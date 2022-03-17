@@ -1,0 +1,3 @@
+name,description,external_url,background_color,youtube_url,batchiness,foo
+Test Batch #1,Testing Batch Upload,https://thirdweb.com,000fff,https://youtube.com,100,
+Test Batch #2,A second item!,https://thirdweb.com,fff000,,99,bar
