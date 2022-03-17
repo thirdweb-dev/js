@@ -12,6 +12,7 @@ import { Card } from "components/layout/Card";
 import { LinkButton } from "components/shared/LinkButton";
 import { BigNumber } from "ethers";
 import { useNetworkMismatch } from "hooks/useNetworkMismatch";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { AiOutlineWarning } from "react-icons/ai";
 import { ChainId } from "utils/network";
@@ -23,6 +24,7 @@ const FAUCETS: Partial<Record<ChainId, string>> = {
 };
 
 export const InsufficientFunds: React.FC = () => {
+  const router = useRouter();
   const mismatchExists = useNetworkMismatch();
   const { address, balance, chainId, getNetworkMetadata } = useWeb3();
   const [dismissed, setDismissed] = useState(false);
@@ -60,6 +62,11 @@ export const InsufficientFunds: React.FC = () => {
   }
 
   if (dismissed) {
+    return null;
+  }
+
+  // if we're on the dashboard overview page do not show the warning, as it is confusing
+  if (router.pathname === "/[wallet]") {
     return null;
   }
 
