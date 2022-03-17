@@ -1,9 +1,9 @@
+import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { contractKeys } from "@3rdweb-sdk/react";
 import { useSDK } from "@thirdweb-dev/react";
 import { ValidContractClass } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
 import { z } from "zod";
-import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 
 export function useDeploy<TContract extends ValidContractClass>(
   contractType?: TContract["contractType"],

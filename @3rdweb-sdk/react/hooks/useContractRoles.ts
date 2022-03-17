@@ -98,33 +98,6 @@ export function useAddRoleMemberMutation<TContract extends ContractWithRoles>(
     },
   );
 }
-
-export function useRemoveRoleMemberMutation<
-  TContract extends ContractWithRoles,
->(contract?: C.Instance<TContract>) {
-  return useMutationWithInvalidate(
-    async (variables: {
-      role: TContract["contractRoles"][number];
-      address: string;
-    }) => {
-      invariant(contract, "contract is required");
-      // await contract.roles.revokeRole(variables.role, variables.address);
-      // TODO bring this back once sdk adds it
-      throw new Error(
-        `not implemented, variables: ${JSON.stringify(variables)}`,
-      );
-    },
-    {
-      onSuccess: (_data, variables, _options, invalidate) => {
-        return invalidate([
-          contractRoleKeys.list(contract?.getAddress()),
-          contractRoleKeys.detail(contract?.getAddress(), variables.role),
-        ]);
-      },
-    },
-  );
-}
-
 export function useIsAccountRole<TContract extends ContractWithRoles>(
   role: TContract["contractRoles"][number],
   contract?: C.Instance<TContract>,
