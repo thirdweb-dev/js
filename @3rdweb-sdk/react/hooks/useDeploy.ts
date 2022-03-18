@@ -2,6 +2,8 @@ import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { contractKeys } from "@3rdweb-sdk/react";
 import { useSDK } from "@thirdweb-dev/react";
 import { ValidContractClass } from "@thirdweb-dev/sdk";
+import { AnalyticsEvents } from "constants/analytics";
+import posthog from "posthog-js";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 
@@ -28,10 +30,11 @@ export function useDeploy<TContract extends ValidContractClass>(
           contractAddress,
           contractType,
         });
-        // TODO BRING THIS BACK
-        // posthog.capture(AnalyticsEvents.DeploymentEvents.DropContract, {
-        //   contractAddress,
-        // });
+        if (contractType) {
+          posthog.capture(AnalyticsEvents.DeploymentEvents[contractType], {
+            contractAddress,
+          });
+        }
         return invalidate([contractKeys.list()]);
       },
     },
