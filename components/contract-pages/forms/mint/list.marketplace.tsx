@@ -15,11 +15,13 @@ import {
   FormHelperText,
   FormLabel,
   Heading,
+  Icon,
   Image,
   Input,
   Select,
   Spinner,
   Stack,
+  Text,
   Tooltip,
   useModalContext,
 } from "@chakra-ui/react";
@@ -30,6 +32,7 @@ import { CurrencySelector } from "components/shared/CurrencySelector";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { FaImage } from "react-icons/fa";
 
 const LIST_FORM_ID = "marketplace-list-form";
 interface IMarketplaceListForm {
@@ -151,25 +154,104 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
             </FormHelperText>
             {nfts?.length ? (
               <Flex gap={2} flexWrap="wrap">
-                {nfts.map((nft, id) => (
-                  <Tooltip key={id} label={nft.name || ""}>
-                    <Image
-                      src={nft.image}
-                      width="140px"
-                      height="140px"
-                      alt={nft.name || ""}
-                      borderRadius="md"
-                      cursor="pointer"
-                      onClick={() =>
-                        isSelected(nft)
-                          ? setValue("selected", undefined)
-                          : setValue("selected", nft)
-                      }
-                      border={isSelected(nft) ? "5px solid" : undefined}
-                      borderColor={isSelected(nft) ? "purple.500" : undefined}
-                    />
-                  </Tooltip>
-                ))}
+                {nfts.map((nft, id) => {
+                  if (nft.image) {
+                    return (
+                      <Tooltip
+                        key={id}
+                        label={`
+                          Name: ${nft.metadata?.name} |
+                          Contract: ${nft.contractAddress} |
+                          Token ID: ${nft.tokenId} |
+                          Token Type: ${nft.tokenType}
+                        `}
+                      >
+                        <Image
+                          src={nft.image}
+                          width="140px"
+                          height="140px"
+                          alt={nft.metadata?.name || ""}
+                          borderRadius="md"
+                          cursor="pointer"
+                          onClick={() =>
+                            isSelected(nft)
+                              ? setValue("selected", undefined)
+                              : setValue("selected", nft)
+                          }
+                          border={isSelected(nft) ? "5px solid" : undefined}
+                          borderColor={
+                            isSelected(nft) ? "purple.500" : undefined
+                          }
+                        />
+                      </Tooltip>
+                    );
+                  }
+
+                  if (nft.metadata && nft.metadata.name) {
+                    return (
+                      <Tooltip
+                        key={id}
+                        label={`
+                          Name: ${nft.metadata?.name} |
+                          Contract: ${nft.contractAddress} |
+                          Token ID: ${nft.tokenId} |
+                          Token Type: ${nft.tokenType}
+                        `}
+                      >
+                        <Center
+                          flexDirection="column"
+                          width="140px"
+                          height="140px"
+                          borderRadius="md"
+                          cursor="pointer"
+                          onClick={() =>
+                            isSelected(nft)
+                              ? setValue("selected", undefined)
+                              : setValue("selected", nft)
+                          }
+                          border={isSelected(nft) ? "5px solid" : undefined}
+                          borderColor={
+                            isSelected(nft) ? "purple.500" : undefined
+                          }
+                          bg="gray.200"
+                        >
+                          <Text>{nft.metadata?.name}</Text>
+                        </Center>
+                      </Tooltip>
+                    );
+                  }
+
+                  return (
+                    <Tooltip key={id}>
+                      <Center
+                        flexDirection="column"
+                        width="140px"
+                        height="140px"
+                        borderRadius="md"
+                        cursor="pointer"
+                        onClick={() =>
+                          isSelected(nft)
+                            ? setValue("selected", undefined)
+                            : setValue("selected", nft)
+                        }
+                        border={isSelected(nft) ? "5px solid" : undefined}
+                        borderColor={isSelected(nft) ? "purple.500" : undefined}
+                        bg="gray.200"
+                      >
+                        <Text>
+                          <strong>Contract:</strong>{" "}
+                          {nft.contractAddress?.slice(0, 10)}...
+                        </Text>
+                        <Text>
+                          <strong>Token ID:</strong> {nft.tokenId}
+                        </Text>
+                        <Text>
+                          <strong>Token Type:</strong> {nft.tokenType}
+                        </Text>
+                      </Center>
+                    </Tooltip>
+                  );
+                })}
               </Flex>
             ) : (
               <Center height="60px">
