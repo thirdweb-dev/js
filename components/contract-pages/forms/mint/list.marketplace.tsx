@@ -222,7 +222,14 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
                   }
 
                   return (
-                    <Tooltip key={id}>
+                    <Tooltip
+                      key={id}
+                      label={`
+                        Contract: ${nft.contractAddress} |
+                        Token ID: ${nft.tokenId} |
+                        Token Type: ${nft.tokenType}
+                      `}
+                    >
                       <Center
                         flexDirection="column"
                         width="140px"
@@ -238,16 +245,7 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
                         borderColor={isSelected(nft) ? "purple.500" : undefined}
                         bg="gray.200"
                       >
-                        <Text>
-                          <strong>Contract:</strong>{" "}
-                          {nft.contractAddress?.slice(0, 10)}...
-                        </Text>
-                        <Text>
-                          <strong>Token ID:</strong> {nft.tokenId}
-                        </Text>
-                        <Text>
-                          <strong>Token Type:</strong> {nft.tokenType}
-                        </Text>
+                        <Icon as={FaImage} boxSize={3} />
                       </Center>
                     </Tooltip>
                   );
