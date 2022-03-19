@@ -1,9 +1,9 @@
+import { contractKeys, networkKeys } from "../cache-keys";
+import { useActiveChainId } from "./useActiveChainId";
+import { useWeb3 } from "./useWeb3";
 import { ChainId, ValidContractClass } from "@thirdweb-dev/sdk";
 import { useQuery } from "react-query";
 import { z } from "zod";
-import { networkKeys, contractKeys } from "../cache-keys";
-import { useActiveChainId } from "./useActiveChainId";
-import { useWeb3 } from "./useWeb3";
 
 export function useContractMetadataWithAddress(
   address: string,

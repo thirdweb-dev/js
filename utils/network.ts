@@ -41,6 +41,15 @@ export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[] = [
   // ChainId.AvalancheFujiTestnet,
 ];
 
+export const SUPPORTED_CHAIN_IDS_V1: SUPPORTED_CHAIN_ID[] = [
+  ChainId.Mainnet,
+  ChainId.Rinkeby,
+  ChainId.Polygon,
+  ChainId.Mumbai,
+  ChainId.Fantom,
+  ChainId.Avalanche,
+];
+
 export const SupportedChainIdToNetworkMap: Record<SUPPORTED_CHAIN_ID, string> =
   {
     [ChainId.Mainnet]: "ethereum",

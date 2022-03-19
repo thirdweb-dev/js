@@ -5,6 +5,7 @@ import {
   useContractMetadataWithAddress,
   useWeb3,
 } from "@3rdweb-sdk/react";
+import { useProjects } from "@3rdweb-sdk/react/hooks/useProjects";
 import {
   Badge,
   Box,
@@ -25,7 +26,12 @@ import {
   MenuOptionGroup,
   Skeleton,
   Stack,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
   Table,
+  Tabs,
   Tbody,
   Td,
   Text,
@@ -43,7 +49,6 @@ import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
 import { Button } from "components/buttons/Button";
 import { Card } from "components/layout/Card";
-import { LinkButton } from "components/shared/LinkButton";
 import { NextLink } from "components/shared/NextLink";
 import { AddressCopyButton } from "components/web3/AddressCopyButton";
 import {
@@ -78,6 +83,7 @@ const Dashboard: ConsolePage = () => {
   const router = useRouter();
   const wallet = useSingleQueryParam("wallet") || "dashboard";
   const { address } = useWeb3();
+  const { data: projects } = useProjects();
 
   // redirect anything that is not a valid address or `/dashboard` to `/dashboard`
   useEffect(() => {
@@ -153,8 +159,24 @@ const Dashboard: ConsolePage = () => {
           <CreateContractButton />
         </Flex>
       )}
-      <ContractTable combinedList={combinedList} />
-      <OldProjects />
+      {projects && projects.length ? (
+        <Tabs>
+          <TabList>
+            <Tab>V2 Contracts</Tab>
+            <Tab>V1 Projects</Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel px={0} pt={8}>
+              <ContractTable combinedList={combinedList} />
+            </TabPanel>
+            <TabPanel px={0} pt={8}>
+              <OldProjects projects={projects} />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      ) : (
+        <ContractTable combinedList={combinedList} />
+      )}
     </Flex>
   );
 };
@@ -609,34 +631,250 @@ const NoWallet: React.FC = () => {
   );
 };
 
-const OldProjects: React.FC = () => {
-  return (
-    <Card>
-      <Flex
-        py={7}
-        align={{ base: "center" }}
-        direction={{ base: "column", md: "row" }}
-        justify={{ base: "center", md: "space-around" }}
-        gap={4}
-      >
-        <Flex align="flex-start" direction="column" gap={2}>
-          <Heading size="title.md">Looking for your old projects?</Heading>
-          <Text maxW="md">
-            You can still access projects created in thirdweb v1 by going to the
-            v1 version of the dashboard.
-          </Text>
-        </Flex>
+interface IProjectCellProps {
+  name: string;
+  chainId: ChainId;
+  address: string;
+}
 
-        <LinkButton
-          href="https://v1.thirdweb.com/dashboard"
-          isExternal
-          colorScheme="purple"
-          w={{ base: "100%", md: "auto" }}
-          // variant="outline"
-        >
-          thirdweb v1 dashboard
-        </LinkButton>
-      </Flex>
-    </Card>
+const ProjectCell: React.FC<IProjectCellProps> = ({
+  name,
+  chainId,
+  address,
+}) => {
+  return (
+    <Skeleton isLoaded={!!address}>
+      <OriginalNextLink
+        href={`https://v1.thirdweb.com/${getNetworkFromChainId(
+          chainId as SUPPORTED_CHAIN_ID,
+        )}/${address}`}
+        passHref
+      >
+        <Link>
+          <Text
+            color="blue.700"
+            _dark={{ color: "blue.300" }}
+            size="label.md"
+            _groupHover={{ textDecor: "underline" }}
+          >
+            {name || "Loading ..."}
+          </Text>
+        </Link>
+      </OriginalNextLink>
+    </Skeleton>
+  );
+};
+
+interface IOldProjects {
+  projects: {
+    chainId: ChainId;
+    address: string;
+    name: string;
+  }[];
+}
+
+const OldProjects: React.FC<IOldProjects> = ({ projects }) => {
+  const { getNetworkMetadata } = useWeb3();
+
+  const columns = useMemo(
+    () => [
+      {
+        Header: "Name",
+        Cell: (cell: Cell<typeof projects[number], "metadata">) => {
+          return (
+            <ProjectCell
+              name={cell.row.original.name}
+              address={cell.row.original.address}
+              chainId={cell.row.original.chainId}
+            />
+          );
+        },
+      },
+      {
+        Header: "Network",
+        accessor: (row) => row.chainId,
+        Cell: (cell: Cell<typeof projects[number], "chainId">) => {
+          const data = getNetworkMetadata(
+            cell.row.original.chainId as SUPPORTED_CHAIN_ID,
+          );
+          return (
+            <Flex align="center" gap={2}>
+              <Icon boxSize={6} as={data.icon} />
+              <Text size="label.md">{data.chainName}</Text>
+              <Badge
+                colorScheme={data.isTestnet ? "blue" : "green"}
+                textTransform="capitalize"
+              >
+                {data.isTestnet ? "Testnet" : "Mainnet"}
+              </Badge>
+            </Flex>
+          );
+        },
+        Filter: (props) => {
+          const options = SUPPORTED_CHAIN_IDS.map((chainId) =>
+            chainId.toString(),
+          );
+          return (
+            <Menu closeOnSelect={false}>
+              <MenuButton
+                as={IconButton}
+                icon={<Icon as={IoFilterSharp} boxSize={4} />}
+                aria-label="open contract type filter menu"
+                size="sm"
+                variant="ghost"
+                p={0}
+              />
+              <MenuList zIndex={10}>
+                <MenuOptionGroup
+                  defaultValue={options}
+                  title="Networks"
+                  type="checkbox"
+                  value={props.filterValue}
+                  onChange={(e) => props.setFilter(props.column.id, e)}
+                >
+                  {options.map((chainId) => (
+                    <MenuItemOption value={chainId} key={chainId}>
+                      <Flex align="center" direction="row" gap={1}>
+                        <Icon
+                          boxSize={4}
+                          as={
+                            getNetworkMetadata(
+                              parseInt(chainId) as SUPPORTED_CHAIN_ID,
+                            ).icon
+                          }
+                        />
+                        <Text size="label.sm">
+                          {
+                            getNetworkMetadata(
+                              parseInt(chainId) as SUPPORTED_CHAIN_ID,
+                            ).chainName
+                          }
+                        </Text>
+                      </Flex>
+                    </MenuItemOption>
+                  ))}
+                </MenuOptionGroup>
+              </MenuList>
+            </Menu>
+          );
+        },
+        filter: (rows, _columnIds, filterValue = []) => {
+          return rows.filter((row) => {
+            return filterValue.includes(row.original.chainId.toString());
+          });
+        },
+      },
+      {
+        Header: "Address",
+        accessor: (row) => row.address,
+        Cell: (cell: Cell<typeof projects[number], "address">) => {
+          return <AddressCopyButton address={cell.row.original.address} />;
+        },
+      },
+    ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  ) as Column<typeof projects[number]>[];
+
+  const defaultColumn = useMemo(
+    () => ({
+      Filter: "",
+    }),
+    [],
+  );
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    // state,
+    // visibleColumns,
+    // preGlobalFilteredRows,
+    // setGlobalFilter,
+  } = useTable(
+    {
+      columns,
+      data: projects,
+      defaultColumn,
+    },
+    useFilters,
+    useGlobalFilter,
+  );
+
+  const router = useRouter();
+
+  if (!projects.length) {
+    return <NoContracts />;
+  }
+
+  return (
+    <Box w="100%" overflowX="auto">
+      <Table
+        {...getTableProps()}
+        bg="backgroundHighlight"
+        p={4}
+        borderRadius="lg"
+        overflow="hidden"
+      >
+        <Thead bg="blackAlpha.50" _dark={{ bg: "whiteAlpha.50" }}>
+          {headerGroups.map((headerGroup) => (
+            // eslint-disable-next-line react/jsx-key
+            <Tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                // eslint-disable-next-line react/jsx-key
+                <Th {...column.getHeaderProps()}>
+                  <Flex align="center" gap={2}>
+                    {column.render("Header")}
+                    {column.render("Filter")}
+                  </Flex>
+                </Th>
+              ))}
+            </Tr>
+          ))}
+        </Thead>
+
+        <Tbody {...getTableBodyProps()}>
+          {rows.map((row) => {
+            prepareRow(row);
+            return (
+              // eslint-disable-next-line react/jsx-key
+              <Tr
+                {...row.getRowProps()}
+                role="group"
+                _hover={{ bg: "blackAlpha.50" }}
+                _dark={{
+                  _hover: {
+                    bg: "whiteAlpha.50",
+                  },
+                }}
+                // this is a hack to get around the fact that safari does not handle position: relative on table rows
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  router.push(
+                    `https://v1.thirdweb.com/${getNetworkFromChainId(
+                      row.original.chainId as SUPPORTED_CHAIN_ID,
+                    )}/${row.original.address}`,
+                  );
+                }}
+                // end hack
+                borderBottomWidth={1}
+                _last={{ borderBottomWidth: 0 }}
+              >
+                {row.cells.map((cell) => {
+                  return (
+                    // eslint-disable-next-line react/jsx-key
+                    <Td borderBottomWidth="inherit" {...cell.getCellProps()}>
+                      {cell.render("Cell")}
+                    </Td>
+                  );
+                })}
+              </Tr>
+            );
+          })}
+        </Tbody>
+      </Table>
+    </Box>
   );
 };
