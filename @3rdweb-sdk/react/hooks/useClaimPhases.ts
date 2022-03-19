@@ -1,10 +1,12 @@
-import { ClaimConditionInput, NFTDrop, EditionDrop } from "@thirdweb-dev/sdk";
-import invariant from "tiny-invariant";
 import { bundleDropKeys, dropKeys } from "../cache-keys";
 import {
   useMutationWithInvalidate,
   useQueryWithNetwork,
 } from "./query/useQueryWithNetwork";
+import { useBundleDropResetClaimEligibilityMutation } from "./useBundleDrop";
+import { useDropResetClaimEligibilityMutation } from "./useDrop";
+import { ClaimConditionInput, EditionDrop, NFTDrop } from "@thirdweb-dev/sdk";
+import invariant from "tiny-invariant";
 
 export function useClaimPhases(
   contract?: NFTDrop | EditionDrop,
@@ -49,6 +51,19 @@ export function useClaimPhasesMutation(
   } else {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useBundleDropPhasesMutation(contract, tokenId);
+  }
+}
+
+export function useResetEligibilityMutation(
+  contract?: NFTDrop | EditionDrop,
+  tokenId?: string,
+) {
+  if (contract instanceof NFTDrop) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useDropResetClaimEligibilityMutation(contract);
+  } else {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useBundleDropResetClaimEligibilityMutation(contract, tokenId);
   }
 }
 

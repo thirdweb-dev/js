@@ -18,6 +18,23 @@ export function useBundleDropContractMetadata(contractAddress?: string) {
   return useContractMetadata(useEditionDrop(contractAddress));
 }
 
+export function useBundleDropResetClaimEligibilityMutation(
+  contract?: EditionDrop,
+  tokenId?: string,
+) {
+  return useMutationWithInvalidate(async () => {
+    invariant(contract, "contract is required");
+    invariant(tokenId, "token id is required");
+    const claimConditions = await contract.claimConditions.getAll(tokenId);
+    const cleaned = claimConditions.map((c) => ({
+      ...c,
+      price: c.currencyMetadata.displayValue,
+    }));
+
+    return await contract.claimConditions.set(tokenId, cleaned, true);
+  });
+}
+
 export function useBundleDropActiveClaimCondition(
   contractAddress?: string,
   tokenId?: string,

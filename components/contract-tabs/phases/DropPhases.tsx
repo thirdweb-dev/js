@@ -4,6 +4,7 @@ import { AdminOnly } from "@3rdweb-sdk/react";
 import {
   useClaimPhases,
   useClaimPhasesMutation,
+  useResetEligibilityMutation,
 } from "@3rdweb-sdk/react/hooks/useClaimPhases";
 import {
   Box,
@@ -20,6 +21,7 @@ import {
   InputProps,
   Select,
   Spinner,
+  Stack,
   Text,
   useToast,
 } from "@chakra-ui/react";
@@ -36,6 +38,7 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { Card } from "components/layout/Card";
 import { BigNumberInput } from "components/shared/BigNumberInput";
 import { CurrencySelector } from "components/shared/CurrencySelector";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import React, { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { BsCircleFill } from "react-icons/bs";
@@ -50,22 +53,65 @@ interface DropPhases {
 }
 
 export const DropPhases: React.FC<DropPhases> = ({ contract, tokenId }) => {
+  const mutation = useResetEligibilityMutation(contract, tokenId);
+  const txNotifications = useTxNotifications(
+    "Succesfully reset claim eligibility",
+    "Failed to reset claim eligibility",
+  );
+
   return (
-    <Card p={0} position="relative">
-      <Flex pt={10} direction="column" gap={8}>
-        <Flex px={10} as="section" direction="column" gap={4}>
-          <Flex direction="column">
-            <Heading size="title.md">Claim Phases</Heading>
-            <Text size="body.md" fontStyle="italic">
-              Add different phases to control when you drop your NFTs, how much
-              they cost, and more.
-            </Text>
+    <Stack spacing={8}>
+      <Card p={0} position="relative">
+        <Flex pt={10} direction="column" gap={8}>
+          <Flex px={10} as="section" direction="column" gap={4}>
+            <Flex direction="column">
+              <Heading size="title.md">Claim Phases</Heading>
+              <Text size="body.md" fontStyle="italic">
+                Add different phases to control when you drop your NFTs, how
+                much they cost, and more.
+              </Text>
+            </Flex>
           </Flex>
+          <Divider />
+          <DropPhasesForm contract={contract} tokenId={tokenId} />
         </Flex>
-        <Divider />
-        <DropPhasesForm contract={contract} tokenId={tokenId} />
-      </Flex>
-    </Card>
+      </Card>
+      <Card p={0} position="relative">
+        <Flex pt={10} direction="column" gap={8}>
+          <Flex px={10} as="section" direction="column" gap={4}>
+            <Flex direction="column">
+              <Heading size="title.md">Claim Eligibility</Heading>
+              <Text size="body.md" fontStyle="italic">
+                This contracts claim eligibility stores who has already claimed
+                NFTs from this contract and carries across claim phases.
+                Resetting claim eligibility will reset this state permanently,
+                and people who have already claimed to their limit will be able
+                to claim again.
+              </Text>
+            </Flex>
+          </Flex>
+
+          <AdminOnly contract={contract} fallback={<Box pb={5} />}>
+            <TransactionButton
+              colorScheme="primary"
+              transactionCount={1}
+              type="submit"
+              isLoading={mutation.isLoading}
+              onClick={() => {
+                mutation.mutate(undefined, txNotifications);
+              }}
+              loadingText="Resetting..."
+              size="md"
+              borderRadius="xl"
+              borderTopLeftRadius="0"
+              borderTopRightRadius="0"
+            >
+              Reset Claim Eligibility
+            </TransactionButton>
+          </AdminOnly>
+        </Flex>
+      </Card>
+    </Stack>
   );
 };
 
@@ -251,6 +297,9 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                             ).error?.message
                           }
                         </FormErrorMessage>
+                        <FormHelperText>
+                          This time is in your timezone.
+                        </FormHelperText>
                       </FormControl>
 
                       <FormControl
