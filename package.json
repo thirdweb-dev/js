@@ -27,7 +27,7 @@
     "@react-hook/throttle": "^2.2.0",
     "@thirdweb-dev/chain-icons": "^1.0.2",
     "@thirdweb-dev/react": "^2.0.1",
-    "@thirdweb-dev/sdk": "^2.0.9-0",
+    "@thirdweb-dev/sdk": "^2.0.12",
     "@types/react-datepicker": "^4.3.4",
     "color": "^4.0.1",
     "emotion-theming": "^11.0.0",
