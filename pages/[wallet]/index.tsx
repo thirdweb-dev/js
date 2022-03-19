@@ -14,8 +14,8 @@ import {
   Heading,
   Icon,
   IconButton,
-  LinkBox,
-  LinkOverlay,
+  Image,
+  Link,
   Menu,
   MenuButton,
   MenuGroup,
@@ -257,13 +257,22 @@ export const ContractTable: React.FC<ContractTableProps> = ({
         Header: "Contract Type",
         accessor: (row) => row.contractType,
         Cell: (cell: Cell<typeof combinedList[number], "contractType">) => {
+          const src = FeatureIconMap[cell.row.original.contractType];
           return (
             <Flex align="center" gap={2}>
-              <ChakraNextImage
-                boxSize={8}
-                src={FeatureIconMap[cell.row.original.contractType]}
-                alt={CONTRACT_TYPE_NAME_MAP[cell.row.original.contractType]}
-              />
+              {src ? (
+                <ChakraNextImage
+                  boxSize={8}
+                  src={src}
+                  alt={CONTRACT_TYPE_NAME_MAP[cell.row.original.contractType]}
+                />
+              ) : (
+                <Image
+                  boxSize={8}
+                  src=""
+                  alt={CONTRACT_TYPE_NAME_MAP[cell.row.original.contractType]}
+                />
+              )}
               <Text size="label.md">
                 {CONTRACT_TYPE_NAME_MAP[cell.row.original.contractType]}
               </Text>
@@ -432,6 +441,10 @@ export const ContractTable: React.FC<ContractTableProps> = ({
     useGlobalFilter,
   );
 
+  const router = useRouter();
+
+  const wallet = useSingleQueryParam("wallet") || "dashboard";
+
   if (!combinedList.length) {
     return <NoContracts />;
   }
@@ -461,14 +474,14 @@ export const ContractTable: React.FC<ContractTableProps> = ({
             </Tr>
           ))}
         </Thead>
+
         <Tbody {...getTableBodyProps()}>
           {rows.map((row) => {
             prepareRow(row);
             return (
               // eslint-disable-next-line react/jsx-key
-              <LinkBox
+              <Tr
                 {...row.getRowProps()}
-                as={Tr}
                 role="group"
                 _hover={{ bg: "blackAlpha.50" }}
                 _dark={{
@@ -476,6 +489,18 @@ export const ContractTable: React.FC<ContractTableProps> = ({
                     bg: "whiteAlpha.50",
                   },
                 }}
+                // this is a hack to get around the fact that safari does not handle position: relative on table rows
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  router.push(
+                    `/${wallet}/${getNetworkFromChainId(
+                      row.original.chainId as SUPPORTED_CHAIN_ID,
+                    )}/${UrlMap[row.original.contractType]}/${
+                      row.original.address
+                    }`,
+                  );
+                }}
+                // end hack
                 borderBottomWidth={1}
                 _last={{ borderBottomWidth: 0 }}
               >
@@ -487,7 +512,7 @@ export const ContractTable: React.FC<ContractTableProps> = ({
                     </Td>
                   );
                 })}
-              </LinkBox>
+              </Tr>
             );
           })}
         </Tbody>
@@ -521,7 +546,7 @@ const AsyncContractCell: React.FC<AsyncContractCellProps> = ({ cell }) => {
         )}/${UrlMap[cell.contractType]}/${cell.address}`}
         passHref
       >
-        <LinkOverlay>
+        <Link>
           <Text
             color="blue.700"
             _dark={{ color: "blue.300" }}
@@ -530,7 +555,7 @@ const AsyncContractCell: React.FC<AsyncContractCellProps> = ({ cell }) => {
           >
             {metadataQuery.data?.name || "Loading ..."}
           </Text>
-        </LinkOverlay>
+        </Link>
       </OriginalNextLink>
     </Skeleton>
   );
