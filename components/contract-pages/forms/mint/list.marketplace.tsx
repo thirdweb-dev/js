@@ -18,6 +18,8 @@ import {
   Icon,
   Image,
   Input,
+  List,
+  ListItem,
   Select,
   Spinner,
   Stack,
@@ -33,6 +35,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FaImage } from "react-icons/fa";
+import { shortenIfAddress } from "utils/usedapp-external";
 
 const LIST_FORM_ID = "marketplace-list-form";
 interface IMarketplaceListForm {
@@ -159,12 +162,24 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
                     return (
                       <Tooltip
                         key={id}
-                        label={`
-                          Name: ${nft.metadata?.name} |
-                          Contract: ${nft.contractAddress} |
-                          Token ID: ${nft.tokenId} |
-                          Token Type: ${nft.tokenType}
-                        `}
+                        label={
+                          <List>
+                            <ListItem>
+                              <strong>Name:</strong>{" "}
+                              {nft.metadata?.name || "N/A"}
+                            </ListItem>
+                            <ListItem>
+                              <strong>Contract Address:</strong>{" "}
+                              {shortenIfAddress(nft.contractAddress)}
+                            </ListItem>
+                            <ListItem>
+                              <strong>Token ID: </strong> {nft.tokenId}
+                            </ListItem>
+                            <ListItem>
+                              <strong>Token Standard: </strong> {nft.tokenType}
+                            </ListItem>
+                          </List>
+                        }
                       >
                         <Image
                           src={nft.image}
@@ -191,12 +206,24 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
                     return (
                       <Tooltip
                         key={id}
-                        label={`
-                          Name: ${nft.metadata?.name} |
-                          Contract: ${nft.contractAddress} |
-                          Token ID: ${nft.tokenId} |
-                          Token Type: ${nft.tokenType}
-                        `}
+                        label={
+                          <List>
+                            <ListItem>
+                              <strong>Name:</strong>{" "}
+                              {nft.metadata?.name || "N/A"}
+                            </ListItem>
+                            <ListItem>
+                              <strong>Contract Address:</strong>{" "}
+                              {shortenIfAddress(nft.contractAddress)}
+                            </ListItem>
+                            <ListItem>
+                              <strong>Token ID: </strong> {nft.tokenId}
+                            </ListItem>
+                            <ListItem>
+                              <strong>Token Standard: </strong> {nft.tokenType}
+                            </ListItem>
+                          </List>
+                        }
                       >
                         <Center
                           flexDirection="column"
@@ -224,11 +251,23 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
                   return (
                     <Tooltip
                       key={id}
-                      label={`
-                        Contract: ${nft.contractAddress} |
-                        Token ID: ${nft.tokenId} |
-                        Token Type: ${nft.tokenType}
-                      `}
+                      label={
+                        <List>
+                          <ListItem>
+                            <strong>Name:</strong> {nft.metadata?.name || "N/A"}
+                          </ListItem>
+                          <ListItem>
+                            <strong>Contract Address:</strong>{" "}
+                            {shortenIfAddress(nft.contractAddress)}
+                          </ListItem>
+                          <ListItem>
+                            <strong>Token ID: </strong> {nft.tokenId}
+                          </ListItem>
+                          <ListItem>
+                            <strong>Token Standard: </strong> {nft.tokenType}
+                          </ListItem>
+                        </List>
+                      }
                     >
                       <Center
                         flexDirection="column"
