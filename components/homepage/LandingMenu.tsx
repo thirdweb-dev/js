@@ -27,7 +27,6 @@ export const LandingMenu: React.FC = () => {
         aria-label="Options"
         icon={<HamburgerIcon />}
         variant="outline"
-        color="black"
       />
       <MenuList bgColor="white" color="black">
         <MenuItem onClick={() => scrollToId("features")}>Features</MenuItem>
