@@ -1,5 +1,4 @@
 import {
-  useActiveChainId,
   useMarketplaceAuctionListMutation,
   useMarketplaceDirectListMutation,
 } from "@3rdweb-sdk/react";
@@ -36,7 +35,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FaImage } from "react-icons/fa";
-import { ChainId, SUPPORTED_CHAIN_ID } from "utils/network";
+import { FiInfo } from "react-icons/fi";
 import { shortenIfAddress } from "utils/usedapp-external";
 
 const LIST_FORM_ID = "marketplace-list-form";
@@ -140,6 +139,8 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
       );
     }
   };
+
+  const noNfts = !nfts?.length;
 
   return (
     <>
@@ -297,12 +298,34 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
                 })}
               </Flex>
             ) : (
-              <Center height="60px">
-                <Text>There are no NFTs owned by this wallet</Text>
-              </Center>
+              <Stack
+                direction="row"
+                bg="orange.50"
+                borderRadius="md"
+                borderWidth="1px"
+                borderColor="orange.100"
+                align="center"
+                padding="10px"
+                spacing={3}
+                _dark={{
+                  bg: "orange.800",
+                  borderColor: "orange.800",
+                }}
+              >
+                <Icon
+                  as={FiInfo}
+                  color="orange.400"
+                  _dark={{ color: "orange.100" }}
+                  boxSize={6}
+                />
+                <Text color="orange.800" _dark={{ color: "orange.100" }}>
+                  There are no NFTs owned by this wallet. You need NFTs to
+                  create a listing.
+                </Text>
+              </Stack>
             )}
           </FormControl>
-          <FormControl>
+          <FormControl isDisabled={noNfts}>
             <Heading as={FormLabel} size="label.lg">
               Listing Type
             </Heading>
@@ -315,7 +338,7 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
               direct listing.
             </FormHelperText>
           </FormControl>
-          <FormControl isRequired>
+          <FormControl isRequired isDisabled={noNfts}>
             <Heading as={FormLabel} size="label.lg">
               Listing Currency
             </Heading>
@@ -329,7 +352,7 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
               The currency you want to sell your tokens for.
             </FormHelperText>
           </FormControl>
-          <FormControl isRequired>
+          <FormControl isRequired isDisabled={noNfts}>
             <Heading as={FormLabel} size="label.lg">
               {watch("listingType") === "auction"
                 ? "Buyout Price Per Token"
@@ -343,7 +366,7 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
             </FormHelperText>
           </FormControl>
           {watch("selected")?.tokenType.toLowerCase() !== "erc721" && (
-            <FormControl isRequired>
+            <FormControl isRequired isDisabled={noNfts}>
               <Stack justify="space-between" direction="row">
                 <Heading as={FormLabel} size="label.lg">
                   Quantity
@@ -366,7 +389,7 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
           )}
           {watch("listingType") === "auction" && (
             <>
-              <FormControl isRequired>
+              <FormControl isRequired isDisabled={noNfts}>
                 <Heading as={FormLabel} size="label.lg">
                   Reserve Price Per Token
                 </Heading>
