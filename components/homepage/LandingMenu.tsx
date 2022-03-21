@@ -29,7 +29,7 @@ export const LandingMenu: React.FC = () => {
         variant="outline"
         color="black"
       />
-      <MenuList bgColor="white" color="black" shadow="xl" borderRadius="xl">
+      <MenuList bgColor="white" color="black">
         <MenuItem onClick={() => scrollToId("features")}>Features</MenuItem>
         <MenuItem onClick={() => scrollToId("developers")}>Developers</MenuItem>
         <NextLink href="https://portal.thirdweb.com">
