@@ -30,7 +30,7 @@ interface WidgetSetupProps {
   contract?: ValidContractInstance;
 }
 
-const IPFS_URI = "ipfs://QmQh99EMq7x8PbRWCUX6AB6VGFqjnH2zbRS5Z7aLxTvD54";
+const IPFS_URI = "ipfs://QmSuwRaMjcrHavQq2sioCQ1jnb3cCcYQjwi9J64pwvAC2R";
 
 const getContractWidgetHash = (contract?: ValidContractInstance) => {
   if (contract instanceof NFTDrop) {
