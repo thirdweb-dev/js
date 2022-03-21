@@ -217,6 +217,11 @@ const Mumbai: CurrencyMetadata[] = [
     symbol: "MATIC",
   },
   {
+    name: "Wrapped Ether",
+    address: "0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa",
+    symbol: "WETH",
+  },
+  {
     name: "Wrapped Matic",
     address: "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889",
     symbol: "WMATIC",
