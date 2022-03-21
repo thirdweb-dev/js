@@ -41,42 +41,47 @@ export function useWalletNFTs() {
         return;
       }
 
-      const data = await alchemy.getNfts({ owner: address });
-      const nftData = data.ownedNfts
-        .map((nft) => {
-          if (!nft.contract.address) {
-            return null;
-          }
+      try {
+        const data = await alchemy.getNfts({ owner: address });
+        const nftData = data.ownedNfts
+          .map((nft) => {
+            if (!nft.contract.address) {
+              return null;
+            }
 
-          if ((nft as any).metadata && (nft as any).metadata.image) {
-            return {
-              contractAddress: nft.contract.address,
-              tokenId: parseInt(nft.id.tokenId, 16),
-              metadata: (nft as any).metadata,
-              image: (nft as any).metadata?.image.replace(
-                "ipfs://",
-                `${process.env.NEXT_PUBLIC_IPFS_GATEWAY_URL}/`,
-              ),
-              tokenType: nft.id.tokenMetadata?.tokenType,
-            };
-          } else if ((nft as any).metadata) {
-            return {
-              contractAddress: nft.contract.address,
-              tokenId: parseInt(nft.id.tokenId, 16),
-              metadata: (nft as any).metadata,
-              tokenType: nft.id.tokenMetadata?.tokenType,
-            };
-          } else {
-            return {
-              contractAddress: nft.contract.address,
-              tokenId: parseInt(nft.id.tokenId, 16),
-              tokenType: nft.id.tokenMetadata?.tokenType,
-            };
-          }
-        })
-        .filter((nft) => !!nft);
+            if ((nft as any).metadata && (nft as any).metadata.image) {
+              return {
+                contractAddress: nft.contract.address,
+                tokenId: parseInt(nft.id.tokenId, 16),
+                metadata: (nft as any).metadata,
+                image: (nft as any).metadata?.image.replace(
+                  "ipfs://",
+                  `${process.env.NEXT_PUBLIC_IPFS_GATEWAY_URL}/`,
+                ),
+                tokenType: nft.id.tokenMetadata?.tokenType,
+              };
+            } else if ((nft as any).metadata) {
+              return {
+                contractAddress: nft.contract.address,
+                tokenId: parseInt(nft.id.tokenId, 16),
+                metadata: (nft as any).metadata,
+                tokenType: nft.id.tokenMetadata?.tokenType,
+              };
+            } else {
+              return {
+                contractAddress: nft.contract.address,
+                tokenId: parseInt(nft.id.tokenId, 16),
+                tokenType: nft.id.tokenMetadata?.tokenType,
+              };
+            }
+          })
+          .filter((nft) => !!nft);
 
-      return nftData as WalletNftData[];
+        return nftData as WalletNftData[];
+      } catch (err) {
+        console.log("Network not supported");
+        throw err;
+      }
     },
     {
       enabled: !!alchemy && !!address,
