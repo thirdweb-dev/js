@@ -1,16 +1,16 @@
-import { useWeb3 } from "@3rdweb-sdk/react";
-import { useToast } from "@chakra-ui/react";
-import { AddressZero } from "@ethersproject/constants";
-import { CURRENCIES } from "constants/currencies";
-import { formatEther, formatUnits } from "ethers/lib/utils";
-import { useCallback, useEffect, useState } from "react";
-import { parseErrorToMessage } from "utils/errorParser";
-import { SUPPORTED_CHAIN_ID } from "utils/network";
-import { isAddressZero, OtherAddressZero } from "utils/zeroAddress";
 import { useActiveChainId, useContractMetadata } from ".";
 import { splitsKeys } from "..";
 import { useQueryWithNetwork } from "./query/useQueryWithNetwork";
+import { useWeb3 } from "@3rdweb-sdk/react";
+import { useToast } from "@chakra-ui/react";
+import { AddressZero } from "@ethersproject/constants";
 import { useSplit, useToken } from "@thirdweb-dev/react";
+import { CURRENCIES } from "constants/currencies";
+import { ethers } from "ethers";
+import { useCallback, useEffect, useState } from "react";
+import { parseErrorToMessage } from "utils/errorParser";
+import { SUPPORTED_CHAIN_ID } from "utils/network";
+import { isAddressZero } from "utils/zeroAddress";
 
 export function useSplitsContractMetadata(contractAddres?: string) {
   return useContractMetadata(useToken(contractAddres));
@@ -39,152 +39,156 @@ export function useSplitsBalanceAndDistribute(contractAddress?: string) {
   const { address } = useWeb3();
   const toast = useToast();
   const chainId = useActiveChainId();
-  // const appAddress = useSingleQueryParam("app");
   const splitsContract = useSplit(contractAddress);
   const [loading, setLoading] = useState(true);
   const [distributeLoading, setDistributeLoading] = useState(false);
-  const [noBalance, setNoBalance] = useState(true);
   const [balances, setBalances] = useState<IBalance[]>([]);
-  const [nonZeroBalances, setNonZeroBalances] = useState<IBalance[]>([]);
+  const [numTransactions, setNumTransactions] = useState(1);
 
-  const getBalances = useCallback(async () => {
-    setLoading(true);
-    // const customCurrencyBalances = currencies?.map(async (currency) => {
-    //   const fullBalance = await splitsContract?.balanceOfToken(
-    //     address as string,
-    //     currency.address,
-    //   );
+  const getCurrencies = useCallback(async () => {
+    const res = await fetch("/api/moralis/balances", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        chain: `0x${chainId?.toString(16)}` as any,
+        address: contractAddress,
+      }),
+    });
 
-    //   const balance = formatUnits(
-    //     fullBalance?.value.toString() || "0",
-    //     fullBalance?.decimals,
-    //   );
+    const data = await res.json();
 
-    //   return {
-    //     address: currency.address,
-    //     name: currency.metadata?.name as string,
-    //     symbol: currency.metadata?.symbol as string,
-    //     balance: balance as string,
-    //   };
-    // });
-
-    const currencyBalances = CURRENCIES[chainId as SUPPORTED_CHAIN_ID]
-      ?.filter((currency) => currency.address !== OtherAddressZero)
-      .map(async (currency) => {
-        const balance =
-          currency.address === AddressZero
-            ? formatEther(
-                (
-                  await splitsContract?.balanceOf(address as string)
-                )?.toString() || "0",
-              )
-            : formatUnits(
-                (
-                  await splitsContract?.balanceOfToken(
-                    address as string,
-                    currency.address,
-                  )
-                )?.value.toString() || "0",
-                (
-                  await splitsContract?.balanceOfToken(
-                    address as string,
-                    currency.address,
-                  )
-                )?.decimals,
-              );
+    const currencies = data.map((token: any) => {
+      if (isAddressZero(token.token_address)) {
+        const native = CURRENCIES[chainId as SUPPORTED_CHAIN_ID].find((c) =>
+          isAddressZero(c.address),
+        );
 
         return {
-          address: currency.address,
-          name: currency.name,
-          symbol: currency.symbol,
+          token_address: AddressZero,
+          name: native?.name,
+          symbol: native?.symbol,
+        };
+      } else {
+        return token;
+      }
+    });
+
+    return currencies;
+  }, [contractAddress, chainId]);
+
+  const getBalances = useCallback(async () => {
+    const currencies = await getCurrencies();
+
+    const formatted = await Promise.all(
+      currencies.map(async (currency: any) => {
+        const balance = isAddressZero(currency.token_address)
+          ? ethers.utils.formatEther(
+              (
+                await splitsContract?.balanceOf(address as string)
+              )?.toString() || "0",
+            )
+          : ethers.utils.formatUnits(
+              (
+                await splitsContract?.balanceOfToken(
+                  address as string,
+                  currency.token_address,
+                )
+              )?.value.toString() || "0",
+              currency.decimals,
+            );
+
+        return {
+          ...currency,
           balance: balance as string,
         };
-      });
+      }),
+    );
 
-    const allBalances = await Promise.all([
-      // ...(customCurrencyBalances || []),
-      ...currencyBalances,
-    ]);
+    return formatted;
+  }, [address, splitsContract, getCurrencies]);
 
-    const nonZeBalances = allBalances.filter((balance: IBalance) => {
-      return parseFloat(balance.balance) > 0;
-    });
+  const getNumberTransactions = useCallback(async () => {
+    const formatted = await getBalances();
 
-    const displayBalances = allBalances.filter((balance: IBalance) => {
-      return (
-        parseFloat(balance.balance) > 0 ||
-        isAddressZero(balance.address) ||
-        balance.symbol === "USDC" ||
-        balance.symbol === "USDT"
-      );
-    });
+    const distributions = formatted.filter(
+      (token) => parseFloat(token.balance) > 0,
+    );
 
-    setNoBalance(nonZeBalances.length === 0);
-    setNonZeroBalances(nonZeBalances);
-    setBalances(displayBalances as unknown as IBalance[]);
-    setLoading(false);
-    // }, [address, chainId, currencies, splitsContract]);
-  }, [address, chainId, splitsContract]);
-
-  // useEffect(() => {
-  //   if (address && currencies) {
-  //     getBalances();
-  //   }
-  // }, [currencies, address, getBalances]);
+    setNumTransactions(distributions.length);
+  }, [getBalances]);
 
   useEffect(() => {
+    const updateBalances = async () => {
+      setLoading(true);
+      const formatted = await getBalances();
+      setBalances(formatted);
+      setLoading(false);
+    };
+
     if (address) {
-      getBalances();
+      updateBalances();
     }
   }, [address, getBalances]);
 
+  useEffect(() => {
+    if (address) {
+      getNumberTransactions();
+    }
+  }, [address, balances, splitsContract, getNumberTransactions]);
+
   const distributeFunds = async () => {
     setDistributeLoading(true);
-    const distributions = nonZeroBalances?.map(async (balance: IBalance) => {
-      if (balance.address === AddressZero) {
-        await splitsContract
-          ?.distribute()
-          .then(() => {
-            toast({
-              title: `Success`,
-              description: `Succesfully distributed ${balance.name}`,
-              status: "success",
-              duration: 5000,
-              isClosable: true,
+    const formatted = await getBalances();
+
+    const distributions = formatted
+      .filter((token) => parseFloat(token.balance) > 0)
+      ?.map(async (currency: any) => {
+        if (isAddressZero(currency.token_address)) {
+          await splitsContract
+            ?.distribute()
+            .then(() => {
+              toast({
+                title: `Success`,
+                description: `Succesfully distributed ${currency.name}`,
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+              });
+            })
+            .catch((err: unknown) => {
+              toast({
+                title: `Error distributing ${currency.name}`,
+                description: parseErrorToMessage(err),
+                status: "error",
+                duration: 9000,
+                isClosable: true,
+              });
             });
-          })
-          .catch((err: unknown) => {
-            toast({
-              title: `Error distributing ${balance.name}`,
-              description: parseErrorToMessage(err),
-              status: "error",
-              duration: 9000,
-              isClosable: true,
+        } else {
+          await splitsContract
+            ?.distributeToken(currency.token_address)
+            .then(() => {
+              toast({
+                title: `Success`,
+                description: `Succesfully distributed ${currency.name}`,
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+              });
+            })
+            .catch((err: unknown) => {
+              toast({
+                title: `Error distributing ${currency.name}`,
+                description: parseErrorToMessage(err),
+                status: "error",
+                duration: 9000,
+                isClosable: true,
+              });
             });
-          });
-      } else {
-        await splitsContract
-          ?.distributeToken(balance.address)
-          .then(() => {
-            toast({
-              title: `Success`,
-              description: `Succesfully distributed ${balance.name}`,
-              status: "success",
-              duration: 5000,
-              isClosable: true,
-            });
-          })
-          .catch((err: unknown) => {
-            toast({
-              title: `Error distributing ${balance.name}`,
-              description: parseErrorToMessage(err),
-              status: "error",
-              duration: 9000,
-              isClosable: true,
-            });
-          });
-      }
-    });
+        }
+      });
 
     await Promise.all(distributions);
     getBalances();
@@ -194,9 +198,8 @@ export function useSplitsBalanceAndDistribute(contractAddress?: string) {
   return {
     loading,
     distributeLoading,
-    noBalance,
-    nonZeroBalances,
     balances,
     distributeFunds,
+    numTransactions,
   };
 }

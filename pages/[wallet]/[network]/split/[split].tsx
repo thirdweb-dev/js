@@ -33,8 +33,13 @@ const SplitsPage: ConsolePage = () => {
   const splitsAddress = useSingleQueryParam("split");
   const contract = useSplit(splitsAddress);
   const metadata = useSplitsContractMetadata(splitsAddress);
-  const { loading, balances, noBalance, distributeFunds, distributeLoading } =
-    useSplitsBalanceAndDistribute(splitsAddress);
+  const {
+    loading,
+    balances,
+    distributeFunds,
+    distributeLoading,
+    numTransactions,
+  } = useSplitsBalanceAndDistribute(splitsAddress);
   const data = useSplitsData(splitsAddress);
 
   const { Track } = useTrack({
@@ -48,12 +53,17 @@ const SplitsPage: ConsolePage = () => {
         contract={contract}
         metadata={metadata}
         data={data}
-        primaryAction={() => (
-          <DistributeButton
-            isLoading={distributeLoading}
-            distributeFunds={distributeFunds}
-          />
-        )}
+        primaryAction={
+          numTransactions > 0
+            ? () => (
+                <DistributeButton
+                  isLoading={distributeLoading}
+                  distributeFunds={distributeFunds}
+                  transactions={numTransactions}
+                />
+              )
+            : undefined
+        }
       >
         <Stack spacing={3}>
           {address && (
@@ -63,9 +73,7 @@ const SplitsPage: ConsolePage = () => {
               </Text>
               <Text mb="12px">
                 This section displays your split of the funds in this contract.
-                {!loading &&
-                  noBalance &&
-                  " There are currently no funds in the contract yet to distribute."}
+                This contract can hold funds in the native token or any ERC20.
               </Text>
               {loading ? (
                 <Stack align="center">
