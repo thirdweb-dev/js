@@ -1,5 +1,6 @@
 import { Box, Grid, Heading, Stack, Text } from "@chakra-ui/layout";
 import { ChakraNextImage } from "components/Image";
+import { StaticImageData } from "next/image";
 import AvalanchePng from "public/assets/chain-icons/avalanche.png";
 import EthereumPng from "public/assets/chain-icons/ethereum.png";
 import FantomPng from "public/assets/chain-icons/fantom.png";

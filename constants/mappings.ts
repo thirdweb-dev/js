@@ -12,6 +12,7 @@ import {
   Vote,
 } from "@thirdweb-dev/sdk";
 import * as CSS from "csstype";
+import { StaticImageData } from "next/image";
 import { ValueOf } from "utils/network";
 
 export const FeatureIconMap: Record<ContractType, StaticImageData> = {

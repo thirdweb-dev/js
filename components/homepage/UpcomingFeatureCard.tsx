@@ -1,5 +1,6 @@
 import { Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
+import { StaticImageData } from "next/image";
 import AdvancedNftsPng from "public/assets/tw-icons/advanced-nfts.png";
 import UpcomingAnalyticsPng from "public/assets/tw-icons/analytics.png";
 import DataPng from "public/assets/tw-icons/data.png";
