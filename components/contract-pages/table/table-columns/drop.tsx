@@ -1,7 +1,7 @@
 import { ActionsCell } from "./actions/ActionsCell";
-import { Code, Image } from "@chakra-ui/react";
+import { MediaCell } from "./cells/media-cell";
+import { Code } from "@chakra-ui/react";
 import { NFTMetadataOwner } from "@thirdweb-dev/sdk";
-import { RenderMedia } from "components/shared/RenderMedia";
 import { AddressCopyButton } from "components/web3/AddressCopyButton";
 import React from "react";
 import { Cell, Column } from "react-table";
@@ -13,18 +13,9 @@ export function generateDropTableColumns() {
       accessor: (row) => row.metadata.id.toString(),
     },
     {
-      Header: "Image",
-      accessor: (row) => row.metadata.image,
-      Cell: ({ cell: { value } }: { cell: { value?: string } }) =>
-        value ? (
-          <Image
-            flexShrink={0}
-            boxSize={24}
-            objectFit="contain"
-            src={value}
-            alt=""
-          />
-        ) : null,
+      Header: "Media",
+      accessor: (row) => row.metadata,
+      Cell: MediaCell,
     },
     { Header: "Name", accessor: (row) => row.metadata.name },
     {
@@ -45,14 +36,6 @@ export function generateDropTableColumns() {
       Cell: ({ cell }: { cell: Cell<NFTMetadataOwner, string> }) => (
         <AddressCopyButton address={cell.value} />
       ),
-    },
-    {
-      Header: "Media File",
-      accessor: (row) => ({
-        animationUrl: (row.metadata as any).animation_url,
-        externalUrl: (row.metadata as any).external_url,
-      }),
-      Cell: ({ cell }: { cell: any }) => <RenderMedia {...cell.value} />,
     },
     {
       Header: "Actions",

@@ -19,7 +19,6 @@ import {
   SimpleGrid,
   Text,
   Textarea,
-  Tooltip,
   useToast,
 } from "@chakra-ui/react";
 import { AddressZero } from "@ethersproject/constants";

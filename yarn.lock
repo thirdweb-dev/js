@@ -1685,11 +1685,15 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.1.2.tgz#9804c5f1b89ae68b46b24f6572ec3a4dd416f61d"
   integrity sha512-W1TLhMrnPUJQFuSy9Ukshei8i2dD46NsZ5Yj7yp1StNZGzjz6pd5q/g01OonBmJRbGCkEkpUi9s/opVoewTpJg==
 
-"@thirdweb-dev/react@^2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.0.1.tgz#06bf97c7635acbb4ad291682f6b59033887fbe46"
-  integrity sha512-+hSspH+O9Lm/idLwDOlgwKtX/1Gn/MznbYzTb/lMZ6x8YuEsK1vF17U3iZ2BBfqXYa3HN1gzOVL+Ak2hatm0yQ==
+"@thirdweb-dev/react@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.0.2.tgz#e747f0628edb87b73ace808cf07b44af81347faa"
+  integrity sha512-K+HhZnA9wSIOxWRQqD93rpvyhAyWGcHrSgYTDDjmkXzzCC2NwpMdEFdDqQjWBzXW0TibolskjJqPUMWAPoX+AQ==
   dependencies:
+    mime "^3.0.0"
+    react-cool-dimensions "^2.0.7"
+    react-icons "^4.3.1"
+    swr "^1.2.2"
     tiny-invariant "^1.2.0"
     wagmi "^0.2.12"
 
@@ -6012,6 +6016,11 @@ mime@1.6.0:
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.6.0.tgz#32cd9e5c64553bd58d19a568af452acff04981b1"
   integrity sha512-x0Vn8spI+wuJ1O6S7gnbaQg8Pxh4NNHb7KSINmEWKiPE4RKOplvijn+NkmYmmRgP68mc70j2EbeTFRsrswaQeg==
 
+mime@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-3.0.0.tgz#b374550dca3a0c18443b0c950a6a58f1931cf7a7"
+  integrity sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==
+
 mimic-fn@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/mimic-fn/-/mimic-fn-2.1.0.tgz#7ed2c2ccccaf84d3ffcb7a69b57711fc2083401b"
@@ -7002,7 +7011,7 @@ react-hook-form@^7.19.5:
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.28.1.tgz#95fc37be6c6b9d57212eb7eca055fb36d079b3b7"
   integrity sha512-mgwxvXuvt3FMY/mdnWbPc++Zf1U5xYzkhOaL05mtFMLvXc9MvUhMUlKtUVuO12sOrgT3nPXBgVFawtiJ4ONrgg==
 
-react-icons@^4.2.0:
+react-icons@^4.2.0, react-icons@^4.3.1:
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.3.1.tgz#2fa92aebbbc71f43d2db2ed1aed07361124e91ca"
   integrity sha512-cB10MXLTs3gVuXimblAdI71jrJx8njrJZmNMEMC+sQu5B/BIOmlsAjskdqpn81y8UBVEGuHODd7/ci5DvoSzTQ==
@@ -7743,6 +7752,11 @@ swarm-js@^0.1.40:
     setimmediate "^1.0.5"
     tar "^4.0.2"
     xhr-request "^1.0.1"
+
+swr@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/swr/-/swr-1.2.2.tgz#6cae09928d30593a7980d80f85823e57468fac5d"
+  integrity sha512-ky0BskS/V47GpW8d6RU7CPsr6J8cr7mQD6+do5eky3bM0IyJaoi3vO8UhvrzJaObuTlGhPl2szodeB2dUd76Xw==
 
 tapable@^1.0.0:
   version "1.1.3"

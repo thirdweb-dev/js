@@ -1,5 +1,6 @@
 import { MarketplaceActionsCell } from "./actions/MarketplaceActionsCell";
-import { Image, Text } from "@chakra-ui/react";
+import { MediaCell } from "./cells/media-cell";
+import { Text } from "@chakra-ui/react";
 import { AuctionListing, DirectListing, ListingType } from "@thirdweb-dev/sdk";
 import { AddressCopyButton } from "components/web3/AddressCopyButton";
 import React from "react";
@@ -14,22 +15,9 @@ export function generateMarketplaceTableColumns() {
       accessor: (row) => row.id,
     },
     {
-      Header: "Image",
-      accessor: (row) =>
-        row.asset?.image?.replace(
-          "ipfs://",
-          "https://cloudflare-ipfs.com/ipfs/",
-        ),
-      Cell: ({ cell: { value } }: { cell: { value?: string } }) =>
-        value ? (
-          <Image
-            flexShrink={0}
-            boxSize={24}
-            objectFit="contain"
-            src={value}
-            alt=""
-          />
-        ) : null,
+      Header: "Media",
+      accessor: (row) => row.asset,
+      Cell: MediaCell,
     },
     { Header: "Name", accessor: (row) => row.asset?.name },
     {
