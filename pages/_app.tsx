@@ -74,6 +74,13 @@ function ConsoleApp({ Component, pageProps }: ConsoleAppProps) {
           :root {
             ${fontsizeCss};
           }
+          #walletconnect-wrapper {
+            color: #000;
+          }
+          .walletconnect-search__input::placeholder {
+            color: inherit;
+            opacity: 0.7;
+          }
         `}
       />
       <DefaultSeo
