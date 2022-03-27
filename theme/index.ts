@@ -30,6 +30,9 @@ const chakraTheme: Theme = extendTheme(
           fontFeatureSettings: `'zero' 1`,
           scrollBehavior: "smooth",
         },
+        body: {
+          colorScheme: "dark",
+        },
         "::selection": {
           backgroundColor: "#90cdf4",
           color: "#fefefe",

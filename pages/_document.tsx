@@ -27,7 +27,7 @@ class ConsoleDocument extends Document {
           ></link>
           <script>global = globalThis;</script>
         </Head>
-        <body>
+        <body id="tw-body-root">
           <ColorModeScript
             initialColorMode={chakraTheme.config.initialColorMode}
           />

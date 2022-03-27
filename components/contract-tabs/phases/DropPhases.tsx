@@ -1,4 +1,3 @@
-import DatePicker from "../settings/shared/DatePicker";
 import { SnapshotUpload } from "../settings/shared/SnapshotUpload";
 import { AdminOnly } from "@3rdweb-sdk/react";
 import {
@@ -43,6 +42,7 @@ import React, { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { BsCircleFill } from "react-icons/bs";
 import { FiPlus, FiTrash, FiUpload } from "react-icons/fi";
+import { toDateTimeLocal } from "utils/date-utils";
 import { parseErrorToMessage } from "utils/errorParser";
 import * as z from "zod";
 import { ZodError } from "zod";
@@ -283,10 +283,14 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                         <Heading as={FormLabel} size="label.md">
                           When will this phase start?
                         </Heading>
-                        <DatePicker
-                          selectedDate={field.startTime}
-                          onChange={(date) =>
-                            form.setValue(`phases.${index}.startTime`, date)
+                        <Input
+                          type="datetime-local"
+                          value={toDateTimeLocal(field.startTime)}
+                          onChange={(e) =>
+                            form.setValue(
+                              `phases.${index}.startTime`,
+                              new Date(e.target.value),
+                            )
                           }
                         />
                         <FormErrorMessage>

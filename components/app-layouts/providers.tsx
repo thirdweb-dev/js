@@ -2,6 +2,7 @@ import { useActiveChainId } from "@3rdweb-sdk/react";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 import { IpfsStorage } from "@thirdweb-dev/sdk";
 import { BigNumber } from "ethers";
+import { useNativeColorMode } from "hooks/useNativeColorMode";
 import React, { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { createWebStoragePersistor } from "react-query/createWebStoragePersistor-experimental";
@@ -50,6 +51,7 @@ export const alchemyUrlMap: Record<SUPPORTED_CHAIN_ID, string> = {
 };
 
 export const Providers: React.FC = ({ children }) => {
+  useNativeColorMode();
   useEffect(() => {
     persistQueryClient({
       queryClient,
