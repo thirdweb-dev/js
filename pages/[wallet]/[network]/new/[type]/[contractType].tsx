@@ -709,7 +709,6 @@ const ContractDeployForm = <TContract extends ValidContractClass>({
           transactionCount={1}
           isDisabled={
             !Object.keys(formState.touchedFields).length ||
-            !BigNumber.from(balance?.data?.value || 0)?.gt(0) ||
             TYPE_CONTRACT_MAP[type as keyof typeof TYPE_CONTRACT_MAP].find(
               (c) => c.contractType === contractType,
             )?.comingSoon
