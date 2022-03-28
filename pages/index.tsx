@@ -39,7 +39,7 @@ const Home: ConsolePage = () => {
   return (
     <LightMode>
       <Track>
-        <Flex justify="center" flexDir="column" as="main">
+        <Flex justify="center" flexDir="column" as="main" bg="#fff">
           <HomepageTopNav />
           <HomepageSection
             id="home"

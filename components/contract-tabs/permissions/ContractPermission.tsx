@@ -53,7 +53,7 @@ export const ContractPermission: React.FC<IContractPermission> = ({
             </Stack>
 
             {role === "transfer" && (
-              <Flex align="center" justify="center" flexGrow="0" flexShrink={0}>
+              <Flex align="center" justify="center" flexGrow={0} flexShrink={0}>
                 {isLoading || isSubmitting ? (
                   <Flex align="center" gap={2} px={2}>
                     <Spinner size="sm" />
@@ -88,7 +88,7 @@ export const ContractPermission: React.FC<IContractPermission> = ({
             )}
 
             {role === "lister" && (
-              <Flex align="center" justify="center" flexGrow="0" flexShrink={0}>
+              <Flex align="center" justify="center" flexGrow={0} flexShrink={0}>
                 {isLoading || isSubmitting ? (
                   <Flex align="center" gap={2} px={2}>
                     <Spinner size="sm" />
@@ -123,7 +123,7 @@ export const ContractPermission: React.FC<IContractPermission> = ({
             )}
 
             {role === "asset" && (
-              <Flex align="center" justify="center" flexGrow="0" flexShrink={0}>
+              <Flex align="center" justify="center" flexGrow={0} flexShrink={0}>
                 {isLoading || isSubmitting ? (
                   <Flex align="center" gap={2} px={2}>
                     <Spinner size="sm" />
