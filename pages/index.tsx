@@ -35,7 +35,7 @@ import { FeaturesBackground } from "components/svgs/FeaturesBackground";
 import { useTrack } from "hooks/analytics/useTrack";
 // images
 import Octopus from "public/assets/landingpage/octopus.png";
-import Shape from "public/assets/landingpage/shape.png";
+import Scissors from "public/assets/landingpage/scissors.png";
 // end images
 import React from "react";
 import { FiCheck } from "react-icons/fi";
@@ -252,11 +252,11 @@ const Home: ConsolePage = () => {
             <Flex justifyContent="center" alignItems="center">
               <ChakraNextImage
                 alt=""
-                maxW={96}
-                w={96}
+                maxW={52}
+                w={52}
                 display={{ base: "none", md: "block" }}
                 placeholder="empty"
-                src={Shape}
+                src={Scissors}
               />
             </Flex>
           </HomepageSection>
