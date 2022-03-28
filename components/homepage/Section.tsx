@@ -24,6 +24,7 @@ interface IHomepageSection {
     MainActionButton: JSX.Element;
     forceBelow?: boolean;
   };
+  leftAlignedTitle?: boolean;
   childrenOnRightSide?: true;
   hero?: true;
   subtitleMd?: boolean;
@@ -49,6 +50,7 @@ export const HomepageSection: React.FC<IHomepageSection> = ({
   topGradient,
   id,
   mainAction,
+  leftAlignedTitle,
   hero,
   subtitleMd,
   titleSm,
@@ -107,7 +109,11 @@ export const HomepageSection: React.FC<IHomepageSection> = ({
                     MainActionButton && !childrenOnRightSide ? "50%" : "100%",
                   ]}
                   color={isDark ? "#F2FBFF" : "#262A36"}
-                  textAlign={MainActionButton && !isMobile ? "left" : "center"}
+                  textAlign={
+                    (MainActionButton && !isMobile) || leftAlignedTitle
+                      ? "left"
+                      : "center"
+                  }
                   size={
                     hero ? "display.lg" : titleSm ? "display.sm" : "display.md"
                   }

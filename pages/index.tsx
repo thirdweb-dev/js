@@ -4,8 +4,12 @@ import {
   Container,
   Flex,
   LightMode,
+  List,
+  ListIcon,
+  ListItem,
   SimpleGrid,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 import {
   Marketplace,
@@ -31,8 +35,10 @@ import { FeaturesBackground } from "components/svgs/FeaturesBackground";
 import { useTrack } from "hooks/analytics/useTrack";
 // images
 import Octopus from "public/assets/landingpage/octopus.png";
+import Shape from "public/assets/landingpage/shape.png";
 // end images
 import React from "react";
+import { FiCheck } from "react-icons/fi";
 
 const Home: ConsolePage = () => {
   const { Track } = useTrack({ page: "home" });
@@ -200,6 +206,59 @@ const Home: ConsolePage = () => {
               <UpcomingFeature type="advanced_nfts" />
               <UpcomingFeature type="data" />
             </SimpleGrid>
+          </HomepageSection>
+
+          <HomepageSection
+            id="fees"
+            title="Free to use"
+            leftAlignedTitle
+            subtitle={
+              <>
+                <List
+                  spacing={3}
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="start"
+                  textAlign="left"
+                >
+                  <ListItem>
+                    <ListIcon as={FiCheck} color="green.500" />
+                    We take zero fees on any smart contracts deployed
+                  </ListItem>
+                  <ListItem>
+                    <ListIcon as={FiCheck} color="green.500" />
+                    You keep 100% of the money you make
+                  </ListItem>
+                  <ListItem>
+                    <ListIcon as={FiCheck} color="green.500" />
+                    Gain access to fresh features each month{" "}
+                  </ListItem>
+                  <ListItem>
+                    <ListIcon as={FiCheck} color="green.500" />
+                    Only pay blockchain-specific gas fees
+                  </ListItem>
+                </List>
+                <Text mt={4} textAlign="left">
+                  In the future, we will introduce advanced features which you
+                  can decide to pay for. We&apos;ll always be clear and
+                  transparent with how much these features will cost.
+                </Text>
+              </>
+            }
+            titleSm
+            subtitleMd
+            childrenOnRightSide
+          >
+            <Flex justifyContent="center" alignItems="center">
+              <ChakraNextImage
+                alt=""
+                maxW={96}
+                w={96}
+                display={{ base: "none", md: "block" }}
+                placeholder="empty"
+                src={Shape}
+              />
+            </Flex>
           </HomepageSection>
 
           <HomepageFooter />
