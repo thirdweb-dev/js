@@ -252,8 +252,8 @@ const Home: ConsolePage = () => {
             <Flex justifyContent="center" alignItems="center">
               <ChakraNextImage
                 alt=""
-                maxW={52}
-                w={52}
+                maxW={64}
+                w={64}
                 display={{ base: "none", md: "block" }}
                 placeholder="empty"
                 src={Scissors}
