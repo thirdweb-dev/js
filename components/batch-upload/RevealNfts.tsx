@@ -13,7 +13,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { BatchToReveal, NFTDrop } from "@thirdweb-dev/sdk";
-import { Button } from "components/buttons/Button";
+import { TransactionButton } from "components/buttons/TransactionButton";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { parseErrorToMessage } from "utils/errorParser";
@@ -94,15 +94,17 @@ export const RevealNftsModal: React.FC<RevealNftsModalProps> = ({
         </ModalBody>
 
         <ModalFooter>
-          <Button
+          <TransactionButton
             mt={4}
             size="md"
-            colorScheme="blue"
-            isLoading={reveal.isLoading}
+            colorScheme="primary"
+            transactionCount={1}
             type="submit"
+            isLoading={reveal.isLoading}
+            loadingText="Revealing NFTs..."
           >
-            Reveal
-          </Button>
+            Reveal NFTs
+          </TransactionButton>
         </ModalFooter>
       </ModalContent>
     </Modal>

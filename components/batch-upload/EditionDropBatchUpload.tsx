@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { EditionDrop } from "@thirdweb-dev/sdk";
 import { Button } from "components/buttons/Button";
+import { TransactionButton } from "components/buttons/TransactionButton";
 import { Logo } from "components/logo";
 import Papa from "papaparse";
 import { useCallback, useRef, useState } from "react";
@@ -152,6 +153,7 @@ export const EditionDropBatchUpload: React.FC<EditionDropBatchUploadProps> = ({
                 <Box ref={paginationPortalRef} />
                 <Flex gap={2} align="center">
                   <Button
+                    borderRadius="md"
                     size="md"
                     isDisabled={mintBatch.isLoading}
                     onClick={() => {
@@ -160,17 +162,18 @@ export const EditionDropBatchUpload: React.FC<EditionDropBatchUploadProps> = ({
                   >
                     Reset
                   </Button>
-                  <Button
-                    isLoading={mintBatch.isLoading}
-                    size="lg"
+                  <TransactionButton
+                    colorScheme="primary"
+                    transactionCount={1}
                     isDisabled={!mergedData.length}
-                    colorScheme="blue"
+                    isLoading={mintBatch.isLoading}
+                    loadingText={`Uploading ${mergedData.length} NFTs...`}
                     onClick={() => {
                       mintBatch.mutate(mergedData, { onSuccess: _onClose });
                     }}
                   >
                     Upload {mergedData.length} NFTs
-                  </Button>
+                  </TransactionButton>
                 </Flex>
               </Flex>
             </Container>

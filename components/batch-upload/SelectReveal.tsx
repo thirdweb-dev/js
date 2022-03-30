@@ -24,7 +24,7 @@ import {
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NFTDrop, NFTMetadataInput } from "@thirdweb-dev/sdk";
-import { Button } from "components/buttons/Button";
+import { TransactionButton } from "components/buttons/TransactionButton";
 import { Card } from "components/layout/Card";
 import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
@@ -190,12 +190,15 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
               You&apos;re ready to go! Now you can upload the files, we will be
               uploading each file to IPFS so it might take a while.
             </Text>
-            <Button
+            <TransactionButton
               mt={4}
               size="lg"
-              colorScheme="blue"
-              isLoading={mintBatch.isLoading}
+              colorScheme="primary"
+              transactionCount={1}
               isDisabled={!mergedData.length}
+              type="submit"
+              isLoading={mintBatch.isLoading}
+              loadingText={`Uploading ${mergedData.length} NFTs...`}
               onClick={() => {
                 mintBatch.mutate(mergedData, {
                   onSuccess: onClose,
@@ -203,7 +206,7 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
               }}
             >
               Upload {mergedData.length} NFTs
-            </Button>
+            </TransactionButton>
           </Flex>
         ) : selectedReveal === "delayed" ? (
           <Stack spacing={6} as="form" onSubmit={handleSubmit(onSubmit)}>
@@ -289,16 +292,18 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
                   {errors?.description?.message}
                 </FormErrorMessage>
               </FormControl>
-              <Button
+              <TransactionButton
                 mt={4}
                 size="lg"
-                colorScheme="blue"
+                colorScheme="primary"
+                transactionCount={1}
+                isDisabled={!mergedData.length}
                 type="submit"
                 isLoading={mintDelayedRevealBatch.isLoading}
-                isDisabled={!mergedData.length}
+                loadingText={`Uploading ${mergedData.length} NFTs...`}
               >
                 Upload {mergedData.length} NFTs
-              </Button>
+              </TransactionButton>
             </Stack>
           </Stack>
         ) : null}

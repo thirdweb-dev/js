@@ -153,7 +153,7 @@ export const NftDropBatchUpload: React.FC<NftDropBatchUploadProps> = ({
                           <Box ref={paginationPortalRef} />
                           <Flex gap={2} align="center">
                             <Button
-                              size="md"
+                              borderRadius="md"
                               isDisabled={!csvData && !jsonData}
                               onClick={() => {
                                 reset();
@@ -162,8 +162,8 @@ export const NftDropBatchUpload: React.FC<NftDropBatchUploadProps> = ({
                               Reset
                             </Button>
                             <Button
-                              size="lg"
-                              colorScheme="blue"
+                              borderRadius="md"
+                              colorScheme="primary"
                               isDisabled={!csvData && !jsonData}
                               onClick={() => setStep(1)}
                             >
