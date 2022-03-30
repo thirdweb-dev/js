@@ -47,7 +47,7 @@ export const ContractPermission: React.FC<IContractPermission> = ({
           <Flex>
             <Stack spacing={1} flexGrow={1}>
               <Heading size="heading.sm" textTransform="capitalize">
-                {role}
+                {role === "minter" ? "Creator" : role}
               </Heading>
               <Text>{description}</Text>
             </Stack>
