@@ -35,15 +35,17 @@ const GasPage: ConsolePage = () => {
   return (
     <Track>
       <NextSeo
-        title="Gas Estimator"
-        description="Estimate the cost on deploying contracts or doing common operations on thirdweb on the Ethereum network."
+        title="Blockchain Gas Estimator"
+        description="Estimate the cost of gas fees when deploying contracts or performing common use cases to the blockchain on thirdweb."
         openGraph={{
-          title: "Gas Estimator | thirdweb",
+          title: "Blockchain Gas Estimator | thirdweb",
           url: `https://thirdweb.com/gas`,
         }}
       />
       <Flex mb={4}>
-        <Heading mr={3}>Gas Estimator</Heading>
+        <Heading mr={3} as="h1">
+          Gas Estimator
+        </Heading>
         <Flex justifyContent="center" alignItems="center">
           <Badge
             size="lg"

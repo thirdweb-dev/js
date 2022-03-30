@@ -15,6 +15,7 @@ import {
   GasPrice,
 } from "constants/mappings";
 import { ethers } from "ethers";
+import { useTrack } from "hooks/analytics/useTrack";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { FiExternalLink } from "react-icons/fi";
 
@@ -67,6 +68,7 @@ export const GasEstimatorBox: React.FC<GasEstimatorBoxProps> = ({
     claim,
     distributeFunds,
   }: GasPrice = GasEstimatorMap[contractType];
+  const { trackEvent } = useTrack();
 
   const formatPrice = (price: number | undefined) => {
     if (price && ethOrUsd === "eth") {
@@ -92,6 +94,14 @@ export const GasEstimatorBox: React.FC<GasEstimatorBoxProps> = ({
     <Box p={6} border="1px solid" borderColor="borderColor" {...props}>
       <NextLink
         href={`https://portal.thirdweb.com/contracts/${contractType}`}
+        onClick={() =>
+          trackEvent({
+            category: "gas-estimator",
+            action: "click",
+            label: "portal-link",
+            contractType,
+          })
+        }
         isExternal
       >
         <Heading size="title.sm" mb={1} mr={1} as={Flex} alignItems="center">
