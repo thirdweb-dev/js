@@ -62,7 +62,11 @@ export const EditionDropBatchUpload: React.FC<EditionDropBatchUploadProps> = ({
 
   const onReaderLoad = (event: any) => {
     const obj = JSON.parse(event.target.result);
-    setJsonData(obj);
+    if (obj.length > 0) {
+      setJsonData(obj);
+    } else {
+      setNoFile(true);
+    }
   };
 
   const onDrop = useCallback<Required<DropzoneOptions>["onDrop"]>(

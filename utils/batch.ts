@@ -104,14 +104,17 @@ export const useMergedData = (
           animation_url: videoFiles[index] || animation_url || undefined,
         });
       });
-    } else if (jsonData) {
+    } else if (Array.isArray(jsonData)) {
       return jsonData.map((nft: any, index: number) => ({
         ...nft,
         properties: (nft?.attributes || nft?.properties || []).map(
           (attribute: any) => ({
             key: attribute.key || attribute.trait_type,
-            value:
-              attribute.value.trim() === "None" ? "" : attribute.value.trim(),
+            value: attribute.value
+              ? attribute.value.trim() === "None"
+                ? ""
+                : attribute.value.trim()
+              : "",
           }),
         ),
         image: imageFiles[index] || nft.image || nft.file_url || undefined,

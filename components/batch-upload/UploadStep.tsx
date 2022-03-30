@@ -36,7 +36,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
               borderRadius="md"
               {...getRootProps()}
               cursor="pointer"
-              bg="inputBg"
+              bg={noFile ? "red.200" : "inputBg"}
               _hover={{
                 bg: "inputBgHover",
                 borderColor: "blue.500",
@@ -59,7 +59,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
                 ) : (
                   <Heading as={Text} size="label.md" color="gray.600">
                     {noFile
-                      ? "No CSV or JSON file found, please try again"
+                      ? "No CSV or valid JSON file found, please try again"
                       : "Drag & Drop files or folders here, or click to select files"}
                   </Heading>
                 )}
