@@ -21,18 +21,27 @@ import { AppLayout } from "components/app-layouts/app";
 import { GasEstimatorBox } from "components/gas-estimator/GasEstimatorBox";
 import { Card } from "components/layout/Card";
 import { useTrack } from "hooks/analytics/useTrack";
+import { NextSeo } from "next-seo";
 import { ConsolePage } from "pages/_app";
 import { useState } from "react";
 
 const GasPage: ConsolePage = () => {
   const [ethOrUsd, setEthOrUsd] = useState<"eth" | "usd">("eth");
   const { data } = useGas();
-  const { Track } = useTrack({
+  const { Track, trackEvent } = useTrack({
     page: "gas-estimator",
   });
 
   return (
     <Track>
+      <NextSeo
+        title="Gas Estimator"
+        description="Estimate the cost on deploying contracts or doing common operations on thirdweb on the Ethereum network."
+        openGraph={{
+          title: "Gas Estimator | thirdweb",
+          url: `https://thirdweb.com/gas`,
+        }}
+      />
       <Flex mb={4}>
         <Heading mr={3}>Gas Estimator</Heading>
         <Flex justifyContent="center" alignItems="center">
@@ -49,7 +58,14 @@ const GasPage: ConsolePage = () => {
           <Heading size="subtitle.sm">ETH</Heading>
           <Switch
             mx={1.5}
-            onChange={() => setEthOrUsd(ethOrUsd === "eth" ? "usd" : "eth")}
+            onChange={() => {
+              setEthOrUsd(ethOrUsd === "eth" ? "usd" : "eth");
+              trackEvent({
+                category: "gas-estimator",
+                action: "click",
+                label: "switch-currency",
+              });
+            }}
           />
           <Heading size="subtitle.sm">USD</Heading>
         </Flex>
