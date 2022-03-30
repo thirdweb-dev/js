@@ -89,6 +89,7 @@ export const HomepageTopNav: React.FC<{}> = () => {
               color="inherit"
               fontWeight="inherit"
               textDecoration={undefined}
+              isExternal
             >
               Guides
             </NextLink>

@@ -25,6 +25,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import React from "react";
+import { RiGasStationFill } from "react-icons/ri";
 import { SiDiscord, SiGithub, SiTwitter } from "react-icons/si";
 
 export const AppShell: React.FC = ({ children }) => {
@@ -139,6 +140,22 @@ export const AppShell: React.FC = ({ children }) => {
                       category: "header",
                       action: "click",
                       label: "github",
+                    })
+                  }
+                />
+
+                <IconButton
+                  as={LinkButton}
+                  noIcon
+                  href="/gas"
+                  bg="transparent"
+                  aria-label="gas-estimator"
+                  icon={<Icon boxSize="1rem" as={RiGasStationFill} />}
+                  onClick={() =>
+                    trackEvent({
+                      category: "header",
+                      action: "click",
+                      label: "gas-estimator",
                     })
                   }
                 />
