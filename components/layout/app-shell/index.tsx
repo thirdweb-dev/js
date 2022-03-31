@@ -1,5 +1,4 @@
 import { Breadcrumbs } from "./Breadcrumbs";
-import { FeedbackModal } from "./FeedbackModal";
 import { ConnectWallet } from "@3rdweb-sdk/react";
 import {
   Box,
@@ -9,10 +8,8 @@ import {
   Flex,
   Icon,
   IconButton,
-  Link,
   Stack,
   Text,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { EarlyAccessBanner } from "components/banners/early-access";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
@@ -31,7 +28,6 @@ import { SiDiscord, SiGithub, SiTwitter } from "react-icons/si";
 export const AppShell: React.FC = ({ children }) => {
   const { pathname } = useRouter();
   const { trackEvent } = useTrack();
-  const feedback = useDisclosure();
 
   return (
     <Flex
@@ -177,19 +173,26 @@ export const AppShell: React.FC = ({ children }) => {
               <Text alignSelf="center" fontSize="sm">
                 thirdweb &copy; {new Date().getFullYear()}
               </Text>
-              <Link
-                onClick={feedback.onOpen}
+              <NextLink
+                href="https://feedback.thirdweb.com"
+                isExternal
                 variant="link"
                 color="inherit"
                 fontWeight="inherit"
                 textDecoration={undefined}
+                onClick={() =>
+                  trackEvent({
+                    category: "footer",
+                    action: "click",
+                    label: "feedback",
+                  })
+                }
               >
                 Feedback
-              </Link>
+              </NextLink>
             </Stack>
           </Stack>
         </Container>
-        <FeedbackModal isOpen={feedback.isOpen} onClose={feedback.onClose} />
         {pathname !== "/dashboard" && (
           <>
             <NetworkMismatchNotice />
