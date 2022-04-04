@@ -248,8 +248,8 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                   onClose={() => setOpenIndex(-1)}
                   value={field.snapshot?.map((v) =>
                     typeof v === "string"
-                      ? { address: v, maxClaimable: 0 }
-                      : { ...v, maxClaimable: 0 },
+                      ? { address: v, maxClaimable: "0" }
+                      : { ...v, maxClaimable: "0" },
                   )}
                   setAddresses={(addresses) =>
                     form.setValue(`phases.${index}.snapshot`, addresses)

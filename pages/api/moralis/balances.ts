@@ -1,4 +1,5 @@
 import { AddressZero } from "@ethersproject/constants";
+import { isAddress } from "ethers/lib/utils";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -7,33 +8,38 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const { chain, address } = req.body;
-  const tokenBalanceEndpoint = `https://deep-index.moralis.io/api/v2/${address}/erc20?chain=${chain}`;
-  const nativeBalanceEndpoint = `https://deep-index.moralis.io/api/v2/${address}/balance?chain=${chain}`;
+  if (!isAddress(address)) {
+    return res.status(400).json({ error: "invalid address" });
+  }
 
-  const tokenBalance = await fetch(tokenBalanceEndpoint, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": process.env.MORALIS_API_KEY || "",
-    },
-  });
+  const _chain = encodeURIComponent(chain);
+  const _address = encodeURIComponent(address);
 
-  const tokenBalances = await tokenBalance.json();
+  const tokenBalanceEndpoint = `https://deep-index.moralis.io/api/v2/${_address}/erc20?chain=${_chain}`;
+  const nativeBalanceEndpoint = `https://deep-index.moralis.io/api/v2/${_address}/balance?chain=${_chain}`;
 
-  const nativeBalance = await fetch(nativeBalanceEndpoint, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": process.env.MORALIS_API_KEY || "",
-    },
-  });
+  const [tokenBalances, nativeBalance] = await Promise.all([
+    fetch(tokenBalanceEndpoint, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.MORALIS_API_KEY || "",
+      },
+    }).then((tRes) => tRes.json()),
+    fetch(nativeBalanceEndpoint, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.MORALIS_API_KEY || "",
+      },
+    }).then((nRes) => nRes.json()),
+  ]);
 
-  const { balance } = await nativeBalance.json();
   const balances = [
     ...tokenBalances,
     {
       token_address: AddressZero,
-      balance,
+      balance: nativeBalance.balance,
     },
   ];
 

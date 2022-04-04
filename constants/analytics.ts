@@ -15,5 +15,6 @@ export class AnalyticsEvents {
     "edition-drop": "App-BundleDropContractDeployed",
     split: "App-SplitsContractDeployed",
     vote: "App-VoteContractDeployed",
+    "token-drop": "App-TokenDropContractDeployed",
   };
 }

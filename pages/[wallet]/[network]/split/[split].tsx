@@ -1,5 +1,5 @@
 import {
-  useSplitsBalanceAndDistribute,
+  useSplitsBalances,
   useSplitsContractMetadata,
   useSplitsData,
 } from "@3rdweb-sdk/react/hooks/useSplits";
@@ -21,26 +21,14 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { ConsolePage } from "pages/_app";
 
-interface IBalance {
-  address: string;
-  name: string;
-  symbol: string;
-  balance: string;
-}
-
 const SplitsPage: ConsolePage = () => {
   const address = useAddress();
   const splitsAddress = useSingleQueryParam("split");
   const contract = useSplit(splitsAddress);
   const metadata = useSplitsContractMetadata(splitsAddress);
-  const {
-    loading,
-    balances,
-    distributeFunds,
-    distributeLoading,
-    numTransactions,
-  } = useSplitsBalanceAndDistribute(splitsAddress);
   const data = useSplitsData(splitsAddress);
+
+  const balanceQuery = useSplitsBalances(splitsAddress);
 
   const { Track } = useTrack({
     page: "splits",
@@ -53,17 +41,7 @@ const SplitsPage: ConsolePage = () => {
         contract={contract}
         metadata={metadata}
         data={data}
-        primaryAction={
-          numTransactions > 0
-            ? () => (
-                <DistributeButton
-                  isLoading={distributeLoading}
-                  distributeFunds={distributeFunds}
-                  transactions={numTransactions}
-                />
-              )
-            : undefined
-        }
+        primaryAction={DistributeButton}
       >
         <Stack spacing={3}>
           {address && (
@@ -75,14 +53,18 @@ const SplitsPage: ConsolePage = () => {
                 This section displays your split of the funds in this contract.
                 This contract can hold funds in the native token or any ERC20.
               </Text>
-              {loading ? (
+              {balanceQuery.isLoading ? (
                 <Stack align="center">
                   <Spinner mb="12px" />
                 </Stack>
               ) : (
                 <Stack direction="row">
-                  {balances?.map((balance: IBalance) => (
-                    <Card as={Stat} key={balance.address} maxWidth="240px">
+                  {balanceQuery.data?.map((balance) => (
+                    <Card
+                      as={Stat}
+                      key={balance.token_address}
+                      maxWidth="240px"
+                    >
                       <StatLabel>{balance.symbol}</StatLabel>
                       <StatNumber>{balance.balance}</StatNumber>
                     </Card>

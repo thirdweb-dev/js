@@ -9,6 +9,7 @@ import {
   Role,
   Split,
   Token,
+  TokenDrop,
   Vote,
 } from "@thirdweb-dev/sdk";
 import * as CSS from "csstype";
@@ -25,6 +26,7 @@ export const FeatureIconMap: Record<ContractType, StaticImageData> = {
   [Marketplace.contractType]: require("public/assets/tw-icons/marketplace.png"),
   [Pack.contractType]: require("public/assets/tw-icons/pack.png"),
   [Split.contractType]: require("public/assets/tw-icons/splits.png"),
+  [TokenDrop.contractType]: require("public/assets/tw-icons/token.png"),
 };
 
 export const UrlMap: Record<ContractType, string> = {
@@ -37,6 +39,7 @@ export const UrlMap: Record<ContractType, string> = {
   [Marketplace.contractType]: "marketplace",
   [Pack.contractType]: "pack",
   [Split.contractType]: "split",
+  [TokenDrop.contractType]: "token-drop",
 };
 
 interface FeatureCard {
@@ -135,6 +138,12 @@ export const FeatureCardMap: Record<ContractType, FeatureCard> = {
     icon: FeatureIconMap[Vote.contractType],
     bg: "#400B31",
   },
+  [TokenDrop.contractType]: {
+    title: "NOT IMPLEMENTED",
+    description: "NOT IMPLEMENTED",
+    icon: FeatureIconMap[TokenDrop.contractType],
+    bg: "#400B31",
+  },
 };
 
 export interface GasPrice {
@@ -183,6 +192,9 @@ export const GasEstimatorMap: Record<ContractType, GasPrice> = {
   [Vote.contractType]: {
     deployContract: 454740,
   },
+  [TokenDrop.contractType]: {
+    deployContract: 0,
+  },
 };
 
 interface ContractDeploy {
@@ -196,6 +208,7 @@ export const CONTRACT_TYPE_NAME_MAP = {
   // drop
   [NFTDrop.contractType]: "NFT Drop" as const,
   [EditionDrop.contractType]: "Edition Drop" as const,
+  [TokenDrop.contractType]: "Token Drop" as const,
 
   // token
   [Token.contractType]: "Token" as const,

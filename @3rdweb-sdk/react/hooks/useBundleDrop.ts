@@ -29,6 +29,8 @@ export function useBundleDropResetClaimEligibilityMutation(
     const cleaned = claimConditions.map((c) => ({
       ...c,
       price: c.currencyMetadata.displayValue,
+      maxQuantity: c.maxQuantity.toString(),
+      quantityLimitPerTransaction: c.quantityLimitPerTransaction.toString(),
     }));
 
     return await contract.claimConditions.set(tokenId, cleaned, true);
