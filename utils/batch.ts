@@ -110,11 +110,12 @@ export const useMergedData = (
         properties: (nft?.attributes || nft?.properties || []).map(
           (attribute: any) => ({
             key: attribute.key || attribute.trait_type,
-            value: attribute.value
-              ? attribute.value.trim() === "None"
-                ? ""
-                : attribute.value.trim()
-              : "",
+            value:
+              typeof attribute.value === "string"
+                ? attribute.value.trim() === "None"
+                  ? ""
+                  : attribute.value.trim()
+                : attribute.value || "",
           }),
         ),
         image: imageFiles[index] || nft.image || nft.file_url || undefined,
