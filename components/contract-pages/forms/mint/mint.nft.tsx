@@ -230,7 +230,7 @@ export const NFTMintForm: React.FC<INFTMintForm> = ({ contract }) => {
                   </FormLabel>
                   <Input max="6" {...register("background_color")} />
                   <FormHelperText>
-                    Must be a six-character hexadecimal without a pre-pended #.
+                    Must be a six-character hexadecimal with a pre-pended #.
                   </FormHelperText>
                   <FormErrorMessage>
                     {errors?.background_color?.message}
