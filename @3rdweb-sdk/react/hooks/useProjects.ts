@@ -2,7 +2,6 @@ import { PROTOCOL_CONTROL_ABI } from "../abis/protocol-control";
 import { REGISTRY_ABI } from "../abis/registry";
 import { useWeb3 } from "./useWeb3";
 import { JsonRpcProvider } from "@ethersproject/providers";
-import { useSDK } from "@thirdweb-dev/react";
 import { alchemyUrlMap } from "components/app-layouts/providers";
 import { ethers } from "ethers";
 import { useQuery } from "react-query";

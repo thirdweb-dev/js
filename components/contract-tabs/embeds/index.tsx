@@ -70,32 +70,25 @@ const buildIframeSrc = (
   const { rpcUrl, ipfsGateway, chainId, tokenId, listingId, relayUrl } =
     options;
 
-  let queryParams = `?contract=${contract?.getAddress()}&chainId=${chainId}`;
+  const url = new URL(contractWidgetHash.replace("ipfs://", ipfsGateway));
+
+  url.searchParams.append("contract", contract.getAddress());
+  url.searchParams.append("chainId", chainId.toString());
+
   if (tokenId !== undefined && contract instanceof EditionDrop) {
-    queryParams += `&tokenId=${tokenId}`;
+    url.searchParams.append("tokenId", tokenId.toString());
   }
   if (listingId !== undefined && contract instanceof Marketplace) {
-    queryParams += `&listingId=${listingId}`;
+    url.searchParams.append("listingId", listingId.toString());
   }
   if (rpcUrl) {
-    queryParams += `&rpcUrl=${rpcUrl}`;
+    url.searchParams.append("rpcUrl", rpcUrl);
   }
   if (relayUrl) {
-    queryParams += `&relayUrl=${relayUrl}`;
+    url.searchParams.append("relayUrl", relayUrl);
   }
 
-  if (
-    contract instanceof NFTDrop ||
-    contract instanceof EditionDrop ||
-    contract instanceof Marketplace
-  ) {
-    return `${contractWidgetHash.replace(
-      "ipfs://",
-      ipfsGateway,
-    )}${queryParams}`;
-  }
-
-  return "";
+  return url.toString();
 };
 
 export const WidgetSetup: React.FC<WidgetSetupProps> = ({ contract }) => {
