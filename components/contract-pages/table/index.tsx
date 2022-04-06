@@ -12,6 +12,7 @@ import {
   useGetTotalCount,
 } from "@3rdweb-sdk/react/hooks/useGetAll";
 import {
+  Box,
   Center,
   CloseButton,
   Divider,
@@ -108,8 +109,12 @@ const RawContractItemsTable = <TContract extends ContractWithGetAll>({
         </HStack>
       </Center>
     );
-  } else if (BigNumber.from(totalCount.data || "0").eq(0) && emptyState) {
-    return <ContractEmptyState {...emptyState} />;
+  } else if (BigNumber.from(totalCount.data || "0").eq(0)) {
+    return (
+      <Box w="full">
+        <ContractEmptyState {...emptyState} contract={contract} />
+      </Box>
+    );
   }
 
   return (

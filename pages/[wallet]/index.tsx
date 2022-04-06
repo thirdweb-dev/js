@@ -612,7 +612,7 @@ const NoWallet: React.FC = () => {
       <Container as={Card}>
         <Stack py={7} align="center" spacing={7} w="100%">
           <ChakraNextImage
-            src={require("public/assets/illustrations/no-apps-cube.png")}
+            src={require("public/assets/illustrations/wallet.png")}
             alt="no apps"
             boxSize={20}
             maxW="200px"

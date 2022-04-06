@@ -172,7 +172,13 @@ const LazyNFTListPage: ConsolePage = () => {
             </Card>
           </Stack>
 
-          <ContractItemsTable contract={contract} />
+          <ContractItemsTable
+            contract={contract}
+            emptyState={{
+              title:
+                "You have not added any drops yet, let's add your first one to get started!",
+            }}
+          />
         </Stack>
       </ContractLayout>
     </Track>
