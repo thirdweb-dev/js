@@ -59,20 +59,13 @@ export const NftDropBatchUpload: React.FC<NftDropBatchUploadProps> = ({
     onClose();
   }, [onClose, setStep, reset]);
 
-  const onReaderLoad = (event: any) => {
-    const obj = JSON.parse(event.target.result);
-    if (obj.length > 0) {
-      setJsonData(obj);
-    } else {
-      setNoFile(true);
-    }
-  };
-
   const onDrop = useCallback<Required<DropzoneOptions>["onDrop"]>(
     async (acceptedFiles) => {
       setNoFile(false);
 
-      const { csv, json, images, videos } = getAcceptedFiles(acceptedFiles);
+      const { csv, json, images, videos } = await getAcceptedFiles(
+        acceptedFiles,
+      );
 
       if (csv) {
         Papa.parse<CSVData>(csv, {
@@ -93,10 +86,8 @@ export const NftDropBatchUpload: React.FC<NftDropBatchUploadProps> = ({
             setCSVData(validResults);
           },
         });
-      } else if (json) {
-        const reader = new FileReader();
-        reader.onload = onReaderLoad;
-        reader.readAsText(json);
+      } else if (json?.length > 0) {
+        setJsonData(json);
       } else {
         console.error("No CSV or JSON found");
         setNoFile(true);
