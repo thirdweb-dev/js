@@ -46,9 +46,10 @@ export const transformHeader = (h: string) => {
 };
 
 export const getAcceptedFiles = async (acceptedFiles: File[]) => {
-  const jsonFiles = acceptedFiles.filter(
-    (f) => jsonMimeTypes.includes(f.type) || f.name.endsWith(".json"),
-  );
+  const jsonFiles = acceptedFiles
+    .filter((f) => jsonMimeTypes.includes(f.type) || f.name.endsWith(".json"))
+    .sort((a, b) => parseInt(a.name) - parseInt(b.name));
+
   let json: File[] = [];
   if (jsonFiles.length > 1) {
     for (const f of jsonFiles) {
