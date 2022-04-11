@@ -1,9 +1,15 @@
-import { CacheKeyMap, recipientKeys, royaltyKeys } from "../cache-keys";
+import {
+  CacheKeyMap,
+  platformFeeKeys,
+  recipientKeys,
+  royaltyKeys,
+} from "../cache-keys";
 import {
   useMutationWithInvalidate,
   useQueryWithNetwork,
 } from "./query/useQueryWithNetwork";
 import {
+  CommonPlatformFeeSchema,
   CommonRoyaltySchema,
   ContractType,
   Edition,
@@ -207,6 +213,48 @@ export function useContractRoyaltyMutation<TContract extends RoyaltyContract>(
     {
       onSuccess: (_data, _variables, _options, invalidate) => {
         invalidate([royaltyKeys.detail(contract?.getAddress())]);
+      },
+    },
+  );
+}
+
+export type PlatformFeeContract =
+  | NFTCollection
+  | NFTDrop
+  | Edition
+  | EditionDrop
+  | Token
+  | Marketplace;
+
+export function hasPlatformFeeMechanic(
+  contract: ValidContractInstance,
+): contract is PlatformFeeContract {
+  return "platformFee" in contract;
+}
+
+export function useContractPlatformFee<TContract extends PlatformFeeContract>(
+  contract?: TContract,
+) {
+  return useQueryWithNetwork(
+    platformFeeKeys.detail(contract?.getAddress()),
+    () => contract?.platformFee.get(),
+    {
+      enabled: !!contract,
+    },
+  );
+}
+export function useContractPlatformFeeMutation<
+  TContract extends PlatformFeeContract,
+>(contract?: TContract) {
+  return useMutationWithInvalidate(
+    (data: z.input<typeof CommonPlatformFeeSchema>) => {
+      invariant(contract, "contract must be defined");
+
+      return contract?.platformFee.set(data);
+    },
+    {
+      onSuccess: (_data, _variables, _options, invalidate) => {
+        invalidate([platformFeeKeys.detail(contract?.getAddress())]);
       },
     },
   );

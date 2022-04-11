@@ -1,8 +1,10 @@
+import { ContractPlatformFee } from "../fees/platform-fee";
 import { ContractPrimarySale } from "../fees/primary-sale";
 import { ContractRoyalties } from "../fees/royalties";
 import { VoteConfiguration } from "../modules/vote/VoteConfiguration";
 import { ContractMetadata } from "./ContractMetadata";
 import {
+  hasPlatformFeeMechanic,
   hasPrimarySaleMechanic,
   hasRoyaltyMechanic,
   useIsAdmin,
@@ -31,6 +33,9 @@ export const ContractSettings: React.FC<IContractSettings> = ({ contract }) => {
       {/* only if the contract has a royalty mechanic */}
       {hasRoyaltyMechanic(contract) && (
         <ContractRoyalties contract={contract} isDisabled={!isAdmin} />
+      )}
+      {hasPlatformFeeMechanic(contract) && (
+        <ContractPlatformFee contract={contract} isDisabled={!isAdmin} />
       )}
       {contract instanceof Vote && <VoteConfiguration contract={contract} />}
     </Stack>

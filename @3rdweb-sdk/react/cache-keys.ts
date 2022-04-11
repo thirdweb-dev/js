@@ -218,6 +218,11 @@ export const royaltyKeys = {
     [...royaltyKeys.detail(address), tokenId] as const,
 };
 
+export const platformFeeKeys = {
+  all: ["platformFee"] as const,
+  detail: (address = AddressZero) => [...platformFeeKeys.all, address] as const,
+};
+
 // NFTs owned by wallet for wrapping
 export const assetKeys = {
   all: ["assets"] as const,
