@@ -109,7 +109,7 @@ export const useMergedData = (
           external_url,
           background_color,
           youtube_url,
-          properties: removeEmptyKeysFromObject(properties),
+          attributes: removeEmptyKeysFromObject(properties),
           image: imageFiles[index] || image || undefined,
           animation_url: videoFiles[index] || animation_url || undefined,
         });
@@ -117,17 +117,6 @@ export const useMergedData = (
     } else if (Array.isArray(jsonData)) {
       return jsonData.map((nft: any, index: number) => ({
         ...nft,
-        properties: (nft?.attributes || nft?.properties || []).map(
-          (attribute: any) => ({
-            key: attribute.key || attribute.trait_type,
-            value:
-              typeof attribute.value === "string"
-                ? attribute.value.trim() === "None"
-                  ? ""
-                  : attribute.value.trim()
-                : attribute.value || "",
-          }),
-        ),
         image: imageFiles[index] || nft.image || nft.file_url || undefined,
         animation_url: videoFiles[index] || nft.animation_url || undefined,
       }));

@@ -118,7 +118,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({ data, portalRef }) => {
       },
       {
         Header: "Properties",
-        accessor: (row) => row.properties,
+        accessor: (row) => row.attributes || row.properties,
         Cell: ({ cell }: { cell: any }) => (
           <Code whiteSpace="pre">{JSON.stringify(cell.value, null, 2)}</Code>
         ),

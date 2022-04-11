@@ -24,7 +24,7 @@ export function generateDropTableColumns() {
     },
     {
       Header: "Properties",
-      accessor: (row) => row.metadata.properties,
+      accessor: (row) => row.metadata.attributes || row.metadata.properties,
       Cell: ({ cell }: { cell: any }) => (
         <Code whiteSpace="pre">{JSON.stringify(cell.value, null, 2)}</Code>
       ),
