@@ -172,7 +172,7 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
       <HStack spacing={6} mb={6}>
         <SelectRevealOption
           name="Reveal upon mint"
-          description="Collectors will inmediately see the final NFT when they complete the minting"
+          description="Collectors will immediately see the final NFT when they complete the minting"
           isActive={selectedReveal === "instant"}
           onClick={() => setSelectedReveal("instant")}
         />
