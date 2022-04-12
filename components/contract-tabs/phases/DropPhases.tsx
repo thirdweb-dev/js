@@ -451,7 +451,7 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                         {field.snapshot && (
                           <Flex
                             w={{ base: "100%", md: "50%" }}
-                            direction="row"
+                            direction={{ base: "column", md: "row" }}
                             align="center"
                             gap={4}
                           >

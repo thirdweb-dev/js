@@ -31,7 +31,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
     <Flex flexGrow={1} align="center" overflow="auto">
       <Container maxW="container.page">
         <Flex gap={8} flexDir={{ base: "column", md: "row" }}>
-          <AspectRatio w="50%">
+          <AspectRatio w={{ base: "100%", md: "50%" }}>
             <Center
               borderRadius="md"
               {...getRootProps()}
@@ -45,7 +45,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
               borderWidth="1px"
             >
               <input {...getInputProps()} />
-              <VStack>
+              <VStack p={6}>
                 <Icon
                   as={BsFillCloudUploadFill}
                   boxSize={8}
@@ -66,7 +66,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
               </VStack>
             </Center>
           </AspectRatio>
-          <Flex gap={2} flexDir="column" w="50%">
+          <Flex gap={2} flexDir="column" w={{ base: "100%", md: "50%" }}>
             <Heading size="subtitle.sm">Requirements</Heading>
             <UnorderedList>
               <ListItem>

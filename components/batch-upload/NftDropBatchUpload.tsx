@@ -113,7 +113,12 @@ export const NftDropBatchUpload: React.FC<NftDropBatchUploadProps> = ({
     >
       <DrawerOverlay />
       <DrawerContent overflowY="scroll">
-        <Container maxW="container.page" borderRadius="2xl" my={12}>
+        <Container
+          maxW="container.page"
+          borderRadius={{ base: 0, md: "2xl" }}
+          my={{ base: 0, md: 12 }}
+          p={{ base: 0, md: 4 }}
+        >
           <Card bg="backgroundCardHighlight">
             <Flex flexDir="column" width="100%" p={4}>
               {step === 0 ? (
@@ -121,7 +126,7 @@ export const NftDropBatchUpload: React.FC<NftDropBatchUploadProps> = ({
                   <Flex
                     align="center"
                     justify="space-between"
-                    py={4}
+                    py={{ base: 2, md: 4 }}
                     w="100%"
                     mb={2}
                   >
@@ -144,15 +149,27 @@ export const NftDropBatchUpload: React.FC<NftDropBatchUploadProps> = ({
                     )}
                     <Flex borderTop="1px solid" borderTopColor="borderColor">
                       <Container maxW="container.page">
-                        <Flex align="center" justify="space-between" p={4}>
+                        <Flex
+                          align="center"
+                          justify="space-between"
+                          p={{ base: 0, md: 4 }}
+                          flexDir={{ base: "column", md: "row" }}
+                          mt={{ base: 4, md: 0 }}
+                        >
                           <Box ref={paginationPortalRef} />
-                          <Flex gap={2} align="center">
+                          <Flex
+                            gap={2}
+                            align="center"
+                            mt={{ base: 4, md: 0 }}
+                            w={{ base: "100%", md: "auto" }}
+                          >
                             <Button
                               borderRadius="md"
                               isDisabled={!csvData && !jsonData}
                               onClick={() => {
                                 reset();
                               }}
+                              w={{ base: "100%", md: "auto" }}
                             >
                               Reset
                             </Button>
@@ -161,6 +178,7 @@ export const NftDropBatchUpload: React.FC<NftDropBatchUploadProps> = ({
                               colorScheme="primary"
                               isDisabled={!csvData && !jsonData}
                               onClick={() => setStep(1)}
+                              w={{ base: "100%", md: "auto" }}
                             >
                               Next
                             </Button>

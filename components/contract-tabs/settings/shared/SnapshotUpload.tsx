@@ -191,8 +191,8 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                     <Heading size="subtitle.sm">Requirements</Heading>
                     <UnorderedList>
                       <ListItem>
-                        Files <em>must</em> contain one .csv file with metadata.{" "}
-                        -{" "}
+                        Files <em>must</em> contain one .csv file with a list of
+                        addresses. -{" "}
                         <Link download color="blue.500" href="/snapshot.csv">
                           Download an example csv
                         </Link>
@@ -204,22 +204,39 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
             </Flex>
           )}
 
-          <Flex boxShadow="rgba(0,0,0,.1) 0px -2px 4px 0px">
+          <Flex borderTop="1px solid" borderTopColor="borderColor">
             <Container maxW="container.page">
-              <Flex align="center" justify="space-between" p={4}>
+              <Flex
+                align="center"
+                justify="space-between"
+                p={{ base: 0, md: 4 }}
+                flexDir={{ base: "column", md: "row" }}
+                mt={{ base: 4, md: 0 }}
+              >
                 <Box ref={paginationPortalRef} />
-                <Flex gap={2} align="center">
+                <Flex
+                  gap={2}
+                  align="center"
+                  mt={{ base: 4, md: 0 }}
+                  w={{ base: "100%", md: "auto" }}
+                >
                   <Button
-                    size="lg"
+                    borderRadius="md"
+                    disabled={validAddresses.length === 0}
                     onClick={() => {
                       reset();
                     }}
-                    disabled={validAddresses.length === 0}
+                    w={{ base: "100%", md: "auto" }}
                   >
                     Reset
                   </Button>
-                  <Button size="lg" colorScheme="blue" onClick={onSave}>
-                    Save
+                  <Button
+                    borderRadius="md"
+                    colorScheme="primary"
+                    onClick={onSave}
+                    w={{ base: "100%", md: "auto" }}
+                  >
+                    Next
                   </Button>
                 </Flex>
               </Flex>

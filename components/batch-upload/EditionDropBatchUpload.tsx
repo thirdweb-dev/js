@@ -116,7 +116,12 @@ export const EditionDropBatchUpload: React.FC<EditionDropBatchUploadProps> = ({
       <DrawerContent>
         <Flex direction="column" gap={6} h="100%">
           <Flex shadow="sm">
-            <Container maxW="container.page">
+            <Container
+              maxW="container.page"
+              borderRadius={{ base: 0, md: "2xl" }}
+              my={{ base: 0, md: 12 }}
+              p={{ base: 0, md: 4 }}
+            >
               <Flex align="center" justify="space-between" p={4}>
                 <Flex gap={2}>
                   <Logo hideWordmark />
@@ -127,33 +132,46 @@ export const EditionDropBatchUpload: React.FC<EditionDropBatchUploadProps> = ({
             </Container>
           </Flex>
 
-          {csvData || jsonData ? (
-            <BatchTable portalRef={paginationPortalRef} data={mergedData} />
-          ) : (
-            <Flex flexGrow={1} align="center" overflow="auto">
-              <Container maxW="container.page">
-                <UploadStep
-                  getRootProps={getRootProps}
-                  getInputProps={getInputProps}
-                  noFile={noFile}
-                  isDragActive={isDragActive}
-                />
-              </Container>
-            </Flex>
-          )}
+          <Box overflowY="scroll">
+            {csvData || jsonData ? (
+              <BatchTable portalRef={paginationPortalRef} data={mergedData} />
+            ) : (
+              <Flex flexGrow={1} align="center" overflow="auto">
+                <Container maxW="container.page">
+                  <UploadStep
+                    getRootProps={getRootProps}
+                    getInputProps={getInputProps}
+                    noFile={noFile}
+                    isDragActive={isDragActive}
+                  />
+                </Container>
+              </Flex>
+            )}
+          </Box>
 
-          <Flex boxShadow="rgba(0,0,0,.1) 0px -2px 4px 0px">
+          <Flex borderTop="1px solid" borderTopColor="borderColor">
             <Container maxW="container.page">
-              <Flex align="center" justify="space-between" p={4}>
+              <Flex
+                align="center"
+                justify="space-between"
+                p={{ base: 0, md: 4 }}
+                flexDir={{ base: "column", md: "row" }}
+                mt={{ base: 4, md: 0 }}
+              >
                 <Box ref={paginationPortalRef} />
-                <Flex gap={2} align="center">
+                <Flex
+                  gap={2}
+                  align="center"
+                  mt={{ base: 4, md: 0 }}
+                  w={{ base: "100%", md: "auto" }}
+                >
                   <Button
                     borderRadius="md"
-                    size="md"
-                    isDisabled={mintBatch.isLoading}
+                    isDisabled={!csvData && !jsonData}
                     onClick={() => {
                       reset();
                     }}
+                    w={{ base: "100%", md: "auto" }}
                   >
                     Reset
                   </Button>

@@ -5,12 +5,12 @@ import {
 import {
   Alert,
   AlertIcon,
+  Box,
   Flex,
   FormControl,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
-  HStack,
   Heading,
   Icon,
   Input,
@@ -52,7 +52,7 @@ const SelectRevealOption: React.FC<SelectRevealOptionProps> = ({
     <Stack
       as={Card}
       padding={5}
-      width="350px"
+      width={{ base: "inherit", md: "350px" }}
       borderRadius="md"
       borderColor={isActive ? "primary.500" : undefined}
       onClick={onClick}
@@ -169,7 +169,11 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
 
   return (
     <Flex flexDir="column">
-      <HStack spacing={6} mb={6}>
+      <Flex
+        gap={{ base: 3, md: 6 }}
+        mb={6}
+        flexDir={{ base: "column", md: "row" }}
+      >
         <SelectRevealOption
           name="Reveal upon mint"
           description="Collectors will immediately see the final NFT when they complete the minting"
@@ -182,7 +186,7 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
           isActive={selectedReveal === "delayed"}
           onClick={() => setSelectedReveal("delayed")}
         />
-      </HStack>
+      </Flex>
       <Flex>
         {selectedReveal === "instant" ? (
           <Flex flexDir="column">
@@ -217,7 +221,10 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
                 You&apos;ll need this password to reveal your NFTs. Please save
                 it somewhere safe.
               </Alert>
-              <Flex>
+              <Flex
+                flexDir={{ base: "column", md: "row" }}
+                gap={{ base: 4, md: 0 }}
+              >
                 <FormControl isRequired isInvalid={!!errors.password} mr={4}>
                   <FormLabel>Password</FormLabel>
                   <InputGroup>
@@ -258,17 +265,19 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
               <Heading size="title.sm">Placeholder</Heading>
               <FormControl isInvalid={!!errors.image}>
                 <FormLabel>Image</FormLabel>
-                <FileInput
-                  accept="image/*"
-                  value={imageUrl}
-                  showUploadButton
-                  setValue={(file) => setValue("image", file)}
-                  border="1px solid"
-                  borderColor="gray.200"
-                  borderRadius="md"
-                  transition="all 200ms ease"
-                  _hover={{ shadow: "sm" }}
-                />
+                <Box width={{ base: "auto", md: "350px" }}>
+                  <FileInput
+                    accept="image/*"
+                    value={imageUrl}
+                    showUploadButton
+                    setValue={(file) => setValue("image", file)}
+                    border="1px solid"
+                    borderColor="gray.200"
+                    borderRadius="md"
+                    transition="all 200ms ease"
+                    _hover={{ shadow: "sm" }}
+                  />
+                </Box>
                 <FormHelperText>
                   You can optionally upload an image as the placeholder.
                 </FormHelperText>
