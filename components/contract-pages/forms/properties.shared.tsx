@@ -62,7 +62,7 @@ export const PropertiesFormControl = <
   });
 
   useEffect(() => {
-    append({ key: "", value: "" } as any, { shouldFocus: false });
+    append({ trait_type: "", value: "" } as any, { shouldFocus: false });
     // should only run on mount to set a first property
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -76,13 +76,13 @@ export const PropertiesFormControl = <
           variant="outline"
           colorScheme="red"
           size="xs"
-          onClick={() => replace([{ key: "", value: "" } as any])}
+          onClick={() => replace([{ trait_type: "", value: "" } as any])}
         >
           Reset
         </Button>
       </Flex>
       {fields.map((field, index) => {
-        const keyError = errors?.attributes?.[index]?.key?.message;
+        const keyError = errors?.attributes?.[index]?.trait_type?.message;
         const valueError = errors?.attributes?.[index]?.value?.message;
         const isInvalid = !!(keyError || valueError);
 
@@ -96,8 +96,10 @@ export const PropertiesFormControl = <
             >
               <FormControl isInvalid={!!keyError}>
                 <Input
-                  {...register(`attributes.${index}.key` as Path<TFieldValues>)}
-                  placeholder="key"
+                  {...register(
+                    `attributes.${index}.trait_type` as Path<TFieldValues>,
+                  )}
+                  placeholder="trait_type"
                 ></Input>
                 <FormErrorMessage>{keyError}</FormErrorMessage>
               </FormControl>
@@ -179,7 +181,9 @@ export const PropertiesFormControl = <
           leftIcon={<Icon as={FiPlus} />}
           colorScheme="purple"
           size="sm"
-          onClick={() => append({ key: undefined, value: undefined } as any)}
+          onClick={() =>
+            append({ trait_type: undefined, value: undefined } as any)
+          }
         >
           Add Row
         </Button>
