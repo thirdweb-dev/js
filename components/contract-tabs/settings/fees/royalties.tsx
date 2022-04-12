@@ -5,8 +5,6 @@ import {
   useContractRoyaltyMutation,
 } from "@3rdweb-sdk/react";
 import {
-  Box,
-  Divider,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -82,10 +80,8 @@ export const ContractRoyalties = <TContract extends RoyaltyContract>({
           }),
         )}
         direction="column"
-        gap={8}
-        pt={10}
       >
-        <Flex direction="column" gap={2} px={10}>
+        <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
           <Heading size="title.sm">Royalties</Heading>
           <Text size="body.md" fontStyle="italic">
             Determine the address that should receive the revenue from royalties
@@ -128,24 +124,21 @@ export const ContractRoyalties = <TContract extends RoyaltyContract>({
             </FormControl>
           </Flex>
         </Flex>
-        <AdminOnly contract={contract} fallback={<Box pb={5} />}>
-          <>
-            <Divider />
-            <TransactionButton
-              colorScheme="primary"
-              transactionCount={1}
-              isDisabled={query.isLoading || !formState.isDirty}
-              type="submit"
-              isLoading={mutation.isLoading}
-              loadingText="Saving..."
-              size="md"
-              borderRadius="xl"
-              borderTopLeftRadius="0"
-              borderTopRightRadius="0"
-            >
-              Update Royalty Settings
-            </TransactionButton>
-          </>
+        <AdminOnly contract={contract}>
+          <TransactionButton
+            colorScheme="primary"
+            transactionCount={1}
+            isDisabled={query.isLoading || !formState.isDirty}
+            type="submit"
+            isLoading={mutation.isLoading}
+            loadingText="Saving..."
+            size="md"
+            borderRadius="xl"
+            borderTopLeftRadius="0"
+            borderTopRightRadius="0"
+          >
+            Update Royalty Settings
+          </TransactionButton>
         </AdminOnly>
       </Flex>
     </Card>

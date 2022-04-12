@@ -1,3 +1,4 @@
+import { useBreakpointValue } from "@chakra-ui/media-query";
 import {
   Alert,
   AlertIcon,
@@ -101,6 +102,7 @@ export const WidgetSetup: React.FC<WidgetSetupProps> = ({ contract }) => {
   const [listingId, setListingId] = useState(0);
 
   const chainId = getChainIdFromNetwork(useSingleQueryParam("network"));
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
   const iframeSrc = buildIframeSrc(contract, {
     chainId,
@@ -221,7 +223,7 @@ export const WidgetSetup: React.FC<WidgetSetupProps> = ({ contract }) => {
         {iframeSrc ? (
           <iframe
             src={iframeSrc}
-            width="600px"
+            width={isMobile ? "100%" : "600px"}
             height="600px"
             frameBorder="0"
           />

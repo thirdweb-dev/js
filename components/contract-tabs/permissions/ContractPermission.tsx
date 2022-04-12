@@ -80,8 +80,8 @@ export const ContractPermission: React.FC<IContractPermission> = ({
                       }
                     }}
                   >
-                    <option value={1}>Non-Transferrable</option>
-                    <option value={0}>Transferrable</option>
+                    <option value={1}>Non-Transferable</option>
+                    <option value={0}>Transferable</option>
                   </Select>
                 )}
               </Flex>
@@ -183,7 +183,7 @@ export const ContractPermission: React.FC<IContractPermission> = ({
                 {isRestricted ? (
                   <>
                     The tokens in this contract are currently{" "}
-                    <strong>non transferrable</strong>. Only wallets that you
+                    <strong>non-transferable</strong>. Only wallets that you
                     explicitly add to the list below will be able to transfer
                     tokens.
                   </>

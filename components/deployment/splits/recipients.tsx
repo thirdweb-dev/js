@@ -42,7 +42,7 @@ export const RecipientForm: React.FC = () => {
   return (
     <>
       <Divider />
-      <Flex px={10} as="section" direction="column" gap={4}>
+      <Flex px={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
         <Flex direction="column">
           <Heading size="title.md">Split Settings</Heading>
           <Text size="body.md" fontStyle="italic">

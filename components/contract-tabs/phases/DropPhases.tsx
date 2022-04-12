@@ -62,8 +62,13 @@ export const DropPhases: React.FC<DropPhases> = ({ contract, tokenId }) => {
   return (
     <Stack spacing={8}>
       <Card p={0} position="relative">
-        <Flex pt={10} direction="column" gap={8}>
-          <Flex px={10} as="section" direction="column" gap={4}>
+        <Flex pt={{ base: 6, md: 10 }} direction="column" gap={8}>
+          <Flex
+            px={{ base: 6, md: 10 }}
+            as="section"
+            direction="column"
+            gap={4}
+          >
             <Flex direction="column">
               <Heading size="title.md">Claim Phases</Heading>
               <Text size="body.md" fontStyle="italic">
@@ -77,8 +82,13 @@ export const DropPhases: React.FC<DropPhases> = ({ contract, tokenId }) => {
         </Flex>
       </Card>
       <Card p={0} position="relative">
-        <Flex pt={10} direction="column" gap={8}>
-          <Flex px={10} as="section" direction="column" gap={4}>
+        <Flex pt={{ base: 6, md: 10 }} direction="column" gap={8}>
+          <Flex
+            px={{ base: 6, md: 10 }}
+            as="section"
+            direction="column"
+            gap={4}
+          >
             <Flex direction="column">
               <Heading size="title.md">Claim Eligibility</Heading>
               <Text size="body.md" fontStyle="italic">
@@ -239,7 +249,7 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
         as="form"
         gap={10}
       >
-        <Flex direction={"column"} gap={4} px={10}>
+        <Flex direction={"column"} gap={4} px={{ base: 6, md: 10 }}>
           {controlledFields.map((field, index) => {
             return (
               <React.Fragment key={`snapshot_${field.id}`}>
@@ -375,7 +385,11 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                           ).invalid
                         }
                       >
-                        <Heading as={FormLabel} size="label.md">
+                        <Heading
+                          as={FormLabel}
+                          size="label.md"
+                          maxWidth={{ base: "50%", md: "100%" }}
+                        >
                           What currency do you want to use?
                         </Heading>
                         <CurrencySelector
@@ -481,7 +495,7 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                         }
                       </FormErrorMessage>
                     </FormControl>
-                    <Flex gap={4} direction="row">
+                    <Flex gap={4} direction={{ base: "column", md: "row" }}>
                       <FormControl
                         isInvalid={
                           form.getFieldState(

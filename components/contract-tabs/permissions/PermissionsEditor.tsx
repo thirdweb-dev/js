@@ -11,8 +11,8 @@ import {
   IconButton,
   Input,
   InputGroup,
-  InputLeftElement,
-  InputRightElement,
+  InputLeftAddon,
+  InputRightAddon,
   Stack,
   Text,
   Tooltip,
@@ -25,8 +25,8 @@ import { Button } from "components/buttons/Button";
 import { isAddress } from "ethers/lib/utils";
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
+import { BiCopy, BiPaste } from "react-icons/bi";
 import { FiInfo, FiPlus, FiTrash } from "react-icons/fi";
-import { ImCopy, ImPaste } from "react-icons/im";
 
 interface IPermissionEditor {
   role: Role;
@@ -97,16 +97,16 @@ export const PermissionEditor: React.FC<IPermissionEditor> = ({
           isInvalid={address && isDisabled}
         >
           <InputGroup>
-            <InputLeftElement>
+            <InputLeftAddon p={0} border="none">
               <Tooltip label="Paste address from clipboard">
                 <IconButton
-                  size="sm"
-                  borderRadius="md"
+                  borderRadius="sm"
+                  borderLeftRadius="md"
                   aria-label="paste address"
-                  icon={<ImPaste />}
-                  _hover={{ borderColor: "blue.500" }}
-                  borderWidth="1px"
-                  // bg="gray.200"
+                  icon={<BiPaste />}
+                  _hover={{ bgColor: "gray.300" }}
+                  width="100%"
+                  height="100%"
                   onClick={() => {
                     navigator.clipboard
                       .readText()
@@ -119,28 +119,36 @@ export const PermissionEditor: React.FC<IPermissionEditor> = ({
                   }}
                 />
               </Tooltip>
-            </InputLeftElement>
+            </InputLeftAddon>
             <Input
               variant="filled"
               fontFamily="mono"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               placeholder={AddressZero}
+              px={2}
             />
-            <InputRightElement width="120px">
-              <Button
-                leftIcon={<Icon as={FiPlus} boxSize={3} />}
-                size="sm"
-                width="120px"
-                colorScheme="blue"
-                borderRadius="md"
-                isDisabled={isDisabled}
-                onClick={addAddress}
-                mr="3px"
-              >
-                Add Address
-              </Button>
-            </InputRightElement>
+            <InputRightAddon
+              p={0}
+              border="none"
+              children={
+                <Button
+                  leftIcon={<Icon as={FiPlus} boxSize={4} />}
+                  size="sm"
+                  borderLeftRadius="none"
+                  borderRightRadius="md"
+                  colorScheme="blue"
+                  isDisabled={isDisabled}
+                  onClick={addAddress}
+                  height="100%"
+                  width="100%"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  Add Address
+                </Button>
+              }
+            />
           </InputGroup>
           <FormErrorMessage>
             {members.includes(address)
@@ -186,46 +194,46 @@ const PermissionAddress: React.FC<IPermissionAddress> = ({
 
   return (
     <Flex gap={0} align="center">
-      <Flex
-        height="40px"
-        flexGrow={1}
-        bg="inputBg"
-        borderColor="inputBorder"
-        borderWidth="1px"
-        align="center"
-        borderRightRadius="md"
-        borderRadius="md"
-      >
-        <Tooltip label="Copy address to clipboard">
-          <IconButton
-            m={0.5}
-            size="sm"
-            borderRadius="md"
-            aria-label="copy address"
-            icon={<ImCopy />}
-            _hover={{ borderColor: "blue.500" }}
-            borderWidth="1px"
-            onClick={handleCopy}
-          />
-        </Tooltip>
-        <Text flexGrow={1} fontFamily="mono" size="body.lg" pl="4px">
-          {member}
-        </Text>
+      <InputGroup>
+        <InputLeftAddon p={0} border="none">
+          <Tooltip label="Copy address to clipboard">
+            <IconButton
+              borderRadius="sm"
+              borderLeftRadius="md"
+              aria-label="copy address"
+              icon={<BiCopy />}
+              _hover={{ bgColor: "gray.300" }}
+              width="100%"
+              height="100%"
+              onClick={handleCopy}
+            />
+          </Tooltip>
+        </InputLeftAddon>
+        <Input variant="filled" fontFamily="mono" value={member} px={2} />
         <AdminOrSelfOnly contract={contract} self={member}>
-          <Button
-            isDisabled={isSubmitting}
-            onClick={removeAddress}
-            leftIcon={<Icon as={FiTrash} boxSize={3} />}
-            colorScheme="red"
-            variant="solid"
-            size="sm"
-            borderRadius="md"
-            mr="3px"
-          >
-            Remove
-          </Button>
+          <InputRightAddon
+            p={0}
+            border="none"
+            children={
+              <Button
+                leftIcon={<Icon as={FiTrash} boxSize={3} />}
+                size="sm"
+                borderLeftRadius="none"
+                borderRightRadius="md"
+                colorScheme="red"
+                isDisabled={isSubmitting}
+                onClick={removeAddress}
+                height="100%"
+                width="100%"
+                justifyContent="center"
+                alignItems="center"
+              >
+                Remove
+              </Button>
+            }
+          />
         </AdminOrSelfOnly>
-      </Flex>
+      </InputGroup>
     </Flex>
   );
 };

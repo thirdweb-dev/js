@@ -27,7 +27,7 @@ const DeployContractType: ConsolePage = () => {
   }
 
   return (
-    <Card p={10}>
+    <Card px={{ base: 4, md: 10 }} py={{ base: 6, md: 10 }}>
       <Flex direction="column" gap={8}>
         <Flex align="center" justify="space-between">
           <IconButton
@@ -41,7 +41,7 @@ const DeployContractType: ConsolePage = () => {
           <Box />
         </Flex>
         <Container maxW="container.md">
-          <SimpleGrid columns={2} gap={5}>
+          <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 3, md: 5 }}>
             {TYPE_CONTRACT_MAP[type as keyof typeof TYPE_CONTRACT_MAP].map(
               (item) => (
                 <LinkCard

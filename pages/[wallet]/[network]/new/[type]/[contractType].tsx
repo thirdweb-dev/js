@@ -68,7 +68,12 @@ const DeployContractContract: ConsolePage = () => {
 
   return (
     <Card p={0}>
-      <Flex direction="column" gap={8} p={10}>
+      <Flex
+        direction="column"
+        gap={8}
+        px={{ base: 4, md: 10 }}
+        py={{ base: 6, md: 10 }}
+      >
         <Flex align="center" justify="space-between" gap={4}>
           <IconButton
             onClick={() => router.back()}
@@ -97,7 +102,7 @@ const DeployContractContract: ConsolePage = () => {
         </Flex>
       </Flex>
       <Divider />
-      <Box pt={10}>
+      <Box pt={{ base: 6, md: 10 }}>
         {contract && contractType ? (
           <ContractDeployForm contract={contract} contractType={contractType} />
         ) : null}
@@ -275,7 +280,7 @@ const ContractDeployForm = <TContract extends ValidContractClass>({
         direction="column"
         gap={8}
       >
-        <Flex px={10} as="section" direction="column" gap={4}>
+        <Flex px={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
           <Flex direction="column">
             <Heading size="title.md">General Settings</Heading>
             <Text size="body.md" fontStyle="italic">
@@ -364,7 +369,12 @@ const ContractDeployForm = <TContract extends ValidContractClass>({
           hasRoyaltyMechanic) && (
           <>
             <Divider />
-            <Flex px={10} as="section" direction="column" gap={4}>
+            <Flex
+              px={{ base: 6, md: 10 }}
+              as="section"
+              direction="column"
+              gap={4}
+            >
               <Flex direction="column">
                 <Heading size="title.md">Payout Settings</Heading>
                 <Text size="body.md" fontStyle="italic">
@@ -510,7 +520,12 @@ const ContractDeployForm = <TContract extends ValidContractClass>({
         {hasVoteMechanic && (
           <>
             <Divider />
-            <Flex px={10} as="section" direction="column" gap={4}>
+            <Flex
+              px={{ base: 6, md: 10 }}
+              as="section"
+              direction="column"
+              gap={4}
+            >
               <Flex direction="column">
                 <Heading size="title.md">Vote Settings</Heading>
                 <Text size="body.md" fontStyle="italic">

@@ -3,12 +3,8 @@ import {
   PlatformFeeContract,
   useContractPlatformFee,
   useContractPlatformFeeMutation,
-  useContractRoyalty,
-  useContractRoyaltyMutation,
 } from "@3rdweb-sdk/react";
 import {
-  Box,
-  Divider,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -19,10 +15,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  CommonPlatformFeeSchema,
-  CommonRoyaltySchema,
-} from "@thirdweb-dev/sdk";
+import { CommonPlatformFeeSchema } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { Card } from "components/layout/Card";
@@ -87,10 +80,8 @@ export const ContractPlatformFee = <TContract extends PlatformFeeContract>({
           }),
         )}
         direction="column"
-        gap={8}
-        pt={10}
       >
-        <Flex direction="column" gap={2} px={10}>
+        <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
           <Heading size="title.sm">Platform fee</Heading>
           <Text size="body.md" fontStyle="italic">
             Determine the address that should receive the revenue from platform
@@ -138,24 +129,21 @@ export const ContractPlatformFee = <TContract extends PlatformFeeContract>({
             </FormControl>
           </Flex>
         </Flex>
-        <AdminOnly contract={contract} fallback={<Box pb={5} />}>
-          <>
-            <Divider />
-            <TransactionButton
-              colorScheme="primary"
-              transactionCount={1}
-              isDisabled={query.isLoading || !formState.isDirty}
-              type="submit"
-              isLoading={mutation.isLoading}
-              loadingText="Saving..."
-              size="md"
-              borderRadius="xl"
-              borderTopLeftRadius="0"
-              borderTopRightRadius="0"
-            >
-              Update Platform Fee Settings
-            </TransactionButton>
-          </>
+        <AdminOnly contract={contract}>
+          <TransactionButton
+            colorScheme="primary"
+            transactionCount={1}
+            isDisabled={query.isLoading || !formState.isDirty}
+            type="submit"
+            isLoading={mutation.isLoading}
+            loadingText="Saving..."
+            size="md"
+            borderRadius="xl"
+            borderTopLeftRadius="0"
+            borderTopRightRadius="0"
+          >
+            Update Platform Fee Settings
+          </TransactionButton>
         </AdminOnly>
       </Flex>
     </Card>

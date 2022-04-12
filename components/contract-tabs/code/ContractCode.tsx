@@ -164,8 +164,12 @@ export const ContractCode: React.FC<IContractCode> = ({ contract }) => {
       })}
 
       <Card>
-        <Flex direction="row" gap={2} justify="space-between" align="flex-end">
-          <Flex direction="column" gap={2}>
+        <Flex
+          direction={{ base: "column", md: "row" }}
+          gap={2}
+          justify="space-between"
+        >
+          <Flex direction="column" gap={2} mb={{ base: 2, md: 0 }}>
             <Heading size="title.sm">Contract ABI</Heading>
             <Text>
               If you need the underlying contract ABI for this contract you can
