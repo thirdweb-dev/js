@@ -1,4 +1,4 @@
-import { dropKeys } from "../cache-keys";
+import { NFTDropKeys } from "../cache-keys";
 import {
   useMutationWithInvalidate,
   useQueryWithNetwork,
@@ -15,13 +15,13 @@ import {
 import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 
-export function useDropContractMetadata(contractAddress?: string) {
+export function useNFTDropContractMetadata(contractAddress?: string) {
   return useContractMetadata(useNFTDrop(contractAddress));
 }
-export function useDropSupply(contractAddress?: string) {
+export function useNFTDropSupply(contractAddress?: string) {
   const dropContract = useNFTDrop(contractAddress);
   return useQueryWithNetwork(
-    dropKeys.supply(contractAddress),
+    NFTDropKeys.supply(contractAddress),
     async () => {
       return {
         totalSupply: (await dropContract?.totalSupply())?.toNumber() || 0,
@@ -37,10 +37,10 @@ export function useDropSupply(contractAddress?: string) {
   );
 }
 
-export function useDropActiveClaimCondition(contractAddress?: string) {
+export function useNFTDropActiveClaimCondition(contractAddress?: string) {
   const dropContract = useNFTDrop(contractAddress);
   return useQueryWithNetwork(
-    dropKeys.activeClaimCondition(contractAddress),
+    NFTDropKeys.activeClaimCondition(contractAddress),
     async () => {
       return await dropContract?.claimConditions.getActive();
     },
@@ -50,11 +50,11 @@ export function useDropActiveClaimCondition(contractAddress?: string) {
   );
 }
 
-export function useDropBalance(contractAddress?: string) {
+export function useNFTDropBalance(contractAddress?: string) {
   const dropContract = useNFTDrop(contractAddress);
   const { address } = useWeb3();
   return useQueryWithNetwork(
-    dropKeys.balanceOf(contractAddress, address),
+    NFTDropKeys.balanceOf(contractAddress, address),
     async () => {
       return await dropContract?.balanceOf(address || "");
     },
@@ -68,7 +68,7 @@ export function useBatchesToReveal(contractAddress?: string) {
   const dropContract = useNFTDrop(contractAddress);
   const { address } = useWeb3();
   return useQueryWithNetwork(
-    dropKeys.batchesToReveal(contractAddress),
+    NFTDropKeys.batchesToReveal(contractAddress),
     async () => {
       return await dropContract?.revealer.getBatchesToReveal();
     },
@@ -82,7 +82,7 @@ export function useBatchesToReveal(contractAddress?: string) {
 // Mutations
 // ----------------------------------------------------------------
 
-export function useDropMintMutation(contract?: NFTDrop) {
+export function useNFTDropMintMutation(contract?: NFTDrop) {
   return useMutationWithInvalidate(
     async (data: NFTMetadataInput) => {
       invariant(contract, "contract is required");
@@ -93,14 +93,14 @@ export function useDropMintMutation(contract?: NFTDrop) {
         return invalidate([
           getAllQueryKey(contract),
           getTotalCountQueryKey(contract),
-          dropKeys.supply(contract?.getAddress()),
+          NFTDropKeys.supply(contract?.getAddress()),
         ]);
       },
     },
   );
 }
 
-export function useDropBatchMint(contract?: NFTDrop) {
+export function useNFTDropBatchMint(contract?: NFTDrop) {
   return useMutationWithInvalidate(
     async (data: NFTMetadataInput[]) => {
       invariant(contract, "contract is required");
@@ -111,14 +111,14 @@ export function useDropBatchMint(contract?: NFTDrop) {
         return invalidate([
           getAllQueryKey(contract),
           getTotalCountQueryKey(contract),
-          dropKeys.supply(contract?.getAddress()),
+          NFTDropKeys.supply(contract?.getAddress()),
         ]);
       },
     },
   );
 }
 
-export function useDropResetClaimEligibilityMutation(contract?: NFTDrop) {
+export function useNFTDropResetClaimEligibilityMutation(contract?: NFTDrop) {
   return useMutationWithInvalidate(async () => {
     invariant(contract, "contract is required");
     const claimConditions = await contract.claimConditions.getAll();
@@ -134,7 +134,7 @@ export function useDropResetClaimEligibilityMutation(contract?: NFTDrop) {
   });
 }
 
-export function useDropClaimConditionMutation(contract?: NFTDrop) {
+export function useNFTDropClaimConditionMutation(contract?: NFTDrop) {
   return useMutationWithInvalidate(
     async (data: ClaimConditionInput[]) => {
       invariant(contract, "contract is required");
@@ -143,7 +143,7 @@ export function useDropClaimConditionMutation(contract?: NFTDrop) {
     {
       onSuccess: (_data, _variables, _options, invalidate) => {
         return invalidate([
-          dropKeys.activeClaimCondition(contract?.getAddress()),
+          NFTDropKeys.activeClaimCondition(contract?.getAddress()),
         ]);
       },
     },
@@ -156,7 +156,7 @@ interface DelayedRevealInput {
   password: string;
 }
 
-export function useDropDelayedRevealBatchMint(contract?: NFTDrop) {
+export function useNFTDropDelayedRevealBatchMint(contract?: NFTDrop) {
   return useMutationWithInvalidate(
     async (data: DelayedRevealInput) => {
       invariant(contract, "contract is required");
@@ -171,8 +171,8 @@ export function useDropDelayedRevealBatchMint(contract?: NFTDrop) {
         return invalidate([
           getAllQueryKey(contract),
           getTotalCountQueryKey(contract),
-          dropKeys.supply(contract?.getAddress()),
-          dropKeys.batchesToReveal(contract?.getAddress()),
+          NFTDropKeys.supply(contract?.getAddress()),
+          NFTDropKeys.batchesToReveal(contract?.getAddress()),
         ]);
       },
     },
@@ -184,7 +184,7 @@ interface RevealInput {
   password: string;
 }
 
-export function useRevealMutation(contract?: NFTDrop) {
+export function useNFTDropRevealMutation(contract?: NFTDrop) {
   return useMutationWithInvalidate(
     async (data: RevealInput) => {
       invariant(contract, "contract is required");
@@ -195,8 +195,8 @@ export function useRevealMutation(contract?: NFTDrop) {
       onSuccess: (_data, _variables, _options, invalidate) => {
         return invalidate([
           getAllQueryKey(contract),
-          dropKeys.detail(contract?.getAddress()),
-          dropKeys.batchesToReveal(contract?.getAddress()),
+          NFTDropKeys.detail(contract?.getAddress()),
+          NFTDropKeys.batchesToReveal(contract?.getAddress()),
         ]);
       },
     },

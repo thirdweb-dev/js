@@ -1,9 +1,9 @@
 import { TTableType } from "../types";
-import { generateBundleDropTableColumns } from "./bundledrop";
-import { generateCollectionableColumns } from "./collection";
-import { generateDropTableColumns } from "./drop";
+import { generateEditionTableColumns } from "./edition";
+import { generateEditionDropTableColumns } from "./editiondrop";
 import { generateMarketplaceTableColumns } from "./marketplace";
-import { generateNFTableColumns } from "./nft";
+import { generateNFTCollectionTableColumns } from "./nftcollection";
+import { generateNFTDropTableColumns } from "./nftdrop";
 import {
   Edition,
   EditionDrop,
@@ -23,16 +23,18 @@ export function useTableColumns<TContract extends ValidContractInstance>(
       return [];
     }
     if (contract instanceof NFTCollection) {
-      return generateNFTableColumns() as Column<TTableType<TContract>>[];
+      return generateNFTCollectionTableColumns() as Column<
+        TTableType<TContract>
+      >[];
     }
     if (contract instanceof Edition) {
-      return generateCollectionableColumns() as Column<TTableType<TContract>>[];
+      return generateEditionTableColumns() as Column<TTableType<TContract>>[];
     }
     if (contract instanceof NFTDrop) {
-      return generateDropTableColumns() as Column<TTableType<TContract>>[];
+      return generateNFTDropTableColumns() as Column<TTableType<TContract>>[];
     }
     if (contract instanceof EditionDrop) {
-      return generateBundleDropTableColumns() as Column<
+      return generateEditionDropTableColumns() as Column<
         TTableType<TContract>
       >[];
     }

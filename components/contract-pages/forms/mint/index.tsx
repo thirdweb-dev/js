@@ -1,8 +1,8 @@
 import { MarketplaceListForm } from "./list.marketplace";
-import { BundleDropMintForm } from "./mint.bundledrop";
-import { CollectionMintForm } from "./mint.collection";
-import { DropMintForm } from "./mint.drop";
-import { NFTMintForm } from "./mint.nft";
+import { EditionMintForm } from "./mint.edition";
+import { EditionDropMintForm } from "./mint.editiondrop";
+import { NFTCollectionMintForm } from "./mint.nftcollection";
+import { NFTDropMintForm } from "./mint.nftdrop";
 import { TokenMintForm } from "./mint.token";
 import { ProposalMintForm } from "./mint.vote";
 import { DrawerHeader, Heading } from "@chakra-ui/react";
@@ -23,14 +23,14 @@ export interface IMintFormProps {
 }
 
 export const MintForm: React.FC<IMintFormProps> = ({ contract }) => {
-  // if its an nft collection contract
+  // if its an NFT Collection contract
   if (contract instanceof NFTCollection) {
     return (
       <>
         <DrawerHeader>
           <Heading>Mint new NFT</Heading>
         </DrawerHeader>
-        <NFTMintForm contract={contract} />
+        <NFTCollectionMintForm contract={contract} />
       </>
     );
   }
@@ -41,29 +41,29 @@ export const MintForm: React.FC<IMintFormProps> = ({ contract }) => {
         <DrawerHeader>
           <Heading>Create new NFT Drop</Heading>
         </DrawerHeader>
-        <DropMintForm contract={contract} />
+        <NFTDropMintForm contract={contract} />
       </>
     );
   }
-  // if its a bundle drop contract
+  // if its a edition drop contract
   if (contract instanceof EditionDrop) {
     return (
       <>
         <DrawerHeader>
           <Heading>Create new Edition Drop</Heading>
         </DrawerHeader>
-        <BundleDropMintForm contract={contract} />
+        <EditionDropMintForm contract={contract} />
       </>
     );
   }
-  // if its a bundle contract
+  // if its a edition contract
   if (contract instanceof Edition) {
     return (
       <>
         <DrawerHeader>
           <Heading>Mint new NFT</Heading>
         </DrawerHeader>
-        <CollectionMintForm contract={contract} />
+        <EditionMintForm contract={contract} />
       </>
     );
   }

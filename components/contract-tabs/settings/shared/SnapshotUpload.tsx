@@ -120,7 +120,9 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
     return ordered.map((address) => ({ address }));
   }, [validAddresses]);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+  });
 
   const paginationPortalRef = useRef<HTMLDivElement>(null);
 

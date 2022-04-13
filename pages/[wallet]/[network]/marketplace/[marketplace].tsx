@@ -9,7 +9,7 @@ import { useSingleQueryParam } from "hooks/useQueryParam";
 import { ConsolePage } from "pages/_app";
 import React from "react";
 
-const MarketPage: ConsolePage = () => {
+const MarketplacePage: ConsolePage = () => {
   const marketAddress = useSingleQueryParam("marketplace");
   const contract = useMarketplace(marketAddress);
   const metadata = useContractMetadata(contract);
@@ -35,6 +35,6 @@ const MarketPage: ConsolePage = () => {
   );
 };
 
-MarketPage.Layout = AppLayout;
+MarketplacePage.Layout = AppLayout;
 
-export default MarketPage;
+export default MarketplacePage;

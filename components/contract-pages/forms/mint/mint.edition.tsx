@@ -1,6 +1,6 @@
 import { PropertiesFormControl } from "../properties.shared";
 import { IMintFormProps } from "./types";
-import { useNftMintMutation } from "@3rdweb-sdk/react";
+import { useEditionCreateAndMintMutation } from "@3rdweb-sdk/react";
 import {
   Accordion,
   AccordionButton,
@@ -22,7 +22,7 @@ import {
   useModalContext,
   useToast,
 } from "@chakra-ui/react";
-import { NFTCollection } from "@thirdweb-dev/sdk";
+import { Edition } from "@thirdweb-dev/sdk";
 import { OpenSeaPropertyBadge } from "components/badges/opensea";
 import { Button } from "components/buttons/Button";
 import { MismatchButton } from "components/buttons/MismatchButton";
@@ -33,13 +33,12 @@ import { useForm } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
 import { parseErrorToMessage } from "utils/errorParser";
 
-const MINT_FORM_ID = "nft-mint-form";
-interface INFTMintForm extends IMintFormProps {
-  contract: NFTCollection;
+const MINT_FORM_ID = "edition-mint-form";
+interface IEditionMintForm extends IMintFormProps {
+  contract: Edition;
 }
-
-export const NFTMintForm: React.FC<INFTMintForm> = ({ contract }) => {
-  const mint = useNftMintMutation(contract);
+export const EditionMintForm: React.FC<IEditionMintForm> = ({ contract }) => {
+  const mint = useEditionCreateAndMintMutation(contract);
   const {
     setValue,
     control,
@@ -47,9 +46,7 @@ export const NFTMintForm: React.FC<INFTMintForm> = ({ contract }) => {
     watch,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    // resolver: zodResolver(NftTokenSchema),
-  });
+  } = useForm();
 
   const modalContext = useModalContext();
   const toast = useToast();
@@ -57,7 +54,7 @@ export const NFTMintForm: React.FC<INFTMintForm> = ({ contract }) => {
   const onSuccess = () => {
     toast({
       title: "Success",
-      description: "NFT minted successfully",
+      description: "Minted!",
       status: "success",
       duration: 5000,
       isClosable: true,
@@ -67,25 +64,19 @@ export const NFTMintForm: React.FC<INFTMintForm> = ({ contract }) => {
 
   const onError = (error: unknown) => {
     toast({
-      title: "Error minting NFT",
+      title: "Error minting",
       description: parseErrorToMessage(error),
       status: "error",
       duration: 9000,
       isClosable: true,
     });
   };
-
-  // TODO FIXME
-  const onSubmit = (data: any) => {
-    mint.mutate(data, { onSuccess, onError });
-  };
-
   const setFile = (file: File) => {
     if (file.type.includes("image")) {
       // image files
       setValue("image", file);
-      if (watch("external_url") instanceof File) {
-        setValue("external_url", undefined);
+      if (watch("external_link") instanceof File) {
+        setValue("external_link", undefined);
       }
       if (watch("animation_url") instanceof File) {
         setValue("animation_url", undefined);
@@ -149,7 +140,9 @@ export const NFTMintForm: React.FC<INFTMintForm> = ({ contract }) => {
           spacing={6}
           as="form"
           id={MINT_FORM_ID}
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit((d: any) =>
+            mint.mutate(d, { onSuccess, onError }),
+          )}
         >
           <Stack>
             <Heading size="subtitle.md">Metadata</Heading>
@@ -204,6 +197,16 @@ export const NFTMintForm: React.FC<INFTMintForm> = ({ contract }) => {
             <FormLabel>Description</FormLabel>
             <Textarea {...register("description")} />
             <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
+          </FormControl>
+          <FormControl isRequired isInvalid={!!errors.supply}>
+            <FormLabel>Initial Supply</FormLabel>
+            <Input
+              type="number"
+              step="1"
+              pattern="[0-9]"
+              {...register("supply")}
+            />
+            <FormErrorMessage>{errors?.supply?.message}</FormErrorMessage>
           </FormControl>
           <PropertiesFormControl
             watch={watch}
@@ -273,7 +276,7 @@ export const NFTMintForm: React.FC<INFTMintForm> = ({ contract }) => {
           type="submit"
           colorScheme="primary"
         >
-          Mint NFT
+          Create NFTs
         </MismatchButton>
       </DrawerFooter>
     </>

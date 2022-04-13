@@ -56,7 +56,7 @@ const Home: ConsolePage = () => {
                 Smart contracts you control. Tools that accelerate your
                 workflow.
                 <Box display={{ base: "none", md: "block" }} /> Intuitive SDKs
-                and widgets for developers.
+                and embeds for developers.
               </>
             }
             bottomGradient="animated"

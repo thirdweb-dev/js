@@ -6,7 +6,7 @@ import { BigNumber } from "ethers";
 import React from "react";
 import { Cell, Column } from "react-table";
 
-export function generateBundleDropTableColumns() {
+export function generateEditionDropTableColumns() {
   return [
     {
       Header: "ID",

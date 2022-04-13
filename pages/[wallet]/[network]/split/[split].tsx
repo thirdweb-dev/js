@@ -1,8 +1,8 @@
 import {
-  useSplitsBalances,
-  useSplitsContractMetadata,
-  useSplitsData,
-} from "@3rdweb-sdk/react/hooks/useSplits";
+  useSplitBalances,
+  useSplitContractMetadata,
+  useSplitData,
+} from "@3rdweb-sdk/react/hooks/useSplit";
 import {
   Spinner,
   Stack,
@@ -21,14 +21,14 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { ConsolePage } from "pages/_app";
 
-const SplitsPage: ConsolePage = () => {
+const SplitPage: ConsolePage = () => {
   const address = useAddress();
   const splitsAddress = useSingleQueryParam("split");
   const contract = useSplit(splitsAddress);
-  const metadata = useSplitsContractMetadata(splitsAddress);
-  const data = useSplitsData(splitsAddress);
+  const metadata = useSplitContractMetadata(splitsAddress);
+  const data = useSplitData(splitsAddress);
 
-  const balanceQuery = useSplitsBalances(splitsAddress);
+  const balanceQuery = useSplitBalances(splitsAddress);
 
   const { Track } = useTrack({
     page: "splits",
@@ -96,6 +96,6 @@ const SplitsPage: ConsolePage = () => {
   );
 };
 
-SplitsPage.Layout = AppLayout;
+SplitPage.Layout = AppLayout;
 
-export default SplitsPage;
+export default SplitPage;

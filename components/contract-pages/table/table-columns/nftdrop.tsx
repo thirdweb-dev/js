@@ -6,10 +6,10 @@ import { AddressCopyButton } from "components/web3/AddressCopyButton";
 import React from "react";
 import { Cell, Column } from "react-table";
 
-export function generateNFTableColumns() {
+export function generateNFTDropTableColumns() {
   return [
     {
-      Header: "ID",
+      Header: "Token ID",
       accessor: (row) => row.metadata.id.toString(),
     },
     {
@@ -29,6 +29,7 @@ export function generateNFTableColumns() {
         <Code whiteSpace="pre">{JSON.stringify(cell.value, null, 2)}</Code>
       ),
     },
+
     {
       Header: "Owned By",
       accessor: (row) => row.owner,

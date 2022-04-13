@@ -18,7 +18,7 @@ type Input = EditionMetadataInput["metadata"] & {
   supply: EditionMetadataInput["supply"];
 };
 
-export function useCollectionCreateAndMintMutation(contract?: Edition) {
+export function useEditionCreateAndMintMutation(contract?: Edition) {
   return useMutationWithInvalidate(
     async (metadataWithSupply: Input) => {
       invariant(contract, "contract is required");

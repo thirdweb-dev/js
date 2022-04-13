@@ -1,6 +1,6 @@
 import { PropertiesFormControl } from "../properties.shared";
 import { IMintFormProps } from "./types";
-import { useCollectionCreateAndMintMutation } from "@3rdweb-sdk/react";
+import { useNFTCollectionMintMutation } from "@3rdweb-sdk/react";
 import {
   Accordion,
   AccordionButton,
@@ -22,7 +22,7 @@ import {
   useModalContext,
   useToast,
 } from "@chakra-ui/react";
-import { Edition } from "@thirdweb-dev/sdk";
+import { NFTCollection } from "@thirdweb-dev/sdk";
 import { OpenSeaPropertyBadge } from "components/badges/opensea";
 import { Button } from "components/buttons/Button";
 import { MismatchButton } from "components/buttons/MismatchButton";
@@ -33,14 +33,15 @@ import { useForm } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
 import { parseErrorToMessage } from "utils/errorParser";
 
-const MINT_FORM_ID = "collection-mint-form";
-interface ICollectionMintForm extends IMintFormProps {
-  contract: Edition;
+const MINT_FORM_ID = "nft-collection-mint-form";
+interface INFTCollectionMintForm extends IMintFormProps {
+  contract: NFTCollection;
 }
-export const CollectionMintForm: React.FC<ICollectionMintForm> = ({
+
+export const NFTCollectionMintForm: React.FC<INFTCollectionMintForm> = ({
   contract,
 }) => {
-  const mint = useCollectionCreateAndMintMutation(contract);
+  const mint = useNFTCollectionMintMutation(contract);
   const {
     setValue,
     control,
@@ -48,7 +49,9 @@ export const CollectionMintForm: React.FC<ICollectionMintForm> = ({
     watch,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    // resolver: zodResolver(NftTokenSchema),
+  });
 
   const modalContext = useModalContext();
   const toast = useToast();
@@ -56,7 +59,7 @@ export const CollectionMintForm: React.FC<ICollectionMintForm> = ({
   const onSuccess = () => {
     toast({
       title: "Success",
-      description: "Minted!",
+      description: "NFT minted successfully",
       status: "success",
       duration: 5000,
       isClosable: true,
@@ -66,19 +69,25 @@ export const CollectionMintForm: React.FC<ICollectionMintForm> = ({
 
   const onError = (error: unknown) => {
     toast({
-      title: "Error minting",
+      title: "Error minting NFT",
       description: parseErrorToMessage(error),
       status: "error",
       duration: 9000,
       isClosable: true,
     });
   };
+
+  // TODO FIXME
+  const onSubmit = (data: any) => {
+    mint.mutate(data, { onSuccess, onError });
+  };
+
   const setFile = (file: File) => {
     if (file.type.includes("image")) {
       // image files
       setValue("image", file);
-      if (watch("external_link") instanceof File) {
-        setValue("external_link", undefined);
+      if (watch("external_url") instanceof File) {
+        setValue("external_url", undefined);
       }
       if (watch("animation_url") instanceof File) {
         setValue("animation_url", undefined);
@@ -142,9 +151,7 @@ export const CollectionMintForm: React.FC<ICollectionMintForm> = ({
           spacing={6}
           as="form"
           id={MINT_FORM_ID}
-          onSubmit={handleSubmit((d: any) =>
-            mint.mutate(d, { onSuccess, onError }),
-          )}
+          onSubmit={handleSubmit(onSubmit)}
         >
           <Stack>
             <Heading size="subtitle.md">Metadata</Heading>
@@ -199,16 +206,6 @@ export const CollectionMintForm: React.FC<ICollectionMintForm> = ({
             <FormLabel>Description</FormLabel>
             <Textarea {...register("description")} />
             <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
-          </FormControl>
-          <FormControl isRequired isInvalid={!!errors.supply}>
-            <FormLabel>Initial Supply</FormLabel>
-            <Input
-              type="number"
-              step="1"
-              pattern="[0-9]"
-              {...register("supply")}
-            />
-            <FormErrorMessage>{errors?.supply?.message}</FormErrorMessage>
           </FormControl>
           <PropertiesFormControl
             watch={watch}
@@ -278,7 +275,7 @@ export const CollectionMintForm: React.FC<ICollectionMintForm> = ({
           type="submit"
           colorScheme="primary"
         >
-          Create NFTs
+          Mint NFT
         </MismatchButton>
       </DrawerFooter>
     </>

@@ -1,4 +1,4 @@
-import { MinterOnly, useBundleDropContractMetadata } from "@3rdweb-sdk/react";
+import { MinterOnly, useEditionDropContractMetadata } from "@3rdweb-sdk/react";
 import { useDisclosure } from "@chakra-ui/hooks";
 import { Icon } from "@chakra-ui/react";
 import { useEditionDrop } from "@thirdweb-dev/react";
@@ -14,19 +14,19 @@ import { ConsolePage } from "pages/_app";
 import React from "react";
 import { RiCheckboxMultipleBlankLine } from "react-icons/ri";
 
-const LazyNFTListPage: ConsolePage = () => {
+const EditionDropPage: ConsolePage = () => {
   const {
     isOpen: isBatchOpen,
     onOpen: onBatchOpen,
     onClose: onBatchClose,
   } = useDisclosure();
 
-  const bundleDropAddress = useSingleQueryParam("edition-drop");
-  const contract = useEditionDrop(bundleDropAddress);
-  const metadata = useBundleDropContractMetadata(bundleDropAddress);
+  const editionDropAddress = useSingleQueryParam("edition-drop");
+  const contract = useEditionDrop(editionDropAddress);
+  const metadata = useEditionDropContractMetadata(editionDropAddress);
   const { Track } = useTrack({
     page: "bundle-drop",
-    drop: bundleDropAddress,
+    drop: editionDropAddress,
   });
 
   return (
@@ -70,6 +70,6 @@ const LazyNFTListPage: ConsolePage = () => {
   );
 };
 
-export default LazyNFTListPage;
+export default EditionDropPage;
 
-LazyNFTListPage.Layout = AppLayout;
+EditionDropPage.Layout = AppLayout;

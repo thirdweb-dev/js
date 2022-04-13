@@ -1,6 +1,6 @@
 import { BatchTable } from "./BatchTable";
 import { UploadStep } from "./UploadStep";
-import { useBundleDropBatchMint } from "@3rdweb-sdk/react";
+import { useEditionDropBatchMint } from "@3rdweb-sdk/react";
 import {
   Box,
   Container,
@@ -45,7 +45,7 @@ export const EditionDropBatchUpload: React.FC<EditionDropBatchUploadProps> = ({
   const [videoFiles, setVideoFiles] = useState<File[]>([]);
   const [noFile, setNoFile] = useState(false);
 
-  const mintBatch = useBundleDropBatchMint(contract);
+  const mintBatch = useEditionDropBatchMint(contract);
 
   const reset = useCallback(() => {
     setCSVData(undefined);

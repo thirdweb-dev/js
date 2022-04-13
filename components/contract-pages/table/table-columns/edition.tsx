@@ -1,15 +1,15 @@
 import { ActionsCell } from "./actions/ActionsCell";
 import { MediaCell } from "./cells/media-cell";
-import { Code } from "@chakra-ui/react";
-import { NFTMetadataOwner } from "@thirdweb-dev/sdk";
-import { AddressCopyButton } from "components/web3/AddressCopyButton";
+import { Code, Text } from "@chakra-ui/react";
+import { EditionMetadata } from "@thirdweb-dev/sdk";
+import { BigNumber } from "ethers";
 import React from "react";
 import { Cell, Column } from "react-table";
 
-export function generateDropTableColumns() {
+export function generateEditionTableColumns() {
   return [
     {
-      Header: "Token ID",
+      Header: "ID",
       accessor: (row) => row.metadata.id.toString(),
     },
     {
@@ -29,18 +29,19 @@ export function generateDropTableColumns() {
         <Code whiteSpace="pre">{JSON.stringify(cell.value, null, 2)}</Code>
       ),
     },
-
     {
-      Header: "Owned By",
-      accessor: (row) => row.owner,
-      Cell: ({ cell }: { cell: Cell<NFTMetadataOwner, string> }) => (
-        <AddressCopyButton address={cell.value} />
-      ),
+      Header: "Supply",
+      accessor: (row) => row.supply.toString(),
+      Cell: ({ cell }: { cell: Cell<EditionMetadata, BigNumber> }) => {
+        return (
+          <Text size="label.sm">{BigNumber.from(cell.value).toString()}</Text>
+        );
+      },
     },
     {
       Header: "Actions",
       id: "actions",
       Cell: ActionsCell || null,
     },
-  ] as Column<NFTMetadataOwner>[];
+  ] as Column<EditionMetadata>[];
 }

@@ -1,4 +1,4 @@
-import { bundleDropKeys } from "../cache-keys";
+import { editionDropKeys } from "../cache-keys";
 import {
   useMutationWithInvalidate,
   useQueryWithNetwork,
@@ -14,11 +14,11 @@ import {
 } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
 
-export function useBundleDropContractMetadata(contractAddress?: string) {
+export function useEditionDropContractMetadata(contractAddress?: string) {
   return useContractMetadata(useEditionDrop(contractAddress));
 }
 
-export function useBundleDropResetClaimEligibilityMutation(
+export function useEditionDropResetClaimEligibilityMutation(
   contract?: EditionDrop,
   tokenId?: string,
 ) {
@@ -37,13 +37,13 @@ export function useBundleDropResetClaimEligibilityMutation(
   });
 }
 
-export function useBundleDropActiveClaimCondition(
+export function useEditionDropActiveClaimCondition(
   contractAddress?: string,
   tokenId?: string,
 ) {
   const dropContract = useEditionDrop(contractAddress);
   return useQueryWithNetwork(
-    bundleDropKeys.activeClaimCondition(contractAddress, tokenId),
+    editionDropKeys.activeClaimCondition(contractAddress, tokenId),
     async () => {
       return await dropContract?.claimConditions.getActive(tokenId as string);
     },
@@ -53,14 +53,14 @@ export function useBundleDropActiveClaimCondition(
   );
 }
 
-export function useBundleDropBalance(
+export function useEditionDropBalance(
   contractAddress?: string,
   tokenId?: string,
 ) {
   const dropContract = useEditionDrop(contractAddress);
   const { address } = useWeb3();
   return useQueryWithNetwork(
-    bundleDropKeys.balanceOf(contractAddress, address, tokenId),
+    editionDropKeys.balanceOf(contractAddress, address, tokenId),
     async () => {
       return await dropContract?.balanceOf(address || "", tokenId || "");
     },
@@ -78,7 +78,7 @@ export function useBundleDropBalance(
 // Mutations
 // ----------------------------------------------------------------
 
-export function useBundleDropMintMutation(contract?: EditionDrop) {
+export function useEditionDropMintMutation(contract?: EditionDrop) {
   return useMutationWithInvalidate(
     async (data: NFTMetadataInput) => {
       invariant(contract, "contract is required");
@@ -92,7 +92,7 @@ export function useBundleDropMintMutation(contract?: EditionDrop) {
   );
 }
 
-export function useBundleDropBatchMint(contract?: EditionDrop) {
+export function useEditionDropBatchMint(contract?: EditionDrop) {
   return useMutationWithInvalidate(
     async (data: NFTMetadataInput[]) => {
       invariant(contract, "contract is required");
@@ -106,7 +106,7 @@ export function useBundleDropBatchMint(contract?: EditionDrop) {
   );
 }
 
-export function useBundleDropClaimMutation(
+export function useEditionDropClaimMutation(
   contract?: EditionDrop,
   tokenId?: string,
 ) {
@@ -120,14 +120,14 @@ export function useBundleDropClaimMutation(
       onSuccess: (_data, _variables, _options, invalidate) => {
         return invalidate([
           getAllQueryKey(contract),
-          bundleDropKeys.detail(contract?.getAddress()),
+          editionDropKeys.detail(contract?.getAddress()),
         ]);
       },
     },
   );
 }
 
-export function useBundleDropClaimConditionMutation(
+export function useEditionDropClaimConditionMutation(
   contract?: EditionDrop,
   tokenId?: string,
 ) {
@@ -139,7 +139,7 @@ export function useBundleDropClaimConditionMutation(
     },
     {
       onSuccess: (_data, _variables, _options, invalidate) => {
-        return invalidate([bundleDropKeys.detail(contract?.getAddress())]);
+        return invalidate([editionDropKeys.detail(contract?.getAddress())]);
       },
     },
   );

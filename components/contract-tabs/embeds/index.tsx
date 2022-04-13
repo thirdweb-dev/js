@@ -27,23 +27,23 @@ import { useState } from "react";
 import { FiCopy } from "react-icons/fi";
 import { getChainIdFromNetwork } from "utils/network";
 
-interface WidgetSetupProps {
+interface EmbedSetupProps {
   contract?: ValidContractInstance;
 }
 
 const IPFS_URI = "ipfs://QmQpHkDDWGJPBHFKkpX1DsfzvwZXQYNVoaW4R1Lhenp6T5";
 
-const getContractWidgetHash = (contract?: ValidContractInstance) => {
+const getContractEmbedHash = (contract?: ValidContractInstance) => {
   if (contract instanceof NFTDrop) {
-    // drop contract widget hash
+    // NFT drop contract embed hash
     return `${IPFS_URI}/drop.html`;
   }
   if (contract instanceof EditionDrop) {
-    // bundle drop contract widget hash
+    // Edition drop contract embed hash
     return `${IPFS_URI}/bundledrop.html`;
   }
   if (contract instanceof Marketplace) {
-    // marketplace contract widget hash
+    // Marketplace contract embed hash
     return `${IPFS_URI}/marketplace.html`;
   }
 
@@ -63,7 +63,7 @@ const buildIframeSrc = (
   contract?: ValidContractInstance,
   options?: IframeSrcOptions,
 ): string => {
-  const contractWidgetHash = getContractWidgetHash(contract);
+  const contractWidgetHash = getContractEmbedHash(contract);
   if (!contract || !options || !contractWidgetHash || !options.chainId) {
     return "";
   }
@@ -92,7 +92,7 @@ const buildIframeSrc = (
   return url.toString();
 };
 
-export const WidgetSetup: React.FC<WidgetSetupProps> = ({ contract }) => {
+export const WidgetSetup: React.FC<EmbedSetupProps> = ({ contract }) => {
   const [ipfsGateway, setIpfsGateway] = useState(
     "https://gateway.ipfscdn.io/ipfs/",
   );

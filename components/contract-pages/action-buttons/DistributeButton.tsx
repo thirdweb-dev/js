@@ -1,8 +1,8 @@
 import { IContractActionButtonProps } from "./types";
 import {
   useDistributeNumOfTransactions,
-  useDistrubuteFunds,
-} from "@3rdweb-sdk/react/hooks/useSplits";
+  useSplitDistributeFunds,
+} from "@3rdweb-sdk/react/hooks/useSplit";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 
@@ -14,7 +14,7 @@ export const DistributeButton: React.FC<IDistributeButtonProps> = ({
   const splitsAddress = useSingleQueryParam("split");
 
   const numTransactions = useDistributeNumOfTransactions(splitsAddress);
-  const distibutedFundsMutation = useDistrubuteFunds(splitsAddress);
+  const distibutedFundsMutation = useSplitDistributeFunds(splitsAddress);
 
   if (!numTransactions) {
     return null;

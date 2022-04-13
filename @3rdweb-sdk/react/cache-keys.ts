@@ -27,55 +27,62 @@ export const dashboardKeys = {
   lists: () => [...dashboardKeys.all, "list"] as const,
   list: (address = AddressZero) => [...dashboardKeys.lists(), address] as const,
 };
-export const bundleKeys = {
-  all: ["bundle"] as const,
-  lists: () => [...bundleKeys.all, "list"] as const,
-  list: (address = AddressZero) => [...bundleKeys.lists(), address] as const,
+export const editionKeys = {
+  all: ["edition"] as const,
+  lists: () => [...editionKeys.all, "list"] as const,
+  list: (address = AddressZero) => [...editionKeys.lists(), address] as const,
   listWithActor: (address = AddressZero, actingAddress = "") =>
-    [...bundleKeys.list(address), { actingAddress }] as const,
+    [...editionKeys.list(address), { actingAddress }] as const,
 };
 
-export const dropKeys = {
-  all: ["drop"] as const,
-  lists: () => [...dropKeys.all, "list"] as const,
-  list: (address = AddressZero) => [...dropKeys.lists(), address] as const,
-  details: () => [...dropKeys.all, "detail"] as const,
-  detail: (address = AddressZero) => [...dropKeys.details(), address] as const,
+export const NFTDropKeys = {
+  all: ["nft-drop"] as const,
+  lists: () => [...NFTDropKeys.all, "list"] as const,
+  list: (address = AddressZero) => [...NFTDropKeys.lists(), address] as const,
+  details: () => [...NFTDropKeys.all, "detail"] as const,
+  detail: (address = AddressZero) =>
+    [...NFTDropKeys.details(), address] as const,
   batchesToReveal: (address = AddressZero) =>
-    [...dropKeys.details(), address, "batchesToReveal"] as const,
+    [...NFTDropKeys.details(), address, "batchesToReveal"] as const,
   supply: (address = AddressZero) =>
-    [...dropKeys.detail(address), "supply"] as const,
+    [...NFTDropKeys.detail(address), "supply"] as const,
   activeClaimCondition: (address = AddressZero) =>
-    [...dropKeys.detail(address), "activeClaimCondition"] as const,
+    [...NFTDropKeys.detail(address), "activeClaimCondition"] as const,
   claimPhases: (address = AddressZero) =>
-    [...dropKeys.detail(address), "claimPhases"] as const,
+    [...NFTDropKeys.detail(address), "claimPhases"] as const,
   balanceOf: (address = AddressZero, userAddress = AddressZero) =>
     [
-      ...dropKeys.detail(address),
+      ...NFTDropKeys.detail(address),
       "balanceOf",
       { address: userAddress },
     ] as const,
 };
 
-export const bundleDropKeys = {
-  all: ["bundle-drop"] as const,
-  lists: () => [...dropKeys.all, "list"] as const,
-  list: (address = AddressZero) => [...dropKeys.lists(), address] as const,
-  details: () => [...dropKeys.all, "detail"] as const,
-  detail: (address = AddressZero) => [...dropKeys.details(), address] as const,
+export const editionDropKeys = {
+  all: ["edition-drop"] as const,
+  lists: () => [...editionDropKeys.all, "list"] as const,
+  list: (address = AddressZero) =>
+    [...editionDropKeys.lists(), address] as const,
+  details: () => [...editionDropKeys.all, "detail"] as const,
+  detail: (address = AddressZero) =>
+    [...editionDropKeys.details(), address] as const,
   activeClaimCondition: (address = AddressZero, tokenId = "-1") =>
-    [...dropKeys.detail(address), "activeClaimCondition", { tokenId }] as const,
+    [
+      ...editionDropKeys.detail(address),
+      "activeClaimCondition",
+      { tokenId },
+    ] as const,
   claimPhases: (address = AddressZero, tokenId = "-1") =>
-    [...dropKeys.detail(address), "claimPhases", { tokenId }] as const,
+    [...editionDropKeys.detail(address), "claimPhases", { tokenId }] as const,
   owned: (address = AddressZero, ownerAddress = AddressZero) =>
-    [...dropKeys.detail(address), "owned", { ownerAddress }] as const,
+    [...editionDropKeys.detail(address), "owned", { ownerAddress }] as const,
   balanceOf: (
     address = AddressZero,
     userAddress = AddressZero,
     tokenId = "-1",
   ) =>
     [
-      ...dropKeys.detail(address),
+      ...editionDropKeys.detail(address),
       "balanceOf",
       { address: userAddress, tokenId },
     ] as const,
@@ -104,7 +111,7 @@ export const contractRoleKeys = {
 };
 
 export const nftCollectionKeys = {
-  all: ["nft_collection"] as const,
+  all: ["nft-collection"] as const,
   lists: () => [...nftCollectionKeys.all, "list"] as const,
   list: (address = AddressZero, queryParams?: QueryAllParams) =>
     queryParams
@@ -246,10 +253,10 @@ export const linkBalanceKeys = {
 
 export const CacheKeyMap: Record<ContractType, any> = {
   [NFTCollection.contractType]: nftCollectionKeys,
-  [Edition.contractType]: bundleKeys,
+  [Edition.contractType]: editionKeys,
   [Token.contractType]: tokenKeys,
-  [NFTDrop.contractType]: dropKeys,
-  [EditionDrop.contractType]: bundleDropKeys,
+  [NFTDrop.contractType]: NFTDropKeys,
+  [EditionDrop.contractType]: editionDropKeys,
   [Vote.contractType]: voteKeys,
   [Marketplace.contractType]: marketplaceKeys,
   [Pack.contractType]: packKeys,

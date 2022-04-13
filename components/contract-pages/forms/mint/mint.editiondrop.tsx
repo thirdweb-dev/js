@@ -1,6 +1,6 @@
 import { PropertiesFormControl } from "../properties.shared";
 import { IMintFormProps } from "./types";
-import { useDropMintMutation } from "@3rdweb-sdk/react";
+import { useEditionDropMintMutation } from "@3rdweb-sdk/react";
 import {
   Accordion,
   AccordionButton,
@@ -22,7 +22,7 @@ import {
   useModalContext,
   useToast,
 } from "@chakra-ui/react";
-import { NFTDrop } from "@thirdweb-dev/sdk";
+import { EditionDrop } from "@thirdweb-dev/sdk";
 import { OpenSeaPropertyBadge } from "components/badges/opensea";
 import { Button } from "components/buttons/Button";
 import { MismatchButton } from "components/buttons/MismatchButton";
@@ -33,13 +33,15 @@ import { useForm } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
 import { parseErrorToMessage } from "utils/errorParser";
 
-const MINT_FORM_ID = "drop-mint-form";
-interface IDropMintForm extends IMintFormProps {
-  contract: NFTDrop;
+const MINT_FORM_ID = "edition-drop-mint-form";
+interface INFTDropMintForm extends IMintFormProps {
+  contract: EditionDrop;
 }
 
-export const DropMintForm: React.FC<IDropMintForm> = ({ contract }) => {
-  const mint = useDropMintMutation(contract);
+export const EditionDropMintForm: React.FC<INFTDropMintForm> = ({
+  contract,
+}) => {
+  const mint = useEditionDropMintMutation(contract);
   const {
     setValue,
     control,
@@ -48,7 +50,7 @@ export const DropMintForm: React.FC<IDropMintForm> = ({ contract }) => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    // resolver: zodResolver(DropTokenSchema),
+    // resolver: zodResolver(),
   });
 
   const imageUrl = useImageFileOrUrl(watch("image"));
@@ -59,7 +61,7 @@ export const DropMintForm: React.FC<IDropMintForm> = ({ contract }) => {
   const onSuccess = () => {
     toast({
       title: "Success",
-      description: "Drop created successfully",
+      description: "Edition Drop created successfully",
       status: "success",
       duration: 5000,
       isClosable: true,
@@ -276,7 +278,7 @@ export const DropMintForm: React.FC<IDropMintForm> = ({ contract }) => {
           type="submit"
           colorScheme="primary"
         >
-          Create Drop
+          Create Edition Drop
         </MismatchButton>
       </DrawerFooter>
     </>

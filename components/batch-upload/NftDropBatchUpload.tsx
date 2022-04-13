@@ -101,7 +101,9 @@ export const NftDropBatchUpload: React.FC<NftDropBatchUploadProps> = ({
 
   const mergedData = useMergedData(csvData, jsonData, imageFiles, videoFiles);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+  });
   const paginationPortalRef = useRef<HTMLDivElement>(null);
   return (
     <Drawer

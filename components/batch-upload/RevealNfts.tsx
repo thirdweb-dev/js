@@ -1,4 +1,4 @@
-import { useRevealMutation } from "@3rdweb-sdk/react";
+import { useNFTDropRevealMutation } from "@3rdweb-sdk/react";
 import {
   FormControl,
   FormErrorMessage,
@@ -37,7 +37,7 @@ export const RevealNftsModal: React.FC<RevealNftsModalProps> = ({
     formState: { errors },
   } = useForm();
 
-  const reveal = useRevealMutation(contract);
+  const reveal = useNFTDropRevealMutation(contract);
 
   const toast = useToast();
 

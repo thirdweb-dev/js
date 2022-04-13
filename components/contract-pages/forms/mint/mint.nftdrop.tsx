@@ -1,6 +1,6 @@
 import { PropertiesFormControl } from "../properties.shared";
 import { IMintFormProps } from "./types";
-import { useBundleDropMintMutation } from "@3rdweb-sdk/react";
+import { useNFTDropMintMutation } from "@3rdweb-sdk/react";
 import {
   Accordion,
   AccordionButton,
@@ -22,7 +22,7 @@ import {
   useModalContext,
   useToast,
 } from "@chakra-ui/react";
-import { EditionDrop } from "@thirdweb-dev/sdk";
+import { NFTDrop } from "@thirdweb-dev/sdk";
 import { OpenSeaPropertyBadge } from "components/badges/opensea";
 import { Button } from "components/buttons/Button";
 import { MismatchButton } from "components/buttons/MismatchButton";
@@ -33,13 +33,13 @@ import { useForm } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
 import { parseErrorToMessage } from "utils/errorParser";
 
-const MINT_FORM_ID = "drop-mint-form";
-interface IDropMintForm extends IMintFormProps {
-  contract: EditionDrop;
+const MINT_FORM_ID = "nft-drop-mint-form";
+interface INFTDropMintForm extends IMintFormProps {
+  contract: NFTDrop;
 }
 
-export const BundleDropMintForm: React.FC<IDropMintForm> = ({ contract }) => {
-  const mint = useBundleDropMintMutation(contract);
+export const NFTDropMintForm: React.FC<INFTDropMintForm> = ({ contract }) => {
+  const mint = useNFTDropMintMutation(contract);
   const {
     setValue,
     control,
@@ -48,7 +48,7 @@ export const BundleDropMintForm: React.FC<IDropMintForm> = ({ contract }) => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    // resolver: zodResolver(),
+    // resolver: zodResolver(DropTokenSchema),
   });
 
   const imageUrl = useImageFileOrUrl(watch("image"));
@@ -59,7 +59,7 @@ export const BundleDropMintForm: React.FC<IDropMintForm> = ({ contract }) => {
   const onSuccess = () => {
     toast({
       title: "Success",
-      description: "Bundledrop created successfully",
+      description: "NFT Drop created successfully",
       status: "success",
       duration: 5000,
       isClosable: true,
@@ -276,7 +276,7 @@ export const BundleDropMintForm: React.FC<IDropMintForm> = ({ contract }) => {
           type="submit"
           colorScheme="primary"
         >
-          Create Edition Drop
+          Create Drop
         </MismatchButton>
       </DrawerFooter>
     </>

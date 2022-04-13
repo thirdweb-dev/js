@@ -12,7 +12,7 @@ export function useNFTContractMetadata(contractAddress?: string) {
 // Mutations
 // ----------------------------------------------------------------
 
-export function useNftMintMutation(contract?: NFTCollection) {
+export function useNFTCollectionMintMutation(contract?: NFTCollection) {
   return useMutationWithInvalidate(
     async (data: NFTMetadataInput) => {
       invariant(contract, "contract is required");

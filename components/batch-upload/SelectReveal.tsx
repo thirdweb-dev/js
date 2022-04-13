@@ -1,7 +1,7 @@
 import {
-  useDropBatchMint,
-  useDropDelayedRevealBatchMint,
-} from "@3rdweb-sdk/react/hooks/useDrop";
+  useNFTDropBatchMint,
+  useNFTDropDelayedRevealBatchMint,
+} from "@3rdweb-sdk/react/hooks/useNFTDrop";
 import {
   Alert,
   AlertIcon,
@@ -125,8 +125,8 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
 
   const imageUrl = useImageFileOrUrl(watch("image"));
 
-  const mintBatch = useDropBatchMint(contract);
-  const mintDelayedRevealBatch = useDropDelayedRevealBatchMint(contract);
+  const mintBatch = useNFTDropBatchMint(contract);
+  const mintDelayedRevealBatch = useNFTDropDelayedRevealBatchMint(contract);
 
   const toast = useToast();
 

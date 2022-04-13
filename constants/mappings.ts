@@ -20,7 +20,7 @@ export const FeatureIconMap: Record<ContractType, StaticImageData> = {
   [NFTDrop.contractType]: require("public/assets/tw-icons/drop.png"),
   [NFTCollection.contractType]: require("public/assets/tw-icons/nft-collection.png"),
   [EditionDrop.contractType]: require("public/assets/tw-icons/drop.png"),
-  [Edition.contractType]: require("public/assets/tw-icons/bundle.png"),
+  [Edition.contractType]: require("public/assets/tw-icons/edition.png"),
   [Token.contractType]: require("public/assets/tw-icons/token.png"),
   [Vote.contractType]: require("public/assets/tw-icons/vote.png"),
   [Marketplace.contractType]: require("public/assets/tw-icons/marketplace.png"),

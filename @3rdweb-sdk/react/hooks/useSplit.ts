@@ -15,11 +15,11 @@ import { parseErrorToMessage } from "utils/errorParser";
 import { SUPPORTED_CHAIN_ID } from "utils/network";
 import { isAddressZero } from "utils/zeroAddress";
 
-export function useSplitsContractMetadata(contractAddres?: string) {
+export function useSplitContractMetadata(contractAddres?: string) {
   return useContractMetadata(useToken(contractAddres));
 }
 
-export function useSplitsData(contractAddress?: string) {
+export function useSplitData(contractAddress?: string) {
   const splitsContract = useSplit(contractAddress);
 
   return useQueryWithNetwork(
@@ -70,7 +70,7 @@ const getCurrencies = async (chainId?: number, contractAddress?: string) => {
   return currencies;
 };
 
-export function useSplitsBalances(contractAddress?: string) {
+export function useSplitBalances(contractAddress?: string) {
   const { address } = useWeb3();
   const chainId = useActiveChainId();
 
@@ -115,15 +115,15 @@ export function useSplitsBalances(contractAddress?: string) {
 }
 
 export function useDistributeNumOfTransactions(contractAddress?: string) {
-  const balances = useSplitsBalances(contractAddress);
+  const balances = useSplitBalances(contractAddress);
   if (!balances.data || balances.isLoading) {
     return 0;
   }
   return balances.data.length;
 }
 
-export function useDistrubuteFunds(contractAddress?: string) {
-  const balances = useSplitsBalances(contractAddress);
+export function useSplitDistributeFunds(contractAddress?: string) {
+  const balances = useSplitBalances(contractAddress);
   const splitsContract = useSplit(contractAddress);
   const toast = useToast();
   return useMutationWithInvalidate(
