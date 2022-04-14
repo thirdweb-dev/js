@@ -46,7 +46,7 @@ export const LandingMenu: React.FC = () => {
               })
             }
           >
-            Get Early Access
+            Start building
           </MenuItem>
         </NextLink>
       </MenuList>

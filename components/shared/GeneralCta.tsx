@@ -49,7 +49,7 @@ export const GeneralCta: React.FC<GeneralCtaProps> = ({ size = "md" }) => {
           size={size}
           href="/start"
         >
-          Get Early Access
+          Start building
         </LinkButton>
       )}
     </Flex>
