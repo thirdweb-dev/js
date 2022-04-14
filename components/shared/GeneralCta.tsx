@@ -21,6 +21,8 @@ export const GeneralCta: React.FC<GeneralCtaProps> = ({ size = "md" }) => {
           bgColor="primary.500"
           color="white"
           _hover={{ bgColor: "primary.400" }}
+          _focus={{ bgColor: "primary.400" }}
+          _active={{ bgColor: "primary.400" }}
           px={12}
           onClick={() =>
             trackEvent({
@@ -41,6 +43,8 @@ export const GeneralCta: React.FC<GeneralCtaProps> = ({ size = "md" }) => {
           bgColor="purple.500"
           color="white"
           _hover={{ bgColor: "purple.600" }}
+          _focus={{ bgColor: "purple.600" }}
+          _active={{ bgColor: "purple.600" }}
           px={12}
           onClick={() =>
             trackEvent({
