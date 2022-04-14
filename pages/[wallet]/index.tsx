@@ -190,9 +190,11 @@ const CreateContractButton: React.FC = () => {
   const { getNetworkMetadata } = useWeb3();
 
   const testnets = useMemo(() => {
-    return SUPPORTED_CHAIN_IDS.map((supportedChain) => {
-      return getNetworkMetadata(supportedChain);
-    }).filter((n) => n.isTestnet);
+    return SUPPORTED_CHAIN_IDS.filter((chainId) => chainId !== ChainId.Goerli)
+      .map((supportedChain) => {
+        return getNetworkMetadata(supportedChain);
+      })
+      .filter((n) => n.isTestnet);
   }, [getNetworkMetadata]);
 
   const mainnets = useMemo(() => {
