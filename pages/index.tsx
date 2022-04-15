@@ -30,7 +30,6 @@ import { HomepageTopNav } from "components/homepage/Topnav";
 import { UpcomingFeature } from "components/homepage/UpcomingFeatureCard";
 import { WhatCanYouBuild } from "components/homepage/WhatCanYouBuild";
 import { GeneralCta } from "components/shared/GeneralCta";
-import { LinkButton } from "components/shared/LinkButton";
 import { FeaturesBackground } from "components/svgs/FeaturesBackground";
 import { useTrack } from "hooks/analytics/useTrack";
 // images
@@ -177,17 +176,6 @@ const Home: ConsolePage = () => {
                 <SupportedChain type="solana" />
                 <SupportedChain type="flow" />
               </SimpleGrid>
-              <LinkButton
-                w="auto"
-                flexGrow={0}
-                size="lg"
-                fontSize={{ base: "md", md: "lg" }}
-                colorScheme="primary"
-                borderRadius="full"
-                href="https://portal.thirdweb.com"
-              >
-                Learn more
-              </LinkButton>
             </Stack>
           </HomepageSection>
 

@@ -41,14 +41,13 @@ export const CodeExamples: React.FC = () => {
 
             <LinkButton
               noIcon
-              bgColor="purple.500"
-              colorScheme="purple"
-              _hover={{ bgColor: "purple.600" }}
               borderRadius="full"
               href="https://portal.thirdweb.com/learn"
-              // px={8}
-              // position="absolute"
-              // bottom={70}
+              bgGradient="linear(to-r, #CC25B3 0%, #418DFF 101.52%)"
+              color="white"
+              _hover={{ opacity: 0.8 }}
+              _focus={{ bgColor: "purple.600" }}
+              _active={{ bgColor: "purple.600" }}
               mt={12}
               size="lg"
               fontSize={{ base: "md", md: "lg" }}
