@@ -44,14 +44,20 @@ const FileVideo: React.FC<
 interface BatchTableProps {
   data: NFTMetadata[];
   portalRef: React.RefObject<HTMLDivElement>;
+  nextTokenIdToMint?: number;
 }
 
-export const BatchTable: React.FC<BatchTableProps> = ({ data, portalRef }) => {
+export const BatchTable: React.FC<BatchTableProps> = ({
+  data,
+  portalRef,
+  nextTokenIdToMint,
+}) => {
   const columns = useMemo(() => {
     return [
       {
         Header: "Token ID",
-        accessor: (_row, index) => index,
+        accessor: (_row, index) =>
+          nextTokenIdToMint ? nextTokenIdToMint + index : index,
       },
       {
         Header: "Image",
@@ -126,7 +132,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({ data, portalRef }) => {
       { Header: "External URL", accessor: (row) => row.external_url },
       { Header: "Background Color", accessor: (row) => row.background_color },
     ] as Column<NFTMetadata>[];
-  }, []);
+  }, [nextTokenIdToMint]);
 
   const {
     getTableProps,

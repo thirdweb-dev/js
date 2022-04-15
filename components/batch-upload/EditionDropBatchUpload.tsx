@@ -1,6 +1,7 @@
 import { BatchTable } from "./BatchTable";
 import { UploadStep } from "./UploadStep";
 import { useEditionDropBatchMint } from "@3rdweb-sdk/react";
+import { useGetTotalCount } from "@3rdweb-sdk/react/hooks/useGetAll";
 import {
   Box,
   Container,
@@ -39,6 +40,7 @@ export const EditionDropBatchUpload: React.FC<EditionDropBatchUploadProps> = ({
   isOpen,
   onClose,
 }) => {
+  const nextTokenIdToMint = useGetTotalCount(contract);
   const [csvData, setCSVData] = useState<Papa.ParseResult<CSVData>>();
   const [jsonData, setJsonData] = useState<any>();
   const [imageFiles, setImageFiles] = useState<File[]>([]);
@@ -134,7 +136,11 @@ export const EditionDropBatchUpload: React.FC<EditionDropBatchUploadProps> = ({
 
           <Box overflowY="scroll">
             {csvData || jsonData ? (
-              <BatchTable portalRef={paginationPortalRef} data={mergedData} />
+              <BatchTable
+                portalRef={paginationPortalRef}
+                data={mergedData}
+                nextTokenIdToMint={nextTokenIdToMint.data?.toNumber()}
+              />
             ) : (
               <Flex flexGrow={1} align="center" overflow="auto">
                 <Container maxW="container.page">
