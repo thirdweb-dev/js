@@ -1660,10 +1660,10 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/chain-icons/-/chain-icons-1.0.2.tgz#b7f7c3f43fb3d8823ed9272ca109d17eb5016716"
   integrity sha512-lNFCK0r86qpuo9ysVfcV8SeAD7Ds12IAO/oD+wsCbvlMu8ObPHXk1Lx3Fi6JFJ/8uisZlEYgXskrfT7sae9Uag==
 
-"@thirdweb-dev/contracts@2.1.7":
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.1.7.tgz#433afa8541e0d696a93bc8654e67eccd6c9f88d3"
-  integrity sha512-QR4LtpopyCSdIhH4rdmXCrbeli0VaZ/hvkysetZqLRBAsuDjchqIS17vkAWwKQ903sK73RnZuEVQ4HAFkxzfqg==
+"@thirdweb-dev/contracts@2.2.0-1":
+  version "2.2.0-1"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.2.0-1.tgz#19482f43a795a2be4d2cfc8ae0afa7367b41b068"
+  integrity sha512-+ek+lHh4RjJPUw0kPk02MYd7ZcuzXbx1j03PWjy/J+/HhJZDGq+LcfsbVILkq+ErZX167IPlj0oVt5qCFlYAKw==
 
 "@thirdweb-dev/react@^2.0.5":
   version "2.0.5"
@@ -1677,9 +1677,9 @@
     wagmi "0.2.26"
 
 "@thirdweb-dev/sdk@^2.0.31":
-  version "2.0.31"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.0.31.tgz#b9a820f314f3320611549ef6957465e3eb4a06dd"
-  integrity sha512-FckfYS4XS6R8kZcqFk74uODf1yrOoY9jDuWnacyJB/XGIJfYm5i3SdYqLJodonNMO6llE2KdFuHwgmob+hUg7g==
+  version "2.0.32"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.0.32.tgz#e0dee6c121e62d452c0e4c4e3224d456fde54086"
+  integrity sha512-UhUuuzrgjZhi1Z5CoFZ+0QrRKnZWEwMYVPKj8e9hIspQELLTELnbojhe7MrwYYqeakXaEnlGZHz2/DvQcl1kcA==
   dependencies:
     "@ethersproject/bignumber" "^5.6.0"
     "@ethersproject/bytes" "^5.6.1"
@@ -1687,7 +1687,7 @@
     "@ethersproject/contracts" "^5.6.0"
     "@ethersproject/providers" "^5.6.1"
     "@ethersproject/units" "^5.6.0"
-    "@thirdweb-dev/contracts" "2.1.7"
+    "@thirdweb-dev/contracts" "2.2.0-1"
     "@web-std/file" "^3.0.0"
     cross-fetch "^3.1.5"
     deep-equal "^2.0.5"
@@ -7061,9 +7061,9 @@ react-motion@^0.5.2:
     raf "^3.1.0"
 
 react-query@^3.31.0:
-  version "3.34.19"
-  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.34.19.tgz#0ff049b6e0d2ed148e9abfdd346625d0e88dc229"
-  integrity sha512-JO0Ymi58WKmvnhgg6bGIrYIeKb64KsKaPWo8JcGnmK2jJxAs2XmMBzlP75ZepSU7CHzcsWtIIyhMrLbX3pb/3w==
+  version "3.34.20"
+  resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.34.20.tgz#649e83073b7e3350cd3fc78f8b2370e9252c4a64"
+  integrity sha512-I0nGBu/4bebKodwwHSFmdMCjgx4bAjn2p5OQRFIlGX7GhVAyTWGRWEWAP3+KG06bb062HPOMqcy9jw086snfQg==
   dependencies:
     "@babel/runtime" "^7.5.5"
     broadcast-channel "^3.4.1"
