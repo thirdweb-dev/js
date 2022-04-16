@@ -270,6 +270,7 @@ export const TYPE_CONTRACT_MAP: ContractDeployMap = {
       title: CONTRACT_TYPE_NAME_MAP[Marketplace.contractType],
       subtitle: "Your very own marketplace",
       contractType: Marketplace.contractType,
+      comingSoon: true,
     },
   ],
   governance: [
