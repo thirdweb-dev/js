@@ -45,10 +45,17 @@ export const transformHeader = (h: string) => {
   return h.trim();
 };
 
+const removeSpecialCharacters = (str: string) =>
+  str.replace(/[^a-zA-Z0-9 ]/g, "");
+
+const sortAscending = (a: File, b: File) =>
+  parseInt(removeSpecialCharacters(a.name)) -
+  parseInt(removeSpecialCharacters(b.name));
+
 export const getAcceptedFiles = async (acceptedFiles: File[]) => {
   const jsonFiles = acceptedFiles
     .filter((f) => jsonMimeTypes.includes(f.type) || f.name.endsWith(".json"))
-    .sort((a, b) => parseInt(a.name) - parseInt(b.name));
+    .sort(sortAscending);
 
   let json: File[] = [];
   if (jsonFiles.length > 1) {
@@ -65,12 +72,10 @@ export const getAcceptedFiles = async (acceptedFiles: File[]) => {
   );
   const images = acceptedFiles
     .filter((f) => f.type.includes("image/"))
-    // sort in ascending order
-    .sort((a, b) => parseInt(a.name) - parseInt(b.name));
+    .sort(sortAscending);
   const videos = acceptedFiles
     .filter((f) => f.type.includes("video/"))
-    // sort in ascending order
-    .sort((a, b) => parseInt(a.name) - parseInt(b.name));
+    .sort(sortAscending);
 
   return { csv, json, images, videos };
 };
