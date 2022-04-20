@@ -99,9 +99,9 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
                 </Text>
               </Flex>
               <Flex direction="column" gap={2}>
-                <Heading size="label.md">Data</Heading>
+                <Heading size="label.md">Root cause</Heading>
                 <Code px={4} py={2} borderRadius="md" whiteSpace="pre-wrap">
-                  {currentError?.data}
+                  {currentError?.reason}
                 </Code>
               </Flex>
               <Divider my={2} borderColor="borderColor" />
