@@ -1,3 +1,4 @@
+/* eslint-disable line-comment-position */
 import { useActiveChainId } from "@3rdweb-sdk/react";
 import { ThirdwebProvider } from "@thirdweb-dev/react";
 import { IpfsStorage } from "@thirdweb-dev/sdk";
@@ -41,13 +42,17 @@ export const StorageSingleton = new IpfsStorage(
 );
 
 export const alchemyUrlMap: Record<SUPPORTED_CHAIN_ID, string> = {
-  [ChainId.Mainnet]: `https://eth-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
-  [ChainId.Rinkeby]: `https://eth-rinkeby.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
+  [ChainId.Mainnet]:
+    "https://frosty-wispy-sky.quiknode.pro/affec9b1773215a9ce54103aed0206330dddf124/", // `https://eth-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
+  [ChainId.Rinkeby]:
+    "https://billowing-spring-darkness.rinkeby.quiknode.pro/bdfa42ad4bece84adb95793474049043c5ffa26d/", // `https://eth-rinkeby.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
   [ChainId.Goerli]: `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
   [ChainId.Fantom]: "https://rpc.ftm.tools",
   [ChainId.Avalanche]: "https://rpc.ankr.com/avalanche",
-  [ChainId.Polygon]: `https://polygon-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
-  [ChainId.Mumbai]: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
+  [ChainId.Polygon]:
+    "https://lingering-icy-waterfall.matic.quiknode.pro/7f82a0ec9990e35de54d7a82f1c94d234f96b5ae/", // `https://polygon-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
+  [ChainId.Mumbai]:
+    "https://dawn-winter-silence.matic-testnet.quiknode.pro/1a490894dec558319317e2cb7a20a2511af43907/", // `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
 };
 
 export const Providers: React.FC = ({ children }) => {
