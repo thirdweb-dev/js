@@ -5,7 +5,7 @@ import {
   useHasVotedOnProposal,
   useTokensDelegated,
 } from "@3rdweb-sdk/react/hooks/useVote";
-import { Flex, Icon, Stack, Text, useToast } from "@chakra-ui/react";
+import { Flex, Icon, Stack, Text } from "@chakra-ui/react";
 import {
   ProposalState,
   Proposal as ProposalType,
@@ -15,9 +15,9 @@ import { Button } from "components/buttons/Button";
 import { Card } from "components/layout/Card";
 import { ethers } from "ethers";
 import { useSingleQueryParam } from "hooks/useQueryParam";
-import React, { useMemo } from "react";
+import { useTxNotifications } from "hooks/useTxNotifications";
+import React, { useCallback, useMemo } from "react";
 import { FiCheck, FiMinus, FiX } from "react-icons/fi";
-import { parseErrorToMessage } from "utils/errorParser";
 
 interface IProposalMetadata {
   color: string;
@@ -72,7 +72,6 @@ interface IProposal {
 }
 
 export const Proposal: React.FC<IProposal> = ({ proposal }) => {
-  const toast = useToast();
   const voteAddress = useSingleQueryParam("vote");
   const { data: hasVoted, isLoading: hasVotedLoading } = useHasVotedOnProposal(
     proposal.proposalId.toString(),
@@ -116,54 +115,34 @@ export const Proposal: React.FC<IProposal> = ({ proposal }) => {
     };
   }, [proposal]);
 
-  const castVote = (voteType: VoteType) => {
-    vote(
-      { voteType },
-      {
-        onSuccess: () => {
-          toast({
-            title: "Success",
-            description: "Vote cast succesfully.",
-            status: "success",
-            duration: 5000,
-            isClosable: true,
-          });
-        },
-        onError: (error) => {
-          toast({
-            title: "Error casting vote",
-            description: parseErrorToMessage(error),
-            status: "error",
-            duration: 9000,
-            isClosable: true,
-          });
-        },
-      },
-    );
-  };
+  const { onSuccess: castVoteSuccess, onError: castVoteError } =
+    useTxNotifications("Vote cast succesfully", "Error casting vote");
 
-  const executeProposal = () => {
+  const castVote = useCallback(
+    (voteType: VoteType) => {
+      vote(
+        { voteType },
+        {
+          onSuccess: castVoteSuccess,
+          onError: castVoteError,
+        },
+      );
+    },
+    [castVoteError, castVoteSuccess, vote],
+  );
+
+  const { onSuccess: executeSuccess, onError: executeError } =
+    useTxNotifications(
+      "Proposal executed succesfully",
+      "Error executing proposal",
+    );
+
+  const executeProposal = useCallback(() => {
     execute(undefined, {
-      onSuccess: () => {
-        toast({
-          title: "Success",
-          description: "Proposal executed succesfully.",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-      },
-      onError: (error: any) => {
-        toast({
-          title: "Error executing proposal",
-          description: parseErrorToMessage(error),
-          status: "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      },
+      onSuccess: executeSuccess,
+      onError: executeError,
     });
-  };
+  }, [execute, executeError, executeSuccess]);
 
   return (
     <Card key={proposal.proposalId.toString()}>

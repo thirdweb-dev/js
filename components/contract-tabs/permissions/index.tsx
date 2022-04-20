@@ -5,14 +5,14 @@ import {
   useContractRoleMembersList,
   useSetAllRoleMembersMutation,
 } from "@3rdweb-sdk/react";
-import { ButtonGroup, Flex, useToast } from "@chakra-ui/react";
+import { ButtonGroup, Flex } from "@chakra-ui/react";
 import { Button } from "components/buttons/Button";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { ROLE_DESCRIPTION_MAP } from "constants/mappings";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { C } from "ts-toolbelt";
-import { parseErrorToMessage } from "utils/errorParser";
 
 export type PermissionFormContext = Record<
   ContractWithRoles["contractRoles"][number],
@@ -32,7 +32,6 @@ export const ContractPermissions = ({
   const contractRoleMembers = useContractRoleMembersList(contract);
   const setAllRolemembers = useSetAllRoleMembersMutation(contract);
   const form = useForm<PermissionFormContext>({});
-  const toast = useToast();
 
   useEffect(() => {
     if (contractRoleMembers.data && !form.formState.isDirty) {
@@ -40,6 +39,11 @@ export const ContractPermissions = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contractRoleMembers.data]);
+
+  const { onSuccess, onError } = useTxNotifications(
+    "Permissions updated",
+    "Failed to update permissions",
+  );
 
   return (
     <FormProvider {...form}>
@@ -51,22 +55,9 @@ export const ContractPermissions = ({
           setAllRolemembers.mutateAsync(d, {
             onSuccess: (_data, variables) => {
               form.reset(variables);
-              toast({
-                title: "Permissions updated",
-                status: "success",
-                duration: 5000,
-                isClosable: true,
-              });
+              onSuccess();
             },
-            onError: (error) => {
-              toast({
-                title: "Failed to update permissions",
-                description: parseErrorToMessage(error),
-                status: "error",
-                duration: 9000,
-                isClosable: true,
-              });
-            },
+            onError,
           }),
         )}
       >

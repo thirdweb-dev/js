@@ -1,5 +1,8 @@
 import { IMintFormProps } from "./types";
-import { useProposalCreateMutation } from "@3rdweb-sdk/react/hooks/useVote";
+import {
+  IProposalInput,
+  useProposalCreateMutation,
+} from "@3rdweb-sdk/react/hooks/useVote";
 import {
   DrawerBody,
   DrawerFooter,
@@ -10,15 +13,14 @@ import {
   Stack,
   Textarea,
   useModalContext,
-  useToast,
 } from "@chakra-ui/react";
 import { Vote } from "@thirdweb-dev/sdk";
 import { Button } from "components/buttons/Button";
 import { MismatchButton } from "components/buttons/MismatchButton";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
-import { parseErrorToMessage } from "utils/errorParser";
 
 const MINT_FORM_ID = "proposal-mint-form";
 interface IProposalMintForm extends IMintFormProps {
@@ -31,35 +33,14 @@ export const ProposalMintForm: React.FC<IProposalMintForm> = ({ contract }) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<IProposalInput>();
 
   const modalContext = useModalContext();
-  const toast = useToast();
 
-  const onSuccess = () => {
-    toast({
-      title: "Success",
-      description: "Proposal successfully created",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
-    modalContext.onClose();
-  };
-
-  const onError = (error: unknown) => {
-    toast({
-      title: "Error",
-      description: parseErrorToMessage(error),
-      status: "error",
-      duration: 9000,
-      isClosable: true,
-    });
-  };
-
-  const onSubmit = (data: any) => {
-    propose.mutate(data, { onSuccess, onError });
-  };
+  const { onSuccess, onError } = useTxNotifications(
+    "Proposal successfully created",
+    "Failed to create proposal",
+  );
 
   return (
     <>
@@ -68,7 +49,15 @@ export const ProposalMintForm: React.FC<IProposalMintForm> = ({ contract }) => {
           spacing={6}
           as="form"
           id={MINT_FORM_ID}
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit((data) => {
+            propose.mutate(data, {
+              onSuccess: () => {
+                onSuccess();
+                modalContext.onClose();
+              },
+              onError,
+            });
+          })}
         >
           <FormControl isRequired isInvalid={!!errors.description}>
             <FormLabel>Description</FormLabel>

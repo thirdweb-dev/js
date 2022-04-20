@@ -2,12 +2,12 @@ import {
   useDelegateMutation,
   useTokensDelegated,
 } from "@3rdweb-sdk/react/hooks/useVote";
-import { Icon, Tooltip, useDisclosure, useToast } from "@chakra-ui/react";
+import { Icon, Tooltip, useDisclosure } from "@chakra-ui/react";
 import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { MismatchButton } from "components/buttons/MismatchButton";
 import { MintDrawer } from "components/shared/MintDrawer";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { FiPlus } from "react-icons/fi";
-import { parseErrorToMessage } from "utils/errorParser";
 
 interface IVoteButton {
   contract: ValidContractInstance;
@@ -31,12 +31,16 @@ export const ProposalButton: React.FC<IVoteButton> = ({ contract }) => {
 };
 
 export const DelegateButton: React.FC<IVoteButton> = ({ contract }) => {
-  const toast = useToast();
   const { data: delegated, isLoading } = useTokensDelegated(
     contract?.getAddress(),
   );
   const { mutate: delegate, isLoading: isDelegating } = useDelegateMutation(
     contract?.getAddress(),
+  );
+
+  const { onSuccess, onError } = useTxNotifications(
+    "Tokens succesfully delegated",
+    "Error delegating tokens",
   );
 
   if (delegated || isLoading) {
@@ -45,24 +49,8 @@ export const DelegateButton: React.FC<IVoteButton> = ({ contract }) => {
 
   const delegateTokens = () => {
     delegate(undefined, {
-      onSuccess: () => {
-        toast({
-          title: "Success",
-          description: "Tokens succesfully delegated.",
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-        });
-      },
-      onError: (error) => {
-        toast({
-          title: "Error delegating tokens",
-          description: parseErrorToMessage(error),
-          status: "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      },
+      onSuccess,
+      onError,
     });
   };
 

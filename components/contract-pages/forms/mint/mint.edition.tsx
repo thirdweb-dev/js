@@ -20,7 +20,6 @@ import {
   Stack,
   Textarea,
   useModalContext,
-  useToast,
 } from "@chakra-ui/react";
 import { Edition } from "@thirdweb-dev/sdk";
 import { OpenSeaPropertyBadge } from "components/badges/opensea";
@@ -28,10 +27,11 @@ import { Button } from "components/buttons/Button";
 import { MismatchButton } from "components/buttons/MismatchButton";
 import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
-import { parseErrorToMessage } from "utils/errorParser";
+import { NFTMetadataInputLimited } from "types/modified-types";
 
 const MINT_FORM_ID = "edition-mint-form";
 interface IEditionMintForm extends IMintFormProps {
@@ -46,37 +46,21 @@ export const EditionMintForm: React.FC<IEditionMintForm> = ({ contract }) => {
     watch,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<NFTMetadataInputLimited & { supply: number }>();
 
   const modalContext = useModalContext();
-  const toast = useToast();
 
-  const onSuccess = () => {
-    toast({
-      title: "Success",
-      description: "Minted!",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
-    modalContext.onClose();
-  };
+  const { onSuccess, onError } = useTxNotifications(
+    "Minted successfully",
+    "Failed to mint",
+  );
 
-  const onError = (error: unknown) => {
-    toast({
-      title: "Error minting",
-      description: parseErrorToMessage(error),
-      status: "error",
-      duration: 9000,
-      isClosable: true,
-    });
-  };
   const setFile = (file: File) => {
     if (file.type.includes("image")) {
       // image files
       setValue("image", file);
-      if (watch("external_link") instanceof File) {
-        setValue("external_link", undefined);
+      if (watch("external_url") instanceof File) {
+        setValue("external_url", undefined);
       }
       if (watch("animation_url") instanceof File) {
         setValue("animation_url", undefined);
@@ -140,8 +124,14 @@ export const EditionMintForm: React.FC<IEditionMintForm> = ({ contract }) => {
           spacing={6}
           as="form"
           id={MINT_FORM_ID}
-          onSubmit={handleSubmit((d: any) =>
-            mint.mutate(d, { onSuccess, onError }),
+          onSubmit={handleSubmit((d) =>
+            mint.mutate(d, {
+              onSuccess: () => {
+                onSuccess();
+                modalContext.onClose();
+              },
+              onError,
+            }),
           )}
         >
           <Stack>

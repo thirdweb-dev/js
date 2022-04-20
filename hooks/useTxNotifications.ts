@@ -1,13 +1,15 @@
 import { useToast } from "@chakra-ui/react";
-import { parseErrorToMessage } from "utils/errorParser";
+import { useErrorHandler } from "contexts/error-handler";
+import { useCallback } from "react";
 
 export function useTxNotifications(
   successMessage: string,
   errorMessage: string,
 ) {
   const toast = useToast();
+  const { onError } = useErrorHandler();
 
-  const onSuccess = () => {
+  const onSuccess = useCallback(() => {
     toast({
       title: "Success",
       description: successMessage,
@@ -15,17 +17,15 @@ export function useTxNotifications(
       duration: 5000,
       isClosable: true,
     });
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [successMessage]);
 
-  const onError = (error: unknown) => {
-    toast({
-      title: errorMessage,
-      description: parseErrorToMessage(error),
-      status: "error",
-      duration: 9000,
-      isClosable: true,
-    });
-  };
+  const _onError = useCallback(
+    (error: unknown) => {
+      onError(error, errorMessage);
+    },
+    [errorMessage, onError],
+  );
 
-  return { onSuccess, onError };
+  return { onSuccess, onError: _onError };
 }

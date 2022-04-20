@@ -12,16 +12,15 @@ import {
   Heading,
   Input,
   Text,
-  useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CommonPlatformFeeSchema } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { Card } from "components/layout/Card";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { parseErrorToMessage } from "utils/errorParser";
 import { z } from "zod";
 
 export const ContractPlatformFee = <TContract extends PlatformFeeContract>({
@@ -31,7 +30,6 @@ export const ContractPlatformFee = <TContract extends PlatformFeeContract>({
   contract: TContract;
   isDisabled: boolean;
 }) => {
-  const toast = useToast();
   const query = useContractPlatformFee(contract);
   const mutation = useContractPlatformFeeMutation(contract);
   const {
@@ -52,6 +50,11 @@ export const ContractPlatformFee = <TContract extends PlatformFeeContract>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query.data, formState.isDirty]);
 
+  const { onSuccess, onError } = useTxNotifications(
+    "Platform fee settings updated",
+    "Error updating platform fee settings",
+  );
+
   return (
     <Card p={0}>
       <Flex
@@ -60,23 +63,9 @@ export const ContractPlatformFee = <TContract extends PlatformFeeContract>({
           mutation.mutateAsync(d, {
             onSuccess: (_data, variables) => {
               reset(variables);
-              toast({
-                title: "Success",
-                description: "Platform fee settings updated",
-                status: "success",
-                duration: 5000,
-                isClosable: true,
-              });
+              onSuccess();
             },
-            onError: (error) => {
-              toast({
-                title: "Error updating platform fee settings",
-                description: parseErrorToMessage(error),
-                status: "error",
-                duration: 9000,
-                isClosable: true,
-              });
-            },
+            onError,
           }),
         )}
         direction="column"

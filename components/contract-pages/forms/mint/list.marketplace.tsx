@@ -63,6 +63,7 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
     "Succesfully created listing",
     "Error creating listing",
   );
+
   const directList = useMarketplaceDirectListMutation(contract.getAddress());
   const auctionList = useMarketplaceAuctionListMutation(contract.getAddress());
   const { watch, register, setValue, handleSubmit } = useForm<ListForm>({
@@ -73,7 +74,7 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
       buyoutPricePerToken: "0",
       listingType: "direct",
       reservePricePerToken: "0",
-      startTimeInSeconds: "0",
+      startTimeInSeconds: Math.floor(Date.now() / 1000).toString(),
       listingDurationInSeconds: (60 * 60 * 24).toString(),
     },
   });

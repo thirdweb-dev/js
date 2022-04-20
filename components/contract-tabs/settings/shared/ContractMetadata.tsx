@@ -12,7 +12,6 @@ import {
   Input,
   Text,
   Textarea,
-  useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CommonContractSchema, ValidContractClass } from "@thirdweb-dev/sdk";
@@ -20,10 +19,10 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { Card } from "components/layout/Card";
 import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { C } from "ts-toolbelt";
-import { parseErrorToMessage } from "utils/errorParser";
 import { z } from "zod";
 
 export const ContractMetadata = <TContract extends ValidContractClass>({
@@ -33,7 +32,6 @@ export const ContractMetadata = <TContract extends ValidContractClass>({
   contract: C.Instance<TContract>;
   isDisabled: boolean;
 }) => {
-  const toast = useToast();
   const metadata = useContractMetadata(contract);
   const metadataMutation = useContractMetadataMutation(contract);
   const {
@@ -54,30 +52,19 @@ export const ContractMetadata = <TContract extends ValidContractClass>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formState.isDirty, metadata.data]);
 
+  const { onSuccess, onError } = useTxNotifications(
+    "Succesfully updated metadata",
+    "Error updating metadata",
+  );
+
   return (
     <Card p={0}>
       <Flex
         as="form"
         onSubmit={handleSubmit((d) => {
           metadataMutation.mutate(d, {
-            onSuccess: () => {
-              toast({
-                title: "Success",
-                description: "Succesfully updated metadata",
-                status: "success",
-                duration: 5000,
-                isClosable: true,
-              });
-            },
-            onError: (error) => {
-              toast({
-                title: "Error updating metadata",
-                description: parseErrorToMessage(error),
-                status: "error",
-                duration: 9000,
-                isClosable: true,
-              });
-            },
+            onSuccess,
+            onError,
           });
         })}
         direction="column"

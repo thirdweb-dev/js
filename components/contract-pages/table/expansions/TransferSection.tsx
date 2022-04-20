@@ -8,15 +8,14 @@ import {
   FormLabel,
   Icon,
   Input,
-  useToast,
 } from "@chakra-ui/react";
 import { AddressZero } from "@ethersproject/constants";
 import { Edition, ValidContractInstance } from "@thirdweb-dev/sdk";
 import { MismatchButton } from "components/buttons/MismatchButton";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import React, { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { IoMdSend } from "react-icons/io";
-import { parseErrorToMessage } from "utils/errorParser";
 
 interface ITransferSection {
   contract?: ValidContractInstance;
@@ -37,7 +36,11 @@ export const TransferSection: React.FC<ITransferSection> = ({
 
   const transfer = useTransferMutation(contract);
   const { closeAllRows } = useTableContext();
-  const toast = useToast();
+
+  const { onSuccess, onError } = useTxNotifications(
+    "Transfer successful",
+    "Error transferring",
+  );
 
   const onSubmit = useCallback(
     (data) => {
@@ -48,29 +51,15 @@ export const TransferSection: React.FC<ITransferSection> = ({
           amount: data.amount,
         },
         {
-          onError: (error) => {
-            toast({
-              title: "Error",
-              description: parseErrorToMessage(error),
-              status: "error",
-              duration: 9000,
-              isClosable: true,
-            });
-          },
+          onError,
           onSuccess: () => {
-            toast({
-              title: "Success",
-              description: "Transfer successful",
-              status: "success",
-              duration: 9000,
-              isClosable: true,
-            });
+            onSuccess();
             closeAllRows();
           },
         },
       );
     },
-    [transfer, tokenId, toast, closeAllRows],
+    [transfer, tokenId, onError, onSuccess, closeAllRows],
   );
 
   const requiresAmount = contract instanceof Edition;

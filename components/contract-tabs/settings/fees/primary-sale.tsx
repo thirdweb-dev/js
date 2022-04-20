@@ -12,15 +12,14 @@ import {
   Heading,
   Input,
   Text,
-  useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CommonPrimarySaleSchema } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { Card } from "components/layout/Card";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { parseErrorToMessage } from "utils/errorParser";
 import { z } from "zod";
 
 export const ContractPrimarySale = <TContract extends RecipientContract>({
@@ -30,7 +29,6 @@ export const ContractPrimarySale = <TContract extends RecipientContract>({
   contract: TContract;
   isDisabled: boolean;
 }) => {
-  const toast = useToast();
   const query = useSaleRecipient(contract);
   const mutation = useSetSaleRecipientMutation(contract);
   const { handleSubmit, getFieldState, formState, register, reset } = useForm<
@@ -46,6 +44,11 @@ export const ContractPrimarySale = <TContract extends RecipientContract>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query.data]);
 
+  const { onSuccess, onError } = useTxNotifications(
+    "Primary sale address updated",
+    "Error updating primary sale address",
+  );
+
   return (
     <Card p={0}>
       <Flex
@@ -54,23 +57,9 @@ export const ContractPrimarySale = <TContract extends RecipientContract>({
           mutation.mutateAsync(d.primary_sale_recipient, {
             onSuccess: (_data, variables) => {
               reset({ primary_sale_recipient: variables });
-              toast({
-                title: "Success",
-                description: "Primary sale address updated",
-                status: "success",
-                duration: 5000,
-                isClosable: true,
-              });
+              onSuccess();
             },
-            onError: (error) => {
-              toast({
-                title: "Error updating recipient address",
-                description: parseErrorToMessage(error),
-                status: "error",
-                duration: 9000,
-                isClosable: true,
-              });
-            },
+            onError,
           }),
         )}
         direction="column"

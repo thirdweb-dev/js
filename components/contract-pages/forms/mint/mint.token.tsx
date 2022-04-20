@@ -10,15 +10,14 @@ import {
   Input,
   Stack,
   useModalContext,
-  useToast,
 } from "@chakra-ui/react";
 import { Token } from "@thirdweb-dev/sdk";
 import { Button } from "components/buttons/Button";
 import { MismatchButton } from "components/buttons/MismatchButton";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
-import { parseErrorToMessage } from "utils/errorParser";
 
 const MINT_FORM_ID = "token-mint-form";
 interface ITokenMintForm extends IMintFormProps {
@@ -33,28 +32,11 @@ export const TokenMintForm: React.FC<ITokenMintForm> = ({ contract }) => {
     formState: { errors },
   } = useForm({ defaultValues: { amount: "0" } });
   const modalContext = useModalContext();
-  const toast = useToast();
 
-  const onSuccess = () => {
-    toast({
-      title: "Success",
-      description: "Additional tokens minted!",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
-    modalContext.onClose();
-  };
-
-  const onError = (error: unknown) => {
-    toast({
-      title: "Error",
-      description: parseErrorToMessage(error),
-      status: "error",
-      duration: 9000,
-      isClosable: true,
-    });
-  };
+  const { onSuccess, onError } = useTxNotifications(
+    "Tokens minted successfully",
+    "Failed to mint tokens",
+  );
 
   return (
     <>
@@ -64,7 +46,13 @@ export const TokenMintForm: React.FC<ITokenMintForm> = ({ contract }) => {
           as="form"
           id={MINT_FORM_ID}
           onSubmit={handleSubmit((d) =>
-            mint.mutate(d.amount, { onSuccess, onError }),
+            mint.mutate(d.amount, {
+              onSuccess: () => {
+                onSuccess();
+                modalContext.onClose();
+              },
+              onError,
+            }),
           )}
         >
           <FormControl isRequired isInvalid={!!errors.amount}>

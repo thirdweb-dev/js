@@ -20,7 +20,6 @@ import {
   Stack,
   Textarea,
   useModalContext,
-  useToast,
 } from "@chakra-ui/react";
 import { EditionDrop } from "@thirdweb-dev/sdk";
 import { OpenSeaPropertyBadge } from "components/badges/opensea";
@@ -28,10 +27,11 @@ import { Button } from "components/buttons/Button";
 import { MismatchButton } from "components/buttons/MismatchButton";
 import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
-import { parseErrorToMessage } from "utils/errorParser";
+import { NFTMetadataInputLimited } from "types/modified-types";
 
 const MINT_FORM_ID = "edition-drop-mint-form";
 interface INFTDropMintForm extends IMintFormProps {
@@ -49,40 +49,16 @@ export const EditionDropMintForm: React.FC<INFTDropMintForm> = ({
     watch,
     handleSubmit,
     formState: { errors },
-  } = useForm({
-    // resolver: zodResolver(),
-  });
+  } = useForm<NFTMetadataInputLimited>();
 
   const imageUrl = useImageFileOrUrl(watch("image"));
 
   const modalContext = useModalContext();
-  const toast = useToast();
 
-  const onSuccess = () => {
-    toast({
-      title: "Success",
-      description: "Edition Drop created successfully",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
-    modalContext.onClose();
-  };
-
-  const onError = (error: unknown) => {
-    toast({
-      title: "Error",
-      description: parseErrorToMessage(error),
-      status: "error",
-      duration: 9000,
-      isClosable: true,
-    });
-  };
-
-  // TODO FIXME
-  const onSubmit = (data: any) => {
-    mint.mutate(data, { onSuccess, onError });
-  };
+  const { onSuccess, onError } = useTxNotifications(
+    "Edition Drop created successfully",
+    "Failed to create Edition Drop",
+  );
 
   const setFile = (file: File) => {
     if (file.type.includes("image")) {
@@ -153,7 +129,15 @@ export const EditionDropMintForm: React.FC<INFTDropMintForm> = ({
           spacing={6}
           as="form"
           id={MINT_FORM_ID}
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit((data) => {
+            mint.mutate(data, {
+              onSuccess: () => {
+                onSuccess();
+                modalContext.onClose();
+              },
+              onError,
+            });
+          })}
         >
           <Stack>
             <Heading size="subtitle.md">Metadata</Heading>

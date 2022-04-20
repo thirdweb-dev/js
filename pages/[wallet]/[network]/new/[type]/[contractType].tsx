@@ -19,7 +19,6 @@ import {
   SimpleGrid,
   Text,
   Textarea,
-  useToast,
 } from "@chakra-ui/react";
 import { AddressZero } from "@ethersproject/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -44,6 +43,7 @@ import {
 import { isAddress } from "ethers/lib/utils";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useSingleQueryParam } from "hooks/useQueryParam";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
 import { ConsolePage } from "pages/_app";
 import React, { useEffect, useMemo } from "react";
@@ -55,7 +55,6 @@ import {
   useForm,
 } from "react-hook-form";
 import { FiChevronLeft } from "react-icons/fi";
-import { parseErrorToMessage } from "utils/errorParser";
 import { NetworkToBlockTimeMap } from "utils/network";
 import { z } from "zod";
 
@@ -252,7 +251,10 @@ const ContractDeployForm = <TContract extends ValidContractClass>({
 
   const seconds = activeChainId && NetworkToBlockTimeMap[activeChainId];
 
-  const toast = useToast();
+  const { onSuccess, onError } = useTxNotifications(
+    "Succesfully deployed contract",
+    "Failed to deploy contract",
+  );
 
   return (
     <FormProvider {...form}>
@@ -262,19 +264,12 @@ const ContractDeployForm = <TContract extends ValidContractClass>({
         onSubmit={handleSubmit((d) => {
           deployMutation.mutate(d, {
             onSuccess: ({ contractAddress }) => {
+              onSuccess();
               push(
                 `/${wallet}/${network}/${UrlMap[contractType]}/${contractAddress}`,
               );
             },
-            onError: (err) => {
-              toast({
-                title: `Failed to deploy contract`,
-                description: parseErrorToMessage(err),
-                status: "error",
-                duration: 9000,
-                isClosable: true,
-              });
-            },
+            onError,
           });
         })}
         direction="column"

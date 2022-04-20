@@ -59,3 +59,6 @@ license-report.txt
 # Local Build stuff
 .yalc/
 yalc.lock
+
+# Remove sitemap stuff
+public/sitemap*.xml

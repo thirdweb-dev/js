@@ -22,7 +22,6 @@ import {
   Spinner,
   Stack,
   Text,
-  useToast,
 } from "@chakra-ui/react";
 import { MaxUint256 } from "@ethersproject/constants";
 import {
@@ -43,7 +42,6 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { BsCircleFill } from "react-icons/bs";
 import { FiPlus, FiTrash, FiUpload } from "react-icons/fi";
 import { toDateTimeLocal } from "utils/date-utils";
-import { parseErrorToMessage } from "utils/errorParser";
 import * as z from "zod";
 import { ZodError } from "zod";
 
@@ -200,7 +198,10 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
     };
   });
 
-  const toast = useToast();
+  const { onSuccess, onError } = useTxNotifications(
+    "Saved claim phases",
+    "Failed to save claim phases",
+  );
 
   return (
     <>
@@ -219,13 +220,7 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
             .mutateAsync(d.phases as ClaimConditionInput[], {
               onSuccess: (_data, variables) => {
                 form.reset({ phases: variables });
-                toast({
-                  title: "Success",
-                  description: "Saved claim phases",
-                  status: "success",
-                  duration: 5000,
-                  isClosable: true,
-                });
+                onSuccess();
               },
             })
             .catch((error) => {
@@ -235,13 +230,7 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                   form.setError(path as any, e);
                 });
               } else {
-                toast({
-                  title: "Error saving claim phases",
-                  description: parseErrorToMessage(error),
-                  status: "error",
-                  duration: 9000,
-                  isClosable: true,
-                });
+                onError(error);
               }
             }),
         )}

@@ -26,15 +26,14 @@ import {
   Th,
   Thead,
   Tr,
-  useToast,
 } from "@chakra-ui/react";
 import { useToken } from "@thirdweb-dev/react";
 import { MismatchButton } from "components/buttons/MismatchButton";
 import { useSingleQueryParam } from "hooks/useQueryParam";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FiSend } from "react-icons/fi";
-import { parseErrorToMessage } from "utils/errorParser";
 
 interface IMintModal {
   isOpen: boolean;
@@ -66,7 +65,11 @@ export const TransferModal: React.FC<IMintModal> = ({ isOpen, onClose }) => {
   const currentBalance = useTokenBalance(tokenAddress, watch("to"));
 
   const mutation = useTransferMutation(contract);
-  const toast = useToast();
+
+  const { onSuccess, onError } = useTxNotifications(
+    "Transferred tokens successfully",
+    "Failed to transfer tokens",
+  );
 
   return (
     <Modal isCentered isOpen={isOpen} onClose={onClose}>
@@ -83,23 +86,8 @@ export const TransferModal: React.FC<IMintModal> = ({ isOpen, onClose }) => {
                   mutation.mutate(
                     { to: d.to, amount: d.amount },
                     {
-                      onSuccess: () => {
-                        toast({
-                          title: "Permissions updated",
-                          status: "success",
-                          duration: 5000,
-                          isClosable: true,
-                        });
-                      },
-                      onError: (error) => {
-                        toast({
-                          title: "Failed to update permissions",
-                          description: parseErrorToMessage(error),
-                          status: "error",
-                          duration: 9000,
-                          isClosable: true,
-                        });
-                      },
+                      onSuccess,
+                      onError,
                       onSettled: onClose,
                     },
                   ),

@@ -20,7 +20,6 @@ import {
   Stack,
   Text,
   Textarea,
-  useToast,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NFTDrop, NFTMetadataInput } from "@thirdweb-dev/sdk";
@@ -28,10 +27,10 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { Card } from "components/layout/Card";
 import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { MouseEventHandler, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { parseErrorToMessage } from "utils/errorParser";
 import z from "zod";
 
 interface SelectRevealOptionProps {
@@ -128,18 +127,10 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
   const mintBatch = useNFTDropBatchMint(contract);
   const mintDelayedRevealBatch = useNFTDropDelayedRevealBatchMint(contract);
 
-  const toast = useToast();
-
-  const onSuccess = (): void => {
-    toast({
-      title: "Success",
-      description: "Batch uploaded successfully",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
-    onClose();
-  };
+  const { onSuccess, onError } = useTxNotifications(
+    "Batch uploaded successfully",
+    "Error uploading delayed reveal batch",
+  );
 
   const onSubmit = (data: DelayedRevealInput) => {
     mintDelayedRevealBatch.mutate(
@@ -153,16 +144,11 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
         password: data.password,
       },
       {
-        onSuccess,
-        onError: (error) => {
-          toast({
-            title: "Error uploading delayed reveal batch",
-            description: parseErrorToMessage(error),
-            status: "error",
-            duration: 9000,
-            isClosable: true,
-          });
+        onSuccess: () => {
+          onSuccess();
+          onClose();
         },
+        onError,
       },
     );
   };
