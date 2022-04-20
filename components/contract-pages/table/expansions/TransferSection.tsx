@@ -10,7 +10,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { AddressZero } from "@ethersproject/constants";
-import { Edition, ValidContractInstance } from "@thirdweb-dev/sdk";
+import { Edition, EditionDrop, ValidContractInstance } from "@thirdweb-dev/sdk";
 import { MismatchButton } from "components/buttons/MismatchButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React, { useCallback } from "react";
@@ -62,7 +62,8 @@ export const TransferSection: React.FC<ITransferSection> = ({
     [transfer, tokenId, onError, onSuccess, closeAllRows],
   );
 
-  const requiresAmount = contract instanceof Edition;
+  const requiresAmount =
+    contract instanceof Edition || contract instanceof EditionDrop;
 
   return (
     <Stack>

@@ -1,26 +1,30 @@
 import { useTableContext } from "../../table-context";
-import { useWeb3 } from "@3rdweb-sdk/react";
+import { useEditionDropBalance } from "@3rdweb-sdk/react";
 import { Button } from "@chakra-ui/button";
 import Icon from "@chakra-ui/icon";
-import { NFTMetadataOwner } from "@thirdweb-dev/sdk";
+import { EditionMetadata } from "@thirdweb-dev/sdk";
+import { useSingleQueryParam } from "hooks/useQueryParam";
 import React from "react";
 import { MdDriveFileMoveOutline } from "react-icons/md";
 import { Row } from "react-table";
 
-interface IOwnerListAndTransferCellProps {
-  row: Row<NFTMetadataOwner>;
+interface IEditionListAndTransferCellProps {
+  row: Row<EditionMetadata>;
 }
 
-export const OwnerListAndTransferCell: React.FC<
-  IOwnerListAndTransferCellProps
+export const EditionListAndTransferCell: React.FC<
+  IEditionListAndTransferCellProps
 > = ({ row }) => {
-  const { address } = useWeb3();
   const tableContext = useTableContext();
+  const editionAddress = useSingleQueryParam("edition");
+  const editionDropAddress = useSingleQueryParam("edition-drop");
 
-  const isOwner =
-    "owner" in row.original ? row.original.owner === address : false;
+  const { data: balance } = useEditionDropBalance(
+    editionAddress || editionDropAddress,
+    row.original.metadata.id.toString(),
+  );
 
-  if (!isOwner) {
+  if (!balance?.gt(0)) {
     return null;
   }
 

@@ -1,4 +1,4 @@
-import { ActionsCell } from "./actions/ActionsCell";
+import { EditionActionsCell } from "./actions/ActionsCell";
 import { MediaCell } from "./cells/media-cell";
 import { Code, Text } from "@chakra-ui/react";
 import { EditionMetadata } from "@thirdweb-dev/sdk";
@@ -41,7 +41,7 @@ export function generateEditionTableColumns() {
     {
       Header: "Actions",
       id: "actions",
-      Cell: ActionsCell || null,
+      Cell: EditionActionsCell || null,
     },
   ] as Column<EditionMetadata>[];
 }

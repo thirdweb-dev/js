@@ -1,4 +1,4 @@
-import { AdminMintConditionCell } from "./actions/AdminMintConditionCell";
+import { EditionDropActionsCell } from "./actions/ActionsCell";
 import { MediaCell } from "./cells/media-cell";
 import { Code, Text } from "@chakra-ui/react";
 import { EditionMetadata } from "@thirdweb-dev/sdk";
@@ -41,7 +41,7 @@ export function generateEditionDropTableColumns() {
     {
       Header: "Actions",
       id: "actions",
-      Cell: AdminMintConditionCell || null,
+      Cell: EditionDropActionsCell || null,
     },
   ] as Column<EditionMetadata>[];
 }
