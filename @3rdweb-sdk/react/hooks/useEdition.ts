@@ -6,6 +6,7 @@ import {
   EditionMetadataInput,
 } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
+import { parseAttributes } from "utils/parseAttributes";
 
 export interface EditionMetadataWithOwner extends EditionMetadata {
   owner: string | undefined;
@@ -14,18 +15,21 @@ export interface EditionMetadataWithOwner extends EditionMetadata {
 // Mutations
 // ----------------------------------------------------------------
 
-type Input = EditionMetadataInput["metadata"] & {
+export type EditionMutationInput = EditionMetadataInput["metadata"] & {
   supply: EditionMetadataInput["supply"];
 };
 
 export function useEditionCreateAndMintMutation(contract?: Edition) {
   return useMutationWithInvalidate(
-    async (metadataWithSupply: Input) => {
+    async (metadataWithSupply: EditionMutationInput) => {
       invariant(contract, "contract is required");
 
       const { supply, ...metadata } = metadataWithSupply;
 
-      return await contract.mint({ metadata, supply });
+      return await contract.mint({
+        metadata: parseAttributes(metadata),
+        supply,
+      });
     },
     {
       onSuccess: (_data, _variables, _options, invalidate) => {

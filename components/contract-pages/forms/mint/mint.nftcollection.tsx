@@ -58,8 +58,6 @@ export const NFTCollectionMintForm: React.FC<INFTCollectionMintForm> = ({
     "Failed to mint NFT",
   );
 
-  // TODO FIXME
-
   const setFile = (file: File) => {
     if (file.type.includes("image")) {
       // image files

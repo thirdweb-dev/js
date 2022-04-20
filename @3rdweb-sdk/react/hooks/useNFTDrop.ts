@@ -14,6 +14,7 @@ import {
 } from "@thirdweb-dev/sdk";
 import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
+import { parseAttributes } from "utils/parseAttributes";
 
 export function useNFTDropContractMetadata(contractAddress?: string) {
   return useContractMetadata(useNFTDrop(contractAddress));
@@ -86,7 +87,7 @@ export function useNFTDropMintMutation(contract?: NFTDrop) {
   return useMutationWithInvalidate(
     async (data: NFTMetadataInput) => {
       invariant(contract, "contract is required");
-      return await contract.createBatch([data]);
+      return await contract.createBatch([parseAttributes(data)]);
     },
     {
       onSuccess: (_data, _variables, _options, invalidate) => {

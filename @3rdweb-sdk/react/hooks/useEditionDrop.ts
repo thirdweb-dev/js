@@ -13,6 +13,7 @@ import {
   NFTMetadataInput,
 } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
+import { parseAttributes } from "utils/parseAttributes";
 
 export function useEditionDropContractMetadata(contractAddress?: string) {
   return useContractMetadata(useEditionDrop(contractAddress));
@@ -82,7 +83,7 @@ export function useEditionDropMintMutation(contract?: EditionDrop) {
   return useMutationWithInvalidate(
     async (data: NFTMetadataInput) => {
       invariant(contract, "contract is required");
-      return await contract.createBatch([data]);
+      return await contract.createBatch([parseAttributes(data)]);
     },
     {
       onSuccess: (_data, _variables, _options, invalidate) => {

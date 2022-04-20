@@ -34,7 +34,7 @@ export const RevealNftsModal: React.FC<RevealNftsModalProps> = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<{ password: string }>();
 
   const { onSuccess, onError } = useTxNotifications(
     "Batch revealed successfully",
@@ -42,28 +42,27 @@ export const RevealNftsModal: React.FC<RevealNftsModalProps> = ({
   );
 
   const reveal = useNFTDropRevealMutation(contract);
-
-  // TODO FIXME
-  const onSubmit = (data: any) => {
-    reveal.mutate(
-      {
-        batchId: batch.batchId,
-        password: data.password,
-      },
-      {
-        onSuccess: () => {
-          onSuccess();
-          onClose();
-        },
-        onError,
-      },
-    );
-  };
-
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent as="form" onSubmit={handleSubmit(onSubmit)}>
+      <ModalContent
+        as="form"
+        onSubmit={handleSubmit((data) =>
+          reveal.mutate(
+            {
+              batchId: batch.batchId,
+              password: data.password,
+            },
+            {
+              onSuccess: () => {
+                onSuccess();
+                onClose();
+              },
+              onError,
+            },
+          ),
+        )}
+      >
         <ModalHeader>
           Reveal Password for {batch?.placeholderMetadata?.name}
         </ModalHeader>
