@@ -3,6 +3,7 @@ import { useEditionDropBalance } from "@3rdweb-sdk/react";
 import { Button } from "@chakra-ui/button";
 import Icon from "@chakra-ui/icon";
 import { EditionMetadata } from "@thirdweb-dev/sdk";
+import { BigNumber } from "ethers";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import React from "react";
 import { MdDriveFileMoveOutline } from "react-icons/md";
@@ -24,7 +25,7 @@ export const EditionListAndTransferCell: React.FC<
     row.original.metadata.id.toString(),
   );
 
-  if (!balance?.gt(0)) {
+  if (BigNumber.from(balance || 0).gt(0)) {
     return null;
   }
 
