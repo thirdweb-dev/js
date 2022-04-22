@@ -1,22 +1,16 @@
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { getAllQueryKey, getTotalCountQueryKey } from "./useGetAll";
 import { useMarketplace } from "@thirdweb-dev/react";
-import { ListingType } from "@thirdweb-dev/sdk";
-
-interface DirectListingProps {
-  assetContractAddress: string;
-  tokenId: string;
-  quantity: string;
-  currencyContractAddress: string;
-  buyoutPricePerToken: string;
-  startTimeInSeconds: string;
-  listingDurationInSeconds: string;
-}
+import {
+  ListingType,
+  NewAuctionListing,
+  NewDirectListing,
+} from "@thirdweb-dev/sdk";
 
 export function useMarketplaceDirectListMutation(contractAddress?: string) {
   const marketplace = useMarketplace(contractAddress);
   return useMutationWithInvalidate(
-    async (data: DirectListingProps) => {
+    async (data: NewDirectListing) => {
       return await marketplace?.direct.createListing({
         ...data,
       });
@@ -32,21 +26,10 @@ export function useMarketplaceDirectListMutation(contractAddress?: string) {
   );
 }
 
-interface AuctionListingProps {
-  assetContractAddress: string;
-  tokenId: string;
-  quantity: string;
-  currencyContractAddress: string;
-  buyoutPricePerToken: string;
-  reservePricePerToken: string;
-  startTimeInSeconds: string;
-  listingDurationInSeconds: string;
-}
-
 export function useMarketplaceAuctionListMutation(contractAddress?: string) {
   const marketplace = useMarketplace(contractAddress);
   return useMutationWithInvalidate(
-    async (data: AuctionListingProps) => {
+    async (data: NewAuctionListing) => {
       return await marketplace?.auction.createListing({
         ...data,
       });

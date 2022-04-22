@@ -2,6 +2,7 @@ import { useTableContext } from "../../table-context";
 import { useEditionDropBalance } from "@3rdweb-sdk/react";
 import { Button } from "@chakra-ui/button";
 import Icon from "@chakra-ui/icon";
+import { Box, Tooltip } from "@chakra-ui/react";
 import { EditionMetadata } from "@thirdweb-dev/sdk";
 import { BigNumber } from "ethers";
 import { useSingleQueryParam } from "hooks/useQueryParam";
@@ -25,23 +26,28 @@ export const EditionListAndTransferCell: React.FC<
     row.original.metadata.id.toString(),
   );
 
-  if (BigNumber.from(balance || 0).gt(0)) {
-    return null;
-  }
+  const ownsAtLeastOne = BigNumber.from(balance || 0).gt(0);
 
   return (
-    <>
-      <Button
-        onClick={() =>
-          tableContext.expandRow({
-            tokenId: row.original.metadata.id.toString(),
-            type: "transfer",
-          })
-        }
-        leftIcon={<Icon as={MdDriveFileMoveOutline} />}
-      >
-        Transfer
-      </Button>
-    </>
+    <Tooltip
+      label={`You do not own at least 1. Your balance: ${balance?.toString()}`}
+      isDisabled={ownsAtLeastOne}
+    >
+      <Box>
+        <Button
+          isFullWidth
+          isDisabled={!ownsAtLeastOne}
+          onClick={() =>
+            tableContext.expandRow({
+              tokenId: row.original.metadata.id.toString(),
+              type: "transfer",
+            })
+          }
+          leftIcon={<Icon as={MdDriveFileMoveOutline} />}
+        >
+          Transfer
+        </Button>
+      </Box>
+    </Tooltip>
   );
 };

@@ -27,7 +27,12 @@ import {
   Tooltip,
   useModalContext,
 } from "@chakra-ui/react";
-import { Marketplace, NATIVE_TOKEN_ADDRESS } from "@thirdweb-dev/sdk";
+import {
+  Marketplace,
+  NATIVE_TOKEN_ADDRESS,
+  NewAuctionListing,
+  NewDirectListing,
+} from "@thirdweb-dev/sdk";
 import { Button } from "components/buttons/Button";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { CurrencySelector } from "components/shared/CurrencySelector";
@@ -43,15 +48,13 @@ interface IMarketplaceListForm {
   contract: Marketplace;
 }
 
-interface ListForm {
+interface ListForm
+  extends Omit<NewDirectListing, "type">,
+    Omit<NewAuctionListing, "type"> {
   selected?: WalletNftData;
-  quantity: string;
-  buyoutPricePerToken: string;
-  currencyContractAddress: string;
   listingType: "direct" | "auction";
-  reservePricePerToken: string;
-  startTimeInSeconds: string;
   listingDurationInSeconds: string;
+  quantity: string;
 }
 
 export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
@@ -74,7 +77,7 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
       buyoutPricePerToken: "0",
       listingType: "direct",
       reservePricePerToken: "0",
-      startTimeInSeconds: Math.floor(Date.now() / 1000).toString(),
+      startTimestamp: new Date(),
       listingDurationInSeconds: (60 * 60 * 24).toString(),
     },
   });
@@ -86,61 +89,6 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
     );
   };
 
-  const onSubmit = (data: any) => {
-    const {
-      selected,
-      currencyContractAddress,
-      quantity,
-      buyoutPricePerToken,
-      listingType,
-      listingDurationInSeconds,
-      startTimeInSeconds,
-      reservePricePerToken,
-    } = data;
-
-    if (listingType === "direct") {
-      directList.mutate(
-        {
-          tokenId: selected?.tokenId,
-          assetContractAddress: selected?.contractAddress,
-          currencyContractAddress,
-          buyoutPricePerToken,
-          quantity,
-          startTimeInSeconds,
-          // Hard code to 100 years for now
-          listingDurationInSeconds: (60 * 60 * 24 * 365 * 100).toString(),
-        },
-        {
-          onSuccess: () => {
-            onSuccess();
-            modalContext.onClose();
-          },
-          onError,
-        },
-      );
-    } else {
-      auctionList.mutate(
-        {
-          tokenId: selected?.tokenId,
-          assetContractAddress: selected?.contractAddress,
-          currencyContractAddress,
-          buyoutPricePerToken,
-          quantity,
-          startTimeInSeconds,
-          listingDurationInSeconds,
-          reservePricePerToken,
-        },
-        {
-          onSuccess: () => {
-            onSuccess();
-            modalContext.onClose();
-          },
-          onError,
-        },
-      );
-    }
-  };
-
   const noNfts = !nfts?.length;
 
   return (
@@ -150,7 +98,58 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
           spacing={6}
           as="form"
           id={LIST_FORM_ID}
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit((formData) => {
+            if (!formData.selected) {
+              return;
+            }
+            if (formData.listingType === "direct") {
+              directList.mutate(
+                {
+                  assetContractAddress: formData.selected.contractAddress,
+                  tokenId: formData.selected.tokenId,
+                  currencyContractAddress: formData.currencyContractAddress,
+                  buyoutPricePerToken: formData.buyoutPricePerToken,
+                  // Hard code to 100 years for now
+                  listingDurationInSeconds: (
+                    60 *
+                    60 *
+                    24 *
+                    365 *
+                    100
+                  ).toString(),
+                  quantity: formData.quantity,
+                  startTimestamp: formData.startTimestamp,
+                },
+                {
+                  onSuccess: () => {
+                    onSuccess();
+                    modalContext.onClose();
+                  },
+                  onError,
+                },
+              );
+            } else if (formData.listingType === "auction") {
+              auctionList.mutate(
+                {
+                  assetContractAddress: formData.selected.contractAddress,
+                  tokenId: formData.selected.tokenId,
+                  currencyContractAddress: formData.currencyContractAddress,
+                  buyoutPricePerToken: formData.buyoutPricePerToken,
+                  listingDurationInSeconds: formData.listingDurationInSeconds,
+                  quantity: formData.quantity,
+                  startTimestamp: formData.startTimestamp,
+                  reservePricePerToken: formData.reservePricePerToken,
+                },
+                {
+                  onSuccess: () => {
+                    onSuccess();
+                    modalContext.onClose();
+                  },
+                  onError,
+                },
+              );
+            }
+          })}
         >
           <FormControl>
             <Heading as={FormLabel} size="label.lg">
