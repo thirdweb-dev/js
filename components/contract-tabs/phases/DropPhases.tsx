@@ -1,4 +1,4 @@
-import { SnapshotUpload } from "../settings/shared/SnapshotUpload";
+import { SnapshotUpload } from "../../batch-upload/SnapshotUpload";
 import { AdminOnly } from "@3rdweb-sdk/react";
 import {
   useClaimPhases,
@@ -250,8 +250,8 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                       ? { address: v, maxClaimable: "0" }
                       : { ...v, maxClaimable: "0" },
                   )}
-                  setAddresses={(addresses) =>
-                    form.setValue(`phases.${index}.snapshot`, addresses)
+                  setSnapshot={(snapshot) =>
+                    form.setValue(`phases.${index}.snapshot`, snapshot)
                   }
                 />
                 <Card position="relative">

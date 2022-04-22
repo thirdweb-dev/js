@@ -27,7 +27,7 @@ import {
   Tr,
   UnorderedList,
 } from "@chakra-ui/react";
-import { ClaimCondition } from "@thirdweb-dev/sdk";
+import { ClaimCondition, SnapshotAddressInput } from "@thirdweb-dev/sdk";
 import { Button } from "components/buttons/Button";
 import { Logo } from "components/logo";
 import { isAddress } from "ethers/lib/utils";
@@ -42,29 +42,32 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { Column, usePagination, useTable } from "react-table";
+import { csvMimeTypes } from "utils/batch";
 
+export interface SnapshotAddressInput {
+  address: string;
+  maxClaimable?: string;
+}
 interface SnapshotUploadProps {
-  setAddresses: (addresses: string[]) => void;
+  setSnapshot: (snapshot: SnapshotAddressInput[]) => void;
   isOpen: boolean;
   onClose: () => void;
-  value: ClaimCondition["snapshot"];
+  value?: ClaimCondition["snapshot"];
 }
 
 export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
-  setAddresses,
+  setSnapshot,
   isOpen,
   onClose,
   value,
 }) => {
-  const initialValue = useMemo(() => {
-    return Array.isArray(value) ? value.map((v) => v.address) : [];
-  }, [value]);
-
-  const [validAddresses, setValidAddresses] = useState<string[]>(initialValue);
+  const [validSnapshot, setValidSnapshot] = useState<SnapshotAddressInput[]>(
+    value || [],
+  );
   const [noCsv, setNoCsv] = useState(false);
 
   const reset = useCallback(() => {
-    setValidAddresses([]);
+    setValidSnapshot([]);
     setNoCsv(false);
   }, []);
 
@@ -76,23 +79,13 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
     (acceptedFiles) => {
       setNoCsv(false);
 
-      const csvMimeTypes = [
-        "text/csv",
-        "text/plain",
-        "text/x-csv",
-        "application/vnd.ms-excel",
-        "application/csv",
-        "application/x-csv",
-        "text/comma-separated-values",
-        "text/x-comma-separated-values",
-        "text/tab-separated-values",
-      ];
-
       const csv = acceptedFiles.find(
         (f) => csvMimeTypes.includes(f.type) || f.name.endsWith(".csv"),
       );
       if (!csv) {
-        console.error("No CSV file found");
+        console.error(
+          "No valid CSV file found, make sure you have an address column.",
+        );
         setNoCsv(true);
         return;
       }
@@ -100,13 +93,24 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
       Papa.parse(csv, {
         header: true,
         complete: (results) => {
-          const addresses: string[] = [
-            ...new Set(
-              results.data.map((r) => Object.values(r as string[])).flat(),
-            ),
-          ].filter((address) => address !== "");
+          const data: SnapshotAddressInput[] = (
+            results.data as SnapshotAddressInput[]
+          ).filter(({ address }) => address !== "");
 
-          setValidAddresses(addresses);
+          // Filter out address duplicates
+          const seen = new Set();
+          const filteredData = data.filter((el) => {
+            const duplicate = seen.has(el.address);
+            seen.add(el.address);
+            return !duplicate;
+          });
+
+          if (!data[0].address) {
+            setNoCsv(true);
+            return;
+          }
+
+          setValidSnapshot(filteredData);
         },
       });
     },
@@ -114,11 +118,11 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
   );
 
   const data = useMemo(() => {
-    const valid = validAddresses.filter((address) => isAddress(address));
-    const invalid = validAddresses.filter((address) => !isAddress(address));
+    const valid = validSnapshot.filter(({ address }) => isAddress(address));
+    const invalid = validSnapshot.filter(({ address }) => !isAddress(address));
     const ordered = [...invalid, ...valid];
-    return ordered.map((address) => ({ address }));
-  }, [validAddresses]);
+    return ordered;
+  }, [validSnapshot]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -127,7 +131,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
   const paginationPortalRef = useRef<HTMLDivElement>(null);
 
   const onSave = () => {
-    setAddresses(validAddresses);
+    setSnapshot(validSnapshot);
     onClose();
   };
 
@@ -148,7 +152,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                 <Flex gap={2}>
                   <Logo hideWordmark />
                   <Heading size="title.md">
-                    {validAddresses.length ? "Edit" : "Upload"} Snapshot
+                    {validSnapshot.length ? "Edit" : "Upload"} Snapshot
                   </Heading>
                 </Flex>
                 <DrawerCloseButton position="relative" right={0} top={0} />
@@ -156,7 +160,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
             </Container>
           </Flex>
 
-          {validAddresses.length > 0 ? (
+          {validSnapshot.length > 0 ? (
             <SnapshotTable portalRef={paginationPortalRef} data={data} />
           ) : (
             <Flex flexGrow={1} align="center" overflow="auto">
@@ -183,7 +187,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                       ) : (
                         <Heading as={Text} size="label.md">
                           {noCsv
-                            ? "No CSV file found, please try again"
+                            ? "No valid CSV file found, make sure you have an address column."
                             : "Drag & Drop a CSV file here"}
                         </Heading>
                       )}
@@ -196,7 +200,20 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                         Files <em>must</em> contain one .csv file with a list of
                         addresses. -{" "}
                         <Link download color="blue.500" href="/snapshot.csv">
-                          Download an example csv
+                          Download an example CSV
+                        </Link>
+                      </ListItem>
+                      <ListItem>
+                        You can also add a column &quot;maxClaimable&quot; to
+                        specify how many NFTs can be claimed by that specific
+                        address per transaction, if not specified, the default
+                        value is the one you have set on your claim phase. -{" "}
+                        <Link
+                          download
+                          color="blue.500"
+                          href="/snapshot-with-maxclaimable.csv"
+                        >
+                          Download an example CSV with maxClaimable
                         </Link>
                       </ListItem>
                     </UnorderedList>
@@ -224,7 +241,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                 >
                   <Button
                     borderRadius="md"
-                    disabled={validAddresses.length === 0}
+                    disabled={validSnapshot.length === 0}
                     onClick={() => {
                       reset();
                     }}
@@ -251,7 +268,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
 };
 
 interface SnapshotTableProps {
-  data: { address: string }[];
+  data: SnapshotAddressInput[];
   portalRef: React.RefObject<HTMLDivElement>;
 }
 
@@ -259,20 +276,14 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
   const columns = useMemo(() => {
     return [
       {
-        Header: "Addresses",
+        Header: "Address",
         accessor: ({ address }) => {
           if (isAddress(address)) {
             return address;
           } else {
             return (
               <Flex>
-                <Tooltip
-                  label={
-                    address.endsWith(".eth")
-                      ? "ENS address are not currently supported. Please use hex addresses only."
-                      : "This is not a valid address"
-                  }
-                >
+                <Tooltip>
                   <Stack direction="row" align="center">
                     <Icon
                       as={IoAlertCircleOutline}
@@ -289,7 +300,13 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
           }
         },
       },
-    ] as Column<{ address: string }>[];
+      {
+        Header: "Max claimable per transaction",
+        accessor: ({ maxClaimable }) => {
+          return maxClaimable || "Default";
+        },
+      },
+    ] as Column<SnapshotAddressInput>[];
   }, []);
 
   const {
