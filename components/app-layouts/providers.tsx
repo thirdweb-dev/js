@@ -1,6 +1,6 @@
 /* eslint-disable line-comment-position */
 import { useActiveChainId } from "@3rdweb-sdk/react";
-import { ThirdwebProvider } from "@thirdweb-dev/react";
+import { ThirdwebProvider, WalletConnector } from "@thirdweb-dev/react";
 import { IpfsStorage } from "@thirdweb-dev/sdk";
 import { BigNumber } from "ethers";
 import { useNativeColorMode } from "hooks/useNativeColorMode";
@@ -63,6 +63,21 @@ export const alchemyUrlMap: Record<SUPPORTED_CHAIN_ID, string> = {
     `https://polygon-mumbai.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
 };
 
+const walletConnectors: WalletConnector[] = [
+  "metamask",
+  "walletConnect",
+  "walletLink",
+];
+if (process.env.NEXT_PUBLIC_MAGIC_KEY) {
+  walletConnectors.push({
+    name: "magic",
+    options: {
+      apiKey: process.env.NEXT_PUBLIC_MAGIC_KEY,
+      rpcUrls: alchemyUrlMap,
+    },
+  });
+}
+
 export const Providers: React.FC = ({ children }) => {
   useNativeColorMode();
   useEffect(() => {
@@ -77,6 +92,7 @@ export const Providers: React.FC = ({ children }) => {
   }, []);
 
   const activeChainId = useActiveChainId();
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThirdwebProvider
@@ -98,6 +114,7 @@ export const Providers: React.FC = ({ children }) => {
             : undefined,
         }}
         storageInterface={StorageSingleton}
+        walletConnectors={walletConnectors}
       >
         {children}
       </ThirdwebProvider>
