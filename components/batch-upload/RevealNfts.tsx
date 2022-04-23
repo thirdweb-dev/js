@@ -46,6 +46,7 @@ export const RevealNftsModal: React.FC<RevealNftsModalProps> = ({
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent
+        mx={{ base: 4, md: 0 }}
         as="form"
         onSubmit={handleSubmit((data) =>
           reveal.mutate(
@@ -71,6 +72,7 @@ export const RevealNftsModal: React.FC<RevealNftsModalProps> = ({
           <FormControl isRequired isInvalid={!!errors.password} mr={4}>
             <Input
               {...register("password")}
+              autoFocus
               placeholder="Password you previously used to batch upload"
               type="password"
             />

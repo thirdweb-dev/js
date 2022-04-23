@@ -74,7 +74,7 @@ export const TransferModal: React.FC<IMintModal> = ({ isOpen, onClose }) => {
   return (
     <Modal isCentered isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent mx={{ base: 4, md: 0 }}>
         <ModalHeader as={Heading}>Transfer Tokens</ModalHeader>
         <ModalCloseButton />
         <ModalBody>

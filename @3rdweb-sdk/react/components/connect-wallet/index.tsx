@@ -3,6 +3,8 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   ButtonProps,
   Flex,
+  FormControl,
+  FormErrorMessage,
   Icon,
   Input,
   Menu,
@@ -25,7 +27,7 @@ import { useConnect, useDisconnect, useMagic } from "@thirdweb-dev/react";
 import { ChakraNextImage } from "components/Image";
 import { Button } from "components/buttons/Button";
 import { StaticImageData } from "next/image";
-import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import { AiOutlineDisconnect } from "react-icons/ai";
 import { FiCheck } from "react-icons/fi";
 import { ImCopy } from "react-icons/im";
@@ -154,36 +156,47 @@ interface IMagicModal {
 
 const MagicModal: React.FC<IMagicModal> = ({ isOpen, onClose }) => {
   const connectMagic = useMagic();
-  const [email, setEmail] = useState("");
-  const [isConnecting, setIsConnecting] = useState(false);
 
-  async function connect() {
-    setIsConnecting(true);
-    try {
-      await connectMagic({ email });
-      onClose();
-    } catch (err) {
-      console.error("failed to connect", err);
-    } finally {
-      setIsConnecting(false);
-    }
-  }
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<{ email: string }>();
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
-      <ModalContent padding="20px" pt="32px">
+      <ModalContent p={{ base: 5, md: 7 }} mx={{ base: 4, md: 0 }}>
         <ModalCloseButton />
-        <ModalBody>
+        <ModalBody
+          as="form"
+          onSubmit={handleSubmit(async ({ email }) => {
+            try {
+              await connectMagic({ email });
+              onClose();
+            } catch (err) {
+              console.error("failed to connect", err);
+              setError("email", {
+                message:
+                  err instanceof Error ? err.message : "Something went wrong",
+              });
+            }
+          })}
+        >
           <Stack spacing={5}>
-            <Input
-              placeholder="name@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <FormControl isRequired isInvalid={!!errors.email} mr={4}>
+              <Input
+                {...register("email")}
+                placeholder="name@example.com"
+                autoFocus
+                type="email"
+              />
+              <FormErrorMessage>{errors?.email?.message}</FormErrorMessage>
+            </FormControl>
             <Button
-              isLoading={isConnecting}
-              onClick={() => connect()}
+              isLoading={isSubmitting}
+              type="submit"
               borderRadius="md"
               colorScheme="primary"
             >
