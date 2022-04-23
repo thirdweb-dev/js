@@ -1,5 +1,4 @@
 import {
-  Button,
   Code,
   Divider,
   Drawer,
@@ -16,6 +15,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { TransactionError } from "@thirdweb-dev/sdk";
+import { Button } from "components/buttons/Button";
 import { LinkButton } from "components/shared/LinkButton";
 import { AddressCopyButton } from "components/web3/AddressCopyButton";
 import { createContext, useCallback, useContext, useState } from "react";
