@@ -5,6 +5,7 @@ import { NFTMetadataOwner } from "@thirdweb-dev/sdk";
 import { AddressCopyButton } from "components/web3/AddressCopyButton";
 import React from "react";
 import { Cell, Column } from "react-table";
+import { parseDescription } from "utils/parseDescription";
 
 export function generateNFTDropTableColumns() {
   return [
@@ -20,7 +21,7 @@ export function generateNFTDropTableColumns() {
     { Header: "Name", accessor: (row) => row.metadata.name },
     {
       Header: "Description",
-      accessor: (row) => row.metadata.description,
+      accessor: (row) => parseDescription(row.metadata.description),
     },
     {
       Header: "Properties",

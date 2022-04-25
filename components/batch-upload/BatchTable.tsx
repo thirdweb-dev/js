@@ -29,6 +29,7 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { Column, usePagination, useTable } from "react-table";
+import { parseDescription } from "utils/parseDescription";
 
 const FileImage: React.FC<ImageProps> = ({ src, ...props }) => {
   const img = useImageFileOrUrl(src);
@@ -120,7 +121,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
       { Header: "Name", accessor: (row) => row.name },
       {
         Header: "Description",
-        accessor: (row) => row.description,
+        accessor: (row) => parseDescription(row.description),
       },
       {
         Header: "Properties",
