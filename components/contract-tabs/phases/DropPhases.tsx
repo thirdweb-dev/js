@@ -318,6 +318,7 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                         </Heading>
 
                         <BigNumberInput
+                          isRequired
                           value={field.maxQuantity?.toString() || "0"}
                           onChange={(value) =>
                             form.setValue(
@@ -497,6 +498,7 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                           How many NFTs can be claimed per transaction?
                         </Heading>
                         <BigNumberInput
+                          isRequired
                           value={
                             field?.quantityLimitPerTransaction?.toString() ||
                             "0"
@@ -530,6 +532,7 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                           claiming?
                         </Heading>
                         <BigNumberInput
+                          isRequired
                           value={field.waitInSeconds?.toString() || "0"}
                           onChange={(value) =>
                             form.setValue(

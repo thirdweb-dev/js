@@ -78,6 +78,7 @@ export const CurrencySelector: React.FC<ICurrencySelector> = ({
         </Button>
         <Flex align="center">
           <Input
+            isRequired
             placeholder="Enter contract address..."
             borderRadius="4px 0px 0px 4px"
             value={editCustomCurrency}
