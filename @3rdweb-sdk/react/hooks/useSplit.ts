@@ -119,7 +119,7 @@ export function useDistributeNumOfTransactions(contractAddress?: string) {
   if (!balances.data || balances.isLoading) {
     return 0;
   }
-  return balances.data.length;
+  return balances.data.filter((b) => b.balance !== "0.0").length;
 }
 
 export function useSplitDistributeFunds(contractAddress?: string) {
