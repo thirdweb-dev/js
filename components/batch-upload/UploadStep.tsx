@@ -110,7 +110,15 @@ export const UploadStep: React.FC<UploadStepProps> = ({
                 you can add an <Code>image</Code> and/or{" "}
                 <Code>animation_url</Code> column and add the IPFS hashes there.{" "}
                 <Link download color="blue.500" href="/example-with-ipfs.csv">
-                  Download example-with-ipfs.csv
+                  Download example.csv
+                </Link>
+              </ListItem>
+              <ListItem>
+                If you want to make your media files map to your NFTs, you can
+                add add the name of your files to the <Code>image</Code> and{" "}
+                <Code>animation_url</Code> column.{" "}
+                <Link download color="blue.500" href="/example-with-maps.csv">
+                  Download example.csv
                 </Link>
               </ListItem>
             </UnorderedList>
