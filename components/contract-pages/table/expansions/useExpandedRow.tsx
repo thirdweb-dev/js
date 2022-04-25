@@ -1,5 +1,6 @@
 import { useTableContext } from "../table-context";
 import { AirdropSection } from "./AirdropSection";
+import { BurnSection } from "./BurnSection";
 import { EditionDropTokenSettingsSection } from "./EditionDropTokenSettings";
 import { TransferSection } from "./TransferSection";
 import { EditionDrop, ValidContractInstance } from "@thirdweb-dev/sdk";
@@ -20,6 +21,8 @@ export function useExpandedRow<TContract extends ValidContractInstance>(
           return (
             <TransferSection contract={contract} tokenId={expanded.tokenId} />
           );
+        } else if (expanded.type === "burn") {
+          return <BurnSection contract={contract} tokenId={expanded.tokenId} />;
         } else if (
           expanded.type === "settings" &&
           contract instanceof EditionDrop

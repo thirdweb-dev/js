@@ -1,4 +1,4 @@
-import { ActionsCell } from "./actions/ActionsCell";
+import { NFTActionsCell } from "./actions/ActionsCell";
 import { MediaCell } from "./cells/media-cell";
 import { Code } from "@chakra-ui/react";
 import { NFTMetadataOwner } from "@thirdweb-dev/sdk";
@@ -41,7 +41,7 @@ export function generateNFTDropTableColumns() {
     {
       Header: "Actions",
       id: "actions",
-      Cell: ActionsCell || null,
+      Cell: NFTActionsCell || null,
     },
   ] as Column<NFTMetadataOwner>[];
 }

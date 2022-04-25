@@ -7,13 +7,13 @@ import React from "react";
 import { MdDriveFileMoveOutline } from "react-icons/md";
 import { Row } from "react-table";
 
-interface IOwnerListAndTransferCellProps {
+interface IOwnerTransferCellProps {
   row: Row<NFTMetadataOwner>;
 }
 
-export const OwnerListAndTransferCell: React.FC<
-  IOwnerListAndTransferCellProps
-> = ({ row }) => {
+export const OwnerTransferCell: React.FC<IOwnerTransferCellProps> = ({
+  row,
+}) => {
   const { address } = useWeb3();
   const tableContext = useTableContext();
 

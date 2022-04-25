@@ -7,17 +7,16 @@ import { EditionMetadata } from "@thirdweb-dev/sdk";
 import { BigNumber } from "ethers";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import React from "react";
-import { MdDriveFileMoveOutline } from "react-icons/md";
+import { FaBurn } from "react-icons/fa";
 import { Row } from "react-table";
 
-interface IEditionListAndTransferCellProps {
+interface IEditionBurnCellProps {
   row: Row<EditionMetadata>;
 }
 
-export const EditionListAndTransferCell: React.FC<
-  IEditionListAndTransferCellProps
-> = ({ row }) => {
+export const EditionBurnCell: React.FC<IEditionBurnCellProps> = ({ row }) => {
   const tableContext = useTableContext();
+
   const editionAddress = useSingleQueryParam("edition");
   const editionDropAddress = useSingleQueryParam("edition-drop");
 
@@ -30,7 +29,9 @@ export const EditionListAndTransferCell: React.FC<
 
   return (
     <Tooltip
-      label={`You do not own at least 1 NFT. Your balance: ${balance?.toString()}`}
+      label={`You do not own at least 1 NFT. Your balance: ${
+        balance?.toString() || 0
+      }`}
       isDisabled={ownsAtLeastOne}
     >
       <Box>
@@ -40,12 +41,12 @@ export const EditionListAndTransferCell: React.FC<
           onClick={() =>
             tableContext.expandRow({
               tokenId: row.original.metadata.id.toString(),
-              type: "transfer",
+              type: "burn",
             })
           }
-          leftIcon={<Icon as={MdDriveFileMoveOutline} />}
+          leftIcon={<Icon as={FaBurn} />}
         >
-          Transfer
+          Burn
         </Button>
       </Box>
     </Tooltip>

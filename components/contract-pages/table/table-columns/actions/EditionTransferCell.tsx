@@ -7,14 +7,14 @@ import { EditionMetadata } from "@thirdweb-dev/sdk";
 import { BigNumber } from "ethers";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import React from "react";
-import { RiDropLine } from "react-icons/ri";
+import { MdDriveFileMoveOutline } from "react-icons/md";
 import { Row } from "react-table";
 
-interface IEditionAirdropCellProps {
+interface IEditionTransferCellProps {
   row: Row<EditionMetadata>;
 }
 
-export const EditionAirdropCell: React.FC<IEditionAirdropCellProps> = ({
+export const EditionTransferCell: React.FC<IEditionTransferCellProps> = ({
   row,
 }) => {
   const tableContext = useTableContext();
@@ -42,12 +42,12 @@ export const EditionAirdropCell: React.FC<IEditionAirdropCellProps> = ({
           onClick={() =>
             tableContext.expandRow({
               tokenId: row.original.metadata.id.toString(),
-              type: "airdrop",
+              type: "transfer",
             })
           }
-          leftIcon={<Icon as={RiDropLine} />}
+          leftIcon={<Icon as={MdDriveFileMoveOutline} />}
         >
-          Airdrop
+          Transfer
         </Button>
       </Box>
     </Tooltip>

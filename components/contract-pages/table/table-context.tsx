@@ -1,7 +1,13 @@
 import { createContext, useCallback, useContext, useState } from "react";
 import invariant from "tiny-invariant";
 
-type ExpansionType = "list" | "transfer" | "settings" | "rewards" | "airdrop";
+type ExpansionType =
+  | "list"
+  | "transfer"
+  | "settings"
+  | "rewards"
+  | "airdrop"
+  | "burn";
 interface IExpandedSettings {
   tokenId: string;
   type: ExpansionType;
