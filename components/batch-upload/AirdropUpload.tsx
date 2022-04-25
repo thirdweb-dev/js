@@ -90,7 +90,9 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
         complete: (results) => {
           const data: AirdropAddressInput[] = (
             results.data as AirdropAddressInput[]
-          ).filter(({ address }) => address !== "");
+          )
+            .filter(({ address }) => address !== "")
+            .map((a) => ({ ...a, address: a.address.trim() }));
 
           // Filter out address duplicates
           const seen = new Set();

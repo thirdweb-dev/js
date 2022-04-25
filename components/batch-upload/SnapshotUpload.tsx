@@ -95,7 +95,11 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
         complete: (results) => {
           const data: SnapshotAddressInput[] = (
             results.data as SnapshotAddressInput[]
-          ).filter(({ address }) => address !== "");
+          )
+            .filter(({ address }) => address !== "")
+            .map((a) => ({ ...a, address: a.address.trim() }));
+
+          console.log({ data });
 
           // Filter out address duplicates
           const seen = new Set();
