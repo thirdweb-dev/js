@@ -95,14 +95,17 @@ function ConsoleApp({ Component, pageProps }: ConsoleAppProps) {
           },
         ]}
         openGraph={{
-          title: "thirdweb",
+          title:
+            "Web3 SDKs for developers ⸱ No-code for NFT artists | thirdweb",
+          description:
+            "Build web3 apps easily. Implement web3 features with powerful SDKs for developers. Drop NFTs with no code. — Ethereum, Polygon, Avalanche, & more.",
           type: "website",
           locale: "en_US",
           url: "https://thirdweb.com",
           site_name: "thirdweb",
           images: [
             {
-              url: "https://thirdweb.com/thirdweb-og.png",
+              url: "https://thirdweb.com/thirdweb.jpeg",
               width: 1200,
               height: 650,
               alt: "thirdweb",
