@@ -31,7 +31,7 @@ interface EmbedSetupProps {
   contract?: ValidContractInstance;
 }
 
-const IPFS_URI = "ipfs://QmQpHkDDWGJPBHFKkpX1DsfzvwZXQYNVoaW4R1Lhenp6T5";
+const IPFS_URI = "ipfs://Qmbmie8xBZs3YFmqSHwX9d36dUt1x8KoNH8KNTRzRYFcgb";
 
 const getContractEmbedHash = (contract?: ValidContractInstance) => {
   if (contract instanceof NFTDrop) {
