@@ -52,7 +52,12 @@ interface IContractCode {
   contract?: ValidContractInstance;
 }
 
-const NPM_INSTALL_COMMAND = `npm install @thirdweb-dev/sdk`;
+const INSTALL_COMMANDS = {
+  typescript: "npm install @thirdweb-dev/sdk",
+  javascript: "npm install @thirdweb-dev/sdk",
+  react: "npm install @thirdweb-dev/react",
+  python: "pip install thirdweb-sdk",
+};
 
 export const ContractCode: React.FC<IContractCode> = ({ contract }) => {
   const { data, isLoading } = useContractCodeSnippetQuery();
@@ -71,7 +76,7 @@ export const ContractCode: React.FC<IContractCode> = ({ contract }) => {
     [address, contract],
   );
 
-  const { onCopy, hasCopied } = useClipboard(NPM_INSTALL_COMMAND);
+  const { onCopy, hasCopied } = useClipboard(INSTALL_COMMANDS[environment]);
 
   if (isLoading) {
     return (
@@ -132,7 +137,7 @@ export const ContractCode: React.FC<IContractCode> = ({ contract }) => {
           <Code borderRadius="md" py={2} px={4} variant="subtle" bg="#1e1e1e">
             <Flex justify="space-between" align="center">
               <Text color="#d4d4d4">
-                {">"} {NPM_INSTALL_COMMAND}
+                {">"} {INSTALL_COMMANDS[environment]}
               </Text>
               <IconButton
                 onClick={onCopy}
