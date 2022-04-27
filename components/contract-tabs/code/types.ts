@@ -1,9 +1,10 @@
-export type Environment = "javascript" | "typescript";
+export type Environment = "javascript" | "typescript" | "react" | "python";
 
 export interface SupportedEnvironment {
   environment: Environment;
   title: string;
   icon: React.FC;
+  colorScheme: string;
 }
 
 export type CodeSnippet = Partial<Record<Environment, string>>;
@@ -13,7 +14,9 @@ export interface SnippetSchema {
   summary: string | null;
   remarks?: string | null;
   examples: CodeSnippet;
-  reference: string;
+  reference: {
+    [key: string]: any;
+  };
   methods?: SnippetSchema[];
   properties?: SnippetSchema[];
 }

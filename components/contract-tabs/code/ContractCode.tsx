@@ -33,10 +33,9 @@ function replaceVariablesInCodeSnippet(
   const envs = Object.keys(snippet) as Environment[];
   for (const env of envs) {
     if (contractAddress) {
-      snippet[env] = snippet[env]?.replace(
-        /{{contract_address}}/gm,
-        contractAddress,
-      );
+      snippet[env] = snippet[env]
+        ?.replace(/{{contract_address}}/gm, contractAddress)
+        .replace(/<YOUR-CONTRACT-ADDRESS>/gm, contractAddress);
     }
 
     if (walletAddress) {
@@ -101,13 +100,13 @@ export const ContractCode: React.FC<IContractCode> = ({ contract }) => {
             <Heading size="label.lg">{snippet.summary}</Heading>
             {snippet.remarks && <Text>{snippet.remarks}</Text>}
           </Flex>
-          {snippet.reference && (
+          {snippet.reference[environment as string] && (
             <LinkButton
               flexShrink={0}
               leftIcon={<IoDocumentOutline />}
               isExternal
               noIcon
-              href={snippet.reference}
+              href={snippet.reference[environment as string]}
               variant="outline"
               size="sm"
             >
@@ -197,7 +196,7 @@ function useContractCodeSnippetQuery() {
     ["code-snippet"],
     async () => {
       const res = await fetch(
-        `https://raw.githubusercontent.com/thirdweb-dev/typescript-sdk/main/docs/snippets.json`,
+        `https://raw.githubusercontent.com/thirdweb-dev/docs/main/docs/snippets.json`,
       );
       return (await res.json()) as SnippetApiResponse;
     },
