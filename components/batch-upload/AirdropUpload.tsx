@@ -91,8 +91,8 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
           const data: AirdropAddressInput[] = (
             results.data as AirdropAddressInput[]
           )
-            .filter(({ address }) => address !== "")
-            .map((a) => ({ ...a, address: a.address.trim() }));
+            .map((a) => ({ ...a, address: (a.address || "").trim() }))
+            .filter(({ address }) => address !== "");
 
           // Filter out address duplicates
           const seen = new Set();
@@ -102,7 +102,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
             return !duplicate;
           });
 
-          if (!data[0].address) {
+          if (!data[0]?.address) {
             setNoCsv(true);
             return;
           }
