@@ -9,7 +9,7 @@ import React from "react";
 
 export const Badge = forwardRef<BadgeProps, "span">(
   ({ py = 1, children, ...props }, ref) => {
-    if (props.colorScheme) {
+    if (props.colorScheme && props.variant && props.variant !== "solid") {
       return (
         <LightMode>
           <ChakraBadge py={py} {...props} ref={ref}>
