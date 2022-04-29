@@ -40,7 +40,7 @@ const EditionDropPage: ConsolePage = () => {
       <ContractLayout
         contract={contract}
         metadata={metadata}
-        primaryAction={MintButton}
+        primaryAction={<MintButton colorScheme="primary" contract={contract} />}
         secondaryAction={
           <MinterOnly contract={contract}>
             <MismatchButton

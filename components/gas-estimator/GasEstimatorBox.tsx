@@ -1,14 +1,5 @@
-import {
-  Box,
-  BoxProps,
-  Flex,
-  Heading,
-  Icon,
-  Text,
-  Tooltip,
-} from "@chakra-ui/react";
+import { Box, BoxProps, Flex, Icon, Tooltip } from "@chakra-ui/react";
 import { ContractType } from "@thirdweb-dev/sdk";
-import { NextLink } from "components/shared/NextLink";
 import {
   CONTRACT_TYPE_NAME_MAP,
   GasEstimatorMap,
@@ -18,6 +9,7 @@ import { ethers } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { AiOutlineInfoCircle } from "react-icons/ai";
 import { FiExternalLink } from "react-icons/fi";
+import { Heading, NextLink, Text } from "tw-components";
 
 interface PriceLineProps {
   title: string;

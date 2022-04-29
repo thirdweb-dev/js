@@ -6,19 +6,17 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
-  Heading,
   IconButton,
   Input,
-  Text,
 } from "@chakra-ui/react";
 import { AddressZero } from "@ethersproject/constants";
 import { Split } from "@thirdweb-dev/sdk";
-import { Button } from "components/buttons/Button";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SplitsPieChart } from "components/splits-chart/splits-chart";
 import { useEffect } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { IoMdAdd, IoMdRemove } from "react-icons/io";
+import { Button, Heading, Text } from "tw-components";
 import { z } from "zod";
 
 export const RecipientForm: React.FC = () => {
@@ -30,7 +28,7 @@ export const RecipientForm: React.FC = () => {
   });
   useEffect(() => {
     if (fields.length === 0) {
-      append({ address: "", sharesBps: 10000 });
+      append({ address: "", sharesBps: 10000 }, { shouldFocus: false });
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -79,8 +77,8 @@ export const RecipientForm: React.FC = () => {
               >
                 <FormControl
                   isInvalid={
-                    getFieldState(`recipients.${index}.address`, formState)
-                      .invalid
+                    !!getFieldState(`recipients.${index}.address`, formState)
+                      .error
                   }
                 >
                   <Input
@@ -97,8 +95,8 @@ export const RecipientForm: React.FC = () => {
                 </FormControl>
                 <FormControl
                   isInvalid={
-                    getFieldState(`recipients.${index}.sharesBps`, formState)
-                      .invalid
+                    !!getFieldState(`recipients.${index}.sharesBps`, formState)
+                      .error
                   }
                 >
                   <BasisPointsInput

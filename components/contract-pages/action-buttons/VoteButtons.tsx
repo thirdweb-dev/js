@@ -10,7 +10,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { FiPlus } from "react-icons/fi";
 
 interface IVoteButton {
-  contract: ValidContractInstance;
+  contract?: ValidContractInstance;
 }
 
 export const ProposalButton: React.FC<IVoteButton> = ({ contract }) => {

@@ -1,30 +1,51 @@
-import { NFTDropKeys, editionDropKeys } from "../cache-keys";
+import { NFTDropKeys, editionDropKeys, tokenDropKeys } from "../cache-keys";
 import {
   useMutationWithInvalidate,
   useQueryWithNetwork,
 } from "./query/useQueryWithNetwork";
 import { useEditionDropResetClaimEligibilityMutation } from "./useEditionDrop";
 import { useNFTDropResetClaimEligibilityMutation } from "./useNFTDrop";
-import { ClaimConditionInput, EditionDrop, NFTDrop } from "@thirdweb-dev/sdk";
+import {
+  useTokenDropData,
+  useTokenDropResetClaimEligibilityMutation,
+} from "./useTokenDrop";
+import {
+  ClaimConditionInput,
+  EditionDrop,
+  NFTDrop,
+  TokenDrop,
+} from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
 
+export function useDecimals(contract?: NFTDrop | EditionDrop | TokenDrop) {
+  if (contract instanceof NFTDrop || contract instanceof EditionDrop) {
+    return 0;
+  } else {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useTokenDropData(contract?.getAddress()).data?.decimals;
+  }
+}
+
 export function useClaimPhases(
-  contract?: NFTDrop | EditionDrop,
+  contract?: NFTDrop | EditionDrop | TokenDrop,
   tokenId?: string,
 ) {
   if (contract instanceof NFTDrop) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useNFTDropClaimPhases(contract);
-  } else {
+  } else if (contract instanceof EditionDrop) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useEditionDropClaimPhases(contract, tokenId);
+  } else {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useTokenDropClaimPhases(contract);
   }
 }
 
 function useNFTDropClaimPhases(contract?: NFTDrop) {
   return useQueryWithNetwork(
     NFTDropKeys.claimPhases(contract?.getAddress()),
-    () => contract?.claimConditions.getAll(),
+    async () => await contract?.claimConditions.getAll(),
     {
       enabled: !!contract,
     },
@@ -34,36 +55,52 @@ function useNFTDropClaimPhases(contract?: NFTDrop) {
 function useEditionDropClaimPhases(contract?: EditionDrop, tokenId?: string) {
   return useQueryWithNetwork(
     editionDropKeys.claimPhases(contract?.getAddress(), tokenId),
-    () => contract?.claimConditions.getAll(tokenId as string),
+    async () => await contract?.claimConditions.getAll(tokenId as string),
     {
       enabled: !!contract && !!tokenId,
     },
   );
 }
 
+function useTokenDropClaimPhases(contract?: TokenDrop) {
+  return useQueryWithNetwork(
+    tokenDropKeys.claimPhases(contract?.getAddress()),
+    async () => await contract?.claimConditions.getAll(),
+    {
+      enabled: !!contract,
+    },
+  );
+}
+
 export function useClaimPhasesMutation(
-  contract?: NFTDrop | EditionDrop,
+  contract?: NFTDrop | EditionDrop | TokenDrop,
   tokenId?: string,
 ) {
   if (contract instanceof NFTDrop) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useNFTDropPhasesMutation(contract);
-  } else {
+  } else if (contract instanceof EditionDrop) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useEditionDropPhasesMutation(contract, tokenId);
+  } else {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useTokenDropPhasesMutation(contract);
   }
 }
 
 export function useResetEligibilityMutation(
-  contract?: NFTDrop | EditionDrop,
+  contract?: NFTDrop | EditionDrop | TokenDrop,
   tokenId?: string,
 ) {
   if (contract instanceof NFTDrop) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useNFTDropResetClaimEligibilityMutation(contract);
-  } else {
+  } else if (contract instanceof EditionDrop) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useEditionDropResetClaimEligibilityMutation(contract, tokenId);
+  } else {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    return useTokenDropResetClaimEligibilityMutation(contract);
   }
 }
 
@@ -98,6 +135,21 @@ function useEditionDropPhasesMutation(
         return invalidate([
           editionDropKeys.claimPhases(contract?.getAddress(), tokenId),
         ]);
+      },
+    },
+  );
+}
+
+function useTokenDropPhasesMutation(contract?: TokenDrop) {
+  return useMutationWithInvalidate(
+    async (phases: ClaimConditionInput[]) => {
+      invariant(contract, "contract is required");
+
+      return await contract.claimConditions.set(phases);
+    },
+    {
+      onSuccess: (_data, _variables, _options, invalidate) => {
+        return invalidate([tokenDropKeys.claimPhases(contract?.getAddress())]);
       },
     },
   );

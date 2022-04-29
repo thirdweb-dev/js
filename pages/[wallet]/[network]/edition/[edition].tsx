@@ -24,7 +24,7 @@ const EditionPage: ConsolePage = () => {
       <ContractLayout
         contract={contract}
         metadata={metadata}
-        primaryAction={MintButton}
+        primaryAction={<MintButton colorScheme="primary" contract={contract} />}
         emptyState={{
           title:
             "You have not minted any NFTs yet, let's mint one to get you started!",

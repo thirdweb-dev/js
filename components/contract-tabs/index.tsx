@@ -8,6 +8,7 @@ import {
   EditionDrop,
   Marketplace,
   NFTDrop,
+  TokenDrop,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
 import React, { useMemo } from "react";
@@ -30,7 +31,10 @@ export function useContractTabs(
       });
     }
 
-    if (contract instanceof NFTDrop && isAdmin) {
+    if (
+      (contract instanceof NFTDrop || contract instanceof TokenDrop) &&
+      isAdmin
+    ) {
       tabs.push({
         title: "Claim Phases",
         content: <DropPhases contract={contract} />,

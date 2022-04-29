@@ -2,23 +2,14 @@ import { BatchTable } from "./BatchTable";
 import { UploadStep } from "./UploadStep";
 import { useEditionDropBatchMint } from "@3rdweb-sdk/react";
 import { useGetTotalCount } from "@3rdweb-sdk/react/hooks/useGetAll";
-import {
-  Box,
-  Container,
-  Drawer,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerOverlay,
-  Flex,
-  Heading,
-} from "@chakra-ui/react";
+import { Box, Container, Flex } from "@chakra-ui/react";
 import { EditionDrop } from "@thirdweb-dev/sdk";
-import { Button } from "components/buttons/Button";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { Logo } from "components/logo";
 import Papa from "papaparse";
 import { useCallback, useRef, useState } from "react";
 import { DropzoneOptions, useDropzone } from "react-dropzone";
+import { Button, Drawer, Heading } from "tw-components";
 import { getAcceptedFiles, transformHeader, useMergedData } from "utils/batch";
 
 interface EditionDropBatchUploadProps {
@@ -114,91 +105,87 @@ export const EditionDropBatchUpload: React.FC<EditionDropBatchUploadProps> = ({
       onClose={_onClose}
       isOpen={isOpen}
     >
-      <DrawerOverlay />
-      <DrawerContent>
-        <Flex direction="column" gap={6} h="100%">
-          <Flex shadow="sm">
-            <Container
-              maxW="container.page"
-              borderRadius={{ base: 0, md: "2xl" }}
-              my={{ base: 0, md: 12 }}
+      <Flex direction="column" gap={6} h="100%">
+        <Flex shadow="sm">
+          <Container
+            maxW="container.page"
+            borderRadius={{ base: 0, md: "2xl" }}
+            my={{ base: 0, md: 12 }}
+            p={{ base: 0, md: 4 }}
+          >
+            <Flex align="center" justify="space-between" p={4}>
+              <Flex gap={2}>
+                <Logo hideWordmark />
+                <Heading size="title.md">Batch upload</Heading>
+              </Flex>
+            </Flex>
+          </Container>
+        </Flex>
+
+        <Box overflowY="scroll">
+          {csvData || jsonData ? (
+            <BatchTable
+              portalRef={paginationPortalRef}
+              data={mergedData}
+              nextTokenIdToMint={nextTokenIdToMint.data?.toNumber()}
+            />
+          ) : (
+            <Flex flexGrow={1} align="center" overflow="auto">
+              <Container maxW="container.page">
+                <UploadStep
+                  getRootProps={getRootProps}
+                  getInputProps={getInputProps}
+                  noFile={noFile}
+                  isDragActive={isDragActive}
+                />
+              </Container>
+            </Flex>
+          )}
+        </Box>
+
+        <Flex borderTop="1px solid" borderTopColor="borderColor">
+          <Container maxW="container.page">
+            <Flex
+              align="center"
+              justify="space-between"
               p={{ base: 0, md: 4 }}
+              flexDir={{ base: "column", md: "row" }}
+              mt={{ base: 4, md: 0 }}
             >
-              <Flex align="center" justify="space-between" p={4}>
-                <Flex gap={2}>
-                  <Logo hideWordmark />
-                  <Heading size="title.md">Batch upload</Heading>
-                </Flex>
-                <DrawerCloseButton position="relative" right={0} top={0} />
-              </Flex>
-            </Container>
-          </Flex>
-
-          <Box overflowY="scroll">
-            {csvData || jsonData ? (
-              <BatchTable
-                portalRef={paginationPortalRef}
-                data={mergedData}
-                nextTokenIdToMint={nextTokenIdToMint.data?.toNumber()}
-              />
-            ) : (
-              <Flex flexGrow={1} align="center" overflow="auto">
-                <Container maxW="container.page">
-                  <UploadStep
-                    getRootProps={getRootProps}
-                    getInputProps={getInputProps}
-                    noFile={noFile}
-                    isDragActive={isDragActive}
-                  />
-                </Container>
-              </Flex>
-            )}
-          </Box>
-
-          <Flex borderTop="1px solid" borderTopColor="borderColor">
-            <Container maxW="container.page">
+              <Box ref={paginationPortalRef} />
               <Flex
+                gap={2}
                 align="center"
-                justify="space-between"
-                p={{ base: 0, md: 4 }}
-                flexDir={{ base: "column", md: "row" }}
                 mt={{ base: 4, md: 0 }}
+                w={{ base: "100%", md: "auto" }}
               >
-                <Box ref={paginationPortalRef} />
-                <Flex
-                  gap={2}
-                  align="center"
-                  mt={{ base: 4, md: 0 }}
+                <Button
+                  borderRadius="md"
+                  isDisabled={!csvData && !jsonData}
+                  onClick={() => {
+                    reset();
+                  }}
                   w={{ base: "100%", md: "auto" }}
                 >
-                  <Button
-                    borderRadius="md"
-                    isDisabled={!csvData && !jsonData}
-                    onClick={() => {
-                      reset();
-                    }}
-                    w={{ base: "100%", md: "auto" }}
-                  >
-                    Reset
-                  </Button>
-                  <TransactionButton
-                    colorScheme="primary"
-                    transactionCount={1}
-                    isDisabled={!mergedData.length}
-                    isLoading={mintBatch.isLoading}
-                    loadingText={`Uploading ${mergedData.length} NFTs...`}
-                    onClick={() => {
-                      mintBatch.mutate(mergedData, { onSuccess: _onClose });
-                    }}
-                  >
-                    Upload {mergedData.length} NFTs
-                  </TransactionButton>
-                </Flex>
+                  Reset
+                </Button>
+                <TransactionButton
+                  colorScheme="primary"
+                  transactionCount={1}
+                  isDisabled={!mergedData.length}
+                  isLoading={mintBatch.isLoading}
+                  loadingText={`Uploading ${mergedData.length} NFTs...`}
+                  onClick={() => {
+                    mintBatch.mutate(mergedData, { onSuccess: _onClose });
+                  }}
+                >
+                  Upload {mergedData.length} NFTs
+                </TransactionButton>
               </Flex>
-            </Container>
-          </Flex>
+            </Flex>
+          </Container>
         </Flex>
-      </DrawerContent>
+      </Flex>
     </Drawer>
   );
 };

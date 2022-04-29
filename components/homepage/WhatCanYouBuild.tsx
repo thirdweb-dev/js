@@ -1,13 +1,7 @@
-import {
-  Container,
-  Divider,
-  Flex,
-  Heading,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Container, Divider, Flex, Stack } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { useState } from "react";
+import { Heading, Text } from "tw-components";
 
 type BuildTab = "membership" | "marketplace" | "dao" | "collection" | "games";
 
@@ -164,17 +158,10 @@ const Tab: React.FC<IBuildTab> = ({
         direction="column"
         height={{ md: "108px", lg: "137px" }}
       >
-        <Text
-          color="#262A36"
-          fontSize={{ base: "20px", lg: "24px" }}
-          fontWeight="600"
-        >
+        <Heading color="#262A36" size="label.2xl">
           {title}
-        </Text>
-        <Text
-          color="rgba(39, 46, 54, 0.9)"
-          fontSize={{ base: "14px", lg: "16px" }}
-        >
+        </Heading>
+        <Text color="rgba(39, 46, 54, 0.9)" size="body.lg">
           {description}
         </Text>
 
@@ -211,7 +198,7 @@ const Tab: React.FC<IBuildTab> = ({
       cursor="pointer"
       _hover={{ bg: "gray.50" }}
     >
-      <Text fontSize={{ base: "20px", lg: "24px" }} fontWeight="600">
+      <Text color="#262A36" size="label.xl">
         {title}
       </Text>
     </Flex>

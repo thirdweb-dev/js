@@ -14,19 +14,18 @@ import {
   InputLeftAddon,
   InputRightAddon,
   Stack,
-  Text,
   Tooltip,
   useClipboard,
   useToast,
 } from "@chakra-ui/react";
 import { AddressZero } from "@ethersproject/constants";
 import { Role } from "@thirdweb-dev/sdk";
-import { Button } from "components/buttons/Button";
 import { isAddress } from "ethers/lib/utils";
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { BiCopy, BiPaste } from "react-icons/bi";
-import { FiInfo, FiPlus, FiTrash } from "react-icons/fi";
+import { BiPaste } from "react-icons/bi";
+import { FiCopy, FiInfo, FiPlus, FiTrash } from "react-icons/fi";
+import { Button, Text } from "tw-components";
 
 interface IPermissionEditor {
   role: Role;
@@ -201,7 +200,7 @@ const PermissionAddress: React.FC<IPermissionAddress> = ({
               borderRadius="sm"
               borderLeftRadius="md"
               aria-label="copy address"
-              icon={<BiCopy />}
+              icon={<FiCopy />}
               _hover={{ bgColor: "gray.300" }}
               width="100%"
               height="100%"

@@ -1,6 +1,7 @@
 import { AddressZero } from "@ethersproject/constants";
 import {
   ContractType,
+  CustomContract,
   Edition,
   EditionDrop,
   Marketplace,
@@ -163,6 +164,34 @@ export const tokenKeys = {
     tokenKeys.detail(address, walletAddress),
 };
 
+export const tokenDropKeys = {
+  all: ["tokenDrop"] as const,
+  details: () => [...tokenDropKeys.all, "detail"] as const,
+  decimals: (address: string = AddressZero) =>
+    [...tokenDropKeys.details(), "decimals", address] as const,
+  detail: (
+    address: string = AddressZero,
+    walletAddress: string = AddressZero,
+  ) => [...tokenDropKeys.details(), address, { walletAddress }] as const,
+  activeClaimCondition: (address = AddressZero) =>
+    [...tokenDropKeys.detail(address), "activeClaimCondition"] as const,
+  claimPhases: (address = AddressZero) =>
+    [...tokenDropKeys.detail(address), "claimPhases"] as const,
+  balanceOf: (
+    address: string = AddressZero,
+    walletAddress: string = AddressZero,
+  ) =>
+    [
+      ...tokenDropKeys.details(),
+      address,
+      "balanceOf",
+      { walletAddress },
+    ] as const,
+  // hack
+  list: (address: string = AddressZero, walletAddress: string = AddressZero) =>
+    tokenDropKeys.detail(address, walletAddress),
+};
+
 export const marketplaceKeys = {
   all: ["marketplace"] as const,
   lists: () => [...marketplaceKeys.all, "list"] as const,
@@ -261,5 +290,6 @@ export const CacheKeyMap: Record<ContractType, any> = {
   [Marketplace.contractType]: marketplaceKeys,
   [Pack.contractType]: packKeys,
   [Split.contractType]: splitsKeys,
-  [TokenDrop.contractType]: {},
+  [TokenDrop.contractType]: tokenDropKeys,
+  [CustomContract.contractType]: {},
 };

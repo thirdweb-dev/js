@@ -9,25 +9,25 @@ import {
   Icon,
   IconButton,
   Stack,
-  Text,
 } from "@chakra-ui/react";
-import { EarlyAccessBanner } from "components/banners/early-access";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
 import { Logo } from "components/logo";
 import { InsufficientFunds } from "components/notices/InsufficientFunds";
 import { NetworkMismatchNotice } from "components/notices/NetworkMismatch";
-import { LinkButton } from "components/shared/LinkButton";
-import { NextLink } from "components/shared/NextLink";
 import { useTrack } from "hooks/analytics/useTrack";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import React from "react";
 import { RiGasStationFill } from "react-icons/ri";
 import { SiDiscord, SiGithub, SiTwitter } from "react-icons/si";
+import { LinkButton, NextLink, Text } from "tw-components";
 
 export const AppShell: React.FC = ({ children }) => {
   const { pathname } = useRouter();
   const { trackEvent } = useTrack();
+
+  const isCustomContractLayout =
+    pathname === "/[wallet]/[network]/[...customContract]";
 
   return (
     <Flex
@@ -52,13 +52,14 @@ export const AppShell: React.FC = ({ children }) => {
         flexShrink={0}
         flexDir="column"
         overflowY="auto"
+        id="tw-scroll-container"
       >
         <Box
           background="backgroundHighlight"
           zIndex="banner"
-          shadow="sm"
-          position="sticky"
-          top={0}
+          shadow={isCustomContractLayout ? undefined : "sm"}
+          position={isCustomContractLayout ? undefined : "sticky"}
+          top={isCustomContractLayout ? undefined : 0}
         >
           <Container
             maxW="container.page"
@@ -161,16 +162,21 @@ export const AppShell: React.FC = ({ children }) => {
             </Stack>
           </Container>
         </Box>
-        <EarlyAccessBanner />
-        <Container flexGrow={1} as="main" maxW="container.page" py={8}>
-          <Breadcrumbs />
-          {children}
-        </Container>
+        {isCustomContractLayout ? (
+          <Box as="main" flexGrow={1}>
+            {children}
+          </Box>
+        ) : (
+          <Container flexGrow={1} as="main" maxW="container.page" py={8}>
+            <Breadcrumbs />
+            {children}
+          </Container>
+        )}
         <Divider />
         <Container as="footer" maxW="container.page" w="100%" py={4}>
           <Stack>
             <Stack direction="row" spacing="4" align="center" justify="center">
-              <Text alignSelf="center" fontSize="sm">
+              <Text alignSelf="center">
                 thirdweb &copy; {new Date().getFullYear()}
               </Text>
               <NextLink

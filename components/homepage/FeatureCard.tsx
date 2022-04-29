@@ -1,7 +1,8 @@
-import { Flex, Heading, Stack } from "@chakra-ui/react";
+import { Flex, Stack } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { FeatureCardMap } from "constants/mappings";
 import React from "react";
+import { Heading } from "tw-components";
 
 interface IFeatureCardProps {
   type: keyof typeof FeatureCardMap;

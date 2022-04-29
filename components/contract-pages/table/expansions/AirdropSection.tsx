@@ -1,13 +1,11 @@
 import { useTableContext } from "../table-context";
 import { useAirdropMutation } from "@3rdweb-sdk/react";
-import { Flex, Stack } from "@chakra-ui/layout";
-import { Icon, Text, useDisclosure } from "@chakra-ui/react";
+import { Flex, Icon, Stack, useDisclosure } from "@chakra-ui/react";
 import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import {
   AirdropAddressInput,
   AirdropUpload,
 } from "components/batch-upload/AirdropUpload";
-import { Button } from "components/buttons/Button";
 import { MismatchButton } from "components/buttons/MismatchButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React, { useCallback } from "react";
@@ -15,6 +13,7 @@ import { useForm } from "react-hook-form";
 import { BsCircleFill } from "react-icons/bs";
 import { FiUpload } from "react-icons/fi";
 import { IoMdSend } from "react-icons/io";
+import { Button, Text } from "tw-components";
 
 interface IAirdropSection {
   contract?: ValidContractInstance;

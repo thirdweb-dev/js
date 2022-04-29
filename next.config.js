@@ -29,8 +29,6 @@ const securityHeaders = [
 
 const moduleExports = {
   reactStrictMode: true,
-  outputFileTracing: false,
-  swcMinify: false,
   async headers() {
     return [
       {
@@ -46,6 +44,16 @@ const moduleExports = {
         source: "/portal/:match*",
         destination: "https://portal.thirdweb.com/:match*",
         permanent: true,
+      },
+      {
+        source: "/dashboard/publish/:path*",
+        destination: "/contracts/publish/:path*",
+        permanent: false,
+      },
+      {
+        source: "/dashboard/mumbai/publish/:path*",
+        destination: "/contracts/publish/:path*",
+        permanent: false,
       },
     ];
   },

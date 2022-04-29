@@ -12,9 +12,6 @@ import {
   DrawerFooter,
   Flex,
   FormControl,
-  FormHelperText,
-  FormLabel,
-  Heading,
   Icon,
   Image,
   Input,
@@ -23,7 +20,6 @@ import {
   Select,
   Spinner,
   Stack,
-  Text,
   Tooltip,
   useModalContext,
 } from "@chakra-ui/react";
@@ -33,7 +29,6 @@ import {
   NewAuctionListing,
   NewDirectListing,
 } from "@thirdweb-dev/sdk";
-import { Button } from "components/buttons/Button";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -41,6 +36,13 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { FaImage } from "react-icons/fa";
 import { FiInfo } from "react-icons/fi";
+import {
+  Button,
+  FormHelperText,
+  FormLabel,
+  Heading,
+  Text,
+} from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 
 const LIST_FORM_ID = "marketplace-list-form";

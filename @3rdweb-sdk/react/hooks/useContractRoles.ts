@@ -35,9 +35,9 @@ export function useContractRoleMembersList<TContract extends ContractWithRoles>(
 ) {
   return useQueryWithNetwork(
     contractRoleKeys.list(contract?.getAddress()),
-    () => {
-      return contract?.roles.getAll() as
-        | Promise<Record<TContract["contractRoles"][number], string[]>>
+    async () => {
+      return (await contract?.roles.getAll()) as
+        | Record<TContract["contractRoles"][number], string[]>
         | undefined;
     },
     {
@@ -52,7 +52,7 @@ export function useContractRoleMembers<TContract extends ContractWithRoles>(
 ) {
   return useQueryWithNetwork(
     contractRoleKeys.detail(contract?.getAddress(), role),
-    () => contract?.roles.get(role as any),
+    async () => await contract?.roles.get(role as any),
     {
       enabled: !!contract && !!contract.getAddress() && !!role,
     },

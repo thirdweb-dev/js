@@ -6,13 +6,13 @@ import {
   useSetAllRoleMembersMutation,
 } from "@3rdweb-sdk/react";
 import { ButtonGroup, Flex } from "@chakra-ui/react";
-import { Button } from "components/buttons/Button";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { ROLE_DESCRIPTION_MAP } from "constants/mappings";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { C } from "ts-toolbelt";
+import { Button } from "tw-components";
 
 export type PermissionFormContext = Record<
   ContractWithRoles["contractRoles"][number],

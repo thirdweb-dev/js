@@ -1,8 +1,7 @@
-import { Text } from "@chakra-ui/react";
 import { Split } from "@thirdweb-dev/sdk";
-import { Card } from "components/layout/Card";
 import React, { useMemo, useState } from "react";
 import { Hint, RadialChart, RadialChartPoint } from "react-vis";
+import { Card, Text } from "tw-components";
 import { z } from "zod";
 
 interface SplitsPieChartProps {

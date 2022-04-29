@@ -1,7 +1,7 @@
 import {
+  isContractWithRoles,
   useIsAccountRole,
   useWeb3,
-  isContractWithRoles,
 } from "@3rdweb-sdk/react";
 import { ValidContractInstance } from "@thirdweb-dev/sdk";
 

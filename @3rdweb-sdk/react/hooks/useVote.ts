@@ -1,13 +1,13 @@
-import { useWeb3 } from "@3rdweb-sdk/react";
-import { useSDK, useToken, useVote } from "@thirdweb-dev/react";
-import { VoteType } from "@thirdweb-dev/sdk";
-import invariant from "tiny-invariant";
 import { voteKeys } from "../cache-keys";
 import {
   useMutationWithInvalidate,
   useQueryWithNetwork,
 } from "./query/useQueryWithNetwork";
 import { useContractMetadata } from "./useContract";
+import { useWeb3 } from "@3rdweb-sdk/react";
+import { useSDK, useToken, useVote } from "@thirdweb-dev/react";
+import { VoteType } from "@thirdweb-dev/sdk";
+import invariant from "tiny-invariant";
 
 export function useVoteContractMetadata(contractAddress?: string) {
   return useContractMetadata(useVote(contractAddress));
@@ -17,7 +17,7 @@ export function useVoteProposalList(contractAddress?: string) {
   const voteContract = useVote(contractAddress);
   return useQueryWithNetwork(
     voteKeys.proposals(contractAddress),
-    () => voteContract?.getAll(),
+    async () => await voteContract?.getAll(),
     {
       enabled: !!voteContract && !!contractAddress,
     },
@@ -32,7 +32,7 @@ export function useHasVotedOnProposal(
   const voteContract = useVote(contractAddress);
   return useQueryWithNetwork(
     voteKeys.userHasVotedOnProposal(proposalId, contractAddress, address),
-    () => voteContract?.hasVoted(proposalId, address),
+    async () => await voteContract?.hasVoted(proposalId, address),
     {
       enabled: !!voteContract && !!contractAddress,
     },
@@ -46,7 +46,7 @@ export function useCanExecuteProposal(
   const voteContract = useVote(contractAddress);
   return useQueryWithNetwork(
     voteKeys.canExecuteProposal(proposalId, contractAddress),
-    () => voteContract?.canExecute(proposalId),
+    async () => await voteContract?.canExecute(proposalId),
     {
       enabled: !!voteContract && !!contractAddress,
     },

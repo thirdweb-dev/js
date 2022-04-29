@@ -1,12 +1,12 @@
-import { LinkButton } from "./LinkButton";
 import { useWeb3 } from "@3rdweb-sdk/react";
 import { Flex, Icon } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { IoRocketOutline } from "react-icons/io5";
 import { VscDashboard } from "react-icons/vsc";
+import { ButtonProps, LinkButton } from "tw-components";
 
 interface GeneralCtaProps {
-  size?: string;
+  size?: ButtonProps["size"];
 }
 
 export const GeneralCta: React.FC<GeneralCtaProps> = ({ size = "md" }) => {

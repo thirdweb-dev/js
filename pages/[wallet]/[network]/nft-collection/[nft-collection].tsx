@@ -18,13 +18,12 @@ const NFTCollectionPage: ConsolePage = () => {
     page: "nft-collection",
     nftCollection: nftCollectionAddress,
   });
-
   return (
     <Track>
       <ContractLayout
         contract={contract}
         metadata={metadata}
-        primaryAction={MintButton}
+        primaryAction={<MintButton colorScheme="primary" contract={contract} />}
         emptyState={{
           title:
             "You have not minted any NFTs yet, let's mint one to get you started!",

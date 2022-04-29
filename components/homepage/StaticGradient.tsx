@@ -1,5 +1,9 @@
-import { AspectRatio, AspectRatioProps, Box } from "@chakra-ui/layout";
-import { useBreakpointValue } from "@chakra-ui/media-query";
+import {
+  AspectRatio,
+  AspectRatioProps,
+  Box,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import React from "react";
 
 export const StaticGradient: React.FC<

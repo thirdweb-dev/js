@@ -1,7 +1,6 @@
 import { useWeb3 } from "@3rdweb-sdk/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
-  ButtonProps,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -19,18 +18,16 @@ import {
   ModalOverlay,
   Skeleton,
   Stack,
-  Text,
   useClipboard,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useConnect, useDisconnect, useMagic } from "@thirdweb-dev/react";
 import { ChakraNextImage } from "components/Image";
-import { Button } from "components/buttons/Button";
 import { StaticImageData } from "next/image";
 import { useForm } from "react-hook-form";
 import { AiOutlineDisconnect } from "react-icons/ai";
-import { FiCheck } from "react-icons/fi";
-import { ImCopy } from "react-icons/im";
+import { FiCheck, FiCopy } from "react-icons/fi";
+import { Button, ButtonProps, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { Connector } from "wagmi-core";
 
@@ -65,6 +62,7 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
           as={Button}
           {...buttonProps}
           variant="outline"
+          colorScheme="gray"
           rightIcon={<ChevronDownIcon />}
         >
           <Flex direction="row" gap={3} align="center">
@@ -89,7 +87,7 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
             icon={
               <Icon
                 color={hasCopied ? "green.500" : undefined}
-                as={hasCopied ? FiCheck : ImCopy}
+                as={hasCopied ? FiCheck : FiCopy}
               />
             }
             onClick={onCopy}

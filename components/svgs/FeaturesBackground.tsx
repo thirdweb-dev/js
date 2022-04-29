@@ -1,5 +1,5 @@
 import Icon from "@chakra-ui/icon";
-import { Flex, FlexProps } from "@chakra-ui/layout";
+import { Flex, FlexProps } from "@chakra-ui/react";
 import React from "react";
 
 export const FeaturesBackground: React.FC<FlexProps> = (props) => {

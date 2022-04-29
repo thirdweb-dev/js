@@ -2,23 +2,20 @@ import {
   ButtonGroup,
   Divider,
   Flex,
-  Heading,
   ListItem,
   Modal,
   ModalBody,
   ModalContent,
   ModalHeader,
   ModalOverlay,
-  Text,
   UnorderedList,
   useBreakpointValue,
 } from "@chakra-ui/react";
-import { Button } from "components/buttons/Button";
 import { Logo } from "components/logo";
-import { LinkButton } from "components/shared/LinkButton";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import React from "react";
 import { FiCheck } from "react-icons/fi";
+import { Button, Heading, LinkButton, Text } from "tw-components";
 
 export const NightlyNotice: React.FC = () => {
   const [hasShownWelcome, setHasShownWelcome] = useLocalStorage(

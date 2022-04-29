@@ -4,15 +4,14 @@ import {
   Code,
   Container,
   Flex,
-  Heading,
   Icon,
   Link,
   ListItem,
-  Text,
   UnorderedList,
   VStack,
 } from "@chakra-ui/react";
 import { BsFillCloudUploadFill } from "react-icons/bs";
+import { Heading, Text } from "tw-components";
 
 interface UploadStepProps {
   getRootProps: any;

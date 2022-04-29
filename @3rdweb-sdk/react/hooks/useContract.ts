@@ -1,12 +1,12 @@
-import { ValidContractClass, ValidContractInstance } from "@thirdweb-dev/sdk";
-import invariant from "tiny-invariant";
-import { C } from "ts-toolbelt";
-import { z } from "zod";
 import { contractKeys } from "../cache-keys";
 import {
   useMutationWithInvalidate,
   useQueryWithNetwork,
 } from "./query/useQueryWithNetwork";
+import { ValidContractClass, ValidContractInstance } from "@thirdweb-dev/sdk";
+import invariant from "tiny-invariant";
+import { C } from "ts-toolbelt";
+import { z } from "zod";
 
 export function useContractMetadata<TContract extends ValidContractInstance>(
   contract?: TContract,

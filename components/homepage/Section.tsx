@@ -4,12 +4,13 @@ import {
   AspectRatioProps,
   Box,
   Container,
-  Heading,
+  Flex,
   SimpleGrid,
   Stack,
-} from "@chakra-ui/layout";
-import { Flex, useBreakpointValue } from "@chakra-ui/react";
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import React, { useMemo } from "react";
+import { Heading } from "tw-components";
 
 type GradientType = "animated" | "static";
 

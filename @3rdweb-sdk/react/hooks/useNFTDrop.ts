@@ -134,7 +134,6 @@ export function useNFTDropResetClaimEligibilityMutation(contract?: NFTDrop) {
     return await contract.claimConditions.set(cleaned, true);
   });
 }
-
 export function useNFTDropClaimConditionMutation(contract?: NFTDrop) {
   return useMutationWithInvalidate(
     async (data: ClaimConditionInput[]) => {

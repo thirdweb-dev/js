@@ -1,12 +1,10 @@
 import { ContractEmptyState, IContractEmptyState } from "./contract-emptystate";
 import { ContractHeader } from "./contract-header";
-import { useWeb3 } from "@3rdweb-sdk/react";
 import {
   Box,
   Center,
   Container,
   HStack,
-  Heading,
   Spinner,
   Stack,
   Tab,
@@ -14,7 +12,6 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  Text,
 } from "@chakra-ui/react";
 import { ValidContractClass } from "@thirdweb-dev/sdk";
 import { ContractTab, useContractTabs } from "components/contract-tabs";
@@ -23,8 +20,8 @@ import { useRouter } from "next/router";
 import React, { PropsWithChildren, useMemo } from "react";
 import { UseQueryResult } from "react-query";
 import { C } from "ts-toolbelt";
+import { Heading, Text } from "tw-components";
 import { parseErrorToMessage } from "utils/errorParser";
-import { removeNull } from "utils/removeNull";
 import { z } from "zod";
 
 interface IContractLayoutProps<
@@ -36,7 +33,7 @@ interface IContractLayoutProps<
   metadata: UseQueryResult<TMetadata>;
   data?: UseQueryResult<TData>;
   // Type shouldn't be enforced on primaryAction props?
-  primaryAction?: React.ElementType<any>;
+  primaryAction?: JSX.Element;
   secondaryAction?: JSX.Element;
   tertiaryAction?: JSX.Element;
   emptyState?: IContractEmptyState;
@@ -57,7 +54,7 @@ export const ContractLayout = <
   emptyState,
 }: PropsWithChildren<IContractLayoutProps<TContract, TMetadata, TData>>) => {
   const router = useRouter();
-  const { address } = useWeb3();
+
   const tabs = useContractTabs(contract);
   const tabIndex = parseInt(useSingleQueryParam("tabIndex") || "0");
   const activeTab = useMemo(() => {
@@ -68,10 +65,6 @@ export const ContractLayout = <
     }
     return tabIndex;
   }, [tabIndex, tabs]);
-
-  const PrimaryActionButton = useMemo(() => {
-    return primaryAction;
-  }, [primaryAction]);
 
   // handle metadata still loading
   if (metadata.isLoading || !metadata.data) {
@@ -89,9 +82,7 @@ export const ContractLayout = <
     return (
       <Center>
         <Container>
-          <Heading as="h1" size="xl">
-            {parseErrorToMessage(metadata.error)}
-          </Heading>
+          <Heading as="h1">{parseErrorToMessage(metadata.error)}</Heading>
         </Container>
       </Center>
     );
@@ -102,15 +93,7 @@ export const ContractLayout = <
       <ContractHeader
         contract={contract}
         contractMetadata={metadata.data}
-        primaryAction={
-          PrimaryActionButton && (
-            <PrimaryActionButton
-              colorScheme="primary"
-              contract={contract}
-              account={removeNull(address)}
-            />
-          )
-        }
+        primaryAction={primaryAction}
         secondaryAction={secondaryAction}
         tertiaryAction={tertiaryAction}
       />

@@ -4,12 +4,12 @@ import {
   MutationFunction,
   QueryFunction,
   QueryKey,
-  useMutation,
   UseMutationOptions,
-  useQuery,
-  useQueryClient,
   UseQueryOptions,
   UseQueryResult,
+  useMutation,
+  useQuery,
+  useQueryClient,
 } from "react-query";
 
 export function useQueryWithNetwork<

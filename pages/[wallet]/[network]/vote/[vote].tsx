@@ -6,14 +6,7 @@ import {
   useVoteProposalList,
   useVoteTokenBalances,
 } from "@3rdweb-sdk/react/hooks/useVote";
-import {
-  Spinner,
-  Stack,
-  Stat,
-  StatLabel,
-  StatNumber,
-  Text,
-} from "@chakra-ui/react";
+import { Spinner, Stack, Stat, StatLabel, StatNumber } from "@chakra-ui/react";
 import { useVote } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import {
@@ -22,12 +15,12 @@ import {
 } from "components/contract-pages/action-buttons/VoteButtons";
 import { ContractLayout } from "components/contract-pages/contract-layout";
 import { Proposal } from "components/contract-pages/vote/Proposal";
-import { Card } from "components/layout/Card";
 import { ContractPageNotice } from "components/notices/ContractPageNotice";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { ConsolePage } from "pages/_app";
 import React, { useMemo } from "react";
+import { Card, Text } from "tw-components";
 
 const VotePage: ConsolePage = () => {
   const { address } = useWeb3();
@@ -71,7 +64,13 @@ const VotePage: ConsolePage = () => {
         contract={contract}
         metadata={metadata}
         data={data}
-        primaryAction={delegated ? ProposalButton : DelegateButton}
+        primaryAction={
+          delegated ? (
+            <ProposalButton contract={contract} />
+          ) : (
+            <DelegateButton contract={contract} />
+          )
+        }
       >
         <Stack spacing={4}>
           {!isDelegatedLoading && !delegated && (

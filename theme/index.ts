@@ -1,13 +1,5 @@
 import { colors } from "./colors";
-import { FormLabel } from "./components/form-label";
-import { Heading } from "./components/heading";
-import { Text } from "./components/text";
-import {
-  chakraFontsizeConfig,
-  fontWeights,
-  letterSpacings,
-  lineHeights,
-} from "./typography";
+import { fontWeights, letterSpacings, lineHeights } from "./typography";
 import { DeepPartial, Theme, extendTheme } from "@chakra-ui/react";
 
 const chakraTheme: Theme = extendTheme(
@@ -44,9 +36,16 @@ const chakraTheme: Theme = extendTheme(
       },
     },
     components: {
-      Heading,
-      Text,
-      FormLabel,
+      Heading: {
+        baseStyle: {
+          color: "heading",
+        },
+      },
+      Text: {
+        baseStyle: {
+          color: "paragraph",
+        },
+      },
       Button: {
         baseStyle: {
           borderRadius: "full",
@@ -160,7 +159,7 @@ const chakraTheme: Theme = extendTheme(
       },
     } as DeepPartial<Theme["components"]>,
     colors,
-    fontSizes: chakraFontsizeConfig,
+    fontSizes: [],
     fontWeights,
     lineHeights,
     letterSpacings,

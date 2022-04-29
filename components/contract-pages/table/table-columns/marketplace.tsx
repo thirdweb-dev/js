@@ -1,10 +1,9 @@
 import { MarketplaceActionsCell } from "./actions/MarketplaceActionsCell";
 import { MediaCell } from "./cells/media-cell";
-import { Text } from "@chakra-ui/react";
 import { AuctionListing, DirectListing, ListingType } from "@thirdweb-dev/sdk";
-import { AddressCopyButton } from "components/web3/AddressCopyButton";
 import React from "react";
 import { Cell, Column } from "react-table";
+import { AddressCopyButton, Text } from "tw-components";
 
 type ListingMetadata = AuctionListing | DirectListing;
 

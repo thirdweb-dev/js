@@ -1,12 +1,12 @@
 import { useTableContext } from "../../table-context";
 import { AdminOnly } from "@3rdweb-sdk/react";
-import { Button } from "@chakra-ui/button";
 import Icon from "@chakra-ui/icon";
 import { useEditionDrop } from "@thirdweb-dev/react";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import React from "react";
 import { FiSettings } from "react-icons/fi";
 import { Row } from "react-table";
+import { Button } from "tw-components";
 
 interface IAdminMintConditionCellProps {
   row: Row<any>;

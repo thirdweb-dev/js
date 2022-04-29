@@ -5,19 +5,18 @@ import {
   useHasVotedOnProposal,
   useTokensDelegated,
 } from "@3rdweb-sdk/react/hooks/useVote";
-import { Flex, Icon, Stack, Text } from "@chakra-ui/react";
+import { Flex, Icon, Stack } from "@chakra-ui/react";
 import {
   ProposalState,
   Proposal as ProposalType,
   VoteType,
 } from "@thirdweb-dev/sdk";
-import { Button } from "components/buttons/Button";
-import { Card } from "components/layout/Card";
 import { ethers } from "ethers";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React, { useCallback, useMemo } from "react";
 import { FiCheck, FiMinus, FiX } from "react-icons/fi";
+import { Button, Card, Text } from "tw-components";
 
 interface IProposalMetadata {
   color: string;

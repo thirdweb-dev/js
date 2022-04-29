@@ -1,4 +1,4 @@
-import { Box, Grid, Heading, Stack, Text } from "@chakra-ui/layout";
+import { Box, Grid, Stack } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { StaticImageData } from "next/image";
 import AvalanchePng from "public/assets/chain-icons/avalanche.png";
@@ -8,6 +8,7 @@ import FlowPng from "public/assets/chain-icons/flow.png";
 import PolygonPng from "public/assets/chain-icons/polygon.png";
 import SolanaPng from "public/assets/chain-icons/solana.png";
 import React from "react";
+import { Heading, Text } from "tw-components";
 
 type SupportedChain =
   | "ethereum"

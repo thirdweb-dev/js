@@ -12,9 +12,6 @@ import {
   DrawerFooter,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  Heading,
   Icon,
   Input,
   Stack,
@@ -23,7 +20,6 @@ import {
 } from "@chakra-ui/react";
 import { EditionDrop } from "@thirdweb-dev/sdk";
 import { OpenSeaPropertyBadge } from "components/badges/opensea";
-import { Button } from "components/buttons/Button";
 import { MismatchButton } from "components/buttons/MismatchButton";
 import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
@@ -31,6 +27,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
+import { Button, FormHelperText, FormLabel, Heading } from "tw-components";
 import { NFTMetadataInputLimited } from "types/modified-types";
 
 const MINT_FORM_ID = "edition-drop-mint-form";

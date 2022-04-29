@@ -1,10 +1,10 @@
 import { Flex, Input, Select, SelectProps } from "@chakra-ui/react";
 import { AddressZero } from "@ethersproject/constants";
-import { Button } from "components/buttons/Button";
 import { CURRENCIES, CurrencyMetadata } from "constants/currencies";
 import { isAddress } from "ethers/lib/utils";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import React, { useMemo, useState } from "react";
+import { Button } from "tw-components";
 import { getChainIdFromNetwork } from "utils/network";
 import { OtherAddressZero } from "utils/zeroAddress";
 

@@ -14,7 +14,6 @@ import {
   Table,
   Tbody,
   Td,
-  Text,
   Th,
   Thead,
   Tr,
@@ -29,6 +28,7 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { Column, usePagination, useTable } from "react-table";
+import { Text } from "tw-components";
 import { parseDescription } from "utils/parseDescription";
 
 const FileImage: React.FC<ImageProps> = ({ src, ...props }) => {
@@ -178,7 +178,9 @@ export const BatchTable: React.FC<BatchTableProps> = ({
                 {headerGroup.headers.map((column) => (
                   // eslint-disable-next-line react/jsx-key
                   <Th {...column.getHeaderProps()}>
-                    {column.render("Header")}
+                    <Text as="label" size="label.md">
+                      {column.render("Header")}
+                    </Text>
                   </Th>
                 ))}
               </Tr>

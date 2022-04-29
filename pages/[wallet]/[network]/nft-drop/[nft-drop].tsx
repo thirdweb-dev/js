@@ -26,7 +26,6 @@ import { MismatchButton } from "components/buttons/MismatchButton";
 import { MintButton } from "components/contract-pages/action-buttons/MintButton";
 import { ContractLayout } from "components/contract-pages/contract-layout";
 import { ContractItemsTable } from "components/contract-pages/table";
-import { Card } from "components/layout/Card";
 import { ContractPageNotice } from "components/notices/ContractPageNotice";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
@@ -34,6 +33,7 @@ import { useRouter } from "next/router";
 import { ConsolePage } from "pages/_app";
 import React, { useState } from "react";
 import { RiCheckboxMultipleBlankLine } from "react-icons/ri";
+import { Card } from "tw-components";
 
 const NFTDropPage: ConsolePage = () => {
   const {
@@ -78,7 +78,7 @@ const NFTDropPage: ConsolePage = () => {
       <ContractLayout
         contract={contract}
         metadata={metadata}
-        primaryAction={MintButton}
+        primaryAction={<MintButton colorScheme="primary" contract={contract} />}
         secondaryAction={
           <MinterOnly contract={contract}>
             <MismatchButton

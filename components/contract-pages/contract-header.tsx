@@ -1,18 +1,11 @@
 import { useContractTypeOfContract } from "@3rdweb-sdk/react";
-import {
-  Box,
-  ButtonGroup,
-  Flex,
-  Heading,
-  Image,
-  Stack,
-} from "@chakra-ui/react";
+import { Box, ButtonGroup, Flex, Image, Stack } from "@chakra-ui/react";
 import { ValidContractClass } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
-import { AddressCopyButton } from "components/web3/AddressCopyButton";
 import { FeatureIconMap } from "constants/mappings";
 import React, { PropsWithChildren } from "react";
 import { C } from "ts-toolbelt";
+import { AddressCopyButton, Heading } from "tw-components";
 import { z } from "zod";
 
 interface IContractHeaderProps<

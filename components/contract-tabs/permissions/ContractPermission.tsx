@@ -1,19 +1,11 @@
 import { PermissionEditor } from "./PermissionsEditor";
 import { ContractWithRolesInstance, useIsAdmin } from "@3rdweb-sdk/react";
-import {
-  Flex,
-  Heading,
-  Icon,
-  Select,
-  Spinner,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Flex, Icon, Select, Spinner, Stack } from "@chakra-ui/react";
 import { AddressZero } from "@ethersproject/constants";
 import { Role } from "@thirdweb-dev/sdk";
-import { Card } from "components/layout/Card";
 import { useFormContext } from "react-hook-form";
 import { FiInfo } from "react-icons/fi";
+import { Card, Heading, Text } from "tw-components";
 
 interface IContractPermission {
   role: Role;
@@ -46,7 +38,7 @@ export const ContractPermission: React.FC<IContractPermission> = ({
         <Stack spacing={2} mb="12px">
           <Flex>
             <Stack spacing={1} flexGrow={1}>
-              <Heading size="heading.sm" textTransform="capitalize">
+              <Heading size="subtitle.sm" textTransform="capitalize">
                 {role === "minter" ? "Creator" : role}
               </Heading>
               <Text>{description}</Text>

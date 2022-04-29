@@ -8,14 +8,13 @@ import {
   LayoutProps,
   Link,
   Stack,
-  Text,
 } from "@chakra-ui/react";
-import { Button } from "components/buttons/Button";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import React, { useCallback } from "react";
 import { DropEvent, FileRejection, useDropzone } from "react-dropzone";
 import { AiFillEye, AiOutlineFileAdd } from "react-icons/ai";
 import { FiImage, FiUpload } from "react-icons/fi";
+import { Button, Text } from "tw-components";
 
 interface IFileInputProps extends BoxProps {
   accept?: HTMLInputElement["accept"];

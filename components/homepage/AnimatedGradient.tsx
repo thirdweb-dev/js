@@ -1,5 +1,8 @@
-import { AspectRatio, AspectRatioProps, Box, Center } from "@chakra-ui/layout";
 import {
+  AspectRatio,
+  AspectRatioProps,
+  Box,
+  Center,
   keyframes,
   useBreakpointValue,
   usePrefersReducedMotion,

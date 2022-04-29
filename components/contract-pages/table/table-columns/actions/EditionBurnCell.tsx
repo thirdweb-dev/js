@@ -1,6 +1,5 @@
 import { useTableContext } from "../../table-context";
 import { useEditionDropBalance } from "@3rdweb-sdk/react";
-import { Button } from "@chakra-ui/button";
 import Icon from "@chakra-ui/icon";
 import { Box, Tooltip } from "@chakra-ui/react";
 import { EditionMetadata } from "@thirdweb-dev/sdk";
@@ -9,6 +8,7 @@ import { useSingleQueryParam } from "hooks/useQueryParam";
 import React from "react";
 import { FaBurn } from "react-icons/fa";
 import { Row } from "react-table";
+import { Button } from "tw-components";
 
 interface IEditionBurnCellProps {
   row: Row<EditionMetadata>;

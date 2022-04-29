@@ -1,13 +1,11 @@
 import { useTableContext } from "../table-context";
 import { useTransferMutation } from "@3rdweb-sdk/react";
-import { Stack } from "@chakra-ui/layout";
 import {
   FormControl,
   FormErrorMessage,
-  FormHelperText,
-  FormLabel,
   Icon,
   Input,
+  Stack,
 } from "@chakra-ui/react";
 import { AddressZero } from "@ethersproject/constants";
 import { Edition, EditionDrop, ValidContractInstance } from "@thirdweb-dev/sdk";
@@ -16,6 +14,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import React, { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { IoMdSend } from "react-icons/io";
+import { FormHelperText, FormLabel } from "tw-components";
 
 interface ITransferSection {
   contract?: ValidContractInstance;

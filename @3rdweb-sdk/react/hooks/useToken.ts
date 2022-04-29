@@ -49,7 +49,7 @@ export function useTokenBalance(
   const addressToCheck = walletAddress || address;
   return useQuery(
     tokenKeys.balanceOf(contractAddress, addressToCheck),
-    () => tokenContract?.balanceOf(addressToCheck || ""),
+    async () => await tokenContract?.balanceOf(addressToCheck || ""),
     {
       enabled:
         !!contractAddress &&

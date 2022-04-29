@@ -1,15 +1,11 @@
 import { ChevronRightIcon } from "@chakra-ui/icons";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  Text,
-} from "@chakra-ui/react";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
 import { isAddress } from "@ethersproject/address";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
+import { Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 
 export const Breadcrumbs: React.FC = () => {

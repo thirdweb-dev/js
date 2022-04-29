@@ -9,7 +9,6 @@ import {
   ListItem,
   SimpleGrid,
   Stack,
-  Text,
 } from "@chakra-ui/react";
 import {
   Marketplace,
@@ -38,6 +37,7 @@ import Scissors from "public/assets/landingpage/scissors.png";
 // end images
 import React from "react";
 import { FiCheck } from "react-icons/fi";
+import { Text } from "tw-components";
 
 const Home: ConsolePage = () => {
   const { Track } = useTrack({ page: "home" });

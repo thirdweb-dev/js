@@ -2,9 +2,9 @@ import { NFTActionsCell } from "./actions/ActionsCell";
 import { MediaCell } from "./cells/media-cell";
 import { Code } from "@chakra-ui/react";
 import { NFTMetadataOwner } from "@thirdweb-dev/sdk";
-import { AddressCopyButton } from "components/web3/AddressCopyButton";
 import React from "react";
 import { Cell, Column } from "react-table";
+import { AddressCopyButton } from "tw-components";
 import { parseDescription } from "utils/parseDescription";
 
 export function generateNFTCollectionTableColumns() {

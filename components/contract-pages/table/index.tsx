@@ -18,7 +18,6 @@ import {
   Divider,
   Flex,
   HStack,
-  Heading,
   Icon,
   IconButton,
   Select,
@@ -28,12 +27,10 @@ import {
   Table,
   Tbody,
   Td,
-  Text,
   Th,
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { Card } from "components/layout/Card";
 import { BigNumber } from "ethers";
 import React, { PropsWithChildren, useEffect, useState } from "react";
 import {
@@ -43,6 +40,7 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { Row, usePagination, useTable } from "react-table";
+import { Card, Heading, Text } from "tw-components";
 
 interface IRawContractItemsTable<TContract extends ContractWithGetAll> {
   // items: TTableType<TContract>[];
@@ -119,7 +117,14 @@ const RawContractItemsTable = <TContract extends ContractWithGetAll>({
 
   return (
     <Stack spacing={4}>
-      <Card maxW="100%" as={Card} overflowX="auto" position="relative">
+      <Card
+        maxW="100%"
+        as={Card}
+        overflowX="auto"
+        position="relative"
+        px={0}
+        pt={0}
+      >
         {items.isFetching && (
           <Spinner
             color="primary"
@@ -130,14 +135,16 @@ const RawContractItemsTable = <TContract extends ContractWithGetAll>({
           />
         )}
         <Table {...getTableProps()}>
-          <Thead>
+          <Thead bg="blackAlpha.50" _dark={{ bg: "whiteAlpha.50" }}>
             {headerGroups.map((headerGroup) => (
               // eslint-disable-next-line react/jsx-key
               <Tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
                   // eslint-disable-next-line react/jsx-key
-                  <Th {...column.getHeaderProps()}>
-                    {column.render("Header")}
+                  <Th {...column.getHeaderProps()} py={5}>
+                    <Heading as="label" size="label.md" color="inherit">
+                      {column.render("Header")}
+                    </Heading>
                   </Th>
                 ))}
               </Tr>

@@ -12,7 +12,6 @@ import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import posthog from "posthog-js";
 import React, { useEffect } from "react";
-import { fontsizeCss } from "theme/typography";
 
 export type ConsolePageComponent<IP, P> = NextComponentType<
   NextPageContext,
@@ -71,10 +70,6 @@ function ConsoleApp({ Component, pageProps }: ConsoleAppProps) {
     <Track>
       <Global
         styles={css`
-          :host,
-          :root {
-            ${fontsizeCss};
-          }
           #walletconnect-wrapper {
             color: #000;
           }

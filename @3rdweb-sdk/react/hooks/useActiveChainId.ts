@@ -1,9 +1,9 @@
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import {
-  getChainIdFromNetwork,
-  getNetworkFromChainId,
   SUPPORTED_CHAIN_ID,
   SupportedNetwork,
+  getChainIdFromNetwork,
+  getNetworkFromChainId,
 } from "utils/network";
 
 export function useActiveChainId(): SUPPORTED_CHAIN_ID | undefined {

@@ -64,12 +64,14 @@ export function useGetTotalCount<TContract extends ContractWithGetAll>(
   contract?: TContract,
 ) {
   const queryKey = getTotalCountQueryKey(contract);
-
   return useQueryWithNetwork(
     queryKey,
     async () => {
       if (!contract) {
         return BigNumber.from(0);
+      }
+      if ("query" in contract && contract.query?.totalSupply) {
+        return await contract.query?.totalSupply();
       }
       if ("getTotalCount" in contract) {
         return await contract.getTotalCount();
@@ -77,7 +79,7 @@ export function useGetTotalCount<TContract extends ContractWithGetAll>(
       return BigNumber.from(0);
     },
     {
-      enabled: !!contract && "getTotalCount" in contract,
+      enabled: !!contract,
       keepPreviousData: true,
     },
   );

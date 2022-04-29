@@ -7,20 +7,16 @@ import {
 } from "@3rdweb-sdk/react";
 import { useProjects } from "@3rdweb-sdk/react/hooks/useProjects";
 import {
-  Badge,
   Box,
   Center,
   Container,
   Flex,
-  Heading,
   Icon,
   IconButton,
   Image,
   Link,
   Menu,
   MenuButton,
-  MenuGroup,
-  MenuItem,
   MenuItemOption,
   MenuList,
   MenuOptionGroup,
@@ -34,7 +30,6 @@ import {
   Tabs,
   Tbody,
   Td,
-  Text,
   Th,
   Thead,
   Tr,
@@ -47,10 +42,6 @@ import {
 } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
-import { Button } from "components/buttons/Button";
-import { Card } from "components/layout/Card";
-import { NextLink } from "components/shared/NextLink";
-import { AddressCopyButton } from "components/web3/AddressCopyButton";
 import {
   CONTRACT_TYPE_NAME_MAP,
   FeatureIconMap,
@@ -72,11 +63,20 @@ import {
   useTable,
 } from "react-table";
 import {
+  AddressCopyButton,
+  Badge,
+  Card,
+  Heading,
+  LinkButton,
+  Text,
+} from "tw-components";
+import {
   ChainId,
   SUPPORTED_CHAIN_ID,
   SUPPORTED_CHAIN_IDS,
   getNetworkFromChainId,
 } from "utils/network";
+import { shortenIfAddress } from "utils/usedapp-external";
 import { z } from "zod";
 
 const Dashboard: ConsolePage = () => {
@@ -154,9 +154,21 @@ const Dashboard: ConsolePage = () => {
   return (
     <Flex direction="column" gap={8}>
       {!!combinedList.length && (
-        <Flex justifyContent="space-between" alignItems="center">
-          <Heading size="title.md">Your contracts</Heading>
-          <CreateContractButton />
+        <Flex justify="space-between" align="top">
+          <Flex gap={2} direction="column">
+            <Heading size="title.md">Deployed contracts</Heading>
+            <Text fontStyle="italic" maxW="container.md">
+              The list of contract instances that you have deployed with
+              thirdweb across all networks.
+            </Text>
+          </Flex>
+          <LinkButton
+            leftIcon={<FiPlus />}
+            colorScheme="primary"
+            href="/contracts"
+          >
+            Deploy new contract
+          </LinkButton>
         </Flex>
       )}
       {projects && projects.length ? (
@@ -184,76 +196,6 @@ const Dashboard: ConsolePage = () => {
 Dashboard.Layout = AppLayout;
 
 export default Dashboard;
-
-const CreateContractButton: React.FC = () => {
-  const wallet = useSingleQueryParam("wallet") || "dashboard";
-  const { getNetworkMetadata } = useWeb3();
-
-  const testnets = useMemo(() => {
-    return SUPPORTED_CHAIN_IDS.filter((chainId) => chainId !== ChainId.Goerli)
-      .map((supportedChain) => {
-        return getNetworkMetadata(supportedChain);
-      })
-      .filter((n) => n.isTestnet);
-  }, [getNetworkMetadata]);
-
-  const mainnets = useMemo(() => {
-    return SUPPORTED_CHAIN_IDS.map((supportedChain) => {
-      return getNetworkMetadata(supportedChain);
-    }).filter((n) => !n.isTestnet);
-  }, [getNetworkMetadata]);
-
-  return (
-    <Flex direction="row" justify="flex-end" zIndex={10}>
-      <Menu>
-        <MenuButton as={Button} leftIcon={<FiPlus />} colorScheme="primary">
-          Create new contract
-        </MenuButton>
-        <MenuList>
-          <MenuGroup title="Mainnets">
-            {mainnets.map((n) => (
-              <MenuItem
-                _hover={{
-                  textDecor: "none",
-                }}
-                href={`/${wallet}/${n.chainName.toLowerCase()}/new`}
-                key={n.chainName}
-                as={NextLink}
-                icon={
-                  <Flex>
-                    <Icon as={n.icon} boxSize={5} />
-                  </Flex>
-                }
-              >
-                {n.chainName}
-              </MenuItem>
-            ))}
-          </MenuGroup>
-          <MenuGroup title="Testnets">
-            {testnets.map((n) => (
-              <MenuItem
-                _hover={{
-                  textDecor: "none",
-                }}
-                href={`/${wallet}/${n.chainName.toLowerCase()}/new`}
-                key={n.chainName}
-                as={NextLink}
-                icon={
-                  <Flex>
-                    <Icon as={n.icon} boxSize={5} />
-                  </Flex>
-                }
-              >
-                {n.chainName}
-              </MenuItem>
-            ))}
-          </MenuGroup>
-        </MenuList>
-      </Menu>
-    </Flex>
-  );
-};
-
 interface ContractTableProps {
   combinedList: {
     chainId: ChainId;
@@ -323,6 +265,7 @@ export const ContractTable: React.FC<ContractTableProps> = ({
                 <MenuOptionGroup
                   defaultValue={contractFilterOptions}
                   title="Contract Types"
+                  fontSize={12}
                   type="checkbox"
                   value={filterVal}
                   onChange={(e) => props.setFilter(props.column.id, e)}
@@ -335,7 +278,7 @@ export const ContractTable: React.FC<ContractTableProps> = ({
                           src={FeatureIconMap[contractType]}
                           alt={contractType}
                         />
-                        <Text size="label.sm">
+                        <Text size="label.md">
                           {CONTRACT_TYPE_NAME_MAP[contractType]}
                         </Text>
                       </Flex>
@@ -390,6 +333,7 @@ export const ContractTable: React.FC<ContractTableProps> = ({
                 <MenuOptionGroup
                   defaultValue={options}
                   title="Networks"
+                  fontSize={12}
                   type="checkbox"
                   value={props.filterValue}
                   onChange={(e) => props.setFilter(props.column.id, e)}
@@ -405,7 +349,7 @@ export const ContractTable: React.FC<ContractTableProps> = ({
                             ).icon
                           }
                         />
-                        <Text size="label.sm">
+                        <Text size="label.md">
                           {
                             getNetworkMetadata(
                               parseInt(chainId) as SUPPORTED_CHAIN_ID,
@@ -490,7 +434,9 @@ export const ContractTable: React.FC<ContractTableProps> = ({
                 // eslint-disable-next-line react/jsx-key
                 <Th {...column.getHeaderProps()}>
                   <Flex align="center" gap={2}>
-                    {column.render("Header")}
+                    <Text as="label" size="label.md">
+                      {column.render("Header")}
+                    </Text>
                     {column.render("Filter")}
                   </Flex>
                 </Th>
@@ -562,14 +508,16 @@ const AsyncContractCell: React.FC<AsyncContractCellProps> = ({ cell }) => {
     cell.chainId,
   );
 
+  const contractTypeUrlSegment =
+    cell.contractType === "custom" ? "" : `/${UrlMap[cell.contractType]}`;
+
+  const href = `/${wallet}/${getNetworkFromChainId(
+    cell.chainId as SUPPORTED_CHAIN_ID,
+  )}${contractTypeUrlSegment}/${cell.address}`;
+
   return (
     <Skeleton isLoaded={!metadataQuery.isLoading}>
-      <OriginalNextLink
-        href={`/${wallet}/${getNetworkFromChainId(
-          cell.chainId as SUPPORTED_CHAIN_ID,
-        )}/${UrlMap[cell.contractType]}/${cell.address}`}
-        passHref
-      >
+      <OriginalNextLink href={href} passHref>
         <Link>
           <Text
             color="blue.700"
@@ -577,7 +525,7 @@ const AsyncContractCell: React.FC<AsyncContractCellProps> = ({ cell }) => {
             size="label.md"
             _groupHover={{ textDecor: "underline" }}
           >
-            {metadataQuery.data?.name || "Loading ..."}
+            {metadataQuery.data?.name || shortenIfAddress(cell.address)}
           </Text>
         </Link>
       </OriginalNextLink>
@@ -589,7 +537,7 @@ const NoContracts: React.FC = () => {
   return (
     <Center w="100%">
       <Container as={Card}>
-        <Stack py={7} align="center" spacing={7} w="100%">
+        <Stack py={7} align="center" spacing={6} w="100%">
           <ChakraNextImage
             src={require("public/assets/illustrations/listing.png")}
             alt="no apps"
@@ -597,11 +545,19 @@ const NoContracts: React.FC = () => {
             maxW="200px"
             mb={3}
           />
-          <Heading size="title.lg" textAlign="center">
-            You don&apos;t have any contracts
-          </Heading>
-          <Text size="subtitle.lg">Deploy a contract to get started</Text>
-          <CreateContractButton />
+          <Flex direction="column" gap={0.5} align="center">
+            <Heading size="title.md" textAlign="center">
+              You don&apos;t have any contracts
+            </Heading>
+            <Text size="body.lg">Deploy a contract to get started</Text>
+          </Flex>
+          <LinkButton
+            leftIcon={<FiPlus />}
+            colorScheme="primary"
+            href="/contracts"
+          >
+            Deploy New Contract
+          </LinkButton>
         </Stack>
       </Container>
     </Center>
@@ -612,7 +568,7 @@ const NoWallet: React.FC = () => {
   return (
     <Center w="100%">
       <Container as={Card}>
-        <Stack py={7} align="center" spacing={7} w="100%">
+        <Stack py={7} align="center" spacing={6} w="100%">
           <ChakraNextImage
             src={require("public/assets/illustrations/wallet.png")}
             alt="no apps"
@@ -620,12 +576,12 @@ const NoWallet: React.FC = () => {
             maxW="200px"
             mb={3}
           />
-          <Heading size="title.lg" textAlign="center">
-            Connect your wallet
-          </Heading>
-          <Text size="subtitle.lg">
-            You need to connect your wallet to continue
-          </Text>
+          <Flex direction="column" gap={0.5} align="center">
+            <Heading size="title.md">Connect your wallet</Heading>
+            <Text size="body.lg">
+              You need to connect your wallet to continue
+            </Text>
+          </Flex>
           <ConnectWallet />
         </Stack>
       </Container>
@@ -659,7 +615,7 @@ const ProjectCell: React.FC<IProjectCellProps> = ({
             size="label.md"
             _groupHover={{ textDecor: "underline" }}
           >
-            {name || "Loading ..."}
+            {name || shortenIfAddress(address)}
           </Text>
         </Link>
       </OriginalNextLink>
@@ -730,6 +686,7 @@ const OldProjects: React.FC<IOldProjects> = ({ projects }) => {
                 <MenuOptionGroup
                   defaultValue={options}
                   title="Networks"
+                  fontSize={12}
                   type="checkbox"
                   value={props.filterValue}
                   onChange={(e) => props.setFilter(props.column.id, e)}
@@ -745,7 +702,7 @@ const OldProjects: React.FC<IOldProjects> = ({ projects }) => {
                             ).icon
                           }
                         />
-                        <Text size="label.sm">
+                        <Text size="label.md">
                           {
                             getNetworkMetadata(
                               parseInt(chainId) as SUPPORTED_CHAIN_ID,
@@ -828,7 +785,9 @@ const OldProjects: React.FC<IOldProjects> = ({ projects }) => {
                 // eslint-disable-next-line react/jsx-key
                 <Th {...column.getHeaderProps()}>
                   <Flex align="center" gap={2}>
-                    {column.render("Header")}
+                    <Text as="label" size="label.md" color="inherit">
+                      {column.render("Header")}
+                    </Text>
                     {column.render("Filter")}
                   </Flex>
                 </Th>

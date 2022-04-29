@@ -9,28 +9,24 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  Heading,
   Icon,
   Input,
   InputGroup,
   InputRightElement,
   Radio,
   Stack,
-  Text,
   Textarea,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { NFTDrop, NFTMetadataInput } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { Card } from "components/layout/Card";
 import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { MouseEventHandler, useState } from "react";
 import { useForm } from "react-hook-form";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { Card, FormHelperText, FormLabel, Heading, Text } from "tw-components";
 import z from "zod";
 
 interface SelectRevealOptionProps {

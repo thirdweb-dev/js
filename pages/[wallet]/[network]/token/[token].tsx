@@ -9,17 +9,16 @@ import {
 } from "@chakra-ui/react";
 import { useToken } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
-import { Button } from "components/buttons/Button";
 import { MintButton } from "components/contract-pages/action-buttons/MintButton";
 import { ContractLayout } from "components/contract-pages/contract-layout";
 import { TransferModal } from "components/currency/TransferModal";
-import { Card } from "components/layout/Card";
 import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { ConsolePage } from "pages/_app";
 import React from "react";
 import { FiSend } from "react-icons/fi";
+import { Button, Card } from "tw-components";
 
 const TokenPage: ConsolePage = () => {
   const tokenAddress = useSingleQueryParam("token");
@@ -40,7 +39,7 @@ const TokenPage: ConsolePage = () => {
         contract={contract}
         metadata={metadata}
         data={data}
-        primaryAction={MintButton}
+        primaryAction={<MintButton colorScheme="primary" contract={contract} />}
         secondaryAction={
           data.data?.ownedBalance &&
           data.data?.ownedBalance !== true &&

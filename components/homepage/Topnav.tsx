@@ -11,11 +11,10 @@ import {
 } from "@chakra-ui/react";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import { Logo } from "components/logo";
-import { LinkButton } from "components/shared/LinkButton";
-import { NextLink } from "components/shared/NextLink";
 import { useTrack } from "hooks/analytics/useTrack";
 import React, { useCallback, useState } from "react";
 import { SiDiscord, SiGithub, SiTwitter } from "react-icons/si";
+import { LinkButton, NextLink } from "tw-components";
 
 export const HomepageTopNav: React.FC<{}> = () => {
   const { trackEvent } = useTrack();

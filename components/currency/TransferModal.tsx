@@ -7,8 +7,6 @@ import {
   Divider,
   FormControl,
   FormErrorMessage,
-  FormLabel,
-  Heading,
   Input,
   InputGroup,
   Modal,
@@ -34,6 +32,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FiSend } from "react-icons/fi";
+import { FormLabel, Heading, Text } from "tw-components";
 
 interface IMintModal {
   isOpen: boolean;
@@ -99,11 +98,7 @@ export const TransferModal: React.FC<IMintModal> = ({ isOpen, onClose }) => {
                       To Address
                     </Heading>
                     <InputGroup>
-                      <Input
-                        fontFamily="mono"
-                        fontSize="body.md"
-                        {...register("to")}
-                      />
+                      <Input fontFamily="mono" {...register("to")} />
                     </InputGroup>
                     <FormErrorMessage>{errors?.to?.message}</FormErrorMessage>
                   </FormControl>
@@ -114,7 +109,6 @@ export const TransferModal: React.FC<IMintModal> = ({ isOpen, onClose }) => {
                     </Heading>
                     <Input
                       fontFamily="mono"
-                      fontSize="body.md"
                       step="any"
                       type="number"
                       {...register("amount")}
@@ -132,8 +126,16 @@ export const TransferModal: React.FC<IMintModal> = ({ isOpen, onClose }) => {
                 <TableCaption>Outcome of successful transfer</TableCaption>
                 <Thead>
                   <Tr>
-                    <Th isNumeric>Current Balance</Th>
-                    <Th isNumeric>New Balance</Th>
+                    <Th isNumeric>
+                      <Text as="label" size="label.md">
+                        Current Balance
+                      </Text>
+                    </Th>
+                    <Th isNumeric>
+                      <Text as="label" size="label.md">
+                        New Balance
+                      </Text>
+                    </Th>
                   </Tr>
                 </Thead>
                 <Tbody>

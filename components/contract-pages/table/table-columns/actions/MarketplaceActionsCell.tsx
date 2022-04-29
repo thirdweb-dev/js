@@ -1,15 +1,14 @@
 import { useMarketplaceCancelMutation, useWeb3 } from "@3rdweb-sdk/react";
-import { ButtonGroup } from "@chakra-ui/button";
 import Icon from "@chakra-ui/icon";
-import { Stack } from "@chakra-ui/layout";
+import { ButtonGroup, Stack } from "@chakra-ui/react";
 import { useMarketplace } from "@thirdweb-dev/react";
 import { AuctionListing, DirectListing } from "@thirdweb-dev/sdk";
-import { Button } from "components/buttons/Button";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { FiXCircle } from "react-icons/fi";
 import { Row } from "react-table";
+import { Button } from "tw-components";
 
 interface IMarketplaceActionsCellProps {
   row: Row<DirectListing | AuctionListing>;

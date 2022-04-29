@@ -5,10 +5,10 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 import { MaxUint256 } from "@ethersproject/constants";
-import { Button } from "components/buttons/Button";
 import { BigNumber } from "ethers";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import { useEffect, useMemo, useState } from "react";
+import { Button } from "tw-components";
 
 interface BigNumberInputProps extends Omit<InputProps, "value" | "onChange"> {
   value: string;

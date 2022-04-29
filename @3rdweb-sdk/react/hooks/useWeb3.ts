@@ -18,6 +18,7 @@ interface NetworkMetadata {
   icon: React.ComponentType;
   symbol: string;
   isTestnet: boolean;
+  chainId: ChainId;
 }
 
 const defaultNetworkMetadata: Record<SUPPORTED_CHAIN_ID, NetworkMetadata> = {
@@ -26,42 +27,49 @@ const defaultNetworkMetadata: Record<SUPPORTED_CHAIN_ID, NetworkMetadata> = {
     icon: Ethereum,
     symbol: "ETH",
     isTestnet: false,
+    chainId: ChainId.Mainnet,
   },
   [ChainId.Rinkeby]: {
     chainName: "Rinkeby",
     icon: Ethereum,
     symbol: "ETH",
     isTestnet: true,
+    chainId: ChainId.Rinkeby,
   },
   [ChainId.Goerli]: {
     chainName: "Goerli",
     icon: Ethereum,
     symbol: "ETH",
     isTestnet: true,
+    chainId: ChainId.Goerli,
   },
   [ChainId.Polygon]: {
     chainName: "Polygon",
     icon: Polygon,
     symbol: "MATIC",
     isTestnet: false,
+    chainId: ChainId.Polygon,
   },
   [ChainId.Fantom]: {
     chainName: "Fantom",
     icon: Fantom,
     symbol: "FTM",
     isTestnet: false,
+    chainId: ChainId.Fantom,
   },
   [ChainId.Avalanche]: {
     chainName: "Avalanche",
     icon: Avalanche,
     symbol: "AVAX",
     isTestnet: false,
+    chainId: ChainId.Avalanche,
   },
   [ChainId.Mumbai]: {
     chainName: "Mumbai",
     icon: Polygon,
     symbol: "MATIC",
     isTestnet: true,
+    chainId: ChainId.Mumbai,
   },
 };
 
@@ -106,6 +114,7 @@ export function useWeb3() {
         icon: QuestionIcon,
         isTestnet: false,
         symbol: "",
+        chainId,
       };
       const c = network.data.chains.find((chain) => chain.id === chainId);
 

@@ -1,8 +1,9 @@
 import Icon from "@chakra-ui/icon";
-import { HStack, Heading, Stack, Text } from "@chakra-ui/layout";
+import { HStack, Stack } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import * as React from "react";
 import { BsWallet2 } from "react-icons/bs";
+import { Heading, Text } from "tw-components";
 
 interface OctopusCardProps {
   title: string;
@@ -46,7 +47,9 @@ export const OctopusCard: React.FC<OctopusCardProps> = ({
           {address}
         </Text>
       </HStack>
-      <Text size="subtitle.sm">{description}</Text>
+      <Heading color="rgba(39, 46, 54, 0.9)" as="p" size="subtitle.sm">
+        {description}
+      </Heading>
     </Stack>
   );
 };

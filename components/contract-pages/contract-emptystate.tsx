@@ -1,8 +1,9 @@
 import { useContractTypeOfContract } from "@3rdweb-sdk/react";
-import { Container, Heading, Stack } from "@chakra-ui/layout";
+import { Container, Stack } from "@chakra-ui/react";
 import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
 import React from "react";
+import { Heading } from "tw-components";
 
 export interface IContractEmptyState {
   title?: string;
@@ -26,7 +27,7 @@ export const ContractEmptyState: React.FC<IContractEmptyState> = ({
           alt="Empty state illustration"
           w="130px"
         />
-        <Heading size="label.lg" fontSize="label.2xl" textAlign="center">
+        <Heading size="label.2xl" textAlign="center">
           {title}
         </Heading>
       </Stack>

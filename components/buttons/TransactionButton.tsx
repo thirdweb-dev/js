@@ -1,10 +1,11 @@
 import { MismatchButton } from "./MismatchButton";
-import { ButtonProps, Center, Flex, Text, Tooltip } from "@chakra-ui/react";
+import { Center, Flex, Tooltip } from "@chakra-ui/react";
 import React from "react";
 import useDimensions from "react-cool-dimensions";
 import { BiTransferAlt } from "react-icons/bi";
+import { ButtonProps, Text } from "tw-components";
 
-interface TransactionButtonProps extends ButtonProps {
+export interface TransactionButtonProps extends ButtonProps {
   transactionCount: number;
 }
 

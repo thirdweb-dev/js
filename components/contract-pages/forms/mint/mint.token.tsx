@@ -5,19 +5,18 @@ import {
   DrawerFooter,
   FormControl,
   FormErrorMessage,
-  FormLabel,
   Icon,
   Input,
   Stack,
   useModalContext,
 } from "@chakra-ui/react";
 import { Token } from "@thirdweb-dev/sdk";
-import { Button } from "components/buttons/Button";
 import { MismatchButton } from "components/buttons/MismatchButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
+import { Button, FormLabel } from "tw-components";
 
 const MINT_FORM_ID = "token-mint-form";
 interface ITokenMintForm extends IMintFormProps {

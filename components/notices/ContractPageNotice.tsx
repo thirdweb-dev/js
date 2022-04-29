@@ -1,6 +1,6 @@
-import { Flex, Stack, Text } from "@chakra-ui/react";
-import { Button } from "components/buttons/Button";
+import { Flex, Stack } from "@chakra-ui/react";
 import { useState } from "react";
+import { Button, Text } from "tw-components";
 
 interface INoticeProps {
   color?: string;

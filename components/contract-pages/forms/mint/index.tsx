@@ -1,14 +1,16 @@
 import { MarketplaceListForm } from "./list.marketplace";
+import { CustomNFTMintForm } from "./mint.customnft";
 import { EditionMintForm } from "./mint.edition";
 import { EditionDropMintForm } from "./mint.editiondrop";
 import { NFTCollectionMintForm } from "./mint.nftcollection";
 import { NFTDropMintForm } from "./mint.nftdrop";
 import { TokenMintForm } from "./mint.token";
 import { ProposalMintForm } from "./mint.vote";
-import { DrawerHeader, Heading } from "@chakra-ui/react";
+import { DrawerHeader } from "@chakra-ui/react";
 import {
   Edition,
   EditionDrop,
+  Erc721,
   Marketplace,
   NFTCollection,
   NFTDrop,
@@ -17,9 +19,10 @@ import {
   Vote,
 } from "@thirdweb-dev/sdk";
 import React from "react";
+import { Heading } from "tw-components";
 
 export interface IMintFormProps {
-  contract?: ValidContractInstance;
+  contract?: ValidContractInstance | Erc721<any>;
 }
 
 export const MintForm: React.FC<IMintFormProps> = ({ contract }) => {
@@ -111,6 +114,17 @@ export const MintForm: React.FC<IMintFormProps> = ({ contract }) => {
           <Heading>Create new proposal</Heading>
         </DrawerHeader>
         <ProposalMintForm contract={contract} />
+      </>
+    );
+  }
+
+  if (contract instanceof Erc721) {
+    return (
+      <>
+        <DrawerHeader>
+          <Heading>Mint new NFT</Heading>
+        </DrawerHeader>
+        <CustomNFTMintForm contract={contract} />
       </>
     );
   }

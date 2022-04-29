@@ -1,20 +1,11 @@
 import { useWeb3 } from "@3rdweb-sdk/react";
-import {
-  ButtonGroup,
-  Container,
-  Heading,
-  Icon,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
-import { Button } from "components/buttons/Button";
-import { Card } from "components/layout/Card";
-import { LinkButton } from "components/shared/LinkButton";
+import { ButtonGroup, Container, Icon, Stack } from "@chakra-ui/react";
+import { useNetworkMismatch } from "@thirdweb-dev/react";
 import { BigNumber } from "ethers";
-import { useNetworkMismatch } from "hooks/useNetworkMismatch";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { AiOutlineWarning } from "react-icons/ai";
+import { Button, Card, Heading, LinkButton, Text } from "tw-components";
 import { ChainId } from "utils/network";
 
 const FAUCETS: Partial<Record<ChainId, string>> = {
@@ -66,7 +57,7 @@ export const InsufficientFunds: React.FC = () => {
   }
 
   // if we're on the dashboard overview page do not show the warning, as it is confusing
-  if (router.pathname === "/[wallet]") {
+  if (router.pathname === "/[wallet]" || router.pathname === "/contracts") {
     return null;
   }
 
@@ -75,7 +66,7 @@ export const InsufficientFunds: React.FC = () => {
   return (
     <Card zIndex="sticky" pb={6} position="fixed" m={4} bottom={0} right={0}>
       <Container as={Stack} spacing={4}>
-        <Heading size="label.2xl">
+        <Heading size="label.lg">
           <Stack direction="row" align="center">
             <Icon boxSize={6} as={AiOutlineWarning} />
             <span>Insufficient Funds</span>

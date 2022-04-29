@@ -2,17 +2,16 @@ import {
   Box,
   Container,
   Flex,
-  Heading,
   Icon,
   IconButton,
   Stack,
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { GeneralCta } from "components/shared/GeneralCta";
-import { LinkButton } from "components/shared/LinkButton";
 import triangleGradient from "public/assets/gradient-triangle.png";
 import React from "react";
 import { SiDiscord, SiTwitter } from "react-icons/si";
+import { Heading, LinkButton } from "tw-components";
 
 export const HomepageFooter: React.FC = () => {
   return (

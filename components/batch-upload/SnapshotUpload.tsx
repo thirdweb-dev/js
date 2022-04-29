@@ -3,13 +3,8 @@ import {
   Box,
   Center,
   Container,
-  Drawer,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerOverlay,
   Flex,
   HStack,
-  Heading,
   Icon,
   IconButton,
   Link,
@@ -20,7 +15,6 @@ import {
   Table,
   Tbody,
   Td,
-  Text,
   Th,
   Thead,
   Tooltip,
@@ -28,7 +22,6 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 import { ClaimCondition, SnapshotAddressInput } from "@thirdweb-dev/sdk";
-import { Button } from "components/buttons/Button";
 import { Logo } from "components/logo";
 import { isAddress } from "ethers/lib/utils";
 import Papa from "papaparse";
@@ -42,6 +35,7 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { Column, usePagination, useTable } from "react-table";
+import { Button, Drawer, Heading, Text } from "tw-components";
 import { csvMimeTypes } from "utils/batch";
 
 export interface SnapshotAddressInput {
@@ -145,126 +139,122 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
       onClose={_onClose}
       isOpen={isOpen}
     >
-      <DrawerOverlay />
-      <DrawerContent>
-        <Flex direction="column" gap={6} h="100%">
-          <Flex shadow="sm">
+      <Flex direction="column" gap={6} h="100%">
+        <Flex shadow="sm">
+          <Container maxW="container.page">
+            <Flex align="center" justify="space-between" p={4}>
+              <Flex gap={2}>
+                <Logo hideWordmark />
+                <Heading size="title.md">
+                  {validSnapshot.length ? "Edit" : "Upload"} Snapshot
+                </Heading>
+              </Flex>
+            </Flex>
+          </Container>
+        </Flex>
+
+        {validSnapshot.length > 0 ? (
+          <SnapshotTable portalRef={paginationPortalRef} data={data} />
+        ) : (
+          <Flex flexGrow={1} align="center" overflow="auto">
             <Container maxW="container.page">
-              <Flex align="center" justify="space-between" p={4}>
-                <Flex gap={2}>
-                  <Logo hideWordmark />
-                  <Heading size="title.md">
-                    {validSnapshot.length ? "Edit" : "Upload"} Snapshot
-                  </Heading>
+              <Flex gap={8} flexDir="column">
+                <AspectRatio ratio={21 / 9} w="100%">
+                  <Center
+                    borderRadius="md"
+                    {...getRootProps()}
+                    cursor="pointer"
+                    bg="inputBg"
+                    _hover={{
+                      bg: "inputBgHover",
+                      borderColor: "blue.500",
+                    }}
+                    borderColor="inputBorder"
+                    borderWidth="1px"
+                  >
+                    <input {...getInputProps()} />
+                    {isDragActive ? (
+                      <Heading as={Text} size="label.md">
+                        Drop the files here
+                      </Heading>
+                    ) : (
+                      <Heading as={Text} size="label.md">
+                        {noCsv
+                          ? "No valid CSV file found, make sure you have an address column."
+                          : "Drag & Drop a CSV file here"}
+                      </Heading>
+                    )}
+                  </Center>
+                </AspectRatio>
+                <Flex gap={2} flexDir="column">
+                  <Heading size="subtitle.sm">Requirements</Heading>
+                  <UnorderedList>
+                    <ListItem>
+                      Files <em>must</em> contain one .csv file with a list of
+                      addresses. -{" "}
+                      <Link download color="blue.500" href="/snapshot.csv">
+                        Download an example CSV
+                      </Link>
+                    </ListItem>
+                    <ListItem>
+                      You can also add a column &quot;maxClaimable&quot; to
+                      specify how many NFTs can be claimed by that specific
+                      address per transaction, if not specified, the default
+                      value is the one you have set on your claim phase. -{" "}
+                      <Link
+                        download
+                        color="blue.500"
+                        href="/snapshot-with-maxclaimable.csv"
+                      >
+                        Download an example CSV with maxClaimable
+                      </Link>
+                    </ListItem>
+                  </UnorderedList>
                 </Flex>
-                <DrawerCloseButton position="relative" right={0} top={0} />
               </Flex>
             </Container>
           </Flex>
+        )}
 
-          {validSnapshot.length > 0 ? (
-            <SnapshotTable portalRef={paginationPortalRef} data={data} />
-          ) : (
-            <Flex flexGrow={1} align="center" overflow="auto">
-              <Container maxW="container.page">
-                <Flex gap={8} flexDir="column">
-                  <AspectRatio ratio={21 / 9} w="100%">
-                    <Center
-                      borderRadius="md"
-                      {...getRootProps()}
-                      cursor="pointer"
-                      bg="inputBg"
-                      _hover={{
-                        bg: "inputBgHover",
-                        borderColor: "blue.500",
-                      }}
-                      borderColor="inputBorder"
-                      borderWidth="1px"
-                    >
-                      <input {...getInputProps()} />
-                      {isDragActive ? (
-                        <Heading as={Text} size="label.md">
-                          Drop the files here
-                        </Heading>
-                      ) : (
-                        <Heading as={Text} size="label.md">
-                          {noCsv
-                            ? "No valid CSV file found, make sure you have an address column."
-                            : "Drag & Drop a CSV file here"}
-                        </Heading>
-                      )}
-                    </Center>
-                  </AspectRatio>
-                  <Flex gap={2} flexDir="column">
-                    <Heading size="subtitle.sm">Requirements</Heading>
-                    <UnorderedList>
-                      <ListItem>
-                        Files <em>must</em> contain one .csv file with a list of
-                        addresses. -{" "}
-                        <Link download color="blue.500" href="/snapshot.csv">
-                          Download an example CSV
-                        </Link>
-                      </ListItem>
-                      <ListItem>
-                        You can also add a column &quot;maxClaimable&quot; to
-                        specify how many NFTs can be claimed by that specific
-                        address per transaction, if not specified, the default
-                        value is the one you have set on your claim phase. -{" "}
-                        <Link
-                          download
-                          color="blue.500"
-                          href="/snapshot-with-maxclaimable.csv"
-                        >
-                          Download an example CSV with maxClaimable
-                        </Link>
-                      </ListItem>
-                    </UnorderedList>
-                  </Flex>
-                </Flex>
-              </Container>
-            </Flex>
-          )}
-
-          <Flex borderTop="1px solid" borderTopColor="borderColor">
-            <Container maxW="container.page">
+        <Flex borderTop="1px solid" borderTopColor="borderColor">
+          <Container maxW="container.page">
+            <Flex
+              align="center"
+              justify="space-between"
+              p={{ base: 0, md: 4 }}
+              flexDir={{ base: "column", md: "row" }}
+              mt={{ base: 4, md: 0 }}
+            >
+              <Box ref={paginationPortalRef} />
               <Flex
+                gap={2}
                 align="center"
-                justify="space-between"
-                p={{ base: 0, md: 4 }}
-                flexDir={{ base: "column", md: "row" }}
                 mt={{ base: 4, md: 0 }}
+                w={{ base: "100%", md: "auto" }}
               >
-                <Box ref={paginationPortalRef} />
-                <Flex
-                  gap={2}
-                  align="center"
-                  mt={{ base: 4, md: 0 }}
+                <Button
+                  borderRadius="md"
+                  disabled={validSnapshot.length === 0}
+                  onClick={() => {
+                    reset();
+                  }}
                   w={{ base: "100%", md: "auto" }}
                 >
-                  <Button
-                    borderRadius="md"
-                    disabled={validSnapshot.length === 0}
-                    onClick={() => {
-                      reset();
-                    }}
-                    w={{ base: "100%", md: "auto" }}
-                  >
-                    Reset
-                  </Button>
-                  <Button
-                    borderRadius="md"
-                    colorScheme="primary"
-                    onClick={onSave}
-                    w={{ base: "100%", md: "auto" }}
-                  >
-                    Next
-                  </Button>
-                </Flex>
+                  Reset
+                </Button>
+                <Button
+                  borderRadius="md"
+                  colorScheme="primary"
+                  onClick={onSave}
+                  w={{ base: "100%", md: "auto" }}
+                >
+                  Next
+                </Button>
               </Flex>
-            </Container>
-          </Flex>
+            </Flex>
+          </Container>
         </Flex>
-      </DrawerContent>
+      </Flex>
     </Drawer>
   );
 };
@@ -354,7 +344,9 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
                 {headerGroup.headers.map((column) => (
                   // eslint-disable-next-line react/jsx-key
                   <Th {...column.getHeaderProps()}>
-                    {column.render("Header")}
+                    <Text as="label" size="label.md">
+                      {column.render("Header")}
+                    </Text>
                   </Th>
                 ))}
               </Tr>

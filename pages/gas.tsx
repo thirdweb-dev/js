@@ -1,12 +1,5 @@
 import { useGas } from "@3rdweb-sdk/react/hooks/useGas";
-import {
-  Badge,
-  Flex,
-  Heading,
-  SimpleGrid,
-  Switch,
-  Text,
-} from "@chakra-ui/react";
+import { Flex, SimpleGrid, Switch } from "@chakra-ui/react";
 import {
   Edition,
   EditionDrop,
@@ -19,11 +12,11 @@ import {
 } from "@thirdweb-dev/sdk";
 import { AppLayout } from "components/app-layouts/app";
 import { GasEstimatorBox } from "components/gas-estimator/GasEstimatorBox";
-import { Card } from "components/layout/Card";
 import { useTrack } from "hooks/analytics/useTrack";
 import { NextSeo } from "next-seo";
 import { ConsolePage } from "pages/_app";
 import { useState } from "react";
+import { Badge, Card, Heading, Text } from "tw-components";
 
 const GasPage: ConsolePage = () => {
   const [ethOrUsd, setEthOrUsd] = useState<"eth" | "usd">("eth");

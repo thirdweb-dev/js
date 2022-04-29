@@ -18,7 +18,7 @@ export function useNFTCollectionMintMutation(contract?: NFTCollection) {
     async (data: NFTMetadataInput) => {
       invariant(contract, "contract is required");
 
-      return await contract.mint(parseAttributes(data));
+      return await contract.mintToSelf(parseAttributes(data));
     },
     {
       onSuccess: (_data, _variables, _options, invalidate) => {

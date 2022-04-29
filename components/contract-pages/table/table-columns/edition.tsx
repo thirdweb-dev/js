@@ -1,10 +1,11 @@
 import { EditionActionsCell } from "./actions/ActionsCell";
 import { MediaCell } from "./cells/media-cell";
-import { Code, Text } from "@chakra-ui/react";
+import { Code } from "@chakra-ui/react";
 import { EditionMetadata } from "@thirdweb-dev/sdk";
 import { BigNumber } from "ethers";
 import React from "react";
 import { Cell, Column } from "react-table";
+import { Text } from "tw-components";
 import { parseDescription } from "utils/parseDescription";
 
 export function generateEditionTableColumns() {

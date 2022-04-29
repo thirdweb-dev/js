@@ -3,12 +3,8 @@ import {
   Alert,
   AlertIcon,
   AlertTitle,
-  Code,
   Flex,
   FormControl,
-  FormHelperText,
-  FormLabel,
-  Heading,
   Input,
   Link,
   Stack,
@@ -20,11 +16,18 @@ import {
   NFTDrop,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
-import { Button } from "components/buttons/Button";
-import { Card } from "components/layout/Card";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useState } from "react";
 import { FiCopy } from "react-icons/fi";
+import { IoMdCheckmark } from "react-icons/io";
+import {
+  Button,
+  Card,
+  CodeBlock,
+  FormHelperText,
+  FormLabel,
+  Heading,
+} from "tw-components";
 import { getChainIdFromNetwork } from "utils/network";
 
 interface EmbedSetupProps {
@@ -203,15 +206,19 @@ export const WidgetSetup: React.FC<EmbedSetupProps> = ({ contract }) => {
         </Stack>
         <Stack as={Card} w={{ base: "100%", md: "50%" }}>
           <Heading size="title.sm">Embed Code</Heading>
-          <Code overflowX="auto" whiteSpace="pre" fontFamily="mono" p={2}>
-            {embedCode}
-          </Code>
+          <CodeBlock
+            canCopy={false}
+            whiteSpace="pre"
+            overflowX="auto"
+            code={embedCode}
+            language="markup"
+          />
           <Button
             colorScheme="purple"
             w="auto"
             variant="outline"
             onClick={onCopy}
-            rightIcon={<FiCopy />}
+            leftIcon={hasCopied ? <IoMdCheckmark /> : <FiCopy />}
           >
             {hasCopied ? "Copied!" : "Copy to clipboard"}
           </Button>
