@@ -3,6 +3,7 @@ import { useQueryWithNetwork } from "./query/useQueryWithNetwork";
 import { useContractTypeOfContract } from "./useCommon";
 import { AddressZero } from "@ethersproject/constants";
 import {
+  EditionDrop,
   Pack,
   QueryAllParams,
   Split,
@@ -90,6 +91,10 @@ export function useGetTotalCount<TContract extends ContractWithGetAll>(
       if (!contract) {
         return BigNumber.from(0);
       }
+      if (contract instanceof EditionDrop) {
+        return await contract.getTotalCount();
+      }
+
       if (lazyMint && "totalUnclaimedSupply" in contract) {
         return await contract.totalUnclaimedSupply();
       }
