@@ -16,7 +16,7 @@ import { CustomSDKContext } from "contexts/custom-sdk-context";
 import { useTrack } from "hooks/analytics/useTrack";
 import { ConsolePage } from "pages/_app";
 import { IoRefreshSharp } from "react-icons/io5";
-import { Badge, Button, Card, Heading, LinkButton, Text } from "tw-components";
+import { Badge, Button, Heading, LinkButton, Text } from "tw-components";
 
 const ContractsHomepageWrapped: React.VFC = () => {
   const { Track } = useTrack({
@@ -35,12 +35,12 @@ const ContractsHomepageWrapped: React.VFC = () => {
             Contracts created by the thirdweb team that you can deploy
           </Text>
         </Flex>
-        <Card overflowX="auto" px={0} pt={0}>
-          <DeployableContractTable
-            hasDescription
-            contractIds={Object.keys(KNOWN_CONTRACTS_MAP)}
-          />
-        </Card>
+
+        <DeployableContractTable
+          hasDescription
+          contractIds={Object.keys(KNOWN_CONTRACTS_MAP)}
+        />
+
         <Box />
         <Flex gap={2} direction="column">
           <Heading size="title.md">
@@ -53,21 +53,13 @@ const ContractsHomepageWrapped: React.VFC = () => {
             Contracts that you have published via the thirdweb cli
           </Text>
         </Flex>
-        <Card overflowX="auto" position="relative" px={0} pt={0}>
-          {publishedContracts.isFetching && (
-            <Spinner
-              color="primary"
-              size="xs"
-              position="absolute"
-              top={2}
-              right={4}
-            />
+
+        <DeployableContractTable
+          isFetching={publishedContracts.isFetching}
+          contractIds={(publishedContracts.data || [])?.map((d) =>
+            d.metadataUri.replace("ipfs://", ""),
           )}
-          <DeployableContractTable
-            contractIds={(publishedContracts.data || [])?.map((d) =>
-              d.metadataUri.replace("ipfs://", ""),
-            )}
-          />
+        >
           {publishedContracts.isLoading && (
             <Center>
               <Flex mt={4} py={4} direction="row" gap={4} align="center">
@@ -118,7 +110,7 @@ const ContractsHomepageWrapped: React.VFC = () => {
                 </Flex>
               </Center>
             )}
-        </Card>
+        </DeployableContractTable>
       </Flex>
     </Track>
   );

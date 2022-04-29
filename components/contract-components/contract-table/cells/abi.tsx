@@ -2,8 +2,7 @@ import { useContractPublishMetadataFromURI } from "../../hooks";
 import { DeployableContractContractCellProps } from "../../types";
 import { Icon, useClipboard, useDisclosure } from "@chakra-ui/react";
 import { useMemo } from "react";
-import { FiCheck } from "react-icons/fi";
-import { ImCopy } from "react-icons/im";
+import { FiCheck, FiCopy } from "react-icons/fi";
 import { Button, CodeBlock, Drawer, Heading } from "tw-components";
 
 export const ContractAbiCell: React.VFC<
@@ -33,7 +32,7 @@ export const ContractAbiCell: React.VFC<
             <Button
               onClick={onCopy}
               colorScheme="primary"
-              leftIcon={<Icon boxSize={3} as={hasCopied ? FiCheck : ImCopy} />}
+              leftIcon={<Icon boxSize={3} as={hasCopied ? FiCheck : FiCopy} />}
             >
               {hasCopied ? "Copied!" : "Copy ABI"}
             </Button>

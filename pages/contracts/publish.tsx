@@ -13,7 +13,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
 import { ConsolePage } from "pages/_app";
 import { useEffect, useMemo, useState } from "react";
-import { Badge, Card, Heading, Text } from "tw-components";
+import { Badge, Heading, Text } from "tw-components";
 
 const ContractsPublishPageWrapped: React.VFC = () => {
   const { Track, trackEvent } = useTrack({
@@ -90,16 +90,16 @@ const ContractsPublishPageWrapped: React.VFC = () => {
             </Link>
           </Text>
         </Flex>
-        <Card overflowX="auto">
-          <DeployableContractTable
-            isPublish
-            contractIds={ipfsHashes}
-            selectable={{
-              selected: publishableContractIds,
-              onChange: setSelectedContractIds,
-            }}
-          />
-        </Card>
+
+        <DeployableContractTable
+          isPublish
+          contractIds={ipfsHashes}
+          selectable={{
+            selected: publishableContractIds,
+            onChange: setSelectedContractIds,
+          }}
+        />
+
         <Flex justify="space-between">
           <Box />
           <TransactionButton

@@ -8,8 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { TransactionError } from "@thirdweb-dev/sdk";
 import { createContext, useCallback, useContext, useState } from "react";
-import { FiAlertTriangle, FiCheck } from "react-icons/fi";
-import { ImCopy } from "react-icons/im";
+import { FiAlertTriangle, FiCheck, FiCopy } from "react-icons/fi";
 import { SiDiscord } from "react-icons/si";
 import {
   AddressCopyButton,
@@ -101,7 +100,7 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
           </LinkButton>
           <Button
             onClick={onCopy}
-            leftIcon={<Icon boxSize={3} as={hasCopied ? FiCheck : ImCopy} />}
+            leftIcon={<Icon boxSize={3} as={hasCopied ? FiCheck : FiCopy} />}
           >
             {hasCopied ? "Copied!" : "Copy error to clipboard"}
           </Button>

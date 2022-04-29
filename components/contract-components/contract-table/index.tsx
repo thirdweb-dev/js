@@ -5,10 +5,11 @@ import { ContractDeployActionCell } from "./cells/deploy-action";
 import { ContractDescriptionCell } from "./cells/description";
 import { ContractImageCell } from "./cells/image";
 import { ContractNameCell } from "./cells/name";
-import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Spinner, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import React, { useMemo } from "react";
 import { Cell, Column, useTable } from "react-table";
-import { Checkbox, Text } from "tw-components";
+import { Card, Checkbox, Text } from "tw-components";
+import { ComponentWithChildren } from "types/component-with-children";
 
 interface DeployableContractTableProps {
   contractIds: ContractId[];
@@ -18,11 +19,19 @@ interface DeployableContractTableProps {
   };
   isPublish?: true;
   hasDescription?: true;
+  isFetching?: boolean;
 }
 
-export const DeployableContractTable: React.VFC<
+export const DeployableContractTable: ComponentWithChildren<
   DeployableContractTableProps
-> = ({ contractIds, selectable, isPublish, hasDescription }) => {
+> = ({
+  contractIds,
+  selectable,
+  isPublish,
+  hasDescription,
+  isFetching,
+  children,
+}) => {
   const tableColumns: Column<{ contractId: ContractId }>[] = useMemo(() => {
     let cols: Column<{ contractId: ContractId }>[] = [
       {
@@ -130,54 +139,63 @@ export const DeployableContractTable: React.VFC<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contractIds.join(), isPublish, selectable, hasDescription]);
 
-  const tableInstance = useTable(
-    {
-      columns: tableColumns,
-      data: contractIds.map((contractId) => ({ contractId })),
-    },
-    // useRowSelect,
-  );
+  const tableInstance = useTable({
+    columns: tableColumns,
+    data: contractIds.map((contractId) => ({ contractId })),
+  });
   return (
-    <Table {...tableInstance.getTableProps()}>
-      <Thead bg="blackAlpha.50" _dark={{ bg: "whiteAlpha.50" }}>
-        {tableInstance.headerGroups.map((headerGroup) => (
-          // eslint-disable-next-line react/jsx-key
-          <Tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              // eslint-disable-next-line react/jsx-key
-              <Th {...column.getHeaderProps()} py={5}>
-                <Text as="label" size="label.md">
-                  {column.render("Header")}
-                </Text>
-              </Th>
-            ))}
-          </Tr>
-        ))}
-      </Thead>
-      <Tbody {...tableInstance.getTableBodyProps()} position="relative">
-        {tableInstance.rows.map((row) => {
-          tableInstance.prepareRow(row);
-          return (
+    <Card p={0} overflowX="auto" position="relative">
+      {isFetching && (
+        <Spinner
+          color="primary"
+          size="xs"
+          position="absolute"
+          top={2}
+          right={4}
+        />
+      )}
+      <Table {...tableInstance.getTableProps()}>
+        <Thead bg="blackAlpha.50" _dark={{ bg: "whiteAlpha.50" }}>
+          {tableInstance.headerGroups.map((headerGroup) => (
             // eslint-disable-next-line react/jsx-key
-            <Tr
-              borderBottomWidth={1}
-              _last={{ borderBottomWidth: 0 }}
-              {...row.getRowProps()}
-            >
-              {row.cells.map((cell) => (
+            <Tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
                 // eslint-disable-next-line react/jsx-key
-                <Td
-                  {...cell.getCellProps()}
-                  borderBottomWidth="inherit"
-                  _last={{ textAlign: "end" }}
-                >
-                  {cell.render("Cell")}
-                </Td>
+                <Th {...column.getHeaderProps()} py={5}>
+                  <Text as="label" size="label.md">
+                    {column.render("Header")}
+                  </Text>
+                </Th>
               ))}
             </Tr>
-          );
-        })}
-      </Tbody>
-    </Table>
+          ))}
+        </Thead>
+        <Tbody {...tableInstance.getTableBodyProps()} position="relative">
+          {tableInstance.rows.map((row) => {
+            tableInstance.prepareRow(row);
+            return (
+              // eslint-disable-next-line react/jsx-key
+              <Tr
+                borderBottomWidth={1}
+                _last={{ borderBottomWidth: 0 }}
+                {...row.getRowProps()}
+              >
+                {row.cells.map((cell) => (
+                  // eslint-disable-next-line react/jsx-key
+                  <Td
+                    {...cell.getCellProps()}
+                    borderBottomWidth="inherit"
+                    _last={isPublish ? undefined : { textAlign: "end" }}
+                  >
+                    {cell.render("Cell")}
+                  </Td>
+                ))}
+              </Tr>
+            );
+          })}
+        </Tbody>
+      </Table>
+      {children}
+    </Card>
   );
 };

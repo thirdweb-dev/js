@@ -15,8 +15,7 @@ import {
 import { useTrack } from "hooks/analytics/useTrack";
 import NextLink, { LinkProps } from "next/link";
 import React from "react";
-import { FiExternalLink } from "react-icons/fi";
-import { ImCopy } from "react-icons/im";
+import { FiCopy, FiExternalLink } from "react-icons/fi";
 import {
   baseFontSizes,
   fontWeights,
@@ -157,7 +156,7 @@ export const AddressCopyButton: React.VFC<IAddressCopyButton> = ({
           });
           trackEvent({ category: "address_button", action: "copy", address });
         }}
-        leftIcon={noIcon ? undefined : <Icon boxSize={3} as={ImCopy} />}
+        leftIcon={noIcon ? undefined : <Icon boxSize={3} as={FiCopy} />}
         fontFamily="mono"
       >
         <Text size={`label.${mapToOneBigger[size]}`}>

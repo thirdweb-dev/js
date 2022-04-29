@@ -2,8 +2,7 @@ import { useContractPublishMetadataFromURI } from "../../hooks";
 import { DeployableContractContractCellProps } from "../../types";
 import { Icon, useClipboard } from "@chakra-ui/react";
 import { useMemo } from "react";
-import { FiCheck } from "react-icons/fi";
-import { ImCopy } from "react-icons/im";
+import { FiCheck, FiCopy } from "react-icons/fi";
 import { Button } from "tw-components";
 
 export const ContractBytecodeCell: React.VFC<
@@ -25,7 +24,7 @@ export const ContractBytecodeCell: React.VFC<
       isLoading={publishMetadata.isLoading}
       size="sm"
       variant="outline"
-      leftIcon={<Icon boxSize={3} as={hasCopied ? FiCheck : ImCopy} />}
+      leftIcon={<Icon boxSize={3} as={hasCopied ? FiCheck : FiCopy} />}
     >
       {hasCopied
         ? "Copied!"

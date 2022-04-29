@@ -1,16 +1,34 @@
 import { Flex, Link } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
-import { ContractDeployForm } from "components/contract-components/contract-deploy-form";
+import { DeployableContractTable } from "components/contract-components/contract-table";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useSingleQueryParam } from "hooks/useQueryParam";
+import { useRouter } from "next/router";
 import { ConsolePage } from "pages/_app";
-import { Badge, Card, Heading, Text } from "tw-components";
+import { useMemo } from "react";
+import { Badge, Heading, Text } from "tw-components";
 
 const ContractsDeployPage: ConsolePage = () => {
   const { Track } = useTrack({
     page: "deploy",
   });
-  const contract = useSingleQueryParam("contract");
+
+  const router = useRouter();
+
+  const ipfsHashes = useMemo(() => {
+    const uri = router.query.uri;
+    const ipfs = router.query.ipfs;
+    let array: string[] = [];
+    // handle both ipfs and uri
+    if (ipfs) {
+      array = Array.isArray(ipfs) ? ipfs : [ipfs];
+    } else if (uri) {
+      array = (Array.isArray(uri) ? uri : [uri]).map((hash) =>
+        hash.replace("ipfs://", ""),
+      );
+    }
+    return array;
+  }, [router.query]);
+
   return (
     <Track>
       <Flex gap={8} direction="column">
@@ -33,9 +51,8 @@ const ContractsDeployPage: ConsolePage = () => {
             </Link>
           </Text>
         </Flex>
-        <Card>
-          <ContractDeployForm contractId={contract || ""} />
-        </Card>
+
+        <DeployableContractTable contractIds={ipfsHashes} />
       </Flex>
     </Track>
   );
