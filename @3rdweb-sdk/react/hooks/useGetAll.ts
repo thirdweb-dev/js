@@ -7,6 +7,7 @@ import {
   QueryAllParams,
   Split,
   Token,
+  TokenDrop,
   ValidContractInstance,
   Vote,
 } from "@thirdweb-dev/sdk";
@@ -48,7 +49,7 @@ export const getTotalCountQueryKey = (
 
 export type ContractWithGetAll = U.Exclude<
   ValidContractInstance,
-  Vote | Split | Token | Pack
+  Vote | Split | Token | Pack | TokenDrop
 >;
 export function useGetAll<TContract extends ContractWithGetAll>(
   contract?: TContract,
@@ -92,8 +93,8 @@ export function useGetTotalCount<TContract extends ContractWithGetAll>(
       if (lazyMint && "totalUnclaimedSupply" in contract) {
         return await contract.totalUnclaimedSupply();
       }
-      if ("query" in contract && contract.query?.totalSupply) {
-        return await contract.query?.totalSupply();
+      if ("totalSupply" in contract) {
+        return await contract.totalSupply(0);
       }
       if ("getTotalCount" in contract) {
         return await contract.getTotalCount();

@@ -1721,10 +1721,10 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/chain-icons/-/chain-icons-1.0.2.tgz#b7f7c3f43fb3d8823ed9272ca109d17eb5016716"
   integrity sha512-lNFCK0r86qpuo9ysVfcV8SeAD7Ds12IAO/oD+wsCbvlMu8ObPHXk1Lx3Fi6JFJ/8uisZlEYgXskrfT7sae9Uag==
 
-"@thirdweb-dev/contracts@2.3.0":
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.3.0.tgz#16240a0a470693eb83d02c3316e8ab37981d8ca9"
-  integrity sha512-FN69SNSFqWuo1vN+zqp17YlzI7Q+TL6Mw43CqWUOTeqyzVoiHSSK4RwPzgK5MewSNUcpLMDvw+6zY/D5rPZ4/Q==
+"@thirdweb-dev/contracts@2.3.2":
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.3.2.tgz#a057fdb21a40e20b14b0099d95d3a4f09e6e6850"
+  integrity sha512-6G7eMTU2cAbeRsGHQ84ZWkRL1hOM7xeUoNh8PEY+PZQyTaeVxImFWXb8sS1QakhT9nE8LBesOb5iXfwBaOCEQw==
 
 "@thirdweb-dev/react@^2.1.0":
   version "2.1.0"
@@ -1741,10 +1741,10 @@
     tiny-invariant "^1.2.0"
     wagmi "^0.2.28"
 
-"@thirdweb-dev/sdk@2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.1.0.tgz#2ccc592b7d64aee66f023197894e6dbabd04ba02"
-  integrity sha512-jq4GuTAnnY2s75Vte0nbmetRMw2FX98N+wCg+VHrIHLFRG4MeFIqEGdzhrbMeEsx0BS0wOm9T8Xzg9cMqIbXJg==
+"@thirdweb-dev/sdk@^2.1.2":
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.1.2.tgz#1633bf512ad2c1eb0e316032cac318e1ecd5e64d"
+  integrity sha512-ebfi+0hNKp2ZjfUDwtucn1V/Ln9d6nHBq6sR5JzndCH8L9Cm5lQtG0ymwmXRXrusnbP8pXHpq/Cy+L4E1Ishjw==
   dependencies:
     "@ethersproject/bignumber" "^5.6.0"
     "@ethersproject/bytes" "^5.6.1"
@@ -1752,7 +1752,7 @@
     "@ethersproject/contracts" "^5.6.0"
     "@ethersproject/providers" "^5.6.1"
     "@ethersproject/units" "^5.6.0"
-    "@thirdweb-dev/contracts" "2.3.0"
+    "@thirdweb-dev/contracts" "2.3.2"
     "@web-std/file" "^3.0.0"
     cross-fetch "^3.1.5"
     deep-equal "^2.0.5"
