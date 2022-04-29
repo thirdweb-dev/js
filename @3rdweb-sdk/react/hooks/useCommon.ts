@@ -8,6 +8,7 @@ import {
   useMutationWithInvalidate,
   useQueryWithNetwork,
 } from "./query/useQueryWithNetwork";
+// eslint-disable-next-line import/no-cycle
 import { getAllQueryKey } from "./useGetAll";
 import {
   CommonPlatformFeeSchema,

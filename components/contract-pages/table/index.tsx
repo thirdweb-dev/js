@@ -46,15 +46,18 @@ interface IRawContractItemsTable<TContract extends ContractWithGetAll> {
   // items: TTableType<TContract>[];
   contract?: TContract;
   emptyState?: IContractEmptyState;
+  lazyMint?: true;
 }
 
 const RawContractItemsTable = <TContract extends ContractWithGetAll>({
   contract,
   emptyState,
+  lazyMint,
 }: PropsWithChildren<IRawContractItemsTable<TContract>>) => {
   const [queryParams, setQueryParams] = useState({ count: 50, start: 0 });
-  const totalCount = useGetTotalCount(contract);
-  const items = useGetAll(contract, queryParams);
+  const items = useGetAll(contract, queryParams, lazyMint);
+  const totalCount = useGetTotalCount(contract, lazyMint);
+
   const columns = useTableColumns(contract);
   const {
     getTableProps,
@@ -117,14 +120,7 @@ const RawContractItemsTable = <TContract extends ContractWithGetAll>({
 
   return (
     <Stack spacing={4}>
-      <Card
-        maxW="100%"
-        as={Card}
-        overflowX="auto"
-        position="relative"
-        px={0}
-        pt={0}
-      >
+      <Card maxW="100%" as={Card} overflowX="auto" position="relative" p={0}>
         {items.isFetching && (
           <Spinner
             color="primary"
@@ -285,6 +281,7 @@ const RawContractItemsTable = <TContract extends ContractWithGetAll>({
 interface IContractItemsTableProps<TContract extends ContractWithGetAll> {
   contract?: TContract;
   emptyState?: IContractEmptyState;
+  lazyMint?: true;
 }
 
 export const ContractItemsTable = <TContract extends ContractWithGetAll>(
