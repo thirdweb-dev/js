@@ -27,7 +27,7 @@ export const ContractEmptyState: React.FC<IContractEmptyState> = ({
           alt="Empty state illustration"
           w="130px"
         />
-        <Heading size="label.2xl" textAlign="center">
+        <Heading size="label.xl" textAlign="center">
           {title}
         </Heading>
       </Stack>

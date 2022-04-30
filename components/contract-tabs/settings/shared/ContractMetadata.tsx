@@ -95,7 +95,7 @@ export const ContractMetadata = <TContract extends ValidContractClass>({
                     metadataMutation.isLoading ||
                     isDisabled
                   }
-                  accept="image/*"
+                  accept={{ "image/*": [] }}
                   value={useImageFileOrUrl(watch("image"))}
                   setValue={(file) =>
                     setValue("image", file, { shouldTouch: true })

@@ -2,10 +2,10 @@ import { IContractActionButtonProps } from "./types";
 import { MinterOnly } from "@3rdweb-sdk/react";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import { EditionDrop, NFTDrop } from "@thirdweb-dev/sdk";
-import { MismatchButton } from "components/buttons/MismatchButton";
 import { MintDrawer } from "components/shared/MintDrawer";
 import React, { useMemo } from "react";
 import { FiPlus } from "react-icons/fi";
+import { Button } from "tw-components";
 
 export interface IMintButtonProps extends IContractActionButtonProps {}
 export const MintButton: React.FC<IMintButtonProps> = ({
@@ -24,13 +24,13 @@ export const MintButton: React.FC<IMintButtonProps> = ({
     <MinterOnly contract={contract}>
       <>
         <MintDrawer isOpen={isOpen} onClose={onClose} contract={contract} />
-        <MismatchButton
+        <Button
           {...restButtonProps}
           onClick={onOpen}
           leftIcon={<Icon as={FiPlus} />}
         >
           {mintButtonText}
-        </MismatchButton>
+        </Button>
       </>
     </MinterOnly>
   );

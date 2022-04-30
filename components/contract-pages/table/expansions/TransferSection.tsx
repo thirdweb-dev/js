@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { AddressZero } from "@ethersproject/constants";
 import { Edition, EditionDrop, ValidContractInstance } from "@thirdweb-dev/sdk";
-import { MismatchButton } from "components/buttons/MismatchButton";
+import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React, { useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -86,14 +86,15 @@ export const TransferSection: React.FC<ITransferSection> = ({
               </FormControl>
             )}
           </Stack>
-          <MismatchButton
+          <TransactionButton
+            transactionCount={1}
             isLoading={transfer.isLoading}
             type="submit"
             colorScheme="primary"
             rightIcon={<Icon as={IoMdSend} />}
           >
-            Send
-          </MismatchButton>
+            Transfer
+          </TransactionButton>
         </Stack>
       </form>
     </Stack>

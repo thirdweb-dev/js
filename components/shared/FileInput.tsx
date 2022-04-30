@@ -11,13 +11,13 @@ import {
 } from "@chakra-ui/react";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import React, { useCallback } from "react";
-import { DropEvent, FileRejection, useDropzone } from "react-dropzone";
+import { Accept, DropEvent, FileRejection, useDropzone } from "react-dropzone";
 import { AiFillEye, AiOutlineFileAdd } from "react-icons/ai";
 import { FiImage, FiUpload } from "react-icons/fi";
 import { Button, Text } from "tw-components";
 
 interface IFileInputProps extends BoxProps {
-  accept?: HTMLInputElement["accept"];
+  accept?: Accept;
   setValue: (file: File) => void;
   isDisabled?: boolean;
   value?: string | File;
@@ -56,7 +56,11 @@ export const FileInput: React.FC<IFileInputProps> = ({
 
   const file: File | null = value instanceof File ? value : null;
   const fileUrl = useImageFileOrUrl(value);
-  const helperText = accept === "image/*" ? "image" : "file";
+  const helperText =
+    accept &&
+    Object.keys(accept).filter((k) => k.split("/")[0] !== "image").length === 1
+      ? "image"
+      : "file";
 
   // Don't display non image file types
   const noDisplay = file && !file.type.includes("image");

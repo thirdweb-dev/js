@@ -43,7 +43,6 @@ import { Row, usePagination, useTable } from "react-table";
 import { Card, Heading, Text } from "tw-components";
 
 interface IRawContractItemsTable<TContract extends ContractWithGetAll> {
-  // items: TTableType<TContract>[];
   contract?: TContract;
   emptyState?: IContractEmptyState;
   lazyMint?: true;

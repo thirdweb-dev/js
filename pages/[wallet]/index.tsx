@@ -154,7 +154,12 @@ const Dashboard: ConsolePage = () => {
   return (
     <Flex direction="column" gap={8}>
       {!!combinedList.length && (
-        <Flex justify="space-between" align="top">
+        <Flex
+          justify="space-between"
+          align="top"
+          gap={4}
+          direction={{ base: "column", md: "row" }}
+        >
           <Flex gap={2} direction="column">
             <Heading size="title.md">Deployed contracts</Heading>
             <Text fontStyle="italic" maxW="container.md">

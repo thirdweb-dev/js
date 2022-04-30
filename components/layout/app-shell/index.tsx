@@ -13,7 +13,6 @@ import {
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
 import { Logo } from "components/logo";
 import { InsufficientFunds } from "components/notices/InsufficientFunds";
-import { NetworkMismatchNotice } from "components/notices/NetworkMismatch";
 import { useTrack } from "hooks/analytics/useTrack";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
@@ -201,7 +200,6 @@ export const AppShell: React.FC = ({ children }) => {
         </Container>
         {pathname !== "/dashboard" && (
           <>
-            <NetworkMismatchNotice />
             <InsufficientFunds />
           </>
         )}

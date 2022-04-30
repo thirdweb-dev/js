@@ -26,7 +26,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useToken } from "@thirdweb-dev/react";
-import { MismatchButton } from "components/buttons/MismatchButton";
+import { TransactionButton } from "components/buttons/TransactionButton";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
@@ -157,7 +157,8 @@ export const TransferModal: React.FC<IMintModal> = ({ isOpen, onClose }) => {
         </ModalBody>
 
         <ModalFooter>
-          <MismatchButton
+          <TransactionButton
+            transactionCount={1}
             isLoading={mutation.isLoading}
             type="submit"
             form={FORM_ID}
@@ -165,8 +166,8 @@ export const TransferModal: React.FC<IMintModal> = ({ isOpen, onClose }) => {
             rightIcon={<FiSend />}
             isDisabled={!watch("to") || !watch("amount")}
           >
-            Send Transfer
-          </MismatchButton>
+            Transfer
+          </TransactionButton>
         </ModalFooter>
       </ModalContent>
     </Modal>

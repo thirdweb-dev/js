@@ -6,7 +6,7 @@ import {
   AirdropAddressInput,
   AirdropUpload,
 } from "components/batch-upload/AirdropUpload";
-import { MismatchButton } from "components/buttons/MismatchButton";
+import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React, { useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -110,7 +110,8 @@ export const AirdropSection: React.FC<IAirdropSection> = ({
               </Flex>
             </Flex>
           </Stack>
-          <MismatchButton
+          <TransactionButton
+            transactionCount={1}
             isLoading={airdrop.isLoading}
             type="submit"
             colorScheme="primary"
@@ -118,7 +119,7 @@ export const AirdropSection: React.FC<IAirdropSection> = ({
             rightIcon={<Icon as={IoMdSend} />}
           >
             Airdrop
-          </MismatchButton>
+          </TransactionButton>
         </Stack>
       </form>
     </Stack>

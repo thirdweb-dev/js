@@ -5,12 +5,13 @@ import {
   useHasVotedOnProposal,
   useTokensDelegated,
 } from "@3rdweb-sdk/react/hooks/useVote";
-import { Flex, Icon, Stack } from "@chakra-ui/react";
+import { Flex, Icon } from "@chakra-ui/react";
 import {
   ProposalState,
   Proposal as ProposalType,
   VoteType,
 } from "@thirdweb-dev/sdk";
+import { TransactionButton } from "components/buttons/TransactionButton";
 import { ethers } from "ethers";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -83,10 +84,13 @@ export const Proposal: React.FC<IProposal> = ({ proposal }) => {
   const { data: delegated } = useTokensDelegated(voteAddress);
   const { mutate: execute, isLoading: isExecuting } =
     useExecuteProposalMutation(proposal.proposalId.toString(), voteAddress);
-  const { mutate: vote, isLoading: isVoting } = useCastVoteMutation(
-    proposal.proposalId.toString(),
-    voteAddress,
-  );
+  const {
+    mutate: vote,
+    isLoading: isVoting,
+    variables,
+  } = useCastVoteMutation(proposal.proposalId.toString(), voteAddress);
+
+  console.log("*** data", { variables });
 
   const votes = useMemo(() => {
     return {
@@ -183,42 +187,45 @@ export const Proposal: React.FC<IProposal> = ({ proposal }) => {
       !hasVoted &&
       !hasVotedLoading &&
       delegated ? (
-        <Stack direction="row" spacing={2} mt="24px">
-          {isVoting ? (
-            <Button width="80px" size="sm" isLoading />
-          ) : (
-            <>
-              <Button
-                width="80px"
-                size="sm"
-                leftIcon={<Icon as={FiCheck} />}
-                onClick={() => castVote(1)}
-              >
-                For
-              </Button>
-              <Button
-                width="80px"
-                size="sm"
-                leftIcon={<Icon as={FiX} />}
-                onClick={() => castVote(0)}
-              >
-                Against
-              </Button>
-              <Button
-                width="80px"
-                size="sm"
-                leftIcon={<Icon as={FiMinus} />}
-                onClick={() => castVote(2)}
-              >
-                Abstain
-              </Button>
-            </>
-          )}
-        </Stack>
+        <Flex mt="24px" gap={2}>
+          <TransactionButton
+            size="sm"
+            transactionCount={1}
+            rightIcon={<Icon as={FiCheck} />}
+            onClick={() => castVote(1)}
+            colorScheme="green"
+            isDisabled={isVoting && variables?.voteType !== 1}
+            isLoading={isVoting && variables?.voteType === 1}
+          >
+            Approve
+          </TransactionButton>
+          <TransactionButton
+            size="sm"
+            transactionCount={1}
+            rightIcon={<Icon as={FiX} />}
+            onClick={() => castVote(0)}
+            colorScheme="red"
+            isDisabled={isVoting && variables?.voteType !== 0}
+            isLoading={isVoting && variables?.voteType === 0}
+          >
+            Against
+          </TransactionButton>
+          <TransactionButton
+            colorScheme="blackAlpha"
+            size="sm"
+            transactionCount={1}
+            rightIcon={<Icon as={FiMinus} />}
+            onClick={() => castVote(2)}
+            isDisabled={isVoting && variables?.voteType !== 2}
+            isLoading={isVoting && variables?.voteType === 2}
+          >
+            Abstain
+          </TransactionButton>
+        </Flex>
       ) : (
         canExecute && (
           <Button
-            colorScheme="blue"
+            colorScheme="primary"
             size="sm"
             leftIcon={<Icon as={FiCheck} />}
             onClick={executeProposal}

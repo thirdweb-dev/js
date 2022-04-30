@@ -3,10 +3,10 @@ import { useActiveChainId, useWeb3 } from "@3rdweb-sdk/react";
 import { ListerOnly } from "@3rdweb-sdk/react/components/roles/lister-only";
 import { Flex, Icon, Tooltip, useDisclosure } from "@chakra-ui/react";
 import { ChainId } from "@thirdweb-dev/react";
-import { MismatchButton } from "components/buttons/MismatchButton";
 import { MintDrawer } from "components/shared/MintDrawer";
 import React from "react";
 import { FiPlus } from "react-icons/fi";
+import { Button } from "tw-components";
 import { SUPPORTED_CHAIN_ID } from "utils/network";
 
 const UNSUPPORTED_CHAINS = [ChainId.Avalanche, ChainId.Fantom];
@@ -33,13 +33,14 @@ export const ListButton: React.FC<IListButtonProps> = ({
           hasArrow
         >
           <Flex>
-            <MismatchButton
+            <Button
               {...restButtonProps}
               leftIcon={<Icon as={FiPlus} />}
               isDisabled
+              colorScheme="primary"
             >
               New Listing
-            </MismatchButton>
+            </Button>
           </Flex>
         </Tooltip>
       </ListerOnly>
@@ -50,13 +51,14 @@ export const ListButton: React.FC<IListButtonProps> = ({
     <ListerOnly contract={contract}>
       <>
         <MintDrawer isOpen={isOpen} onClose={onClose} contract={contract} />
-        <MismatchButton
+        <Button
           {...restButtonProps}
           onClick={onOpen}
           leftIcon={<Icon as={FiPlus} />}
+          colorScheme="primary"
         >
           New Listing
-        </MismatchButton>
+        </Button>
       </>
     </ListerOnly>
   );

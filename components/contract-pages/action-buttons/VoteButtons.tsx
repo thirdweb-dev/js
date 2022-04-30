@@ -4,10 +4,10 @@ import {
 } from "@3rdweb-sdk/react/hooks/useVote";
 import { Icon, Tooltip, useDisclosure } from "@chakra-ui/react";
 import { ValidContractInstance } from "@thirdweb-dev/sdk";
-import { MismatchButton } from "components/buttons/MismatchButton";
 import { MintDrawer } from "components/shared/MintDrawer";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { FiPlus } from "react-icons/fi";
+import { Button } from "tw-components";
 
 interface IVoteButton {
   contract?: ValidContractInstance;
@@ -19,13 +19,13 @@ export const ProposalButton: React.FC<IVoteButton> = ({ contract }) => {
   return (
     <>
       <MintDrawer isOpen={isOpen} onClose={onClose} contract={contract} />
-      <MismatchButton
+      <Button
         colorScheme="primary"
         onClick={onOpen}
         leftIcon={<Icon as={FiPlus} />}
       >
         Create Proposal
-      </MismatchButton>
+      </Button>
     </>
   );
 };
@@ -56,13 +56,13 @@ export const DelegateButton: React.FC<IVoteButton> = ({ contract }) => {
 
   return (
     <Tooltip label="You need to delegate tokens to this contract before you can make proposals and vote.">
-      <MismatchButton
+      <Button
         colorScheme="primary"
         onClick={delegateTokens}
         isLoading={isDelegating}
       >
         Delegate Tokens
-      </MismatchButton>
+      </Button>
     </Tooltip>
   );
 };

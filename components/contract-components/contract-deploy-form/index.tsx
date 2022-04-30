@@ -1,6 +1,5 @@
 import { ContractId } from "../types";
 import { isContractIdBuiltInContract } from "../utils";
-import { NetworkMismatchNotice } from "components/notices/NetworkMismatch";
 import { CustomSDKContext } from "contexts/custom-sdk-context";
 import dynamic from "next/dynamic";
 import { useState } from "react";
@@ -41,7 +40,6 @@ export const ContractDeployForm: React.VFC<ContractDeployFormProps> = ({
           onChainSelect={setSelectedChain}
         />
       )}
-      <NetworkMismatchNotice />
     </CustomSDKContext>
   );
 };

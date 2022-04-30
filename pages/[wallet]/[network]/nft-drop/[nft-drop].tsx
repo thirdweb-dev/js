@@ -38,7 +38,7 @@ import { useRouter } from "next/router";
 import { ConsolePage } from "pages/_app";
 import React, { useState } from "react";
 import { RiCheckboxMultipleBlankLine } from "react-icons/ri";
-import { Card } from "tw-components";
+import { Button, Card } from "tw-components";
 
 const NFTDropPage: ConsolePage = () => {
   const {
@@ -86,14 +86,14 @@ const NFTDropPage: ConsolePage = () => {
         primaryAction={<MintButton colorScheme="primary" contract={contract} />}
         secondaryAction={
           <MinterOnly contract={contract}>
-            <MismatchButton
+            <Button
               leftIcon={<Icon as={RiCheckboxMultipleBlankLine} />}
               onClick={onBatchOpen}
               colorScheme="primary"
               variant="outline"
             >
               Batch Upload
-            </MismatchButton>
+            </Button>
           </MinterOnly>
         }
         tertiaryAction={

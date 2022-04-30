@@ -5,7 +5,6 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { DeployableContractTable } from "components/contract-components/contract-table";
 import { usePublishMutation } from "components/contract-components/hooks";
 import { ContractId } from "components/contract-components/types";
-import { NetworkMismatchNotice } from "components/notices/NetworkMismatch";
 import { UrlMap } from "constants/mappings";
 import { CustomSDKContext } from "contexts/custom-sdk-context";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -142,8 +141,6 @@ const ContractsPublishPageWrapped: React.VFC = () => {
           </TransactionButton>
         </Flex>
       </Flex>
-      {/* TODO remove this somehow */}
-      <NetworkMismatchNotice />
     </Track>
   );
 };

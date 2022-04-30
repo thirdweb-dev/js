@@ -249,7 +249,7 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
                 <FormLabel>Image</FormLabel>
                 <Box width={{ base: "auto", md: "350px" }}>
                   <FileInput
-                    accept="image/*"
+                    accept={{ "image/*": [] }}
                     value={imageUrl}
                     showUploadButton
                     setValue={(file) => setValue("image", file)}

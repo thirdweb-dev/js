@@ -8,7 +8,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { Edition, EditionDrop, ValidContractInstance } from "@thirdweb-dev/sdk";
-import { MismatchButton } from "components/buttons/MismatchButton";
+import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React, { useCallback } from "react";
 import { useForm } from "react-hook-form";
@@ -75,14 +75,15 @@ export const BurnSection: React.FC<IBurnSection> = ({ contract, tokenId }) => {
               </FormControl>
             )}
           </Stack>
-          <MismatchButton
+          <TransactionButton
+            transactionCount={1}
             isLoading={burn.isLoading}
             type="submit"
             colorScheme="primary"
             rightIcon={<Icon as={FaBurn} />}
           >
             Burn
-          </MismatchButton>
+          </TransactionButton>
         </Stack>
       </form>
     </Stack>

@@ -12,7 +12,6 @@ import {
   DrawerFooter,
   FormControl,
   FormErrorMessage,
-  Icon,
   Input,
   Stack,
   Textarea,
@@ -20,13 +19,12 @@ import {
 } from "@chakra-ui/react";
 import { Edition } from "@thirdweb-dev/sdk";
 import { OpenSeaPropertyBadge } from "components/badges/opensea";
-import { MismatchButton } from "components/buttons/MismatchButton";
+import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { FiPlus } from "react-icons/fi";
 import { Button, FormHelperText, FormLabel, Heading } from "tw-components";
 import { NFTMetadataInputLimited } from "types/modified-types";
 
@@ -164,7 +162,7 @@ export const EditionMintForm: React.FC<IEditionMintForm> = ({ contract }) => {
               <FormLabel>Cover Image</FormLabel>
               <FileInput
                 maxContainerWidth={"200px"}
-                accept="image/*"
+                accept={{ "image/*": [] }}
                 value={imageUrl}
                 showUploadButton
                 setValue={(file) => setValue("image", file)}
@@ -256,15 +254,15 @@ export const EditionMintForm: React.FC<IEditionMintForm> = ({ contract }) => {
         >
           Cancel
         </Button>
-        <MismatchButton
+        <TransactionButton
+          transactionCount={1}
           isLoading={mint.isLoading}
-          leftIcon={<Icon as={FiPlus} />}
           form={MINT_FORM_ID}
           type="submit"
           colorScheme="primary"
         >
           Create NFTs
-        </MismatchButton>
+        </TransactionButton>
       </DrawerFooter>
     </>
   );

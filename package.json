@@ -40,7 +40,7 @@
     "react": "17.0.2",
     "react-cool-dimensions": "^2.0.7",
     "react-dom": "17.0.2",
-    "react-dropzone": "^12.0.2",
+    "react-dropzone": "^13.0.0",
     "react-hook-form": "^7.19.5",
     "react-icons": "^4.2.0",
     "react-query": "^4.0.0-beta.3",
