@@ -10,7 +10,7 @@ import {
 import { Edition, EditionDrop, ValidContractInstance } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import React, { useCallback } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { FaBurn } from "react-icons/fa";
 import { FormHelperText, FormLabel } from "tw-components";
@@ -37,31 +37,28 @@ export const BurnSection: React.FC<IBurnSection> = ({ contract, tokenId }) => {
     "Error burning",
   );
 
-  const onSubmit = useCallback(
-    (data) => {
-      burn.mutate(
-        {
-          tokenId,
-          amount: data.amount,
-        },
-        {
-          onError,
-          onSuccess: () => {
-            onSuccess();
-            closeAllRows();
-          },
-        },
-      );
-    },
-    [burn, tokenId, onError, onSuccess, closeAllRows],
-  );
-
   const requiresAmount =
     contract instanceof Edition || contract instanceof EditionDrop;
 
   return (
     <Stack pt={3}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={handleSubmit((data) => {
+          burn.mutate(
+            {
+              tokenId,
+              amount: data.amount,
+            },
+            {
+              onError,
+              onSuccess: () => {
+                onSuccess();
+                closeAllRows();
+              },
+            },
+          );
+        })}
+      >
         <Stack align="center">
           <Stack spacing={6} w="100%" direction={{ base: "column", md: "row" }}>
             {requiresAmount && (

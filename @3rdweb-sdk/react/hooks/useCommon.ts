@@ -142,7 +142,7 @@ interface ITransferInput {
 
 interface IAirdropInput {
   tokenId: string;
-  addresses: { address: string; quantity: string }[];
+  addresses: { address: string; quantity?: string }[];
 }
 
 interface IBurnInput {

@@ -11,7 +11,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { Edition, EditionDrop, ValidContractInstance } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import React, { useCallback } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { IoMdSend } from "react-icons/io";
 import { FormHelperText, FormLabel } from "tw-components";
@@ -41,32 +41,29 @@ export const TransferSection: React.FC<ITransferSection> = ({
     "Error transferring",
   );
 
-  const onSubmit = useCallback(
-    (data) => {
-      transfer.mutate(
-        {
-          tokenId,
-          to: data.to,
-          amount: data.amount,
-        },
-        {
-          onError,
-          onSuccess: () => {
-            onSuccess();
-            closeAllRows();
-          },
-        },
-      );
-    },
-    [transfer, tokenId, onError, onSuccess, closeAllRows],
-  );
-
   const requiresAmount =
     contract instanceof Edition || contract instanceof EditionDrop;
 
   return (
     <Stack pt={3}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={handleSubmit((data) => {
+          transfer.mutate(
+            {
+              tokenId,
+              to: data.to,
+              amount: data.amount,
+            },
+            {
+              onError,
+              onSuccess: () => {
+                onSuccess();
+                closeAllRows();
+              },
+            },
+          );
+        })}
+      >
         <Stack align="center">
           <Stack spacing={6} w="100%" direction={{ base: "column", md: "row" }}>
             <FormControl isRequired isInvalid={!!errors.to}>

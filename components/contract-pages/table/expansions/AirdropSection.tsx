@@ -1,5 +1,8 @@
 import { useTableContext } from "../table-context";
-import { useAirdropMutation } from "@3rdweb-sdk/react";
+import {
+  useAirdropMutation,
+  useContractTypeOfContract,
+} from "@3rdweb-sdk/react";
 import { Flex, Icon, Stack, useDisclosure } from "@chakra-ui/react";
 import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import {
@@ -7,8 +10,9 @@ import {
   AirdropUpload,
 } from "components/batch-upload/AirdropUpload";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import React, { useCallback } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { BsCircleFill } from "react-icons/bs";
 import { FiUpload } from "react-icons/fi";
@@ -29,6 +33,7 @@ export const AirdropSection: React.FC<IAirdropSection> = ({
   }>({
     defaultValues: { addresses: [] },
   });
+  const { trackEvent } = useTrack();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -40,30 +45,53 @@ export const AirdropSection: React.FC<IAirdropSection> = ({
     "Error transferring",
   );
 
-  const onSubmit = useCallback(
-    (data) => {
-      airdrop.mutate(
-        {
-          tokenId,
-          addresses: data.addresses,
-        },
-        {
-          onError,
-          onSuccess: () => {
-            onSuccess();
-            closeAllRows();
-          },
-        },
-      );
-    },
-    [airdrop, tokenId, onError, onSuccess, closeAllRows],
-  );
-
   const addresses = watch("addresses");
+
+  const categoryName = useContractTypeOfContract(contract) || "unknown-airdrop";
 
   return (
     <Stack pt={3}>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={handleSubmit((data) => {
+          trackEvent({
+            category: categoryName,
+            action: "airdrop",
+            label: "attempt",
+            contractAddress: contract?.getAddress(),
+            tokenId,
+          });
+          airdrop.mutate(
+            {
+              tokenId,
+              addresses: data.addresses,
+            },
+            {
+              onSuccess: () => {
+                onSuccess();
+                trackEvent({
+                  category: categoryName,
+                  action: "airdrop",
+                  label: "success",
+                  contractAddress: contract?.getAddress(),
+                  tokenId,
+                });
+                closeAllRows();
+              },
+              onError: (error) => {
+                trackEvent({
+                  category: categoryName,
+                  action: "airdrop",
+                  label: "error",
+                  contractAddress: contract?.getAddress(),
+                  tokenId,
+                  error,
+                });
+                onError(error);
+              },
+            },
+          );
+        })}
+      >
         <Stack align="center">
           <Stack
             spacing={6}
