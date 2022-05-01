@@ -1768,10 +1768,10 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.3.2.tgz#a057fdb21a40e20b14b0099d95d3a4f09e6e6850"
   integrity sha512-6G7eMTU2cAbeRsGHQ84ZWkRL1hOM7xeUoNh8PEY+PZQyTaeVxImFWXb8sS1QakhT9nE8LBesOb5iXfwBaOCEQw==
 
-"@thirdweb-dev/react@^2.2.0":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.2.1.tgz#3ca26d9bc53eb7cf8cb095bfe83ce4a1319a4572"
-  integrity sha512-NnJYlkHymD8Jo0OhRtLuxU/rTshZrjTuXyNisaf828RKA4TCGqJGHAChceKuVBOrf1LXemjj8UXjMQTIhI6jfA==
+"@thirdweb-dev/react@^2.2.2":
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.2.2.tgz#86a13378675710488e2031aa3b27e4f1d7927669"
+  integrity sha512-FwlAtdPl7TSlxcmpc2Te7LOJPRsy8BBbdmJkkYWKUQJhwY0t2K62T8Meq5TqEJIUde7+MpIWWT4rl2arMgPQUQ==
   dependencies:
     "@gnosis.pm/safe-core-sdk" "^2.1.0"
     "@gnosis.pm/safe-ethers-adapters" "^0.1.0-alpha.9"
@@ -1784,10 +1784,10 @@
     tiny-invariant "^1.2.0"
     wagmi "^0.2.28"
 
-"@thirdweb-dev/sdk@^2.1.2":
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.1.3.tgz#c36bfa05e30cb78939d13a61509580c05ebb05f2"
-  integrity sha512-9xVCsRBg37asyDxwG16wRSiXLWl80mRvT0VTO/l8hWfWgUmMqR+LMN3E6GQBDfyopC9hBApuClYO3RUeOijv7g==
+"@thirdweb-dev/sdk@^2.1.4-0":
+  version "2.1.4-0"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.1.4-0.tgz#e48f65582790b7d307eb3d4f858443c7bb8ce31c"
+  integrity sha512-WXBOeQsEDNpLmtBMAtutUKW44JzBmA85GfVHYE4fkX9001D5iC8vE3cNbmHj6vVatoqRUl1EtQRbwMWMnP28/Q==
   dependencies:
     "@ethersproject/bignumber" "^5.6.0"
     "@ethersproject/bytes" "^5.6.1"
