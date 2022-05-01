@@ -467,13 +467,16 @@ export const ContractTable: React.FC<ContractTableProps> = ({
                 // this is a hack to get around the fact that safari does not handle position: relative on table rows
                 style={{ cursor: "pointer" }}
                 onClick={() => {
-                  router.push(
-                    `/${wallet}/${getNetworkFromChainId(
-                      row.original.chainId as SUPPORTED_CHAIN_ID,
-                    )}/${UrlMap[row.original.contractType]}/${
-                      row.original.address
-                    }`,
-                  );
+                  const contractTypeUrlSegment =
+                    row.original.contractType === "custom"
+                      ? ""
+                      : `/${UrlMap[row.original.contractType]}`;
+
+                  const href = `/${wallet}/${getNetworkFromChainId(
+                    row.original.chainId as SUPPORTED_CHAIN_ID,
+                  )}${contractTypeUrlSegment}/${row.original.address}`;
+
+                  router.push(href);
                 }}
                 // end hack
                 borderBottomWidth={1}
@@ -561,7 +564,7 @@ const NoContracts: React.FC = () => {
             colorScheme="primary"
             href="/contracts"
           >
-            Deploy New Contract
+            Deploy new contract
           </LinkButton>
         </Stack>
       </Container>
