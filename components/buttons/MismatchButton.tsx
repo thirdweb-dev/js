@@ -61,6 +61,8 @@ export const MismatchButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
           </Button>
         </PopoverTrigger>
         <Card
+          maxW="sm"
+          w="auto"
           as={PopoverContent}
           bg="backgroundCardHighlight"
           mx={6}
@@ -86,7 +88,8 @@ const MismatchNotice: React.VFC<{
   onClose: () => void;
 }> = ({ initialFocusRef, onClose }) => {
   const { chainId, getNetworkMetadata } = useWeb3();
-  const activeChainId = useDesiredChainId();
+  const desiredChainId = useDesiredChainId();
+
   const signerChainId = chainId as SUPPORTED_CHAIN_ID;
   const [network, switchNetwork] = useNetwork();
 
@@ -104,17 +107,17 @@ const MismatchNotice: React.VFC<{
     .map((s, idx) => (idx === 0 ? s.toUpperCase() : s))
     .join("");
 
-  const twNetwork = getNetworkFromChainId(activeChainId)
+  const twNetwork = getNetworkFromChainId(desiredChainId)
     .split("")
     .map((s, idx) => (idx === 0 ? s.toUpperCase() : s))
     .join("");
 
   const onSwitchWallet = useCallback(async () => {
-    if (actuallyCanAttemptSwitch && activeChainId) {
-      await switchNetwork(activeChainId);
+    if (actuallyCanAttemptSwitch && desiredChainId) {
+      await switchNetwork(desiredChainId);
     }
     onClose();
-  }, [activeChainId, actuallyCanAttemptSwitch, onClose, switchNetwork]);
+  }, [desiredChainId, actuallyCanAttemptSwitch, onClose, switchNetwork]);
 
   return (
     <Flex direction="column" gap={4}>
@@ -126,8 +129,9 @@ const MismatchNotice: React.VFC<{
       </Heading>
 
       <Text>
-        You are connected to the <strong>{walletNetwork}</strong> network but
-        you are trying to interact on the <strong>{twNetwork}</strong> network.
+        Your wallet is connected to the <strong>{walletNetwork}</strong> network
+        but this action requires you to connect to the{" "}
+        <strong>{twNetwork}</strong> network.
       </Text>
 
       <Button

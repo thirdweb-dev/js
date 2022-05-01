@@ -25,9 +25,14 @@ import {
 } from "theme/typography";
 import { shortenIfAddress } from "utils/usedapp-external";
 
-const mapToOneBigger = { xs: "sm", sm: "md", md: "lg", lg: "xl" } as const;
+export const buttonSizesMap = {
+  xs: "sm",
+  sm: "md",
+  md: "lg",
+  lg: "xl",
+} as const;
 
-type PossibleButtonSize = keyof typeof mapToOneBigger;
+export type PossibleButtonSize = keyof typeof buttonSizesMap;
 
 export interface ButtonProps extends Omit<ChakraButtonprops, "size"> {
   size?: PossibleButtonSize;
@@ -39,7 +44,7 @@ export const Button = forwardRef<ButtonProps, "button">(
     let _size: PossibleButtonSize = (size ||
       groupSize ||
       "md") as PossibleButtonSize;
-    if (!(_size in mapToOneBigger)) {
+    if (!(_size in buttonSizesMap)) {
       _size = "md";
     }
     const fontSizeMap =
@@ -52,7 +57,7 @@ export const Button = forwardRef<ButtonProps, "button">(
       fontWeight: fontWeights.label,
       lineHeight: lineHeights.label,
       letterSpacing: letterSpacings.label,
-      fontSize: fontSizeMap.label[mapToOneBigger[_size]],
+      fontSize: fontSizeMap.label[buttonSizesMap[_size]],
       size: _size,
       ...buttonGroupContext,
       ...restButtonprops,
@@ -159,7 +164,7 @@ export const AddressCopyButton: React.VFC<IAddressCopyButton> = ({
         leftIcon={noIcon ? undefined : <Icon boxSize={3} as={FiCopy} />}
         fontFamily="mono"
       >
-        <Text size={`label.${mapToOneBigger[size]}`}>
+        <Text size={`label.${buttonSizesMap[size]}`}>
           {shortenIfAddress(address)}
         </Text>
       </Button>

@@ -1,19 +1,13 @@
 import { useTableContext } from "../table-context";
 import { useBurnMutation } from "@3rdweb-sdk/react";
-import {
-  FormControl,
-  FormErrorMessage,
-  Icon,
-  Input,
-  Stack,
-} from "@chakra-ui/react";
+import { FormControl, Icon, Input, Stack } from "@chakra-ui/react";
 import { Edition, EditionDrop, ValidContractInstance } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FaBurn } from "react-icons/fa";
-import { FormHelperText, FormLabel } from "tw-components";
+import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 
 interface IBurnSection {
   contract?: ValidContractInstance;

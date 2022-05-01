@@ -67,6 +67,7 @@ const walletConnectors: WalletConnector[] = [
   "metamask",
   "walletConnect",
   "walletLink",
+  "gnosis",
 ];
 if (process.env.NEXT_PUBLIC_MAGIC_KEY) {
   walletConnectors.push({

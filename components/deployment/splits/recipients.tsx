@@ -5,7 +5,6 @@ import {
   Divider,
   Flex,
   FormControl,
-  FormErrorMessage,
   IconButton,
   Input,
 } from "@chakra-ui/react";
@@ -16,7 +15,7 @@ import { SplitsPieChart } from "components/splits-chart/splits-chart";
 import { useEffect } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { IoMdAdd, IoMdRemove } from "react-icons/io";
-import { Button, Heading, Text } from "tw-components";
+import { Button, FormErrorMessage, Heading, Text } from "tw-components";
 import { z } from "zod";
 
 export const RecipientForm: React.FC = () => {

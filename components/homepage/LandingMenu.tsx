@@ -1,9 +1,8 @@
 import { HamburgerIcon } from "@chakra-ui/icons";
-import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
-import { IconButton } from "@chakra-ui/react";
+import { IconButton, Menu, MenuButton, MenuList } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useCallback } from "react";
-import { NextLink } from "tw-components";
+import { MenuItem, NextLink } from "tw-components";
 
 export const LandingMenu: React.FC = () => {
   const { trackEvent } = useTrack();

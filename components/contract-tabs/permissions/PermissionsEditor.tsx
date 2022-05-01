@@ -6,7 +6,6 @@ import {
 import {
   Flex,
   FormControl,
-  FormErrorMessage,
   Icon,
   IconButton,
   Input,
@@ -25,7 +24,7 @@ import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { BiPaste } from "react-icons/bi";
 import { FiCopy, FiInfo, FiPlus, FiTrash } from "react-icons/fi";
-import { Button, Text } from "tw-components";
+import { Button, FormErrorMessage, Text } from "tw-components";
 
 interface IPermissionEditor {
   role: Role;

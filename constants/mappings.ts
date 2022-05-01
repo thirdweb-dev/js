@@ -1,4 +1,5 @@
 import {
+  ChainId,
   ContractType,
   CustomContract,
   Edition,
@@ -313,3 +314,25 @@ export const ROLE_DESCRIPTION_MAP: Record<Role, string> = {
   editor: "NOT IMPLEMENTED",
   asset: "Determine which assets can be listed on this marketplace.",
 };
+
+// gnosis mappings
+export const GNOSIS_TO_CHAIN_ID = {
+  // supported mainnets
+  eth: ChainId.Mainnet,
+  matic: ChainId.Polygon,
+  avax: ChainId.Avalanche,
+  // supported testnets
+  rin: ChainId.Rinkeby,
+  gor: ChainId.Goerli,
+} as const;
+
+export const CHAIN_ID_TO_GNOSIS = Object.entries(GNOSIS_TO_CHAIN_ID).reduce(
+  (acc, [gnosis, chainId]) => ({
+    ...acc,
+    [chainId]: gnosis,
+  }),
+  {} as Record<
+    typeof GNOSIS_TO_CHAIN_ID[keyof typeof GNOSIS_TO_CHAIN_ID],
+    keyof typeof GNOSIS_TO_CHAIN_ID
+  >,
+);

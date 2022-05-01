@@ -83,7 +83,7 @@ const ContractsPublishPageWrapped: React.VFC = () => {
             <Link
               color="primary.500"
               isExternal
-              href="https://www.notion.so/thirdweb/Alpha-Custom-Contract-74d81faa569b418f9ed718645fd7df2c"
+              href="https://thirdweb.notion.site/thirdweb-deploy-Public-Alpha-74d81faa569b418f9ed718645fd7df2c"
             >
               Learn more about publishing contracts
             </Link>

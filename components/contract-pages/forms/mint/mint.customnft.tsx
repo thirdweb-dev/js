@@ -9,7 +9,6 @@ import {
   DrawerBody,
   DrawerFooter,
   FormControl,
-  FormErrorMessage,
   Input,
   Stack,
   Textarea,
@@ -24,7 +23,13 @@ import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Button, FormHelperText, FormLabel, Heading } from "tw-components";
+import {
+  Button,
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
+  Heading,
+} from "tw-components";
 import { NFTMetadataInputLimited } from "types/modified-types";
 
 const MINT_FORM_ID = "nft-collection-mint-form";

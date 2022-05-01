@@ -89,9 +89,6 @@ export const Proposal: React.FC<IProposal> = ({ proposal }) => {
     isLoading: isVoting,
     variables,
   } = useCastVoteMutation(proposal.proposalId.toString(), voteAddress);
-
-  console.log("*** data", { variables });
-
   const votes = useMemo(() => {
     return {
       for: parseFloat(

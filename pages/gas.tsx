@@ -41,7 +41,7 @@ const GasPage: ConsolePage = () => {
         </Heading>
         <Flex justifyContent="center" alignItems="center">
           <Badge
-            size="lg"
+            size="label.md"
             colorScheme="green"
             borderRadius="lg"
             px={1}

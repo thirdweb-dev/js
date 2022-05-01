@@ -82,29 +82,29 @@ export const mdFontSizes: Record<
   },
 };
 
-export const fontWeights: Record<TypographyBase, number> = {
+export const fontWeights = {
   display: 800,
   title: 700,
   subtitle: 500,
   label: 600,
   body: 400,
-};
+} as const;
 
-export const lineHeights: Record<TypographyBase, number> = {
+export const lineHeights = {
   display: 1.2,
   title: 1.125,
   subtitle: 1.6,
   label: 1,
   body: 1.6,
-};
+} as const;
 
-export const letterSpacings: Record<TypographyBase, number | "initial"> = {
+export const letterSpacings = {
   display: -1.5,
   title: 0.15,
   subtitle: 0.1,
   label: "initial",
   body: "initial",
-};
+} as const;
 
 export type TypographyBase =
   | "display"

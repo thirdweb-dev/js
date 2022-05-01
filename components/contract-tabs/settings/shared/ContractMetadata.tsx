@@ -3,13 +3,7 @@ import {
   useContractMetadata,
   useContractMetadataMutation,
 } from "@3rdweb-sdk/react";
-import {
-  Flex,
-  FormControl,
-  FormErrorMessage,
-  Input,
-  Textarea,
-} from "@chakra-ui/react";
+import { Flex, FormControl, Input, Textarea } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CommonContractSchema, ValidContractClass } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -19,7 +13,13 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { C } from "ts-toolbelt";
-import { Card, FormLabel, Heading, Text } from "tw-components";
+import {
+  Card,
+  FormErrorMessage,
+  FormLabel,
+  Heading,
+  Text,
+} from "tw-components";
 import { z } from "zod";
 
 export const ContractMetadata = <TContract extends ValidContractClass>({

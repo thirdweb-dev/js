@@ -6,7 +6,6 @@ import {
 import {
   Divider,
   FormControl,
-  FormErrorMessage,
   Input,
   InputGroup,
   Modal,
@@ -32,7 +31,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FiSend } from "react-icons/fi";
-import { FormLabel, Heading, Text } from "tw-components";
+import { FormErrorMessage, FormLabel, Heading, Text } from "tw-components";
 
 interface IMintModal {
   isOpen: boolean;

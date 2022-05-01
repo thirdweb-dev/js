@@ -1,7 +1,6 @@
 import {
   Flex,
   FormControl,
-  FormErrorMessage,
   Icon,
   IconButton,
   Input,
@@ -28,7 +27,7 @@ import {
   useFieldArray,
 } from "react-hook-form";
 import { FiPlus, FiSlash, FiTrash, FiUpload, FiX } from "react-icons/fi";
-import { Button, FormLabel } from "tw-components";
+import { Button, FormErrorMessage, FormLabel } from "tw-components";
 // import { optionalProperties } from "schema/shared";
 import { z } from "zod";
 

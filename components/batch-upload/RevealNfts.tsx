@@ -1,7 +1,6 @@
 import { useNFTDropRevealMutation } from "@3rdweb-sdk/react";
 import {
   FormControl,
-  FormErrorMessage,
   Input,
   Modal,
   ModalBody,
@@ -16,6 +15,7 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { FormErrorMessage } from "tw-components";
 
 interface RevealNftsModalProps {
   contract?: NFTDrop;

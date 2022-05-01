@@ -100,7 +100,7 @@ const ContractsHomepageWrapped: React.VFC = () => {
                   <Text>You have not published any contracts yet.</Text>
                   <LinkButton
                     size="sm"
-                    href="https://www.notion.so/thirdweb/Alpha-Custom-Contract-74d81faa569b418f9ed718645fd7df2c"
+                    href="https://thirdweb.notion.site/thirdweb-deploy-Public-Alpha-74d81faa569b418f9ed718645fd7df2c"
                     isExternal
                     variant="outline"
                     colorScheme="primary"
