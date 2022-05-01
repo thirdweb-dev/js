@@ -248,7 +248,7 @@ const CustomContractForm: React.VFC<CustomContractFormProps> = ({
         <FormControl>
           <SupportedNetworkSelect
             disabledChainIds={SUPPORTED_CHAIN_IDS.filter(
-              (c) => c === ChainId.Mumbai,
+              (c) => c === ChainId.Mumbai || c === ChainId.Rinkeby,
             )}
             disabledChainIdText="coming soon"
             isDisabled={deploy.isLoading || !publishMetadata.isSuccess}
