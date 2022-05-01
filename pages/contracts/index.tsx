@@ -67,7 +67,7 @@ const ContractsHomepageWrapped: React.VFC = () => {
                 {walletAddress && <Spinner size="sm" />}
                 <Text>
                   {walletAddress
-                    ? "Loading custom contracts"
+                    ? "Loading your contracts"
                     : "No wallet connected"}
                 </Text>
               </Flex>
