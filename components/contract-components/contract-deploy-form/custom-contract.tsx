@@ -150,7 +150,7 @@ const CustomContractForm: React.VFC<CustomContractFormProps> = ({
           colorScheme="green"
           variant="outline"
         >
-          Custom Contract
+          Smart Contract
         </Badge>
       </Flex>
       <Divider borderColor="borderColor" />

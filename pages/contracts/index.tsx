@@ -30,6 +30,20 @@ const ContractsHomepageWrapped: React.VFC = () => {
     <Track>
       <Flex gap={8} direction="column">
         <Flex gap={2} direction="column">
+          <Heading size="title.md">
+            Your contracts{" "}
+            <Badge variant="outline" colorScheme="purple">
+              beta
+            </Badge>
+          </Heading>
+          <Text fontStyle="italic">
+            Contracts that you have published via the thirdweb cli
+          </Text>
+        </Flex>
+
+        <Box />
+
+        <Flex gap={2} direction="column">
           <Heading size="title.md">Built-in contracts</Heading>
           <Text fontStyle="italic">
             Contracts created by the thirdweb team that you can deploy
@@ -40,19 +54,6 @@ const ContractsHomepageWrapped: React.VFC = () => {
           hasDescription
           contractIds={Object.keys(KNOWN_CONTRACTS_MAP)}
         />
-
-        <Box />
-        <Flex gap={2} direction="column">
-          <Heading size="title.md">
-            Custom contracts{" "}
-            <Badge variant="outline" colorScheme="purple">
-              beta
-            </Badge>
-          </Heading>
-          <Text fontStyle="italic">
-            Contracts that you have published via the thirdweb cli
-          </Text>
-        </Flex>
 
         <DeployableContractTable
           isFetching={publishedContracts.isFetching}

@@ -29,7 +29,7 @@ export const CustomContractOverviewPage: React.VFC<
   }
   return (
     <Card as={Flex} flexDirection="column" gap={2}>
-      <Heading size="subtitle.md">Custom Contract</Heading>
+      <Heading size="subtitle.md">Smart Contract</Heading>
       <Text>
         Go to the{" "}
         <NextLink
