@@ -13,7 +13,7 @@ export const ABICopyButton: React.FC<ABICopyButtonProps> = ({
 }) => {
   const contractConstructor = useContractConstructor(restButtonProps.contract);
   const abi = useMemo(() => {
-    return contractConstructor ? contractConstructor.contractFactory.abi : null;
+    return contractConstructor ? contractConstructor.contractAbi : null;
   }, [contractConstructor]);
 
   const { onCopy, hasCopied, value } = useClipboard(
