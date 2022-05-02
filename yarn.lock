@@ -1784,10 +1784,10 @@
     tiny-invariant "^1.2.0"
     wagmi "^0.2.28"
 
-"@thirdweb-dev/sdk@^2.1.4":
-  version "2.1.4"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.1.4.tgz#71dfa199cf2bff7bef68996238a9f80be9cd6f9a"
-  integrity sha512-Fa2U3QpMhWnlJvt8q+4hElmt2aLNgdJbdmS6BB8Ds0fOqfWFSEPwuva2wiq0tHPsdMqCvCuXDhWVsaTEiVmMEQ==
+"@thirdweb-dev/sdk@^2.1.3-0":
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.1.5.tgz#d65025f5d88b9da1076efae014fd5dc1872dd524"
+  integrity sha512-dQmDL8VV/Lqdj7r2wnZ8khXL+xII5HWcDBIs/TgMhQd1EhU+MlvPgKzCPI/O4ngFipS60YS8HNefJjKWebwDBw==
   dependencies:
     "@ethersproject/bignumber" "^5.6.0"
     "@ethersproject/bytes" "^5.6.1"
@@ -7130,9 +7130,9 @@ react-dom@17.0.2:
     scheduler "^0.20.2"
 
 react-dropzone@^14.0.1:
-  version "14.0.1"
-  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-14.0.1.tgz#15df003f07a1f9fb6a460db06ed367c2e62667be"
-  integrity sha512-FyRWrlMmM2+8TkM0aPdRwdZJ5HX3+4O1vWtHecJMFB36N89Bub1sIrk8HyOrjb9hwm1HXGRZ4Q+PW4G/MDFg1Q==
+  version "14.1.1"
+  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-14.1.1.tgz#44ef66b8806bab7e3e39a4b089e73145de038482"
+  integrity sha512-JYavQrxU66hBHwDAXCMoHNvhMonKDA0VQ8ouJi8Ouxgz9lmtA4OGVBXgOTCq4vCbwTTDT9synvNUCIpT6zWWow==
   dependencies:
     attr-accept "^2.2.2"
     file-selector "^0.5.0"
