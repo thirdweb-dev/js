@@ -32,6 +32,7 @@ import { UrlMap } from "constants/mappings";
 import { isAddress } from "ethers/lib/utils";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
+import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
@@ -207,6 +208,8 @@ const BuiltinContractForm: React.VFC<BuiltinContractFormProps> = ({
     "Failed to deploy contract",
   );
 
+  const wallet = useSingleQueryParam("wallet") || "dashboard";
+
   const { trackEvent } = useTrack();
   const router = useRouter();
 
@@ -250,7 +253,7 @@ const BuiltinContractForm: React.VFC<BuiltinContractFormProps> = ({
                 });
                 onSuccess();
                 router.push(
-                  `/dashboard/${SupportedChainIdToNetworkMap[selectedChain]}/${UrlMap[contractType]}/${contractAddress}`,
+                  `/${wallet}/${SupportedChainIdToNetworkMap[selectedChain]}/${UrlMap[contractType]}/${contractAddress}`,
                 );
               },
               onError: (err) => {

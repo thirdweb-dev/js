@@ -18,7 +18,7 @@ export function useDeploy<TContract extends ValidContractClass>(
         `[Contract:deploy] - attempting to deploy ${contractType} contract without an active sdk`,
       );
       invariant(contractType, "[Contract:deploy] - contractType is required");
-      const contractAddress = await sdk.deployer.deployContract(
+      const contractAddress = await sdk.deployer.deployBuiltInContract(
         contractType,
         metadata,
       );

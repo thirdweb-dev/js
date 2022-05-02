@@ -47,7 +47,7 @@ const ContractsDeployPage: ConsolePage = () => {
               isExternal
               href="https://thirdweb.notion.site/thirdweb-deploy-Public-Alpha-74d81faa569b418f9ed718645fd7df2c"
             >
-              Learn more about deploying custom contracts.
+              Learn more about deploying your contracts.
             </Link>
           </Text>
         </Flex>

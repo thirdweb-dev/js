@@ -12,7 +12,6 @@ import {
   Skeleton,
   Textarea,
 } from "@chakra-ui/react";
-import { useAddress } from "@thirdweb-dev/react";
 import { ChainId } from "@thirdweb-dev/sdk";
 import { CustomContractMetadata } from "@thirdweb-dev/sdk/dist/src/schema/contracts/custom";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -20,6 +19,7 @@ import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelec
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
+import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
@@ -70,7 +70,7 @@ const CustomContractForm: React.VFC<CustomContractFormProps> = ({
   }, []);
 
   const deploy = useCustomContractDeployMutation(ipfsHash);
-  const walletAddress = useAddress();
+  const wallet = useSingleQueryParam("wallet") || "dashboard";
   const router = useRouter();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully deployed contract",
@@ -119,7 +119,7 @@ const CustomContractForm: React.VFC<CustomContractFormProps> = ({
               onSuccess();
 
               router.push(
-                `/${walletAddress}/${SupportedChainIdToNetworkMap[selectedChain]}/${deployedContractAddress}`,
+                `/${wallet}/${SupportedChainIdToNetworkMap[selectedChain]}/${deployedContractAddress}`,
               );
             },
             onError: (err) => {
@@ -150,7 +150,7 @@ const CustomContractForm: React.VFC<CustomContractFormProps> = ({
           colorScheme="green"
           variant="outline"
         >
-          Custom Contract
+          Smart Contract
         </Badge>
       </Flex>
       <Divider borderColor="borderColor" />
@@ -248,7 +248,7 @@ const CustomContractForm: React.VFC<CustomContractFormProps> = ({
         <FormControl>
           <SupportedNetworkSelect
             disabledChainIds={SUPPORTED_CHAIN_IDS.filter(
-              (c) => c === ChainId.Mumbai,
+              (c) => c !== ChainId.Mumbai && c !== ChainId.Rinkeby,
             )}
             disabledChainIdText="coming soon"
             isDisabled={deploy.isLoading || !publishMetadata.isSuccess}

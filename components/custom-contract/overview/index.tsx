@@ -1,5 +1,5 @@
 import { Flex, Link } from "@chakra-ui/react";
-import { detectErc721Instance, useCustomContract } from "@thirdweb-dev/react";
+import { detectErc721Instance, useContract } from "@thirdweb-dev/react";
 import dynamic from "next/dynamic";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
@@ -15,7 +15,7 @@ export const CustomContractOverviewPage: React.VFC<
   CustomContractOverviewPageProps
 > = ({ contractAddress }) => {
   const router = useRouter();
-  const contractQuery = useCustomContract(contractAddress);
+  const contractQuery = useContract(contractAddress);
 
   if (!contractQuery || contractQuery?.isLoading) {
     return <div>Loading...</div>;
@@ -29,7 +29,7 @@ export const CustomContractOverviewPage: React.VFC<
   }
   return (
     <Card as={Flex} flexDirection="column" gap={2}>
-      <Heading size="subtitle.md">Custom Contract</Heading>
+      <Heading size="subtitle.md">Smart Contract</Heading>
       <Text>
         Go to the{" "}
         <NextLink

@@ -1,7 +1,6 @@
 import {
   ChainId,
   ContractType,
-  CustomContract,
   Edition,
   EditionDrop,
   Marketplace,
@@ -9,6 +8,7 @@ import {
   NFTDrop,
   Pack,
   Role,
+  SmartContract,
   Split,
   Token,
   TokenDrop,
@@ -29,7 +29,7 @@ export const FeatureIconMap: Record<ContractType, StaticImageData> = {
   [Split.contractType]: require("public/assets/tw-icons/splits.png"),
   [TokenDrop.contractType]: require("public/assets/tw-icons/token.png"),
   // TODO (byoc) icon for custom contract
-  [CustomContract.contractType]: require("public/assets/tw-icons/general.png"),
+  [SmartContract.contractType]: require("public/assets/tw-icons/general.png"),
 };
 
 export const UrlMap: Record<ContractType, string> = {
@@ -44,7 +44,7 @@ export const UrlMap: Record<ContractType, string> = {
   [Split.contractType]: "split",
   [TokenDrop.contractType]: "token-drop",
   // TODO (byoc)
-  [CustomContract.contractType]: "",
+  [SmartContract.contractType]: "",
 };
 
 interface BuiltinContractDetails {
@@ -111,7 +111,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       comingSoon: true,
     },
 
-    [CustomContract.contractType]: {
+    [SmartContract.contractType]: {
       title: "NOT IMPLEMENTED",
       description: "NOT IMPLEMENTED",
       icon: FeatureIconMap[TokenDrop.contractType],
@@ -221,7 +221,7 @@ export const FeatureCardMap: Record<ContractType, FeatureCard> = {
     bg: "#400B31",
   },
 
-  [CustomContract.contractType]: {
+  [SmartContract.contractType]: {
     title: "NOT IMPLEMENTED",
     description: "NOT IMPLEMENTED",
     icon: FeatureIconMap[TokenDrop.contractType],
@@ -278,7 +278,7 @@ export const GasEstimatorMap: Record<ContractType, GasPrice> = {
   [TokenDrop.contractType]: {
     deployContract: 0,
   },
-  [CustomContract.contractType]: {
+  [SmartContract.contractType]: {
     deployContract: 0,
   },
 };
@@ -300,7 +300,7 @@ export const CONTRACT_TYPE_NAME_MAP = {
   [Pack.contractType]: "Pack" as const,
   [Split.contractType]: "Split" as const,
 
-  [CustomContract.contractType]: "Custom" as const,
+  [SmartContract.contractType]: "Custom" as const,
 } as const;
 
 export const ROLE_DESCRIPTION_MAP: Record<Role, string> = {

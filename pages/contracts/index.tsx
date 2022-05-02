@@ -30,21 +30,8 @@ const ContractsHomepageWrapped: React.VFC = () => {
     <Track>
       <Flex gap={8} direction="column">
         <Flex gap={2} direction="column">
-          <Heading size="title.md">Built-in contracts</Heading>
-          <Text fontStyle="italic">
-            Contracts created by the thirdweb team that you can deploy
-          </Text>
-        </Flex>
-
-        <DeployableContractTable
-          hasDescription
-          contractIds={Object.keys(KNOWN_CONTRACTS_MAP)}
-        />
-
-        <Box />
-        <Flex gap={2} direction="column">
           <Heading size="title.md">
-            Custom contracts{" "}
+            Your contracts{" "}
             <Badge variant="outline" colorScheme="purple">
               beta
             </Badge>
@@ -53,7 +40,6 @@ const ContractsHomepageWrapped: React.VFC = () => {
             Contracts that you have published via the thirdweb cli
           </Text>
         </Flex>
-
         <DeployableContractTable
           isFetching={publishedContracts.isFetching}
           contractIds={(publishedContracts.data || [])?.map((d) =>
@@ -66,7 +52,7 @@ const ContractsHomepageWrapped: React.VFC = () => {
                 {walletAddress && <Spinner size="sm" />}
                 <Text>
                   {walletAddress
-                    ? "Loading custom contracts"
+                    ? "Loading your contracts"
                     : "No wallet connected"}
                 </Text>
               </Flex>
@@ -111,6 +97,20 @@ const ContractsHomepageWrapped: React.VFC = () => {
               </Center>
             )}
         </DeployableContractTable>
+
+        <Box />
+
+        <Flex gap={2} direction="column">
+          <Heading size="title.md">Built-in contracts</Heading>
+          <Text fontStyle="italic">
+            Contracts created by the thirdweb team that you can deploy
+          </Text>
+        </Flex>
+
+        <DeployableContractTable
+          hasDescription
+          contractIds={Object.keys(KNOWN_CONTRACTS_MAP)}
+        />
       </Flex>
     </Track>
   );

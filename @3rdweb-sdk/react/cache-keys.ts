@@ -1,7 +1,6 @@
 import { AddressZero } from "@ethersproject/constants";
 import {
   ContractType,
-  CustomContract,
   Edition,
   EditionDrop,
   Marketplace,
@@ -10,6 +9,7 @@ import {
   Pack,
   QueryAllParams,
   Role,
+  SmartContract,
   Split,
   Token,
   TokenDrop,
@@ -291,5 +291,5 @@ export const CacheKeyMap: Record<ContractType, any> = {
   [Pack.contractType]: packKeys,
   [Split.contractType]: splitsKeys,
   [TokenDrop.contractType]: tokenDropKeys,
-  [CustomContract.contractType]: {},
+  [SmartContract.contractType]: {},
 };
