@@ -147,7 +147,7 @@ contract.${expandedFeature.namespace}`}
 
 const provider = ethers.Wallet.createRandom();
 const sdk = new ThirdwebSDK(provider);
-const contract = await sdk.getCustomContract("${contractAddress}");`}
+const contract = await sdk.getContract("${contractAddress}");`}
         />
       </Card>
       {detectedFeaturesCard}
