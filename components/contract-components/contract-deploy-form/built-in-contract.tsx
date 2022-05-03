@@ -221,55 +221,52 @@ const BuiltinContractForm: React.VFC<BuiltinContractFormProps> = ({
         gap={4}
         direction="column"
         as="form"
-        onSubmit={handleSubmit(
-          (d) => {
-            if (!selectedChain) {
-              return;
-            }
-            const deployData = {
-              contractType,
-              contractMetadata: d,
-              publishMetadata: publishMetadata.data,
-              chainId: selectedChain,
-            };
-            trackEvent({
-              category: "builtin-contract",
-              action: "deploy",
-              label: "attempt",
-              deployData,
-            });
-            deploy.mutate(d, {
-              onSuccess: ({ contractAddress }) => {
-                console.info("contract deployed:", {
-                  chainId: selectedChain,
-                  address: contractAddress,
-                });
-                trackEvent({
-                  category: "builtin-contract",
-                  action: "deploy",
-                  label: "success",
-                  deployData,
-                  contractAddress,
-                });
-                onSuccess();
-                router.push(
-                  `/${wallet}/${SupportedChainIdToNetworkMap[selectedChain]}/${UrlMap[contractType]}/${contractAddress}`,
-                );
-              },
-              onError: (err) => {
-                trackEvent({
-                  category: "builtin-contract",
-                  action: "deploy",
-                  label: "error",
-                  deployData,
-                  error: err,
-                });
-                onError(err);
-              },
-            });
-          },
-          (invalid) => console.log("*** invalid", invalid),
-        )}
+        onSubmit={handleSubmit((d) => {
+          if (!selectedChain) {
+            return;
+          }
+          const deployData = {
+            contractType,
+            contractMetadata: d,
+            publishMetadata: publishMetadata.data,
+            chainId: selectedChain,
+          };
+          trackEvent({
+            category: "builtin-contract",
+            action: "deploy",
+            label: "attempt",
+            deployData,
+          });
+          deploy.mutate(d, {
+            onSuccess: ({ contractAddress }) => {
+              console.info("contract deployed:", {
+                chainId: selectedChain,
+                address: contractAddress,
+              });
+              trackEvent({
+                category: "builtin-contract",
+                action: "deploy",
+                label: "success",
+                deployData,
+                contractAddress,
+              });
+              onSuccess();
+              router.push(
+                `/${wallet}/${SupportedChainIdToNetworkMap[selectedChain]}/${UrlMap[contractType]}/${contractAddress}`,
+              );
+            },
+            onError: (err) => {
+              trackEvent({
+                category: "builtin-contract",
+                action: "deploy",
+                label: "error",
+                deployData,
+                error: err,
+              });
+              onError(err);
+            },
+          });
+        })}
       >
         <Flex gap={4} align="center">
           <ContractIdImage boxSize={12} contractId={contractType} />

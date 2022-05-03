@@ -16,38 +16,37 @@ export const CustomContractOverviewPage: React.VFC<
 > = ({ contractAddress }) => {
   const router = useRouter();
   const contractQuery = useContract(contractAddress);
-
+  const nftContract = detectErc721Instance(contractQuery?.contract);
   if (!contractQuery || contractQuery?.isLoading) {
     return <div>Loading...</div>;
   }
 
-  const nftContract = detectErc721Instance(contractQuery?.contract);
-
-  if (nftContract) {
-    // nft overview page
-    return <NftOverview contract={nftContract} />;
-  }
   return (
-    <Card as={Flex} flexDirection="column" gap={2}>
-      <Heading size="subtitle.md">Smart Contract</Heading>
-      <Text>
-        Go to the{" "}
-        <NextLink
-          passHref
-          href={{
-            pathname: router.pathname,
-            query: {
-              ...router.query,
-              customContract: [contractAddress || "", "code"],
-            },
-          }}
-        >
-          <Link fontWeight="bold" colorScheme="primary" color="primary.500">
-            Code
-          </Link>
-        </NextLink>{" "}
-        tab to learn how to integrate with the sdk.
-      </Text>
-    </Card>
+    <Flex direction="column" gap={4}>
+      {nftContract && <NftOverview contract={nftContract} />}
+      {!nftContract && (
+        <Card as={Flex} flexDirection="column" gap={2}>
+          <Heading size="subtitle.md">Generic Smart Contract</Heading>
+          <Text>
+            Go to the{" "}
+            <NextLink
+              passHref
+              href={{
+                pathname: router.pathname,
+                query: {
+                  ...router.query,
+                  customContract: [contractAddress || "", "code"],
+                },
+              }}
+            >
+              <Link fontWeight="bold" colorScheme="primary" color="primary.500">
+                Code
+              </Link>
+            </NextLink>{" "}
+            tab to learn how to integrate with the sdk.
+          </Text>
+        </Card>
+      )}
+    </Flex>
   );
 };

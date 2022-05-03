@@ -83,7 +83,9 @@ const Dashboard: ConsolePage = () => {
   const router = useRouter();
   const wallet = useSingleQueryParam("wallet") || "dashboard";
   const { address } = useWeb3();
-  const { data: projects } = useProjects();
+  const { data: projects } = useProjects(
+    wallet === "dashboard" ? address : wallet,
+  );
 
   // redirect anything that is not a valid address or `/dashboard` to `/dashboard`
   useEffect(() => {

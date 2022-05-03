@@ -11,10 +11,13 @@ import {
   Input,
   Skeleton,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
+import { useAddress } from "@thirdweb-dev/react";
 import { ChainId } from "@thirdweb-dev/sdk";
 import { CustomContractMetadata } from "@thirdweb-dev/sdk/dist/src/schema/contracts/custom";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { FeedbackForm } from "components/feedback/feedback-form";
 import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelect";
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -26,6 +29,7 @@ import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Badge,
+  Card,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
@@ -69,6 +73,7 @@ const CustomContractForm: React.VFC<CustomContractFormProps> = ({
     });
   }, []);
 
+  const address = useAddress();
   const deploy = useCustomContractDeployMutation(ipfsHash);
   const wallet = useSingleQueryParam("wallet") || "dashboard";
   const router = useRouter();
@@ -76,6 +81,8 @@ const CustomContractForm: React.VFC<CustomContractFormProps> = ({
     "Successfully deployed contract",
     "Failed to deploy contract",
   );
+
+  const toast = useToast();
 
   return (
     <Flex
@@ -117,6 +124,25 @@ const CustomContractForm: React.VFC<CustomContractFormProps> = ({
                 contractAddress: deployedContractAddress,
               });
               onSuccess();
+              const toastId = toast({
+                isClosable: false,
+                duration: null,
+                position: "bottom-right",
+                render: () => (
+                  <Card p={8} maxW="100vw" w="lg">
+                    <FeedbackForm
+                      trackEvent={trackEvent}
+                      wallet={address}
+                      scope="thirdweb-deploy"
+                      onClose={() => {
+                        if (toastId) {
+                          toast.close(toastId);
+                        }
+                      }}
+                    />
+                  </Card>
+                ),
+              });
 
               router.push(
                 `/${wallet}/${SupportedChainIdToNetworkMap[selectedChain]}/${deployedContractAddress}`,
