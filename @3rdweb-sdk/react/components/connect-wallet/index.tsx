@@ -18,6 +18,7 @@ import {
   ModalOverlay,
   Skeleton,
   Stack,
+  Tooltip,
   useClipboard,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -47,6 +48,7 @@ import {
   Badge,
   Button,
   ButtonProps,
+  Card,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
@@ -211,7 +213,7 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
                   : "Disconnect"}
               </MenuItem>
             </MenuGroup>
-            <MenuDivider borderColor="borderColor" mb={3} />
+            <MenuDivider borderColor="borderColor" mb={5} />
 
             <MenuGroup
               title={
@@ -308,7 +310,11 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
                     <ChakraNextImage
                       boxSize={4}
                       borderRadius="md"
-                      src={connectorIdToImageUrl[_connector.name]}
+                      src={
+                        _connector.id === "gnosis"
+                          ? connectorIdToImageUrl["Gnosis"]
+                          : connectorIdToImageUrl[_connector.name]
+                      }
                       placeholder="empty"
                       alt=""
                     />
@@ -321,6 +327,41 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
                 </MenuItem>
               );
             })}
+          {gnosisConnector ? (
+            <>
+              <MenuDivider py={0} />
+              <Tooltip
+                bg="transparent"
+                boxShadow="none"
+                p={0}
+                label={
+                  <Card>
+                    <Text>
+                      You need to first connect a personal wallet to connect to
+                      a Gnosis Safe.
+                    </Text>
+                  </Card>
+                }
+                shouldWrapChildren
+              >
+                <MenuItem
+                  py={3}
+                  isDisabled
+                  icon={
+                    <ChakraNextImage
+                      boxSize={4}
+                      borderRadius="md"
+                      src={connectorIdToImageUrl["Gnosis"]}
+                      placeholder="empty"
+                      alt=""
+                    />
+                  }
+                >
+                  Gnosis Safe
+                </MenuItem>
+              </Tooltip>
+            </>
+          ) : undefined}
         </MenuList>
       </Menu>
     </>

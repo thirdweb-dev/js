@@ -27,7 +27,7 @@ export interface MenuGroupProps
 }
 
 export const MenuGroup: ComponentWithChildren<MenuGroupProps> = ({
-  size = "label.md",
+  size = "label.lg",
   title,
   ...restProps
 }) => {
