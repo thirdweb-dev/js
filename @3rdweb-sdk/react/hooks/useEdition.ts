@@ -1,5 +1,6 @@
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { getAllQueryKey } from "./useGetAll";
+import { useAddress } from "@thirdweb-dev/react";
 import {
   Edition,
   EditionMetadata,
@@ -20,13 +21,18 @@ export type EditionMutationInput = EditionMetadataInput["metadata"] & {
 };
 
 export function useEditionCreateAndMintMutation(contract?: Edition) {
+  const address = useAddress();
   return useMutationWithInvalidate(
     async (metadataWithSupply: EditionMutationInput) => {
-      invariant(contract, "contract is required");
+      invariant(
+        contract?.mint?.to,
+        "contract does not support minting or is not initialized",
+      );
+      invariant(address, "address is not defined");
 
       const { supply, ...metadata } = metadataWithSupply;
 
-      return await contract.mint({
+      return await contract.mint.to(address, {
         metadata: parseAttributes(metadata),
         supply,
       });

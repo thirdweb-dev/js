@@ -161,7 +161,7 @@ const contract = await sdk.getContract("${contractAddress}");`}
                 language="typescript"
               />
             ))
-          : ""}
+          : undefined}
       </Card>
     </Flex>
   );

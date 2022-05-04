@@ -78,12 +78,8 @@ export function useContractConstructor<T extends ValidContractInstance>(
   throw new Error("Contract is not a valid contract");
 }
 
-export function useContractTypeOfContract<T extends ValidContractInstance>(
-  contract?: T,
-): ContractType | null {
-  if (!contract) {
-    return null;
-  } else if (contract instanceof NFTDrop) {
+export function contractTypeFromContract(contract: ValidContractInstance) {
+  if (contract instanceof NFTDrop) {
     return NFTDrop.contractType;
   } else if (contract instanceof EditionDrop) {
     return EditionDrop.contractType;
@@ -104,6 +100,15 @@ export function useContractTypeOfContract<T extends ValidContractInstance>(
   }
 
   throw new Error("Contract does not have a contractType");
+}
+
+export function useContractTypeOfContract<T extends ValidContractInstance>(
+  contract?: T,
+): ContractType | null {
+  if (!contract) {
+    return null;
+  }
+  return contractTypeFromContract(contract);
 }
 
 export function useContractName<T extends ValidContractInstance>(

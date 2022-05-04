@@ -1,6 +1,7 @@
 import { ContractId } from "./types";
 import { isContractIdBuiltInContract } from "./utils";
 import { contractKeys, networkKeys } from "@3rdweb-sdk/react";
+import { contractTypeFromContract } from "@3rdweb-sdk/react/hooks/useCommon";
 import {
   useAddress,
   useChainId,
@@ -156,10 +157,15 @@ export function usePublishedMetadataQuery(contractAddress: string) {
   return useQuery(
     ["published-metadata", contractAddress],
     async () => {
-      const contract = contractQuery?.contract as SmartContract;
-      return contractAddress && contract
-        ? await contract.publishedMetadata.get()
-        : undefined;
+      if (contractQuery?.contract instanceof SmartContract) {
+        return await contractQuery.contract.publishedMetadata.get();
+      }
+      if (contractQuery?.contract) {
+        return BuiltinContractMap[
+          contractTypeFromContract(contractQuery.contract)
+        ];
+      }
+      return undefined;
     },
     {
       enabled: !!contractAddress && !!contractQuery?.contract,

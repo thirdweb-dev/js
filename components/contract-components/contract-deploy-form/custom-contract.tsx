@@ -254,6 +254,7 @@ const CustomContractForm: React.VFC<CustomContractFormProps> = ({
             <FormControl isRequired key={param.name}>
               <FormLabel>{param.name}</FormLabel>
               <Input
+                fontFamily={param.type === "address" ? "monospace" : undefined}
                 value={contractParams[idx] || ""}
                 onChange={(e) => setContractParams(idx, e.currentTarget.value)}
                 type="text"
