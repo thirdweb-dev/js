@@ -117,12 +117,12 @@ export const WidgetSetup: React.FC<EmbedSetupProps> = ({ contract }) => {
   });
 
   const embedCode = `<iframe
-    src="${iframeSrc}"
-    width="600px"
-    height="600px"
-    style="max-width:100%;"
-    frameborder="0"
-  ></iframe>`;
+src="${iframeSrc}"
+width="600px"
+height="600px"
+style="max-width:100%;"
+frameborder="0"
+></iframe>`;
 
   const { hasCopied, onCopy } = useClipboard(embedCode, 3000);
 

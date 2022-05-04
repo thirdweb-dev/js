@@ -39,6 +39,7 @@ export const CodeBlock: React.VFC<CodeBlockProps> = ({
           py={py}
           px={px}
           w={w}
+          whiteSpace="pre-wrap"
           {...restCodeProps}
           className={className}
           style={style}
@@ -46,7 +47,6 @@ export const CodeBlock: React.VFC<CodeBlockProps> = ({
           borderColor="borderColor"
           position="relative"
           as={Code}
-          whiteSpace="pre-wrap"
         >
           {tokens.map((line, i) => (
             // eslint-disable-next-line react/jsx-key
