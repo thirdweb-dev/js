@@ -19,7 +19,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { RiGasStationFill } from "react-icons/ri";
 import { SiDiscord, SiGithub, SiTwitter } from "react-icons/si";
-import { LinkButton, NextLink, Text } from "tw-components";
+import { Link, LinkButton, NextLink, Text } from "tw-components";
 
 export const AppShell: React.FC = ({ children }) => {
   const { pathname } = useRouter();
@@ -195,6 +195,12 @@ export const AppShell: React.FC = ({ children }) => {
               >
                 Feedback
               </NextLink>
+              <Link isExternal href="/tos">
+                Terms of Service
+              </Link>
+              <Link isExternal href="/privacy">
+                Privacy Policy
+              </Link>
             </Stack>
           </Stack>
         </Container>

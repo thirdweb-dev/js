@@ -1768,10 +1768,10 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.3.5.tgz#66ab82aa8a8cfd0b599cb148b5593a1b40bae8fb"
   integrity sha512-K8jFMltUQuk8s/roBa7WyVcUPlSyBecsQYOZ5yfqwmx6AI0XoS8pP63DvjIw9v3YogOIqDezsNWafoaa4M9qHw==
 
-"@thirdweb-dev/react@^2.2.3":
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.2.3.tgz#63a80f3257e6ca67c056f3905f8525a9667bcc9a"
-  integrity sha512-Ud4wiV8RJG8BKaZeSH2OVIKFEusnihF0RBulJ8/AgfvoT+DuDYwTXbEdbQh9MXTS14CRBxTtEndNWbOONdLwRw==
+"@thirdweb-dev/react@^2.2.4":
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.2.4.tgz#39d0436313769870cb2ed5daa3f28d7083b3473c"
+  integrity sha512-QPYFUIz6T/jUO0gTd8xltM1O8s+viDvas5o0cwlqcw+Sz9G/1622FRKwgcYW30JhciCMv7JMR+W1n5WU/xIhfQ==
   dependencies:
     "@gnosis.pm/safe-core-sdk" "^2.1.0"
     "@gnosis.pm/safe-ethers-adapters" "^0.1.0-alpha.9"
@@ -1785,9 +1785,9 @@
     wagmi "^0.2.28"
 
 "@thirdweb-dev/sdk@^2.1.3-0":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.2.1.tgz#c46dd2032ec3a83b15cfc5b76d614b8a0f682dbc"
-  integrity sha512-Yrtnxi0oeCgFLjg/n/tUsnqbSOmzRtNtBuXi7akHUcbkOmxDtEZCpSTxyKk1JfwFzux2LTFhnfAHJTstWU1Oiw==
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.2.2.tgz#0702dea053a3f5496b698d2a2f9aa5230af2645d"
+  integrity sha512-HmCR/q3eBDpS6Gfc2Tghy3nbnXO3J9v5SRGI/pxDcPkadba8jvU64VX7AXk2gkZiDU3HYA2Sf7VJnACzSOHmNg==
   dependencies:
     "@ethersproject/bignumber" "^5.6.0"
     "@ethersproject/bytes" "^5.6.1"
@@ -3829,9 +3829,9 @@ eip1193-provider@1.0.1:
     "@json-rpc-tools/provider" "^1.5.5"
 
 electron-to-chromium@^1.4.118:
-  version "1.4.132"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.132.tgz#b64599eb018221e52e2e4129de103b03a413c55d"
-  integrity sha512-JYdZUw/1068NWN+SwXQ7w6Ue0bWYGihvSUNNQwurvcDV/SM7vSiGZ3NuFvFgoEiCs4kB8xs3cX2an3wB7d4TBw==
+  version "1.4.134"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.134.tgz#9baca7a018ca489d8e81a00c7cfe15161da38568"
+  integrity sha512-OdD7M2no4Mi8PopfvoOuNcwYDJ2mNFxaBfurA6okG3fLBaMcFah9S+si84FhX+FIWLKkdaiHfl4A+5ep/gOVrg==
 
 elliptic@6.5.4, elliptic@^6.4.0, elliptic@^6.5.2, elliptic@^6.5.3, elliptic@^6.5.4:
   version "6.5.4"

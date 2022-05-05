@@ -170,16 +170,10 @@ function getContractSnippets(
 }
 
 function useContractCodeSnippetQuery() {
-  return useQuery(
-    ["code-snippet"],
-    async () => {
-      const res = await fetch(
-        `https://raw.githubusercontent.com/thirdweb-dev/docs/main/docs/snippets.json`,
-      );
-      return (await res.json()) as SnippetApiResponse;
-    },
-    {
-      refetchInterval: 10_000,
-    },
-  );
+  return useQuery(["code-snippet"], async () => {
+    const res = await fetch(
+      `https://raw.githubusercontent.com/thirdweb-dev/docs/main/docs/snippets.json`,
+    );
+    return (await res.json()) as SnippetApiResponse;
+  });
 }

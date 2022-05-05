@@ -3,32 +3,21 @@ import {
   Box,
   Container,
   Flex,
-  Image,
-  Skeleton,
   useBreakpointValue,
   usePrevious,
 } from "@chakra-ui/react";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
-import { useContractMetadata, useContractType } from "@thirdweb-dev/react";
-import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
+import { ContractHeader } from "components/custom-contract/contract-header";
 import { CustomContractOverviewPage } from "components/custom-contract/overview";
 import { CustomContractCodeTab } from "components/custom-contract/tabs/code";
 import { Logo } from "components/logo";
-import { FeatureIconMap } from "constants/mappings";
 import { useIsomorphicLayoutEffect } from "framer-motion";
 import { useTrack } from "hooks/analytics/useTrack";
 import { LinkProps } from "next/link";
 import { useRouter } from "next/router";
 import { useCallback, useRef, useState } from "react";
-import {
-  AddressCopyButton,
-  Button,
-  Card,
-  Heading,
-  LinkButton,
-  Text,
-} from "tw-components";
+import { Button, Card, Heading, LinkButton, Text } from "tw-components";
 import { isBrowser } from "utils/isBrowser";
 
 const CustomContractPage: ConsolePage = () => {
@@ -127,21 +116,7 @@ const CustomContractPage: ConsolePage = () => {
           </Container>
         </Box>
         {/* sub-header */}
-        <Box
-          borderBottomColor="borderColor"
-          borderBottomWidth={1}
-          bg="backgroundHighlight"
-          w="full"
-          as="aside"
-          py={6}
-        >
-          <Container maxW="container.page">
-            <Flex justify="space-between" align="center" direction="row">
-              <ContractMetadata contractAddress={contractAddress} />
-              <AddressCopyButton colorScheme="gray" address={contractAddress} />
-            </Flex>
-          </Container>
-        </Box>
+        <ContractHeader contractAddress={contractAddress} />
         {/* main content */}
         <Container maxW="container.page">
           <PageTrack>
@@ -167,64 +142,6 @@ const CustomContractPage: ConsolePage = () => {
 export default CustomContractPage;
 
 CustomContractPage.Layout = AppLayout;
-
-interface ContractMetadataProps {
-  contractAddress: string;
-}
-
-const ContractMetadata: React.VFC<ContractMetadataProps> = ({
-  contractAddress,
-}) => {
-  const metadataQuery = useContractMetadata(contractAddress);
-  const contractType = useContractType(contractAddress);
-
-  const contractTypeImage =
-    (contractType.data &&
-      contractType.data !== "custom" &&
-      FeatureIconMap[contractType.data]) ||
-    FeatureIconMap["vote"];
-
-  if (metadataQuery.isError) {
-    return <Box>Failed to load contract metadata</Box>;
-  }
-
-  return (
-    <Flex align="center" gap={2}>
-      <Skeleton isLoaded={metadataQuery.isSuccess}>
-        {metadataQuery.data?.image ? (
-          <Image
-            objectFit="contain"
-            boxSize="64px"
-            src={metadataQuery.data.image}
-            alt={metadataQuery.data?.name}
-          />
-        ) : contractTypeImage ? (
-          <ChakraNextImage
-            boxSize="64px"
-            src={contractTypeImage}
-            alt={metadataQuery.data?.name || ""}
-          />
-        ) : null}
-      </Skeleton>
-      <Flex direction="column" gap={1}>
-        <Skeleton isLoaded={metadataQuery.isSuccess}>
-          <Heading size="title.md">
-            {metadataQuery.isSuccess
-              ? metadataQuery.data?.name
-              : "testing testing testing"}
-          </Heading>
-        </Skeleton>
-        <Skeleton isLoaded={metadataQuery.isSuccess}>
-          <Text size="body.md">
-            {metadataQuery.isSuccess
-              ? metadataQuery.data?.description
-              : "foo bar baz"}
-          </Text>
-        </Skeleton>
-      </Flex>
-    </Flex>
-  );
-};
 
 interface ContractSubnavProps {
   activeTab: string;

@@ -11,7 +11,7 @@ import { GeneralCta } from "components/shared/GeneralCta";
 import triangleGradient from "public/assets/gradient-triangle.png";
 import React from "react";
 import { SiDiscord, SiTwitter } from "react-icons/si";
-import { Heading, LinkButton } from "tw-components";
+import { Heading, Link, LinkButton } from "tw-components";
 
 export const HomepageFooter: React.FC = () => {
   return (
@@ -86,6 +86,14 @@ export const HomepageFooter: React.FC = () => {
               icon={<Icon boxSize="1.5rem" as={SiDiscord} />}
             />
           </Stack>
+          <Flex gap={4}>
+            <Link isExternal href="/privacy">
+              Priacy Policy
+            </Link>
+            <Link isExternal href="/tos">
+              Terms of Service
+            </Link>
+          </Flex>
         </Stack>
       </Container>
     </Flex>

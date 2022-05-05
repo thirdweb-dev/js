@@ -1,3 +1,4 @@
+import { Card } from "./card";
 import { Text } from "./text";
 import {
   Button as ChakraButton,
@@ -125,7 +126,7 @@ LinkButton.displayName = "LinkButton";
 interface IAddressCopyButton extends Omit<ButtonProps, "onClick" | "size"> {
   address?: string;
   noIcon?: boolean;
-  size?: "sm" | "md" | "lg";
+  size?: PossibleButtonSize;
 }
 
 export const AddressCopyButton: React.VFC<IAddressCopyButton> = ({
@@ -142,7 +143,16 @@ export const AddressCopyButton: React.VFC<IAddressCopyButton> = ({
   const toast = useToast();
 
   return (
-    <Tooltip hasArrow label="Copy address to clipboard">
+    <Tooltip
+      p={0}
+      bg="transparent"
+      boxShadow="none"
+      label={
+        <Card py={2} px={4}>
+          <Text size="label.sm">Copy address to clipboard</Text>
+        </Card>
+      }
+    >
       <Button
         flexGrow={flexGrow}
         size={size}
