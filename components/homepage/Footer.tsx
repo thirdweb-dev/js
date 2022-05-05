@@ -88,7 +88,7 @@ export const HomepageFooter: React.FC = () => {
           </Stack>
           <Flex gap={4}>
             <Link isExternal href="/privacy">
-              Priacy Policy
+              Privacy Policy
             </Link>
             <Link isExternal href="/tos">
               Terms of Service
