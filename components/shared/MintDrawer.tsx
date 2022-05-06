@@ -3,7 +3,7 @@ import { MintForm } from "components/contract-pages/forms/mint";
 import { Drawer } from "tw-components";
 
 interface IMintDrawer {
-  contract?: ValidContractInstance | Erc721<any>;
+  contract?: ValidContractInstance | Erc721;
   isOpen: boolean;
   onClose: () => void;
 }

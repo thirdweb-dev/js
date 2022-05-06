@@ -14,7 +14,7 @@ import {
   Textarea,
   useModalContext,
 } from "@chakra-ui/react";
-import { useNFTMint } from "@thirdweb-dev/react";
+import { useAddress, useMintNFT } from "@thirdweb-dev/react";
 import { Erc721 } from "@thirdweb-dev/sdk";
 import { OpenSeaPropertyBadge } from "components/badges/opensea";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -34,13 +34,14 @@ import { NFTMetadataInputLimited } from "types/modified-types";
 
 const MINT_FORM_ID = "nft-collection-mint-form";
 interface CustomNFTMintForm {
-  contract: Erc721<any>;
+  contract: Erc721;
 }
 
 export const CustomNFTMintForm: React.FC<CustomNFTMintForm> = ({
   contract,
 }) => {
-  const { mutate, isLoading } = useNFTMint(contract);
+  const address = useAddress();
+  const { mutate, isLoading } = useMintNFT(contract);
   const {
     setValue,
     control,
@@ -127,13 +128,20 @@ export const CustomNFTMintForm: React.FC<CustomNFTMintForm> = ({
           as="form"
           id={MINT_FORM_ID}
           onSubmit={handleSubmit((data) => {
-            mutate(data, {
-              onSuccess: () => {
-                onSuccess();
-                modalContext.onClose();
+            if (!address) {
+              onError("Please connect your wallet to mint.");
+              return;
+            }
+            mutate(
+              { to: address, metadata: data },
+              {
+                onSuccess: () => {
+                  onSuccess();
+                  modalContext.onClose();
+                },
+                onError,
               },
-              onError,
-            });
+            );
           })}
         >
           <Stack>

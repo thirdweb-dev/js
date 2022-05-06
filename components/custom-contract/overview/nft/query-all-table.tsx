@@ -15,7 +15,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { BigNumber } from "@ethersproject/bignumber";
-import { useNFTList, useNFTSupply } from "@thirdweb-dev/react";
+import { useNFTSupply, useNFTs } from "@thirdweb-dev/react";
 import { Erc721, Json, NFTMetadataOwner } from "@thirdweb-dev/sdk";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import React, { useEffect, useState } from "react";
@@ -29,7 +29,7 @@ import { Cell, Column, usePagination, useTable } from "react-table";
 import { AddressCopyButton, Card, Heading, Text } from "tw-components";
 
 interface ContractOverviewNftGetAllProps {
-  contract: Erc721<any>;
+  contract: Erc721;
 }
 
 const tableColumns: Column<NFTMetadataOwner>[] = [
@@ -70,7 +70,7 @@ const ContractOverviewNftGetAll: React.VFC<ContractOverviewNftGetAllProps> = ({
   contract,
 }) => {
   const [queryParams, setQueryParams] = useState({ count: 50, start: 0 });
-  const getAllQueryResult = useNFTList(contract, queryParams);
+  const getAllQueryResult = useNFTs(contract, queryParams);
   const totalSupply = useNFTSupply(contract);
   const {
     getTableProps,

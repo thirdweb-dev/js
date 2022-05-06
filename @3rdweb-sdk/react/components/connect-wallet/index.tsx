@@ -29,6 +29,7 @@ import {
   useDisconnect,
   useGnosis,
   useMagic,
+  useMetamask,
   useNetwork,
 } from "@thirdweb-dev/react";
 import { ChakraNextImage } from "components/Image";
@@ -85,6 +86,8 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
       connect(_connector);
     }
   }
+
+  const connectWithMetamask = useMetamask();
 
   const activeConnector = connector.data.connector;
 
@@ -295,8 +298,23 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
         </MenuButton>
 
         <MenuList>
+          <MenuItem
+            py={3}
+            icon={
+              <ChakraNextImage
+                boxSize={4}
+                borderRadius="md"
+                src={connectorIdToImageUrl.MetaMask}
+                placeholder="empty"
+                alt=""
+              />
+            }
+            onClick={() => connectWithMetamask()}
+          >
+            MetaMask
+          </MenuItem>
           {connector.data.connectors
-            .filter((c) => c.id !== "gnosis")
+            .filter((c) => c.id !== "gnosis" && c.id !== "injected")
             .map((_connector) => {
               if (!_connector.ready) {
                 return null;

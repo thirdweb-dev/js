@@ -22,7 +22,7 @@ import React from "react";
 import { Heading } from "tw-components";
 
 export interface IMintFormProps {
-  contract?: ValidContractInstance | Erc721<any>;
+  contract?: ValidContractInstance | Erc721;
 }
 
 export const MintForm: React.FC<IMintFormProps> = ({ contract }) => {

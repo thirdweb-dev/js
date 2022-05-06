@@ -5,6 +5,7 @@ import { AppLayout } from "components/app-layouts/app";
 import { FallbackLayout } from "components/app-layouts/fallback";
 import { Providers } from "components/app-layouts/providers";
 import { ErrorProvider } from "contexts/error-handler";
+import flat from "flat";
 import { useTrack } from "hooks/analytics/useTrack";
 import { NextComponentType, NextPageContext } from "next";
 import { DefaultSeo } from "next-seo";
@@ -60,7 +61,7 @@ function ConsoleApp({ Component, pageProps }: ConsoleAppProps) {
           console.debug(`[PH.capture]:${catActLab}`, restData);
         }
 
-        posthog.capture(catActLab, restData);
+        posthog.capture(catActLab, flat(restData));
       },
     },
   );
