@@ -262,7 +262,10 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                   value={field.snapshot?.map((v) =>
                     typeof v === "string"
                       ? { address: v, maxClaimable: "0" }
-                      : { ...v, maxClaimable: "0" },
+                      : {
+                          ...v,
+                          maxClaimable: v?.maxClaimable?.toString() || "0",
+                        },
                   )}
                   setSnapshot={(snapshot) =>
                     form.setValue(`phases.${index}.snapshot`, snapshot)
