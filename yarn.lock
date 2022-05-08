@@ -1171,7 +1171,7 @@
     "@ethersproject/logger" "^5.6.0"
     bn.js "^4.11.9"
 
-"@ethersproject/bytes@5.6.1", "@ethersproject/bytes@^5.0.4", "@ethersproject/bytes@^5.6.0", "@ethersproject/bytes@^5.6.1":
+"@ethersproject/bytes@5.6.1", "@ethersproject/bytes@^5.0.4", "@ethersproject/bytes@^5.6.0":
   version "5.6.1"
   resolved "https://registry.yarnpkg.com/@ethersproject/bytes/-/bytes-5.6.1.tgz#24f916e411f82a8a60412344bf4a813b917eefe7"
   integrity sha512-NwQt7cKn5+ZE4uDn+X5RAXLp46E1chXoaMmrxAyA0rblpxz8t58lVkrHXoRIn0lz1joQElQ8410GqhTqMOwc6g==
@@ -1287,7 +1287,7 @@
   dependencies:
     "@ethersproject/logger" "^5.6.0"
 
-"@ethersproject/providers@5.6.5", "@ethersproject/providers@^5.5.1", "@ethersproject/providers@^5.6.1":
+"@ethersproject/providers@5.6.5", "@ethersproject/providers@^5.5.1":
   version "5.6.5"
   resolved "https://registry.yarnpkg.com/@ethersproject/providers/-/providers-5.6.5.tgz#aefecf78459817a323452e05a16d56afcf807e27"
   integrity sha512-TRS+c2Ud+cMpWodmGAc9xbnYRPWzRNYt2zkCSnj58nJoamBQ6x4cUbBeo0lTC3y+6RDVIBeJv18OqsDbSktLVg==
@@ -1385,7 +1385,7 @@
     "@ethersproject/rlp" "^5.6.0"
     "@ethersproject/signing-key" "^5.6.0"
 
-"@ethersproject/units@5.6.0", "@ethersproject/units@^5.6.0":
+"@ethersproject/units@5.6.0":
   version "5.6.0"
   resolved "https://registry.yarnpkg.com/@ethersproject/units/-/units-5.6.0.tgz#e5cbb1906988f5740254a21b9ded6bd51e826d9c"
   integrity sha512-tig9x0Qmh8qbo1w8/6tmtyrm/QQRviBh389EQ+d8fP4wDsBrJBf08oZfoiz1/uenKK9M78yAP4PoR7SsVoTjsw==
@@ -1784,17 +1784,11 @@
     tiny-invariant "^1.2.0"
     wagmi "^0.2.28"
 
-"@thirdweb-dev/sdk@^2.1.3-0":
-  version "2.2.3"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.2.3.tgz#735bd20be4d0cdf3fe8eb2d37f38f896e2890143"
-  integrity sha512-TJFf+DODFjBzXDpTantCcN7PFLQ8t89faEaMPjryvrekm0FFntIbqQEhTTbSGtmtjfqrQJUAyM2Kw9n8F7GARQ==
+"@thirdweb-dev/sdk@^2.2.5":
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.2.5.tgz#81c954f37c2a7144e23c84c754f904f43d131e95"
+  integrity sha512-6XpiElzVul86DBhFWR8uGcUdl3i9yWNqd1BYE3thP6smCkmwG+2C7vN/6Jl943SDuhgg4sKR/urLgNDJSSmsfg==
   dependencies:
-    "@ethersproject/bignumber" "^5.6.0"
-    "@ethersproject/bytes" "^5.6.1"
-    "@ethersproject/constants" "^5.6.0"
-    "@ethersproject/contracts" "^5.6.0"
-    "@ethersproject/providers" "^5.6.1"
-    "@ethersproject/units" "^5.6.0"
     "@thirdweb-dev/contracts" "2.3.5"
     "@web-std/file" "^3.0.0"
     cross-fetch "^3.1.5"
