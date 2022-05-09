@@ -36,9 +36,11 @@ export function useContractRoleMembersList<TContract extends ContractWithRoles>(
   return useQueryWithNetwork(
     contractRoleKeys.list(contract?.getAddress()),
     async () => {
-      return (await contract?.roles.getAll()) as
-        | Record<TContract["contractRoles"][number], string[]>
-        | undefined;
+      invariant(
+        contract?.roles.getAll,
+        "[Contract:useContractRoleMembersList] - contract has no roles",
+      );
+      return await contract.roles.getAll();
     },
     {
       enabled: !!contract && !!contract.getAddress(),

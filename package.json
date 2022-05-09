@@ -62,7 +62,7 @@
     "@types/cors": "^2.8.12",
     "@types/flat": "^5.0.2",
     "@types/papaparse": "^5.3.1",
-    "@types/react": "^17.0.30",
+    "@types/react": "^17",
     "@types/react-table": "^7.7.7",
     "@types/react-tracking": "^8.1.2",
     "@types/react-vis": "^1.11.10",

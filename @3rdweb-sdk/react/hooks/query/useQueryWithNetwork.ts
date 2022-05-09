@@ -38,6 +38,7 @@ export function useQueryWithNetwork<
   const combinedQueryKey = (
     networkKeys.chain(activeChainId) as readonly unknown[]
   ).concat(queryKey) as unknown as TQueryKey;
+
   return useQuery(combinedQueryKey, queryFn, mergedOptions);
 }
 export function useMutationWithInvalidate<

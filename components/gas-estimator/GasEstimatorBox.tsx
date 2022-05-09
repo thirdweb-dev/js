@@ -1,3 +1,4 @@
+import { GasEstimate } from "@3rdweb-sdk/react/hooks/useGas";
 import { Box, BoxProps, Flex, Icon, Tooltip } from "@chakra-ui/react";
 import { ContractType } from "@thirdweb-dev/sdk";
 import {
@@ -43,7 +44,7 @@ const PriceLine: React.FC<PriceLineProps> = ({
 interface GasEstimatorBoxProps extends BoxProps {
   contractType: ContractType;
   ethOrUsd: "eth" | "usd";
-  data: { gasPrice: number; ethPrice: number };
+  data?: GasEstimate;
 }
 
 export const GasEstimatorBox: React.FC<GasEstimatorBoxProps> = ({
