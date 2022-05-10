@@ -1,6 +1,7 @@
-import { Link, Text } from "@chakra-ui/react";
+import { Link } from "@chakra-ui/react";
 import posthog from "posthog-js";
 import React from "react";
+import { Text } from "tw-components";
 
 const PLEASE_REACH_OUT_MESSAGE = (
   <>
