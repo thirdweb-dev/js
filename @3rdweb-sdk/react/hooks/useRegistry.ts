@@ -9,6 +9,7 @@ import { ChainId, SUPPORTED_CHAIN_ID } from "utils/network";
 
 interface IRemoveContract {
   contractAddress: string;
+  contractType: string;
   chainId: ChainId;
 }
 
@@ -20,13 +21,17 @@ export function useRemoveContractMutation() {
     async (data: IRemoveContract) => {
       invariant(signer, "must have an active signer");
 
-      const { contractAddress, chainId } = data;
+      const { contractAddress, contractType, chainId } = data;
       const rpcUrl = alchemyUrlMap[chainId as SUPPORTED_CHAIN_ID];
       const sdk = new ThirdwebSDK(rpcUrl);
       sdk.updateSignerOrProvider(signer);
 
       const registry = await sdk?.deployer.getRegistry();
-      console.log(contractAddress);
+
+      if (contractType === "custom") {
+        return await registry.removeCustomContract(contractAddress);
+      }
+
       return await registry.removeContract(contractAddress);
     },
     {
