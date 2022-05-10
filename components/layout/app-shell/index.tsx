@@ -77,7 +77,7 @@ export const AppShell: React.FC = ({ children }) => {
               marginLeft="auto"
             >
               <NextLink
-                href="https://portal.thirdweb.com"
+                href="https://portal.thirdweb.com/guides"
                 isExternal
                 variant="link"
                 color="inherit"

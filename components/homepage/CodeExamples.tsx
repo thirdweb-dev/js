@@ -42,7 +42,7 @@ export const CodeExamples: React.FC = () => {
             <LinkButton
               noIcon
               borderRadius="full"
-              href="https://portal.thirdweb.com/learn"
+              href="https://portal.thirdweb.com/"
               bgGradient="linear(to-r, #CC25B3 0%, #418DFF 101.52%)"
               color="white"
               _hover={{ opacity: 0.8 }}

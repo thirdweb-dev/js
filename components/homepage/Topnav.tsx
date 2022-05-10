@@ -83,7 +83,7 @@ export const HomepageTopNav: React.FC<{}> = () => {
             <Link onClick={() => scrollToId("developers")}>Developers</Link>
             <Link onClick={() => scrollToId("fees")}>Pricing</Link>
             <NextLink
-              href="https://portal.thirdweb.com"
+              href="https://portal.thirdweb.com/guides"
               variant="link"
               color="inherit"
               fontWeight="inherit"

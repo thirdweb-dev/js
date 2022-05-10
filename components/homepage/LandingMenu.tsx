@@ -32,7 +32,7 @@ export const LandingMenu: React.FC = () => {
         <MenuItem onClick={() => scrollToId("features")}>Features</MenuItem>
         <MenuItem onClick={() => scrollToId("developers")}>Developers</MenuItem>
         <MenuItem onClick={() => scrollToId("fees")}>Pricing</MenuItem>
-        <NextLink href="https://portal.thirdweb.com" isExternal>
+        <NextLink href="https://portal.thirdweb.com/guides" isExternal>
           <MenuItem>Guides</MenuItem>
         </NextLink>
         <NextLink href="/dashboard">
