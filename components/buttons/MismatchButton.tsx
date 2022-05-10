@@ -7,6 +7,7 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
 import {

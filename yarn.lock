@@ -1784,10 +1784,10 @@
     tiny-invariant "^1.2.0"
     wagmi "^0.2.28"
 
-"@thirdweb-dev/sdk@^2.2.5":
-  version "2.2.5"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.2.5.tgz#81c954f37c2a7144e23c84c754f904f43d131e95"
-  integrity sha512-6XpiElzVul86DBhFWR8uGcUdl3i9yWNqd1BYE3thP6smCkmwG+2C7vN/6Jl943SDuhgg4sKR/urLgNDJSSmsfg==
+"@thirdweb-dev/sdk@^2.2.6":
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.2.6.tgz#0ac51d415cb2efbe2941933497eb1f6878f56c43"
+  integrity sha512-8Z7eKmDjqoNWT39Ry21i+0D0FsTJdspXnmKY4tixwPX3hjplrcZROmGonhGbhKXG7HcWLpWXP/myrTNkdUHoJw==
   dependencies:
     "@thirdweb-dev/contracts" "2.3.5"
     "@web-std/file" "^3.0.0"
@@ -1957,7 +1957,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^17", "@types/react@^17.0.15", "@types/react@^17.0.30":
+"@types/react@*", "@types/react@^17", "@types/react@^17.0.15":
   version "17.0.45"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.45.tgz#9b3d5b661fd26365fefef0e766a1c6c30ccf7b3f"
   integrity sha512-YfhQ22Lah2e3CHPsb93tRwIGNiSwkuz1/blk4e6QrWS0jQzCSNbGLtOEYhPg02W0yGTTmpajp7dCTbBAMN3qsg==
