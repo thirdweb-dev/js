@@ -45,6 +45,8 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
       setCurrentError(err as EnhancedTransactionError);
     } else {
       toast({
+        position: "bottom",
+        variant: "solid",
         title,
         description: parseErrorToMessage(err),
         status: "error",

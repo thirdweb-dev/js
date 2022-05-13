@@ -153,6 +153,8 @@ export const AddressCopyButton: React.FC<IAddressCopyButton> = ({
           e.preventDefault();
           onCopy();
           toast({
+            variant: "solid",
+            position: "bottom",
             title: "Address copied.",
             status: "success",
             duration: 5000,

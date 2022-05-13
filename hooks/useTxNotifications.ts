@@ -11,6 +11,8 @@ export function useTxNotifications(
 
   const onSuccess = useCallback(() => {
     toast({
+      position: "bottom",
+      variant: "solid",
       title: "Success",
       description: successMessage,
       status: "success",

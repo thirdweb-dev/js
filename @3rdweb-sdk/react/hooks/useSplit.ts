@@ -139,6 +139,8 @@ export function useSplitDistributeFunds(contractAddress?: string) {
               .distribute()
               .then(() => {
                 toast({
+                  position: "bottom",
+                  variant: "solid",
                   title: `Success`,
                   description: `Succesfully distributed ${currency.name}`,
                   status: "success",
@@ -148,6 +150,8 @@ export function useSplitDistributeFunds(contractAddress?: string) {
               })
               .catch((err: unknown) => {
                 toast({
+                  position: "bottom",
+                  variant: "solid",
                   title: `Error distributing ${currency.name}`,
                   description: parseErrorToMessage(err),
                   status: "error",
@@ -160,6 +164,8 @@ export function useSplitDistributeFunds(contractAddress?: string) {
               .distributeToken(currency.token_address)
               .then(() => {
                 toast({
+                  position: "bottom",
+                  variant: "solid",
                   title: `Success`,
                   description: `Succesfully distributed ${currency.name}`,
                   status: "success",
@@ -169,6 +175,8 @@ export function useSplitDistributeFunds(contractAddress?: string) {
               })
               .catch((err: unknown) => {
                 toast({
+                  position: "bottom",
+                  variant: "solid",
                   title: `Error distributing ${currency.name}`,
                   description: parseErrorToMessage(err),
                   status: "error",

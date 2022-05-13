@@ -183,6 +183,8 @@ const PermissionAddress: React.FC<IPermissionAddress> = ({
     e.preventDefault();
     onCopy();
     toast({
+      position: "bottom",
+      variant: "solid",
       title: "Address copied.",
       status: "success",
       duration: 5000,
