@@ -3,7 +3,7 @@ import { ContractId, DeployableContractContractCellProps } from "../../types";
 import { Image, Skeleton } from "@chakra-ui/react";
 import { ChakraNextImage, ChakraNextImageProps } from "components/Image";
 
-export const ContractImageCell: React.VFC<
+export const ContractImageCell: React.FC<
   DeployableContractContractCellProps
 > = ({ cell: { value } }) => {
   return <ContractIdImage contractId={value} />;
@@ -14,7 +14,7 @@ interface ContractIdImageProps
   contractId: ContractId;
 }
 
-export const ContractIdImage: React.VFC<ContractIdImageProps> = ({
+export const ContractIdImage: React.FC<ContractIdImageProps> = ({
   contractId,
   boxSize = 8,
   ...imgProps

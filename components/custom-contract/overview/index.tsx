@@ -11,7 +11,7 @@ interface CustomContractOverviewPageProps {
   contractAddress?: string;
 }
 
-export const CustomContractOverviewPage: React.VFC<
+export const CustomContractOverviewPage: React.FC<
   CustomContractOverviewPageProps
 > = ({ contractAddress }) => {
   const router = useRouter();

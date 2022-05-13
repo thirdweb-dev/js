@@ -12,7 +12,7 @@ interface ContractDeployFormProps {
   contractId: ContractId;
 }
 
-export const ContractDeployForm: React.VFC<ContractDeployFormProps> = ({
+export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
   contractId,
 }) => {
   const [selectedChain, setSelectedChain] = useState<

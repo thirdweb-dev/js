@@ -36,7 +36,7 @@ export const EditionBurnCell: React.FC<IEditionBurnCellProps> = ({ row }) => {
     >
       <Box>
         <Button
-          isFullWidth
+          w="full"
           isDisabled={!ownsAtLeastOne}
           onClick={() =>
             tableContext.expandRow({

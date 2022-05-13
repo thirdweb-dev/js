@@ -14,6 +14,9 @@ import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import posthog from "posthog-js";
 import React, { useEffect } from "react";
+import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
+
+const fontSizeCssVars = generateBreakpointTypographyCssVars();
 
 export type ConsolePageComponent<IP, P> = NextComponentType<
   NextPageContext,
@@ -68,6 +71,7 @@ function ConsoleApp({ Component, pageProps }: ConsoleAppProps) {
   );
 
   const Layout = Component.Layout || FallbackLayout;
+
   return (
     <Track>
       <Global
@@ -79,6 +83,7 @@ function ConsoleApp({ Component, pageProps }: ConsoleAppProps) {
             color: inherit;
             opacity: 0.7;
           }
+          ${fontSizeCssVars}
         `}
       />
       <DefaultSeo
@@ -132,7 +137,7 @@ function ConsoleApp({ Component, pageProps }: ConsoleAppProps) {
 }
 export default ConsoleApp;
 
-const PHIdentifier: React.VFC = () => {
+const PHIdentifier: React.FC = () => {
   const address = useAddress();
   useEffect(() => {
     if (address) {

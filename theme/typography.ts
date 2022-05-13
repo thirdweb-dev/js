@@ -1,9 +1,6 @@
 import { pxToRem } from "../utils/pxFunctions";
 
-export const baseFontSizes: Record<
-  TypographyBase,
-  Record<TypographySize, string>
-> = {
+export const baseFontSizes = {
   display: {
     sm: pxToRem(24),
     md: pxToRem(28),
@@ -39,12 +36,11 @@ export const baseFontSizes: Record<
     xl: pxToRem(18),
     "2xl": pxToRem(20),
   },
-};
+} as const;
 
-export const mdFontSizes: Record<
-  TypographyBase,
-  Record<TypographySize, string>
-> = {
+export type FontSizeRecord = typeof baseFontSizes;
+
+export const mdFontSizes: FontSizeRecord = {
   display: {
     sm: pxToRem(56),
     md: pxToRem(64),
@@ -112,8 +108,9 @@ export type TypographyBase =
   | "subtitle"
   | "label"
   | "body";
-
 export type TypographySize = "sm" | "md" | "lg" | "xl" | "2xl";
+
+export type TypographyFontSize = `${TypographyBase}.${TypographySize}`;
 
 export type HeadingBase = Exclude<TypographyBase, "body">;
 

@@ -3,6 +3,7 @@ import { StaticGradient } from "./StaticGradient";
 import {
   AspectRatioProps,
   Box,
+  BoxProps,
   Container,
   Flex,
   SimpleGrid,
@@ -11,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useMemo } from "react";
 import { Heading } from "tw-components";
+import { ComponentWithChildren } from "types/component-with-children";
 
 type GradientType = "animated" | "static";
 
@@ -31,6 +33,7 @@ interface IHomepageSection {
   subtitleMd?: boolean;
   titleSm?: boolean;
   paddingBottom?: boolean;
+  overflow?: BoxProps["overflow"];
 }
 
 const gradientMap: Record<
@@ -41,7 +44,7 @@ const gradientMap: Record<
   static: StaticGradient,
 };
 
-export const HomepageSection: React.FC<IHomepageSection> = ({
+export const HomepageSection: ComponentWithChildren<IHomepageSection> = ({
   childrenOnRightSide,
   title,
   subtitle,
@@ -56,6 +59,7 @@ export const HomepageSection: React.FC<IHomepageSection> = ({
   subtitleMd,
   titleSm,
   paddingBottom,
+  overflow = "hidden",
 }) => {
   const TopGradient = topGradient ? gradientMap[topGradient] : null;
   const BottomGradient = bottomGradient ? gradientMap[bottomGradient] : null;
@@ -70,7 +74,7 @@ export const HomepageSection: React.FC<IHomepageSection> = ({
       w="100%"
       position="relative"
       as="section"
-      overflow="hidden"
+      overflow={overflow}
       id={id}
       pb={paddingBottom ? [40, 40, 80] : []}
     >

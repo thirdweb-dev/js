@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useState } from "react";
 import invariant from "tiny-invariant";
+import { ComponentWithChildren } from "types/component-with-children";
 
 type ExpansionType =
   | "list"
@@ -34,7 +35,7 @@ export function useTableContext(): ITableContext {
   return context;
 }
 
-export const TableProvider: React.FC = ({ children }) => {
+export const TableProvider: ComponentWithChildren = ({ children }) => {
   const [expanded, setExpanded] = useState<IExpandedSettings | null>(null);
 
   const expandRow = useCallback((setting: IExpandedSettings) => {

@@ -20,8 +20,9 @@ import React from "react";
 import { RiGasStationFill } from "react-icons/ri";
 import { SiDiscord, SiGithub, SiTwitter } from "react-icons/si";
 import { Link, LinkButton, NextLink, Text } from "tw-components";
+import { ComponentWithChildren } from "types/component-with-children";
 
-export const AppShell: React.FC = ({ children }) => {
+export const AppShell: ComponentWithChildren = ({ children }) => {
   const { pathname } = useRouter();
   const { trackEvent } = useTrack();
 

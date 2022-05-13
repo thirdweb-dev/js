@@ -147,7 +147,7 @@ interface ContractSubnavProps {
   activeTab: string;
   contractAddress?: string;
 }
-const ContractSubnav: React.VFC<ContractSubnavProps> = ({
+const ContractSubnav: React.FC<ContractSubnavProps> = ({
   activeTab,
   contractAddress,
 }) => {
@@ -232,7 +232,7 @@ interface ContractSubNavLinkButton {
   label: string;
 }
 
-const ContractSubNavLinkButton: React.VFC<ContractSubNavLinkButton> = (
+const ContractSubNavLinkButton: React.FC<ContractSubNavLinkButton> = (
   props,
 ) => {
   const { trackEvent } = useTrack();

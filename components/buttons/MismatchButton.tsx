@@ -7,7 +7,6 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
-  Tooltip,
   useDisclosure,
 } from "@chakra-ui/react";
 import {
@@ -84,7 +83,7 @@ export const MismatchButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
 MismatchButton.displayName = "MismatchButton";
 
-const MismatchNotice: React.VFC<{
+const MismatchNotice: React.FC<{
   initialFocusRef: React.RefObject<HTMLButtonElement>;
   onClose: () => void;
 }> = ({ initialFocusRef, onClose }) => {

@@ -10,7 +10,7 @@ interface MediaCellProps {
   };
 }
 
-export const MediaCell: React.VFC<MediaCellProps> = ({ cell }) => {
+export const MediaCell: React.FC<MediaCellProps> = ({ cell }) => {
   const nftMetadata = cell.value;
   return (
     <ChakraThirdwebNftMedia

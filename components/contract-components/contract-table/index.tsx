@@ -7,7 +7,7 @@ import { ContractImageCell } from "./cells/image";
 import { ContractNameCell } from "./cells/name";
 import { Spinner, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import React, { useMemo } from "react";
-import { Cell, Column, useTable } from "react-table";
+import { Column, useTable } from "react-table";
 import { Card, Checkbox, Text } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
@@ -37,12 +37,12 @@ export const DeployableContractTable: ComponentWithChildren<
       {
         Header: "Icon",
         accessor: (row) => row.contractId,
-        Cell: ContractImageCell,
+        Cell: (cell: any) => <ContractImageCell cell={cell} />,
       },
       {
         Header: "Name",
         accessor: (row) => row.contractId,
-        Cell: ContractNameCell,
+        Cell: (cell: any) => <ContractNameCell cell={cell} />,
       },
     ];
 
@@ -52,7 +52,7 @@ export const DeployableContractTable: ComponentWithChildren<
         {
           Header: "Description",
           accessor: (row) => row.contractId,
-          Cell: ContractDescriptionCell,
+          Cell: (cell: any) => <ContractDescriptionCell cell={cell} />,
         },
       ];
     } else {
@@ -61,12 +61,12 @@ export const DeployableContractTable: ComponentWithChildren<
         {
           Header: "ABI",
           accessor: (row) => row.contractId,
-          Cell: ContractAbiCell,
+          Cell: (cell: any) => <ContractAbiCell cell={cell} />,
         },
         {
           Header: "Bytecode",
           accessor: (row) => row.contractId,
-          Cell: ContractBytecodeCell,
+          Cell: (cell: any) => <ContractBytecodeCell cell={cell} />,
         },
       ];
     }
@@ -76,7 +76,7 @@ export const DeployableContractTable: ComponentWithChildren<
         {
           id: "deploy-action",
           accessor: (row) => row.contractId,
-          Cell: ContractDeployActionCell,
+          Cell: (cell: any) => <ContractDeployActionCell cell={cell} />,
         },
       ];
     }
@@ -109,7 +109,7 @@ export const DeployableContractTable: ComponentWithChildren<
             );
           },
 
-          Cell: ({ value }: Cell<{ ContractId: ContractId }>) => {
+          Cell: ({ value }: any) => {
             const isChecked = selectedContractIds.includes(value);
             return (
               <Checkbox

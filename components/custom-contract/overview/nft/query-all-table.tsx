@@ -40,7 +40,7 @@ const tableColumns: Column<NFTMetadataOwner>[] = [
   {
     Header: "Media",
     accessor: (row) => row.metadata,
-    Cell: MediaCell,
+    Cell: (cell: any) => <MediaCell cell={cell} />,
   },
   {
     Header: "Name",
@@ -66,7 +66,7 @@ const tableColumns: Column<NFTMetadataOwner>[] = [
   },
 ];
 
-const ContractOverviewNftGetAll: React.VFC<ContractOverviewNftGetAllProps> = ({
+const ContractOverviewNftGetAll: React.FC<ContractOverviewNftGetAllProps> = ({
   contract,
 }) => {
   const [queryParams, setQueryParams] = useState({ count: 50, start: 0 });

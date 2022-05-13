@@ -13,7 +13,7 @@ interface FeatureButtonProps extends ButtonProps {
   features: FeatureWithEnabled[];
 }
 
-export const FeatureButton: React.VFC<FeatureButtonProps> = ({
+export const FeatureButton: React.FC<FeatureButtonProps> = ({
   features,
   ...restProps
 }) => {

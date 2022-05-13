@@ -19,7 +19,7 @@ interface CodeBlockProps extends Omit<CodeProps, "size"> {
   canCopy?: boolean;
 }
 
-export const CodeBlock: React.VFC<CodeBlockProps> = ({
+export const CodeBlock: React.FC<CodeBlockProps> = ({
   code,
   language,
   px = 4,

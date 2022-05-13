@@ -22,7 +22,7 @@ export interface FeedbackFormProps {
   onClose?: () => void;
   trackEvent: ReturnType<typeof useTrack>["trackEvent"];
 }
-export const FeedbackForm: React.VFC<FeedbackFormProps> = ({
+export const FeedbackForm: React.FC<FeedbackFormProps> = ({
   scope,
   wallet,
   onClose,
@@ -151,7 +151,7 @@ interface StartRatingProps {
   onRating: (rating: Rating) => void;
 }
 
-const StartRating: React.VFC<StartRatingProps> = ({ rating, onRating }) => {
+const StartRating: React.FC<StartRatingProps> = ({ rating, onRating }) => {
   return (
     <ButtonGroup cursor="pointer" gap={0} size="md" variant="ghost">
       {([1, 2, 3, 4, 5] as Rating[]).map((index) => {

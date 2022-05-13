@@ -138,7 +138,7 @@ interface ExternalApprovalNoticeProps {
   initialFocusRef: React.RefObject<HTMLButtonElement>;
 }
 
-const ExternalApprovalNotice: React.VFC<ExternalApprovalNoticeProps> = ({
+const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
   connectorId,
   initialFocusRef,
 }) => {

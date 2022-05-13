@@ -8,7 +8,7 @@ interface ContractHeaderProps {
   contractAddress: string;
 }
 
-export const ContractHeader: React.VFC<ContractHeaderProps> = ({
+export const ContractHeader: React.FC<ContractHeaderProps> = ({
   contractAddress,
 }) => {
   return (

@@ -25,7 +25,7 @@ interface FeatureDrawerContentProps {
   features: FeatureWithEnabled[];
 }
 
-export const FeatureDrawerContent: React.VFC<FeatureDrawerContentProps> = ({
+export const FeatureDrawerContent: React.FC<FeatureDrawerContentProps> = ({
   features,
 }) => {
   return (
@@ -57,7 +57,7 @@ interface FeatureDetailsProps {
   feature: FeatureWithEnabled;
 }
 
-const FeatureRoot: React.VFC<FeatureDetailsProps> = ({ feature }) => {
+const FeatureRoot: React.FC<FeatureDetailsProps> = ({ feature }) => {
   const codeSnippets = useFeatureCodeSnippet();
   const subFeatures = useMemo(() => {
     return flattenFeatures(convertFeaturesMapToarray(feature.features));
@@ -132,7 +132,7 @@ const FeatureRoot: React.VFC<FeatureDetailsProps> = ({ feature }) => {
   );
 };
 
-const FeatureDetails: React.VFC<FeatureDetailsProps> = ({ feature }) => {
+const FeatureDetails: React.FC<FeatureDetailsProps> = ({ feature }) => {
   const codeSnippets = useFeatureCodeSnippet();
 
   const featureDetails = useMemo(() => {
@@ -187,7 +187,7 @@ interface MethodProps {
   method: SnippetSchema;
 }
 
-export const Method: React.VFC<MethodProps> = ({ method }) => {
+export const Method: React.FC<MethodProps> = ({ method }) => {
   const router = useRouter();
   const query = router.query.customContract || [];
   const contractAddress = query[0];

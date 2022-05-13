@@ -1,22 +1,20 @@
 import { PossibleButtonSize, buttonSizesMap } from "./button";
+import { convertFontSizeToCSSVar } from "./utils/typography";
 import {
   MenuGroup as ChakraMenuGroup,
   MenuGroupProps as ChakraMenuGroupProps,
   MenuItem as ChakraMenuItem,
   MenuItemProps as ChakraMenuItemProps,
   forwardRef,
-  useBreakpointValue,
   useButtonGroup,
 } from "@chakra-ui/react";
 import {
   LabelBase,
   LabelSizes,
   TypographySize,
-  baseFontSizes,
   fontWeights,
   letterSpacings,
   lineHeights,
-  mdFontSizes,
 } from "theme/typography";
 import { ComponentWithChildren } from "types/component-with-children";
 
@@ -31,16 +29,11 @@ export const MenuGroup: ComponentWithChildren<MenuGroupProps> = ({
   title,
   ...restProps
 }) => {
-  const [base, fontSizeKey] = size.split(".") as [LabelBase, TypographySize];
-  const fontSizeMap =
-    useBreakpointValue({
-      base: baseFontSizes,
-      md: mdFontSizes,
-    }) || mdFontSizes;
+  const [base] = size.split(".") as [LabelBase, TypographySize];
 
   return (
     <ChakraMenuGroup
-      fontSize={fontSizeMap[base][fontSizeKey]}
+      fontSize={convertFontSizeToCSSVar(size)}
       fontWeight={fontWeights[base]}
       lineHeight={lineHeights[base]}
       letterSpacing={letterSpacings[base]}
@@ -64,17 +57,12 @@ export const MenuItem = forwardRef<MenuItemProps, "button">(
     if (!(_size in buttonSizesMap)) {
       _size = "md";
     }
-    const fontSizeMap =
-      useBreakpointValue({
-        base: baseFontSizes,
-        md: mdFontSizes,
-      }) || mdFontSizes;
 
     const props: MenuItemProps = {
       fontWeight: fontWeights.subtitle,
       lineHeight: lineHeights.label,
       letterSpacing: letterSpacings.body,
-      fontSize: fontSizeMap["label"][_size],
+      fontSize: convertFontSizeToCSSVar(`label.${_size}`),
       size: _size,
       ...buttonGroupContext,
       ...restButtonprops,

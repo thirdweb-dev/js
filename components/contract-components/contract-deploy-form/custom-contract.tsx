@@ -48,7 +48,7 @@ interface CustomContractFormProps {
   onChainSelect: (chainId: SUPPORTED_CHAIN_ID) => void;
 }
 
-const CustomContractForm: React.VFC<CustomContractFormProps> = ({
+const CustomContractForm: React.FC<CustomContractFormProps> = ({
   ipfsHash,
   selectedChain,
   onChainSelect,

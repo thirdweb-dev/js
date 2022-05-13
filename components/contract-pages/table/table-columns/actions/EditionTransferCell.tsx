@@ -37,7 +37,6 @@ export const EditionTransferCell: React.FC<IEditionTransferCellProps> = ({
     >
       <Box>
         <Button
-          isFullWidth
           isDisabled={!ownsAtLeastOne}
           onClick={() =>
             tableContext.expandRow({

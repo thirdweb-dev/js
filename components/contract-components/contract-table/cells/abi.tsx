@@ -5,9 +5,9 @@ import { useMemo } from "react";
 import { FiCheck, FiCopy } from "react-icons/fi";
 import { Button, CodeBlock, Drawer, Heading } from "tw-components";
 
-export const ContractAbiCell: React.VFC<
-  DeployableContractContractCellProps
-> = ({ cell: { value } }) => {
+export const ContractAbiCell: React.FC<DeployableContractContractCellProps> = ({
+  cell: { value },
+}) => {
   const publishMetadata = useContractPublishMetadataFromURI(value);
 
   const { isOpen, onOpen, onClose } = useDisclosure();

@@ -24,7 +24,7 @@ import {
 import { Logo } from "components/logo";
 import { isAddress } from "ethers/lib/utils";
 import Papa from "papaparse";
-import { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { DropzoneOptions, useDropzone } from "react-dropzone";
 import { IoAlertCircleOutline } from "react-icons/io5";
 import {

@@ -14,7 +14,7 @@ import { ConsolePage } from "pages/_app";
 import { useEffect, useMemo, useState } from "react";
 import { Badge, Heading, Text } from "tw-components";
 
-const ContractsPublishPageWrapped: React.VFC = () => {
+const ContractsPublishPageWrapped: React.FC = () => {
   const { Track, trackEvent } = useTrack({
     page: "publish",
   });

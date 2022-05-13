@@ -6,7 +6,7 @@ interface ContentOverviewProps {
   contractAddress: string;
 }
 
-export const CustomContractCodeTab: React.VFC<ContentOverviewProps> = ({
+export const CustomContractCodeTab: React.FC<ContentOverviewProps> = ({
   contractAddress,
 }) => {
   const functionsQuery = useContractFunctions(contractAddress);

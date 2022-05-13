@@ -3,7 +3,7 @@ import { DeployableContractContractCellProps } from "../../types";
 import { Skeleton } from "@chakra-ui/react";
 import { Text } from "tw-components";
 
-export const ContractDescriptionCell: React.VFC<
+export const ContractDescriptionCell: React.FC<
   DeployableContractContractCellProps
 > = ({ cell: { value } }) => {
   const publishMetadata = useContractPublishMetadataFromURI(value);

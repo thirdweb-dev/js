@@ -4,12 +4,13 @@ import {
   useWeb3,
 } from "@3rdweb-sdk/react";
 import { ValidContractInstance } from "@thirdweb-dev/sdk";
+import { ComponentWithChildren } from "types/component-with-children";
 
 interface IListerOnlyProps {
   contract?: ValidContractInstance;
 }
 
-export const ListerOnly: React.FC<IListerOnlyProps> = ({
+export const ListerOnly: ComponentWithChildren<IListerOnlyProps> = ({
   children,
   contract,
 }) => {

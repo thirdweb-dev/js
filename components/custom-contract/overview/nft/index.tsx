@@ -12,7 +12,7 @@ interface NftOverviewPageProps {
   contract: Erc721<any>;
 }
 
-const NftOverviewPage: React.VFC<NftOverviewPageProps> = ({ contract }) => {
+const NftOverviewPage: React.FC<NftOverviewPageProps> = ({ contract }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const contractSupportsMinting = useMemo(() => {

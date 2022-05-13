@@ -1,10 +1,16 @@
 import { HamburgerIcon } from "@chakra-ui/icons";
-import { IconButton, Menu, MenuButton, MenuList } from "@chakra-ui/react";
+import {
+  IconButton,
+  IconButtonProps,
+  Menu,
+  MenuButton,
+  MenuList,
+} from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useCallback } from "react";
 import { MenuItem, NextLink } from "tw-components";
 
-export const LandingMenu: React.FC = () => {
+export const LandingMenu: React.FC<IconButtonProps> = (props) => {
   const { trackEvent } = useTrack();
 
   const scrollToId = useCallback(
@@ -22,6 +28,7 @@ export const LandingMenu: React.FC = () => {
   return (
     <Menu>
       <MenuButton
+        {...props}
         as={IconButton}
         aria-label="Options"
         icon={<HamburgerIcon />}

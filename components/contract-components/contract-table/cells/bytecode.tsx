@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { FiCheck, FiCopy } from "react-icons/fi";
 import { Button } from "tw-components";
 
-export const ContractBytecodeCell: React.VFC<
+export const ContractBytecodeCell: React.FC<
   DeployableContractContractCellProps
 > = ({ cell: { value } }) => {
   const publishMetadata = useContractPublishMetadataFromURI(value);

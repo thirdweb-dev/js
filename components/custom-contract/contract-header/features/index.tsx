@@ -16,7 +16,7 @@ const EIP_FEATURE_NAMES: FeatureName[] = ["ERC20", "ERC721", "ERC1155"];
 interface ContractHeaderFeaturesSectionProps {
   contractAddress: string;
 }
-export const ContractHeaderFeaturesSection: React.VFC<
+export const ContractHeaderFeaturesSection: React.FC<
   ContractHeaderFeaturesSectionProps
 > = ({ contractAddress }) => {
   const metadataQuery = usePublishedMetadataQuery(contractAddress);

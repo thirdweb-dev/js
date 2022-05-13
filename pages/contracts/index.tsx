@@ -18,7 +18,7 @@ import { ConsolePage } from "pages/_app";
 import { IoRefreshSharp } from "react-icons/io5";
 import { Badge, Button, Heading, LinkButton, Text } from "tw-components";
 
-const ContractsHomepageWrapped: React.VFC = () => {
+const ContractsHomepageWrapped: React.FC = () => {
   const { Track } = useTrack({
     page: "contracts",
   });

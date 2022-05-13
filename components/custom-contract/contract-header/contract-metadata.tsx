@@ -9,7 +9,7 @@ interface ContractMetadataProps {
   contractAddress: string;
 }
 
-export const ContractMetadata: React.VFC<ContractMetadataProps> = ({
+export const ContractMetadata: React.FC<ContractMetadataProps> = ({
   contractAddress,
 }) => {
   const metadataQuery = useContractMetadata(contractAddress);

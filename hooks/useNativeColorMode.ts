@@ -1,4 +1,4 @@
-import { useColorModeValue } from "@chakra-ui/system";
+import { useColorModeValue } from "@chakra-ui/react";
 import { useEffect } from "react";
 
 export function useNativeColorMode() {
