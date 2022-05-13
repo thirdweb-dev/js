@@ -1844,7 +1844,7 @@
     tiny-invariant "^1.2.0"
     wagmi "^0.2.28"
 
-"@thirdweb-dev/sdk@^2.2.7":
+"@thirdweb-dev/sdk@^2.2.8":
   version "2.2.8"
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.2.8.tgz#4c1128e618a97c0b77e38d7d9b42354781187689"
   integrity sha512-Ts85JqbSBgl9WeGxfjfh0LbSxriDyuCClBItorwSOgeDWmnLKeswE7p5vGsT13Hb6ns88Li+Sse1wDKfH5Z5sA==
@@ -1963,14 +1963,14 @@
   integrity sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==
 
 "@types/node@*":
-  version "17.0.32"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.32.tgz#51d59d7a90ef2d0ae961791e0900cad2393a0149"
-  integrity sha512-eAIcfAvhf/BkHcf4pkLJ7ECpBAhh9kcxRBpip9cTiO+hf+aJrsxYxBeS6OXvOd9WqNAJmavXVpZvY1rBjNsXmw==
+  version "17.0.33"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.33.tgz#3c1879b276dc63e73030bb91165e62a4509cd506"
+  integrity sha512-miWq2m2FiQZmaHfdZNcbpp9PuXg34W5JZ5CrJ/BaS70VuhoJENBEQybeiYSaPBRNq6KQGnjfEnc/F3PN++D+XQ==
 
 "@types/node@^12.12.6":
-  version "12.20.51"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.51.tgz#8bc65be17b95ab6dc89b70839598aeff43ded9c5"
-  integrity sha512-anVDMfReTatfH8GVmHmaTZOL0jeTLNZ9wK9SSrQS3tMmn4vUc+9fVWlUzAieuQefWDyWUz4Z3aqXxDgO1VsYjg==
+  version "12.20.52"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.20.52.tgz#2fd2dc6bfa185601b15457398d4ba1ef27f81251"
+  integrity sha512-cfkwWw72849SNYp3Zx0IcIs25vABmFh73xicxhCkTcvtZQeIez15PpwQN8fY3RD7gv1Wrxlc9MEtfMORZDEsGw==
 
 "@types/papaparse@^5.3.1":
   version "5.3.2"
@@ -6838,13 +6838,13 @@ postcss@^8.1.7:
     source-map-js "^1.0.2"
 
 posthog-js@^1.14.4:
-  version "1.21.0"
-  resolved "https://registry.yarnpkg.com/posthog-js/-/posthog-js-1.21.0.tgz#f1eda08c0d6191f7f4b55e5875be1fac874b241b"
-  integrity sha512-zgu3tVbBDJNfzWELUo/rfXVSQmiUUCz2qSZ6d32EJbn76fevn+kAs3ukzCUCJO563ZXKWoo4nfKa6U6ylQggJA==
+  version "1.21.1"
+  resolved "https://registry.yarnpkg.com/posthog-js/-/posthog-js-1.21.1.tgz#3f4242c2832b7fc80b4a177b0d0e1b71da2b8272"
+  integrity sha512-/mf0ezl9DAZp0LA0fupNvII/O0/1IWqsDiLma5oKHpGqyhFA2ObRENxiZvdSt+UFvcXtoieDsW5SoDPZMFvWgA==
   dependencies:
     "@sentry/types" "^6.11.0"
     fflate "^0.4.1"
-    rrweb-snapshot "^1.1.7"
+    rrweb-snapshot "^1.1.14"
 
 preact@10.4.1:
   version "10.4.1"
@@ -7438,7 +7438,7 @@ rlp@^2.0.0, rlp@^2.2.3, rlp@^2.2.4:
   dependencies:
     bn.js "^5.2.0"
 
-rrweb-snapshot@^1.1.7:
+rrweb-snapshot@^1.1.14:
   version "1.1.14"
   resolved "https://registry.yarnpkg.com/rrweb-snapshot/-/rrweb-snapshot-1.1.14.tgz#9d4d9be54a28a893373428ee4393ec7e5bd83fcc"
   integrity sha512-eP5pirNjP5+GewQfcOQY4uBiDnpqxNRc65yKPW0eSoU1XamDfc4M8oqpXGMyUyvLyxFDB0q0+DChuxxiU2FXBQ==

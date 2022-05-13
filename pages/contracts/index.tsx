@@ -101,7 +101,7 @@ const ContractsHomepageWrapped: React.FC = () => {
         <Box />
 
         <Flex gap={2} direction="column">
-          <Heading size="title.md">Built-in contracts</Heading>
+          <Heading size="title.md">Pre-built contracts</Heading>
           <Text fontStyle="italic">
             Contracts created by the thirdweb team that you can deploy
           </Text>

@@ -25,7 +25,7 @@ export const ContractDeployActionCell: React.FC<
             <LinkButton
               variant="outline"
               isExternal
-              href={`https://portal.thirdweb.com/contracts/${value}`}
+              href={`https://portal.thirdweb.com/pre-built-contracts/${value}`}
             >
               Learn more
             </LinkButton>

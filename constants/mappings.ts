@@ -118,7 +118,6 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       description: "Claimable drop of ERC20 tokens",
       icon: FeatureIconMap[TokenDrop.contractType],
       abi: TokenDrop.contractAbi,
-      comingSoon: true,
     },
     [SmartContract.contractType]: {
       title: "NOT IMPLEMENTED",

@@ -129,8 +129,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
   const hasPlatformFeeMechanic = useMemo(
     () =>
       "platform_fee_recipient" in contract.schema.deploy.shape &&
-      "platform_fee_basis_points" in contract.schema.deploy.shape &&
-      false,
+      "platform_fee_basis_points" in contract.schema.deploy.shape,
     [contract],
   );
   const hasRoyaltyMechanic = useMemo(
@@ -287,7 +286,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
             colorScheme="purple"
             variant="outline"
           >
-            Built-in Contract
+            Pre-built Contract
           </Badge>
         </Flex>
         <Divider borderColor="borderColor" />
