@@ -67,6 +67,7 @@ const connectorIdToImageUrl: Record<string, StaticImageData> = {
   "Coinbase Wallet": require("public/logos/coinbase-wallet-logo.svg"),
   Magic: require("public/logos/magic-logo.svg"),
   Gnosis: require("public/logos/gnosis-logo.svg"),
+  Injected: require("public/logos/wallet.png"),
 };
 
 export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
@@ -314,7 +315,7 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
             MetaMask
           </MenuItem>
           {connector.data.connectors
-            .filter((c) => c.id !== "gnosis" && c.id !== "injected")
+            .filter((c) => c.id !== "gnosis" && c.name !== "MetaMask")
             .map((_connector) => {
               if (!_connector.ready) {
                 return null;
@@ -331,7 +332,9 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
                       src={
                         _connector.id === "gnosis"
                           ? connectorIdToImageUrl["Gnosis"]
-                          : connectorIdToImageUrl[_connector.name]
+                          : _connector.name !== "Injected"
+                          ? connectorIdToImageUrl[_connector.name]
+                          : connectorIdToImageUrl["Injected"]
                       }
                       placeholder="empty"
                       alt=""
@@ -341,6 +344,8 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
                 >
                   {_connector.id === "magic"
                     ? "Email Wallet (Magic)"
+                    : _connector.name === "Injected"
+                    ? "Mobile Wallet"
                     : _connector.name}
                 </MenuItem>
               );
