@@ -5,6 +5,8 @@ import {
   Button as ChakraButton,
   ButtonProps as ChakraButtonprops,
   Icon,
+  IconButton,
+  IconButtonProps,
   LightMode,
   Link,
   Tooltip,
@@ -31,10 +33,12 @@ export type PossibleButtonSize = keyof typeof buttonSizesMap;
 
 export interface ButtonProps extends Omit<ChakraButtonprops, "size"> {
   size?: PossibleButtonSize;
+  fromcolor?: string;
+  tocolor?: string;
 }
 
 export const Button = forwardRef<ButtonProps, "button">(
-  ({ size, ...restButtonprops }, ref) => {
+  ({ size, ...restButtonProps }, ref) => {
     const { size: groupSize, ...buttonGroupContext } = useButtonGroup() || {};
     let _size: PossibleButtonSize = (size ||
       groupSize ||
@@ -50,7 +54,7 @@ export const Button = forwardRef<ButtonProps, "button">(
       fontSize: convertFontSizeToCSSVar(`label.${buttonSizesMap[_size]}`),
       size: _size,
       ...buttonGroupContext,
-      ...restButtonprops,
+      ...restButtonProps,
     };
     if (props.colorScheme && props.variant !== "outline") {
       return (
@@ -71,14 +75,14 @@ export const Button = forwardRef<ButtonProps, "button">(
 
 Button.displayName = "Button";
 
-interface ILinkButtonProps extends ButtonProps {
+export interface LinkButtonProps extends ButtonProps {
   href: string | LinkProps["href"];
   isExternal?: boolean;
   noIcon?: true;
 }
 
-export const LinkButton = React.forwardRef<HTMLButtonElement, ILinkButtonProps>(
-  ({ href, isExternal, noIcon, children, ...restButtonprops }, ref) => {
+export const LinkButton = React.forwardRef<HTMLButtonElement, LinkButtonProps>(
+  ({ href, isExternal, noIcon, children, ...restButtonProps }, ref) => {
     if (isExternal) {
       return (
         <Button
@@ -88,7 +92,7 @@ export const LinkButton = React.forwardRef<HTMLButtonElement, ILinkButtonProps>(
           ref={ref}
           textDecoration="none!important"
           rightIcon={noIcon ? undefined : <Icon as={FiExternalLink} />}
-          {...restButtonprops}
+          {...restButtonProps}
         >
           {children}
         </Button>
@@ -100,7 +104,7 @@ export const LinkButton = React.forwardRef<HTMLButtonElement, ILinkButtonProps>(
         <Button
           as={Link}
           ref={ref}
-          {...restButtonprops}
+          {...restButtonProps}
           textDecoration="none!important"
         >
           {children}
@@ -112,13 +116,39 @@ export const LinkButton = React.forwardRef<HTMLButtonElement, ILinkButtonProps>(
 
 LinkButton.displayName = "LinkButton";
 
-interface IAddressCopyButton extends Omit<ButtonProps, "onClick" | "size"> {
+export interface TrackedIconButtonProps extends IconButtonProps {
+  category: string;
+  label?: string;
+}
+
+export const TrackedIconButton = forwardRef<TrackedIconButtonProps, "button">(
+  ({ category, label, ...restButtonProps }, ref) => {
+    const { trackEvent } = useTrack();
+    return (
+      <IconButton
+        ref={ref}
+        onClick={() =>
+          trackEvent({
+            category,
+            action: "click",
+            label,
+          })
+        }
+        {...restButtonProps}
+      />
+    );
+  },
+);
+
+TrackedIconButton.displayName = "TrackedIconButton";
+
+interface AddressCopyButtonProps extends Omit<ButtonProps, "onClick" | "size"> {
   address?: string;
   noIcon?: boolean;
   size?: PossibleButtonSize;
 }
 
-export const AddressCopyButton: React.FC<IAddressCopyButton> = ({
+export const AddressCopyButton: React.FC<AddressCopyButtonProps> = ({
   address,
   noIcon,
   flexGrow = 0,

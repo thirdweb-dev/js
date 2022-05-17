@@ -7,24 +7,27 @@ import {
   Divider,
   Flex,
   Icon,
-  IconButton,
   Stack,
 } from "@chakra-ui/react";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
 import { Logo } from "components/logo";
 import { InsufficientFunds } from "components/notices/InsufficientFunds";
-import { useTrack } from "hooks/analytics/useTrack";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import React from "react";
 import { RiGasStationFill } from "react-icons/ri";
-import { SiDiscord, SiGithub, SiTwitter } from "react-icons/si";
-import { Link, LinkButton, NextLink, Text } from "tw-components";
+import { SiDiscord, SiGithub, SiTwitter, SiYoutube } from "react-icons/si";
+import {
+  Link,
+  LinkButton,
+  Text,
+  TrackedIconButton,
+  TrackedLink,
+} from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
 export const AppShell: ComponentWithChildren = ({ children }) => {
   const { pathname } = useRouter();
-  const { trackEvent } = useTrack();
 
   const isCustomContractLayout =
     pathname === "/[wallet]/[network]/[...customContract]";
@@ -68,16 +71,16 @@ export const AppShell: ComponentWithChildren = ({ children }) => {
             as="header"
             alignItems="center"
           >
-            <NextLink href="/dashboard">
+            <Link href="/dashboard">
               <Logo />
-            </NextLink>
+            </Link>
             <Stack
               direction="row"
               align="center"
               spacing={{ base: 3, md: 4 }}
               marginLeft="auto"
             >
-              <NextLink
+              <Link
                 href="https://portal.thirdweb.com/guides"
                 isExternal
                 variant="link"
@@ -87,12 +90,12 @@ export const AppShell: ComponentWithChildren = ({ children }) => {
                 display={{ base: "none", md: "block" }}
               >
                 Guides
-              </NextLink>
+              </Link>
               <ButtonGroup
                 variant="ghost"
                 display={{ base: "none", md: "block" }}
               >
-                <IconButton
+                <TrackedIconButton
                   as={LinkButton}
                   isExternal
                   noIcon
@@ -100,15 +103,10 @@ export const AppShell: ComponentWithChildren = ({ children }) => {
                   bg="transparent"
                   aria-label="twitter"
                   icon={<Icon boxSize="1rem" as={SiTwitter} />}
-                  onClick={() =>
-                    trackEvent({
-                      category: "header",
-                      action: "click",
-                      label: "twitter",
-                    })
-                  }
+                  category="header"
+                  label="twitter"
                 />
-                <IconButton
+                <TrackedIconButton
                   as={LinkButton}
                   isExternal
                   noIcon
@@ -116,15 +114,21 @@ export const AppShell: ComponentWithChildren = ({ children }) => {
                   bg="transparent"
                   aria-label="discord"
                   icon={<Icon boxSize="1rem" as={SiDiscord} />}
-                  onClick={() =>
-                    trackEvent({
-                      category: "header",
-                      action: "click",
-                      label: "discord",
-                    })
-                  }
+                  category="header"
+                  label="discord"
                 />
-                <IconButton
+                <TrackedIconButton
+                  as={LinkButton}
+                  isExternal
+                  noIcon
+                  href="https://www.youtube.com/channel/UCdzMx7Zhy5va5End1-XJFbA"
+                  bg="transparent"
+                  aria-label="YouTube"
+                  icon={<Icon boxSize="1rem" as={SiYoutube} />}
+                  category="header"
+                  label="youtube"
+                />
+                <TrackedIconButton
                   as={LinkButton}
                   isExternal
                   noIcon
@@ -132,29 +136,19 @@ export const AppShell: ComponentWithChildren = ({ children }) => {
                   bg="transparent"
                   aria-label="github"
                   icon={<Icon boxSize="1rem" as={SiGithub} />}
-                  onClick={() =>
-                    trackEvent({
-                      category: "header",
-                      action: "click",
-                      label: "github",
-                    })
-                  }
+                  category="header"
+                  label="github"
                 />
 
-                <IconButton
+                <TrackedIconButton
                   as={LinkButton}
                   noIcon
                   href="/gas"
                   bg="transparent"
                   aria-label="gas-estimator"
                   icon={<Icon boxSize="1rem" as={RiGasStationFill} />}
-                  onClick={() =>
-                    trackEvent({
-                      category: "header",
-                      action: "click",
-                      label: "gas-estimator",
-                    })
-                  }
+                  category="header"
+                  label="gas-estimator"
                 />
               </ButtonGroup>
               <ColorModeToggle />
@@ -179,29 +173,30 @@ export const AppShell: ComponentWithChildren = ({ children }) => {
               <Text alignSelf="center">
                 thirdweb &copy; {new Date().getFullYear()}
               </Text>
-              <NextLink
-                href="https://feedback.thirdweb.com"
+              <TrackedLink
                 isExternal
-                variant="link"
-                color="inherit"
-                fontWeight="inherit"
-                textDecoration={undefined}
-                onClick={() =>
-                  trackEvent({
-                    category: "footer",
-                    action: "click",
-                    label: "feedback",
-                  })
-                }
+                href="https://feedback.thirdweb.com"
+                category="footer"
+                label="feedback"
               >
                 Feedback
-              </NextLink>
-              <Link isExternal href="/tos">
-                Terms of Service
-              </Link>
-              <Link isExternal href="/privacy">
+              </TrackedLink>
+              <TrackedLink
+                isExternal
+                href="/privacy"
+                category="footer"
+                label="privacy"
+              >
                 Privacy Policy
-              </Link>
+              </TrackedLink>
+              <TrackedLink
+                isExternal
+                href="/tos"
+                category="footer"
+                label="terms"
+              >
+                Terms of Service
+              </TrackedLink>
             </Stack>
           </Stack>
         </Container>

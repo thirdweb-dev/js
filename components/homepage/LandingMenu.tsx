@@ -6,55 +6,52 @@ import {
   MenuButton,
   MenuList,
 } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useCallback } from "react";
-import { MenuItem, NextLink } from "tw-components";
+import { MenuItem, TrackedLink } from "tw-components";
 
 export const LandingMenu: React.FC<IconButtonProps> = (props) => {
-  const { trackEvent } = useTrack();
-
-  const scrollToId = useCallback(
-    (id: string) => {
-      if (document) {
-        trackEvent({ category: "topnav", action: "click", label: id });
-        document.getElementById(id)?.scrollIntoView({
-          behavior: "smooth",
-        });
-      }
-    },
-    [trackEvent],
-  );
-
   return (
     <Menu>
       <MenuButton
         {...props}
         as={IconButton}
-        aria-label="Options"
+        aria-label="Menu"
         icon={<HamburgerIcon />}
         variant="outline"
-        color="black"
       />
-      <MenuList bgColor="white" color="black">
-        <MenuItem onClick={() => scrollToId("features")}>Features</MenuItem>
-        <MenuItem onClick={() => scrollToId("developers")}>Developers</MenuItem>
-        <MenuItem onClick={() => scrollToId("fees")}>Pricing</MenuItem>
-        <NextLink href="https://portal.thirdweb.com/guides" isExternal>
-          <MenuItem>Guides</MenuItem>
-        </NextLink>
-        <NextLink href="/dashboard">
-          <MenuItem
-            onClick={() =>
-              trackEvent({
-                category: "topnav",
-                action: "click",
-                label: "start",
-              })
-            }
-          >
-            Start building
-          </MenuItem>
-        </NextLink>
+      <MenuList bgColor="black" color="white">
+        <MenuItem
+          as={TrackedLink}
+          href="#developers"
+          category="mobile-menu"
+          label="developers"
+        >
+          Developers
+        </MenuItem>
+        <MenuItem
+          as={TrackedLink}
+          href="#features"
+          category="mobile-menu"
+          label="fees"
+        >
+          Features
+        </MenuItem>
+        <MenuItem
+          as={TrackedLink}
+          href="#fees"
+          category="mobile-menu"
+          label="fees"
+        >
+          Pricing
+        </MenuItem>
+
+        <MenuItem
+          as={TrackedLink}
+          href="https://portal.thirdweb.com"
+          category="mobile-menu"
+          label="portal"
+        >
+          Docs
+        </MenuItem>
       </MenuList>
     </Menu>
   );

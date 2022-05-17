@@ -1,9 +1,10 @@
 const URL = "https://api.convertkit.com/v3/forms/2840699/subscribe";
 
-export async function sendEmailToConvertkit(email: string) {
+export async function sendEmailToConvertkit(email: string, tags: string[]) {
   const data = {
     email,
     api_key: process.env.NEXT_PUBLIC_CONVERTKIT_API_KEY,
+    tags,
   };
   const response = await fetch(URL, {
     method: "POST",

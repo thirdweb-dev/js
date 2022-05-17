@@ -2,11 +2,11 @@ import { pxToRem } from "../utils/pxFunctions";
 
 export const baseFontSizes = {
   display: {
-    sm: pxToRem(24),
-    md: pxToRem(28),
-    lg: pxToRem(32),
-    xl: pxToRem(36),
-    "2xl": pxToRem(40),
+    sm: pxToRem(44),
+    md: pxToRem(48),
+    lg: pxToRem(52),
+    xl: pxToRem(56),
+    "2xl": pxToRem(64),
   },
   title: {
     sm: pxToRem(16),

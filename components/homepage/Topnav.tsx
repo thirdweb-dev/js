@@ -4,20 +4,17 @@ import {
   Container,
   Flex,
   Icon,
-  IconButton,
-  Link,
   Stack,
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import { Logo } from "components/logo";
-import { useTrack } from "hooks/analytics/useTrack";
-import React, { useCallback, useState } from "react";
-import { SiDiscord, SiGithub, SiTwitter } from "react-icons/si";
-import { LinkButton, NextLink } from "tw-components";
+import React, { useState } from "react";
+import { FiExternalLink } from "react-icons/fi";
+import { SiDiscord, SiGithub, SiTwitter, SiYoutube } from "react-icons/si";
+import { LinkButton, TrackedIconButton, TrackedLink } from "tw-components";
 
 export const HomepageTopNav: React.FC<{}> = () => {
-  const { trackEvent } = useTrack();
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [isScrolled, setIsScrolled] = useState(false);
   useScrollPosition(
@@ -34,18 +31,6 @@ export const HomepageTopNav: React.FC<{}> = () => {
     33,
   );
 
-  const scrollToId = useCallback(
-    (id: string) => {
-      if (document) {
-        trackEvent({ category: "topnav", action: "click", label: id });
-        document.getElementById(id)?.scrollIntoView({
-          behavior: "smooth",
-        });
-      }
-    },
-    [trackEvent],
-  );
-
   return (
     <>
       <Box
@@ -57,7 +42,8 @@ export const HomepageTopNav: React.FC<{}> = () => {
         zIndex="overlay"
         as="header"
         boxShadow={isScrolled ? "md" : undefined}
-        bg={isScrolled ? "backgroundLight" : "transparent"}
+        bg={isScrolled ? "blackAlpha.900" : "transparent"}
+        backdropFilter="blur(10px)"
       >
         <Container
           as={Flex}
@@ -67,86 +53,98 @@ export const HomepageTopNav: React.FC<{}> = () => {
           align="center"
           flexDir="row"
         >
-          <Link onClick={() => scrollToId("home")}>
-            <Logo color="#262A36" />
-          </Link>
+          <TrackedLink href="/" category="topnav" label="home">
+            <Logo color="#fff" />
+          </TrackedLink>
           <Stack
             display={["none", "none", "flex"]}
             direction="row"
             alignItems="center"
-            color="#262A36"
+            color="gray.50"
             fontWeight="bold"
             spacing={10}
             as="nav"
           >
-            <Link onClick={() => scrollToId("features")}>Features</Link>
-            <Link onClick={() => scrollToId("developers")}>Developers</Link>
-            <Link onClick={() => scrollToId("fees")}>Pricing</Link>
-            <NextLink
-              href="https://portal.thirdweb.com/guides"
+            <TrackedLink
+              href="#developers"
+              category="topnav"
+              label="developers"
+            >
+              Developers
+            </TrackedLink>
+            <TrackedLink href="#features" category="topnav" label="features">
+              Features
+            </TrackedLink>
+            <TrackedLink href="#fees" category="topnav" label="fees">
+              Pricing
+            </TrackedLink>
+            <TrackedLink
+              href="https://portal.thirdweb.com"
               variant="link"
               color="inherit"
               fontWeight="inherit"
               textDecoration={undefined}
               isExternal
+              category="topnav"
+              label="portal"
             >
-              Guides
-            </NextLink>
+              <Flex alignItems="center">
+                Docs
+                <Icon ml={1.5} as={FiExternalLink} />
+              </Flex>
+            </TrackedLink>
             <Flex
               display={{ base: "none", lg: "flex" }}
               direction="row"
               align="center"
             >
-              <IconButton
+              <TrackedIconButton
                 as={LinkButton}
                 isExternal
                 noIcon
                 href="https://twitter.com/thirdweb_"
-                color="gray.500"
+                color="gray.50"
                 bg="transparent"
                 aria-label="twitter"
                 icon={<Icon boxSize="1rem" as={SiTwitter} />}
-                onClick={() =>
-                  trackEvent({
-                    category: "topnav",
-                    action: "click",
-                    label: "twitter",
-                  })
-                }
+                category="topnav"
+                label="twitter"
               />
-              <IconButton
+              <TrackedIconButton
                 as={LinkButton}
                 isExternal
                 noIcon
                 href="https://discord.gg/thirdweb"
                 bg="transparent"
-                color="gray.500"
+                color="gray.50"
                 aria-label="discord"
                 icon={<Icon boxSize="1rem" as={SiDiscord} />}
-                onClick={() =>
-                  trackEvent({
-                    category: "topnav",
-                    action: "click",
-                    label: "discord",
-                  })
-                }
+                category="topnav"
+                label="discord"
               />
-              <IconButton
+              <TrackedIconButton
+                as={LinkButton}
+                isExternal
+                noIcon
+                href="https://www.youtube.com/channel/UCdzMx7Zhy5va5End1-XJFbA"
+                bg="transparent"
+                color="gray.50"
+                aria-label="YouTube"
+                icon={<Icon boxSize="1rem" as={SiYoutube} />}
+                category="topnav"
+                label="youtube"
+              />
+              <TrackedIconButton
                 as={LinkButton}
                 isExternal
                 noIcon
                 href="https://github.com/thirdweb-dev"
                 bg="transparent"
-                color="gray.500"
+                color="gray.50"
                 aria-label="github"
                 icon={<Icon boxSize="1rem" as={SiGithub} />}
-                onClick={() =>
-                  trackEvent({
-                    category: "topnav",
-                    action: "click",
-                    label: "github",
-                  })
-                }
+                category="topnav"
+                label="github"
               />
             </Flex>
           </Stack>

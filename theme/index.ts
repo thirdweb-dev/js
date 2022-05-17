@@ -1,6 +1,7 @@
 import { colors } from "./colors";
 import { fontWeights, letterSpacings, lineHeights } from "./typography";
 import { DeepPartial, Theme, extendTheme } from "@chakra-ui/react";
+import { getColor, mode } from "@chakra-ui/theme-tools";
 
 const chakraTheme: Theme = extendTheme({
   config: {
@@ -15,7 +16,7 @@ const chakraTheme: Theme = extendTheme({
   styles: {
     global: {
       "html, body": {
-        background: "initial",
+        background: "#000",
         padding: 0,
         margin: 0,
         fontFeatureSettings: `'zero' 1`,
@@ -48,6 +49,35 @@ const chakraTheme: Theme = extendTheme({
     Button: {
       baseStyle: {
         borderRadius: "full",
+      },
+      variants: {
+        gradient: (props: any) => {
+          const { theme, fromcolor, tocolor } = props;
+          const lgFrom = getColor(theme, fromcolor);
+          const lgTo = getColor(theme, tocolor);
+          const bgColor = getColor(theme, mode("white", "gray.800")(props));
+
+          return {
+            border: "3px solid",
+            borderColor: "transparent",
+            borderRadius: "full",
+            background: `linear-gradient(${bgColor}, ${bgColor}) padding-box, 
+            linear-gradient(135deg, ${lgFrom}, ${lgTo}) border-box`,
+            "> *": {
+              background: `linear-gradient(135deg, ${lgFrom}, ${lgTo})`,
+              backgroundClip: "text",
+              textFillColor: "transparent",
+            },
+            _hover: {
+              background: `linear-gradient(${bgColor}, ${bgColor}) padding-box, 
+              linear-gradient(315deg, ${lgFrom}, ${lgTo}) border-box`,
+              "> *": {
+                background: `linear-gradient(315deg, ${lgFrom}, ${lgTo})`,
+                backgroundClip: "text",
+              },
+            },
+          };
+        },
       },
     },
     Modal: {

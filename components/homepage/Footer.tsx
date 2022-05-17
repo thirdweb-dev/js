@@ -1,101 +1,315 @@
 import {
   Box,
+  ButtonGroup,
   Container,
+  DarkMode,
+  Divider,
   Flex,
   Icon,
-  IconButton,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  LightMode,
+  SimpleGrid,
   Stack,
+  useToast,
 } from "@chakra-ui/react";
-import { ChakraNextImage } from "components/Image";
-import { GeneralCta } from "components/shared/GeneralCta";
-import triangleGradient from "public/assets/gradient-triangle.png";
-import React from "react";
-import { SiDiscord, SiTwitter } from "react-icons/si";
-import { Heading, Link, LinkButton } from "tw-components";
+import { Logo } from "components/logo";
+import { useForm } from "react-hook-form";
+import { HiOutlineMail } from "react-icons/hi";
+import {
+  SiDiscord,
+  SiGithub,
+  SiInstagram,
+  SiLinkedin,
+  SiTiktok,
+  SiTwitter,
+  SiYoutube,
+} from "react-icons/si";
+import {
+  Button,
+  Heading,
+  LinkButton,
+  TrackedIconButton,
+  TrackedLink,
+} from "tw-components";
+import { sendEmailToConvertkit } from "utils/convertkit";
 
 export const HomepageFooter: React.FC = () => {
+  const { register, handleSubmit, setError } = useForm<{ email: string }>();
+  const toast = useToast();
+
   return (
-    <Flex
-      position="relative"
-      as="footer"
-      bg="backgroundDark"
-      mixBlendMode="multiply"
-      overflow="hidden"
-    >
-      <Box
-        zIndex={-1}
-        pointerEvents="none"
-        position="absolute"
-        w={{ base: "200vw", md: "1920px" }}
-        bottom="-10px"
-        left="50%"
-        transform="translateX(-50%)"
-      >
-        <ChakraNextImage
-          alt=""
-          layout="responsive"
-          objectFit="cover"
-          src={triangleGradient}
-        />
-      </Box>
-      <Container
-        maxW="container.page"
-        position="relative"
-        py={["75px", "75px", "150px"]}
-      >
+    <Box bgColor="#111315" zIndex="100">
+      <Container as="footer" maxW="container.page" color="gray.500">
+        <Box p={16} px={{ base: 4, md: 16 }} mx="auto">
+          <Heading
+            size="label.md"
+            textTransform="uppercase"
+            pb={3}
+            textAlign="center"
+            lineHeight={1.5}
+          >
+            Join 20,000+ builders and stay up to date with our newsletter
+          </Heading>
+          <Flex
+            as="form"
+            direction={{ base: "column", sm: "row" }}
+            mx="auto"
+            maxW="md"
+            gap={{ base: 4, md: 0 }}
+            onSubmit={handleSubmit(async ({ email }) => {
+              try {
+                await sendEmailToConvertkit(email, ["landing"]);
+                toast({
+                  position: "bottom",
+                  variant: "solid",
+                  title: "You're in!",
+                  description: "Check your inbox to confirm your subscription.",
+                  status: "success",
+                  duration: 5000,
+                  isClosable: true,
+                });
+              } catch (err) {
+                console.error("failed to send email to convertkit", err);
+                setError("email", {
+                  message:
+                    err instanceof Error ? err.message : "Something went wrong",
+                });
+              }
+            })}
+          >
+            <InputGroup display="flex" size="md">
+              <InputLeftElement pointerEvents="none">
+                <Icon as={HiOutlineMail} />
+              </InputLeftElement>
+              <Input
+                borderEndRadius={{ base: "md", md: "none" }}
+                variant="outline"
+                borderColor="rgba(255,255,255,.2)"
+                placeholder="Email address"
+                type="email"
+                required
+                {...register("email")}
+              />
+            </InputGroup>
+            <LightMode>
+              <Button
+                borderStartRadius={{ base: "md", md: "none" }}
+                variant="gradient"
+                fromcolor="#1D64EF"
+                tocolor="#E0507A"
+                type="submit"
+                borderRadius="md"
+                borderWidth="1px"
+                flexShrink={0}
+              >
+                <Box as="span">Subscribe</Box>
+              </Button>
+            </LightMode>
+          </Flex>
+        </Box>
+        <DarkMode>
+          <Divider borderColor="rgba(255,255,255,0.1)" />
+        </DarkMode>
         <Stack
-          w="100%"
-          align="center"
-          spacing={{ base: "2.5rem", md: "5.5rem" }}
+          spacing="8"
+          direction={{ base: "column", md: "row" }}
+          justify="space-between"
+          py={{ base: "12", md: "16" }}
         >
-          <Container maxW="container.lg" px={0}>
-            <Heading
-              color="#F2FBFF"
-              w="100%"
-              as="h2"
-              textAlign="center"
-              size="display.md"
-            >
-              Add NFTs and other web3 features to your project today.
-            </Heading>
-          </Container>
-          <GeneralCta size="lg" />
-          <Stack direction="row">
-            <IconButton
-              as={LinkButton}
-              isExternal
-              noIcon
-              href="https://twitter.com/thirdweb_"
-              size="lg"
-              colorScheme="whiteAlpha"
-              color="rgba(242, 251, 255, 0.8)"
-              variant="ghost"
-              aria-label="twitter"
-              icon={<Icon boxSize="1.5rem" as={SiTwitter} />}
-            />
-            <IconButton
-              as={LinkButton}
-              isExternal
-              noIcon
-              href="https://discord.gg/thirdweb"
-              size="lg"
-              colorScheme="whiteAlpha"
-              color="rgba(242, 251, 255, 0.8)"
-              variant="ghost"
-              aria-label="discord"
-              icon={<Icon boxSize="1.5rem" as={SiDiscord} />}
-            />
+          <Stack spacing={{ base: "6", md: "8" }} align="start">
+            <Logo color="#fff" />
+            <ButtonGroup variant="ghost">
+              <TrackedIconButton
+                as={LinkButton}
+                isExternal
+                noIcon
+                href="https://twitter.com/thirdweb_"
+                icon={<SiTwitter fontSize="1.25rem" />}
+                category="footer"
+                aria-label="Twitter"
+              />
+              <TrackedIconButton
+                as={LinkButton}
+                isExternal
+                noIcon
+                href="https://discord.gg/thirdweb"
+                aria-label="Discord"
+                icon={<SiDiscord fontSize="1.25rem" />}
+                category="footer"
+                label="discord"
+              />
+              <TrackedIconButton
+                as={LinkButton}
+                isExternal
+                noIcon
+                href="https://www.youtube.com/channel/UCdzMx7Zhy5va5End1-XJFbA"
+                aria-label="YouTube"
+                icon={<SiYoutube fontSize="1.25rem" />}
+                category="footer"
+                label="youtube"
+              />
+              <TrackedIconButton
+                as={LinkButton}
+                isExternal
+                noIcon
+                href="https://www.linkedin.com/company/third-web/"
+                aria-label="LinkedIn"
+                icon={<SiLinkedin fontSize="1.25rem" />}
+                category="footer"
+                label="youtube"
+              />
+              <TrackedIconButton
+                as={LinkButton}
+                isExternal
+                noIcon
+                href="https://www.instagram.com/thirdweb/"
+                aria-label="Instagram"
+                icon={<SiInstagram fontSize="1.25rem" />}
+                category="footer"
+                label="instagram"
+              />
+              <TrackedIconButton
+                as={LinkButton}
+                isExternal
+                noIcon
+                href="https://www.tiktok.com/@thirdweb"
+                aria-label="TikTok"
+                icon={<SiTiktok fontSize="1.25rem" />}
+                category="footer"
+                label="tiktok"
+              />
+              <TrackedIconButton
+                as={LinkButton}
+                isExternal
+                noIcon
+                href="https://github.com/thirdweb-dev"
+                aria-label="GitHub"
+                icon={<SiGithub fontSize="1.25rem" />}
+                category="footer"
+                label="github"
+              />
+            </ButtonGroup>
           </Stack>
-          <Flex gap={4}>
-            <Link isExternal href="/privacy">
-              Privacy Policy
-            </Link>
-            <Link isExternal href="/tos">
-              Terms of Service
-            </Link>
+          <Flex
+            direction={{ base: "column-reverse", md: "column", lg: "row" }}
+            gap={{ base: "12", md: "8" }}
+          >
+            <SimpleGrid columns={{ base: 2, lg: 4 }} spacing="8">
+              <Stack spacing="4" minW="36" flex="1">
+                <Heading size="label.lg">Product</Heading>
+                <Stack spacing="3" shouldWrapChildren>
+                  <TrackedLink
+                    href="#features"
+                    category="footer"
+                    label="features"
+                  >
+                    Features
+                  </TrackedLink>
+                  <TrackedLink href="#fees" category="footer" label="pricing">
+                    Pricing
+                  </TrackedLink>
+                  <TrackedLink
+                    href="/dashboard"
+                    category="footer"
+                    label="dashboard"
+                  >
+                    Dashboard
+                  </TrackedLink>
+                </Stack>
+              </Stack>
+              <Stack spacing="4" minW="36" flex="1">
+                <Heading size="label.lg">Company</Heading>
+                <Stack spacing="3" shouldWrapChildren>
+                  <TrackedLink
+                    isExternal
+                    href="https://portal.thirdweb.com"
+                    category="footer"
+                    label="portal"
+                  >
+                    Docs
+                  </TrackedLink>
+                  <TrackedLink
+                    isExternal
+                    href="https://blog.thirdweb.com/"
+                    category="footer"
+                    label="blog"
+                  >
+                    Blog
+                  </TrackedLink>
+                  <TrackedLink
+                    isExternal
+                    href="https://portal.thirdweb.com/guides"
+                    category="footer"
+                    label="guides"
+                  >
+                    Guides
+                  </TrackedLink>
+                </Stack>
+              </Stack>
+              <Stack spacing="4" minW="36" flex="1">
+                <Heading size="label.lg">SDKs</Heading>
+                <Stack spacing="3" shouldWrapChildren>
+                  <TrackedLink
+                    isExternal
+                    href="https://portal.thirdweb.com/typescript"
+                    category="footer"
+                    label="javascript"
+                  >
+                    JavaScript
+                  </TrackedLink>
+                  <TrackedLink
+                    isExternal
+                    href="https://portal.thirdweb.com/react"
+                    category="footer"
+                    label="react"
+                  >
+                    React
+                  </TrackedLink>
+                  <TrackedLink
+                    isExternal
+                    href="https://portal.thirdweb.com/python"
+                    category="footer"
+                    label="python"
+                  >
+                    Python
+                  </TrackedLink>
+                  <TrackedLink
+                    isExternal
+                    href="https://portal.thirdweb.com/contracts"
+                    category="footer"
+                    label="contracts"
+                  >
+                    Contracts
+                  </TrackedLink>
+                </Stack>
+              </Stack>
+              <Stack spacing="4" minW="36" flex="1">
+                <Heading size="label.lg">Legal</Heading>
+                <Stack spacing="3" shouldWrapChildren>
+                  <TrackedLink
+                    isExternal
+                    href="/privacy"
+                    category="footer"
+                    label="privacy"
+                  >
+                    Privacy Policy
+                  </TrackedLink>
+                  <TrackedLink
+                    isExternal
+                    href="/tos"
+                    category="footer"
+                    label="terms"
+                  >
+                    Terms of Service
+                  </TrackedLink>
+                </Stack>
+              </Stack>
+            </SimpleGrid>
           </Flex>
         </Stack>
       </Container>
-    </Flex>
+    </Box>
   );
 };

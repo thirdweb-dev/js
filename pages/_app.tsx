@@ -1,10 +1,8 @@
 import chakraTheme from "../theme";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
-import { useAddress } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { FallbackLayout } from "components/app-layouts/fallback";
-import { Providers } from "components/app-layouts/providers";
 import { ErrorProvider } from "contexts/error-handler";
 import flat from "flat";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -124,25 +122,12 @@ function ConsoleApp({ Component, pageProps }: ConsoleAppProps) {
 
       <ChakraProvider theme={chakraTheme}>
         <ErrorProvider>
-          <Providers>
-            <PHIdentifier />
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </Providers>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
         </ErrorProvider>
       </ChakraProvider>
     </Track>
   );
 }
 export default ConsoleApp;
-
-const PHIdentifier: React.FC = () => {
-  const address = useAddress();
-  useEffect(() => {
-    if (address) {
-      posthog.identify(address);
-    }
-  }, [address]);
-  return null;
-};
