@@ -11,7 +11,6 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import { CaseStudyCard } from "components/homepage/CaseStudyCard";
 import { CodeSelector } from "components/homepage/CodeSelector";
 import { ContractCard } from "components/homepage/ContractCard";
 import { DashboardCard } from "components/homepage/DashboardCard";
@@ -153,8 +152,6 @@ export default function Home() {
                 mb={{ base: 4, md: 12 }}
               >
                 <Heading textAlign="center" size="display.sm" as="h2">
-                  Introducing
-                  <br />
                   <Heading
                     as="span"
                     bgGradient="linear(to-r, #B8EEFF, #8689E3)"
@@ -432,7 +429,7 @@ export default function Home() {
             </Flex>
           </HomepageSection>
 
-          <HomepageSection id="fees" middleGradient>
+          <HomepageSection id="fees">
             <SimpleGrid
               py={{ base: 12, lg: 24 }}
               columns={{ base: 1, lg: 2 }}
@@ -505,7 +502,7 @@ export default function Home() {
             </SimpleGrid>
           </HomepageSection>
 
-          <HomepageSection id="examples" bottomGradient>
+          <HomepageSection id="examples" middleGradient>
             <Flex
               flexDir="column"
               py={{ base: 12, lg: 24 }}
@@ -524,7 +521,7 @@ export default function Home() {
               <SimpleGrid
                 w="100%"
                 columns={{ base: 2, md: 4 }}
-                spacing={{ base: 6, md: 12 }}
+                spacing={{ base: 6, md: 24 }}
               >
                 {exampleCategories.map((category) => (
                   <ExampleItem category={category} key={category} />
@@ -532,57 +529,7 @@ export default function Home() {
               </SimpleGrid>
             </Flex>
           </HomepageSection>
-
-          <HomepageSection id="case-studies">
-            <Flex
-              flexDir="column"
-              py={{ base: 12, lg: 24 }}
-              align="center"
-              gap={{ base: 6, md: 8 }}
-            >
-              <Heading
-                maxW="container.lg"
-                as="h2"
-                size="display.sm"
-                textAlign="center"
-              >
-                Case studies.
-              </Heading>
-              <Heading maxW="md" size="subtitle.lg" as="h3" textAlign="center">
-                Powering web3 experiences from startups to large organizations
-              </Heading>
-              <SimpleGrid
-                flexDirection={{ base: "column", md: "row" }}
-                gap={12}
-                mt={6}
-                columns={{ base: 1, md: 2 }}
-                w="full"
-              >
-                <CaseStudyCard
-                  title="100thieves"
-                  description="100Thieves launched an NFT to commemorate their historic 2021 LCS Championship win, with over 700k NFTs claimed."
-                  href="https://twitter.com/thirdweb_/status/1488987923978588160"
-                />
-                <CaseStudyCard
-                  title="boohoo"
-                  description="boohoo launched their entry into web3 with boohooverse selling over 12k NFTs to a non-crypto native audience."
-                  href="https://twitter.com/thirdweb_/status/1518591454326702081"
-                />
-                <CaseStudyCard
-                  title="yestheory"
-                  description="Yes Theory dropped a digital ticket NFT to become the first feature-length documentary crowd-funded by NFTs."
-                  href="https://twitter.com/thirdweb_/status/1516460620798963713"
-                />
-                <CaseStudyCard
-                  title="fnatic"
-                  description="Fnatic launched their free and paid digital membership program, with over 400k NFTs claimed within the first month."
-                  href="https://twitter.com/thirdweb_/status/1509180723978252303"
-                />
-              </SimpleGrid>
-            </Flex>
-          </HomepageSection>
-
-          <HomepageSection id="get-started" bottomGradient bottomPattern>
+          <HomepageSection id="get-started" bottomPattern>
             <Flex
               flexDir="column"
               pt={{ base: 12, lg: 24 }}

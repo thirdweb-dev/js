@@ -64,7 +64,7 @@ export const HomepageSection: ComponentWithChildren<IHomepageSection> = ({
         <AspectRatio
           w="100vw"
           maxW="container.lg"
-          ratio={1}
+          ratio={{ base: 1 / 2, md: 1 }}
           position="absolute"
           top={0}
           left="50%"
@@ -99,7 +99,7 @@ export const HomepageSection: ComponentWithChildren<IHomepageSection> = ({
         <AspectRatio
           w="100vw"
           maxW="container.lg"
-          ratio={1}
+          ratio={{ base: 1 / 2, md: 1 }}
           position="absolute"
           bottom="5%"
           left="50%"
