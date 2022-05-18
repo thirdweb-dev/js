@@ -16,11 +16,6 @@ import {
   Stat,
   StatLabel,
   StatNumber,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
 } from "@chakra-ui/react";
 import { useNFTDrop } from "@thirdweb-dev/react";
 import { BatchToReveal } from "@thirdweb-dev/sdk";
@@ -177,32 +172,12 @@ const NFTDropPage: ConsolePage = () => {
             </Card>
           </Stack>
 
-          <Tabs variant="solid-rounded">
-            <TabList>
-              <Tab>Unclaimed</Tab>
-              <Tab>Claimed</Tab>
-            </TabList>
-            <TabPanels>
-              <TabPanel px={0}>
-                <ContractItemsTable
-                  lazyMint
-                  contract={contract}
-                  emptyState={{
-                    title:
-                      "You have not added any drops yet, let's add your first one to get started!",
-                  }}
-                />
-              </TabPanel>
-              <TabPanel px={0}>
-                <ContractItemsTable
-                  contract={contract}
-                  emptyState={{
-                    title: "No one has claimed any of your drops yet!",
-                  }}
-                />
-              </TabPanel>
-            </TabPanels>
-          </Tabs>
+          <ContractItemsTable
+            contract={contract}
+            emptyState={{
+              title: "No one has claimed any of your drops yet!",
+            }}
+          />
         </Stack>
       </ContractLayout>
     </Track>

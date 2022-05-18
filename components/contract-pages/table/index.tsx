@@ -45,17 +45,15 @@ import { Card, Heading, Text } from "tw-components";
 interface IRawContractItemsTable<TContract extends ContractWithGetAll> {
   contract?: TContract;
   emptyState?: IContractEmptyState;
-  lazyMint?: true;
 }
 
 const RawContractItemsTable = <TContract extends ContractWithGetAll>({
   contract,
   emptyState,
-  lazyMint,
 }: PropsWithChildren<IRawContractItemsTable<TContract>>) => {
   const [queryParams, setQueryParams] = useState({ count: 50, start: 0 });
-  const items = useGetAll(contract, queryParams, lazyMint);
-  const totalCount = useGetTotalCount(contract, lazyMint);
+  const items = useGetAll(contract, queryParams);
+  const totalCount = useGetTotalCount(contract);
 
   const columns = useTableColumns(contract);
   const {
@@ -280,7 +278,6 @@ const RawContractItemsTable = <TContract extends ContractWithGetAll>({
 interface IContractItemsTableProps<TContract extends ContractWithGetAll> {
   contract?: TContract;
   emptyState?: IContractEmptyState;
-  lazyMint?: true;
 }
 
 export const ContractItemsTable = <TContract extends ContractWithGetAll>(

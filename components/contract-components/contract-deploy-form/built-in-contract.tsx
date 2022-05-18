@@ -2,6 +2,11 @@ import { ContractIdImage } from "../contract-table/cells/image";
 import { useContractPublishMetadataFromURI } from "../hooks";
 import { useDeploy } from "@3rdweb-sdk/react";
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Divider,
   Flex,
   FormControl,
@@ -465,55 +470,83 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                 </Flex>
               )}
               {hasPlatformFeeMechanic && (
-                <Flex pb={4} direction="column" gap={2}>
-                  <Heading size="label.lg">Platform fees</Heading>
-                  <Flex gap={4} direction={{ base: "column", md: "row" }}>
-                    <FormControl
-                      isRequired={isRequired("platform_fee_recipient")}
-                      isInvalid={
-                        !!getFieldState("platform_fee_recipient", formState)
-                          .error
-                      }
-                    >
-                      <FormLabel>Recipient Address</FormLabel>
-                      <Input
-                        variant="filled"
-                        {...register("platform_fee_recipient")}
-                      />
-                      <FormErrorMessage>
-                        {
-                          getFieldState("platform_fee_recipient", formState)
-                            .error?.message
-                        }
-                      </FormErrorMessage>
-                    </FormControl>
-                    <FormControl
-                      maxW={{ base: "100%", md: "200px" }}
-                      isRequired={isRequired("platform_fee_basis_points")}
-                      isInvalid={
-                        !!getFieldState("platform_fee_basis_points", formState)
-                          .error
-                      }
-                    >
-                      <FormLabel>Percentage</FormLabel>
-                      <BasisPointsInput
-                        variant="filled"
-                        value={watch("platform_fee_basis_points")}
-                        onChange={(value) =>
-                          setValue("platform_fee_basis_points", value, {
-                            shouldTouch: true,
-                          })
-                        }
-                      />
-                      <FormErrorMessage>
-                        {
-                          getFieldState("platform_fee_basis_points", formState)
-                            .error?.message
-                        }
-                      </FormErrorMessage>
-                    </FormControl>
-                  </Flex>
-                </Flex>
+                <Accordion allowToggle>
+                  <AccordionItem borderColor="borderColor">
+                    <AccordionButton px={0}>
+                      <Heading size="subtitle.md" flex="1" textAlign="left">
+                        Advanced Configuration
+                      </Heading>
+
+                      <AccordionIcon />
+                    </AccordionButton>
+
+                    <AccordionPanel py={4} px={0}>
+                      <Flex pb={4} direction="column" gap={2}>
+                        <Heading size="label.lg">Platform fees</Heading>
+                        <Text size="body.md" fontStyle="italic">
+                          Get additional fees for all primary sales that happen
+                          on this contract. (This is useful if you are deploying
+                          this contract for a 3rd party and want to take fees
+                          for your service.)
+                        </Text>
+                        <Flex gap={4} direction={{ base: "column", md: "row" }}>
+                          <FormControl
+                            isRequired={isRequired("platform_fee_recipient")}
+                            isInvalid={
+                              !!getFieldState(
+                                "platform_fee_recipient",
+                                formState,
+                              ).error
+                            }
+                          >
+                            <FormLabel>Recipient Address</FormLabel>
+                            <Input
+                              variant="filled"
+                              {...register("platform_fee_recipient")}
+                            />
+                            <FormErrorMessage>
+                              {
+                                getFieldState(
+                                  "platform_fee_recipient",
+                                  formState,
+                                ).error?.message
+                              }
+                            </FormErrorMessage>
+                          </FormControl>
+                          <FormControl
+                            maxW={{ base: "100%", md: "200px" }}
+                            isRequired={isRequired("platform_fee_basis_points")}
+                            isInvalid={
+                              !!getFieldState(
+                                "platform_fee_basis_points",
+                                formState,
+                              ).error
+                            }
+                          >
+                            <FormLabel>Percentage</FormLabel>
+                            <BasisPointsInput
+                              variant="filled"
+                              value={watch("platform_fee_basis_points")}
+                              onChange={(value) =>
+                                setValue("platform_fee_basis_points", value, {
+                                  shouldTouch: true,
+                                })
+                              }
+                            />
+                            <FormErrorMessage>
+                              {
+                                getFieldState(
+                                  "platform_fee_basis_points",
+                                  formState,
+                                ).error?.message
+                              }
+                            </FormErrorMessage>
+                          </FormControl>
+                        </Flex>
+                      </Flex>
+                    </AccordionPanel>
+                  </AccordionItem>
+                </Accordion>
               )}
             </Flex>
           </>

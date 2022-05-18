@@ -154,7 +154,7 @@ const Home: ConsolePage = () => {
                 mb={{ base: 4, md: 12 }}
               >
                 <Heading textAlign="center" size="display.sm" as="h2">
-                  Introducing:
+                  Introducing
                   <br />
                   <Heading
                     as="span"
@@ -208,6 +208,7 @@ const Home: ConsolePage = () => {
                     <Text size="body.lg">
                       Building blocks for your smart contracts:{" "}
                       <Link
+                        fontStyle="italic"
                         href="https://portal.thirdweb.com/thirdweb-deploy/contract-features"
                         isExternal
                       >
@@ -215,6 +216,7 @@ const Home: ConsolePage = () => {
                       </Link>
                       ,{" "}
                       <Link
+                        fontStyle="italic"
                         href="https://portal.thirdweb.com/thirdweb-deploy/contract-features"
                         isExternal
                       >
@@ -222,6 +224,7 @@ const Home: ConsolePage = () => {
                       </Link>
                       ,{" "}
                       <Link
+                        fontStyle="italic"
                         href="https://portal.thirdweb.com/thirdweb-deploy/contract-features/permissions"
                         isExternal
                       >
@@ -229,6 +232,7 @@ const Home: ConsolePage = () => {
                       </Link>
                       ,{" "}
                       <Link
+                        fontStyle="italic"
                         href="https://portal.thirdweb.com/thirdweb-deploy/contract-features/royalty"
                         isExternal
                       >
@@ -236,6 +240,7 @@ const Home: ConsolePage = () => {
                       </Link>
                       ,{" "}
                       <Link
+                        fontStyle="italic"
                         href="https://portal.thirdweb.com/thirdweb-deploy/contract-features"
                         isExternal
                       >
@@ -243,6 +248,7 @@ const Home: ConsolePage = () => {
                       </Link>
                       ,{" "}
                       <Link
+                        fontStyle="italic"
                         href="https://portal.thirdweb.com/thirdweb-deploy/contract-features"
                         isExternal
                       >
