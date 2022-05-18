@@ -2,7 +2,6 @@ import { useQueryWithNetwork } from "./query/useQueryWithNetwork";
 // eslint-disable-next-line import/no-cycle
 import { useContractTypeOfContract } from "./useCommon";
 import {
-  EditionDrop,
   Pack,
   QueryAllParams,
   Split,
@@ -73,16 +72,14 @@ export function useGetTotalCount<TContract extends ContractWithGetAll>(
       if (!contract) {
         return BigNumber.from(0);
       }
-      if (contract instanceof EditionDrop) {
-        return await contract.getTotalCount();
-      }
 
-      if ("totalSupply" in contract) {
-        return await contract.totalSupply(0);
-      }
       if ("getTotalCount" in contract) {
         return await contract.getTotalCount();
       }
+      if ("totalSupply" in contract) {
+        return await contract.totalSupply();
+      }
+
       return BigNumber.from(0);
     },
     {
