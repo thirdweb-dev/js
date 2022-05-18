@@ -294,7 +294,7 @@ export default function Home() {
             </Flex>
           </HomepageSection>
 
-          <HomepageSection id="developers" bottomPattern middleGradient>
+          {/*           <HomepageSection id="developers" bottomPattern middleGradient>
             <Flex
               flexDir="column"
               py={{ base: 12, lg: 24 }}
@@ -309,7 +309,7 @@ export default function Home() {
               </Heading>
               <CodeSelector />
             </Flex>
-          </HomepageSection>
+          </HomepageSection> */}
 
           <HomepageSection id="features">
             <Flex
