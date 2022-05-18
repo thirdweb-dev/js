@@ -6,10 +6,9 @@ import { ContractLayout } from "components/contract-pages/contract-layout";
 import { ContractItemsTable } from "components/contract-pages/table";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
-import { ConsolePage } from "pages/_app";
-import React from "react";
+import React, { ReactElement } from "react";
 
-const EditionPage: ConsolePage = () => {
+export default function EditionPage() {
   const editionAddress = useSingleQueryParam("edition");
   const contract = useEdition(editionAddress);
   const metadata = useContractMetadata(contract);
@@ -40,8 +39,6 @@ const EditionPage: ConsolePage = () => {
       </ContractLayout>
     </Track>
   );
-};
+}
 
-EditionPage.Layout = AppLayout;
-
-export default EditionPage;
+EditionPage.getLayout = (page: ReactElement) => <AppLayout>{page}</AppLayout>;

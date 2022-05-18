@@ -1,7 +1,6 @@
 import { Flex, Input, Select, SelectProps } from "@chakra-ui/react";
-import { AddressZero } from "@ethersproject/constants";
 import { CURRENCIES, CurrencyMetadata } from "constants/currencies";
-import { isAddress } from "ethers/lib/utils";
+import { constants, utils } from "ethers";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import React, { useMemo, useState } from "react";
 import { Button } from "tw-components";
@@ -40,7 +39,7 @@ export const CurrencySelector: React.FC<ICurrencySelector> = ({
   }, [chainId, customCurrency, initialValue]);
 
   const addCustomCurrency = () => {
-    if (!isAddress(editCustomCurrency)) {
+    if (!utils.isAddress(editCustomCurrency)) {
       return;
     }
     if (editCustomCurrency) {
@@ -88,7 +87,7 @@ export const CurrencySelector: React.FC<ICurrencySelector> = ({
             borderRadius="0px 4px 4px 0px"
             colorScheme="primary"
             onClick={addCustomCurrency}
-            isDisabled={!isAddress(editCustomCurrency)}
+            isDisabled={!utils.isAddress(editCustomCurrency)}
           >
             +
           </Button>
@@ -119,7 +118,7 @@ export const CurrencySelector: React.FC<ICurrencySelector> = ({
       <Select
         position="relative"
         value={
-          value?.toLowerCase() === AddressZero.toLowerCase()
+          value?.toLowerCase() === constants.AddressZero.toLowerCase()
             ? OtherAddressZero.toLowerCase()
             : value?.toLowerCase()
         }
@@ -132,7 +131,8 @@ export const CurrencySelector: React.FC<ICurrencySelector> = ({
           CURRENCIES[chainId]
             .filter(
               (currency: CurrencyMetadata) =>
-                currency.address.toLowerCase() !== AddressZero.toLowerCase(),
+                currency.address.toLowerCase() !==
+                constants.AddressZero.toLowerCase(),
             )
             .map((currency: CurrencyMetadata) => (
               <option

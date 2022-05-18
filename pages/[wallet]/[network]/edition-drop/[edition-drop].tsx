@@ -9,12 +9,11 @@ import { ContractLayout } from "components/contract-pages/contract-layout";
 import { ContractItemsTable } from "components/contract-pages/table";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
-import { ConsolePage } from "pages/_app";
-import React from "react";
+import React, { ReactElement } from "react";
 import { RiCheckboxMultipleBlankLine } from "react-icons/ri";
 import { Button } from "tw-components";
 
-const EditionDropPage: ConsolePage = () => {
+export default function EditionDropPage() {
   const {
     isOpen: isBatchOpen,
     onOpen: onBatchOpen,
@@ -68,8 +67,8 @@ const EditionDropPage: ConsolePage = () => {
       </ContractLayout>
     </Track>
   );
-};
+}
 
-export default EditionDropPage;
-
-EditionDropPage.Layout = AppLayout;
+EditionDropPage.getLayout = (page: ReactElement) => (
+  <AppLayout>{page}</AppLayout>
+);

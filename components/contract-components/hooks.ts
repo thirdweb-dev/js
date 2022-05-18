@@ -42,8 +42,6 @@ export function useContractPublishMetadataFromURI(contractId: ContractId) {
         return {
           image: details.icon,
           name: details.title,
-          abi: details.abi,
-          bytecode: details.bytecode,
           deployDisabled: details.comingSoon,
           description: details.description,
         };

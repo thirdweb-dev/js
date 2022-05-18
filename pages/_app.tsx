@@ -1,36 +1,28 @@
 import chakraTheme from "../theme";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
-import { AppLayout } from "components/app-layouts/app";
-import { FallbackLayout } from "components/app-layouts/fallback";
 import { ErrorProvider } from "contexts/error-handler";
 import flat from "flat";
 import { useTrack } from "hooks/analytics/useTrack";
-import { NextComponentType, NextPageContext } from "next";
+import { NextPage } from "next";
 import { DefaultSeo } from "next-seo";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import posthog from "posthog-js";
-import React, { useEffect } from "react";
+import React, { ReactElement, ReactNode, useEffect } from "react";
 import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
 
 const fontSizeCssVars = generateBreakpointTypographyCssVars();
 
-export type ConsolePageComponent<IP, P> = NextComponentType<
-  NextPageContext,
-  IP,
-  P
-> & {
-  Layout?: typeof AppLayout;
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: ReactElement) => ReactNode;
 };
 
-export type ConsolePage<P = {}, IP = P> = ConsolePageComponent<IP, P>;
-
-type ConsoleAppProps<P = {}, IP = P> = AppProps & {
-  Component: ConsolePageComponent<IP, P>;
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
 };
 
-function ConsoleApp({ Component, pageProps }: ConsoleAppProps) {
+function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
 
   useEffect(() => {
@@ -68,7 +60,7 @@ function ConsoleApp({ Component, pageProps }: ConsoleAppProps) {
     },
   );
 
-  const Layout = Component.Layout || FallbackLayout;
+  const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
     <Track>
@@ -121,11 +113,7 @@ function ConsoleApp({ Component, pageProps }: ConsoleAppProps) {
       />
 
       <ChakraProvider theme={chakraTheme}>
-        <ErrorProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </ErrorProvider>
+        <ErrorProvider>{getLayout(<Component {...pageProps} />)}</ErrorProvider>
       </ChakraProvider>
     </Track>
   );

@@ -67,10 +67,9 @@ const moduleExports = {
       },
     ];
   },
-  async rewrites() {
-    return [];
-  },
   images: {
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     domains: [
       "thirdweb.com",
       "ipfs.thirdweb.com",

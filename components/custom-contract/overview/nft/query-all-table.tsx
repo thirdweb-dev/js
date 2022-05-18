@@ -14,10 +14,10 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { BigNumber } from "@ethersproject/bignumber";
 import { useNFTSupply, useNFTs } from "@thirdweb-dev/react";
 import { Erc721, Json, NFTMetadataOwner } from "@thirdweb-dev/sdk";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
+import { BigNumber } from "ethers";
 import React, { useEffect, useState } from "react";
 import {
   MdFirstPage,

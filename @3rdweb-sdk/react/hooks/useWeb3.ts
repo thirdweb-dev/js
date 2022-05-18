@@ -7,8 +7,7 @@ import {
 } from "@thirdweb-dev/chain-icons";
 import { useAddress, useNetwork } from "@thirdweb-dev/react";
 import { alchemyUrlMap } from "components/app-layouts/providers";
-import { BigNumber, ethers } from "ethers";
-import { formatEther } from "ethers/lib/utils";
+import { BigNumber, ethers, utils } from "ethers";
 import { useCallback } from "react";
 import { useQuery } from "react-query";
 import { ChainId, SUPPORTED_CHAIN_ID } from "utils/network";
@@ -93,7 +92,7 @@ const useBalance = (address?: string) => {
 
       return {
         value: balance,
-        formatted: formatEther(balance).slice(0, 6),
+        formatted: utils.formatEther(balance).slice(0, 6),
       };
     },
     {

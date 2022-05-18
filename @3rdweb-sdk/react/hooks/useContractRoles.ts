@@ -4,13 +4,13 @@ import {
   useQueryWithNetwork,
 } from "./query/useQueryWithNetwork";
 import { useWeb3 } from "@3rdweb-sdk/react";
-import { AddressZero } from "@ethersproject/constants";
 import {
   Split,
   ValidContractClass,
   ValidContractInstance,
   Vote,
 } from "@thirdweb-dev/sdk";
+import { constants } from "ethers";
 import invariant from "tiny-invariant";
 import { C, U } from "ts-toolbelt";
 
@@ -115,7 +115,7 @@ export function useIsAccountRole<TContract extends ContractWithRoles>(
     return false;
   }
 
-  if (data?.includes(AddressZero)) {
+  if (data?.includes(constants.AddressZero)) {
     return true;
   }
 

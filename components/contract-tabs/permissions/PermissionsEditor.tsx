@@ -17,9 +17,8 @@ import {
   useClipboard,
   useToast,
 } from "@chakra-ui/react";
-import { AddressZero } from "@ethersproject/constants";
 import { Role } from "@thirdweb-dev/sdk";
-import { isAddress } from "ethers/lib/utils";
+import { constants, utils } from "ethers";
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { BiPaste } from "react-icons/bi";
@@ -48,7 +47,7 @@ export const PermissionEditor: React.FC<IPermissionEditor> = ({
   const [address, setAddress] = useState("");
 
   const members = watch(role) || [];
-  const isDisabled = !isAddress(address) || members.includes(address);
+  const isDisabled = !utils.isAddress(address) || members.includes(address);
 
   const addAddress = () => {
     if (isDisabled) {
@@ -123,7 +122,7 @@ export const PermissionEditor: React.FC<IPermissionEditor> = ({
               fontFamily="mono"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              placeholder={AddressZero}
+              placeholder={constants.AddressZero}
               px={2}
             />
             <InputRightAddon
@@ -151,7 +150,7 @@ export const PermissionEditor: React.FC<IPermissionEditor> = ({
           <FormErrorMessage>
             {members.includes(address)
               ? "Address already has this role"
-              : !isAddress(address)
+              : !utils.isAddress(address)
               ? "Not a valid address"
               : ""}
           </FormErrorMessage>

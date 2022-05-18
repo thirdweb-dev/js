@@ -20,7 +20,6 @@ import {
   Skeleton,
   Textarea,
 } from "@chakra-ui/react";
-import { AddressZero } from "@ethersproject/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddress } from "@thirdweb-dev/react";
 import {
@@ -34,7 +33,7 @@ import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelect";
 import { FileInput } from "components/shared/FileInput";
 import { UrlMap } from "constants/mappings";
-import { isAddress } from "ethers/lib/utils";
+import { constants, utils } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useSingleQueryParam } from "hooks/useQueryParam";
@@ -572,13 +571,13 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                   isInvalid={
                     !!getFieldState("voting_token_address", formState).error ||
                     (watch("voting_token_address")
-                      ? !isAddress(watch("voting_token_address"))
+                      ? !utils.isAddress(watch("voting_token_address"))
                       : false)
                   }
                 >
                   <FormLabel>Governance Token Address</FormLabel>
                   <Input
-                    placeholder={AddressZero}
+                    placeholder={constants.AddressZero}
                     variant="filled"
                     {...register("voting_token_address")}
                   />
@@ -590,7 +589,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                     {getFieldState("voting_token_address", formState).error
                       ?.message ||
                       (watch("voting_token_address") &&
-                        !isAddress(watch("voting_token_address")) &&
+                        !utils.isAddress(watch("voting_token_address")) &&
                         "Please enter a valid address.")}
                   </FormErrorMessage>
                 </FormControl>

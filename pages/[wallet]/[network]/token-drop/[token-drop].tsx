@@ -17,12 +17,11 @@ import { TransferModal } from "components/currency/TransferModal";
 import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
-import { ConsolePage } from "pages/_app";
-import React from "react";
+import React, { ReactElement } from "react";
 import { FiSend } from "react-icons/fi";
 import { Button, Card } from "tw-components";
 
-const TokenDropPage: ConsolePage = () => {
+export default function TokenDropPage() {
   const tokenDropAddress = useSingleQueryParam("token-drop");
   const contract = useTokenDrop(tokenDropAddress);
   const metadata = useTokenDropContractMetadata(tokenDropAddress);
@@ -86,8 +85,6 @@ const TokenDropPage: ConsolePage = () => {
       </ContractLayout>
     </Track>
   );
-};
+}
 
-TokenDropPage.Layout = AppLayout;
-
-export default TokenDropPage;
+TokenDropPage.getLayout = (page: ReactElement) => <AppLayout>{page}</AppLayout>;

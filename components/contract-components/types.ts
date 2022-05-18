@@ -1,4 +1,4 @@
-import { ContractType } from "@thirdweb-dev/sdk";
+import type { ContractType } from "@thirdweb-dev/sdk";
 
 export type ContractId = ContractType | string;
 

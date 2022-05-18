@@ -1,4 +1,3 @@
-import type { ConsolePage } from "../../_app";
 import {
   Box,
   Container,
@@ -16,11 +15,11 @@ import { useIsomorphicLayoutEffect } from "framer-motion";
 import { useTrack } from "hooks/analytics/useTrack";
 import { LinkProps } from "next/link";
 import { useRouter } from "next/router";
-import { useCallback, useRef, useState } from "react";
+import { ReactElement, useCallback, useRef, useState } from "react";
 import { Button, Card, Heading, LinkButton, Text } from "tw-components";
 import { isBrowser } from "utils/isBrowser";
 
-const CustomContractPage: ConsolePage = () => {
+export default function CustomContractPage() {
   const router = useRouter();
   const query = router.query.customContract || [];
   const contractAddress = query[0];
@@ -137,11 +136,11 @@ const CustomContractPage: ConsolePage = () => {
       </Flex>
     </RootTrack>
   );
-};
+}
 
-export default CustomContractPage;
-
-CustomContractPage.Layout = AppLayout;
+CustomContractPage.getLayout = (page: ReactElement) => (
+  <AppLayout>{page}</AppLayout>
+);
 
 interface ContractSubnavProps {
   activeTab: string;

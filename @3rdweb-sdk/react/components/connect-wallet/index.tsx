@@ -22,7 +22,6 @@ import {
   useClipboard,
   useDisclosure,
 } from "@chakra-ui/react";
-import { AddressZero } from "@ethersproject/constants";
 import {
   ChainId,
   useConnect,
@@ -37,7 +36,7 @@ import { MismatchButton } from "components/buttons/MismatchButton";
 import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelect";
 import { GNOSIS_TO_CHAIN_ID } from "constants/mappings";
 import { CustomSDKContext } from "contexts/custom-sdk-context";
-import { isAddress } from "ethers/lib/utils";
+import { constants, utils } from "ethers";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { StaticImageData } from "next/image";
 import { useEffect } from "react";
@@ -425,7 +424,7 @@ const GnosisSafeModal: React.FC<ConnectorModalProps> = ({
         type: "required",
         message: "Safe address is required",
       });
-    } else if (!isAddress(formData.safeAddress)) {
+    } else if (!utils.isAddress(formData.safeAddress)) {
       setError("safeAddress", {
         type: "pattern",
         message: "Not a valid address",
@@ -485,7 +484,7 @@ const GnosisSafeModal: React.FC<ConnectorModalProps> = ({
 
                       // prevent the default (setting the data to the input) since we're about to handle it
                       if (
-                        isAddress(gnosisSafeAddress) &&
+                        utils.isAddress(gnosisSafeAddress) &&
                         gnosisNetwork in GNOSIS_TO_CHAIN_ID
                       ) {
                         e.preventDefault();
@@ -504,7 +503,7 @@ const GnosisSafeModal: React.FC<ConnectorModalProps> = ({
                   }
                 }}
                 {...register("safeAddress")}
-                placeholder={`net:${AddressZero}`}
+                placeholder={`net:${constants.AddressZero}`}
                 autoFocus
               />
               <FormHelperText>

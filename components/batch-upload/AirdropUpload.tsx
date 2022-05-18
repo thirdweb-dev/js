@@ -22,7 +22,7 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 import { Logo } from "components/logo";
-import { isAddress } from "ethers/lib/utils";
+import { utils } from "ethers";
 import Papa from "papaparse";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { DropzoneOptions, useDropzone } from "react-dropzone";
@@ -109,8 +109,12 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
   );
 
   const data = useMemo(() => {
-    const valid = validAirdrop.filter(({ address }) => isAddress(address));
-    const invalid = validAirdrop.filter(({ address }) => !isAddress(address));
+    const valid = validAirdrop.filter(({ address }) =>
+      utils.isAddress(address),
+    );
+    const invalid = validAirdrop.filter(
+      ({ address }) => !utils.isAddress(address),
+    );
     const ordered = [...invalid, ...valid];
     return ordered;
   }, [validAirdrop]);
@@ -253,7 +257,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
       {
         Header: "Address",
         accessor: ({ address }: { address: string }) => {
-          if (isAddress(address)) {
+          if (utils.isAddress(address)) {
             return address;
           } else {
             return (

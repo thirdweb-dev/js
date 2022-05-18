@@ -1,8 +1,7 @@
 import { PROTOCOL_CONTROL_ABI } from "../abis/protocol-control";
 import { REGISTRY_ABI } from "../abis/registry";
-import { JsonRpcProvider } from "@ethersproject/providers";
 import { alchemyUrlMap } from "components/app-layouts/providers";
-import { ethers } from "ethers";
+import { ethers, providers } from "ethers";
 import { useQuery } from "react-query";
 import { SUPPORTED_CHAIN_ID, SUPPORTED_CHAIN_IDS_V1 } from "utils/network";
 
@@ -10,7 +9,7 @@ const REGISTRY_ADDRESS = "0x902a29f2cfe9f8580ad672AaAD7E917d85ca9a2E";
 
 export function useProjects(address?: string) {
   const getApps = async (chainId: SUPPORTED_CHAIN_ID) => {
-    const provider = new JsonRpcProvider(
+    const provider = new providers.JsonRpcProvider(
       alchemyUrlMap[chainId as SUPPORTED_CHAIN_ID],
     );
 

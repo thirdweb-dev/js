@@ -1,4 +1,3 @@
-import { ConsolePage } from "../_app";
 import {
   ConnectWallet,
   useContractList,
@@ -55,12 +54,12 @@ import {
   FeatureIconMap,
   UrlMap,
 } from "constants/mappings";
-import { isAddress } from "ethers/lib/utils";
+import { utils } from "ethers";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import OriginalNextLink from "next/link";
 import { useRouter } from "next/router";
 import * as React from "react";
-import { useEffect, useMemo } from "react";
+import { ReactElement, useEffect, useMemo } from "react";
 import { AiOutlineWarning } from "react-icons/ai";
 import { FaTrash } from "react-icons/fa";
 import { FiPlus } from "react-icons/fi";
@@ -86,7 +85,7 @@ import {
 import { shortenIfAddress } from "utils/usedapp-external";
 import { z } from "zod";
 
-const Dashboard: ConsolePage = () => {
+export default function Dashboard() {
   const router = useRouter();
   const wallet = useSingleQueryParam("wallet") || "dashboard";
   const { address } = useWeb3();
@@ -96,7 +95,7 @@ const Dashboard: ConsolePage = () => {
 
   // redirect anything that is not a valid address or `/dashboard` to `/dashboard`
   useEffect(() => {
-    if (!isAddress(wallet) && wallet !== "dashboard") {
+    if (!utils.isAddress(wallet) && wallet !== "dashboard") {
       router.replace("/dashboard");
     }
   }, [router, wallet]);
@@ -104,7 +103,7 @@ const Dashboard: ConsolePage = () => {
   const dashboardAddress = useMemo(() => {
     return wallet === "dashboard"
       ? address
-      : isAddress(wallet)
+      : utils.isAddress(wallet)
       ? wallet
       : address;
   }, [address, wallet]);
@@ -205,11 +204,10 @@ const Dashboard: ConsolePage = () => {
       )}
     </Flex>
   );
-};
+}
 
-Dashboard.Layout = AppLayout;
+Dashboard.getLayout = (page: ReactElement) => <AppLayout>{page}</AppLayout>;
 
-export default Dashboard;
 interface ContractTableProps {
   combinedList: {
     chainId: ChainId;

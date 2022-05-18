@@ -1,7 +1,6 @@
 import { useQueryWithNetwork } from "./query/useQueryWithNetwork";
 // eslint-disable-next-line import/no-cycle
 import { useContractTypeOfContract } from "./useCommon";
-import { AddressZero } from "@ethersproject/constants";
 import {
   EditionDrop,
   Pack,
@@ -12,7 +11,7 @@ import {
   ValidContractInstance,
   Vote,
 } from "@thirdweb-dev/sdk";
-import { BigNumber } from "ethers";
+import { BigNumber, constants } from "ethers";
 import { U } from "ts-toolbelt";
 
 export const getAllQueryKey = (
@@ -23,7 +22,7 @@ export const getAllQueryKey = (
   const contractType =
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useContractTypeOfContract(contract) || ("invalid-contract" as const);
-  const contractAddress = contract?.getAddress() || AddressZero;
+  const contractAddress = contract?.getAddress() || constants.AddressZero;
   return queryParams
     ? ([contractType, contractAddress, "getAll", queryParams] as const)
     : ([contractType, contractAddress, "getAll"] as const);
@@ -34,7 +33,7 @@ export const getTotalCountQueryKey = (contract?: ValidContractInstance) => {
   const contractType =
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useContractTypeOfContract(contract) || ("invalid-contract" as const);
-  const contractAddress = contract?.getAddress() || AddressZero;
+  const contractAddress = contract?.getAddress() || constants.AddressZero;
   return [contractType, contractAddress, "totalCount"] as const;
 };
 

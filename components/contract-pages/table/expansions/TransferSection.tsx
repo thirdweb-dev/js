@@ -1,9 +1,9 @@
 import { useTableContext } from "../table-context";
 import { useTransferMutation } from "@3rdweb-sdk/react";
 import { FormControl, Icon, Input, Stack } from "@chakra-ui/react";
-import { AddressZero } from "@ethersproject/constants";
 import { Edition, EditionDrop, ValidContractInstance } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { constants } from "ethers";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -62,7 +62,7 @@ export const TransferSection: React.FC<ITransferSection> = ({
           <Stack spacing={6} w="100%" direction={{ base: "column", md: "row" }}>
             <FormControl isRequired isInvalid={!!errors.to}>
               <FormLabel>To Address</FormLabel>
-              <Input placeholder={AddressZero} {...register("to")} />
+              <Input placeholder={constants.AddressZero} {...register("to")} />
               <FormHelperText>Enter the address to transfer to.</FormHelperText>
               <FormErrorMessage>{errors.to?.message}</FormErrorMessage>
             </FormControl>

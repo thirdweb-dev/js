@@ -6,10 +6,9 @@ import {
 } from "./query/useQueryWithNetwork";
 import { useWeb3 } from "@3rdweb-sdk/react";
 import { useToast } from "@chakra-ui/react";
-import { AddressZero } from "@ethersproject/constants";
 import { useSplit, useToken } from "@thirdweb-dev/react";
 import { CURRENCIES } from "constants/currencies";
-import { ethers } from "ethers";
+import { constants, ethers } from "ethers";
 import invariant from "tiny-invariant";
 import { parseErrorToMessage } from "utils/errorParser";
 import { SUPPORTED_CHAIN_ID } from "utils/network";
@@ -57,7 +56,7 @@ const getCurrencies = async (chainId?: number, contractAddress?: string) => {
       );
 
       return {
-        token_address: AddressZero,
+        token_address: constants.AddressZero,
         name: native?.name,
         symbol: native?.symbol,
         decimals: 18,

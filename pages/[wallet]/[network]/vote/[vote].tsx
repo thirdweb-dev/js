@@ -18,11 +18,10 @@ import { Proposal } from "components/contract-pages/vote/Proposal";
 import { ContractPageNotice } from "components/notices/ContractPageNotice";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
-import { ConsolePage } from "pages/_app";
-import React, { useMemo } from "react";
+import React, { ReactElement, useMemo } from "react";
 import { Card, Text } from "tw-components";
 
-const VotePage: ConsolePage = () => {
+export default function VotePage() {
   const { address } = useWeb3();
   const voteAddress = useSingleQueryParam("vote");
   const contract = useVote(voteAddress);
@@ -116,8 +115,6 @@ const VotePage: ConsolePage = () => {
       </ContractLayout>
     </Track>
   );
-};
+}
 
-VotePage.Layout = AppLayout;
-
-export default VotePage;
+VotePage.getLayout = (page: ReactElement) => <AppLayout>{page}</AppLayout>;

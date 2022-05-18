@@ -1,6 +1,6 @@
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from "@chakra-ui/react";
-import { isAddress } from "@ethersproject/address";
+import { utils } from "ethers";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
@@ -23,7 +23,7 @@ export const Breadcrumbs: React.FC = () => {
 
     for (let i = 1; i < asArray.length; i = i + 2) {
       const title = asArray[i].split("-").join(" ").replace("nft", "NFT");
-      const _address = isAddress(asArray[i + 1])
+      const _address = utils.isAddress(asArray[i + 1])
         ? shortenIfAddress(asArray[i + 1])
         : "";
       if (_address) {

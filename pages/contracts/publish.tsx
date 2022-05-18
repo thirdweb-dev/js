@@ -10,8 +10,7 @@ import { CustomSDKContext } from "contexts/custom-sdk-context";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
-import { ConsolePage } from "pages/_app";
-import { useEffect, useMemo, useState } from "react";
+import { ReactElement, useEffect, useMemo, useState } from "react";
 import { Badge, Heading, Text } from "tw-components";
 
 const ContractsPublishPageWrapped: React.FC = () => {
@@ -145,14 +144,14 @@ const ContractsPublishPageWrapped: React.FC = () => {
   );
 };
 
-const ContractsPublishPage: ConsolePage = () => {
+export default function ContractsPublishPage() {
   return (
     <CustomSDKContext desiredChainId={ChainId.Mumbai}>
       <ContractsPublishPageWrapped />
     </CustomSDKContext>
   );
-};
+}
 
-ContractsPublishPage.Layout = AppLayout;
-
-export default ContractsPublishPage;
+ContractsPublishPage.getLayout = (page: ReactElement) => (
+  <AppLayout>{page}</AppLayout>
+);

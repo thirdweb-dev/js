@@ -4,7 +4,7 @@ import { useContractMetadata } from "./useContract";
 import { useWeb3 } from "@3rdweb-sdk/react";
 import { useAddress, useToken } from "@thirdweb-dev/react";
 import { Token } from "@thirdweb-dev/sdk";
-import { isAddress } from "ethers/lib/utils";
+import { utils } from "ethers";
 import { useQuery } from "react-query";
 import invariant from "tiny-invariant";
 import { isAddressZero } from "utils/zeroAddress";
@@ -35,7 +35,7 @@ export function useTokenData(contractAddress?: string) {
         !!tokenContract &&
         !!contractAddress &&
         !isAddressZero(contractAddress) &&
-        isAddress(contractAddress),
+        utils.isAddress(contractAddress),
     },
   );
 }
@@ -55,7 +55,7 @@ export function useTokenBalance(
         !!contractAddress &&
         !!addressToCheck &&
         !isAddressZero(contractAddress) &&
-        isAddress(contractAddress),
+        utils.isAddress(contractAddress),
     },
   );
 }

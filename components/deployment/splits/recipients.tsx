@@ -8,10 +8,10 @@ import {
   IconButton,
   Input,
 } from "@chakra-ui/react";
-import { AddressZero } from "@ethersproject/constants";
-import { Split } from "@thirdweb-dev/sdk";
+import type { Split } from "@thirdweb-dev/sdk";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SplitsPieChart } from "components/splits-chart/splits-chart";
+import { constants } from "ethers";
 import { useEffect } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { IoMdAdd, IoMdRemove } from "react-icons/io";
@@ -82,7 +82,7 @@ export const RecipientForm: React.FC = () => {
                 >
                   <Input
                     variant="filled"
-                    placeholder={AddressZero}
+                    placeholder={constants.AddressZero}
                     {...register(`recipients.${index}.address`)}
                   />
                   <FormErrorMessage>

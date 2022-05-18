@@ -4,9 +4,7 @@ import {
   InputProps,
   InputRightElement,
 } from "@chakra-ui/react";
-import { MaxUint256 } from "@ethersproject/constants";
-import { BigNumber } from "ethers";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
+import { BigNumber, constants, utils } from "ethers";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "tw-components";
 
@@ -27,13 +25,13 @@ export const BigNumberInput: React.FC<BigNumberInputProps> = ({
   isDisabled,
   decimals = 0,
   maxUIntString = "Unlimited",
-  max = MaxUint256.toString(),
+  max = constants.MaxUint256.toString(),
   min,
   ...restInputProps
 }) => {
   const [inputValue, setInputvalue] = useState("0");
   const _max = useMemo(() => {
-    return formatUnits(max, decimals).toString();
+    return utils.formatUnits(max, decimals).toString();
   }, [decimals, max]);
   // update current value
   useEffect(() => {
@@ -43,13 +41,13 @@ export const BigNumberInput: React.FC<BigNumberInputProps> = ({
       let parseInputValue;
 
       try {
-        parseInputValue = parseUnits(inputValue || "0", decimals);
+        parseInputValue = utils.parseUnits(inputValue || "0", decimals);
       } catch {
         // do nothing
       }
 
       if (!parseInputValue || !parseInputValue.eq(value)) {
-        setInputvalue(formatUnits(value, decimals));
+        setInputvalue(utils.formatUnits(value, decimals));
       }
     }
   }, [value, decimals, inputValue, _max]);
@@ -64,8 +62,8 @@ export const BigNumberInput: React.FC<BigNumberInputProps> = ({
     let newValue: BigNumber;
     let parsedMax: BigNumber;
     try {
-      newValue = parseUnits(_value, decimals);
-      parsedMax = parseUnits(_max, decimals);
+      newValue = utils.parseUnits(_value, decimals);
+      parsedMax = utils.parseUnits(_max, decimals);
     } catch (e) {
       // don't update the input on invalid values
       return;

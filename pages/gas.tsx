@@ -1,24 +1,13 @@
 import { useGas } from "@3rdweb-sdk/react/hooks/useGas";
 import { Flex, SimpleGrid, Switch } from "@chakra-ui/react";
-import {
-  Edition,
-  EditionDrop,
-  Marketplace,
-  NFTCollection,
-  NFTDrop,
-  Split,
-  Token,
-  Vote,
-} from "@thirdweb-dev/sdk";
 import { AppLayout } from "components/app-layouts/app";
 import { GasEstimatorBox } from "components/gas-estimator/GasEstimatorBox";
 import { useTrack } from "hooks/analytics/useTrack";
 import { NextSeo } from "next-seo";
-import { ConsolePage } from "pages/_app";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { Badge, Card, Heading, Text } from "tw-components";
 
-const GasPage: ConsolePage = () => {
+export default function GasPage() {
   const [ethOrUsd, setEthOrUsd] = useState<"eth" | "usd">("eth");
   const { data } = useGas();
   const { Track, trackEvent } = useTrack({
@@ -67,46 +56,46 @@ const GasPage: ConsolePage = () => {
       </Flex>
       <SimpleGrid as={Card} p={0} columns={{ base: 1, md: 4 }}>
         <GasEstimatorBox
-          contractType={NFTDrop.contractType}
+          contractType={"nft-drop"}
           ethOrUsd={ethOrUsd}
           data={data}
           borderTopLeftRadius="xl"
           borderTopRightRadius={{ base: "xl", md: "0" }}
         />
         <GasEstimatorBox
-          contractType={EditionDrop.contractType}
+          contractType={"edition-drop"}
           ethOrUsd={ethOrUsd}
           data={data}
         />
         <GasEstimatorBox
-          contractType={NFTCollection.contractType}
+          contractType={"nft-collection"}
           ethOrUsd={ethOrUsd}
           data={data}
         />
         <GasEstimatorBox
-          contractType={Edition.contractType}
+          contractType={"edition"}
           ethOrUsd={ethOrUsd}
           data={data}
           borderTopRightRadius={{ base: "0", md: "xl" }}
         />
         <GasEstimatorBox
-          contractType={Token.contractType}
+          contractType={"token"}
           ethOrUsd={ethOrUsd}
           data={data}
           borderBottomLeftRadius={{ base: "0", md: "xl" }}
         />
         <GasEstimatorBox
-          contractType={Split.contractType}
+          contractType={"split"}
           ethOrUsd={ethOrUsd}
           data={data}
         />
         <GasEstimatorBox
-          contractType={Marketplace.contractType}
+          contractType={"marketplace"}
           ethOrUsd={ethOrUsd}
           data={data}
         />
         <GasEstimatorBox
-          contractType={Vote.contractType}
+          contractType={"vote"}
           ethOrUsd={ethOrUsd}
           data={data}
           borderBottomRightRadius="xl"
@@ -120,8 +109,8 @@ const GasPage: ConsolePage = () => {
       </Text>
     </Track>
   );
+}
+
+GasPage.getLayout = function getLayout(page: ReactElement) {
+  return <AppLayout>{page}</AppLayout>;
 };
-
-GasPage.Layout = AppLayout;
-
-export default GasPage;

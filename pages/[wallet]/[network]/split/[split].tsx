@@ -11,11 +11,11 @@ import { DistributeButton } from "components/contract-pages/action-buttons/Distr
 import { ContractLayout } from "components/contract-pages/contract-layout";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
-import { ConsolePage } from "pages/_app";
+import { ReactElement } from "react";
 import { Card, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 
-const SplitPage: ConsolePage = () => {
+export default function SplitPage() {
   const address = useAddress();
   const splitsAddress = useSingleQueryParam("split");
   const contract = useSplit(splitsAddress);
@@ -91,8 +91,6 @@ const SplitPage: ConsolePage = () => {
       </ContractLayout>
     </Track>
   );
-};
+}
 
-SplitPage.Layout = AppLayout;
-
-export default SplitPage;
+SplitPage.getLayout = (page: ReactElement) => <AppLayout>{page}</AppLayout>;

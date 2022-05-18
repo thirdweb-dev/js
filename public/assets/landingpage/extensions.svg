@@ -1,8 +1,8 @@
 <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M1.5 15V42H46.5V15M1.5 6H46.5V15H1.5V6Z" stroke="white" stroke-opacity="0.2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M6 11.25C6.41421 11.25 6.75 10.9142 6.75 10.5C6.75 10.0858 6.41421 9.75 6 9.75C5.58579 9.75 5.25 10.0858 5.25 10.5C5.25 10.9142 5.58579 11.25 6 11.25Z" stroke="white" stroke-opacity="0.2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M11.25 11.25C11.6642 11.25 12 10.9142 12 10.5C12 10.0858 11.6642 9.75 11.25 9.75C10.8358 9.75 10.5 10.0858 10.5 10.5C10.5 10.9142 10.8358 11.25 11.25 11.25Z" stroke="white" stroke-opacity="0.2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M16.5 11.25C16.9142 11.25 17.25 10.9142 17.25 10.5C17.25 10.0858 16.9142 9.75 16.5 9.75C16.0858 9.75 15.75 10.0858 15.75 10.5C15.75 10.9142 16.0858 11.25 16.5 11.25Z" stroke="white" stroke-opacity="0.2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M1.5 15V42H46.5V15M1.5 6H46.5V15H1.5V6Z" stroke="white" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M6 11.25C6.41421 11.25 6.75 10.9142 6.75 10.5C6.75 10.0858 6.41421 9.75 6 9.75C5.58579 9.75 5.25 10.0858 5.25 10.5C5.25 10.9142 5.58579 11.25 6 11.25Z" stroke="white" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M11.25 11.25C11.6642 11.25 12 10.9142 12 10.5C12 10.0858 11.6642 9.75 11.25 9.75C10.8358 9.75 10.5 10.0858 10.5 10.5C10.5 10.9142 10.8358 11.25 11.25 11.25Z" stroke="white" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16.5 11.25C16.9142 11.25 17.25 10.9142 17.25 10.5C17.25 10.0858 16.9142 9.75 16.5 9.75C16.0858 9.75 15.75 10.0858 15.75 10.5C15.75 10.9142 16.0858 11.25 16.5 11.25Z" stroke="white" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M38 28.3333H35.4154L31.5385 24.3333L27.6615 32.3333L21.2 23L14.7385 35L12.5846 31H10" stroke="url(#paint0_linear_3694_5659)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 <defs>
 <linearGradient id="paint0_linear_3694_5659" x1="45" y1="33.2222" x2="3.98216" y2="33.9504" gradientUnits="userSpaceOnUse">

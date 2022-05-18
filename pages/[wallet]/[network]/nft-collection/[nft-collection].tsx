@@ -6,10 +6,9 @@ import { ContractLayout } from "components/contract-pages/contract-layout";
 import { ContractItemsTable } from "components/contract-pages/table";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
-import { ConsolePage } from "pages/_app";
-import React from "react";
+import React, { ReactElement } from "react";
 
-const NFTCollectionPage: ConsolePage = () => {
+export default function NFTCollectionPage() {
   const nftCollectionAddress = useSingleQueryParam("nft-collection");
   const contract = useNFTCollection(nftCollectionAddress);
   const metadata = useNFTContractMetadata(nftCollectionAddress);
@@ -39,8 +38,8 @@ const NFTCollectionPage: ConsolePage = () => {
       </ContractLayout>
     </Track>
   );
-};
+}
 
-NFTCollectionPage.Layout = AppLayout;
-
-export default NFTCollectionPage;
+NFTCollectionPage.getLayout = (page: ReactElement) => (
+  <AppLayout>{page}</AppLayout>
+);

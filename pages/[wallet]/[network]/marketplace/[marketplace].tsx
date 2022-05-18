@@ -6,10 +6,9 @@ import { ContractLayout } from "components/contract-pages/contract-layout";
 import { ContractItemsTable } from "components/contract-pages/table";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
-import { ConsolePage } from "pages/_app";
-import React from "react";
+import React, { ReactElement } from "react";
 
-const MarketplacePage: ConsolePage = () => {
+export default function MarketplacePage() {
   const marketAddress = useSingleQueryParam("marketplace");
   const contract = useMarketplace(marketAddress);
   const metadata = useContractMetadata(contract);
@@ -33,8 +32,8 @@ const MarketplacePage: ConsolePage = () => {
       </ContractLayout>
     </Track>
   );
-};
+}
 
-MarketplacePage.Layout = AppLayout;
-
-export default MarketplacePage;
+MarketplacePage.getLayout = (page: ReactElement) => (
+  <AppLayout>{page}</AppLayout>
+);

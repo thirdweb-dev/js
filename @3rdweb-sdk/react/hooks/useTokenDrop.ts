@@ -7,7 +7,7 @@ import { useContractMetadata } from "./useContract";
 import { useWeb3 } from "@3rdweb-sdk/react";
 import { useTokenDrop } from "@thirdweb-dev/react";
 import { ClaimConditionInput, TokenDrop } from "@thirdweb-dev/sdk";
-import { isAddress } from "ethers/lib/utils";
+import { utils } from "ethers";
 import { useQuery } from "react-query";
 import invariant from "tiny-invariant";
 import { isAddressZero } from "utils/zeroAddress";
@@ -38,7 +38,7 @@ export function useTokenDropData(contractAddress?: string) {
         !!tokenDropContract &&
         !!contractAddress &&
         !isAddressZero(contractAddress) &&
-        isAddress(contractAddress),
+        utils.isAddress(contractAddress),
     },
   );
 }
@@ -58,7 +58,7 @@ export function useTokenDropBalance(
         !!contractAddress &&
         !!addressToCheck &&
         !isAddressZero(contractAddress) &&
-        isAddress(contractAddress),
+        utils.isAddress(contractAddress),
     },
   );
 }

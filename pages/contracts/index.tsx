@@ -14,7 +14,7 @@ import { DeployableContractTable } from "components/contract-components/contract
 import { usePublishedContractsQuery } from "components/contract-components/hooks";
 import { CustomSDKContext } from "contexts/custom-sdk-context";
 import { useTrack } from "hooks/analytics/useTrack";
-import { ConsolePage } from "pages/_app";
+import { ReactElement } from "react";
 import { IoRefreshSharp } from "react-icons/io5";
 import { Badge, Button, Heading, LinkButton, Text } from "tw-components";
 
@@ -116,14 +116,14 @@ const ContractsHomepageWrapped: React.FC = () => {
   );
 };
 
-const ContractsHomepage: ConsolePage = () => {
+export default function ContractsHomepage() {
   return (
     <CustomSDKContext desiredChainId={ChainId.Mumbai}>
       <ContractsHomepageWrapped />
     </CustomSDKContext>
   );
-};
+}
 
-ContractsHomepage.Layout = AppLayout;
-
-export default ContractsHomepage;
+ContractsHomepage.getLayout = (page: ReactElement) => (
+  <AppLayout>{page}</AppLayout>
+);

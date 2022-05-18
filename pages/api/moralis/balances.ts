@@ -1,5 +1,4 @@
-import { AddressZero } from "@ethersproject/constants";
-import { isAddress } from "ethers/lib/utils";
+import { constants, utils } from "ethers";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -8,7 +7,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const { chain, address } = req.body;
-  if (!isAddress(address)) {
+  if (!utils.isAddress(address)) {
     return res.status(400).json({ error: "invalid address" });
   }
 
@@ -38,7 +37,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const balances = [
     ...tokenBalances,
     {
-      token_address: AddressZero,
+      token_address: constants.AddressZero,
       balance: nativeBalance.balance,
     },
   ];

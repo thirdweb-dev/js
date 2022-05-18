@@ -30,12 +30,11 @@ import { ContractPageNotice } from "components/notices/ContractPageNotice";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
-import { ConsolePage } from "pages/_app";
-import React, { useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { RiCheckboxMultipleBlankLine } from "react-icons/ri";
 import { Button, Card } from "tw-components";
 
-const NFTDropPage: ConsolePage = () => {
+export default function NFTDropPage() {
   const {
     isOpen: isBatchOpen,
     onOpen: onBatchOpen,
@@ -182,8 +181,6 @@ const NFTDropPage: ConsolePage = () => {
       </ContractLayout>
     </Track>
   );
-};
+}
 
-export default NFTDropPage;
-
-NFTDropPage.Layout = AppLayout;
+NFTDropPage.getLayout = (page: ReactElement) => <AppLayout>{page}</AppLayout>;

@@ -23,7 +23,7 @@ import {
 } from "@chakra-ui/react";
 import { ClaimCondition, SnapshotAddressInput } from "@thirdweb-dev/sdk";
 import { Logo } from "components/logo";
-import { isAddress } from "ethers/lib/utils";
+import { utils } from "ethers";
 import Papa from "papaparse";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { DropzoneOptions, useDropzone } from "react-dropzone";
@@ -114,8 +114,12 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
   );
 
   const data = useMemo(() => {
-    const valid = validSnapshot.filter(({ address }) => isAddress(address));
-    const invalid = validSnapshot.filter(({ address }) => !isAddress(address));
+    const valid = validSnapshot.filter(({ address }) =>
+      utils.isAddress(address),
+    );
+    const invalid = validSnapshot.filter(
+      ({ address }) => !utils.isAddress(address),
+    );
     const ordered = [...invalid, ...valid];
     return ordered;
   }, [validSnapshot]);
@@ -270,7 +274,7 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
       {
         Header: "Address",
         accessor: ({ address }) => {
-          if (isAddress(address)) {
+          if (utils.isAddress(address)) {
             return address;
           } else {
             return (

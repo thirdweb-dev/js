@@ -15,12 +15,11 @@ import { TransferModal } from "components/currency/TransferModal";
 import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
-import { ConsolePage } from "pages/_app";
-import React from "react";
+import React, { ReactElement } from "react";
 import { FiSend } from "react-icons/fi";
 import { Button, Card } from "tw-components";
 
-const TokenPage: ConsolePage = () => {
+export default function TokenPage() {
   const tokenAddress = useSingleQueryParam("token");
   const contract = useToken(tokenAddress);
   const metadata = useTokenContractMetadata(tokenAddress);
@@ -85,8 +84,6 @@ const TokenPage: ConsolePage = () => {
       </ContractLayout>
     </Track>
   );
-};
+}
 
-TokenPage.Layout = AppLayout;
-
-export default TokenPage;
+TokenPage.getLayout = (page: ReactElement) => <AppLayout>{page}</AppLayout>;
