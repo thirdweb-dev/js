@@ -1,7 +1,9 @@
 import {
   AspectRatio,
   AspectRatioProps,
+  Box,
   Center,
+  Flex,
   Icon,
   PropsOf,
   SimpleGrid,
@@ -14,7 +16,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { IconType } from "react-icons";
-import { SiJavascript, SiPython, SiReact } from "react-icons/si";
+import { SiJavascript, SiPython, SiReact, SiReplit } from "react-icons/si";
 import {
   Button,
   ButtonProps,
@@ -125,7 +127,7 @@ export const CodeSelector: React.FC = () => {
           React
         </CodeOptionButton>
       </SimpleGrid>
-      <LazyLoadedIframe
+      {/* <LazyLoadedIframe
         aspectRatioProps={{
           ratio: { base: 9 / 16, md: 16 / 9 },
           w: "full",
@@ -141,30 +143,59 @@ export const CodeSelector: React.FC = () => {
         sandbox="allow-scripts allow-same-origin"
         loading="lazy"
         src={`https://replit.com/@thirdweb-dev/${activeLanguage}-sdk?lite=true`}
-      />
-      <LinkButton
-        bg="white"
-        color="#000"
-        variant="solid"
-        borderRadius="md"
-        _hover={{
-          bg: "whiteAlpha.800",
-        }}
-        w="full"
-        maxW="300px"
-        href={`https://portal.thirdweb.com/${activeLanguage}`}
-        isExternal
-        p={6}
-        onClick={() =>
-          trackEvent({
-            category: "code-selector",
-            action: "click-documentation",
-            label: activeLanguage,
-          })
-        }
+      /> */}
+
+      <Flex
+        gap={{ base: 4, md: 12 }}
+        align="center"
+        direction={{ base: "column", md: "row" }}
+        w="100%"
+        maxW="container.sm"
       >
-        See documentation
-      </LinkButton>
+        <LinkButton
+          role="group"
+          borderRadius="md"
+          p={6}
+          variant="gradient"
+          fromcolor="#1D64EF"
+          tocolor="#E0507A"
+          // flexShrink={0}
+          isExternal
+          // variant="solid"
+          colorScheme="primary"
+          w="full"
+          // maxW="300px"
+          href={`https://replit.com/@thirdweb-dev/${activeLanguage}-sdk`}
+          leftIcon={
+            <Icon
+              color="#1D64EF"
+              _groupHover={{ color: "#E0507A" }}
+              as={SiReplit}
+            />
+          }
+        >
+          <Box as="span">Try it on repl.it</Box>
+        </LinkButton>
+        <LinkButton
+          variant="outline"
+          borderRadius="md"
+          w="full"
+          // maxW="300px"
+          href={`https://portal.thirdweb.com/${activeLanguage}`}
+          isExternal
+          p={6}
+          // flexShrink={0}
+          onClick={() =>
+            trackEvent({
+              category: "code-selector",
+              action: "click-documentation",
+              label: activeLanguage,
+            })
+          }
+        >
+          Explore documentation
+        </LinkButton>
+      </Flex>
     </>
   );
 };

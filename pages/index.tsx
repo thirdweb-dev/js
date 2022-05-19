@@ -11,7 +11,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-// import { CodeSelector } from "components/homepage/CodeSelector";
+import { CodeSelector } from "components/homepage/CodeSelector";
 import { ContractCard } from "components/homepage/ContractCard";
 import { DashboardCard } from "components/homepage/DashboardCard";
 import { HomepageFooter } from "components/homepage/Footer";
@@ -294,7 +294,7 @@ export default function Home() {
             </Flex>
           </HomepageSection>
 
-          {/*           <HomepageSection id="developers" bottomPattern middleGradient>
+          <HomepageSection id="developers" bottomPattern middleGradient>
             <Flex
               flexDir="column"
               py={{ base: 12, lg: 24 }}
@@ -309,7 +309,7 @@ export default function Home() {
               </Heading>
               <CodeSelector />
             </Flex>
-          </HomepageSection> */}
+          </HomepageSection>
 
           <HomepageSection id="features">
             <Flex
