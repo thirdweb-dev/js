@@ -46,7 +46,6 @@ interface CodeOptionButtonProps extends ButtonProps {
 }
 const CodeOptionButton: React.FC<CodeOptionButtonProps> = ({
   children,
-
   language,
   setActiveLanguage,
   activeLanguage,

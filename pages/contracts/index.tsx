@@ -97,16 +97,13 @@ const ContractsHomepageWrapped: React.FC = () => {
               </Center>
             )}
         </DeployableContractTable>
-
         <Box />
-
         <Flex gap={2} direction="column">
           <Heading size="title.md">Pre-built contracts</Heading>
           <Text fontStyle="italic">
             Contracts created by the thirdweb team that you can deploy
           </Text>
         </Flex>
-
         <DeployableContractTable
           hasDescription
           contractIds={Object.keys(KNOWN_CONTRACTS_MAP)}
