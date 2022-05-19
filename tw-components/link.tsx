@@ -48,19 +48,20 @@ interface TrackedLinkProps extends LinkProps {
 /**
  * A link component extends the `Link` component and adds tracking.
  */
-export const TrackedLink: React.FC<TrackedLinkProps> = ({
-  category,
-  label,
-  ...props
-}) => {
+export const TrackedLink = React.forwardRef<
+  HTMLAnchorElement,
+  TrackedLinkProps
+>(({ category, label, ...props }, ref) => {
   const { trackEvent } = useTrack();
 
   const onClick = useCallback(() => {
     trackEvent({ category, action: "click", label });
   }, [trackEvent, category, label]);
 
-  return <Link onClick={onClick} {...props} />;
-};
+  return <Link ref={ref} onClick={onClick} {...props} />;
+});
+
+TrackedLink.displayName = "TrackedLink";
 
 /**
  * @deprecated Use {@link Link} instead.
