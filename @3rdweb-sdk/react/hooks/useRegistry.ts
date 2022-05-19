@@ -1,5 +1,4 @@
 import { contractKeys, networkKeys } from "../cache-keys";
-import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { useAddress, useSigner } from "@thirdweb-dev/react";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { alchemyUrlMap } from "components/app-layouts/providers";
@@ -38,7 +37,7 @@ export function useRemoveContractMutation() {
       return tx;
     },
     {
-      onSuccess: (_data, _variables, _options) => {
+      onSuccess: (_data, _variables) => {
         const { chainId } = _variables;
         return queryClient.invalidateQueries([
           ...networkKeys.chain(chainId as SUPPORTED_CHAIN_ID),

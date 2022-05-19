@@ -1789,7 +1789,7 @@
     tiny-invariant "^1.2.0"
     wagmi "^0.2.28"
 
-"@thirdweb-dev/sdk@^2.2.10":
+"@thirdweb-dev/sdk@^2.2.11":
   version "2.2.11"
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.2.11.tgz#eeb2ea88e3a16a8cea634094e06a7f6478d279d4"
   integrity sha512-oFRgmSXysG64ZT+9DpDCwVUSg09HjvTgyi6u6yYjXmir8CgVmwQHVhBxOUGXmG3oHgFDenUtdxmma3Vvdoi8mg==
