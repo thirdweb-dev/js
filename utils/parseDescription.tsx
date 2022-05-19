@@ -1,6 +1,7 @@
-import { Text, Tooltip } from "@chakra-ui/react";
+import { Tooltip } from "@chakra-ui/react";
+import { Text } from "tw-components";
 
-export const parseDescription = (description?: string) => (
+export const parseDescription = (description?: string | null) => (
   <Tooltip
     label={
       <Text whiteSpace="pre-wrap" color="inherit" p={2}>

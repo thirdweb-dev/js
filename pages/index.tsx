@@ -11,7 +11,7 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import { CodeSelector } from "components/homepage/CodeSelector";
+// import { CodeSelector } from "components/homepage/CodeSelector";
 import { ContractCard } from "components/homepage/ContractCard";
 import { DashboardCard } from "components/homepage/DashboardCard";
 import { HomepageFooter } from "components/homepage/Footer";

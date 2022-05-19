@@ -14,7 +14,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useNFTSupply, useNFTs } from "@thirdweb-dev/react";
+import { useNFTs, useTotalCirculatingSupply } from "@thirdweb-dev/react";
 import { Erc721, Json, NFTMetadataOwner } from "@thirdweb-dev/sdk";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import { BigNumber } from "ethers";
@@ -71,7 +71,7 @@ const ContractOverviewNftGetAll: React.FC<ContractOverviewNftGetAllProps> = ({
 }) => {
   const [queryParams, setQueryParams] = useState({ count: 50, start: 0 });
   const getAllQueryResult = useNFTs(contract, queryParams);
-  const totalSupply = useNFTSupply(contract);
+  const totalSupply = useTotalCirculatingSupply(contract);
   const {
     getTableProps,
     getTableBodyProps,
