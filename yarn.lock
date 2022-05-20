@@ -1778,9 +1778,9 @@
   integrity sha512-TUWo1vV6kEDZGfLRv9wJFxAkncc2lLCfPUN2YJp/4Ggqlm4ZdeELW2Y4cV+H8DMeiMO4ROLKNa2PUUHTQH2SJg==
 
 "@thirdweb-dev/react@^2.3.1":
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.3.1.tgz#9502c43f2370205942efa17971f50878795b3f41"
-  integrity sha512-6yJ37S0Xkqa5DYSGQjJVN5OpvKq+JTzUGc/ByFmGrwFMwtQ+91LdIpTTIILXllqXweOwl12LstG5v0zIXq/f3Q==
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.3.2.tgz#ed208f55e38dab3935ec4c0488e45dabf4f3d7bb"
+  integrity sha512-8ubsDb0+1H2AX4vOHh4/sClZ1J/hCJKoZAjkB3QpxCxOXdwhKT0tWnRY0aF6DMaGt8jro8+IFyo1t/aaJwl24A==
   dependencies:
     detect-browser "^5.3.0"
     mime "^3.0.0"
