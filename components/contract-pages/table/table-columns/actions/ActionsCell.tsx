@@ -4,7 +4,7 @@ import { EditionBurnCell } from "./EditionBurnCell";
 import { EditionTransferCell } from "./EditionTransferCell";
 import { OwnerBurnCell } from "./OwnerBurnCell";
 import { OwnerTransferCell } from "./OwnerTransferCell";
-import { ButtonGroup, Stack } from "@chakra-ui/react";
+import { ButtonGroup, Flex, Stack } from "@chakra-ui/react";
 import { EditionMetadata, NFTMetadataOwner } from "@thirdweb-dev/sdk";
 import { Row } from "react-table";
 
@@ -34,7 +34,9 @@ const ERC1155Cell: React.FC<IEditionActionsCell> = ({ row }) => (
 export const NFTActionsCell: React.FC<INFTActionsCell> = ({ row }) => {
   return (
     <Stack as={ButtonGroup} size="sm" variant="outline">
-      <ERC721Cell row={row} />
+      <Flex flexDir="column" gap={1}>
+        <ERC721Cell row={row} />
+      </Flex>
     </Stack>
   );
 };
@@ -42,7 +44,9 @@ export const NFTActionsCell: React.FC<INFTActionsCell> = ({ row }) => {
 export const EditionActionsCell: React.FC<IEditionActionsCell> = ({ row }) => {
   return (
     <Stack as={ButtonGroup} size="sm" variant="outline">
-      <ERC1155Cell row={row} />
+      <Flex flexDir="column" gap={1}>
+        <ERC1155Cell row={row} />
+      </Flex>
     </Stack>
   );
 };
@@ -52,8 +56,10 @@ export const EditionDropActionsCell: React.FC<IEditionActionsCell> = ({
 }) => {
   return (
     <Stack as={ButtonGroup} size="sm" variant="outline">
-      <AdminMintConditionCell row={row} />
-      <ERC1155Cell row={row} />
+      <Flex flexDir="column" gap={1}>
+        <AdminMintConditionCell row={row} />
+        <ERC1155Cell row={row} />
+      </Flex>
     </Stack>
   );
 };

@@ -10,6 +10,7 @@ export const parseDescription = (description?: string | null) => (
     }
     openDelay={500}
     borderRadius="md"
+    shouldWrapChildren
   >
     <Text whiteSpace="pre-wrap" noOfLines={6}>
       {description}

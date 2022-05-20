@@ -1,6 +1,6 @@
 import { useMarketplaceCancelMutation, useWeb3 } from "@3rdweb-sdk/react";
 import Icon from "@chakra-ui/icon";
-import { ButtonGroup, Stack } from "@chakra-ui/react";
+import { ButtonGroup, Flex, Stack } from "@chakra-ui/react";
 import { useMarketplace } from "@thirdweb-dev/react";
 import { AuctionListing, DirectListing } from "@thirdweb-dev/sdk";
 import { useSingleQueryParam } from "hooks/useQueryParam";
@@ -49,14 +49,16 @@ export const MarketplaceActionsCell: React.FC<IMarketplaceActionsCellProps> = ({
 
   return (
     <Stack as={ButtonGroup} size="sm" variant="outline">
-      <Button
-        isLoading={unlist.isLoading}
-        isDisabled={!marketplaceContract}
-        onClick={unlistMutation}
-        leftIcon={<Icon as={FiXCircle} />}
-      >
-        Cancel Listing
-      </Button>
+      <Flex flexDir="column" gap={1}>
+        <Button
+          isLoading={unlist.isLoading}
+          isDisabled={!marketplaceContract}
+          onClick={unlistMutation}
+          leftIcon={<Icon as={FiXCircle} />}
+        >
+          Cancel Listing
+        </Button>
+      </Flex>
     </Stack>
   );
 };

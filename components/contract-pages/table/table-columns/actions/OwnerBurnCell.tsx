@@ -24,6 +24,7 @@ export const OwnerBurnCell: React.FC<IOwnerBurnCellProps> = ({ row }) => {
 
   return (
     <Button
+      w="full"
       onClick={() =>
         tableContext.expandRow({
           tokenId: row.original.metadata.id.toString(),
