@@ -1,5 +1,5 @@
 import { Box, Flex } from "@chakra-ui/react";
-import { useContractFunctions } from "@thirdweb-dev/react";
+import { ChainId, useChainId, useContractFunctions } from "@thirdweb-dev/react";
 import { Card, CodeBlock, Heading } from "tw-components";
 
 interface ContentOverviewProps {
@@ -10,11 +10,13 @@ export const CustomContractCodeTab: React.FC<ContentOverviewProps> = ({
   contractAddress,
 }) => {
   const functionsQuery = useContractFunctions(contractAddress);
+  const chainId = useChainId();
+  const chainName = getChainName(chainId);
 
   const functions = functionsQuery.data
     ?.filter(
       (d) =>
-        d.name !== "contractURI" &&
+        d.name !== "tw_initializeOwner" &&
         d.name !== "setThirdwebInfo" &&
         d.name !== "getPublishMetadataUri",
     )
@@ -33,7 +35,7 @@ export const CustomContractCodeTab: React.FC<ContentOverviewProps> = ({
           py={2}
           borderRadius="md"
           language="bash"
-          code={`npm install @thirdweb-dev/sdk`}
+          code={`npm install @thirdweb-dev/sdk ethers`}
         />
       </Card>
       <Card as={Flex} gap={2} flexDirection="column">
@@ -44,8 +46,7 @@ export const CustomContractCodeTab: React.FC<ContentOverviewProps> = ({
           language="typescript"
           code={`import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-const provider = ethers.Wallet.createRandom();
-const sdk = new ThirdwebSDK(provider);
+const sdk = new ThirdwebSDK("${chainName}");
 const contract = await sdk.getContract("${contractAddress}");`}
         />
       </Card>
@@ -65,3 +66,24 @@ const contract = await sdk.getContract("${contractAddress}");`}
     </Flex>
   );
 };
+
+function getChainName(chainId: number | undefined) {
+  switch (chainId) {
+    case ChainId.Mainnet:
+      return "mainnet";
+    case ChainId.Rinkeby:
+      return "rinkeby";
+    case ChainId.Goerli:
+      return "goerli";
+    case ChainId.Polygon:
+      return "polygon";
+    case ChainId.Mumbai:
+      return "mumbai";
+    case ChainId.Fantom:
+      return "fantom";
+    case ChainId.Avalanche:
+      return "avalanche";
+    default:
+      return "mainnet";
+  }
+}
