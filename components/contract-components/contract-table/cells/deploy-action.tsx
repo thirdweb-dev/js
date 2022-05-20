@@ -31,7 +31,10 @@ export const ContractDeployActionCell: React.FC<
               category="deploy"
               label="audited"
               aria-label="Audited contract"
-              icon={<Icon as={BsShieldFillCheck} boxSize={5} />}
+              colorScheme="green"
+              variant="outline"
+              borderWidth="2px"
+              icon={<Icon as={BsShieldFillCheck} boxSize={4} />}
             />
           </Tooltip>
         )}
