@@ -113,14 +113,6 @@ export function useSplitBalances(contractAddress?: string) {
   );
 }
 
-export function useDistributeNumOfTransactions(contractAddress?: string) {
-  const balances = useSplitBalances(contractAddress);
-  if (!balances.data || balances.isLoading) {
-    return 0;
-  }
-  return balances.data.filter((b) => b.balance !== "0.0").length;
-}
-
 export function useSplitDistributeFunds(contractAddress?: string) {
   const balances = useSplitBalances(contractAddress);
   const splitsContract = useSplit(contractAddress);
