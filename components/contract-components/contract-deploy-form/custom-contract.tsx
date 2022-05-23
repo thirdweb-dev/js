@@ -275,7 +275,10 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
         <FormControl>
           <SupportedNetworkSelect
             disabledChainIds={SUPPORTED_CHAIN_IDS.filter(
-              (c) => c !== ChainId.Mumbai && c !== ChainId.Rinkeby,
+              (c) =>
+                c !== ChainId.Mumbai &&
+                c !== ChainId.Rinkeby &&
+                c !== ChainId.Goerli,
             )}
             disabledChainIdText="coming soon"
             isDisabled={deploy.isLoading || !publishMetadata.isSuccess}
