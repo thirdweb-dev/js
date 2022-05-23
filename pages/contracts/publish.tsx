@@ -82,7 +82,7 @@ const ContractsPublishPageWrapped: React.FC = () => {
             <Link
               color="primary.500"
               isExternal
-              href="https://thirdweb.notion.site/thirdweb-deploy-Public-Alpha-74d81faa569b418f9ed718645fd7df2c"
+              href="https://portal.thirdweb.com/thirdweb-deploy"
             >
               Learn more about publishing contracts
             </Link>
