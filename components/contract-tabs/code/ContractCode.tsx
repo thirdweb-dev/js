@@ -46,6 +46,7 @@ const INSTALL_COMMANDS = {
   javascript: "npm install @thirdweb-dev/sdk",
   react: "npm install @thirdweb-dev/react",
   python: "pip install thirdweb-sdk",
+  go: "go get github.com/thirdweb-dev/go-sdk",
 };
 
 export const ContractCode: React.FC<IContractCode> = ({ contract }) => {

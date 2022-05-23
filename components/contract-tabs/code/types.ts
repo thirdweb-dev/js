@@ -1,4 +1,9 @@
-export type Environment = "javascript" | "typescript" | "react" | "python";
+export type Environment =
+  | "javascript"
+  | "typescript"
+  | "react"
+  | "python"
+  | "go";
 
 export interface SupportedEnvironment {
   environment: Environment;

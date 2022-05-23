@@ -1,7 +1,13 @@
 import { CodeSnippet, Environment, SupportedEnvironment } from "./types";
 import { ButtonGroup, Flex, Icon, Stack } from "@chakra-ui/react";
 import { Dispatch, SetStateAction, useMemo } from "react";
-import { SiJavascript, SiPython, SiReact, SiTypescript } from "react-icons/si";
+import {
+  SiGo,
+  SiJavascript,
+  SiPython,
+  SiReact,
+  SiTypescript,
+} from "react-icons/si";
 import { Button, CodeBlock, Heading } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
@@ -34,6 +40,12 @@ const Environments: SupportedEnvironment[] = [
     environment: "python",
     title: "Python",
     icon: SiPython,
+    colorScheme: "blue",
+  },
+  {
+    environment: "go",
+    title: "Go",
+    icon: SiGo,
     colorScheme: "blue",
   },
 ];
