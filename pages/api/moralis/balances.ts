@@ -1,30 +1,39 @@
+import { CURRENCIES } from "constants/currencies";
 import { constants, utils } from "ethers";
 import { NextApiRequest, NextApiResponse } from "next";
+import { SUPPORTED_CHAIN_ID } from "utils/network";
+
+export type BalanceQueryRequest = {
+  chainId: SUPPORTED_CHAIN_ID;
+  address: string;
+};
+
+export type BalanceQueryResponse = Array<{
+  balance: string;
+  decimals: number;
+  name?: string;
+  symbol: string;
+  token_address: string;
+  display_balance: string;
+}>;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
     return res.status(400).json({ error: "invalid method" });
   }
 
-  const { chain, address } = req.body;
+  const { chainId, address } = req.body;
   if (!utils.isAddress(address)) {
     return res.status(400).json({ error: "invalid address" });
   }
 
-  const _chain = encodeURIComponent(chain);
+  const _chain = encodeURIComponent(`0x${chainId?.toString(16)}`);
   const _address = encodeURIComponent(address);
 
   const tokenBalanceEndpoint = `https://deep-index.moralis.io/api/v2/${_address}/erc20?chain=${_chain}`;
   const nativeBalanceEndpoint = `https://deep-index.moralis.io/api/v2/${_address}/balance?chain=${_chain}`;
 
-  const [tokenBalances, nativeBalance] = await Promise.all([
-    fetch(tokenBalanceEndpoint, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": process.env.MORALIS_API_KEY || "",
-      },
-    }).then((tRes) => tRes.json()),
+  const [nativeBalance, tokenBalances] = await Promise.all([
     fetch(nativeBalanceEndpoint, {
       method: "GET",
       headers: {
@@ -32,15 +41,34 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         "x-api-key": process.env.MORALIS_API_KEY || "",
       },
     }).then((nRes) => nRes.json()),
+    fetch(tokenBalanceEndpoint, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.MORALIS_API_KEY || "",
+      },
+    }).then((tRes) => tRes.json()),
   ]);
+
+  const native = CURRENCIES[chainId as SUPPORTED_CHAIN_ID].find(
+    (c) => c.address === constants.AddressZero,
+  );
 
   const balances = [
     ...tokenBalances,
     {
-      token_address: constants.AddressZero,
+      token_address: native?.address,
+      symbol: native?.symbol,
+      name: "Native Token",
+      decimals: 18,
       balance: nativeBalance.balance,
     },
-  ];
+  ].map((balance) => ({
+    ...balance,
+    display_balance: utils
+      .formatUnits(balance.balance, balance.decimals)
+      .toString(),
+  }));
 
   return res.status(200).json(balances);
 };

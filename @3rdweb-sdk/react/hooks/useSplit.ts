@@ -4,14 +4,15 @@ import {
   useMutationWithInvalidate,
   useQueryWithNetwork,
 } from "./query/useQueryWithNetwork";
-import { useWeb3 } from "@3rdweb-sdk/react";
 import { useToast } from "@chakra-ui/react";
 import { useSplit, useToken } from "@thirdweb-dev/react";
-import { CURRENCIES } from "constants/currencies";
-import { constants, ethers } from "ethers";
+import { Split } from "@thirdweb-dev/sdk";
+import {
+  BalanceQueryRequest,
+  BalanceQueryResponse,
+} from "pages/api/moralis/balances";
 import invariant from "tiny-invariant";
 import { parseErrorToMessage } from "utils/errorParser";
-import { SUPPORTED_CHAIN_ID } from "utils/network";
 import { isAddressZero } from "utils/zeroAddress";
 
 export function useSplitContractMetadata(contractAddres?: string) {
@@ -29,104 +30,41 @@ export function useSplitData(contractAddress?: string) {
     },
   );
 }
-
-const getCurrencies = async (chainId?: number, contractAddress?: string) => {
-  const res = await fetch("/api/moralis/balances", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      chain: `0x${chainId?.toString(16)}` as any,
-      address: contractAddress,
-    }),
-  });
-
-  const data = await res.json();
-
-  const currencies: Array<{
-    token_address: string;
-    name?: string;
-    symbol?: string;
-    decimals: number;
-  }> = data.map((token: any) => {
-    if (isAddressZero(token.token_address)) {
-      const native = CURRENCIES[chainId as SUPPORTED_CHAIN_ID].find((c) =>
-        isAddressZero(c.address),
-      );
-
-      return {
-        token_address: constants.AddressZero,
-        name: native?.name,
-        symbol: native?.symbol,
-        decimals: 18,
-      };
-    } else {
-      return token;
-    }
-  });
-
-  return currencies;
-};
-
 export function useSplitBalances(contractAddress?: string) {
-  const { address } = useWeb3();
   const chainId = useActiveChainId();
-
-  const splitsContract = useSplit(contractAddress);
-
   const currencies = useQueryWithNetwork(
     splitsKeys.currencies(contractAddress),
-    () => getCurrencies(chainId, contractAddress),
+    () =>
+      fetch("/api/moralis/balances", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          chainId,
+          address: contractAddress,
+        } as BalanceQueryRequest),
+      }).then((res) => res.json()) as Promise<BalanceQueryResponse>,
     { enabled: !!chainId && !!contractAddress },
   );
-
-  return useQueryWithNetwork(
-    splitsKeys.balances(contractAddress),
-    async () =>
-      Promise.all(
-        (currencies.data || []).map(async (currency) => {
-          let balance = ethers.utils.formatEther("0").toString();
-          if (
-            isAddressZero(currency.token_address) &&
-            splitsContract &&
-            address
-          ) {
-            balance = ethers.utils
-              .formatEther(await splitsContract.balanceOf(address))
-              .toString();
-          } else if (splitsContract && address) {
-            balance = (
-              await splitsContract.balanceOfToken(
-                address,
-                currency.token_address,
-              )
-            ).displayValue;
-          }
-
-          return { ...currency, balance };
-        }),
-      ),
-    {
-      enabled: !!chainId && !!contractAddress && !!address && !!currencies,
-    },
-  );
+  return currencies;
 }
 
-export function useSplitDistributeFunds(contractAddress?: string) {
+export function useSplitDistributeFunds(contract?: Split) {
+  const contractAddress = contract?.getAddress();
   const balances = useSplitBalances(contractAddress);
-  const splitsContract = useSplit(contractAddress);
   const toast = useToast();
+
   return useMutationWithInvalidate(
     async () => {
-      invariant(splitsContract, "split contract is not ready");
+      invariant(contract, "split contract is not ready");
       invariant(balances.data, "No balances to distribute");
 
       const distributions = (balances.data || [])
-        .filter((token) => parseFloat(token.balance) > 0)
+        .filter((token) => token.display_balance !== "0.0")
         .map(async (currency) => {
           if (isAddressZero(currency.token_address)) {
-            await splitsContract
+            await contract
               .distribute()
               .then(() => {
                 toast({
@@ -151,7 +89,7 @@ export function useSplitDistributeFunds(contractAddress?: string) {
                 });
               });
           } else {
-            await splitsContract
+            await contract
               .distributeToken(currency.token_address)
               .then(() => {
                 toast({

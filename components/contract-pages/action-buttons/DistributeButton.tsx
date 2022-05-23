@@ -3,28 +3,30 @@ import {
   useSplitBalances,
   useSplitDistributeFunds,
 } from "@3rdweb-sdk/react/hooks/useSplit";
+import { Split } from "@thirdweb-dev/sdk";
 import { MismatchButton } from "components/buttons/MismatchButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useMemo } from "react";
 import { Button } from "tw-components";
 
-export interface IDistributeButtonProps extends IContractActionButtonProps {}
+export interface IDistributeButtonProps extends IContractActionButtonProps {
+  contract?: Split;
+  balances: ReturnType<typeof useSplitBalances>;
+}
 
 export const DistributeButton: React.FC<IDistributeButtonProps> = ({
+  contract,
+  balances,
   ...restButtonProps
 }) => {
-  const splitsAddress = useSingleQueryParam("split");
-
-  const balances = useSplitBalances(splitsAddress);
   const numTransactions = useMemo(() => {
     if (!balances.data || balances.isLoading) {
       return 0;
     }
-    return balances.data.filter((b) => b.balance !== "0.0").length;
+    return balances.data.filter((b) => b.display_balance !== "0.0").length;
   }, [balances.data, balances.isLoading]);
 
-  const distibutedFundsMutation = useSplitDistributeFunds(splitsAddress);
+  const distibutedFundsMutation = useSplitDistributeFunds(contract);
 
   if (balances.isError) {
     // if we fail to get the balances, we can't know how many transactions there are going to be
