@@ -63,11 +63,11 @@ export const DeployableContractTable: ComponentWithChildren<
           accessor: (row) => row.contractId,
           Cell: (cell: any) => <ContractAbiCell cell={cell} />,
         },
-        {
-          Header: "Bytecode",
-          accessor: (row) => row.contractId,
-          Cell: (cell: any) => <ContractBytecodeCell cell={cell} />,
-        },
+        // {
+        //   Header: "Bytecode",
+        //   accessor: (row) => row.contractId,
+        //   Cell: (cell: any) => <ContractBytecodeCell cell={cell} />,
+        // },
       ];
     }
     if (!isPublish) {

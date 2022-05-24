@@ -13,6 +13,7 @@ import {
   SmartContract,
   detectFeatures,
   extractConstructorParamsFromAbi,
+  fetchContractBytecodeMetadata,
   fetchContractMetadata,
 } from "@thirdweb-dev/sdk";
 import { CustomContractMetadata } from "@thirdweb-dev/sdk/dist/src/schema/contracts/custom";
@@ -46,7 +47,7 @@ export function useContractPublishMetadataFromURI(contractId: ContractId) {
           description: details.description,
         };
       }
-      const resolved = await fetchContractMetadata(
+      const resolved = await fetchContractBytecodeMetadata(
         contractIdIpfsHash,
         StorageSingleton,
       );
@@ -60,7 +61,6 @@ export function useContractPublishMetadataFromURI(contractId: ContractId) {
         image: (resolved as any)?.image || FeatureIconMap.custom,
         name: resolved.name,
         abi: resolved.abi,
-        bytecode: resolved.bytecode,
       };
     },
     {
@@ -120,7 +120,6 @@ export function useCustomContractDeployMutation(ipfsHash: string) {
       ).deployContract(
         ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
         constructorParams,
-        metadata,
       );
     },
     {

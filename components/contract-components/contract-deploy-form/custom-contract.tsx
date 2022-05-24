@@ -179,66 +179,6 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           Smart Contract
         </Badge>
       </Flex>
-      <Divider borderColor="borderColor" />
-      <Flex direction="column">
-        <Heading size="subtitle.md">Contract Metadata</Heading>
-        <Text size="body.md" fontStyle="italic">
-          Settings to organize and distinguish between your different contracts.
-        </Text>
-      </Flex>
-      <Flex gap={4} direction={{ base: "column", md: "row" }}>
-        <Flex flexShrink={0} flexGrow={1} maxW={{ base: "100%", md: "160px" }}>
-          <FormControl
-            isDisabled={!publishMetadata.isSuccess}
-            display="flex"
-            flexDirection="column"
-            isInvalid={!!getFieldState("image", formState).error}
-          >
-            <FormLabel>Image</FormLabel>
-            <FileInput
-              accept={{ "image/*": [] }}
-              value={useImageFileOrUrl(watch("image"))}
-              setValue={(file) =>
-                setValue("image", file, { shouldTouch: true })
-              }
-              border="1px solid"
-              borderColor="gray.200"
-              borderRadius="md"
-              transition="all 200ms ease"
-            />
-            <FormErrorMessage>
-              {getFieldState("image", formState).error?.message}
-            </FormErrorMessage>
-          </FormControl>
-        </Flex>
-
-        <Flex direction="column" gap={4} flexGrow={1} justify="space-between">
-          <Flex gap={4} direction={{ base: "column", md: "row" }}>
-            <FormControl
-              isDisabled={!publishMetadata.isSuccess}
-              isRequired
-              isInvalid={!!getFieldState("name", formState).error}
-            >
-              <FormLabel>Name</FormLabel>
-              <Input autoFocus variant="filled" {...register("name")} />
-              <FormErrorMessage>
-                {getFieldState("name", formState).error?.message}
-              </FormErrorMessage>
-            </FormControl>
-          </Flex>
-
-          <FormControl
-            isDisabled={!publishMetadata.isSuccess}
-            isInvalid={!!getFieldState("description", formState).error}
-          >
-            <FormLabel>Description</FormLabel>
-            <Textarea variant="filled" {...register("description")} />
-            <FormErrorMessage>
-              {getFieldState("description", formState).error?.message}
-            </FormErrorMessage>
-          </FormControl>
-        </Flex>
-      </Flex>
       {constructorParams?.length ? (
         <>
           <Divider my={4} borderColor="borderColor" />
