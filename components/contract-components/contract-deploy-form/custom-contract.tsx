@@ -278,7 +278,8 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
               (c) =>
                 c !== ChainId.Mumbai &&
                 c !== ChainId.Rinkeby &&
-                c !== ChainId.Goerli,
+                c !== ChainId.Goerli &&
+                c !== ChainId.Polygon,
             )}
             disabledChainIdText="coming soon"
             isDisabled={deploy.isLoading || !publishMetadata.isSuccess}
