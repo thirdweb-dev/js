@@ -23,7 +23,6 @@ import {
 } from "components/homepage/examples/ExampleItem";
 import { MultiChainSVG } from "components/homepage/multi-chain-svg";
 import { GeneralCta } from "components/shared/GeneralCta";
-import { BuiltinContractMap } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 // images
 import Analytics from "public/assets/landingpage/analytics.png";
@@ -38,7 +37,7 @@ import { AiOutlineTeam } from "react-icons/ai";
 import { BsMenuButtonWide } from "react-icons/bs";
 import { FiCheck } from "react-icons/fi";
 import { MdOutlineAnalytics } from "react-icons/md";
-import { Heading, Link, Text } from "tw-components";
+import { Heading, Link, Text, TrackedLink } from "tw-components";
 
 export default function Home() {
   const { Track } = useTrack({ page: "home" });
@@ -61,7 +60,6 @@ export default function Home() {
           <HomepageTopNav />
           <HomepageSection id="home" topGradient bottomPattern>
             <SimpleGrid
-              pb={{ base: 12, lg: 24 }}
               pt={{
                 base: 24,
                 md: 48,
@@ -140,16 +138,14 @@ export default function Home() {
               flexDir="column"
               gap={{ base: 6, md: 8 }}
               py={{ base: 12, lg: 24 }}
+              pt={{ base: 24, lg: 0 }}
               align="center"
             >
               <Flex
                 p={{ base: 0, md: 12 }}
+                pt={{ base: 0, md: 24 }}
                 flexDir="column"
                 gap={{ base: 6, md: 8 }}
-                borderWidth={{ base: 0, md: 2 }}
-                borderColor="rgba(255,255,255,.1)"
-                borderRadius="2xl"
-                mb={{ base: 4, md: 12 }}
               >
                 <Heading textAlign="center" size="display.sm" as="h2">
                   <Heading
@@ -157,17 +153,21 @@ export default function Home() {
                     bgGradient="linear(to-r, #B8EEFF, #8689E3)"
                     bgClip="text"
                     size="display.sm"
+                    _hover={{ opacity: 0.8 }}
+                    textDecoration="underline"
                   >
-                    <Link
+                    <TrackedLink
                       isExternal
                       href="https://portal.thirdweb.com/thirdweb-deploy"
+                      category="thirdweb-deloy"
+                      label="heading"
                     >
                       thirdweb deploy
-                    </Link>
+                    </TrackedLink>
                   </Heading>
                 </Heading>
                 <Heading size="subtitle.lg" as="h3" textAlign="center">
-                  Bring your own contracts, unlock all of our tools.
+                  Bring your own contracts, unlock the power of thirdweb.
                 </Heading>
                 <SimpleGrid
                   flexDir="column"
@@ -185,7 +185,9 @@ export default function Home() {
                       alt=""
                       w={12}
                     />
-                    <Heading size="title.sm">No more private keys</Heading>
+                    <Heading size="title.sm">
+                      Private keys are dangerous
+                    </Heading>
                     <Text size="body.lg">
                       Deploy as a team seamlessly with a multi-sig or as a solo
                       dev with your favorite wallet. Never accidentally leak
@@ -200,56 +202,85 @@ export default function Home() {
                       alt=""
                       w={12}
                     />
-                    <Heading size="title.sm">Power up with extensions</Heading>
+                    <Heading size="title.sm">
+                      Power up with{" "}
+                      <TrackedLink
+                        href="https://portal.thirdweb.com/thirdweb-deploy/contract-features"
+                        category="thirdweb-deploy"
+                        label="extensions"
+                        borderBottom="1px solid"
+                        _hover={{ opacity: 0.9 }}
+                      >
+                        extensions
+                      </TrackedLink>
+                    </Heading>
                     <Text size="body.lg">
                       Building blocks for your smart contracts:{" "}
-                      <Link
-                        fontStyle="italic"
-                        href="https://portal.thirdweb.com/thirdweb-deploy/contract-features"
-                        isExternal
-                      >
-                        Delayed Reveal
-                      </Link>
-                      ,{" "}
-                      <Link
-                        fontStyle="italic"
-                        href="https://portal.thirdweb.com/thirdweb-deploy/contract-features"
-                        isExternal
-                      >
-                        Signature Minting
-                      </Link>
-                      ,{" "}
-                      <Link
-                        fontStyle="italic"
+                      <TrackedLink
+                        category="thirdweb-deploy"
+                        borderBottom="1px solid"
                         href="https://portal.thirdweb.com/thirdweb-deploy/contract-features/permissions"
                         isExternal
+                        _hover={{ opacity: 0.9 }}
+                        label="permissions"
                       >
                         Permissions & Roles
-                      </Link>
+                      </TrackedLink>
                       ,{" "}
-                      <Link
-                        fontStyle="italic"
+                      <TrackedLink
+                        category="thirdweb-deploy"
+                        borderBottom="1px solid"
                         href="https://portal.thirdweb.com/thirdweb-deploy/contract-features/royalty"
                         isExternal
+                        _hover={{ opacity: 0.9 }}
+                        label="royalties"
                       >
                         Royalties
-                      </Link>
+                      </TrackedLink>
                       ,{" "}
-                      <Link
-                        fontStyle="italic"
+                      <TrackedLink
+                        category="thirdweb-deploy"
+                        borderBottom="1px solid"
                         href="https://portal.thirdweb.com/thirdweb-deploy/contract-features"
                         isExternal
+                        _hover={{ opacity: 0.9 }}
+                        label="delayed-reveal"
+                      >
+                        Delayed Reveal
+                      </TrackedLink>
+                      ,{" "}
+                      <TrackedLink
+                        category="thirdweb-deploy"
+                        borderBottom="1px solid"
+                        href="https://portal.thirdweb.com/thirdweb-deploy/contract-features"
+                        isExternal
+                        _hover={{ opacity: 0.9 }}
+                        label="signature-minting"
+                      >
+                        Signature Minting
+                      </TrackedLink>
+                      ,{" "}
+                      <TrackedLink
+                        category="thirdweb-deploy"
+                        borderBottom="1px solid"
+                        href="https://portal.thirdweb.com/thirdweb-deploy/contract-features"
+                        isExternal
+                        _hover={{ opacity: 0.9 }}
+                        label="primary-sales"
                       >
                         Primary Sales
-                      </Link>
+                      </TrackedLink>
                       ,{" "}
-                      <Link
-                        fontStyle="italic"
+                      <TrackedLink
+                        category="thirdweb-deploy"
+                        borderBottom="1px solid"
                         href="https://portal.thirdweb.com/thirdweb-deploy/contract-features"
                         isExternal
+                        _hover={{ opacity: 0.9 }}
+                        label="more"
                       >
                         and more...
-                      </Link>{" "}
+                      </TrackedLink>{" "}
                     </Text>
                   </Stack>
 
@@ -261,7 +292,7 @@ export default function Home() {
                       w={12}
                     />
                     <Heading size="title.sm">
-                      Automatic SDKs and dashboards
+                      Powerful SDKs and dashboards
                     </Heading>
                     <Text size="body.lg">
                       Fully featured SDKs for your contracts so you can focus on
@@ -270,39 +301,58 @@ export default function Home() {
                     </Text>
                   </Stack>
                 </SimpleGrid>
+
+                <Heading size="subtitle.lg" as="h3" textAlign="center">
+                  Get started with our{" "}
+                  <TrackedLink
+                    href="https://portal.thirdweb.com/pre-built-contracts"
+                    category="pre-built-contract"
+                    label="heading"
+                    borderBottom="1px solid"
+                    isExternal
+                    _hover={{ opacity: 0.9 }}
+                  >
+                    pre-built contracts
+                  </TrackedLink>
+                </Heading>
+                <SimpleGrid
+                  columns={{ base: 2, md: 3, lg: 4 }}
+                  spacing={{ base: 3, md: 4 }}
+                >
+                  <ContractCard
+                    icon="nft-drop"
+                    title="NFTs"
+                    description="ERC721 and ERC1155, minted or lazy minted so your audience can claim them."
+                  />
+                  <ContractCard
+                    icon="token"
+                    title="Tokens"
+                    description="ERC20 tokens, minted or lazy minted so your audience can claim them."
+                  />
+                  <ContractCard
+                    icon="marketplace"
+                    title="Marketplace"
+                    description="NFT marketplace, either open to any collection or limited to the collections you want."
+                  />
+                  <ContractCard
+                    icon="split"
+                    title="More"
+                    description="Governance on-chain, splitting revenue, and more."
+                  />
+                </SimpleGrid>
               </Flex>
-              <Heading size="subtitle.lg" as="h3" textAlign="center">
-                or get started with our pre-built contracts
-              </Heading>
-              <SimpleGrid
-                columns={{ base: 2, md: 3, lg: 4 }}
-                spacing={{ base: 3, md: 4 }}
-                mb={12}
-              >
-                {Object.entries(BuiltinContractMap)
-                  .filter(
-                    ([, contract]) => contract.title !== "NOT IMPLEMENTED",
-                  )
-                  .map(([key, contract]) => (
-                    <ContractCard
-                      key={key}
-                      contract={contract}
-                      contractType={key as keyof typeof BuiltinContractMap}
-                    />
-                  ))}
-              </SimpleGrid>
             </Flex>
           </HomepageSection>
 
           <HomepageSection id="developers" bottomPattern middleGradient>
             <Flex
               flexDir="column"
-              py={{ base: 12, lg: 24 }}
+              pt={{ base: 12, lg: 24 }}
               align="center"
               gap={{ base: 6, md: 8 }}
             >
               <Heading as="h2" size="display.sm" textAlign="center">
-                Powerful and intuitive SDKs.
+                Powerful SDKs.
               </Heading>
               <Heading as="h3" size="subtitle.lg" textAlign="center">
                 Easily integrate into web, mobile, backend, games, etc.
@@ -314,19 +364,25 @@ export default function Home() {
           <HomepageSection id="features">
             <Flex
               flexDir="column"
-              py={{ base: 12, lg: 24 }}
+              pb={{ base: 12, lg: 24 }}
+              pt={24}
               align="center"
               gap={{ base: 12, lg: 24 }}
             >
-              <Heading as="h2" size="display.sm" textAlign="center">
-                Dashboards to
-                <br />
-                control{" "}
-                <Heading as="span" fontSize="inherit" fontWeight={900}>
-                  everything
+              <Flex flexDir="column" gap={4}>
+                <Heading as="h2" size="display.sm" textAlign="center">
+                  Dashboards to
+                  <br />
+                  control{" "}
+                  <Heading as="span" fontSize="inherit" fontWeight={900}>
+                    everything
+                  </Heading>
+                  .
                 </Heading>
-                .
-              </Heading>
+                <Heading size="subtitle.lg" as="h3" textAlign="center">
+                  Everything you need, in one place.
+                </Heading>
+              </Flex>
               <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
                 <DashboardCard
                   headingTitle="teams"
@@ -533,9 +589,9 @@ export default function Home() {
             <Flex
               flexDir="column"
               pt={{ base: 12, lg: 24 }}
+              pb={{ base: 24, lg: 0 }}
               align="center"
               gap={{ base: 6, md: 8 }}
-              pb={{ base: 24, md: 0 }}
             >
               <Center mb={6} pt={{ base: 8, lg: 24 }}>
                 <Center p={2} position="relative" mb={6}>
@@ -571,7 +627,11 @@ export default function Home() {
                 Build web3 apps with ease. Get instant access.
               </Heading>
               <LightMode>
-                <GeneralCta title="Start building for free" size="lg" />
+                <GeneralCta
+                  title="Start building for free"
+                  size="lg"
+                  w={{ base: "full", md: "inherit" }}
+                />
               </LightMode>
             </Flex>
           </HomepageSection>

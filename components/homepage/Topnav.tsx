@@ -10,7 +10,6 @@ import {
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import { Logo } from "components/logo";
 import React, { useState } from "react";
-import { FiExternalLink } from "react-icons/fi";
 import { SiDiscord, SiGithub, SiTwitter, SiYoutube } from "react-icons/si";
 import { LinkButton, TrackedIconButton, TrackedLink } from "tw-components";
 
@@ -77,21 +76,6 @@ export const HomepageTopNav: React.FC<{}> = () => {
             </TrackedLink>
             <TrackedLink href="#fees" category="topnav" label="fees">
               Pricing
-            </TrackedLink>
-            <TrackedLink
-              href="https://portal.thirdweb.com"
-              variant="link"
-              color="inherit"
-              fontWeight="inherit"
-              textDecoration={undefined}
-              isExternal
-              category="topnav"
-              label="portal"
-            >
-              <Flex alignItems="center">
-                Docs
-                <Icon ml={1.5} as={FiExternalLink} />
-              </Flex>
             </TrackedLink>
             <Flex
               display={{ base: "none", lg: "flex" }}

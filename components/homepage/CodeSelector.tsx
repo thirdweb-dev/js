@@ -146,47 +146,22 @@ export const CodeSelector: React.FC = () => {
         </CodeOptionButton>
       </SimpleGrid>
       {isReplitEnabled ? (
-        <>
-          <LazyLoadedIframe
-            aspectRatioProps={{
-              ratio: { base: 9 / 16, md: 16 / 9 },
-              w: "full",
-              borderRadius: "xl",
-              overflow: "hidden",
-              border: "2px solid",
-              borderColor: "#4953AF",
-              bg: "#1C2333",
-            }}
-            frameBorder="0"
-            width="1200px"
-            height="800px"
-            loading="lazy"
-            src={`https://replit.com/@thirdweb-dev/${activeLanguage}-sdk?lite=true`}
-          />
-          <LinkButton
-            variant="outline"
-            borderRadius="md"
-            bg="#fff"
-            color="#000"
-            w="full"
-            maxW="container.sm"
-            _hover={{
-              bg: "whiteAlpha.800",
-            }}
-            href={`https://portal.thirdweb.com/${activeLanguage}`}
-            isExternal
-            p={6}
-            onClick={() =>
-              trackEvent({
-                category: "code-selector",
-                action: "click-documentation",
-                label: activeLanguage,
-              })
-            }
-          >
-            Explore documentation
-          </LinkButton>
-        </>
+        <LazyLoadedIframe
+          aspectRatioProps={{
+            ratio: { base: 9 / 16, md: 16 / 9 },
+            w: "full",
+            borderRadius: "xl",
+            overflow: "hidden",
+            border: "2px solid",
+            borderColor: "#4953AF",
+            bg: "#1C2333",
+          }}
+          frameBorder="0"
+          width="1200px"
+          height="800px"
+          loading="lazy"
+          src={`https://replit.com/@thirdweb-dev/${activeLanguage}-sdk?lite=true`}
+        />
       ) : (
         <Flex
           gap={{ base: 4, md: 12 }}
@@ -240,6 +215,29 @@ export const CodeSelector: React.FC = () => {
           </LinkButton>
         </Flex>
       )}
+      <LinkButton
+        variant="outline"
+        borderRadius="md"
+        bg="#fff"
+        color="#000"
+        w="full"
+        maxW="container.sm"
+        _hover={{
+          bg: "whiteAlpha.800",
+        }}
+        href="https://portal.thirdweb.com/"
+        isExternal
+        p={6}
+        onClick={() =>
+          trackEvent({
+            category: "code-selector",
+            action: "click",
+            label: "documentation",
+          })
+        }
+      >
+        Explore documentation
+      </LinkButton>
     </>
   );
 };

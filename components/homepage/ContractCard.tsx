@@ -1,21 +1,20 @@
 import { Flex, LinkBox, LinkOverlay } from "@chakra-ui/react";
-import { ContractType } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
-import { BuiltinContractDetails, UrlMap } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import React from "react";
 import { Heading, Text } from "tw-components";
 
 interface ContractCardProps {
-  contract: BuiltinContractDetails;
-  contractType: ContractType;
+  icon: string;
+  title: string;
+  description: string;
 }
 
 export const ContractCard: React.FC<ContractCardProps> = ({
-  contract,
-  contractType,
+  icon,
+  title,
+  description,
 }) => {
-  const { title, description, icon } = contract;
   const { trackEvent } = useTrack();
   return (
     <Flex
@@ -31,15 +30,20 @@ export const ContractCard: React.FC<ContractCardProps> = ({
       _hover={{ borderColor: "primary.600", textDecoration: "none" }}
     >
       <Flex align="center" gap={2}>
-        <ChakraNextImage src={icon} alt={title} boxSize={7} flexShrink={0} />
+        <ChakraNextImage
+          src={require(`/public/assets/tw-icons/${icon}.png`)}
+          alt={title}
+          boxSize={7}
+          flexShrink={0}
+        />
         <LinkOverlay
-          href={`https://portal.thirdweb.com/pre-built-contracts/${UrlMap[contractType]}`}
+          href={`https://portal.thirdweb.com/pre-built-contracts/${icon}`}
           isExternal
           onClick={() =>
             trackEvent({
               category: "pre-built-contract",
               action: "click",
-              label: contractType,
+              label: title.toLowerCase(),
             })
           }
         >

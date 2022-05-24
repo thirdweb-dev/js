@@ -50,7 +50,7 @@ export const HomepageFooter: React.FC = () => {
             textAlign="center"
             lineHeight={1.5}
           >
-            Join 20,000+ builders and stay up to date with our newsletter
+            Join 40,000+ builders and stay up to date with our newsletter
           </Heading>
           <Flex
             as="form"

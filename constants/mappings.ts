@@ -2,7 +2,7 @@ import type { ContractType, Role } from "@thirdweb-dev/sdk";
 import { StaticImageData } from "next/image";
 
 export const FeatureIconMap: Record<ContractType, StaticImageData> = {
-  "nft-drop": require("public/assets/tw-icons/drop.png"),
+  "nft-drop": require("public/assets/tw-icons/nft-drop.png"),
   "nft-collection": require("public/assets/tw-icons/nft-collection.png"),
   "edition-drop": require("public/assets/tw-icons/edition-drop.png"),
   edition: require("public/assets/tw-icons/edition.png"),
@@ -10,7 +10,7 @@ export const FeatureIconMap: Record<ContractType, StaticImageData> = {
   vote: require("public/assets/tw-icons/vote.png"),
   marketplace: require("public/assets/tw-icons/marketplace.png"),
   pack: require("public/assets/tw-icons/pack.png"),
-  split: require("public/assets/tw-icons/splits.png"),
+  split: require("public/assets/tw-icons/split.png"),
   "token-drop": require("public/assets/tw-icons/token.png"),
   // TODO (byoc) icon for custom contract
   custom: require("public/assets/tw-icons/general.png"),

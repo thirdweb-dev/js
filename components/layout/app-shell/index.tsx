@@ -80,17 +80,19 @@ export const AppShell: ComponentWithChildren = ({ children }) => {
               spacing={{ base: 3, md: 4 }}
               marginLeft="auto"
             >
-              <Link
-                href="https://portal.thirdweb.com/guides"
+              <TrackedLink
+                href="https://portal.thirdweb.com/"
                 isExternal
                 variant="link"
                 color="inherit"
                 fontWeight="inherit"
                 textDecoration={undefined}
                 display={{ base: "none", md: "block" }}
+                category="header"
+                label="docs"
               >
-                Guides
-              </Link>
+                Docs
+              </TrackedLink>
               <ButtonGroup
                 variant="ghost"
                 display={{ base: "none", md: "block" }}
