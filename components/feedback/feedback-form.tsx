@@ -20,12 +20,14 @@ export interface FeedbackFormProps {
   wallet?: string;
   scope: keyof typeof FEEDBACK_PRODUCT_MAP;
   onClose?: () => void;
+  onSubmitSuccess?: () => void;
   trackEvent: ReturnType<typeof useTrack>["trackEvent"];
 }
 export const FeedbackForm: React.FC<FeedbackFormProps> = ({
   scope,
   wallet,
   onClose,
+  onSubmitSuccess,
   trackEvent,
 }) => {
   const productName = FEEDBACK_PRODUCT_MAP[scope];
@@ -92,6 +94,9 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
             }),
           });
           onSuccess();
+          if (onSubmitSuccess) {
+            onSubmitSuccess();
+          }
         } catch (e) {
           console.error("failed to send product feedback", e);
         } finally {

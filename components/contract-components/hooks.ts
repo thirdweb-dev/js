@@ -14,9 +14,7 @@ import {
   detectFeatures,
   extractConstructorParamsFromAbi,
   fetchContractBytecodeMetadata,
-  fetchContractMetadata,
 } from "@thirdweb-dev/sdk";
-import { CustomContractMetadata } from "@thirdweb-dev/sdk/dist/src/schema/contracts/custom";
 import { StorageSingleton } from "components/app-layouts/providers";
 import { BuiltinContractMap, FeatureIconMap } from "constants/mappings";
 import { StaticImageData } from "next/image";
@@ -104,13 +102,7 @@ export function useCustomContractDeployMutation(ipfsHash: string) {
   const chainId = useChainId();
 
   return useMutation(
-    async ({
-      metadata,
-      constructorParams,
-    }: {
-      metadata: CustomContractMetadata;
-      constructorParams: unknown[];
-    }) => {
+    async (constructorParams: unknown[]) => {
       invariant(
         sdk && "getPublisher" in sdk,
         "sdk is not ready or does not support publishing",

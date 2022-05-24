@@ -1,6 +1,5 @@
 import { ContractId } from "../types";
 import { ContractAbiCell } from "./cells/abi";
-import { ContractBytecodeCell } from "./cells/bytecode";
 import { ContractDeployActionCell } from "./cells/deploy-action";
 import { ContractDescriptionCell } from "./cells/description";
 import { ContractImageCell } from "./cells/image";
@@ -63,11 +62,6 @@ export const DeployableContractTable: ComponentWithChildren<
           accessor: (row) => row.contractId,
           Cell: (cell: any) => <ContractAbiCell cell={cell} />,
         },
-        // {
-        //   Header: "Bytecode",
-        //   accessor: (row) => row.contractId,
-        //   Cell: (cell: any) => <ContractBytecodeCell cell={cell} />,
-        // },
       ];
     }
     if (!isPublish) {
