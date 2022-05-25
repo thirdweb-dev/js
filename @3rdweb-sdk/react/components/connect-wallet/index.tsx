@@ -331,7 +331,9 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
                       src={
                         _connector.id === "gnosis"
                           ? connectorIdToImageUrl["Gnosis"]
-                          : _connector.name !== "Injected"
+                          : Object.keys(connectorIdToImageUrl).includes(
+                              _connector.name,
+                            )
                           ? connectorIdToImageUrl[_connector.name]
                           : connectorIdToImageUrl["Injected"]
                       }
