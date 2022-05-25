@@ -1,15 +1,13 @@
-import { ButtonGroup, Divider, Flex } from "@chakra-ui/react";
 import { Route } from "@tanstack/react-location";
 import { useContract } from "@thirdweb-dev/react";
 import {
-  Erc20,
-  Erc721,
-  Erc1155,
   SmartContract,
   ValidContractInstance,
+  detectContractFeature,
 } from "@thirdweb-dev/sdk";
+import { FeatureName } from "@thirdweb-dev/sdk/dist/src/constants/contract-features";
+import { ContractWrapper } from "@thirdweb-dev/sdk/dist/src/core/classes/contract-wrapper";
 import React from "react";
-import { Card, Heading, LinkButton, Text } from "tw-components";
 
 export type EnhancedRoute = Route & {
   title: string;
@@ -21,12 +19,6 @@ export function useContractRouteConfig(
   contractAddress?: string,
 ): EnhancedRoute[] {
   const contract = useContract(contractAddress);
-
-  const nftContract =
-    detectErc721Instance(contract.contract) ||
-    detectErc1155Instance(contract.contract);
-
-  const tokenContract = detectErc20Instance(contract.contract);
 
   return [
     {
@@ -50,74 +42,23 @@ export function useContractRouteConfig(
     {
       title: "NFTs",
       path: "nfts",
-      isEnabled: !!nftContract,
-      element: nftContract ? (
-        () =>
-          import("../tabs/nfts/page").then(({ ContractNFTPage }) => (
-            <ContractNFTPage contract={nftContract} />
-          ))
-      ) : (
-        <Card as={Flex} flexDir="column" gap={3}>
-          {/* TODO  extract this out into it's own component and make it better */}
-          <Heading size="subtitle.md">No NFT extension enabled</Heading>
-          <Text>
-            To enable NFT features you will have to extend the required
-            interfaces in your contract.
-          </Text>
-
-          <Divider my={1} borderColor="borderColor" />
-          <Flex gap={4} align="center">
-            <Heading size="label.md">Learn more: </Heading>
-            <ButtonGroup colorScheme="purple" size="sm" variant="solid">
-              <LinkButton
-                isExternal
-                href="https://portal.thirdweb.com/thirdweb-deploy/contract-features/erc721"
-              >
-                ERC721
-              </LinkButton>
-              <LinkButton
-                isExternal
-                href="https://portal.thirdweb.com/thirdweb-deploy/contract-features/erc1155"
-              >
-                ERC1155
-              </LinkButton>
-            </ButtonGroup>
-          </Flex>
-        </Card>
-      ),
+      isEnabled: isFeatureEnabledFromContract(contract.contract, [
+        "ERC721",
+        "ERC1155",
+      ]),
+      element: () =>
+        import("../tabs/nfts/page").then(({ ContractNFTPage }) => (
+          <ContractNFTPage contractAddress={contractAddress} />
+        )),
     },
     {
       title: "Tokens",
       path: "tokens",
-      isEnabled: !!tokenContract,
-      element: tokenContract ? (
-        () =>
-          import("../tabs/tokens/page").then(({ ContractTokensPage }) => (
-            <ContractTokensPage contract={tokenContract} />
-          ))
-      ) : (
-        <Card as={Flex} flexDir="column" gap={3}>
-          {/* TODO  extract this out into it's own component and make it better */}
-          <Heading size="subtitle.md">No Token extension enabled</Heading>
-          <Text>
-            To enable Token features you will have to extend the required
-            interfaces in your contract.
-          </Text>
-
-          <Divider my={1} borderColor="borderColor" />
-          <Flex gap={4} align="center">
-            <Heading size="label.md">Learn more: </Heading>
-            <ButtonGroup colorScheme="purple" size="sm" variant="solid">
-              <LinkButton
-                isExternal
-                href="https://portal.thirdweb.com/thirdweb-deploy/contract-features/erc20"
-              >
-                ERC20
-              </LinkButton>
-            </ButtonGroup>
-          </Flex>
-        </Card>
-      ),
+      isEnabled: isFeatureEnabledFromContract(contract.contract, ["ERC20"]),
+      element: () =>
+        import("../tabs/tokens/page").then(({ ContractTokensPage }) => (
+          <ContractTokensPage contractAddress={contractAddress} />
+        )),
     },
     {
       title: "Settings",
@@ -131,50 +72,19 @@ export function useContractRouteConfig(
     },
   ];
 }
-// quick utils
-// TODO move these to utils
 
-function detectErc721Instance(
-  contract: ValidContractInstance | SmartContract | null | undefined,
-) {
+function isFeatureEnabledFromContract(
+  contract: ValidContractInstance | SmartContract | null = null,
+  featureName: FeatureName | FeatureName[],
+): boolean {
   if (!contract) {
-    return undefined;
+    return false;
   }
-  if (contract instanceof Erc721) {
-    return contract;
-  }
-  if ("nft" in contract && contract.nft instanceof Erc721) {
-    return contract.nft;
-  }
-  return undefined;
-}
 
-function detectErc1155Instance(
-  contract: ValidContractInstance | SmartContract | null | undefined,
-) {
-  if (!contract) {
-    return undefined;
-  }
-  if (contract instanceof Erc1155) {
-    return contract;
-  }
-  if ("edition" in contract && contract.edition instanceof Erc1155) {
-    return contract.edition;
-  }
-  return undefined;
-}
+  const contractWrapper = (contract as any)
+    .contractWrapper as ContractWrapper<any>;
 
-function detectErc20Instance(
-  contract: ValidContractInstance | SmartContract | null | undefined,
-) {
-  if (!contract) {
-    return undefined;
-  }
-  if (contract instanceof Erc20) {
-    return contract;
-  }
-  if ("token" in contract && contract.token instanceof Erc20) {
-    return contract.token;
-  }
-  return undefined;
+  return Array.isArray(featureName)
+    ? featureName.some((f) => detectContractFeature(contractWrapper, f))
+    : detectContractFeature(contractWrapper, featureName);
 }

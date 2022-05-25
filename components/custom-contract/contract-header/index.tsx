@@ -2,8 +2,6 @@ import { ContractMetadata } from "./contract-metadata";
 import { ContractHeaderFeaturesSection } from "./features";
 import { Box, Container, Flex } from "@chakra-ui/react";
 
-// import { AddressCopyButton } from "tw-components";
-
 interface ContractHeaderProps {
   contractAddress: string;
 }
