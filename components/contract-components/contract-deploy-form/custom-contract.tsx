@@ -99,7 +99,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
             });
             onSuccess();
 
-            router.push(
+            router.replace(
               `/${wallet}/${SupportedChainIdToNetworkMap[selectedChain]}/${deployedContractAddress}`,
             );
           },

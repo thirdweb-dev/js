@@ -3,57 +3,15 @@ import { useAddContractMutation } from "@3rdweb-sdk/react/hooks/useRegistry";
 import { Flex } from "@chakra-ui/react";
 import { useAddress, useContract } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { FeedbackForm } from "components/feedback/feedback-form";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import { Card, Heading, Text } from "tw-components";
 
-interface CustomContractOverviewPageProps {
-  contractAddress?: string;
-}
-
-export const CustomContractOverviewPage: React.FC<
-  CustomContractOverviewPageProps
-> = ({ contractAddress }) => {
-  const address = useAddress();
-  const contractQuery = useContract(contractAddress);
-
-  const { trackEvent } = useTrack();
-
-  if (!contractAddress) {
-    return <div>No contract address provided</div>;
-  }
-  if (!contractQuery || contractQuery?.isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  return (
-    <Flex direction="column" gap={4}>
-      <Flex gap={8} w="100%">
-        <AddToDashboardCardCTA contractAddress={contractAddress} />
-
-        {/* we only show the feedback form on custom cotnracts */}
-        {contractQuery.data?.contractType === "custom" && (
-          <Card flexGrow={1}>
-            <FeedbackForm
-              trackEvent={trackEvent}
-              wallet={address}
-              scope="thirdweb-deploy"
-              localStorageKey={`tw_deploy-${contractAddress}`}
-            />
-          </Card>
-        )}
-      </Flex>
-    </Flex>
-  );
-};
-
-interface AddToDashboardCardCTAProps {
+interface AddToDashboardCardProps {
   contractAddress: string;
 }
 
-const AddToDashboardCardCTA: React.FC<AddToDashboardCardCTAProps> = ({
+export const AddToDashboardCard: React.FC<AddToDashboardCardProps> = ({
   contractAddress,
 }) => {
   const activeChainId = useActiveChainId();

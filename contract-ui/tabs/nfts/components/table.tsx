@@ -14,11 +14,16 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useNFTs, useTotalCirculatingSupply } from "@thirdweb-dev/react";
-import { Erc721, Json, NFTMetadataOwner } from "@thirdweb-dev/sdk";
+import {
+  NFT,
+  NFTContract,
+  useNFTs,
+  useTotalCirculatingSupply,
+} from "@thirdweb-dev/react";
+import { Erc721, Erc1155, Json } from "@thirdweb-dev/sdk";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import { BigNumber } from "ethers";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   MdFirstPage,
   MdLastPage,
@@ -29,46 +34,56 @@ import { Cell, Column, usePagination, useTable } from "react-table";
 import { AddressCopyButton, Card, Heading, Text } from "tw-components";
 
 interface ContractOverviewNftGetAllProps {
-  contract: Erc721;
+  contract: NFTContract;
 }
-
-const tableColumns: Column<NFTMetadataOwner>[] = [
-  {
-    Header: "Token Id",
-    accessor: (row) => row.metadata.id.toString(),
-  },
-  {
-    Header: "Media",
-    accessor: (row) => row.metadata,
-    Cell: (cell: any) => <MediaCell cell={cell} />,
-  },
-  {
-    Header: "Name",
-    accessor: (row) => row.metadata.name,
-  },
-  {
-    Header: "Description",
-    accessor: (row) => row.metadata.description,
-  },
-  {
-    Header: "Properties",
-    accessor: (row) => row.metadata.attributes || row.metadata.properties,
-    Cell: ({ cell }: { cell: Cell<NFTMetadataOwner, Json> }) => (
-      <Code whiteSpace="pre">{JSON.stringify(cell.value, null, 2)}</Code>
-    ),
-  },
-  {
-    Header: "Owned By",
-    accessor: (row) => row.owner,
-    Cell: ({ cell }: { cell: Cell<NFTMetadataOwner, string> }) => (
-      <AddressCopyButton address={cell.value} />
-    ),
-  },
-];
-
-const ContractOverviewNftGetAll: React.FC<ContractOverviewNftGetAllProps> = ({
+export const NftGetAllTable: React.FC<ContractOverviewNftGetAllProps> = ({
   contract,
 }) => {
+  const tableColumns = useMemo(() => {
+    const cols: Column<NFT<NFTContract>>[] = [
+      {
+        Header: "Token Id",
+        accessor: (row) => row.metadata.id.toString(),
+      },
+      {
+        Header: "Media",
+        accessor: (row) => row.metadata,
+        Cell: (cell: any) => <MediaCell cell={cell} />,
+      },
+      {
+        Header: "Name",
+        accessor: (row) => row.metadata.name,
+      },
+      {
+        Header: "Description",
+        accessor: (row) => row.metadata.description,
+      },
+      {
+        Header: "Properties",
+        accessor: (row) => row.metadata.attributes || row.metadata.properties,
+        Cell: ({ cell }: { cell: Cell<NFT<NFTContract>, Json> }) => (
+          <Code whiteSpace="pre">{JSON.stringify(cell.value, null, 2)}</Code>
+        ),
+      },
+    ];
+    if (contract instanceof Erc721) {
+      cols.push({
+        Header: "Owned By",
+        accessor: (row) => row.owner,
+        Cell: ({ cell }: { cell: Cell<NFT<NFTContract>, string> }) => (
+          <AddressCopyButton address={cell.value} />
+        ),
+      });
+    }
+    if (contract instanceof Erc1155) {
+      cols.push({
+        Header: "Supply",
+        accessor: (row) => BigNumber.from(row.supply).toString(),
+      });
+    }
+    return cols;
+  }, [contract]);
+
   const [queryParams, setQueryParams] = useState({ count: 50, start: 0 });
   const getAllQueryResult = useNFTs(contract, queryParams);
   const totalSupply = useTotalCirculatingSupply(contract);
@@ -234,5 +249,3 @@ const ContractOverviewNftGetAll: React.FC<ContractOverviewNftGetAllProps> = ({
     </Flex>
   );
 };
-
-export default ContractOverviewNftGetAll;

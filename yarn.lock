@@ -256,7 +256,7 @@
     core-js-pure "^3.20.2"
     regenerator-runtime "^0.13.4"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.2", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.16.3", "@babel/runtime@^7.17.9", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.10.2", "@babel/runtime@^7.12.13", "@babel/runtime@^7.12.5", "@babel/runtime@^7.13.10", "@babel/runtime@^7.16.3", "@babel/runtime@^7.16.7", "@babel/runtime@^7.17.9", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.2", "@babel/runtime@^7.7.2", "@babel/runtime@^7.7.6":
   version "7.18.0"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.18.0.tgz#6d77142a19cb6088f0af662af1ada37a604d34ae"
   integrity sha512-YMQvx/6nKEaucl0MY56mwIG483xk8SDNdlUwb2Ts6FUpr7fm85DxEmsY18LXBNhcTz6tO6JwZV8w1W06v8UKeg==
@@ -1776,6 +1776,21 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
+"@tanstack/react-location-devtools@^3.4.4":
+  version "3.4.4"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-location-devtools/-/react-location-devtools-3.4.4.tgz#e7b064d39d3376cead2fba35d0e6a6f6eb5cb5a4"
+  integrity sha512-EyPdaPXlIgGoZl8S34RPcQ/OD2WqwZSNg89lpTfFf3yUWOOMJHmK6MUH3jubOjtAONnIs+UreePWbW+NY7gBAQ==
+  dependencies:
+    "@babel/runtime" "^7.16.7"
+
+"@tanstack/react-location@^3.7.4":
+  version "3.7.4"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-location/-/react-location-3.7.4.tgz#0125ba5685805d232429b8df70d20cb6c2a56cec"
+  integrity sha512-6rH2vNHGr0uyeUz5ZHvWMYjeYKGgIKFzvs5749QtnS9f+FU7t7fQE0hKZAzltBZk82LT7iYbcHBRyUg2lW13VA==
+  dependencies:
+    "@babel/runtime" "^7.16.7"
+    history "^5.2.0"
+
 "@thirdweb-dev/chain-icons@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/chain-icons/-/chain-icons-1.0.2.tgz#b7f7c3f43fb3d8823ed9272ca109d17eb5016716"
@@ -1786,10 +1801,10 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.3.8.tgz#7c565b4d4f1917bbbc76dc48c9f6bffc8c6eabdd"
   integrity sha512-cSVwIzPSYaS8gFlkq4r+G9UyVwr/62uE+p6SzrZFXYCbeCJwJTml3VnrVEptJ7g8RukL4Lh6uwQ6IPtgMTY4cQ==
 
-"@thirdweb-dev/react@^2.3.6":
-  version "2.3.11"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.3.11.tgz#248a168abea69d13fdf6793702b600b8f64ff5f3"
-  integrity sha512-L4EQGuh/sjC8PRoePi+dCzoZKACk4d8KXCUHRyAH8awzSZpSR7mmBXB+xcxWkEit55Cbm6RMiE5zfUCwNYtUFw==
+"@thirdweb-dev/react@^2.3.12-0":
+  version "2.3.12-0"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.3.12-0.tgz#701899a221a8462b393a462a153c2d21650567a7"
+  integrity sha512-VPPvdfrmLUE8Knjd3HEAb8Bf/uNkY8mczas2zsLetp7fRmGciKE0KLG6YMm+05MwAqE1vNs6p4phLb9bCqcmUg==
   dependencies:
     detect-browser "^5.3.0"
     mime "^3.0.0"
@@ -5127,6 +5142,13 @@ hey-listen@^1.0.8:
   resolved "https://registry.yarnpkg.com/hey-listen/-/hey-listen-1.0.8.tgz#8e59561ff724908de1aa924ed6ecc84a56a9aa68"
   integrity sha512-COpmrF2NOg4TBWUJ5UVyaCU2A88wEMkUPK4hNqyCkqHbxT92BbvfjoSozkAIIm6XhicGlJHhFdullInrdhwU8Q==
 
+history@^5.2.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/history/-/history-5.3.0.tgz#1548abaa245ba47992f063a0783db91ef201c73b"
+  integrity sha512-ZqaKwjjrAYUYfLG+htGaIIZ4nioX2L70ZUMIFysS3xvBsSG4x/n1V6TXV3N8ZYNuFGlDirFg32T7B6WOUPDYcQ==
+  dependencies:
+    "@babel/runtime" "^7.7.6"
+
 hmac-drbg@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/hmac-drbg/-/hmac-drbg-1.0.1.tgz#d2745701025a6c775a6c545793ed502fc0c649a1"
@@ -7947,12 +7969,7 @@ typedarray-to-buffer@3.1.5, typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typescript@^3.9.10, typescript@^3.9.5, typescript@^3.9.7:
-  version "3.9.10"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.10.tgz#70f3910ac7a51ed6bef79da7800690b19bf778b8"
-  integrity sha512-w6fIxVE/H1PkLKcCPsFqKE7Kv7QUwhU8qQY2MueZXWx5cPZdwFupLgKK3vntcK98BtNHZtAF4LA/yl2a7k8R6Q==
-
-typescript@^4.2.3, typescript@^4.4.4:
+typescript@^3.9.10, typescript@^3.9.5, typescript@^3.9.7, typescript@^4.2.3, typescript@^4.4.4, typescript@^4.7.0:
   version "4.7.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.7.2.tgz#1f9aa2ceb9af87cca227813b4310fff0b51593c4"
   integrity sha512-Mamb1iX2FDUpcTRzltPxgWMKy3fhg0TN378ylbktPGPK/99KbDtMQ4W1hwgsbPAsG3a0xKa1vmw4VKZQbkvz5A==
