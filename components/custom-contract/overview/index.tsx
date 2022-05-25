@@ -5,7 +5,6 @@ import { useAddress, useContract } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FeedbackForm } from "components/feedback/feedback-form";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useLocalStorage } from "hooks/useLocalStorage";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import { Card, Heading, Text } from "tw-components";
@@ -21,10 +20,7 @@ export const CustomContractOverviewPage: React.FC<
   const contractQuery = useContract(contractAddress);
 
   const { trackEvent } = useTrack();
-  const [hasSubmittedFeedback, setHasSubmittedFeedback] = useLocalStorage(
-    `tw_deploy_feedback_${contractAddress}`,
-    true,
-  );
+
   if (!contractAddress) {
     return <div>No contract address provided</div>;
   }
@@ -36,13 +32,15 @@ export const CustomContractOverviewPage: React.FC<
     <Flex direction="column" gap={4}>
       <Flex gap={8} w="100%">
         <AddToDashboardCardCTA contractAddress={contractAddress} />
-        {!hasSubmittedFeedback && (
+
+        {/* we only show the feedback form on custom cotnracts */}
+        {contractQuery.data?.contractType === "custom" && (
           <Card flexGrow={1}>
             <FeedbackForm
-              onSubmitSuccess={() => setHasSubmittedFeedback(true)}
               trackEvent={trackEvent}
               wallet={address}
               scope="thirdweb-deploy"
+              localStorageKey={`tw_deploy-${contractAddress}`}
             />
           </Card>
         )}
@@ -73,7 +71,7 @@ const AddToDashboardCardCTA: React.FC<AddToDashboardCardCTAProps> = ({
     );
   }, [contractAddress, contractList.data]);
 
-  if (shouldShow) {
+  if (!shouldShow) {
     return null;
   }
   return (

@@ -24,7 +24,7 @@ export const NightlyNotice: React.FC = () => {
   );
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  return hasShownWelcome ? null : (
+  return hasShownWelcome.data || hasShownWelcome.isLoading ? null : (
     <Modal
       size={isMobile ? "full" : "xl"}
       closeOnEsc={false}
