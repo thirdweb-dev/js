@@ -26,7 +26,7 @@
     "@react-hook/intersection-observer": "^3.1.1",
     "@tanstack/react-location": "^3.7.4",
     "@thirdweb-dev/chain-icons": "^1.0.2",
-    "@thirdweb-dev/react": "^2.3.12-0",
+    "@thirdweb-dev/react": "^2.3.12",
     "@thirdweb-dev/sdk": "^2.2.20-1",
     "bn.js": "^5.2.0",
     "color": "^4.0.1",
