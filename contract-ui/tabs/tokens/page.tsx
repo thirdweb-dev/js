@@ -17,7 +17,6 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
   const contract = useContract(contractAddress);
 
   const detectedContract = detectErc20Instance(contract.contract);
-  console.log("*** ContractNFTPage", { detectedContract });
 
   if (contract.isLoading) {
     // TODO build a skeleton for this
@@ -53,10 +52,12 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
   return (
     <Flex direction="column" gap={6}>
       <Flex direction="row" justify="space-between" align="center">
-        <Heading size="title.sm">Contract NFTs</Heading>
+        <Heading size="title.sm">Contract Tokens</Heading>
+        <ButtonGroup>
+          <TokenMintButton contract={detectedContract} />
+        </ButtonGroup>
       </Flex>
 
-      <TokenMintButton contract={detectedContract} />
       <TokenSupply contract={detectedContract} />
     </Flex>
   );

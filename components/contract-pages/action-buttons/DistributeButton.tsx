@@ -33,7 +33,6 @@ export const DistributeButton: React.FC<IDistributeButtonProps> = ({
     // we still want to show the button, so we'll just show the mismatch button
     return (
       <MismatchButton
-        borderRadius="full"
         isLoading={distibutedFundsMutation.isLoading}
         colorScheme="primary"
         onClick={() => distibutedFundsMutation.mutate()}
@@ -46,12 +45,7 @@ export const DistributeButton: React.FC<IDistributeButtonProps> = ({
 
   if (numTransactions === 0) {
     return (
-      <Button
-        borderRadius="full"
-        isDisabled
-        colorScheme="primary"
-        {...restButtonProps}
-      >
+      <Button isDisabled colorScheme="primary" {...restButtonProps}>
         Nothing to distribute
       </Button>
     );
@@ -60,7 +54,6 @@ export const DistributeButton: React.FC<IDistributeButtonProps> = ({
   return (
     <TransactionButton
       transactionCount={numTransactions}
-      borderRadius="full"
       isLoading={balances.isLoading || distibutedFundsMutation.isLoading}
       colorScheme="primary"
       onClick={() => distibutedFundsMutation.mutate()}

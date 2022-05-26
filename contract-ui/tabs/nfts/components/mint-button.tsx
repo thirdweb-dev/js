@@ -1,9 +1,10 @@
 import { NFTMintForm } from "./mint-form";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import { NFTContract } from "@thirdweb-dev/react";
+import { ExtensionDetectButton } from "components/buttons/ExtensionDetectButton";
 import React from "react";
 import { FiPlus } from "react-icons/fi";
-import { Button, Drawer } from "tw-components";
+import { Drawer } from "tw-components";
 
 interface NFTMintButtonProps {
   contract: NFTContract;
@@ -26,13 +27,16 @@ export const NFTMintButton: React.FC<NFTMintButtonProps> = ({
       >
         <NFTMintForm contract={contract} />
       </Drawer>
-      <Button
+      <ExtensionDetectButton
+        colorScheme="primary"
+        leftIcon={<Icon as={FiPlus} />}
         {...restButtonProps}
         onClick={onOpen}
-        leftIcon={<Icon as={FiPlus} />}
+        contract={contract}
+        feature={["ERC721Mintable", "ERC1155Mintable"]}
       >
         Mint
-      </Button>
+      </ExtensionDetectButton>
     </>
   );
 };

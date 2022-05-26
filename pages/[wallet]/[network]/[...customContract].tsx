@@ -3,6 +3,7 @@ import {
   Container,
   Flex,
   Icon,
+  Spinner,
   useBreakpointValue,
   usePrevious,
 } from "@chakra-ui/react";
@@ -189,18 +190,12 @@ const ContractSubnav: React.FC<ContractSubnavProps> = ({ routes }) => {
         <ContractSubNavLinkButton
           icon={
             route.isEnabled !== undefined ? (
-              route.isEnabled ? (
-                <Icon
-                  transform="translateY(12%)"
-                  as={FiCheckCircle}
-                  color="green.500"
-                />
+              route.isEnabled === "enabled" ? (
+                <Icon as={FiCheckCircle} color="green.500" />
+              ) : route.isEnabled === "loading" ? (
+                <Spinner color="purple.500" size="xs" />
               ) : (
-                <Icon
-                  transform="translateY(12%)"
-                  as={FiXCircle}
-                  color="red.500"
-                />
+                <Icon as={FiXCircle} color="red.500" />
               )
             ) : undefined
           }
@@ -248,6 +243,8 @@ const ContractSubNavLinkButton: React.FC<ContractSubNavLinkButton> = (
       _focus={{
         boxShadow: "none",
       }}
+      display="flex"
+      // align="center"
       leftIcon={props.icon}
       variant="unstyled"
       onMouseOverCapture={(e) => props.onHover(e.currentTarget)}

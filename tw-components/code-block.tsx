@@ -8,17 +8,24 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import Highlight, { Language, defaultProps } from "prism-react-renderer";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+import Prism from "prism-react-renderer/prism";
 import darkTheme from "prism-react-renderer/themes/oceanicNext";
 import lightTheme from "prism-react-renderer/themes/vsLight";
 import { FiCopy } from "react-icons/fi";
 import { IoMdCheckmark } from "react-icons/io";
 
+// add solidity lang support for code
+((typeof global !== "undefined" ? global : window) as any).Prism = Prism;
+require("prismjs/components/prism-solidity");
+// end add solidity support
+
 interface CodeBlockProps extends Omit<CodeProps, "size"> {
   code: string;
-  language: Language;
+  language: Language | "solidity";
   canCopy?: boolean;
 }
-
 export const CodeBlock: React.FC<CodeBlockProps> = ({
   code,
   language,
@@ -32,7 +39,12 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   const theme = useColorModeValue(lightTheme, darkTheme);
   const { onCopy, hasCopied } = useClipboard(code);
   return (
-    <Highlight {...defaultProps} code={code} language={language} theme={theme}>
+    <Highlight
+      {...defaultProps}
+      code={code}
+      language={language as Language}
+      theme={theme}
+    >
       {({ className, style, tokens, getLineProps, getTokenProps }) => (
         <Text
           borderRadius={borderRadius}

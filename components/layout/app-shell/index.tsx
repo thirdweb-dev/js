@@ -154,7 +154,7 @@ export const AppShell: ComponentWithChildren = ({ children }) => {
                 />
               </ButtonGroup>
               <ColorModeToggle />
-              <ConnectWallet borderRadius="full" colorScheme="primary" />
+              <ConnectWallet colorScheme="primary" />
             </Stack>
           </Container>
         </Box>

@@ -1,18 +1,15 @@
 import { Route } from "@tanstack/react-location";
 import { useContract } from "@thirdweb-dev/react";
 import {
-  SmartContract,
-  ValidContractInstance,
-  detectContractFeature,
-} from "@thirdweb-dev/sdk";
-import { FeatureName } from "@thirdweb-dev/sdk/dist/src/constants/contract-features";
-import { ContractWrapper } from "@thirdweb-dev/sdk/dist/src/core/classes/contract-wrapper";
+  ExtensionDetectedState,
+  extensionDetectedState,
+} from "components/buttons/ExtensionDetectButton";
 import React from "react";
 
 export type EnhancedRoute = Route & {
   title: string;
   path: string;
-  isEnabled?: boolean;
+  isEnabled?: ExtensionDetectedState;
 };
 
 export function useContractRouteConfig(
@@ -42,10 +39,10 @@ export function useContractRouteConfig(
     {
       title: "NFTs",
       path: "nfts",
-      isEnabled: isFeatureEnabledFromContract(contract.contract, [
-        "ERC721",
-        "ERC1155",
-      ]),
+      isEnabled: extensionDetectedState({
+        contract,
+        feature: ["ERC1155", "ERC721"],
+      }),
       element: () =>
         import("../tabs/nfts/page").then(({ ContractNFTPage }) => (
           <ContractNFTPage contractAddress={contractAddress} />
@@ -54,7 +51,7 @@ export function useContractRouteConfig(
     {
       title: "Tokens",
       path: "tokens",
-      isEnabled: isFeatureEnabledFromContract(contract.contract, ["ERC20"]),
+      isEnabled: extensionDetectedState({ contract, feature: "ERC20" }),
       element: () =>
         import("../tabs/tokens/page").then(({ ContractTokensPage }) => (
           <ContractTokensPage contractAddress={contractAddress} />
@@ -71,20 +68,4 @@ export function useContractRouteConfig(
         ),
     },
   ];
-}
-
-function isFeatureEnabledFromContract(
-  contract: ValidContractInstance | SmartContract | null = null,
-  featureName: FeatureName | FeatureName[],
-): boolean {
-  if (!contract) {
-    return false;
-  }
-
-  const contractWrapper = (contract as any)
-    .contractWrapper as ContractWrapper<any>;
-
-  return Array.isArray(featureName)
-    ? featureName.some((f) => detectContractFeature(contractWrapper, f))
-    : detectContractFeature(contractWrapper, featureName);
 }
