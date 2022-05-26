@@ -1,11 +1,32 @@
 import { Flex, Link } from "@chakra-ui/react";
-import { detectErc721Instance, useContract } from "@thirdweb-dev/react";
+import { useContract } from "@thirdweb-dev/react";
+import {
+  Erc721,
+  SmartContract,
+  ValidContractInstance,
+} from "@thirdweb-dev/sdk";
 import dynamic from "next/dynamic";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { Card, Heading, Text } from "tw-components";
 
 const NftOverview = dynamic(() => import("./nft"));
+
+function detectErc721Instance(
+  contract: ValidContractInstance | SmartContract | null | undefined,
+) {
+  if (!contract) {
+    return undefined;
+  }
+  if (contract instanceof Erc721) {
+    return contract;
+  }
+  if ("nft" in contract && contract.nft instanceof Erc721) {
+    console.log("*** detect extended contract nft", contract);
+    return contract.nft;
+  }
+  return undefined;
+}
 
 interface CustomContractOverviewPageProps {
   contractAddress?: string;
