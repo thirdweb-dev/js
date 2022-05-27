@@ -8,6 +8,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  SimpleGrid,
   Skeleton,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -242,7 +243,10 @@ export default function ContractDetailPage() {
                   contract in the dashboard as well as in the SDKs.
                 </Text>
               </Box>
-              <Flex direction="column" gap={6}>
+              <SimpleGrid
+                gap={6}
+                columns={{ base: 1, md: Math.min(enabledFeatures.length, 2) }}
+              >
                 {enabledFeatures.map((feature) => (
                   <Card key={feature.name}>
                     <FeatureDetails
@@ -252,7 +256,7 @@ export default function ContractDetailPage() {
                     />
                   </Card>
                 ))}
-              </Flex>
+              </SimpleGrid>
             </Flex>
           )}
           {suggestedFeatures.length > 0 && (
@@ -265,7 +269,10 @@ export default function ContractDetailPage() {
                 </Text>
               </Box>
 
-              <Flex direction="column" gap={6}>
+              <SimpleGrid
+                gap={6}
+                columns={{ base: 1, md: Math.min(suggestedFeatures.length, 2) }}
+              >
                 {suggestedFeatures.map((feature) => (
                   <Card key={feature.name}>
                     <FeatureDetails
@@ -275,7 +282,7 @@ export default function ContractDetailPage() {
                     />
                   </Card>
                 ))}
-              </Flex>
+              </SimpleGrid>
             </Flex>
           )}
           {disabledFeatures.length > 0 && (
@@ -288,7 +295,10 @@ export default function ContractDetailPage() {
                 </Text>
               </Box>
 
-              <Flex direction="column" gap={6}>
+              <SimpleGrid
+                gap={6}
+                columns={{ base: 1, md: Math.min(disabledFeatures.length, 2) }}
+              >
                 {disabledFeatures.map((feature) => (
                   <Card key={feature.name}>
                     <FeatureDetails
@@ -298,7 +308,7 @@ export default function ContractDetailPage() {
                     />
                   </Card>
                 ))}
-              </Flex>
+              </SimpleGrid>
             </Flex>
           )}
         </Flex>
@@ -378,22 +388,14 @@ const FeatureDetails: React.FC<FeatureDetailsProps> = ({
               )}
             </>
           ) : (
-            <>
+            <Flex mt={2} gap={3} direction="column">
               <CodeBlock
-                mt={1}
                 language="solidity"
-                code={`// import the extension
-import ${feature.name} from "@thirdweb-dev/contracts/${feature.name}";
+                code={`import ${feature.name} from "@thirdweb-dev/contracts/${feature.name}";
 
-// add the extension to your contract
-contract ${contractName} is ${feature.name} {
-// ...
-}`}
+contract ${contractName} is ${feature.name} { ... }`}
               />
-              <Text fontStyle="italic">
-                Add this extension by extending your contract.
-              </Text>
-            </>
+            </Flex>
           )}
         </Flex>
       )}
