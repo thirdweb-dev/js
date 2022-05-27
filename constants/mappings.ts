@@ -14,6 +14,7 @@ export const FeatureIconMap: Record<ContractType, StaticImageData> = {
   "token-drop": require("public/assets/tw-icons/token.png"),
   // TODO (byoc) icon for custom contract
   custom: require("public/assets/tw-icons/general.png"),
+  "signature-drop": require("public/assets/tw-icons/general.png"),
 } as const;
 
 export const UrlMap: Record<ContractType, string> = {
@@ -29,6 +30,7 @@ export const UrlMap: Record<ContractType, string> = {
   "token-drop": "token-drop",
   // TODO (byoc)
   custom: "",
+  "signature-drop": "",
 };
 
 export interface BuiltinContractDetails {
@@ -97,6 +99,11 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       description: "NOT IMPLEMENTED",
       icon: FeatureIconMap["token-drop"],
     },
+    "signature-drop": {
+      title: "NOT IMPLEMENTED",
+      description: "NOT IMPLEMENTED",
+      icon: FeatureIconMap["token-drop"],
+    },
   };
 
 export interface GasPrice {
@@ -151,13 +158,17 @@ export const GasEstimatorMap: Record<ContractType, GasPrice> = {
   custom: {
     deployContract: 0,
   },
+  "signature-drop": {
+    deployContract: 0,
+  },
 };
 
-export const CONTRACT_TYPE_NAME_MAP = {
+export const CONTRACT_TYPE_NAME_MAP: Record<ContractType, string> = {
   // drop
   "nft-drop": "NFT Drop" as const,
   "edition-drop": "Edition Drop" as const,
   "token-drop": "Token Drop" as const,
+  "signature-drop": "Signature Drop" as const,
 
   // token
   token: "Token" as const,

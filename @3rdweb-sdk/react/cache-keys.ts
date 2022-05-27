@@ -8,6 +8,7 @@ import {
   Pack,
   QueryAllParams,
   Role,
+  SignatureDrop,
   SmartContract,
   Split,
   Token,
@@ -317,4 +318,5 @@ export const CacheKeyMap: Record<ContractType, any> = {
   [Split.contractType]: splitsKeys,
   [TokenDrop.contractType]: tokenDropKeys,
   [SmartContract.contractType]: {},
+  [SignatureDrop.contractType]: {},
 };
