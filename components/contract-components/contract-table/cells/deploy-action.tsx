@@ -86,7 +86,7 @@ export const ContractDeployActionCell: React.FC<
             rightIcon={<Icon as={FiArrowRight} />}
             href={`/contracts/${encodeURIComponent(value)}?from=deploy`}
           >
-            Deploy now
+            Deploy
           </LinkButton>
         )}
       </ButtonGroup>
