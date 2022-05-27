@@ -60,7 +60,7 @@ export const HomepageFooter: React.FC = () => {
             gap={{ base: 4, md: 0 }}
             onSubmit={handleSubmit(async ({ email }) => {
               try {
-                await sendEmailToConvertkit(email, ["landing"]);
+                await sendEmailToConvertkit(email, [3136080]);
                 toast({
                   position: "bottom",
                   variant: "solid",
