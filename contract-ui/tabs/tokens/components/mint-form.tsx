@@ -1,4 +1,3 @@
-import { useTokenMintMutation } from "@3rdweb-sdk/react";
 import {
   DrawerBody,
   DrawerFooter,
@@ -8,7 +7,7 @@ import {
   Stack,
   useModalContext,
 } from "@chakra-ui/react";
-import { useAddress, useMintToken, useSDK } from "@thirdweb-dev/react";
+import { useAddress, useMintToken } from "@thirdweb-dev/react";
 import type { Erc20 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
