@@ -186,25 +186,30 @@ const ContractSubnav: React.FC<ContractSubnavProps> = ({ routes }) => {
         borderRadius="md"
       />
 
-      {routes.map((route) => (
-        <ContractSubNavLinkButton
-          icon={
-            route.isEnabled !== undefined ? (
-              route.isEnabled === "enabled" ? (
-                <Icon as={FiCheckCircle} color="green.500" />
-              ) : route.isEnabled === "loading" ? (
-                <Spinner color="purple.500" size="xs" />
-              ) : (
-                <Icon as={FiXCircle} color="red.500" />
-              )
-            ) : undefined
-          }
-          key={route.path}
-          label={route.title}
-          onHover={setHoveredEl}
-          href={route.path}
-        />
-      ))}
+      {routes
+        .filter(
+          (route) =>
+            route.isEnabled === undefined || route.isEnabled !== "disabled",
+        )
+        .map((route) => (
+          <ContractSubNavLinkButton
+            icon={
+              route.isEnabled !== undefined ? (
+                route.isEnabled === "enabled" ? (
+                  <Icon as={FiCheckCircle} color="green.500" />
+                ) : route.isEnabled === "loading" ? (
+                  <Spinner color="purple.500" size="xs" />
+                ) : (
+                  <Icon as={FiXCircle} color="red.500" />
+                )
+              ) : undefined
+            }
+            key={route.path}
+            label={route.title}
+            onHover={setHoveredEl}
+            href={route.path}
+          />
+        ))}
     </Flex>
   );
 };
@@ -244,11 +249,9 @@ const ContractSubNavLinkButton: React.FC<ContractSubNavLinkButton> = (
         boxShadow: "none",
       }}
       display="flex"
-      // align="center"
       leftIcon={props.icon}
       variant="unstyled"
       onMouseOverCapture={(e) => props.onHover(e.currentTarget)}
-      // size="sm"
       height="auto"
       p={3}
       color="heading"
