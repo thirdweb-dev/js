@@ -29,12 +29,12 @@ import { FiCheckCircle, FiXCircle } from "react-icons/fi";
 import { Button, LinkButton } from "tw-components";
 import { isBrowser } from "utils/isBrowser";
 
-const location = new ReactLocation();
-
 export default function CustomContractPage() {
   const router = useRouter();
   const query = router.query.customContract || [];
   const contractAddress = query[0];
+
+  const [location] = useState(() => new ReactLocation());
 
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [isScrolled, setIsScrolled] = useState(false);
@@ -80,6 +80,7 @@ export default function CustomContractPage() {
       basepath={`${router.query.wallet}/${router.query.network}/${contractAddress}`}
       location={location}
       routes={routes}
+      defaultElement="Foo"
     >
       <RootTrack>
         <Flex direction="column" ref={scrollRef}>
