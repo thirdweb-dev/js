@@ -27,7 +27,7 @@
     "@tanstack/react-location": "^3.7.4",
     "@thirdweb-dev/chain-icons": "^1.0.2",
     "@thirdweb-dev/react": "^2.3.6",
-    "@thirdweb-dev/sdk": "^2.3.1-0",
+    "@thirdweb-dev/sdk": "^2.3.1",
     "bn.js": "^5.2.0",
     "color": "^4.0.1",
     "date-fns": "^2.28.0",
