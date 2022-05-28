@@ -10,7 +10,7 @@ import { persistQueryClient } from "react-query/persistQueryClient";
 import { ComponentWithChildren } from "types/component-with-children";
 import { ChainId, SUPPORTED_CHAIN_ID } from "utils/network";
 
-const __CACHE_BUSTER = "tw_v2.0.1";
+const __CACHE_BUSTER = "tw_v2.0.2";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
