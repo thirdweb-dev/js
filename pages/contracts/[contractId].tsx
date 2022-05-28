@@ -455,7 +455,7 @@ const FeatureDetails: React.FC<FeatureDetailsProps> = ({
                 <Flex mt={2} gap={3} direction="column">
                   <CodeBlock
                     language="solidity"
-                    code={`import ${contractFeatureName} from "@thirdweb-dev/contracts/${contractFeaturePath}/${contractFeatureName}.sol";
+                    code={`import "@thirdweb-dev/contracts/${contractFeaturePath}/${contractFeatureName}.sol";
 
 contract ${contractName} is ${contractFeatureName} { ... }`}
                   />
