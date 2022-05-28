@@ -1,43 +1,35 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { isBrowser } from "utils/isBrowser";
 
-export function useLocalStorage<TType>(
-  key: string,
-  initialValue: TType,
-): [TType, (value: TType) => void] {
-  // State to store our value
-  // Pass initial state function to useState so logic is only executed once
-  const [storedValue, setStoredValue] = useState<TType>(initialValue);
+export function useLocalStorage<TType>(key = "", initialValue: TType) {
+  const queryClient = useQueryClient();
+  const queryKey = useMemo(() => ["local-storage", key], [key]);
 
-  useEffect(() => {
-    try {
-      // Get from local storage by key
-      const item = window.localStorage.getItem(key);
-      // Parse stored json or if none return initialValue
-      if (item) {
-        setStoredValue(JSON.parse(item));
+  const { mutate } = useMutation(
+    async (value: TType) => {
+      if (key) {
+        return localStorage.setItem(key, JSON.stringify(value));
       }
-    } catch (error) {
-      // If error also return initialValue
-      console.log(error);
-    }
-  }, [key]);
-  // Return a wrapped version of useState's setter function that ...
-  // ... persists the new value to localStorage.
-  const setValue = (value: TType) => {
-    try {
-      // Allow value to be a function so we have same API as useState
-      const valueToStore =
-        value instanceof Function ? value(storedValue) : value;
-      // Save state
-      setStoredValue(valueToStore);
-      // Save to local storage
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+    },
+    {
+      onSuccess: () => queryClient.invalidateQueries(queryKey),
+    },
+  );
+
+  const query = useQuery<TType>(
+    queryKey,
+    () => {
+      const value = window.localStorage.getItem(key);
+      if (value) {
+        return JSON.parse(value);
       }
-    } catch (error) {
-      // A more advanced implementation would handle the error case
-      console.log(error);
-    }
-  };
-  return [storedValue, setValue];
+      return initialValue;
+    },
+    {
+      enabled: isBrowser() && !!key,
+    },
+  );
+
+  return [query, mutate] as const;
 }

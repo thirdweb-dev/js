@@ -3,7 +3,7 @@ import { ChainId, useChainId, useContractFunctions } from "@thirdweb-dev/react";
 import { Card, CodeBlock, Heading } from "tw-components";
 
 interface ContentOverviewProps {
-  contractAddress: string;
+  contractAddress?: string;
 }
 
 export const CustomContractCodeTab: React.FC<ContentOverviewProps> = ({

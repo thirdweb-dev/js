@@ -7,9 +7,11 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import type { useTrack } from "hooks/analytics/useTrack";
+import { useLocalStorage } from "hooks/useLocalStorage";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
 import { AiFillStar, AiOutlineStar } from "react-icons/ai";
+import { FiCheck, FiSend } from "react-icons/fi";
 import { Button, FormErrorMessage, FormLabel, Heading } from "tw-components";
 
 const FEEDBACK_PRODUCT_MAP = {
@@ -20,14 +22,27 @@ export interface FeedbackFormProps {
   wallet?: string;
   scope: keyof typeof FEEDBACK_PRODUCT_MAP;
   onClose?: () => void;
+  onSubmitSuccess?: () => void;
   trackEvent: ReturnType<typeof useTrack>["trackEvent"];
+  localStorageKey?: string;
 }
+
 export const FeedbackForm: React.FC<FeedbackFormProps> = ({
   scope,
   wallet,
   onClose,
+  onSubmitSuccess,
   trackEvent,
+  localStorageKey,
 }) => {
+  const [hasSubmittedFeedbackQuery, setHasSubmittedFeedback] = useLocalStorage(
+    localStorageKey,
+    false,
+  );
+
+  const hasSubmittedFeedback =
+    !!hasSubmittedFeedbackQuery.data && hasSubmittedFeedbackQuery.isSuccess;
+
   const productName = FEEDBACK_PRODUCT_MAP[scope];
 
   const { register, watch, handleSubmit, setValue, setError, formState } =
@@ -92,6 +107,10 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
             }),
           });
           onSuccess();
+          setHasSubmittedFeedback(true);
+          if (onSubmitSuccess) {
+            onSubmitSuccess();
+          }
         } catch (e) {
           console.error("failed to send product feedback", e);
         } finally {
@@ -110,35 +129,44 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
         </Heading>
         {_onClose && <CloseButton onClick={_onClose} />}
       </Flex>
-      <FormControl
-        as={Flex}
-        flexDirection="column"
-        gap={0.5}
-        isInvalid={!!formState.errors.rating}
-      >
-        <FormLabel>Rating</FormLabel>
-        <StartRating
-          rating={watch("rating")}
-          onRating={(rating) => setValue("rating", rating)}
-        />
-        <FormErrorMessage>{formState.errors.rating?.message}</FormErrorMessage>
-      </FormControl>
-      <FormControl as={Flex} flexDirection="column" gap={0.5}>
-        <FormLabel>Feedback</FormLabel>
-        <Textarea
-          {...register("feedback")}
-          placeholder={`What's your biggest pain point using ${productName}?
+      {!hasSubmittedFeedback && (
+        <>
+          <FormControl
+            as={Flex}
+            flexDirection="column"
+            gap={0.5}
+            isInvalid={!!formState.errors.rating}
+          >
+            <FormLabel>Rating</FormLabel>
+            <StartRating
+              rating={watch("rating")}
+              onRating={(rating) => setValue("rating", rating)}
+            />
+            <FormErrorMessage>
+              {formState.errors.rating?.message}
+            </FormErrorMessage>
+          </FormControl>
+          <FormControl as={Flex} flexDirection="column" gap={0.5}>
+            <FormLabel>Feedback</FormLabel>
+            <Textarea
+              {...register("feedback")}
+              placeholder={`What's your biggest pain point using ${productName}?
 What's your favorite thing about ${productName}?
 What features would you like us to add next?`}
-        />
-      </FormControl>
+            />
+          </FormControl>
+        </>
+      )}
       <Button
-        isDisabled={watch("rating") === 0}
+        isDisabled={hasSubmittedFeedback || watch("rating") === 0}
         isLoading={formState.isSubmitting}
         type="submit"
-        colorScheme="blue"
+        colorScheme={hasSubmittedFeedback ? "green" : "primary"}
+        leftIcon={hasSubmittedFeedback ? <FiCheck /> : <FiSend />}
       >
-        Submit Feedback
+        {hasSubmittedFeedback
+          ? "Feedback received, thanks!"
+          : "Submit Feedback"}
       </Button>
     </Flex>
   );

@@ -15,8 +15,9 @@ import {
   useClipboard,
   useToast,
 } from "@chakra-ui/react";
+import { Link as LocationLink, useMatch } from "@tanstack/react-location";
 import { useTrack } from "hooks/analytics/useTrack";
-import NextLink, { LinkProps } from "next/link";
+import NextLink from "next/link";
 import React from "react";
 import { FiCopy, FiExternalLink } from "react-icons/fi";
 import { fontWeights, letterSpacings, lineHeights } from "theme/typography";
@@ -76,13 +77,15 @@ export const Button = forwardRef<ButtonProps, "button">(
 Button.displayName = "Button";
 
 export interface LinkButtonProps extends ButtonProps {
-  href: string | LinkProps["href"];
+  href: string;
   isExternal?: boolean;
   noIcon?: true;
 }
 
 export const LinkButton = React.forwardRef<HTMLButtonElement, LinkButtonProps>(
   ({ href, isExternal, noIcon, children, ...restButtonProps }, ref) => {
+    const match = useMatch();
+
     if (isExternal) {
       return (
         <Button
@@ -93,6 +96,20 @@ export const LinkButton = React.forwardRef<HTMLButtonElement, LinkButtonProps>(
           textDecoration="none!important"
           rightIcon={noIcon ? undefined : <Icon as={FiExternalLink} />}
           {...restButtonProps}
+        >
+          {children}
+        </Button>
+      );
+    }
+
+    // we're in a react location context, so we can use that
+    if (match) {
+      return (
+        <Button
+          as={LocationLink}
+          to={href}
+          {...restButtonProps}
+          textDecoration="none!important"
         >
           {children}
         </Button>

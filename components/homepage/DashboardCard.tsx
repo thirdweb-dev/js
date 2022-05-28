@@ -72,7 +72,7 @@ interface CardGradientBackgroundProps {
   rightGradient?: string;
 }
 
-const CardGradientBackground: React.FC<CardGradientBackgroundProps> = (
+export const CardGradientBackground: React.FC<CardGradientBackgroundProps> = (
   props,
 ) => {
   return (

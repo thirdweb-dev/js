@@ -2,6 +2,7 @@ import {
   Link as ChakraLink,
   LinkProps as ChakraLinkProps,
 } from "@chakra-ui/react";
+import { Link as LocationLink, useMatch } from "@tanstack/react-location";
 import { useTrack } from "hooks/analytics/useTrack";
 import _NextLink, { LinkProps as _NextLinkProps } from "next/link";
 import React, { useCallback } from "react";
@@ -20,10 +21,20 @@ interface LinkProps
  */
 export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
   (props, ref) => {
+    const match = useMatch();
     const { href, isExternal, children, ...restLinkProps } = props;
     if (isExternal) {
       return (
         <ChakraLink isExternal href={href} ref={ref} {...restLinkProps}>
+          {children}
+        </ChakraLink>
+      );
+    }
+
+    // we're in a react location context, so we can use that
+    if (match) {
+      return (
+        <ChakraLink as={LocationLink} to={href} {...restLinkProps}>
           {children}
         </ChakraLink>
       );

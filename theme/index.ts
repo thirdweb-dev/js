@@ -48,7 +48,7 @@ const chakraTheme: Theme = extendTheme({
     },
     Button: {
       baseStyle: {
-        borderRadius: "full",
+        borderRadius: "md",
       },
       variants: {
         gradient: (props: any) => {
@@ -60,7 +60,7 @@ const chakraTheme: Theme = extendTheme({
           return {
             border: "3px solid",
             borderColor: "transparent",
-            borderRadius: "full",
+            borderRadius: "md",
             background: `linear-gradient(${bgColor}, ${bgColor}) padding-box, 
             linear-gradient(135deg, ${lgFrom}, ${lgTo}) border-box`,
             "> *": {
