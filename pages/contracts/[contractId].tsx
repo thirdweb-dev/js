@@ -1,4 +1,9 @@
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Box,
   Divider,
   Flex,
@@ -8,12 +13,14 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  SimpleGrid,
   Skeleton,
   useDisclosure,
 } from "@chakra-ui/react";
 import { detectFeatures } from "@thirdweb-dev/sdk";
-import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/src/constants/contract-features";
+import {
+  FeatureName,
+  FeatureWithEnabled,
+} from "@thirdweb-dev/sdk/dist/src/constants/contract-features";
 import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
 import { ContractDeployForm } from "components/contract-components/contract-deploy-form";
@@ -43,6 +50,8 @@ import {
   Text,
 } from "tw-components";
 
+const ROOT_FEATUES: FeatureName[] = ["ERC20", "ERC721", "ERC1155"];
+
 const ALWAYS_SUGGESTED = ["ContractMetadata", "Permissions"];
 
 function extractFeatures(
@@ -68,7 +77,6 @@ function extractFeatures(
     // otherwise if it is disabled, but it's parent is enabled or suggested, then add it to suggestedFeatures
     else if (
       enabledFeatures.findIndex((f) => f.name === parent) > -1 ||
-      suggestedFeatures.findIndex((f) => f.name === parent) > -1 ||
       ALWAYS_SUGGESTED.includes(feature.name)
     ) {
       suggestedFeatures.push(feature);
@@ -85,6 +93,26 @@ function extractFeatures(
       feature.name,
     );
   }
+
+  const rootFeatureInEnabled = enabledFeatures.find((f) =>
+    ROOT_FEATUES.includes(f.name),
+  )?.name;
+
+  disabledFeatures = disabledFeatures.filter((f) => {
+    // if there is no root feature in enabledFeatures, let everything through
+    if (!rootFeatureInEnabled) {
+      return true;
+    }
+    // if the feature starts with the root feature, then let it through
+    if (f.name.startsWith(rootFeatureInEnabled)) {
+      return true;
+    }
+    const otherRootFeatures = ROOT_FEATUES.filter(
+      (feat) => feat !== rootFeatureInEnabled,
+    );
+    // copilot knows, I hope
+    return !otherRootFeatures.some((feat) => f.name.startsWith(feat));
+  });
 
   return {
     enabledFeatures,
@@ -243,20 +271,23 @@ export default function ContractDetailPage() {
                   contract in the dashboard as well as in the SDKs.
                 </Text>
               </Box>
-              <SimpleGrid
+              <Accordion
+                allowToggle
+                allowMultiple
+                defaultIndex={[0]}
+                display="flex"
+                flexDir="column"
                 gap={6}
-                columns={{ base: 1, md: Math.min(enabledFeatures.length, 2) }}
               >
                 {enabledFeatures.map((feature) => (
-                  <Card key={feature.name}>
-                    <FeatureDetails
-                      contractName={publishMetadataQuery.data?.name}
-                      feature={feature}
-                      state="enabled"
-                    />
-                  </Card>
+                  <FeatureDetails
+                    key={feature.name}
+                    contractName={publishMetadataQuery.data?.name}
+                    feature={feature}
+                    state="enabled"
+                  />
                 ))}
-              </SimpleGrid>
+              </Accordion>
             </Flex>
           )}
           {suggestedFeatures.length > 0 && (
@@ -265,24 +296,27 @@ export default function ContractDetailPage() {
                 <Heading size="subtitle.lg">Suggested Extensions</Heading>
                 <Text>
                   These extensions would likely be useful for this contract, but
-                  we did not detect them at this time.
+                  are not being implemented.
                 </Text>
               </Box>
 
-              <SimpleGrid
+              <Accordion
+                allowToggle
+                allowMultiple
+                defaultIndex={[0]}
+                display="flex"
+                flexDir="column"
                 gap={6}
-                columns={{ base: 1, md: Math.min(suggestedFeatures.length, 2) }}
               >
                 {suggestedFeatures.map((feature) => (
-                  <Card key={feature.name}>
-                    <FeatureDetails
-                      contractName={publishMetadataQuery.data?.name}
-                      feature={feature}
-                      state="suggested"
-                    />
-                  </Card>
+                  <FeatureDetails
+                    key={feature.name}
+                    contractName={publishMetadataQuery.data?.name}
+                    feature={feature}
+                    state="suggested"
+                  />
                 ))}
-              </SimpleGrid>
+              </Accordion>
             </Flex>
           )}
           {disabledFeatures.length > 0 && (
@@ -290,25 +324,27 @@ export default function ContractDetailPage() {
               <Box>
                 <Heading size="subtitle.lg">Available Extensions</Heading>
                 <Text>
-                  These are other available extensions you could explore adding
-                  to this contract.
+                  Extensions that are available to be added to this contract.
                 </Text>
               </Box>
 
-              <SimpleGrid
+              <Accordion
+                allowToggle
+                allowMultiple
+                defaultIndex={[0]}
+                display="flex"
+                flexDir="column"
                 gap={6}
-                columns={{ base: 1, md: Math.min(disabledFeatures.length, 2) }}
               >
                 {disabledFeatures.map((feature) => (
-                  <Card key={feature.name}>
-                    <FeatureDetails
-                      contractName={publishMetadataQuery.data?.name}
-                      feature={feature}
-                      state="disabled"
-                    />
-                  </Card>
+                  <FeatureDetails
+                    key={feature.name}
+                    contractName={publishMetadataQuery.data?.name}
+                    feature={feature}
+                    state="disabled"
+                  />
                 ))}
-              </SimpleGrid>
+              </Accordion>
             </Flex>
           )}
         </Flex>
@@ -338,68 +374,98 @@ const FeatureDetails: React.FC<FeatureDetailsProps> = ({
     return codeSnippets.data ? codeSnippets.data[feature.name] : undefined;
   }, [codeSnippets.data, feature.name]);
 
+  const contractFeatureName = feature.docLinks.contracts;
+  const contractFeaturePath = contractFeatureName.startsWith("I")
+    ? "feature/interface"
+    : "feature";
+
   return (
-    <Flex direction="column" gap={4}>
-      <Flex gap={2} align="center" justify="space-between">
-        <Flex gap={2} align="center">
-          <Icon
-            boxSize={4}
-            color={
-              state === "enabled"
-                ? "green.500"
-                : state === "suggested"
-                ? "blue.500"
-                : "red.500"
-            }
-            as={
-              state === "enabled"
-                ? FiCheckCircle
-                : state === "suggested"
-                ? FiInfo
-                : FiXCircle
-            }
-          />
-          <Heading textAlign="left" size="subtitle.sm">
-            {feature.name}
-          </Heading>
-        </Flex>
-        <LinkButton
-          size="sm"
-          href={`https://portal.thirdweb.com/contracts/${feature.docLinks.contracts}`}
-          isExternal
-          variant="ghost"
-          borderRadius="md"
+    <Card key={feature.name} p={0} overflow="hidden">
+      <AccordionItem border="none">
+        <AccordionButton
+          p={4}
+          justifyContent="space-between"
+          _focus={{
+            boxShadow: "none",
+          }}
+          _expanded={{
+            bg: "blackAlpha.50",
+          }}
         >
-          Learn more
-        </LinkButton>
-      </Flex>
-
-      {featureDetails && (
-        <Flex direction="column" gap={2}>
-          <Heading size="label.md">{featureDetails.summary}</Heading>
-          {state === "enabled" ? (
-            <>
-              {featureDetails.examples.javascript && (
-                <CodeBlock
-                  mt={1}
-                  language="javascript"
-                  code={featureDetails.examples.javascript}
-                />
-              )}
-            </>
-          ) : (
-            <Flex mt={2} gap={3} direction="column">
-              <CodeBlock
-                language="solidity"
-                code={`import ${feature.name} from "@thirdweb-dev/contracts/${feature.name}.sol";
-
-contract ${contractName} is ${feature.name} { ... }`}
+          <Flex gap={2} align="center" justify="space-between">
+            <Flex gap={2} align="center">
+              <Icon
+                boxSize={4}
+                color={
+                  state === "enabled"
+                    ? "green.500"
+                    : state === "suggested"
+                    ? "blue.500"
+                    : "red.500"
+                }
+                as={
+                  state === "enabled"
+                    ? FiCheckCircle
+                    : state === "suggested"
+                    ? FiInfo
+                    : FiXCircle
+                }
               />
+              <Heading textAlign="left" size="subtitle.sm">
+                {feature.name}
+              </Heading>
+            </Flex>
+          </Flex>
+          <AccordionIcon />
+        </AccordionButton>
+
+        <AccordionPanel>
+          {featureDetails && (
+            <Flex direction="column" gap={2}>
+              <Flex gap={4} justify="space-between" align="center">
+                <Heading size="label.md">{featureDetails.summary}</Heading>
+                <LinkButton
+                  size="sm"
+                  href={
+                    state === "enabled"
+                      ? `https://portal.thirdweb.com/typescript/${feature.docLinks.sdk}`
+                      : `https://portal.thirdweb.com/contracts/${feature.docLinks.contracts}`
+                  }
+                  isExternal
+                  variant="ghost"
+                  borderRadius="md"
+                >
+                  Learn more
+                </LinkButton>
+              </Flex>
+              {state === "enabled" ? (
+                <>
+                  {featureDetails.examples.javascript && (
+                    <CodeBlock
+                      mt={1}
+                      language="javascript"
+                      code={featureDetails.examples.javascript.replaceAll(
+                        "{{contract_address}}",
+                        "0x...",
+                      )}
+                    />
+                  )}
+                </>
+              ) : (
+                <Flex mt={2} gap={3} direction="column">
+                  <CodeBlock
+                    language="solidity"
+                    code={`import ${contractFeatureName} from "@thirdweb-dev/contracts/${contractFeaturePath}/${contractFeatureName}.sol";
+
+contract ${contractName} is ${contractFeatureName} { ... }`}
+                  />
+                </Flex>
+              )}
             </Flex>
           )}
-        </Flex>
-      )}
-    </Flex>
+        </AccordionPanel>
+      </AccordionItem>
+    </Card>
   );
 };
 
