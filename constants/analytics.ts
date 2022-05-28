@@ -18,5 +18,6 @@ export class AnalyticsEvents {
     "token-drop": "App-TokenDropContractDeployed",
     custom: "App-CustomContractDeployed",
     "signature-drop": "App-SignatureDropContractDeployed",
+    multiwrap: "App-MultiwrapContractDeployed",
   };
 }

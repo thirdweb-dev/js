@@ -5,6 +5,7 @@ import {
 } from "./query/useQueryWithNetwork";
 import { useWeb3 } from "@3rdweb-sdk/react";
 import {
+  Multiwrap,
   Split,
   ValidContractClass,
   ValidContractInstance,
@@ -16,7 +17,7 @@ import { C, U } from "ts-toolbelt";
 
 export type ContractWithRoles = U.Exclude<
   ValidContractClass,
-  typeof Vote | typeof Split
+  typeof Vote | typeof Split | typeof Multiwrap
 >;
 
 export type ContractWithRolesInstance = C.Instance<ContractWithRoles>;

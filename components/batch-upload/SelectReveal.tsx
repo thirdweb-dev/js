@@ -12,12 +12,17 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Progress,
   Radio,
   Stack,
   Textarea,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { NFTDrop, NFTMetadataInput } from "@thirdweb-dev/sdk";
+import {
+  NFTDrop,
+  NFTMetadataInput,
+  UploadProgressEvent,
+} from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
@@ -113,6 +118,10 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
     "unselected" | "instant" | "delayed"
   >("unselected");
   const [show, setShow] = useState(false);
+  const [progress, setProgress] = useState<UploadProgressEvent>({
+    progress: 0,
+    total: 100,
+  });
 
   const {
     register,
@@ -169,15 +178,43 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
               isDisabled={!mergedData.length}
               type="submit"
               isLoading={mintBatch.isLoading}
-              loadingText={`Uploading ${mergedData.length} NFTs...`}
+              loadingText={
+                progress.progress >= progress.total
+                  ? `Waiting for approval...`
+                  : `Uploading ${mergedData.length} NFTs...`
+              }
               onClick={() => {
-                mintBatch.mutate(mergedData, {
-                  onSuccess: onClose,
-                });
+                mintBatch.mutate(
+                  {
+                    metadata: mergedData,
+                    onProgress: (event: UploadProgressEvent) => {
+                      setProgress(event);
+                    },
+                  },
+                  {
+                    onSuccess: onClose,
+                    onError: () => {
+                      setProgress({
+                        progress: 0,
+                        total: 100,
+                      });
+                    },
+                  },
+                );
               }}
             >
               Upload {mergedData.length} NFTs
             </TransactionButton>
+            {mintBatch.isLoading && (
+              <Progress
+                borderRadius="md"
+                mt="12px"
+                size="lg"
+                hasStripe
+                colorScheme="blue"
+                value={(progress.progress / progress.total) * 100}
+              />
+            )}
           </Flex>
         ) : selectedReveal === "delayed" ? (
           <Stack
@@ -193,13 +230,22 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
                   },
                   metadatas: mergedData,
                   password: data.password,
+                  onProgress: (event: UploadProgressEvent) => {
+                    setProgress(event);
+                  },
                 },
                 {
                   onSuccess: () => {
                     onSuccess();
                     onClose();
                   },
-                  onError,
+                  onError: (err) => {
+                    setProgress({
+                      progress: 0,
+                      total: 100,
+                    });
+                    onError(err);
+                  },
                 },
               );
             })}
@@ -299,10 +345,24 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
                 isDisabled={!mergedData.length}
                 type="submit"
                 isLoading={mintDelayedRevealBatch.isLoading}
-                loadingText={`Uploading ${mergedData.length} NFTs...`}
+                loadingText={
+                  progress.progress >= progress.total
+                    ? `Waiting for approval...`
+                    : `Uploading ${mergedData.length} NFTs...`
+                }
               >
                 Upload {mergedData.length} NFTs
               </TransactionButton>
+              {mintDelayedRevealBatch.isLoading && (
+                <Progress
+                  borderRadius="md"
+                  mt="12px"
+                  size="lg"
+                  hasStripe
+                  colorScheme="blue"
+                  value={(progress.progress / progress.total) * 100}
+                />
+              )}
             </Stack>
           </Stack>
         ) : null}

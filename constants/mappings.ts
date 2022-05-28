@@ -15,6 +15,7 @@ export const FeatureIconMap: Record<ContractType, StaticImageData> = {
   // TODO (byoc) icon for custom contract
   custom: require("public/assets/tw-icons/general.png"),
   "signature-drop": require("public/assets/tw-icons/general.png"),
+  multiwrap: require("public/assets/tw-icons/general.png"),
 } as const;
 
 export const UrlMap: Record<ContractType, string> = {
@@ -31,6 +32,7 @@ export const UrlMap: Record<ContractType, string> = {
   // TODO (byoc)
   custom: "",
   "signature-drop": "",
+  multiwrap: "",
 };
 
 export interface BuiltinContractDetails {
@@ -104,6 +106,11 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       description: "NOT IMPLEMENTED",
       icon: FeatureIconMap["token-drop"],
     },
+    multiwrap: {
+      title: "NOT IMPLEMENTED",
+      description: "NOT IMPLEMENTED",
+      icon: FeatureIconMap["token-drop"],
+    },
   };
 
 export interface GasPrice {
@@ -161,6 +168,9 @@ export const GasEstimatorMap: Record<ContractType, GasPrice> = {
   "signature-drop": {
     deployContract: 0,
   },
+  multiwrap: {
+    deployContract: 0,
+  },
 };
 
 export const CONTRACT_TYPE_NAME_MAP: Record<ContractType, string> = {
@@ -174,6 +184,7 @@ export const CONTRACT_TYPE_NAME_MAP: Record<ContractType, string> = {
   token: "Token" as const,
   "nft-collection": "NFT Collection" as const,
   edition: "Edition" as const,
+  multiwrap: "Multi Wrap" as const,
 
   // other
   vote: "Vote" as const,
@@ -194,6 +205,7 @@ export const ROLE_DESCRIPTION_MAP: Record<Role, string> = {
   lister: "Determine who can create new listings on this contract.",
   editor: "NOT IMPLEMENTED",
   asset: "Determine which assets can be listed on this marketplace.",
+  unwrap: "Determine who can unwrap tokens on this contract.",
 };
 
 // gnosis mappings

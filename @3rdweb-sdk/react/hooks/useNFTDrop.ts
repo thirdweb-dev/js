@@ -11,6 +11,7 @@ import {
   ClaimConditionInput,
   NFTDrop,
   NFTMetadataInput,
+  UploadProgressEvent,
 } from "@thirdweb-dev/sdk";
 import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
@@ -106,11 +107,17 @@ export function useNFTDropMintMutation(contract?: NFTDrop) {
   );
 }
 
+interface UploadWithProgress {
+  metadata: NFTMetadataInput[];
+  onProgress: (event: UploadProgressEvent) => void;
+}
+
 export function useNFTDropBatchMint(contract?: NFTDrop) {
   return useMutationWithInvalidate(
-    async (data: NFTMetadataInput[]) => {
+    async (data: UploadWithProgress) => {
       invariant(contract, "contract is required");
-      return await contract.createBatch(data);
+      const { metadata, onProgress } = data;
+      return await contract.createBatch(metadata, { onProgress });
     },
     {
       onSuccess: (_data, _variables, _options, invalidate) => {
@@ -159,6 +166,7 @@ interface DelayedRevealInput {
   placeholder: NFTMetadataInput;
   metadatas: NFTMetadataInput[];
   password: string;
+  onProgress: (event: UploadProgressEvent) => void;
 }
 
 export function useNFTDropDelayedRevealBatchMint(contract?: NFTDrop) {
@@ -169,6 +177,7 @@ export function useNFTDropDelayedRevealBatchMint(contract?: NFTDrop) {
         data.placeholder,
         data.metadatas,
         data.password,
+        { onProgress: data.onProgress },
       );
     },
     {
