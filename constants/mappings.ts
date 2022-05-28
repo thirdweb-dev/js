@@ -102,14 +102,16 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       icon: FeatureIconMap["token-drop"],
     },
     "signature-drop": {
-      title: "NOT IMPLEMENTED",
-      description: "NOT IMPLEMENTED",
+      title: "Signature Drop",
+      description: "Claimable drop with signature verification",
       icon: FeatureIconMap["token-drop"],
+      comingSoon: true,
     },
     multiwrap: {
-      title: "NOT IMPLEMENTED",
-      description: "NOT IMPLEMENTED",
+      title: "Multiwrap",
+      description: "Bundle Tokens and NFTs together",
       icon: FeatureIconMap["token-drop"],
+      comingSoon: true,
     },
   };
 
