@@ -13,7 +13,7 @@ import {
   SmartContract,
   detectFeatures,
   extractConstructorParamsFromAbi,
-  fetchContractBytecodeMetadata,
+  fetchPreDeployMetadata,
 } from "@thirdweb-dev/sdk";
 import { StorageSingleton } from "components/app-layouts/providers";
 import { BuiltinContractMap, FeatureIconMap } from "constants/mappings";
@@ -45,7 +45,7 @@ export function useContractPublishMetadataFromURI(contractId: ContractId) {
           description: details.description,
         };
       }
-      const resolved = await fetchContractBytecodeMetadata(
+      const resolved = await fetchPreDeployMetadata(
         contractIdIpfsHash,
         StorageSingleton,
       );
