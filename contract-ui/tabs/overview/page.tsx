@@ -29,7 +29,7 @@ export const CustomContractOverviewPage: React.FC<
       <Heading size="subtitle.md">Contract Overview</Heading>
       <Flex gap={8} w="100%" flexWrap="wrap">
         <Card w="100%" flexShrink={0}>
-          Additional contract overview infromation is being added. In the
+          Additional contract overview information is being added. In the
           meantime why not check out{" "}
           <Link href="code" color="primary.500">
             the code tab
