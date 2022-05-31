@@ -40,7 +40,7 @@ const EXAMPLES_MAP = {
   },
   communityRewards: {
     title: "Community rewards",
-    href: "https://portal.thirdweb.com/examples",
+    href: "https://github.com/thirdweb-example/community-rewards",
     svg: CommunityRewards,
   },
   playToEarnGames: {
