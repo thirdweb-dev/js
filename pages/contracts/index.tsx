@@ -30,8 +30,19 @@ const ContractsHomepageWrapped: React.FC = () => {
     <Track>
       <Flex gap={8} direction="column">
         <Flex gap={2} direction="column">
+          <Heading size="title.md">Pre-built contracts</Heading>
+          <Text fontStyle="italic">
+            Contracts created by the thirdweb team that you can deploy
+          </Text>
+        </Flex>
+        <DeployableContractTable
+          hasDescription
+          contractIds={Object.keys(KNOWN_CONTRACTS_MAP)}
+        />
+        <Box />
+        <Flex gap={2} direction="column">
           <Heading size="title.md">
-            Your contracts{" "}
+            Your published contracts{" "}
             <Badge variant="outline" colorScheme="purple">
               beta
             </Badge>
@@ -97,17 +108,6 @@ const ContractsHomepageWrapped: React.FC = () => {
               </Center>
             )}
         </DeployableContractTable>
-        <Box />
-        <Flex gap={2} direction="column">
-          <Heading size="title.md">Pre-built contracts</Heading>
-          <Text fontStyle="italic">
-            Contracts created by the thirdweb team that you can deploy
-          </Text>
-        </Flex>
-        <DeployableContractTable
-          hasDescription
-          contractIds={Object.keys(KNOWN_CONTRACTS_MAP)}
-        />
       </Flex>
     </Track>
   );

@@ -838,10 +838,11 @@ const NoWallet: React.FC = () => {
             maxW="200px"
             mb={3}
           />
-          <Flex direction="column" gap={0.5} align="center">
+          <Flex direction="column" gap={2} align="center">
             <Heading size="title.md">Connect your wallet</Heading>
-            <Text size="body.lg">
-              You need to connect your wallet to continue
+            <Text size="body.lg" textAlign="center">
+              You need to connect your wallet to deploy and interact with your
+              contracts.
             </Text>
           </Flex>
           <ConnectWallet />

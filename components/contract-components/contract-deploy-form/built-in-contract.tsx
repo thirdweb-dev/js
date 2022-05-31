@@ -755,7 +755,8 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
         <Flex direction="column">
           <Heading size="subtitle.md">Network / Chain</Heading>
           <Text size="body.md" fontStyle="italic">
-            Select which network to deploy this contract on.
+            Select which network to deploy this contract on. We recommend
+            deploying on a testnet before doing it on a mainnet.
           </Text>
         </Flex>
         <Flex gap={4} direction={{ base: "column", md: "row" }}>
