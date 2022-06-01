@@ -6,10 +6,7 @@ import {
   Polygon,
 } from "@thirdweb-dev/chain-icons";
 import { useAddress, useNetwork } from "@thirdweb-dev/react";
-import { alchemyUrlMap } from "components/app-layouts/providers";
-import { BigNumber, ethers, utils } from "ethers";
 import { useCallback } from "react";
-import { useQuery } from "react-query";
 import { ChainId, SUPPORTED_CHAIN_ID } from "utils/network";
 
 interface NetworkMetadata {
@@ -72,39 +69,9 @@ const defaultNetworkMetadata: Record<SUPPORTED_CHAIN_ID, NetworkMetadata> = {
   },
 };
 
-const useBalance = (address?: string) => {
-  const [network] = useNetwork();
-  const chainId = network.data.chain?.id;
-  return useQuery(
-    ["balance", address, { chainId }],
-    async () => {
-      let balance = BigNumber.from(0);
-      if (chainId) {
-        const provider = ethers.getDefaultProvider(
-          chainId in alchemyUrlMap
-            ? alchemyUrlMap[chainId as SUPPORTED_CHAIN_ID]
-            : chainId,
-        );
-        balance = await provider.getBalance(address || "");
-      }
-
-      balance = BigNumber.from(balance || 0);
-
-      return {
-        value: balance,
-        formatted: utils.formatEther(balance).slice(0, 6),
-      };
-    },
-    {
-      enabled: !!chainId && !!address,
-    },
-  );
-};
-
 export function useWeb3() {
   const address = useAddress();
   const [network] = useNetwork();
-  const balance = useBalance(address);
 
   const getNetworkMetadata = useCallback(
     (chainId: SUPPORTED_CHAIN_ID) => {
@@ -137,6 +104,5 @@ export function useWeb3() {
     // error: account.error,
     address,
     chainId: network.data.chain?.id,
-    balance,
   };
 }

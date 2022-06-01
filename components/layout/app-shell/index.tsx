@@ -202,11 +202,7 @@ export const AppShell: ComponentWithChildren = ({ children }) => {
             </Stack>
           </Stack>
         </Container>
-        {pathname !== "/dashboard" && (
-          <>
-            <InsufficientFunds />
-          </>
-        )}
+        {pathname === "/contracts" && <InsufficientFunds />}
       </Flex>
     </Flex>
   );

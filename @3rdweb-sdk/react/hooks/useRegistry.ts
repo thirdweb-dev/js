@@ -21,17 +21,11 @@ export function useRemoveContractMutation() {
     async (data: RemoveContractParams) => {
       invariant(signer, "must have an active signer");
 
-      const { contractAddress, contractType, chainId } = data;
+      const { contractAddress, chainId } = data;
       const rpcUrl = alchemyUrlMap[chainId as SUPPORTED_CHAIN_ID];
       const sdk = ThirdwebSDK.fromSigner(signer, rpcUrl);
 
       const registry = await sdk?.deployer.getRegistry();
-
-      if (contractType === "custom") {
-        const tx = await registry.removeCustomContract(contractAddress);
-        return tx;
-      }
-
       const tx = await registry.removeContract(contractAddress);
       return tx;
     },
@@ -61,18 +55,10 @@ export function useAddContractMutation() {
       invariant(address, "cannot add a contract without an address");
       invariant(sdk, "sdk not provided");
 
-      const { contractAddress, contractType } = data;
+      const { contractAddress } = data;
 
       const registry = await sdk.deployer.getRegistry();
-
-      let tx;
-      if (contractType === "custom") {
-        tx = await registry.addCustomContract(contractAddress);
-      } else {
-        tx = await registry.addContract(contractAddress);
-      }
-
-      return tx;
+      return await registry.addContract(contractAddress);
     },
     {
       onSuccess: (_data, _variables, _options, invalidate) => {

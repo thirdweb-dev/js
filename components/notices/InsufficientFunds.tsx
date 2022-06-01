@@ -1,6 +1,6 @@
 import { useWeb3 } from "@3rdweb-sdk/react";
 import { ButtonGroup, Container, Icon, Stack } from "@chakra-ui/react";
-import { useNetworkMismatch } from "@thirdweb-dev/react";
+import { useBalance, useNetworkMismatch } from "@thirdweb-dev/react";
 import { BigNumber } from "ethers";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -17,7 +17,8 @@ const FAUCETS: Partial<Record<ChainId, string>> = {
 export const InsufficientFunds: React.FC = () => {
   const router = useRouter();
   const mismatchExists = useNetworkMismatch();
-  const { address, balance, chainId, getNetworkMetadata } = useWeb3();
+  const { address, chainId, getNetworkMetadata } = useWeb3();
+  const balanceQuery = useBalance();
   const [dismissed, setDismissed] = useState(false);
   const [delayExpired, setDelayExpired] = useState(false);
 
@@ -48,7 +49,7 @@ export const InsufficientFunds: React.FC = () => {
   if (!delayExpired) {
     return null;
   }
-  if (BigNumber.from(balance?.data?.value || 0)?.gt(0)) {
+  if (BigNumber.from(balanceQuery?.data?.value || 0)?.gt(0)) {
     return null;
   }
 

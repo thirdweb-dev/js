@@ -24,6 +24,7 @@ import {
 } from "@chakra-ui/react";
 import {
   ChainId,
+  useBalance,
   useConnect,
   useDisconnect,
   useGnosis,
@@ -71,7 +72,7 @@ const connectorIdToImageUrl: Record<string, StaticImageData> = {
 
 export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
   const [connector, connect] = useConnect();
-  const { balance, address, chainId, getNetworkMetadata } = useWeb3();
+  const { address, chainId, getNetworkMetadata } = useWeb3();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const disconnect = useDisconnect();
   const disconnectFully = useDisconnect({ reconnectAfterGnosis: false });
@@ -86,6 +87,8 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
       connect(_connector);
     }
   }
+
+  const balanceQuery = useBalance();
 
   const connectWithMetamask = useMetamask();
 
@@ -119,8 +122,8 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
               <Icon boxSize={6} as={SVG} />
               <Flex gap={0.5} direction="column" textAlign="left">
                 <Text size="label.sm">
-                  <Skeleton as="span" isLoaded={!balance.isLoading}>
-                    {balance.data?.formatted || "0.000"}
+                  <Skeleton as="span" isLoaded={!balanceQuery.isLoading}>
+                    {balanceQuery.data?.displayValue.slice(0, 6) || "0.000"}
                   </Skeleton>{" "}
                   {getNetworkMetadata(chainId).symbol}
                 </Text>
