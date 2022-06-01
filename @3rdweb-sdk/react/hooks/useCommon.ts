@@ -169,7 +169,7 @@ export type RecipientContract = NFTDrop | EditionDrop;
 export function hasPrimarySaleMechanic(
   contract: ValidContractInstance,
 ): contract is RecipientContract {
-  return "primarySale" in contract;
+  return "sales" in contract;
 }
 
 export function useSaleRecipient<TContract extends RecipientContract>(
@@ -180,7 +180,7 @@ export function useSaleRecipient<TContract extends RecipientContract>(
     tokenId
       ? recipientKeys.token(contract?.getAddress(), tokenId)
       : recipientKeys.detail(contract?.getAddress()),
-    async () => await contract?.primarySale.getRecipient(),
+    async () => await contract?.sales.getRecipient(),
     {
       enabled: !!contract,
     },
@@ -193,7 +193,7 @@ export function useSetSaleRecipientMutation<
     (recipientAddress: string) => {
       invariant(contract, "contract must be defined");
 
-      return contract?.primarySale.setRecipient(recipientAddress);
+      return contract?.sales.setRecipient(recipientAddress);
     },
     {
       onSuccess: (_data, _variables, _options, invalidate) => {
@@ -212,7 +212,7 @@ export type RoyaltyContract = NFTDrop | EditionDrop | NFTCollection | Edition;
 export function hasRoyaltyMechanic(
   contract: ValidContractInstance,
 ): contract is RoyaltyContract {
-  return "royalty" in contract;
+  return "royalties" in contract;
 }
 
 export function useContractRoyalty<TContract extends RoyaltyContract>(
@@ -220,7 +220,7 @@ export function useContractRoyalty<TContract extends RoyaltyContract>(
 ) {
   return useQueryWithNetwork(
     royaltyKeys.detail(contract?.getAddress()),
-    async () => await contract?.royalty.getDefaultRoyaltyInfo(),
+    async () => await contract?.royalties.getDefaultRoyaltyInfo(),
     {
       enabled: !!contract,
     },
@@ -233,7 +233,7 @@ export function useContractRoyaltyMutation<TContract extends RoyaltyContract>(
     (data: z.input<typeof CommonRoyaltySchema>) => {
       invariant(contract, "contract must be defined");
 
-      return contract?.royalty.setDefaultRoyaltyInfo(data);
+      return contract?.royalties.setDefaultRoyaltyInfo(data);
     },
     {
       onSuccess: (_data, _variables, _options, invalidate) => {
@@ -254,7 +254,7 @@ export type PlatformFeeContract =
 export function hasPlatformFeeMechanic(
   contract: ValidContractInstance,
 ): contract is PlatformFeeContract {
-  return "platformFee" in contract;
+  return "platformFees" in contract;
 }
 
 export function useContractPlatformFee<TContract extends PlatformFeeContract>(
@@ -262,7 +262,7 @@ export function useContractPlatformFee<TContract extends PlatformFeeContract>(
 ) {
   return useQueryWithNetwork(
     platformFeeKeys.detail(contract?.getAddress()),
-    async () => await contract?.platformFee.get(),
+    async () => await contract?.platformFees.get(),
     {
       enabled: !!contract,
     },
@@ -275,7 +275,7 @@ export function useContractPlatformFeeMutation<
     (data: z.input<typeof CommonPlatformFeeSchema>) => {
       invariant(contract, "contract must be defined");
 
-      return contract?.platformFee.set(data);
+      return contract?.platformFees.set(data);
     },
     {
       onSuccess: (_data, _variables, _options, invalidate) => {
