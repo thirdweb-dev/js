@@ -4,7 +4,6 @@ import { Flex } from "@chakra-ui/react";
 import { useAddress, useContract } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useMemo } from "react";
 import { Card, Heading, Text } from "tw-components";
 
 interface AddToDashboardCardProps {
@@ -23,11 +22,9 @@ export const AddToDashboardCard: React.FC<AddToDashboardCardProps> = ({
     "Added to dashboard",
     "Failed to add to dashboard",
   );
-  const shouldShow = useMemo(() => {
-    return (
-      contractList.data?.findIndex((c) => c.address === contractAddress) === -1
-    );
-  }, [contractAddress, contractList.data]);
+
+  const shouldShow =
+    contractList.data?.findIndex((c) => c.address === contractAddress) === -1;
 
   if (!shouldShow) {
     return null;
