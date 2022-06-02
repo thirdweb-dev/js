@@ -75,6 +75,7 @@ const chakraTheme: Theme = extendTheme({
                 background: `linear-gradient(315deg, ${lgFrom}, ${lgTo})`,
                 backgroundClip: "text",
               },
+              opacity: 0.9,
             },
           };
         },
