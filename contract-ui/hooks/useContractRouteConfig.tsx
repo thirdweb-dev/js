@@ -57,7 +57,7 @@ export function useContractRouteConfig(
           <ContractTokensPage contractAddress={contractAddress} />
         )),
     },
-    /*     {
+    {
       title: "Permissions",
       path: "permissions",
       isEnabled: extensionDetectedState({ contract, feature: "Permissions" }),
@@ -67,7 +67,7 @@ export function useContractRouteConfig(
             <ContractPermissionsPage contractAddress={contractAddress} />
           ),
         ),
-    }, */
+    },
     {
       title: "Settings",
       path: "settings",

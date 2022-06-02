@@ -197,7 +197,7 @@ export const CONTRACT_TYPE_NAME_MAP: Record<ContractType, string> = {
   custom: "Custom" as const,
 } as const;
 
-export const ROLE_DESCRIPTION_MAP: Record<Role, string> = {
+export const ROLE_DESCRIPTION_MAP: Record<Role | string, string> = {
   admin:
     "Determine who can grant or revoke roles and modify settings on this contract.",
   minter: "Determine who can create new tokens on this contract.",
@@ -205,7 +205,6 @@ export const ROLE_DESCRIPTION_MAP: Record<Role, string> = {
     "Determine who can pause (and unpause) all external calls made to this contract's contract.",
   transfer: "Determine who can transfer tokens on this contract.",
   lister: "Determine who can create new listings on this contract.",
-  editor: "NOT IMPLEMENTED",
   asset: "Determine which assets can be listed on this marketplace.",
   unwrap: "Determine who can unwrap tokens on this contract.",
 };

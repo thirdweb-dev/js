@@ -1,6 +1,8 @@
+import { Permissions } from "./components";
 import { ButtonGroup, Divider, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
-import { PotentialContractInstance } from "contract-ui/types/types";
+import { SmartContract } from "@thirdweb-dev/sdk";
+import { ContractWithRoles } from "contract-ui/types/types";
 import React from "react";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 
@@ -13,7 +15,7 @@ export const ContractPermissionsPage: React.FC<
 > = ({ contractAddress }) => {
   const contract = useContract(contractAddress);
 
-  const detectedFeature = detectPermissions(contract.contract);
+  const detectedFeature = detectPermissions(contract.contract as SmartContract);
 
   if (contract.isLoading) {
     // TODO build a skeleton for this
@@ -48,19 +50,12 @@ export const ContractPermissionsPage: React.FC<
 
   return (
     <Flex direction="column" gap={6}>
-      <Flex direction="row" justify="space-between" align="center">
-        <Heading size="title.sm">Contract Tokens</Heading>
-        <ButtonGroup>
-          {/* <TokenMintButton contract={detectedContract} /> */}
-        </ButtonGroup>
-      </Flex>
-
-      {/* <TokenSupply contract={detectedContract} /> */}
+      <Permissions contract={contract.contract as SmartContract} />
     </Flex>
   );
 };
 
-export function detectPermissions(contract: PotentialContractInstance) {
+export function detectPermissions(contract: ContractWithRoles) {
   if (!contract) {
     return undefined;
   }

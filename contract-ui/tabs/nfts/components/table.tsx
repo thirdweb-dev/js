@@ -14,12 +14,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import {
-  NFT,
-  NFTContract,
-  useNFTs,
-  useTotalCirculatingSupply,
-} from "@thirdweb-dev/react";
+import { NFT, NFTContract, useNFTs, useTotalCount } from "@thirdweb-dev/react";
 import { Erc721, Erc1155, Json } from "@thirdweb-dev/sdk";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import { BigNumber } from "ethers";
@@ -86,7 +81,7 @@ export const NftGetAllTable: React.FC<ContractOverviewNftGetAllProps> = ({
 
   const [queryParams, setQueryParams] = useState({ count: 50, start: 0 });
   const getAllQueryResult = useNFTs(contract, queryParams);
-  const totalSupply = useTotalCirculatingSupply(contract);
+  const totalCountQuery = useTotalCount(contract);
   const {
     getTableProps,
     getTableBodyProps,
@@ -113,7 +108,8 @@ export const NftGetAllTable: React.FC<ContractOverviewNftGetAllProps> = ({
       manualPagination: true,
       pageCount: Math.max(
         Math.ceil(
-          BigNumber.from(totalSupply.data || 0).toNumber() / queryParams.count,
+          BigNumber.from(totalCountQuery.data || 0).toNumber() /
+            queryParams.count,
         ),
         1,
       ),
@@ -201,31 +197,31 @@ export const NftGetAllTable: React.FC<ContractOverviewNftGetAllProps> = ({
       <Center w="100%">
         <Flex gap={2} direction="row" align="center">
           <IconButton
-            isDisabled={!canPreviousPage || totalSupply.isLoading}
+            isDisabled={!canPreviousPage || totalCountQuery.isLoading}
             aria-label="first page"
             icon={<Icon as={MdFirstPage} />}
             onClick={() => gotoPage(0)}
           />
           <IconButton
-            isDisabled={!canPreviousPage || totalSupply.isLoading}
+            isDisabled={!canPreviousPage || totalCountQuery.isLoading}
             aria-label="previous page"
             icon={<Icon as={MdNavigateBefore} />}
             onClick={() => previousPage()}
           />
           <Text whiteSpace="nowrap">
             Page <strong>{pageIndex + 1}</strong> of{" "}
-            <Skeleton display="inline" isLoaded={totalSupply.isSuccess}>
+            <Skeleton display="inline" isLoaded={totalCountQuery.isSuccess}>
               <strong>{pageCount}</strong>
             </Skeleton>
           </Text>
           <IconButton
-            isDisabled={!canNextPage || totalSupply.isLoading}
+            isDisabled={!canNextPage || totalCountQuery.isLoading}
             aria-label="next page"
             icon={<Icon as={MdNavigateNext} />}
             onClick={() => nextPage()}
           />
           <IconButton
-            isDisabled={!canNextPage || totalSupply.isLoading}
+            isDisabled={!canNextPage || totalCountQuery.isLoading}
             aria-label="last page"
             icon={<Icon as={MdLastPage} />}
             onClick={() => gotoPage(pageCount - 1)}
@@ -236,7 +232,7 @@ export const NftGetAllTable: React.FC<ContractOverviewNftGetAllProps> = ({
               setPageSize(parseInt(e.target.value as string, 10));
             }}
             value={pageSize}
-            isDisabled={totalSupply.isLoading}
+            isDisabled={totalCountQuery.isLoading}
           >
             <option value="25">25</option>
             <option value="50">50</option>
