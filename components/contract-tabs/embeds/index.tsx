@@ -14,6 +14,7 @@ import {
   EditionDrop,
   Marketplace,
   NFTDrop,
+  TokenDrop,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
 import { useSingleQueryParam } from "hooks/useQueryParam";
@@ -34,7 +35,7 @@ interface EmbedSetupProps {
   contract?: ValidContractInstance;
 }
 
-const IPFS_URI = "ipfs://QmWpFXDFj5xERYoXFB4DVARehD6UKKsTyYM8jPHuRBvWd8";
+const IPFS_URI = "ipfs://Qmc6rwR4Bg8arDrzVd7TF42YZp1zWKYnMu1Zc9gdHaKBcN";
 
 const getContractEmbedHash = (contract?: ValidContractInstance) => {
   if (contract instanceof NFTDrop) {
@@ -48,6 +49,10 @@ const getContractEmbedHash = (contract?: ValidContractInstance) => {
   if (contract instanceof Marketplace) {
     // Marketplace contract embed hash
     return `${IPFS_URI}/marketplace.html`;
+  }
+  if (contract instanceof TokenDrop) {
+    // Token drop contract embed hash
+    return `${IPFS_URI}/token-drop.html`;
   }
 
   return null;
