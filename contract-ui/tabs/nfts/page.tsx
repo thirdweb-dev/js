@@ -2,12 +2,8 @@ import { NFTMintButton } from "./components/mint-button";
 import { NftGetAllTable } from "./components/table";
 import { ButtonGroup, Divider, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
-import {
-  Erc721,
-  Erc1155,
-  SmartContract,
-  ValidContractInstance,
-} from "@thirdweb-dev/sdk";
+import { Erc721, Erc1155 } from "@thirdweb-dev/sdk";
+import { PotentialContractInstance } from "contract-ui/types/types";
 import React from "react";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 
@@ -65,19 +61,15 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
     <Flex direction="column" gap={6}>
       <Flex direction="row" justify="space-between" align="center">
         <Heading size="title.sm">Contract NFTs</Heading>
-        {/* TODO add erc721 & 1155 mint flow here */}
+        <NFTMintButton contract={detectedContract} />
       </Flex>
       {/* TODO check if this is supported before rendering it */}
-
-      <NFTMintButton contract={detectedContract} />
       <NftGetAllTable contract={detectedContract} />
     </Flex>
   );
 };
 
-export function detectErc721Instance(
-  contract: ValidContractInstance | SmartContract | null | undefined,
-) {
+export function detectErc721Instance(contract: PotentialContractInstance) {
   if (!contract) {
     return undefined;
   }
@@ -92,9 +84,7 @@ export function detectErc721Instance(
   return undefined;
 }
 
-export function detectErc1155Instance(
-  contract: ValidContractInstance | SmartContract | null | undefined,
-) {
+export function detectErc1155Instance(contract: PotentialContractInstance) {
   if (!contract) {
     return undefined;
   }
@@ -107,8 +97,6 @@ export function detectErc1155Instance(
   return undefined;
 }
 
-export function detectNFTContractInstance(
-  contract: ValidContractInstance | SmartContract | null | undefined,
-) {
+export function detectNFTContractInstance(contract: PotentialContractInstance) {
   return detectErc721Instance(contract) || detectErc1155Instance(contract);
 }
