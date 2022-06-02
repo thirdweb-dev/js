@@ -70,7 +70,7 @@ export const MismatchButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
             {...props}
             type={networksMismatch || isBalanceZero ? "button" : type}
             loadingText={loadingText}
-            onClick={() => {
+            onClick={(e) => {
               if (isBalanceZero) {
                 trackEvent({
                   category: "no-funds",
@@ -78,7 +78,12 @@ export const MismatchButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
                   label: "open-popover",
                 });
               }
-              return networksMismatch || isBalanceZero ? undefined : onClick;
+              if (networksMismatch || isBalanceZero) {
+                return undefined;
+              }
+              if (onClick) {
+                return onClick(e);
+              }
             }}
             ref={ref}
             isDisabled={isDisabled}

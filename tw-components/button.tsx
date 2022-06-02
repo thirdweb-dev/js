@@ -105,14 +105,15 @@ export const LinkButton = React.forwardRef<HTMLButtonElement, LinkButtonProps>(
     // we're in a react location context, so we can use that
     if (match) {
       return (
-        <Button
-          as={LocationLink}
-          to={href}
-          {...restButtonProps}
-          textDecoration="none!important"
-        >
-          {children}
-        </Button>
+        <LocationLink to={href}>
+          <Button
+            {...restButtonProps}
+            ref={ref}
+            textDecoration="none!important"
+          >
+            {children}
+          </Button>
+        </LocationLink>
       );
     }
 

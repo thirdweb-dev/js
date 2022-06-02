@@ -3,6 +3,7 @@ import { useAddContractMutation } from "@3rdweb-sdk/react/hooks/useRegistry";
 import { Flex } from "@chakra-ui/react";
 import { useAddress, useContract } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { Card, Heading, Text } from "tw-components";
 
@@ -18,6 +19,7 @@ export const AddToDashboardCard: React.FC<AddToDashboardCardProps> = ({
   const contractList = useContractList(activeChainId || -1, address);
   const contractQuery = useContract(contractAddress);
   const addToDashboardMutation = useAddContractMutation();
+  const { trackEvent } = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Added to dashboard",
     "Failed to add to dashboard",
@@ -29,6 +31,7 @@ export const AddToDashboardCard: React.FC<AddToDashboardCardProps> = ({
   if (!shouldShow) {
     return null;
   }
+
   return (
     <Card
       as={Flex}
@@ -60,14 +63,39 @@ export const AddToDashboardCard: React.FC<AddToDashboardCardProps> = ({
           if (!contractQuery.data?.contractType) {
             return;
           }
+
+          trackEvent({
+            category: "custom-contract",
+            action: "add-to-dashboard",
+            label: "attempt",
+            contractAddress,
+          });
+
           addToDashboardMutation.mutate(
             {
               contractAddress,
               contractType: contractQuery.data.contractType,
             },
             {
-              onSuccess,
-              onError,
+              onSuccess: () => {
+                onSuccess();
+                trackEvent({
+                  category: "custom-contract",
+                  action: "add-to-dashboard",
+                  label: "success",
+                  contractAddress,
+                });
+              },
+              onError: (err) => {
+                onError(err);
+                trackEvent({
+                  category: "custom-contract",
+                  action: "add-to-dashboard",
+                  label: "error",
+                  contractAddress,
+                  error: err,
+                });
+              },
             },
           );
         }}

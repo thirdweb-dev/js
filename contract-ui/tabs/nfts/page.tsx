@@ -18,7 +18,6 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   const contract = useContract(contractAddress);
 
   const detectedContract = detectNFTContractInstance(contract.contract);
-  console.log("*** ContractNFTPage", { detectedContract });
 
   if (contract.isLoading) {
     // TODO build a skeleton for this
@@ -74,11 +73,9 @@ export function detectErc721Instance(contract: PotentialContractInstance) {
     return undefined;
   }
   if (contract instanceof Erc721) {
-    console.log("*** detect extended contract", contract);
     return contract;
   }
   if ("nft" in contract && contract.nft instanceof Erc721) {
-    console.log("*** detect extended contract nft", contract);
     return contract.nft;
   }
   return undefined;
