@@ -50,6 +50,8 @@ export const MismatchButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { trackEvent } = useTrack();
+    const { chainId, getNetworkMetadata } = useWeb3();
+    const { isTestnet } = getNetworkMetadata(chainId || 0);
 
     if (!address) {
       return (
@@ -62,23 +64,28 @@ export const MismatchButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
         initialFocusRef={initialFocusRef}
         isLazy
         isOpen={isOpen}
-        onOpen={networksMismatch || isBalanceZero ? onOpen : undefined}
+        onOpen={
+          networksMismatch || (isBalanceZero && isTestnet) ? onOpen : undefined
+        }
         onClose={onClose}
       >
         <PopoverTrigger>
           <Button
             {...props}
-            type={networksMismatch || isBalanceZero ? "button" : type}
+            type={
+              networksMismatch || (isBalanceZero && isTestnet) ? "button" : type
+            }
             loadingText={loadingText}
             onClick={(e) => {
-              if (isBalanceZero) {
+              if (isBalanceZero && isTestnet) {
                 trackEvent({
                   category: "no-funds",
-                  action: "click",
-                  label: "open-popover",
+                  action: "popover",
+                  label:
+                    SupportedChainIdToNetworkMap[chainId as SUPPORTED_CHAIN_ID],
                 });
               }
-              if (networksMismatch || isBalanceZero) {
+              if (networksMismatch || (isBalanceZero && isTestnet)) {
                 return undefined;
               }
               if (onClick) {
@@ -216,7 +223,7 @@ const NoFundsNotice = () => {
       <Text>
         You don&apos;t have any funds on this network. You&apos;ll need some{" "}
         {symbol} to pay for gas.
-        {isTestnet && "You can get some from the faucet below."}
+        {isTestnet && " You can get some from the faucet below."}
       </Text>
 
       <ButtonGroup size="sm">

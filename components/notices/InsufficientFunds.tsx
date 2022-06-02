@@ -76,8 +76,8 @@ export const InsufficientFunds: React.FC = () => {
 
         <Text>
           You don&apos;t have any funds on this network. You&apos;ll need some{" "}
-          {symbol} to get started.
-          {isTestnet && "You can get some from the faucet below."}
+          {symbol} to pay for gas.
+          {isTestnet && " You can get some from the faucet below."}
         </Text>
 
         <ButtonGroup size="sm">
