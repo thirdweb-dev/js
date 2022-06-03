@@ -6,7 +6,7 @@ interface ContentOverviewProps {
   contractAddress?: string;
 }
 
-export const CustomContractCodeTab: React.FC<ContentOverviewProps> = ({
+export const CustomContractCode: React.FC<ContentOverviewProps> = ({
   contractAddress,
 }) => {
   const functionsQuery = useContractFunctions(contractAddress);
@@ -27,7 +27,8 @@ export const CustomContractCodeTab: React.FC<ContentOverviewProps> = ({
   }
 
   return (
-    <Flex gap={4} direction="column">
+    <Flex gap={4} direction="column" w="full">
+      <Heading size="subtitle.sm">Get started with the SDK</Heading>
       <Card as={Flex} gap={2} flexDirection="column">
         <Heading size="subtitle.md">Install the thirdweb SDK</Heading>
         <CodeBlock

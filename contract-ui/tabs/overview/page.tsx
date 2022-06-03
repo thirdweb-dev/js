@@ -1,9 +1,10 @@
 import { AddToDashboardCard } from "./cards/add-to-dashboard";
+import { CustomContractCode } from "./cards/custom-contract-code";
 import { FeedbackFormCard } from "./cards/feedback-form";
 import { Flex } from "@chakra-ui/react";
 import { useAddress, useContract } from "@thirdweb-dev/react";
 import { useTrack } from "hooks/analytics/useTrack";
-import { Card, Heading, Link } from "tw-components";
+import { Heading } from "tw-components";
 
 interface CustomContractOverviewPageProps {
   contractAddress?: string;
@@ -28,16 +29,8 @@ export const CustomContractOverviewPage: React.FC<
     <Flex direction="column" gap={4}>
       <Heading size="subtitle.md">Contract Overview</Heading>
       <Flex gap={8} w="100%" flexWrap="wrap">
-        <Card w="100%" flexShrink={0}>
-          Additional contract overview information is being added. In the
-          meantime why not check out{" "}
-          <Link href="code" color="primary.500">
-            the code tab
-          </Link>
-          ?
-        </Card>
         <AddToDashboardCard contractAddress={contractAddress} />
-        {/* we only show the feedback form on custom cotnracts */}
+        {/* we only show the feedback form on custom contracts */}
         {contractQuery.data?.contractType === "custom" && (
           <FeedbackFormCard
             trackEvent={trackEvent}
@@ -46,6 +39,7 @@ export const CustomContractOverviewPage: React.FC<
             localStorageKey={`tw_deploy-${contractAddress}`}
           />
         )}
+        <CustomContractCode contractAddress={contractAddress} />
       </Flex>
     </Flex>
   );

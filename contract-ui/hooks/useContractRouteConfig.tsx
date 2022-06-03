@@ -29,14 +29,6 @@ export function useContractRouteConfig(
         ),
     },
     {
-      title: "Code",
-      path: "code",
-      element: () =>
-        import("../tabs/code/page").then(({ CustomContractCodeTab }) => (
-          <CustomContractCodeTab contractAddress={contractAddress} />
-        )),
-    },
-    {
       title: "NFTs",
       path: "nfts",
       isEnabled: extensionDetectedState({
