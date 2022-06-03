@@ -26,7 +26,7 @@
     "@react-hook/intersection-observer": "^3.1.1",
     "@tanstack/react-location": "^3.7.4",
     "@thirdweb-dev/chain-icons": "^1.0.2",
-    "@thirdweb-dev/react": "^2.4.0-7",
+    "@thirdweb-dev/react": "^2.4.0",
     "@thirdweb-dev/sdk": "^2.3.8-0",
     "bn.js": "^5.2.0",
     "color": "^4.0.1",
@@ -79,10 +79,10 @@
     "eslint-plugin-inclusive-language": "^2.1.1",
     "eslint-plugin-prettier": "^4.0.0",
     "isomorphic-fetch": "^3.0.0",
-    "next-sitemap": "^2.0.0",
+    "next-sitemap": "^3.0.0",
     "next-unused": "^0.0.6",
     "prettier": "^2.4.1",
-    "typescript": "^4.4.4"
+    "typescript": "^4.7.0"
   },
   "resolutions": {
     "@types/react": "^18",
