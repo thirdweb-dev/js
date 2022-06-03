@@ -54,6 +54,7 @@ import {
   FormLabel,
   Heading,
   Text,
+  TrackedLink,
 } from "tw-components";
 import {
   NetworkToBlockTimeMap,
@@ -755,8 +756,17 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
         <Flex direction="column">
           <Heading size="subtitle.md">Network / Chain</Heading>
           <Text size="body.md" fontStyle="italic">
-            Select which network to deploy this contract on. We recommend
-            deploying on a testnet before doing it on a mainnet.
+            Select a network to deploy this contract on. We recommend starting
+            with a testnet.{" "}
+            <TrackedLink
+              href="https://portal.thirdweb.com/guides/which-network-should-you-use"
+              color="primary.600"
+              category="deploy"
+              label="learn-networks"
+              isExternal
+            >
+              Learn more about the different networks.
+            </TrackedLink>
           </Text>
         </Flex>
         <Flex gap={4} direction={{ base: "column", md: "row" }}>
