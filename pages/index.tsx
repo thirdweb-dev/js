@@ -17,10 +17,7 @@ import { DashboardCard } from "components/homepage/DashboardCard";
 import { HomepageFooter } from "components/homepage/Footer";
 import { HomepageSection } from "components/homepage/Section";
 import { HomepageTopNav } from "components/homepage/Topnav";
-import {
-  ExampleItem,
-  exampleCategories,
-} from "components/homepage/examples/ExampleItem";
+import { ExamplesSection } from "components/homepage/examples/ExamplesSection";
 import { MultiChainSVG } from "components/homepage/multi-chain-svg";
 import { GeneralCta } from "components/shared/GeneralCta";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -574,15 +571,7 @@ export default function Home() {
               >
                 Build anything.
               </Heading>
-              <SimpleGrid
-                w="100%"
-                columns={{ base: 2, md: 4 }}
-                spacing={{ base: 6, md: 24 }}
-              >
-                {exampleCategories.map((category) => (
-                  <ExampleItem category={category} key={category} />
-                ))}
-              </SimpleGrid>
+              <ExamplesSection />
             </Flex>
           </HomepageSection>
           <HomepageSection id="get-started" bottomPattern>

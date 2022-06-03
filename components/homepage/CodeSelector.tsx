@@ -194,25 +194,6 @@ export const CodeSelector: React.FC = () => {
           >
             <Box as="span">Try it on repl.it</Box>
           </LinkButton>
-          <LinkButton
-            variant="outline"
-            borderRadius="md"
-            w="full"
-            // maxW="300px"
-            href={`https://portal.thirdweb.com/${activeLanguage}`}
-            isExternal
-            p={6}
-            // flexShrink={0}
-            onClick={() =>
-              trackEvent({
-                category: "code-selector",
-                action: "click-documentation",
-                label: activeLanguage,
-              })
-            }
-          >
-            Explore documentation
-          </LinkButton>
         </Flex>
       )}
       <LinkButton
