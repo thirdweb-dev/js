@@ -7,6 +7,10 @@ import {
   useResetEligibilityMutation,
 } from "@3rdweb-sdk/react/hooks/useClaimPhases";
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   Box,
   Divider,
   Flex,
@@ -31,8 +35,10 @@ import {
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BigNumberInput } from "components/shared/BigNumberInput";
 import { CurrencySelector } from "components/shared/CurrencySelector";
+import deepEqual from "fast-deep-equal";
+import { useLeaveConfirm } from "hooks/useLeaveConfirm";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { BsCircleFill } from "react-icons/bs";
 import { FiPlus, FiTrash, FiUpload } from "react-icons/fi";
@@ -131,6 +137,16 @@ export const DropPhases: React.FC<DropPhases> = ({ contract, tokenId }) => {
   );
 };
 
+const DEFAULT_PHASE = {
+  startTime: new Date(),
+  maxQuantity: "unlimited",
+  quantityLimitPerTransaction: "unlimited",
+  waitInSeconds: "0",
+  price: 0,
+  currencyAddress: NATIVE_TOKEN_ADDRESS,
+  snapshot: undefined,
+  merkleRootHash: undefined,
+};
 const DropPhasesSchema = z.object({
   phases: ClaimConditionInputArray,
 });
@@ -138,6 +154,17 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
   const query = useClaimPhases(contract, tokenId);
   const mutation = useClaimPhasesMutation(contract, tokenId);
   const decimals = useDecimals(contract);
+
+  const transformedQueryData = useMemo(() => {
+    return (query.data || []).map((phase) => ({
+      ...phase,
+      price: Number(phase.currencyMetadata.displayValue),
+      maxQuantity: phase.maxQuantity.toString(),
+      quantityLimitPerTransaction: phase.quantityLimitPerTransaction.toString(),
+      waitInSeconds: phase.waitInSeconds.toString(),
+      startTime: new Date(phase.startTime),
+    }));
+  }, [query.data]);
 
   const nftsOrToken =
     contract instanceof NFTDrop || contract instanceof EditionDrop
@@ -147,15 +174,7 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
   const form = useForm<z.input<typeof DropPhasesSchema>>({
     defaultValues: query.data
       ? {
-          phases: query.data.map((phase) => ({
-            ...phase,
-            price: phase.currencyMetadata.displayValue,
-            maxQuantity: phase.maxQuantity.toString(),
-            quantityLimitPerTransaction:
-              phase.quantityLimitPerTransaction.toString(),
-            waitInSeconds: phase.waitInSeconds.toString(),
-            startTime: new Date(phase.startTime),
-          })),
+          phases: transformedQueryData,
         }
       : undefined,
   });
@@ -174,32 +193,15 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
       !form.getValues("phases").length
     ) {
       form.reset({
-        phases: query.data.map((phase) => ({
-          ...phase,
-          price: phase.currencyMetadata.displayValue,
-          maxQuantity: phase.maxQuantity.toString(),
-          quantityLimitPerTransaction:
-            phase.quantityLimitPerTransaction.toString(),
-          waitInSeconds: phase.waitInSeconds.toString(),
-          startTime: new Date(phase.startTime),
-        })),
+        phases: transformedQueryData,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query.data, form.formState.isDirty]);
-  const addPhase = () => {
-    append({
-      startTime: new Date(),
-      maxQuantity: "unlimited",
-      quantityLimitPerTransaction: "unlimited",
-      waitInSeconds: "0",
-      price: 0,
-      currencyAddress: NATIVE_TOKEN_ADDRESS,
-      snapshot: undefined,
-      merkleRootHash: undefined,
-    });
-  };
 
+  const addPhase = () => {
+    append(DEFAULT_PHASE);
+  };
   const removePhase = (index: number) => {
     remove(index);
   };
@@ -216,6 +218,11 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
     "Saved claim phases",
     "Failed to save claim phases",
   );
+
+  const isDataEqual = deepEqual(transformedQueryData, watchFieldArray);
+
+  // make user confirm not-saving changes
+  useLeaveConfirm(!isDataEqual);
 
   return (
     <>
@@ -580,15 +587,29 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
               </React.Fragment>
             );
           })}
-
+          {!watchFieldArray?.length && (
+            <Alert status="warning" borderRadius="md">
+              <AlertIcon />
+              <Flex direction="column">
+                <AlertTitle>
+                  You need to set at least one claim phase
+                </AlertTitle>
+                <AlertDescription>
+                  Without a claim phase no-one will be able to claim this drop.
+                  To add one, click the button below.
+                </AlertDescription>
+              </Flex>
+            </Alert>
+          )}
           <Button
-            colorScheme="primary"
-            variant="outline"
+            colorScheme={watchFieldArray?.length ? "primary" : "purple"}
+            variant={watchFieldArray?.length ? "outline" : "solid"}
             borderRadius="md"
             leftIcon={<Icon as={FiPlus} />}
             onClick={addPhase}
           >
-            Add Phase
+            Add {watchFieldArray?.length ? "Additional " : "Initial "}Claim
+            Phase
           </Button>
         </Flex>
         <AdminOnly contract={contract} fallback={<Box pb={5} />}>
@@ -597,10 +618,7 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
             <TransactionButton
               colorScheme="primary"
               transactionCount={1}
-              isDisabled={
-                query.isLoading ||
-                form.getFieldState("phases", form.formState).isTouched
-              }
+              isDisabled={query.isLoading || isDataEqual}
               type="submit"
               isLoading={mutation.isLoading}
               loadingText="Saving..."
@@ -609,7 +627,7 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
               borderTopLeftRadius="0"
               borderTopRightRadius="0"
             >
-              Update Claim Phases
+              Save Claim Phases
             </TransactionButton>
           </>
         </AdminOnly>
