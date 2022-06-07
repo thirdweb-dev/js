@@ -24,8 +24,6 @@ export const Permissions = <TContract extends ContractWithRoles>({
 }) => {
   const allRoleMembers = useAllRoleMembers(contract);
   const setAllRoleMembers = useSetAllRoleMembers(contract);
-  console.log(allRoleMembers.data);
-  console.log(allRoleMembers.data);
   const form = useForm({});
 
   useEffect(() => {

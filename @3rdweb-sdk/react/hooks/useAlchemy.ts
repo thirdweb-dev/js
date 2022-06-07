@@ -79,7 +79,7 @@ export function useWalletNFTs() {
 
         return nftData as WalletNftData[];
       } catch (err) {
-        console.log("Network not supported");
+        console.error("Network not supported");
         throw err;
       }
     },

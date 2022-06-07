@@ -23,7 +23,6 @@ interface TokenMintFormProps {
 export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
   const address = useAddress();
   const mint = useMintToken(contract);
-  console.log(address);
   const {
     register,
     handleSubmit,
