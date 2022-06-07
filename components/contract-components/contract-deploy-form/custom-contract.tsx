@@ -1,10 +1,9 @@
-import { ContractIdImage } from "../contract-table/cells/image";
 import {
   useConstructorParamsFromABI,
   useContractPublishMetadataFromURI,
   useCustomContractDeployMutation,
 } from "../hooks";
-import { Divider, Flex, FormControl, Input, Skeleton } from "@chakra-ui/react";
+import { Divider, Flex, FormControl, Input } from "@chakra-ui/react";
 import { CustomContractMetadata } from "@thirdweb-dev/sdk/dist/src/schema/contracts/custom";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelect";
@@ -15,7 +14,6 @@ import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
-  Badge,
   FormHelperText,
   FormLabel,
   Heading,
@@ -121,29 +119,11 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
         });
       })}
     >
-      <Flex gap={4} align="center">
-        <ContractIdImage boxSize={12} contractId={ipfsHash} />
-        <Flex gap={2} direction="column">
-          <Skeleton isLoaded={publishMetadata.isSuccess}>
-            <Heading minW="60px" size="subtitle.lg">
-              {publishMetadata.data?.name}
-            </Heading>
-          </Skeleton>
-        </Flex>
-        <Badge
-          display={{ base: "none", md: "inherit" }}
-          colorScheme="green"
-          variant="outline"
-        >
-          Smart Contract
-        </Badge>
-      </Flex>
       {constructorParams?.length ? (
         <>
-          <Divider my={4} borderColor="borderColor" />
           <Flex direction="column">
             <Heading size="subtitle.md">Contract Parameters</Heading>
-            <Text size="body.md" fontStyle="italic">
+            <Text size="body.md">
               Parameters the contract specifies to be passed in during
               deployment.
             </Text>
@@ -166,7 +146,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       <Divider borderColor="borderColor" mt="auto" />
       <Flex direction="column">
         <Heading size="subtitle.md">Network / Chain</Heading>
-        <Text size="body.md" fontStyle="italic">
+        <Text size="body.md">
           Select a network to deploy this contract on. We recommend starting
           with a testnet.{" "}
           <TrackedLink

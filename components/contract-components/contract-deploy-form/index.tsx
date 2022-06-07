@@ -3,7 +3,7 @@ import { isContractIdBuiltInContract } from "../utils";
 import { useChainId } from "@thirdweb-dev/react";
 import { CustomSDKContext } from "contexts/custom-sdk-context";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SUPPORTED_CHAIN_ID, SUPPORTED_CHAIN_IDS } from "utils/network";
 
 const CustomContractForm = dynamic(() => import("./custom-contract"));
@@ -20,6 +20,13 @@ export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
   const [selectedChain, setSelectedChain] = useState<
     SUPPORTED_CHAIN_ID | undefined
   >(chainId && SUPPORTED_CHAIN_IDS.includes(chainId) ? chainId : undefined);
+
+  useEffect(() => {
+    if (!selectedChain && chainId && SUPPORTED_CHAIN_IDS.includes(chainId)) {
+      setSelectedChain(chainId);
+    }
+  }, [chainId, selectedChain]);
+
   if (!contractId) {
     return null;
   }

@@ -10,17 +10,12 @@ import {
   Icon,
   IconButton,
   Image,
-  Input,
-  InputGroup,
-  InputLeftElement,
+  LinkBox,
+  LinkOverlay,
   Skeleton,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { detectFeatures } from "@thirdweb-dev/sdk";
-import {
-  FeatureName,
-  FeatureWithEnabled,
-} from "@thirdweb-dev/sdk/dist/src/constants/contract-features";
+import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/src/constants/contract-features";
 import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
 import { ContractDeployForm } from "components/contract-components/contract-deploy-form";
@@ -30,27 +25,15 @@ import { FeatureIconMap } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
-import { ReactElement, useMemo, useState } from "react";
+import { ReactElement, useMemo } from "react";
 import {
   FiArrowLeft,
   FiCheckCircle,
+  FiExternalLink,
   FiInfo,
-  FiSearch,
-  FiXCircle,
 } from "react-icons/fi";
-import { IoRocketOutline } from "react-icons/io5";
 import { useQuery } from "react-query";
-import {
-  Button,
-  Card,
-  CodeBlock,
-  Drawer,
-  Heading,
-  LinkButton,
-  Text,
-} from "tw-components";
-
-const ROOT_FEATUES: FeatureName[] = ["ERC20", "ERC721", "ERC1155"];
+import { Card, CodeBlock, Heading, LinkButton, Text } from "tw-components";
 
 const ALWAYS_SUGGESTED = ["ContractMetadata", "Permissions"];
 
@@ -58,14 +41,12 @@ function extractFeatures(
   input: ReturnType<typeof detectFeatures>,
   enabledFeatures: FeatureWithEnabled[] = [],
   suggestedFeatures: FeatureWithEnabled[] = [],
-  disabledFeatures: FeatureWithEnabled[] = [],
   parent = "__ROOT__",
 ) {
   if (!input) {
     return {
       enabledFeatures,
       suggestedFeatures,
-      disabledFeatures,
     };
   }
   for (const featureKey in input) {
@@ -80,44 +61,19 @@ function extractFeatures(
       ALWAYS_SUGGESTED.includes(feature.name)
     ) {
       suggestedFeatures.push(feature);
-      // otherwise add it to disabledFeatures
-    } else {
-      disabledFeatures.push(feature);
     }
     // recurse
     extractFeatures(
       feature.features,
       enabledFeatures,
       suggestedFeatures,
-      disabledFeatures,
       feature.name,
     );
   }
 
-  const rootFeatureInEnabled = enabledFeatures.find((f) =>
-    ROOT_FEATUES.includes(f.name),
-  )?.name;
-
-  disabledFeatures = disabledFeatures.filter((f) => {
-    // if there is no root feature in enabledFeatures, let everything through
-    if (!rootFeatureInEnabled) {
-      return true;
-    }
-    // if the feature starts with the root feature, then let it through
-    if (f.name.startsWith(rootFeatureInEnabled)) {
-      return true;
-    }
-    const otherRootFeatures = ROOT_FEATUES.filter(
-      (feat) => feat !== rootFeatureInEnabled,
-    );
-    // copilot knows, I hope
-    return !otherRootFeatures.some((feat) => f.name.startsWith(feat));
-  });
-
   return {
     enabledFeatures,
     suggestedFeatures,
-    disabledFeatures,
   };
 }
 
@@ -149,51 +105,28 @@ export default function ContractDetailPage() {
   }, [contractId]);
   const features = useContractFeatures(publishMetadataQuery.data?.abi);
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const [extensionFilter, setExtensionFilter] = useState("");
-
-  const [enabledFeatures, suggestedFeatures, disabledFeatures] = useMemo(() => {
+  const [enabledFeatures, suggestedFeatures] = useMemo(() => {
     if (!features) {
-      return [[], [], []];
+      return [[], []];
     }
-    const enabled = features.enabledFeatures.filter(
-      (f) =>
-        f.name.toLowerCase().includes(extensionFilter.toLowerCase()) ||
-        f.namespace.toLowerCase().includes(extensionFilter.toLowerCase()),
-    );
-    const suggested = features.suggestedFeatures.filter(
-      (f) =>
-        f.name.toLowerCase().includes(extensionFilter.toLowerCase()) ||
-        f.namespace.toLowerCase().includes(extensionFilter.toLowerCase()),
-    );
-    const disabled = features.disabledFeatures.filter(
-      (f) =>
-        f.name.toLowerCase().includes(extensionFilter.toLowerCase()) ||
-        f.namespace.toLowerCase().includes(extensionFilter.toLowerCase()),
-    );
-    return [enabled, suggested, disabled] as const;
-  }, [extensionFilter, features]);
+    const enabled = features.enabledFeatures;
+    const suggested = features.suggestedFeatures;
+    return [enabled, suggested] as const;
+  }, [features]);
 
   return (
     <Track>
-      <Drawer size="xl" isOpen={isOpen} onClose={onClose}>
-        {contractId && <ContractDeployForm contractId={contractId} />}
-      </Drawer>
       <Flex direction="column" as="section" gap={4}>
-        <Flex gap={4} align="center">
-          {from && (
-            <IconButton
-              variant="ghost"
-              aria-label="back"
-              onClick={() => router.back()}
-              icon={<Icon boxSize={6} as={FiArrowLeft} />}
-            />
-          )}
-          <Heading>Contract Details</Heading>
-        </Flex>
         <Flex align="center" gap={4} justify="space-between" as="header">
           <Flex align="center" gap={2}>
+            {from && (
+              <IconButton
+                variant="ghost"
+                aria-label="back"
+                onClick={() => router.back()}
+                icon={<Icon boxSize={6} as={FiArrowLeft} />}
+              />
+            )}
             <Skeleton isLoaded={publishMetadataQuery.isSuccess}>
               {publishMetadataQuery.data?.image ? (
                 typeof publishMetadataQuery.data.image === "string" ? (
@@ -228,66 +161,37 @@ export default function ContractDetailPage() {
               </Skeleton>
             </Flex>
           </Flex>
-          <Flex align="center" gap={4}>
-            <InputGroup>
-              <InputLeftElement>
-                <Icon as={FiSearch} />
-              </InputLeftElement>
-              <Input
-                value={extensionFilter}
-                onChange={(e) => setExtensionFilter(e.target.value)}
-                placeholder="Filter extensions..."
-                variant="outline"
-                borderColor="borderColor"
-              />
-            </InputGroup>
-            <Button
-              flexShrink={0}
-              isDisabled={publishMetadataQuery.data?.deployDisabled}
-              onClick={onOpen}
-              isLoading={publishMetadataQuery.isLoading}
-              colorScheme="primary"
-              variant={
-                publishMetadataQuery.data?.deployDisabled ? "outline" : "solid"
-              }
-              rightIcon={
-                !publishMetadataQuery.data?.deployDisabled ? (
-                  <Icon as={IoRocketOutline} />
-                ) : undefined
-              }
-            >
-              Deploy
-            </Button>
-          </Flex>
         </Flex>
         <Divider borderColor="borderColor" />
         <Flex gap={12} direction="column" as="main">
-          {enabledFeatures.length > 0 && (
-            <Flex gap={4} direction="column" as="section">
-              <Box>
-                <Heading size="subtitle.lg">Detected Extensions</Heading>
-                <Text>
-                  These extensions will automatically be available for this
-                  contract in the dashboard as well as in the SDKs.
-                </Text>
-              </Box>
-              <Accordion
-                allowToggle
-                allowMultiple
-                defaultIndex={[0]}
-                display="flex"
-                flexDir="column"
-                gap={6}
-              >
-                {enabledFeatures.map((feature) => (
-                  <FeatureDetails
-                    key={feature.name}
-                    contractName={publishMetadataQuery.data?.name}
-                    feature={feature}
-                    state="enabled"
-                  />
-                ))}
-              </Accordion>
+          {contractId && (
+            <Flex gap={4} direction="column">
+              <Card>
+                <Flex direction="column" gap={6}>
+                  {enabledFeatures.length > 0 && (
+                    <Flex direction="column" gap={4}>
+                      <Box>
+                        <Heading size="subtitle.md">
+                          Detected Extensions
+                        </Heading>
+                        <Text>
+                          These extensions will automatically be available for
+                          this contract in the dashboard as well as in the SDKs.
+                        </Text>
+                      </Box>
+                      <Flex gap={2}>
+                        {enabledFeatures.map((feature) => (
+                          <EnabledFeature
+                            key={feature.name}
+                            feature={feature}
+                          />
+                        ))}
+                      </Flex>
+                    </Flex>
+                  )}
+                  <ContractDeployForm contractId={contractId} />
+                </Flex>
+              </Card>
             </Flex>
           )}
           {suggestedFeatures.length > 0 && (
@@ -309,39 +213,10 @@ export default function ContractDetailPage() {
                 gap={6}
               >
                 {suggestedFeatures.map((feature) => (
-                  <FeatureDetails
+                  <SuggestedFeature
                     key={feature.name}
                     contractName={publishMetadataQuery.data?.name}
                     feature={feature}
-                    state="suggested"
-                  />
-                ))}
-              </Accordion>
-            </Flex>
-          )}
-          {disabledFeatures.length > 0 && (
-            <Flex gap={4} direction="column" as="section">
-              <Box>
-                <Heading size="subtitle.lg">Available Extensions</Heading>
-                <Text>
-                  Extensions that are available to be added to this contract.
-                </Text>
-              </Box>
-
-              <Accordion
-                allowToggle
-                allowMultiple
-                defaultIndex={[0]}
-                display="flex"
-                flexDir="column"
-                gap={6}
-              >
-                {disabledFeatures.map((feature) => (
-                  <FeatureDetails
-                    key={feature.name}
-                    contractName={publishMetadataQuery.data?.name}
-                    feature={feature}
-                    state="disabled"
                   />
                 ))}
               </Accordion>
@@ -357,17 +232,55 @@ ContractDetailPage.getLayout = function getLayout(page: ReactElement) {
   return <AppLayout>{page}</AppLayout>;
 };
 
-interface FeatureDetailsProps {
+interface EnabledFeatureProps {
   feature: FeatureWithEnabled;
-  state: "enabled" | "disabled" | "suggested";
+}
+
+const EnabledFeature: React.FC<EnabledFeatureProps> = ({ feature }) => {
+  const { trackEvent } = useTrack();
+  return (
+    <Card
+      overflow="hidden"
+      py={2}
+      as={LinkBox}
+      _hover={{ opacity: 0.8 }}
+      borderRadius="full"
+    >
+      <Flex gap={2} align="center" justify="space-between">
+        <Flex gap={2} align="center">
+          <Icon boxSize={4} color="green.500" as={FiCheckCircle} />
+          <LinkOverlay
+            href={`https://portal.thirdweb.com/typescript/${feature.docLinks.sdk}`}
+            isExternal
+            onClick={() =>
+              trackEvent({
+                category: "extensions-deploy",
+                action: "click",
+                label: feature.name,
+              })
+            }
+          >
+            <Heading textAlign="left" size="subtitle.sm">
+              {feature.name}
+            </Heading>
+          </LinkOverlay>
+          <Icon as={FiExternalLink} />
+        </Flex>
+      </Flex>
+    </Card>
+  );
+};
+
+interface SuggestedFeatureProps {
+  feature: FeatureWithEnabled;
   contractName?: string;
 }
 
-const FeatureDetails: React.FC<FeatureDetailsProps> = ({
+const SuggestedFeature: React.FC<SuggestedFeatureProps> = ({
   feature,
-  state,
   contractName = "YourContract",
 }) => {
+  const { trackEvent } = useTrack();
   const codeSnippets = useFeatureCodeSnippet();
 
   const featureDetails = useMemo(() => {
@@ -380,7 +293,7 @@ const FeatureDetails: React.FC<FeatureDetailsProps> = ({
     : "feature";
 
   return (
-    <Card key={feature.name} p={0} overflow="hidden">
+    <Card p={0} overflow="hidden">
       <AccordionItem border="none">
         <AccordionButton
           p={4}
@@ -394,23 +307,7 @@ const FeatureDetails: React.FC<FeatureDetailsProps> = ({
         >
           <Flex gap={2} align="center" justify="space-between">
             <Flex gap={2} align="center">
-              <Icon
-                boxSize={4}
-                color={
-                  state === "enabled"
-                    ? "green.500"
-                    : state === "suggested"
-                    ? "blue.500"
-                    : "red.500"
-                }
-                as={
-                  state === "enabled"
-                    ? FiCheckCircle
-                    : state === "suggested"
-                    ? FiInfo
-                    : FiXCircle
-                }
-              />
+              <Icon boxSize={4} color="blue.500" as={FiInfo} />
               <Heading textAlign="left" size="subtitle.sm">
                 {feature.name}
               </Heading>
@@ -426,41 +323,29 @@ const FeatureDetails: React.FC<FeatureDetailsProps> = ({
                 <Heading size="label.md">{featureDetails.summary}</Heading>
                 <LinkButton
                   size="sm"
-                  href={
-                    state === "enabled"
-                      ? `https://portal.thirdweb.com/typescript/${feature.docLinks.sdk}`
-                      : `https://portal.thirdweb.com/contracts/${feature.docLinks.contracts}`
-                  }
+                  href={`https://portal.thirdweb.com/contracts/${feature.docLinks.contracts}`}
                   isExternal
                   variant="ghost"
                   borderRadius="md"
+                  onClick={() =>
+                    trackEvent({
+                      category: "extensions-deploy",
+                      action: "click",
+                      label: feature.name,
+                    })
+                  }
                 >
                   Learn more
                 </LinkButton>
               </Flex>
-              {state === "enabled" ? (
-                <>
-                  {featureDetails.examples.javascript && (
-                    <CodeBlock
-                      mt={1}
-                      language="javascript"
-                      code={featureDetails.examples.javascript.replaceAll(
-                        "{{contract_address}}",
-                        "0x...",
-                      )}
-                    />
-                  )}
-                </>
-              ) : (
-                <Flex mt={2} gap={3} direction="column">
-                  <CodeBlock
-                    language="solidity"
-                    code={`import "@thirdweb-dev/contracts/${contractFeaturePath}/${contractFeatureName}.sol";
+              <Flex mt={2} gap={3} direction="column">
+                <CodeBlock
+                  language="solidity"
+                  code={`import "@thirdweb-dev/contracts/${contractFeaturePath}/${contractFeatureName}.sol";
 
 contract ${contractName} is ${contractFeatureName} { ... }`}
-                  />
-                </Flex>
-              )}
+                />
+              </Flex>
             </Flex>
           )}
         </AccordionPanel>
