@@ -33,7 +33,14 @@ import {
   FiInfo,
 } from "react-icons/fi";
 import { useQuery } from "react-query";
-import { Card, CodeBlock, Heading, LinkButton, Text } from "tw-components";
+import {
+  Card,
+  CodeBlock,
+  Heading,
+  LinkButton,
+  Text,
+  TrackedLink,
+} from "tw-components";
 
 const ALWAYS_SUGGESTED = ["ContractMetadata", "Permissions"];
 
@@ -172,7 +179,17 @@ export default function ContractDetailPage() {
                     <Flex direction="column" gap={4}>
                       <Box>
                         <Heading size="subtitle.md">
-                          Detected Extensions
+                          <TrackedLink
+                            href="https://portal.thirdweb.com/thirdweb-deploy/contract-extensions"
+                            category="extensions-deploy"
+                            label="header"
+                            isExternal
+                          >
+                            <Flex alignItems="center" gap={2}>
+                              Detected Extensions
+                              <Icon as={FiExternalLink} />
+                            </Flex>
+                          </TrackedLink>
                         </Heading>
                         <Text>
                           These extensions will automatically be available for
@@ -250,7 +267,7 @@ const EnabledFeature: React.FC<EnabledFeatureProps> = ({ feature }) => {
         <Flex gap={2} align="center">
           <Icon boxSize={4} color="green.500" as={FiCheckCircle} />
           <LinkOverlay
-            href={`https://portal.thirdweb.com/typescript/${feature.docLinks.sdk}`}
+            href={`https://portal.thirdweb.com/contracts/${feature.docLinks.contracts}`}
             isExternal
             onClick={() =>
               trackEvent({
