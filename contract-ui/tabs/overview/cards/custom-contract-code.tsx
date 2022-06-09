@@ -1,5 +1,8 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { ChainId, useChainId, useContractFunctions } from "@thirdweb-dev/react";
+import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
+import { Environment } from "components/contract-tabs/code/types";
+import { useState } from "react";
 import { Card, CodeBlock, Heading } from "tw-components";
 
 interface ContentOverviewProps {
@@ -22,6 +25,8 @@ export const CustomContractCode: React.FC<ContentOverviewProps> = ({
     )
     .map((f) => f.signature);
 
+  const [codeEnv, setCodeEnv] = useState<Environment>("javascript");
+
   if (functionsQuery.isError) {
     return <Box>Contract does not support generated functions</Box>;
   }
@@ -31,24 +36,42 @@ export const CustomContractCode: React.FC<ContentOverviewProps> = ({
       <Heading size="subtitle.sm">Get started with the SDK</Heading>
       <Card as={Flex} gap={2} flexDirection="column">
         <Heading size="subtitle.md">Install the thirdweb SDK</Heading>
-        <CodeBlock
-          px={4}
-          py={2}
-          borderRadius="md"
-          language="bash"
-          code={`npm install @thirdweb-dev/sdk ethers`}
+        <CodeSegment
+          setEnvironment={setCodeEnv}
+          environment={codeEnv}
+          isInstallCommand
+          snippet={{
+            javascript: `npm install @thirdweb-dev/sdk ethers`,
+            react: `npm install @thirdweb-dev/react @thirdweb-dev/sdk ethers`,
+            python: `pip install thirdweb-sdk`,
+            go: `go get github.com/thirdweb-dev/go-sdk/thirdweb`,
+          }}
         />
       </Card>
       <Card as={Flex} gap={2} flexDirection="column">
         <Heading size="subtitle.md">
           Use your contract with the thirdweb SDK
         </Heading>
-        <CodeBlock
-          language="typescript"
-          code={`import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+        <CodeSegment
+          setEnvironment={setCodeEnv}
+          environment={codeEnv}
+          snippet={{
+            javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk;
 
 const sdk = new ThirdwebSDK("${chainName}");
-const contract = await sdk.getContract("${contractAddress}");`}
+const contract = await sdk.getContract("${contractAddress}");`,
+            react: `const { contract, isLoading } = useContract("${contractAddress}");`,
+            python: `from thirdweb import ThirdwebSDK
+
+sdk = ThirdwebSDK("${chainName}")
+contract = sdk.get_contract("${contractAddress}")`,
+            go: `import (
+  "github.com/thirdweb-dev/go-sdk/thirdweb"
+)
+            
+sdk, err := thirdweb.NewThirdwebSDK("${chainName}", nil)
+contract, err := sdk.GetContract("${contractAddress}")`,
+          }}
         />
       </Card>
 

@@ -178,7 +178,7 @@ export default function ContractDetailPage() {
                           this contract in the dashboard as well as in the SDKs.
                         </Text>
                       </Box>
-                      <Flex gap={2}>
+                      <Flex gap={2} flexWrap="wrap">
                         {enabledFeatures.map((feature) => (
                           <EnabledFeature
                             key={feature.name}
@@ -195,7 +195,6 @@ export default function ContractDetailPage() {
           )}
           <Center>
             <LinkButton
-              size="sm"
               variant="outline"
               isExternal
               href="https://portal.thirdweb.com/thirdweb-deploy/contract-extensions"

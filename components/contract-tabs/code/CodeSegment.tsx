@@ -15,6 +15,7 @@ interface ICodeSegment {
   snippet: CodeSnippet;
   environment: Environment;
   setEnvironment: Dispatch<SetStateAction<Environment>>;
+  isInstallCommand?: true;
 }
 
 const Environments: SupportedEnvironment[] = [
@@ -54,6 +55,7 @@ export const CodeSegment: React.FC<ICodeSegment> = ({
   snippet,
   environment,
   setEnvironment,
+  isInstallCommand,
 }) => {
   const activeEnvironment: Environment = useMemo(() => {
     return (
@@ -98,7 +100,7 @@ export const CodeSegment: React.FC<ICodeSegment> = ({
         </Flex>
       </Flex>
 
-      {activeEnvironment === "react" && (
+      {activeEnvironment === "react" && !isInstallCommand && (
         <CodeBlock
           code={
             '// Make sure to wrap your app in a <ThirdwebProvider>\nimport { ThirdwebProvider } from "@thirdweb/react";\n\nexport default function App() {\n  return (\n    <ThirdwebProvider>\n      <AppContent />\n    </ThirdwebProvider>\n  );\n}'
@@ -108,7 +110,13 @@ export const CodeSegment: React.FC<ICodeSegment> = ({
       )}
       <CodeBlock
         code={code}
-        language={activeEnvironment === "react" ? "jsx" : activeEnvironment}
+        language={
+          isInstallCommand
+            ? "bash"
+            : activeEnvironment === "react"
+            ? "jsx"
+            : activeEnvironment
+        }
       />
     </Stack>
   );
