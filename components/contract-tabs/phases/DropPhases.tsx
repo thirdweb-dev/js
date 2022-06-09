@@ -160,9 +160,18 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
       ...phase,
       price: Number(phase.currencyMetadata.displayValue),
       maxQuantity: phase.maxQuantity.toString(),
+      currencyMetadata: {
+        ...phase.currencyMetadata,
+        value: phase.currencyMetadata.value.toString(),
+      },
+      currencyAddress: phase.currencyAddress.toLowerCase(),
       quantityLimitPerTransaction: phase.quantityLimitPerTransaction.toString(),
       waitInSeconds: phase.waitInSeconds.toString(),
       startTime: new Date(phase.startTime),
+      snapshot: phase.snapshot?.map(({ address, maxClaimable }) => ({
+        address,
+        maxClaimable: maxClaimable || "0",
+      })),
     }));
   }, [query.data]);
 
@@ -221,8 +230,10 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
 
   const isDataEqual = deepEqual(transformedQueryData, watchFieldArray);
 
+  console.log({ transformedQueryData, watchFieldArray });
+
   // make user confirm not-saving changes
-  useLeaveConfirm(!isDataEqual);
+  useLeaveConfirm(query.isSuccess && !isDataEqual);
 
   return (
     <>
@@ -587,7 +598,7 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
               </React.Fragment>
             );
           })}
-          {!watchFieldArray?.length && (
+          {watchFieldArray?.length === 0 && (
             <Alert status="warning" borderRadius="md">
               <AlertIcon />
               <Flex direction="column">
@@ -602,13 +613,13 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
             </Alert>
           )}
           <Button
-            colorScheme={watchFieldArray?.length ? "primary" : "purple"}
-            variant={watchFieldArray?.length ? "outline" : "solid"}
+            colorScheme={watchFieldArray?.length > 0 ? "primary" : "purple"}
+            variant={watchFieldArray?.length > 0 ? "outline" : "solid"}
             borderRadius="md"
             leftIcon={<Icon as={FiPlus} />}
             onClick={addPhase}
           >
-            Add {watchFieldArray?.length ? "Additional " : "Initial "}Claim
+            Add {watchFieldArray?.length > 0 ? "Additional " : "Initial "}Claim
             Phase
           </Button>
         </Flex>
