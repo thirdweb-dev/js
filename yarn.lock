@@ -1796,15 +1796,15 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/chain-icons/-/chain-icons-1.0.2.tgz#b7f7c3f43fb3d8823ed9272ca109d17eb5016716"
   integrity sha512-lNFCK0r86qpuo9ysVfcV8SeAD7Ds12IAO/oD+wsCbvlMu8ObPHXk1Lx3Fi6JFJ/8uisZlEYgXskrfT7sae9Uag==
 
-"@thirdweb-dev/contracts@2.3.13":
-  version "2.3.13"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.3.13.tgz#594311c0d30f2dfbb6abe66ca95782e39442ee55"
-  integrity sha512-eodWNHvIZyyiJUNr6oApUZPEq9xBISvDATuZMhBVvUy2PoRM8rc6pKyDL6LeJFJoHNsSgojqouMPD9+e7OGCiA==
+"@thirdweb-dev/contracts@2.3.9":
+  version "2.3.9"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.3.9.tgz#1493c7b12133b3a23733eb9bfa1355ad68954d6f"
+  integrity sha512-MmOVqWKdlFsZRk/Ym/fFfrCo/mzJyWL+EWsLYjpa3CUvwt6DffED+LB8pfTo8DkoTkC0Y9J4yzsdbJSgoa0tFw==
 
-"@thirdweb-dev/react@^2.4.1-0":
-  version "2.4.1-0"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.4.1-0.tgz#443e60ce537ff4b56777a403db34b5c734fe84c8"
-  integrity sha512-bRpQYoS3PUUvkobrR+MbaTgX4jyqxPgtXywX75wqfTIKKvVHmkY9qaoaD42qsQ7yYONSXsk+Owz78WrpfOtmEw==
+"@thirdweb-dev/react@2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.4.0.tgz#044bc5ee9f689325893d0320228f322cda95ceb6"
+  integrity sha512-dlYEFy4udcBnQG0DeZ9UJTdKz0crhg4R4GtUOCMIsKK4SIpwt2ATayqOKprW9NT2+c0+RLWY6cl24TYt3lSH5A==
   dependencies:
     detect-browser "^5.3.0"
     mime "^3.0.0"
@@ -1813,12 +1813,12 @@
     tiny-invariant "^1.2.0"
     wagmi "^0.2.28"
 
-"@thirdweb-dev/sdk@^2.3.8":
-  version "2.3.8"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.3.8.tgz#8de9bfea1fb7ab6844862584ba9889780fd103a4"
-  integrity sha512-Iw+nef6b42bCikPhsieOwesBuS4AdM/xV7B7j4pcO7X8l+iT+liR/5OZWZtFFDuoFQJEvccwKj438cWIQ+nBNQ==
+"@thirdweb-dev/sdk@2.3.8-0":
+  version "2.3.8-0"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.3.8-0.tgz#27467db2d028fe6fade1058647accec2390e8e50"
+  integrity sha512-A/j8Ao5awb4TFNji+RktzV5cCezOYgygUG4hGhv+Zjn532EELaFZajw7r3B39nvHbMYZ0r7fVY/Ij85Oul4CEA==
   dependencies:
-    "@thirdweb-dev/contracts" "2.3.13"
+    "@thirdweb-dev/contracts" "2.3.9"
     "@web-std/file" "^3.0.0"
     cbor "^8.1.0"
     cross-fetch "^3.1.5"
