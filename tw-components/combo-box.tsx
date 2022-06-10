@@ -47,6 +47,7 @@ const ComboboxInput = forwardRef<ComboBoxInputProps, "input">(
           {...inputRestProps}
           onFocus={(e) => {
             openMenu();
+            e.target.select();
             if (onFocus) {
               onFocus(e);
             }
