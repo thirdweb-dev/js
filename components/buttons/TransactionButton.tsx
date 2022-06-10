@@ -71,9 +71,18 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
         >
           {children}
           <Tooltip
-            label={`This action will trigger ${transactionCount} ${
-              transactionCount > 1 ? "transactions" : "transaction"
-            }.`}
+            bg="transparent"
+            boxShadow="none"
+            p={0}
+            w="auto"
+            label={
+              <Card w="auto" py={2}>
+                <Text>
+                  This action will trigger {transactionCount}{" "}
+                  {transactionCount > 1 ? "transactions" : "transaction"}.
+                </Text>
+              </Card>
+            }
           >
             <Center
               _groupHover={{

@@ -51,31 +51,20 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
           py={py}
           px={px}
           w={w}
-          whiteSpace="pre-wrap"
-          {...restCodeProps}
-          className={className}
-          style={style}
           borderWidth="1px"
           borderColor="borderColor"
           position="relative"
+          className={className}
+          style={style}
+          whiteSpace="pre-wrap"
+          {...restCodeProps}
           as={Code}
         >
-          {tokens.map((line, i) => (
-            // eslint-disable-next-line react/jsx-key
-            <div {...getLineProps({ line, key: i })}>
-              {line.map((token, key) => (
-                // eslint-disable-next-line react/jsx-key
-                <span {...getTokenProps({ token, key })} />
-              ))}
-            </div>
-          ))}
-
           {canCopy && code && (
             <IconButton
               onClick={onCopy}
-              position="absolute"
-              right={1}
-              top={1}
+              position="relative"
+              float="right"
               aria-label="Copy"
               borderRadius="md"
               variant="ghost"
@@ -89,6 +78,16 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
               }
             />
           )}
+
+          {tokens.map((line, i) => (
+            // eslint-disable-next-line react/jsx-key
+            <div {...getLineProps({ line, key: i })}>
+              {line.map((token, key) => (
+                // eslint-disable-next-line react/jsx-key
+                <span {...getTokenProps({ token, key })} />
+              ))}
+            </div>
+          ))}
         </Text>
       )}
     </Highlight>

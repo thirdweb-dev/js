@@ -8,7 +8,7 @@ import {
   SiReact,
   SiTypescript,
 } from "react-icons/si";
-import { Button, CodeBlock, Heading } from "tw-components";
+import { Button, CodeBlock } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
 interface ICodeSegment {
@@ -84,7 +84,6 @@ export const CodeSegment: React.FC<ICodeSegment> = ({
     <Stack spacing={2}>
       <Flex justify="space-between" align="flex-end">
         <Flex direction="column" gap={4}>
-          <Heading size="label.sm">Code Snippet</Heading>
           <ButtonGroup isAttached size="sm" variant="outline">
             {environments.map((env) => (
               <SupportedEnvironmentButton
@@ -100,14 +99,6 @@ export const CodeSegment: React.FC<ICodeSegment> = ({
         </Flex>
       </Flex>
 
-      {activeEnvironment === "react" && !isInstallCommand && (
-        <CodeBlock
-          code={
-            '// Make sure to wrap your app in a <ThirdwebProvider>\nimport { ThirdwebProvider } from "@thirdweb/react";\n\nexport default function App() {\n  return (\n    <ThirdwebProvider>\n      <AppContent />\n    </ThirdwebProvider>\n  );\n}'
-          }
-          language="jsx"
-        />
-      )}
       <CodeBlock
         code={code}
         language={
