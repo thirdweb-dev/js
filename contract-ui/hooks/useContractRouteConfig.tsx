@@ -70,5 +70,13 @@ export function useContractRouteConfig(
           ),
         ),
     },
+    {
+      title: "Source",
+      path: "source",
+      element: () =>
+        import("../tabs/source/page").then(({ CustomContractSourcePage }) => (
+          <CustomContractSourcePage contractAddress={contractAddress} />
+        )),
+    },
   ];
 }
