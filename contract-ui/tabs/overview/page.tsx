@@ -1,4 +1,3 @@
-import { AddToDashboardCard } from "./cards/add-to-dashboard";
 import { CustomContractCode } from "./cards/custom-contract-code";
 import { Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
@@ -22,7 +21,6 @@ export const CustomContractOverviewPage: React.FC<
   return (
     <Flex direction="column" gap={4}>
       <Flex gap={8} w="100%" flexWrap="wrap">
-        <AddToDashboardCard contractAddress={contractAddress} />
         <CustomContractCode contractAddress={contractAddress} />
       </Flex>
     </Flex>
