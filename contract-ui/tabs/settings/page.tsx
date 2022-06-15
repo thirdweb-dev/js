@@ -4,7 +4,7 @@ import { SettingsPrimarySale } from "./components/primary-sale";
 import { SettingsRoyalties } from "./components/royalties";
 import { ButtonGroup, Divider, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
-import { PotentialContractInstance } from "contract-ui/types/types";
+import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 
 interface CustomContractOverviewPageProps {
@@ -16,10 +16,22 @@ export const CustomContractSettingsTab: React.FC<
 > = ({ contractAddress }) => {
   const contract = useContract(contractAddress);
 
-  const detectedMetadata = detectMetadata(contract.contract);
-  const detectedPrimarySale = detectPrimarySale(contract.contract);
-  const detectedRoyalties = detectRoyalties(contract.contract);
-  const detectedPlatformFees = detectPlatformFees(contract.contract);
+  const detectedMetadata = extensionDetectedState({
+    contract,
+    feature: "ContractMetadata",
+  });
+  const detectedPrimarySale = extensionDetectedState({
+    contract,
+    feature: "PrimarySale",
+  });
+  const detectedRoyalties = extensionDetectedState({
+    contract,
+    feature: "Royalty",
+  });
+  const detectedPlatformFees = extensionDetectedState({
+    contract,
+    feature: "PlatformFee",
+  });
 
   if (contract.isLoading) {
     // TODO build a skeleton for this
@@ -27,10 +39,10 @@ export const CustomContractSettingsTab: React.FC<
   }
 
   if (
-    !detectedMetadata &&
-    !detectedPrimarySale &&
-    !detectedPlatformFees &&
-    !detectedRoyalties
+    detectedMetadata === "disabled" &&
+    detectedPrimarySale === "disabled" &&
+    detectedPlatformFees === "disabled" &&
+    detectedRoyalties === "disabled"
   ) {
     return (
       <Card as={Flex} flexDir="column" gap={3}>
@@ -61,16 +73,16 @@ export const CustomContractSettingsTab: React.FC<
     <Flex direction="column" gap={4}>
       <Flex gap={8} w="100%">
         <Flex flexDir="column" w="100%" gap={8}>
-          {detectedMetadata && (
+          {detectedMetadata === "enabled" && (
             <SettingsMetadata contract={contract.contract} />
           )}
-          {detectedPrimarySale && (
+          {detectedPrimarySale === "enabled" && (
             <SettingsPrimarySale contract={contract.contract} />
           )}
-          {detectedRoyalties && (
+          {detectedRoyalties === "enabled" && (
             <SettingsRoyalties contract={contract.contract} />
           )}
-          {detectedPlatformFees && (
+          {detectedPlatformFees === "enabled" && (
             <SettingsPlatformFees contract={contract.contract} />
           )}
         </Flex>
@@ -78,43 +90,3 @@ export const CustomContractSettingsTab: React.FC<
     </Flex>
   );
 };
-
-export function detectMetadata(contract: PotentialContractInstance) {
-  if (!contract) {
-    return undefined;
-  }
-  if ("metadata" in contract) {
-    return contract.metadata;
-  }
-  return undefined;
-}
-
-export function detectPrimarySale(contract: PotentialContractInstance) {
-  if (!contract) {
-    return undefined;
-  }
-  if ("sales" in contract) {
-    return contract.sales;
-  }
-  return undefined;
-}
-
-export function detectPlatformFees(contract: PotentialContractInstance) {
-  if (!contract) {
-    return undefined;
-  }
-  if ("platformFees" in contract) {
-    return contract.platformFees;
-  }
-  return undefined;
-}
-
-export function detectRoyalties(contract: PotentialContractInstance) {
-  if (!contract) {
-    return undefined;
-  }
-  if ("royalties" in contract) {
-    return contract.royalties;
-  }
-  return undefined;
-}
