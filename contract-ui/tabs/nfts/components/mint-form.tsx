@@ -73,7 +73,8 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract }) => {
       ["audio", "video", "text/html", "model/*"].some((type: string) =>
         file.type.includes(type),
       ) ||
-      file.name.endsWith(".glb")
+      file.name.endsWith(".glb") ||
+      file.name.endsWith(".usdz")
     ) {
       // audio, video, html, and glb (3d) files
       setValue("animation_url", file);

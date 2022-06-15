@@ -76,7 +76,9 @@ export const FileInput: React.FC<IFileInputProps> = ({
       ? "CSV"
       : file.type.includes("text") || file.type.includes("pdf")
       ? "Text"
-      : file.type.includes("model") || file.name.endsWith(".glb")
+      : file.type.includes("model") ||
+        file.name.endsWith(".glb") ||
+        file.name.endsWith(".usdz")
       ? "3D Model"
       : "Media"
     : null;
