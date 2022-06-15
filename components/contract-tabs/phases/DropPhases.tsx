@@ -36,7 +36,6 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { BigNumberInput } from "components/shared/BigNumberInput";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import deepEqual from "fast-deep-equal";
-import { useLeaveConfirm } from "hooks/useLeaveConfirm";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React, { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -229,9 +228,6 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
   );
 
   const isDataEqual = deepEqual(transformedQueryData, watchFieldArray);
-
-  // make user confirm not-saving changes
-  useLeaveConfirm(query.isSuccess && !isDataEqual);
 
   return (
     <>
