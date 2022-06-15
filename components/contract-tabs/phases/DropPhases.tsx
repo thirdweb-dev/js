@@ -230,8 +230,6 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
 
   const isDataEqual = deepEqual(transformedQueryData, watchFieldArray);
 
-  console.log({ transformedQueryData, watchFieldArray });
-
   // make user confirm not-saving changes
   useLeaveConfirm(query.isSuccess && !isDataEqual);
 

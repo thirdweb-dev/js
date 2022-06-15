@@ -1,9 +1,9 @@
 import { useActiveChainId, useWeb3 } from ".";
 import { useQueryWithNetwork } from "./query/useQueryWithNetwork";
 import { AlchemyWeb3, createAlchemyWeb3 } from "@alch/alchemy-web3";
+import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import { alchemyUrlMap } from "components/app-layouts/providers";
 import { useEffect, useState } from "react";
-import { SUPPORTED_CHAIN_ID } from "utils/network";
 
 export function useAlchemy() {
   const activeChainId = useActiveChainId();

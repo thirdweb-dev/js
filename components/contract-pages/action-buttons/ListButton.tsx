@@ -3,11 +3,11 @@ import { useActiveChainId, useWeb3 } from "@3rdweb-sdk/react";
 import { ListerOnly } from "@3rdweb-sdk/react/components/roles/lister-only";
 import { Flex, Icon, Tooltip, useDisclosure } from "@chakra-ui/react";
 import { ChainId } from "@thirdweb-dev/react";
+import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import { MintDrawer } from "components/shared/MintDrawer";
 import React from "react";
 import { FiPlus } from "react-icons/fi";
 import { Button } from "tw-components";
-import { SUPPORTED_CHAIN_ID } from "utils/network";
 
 const UNSUPPORTED_CHAINS = [ChainId.Avalanche, ChainId.Fantom];
 

@@ -1,4 +1,4 @@
-import { useWeb3 } from "@3rdweb-sdk/react";
+import { FAUCETS, useWeb3 } from "@3rdweb-sdk/react";
 import { ButtonGroup, Container, Icon, Stack } from "@chakra-ui/react";
 import { useBalance, useNetworkMismatch } from "@thirdweb-dev/react";
 import { BigNumber } from "ethers";
@@ -6,13 +6,6 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { AiOutlineWarning } from "react-icons/ai";
 import { Button, Card, Heading, LinkButton, Text } from "tw-components";
-import { ChainId } from "utils/network";
-
-const FAUCETS: Partial<Record<ChainId, string>> = {
-  [ChainId.Rinkeby]: "https://faucets.chain.link/rinkeby",
-  [ChainId.Goerli]: "https://faucet.paradigm.xyz/",
-  [ChainId.Mumbai]: "https://faucet.polygon.technology/",
-};
 
 export const InsufficientFunds: React.FC = () => {
   const router = useRouter();

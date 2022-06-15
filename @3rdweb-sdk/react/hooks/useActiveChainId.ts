@@ -1,6 +1,6 @@
+import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import {
-  SUPPORTED_CHAIN_ID,
   SupportedNetwork,
   getChainIdFromNetwork,
   getNetworkFromChainId,

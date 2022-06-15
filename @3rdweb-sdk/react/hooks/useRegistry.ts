@@ -1,11 +1,10 @@
 import { contractKeys, networkKeys } from "../cache-keys";
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { useAddress, useSDK, useSigner } from "@thirdweb-dev/react";
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { ChainId, SUPPORTED_CHAIN_ID, ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { alchemyUrlMap } from "components/app-layouts/providers";
 import { useMutation, useQueryClient } from "react-query";
 import invariant from "tiny-invariant";
-import { ChainId, SUPPORTED_CHAIN_ID } from "utils/network";
 
 type RemoveContractParams = {
   contractAddress: string;

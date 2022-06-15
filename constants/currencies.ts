@@ -1,4 +1,5 @@
-import { ChainId, SUPPORTED_CHAIN_ID } from "utils/network";
+import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
+import { constants } from "ethers";
 import { OtherAddressZero } from "utils/zeroAddress";
 
 export interface CurrencyMetadata {
@@ -9,7 +10,7 @@ export interface CurrencyMetadata {
 
 const Ethereum: CurrencyMetadata[] = [
   {
-    address: "0x0000000000000000000000000000000000000000",
+    address: constants.AddressZero,
     name: "Ethereum",
     symbol: "ETH",
   },
@@ -47,7 +48,7 @@ const Ethereum: CurrencyMetadata[] = [
 
 const Rinkeby: CurrencyMetadata[] = [
   {
-    address: "0x0000000000000000000000000000000000000000",
+    address: constants.AddressZero,
     name: "Ethereum",
     symbol: "ETH",
   },
@@ -75,7 +76,7 @@ const Rinkeby: CurrencyMetadata[] = [
 
 const Goerli: CurrencyMetadata[] = [
   {
-    address: "0x0000000000000000000000000000000000000000",
+    address: constants.AddressZero,
     name: "Ethereum",
     symbol: "ETH",
   },
@@ -103,7 +104,7 @@ const Goerli: CurrencyMetadata[] = [
 
 const Polygon: CurrencyMetadata[] = [
   {
-    address: "0x0000000000000000000000000000000000000000",
+    address: constants.AddressZero,
     name: "Polygon",
     symbol: "MATIC",
   },
@@ -134,9 +135,42 @@ const Polygon: CurrencyMetadata[] = [
   },
 ];
 
+const Mumbai: CurrencyMetadata[] = [
+  {
+    address: constants.AddressZero,
+    name: "Polygon",
+    symbol: "MATIC",
+  },
+  {
+    address: OtherAddressZero,
+    name: "Polygon",
+    symbol: "MATIC",
+  },
+  {
+    name: "Wrapped Ether",
+    address: "0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa",
+    symbol: "WETH",
+  },
+  {
+    name: "Wrapped Matic",
+    address: "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889",
+    symbol: "WMATIC",
+  },
+  {
+    name: "Tether USD",
+    address: "0x3813e82e6f7098b9583FC0F33a962D02018B6803",
+    symbol: "USDT",
+  },
+  {
+    address: "0xe6b8a5cf854791412c1f6efc7caf629f5df1c747",
+    name: "USD Coin",
+    symbol: "USDC",
+  },
+];
+
 const Fantom: CurrencyMetadata[] = [
   {
-    address: "0x0000000000000000000000000000000000000000",
+    address: constants.AddressZero,
     name: "Fantom",
     symbol: "FTM",
   },
@@ -167,9 +201,27 @@ const Fantom: CurrencyMetadata[] = [
   },
 ];
 
+const FantomTestnet: CurrencyMetadata[] = [
+  {
+    address: constants.AddressZero,
+    name: "Fantom",
+    symbol: "FTM",
+  },
+  {
+    address: OtherAddressZero,
+    name: "Fantom",
+    symbol: "FTM",
+  },
+  {
+    name: "Wrapped Fantom",
+    address: "0xf1277d1Ed8AD466beddF92ef448A132661956621",
+    symbol: "WFTM",
+  },
+];
+
 const Avalanche: CurrencyMetadata[] = [
   {
-    address: "0x0000000000000000000000000000000000000000",
+    address: constants.AddressZero,
     name: "Avalanche",
     symbol: "AVAX",
   },
@@ -205,36 +257,93 @@ const Avalanche: CurrencyMetadata[] = [
   },
 ];
 
-const Mumbai: CurrencyMetadata[] = [
+const AvalancheFujiTestnet: CurrencyMetadata[] = [
   {
-    address: "0x0000000000000000000000000000000000000000",
-    name: "Polygon",
-    symbol: "MATIC",
+    address: constants.AddressZero,
+    name: "Avalanche",
+    symbol: "AVAX",
   },
   {
     address: OtherAddressZero,
-    name: "Polygon",
-    symbol: "MATIC",
+    name: "Avalanche",
+    symbol: "AVAX",
   },
   {
+    address: "0xd00ae08403B9bbb9124bB305C09058E32C39A48c",
+    name: "Wrapped AVAX",
+    symbol: "WAVAX",
+  },
+];
+
+const Optimism: CurrencyMetadata[] = [
+  {
+    address: constants.AddressZero,
+    name: "Ethereum",
+    symbol: "ETH",
+  },
+  {
+    address: OtherAddressZero,
+    name: "Ethereum",
+    symbol: "ETH",
+  },
+  {
+    address: "0x4200000000000000000000000000000000000006",
     name: "Wrapped Ether",
-    address: "0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa",
     symbol: "WETH",
   },
+];
+
+const OptimismTestnet: CurrencyMetadata[] = [
   {
-    name: "Wrapped Matic",
-    address: "0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889",
-    symbol: "WMATIC",
+    address: constants.AddressZero,
+    name: "Ethereum",
+    symbol: "ETH",
   },
   {
-    name: "Tether USD",
-    address: "0x3813e82e6f7098b9583FC0F33a962D02018B6803",
-    symbol: "USDT",
+    address: OtherAddressZero,
+    name: "Ethereum",
+    symbol: "ETH",
   },
   {
-    address: "0xe6b8a5cf854791412c1f6efc7caf629f5df1c747",
-    name: "USD Coin",
-    symbol: "USDC",
+    address: "0xbC6F6b680bc61e30dB47721c6D1c5cde19C1300d",
+    name: "Wrapped Ether",
+    symbol: "WETH",
+  },
+];
+
+const Arbitrum: CurrencyMetadata[] = [
+  {
+    address: constants.AddressZero,
+    name: "Ethereum",
+    symbol: "ETH",
+  },
+  {
+    address: OtherAddressZero,
+    name: "Ethereum",
+    symbol: "ETH",
+  },
+  {
+    address: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+    name: "Wrapped Ether",
+    symbol: "WETH",
+  },
+];
+
+const ArbitrumTestnet: CurrencyMetadata[] = [
+  {
+    address: constants.AddressZero,
+    name: "Ethereum",
+    symbol: "ETH",
+  },
+  {
+    address: OtherAddressZero,
+    name: "Ethereum",
+    symbol: "ETH",
+  },
+  {
+    address: "0xEBbc3452Cc911591e4F18f3b36727Df45d6bd1f9",
+    name: "Wrapped Ether",
+    symbol: "WETH",
   },
 ];
 
@@ -243,8 +352,13 @@ export const CURRENCIES: Record<SUPPORTED_CHAIN_ID, CurrencyMetadata[]> = {
   [ChainId.Rinkeby]: Rinkeby,
   [ChainId.Goerli]: Goerli,
   [ChainId.Polygon]: Polygon,
-  [ChainId.Fantom]: Fantom,
-  [ChainId.Avalanche]: Avalanche,
   [ChainId.Mumbai]: Mumbai,
-  [ChainId.Mainnet]: Ethereum,
+  [ChainId.Fantom]: Fantom,
+  [ChainId.FantomTestnet]: FantomTestnet,
+  [ChainId.Avalanche]: Avalanche,
+  [ChainId.AvalancheFujiTestnet]: AvalancheFujiTestnet,
+  [ChainId.Optimism]: Optimism,
+  [ChainId.OptimismTestnet]: OptimismTestnet,
+  [ChainId.Arbitrum]: Arbitrum,
+  [ChainId.ArbitrumTestnet]: ArbitrumTestnet,
 } as const;

@@ -46,8 +46,11 @@ import {
 import { useNetwork } from "@thirdweb-dev/react";
 import {
   CONTRACTS_MAP,
+  ChainId,
   CommonContractOutputSchema,
   ContractType,
+  SUPPORTED_CHAIN_ID,
+  SUPPORTED_CHAIN_IDS,
   ValidContractClass,
 } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
@@ -87,9 +90,6 @@ import {
   Text,
 } from "tw-components";
 import {
-  ChainId,
-  SUPPORTED_CHAIN_ID,
-  SUPPORTED_CHAIN_IDS,
   SupportedChainIdToNetworkMap,
   getNetworkFromChainId,
 } from "utils/network";
@@ -120,32 +120,35 @@ export default function Dashboard() {
   }, [address, wallet]);
 
   const mainnetQuery = useContractList(ChainId.Mainnet, dashboardAddress);
-  const polygonQuery = useContractList(ChainId.Polygon, dashboardAddress);
-  const avalancheQuery = useContractList(ChainId.Avalanche, dashboardAddress);
-  const fantomQuery = useContractList(ChainId.Fantom, dashboardAddress);
   const rinkebyQuery = useContractList(ChainId.Rinkeby, dashboardAddress);
   const goerliQuery = useContractList(ChainId.Goerli, dashboardAddress);
+  const polygonQuery = useContractList(ChainId.Polygon, dashboardAddress);
   const mumbaiQuery = useContractList(ChainId.Mumbai, dashboardAddress);
+  const fantomQuery = useContractList(ChainId.Fantom, dashboardAddress);
+  const fantomTestnetQuery = useContractList(
+    ChainId.FantomTestnet,
+    dashboardAddress,
+  );
+  const avalancheQuery = useContractList(ChainId.Avalanche, dashboardAddress);
+  const avalancheFujiTestnetQuery = useContractList(
+    ChainId.AvalancheFujiTestnet,
+    dashboardAddress,
+  );
+  const optimismQuery = useContractList(ChainId.Optimism, dashboardAddress);
+  const optimismTestnetQuery = useContractList(
+    ChainId.OptimismTestnet,
+    dashboardAddress,
+  );
+  const arbitrumQuery = useContractList(ChainId.Arbitrum, dashboardAddress);
+  const arbitrumTestnetQuery = useContractList(
+    ChainId.ArbitrumTestnet,
+    dashboardAddress,
+  );
 
   const combinedList = useMemo(() => {
     return (
       mainnetQuery.data?.map((d) => ({ ...d, chainId: ChainId.Mainnet })) || []
     )
-      .concat(
-        polygonQuery.data?.map((d) => ({
-          ...d,
-          chainId: ChainId.Polygon,
-        })) || [],
-      )
-      .concat(
-        avalancheQuery.data?.map((d) => ({
-          ...d,
-          chainId: ChainId.Avalanche,
-        })) || [],
-      )
-      .concat(
-        fantomQuery.data?.map((d) => ({ ...d, chainId: ChainId.Fantom })) || [],
-      )
       .concat(
         rinkebyQuery.data?.map((d) => ({ ...d, chainId: ChainId.Rinkeby })) ||
           [],
@@ -154,16 +157,69 @@ export default function Dashboard() {
         goerliQuery.data?.map((d) => ({ ...d, chainId: ChainId.Goerli })) || [],
       )
       .concat(
+        polygonQuery.data?.map((d) => ({
+          ...d,
+          chainId: ChainId.Polygon,
+        })) || [],
+      )
+      .concat(
         mumbaiQuery.data?.map((d) => ({ ...d, chainId: ChainId.Mumbai })) || [],
+      )
+      .concat(
+        avalancheQuery.data?.map((d) => ({
+          ...d,
+          chainId: ChainId.Avalanche,
+        })) || [],
+      )
+      .concat(
+        avalancheFujiTestnetQuery.data?.map((d) => ({
+          ...d,
+          chainId: ChainId.AvalancheFujiTestnet,
+        })) || [],
+      )
+      .concat(
+        fantomQuery.data?.map((d) => ({ ...d, chainId: ChainId.Fantom })) || [],
+      )
+      .concat(
+        fantomTestnetQuery.data?.map((d) => ({
+          ...d,
+          chainId: ChainId.FantomTestnet,
+        })) || [],
+      )
+      .concat(
+        optimismQuery.data?.map((d) => ({ ...d, chainId: ChainId.Optimism })) ||
+          [],
+      )
+      .concat(
+        optimismTestnetQuery.data?.map((d) => ({
+          ...d,
+          chainId: ChainId.OptimismTestnet,
+        })) || [],
+      )
+      .concat(
+        arbitrumQuery.data?.map((d) => ({ ...d, chainId: ChainId.Arbitrum })) ||
+          [],
+      )
+      .concat(
+        arbitrumTestnetQuery.data?.map((d) => ({
+          ...d,
+          chainId: ChainId.ArbitrumTestnet,
+        })) || [],
       );
   }, [
     mainnetQuery.data,
-    polygonQuery.data,
-    avalancheQuery.data,
-    fantomQuery.data,
     rinkebyQuery.data,
     goerliQuery.data,
+    polygonQuery.data,
     mumbaiQuery.data,
+    fantomQuery.data,
+    fantomTestnetQuery.data,
+    avalancheQuery.data,
+    avalancheFujiTestnetQuery.data,
+    optimismQuery.data,
+    optimismTestnetQuery.data,
+    arbitrumQuery.data,
+    arbitrumTestnetQuery.data,
   ]);
 
   return (

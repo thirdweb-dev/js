@@ -1846,7 +1846,7 @@
     "@babel/runtime" "^7.16.7"
     history "^5.2.0"
 
-"@thirdweb-dev/chain-icons@^1.0.2":
+"@thirdweb-dev/chain-icons@1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/chain-icons/-/chain-icons-1.0.2.tgz#b7f7c3f43fb3d8823ed9272ca109d17eb5016716"
   integrity sha512-lNFCK0r86qpuo9ysVfcV8SeAD7Ds12IAO/oD+wsCbvlMu8ObPHXk1Lx3Fi6JFJ/8uisZlEYgXskrfT7sae9Uag==
@@ -1856,10 +1856,10 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.3.14.tgz#46cb582b5593a4f2fd49d953894729aa6ec42f35"
   integrity sha512-aQ7NGvU+1JDLh1Ha13m3DQpqfhmHzJUcbOOS93I0nKJOLKNUaQL2oQpg+3GBpMzZWIsScDztlfqwJ3wltaNYgQ==
 
-"@thirdweb-dev/react@^2.4.2-0":
-  version "2.4.2-0"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.4.2-0.tgz#bc682608e6eafc8b70ae1a51b49ca285a4ed54db"
-  integrity sha512-5DOUIMuarb4C+vYkt+n3iVsXoPyWfDzdDGI8M334cm5nQqT5sW5KSLI0Brh4UTLxf6sar1MowhH6rueuVGrSOg==
+"@thirdweb-dev/react@^2.4.2":
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.4.2.tgz#f816317bb4369e90e57e420c0574058615c76140"
+  integrity sha512-Oem2mpV7pxSs5evi3B9cUOgPD/rWnKTd+2ndFgGjRRowPTruUtNyNZcc4hsE2Prgry+4hMdYUk1nP1qDjul4bQ==
   dependencies:
     "@gnosis.pm/safe-core-sdk" "2.1.0"
     "@gnosis.pm/safe-ethers-adapters" "0.1.0-alpha.9"
@@ -1871,10 +1871,10 @@
     tiny-invariant "^1.2.0"
     wagmi "^0.2.28"
 
-"@thirdweb-dev/sdk@^2.3.11":
-  version "2.3.11"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.3.11.tgz#7b810d2e4d74c4f67fa775d79e4e082f995663c4"
-  integrity sha512-sdIuSVxiMko+rhVjrdpZ3+yWMlB9mDsCD0tKfBE18Vp+rqmRTy2nIDz76fkqBVZi24BVdaGi81VnNpBMlKzRMw==
+"@thirdweb-dev/sdk@^2.3.14":
+  version "2.3.14"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.3.14.tgz#010de932fdd82b4826aa4facb97b3c4d56cd0af2"
+  integrity sha512-jo868pMYCg80VZDJvLn/R4rssHvvZGg/e5AtPLSnFjqH8vJ3ClX9Wtn0r6k6M3Sn64yi9dNiO3uA3GBDIyQ2EQ==
   dependencies:
     "@thirdweb-dev/contracts" "2.3.14"
     "@web-std/file" "^3.0.0"

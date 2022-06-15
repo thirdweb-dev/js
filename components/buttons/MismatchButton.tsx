@@ -1,5 +1,6 @@
-import { ConnectWallet, useWeb3 } from "@3rdweb-sdk/react";
+import { ConnectWallet, FAUCETS, useWeb3 } from "@3rdweb-sdk/react";
 import {
+  Box,
   ButtonGroup,
   Flex,
   Icon,
@@ -11,13 +12,13 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import {
-  ChainId,
   useBalance,
   useChainId,
   useDesiredChainId,
   useNetwork,
   useNetworkMismatch,
 } from "@thirdweb-dev/react";
+import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import React, { useCallback, useRef } from "react";
@@ -32,7 +33,6 @@ import {
   Text,
 } from "tw-components";
 import {
-  SUPPORTED_CHAIN_ID,
   SupportedChainIdToNetworkMap,
   getNetworkFromChainId,
 } from "utils/network";
@@ -171,9 +171,15 @@ const MismatchNotice: React.FC<{
       </Heading>
 
       <Text>
-        Your wallet is connected to the <strong>{walletNetwork}</strong> network
-        but this action requires you to connect to the{" "}
-        <strong>{twNetwork}</strong> network.
+        Your wallet is connected to the{" "}
+        <Box as="strong" textTransform="capitalize">
+          {walletNetwork.replace("-", " ")}
+        </Box>{" "}
+        network but this action requires you to connect to the{" "}
+        <Box as="strong" textTransform="capitalize">
+          {twNetwork.replace("-", " ")}
+        </Box>{" "}
+        network.
       </Text>
 
       <Button
@@ -184,8 +190,9 @@ const MismatchNotice: React.FC<{
         isLoading={network.loading}
         isDisabled={!actuallyCanAttemptSwitch}
         colorScheme="orange"
+        textTransform="capitalize"
       >
-        Switch wallet to {twNetwork}
+        Switch wallet to {twNetwork.replace("-", " ")}
       </Button>
 
       {!actuallyCanAttemptSwitch && (
@@ -197,12 +204,6 @@ const MismatchNotice: React.FC<{
       )}
     </Flex>
   );
-};
-
-const FAUCETS: Partial<Record<ChainId, string>> = {
-  [ChainId.Rinkeby]: "https://rinkebyfaucet.com",
-  [ChainId.Goerli]: "https://faucet.paradigm.xyz/",
-  [ChainId.Mumbai]: "https://mumbaifaucet.com",
 };
 
 const NoFundsNotice = () => {
@@ -223,7 +224,9 @@ const NoFundsNotice = () => {
       <Text>
         You don&apos;t have any funds on this network. You&apos;ll need some{" "}
         {symbol} to pay for gas.
-        {isTestnet && " You can get some from the faucet below."}
+        {isTestnet &&
+          FAUCETS[chainId as keyof typeof FAUCETS] &&
+          " You can get some from the faucet below."}
       </Text>
 
       <ButtonGroup size="sm">

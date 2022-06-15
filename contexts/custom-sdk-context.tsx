@@ -1,10 +1,10 @@
 import { ThirdwebSDKProvider, useSigner } from "@thirdweb-dev/react";
+import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import {
   StorageSingleton,
   alchemyUrlMap,
 } from "components/app-layouts/providers";
 import { ComponentWithChildren } from "types/component-with-children";
-import { SUPPORTED_CHAIN_ID } from "utils/network";
 import { useProvider } from "wagmi";
 
 export const CustomSDKContext: ComponentWithChildren<{

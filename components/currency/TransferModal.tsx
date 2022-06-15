@@ -1,10 +1,5 @@
+import { useTransferMutation, useWeb3 } from "@3rdweb-sdk/react";
 import {
-  useTokenBalance,
-  useTransferMutation,
-  useWeb3,
-} from "@3rdweb-sdk/react";
-import {
-  Divider,
   FormControl,
   Input,
   InputGroup,
@@ -16,13 +11,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
-  Table,
-  TableCaption,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
 } from "@chakra-ui/react";
 import { useToken } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -31,7 +19,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FiSend } from "react-icons/fi";
-import { FormErrorMessage, FormLabel, Heading, Text } from "tw-components";
+import { FormErrorMessage, FormLabel, Heading } from "tw-components";
 
 interface IMintModal {
   isOpen: boolean;
@@ -59,8 +47,6 @@ export const TransferModal: React.FC<IMintModal> = ({ isOpen, onClose }) => {
   } = useForm<TransferModalFormValues>({
     defaultValues: { to: address, amount: "0" },
   });
-
-  const currentBalance = useTokenBalance(tokenAddress, watch("to"));
 
   const mutation = useTransferMutation(contract);
 
@@ -118,39 +104,6 @@ export const TransferModal: React.FC<IMintModal> = ({ isOpen, onClose }) => {
                   </FormControl>
                 </Stack>
               </form>
-            </Stack>
-            <Divider />
-            <Stack spacing={2} opacity={watch("to") ? 1 : 0.5}>
-              <Table variant="simple">
-                <TableCaption>Outcome of successful transfer</TableCaption>
-                <Thead>
-                  <Tr>
-                    <Th isNumeric>
-                      <Text as="label" size="label.md">
-                        Current Balance
-                      </Text>
-                    </Th>
-                    <Th isNumeric>
-                      <Text as="label" size="label.md">
-                        New Balance
-                      </Text>
-                    </Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  <Tr>
-                    <Td fontFamily="mono" isNumeric>
-                      {currentBalance.data?.displayValue}
-                    </Td>
-                    <Td fontFamily="mono" isNumeric>
-                      {watch("to")
-                        ? parseFloat(currentBalance.data?.displayValue || "0") +
-                          parseFloat(watch("amount"))
-                        : 0}
-                    </Td>
-                  </Tr>
-                </Tbody>
-              </Table>
             </Stack>
           </Stack>
         </ModalBody>

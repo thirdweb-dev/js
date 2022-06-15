@@ -1,6 +1,10 @@
-import type { ContractType, QueryAllParams, Role } from "@thirdweb-dev/sdk";
+import type {
+  ContractType,
+  QueryAllParams,
+  Role,
+  SUPPORTED_CHAIN_ID,
+} from "@thirdweb-dev/sdk";
 import { constants } from "ethers";
-import { SUPPORTED_CHAIN_ID } from "utils/network";
 
 export const networkKeys = {
   all: ["network"] as const,

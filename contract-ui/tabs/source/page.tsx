@@ -73,7 +73,6 @@ export const CustomContractSourcePage: React.FC<
           };
         })
     : [];
-  console.log(sources);
 
   return (
     <Flex direction="column" gap={8}>
