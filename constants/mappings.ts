@@ -46,72 +46,74 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
   {
     "nft-drop": {
       title: "NFT Drop",
-      description: "Claimable drop of one-of-one NFTs",
+      description: "ERC721 NFTs that other people can claim",
       icon: FeatureIconMap["nft-drop"],
-    },
-    "nft-collection": {
-      title: "NFT Collection",
-      description: "A collection of one-of-one NFTs",
-      icon: FeatureIconMap["nft-collection"],
     },
     marketplace: {
       title: "Marketplace",
-      description: "Your very own marketplace",
+      description: "Marketplace for ERC721/ERC1155 NFTs",
       icon: FeatureIconMap["marketplace"],
-    },
-    token: {
-      title: "Token",
-      description: "Your own ERC20 token",
-      icon: FeatureIconMap["token"],
-    },
-    pack: {
-      title: "Pack",
-      description: "Randomized rewards (loot boxes)",
-      icon: FeatureIconMap["pack"],
-
-      comingSoon: true,
     },
     split: {
       title: "Split",
-      description: "Fee splitting for your revenue",
+      description: "Fee splitting for your primary sales and royalties",
       icon: FeatureIconMap["split"],
+    },
+    token: {
+      title: "Token",
+      description: "ERC20 token",
+      icon: FeatureIconMap["token"],
     },
     "edition-drop": {
       title: "Edition Drop",
-      description: "Claimable drop of N-of-one NFTs",
+      description: "ERC1155 NFTs that other people can claim",
       icon: FeatureIconMap["edition-drop"],
-    },
-    edition: {
-      title: "Edition",
-      description: "A collection of N-of-one NFTs",
-      icon: FeatureIconMap["edition"],
-    },
-    vote: {
-      title: "Vote",
-      description: "On-chain ERC20 based voting",
-      icon: FeatureIconMap["vote"],
     },
     "token-drop": {
       title: "Token Drop",
-      description: "Claimable drop of ERC20 tokens",
+      description: "ERC20 tokens that other people can claim",
       icon: FeatureIconMap["token-drop"],
+    },
+    vote: {
+      title: "Vote",
+      description: "On-chain ERC20-based voting",
+      icon: FeatureIconMap["vote"],
+    },
+    "nft-collection": {
+      title: "NFT Collection",
+      description: "ERC721 mintable NFTs",
+      icon: FeatureIconMap["nft-collection"],
+    },
+    edition: {
+      title: "Edition",
+      description: "ERC1155 mintable NFTs",
+      icon: FeatureIconMap["edition"],
+    },
+    pack: {
+      title: "Pack",
+      description:
+        "Bundle ERC721/ERC1155/ERC20 into a single token, with lootbox mechanics",
+      icon: FeatureIconMap["pack"],
+      comingSoon: true,
+    },
+    multiwrap: {
+      title: "Multiwrap",
+      description:
+        "Bundle multiple ERC721/ERC1155/ERC20 tokens into a single ERC721",
+      icon: FeatureIconMap["token-drop"],
+      comingSoon: true,
+    },
+    "signature-drop": {
+      title: "Signature Drop",
+      description:
+        "ERC721A NFTs that other people can claim, with signature verification",
+      icon: FeatureIconMap["nft-drop"],
+      comingSoon: true,
     },
     custom: {
       title: "NOT IMPLEMENTED",
       description: "NOT IMPLEMENTED",
       icon: FeatureIconMap["token-drop"],
-    },
-    "signature-drop": {
-      title: "Signature Drop",
-      description: "Claimable drop with signature verification",
-      icon: FeatureIconMap["token-drop"],
-      comingSoon: true,
-    },
-    multiwrap: {
-      title: "Multiwrap",
-      description: "Bundle Tokens and NFTs together",
-      icon: FeatureIconMap["token-drop"],
-      comingSoon: true,
     },
   };
 

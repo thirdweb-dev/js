@@ -8,10 +8,11 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
-import { ChainId, KNOWN_CONTRACTS_MAP } from "@thirdweb-dev/sdk";
+import { ChainId } from "@thirdweb-dev/sdk";
 import { AppLayout } from "components/app-layouts/app";
 import { DeployableContractTable } from "components/contract-components/contract-table";
 import { usePublishedContractsQuery } from "components/contract-components/hooks";
+import { BuiltinContractMap } from "constants/mappings";
 import { CustomSDKContext } from "contexts/custom-sdk-context";
 import { useTrack } from "hooks/analytics/useTrack";
 import { ReactElement } from "react";
@@ -37,7 +38,9 @@ const ContractsHomepageWrapped: React.FC = () => {
         </Flex>
         <DeployableContractTable
           hasDescription
-          contractIds={Object.keys(KNOWN_CONTRACTS_MAP)}
+          contractIds={Object.keys(BuiltinContractMap).filter(
+            (contract) => contract !== "custom",
+          )}
         />
         <Box />
         <Flex gap={2} direction="column">
