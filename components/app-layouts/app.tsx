@@ -1,7 +1,7 @@
 import { Providers } from "./providers";
 import { useAddress, useBalance, useChainId } from "@thirdweb-dev/react";
 import { AppShell } from "components/layout/app-shell";
-import { NightlyNotice } from "components/notices/NightlyNotice";
+import { PrivacyNotice } from "components/notices/PrivacyNotice";
 import posthog from "posthog-js";
 import React, { useEffect } from "react";
 import { ComponentWithChildren } from "types/component-with-children";
@@ -10,7 +10,7 @@ export const AppLayout: ComponentWithChildren = ({ children }) => {
   return (
     <Providers>
       <PHIdentifier />
-      <NightlyNotice />
+      <PrivacyNotice />
       <AppShell>{children}</AppShell>
     </Providers>
   );
