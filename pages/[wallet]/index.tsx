@@ -29,6 +29,7 @@ import {
   PopoverContent,
   SimpleGrid,
   Skeleton,
+  Spinner,
   Stack,
   Tab,
   TabList,
@@ -100,7 +101,7 @@ export default function Dashboard() {
   const router = useRouter();
   const wallet = useSingleQueryParam("wallet") || "dashboard";
   const { address } = useWeb3();
-  const { data: projects } = useProjects(
+  const { data: projects, isFetched: projectsIsFetched } = useProjects(
     wallet === "dashboard" ? address : wallet,
   );
 
@@ -222,56 +223,101 @@ export default function Dashboard() {
     arbitrumTestnetQuery.data,
   ]);
 
+  const isFetched =
+    mainnetQuery.isFetched &&
+    rinkebyQuery.isFetched &&
+    goerliQuery.isFetched &&
+    polygonQuery.isFetched &&
+    mumbaiQuery.isFetched &&
+    fantomQuery.isFetched &&
+    fantomTestnetQuery.isFetched &&
+    avalancheQuery.isFetched &&
+    avalancheFujiTestnetQuery.isFetched &&
+    optimismQuery.isFetched &&
+    optimismTestnetQuery.isFetched &&
+    arbitrumQuery.isFetched &&
+    arbitrumTestnetQuery.isFetched &&
+    projectsIsFetched;
+
+  useEffect(() => {
+    if (isFetched && combinedList.length === 0 && projects?.length === 0) {
+      router.replace("/contracts");
+    }
+  }, [isFetched, router, combinedList, projects]);
+
   return (
     <Flex direction="column" gap={8}>
       {wallet === "dashboard" && !address ? (
         <NoWallet />
       ) : (
         <>
-          {!!combinedList.length && (
-            <Flex
-              justify="space-between"
-              align="top"
-              gap={4}
-              direction={{ base: "column", md: "row" }}
+          {combinedList.length === 0 && projects?.length === 0 ? (
+            <Box
+              position="absolute"
+              left="50%"
+              top="50%"
+              transform="translate(-50%, -50%)"
             >
-              <Flex gap={2} direction="column">
-                <Heading size="title.md">Deployed contracts</Heading>
-                <Text fontStyle="italic" maxW="container.md">
-                  The list of contract instances that you have deployed with
-                  thirdweb across all networks.
-                </Text>
-              </Flex>
-              <LinkButton
-                leftIcon={<FiPlus />}
-                colorScheme="primary"
-                href="/contracts"
-              >
-                Deploy new contract
-              </LinkButton>
-            </Flex>
-          )}
-          {projects && projects.length ? (
-            <Tabs>
-              <TabList>
-                <Tab>V2 Contracts</Tab>
-                <Tab>V1 Projects</Tab>
-              </TabList>
-              <TabPanels>
-                <TabPanel px={0} pt={8}>
-                  <ContractTable combinedList={combinedList} />
-                </TabPanel>
-                <TabPanel px={0} pt={8}>
-                  <OldProjects projects={projects} />
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
+              <Spinner
+                thickness="4px"
+                speed="0.65s"
+                emptyColor="gray.200"
+                color="blue.500"
+                size="xl"
+              />
+            </Box>
           ) : (
-            <ContractTable combinedList={combinedList} />
+            <>
+              <Flex
+                justify="space-between"
+                align="top"
+                gap={4}
+                direction={{ base: "column", md: "row" }}
+              >
+                <Flex gap={2} direction="column">
+                  <Heading size="title.md">Deployed contracts</Heading>
+                  <Text fontStyle="italic" maxW="container.md">
+                    The list of contract instances that you have deployed with
+                    thirdweb across all networks.
+                  </Text>
+                </Flex>
+                <LinkButton
+                  leftIcon={<FiPlus />}
+                  colorScheme="primary"
+                  href="/contracts"
+                >
+                  Deploy new contract
+                </LinkButton>
+              </Flex>
+              {projects && projects.length ? (
+                <>
+                  <Tabs>
+                    <TabList>
+                      <Tab>V2 Contracts</Tab>
+                      <Tab>V1 Projects</Tab>
+                    </TabList>
+                    <TabPanels>
+                      <TabPanel px={0} pt={8}>
+                        {combinedList.length === 0 ? (
+                          <NoContracts />
+                        ) : (
+                          <ContractTable combinedList={combinedList} />
+                        )}
+                      </TabPanel>
+                      <TabPanel px={0} pt={8}>
+                        <OldProjects projects={projects} />
+                      </TabPanel>
+                    </TabPanels>
+                  </Tabs>
+                </>
+              ) : (
+                <ContractTable combinedList={combinedList} />
+              )}
+              <LearnMoreSection />
+            </>
           )}
         </>
       )}
-      <LearnMoreSection />
     </Flex>
   );
 }
@@ -728,10 +774,6 @@ export const ContractTable: React.FC<ContractTableProps> = ({
 
   const wallet = useSingleQueryParam("wallet") || "dashboard";
 
-  if (!combinedList.length) {
-    return <NoContracts />;
-  }
-
   return (
     <Box w="100%" overflowX="auto">
       <Table
@@ -863,11 +905,15 @@ const NoContracts: React.FC = () => {
             maxW="200px"
             mb={3}
           />
-          <Flex direction="column" gap={0.5} align="center">
+          <Flex direction="column" gap={2} align="center">
             <Heading size="title.md" textAlign="center">
               You don&apos;t have any contracts
             </Heading>
-            <Text size="body.lg">Deploy a contract to get started</Text>
+            <Text size="body.lg" textAlign="center">
+              We found projects on thirdweb v1, but you don&apos;t have any
+              contracts on thirdweb v2, deploy a contract go get started or
+              navigate to V1 contracts.
+            </Text>
           </Flex>
           <LinkButton
             leftIcon={<FiPlus />}
@@ -1082,10 +1128,6 @@ const OldProjects: React.FC<IOldProjects> = ({ projects }) => {
   );
 
   const router = useRouter();
-
-  if (!projects.length) {
-    return <NoContracts />;
-  }
 
   return (
     <Box w="100%" overflowX="auto">
