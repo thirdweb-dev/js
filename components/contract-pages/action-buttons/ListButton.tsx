@@ -9,7 +9,12 @@ import React from "react";
 import { FiPlus } from "react-icons/fi";
 import { Button } from "tw-components";
 
-const UNSUPPORTED_CHAINS = [ChainId.Avalanche, ChainId.Fantom];
+const UNSUPPORTED_CHAINS = [
+  ChainId.Avalanche,
+  ChainId.Fantom,
+  ChainId.AvalancheFujiTestnet,
+  ChainId.FantomTestnet,
+];
 
 export interface IListButtonProps extends IContractActionButtonProps {}
 export const ListButton: React.FC<IListButtonProps> = ({
