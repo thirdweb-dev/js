@@ -10,6 +10,7 @@ import {
   Divider,
   Flex,
   FormControl,
+  IconButton,
   Input,
   NumberDecrementStepper,
   NumberIncrementStepper,
@@ -49,12 +50,14 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
+import { FiChevronLeft } from "react-icons/fi";
 import {
   Badge,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
   Heading,
+  LinkButton,
   Text,
   TrackedLink,
 } from "tw-components";
@@ -273,27 +276,49 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
           });
         })}
       >
-        <Flex gap={4} align="center">
-          <ContractIdImage boxSize={12} contractId={contractType} />
-          <Flex direction="column">
-            <Skeleton isLoaded={publishMetadata.isSuccess}>
-              <Heading minW="60px" size="subtitle.lg">
-                {publishMetadata.data?.name}
-              </Heading>
-            </Skeleton>
-            <Skeleton isLoaded={publishMetadata.isSuccess}>
-              <Text maxW="xs" fontStyle="italic" noOfLines={2}>
-                {publishMetadata.data?.description || "No description"}
-              </Text>
-            </Skeleton>
+        <Flex justifyContent="space-between">
+          <Flex gap={4} align="center">
+            <IconButton
+              onClick={() => router.back()}
+              size="sm"
+              aria-label="back"
+              icon={<FiChevronLeft />}
+            />
+            <ContractIdImage boxSize={12} contractId={contractType} />
+            <Flex direction="column">
+              <Skeleton isLoaded={publishMetadata.isSuccess}>
+                <Heading minW="60px" size="subtitle.lg">
+                  {publishMetadata.data?.name}
+                </Heading>
+              </Skeleton>
+              <Skeleton isLoaded={publishMetadata.isSuccess}>
+                <Text maxW="xs" fontStyle="italic" noOfLines={2}>
+                  {publishMetadata.data?.description || "No description"}
+                </Text>
+              </Skeleton>
+            </Flex>
+            <Badge
+              display={{ base: "none", md: "inherit" }}
+              colorScheme="purple"
+              variant="outline"
+            >
+              Pre-built Contract
+            </Badge>
           </Flex>
-          <Badge
-            display={{ base: "none", md: "inherit" }}
-            colorScheme="purple"
+          <LinkButton
             variant="outline"
+            isExternal
+            href={`https://portal.thirdweb.com/pre-built-contracts/${contractType}`}
+            onClick={() =>
+              trackEvent({
+                category: "learn-more-deploy",
+                action: "click",
+                label: contractType,
+              })
+            }
           >
-            Pre-built Contract
-          </Badge>
+            Learn more about this contract
+          </LinkButton>
         </Flex>
         <Divider borderColor="borderColor" />
         <Flex direction="column">

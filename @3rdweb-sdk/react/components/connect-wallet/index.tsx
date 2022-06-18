@@ -93,8 +93,16 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
     if (_connector.name.toLowerCase() === "magic") {
       onOpen();
     } else {
-      connect(_connector);
-      registerConnector(_connector.name);
+      try {
+        posthog.capture("wallet_connected_attempt", { connector: _connector });
+        connect(_connector);
+        registerConnector(_connector.name);
+      } catch (error) {
+        posthog.capture("wallet_connected_fail", {
+          connector: _connector,
+          error,
+        });
+      }
     }
   }
 
@@ -325,8 +333,18 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
               />
             }
             onClick={() => {
-              connectWithMetamask();
-              registerConnector("metamask");
+              try {
+                posthog.capture("wallet_connected_attempt", {
+                  connector: "metamask",
+                });
+                connectWithMetamask();
+                registerConnector("metamask");
+              } catch (error) {
+                posthog.capture("wallet_connected_fail", {
+                  connector: "metamask",
+                  error,
+                });
+              }
             }}
           >
             MetaMask
@@ -598,14 +616,24 @@ const MagicModal: React.FC<ConnectorModalProps> = ({ isOpen, onClose }) => {
           as="form"
           onSubmit={handleSubmit(async ({ email }) => {
             try {
+              posthog.capture("wallet_connected_attempt", {
+                connector: "magic",
+              });
               await connectMagic({ email });
               registerConnector("magic");
+
               onClose();
-            } catch (err) {
-              console.error("failed to connect", err);
+            } catch (error) {
+              console.error("failed to connect", error);
               setError("email", {
                 message:
-                  err instanceof Error ? err.message : "Something went wrong",
+                  error instanceof Error
+                    ? error.message
+                    : "Something went wrong",
+              });
+              posthog.capture("wallet_connected_fail", {
+                connector: "magic",
+                error,
               });
             }
           })}

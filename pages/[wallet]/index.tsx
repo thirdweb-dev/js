@@ -241,7 +241,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (isFetched && combinedList.length === 0 && projects?.length === 0) {
-      router.replace("/contracts");
+      router.replace("/contracts/new");
     }
   }, [isFetched, router, combinedList, projects]);
 
@@ -284,7 +284,7 @@ export default function Dashboard() {
                 <LinkButton
                   leftIcon={<FiPlus />}
                   colorScheme="primary"
-                  href="/contracts"
+                  href="/contracts/new"
                 >
                   Deploy new contract
                 </LinkButton>
@@ -918,7 +918,7 @@ const NoContracts: React.FC = () => {
           <LinkButton
             leftIcon={<FiPlus />}
             colorScheme="primary"
-            href="/contracts"
+            href="/contracts/new"
           >
             Deploy new contract
           </LinkButton>
