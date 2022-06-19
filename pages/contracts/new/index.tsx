@@ -39,7 +39,7 @@ export default function DeployContract() {
                   category: "ftux",
                   action: "click",
                   label: "step-1",
-                  option: "drop",
+                  type: "drop",
                 })
               }
             />
@@ -70,14 +70,20 @@ export default function DeployContract() {
               href={`/contracts/new/marketplace/marketplace`}
               title="Setup Marketplace"
               subtitle="Create marketplaces to list or auction both ERC721 and ERC1155 NFTs"
-              onClick={() =>
+              onClick={() => {
                 trackEvent({
                   category: "ftux",
                   action: "click",
                   label: "step-1",
                   type: "marketplace",
-                })
-              }
+                });
+                trackEvent({
+                  category: "ftux",
+                  action: "click",
+                  label: "step-2",
+                  contractType: "marketplace",
+                });
+              }}
             />
             <LinkCard
               largeIcon
