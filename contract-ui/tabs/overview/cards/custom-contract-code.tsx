@@ -50,7 +50,9 @@ export const CustomContractCode: React.FC<ContentOverviewProps> = ({
   const functionsQuery = useContractFunctions(contractAddress);
 
   const [selectedName, setSelectedName] = useState<string>(() =>
-    functionsQuery.data ? functionsQuery.data[0].name : "",
+    functionsQuery.data && functionsQuery.data[0]
+      ? functionsQuery.data[0].name
+      : "",
   );
 
   const selectedFn = useMemo(() => {
@@ -71,7 +73,7 @@ export const CustomContractCode: React.FC<ContentOverviewProps> = ({
           <Card as={Flex} gap={2} flexDirection="column">
             <Flex gap={4}>
               <ComboBox
-                defaultInputValue={functionsQuery.data[0].name}
+                defaultInputValue={functionsQuery.data[0]?.name}
                 items={functionsQuery.data.map((f) => f.name)}
                 onChange={(d) => {
                   setSelectedName(d);
