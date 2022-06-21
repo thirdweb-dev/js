@@ -63,7 +63,8 @@ export const alchemyUrlMap: Record<SUPPORTED_CHAIN_ID, string> = {
     process.env.NEXT_PUBLIC_RPC_FANTOM_TESTNET ||
     "https://rpc.testnet.fantom.network",
   [ChainId.Avalanche]:
-    process.env.NEXT_PUBLIC_RPC_AVALANCHE || "https://rpc.ankr.com/avalanche",
+    process.env.NEXT_PUBLIC_RPC_AVALANCHE ||
+    "https://api.avax.network/ext/bc/C/rpc",
   [ChainId.AvalancheFujiTestnet]:
     process.env.NEXT_PUBLIC_RPC_AVALANCHE_FUJI_TESTNET ||
     "https://api.avax-test.network/ext/bc/C/rpc",
