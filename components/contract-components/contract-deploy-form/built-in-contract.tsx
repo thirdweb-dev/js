@@ -24,7 +24,6 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddress } from "@thirdweb-dev/react";
 import {
-  ChainId,
   ContractType,
   KNOWN_CONTRACTS_MAP,
   SUPPORTED_CHAIN_ID,
@@ -798,8 +797,6 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
         <Flex gap={4} direction={{ base: "column", md: "row" }}>
           <FormControl>
             <SupportedNetworkSelect
-              disabledChainIdText="Coming Soon"
-              disabledChainIds={[ChainId.Arbitrum, ChainId.Optimism]}
               isDisabled={deploy.isLoading || !publishMetadata.isSuccess}
               value={selectedChain || -1}
               onChange={(e) =>
