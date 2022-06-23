@@ -1,14 +1,14 @@
 import { QuestionIcon } from "@chakra-ui/icons";
 import {
+  Arbitrum,
   Avalanche,
   Ethereum,
   Fantom,
+  Optimism,
   Polygon,
 } from "@thirdweb-dev/chain-icons";
 import { ChainId, useAddress, useNetwork } from "@thirdweb-dev/react";
 import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
-import Arbitrum from "components/icons/arbitrum";
-import Optimism from "components/icons/optimism";
 import { useCallback } from "react";
 
 interface NetworkMetadata {

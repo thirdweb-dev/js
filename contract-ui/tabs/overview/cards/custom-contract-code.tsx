@@ -7,12 +7,15 @@ import {
   FormControl,
   Icon,
   Input,
+  InputGroup,
+  InputLeftAddon,
+  List,
+  ListItem,
   Popover,
   PopoverArrow,
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
-  Portal,
 } from "@chakra-ui/react";
 import {
   ChainId,
@@ -27,13 +30,13 @@ import { Environment } from "components/contract-tabs/code/types";
 import { BigNumber } from "ethers";
 import { useId, useMemo, useRef, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { FiCode, FiPlay } from "react-icons/fi";
+import { FiCode, FiEdit2, FiEye, FiPlay, FiSearch } from "react-icons/fi";
 import { useMutation } from "react-query";
 import {
+  Badge,
   Button,
   Card,
   CodeBlock,
-  ComboBox,
   FormHelperText,
   FormLabel,
   Heading,
@@ -49,17 +52,28 @@ export const CustomContractCode: React.FC<ContentOverviewProps> = ({
 }) => {
   const functionsQuery = useContractFunctions(contractAddress);
 
-  const [selectedName, setSelectedName] = useState<string>(() =>
-    functionsQuery.data && functionsQuery.data[0]
-      ? functionsQuery.data[0].name
-      : "",
+  const [functionFilter, setFunctionFilter] = useState("");
+
+  const { readFunctions, writeFunctions } = useMemo(() => {
+    const filteredFns = (functionsQuery.data || []).filter(
+      (f) => f.name.toLowerCase().indexOf(functionFilter.toLowerCase()) > -1,
+    );
+    const readFunctions = filteredFns.filter(
+      (f) => f.stateMutability === "view" || f.stateMutability === "pure",
+    );
+    const writeFunctions = filteredFns.filter(
+      (f) => f.stateMutability !== "view" && f.stateMutability !== "pure",
+    );
+    return { readFunctions, writeFunctions };
+  }, [functionFilter, functionsQuery.data]);
+
+  const [selectedSig, setSelectedSig] = useState<string>(() =>
+    writeFunctions[0] ? writeFunctions[0].name : "",
   );
 
   const selectedFn = useMemo(() => {
-    return functionsQuery.data?.find((fn) => fn.name === selectedName);
-  }, [functionsQuery.data, selectedName]);
-
-  const containerRef = useRef<HTMLDivElement>(null);
+    return functionsQuery.data?.find((fn) => fn.signature === selectedSig);
+  }, [functionsQuery.data, selectedSig]);
 
   if (functionsQuery.isError) {
     return <Box>Contract does not support generated functions</Box>;
@@ -70,20 +84,94 @@ export const CustomContractCode: React.FC<ContentOverviewProps> = ({
       {functionsQuery.data && contractAddress && (
         <Flex gap={3} flexDirection="column">
           <Heading size="subtitle.md">Interact with contract</Heading>
-          <Card as={Flex} gap={2} flexDirection="column">
-            <Flex gap={4}>
-              <ComboBox
-                defaultInputValue={functionsQuery.data[0]?.name}
-                items={functionsQuery.data.map((f) => f.name)}
-                onChange={(d) => {
-                  setSelectedName(d);
-                }}
-              />
+          <Card
+            overflow="hidden"
+            p={0}
+            as={Flex}
+            gap={0}
+            flexDirection={{ base: "column", md: "row" }}
+            minH="400px"
+          >
+            <Card
+              border="none"
+              as={Flex}
+              flexShrink={0}
+              gap={2}
+              flexDirection="column"
+              borderRightRadius={{ base: undefined, md: "none" }}
+              borderBottomRadius={{ base: "none", md: undefined }}
+              boxShadow="none"
+            >
+              <InputGroup>
+                <InputLeftAddon>
+                  <Icon as={FiSearch} />
+                </InputLeftAddon>
+                <Input
+                  value={functionFilter}
+                  onChange={(e) => setFunctionFilter(e.currentTarget.value)}
+                  placeholder="Type to filter"
+                />
+              </InputGroup>
+              <Divider borderColor="borderColor" />
+              <List
+                gap={0.5}
+                as={Flex}
+                flexDir="column"
+                overflow="auto"
+                h={{ base: "300px", md: "600px" }}
+                flexGrow={1}
+              >
+                {writeFunctions.map((abiFn) => (
+                  <ListItem key={abiFn.signature}>
+                    <Button
+                      size="sm"
+                      onClick={() => setSelectedSig(abiFn.signature)}
+                      colorScheme={
+                        selectedFn && selectedFn.signature === abiFn.signature
+                          ? "purple"
+                          : undefined
+                      }
+                      variant={
+                        selectedFn && selectedFn.signature === abiFn.signature
+                          ? "solid"
+                          : "ghost"
+                      }
+                      w="full"
+                      justifyContent="start"
+                      leftIcon={<FiEdit2 />}
+                    >
+                      {abiFn.name}
+                    </Button>
+                  </ListItem>
+                ))}
 
-              <Box flexShrink={0} ref={containerRef} />
-            </Flex>
+                {readFunctions.map((abiFn) => (
+                  <ListItem key={abiFn.signature}>
+                    <Button
+                      size="sm"
+                      onClick={() => setSelectedSig(abiFn.signature)}
+                      colorScheme={
+                        selectedFn && selectedFn.signature === abiFn.signature
+                          ? "purple"
+                          : undefined
+                      }
+                      variant={
+                        selectedFn && selectedFn.signature === abiFn.signature
+                          ? "solid"
+                          : "ghost"
+                      }
+                      w="full"
+                      justifyContent="start"
+                      leftIcon={<FiEye />}
+                    >
+                      {abiFn.name}
+                    </Button>
+                  </ListItem>
+                ))}
+              </List>
+            </Card>
+            <Divider orientation="vertical" borderColor="borderColor" />
             <InteractiveAbiFunction
-              containerRef={containerRef}
               key={selectedFn?.name || "nonexsitent"}
               contractAddress={contractAddress}
               abiFunction={selectedFn}
@@ -127,13 +215,11 @@ function formatResponseData(data: unknown): string {
 interface InteractiveAbiFunctionProps {
   abiFunction?: AbiFunction;
   contractAddress: string;
-  containerRef: React.RefObject<HTMLDivElement>;
 }
 
 const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
   abiFunction,
   contractAddress,
-  containerRef,
 }) => {
   const formId = useId();
   const { contract, isLoading: contractLoading } = useContract(contractAddress);
@@ -177,116 +263,35 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
   const [codeEnv, setCodeEnv] = useState<Environment>("javascript");
 
   return (
-    <>
-      <Portal containerRef={containerRef}>
-        <ButtonGroup ml="auto">
-          <Popover initialFocusRef={initialFocusRef} isLazy>
-            <PopoverTrigger>
-              <Button isDisabled={!abiFunction} leftIcon={<Icon as={FiCode} />}>
-                Code
-              </Button>
-            </PopoverTrigger>
-            <Card
-              w="auto"
-              as={PopoverContent}
-              bg="backgroundCardHighlight"
-              boxShadow="0px 0px 2px 0px var(--popper-arrow-shadow-color)"
-              mx={4}
-              maxW="2xl"
-            >
-              <PopoverArrow bg="backgroundCardHighlight" />
-              <PopoverBody>
-                <Flex gap={6} direction="column">
-                  <Flex gap={3} direction="column">
-                    <Heading size="label.lg">Installation</Heading>
-                    <CodeSegment
-                      setEnvironment={setCodeEnv}
-                      environment={codeEnv}
-                      isInstallCommand
-                      snippet={{
-                        javascript: `npm install @thirdweb-dev/sdk ethers`,
-                        react: `npm install @thirdweb-dev/react @thirdweb-dev/sdk ethers`,
-                        python: `pip install thirdweb-sdk`,
-                        go: `go get github.com/thirdweb-dev/go-sdk/thirdweb`,
-                      }}
-                    />
-                  </Flex>
-                  <Flex gap={3} direction="column">
-                    <Heading size="label.lg">Code</Heading>
-                    <CodeSegment
-                      setEnvironment={setCodeEnv}
-                      environment={codeEnv}
-                      snippet={{
-                        javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk";
-
-const sdk = new ThirdwebSDK("${chainName}");
-const contract = await sdk.getContract("${contractAddress}");
-const result = await contract.call("${abiFunction?.name}"${watch("params")
-                          .map(
-                            (f) => `, ${f.value ? `"${f.value}"` : `${f.key}`}`,
-                          )
-                          .join("")});
-`,
-                        react: `import { useContract } from "@thirdweb-dev/react";
-
-const { contract, isLoading } = useContract("${contractAddress}");
-const result = await contract.call("${abiFunction?.name}"${watch("params")
-                          .map(
-                            (f) => `, ${f.value ? `"${f.value}"` : `${f.key}`}`,
-                          )
-                          .join("")});`,
-                        python: `from thirdweb import ThirdwebSDK
-
-sdk = ThirdwebSDK("${chainName}")
-contract = sdk.get_contract("${contractAddress}")
-const result = await contract.call("${abiFunction?.name}"${watch("params")
-                          .map(
-                            (f) => `, ${f.value ? `"${f.value}"` : `${f.key}`}`,
-                          )
-                          .join("")});`,
-                        go: `import (
-  "github.com/thirdweb-dev/go-sdk/thirdweb"
-)
-            
-sdk, err := thirdweb.NewThirdwebSDK("${chainName}", nil)
-contract, err := sdk.GetContract("${contractAddress}")
-const result = await contract.Call("${abiFunction?.name}"${watch("params")
-                          .map(
-                            (f) => `, ${f.value ? `"${f.value}"` : `${f.key}`}`,
-                          )
-                          .join("")});`,
-                      }}
-                    />
-                  </Flex>
-                </Flex>
-              </PopoverBody>
-            </Card>
-          </Popover>
-          {isView ? (
-            <Button
-              isDisabled={!abiFunction}
-              rightIcon={<Icon as={FiPlay} />}
-              colorScheme="primary"
-              isLoading={contractLoading || mutationLoading}
-              type="submit"
-              form={formId}
-            >
-              Run
-            </Button>
-          ) : (
-            <TransactionButton
-              isDisabled={!abiFunction}
-              colorScheme="primary"
-              transactionCount={1}
-              isLoading={contractLoading || mutationLoading}
-              type="submit"
-              form={formId}
-            >
-              Execute
-            </TransactionButton>
+    <Card
+      bg="transparent"
+      border="none"
+      as={Flex}
+      flexDirection="column"
+      gap={4}
+      flexGrow={1}
+      boxShadow="none"
+    >
+      <Flex gap={2} direction="column">
+        <Flex gap={2} align="center">
+          <Heading size="title.sm">
+            {abiFunction?.name || "No function selected"}
+          </Heading>
+          {abiFunction?.stateMutability && (
+            <Badge size="label.sm" variant="subtle">
+              {abiFunction?.stateMutability}
+            </Badge>
           )}
-        </ButtonGroup>
-      </Portal>
+        </Flex>
+        {!abiFunction ? (
+          <Text>Please select a function on the left to get started</Text>
+        ) : (
+          ""
+        )}
+        {abiFunction?.signature && (
+          <CodeBlock code={abiFunction.signature} language="typescript" />
+        )}
+      </Flex>
       <Flex
         direction="column"
         gap={2}
@@ -301,18 +306,16 @@ const result = await contract.Call("${abiFunction?.name}"${watch("params")
         {fields.length > 0 && (
           <>
             <Divider borderColor="borderColor" />
-            <Card>
-              {fields.map((item, index) => (
-                <FormControl key={item.id} gap={0.5}>
-                  <FormLabel>{item.key}</FormLabel>
-                  <Input
-                    defaultValue={getValues(`params.${index}.value`)}
-                    {...register(`params.${index}.value`)}
-                  />
-                  <FormHelperText>{item.type}</FormHelperText>
-                </FormControl>
-              ))}
-            </Card>
+            {fields.map((item, index) => (
+              <FormControl key={item.id} gap={0.5}>
+                <FormLabel>{item.key}</FormLabel>
+                <Input
+                  defaultValue={getValues(`params.${index}.value`)}
+                  {...register(`params.${index}.value`)}
+                />
+                <FormHelperText>{item.type}</FormHelperText>
+              </FormControl>
+            ))}
           </>
         )}
 
@@ -343,6 +346,115 @@ const result = await contract.Call("${abiFunction?.name}"${watch("params")
           </>
         ) : null}
       </Flex>
-    </>
+
+      <Divider mt="auto" borderColor="borderColor" />
+      <ButtonGroup ml="auto">
+        <Popover initialFocusRef={initialFocusRef} isLazy>
+          <PopoverTrigger>
+            <Button isDisabled={!abiFunction} leftIcon={<Icon as={FiCode} />}>
+              Code
+            </Button>
+          </PopoverTrigger>
+          <Card
+            w="auto"
+            as={PopoverContent}
+            bg="backgroundCardHighlight"
+            boxShadow="0px 0px 2px 0px var(--popper-arrow-shadow-color)"
+            mx={4}
+            maxW="2xl"
+          >
+            <PopoverArrow bg="backgroundCardHighlight" />
+            <PopoverBody>
+              <Flex gap={6} direction="column">
+                <Flex gap={3} direction="column">
+                  <Heading size="label.lg">Installation</Heading>
+                  <CodeSegment
+                    setEnvironment={setCodeEnv}
+                    environment={codeEnv}
+                    isInstallCommand
+                    snippet={{
+                      javascript: `npm install @thirdweb-dev/sdk ethers`,
+                      react: `npm install @thirdweb-dev/react @thirdweb-dev/sdk ethers`,
+                      python: `pip install thirdweb-sdk`,
+                      go: `go get github.com/thirdweb-dev/go-sdk/thirdweb`,
+                    }}
+                  />
+                </Flex>
+                <Flex gap={3} direction="column">
+                  <Heading size="label.lg">Code</Heading>
+                  <CodeSegment
+                    setEnvironment={setCodeEnv}
+                    environment={codeEnv}
+                    snippet={{
+                      javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+
+const sdk = new ThirdwebSDK("${chainName}");
+const contract = await sdk.getContract("${contractAddress}");
+const result = await contract.call("${abiFunction?.name}"${watch("params")
+                        .map(
+                          (f) => `, ${f.value ? `"${f.value}"` : `${f.key}`}`,
+                        )
+                        .join("")});
+`,
+                      react: `import { useContract } from "@thirdweb-dev/react";
+
+const { contract, isLoading } = useContract("${contractAddress}");
+const result = await contract.call("${abiFunction?.name}"${watch("params")
+                        .map(
+                          (f) => `, ${f.value ? `"${f.value}"` : `${f.key}`}`,
+                        )
+                        .join("")});`,
+                      python: `from thirdweb import ThirdwebSDK
+
+sdk = ThirdwebSDK("${chainName}")
+contract = sdk.get_contract("${contractAddress}")
+const result = await contract.call("${abiFunction?.name}"${watch("params")
+                        .map(
+                          (f) => `, ${f.value ? `"${f.value}"` : `${f.key}`}`,
+                        )
+                        .join("")});`,
+                      go: `import (
+  "github.com/thirdweb-dev/go-sdk/thirdweb"
+)
+            
+sdk, err := thirdweb.NewThirdwebSDK("${chainName}", nil)
+contract, err := sdk.GetContract("${contractAddress}")
+const result = await contract.Call("${abiFunction?.name}"${watch("params")
+                        .map(
+                          (f) => `, ${f.value ? `"${f.value}"` : `${f.key}`}`,
+                        )
+                        .join("")});`,
+                    }}
+                  />
+                </Flex>
+              </Flex>
+            </PopoverBody>
+          </Card>
+        </Popover>
+        {isView ? (
+          <Button
+            isDisabled={!abiFunction}
+            rightIcon={<Icon as={FiPlay} />}
+            colorScheme="primary"
+            isLoading={contractLoading || mutationLoading}
+            type="submit"
+            form={formId}
+          >
+            Run
+          </Button>
+        ) : (
+          <TransactionButton
+            isDisabled={!abiFunction}
+            colorScheme="primary"
+            transactionCount={1}
+            isLoading={contractLoading || mutationLoading}
+            type="submit"
+            form={formId}
+          >
+            Execute
+          </TransactionButton>
+        )}
+      </ButtonGroup>
+    </Card>
   );
 };

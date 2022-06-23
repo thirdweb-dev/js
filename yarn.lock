@@ -1848,10 +1848,10 @@
     "@babel/runtime" "^7.16.7"
     history "^5.2.0"
 
-"@thirdweb-dev/chain-icons@1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/chain-icons/-/chain-icons-1.0.2.tgz#b7f7c3f43fb3d8823ed9272ca109d17eb5016716"
-  integrity sha512-lNFCK0r86qpuo9ysVfcV8SeAD7Ds12IAO/oD+wsCbvlMu8ObPHXk1Lx3Fi6JFJ/8uisZlEYgXskrfT7sae9Uag==
+"@thirdweb-dev/chain-icons@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/chain-icons/-/chain-icons-1.0.4.tgz#5b8b88995f71628885d8e72b679fe0631d281036"
+  integrity sha512-veUEsYonSUH3d+OF71eAUnwngDRzaveKbSZqcHNR6MpZExAMYMMnnVW8gsR+S6GLyLGQHahoUnsxqWZZN7Bx2w==
 
 "@thirdweb-dev/contracts@2.3.15-0":
   version "2.3.15-0"

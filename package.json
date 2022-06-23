@@ -25,7 +25,7 @@
     "@n8tb1t/use-scroll-position": "^2.0.3",
     "@react-hook/intersection-observer": "^3.1.1",
     "@tanstack/react-location": "^3.7.4",
-    "@thirdweb-dev/chain-icons": "1.0.2",
+    "@thirdweb-dev/chain-icons": "^1.0.4",
     "@thirdweb-dev/react": "^2.4.4",
     "@thirdweb-dev/sdk": "^2.3.14",
     "bn.js": "^5.2.0",
