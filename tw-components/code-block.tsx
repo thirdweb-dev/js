@@ -1,5 +1,6 @@
 import { Text } from "./text";
 import {
+  Box,
   Code,
   CodeProps,
   Icon,
@@ -81,12 +82,12 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
 
           {tokens.map((line, i) => (
             // eslint-disable-next-line react/jsx-key
-            <div {...getLineProps({ line, key: i })}>
+            <Box {...getLineProps({ line, key: i })} pt={1}>
               {line.map((token, key) => (
                 // eslint-disable-next-line react/jsx-key
                 <span {...getTokenProps({ token, key })} />
               ))}
-            </div>
+            </Box>
           ))}
         </Text>
       )}

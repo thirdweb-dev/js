@@ -139,9 +139,9 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
               <FormHelperText>{param.type}</FormHelperText>
             </FormControl>
           ))}
+          <Divider borderColor="borderColor" mt="auto" />
         </>
       ) : null}
-      <Divider borderColor="borderColor" mt="auto" />
       <Flex direction="column">
         <Heading size="subtitle.md">Network / Chain</Heading>
         <Text size="body.md">

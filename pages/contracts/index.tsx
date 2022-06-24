@@ -62,7 +62,7 @@ const ContractsHomepageWrapped: React.FC = () => {
         >
           {publishedContracts.isLoading && (
             <Center>
-              <Flex mt={4} py={4} direction="row" gap={4} align="center">
+              <Flex py={4} direction="row" gap={4} align="center">
                 {walletAddress && <Spinner size="sm" />}
                 <Text>
                   {walletAddress
@@ -96,7 +96,7 @@ const ContractsHomepageWrapped: React.FC = () => {
           {publishedContracts.isSuccess &&
             publishedContracts.data.length === 0 && (
               <Center>
-                <Flex mt={4} py={4} direction="column" gap={4} align="center">
+                <Flex py={4} direction="column" gap={4} align="center">
                   <Text>You have not published any contracts yet.</Text>
                   <LinkButton
                     size="sm"

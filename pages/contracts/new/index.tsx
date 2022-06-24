@@ -20,7 +20,7 @@ export default function DeployContract() {
             aria-label="back"
             icon={<FiChevronLeft />}
           />
-          <Heading size="title.lg">What do you want to build?</Heading>
+          <Heading size="title.lg">What do you want to deploy?</Heading>
           <Box />
         </Flex>
         <Container maxW="container.md">
@@ -29,77 +29,35 @@ export default function DeployContract() {
               largeIcon
               bg="backgroundCardHighlight"
               borderWidth="2px"
+              src={require("/public/assets/add-contract/tw-publish.png")}
+              alt="custom"
+              href="/contracts/new/custom"
+              title="My contracts"
+              subtitle="Publish custom contracts so you can deploy them at any time."
+              onClick={() =>
+                trackEvent({
+                  category: "ftux",
+                  action: "click",
+                  label: "step-0",
+                  type: "custom",
+                })
+              }
+            />
+            <LinkCard
+              largeIcon
+              bg="backgroundCardHighlight"
+              borderWidth="2px"
               src={require("/public/assets/add-contract/drop.png")}
-              alt="drop"
-              href={`/contracts/new/drop`}
-              title="Release a drop"
-              subtitle="Set up a drop that other people can mint, with an easy to use NFT batch upload"
-              onClick={() =>
-                trackEvent({
-                  category: "ftux",
-                  action: "click",
-                  label: "step-1",
-                  type: "drop",
-                })
-              }
-            />
-            <LinkCard
-              largeIcon
-              bg="backgroundCardHighlight"
-              borderWidth="2px"
-              src={require("/public/assets/add-contract/nft.png")}
               alt="token"
-              href={`/contracts/new/token`}
-              title="Create NFTs and Tokens"
-              subtitle="Mint your own NFTs, packs and other tokens to transfer them or list them on a marketplace"
+              href="/contracts/new/pre-built"
+              title="Pre-built contracts"
+              subtitle="From NFT Drop to payment splitters to marketplaces."
               onClick={() =>
                 trackEvent({
                   category: "ftux",
                   action: "click",
-                  label: "step-1",
-                  type: "token",
-                })
-              }
-            />
-            <LinkCard
-              largeIcon
-              bg="backgroundCardHighlight"
-              borderWidth="2px"
-              src={require("/public/assets/add-contract/marketplace.png")}
-              alt="marketplace"
-              href={`/contracts/new/marketplace/marketplace`}
-              title="Setup Marketplace"
-              subtitle="Create marketplaces to list or auction both ERC721 and ERC1155 NFTs"
-              onClick={() => {
-                trackEvent({
-                  category: "ftux",
-                  action: "click",
-                  label: "step-1",
-                  type: "marketplace",
-                });
-                trackEvent({
-                  category: "ftux",
-                  action: "click",
-                  label: "step-2",
-                  contractType: "marketplace",
-                });
-              }}
-            />
-            <LinkCard
-              largeIcon
-              bg="backgroundCardHighlight"
-              borderWidth="2px"
-              src={require("/public/assets/add-contract/governance.png")}
-              alt="governance"
-              href={`/contracts/new/governance`}
-              title="Governance & Splits"
-              subtitle="Establish decentralized governance or split revenue for your contracts"
-              onClick={() =>
-                trackEvent({
-                  category: "ftux",
-                  action: "click",
-                  label: "step-1",
-                  type: "governance",
+                  label: "step-0",
+                  type: "pre-built",
                 })
               }
             />

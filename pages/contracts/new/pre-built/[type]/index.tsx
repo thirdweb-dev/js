@@ -43,7 +43,7 @@ export default function DeployContractType() {
                   bg="backgroundCardHighlight"
                   src={FeatureIconMap[item.contractType as ContractType]}
                   alt={item.title}
-                  href={`/contracts/new/${type}/${item.contractType}`}
+                  href={`/contracts/new/pre-built/${type}/${item.contractType}`}
                   title={item.title}
                   subtitle={item.description}
                   comingSoon={item.comingSoon}
