@@ -45,7 +45,7 @@ const EXAMPLES_MAP = {
   },
   playToEarnGames: {
     title: "Play-to-earn games",
-    href: "https://portal.thirdweb.com/examples",
+    href: "https://github.com/thirdweb-example/play-to-earn-game",
     svg: PlayToEarnGames,
   },
   defiProtocols: {

@@ -7,12 +7,14 @@ import { Heading, Text } from "tw-components";
 interface ContractCardProps {
   icon: string;
   title: string;
+  urlPath: string;
   description: string;
 }
 
 export const ContractCard: React.FC<ContractCardProps> = ({
   icon,
   title,
+  urlPath,
   description,
 }) => {
   const { trackEvent } = useTrack();
@@ -37,7 +39,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
           flexShrink={0}
         />
         <LinkOverlay
-          href={`https://portal.thirdweb.com/pre-built-contracts/${icon}`}
+          href={`https://portal.thirdweb.com/pre-built-contracts/${urlPath}`}
           isExternal
           onClick={() =>
             trackEvent({

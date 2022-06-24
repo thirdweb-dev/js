@@ -319,21 +319,25 @@ export default function Home() {
                   <ContractCard
                     icon="nft-drop"
                     title="NFTs"
+                    urlPath="nfts"
                     description="ERC721 and ERC1155, minted or lazy minted so your audience can claim them."
                   />
                   <ContractCard
                     icon="token"
                     title="Tokens"
+                    urlPath="tokens"
                     description="ERC20 tokens, minted or lazy minted so your audience can claim them."
                   />
                   <ContractCard
                     icon="marketplace"
                     title="Marketplace"
+                    urlPath="marketplace"
                     description="NFT marketplace, either open to any collection or limited to the collections you want."
                   />
                   <ContractCard
                     icon="split"
                     title="More"
+                    urlPath="other"
                     description="Governance on-chain, splitting revenue, and more."
                   />
                 </SimpleGrid>
