@@ -45,10 +45,11 @@ export default function SplitPage() {
     return balanceQuery.data.reduce((acc, curr) => {
       return {
         ...acc,
+        // convert to bps for BigNumber calculations
         [curr.token_address]: ethers.utils.formatUnits(
           BigNumber.from(curr.balance)
-            .mul(activeRecipient.splitPercentage)
-            .div(100),
+            .mul(activeRecipient.splitPercentage * 100)
+            .div(10000),
           curr.decimals,
         ),
       };
