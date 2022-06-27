@@ -16,6 +16,7 @@ import {
   PopoverBody,
   PopoverContent,
   PopoverTrigger,
+  SimpleGrid,
 } from "@chakra-ui/react";
 import {
   ChainId,
@@ -58,13 +59,15 @@ export const CustomContractCode: React.FC<ContentOverviewProps> = ({
     const filteredFns = (functionsQuery.data || []).filter(
       (f) => f.name.toLowerCase().indexOf(functionFilter.toLowerCase()) > -1,
     );
-    const readFunctions = filteredFns.filter(
-      (f) => f.stateMutability === "view" || f.stateMutability === "pure",
-    );
-    const writeFunctions = filteredFns.filter(
-      (f) => f.stateMutability !== "view" && f.stateMutability !== "pure",
-    );
-    return { readFunctions, writeFunctions };
+
+    return {
+      readFunctions: filteredFns.filter(
+        (f) => f.stateMutability === "view" || f.stateMutability === "pure",
+      ),
+      writeFunctions: filteredFns.filter(
+        (f) => f.stateMutability !== "view" && f.stateMutability !== "pure",
+      ),
+    };
   }, [functionFilter, functionsQuery.data]);
 
   const [selectedSig, setSelectedSig] = useState<string>(() =>
@@ -80,20 +83,15 @@ export const CustomContractCode: React.FC<ContentOverviewProps> = ({
   }
 
   return (
-    <Flex gap={4} direction="column" w="full">
+    <Flex gap={3} flexDirection="column" w="100%">
+      <Heading size="subtitle.md">Contract Functions</Heading>
       {functionsQuery.data && contractAddress && (
-        <Flex gap={3} flexDirection="column">
-          <Heading size="subtitle.md">Interact with contract</Heading>
-          <Card
-            overflow="hidden"
-            p={0}
-            as={Flex}
-            gap={0}
-            flexDirection={{ base: "column", md: "row" }}
-            minH="400px"
-          >
+        <Card overflow="hidden" p={0} minH="400px">
+          <SimpleGrid columns={12}>
             <Card
-              border="none"
+              gridColumn={{ base: "span 12", md: "span 3" }}
+              borderWidth="0px"
+              borderRightWidth="1px"
               as={Flex}
               flexShrink={0}
               gap={2}
@@ -124,6 +122,7 @@ export const CustomContractCode: React.FC<ContentOverviewProps> = ({
                 {writeFunctions.map((abiFn) => (
                   <ListItem key={abiFn.signature}>
                     <Button
+                      borderRadius="sm"
                       size="sm"
                       onClick={() => setSelectedSig(abiFn.signature)}
                       colorScheme={
@@ -148,6 +147,7 @@ export const CustomContractCode: React.FC<ContentOverviewProps> = ({
                 {readFunctions.map((abiFn) => (
                   <ListItem key={abiFn.signature}>
                     <Button
+                      borderRadius="sm"
                       size="sm"
                       onClick={() => setSelectedSig(abiFn.signature)}
                       colorScheme={
@@ -170,14 +170,13 @@ export const CustomContractCode: React.FC<ContentOverviewProps> = ({
                 ))}
               </List>
             </Card>
-            <Divider orientation="vertical" borderColor="borderColor" />
             <InteractiveAbiFunction
               key={selectedFn?.name || "nonexsitent"}
               contractAddress={contractAddress}
               abiFunction={selectedFn}
             />
-          </Card>
-        </Flex>
+          </SimpleGrid>
+        </Card>
       )}
     </Flex>
   );
@@ -264,13 +263,16 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
 
   return (
     <Card
+      gridColumn={{ base: "span 12", md: "span 9" }}
+      borderRadius="none"
       bg="transparent"
       border="none"
       as={Flex}
       flexDirection="column"
       gap={4}
-      flexGrow={1}
       boxShadow="none"
+      flexGrow={1}
+      w="100%"
     >
       <Flex gap={2} direction="column">
         <Flex gap={2} align="center">
@@ -285,14 +287,14 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
         </Flex>
         {!abiFunction ? (
           <Text>Please select a function on the left to get started</Text>
-        ) : (
-          ""
-        )}
+        ) : null}
         {abiFunction?.signature && (
           <CodeBlock code={abiFunction.signature} language="typescript" />
         )}
       </Flex>
       <Flex
+        position="relative"
+        w="100%"
         direction="column"
         gap={2}
         as="form"
@@ -342,7 +344,12 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
           <>
             <Divider borderColor="borderColor" />
             <Heading size="label.sm">Output</Heading>
-            <CodeBlock language="json" code={formatResponseData(data)} />
+            <CodeBlock
+              w="full"
+              position="relative"
+              language="json"
+              code={formatResponseData(data)}
+            />
           </>
         ) : null}
       </Flex>

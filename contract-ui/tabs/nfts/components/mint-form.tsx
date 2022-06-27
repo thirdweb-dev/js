@@ -179,7 +179,9 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract }) => {
               You can upload image, audio, video, html, text, pdf, and 3d model
               files here.
             </FormHelperText>
-            <FormErrorMessage>{mediaFileError?.message}</FormErrorMessage>
+            <FormErrorMessage>
+              {mediaFileError?.message as string}
+            </FormErrorMessage>
           </FormControl>
           {showCoverImageUpload && (
             <FormControl isInvalid={!!errors.image}>
@@ -199,7 +201,9 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract }) => {
               <FormHelperText>
                 You can optionally upload an image as the cover of your NFT.
               </FormHelperText>
-              <FormErrorMessage>{errors?.image?.message}</FormErrorMessage>
+              <FormErrorMessage>
+                {errors?.image?.message as string}
+              </FormErrorMessage>
             </FormControl>
           )}
           <FormControl isInvalid={!!errors.description}>
@@ -262,7 +266,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract }) => {
                       view the item on your site.
                     </FormHelperText>
                     <FormErrorMessage>
-                      {errors?.external_url?.message}
+                      {errors?.external_url?.message as string}
                     </FormErrorMessage>
                   </FormControl>
                 )}

@@ -22,7 +22,7 @@ export const queryClient = new QueryClient({
   },
 });
 
-function replacer(_key: string, value: any) {
+export function bigNumberReplacer(_key: string, value: any) {
   // if we find a BigNumber then make it into a string (since that is safe)
   if (
     BigNumber.isBigNumber(value) ||
@@ -107,7 +107,7 @@ export const Providers: ComponentWithChildren = ({ children }) => {
       buster: __CACHE_BUSTER,
       persister: createWebStoragePersister({
         storage: window.localStorage,
-        serialize: (data) => JSON.stringify(data, replacer),
+        serialize: (data) => JSON.stringify(data, bigNumberReplacer),
       }),
     });
   }, []);

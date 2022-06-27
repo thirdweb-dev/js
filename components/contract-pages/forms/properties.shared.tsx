@@ -19,7 +19,6 @@ import {
   FieldValues,
   Path,
   PathValue,
-  UnpackNestedValue,
   UseFormRegister,
   UseFormSetValue,
   UseFormWatch,
@@ -28,7 +27,6 @@ import {
 } from "react-hook-form";
 import { FiPlus, FiSlash, FiTrash, FiUpload, FiX } from "react-icons/fi";
 import { Button, FormErrorMessage, FormLabel } from "tw-components";
-// import { optionalProperties } from "schema/shared";
 import { z } from "zod";
 
 interface IPropertyFieldValues extends FieldValues {
@@ -80,8 +78,10 @@ export const PropertiesFormControl = <
         </Button>
       </Flex>
       {fields.map((field, index) => {
-        const keyError = errors?.attributes?.[index]?.trait_type?.message;
-        const valueError = errors?.attributes?.[index]?.value?.message;
+        const keyError = (errors as any)?.attributes?.[index]?.trait_type
+          ?.message as string | undefined;
+        const valueError = (errors as any)?.attributes?.[index]?.value
+          ?.message as string | undefined;
         const isInvalid = !!(keyError || valueError);
 
         return (
@@ -122,9 +122,7 @@ export const PropertiesFormControl = <
                         onClick={() =>
                           setValue(
                             `attributes.${index}.value` as Path<TFieldValues>,
-                            "" as UnpackNestedValue<
-                              PathValue<TFieldValues, Path<TFieldValues>>
-                            >,
+                            "" as PathValue<TFieldValues, Path<TFieldValues>>,
                           )
                         }
                       />
@@ -144,8 +142,9 @@ export const PropertiesFormControl = <
                           setValue={(file) => {
                             setValue(
                               `attributes.${index}.value` as Path<TFieldValues>,
-                              file as UnpackNestedValue<
-                                PathValue<TFieldValues, Path<TFieldValues>>
+                              file as PathValue<
+                                TFieldValues,
+                                Path<TFieldValues>
                               >,
                             );
                           }}
