@@ -53,10 +53,12 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
     if (!eventsQuery.data) {
       return [];
     }
-    const obj = eventsQuery.data.reduce((acc, curr) => {
+    const obj = eventsQuery.data.slice(0, 100).reduce((acc, curr) => {
       if (acc[curr.transaction.transactionHash]) {
         acc[curr.transaction.transactionHash].events.push(curr);
-
+        acc[curr.transaction.transactionHash].events.sort(
+          (a, b) => b.transaction.logIndex - a.transaction.logIndex,
+        );
         if (
           acc[curr.transaction.transactionHash].blockNumber >
           curr.transaction.blockNumber
@@ -80,7 +82,9 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   return (
     <Flex gap={3} flexDirection="column">
       <Flex align="center" justify="space-between" w="full">
-        <Heading size="subtitle.md">Activity Feed</Heading>
+        <Heading size="subtitle.md">
+          Activity Feed <small>(last 10 transactions)</small>
+        </Heading>
         <Box>
           <FormControl display="flex" alignItems="center">
             <FormLabel htmlFor="auto-update" mb="0">
@@ -97,7 +101,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
         </Box>
       </Flex>
       {eventsQuery.data && contractAddress && (
-        <Card p={0}>
+        <Card p={0} overflow="hidden">
           <SimpleGrid
             gap={2}
             columns={12}
@@ -116,8 +120,8 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
           </SimpleGrid>
 
           <List overflow="auto" maxH={{ base: "300px", md: "600px" }}>
-            <AnimatePresence initial={true}>
-              {transactions.map((e) => (
+            <AnimatePresence initial={false}>
+              {transactions.slice(0, 10).map((e) => (
                 <ActivityFeedItem key={e.transactionHash} transaction={e} />
               ))}
             </AnimatePresence>
@@ -141,17 +145,27 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = ({
       gap={2}
       as={motion.li}
       initial={{
+        y: -30,
         opacity: 0,
         paddingTop: 0,
         paddingBottom: 0,
         height: 0,
       }}
       animate={{
+        y: 0,
         opacity: 1,
         height: "auto",
         paddingTop: "var(--chakra-space-3)",
         paddingBottom: "var(--chakra-space-3)",
         transition: { duration: 0.15 },
+      }}
+      exit={{
+        y: 30,
+        opacity: 0,
+        paddingTop: 0,
+        paddingBottom: 0,
+        height: 0,
+        transition: { duration: 0.3 },
       }}
       willChange="opacity, height, paddingTop, paddingBottom"
       borderBottomWidth="1px"
