@@ -3,6 +3,7 @@ import { DeployableContractContractCellProps } from "../../types";
 import { ButtonGroup, Icon, Tooltip, useDisclosure } from "@chakra-ui/react";
 import { ContractDeployForm } from "components/contract-components/contract-deploy-form";
 import { isContractIdBuiltInContract } from "components/contract-components/utils";
+import { BuiltinContractMap } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { BsShieldFillCheck } from "react-icons/bs";
 import { FiArrowRight } from "react-icons/fi";
@@ -17,6 +18,9 @@ export const ContractDeployActionCell: React.FC<
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { trackEvent } = useTrack();
 
+  const audit =
+    BuiltinContractMap[value as keyof typeof BuiltinContractMap]?.audit;
+
   return (
     <>
       <Drawer size="xl" isOpen={isOpen} onClose={onClose}>
@@ -24,13 +28,13 @@ export const ContractDeployActionCell: React.FC<
       </Drawer>
 
       <ButtonGroup size="sm">
-        {(value === "nft-drop" || value === "marketplace") && (
+        {audit && (
           <Tooltip label="Audited Contract" borderRadius="lg" placement="top">
             <TrackedIconButton
               as={LinkButton}
               noIcon
               isExternal
-              href={`${process.env.NEXT_PUBLIC_IPFS_GATEWAY_URL}/QmNgNaLwzgMxcx9r6qDvJmTFam6xxUxX7Vp8E99oRt7i74`}
+              href={`${process.env.NEXT_PUBLIC_IPFS_GATEWAY_URL}/${audit}`}
               category="deploy"
               label="audited"
               aria-label="Audited contract"
@@ -38,6 +42,13 @@ export const ContractDeployActionCell: React.FC<
               variant="outline"
               borderWidth="2px"
               icon={<Icon as={BsShieldFillCheck} boxSize={4} />}
+              onClick={() =>
+                trackEvent({
+                  category: "visit-audit",
+                  action: "click",
+                  label: value,
+                })
+              }
             />
           </Tooltip>
         )}

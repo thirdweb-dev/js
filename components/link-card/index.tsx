@@ -1,12 +1,14 @@
 import {
   AspectRatio,
   Box,
+  Flex,
   LinkBox,
   LinkOverlay,
   Stack,
 } from "@chakra-ui/react";
 import { ChakraNextImage, ChakraNextImageProps } from "components/Image";
 import NextLink from "next/link";
+import twAudited from "public/brand/thirdweb-audited-2.png";
 import { Badge, Card, CardProps, Heading, Text } from "tw-components";
 
 interface LinkCardProps extends CardProps {
@@ -18,6 +20,7 @@ interface LinkCardProps extends CardProps {
   largeIcon?: boolean;
   comingSoon?: boolean;
   erc?: string;
+  audit?: string;
 }
 
 export const LinkCard: React.FC<LinkCardProps> = ({
@@ -29,6 +32,7 @@ export const LinkCard: React.FC<LinkCardProps> = ({
   largeIcon,
   comingSoon,
   erc,
+  audit,
   ...restCardProps
 }) => {
   return (
@@ -63,11 +67,19 @@ export const LinkCard: React.FC<LinkCardProps> = ({
         <Stack spacing={1}>
           <NextLink href={href} passHref>
             <LinkOverlay>
-              <Heading size="title.sm" as="h3">
-                {title}
-              </Heading>
+              <Flex gap={2}>
+                <Heading size="title.sm" as="h3">
+                  {title}
+                </Heading>
+                {audit && (
+                  <Box width={20}>
+                    <ChakraNextImage src={twAudited} alt="audited" />
+                  </Box>
+                )}
+              </Flex>
             </LinkOverlay>
           </NextLink>
+          <Flex justifyContent="center" alignItems="center" as={LinkBox}></Flex>
           {subtitle && <Text size="body.md">{subtitle}</Text>}
         </Stack>
       </Stack>

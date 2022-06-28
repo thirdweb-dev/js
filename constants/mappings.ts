@@ -42,6 +42,7 @@ export interface BuiltinContractDetails {
   comingSoon?: boolean;
   contractType: ContractType;
   erc?: "ERC721" | "ERC20" | "ERC1155" | "ERC721A";
+  audit?: string;
 }
 
 export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
@@ -52,12 +53,14 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       icon: FeatureIconMap["nft-drop"],
       contractType: "nft-drop",
       erc: "ERC721",
+      audit: "QmNgNaLwzgMxcx9r6qDvJmTFam6xxUxX7Vp8E99oRt7i74",
     },
     marketplace: {
       title: "Marketplace",
       description: "Marketplace for ERC721/ERC1155 NFTs",
       icon: FeatureIconMap["marketplace"],
       contractType: "marketplace",
+      audit: "QmNgNaLwzgMxcx9r6qDvJmTFam6xxUxX7Vp8E99oRt7i74",
     },
     split: {
       title: "Split",
@@ -78,6 +81,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       icon: FeatureIconMap["edition-drop"],
       contractType: "edition-drop",
       erc: "ERC1155",
+      audit: "QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
     },
     "token-drop": {
       title: "Token Drop",
@@ -121,6 +125,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       icon: FeatureIconMap["token-drop"],
       comingSoon: true,
       contractType: "multiwrap",
+      audit: "QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
     },
     "signature-drop": {
       title: "Signature Drop",
@@ -130,6 +135,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       comingSoon: true,
       contractType: "signature-drop",
       erc: "ERC721A",
+      audit: "QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
     },
     custom: {
       title: "NOT IMPLEMENTED",

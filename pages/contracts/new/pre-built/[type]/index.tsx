@@ -48,6 +48,7 @@ export default function DeployContractType() {
                   subtitle={item.description}
                   comingSoon={item.comingSoon}
                   erc={item.erc}
+                  audit={item.audit}
                   onClick={() =>
                     trackEvent({
                       category: "ftux",
