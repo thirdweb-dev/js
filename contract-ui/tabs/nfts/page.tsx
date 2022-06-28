@@ -6,6 +6,7 @@ import { Erc721, Erc1155 } from "@thirdweb-dev/sdk";
 import { PotentialContractInstance } from "contract-ui/types/types";
 import React from "react";
 import { Card, Heading, LinkButton, Text } from "tw-components";
+import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 
 interface NftOverviewPageProps {
   contractAddress?: string;
@@ -19,18 +20,23 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
 
   const detectedContract = detectNFTContractInstance(contract.contract);
 
+  const detectedState = extensionDetectedState({
+    contract,
+    feature: ["ERC721Enumerable", "ERC1155Enumerable"],
+  });
+
   if (contract.isLoading) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
   }
 
-  if (!detectedContract) {
+  if (!detectedContract || detectedState === "disabled") {
     return (
       <Card as={Flex} flexDir="column" gap={3}>
         {/* TODO  extract this out into it's own component and make it better */}
-        <Heading size="subtitle.md">No NFT extension enabled</Heading>
+        <Heading size="subtitle.md">No Enumerable extension enabled</Heading>
         <Text>
-          To enable NFT features you will have to extend the required interfaces
+          To being able to see the list of the NFTs minted on your contract, you will have to extend the required interfaces
           in your contract.
         </Text>
 
@@ -40,15 +46,15 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
           <ButtonGroup colorScheme="purple" size="sm" variant="solid">
             <LinkButton
               isExternal
-              href="https://portal.thirdweb.com/thirdweb-deploy/contract-features/erc721"
+              href="https://portal.thirdweb.com/thirdweb-deploy/contract-extensions/erc721#erc721enumerable"
             >
-              ERC721
+              ERC721Enumerable
             </LinkButton>
             <LinkButton
               isExternal
-              href="https://portal.thirdweb.com/thirdweb-deploy/contract-features/erc1155"
+              href="https://portal.thirdweb.com/thirdweb-deploy/contract-extensions/erc721#erc721enumerable"
             >
-              ERC1155
+              ERC1155Enumerable
             </LinkButton>
           </ButtonGroup>
         </Flex>
@@ -62,8 +68,9 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
         <Heading size="title.sm">Contract NFTs</Heading>
         <NFTMintButton contract={detectedContract} />
       </Flex>
-      {/* TODO check if this is supported before rendering it */}
-      <NftGetAllTable contract={detectedContract} />
+      {detectedState === "enabled" && (
+        <NftGetAllTable contract={detectedContract} />
+      ) }
     </Flex>
   );
 };

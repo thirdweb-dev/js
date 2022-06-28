@@ -1,10 +1,10 @@
 import { NFTMintForm } from "./mint-form";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import { NFTContract } from "@thirdweb-dev/react";
-import { ExtensionDetectButton } from "components/buttons/ExtensionDetectButton";
+import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import React from "react";
 import { FiPlus } from "react-icons/fi";
-import { Drawer } from "tw-components";
+import { Button, Drawer } from "tw-components";
 
 interface NFTMintButtonProps {
   contract: NFTContract;
@@ -15,6 +15,11 @@ export const NFTMintButton: React.FC<NFTMintButtonProps> = ({
   ...restButtonProps
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const detectedState = extensionDetectedState({
+    contract,
+    feature: ["ERC721Mintable", "ERC1155Mintable"],
+  });
 
   return (
     <>
@@ -27,16 +32,16 @@ export const NFTMintButton: React.FC<NFTMintButtonProps> = ({
       >
         <NFTMintForm contract={contract} />
       </Drawer>
-      <ExtensionDetectButton
-        colorScheme="primary"
-        leftIcon={<Icon as={FiPlus} />}
-        {...restButtonProps}
-        onClick={onOpen}
-        contract={contract}
-        feature={["ERC721Mintable", "ERC1155Mintable"]}
-      >
-        Mint
-      </ExtensionDetectButton>
+      {detectedState === "enabled" && (
+        <Button
+          colorScheme="primary"
+          leftIcon={<Icon as={FiPlus} />}
+          {...restButtonProps}
+          onClick={onOpen}
+        >
+          Mint
+        </Button>
+      )}
     </>
   );
 };
