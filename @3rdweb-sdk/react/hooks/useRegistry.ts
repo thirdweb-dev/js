@@ -42,7 +42,6 @@ export function useRemoveContractMutation() {
 
 type AddContractParams = {
   contractAddress: string;
-  contractType: string;
 };
 
 export function useAddContractMutation() {

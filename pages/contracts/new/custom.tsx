@@ -33,7 +33,7 @@ function DeployCustomContract() {
 
   const walletAddress = useAddress();
   const publishedContracts = usePublishedContractsQuery();
-  console.log(publishedContracts.data);
+
   return (
     <Card px={{ base: 4, md: 10 }} py={{ base: 6, md: 10 }}>
       <Flex direction="column" gap={8}>

@@ -5,7 +5,6 @@ import {
 } from "../hooks";
 import { Divider, Flex, FormControl, Input } from "@chakra-ui/react";
 import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
-import { CustomContractMetadata } from "@thirdweb-dev/sdk/dist/src/schema/contracts/custom";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelect";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -15,6 +14,7 @@ import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
+  Checkbox,
   FormHelperText,
   FormLabel,
   Heading,
@@ -40,10 +40,9 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     publishMetadata.data?.abi,
   );
 
-  const form =
-    useForm<Pick<CustomContractMetadata, "name" | "image" | "description">>();
+  const form = useForm<{ addToDashboard: true }>();
 
-  const { handleSubmit } = form;
+  const { register, watch, handleSubmit } = form;
   const [contractParams, _setContractParams] = useState<any[]>([]);
   const setContractParams = useCallback((idx: number, value: any) => {
     _setContractParams((prev) => {
@@ -85,36 +84,49 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           label: "attempt",
           deployData,
         });
-        deploy.mutate(contractParams, {
-          onSuccess: (deployedContractAddress) => {
-            console.info("contract deployed:", {
-              chainId: selectedChain,
-              address: deployedContractAddress,
-            });
-            trackEvent({
-              category: "custom-contract",
-              action: "deploy",
-              label: "success",
-              deployData,
-              contractAddress: deployedContractAddress,
-            });
-            onSuccess();
+        deploy.mutate(
+          {
+            constructorParams: contractParams,
+            addToDashboard: d.addToDashboard,
+          },
+          {
+            onSuccess: (deployedContractAddress) => {
+              console.info("contract deployed:", {
+                chainId: selectedChain,
+                address: deployedContractAddress,
+              });
+              trackEvent({
+                category: "custom-contract",
+                action: "deploy",
+                label: "success",
+                deployData,
+                contractAddress: deployedContractAddress,
+                addToDashboard: d.addToDashboard,
+              });
+              trackEvent({
+                category: "custom-contract",
+                action: "add-to-dashboard",
+                label: "success",
+                contractAddress: deployedContractAddress,
+              });
+              onSuccess();
 
-            router.replace(
-              `/${wallet}/${SupportedChainIdToNetworkMap[selectedChain]}/${deployedContractAddress}`,
-            );
+              router.replace(
+                `/${wallet}/${SupportedChainIdToNetworkMap[selectedChain]}/${deployedContractAddress}`,
+              );
+            },
+            onError: (err) => {
+              trackEvent({
+                category: "custom-contract",
+                action: "deploy",
+                label: "error",
+                deployData,
+                error: err,
+              });
+              onError(err);
+            },
           },
-          onError: (err) => {
-            trackEvent({
-              category: "custom-contract",
-              action: "deploy",
-              label: "error",
-              deployData,
-              error: err,
-            });
-            onError(err);
-          },
-        });
+        );
       })}
     >
       {constructorParams?.length ? (
@@ -149,13 +161,33 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           with a testnet.{" "}
           <TrackedLink
             href="https://portal.thirdweb.com/guides/which-network-should-you-use"
-            color="primary.600"
+            color="primary.500"
             category="deploy"
             label="learn-networks"
             isExternal
           >
             Learn more about the different networks.
           </TrackedLink>
+        </Text>
+      </Flex>
+      <Flex alignItems="center" gap={3}>
+        <Checkbox
+          autoFocus={true}
+          {...register("addToDashboard")}
+          defaultChecked
+        />
+        <Text mt={1}>
+          Add to dashboard so I can find it in the list of my contracts at{" "}
+          <TrackedLink
+            href="https://thirdweb.com/dashboard"
+            isExternal
+            category="custom-contract"
+            label="visit-dashboard"
+            color="primary.500"
+          >
+            /dashboard
+          </TrackedLink>
+          .
         </Text>
       </Flex>
       <Flex gap={4} direction={{ base: "column", md: "row" }}>
@@ -176,7 +208,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           isLoading={deploy.isLoading}
           isDisabled={!publishMetadata.isSuccess || !selectedChain}
           colorScheme="primary"
-          transactionCount={1}
+          transactionCount={!watch("addToDashboard") ? 1 : 2}
         >
           Deploy Now
         </TransactionButton>

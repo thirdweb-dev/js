@@ -1,3 +1,4 @@
+import { AddToDashboardCard } from "../overview/cards/add-to-dashboard";
 import { SettingsMetadata } from "./components/metadata";
 import { SettingsPlatformFees } from "./components/platform-fees";
 import { SettingsPrimarySale } from "./components/primary-sale";
@@ -45,27 +46,30 @@ export const CustomContractSettingsTab: React.FC<
     detectedRoyalties === "disabled"
   ) {
     return (
-      <Card as={Flex} flexDir="column" gap={3}>
-        {/* TODO  extract this out into it's own component and make it better */}
-        <Heading size="subtitle.md">No Settings enabled</Heading>
-        <Text>
-          To enable Settings features you will have to extend the required
-          interfaces in your contract.
-        </Text>
+      <Flex direction="column" gap={4}>
+        <AddToDashboardCard contract={contract.contract} />
+        <Card as={Flex} flexDir="column" gap={3}>
+          {/* TODO  extract this out into it's own component and make it better */}
+          <Heading size="subtitle.md">No Settings enabled</Heading>
+          <Text>
+            To enable Settings features you will have to extend the required
+            interfaces in your contract.
+          </Text>
 
-        <Divider my={1} borderColor="borderColor" />
-        <Flex gap={4} align="center">
-          <Heading size="label.md">Learn more: </Heading>
-          <ButtonGroup colorScheme="purple" size="sm" variant="solid">
-            <LinkButton
-              isExternal
-              href="https://portal.thirdweb.com/thirdweb-deploy/contract-extensions/other-settings"
-            >
-              Settings
-            </LinkButton>
-          </ButtonGroup>
-        </Flex>
-      </Card>
+          <Divider my={1} borderColor="borderColor" />
+          <Flex gap={4} align="center">
+            <Heading size="label.md">Learn more: </Heading>
+            <ButtonGroup colorScheme="purple" size="sm" variant="solid">
+              <LinkButton
+                isExternal
+                href="https://portal.thirdweb.com/thirdweb-deploy/contract-extensions/other-settings"
+              >
+                Settings
+              </LinkButton>
+            </ButtonGroup>
+          </Flex>
+        </Card>
+      </Flex>
     );
   }
 
@@ -73,6 +77,7 @@ export const CustomContractSettingsTab: React.FC<
     <Flex direction="column" gap={4}>
       <Flex gap={8} w="100%">
         <Flex flexDir="column" w="100%" gap={8}>
+          <AddToDashboardCard contract={contract.contract} />
           {detectedMetadata === "enabled" && (
             <SettingsMetadata contract={contract.contract} />
           )}

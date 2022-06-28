@@ -1,32 +1,25 @@
 import { useActiveChainId, useContractList } from "@3rdweb-sdk/react";
 import { useAddContractMutation } from "@3rdweb-sdk/react/hooks/useRegistry";
-import {
-  Flex,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-} from "@chakra-ui/react";
-import { useAddress, useContract } from "@thirdweb-dev/react";
+import { Flex } from "@chakra-ui/react";
+import { useAddress } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { PotentialContractInstance } from "contract-ui/types/types";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useState } from "react";
-import { Button, Text, TrackedLink } from "tw-components";
+import { Card, Heading, Text, TrackedLink } from "tw-components";
 
-interface AddToDashboardCardProps {
-  contractAddress: string;
-}
-
-export const AddToDashboardCard: React.FC<AddToDashboardCardProps> = ({
-  contractAddress,
+export const AddToDashboardCard = <
+  TContract extends PotentialContractInstance,
+>({
+  contract,
+  prebuilt,
+}: {
+  contract: TContract;
+  prebuilt?: boolean;
 }) => {
   const activeChainId = useActiveChainId();
   const address = useAddress();
   const contractList = useContractList(activeChainId || -1, address);
-  const contractQuery = useContract(contractAddress);
   const addToDashboardMutation = useAddContractMutation();
 
   const { trackEvent } = useTrack();
@@ -36,24 +29,18 @@ export const AddToDashboardCard: React.FC<AddToDashboardCardProps> = ({
   );
 
   const shouldShow =
-    contractList.data?.findIndex((c) => c.address === contractAddress) === -1 &&
+    contractList.isFetched &&
+    contractList.data?.findIndex(
+      (c) => c.address === contract?.getAddress(),
+    ) === -1 &&
     contractList.isSuccess;
 
-  const [hasClosedModal, setHasClosedModal] = useState(false);
-
-  return (
-    <Modal
-      isOpen={shouldShow && !hasClosedModal}
-      onClose={() => undefined}
-      closeOnEsc={false}
-      closeOnOverlayClick={false}
-      isCentered
-    >
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>This contract is not on your dashboard</ModalHeader>
-        <ModalBody>
-          <Flex direction="column" gap={0}>
+  return shouldShow ? (
+    <Card p={0}>
+      <Flex direction="column">
+        <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
+          <Flex direction="column" gap={1}>
+            <Heading size="title.md">Add to dashboard</Heading>
             <Text>
               When you add this contract to the dashboard it will be displayed
               in the list of your contracts at{" "}
@@ -69,81 +56,61 @@ export const AddToDashboardCard: React.FC<AddToDashboardCardProps> = ({
               .
             </Text>
           </Flex>
-        </ModalBody>
+        </Flex>
+        <TransactionButton
+          w="full"
+          mt="auto"
+          justifySelf="flex-end"
+          isLoading={addToDashboardMutation.isLoading}
+          transactionCount={1}
+          colorScheme="primary"
+          type="submit"
+          loadingText="Saving..."
+          size="md"
+          borderRadius="xl"
+          borderTopLeftRadius="0"
+          borderTopRightRadius="0"
+          onClick={() => {
+            trackEvent({
+              category: `${prebuilt ? "prebuilt" : "custom"}-contract`,
+              action: "add-to-dashboard",
+              label: "attempt",
+              contractAddress: contract?.getAddress(),
+            });
 
-        <ModalFooter as={Flex} direction="column" gap={6}>
-          <TransactionButton
-            w="full"
-            mt="auto"
-            justifySelf="flex-end"
-            isLoading={
-              addToDashboardMutation.isLoading || contractQuery.isLoading
-            }
-            isDisabled={!contractQuery?.data?.contractType}
-            transactionCount={1}
-            colorScheme="primary"
-            onClick={() => {
-              if (!contractQuery.data?.contractType) {
-                return;
-              }
-
-              trackEvent({
-                category: "custom-contract",
-                action: "add-to-dashboard",
-                label: "attempt",
-                contractAddress,
-              });
-
+            if (contract?.getAddress()) {
               addToDashboardMutation.mutate(
                 {
-                  contractAddress,
-                  contractType: contractQuery.data.contractType,
+                  contractAddress: contract?.getAddress(),
                 },
                 {
                   onSuccess: () => {
                     onSuccess();
                     trackEvent({
-                      category: "custom-contract",
+                      category: `${prebuilt ? "prebuilt" : "custom"}-contract`,
                       action: "add-to-dashboard",
                       label: "success",
-                      contractAddress,
+                      contractAddress: contract?.getAddress(),
                     });
                   },
                   onError: (err) => {
                     onError(err);
                     trackEvent({
-                      category: "custom-contract",
+                      category: `${prebuilt ? "prebuilt" : "custom"}-contract`,
                       action: "add-to-dashboard",
                       label: "error",
-                      contractAddress,
+                      contractAddress: contract?.getAddress(),
                       error: err,
                     });
                   },
                 },
               );
-            }}
-          >
-            Add to dashboard
-          </TransactionButton>
-          <Button
-            variant="ghost"
-            w="full"
-            size="xs"
-            py={4}
-            onClick={() => {
-              trackEvent({
-                category: "custom-contract",
-                action: "add-to-dashboard",
-                label: "skip",
-                contractAddress,
-              });
-              setHasClosedModal(true);
-            }}
-          >
-            Skip for now
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
-  );
+            }
+          }}
+        >
+          Add to dashboard
+        </TransactionButton>
+      </Flex>
+    </Card>
+  ) : null;
 };

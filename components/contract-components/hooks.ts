@@ -95,6 +95,11 @@ export function usePublishMutation() {
   });
 }
 
+interface ContractDeployMutationParams {
+  constructorParams: unknown[];
+  addToDashboard?: boolean;
+}
+
 export function useCustomContractDeployMutation(ipfsHash: string) {
   const sdk = useSDK();
   const queryClient = useQueryClient();
@@ -102,7 +107,7 @@ export function useCustomContractDeployMutation(ipfsHash: string) {
   const chainId = useChainId();
 
   return useMutation(
-    async (constructorParams: unknown[]) => {
+    async (data: ContractDeployMutationParams) => {
       invariant(
         sdk && "getPublisher" in sdk,
         "sdk is not ready or does not support publishing",
@@ -111,12 +116,16 @@ export function useCustomContractDeployMutation(ipfsHash: string) {
         await sdk.getPublisher()
       ).deployContract(
         ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
-        constructorParams,
+        data.constructorParams,
       );
     },
     {
-      onSuccess: () => {
-        return queryClient.invalidateQueries([
+      onSuccess: async (contractAddress, variables) => {
+        if (variables.addToDashboard) {
+          const registry = await sdk?.deployer.getRegistry();
+          await registry?.addContract(contractAddress);
+        }
+        return await queryClient.invalidateQueries([
           ...networkKeys.chain(chainId),
           ...contractKeys.list(walletAddress),
         ]);

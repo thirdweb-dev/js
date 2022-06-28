@@ -21,7 +21,6 @@ import {
   EnhancedRoute,
   useContractRouteConfig,
 } from "contract-ui/hooks/useContractRouteConfig";
-import { AddToDashboardCard } from "contract-ui/tabs/overview/cards/add-to-dashboard";
 import { useIsomorphicLayoutEffect } from "framer-motion";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useRouter } from "next/router";
@@ -84,7 +83,6 @@ export default function CustomContractPage() {
       defaultElement="Foo"
     >
       <RootTrack>
-        <AddToDashboardCard contractAddress={contractAddress} />
         <Flex direction="column" ref={scrollRef}>
           {/* sub-header-nav */}
           <Box

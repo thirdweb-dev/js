@@ -113,7 +113,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
                 gap={1}
                 align="center"
               >
-                <Text color="inherit" size="label.sm">
+                <Text color="inherit" size="label.md" fontFamily="mono">
                   {transactionCount}
                 </Text>
                 <BiTransferAlt />
