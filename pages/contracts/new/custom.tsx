@@ -10,11 +10,11 @@ import {
   Spinner,
   VStack,
 } from "@chakra-ui/react";
-import { ChainId, useAddress } from "@thirdweb-dev/react";
+import { useAddress } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { DeployableContractTable } from "components/contract-components/contract-table";
 import { usePublishedContractsQuery } from "components/contract-components/hooks";
-import { CustomSDKContext } from "contexts/custom-sdk-context";
+import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
 import { FiChevronLeft } from "react-icons/fi";
@@ -134,9 +134,9 @@ function DeployCustomContract() {
 
 export default function DeployCustomContractWrapped() {
   return (
-    <CustomSDKContext desiredChainId={ChainId.Mumbai}>
+    <PublisherSDKContext>
       <DeployCustomContract />
-    </CustomSDKContext>
+    </PublisherSDKContext>
   );
 }
 

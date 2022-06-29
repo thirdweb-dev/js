@@ -1,12 +1,11 @@
 import { Box, Flex, Link } from "@chakra-ui/react";
-import { ChainId } from "@thirdweb-dev/sdk";
 import { AppLayout } from "components/app-layouts/app";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { DeployableContractTable } from "components/contract-components/contract-table";
 import { usePublishMutation } from "components/contract-components/hooks";
 import { ContractId } from "components/contract-components/types";
 import { UrlMap } from "constants/mappings";
-import { CustomSDKContext } from "contexts/custom-sdk-context";
+import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
@@ -103,7 +102,7 @@ const ContractsPublishPageWrapped: React.FC = () => {
           <TransactionButton
             colorScheme="primary"
             isDisabled={!publishContractNo}
-            transactionCount={1}
+            transactionCount={publishContractNo}
             isLoading={publishMutation.isLoading}
             onClick={() => {
               trackEvent({
@@ -146,9 +145,9 @@ const ContractsPublishPageWrapped: React.FC = () => {
 
 export default function ContractsPublishPage() {
   return (
-    <CustomSDKContext desiredChainId={ChainId.Mumbai}>
+    <PublisherSDKContext>
       <ContractsPublishPageWrapped />
-    </CustomSDKContext>
+    </PublisherSDKContext>
   );
 }
 
