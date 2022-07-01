@@ -94,7 +94,12 @@ export function usePublishMutation() {
     // FIXME - can't call batch here because of a bug with multicall + gasless setup. Looping through the uris and calling publish one by one for now.
     const receipts = [];
     for (const uri of uris) {
-      receipts.push(await sdk.getPublisher().publish(uri));
+      // TODO - add version input UI + other publish metadata and pass it here
+      receipts.push(
+        await sdk.getPublisher().publish(uri, {
+          version: "0.0.1",
+        }),
+      );
     }
     return receipts;
   });
