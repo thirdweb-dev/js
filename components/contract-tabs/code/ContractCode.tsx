@@ -9,21 +9,25 @@ import {
 import { useContractName, useWeb3 } from "@3rdweb-sdk/react";
 import { Flex, Spinner, Stack } from "@chakra-ui/react";
 import { ValidContractInstance } from "@thirdweb-dev/sdk";
+import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useCallback, useMemo, useState } from "react";
 import { IoDocumentOutline } from "react-icons/io5";
 import { useQuery } from "react-query";
 import { Card, CodeBlock, Heading, LinkButton, Text } from "tw-components";
+import { SupportedNetwork } from "utils/network";
 
 function replaceVariablesInCodeSnippet(
   snippet: CodeSnippet,
   contractAddress?: string,
   walletAddress?: string,
+  chainName?: string,
 ): CodeSnippet {
   const envs = Object.keys(snippet) as Environment[];
   for (const env of envs) {
     if (contractAddress) {
       snippet[env] = snippet[env]
         ?.replace(/{{contract_address}}/gm, contractAddress)
+        ?.replace(/{{chainName}}/gm, chainName || "rinkeby")
         .replace(/<YOUR-CONTRACT-ADDRESS>/gm, contractAddress);
     }
 
@@ -51,6 +55,7 @@ const INSTALL_COMMANDS = {
 
 export const ContractCode: React.FC<IContractCode> = ({ contract }) => {
   const { data, isLoading } = useContractCodeSnippetQuery();
+  const chainName = useSingleQueryParam<SupportedNetwork>("network");
 
   const contractName = useContractName(contract);
 
@@ -62,8 +67,13 @@ export const ContractCode: React.FC<IContractCode> = ({ contract }) => {
   const [environment, setEnvironment] = useState<Environment>("javascript");
   const replaceSnippetVars = useCallback(
     (snip: Partial<Record<Environment, string>>) =>
-      replaceVariablesInCodeSnippet(snip, contract?.getAddress(), address),
-    [address, contract],
+      replaceVariablesInCodeSnippet(
+        snip,
+        contract?.getAddress(),
+        address,
+        chainName,
+      ),
+    [address, contract, chainName],
   );
 
   if (isLoading) {
