@@ -134,7 +134,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
     <Drawer
       allowPinchZoom
       preserveScrollBarGap
-      size="full"
+      size="xl"
       onClose={_onClose}
       isOpen={isOpen}
     >

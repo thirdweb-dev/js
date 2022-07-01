@@ -3,7 +3,7 @@ import { SelectReveal } from "./SelectReveal";
 import { UploadStep } from "./UploadStep";
 import { useGetTotalCount } from "@3rdweb-sdk/react/hooks/useGetAll";
 import { Box, Container, Flex, HStack, Icon } from "@chakra-ui/react";
-import { NFTDrop } from "@thirdweb-dev/sdk";
+import { EditionDrop, NFTDrop } from "@thirdweb-dev/sdk";
 import Papa from "papaparse";
 import { useCallback, useRef, useState } from "react";
 import { DropzoneOptions, useDropzone } from "react-dropzone";
@@ -16,13 +16,13 @@ import {
   useMergedData,
 } from "utils/batch";
 
-interface NftDropBatchUploadProps {
-  contract?: NFTDrop;
+interface DropBatchUploadProps {
+  contract?: NFTDrop | EditionDrop;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const NftDropBatchUpload: React.FC<NftDropBatchUploadProps> = ({
+export const DropBatchUpload: React.FC<DropBatchUploadProps> = ({
   contract,
   isOpen,
   onClose,

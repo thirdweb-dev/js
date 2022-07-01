@@ -20,7 +20,7 @@ import {
 import { useNFTDrop } from "@thirdweb-dev/react";
 import { BatchToReveal } from "@thirdweb-dev/sdk";
 import { AppLayout } from "components/app-layouts/app";
-import { NftDropBatchUpload } from "components/batch-upload/NftDropBatchUpload";
+import { DropBatchUpload } from "components/batch-upload/DropBatchUpload";
 import { RevealNftsModal } from "components/batch-upload/RevealNfts";
 import { MismatchButton } from "components/buttons/MismatchButton";
 import { MintButton } from "components/contract-pages/action-buttons/MintButton";
@@ -62,7 +62,7 @@ export default function NFTDropPage() {
 
   return (
     <Track>
-      <NftDropBatchUpload
+      <DropBatchUpload
         isOpen={isBatchOpen}
         onClose={onBatchClose}
         contract={contract}

@@ -139,7 +139,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
     <Drawer
       allowPinchZoom
       preserveScrollBarGap
-      size="full"
+      size="xl"
       onClose={_onClose}
       isOpen={isOpen}
     >

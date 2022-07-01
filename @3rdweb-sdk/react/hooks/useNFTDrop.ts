@@ -9,6 +9,7 @@ import { useWeb3 } from "@3rdweb-sdk/react";
 import { useNFTDrop } from "@thirdweb-dev/react";
 import {
   ClaimConditionInput,
+  EditionDrop,
   NFTDrop,
   NFTMetadataInput,
   UploadProgressEvent,
@@ -112,7 +113,7 @@ interface UploadWithProgress {
   onProgress: (event: UploadProgressEvent) => void;
 }
 
-export function useNFTDropBatchMint(contract?: NFTDrop) {
+export function useDropBatchMint(contract?: NFTDrop | EditionDrop) {
   return useMutationWithInvalidate(
     async (data: UploadWithProgress) => {
       invariant(contract, "contract is required");

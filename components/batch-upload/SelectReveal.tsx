@@ -1,5 +1,5 @@
 import {
-  useNFTDropBatchMint,
+  useDropBatchMint,
   useNFTDropDelayedRevealBatchMint,
 } from "@3rdweb-sdk/react/hooks/useNFTDrop";
 import {
@@ -16,9 +16,11 @@ import {
   Radio,
   Stack,
   Textarea,
+  Tooltip,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  EditionDrop,
   NFTDrop,
   NFTMetadataInput,
   UploadProgressEvent,
@@ -53,41 +55,59 @@ const SelectRevealOption: React.FC<SelectRevealOptionProps> = ({
   description,
   isActive,
   onClick,
+  disabled,
 }) => {
   return (
-    <Stack
-      as={Card}
-      padding={5}
-      width={{ base: "inherit", md: "350px" }}
-      borderRadius="md"
-      borderColor={isActive ? "primary.500" : undefined}
-      onClick={onClick}
-      cursor={"pointer"}
+    <Tooltip
+      label={
+        disabled && (
+          <Card bgColor="backgroundHighlight">
+            <Text>Delayed reveal is only available in NFT Drop contracts</Text>
+          </Card>
+        )
+      }
+      bg="transparent"
+      boxShadow="none"
+      p={0}
+      shouldWrapChildren
     >
-      <Stack flexDirection="row" alignItems="start" spacing={0}>
-        <Radio
-          cursor="pointer"
-          size="lg"
-          colorScheme="blue"
-          mt={0.5}
-          mr={2.5}
-          isChecked={isActive}
-        />
-        <Stack ml={4} flexDirection="column" alignSelf="start">
-          <Heading size="subtitle.sm" fontWeight="700" mb={0}>
-            {name}
-          </Heading>
-          <Text size="body.sm" mt="4px">
-            {description}
-          </Text>
+      <Stack
+        as={Card}
+        padding={5}
+        width={{ base: "inherit", md: "350px" }}
+        borderRadius="md"
+        borderColor={isActive ? "primary.500" : undefined}
+        onClick={onClick}
+        cursor={disabled ? "not-allowed" : "pointer"}
+        pointerEvents={disabled ? "none" : undefined}
+        bgColor={disabled ? "backgroundHighlight" : undefined}
+      >
+        <Stack flexDirection="row" alignItems="start" spacing={0} cursor="">
+          <Radio
+            cursor="pointer"
+            size="lg"
+            colorScheme="blue"
+            mt={0.5}
+            mr={2.5}
+            isChecked={isActive}
+            isDisabled={disabled}
+          />
+          <Stack ml={4} flexDirection="column" alignSelf="start">
+            <Heading size="subtitle.sm" fontWeight="700" mb={0}>
+              {name}
+            </Heading>
+            <Text size="body.sm" mt="4px">
+              {description}
+            </Text>
+          </Stack>
         </Stack>
       </Stack>
-    </Stack>
+    </Tooltip>
   );
 };
 
 interface SelectRevealProps {
-  contract?: NFTDrop;
+  contract?: NFTDrop | EditionDrop;
   mergedData: NFTMetadataInput[];
   onClose: () => void;
 }
@@ -116,7 +136,7 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
 }) => {
   const [selectedReveal, setSelectedReveal] = useState<
     "unselected" | "instant" | "delayed"
-  >("unselected");
+  >(contract instanceof EditionDrop ? "instant" : "unselected");
   const [show, setShow] = useState(false);
   const [progress, setProgress] = useState<UploadProgressEvent>({
     progress: 0,
@@ -135,8 +155,10 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
 
   const imageUrl = useImageFileOrUrl(watch("image"));
 
-  const mintBatch = useNFTDropBatchMint(contract);
-  const mintDelayedRevealBatch = useNFTDropDelayedRevealBatchMint(contract);
+  const mintBatch = useDropBatchMint(contract);
+  const mintDelayedRevealBatch = useNFTDropDelayedRevealBatchMint(
+    contract as NFTDrop,
+  );
 
   const { onSuccess, onError } = useTxNotifications(
     "Batch uploaded successfully",
@@ -161,6 +183,7 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
           description="Collectors will mint your placeholder image, then you reveal at a later time"
           isActive={selectedReveal === "delayed"}
           onClick={() => setSelectedReveal("delayed")}
+          disabled={contract instanceof EditionDrop}
         />
       </Flex>
       <Flex>

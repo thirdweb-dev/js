@@ -3,7 +3,7 @@ import { useDisclosure } from "@chakra-ui/hooks";
 import { Icon } from "@chakra-ui/react";
 import { useEditionDrop } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
-import { EditionDropBatchUpload } from "components/batch-upload/EditionDropBatchUpload";
+import { DropBatchUpload } from "components/batch-upload/DropBatchUpload";
 import { MintButton } from "components/contract-pages/action-buttons/MintButton";
 import { ContractLayout } from "components/contract-pages/contract-layout";
 import { ContractItemsTable } from "components/contract-pages/table";
@@ -30,7 +30,7 @@ export default function EditionDropPage() {
 
   return (
     <Track>
-      <EditionDropBatchUpload
+      <DropBatchUpload
         isOpen={isBatchOpen}
         onClose={onBatchClose}
         contract={contract}
