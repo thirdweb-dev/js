@@ -9,7 +9,7 @@ import { createWebStoragePersister } from "react-query/createWebStoragePersister
 import { persistQueryClient } from "react-query/persistQueryClient";
 import { ComponentWithChildren } from "types/component-with-children";
 
-const __CACHE_BUSTER = "tw_v2.0.2";
+const __CACHE_BUSTER = "tw_v2.0.3";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
