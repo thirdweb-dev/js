@@ -17,6 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
   SimpleGrid,
+  Textarea,
 } from "@chakra-ui/react";
 import {
   ChainId,
@@ -211,6 +212,51 @@ function formatResponseData(data: unknown): string {
   return JSON.stringify(data, null, 2);
 }
 
+function displayString(str: string) {
+  // Only add quotes around string if they aren't already there
+  return str[0] === '"' && str.slice(-1) === '"' ? `${str}` : `"${str}"`;
+}
+
+function parseParameter(param: any, language: Environment): string {
+  if (!param.value) {
+    return param.key;
+  }
+
+  // Different syntax for go maps and arrays
+  if (language === "go") {
+    try {
+      const parsed = JSON.parse(param.value);
+      if (Array.isArray(parsed)) {
+        return `[]interface{}{${parsed
+          .map((p) => parseParameter({ value: JSON.stringify(p) }, "go"))
+          .join(", ")}}`;
+      } else if (typeof parsed === "object") {
+        return `map[string]interface{}{${Object.keys(parsed)
+          .map(
+            (k) => `"${k}": ${parseParameter({ value: `${parsed[k]}` }, "go")}`,
+          )
+          .join(", ")}}`;
+      }
+      {
+        return displayString(param.value);
+      }
+    } catch {
+      return displayString(param.value);
+    }
+  }
+
+  try {
+    const parsed = JSON.parse(param.value);
+    if (Array.isArray(parsed) || typeof parsed === "object") {
+      return param.value;
+    }
+  } catch {
+    return displayString(param.value);
+  }
+
+  return displayString(param.value);
+}
+
 interface InteractiveAbiFunctionProps {
   abiFunction?: AbiFunction;
   contractAddress: string;
@@ -222,15 +268,6 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
 }) => {
   const formId = useId();
   const { contract, isLoading: contractLoading } = useContract(contractAddress);
-
-  const {
-    mutate,
-    data,
-    error,
-    isLoading: mutationLoading,
-  } = useMutation(async (params: unknown[] = []) =>
-    abiFunction ? await contract?.call(abiFunction.name, ...params) : undefined,
-  );
 
   const initialFocusRef = useRef<HTMLButtonElement>(null);
 
@@ -260,6 +297,35 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
   const chainId = useActiveChainId();
   const chainName = getChainName(chainId);
   const [codeEnv, setCodeEnv] = useState<Environment>("javascript");
+
+  async function contractCall(params: unknown[]) {
+    if (!abiFunction) {
+      return undefined;
+    }
+
+    const parsedParams = params.map((p) => {
+      try {
+        const parsed = JSON.parse(p as string);
+        if (Array.isArray(parsed) || typeof parsed === "object") {
+          return parsed;
+        } else {
+          // Return original value if its not an array or object
+          return p;
+        }
+      } catch {
+        // JSON.parse on string will throw an error
+        return p;
+      }
+    });
+    return await contract?.call(abiFunction.name as string, ...parsedParams);
+  }
+
+  const {
+    mutate,
+    data,
+    error,
+    isLoading: mutationLoading,
+  } = useMutation(async (params: unknown[] = []) => contractCall(params));
 
   return (
     <Card
@@ -311,11 +377,22 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
             {fields.map((item, index) => (
               <FormControl key={item.id} gap={0.5}>
                 <FormLabel>{item.key}</FormLabel>
-                <Input
-                  defaultValue={getValues(`params.${index}.value`)}
-                  {...register(`params.${index}.value`)}
-                />
-                <FormHelperText>{item.type}</FormHelperText>
+                {item.type.includes("tuple") || item.type.includes("[]") ? (
+                  <Textarea
+                    defaultValue={getValues(`params.${index}.value`)}
+                    {...register(`params.${index}.value`)}
+                  />
+                ) : (
+                  <Input
+                    defaultValue={getValues(`params.${index}.value`)}
+                    {...register(`params.${index}.value`)}
+                  />
+                )}
+                <FormHelperText>
+                  {item.type}{" "}
+                  {(item.type.includes("tuple") || item.type.includes("[]")) &&
+                    "- Input should be passed in as a valid JSON string"}
+                </FormHelperText>
               </FormControl>
             ))}
           </>
@@ -398,27 +475,21 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
 const sdk = new ThirdwebSDK("${chainName}");
 const contract = await sdk.getContract("${contractAddress}");
 const result = await contract.call("${abiFunction?.name}"${watch("params")
-                        .map(
-                          (f) => `, ${f.value ? `"${f.value}"` : `${f.key}`}`,
-                        )
+                        .map((f) => `, ${parseParameter(f, "javascript")}`)
                         .join("")});
 `,
                       react: `import { useContract } from "@thirdweb-dev/react";
 
 const { contract, isLoading } = useContract("${contractAddress}");
 const result = await contract.call("${abiFunction?.name}"${watch("params")
-                        .map(
-                          (f) => `, ${f.value ? `"${f.value}"` : `${f.key}`}`,
-                        )
+                        .map((f) => `, ${parseParameter(f, "react")}`)
                         .join("")});`,
                       python: `from thirdweb import ThirdwebSDK
 
 sdk = ThirdwebSDK("${chainName}")
 contract = sdk.get_contract("${contractAddress}")
-const result = await contract.call("${abiFunction?.name}"${watch("params")
-                        .map(
-                          (f) => `, ${f.value ? `"${f.value}"` : `${f.key}`}`,
-                        )
+result = contract.call("${abiFunction?.name}"${watch("params")
+                        .map((f) => `, ${parseParameter(f, "python")}`)
                         .join("")});`,
                       go: `import (
   "github.com/thirdweb-dev/go-sdk/thirdweb"
@@ -426,10 +497,8 @@ const result = await contract.call("${abiFunction?.name}"${watch("params")
             
 sdk, err := thirdweb.NewThirdwebSDK("${chainName}", nil)
 contract, err := sdk.GetContract("${contractAddress}")
-const result = await contract.Call("${abiFunction?.name}"${watch("params")
-                        .map(
-                          (f) => `, ${f.value ? `"${f.value}"` : `${f.key}`}`,
-                        )
+result, err = contract.Call("${abiFunction?.name}"${watch("params")
+                        .map((f) => `, ${parseParameter(f, "go")}`)
                         .join("")});`,
                     }}
                   />
