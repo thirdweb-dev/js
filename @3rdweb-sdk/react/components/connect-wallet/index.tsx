@@ -652,7 +652,7 @@ const MagicModal: React.FC<ConnectorModalProps> = ({ isOpen, onClose }) => {
               borderRadius="md"
               colorScheme="primary"
             >
-              Connect with Magic
+              Sign In
             </Button>
           </Stack>
         </ModalBody>
