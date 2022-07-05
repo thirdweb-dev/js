@@ -378,7 +378,7 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
                   onClick={() => handleConnect(_connector)}
                 >
                   {_connector.id === "magic"
-                    ? "Email Wallet (Magic)"
+                    ? "Email Wallet"
                     : _connector.name === "Injected"
                     ? "Mobile Wallet"
                     : _connector.name}
