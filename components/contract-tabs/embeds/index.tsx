@@ -135,7 +135,7 @@ const buildIframeSrc = (
 };
 export const EmbedSetup: React.FC<EmbedSetupProps> = ({ contract }) => {
   const [ipfsGateway, setIpfsGateway] = useState(
-    "https://gateway.ipfscdn.io/ipfs/",
+    "https://ipfs.thirdweb.com/ipfs/",
   );
   const [rpcUrl, setRpcUrl] = useState("");
   const [relayUrl, setRelayUrl] = useState("");
