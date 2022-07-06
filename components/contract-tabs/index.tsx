@@ -1,5 +1,5 @@
 import { ContractCode } from "./code/ContractCode";
-import { WidgetSetup } from "./embeds";
+import { EmbedSetup } from "./embeds";
 import { ContractPermissions } from "./permissions";
 import { DropPhases } from "./phases/DropPhases";
 import { ContractSettings } from "./settings/shared/ContractSettings";
@@ -48,7 +48,7 @@ export function useContractTabs(
     ) {
       tabs.push({
         title: "Embed",
-        content: <WidgetSetup contract={contract} />,
+        content: <EmbedSetup contract={contract} />,
       });
     }
 

@@ -7,6 +7,7 @@ import {
   FormControl,
   Input,
   Link,
+  Select,
   Stack,
   useClipboard,
 } from "@chakra-ui/react";
@@ -35,7 +36,7 @@ interface EmbedSetupProps {
   contract?: ValidContractInstance;
 }
 
-const IPFS_URI = "ipfs://QmaJu4798H3cZrYy6sWFZCwpi2Q3NpuzA2h6hBG1MExJL9";
+const IPFS_URI = "ipfs://QmbEcsAGzZZZd7SHPoUGBcfTiuyzwGBzBmAHYt5ubTPqxB";
 
 const getContractEmbedHash = (contract?: ValidContractInstance) => {
   if (contract instanceof NFTDrop) {
@@ -65,21 +66,45 @@ interface IframeSrcOptions {
   tokenId?: number;
   listingId?: number;
   relayUrl?: string;
+  theme?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
 }
+
+const colorOptions = [
+  "blue",
+  "orange",
+  "pink",
+  "green",
+  "purple",
+  "red",
+  "teal",
+  "cyan",
+  "yellow",
+];
 
 const buildIframeSrc = (
   contract?: ValidContractInstance,
   options?: IframeSrcOptions,
 ): string => {
-  const contractWidgetHash = getContractEmbedHash(contract);
-  if (!contract || !options || !contractWidgetHash || !options.chainId) {
+  const contractEmbedHash = getContractEmbedHash(contract);
+  if (!contract || !options || !contractEmbedHash || !options.chainId) {
     return "";
   }
 
-  const { rpcUrl, ipfsGateway, chainId, tokenId, listingId, relayUrl } =
-    options;
+  const {
+    rpcUrl,
+    ipfsGateway,
+    chainId,
+    tokenId,
+    listingId,
+    relayUrl,
+    theme,
+    primaryColor,
+    secondaryColor,
+  } = options;
 
-  const url = new URL(contractWidgetHash.replace("ipfs://", ipfsGateway));
+  const url = new URL(contractEmbedHash.replace("ipfs://", ipfsGateway));
 
   url.searchParams.append("contract", contract.getAddress());
   url.searchParams.append("chainId", chainId.toString());
@@ -96,11 +121,19 @@ const buildIframeSrc = (
   if (relayUrl) {
     url.searchParams.append("relayUrl", relayUrl);
   }
+  if (theme) {
+    url.searchParams.append("theme", theme);
+  }
+  if (primaryColor) {
+    url.searchParams.append("primaryColor", primaryColor);
+  }
+  if (secondaryColor) {
+    url.searchParams.append("secondaryColor", secondaryColor);
+  }
 
   return url.toString();
 };
-
-export const WidgetSetup: React.FC<EmbedSetupProps> = ({ contract }) => {
+export const EmbedSetup: React.FC<EmbedSetupProps> = ({ contract }) => {
   const [ipfsGateway, setIpfsGateway] = useState(
     "https://gateway.ipfscdn.io/ipfs/",
   );
@@ -108,6 +141,9 @@ export const WidgetSetup: React.FC<EmbedSetupProps> = ({ contract }) => {
   const [relayUrl, setRelayUrl] = useState("");
   const [tokenId, setTokenId] = useState(0);
   const [listingId, setListingId] = useState(0);
+  const [theme, setTheme] = useState("light");
+  const [primaryColor, setPrimaryColor] = useState("blue");
+  const [secondaryColor, setSecondaryColor] = useState("orange");
 
   const chainId = getChainIdFromNetwork(useSingleQueryParam("network"));
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -119,6 +155,9 @@ export const WidgetSetup: React.FC<EmbedSetupProps> = ({ contract }) => {
     tokenId,
     listingId,
     relayUrl,
+    theme,
+    primaryColor,
+    secondaryColor,
   });
 
   const embedCode = `<iframe
@@ -208,6 +247,52 @@ frameborder="0"
               </FormHelperText>
             </FormControl>
           )}
+          <Heading size="title.sm">Customization</Heading>
+          <FormControl>
+            <FormLabel>Theme</FormLabel>
+            <Select onChange={(e) => setTheme(e.target.value)} value={theme}>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+              <option value="system">User system</option>
+            </Select>
+            <FormHelperText>
+              Selecting system will make it so the embed would change depending
+              on the user system&apos;s preferences
+            </FormHelperText>
+          </FormControl>
+          <FormControl>
+            <FormLabel>Primary Color</FormLabel>
+            <Select
+              onChange={(e) => setPrimaryColor(e.target.value)}
+              value={primaryColor}
+            >
+              {colorOptions.map((color) => (
+                <option key={color} value={color}>
+                  {color[0].toUpperCase() + color.substring(1)}
+                </option>
+              ))}
+            </Select>
+            <FormHelperText>
+              Used for the main actions button backgrounds.
+            </FormHelperText>
+          </FormControl>
+          <FormControl>
+            <FormLabel>Secondary Color</FormLabel>
+            <Select
+              onChange={(e) => setSecondaryColor(e.target.value)}
+              value={secondaryColor}
+            >
+              {colorOptions.map((color) => (
+                <option key={color} value={color}>
+                  {color[0].toUpperCase() + color.substring(1)}
+                </option>
+              ))}
+            </Select>
+            <FormHelperText>
+              Use for secondary actions (like when the user is connected to the
+              wrong network)
+            </FormHelperText>
+          </FormControl>
         </Stack>
         <Stack as={Card} w={{ base: "100%", md: "50%" }}>
           <Heading size="title.sm">Embed Code</Heading>
