@@ -1,9 +1,9 @@
 import { ContractId } from "../types";
-import { ContractAbiCell } from "./cells/abi";
 import { ContractDeployActionCell } from "./cells/deploy-action";
 import { ContractDescriptionCell } from "./cells/description";
 import { ContractImageCell } from "./cells/image";
 import { ContractNameCell } from "./cells/name";
+import { ContractVersionCell } from "./cells/version";
 import { Spinner, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import React, { useMemo } from "react";
 import { Column, useTable } from "react-table";
@@ -58,9 +58,9 @@ export const DeployableContractTable: ComponentWithChildren<
       cols = [
         ...cols,
         {
-          Header: "ABI",
+          Header: "Version",
           accessor: (row) => row.contractId,
-          Cell: (cell: any) => <ContractAbiCell cell={cell} />,
+          Cell: (cell: any) => <ContractVersionCell cell={cell} />,
         },
       ];
     }

@@ -1,6 +1,7 @@
 import { ContractId } from "./types";
 import { isContractIdBuiltInContract } from "./utils";
 import { contractKeys, networkKeys } from "@3rdweb-sdk/react";
+import { useMutationWithInvalidate } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
 import { contractTypeFromContract } from "@3rdweb-sdk/react/hooks/useCommon";
 import {
   useAddress,
@@ -15,6 +16,7 @@ import {
   extractConstructorParamsFromAbi,
   fetchPreDeployMetadata,
 } from "@thirdweb-dev/sdk";
+import { ExtraPublishMetadata } from "@thirdweb-dev/sdk/dist/src/schema/contracts/custom";
 import { StorageSingleton } from "components/app-layouts/providers";
 import { BuiltinContractMap, FeatureIconMap } from "constants/mappings";
 import { StaticImageData } from "next/image";
@@ -45,6 +47,8 @@ export function useContractPublishMetadataFromURI(contractId: ContractId) {
           description: details.description,
         };
       }
+      // TODO: Make this nicer.
+      invariant(contractId !== "ipfs://undefined", "uri can't be undefined");
       const resolved = await fetchPreDeployMetadata(
         contractIdIpfsHash,
         StorageSingleton,
@@ -67,6 +71,25 @@ export function useContractPublishMetadataFromURI(contractId: ContractId) {
   );
 }
 
+export function useContractPrePublishMetadata(uri: string, address?: string) {
+  const contractIdIpfsHash = useContractIdIpfsHash(uri);
+  const sdk = useSDK();
+  return useQuery(
+    ["pre-publish-metadata", uri, address],
+    async () => {
+      invariant(address, "address is not defined");
+      // TODO: Make this nicer.
+      invariant(uri !== "ipfs://undefined", "uri can't be undefined");
+      return await sdk
+        ?.getPublisher()
+        .fetchPrePublishMetadata(contractIdIpfsHash, address);
+    },
+    {
+      enabled: !!uri && !!address,
+    },
+  );
+}
+
 export function useConstructorParamsFromABI(abi?: any) {
   return useMemo(() => {
     return abi ? extractConstructorParamsFromAbi(abi) : [];
@@ -83,26 +106,28 @@ export function useContractIdIpfsHash(contractId: ContractId) {
   return `ipfs://${contractId}`;
 }
 
+interface PublishMutationData {
+  predeployUri: string;
+  extraMetadata: ExtraPublishMetadata;
+}
+
 export function usePublishMutation() {
   const sdk = useSDK();
 
-  return useMutation(async (uris: string[]) => {
-    invariant(
-      sdk && "getPublisher" in sdk,
-      "sdk is not ready or does not support publishing",
-    );
-    // FIXME - can't call batch here because of a bug with multicall + gasless setup. Looping through the uris and calling publish one by one for now.
-    const receipts = [];
-    for (const uri of uris) {
-      // TODO - add version input UI + other publish metadata and pass it here
-      receipts.push(
-        await sdk.getPublisher().publish(uri, {
-          version: "0.0.1",
-        }),
+  return useMutationWithInvalidate(
+    async ({ predeployUri, extraMetadata }: PublishMutationData) => {
+      invariant(
+        sdk && "getPublisher" in sdk,
+        "sdk is not ready or does not support publishing",
       );
-    }
-    return receipts;
-  });
+      await sdk.getPublisher().publish(predeployUri, extraMetadata);
+    },
+    {
+      onSuccess: (_data, _variables, _options, invalidate) => {
+        return invalidate([["pre-publish-metadata", _variables.predeployUri]]);
+      },
+    },
+  );
 }
 
 interface ContractDeployMutationParams {
