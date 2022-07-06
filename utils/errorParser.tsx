@@ -46,13 +46,6 @@ function parseError(error: unknown): string | JSX.Element {
     return (error as any)?.error?.message;
   }
 
-  // errors with data.code
-  if (isErrorWithDataCode(error)) {
-    const err = parseErrorDataCode(error);
-    if (err) {
-      return err;
-    }
-  }
   // errors with code top level
   if (isErrorWithCode(error)) {
     const err = parseErrorCode(error);
@@ -75,6 +68,7 @@ function parseError(error: unknown): string | JSX.Element {
 
 interface ErrorWithCode extends Error {
   code: number | string;
+  data: { code: number; message: string };
   stack?: string;
   reason?: string;
 }
@@ -113,38 +107,25 @@ function parseErrorCode(error: ErrorWithCode): string | JSX.Element | void {
         `;
       }
 
-      return "An internal error occured with your transaction.";
+      if (error.data.message.includes("max code size exceeded")) {
+        return `
+          This contract is bigger than the size limit (24,567 bytes). 
+          You need to reduce the size of the contract before deploying. 
+          We recommend enabling the optimizer in your compiler.
+        `;
+      }
+
+      return (
+        error?.data.message ||
+        error?.message ||
+        "An internal error occured with your transaction."
+      );
     }
     case -32002: {
       return "There is already a pending request on your wallet to do that. Please check your wallet.";
     }
     case 4001: {
       return "You denied the transaction request.";
-    }
-  }
-}
-
-interface ErrorWithDataCode extends Error {
-  data: ErrorWithCode;
-}
-function isErrorWithDataCode(error: unknown): error is ErrorWithDataCode {
-  return (error as ErrorWithDataCode)?.data?.code !== undefined;
-}
-
-function parseErrorDataCode(
-  error: ErrorWithDataCode,
-): string | JSX.Element | void {
-  switch (error.data.code) {
-    case -32000: {
-      return "Your wallet has insufficient funds to complete this action.";
-    }
-    case 4001: {
-      return "You denied the transaction request.";
-    }
-    case 3: {
-      if (error.data.message) {
-        return error.data.message;
-      }
     }
   }
 }
