@@ -29,7 +29,7 @@ import { AbiFunction } from "@thirdweb-dev/sdk/dist/src/schema/contracts/custom"
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
 import { Environment } from "components/contract-tabs/code/types";
-import { BigNumber } from "ethers";
+import { BigNumber, utils } from "ethers";
 import { useId, useMemo, useRef, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FiCode, FiEdit2, FiEye, FiPlay, FiSearch } from "react-icons/fi";
@@ -279,6 +279,7 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
           value: "",
           type: i.type,
         })) || [],
+      value: "0",
     },
   });
   const { fields } = useFieldArray({
@@ -298,7 +299,7 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
   const chainName = getChainName(chainId);
   const [codeEnv, setCodeEnv] = useState<Environment>("javascript");
 
-  async function contractCall(params: unknown[]) {
+  async function contractCall(params: unknown[], value?: BigNumber) {
     if (!abiFunction) {
       return undefined;
     }
@@ -317,6 +318,13 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
         return p;
       }
     });
+
+    if (value) {
+      parsedParams.push({
+        value,
+      });
+    }
+
     return await contract?.call(abiFunction.name as string, ...parsedParams);
   }
 
@@ -325,7 +333,10 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
     data,
     error,
     isLoading: mutationLoading,
-  } = useMutation(async (params: unknown[] = []) => contractCall(params));
+  } = useMutation(
+    async ({ params, value }: { params: unknown[]; value: BigNumber }) =>
+      contractCall(params || [], value),
+  );
 
   return (
     <Card
@@ -353,7 +364,12 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
         </Flex>
         {!abiFunction ? (
           <Text>Please select a function on the left to get started</Text>
-        ) : null}
+        ) : (
+          // TODO: Remove this when we update SDK
+          <Text fontSize="12px" noOfLines={2}>
+            {(abiFunction as any).comment}
+          </Text>
+        )}
         {abiFunction?.signature && (
           <CodeBlock code={abiFunction.signature} language="typescript" />
         )}
@@ -367,7 +383,10 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
         id={formId}
         onSubmit={handleSubmit((d) => {
           if (d.params) {
-            mutate(d.params.map((p) => p.value));
+            mutate({
+              params: d.params.map((p) => p.value),
+              value: utils.parseEther(d.value),
+            });
           }
         })}
       >
@@ -395,6 +414,20 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                 </FormHelperText>
               </FormControl>
             ))}
+          </>
+        )}
+
+        {abiFunction?.stateMutability === "payable" && (
+          <>
+            <Divider borderColor="borderColor" />
+            <FormControl gap={0.5}>
+              <FormLabel>Native Token Value</FormLabel>
+              <Input {...register(`value`)} />
+              <FormHelperText>
+                The native currency value to send with this transaction (ex:
+                0.01 to send 0.01 native currency).
+              </FormHelperText>
+            </FormControl>
           </>
         )}
 
