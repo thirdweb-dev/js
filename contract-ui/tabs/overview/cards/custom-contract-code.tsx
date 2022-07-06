@@ -85,7 +85,7 @@ export const CustomContractCode: React.FC<ContentOverviewProps> = ({
 
   return (
     <Flex gap={3} flexDirection="column" w="100%">
-      <Heading size="subtitle.md">Contract Functions</Heading>
+      <Heading size="subtitle.md">Contract Explorer</Heading>
       {functionsQuery.data && contractAddress && (
         <Card overflow="hidden" p={0} minH="400px">
           <SimpleGrid columns={12}>
