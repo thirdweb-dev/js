@@ -7,6 +7,7 @@ import {
   Container,
   Flex,
   IconButton,
+  Link,
   Spinner,
   VStack,
 } from "@chakra-ui/react";
@@ -36,7 +37,7 @@ function DeployCustomContract() {
 
   return (
     <Card px={{ base: 4, md: 10 }} py={{ base: 6, md: 10 }}>
-      <Flex direction="column" gap={8}>
+      <Flex direction="column" gap={12}>
         <Flex align="center" justify="space-between">
           <IconButton
             onClick={() => router.back()}
@@ -45,12 +46,12 @@ function DeployCustomContract() {
             icon={<FiChevronLeft />}
           />
           <VStack>
-            <Heading size="title.lg">Published Contracts</Heading>
-            <Text>Deploy custom contracts written by you or your team</Text>
+            <Heading size="title.lg">Released Contracts</Heading>
+            <Text>Deploy contracts released by you or your team</Text>
           </VStack>
           <Box />
         </Flex>
-        <Container maxW="container.md" as={Flex} gap={12} direction="column">
+        <Container maxW="container.page" as={Flex} gap={12} direction="column">
           <DeployableContractTable
             isFetching={publishedContracts.isFetching}
             contractIds={(publishedContracts.data || [])?.map((d) =>
@@ -75,7 +76,7 @@ function DeployCustomContract() {
                   <Alert status="error" borderRadius="md">
                     <AlertIcon />
                     <AlertTitle mr={2}>
-                      Failed to fetch published contracts
+                      Failed to fetch released contracts
                     </AlertTitle>
                     <Button
                       onClick={() => publishedContracts.refetch()}
@@ -94,10 +95,10 @@ function DeployCustomContract() {
               publishedContracts.data.length === 0 && (
                 <Center>
                   <Flex py={4} direction="column" gap={4} align="center">
-                    <Text>You have not published any contracts yet.</Text>
+                    <Text>You have not released any contracts yet.</Text>
                     <LinkButton
                       size="sm"
-                      href="https://portal.thirdweb.com/thirdweb-deploy"
+                      href="https://portal.thirdweb.com/thirdweb-deploy/thirdweb-cli"
                       isExternal
                       variant="outline"
                       colorScheme="primary"
@@ -110,21 +111,22 @@ function DeployCustomContract() {
           </DeployableContractTable>
 
           <Flex flexDir="column" gap={4}>
-            <Heading size="title.md">Add new published contracts</Heading>
+            <Heading size="title.md">How to create releases</Heading>
             <Card as={Flex} flexDir="column" gap={3}>
               <Text>
-                Run this command in your project to make your contracts easily
-                deployable:
+                Run this command in your project to create deployable releases
+                of your own contracts
               </Text>
-              <CodeBlock code="npx thirdweb publish" language={"javascript"} />
+              <CodeBlock code="npx thirdweb release" language={"javascript"} />
+              <Link
+                fontSize={14}
+                color="primary.500"
+                isExternal
+                href="https://portal.thirdweb.com/thirdweb-deploy/thirdweb-cli"
+              >
+                Learn more about releasing contracts
+              </Link>
             </Card>
-            {/*             <Card as={Flex} flexDir="column" gap={2}>
-              <Text>Automatically publish contracts with Github Actions</Text>
-              <CodeBlock
-                code="npx thirdweb install-ci"
-                language={"javascript"}
-              />
-            </Card> */}
           </Flex>
         </Container>
       </Flex>
