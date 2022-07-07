@@ -203,6 +203,7 @@ function getChainName(chainId: number | undefined) {
       return "mainnet";
   }
 }
+
 function formatResponseData(data: unknown): string {
   if (BigNumber.isBigNumber(data)) {
     data = data.toString();
@@ -257,6 +258,48 @@ function parseParameter(param: any, language: Environment): string {
   return displayString(param.value);
 }
 
+type FunctionComponents = {
+  name: string;
+  type: string;
+  [key: string]: any;
+}[];
+
+function formatInputType(type: string, components?: FunctionComponents): any {
+  if (type.includes("[]")) {
+    const obj = [];
+    obj.push(formatInputType(type.replace("[]", ""), components));
+    return obj;
+  } else if (type.includes("tuple")) {
+    const obj: any = {};
+    components?.forEach((component) => {
+      obj[component.name] = formatInputType(
+        component.type,
+        component.components,
+      );
+    });
+    return obj;
+  } else if (type.includes("string")) {
+    return "...";
+  } else if (type.includes("int")) {
+    return 0;
+  } else if (type.includes("bool")) {
+    return true;
+  } else if (type.includes("address")) {
+    return "0x...";
+  } else {
+    return "0";
+  }
+}
+
+function formatHint(type: string, components?: FunctionComponents): string {
+  const placeholder = formatInputType(type, components);
+  return JSON.stringify(placeholder)
+    .replaceAll(",", ", ")
+    .replaceAll(":", ": ")
+    .replaceAll("{", "{ ")
+    .replaceAll("}", " }");
+}
+
 interface InteractiveAbiFunctionProps {
   abiFunction?: AbiFunction;
   contractAddress: string;
@@ -278,6 +321,7 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
           key: i.name || "key",
           value: "",
           type: i.type,
+          components: i.components,
         })) || [],
       value: "0",
     },
@@ -392,10 +436,13 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
       >
         {fields.length > 0 && (
           <>
-            <Divider borderColor="borderColor" />
+            <Divider borderColor="borderColor" mb="8px" />
             {fields.map((item, index) => (
-              <FormControl key={item.id} gap={0.5}>
-                <FormLabel>{item.key}</FormLabel>
+              <FormControl key={item.id} mb="8px">
+                <Flex justify="space-between">
+                  <FormLabel>{item.key}</FormLabel>
+                  <Text fontSize="12px">{item.type}</Text>
+                </Flex>
                 {item.type.includes("tuple") || item.type.includes("[]") ? (
                   <Textarea
                     defaultValue={getValues(`params.${index}.value`)}
@@ -407,11 +454,12 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                     {...register(`params.${index}.value`)}
                   />
                 )}
-                <FormHelperText>
-                  {item.type}{" "}
-                  {(item.type.includes("tuple") || item.type.includes("[]")) &&
-                    "- Input should be passed in as a valid JSON string"}
-                </FormHelperText>
+                {(item.type.includes("tuple") || item.type.includes("[]")) && (
+                  <FormHelperText>
+                    Input should be passed in JSON format - Ex:{" "}
+                    {formatHint(item.type, item.components)}
+                  </FormHelperText>
+                )}
               </FormControl>
             ))}
           </>
@@ -419,7 +467,7 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
 
         {abiFunction?.stateMutability === "payable" && (
           <>
-            <Divider borderColor="borderColor" />
+            <Divider borderColor="borderColor" mb="8px" />
             <FormControl gap={0.5}>
               <FormLabel>Native Token Value</FormLabel>
               <Input {...register(`value`)} />
