@@ -15,7 +15,7 @@ export default function DeployContract() {
       <Flex direction="column" gap={8}>
         <Flex align="center" justify="space-between">
           <IconButton
-            onClick={() => router.back()}
+            onClick={() => router.push("/dashboard")}
             size="sm"
             aria-label="back"
             icon={<FiChevronLeft />}

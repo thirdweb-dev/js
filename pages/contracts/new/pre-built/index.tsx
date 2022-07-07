@@ -6,16 +6,18 @@ import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
 import { FiChevronLeft } from "react-icons/fi";
 import { Card, Heading } from "tw-components";
+import { pushToPreviousRoute } from "utils/pushToPreviousRoute";
 
 export default function DeployPrebuiltContract() {
   const router = useRouter();
+
   const { trackEvent } = useTrack();
   return (
     <Card px={{ base: 4, md: 10 }} py={{ base: 6, md: 10 }}>
       <Flex direction="column" gap={8}>
         <Flex align="center" justify="space-between">
           <IconButton
-            onClick={() => router.back()}
+            onClick={() => pushToPreviousRoute(router)}
             size="sm"
             aria-label="back"
             icon={<FiChevronLeft />}

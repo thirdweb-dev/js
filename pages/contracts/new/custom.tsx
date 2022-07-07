@@ -28,6 +28,7 @@ import {
   LinkButton,
   Text,
 } from "tw-components";
+import { pushToPreviousRoute } from "utils/pushToPreviousRoute";
 
 function DeployCustomContract() {
   const router = useRouter();
@@ -40,7 +41,7 @@ function DeployCustomContract() {
       <Flex direction="column" gap={12}>
         <Flex align="center" justify="space-between">
           <IconButton
-            onClick={() => router.back()}
+            onClick={() => pushToPreviousRoute(router)}
             size="sm"
             aria-label="back"
             icon={<FiChevronLeft />}

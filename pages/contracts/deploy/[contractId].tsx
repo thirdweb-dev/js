@@ -23,6 +23,7 @@ import { useRouter } from "next/router";
 import { ReactElement, useMemo } from "react";
 import { FiArrowLeft, FiCheckCircle, FiExternalLink } from "react-icons/fi";
 import { Card, Heading, LinkButton, Text, TrackedLink } from "tw-components";
+import { pushToPreviousRoute } from "utils/pushToPreviousRoute";
 
 const ALWAYS_SUGGESTED = ["ContractMetadata", "Permissions"];
 
@@ -112,7 +113,7 @@ export default function ContractDetailPage() {
               <IconButton
                 variant="ghost"
                 aria-label="back"
-                onClick={() => router.back()}
+                onClick={() => pushToPreviousRoute(router)}
                 icon={<Icon boxSize={6} as={FiArrowLeft} />}
               />
             )}

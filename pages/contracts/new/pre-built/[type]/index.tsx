@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
 import { FiChevronLeft } from "react-icons/fi";
 import { Card, Heading } from "tw-components";
+import { pushToPreviousRoute } from "utils/pushToPreviousRoute";
 
 export default function DeployContractType() {
   const type = useSingleQueryParam("type");
@@ -24,7 +25,7 @@ export default function DeployContractType() {
       <Flex direction="column" gap={8}>
         <Flex align="center" justify="space-between">
           <IconButton
-            onClick={() => router.back()}
+            onClick={() => pushToPreviousRoute(router)}
             size="sm"
             aria-label="back"
             icon={<FiChevronLeft />}
