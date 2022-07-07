@@ -209,7 +209,18 @@ function formatResponseData(data: unknown): string {
     data = data.toString();
   }
 
-  // more parsing here
+  if (typeof data === "object") {
+    const receipt: any = (data as any).receipt;
+    if (receipt) {
+      data = {
+        to: receipt.to,
+        from: receipt.from,
+        transactionHash: receipt.transactionHash,
+        events: receipt.events,
+      };
+    }
+  }
+
   return JSON.stringify(data, null, 2);
 }
 
@@ -298,6 +309,18 @@ function formatHint(type: string, components?: FunctionComponents): string {
     .replaceAll(":", ": ")
     .replaceAll("{", "{ ")
     .replaceAll("}", " }");
+}
+
+function formatError(error: Error): string {
+  if (error.message) {
+    return error.message.split("| Raw error |\n")[0].trim();
+  }
+
+  try {
+    return JSON.stringify(error);
+  } catch {
+    return error.toString();
+  }
 }
 
 interface InteractiveAbiFunctionProps {
@@ -495,7 +518,7 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
               borderWidth="1px"
               position="relative"
             >
-              {(error as Error).toString()}
+              {formatError(error as any)}
             </Text>
           </>
         ) : data !== undefined ? (
