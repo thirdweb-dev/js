@@ -34,7 +34,7 @@ interface ContractPublishMetadata {
 }
 
 export function useContractPublishMetadataFromURI(contractId: ContractId) {
-  const contractIdIpfsHash = useContractIdIpfsHash(contractId);
+  const contractIdIpfsHash = toContractIdIpfsHash(contractId);
   return useQuery<ContractPublishMetadata>(
     ["publish-metadata", contractId],
     async () => {
@@ -72,7 +72,7 @@ export function useContractPublishMetadataFromURI(contractId: ContractId) {
 }
 
 export function useContractPrePublishMetadata(uri: string, address?: string) {
-  const contractIdIpfsHash = useContractIdIpfsHash(uri);
+  const contractIdIpfsHash = toContractIdIpfsHash(uri);
   const sdk = useSDK();
   return useQuery(
     ["pre-publish-metadata", uri, address],
@@ -96,10 +96,10 @@ export function useConstructorParamsFromABI(abi?: any) {
   }, [abi]);
 }
 
-export function useContractIdIpfsHash(contractId: ContractId) {
+export function toContractIdIpfsHash(contractId: ContractId) {
   if (
     isContractIdBuiltInContract(contractId) ||
-    contractId.startsWith("ipfs://")
+    contractId?.startsWith("ipfs://")
   ) {
     return contractId;
   }
@@ -120,7 +120,8 @@ export function usePublishMutation() {
         sdk && "getPublisher" in sdk,
         "sdk is not ready or does not support publishing",
       );
-      await sdk.getPublisher().publish(predeployUri, extraMetadata);
+      const contractIdIpfsHash = toContractIdIpfsHash(predeployUri);
+      await sdk.getPublisher().publish(contractIdIpfsHash, extraMetadata);
     },
     {
       onSuccess: (_data, _variables, _options, invalidate) => {

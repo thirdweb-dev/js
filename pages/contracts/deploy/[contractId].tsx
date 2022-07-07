@@ -155,8 +155,8 @@ export default function ContractDetailPage() {
         <Flex gap={12} direction="column" as="main">
           {contractId && (
             <Flex gap={4} direction="column">
-              <Card>
-                <Flex direction="column" gap={6}>
+              <Card p={{ base: 6, md: 10 }}>
+                <Flex direction="column" gap={8}>
                   {enabledFeatures.length > 0 && (
                     <Flex direction="column" gap={4}>
                       <Box>

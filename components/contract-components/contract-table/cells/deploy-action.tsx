@@ -12,7 +12,7 @@ import { Button, Drawer, LinkButton, TrackedIconButton } from "tw-components";
 
 export const ContractDeployActionCell: React.FC<
   DeployableContractContractCellProps
-> = ({ cell: { value } }) => {
+> = ({ cell: { value }, release }) => {
   const publishMetadata = useContractPublishMetadataFromURI(value);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -95,9 +95,11 @@ export const ContractDeployActionCell: React.FC<
             isLoading={publishMetadata.isLoading}
             colorScheme="purple"
             rightIcon={<Icon as={FiArrowRight} />}
-            href={`/contracts/${encodeURIComponent(value)}?from=deploy`}
+            href={`/contracts/${
+              release ? "release" : "deploy"
+            }/${encodeURIComponent(value)}`}
           >
-            Deploy
+            {release ? "Release" : "Deploy"}
           </LinkButton>
         )}
       </ButtonGroup>

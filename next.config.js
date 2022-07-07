@@ -65,6 +65,11 @@ const moduleExports = {
         destination: "/Thirdweb_Terms_of_Service.pdf",
         permanent: false,
       },
+      {
+        source: "/contracts/publish",
+        destination: "/contracts/release",
+        permanent: false,
+      },
     ];
   },
   images: {
