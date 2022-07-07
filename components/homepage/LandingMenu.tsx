@@ -21,19 +21,35 @@ export const LandingMenu: React.FC<IconButtonProps> = (props) => {
       <MenuList bgColor="black" color="white">
         <MenuItem
           as={TrackedLink}
+          href="#contracts"
+          category="mobile-menu"
+          label="contracts"
+        >
+          Contracts
+        </MenuItem>
+        <MenuItem
+          as={TrackedLink}
           href="#developers"
           category="mobile-menu"
           label="developers"
         >
-          Developers
+          SDKs
         </MenuItem>
         <MenuItem
           as={TrackedLink}
-          href="#features"
+          href="#dashboards"
           category="mobile-menu"
-          label="fees"
+          label="dashboards"
         >
-          Features
+          Dashboards
+        </MenuItem>
+        <MenuItem
+          as={TrackedLink}
+          href="https://portal.thirdweb.com"
+          category="mobile-menu"
+          label="portal"
+        >
+          Docs
         </MenuItem>
         <MenuItem
           as={TrackedLink}
@@ -42,15 +58,6 @@ export const LandingMenu: React.FC<IconButtonProps> = (props) => {
           label="fees"
         >
           Pricing
-        </MenuItem>
-
-        <MenuItem
-          as={TrackedLink}
-          href="https://portal.thirdweb.com"
-          category="mobile-menu"
-          label="portal"
-        >
-          Docs
         </MenuItem>
       </MenuList>
     </Menu>

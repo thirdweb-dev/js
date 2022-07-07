@@ -4,18 +4,29 @@ import {
   Container,
   Flex,
   Icon,
+  Menu,
+  MenuButton,
+  MenuList,
   Stack,
   useBreakpointValue,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import { Logo } from "components/logo";
 import React, { useState } from "react";
 import { SiDiscord, SiGithub, SiTwitter, SiYoutube } from "react-icons/si";
-import { LinkButton, TrackedIconButton, TrackedLink } from "tw-components";
+import {
+  LinkButton,
+  MenuItem,
+  Text,
+  TrackedIconButton,
+  TrackedLink,
+} from "tw-components";
 
 export const HomepageTopNav: React.FC<{}> = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [isScrolled, setIsScrolled] = useState(false);
+  const { isOpen, onClose, onOpen } = useDisclosure();
   useScrollPosition(
     ({ currPos }) => {
       if (currPos.y < -5) {
@@ -65,18 +76,52 @@ export const HomepageTopNav: React.FC<{}> = () => {
             as="nav"
           >
             <TrackedLink
-              href="#developers"
+              href="https://portal.thirdweb.com"
               category="topnav"
-              label="developers"
+              label="docs"
+              isExternal
             >
-              Developers
+              Docs
             </TrackedLink>
-            <TrackedLink href="#features" category="topnav" label="features">
-              Features
-            </TrackedLink>
+            <Menu isOpen={isOpen} onClose={onClose}>
+              <MenuButton
+                onMouseEnter={onOpen}
+                onMouseLeave={onClose}
+                py="12px"
+              >
+                <Text color="white" fontWeight="bold" fontSize="16px">
+                  Features
+                </Text>
+              </MenuButton>
+              <MenuList onMouseEnter={onOpen} onMouseLeave={onClose} mt="-12px">
+                <TrackedLink
+                  href="#contracts"
+                  category="topnav"
+                  label="contracts"
+                >
+                  <MenuItem>Contracts</MenuItem>
+                </TrackedLink>
+                <TrackedLink
+                  href="#developers"
+                  category="topnav"
+                  label="developers"
+                >
+                  <MenuItem>SDKs</MenuItem>
+                </TrackedLink>
+
+                <TrackedLink
+                  href="#features"
+                  category="topnav"
+                  label="features"
+                >
+                  <MenuItem>Dashboards</MenuItem>
+                </TrackedLink>
+              </MenuList>
+            </Menu>
             <TrackedLink href="#fees" category="topnav" label="fees">
               Pricing
             </TrackedLink>
+
             <Flex
               display={{ base: "none", lg: "flex" }}
               direction="row"
