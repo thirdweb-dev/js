@@ -16,7 +16,7 @@ import {
   Textarea,
   useModalContext,
 } from "@chakra-ui/react";
-import { NFTDrop } from "@thirdweb-dev/sdk";
+import { NFTDrop, SignatureDrop } from "@thirdweb-dev/sdk";
 import { OpenSeaPropertyBadge } from "components/badges/opensea";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
@@ -35,7 +35,7 @@ import { NFTMetadataInputLimited } from "types/modified-types";
 
 const MINT_FORM_ID = "nft-drop-mint-form";
 interface INFTDropMintForm extends IMintFormProps {
-  contract: NFTDrop;
+  contract: NFTDrop | SignatureDrop;
 }
 
 export const NFTDropMintForm: React.FC<INFTDropMintForm> = ({ contract }) => {

@@ -14,6 +14,7 @@ import {
   Marketplace,
   NFTCollection,
   NFTDrop,
+  SignatureDrop,
   Token,
   ValidContractInstance,
   Vote,
@@ -38,7 +39,7 @@ export const MintForm: React.FC<IMintFormProps> = ({ contract }) => {
     );
   }
   // if its a drop contract
-  if (contract instanceof NFTDrop) {
+  if (contract instanceof NFTDrop || contract instanceof SignatureDrop) {
     return (
       <>
         <DrawerHeader>

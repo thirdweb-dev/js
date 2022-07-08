@@ -91,7 +91,7 @@ export function useBatchesToReveal(contractAddress?: string) {
 // Mutations
 // ----------------------------------------------------------------
 
-export function useNFTDropMintMutation(contract?: NFTDrop) {
+export function useNFTDropMintMutation(contract?: NFTDrop | SignatureDrop) {
   return useMutationWithInvalidate(
     async (data: NFTMetadataInput) => {
       invariant(contract, "contract is required");
