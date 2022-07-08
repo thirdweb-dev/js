@@ -1,4 +1,3 @@
-import { ActivityFeed } from "./cards/activity-feed";
 import { CustomContractCode } from "./cards/custom-contract-code";
 import { Flex } from "@chakra-ui/react";
 
@@ -16,7 +15,6 @@ export const CustomContractOverviewPage: React.FC<
   return (
     <Flex direction="column" gap={8}>
       <CustomContractCode contractAddress={contractAddress} />
-      <ActivityFeed contractAddress={contractAddress} />
     </Flex>
   );
 };

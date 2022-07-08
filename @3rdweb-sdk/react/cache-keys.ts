@@ -98,6 +98,8 @@ export const contractKeys = {
   details: () => [...contractKeys.all, "detail"] as const,
   detail: (address: string = constants.AddressZero) =>
     [...contractKeys.details(), address] as const,
+  activity: (address: string = constants.AddressZero) =>
+    [...contractKeys.detail(address), "activity"] as const,
 };
 
 export const contractRoleKeys = {
