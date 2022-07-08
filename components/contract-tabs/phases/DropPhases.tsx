@@ -30,6 +30,7 @@ import {
   EditionDrop,
   NATIVE_TOKEN_ADDRESS,
   NFTDrop,
+  SignatureDrop,
   TokenDrop,
 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -54,21 +55,23 @@ import { toDateTimeLocal } from "utils/date-utils";
 import * as z from "zod";
 import { ZodError } from "zod";
 
+type ResettableContracts = TokenDrop | EditionDrop | NFTDrop;
+
 interface DropPhases {
-  contract?: NFTDrop | EditionDrop | TokenDrop;
+  contract?: NFTDrop | EditionDrop | TokenDrop | SignatureDrop;
   tokenId?: string;
 }
 export const DropPhases: React.FC<DropPhases> = ({ contract, tokenId }) => {
-  const mutation = useResetEligibilityMutation(contract, tokenId);
+  const mutation = useResetEligibilityMutation(
+    contract as ResettableContracts,
+    tokenId,
+  );
   const txNotifications = useTxNotifications(
     "Succesfully reset claim eligibility",
     "Failed to reset claim eligibility",
   );
 
-  const nftsOrToken =
-    contract instanceof NFTDrop || contract instanceof EditionDrop
-      ? "NFTs"
-      : "tokens";
+  const nftsOrToken = contract instanceof TokenDrop ? "tokens" : "NFTs";
 
   return (
     <Stack spacing={8}>
@@ -155,29 +158,29 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
   const decimals = useDecimals(contract);
 
   const transformedQueryData = useMemo(() => {
-    return (query.data || []).map((phase) => ({
-      ...phase,
-      price: Number(phase.currencyMetadata.displayValue),
-      maxQuantity: phase.maxQuantity.toString(),
-      currencyMetadata: {
-        ...phase.currencyMetadata,
-        value: phase.currencyMetadata.value.toString(),
-      },
-      currencyAddress: phase.currencyAddress.toLowerCase(),
-      quantityLimitPerTransaction: phase.quantityLimitPerTransaction.toString(),
-      waitInSeconds: phase.waitInSeconds.toString(),
-      startTime: new Date(phase.startTime),
-      snapshot: phase.snapshot?.map(({ address, maxClaimable }) => ({
-        address,
-        maxClaimable: maxClaimable || "0",
-      })),
-    }));
+    return (query.data || [])
+      .map((phase) => ({
+        ...phase,
+        price: Number(phase.currencyMetadata.displayValue),
+        maxQuantity: phase.maxQuantity.toString(),
+        currencyMetadata: {
+          ...phase.currencyMetadata,
+          value: phase.currencyMetadata.value.toString(),
+        },
+        currencyAddress: phase.currencyAddress.toLowerCase(),
+        quantityLimitPerTransaction:
+          phase.quantityLimitPerTransaction.toString(),
+        waitInSeconds: phase.waitInSeconds.toString(),
+        startTime: new Date(phase.startTime),
+        snapshot: phase.snapshot?.map(({ address, maxClaimable }) => ({
+          address,
+          maxClaimable: maxClaimable || "0",
+        })),
+      }))
+      .filter((phase) => phase.maxQuantity !== "0");
   }, [query.data]);
 
-  const nftsOrToken =
-    contract instanceof NFTDrop || contract instanceof EditionDrop
-      ? "NFTs"
-      : "tokens";
+  const nftsOrToken = contract instanceof TokenDrop ? "tokens" : "NFTs";
 
   const form = useForm<z.input<typeof DropPhasesSchema>>({
     defaultValues: query.data
@@ -606,16 +609,30 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
               </Flex>
             </Alert>
           )}
-          <Button
-            colorScheme={watchFieldArray?.length > 0 ? "primary" : "purple"}
-            variant={watchFieldArray?.length > 0 ? "outline" : "solid"}
-            borderRadius="md"
-            leftIcon={<Icon as={FiPlus} />}
-            onClick={addPhase}
-          >
-            Add {watchFieldArray?.length > 0 ? "Additional " : "Initial "}Claim
-            Phase
-          </Button>
+          {contract instanceof SignatureDrop && watchFieldArray.length === 0 && (
+            <Button
+              colorScheme="purple"
+              variant="solid"
+              borderRadius="md"
+              leftIcon={<Icon as={FiPlus} />}
+              onClick={addPhase}
+            >
+              Add Claim Phase
+            </Button>
+          )}
+
+          {contract instanceof SignatureDrop ? null : (
+            <Button
+              colorScheme={watchFieldArray?.length > 0 ? "primary" : "purple"}
+              variant={watchFieldArray?.length > 0 ? "outline" : "solid"}
+              borderRadius="md"
+              leftIcon={<Icon as={FiPlus} />}
+              onClick={addPhase}
+            >
+              Add {watchFieldArray?.length > 0 ? "Additional " : "Initial "}
+              Claim Phase
+            </Button>
+          )}
         </Flex>
         <AdminOnly contract={contract} fallback={<Box pb={5} />}>
           <>

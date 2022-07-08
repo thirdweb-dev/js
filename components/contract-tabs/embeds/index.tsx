@@ -15,6 +15,7 @@ import {
   EditionDrop,
   Marketplace,
   NFTDrop,
+  SignatureDrop,
   TokenDrop,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
@@ -36,7 +37,7 @@ interface EmbedSetupProps {
   contract?: ValidContractInstance;
 }
 
-const IPFS_URI = "ipfs://QmbEcsAGzZZZd7SHPoUGBcfTiuyzwGBzBmAHYt5ubTPqxB";
+const IPFS_URI = "ipfs://QmZ7JB3mBYxTD8McJZK8QrVAY7i9JrL3Tqu14GVaYYqnQh";
 
 const getContractEmbedHash = (contract?: ValidContractInstance) => {
   if (contract instanceof NFTDrop) {
@@ -54,6 +55,10 @@ const getContractEmbedHash = (contract?: ValidContractInstance) => {
   if (contract instanceof TokenDrop) {
     // Token drop contract embed hash
     return `${IPFS_URI}/token-drop.html`;
+  }
+  if (contract instanceof SignatureDrop) {
+    // Signature drop contract embed hash
+    return `${IPFS_URI}/signature-drop.html`;
   }
 
   return null;
@@ -121,16 +126,15 @@ const buildIframeSrc = (
   if (relayUrl) {
     url.searchParams.append("relayUrl", relayUrl);
   }
-  if (theme) {
+  if (theme && theme !== "light") {
     url.searchParams.append("theme", theme);
   }
-  if (primaryColor) {
+  if (primaryColor && primaryColor !== "blue") {
     url.searchParams.append("primaryColor", primaryColor);
   }
-  if (secondaryColor) {
+  if (secondaryColor && secondaryColor !== "orange") {
     url.searchParams.append("secondaryColor", secondaryColor);
   }
-
   return url.toString();
 };
 export const EmbedSetup: React.FC<EmbedSetupProps> = ({ contract }) => {

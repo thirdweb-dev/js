@@ -13,12 +13,19 @@ import {
   ClaimConditionInput,
   EditionDrop,
   NFTDrop,
+  SignatureDrop,
   TokenDrop,
 } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
 
-export function useDecimals(contract?: NFTDrop | EditionDrop | TokenDrop) {
-  if (contract instanceof NFTDrop || contract instanceof EditionDrop) {
+export function useDecimals(
+  contract?: NFTDrop | EditionDrop | TokenDrop | SignatureDrop,
+) {
+  if (
+    contract instanceof NFTDrop ||
+    contract instanceof EditionDrop ||
+    contract instanceof SignatureDrop
+  ) {
     return 0;
   } else {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -27,10 +34,10 @@ export function useDecimals(contract?: NFTDrop | EditionDrop | TokenDrop) {
 }
 
 export function useClaimPhases(
-  contract?: NFTDrop | EditionDrop | TokenDrop,
+  contract?: NFTDrop | EditionDrop | TokenDrop | SignatureDrop,
   tokenId?: string,
 ) {
-  if (contract instanceof NFTDrop) {
+  if (contract instanceof NFTDrop || contract instanceof SignatureDrop) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useNFTDropClaimPhases(contract);
   } else if (contract instanceof EditionDrop) {
@@ -42,7 +49,7 @@ export function useClaimPhases(
   }
 }
 
-function useNFTDropClaimPhases(contract?: NFTDrop) {
+function useNFTDropClaimPhases(contract?: NFTDrop | SignatureDrop) {
   return useQueryWithNetwork(
     NFTDropKeys.claimPhases(contract?.getAddress()),
     async () => await contract?.claimConditions.getAll(),
@@ -73,10 +80,10 @@ function useTokenDropClaimPhases(contract?: TokenDrop) {
 }
 
 export function useClaimPhasesMutation(
-  contract?: NFTDrop | EditionDrop | TokenDrop,
+  contract?: NFTDrop | EditionDrop | TokenDrop | SignatureDrop,
   tokenId?: string,
 ) {
-  if (contract instanceof NFTDrop) {
+  if (contract instanceof NFTDrop || contract instanceof SignatureDrop) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useNFTDropPhasesMutation(contract);
   } else if (contract instanceof EditionDrop) {
@@ -104,7 +111,7 @@ export function useResetEligibilityMutation(
   }
 }
 
-function useNFTDropPhasesMutation(contract?: NFTDrop) {
+function useNFTDropPhasesMutation(contract?: NFTDrop | SignatureDrop) {
   return useMutationWithInvalidate(
     async (phases: ClaimConditionInput[]) => {
       invariant(contract, "contract is required");

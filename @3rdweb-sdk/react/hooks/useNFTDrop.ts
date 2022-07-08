@@ -12,6 +12,7 @@ import {
   EditionDrop,
   NFTDrop,
   NFTMetadataInput,
+  SignatureDrop,
   UploadProgressEvent,
 } from "@thirdweb-dev/sdk";
 import { BigNumber } from "ethers";
@@ -113,7 +114,9 @@ interface UploadWithProgress {
   onProgress: (event: UploadProgressEvent) => void;
 }
 
-export function useDropBatchMint(contract?: NFTDrop | EditionDrop) {
+export function useDropBatchMint(
+  contract?: NFTDrop | EditionDrop | SignatureDrop,
+) {
   return useMutationWithInvalidate(
     async (data: UploadWithProgress) => {
       invariant(contract, "contract is required");
@@ -199,7 +202,7 @@ interface RevealInput {
   password: string;
 }
 
-export function useNFTDropRevealMutation(contract?: NFTDrop) {
+export function useNFTDropRevealMutation(contract?: NFTDrop | SignatureDrop) {
   return useMutationWithInvalidate(
     async (data: RevealInput) => {
       invariant(contract, "contract is required");

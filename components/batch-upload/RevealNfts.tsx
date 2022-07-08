@@ -10,7 +10,7 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import { BatchToReveal, NFTDrop } from "@thirdweb-dev/sdk";
+import { BatchToReveal, NFTDrop, SignatureDrop } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 import { FormErrorMessage } from "tw-components";
 
 interface RevealNftsModalProps {
-  contract?: NFTDrop;
+  contract?: NFTDrop | SignatureDrop;
   isOpen: boolean;
   onClose: () => void;
   batch: BatchToReveal;

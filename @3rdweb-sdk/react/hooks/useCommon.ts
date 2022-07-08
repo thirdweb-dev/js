@@ -19,6 +19,7 @@ import {
   Marketplace,
   NFTCollection,
   NFTDrop,
+  SignatureDrop,
   Split,
   Token,
   TokenDrop,
@@ -47,6 +48,8 @@ export function useRealContract<T extends ValidContractInstance>(contract: T) {
     return contract as Split;
   } else if (contract instanceof TokenDrop) {
     return contract as TokenDrop;
+  } else if (contract instanceof SignatureDrop) {
+    return contract as SignatureDrop;
   }
 
   throw new Error("Contract is not a valid contract");
@@ -73,6 +76,8 @@ export function useContractConstructor<T extends ValidContractInstance>(
     return Split;
   } else if (contract instanceof TokenDrop) {
     return TokenDrop;
+  } else if (contract instanceof SignatureDrop) {
+    return SignatureDrop;
   }
 
   throw new Error("Contract is not a valid contract");
@@ -97,6 +102,8 @@ export function contractTypeFromContract(contract: ValidContractInstance) {
     return Split.contractType;
   } else if (contract instanceof TokenDrop) {
     return TokenDrop.contractType;
+  } else if (contract instanceof SignatureDrop) {
+    return SignatureDrop.contractType;
   }
 
   throw new Error("Contract does not have a contractType");
@@ -134,6 +141,8 @@ export function useContractName<T extends ValidContractInstance>(
     return "Split";
   } else if (contract instanceof TokenDrop) {
     return "TokenDrop";
+  } else if (contract instanceof SignatureDrop) {
+    return "SignatureDrop";
   }
 
   throw new Error("Contract does not have a contractType");
@@ -161,7 +170,8 @@ export type TransferableContract =
   | Token
   | NFTDrop
   | EditionDrop
-  | TokenDrop;
+  | TokenDrop
+  | SignatureDrop;
 // | PackContract;
 
 export type RecipientContract = NFTDrop | EditionDrop;
@@ -207,7 +217,12 @@ export function useSetSaleRecipientMutation<
   );
 }
 
-export type RoyaltyContract = NFTDrop | EditionDrop | NFTCollection | Edition;
+export type RoyaltyContract =
+  | NFTDrop
+  | EditionDrop
+  | NFTCollection
+  | Edition
+  | SignatureDrop;
 
 export function hasRoyaltyMechanic(
   contract: ValidContractInstance,
@@ -249,7 +264,8 @@ export type PlatformFeeContract =
   | Edition
   | EditionDrop
   | Token
-  | Marketplace;
+  | Marketplace
+  | SignatureDrop;
 
 export function hasPlatformFeeMechanic(
   contract: ValidContractInstance,

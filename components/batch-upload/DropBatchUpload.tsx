@@ -3,7 +3,7 @@ import { SelectReveal } from "./SelectReveal";
 import { UploadStep } from "./UploadStep";
 import { useGetTotalCount } from "@3rdweb-sdk/react/hooks/useGetAll";
 import { Box, Container, Flex, HStack, Icon } from "@chakra-ui/react";
-import { EditionDrop, NFTDrop } from "@thirdweb-dev/sdk";
+import { EditionDrop, NFTDrop, SignatureDrop } from "@thirdweb-dev/sdk";
 import Papa from "papaparse";
 import { useCallback, useRef, useState } from "react";
 import { DropzoneOptions, useDropzone } from "react-dropzone";
@@ -17,7 +17,7 @@ import {
 } from "utils/batch";
 
 interface DropBatchUploadProps {
-  contract?: NFTDrop | EditionDrop;
+  contract?: NFTDrop | EditionDrop | SignatureDrop;
   isOpen: boolean;
   onClose: () => void;
 }

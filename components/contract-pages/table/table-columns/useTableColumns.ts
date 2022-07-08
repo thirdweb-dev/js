@@ -10,6 +10,7 @@ import {
   Marketplace,
   NFTCollection,
   NFTDrop,
+  SignatureDrop,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
 import { useMemo } from "react";
@@ -30,7 +31,7 @@ export function useTableColumns<TContract extends ValidContractInstance>(
     if (contract instanceof Edition) {
       return generateEditionTableColumns() as Column<TTableType<TContract>>[];
     }
-    if (contract instanceof NFTDrop) {
+    if (contract instanceof NFTDrop || contract instanceof SignatureDrop) {
       return generateNFTDropTableColumns() as Column<TTableType<TContract>>[];
     }
     if (contract instanceof EditionDrop) {
