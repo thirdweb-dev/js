@@ -1,5 +1,5 @@
 import { SnapshotUpload } from "../../batch-upload/SnapshotUpload";
-import { AdminOnly } from "@3rdweb-sdk/react";
+import { AdminOnly, useIsAdmin } from "@3rdweb-sdk/react";
 import {
   useClaimPhases,
   useClaimPhasesMutation,
@@ -86,8 +86,8 @@ export const DropPhases: React.FC<DropPhases> = ({ contract, tokenId }) => {
             <Flex direction="column">
               <Heading size="title.md">Claim Phases</Heading>
               <Text size="body.md" fontStyle="italic">
-                Add different phases to control when you drop your {nftsOrToken}
-                , how much they cost, and more.
+                Different phases control when the {nftsOrToken} get dropped, how
+                much they cost, and more.
               </Text>
             </Flex>
           </Flex>
@@ -95,46 +95,48 @@ export const DropPhases: React.FC<DropPhases> = ({ contract, tokenId }) => {
           <DropPhasesForm contract={contract} tokenId={tokenId} />
         </Flex>
       </Card>
-      <Card p={0} position="relative">
-        <Flex pt={{ base: 6, md: 10 }} direction="column" gap={8}>
-          <Flex
-            px={{ base: 6, md: 10 }}
-            as="section"
-            direction="column"
-            gap={4}
-          >
-            <Flex direction="column">
-              <Heading size="title.md">Claim Eligibility</Heading>
-              <Text size="body.md" fontStyle="italic">
-                This contracts claim eligibility stores who has already claimed
-                {nftsOrToken} from this contract and carries across claim
-                phases. Resetting claim eligibility will reset this state
-                permanently, and people who have already claimed to their limit
-                will be able to claim again.
-              </Text>
-            </Flex>
-          </Flex>
-
-          <AdminOnly contract={contract} fallback={<Box pb={5} />}>
-            <TransactionButton
-              colorScheme="primary"
-              transactionCount={1}
-              type="submit"
-              isLoading={mutation.isLoading}
-              onClick={() => {
-                mutation.mutate(undefined, txNotifications);
-              }}
-              loadingText="Resetting..."
-              size="md"
-              borderRadius="xl"
-              borderTopLeftRadius="0"
-              borderTopRightRadius="0"
+      <AdminOnly contract={contract}>
+        <Card p={0} position="relative">
+          <Flex pt={{ base: 6, md: 10 }} direction="column" gap={8}>
+            <Flex
+              px={{ base: 6, md: 10 }}
+              as="section"
+              direction="column"
+              gap={4}
             >
-              Reset Claim Eligibility
-            </TransactionButton>
-          </AdminOnly>
-        </Flex>
-      </Card>
+              <Flex direction="column">
+                <Heading size="title.md">Claim Eligibility</Heading>
+                <Text size="body.md" fontStyle="italic">
+                  This contracts claim eligibility stores who has already
+                  claimed {nftsOrToken} from this contract and carries across
+                  claim phases. Resetting claim eligibility will reset this
+                  state permanently, and people who have already claimed to
+                  their limit will be able to claim again.
+                </Text>
+              </Flex>
+            </Flex>
+
+            <AdminOnly contract={contract} fallback={<Box pb={5} />}>
+              <TransactionButton
+                colorScheme="primary"
+                transactionCount={1}
+                type="submit"
+                isLoading={mutation.isLoading}
+                onClick={() => {
+                  mutation.mutate(undefined, txNotifications);
+                }}
+                loadingText="Resetting..."
+                size="md"
+                borderRadius="xl"
+                borderTopLeftRadius="0"
+                borderTopRightRadius="0"
+              >
+                Reset Claim Eligibility
+              </TransactionButton>
+            </AdminOnly>
+          </Flex>
+        </Card>
+      </AdminOnly>
     </Stack>
   );
 };
@@ -153,6 +155,7 @@ const DropPhasesSchema = z.object({
   phases: ClaimConditionInputArray,
 });
 const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
+  const isAdmin = useIsAdmin(contract);
   const query = useClaimPhases(contract, tokenId);
   const mutation = useClaimPhasesMutation(contract, tokenId);
   const decimals = useDecimals(contract);
@@ -287,17 +290,19 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                   }
                 />
                 <Card position="relative">
-                  <Icon
-                    color="red.500"
-                    as={FiTrash}
-                    boxSize={5}
-                    top="16px"
-                    right="16px"
-                    position="absolute"
-                    cursor="pointer"
-                    _hover={{ color: "red.400" }}
-                    onClick={() => removePhase(index)}
-                  />
+                  <AdminOnly contract={contract}>
+                    <Icon
+                      color="red.500"
+                      as={FiTrash}
+                      boxSize={5}
+                      top="16px"
+                      right="16px"
+                      position="absolute"
+                      cursor="pointer"
+                      _hover={{ color: "red.400" }}
+                      onClick={() => removePhase(index)}
+                    />
+                  </AdminOnly>
 
                   <Flex direction="column" gap={8}>
                     <Heading size="label.lg">Phase {index + 1}</Heading>
@@ -485,7 +490,7 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                               onClick={() => setOpenIndex(index)}
                               rightIcon={<Icon as={FiUpload} />}
                             >
-                              Edit Claimer Snapshot
+                              {isAdmin ? "Edit" : "See"} Claimer Snapshot
                             </Button>
 
                             <Flex
@@ -595,44 +600,44 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
               </React.Fragment>
             );
           })}
+
           {watchFieldArray?.length === 0 && (
             <Alert status="warning" borderRadius="md">
               <AlertIcon />
               <Flex direction="column">
-                <AlertTitle>
-                  You need to set at least one claim phase
-                </AlertTitle>
+                <AlertTitle>No claim phases set.</AlertTitle>
                 <AlertDescription>
                   Without a claim phase no-one will be able to claim this drop.
-                  To add one, click the button below.
                 </AlertDescription>
               </Flex>
             </Alert>
           )}
-          {contract instanceof SignatureDrop && watchFieldArray.length === 0 && (
-            <Button
-              colorScheme="purple"
-              variant="solid"
-              borderRadius="md"
-              leftIcon={<Icon as={FiPlus} />}
-              onClick={addPhase}
-            >
-              Add Claim Phase
-            </Button>
-          )}
+          <AdminOnly contract={contract}>
+            {contract instanceof SignatureDrop && watchFieldArray.length === 0 && (
+              <Button
+                colorScheme="purple"
+                variant="solid"
+                borderRadius="md"
+                leftIcon={<Icon as={FiPlus} />}
+                onClick={addPhase}
+              >
+                Add Claim Phase
+              </Button>
+            )}
 
-          {contract instanceof SignatureDrop ? null : (
-            <Button
-              colorScheme={watchFieldArray?.length > 0 ? "primary" : "purple"}
-              variant={watchFieldArray?.length > 0 ? "outline" : "solid"}
-              borderRadius="md"
-              leftIcon={<Icon as={FiPlus} />}
-              onClick={addPhase}
-            >
-              Add {watchFieldArray?.length > 0 ? "Additional " : "Initial "}
-              Claim Phase
-            </Button>
-          )}
+            {contract instanceof SignatureDrop ? null : (
+              <Button
+                colorScheme={watchFieldArray?.length > 0 ? "primary" : "purple"}
+                variant={watchFieldArray?.length > 0 ? "outline" : "solid"}
+                borderRadius="md"
+                leftIcon={<Icon as={FiPlus} />}
+                onClick={addPhase}
+              >
+                Add {watchFieldArray?.length > 0 ? "Additional " : "Initial "}
+                Claim Phase
+              </Button>
+            )}
+          </AdminOnly>
         </Flex>
         <AdminOnly contract={contract} fallback={<Box pb={5} />}>
           <>
