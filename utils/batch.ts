@@ -1,3 +1,4 @@
+import { NFTMetadataInput } from "@thirdweb-dev/sdk";
 import { useMemo } from "react";
 
 export interface CSVData extends Record<string, string | undefined> {
@@ -148,3 +149,9 @@ export const useMergedData = (
     }
   }, [csvData, jsonData, imageFiles, videoFiles]);
 };
+
+export const shuffleData = (array: NFTMetadataInput[]) =>
+  array
+    .map((value) => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);

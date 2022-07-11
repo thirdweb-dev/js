@@ -35,35 +35,39 @@ import { useForm } from "react-hook-form";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import {
   Card,
+  Checkbox,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
   Heading,
   Text,
 } from "tw-components";
+import { shuffleData } from "utils/batch";
 import z from "zod";
 
-interface SelectRevealOptionProps {
+interface SelectOptionProps {
   name: string;
   description: string;
   isActive: boolean;
   onClick: MouseEventHandler<HTMLDivElement>;
   disabled?: boolean;
+  disabledText?: string;
 }
 
-const SelectRevealOption: React.FC<SelectRevealOptionProps> = ({
+const SelectOption: React.FC<SelectOptionProps> = ({
   name,
   description,
   isActive,
   onClick,
   disabled,
+  disabledText,
 }) => {
   return (
     <Tooltip
       label={
         disabled && (
           <Card bgColor="backgroundHighlight">
-            <Text>Delayed reveal is only available in NFT Drop contracts</Text>
+            <Text>{disabledText}</Text>
           </Card>
         )
       }
@@ -115,13 +119,12 @@ interface SelectRevealProps {
 
 const DelayedRevealSchema = z
   .object({
-    name: z.string().nonempty("A name is required"),
+    name: z.string().min(1, "A name is required"),
     image: z.any().optional(),
     description: z.string().or(z.string().length(0)).optional(),
-    password: z.string().nonempty({ message: "A password is required." }),
-    confirmPassword: z
-      .string()
-      .nonempty({ message: "Please confirm your password." }),
+    password: z.string().min(1, "A password is required."),
+    shuffle: z.boolean().default(false),
+    confirmPassword: z.string().min(1, "Please confirm your password."),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords don't match",
@@ -173,27 +176,39 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
         mb={6}
         flexDir={{ base: "column", md: "row" }}
       >
-        <SelectRevealOption
+        <SelectOption
           name="Reveal upon mint"
           description="Collectors will immediately see the final NFT when they complete the minting"
           isActive={selectedReveal === "instant"}
           onClick={() => setSelectedReveal("instant")}
         />
-        <SelectRevealOption
+        <SelectOption
           name="Delayed Reveal"
           description="Collectors will mint your placeholder image, then you reveal at a later time"
           isActive={selectedReveal === "delayed"}
           onClick={() => setSelectedReveal("delayed")}
           disabled={contract instanceof EditionDrop}
+          disabledText="Delayed reveal is only available is not availble in Edition Drop contracts"
         />
       </Flex>
       <Flex>
         {selectedReveal === "instant" ? (
-          <Flex flexDir="column">
+          <Flex flexDir="column" gap={2}>
             <Text size="body.md" color="gray.600">
               You&apos;re ready to go! Now you can upload the files, we will be
               uploading each file to IPFS so it might take a while.
             </Text>
+            {contract instanceof EditionDrop ? null : (
+              <Flex alignItems="center" gap={3}>
+                <Checkbox {...register("shuffle")} />
+                <Flex gap={1}>
+                  <Text>Shuffle the order of the NFTs before uploading.</Text>
+                  <Text fontStyle="italic">
+                    This is an off-chain operation and is not provable.
+                  </Text>
+                </Flex>
+              </Flex>
+            )}
             <TransactionButton
               mt={4}
               size="lg"
@@ -210,7 +225,9 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
               onClick={() => {
                 mintBatch.mutate(
                   {
-                    metadata: mergedData,
+                    metadata: watch("shuffle")
+                      ? shuffleData(mergedData)
+                      : mergedData,
                     onProgress: (event: UploadProgressEvent) => {
                       setProgress(event);
                     },
@@ -252,7 +269,9 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
                     description: data.description || "",
                     image: data.image,
                   },
-                  metadatas: mergedData,
+                  metadatas: watch("shuffle")
+                    ? shuffleData(mergedData)
+                    : mergedData,
                   password: data.password,
                   onProgress: (event: UploadProgressEvent) => {
                     setProgress(event);
@@ -363,6 +382,15 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
                   {errors?.description?.message}
                 </FormErrorMessage>
               </FormControl>
+              <Flex alignItems="center" gap={3}>
+                <Checkbox {...register("shuffle")} />
+                <Flex gap={1}>
+                  <Text>Shuffle the order of the NFTs before uploading.</Text>
+                  <Text fontStyle="italic">
+                    This is an off-chain operation and is not provable.
+                  </Text>
+                </Flex>
+              </Flex>
               <TransactionButton
                 mt={4}
                 size="lg"

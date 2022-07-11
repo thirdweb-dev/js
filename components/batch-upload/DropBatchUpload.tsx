@@ -196,7 +196,7 @@ export const DropBatchUpload: React.FC<DropBatchUploadProps> = ({
                       cursor="pointer"
                     />
                     <Heading size="title.md">
-                      When will you reveal your NFTs?
+                      When will you reveal your NFTs and in what order?
                     </Heading>
                   </HStack>
                 </Flex>
