@@ -1,4 +1,4 @@
-import { AdminMintConditionCell } from "./AdminMintConditionCell";
+import { ClaimPhasesCell } from "./ClaimPhasesCell";
 import { EditionAirdropCell } from "./EditionAirdropCell";
 import { EditionBurnCell } from "./EditionBurnCell";
 import { EditionTransferCell } from "./EditionTransferCell";
@@ -57,7 +57,7 @@ export const EditionDropActionsCell: React.FC<IEditionActionsCell> = ({
   return (
     <Stack as={ButtonGroup} size="sm" variant="outline">
       <Flex flexDir="column" gap={1}>
-        <AdminMintConditionCell row={row} />
+        <ClaimPhasesCell row={row} />
         <ERC1155Cell row={row} />
       </Flex>
     </Stack>
