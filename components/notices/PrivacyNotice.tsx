@@ -8,6 +8,7 @@ import {
   ModalOverlay,
   useBreakpointValue,
 } from "@chakra-ui/react";
+import { useAddress } from "@thirdweb-dev/react";
 import { Logo } from "components/logo";
 import { useLocalStorage } from "hooks/useLocalStorage";
 import React from "react";
@@ -20,9 +21,10 @@ export const PrivacyNotice: React.FC = () => {
     false,
   );
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const address = useAddress();
   const { register, watch, handleSubmit } = useForm<{ accepted: false }>();
 
-  return hasAcceptedTOS.data || hasAcceptedTOS.isLoading ? null : (
+  return hasAcceptedTOS.data || hasAcceptedTOS.isLoading || !address ? null : (
     <Modal
       size={isMobile ? "full" : "xl"}
       closeOnEsc={false}
