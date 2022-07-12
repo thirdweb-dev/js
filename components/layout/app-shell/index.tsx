@@ -34,6 +34,10 @@ export const AppShell: ComponentWithChildren = ({ children }) => {
   const isCustomContractLayout =
     pathname === "/[wallet]/[network]/[...customContract]";
 
+  const isReleasedContractsLayout =
+    pathname === "/contracts/[wallet]/[...contractName]" ||
+    pathname === "/contracts/[wallet]";
+
   return (
     <Flex
       h="calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))"
@@ -166,6 +170,10 @@ export const AppShell: ComponentWithChildren = ({ children }) => {
           <Box as="main" flexGrow={1}>
             {children}
           </Box>
+        ) : isReleasedContractsLayout ? (
+          <Container flexGrow={1} as="main" maxW="container.page" py={8}>
+            {children}
+          </Container>
         ) : (
           <Container flexGrow={1} as="main" maxW="container.page" py={8}>
             <Breadcrumbs />

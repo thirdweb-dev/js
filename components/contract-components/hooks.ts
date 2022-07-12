@@ -16,7 +16,10 @@ import {
   extractConstructorParamsFromAbi,
   fetchPreDeployMetadata,
 } from "@thirdweb-dev/sdk";
-import { ExtraPublishMetadata } from "@thirdweb-dev/sdk/dist/src/schema/contracts/custom";
+import {
+  ExtraPublishMetadata,
+  PublishedContract,
+} from "@thirdweb-dev/sdk/dist/src/schema/contracts/custom";
 import { StorageSingleton } from "components/app-layouts/providers";
 import { BuiltinContractMap, FeatureIconMap } from "constants/mappings";
 import { StaticImageData } from "next/image";
@@ -86,6 +89,92 @@ export function useContractPrePublishMetadata(uri: string, address?: string) {
     },
     {
       enabled: !!uri && !!address,
+    },
+  );
+}
+
+export function useReleaserProfile(publisherAddress?: string) {
+  const sdk = useSDK();
+  return useQuery(
+    ["releaser-profile", publisherAddress],
+    async () => {
+      invariant(publisherAddress, "address is not defined");
+      invariant(sdk, "sdk not provided");
+      return await sdk.getPublisher().getPublisherProfile(publisherAddress);
+    },
+    {
+      enabled: !!publisherAddress,
+    },
+  );
+}
+
+export function useLatestRelease(
+  publisherAddress?: string,
+  contractName?: string,
+) {
+  const sdk = useSDK();
+  return useQuery(
+    ["latest-release", publisherAddress, contractName],
+    async () => {
+      invariant(publisherAddress, "address is not defined");
+      invariant(contractName, "contract name is not defined");
+      invariant(sdk, "sdk not provided");
+      return await sdk.getPublisher().getLatest(publisherAddress, contractName);
+    },
+    {
+      enabled: !!publisherAddress && !!contractName,
+    },
+  );
+}
+export function useAllVersions(
+  publisherAddress?: string,
+  contractName?: string,
+) {
+  const sdk = useSDK();
+  return useQuery(
+    ["latest-release", publisherAddress, contractName],
+    async () => {
+      invariant(publisherAddress, "address is not defined");
+      invariant(contractName, "contract name is not defined");
+      invariant(sdk, "sdk not provided");
+      const allVersions = await sdk
+        .getPublisher()
+        .getAllVersions(publisherAddress, contractName);
+
+      const releasedVersions = [];
+
+      for (let i = 0; i < allVersions.length; i++) {
+        const contractInfo = await sdk
+          .getPublisher()
+          .fetchPublishedContractInfo(allVersions[i]);
+
+        releasedVersions.unshift({
+          ...allVersions[i],
+          version: contractInfo.publishedMetadata.version,
+          name: contractInfo.publishedMetadata.name,
+          description: contractInfo.publishedMetadata.description,
+        });
+      }
+
+      return releasedVersions;
+    },
+    {
+      enabled: !!publisherAddress && !!contractName,
+    },
+  );
+}
+
+export function useReleasedContractInfo(contract: PublishedContract) {
+  const sdk = useSDK();
+  return useQuery(
+    ["released-contract", contract],
+    async () => {
+      invariant(contract, "contract is not defined");
+      invariant(sdk, "sdk not provided");
+      return await sdk.getPublisher().fetchPublishedContractInfo(contract);
+    },
+    {
+      enabled: !!contract,
     },
   );
 }
@@ -170,9 +259,8 @@ export function useCustomContractDeployMutation(ipfsHash: string) {
   );
 }
 
-export function usePublishedContractsQuery() {
+export function usePublishedContractsQuery(address?: string) {
   const sdk = useSDK();
-  const address = useAddress();
   return useQuery(
     ["published-contracts", address],
     async () => {

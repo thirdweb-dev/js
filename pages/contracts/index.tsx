@@ -24,7 +24,7 @@ const ContractsHomepageWrapped: React.FC = () => {
   });
 
   const walletAddress = useAddress();
-  const publishedContracts = usePublishedContractsQuery();
+  const publishedContracts = usePublishedContractsQuery(walletAddress);
 
   return (
     <Track>

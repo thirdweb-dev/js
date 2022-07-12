@@ -34,7 +34,7 @@ function DeployCustomContract() {
   const router = useRouter();
 
   const walletAddress = useAddress();
-  const publishedContracts = usePublishedContractsQuery();
+  const publishedContracts = usePublishedContractsQuery(walletAddress);
 
   return (
     <Card px={{ base: 4, md: 10 }} py={{ base: 6, md: 10 }}>

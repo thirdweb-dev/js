@@ -432,13 +432,16 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
         {!abiFunction ? (
           <Text>Please select a function on the left to get started</Text>
         ) : (
-          // TODO: Remove this when we update SDK
-          <Text fontSize="12px" noOfLines={2}>
-            {(abiFunction as any).comment}
-          </Text>
-        )}
-        {abiFunction?.signature && (
-          <CodeBlock code={abiFunction.signature} language="typescript" />
+          <>
+            {abiFunction?.comment && (
+              <Text fontSize="12px" noOfLines={2}>
+                {abiFunction.comment}
+              </Text>
+            )}
+            {abiFunction?.signature && (
+              <CodeBlock code={abiFunction?.signature} language="typescript" />
+            )}
+          </>
         )}
       </Flex>
       <Flex

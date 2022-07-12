@@ -1,6 +1,7 @@
 import { useContractPublishMetadataFromURI } from "../../hooks";
 import { DeployableContractContractCellProps } from "../../types";
 import { ButtonGroup, Icon, Tooltip, useDisclosure } from "@chakra-ui/react";
+import { useAddress } from "@thirdweb-dev/react";
 import { ContractDeployForm } from "components/contract-components/contract-deploy-form";
 import { isContractIdBuiltInContract } from "components/contract-components/utils";
 import { BuiltinContractMap } from "constants/mappings";
@@ -14,6 +15,7 @@ export const ContractDeployActionCell: React.FC<
   DeployableContractContractCellProps
 > = ({ cell: { value }, release }) => {
   const publishMetadata = useContractPublishMetadataFromURI(value);
+  const address = useAddress();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { trackEvent } = useTrack();
@@ -95,9 +97,11 @@ export const ContractDeployActionCell: React.FC<
             isLoading={publishMetadata.isLoading}
             colorScheme="purple"
             rightIcon={<Icon as={FiArrowRight} />}
-            href={`/contracts/${
-              release ? "release" : "deploy"
-            }/${encodeURIComponent(value)}`}
+            href={
+              release
+                ? `/contracts/"release"/${encodeURIComponent(value)}`
+                : `/contracts/${address}/${publishMetadata.data?.name}`
+            }
           >
             {release ? "Release" : "Deploy"}
           </LinkButton>

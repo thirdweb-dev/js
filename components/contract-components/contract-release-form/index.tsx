@@ -61,7 +61,8 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
         description:
           prePublishMetadata.data?.latestPublishedContractMetadata
             ?.publishedMetadata.description ||
-          prePublishMetadata.data?.preDeployMetadata.info.title,
+          prePublishMetadata.data?.preDeployMetadata.info.title ||
+          "",
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -93,7 +94,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
                   uris: contractId,
                 });
                 router.push(
-                  `/contracts/deploy/${encodeURIComponent(contractId)}`,
+                  `/contracts/${address}/${publishMetadata.data?.name}`,
                 );
               },
               onError: (err) => {
@@ -137,8 +138,13 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
           </Flex>
           <FormControl isInvalid={!!errors.name}>
             <FormLabel>Description</FormLabel>
-            <Textarea {...register("description")} disabled={!address} />
+            <Input {...register("description")} disabled={!address} />
             <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
+          </FormControl>
+          <FormControl isInvalid={!!errors.name}>
+            <FormLabel>Readme</FormLabel>
+            <Textarea {...register("readme")} disabled={!address} />
+            <FormErrorMessage>{errors?.readme?.message}</FormErrorMessage>
           </FormControl>
           <FormControl isRequired isInvalid={!!errors.name}>
             <Flex alignItems="center" mb={1}>
