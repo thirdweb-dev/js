@@ -36,7 +36,7 @@ const ContractsHomepageWrapped: React.FC = () => {
           </Text>
         </Flex>
         <DeployableContractTable
-          hasDescription
+          context="built-in"
           contractIds={Object.keys(BuiltinContractMap).filter(
             (contract) => contract !== "custom",
           )}

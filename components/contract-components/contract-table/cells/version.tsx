@@ -9,9 +9,9 @@ export const ContractVersionCell: React.FC<
   const address = useAddress();
   const fullPublishMetadata = useContractPrePublishMetadata(value, address);
   return (
-    <Text size="label.md">
+    <Text size="body.md">
       {fullPublishMetadata.data?.latestPublishedContractMetadata
-        ?.publishedMetadata?.version || "-"}
+        ?.publishedMetadata?.version || "First Release"}
     </Text>
   );
 };

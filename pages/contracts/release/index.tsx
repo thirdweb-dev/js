@@ -36,7 +36,10 @@ export default function ContractsReleasePage() {
           </Text>
         </Flex>
 
-        <DeployableContractTable contractIds={ipfsHashes} release />
+        <DeployableContractTable
+          contractIds={ipfsHashes}
+          context="create_release"
+        />
       </Flex>
     </Track>
   );

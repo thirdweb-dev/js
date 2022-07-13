@@ -36,7 +36,7 @@ export default function ContractsDeployPage() {
           </Text>
         </Flex>
 
-        <DeployableContractTable contractIds={ipfsHashes} />
+        <DeployableContractTable contractIds={ipfsHashes} context="deploy" />
       </Flex>
     </Track>
   );

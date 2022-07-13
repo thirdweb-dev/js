@@ -1,5 +1,8 @@
 import { useContractPublishMetadataFromURI } from "../../hooks";
-import { DeployableContractContractCellProps } from "../../types";
+import {
+  ContractCellContext,
+  DeployableContractContractCellProps,
+} from "../../types";
 import { ButtonGroup, Icon, Tooltip, useDisclosure } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import { ContractDeployForm } from "components/contract-components/contract-deploy-form";
@@ -13,7 +16,7 @@ import { Button, Drawer, LinkButton, TrackedIconButton } from "tw-components";
 
 export const ContractDeployActionCell: React.FC<
   DeployableContractContractCellProps
-> = ({ cell: { value }, release }) => {
+> = ({ cell: { value }, context }) => {
   const publishMetadata = useContractPublishMetadataFromURI(value);
   const address = useAddress();
 
@@ -97,16 +100,36 @@ export const ContractDeployActionCell: React.FC<
             isLoading={publishMetadata.isLoading}
             colorScheme="purple"
             rightIcon={<Icon as={FiArrowRight} />}
-            href={
-              release
-                ? `/contracts/"release"/${encodeURIComponent(value)}`
-                : `/contracts/${address}/${publishMetadata.data?.name}`
-            }
+            href={actionUrlPath(
+              context,
+              value,
+              address,
+              publishMetadata.data?.name,
+            )}
           >
-            {release ? "Release" : "Deploy"}
+            {context === "create_release" ? "Release" : "Deploy"}
           </LinkButton>
         )}
       </ButtonGroup>
     </>
   );
 };
+
+function actionUrlPath(
+  context: ContractCellContext | undefined,
+  hash: string,
+  address?: string,
+  name?: string,
+) {
+  switch (context) {
+    case "view_release":
+      return `/contracts/${address}/${name}`;
+    case "create_release":
+      return `/contracts/release/${encodeURIComponent(hash)}`;
+    case "deploy":
+      return `/contracts/deploy/${encodeURIComponent(hash)}`;
+    default:
+      // should never happen
+      return `/contracts/deploy/${encodeURIComponent(hash)}`;
+  }
+}

@@ -1,4 +1,4 @@
-import { ContractId } from "../types";
+import { ContractCellContext, ContractId } from "../types";
 import { ContractDeployActionCell } from "./cells/deploy-action";
 import { ContractDescriptionCell } from "./cells/description";
 import { ContractImageCell } from "./cells/image";
@@ -16,21 +16,13 @@ interface DeployableContractTableProps {
     selected: ContractId[];
     onChange: (contractIds: ContractId[]) => void;
   };
-  hasDescription?: true;
   isFetching?: boolean;
-  release?: boolean;
+  context?: ContractCellContext;
 }
 
 export const DeployableContractTable: ComponentWithChildren<
   DeployableContractTableProps
-> = ({
-  contractIds,
-  selectable,
-  hasDescription,
-  isFetching,
-  release,
-  children,
-}) => {
+> = ({ contractIds, selectable, isFetching, context, children }) => {
   const tableColumns: Column<{ contractId: ContractId }>[] = useMemo(() => {
     let cols: Column<{ contractId: ContractId }>[] = [
       {
@@ -45,7 +37,7 @@ export const DeployableContractTable: ComponentWithChildren<
       },
     ];
 
-    if (hasDescription) {
+    if (context !== "deploy") {
       cols = [
         ...cols,
         {
@@ -54,7 +46,8 @@ export const DeployableContractTable: ComponentWithChildren<
           Cell: (cell: any) => <ContractDescriptionCell cell={cell} />,
         },
       ];
-    } else {
+    }
+    if (context === "view_release" || context === "create_release") {
       cols = [
         ...cols,
         {
@@ -64,13 +57,14 @@ export const DeployableContractTable: ComponentWithChildren<
         },
       ];
     }
+
     cols = [
       ...cols,
       {
         id: "deploy-action",
         accessor: (row) => row.contractId,
         Cell: (cell: any) => (
-          <ContractDeployActionCell cell={cell} release={release} />
+          <ContractDeployActionCell cell={cell} context={context} />
         ),
       },
     ];
@@ -131,7 +125,7 @@ export const DeployableContractTable: ComponentWithChildren<
     return cols;
     // this is to avoid re-rendering of the table when the contractIds array changes (it will always be a string array, so we can just join it and compare the string output)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [contractIds.join(), release, selectable, hasDescription]);
+  }, [contractIds.join(), context, selectable]);
 
   const tableInstance = useTable({
     columns: tableColumns,

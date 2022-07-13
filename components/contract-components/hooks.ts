@@ -72,6 +72,7 @@ export function useContractPublishMetadataFromURI(contractId: ContractId) {
       return {
         image: (resolved as any)?.image || FeatureIconMap.custom,
         name: resolved.name,
+        description: resolved.info?.title,
         abi: resolved.abi,
         info: resolved.info,
         licenses: resolved.licenses,
@@ -90,6 +91,10 @@ export function useContractPrePublishMetadata(uri: string, address?: string) {
   return useQuery(
     ["pre-publish-metadata", uri, address],
     async () => {
+      invariant(
+        !isContractIdBuiltInContract(uri),
+        "Skipping publish metadata fetch for built-in contract",
+      );
       invariant(address, "address is not defined");
       // TODO: Make this nicer.
       invariant(uri !== "ipfs://undefined", "uri can't be undefined");

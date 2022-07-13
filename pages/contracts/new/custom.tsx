@@ -58,6 +58,7 @@ function DeployCustomContract() {
             contractIds={(publishedContracts.data || [])?.map((d) =>
               d.metadataUri.replace("ipfs://", ""),
             )}
+            context="view_release"
           >
             {publishedContracts.isLoading && (
               <Center>
