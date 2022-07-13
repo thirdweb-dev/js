@@ -1,11 +1,9 @@
+import { useReleasedContractFunctions } from "../hooks";
 import { InfoIcon } from "@chakra-ui/icons";
 import { Flex, Icon, Tooltip } from "@chakra-ui/react";
-import { useSDK } from "@thirdweb-dev/react";
 import { AbiFunction, PublishedContract } from "@thirdweb-dev/sdk";
 import { BiPencil } from "react-icons/bi";
 import { BsEye } from "react-icons/bs";
-import { useQuery } from "react-query";
-import invariant from "tiny-invariant";
 import { Badge, Card, Heading, Text } from "tw-components";
 
 interface ExtractedContractFunctionsProps {
@@ -14,23 +12,6 @@ interface ExtractedContractFunctionsProps {
 
 interface ContractFunctionProps {
   fn: AbiFunction;
-}
-
-function useReleasedContractFunctions(contractRelease: PublishedContract) {
-  const sdk = useSDK();
-  return useQuery(
-    ["contract-functions", contractRelease.metadataUri],
-    async () => {
-      invariant(contractRelease, "contract is not defined");
-      invariant(sdk, "sdk not provided");
-      return await sdk
-        ?.getPublisher()
-        .extractFunctions(contractRelease.metadataUri);
-    },
-    {
-      enabled: !!contractRelease && !!sdk,
-    },
-  );
 }
 
 const ContractFunction: React.FC<ContractFunctionProps> = ({ fn }) => {
@@ -96,7 +77,7 @@ export const ExtractedContractFunctions: React.FC<
             (f) => f.stateMutability === "view" || f.stateMutability === "pure",
           )
           .map((fn) => (
-            <ContractFunction key={fn.name} fn={fn} />
+            <ContractFunction key={fn.signature} fn={fn} />
           ))}
       </Flex>
     </Flex>

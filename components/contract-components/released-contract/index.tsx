@@ -1,4 +1,7 @@
-import { useReleasedContractInfo } from "../hooks";
+import {
+  useReleasedContractCompilerMetadata,
+  useReleasedContractInfo,
+} from "../hooks";
 import { ReleaserHeader } from "../releaser/releaser-header";
 import { ExtractedContractFunctions } from "./extracted-contract-functions";
 import {
@@ -33,6 +36,7 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
   release,
 }) => {
   const releasedContractInfo = useReleasedContractInfo(release);
+  const { data: compilerInfo } = useReleasedContractCompilerMetadata(release);
   const wallet = useSingleQueryParam("wallet");
   const router = useRouter();
 
@@ -94,8 +98,7 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
               <Flex gap={2} alignItems="center">
                 <Icon as={IoDocumentOutline} boxSize={5} />
                 <Text size="label.md">
-                  {releasedContractInfo.data?.publishedMetadata.license ||
-                    "No license found"}
+                  License: {compilerInfo?.licenses?.join(", ") || "None"}
                 </Text>
               </Flex>
             </ListItem>
