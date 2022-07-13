@@ -1,7 +1,7 @@
 import { IContractActionButtonProps } from "./types";
 import { MinterOnly } from "@3rdweb-sdk/react";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import { EditionDrop, NFTDrop } from "@thirdweb-dev/sdk";
+import { EditionDrop, NFTDrop, SignatureDrop } from "@thirdweb-dev/sdk";
 import { MintDrawer } from "components/shared/MintDrawer";
 import React, { useMemo } from "react";
 import { FiPlus } from "react-icons/fi";
@@ -15,7 +15,9 @@ export const MintButton: React.FC<IMintButtonProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const mintButtonText = useMemo(() => {
-    return contract instanceof NFTDrop || contract instanceof EditionDrop
+    return contract instanceof NFTDrop ||
+      contract instanceof EditionDrop ||
+      contract instanceof SignatureDrop
       ? "Create"
       : "Mint";
   }, [contract]);

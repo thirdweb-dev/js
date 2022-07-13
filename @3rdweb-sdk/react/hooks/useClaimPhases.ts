@@ -1,8 +1,14 @@
-import { NFTDropKeys, editionDropKeys, tokenDropKeys } from "../cache-keys";
+import {
+  CacheKeyMap,
+  NFTDropKeys,
+  editionDropKeys,
+  tokenDropKeys,
+} from "../cache-keys";
 import {
   useMutationWithInvalidate,
   useQueryWithNetwork,
 } from "./query/useQueryWithNetwork";
+import { useContractTypeOfContract } from "./useCommon";
 import { useEditionDropResetClaimEligibilityMutation } from "./useEditionDrop";
 import { useNFTDropResetClaimEligibilityMutation } from "./useNFTDrop";
 import {
@@ -50,8 +56,11 @@ export function useClaimPhases(
 }
 
 function useNFTDropClaimPhases(contract?: NFTDrop | SignatureDrop) {
+  const contractType = useContractTypeOfContract(contract);
   return useQueryWithNetwork(
-    NFTDropKeys.claimPhases(contract?.getAddress()),
+    CacheKeyMap[contractType as keyof typeof CacheKeyMap].claimPhases(
+      contract?.getAddress(),
+    ),
     async () => await contract?.claimConditions.getAll(),
     {
       enabled: !!contract,
@@ -96,10 +105,10 @@ export function useClaimPhasesMutation(
 }
 
 export function useResetEligibilityMutation(
-  contract?: NFTDrop | EditionDrop | TokenDrop,
+  contract?: NFTDrop | EditionDrop | TokenDrop | SignatureDrop,
   tokenId?: string,
 ) {
-  if (contract instanceof NFTDrop) {
+  if (contract instanceof NFTDrop || contract instanceof SignatureDrop) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useNFTDropResetClaimEligibilityMutation(contract);
   } else if (contract instanceof EditionDrop) {

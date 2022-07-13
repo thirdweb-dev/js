@@ -54,6 +54,33 @@ export const NFTDropKeys = {
     ] as const,
 };
 
+export const SignatureDropKeys = {
+  all: ["nft-drop"] as const,
+  lists: () => [...SignatureDropKeys.all, "list"] as const,
+  list: (address = constants.AddressZero) =>
+    [...SignatureDropKeys.lists(), address] as const,
+  details: () => [...SignatureDropKeys.all, "detail"] as const,
+  detail: (address = constants.AddressZero) =>
+    [...SignatureDropKeys.details(), address] as const,
+  batchesToReveal: (address = constants.AddressZero) =>
+    [...SignatureDropKeys.details(), address, "batchesToReveal"] as const,
+  supply: (address = constants.AddressZero) =>
+    [...SignatureDropKeys.detail(address), "supply"] as const,
+  activeClaimCondition: (address = constants.AddressZero) =>
+    [...SignatureDropKeys.detail(address), "activeClaimCondition"] as const,
+  claimPhases: (address = constants.AddressZero) =>
+    [...SignatureDropKeys.detail(address), "claimPhases"] as const,
+  balanceOf: (
+    address = constants.AddressZero,
+    userAddress = constants.AddressZero,
+  ) =>
+    [
+      ...SignatureDropKeys.detail(address),
+      "balanceOf",
+      { address: userAddress },
+    ] as const,
+};
+
 export const editionDropKeys = {
   all: ["edition-drop"] as const,
   lists: () => [...editionDropKeys.all, "list"] as const,
@@ -308,6 +335,6 @@ export const CacheKeyMap: Record<ContractType, any> = {
   split: splitsKeys,
   "token-drop": tokenDropKeys,
   custom: {},
-  "signature-drop": {},
+  "signature-drop": SignatureDropKeys,
   multiwrap: {},
 };
