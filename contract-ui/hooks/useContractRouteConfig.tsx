@@ -61,6 +61,14 @@ export function useContractRouteConfig(
         ),
     },
     {
+      title: "Code",
+      path: "code",
+      element: () =>
+        import("../tabs/code/page").then(({ ContractCodePage }) => (
+          <ContractCodePage contractAddress={contractAddress} />
+        )),
+    },
+    {
       title: "Activity",
       path: "activity",
       element: () =>

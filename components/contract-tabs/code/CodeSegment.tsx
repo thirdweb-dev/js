@@ -15,7 +15,8 @@ interface ICodeSegment {
   snippet: CodeSnippet;
   environment: Environment;
   setEnvironment: Dispatch<SetStateAction<Environment>>;
-  isInstallCommand?: true;
+  isInstallCommand?: boolean;
+  hideTabs?: boolean;
 }
 
 const Environments: SupportedEnvironment[] = [
@@ -56,6 +57,7 @@ export const CodeSegment: React.FC<ICodeSegment> = ({
   environment,
   setEnvironment,
   isInstallCommand,
+  hideTabs,
 }) => {
   const activeEnvironment: Environment = useMemo(() => {
     return (
@@ -82,22 +84,24 @@ export const CodeSegment: React.FC<ICodeSegment> = ({
 
   return (
     <Stack spacing={2}>
-      <Flex justify="space-between" align="flex-end">
-        <Flex direction="column" gap={4}>
-          <ButtonGroup isAttached size="sm" variant="outline">
-            {environments.map((env) => (
-              <SupportedEnvironmentButton
-                key={env.environment}
-                icon={<Icon as={env.icon} />}
-                active={activeEnvironment === env.environment}
-                onClick={() => setEnvironment(env.environment)}
-              >
-                {env.title}
-              </SupportedEnvironmentButton>
-            ))}
-          </ButtonGroup>
+      {!hideTabs && (
+        <Flex justify="space-between" align="flex-end">
+          <Flex direction="column" gap={4}>
+            <ButtonGroup isAttached size="sm" variant="outline">
+              {environments.map((env) => (
+                <SupportedEnvironmentButton
+                  key={env.environment}
+                  icon={<Icon as={env.icon} />}
+                  active={activeEnvironment === env.environment}
+                  onClick={() => setEnvironment(env.environment)}
+                >
+                  {env.title}
+                </SupportedEnvironmentButton>
+              ))}
+            </ButtonGroup>
+          </Flex>
         </Flex>
-      </Flex>
+      )}
 
       <CodeBlock
         code={code}
