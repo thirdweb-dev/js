@@ -75,7 +75,12 @@ export const getAcceptedFiles = async (acceptedFiles: File[]) => {
     .filter((f) => f.type.includes("image/"))
     .sort(sortAscending);
   const videos = acceptedFiles
-    .filter((f) => f.type.includes("video/"))
+    .filter(
+      (f) =>
+        f.type.includes("video/") ||
+        f.name.endsWith(".glb") ||
+        f.name.endsWith(".usdz"),
+    )
     .sort(sortAscending);
 
   return { csv, json, images, videos };
