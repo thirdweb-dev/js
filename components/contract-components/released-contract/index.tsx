@@ -1,4 +1,6 @@
 import {
+  useContractEnabledFeatures,
+  useContractPublishMetadataFromURI,
   useReleasedContractCompilerMetadata,
   useReleasedContractInfo,
 } from "../hooks";
@@ -17,6 +19,7 @@ import { useSingleQueryParam } from "hooks/useQueryParam";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { BiShareAlt } from "react-icons/bi";
+import { FcCheckmark } from "react-icons/fc";
 import { IoMdCheckmark } from "react-icons/io";
 import { IoDocumentOutline } from "react-icons/io5";
 import { SiTwitter } from "react-icons/si";
@@ -39,6 +42,13 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
   const { data: compilerInfo } = useReleasedContractCompilerMetadata(release);
   const wallet = useSingleQueryParam("wallet");
   const router = useRouter();
+  const contractReleaseMetadata = useContractPublishMetadataFromURI(
+    release.metadataUri,
+  );
+
+  const enabledFeatures = useContractEnabledFeatures(
+    contractReleaseMetadata.data?.abi,
+  );
 
   const currentRoute = `https://thirdweb.com${router.asPath}`;
 
@@ -93,7 +103,7 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
         <Divider />
         <Flex flexDir="column" gap={4}>
           <Heading size="title.sm">Contract details</Heading>
-          <List>
+          <List as={Flex} flexDir="column" gap={3}>
             <ListItem>
               <Flex gap={2} alignItems="center">
                 <Icon as={IoDocumentOutline} boxSize={5} />
@@ -102,6 +112,14 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
                 </Text>
               </Flex>
             </ListItem>
+            {(enabledFeatures || []).map((feature) => (
+              <ListItem key={feature.name}>
+                <Flex gap={2} alignItems="center">
+                  <Icon as={FcCheckmark} boxSize={5} />
+                  <Text size="label.md">{feature.name}</Text>
+                </Flex>
+              </ListItem>
+            ))}
           </List>
         </Flex>
         <Divider />

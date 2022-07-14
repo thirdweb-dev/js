@@ -34,7 +34,7 @@ const ContractsNamePageWrapped = () => {
         </Flex>
         <Flex gap={3}>
           <Select onChange={(e) => setSelectedVersion(e.target.value)} w={24}>
-            {(allVersions.data || []).map((releasedVersion) => (
+            {(allVersions?.data || []).map((releasedVersion) => (
               <option key={releasedVersion.id} value={releasedVersion.version}>
                 {releasedVersion.version}
               </option>

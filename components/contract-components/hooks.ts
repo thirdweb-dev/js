@@ -17,6 +17,7 @@ import {
   extractFunctionsFromAbi,
   fetchPreDeployMetadata,
 } from "@thirdweb-dev/sdk";
+import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/src/constants/contract-features";
 import {
   AbiSchema,
   ContractInfoSchema,
@@ -338,4 +339,61 @@ export function useContractFeatures(abi?: any) {
   return useMemo(() => {
     return abi ? detectFeatures(abi) : undefined;
   }, [abi]);
+}
+
+const ALWAYS_SUGGESTED = ["ContractMetadata", "Permissions"];
+
+function extractFeatures(
+  input: ReturnType<typeof detectFeatures>,
+  enabledFeatures: FeatureWithEnabled[] = [],
+  suggestedFeatures: FeatureWithEnabled[] = [],
+  parent = "__ROOT__",
+) {
+  if (!input) {
+    return {
+      enabledFeatures,
+      suggestedFeatures,
+    };
+  }
+  for (const featureKey in input) {
+    const feature = input[featureKey];
+    // if feature is enabled, then add it to enabledFeatures
+    if (feature.enabled) {
+      enabledFeatures.push(feature);
+    }
+    // otherwise if it is disabled, but it's parent is enabled or suggested, then add it to suggestedFeatures
+    else if (
+      enabledFeatures.findIndex((f) => f.name === parent) > -1 ||
+      ALWAYS_SUGGESTED.includes(feature.name)
+    ) {
+      suggestedFeatures.push(feature);
+    }
+    // recurse
+    extractFeatures(
+      feature.features,
+      enabledFeatures,
+      suggestedFeatures,
+      feature.name,
+    );
+  }
+
+  return {
+    enabledFeatures,
+    suggestedFeatures,
+  };
+}
+
+export function useContractDetectedFeatures(abi?: any) {
+  const features = useMemo(() => {
+    if (abi) {
+      return extractFeatures(detectFeatures(abi));
+    }
+    return undefined;
+  }, [abi]);
+  return features;
+}
+
+export function useContractEnabledFeatures(abi?: any) {
+  const features = useContractDetectedFeatures(abi);
+  return features ? features.enabledFeatures : [];
 }
