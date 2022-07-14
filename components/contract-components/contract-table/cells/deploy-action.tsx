@@ -9,6 +9,7 @@ import { ContractDeployForm } from "components/contract-components/contract-depl
 import { isContractIdBuiltInContract } from "components/contract-components/utils";
 import { BuiltinContractMap } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useSingleQueryParam } from "hooks/useQueryParam";
 import { BsShieldFillCheck } from "react-icons/bs";
 import { FiArrowRight } from "react-icons/fi";
 import { IoRocketOutline } from "react-icons/io5";
@@ -19,6 +20,7 @@ export const ContractDeployActionCell: React.FC<
 > = ({ cell: { value }, context }) => {
   const publishMetadata = useContractPublishMetadataFromURI(value);
   const address = useAddress();
+  const wallet = useSingleQueryParam("wallet");
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { trackEvent } = useTrack();
@@ -103,7 +105,7 @@ export const ContractDeployActionCell: React.FC<
             href={actionUrlPath(
               context,
               value,
-              address,
+              wallet || address,
               publishMetadata.data?.name,
             )}
           >
