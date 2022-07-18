@@ -361,7 +361,7 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
                   You can optionally upload an image as the placeholder.
                 </FormHelperText>
                 <FormErrorMessage>
-                  {errors?.image?.message as string}
+                  {errors?.image?.message as unknown as string}
                 </FormErrorMessage>
               </FormControl>
               <FormControl isRequired isInvalid={!!errors.name}>

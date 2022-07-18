@@ -180,7 +180,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract }) => {
               files here.
             </FormHelperText>
             <FormErrorMessage>
-              {mediaFileError?.message as string}
+              {mediaFileError?.message as unknown as string}
             </FormErrorMessage>
           </FormControl>
           {showCoverImageUpload && (
@@ -202,7 +202,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract }) => {
                 You can optionally upload an image as the cover of your NFT.
               </FormHelperText>
               <FormErrorMessage>
-                {errors?.image?.message as string}
+                {errors?.image?.message as unknown as string}
               </FormErrorMessage>
             </FormControl>
           )}
@@ -225,7 +225,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract }) => {
           )}
           <PropertiesFormControl
             watch={watch}
-            errors={errors}
+            errors={errors as any}
             control={control}
             register={register}
             setValue={setValue}
@@ -266,7 +266,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract }) => {
                       view the item on your site.
                     </FormHelperText>
                     <FormErrorMessage>
-                      {errors?.external_url?.message as string}
+                      {errors?.external_url?.message as unknown as string}
                     </FormErrorMessage>
                   </FormControl>
                 )}

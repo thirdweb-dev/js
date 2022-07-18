@@ -167,7 +167,7 @@ export const EditionDropMintForm: React.FC<INFTDropMintForm> = ({
               files here.
             </FormHelperText>
             <FormErrorMessage>
-              {mediaFileError?.message as string}
+              {mediaFileError?.message as unknown as string}
             </FormErrorMessage>
           </FormControl>
           {showCoverImageUpload && (
@@ -189,7 +189,7 @@ export const EditionDropMintForm: React.FC<INFTDropMintForm> = ({
                 You can optionally upload an image as the cover of your NFT.
               </FormHelperText>
               <FormErrorMessage>
-                {errors?.image?.message as string}
+                {errors?.image?.message as unknown as string}
               </FormErrorMessage>
             </FormControl>
           )}
@@ -201,7 +201,7 @@ export const EditionDropMintForm: React.FC<INFTDropMintForm> = ({
           </FormControl>
           <PropertiesFormControl
             watch={watch}
-            errors={errors}
+            errors={errors as any}
             control={control}
             register={register}
             setValue={setValue}
@@ -242,7 +242,7 @@ export const EditionDropMintForm: React.FC<INFTDropMintForm> = ({
                       view the item on your site.
                     </FormHelperText>
                     <FormErrorMessage>
-                      {errors?.external_url?.message as string}
+                      {errors?.external_url?.message as unknown as string}
                     </FormErrorMessage>
                   </FormControl>
                 )}
