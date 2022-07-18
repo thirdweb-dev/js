@@ -53,7 +53,6 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
   const currentRoute = `https://thirdweb.com${router.asPath}`;
 
   const { onCopy, hasCopied } = useClipboard(currentRoute);
-
   return (
     <Flex gap={12} w="full" flexDir={{ base: "column", md: "row" }}>
       <NextSeo

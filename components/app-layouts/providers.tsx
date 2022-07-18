@@ -1,41 +1,10 @@
 import { useActiveChainId } from "@3rdweb-sdk/react";
 import { ThirdwebProvider, WalletConnector } from "@thirdweb-dev/react";
 import { ChainId, IpfsStorage, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
-import { BigNumber } from "ethers";
 import { useNativeColorMode } from "hooks/useNativeColorMode";
-import React, { useEffect } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { createWebStoragePersister } from "react-query/createWebStoragePersister";
-import { persistQueryClient } from "react-query/persistQueryClient";
+import React from "react";
 import { ComponentWithChildren } from "types/component-with-children";
-
-const __CACHE_BUSTER = "tw_v2.0.4";
-
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      // 24 hours
-      cacheTime: 1000 * 60 * 60 * 24,
-      // 30 seconds
-      staleTime: 1000 * 30,
-    },
-  },
-});
-
-export function bigNumberReplacer(_key: string, value: any) {
-  // if we find a BigNumber then make it into a string (since that is safe)
-  if (
-    BigNumber.isBigNumber(value) ||
-    (typeof value === "object" &&
-      value !== null &&
-      value.type === "BigNumber" &&
-      "hex" in value)
-  ) {
-    return BigNumber.from(value).toString();
-  }
-
-  return value;
-}
+import { queryClient } from "utils/query-client";
 
 export const StorageSingleton = new IpfsStorage(
   process.env.NEXT_PUBLIC_IPFS_GATEWAY_URL,
@@ -101,45 +70,32 @@ if (process.env.NEXT_PUBLIC_MAGIC_KEY) {
 export const Providers: ComponentWithChildren = ({ children }) => {
   useNativeColorMode();
 
-  useEffect(() => {
-    persistQueryClient({
-      queryClient,
-      buster: __CACHE_BUSTER,
-      persister: createWebStoragePersister({
-        storage: window.localStorage,
-        serialize: (data) => JSON.stringify(data, bigNumberReplacer),
-      }),
-    });
-  }, []);
-
   const activeChainId = useActiveChainId();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThirdwebProvider
-        queryClient={queryClient}
-        dAppMeta={{
-          name: "thirdweb",
-          logoUrl: "https://thirdweb.com/favicon.ico",
-          isDarkMode: false,
-          url: "https://thirdweb.com",
-        }}
-        chainRpc={alchemyUrlMap}
-        desiredChainId={activeChainId}
-        sdkOptions={{
-          gasSettings: { maxPriceInGwei: 650 },
-          readonlySettings: activeChainId
-            ? {
-                chainId: activeChainId,
-                rpcUrl: alchemyUrlMap[activeChainId as SUPPORTED_CHAIN_ID],
-              }
-            : undefined,
-        }}
-        storageInterface={StorageSingleton}
-        walletConnectors={walletConnectors}
-      >
-        {children}
-      </ThirdwebProvider>
-    </QueryClientProvider>
+    <ThirdwebProvider
+      queryClient={queryClient}
+      dAppMeta={{
+        name: "thirdweb",
+        logoUrl: "https://thirdweb.com/favicon.ico",
+        isDarkMode: false,
+        url: "https://thirdweb.com",
+      }}
+      chainRpc={alchemyUrlMap}
+      desiredChainId={activeChainId}
+      sdkOptions={{
+        gasSettings: { maxPriceInGwei: 650 },
+        readonlySettings: activeChainId
+          ? {
+              chainId: activeChainId,
+              rpcUrl: alchemyUrlMap[activeChainId as SUPPORTED_CHAIN_ID],
+            }
+          : undefined,
+      }}
+      storageInterface={StorageSingleton}
+      walletConnectors={walletConnectors}
+    >
+      {children}
+    </ThirdwebProvider>
   );
 };

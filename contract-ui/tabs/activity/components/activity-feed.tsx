@@ -21,8 +21,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { ContractEvent } from "@thirdweb-dev/sdk";
-import { bigNumberReplacer } from "components/app-layouts/providers";
 import { AnimatePresence, motion } from "framer-motion";
+import { bigNumberReplacer } from "pages/_app";
 import { useState } from "react";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { FiChevronDown, FiCopy } from "react-icons/fi";
