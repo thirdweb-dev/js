@@ -6,21 +6,24 @@ import { ReleasedContract } from "components/contract-components/released-contra
 import { FeatureIconMap } from "constants/mappings";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { useSingleQueryParam } from "hooks/useQueryParam";
-import { ReactElement, useMemo, useState } from "react";
+import { useRouter } from "next/router";
+import { ReactElement, useMemo } from "react";
 import { Heading, LinkButton, Text } from "tw-components";
 
 const ContractsNamePageWrapped = () => {
   const wallet = useSingleQueryParam("wallet");
   const contractName = useSingleQueryParam("contractName");
+  const version = useSingleQueryParam("version");
+  const router = useRouter();
+
   const allVersions = useAllVersions(wallet, contractName);
-  const [selectedVersion, setSelectedVersion] = useState<string>();
 
   const release = useMemo(() => {
-    if (selectedVersion) {
-      return allVersions.data?.find((v) => v.version === selectedVersion);
+    if (version) {
+      return allVersions.data?.find((v) => v.version === version);
     }
     return allVersions.data?.[0];
-  }, [allVersions?.data, selectedVersion]);
+  }, [allVersions?.data, version]);
 
   return (
     <Flex direction="column" gap={8}>
@@ -33,9 +36,20 @@ const ContractsNamePageWrapped = () => {
           </Skeleton>
         </Flex>
         <Flex gap={3}>
-          <Select onChange={(e) => setSelectedVersion(e.target.value)} w={24}>
+          <Select
+            onChange={(e) =>
+              router.push(
+                `/contracts/${wallet}/${contractName}/${e.target.value}`,
+              )
+            }
+            w={24}
+            value={version}
+          >
             {(allVersions?.data || []).map((releasedVersion) => (
-              <option key={releasedVersion.id} value={releasedVersion.version}>
+              <option
+                key={releasedVersion.version}
+                value={releasedVersion.version}
+              >
                 {releasedVersion.version}
               </option>
             ))}
@@ -46,7 +60,7 @@ const ContractsNamePageWrapped = () => {
               release?.metadataUri.replace("ipfs://", "") || "",
             )}`}
           >
-            Deploy {selectedVersion || "Now"}
+            Deploy Now
           </LinkButton>
         </Flex>
       </Flex>
