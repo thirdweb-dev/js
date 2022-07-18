@@ -11,14 +11,14 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import { CodeSelector } from "components/homepage/CodeSelector";
-import { ContractCard } from "components/homepage/ContractCard";
-import { DashboardCard } from "components/homepage/DashboardCard";
-import { HomepageFooter } from "components/homepage/Footer";
-import { HomepageSection } from "components/homepage/Section";
-import { HomepageTopNav } from "components/homepage/Topnav";
-import { ExamplesSection } from "components/homepage/examples/ExamplesSection";
-import { MultiChainSVG } from "components/homepage/multi-chain-svg";
+import { HomepageSection } from "components/product-pages/common/Section";
+import { CodeSelector } from "components/product-pages/homepage/CodeSelector";
+import { ContractCard } from "components/product-pages/homepage/ContractCard";
+import { DashboardCard } from "components/product-pages/homepage/DashboardCard";
+import { HomepageFooter } from "components/product-pages/homepage/Footer";
+import { HomepageTopNav } from "components/product-pages/homepage/Topnav";
+import { ExamplesSection } from "components/product-pages/homepage/examples/ExamplesSection";
+import { MultiChainSVG } from "components/product-pages/homepage/multi-chain-svg";
 import { GeneralCta } from "components/shared/GeneralCta";
 import { useTrack } from "hooks/analytics/useTrack";
 // images

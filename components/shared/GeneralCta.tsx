@@ -1,16 +1,18 @@
 import { Box, Icon } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { BsLightningCharge } from "react-icons/bs";
-import { ButtonProps, LinkButton } from "tw-components";
+import { ButtonProps, LinkButton, LinkButtonProps } from "tw-components";
 
-interface GeneralCtaProps extends ButtonProps {
+interface GeneralCtaProps extends Omit<LinkButtonProps, "href"> {
   size?: ButtonProps["size"];
   title?: string;
+  href?: string;
 }
 
 export const GeneralCta: React.FC<GeneralCtaProps> = ({
   size = "md",
   title = "Start building",
+  href = "/dashboard",
   ...props
 }) => {
   const { trackEvent } = useTrack();
@@ -42,7 +44,7 @@ export const GeneralCta: React.FC<GeneralCtaProps> = ({
       tocolor="#E0507A"
       size={size}
       borderRadius="md"
-      href="/dashboard"
+      href={href}
       {...props}
     >
       <Box as="span" py={0.5}>

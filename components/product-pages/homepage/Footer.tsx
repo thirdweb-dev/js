@@ -17,6 +17,7 @@ import {
 import { Logo } from "components/logo";
 import { useForm } from "react-hook-form";
 import { HiOutlineMail } from "react-icons/hi";
+import { MdMarkEmailRead } from "react-icons/md";
 import {
   SiDiscord,
   SiGithub,
@@ -30,6 +31,7 @@ import {
   Button,
   Heading,
   LinkButton,
+  Text,
   TrackedIconButton,
   TrackedLink,
 } from "tw-components";
@@ -42,16 +44,25 @@ export const HomepageFooter: React.FC = () => {
   return (
     <Box bgColor="#111315" zIndex="100">
       <Container as="footer" maxW="container.page" color="gray.500">
-        <Box p={16} px={{ base: 4, md: 16 }} mx="auto">
-          <Heading
-            size="label.md"
-            textTransform="uppercase"
-            pb={3}
-            textAlign="center"
-            lineHeight={1.5}
-          >
-            Join 40,000+ builders and stay up to date with our newsletter
-          </Heading>
+        <Stack
+          spacing="8"
+          direction={{ base: "column", md: "row" }}
+          justify="space-between"
+          py={{ base: "12", md: "16" }}
+        >
+          <Stack direction="row" spacing={5} align="center">
+            <Icon boxSize={8} color="white" as={MdMarkEmailRead} />
+            <Stack>
+              <Text color="white" size="label.lg">
+                Sign up for our newsletter
+              </Text>
+              <Text>
+                Join 40,000+ builders and stay up to date with our latest
+                updates and news.
+              </Text>
+            </Stack>
+          </Stack>
+
           <Flex
             as="form"
             direction={{ base: "column", sm: "row" }}
@@ -108,10 +119,12 @@ export const HomepageFooter: React.FC = () => {
               </Button>
             </LightMode>
           </Flex>
-        </Box>
+        </Stack>
+
         <DarkMode>
           <Divider borderColor="rgba(255,255,255,0.1)" />
         </DarkMode>
+
         <Stack
           spacing="8"
           direction={{ base: "column", md: "row" }}

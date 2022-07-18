@@ -1,8 +1,8 @@
-import { AspectRatio, Box, Container } from "@chakra-ui/react";
+import { AspectRatio, Box, BoxProps, Container } from "@chakra-ui/react";
 import React from "react";
 import { ComponentWithChildren } from "types/component-with-children";
 
-interface IHomepageSection {
+interface IHomepageSection extends BoxProps {
   bottomGradient?: true;
   topGradient?: true;
   middleGradient?: true;
@@ -16,6 +16,7 @@ export const HomepageSection: ComponentWithChildren<IHomepageSection> = ({
   middleGradient,
   id,
   bottomPattern,
+  ...restBoxProps
 }) => {
   return (
     <Box
@@ -24,6 +25,7 @@ export const HomepageSection: ComponentWithChildren<IHomepageSection> = ({
       as="section"
       overflow="visible"
       zIndex={2}
+      {...restBoxProps}
     >
       {topGradient && (
         <AspectRatio
