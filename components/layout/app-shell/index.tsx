@@ -35,7 +35,8 @@ export const AppShell: ComponentWithChildren = ({ children }) => {
     pathname === "/[wallet]/[network]/[...customContract]";
 
   const isReleasedContractsLayout =
-    pathname === "/contracts/[wallet]/[...contractName]" ||
+    pathname === "/contracts/[wallet]/[contractName]/[version]" ||
+    pathname === "/contracts/[wallet]/[contractName]" ||
     pathname === "/contracts/[wallet]";
 
   return (
