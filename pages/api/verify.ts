@@ -119,8 +119,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       );
     }
 
-    console.log(`Verifying contract ${contractAddress} on chain ${chainId}`);
-
     // TODO can't use alchemyMap here because the domain is not in the allowlist
     const rpc = SupportedChainIdToNetworkMap[chainId as SUPPORTED_CHAIN_ID];
     const sdk = new ThirdwebSDK(rpc, {}, StorageSingleton);
@@ -206,7 +204,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(200).json({ error: data.result });
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return res.status(400).json({ error: (e as any).toString() });
   }
 };

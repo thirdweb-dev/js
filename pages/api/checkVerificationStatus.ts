@@ -9,7 +9,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   const guid = req.query["guid"];
   const chainId = Number(req.query["chainId"]) as ChainId;
-  console.log("Checking verification status for guid:", guid);
 
   const endpoint = `${apiMap[chainId]}?module=contract&action=checkverifystatus&guid=${guid}&apikey=${apiKeyMap[chainId]}"`;
 

@@ -1,3 +1,4 @@
+import { BatchLazyMintButton } from "./components/batch-lazy-mint-button";
 import { NFTMintButton } from "./components/mint-button";
 import { NftGetAllTable } from "./components/table";
 import { ButtonGroup, Divider, Flex } from "@chakra-ui/react";
@@ -69,7 +70,10 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
     <Flex direction="column" gap={6}>
       <Flex direction="row" justify="space-between" align="center">
         <Heading size="title.sm">Contract NFTs</Heading>
-        <NFTMintButton contract={detectedContract} />
+        <Flex gap={4}>
+          <NFTMintButton contract={detectedContract} />
+          <BatchLazyMintButton contract={detectedContract} />
+        </Flex>
       </Flex>
       {enabled && <NftGetAllTable contract={detectedContract} />}
     </Flex>

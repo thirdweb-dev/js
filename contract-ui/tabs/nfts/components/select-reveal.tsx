@@ -1,47 +1,17 @@
-import {
-  useDropBatchMint,
-  useNFTDropDelayedRevealBatchMint,
-} from "@3rdweb-sdk/react/hooks/useNFTDrop";
-import {
-  Alert,
-  AlertIcon,
-  Box,
-  Flex,
-  FormControl,
-  Icon,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Progress,
-  Radio,
-  Stack,
-  Textarea,
-  Tooltip,
-} from "@chakra-ui/react";
+import { Flex, Progress, Radio, Stack, Tooltip } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useLazyMint } from "@thirdweb-dev/react";
 import {
   EditionDrop,
-  NFTDrop,
+  Erc721,
   NFTMetadataInput,
-  SignatureDrop,
   UploadProgressEvent,
 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { FileInput } from "components/shared/FileInput";
-import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { MouseEventHandler, useState } from "react";
 import { useForm } from "react-hook-form";
-import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import {
-  Card,
-  Checkbox,
-  FormErrorMessage,
-  FormHelperText,
-  FormLabel,
-  Heading,
-  Text,
-} from "tw-components";
+import { Card, Checkbox, Heading, Text } from "tw-components";
 import { shuffleData } from "utils/batch";
 import z from "zod";
 
@@ -112,7 +82,7 @@ const SelectOption: React.FC<SelectOptionProps> = ({
 };
 
 interface SelectRevealProps {
-  contract?: NFTDrop | EditionDrop | SignatureDrop;
+  contract?: Erc721;
   mergedData: NFTMetadataInput[];
   onClose: () => void;
 }
@@ -140,33 +110,26 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
 }) => {
   const [selectedReveal, setSelectedReveal] = useState<
     "unselected" | "instant" | "delayed"
-  >(contract instanceof EditionDrop ? "instant" : "unselected");
-  const [show, setShow] = useState(false);
+  >("instant");
+  /*   const [show, setShow] = useState(false); */
   const [progress, setProgress] = useState<UploadProgressEvent>({
     progress: 0,
     total: 100,
   });
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm<DelayedRevealInput>({
+  const { register, watch } = useForm<DelayedRevealInput>({
     resolver: zodResolver(DelayedRevealSchema),
   });
 
-  const imageUrl = useImageFileOrUrl(watch("image"));
+  /*   const imageUrl = useImageFileOrUrl(watch("image")); */
 
-  const mintBatch = useDropBatchMint(contract);
-  const mintDelayedRevealBatch = useNFTDropDelayedRevealBatchMint(
-    contract as NFTDrop,
-  );
+  const mintBatch = useLazyMint(contract, (event: UploadProgressEvent) => {
+    setProgress(event);
+  });
 
   const { onSuccess, onError } = useTxNotifications(
     "Batch uploaded successfully",
-    "Error uploading delayed reveal batch",
+    "Error uploading batch",
   );
 
   return (
@@ -187,8 +150,8 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
           description="Collectors will mint your placeholder image, then you reveal at a later time"
           isActive={selectedReveal === "delayed"}
           onClick={() => setSelectedReveal("delayed")}
-          disabled={contract instanceof EditionDrop}
-          disabledText="Delayed reveal is not available in Edition Drop contracts"
+          disabled={true}
+          disabledText="Delayed reveal is not available yet on dashboard for custom contracts"
         />
       </Flex>
       <Flex>
@@ -225,20 +188,21 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
               onClick={() => {
                 mintBatch.mutate(
                   {
-                    metadata: watch("shuffle")
+                    metadatas: watch("shuffle")
                       ? shuffleData(mergedData)
                       : mergedData,
-                    onProgress: (event: UploadProgressEvent) => {
-                      setProgress(event);
-                    },
                   },
                   {
-                    onSuccess: onClose,
-                    onError: () => {
+                    onSuccess: () => {
+                      onSuccess();
+                      onClose();
+                    },
+                    onError: (err) => {
                       setProgress({
                         progress: 0,
                         total: 100,
                       });
+                      onError(err);
                     },
                   },
                 );
@@ -258,7 +222,8 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
             )}
           </Flex>
         ) : selectedReveal === "delayed" ? (
-          <Stack
+          <>
+            {/* <Stack
             spacing={6}
             as="form"
             onSubmit={handleSubmit((data) => {
@@ -418,7 +383,8 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
                 />
               )}
             </Stack>
-          </Stack>
+          </Stack> */}
+          </>
         ) : null}
       </Flex>
     </Flex>
