@@ -6,6 +6,7 @@ import {
   fetchAllVersions,
   fetchContractPublishMetadataFromURI,
   fetchReleasedContractInfo,
+  fetchReleaserProfile,
   useAllVersions,
 } from "components/contract-components/hooks";
 import { ReleasedContract } from "components/contract-components/released-contract";
@@ -33,7 +34,6 @@ const ContractsNamePageWrapped = () => {
       allVersions.data?.[0]
     );
   }, [allVersions?.data, version]);
-
   return (
     <Flex direction="column" gap={8}>
       <Flex justifyContent="space-between" w="full">
@@ -94,6 +94,12 @@ ContractNamePage.getLayout = function getLayout(page: ReactElement) {
 };
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  // cache for 10 seconds, with up to 60 seconds of stale time
+  ctx.res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=10, stale-while-revalidate=59",
+  );
+
   const queryClient = new QueryClient();
   // TODO make this use alchemy / other RPC
   // currently blocked because our alchemy RPC does not allow us to call this from the server (since we have an allow-list)
@@ -101,25 +107,25 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const wallet = getSingleQueryValue(ctx.query, "wallet");
   const contractName = getSingleQueryValue(ctx.query, "contractName");
+  const version = getSingleQueryValue(ctx.query, "version");
 
-  const publishedContract = await queryClient.fetchQuery(
+  const allVersions = await queryClient.fetchQuery(
     ["all-releases", wallet, contractName],
     () => fetchAllVersions(sdk, wallet, contractName),
   );
 
-  const singularPublishedContract = publishedContract[0];
+  const release =
+    allVersions.find((v) => v.version === version) || allVersions[0];
 
   await Promise.all([
-    queryClient.prefetchQuery(
-      ["released-contract", singularPublishedContract],
-      () => fetchReleasedContractInfo(sdk, singularPublishedContract),
+    queryClient.prefetchQuery(["released-contract", release], () =>
+      fetchReleasedContractInfo(sdk, release),
     ),
-    queryClient.prefetchQuery(
-      ["publish-metadata", singularPublishedContract.metadataUri],
-      () =>
-        fetchContractPublishMetadataFromURI(
-          singularPublishedContract.metadataUri,
-        ),
+    queryClient.prefetchQuery(["publish-metadata", release.metadataUri], () =>
+      fetchContractPublishMetadataFromURI(release.metadataUri),
+    ),
+    queryClient.prefetchQuery(["releaser-profile", wallet], () =>
+      fetchReleaserProfile(sdk, wallet),
     ),
   ]);
 

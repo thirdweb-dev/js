@@ -246,7 +246,7 @@ export const CustomContractSourcePage: React.FC<
                 key={signature.filename}
               >
                 <Heading size="label.md">{signature.filename}</Heading>
-                <CodeBlock code={signature.source} language="javascript" />
+                <CodeBlock code={signature.source} language="solidity" />
               </Card>
             ))}
           </>

@@ -125,15 +125,20 @@ export function useContractPrePublishMetadata(uri: string, address?: string) {
   );
 }
 
+export async function fetchReleaserProfile(
+  sdk?: ThirdwebSDK,
+  publisherAddress?: string,
+) {
+  invariant(publisherAddress, "address is not defined");
+  invariant(sdk, "sdk not provided");
+  return await sdk.getPublisher().getPublisherProfile(publisherAddress);
+}
+
 export function useReleaserProfile(publisherAddress?: string) {
   const sdk = useSDK();
   return useQuery(
     ["releaser-profile", publisherAddress],
-    async () => {
-      invariant(publisherAddress, "address is not defined");
-      invariant(sdk, "sdk not provided");
-      return await sdk.getPublisher().getPublisherProfile(publisherAddress);
-    },
+    () => fetchReleaserProfile(sdk, publisherAddress),
     {
       enabled: !!publisherAddress,
     },
@@ -363,9 +368,11 @@ export function usePublishedContractsQuery(address?: string) {
   return useQuery(
     ["published-contracts", address],
     async () => {
-      return address && sdk
-        ? (await (await sdk.getPublisher()).getAll(address)).filter((c) => c.id)
-        : [];
+      invariant(sdk, "sdk not provided");
+      invariant(address, "address is not defined");
+      return ((await sdk.getPublisher().getAll(address)) || []).filter(
+        (c) => c.id,
+      );
     },
     {
       enabled: !!address && !!sdk,

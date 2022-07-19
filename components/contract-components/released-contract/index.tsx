@@ -8,11 +8,14 @@ import {
 import { ReleaserHeader } from "../releaser/releaser-header";
 import { ContractFunction } from "./extracted-contract-functions";
 import {
+  Box,
+  Center,
   Divider,
   Flex,
   Icon,
   List,
   ListItem,
+  Spinner,
   Tab,
   TabList,
   TabPanel,
@@ -20,20 +23,30 @@ import {
   Tabs,
   useClipboard,
 } from "@chakra-ui/react";
-import { PublishedContract } from "@thirdweb-dev/sdk";
+import {
+  PublishedContract,
+  PublishedMetadata,
+  fetchSourceFilesFromMetadata,
+} from "@thirdweb-dev/sdk";
+import { StorageSingleton } from "components/app-layouts/providers";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { BiPencil, BiShareAlt } from "react-icons/bi";
 import { BsEye } from "react-icons/bs";
 import { FcCheckmark } from "react-icons/fc";
+import { FiXCircle } from "react-icons/fi";
 import { IoMdCheckmark } from "react-icons/io";
 import { IoDocumentOutline } from "react-icons/io5";
 import { SiTwitter } from "react-icons/si";
 import { VscSourceControl } from "react-icons/vsc";
+import { useQuery } from "react-query";
+import invariant from "tiny-invariant";
 import {
   Card,
+  CodeBlock,
   Heading,
+  Link,
   LinkButton,
   Text,
   TrackedIconButton,
@@ -58,7 +71,33 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
   const enabledFeatures = useContractEnabledFeatures(
     contractReleaseMetadata.data?.abi,
   );
-
+  const sources = useQuery(
+    ["sources", release],
+    async () => {
+      invariant(
+        contractReleaseMetadata.data?.compilerMetadata?.sources,
+        "no compilerMetadata sources available",
+      );
+      return (
+        await fetchSourceFilesFromMetadata(
+          {
+            metadata: {
+              sources: contractReleaseMetadata.data.compilerMetadata.sources,
+            },
+          } as unknown as PublishedMetadata,
+          StorageSingleton,
+        )
+      )
+        .filter((source) => !source.filename.includes("@"))
+        .map((source) => {
+          return {
+            ...source,
+            filename: source.filename.split("/").pop(),
+          };
+        });
+    },
+    { enabled: !!contractReleaseMetadata.data?.compilerMetadata?.sources },
+  );
   const currentRoute = `https://thirdweb.com${router.asPath}`;
 
   const { data: contractFunctions } = useReleasedContractFunctions(release);
@@ -100,24 +139,47 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
         )}
         <Card w="full" as={Flex} flexDir="column" gap={2} p={0}>
           <Tabs colorScheme="purple">
-            <TabList borderBottomColor="borderColor" borderBottomWidth="1px">
+            <TabList
+              px={{ base: 2, md: 6 }}
+              borderBottomColor="borderColor"
+              borderBottomWidth="1px"
+            >
               <Tab gap={2}>
-                <Icon as={BiPencil} />
-                <Heading my={2} size="label.lg">
-                  Functions
+                <Icon as={BiPencil} my={2} />
+                <Heading size="label.lg">
+                  <Box as="span" display={{ base: "none", md: "flex" }}>
+                    Functions
+                  </Box>
+                  <Box as="span" display={{ base: "flex", md: "none" }}>
+                    Func
+                  </Box>
                 </Heading>
               </Tab>
               <Tab gap={2}>
-                <Icon as={BsEye} />
-                <Heading size="label.lg">Variables</Heading>
+                <Icon as={BsEye} my={2} />
+                <Heading size="label.lg">
+                  <Box as="span" display={{ base: "none", md: "flex" }}>
+                    Variables
+                  </Box>
+                  <Box as="span" display={{ base: "flex", md: "none" }}>
+                    Var
+                  </Box>
+                </Heading>
               </Tab>
-              <Tab gap={2} isDisabled>
-                <Icon as={VscSourceControl} />
-                <Heading size="label.lg">Sources (Coming Soon)</Heading>
+              <Tab gap={2}>
+                <Icon as={VscSourceControl} my={2} />
+                <Heading size="label.lg">
+                  <Box as="span" display={{ base: "none", md: "flex" }}>
+                    Sources
+                  </Box>
+                  <Box as="span" display={{ base: "flex", md: "none" }}>
+                    Src
+                  </Box>
+                </Heading>
               </Tab>
             </TabList>
-            <TabPanels>
-              <TabPanel px={6} pt={8}>
+            <TabPanels px={{ base: 2, md: 6 }} py={2}>
+              <TabPanel px={0}>
                 <Flex flexDir="column" flex="1" gap={3}>
                   {(contractFunctions || [])
                     .filter(
@@ -130,7 +192,7 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
                     ))}
                 </Flex>
               </TabPanel>
-              <TabPanel px={6} pt={8}>
+              <TabPanel px={0}>
                 <Flex flexDir="column" flex="1" gap={3}>
                   {(contractFunctions || [])
                     .filter(
@@ -143,14 +205,56 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
                     ))}
                 </Flex>
               </TabPanel>
-              <TabPanel px={6} pt={8}>
-                sources
+              <TabPanel px={0}>
+                {sources.isLoading ? (
+                  <Card>
+                    <Center>
+                      <Spinner mr={4} /> Loading sources...
+                    </Center>
+                  </Card>
+                ) : sources.data && sources.data.length > 0 ? (
+                  <Flex direction="column" gap={8}>
+                    {sources.data.map((signature) => (
+                      <Flex
+                        gap={4}
+                        flexDirection="column"
+                        key={signature.filename}
+                      >
+                        <Heading size="label.md">{signature.filename}</Heading>
+                        <CodeBlock
+                          code={signature.source}
+                          language="solidity"
+                        />
+                      </Flex>
+                    ))}
+                  </Flex>
+                ) : (
+                  <Card>
+                    <Flex direction="column" align="left" gap={2}>
+                      <Flex direction="row" align="center" gap={2}>
+                        <Icon as={FiXCircle} color="red.500" />
+                        <Heading size="title.sm">
+                          Contract source code not available
+                        </Heading>
+                      </Flex>
+                      <Heading size="subtitle.sm">
+                        Try deploying with{" "}
+                        <Link
+                          href="https://portal.thirdweb.com/thirdweb-deploy/thirdweb-cli"
+                          isExternal
+                        >
+                          thirdweb CLI v0.5+
+                        </Link>
+                      </Heading>
+                    </Flex>
+                  </Card>
+                )}
               </TabPanel>
             </TabPanels>
           </Tabs>
         </Card>
       </Flex>
-      <Flex w={{ base: "100vw", md: "20vw" }} flexDir="column" gap={6}>
+      <Flex w={{ base: "100%", md: "18vw" }} flexDir="column" gap={6}>
         {wallet && <ReleaserHeader wallet={wallet} />}
         <Divider />
         <Flex flexDir="column" gap={4}>
