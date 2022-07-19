@@ -1,5 +1,5 @@
 import {
-  useContractEnabledFeatures,
+  useContractEnabledExtensions,
   useContractPublishMetadataFromURI,
   useReleasedContractCompilerMetadata,
   useReleasedContractFunctions,
@@ -32,6 +32,7 @@ import { StorageSingleton } from "components/app-layouts/providers";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
+import { useMemo } from "react";
 import { BiPencil, BiShareAlt } from "react-icons/bi";
 import { BsEye } from "react-icons/bs";
 import { FcCheckmark } from "react-icons/fc";
@@ -52,8 +53,14 @@ import {
   TrackedIconButton,
 } from "tw-components";
 
+interface ExtendedReleasedContractInfo extends PublishedContract {
+  name: string;
+  description: string;
+  version: string;
+}
+
 interface ReleasedContractProps {
-  release: PublishedContract;
+  release: ExtendedReleasedContractInfo;
 }
 
 export const ReleasedContract: React.FC<ReleasedContractProps> = ({
@@ -68,9 +75,26 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
     release.metadataUri,
   );
 
-  const enabledFeatures = useContractEnabledFeatures(
+  const enabledExtensions = useContractEnabledExtensions(
     contractReleaseMetadata.data?.abi,
   );
+
+  const enabledExtensionsUrl = useMemo(() => {
+    return enabledExtensions
+      .map((extension) => {
+        return `extensions=${extension.name}`;
+      })
+      .join("&");
+  }, [enabledExtensions]);
+
+  const licensesUrl = useMemo(() => {
+    return compilerInfo?.licenses
+      ?.map((license: string) => {
+        return `licenses=${license}`;
+      })
+      .join("&");
+  }, [compilerInfo?.licenses]);
+
   const sources = useQuery(
     ["sources", release],
     async () => {
@@ -111,6 +135,14 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
         openGraph={{
           title: `${releasedContractInfo.data?.name} | Deploy in one click with thirdweb deploy`,
           url: currentRoute,
+          images: [
+            {
+              url: `https://og-image.thirdweb.com/thirdweb?version=${release?.version}&description=${release?.description}&contractName=${release.name}&${licensesUrl}&${enabledExtensionsUrl}&releaser=${wallet}&.png`,
+              width: 1200,
+              height: 650,
+              alt: "thirdweb",
+            },
+          ],
         }}
       />
       <Flex w="full" flexDir="column" gap={6}>
@@ -268,7 +300,7 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
                 </Text>
               </Flex>
             </ListItem>
-            {(enabledFeatures || []).map((feature) => (
+            {(enabledExtensions || []).map((feature) => (
               <ListItem key={feature.name}>
                 <Flex gap={2} alignItems="center">
                   <Icon as={FcCheckmark} boxSize={5} />

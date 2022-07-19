@@ -409,57 +409,57 @@ export function useContractFeatures(abi?: any) {
 
 const ALWAYS_SUGGESTED = ["ContractMetadata", "Permissions"];
 
-function extractFeatures(
+function extractExtensions(
   input: ReturnType<typeof detectFeatures>,
-  enabledFeatures: FeatureWithEnabled[] = [],
-  suggestedFeatures: FeatureWithEnabled[] = [],
+  enabledExtensions: FeatureWithEnabled[] = [],
+  suggestedExtensions: FeatureWithEnabled[] = [],
   parent = "__ROOT__",
 ) {
   if (!input) {
     return {
-      enabledFeatures,
-      suggestedFeatures,
+      enabledExtensions,
+      suggestedExtensions,
     };
   }
-  for (const featureKey in input) {
-    const feature = input[featureKey];
-    // if feature is enabled, then add it to enabledFeatures
-    if (feature.enabled) {
-      enabledFeatures.push(feature);
+  for (const extensionKey in input) {
+    const extension = input[extensionKey];
+    // if extension is enabled, then add it to enabledFeatures
+    if (extension.enabled) {
+      enabledExtensions.push(extension);
     }
     // otherwise if it is disabled, but it's parent is enabled or suggested, then add it to suggestedFeatures
     else if (
-      enabledFeatures.findIndex((f) => f.name === parent) > -1 ||
-      ALWAYS_SUGGESTED.includes(feature.name)
+      enabledExtensions.findIndex((f) => f.name === parent) > -1 ||
+      ALWAYS_SUGGESTED.includes(extension.name)
     ) {
-      suggestedFeatures.push(feature);
+      suggestedExtensions.push(extension);
     }
     // recurse
-    extractFeatures(
-      feature.features,
-      enabledFeatures,
-      suggestedFeatures,
-      feature.name,
+    extractExtensions(
+      extension.features,
+      enabledExtensions,
+      suggestedExtensions,
+      extension.name,
     );
   }
 
   return {
-    enabledFeatures,
-    suggestedFeatures,
+    enabledExtensions,
+    suggestedExtensions,
   };
 }
 
-export function useContractDetectedFeatures(abi?: any) {
+export function useContractDetectedExtensions(abi?: any) {
   const features = useMemo(() => {
     if (abi) {
-      return extractFeatures(detectFeatures(abi));
+      return extractExtensions(detectFeatures(abi));
     }
     return undefined;
   }, [abi]);
   return features;
 }
 
-export function useContractEnabledFeatures(abi?: any) {
-  const features = useContractDetectedFeatures(abi);
-  return features ? features.enabledFeatures : [];
+export function useContractEnabledExtensions(abi?: any) {
+  const extensions = useContractDetectedExtensions(abi);
+  return extensions ? extensions.enabledExtensions : [];
 }

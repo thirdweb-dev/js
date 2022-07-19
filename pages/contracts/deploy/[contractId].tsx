@@ -13,7 +13,7 @@ import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/src/constants/contrac
 import { AppLayout } from "components/app-layouts/app";
 import { ContractDeployForm } from "components/contract-components/contract-deploy-form";
 import {
-  useContractEnabledFeatures,
+  useContractEnabledExtensions,
   useContractPublishMetadataFromURI,
 } from "components/contract-components/hooks";
 import { ContractIdImage } from "components/contract-components/shared/contract-id-image";
@@ -37,7 +37,7 @@ export default function ContractDetailPage() {
     contractId || "",
   );
 
-  const enabledFeatures = useContractEnabledFeatures(
+  const enabledFeatures = useContractEnabledExtensions(
     publishMetadataQuery.data?.abi,
   );
 
