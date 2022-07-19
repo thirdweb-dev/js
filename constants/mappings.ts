@@ -70,14 +70,7 @@ export const DisabledChainsMap: Record<ContractType, SUPPORTED_CHAIN_ID[]> = {
   ],
   split: [],
   "token-drop": [],
-  "signature-drop": [
-    ChainId.Mainnet,
-    ChainId.Polygon,
-    ChainId.Fantom,
-    ChainId.Avalanche,
-    ChainId.Optimism,
-    ChainId.Arbitrum,
-  ],
+  "signature-drop": [],
   multiwrap: [],
   custom: [],
 };

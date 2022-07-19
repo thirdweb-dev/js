@@ -1,3 +1,4 @@
+/* eslint-disable line-comment-position */
 import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 
 export const SUPPORTED_CHAIN_IDS_V1: SUPPORTED_CHAIN_ID[] = [
@@ -32,19 +33,19 @@ export const SupportedNetworkToChainIdMap: Record<
   ValueOf<typeof SupportedChainIdToNetworkMap>,
   SUPPORTED_CHAIN_ID
 > = {
-  ethereum: ChainId.Mainnet,
-  rinkeby: ChainId.Rinkeby,
-  goerli: ChainId.Goerli,
-  polygon: ChainId.Polygon,
-  mumbai: ChainId.Mumbai,
-  fantom: ChainId.Fantom,
-  "fantom-testnet": ChainId.FantomTestnet,
-  avalanche: ChainId.Avalanche,
-  "avalanche-fuji": ChainId.AvalancheFujiTestnet,
-  optimism: ChainId.Optimism,
-  "optimism-testnet": ChainId.OptimismTestnet,
-  arbitrum: ChainId.Arbitrum,
-  "arbitrum-testnet": ChainId.ArbitrumTestnet,
+  ethereum: ChainId.Mainnet, // 1
+  rinkeby: ChainId.Rinkeby, // 4
+  goerli: ChainId.Goerli, // 5
+  polygon: ChainId.Polygon, // 137
+  mumbai: ChainId.Mumbai, // 80001
+  fantom: ChainId.Fantom, // 250
+  "fantom-testnet": ChainId.FantomTestnet, // 4002
+  avalanche: ChainId.Avalanche, // 43114
+  "avalanche-fuji": ChainId.AvalancheFujiTestnet, // 43113
+  optimism: ChainId.Optimism, // 10
+  "optimism-testnet": ChainId.OptimismTestnet, // 69
+  arbitrum: ChainId.Arbitrum, // 42161
+  "arbitrum-testnet": ChainId.ArbitrumTestnet, // 421611
 } as const;
 
 export const NetworkToBlockTimeMap: Record<SUPPORTED_CHAIN_ID, string> = {
