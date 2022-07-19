@@ -111,7 +111,7 @@ export const CustomContractCode: React.FC<ContentOverviewProps> = ({
                   placeholder="Type to filter"
                 />
               </InputGroup>
-              <Divider borderColor="borderColor" />
+              <Divider />
               <List
                 gap={0.5}
                 as={Flex}
@@ -462,7 +462,7 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
       >
         {fields.length > 0 && (
           <>
-            <Divider borderColor="borderColor" mb="8px" />
+            <Divider mb="8px" />
             {fields.map((item, index) => (
               <FormControl key={item.id} mb="8px">
                 <Flex justify="space-between">
@@ -493,7 +493,7 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
 
         {abiFunction?.stateMutability === "payable" && (
           <>
-            <Divider borderColor="borderColor" mb="8px" />
+            <Divider mb="8px" />
             <FormControl gap={0.5}>
               <FormLabel>Native Token Value</FormLabel>
               <Input {...register(`value`)} />
@@ -507,7 +507,7 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
 
         {error ? (
           <>
-            <Divider borderColor="borderColor" />
+            <Divider />
             <Heading size="label.sm">Error</Heading>
             <Text
               borderColor="borderColor"
@@ -526,7 +526,7 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
           </>
         ) : data !== undefined ? (
           <>
-            <Divider borderColor="borderColor" />
+            <Divider />
             <Heading size="label.sm">Output</Heading>
             <CodeBlock
               w="full"
@@ -538,7 +538,7 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
         ) : null}
       </Flex>
 
-      <Divider mt="auto" borderColor="borderColor" />
+      <Divider mt="auto" />
       <ButtonGroup ml="auto">
         <Popover initialFocusRef={initialFocusRef} isLazy>
           <PopoverTrigger>

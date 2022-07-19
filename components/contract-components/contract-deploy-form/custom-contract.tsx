@@ -155,7 +155,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
               />
             </FormControl>
           ))}
-          <Divider borderColor="borderColor" mt="auto" />
+          <Divider mt="auto" />
         </>
       ) : null}
       <Flex direction="column">

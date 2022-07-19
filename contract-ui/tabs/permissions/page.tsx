@@ -32,7 +32,7 @@ export const ContractPermissionsPage: React.FC<
           interfaces in your contract.
         </Text>
 
-        <Divider my={1} borderColor="borderColor" />
+        <Divider my={1} />
         <Flex gap={4} align="center">
           <Heading size="label.md">Learn more: </Heading>
           <ButtonGroup colorScheme="purple" size="sm" variant="solid">

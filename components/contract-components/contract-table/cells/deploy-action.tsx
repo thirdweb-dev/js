@@ -125,7 +125,7 @@ function actionUrlPath(
 ) {
   switch (context) {
     case "view_release":
-      return `/contracts/${address}/${name}`;
+      return `/contracts/${address}/${name}/latest`;
     case "create_release":
       return `/contracts/release/${encodeURIComponent(hash)}`;
     case "deploy":

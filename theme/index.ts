@@ -46,6 +46,11 @@ const chakraTheme: Theme = extendTheme({
         color: "paragraph",
       },
     },
+    Divider: {
+      baseStyle: {
+        borderColor: "borderColor",
+      },
+    },
     Button: {
       baseStyle: {
         borderRadius: "md",

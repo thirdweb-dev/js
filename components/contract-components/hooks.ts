@@ -82,7 +82,7 @@ export async function fetchContractPublishMetadataFromURI(
     };
   }
   return {
-    image: (resolved as any)?.image || "",
+    image: (resolved as any)?.image || "custom",
     name: resolved.name,
     description: resolved.info?.title || "",
     abi: resolved.abi,

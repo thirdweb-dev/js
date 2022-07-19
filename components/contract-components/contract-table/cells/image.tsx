@@ -2,6 +2,8 @@ import { useContractPublishMetadataFromURI } from "../../hooks";
 import { ContractId, DeployableContractContractCellProps } from "../../types";
 import { Image, Skeleton } from "@chakra-ui/react";
 import { ChakraNextImage, ChakraNextImageProps } from "components/Image";
+import { FeatureIconMap } from "constants/mappings";
+import { StaticImageData } from "next/image";
 
 export const ContractImageCell: React.FC<
   DeployableContractContractCellProps
@@ -21,7 +23,10 @@ export const ContractIdImage: React.FC<ContractIdImageProps> = ({
 }) => {
   const publishMetadata = useContractPublishMetadataFromURI(contractId);
 
-  const img = publishMetadata.data?.image;
+  let img = publishMetadata.data?.image;
+  if (typeof img === "string" && img in FeatureIconMap) {
+    img = FeatureIconMap[img as keyof typeof FeatureIconMap];
+  }
 
   const isStaticImage = img && typeof img !== "string";
 
@@ -31,14 +36,14 @@ export const ContractIdImage: React.FC<ContractIdImageProps> = ({
         <ChakraNextImage
           {...imgProps}
           boxSize={boxSize}
-          src={img}
+          src={img as StaticImageData}
           alt={publishMetadata.data?.name || "Contract Image"}
         />
       ) : (
         <Image
           {...imgProps}
           boxSize={boxSize}
-          src={img}
+          src={img as string}
           alt={publishMetadata.data?.name || "Contract Image"}
         />
       )}

@@ -70,6 +70,12 @@ const moduleExports = {
         destination: "/contracts/release",
         permanent: false,
       },
+      // non-versioned contract releases
+      {
+        source: "/contracts/:wallet/:contractName",
+        destination: "/contracts/:wallet/:contractName/latest",
+        permanent: false,
+      },
     ];
   },
   images: {

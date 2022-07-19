@@ -96,7 +96,7 @@ export default function ContractDetailPage() {
             </Flex>
           </Flex>
         </Flex>
-        <Divider borderColor="borderColor" />
+        <Divider />
         <Flex gap={12} direction="column" as="main">
           {contractId && (
             <Flex gap={4} direction="column">

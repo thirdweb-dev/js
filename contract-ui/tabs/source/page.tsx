@@ -15,7 +15,7 @@ import {
   Spinner,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useSDK } from "@thirdweb-dev/react";
+import { useContractSources } from "contract-ui/hooks/useContractSources";
 import { VerificationStatus, blockExplorerMap } from "pages/api/verify";
 import { FiCheckCircle, FiXCircle } from "react-icons/fi";
 import {
@@ -29,21 +29,6 @@ import {
 
 interface CustomContractSourcePageProps {
   contractAddress?: string;
-}
-
-function useContractSources(contractAddress?: string) {
-  const sdk = useSDK();
-  return useQueryWithNetwork(
-    [contractAddress],
-    async () => {
-      return await sdk
-        ?.getPublisher()
-        .fetchContractSourcesFromAddress(contractAddress || "");
-    },
-    {
-      enabled: !!contractAddress,
-    },
-  );
 }
 
 function useVerifyCall(shouldFetch: boolean, contractAddress?: string) {
@@ -81,7 +66,7 @@ function useCheckVerificationStatus(guid?: string) {
     },
     {
       enabled: !!guid && !!chainId,
-      refetchInterval: (data, query) => {
+      refetchInterval: (data) => {
         if (data?.result === VerificationStatus.PENDING) {
           return 3000;
         }

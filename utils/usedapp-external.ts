@@ -11,7 +11,7 @@ export function shortenAddress(address: string, extraShort?: true): string {
     const formattedAddress = utils.getAddress(address);
     return shortenString(formattedAddress, extraShort);
   } catch {
-    throw new TypeError("Invalid input, address can't be parsed");
+    return address;
   }
 }
 

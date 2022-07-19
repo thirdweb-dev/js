@@ -1,8 +1,7 @@
 import { Flex, Select, Skeleton } from "@chakra-ui/react";
-import { ChainId, ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
-import { alchemyUrlMap } from "components/app-layouts/providers";
 import {
   fetchAllVersions,
   fetchContractPublishMetadataFromURI,
@@ -29,11 +28,12 @@ const ContractsNamePageWrapped = () => {
   const allVersions = useAllVersions(wallet, contractName);
 
   const release = useMemo(() => {
-    if (version) {
-      return allVersions.data?.find((v) => v.version === version);
-    }
-    return allVersions.data?.[0];
+    return (
+      allVersions.data?.find((v) => v.version === version) ||
+      allVersions.data?.[0]
+    );
   }, [allVersions?.data, version]);
+
   return (
     <Flex direction="column" gap={8}>
       <Flex justifyContent="space-between" w="full">
@@ -44,26 +44,29 @@ const ContractsNamePageWrapped = () => {
             <Text>{release?.description}</Text>
           </Skeleton>
         </Flex>
-        <Flex gap={3}>
+        <Flex gap={3} direction={{ base: "column", md: "row" }}>
           <Select
             onChange={(e) =>
               router.push(
                 `/contracts/${wallet}/${contractName}/${e.target.value}`,
+                undefined,
+                { shallow: true },
               )
             }
-            w={24}
             value={version}
           >
-            {(allVersions?.data || []).map((releasedVersion) => (
+            {(allVersions?.data || []).map((releasedVersion, idx) => (
               <option
                 key={releasedVersion.version}
                 value={releasedVersion.version}
               >
                 {releasedVersion.version}
+                {idx === 0 ? " (latest)" : ""}
               </option>
             ))}
           </Select>
           <LinkButton
+            flexShrink={0}
             colorScheme="purple"
             href={`/contracts/deploy/${encodeURIComponent(
               release?.metadataUri.replace("ipfs://", "") || "",
@@ -92,7 +95,9 @@ ContractNamePage.getLayout = function getLayout(page: ReactElement) {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const queryClient = new QueryClient();
-  const sdk = new ThirdwebSDK(alchemyUrlMap[ChainId.Polygon]);
+  // TODO make this use alchemy / other RPC
+  // currently blocked because our alchemy RPC does not allow us to call this from the server (since we have an allow-list)
+  const sdk = new ThirdwebSDK("polygon");
 
   const wallet = getSingleQueryValue(ctx.query, "wallet");
   const contractName = getSingleQueryValue(ctx.query, "contractName");

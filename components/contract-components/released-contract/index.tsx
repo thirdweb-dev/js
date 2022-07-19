@@ -2,27 +2,35 @@ import {
   useContractEnabledFeatures,
   useContractPublishMetadataFromURI,
   useReleasedContractCompilerMetadata,
+  useReleasedContractFunctions,
   useReleasedContractInfo,
 } from "../hooks";
 import { ReleaserHeader } from "../releaser/releaser-header";
-import { ExtractedContractFunctions } from "./extracted-contract-functions";
+import { ContractFunction } from "./extracted-contract-functions";
 import {
   Divider,
   Flex,
   Icon,
   List,
   ListItem,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   useClipboard,
 } from "@chakra-ui/react";
 import { PublishedContract } from "@thirdweb-dev/sdk";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
-import { BiShareAlt } from "react-icons/bi";
+import { BiPencil, BiShareAlt } from "react-icons/bi";
+import { BsEye } from "react-icons/bs";
 import { FcCheckmark } from "react-icons/fc";
 import { IoMdCheckmark } from "react-icons/io";
 import { IoDocumentOutline } from "react-icons/io5";
 import { SiTwitter } from "react-icons/si";
+import { VscSourceControl } from "react-icons/vsc";
 import {
   Card,
   Heading,
@@ -40,6 +48,7 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
 }) => {
   const releasedContractInfo = useReleasedContractInfo(release);
   const { data: compilerInfo } = useReleasedContractCompilerMetadata(release);
+
   const wallet = useSingleQueryParam("wallet");
   const router = useRouter();
   const contractReleaseMetadata = useContractPublishMetadataFromURI(
@@ -52,9 +61,11 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
 
   const currentRoute = `https://thirdweb.com${router.asPath}`;
 
+  const { data: contractFunctions } = useReleasedContractFunctions(release);
+
   const { onCopy, hasCopied } = useClipboard(currentRoute);
   return (
-    <Flex gap={12} w="full" flexDir={{ base: "column", md: "row" }}>
+    <Flex gap={12} w="full" flexDir={{ base: "column-reverse", md: "row" }}>
       <NextSeo
         title={`${releasedContractInfo.data?.name} | Deploy in one click with thirdweb deploy`}
         description={`Browse previous versions of ${releasedContractInfo.data?.name} and deploy it in one click to any supported blockchains.`}
@@ -87,17 +98,59 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
             </Text>
           </Card>
         )}
-        {release && (
-          <Card w="full" as={Flex} flexDir="column" gap={2} p={0}>
-            <Heading px={6} pt={5} pb={2} size="title.sm">
-              Functions
-            </Heading>
-            <Divider />
-            <ExtractedContractFunctions contractRelease={release} />
-          </Card>
-        )}
+        <Card w="full" as={Flex} flexDir="column" gap={2} p={0}>
+          <Tabs colorScheme="purple">
+            <TabList borderBottomColor="borderColor" borderBottomWidth="1px">
+              <Tab gap={2}>
+                <Icon as={BiPencil} />
+                <Heading my={2} size="label.lg">
+                  Functions
+                </Heading>
+              </Tab>
+              <Tab gap={2}>
+                <Icon as={BsEye} />
+                <Heading size="label.lg">Variables</Heading>
+              </Tab>
+              <Tab gap={2} isDisabled>
+                <Icon as={VscSourceControl} />
+                <Heading size="label.lg">Sources (Coming Soon)</Heading>
+              </Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel px={6} pt={8}>
+                <Flex flexDir="column" flex="1" gap={3}>
+                  {(contractFunctions || [])
+                    .filter(
+                      (f) =>
+                        f.stateMutability !== "view" &&
+                        f.stateMutability !== "pure",
+                    )
+                    .map((fn) => (
+                      <ContractFunction key={fn.name} fn={fn} />
+                    ))}
+                </Flex>
+              </TabPanel>
+              <TabPanel px={6} pt={8}>
+                <Flex flexDir="column" flex="1" gap={3}>
+                  {(contractFunctions || [])
+                    .filter(
+                      (f) =>
+                        f.stateMutability === "view" ||
+                        f.stateMutability === "pure",
+                    )
+                    .map((fn) => (
+                      <ContractFunction key={fn.signature} fn={fn} />
+                    ))}
+                </Flex>
+              </TabPanel>
+              <TabPanel px={6} pt={8}>
+                sources
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </Card>
       </Flex>
-      <Flex w={{ base: "100vw", md: "25vw" }} flexDir="column" gap={6}>
+      <Flex w={{ base: "100vw", md: "20vw" }} flexDir="column" gap={6}>
         {wallet && <ReleaserHeader wallet={wallet} />}
         <Divider />
         <Flex flexDir="column" gap={4}>

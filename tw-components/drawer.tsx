@@ -49,7 +49,7 @@ export const Drawer: ComponentWithChildren<DrawerProps> = ({
         {header && (
           <>
             <DrawerHeader {...header} />
-            <Divider borderColor="borderColor" />
+            <Divider />
           </>
         )}
         <DrawerBody {...drawerBodyProps} py={4}>
@@ -57,7 +57,7 @@ export const Drawer: ComponentWithChildren<DrawerProps> = ({
         </DrawerBody>
         {footer && (
           <>
-            <Divider borderColor="borderColor" />
+            <Divider />
             <DrawerFooter {...footer} />
           </>
         )}

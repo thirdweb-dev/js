@@ -352,7 +352,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
             </LinkButton>
           </Flex>
         </Flex>
-        <Divider borderColor="borderColor" />
+        <Divider />
         <Flex direction="column">
           <Heading size="subtitle.md">Contract Metadata</Heading>
           <Text size="body.md" fontStyle="italic">
@@ -437,7 +437,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
           hasPlatformFeeMechanic ||
           hasRoyaltyMechanic) && (
           <>
-            <Divider borderColor="borderColor" />
+            <Divider />
             <Flex as="section" direction="column" gap={4}>
               <Flex direction="column">
                 <Heading size="subtitle.md">Payout Settings</Heading>
@@ -810,7 +810,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
         {/* splits start */}
         {hasSplitsMechanic && <RecipientForm />}
         {/* splits end */}
-        <Divider borderColor="borderColor" mt="auto" />
+        <Divider mt="auto" />
         <Flex direction="column">
           <Heading size="subtitle.md">Network / Chain</Heading>
           <Text size="body.md" fontStyle="italic">

@@ -5,8 +5,8 @@ import { Flex } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import { ChakraNextImage } from "components/Image";
 import { useRouter } from "next/router";
-import { Heading, LinkButton, Text } from "tw-components";
-import { shortenAddress } from "utils/usedapp-external";
+import { Heading, Link, LinkButton, Text } from "tw-components";
+import { shortenIfAddress } from "utils/usedapp-external";
 
 interface ReleaserHeaderProps {
   wallet: string;
@@ -27,7 +27,7 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
       flexDirection={{ base: "column", md: page ? "column" : "row" }}
       justifyContent="space-between"
     >
-      <Flex direction="column" gap={4}>
+      <Flex direction="column" gap={4} w="full">
         <Heading size="title.sm">
           {isProfilePage ? "Author" : "Released by"}
         </Heading>
@@ -39,10 +39,12 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
             src={require("public/assets/others/hexagon.png")}
           />
           <Flex flexDir="column">
-            <Heading size="subtitle.sm" ml={2}>
-              {/* TODO resolve ENS name */}
-              {releaserProfile?.data?.name || shortenAddress(wallet)}
-            </Heading>
+            <Link href={`/contracts/${wallet}`}>
+              <Heading size="subtitle.sm" ml={2}>
+                {/* TODO resolve ENS name */}
+                {releaserProfile?.data?.name || shortenIfAddress(wallet)}
+              </Heading>
+            </Link>
             {isProfilePage && releaserProfile?.data?.bio && (
               <Text ml={2} noOfLines={2}>
                 {releaserProfile.data.bio}
@@ -54,7 +56,7 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
           </Flex>
         </Flex>
         {!isProfilePage && (
-          <LinkButton href={`/contracts/${wallet}`}>
+          <LinkButton variant="outline" size="sm" href={`/contracts/${wallet}`}>
             View all contracts
           </LinkButton>
         )}
