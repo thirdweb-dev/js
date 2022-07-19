@@ -5,24 +5,22 @@ import {
   Flex,
   Icon,
   IconButton,
-  Image,
   LinkBox,
   LinkOverlay,
   Skeleton,
 } from "@chakra-ui/react";
 import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/src/constants/contract-features";
-import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
 import { ContractDeployForm } from "components/contract-components/contract-deploy-form";
 import {
   useContractEnabledFeatures,
   useContractPublishMetadataFromURI,
 } from "components/contract-components/hooks";
-import { FeatureIconMap } from "constants/mappings";
+import { ContractIdImage } from "components/contract-components/shared/contract-id-image";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
-import { ReactElement, useMemo } from "react";
+import { ReactElement } from "react";
 import { FiArrowLeft, FiCheckCircle, FiExternalLink } from "react-icons/fi";
 import { Card, Heading, LinkButton, Text, TrackedLink } from "tw-components";
 import { pushToPreviousRoute } from "utils/pushToPreviousRoute";
@@ -38,11 +36,6 @@ export default function ContractDetailPage() {
   const publishMetadataQuery = useContractPublishMetadataFromURI(
     contractId || "",
   );
-  const contractTypeImage = useMemo(() => {
-    return contractId && contractId in FeatureIconMap
-      ? FeatureIconMap[contractId as keyof typeof FeatureIconMap]
-      : FeatureIconMap["custom"];
-  }, [contractId]);
 
   const enabledFeatures = useContractEnabledFeatures(
     publishMetadataQuery.data?.abi,
@@ -61,30 +54,7 @@ export default function ContractDetailPage() {
                 icon={<Icon boxSize={6} as={FiArrowLeft} />}
               />
             )}
-            <Skeleton isLoaded={publishMetadataQuery.isSuccess}>
-              {publishMetadataQuery.data?.image ? (
-                typeof publishMetadataQuery.data.image === "string" ? (
-                  <Image
-                    objectFit="contain"
-                    boxSize="64px"
-                    src={publishMetadataQuery.data.image}
-                    alt={publishMetadataQuery.data?.name}
-                  />
-                ) : (
-                  <ChakraNextImage
-                    boxSize="64px"
-                    src={publishMetadataQuery.data.image}
-                    alt={publishMetadataQuery.data?.name}
-                  />
-                )
-              ) : contractTypeImage ? (
-                <ChakraNextImage
-                  boxSize="64px"
-                  src={contractTypeImage}
-                  alt={publishMetadataQuery.data?.name || ""}
-                />
-              ) : null}
-            </Skeleton>
+            <ContractIdImage boxSize={12} contractId={contractId || "custom"} />
             <Flex direction="column" gap={1} align="flex-start">
               <Skeleton isLoaded={publishMetadataQuery.isSuccess}>
                 <Heading size="title.md">

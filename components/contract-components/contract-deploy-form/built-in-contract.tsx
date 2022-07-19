@@ -1,5 +1,5 @@
-import { ContractIdImage } from "../contract-table/cells/image";
 import { useContractPublishMetadataFromURI } from "../hooks";
+import { ContractIdImage } from "../shared/contract-id-image";
 import { useDeploy } from "@3rdweb-sdk/react";
 import {
   Accordion,
