@@ -1,6 +1,7 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, GridItem, List, ListItem, SimpleGrid } from "@chakra-ui/react";
 import { AbiFunction } from "@thirdweb-dev/sdk";
-import { Badge, Heading, Text } from "tw-components";
+import { useState } from "react";
+import { Badge, Button, Card, Heading, Text } from "tw-components";
 
 interface ContractFunctionProps {
   fn: AbiFunction;
@@ -10,7 +11,7 @@ export const ContractFunction: React.FC<ContractFunctionProps> = ({ fn }) => {
   return (
     <Flex direction="column" gap={1.5}>
       <Flex alignItems="center" gap={2}>
-        <Heading size="label.md">{fn.name}</Heading>
+        <Heading size="subtitle.md">{fn.name}</Heading>
         {fn.stateMutability === "payable" && (
           <Badge size="label.sm" variant="subtle" colorScheme="green">
             Payable
@@ -18,7 +19,7 @@ export const ContractFunction: React.FC<ContractFunctionProps> = ({ fn }) => {
         )}
       </Flex>
       {fn.comment && (
-        <Text size="body.sm">
+        <Text size="body.md">
           {fn.comment
             .replaceAll(/See \{(.+)\}(\.)?/gm, "")
             .replaceAll("{", '"')
@@ -36,11 +37,46 @@ interface ContractFunctionsPanelProps {
 export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
   functions,
 }) => {
+  const [selectedFunction, setSelectedFunction] = useState<AbiFunction>(
+    functions[0],
+  );
+
   return (
-    <Flex flexDir="column" flex="1" gap={3}>
-      {functions.map((fn) => (
-        <ContractFunction key={fn.signature} fn={fn} />
-      ))}
-    </Flex>
+    <SimpleGrid columns={12}>
+      <GridItem
+        colSpan={{ base: 12, md: 3 }}
+        borderRightWidth={{ base: "0px", md: "1px" }}
+        borderBottomWidth={{ base: "1px", md: "0px" }}
+        borderColor="borderColor"
+      >
+        <List
+          overflow="auto"
+          h={{ base: "300px", md: "500px" }}
+          pr={{ base: 0, md: 3 }}
+          mb={{ base: 3, md: 0 }}
+        >
+          {functions.map((fn) => (
+            <ListItem key={fn.signature} my={0.5}>
+              <Button
+                fontWeight={selectedFunction === fn ? 600 : 400}
+                onClick={() => setSelectedFunction(fn)}
+                color="heading"
+                opacity={selectedFunction === fn ? 1 : 0.65}
+                _hover={{ opacity: 1, textDecor: "underline" }}
+                variant="link"
+                fontFamily="mono"
+              >
+                {fn.name}
+              </Button>
+            </ListItem>
+          ))}
+        </List>
+      </GridItem>
+      <GridItem colSpan={{ base: 12, md: 9 }}>
+        <Card ml={{ base: 0, md: 3 }} mt={{ base: 3, md: 0 }} flexGrow={1}>
+          <ContractFunction fn={selectedFunction} />
+        </Card>
+      </GridItem>
+    </SimpleGrid>
   );
 };

@@ -1,6 +1,7 @@
 import {
   useContractPrePublishMetadata,
   useContractPublishMetadataFromURI,
+  useEnsName,
   usePublishMutation,
 } from "../hooks";
 import { ContractId } from "../types";
@@ -71,6 +72,9 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
   const latestVersion =
     prePublishMetadata.data?.latestPublishedContractMetadata?.publishedMetadata
       .version;
+
+  const ensName = useEnsName(address);
+
   return (
     <Card w="100%" p={{ base: 6, md: 10 }}>
       <Flex
@@ -126,7 +130,8 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
                 </Heading>
                 {address ? (
                   <Text size="body.md" py={1}>
-                    Releasing as {shortenIfAddress(address)}
+                    Releasing as{" "}
+                    <strong>{shortenIfAddress(ensName.data || address)}</strong>
                   </Text>
                 ) : (
                   <Text size="body.md" py={1}>

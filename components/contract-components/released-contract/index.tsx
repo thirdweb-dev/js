@@ -154,7 +154,7 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
           <Card as={Flex} flexDir="column" gap={2} p={0}>
             <Tabs isLazy lazyBehavior="keepMounted" colorScheme="purple">
               <TabList
-                px={{ base: 2, md: 6 }}
+                px={0}
                 borderBottomColor="borderColor"
                 borderBottomWidth="1px"
               >
