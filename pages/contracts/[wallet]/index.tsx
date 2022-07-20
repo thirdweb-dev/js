@@ -7,19 +7,27 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { AppLayout } from "components/app-layouts/app";
 import { DeployableContractTable } from "components/contract-components/contract-table";
 import {
+  fetchPublishedContracts,
+  fetchReleaserProfile,
+  resolveAddressToEnsName,
+  resolvePossibleENSName,
   usePublishedContractsQuery,
   useResolvedEnsName,
 } from "components/contract-components/hooks";
 import { ReleaserHeader } from "components/contract-components/releaser/releaser-header";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { useSingleQueryParam } from "hooks/useQueryParam";
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { ReactElement, useEffect } from "react";
 import { IoRefreshSharp } from "react-icons/io5";
+import { QueryClient, dehydrate } from "react-query";
 import { Button, LinkButton, Text } from "tw-components";
+import { getSingleQueryValue } from "utils/router";
 
 const UserPageWrapped = () => {
   const wallet = useSingleQueryParam("wallet");
@@ -121,4 +129,61 @@ export default function UserPage() {
 
 UserPage.getLayout = function getLayout(page: ReactElement) {
   return <AppLayout>{page}</AppLayout>;
+};
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  // cache for 10 seconds, with up to 60 seconds of stale time
+  ctx.res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=10, stale-while-revalidate=59",
+  );
+
+  const queryClient = new QueryClient();
+  // TODO make this use alchemy / other RPC
+  // currently blocked because our alchemy RPC does not allow us to call this from the server (since we have an allow-list)
+  const sdk = new ThirdwebSDK("polygon");
+
+  const walletOrEnsAddress = getSingleQueryValue(ctx.query, "wallet");
+
+  if (!walletOrEnsAddress) {
+    return {
+      redirect: {
+        destination: "/contracts",
+        permanent: false,
+      },
+      props: {},
+    };
+  }
+
+  const resolvedAddress = await queryClient.fetchQuery(
+    ["ens-address", walletOrEnsAddress],
+    () => resolvePossibleENSName(walletOrEnsAddress),
+  );
+
+  if (!resolvedAddress) {
+    return {
+      redirect: {
+        destination: "/contracts",
+        permanent: false,
+      },
+      props: {},
+    };
+  }
+  await Promise.all([
+    queryClient.prefetchQuery(["releaser-profile", resolvedAddress], () =>
+      fetchReleaserProfile(sdk, resolvedAddress),
+    ),
+    queryClient.prefetchQuery(["ens-name", resolvedAddress], () =>
+      resolveAddressToEnsName(resolvedAddress),
+    ),
+    queryClient.prefetchQuery(["published-contracts", resolvedAddress], () =>
+      fetchPublishedContracts(sdk, resolvedAddress),
+    ),
+  ]);
+
+  return {
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
+  };
 };

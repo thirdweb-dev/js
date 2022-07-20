@@ -358,17 +358,20 @@ export function useCustomContractDeployMutation(ipfsHash: string) {
   );
 }
 
+export async function fetchPublishedContracts(
+  sdk?: ThirdwebSDK,
+  address?: string,
+) {
+  invariant(sdk, "sdk not provided");
+  invariant(address, "address is not defined");
+  return ((await sdk.getPublisher().getAll(address)) || []).filter((c) => c.id);
+}
+
 export function usePublishedContractsQuery(address?: string) {
   const sdk = useSDK();
   return useQuery(
     ["published-contracts", address],
-    async () => {
-      invariant(sdk, "sdk not provided");
-      invariant(address, "address is not defined");
-      return ((await sdk.getPublisher().getAll(address)) || []).filter(
-        (c) => c.id,
-      );
-    },
+    () => fetchPublishedContracts(sdk, address),
     {
       enabled: !!address && !!sdk,
     },

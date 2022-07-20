@@ -8,6 +8,7 @@ import {
 } from "../hooks";
 import { ReleaserHeader } from "../releaser/releaser-header";
 import { ContractFunctionsPanel } from "./extracted-contract-functions";
+import { MarkdownRenderer } from "./markdown-renderer";
 import { SourcesPanel } from "./sources-panel";
 import {
   Box,
@@ -134,9 +135,15 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
                 Readme
               </Heading>
               <Divider />
-              <Text px={6} pt={2} pb={5} whiteSpace="pre-wrap">
-                {releasedContractInfo.data?.publishedMetadata.readme}
-              </Text>
+
+              <MarkdownRenderer
+                px={6}
+                pt={2}
+                pb={5}
+                markdownText={
+                  releasedContractInfo.data?.publishedMetadata?.readme
+                }
+              />
             </Card>
           )}
           {releasedContractInfo.data?.publishedMetadata?.changelog && (
@@ -146,9 +153,15 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
                 Notes
               </Heading>
               <Divider />
-              <Text px={6} pt={2} pb={5} whiteSpace="pre-wrap">
-                {releasedContractInfo.data?.publishedMetadata?.changelog}
-              </Text>
+
+              <MarkdownRenderer
+                px={6}
+                pt={2}
+                pb={5}
+                markdownText={
+                  releasedContractInfo.data?.publishedMetadata?.changelog
+                }
+              />
             </Card>
           )}
           <Card as={Flex} flexDir="column" gap={2} p={0}>

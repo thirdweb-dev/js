@@ -1,7 +1,8 @@
 import { useEnsName, useReleaserProfile, useResolvedEnsName } from "../hooks";
 import { EditProfile } from "./edit-profile";
+import { MaskedAvatar } from "./masked-avatar";
 import { ReleaserSocials } from "./releaser-socials";
-import { Flex, Image, Skeleton } from "@chakra-ui/react";
+import { Flex, Skeleton } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import { useRouter } from "next/router";
 import { Heading, Link, LinkButton, Text } from "tw-components";
@@ -34,15 +35,14 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
         </Heading>
         <Flex gap={4} alignItems="center">
           <Skeleton isLoaded={releaserProfile.isSuccess}>
-            <Image
-              alt=""
+            <MaskedAvatar
               boxSize={12}
               mt={1}
               src={
                 releaserProfile.data?.avatar ||
                 `https://source.boringavatars.com/marble/120/${
                   ensName.data || wallet
-                }?colors=264653,2a9d8f,e9c46a,f4a261,e76f51`
+                }?colors=264653,2a9d8f,e9c46a,f4a261,e76f51&square=true`
               }
             />
           </Skeleton>
@@ -72,9 +72,11 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
           </LinkButton>
         )}
       </Flex>
-      {wallet === address && isProfilePage && releaserProfile?.data && (
-        <EditProfile releaserProfile={releaserProfile.data} />
-      )}
+      {resolvedAddress.data === address &&
+        isProfilePage &&
+        releaserProfile?.data && (
+          <EditProfile releaserProfile={releaserProfile.data} />
+        )}
     </Flex>
   );
 };
