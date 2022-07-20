@@ -52,11 +52,13 @@ import {
   Text,
   TrackedIconButton,
 } from "tw-components";
+import { shortenIfAddress } from "utils/usedapp-external";
 
 interface ExtendedReleasedContractInfo extends PublishedContract {
   name: string;
   description: string;
   version: string;
+  releaser: string;
 }
 
 interface ReleasedContractProps {
@@ -122,7 +124,10 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
     },
     { enabled: !!contractReleaseMetadata.data?.compilerMetadata?.sources },
   );
-  const currentRoute = `https://thirdweb.com${router.asPath}`;
+  const currentRoute = `https://thirdweb.com${router.asPath}`.replace(
+    "/latest",
+    "",
+  );
 
   const { data: contractFunctions } = useReleasedContractFunctions(release);
 
@@ -130,14 +135,16 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
   return (
     <Flex gap={12} w="full" flexDir={{ base: "column-reverse", md: "row" }}>
       <NextSeo
-        title={`${releasedContractInfo.data?.name} | Deploy in one click with thirdweb deploy`}
-        description={`Browse previous versions of ${releasedContractInfo.data?.name} and deploy it in one click to any supported blockchains.`}
+        title={release.name}
+        description={`${release.description}${
+          release.description ? ". " : ""
+        }Deploy ${release.name} in one click with thirdweb.`}
         openGraph={{
-          title: `${releasedContractInfo.data?.name} | Deploy in one click with thirdweb deploy`,
+          title: `${shortenIfAddress(release.releaser)}/${release.name}`,
           url: currentRoute,
           images: [
             {
-              url: `https://og-image.thirdweb.com/thirdweb?version=${release?.version}&description=${release?.description}&contractName=${release.name}&${licensesUrl}&${enabledExtensionsUrl}&releaser=${wallet}&.png`,
+              url: `https://og-image.thirdweb.com/thirdweb?version=${release?.version}&description=${release?.description}&contractName=${release.name}&${licensesUrl}&${enabledExtensionsUrl}&releaser=${wallet}.png`,
               width: 1200,
               height: 650,
               alt: "thirdweb",

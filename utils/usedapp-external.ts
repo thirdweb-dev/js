@@ -22,5 +22,5 @@ export function shortenIfAddress(
   if (typeof address === "string" && address.length > 0) {
     return shortenAddress(address, extraShort);
   }
-  return "";
+  return address || "";
 }
