@@ -9,7 +9,10 @@ import {
 import { useAddress } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { DeployableContractTable } from "components/contract-components/contract-table";
-import { usePublishedContractsQuery } from "components/contract-components/hooks";
+import {
+  usePublishedContractsQuery,
+  useResolvedEnsName,
+} from "components/contract-components/hooks";
 import { ReleaserHeader } from "components/contract-components/releaser/releaser-header";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { useSingleQueryParam } from "hooks/useQueryParam";
@@ -20,14 +23,23 @@ import { Button, LinkButton, Text } from "tw-components";
 
 const UserPageWrapped = () => {
   const wallet = useSingleQueryParam("wallet");
+
+  const resolvedAddress = useResolvedEnsName(wallet);
+
   const address = useAddress();
   const router = useRouter();
-  const publishedContracts = usePublishedContractsQuery(wallet);
+  const publishedContracts = usePublishedContractsQuery(
+    resolvedAddress.data || undefined,
+  );
 
   // We do this so it doesn't break for users that haven't updated their CLI
   useEffect(() => {
     const previousPath = router.asPath.split("/")[2];
-    if (previousPath !== "[wallet]" && wallet?.startsWith("Qm")) {
+    if (
+      previousPath !== "[wallet]" &&
+      wallet?.startsWith("Qm") &&
+      !wallet.endsWith(".eth")
+    ) {
       router.replace(`/contracts/deploy/${previousPath}`);
     }
   }, [wallet, router]);
@@ -79,7 +91,7 @@ const UserPageWrapped = () => {
               <Center>
                 <Flex py={4} direction="column" gap={4} align="center">
                   <Text>No releases found.</Text>
-                  {wallet === address && (
+                  {resolvedAddress.data === address && (
                     <LinkButton
                       size="sm"
                       href="https://portal.thirdweb.com/thirdweb-deploy/thirdweb-cli"

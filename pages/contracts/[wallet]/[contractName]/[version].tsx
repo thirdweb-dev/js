@@ -1,4 +1,11 @@
-import { Flex, Select, Skeleton } from "@chakra-ui/react";
+import {
+  Divider,
+  Flex,
+  GridItem,
+  Select,
+  SimpleGrid,
+  Skeleton,
+} from "@chakra-ui/react";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
@@ -7,7 +14,10 @@ import {
   fetchContractPublishMetadataFromURI,
   fetchReleasedContractInfo,
   fetchReleaserProfile,
+  resolveAddressToEnsName,
+  resolvePossibleENSName,
   useAllVersions,
+  useResolvedEnsName,
 } from "components/contract-components/hooks";
 import { ReleasedContract } from "components/contract-components/released-contract";
 import { FeatureIconMap } from "constants/mappings";
@@ -22,11 +32,15 @@ import { getSingleQueryValue } from "utils/router";
 
 const ContractsNamePageWrapped = () => {
   const wallet = useSingleQueryParam("wallet");
+  const resolvedAddress = useResolvedEnsName(wallet);
   const contractName = useSingleQueryParam("contractName");
   const version = useSingleQueryParam("version");
   const router = useRouter();
 
-  const allVersions = useAllVersions(wallet, contractName);
+  const allVersions = useAllVersions(
+    resolvedAddress.data || undefined,
+    contractName,
+  );
 
   const release = useMemo(() => {
     return (
@@ -35,16 +49,25 @@ const ContractsNamePageWrapped = () => {
     );
   }, [allVersions?.data, version]);
   return (
-    <Flex direction="column" gap={8}>
-      <Flex justifyContent="space-between" w="full">
+    <SimpleGrid columns={12} gap={{ base: 6, md: 12 }} w="full">
+      <GridItem colSpan={{ base: 12, md: 9 }}>
         <Flex gap={4} alignItems="center">
-          <ChakraNextImage src={FeatureIconMap["custom"]} boxSize={12} alt="" />
+          <ChakraNextImage
+            flexShrink={0}
+            src={FeatureIconMap["custom"]}
+            boxSize={12}
+            alt=""
+          />
           <Skeleton isLoaded={allVersions.isSuccess}>
-            <Heading size="title.md">{release?.name}</Heading>
-            <Text>{release?.description}</Text>
+            <Flex direction="column" gap={2}>
+              <Heading size="title.md">{release?.name}</Heading>
+              <Text>{release?.description}</Text>
+            </Flex>
           </Skeleton>
         </Flex>
-        <Flex gap={3} direction={{ base: "column", md: "row" }}>
+      </GridItem>
+      <GridItem colSpan={{ base: 12, md: 3 }}>
+        <Flex gap={3} direction="column">
           <Select
             onChange={(e) =>
               router.push(
@@ -75,9 +98,14 @@ const ContractsNamePageWrapped = () => {
             Deploy Now
           </LinkButton>
         </Flex>
-      </Flex>
-      <Flex>{release && <ReleasedContract release={release} />}</Flex>
-    </Flex>
+      </GridItem>
+      <GridItem colSpan={12} display={{ base: "inherit", md: "none" }}>
+        <Divider />
+      </GridItem>
+      {release && wallet && (
+        <ReleasedContract release={release} walletOrEns={wallet} />
+      )}
+    </SimpleGrid>
   );
 };
 
@@ -105,13 +133,38 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   // currently blocked because our alchemy RPC does not allow us to call this from the server (since we have an allow-list)
   const sdk = new ThirdwebSDK("polygon");
 
-  const wallet = getSingleQueryValue(ctx.query, "wallet");
+  const walletOrEnsAddress = getSingleQueryValue(ctx.query, "wallet");
   const contractName = getSingleQueryValue(ctx.query, "contractName");
   const version = getSingleQueryValue(ctx.query, "version");
 
+  if (!walletOrEnsAddress) {
+    return {
+      redirect: {
+        destination: "/contracts",
+        permanent: false,
+      },
+      props: {},
+    };
+  }
+
+  const resolvedAddress = await queryClient.fetchQuery(
+    ["ens-address", walletOrEnsAddress],
+    () => resolvePossibleENSName(walletOrEnsAddress),
+  );
+
+  if (!resolvedAddress) {
+    return {
+      redirect: {
+        destination: "/contracts",
+        permanent: false,
+      },
+      props: {},
+    };
+  }
+
   const allVersions = await queryClient.fetchQuery(
-    ["all-releases", wallet, contractName],
-    () => fetchAllVersions(sdk, wallet, contractName),
+    ["all-releases", resolvedAddress, contractName],
+    () => fetchAllVersions(sdk, resolvedAddress, contractName),
   );
 
   const release =
@@ -124,8 +177,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     queryClient.prefetchQuery(["publish-metadata", release.metadataUri], () =>
       fetchContractPublishMetadataFromURI(release.metadataUri),
     ),
-    queryClient.prefetchQuery(["releaser-profile", wallet], () =>
-      fetchReleaserProfile(sdk, wallet),
+    queryClient.prefetchQuery(["releaser-profile", resolvedAddress], () =>
+      fetchReleaserProfile(sdk, resolvedAddress),
+    ),
+    queryClient.prefetchQuery(["ens-name", resolvedAddress], () =>
+      resolveAddressToEnsName(resolvedAddress),
     ),
   ]);
 

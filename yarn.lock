@@ -1936,10 +1936,10 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.0.1.tgz#915ad593d5ef42ebd6e26c04a1d3498a8e72197b"
   integrity sha512-VSK4djhHzwxOzx2BUke42emcyrklFcVzvNqK8gAupwNQzMtl/89D6yzXqtxQxEM39qP/SG4Q2olpVzD+tr/ymQ==
 
-"@thirdweb-dev/react@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.5.0.tgz#12e74c70d3156538de0d712dd2745ee436b13780"
-  integrity sha512-2HTogtSH998eEFWvoJRjFAFX7lvX/jH+NCKO8fLKsis0MJtoS5lvOlfEB11lA7aCNKPupx7JDSMj5RtcY+QMlQ==
+"@thirdweb-dev/react@^2.5.1":
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.5.1.tgz#e200b0662884e911512a6c4ea06fa5f82130e7e2"
+  integrity sha512-JIw2jzywBAF5yML74EQUX+fFGXoU0+WDObxSjzyLDGqRNK+e0eGmipYdBfBHxiddJGBC1h+nqKg01OMppYY9/w==
   dependencies:
     "@gnosis.pm/safe-core-sdk" "2.1.0"
     "@gnosis.pm/safe-ethers-adapters" "0.1.0-alpha.9"
@@ -1947,7 +1947,7 @@
     detect-browser "^5.3.0"
     mime "^3.0.0"
     react-cool-dimensions "^2.0.7"
-    react-query "^4.0.0-beta.3"
+    react-query "4.0.0-beta.23"
     tiny-invariant "^1.2.0"
     wagmi "^0.2.28"
 
@@ -7270,7 +7270,7 @@ react-motion@^0.5.2:
     prop-types "^15.5.8"
     raf "^3.1.0"
 
-react-query@^4.0.0-beta.3:
+react-query@4.0.0-beta.23, react-query@^4.0.0-beta.3:
   version "4.0.0-beta.23"
   resolved "https://registry.yarnpkg.com/react-query/-/react-query-4.0.0-beta.23.tgz#76713547670ef1f991ae828b3d51df63ec6e035c"
   integrity sha512-e6mNBVAYGy0M1OwX0mhRB/lCkOedKeqTUrbPjNCqvm8hQGUsJJobqfHVvTv8o6JJaOO2MFcxKF4vZM+PEKbHZA==

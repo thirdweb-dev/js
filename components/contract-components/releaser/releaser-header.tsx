@@ -1,4 +1,4 @@
-import { useReleaserProfile } from "../hooks";
+import { useEnsName, useReleaserProfile, useResolvedEnsName } from "../hooks";
 import { EditProfile } from "./edit-profile";
 import { ReleaserSocials } from "./releaser-socials";
 import { Flex } from "@chakra-ui/react";
@@ -12,15 +12,17 @@ interface ReleaserHeaderProps {
   wallet: string;
   page?: boolean;
 }
-
 export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
   wallet,
   page,
 }) => {
-  const releaserProfile = useReleaserProfile(wallet);
+  const resolvedAddress = useResolvedEnsName(wallet);
+  const releaserProfile = useReleaserProfile(resolvedAddress.data || undefined);
   const address = useAddress();
   const router = useRouter();
   const isProfilePage = router.pathname === "/contracts/[wallet]";
+
+  const ensName = useEnsName(wallet);
 
   return (
     <Flex
@@ -31,7 +33,7 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
         <Heading size="title.sm">
           {isProfilePage ? "Author" : "Released by"}
         </Heading>
-        <Flex gap={4} alignItems="top">
+        <Flex gap={4} alignItems="center">
           <ChakraNextImage
             alt=""
             boxSize={12}
@@ -39,10 +41,12 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
             src={require("public/assets/others/hexagon.png")}
           />
           <Flex flexDir="column">
-            <Link href={`/contracts/${wallet}`}>
+            <Link href={`/contracts/${ensName.data || wallet}`}>
               <Heading size="subtitle.sm" ml={2}>
                 {/* TODO resolve ENS name */}
-                {releaserProfile?.data?.name || shortenIfAddress(wallet)}
+                {releaserProfile?.data?.name ||
+                  ensName.data ||
+                  shortenIfAddress(wallet)}
               </Heading>
             </Link>
             {isProfilePage && releaserProfile?.data?.bio && (

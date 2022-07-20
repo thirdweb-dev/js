@@ -28,3 +28,19 @@ export const ContractFunction: React.FC<ContractFunctionProps> = ({ fn }) => {
     </Flex>
   );
 };
+
+interface ContractFunctionsPanelProps {
+  functions: AbiFunction[];
+}
+
+export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
+  functions,
+}) => {
+  return (
+    <Flex flexDir="column" flex="1" gap={3}>
+      {functions.map((fn) => (
+        <ContractFunction key={fn.signature} fn={fn} />
+      ))}
+    </Flex>
+  );
+};
