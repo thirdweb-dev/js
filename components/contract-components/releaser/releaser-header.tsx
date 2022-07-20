@@ -1,9 +1,8 @@
 import { useEnsName, useReleaserProfile, useResolvedEnsName } from "../hooks";
 import { EditProfile } from "./edit-profile";
 import { ReleaserSocials } from "./releaser-socials";
-import { Flex } from "@chakra-ui/react";
+import { Flex, Image, Skeleton } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
-import { ChakraNextImage } from "components/Image";
 import { useRouter } from "next/router";
 import { Heading, Link, LinkButton, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
@@ -34,12 +33,20 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
           {isProfilePage ? "Author" : "Released by"}
         </Heading>
         <Flex gap={4} alignItems="center">
-          <ChakraNextImage
-            alt=""
-            boxSize={12}
-            mt={1}
-            src={require("public/assets/others/hexagon.png")}
-          />
+          <Skeleton isLoaded={releaserProfile.isSuccess}>
+            <Image
+              alt=""
+              boxSize={12}
+              mt={1}
+              src={
+                releaserProfile.data?.avatar ||
+                `https://source.boringavatars.com/marble/120/${
+                  ensName.data || wallet
+                }?colors=264653,2a9d8f,e9c46a,f4a261,e76f51`
+              }
+            />
+          </Skeleton>
+
           <Flex flexDir="column">
             <Link href={`/contracts/${ensName.data || wallet}`}>
               <Heading size="subtitle.sm" ml={2}>

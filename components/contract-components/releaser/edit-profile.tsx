@@ -1,5 +1,6 @@
 import { useEditProfileMutation } from "../hooks";
 import {
+  Box,
   Divider,
   Flex,
   FormControl,
@@ -15,11 +16,14 @@ import {
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
-import { ProfileMetadata } from "@thirdweb-dev/sdk";
+import { ProfileMetadata, ProfileMetadataInput } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { FileInput } from "components/shared/FileInput";
+import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { BiImage } from "react-icons/bi";
 import { FiGlobe } from "react-icons/fi";
 import { HiPencilAlt } from "react-icons/hi";
 import { SiDiscord, SiTwitter } from "react-icons/si";
@@ -37,8 +41,12 @@ export const EditProfile: React.FC<EditProfileProps> = ({
     register,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors, isDirty },
-  } = useForm<ProfileMetadata>();
+  } = useForm<ProfileMetadataInput>();
+
+  const imageUrl = useImageFileOrUrl(watch("avatar"));
 
   const editProfile = useEditProfileMutation();
 
@@ -83,6 +91,30 @@ export const EditProfile: React.FC<EditProfileProps> = ({
           </ModalHeader>
           <Divider mb={5} />
           <ModalBody as={Flex} flexDir="column" gap={8}>
+            <FormControl isInvalid={!!errors.avatar}>
+              <FormLabel>
+                <Flex gap={2}>
+                  <Icon as={BiImage} boxSize={4} />
+                  Avatar
+                </Flex>
+              </FormLabel>
+              <Box width={{ base: "auto", md: "250px" }}>
+                <FileInput
+                  accept={{ "image/*": [] }}
+                  value={imageUrl}
+                  showUploadButton
+                  setValue={(file) => setValue("avatar", file)}
+                  border="1px solid"
+                  borderColor="gray.200"
+                  borderRadius="md"
+                  transition="all 200ms ease"
+                  _hover={{ shadow: "sm" }}
+                />
+              </Box>
+              <FormErrorMessage>
+                {errors?.avatar?.message as unknown as string}
+              </FormErrorMessage>
+            </FormControl>
             <FormControl isInvalid={!!errors.bio} mr={4}>
               <FormLabel>
                 <Flex gap={2}>
