@@ -21,14 +21,7 @@ export const ContractFunction: React.FC<ContractFunctionProps> = ({ fn }) => {
           </Badge>
         )}
       </Flex>
-      {fn.comment && (
-        <Text size="body.md">
-          {fn.comment
-            .replaceAll(/See \{(.+)\}(\.)?/gm, "")
-            .replaceAll("{", '"')
-            .replaceAll("}", '"')}
-        </Text>
-      )}
+      {fn.comment && <Text size="body.md">{fn.comment}</Text>}
     </Flex>
   );
 };
