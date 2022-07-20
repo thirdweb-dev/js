@@ -4,10 +4,13 @@ import { useState } from "react";
 import { Badge, Button, Card, Heading, Text } from "tw-components";
 
 interface ContractFunctionProps {
-  fn: AbiFunction;
+  fn?: AbiFunction;
 }
 
 export const ContractFunction: React.FC<ContractFunctionProps> = ({ fn }) => {
+  if (!fn) {
+    return null;
+  }
   return (
     <Flex direction="column" gap={1.5}>
       <Flex alignItems="center" gap={2}>
@@ -40,7 +43,6 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
   const [selectedFunction, setSelectedFunction] = useState<AbiFunction>(
     functions[0],
   );
-
   return (
     <SimpleGrid columns={12}>
       <GridItem
@@ -58,10 +60,12 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
           {functions.map((fn) => (
             <ListItem key={fn.signature} my={0.5}>
               <Button
-                fontWeight={selectedFunction === fn ? 600 : 400}
+                fontWeight={
+                  selectedFunction.signature === fn.signature ? 600 : 400
+                }
+                opacity={selectedFunction.signature === fn.signature ? 1 : 0.65}
                 onClick={() => setSelectedFunction(fn)}
                 color="heading"
-                opacity={selectedFunction === fn ? 1 : 0.65}
                 _hover={{ opacity: 1, textDecor: "underline" }}
                 variant="link"
                 fontFamily="mono"

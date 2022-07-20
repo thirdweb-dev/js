@@ -77,7 +77,7 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
     "",
   );
 
-  const { data: contractFunctions } = useReleasedContractFunctions(release);
+  const contractFunctions = useReleasedContractFunctions(release);
 
   const { onCopy, hasCopied } = useClipboard(currentRoute);
 

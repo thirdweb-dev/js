@@ -246,23 +246,13 @@ export function useReleasedContractInfo(contract: PublishedContract) {
     },
   );
 }
-
 export function useReleasedContractFunctions(contract: PublishedContract) {
   const { data: meta } = useContractPublishMetadataFromURI(
     contract.metadataUri,
   );
-  return useQuery(
-    ["contract-functions", contract.metadataUri],
-    async () => {
-      invariant(contract, "contract is not defined");
-      invariant(meta, "sdk not provided");
-      invariant(meta.abi, "sdk not provided");
-      return extractFunctionsFromAbi(meta.abi || {}, meta.compilerMetadata);
-    },
-    {
-      enabled: !!contract && !!meta && !!meta.abi,
-    },
-  );
+  return meta
+    ? extractFunctionsFromAbi(meta.abi as any, meta?.compilerMetadata)
+    : undefined;
 }
 
 export function useReleasedContractCompilerMetadata(
