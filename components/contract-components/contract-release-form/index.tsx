@@ -162,7 +162,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
             </Flex>
             <Input
               {...register("version")}
-              placeholder={latestVersion || "1.0.0"}
+              placeholder="Use semantic versioning (ex: 1.7.15)"
               disabled={!address}
             />
             <FormErrorMessage>{errors?.version?.message}</FormErrorMessage>
