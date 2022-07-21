@@ -100,7 +100,7 @@ export const ContractLayout = <
       <Tabs index={activeTab} isLazy>
         <TabList
           overflowY="visible"
-          overflowX={{ base: "scroll", md: "inherit" }}
+          overflowX={{ base: "auto", md: "inherit" }}
         >
           <Tab
             onClick={() =>

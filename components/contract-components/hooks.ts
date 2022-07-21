@@ -1,7 +1,10 @@
 import { ContractId } from "./types";
 import { isContractIdBuiltInContract } from "./utils";
 import { contractKeys, networkKeys } from "@3rdweb-sdk/react";
-import { useMutationWithInvalidate } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
+import {
+  useMutationWithInvalidate,
+  useQueryWithNetwork,
+} from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
 import { contractTypeFromContract } from "@3rdweb-sdk/react/hooks/useCommon";
 import {
   useAddress,
@@ -18,6 +21,7 @@ import {
   extractConstructorParamsFromAbi,
   extractFunctionsFromAbi,
   fetchPreDeployMetadata,
+  resolveContractUriFromAddress,
 } from "@thirdweb-dev/sdk";
 import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/src/constants/contract-features";
 import {
@@ -223,6 +227,35 @@ export function useAllVersions(
     () => fetchAllVersions(sdk, publisherAddress, contractName),
     {
       enabled: !!publisherAddress && !!contractName && !!sdk,
+    },
+  );
+}
+
+export function useReleasesFromDeploy(contractAddress: string) {
+  const sdk = useSDK();
+  const provider = sdk?.getProvider();
+
+  const polygonSdk = new ThirdwebSDK("polygon");
+  return useQueryWithNetwork(
+    ["release-from-deploy", contractAddress],
+    async () => {
+      invariant(contractAddress, "contractAddress is not defined");
+      invariant(provider, "provider is not defined");
+      const compilerMetaUri = await resolveContractUriFromAddress(
+        contractAddress,
+        provider,
+      );
+
+      if (compilerMetaUri) {
+        return await polygonSdk
+          .getPublisher()
+          .resolvePublishMetadataFromCompilerMetadata(compilerMetaUri);
+      }
+
+      return undefined;
+    },
+    {
+      enabled: !!contractAddress && !!provider,
     },
   );
 }

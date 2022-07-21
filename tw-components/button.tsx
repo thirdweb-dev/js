@@ -80,10 +80,14 @@ export interface LinkButtonProps extends ButtonProps {
   href: string;
   isExternal?: boolean;
   noIcon?: true;
+  noMatch?: true;
 }
 
 export const LinkButton = React.forwardRef<HTMLButtonElement, LinkButtonProps>(
-  ({ href, isExternal, noIcon, children, ...restButtonProps }, ref) => {
+  (
+    { href, isExternal, noIcon, noMatch, children, ...restButtonProps },
+    ref,
+  ) => {
     const match = useMatch();
 
     if (isExternal) {
@@ -103,7 +107,7 @@ export const LinkButton = React.forwardRef<HTMLButtonElement, LinkButtonProps>(
     }
 
     // we're in a react location context, so we can use that
-    if (match) {
+    if (match && !noMatch) {
       return (
         <LocationLink to={href}>
           <Button
