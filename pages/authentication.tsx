@@ -14,6 +14,7 @@ import { HomepageFooter } from "components/product-pages/homepage/Footer";
 import { HomepageTopNav } from "components/product-pages/homepage/Topnav";
 import { GeneralCta } from "components/shared/GeneralCta";
 import { useTrack } from "hooks/analytics/useTrack";
+import { NextSeo } from "next-seo";
 import WhiteLogo from "public/assets/landingpage/white-logo.png";
 import Hero from "public/assets/product-pages/authentication/auth.png";
 import { Heading, Text, TrackedLink } from "tw-components";
@@ -24,6 +25,14 @@ export default function Authentication() {
   return (
     <DarkMode>
       <Track>
+        <NextSeo
+          title="Wallet Authentication"
+          description="Simple wallet based sign-in and authentication for any app."
+          openGraph={{
+            title: "Wallet Authentication | thirdweb",
+            url: `https://thirdweb.com/authentication`,
+          }}
+        />
         <Flex
           sx={{
             // overwrite the theme colors because the home page is *always* in "dark mode"
