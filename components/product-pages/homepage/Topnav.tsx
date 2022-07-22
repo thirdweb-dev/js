@@ -183,11 +183,6 @@ export const HomepageTopNav: React.FC<{}> = () => {
                 </MenuItem>
               </MenuList>
             </Menu>
-            {typeof window !== "undefined" && window.location.pathname === "/" && (
-              <TrackedLink href="#fees" category="topnav" label="fees">
-                Pricing
-              </TrackedLink>
-            )}
           </Stack>
 
           <Flex

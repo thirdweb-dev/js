@@ -21,6 +21,7 @@ import { ExamplesSection } from "components/product-pages/homepage/examples/Exam
 import { MultiChainSVG } from "components/product-pages/homepage/multi-chain-svg";
 import { GeneralCta } from "components/shared/GeneralCta";
 import { useTrack } from "hooks/analytics/useTrack";
+import { NextSeo } from "next-seo";
 // images
 import Analytics from "public/assets/landingpage/analytics.png";
 import Contracts from "public/assets/landingpage/contracts.png";
@@ -42,6 +43,14 @@ export default function Home() {
   return (
     <DarkMode>
       <Track>
+        <NextSeo
+          title="Wallet Authentication"
+          description="Simple wallet based sign-in and authentication for any app."
+          openGraph={{
+            title: "Wallet Authentication | thirdweb",
+            url: `https://thirdweb.com/authentication`,
+          }}
+        />
         <Flex
           sx={{
             // overwrite the theme colors because the home page is *always* in "dark mode"
