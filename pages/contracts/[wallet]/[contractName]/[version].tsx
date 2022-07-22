@@ -48,6 +48,7 @@ const ContractsNamePageWrapped = () => {
       allVersions.data?.[0]
     );
   }, [allVersions?.data, version]);
+
   return (
     <SimpleGrid columns={12} gap={{ base: 6, md: 12 }} w="full">
       <GridItem colSpan={{ base: 12, md: 9 }}>

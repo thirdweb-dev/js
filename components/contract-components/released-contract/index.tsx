@@ -5,6 +5,7 @@ import {
   useReleasedContractCompilerMetadata,
   useReleasedContractFunctions,
   useReleasedContractInfo,
+  useReleaserProfile,
 } from "../hooks";
 import { ReleaserHeader } from "../releaser/releaser-header";
 import { ContractFunctionsPanel } from "./extracted-contract-functions";
@@ -50,6 +51,7 @@ export interface ExtendedReleasedContractInfo extends PublishedContract {
   description: string;
   version: string;
   releaser: string;
+  tags: string[];
 }
 
 interface ReleasedContractProps {
@@ -72,6 +74,8 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
   const enabledExtensions = useContractEnabledExtensions(
     contractReleaseMetadata.data?.abi,
   );
+
+  const releaserProfile = useReleaserProfile(release.releaser);
 
   const currentRoute = `https://thirdweb.com${router.asPath}`.replace(
     "/latest",
@@ -104,8 +108,29 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
         });
     }
     url.searchParams.append("releaser", releaserEnsOrAddress);
+    if (releaserProfile.data?.avatar) {
+      url.searchParams.append("avatar", releaserProfile.data.avatar);
+    }
     return `${url.href}&.png`;
-  }, [release, compilerInfo, enabledExtensions, releaserEnsOrAddress]);
+  }, [
+    release,
+    compilerInfo,
+    enabledExtensions,
+    releaserEnsOrAddress,
+    releaserProfile?.data,
+  ]);
+
+  const twitterIntentUrl = useMemo(() => {
+    const url = new URL("https://twitter.com/intent/tweet");
+    url.searchParams.append(
+      "text",
+      `Check out this ${release.name} contract on @thirdweb_
+      
+Deploy it in one click`,
+    );
+    url.searchParams.append("url", currentRoute);
+    return url.href;
+  }, [release, currentRoute]);
 
   return (
     <>
@@ -281,7 +306,7 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
                 as={LinkButton}
                 isExternal
                 noIcon
-                href={`https://twitter.com/intent/tweet?text=Check%20out%20this%20${releasedContractInfo.data?.name}%20contract%20on%20%40thirdweb_%0A%0ADeploy%20it%20in%20one%20click%3A&url=${currentRoute}`}
+                href={twitterIntentUrl}
                 bg="transparent"
                 aria-label="twitter"
                 icon={<Icon boxSize={5} as={SiTwitter} />}
