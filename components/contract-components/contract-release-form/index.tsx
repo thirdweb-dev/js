@@ -4,8 +4,21 @@ import {
   useEnsName,
   usePublishMutation,
 } from "../hooks";
+import { MarkdownRenderer } from "../released-contract/markdown-renderer";
 import { ContractId } from "../types";
-import { Flex, FormControl, Input, Skeleton, Textarea } from "@chakra-ui/react";
+import {
+  Flex,
+  FormControl,
+  Icon,
+  Input,
+  Skeleton,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Textarea,
+} from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import { ExtraPublishMetadata } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
@@ -14,8 +27,9 @@ import { FeatureIconMap } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { BsCode, BsEye } from "react-icons/bs";
 import {
   Card,
   FormErrorMessage,
@@ -39,6 +53,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
     reset,
     register,
     handleSubmit,
+    watch,
     formState: { errors, isDirty },
   } = useForm<ExtraPublishMetadata>();
   const router = useRouter();
@@ -74,6 +89,15 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
       .version;
 
   const ensName = useEnsName(address);
+
+  const placeholderVersion = useMemo(() => {
+    if (latestVersion) {
+      return `${latestVersion.split(".")[0]}.${latestVersion.split(".")[1]}.${
+        Number(latestVersion.split(".")[2]) + 1
+      }`;
+    }
+    return "1.0.0";
+  }, [latestVersion]);
 
   return (
     <Card w="100%" p={{ base: 6, md: 10 }}>
@@ -146,11 +170,38 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
             <Input {...register("description")} disabled={!address} />
             <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
           </FormControl>
+
           <FormControl isInvalid={!!errors.name}>
-            <FormLabel>Readme</FormLabel>
-            <Textarea {...register("readme")} disabled={!address} />
-            <FormErrorMessage>{errors?.readme?.message}</FormErrorMessage>
+            <FormLabel>Readme</FormLabel>{" "}
+            <Tabs isLazy lazyBehavior="keepMounted" colorScheme="purple">
+              <TabList
+                px={0}
+                borderBottomColor="borderColor"
+                borderBottomWidth="1px"
+              >
+                <Tab gap={2}>
+                  <Icon as={BsCode} my={2} />
+                  <Heading size="label.lg">Edit Readme</Heading>
+                </Tab>
+                <Tab gap={2}>
+                  <Icon as={BsEye} my={2} />
+                  <Heading size="label.lg">Preview</Heading>
+                </Tab>
+              </TabList>
+              <TabPanels py={2}>
+                <TabPanel px={0}>
+                  <Textarea {...register("readme")} disabled={!address} />
+                  <FormErrorMessage>{errors?.readme?.message}</FormErrorMessage>
+                </TabPanel>
+                <TabPanel px={0}>
+                  <Card>
+                    <MarkdownRenderer markdownText={watch("readme") || ""} />
+                  </Card>
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
           </FormControl>
+
           <FormControl isRequired isInvalid={!!errors.name}>
             <Flex alignItems="center" mb={1}>
               <FormLabel flex="1" mb={0}>
@@ -162,15 +213,42 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
             </Flex>
             <Input
               {...register("version")}
-              placeholder="Use semantic versioning (ex: 1.7.15)"
+              placeholder={placeholderVersion}
               disabled={!address}
             />
             <FormErrorMessage>{errors?.version?.message}</FormErrorMessage>
           </FormControl>
           <FormControl isInvalid={!!errors.name}>
-            <FormLabel>Release Notes</FormLabel>
-            <Textarea {...register("changelog")} disabled={!address} />
-            <FormErrorMessage>{errors?.changelog?.message}</FormErrorMessage>
+            <FormLabel>Release notes</FormLabel>{" "}
+            <Tabs isLazy lazyBehavior="keepMounted" colorScheme="purple">
+              <TabList
+                px={0}
+                borderBottomColor="borderColor"
+                borderBottomWidth="1px"
+              >
+                <Tab gap={2}>
+                  <Icon as={BsCode} my={2} />
+                  <Heading size="label.lg">Edit Release notes</Heading>
+                </Tab>
+                <Tab gap={2}>
+                  <Icon as={BsEye} my={2} />
+                  <Heading size="label.lg">Preview</Heading>
+                </Tab>
+              </TabList>
+              <TabPanels py={2}>
+                <TabPanel px={0}>
+                  <Textarea {...register("changelog")} disabled={!address} />
+                  <FormErrorMessage>
+                    {errors?.changelog?.message}
+                  </FormErrorMessage>
+                </TabPanel>
+                <TabPanel px={0}>
+                  <Card>
+                    <MarkdownRenderer markdownText={watch("changelog") || ""} />
+                  </Card>
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
           </FormControl>
           <Flex justifyContent="space-between" alignItems="center">
             <Text>
