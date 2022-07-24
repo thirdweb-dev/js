@@ -12,7 +12,7 @@ const EXAMPLES = [
   {
     title: "Sign-in With Wallet",
     label: "sign-in-with-wallet",
-    href: "https://github.com/thirdweb-example/sign-in-with-ethereum",
+    href: "https://github.com/thirdweb-example/login-with-wallet",
     svg: NFTDrops,
   },
   {
