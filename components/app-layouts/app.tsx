@@ -29,7 +29,7 @@ const PHIdentifier: React.FC = () => {
 
   useEffect(() => {
     if (chainId) {
-      posthog.register({ chainId });
+      posthog.register({ chain_id: chainId });
     }
   }, [chainId]);
 
