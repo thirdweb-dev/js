@@ -134,3 +134,15 @@ export function useIsAdmin<TContract extends ValidContractClass>(
     address,
   );
 }
+
+export function useIsMinter<TContract extends ValidContractClass>(
+  contract?: C.Instance<TContract>,
+) {
+  const { address } = useWeb3();
+  const contractHasRoles = isContractWithRoles(contract);
+  return useIsAccountRole(
+    "minter",
+    contractHasRoles ? contract : undefined,
+    address,
+  );
+}

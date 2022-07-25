@@ -44,3 +44,28 @@ export function useEditionCreateAndMintMutation(contract?: Edition) {
     },
   );
 }
+
+interface EditionMintSupplyInput {
+  tokenId: string;
+  amount: string;
+}
+
+export function useEditionMintSupplyMutation(contract?: Edition) {
+  const address = useAddress();
+  return useMutationWithInvalidate(
+    async ({ tokenId, amount }: EditionMintSupplyInput) => {
+      invariant(
+        contract?.mintAdditionalSupply,
+        "contract does not support mintAdditionalSupply",
+      );
+      invariant(address, "address is not defined");
+
+      return await contract.mintAdditionalSupply(tokenId, amount);
+    },
+    {
+      onSuccess: (_data, _variables, _options, invalidate) => {
+        return invalidate([getAllQueryKey(contract)]);
+      },
+    },
+  );
+}

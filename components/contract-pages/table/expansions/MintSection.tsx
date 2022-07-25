@@ -1,20 +1,20 @@
 import { useTableContext } from "../table-context";
-import { useBurnMutation } from "@3rdweb-sdk/react";
+import { useEditionMintSupplyMutation } from "@3rdweb-sdk/react";
 import { FormControl, Icon, Input, Stack } from "@chakra-ui/react";
-import { Edition, EditionDrop, ValidContractInstance } from "@thirdweb-dev/sdk";
+import { Edition } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { FaBurn } from "react-icons/fa";
+import { ImStack } from "react-icons/im";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 
-interface IBurnSection {
-  contract?: ValidContractInstance;
+interface IMintSection {
+  contract?: Edition;
   tokenId: string;
 }
 
-export const BurnSection: React.FC<IBurnSection> = ({ contract, tokenId }) => {
+export const MintSection: React.FC<IMintSection> = ({ contract, tokenId }) => {
   const {
     register,
     handleSubmit,
@@ -23,16 +23,13 @@ export const BurnSection: React.FC<IBurnSection> = ({ contract, tokenId }) => {
     defaultValues: { amount: "1" },
   });
 
-  const burn = useBurnMutation(contract);
+  const burn = useEditionMintSupplyMutation(contract);
   const { closeAllRows } = useTableContext();
 
   const { onSuccess, onError } = useTxNotifications(
-    "Burn successful",
-    "Error burning",
+    "Mint successful",
+    "Error minting additional supply",
   );
-
-  const requiresAmount =
-    contract instanceof Edition || contract instanceof EditionDrop;
 
   return (
     <Stack pt={3}>
@@ -55,28 +52,23 @@ export const BurnSection: React.FC<IBurnSection> = ({ contract, tokenId }) => {
       >
         <Stack align="center">
           <Stack spacing={6} w="100%" direction={{ base: "column", md: "row" }}>
-            {requiresAmount && (
-              <FormControl
-                isRequired={requiresAmount}
-                isInvalid={!!errors.amount}
-              >
-                <FormLabel>Amount</FormLabel>
-                <Input placeholder={"1"} {...register("amount")} />
-                <FormHelperText>
-                  How many would you like to burn?
-                </FormHelperText>
-                <FormErrorMessage>{errors.amount?.message}</FormErrorMessage>
-              </FormControl>
-            )}
+            <FormControl isRequired isInvalid={!!errors.amount}>
+              <FormLabel>Amount</FormLabel>
+              <Input placeholder={"1"} {...register("amount")} />
+              <FormHelperText>
+                How many tokens would you like to mint?
+              </FormHelperText>
+              <FormErrorMessage>{errors.amount?.message}</FormErrorMessage>
+            </FormControl>
           </Stack>
           <TransactionButton
             transactionCount={1}
             isLoading={burn.isLoading}
             type="submit"
             colorScheme="primary"
-            rightIcon={<Icon as={FaBurn} />}
+            rightIcon={<Icon as={ImStack} />}
           >
-            Burn
+            Mint
           </TransactionButton>
         </Stack>
       </form>

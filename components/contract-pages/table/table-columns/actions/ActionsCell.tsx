@@ -1,6 +1,7 @@
 import { ClaimPhasesCell } from "./ClaimPhasesCell";
 import { EditionAirdropCell } from "./EditionAirdropCell";
 import { EditionBurnCell } from "./EditionBurnCell";
+import { EditionMintCell } from "./EditionMintCell";
 import { EditionTransferCell } from "./EditionTransferCell";
 import { OwnerBurnCell } from "./OwnerBurnCell";
 import { OwnerTransferCell } from "./OwnerTransferCell";
@@ -46,6 +47,7 @@ export const EditionActionsCell: React.FC<IEditionActionsCell> = ({ row }) => {
     <Stack as={ButtonGroup} size="sm" variant="outline">
       <Flex flexDir="column" gap={1}>
         <ERC1155Cell row={row} />
+        <EditionMintCell row={row} />
       </Flex>
     </Stack>
   );

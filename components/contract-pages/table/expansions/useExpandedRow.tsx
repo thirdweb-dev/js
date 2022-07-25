@@ -2,8 +2,9 @@ import { useTableContext } from "../table-context";
 import { AirdropSection } from "./AirdropSection";
 import { BurnSection } from "./BurnSection";
 import { EditionDropTokenSettingsSection } from "./EditionDropTokenSettings";
+import { MintSection } from "./MintSection";
 import { TransferSection } from "./TransferSection";
-import { EditionDrop, ValidContractInstance } from "@thirdweb-dev/sdk";
+import { Edition, EditionDrop, ValidContractInstance } from "@thirdweb-dev/sdk";
 import { useCallback } from "react";
 
 export function useExpandedRow<TContract extends ValidContractInstance>(
@@ -23,6 +24,8 @@ export function useExpandedRow<TContract extends ValidContractInstance>(
           );
         } else if (expanded.type === "burn") {
           return <BurnSection contract={contract} tokenId={expanded.tokenId} />;
+        } else if (expanded.type === "mint" && contract instanceof Edition) {
+          return <MintSection contract={contract} tokenId={expanded.tokenId} />;
         } else if (
           expanded.type === "settings" &&
           contract instanceof EditionDrop

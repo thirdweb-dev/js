@@ -8,7 +8,9 @@ type ExpansionType =
   | "settings"
   | "rewards"
   | "airdrop"
-  | "burn";
+  | "burn"
+  | "mint";
+
 interface IExpandedSettings {
   tokenId: string;
   type: ExpansionType;
