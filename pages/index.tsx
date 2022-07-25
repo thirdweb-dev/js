@@ -155,7 +155,7 @@ export default function Home() {
                   >
                     <TrackedLink
                       isExternal
-                      href="https://portal.thirdweb.com/thirdweb-deploy"
+                      href="https://portal.thirdweb.com/thirdweb-cli"
                       category="thirdweb-deloy"
                       label="heading"
                     >
@@ -202,7 +202,7 @@ export default function Home() {
                     <Heading size="title.sm">
                       Power up with{" "}
                       <TrackedLink
-                        href="https://portal.thirdweb.com/thirdweb-deploy/contract-features"
+                        href="https://portal.thirdweb.com/thirdweb-deploy/contract-extensions"
                         category="thirdweb-deploy"
                         label="extensions"
                         borderBottom="1px solid"
@@ -216,7 +216,7 @@ export default function Home() {
                       <TrackedLink
                         category="thirdweb-deploy"
                         borderBottom="1px solid"
-                        href="https://portal.thirdweb.com/thirdweb-deploy/contract-features/permissions"
+                        href="https://portal.thirdweb.com/solidity-sdk/contract-extensions/permissions"
                         isExternal
                         _hover={{ opacity: 0.9 }}
                         label="permissions"
@@ -227,7 +227,7 @@ export default function Home() {
                       <TrackedLink
                         category="thirdweb-deploy"
                         borderBottom="1px solid"
-                        href="https://portal.thirdweb.com/thirdweb-deploy/contract-features/royalty"
+                        href="https://portal.thirdweb.com/solidity-sdk/contract-extensions/royalty"
                         isExternal
                         _hover={{ opacity: 0.9 }}
                         label="royalties"
@@ -238,7 +238,7 @@ export default function Home() {
                       <TrackedLink
                         category="thirdweb-deploy"
                         borderBottom="1px solid"
-                        href="https://portal.thirdweb.com/thirdweb-deploy/contract-features"
+                        href="https://portal.thirdweb.com/solidity-sdk/contract-extensions/delayedreveal"
                         isExternal
                         _hover={{ opacity: 0.9 }}
                         label="delayed-reveal"
@@ -249,7 +249,7 @@ export default function Home() {
                       <TrackedLink
                         category="thirdweb-deploy"
                         borderBottom="1px solid"
-                        href="https://portal.thirdweb.com/thirdweb-deploy/contract-features"
+                        href="https://portal.thirdweb.com/solidity-sdk/contract-extensions/signatureminting"
                         isExternal
                         _hover={{ opacity: 0.9 }}
                         label="signature-minting"
@@ -260,7 +260,7 @@ export default function Home() {
                       <TrackedLink
                         category="thirdweb-deploy"
                         borderBottom="1px solid"
-                        href="https://portal.thirdweb.com/thirdweb-deploy/contract-features"
+                        href="https://portal.thirdweb.com/solidity-sdk/contract-extensions/primarysale"
                         isExternal
                         _hover={{ opacity: 0.9 }}
                         label="primary-sales"
@@ -271,7 +271,7 @@ export default function Home() {
                       <TrackedLink
                         category="thirdweb-deploy"
                         borderBottom="1px solid"
-                        href="https://portal.thirdweb.com/thirdweb-deploy/contract-features"
+                        href="https://portal.thirdweb.com/thirdweb-deploy/contract-extensions"
                         isExternal
                         _hover={{ opacity: 0.9 }}
                         label="more"

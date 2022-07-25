@@ -102,7 +102,7 @@ const UserPageWrapped = () => {
                   {resolvedAddress.data === address && (
                     <LinkButton
                       size="sm"
-                      href="https://portal.thirdweb.com/thirdweb-deploy/thirdweb-cli"
+                      href="https://portal.thirdweb.com/thirdweb-cli"
                       isExternal
                       variant="outline"
                       colorScheme="primary"

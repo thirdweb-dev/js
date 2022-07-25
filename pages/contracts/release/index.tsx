@@ -29,7 +29,7 @@ export default function ContractsReleasePage() {
             <Link
               color="primary.500"
               isExternal
-              href="https://portal.thirdweb.com/thirdweb-deploy"
+              href="https://portal.thirdweb.com/thirdweb-cli"
             >
               Learn more about releasing your contracts.
             </Link>

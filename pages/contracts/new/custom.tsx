@@ -100,7 +100,7 @@ function DeployCustomContract() {
                     <Text>You have not released any contracts yet.</Text>
                     <LinkButton
                       size="sm"
-                      href="https://portal.thirdweb.com/thirdweb-deploy/thirdweb-cli"
+                      href="https://portal.thirdweb.com/thirdweb-cli"
                       isExternal
                       variant="outline"
                       colorScheme="primary"
@@ -124,7 +124,7 @@ function DeployCustomContract() {
                 fontSize={14}
                 color="primary.500"
                 isExternal
-                href="https://portal.thirdweb.com/thirdweb-deploy/thirdweb-cli"
+                href="https://portal.thirdweb.com/thirdweb-cli"
               >
                 Learn more about releasing contracts
               </Link>

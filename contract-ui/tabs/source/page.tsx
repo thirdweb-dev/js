@@ -195,7 +195,7 @@ export const CustomContractSourcePage: React.FC<
       <Heading size="subtitle.sm">
         Try deploying with{" "}
         <Link
-          href="https://portal.thirdweb.com/thirdweb-deploy/thirdweb-cli"
+          href="https://portal.thirdweb.com/thirdweb-cli"
           isExternal
         >
           thirdweb CLI v0.5+

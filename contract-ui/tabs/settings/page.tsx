@@ -62,9 +62,21 @@ export const CustomContractSettingsTab: React.FC<
             <ButtonGroup colorScheme="purple" size="sm" variant="solid">
               <LinkButton
                 isExternal
-                href="https://portal.thirdweb.com/thirdweb-deploy/contract-extensions/other-settings"
+                href="https://portal.thirdweb.com/solidity-sdk/contract-extensions/platformfee"
               >
-                Settings
+                Platform Fee
+              </LinkButton>
+              <LinkButton
+                isExternal
+                href="https://portal.thirdweb.com/solidity-sdk/contract-extensions/primarysale"
+              >
+                Primary Sale
+              </LinkButton>
+              <LinkButton
+                isExternal
+                href="https://portal.thirdweb.com/solidity-sdk/contract-extensions/royalty"
+              >
+                Royalty
               </LinkButton>
             </ButtonGroup>
           </Flex>

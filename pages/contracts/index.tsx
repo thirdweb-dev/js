@@ -99,7 +99,7 @@ const ContractsHomepageWrapped: React.FC = () => {
                   <Text>You have not published any contracts yet.</Text>
                   <LinkButton
                     size="sm"
-                    href="https://portal.thirdweb.com/thirdweb-deploy"
+                    href="https://portal.thirdweb.com/thirdweb-cli"
                     isExternal
                     variant="outline"
                     colorScheme="primary"
