@@ -11,7 +11,7 @@ export function parseAttributes<
   };
 }
 
-function removeEmptyValues(data: NFTMetadataInput["attributes"]) {
+export function removeEmptyValues(data: NFTMetadataInput["attributes"]) {
   if (!data) {
     return data;
   }
@@ -19,8 +19,8 @@ function removeEmptyValues(data: NFTMetadataInput["attributes"]) {
     const parsedArray = data
       .filter(({ value }) => value !== "")
       .map(({ value, trait_type }) => ({
-        value,
         ...(!!trait_type && { trait_type }),
+        value,
       }));
     return parsedArray.length === 0 ? undefined : parsedArray;
   }

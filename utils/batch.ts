@@ -1,3 +1,4 @@
+import { removeEmptyValues } from "./parseAttributes";
 import { NFTMetadataInput } from "@thirdweb-dev/sdk";
 import { useMemo } from "react";
 
@@ -95,6 +96,15 @@ export const removeEmptyKeysFromObject = (obj: any) => {
   return obj;
 };
 
+export const convertToOsStandard = (obj: NFTMetadataInput["attributes"]) => {
+  const attributes = Object.entries(obj || {}).map(([trait_type, value]) => ({
+    trait_type,
+    value,
+  }));
+
+  return removeEmptyValues(attributes);
+};
+
 export const useMergedData = (
   csvData: Papa.ParseResult<CSVData> | undefined,
   jsonData: any,
@@ -121,7 +131,9 @@ export const useMergedData = (
           external_url,
           background_color,
           youtube_url,
-          attributes: removeEmptyKeysFromObject(properties),
+          attributes: convertToOsStandard(
+            removeEmptyKeysFromObject(properties),
+          ),
           image:
             imageFiles.find((img) => img.name === image) ||
             imageFiles[index] ||
