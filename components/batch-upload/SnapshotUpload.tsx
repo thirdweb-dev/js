@@ -299,7 +299,9 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
       {
         Header: "Max claimable",
         accessor: ({ maxClaimable }) => {
-          return maxClaimable || "Default";
+          return maxClaimable === "0" || !maxClaimable
+            ? "Default"
+            : maxClaimable;
         },
       },
     ] as Column<SnapshotAddressInput>[];
