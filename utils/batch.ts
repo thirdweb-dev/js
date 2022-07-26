@@ -126,8 +126,8 @@ export const useMergedData = (
         } = row;
 
         return removeEmptyKeysFromObject({
-          name,
-          description,
+          name: name.toString(),
+          description: description?.toString(),
           external_url,
           background_color,
           youtube_url,
