@@ -23,7 +23,6 @@
     "@emotion/styled": "^11",
     "@hookform/resolvers": "^2.8.0",
     "@n8tb1t/use-scroll-position": "^2.0.3",
-    "@react-hook/intersection-observer": "^3.1.1",
     "@tanstack/react-location": "^3.7.4",
     "@thirdweb-dev/chain-icons": "^1.0.4",
     "@thirdweb-dev/react": "^2.5.1",
