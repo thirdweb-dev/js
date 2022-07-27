@@ -20,7 +20,6 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import {
-  ChainId,
   useActiveChainId,
   useContract,
   useContractFunctions,
@@ -44,6 +43,7 @@ import {
   Heading,
   Text,
 } from "tw-components";
+import { SupportedChainIdToNetworkMap } from "utils/network";
 
 interface ContentOverviewProps {
   contractAddress?: string;
@@ -182,27 +182,6 @@ export const CustomContractCode: React.FC<ContentOverviewProps> = ({
     </Flex>
   );
 };
-
-function getChainName(chainId: number | undefined) {
-  switch (chainId) {
-    case ChainId.Mainnet:
-      return "mainnet";
-    case ChainId.Rinkeby:
-      return "rinkeby";
-    case ChainId.Goerli:
-      return "goerli";
-    case ChainId.Polygon:
-      return "polygon";
-    case ChainId.Mumbai:
-      return "mumbai";
-    case ChainId.Fantom:
-      return "fantom";
-    case ChainId.Avalanche:
-      return "avalanche";
-    default:
-      return "mainnet";
-  }
-}
 
 function formatResponseData(data: unknown): string {
   if (BigNumber.isBigNumber(data)) {
@@ -363,7 +342,10 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
   }, [abiFunction]);
 
   const chainId = useActiveChainId();
-  const chainName = getChainName(chainId);
+  const chainName =
+    SupportedChainIdToNetworkMap[
+      chainId as keyof typeof SupportedChainIdToNetworkMap
+    ];
   const [codeEnv, setCodeEnv] = useState<Environment>("javascript");
 
   async function contractCall(params: unknown[], value?: BigNumber) {
