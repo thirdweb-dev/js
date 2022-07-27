@@ -6,6 +6,7 @@ import {
   Flex,
   Spinner,
 } from "@chakra-ui/react";
+import { QueryClient, dehydrate } from "@tanstack/react-query";
 import { useAddress } from "@thirdweb-dev/react";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { AppLayout } from "components/app-layouts/app";
@@ -25,7 +26,6 @@ import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { ReactElement, useEffect } from "react";
 import { IoRefreshSharp } from "react-icons/io5";
-import { QueryClient, dehydrate } from "react-query";
 import { Button, LinkButton, Text } from "tw-components";
 import { getSingleQueryValue } from "utils/router";
 

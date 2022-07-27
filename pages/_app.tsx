@@ -1,6 +1,12 @@
 import chakraTheme from "../theme";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+import { Hydrate } from "@tanstack/react-query";
+import {
+  PersistQueryClientProvider,
+  Persister,
+} from "@tanstack/react-query-persist-client";
 import { ErrorProvider } from "contexts/error-handler";
 import { BigNumber } from "ethers";
 import flat from "flat";
@@ -11,13 +17,11 @@ import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import posthog from "posthog-js";
 import React, { ReactElement, ReactNode, useEffect } from "react";
-import { Hydrate, QueryClientProvider } from "react-query";
-import { createWebStoragePersister } from "react-query/createWebStoragePersister";
-import { persistQueryClient } from "react-query/persistQueryClient";
 import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
+import { isBrowser } from "utils/isBrowser";
 import { queryClient } from "utils/query-client";
 
-const __CACHE_BUSTER = "tw_v2.0.4";
+const __CACHE_BUSTER = "v2.0.4";
 
 export function bigNumberReplacer(_key: string, value: any) {
   // if we find a BigNumber then make it into a string (since that is safe)
@@ -44,19 +48,14 @@ type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout;
 };
 
+const persister: Persister = createSyncStoragePersister({
+  storage: isBrowser() ? window.localStorage : undefined,
+  serialize: (data) => JSON.stringify(data, bigNumberReplacer),
+  key: `tw-query-client:${__CACHE_BUSTER}`,
+});
+
 function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
-
-  useEffect(() => {
-    persistQueryClient({
-      queryClient,
-      buster: __CACHE_BUSTER,
-      persister: createWebStoragePersister({
-        storage: window.localStorage,
-        serialize: (data) => JSON.stringify(data, bigNumberReplacer),
-      }),
-    });
-  }, []);
 
   useEffect(() => {
     // Init PostHog
@@ -95,7 +94,10 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
 
   const getLayout = Component.getLayout ?? ((page) => page);
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{ persister }}
+    >
       <Hydrate state={pageProps.dehydratedState}>
         <Track>
           <Global
@@ -153,7 +155,7 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
           </ChakraProvider>
         </Track>
       </Hydrate>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   );
 }
 export default ConsoleApp;

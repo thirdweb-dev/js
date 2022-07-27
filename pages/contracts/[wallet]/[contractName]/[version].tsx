@@ -6,6 +6,7 @@ import {
   SimpleGrid,
   Skeleton,
 } from "@chakra-ui/react";
+import { QueryClient, dehydrate } from "@tanstack/react-query";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
@@ -26,7 +27,6 @@ import { useSingleQueryParam } from "hooks/useQueryParam";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { ReactElement, useMemo } from "react";
-import { QueryClient, dehydrate } from "react-query";
 import { Heading, LinkButton, Text } from "tw-components";
 import { getSingleQueryValue } from "utils/router";
 

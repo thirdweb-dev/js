@@ -1,5 +1,5 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 import { isBrowser } from "utils/isBrowser";
 
 export function useLocalStorage<TType>(key = "", initialValue: TType) {

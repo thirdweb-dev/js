@@ -5,10 +5,10 @@ import {
 } from "./query/useQueryWithNetwork";
 import { useContractMetadata } from "./useContract";
 import { useWeb3 } from "@3rdweb-sdk/react";
+import { useQuery } from "@tanstack/react-query";
 import { useTokenDrop } from "@thirdweb-dev/react";
 import { ClaimConditionInput, TokenDrop } from "@thirdweb-dev/sdk";
 import { utils } from "ethers";
-import { useQuery } from "react-query";
 import invariant from "tiny-invariant";
 import { isAddressZero } from "utils/zeroAddress";
 

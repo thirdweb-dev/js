@@ -8,11 +8,11 @@ import {
 } from "./types";
 import { useContractName, useWeb3 } from "@3rdweb-sdk/react";
 import { Flex, Spinner, Stack } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useCallback, useMemo, useState } from "react";
 import { IoDocumentOutline } from "react-icons/io5";
-import { useQuery } from "react-query";
 import { Card, CodeBlock, Heading, LinkButton, Text } from "tw-components";
 import { SupportedNetwork } from "utils/network";
 

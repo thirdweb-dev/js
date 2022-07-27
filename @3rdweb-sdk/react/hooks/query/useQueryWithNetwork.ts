@@ -1,5 +1,4 @@
 import { networkKeys, useActiveChainId } from "@3rdweb-sdk/react";
-import { useCallback } from "react";
 import {
   MutationFunction,
   QueryFunction,
@@ -10,7 +9,8 @@ import {
   useMutation,
   useQuery,
   useQueryClient,
-} from "react-query";
+} from "@tanstack/react-query";
+import { useCallback } from "react";
 
 export function useQueryWithNetwork<
   TQueryFnData = unknown,

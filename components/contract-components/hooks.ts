@@ -6,6 +6,7 @@ import {
   useQueryWithNetwork,
 } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
 import { contractTypeFromContract } from "@3rdweb-sdk/react/hooks/useCommon";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   useAddress,
   useChainId,
@@ -37,7 +38,6 @@ import { ethers } from "ethers";
 import { getAddress } from "ethers/lib/utils";
 import { StaticImageData } from "next/image";
 import { useMemo } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 

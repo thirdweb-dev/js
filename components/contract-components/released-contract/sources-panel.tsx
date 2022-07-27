@@ -1,13 +1,13 @@
 import type { ExtendedReleasedContractInfo } from ".";
 import { ContractPublishMetadata } from "../hooks";
 import { Center, Flex, Icon, Spinner } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import {
   PublishedMetadata,
   fetchSourceFilesFromMetadata,
 } from "@thirdweb-dev/sdk";
 import { StorageSingleton } from "components/app-layouts/providers";
 import { FiXCircle } from "react-icons/fi";
-import { useQuery } from "react-query";
 import invariant from "tiny-invariant";
 import { Card, CodeBlock, Heading, Link } from "tw-components";
 

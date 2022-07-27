@@ -13,12 +13,12 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
+import { UseQueryResult } from "@tanstack/react-query";
 import { ValidContractClass } from "@thirdweb-dev/sdk";
 import { ContractTab, useContractTabs } from "components/contract-tabs";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
 import React, { PropsWithChildren, useMemo } from "react";
-import { UseQueryResult } from "react-query";
 import { C } from "ts-toolbelt";
 import { Heading, Text } from "tw-components";
 import { parseErrorToMessage } from "utils/errorParser";

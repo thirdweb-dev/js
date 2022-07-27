@@ -1,11 +1,11 @@
 import { contractKeys, networkKeys } from "../cache-keys";
+import { useQuery } from "@tanstack/react-query";
 import { useReadonlySDK } from "@thirdweb-dev/react";
 import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import {
   StorageSingleton,
   alchemyUrlMap,
 } from "components/app-layouts/providers";
-import { useQuery } from "react-query";
 
 export function useContractList(
   chainId: SUPPORTED_CHAIN_ID,
