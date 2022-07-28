@@ -2,8 +2,10 @@ import { Box, Flex, Select } from "@chakra-ui/react";
 import { useContractFunctions } from "@thirdweb-dev/react";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
 import { Environment } from "components/contract-tabs/code/types";
+import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useMemo, useState } from "react";
 import { Card, Heading, Text } from "tw-components";
+import { SupportedNetwork } from "utils/network";
 
 interface CodeOverviewProps {
   contractAddress?: string;
@@ -11,61 +13,61 @@ interface CodeOverviewProps {
 
 const COMMANDS = {
   install: {
-    javascript: "npm install @thirdweb-dev/sdk",
-    react: "npm install @thirdweb-dev/react",
+    javascript: "npm install @thirdweb-dev/sdk ethers",
+    react: "npm install @thirdweb-dev/react @thirdweb-dev/sdk ethers",
     python: "pip install thirdweb-sdk",
     go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
   },
   setup: {
     javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-const sdk = new ThirdwebSDK("mumbai");
-const contract = await sdk.getContract("CONTRACT-ADDRESS");`,
+const sdk = new ThirdwebSDK("{{chainName}}");
+const contract = await sdk.getContract("{{contract_address}}");`,
     react: `import { useContract } from "@thirdweb-dev/react";
 
 export default function Component() {
-  const contract = useContract("CONTRACT-ADDRESS");
+  const { contract } = useContract("{{contract_address}}");
   // Now you can use the contract in the rest of the component
 }`,
     python: `from thirdweb import ThirdwebSDK
 
-sdk = ThirdwebSDK("mumbai")
-contract = sdk.get_contract("CONTRACT-ADDRESS")`,
+sdk = ThirdwebSDK("{{chainName}}")
+contract = sdk.get_contract("{{contract_address}}")`,
     go: `import "github.com/thirdweb-dev/go-sdk/thirdweb"
 
-sdk, err := thirdweb.NewThirdwebSDK("mumbai")
-contract, err := sdk.GetContract("CONTRACT-ADDRESS")
+sdk, err := thirdweb.NewThirdwebSDK("{{chainName}}")
+contract, err := sdk.GetContract("{{contract_address}}")
 `,
   },
   read: {
-    javascript: `const data = await contract.call("FN", ARGS)`,
+    javascript: `const data = await contract.call("{{function}}", {{args}})`,
     react: `import { useContract, useContractData } from "@thirdweb-dev/react";
 
 export default function Component() {
-  const contract = useContract("CONTRACT-ADDRESS");
-  const { data, isLoading } = useContractData(contract, "FN", ARGS)
+  const { contract } = useContract("{{contract_address}}");
+  const { data, isLoading } = useContractData(contract, "{{function}}", {{args}})
 }`,
-    python: `data = contract.call("FN", ARGS)`,
-    go: `data, err := contract.Call("FN", ARGS)`,
+    python: `data = contract.call("{{function}}", {{args}})`,
+    go: `data, err := contract.Call("{{function}}", {{args}})`,
   },
   write: {
-    javascript: `const data = await contract.call("FN", ARGS)`,
+    javascript: `const data = await contract.call("{{function}}", {{args}})`,
     react: `import { useContract, useContractCall } from "@thirdweb-dev/react";
 
 export default function Component() {
-  const contract = useContract("CONTRACT-ADDRESS");
-  const { mutate, isLoading } = useContractCall(contract, "FN")
+  const { contract } = useContract("{{contract_address}}");
+  const { mutate, isLoading } = useContractCall(contract, "{{function}}")
 
-  function call() {
-    mutate(ARGS, {
+  const call = () => {
+    mutate({ {{args}} }, {
       onSuccess: (data) => {
-        console.log(data)
+        // Do something on success
       }
     })
   }
 }`,
-    python: `data = contract.call("FN", ARGS)`,
-    go: `data, err := contract.Call("FN", ARGS)`,
+    python: `data = contract.call("{{function}}", {{args}})`,
+    go: `data, err := contract.Call("{{function}}", {{args}})`,
   },
 };
 
@@ -73,27 +75,28 @@ interface SnippetOptions {
   contractAddress?: string;
   fn?: string;
   args?: string[];
+  chainName?: string;
 }
 
 function formatSnippet(
   snippet: Record<Environment, any>,
-  { contractAddress, fn, args }: SnippetOptions,
+  { contractAddress, fn, args, chainName }: SnippetOptions,
 ) {
   const code = { ...snippet };
   for (const key of Object.keys(code)) {
     const env = key as Environment;
 
+    code[env] = code[env]
+      ?.replace(/{{contract_address}}/gm, contractAddress)
+      ?.replace(/{{chainName}}/gm, chainName || "goerli")
+      ?.replace(/{{function}}/gm, fn || "");
+
     if (args && args.length) {
-      code[env] = code[env]
-        .replace("CONTRACT-ADDRESS", contractAddress || "")
-        .replace("FN", fn || "")
-        .replace("ARGS", args?.join(", ") || "");
+      code[env] = code[env]?.replace(/{{args}}/gm, args?.join(", ") || "");
     } else {
       code[env] = code[env]
-        .replace("CONTRACT-ADDRESS", contractAddress || "")
-        .replace("FN", fn || "")
-        .replace(", ARGS", "")
-        .replace("ARGS, ", "");
+        ?.replace(", {{args}}", "")
+        ?.replace("{{args}}, ", "");
     }
   }
 
@@ -103,6 +106,7 @@ function formatSnippet(
 export const CodeOverview: React.FC<CodeOverviewProps> = ({
   contractAddress,
 }) => {
+  const chainName = useSingleQueryParam<SupportedNetwork>("network");
   const [environment, setEnvironment] = useState<Environment>("react");
 
   const functionsQuery = useContractFunctions(contractAddress);
@@ -141,7 +145,10 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
         <CodeSegment
           environment={environment}
           setEnvironment={setEnvironment}
-          snippet={formatSnippet(COMMANDS.setup as any, { contractAddress })}
+          snippet={formatSnippet(COMMANDS.setup as any, {
+            contractAddress,
+            chainName,
+          })}
           hideTabs
         />
       </Card>
@@ -171,6 +178,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
             args: readFunctions
               ?.find((f) => f.name === read)
               ?.inputs?.map((i) => i.name),
+            chainName,
           })}
         />
       </Card>
@@ -203,6 +211,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
             args: writeFunctions
               ?.find((f) => f.name === write)
               ?.inputs?.map((i, index) => i.name || `arg${index}`),
+            chainName,
           })}
         />
       </Card>
