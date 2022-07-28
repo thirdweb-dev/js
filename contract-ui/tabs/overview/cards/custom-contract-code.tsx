@@ -346,7 +346,7 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
     SupportedChainIdToNetworkMap[
       chainId as keyof typeof SupportedChainIdToNetworkMap
     ];
-  const [codeEnv, setCodeEnv] = useState<Environment>("javascript");
+  const [codeEnv, setCodeEnv] = useState<Environment>("react");
 
   async function contractCall(params: unknown[], value?: BigNumber) {
     if (!abiFunction) {
@@ -419,9 +419,6 @@ const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
               <Text fontSize="12px" noOfLines={2}>
                 {abiFunction.comment}
               </Text>
-            )}
-            {abiFunction?.signature && (
-              <CodeBlock code={abiFunction?.signature} language="typescript" />
             )}
           </>
         )}

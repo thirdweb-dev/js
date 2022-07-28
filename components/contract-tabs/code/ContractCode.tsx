@@ -64,7 +64,7 @@ export const ContractCode: React.FC<IContractCode> = ({ contract }) => {
   }, [data, contractName]);
 
   const { address } = useWeb3();
-  const [environment, setEnvironment] = useState<Environment>("javascript");
+  const [environment, setEnvironment] = useState<Environment>("react");
   const replaceSnippetVars = useCallback(
     (snip: Partial<Record<Environment, string>>) =>
       replaceVariablesInCodeSnippet(
