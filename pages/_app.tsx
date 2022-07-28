@@ -51,7 +51,7 @@ type AppPropsWithLayout = AppProps & {
 const persister: Persister = createSyncStoragePersister({
   storage: isBrowser() ? window.localStorage : undefined,
   serialize: (data) => JSON.stringify(data, bigNumberReplacer),
-  key: `tw-query-client:${__CACHE_BUSTER}`,
+  key: `tw-query-cache:${__CACHE_BUSTER}`,
 });
 
 function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {

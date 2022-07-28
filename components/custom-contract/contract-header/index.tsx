@@ -11,9 +11,10 @@ export const ContractHeader: React.FC<ContractHeaderProps> = ({
 }) => {
   return (
     <Box
-      borderBottomColor="borderColor"
+      borderColor="borderColor"
+      borderTopWidth={1}
       borderBottomWidth={1}
-      bg="backgroundHighlight"
+      bg="backgroundCardHighlight"
       w="full"
       as="aside"
       py={6}

@@ -82,6 +82,7 @@ export const NftGetAllTable: React.FC<ContractOverviewNftGetAllProps> = ({
   const [queryParams, setQueryParams] = useState({ count: 50, start: 0 });
   const getAllQueryResult = useNFTs(contract, queryParams);
   const totalCountQuery = useTotalCount(contract);
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -210,7 +211,11 @@ export const NftGetAllTable: React.FC<ContractOverviewNftGetAllProps> = ({
           />
           <Text whiteSpace="nowrap">
             Page <strong>{pageIndex + 1}</strong> of{" "}
-            <Skeleton display="inline" isLoaded={totalCountQuery.isSuccess}>
+            <Skeleton
+              as="span"
+              display="inline"
+              isLoaded={totalCountQuery.isSuccess}
+            >
               <strong>{pageCount}</strong>
             </Skeleton>
           </Text>

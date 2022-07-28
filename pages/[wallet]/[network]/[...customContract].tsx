@@ -84,6 +84,8 @@ export default function CustomContractPage() {
     >
       <RootTrack>
         <Flex direction="column" ref={scrollRef}>
+          {/* sub-header */}
+          <ContractHeader contractAddress={contractAddress} />
           {/* sub-header-nav */}
           <Box
             position="sticky"
@@ -132,8 +134,7 @@ export default function CustomContractPage() {
               </Flex>
             </Container>
           </Box>
-          {/* sub-header */}
-          <ContractHeader contractAddress={contractAddress} />
+
           {/* main content */}
           <Container maxW="container.page">
             <Box py={8}>

@@ -109,7 +109,11 @@ export const ContractDeployActionCell: React.FC<
               publishMetadata.data?.name,
             )}
           >
-            {context === "create_release" ? "Release" : "Deploy"}
+            {context === "create_release"
+              ? "Release"
+              : context === "view_release"
+              ? "Details"
+              : "Deploy"}
           </LinkButton>
         )}
       </ButtonGroup>

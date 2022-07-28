@@ -23,7 +23,7 @@ import {
 import { ContractEvent } from "@thirdweb-dev/sdk";
 import { AnimatePresence, motion } from "framer-motion";
 import { bigNumberReplacer } from "pages/_app";
-import { useState } from "react";
+import React, { useState } from "react";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { FiChevronDown, FiCopy } from "react-icons/fi";
 import {
@@ -94,11 +94,16 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
           </SimpleGrid>
 
           <List overflow="auto">
-            <AnimatePresence initial={false}>
+            <Accordion
+              as={AnimatePresence}
+              initial={false}
+              allowToggle
+              allowMultiple
+            >
               {activityQuery.data.slice(0, 10).map((e) => (
                 <ActivityFeedItem key={e.transactionHash} transaction={e} />
               ))}
-            </AnimatePresence>
+            </Accordion>
           </List>
         </Card>
       )}
@@ -117,167 +122,174 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = ({
   const { onCopy } = useClipboard(transaction.transactionHash);
 
   return (
-    <Accordion allowToggle>
-      <AccordionItem>
-        <AccordionButton padding={0}>
-          <SimpleGrid
-            columns={12}
-            gap={2}
-            as={motion.li}
-            initial={{
-              y: -30,
-              opacity: 0,
-              paddingTop: 0,
-              paddingBottom: 0,
-              height: 0,
-            }}
-            animate={{
-              y: 0,
-              opacity: 1,
-              height: "auto",
-              paddingTop: "var(--chakra-space-3)",
-              paddingBottom: "var(--chakra-space-3)",
-              transition: { duration: 0.15 },
-            }}
-            exit={{
-              y: 30,
-              opacity: 0,
-              paddingTop: 0,
-              paddingBottom: 0,
-              height: 0,
-              transition: { duration: 0.3 },
-            }}
-            willChange="opacity, height, paddingTop, paddingBottom"
-            borderBottomWidth="1px"
-            borderColor="borderColor"
-            padding={4}
-            overflow="hidden"
-            alignItems="center"
-            _last={{ borderBottomWidth: 0 }}
-          >
-            <Box gridColumn="span 3">
-              <Stack direction="row" align="center" spacing={3}>
-                <Tooltip
-                  p={0}
+    <AccordionItem
+      borderBottom="none"
+      borderColor="borderColor"
+      _first={{ borderTop: "none" }}
+    >
+      <AccordionButton padding={0}>
+        <SimpleGrid
+          columns={12}
+          gap={2}
+          as={motion.li}
+          initial={{
+            y: -30,
+            opacity: 0,
+            paddingTop: 0,
+            paddingBottom: 0,
+            height: 0,
+          }}
+          animate={{
+            y: 0,
+            opacity: 1,
+            height: "auto",
+            paddingTop: "var(--chakra-space-3)",
+            paddingBottom: "var(--chakra-space-3)",
+            transition: { duration: 0.15 },
+          }}
+          exit={{
+            y: 30,
+            opacity: 0,
+            paddingTop: 0,
+            paddingBottom: 0,
+            height: 0,
+            transition: { duration: 0.3 },
+          }}
+          willChange="opacity, height, paddingTop, paddingBottom"
+          borderBottomWidth="1px"
+          borderColor="borderColor"
+          padding={4}
+          overflow="hidden"
+          alignItems="center"
+          _last={{ borderBottomWidth: 0 }}
+        >
+          <Box gridColumn="span 3">
+            <Stack direction="row" align="center" spacing={3}>
+              <Tooltip
+                p={0}
+                bg="transparent"
+                boxShadow="none"
+                label={
+                  <Card py={2} px={4}>
+                    <Text size="label.sm">
+                      Copy transaction hash to clipboard
+                    </Text>
+                  </Card>
+                }
+              >
+                <Button
+                  size="sm"
                   bg="transparent"
-                  boxShadow="none"
-                  label={
-                    <Card py={2} px={4}>
-                      <Text size="label.sm">
-                        Copy transaction hash to clipboard
-                      </Text>
-                    </Card>
-                  }
+                  onClick={() => {
+                    onCopy();
+                    toast({
+                      variant: "solid",
+                      position: "bottom",
+                      title: "Transaction hash copied.",
+                      status: "success",
+                      duration: 5000,
+                      isClosable: true,
+                    });
+                  }}
                 >
-                  <Button
-                    size="sm"
-                    bg="transparent"
-                    onClick={() => {
-                      onCopy();
-                      toast({
-                        variant: "solid",
-                        position: "bottom",
-                        title: "Transaction hash copied.",
-                        status: "success",
-                        duration: 5000,
-                        isClosable: true,
-                      });
-                    }}
-                  >
-                    <Icon as={FiCopy} boxSize={3} />
-                  </Button>
-                </Tooltip>
-                <Text fontFamily="mono" noOfLines={1}>
-                  {transaction.transactionHash.slice(0, 32)}...
-                </Text>
-              </Stack>
-            </Box>
+                  <Icon as={FiCopy} boxSize={3} />
+                </Button>
+              </Tooltip>
+              <Text fontFamily="mono" noOfLines={1}>
+                {transaction.transactionHash.slice(0, 32)}...
+              </Text>
+            </Stack>
+          </Box>
 
-            <Box gridColumn="span 1" />
+          <Box gridColumn="span 1" />
 
-            <ButtonGroup
-              size="sm"
-              variant="outline"
-              gridColumn="span 5"
-              flexWrap="wrap"
-              gap={2}
-              spacing={0}
-            >
-              {transaction.events.slice(0, 2).map((e, idx) => (
-                <Button key={idx}>{e.eventName}</Button>
-              ))}
-              {transaction.events.length > 2 && (
-                <Button>+ {transaction.events.length - 2}</Button>
-              )}
-            </ButtonGroup>
+          <ButtonGroup
+            size="sm"
+            variant="outline"
+            gridColumn="span 5"
+            flexWrap="wrap"
+            gap={2}
+            spacing={0}
+            pointerEvents="none"
+          >
+            {transaction.events.slice(0, 2).map((e, idx) => (
+              <Button as="span" key={idx}>
+                {e.eventName}
+              </Button>
+            ))}
+            {transaction.events.length > 2 && (
+              <Button as="span">+ {transaction.events.length - 2}</Button>
+            )}
+          </ButtonGroup>
 
-            <Box gridColumn="span 3">
-              <Stack direction="row" justify="space-between">
-                <Text fontFamily="mono" noOfLines={1}>
-                  {transaction.blockNumber}
-                </Text>
-                <Box>
-                  <Icon as={FiChevronDown} />
-                </Box>
-              </Stack>
-            </Box>
-          </SimpleGrid>
-        </AccordionButton>
-        <AccordionPanel>
-          <Card>
-            <Stack spacing={4}>
-              <Heading size="subtitle.sm" fontWeight="bold">
-                Transaction Data
-              </Heading>
+          <Box gridColumn="span 3">
+            <Stack direction="row" justify="space-between">
+              <Text fontFamily="mono" noOfLines={1}>
+                {transaction.blockNumber}
+              </Text>
+              <Box>
+                <Icon as={FiChevronDown} />
+              </Box>
+            </Stack>
+          </Box>
+        </SimpleGrid>
+      </AccordionButton>
+      <AccordionPanel>
+        <Card>
+          <Stack spacing={4}>
+            <Heading size="subtitle.sm" fontWeight="bold">
+              Transaction Data
+            </Heading>
 
-              <Divider />
+            <Divider />
 
-              <TransactionData
-                name="Transaction Hash"
-                value={transaction.transactionHash}
-                description={`
+            <TransactionData
+              name="Transaction Hash"
+              value={transaction.transactionHash}
+              description={`
                   A transaction hash is a unique 66 character identifier
                   that is generated whenever a transaction is executed.
                 `}
-              />
+            />
 
-              <TransactionData
-                name="Block Number"
-                value={transaction.blockNumber}
-                description={`
+            <TransactionData
+              name="Block Number"
+              value={transaction.blockNumber}
+              description={`
                   The number of the block in which the transaction was recorded.
                   Block confirmation indicate how many blocks since the transaction was validated.
                 `}
-              />
+            />
 
-              <Heading size="subtitle.sm" fontWeight="bold" pt={6}>
-                Event Data
-              </Heading>
+            <Heading size="subtitle.sm" fontWeight="bold" pt={6}>
+              Event Data
+            </Heading>
 
-              <Divider />
+            <Divider />
 
-              {transaction.events.map((event) => (
-                <>
-                  <SimpleGrid columns={12} gap={2}>
-                    <Box gridColumn="span 3">
-                      <Text fontWeight="bold">{event.eventName}</Text>
-                    </Box>
+            {transaction.events.map((event, idx, arr) => (
+              <React.Fragment
+                key={`${event.transaction.transactionHash}_${event.transaction.logIndex}`}
+              >
+                <SimpleGrid columns={12} gap={2}>
+                  <Box gridColumn="span 3">
+                    <Text fontWeight="bold">{event.eventName}</Text>
+                  </Box>
 
-                    <CodeBlock
-                      gridColumn="span 9"
-                      code={JSON.stringify(event.data, bigNumberReplacer, 2)}
-                      language="json"
-                    />
-                  </SimpleGrid>
+                  <CodeBlock
+                    gridColumn="span 9"
+                    code={JSON.stringify(event.data, bigNumberReplacer, 2)}
+                    language="json"
+                  />
+                </SimpleGrid>
 
-                  <Divider />
-                </>
-              ))}
-            </Stack>
-          </Card>
-        </AccordionPanel>
-      </AccordionItem>
-    </Accordion>
+                {arr.length - 1 === idx ? null : <Divider />}
+              </React.Fragment>
+            ))}
+          </Stack>
+        </Card>
+      </AccordionPanel>
+    </AccordionItem>
   );
 };
 
