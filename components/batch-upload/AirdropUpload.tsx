@@ -85,7 +85,10 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
           const data: AirdropAddressInput[] = (
             results.data as AirdropAddressInput[]
           )
-            .map((a) => ({ ...a, address: (a.address || "").trim() }))
+            .map(({ address, quantity }) => ({
+              address: (address || "").trim(),
+              quantity: (quantity || "1").trim(),
+            }))
             .filter(({ address }) => address !== "");
 
           // Filter out address duplicates
@@ -195,6 +198,10 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                       <Link download color="blue.500" href="/airdrop.csv">
                         Download an example CSV
                       </Link>
+                    </ListItem>
+                    <ListItem>
+                      Repeated addresses will be removed and only the first
+                      found will be kept.
                     </ListItem>
                   </UnorderedList>
                 </Flex>

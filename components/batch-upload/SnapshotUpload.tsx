@@ -90,7 +90,10 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
           const data: SnapshotAddressInput[] = (
             results.data as SnapshotAddressInput[]
           )
-            .map((a) => ({ ...a, address: (a.address || "").trim() }))
+            .map(({ address, maxClaimable }) => ({
+              address: (address || "").trim(),
+              quantity: (maxClaimable || "0").trim(),
+            }))
             .filter(({ address }) => address !== "");
 
           // Filter out address duplicates
@@ -212,6 +215,10 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                       >
                         Download an example CSV with maxClaimable
                       </Link>
+                    </ListItem>
+                    <ListItem>
+                      Repeated addresses will be removed and only the first
+                      found will be kept.
                     </ListItem>
                   </UnorderedList>
                 </Flex>
