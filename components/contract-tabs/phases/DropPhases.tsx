@@ -515,6 +515,12 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                           </Flex>
                         )}
                       </Flex>
+                      <FormHelperText>
+                        Snapshot spots are one-time-use! Once a wallet has
+                        claimed the drop, it cannot claim again, even if it did
+                        not claim the entire amount assigned to it in the
+                        snapshot.
+                      </FormHelperText>
                       <FormErrorMessage>
                         {
                           form.getFieldState(

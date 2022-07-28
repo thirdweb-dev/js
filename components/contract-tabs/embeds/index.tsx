@@ -186,10 +186,6 @@ frameborder="0"
               value={ipfsGateway}
               onChange={(e) => setIpfsGateway(e.target.value)}
             />
-            <FormHelperText>
-              We <strong>recommend</strong> using a dedicated IPFS gateway for
-              production use!
-            </FormHelperText>
           </FormControl>
           {contract instanceof Marketplace ? (
             <FormControl>
