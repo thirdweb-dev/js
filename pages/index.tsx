@@ -156,10 +156,10 @@ export default function Home() {
                     <TrackedLink
                       isExternal
                       href="https://portal.thirdweb.com/thirdweb-cli"
-                      category="thirdweb-deloy"
+                      category="thirdweb-release"
                       label="heading"
                     >
-                      thirdweb deploy
+                      thirdweb release
                     </TrackedLink>
                   </Heading>
                 </Heading>

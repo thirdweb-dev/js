@@ -26,6 +26,7 @@ export const LandingMenu: React.FC<IconButtonProps> = (props) => {
             href="https://portal.thirdweb.com/smart-contracts"
             category="topnav"
             label="contracts"
+            isExternal
           >
             Contracts
           </MenuItem>
@@ -34,6 +35,7 @@ export const LandingMenu: React.FC<IconButtonProps> = (props) => {
             href="https://portal.thirdweb.com/building-web3-apps/setting-up-the-sdk"
             category="topnav"
             label="developers"
+            isExternal
           >
             SDKs
           </MenuItem>

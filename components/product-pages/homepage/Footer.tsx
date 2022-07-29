@@ -211,17 +211,23 @@ export const HomepageFooter: React.FC = () => {
           >
             <SimpleGrid columns={{ base: 2, lg: 4 }} spacing="8">
               <Stack spacing="4" minW="36" flex="1">
-                <Heading size="label.lg">Product</Heading>
+                <Heading size="label.lg">Products</Heading>
                 <Stack spacing="3" shouldWrapChildren>
                   <TrackedLink
-                    href="#features"
+                    href="https://portal.thirdweb.com/smart-contracts"
                     category="footer"
-                    label="features"
+                    label="contracts"
+                    isExternal
                   >
-                    Features
+                    Contracts
                   </TrackedLink>
-                  <TrackedLink href="#fees" category="footer" label="pricing">
-                    Pricing
+                  <TrackedLink
+                    href="https://portal.thirdweb.com/building-web3-apps/setting-up-the-sdk"
+                    category="footer"
+                    label="developers"
+                    isExternal
+                  >
+                    SDKs
                   </TrackedLink>
                   <TrackedLink
                     href="/dashboard"
@@ -230,10 +236,17 @@ export const HomepageFooter: React.FC = () => {
                   >
                     Dashboard
                   </TrackedLink>
+                  <TrackedLink
+                    href="/authentication"
+                    category="footer"
+                    label="authentication"
+                  >
+                    Authentication
+                  </TrackedLink>
                 </Stack>
               </Stack>
               <Stack spacing="4" minW="36" flex="1">
-                <Heading size="label.lg">Company</Heading>
+                <Heading size="label.lg">Resources</Heading>
                 <Stack spacing="3" shouldWrapChildren>
                   <TrackedLink
                     isExternal
@@ -245,19 +258,19 @@ export const HomepageFooter: React.FC = () => {
                   </TrackedLink>
                   <TrackedLink
                     isExternal
-                    href="https://blog.thirdweb.com/"
-                    category="footer"
-                    label="blog"
-                  >
-                    Blog
-                  </TrackedLink>
-                  <TrackedLink
-                    isExternal
                     href="https://portal.thirdweb.com/guides"
                     category="footer"
                     label="guides"
                   >
                     Guides
+                  </TrackedLink>
+                  <TrackedLink
+                    isExternal
+                    href="https://blog.thirdweb.com/"
+                    category="footer"
+                    label="blog"
+                  >
+                    Blog
                   </TrackedLink>
                 </Stack>
               </Stack>

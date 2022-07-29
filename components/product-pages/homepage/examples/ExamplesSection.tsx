@@ -26,7 +26,7 @@ export const ExamplesSection = () => {
         _hover={{
           bg: "whiteAlpha.800",
         }}
-        href="https://portal.thirdweb.com/examples"
+        href="https://portal.thirdweb.com/templates"
         isExternal
         p={6}
         onClick={() =>
@@ -37,7 +37,7 @@ export const ExamplesSection = () => {
           })
         }
       >
-        Explore all examples
+        Explore all templates
       </LinkButton>
     </>
   );
