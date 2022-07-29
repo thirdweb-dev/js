@@ -227,7 +227,7 @@ export const CodeSelector: React.FC = () => {
           isExternal
           colorScheme="primary"
           w="full"
-          href={`https://replit.com/@thirdweb-dev/${activeLanguage}-sdk`}
+          href={`https://replit.com/@thirdweb/${activeLanguage}-sdk`}
           rightIcon={
             <Icon
               color="#E0507A"
