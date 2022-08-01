@@ -1,10 +1,9 @@
 import { Flex, Input, Select, SelectProps } from "@chakra-ui/react";
+import { useActiveChainId } from "@thirdweb-dev/react";
 import { CURRENCIES, CurrencyMetadata } from "constants/currencies";
 import { constants, utils } from "ethers";
-import { useSingleQueryParam } from "hooks/useQueryParam";
 import React, { useMemo, useState } from "react";
 import { Button } from "tw-components";
-import { getChainIdFromNetwork } from "utils/network";
 import { OtherAddressZero } from "utils/zeroAddress";
 
 interface ICurrencySelector extends SelectProps {
@@ -20,7 +19,7 @@ export const CurrencySelector: React.FC<ICurrencySelector> = ({
   hideDefaultCurrencies,
   ...props
 }) => {
-  const chainId = getChainIdFromNetwork(useSingleQueryParam("network"));
+  const chainId = useActiveChainId();
 
   const [isAddingCurrency, setIsAddingCurrency] = useState(false);
   const [editCustomCurrency, setEditCustomCurrency] = useState("");

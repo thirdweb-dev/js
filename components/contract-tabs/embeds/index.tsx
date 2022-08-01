@@ -1,3 +1,4 @@
+import { useActiveChainId } from "@3rdweb-sdk/react";
 import { useBreakpointValue } from "@chakra-ui/media-query";
 import {
   Alert,
@@ -19,7 +20,6 @@ import {
   TokenDrop,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
-import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useState } from "react";
 import { FiCopy } from "react-icons/fi";
 import { IoMdCheckmark } from "react-icons/io";
@@ -31,7 +31,6 @@ import {
   FormLabel,
   Heading,
 } from "tw-components";
-import { getChainIdFromNetwork } from "utils/network";
 
 interface EmbedSetupProps {
   contract?: ValidContractInstance;
@@ -149,7 +148,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({ contract }) => {
   const [primaryColor, setPrimaryColor] = useState("blue");
   const [secondaryColor, setSecondaryColor] = useState("orange");
 
-  const chainId = getChainIdFromNetwork(useSingleQueryParam("network"));
+  const chainId = useActiveChainId();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
   const iframeSrc = buildIframeSrc(contract, {
