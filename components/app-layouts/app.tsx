@@ -1,17 +1,17 @@
 import { Providers } from "./providers";
 import { useAddress, useBalance, useChainId } from "@thirdweb-dev/react";
-import { AppShell } from "components/layout/app-shell";
+import { AppShell, AppShellProps } from "components/layout/app-shell";
 import { PrivacyNotice } from "components/notices/PrivacyNotice";
 import posthog from "posthog-js";
 import React, { useEffect } from "react";
 import { ComponentWithChildren } from "types/component-with-children";
 
-export const AppLayout: ComponentWithChildren = ({ children }) => {
+export const AppLayout: ComponentWithChildren<AppShellProps> = (props) => {
   return (
     <Providers>
       <PHIdentifier />
       <PrivacyNotice />
-      <AppShell>{children}</AppShell>
+      <AppShell {...props} />
     </Providers>
   );
 };

@@ -34,7 +34,6 @@ import {
   Heading,
   Text,
 } from "tw-components";
-import { isBrowser } from "utils/isBrowser";
 
 interface ContractTransaction {
   transactionHash: ContractEvent["transaction"]["transactionHash"];
@@ -49,7 +48,7 @@ interface ActivityFeedProps {
 export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   contractAddress,
 }) => {
-  const [autoUpdate, setAutoUpdate] = useState(isBrowser() ? true : false);
+  const [autoUpdate, setAutoUpdate] = useState(true);
   const activityQuery = useActivity(contractAddress, autoUpdate);
 
   return (

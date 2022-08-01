@@ -45,7 +45,6 @@ import {
 import { constants, utils } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
-import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
 import twAudited from "public/brand/thirdweb-audited-2.png";
@@ -223,8 +222,6 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
     "Failed to deploy contract",
   );
 
-  const wallet = useSingleQueryParam("wallet") || "dashboard";
-
   const { trackEvent } = useTrack();
   const router = useRouter();
 
@@ -269,7 +266,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
               });
               onSuccess();
               router.push(
-                `/${wallet}/${SupportedChainIdToNetworkMap[selectedChain]}/${UrlMap[contractType]}/${contractAddress}`,
+                `/${SupportedChainIdToNetworkMap[selectedChain]}/${UrlMap[contractType]}/${contractAddress}`,
               );
             },
             onError: (err) => {

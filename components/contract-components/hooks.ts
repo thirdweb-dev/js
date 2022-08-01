@@ -233,7 +233,7 @@ export function useAllVersions(
   );
 }
 
-export function useReleasesFromDeploy(contractAddress: string) {
+export function useReleasesFromDeploy(contractAddress?: string) {
   const sdk = useSDK();
   const provider = sdk?.getProvider();
 

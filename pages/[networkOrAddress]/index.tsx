@@ -30,7 +30,7 @@ import { Button, LinkButton, Text } from "tw-components";
 import { getSingleQueryValue } from "utils/router";
 
 const UserPageWrapped = () => {
-  const wallet = useSingleQueryParam("wallet");
+  const wallet = useSingleQueryParam("networkOrAddress");
 
   const resolvedAddress = useResolvedEnsName(wallet);
 
@@ -44,7 +44,7 @@ const UserPageWrapped = () => {
   useEffect(() => {
     const previousPath = router.asPath.split("/")[2];
     if (
-      previousPath !== "[wallet]" &&
+      previousPath !== "[networkOrAddress]" &&
       wallet?.startsWith("Qm") &&
       !wallet.endsWith(".eth")
     ) {
@@ -143,7 +143,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   // currently blocked because our alchemy RPC does not allow us to call this from the server (since we have an allow-list)
   const sdk = new ThirdwebSDK("polygon");
 
-  const walletOrEnsAddress = getSingleQueryValue(ctx.query, "wallet");
+  const walletOrEnsAddress = getSingleQueryValue(ctx.query, "networkOrAddress");
 
   if (!walletOrEnsAddress) {
     return {

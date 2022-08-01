@@ -111,7 +111,8 @@
     ],
     "exclude": [
       "node_modules",
-      "types"
+      "types",
+      "tw-components"
     ],
     "entrypoints": []
   }

@@ -9,7 +9,6 @@ import {
 import { QueryClient, dehydrate } from "@tanstack/react-query";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
-import { AppLayout } from "components/app-layouts/app";
 import {
   fetchAllVersions,
   fetchContractPublishMetadataFromURI,
@@ -22,19 +21,27 @@ import {
 } from "components/contract-components/hooks";
 import { ReleasedContract } from "components/contract-components/released-contract";
 import { FeatureIconMap } from "constants/mappings";
-import { PublisherSDKContext } from "contexts/custom-sdk-context";
-import { useSingleQueryParam } from "hooks/useQueryParam";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { ReactElement, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Heading, LinkButton, Text } from "tw-components";
 import { getSingleQueryValue } from "utils/router";
 
-const ContractsNamePageWrapped = () => {
-  const wallet = useSingleQueryParam("wallet");
-  const resolvedAddress = useResolvedEnsName(wallet);
-  const contractName = useSingleQueryParam("contractName");
-  const version = useSingleQueryParam("version");
+export interface ReleaseWithVersionPageProps {
+  author: string;
+  contractName: string;
+  version: string;
+}
+
+export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
+  author,
+  contractName,
+  version: initialVersion,
+}) => {
+  const resolvedAddress = useResolvedEnsName(author);
+
+  const [version, setVersion] = useState(initialVersion);
+
   const router = useRouter();
 
   const allVersions = useAllVersions(
@@ -70,13 +77,14 @@ const ContractsNamePageWrapped = () => {
       <GridItem colSpan={{ base: 12, md: 3 }}>
         <Flex gap={3} direction="column">
           <Select
-            onChange={(e) =>
-              router.push(
-                `/contracts/${wallet}/${contractName}/${e.target.value}`,
-                undefined,
-                { shallow: true },
-              )
-            }
+            onChange={(e) => {
+              const path =
+                e.target.value === allVersions.data?.[0].version
+                  ? `/${author}/${contractName}`
+                  : `/${author}/${contractName}/${e.target.value}`;
+              router.push(path, undefined, { shallow: true });
+              setVersion(e.target.value);
+            }}
             value={version}
           >
             {(allVersions?.data || []).map((releasedVersion, idx) => (
@@ -103,23 +111,9 @@ const ContractsNamePageWrapped = () => {
       <GridItem colSpan={12} display={{ base: "inherit", md: "none" }}>
         <Divider />
       </GridItem>
-      {release && wallet && (
-        <ReleasedContract release={release} walletOrEns={wallet} />
-      )}
+      {release && <ReleasedContract release={release} walletOrEns={author} />}
     </SimpleGrid>
   );
-};
-
-export default function ContractNamePage() {
-  return (
-    <PublisherSDKContext>
-      <ContractsNamePageWrapped />
-    </PublisherSDKContext>
-  );
-}
-
-ContractNamePage.getLayout = function getLayout(page: ReactElement) {
-  return <AppLayout>{page}</AppLayout>;
 };
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -134,7 +128,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   // currently blocked because our alchemy RPC does not allow us to call this from the server (since we have an allow-list)
   const sdk = new ThirdwebSDK("polygon");
 
-  const walletOrEnsAddress = getSingleQueryValue(ctx.query, "wallet");
+  const walletOrEnsAddress = getSingleQueryValue(ctx.query, "networkOrAddress");
   const contractName = getSingleQueryValue(ctx.query, "contractName");
   const version = getSingleQueryValue(ctx.query, "version");
 

@@ -1,4 +1,3 @@
-import { Breadcrumbs } from "./Breadcrumbs";
 import { ConnectWallet } from "@3rdweb-sdk/react";
 import {
   Box,
@@ -9,7 +8,6 @@ import {
   Icon,
   Stack,
 } from "@chakra-ui/react";
-import { useAddress } from "@thirdweb-dev/react";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
 import { Logo } from "components/logo";
 import { InsufficientFunds } from "components/notices/InsufficientFunds";
@@ -27,18 +25,17 @@ import {
 } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
-export const AppShell: ComponentWithChildren = ({ children }) => {
+export interface AppShellProps {
+  layout?: "custom-contract";
+}
+
+export const AppShell: ComponentWithChildren<AppShellProps> = ({
+  children,
+  layout,
+}) => {
   const { pathname } = useRouter();
-  const address = useAddress();
 
-  const isCustomContractLayout =
-    pathname === "/[wallet]/[network]/[...customContract]";
-
-  const isReleasedContractsLayout =
-    pathname === "/contracts/[wallet]/[contractName]/[version]" ||
-    pathname === "/contracts/[wallet]/[contractName]" ||
-    pathname === "/contracts/[wallet]";
-
+  const isCustomContractLayout = layout === "custom-contract";
   return (
     <Flex
       h="calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))"
@@ -161,9 +158,7 @@ export const AppShell: ComponentWithChildren = ({ children }) => {
                 />
               </ButtonGroup>
               <ColorModeToggle />
-              {pathname === "/[wallet]" && !address ? null : (
-                <ConnectWallet colorScheme="primary" />
-              )}
+              <ConnectWallet colorScheme="primary" />
             </Stack>
           </Container>
         </Box>
@@ -171,13 +166,8 @@ export const AppShell: ComponentWithChildren = ({ children }) => {
           <Box as="main" flexGrow={1}>
             {children}
           </Box>
-        ) : isReleasedContractsLayout ? (
-          <Container flexGrow={1} as="main" maxW="container.page" py={8}>
-            {children}
-          </Container>
         ) : (
           <Container flexGrow={1} as="main" maxW="container.page" py={8}>
-            <Breadcrumbs />
             {children}
           </Container>
         )}

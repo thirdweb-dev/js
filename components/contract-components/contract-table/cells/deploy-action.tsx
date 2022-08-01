@@ -20,7 +20,7 @@ export const ContractDeployActionCell: React.FC<
 > = ({ cell: { value }, context }) => {
   const publishMetadata = useContractPublishMetadataFromURI(value);
   const address = useAddress();
-  const wallet = useSingleQueryParam("wallet");
+  const wallet = useSingleQueryParam("networkOrAddress");
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { trackEvent } = useTrack();
@@ -129,7 +129,7 @@ function actionUrlPath(
 ) {
   switch (context) {
     case "view_release":
-      return `/contracts/${address}/${name}/latest`;
+      return `/${address}/${name}`;
     case "create_release":
       return `/contracts/release/${encodeURIComponent(hash)}`;
     case "deploy":

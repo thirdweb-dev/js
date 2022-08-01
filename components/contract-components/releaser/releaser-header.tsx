@@ -20,7 +20,7 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
   const releaserProfile = useReleaserProfile(resolvedAddress.data || undefined);
   const address = useAddress();
   const router = useRouter();
-  const isProfilePage = router.pathname === "/contracts/[wallet]";
+  const isProfilePage = router.pathname === "/[networkOrAddress]";
 
   const ensName = useEnsName(wallet);
 
@@ -48,9 +48,8 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
           </Skeleton>
 
           <Flex flexDir="column">
-            <Link href={`/contracts/${ensName.data || wallet}`}>
+            <Link href={`/${ensName.data || wallet}`}>
               <Heading size="subtitle.sm" ml={2}>
-                {/* TODO resolve ENS name */}
                 {releaserProfile?.data?.name ||
                   ensName.data ||
                   shortenIfAddress(wallet)}
@@ -67,7 +66,7 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
           </Flex>
         </Flex>
         {!isProfilePage && (
-          <LinkButton variant="outline" size="sm" href={`/contracts/${wallet}`}>
+          <LinkButton variant="outline" size="sm" href={`/${wallet}`}>
             View all contracts
           </LinkButton>
         )}

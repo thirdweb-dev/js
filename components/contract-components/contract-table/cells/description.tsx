@@ -10,7 +10,7 @@ export const ContractDescriptionCell: React.FC<
   DeployableContractContractCellProps
 > = ({ cell: { value } }) => {
   const address = useAddress();
-  const wallet = useSingleQueryParam("wallet");
+  const wallet = useSingleQueryParam("networkOrAddress");
 
   const resolvedAddress = useResolvedEnsName(wallet);
 

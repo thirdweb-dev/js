@@ -7,7 +7,8 @@ import {
 } from "utils/network";
 
 export function useActiveChainId(): SUPPORTED_CHAIN_ID | undefined {
-  const networkFromUrl = useSingleQueryParam<SupportedNetwork>("network");
+  const networkFromUrl =
+    useSingleQueryParam<SupportedNetwork>("networkOrAddress");
   return getChainIdFromNetwork(networkFromUrl);
 }
 

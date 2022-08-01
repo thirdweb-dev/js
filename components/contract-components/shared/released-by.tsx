@@ -2,6 +2,7 @@ import { Flex } from "@chakra-ui/react";
 import {
   useEnsName,
   useReleasesFromDeploy,
+  useResolvedEnsName,
 } from "components/contract-components/hooks";
 import { LinkButton, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
@@ -11,7 +12,10 @@ interface ReleasedByProps {
 }
 
 export const ReleasedBy: React.FC<ReleasedByProps> = ({ contractAddress }) => {
-  const releasesFromDeploy = useReleasesFromDeploy(contractAddress);
+  const resolvedAddress = useResolvedEnsName(contractAddress);
+  const releasesFromDeploy = useReleasesFromDeploy(
+    resolvedAddress.data || undefined,
+  );
 
   const lastRelease = releasesFromDeploy?.data?.length
     ? releasesFromDeploy.data[releasesFromDeploy.data.length - 1]

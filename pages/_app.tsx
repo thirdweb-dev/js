@@ -41,7 +41,7 @@ export function bigNumberReplacer(_key: string, value: any) {
 const fontSizeCssVars = generateBreakpointTypographyCssVars();
 
 type NextPageWithLayout = NextPage & {
-  getLayout?: (page: ReactElement) => ReactNode;
+  getLayout?: (page: ReactElement, pageProps?: any) => ReactNode;
 };
 
 type AppPropsWithLayout = AppProps & {
@@ -150,7 +150,7 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
 
           <ChakraProvider theme={chakraTheme}>
             <ErrorProvider>
-              {getLayout(<Component {...pageProps} />)}
+              {getLayout(<Component {...pageProps} />, pageProps)}
             </ErrorProvider>
           </ChakraProvider>
         </Track>

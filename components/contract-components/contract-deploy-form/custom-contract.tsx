@@ -8,7 +8,6 @@ import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelect";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
@@ -53,7 +52,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
   }, []);
 
   const deploy = useCustomContractDeployMutation(ipfsHash);
-  const wallet = useSingleQueryParam("wallet") || "dashboard";
+
   const router = useRouter();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully deployed contract",
@@ -112,7 +111,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
               onSuccess();
 
               router.replace(
-                `/${wallet}/${SupportedChainIdToNetworkMap[selectedChain]}/${deployedContractAddress}`,
+                `/${SupportedChainIdToNetworkMap[selectedChain]}/${deployedContractAddress}`,
               );
             },
             onError: (err) => {
