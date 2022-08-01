@@ -139,8 +139,8 @@ export const MarkdownRenderer: React.FC<
             _last={{ borderBottomWidth: 0 }}
           />
         ),
-        ul: (props) => <UnorderedList {...props} />,
-        ol: (props) => <OrderedList {...props} />,
+        ul: (props) => <UnorderedList {...props} mb={4} />,
+        ol: (props) => <OrderedList {...props} mb={4} />,
         li: ({ children: c, ...props }) => (
           <ListItem {...props}>
             <Text>{c}</Text>

@@ -122,7 +122,9 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
                   uris: contractId,
                 });
                 router.push(
-                  `/contracts/${address}/${publishMetadata.data?.name}`,
+                  `/contracts/${ensName.data || address}/${
+                    publishMetadata.data?.name
+                  }`,
                 );
               },
               onError: (err) => {
@@ -180,7 +182,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
               >
                 <Tab gap={2}>
                   <Icon as={BsCode} my={2} />
-                  <Heading size="label.lg">Readme</Heading>
+                  <Heading size="label.lg">About</Heading>
                 </Tab>
                 <Tab gap={2}>
                   <Icon as={BsEye} my={2} />
@@ -189,7 +191,11 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
               </TabList>
               <TabPanels pt={2}>
                 <TabPanel px={0} pb={0}>
-                  <Textarea {...register("readme")} disabled={!address} />
+                  <Textarea
+                    {...register("readme")}
+                    disabled={!address}
+                    rows={12}
+                  />
                   <FormErrorMessage>{errors?.readme?.message}</FormErrorMessage>
                 </TabPanel>
                 <TabPanel px={0} pb={0}>
