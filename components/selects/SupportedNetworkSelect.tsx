@@ -57,7 +57,11 @@ export const SupportedNetworkSelect = forwardRef<
             >
               {tn.chainName} ({tn.symbol})
               {disabledChainIds?.includes(tn.chainId)
-                ? ` - ${disabledChainIdText}`
+                ? ` - ${
+                    tn.chainId === ChainId.Rinkeby
+                      ? "Deprecated"
+                      : disabledChainIdText
+                  }`
                 : ""}
             </option>
           ))}
