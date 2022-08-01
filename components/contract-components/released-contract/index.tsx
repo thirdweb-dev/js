@@ -155,16 +155,8 @@ Deploy it in one click`,
       <GridItem order={{ base: 4, md: 3 }} colSpan={{ base: 12, md: 9 }}>
         <Flex flexDir="column" gap={6}>
           {releasedContractInfo.data?.publishedMetadata?.readme && (
-            <Card as={Flex} flexDir="column" gap={2} p={0}>
-              <Heading px={6} pt={5} pb={2} size="title.sm">
-                Readme
-              </Heading>
-              <Divider />
-
+            <Card as={Flex} flexDir="column" gap={2} p={6}>
               <MarkdownRenderer
-                px={6}
-                pt={2}
-                pb={5}
                 markdownText={
                   releasedContractInfo.data?.publishedMetadata?.readme
                 }
