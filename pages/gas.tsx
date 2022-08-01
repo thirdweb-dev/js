@@ -56,49 +56,45 @@ export default function GasPage() {
       </Flex>
       <SimpleGrid as={Card} p={0} columns={{ base: 1, md: 4 }}>
         <GasEstimatorBox
-          contractType={"nft-drop"}
+          contractType="signature-drop"
+          ethOrUsd={ethOrUsd}
+          data={data}
+          borderTopLeftRadius="xl"
+        />
+        <GasEstimatorBox
+          contractType="nft-drop"
           ethOrUsd={ethOrUsd}
           data={data}
           borderTopLeftRadius="xl"
           borderTopRightRadius={{ base: "xl", md: "0" }}
         />
         <GasEstimatorBox
-          contractType={"edition-drop"}
+          contractType="edition-drop"
           ethOrUsd={ethOrUsd}
           data={data}
         />
         <GasEstimatorBox
-          contractType={"nft-collection"}
+          contractType="nft-collection"
           ethOrUsd={ethOrUsd}
           data={data}
         />
         <GasEstimatorBox
-          contractType={"edition"}
+          contractType="edition"
           ethOrUsd={ethOrUsd}
           data={data}
           borderTopRightRadius={{ base: "0", md: "xl" }}
         />
         <GasEstimatorBox
-          contractType={"token"}
+          contractType="token"
           ethOrUsd={ethOrUsd}
           data={data}
           borderBottomLeftRadius={{ base: "0", md: "xl" }}
         />
+        <GasEstimatorBox contractType="split" ethOrUsd={ethOrUsd} data={data} />
         <GasEstimatorBox
-          contractType={"split"}
+          contractType="marketplace"
           ethOrUsd={ethOrUsd}
           data={data}
-        />
-        <GasEstimatorBox
-          contractType={"marketplace"}
-          ethOrUsd={ethOrUsd}
-          data={data}
-        />
-        <GasEstimatorBox
-          contractType={"vote"}
-          ethOrUsd={ethOrUsd}
-          data={data}
-          borderBottomRightRadius="xl"
           borderBottomLeftRadius={{ base: "xl", md: "0" }}
         />
       </SimpleGrid>

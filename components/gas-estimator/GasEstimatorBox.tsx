@@ -60,6 +60,7 @@ export const GasEstimatorBox: React.FC<GasEstimatorBoxProps> = ({
     batchUpload,
     mint,
     claim,
+    claim5,
     distributeFunds,
   }: GasPrice = GasEstimatorMap[contractType];
   const { trackEvent } = useTrack();
@@ -137,6 +138,13 @@ export const GasEstimatorBox: React.FC<GasEstimatorBoxProps> = ({
         gasPrice={claim}
       >
         {formatPrice(claim)}
+      </PriceLine>
+      <PriceLine
+        title="Claim 5"
+        label="The price your audience pays to claim five previously created NFT"
+        gasPrice={claim5}
+      >
+        {formatPrice(claim5)}
       </PriceLine>
       <PriceLine
         title="Distribute funds"

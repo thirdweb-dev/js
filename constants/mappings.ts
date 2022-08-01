@@ -206,15 +206,24 @@ export interface GasPrice {
   batchUpload?: number;
   mint?: number;
   claim?: number;
+  claim5?: number;
   distributeFunds?: number;
 }
 
 export const GasEstimatorMap: Record<ContractType, GasPrice> = {
+  "signature-drop": {
+    deployContract: 800735,
+    setClaimPhase: 143139,
+    batchUpload: 169832,
+    claim: 174604,
+    claim5: 182572,
+  },
   "nft-drop": {
     deployContract: 785405,
     setClaimPhase: 187999,
     batchUpload: 169832,
     claim: 277449,
+    claim5: 745113,
   },
   "edition-drop": {
     deployContract: 746515,
@@ -250,9 +259,6 @@ export const GasEstimatorMap: Record<ContractType, GasPrice> = {
     deployContract: 0,
   },
   custom: {
-    deployContract: 0,
-  },
-  "signature-drop": {
     deployContract: 0,
   },
   multiwrap: {
