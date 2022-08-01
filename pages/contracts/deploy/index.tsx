@@ -15,7 +15,7 @@ export default function ContractsDeployPage() {
 
   const ipfsHashes = useMemo(() => {
     const ipfs = router.query.ipfs;
-    return Array.isArray(ipfs) ? ipfs : [ipfs];
+    return Array.isArray(ipfs) ? ipfs : [ipfs || ""];
   }, [router.query]);
 
   return (

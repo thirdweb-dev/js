@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { ThirdwebSDKProvider, useSigner } from "@thirdweb-dev/react";
 import { ChainId, SDKOptions, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import {
@@ -13,12 +14,14 @@ export const CustomSDKContext: ComponentWithChildren<{
 }> = ({ desiredChainId, options, children }) => {
   const signer = useSigner();
   const provider = useProvider();
+  const queryClient = useQueryClient();
 
   return (
     <ThirdwebSDKProvider
       desiredChainId={desiredChainId}
       signer={signer}
       provider={provider}
+      queryClient={queryClient}
       sdkOptions={{
         gasSettings: {
           maxPriceInGwei: 650,
