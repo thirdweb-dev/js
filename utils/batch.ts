@@ -79,6 +79,10 @@ export const getAcceptedFiles = async (acceptedFiles: File[]) => {
     .filter(
       (f) =>
         f.type.includes("video/") ||
+        f.type.includes("audio") ||
+        f.type.includes("model") ||
+        f.type.includes("pdf") ||
+        f.type.includes("text") ||
         f.name.endsWith(".glb") ||
         f.name.endsWith(".usdz"),
     )
