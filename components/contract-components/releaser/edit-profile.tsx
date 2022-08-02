@@ -26,7 +26,7 @@ import { useForm } from "react-hook-form";
 import { BiImage } from "react-icons/bi";
 import { FiGlobe } from "react-icons/fi";
 import { HiPencilAlt } from "react-icons/hi";
-import { SiDiscord, SiTwitter } from "react-icons/si";
+import { SiDiscord, SiGithub, SiTwitter } from "react-icons/si";
 import { Button, FormErrorMessage, FormLabel, Heading } from "tw-components";
 
 interface EditProfileProps {
@@ -70,7 +70,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         Edit Profile
       </Button>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} size="2xl">
         <ModalOverlay />
         <ModalContent
           mx={{ base: 4, md: 0 }}
@@ -128,6 +128,19 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                 placeholder="Tell us about yourself"
               />
               <FormErrorMessage>{errors?.bio?.message}</FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={!!errors.github} mr={4}>
+              <FormLabel>
+                <Flex gap={2}>
+                  <Icon as={SiGithub} boxSize={4} />
+                  GitHub
+                </Flex>
+              </FormLabel>
+              <Input
+                {...register("github")}
+                placeholder="https://github.com/yourname"
+              />
+              <FormErrorMessage>{errors?.github?.message}</FormErrorMessage>
             </FormControl>
             <FormControl isInvalid={!!errors.twitter} mr={4}>
               <FormLabel>
