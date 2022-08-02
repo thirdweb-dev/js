@@ -1,3 +1,4 @@
+import { PRODUCTS } from "./Products";
 import { HamburgerIcon } from "@chakra-ui/icons";
 import {
   Divider,
@@ -9,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { MenuGroup, MenuItem, TrackedLink } from "tw-components";
 
-export const LandingMenu: React.FC<IconButtonProps> = (props) => {
+export const MobileMenu: React.FC<IconButtonProps> = (props) => {
   return (
     <Menu>
       <MenuButton
@@ -21,32 +22,18 @@ export const LandingMenu: React.FC<IconButtonProps> = (props) => {
       />
       <MenuList bgColor="black" color="white">
         <MenuGroup title={<>Products</>}>
-          <MenuItem
-            as={TrackedLink}
-            href="https://portal.thirdweb.com/smart-contracts"
-            category="topnav"
-            label="contracts"
-            isExternal
-          >
-            Contracts
-          </MenuItem>
-          <MenuItem
-            as={TrackedLink}
-            href="https://portal.thirdweb.com/building-web3-apps/setting-up-the-sdk"
-            category="topnav"
-            label="developers"
-            isExternal
-          >
-            SDKs
-          </MenuItem>
-          <MenuItem
-            as={TrackedLink}
-            href="/authentication"
-            category="topnav"
-            label="authentication"
-          >
-            Authentication
-          </MenuItem>
+          {PRODUCTS.map((product, id) => (
+            <MenuItem
+              key={id}
+              as={TrackedLink}
+              href={product.link}
+              category="topnav"
+              label={product.label}
+              isExternal
+            >
+              {product.name}
+            </MenuItem>
+          ))}
         </MenuGroup>
 
         <Divider />

@@ -1,4 +1,5 @@
-import { LandingMenu } from "./LandingMenu";
+import { MobileMenu } from "./nav/MobileMenu";
+import { Products } from "./nav/Products";
 import {
   Box,
   Container,
@@ -26,7 +27,6 @@ import {
 export const HomepageTopNav: React.FC<{}> = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [isScrolled, setIsScrolled] = useState(false);
-  const { isOpen, onClose, onOpen } = useDisclosure();
   const {
     isOpen: isResourcesOpen,
     onOpen: onResourcesOpen,
@@ -81,61 +81,7 @@ export const HomepageTopNav: React.FC<{}> = () => {
             spacing={10}
             as="nav"
           >
-            <Menu isOpen={isOpen} onClose={onClose}>
-              <MenuButton
-                onMouseEnter={onOpen}
-                onMouseLeave={onClose}
-                py="12px"
-              >
-                <Text color="white" fontWeight="bold" fontSize="16px">
-                  Products
-                </Text>
-              </MenuButton>
-              <MenuList
-                onMouseEnter={onOpen}
-                onMouseLeave={onClose}
-                mt="-12px"
-                bgColor="black"
-                color="white"
-                borderColor="rgba(255, 255, 255, 0.1)"
-                overflow="hidden"
-              >
-                <MenuItem
-                  as={TrackedLink}
-                  href="https://portal.thirdweb.com/smart-contracts"
-                  category="topnav"
-                  label="contracts"
-                  isExternal
-                >
-                  Contracts
-                </MenuItem>
-                <MenuItem
-                  as={TrackedLink}
-                  href="https://portal.thirdweb.com/building-web3-apps/setting-up-the-sdk"
-                  category="topnav"
-                  label="developers"
-                  isExternal
-                >
-                  SDKs
-                </MenuItem>
-                <MenuItem
-                  as={TrackedLink}
-                  href="https://thirdweb.com/dashboard"
-                  category="topnav"
-                  label="dashboard"
-                >
-                  Dashboard
-                </MenuItem>
-                <MenuItem
-                  as={TrackedLink}
-                  href="/authentication"
-                  category="topnav"
-                  label="authentication"
-                >
-                  Authentication
-                </MenuItem>
-              </MenuList>
-            </Menu>
+            <Products />
 
             <Menu isOpen={isResourcesOpen} onClose={onResourcesClose}>
               <MenuButton
@@ -188,7 +134,7 @@ export const HomepageTopNav: React.FC<{}> = () => {
           </Stack>
 
           <Flex
-            display={{ base: "none", lg: "flex" }}
+            display={{ base: "none", md: "flex" }}
             direction="row"
             align="center"
           >
@@ -230,7 +176,7 @@ export const HomepageTopNav: React.FC<{}> = () => {
             />
           </Flex>
 
-          <LandingMenu
+          <MobileMenu
             aria-label="Homepage Menu"
             display={{ base: "inherit", md: "none" }}
           />

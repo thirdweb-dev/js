@@ -1,3 +1,4 @@
+import { PRODUCTS } from "../common/nav/Products";
 import {
   Box,
   ButtonGroup,
@@ -213,36 +214,17 @@ export const HomepageFooter: React.FC = () => {
               <Stack spacing="4" minW="36" flex="1">
                 <Heading size="label.lg">Products</Heading>
                 <Stack spacing="3" shouldWrapChildren>
-                  <TrackedLink
-                    href="https://portal.thirdweb.com/smart-contracts"
-                    category="footer"
-                    label="contracts"
-                    isExternal
-                  >
-                    Contracts
-                  </TrackedLink>
-                  <TrackedLink
-                    href="https://portal.thirdweb.com/building-web3-apps/setting-up-the-sdk"
-                    category="footer"
-                    label="developers"
-                    isExternal
-                  >
-                    SDKs
-                  </TrackedLink>
-                  <TrackedLink
-                    href="/dashboard"
-                    category="footer"
-                    label="dashboard"
-                  >
-                    Dashboard
-                  </TrackedLink>
-                  <TrackedLink
-                    href="/authentication"
-                    category="footer"
-                    label="authentication"
-                  >
-                    Authentication
-                  </TrackedLink>
+                  {PRODUCTS.map((product, id) => (
+                    <TrackedLink
+                      key={id}
+                      href={product.link}
+                      category="footer"
+                      label={product.label}
+                      isExternal
+                    >
+                      {product.name}
+                    </TrackedLink>
+                  ))}
                 </Stack>
               </Stack>
               <Stack spacing="4" minW="36" flex="1">
