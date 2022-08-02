@@ -1,4 +1,5 @@
 import { BatchLazyMintButton } from "./components/batch-lazy-mint-button";
+import { NFTLazyMintButton } from "./components/lazy-mint-button";
 import { NFTMintButton } from "./components/mint-button";
 import { NftGetAllTable } from "./components/table";
 import { Flex } from "@chakra-ui/react";
@@ -34,17 +35,8 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
     return <div>Loading...</div>;
   }
 
-  if (!detectedContract || !enabled) {
-    return (
-      <Card as={Flex} flexDir="column" gap={3}>
-        {/* TODO  extract this out into it's own component and make it better */}
-        <Heading size="subtitle.md">No Enumerable extension enabled</Heading>
-        <Text>
-          To being able to see the list of the NFTs minted on your contract, you
-          will have to extend the ERC721Enumerable in your contract.
-        </Text>
-      </Card>
-    );
+  if (!detectedContract) {
+    return null;
   }
 
   return (
@@ -53,10 +45,23 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
         <Heading size="title.sm">Contract NFTs</Heading>
         <Flex gap={4}>
           <NFTMintButton contract={detectedContract} />
+          <NFTLazyMintButton contract={detectedContract} />
           <BatchLazyMintButton contract={detectedContract} />
         </Flex>
       </Flex>
-      {enabled && <NftGetAllTable contract={detectedContract} />}
+      {!enabled ? (
+        <Card as={Flex} flexDir="column" gap={3}>
+          {/* TODO  extract this out into it's own component and make it better */}
+          <Heading size="subtitle.md">No Enumerable extension enabled</Heading>
+          <Text>
+            To being able to see the list of the NFTs minted on your contract,
+            you will have to extend the ERC721Enumerable extension in your
+            contract.
+          </Text>
+        </Card>
+      ) : (
+        <NftGetAllTable contract={detectedContract} />
+      )}
     </Flex>
   );
 };

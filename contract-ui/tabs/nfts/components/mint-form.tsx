@@ -14,7 +14,12 @@ import {
   Textarea,
   useModalContext,
 } from "@chakra-ui/react";
-import { NFTContract, useAddress, useMintNFT } from "@thirdweb-dev/react";
+import {
+  NFTContract,
+  useAddress,
+  useLazyMint,
+  useMintNFT,
+} from "@thirdweb-dev/react";
 import { Erc1155 } from "@thirdweb-dev/sdk";
 import { OpenSeaPropertyBadge } from "components/badges/opensea";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -36,13 +41,26 @@ import { parseAttributes } from "utils/parseAttributes";
 
 const MINT_FORM_ID = "nft-mint-form";
 
-interface NFTMintForm {
-  contract: NFTContract;
-}
+type NFTMintForm =
+  | {
+      contract: NFTContract;
+      mintMutation: ReturnType<typeof useMintNFT>;
+      lazyMintMutation?: undefined;
+    }
+  | {
+      contract: NFTContract;
+      lazyMintMutation: ReturnType<typeof useLazyMint>;
+      mintMutation?: undefined;
+    };
 
-export const NFTMintForm: React.FC<NFTMintForm> = ({ contract }) => {
+export const NFTMintForm: React.FC<NFTMintForm> = ({
+  contract,
+  lazyMintMutation,
+  mintMutation,
+}) => {
   const address = useAddress();
-  const { mutate, isLoading } = useMintNFT(contract);
+  const mutation = mintMutation || lazyMintMutation;
+
   const {
     setValue,
     control,
@@ -137,20 +155,38 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract }) => {
               onError("Please connect your wallet to mint.");
               return;
             }
-            mutate(
-              {
-                to: address,
-                metadata: parseAttributes(data),
-                supply: data.supply,
-              },
-              {
-                onSuccess: () => {
-                  onSuccess();
-                  modalContext.onClose();
+
+            if (lazyMintMutation) {
+              lazyMintMutation.mutate(
+                {
+                  metadatas: [parseAttributes(data)],
                 },
-                onError,
-              },
-            );
+                {
+                  onSuccess: () => {
+                    onSuccess();
+                    modalContext.onClose();
+                  },
+                  onError,
+                },
+              );
+            }
+
+            if (mintMutation) {
+              mintMutation.mutate(
+                {
+                  to: address,
+                  metadata: parseAttributes(data),
+                  supply: data.supply,
+                },
+                {
+                  onSuccess: () => {
+                    onSuccess();
+                    modalContext.onClose();
+                  },
+                  onError,
+                },
+              );
+            }
           })}
         >
           <Stack>
@@ -211,7 +247,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract }) => {
             <Textarea {...register("description")} />
             <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
           </FormControl>
-          {contract instanceof Erc1155 && (
+          {contract instanceof Erc1155 && mintMutation && (
             <FormControl isRequired isInvalid={!!errors.supply}>
               <FormLabel>Initial Supply</FormLabel>
               <Input
@@ -277,7 +313,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract }) => {
       </DrawerBody>
       <DrawerFooter>
         <Button
-          isDisabled={isLoading}
+          isDisabled={mutation?.isLoading}
           variant="outline"
           mr={3}
           onClick={modalContext.onClose}
@@ -286,12 +322,12 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({ contract }) => {
         </Button>
         <TransactionButton
           transactionCount={1}
-          isLoading={isLoading}
+          isLoading={mutation?.isLoading || false}
           form={MINT_FORM_ID}
           type="submit"
           colorScheme="primary"
         >
-          Mint NFT
+          {lazyMintMutation && "Lazy "} Mint NFT
         </TransactionButton>
       </DrawerFooter>
     </>
