@@ -16,6 +16,7 @@ import {
 } from "components/pages/release";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { isAddress } from "ethers/lib/utils";
+import { isEnsName } from "lib/ens";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ReactElement } from "react";
 import {
@@ -134,8 +135,8 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
     )[];
 
     if (contractName) {
-      const { address } = await queryClient.fetchQuery(
-        ens.queryKey(contractName),
+      const { address, ensName } = await queryClient.fetchQuery(
+        ens.queryKey(networkOrAddress),
         () => ens.fetch(networkOrAddress),
       );
 
@@ -153,7 +154,21 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
       const release =
         allVersions.find((v) => v.version === version) || allVersions[0];
 
+      const ensQueries = [
+        queryClient.prefetchQuery(ens.queryKey(address), () =>
+          ens.fetch(address),
+        ),
+      ];
+      if (ensName) {
+        ensQueries.push(
+          queryClient.prefetchQuery(ens.queryKey(ensName), () =>
+            ens.fetch(ensName),
+          ),
+        );
+      }
+
       await Promise.all([
+        ...ensQueries,
         queryClient.prefetchQuery(["released-contract", release], () =>
           fetchReleasedContractInfo(sdk, release),
         ),
@@ -192,5 +207,5 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 // if a string is a valid address or ens name
 function isPossibleAddress(address: string) {
-  return isAddress(address) || address.endsWith(".eth");
+  return isAddress(address) || isEnsName(".eth");
 }

@@ -135,12 +135,9 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   // currently blocked because our alchemy RPC does not allow us to call this from the server (since we have an allow-list)
   const sdk = new ThirdwebSDK("polygon");
 
-  const walletOrEnsAddress = getSingleQueryValue(
-    ctx.params,
-    "networkOrAddress",
-  );
+  const networkOrAddress = getSingleQueryValue(ctx.params, "networkOrAddress");
 
-  if (!walletOrEnsAddress) {
+  if (!networkOrAddress) {
     return {
       redirect: {
         destination: "/contracts",
@@ -150,12 +147,12 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
     };
   }
 
-  const ensQuery = await queryClient.fetchQuery(
-    ens.queryKey(walletOrEnsAddress),
-    () => ens.fetch(walletOrEnsAddress),
+  const { address, ensName } = await queryClient.fetchQuery(
+    ens.queryKey(networkOrAddress),
+    () => ens.fetch(networkOrAddress),
   );
 
-  if (!ensQuery.address) {
+  if (!address) {
     return {
       redirect: {
         destination: "/contracts",
@@ -164,12 +161,25 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
       props: {},
     };
   }
+
+  const ensQueries = [
+    queryClient.prefetchQuery(ens.queryKey(address), () => ens.fetch(address)),
+  ];
+  if (ensName) {
+    ensQueries.push(
+      queryClient.prefetchQuery(ens.queryKey(ensName), () =>
+        ens.fetch(ensName),
+      ),
+    );
+  }
+
   await Promise.all([
-    queryClient.prefetchQuery(["releaser-profile", ensQuery.address], () =>
-      fetchReleaserProfile(sdk, ensQuery.address),
+    ...ensQueries,
+    queryClient.prefetchQuery(["releaser-profile", address], () =>
+      fetchReleaserProfile(sdk, address),
     ),
-    queryClient.prefetchQuery(["published-contracts", ensQuery.address], () =>
-      fetchPublishedContracts(sdk, ensQuery.address),
+    queryClient.prefetchQuery(["published-contracts", address], () =>
+      fetchPublishedContracts(sdk, address),
     ),
   ]);
 

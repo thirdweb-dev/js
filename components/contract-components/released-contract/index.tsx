@@ -24,16 +24,15 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
-  useClipboard,
 } from "@chakra-ui/react";
 import { PublishedContract } from "@thirdweb-dev/sdk";
+import { ShareButton } from "components/share-buttom";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
-import { BiPencil, BiShareAlt } from "react-icons/bi";
+import { BiPencil } from "react-icons/bi";
 import { BsEye } from "react-icons/bs";
 import { FcCheckmark } from "react-icons/fc";
-import { IoMdCheckmark } from "react-icons/io";
 import { IoDocumentOutline } from "react-icons/io5";
 import { SiTwitter } from "react-icons/si";
 import { VscSourceControl } from "react-icons/vsc";
@@ -77,14 +76,11 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
 
   const releaserProfile = useReleaserProfile(release.releaser);
 
-  const currentRoute = `https://thirdweb.com${router.asPath}`.replace(
-    "/latest",
-    "",
-  );
+  const currentRoute = `https://thirdweb.com${router.asPath}`;
 
   const contractFunctions = useReleasedContractFunctions(release);
 
-  const { onCopy, hasCopied } = useClipboard(currentRoute);
+  // const { onCopy, hasCopied } = useClipboard(currentRoute);
 
   const ensQuery = ens.useQuery(release.releaser);
 
@@ -135,7 +131,7 @@ Deploy it in one click`,
   return (
     <>
       <NextSeo
-        title={release.name}
+        title={`${shortenIfAddress(releaserEnsOrAddress)}/${release.name}`}
         description={`${release.description}${
           release.description ? ". " : ""
         }Deploy ${release.name} in one click with thirdweb.`}
@@ -281,18 +277,14 @@ Deploy it in one click`,
           <Flex flexDir="column" gap={4}>
             <Heading size="title.sm">Share</Heading>
             <Flex gap={2} alignItems="center">
-              <TrackedIconButton
-                bg="transparent"
-                aria-label="copy-url"
-                icon={
-                  <Icon
-                    boxSize={5}
-                    as={hasCopied ? IoMdCheckmark : BiShareAlt}
-                  />
-                }
-                category="released-contract"
-                label="copy-url"
-                onClick={onCopy}
+              <ShareButton
+                url={currentRoute}
+                title={`${shortenIfAddress(releaserEnsOrAddress)}/${
+                  release.name
+                }`}
+                text={`Deploy ${shortenIfAddress(releaserEnsOrAddress)}/${
+                  release.name
+                } in one click with thirdweb.`}
               />
               <TrackedIconButton
                 as={LinkButton}

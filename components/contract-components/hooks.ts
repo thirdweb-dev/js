@@ -528,8 +528,9 @@ async function fetchEns(addressOrEnsName: string): Promise<ENSResolveResult> {
   return await res.json();
 }
 
-const ensQueryKey = (addressOrEnsName: string) =>
-  ["ens", addressOrEnsName] as const;
+const ensQueryKey = (addressOrEnsName: string) => {
+  return ["ens", addressOrEnsName] as const;
+};
 
 function useEns(addressOrEnsName?: string) {
   return useQuery(
