@@ -1,7 +1,7 @@
 import {
+  ens,
   useContractEnabledExtensions,
   useContractPublishMetadataFromURI,
-  useEnsName,
   useReleasedContractCompilerMetadata,
   useReleasedContractFunctions,
   useReleasedContractInfo,
@@ -86,9 +86,9 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
 
   const { onCopy, hasCopied } = useClipboard(currentRoute);
 
-  const ensName = useEnsName(release.releaser);
+  const ensQuery = ens.useQuery(release.releaser);
 
-  const releaserEnsOrAddress = ensName.data || release.releaser;
+  const releaserEnsOrAddress = ensQuery.data?.ensName || release.releaser;
 
   const ogImageUrl = useMemo(() => {
     const url = new URL("https://og-image.thirdweb.com/thirdweb");

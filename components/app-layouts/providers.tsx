@@ -1,10 +1,10 @@
 import { useActiveChainId } from "@3rdweb-sdk/react";
+import { QueryClient } from "@tanstack/react-query";
 import { ThirdwebProvider, WalletConnector } from "@thirdweb-dev/react";
 import { ChainId, IpfsStorage, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import { useNativeColorMode } from "hooks/useNativeColorMode";
 import React from "react";
 import { ComponentWithChildren } from "types/component-with-children";
-import { queryClient } from "utils/query-client";
 
 export const StorageSingleton = new IpfsStorage(
   process.env.NEXT_PUBLIC_IPFS_GATEWAY_URL,
@@ -67,7 +67,9 @@ if (process.env.NEXT_PUBLIC_MAGIC_KEY) {
   });
 }
 
-export const Providers: ComponentWithChildren = ({ children }) => {
+export const DashboardThirdwebProvider: ComponentWithChildren<{
+  queryClient: QueryClient;
+}> = ({ children, queryClient }) => {
   useNativeColorMode();
 
   const activeChainId = useActiveChainId();

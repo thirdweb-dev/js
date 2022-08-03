@@ -2,11 +2,12 @@ import chakraTheme from "../theme";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
-import { Hydrate } from "@tanstack/react-query";
+import { Hydrate, QueryClient } from "@tanstack/react-query";
 import {
   PersistQueryClientProvider,
   Persister,
 } from "@tanstack/react-query-persist-client";
+import { DashboardThirdwebProvider } from "components/app-layouts/providers";
 import { ErrorProvider } from "contexts/error-handler";
 import { BigNumber } from "ethers";
 import flat from "flat";
@@ -16,10 +17,9 @@ import { DefaultSeo } from "next-seo";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import posthog from "posthog-js";
-import React, { ReactElement, ReactNode, useEffect } from "react";
+import React, { ReactElement, ReactNode, useEffect, useState } from "react";
 import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
 import { isBrowser } from "utils/isBrowser";
-import { queryClient } from "utils/query-client";
 
 const __CACHE_BUSTER = "v2.0.4";
 
@@ -55,6 +55,21 @@ const persister: Persister = createSyncStoragePersister({
 });
 
 function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
+  // has to be constructed in here because it may otherwise share state between SSR'd pages
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            // 24 hours
+            cacheTime: 1000 * 60 * 60 * 24,
+            // 30 seconds
+            staleTime: 1000 * 30,
+          },
+        },
+      }),
+  );
+
   const router = useRouter();
 
   useEffect(() => {
@@ -150,7 +165,9 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
 
           <ChakraProvider theme={chakraTheme}>
             <ErrorProvider>
-              {getLayout(<Component {...pageProps} />, pageProps)}
+              <DashboardThirdwebProvider queryClient={queryClient}>
+                {getLayout(<Component {...pageProps} />, pageProps)}
+              </DashboardThirdwebProvider>
             </ErrorProvider>
           </ChakraProvider>
         </Track>

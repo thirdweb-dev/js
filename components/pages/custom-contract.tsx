@@ -14,7 +14,7 @@ import {
   Router,
   useMatchRoute,
 } from "@tanstack/react-location";
-import { useResolvedEnsName } from "components/contract-components/hooks";
+import { ens } from "components/contract-components/hooks";
 import { ContractHeader } from "components/custom-contract/contract-header";
 import { Logo } from "components/logo";
 import {
@@ -37,14 +37,14 @@ export const CustomContractPage: React.FC<CustomContractPageProps> = ({
   contractAddress,
   network,
 }) => {
-  const resolvedAddress = useResolvedEnsName(contractAddress);
+  const ensQuery = ens.useQuery(contractAddress);
   const [location] = useState(() => new ReactLocation({}));
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollRef = useRef<any>(null);
   const scrollContainerRef = useRef<HTMLElement>();
 
-  const routes = useContractRouteConfig(resolvedAddress.data || undefined);
+  const routes = useContractRouteConfig(ensQuery.data?.address || undefined);
   useIsomorphicLayoutEffect(() => {
     const el = document.getElementById("tw-scroll-container");
 

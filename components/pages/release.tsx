@@ -6,27 +6,14 @@ import {
   SimpleGrid,
   Skeleton,
 } from "@chakra-ui/react";
-import { QueryClient, dehydrate } from "@tanstack/react-query";
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
 import { DeployFormDrawer } from "components/contract-components/contract-deploy-form/drawer";
-import {
-  fetchAllVersions,
-  fetchContractPublishMetadataFromURI,
-  fetchReleasedContractInfo,
-  fetchReleaserProfile,
-  resolveAddressToEnsName,
-  resolvePossibleENSName,
-  useAllVersions,
-  useResolvedEnsName,
-} from "components/contract-components/hooks";
+import { ens, useAllVersions } from "components/contract-components/hooks";
 import { ReleasedContract } from "components/contract-components/released-contract";
 import { FeatureIconMap } from "constants/mappings";
-import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import { Heading, Text } from "tw-components";
-import { getSingleQueryValue } from "utils/router";
 
 export interface ReleaseWithVersionPageProps {
   author: string;
@@ -39,14 +26,14 @@ export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
   contractName,
   version: initialVersion,
 }) => {
-  const resolvedAddress = useResolvedEnsName(author);
+  const ensQuery = ens.useQuery(author);
 
   const [version, setVersion] = useState(initialVersion);
 
   const router = useRouter();
 
   const allVersions = useAllVersions(
-    resolvedAddress.data || undefined,
+    ensQuery.data?.address || undefined,
     contractName,
   );
 
@@ -111,75 +98,4 @@ export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
       {release && <ReleasedContract release={release} walletOrEns={author} />}
     </SimpleGrid>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  // cache for 10 seconds, with up to 60 seconds of stale time
-  ctx.res.setHeader(
-    "Cache-Control",
-    "public, s-maxage=10, stale-while-revalidate=59",
-  );
-
-  const queryClient = new QueryClient();
-  // TODO make this use alchemy / other RPC
-  // currently blocked because our alchemy RPC does not allow us to call this from the server (since we have an allow-list)
-  const sdk = new ThirdwebSDK("polygon");
-
-  const walletOrEnsAddress = getSingleQueryValue(ctx.query, "networkOrAddress");
-  const contractName = getSingleQueryValue(ctx.query, "contractName");
-  const version = getSingleQueryValue(ctx.query, "version");
-
-  if (!walletOrEnsAddress) {
-    return {
-      redirect: {
-        destination: "/contracts",
-        permanent: false,
-      },
-      props: {},
-    };
-  }
-
-  const resolvedAddress = await queryClient.fetchQuery(
-    ["ens-address", walletOrEnsAddress],
-    () => resolvePossibleENSName(walletOrEnsAddress),
-  );
-
-  if (!resolvedAddress) {
-    return {
-      redirect: {
-        destination: "/contracts",
-        permanent: false,
-      },
-      props: {},
-    };
-  }
-
-  const allVersions = await queryClient.fetchQuery(
-    ["all-releases", resolvedAddress, contractName],
-    () => fetchAllVersions(sdk, resolvedAddress, contractName),
-  );
-
-  const release =
-    allVersions.find((v) => v.version === version) || allVersions[0];
-
-  await Promise.all([
-    queryClient.prefetchQuery(["released-contract", release], () =>
-      fetchReleasedContractInfo(sdk, release),
-    ),
-    queryClient.prefetchQuery(["publish-metadata", release.metadataUri], () =>
-      fetchContractPublishMetadataFromURI(release.metadataUri),
-    ),
-    queryClient.prefetchQuery(["releaser-profile", resolvedAddress], () =>
-      fetchReleaserProfile(sdk, resolvedAddress),
-    ),
-    queryClient.prefetchQuery(["ens-name", resolvedAddress], () =>
-      resolveAddressToEnsName(resolvedAddress),
-    ),
-  ]);
-
-  return {
-    props: {
-      dehydratedState: dehydrate(queryClient),
-    },
-  };
 };

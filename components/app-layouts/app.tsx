@@ -1,4 +1,3 @@
-import { Providers } from "./providers";
 import { useAddress, useBalance, useChainId } from "@thirdweb-dev/react";
 import { AppShell, AppShellProps } from "components/layout/app-shell";
 import { PrivacyNotice } from "components/notices/PrivacyNotice";
@@ -8,11 +7,11 @@ import { ComponentWithChildren } from "types/component-with-children";
 
 export const AppLayout: ComponentWithChildren<AppShellProps> = (props) => {
   return (
-    <Providers>
+    <>
       <PHIdentifier />
       <PrivacyNotice />
       <AppShell {...props} />
-    </Providers>
+    </>
   );
 };
 

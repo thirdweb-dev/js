@@ -1,4 +1,4 @@
-import { useContractPublishMetadataFromURI, useEnsName } from "../../hooks";
+import { ens, useContractPublishMetadataFromURI } from "../../hooks";
 import {
   ContractCellContext,
   DeployableContractContractCellProps,
@@ -20,7 +20,7 @@ export const ContractDeployActionCell: React.FC<
 > = ({ cell: { value }, context }) => {
   const publishMetadata = useContractPublishMetadataFromURI(value);
   const address = useAddress();
-  const ens = useEnsName(address);
+  const ensQuery = ens.useQuery(address);
   const wallet = useSingleQueryParam("networkOrAddress");
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -106,7 +106,7 @@ export const ContractDeployActionCell: React.FC<
             href={actionUrlPath(
               context,
               value,
-              wallet || ens.data || address,
+              wallet || ensQuery.data?.ensName || address,
               publishMetadata.data?.name,
             )}
           >

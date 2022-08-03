@@ -12,17 +12,15 @@ import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { AppLayout } from "components/app-layouts/app";
 import { DeployableContractTable } from "components/contract-components/contract-table";
 import {
+  ens,
   fetchPublishedContracts,
   fetchReleaserProfile,
-  resolveAddressToEnsName,
-  resolvePossibleENSName,
   usePublishedContractsQuery,
-  useResolvedEnsName,
 } from "components/contract-components/hooks";
 import { ReleaserHeader } from "components/contract-components/releaser/releaser-header";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { useSingleQueryParam } from "hooks/useQueryParam";
-import { GetServerSideProps } from "next";
+import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import { ReactElement, useEffect } from "react";
 import { IoRefreshSharp } from "react-icons/io5";
@@ -32,12 +30,12 @@ import { getSingleQueryValue } from "utils/router";
 const UserPageWrapped = () => {
   const wallet = useSingleQueryParam("networkOrAddress");
 
-  const resolvedAddress = useResolvedEnsName(wallet);
+  const ensQuery = ens.useQuery(wallet);
 
   const address = useAddress();
   const router = useRouter();
   const publishedContracts = usePublishedContractsQuery(
-    resolvedAddress.data || undefined,
+    ensQuery.data?.address || undefined,
   );
 
   // We do this so it doesn't break for users that haven't updated their CLI
@@ -99,7 +97,7 @@ const UserPageWrapped = () => {
               <Center>
                 <Flex py={4} direction="column" gap={4} align="center">
                   <Text>No releases found.</Text>
-                  {resolvedAddress.data === address && (
+                  {ensQuery.data?.address === address && (
                     <LinkButton
                       size="sm"
                       href="https://portal.thirdweb.com/release"
@@ -131,19 +129,16 @@ UserPage.getLayout = function getLayout(page: ReactElement) {
   return <AppLayout>{page}</AppLayout>;
 };
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  // cache for 10 seconds, with up to 60 seconds of stale time
-  ctx.res.setHeader(
-    "Cache-Control",
-    "public, s-maxage=10, stale-while-revalidate=59",
-  );
-
+export const getStaticProps: GetStaticProps = async (ctx) => {
   const queryClient = new QueryClient();
   // TODO make this use alchemy / other RPC
   // currently blocked because our alchemy RPC does not allow us to call this from the server (since we have an allow-list)
   const sdk = new ThirdwebSDK("polygon");
 
-  const walletOrEnsAddress = getSingleQueryValue(ctx.query, "networkOrAddress");
+  const walletOrEnsAddress = getSingleQueryValue(
+    ctx.params,
+    "networkOrAddress",
+  );
 
   if (!walletOrEnsAddress) {
     return {
@@ -155,12 +150,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  const resolvedAddress = await queryClient.fetchQuery(
-    ["ens-address", walletOrEnsAddress],
-    () => resolvePossibleENSName(walletOrEnsAddress),
+  const ensQuery = await queryClient.fetchQuery(
+    ens.queryKey(walletOrEnsAddress),
+    () => ens.fetch(walletOrEnsAddress),
   );
 
-  if (!resolvedAddress) {
+  if (!ensQuery.address) {
     return {
       redirect: {
         destination: "/contracts",
@@ -170,14 +165,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
   await Promise.all([
-    queryClient.prefetchQuery(["releaser-profile", resolvedAddress], () =>
-      fetchReleaserProfile(sdk, resolvedAddress),
+    queryClient.prefetchQuery(["releaser-profile", ensQuery.address], () =>
+      fetchReleaserProfile(sdk, ensQuery.address),
     ),
-    queryClient.prefetchQuery(["ens-name", resolvedAddress], () =>
-      resolveAddressToEnsName(resolvedAddress),
-    ),
-    queryClient.prefetchQuery(["published-contracts", resolvedAddress], () =>
-      fetchPublishedContracts(sdk, resolvedAddress),
+    queryClient.prefetchQuery(["published-contracts", ensQuery.address], () =>
+      fetchPublishedContracts(sdk, ensQuery.address),
     ),
   ]);
 
@@ -185,5 +177,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     props: {
       dehydratedState: dehydrate(queryClient),
     },
+  };
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    fallback: "blocking",
+    paths: [],
   };
 };

@@ -3,12 +3,11 @@ import { SupportedChainId } from "@thirdweb-dev/react/dist/constants/chain";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { AppLayout } from "components/app-layouts/app";
 import {
+  ens,
   fetchAllVersions,
   fetchContractPublishMetadataFromURI,
   fetchReleasedContractInfo,
   fetchReleaserProfile,
-  resolveAddressToEnsName,
-  resolvePossibleENSName,
 } from "components/contract-components/hooks";
 import { CustomContractPage } from "components/pages/custom-contract";
 import {
@@ -17,7 +16,7 @@ import {
 } from "components/pages/release";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { isAddress } from "ethers/lib/utils";
-import { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { ReactElement } from "react";
 import {
   SupportedNetworkToChainIdMap,
@@ -25,9 +24,7 @@ import {
 } from "utils/network";
 import { getSingleQueryValue } from "utils/router";
 
-function CatchAllPage(
-  props: InferGetServerSidePropsType<typeof getServerSideProps>,
-) {
+function CatchAllPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
   if (props.pageType === "contract") {
     return (
       <CustomContractPage
@@ -52,7 +49,7 @@ function CatchAllPage(
 
 CatchAllPage.getLayout = function (
   page: ReactElement,
-  props: InferGetServerSidePropsType<typeof getServerSideProps>,
+  props: InferGetStaticPropsType<typeof getStaticProps>,
 ) {
   return (
     <AppLayout
@@ -74,30 +71,34 @@ type PossiblePageProps =
       chainId: SupportedChainId;
     };
 
-export const getServerSideProps: GetServerSideProps<PossiblePageProps> = async (
+export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
   ctx,
 ) => {
   const networkOrAddress = getSingleQueryValue(
-    ctx.query,
+    ctx.params,
     "networkOrAddress",
   ) as string;
-
   // handle old dashboard urls
   if (networkOrAddress === "dashboard") {
+    const pathSegments = ctx.params?.catchAll as string[];
+
+    const destination = pathSegments.join("/");
+
     return {
       redirect: {
-        destination: ctx.resolvedUrl.replace("/dashboard", ""),
+        destination: `/${destination}`,
         permanent: false,
       },
     };
   }
   // handle old contract urls
   if (networkOrAddress === "contracts") {
+    const pathSegments = ctx.params?.catchAll as string[];
+
+    const destination = pathSegments.join("/").replace("/latest", "");
     return {
       redirect: {
-        destination: ctx.resolvedUrl
-          .replace("/contracts", "")
-          .replace("/latest", ""),
+        destination: `/${destination}`,
         permanent: false,
       },
     };
@@ -108,17 +109,11 @@ export const getServerSideProps: GetServerSideProps<PossiblePageProps> = async (
 
   // handle the case where the user is trying to access a custom contract
   if (networkOrAddress in SupportedNetworkToChainIdMap) {
-    const [contractAddress] = ctx.query.catchAll as (string | undefined)[];
+    const [contractAddress] = ctx.params?.catchAll as (string | undefined)[];
 
     if (contractAddress && isPossibleAddress(contractAddress)) {
-      await queryClient.prefetchQuery(["ens-address", contractAddress], () =>
-        resolvePossibleENSName(contractAddress),
-      );
-
-      // cache for 10 seconds, with up to 60 seconds of stale time
-      ctx.res.setHeader(
-        "Cache-Control",
-        "public, s-maxage=10, stale-while-revalidate=59",
+      await queryClient.prefetchQuery(ens.queryKey(contractAddress), () =>
+        ens.fetch(contractAddress),
       );
 
       return {
@@ -133,26 +128,26 @@ export const getServerSideProps: GetServerSideProps<PossiblePageProps> = async (
     }
   } else if (isPossibleAddress(networkOrAddress)) {
     // we're in release world
-    const [contractName, version = ""] = ctx.query.catchAll as (
+    const [contractName, version = ""] = ctx.params?.catchAll as (
       | string
       | undefined
     )[];
 
     if (contractName) {
-      const resolvedAddress = await queryClient.fetchQuery(
-        ["ens-address", networkOrAddress],
-        () => resolvePossibleENSName(networkOrAddress),
+      const { address } = await queryClient.fetchQuery(
+        ens.queryKey(contractName),
+        () => ens.fetch(networkOrAddress),
       );
 
-      if (!resolvedAddress) {
+      if (!address) {
         return {
           notFound: true,
         };
       }
 
       const allVersions = await queryClient.fetchQuery(
-        ["all-releases", resolvedAddress, contractName],
-        () => fetchAllVersions(sdk, resolvedAddress, contractName),
+        ["all-releases", address, contractName],
+        () => fetchAllVersions(sdk, address, contractName),
       );
 
       const release =
@@ -166,19 +161,10 @@ export const getServerSideProps: GetServerSideProps<PossiblePageProps> = async (
           ["publish-metadata", release.metadataUri],
           () => fetchContractPublishMetadataFromURI(release.metadataUri),
         ),
-        queryClient.prefetchQuery(["releaser-profile", resolvedAddress], () =>
-          fetchReleaserProfile(sdk, resolvedAddress),
-        ),
-        queryClient.prefetchQuery(["ens-name", resolvedAddress], () =>
-          resolveAddressToEnsName(resolvedAddress),
+        queryClient.prefetchQuery(["releaser-profile", address], () =>
+          fetchReleaserProfile(sdk, address),
         ),
       ]);
-
-      // cache for 10 seconds, with up to 60 seconds of stale time
-      ctx.res.setHeader(
-        "Cache-Control",
-        "public, s-maxage=10, stale-while-revalidate=59",
-      );
 
       return {
         props: {
@@ -194,6 +180,13 @@ export const getServerSideProps: GetServerSideProps<PossiblePageProps> = async (
 
   return {
     notFound: true,
+  };
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    fallback: "blocking",
+    paths: [],
   };
 };
 
