@@ -461,7 +461,7 @@ const LearnMoreSection: React.FC = () => {
           <Icon as={AiFillCode} boxSize={9} />
           <Flex flexDir="column" gap={1}>
             <LinkOverlay
-              href="https://portal.thirdweb.com/thirdweb-cli"
+              href="https://portal.thirdweb.com/deploy"
               isExternal
               onClick={() =>
                 trackEvent({

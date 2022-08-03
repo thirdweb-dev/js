@@ -77,7 +77,7 @@ export default function ContractDetailPage() {
                       <Box>
                         <Heading size="subtitle.md">
                           <TrackedLink
-                            href="https://portal.thirdweb.com/thirdweb-deploy/contract-extensions"
+                            href="https://portal.thirdweb.com/contracts-sdk"
                             category="extensions-deploy"
                             label="header"
                             isExternal
@@ -112,7 +112,7 @@ export default function ContractDetailPage() {
             <LinkButton
               variant="outline"
               isExternal
-              href="https://portal.thirdweb.com/thirdweb-deploy/contract-extensions"
+              href="https://portal.thirdweb.com/contracts-sdk"
             >
               Learn about thirdweb extensions
             </LinkButton>

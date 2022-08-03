@@ -80,7 +80,7 @@ export default function Authentication() {
                   <GeneralCta
                     title="Get started"
                     size="lg"
-                    href="https://portal.thirdweb.com/building-web3-apps/authenticating-users"
+                    href="https://portal.thirdweb.com/auth"
                     w={{ base: "full", md: "inherit" }}
                   />
                 </LightMode>
@@ -337,7 +337,7 @@ export default function Authentication() {
               <LightMode>
                 <GeneralCta
                   size="lg"
-                  href="https://portal.thirdweb.com/building-web3-apps/authenticating-users"
+                  href="https://portal.thirdweb.com/auth"
                   w={{ base: "full", md: "inherit" }}
                 />
               </LightMode>

@@ -138,7 +138,7 @@ export const AuthenticationCode: React.FC = () => {
         <GeneralCta
           size="md"
           title="Explore documentation"
-          href="https://portal.thirdweb.com/building-web3-apps/authenticating-users"
+          href="https://portal.thirdweb.com/auth"
           w={{ base: "full", md: "inherit" }}
           px={10}
           py={6}

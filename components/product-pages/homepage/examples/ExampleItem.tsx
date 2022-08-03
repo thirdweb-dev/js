@@ -15,42 +15,42 @@ import { Heading } from "tw-components";
 const EXAMPLES_MAP = {
   nftDrops: {
     title: "NFT drops",
-    href: "https://github.com/thirdweb-example/custom-minting-page",
+    href: "https://portal.thirdweb.com/templates/nft-drop-template",
     svg: NFTDrops,
   },
   marketplaces: {
     title: "NFT marketplaces",
-    href: "https://github.com/thirdweb-example/marketplace-next-ts",
+    href: "https://portal.thirdweb.com/templates/marketplace-next-ts-template",
     svg: Marketplaces,
   },
   tokenGated: {
     title: "Token-gated memberships",
-    href: "https://github.com/thirdweb-example/NFT-Gated-Website",
+    href: "https://portal.thirdweb.com/templates/nft-gated-website-template",
     svg: TokenGated,
   },
   daos: {
     title: "DAOs",
-    href: "https://github.com/thirdweb-example/dao",
+    href: "https://portal.thirdweb.com/templates/dao-template",
     svg: DAOs,
   },
   creatorTools: {
     title: "Creator tools",
-    href: "https://portal.thirdweb.com/examples",
+    href: "https://portal.thirdweb.com/templates",
     svg: CreatorTools,
   },
   communityRewards: {
     title: "Community rewards",
-    href: "https://github.com/thirdweb-example/community-rewards",
+    href: "https://portal.thirdweb.com/templates/community-rewards-template",
     svg: CommunityRewards,
   },
   playToEarnGames: {
     title: "Play-to-earn games",
-    href: "https://github.com/thirdweb-example/play-to-earn-game",
+    href: "https://portal.thirdweb.com/templates/play-to-earn-game-template",
     svg: PlayToEarnGames,
   },
   defiProtocols: {
     title: "DeFi protocols",
-    href: "https://portal.thirdweb.com/examples",
+    href: "https://portal.thirdweb.com/templates",
     svg: DefiProtocols,
   },
 } as const;

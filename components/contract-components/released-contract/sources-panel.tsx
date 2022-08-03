@@ -72,7 +72,7 @@ export const SourcesPanel: React.FC<SourcesPanelProps> = ({
         </Flex>
         <Heading size="subtitle.sm">
           Try deploying with{" "}
-          <Link href="https://portal.thirdweb.com/thirdweb-cli" isExternal>
+          <Link href="https://portal.thirdweb.com/cli" isExternal>
             thirdweb CLI v0.5+
           </Link>
         </Heading>

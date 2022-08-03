@@ -27,7 +27,7 @@ const ContractsPublishPageWrapped: React.FC = () => {
             <Link
               color="primary.500"
               isExternal
-              href="https://portal.thirdweb.com/thirdweb-cli"
+              href="https://portal.thirdweb.com/release"
             >
               Learn more
             </Link>
