@@ -38,6 +38,7 @@ import { ENSResolveResult, isEnsName } from "lib/ens";
 import { StaticImageData } from "next/image";
 import { useMemo } from "react";
 import invariant from "tiny-invariant";
+import { isBrowser } from "utils/isBrowser";
 import { z } from "zod";
 
 export interface ContractPublishMetadata {
@@ -510,9 +511,12 @@ export function useContractEnabledExtensions(abi?: any) {
 }
 
 function getAbsoluteUrlForSSR(path: string) {
+  if (isBrowser()) {
+    return path;
+  }
   const url = new URL(
-    process.env.NEXT_PUBLIC_VERCEL_URL
-      ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+    process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
       : "http://localhost:3000",
   );
   url.pathname = path;
