@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, Link } from "@chakra-ui/react";
 import {
   ens,
   useReleasesFromDeploy,
@@ -19,19 +19,23 @@ export const ReleasedBy: React.FC<ReleasedByProps> = ({ contractAddress }) => {
   const lastRelease = releasesFromDeploy?.data?.length
     ? releasesFromDeploy.data[releasesFromDeploy.data.length - 1]
     : undefined;
+
+  const releaserAddress = ensQuery.data?.ensName || lastRelease?.publisher;
   return lastRelease ? (
-    <Flex flexDir="column" gap={3}>
+    <Flex flexDir="column" gap={3} alignItems="end">
       <LinkButton
-        href={`/contracts/${lastRelease?.publisher}/${lastRelease?.name}/${lastRelease?.version}`}
+        href={`/contracts/${releaserAddress}/${lastRelease?.name}/${lastRelease?.version}`}
         noMatch
         size="sm"
+        variant="outline"
       >
-        {lastRelease?.name} | {lastRelease?.version}
+        {lastRelease?.name} v{lastRelease?.version}
       </LinkButton>
-      <Text size="label.sm" textAlign="center">
-        Released by{" "}
-        {shortenIfAddress(ensQuery.data?.ensName || lastRelease?.publisher)}
-      </Text>
+      <Link href={`/${releaserAddress}`}>
+        <Text size="label.sm" textAlign="center">
+          Released by {shortenIfAddress(releaserAddress)}
+        </Text>
+      </Link>
     </Flex>
   ) : null;
 };
