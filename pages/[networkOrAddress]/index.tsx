@@ -27,7 +27,7 @@ import { IoRefreshSharp } from "react-icons/io5";
 import { Button, LinkButton, Text } from "tw-components";
 import { getSingleQueryValue } from "utils/router";
 
-const UserPageWrapped = () => {
+export default function UserPage() {
   const wallet = useSingleQueryParam("networkOrAddress");
 
   const ensQuery = ens.useQuery(wallet);
@@ -115,18 +115,14 @@ const UserPageWrapped = () => {
       </Flex>
     </Flex>
   );
-};
-
-export default function UserPage() {
-  return (
-    <PublisherSDKContext>
-      <UserPageWrapped />
-    </PublisherSDKContext>
-  );
 }
 
 UserPage.getLayout = function getLayout(page: ReactElement) {
-  return <AppLayout>{page}</AppLayout>;
+  return (
+    <AppLayout>
+      <PublisherSDKContext>{page}</PublisherSDKContext>
+    </AppLayout>
+  );
 };
 
 export const getStaticProps: GetStaticProps = async (ctx) => {

@@ -277,7 +277,7 @@ export default function Dashboard() {
                 <LinkButton
                   leftIcon={<FiPlus />}
                   colorScheme="primary"
-                  href="/contracts/new"
+                  href="/contracts"
                 >
                   Deploy new contract
                 </LinkButton>
@@ -899,7 +899,7 @@ const NoContracts: React.FC = () => {
           <LinkButton
             leftIcon={<FiPlus />}
             colorScheme="primary"
-            href="/contracts/new"
+            href="/contracts"
           >
             Deploy new contract
           </LinkButton>

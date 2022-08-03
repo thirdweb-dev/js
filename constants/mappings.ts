@@ -46,6 +46,7 @@ export interface BuiltinContractDetails {
   icon: StaticImageData;
   comingSoon?: boolean;
   contractType: ContractType;
+  href: string;
   erc?: "ERC721" | "ERC20" | "ERC1155" | "ERC721A";
   audit?: string;
 }
@@ -85,6 +86,16 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       contractType: "nft-drop",
       erc: "ERC721",
       audit: "QmNgNaLwzgMxcx9r6qDvJmTFam6xxUxX7Vp8E99oRt7i74",
+      href: "/contracts/new/pre-built/drop/nft-drop",
+    },
+    "signature-drop": {
+      title: "Signature Drop",
+      description: "ERC721A NFTs that other people can claim",
+      icon: FeatureIconMap["nft-drop"],
+      contractType: "signature-drop",
+      erc: "ERC721A",
+      audit: "QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
+      href: "/contracts/new/pre-built/drop/signature-drop",
     },
     marketplace: {
       title: "Marketplace",
@@ -92,19 +103,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       icon: FeatureIconMap["marketplace"],
       contractType: "marketplace",
       audit: "QmNgNaLwzgMxcx9r6qDvJmTFam6xxUxX7Vp8E99oRt7i74",
-    },
-    split: {
-      title: "Split",
-      description: "Fee splitting for your primary sales and royalties",
-      icon: FeatureIconMap["split"],
-      contractType: "split",
-    },
-    token: {
-      title: "Token",
-      description: "ERC20 token",
-      icon: FeatureIconMap["token"],
-      contractType: "token",
-      erc: "ERC20",
+      href: "/contracts/new/pre-built/marketplace/marketplace",
     },
     "edition-drop": {
       title: "Edition Drop",
@@ -113,41 +112,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       contractType: "edition-drop",
       erc: "ERC1155",
       audit: "QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
-    },
-    "token-drop": {
-      title: "Token Drop",
-      description: "ERC20 token that you can sell for other tokens",
-      icon: FeatureIconMap["token-drop"],
-      contractType: "token-drop",
-      erc: "ERC20",
-    },
-    vote: {
-      title: "Vote",
-      description: "On-chain ERC20-based voting",
-      icon: FeatureIconMap["vote"],
-      contractType: "vote",
-    },
-    "nft-collection": {
-      title: "NFT Collection",
-      description: "ERC721 mintable NFTs",
-      icon: FeatureIconMap["nft-collection"],
-      contractType: "nft-collection",
-      erc: "ERC721",
-    },
-    edition: {
-      title: "Edition",
-      description: "ERC1155 mintable NFTs",
-      icon: FeatureIconMap["edition"],
-      contractType: "edition",
-      erc: "ERC1155",
-    },
-    pack: {
-      title: "Pack",
-      description:
-        "Bundle ERC721/ERC1155/ERC20 into a single token, with lootbox mechanics",
-      icon: FeatureIconMap["pack"],
-      contractType: "pack",
-      erc: "ERC1155",
+      href: "/contracts/new/pre-built/drop/edition-drop",
     },
     multiwrap: {
       title: "Multiwrap",
@@ -157,21 +122,69 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       contractType: "multiwrap",
       erc: "ERC721",
       audit: "QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
+      href: "/contracts/new/pre-built/token/multiwrap",
     },
-    "signature-drop": {
-      title: "Signature Drop",
+    token: {
+      title: "Token",
+      description: "ERC20 token",
+      icon: FeatureIconMap["token"],
+      contractType: "token",
+      erc: "ERC20",
+      href: "/contracts/new/pre-built/token/token",
+    },
+    edition: {
+      title: "Edition",
+      description: "ERC1155 mintable NFTs",
+      icon: FeatureIconMap["edition"],
+      contractType: "edition",
+      erc: "ERC1155",
+      href: "/contracts/new/pre-built/token/edition",
+    },
+    "token-drop": {
+      title: "Token Drop",
+      description: "ERC20 token that you can sell for other tokens",
+      icon: FeatureIconMap["token-drop"],
+      contractType: "token-drop",
+      erc: "ERC20",
+      href: "/contracts/new/pre-built/drop/token-drop",
+    },
+    split: {
+      title: "Split",
+      description: "Fee splitting for your primary sales and royalties",
+      icon: FeatureIconMap["split"],
+      contractType: "split",
+      href: "/contracts/new/pre-built/governance/split",
+    },
+    "nft-collection": {
+      title: "NFT Collection",
+      description: "ERC721 mintable NFTs",
+      icon: FeatureIconMap["nft-collection"],
+      contractType: "nft-collection",
+      erc: "ERC721",
+      href: "/contracts/new/pre-built/token/nft-collection",
+    },
+    vote: {
+      title: "Vote",
+      description: "On-chain ERC20-based voting",
+      icon: FeatureIconMap["vote"],
+      contractType: "vote",
+      href: "/contracts/new/pre-built/governance/vote",
+    },
+    pack: {
+      title: "Pack",
       description:
-        "ERC721A NFTs that other people can claim, with signature verification",
-      icon: FeatureIconMap["nft-drop"],
-      contractType: "signature-drop",
-      erc: "ERC721A",
-      audit: "QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
+        "Bundle ERC721/ERC1155/ERC20 into a single token, with lootbox mechanics",
+      icon: FeatureIconMap["pack"],
+      contractType: "pack",
+      erc: "ERC1155",
+      href: "/contracts/new/pre-built/token/pack",
     },
     custom: {
       title: "NOT IMPLEMENTED",
       description: "NOT IMPLEMENTED",
-      icon: FeatureIconMap["token-drop"],
+      icon: FeatureIconMap["custom"],
       contractType: "custom",
+      href: "NOT IMPLEMENTED",
     },
   };
 

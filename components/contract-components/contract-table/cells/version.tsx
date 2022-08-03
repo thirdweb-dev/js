@@ -1,6 +1,7 @@
 import { ens, useContractPrePublishMetadata } from "../../hooks";
 import { DeployableContractContractCellProps } from "../../types";
 import { useAddress } from "@thirdweb-dev/react";
+import { BuiltinContractMap } from "constants/mappings";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { Text } from "tw-components";
 
@@ -16,10 +17,13 @@ export const ContractVersionCell: React.FC<
     ensQuery.data?.address || wallet || address,
   );
 
+  const isPrebuilt =
+    !!BuiltinContractMap[value as keyof typeof BuiltinContractMap];
+
   return (
     <Text size="body.md">
       {fullPublishMetadata.data?.latestPublishedContractMetadata
-        ?.publishedMetadata.version || "First Release"}
+        ?.publishedMetadata.version || (isPrebuilt ? "2.0.0" : "First Release")}
     </Text>
   );
 };

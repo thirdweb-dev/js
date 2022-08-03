@@ -7,7 +7,7 @@ import { useSingleQueryParam } from "hooks/useQueryParam";
 import { ReactElement } from "react";
 import { Heading, Text } from "tw-components";
 
-const ContractsPublishPageWrapped: React.FC = () => {
+export default function ContractsPublishPage() {
   const { Track } = useTrack({
     page: "publish",
   });
@@ -37,16 +37,10 @@ const ContractsPublishPageWrapped: React.FC = () => {
       </Flex>
     </Track>
   );
-};
-
-export default function ContractsPublishPage() {
-  return (
-    <PublisherSDKContext>
-      <ContractsPublishPageWrapped />
-    </PublisherSDKContext>
-  );
 }
 
 ContractsPublishPage.getLayout = (page: ReactElement) => (
-  <AppLayout>{page}</AppLayout>
+  <AppLayout>
+    <PublisherSDKContext>{page}</PublisherSDKContext>
+  </AppLayout>
 );

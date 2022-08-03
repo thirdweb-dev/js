@@ -70,7 +70,6 @@ import {
   NetworkToBlockTimeMap,
   SupportedChainIdToNetworkMap,
 } from "utils/network";
-import { pushToPreviousRoute } from "utils/pushToPreviousRoute";
 import { z } from "zod";
 
 function useDeployForm<TContract extends ValidContractClass>(
@@ -289,7 +288,8 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
         >
           <Flex gap={4} align="center">
             <IconButton
-              onClick={() => pushToPreviousRoute(router)}
+              as={LinkButton}
+              href="/contracts"
               size="sm"
               aria-label="back"
               icon={<FiChevronLeft />}

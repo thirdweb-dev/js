@@ -3,17 +3,15 @@ import {
   ContractCellContext,
   DeployableContractContractCellProps,
 } from "../../types";
-import { ButtonGroup, Icon, Tooltip, useDisclosure } from "@chakra-ui/react";
+import { ButtonGroup, Icon, Tooltip } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
-import { ContractDeployForm } from "components/contract-components/contract-deploy-form";
 import { isContractIdBuiltInContract } from "components/contract-components/utils";
 import { BuiltinContractMap } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { BsShieldFillCheck } from "react-icons/bs";
 import { FiArrowRight } from "react-icons/fi";
-import { IoRocketOutline } from "react-icons/io5";
-import { Button, Drawer, LinkButton, TrackedIconButton } from "tw-components";
+import { LinkButton, TrackedIconButton } from "tw-components";
 
 export const ContractDeployActionCell: React.FC<
   DeployableContractContractCellProps
@@ -23,7 +21,6 @@ export const ContractDeployActionCell: React.FC<
   const ensQuery = ens.useQuery(address);
   const wallet = useSingleQueryParam("networkOrAddress");
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const { trackEvent } = useTrack();
 
   const audit =
@@ -31,10 +28,6 @@ export const ContractDeployActionCell: React.FC<
 
   return (
     <>
-      <Drawer size="xl" isOpen={isOpen} onClose={onClose}>
-        <ContractDeployForm contractId={value} />
-      </Drawer>
-
       <ButtonGroup size="sm">
         {audit && (
           <Tooltip label="Audited Contract" borderRadius="lg" placement="top">
@@ -61,42 +54,22 @@ export const ContractDeployActionCell: React.FC<
           </Tooltip>
         )}
         {isContractIdBuiltInContract(value) ? (
-          <>
-            {!publishMetadata.data?.deployDisabled && (
-              <LinkButton
-                variant="outline"
-                isExternal
-                href={`https://portal.thirdweb.com/pre-built-contracts/${value}`}
-                onClick={() =>
-                  trackEvent({
-                    category: "learn-more-deploy",
-                    action: "click",
-                    label: value,
-                  })
-                }
-              >
-                Learn more
-              </LinkButton>
-            )}
-            <Button
-              isDisabled={publishMetadata.data?.deployDisabled}
-              onClick={onOpen}
-              isLoading={publishMetadata.isLoading}
-              colorScheme="purple"
-              variant={
-                publishMetadata.data?.deployDisabled ? "outline" : "solid"
-              }
-              rightIcon={
-                !publishMetadata.data?.deployDisabled ? (
-                  <Icon as={IoRocketOutline} />
-                ) : undefined
-              }
-            >
-              {publishMetadata.data?.deployDisabled
-                ? "Coming Soon"
-                : "Deploy Now"}
-            </Button>
-          </>
+          <LinkButton
+            isDisabled={publishMetadata.data?.deployDisabled}
+            href={
+              BuiltinContractMap[value as keyof typeof BuiltinContractMap]?.href
+            }
+            isLoading={publishMetadata.isLoading}
+            colorScheme="purple"
+            variant={publishMetadata.data?.deployDisabled ? "outline" : "solid"}
+            rightIcon={
+              !publishMetadata.data?.deployDisabled ? (
+                <Icon as={FiArrowRight} />
+              ) : undefined
+            }
+          >
+            {publishMetadata.data?.deployDisabled ? "Coming Soon" : "Details"}
+          </LinkButton>
         ) : (
           <LinkButton
             isDisabled={publishMetadata.data?.deployDisabled}

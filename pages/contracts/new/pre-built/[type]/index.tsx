@@ -5,15 +5,12 @@ import { LinkCard } from "components/link-card";
 import { FeatureIconMap, TYPE_CONTRACT_MAP } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
-import { useRouter } from "next/router";
 import React, { ReactElement } from "react";
 import { FiChevronLeft } from "react-icons/fi";
-import { Card, Heading } from "tw-components";
-import { pushToPreviousRoute } from "utils/pushToPreviousRoute";
+import { Card, Heading, LinkButton } from "tw-components";
 
 export default function DeployContractType() {
   const type = useSingleQueryParam("type");
-  const router = useRouter();
   const { trackEvent } = useTrack();
 
   if (!type || !(type in TYPE_CONTRACT_MAP)) {
@@ -25,7 +22,8 @@ export default function DeployContractType() {
       <Flex direction="column" gap={8}>
         <Flex align="center" justify="space-between">
           <IconButton
-            onClick={() => pushToPreviousRoute(router)}
+            as={LinkButton}
+            href="/contracts"
             size="sm"
             aria-label="back"
             icon={<FiChevronLeft />}

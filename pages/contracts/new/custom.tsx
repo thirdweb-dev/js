@@ -30,7 +30,7 @@ import {
 } from "tw-components";
 import { pushToPreviousRoute } from "utils/pushToPreviousRoute";
 
-function DeployCustomContract() {
+export default function DeployCustomContractWrapped() {
   const router = useRouter();
 
   const walletAddress = useAddress();
@@ -136,14 +136,8 @@ function DeployCustomContract() {
   );
 }
 
-export default function DeployCustomContractWrapped() {
-  return (
-    <PublisherSDKContext>
-      <DeployCustomContract />
-    </PublisherSDKContext>
-  );
-}
-
 DeployCustomContractWrapped.getLayout = (page: ReactElement) => (
-  <AppLayout>{page}</AppLayout>
+  <AppLayout>
+    <PublisherSDKContext>{page}</PublisherSDKContext>
+  </AppLayout>
 );

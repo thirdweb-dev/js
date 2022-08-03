@@ -18,17 +18,18 @@ export const ShareButton: React.FC<Required<Omit<ShareData, "files">>> = (
         await navigator.share(shareData);
         return;
       } catch (err) {
-        console.error(err);
+        console.warn("failed to share", err);
       }
+    } else {
+      onCopy();
+      toast({
+        position: "bottom",
+        title: "URL copied to clipboard",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
     }
-    onCopy();
-    toast({
-      position: "bottom",
-      title: "URL copied to clipboard",
-      status: "success",
-      duration: 5000,
-      isClosable: true,
-    });
   };
 
   return (
