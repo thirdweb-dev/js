@@ -1,52 +1,14 @@
-import {
-  Box,
-  Flex,
-  Icon,
-  SimpleGrid,
-  useBreakpointValue,
-} from "@chakra-ui/react";
+import { CodeOptionButton, CodeOptions } from "../common/CodeOptionButton";
+import { Box, Flex, Icon, SimpleGrid } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
-import { Language } from "prism-react-renderer";
-import { Dispatch, SetStateAction, useState } from "react";
-import { flushSync } from "react-dom";
-import {
-  SiGo,
-  SiJavascript,
-  SiPython,
-  SiReact,
-  SiReplit,
-} from "react-icons/si";
-import {
-  Button,
-  ButtonProps,
-  CodeBlock,
-  LinkButton,
-  PossibleButtonSize,
-} from "tw-components";
-
-const LOGO_OPTIONS = {
-  typescript: {
-    icon: SiJavascript,
-    fill: "yellow",
-  },
-  react: {
-    icon: SiReact,
-    fill: "#61dafb",
-  },
-  python: {
-    icon: SiPython,
-    fill: "#3e7aac",
-  },
-  go: {
-    icon: SiGo,
-    fill: "#50b7e0",
-  },
-} as const;
+import { useState } from "react";
+import { SiReplit } from "react-icons/si";
+import { CodeBlock, LinkButton } from "tw-components";
 
 const codeSnippets = {
-  typescript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+  javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-const sdk = new ThirdwebSDK("rinkeby");
+const sdk = new ThirdwebSDK("goerli");
 const nftCollection = sdk.getNFTCollection("0xb1c42E0C4289E68f1C337Eb0Da6a38C4c9F3f58e");
 
 const nfts = await nftCollection.getAll();`,
@@ -72,7 +34,7 @@ export default function App() {
   python: `from thirdweb import ThirdwebSDK
 from pprint import pprint
 
-sdk = ThirdwebSDK("rinkeby")
+sdk = ThirdwebSDK("goerli")
 
 nftCollection = sdk.get_nft_collection(
     "0xb1c42E0C4289E68f1C337Eb0Da6a38C4c9F3f58e")
@@ -89,7 +51,7 @@ import (
 )
 
 func main() {
-  sdk, _ := thirdweb.NewThirdwebSDK("rinkeby", nil)
+  sdk, _ := thirdweb.NewThirdwebSDK("goerli", nil)
 
   // Add your NFT Collection contract address here
   address := "0xb1c42E0C4289E68f1C337Eb0Da6a38C4c9F3f58e"
@@ -103,65 +65,10 @@ func main() {
 }`,
 };
 
-export type CodeOptions = keyof typeof LOGO_OPTIONS;
-
-interface CodeOptionButtonProps extends ButtonProps {
-  language: CodeOptions;
-  activeLanguage: CodeOptions;
-  setActiveLanguage: Dispatch<SetStateAction<CodeOptions>>;
-}
-const CodeOptionButton: React.FC<CodeOptionButtonProps> = ({
-  children,
-  language,
-  setActiveLanguage,
-  activeLanguage,
-  ...rest
-}) => {
-  const { trackEvent } = useTrack();
-
-  const logo = LOGO_OPTIONS[language];
-  const size = useBreakpointValue(
-    { base: "sm", md: "md" },
-    "md",
-  ) as PossibleButtonSize;
-
-  return (
-    <Button
-      leftIcon={<Icon as={logo.icon} fill={logo.fill} />}
-      borderRadius="md"
-      variant="solid"
-      colorScheme="blackAlpha"
-      bg="#1E1E24"
-      borderWidth="1px"
-      size={size}
-      borderColor={
-        language === activeLanguage ? "#0098EE" : "rgba(255, 255, 255, 0.1)"
-      }
-      _hover={{ borderColor: "#0098EE" }}
-      _active={{
-        borderColor: language === activeLanguage ? "#0098EE" : undefined,
-      }}
-      onClick={() => {
-        trackEvent({
-          category: "code-selector",
-          action: "switch-language",
-          label: language,
-        });
-        flushSync(() => {
-          setActiveLanguage(language);
-        });
-      }}
-      {...rest}
-    >
-      {children}
-    </Button>
-  );
-};
-
 export const CodeSelector: React.FC = () => {
   const [activeLanguage, setActiveLanguage] =
-    useState<CodeOptions>("typescript");
-  const { trackEvent } = useTrack();
+    useState<CodeOptions>("javascript");
+  const trackEvent = useTrack();
   return (
     <>
       <SimpleGrid
@@ -172,7 +79,7 @@ export const CodeSelector: React.FC = () => {
         <CodeOptionButton
           setActiveLanguage={setActiveLanguage}
           activeLanguage={activeLanguage}
-          language="typescript"
+          language="javascript"
         >
           JavaScript
         </CodeOptionButton>
@@ -205,9 +112,7 @@ export const CodeSelector: React.FC = () => {
         borderWidth="2px"
         py={4}
         code={codeSnippets[activeLanguage]}
-        language={
-          activeLanguage === "react" ? "jsx" : (activeLanguage as Language)
-        }
+        language={activeLanguage === "react" ? "jsx" : activeLanguage}
       />
 
       <Flex

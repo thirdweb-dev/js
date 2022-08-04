@@ -1,4 +1,4 @@
-import { Box, Flex, LinkBox, LinkOverlay, SimpleGrid } from "@chakra-ui/react";
+import { Flex, LinkBox, LinkOverlay, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { useTrack } from "hooks/analytics/useTrack";
 import { StaticImageData } from "next/image";
@@ -44,7 +44,7 @@ const ExampleItem: React.FC<ExampleItemProps> = ({
   href,
   image,
 }) => {
-  const { trackEvent } = useTrack();
+  const trackEvent = useTrack();
 
   if (!href) {
     return (

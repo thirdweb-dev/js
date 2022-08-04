@@ -20,16 +20,14 @@ import { ContractIdImage } from "components/contract-components/shared/contract-
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
+import { PageId } from "page-id";
+import { ThirdwebNextPage } from "pages/_app";
 import { ReactElement } from "react";
 import { FiArrowLeft, FiCheckCircle, FiExternalLink } from "react-icons/fi";
 import { Card, Heading, LinkButton, Text, TrackedLink } from "tw-components";
 import { pushToPreviousRoute } from "utils/pushToPreviousRoute";
 
-export default function ContractDetailPage() {
-  const { Track } = useTrack({
-    page: "contract-detail",
-  });
-
+const ContractDeployDetailPage: ThirdwebNextPage = () => {
   const router = useRouter();
   const contractId = useSingleQueryParam("contractId");
   const from = useSingleQueryParam("from");
@@ -42,7 +40,7 @@ export default function ContractDetailPage() {
   );
 
   return (
-    <Track>
+    <>
       <Flex direction="column" as="section" gap={4}>
         <Flex align="center" gap={4} justify="space-between" as="header">
           <Flex align="center" gap={2}>
@@ -119,20 +117,24 @@ export default function ContractDetailPage() {
           </Center>
         </Flex>
       </Flex>
-    </Track>
+    </>
   );
-}
+};
 
-ContractDetailPage.getLayout = function getLayout(page: ReactElement) {
+ContractDeployDetailPage.getLayout = function getLayout(page: ReactElement) {
   return <AppLayout>{page}</AppLayout>;
 };
+
+ContractDeployDetailPage.pageId = PageId.DeploySingle;
+
+export default ContractDeployDetailPage;
 
 interface EnabledFeatureProps {
   feature: FeatureWithEnabled;
 }
 
 const EnabledFeature: React.FC<EnabledFeatureProps> = ({ feature }) => {
-  const { trackEvent } = useTrack();
+  const trackEvent = useTrack();
   return (
     <Card
       overflow="hidden"

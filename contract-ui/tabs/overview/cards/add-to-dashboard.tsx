@@ -22,7 +22,7 @@ export const AddToDashboardCard = <
   const contractList = useContractList(activeChainId || -1, address);
   const addToDashboardMutation = useAddContractMutation();
 
-  const { trackEvent } = useTrack();
+  const trackEvent = useTrack();
   const { onSuccess, onError } = useTxNotifications(
     "Added to dashboard",
     "Failed to add to dashboard",

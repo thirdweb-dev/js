@@ -33,7 +33,7 @@ export const AirdropSection: React.FC<IAirdropSection> = ({
   }>({
     defaultValues: { addresses: [] },
   });
-  const { trackEvent } = useTrack();
+  const trackEvent = useTrack();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 

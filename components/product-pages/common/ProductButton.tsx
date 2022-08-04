@@ -14,7 +14,7 @@ export const ProductButton: React.FC<GeneralCtaProps> = ({
   href,
   ...props
 }) => {
-  const { trackEvent } = useTrack();
+  const trackEvent = useTrack();
 
   return (
     <LinkButton

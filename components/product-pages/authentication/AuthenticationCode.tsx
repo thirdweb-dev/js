@@ -1,90 +1,54 @@
-import { ProductButton } from "../common/ProductButton";
-import {
-  Icon,
-  LightMode,
-  SimpleGrid,
-  useBreakpointValue,
-} from "@chakra-ui/react";
-import { ChakraNextImage } from "components/Image";
+import { CodeOptionButton, CodeOptions } from "../common/CodeOptionButton";
+import { LightMode, SimpleGrid } from "@chakra-ui/react";
 import { GeneralCta } from "components/shared/GeneralCta";
-import { useTrack } from "hooks/analytics/useTrack";
-import { Dispatch, SetStateAction, useState } from "react";
-import { flushSync } from "react-dom";
-import { SiGo, SiJavascript, SiPython, SiReact } from "react-icons/si";
-import { Button, ButtonProps, PossibleButtonSize } from "tw-components";
+import { useState } from "react";
+import { CodeBlock } from "tw-components";
 
-const LOGO_OPTIONS = {
-  javascript: {
-    icon: SiJavascript,
-    fill: "yellow",
-  },
-  react: {
-    icon: SiReact,
-    fill: "#61dafb",
-  },
-  python: {
-    icon: SiPython,
-    fill: "#3e7aac",
-  },
-  go: {
-    icon: SiGo,
-    fill: "#50b7e0",
-  },
-} as const;
+//
 
-export type CodeOptions = keyof typeof LOGO_OPTIONS;
+const codeSnippets = {
+  javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-interface CodeOptionButtonProps extends ButtonProps {
-  language: CodeOptions;
-  activeLanguage: CodeOptions;
-  setActiveLanguage: Dispatch<SetStateAction<CodeOptions>>;
-}
-const CodeOptionButton: React.FC<CodeOptionButtonProps> = ({
-  children,
-  language,
-  setActiveLanguage,
-  activeLanguage,
-  ...rest
-}) => {
-  const { trackEvent } = useTrack();
+const sdk = new ThirdwebSDK("goerli");
 
-  const logo = LOGO_OPTIONS[language];
-  const size = useBreakpointValue(
-    { base: "sm", md: "md" },
-    "md",
-  ) as PossibleButtonSize;
+// Login with a single line of code
+const payload = await sdk.auth.login();
 
-  return (
-    <Button
-      leftIcon={<Icon as={logo.icon} fill={logo.fill} />}
-      borderRadius="md"
-      variant="solid"
-      colorScheme="blackAlpha"
-      bg="#1E1E24"
-      borderWidth="1px"
-      size={size}
-      borderColor={
-        language === activeLanguage ? "#0098EE" : "rgba(255, 255, 255, 0.1)"
-      }
-      _hover={{ borderColor: "#0098EE" }}
-      _active={{
-        borderColor: language === activeLanguage ? "#0098EE" : undefined,
-      }}
-      onClick={() => {
-        trackEvent({
-          category: "code-selector",
-          action: "switch-language",
-          label: language,
-        });
-        flushSync(() => {
-          setActiveLanguage(language);
-        });
-      }}
-      {...rest}
-    >
-      {children}
-    </Button>
-  );
+// And verify the address of the logged in wallet
+const address = await sdk.auth.verify(payload);`,
+  react: `import { useSDK } from "@thirdweb-dev/react";
+
+export default function App() {
+ const sdk = useSDK();
+
+ async function login() {
+  // Login with a single line of code
+  const payload = await sdk.auth.login();
+
+  // And verify the address of the logged in wallet
+  const address = await sdk.auth.verify(payload);
+ }
+}`,
+  python: `from thirdweb import ThirdwebSDK
+
+sdk = ThirdwebSDK("goerli")
+
+# Login with a single line of code
+payload = sdk.auth.login();
+
+# And verify the address of the logged in wallet
+address = sdk.auth.verify(payload);`,
+  go: `import "github.com/thirdweb-dev/go-sdk/thirdweb"
+
+func main() {
+  sdk, err := thirdweb.NewThirdwebSDK("goerli", nil)
+
+  // Login with a single line of code
+  payload, err := sdk.Auth.Login()
+
+  // And verify the address of the logged in wallet
+  address, err := sdk.Auth.Verify(payload)
+}`,
 };
 
 export const AuthenticationCode: React.FC = () => {
@@ -128,11 +92,13 @@ export const AuthenticationCode: React.FC = () => {
         </CodeOptionButton>
       </SimpleGrid>
 
-      <ChakraNextImage
-        src={require(`/public/assets/product-pages/authentication/auth-${activeLanguage}.png`)}
-        placeholder="empty"
-        alt=""
-        w={720}
+      <CodeBlock
+        w={{ base: "full", md: "80%" }}
+        borderColor="#4953AF"
+        borderWidth="2px"
+        py={4}
+        code={codeSnippets[activeLanguage]}
+        language={activeLanguage === "react" ? "jsx" : activeLanguage}
       />
 
       <LightMode>

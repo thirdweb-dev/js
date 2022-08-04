@@ -1,16 +1,13 @@
 import { Flex, Link } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { DeployableContractTable } from "components/contract-components/contract-table";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useRouter } from "next/router";
+import { PageId } from "page-id";
+import { ThirdwebNextPage } from "pages/_app";
 import { ReactElement, useMemo } from "react";
 import { Heading, Text } from "tw-components";
 
-export default function ContractsDeployPage() {
-  const { Track } = useTrack({
-    page: "deploy",
-  });
-
+const ContractsDeployPage: ThirdwebNextPage = () => {
   const router = useRouter();
 
   const ipfsHashes = useMemo(() => {
@@ -19,7 +16,7 @@ export default function ContractsDeployPage() {
   }, [router.query]);
 
   return (
-    <Track>
+    <>
       <Flex gap={8} direction="column">
         <Flex gap={2} direction="column">
           <Heading size="title.md">Deploy Contract</Heading>
@@ -38,10 +35,14 @@ export default function ContractsDeployPage() {
 
         <DeployableContractTable contractIds={ipfsHashes} context="deploy" />
       </Flex>
-    </Track>
+    </>
   );
-}
+};
 
 ContractsDeployPage.getLayout = function getLayout(page: ReactElement) {
   return <AppLayout>{page}</AppLayout>;
 };
+
+ContractsDeployPage.pageId = PageId.DeployMultiple;
+
+export default ContractsDeployPage;

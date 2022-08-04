@@ -2,20 +2,17 @@ import { Flex, Link } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { ContractReleaseForm } from "components/contract-components/contract-release-form";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
+import { PageId } from "page-id";
+import { ThirdwebNextPage } from "pages/_app";
 import { ReactElement } from "react";
 import { Heading, Text } from "tw-components";
 
-export default function ContractsPublishPage() {
-  const { Track } = useTrack({
-    page: "publish",
-  });
-
+const ContractsPublishPage: ThirdwebNextPage = () => {
   const contractId = useSingleQueryParam("contractId");
 
   return (
-    <Track>
+    <>
       <Flex gap={8} direction="column">
         <Flex gap={2} direction="column">
           <Heading size="title.md">Create a Release</Heading>
@@ -35,12 +32,16 @@ export default function ContractsPublishPage() {
         </Flex>
         {contractId && <ContractReleaseForm contractId={contractId} />}
       </Flex>
-    </Track>
+    </>
   );
-}
+};
 
 ContractsPublishPage.getLayout = (page: ReactElement) => (
   <AppLayout>
     <PublisherSDKContext>{page}</PublisherSDKContext>
   </AppLayout>
 );
+
+ContractsPublishPage.pageId = PageId.ReleaseSingle;
+
+export default ContractsPublishPage;

@@ -1,4 +1,4 @@
-import { Box, Flex, Stack, useDisclosure } from "@chakra-ui/react";
+import { Box, Fade, Flex, Stack, useDisclosure } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { StaticImageData } from "next/image";
 import { Card, Text, TrackedLink } from "tw-components";
@@ -74,13 +74,16 @@ export const Products: React.FC = () => {
         fontSize="16px"
         cursor="pointer"
         py={3}
+        opacity={isOpen ? 0.8 : 1}
+        transition="opacity 0.1s"
       >
         Products
       </Text>
 
       <Box position="relative">
-        {isOpen && (
+        <Fade in={isOpen}>
           <Card
+            pointerEvents={isOpen ? "all" : "none"}
             p="20px"
             onMouseEnter={onOpen}
             position="absolute"
@@ -103,7 +106,7 @@ export const Products: React.FC = () => {
               </Stack>
             </Flex>
           </Card>
-        )}
+        </Fade>
       </Box>
     </Box>
   );
@@ -122,6 +125,7 @@ const Product: React.FC<IProduct> = ({
       category="topnav"
       label={label}
       textDecor="none !important"
+      isExternal={link.startsWith("http")}
     >
       <Box _hover={{ bg: "whiteAlpha.50" }} p="8px" borderRadius="md">
         <Stack direction="row" align="center" spacing={3}>

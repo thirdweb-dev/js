@@ -9,10 +9,12 @@ import { AppLayout } from "components/app-layouts/app";
 import BuiltinContractForm from "components/contract-components/contract-deploy-form/built-in-contract";
 import { CustomSDKContext } from "contexts/custom-sdk-context";
 import { useSingleQueryParam } from "hooks/useQueryParam";
+import { PageId } from "page-id";
+import { ThirdwebNextPage } from "pages/_app";
 import React, { ReactElement, useEffect, useState } from "react";
 import { Card } from "tw-components";
 
-export default function DeployContractContract() {
+const DeployContractType: ThirdwebNextPage = () => {
   const contractType = useSingleQueryParam("contractType") as
     | ContractType
     | undefined;
@@ -42,8 +44,12 @@ export default function DeployContractContract() {
       </Box>
     </Card>
   );
-}
+};
 
-DeployContractContract.getLayout = (page: ReactElement) => (
+DeployContractType.getLayout = (page: ReactElement) => (
   <AppLayout>{page}</AppLayout>
 );
+
+DeployContractType.pageId = PageId.PreBuiltContractType;
+
+export default DeployContractType;

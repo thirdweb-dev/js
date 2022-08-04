@@ -3,15 +3,17 @@ import { AppLayout } from "components/app-layouts/app";
 import { LinkCard } from "components/link-card";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useRouter } from "next/router";
+import { PageId } from "page-id";
+import { ThirdwebNextPage } from "pages/_app";
 import React, { ReactElement } from "react";
 import { FiChevronLeft } from "react-icons/fi";
 import { Card, Heading } from "tw-components";
 import { pushToPreviousRoute } from "utils/pushToPreviousRoute";
 
-export default function DeployPrebuiltContract() {
+const DeployPrebuiltContract: ThirdwebNextPage = () => {
   const router = useRouter();
 
-  const { trackEvent } = useTrack();
+  const trackEvent = useTrack();
   return (
     <Card px={{ base: 4, md: 10 }} py={{ base: 6, md: 10 }}>
       <Flex direction="column" gap={8}>
@@ -110,8 +112,12 @@ export default function DeployPrebuiltContract() {
       </Flex>
     </Card>
   );
-}
+};
 
 DeployPrebuiltContract.getLayout = (page: ReactElement) => (
   <AppLayout>{page}</AppLayout>
 );
+
+DeployPrebuiltContract.pageId = PageId.PreBuiltContract;
+
+export default DeployPrebuiltContract;

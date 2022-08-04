@@ -46,9 +46,7 @@ interface ContractReleaseFormProps {
 export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
   contractId,
 }) => {
-  const { trackEvent } = useTrack({
-    page: "publish",
-  });
+  const trackEvent = useTrack();
   const {
     reset,
     register,

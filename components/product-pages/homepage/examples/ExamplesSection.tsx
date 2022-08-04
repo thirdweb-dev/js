@@ -4,7 +4,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import { LinkButton } from "tw-components";
 
 export const ExamplesSection = () => {
-  const { trackEvent } = useTrack();
+  const trackEvent = useTrack();
   return (
     <>
       <SimpleGrid

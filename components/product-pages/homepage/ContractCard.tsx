@@ -17,7 +17,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
   urlPath,
   description,
 }) => {
-  const { trackEvent } = useTrack();
+  const trackEvent = useTrack();
   return (
     <Flex
       as={LinkBox}

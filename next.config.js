@@ -70,6 +70,11 @@ const moduleExports = {
         destination: "/contracts/release",
         permanent: false,
       },
+      {
+        source: "/authentication",
+        destination: "/auth",
+        permanent: false,
+      },
     ];
   },
   images: {

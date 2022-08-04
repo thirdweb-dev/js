@@ -6,33 +6,18 @@ import {
   Container,
   Flex,
   Icon,
-  Menu,
-  MenuButton,
-  MenuList,
   Stack,
   useBreakpointValue,
-  useDisclosure,
 } from "@chakra-ui/react";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import { Logo } from "components/logo";
 import React, { useState } from "react";
 import { SiDiscord, SiTwitter, SiYoutube } from "react-icons/si";
-import {
-  LinkButton,
-  MenuItem,
-  Text,
-  TrackedIconButton,
-  TrackedLink,
-} from "tw-components";
+import { LinkButton, TrackedIconButton, TrackedLink } from "tw-components";
 
 export const HomepageTopNav: React.FC<{}> = () => {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [isScrolled, setIsScrolled] = useState(false);
-  const {
-    isOpen: isResourcesOpen,
-    onOpen: onResourcesOpen,
-    onClose: onResourcesClose,
-  } = useDisclosure();
 
   useScrollPosition(
     ({ currPos }) => {

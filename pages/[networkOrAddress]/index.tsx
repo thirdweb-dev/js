@@ -22,12 +22,14 @@ import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
+import { PageId } from "page-id";
+import { ThirdwebNextPage } from "pages/_app";
 import { ReactElement, useEffect } from "react";
 import { IoRefreshSharp } from "react-icons/io5";
 import { Button, LinkButton, Text } from "tw-components";
 import { getSingleQueryValue } from "utils/router";
 
-export default function UserPage() {
+const UserPage: ThirdwebNextPage = () => {
   const wallet = useSingleQueryParam("networkOrAddress");
 
   const ensQuery = ens.useQuery(wallet);
@@ -115,7 +117,7 @@ export default function UserPage() {
       </Flex>
     </Flex>
   );
-}
+};
 
 UserPage.getLayout = function getLayout(page: ReactElement) {
   return (
@@ -124,6 +126,10 @@ UserPage.getLayout = function getLayout(page: ReactElement) {
     </AppLayout>
   );
 };
+
+UserPage.pageId = PageId.Profile;
+
+export default UserPage;
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const queryClient = new QueryClient();

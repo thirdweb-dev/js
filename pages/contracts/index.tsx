@@ -5,15 +5,12 @@ import { DeployableContractTable } from "components/contract-components/contract
 import { usePublishedContractsQuery } from "components/contract-components/hooks";
 import { BuiltinContractMap } from "constants/mappings";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
-import { useTrack } from "hooks/analytics/useTrack";
+import { PageId } from "page-id";
+import { ThirdwebNextPage } from "pages/_app";
 import { ReactElement, useMemo } from "react";
 import { Card, Heading, LinkButton, Text, TrackedLink } from "tw-components";
 
-export default function ContractsHomepage() {
-  const { Track } = useTrack({
-    page: "contracts",
-  });
-
+const Contracts: ThirdwebNextPage = () => {
   const walletAddress = useAddress();
   const releasedContractsQuery = usePublishedContractsQuery(walletAddress);
 
@@ -35,7 +32,7 @@ export default function ContractsHomepage() {
   );
 
   return (
-    <Track>
+    <>
       <Flex gap={8} direction="column">
         <Flex gap={2} direction="column">
           <Heading size="title.md">Contracts</Heading>
@@ -101,12 +98,16 @@ export default function ContractsHomepage() {
           </Card>
         </DarkMode>
       </Flex>
-    </Track>
+    </>
   );
-}
+};
 
-ContractsHomepage.getLayout = (page: ReactElement) => (
+Contracts.getLayout = (page: ReactElement) => (
   <AppLayout>
     <PublisherSDKContext>{page}</PublisherSDKContext>
   </AppLayout>
 );
+
+Contracts.pageId = PageId.Contracts;
+
+export default Contracts;

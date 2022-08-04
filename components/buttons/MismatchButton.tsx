@@ -49,7 +49,7 @@ export const MismatchButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const networksMismatch = useNetworkMismatch();
 
     const { isOpen, onOpen, onClose } = useDisclosure();
-    const { trackEvent } = useTrack();
+    const trackEvent = useTrack();
     const { chainId, getNetworkMetadata } = useWeb3();
     const { isTestnet } = getNetworkMetadata(chainId || 0);
 
@@ -210,7 +210,7 @@ const NoFundsNotice = () => {
   const chainId = useChainId();
   const { getNetworkMetadata } = useWeb3();
   const { symbol, isTestnet } = getNetworkMetadata(chainId || 0);
-  const { trackEvent } = useTrack();
+  const trackEvent = useTrack();
 
   return (
     <Flex direction="column" gap={4}>

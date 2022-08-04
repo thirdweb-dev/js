@@ -33,7 +33,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
   selectedChain,
   onChainSelect,
 }) => {
-  const { trackEvent } = useTrack();
+  const trackEvent = useTrack();
   const publishMetadata = useContractPublishMetadataFromURI(ipfsHash);
   const constructorParams = useConstructorParamsFromABI(
     publishMetadata.data?.abi,

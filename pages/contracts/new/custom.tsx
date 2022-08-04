@@ -17,6 +17,8 @@ import { DeployableContractTable } from "components/contract-components/contract
 import { usePublishedContractsQuery } from "components/contract-components/hooks";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { useRouter } from "next/router";
+import { PageId } from "page-id";
+import { ThirdwebNextPage } from "pages/_app";
 import React, { ReactElement } from "react";
 import { FiChevronLeft } from "react-icons/fi";
 import { IoRefreshSharp } from "react-icons/io5";
@@ -30,7 +32,7 @@ import {
 } from "tw-components";
 import { pushToPreviousRoute } from "utils/pushToPreviousRoute";
 
-export default function DeployCustomContractWrapped() {
+const DeployCustomContract: ThirdwebNextPage = () => {
   const router = useRouter();
 
   const walletAddress = useAddress();
@@ -134,10 +136,14 @@ export default function DeployCustomContractWrapped() {
       </Flex>
     </Card>
   );
-}
+};
 
-DeployCustomContractWrapped.getLayout = (page: ReactElement) => (
+DeployCustomContract.getLayout = (page: ReactElement) => (
   <AppLayout>
     <PublisherSDKContext>{page}</PublisherSDKContext>
   </AppLayout>
 );
+
+DeployCustomContract.pageId = PageId.NewCustomContract;
+
+export default DeployCustomContract;

@@ -63,7 +63,7 @@ export const TrackedLink = React.forwardRef<
   HTMLAnchorElement,
   TrackedLinkProps
 >(({ category, label, ...props }, ref) => {
-  const { trackEvent } = useTrack();
+  const trackEvent = useTrack();
 
   const onClick = useCallback(() => {
     trackEvent({ category, action: "click", label });

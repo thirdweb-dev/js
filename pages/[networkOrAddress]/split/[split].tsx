@@ -17,25 +17,20 @@ import { AppLayout } from "components/app-layouts/app";
 import { DistributeButton } from "components/contract-pages/action-buttons/DistributeButton";
 import { ContractLayout } from "components/contract-pages/contract-layout";
 import { BigNumber, ethers } from "ethers";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
+import { PageId } from "page-id";
+import { ThirdwebNextPage } from "pages/_app";
 import { ReactElement, useMemo } from "react";
 import { Card, Heading, Text } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 
-export default function SplitPage() {
+const SplitPage: ThirdwebNextPage = () => {
   const address = useAddress();
   const splitsAddress = useSingleQueryParam("split");
   const contract = useSplit(splitsAddress);
   const metadata = useSplitContractMetadata(splitsAddress);
   const splitQuery = useSplitData(splitsAddress);
   const balanceQuery = useSplitBalances(splitsAddress);
-
-  const { Track } = useTrack({
-    page: "splits",
-    splits: splitsAddress,
-  });
-
   const shareOfBalancesForConnectedWallet = useMemo(() => {
     const activeRecipient = splitQuery.data?.find((r) => r.address === address);
     if (!activeRecipient || !balanceQuery.data) {
@@ -57,7 +52,7 @@ export default function SplitPage() {
   }, [splitQuery.data, balanceQuery.data, address]);
 
   return (
-    <Track>
+    <>
       <ContractLayout
         contract={contract}
         metadata={metadata}
@@ -139,8 +134,12 @@ export default function SplitPage() {
           </Card>
         </Stack>
       </ContractLayout>
-    </Track>
+    </>
   );
-}
+};
 
 SplitPage.getLayout = (page: ReactElement) => <AppLayout>{page}</AppLayout>;
+
+SplitPage.pageId = PageId.SplitContract;
+
+export default SplitPage;

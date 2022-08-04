@@ -5,13 +5,15 @@ import { LinkCard } from "components/link-card";
 import { FeatureIconMap, TYPE_CONTRACT_MAP } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
+import { PageId } from "page-id";
+import { ThirdwebNextPage } from "pages/_app";
 import React, { ReactElement } from "react";
 import { FiChevronLeft } from "react-icons/fi";
 import { Card, Heading, LinkButton } from "tw-components";
 
-export default function DeployContractType() {
+const DeployContractCategory: ThirdwebNextPage = () => {
   const type = useSingleQueryParam("type");
-  const { trackEvent } = useTrack();
+  const trackEvent = useTrack();
 
   if (!type || !(type in TYPE_CONTRACT_MAP)) {
     return <div>invalid type</div>;
@@ -65,8 +67,12 @@ export default function DeployContractType() {
       </Flex>
     </Card>
   );
-}
+};
 
-DeployContractType.getLayout = (page: ReactElement) => (
+DeployContractCategory.getLayout = (page: ReactElement) => (
   <AppLayout>{page}</AppLayout>
 );
+
+DeployContractCategory.pageId = PageId.PreBuiltContractCategory;
+
+export default DeployContractCategory;

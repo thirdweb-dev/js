@@ -10,14 +10,19 @@ import {
 import { DashboardThirdwebProvider } from "components/app-layouts/providers";
 import { ErrorProvider } from "contexts/error-handler";
 import { BigNumber } from "ethers";
-import flat from "flat";
-import { useTrack } from "hooks/analytics/useTrack";
 import { NextPage } from "next";
 import { DefaultSeo } from "next-seo";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
+import { PageId } from "page-id";
 import posthog from "posthog-js";
-import React, { ReactElement, ReactNode, useEffect, useState } from "react";
+import React, {
+  ReactElement,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
 import { isBrowser } from "utils/isBrowser";
 
@@ -40,12 +45,13 @@ export function bigNumberReplacer(_key: string, value: any) {
 
 const fontSizeCssVars = generateBreakpointTypographyCssVars();
 
-type NextPageWithLayout = NextPage & {
+export type ThirdwebNextPage = NextPage<any> & {
   getLayout?: (page: ReactElement, pageProps?: any) => ReactNode;
+  pageId: PageId | ((pageProps: any) => PageId);
 };
 
 type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout;
+  Component: ThirdwebNextPage;
 };
 
 const persister: Persister = createSyncStoragePersister({
@@ -77,35 +83,30 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
     posthog.init("phc_hKK4bo8cHZrKuAVXfXGpfNSLSJuucUnguAgt2j6dgSV", {
       api_host: "https://a.thirdweb.com",
       autocapture: true,
+      debug: false,
+      capture_pageview: false,
     });
-
-    // Track page views
-    const handleRouteChange = () => {
-      posthog.capture("$pageview");
-    };
-    router.events.on("routeChangeComplete", handleRouteChange);
-
-    return () => {
-      router.events.off("routeChangeComplete", handleRouteChange);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // register the git commit sha on all subsequent events
+    posthog.register({
+      tw_dashboard_version: process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA,
+    });
   }, []);
-  const { Track } = useTrack(
-    { page: "root" },
-    {
-      dispatch: (data) => {
-        const { category, action, label, ...restData } = data;
-        const catActLab = label
-          ? `${category}.${action}.${label}`
-          : `${category}.${action}`;
-        if (process.env.NODE_ENV === "development") {
-          console.debug(`[PH.capture]:${catActLab}`, restData);
-        }
-
-        posthog.capture(catActLab, flat(restData));
-      },
-    },
-  );
+  const pageId =
+    typeof Component.pageId === "function"
+      ? Component.pageId(pageProps)
+      : Component.pageId;
+  const prevPageId = useRef<string>();
+  useEffect(() => {
+    // this catches the case where the the hook is called twice on the same page
+    if (pageId === prevPageId.current) {
+      return;
+    }
+    posthog.register({ page_id: pageId });
+    posthog.capture("$pageview");
+    return () => {
+      prevPageId.current = pageId;
+    };
+  }, [pageId]);
 
   const getLayout = Component.getLayout ?? ((page) => page);
   return (
@@ -114,63 +115,61 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
       persistOptions={{ persister }}
     >
       <Hydrate state={pageProps.dehydratedState}>
-        <Track>
-          <Global
-            styles={css`
-              #walletconnect-wrapper {
-                color: #000;
-              }
-              .walletconnect-search__input::placeholder {
-                color: inherit;
-                opacity: 0.7;
-              }
-              ${fontSizeCssVars}
-            `}
-          />
-          <DefaultSeo
-            defaultTitle="Web3 SDKs for developers ⸱ No-code for NFT artists | thirdweb"
-            titleTemplate="%s | thirdweb"
-            description="Build web3 apps easily. Implement web3 features with powerful SDKs for developers. Drop NFTs with no code. — Ethereum, Polygon, Avalanche, & more."
-            additionalLinkTags={[
+        <Global
+          styles={css`
+            #walletconnect-wrapper {
+              color: #000;
+            }
+            .walletconnect-search__input::placeholder {
+              color: inherit;
+              opacity: 0.7;
+            }
+            ${fontSizeCssVars}
+          `}
+        />
+        <DefaultSeo
+          defaultTitle="Web3 SDKs for developers ⸱ No-code for NFT artists | thirdweb"
+          titleTemplate="%s | thirdweb"
+          description="Build web3 apps easily. Implement web3 features with powerful SDKs for developers. Drop NFTs with no code. — Ethereum, Polygon, Avalanche, & more."
+          additionalLinkTags={[
+            {
+              rel: "icon",
+              href: "/favicon.ico",
+            },
+          ]}
+          openGraph={{
+            title:
+              "Web3 SDKs for developers ⸱ No-code for NFT artists | thirdweb",
+            description:
+              "Build web3 apps easily. Implement web3 features with powerful SDKs for developers. Drop NFTs with no code. — Ethereum, Polygon, Avalanche, & more.",
+            type: "website",
+            locale: "en_US",
+            url: "https://thirdweb.com",
+            site_name: "thirdweb",
+            images: [
               {
-                rel: "icon",
-                href: "/favicon.ico",
+                url: "https://thirdweb.com/thirdweb.png",
+                width: 1200,
+                height: 650,
+                alt: "thirdweb",
               },
-            ]}
-            openGraph={{
-              title:
-                "Web3 SDKs for developers ⸱ No-code for NFT artists | thirdweb",
-              description:
-                "Build web3 apps easily. Implement web3 features with powerful SDKs for developers. Drop NFTs with no code. — Ethereum, Polygon, Avalanche, & more.",
-              type: "website",
-              locale: "en_US",
-              url: "https://thirdweb.com",
-              site_name: "thirdweb",
-              images: [
-                {
-                  url: "https://thirdweb.com/thirdweb.png",
-                  width: 1200,
-                  height: 650,
-                  alt: "thirdweb",
-                },
-              ],
-            }}
-            twitter={{
-              handle: "@thirdweb_",
-              site: "@thirdweb_",
-              cardType: "summary_large_image",
-            }}
-            canonical={`https://thirdweb.com${router.asPath}`}
-          />
+            ],
+          }}
+          twitter={{
+            handle: "@thirdweb_",
+            site: "@thirdweb_",
+            cardType: "summary_large_image",
+          }}
+          canonical={`https://thirdweb.com${router.asPath}`}
+        />
 
-          <ChakraProvider theme={chakraTheme}>
-            <ErrorProvider>
-              <DashboardThirdwebProvider queryClient={queryClient}>
-                {getLayout(<Component {...pageProps} />, pageProps)}
-              </DashboardThirdwebProvider>
-            </ErrorProvider>
-          </ChakraProvider>
-        </Track>
+        <ChakraProvider theme={chakraTheme}>
+          <ErrorProvider>
+            <DashboardThirdwebProvider queryClient={queryClient}>
+              {getLayout(<Component {...pageProps} />, pageProps)}
+            </DashboardThirdwebProvider>
+          </ErrorProvider>
+        </ChakraProvider>
       </Hydrate>
     </PersistQueryClientProvider>
   );

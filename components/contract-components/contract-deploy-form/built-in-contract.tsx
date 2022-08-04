@@ -221,7 +221,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
     "Failed to deploy contract",
   );
 
-  const { trackEvent } = useTrack();
+  const trackEvent = useTrack();
   const router = useRouter();
 
   const audit = BuiltinContractMap[contractType]?.audit;

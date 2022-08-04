@@ -1,5 +1,6 @@
+import flat from "flat";
+import posthog from "posthog-js";
 import { useCallback } from "react";
-import { Options, useTracking } from "react-tracking";
 
 type TExtendedTrackParams = {
   category: string;
@@ -8,23 +9,16 @@ type TExtendedTrackParams = {
   [key: string]: any;
 };
 
-interface IOptions<TOptions extends TExtendedTrackParams>
-  extends Options<TOptions> {
-  dispatch: (data: TExtendedTrackParams) => any;
-}
+export function useTrack() {
+  return useCallback((trackingData: TExtendedTrackParams) => {
+    const { category, action, label, ...restData } = trackingData;
+    const catActLab = label
+      ? `${category}.${action}.${label}`
+      : `${category}.${action}`;
+    if (process.env.NODE_ENV === "development") {
+      console.debug(`[PH.capture]:${catActLab}`, restData);
+    }
 
-export function useTrack<TTrackingParams extends {}>(
-  params?: TTrackingParams,
-  options?: IOptions<any>,
-) {
-  const { Track, trackEvent } = useTracking(params, options);
-
-  const trackEventWithCategoryActionLabel = useCallback(
-    (trackParams: TExtendedTrackParams) => {
-      trackEvent(trackParams as any);
-    },
-    [trackEvent],
-  );
-
-  return { Track, trackEvent: trackEventWithCategoryActionLabel };
+    posthog.capture(catActLab, flat(restData));
+  }, []);
 }

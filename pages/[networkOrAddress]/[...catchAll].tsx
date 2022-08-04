@@ -18,6 +18,8 @@ import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { isAddress } from "ethers/lib/utils";
 import { isEnsName } from "lib/ens";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import { PageId } from "page-id";
+import { ThirdwebNextPage } from "pages/_app";
 import { ReactElement } from "react";
 import {
   SupportedNetworkToChainIdMap,
@@ -25,7 +27,9 @@ import {
 } from "utils/network";
 import { getSingleQueryValue } from "utils/router";
 
-function CatchAllPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
+const CatchAllPage: ThirdwebNextPage = (
+  props: InferGetStaticPropsType<typeof getStaticProps>,
+) => {
   if (props.pageType === "contract") {
     return (
       <CustomContractPage
@@ -46,7 +50,7 @@ function CatchAllPage(props: InferGetStaticPropsType<typeof getStaticProps>) {
     );
   }
   return null;
-}
+};
 
 CatchAllPage.getLayout = function (
   page: ReactElement,
@@ -59,6 +63,18 @@ CatchAllPage.getLayout = function (
       {page}
     </AppLayout>
   );
+};
+
+CatchAllPage.pageId = (
+  props: InferGetStaticPropsType<typeof getStaticProps>,
+) => {
+  if (props.pageType === "contract") {
+    return PageId.DeployedContract;
+  }
+  if (props.pageType === "release") {
+    return PageId.ReleasedContract;
+  }
+  return PageId.Unknown;
 };
 
 export default CatchAllPage;

@@ -64,7 +64,7 @@ export type ExampleCategory = keyof typeof EXAMPLES_MAP;
 export const ExampleItem: React.FC<{ category: ExampleCategory }> = ({
   category,
 }) => {
-  const { trackEvent } = useTrack();
+  const trackEvent = useTrack();
   const { title, href, svg: RenderSVG } = EXAMPLES_MAP[category];
   return (
     <Flex as={LinkBox} role="group" flexDir="column" gap={6} flexGrow={0}>

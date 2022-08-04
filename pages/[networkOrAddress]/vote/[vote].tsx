@@ -16,12 +16,13 @@ import {
 import { ContractLayout } from "components/contract-pages/contract-layout";
 import { Proposal } from "components/contract-pages/vote/Proposal";
 import { ContractPageNotice } from "components/notices/ContractPageNotice";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
+import { PageId } from "page-id";
+import { ThirdwebNextPage } from "pages/_app";
 import React, { ReactElement, useMemo } from "react";
 import { Card, Text } from "tw-components";
 
-export default function VotePage() {
+const VotePage: ThirdwebNextPage = () => {
   const { address } = useWeb3();
   const voteAddress = useSingleQueryParam("vote");
   const contract = useVote(voteAddress);
@@ -41,11 +42,6 @@ export default function VotePage() {
   );
   const { mutate: delegate } = useDelegateMutation(contract?.getAddress());
 
-  const { Track } = useTrack({
-    page: "vote",
-    token: voteAddress,
-  });
-
   const proposals = useMemo(() => {
     if (!data.data || data.data.length < 1) {
       return [];
@@ -58,7 +54,7 @@ export default function VotePage() {
   }, [data]);
 
   return (
-    <Track>
+    <>
       <ContractLayout
         contract={contract}
         metadata={metadata}
@@ -113,8 +109,12 @@ export default function VotePage() {
           ))}
         </Stack>
       </ContractLayout>
-    </Track>
+    </>
   );
-}
+};
 
 VotePage.getLayout = (page: ReactElement) => <AppLayout>{page}</AppLayout>;
+
+VotePage.pageId = PageId.VoteContract;
+
+export default VotePage;

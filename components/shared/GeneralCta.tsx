@@ -15,7 +15,7 @@ export const GeneralCta: React.FC<GeneralCtaProps> = ({
   href = "/dashboard",
   ...props
 }) => {
-  const { trackEvent } = useTrack();
+  const trackEvent = useTrack();
 
   return (
     <LinkButton

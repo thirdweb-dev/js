@@ -15,26 +15,21 @@ import { AppLayout } from "components/app-layouts/app";
 import { ContractLayout } from "components/contract-pages/contract-layout";
 import { TransferModal } from "components/currency/TransferModal";
 import { BigNumber } from "ethers";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
+import { PageId } from "page-id";
+import { ThirdwebNextPage } from "pages/_app";
 import React, { ReactElement } from "react";
 import { FiSend } from "react-icons/fi";
 import { Button, Card } from "tw-components";
 
-export default function TokenDropPage() {
+const TokenDropPage: ThirdwebNextPage = () => {
   const tokenDropAddress = useSingleQueryParam("token-drop");
   const contract = useTokenDrop(tokenDropAddress);
   const metadata = useTokenDropContractMetadata(tokenDropAddress);
   const data = useTokenDropData(tokenDropAddress);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const { Track } = useTrack({
-    page: "tokenDrop",
-    tokenDrop: tokenDropAddress,
-  });
-
   return (
-    <Track>
+    <>
       <TransferModal isOpen={isOpen} onClose={onClose} />
       <ContractLayout
         contract={contract}
@@ -83,8 +78,12 @@ export default function TokenDropPage() {
           </Stack>
         </Stack>
       </ContractLayout>
-    </Track>
+    </>
   );
-}
+};
 
 TokenDropPage.getLayout = (page: ReactElement) => <AppLayout>{page}</AppLayout>;
+
+TokenDropPage.pageId = PageId.TokenDropContract;
+
+export default TokenDropPage;

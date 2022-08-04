@@ -4,42 +4,41 @@ import { AppLayout } from "components/app-layouts/app";
 import { MintButton } from "components/contract-pages/action-buttons/MintButton";
 import { ContractLayout } from "components/contract-pages/contract-layout";
 import { ContractItemsTable } from "components/contract-pages/table";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
+import { PageId } from "page-id";
+import { ThirdwebNextPage } from "pages/_app";
 import React, { ReactElement } from "react";
 
-export default function NFTCollectionPage() {
+const NFTCollectionPage: ThirdwebNextPage = () => {
   const nftCollectionAddress = useSingleQueryParam("nft-collection");
   const contract = useNFTCollection(nftCollectionAddress);
   const metadata = useNFTContractMetadata(nftCollectionAddress);
 
-  const { Track } = useTrack({
-    page: "nft-collection",
-    nftCollection: nftCollectionAddress,
-  });
   return (
-    <Track>
-      <ContractLayout
+    <ContractLayout
+      contract={contract}
+      metadata={metadata}
+      primaryAction={<MintButton colorScheme="primary" contract={contract} />}
+      emptyState={{
+        title:
+          "You have not minted any NFTs yet, let's mint one to get you started!",
+      }}
+    >
+      <ContractItemsTable
         contract={contract}
-        metadata={metadata}
-        primaryAction={<MintButton colorScheme="primary" contract={contract} />}
         emptyState={{
           title:
             "You have not minted any NFTs yet, let's mint one to get you started!",
         }}
-      >
-        <ContractItemsTable
-          contract={contract}
-          emptyState={{
-            title:
-              "You have not minted any NFTs yet, let's mint one to get you started!",
-          }}
-        />
-      </ContractLayout>
-    </Track>
+      />
+    </ContractLayout>
   );
-}
+};
 
 NFTCollectionPage.getLayout = (page: ReactElement) => (
   <AppLayout>{page}</AppLayout>
 );
+
+NFTCollectionPage.pageId = PageId.NftCollectionContract;
+
+export default NFTCollectionPage;

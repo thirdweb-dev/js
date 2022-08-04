@@ -7,13 +7,14 @@ import { DropBatchUpload } from "components/batch-upload/DropBatchUpload";
 import { MintButton } from "components/contract-pages/action-buttons/MintButton";
 import { ContractLayout } from "components/contract-pages/contract-layout";
 import { ContractItemsTable } from "components/contract-pages/table";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
+import { PageId } from "page-id";
+import { ThirdwebNextPage } from "pages/_app";
 import React, { ReactElement } from "react";
 import { RiCheckboxMultipleBlankLine } from "react-icons/ri";
 import { Button } from "tw-components";
 
-export default function EditionDropPage() {
+const EditionDropPage: ThirdwebNextPage = () => {
   const {
     isOpen: isBatchOpen,
     onOpen: onBatchOpen,
@@ -23,13 +24,9 @@ export default function EditionDropPage() {
   const editionDropAddress = useSingleQueryParam("edition-drop");
   const contract = useEditionDrop(editionDropAddress);
   const metadata = useEditionDropContractMetadata(editionDropAddress);
-  const { Track } = useTrack({
-    page: "bundle-drop",
-    drop: editionDropAddress,
-  });
 
   return (
-    <Track>
+    <>
       <DropBatchUpload
         isOpen={isBatchOpen}
         onClose={onBatchClose}
@@ -65,10 +62,14 @@ export default function EditionDropPage() {
           }}
         />
       </ContractLayout>
-    </Track>
+    </>
   );
-}
+};
 
 EditionDropPage.getLayout = (page: ReactElement) => (
   <AppLayout>{page}</AppLayout>
 );
+
+EditionDropPage.pageId = PageId.EditionDropContract;
+
+export default EditionDropPage;

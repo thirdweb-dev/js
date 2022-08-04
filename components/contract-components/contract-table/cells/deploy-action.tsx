@@ -21,7 +21,7 @@ export const ContractDeployActionCell: React.FC<
   const ensQuery = ens.useQuery(address);
   const wallet = useSingleQueryParam("networkOrAddress");
 
-  const { trackEvent } = useTrack();
+  const trackEvent = useTrack();
 
   const audit =
     BuiltinContractMap[value as keyof typeof BuiltinContractMap]?.audit;

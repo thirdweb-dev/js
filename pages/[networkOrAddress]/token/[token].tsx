@@ -13,26 +13,21 @@ import { MintButton } from "components/contract-pages/action-buttons/MintButton"
 import { ContractLayout } from "components/contract-pages/contract-layout";
 import { TransferModal } from "components/currency/TransferModal";
 import { BigNumber } from "ethers";
-import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
+import { PageId } from "page-id";
+import { ThirdwebNextPage } from "pages/_app";
 import React, { ReactElement } from "react";
 import { FiSend } from "react-icons/fi";
 import { Button, Card } from "tw-components";
 
-export default function TokenPage() {
+const TokenPage: ThirdwebNextPage = () => {
   const tokenAddress = useSingleQueryParam("token");
   const contract = useToken(tokenAddress);
   const metadata = useTokenContractMetadata(tokenAddress);
   const data = useTokenData(tokenAddress);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const { Track } = useTrack({
-    page: "token",
-    token: tokenAddress,
-  });
-
   return (
-    <Track>
+    <>
       <TransferModal isOpen={isOpen} onClose={onClose} />
       <ContractLayout
         contract={contract}
@@ -82,8 +77,11 @@ export default function TokenPage() {
           </Stack>
         </Stack>
       </ContractLayout>
-    </Track>
+    </>
   );
-}
+};
 
 TokenPage.getLayout = (page: ReactElement) => <AppLayout>{page}</AppLayout>;
+TokenPage.pageId = PageId.TokenContract;
+
+export default TokenPage;
