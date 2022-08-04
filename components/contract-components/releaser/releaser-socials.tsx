@@ -1,5 +1,5 @@
 import { Icon } from "@chakra-ui/icons";
-import { Flex } from "@chakra-ui/react";
+import { ButtonGroup } from "@chakra-ui/react";
 import { ProfileMetadata } from "@thirdweb-dev/sdk";
 import { FiGlobe } from "react-icons/fi";
 import {
@@ -21,7 +21,7 @@ interface ReleaserSocialsProps {
 export const ReleaserSocials: React.FC<ReleaserSocialsProps> = ({
   releaserProfile,
 }) => (
-  <Flex>
+  <ButtonGroup size="sm" spacing={0}>
     {releaserProfile.twitter && (
       <TrackedIconButton
         as={LinkButton}
@@ -30,7 +30,7 @@ export const ReleaserSocials: React.FC<ReleaserSocialsProps> = ({
         href={releaserProfile.twitter}
         bg="transparent"
         aria-label="twitter"
-        icon={<Icon boxSize={5} as={SiTwitter} />}
+        icon={<Icon as={SiTwitter} />}
         category="releaser-header"
         label="twitter"
       />
@@ -43,7 +43,7 @@ export const ReleaserSocials: React.FC<ReleaserSocialsProps> = ({
         href={releaserProfile.discord}
         bg="transparent"
         aria-label="discord"
-        icon={<Icon boxSize={5} as={SiDiscord} />}
+        icon={<Icon as={SiDiscord} />}
         category="releaser-header"
         label="discord"
       />
@@ -56,7 +56,7 @@ export const ReleaserSocials: React.FC<ReleaserSocialsProps> = ({
         href={releaserProfile.github}
         bg="transparent"
         aria-label="github"
-        icon={<Icon boxSize={5} as={SiGithub} />}
+        icon={<Icon as={SiGithub} />}
         category="releaser-header"
         label="github"
       />
@@ -69,11 +69,12 @@ export const ReleaserSocials: React.FC<ReleaserSocialsProps> = ({
         href={releaserProfile.website}
         bg="transparent"
         aria-label="website"
-        icon={<Icon boxSize={5} as={FiGlobe} />}
+        icon={<Icon as={FiGlobe} />}
         category="releaser-header"
         label="website"
       />
     )}
+
     {releaserProfile.medium && (
       <TrackedIconButton
         as={LinkButton}
@@ -82,7 +83,7 @@ export const ReleaserSocials: React.FC<ReleaserSocialsProps> = ({
         href={releaserProfile.medium}
         bg="transparent"
         aria-label="medium"
-        icon={<Icon boxSize={5} as={SiMedium} />}
+        icon={<Icon as={SiMedium} />}
         category="releaser-header"
         label="medium"
       />
@@ -95,7 +96,7 @@ export const ReleaserSocials: React.FC<ReleaserSocialsProps> = ({
         href={releaserProfile.telegram}
         bg="transparent"
         aria-label="telegram"
-        icon={<Icon boxSize={5} as={SiTelegram} />}
+        icon={<Icon as={SiTelegram} />}
         category="releaser-header"
         label="telegram"
       />
@@ -108,7 +109,7 @@ export const ReleaserSocials: React.FC<ReleaserSocialsProps> = ({
         href={releaserProfile.facebook}
         bg="transparent"
         aria-label="facebook"
-        icon={<Icon boxSize={5} as={SiFacebook} />}
+        icon={<Icon as={SiFacebook} />}
         category="releaser-header"
         label="facebook"
       />
@@ -121,7 +122,7 @@ export const ReleaserSocials: React.FC<ReleaserSocialsProps> = ({
         href={releaserProfile.reddit}
         bg="transparent"
         aria-label="reddit"
-        icon={<Icon boxSize={5} as={SiReddit} />}
+        icon={<Icon as={SiReddit} />}
         category="releaser-header"
         label="reddit"
       />
@@ -134,10 +135,10 @@ export const ReleaserSocials: React.FC<ReleaserSocialsProps> = ({
         href={releaserProfile.linkedin}
         bg="transparent"
         aria-label="linkedin"
-        icon={<Icon boxSize={5} as={SiLinkedin} />}
+        icon={<Icon as={SiLinkedin} />}
         category="releaser-header"
         label="linkedin"
       />
     )}
-  </Flex>
+  </ButtonGroup>
 );

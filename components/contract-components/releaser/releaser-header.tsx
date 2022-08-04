@@ -36,8 +36,7 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
         <Flex gap={4} alignItems="center">
           <Skeleton isLoaded={releaserProfile.isSuccess}>
             <MaskedAvatar
-              boxSize={12}
-              mt={1}
+              boxSize={14}
               src={
                 releaserProfile.data?.avatar ||
                 `https://source.boringavatars.com/marble/120/${
