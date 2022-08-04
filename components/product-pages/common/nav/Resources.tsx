@@ -3,7 +3,7 @@ import { ChakraNextImage } from "components/Image";
 import { StaticImageData } from "next/image";
 import { Card, Text, TrackedLink } from "tw-components";
 
-interface IProduct {
+interface IResource {
   name: string;
   label: string;
   description: string;
@@ -11,59 +11,31 @@ interface IProduct {
   icon: StaticImageData;
 }
 
-export const PRODUCTS: IProduct[] = [
+export const RESOURCES: IResource[] = [
   {
-    name: "Web3 SDK",
-    label: "web3-sdk",
-    description: "Integrate web3 into your apps",
-    link: "https://portal.thirdweb.com/web3-sdk",
-    icon: require("public/assets/tw-icons/general.png"),
-  },
-  {
-    name: "Pre-built Contracts",
-    label: "pre-built-contracts",
-    description: "Pre-built and audited contracts",
-    link: "https://portal.thirdweb.com/pre-built-contracts",
+    name: "Docs",
+    label: "docs",
+    description: "Complete thirdweb documentation",
+    link: "https://portal.thirdweb.com",
     icon: require("public/assets/tw-icons/pack.png"),
   },
   {
-    name: "Contract Extensions",
-    label: "contract-extensions",
-    description: "Build and extend smart contracts",
-    link: "https://portal.thirdweb.com/contracts-sdk",
+    name: "Guides",
+    label: "guides",
+    description: "Learn how to build with thirdweb",
+    link: "https://portal.thirdweb.com/guides",
     icon: require("public/assets/tw-icons/edition.png"),
   },
   {
-    name: "Dashboard",
-    label: "dashboard",
-    description: "Easily manage your contracts",
-    link: "/dashboard",
-    icon: require("public/assets/tw-icons/data.png"),
-  },
-  {
-    name: "Auth",
-    label: "auth",
-    description: "Simple web3 login",
-    link: "/auth",
-    icon: require("public/assets/tw-icons/access-nft.png"),
-  },
-  {
-    name: "Release",
-    label: "release",
-    description: "Publish your contract on-chain",
-    link: "https://portal.thirdweb.com/release",
-    icon: require("public/assets/tw-icons/marketplace.png"),
-  },
-  {
-    name: "Deploy",
-    label: "deploy",
-    description: "Seamless contract deployment",
-    link: "https://portal.thirdweb.com/deploy",
-    icon: require("public/assets/tw-icons/dynamic-nft.png"),
+    name: "Blog",
+    label: "blog",
+    description: "Our latest news and updates",
+    link: "https://blog.thirdweb.com",
+    icon: require("public/assets/tw-icons/datastore.png"),
   },
 ];
 
-export const Products: React.FC = () => {
+export const Resources: React.FC = () => {
   const { onOpen, isOpen, onClose } = useDisclosure();
 
   return (
@@ -75,7 +47,7 @@ export const Products: React.FC = () => {
         cursor="pointer"
         py={3}
       >
-        Products
+        Resources
       </Text>
 
       <Box position="relative">
@@ -85,20 +57,15 @@ export const Products: React.FC = () => {
             onMouseEnter={onOpen}
             position="absolute"
             top={0}
-            left="-280px"
+            left="-124px"
             borderColor="whiteAlpha.100"
             bg="black"
             borderWidth="2px"
           >
             <Flex>
               <Stack width="300px">
-                {PRODUCTS.slice(0, 4).map((product, id) => (
-                  <Product key={id} {...product} />
-                ))}
-              </Stack>
-              <Stack width="300px">
-                {PRODUCTS.slice(4, 8).map((product, id) => (
-                  <Product key={id} {...product} />
+                {RESOURCES.map((resource, id) => (
+                  <Resource key={id} {...resource} />
                 ))}
               </Stack>
             </Flex>
@@ -109,7 +76,7 @@ export const Products: React.FC = () => {
   );
 };
 
-const Product: React.FC<IProduct> = ({
+const Resource: React.FC<IResource> = ({
   name,
   description,
   label,

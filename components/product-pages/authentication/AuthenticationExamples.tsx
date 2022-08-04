@@ -1,11 +1,7 @@
-import {
-  DAOs,
-  Marketplaces,
-  NFTDrops,
-  TokenGated,
-} from "../homepage/examples/example-svgs";
-import { Flex, LinkBox, LinkOverlay, SimpleGrid } from "@chakra-ui/react";
+import { Box, Flex, LinkBox, LinkOverlay, SimpleGrid } from "@chakra-ui/react";
+import { ChakraNextImage } from "components/Image";
 import { useTrack } from "hooks/analytics/useTrack";
+import { StaticImageData } from "next/image";
 import { Badge, Heading } from "tw-components";
 
 const EXAMPLES = [
@@ -13,25 +9,25 @@ const EXAMPLES = [
     title: "Sign-in With Wallet",
     label: "sign-in-with-wallet",
     href: "https://github.com/thirdweb-example/login-with-wallet",
-    svg: NFTDrops,
+    image: require("/public/assets/product-pages/authentication/login-with-wallet.png"),
   },
   {
     title: "Stripe Subscriptions For Wallets",
     label: "stripe-subscriptions-for-wallets",
     href: "https://github.com/thirdweb-example/thirdweb-stripe",
-    svg: Marketplaces,
+    image: require("/public/assets/product-pages/authentication/stripe-subscriptions.png"),
   },
   {
     title: "Link Existing Accounts to Wallets",
     label: "link-existing-accounts-to-wallets",
     href: "",
-    svg: TokenGated,
+    image: require("/public/assets/product-pages/authentication/link-accounts.png"),
   },
   {
     title: "Authenticate With Discord Bot",
     label: "authenticate-with-discord-bot",
     href: "",
-    svg: DAOs,
+    image: require("/public/assets/product-pages/authentication/discord-authentication.png"),
   },
 ];
 
@@ -39,28 +35,34 @@ interface ExampleItemProps {
   title: string;
   label: string;
   href: string;
-  svg: React.FC;
+  image: StaticImageData;
 }
 
 const ExampleItem: React.FC<ExampleItemProps> = ({
   title,
   label,
   href,
-  svg: RenderSVG,
+  image,
 }) => {
   const { trackEvent } = useTrack();
 
   if (!href) {
     return (
-      <Flex flexDir="column" position="relative" gap={4} flexGrow={0}>
-        <RenderSVG />
+      <Flex
+        flexDir="column"
+        position="relative"
+        gap={4}
+        flexGrow={0}
+        mt={{ base: "36px", md: 0 }}
+      >
+        <ChakraNextImage alt={label} src={image} />
         <Badge
           alignSelf="center"
           borderRadius="md"
           position="absolute"
           top="-36px"
         >
-          Example Coming Soon
+          Coming Soon
         </Badge>
         <Heading textAlign="center" size="subtitle.md" maxW="100%">
           {title}
@@ -71,7 +73,14 @@ const ExampleItem: React.FC<ExampleItemProps> = ({
 
   return (
     <Flex as={LinkBox} role="group" flexDir="column" gap={4} flexGrow={0}>
-      <RenderSVG />
+      <ChakraNextImage
+        alt={label}
+        src={image}
+        borderRadius="21px"
+        _groupHover={{
+          border: "1px solid #C5D8FF",
+        }}
+      />
       <LinkOverlay
         href={href}
         isExternal

@@ -21,7 +21,7 @@ export const MobileMenu: React.FC<IconButtonProps> = (props) => {
         variant="outline"
       />
       <MenuList bgColor="black" color="white">
-        <MenuGroup title={<>Products</>}>
+        <MenuGroup title={<>Products</>} ml="12px">
           {PRODUCTS.map((product, id) => (
             <MenuItem
               key={id}
@@ -36,9 +36,9 @@ export const MobileMenu: React.FC<IconButtonProps> = (props) => {
           ))}
         </MenuGroup>
 
-        <Divider />
+        <Divider mt={2} opacity="0.3" />
 
-        <MenuGroup title={<>Resources</>}>
+        <MenuGroup title={<>Resources</>} ml="12px">
           <MenuItem
             as={TrackedLink}
             href="https://portal.thirdweb.com"

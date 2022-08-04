@@ -1,5 +1,6 @@
 import { MobileMenu } from "./nav/MobileMenu";
 import { Products } from "./nav/Products";
+import { Resources } from "./nav/Resources";
 import {
   Box,
   Container,
@@ -82,55 +83,7 @@ export const HomepageTopNav: React.FC<{}> = () => {
             as="nav"
           >
             <Products />
-
-            <Menu isOpen={isResourcesOpen} onClose={onResourcesClose}>
-              <MenuButton
-                onMouseEnter={onResourcesOpen}
-                onMouseLeave={onResourcesClose}
-                py="12px"
-              >
-                <Text color="white" fontWeight="bold" fontSize="16px">
-                  Resources
-                </Text>
-              </MenuButton>
-              <MenuList
-                onMouseEnter={onResourcesOpen}
-                onMouseLeave={onResourcesClose}
-                mt="-12px"
-                bgColor="black"
-                color="white"
-                borderColor="rgba(255, 255, 255, 0.1)"
-                overflow="hidden"
-              >
-                <MenuItem
-                  as={TrackedLink}
-                  href="https://portal.thirdweb.com"
-                  category="topnav"
-                  label="docs"
-                  target="_blank"
-                >
-                  Docs
-                </MenuItem>
-                <MenuItem
-                  as={TrackedLink}
-                  href="https://portal.thirdweb.com/guides"
-                  category="topnav"
-                  label="guides"
-                  target="_blank"
-                >
-                  Guides
-                </MenuItem>
-                <MenuItem
-                  as={TrackedLink}
-                  href="https://blog.thirdweb.com"
-                  category="topnav"
-                  label="blog"
-                  target="_blank"
-                >
-                  Blog
-                </MenuItem>
-              </MenuList>
-            </Menu>
+            <Resources />
           </Stack>
 
           <Flex

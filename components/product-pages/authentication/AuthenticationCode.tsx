@@ -1,3 +1,4 @@
+import { ProductButton } from "../common/ProductButton";
 import {
   Icon,
   LightMode,
@@ -136,12 +137,13 @@ export const AuthenticationCode: React.FC = () => {
 
       <LightMode>
         <GeneralCta
-          size="md"
           title="Explore documentation"
-          href="https://portal.thirdweb.com/auth"
+          size="sm"
+          fontSize="20px"
+          px={8}
+          py={8}
+          href="https://portal.thirdweb.com/building-web3-apps/authenticating-users"
           w={{ base: "full", md: "inherit" }}
-          px={10}
-          py={6}
         />
       </LightMode>
     </>
