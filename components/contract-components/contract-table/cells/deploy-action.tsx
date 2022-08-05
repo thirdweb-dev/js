@@ -40,8 +40,7 @@ export const ContractDeployActionCell: React.FC<
               label="audited"
               aria-label="Audited contract"
               colorScheme="green"
-              variant="outline"
-              borderWidth="2px"
+              variant="ghost"
               icon={<Icon as={BsShieldFillCheck} boxSize={4} />}
               onClick={() =>
                 trackEvent({

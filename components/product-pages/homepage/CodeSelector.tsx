@@ -3,7 +3,7 @@ import { Box, Flex, Icon, SimpleGrid } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useState } from "react";
 import { SiReplit } from "react-icons/si";
-import { CodeBlock, LinkButton } from "tw-components";
+import { Card, CodeBlock, LinkButton } from "tw-components";
 
 const codeSnippets = {
   javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk";
@@ -106,14 +106,23 @@ export const CodeSelector: React.FC = () => {
         </CodeOptionButton>
       </SimpleGrid>
 
-      <CodeBlock
-        w={{ base: "full", md: "80%" }}
-        borderColor="#4953AF"
-        borderWidth="2px"
-        py={4}
-        code={codeSnippets[activeLanguage]}
-        language={activeLanguage === "react" ? "jsx" : activeLanguage}
-      />
+      <Card
+        w={{ base: "full", md: "69%" }}
+        borderWidth={0}
+        p={0}
+        outlineBorder={{
+          gradient: "linear(147.15deg, #1D64EF 30.17%, #E0507A 100%)",
+          width: "5px",
+        }}
+      >
+        <CodeBlock
+          borderWidth={0}
+          w="full"
+          py={4}
+          code={codeSnippets[activeLanguage]}
+          language={activeLanguage === "react" ? "jsx" : activeLanguage}
+        />
+      </Card>
 
       <Flex
         gap={{ base: 4, md: 6 }}

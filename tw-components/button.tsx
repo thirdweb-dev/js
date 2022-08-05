@@ -57,7 +57,11 @@ export const Button = forwardRef<ButtonProps, "button">(
       ...buttonGroupContext,
       ...restButtonProps,
     };
-    if (props.colorScheme && props.variant !== "outline") {
+    if (
+      props.colorScheme &&
+      props.variant !== "outline" &&
+      props.variant !== "ghost"
+    ) {
       return (
         <LightMode>
           <ChakraButton

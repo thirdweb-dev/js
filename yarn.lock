@@ -1990,10 +1990,10 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.0.3.tgz#ba83b7e28ab01a88358de479cf98cddbf835ff56"
   integrity sha512-TQRrML5SwbTb0VA1nu7VLxqIXrqMfvaXOBFT//yA9Jdd7GNsG4zSQHlHpkU4KWG1r766poG/AuXwz8KQ1A9IBg==
 
-"@thirdweb-dev/react@^2.6.0-4":
-  version "2.6.0-4"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.6.0-4.tgz#1108a8fd0ca0964b144c8025a3f89397f64f1928"
-  integrity sha512-I3xelbqYG/TBSxmBf3nTjEaJea7j49xPDczY2yz/u10MWTDxTw3ZwL665b7UmytgI43E2N+M7btMTIVYsua10w==
+"@thirdweb-dev/react@^2.6.0":
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.6.0.tgz#2c25dd026c1bf0901dcd36267a6b28c037ed63c5"
+  integrity sha512-TCeiSA/vk8XgRZWI9Z6kimLDd7rvY+NYHzstw0VeE7sOItC9gbWEjyGAzKrX10ST7a4g4+JwPYl20DZ+0D7szg==
   dependencies:
     "@gnosis.pm/safe-core-sdk" "2.1.0"
     "@gnosis.pm/safe-ethers-adapters" "0.1.0-alpha.9"

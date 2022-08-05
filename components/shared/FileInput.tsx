@@ -23,6 +23,7 @@ interface IFileInputProps extends BoxProps {
   value?: string | File;
   showUploadButton?: true;
   maxContainerWidth?: LayoutProps["maxW"];
+  renderPreview?: (fileUrl: string) => React.ReactNode;
 }
 
 export const FileInput: React.FC<IFileInputProps> = ({
@@ -33,6 +34,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
   value,
   children,
   maxContainerWidth,
+  renderPreview,
   ...restBoxProps
 }) => {
   const onDrop = useCallback<
@@ -117,7 +119,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
           <Center
             {...restBoxProps}
             cursor="pointer"
-            bg="inputBg"
+            bg={fileUrl ? "transparent" : "inputBg"}
             _hover={{
               bg: "inputBgHover",
               borderColor: "blue.500",
@@ -128,7 +130,9 @@ export const FileInput: React.FC<IFileInputProps> = ({
             position="relative"
             overflow="hidden"
           >
-            {noDisplay ? (
+            {renderPreview ? (
+              renderPreview(fileUrl)
+            ) : noDisplay ? (
               <Stack align="center" color="gray.600">
                 <Icon boxSize={6} as={FiImage} />
                 <Text color="gray.600">{fileType} uploaded</Text>

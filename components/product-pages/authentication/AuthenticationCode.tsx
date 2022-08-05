@@ -2,7 +2,7 @@ import { CodeOptionButton, CodeOptions } from "../common/CodeOptionButton";
 import { LightMode, SimpleGrid } from "@chakra-ui/react";
 import { GeneralCta } from "components/shared/GeneralCta";
 import { useState } from "react";
-import { CodeBlock } from "tw-components";
+import { Card, CodeBlock } from "tw-components";
 
 //
 
@@ -92,14 +92,24 @@ export const AuthenticationCode: React.FC = () => {
         </CodeOptionButton>
       </SimpleGrid>
 
-      <CodeBlock
-        w={{ base: "full", md: "80%" }}
-        borderColor="#4953AF"
-        borderWidth="2px"
-        py={4}
-        code={codeSnippets[activeLanguage]}
-        language={activeLanguage === "react" ? "jsx" : activeLanguage}
-      />
+      <Card
+        w={{ base: "full", md: "69%" }}
+        borderWidth={0}
+        p={0}
+        outlineBorder={{
+          gradient:
+            "linear-gradient(147.15deg, #410AB6 30.17%, #FF8D5C 100.01%)",
+          width: "5px",
+        }}
+      >
+        <CodeBlock
+          borderWidth={0}
+          w="full"
+          py={4}
+          code={codeSnippets[activeLanguage]}
+          language={activeLanguage === "react" ? "jsx" : activeLanguage}
+        />
+      </Card>
 
       <LightMode>
         <GeneralCta

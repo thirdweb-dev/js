@@ -1,4 +1,4 @@
-import { DarkMode, Flex } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { DeployableContractTable } from "components/contract-components/contract-table";
@@ -8,7 +8,14 @@ import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "pages/_app";
 import { ReactElement, useMemo } from "react";
-import { Card, Heading, LinkButton, Text, TrackedLink } from "tw-components";
+import {
+  Card,
+  CodeBlock,
+  Heading,
+  LinkButton,
+  Text,
+  TrackedLink,
+} from "tw-components";
 
 const Contracts: ThirdwebNextPage = () => {
   const walletAddress = useAddress();
@@ -65,38 +72,41 @@ const Contracts: ThirdwebNextPage = () => {
           contractIds={allContracts}
           context="view_release"
         />
-        <DarkMode>
-          <Card
-            p={8}
-            bgGradient="linear(147.15deg, #410AB6 30.17%, #E85CFF 100%)"
-            border="none"
+
+        <Card
+          bg="backgroundHighlight"
+          p={8}
+          outlineBorder={{
+            gradient: "linear(147.15deg, #410AB6 30.17%, #E85CFF 100%)",
+            width: "5px",
+          }}
+        >
+          <Flex
+            gap={4}
+            direction={{ base: "column", md: "row" }}
+            justify="space-between"
+            align="center"
           >
-            <Flex
-              gap={4}
-              direction={{ base: "column", md: "row" }}
-              justify="space-between"
-              align="center"
-            >
-              <Flex gap={4} direction="column">
-                <Heading color="white" size="title.lg" fontFamily="mono">
-                  release
-                </Heading>
-                <Heading color="white" size="subtitle.md">
-                  Bring your own contracts, unlock the power of thirdweb.
-                </Heading>
-              </Flex>
-              <LinkButton
-                w={{ base: "full", md: "auto" }}
-                variant="ghost"
-                isExternal
-                href="https://portal.thirdweb.com/release"
-                size="md"
-              >
-                Learn more
-              </LinkButton>
+            <Flex gap={6} direction="column">
+              <Heading size="title.md">
+                Don&apos;t see the contract you want? Release your own!
+              </Heading>
+
+              <Box>
+                <CodeBlock code="npx thirdweb release" language="bash" />
+              </Box>
             </Flex>
-          </Card>
-        </DarkMode>
+            <LinkButton
+              colorScheme="purple"
+              w={{ base: "full", md: "auto" }}
+              isExternal
+              href="https://portal.thirdweb.com/release"
+              size="md"
+            >
+              Learn more
+            </LinkButton>
+          </Flex>
+        </Card>
       </Flex>
     </>
   );

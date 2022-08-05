@@ -84,16 +84,17 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
               }
             />
           )}
-
-          {tokens.map((line, i) => (
-            // eslint-disable-next-line react/jsx-key
-            <Box {...getLineProps({ line, key: i })}>
-              {line.map((token, key) => (
-                // eslint-disable-next-line react/jsx-key
-                <span {...getTokenProps({ token, key })} />
-              ))}
-            </Box>
-          ))}
+          <Box as="span" display="block" my={1}>
+            {tokens.map((line, i) => (
+              // eslint-disable-next-line react/jsx-key
+              <Box {...getLineProps({ line, key: i })}>
+                {line.map((token, key) => (
+                  // eslint-disable-next-line react/jsx-key
+                  <span {...getTokenProps({ token, key })} />
+                ))}
+              </Box>
+            ))}
+          </Box>
         </Text>
       )}
     </Highlight>

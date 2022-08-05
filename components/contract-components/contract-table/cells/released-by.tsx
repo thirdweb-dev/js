@@ -18,17 +18,18 @@ export const ContractReleasedByCell: React.FC<
     value,
     ensQuery.data?.address || wallet || address,
   );
-
   const isPrebuilt =
     !!BuiltinContractMap[value as keyof typeof BuiltinContractMap];
 
   const releaser =
     fullPublishMetadata.data?.latestPublishedContractMetadata?.publishedMetadata
       .publisher;
+
+  const releaserEnsQuery = ens.useQuery(releaser);
   return (
     <Skeleton isLoaded={fullPublishMetadata.isSuccess || isPrebuilt}>
       <LinkButton
-        href={`/${ensQuery.data?.ensName || releaser}`}
+        href={`/${releaserEnsQuery.data?.ensName || releaser}`}
         variant="outline"
         px={3}
         mr={3}
@@ -38,7 +39,7 @@ export const ContractReleasedByCell: React.FC<
         width="100%"
       >
         <Text size="body.md">
-          {shortenIfAddress(ensQuery.data?.ensName || releaser, true) ||
+          {shortenIfAddress(releaserEnsQuery.data?.ensName || releaser, true) ||
             (isPrebuilt ? "thirdweb" : "Unknown")}
         </Text>
       </LinkButton>
