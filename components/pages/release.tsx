@@ -11,6 +11,7 @@ import { DeployFormDrawer } from "components/contract-components/contract-deploy
 import { ens, useAllVersions } from "components/contract-components/hooks";
 import { ReleasedContract } from "components/contract-components/released-contract";
 import { FeatureIconMap } from "constants/mappings";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import { Heading, Text } from "tw-components";
@@ -26,6 +27,7 @@ export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
   contractName,
   version: initialVersion,
 }) => {
+  const trackEvent = useTrack();
   const ensQuery = ens.useQuery(author);
 
   const [version, setVersion] = useState(initialVersion);
@@ -66,6 +68,11 @@ export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
         <Flex gap={3}>
           <Select
             onChange={(e) => {
+              trackEvent({
+                category: "release-selector",
+                action: "click",
+                version_selected: e.target.value,
+              });
               const path =
                 e.target.value === allVersions.data?.[0].version
                   ? `/${author}/${contractName}`

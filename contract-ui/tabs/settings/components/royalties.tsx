@@ -8,6 +8,7 @@ import { CommonRoyaltySchema, SmartContract } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { PotentialContractInstance } from "contract-ui/types/types";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -25,6 +26,7 @@ export const SettingsRoyalties = <TContract extends PotentialContractInstance>({
 }: {
   contract: TContract;
 }) => {
+  const trackEvent = useTrack();
   const query = useRoyaltySettings(contract as SmartContract);
   const mutation = useUpdateRoyaltySettings(contract as SmartContract);
   const {
@@ -54,15 +56,33 @@ export const SettingsRoyalties = <TContract extends PotentialContractInstance>({
     <Card p={0}>
       <Flex
         as="form"
-        onSubmit={handleSubmit((d) =>
+        onSubmit={handleSubmit((d) => {
+          trackEvent({
+            category: "royalty",
+            action: "set-royalty",
+            label: "attempt",
+          });
           mutation.mutateAsync(d, {
             onSuccess: (_data, variables) => {
+              trackEvent({
+                category: "royalty",
+                action: "set-royalty",
+                label: "success",
+              });
               reset(variables);
               onSuccess();
             },
-            onError,
-          }),
-        )}
+            onError: (error) => {
+              trackEvent({
+                category: "royalty",
+                action: "set-royalty",
+                label: "error",
+                error,
+              });
+              onError(error);
+            },
+          });
+        })}
         direction="column"
       >
         <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>

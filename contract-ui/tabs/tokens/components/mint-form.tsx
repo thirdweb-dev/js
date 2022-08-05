@@ -10,6 +10,7 @@ import {
 import { useAddress, useMintToken } from "@thirdweb-dev/react";
 import type { Erc20 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -21,6 +22,7 @@ interface TokenMintFormProps {
 }
 
 export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
+  const trackEvent = useTrack();
   const address = useAddress();
   const mint = useMintToken(contract);
   const {
@@ -47,14 +49,32 @@ export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
           id={MINT_FORM_ID}
           onSubmit={handleSubmit((d) => {
             if (address) {
+              trackEvent({
+                category: "token-mint",
+                action: "mint",
+                label: "attempt",
+              });
               mint.mutate(
                 { amount: d.amount, to: address },
                 {
                   onSuccess: () => {
+                    trackEvent({
+                      category: "token-mint",
+                      action: "mint",
+                      label: "success",
+                    });
                     onSuccess();
                     modalContext.onClose();
                   },
-                  onError,
+                  onError: (error) => {
+                    trackEvent({
+                      category: "token-mint",
+                      action: "mint",
+                      label: "error",
+                      error,
+                    });
+                    onError(error);
+                  },
                 },
               );
             }

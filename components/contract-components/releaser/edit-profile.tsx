@@ -19,6 +19,7 @@ import {
 import { ProfileMetadata, ProfileMetadataInput } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect } from "react";
@@ -55,6 +56,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({
     "Error updating profile",
   );
 
+  const trackEvent = useTrack();
+
   useEffect(() => {
     if (!isDirty) {
       reset({
@@ -75,15 +78,33 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         <ModalContent
           mx={{ base: 4, md: 0 }}
           as="form"
-          onSubmit={handleSubmit((d) =>
+          onSubmit={handleSubmit((d) => {
+            trackEvent({
+              category: "profile",
+              action: "edit",
+              label: "attempt",
+            });
             editProfile.mutate(d, {
               onSuccess: () => {
                 onSuccess();
+                trackEvent({
+                  category: "profile",
+                  action: "edit",
+                  label: "success",
+                });
                 onClose();
               },
-              onError,
-            }),
-          )}
+              onError: (error) => {
+                onError(error);
+                trackEvent({
+                  category: "profile",
+                  action: "edit",
+                  label: "error",
+                  error,
+                });
+              },
+            });
+          })}
         >
           <ModalHeader as={Flex} alignItems="center" p={5}>
             <Heading size="title.md">Edit your profile</Heading>

@@ -8,6 +8,7 @@ import {
   UploadProgressEvent,
 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { MouseEventHandler, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -108,6 +109,7 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
   mergedData,
   onClose,
 }) => {
+  const trackEvent = useTrack();
   const [selectedReveal, setSelectedReveal] = useState<
     "unselected" | "instant" | "delayed"
   >("instant");
@@ -186,6 +188,11 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
                   : `Uploading ${mergedData.length} NFTs...`
               }
               onClick={() => {
+                trackEvent({
+                  category: "batch-upload-instant",
+                  action: "upload",
+                  label: "attempt",
+                });
                 mintBatch.mutate(
                   {
                     metadatas: watch("shuffle")
@@ -194,15 +201,26 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
                   },
                   {
                     onSuccess: () => {
+                      trackEvent({
+                        category: "batch-upload-instant",
+                        action: "upload",
+                        label: "success",
+                      });
                       onSuccess();
                       onClose();
                     },
-                    onError: (err) => {
+                    onError: (error) => {
+                      trackEvent({
+                        category: "batch-upload-instant",
+                        action: "upload",
+                        label: "error",
+                        error,
+                      });
                       setProgress({
                         progress: 0,
                         total: 100,
                       });
-                      onError(err);
+                      onError(error);
                     },
                   },
                 );

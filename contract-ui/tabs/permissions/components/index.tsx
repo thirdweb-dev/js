@@ -8,6 +8,7 @@ import {
 } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { ROLE_DESCRIPTION_MAP } from "constants/mappings";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -22,6 +23,7 @@ export const Permissions = <TContract extends ContractWithRoles>({
 }: {
   contract: TContract;
 }) => {
+  const trackEvent = useTrack();
   const allRoleMembers = useAllRoleMembers(contract);
   const setAllRoleMembers = useSetAllRoleMembers(contract);
   const form = useForm({});
@@ -44,15 +46,33 @@ export const Permissions = <TContract extends ContractWithRoles>({
         gap={4}
         direction="column"
         as="form"
-        onSubmit={form.handleSubmit((d) =>
+        onSubmit={form.handleSubmit((d) => {
+          trackEvent({
+            category: "permissions",
+            action: "set-permissions",
+            label: "attempt",
+          });
           setAllRoleMembers.mutateAsync(d as PermissionFormContext<TContract>, {
             onSuccess: (_data, variables) => {
+              trackEvent({
+                category: "permissions",
+                action: "set-permissions",
+                label: "success",
+              });
               form.reset(variables);
               onSuccess();
             },
-            onError,
-          }),
-        )}
+            onError: (error) => {
+              trackEvent({
+                category: "permissions",
+                action: "set-permissions",
+                label: "error",
+                error,
+              });
+              onError(error);
+            },
+          });
+        })}
       >
         {Object.keys(allRoleMembers.data || ROLE_DESCRIPTION_MAP).map(
           (role) => {
@@ -61,7 +81,6 @@ export const Permissions = <TContract extends ContractWithRoles>({
                 isLoading={allRoleMembers.isLoading}
                 key={role}
                 role={role}
-                contract={contract}
                 description={ROLE_DESCRIPTION_MAP[role] || ""}
               />
             );

@@ -5,6 +5,7 @@ import { CommonPlatformFeeSchema, SmartContract } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { PotentialContractInstance } from "contract-ui/types/types";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -24,6 +25,7 @@ export const SettingsPlatformFees = <
 }: {
   contract: TContract;
 }) => {
+  const trackEvent = useTrack();
   const query = usePlatformFees(contract as SmartContract);
   const mutation = useUpdatePlatformFees(contract as SmartContract);
   const {
@@ -53,15 +55,33 @@ export const SettingsPlatformFees = <
     <Card p={0}>
       <Flex
         as="form"
-        onSubmit={handleSubmit((d) =>
+        onSubmit={handleSubmit((d) => {
+          trackEvent({
+            category: "platform-fees",
+            action: "set-platform-fees",
+            label: "attempt",
+          });
           mutation.mutateAsync(d, {
             onSuccess: (_data, variables) => {
+              trackEvent({
+                category: "platform-fees",
+                action: "set-platform-fees",
+                label: "success",
+              });
               reset(variables);
               onSuccess();
             },
-            onError,
-          }),
-        )}
+            onError: (error) => {
+              trackEvent({
+                category: "platform-fees",
+                action: "set-platform-fees",
+                label: "error",
+                error,
+              });
+              onError(error);
+            },
+          });
+        })}
         direction="column"
       >
         <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>

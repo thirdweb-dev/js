@@ -1,6 +1,7 @@
 import { ContractDeployForm } from ".";
 import { ContractId } from "../types";
 import { Box, useDisclosure } from "@chakra-ui/react";
+import { useTrack } from "hooks/analytics/useTrack";
 import { Button, Drawer } from "tw-components";
 
 interface DeployFormDrawerProps {
@@ -11,9 +12,21 @@ export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
   contractId,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const trackEvent = useTrack();
   return (
     <>
-      <Button flexShrink={0} colorScheme="purple" onClick={onOpen}>
+      <Button
+        flexShrink={0}
+        colorScheme="purple"
+        onClick={() => {
+          trackEvent({
+            category: "specific-release",
+            action: "click",
+            label: "open-drawer",
+          });
+          onOpen();
+        }}
+      >
         Deploy Now
       </Button>
       <Drawer

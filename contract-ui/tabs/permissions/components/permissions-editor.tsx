@@ -12,7 +12,6 @@ import {
   useClipboard,
   useToast,
 } from "@chakra-ui/react";
-import { PotentialContractInstance } from "contract-ui/types/types";
 import { constants, utils } from "ethers";
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
@@ -22,13 +21,9 @@ import { Button, FormErrorMessage, Text } from "tw-components";
 
 interface IPermissionEditor {
   role: string;
-  contract: PotentialContractInstance;
 }
 
-export const PermissionEditor: React.FC<IPermissionEditor> = ({
-  role,
-  contract,
-}) => {
+export const PermissionEditor: React.FC<IPermissionEditor> = ({ role }) => {
   /*   const isAdmin = useIsAdmin(contract); */
   const {
     control,

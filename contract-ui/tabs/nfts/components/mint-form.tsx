@@ -25,6 +25,7 @@ import { OpenSeaPropertyBadge } from "components/badges/opensea";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { PropertiesFormControl } from "components/contract-pages/forms/properties.shared";
 import { FileInput } from "components/shared/FileInput";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
@@ -58,6 +59,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
   lazyMintMutation,
   mintMutation,
 }) => {
+  const trackEvent = useTrack();
   const address = useAddress();
   const mutation = mintMutation || lazyMintMutation;
 
@@ -157,21 +159,44 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
             }
 
             if (lazyMintMutation) {
+              trackEvent({
+                category: "nft-mint",
+                action: "lazy-mint",
+                label: "attempt",
+              });
               lazyMintMutation.mutate(
                 {
                   metadatas: [parseAttributes(data)],
                 },
                 {
                   onSuccess: () => {
+                    trackEvent({
+                      category: "nft-mint",
+                      action: "lazy-mint",
+                      label: "success",
+                    });
                     onSuccess();
                     modalContext.onClose();
                   },
-                  onError,
+                  onError: (error) => {
+                    trackEvent({
+                      category: "nft-mint",
+                      action: "lazy-mint",
+                      label: "error",
+                      error,
+                    });
+                    onError(error);
+                  },
                 },
               );
             }
 
             if (mintMutation) {
+              trackEvent({
+                category: "nft-mint",
+                action: "mint",
+                label: "attempt",
+              });
               mintMutation.mutate(
                 {
                   to: address,
@@ -180,10 +205,23 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                 },
                 {
                   onSuccess: () => {
+                    trackEvent({
+                      category: "nft-mint",
+                      action: "mint",
+                      label: "success",
+                    });
                     onSuccess();
                     modalContext.onClose();
                   },
-                  onError,
+                  onError: (error) => {
+                    trackEvent({
+                      category: "nft-mint",
+                      action: "mint",
+                      label: "error",
+                      error,
+                    });
+                    onError(error);
+                  },
                 },
               );
             }

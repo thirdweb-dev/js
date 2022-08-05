@@ -5,6 +5,7 @@ import { CommonContractSchema, SmartContract } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { PotentialContractInstance } from "contract-ui/types/types";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect } from "react";
@@ -23,6 +24,7 @@ export const SettingsMetadata = <TContract extends PotentialContractInstance>({
 }: {
   contract: TContract;
 }) => {
+  const trackEvent = useTrack();
   const metadata = useMetadata(contract as SmartContract);
   const metadataMutation = useUpdateMetadata(contract as SmartContract);
   const {
@@ -53,9 +55,29 @@ export const SettingsMetadata = <TContract extends PotentialContractInstance>({
       <Flex
         as="form"
         onSubmit={handleSubmit((d) => {
+          trackEvent({
+            category: "metadata",
+            action: "set-metadata",
+            label: "attempt",
+          });
           metadataMutation.mutate(d, {
-            onSuccess,
-            onError,
+            onSuccess: () => {
+              trackEvent({
+                category: "metadata",
+                action: "set-metadata",
+                label: "success",
+              });
+              onSuccess();
+            },
+            onError: (error) => {
+              trackEvent({
+                category: "metadata",
+                action: "set-metadata",
+                label: "error",
+                error,
+              });
+              onError(error);
+            },
           });
         })}
         direction="column"
