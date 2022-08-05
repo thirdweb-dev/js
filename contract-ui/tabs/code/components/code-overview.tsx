@@ -56,14 +56,15 @@ export default function Component() {
 
 export default function Component() {
   const { contract } = useContract("{{contract_address}}");
-  const { mutate, isLoading } = useContractCall(contract, "{{function}}")
+  const { mutateAsync: {{function}}, isLoading } = useContractCall(contract, "{{function}}")
 
-  const call = () => {
-    mutate({ {{args}} }, {
-      onSuccess: (data) => {
-        // Do something on success
-      }
-    })
+  const call = async () => {
+    try{
+      const data = await {{function}}({ {{args}} });
+      console.log("contract call successs", data);
+    }catch(err){
+      console.error("contract call failure", err);
+    }
   }
 }`,
     python: `data = contract.call("{{function}}", {{args}})`,
@@ -156,7 +157,11 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
         <Flex align="center" justify="space-between">
           <Heading size="title.sm">Reading Data</Heading>
           <Box>
-            <Select value={read} onChange={(e) => setRead(e.target.value)}>
+            <Select
+              variant="outline"
+              value={read}
+              onChange={(e) => setRead(e.target.value)}
+            >
               {readFunctions?.map((f, i) => (
                 <option value={f.name} key={i}>
                   {f.name}
@@ -187,7 +192,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
           <Heading size="title.sm">Writing Data</Heading>
           <Box>
             <Select
-              width="200px"
+              variant="outline"
               value={write}
               onChange={(e) => setWrite(e.target.value)}
             >

@@ -26,6 +26,7 @@ interface CodeBlockProps extends Omit<CodeProps, "size"> {
   code: string;
   language: Language | "solidity";
   canCopy?: boolean;
+  wrap?: boolean;
 }
 export const CodeBlock: React.FC<CodeBlockProps> = ({
   code,
@@ -37,6 +38,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   borderColor = "borderColor",
   borderWidth = "1px",
   canCopy = true,
+  wrap = true,
   ...restCodeProps
 }) => {
   const theme = useColorModeValue(lightTheme, darkTheme);
@@ -59,12 +61,13 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
           position="relative"
           className={className}
           style={style}
-          whiteSpace="pre-wrap"
+          whiteSpace={wrap ? "pre-wrap" : "pre"}
           {...restCodeProps}
           as={Code}
         >
           {canCopy && code && (
             <IconButton
+              mr={-2}
               onClick={onCopy}
               position="relative"
               float="right"
@@ -84,7 +87,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
 
           {tokens.map((line, i) => (
             // eslint-disable-next-line react/jsx-key
-            <Box {...getLineProps({ line, key: i })} pt={1}>
+            <Box {...getLineProps({ line, key: i })}>
               {line.map((token, key) => (
                 // eslint-disable-next-line react/jsx-key
                 <span {...getTokenProps({ token, key })} />

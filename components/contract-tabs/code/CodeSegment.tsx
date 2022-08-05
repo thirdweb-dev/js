@@ -87,7 +87,13 @@ export const CodeSegment: React.FC<ICodeSegment> = ({
       {!hideTabs && (
         <Flex justify="space-between" align="flex-end">
           <Flex direction="column" gap={4}>
-            <ButtonGroup isAttached size="sm" variant="outline">
+            <ButtonGroup
+              isAttached
+              size="sm"
+              variant="outline"
+              flexWrap="wrap"
+              rowGap={2}
+            >
               {environments.map((env) => (
                 <SupportedEnvironmentButton
                   key={env.environment}

@@ -1,6 +1,6 @@
+import { NFTDrawer } from "./nft-drawer";
 import {
   Center,
-  Code,
   Flex,
   Icon,
   IconButton,
@@ -26,7 +26,13 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { Cell, Column, usePagination, useTable } from "react-table";
-import { AddressCopyButton, Card, Heading, Text } from "tw-components";
+import {
+  AddressCopyButton,
+  Card,
+  CodeBlock,
+  Heading,
+  Text,
+} from "tw-components";
 
 interface ContractOverviewNftGetAllProps {
   contract: NFTContract;
@@ -57,7 +63,12 @@ export const NftGetAllTable: React.FC<ContractOverviewNftGetAllProps> = ({
         Header: "Properties",
         accessor: (row) => row.metadata.attributes || row.metadata.properties,
         Cell: ({ cell }: { cell: Cell<NFT<NFTContract>, Json> }) => (
-          <Code whiteSpace="pre">{JSON.stringify(cell.value, null, 2)}</Code>
+          <CodeBlock
+            code={JSON.stringify(cell.value, null, 2) || ""}
+            language="json"
+            canCopy={false}
+            wrap={false}
+          />
         ),
       },
     ];
@@ -121,6 +132,11 @@ export const NftGetAllTable: React.FC<ContractOverviewNftGetAllProps> = ({
   useEffect(() => {
     setQueryParams({ start: pageIndex * pageSize, count: pageSize });
   }, [pageIndex, pageSize]);
+
+  const [tokenRow, setTokenRow] = useState<NFT<
+    Erc721<any> | Erc1155<any>
+  > | null>(null);
+
   return (
     <Flex gap={4} direction="column">
       <Card maxW="100%" overflowX="auto" position="relative" px={0} pt={0}>
@@ -133,6 +149,12 @@ export const NftGetAllTable: React.FC<ContractOverviewNftGetAllProps> = ({
             right={4}
           />
         )}
+        <NFTDrawer
+          contract={contract}
+          data={tokenRow}
+          isOpen={!!tokenRow}
+          onClose={() => setTokenRow(null)}
+        />
         <Table {...getTableProps()}>
           <Thead bg="blackAlpha.50" _dark={{ bg: "whiteAlpha.50" }}>
             {headerGroups.map((headerGroup) => (
@@ -152,14 +174,23 @@ export const NftGetAllTable: React.FC<ContractOverviewNftGetAllProps> = ({
           <Tbody {...getTableBodyProps()} position="relative">
             {page.map((row) => {
               prepareRow(row);
-
               return (
                 // eslint-disable-next-line react/jsx-key
                 <Tr
-                  transition="all 0.1s"
+                  {...row.getRowProps()}
+                  role="group"
+                  _hover={{ bg: "blackAlpha.50" }}
+                  _dark={{
+                    _hover: {
+                      bg: "whiteAlpha.50",
+                    },
+                  }}
+                  // this is a hack to get around the fact that safari does not handle position: relative on table rows
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setTokenRow(row.original)}
+                  // end hack
                   borderBottomWidth={1}
                   _last={{ borderBottomWidth: 0 }}
-                  {...row.getRowProps()}
                 >
                   {row.cells.map((cell) => (
                     // eslint-disable-next-line react/jsx-key
