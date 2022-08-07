@@ -60,7 +60,7 @@ export default function Component() {
 
   const call = async () => {
     try{
-      const data = await {{function}}({ {{args}} });
+      const data = await {{function}}([ {{args}} ]);
       console.log("contract call successs", data);
     }catch(err){
       console.error("contract call failure", err);
