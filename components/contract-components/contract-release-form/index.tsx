@@ -65,13 +65,25 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
   const publishMetadata = useContractPublishMetadataFromURI(contractId);
   const prePublishMetadata = useContractPrePublishMetadata(contractId, address);
 
+  const latestVersion =
+    prePublishMetadata.data?.latestPublishedContractMetadata?.publishedMetadata
+      .version;
+
+  const placeholderVersion = useMemo(() => {
+    if (latestVersion) {
+      const versplit = latestVersion.split(".");
+      return `${versplit[0]}.${versplit[1]}.${Number(versplit[2]) + 1}`;
+    }
+    return "1.0.0";
+  }, [latestVersion]);
+
   useEffect(() => {
     if (!isDirty && address) {
       reset({
         ...prePublishMetadata.data?.latestPublishedContractMetadata
           ?.publishedMetadata,
         changelog: "",
-        version: "",
+        version: placeholderVersion,
         description:
           prePublishMetadata.data?.latestPublishedContractMetadata
             ?.publishedMetadata.description ||
@@ -80,23 +92,9 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [prePublishMetadata.data, address]);
-
-  const latestVersion =
-    prePublishMetadata.data?.latestPublishedContractMetadata?.publishedMetadata
-      .version;
+  }, [prePublishMetadata.data, address, placeholderVersion, isDirty]);
 
   const ensQuery = ens.useQuery(address);
-
-  const placeholderVersion = useMemo(() => {
-    if (latestVersion) {
-      return `${latestVersion.split(".")[0]}.${latestVersion.split(".")[1]}.${
-        Number(latestVersion.split(".")[2]) + 1
-      }`;
-    }
-    return "1.0.0";
-  }, [latestVersion]);
-
   return (
     <Card w="100%" p={{ base: 6, md: 10 }}>
       <Flex
@@ -127,6 +125,9 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
                   `/contracts/${ensQuery.data?.ensName || address}/${
                     publishMetadata.data?.name
                   }`,
+                  undefined,
+                  // reset scroll after redirect
+                  { scroll: true },
                 );
               },
               onError: (err) => {

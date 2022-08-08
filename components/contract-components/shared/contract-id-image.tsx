@@ -14,8 +14,9 @@ import { useSingleQueryParam } from "hooks/useQueryParam";
 import { StaticImageData } from "next/image";
 
 export interface ContractIdImageProps
-  extends Omit<ChakraNextImageProps, "src" | "alt"> {
+  extends Omit<ChakraNextImageProps, "src" | "alt" | "boxSize"> {
   contractId: ContractId;
+  boxSize?: number;
 }
 
 export const ContractIdImage: React.FC<ContractIdImageProps> = ({

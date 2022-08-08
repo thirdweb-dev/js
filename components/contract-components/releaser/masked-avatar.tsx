@@ -1,16 +1,33 @@
+import { ens, useReleaserProfile } from "../hooks";
 import { Box, BoxProps } from "@chakra-ui/react";
+import { useMemo } from "react";
 
-interface MaskedAvatarProps extends Omit<BoxProps, "as" | "viewBox"> {
+interface MaskedAvatarProps
+  extends Omit<BoxProps, "as" | "viewBox" | "boxSize"> {
   src: string;
+  boxSize?: number;
 }
 
 export const MaskedAvatar: React.FC<MaskedAvatarProps> = ({
   src,
+  boxSize = 12,
   ...restBoxProps
 }) => {
+  const stdDeviation = useMemo(() => {
+    let d = boxSize / 5;
+    if (d < 2) {
+      d = 2;
+    }
+    if (d > 5) {
+      d = 5;
+    }
+    return d;
+  }, [boxSize]);
+
   return (
     <>
       <Box
+        boxSize={boxSize}
         {...restBoxProps}
         filter="url(#round)"
         display="grid"
@@ -26,7 +43,7 @@ export const MaskedAvatar: React.FC<MaskedAvatarProps> = ({
           clipPath:
             "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
         }}
-      ></Box>
+      />
       <Box
         as="svg"
         visibility="hidden"
@@ -38,7 +55,11 @@ export const MaskedAvatar: React.FC<MaskedAvatarProps> = ({
       >
         <defs>
           <filter id="round">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation={stdDeviation}
+              result="blur"
+            />
             <feColorMatrix
               in="blur"
               mode="matrix"
@@ -50,5 +71,30 @@ export const MaskedAvatar: React.FC<MaskedAvatarProps> = ({
         </defs>
       </Box>
     </>
+  );
+};
+
+interface ReleaserAvatar extends Omit<MaskedAvatarProps, "src"> {
+  address: string;
+}
+
+export const ReleaserAvatar: React.FC<ReleaserAvatar> = ({
+  address,
+  ...restProps
+}) => {
+  const ensQuery = ens.useQuery(address);
+  const releaserProfile = useReleaserProfile(
+    ensQuery.data?.address || undefined,
+  );
+  return (
+    <MaskedAvatar
+      src={
+        releaserProfile.data?.avatar ||
+        `https://source.boringavatars.com/marble/120/${
+          ensQuery.data?.ensName || ensQuery.data?.address
+        }?colors=264653,2a9d8f,e9c46a,f4a261,e76f51&square=true`
+      }
+      {...restProps}
+    />
   );
 };

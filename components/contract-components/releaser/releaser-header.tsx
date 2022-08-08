@@ -1,6 +1,6 @@
 import { ens, useReleaserProfile } from "../hooks";
 import { EditProfile } from "./edit-profile";
-import { MaskedAvatar } from "./masked-avatar";
+import { ReleaserAvatar } from "./masked-avatar";
 import { ReleaserSocials } from "./releaser-socials";
 import { Flex, Skeleton } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
@@ -38,14 +38,9 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
         </Heading>
         <Flex gap={4} alignItems="center">
           <Skeleton isLoaded={releaserProfile.isSuccess}>
-            <MaskedAvatar
+            <ReleaserAvatar
               boxSize={14}
-              src={
-                releaserProfile.data?.avatar ||
-                `https://source.boringavatars.com/marble/120/${
-                  ensQuery.data?.ensName || wallet
-                }?colors=264653,2a9d8f,e9c46a,f4a261,e76f51&square=true`
-              }
+              address={ensQuery.data?.ensName || wallet}
             />
           </Skeleton>
 

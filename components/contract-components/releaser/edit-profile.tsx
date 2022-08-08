@@ -147,7 +147,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                 transition="all 200ms ease"
                 _hover={{ shadow: "sm" }}
                 renderPreview={(fileUrl) => (
-                  <MaskedAvatar boxSize="100%" src={fileUrl} />
+                  <MaskedAvatar w="100%" h="100%" src={fileUrl} />
                 )}
               />
             </Box>

@@ -62,14 +62,17 @@ export const NftGetAllTable: React.FC<ContractOverviewNftGetAllProps> = ({
       {
         Header: "Properties",
         accessor: (row) => row.metadata.attributes || row.metadata.properties,
-        Cell: ({ cell }: { cell: Cell<NFT<NFTContract>, Json> }) => (
-          <CodeBlock
-            code={JSON.stringify(cell.value, null, 2) || ""}
-            language="json"
-            canCopy={false}
-            wrap={false}
-          />
-        ),
+        Cell: ({ cell }: { cell: Cell<NFT<NFTContract>, Json> }) =>
+          cell.value ? (
+            <CodeBlock
+              code={JSON.stringify(cell.value, null, 2) || ""}
+              language="json"
+              canCopy={false}
+              wrap={false}
+            />
+          ) : (
+            <Text fontStyle="italic">none set</Text>
+          ),
       },
     ];
     if (contract instanceof Erc721) {
@@ -139,7 +142,7 @@ export const NftGetAllTable: React.FC<ContractOverviewNftGetAllProps> = ({
 
   return (
     <Flex gap={4} direction="column">
-      <Card maxW="100%" overflowX="auto" position="relative" px={0} pt={0}>
+      <Card maxW="100%" overflowX="auto" position="relative" px={0} py={0}>
         {getAllQueryResult.isFetching && (
           <Spinner
             color="primary"

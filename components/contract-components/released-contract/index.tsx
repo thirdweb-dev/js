@@ -8,34 +8,31 @@ import {
   useReleaserProfile,
 } from "../hooks";
 import { ReleaserHeader } from "../releaser/releaser-header";
-import { ContractFunctionsPanel } from "./extracted-contract-functions";
 import { MarkdownRenderer } from "./markdown-renderer";
-import { SourcesPanel } from "./sources-panel";
 import {
-  Box,
   Divider,
   Flex,
   GridItem,
   Icon,
   List,
   ListItem,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
 } from "@chakra-ui/react";
-import { PublishedContract } from "@thirdweb-dev/sdk";
+import { useQuery } from "@tanstack/react-query";
+import {
+  PublishedContract,
+  PublishedMetadata,
+  fetchSourceFilesFromMetadata,
+} from "@thirdweb-dev/sdk";
+import { StorageSingleton } from "components/app-layouts/providers";
+import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
 import { ShareButton } from "components/share-buttom";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
-import { BiPencil } from "react-icons/bi";
-import { BsEye } from "react-icons/bs";
 import { FcCheckmark } from "react-icons/fc";
 import { IoDocumentOutline } from "react-icons/io5";
 import { SiTwitter } from "react-icons/si";
-import { VscSourceControl } from "react-icons/vsc";
+import invariant from "tiny-invariant";
 import {
   Card,
   Heading,
@@ -128,6 +125,34 @@ Deploy it in one click`,
     return url.href;
   }, [release, currentRoute]);
 
+  const sources = useQuery(
+    ["sources", release],
+    async () => {
+      invariant(
+        contractReleaseMetadata.data?.compilerMetadata?.sources,
+        "no compilerMetadata sources available",
+      );
+      return (
+        await fetchSourceFilesFromMetadata(
+          {
+            metadata: {
+              sources: contractReleaseMetadata.data.compilerMetadata.sources,
+            },
+          } as unknown as PublishedMetadata,
+          StorageSingleton,
+        )
+      )
+        .filter((source) => !source.filename.includes("@"))
+        .map((source) => {
+          return {
+            ...source,
+            filename: source.filename.split("/").pop(),
+          };
+        });
+    },
+    { enabled: !!contractReleaseMetadata.data?.compilerMetadata?.sources },
+  );
+
   return (
     <>
       <NextSeo
@@ -177,75 +202,12 @@ Deploy it in one click`,
               />
             </Card>
           )}
-          <Card as={Flex} flexDir="column" gap={2} p={0}>
-            <Tabs isLazy lazyBehavior="keepMounted" colorScheme="purple">
-              <TabList
-                px={0}
-                borderBottomColor="borderColor"
-                borderBottomWidth="1px"
-              >
-                <Tab gap={2}>
-                  <Icon as={BiPencil} my={2} />
-                  <Heading size="label.lg">
-                    <Box as="span" display={{ base: "none", md: "flex" }}>
-                      Functions
-                    </Box>
-                    <Box as="span" display={{ base: "flex", md: "none" }}>
-                      Func
-                    </Box>
-                  </Heading>
-                </Tab>
-                <Tab gap={2}>
-                  <Icon as={BsEye} my={2} />
-                  <Heading size="label.lg">
-                    <Box as="span" display={{ base: "none", md: "flex" }}>
-                      Variables
-                    </Box>
-                    <Box as="span" display={{ base: "flex", md: "none" }}>
-                      Var
-                    </Box>
-                  </Heading>
-                </Tab>
-                <Tab gap={2}>
-                  <Icon as={VscSourceControl} my={2} />
-                  <Heading size="label.lg">
-                    <Box as="span" display={{ base: "none", md: "flex" }}>
-                      Sources
-                    </Box>
-                    <Box as="span" display={{ base: "flex", md: "none" }}>
-                      Src
-                    </Box>
-                  </Heading>
-                </Tab>
-              </TabList>
-              <TabPanels px={{ base: 2, md: 6 }} py={2}>
-                <TabPanel px={0}>
-                  <ContractFunctionsPanel
-                    functions={(contractFunctions || []).filter(
-                      (f) =>
-                        f.stateMutability !== "view" &&
-                        f.stateMutability !== "pure",
-                    )}
-                  />
-                </TabPanel>
-                <TabPanel px={0}>
-                  <ContractFunctionsPanel
-                    functions={(contractFunctions || []).filter(
-                      (f) =>
-                        f.stateMutability === "view" ||
-                        f.stateMutability === "pure",
-                    )}
-                  />
-                </TabPanel>
-                <TabPanel px={0}>
-                  <SourcesPanel
-                    release={release}
-                    contractReleaseMetadata={contractReleaseMetadata.data}
-                  />
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
-          </Card>
+          {contractFunctions && (
+            <ContractFunctionsOverview
+              functions={contractFunctions}
+              sources={sources.data}
+            />
+          )}
         </Flex>
       </GridItem>
       <GridItem order={{ base: 3, md: 4 }} colSpan={{ base: 12, md: 3 }}>

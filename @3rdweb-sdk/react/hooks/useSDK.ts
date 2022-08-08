@@ -18,11 +18,8 @@ export function useContractList(
   );
   return useQuery(
     [...networkKeys.chain(chainId), ...contractKeys.list(walletAddress)],
-    async () => {
-      const data = await sdk?.getContractList(walletAddress || "");
-
-      return data;
-    },
+    async () =>
+      [...((await sdk?.getContractList(walletAddress || "")) || [])].reverse(),
     {
       enabled: !!sdk && !!walletAddress && !!chainId,
     },

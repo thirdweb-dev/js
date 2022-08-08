@@ -13,6 +13,7 @@ interface LinkProps
   isExternal?: boolean;
   noIcon?: true;
   href: string;
+  noMatch?: true;
 }
 
 /**
@@ -20,9 +21,9 @@ interface LinkProps
  * Combines the `NextLink` and Chakra `Link` components.
  */
 export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
-  (props, ref) => {
+  ({ href, isExternal, children, noMatch, ...restLinkProps }, ref) => {
     const match = useMatch();
-    const { href, isExternal, children, ...restLinkProps } = props;
+
     if (isExternal) {
       return (
         <ChakraLink isExternal href={href} ref={ref} {...restLinkProps}>
@@ -32,7 +33,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
     }
 
     // we're in a react location context, so we can use that
-    if (match) {
+    if (match && !noMatch) {
       return (
         <ChakraLink as={LocationLink} to={href} {...restLinkProps}>
           {children}

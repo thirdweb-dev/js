@@ -540,7 +540,9 @@ function useEns(addressOrEnsName?: string) {
         ? fetchEns(addressOrEnsName)
         : { address: null, ensName: null },
     {
-      enabled: !!addressOrEnsName,
+      enabled:
+        !!addressOrEnsName &&
+        (isAddress(addressOrEnsName) || isEnsName(addressOrEnsName)),
       // 24h
       cacheTime: 60 * 60 * 24 * 1000,
       // 1h

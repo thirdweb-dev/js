@@ -1,65 +1,28 @@
-import type { ExtendedReleasedContractInfo } from ".";
-import { ContractPublishMetadata } from "../hooks";
-import { Center, Flex, Icon, Spinner } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
-import {
-  PublishedMetadata,
-  fetchSourceFilesFromMetadata,
-} from "@thirdweb-dev/sdk";
-import { StorageSingleton } from "components/app-layouts/providers";
+import { Flex, Icon } from "@chakra-ui/react";
 import { FiXCircle } from "react-icons/fi";
-import invariant from "tiny-invariant";
 import { Card, CodeBlock, Heading, Link } from "tw-components";
 
+export type SourceFile = {
+  filename: string | undefined;
+  source: string;
+};
+
 interface SourcesPanelProps {
-  release: ExtendedReleasedContractInfo;
-  contractReleaseMetadata?: ContractPublishMetadata;
+  sources: SourceFile[];
 }
 
-export const SourcesPanel: React.FC<SourcesPanelProps> = ({
-  release,
-  contractReleaseMetadata,
-}) => {
-  const sources = useQuery(
-    ["sources", release],
-    async () => {
-      invariant(
-        contractReleaseMetadata?.compilerMetadata?.sources,
-        "no compilerMetadata sources available",
-      );
-      return (
-        await fetchSourceFilesFromMetadata(
-          {
-            metadata: {
-              sources: contractReleaseMetadata.compilerMetadata.sources,
-            },
-          } as unknown as PublishedMetadata,
-          StorageSingleton,
-        )
-      )
-        .filter((source) => !source.filename.includes("@"))
-        .map((source) => {
-          return {
-            ...source,
-            filename: source.filename.split("/").pop(),
-          };
-        });
-    },
-    { enabled: !!contractReleaseMetadata?.compilerMetadata?.sources },
-  );
-
-  return sources.isLoading ? (
-    <Card>
-      <Center>
-        <Spinner mr={4} /> Loading sources...
-      </Center>
-    </Card>
-  ) : sources.data && sources.data.length > 0 ? (
+export const SourcesPanel: React.FC<SourcesPanelProps> = ({ sources }) => {
+  return sources.length > 0 ? (
     <Flex direction="column" gap={8}>
-      {sources.data.map((signature) => (
+      {sources.map((signature) => (
         <Flex gap={4} flexDirection="column" key={signature.filename}>
           <Heading size="label.md">{signature.filename}</Heading>
-          <CodeBlock code={signature.source} language="solidity" />
+          <CodeBlock
+            maxH="500px"
+            overflow="auto"
+            code={signature.source.trim()}
+            language="solidity"
+          />
         </Flex>
       ))}
     </Flex>

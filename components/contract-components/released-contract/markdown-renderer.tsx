@@ -81,11 +81,12 @@ export const MarkdownRenderer: React.FC<
           return (
             <Text
               as="code"
-              px={1.5}
-              py={1}
-              mx={1}
-              bg="backgroundBody"
+              px={1}
+              py={0.5}
+              bg="blackAlpha.100"
+              _dark={{ bg: "whiteAlpha.100" }}
               borderRadius="md"
+              fontFamily="mono"
               {...props}
             />
           );

@@ -30,7 +30,10 @@ export const Drawer: ComponentWithChildren<DrawerProps> = ({
   hideCloseButton,
   ...restDrawerProps
 }) => {
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  const isMobile = useBreakpointValue(
+    { base: true, md: false },
+    { fallback: "md" },
+  );
   return (
     <ChakraDrawer
       {...restDrawerProps}
