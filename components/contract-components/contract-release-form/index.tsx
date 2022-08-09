@@ -297,7 +297,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
               isDisabled={isDisabled}
               isLoading={isLoading}
               loadingText={
-                publishMetadata.isSuccess ? "Preparing page" : "Releasing"
+                publishMutation.isSuccess ? "Preparing page" : "Releasing"
               }
               type="submit"
             >
