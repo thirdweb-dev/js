@@ -128,7 +128,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       erc: "ERC721",
       audit: "QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
       href: "/contracts/new/pre-built/token/multiwrap",
-      roles: ["admin", "transfer", "minter", "unwrap"],
+      roles: ["admin", "transfer", "minter", "unwrap", "asset"],
     },
     token: {
       title: "Token",
