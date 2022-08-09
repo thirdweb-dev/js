@@ -12,7 +12,6 @@ import {
   SourceFile,
   SourcesPanel,
 } from "components/contract-components/released-contract/sources-panel";
-import { useMemo } from "react";
 import { Card, Heading } from "tw-components";
 
 interface ContractFunctionsOverview {
@@ -26,31 +25,24 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
   contract,
   sources,
 }) => {
-  const { fns, vars } = useMemo(() => {
-    return {
-      fns: functions.filter((fn) => fn.stateMutability !== "pure"),
-      vars: functions.filter((fn) => fn.stateMutability === "pure"),
-    };
-  }, [functions]);
-
   return (
     <Card as={Flex} flexDir="column" gap={2} p={0}>
       <Tabs isLazy lazyBehavior="keepMounted" colorScheme="purple">
         <TabList px={0} borderBottomColor="borderColor" borderBottomWidth="1px">
-          {fns.length ? (
+          {functions.length ? (
             <Tab gap={2}>
               <Heading color="inherit" my={1} size="label.lg">
                 Functions
               </Heading>
             </Tab>
           ) : null}
-          {vars.length ? (
+          {/* {vars.length ? (
             <Tab gap={2}>
               <Heading color="inherit" my={1} size="label.lg">
                 Variables
               </Heading>
             </Tab>
-          ) : null}
+          ) : null} */}
           <Tab isDisabled gap={2}>
             <Heading color="inherit" my={1} size="label.lg">
               Events 🚧
@@ -65,16 +57,19 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
           )}
         </TabList>
         <TabPanels px={{ base: 2, md: 6 }} py={2}>
-          {fns.length ? (
+          {functions.length ? (
             <TabPanel px={0}>
-              <ContractFunctionsPanel functions={fns} contract={contract} />
+              <ContractFunctionsPanel
+                functions={functions}
+                contract={contract}
+              />
             </TabPanel>
           ) : null}
-          {vars.length ? (
+          {/* {vars.length ? (
             <TabPanel px={0}>
               <ContractFunctionsPanel functions={vars} contract={contract} />
             </TabPanel>
-          ) : null}
+          ) : null} */}
           <TabPanel px={0}>
             <div>Events panel will go here</div>
           </TabPanel>

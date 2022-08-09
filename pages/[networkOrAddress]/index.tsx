@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { QueryClient, dehydrate } from "@tanstack/react-query";
 import { useAddress } from "@thirdweb-dev/react";
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { ChainId } from "@thirdweb-dev/sdk";
 import { AppLayout } from "components/app-layouts/app";
 import { DeployableContractTable } from "components/contract-components/contract-table";
 import {
@@ -20,6 +20,7 @@ import {
 import { ReleaserHeader } from "components/contract-components/releaser/releaser-header";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { useSingleQueryParam } from "hooks/useQueryParam";
+import { getSSRSDK } from "lib/ssr-sdk";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
@@ -135,7 +136,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   const queryClient = new QueryClient();
   // TODO make this use alchemy / other RPC
   // currently blocked because our alchemy RPC does not allow us to call this from the server (since we have an allow-list)
-  const sdk = new ThirdwebSDK("polygon");
+  const polygonSdk = getSSRSDK(ChainId.Polygon);
 
   const networkOrAddress = getSingleQueryValue(ctx.params, "networkOrAddress");
 
@@ -178,10 +179,10 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   await Promise.all([
     ...ensQueries,
     queryClient.prefetchQuery(["releaser-profile", address], () =>
-      fetchReleaserProfile(sdk, address),
+      fetchReleaserProfile(polygonSdk, address),
     ),
     queryClient.prefetchQuery(["published-contracts", address], () =>
-      fetchPublishedContracts(sdk, address),
+      fetchPublishedContracts(polygonSdk, address),
     ),
   ]);
 
@@ -194,7 +195,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    fallback: "blocking",
+    fallback: true,
     paths: [],
   };
 };

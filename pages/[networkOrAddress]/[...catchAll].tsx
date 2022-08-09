@@ -1,6 +1,6 @@
 import { QueryClient, dehydrate } from "@tanstack/react-query";
 import { SupportedChainId } from "@thirdweb-dev/react/dist/constants/chain";
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { ChainId } from "@thirdweb-dev/sdk";
 import { AppLayout } from "components/app-layouts/app";
 import {
   ens,
@@ -17,6 +17,7 @@ import {
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { isAddress } from "ethers/lib/utils";
 import { isEnsName } from "lib/ens";
+import { getSSRSDK } from "lib/ssr-sdk";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "pages/_app";
@@ -122,7 +123,7 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
   }
 
   const queryClient = new QueryClient();
-  const sdk = new ThirdwebSDK("polygon");
+  const polygonSdk = getSSRSDK(ChainId.Polygon);
 
   // handle the case where the user is trying to access a custom contract
   if (networkOrAddress in SupportedNetworkToChainIdMap) {
@@ -164,7 +165,7 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
 
       const allVersions = await queryClient.fetchQuery(
         ["all-releases", address, contractName],
-        () => fetchAllVersions(sdk, address, contractName),
+        () => fetchAllVersions(polygonSdk, address, contractName),
       );
 
       const release =
@@ -186,14 +187,14 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
       await Promise.all([
         ...ensQueries,
         queryClient.prefetchQuery(["released-contract", release], () =>
-          fetchReleasedContractInfo(sdk, release),
+          fetchReleasedContractInfo(polygonSdk, release),
         ),
         queryClient.prefetchQuery(
           ["publish-metadata", release.metadataUri],
           () => fetchContractPublishMetadataFromURI(release.metadataUri),
         ),
         queryClient.prefetchQuery(["releaser-profile", address], () =>
-          fetchReleaserProfile(sdk, address),
+          fetchReleaserProfile(polygonSdk, address),
         ),
       ]);
 
@@ -216,7 +217,7 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    fallback: "blocking",
+    fallback: true,
     paths: [],
   };
 };

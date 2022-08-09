@@ -9,6 +9,7 @@ import {
 import { StorageSingleton } from "components/app-layouts/providers";
 import { ethers } from "ethers";
 import { Interface } from "ethers/lib/utils";
+import { getSSRSDK } from "lib/ssr-sdk";
 import { NextApiRequest, NextApiResponse } from "next";
 import { SupportedChainIdToNetworkMap } from "utils/network";
 
@@ -316,7 +317,7 @@ async function fetchDeployBytecodeFromReleaseMetadata(
     provider,
   );
   if (compialierMetaUri) {
-    const pubmeta = await new ThirdwebSDK("polygon")
+    const pubmeta = await getSSRSDK(ChainId.Polygon)
       .getPublisher()
       .resolvePublishMetadataFromCompilerMetadata(compialierMetaUri);
     return pubmeta.length > 0

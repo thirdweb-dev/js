@@ -14,6 +14,7 @@ import {
   useSDK,
 } from "@thirdweb-dev/react";
 import {
+  ChainId,
   ContractType,
   SmartContract,
   ThirdwebSDK,
@@ -35,6 +36,7 @@ import { StorageSingleton } from "components/app-layouts/providers";
 import { BuiltinContractMap } from "constants/mappings";
 import { isAddress } from "ethers/lib/utils";
 import { ENSResolveResult, isEnsName } from "lib/ens";
+import { getSSRSDK } from "lib/ssr-sdk";
 import { StaticImageData } from "next/image";
 import { useMemo } from "react";
 import invariant from "tiny-invariant";
@@ -237,7 +239,7 @@ export function useReleasesFromDeploy(contractAddress?: string) {
   const sdk = useSDK();
   const provider = sdk?.getProvider();
 
-  const polygonSdk = new ThirdwebSDK("polygon");
+  const polygonSdk = getSSRSDK(ChainId.Polygon);
   return useQueryWithNetwork(
     ["release-from-deploy", contractAddress],
     async () => {

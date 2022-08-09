@@ -1,9 +1,10 @@
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { ChainId } from "@thirdweb-dev/sdk";
 import {
   ens,
   fetchPublishedContracts,
 } from "components/contract-components/hooks";
 import { ENSResolveResult } from "lib/ens";
+import { getSSRSDK } from "lib/ssr-sdk";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSingleQueryValue } from "utils/router";
 
@@ -40,9 +41,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   // if we don't have a specific contractName we have to actually fetch all the contracts for the address
   if (!contractName) {
-    const sdk = new ThirdwebSDK("polygon");
+    const polygonSdk = getSSRSDK(ChainId.Polygon);
     const publishedContracts = await fetchPublishedContracts(
-      sdk,
+      polygonSdk,
       ensResult.address,
     );
 
