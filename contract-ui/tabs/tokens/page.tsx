@@ -43,7 +43,11 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
     <Flex direction="column" gap={6}>
       <Flex direction="row" justify="space-between" align="center">
         <Heading size="title.sm">Contract Tokens</Heading>
-        <ButtonGroup>
+        <ButtonGroup
+          flexDirection={{ base: "column", md: "row" }}
+          gap={2}
+          w="inherit"
+        >
           <TokenAirdropButton contract={detectedContract} />
           <TokenTransferButton contract={detectedContract} />
           <TokenMintButton contract={detectedContract} />

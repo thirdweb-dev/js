@@ -4,10 +4,12 @@ import {
   ContractWithRoles,
   RolesForContract,
   useAllRoleMembers,
+  useContractType,
   useSetAllRoleMembers,
 } from "@thirdweb-dev/react";
+import { Role } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { ROLE_DESCRIPTION_MAP } from "constants/mappings";
+import { BuiltinContractMap, ROLE_DESCRIPTION_MAP } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect } from "react";
@@ -27,6 +29,10 @@ export const Permissions = <TContract extends ContractWithRoles>({
   const allRoleMembers = useAllRoleMembers(contract);
   const setAllRoleMembers = useSetAllRoleMembers(contract);
   const form = useForm({});
+
+  const { data: contractType } = useContractType(contract.getAddress());
+  const contractData =
+    BuiltinContractMap[contractType as keyof typeof BuiltinContractMap];
 
   useEffect(() => {
     if (allRoleMembers.data && !form.formState.isDirty) {
@@ -74,8 +80,11 @@ export const Permissions = <TContract extends ContractWithRoles>({
           });
         })}
       >
-        {Object.keys(allRoleMembers.data || ROLE_DESCRIPTION_MAP).map(
-          (role) => {
+        {Object.keys(allRoleMembers.data || ROLE_DESCRIPTION_MAP)
+          .filter((role) =>
+            contractData ? contractData.roles?.includes(role as Role) : true,
+          )
+          .map((role) => {
             return (
               <ContractPermission
                 isLoading={allRoleMembers.isLoading}
@@ -84,8 +93,7 @@ export const Permissions = <TContract extends ContractWithRoles>({
                 description={ROLE_DESCRIPTION_MAP[role] || ""}
               />
             );
-          },
-        )}
+          })}
         <ButtonGroup justifyContent="flex-end">
           <Button
             borderRadius="md"

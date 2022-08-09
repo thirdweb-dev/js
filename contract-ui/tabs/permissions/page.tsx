@@ -26,7 +26,7 @@ export const ContractPermissionsPage: React.FC<
     return (
       <Card as={Flex} flexDir="column" gap={3}>
         {/* TODO  extract this out into it's own component and make it better */}
-        <Heading size="subtitle.md">No Permissions enabled</Heading>
+        <Heading size="subtitle.md">No Permissions Enumerable enabled</Heading>
         <Text>
           To enable Permissions features you will have to extend the required
           interfaces in your contract.
@@ -38,9 +38,9 @@ export const ContractPermissionsPage: React.FC<
           <ButtonGroup colorScheme="purple" size="sm" variant="solid">
             <LinkButton
               isExternal
-              href="https://portal.thirdweb.com/contracts-sdk/contract-extensions/permissions"
+              href="https://portal.thirdweb.com/contracts-sdk/contract-extensions/permissions#permissions-enumerable"
             >
-              Permissions
+              Permissions Enumerable
             </LinkButton>
           </ButtonGroup>
         </Flex>

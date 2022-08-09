@@ -21,7 +21,7 @@ export const TokenSupply: React.FC<TokenBalancesProps> = ({ contract }) => {
 
   return (
     <Stack spacing={6}>
-      <Stack direction="row" spacing={6}>
+      <Stack direction={{ base: "column", md: "row" }} spacing={6}>
         <Card as={Stat}>
           <StatLabel>Total Supply</StatLabel>
           <StatNumber>
