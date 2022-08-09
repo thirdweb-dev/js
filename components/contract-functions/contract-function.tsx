@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { AbiFunction, SmartContract } from "@thirdweb-dev/sdk";
 import { MarkdownRenderer } from "components/contract-components/released-contract/markdown-renderer";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FiEdit2, FiEye } from "react-icons/fi";
 import { Badge, Button, Card, Heading, Text } from "tw-components";
 
@@ -119,9 +119,22 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
   functions,
   contract,
 }) => {
+  const sortedFunctions = useMemo(() => {
+    return functions.sort((a, b) => {
+      if (b.stateMutability === "view" || b.stateMutability === "pure") {
+        return -1;
+      }
+      if (a.stateMutability === "view" || a.stateMutability === "pure") {
+        return 1;
+      }
+      return 0;
+    });
+  }, [functions]);
+
   const [selectedFunction, setSelectedFunction] = useState<AbiFunction>(
-    functions[0],
+    sortedFunctions[0],
   );
+
   return (
     <SimpleGrid columns={12}>
       <GridItem
@@ -136,7 +149,7 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
           pr={{ base: 0, md: 3 }}
           mb={{ base: 3, md: 0 }}
         >
-          {functions.map((fn) => (
+          {sortedFunctions.map((fn) => (
             <ListItem key={fn.signature} my={0.5}>
               <Button
                 size="sm"

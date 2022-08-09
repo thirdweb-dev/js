@@ -31,11 +31,10 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
     <Flex
       flexDirection={{ base: "column", md: page ? "column" : "row" }}
       justifyContent="space-between"
+      align="center"
     >
       <Flex direction="column" gap={4} w="full">
-        <Heading size="title.sm">
-          {isProfilePage ? "Author" : "Released by"}
-        </Heading>
+        {isProfilePage ? null : <Heading size="title.sm">Released by</Heading>}
         <Flex gap={4} alignItems="center">
           <Skeleton isLoaded={releaserProfile.isSuccess}>
             <ReleaserAvatar

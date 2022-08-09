@@ -11,13 +11,13 @@ import {
 import { useContractCall } from "@thirdweb-dev/react";
 import { SmartContract } from "@thirdweb-dev/sdk";
 import { AbiFunction } from "@thirdweb-dev/sdk/dist/src/schema/contracts/custom";
+import { MismatchButton } from "components/buttons/MismatchButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BigNumber, utils } from "ethers";
 import { useId, useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FiPlay } from "react-icons/fi";
 import {
-  Button,
   Card,
   CodeBlock,
   FormHelperText,
@@ -279,7 +279,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
       <Divider mt="auto" />
       <ButtonGroup ml="auto">
         {isView ? (
-          <Button
+          <MismatchButton
             isDisabled={!abiFunction}
             rightIcon={<Icon as={FiPlay} />}
             colorScheme="primary"
@@ -288,7 +288,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
             form={formId}
           >
             Run
-          </Button>
+          </MismatchButton>
         ) : (
           <TransactionButton
             isDisabled={!abiFunction}

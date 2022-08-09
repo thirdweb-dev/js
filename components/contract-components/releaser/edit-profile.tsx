@@ -18,7 +18,7 @@ import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect, useId } from "react";
 import { useForm } from "react-hook-form";
 import { BiImage } from "react-icons/bi";
-import { FiGlobe } from "react-icons/fi";
+import { FiEdit, FiGlobe } from "react-icons/fi";
 import { HiPencilAlt } from "react-icons/hi";
 import { SiDiscord, SiGithub, SiTwitter } from "react-icons/si";
 import {
@@ -69,7 +69,12 @@ export const EditProfile: React.FC<EditProfileProps> = ({
 
   return (
     <>
-      <Button onClick={onOpen} size="sm">
+      <Button
+        onClick={onOpen}
+        size="sm"
+        variant="outline"
+        leftIcon={<Icon as={FiEdit} />}
+      >
         Edit Profile
       </Button>
 

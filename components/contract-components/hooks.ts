@@ -32,11 +32,13 @@ import {
   ProfileMetadata,
   PublishedContract,
 } from "@thirdweb-dev/sdk/dist/src/schema/contracts/custom";
-import { StorageSingleton } from "components/app-layouts/providers";
+import {
+  StorageSingleton,
+  alchemyUrlMap,
+} from "components/app-layouts/providers";
 import { BuiltinContractMap } from "constants/mappings";
 import { isAddress } from "ethers/lib/utils";
 import { ENSResolveResult, isEnsName } from "lib/ens";
-import { getSSRSDK } from "lib/ssr-sdk";
 import { StaticImageData } from "next/image";
 import { useMemo } from "react";
 import invariant from "tiny-invariant";
@@ -69,6 +71,7 @@ export async function fetchContractPublishMetadataFromURI(
   contractId: ContractId,
 ) {
   const contractIdIpfsHash = toContractIdIpfsHash(contractId);
+
   if (isContractIdBuiltInContract(contractId)) {
     const details = BuiltinContractMap[contractIdIpfsHash as ContractType];
     return {
@@ -78,18 +81,25 @@ export async function fetchContractPublishMetadataFromURI(
       description: details.description,
     };
   }
-  // TODO: Make this nicer.
+
   invariant(contractId !== "ipfs://undefined", "uri can't be undefined");
-  const resolved = await fetchPreDeployMetadata(
-    contractIdIpfsHash,
-    StorageSingleton,
-  );
+  let resolved;
+  try {
+    resolved = await fetchPreDeployMetadata(
+      contractIdIpfsHash,
+      StorageSingleton,
+    );
+  } catch (err) {
+    console.error("failed to resolvePreDeployMetadata", err);
+  }
+
   if (!resolved) {
     return {
-      name: "Loading...",
+      name: "",
       image: "custom",
     };
   }
+
   return {
     image: (resolved as any)?.image || "custom",
     name: resolved.name,
@@ -239,7 +249,16 @@ export function useReleasesFromDeploy(contractAddress?: string) {
   const sdk = useSDK();
   const provider = sdk?.getProvider();
 
-  const polygonSdk = getSSRSDK(ChainId.Polygon);
+  const polygonSdk = new ThirdwebSDK(
+    alchemyUrlMap[ChainId.Polygon],
+    {
+      readonlySettings: {
+        chainId: ChainId.Polygon,
+        rpcUrl: alchemyUrlMap[ChainId.Polygon],
+      },
+    },
+    StorageSingleton,
+  );
   return useQueryWithNetwork(
     ["release-from-deploy", contractAddress],
     async () => {

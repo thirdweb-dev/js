@@ -52,9 +52,9 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   const activityQuery = useActivity(contractAddress, autoUpdate);
 
   return (
-    <Flex gap={3} flexDirection="column">
+    <Flex gap={6} flexDirection="column">
       <Flex align="center" justify="space-between" w="full">
-        <Heading size="subtitle.md">Latest Transactions</Heading>
+        <Heading size="title.sm">Latest Transactions</Heading>
         <Box>
           <FormControl display="flex" alignItems="center">
             <FormLabel htmlFor="auto-update" mb="0">
