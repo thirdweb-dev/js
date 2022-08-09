@@ -12,7 +12,7 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { BuiltinContractMap, ROLE_DESCRIPTION_MAP } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Button } from "tw-components";
 
@@ -45,6 +45,15 @@ export const Permissions = <TContract extends ContractWithRoles>({
     "Permissions updated",
     "Failed to update permissions",
   );
+
+  const roles = useMemo(() => {
+    return Object.keys(allRoleMembers.data || ROLE_DESCRIPTION_MAP).filter(
+      (role) =>
+        contractData && contractData.contractType !== "custom"
+          ? contractData.roles?.includes(role as Role)
+          : true,
+    );
+  }, [allRoleMembers.data, contractData]);
 
   return (
     <FormProvider {...form}>
@@ -80,20 +89,16 @@ export const Permissions = <TContract extends ContractWithRoles>({
           });
         })}
       >
-        {Object.keys(allRoleMembers.data || ROLE_DESCRIPTION_MAP)
-          .filter((role) =>
-            contractData ? contractData.roles?.includes(role as Role) : true,
-          )
-          .map((role) => {
-            return (
-              <ContractPermission
-                isLoading={allRoleMembers.isLoading}
-                key={role}
-                role={role}
-                description={ROLE_DESCRIPTION_MAP[role] || ""}
-              />
-            );
-          })}
+        {roles.map((role) => {
+          return (
+            <ContractPermission
+              isLoading={allRoleMembers.isLoading}
+              key={role}
+              role={role}
+              description={ROLE_DESCRIPTION_MAP[role] || ""}
+            />
+          );
+        })}
         <ButtonGroup justifyContent="flex-end">
           <Button
             borderRadius="md"
