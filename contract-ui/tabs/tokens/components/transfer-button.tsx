@@ -33,7 +33,7 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
         {...restButtonProps}
         onClick={onOpen}
         contract={contract}
-        feature="ERC20Mintable"
+        feature="ERC20"
       >
         Transfer
       </ExtensionDetectButton>
