@@ -37,6 +37,7 @@ export const ContractReleasedByCell: React.FC<
         fontFamily="mono"
         size="sm"
         width="100%"
+        onClick={(e) => e.stopPropagation()}
       >
         <Text size="body.md">
           {shortenIfAddress(releaserEnsQuery.data?.ensName || releaser, true) ||

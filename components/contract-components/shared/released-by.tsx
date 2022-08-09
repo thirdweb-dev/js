@@ -48,22 +48,15 @@ export const ReleasedBy: React.FC<ReleasedByProps> = ({ contractAddress }) => {
       as={LinkBox}
     >
       <Flex gap={2} direction="column">
-        <Flex gap={0.5} direction="column">
-          <Flex justify="space-between" gap={4} align="center">
-            <LinkOverlay as={Link} href={releaseUrl} noMatch>
-              <Heading noOfLines={1} size="label.lg">
-                {releaseToShow.name}
-              </Heading>
-            </LinkOverlay>
-            <Badge flexShrink={0} borderRadius="sm" textTransform="lowercase">
-              v{releaseToShow.version}
-            </Badge>
-          </Flex>
-          {releaseToShow.description && (
-            <Text noOfLines={2} size="body.sm">
-              {releaseToShow.description}
-            </Text>
-          )}
+        <Flex justify="space-between" gap={4} align="center">
+          <LinkOverlay as={Link} href={releaseUrl} noMatch>
+            <Heading noOfLines={1} size="label.lg">
+              {releaseToShow.name}
+            </Heading>
+          </LinkOverlay>
+          <Badge flexShrink={0} borderRadius="sm" textTransform="lowercase">
+            v{releaseToShow.version}
+          </Badge>
         </Flex>
 
         <Link

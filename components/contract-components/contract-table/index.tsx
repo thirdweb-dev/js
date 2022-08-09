@@ -1,4 +1,6 @@
+import { ens, useContractPublishMetadataFromURI } from "../hooks";
 import { ContractCellContext, ContractId } from "../types";
+import { isContractIdBuiltInContract } from "../utils";
 import { ContractDeployActionCell } from "./cells/deploy-action";
 import { ContractDescriptionCell } from "./cells/description";
 import { ContractImageCell } from "./cells/image";
@@ -6,8 +8,12 @@ import { ContractNameCell } from "./cells/name";
 import { ContractReleasedByCell } from "./cells/released-by";
 import { ContractVersionCell } from "./cells/version";
 import { Spinner, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { useAddress } from "@thirdweb-dev/react";
+import { BuiltinContractMap } from "constants/mappings";
+import { useSingleQueryParam } from "hooks/useQueryParam";
+import { useRouter } from "next/router";
 import React, { useMemo } from "react";
-import { Column, useTable } from "react-table";
+import { Column, Row, useTable } from "react-table";
 import { Card, Checkbox, Text } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
@@ -172,24 +178,11 @@ export const DeployableContractTable: ComponentWithChildren<
           {tableInstance.rows.map((row) => {
             tableInstance.prepareRow(row);
             return (
-              // eslint-disable-next-line react/jsx-key
-              <Tr
-                borderBottomWidth={1}
-                _last={{ borderBottomWidth: 0 }}
-                {...row.getRowProps()}
-              >
-                {row.cells.map((cell) => (
-                  // eslint-disable-next-line react/jsx-key
-                  <Td
-                    {...cell.getCellProps()}
-                    borderBottomWidth="inherit"
-                    borderBottomColor="borderColor"
-                    _last={{ textAlign: "end" }}
-                  >
-                    {cell.render("Cell")}
-                  </Td>
-                ))}
-              </Tr>
+              <TableRow
+                row={row}
+                key={row.original.contractId}
+                context={context}
+              />
             );
           })}
         </Tbody>
@@ -198,3 +191,86 @@ export const DeployableContractTable: ComponentWithChildren<
     </Card>
   );
 };
+
+interface TableRowProps {
+  row: Row<{ contractId: ContractId }>;
+  context?: ContractCellContext;
+}
+
+const TableRow: React.FC<TableRowProps> = ({ row, context }) => {
+  const publishMetadata = useContractPublishMetadataFromURI(
+    row.original.contractId,
+  );
+  const address = useAddress();
+
+  const wallet = useSingleQueryParam("networkOrAddress");
+  const router = useRouter();
+
+  const connectedWalletEns = ens.useQuery(address);
+  const walletEns = ens.useQuery(wallet);
+
+  return (
+    <Tr
+      borderBottomWidth={1}
+      role="group"
+      cursor="pointer"
+      _last={{ borderBottomWidth: 0 }}
+      _hover={{ bg: "blackAlpha.50" }}
+      _dark={{
+        _hover: {
+          bg: "whiteAlpha.50",
+        },
+      }}
+      onClick={() => {
+        router.push(
+          isContractIdBuiltInContract(row.original.contractId)
+            ? BuiltinContractMap[
+                row.original.contractId as keyof typeof BuiltinContractMap
+              ]?.href
+            : actionUrlPath(
+                context,
+                row.original.contractId,
+                walletEns.data?.ensName ||
+                  walletEns.data?.address ||
+                  connectedWalletEns.data?.ensName ||
+                  connectedWalletEns.data?.address ||
+                  address,
+                publishMetadata.data?.name,
+              ),
+        );
+      }}
+      {...row.getRowProps()}
+    >
+      {row.cells.map((cell) => (
+        // eslint-disable-next-line react/jsx-key
+        <Td
+          {...cell.getCellProps()}
+          borderBottomWidth="inherit"
+          borderBottomColor="borderColor"
+          _last={{ textAlign: "end" }}
+        >
+          {cell.render("Cell")}
+        </Td>
+      ))}
+    </Tr>
+  );
+};
+
+function actionUrlPath(
+  context: ContractCellContext | undefined,
+  hash: string,
+  address?: string,
+  name?: string,
+) {
+  switch (context) {
+    case "view_release":
+      return `/${address}/${name}`;
+    case "create_release":
+      return `/contracts/release/${encodeURIComponent(hash)}`;
+    case "deploy":
+      return `/contracts/deploy/${encodeURIComponent(hash)}`;
+    default:
+      // should never happen
+      return `/contracts/deploy/${encodeURIComponent(hash)}`;
+  }
+}
