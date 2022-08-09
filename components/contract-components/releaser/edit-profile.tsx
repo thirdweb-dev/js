@@ -72,35 +72,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         Edit Profile
       </Button>
 
-      <form
-        onSubmit={handleSubmit((d) => {
-          trackEvent({
-            category: "profile",
-            action: "edit",
-            label: "attempt",
-          });
-          editProfile.mutate(d, {
-            onSuccess: () => {
-              onSuccess();
-              trackEvent({
-                category: "profile",
-                action: "edit",
-                label: "success",
-              });
-              onClose();
-            },
-            onError: (error) => {
-              onError(error);
-              trackEvent({
-                category: "profile",
-                action: "edit",
-                label: "error",
-                error,
-              });
-            },
-          });
-        })}
-      >
+      <form>
         <Drawer
           isOpen={isOpen}
           onClose={onClose}
@@ -117,6 +89,33 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                 colorScheme="blue"
                 type="submit"
                 isLoading={editProfile.isLoading}
+                onClick={handleSubmit((d) => {
+                  trackEvent({
+                    category: "profile",
+                    action: "edit",
+                    label: "attempt",
+                  });
+                  editProfile.mutate(d, {
+                    onSuccess: () => {
+                      onSuccess();
+                      trackEvent({
+                        category: "profile",
+                        action: "edit",
+                        label: "success",
+                      });
+                      onClose();
+                    },
+                    onError: (error) => {
+                      onError(error);
+                      trackEvent({
+                        category: "profile",
+                        action: "edit",
+                        label: "error",
+                        error,
+                      });
+                    },
+                  });
+                })}
               >
                 Save
               </TransactionButton>
@@ -126,6 +125,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
             gap: 6,
             display: "flex",
             flexDirection: "column",
+            overflowX: "hidden",
           }}
         >
           <FormControl isInvalid={!!errors.avatar}>
@@ -155,7 +155,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
               {errors?.avatar?.message as unknown as string}
             </FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={!!errors.bio} mr={4}>
+          <FormControl isInvalid={!!errors.bio}>
             <FormLabel>
               <Flex gap={2}>
                 <Icon as={HiPencilAlt} boxSize={4} />
@@ -169,7 +169,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
             />
             <FormErrorMessage>{errors?.bio?.message}</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={!!errors.github} mr={4}>
+          <FormControl isInvalid={!!errors.github}>
             <FormLabel>
               <Flex gap={2}>
                 <Icon as={SiGithub} boxSize={4} />
@@ -182,7 +182,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
             />
             <FormErrorMessage>{errors?.github?.message}</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={!!errors.twitter} mr={4}>
+          <FormControl isInvalid={!!errors.twitter}>
             <FormLabel>
               <Flex gap={2}>
                 <Icon as={SiTwitter} boxSize={4} />
@@ -195,7 +195,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
             />
             <FormErrorMessage>{errors?.twitter?.message}</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={!!errors.website} mr={4}>
+          <FormControl isInvalid={!!errors.website}>
             <FormLabel>
               <Flex gap={2}>
                 <Icon as={FiGlobe} boxSize={4} />
@@ -208,7 +208,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
             />
             <FormErrorMessage>{errors?.website?.message}</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={!!errors.discord} mr={4}>
+          <FormControl isInvalid={!!errors.discord}>
             <FormLabel>
               <Flex gap={2}>
                 <Icon as={SiDiscord} boxSize={4} />
