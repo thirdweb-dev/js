@@ -15,7 +15,7 @@ import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useEffect } from "react";
+import { useEffect, useId } from "react";
 import { useForm } from "react-hook-form";
 import { BiImage } from "react-icons/bi";
 import { FiGlobe } from "react-icons/fi";
@@ -36,6 +36,7 @@ interface EditProfileProps {
 export const EditProfile: React.FC<EditProfileProps> = ({
   releaserProfile,
 }) => {
+  const FORM_ID = useId();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     register,
@@ -72,7 +73,36 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         Edit Profile
       </Button>
 
-      <form>
+      <form
+        id={FORM_ID}
+        onSubmit={handleSubmit((d) => {
+          trackEvent({
+            category: "profile",
+            action: "edit",
+            label: "attempt",
+          });
+          editProfile.mutate(d, {
+            onSuccess: () => {
+              onSuccess();
+              trackEvent({
+                category: "profile",
+                action: "edit",
+                label: "success",
+              });
+              onClose();
+            },
+            onError: (error) => {
+              onError(error);
+              trackEvent({
+                category: "profile",
+                action: "edit",
+                label: "error",
+                error,
+              });
+            },
+          });
+        })}
+      >
         <Drawer
           isOpen={isOpen}
           onClose={onClose}
@@ -89,33 +119,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
                 colorScheme="blue"
                 type="submit"
                 isLoading={editProfile.isLoading}
-                onClick={handleSubmit((d) => {
-                  trackEvent({
-                    category: "profile",
-                    action: "edit",
-                    label: "attempt",
-                  });
-                  editProfile.mutate(d, {
-                    onSuccess: () => {
-                      onSuccess();
-                      trackEvent({
-                        category: "profile",
-                        action: "edit",
-                        label: "success",
-                      });
-                      onClose();
-                    },
-                    onError: (error) => {
-                      onError(error);
-                      trackEvent({
-                        category: "profile",
-                        action: "edit",
-                        label: "error",
-                        error,
-                      });
-                    },
-                  });
-                })}
+                form={FORM_ID}
               >
                 Save
               </TransactionButton>
