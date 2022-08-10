@@ -1,7 +1,6 @@
 import { NFTMintForm } from "./mint-form";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import { NFTContract, useLazyMint } from "@thirdweb-dev/react";
-import { Erc721 } from "@thirdweb-dev/sdk";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import React from "react";
 import { FiPlus } from "react-icons/fi";
@@ -16,11 +15,11 @@ export const NFTLazyMintButton: React.FC<NFTLazyMintButtonProps> = ({
   ...restButtonProps
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const mutation = useLazyMint(contract as Erc721);
+  const mutation = useLazyMint(contract);
 
   const detectedState = extensionDetectedState({
     contract,
-    feature: ["ERC721Droppable"],
+    feature: ["ERC721Droppable", "ERC1155Droppable"],
   });
 
   if (detectedState !== "enabled") {
