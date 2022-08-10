@@ -3,6 +3,7 @@ import {
   useContractEnabledExtensions,
   useContractPublishMetadataFromURI,
   useReleasedContractCompilerMetadata,
+  useReleasedContractEvents,
   useReleasedContractFunctions,
   useReleasedContractInfo,
   useReleaserProfile,
@@ -76,6 +77,7 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
   const currentRoute = `https://thirdweb.com${router.asPath}`;
 
   const contractFunctions = useReleasedContractFunctions(release);
+  const contractEvents = useReleasedContractEvents(release);
 
   // const { onCopy, hasCopied } = useClipboard(currentRoute);
 
@@ -205,6 +207,7 @@ Deploy it in one click`,
           {contractFunctions && (
             <ContractFunctionsOverview
               functions={contractFunctions}
+              events={contractEvents}
               sources={sources.data}
             />
           )}

@@ -7,7 +7,7 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import type { AbiFunction, SmartContract } from "@thirdweb-dev/sdk";
+import type { AbiEvent, AbiFunction, SmartContract } from "@thirdweb-dev/sdk";
 import {
   SourceFile,
   SourcesPanel,
@@ -16,12 +16,14 @@ import { Card, Heading } from "tw-components";
 
 interface ContractFunctionsOverview {
   functions: AbiFunction[];
+  events?: AbiEvent[] | null;
   contract?: SmartContract;
   sources?: SourceFile[];
 }
 
 export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
   functions,
+  events,
   contract,
   sources,
 }) => {
@@ -36,18 +38,13 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
               </Heading>
             </Tab>
           ) : null}
-          {/* {vars.length ? (
+          {events?.length ? (
             <Tab gap={2}>
               <Heading color="inherit" my={1} size="label.lg">
-                Variables
+                Events
               </Heading>
             </Tab>
-          ) : null} */}
-          <Tab isDisabled gap={2}>
-            <Heading color="inherit" my={1} size="label.lg">
-              Events 🚧
-            </Heading>
-          </Tab>
+          ) : null}
           {sources && (
             <Tab gap={2}>
               <Heading color="inherit" my={1} size="label.lg">
@@ -60,19 +57,19 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
           {functions.length ? (
             <TabPanel px={0}>
               <ContractFunctionsPanel
-                functions={functions}
+                fnsOrEvents={functions}
                 contract={contract}
               />
             </TabPanel>
           ) : null}
-          {/* {vars.length ? (
+          {events?.length ? (
             <TabPanel px={0}>
-              <ContractFunctionsPanel functions={vars} contract={contract} />
+              <ContractFunctionsPanel
+                fnsOrEvents={events}
+                contract={contract}
+              />
             </TabPanel>
-          ) : null} */}
-          <TabPanel px={0}>
-            <div>Events panel will go here</div>
-          </TabPanel>
+          ) : null}
           {sources && (
             <TabPanel px={0}>
               <SourcesPanel sources={sources} />
