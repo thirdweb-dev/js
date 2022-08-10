@@ -59,10 +59,10 @@ export default function Component() {
   const { mutateAsync: {{function}}, isLoading } = useContractCall(contract, "{{function}}")
 
   const call = async () => {
-    try{
+    try {
       const data = await {{function}}([ {{args}} ]);
-      console.log("contract call successs", data);
-    }catch(err){
+      console.info("contract call successs", data);
+    } catch (err) {
       console.error("contract call failure", err);
     }
   }
@@ -92,7 +92,7 @@ function formatSnippet(
       ?.replace(/{{chainName}}/gm, chainName || "goerli")
       ?.replace(/{{function}}/gm, fn || "");
 
-    if (args && args.length) {
+    if (args && args?.some((arg) => arg)) {
       code[env] = code[env]?.replace(/{{args}}/gm, args?.join(", ") || "");
     } else {
       code[env] = code[env]
@@ -107,7 +107,7 @@ function formatSnippet(
 export const CodeOverview: React.FC<CodeOverviewProps> = ({
   contractAddress,
 }) => {
-  const chainName = useSingleQueryParam<SupportedNetwork>("network");
+  const chainName = useSingleQueryParam<SupportedNetwork>("networkOrAddress");
   const [environment, setEnvironment] = useState<Environment>("react");
 
   const functionsQuery = useContractFunctions(contractAddress);

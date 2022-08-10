@@ -55,7 +55,7 @@ const INSTALL_COMMANDS = {
 
 export const ContractCode: React.FC<IContractCode> = ({ contract }) => {
   const { data, isLoading } = useContractCodeSnippetQuery();
-  const chainName = useSingleQueryParam<SupportedNetwork>("network");
+  const chainName = useSingleQueryParam<SupportedNetwork>("networkOrAddress");
 
   const contractName = useContractName(contract);
 
