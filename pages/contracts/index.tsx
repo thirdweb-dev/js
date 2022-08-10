@@ -58,7 +58,7 @@ const Contracts: ThirdwebNextPage = () => {
             <TrackedLink
               category="contracts"
               label="released"
-              href="https://portal.thirdweb.com/thirdweb-cli"
+              href="https://portal.thirdweb.com/release"
               isExternal
               color="blue.500"
             >

@@ -220,8 +220,13 @@ Deploy it in one click`,
               <ListItem>
                 <Flex gap={2} alignItems="center">
                   <Icon as={IoDocumentOutline} boxSize={5} />
-                  <Text size="label.md">
-                    License: {compilerInfo?.licenses?.join(", ") || "None"}
+                  <Text size="label.md" lineHeight={1.2}>
+                    License
+                    {compilerInfo?.licenses &&
+                    compilerInfo?.licenses?.length > 1
+                      ? "s"
+                      : ""}
+                    : {compilerInfo?.licenses?.join(", ") || "None"}
                   </Text>
                 </Flex>
               </ListItem>

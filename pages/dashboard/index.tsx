@@ -776,7 +776,10 @@ export const ContractTable: React.FC<ContractTableProps> = ({
             <Tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
                 // eslint-disable-next-line react/jsx-key
-                <Th {...column.getHeaderProps()}>
+                <Th
+                  borderBottomColor="borderColor"
+                  {...column.getHeaderProps()}
+                >
                   <Flex align="center" gap={2}>
                     <Text as="label" size="label.md">
                       {column.render("Header")}
@@ -824,7 +827,11 @@ export const ContractTable: React.FC<ContractTableProps> = ({
                 {row.cells.map((cell) => {
                   return (
                     // eslint-disable-next-line react/jsx-key
-                    <Td borderBottomWidth="inherit" {...cell.getCellProps()}>
+                    <Td
+                      borderBottomWidth="inherit"
+                      borderBottomColor="borderColor"
+                      {...cell.getCellProps()}
+                    >
                       {cell.render("Cell")}
                     </Td>
                   );

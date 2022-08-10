@@ -37,10 +37,22 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
         {isProfilePage ? null : <Heading size="title.sm">Released by</Heading>}
         <Flex gap={4} alignItems="center">
           <Skeleton isLoaded={releaserProfile.isSuccess}>
-            <ReleaserAvatar
-              boxSize={14}
-              address={ensQuery.data?.ensName || wallet}
-            />
+            <Link
+              href={`/contracts/${ensQuery.data?.ensName || wallet}`}
+              onClick={() =>
+                trackEvent({
+                  category: "releaser-header",
+                  action: "click",
+                  label: "releaser-avatar",
+                })
+              }
+              pointerEvents={isProfilePage ? "none" : "auto"}
+            >
+              <ReleaserAvatar
+                boxSize={14}
+                address={ensQuery.data?.ensName || wallet}
+              />
+            </Link>
           </Skeleton>
 
           <Flex flexDir="column">
@@ -53,6 +65,7 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
                   label: "releaser-name",
                 })
               }
+              pointerEvents={isProfilePage ? "none" : "auto"}
             >
               <Heading size="subtitle.sm" ml={2}>
                 {releaserProfile?.data?.name ||

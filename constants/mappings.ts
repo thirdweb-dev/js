@@ -320,7 +320,7 @@ export const ROLE_DESCRIPTION_MAP: Record<Role | string, string> = {
     "Determine who can pause (and unpause) all external calls made to this contract's contract.",
   transfer: "Determine who can transfer tokens on this contract.",
   lister: "Determine who can create new listings on this contract.",
-  asset: "Determine which assets can be listed on this marketplace.",
+  asset: "Determine which assets can be used on this contract.",
   unwrap: "Determine who can unwrap tokens on this contract.",
 };
 
