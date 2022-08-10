@@ -4,9 +4,10 @@ import {
   useCustomContractDeployMutation,
 } from "../hooks";
 import { Divider, Flex, FormControl, Input } from "@chakra-ui/react";
-import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
+import { ContractType, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelect";
+import { DisabledChainsMap } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
@@ -196,8 +197,15 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       <Flex gap={4} direction={{ base: "column", md: "row" }}>
         <FormControl>
           <SupportedNetworkSelect
+            disabledChainIds={DisabledChainsMap["custom" as ContractType]}
             isDisabled={deploy.isLoading || !publishMetadata.isSuccess}
-            value={selectedChain || -1}
+            value={
+              !DisabledChainsMap["custom" as ContractType].find(
+                (chain) => chain === selectedChain,
+              )
+                ? selectedChain
+                : -1
+            }
             onChange={(e) =>
               onChainSelect(
                 parseInt(e.currentTarget.value) as SUPPORTED_CHAIN_ID,

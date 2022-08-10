@@ -833,7 +833,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                   (chain) => chain === selectedChain,
                 )
                   ? selectedChain
-                  : undefined
+                  : -1
               }
               onChange={(e) =>
                 onChainSelect(
