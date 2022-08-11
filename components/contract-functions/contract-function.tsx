@@ -164,6 +164,7 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
           h={{ base: "300px", md: "500px" }}
           pr={{ base: 0, md: 3 }}
           mb={{ base: 3, md: 0 }}
+          overflowX="hidden"
         >
           {fnsOrEventsSorted.map((fn) => (
             <ListItem
