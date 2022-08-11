@@ -160,7 +160,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
 
             if (lazyMintMutation) {
               trackEvent({
-                category: "nft-mint",
+                category: "nft",
                 action: "lazy-mint",
                 label: "attempt",
               });
@@ -171,7 +171,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                 {
                   onSuccess: () => {
                     trackEvent({
-                      category: "nft-mint",
+                      category: "nft",
                       action: "lazy-mint",
                       label: "success",
                     });
@@ -180,7 +180,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                   },
                   onError: (error) => {
                     trackEvent({
-                      category: "nft-mint",
+                      category: "nft",
                       action: "lazy-mint",
                       label: "error",
                       error,
@@ -193,7 +193,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
 
             if (mintMutation) {
               trackEvent({
-                category: "nft-mint",
+                category: "nft",
                 action: "mint",
                 label: "attempt",
               });
@@ -206,7 +206,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                 {
                   onSuccess: () => {
                     trackEvent({
-                      category: "nft-mint",
+                      category: "nft",
                       action: "mint",
                       label: "success",
                     });
@@ -215,7 +215,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                   },
                   onError: (error) => {
                     trackEvent({
-                      category: "nft-mint",
+                      category: "nft",
                       action: "mint",
                       label: "error",
                       error,

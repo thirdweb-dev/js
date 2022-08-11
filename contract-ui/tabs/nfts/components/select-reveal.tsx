@@ -188,8 +188,8 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
               }
               onClick={() => {
                 trackEvent({
-                  category: "batch-upload-instant",
-                  action: "upload",
+                  category: "nft",
+                  action: "batch-upload-instant",
                   label: "attempt",
                 });
                 mintBatch.mutate(
@@ -201,8 +201,8 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
                   {
                     onSuccess: () => {
                       trackEvent({
-                        category: "batch-upload-instant",
-                        action: "upload",
+                        category: "nft",
+                        action: "batch-upload-instant",
                         label: "success",
                       });
                       onSuccess();
@@ -210,8 +210,8 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
                     },
                     onError: (error) => {
                       trackEvent({
-                        category: "batch-upload-instant",
-                        action: "upload",
+                        category: "nft",
+                        action: "batch-upload-instant",
                         label: "error",
                         error,
                       });

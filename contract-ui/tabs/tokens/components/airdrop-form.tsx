@@ -64,7 +64,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
           <form
             onSubmit={handleSubmit((data) => {
               trackEvent({
-                category: "token-airdrop",
+                category: "token",
                 action: "airdrop",
                 label: "attempt",
                 contractAddress: contract?.getAddress(),
@@ -80,7 +80,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
                 onSuccess: () => {
                   onSuccess();
                   trackEvent({
-                    category: "token-airdrop",
+                    category: "token",
                     action: "airdrop",
                     label: "success",
                     contract_address: contract?.getAddress(),
@@ -89,7 +89,7 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
                 },
                 onError: (error) => {
                   trackEvent({
-                    category: "token-airdrop",
+                    category: "token",
                     action: "airdrop",
                     label: "success",
                     contract_address: contract?.getAddress(),

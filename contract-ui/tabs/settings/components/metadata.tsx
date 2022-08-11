@@ -56,14 +56,14 @@ export const SettingsMetadata = <TContract extends PotentialContractInstance>({
         as="form"
         onSubmit={handleSubmit((d) => {
           trackEvent({
-            category: "metadata",
+            category: "settings",
             action: "set-metadata",
             label: "attempt",
           });
           metadataMutation.mutate(d, {
             onSuccess: () => {
               trackEvent({
-                category: "metadata",
+                category: "settings",
                 action: "set-metadata",
                 label: "success",
               });
@@ -71,7 +71,7 @@ export const SettingsMetadata = <TContract extends PotentialContractInstance>({
             },
             onError: (error) => {
               trackEvent({
-                category: "metadata",
+                category: "settings",
                 action: "set-metadata",
                 label: "error",
                 error,

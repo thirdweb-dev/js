@@ -58,14 +58,14 @@ export const SettingsRoyalties = <TContract extends PotentialContractInstance>({
         as="form"
         onSubmit={handleSubmit((d) => {
           trackEvent({
-            category: "royalty",
+            category: "settings",
             action: "set-royalty",
             label: "attempt",
           });
           mutation.mutateAsync(d, {
             onSuccess: (_data, variables) => {
               trackEvent({
-                category: "royalty",
+                category: "settings",
                 action: "set-royalty",
                 label: "success",
               });
@@ -74,7 +74,7 @@ export const SettingsRoyalties = <TContract extends PotentialContractInstance>({
             },
             onError: (error) => {
               trackEvent({
-                category: "royalty",
+                category: "settings",
                 action: "set-royalty",
                 label: "error",
                 error,

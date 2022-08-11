@@ -50,7 +50,7 @@ export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
           onSubmit={handleSubmit((d) => {
             if (address) {
               trackEvent({
-                category: "token-mint",
+                category: "token",
                 action: "mint",
                 label: "attempt",
               });
@@ -59,7 +59,7 @@ export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
                 {
                   onSuccess: () => {
                     trackEvent({
-                      category: "token-mint",
+                      category: "token",
                       action: "mint",
                       label: "success",
                     });
@@ -68,7 +68,7 @@ export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
                   },
                   onError: (error) => {
                     trackEvent({
-                      category: "token-mint",
+                      category: "token",
                       action: "mint",
                       label: "error",
                       error,

@@ -57,14 +57,14 @@ export const SettingsPlatformFees = <
         as="form"
         onSubmit={handleSubmit((d) => {
           trackEvent({
-            category: "platform-fees",
+            category: "settings",
             action: "set-platform-fees",
             label: "attempt",
           });
           mutation.mutateAsync(d, {
             onSuccess: (_data, variables) => {
               trackEvent({
-                category: "platform-fees",
+                category: "settings",
                 action: "set-platform-fees",
                 label: "success",
               });
@@ -73,7 +73,7 @@ export const SettingsPlatformFees = <
             },
             onError: (error) => {
               trackEvent({
-                category: "platform-fees",
+                category: "settings",
                 action: "set-platform-fees",
                 label: "error",
                 error,

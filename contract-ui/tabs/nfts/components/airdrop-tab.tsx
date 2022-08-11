@@ -47,7 +47,7 @@ export const AirdropTab: React.FC<AirdropTabProps> = ({
       <form
         onSubmit={handleSubmit((data) => {
           trackEvent({
-            category: "nft-airdrop",
+            category: "nft",
             action: "airdrop",
             label: "attempt",
             contractAddress: contract?.getAddress(),
@@ -62,7 +62,7 @@ export const AirdropTab: React.FC<AirdropTabProps> = ({
               onSuccess: () => {
                 onSuccess();
                 trackEvent({
-                  category: "nft-airdrop",
+                  category: "nft",
                   action: "airdrop",
                   label: "success",
                   contract_address: contract?.getAddress(),
@@ -71,7 +71,7 @@ export const AirdropTab: React.FC<AirdropTabProps> = ({
               },
               onError: (error) => {
                 trackEvent({
-                  category: "nft-airdrop",
+                  category: "nft",
                   action: "airdrop",
                   label: "success",
                   contract_address: contract?.getAddress(),

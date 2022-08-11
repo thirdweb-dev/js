@@ -41,7 +41,7 @@ export const TransferTab: React.FC<TransferTabProps> = ({
       <form
         onSubmit={handleSubmit((data) => {
           trackEvent({
-            category: "token",
+            category: "nft",
             action: "transfer",
             label: "attempt",
           });
@@ -54,7 +54,7 @@ export const TransferTab: React.FC<TransferTabProps> = ({
             {
               onSuccess: () => {
                 trackEvent({
-                  category: "token",
+                  category: "nft",
                   action: "transfer",
                   label: "success",
                 });
@@ -62,7 +62,7 @@ export const TransferTab: React.FC<TransferTabProps> = ({
               },
               onError: (error) => {
                 trackEvent({
-                  category: "token",
+                  category: "nft",
                   action: "transfer",
                   label: "error",
                   error,

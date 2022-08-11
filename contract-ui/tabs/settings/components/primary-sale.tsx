@@ -54,14 +54,14 @@ export const SettingsPrimarySale = <
         as="form"
         onSubmit={handleSubmit((d) => {
           trackEvent({
-            category: "primary-sale",
+            category: "settings",
             action: "set-primary-sale",
             label: "attempt",
           });
           mutation.mutateAsync(d.primary_sale_recipient, {
             onSuccess: (_data, variables) => {
               trackEvent({
-                category: "primary-sale",
+                category: "settings",
                 action: "set-primary-sale",
                 label: "success",
               });
@@ -70,7 +70,7 @@ export const SettingsPrimarySale = <
             },
             onError: (error) => {
               trackEvent({
-                category: "primary-sale",
+                category: "settings",
                 action: "set-primary-sale",
                 label: "error",
                 error,

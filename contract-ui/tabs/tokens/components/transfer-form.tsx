@@ -80,7 +80,7 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
           onClick={handleSubmit((d) => {
             if (address) {
               trackEvent({
-                category: "token-transfer",
+                category: "token",
                 action: "transfer",
                 label: "attempt",
               });
@@ -89,7 +89,7 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
                 {
                   onSuccess: () => {
                     trackEvent({
-                      category: "token-transfer",
+                      category: "token",
                       action: "transfer",
                       label: "success",
                     });
@@ -98,7 +98,7 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
                   },
                   onError: (error) => {
                     trackEvent({
-                      category: "token-transfer",
+                      category: "token",
                       action: "transfer",
                       label: "error",
                       error,
