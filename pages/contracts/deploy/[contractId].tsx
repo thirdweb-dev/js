@@ -22,18 +22,31 @@ import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "pages/_app";
-import { ReactElement } from "react";
+import { ReactElement, useEffect, useRef } from "react";
 import { FiArrowLeft, FiCheckCircle, FiExternalLink } from "react-icons/fi";
 import { Card, Heading, LinkButton, Text, TrackedLink } from "tw-components";
 import { pushToPreviousRoute } from "utils/pushToPreviousRoute";
 
 const ContractDeployDetailPage: ThirdwebNextPage = () => {
   const router = useRouter();
+  const trackEvent = useTrack();
   const contractId = useSingleQueryParam("contractId");
   const from = useSingleQueryParam("from");
   const publishMetadataQuery = useContractPublishMetadataFromURI(
     contractId || "",
   );
+
+  const hasTrackedImpression = useRef<boolean>(false);
+  useEffect(() => {
+    if (publishMetadataQuery.data && !hasTrackedImpression.current) {
+      hasTrackedImpression.current = true;
+      trackEvent({
+        action: "impression",
+        category: "deploy",
+        analytics: publishMetadataQuery.data.analytics,
+      });
+    }
+  }, [publishMetadataQuery.data, trackEvent]);
 
   const enabledFeatures = useContractEnabledExtensions(
     publishMetadataQuery.data?.abi,

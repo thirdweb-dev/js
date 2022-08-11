@@ -27,7 +27,7 @@ import { FeatureIconMap } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { BsCode, BsEye } from "react-icons/bs";
 import {
@@ -65,6 +65,18 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
 
   const publishMetadata = useContractPublishMetadataFromURI(contractId);
   const prePublishMetadata = useContractPrePublishMetadata(contractId, address);
+
+  const hasTrackedImpression = useRef<boolean>(false);
+  useEffect(() => {
+    if (publishMetadata.data && !hasTrackedImpression.current) {
+      hasTrackedImpression.current = true;
+      trackEvent({
+        action: "impression",
+        category: "publish",
+        analytics: publishMetadata.data.analytics,
+      });
+    }
+  }, [publishMetadata.data, trackEvent]);
 
   const latestVersion =
     prePublishMetadata.data?.latestPublishedContractMetadata?.publishedMetadata

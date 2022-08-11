@@ -57,6 +57,7 @@ export interface ContractPublishMetadata {
   info?: z.infer<typeof ContractInfoSchema>;
   licenses?: string[];
   compilerMetadata?: Record<string, any>;
+  analytics?: Record<string, any>;
 }
 
 function removeUndefinedFromObject(obj: Record<string, any>) {
@@ -110,6 +111,7 @@ export async function fetchContractPublishMetadataFromURI(
     info: removeUndefinedFromObject(resolved.info),
     licenses: resolved.licenses,
     compilerMetadata: resolved.metadata,
+    analytics: resolved.analytics,
   };
 }
 
