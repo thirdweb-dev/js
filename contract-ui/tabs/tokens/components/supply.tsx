@@ -1,4 +1,5 @@
 import {
+  Skeleton,
   Stack,
   Stat,
   StatHelpText,
@@ -16,35 +17,44 @@ interface TokenBalancesProps {
 
 export const TokenSupply: React.FC<TokenBalancesProps> = ({ contract }) => {
   const address = useAddress();
-  const { data: tokenSupply } = useTokenSupply(contract);
-  const { data: ownedBalance } = useBalance(contract.getAddress());
+  const { data: tokenSupply, isSuccess: isTokenSupplySuccess } =
+    useTokenSupply(contract);
+  const { data: ownedBalance, isSuccess: isOwnedBalanceSuccess } = useBalance(
+    contract.getAddress(),
+  );
 
   return (
     <Stack spacing={6}>
       <Stack direction={{ base: "column", md: "row" }} spacing={6}>
         <Card as={Stat}>
           <StatLabel>Total Supply</StatLabel>
-          <StatNumber>
-            {tokenSupply?.displayValue} {tokenSupply?.symbol}
-          </StatNumber>
+          <Skeleton isLoaded={isTokenSupplySuccess}>
+            <StatNumber>
+              {tokenSupply?.displayValue} {tokenSupply?.symbol}
+            </StatNumber>
+          </Skeleton>
         </Card>
         <Card as={Stat}>
           <StatLabel>Owned by you</StatLabel>
-          <StatNumber>
-            {address ? (
-              <>
-                {ownedBalance?.displayValue} {ownedBalance?.symbol}
-              </>
-            ) : (
-              <StatHelpText>
-                Connect your wallet to see your balance
-              </StatHelpText>
-            )}
-          </StatNumber>
+          <Skeleton isLoaded={isOwnedBalanceSuccess || !address}>
+            <StatNumber>
+              {address ? (
+                <>
+                  {ownedBalance?.displayValue} {ownedBalance?.symbol}
+                </>
+              ) : (
+                <StatHelpText>
+                  Connect your wallet to see your balance
+                </StatHelpText>
+              )}
+            </StatNumber>
+          </Skeleton>
         </Card>
         <Card as={Stat}>
           <StatLabel>Decimals</StatLabel>
-          <StatNumber>{tokenSupply?.decimals}</StatNumber>
+          <Skeleton isLoaded={isTokenSupplySuccess}>
+            <StatNumber>{tokenSupply?.decimals}</StatNumber>
+          </Skeleton>
         </Card>
       </Stack>
     </Stack>
