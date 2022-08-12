@@ -19,6 +19,18 @@ export function useTrack() {
       console.debug(`[PH.capture]:${catActLab}`, restData);
     }
 
-    posthog.capture(catActLab, flat(restData));
+    const restDataSafe = Object.fromEntries(
+      Object.entries(restData).map(([key, value]) => {
+        if (value instanceof Error) {
+          return [
+            key,
+            { message: value.message, stack: value.stack?.toString() },
+          ];
+        }
+        return [key, value];
+      }),
+    );
+
+    posthog.capture(catActLab, flat(restDataSafe));
   }, []);
 }
