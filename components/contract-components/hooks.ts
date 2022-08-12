@@ -111,7 +111,7 @@ export async function fetchContractPublishMetadataFromURI(
     info: removeUndefinedFromObject(resolved.info),
     licenses: resolved.licenses,
     compilerMetadata: resolved.metadata,
-    analytics: resolved.analytics,
+    analytics: removeUndefinedFromObject(resolved.analytics),
   };
 }
 
