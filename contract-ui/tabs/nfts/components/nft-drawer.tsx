@@ -1,4 +1,5 @@
 import { AirdropTab } from "./airdrop-tab";
+import { BurnTab } from "./burn-tab";
 import { TransferTab } from "./transfer-tab";
 import {
   Flex,
@@ -43,9 +44,6 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
     data?.metadata.id,
   );
 
-  const isERC1155 = contract instanceof Erc1155;
-  const isERC721 = contract instanceof Erc721;
-
   const prevData = usePrevious(data);
 
   const renderData = data || prevData;
@@ -53,9 +51,12 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
     return null;
   }
 
+  const isERC1155 = contract instanceof Erc1155;
+  const isERC721 = contract instanceof Erc721;
   const isOwner =
     (isERC1155 && BigNumber.from(balanceOf?.data || 0).gt(0)) ||
     (isERC721 && renderData.owner === address);
+  const isBurnable = detectBurn(contract);
 
   return (
     <Drawer
@@ -98,9 +99,11 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
                   Airdrop
                 </Tab>
               )}
-              <Tab gap={2} isDisabled>
-                Burn 🚧
-              </Tab>
+              {isBurnable && (
+                <Tab gap={2} isDisabled={!isOwner}>
+                  Burn
+                </Tab>
+              )}
               {isERC1155 && (
                 <Tab gap={2} isDisabled>
                   Claim Phases 🚧
@@ -132,15 +135,22 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
                   tokenId={renderData.metadata.id.toString()}
                 />
               </TabPanel>
-              <TabPanel>
-                {isERC1155 && contract instanceof Erc1155 && (
+              {isERC1155 && (
+                <TabPanel>
                   <AirdropTab
                     contract={contract}
                     tokenId={renderData.metadata.id.toString()}
                   />
-                )}
-              </TabPanel>
-              <TabPanel>Burn</TabPanel>
+                </TabPanel>
+              )}
+              {isBurnable && (
+                <TabPanel>
+                  <BurnTab
+                    contract={contract}
+                    tokenId={renderData.metadata.id.toString()}
+                  />
+                </TabPanel>
+              )}
             </TabPanels>
           </Tabs>
         </Card>
@@ -148,3 +158,13 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
     </Drawer>
   );
 };
+
+export function detectBurn(contract?: NFTContract) {
+  if (!contract) {
+    return undefined;
+  }
+  if ("burn" in contract) {
+    return !!contract?.burn;
+  }
+  return undefined;
+}

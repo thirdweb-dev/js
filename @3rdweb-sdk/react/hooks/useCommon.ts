@@ -8,8 +8,6 @@ import {
   useMutationWithInvalidate,
   useQueryWithNetwork,
 } from "./query/useQueryWithNetwork";
-// eslint-disable-next-line import/no-cycle
-import { getAllQueryKey } from "./useGetAll";
 import {
   CommonPlatformFeeSchema,
   CommonRoyaltySchema,
@@ -157,11 +155,6 @@ interface ITransferInput {
 interface IAirdropInput {
   tokenId: string;
   addresses: { address: string; quantity?: string }[];
-}
-
-interface IBurnInput {
-  tokenId: string;
-  amount?: string;
 }
 
 export type TransferableContract =
@@ -411,58 +404,6 @@ export function useAirdropMutation<TContract extends ValidContractInstance>(
         return invalidate([
           CacheKeyMap[contractType].list(contract?.getAddress()),
         ]);
-      },
-    },
-  );
-}
-
-export function useBurnMutation<TContract extends ValidContractInstance>(
-  contract?: TContract,
-) {
-  const contractType = useContractTypeOfContract(contract);
-
-  return useMutationWithInvalidate(
-    async (burnData: IBurnInput) => {
-      invariant(
-        contract,
-        "Contract is not a valid contract. Please use a valid contract",
-      );
-      invariant(
-        "burn" in contract,
-        "Contract does not support burn functionality",
-      );
-      if (contract instanceof Edition || contract instanceof EditionDrop) {
-        return await contract.burn(burnData.tokenId, burnData.amount || 1);
-      } else if (
-        contract instanceof NFTCollection ||
-        contract instanceof NFTDrop ||
-        contract instanceof SignatureDrop
-      ) {
-        return await contract.burn(burnData.tokenId);
-      } else if (contract instanceof Token) {
-        return await contract.burn(burnData.amount || 0);
-      }
-      throw new Error("Contract is not a valid contract");
-    },
-    {
-      onSuccess: (_data, _variables, _options, invalidate) => {
-        // this should not be possible, but we need to catch it in case it does
-        // if we don't know we just invalidate everything.
-        if (!contractType) {
-          return invalidate(
-            Object.keys(CacheKeyMap)
-              .map((key) => {
-                const cacheKeys = CacheKeyMap[key as keyof typeof CacheKeyMap];
-                if ("list" in cacheKeys) {
-                  return cacheKeys.list(contract?.getAddress());
-                }
-                return undefined as never;
-              })
-              .filter((fn) => !!fn),
-          );
-        }
-
-        return invalidate([getAllQueryKey(contract)]);
       },
     },
   );

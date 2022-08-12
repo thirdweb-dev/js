@@ -1,6 +1,6 @@
 import { useTableContext } from "../table-context";
-import { useBurnMutation } from "@3rdweb-sdk/react";
 import { FormControl, Icon, Input, Stack } from "@chakra-ui/react";
+import { NFTContract, useBurnNFT } from "@thirdweb-dev/react";
 import { Edition, EditionDrop, ValidContractInstance } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -23,7 +23,7 @@ export const BurnSection: React.FC<IBurnSection> = ({ contract, tokenId }) => {
     defaultValues: { amount: "1" },
   });
 
-  const burn = useBurnMutation(contract);
+  const burn = useBurnNFT(contract as NFTContract);
   const { closeAllRows } = useTableContext();
 
   const { onSuccess, onError } = useTxNotifications(
