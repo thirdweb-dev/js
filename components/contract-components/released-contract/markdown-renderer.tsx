@@ -66,7 +66,8 @@ export const MarkdownRenderer: React.FC<
           <Heading size="label.md" {...commonHeadingProps} {...props} />
         ),
         a: (props) => <Link color="primary.500" isExternal {...props} />,
-        code: (props) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        code: ({ inline, ...props }) => {
           if (props?.className) {
             const language = props.className.replace("language-", "");
             return (
@@ -78,6 +79,7 @@ export const MarkdownRenderer: React.FC<
               />
             );
           }
+
           return (
             <Text
               as="code"

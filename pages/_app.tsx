@@ -1,5 +1,5 @@
 import chakraTheme from "../theme";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, theme } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 import { Hydrate, QueryClient } from "@tanstack/react-query";
@@ -14,6 +14,7 @@ import { NextPage } from "next";
 import { DefaultSeo } from "next-seo";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
+import NProgress from "nprogress";
 import { PageId } from "page-id";
 import posthog from "posthog-js";
 import React, {
@@ -79,6 +80,32 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
 
   useEffect(() => {
+    // setup route cancellation
+    const handleStart = (url: string) => {
+      if (url !== window.location.pathname) {
+        (window as any).routeTimeout = setTimeout(() => {
+          (window as any).location = url;
+        }, 350);
+        NProgress.start();
+      }
+    };
+    const handleStop = () => {
+      clearTimeout((window as any).routeTimeout);
+      NProgress.done();
+    };
+
+    router.events.on("routeChangeStart", handleStart);
+    router.events.on("routeChangeComplete", handleStop);
+    router.events.on("routeChangeError", handleStop);
+
+    return () => {
+      router.events.off("routeChangeStart", handleStart);
+      router.events.off("routeChangeComplete", handleStop);
+      router.events.off("routeChangeError", handleStop);
+    };
+  }, [router]);
+
+  useEffect(() => {
     // Init PostHog
     posthog.init("phc_hKK4bo8cHZrKuAVXfXGpfNSLSJuucUnguAgt2j6dgSV", {
       api_host: "https://a.thirdweb.com",
@@ -125,6 +152,36 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
               opacity: 0.7;
             }
             ${fontSizeCssVars}
+            
+            #nprogress {
+              pointer-events: none;
+            }
+            
+            #nprogress .bar {
+              background: ${theme.colors.purple[500]};
+            
+              position: fixed;
+              z-index: 1031;
+              top: 0;
+              left: 0;
+            
+              width: 100%;
+              height: 2px;
+            }
+            
+            /* Fancy blur effect */
+            #nprogress .peg {
+              display: block;
+              position: absolute;
+              right: 0px;
+              width: 100px;
+              height: 100%;
+              box-shadow: 0 0 10px ${theme.colors.purple[500]}, 0 0 5px ${theme.colors.purple[500]};
+              opacity: 1.0;
+            
+              -webkit-transform: rotate(3deg) translate(0px, -4px);
+                  -ms-transform: rotate(3deg) translate(0px, -4px);
+                      transform: rotate(3deg) translate(0px, -4px);
           `}
         />
         <DefaultSeo

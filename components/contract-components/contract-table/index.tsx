@@ -237,6 +237,11 @@ const TableRow: React.FC<TableRowProps> = ({ row, context }) => {
                   address,
                 publishMetadata.data?.name,
               ),
+          undefined,
+          {
+            scroll: true,
+            shallow: true,
+          },
         );
       }}
       {...row.getRowProps()}

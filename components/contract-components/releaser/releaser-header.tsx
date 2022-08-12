@@ -38,7 +38,7 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
         <Flex gap={4} alignItems="center">
           <Skeleton isLoaded={releaserProfile.isSuccess}>
             <Link
-              href={`/contracts/${ensQuery.data?.ensName || wallet}`}
+              href={`/${ensQuery.data?.ensName || wallet}`}
               onClick={() =>
                 trackEvent({
                   category: "releaser-header",
@@ -57,7 +57,7 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
 
           <Flex flexDir="column">
             <Link
-              href={`/contracts/${ensQuery.data?.ensName || wallet}`}
+              href={`/${ensQuery.data?.ensName || wallet}`}
               onClick={() =>
                 trackEvent({
                   category: "releaser-header",
@@ -87,7 +87,7 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
           <LinkButton
             variant="outline"
             size="sm"
-            href={`/contracts/${wallet}`}
+            href={`/${wallet}`}
             onClick={() =>
               trackEvent({
                 category: "releaser-header",

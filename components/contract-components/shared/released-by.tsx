@@ -40,7 +40,7 @@ export const ReleasedBy: React.FC<ReleasedByProps> = ({ contractAddress }) => {
     return null;
   }
 
-  const releaseUrl = `/contracts/${releaserAddress}/${releaseToShow?.name}/${releaseToShow?.version}`;
+  const releaseUrl = `/${releaserAddress}/${releaseToShow?.name}/${releaseToShow?.version}`;
   return (
     <Card
       w={{ base: "100%", md: "330px" }}

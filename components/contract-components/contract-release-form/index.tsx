@@ -116,7 +116,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
     ) {
       return undefined;
     }
-    return `/contracts/${ensQuery.data.ensName || ensQuery.data.address}/${
+    return `/${ensQuery.data.ensName || ensQuery.data.address}/${
       publishMetadata.data.name
     }`;
   }, [
