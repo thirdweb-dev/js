@@ -26,14 +26,14 @@ export const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
     watch,
     formState: { errors },
   } = useForm<{ to: string; amount: string }>({
-    defaultValues: { to: "", amount: "1" },
+    defaultValues: { amount: "1" },
   });
 
   const burn = useBurnNFT(contract);
 
   const { onSuccess, onError } = useTxNotifications(
     "Burn successful",
-    "Error burnring",
+    "Error burning",
   );
 
   const requiresAmount = contract instanceof Erc1155;
@@ -81,13 +81,16 @@ export const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
               w="100%"
               direction={{ base: "column", md: "row" }}
             >
-              <FormControl isRequired={requiresAmount} isInvalid={!!errors.to}>
+              <FormControl
+                isRequired={requiresAmount}
+                isInvalid={!!errors.amount}
+              >
                 <FormLabel>Amount</FormLabel>
                 <Input placeholder={"1"} {...register("amount")} />
                 <FormHelperText>
                   How many would you like to burn?
                 </FormHelperText>
-                <FormErrorMessage>{errors.to?.message}</FormErrorMessage>
+                <FormErrorMessage>{errors.amount?.message}</FormErrorMessage>
               </FormControl>
             </Stack>
           )}
