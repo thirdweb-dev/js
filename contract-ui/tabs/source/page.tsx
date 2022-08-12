@@ -1,5 +1,6 @@
 import { useActiveChainId } from "@3rdweb-sdk/react";
 import { useQueryWithNetwork } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
+import { usePrebuiltSource } from "@3rdweb-sdk/react/hooks/usePrebuiltSource";
 import {
   Divider,
   Flex,
@@ -174,10 +175,13 @@ export const CustomContractSourcePage: React.FC<
   const contractQuery = useContractSources(contractAddress);
   const chainId = useActiveChainId();
 
+  const { data: prebuiltSource } = usePrebuiltSource(contractAddress);
+
   if (!contractAddress) {
     return <div>No contract address provided</div>;
   }
-  if (!contractQuery || contractQuery?.isLoading) {
+
+  if ((!contractQuery || contractQuery?.isLoading) && !prebuiltSource) {
     return (
       <Flex direction="row" align="center" gap={2}>
         <Spinner color="purple.500" size="xs" />
@@ -201,12 +205,14 @@ export const CustomContractSourcePage: React.FC<
     </Flex>
   );
 
-  if (contractQuery.isError) {
+  if (contractQuery.isError && !prebuiltSource) {
     return codeNotFound;
   }
 
   // clean up the source filenames and filter out libraries
-  const sources = contractQuery.data
+  const sources = prebuiltSource
+    ? [prebuiltSource]
+    : contractQuery.data
     ? contractQuery.data
         .filter((source) => !source.filename.includes("@"))
         .map((source) => {
@@ -231,9 +237,11 @@ export const CustomContractSourcePage: React.FC<
               <Heading size="title.sm" flex={1}>
                 Contract Source Code
               </Heading>
-              <Button variant="solid" colorScheme="purple" onClick={onOpen}>
-                Verify on {blockExplorerName(chainId)}
-              </Button>
+              {!prebuiltSource && (
+                <Button variant="solid" colorScheme="purple" onClick={onOpen}>
+                  Verify on {blockExplorerName(chainId)}
+                </Button>
+              )}
             </Flex>
             {sources.map((signature) => (
               <Card
