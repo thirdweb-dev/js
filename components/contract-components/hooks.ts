@@ -17,6 +17,7 @@ import {
 import {
   ChainId,
   ContractType,
+  SUPPORTED_CHAIN_ID,
   SmartContract,
   ThirdwebSDK,
   detectFeatures,
@@ -39,6 +40,7 @@ import {
   alchemyUrlMap,
 } from "components/app-layouts/providers";
 import { BuiltinContractMap } from "constants/mappings";
+import { ethers } from "ethers";
 import { isAddress } from "ethers/lib/utils";
 import { ENSResolveResult, isEnsName } from "lib/ens";
 import { StaticImageData } from "next/image";
@@ -249,9 +251,16 @@ export function useAllVersions(
   );
 }
 
-export function useReleasesFromDeploy(contractAddress?: string) {
-  const sdk = useSDK();
-  const provider = sdk?.getProvider();
+export function useReleasesFromDeploy(
+  contractAddress?: string,
+  chainId?: SUPPORTED_CHAIN_ID,
+) {
+  const activeChainId = useActiveChainId();
+  const cId = chainId || activeChainId;
+
+  const provider = cId
+    ? new ethers.providers.StaticJsonRpcProvider(alchemyUrlMap[cId])
+    : undefined;
 
   const polygonSdk = new ThirdwebSDK(
     alchemyUrlMap[ChainId.Polygon],
@@ -263,8 +272,11 @@ export function useReleasesFromDeploy(contractAddress?: string) {
     },
     StorageSingleton,
   );
-  return useQueryWithNetwork(
-    ["release-from-deploy", contractAddress],
+  return useQuery(
+    (networkKeys.chain(cId) as readonly unknown[]).concat([
+      "release-from-deploy",
+      contractAddress,
+    ]),
     async () => {
       invariant(contractAddress, "contractAddress is not defined");
       invariant(provider, "provider is not defined");

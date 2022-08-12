@@ -27,7 +27,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     // cache for 10 seconds, with up to 60 seconds of stale time
     res.setHeader(
       "Cache-Control",
-      "public, s-maxage=10, stale-while-revalidate=59",
+      "public, s-maxage=60, stale-while-revalidate=119",
     );
 
     return res.status(200).json({

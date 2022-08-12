@@ -46,7 +46,6 @@ import {
 } from "@chakra-ui/react";
 import { useNetwork } from "@thirdweb-dev/react";
 import {
-  CONTRACTS_MAP,
   ChainId,
   CommonContractOutputSchema,
   ContractType,
@@ -56,6 +55,7 @@ import {
 } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
+import { useReleasesFromDeploy } from "components/contract-components/hooks";
 import {
   CONTRACT_TYPE_NAME_MAP,
   FeatureIconMap,
@@ -552,97 +552,13 @@ export const ContractTable: React.FC<ContractTableProps> = ({
         Header: "Name",
         accessor: (row) => row.metadata,
         Cell: (cell: any) => {
-          return <AsyncContractCell cell={cell.row.original} />;
+          return <AsyncContractNameCell cell={cell.row.original} />;
         },
       },
       {
         Header: "Contract Type",
         accessor: (row) => row.contractType,
-        Cell: (cell: any) => {
-          const src =
-            FeatureIconMap[cell.row.original.contractType as ContractType];
-          return (
-            <Flex align="center" gap={2}>
-              {src ? (
-                <ChakraNextImage
-                  boxSize={8}
-                  src={src}
-                  alt={
-                    CONTRACT_TYPE_NAME_MAP[
-                      cell.row.original.contractType as ContractType
-                    ]
-                  }
-                />
-              ) : (
-                <Image
-                  boxSize={8}
-                  src=""
-                  alt={
-                    CONTRACT_TYPE_NAME_MAP[
-                      cell.row.original.contractType as ContractType
-                    ]
-                  }
-                />
-              )}
-              <Text size="label.md">
-                {
-                  CONTRACT_TYPE_NAME_MAP[
-                    cell.row.original.contractType as ContractType
-                  ]
-                }
-              </Text>
-            </Flex>
-          );
-        },
-        Filter: (props) => {
-          const contractFilterOptions = Object.keys(
-            CONTRACTS_MAP,
-          ) as ContractType[];
-          const filterVal = props.filterValue;
-
-          return (
-            <Menu closeOnSelect={false}>
-              <MenuButton
-                as={IconButton}
-                icon={<Icon as={IoFilterSharp} boxSize={4} />}
-                aria-label="open contract type filter menu"
-                size="sm"
-                p={0}
-                variant="ghost"
-              />
-              <MenuList zIndex={10}>
-                <MenuOptionGroup
-                  defaultValue={contractFilterOptions}
-                  title="Contract Types"
-                  fontSize={12}
-                  type="checkbox"
-                  value={filterVal}
-                  onChange={(e) => props.setFilter(props.column.id, e)}
-                >
-                  {contractFilterOptions.map((contractType) => (
-                    <MenuItemOption value={contractType} key={contractType}>
-                      <Flex align="center" direction="row" gap={1}>
-                        <ChakraNextImage
-                          boxSize={4}
-                          src={FeatureIconMap[contractType]}
-                          alt={contractType}
-                        />
-                        <Text size="label.md">
-                          {CONTRACT_TYPE_NAME_MAP[contractType]}
-                        </Text>
-                      </Flex>
-                    </MenuItemOption>
-                  ))}
-                </MenuOptionGroup>
-              </MenuList>
-            </Menu>
-          );
-        },
-        filter: (rows, _columnIds, filterValue = []) => {
-          return rows.filter((row) => {
-            return filterValue.includes(row.original.contractType);
-          });
-        },
+        Cell: (cell: any) => <AsyncContractTypeCell cell={cell.row.original} />,
       },
       {
         Header: "Network",
@@ -845,7 +761,7 @@ export const ContractTable: React.FC<ContractTableProps> = ({
   );
 };
 
-interface AsyncContractCellProps {
+interface AsyncContractTypeCellProps {
   cell: {
     address: string;
     chainId: ChainId;
@@ -854,7 +770,91 @@ interface AsyncContractCellProps {
   };
 }
 
-const AsyncContractCell: React.FC<AsyncContractCellProps> = ({ cell }) => {
+const AsyncContractTypeCell: React.FC<AsyncContractTypeCellProps> = ({
+  cell,
+}) => {
+  const isPrebuiltContract = cell.contractType !== "custom";
+
+  const releasesFromDeploy = useReleasesFromDeploy(
+    isPrebuiltContract ? undefined : cell.address || undefined,
+    cell.chainId as SUPPORTED_CHAIN_ID,
+  );
+  const src = FeatureIconMap[cell.contractType as ContractType];
+
+  if (isPrebuiltContract) {
+    return (
+      <Flex align="center" gap={2}>
+        {src ? (
+          <ChakraNextImage
+            boxSize={8}
+            src={src}
+            alt={CONTRACT_TYPE_NAME_MAP[cell.contractType as ContractType]}
+          />
+        ) : (
+          <Image
+            boxSize={8}
+            src=""
+            alt={CONTRACT_TYPE_NAME_MAP[cell.contractType as ContractType]}
+          />
+        )}
+        <Text size="label.md">
+          {CONTRACT_TYPE_NAME_MAP[cell.contractType as ContractType]}
+        </Text>
+      </Flex>
+    );
+  }
+
+  const actualRelease = releasesFromDeploy.data
+    ? releasesFromDeploy.data[0]
+    : null;
+
+  if (!releasesFromDeploy.isLoading && !actualRelease) {
+    return (
+      <Flex align="center" gap={2}>
+        {src ? (
+          <ChakraNextImage
+            boxSize={8}
+            src={src}
+            alt={CONTRACT_TYPE_NAME_MAP["custom"]}
+          />
+        ) : (
+          <Image boxSize={8} src="" alt={CONTRACT_TYPE_NAME_MAP["custom"]} />
+        )}
+        <Text size="label.md">{CONTRACT_TYPE_NAME_MAP["custom"]}</Text>
+      </Flex>
+    );
+  }
+
+  return (
+    <Flex align="center" gap={2}>
+      <Skeleton isLoaded={!releasesFromDeploy.isLoading}>
+        <ChakraNextImage
+          boxSize={8}
+          src={src}
+          alt={CONTRACT_TYPE_NAME_MAP["custom"]}
+        />
+      </Skeleton>
+      <Skeleton isLoaded={!releasesFromDeploy.isLoading}>
+        <Text size="label.md">
+          {actualRelease?.name || CONTRACT_TYPE_NAME_MAP["custom"]}
+        </Text>
+      </Skeleton>
+    </Flex>
+  );
+};
+
+interface AsyncContractNameCellProps {
+  cell: {
+    address: string;
+    chainId: ChainId;
+    contractType: ContractType;
+    metadata: () => Promise<z.output<ValidContractClass["schema"]["output"]>>;
+  };
+}
+
+const AsyncContractNameCell: React.FC<AsyncContractNameCellProps> = ({
+  cell,
+}) => {
   const metadataQuery = useContractMetadataWithAddress(
     cell.address,
     cell.metadata,

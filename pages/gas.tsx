@@ -101,7 +101,7 @@ const GasPage: ThirdwebNextPage = () => {
       <Text mt={4} textAlign="center">
         Estimates calculated at {data?.gasPrice} gwei and the ETH price of $
         {data?.ethPrice}. These estimates are only intended to use for contracts
-        deployed with thirdweb. Updated every 10 seconds.
+        deployed with thirdweb. Updated every 60 seconds.
       </Text>
     </>
   );

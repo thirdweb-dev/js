@@ -10,7 +10,7 @@ export function useGas() {
       return res.json() as Promise<GasEstimate>;
     },
     {
-      refetchInterval: 10000,
+      refetchInterval: 60_000,
     },
   );
 }
