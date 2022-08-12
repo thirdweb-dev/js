@@ -83,14 +83,17 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
     // setup route cancellation
     const handleStart = (url: string) => {
       if (url !== window.location.pathname) {
-        (window as any).routeTimeout = setTimeout(() => {
-          (window as any).location = url;
-        }, 350);
+        // in production *only* time out the current route transition after 350ms
+        if (process.env.NODE_ENV === "production") {
+          (window as any).routeTransitionTimeout = setTimeout(() => {
+            (window as any).location = url;
+          }, 350);
+        }
         NProgress.start();
       }
     };
     const handleStop = () => {
-      clearTimeout((window as any).routeTimeout);
+      clearTimeout((window as any).routeTransitionTimeout);
       NProgress.done();
     };
 
