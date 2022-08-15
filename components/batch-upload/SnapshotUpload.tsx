@@ -59,6 +59,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
     value || [],
   );
   const [noCsv, setNoCsv] = useState(false);
+  const [invalidFound, setInvalidFound] = useState(false);
 
   const reset = useCallback(() => {
     setValidSnapshot([]);
@@ -123,6 +124,9 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
     const invalid = validSnapshot.filter(
       ({ address }) => !utils.isAddress(address),
     );
+    if (invalid?.length > 0) {
+      setInvalidFound(true);
+    }
     const ordered = [...invalid, ...valid];
     return ordered;
   }, [validSnapshot]);
@@ -258,6 +262,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                   colorScheme="primary"
                   onClick={onSave}
                   w={{ base: "100%", md: "auto" }}
+                  disabled={invalidFound || validSnapshot.length === 0}
                 >
                   Next
                 </Button>
@@ -286,7 +291,7 @@ const SnapshotTable: React.FC<SnapshotTableProps> = ({ data, portalRef }) => {
           } else {
             return (
               <Flex>
-                <Tooltip>
+                <Tooltip label="Address is not valid">
                   <Stack direction="row" align="center">
                     <Icon
                       as={IoAlertCircleOutline}

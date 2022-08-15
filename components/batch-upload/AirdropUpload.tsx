@@ -54,6 +54,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
 }) => {
   const [validAirdrop, setValidAirdrop] = useState<AirdropAddressInput[]>([]);
   const [noCsv, setNoCsv] = useState(false);
+  const [invalidFound, setInvalidFound] = useState(false);
 
   const reset = useCallback(() => {
     setValidAirdrop([]);
@@ -119,6 +120,9 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
       ({ address }) => !utils.isAddress(address),
     );
     const ordered = [...invalid, ...valid];
+    if (invalid?.length > 0) {
+      setInvalidFound(true);
+    }
     return ordered;
   }, [validAirdrop]);
 
@@ -241,6 +245,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                   colorScheme="primary"
                   onClick={onSave}
                   w={{ base: "100%", md: "auto" }}
+                  disabled={invalidFound || validAirdrop.length === 0}
                 >
                   Next
                 </Button>
@@ -269,7 +274,7 @@ const AirdropTable: React.FC<AirdropTableProps> = ({ data, portalRef }) => {
           } else {
             return (
               <Flex>
-                <Tooltip>
+                <Tooltip label="Address is not valid">
                   <Stack direction="row" align="center">
                     <Icon
                       as={IoAlertCircleOutline}
