@@ -1,6 +1,6 @@
 import { format, isValid } from "date-fns";
 
-const DATE_TIME_LOCAL_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+const DATE_TIME_LOCAL_FORMAT = "yyyy-MM-dd'T'HH:mm";
 
 export function toDateTimeLocal(date?: Date) {
   return date && isValid(date)
