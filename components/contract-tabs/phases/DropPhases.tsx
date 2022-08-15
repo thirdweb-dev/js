@@ -386,8 +386,8 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                         }
                       >
                         <Heading as={FormLabel} size="label.md">
-                          How much do you want to charge to claim the{" "}
-                          {nftsOrToken}?
+                          How much do you want to charge to claim each{" "}
+                          {contract instanceof TokenDrop ? "token" : "NFT"}?
                         </Heading>
                         <PriceInput
                           value={parseFloat(field.price?.toString() || "0")}
