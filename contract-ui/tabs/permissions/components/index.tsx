@@ -55,6 +55,10 @@ export const Permissions = <TContract extends ContractWithRoles>({
     );
   }, [allRoleMembers.data, contractData]);
 
+  const isPrebuilt =
+    BuiltinContractMap[contractType as keyof typeof BuiltinContractMap]
+      .contractType !== "custom";
+
   return (
     <FormProvider {...form}>
       <Flex
@@ -96,6 +100,8 @@ export const Permissions = <TContract extends ContractWithRoles>({
               key={role}
               role={role}
               description={ROLE_DESCRIPTION_MAP[role] || ""}
+              isPrebuilt={isPrebuilt}
+              contract={contract}
             />
           );
         })}

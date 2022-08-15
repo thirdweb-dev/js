@@ -1,3 +1,4 @@
+import { useIsAdmin } from "@3rdweb-sdk/react";
 import {
   Flex,
   FormControl,
@@ -12,6 +13,7 @@ import {
   useClipboard,
   useToast,
 } from "@chakra-ui/react";
+import { SmartContract, ValidContractInstance } from "@thirdweb-dev/sdk";
 import { constants, utils } from "ethers";
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
@@ -19,12 +21,16 @@ import { BiPaste } from "react-icons/bi";
 import { FiCopy, FiInfo, FiPlus, FiTrash } from "react-icons/fi";
 import { Button, FormErrorMessage, Text } from "tw-components";
 
-interface IPermissionEditor {
+interface PermissionEditorProps {
   role: string;
+  contract: ValidContractInstance | SmartContract;
 }
 
-export const PermissionEditor: React.FC<IPermissionEditor> = ({ role }) => {
-  /*   const isAdmin = useIsAdmin(contract); */
+export const PermissionEditor: React.FC<PermissionEditorProps> = ({
+  role,
+  contract,
+}) => {
+  const isAdmin = useIsAdmin(contract as ValidContractInstance);
   const {
     control,
     watch,
@@ -77,71 +83,74 @@ export const PermissionEditor: React.FC<IPermissionEditor> = ({ role }) => {
           removeAddress={() => remove(index)}
         />
       ))}
-      {/*       {isAdmin && ( */}
-      <FormControl isDisabled={isSubmitting} isInvalid={address && isDisabled}>
-        <InputGroup>
-          <InputLeftAddon p={0} border="none">
-            <Tooltip label="Paste address from clipboard">
-              <IconButton
-                borderRadius="sm"
-                borderLeftRadius="md"
-                aria-label="paste address"
-                icon={<BiPaste />}
-                _hover={{ bgColor: "gray.300" }}
-                width="100%"
-                height="100%"
-                onClick={() => {
-                  navigator.clipboard
-                    .readText()
-                    .then((text) => {
-                      setAddress(text);
-                    })
-                    .catch((err) => {
-                      console.error("failed to paste from clipboard", err);
-                    });
-                }}
-              />
-            </Tooltip>
-          </InputLeftAddon>
-          <Input
-            variant="filled"
-            fontFamily="mono"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder={constants.AddressZero}
-            px={2}
-          />
-          <InputRightAddon
-            p={0}
-            border="none"
-            children={
-              <Button
-                leftIcon={<Icon as={FiPlus} boxSize={4} />}
-                size="sm"
-                borderLeftRadius="none"
-                borderRightRadius="md"
-                colorScheme="blue"
-                isDisabled={isDisabled}
-                onClick={addAddress}
-                height="100%"
-                width="100%"
-                justifyContent="center"
-                alignItems="center"
-              >
-                Add Address
-              </Button>
-            }
-          />
-        </InputGroup>
-        <FormErrorMessage>
-          {members.includes(address)
-            ? "Address already has this role"
-            : !utils.isAddress(address)
-            ? "Not a valid address"
-            : ""}
-        </FormErrorMessage>
-      </FormControl>
-      {/*  )} */}
+      {isAdmin && (
+        <FormControl
+          isDisabled={isSubmitting}
+          isInvalid={address && isDisabled}
+        >
+          <InputGroup>
+            <InputLeftAddon p={0} border="none">
+              <Tooltip label="Paste address from clipboard">
+                <IconButton
+                  borderRadius="sm"
+                  borderLeftRadius="md"
+                  aria-label="paste address"
+                  icon={<BiPaste />}
+                  _hover={{ bgColor: "gray.300" }}
+                  width="100%"
+                  height="100%"
+                  onClick={() => {
+                    navigator.clipboard
+                      .readText()
+                      .then((text) => {
+                        setAddress(text);
+                      })
+                      .catch((err) => {
+                        console.error("failed to paste from clipboard", err);
+                      });
+                  }}
+                />
+              </Tooltip>
+            </InputLeftAddon>
+            <Input
+              variant="filled"
+              fontFamily="mono"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder={constants.AddressZero}
+              px={2}
+            />
+            <InputRightAddon
+              p={0}
+              border="none"
+              children={
+                <Button
+                  leftIcon={<Icon as={FiPlus} boxSize={4} />}
+                  size="sm"
+                  borderLeftRadius="none"
+                  borderRightRadius="md"
+                  colorScheme="blue"
+                  isDisabled={isDisabled}
+                  onClick={addAddress}
+                  height="100%"
+                  width="100%"
+                  justifyContent="center"
+                  alignItems="center"
+                >
+                  Add Address
+                </Button>
+              }
+            />
+          </InputGroup>
+          <FormErrorMessage>
+            {members.includes(address)
+              ? "Address already has this role"
+              : !utils.isAddress(address)
+              ? "Not a valid address"
+              : ""}
+          </FormErrorMessage>
+        </FormControl>
+      )}
     </Stack>
   );
 };

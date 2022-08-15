@@ -4,6 +4,7 @@ import {
   useQueryWithNetwork,
 } from "./query/useQueryWithNetwork";
 import { useWeb3 } from "@3rdweb-sdk/react";
+import { useContractType } from "@thirdweb-dev/react";
 import {
   Multiwrap,
   Split,
@@ -127,7 +128,13 @@ export function useIsAdmin<TContract extends ValidContractClass>(
   contract?: C.Instance<TContract>,
 ) {
   const { address } = useWeb3();
+  const { data: contractType } = useContractType(contract?.getAddress());
+  if (contractType === "custom") {
+    return true;
+  }
+
   const contractHasRoles = isContractWithRoles(contract);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   return useIsAccountRole(
     "admin",
     contractHasRoles ? contract : undefined,

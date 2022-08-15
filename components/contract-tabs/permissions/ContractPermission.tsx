@@ -261,11 +261,11 @@ export const ContractPermission: React.FC<IContractPermission> = ({
                 {isRestricted ? (
                   <>
                     Currently, only assets from the contracts specified below
-                    will be able to be listed on this marketplace.
+                    will be able to be used on this contract.
                   </>
                 ) : (
                   <>
-                    This marketplace is open for people to list assets from any
+                    This contract is open for people to list assets from any
                     contract.
                   </>
                 )}
