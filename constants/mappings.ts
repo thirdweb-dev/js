@@ -54,15 +54,14 @@ export interface BuiltinContractDetails {
 }
 
 export const DisabledChainsMap: Record<ContractType, SUPPORTED_CHAIN_ID[]> = {
-  "nft-drop": [ChainId.Rinkeby],
-  "nft-collection": [ChainId.Rinkeby],
-  "edition-drop": [ChainId.Rinkeby],
-  edition: [ChainId.Rinkeby],
-  token: [ChainId.Rinkeby],
-  vote: [ChainId.Rinkeby],
-  marketplace: [ChainId.Rinkeby],
+  "nft-drop": [],
+  "nft-collection": [],
+  "edition-drop": [],
+  edition: [],
+  token: [],
+  vote: [],
+  marketplace: [],
   pack: [
-    ChainId.Rinkeby,
     ChainId.Mainnet,
     ChainId.Polygon,
     ChainId.Fantom,
@@ -72,11 +71,11 @@ export const DisabledChainsMap: Record<ContractType, SUPPORTED_CHAIN_ID[]> = {
     ChainId.ArbitrumTestnet,
     ChainId.OptimismTestnet,
   ],
-  split: [ChainId.Rinkeby],
-  "token-drop": [ChainId.Rinkeby],
-  "signature-drop": [ChainId.Rinkeby],
-  multiwrap: [ChainId.Rinkeby],
-  custom: [ChainId.Rinkeby],
+  split: [],
+  "token-drop": [],
+  "signature-drop": [],
+  multiwrap: [],
+  custom: [],
 };
 
 export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
