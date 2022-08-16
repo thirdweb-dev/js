@@ -627,17 +627,18 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
             </Alert>
           )}
           <AdminOnly contract={contract}>
-            {contract instanceof SignatureDrop && watchFieldArray.length === 0 && (
-              <Button
-                colorScheme="purple"
-                variant="solid"
-                borderRadius="md"
-                leftIcon={<Icon as={FiPlus} />}
-                onClick={addPhase}
-              >
-                Add Claim Phase
-              </Button>
-            )}
+            {contract instanceof SignatureDrop &&
+              watchFieldArray?.length === 0 && (
+                <Button
+                  colorScheme="purple"
+                  variant="solid"
+                  borderRadius="md"
+                  leftIcon={<Icon as={FiPlus} />}
+                  onClick={addPhase}
+                >
+                  Add Claim Phase
+                </Button>
+              )}
 
             {contract instanceof SignatureDrop ? null : (
               <Button
