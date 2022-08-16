@@ -156,6 +156,12 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
       <Card as={Flex} flexDirection="column" gap={3}>
         <Flex align="center" justify="space-between">
           <Heading size="title.sm">Reading Data</Heading>
+        </Flex>
+        <Text>
+          Once you setup your contract, you can read data from contract
+          functions as follows.
+        </Text>
+        <Flex>
           <Box>
             <Select
               variant="outline"
@@ -170,10 +176,6 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
             </Select>
           </Box>
         </Flex>
-        <Text>
-          Once you setup your contract, you can read data from contract
-          functions as follows.
-        </Text>
         <CodeSegment
           environment={environment}
           setEnvironment={setEnvironment}
@@ -190,6 +192,11 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
       <Card as={Flex} flexDirection="column" gap={3}>
         <Flex align="center" justify="space-between">
           <Heading size="title.sm">Writing Data</Heading>
+        </Flex>
+        <Text>
+          And you can also make write function calls with the following setup
+        </Text>
+        <Flex>
           <Box>
             <Select
               variant="outline"
@@ -204,9 +211,6 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
             </Select>
           </Box>
         </Flex>
-        <Text>
-          And you can also make write function calls with the following setup
-        </Text>
         <CodeSegment
           environment={environment}
           setEnvironment={setEnvironment}
