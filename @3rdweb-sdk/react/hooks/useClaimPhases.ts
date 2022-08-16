@@ -120,12 +120,17 @@ export function useResetEligibilityMutation(
   }
 }
 
+interface DropPhasesInput {
+  phases: ClaimConditionInput[];
+  reset: boolean;
+}
+
 function useNFTDropPhasesMutation(contract?: NFTDrop | SignatureDrop) {
   return useMutationWithInvalidate(
-    async (phases: ClaimConditionInput[]) => {
+    async ({ phases, reset }: DropPhasesInput) => {
       invariant(contract, "contract is required");
 
-      return await contract.claimConditions.set(phases);
+      return await contract.claimConditions.set(phases, reset);
     },
     {
       onSuccess: (_data, _variables, _options, invalidate) => {
@@ -140,11 +145,11 @@ function useEditionDropPhasesMutation(
   tokenId?: string,
 ) {
   return useMutationWithInvalidate(
-    async (phases: ClaimConditionInput[]) => {
+    async ({ phases, reset }: DropPhasesInput) => {
       invariant(contract, "contract is required");
       invariant(tokenId, "tokenId is required");
 
-      return await contract.claimConditions.set(tokenId, phases);
+      return await contract.claimConditions.set(tokenId, phases, reset);
     },
     {
       onSuccess: (_data, _variables, _options, invalidate) => {
@@ -158,10 +163,10 @@ function useEditionDropPhasesMutation(
 
 function useTokenDropPhasesMutation(contract?: TokenDrop) {
   return useMutationWithInvalidate(
-    async (phases: ClaimConditionInput[]) => {
+    async ({ phases, reset }: DropPhasesInput) => {
       invariant(contract, "contract is required");
 
-      return await contract.claimConditions.set(phases);
+      return await contract.claimConditions.set(phases, reset);
     },
     {
       onSuccess: (_data, _variables, _options, invalidate) => {
