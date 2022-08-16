@@ -1,4 +1,4 @@
-import { AddToDashboardCard } from "../overview/cards/add-to-dashboard";
+import { AddToDashboardCard } from "./components/add-to-dashboard";
 import { SettingsMetadata } from "./components/metadata";
 import { SettingsPlatformFees } from "./components/platform-fees";
 import { SettingsPrimarySale } from "./components/primary-sale";

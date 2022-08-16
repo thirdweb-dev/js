@@ -1,12 +1,12 @@
-import { ActivityFeed } from "./components/activity-feed";
+import { EventsFeed } from "./components/events-feed";
 import { Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 
-interface ContractActivityPageProps {
+interface ContractEventsPageProps {
   contractAddress?: string;
 }
 
-export const ContractActivityPage: React.FC<ContractActivityPageProps> = ({
+export const ContractEventsPage: React.FC<ContractEventsPageProps> = ({
   contractAddress,
 }) => {
   const contract = useContract(contractAddress);
@@ -18,7 +18,7 @@ export const ContractActivityPage: React.FC<ContractActivityPageProps> = ({
 
   return (
     <Flex direction="column" gap={6}>
-      <ActivityFeed contractAddress={contractAddress} />
+      <EventsFeed contractAddress={contractAddress} />
     </Flex>
   );
 };

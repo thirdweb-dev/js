@@ -19,7 +19,7 @@ export function useContractRouteConfig(
 
   return [
     {
-      title: "Overview",
+      title: "Explorer",
       path: "/",
       element: () =>
         import("../tabs/overview/page").then(
@@ -27,6 +27,14 @@ export function useContractRouteConfig(
             <CustomContractOverviewPage contractAddress={contractAddress} />
           ),
         ),
+    },
+    {
+      title: "Events",
+      path: "events",
+      element: () =>
+        import("../tabs/events/page").then(({ ContractEventsPage }) => (
+          <ContractEventsPage contractAddress={contractAddress} />
+        )),
     },
     {
       title: "NFTs",
@@ -66,14 +74,6 @@ export function useContractRouteConfig(
       element: () =>
         import("../tabs/code/page").then(({ ContractCodePage }) => (
           <ContractCodePage contractAddress={contractAddress} />
-        )),
-    },
-    {
-      title: "Activity",
-      path: "activity",
-      element: () =>
-        import("../tabs/activity/page").then(({ ContractActivityPage }) => (
-          <ContractActivityPage contractAddress={contractAddress} />
         )),
     },
     {

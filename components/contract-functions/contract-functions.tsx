@@ -19,6 +19,7 @@ interface ContractFunctionsOverview {
   events?: AbiEvent[] | null;
   contract?: SmartContract;
   sources?: SourceFile[];
+  onlyFunctions?: boolean;
 }
 
 export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
@@ -26,7 +27,16 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
   events,
   contract,
   sources,
+  onlyFunctions,
 }) => {
+  if (onlyFunctions) {
+    return (
+      <Card as={Flex} flexDir="column" gap={2}>
+        <ContractFunctionsPanel fnsOrEvents={functions} contract={contract} />
+      </Card>
+    );
+  }
+
   return (
     <Card as={Flex} flexDir="column" gap={2} p={0}>
       <Tabs isLazy lazyBehavior="keepMounted" colorScheme="purple">

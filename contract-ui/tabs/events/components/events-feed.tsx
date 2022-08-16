@@ -41,13 +41,11 @@ interface ContractTransaction {
   events: ContractEvent[];
 }
 
-interface ActivityFeedProps {
+interface EventsFeedProps {
   contractAddress?: string;
 }
 
-export const ActivityFeed: React.FC<ActivityFeedProps> = ({
-  contractAddress,
-}) => {
+export const EventsFeed: React.FC<EventsFeedProps> = ({ contractAddress }) => {
   const [autoUpdate, setAutoUpdate] = useState(true);
   const activityQuery = useActivity(contractAddress, autoUpdate);
 
@@ -100,7 +98,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
               allowMultiple
             >
               {activityQuery.data.slice(0, 10).map((e) => (
-                <ActivityFeedItem key={e.transactionHash} transaction={e} />
+                <EventsFeedItem key={e.transactionHash} transaction={e} />
               ))}
             </Accordion>
           </List>
@@ -110,11 +108,11 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   );
 };
 
-interface ActivityFeedItemProps {
+interface EventsFeedItemProps {
   transaction: ContractTransaction;
 }
 
-export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = ({
+export const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
   transaction,
 }) => {
   const toast = useToast();
