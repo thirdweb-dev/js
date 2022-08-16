@@ -265,7 +265,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
               });
               onSuccess();
               router.push(
-                `/${SupportedChainIdToNetworkMap[selectedChain]}/${UrlMap[contractType]}/${contractAddress}`,
+                `/${SupportedChainIdToNetworkMap[selectedChain]}${UrlMap[contractType]}/${contractAddress}`,
               );
             },
             onError: (err) => {

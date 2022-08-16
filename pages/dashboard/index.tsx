@@ -725,14 +725,11 @@ export const ContractTable: React.FC<ContractTableProps> = ({
                 // this is a hack to get around the fact that safari does not handle position: relative on table rows
                 style={{ cursor: "pointer" }}
                 onClick={() => {
-                  const contractTypeUrlSegment =
-                    row.original.contractType === "custom"
-                      ? ""
-                      : `/${UrlMap[row.original.contractType]}`;
-
                   const href = `/${getNetworkFromChainId(
                     row.original.chainId as SUPPORTED_CHAIN_ID,
-                  )}${contractTypeUrlSegment}/${row.original.address}`;
+                  )}${UrlMap[row.original.contractType]}/${
+                    row.original.address
+                  }`;
 
                   router.push(href);
                 }}
@@ -861,12 +858,9 @@ const AsyncContractNameCell: React.FC<AsyncContractNameCellProps> = ({
     cell.chainId,
   );
 
-  const contractTypeUrlSegment =
-    cell.contractType === "custom" ? "" : `/${UrlMap[cell.contractType]}`;
-
-  const href = `/${getNetworkFromChainId(
-    cell.chainId as SUPPORTED_CHAIN_ID,
-  )}${contractTypeUrlSegment}/${cell.address}`;
+  const href = `/${getNetworkFromChainId(cell.chainId as SUPPORTED_CHAIN_ID)}${
+    UrlMap[cell.contractType]
+  }/${cell.address}`;
 
   return (
     <Skeleton isLoaded={!metadataQuery.isLoading}>
