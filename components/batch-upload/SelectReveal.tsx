@@ -233,8 +233,12 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
                     },
                   },
                   {
-                    onSuccess: onClose,
-                    onError: () => {
+                    onSuccess: () => {
+                      onSuccess();
+                      onClose();
+                    },
+                    onError: (err) => {
+                      onError(err);
                       setProgress({
                         progress: 0,
                         total: 100,

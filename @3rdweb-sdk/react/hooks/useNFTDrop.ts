@@ -158,10 +158,14 @@ export function useDropBatchMint(
           );
         }
 
+        const supplyKeys = CacheKeyMap[contractType].supply
+          ? CacheKeyMap[contractType].supply(contract?.getAddress())
+          : [];
+
         return invalidate([
           getAllQueryKey(contract),
           getTotalCountQueryKey(contract),
-          CacheKeyMap[contractType].supply(contract?.getAddress()),
+          ...supplyKeys,
         ]);
       },
     },
