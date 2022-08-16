@@ -22,6 +22,7 @@ import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { getSSRSDK } from "lib/ssr-sdk";
 import { GetStaticPaths, GetStaticProps } from "next";
+import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "pages/_app";
@@ -29,6 +30,7 @@ import { ReactElement, useEffect } from "react";
 import { IoRefreshSharp } from "react-icons/io5";
 import { Button, LinkButton, Text } from "tw-components";
 import { getSingleQueryValue } from "utils/router";
+import { shortenIfAddress } from "utils/usedapp-external";
 
 const UserPage: ThirdwebNextPage = () => {
   const wallet = useSingleQueryParam("networkOrAddress");
@@ -54,69 +56,78 @@ const UserPage: ThirdwebNextPage = () => {
   }, [wallet, router]);
 
   return (
-    <Flex flexDir="column" gap={8}>
-      {wallet && <ReleaserHeader wallet={wallet} />}
-      <Flex flexDir="column" gap={4}>
-        <DeployableContractTable
-          isFetching={publishedContracts.isFetching}
-          contractIds={(publishedContracts.data || [])?.map((d) =>
-            d.metadataUri.replace("ipfs://", ""),
-          )}
-          context="view_release"
-        >
-          {publishedContracts.isLoading && (
-            <Center>
-              <Flex py={4} direction="row" gap={4} align="center">
-                {wallet && <Spinner size="sm" />}
-                <Text>
-                  {wallet ? "Loading releases" : "No wallet connected"}
-                </Text>
-              </Flex>
-            </Center>
-          )}
-          {publishedContracts.isError && (
-            <Center>
-              <Flex mt={4} py={4} direction="column" gap={4} align="center">
-                <Alert status="error" borderRadius="md">
-                  <AlertIcon />
-                  <AlertTitle mr={2}>
-                    Failed to fetch released contracts
-                  </AlertTitle>
-                  <Button
-                    onClick={() => publishedContracts.refetch()}
-                    leftIcon={<IoRefreshSharp />}
-                    ml="auto"
-                    size="sm"
-                    colorScheme="red"
-                  >
-                    Retry
-                  </Button>
-                </Alert>
-              </Flex>
-            </Center>
-          )}
-          {publishedContracts.isSuccess &&
-            publishedContracts.data.length === 0 && (
+    <>
+      <NextSeo
+        title={`${shortenIfAddress(ensQuery?.data?.ensName || wallet)}`}
+        description={`Visit ${shortenIfAddress(
+          shortenIfAddress(ensQuery?.data?.ensName || wallet),
+        )} profile and view all their released contracts. Deploy them easily with one click.`}
+      />
+
+      <Flex flexDir="column" gap={8}>
+        {wallet && <ReleaserHeader wallet={wallet} />}
+        <Flex flexDir="column" gap={4}>
+          <DeployableContractTable
+            isFetching={publishedContracts.isFetching}
+            contractIds={(publishedContracts.data || [])?.map((d) =>
+              d.metadataUri.replace("ipfs://", ""),
+            )}
+            context="view_release"
+          >
+            {publishedContracts.isLoading && (
               <Center>
-                <Flex py={4} direction="column" gap={4} align="center">
-                  <Text>No releases found.</Text>
-                  {ensQuery.data?.address === address && (
-                    <LinkButton
-                      size="sm"
-                      href="https://portal.thirdweb.com/release"
-                      isExternal
-                      variant="outline"
-                      colorScheme="primary"
-                    >
-                      Learn more about releasing contracts
-                    </LinkButton>
-                  )}
+                <Flex py={4} direction="row" gap={4} align="center">
+                  {wallet && <Spinner size="sm" />}
+                  <Text>
+                    {wallet ? "Loading releases" : "No wallet connected"}
+                  </Text>
                 </Flex>
               </Center>
             )}
-        </DeployableContractTable>
+            {publishedContracts.isError && (
+              <Center>
+                <Flex mt={4} py={4} direction="column" gap={4} align="center">
+                  <Alert status="error" borderRadius="md">
+                    <AlertIcon />
+                    <AlertTitle mr={2}>
+                      Failed to fetch released contracts
+                    </AlertTitle>
+                    <Button
+                      onClick={() => publishedContracts.refetch()}
+                      leftIcon={<IoRefreshSharp />}
+                      ml="auto"
+                      size="sm"
+                      colorScheme="red"
+                    >
+                      Retry
+                    </Button>
+                  </Alert>
+                </Flex>
+              </Center>
+            )}
+            {publishedContracts.isSuccess &&
+              publishedContracts.data.length === 0 && (
+                <Center>
+                  <Flex py={4} direction="column" gap={4} align="center">
+                    <Text>No releases found.</Text>
+                    {ensQuery.data?.address === address && (
+                      <LinkButton
+                        size="sm"
+                        href="https://portal.thirdweb.com/release"
+                        isExternal
+                        variant="outline"
+                        colorScheme="primary"
+                      >
+                        Learn more about releasing contracts
+                      </LinkButton>
+                    )}
+                  </Flex>
+                </Center>
+              )}
+          </DeployableContractTable>
+        </Flex>
       </Flex>
-    </Flex>
+    </>
   );
 };
 
