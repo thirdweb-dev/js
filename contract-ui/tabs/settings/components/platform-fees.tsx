@@ -1,7 +1,12 @@
+import { AdminOnly } from "@3rdweb-sdk/react";
 import { Flex, FormControl, Input } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePlatformFees, useUpdatePlatformFees } from "@thirdweb-dev/react";
-import { CommonPlatformFeeSchema, SmartContract } from "@thirdweb-dev/sdk";
+import {
+  CommonPlatformFeeSchema,
+  SmartContract,
+  ValidContractInstance,
+} from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { PotentialContractInstance } from "contract-ui/types/types";
@@ -130,22 +135,22 @@ export const SettingsPlatformFees = <
             </FormControl>
           </Flex>
         </Flex>
-        {/*         <AdminOnly contract={contract}> */}
-        <TransactionButton
-          colorScheme="primary"
-          transactionCount={1}
-          isDisabled={query.isLoading || !formState.isDirty}
-          type="submit"
-          isLoading={mutation.isLoading}
-          loadingText="Saving..."
-          size="md"
-          borderRadius="xl"
-          borderTopLeftRadius="0"
-          borderTopRightRadius="0"
-        >
-          Update Platform Fee Settings
-        </TransactionButton>
-        {/*         </AdminOnly> */}
+        <AdminOnly contract={contract as ValidContractInstance}>
+          <TransactionButton
+            colorScheme="primary"
+            transactionCount={1}
+            isDisabled={query.isLoading || !formState.isDirty}
+            type="submit"
+            isLoading={mutation.isLoading}
+            loadingText="Saving..."
+            size="md"
+            borderRadius="xl"
+            borderTopLeftRadius="0"
+            borderTopRightRadius="0"
+          >
+            Update Platform Fee Settings
+          </TransactionButton>
+        </AdminOnly>
       </Flex>
     </Card>
   );

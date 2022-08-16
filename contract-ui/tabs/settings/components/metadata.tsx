@@ -1,7 +1,12 @@
+import { AdminOnly } from "@3rdweb-sdk/react";
 import { Flex, FormControl, Input, Textarea } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMetadata, useUpdateMetadata } from "@thirdweb-dev/react";
-import { CommonContractSchema, SmartContract } from "@thirdweb-dev/sdk";
+import {
+  CommonContractSchema,
+  SmartContract,
+  ValidContractInstance,
+} from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { PotentialContractInstance } from "contract-ui/types/types";
@@ -154,22 +159,22 @@ export const SettingsMetadata = <TContract extends PotentialContractInstance>({
           </Flex>
         </Flex>
 
-        {/*         <AdminOnly contract={contract}> */}
-        <TransactionButton
-          colorScheme="primary"
-          transactionCount={1}
-          isDisabled={metadata.isLoading || !formState.isDirty}
-          type="submit"
-          isLoading={metadataMutation.isLoading}
-          loadingText="Saving..."
-          size="md"
-          borderRadius="xl"
-          borderTopLeftRadius="0"
-          borderTopRightRadius="0"
-        >
-          Update Metadata
-        </TransactionButton>
-        {/*         </AdminOnly> */}
+        <AdminOnly contract={contract as ValidContractInstance}>
+          <TransactionButton
+            colorScheme="primary"
+            transactionCount={1}
+            isDisabled={metadata.isLoading || !formState.isDirty}
+            type="submit"
+            isLoading={metadataMutation.isLoading}
+            loadingText="Saving..."
+            size="md"
+            borderRadius="xl"
+            borderTopLeftRadius="0"
+            borderTopRightRadius="0"
+          >
+            Update Metadata
+          </TransactionButton>
+        </AdminOnly>
       </Flex>
     </Card>
   );

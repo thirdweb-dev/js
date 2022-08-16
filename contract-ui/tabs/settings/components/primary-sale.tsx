@@ -1,10 +1,15 @@
+import { AdminOnly } from "@3rdweb-sdk/react";
 import { Flex, FormControl, Input } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   usePrimarySaleRecipient,
   useUpdatePrimarySaleRecipient,
 } from "@thirdweb-dev/react";
-import { CommonPrimarySaleSchema, SmartContract } from "@thirdweb-dev/sdk";
+import {
+  CommonPrimarySaleSchema,
+  SmartContract,
+  ValidContractInstance,
+} from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { PotentialContractInstance } from "contract-ui/types/types";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -105,22 +110,22 @@ export const SettingsPrimarySale = <
             </FormControl>
           </Flex>
         </Flex>
-        {/*         <AdminOnly contract={contract}> */}
-        <TransactionButton
-          colorScheme="primary"
-          transactionCount={1}
-          isDisabled={query.isLoading || !formState.isDirty}
-          type="submit"
-          isLoading={mutation.isLoading}
-          loadingText="Saving..."
-          size="md"
-          borderRadius="xl"
-          borderTopLeftRadius="0"
-          borderTopRightRadius="0"
-        >
-          Update Primary Sale Settings
-        </TransactionButton>
-        {/*         </AdminOnly> */}
+        <AdminOnly contract={contract as ValidContractInstance}>
+          <TransactionButton
+            colorScheme="primary"
+            transactionCount={1}
+            isDisabled={query.isLoading || !formState.isDirty}
+            type="submit"
+            isLoading={mutation.isLoading}
+            loadingText="Saving..."
+            size="md"
+            borderRadius="xl"
+            borderTopLeftRadius="0"
+            borderTopRightRadius="0"
+          >
+            Update Primary Sale Settings
+          </TransactionButton>
+        </AdminOnly>
       </Flex>
     </Card>
   );

@@ -1,4 +1,4 @@
-import { useIsAdmin } from "@3rdweb-sdk/react";
+import { AdminOnly } from "@3rdweb-sdk/react";
 import {
   Flex,
   FormControl,
@@ -30,7 +30,6 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
   role,
   contract,
 }) => {
-  const isAdmin = useIsAdmin(contract as ValidContractInstance);
   const {
     control,
     watch,
@@ -83,7 +82,7 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
           removeAddress={() => remove(index)}
         />
       ))}
-      {isAdmin && (
+      <AdminOnly contract={contract as ValidContractInstance}>
         <FormControl
           isDisabled={isSubmitting}
           isInvalid={address && isDisabled}
@@ -150,7 +149,7 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
               : ""}
           </FormErrorMessage>
         </FormControl>
-      )}
+      </AdminOnly>
     </Stack>
   );
 };

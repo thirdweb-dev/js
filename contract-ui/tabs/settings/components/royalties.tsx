@@ -1,10 +1,15 @@
+import { AdminOnly } from "@3rdweb-sdk/react";
 import { Flex, FormControl, Input } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   useRoyaltySettings,
   useUpdateRoyaltySettings,
 } from "@thirdweb-dev/react";
-import { CommonRoyaltySchema, SmartContract } from "@thirdweb-dev/sdk";
+import {
+  CommonRoyaltySchema,
+  SmartContract,
+  ValidContractInstance,
+} from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { PotentialContractInstance } from "contract-ui/types/types";
@@ -126,22 +131,22 @@ export const SettingsRoyalties = <TContract extends PotentialContractInstance>({
             </FormControl>
           </Flex>
         </Flex>
-        {/*         <AdminOnly contract={contract}> */}
-        <TransactionButton
-          colorScheme="primary"
-          transactionCount={1}
-          isDisabled={query.isLoading || !formState.isDirty}
-          type="submit"
-          isLoading={mutation.isLoading}
-          loadingText="Saving..."
-          size="md"
-          borderRadius="xl"
-          borderTopLeftRadius="0"
-          borderTopRightRadius="0"
-        >
-          Update Royalty Settings
-        </TransactionButton>
-        {/*         </AdminOnly> */}
+        <AdminOnly contract={contract as ValidContractInstance}>
+          <TransactionButton
+            colorScheme="primary"
+            transactionCount={1}
+            isDisabled={query.isLoading || !formState.isDirty}
+            type="submit"
+            isLoading={mutation.isLoading}
+            loadingText="Saving..."
+            size="md"
+            borderRadius="xl"
+            borderTopLeftRadius="0"
+            borderTopRightRadius="0"
+          >
+            Update Royalty Settings
+          </TransactionButton>
+        </AdminOnly>
       </Flex>
     </Card>
   );
