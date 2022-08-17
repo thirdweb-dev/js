@@ -87,11 +87,11 @@ export function useContractRouteConfig(
         ),
     },
     {
-      title: "Source",
-      path: "source",
+      title: "Sources",
+      path: "sources",
       element: () =>
-        import("../tabs/source/page").then(({ CustomContractSourcePage }) => (
-          <CustomContractSourcePage contractAddress={contractAddress} />
+        import("../tabs/sources/page").then(({ CustomContractSourcesPage }) => (
+          <CustomContractSourcesPage contractAddress={contractAddress} />
         )),
     },
   ];

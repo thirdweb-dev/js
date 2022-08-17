@@ -1,4 +1,4 @@
-import { ContractId } from "./types";
+import { Abi, ContractId } from "./types";
 import { isContractIdBuiltInContract } from "./utils";
 import { contractKeys, networkKeys } from "@3rdweb-sdk/react";
 import {
@@ -29,7 +29,6 @@ import {
 } from "@thirdweb-dev/sdk";
 import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/src/constants/contract-features";
 import {
-  AbiSchema,
   ContractInfoSchema,
   ExtraPublishMetadata,
   ProfileMetadata,
@@ -53,7 +52,7 @@ export interface ContractPublishMetadata {
   image: string | StaticImageData;
   name: string;
   description?: string;
-  abi?: z.infer<typeof AbiSchema>;
+  abi?: Abi;
   bytecode?: string;
   deployDisabled?: boolean;
   info?: z.infer<typeof ContractInfoSchema>;
@@ -323,7 +322,7 @@ export function useReleasedContractFunctions(contract: PublishedContract) {
     contract.metadataUri,
   );
   return meta
-    ? extractFunctionsFromAbi(meta.abi as any, meta?.compilerMetadata)
+    ? extractFunctionsFromAbi(meta.abi as Abi, meta?.compilerMetadata)
     : undefined;
 }
 export function useReleasedContractEvents(contract: PublishedContract) {
@@ -331,7 +330,7 @@ export function useReleasedContractEvents(contract: PublishedContract) {
     contract.metadataUri,
   );
   return meta
-    ? extractEventsFromAbi(meta.abi as any, meta?.compilerMetadata)
+    ? extractEventsFromAbi(meta.abi as Abi, meta?.compilerMetadata)
     : undefined;
 }
 
@@ -341,7 +340,7 @@ export function useReleasedContractCompilerMetadata(
   return useContractPublishMetadataFromURI(contract.metadataUri);
 }
 
-export function useConstructorParamsFromABI(abi?: any) {
+export function useConstructorParamsFromABI(abi?: Abi) {
   return useMemo(() => {
     return abi ? extractConstructorParamsFromAbi(abi) : [];
   }, [abi]);

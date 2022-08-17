@@ -209,6 +209,7 @@ Deploy it in one click`,
               functions={contractFunctions}
               events={contractEvents}
               sources={sources.data}
+              abi={contractReleaseMetadata.data?.abi}
             />
           )}
         </Flex>

@@ -1,4 +1,5 @@
 import { TokenAirdropButton } from "./components/airdrop-button";
+import { TokenBurnButton } from "./components/burn-button";
 import { TokenMintButton } from "./components/mint-button";
 import { TokenSupply } from "./components/supply";
 import { TokenTransferButton } from "./components/transfer-button";
@@ -8,7 +9,6 @@ import { Erc20 } from "@thirdweb-dev/sdk";
 import { PotentialContractInstance } from "contract-ui/types/types";
 import React from "react";
 import { Card, Heading, Text } from "tw-components";
-import { TokenBurnButton } from "./components/burn-button";
 
 interface ContractTokenPageProps {
   contractAddress?: string;

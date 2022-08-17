@@ -6,7 +6,11 @@ import {
   SnippetApiResponse,
   SnippetSchema,
 } from "./types";
-import { useContractName, useWeb3 } from "@3rdweb-sdk/react";
+import {
+  useContractConstructor,
+  useContractName,
+  useWeb3,
+} from "@3rdweb-sdk/react";
 import { Flex, Spinner, Stack } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { ValidContractInstance } from "@thirdweb-dev/sdk";
@@ -65,6 +69,12 @@ export const ContractCode: React.FC<IContractCode> = ({ contract }) => {
 
   const { address } = useWeb3();
   const [environment, setEnvironment] = useState<Environment>("react");
+
+  const contractConstructor = useContractConstructor(contract);
+  const abi = useMemo(() => {
+    return contractConstructor ? contractConstructor.contractAbi : null;
+  }, [contractConstructor]);
+
   const replaceSnippetVars = useCallback(
     (snip: Partial<Record<Environment, string>>) =>
       replaceVariablesInCodeSnippet(
@@ -164,9 +174,7 @@ export const ContractCode: React.FC<IContractCode> = ({ contract }) => {
               copy it from here.
             </Text>
           </Flex>
-          {contract && (
-            <ABICopyButton colorScheme="purple" contract={contract} />
-          )}
+          {abi && <ABICopyButton colorScheme="purple" abi={abi} />}
         </Flex>
       </Card>
     </Stack>

@@ -7,6 +7,7 @@ import {
   resolveContractUriFromAddress,
 } from "@thirdweb-dev/sdk";
 import { StorageSingleton } from "components/app-layouts/providers";
+import { Abi } from "components/contract-components/types";
 import { ethers } from "ethers";
 import { Interface } from "ethers/lib/utils";
 import { getSSRSDK } from "lib/ssr-sdk";
@@ -219,7 +220,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 async function fetchConstructorParams(
   contractAddress: string,
   chainId: ChainId,
-  abi: any,
+  abi: Abi,
   provider: ethers.providers.Provider,
 ): Promise<string> {
   const constructorParamTypes = extractConstructorParamsFromAbi(abi);

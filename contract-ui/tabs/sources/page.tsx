@@ -5,7 +5,6 @@ import {
   Divider,
   Flex,
   Icon,
-  Link,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -16,19 +15,16 @@ import {
   Spinner,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useContract } from "@thirdweb-dev/react";
+import { SourcesPanel } from "components/contract-components/shared/sources-panel";
+import { Abi } from "components/contract-components/types";
 import { useContractSources } from "contract-ui/hooks/useContractSources";
 import { VerificationStatus, blockExplorerMap } from "pages/api/verify";
+import { useMemo } from "react";
 import { FiCheckCircle, FiXCircle } from "react-icons/fi";
-import {
-  Badge,
-  Button,
-  Card,
-  CodeBlock,
-  Heading,
-  LinkButton,
-} from "tw-components";
+import { Badge, Button, Card, Heading, LinkButton } from "tw-components";
 
-interface CustomContractSourcePageProps {
+interface CustomContractSourcesPageProps {
   contractAddress?: string;
 }
 
@@ -168,14 +164,20 @@ const VerifyContractModal: React.FC<ConnectorModalProps> = ({
   );
 };
 
-export const CustomContractSourcePage: React.FC<
-  CustomContractSourcePageProps
+export const CustomContractSourcesPage: React.FC<
+  CustomContractSourcesPageProps
 > = ({ contractAddress }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const contractQuery = useContractSources(contractAddress);
   const chainId = useActiveChainId();
 
   const { data: prebuiltSource } = usePrebuiltSource(contractAddress);
+  const { contract } = useContract(contractAddress);
+
+  const abi = useMemo(
+    () => (contract?.publishedMetadata as any).contractWrapper.abi as Abi,
+    [contract],
+  );
 
   if (!contractAddress) {
     return <div>No contract address provided</div>;
@@ -188,25 +190,6 @@ export const CustomContractSourcePage: React.FC<
         <Heading size="title.sm">Loading...</Heading>
       </Flex>
     );
-  }
-
-  const codeNotFound = (
-    <Flex direction="column" align="left" gap={2}>
-      <Flex direction="row" align="center" gap={2}>
-        <Icon as={FiXCircle} color="red.500" />
-        <Heading size="title.sm">Contract source code not available</Heading>
-      </Flex>
-      <Heading size="subtitle.sm">
-        Try deploying with{" "}
-        <Link href="https://portal.thirdweb.com/cli" isExternal>
-          thirdweb CLI v0.5+
-        </Link>
-      </Heading>
-    </Flex>
-  );
-
-  if (contractQuery.isError && !prebuiltSource) {
-    return codeNotFound;
   }
 
   // clean up the source filenames and filter out libraries
@@ -231,33 +214,19 @@ export const CustomContractSourcePage: React.FC<
         contractAddress={contractAddress}
       />
       <Flex direction="column" gap={8}>
-        {sources && sources.length > 0 ? (
-          <>
-            <Flex direction="row" alignItems="center" gap={2}>
-              <Heading size="title.sm" flex={1}>
-                Contract Source Code
-              </Heading>
-              {!prebuiltSource && (
-                <Button variant="solid" colorScheme="purple" onClick={onOpen}>
-                  Verify on {blockExplorerName(chainId)}
-                </Button>
-              )}
-            </Flex>
-            {sources.map((signature) => (
-              <Card
-                as={Flex}
-                gap={4}
-                flexDirection="column"
-                key={signature.filename}
-              >
-                <Heading size="label.md">{signature.filename}</Heading>
-                <CodeBlock code={signature.source} language="solidity" />
-              </Card>
-            ))}
-          </>
-        ) : (
-          codeNotFound
-        )}
+        <Flex direction="row" alignItems="center" gap={2}>
+          <Heading size="title.sm" flex={1}>
+            Sources
+          </Heading>
+          {!prebuiltSource && (
+            <Button variant="solid" colorScheme="purple" onClick={onOpen}>
+              Verify on {blockExplorerName(chainId)}
+            </Button>
+          )}
+        </Flex>
+        <Card>
+          <SourcesPanel sources={sources} abi={abi} />
+        </Card>
       </Flex>
     </>
   );
