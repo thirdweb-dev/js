@@ -7,7 +7,7 @@ import {
   Stack,
   useModalContext,
 } from "@chakra-ui/react";
-import { useAddress, useTransferToken } from "@thirdweb-dev/react";
+import { useTransferToken } from "@thirdweb-dev/react";
 import type { Erc20 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { constants } from "ethers";
@@ -31,7 +31,6 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
   contract,
 }) => {
   const trackEvent = useTrack();
-  const address = useAddress();
   const transfer = useTransferToken(contract);
   const {
     register,
@@ -41,8 +40,8 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
   const modalContext = useModalContext();
 
   const { onSuccess, onError } = useTxNotifications(
-    "Tokens minted successfully",
-    "Failed to mint tokens",
+    "Succesfully transferred tokens",
+    "Failed to transfer tokens",
   );
 
   return (
@@ -78,36 +77,34 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
           type="submit"
           colorScheme="primary"
           onClick={handleSubmit((d) => {
-            if (address) {
-              trackEvent({
-                category: "token",
-                action: "transfer",
-                label: "attempt",
-              });
-              transfer.mutate(
-                { amount: d.amount, to: address },
-                {
-                  onSuccess: () => {
-                    trackEvent({
-                      category: "token",
-                      action: "transfer",
-                      label: "success",
-                    });
-                    onSuccess();
-                    modalContext.onClose();
-                  },
-                  onError: (error) => {
-                    trackEvent({
-                      category: "token",
-                      action: "transfer",
-                      label: "error",
-                      error,
-                    });
-                    onError(error);
-                  },
+            trackEvent({
+              category: "token",
+              action: "transfer",
+              label: "attempt",
+            });
+            transfer.mutate(
+              { amount: d.amount, to: d.to },
+              {
+                onSuccess: () => {
+                  trackEvent({
+                    category: "token",
+                    action: "transfer",
+                    label: "success",
+                  });
+                  onSuccess();
+                  modalContext.onClose();
                 },
-              );
-            }
+                onError: (error) => {
+                  trackEvent({
+                    category: "token",
+                    action: "transfer",
+                    label: "error",
+                    error,
+                  });
+                  onError(error);
+                },
+              },
+            );
           })}
         >
           Transfer Tokens
