@@ -2014,10 +2014,10 @@
     tiny-invariant "^1.2.0"
     wagmi "^0.2.28"
 
-"@thirdweb-dev/sdk@^2.3.36":
-  version "2.3.36"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.3.36.tgz#ae7c71e8cf9ff740ae32322d3ef4cb74df4dd535"
-  integrity sha512-eg2TTu8paJvcD1BMDm7L7Z40T6rShuGEhdsmR1LnGKdKsyWpvhtPCPB5NVfMWpYVMcQs38qm4geh4j0FMlXVgg==
+"@thirdweb-dev/sdk@^2.3.37":
+  version "2.3.37"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-2.3.37.tgz#14b7f043f58f977b71672998cf089676170efd7b"
+  integrity sha512-nyxPp3kk/RDQruBR6nP3p74aIGwetC+NtmXVBKUhmdxblUDnxqLmap+x/uu31aBkpiWkl4fecV7swWu07DqmkQ==
   dependencies:
     "@thirdweb-dev/contracts" "3.1.0-1"
     "@web-std/file" "^3.0.0"
