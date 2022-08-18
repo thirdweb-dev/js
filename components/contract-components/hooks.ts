@@ -23,6 +23,7 @@ import {
   detectFeatures,
   extractConstructorParamsFromAbi,
   extractEventsFromAbi,
+  extractFunctionParamsFromAbi,
   extractFunctionsFromAbi,
   fetchPreDeployMetadata,
   resolveContractUriFromAddress,
@@ -71,6 +72,7 @@ function removeUndefinedFromObject(obj: Record<string, any>) {
   return newObj;
 }
 
+// metadata PRE release, only has the compiler output info (from CLI)
 export async function fetchContractPublishMetadataFromURI(
   contractId: ContractId,
 ) {
@@ -126,6 +128,8 @@ export function useContractPublishMetadataFromURI(contractId: ContractId) {
   );
 }
 
+// metadata PRE release, only contains the compiler output
+// if passing an addres, also fetches the latest version of the matching contract
 export function useContractPrePublishMetadata(uri: string, address?: string) {
   const contractIdIpfsHash = toContractIdIpfsHash(uri);
   const sdk = useSDK();
@@ -145,6 +149,29 @@ export function useContractPrePublishMetadata(uri: string, address?: string) {
     },
     {
       enabled: !!uri && !!address,
+    },
+  );
+}
+
+// Metadata POST release, contains all the extra information filled in by the user
+export function useContractFullPublishMetadata(uri: string) {
+  const contractIdIpfsHash = toContractIdIpfsHash(uri);
+  const sdk = useSDK();
+  return useQuery(
+    ["full-publish-metadata", uri],
+    async () => {
+      invariant(
+        !isContractIdBuiltInContract(uri),
+        "Skipping publish metadata fetch for built-in contract",
+      );
+      // TODO: Make this nicer.
+      invariant(uri !== "ipfs://undefined", "uri can't be undefined");
+      return await sdk
+        ?.getPublisher()
+        .fetchFullPublishMetadata(contractIdIpfsHash);
+    },
+    {
+      enabled: !!uri,
     },
   );
 }
@@ -346,6 +373,14 @@ export function useConstructorParamsFromABI(abi?: Abi) {
   }, [abi]);
 }
 
+export function useFunctionParamsFromABI(abi?: any, functionName?: string) {
+  return useMemo(() => {
+    return abi && functionName
+      ? extractFunctionParamsFromAbi(abi, functionName)
+      : [];
+  }, [abi, functionName]);
+}
+
 export function toContractIdIpfsHash(contractId: ContractId) {
   if (
     isContractIdBuiltInContract(contractId) ||
@@ -428,17 +463,18 @@ export function useCustomContractDeployMutation(ipfsHash: string) {
         sdk && "getPublisher" in sdk,
         "sdk is not ready or does not support publishing",
       );
-      return await sdk.deployer.deployContractFromUri(
+      const contractAddress = await sdk.deployer.deployContractFromUri(
         ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
         data.constructorParams,
       );
+      if (data.addToDashboard) {
+        const registry = await sdk?.deployer.getRegistry();
+        await registry?.addContract(contractAddress);
+      }
+      return contractAddress;
     },
     {
-      onSuccess: async (contractAddress, variables) => {
-        if (variables.addToDashboard) {
-          const registry = await sdk?.deployer.getRegistry();
-          await registry?.addContract(contractAddress);
-        }
+      onSuccess: async () => {
         return await queryClient.invalidateQueries([
           ...networkKeys.chain(chainId),
           ...contractKeys.list(walletAddress),

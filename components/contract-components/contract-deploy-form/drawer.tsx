@@ -1,15 +1,20 @@
 import { ContractDeployForm } from ".";
 import { ContractId } from "../types";
 import { Box, useDisclosure } from "@chakra-ui/react";
+import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import { useTrack } from "hooks/analytics/useTrack";
 import { Button, Drawer } from "tw-components";
 
 interface DeployFormDrawerProps {
   contractId: ContractId;
+  chainId?: SUPPORTED_CHAIN_ID;
+  onSuccessCallback?: (contractAddress: string) => void;
 }
 
 export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
   contractId,
+  chainId,
+  onSuccessCallback,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const trackEvent = useTrack();
@@ -37,7 +42,18 @@ export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
         isOpen={isOpen}
       >
         <Box py={4} px={2}>
-          <ContractDeployForm contractId={contractId} />
+          <ContractDeployForm
+            contractId={contractId}
+            chainId={chainId}
+            onSuccessCallback={
+              onSuccessCallback
+                ? (address) => {
+                    onSuccessCallback(address);
+                    onClose();
+                  }
+                : undefined
+            }
+          />
         </Box>
       </Drawer>
     </>

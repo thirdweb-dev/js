@@ -11,15 +11,25 @@ const BuiltinContractForm = dynamic(() => import("./built-in-contract"));
 
 interface ContractDeployFormProps {
   contractId: ContractId;
+  chainId?: SUPPORTED_CHAIN_ID;
+  onSuccessCallback?: (contractAddress: string) => void;
 }
 
 export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
   contractId,
+  chainId: chainIdProp,
+  onSuccessCallback,
 }) => {
   const chainId = useChainId();
   const [selectedChain, setSelectedChain] = useState<
     SUPPORTED_CHAIN_ID | undefined
-  >(chainId && SUPPORTED_CHAIN_IDS.includes(chainId) ? chainId : undefined);
+  >(
+    chainIdProp
+      ? chainIdProp
+      : chainId && SUPPORTED_CHAIN_IDS.includes(chainId)
+      ? chainId
+      : undefined,
+  );
 
   useEffect(() => {
     if (!selectedChain && chainId && SUPPORTED_CHAIN_IDS.includes(chainId)) {
@@ -47,6 +57,8 @@ export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
           ipfsHash={contractId}
           selectedChain={selectedChain}
           onChainSelect={setSelectedChain}
+          restrictToSelectedChainId={!!chainIdProp}
+          onSuccessCallback={onSuccessCallback}
         />
       )}
     </CustomSDKContext>

@@ -1,7 +1,9 @@
 import {
   useConstructorParamsFromABI,
+  useContractFullPublishMetadata,
   useContractPublishMetadataFromURI,
   useCustomContractDeployMutation,
+  useFunctionParamsFromABI,
 } from "../hooks";
 import { Divider, Flex, FormControl, Input } from "@chakra-ui/react";
 import { ContractType, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
@@ -27,18 +29,32 @@ interface CustomContractFormProps {
   ipfsHash: string;
   selectedChain: SUPPORTED_CHAIN_ID | undefined;
   onChainSelect: (chainId: SUPPORTED_CHAIN_ID) => void;
+  restrictToSelectedChainId?: boolean;
+  onSuccessCallback?: (contractAddress: string) => void;
 }
 
 const CustomContractForm: React.FC<CustomContractFormProps> = ({
   ipfsHash,
   selectedChain,
   onChainSelect,
+  restrictToSelectedChainId,
+  onSuccessCallback,
 }) => {
   const trackEvent = useTrack();
-  const publishMetadata = useContractPublishMetadataFromURI(ipfsHash);
+  const compilerMetadata = useContractPublishMetadataFromURI(ipfsHash);
+  const fullReleaseMetadata = useContractFullPublishMetadata(ipfsHash);
   const constructorParams = useConstructorParamsFromABI(
-    publishMetadata.data?.abi,
+    compilerMetadata.data?.abi,
   );
+  const initializerParams = useFunctionParamsFromABI(
+    compilerMetadata.data?.abi,
+    fullReleaseMetadata.data?.factoryDeploymentData
+      ?.implementationInitializerFunction || "initialize",
+  );
+  const isFactoryDeployment = fullReleaseMetadata.data?.isDeployableViaFactory;
+  const deployParams = isFactoryDeployment
+    ? initializerParams
+    : constructorParams;
 
   const form = useForm<{ addToDashboard: true }>();
 
@@ -75,7 +91,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           ipfsHash,
           constructorParams: contractParams,
           contractMetadata: d,
-          publishMetadata: publishMetadata.data,
+          publishMetadata: compilerMetadata.data,
           chainId: selectedChain,
         };
         trackEvent({
@@ -110,10 +126,13 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 contractAddress: deployedContractAddress,
               });
               onSuccess();
-
-              router.replace(
-                `/${SupportedChainIdToNetworkMap[selectedChain]}/${deployedContractAddress}`,
-              );
+              if (onSuccessCallback) {
+                onSuccessCallback(deployedContractAddress);
+              } else {
+                router.replace(
+                  `/${SupportedChainIdToNetworkMap[selectedChain]}/${deployedContractAddress}`,
+                );
+              }
             },
             onError: (err) => {
               trackEvent({
@@ -129,7 +148,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
         );
       })}
     >
-      {constructorParams?.length ? (
+      {deployParams?.length ? (
         <>
           <Flex direction="column">
             <Heading size="subtitle.md">Contract Parameters</Heading>
@@ -139,7 +158,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
             </Text>
           </Flex>
           {/* TODO make this part of the actual form */}
-          {constructorParams.map((param, idx) => (
+          {deployParams.map((param, idx) => (
             <FormControl isRequired key={param.name}>
               <Flex alignItems="center" my={1}>
                 <FormLabel mb={0} flex="1">
@@ -198,7 +217,11 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
         <FormControl>
           <SupportedNetworkSelect
             disabledChainIds={DisabledChainsMap["custom" as ContractType]}
-            isDisabled={deploy.isLoading || !publishMetadata.isSuccess}
+            isDisabled={
+              restrictToSelectedChainId ||
+              deploy.isLoading ||
+              !compilerMetadata.isSuccess
+            }
             value={
               !DisabledChainsMap["custom" as ContractType].find(
                 (chain) => chain === selectedChain,
@@ -217,7 +240,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           flexShrink={0}
           type="submit"
           isLoading={deploy.isLoading}
-          isDisabled={!publishMetadata.isSuccess || !selectedChain}
+          isDisabled={!compilerMetadata.isSuccess || !selectedChain}
           colorScheme="primary"
           transactionCount={!watch("addToDashboard") ? 1 : 2}
         >
