@@ -9,14 +9,17 @@ interface DeployFormDrawerProps {
   contractId: ContractId;
   chainId?: SUPPORTED_CHAIN_ID;
   onSuccessCallback?: (contractAddress: string) => void;
+  onDrawerVisibilityChanged?: (isVisible: boolean) => void;
 }
 
 export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
   contractId,
   chainId,
   onSuccessCallback,
+  onDrawerVisibilityChanged,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   const trackEvent = useTrack();
   return (
     <>
@@ -30,6 +33,7 @@ export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
             label: "open-drawer",
           });
           onOpen();
+          onDrawerVisibilityChanged?.(true);
         }}
       >
         Deploy Now
@@ -38,7 +42,13 @@ export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
         allowPinchZoom
         preserveScrollBarGap
         size="lg"
-        onClose={onClose}
+        onClose={() => {
+          onDrawerVisibilityChanged?.(false);
+          onClose();
+        }}
+        onCloseComplete={() => {
+          onDrawerVisibilityChanged?.(false);
+        }}
         isOpen={isOpen}
       >
         <Box py={4} px={2}>
@@ -49,6 +59,7 @@ export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
               onSuccessCallback
                 ? (address) => {
                     onSuccessCallback(address);
+                    onDrawerVisibilityChanged?.(false);
                     onClose();
                   }
                 : undefined

@@ -33,7 +33,7 @@ import { FeatureIconMap } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { BsCode, BsEye } from "react-icons/bs";
 import {
@@ -72,6 +72,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
   const address = useAddress();
   const publishMutation = usePublishMutation();
   const showProxyDeployment = router.query.proxyDeploy === "true";
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const publishMetadata = useContractPublishMetadataFromURI(contractId);
   const prePublishMetadata = useContractPrePublishMetadata(contractId, address);
@@ -158,7 +159,13 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
     <Card w="100%" p={{ base: 6, md: 10 }}>
       <Flex
         as="form"
+        id="contract-release-form"
         onSubmit={handleSubmit((data) => {
+          // the drawer has another form inside it which triggers this one on submit
+          // hacky solution to avoid double submission
+          if (isDrawerOpen) {
+            return;
+          }
           trackEvent({
             category: "publish",
             action: "click",
@@ -370,6 +377,9 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
                             contractAddress,
                           );
                         }}
+                        onDrawerVisibilityChanged={(visible) => {
+                          setIsDrawerOpen(visible);
+                        }}
                       />
                     </Flex>
                   </FormControl>
@@ -437,6 +447,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
               transactionCount={1}
               isDisabled={isDisabled}
               isLoading={isLoading}
+              form="contract-release-form"
               loadingText={
                 publishMutation.isSuccess
                   ? "Preparing page"

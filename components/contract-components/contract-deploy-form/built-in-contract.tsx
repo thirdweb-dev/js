@@ -345,7 +345,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                 })
               }
             >
-              Learn more about this contract
+              Learn more
             </LinkButton>
           </Flex>
         </Flex>

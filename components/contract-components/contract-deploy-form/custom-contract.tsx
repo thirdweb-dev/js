@@ -82,6 +82,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       minH="full"
       gap={4}
       direction="column"
+      id="custom-contract-form"
       as="form"
       onSubmit={handleSubmit((d) => {
         if (!selectedChain) {
@@ -239,6 +240,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
         <TransactionButton
           flexShrink={0}
           type="submit"
+          form="custom-contract-form"
           isLoading={deploy.isLoading}
           isDisabled={!compilerMetadata.isSuccess || !selectedChain}
           colorScheme="primary"
