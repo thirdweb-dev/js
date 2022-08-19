@@ -15,22 +15,22 @@ import { Heading } from "tw-components";
 const EXAMPLES_MAP = {
   nftDrops: {
     title: "NFT drops",
-    href: "https://portal.thirdweb.com/templates/nft-drop-template",
+    href: "https://portal.thirdweb.com/templates",
     svg: NFTDrops,
   },
   marketplaces: {
     title: "NFT marketplaces",
-    href: "https://portal.thirdweb.com/templates/marketplace-next-ts-template",
+    href: "https://portal.thirdweb.com/templates",
     svg: Marketplaces,
   },
   tokenGated: {
     title: "Token-gated memberships",
-    href: "https://portal.thirdweb.com/templates/nft-gated-website-template",
+    href: "https://portal.thirdweb.com/templates",
     svg: TokenGated,
   },
   daos: {
     title: "DAOs",
-    href: "https://portal.thirdweb.com/templates/dao-template",
+    href: "https://portal.thirdweb.com/templates",
     svg: DAOs,
   },
   creatorTools: {
@@ -40,12 +40,12 @@ const EXAMPLES_MAP = {
   },
   communityRewards: {
     title: "Community rewards",
-    href: "https://portal.thirdweb.com/templates/community-rewards-template",
+    href: "https://portal.thirdweb.com/templates",
     svg: CommunityRewards,
   },
   playToEarnGames: {
     title: "Play-to-earn games",
-    href: "https://portal.thirdweb.com/templates/play-to-earn-game-template",
+    href: "https://portal.thirdweb.com/templates",
     svg: PlayToEarnGames,
   },
   defiProtocols: {
