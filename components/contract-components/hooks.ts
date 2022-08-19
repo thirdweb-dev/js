@@ -212,6 +212,8 @@ export function useLatestRelease(
         .getPublisher()
         .getLatest(publisherAddress, contractName);
 
+      invariant(latestRelease, "latest release is not defined");
+
       const contractInfo = await sdk
         .getPublisher()
         .fetchPublishedContractInfo(latestRelease);
