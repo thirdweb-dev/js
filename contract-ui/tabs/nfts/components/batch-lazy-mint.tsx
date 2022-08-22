@@ -1,9 +1,9 @@
 import { SelectReveal } from "./select-reveal";
 import { Box, Container, Flex, HStack, Icon } from "@chakra-ui/react";
-import { useTotalCount } from "@thirdweb-dev/react";
-import { Erc721 } from "@thirdweb-dev/sdk";
+import { NFTContract, useTotalCount } from "@thirdweb-dev/react";
 import { BatchTable } from "components/batch-upload/BatchTable";
 import { UploadStep } from "components/batch-upload/UploadStep";
+import { BigNumber } from "ethers";
 import Papa from "papaparse";
 import { useCallback, useRef, useState } from "react";
 import { DropzoneOptions, useDropzone } from "react-dropzone";
@@ -17,7 +17,7 @@ import {
 } from "utils/batch";
 
 interface BatchLazyMintProps {
-  contract?: Erc721;
+  contract: NFTContract;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -127,7 +127,9 @@ export const BatchLazyMint: React.FC<BatchLazyMintProps> = ({
                     <BatchTable
                       portalRef={paginationPortalRef}
                       data={mergedData}
-                      nextTokenIdToMint={nextTokenIdToMint.data?.toNumber()}
+                      nextTokenIdToMint={BigNumber.from(
+                        nextTokenIdToMint.data || 0,
+                      ).toNumber()}
                     />
                   ) : (
                     <UploadStep

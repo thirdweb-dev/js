@@ -1,17 +1,47 @@
-import { Flex, Progress, Radio, Stack, Tooltip } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertIcon,
+  Box,
+  Flex,
+  FormControl,
+  Icon,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Progress,
+  Radio,
+  Stack,
+  Textarea,
+  Tooltip,
+} from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { NFTContract, useLazyMint } from "@thirdweb-dev/react";
+import {
+  NFTContract,
+  useDelayedRevealLazyMint,
+  useLazyMint,
+} from "@thirdweb-dev/react";
 import {
   EditionDrop,
   NFTMetadataInput,
   UploadProgressEvent,
 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { MouseEventHandler, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Card, Checkbox, Heading, Text } from "tw-components";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import {
+  Card,
+  Checkbox,
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
+  Heading,
+  Text,
+} from "tw-components";
 import { shuffleData } from "utils/batch";
 import z from "zod";
 
@@ -112,26 +142,41 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
   const [selectedReveal, setSelectedReveal] = useState<
     "unselected" | "instant" | "delayed"
   >("instant");
-  /*   const [show, setShow] = useState(false); */
+  const [show, setShow] = useState(false);
   const [progress, setProgress] = useState<UploadProgressEvent>({
     progress: 0,
     total: 100,
   });
 
-  const { register, watch } = useForm<DelayedRevealInput>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<DelayedRevealInput>({
     resolver: zodResolver(DelayedRevealSchema),
   });
 
-  /*   const imageUrl = useImageFileOrUrl(watch("image")); */
+  const imageUrl = useImageFileOrUrl(watch("image"));
 
   const mintBatch = useLazyMint(contract, (event: UploadProgressEvent) => {
     setProgress(event);
   });
 
+  const mintDelayedRevealBatch = useDelayedRevealLazyMint(
+    contract,
+    (event: UploadProgressEvent) => {
+      setProgress(event);
+    },
+  );
+
   const { onSuccess, onError } = useTxNotifications(
     "Batch uploaded successfully",
     "Error uploading batch",
   );
+
+  const isRevealable = detectRevealer(contract);
 
   return (
     <Flex flexDir="column">
@@ -151,8 +196,8 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
           description="Collectors will mint your placeholder image, then you reveal at a later time"
           isActive={selectedReveal === "delayed"}
           onClick={() => setSelectedReveal("delayed")}
-          disabled={true}
-          disabledText="Delayed reveal is not available yet on dashboard for custom contracts"
+          disabled={!isRevealable}
+          disabledText="Your contract doesn't implement Delayed Reveal"
         />
       </Flex>
       <Flex>
@@ -240,170 +285,193 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
           </Flex>
         ) : selectedReveal === "delayed" ? (
           <>
-            {/* <Stack
-            spacing={6}
-            as="form"
-            onSubmit={handleSubmit((data) => {
-              mintDelayedRevealBatch.mutate(
-                {
-                  placeholder: {
-                    name: data.name,
-                    description: data.description || "",
-                    image: data.image,
+            <Stack
+              spacing={6}
+              as="form"
+              onSubmit={handleSubmit((data) => {
+                trackEvent({
+                  category: "nft",
+                  action: "batch-upload-delayed",
+                  label: "attempt",
+                });
+                mintDelayedRevealBatch.mutate(
+                  {
+                    placeholder: {
+                      name: data.name,
+                      description: data.description || "",
+                      image: data.image,
+                    },
+                    metadatas: watch("shuffle")
+                      ? shuffleData(mergedData)
+                      : mergedData,
+                    password: data.password,
                   },
-                  metadatas: watch("shuffle")
-                    ? shuffleData(mergedData)
-                    : mergedData,
-                  password: data.password,
-                  onProgress: (event: UploadProgressEvent) => {
-                    setProgress(event);
+                  {
+                    onSuccess: () => {
+                      trackEvent({
+                        category: "nft",
+                        action: "batch-upload-delayed",
+                        label: "success",
+                      });
+                      onSuccess();
+                      onClose();
+                    },
+                    onError: (error) => {
+                      trackEvent({
+                        category: "nft",
+                        action: "batch-upload-delayed",
+                        label: "error",
+                        error,
+                      });
+                      setProgress({
+                        progress: 0,
+                        total: 100,
+                      });
+                      onError(error);
+                    },
                   },
-                },
-                {
-                  onSuccess: () => {
-                    onSuccess();
-                    onClose();
-                  },
-                  onError: (err) => {
-                    setProgress({
-                      progress: 0,
-                      total: 100,
-                    });
-                    onError(err);
-                  },
-                },
-              );
-            })}
-          >
-            <Stack spacing={3}>
-              <Heading size="title.sm">Let&apos;s set a password</Heading>
-              <Alert status="warning" borderRadius="lg">
-                <AlertIcon />
-                You&apos;ll need this password to reveal your NFTs. Please save
-                it somewhere safe.
-              </Alert>
-              <Flex
-                flexDir={{ base: "column", md: "row" }}
-                gap={{ base: 4, md: 0 }}
-              >
-                <FormControl isRequired isInvalid={!!errors.password} mr={4}>
-                  <FormLabel>Password</FormLabel>
-                  <InputGroup>
-                    <Input
-                      {...register("password")}
-                      placeholder="Choose password"
-                      type={show ? "text" : "password"}
-                    />
-                    <InputRightElement
-                      cursor="pointer"
-                      children={
-                        <Icon
-                          as={show ? AiFillEye : AiFillEyeInvisible}
-                          onClick={() => setShow(!show)}
-                        />
-                      }
-                    />
-                  </InputGroup>
+                );
+              })}
+            >
+              <Stack spacing={3}>
+                <Heading size="title.sm">Let&apos;s set a password</Heading>
+                <Alert status="warning" borderRadius="lg">
+                  <AlertIcon />
+                  You&apos;ll need this password to reveal your NFTs. Please
+                  save it somewhere safe.
+                </Alert>
+                <Flex
+                  flexDir={{ base: "column", md: "row" }}
+                  gap={{ base: 4, md: 0 }}
+                >
+                  <FormControl isRequired isInvalid={!!errors.password} mr={4}>
+                    <FormLabel>Password</FormLabel>
+                    <InputGroup>
+                      <Input
+                        {...register("password")}
+                        placeholder="Choose password"
+                        type={show ? "text" : "password"}
+                      />
+                      <InputRightElement
+                        cursor="pointer"
+                        children={
+                          <Icon
+                            as={show ? AiFillEye : AiFillEyeInvisible}
+                            onClick={() => setShow(!show)}
+                          />
+                        }
+                      />
+                    </InputGroup>
 
-                  <FormErrorMessage>
-                    {errors?.password?.message}
-                  </FormErrorMessage>
-                </FormControl>
-                <FormControl isRequired isInvalid={!!errors.confirmPassword}>
-                  <FormLabel>Confirm password</FormLabel>
-                  <Input
-                    {...register("confirmPassword")}
-                    placeholder="Confirm password"
-                    type="password"
-                  />
-                  <FormErrorMessage>
-                    {errors?.confirmPassword?.message}
-                  </FormErrorMessage>
-                </FormControl>
-              </Flex>
-            </Stack>
-            <Stack spacing={5}>
-              <Heading size="title.sm">Placeholder</Heading>
-              <FormControl isInvalid={!!errors.image}>
-                <FormLabel>Image</FormLabel>
-                <Box width={{ base: "auto", md: "350px" }}>
-                  <FileInput
-                    accept={{ "image/*": [] }}
-                    value={imageUrl}
-                    showUploadButton
-                    setValue={(file) => setValue("image", file)}
-                    border="1px solid"
-                    borderColor="gray.200"
-                    borderRadius="md"
-                    transition="all 200ms ease"
-                    _hover={{ shadow: "sm" }}
-                  />
-                </Box>
-                <FormHelperText>
-                  You can optionally upload an image as the placeholder.
-                </FormHelperText>
-                <FormErrorMessage>
-                  {errors?.image?.message as unknown as string}
-                </FormErrorMessage>
-              </FormControl>
-              <FormControl isRequired isInvalid={!!errors.name}>
-                <FormLabel>Name</FormLabel>
-                <Input
-                  {...register("name")}
-                  placeholder="eg. My NFT (Coming soon)"
-                />
-                <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
-              </FormControl>
-              <FormControl isInvalid={!!errors.description}>
-                <FormLabel>Description</FormLabel>
-                <Textarea
-                  {...register("description")}
-                  placeholder="eg. Reveal on July 15th!"
-                />
-                <FormErrorMessage>
-                  {errors?.description?.message}
-                </FormErrorMessage>
-              </FormControl>
-              <Flex alignItems="center" gap={3}>
-                <Checkbox {...register("shuffle")} />
-                <Flex gap={1}>
-                  <Text>Shuffle the order of the NFTs before uploading.</Text>
-                  <Text fontStyle="italic">
-                    This is an off-chain operation and is not provable.
-                  </Text>
+                    <FormErrorMessage>
+                      {errors?.password?.message}
+                    </FormErrorMessage>
+                  </FormControl>
+                  <FormControl isRequired isInvalid={!!errors.confirmPassword}>
+                    <FormLabel>Confirm password</FormLabel>
+                    <Input
+                      {...register("confirmPassword")}
+                      placeholder="Confirm password"
+                      type="password"
+                    />
+                    <FormErrorMessage>
+                      {errors?.confirmPassword?.message}
+                    </FormErrorMessage>
+                  </FormControl>
                 </Flex>
-              </Flex>
-              <TransactionButton
-                mt={4}
-                size="lg"
-                colorScheme="primary"
-                transactionCount={1}
-                isDisabled={!mergedData.length}
-                type="submit"
-                isLoading={mintDelayedRevealBatch.isLoading}
-                loadingText={
-                  progress.progress >= progress.total
-                    ? `Waiting for approval...`
-                    : `Uploading ${mergedData.length} NFTs...`
-                }
-              >
-                Upload {mergedData.length} NFTs
-              </TransactionButton>
-              {mintDelayedRevealBatch.isLoading && (
-                <Progress
-                  borderRadius="md"
-                  mt="12px"
+              </Stack>
+              <Stack spacing={5}>
+                <Heading size="title.sm">Placeholder</Heading>
+                <FormControl isInvalid={!!errors.image}>
+                  <FormLabel>Image</FormLabel>
+                  <Box width={{ base: "auto", md: "350px" }}>
+                    <FileInput
+                      accept={{ "image/*": [] }}
+                      value={imageUrl}
+                      showUploadButton
+                      setValue={(file) => setValue("image", file)}
+                      border="1px solid"
+                      borderColor="gray.200"
+                      borderRadius="md"
+                      transition="all 200ms ease"
+                      _hover={{ shadow: "sm" }}
+                    />
+                  </Box>
+                  <FormHelperText>
+                    You can optionally upload an image as the placeholder.
+                  </FormHelperText>
+                  <FormErrorMessage>
+                    {errors?.image?.message as unknown as string}
+                  </FormErrorMessage>
+                </FormControl>
+                <FormControl isRequired isInvalid={!!errors.name}>
+                  <FormLabel>Name</FormLabel>
+                  <Input
+                    {...register("name")}
+                    placeholder="eg. My NFT (Coming soon)"
+                  />
+                  <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
+                </FormControl>
+                <FormControl isInvalid={!!errors.description}>
+                  <FormLabel>Description</FormLabel>
+                  <Textarea
+                    {...register("description")}
+                    placeholder="eg. Reveal on July 15th!"
+                  />
+                  <FormErrorMessage>
+                    {errors?.description?.message}
+                  </FormErrorMessage>
+                </FormControl>
+                <Flex alignItems="center" gap={3}>
+                  <Checkbox {...register("shuffle")} />
+                  <Flex gap={1}>
+                    <Text>Shuffle the order of the NFTs before uploading.</Text>
+                    <Text fontStyle="italic">
+                      This is an off-chain operation and is not provable.
+                    </Text>
+                  </Flex>
+                </Flex>
+                <TransactionButton
+                  mt={4}
                   size="lg"
-                  hasStripe
-                  colorScheme="blue"
-                  value={(progress.progress / progress.total) * 100}
-                />
-              )}
+                  colorScheme="primary"
+                  transactionCount={1}
+                  isDisabled={!mergedData.length}
+                  type="submit"
+                  isLoading={mintDelayedRevealBatch.isLoading}
+                  loadingText={
+                    progress.progress >= progress.total
+                      ? `Waiting for approval...`
+                      : `Uploading ${mergedData.length} NFTs...`
+                  }
+                >
+                  Upload {mergedData.length} NFTs
+                </TransactionButton>
+                {mintDelayedRevealBatch.isLoading && (
+                  <Progress
+                    borderRadius="md"
+                    mt="12px"
+                    size="lg"
+                    hasStripe
+                    colorScheme="blue"
+                    value={(progress.progress / progress.total) * 100}
+                  />
+                )}
+              </Stack>
             </Stack>
-          </Stack> */}
           </>
         ) : null}
       </Flex>
     </Flex>
   );
 };
+
+export function detectRevealer(contract?: NFTContract) {
+  if (!contract) {
+    return undefined;
+  }
+  if ("drop" in contract) {
+    return !!contract?.drop?.revealer;
+  }
+  return undefined;
+}
