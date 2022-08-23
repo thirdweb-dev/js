@@ -173,7 +173,16 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
             >
               <Button
                 size="sm"
-                fontWeight={selectedFunction.name === fn.name ? 600 : 400}
+                fontWeight={
+                  (isFunction &&
+                    (selectedFunction as AbiFunction).signature ===
+                      (fn as AbiFunction).signature) ||
+                  (!isFunction &&
+                    (selectedFunction as AbiEvent).name ===
+                      (fn as AbiEvent).name)
+                    ? 600
+                    : 400
+                }
                 leftIcon={
                   <Icon
                     boxSize={3}
@@ -187,7 +196,16 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
                     }
                   />
                 }
-                opacity={selectedFunction.name === fn.name ? 1 : 0.65}
+                opacity={
+                  (isFunction &&
+                    (selectedFunction as AbiFunction).signature ===
+                      (fn as AbiFunction).signature) ||
+                  (!isFunction &&
+                    (selectedFunction as AbiEvent).name ===
+                      (fn as AbiEvent).name)
+                    ? 1
+                    : 0.65
+                }
                 onClick={() => setSelectedFunction(fn)}
                 color="heading"
                 _hover={{ opacity: 1, textDecor: "underline" }}
