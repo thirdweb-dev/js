@@ -2047,10 +2047,10 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.1.0-1.tgz#8c4d068f0548f780a90cc723636bcc358cb946eb"
   integrity sha512-v19UtKKIpd6ol7fXcAL24F7Jwew1jIAmxstogTw9MdX2k9McwaI0Ebxu/3SSkQq2AhmruwOPp+E2xq1SWKsBUw==
 
-"@thirdweb-dev/react@^2.7.0-2":
-  version "2.7.0-2"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.7.0-2.tgz#42b2780e4ec727a7e8237b3f32d5440e7c4f5264"
-  integrity sha512-Ennj46ilgGtvM8dDfeON7LwUwtLA/GreO/pFXDRHsQgR8jOHFa+2vhbOTatkMAY7bnMrbSM6rRDOGiq5bCdc2A==
+"@thirdweb-dev/react@^2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-2.7.0.tgz#b66e6399aa92d57dab7b6f68175a515ff8d33614"
+  integrity sha512-oXlStkcebLMOSEO32yThlSoINAGDw3bVl0uM3QRng7fC7te8DUCaQ6c7VbRM4Byx53yQze05lYYLBjyaVLYkOA==
   dependencies:
     "@emotion/react" "^11.10.0"
     "@emotion/styled" "^11.10.0"

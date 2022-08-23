@@ -14,11 +14,11 @@ import {
   useTransferBatchToken,
 } from "@thirdweb-dev/react";
 import { Amount, Erc20 } from "@thirdweb-dev/sdk";
+import { TransactionButton } from "components/buttons/TransactionButton";
 import {
   AirdropAddressInput,
   AirdropUpload,
-} from "components/batch-upload/AirdropUpload";
-import { TransactionButton } from "components/buttons/TransactionButton";
+} from "contract-ui/tabs/nfts/components/airdrop-upload";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";

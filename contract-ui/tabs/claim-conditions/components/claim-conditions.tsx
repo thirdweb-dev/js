@@ -1,11 +1,5 @@
 import { AdminOnly, useIsAdmin } from "@3rdweb-sdk/react";
 import {
-  useClaimPhases,
-  useClaimPhasesMutation,
-  useDecimals,
-  useResetEligibilityMutation,
-} from "@3rdweb-sdk/react/hooks/useClaimPhases";
-import {
   Alert,
   AlertDescription,
   AlertIcon,
@@ -24,19 +18,27 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import {
+  NFTContract,
+  useClaimConditions,
+  useContract,
+  useContractType,
+  useResetClaimConditions,
+  useSetClaimConditions,
+} from "@thirdweb-dev/react";
+import {
   ClaimConditionInput,
   ClaimConditionInputArray,
-  EditionDrop,
+  Erc20,
+  Erc1155,
   NATIVE_TOKEN_ADDRESS,
-  NFTDrop,
-  SignatureDrop,
-  TokenDrop,
+  ValidContractInstance,
 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BigNumberInput } from "components/shared/BigNumberInput";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { SnapshotUpload } from "contract-ui/tabs/claim-conditions/components/snapshot-upload";
 import deepEqual from "fast-deep-equal";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React, { useEffect, useMemo, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -55,23 +57,29 @@ import { toDateTimeLocal } from "utils/date-utils";
 import * as z from "zod";
 import { ZodError } from "zod";
 
-type ResettableContracts = TokenDrop | EditionDrop | NFTDrop;
-
-interface DropPhases {
-  contract?: NFTDrop | EditionDrop | TokenDrop | SignatureDrop;
+interface ClaimConditionsProps {
+  contract?: NFTContract;
   tokenId?: string;
+  isColumn?: true;
 }
-export const DropPhases: React.FC<DropPhases> = ({ contract, tokenId }) => {
-  const mutation = useResetEligibilityMutation(
-    contract as ResettableContracts,
+export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
+  contract,
+  tokenId,
+  isColumn,
+}) => {
+  const trackEvent = useTrack();
+  const resetClaimConditions = useResetClaimConditions(
+    contract as Erc1155,
     tokenId,
   );
-  const txNotifications = useTxNotifications(
+  const { onSuccess, onError } = useTxNotifications(
     "Succesfully reset claim eligibility",
     "Failed to reset claim eligibility",
   );
 
-  const nftsOrToken = contract instanceof TokenDrop ? "tokens" : "NFTs";
+  const { contract: actualContract } = useContract(contract?.getAddress());
+
+  const nftsOrToken = contract instanceof Erc20 ? "tokens" : "NFTs";
 
   return (
     <Stack spacing={8}>
@@ -84,7 +92,7 @@ export const DropPhases: React.FC<DropPhases> = ({ contract, tokenId }) => {
             gap={4}
           >
             <Flex direction="column">
-              <Heading size="title.md">Claim Phases</Heading>
+              <Heading size="title.md">Set phases</Heading>
               <Text size="body.md" fontStyle="italic">
                 Different phases control when the {nftsOrToken} get dropped, how
                 much they cost, and more.
@@ -92,10 +100,14 @@ export const DropPhases: React.FC<DropPhases> = ({ contract, tokenId }) => {
             </Flex>
           </Flex>
           <Divider />
-          <DropPhasesForm contract={contract} tokenId={tokenId} />
+          <ClaimConditionsForm
+            contract={contract}
+            tokenId={tokenId}
+            isColumn={isColumn}
+          />
         </Flex>
       </Card>
-      <AdminOnly contract={contract}>
+      <AdminOnly contract={actualContract as unknown as ValidContractInstance}>
         <Card p={0} position="relative">
           <Flex pt={{ base: 6, md: 10 }} direction="column" gap={8}>
             <Flex
@@ -116,14 +128,40 @@ export const DropPhases: React.FC<DropPhases> = ({ contract, tokenId }) => {
               </Flex>
             </Flex>
 
-            <AdminOnly contract={contract} fallback={<Box pb={5} />}>
+            <AdminOnly
+              contract={actualContract as unknown as ValidContractInstance}
+              fallback={<Box pb={5} />}
+            >
               <TransactionButton
                 colorScheme="primary"
                 transactionCount={1}
                 type="submit"
-                isLoading={mutation.isLoading}
+                isLoading={resetClaimConditions.isLoading}
                 onClick={() => {
-                  mutation.mutate(undefined, txNotifications);
+                  trackEvent({
+                    category: contract instanceof Erc20 ? "token" : "nft",
+                    action: "reset-claim-conditions",
+                    label: "attempt",
+                  });
+                  resetClaimConditions.mutate(undefined, {
+                    onSuccess: () => {
+                      trackEvent({
+                        category: contract instanceof Erc20 ? "token" : "nft",
+                        action: "reset-claim-conditions",
+                        label: "success",
+                      });
+                      onSuccess();
+                    },
+                    onError: (error) => {
+                      trackEvent({
+                        category: contract instanceof Erc20 ? "token" : "nft",
+                        action: "reset-claim-conditions",
+                        label: "error",
+                        error,
+                      });
+                      onError(error);
+                    },
+                  });
                 }}
                 loadingText="Resetting..."
                 size="md"
@@ -151,15 +189,23 @@ const DEFAULT_PHASE = {
   snapshot: undefined,
   merkleRootHash: undefined,
 };
-const DropPhasesSchema = z.object({
+const ClaimConditionsSchema = z.object({
   phases: ClaimConditionInputArray,
 });
-const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
+const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
+  contract,
+  tokenId,
+  isColumn,
+}) => {
+  const trackEvent = useTrack();
   const [resetFlag, setResetFlag] = useState(false);
-  const isAdmin = useIsAdmin(contract);
-  const query = useClaimPhases(contract, tokenId);
-  const mutation = useClaimPhasesMutation(contract, tokenId);
-  const decimals = useDecimals(contract);
+  const isAdmin = useIsAdmin(contract as ValidContractInstance);
+
+  // We're setting it as Erc1155 so TypeScript doesn't complain that we don't have a tokenId.
+  const query = useClaimConditions(contract as Erc1155, tokenId);
+  const mutation = useSetClaimConditions(contract as Erc1155, tokenId);
+  /*   const decimals = useDecimals(contract); */
+  const decimals = 0;
 
   const transformedQueryData = useMemo(() => {
     return (query.data || [])
@@ -184,9 +230,9 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
       .filter((phase) => phase.maxQuantity !== "0");
   }, [query.data]);
 
-  const nftsOrToken = contract instanceof TokenDrop ? "tokens" : "NFTs";
+  const nftsOrToken = contract instanceof Erc20 ? "tokens" : "NFTs";
 
-  const form = useForm<z.input<typeof DropPhasesSchema>>({
+  const form = useForm<z.input<typeof ClaimConditionsSchema>>({
     defaultValues: query.data
       ? {
           phases: transformedQueryData,
@@ -235,6 +281,18 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
   );
 
   const isDataEqual = deepEqual(transformedQueryData, watchFieldArray);
+
+  const { data: contractType } = useContractType(contract?.getAddress());
+  const isMultiPhase = useMemo(
+    () =>
+      contractType === "nft-drop" ||
+      contractType === "edition-drop" ||
+      contractType === "token-drop",
+    [contractType],
+  );
+
+  const { contract: actualContract } = useContract(contract?.getAddress());
+
   return (
     <>
       {query.isRefetching && (
@@ -247,14 +305,32 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
         />
       )}
       <Flex
-        onSubmit={form.handleSubmit((d) =>
+        onSubmit={form.handleSubmit((d) => {
+          trackEvent({
+            category: contract instanceof Erc20 ? "token" : "nft",
+            action: "set-claim-conditions",
+            label: "attempt",
+          });
           mutation
             .mutateAsync(
               { phases: d.phases as ClaimConditionInput[], reset: resetFlag },
               {
                 onSuccess: (_data, variables) => {
+                  trackEvent({
+                    category: contract instanceof Erc20 ? "token" : "nft",
+                    action: "set-claim-conditions",
+                    label: "success",
+                  });
                   form.reset({ phases: variables.phases });
                   onSuccess();
+                },
+                onError: (error) => {
+                  trackEvent({
+                    category: contract instanceof Erc20 ? "token" : "nft",
+                    action: "set-claim-conditions",
+                    label: "attempt",
+                  });
+                  onError(error);
                 },
               },
             )
@@ -267,8 +343,8 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
               } else {
                 onError(error);
               }
-            }),
-        )}
+            });
+        })}
         direction="column"
         as="form"
         gap={10}
@@ -293,7 +369,11 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                   }
                 />
                 <Card position="relative">
-                  <AdminOnly contract={contract}>
+                  <AdminOnly
+                    contract={
+                      actualContract as unknown as ValidContractInstance
+                    }
+                  >
                     <Icon
                       color="red.500"
                       as={FiTrash}
@@ -305,9 +385,10 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                       _hover={{ color: "red.400" }}
                       onClick={() => {
                         removePhase(index);
-                        if (contract instanceof SignatureDrop) {
-                          setResetFlag(true);
+                        if (isMultiPhase) {
+                          return;
                         }
+                        setResetFlag(true);
                       }}
                     />
                   </AdminOnly>
@@ -315,7 +396,13 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                   <Flex direction="column" gap={8}>
                     <Heading size="label.lg">Phase {index + 1}</Heading>
 
-                    <Flex direction={{ base: "column", md: "row" }} gap={4}>
+                    <Flex
+                      direction={{
+                        base: "column",
+                        md: isColumn ? "column" : "row",
+                      }}
+                      gap={4}
+                    >
                       <FormControl
                         isInvalid={
                           !!form.getFieldState(
@@ -385,7 +472,13 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                       </FormControl>
                     </Flex>
 
-                    <Flex direction={{ base: "column", md: "row" }} gap={4}>
+                    <Flex
+                      direction={{
+                        base: "column",
+                        md: isColumn ? "column" : "row",
+                      }}
+                      gap={4}
+                    >
                       <FormControl
                         isInvalid={
                           !!form.getFieldState(
@@ -396,7 +489,7 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                       >
                         <Heading as={FormLabel} size="label.md">
                           How much do you want to charge to claim each{" "}
-                          {contract instanceof TokenDrop ? "token" : "NFT"}?
+                          {contract instanceof Erc20 ? "token" : "NFT"}?
                         </Heading>
                         <PriceInput
                           value={parseFloat(field.price?.toString() || "0")}
@@ -488,7 +581,10 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                         {field.snapshot && (
                           <Flex
                             w={{ base: "100%", md: "50%" }}
-                            direction={{ base: "column", md: "row" }}
+                            direction={{
+                              base: "column",
+                              md: isColumn ? "column" : "row",
+                            }}
                             align="center"
                             gap={4}
                           >
@@ -538,7 +634,13 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                         }
                       </FormErrorMessage>
                     </FormControl>
-                    <Flex gap={4} direction={{ base: "column", md: "row" }}>
+                    <Flex
+                      gap={4}
+                      direction={{
+                        base: "column",
+                        md: isColumn ? "column" : "row",
+                      }}
+                    >
                       <FormControl
                         isInvalid={
                           !!form.getFieldState(
@@ -626,21 +728,10 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
               </Flex>
             </Alert>
           )}
-          <AdminOnly contract={contract}>
-            {contract instanceof SignatureDrop &&
-              watchFieldArray?.length === 0 && (
-                <Button
-                  colorScheme="purple"
-                  variant="solid"
-                  borderRadius="md"
-                  leftIcon={<Icon as={FiPlus} />}
-                  onClick={addPhase}
-                >
-                  Add Claim Phase
-                </Button>
-              )}
-
-            {contract instanceof SignatureDrop ? null : (
+          <AdminOnly
+            contract={actualContract as unknown as ValidContractInstance}
+          >
+            {isMultiPhase ? (
               <Button
                 colorScheme={watchFieldArray?.length > 0 ? "primary" : "purple"}
                 variant={watchFieldArray?.length > 0 ? "outline" : "solid"}
@@ -651,10 +742,25 @@ const DropPhasesForm: React.FC<DropPhases> = ({ contract, tokenId }) => {
                 Add {watchFieldArray?.length > 0 ? "Additional " : "Initial "}
                 Claim Phase
               </Button>
+            ) : (
+              watchFieldArray?.length === 0 && (
+                <Button
+                  colorScheme="purple"
+                  variant="solid"
+                  borderRadius="md"
+                  leftIcon={<Icon as={FiPlus} />}
+                  onClick={addPhase}
+                >
+                  Add Claim Phase
+                </Button>
+              )
             )}
           </AdminOnly>
         </Flex>
-        <AdminOnly contract={contract} fallback={<Box pb={5} />}>
+        <AdminOnly
+          contract={actualContract as unknown as ValidContractInstance}
+          fallback={<Box pb={5} />}
+        >
           <>
             <Divider />
             <TransactionButton

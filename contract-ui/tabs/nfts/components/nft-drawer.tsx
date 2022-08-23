@@ -20,6 +20,7 @@ import {
   useNFTBalance,
 } from "@thirdweb-dev/react";
 import { Erc721, Erc1155 } from "@thirdweb-dev/sdk";
+import { ClaimConditions } from "contract-ui/tabs/claim-conditions/components/claim-conditions";
 import { BigNumber } from "ethers";
 import { Card, Drawer, Heading, Text } from "tw-components";
 
@@ -48,6 +49,7 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
   const prevData = usePrevious(data);
 
   const renderData = data || prevData;
+
   if (!renderData) {
     return null;
   }
@@ -62,11 +64,13 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
   const isMintable = detectMintable(contract);
   const isClaimable = detectClaimable(contract);
 
+  const tokenId = renderData?.metadata.id.toString();
+
   return (
     <Drawer
       allowPinchZoom
       preserveScrollBarGap
-      size="lg"
+      size="xl"
       onClose={onClose}
       isOpen={isOpen}
     >
@@ -109,19 +113,13 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
                 </Tab>
               )}
               {isMintable && isERC1155 && <Tab gap={2}>Mint</Tab>}
-              {isClaimable && isERC1155 && (
-                <Tab gap={2} isDisabled>
-                  Claim Phases 🚧
-                </Tab>
-              )}
+              {isClaimable && isERC1155 && <Tab gap={2}>Claim Conditions</Tab>}
             </TabList>
 
             <TabPanels px={{ base: 4, md: 6 }} py={2}>
               <TabPanel px={0}>
                 <Flex flexDir="column" gap={3}>
-                  <Text size="label.md">
-                    Token ID: {renderData.metadata.id.toString()}
-                  </Text>
+                  <Text size="label.md">Token ID: {tokenId}</Text>
                   {isERC721 && (
                     <Text size="label.md">Owner: {renderData.owner}</Text>
                   )}
@@ -135,36 +133,32 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
               </TabPanel>
 
               <TabPanel px={0}>
-                <TransferTab
-                  contract={contract}
-                  tokenId={renderData.metadata.id.toString()}
-                />
+                <TransferTab contract={contract} tokenId={tokenId} />
               </TabPanel>
               {isERC1155 && (
                 <TabPanel>
-                  <AirdropTab
-                    contract={contract}
-                    tokenId={renderData.metadata.id.toString()}
-                  />
+                  <AirdropTab contract={contract} tokenId={tokenId} />
                 </TabPanel>
               )}
               {isBurnable && (
                 <TabPanel>
-                  <BurnTab
-                    contract={contract}
-                    tokenId={renderData.metadata.id.toString()}
-                  />
+                  <BurnTab contract={contract} tokenId={tokenId} />
                 </TabPanel>
               )}
               {isMintable && isERC1155 && (
                 <TabPanel>
-                  <MintSupplyTab
+                  <MintSupplyTab contract={contract} tokenId={tokenId} />
+                </TabPanel>
+              )}
+              {isClaimable && isERC1155 && (
+                <TabPanel>
+                  <ClaimConditions
                     contract={contract}
-                    tokenId={renderData.metadata.id.toString()}
+                    tokenId={tokenId}
+                    isColumn
                   />
                 </TabPanel>
               )}
-              {isClaimable && isERC1155 && <TabPanel>Claim Phases</TabPanel>}
             </TabPanels>
           </Tabs>
         </Card>
@@ -198,7 +192,7 @@ export function detectClaimable(contract?: NFTContract) {
     return undefined;
   }
   if ("drop" in contract) {
-    return !!contract?.drop;
+    return !!contract?.drop?.claim;
   }
   return undefined;
 }

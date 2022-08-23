@@ -58,6 +58,20 @@ export function useContractRouteConfig(
         )),
     },
     {
+      title: "Claim Conditions",
+      path: "claim-conditions",
+      isEnabled: extensionDetectedState({
+        contract,
+        feature: "ERC721Droppable",
+      }),
+      element: () =>
+        import("../tabs/claim-conditions/page").then(
+          ({ ContractClaimConditionsPage }) => (
+            <ContractClaimConditionsPage contractAddress={contractAddress} />
+          ),
+        ),
+    },
+    {
       title: "Permissions",
       path: "permissions",
       isEnabled: extensionDetectedState({ contract, feature: "Permissions" }),
