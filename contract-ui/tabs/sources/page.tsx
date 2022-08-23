@@ -175,7 +175,7 @@ export const CustomContractSourcesPage: React.FC<
   const { contract } = useContract(contractAddress);
 
   const abi = useMemo(
-    () => (contract?.publishedMetadata as any).contractWrapper.abi as Abi,
+    () => (contract?.publishedMetadata as any)?.contractWrapper?.abi as Abi,
     [contract],
   );
 
