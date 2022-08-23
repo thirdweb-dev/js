@@ -9,8 +9,26 @@ export enum PageId {
   // thirdweb.com
   Homepage = "homepage-landing",
 
-  // thirdweb.com/authentication
-  Authentication = "auth-landing",
+  // thirdweb.com/auth
+  AuthenticationLanding = "auth-landing",
+
+  // thirdweb.com/release
+  ReleaseLanding = "release-landing",
+
+  // thirdweb.com/deploy
+  DeployLanding = "deploy-landing",
+
+  // thirdweb.com/contract-extensions
+  ContractExtensionsLanding = "contract-extensions-landing",
+
+  // thirdweb.com/web3-sdk
+  Web3SDKLanding = "web3-sdk-landing",
+
+  // thirdweb.com/pre-built-contracts
+  PreBuiltContractsLanding = "pre-built-contracts-landing",
+
+  // thirdweb.com/web3-dashboard
+  DashboardLanding = "dashboard-landing",
 
   // thirdweb.com/gas
   GasEstimator = "gas-estimator",

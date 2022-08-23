@@ -29,7 +29,6 @@ export const MobileMenu: React.FC<IconButtonProps> = (props) => {
               href={product.link}
               category="topnav"
               label={product.label}
-              isExternal
             >
               {product.name}
             </MenuItem>

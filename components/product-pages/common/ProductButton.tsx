@@ -19,7 +19,7 @@ export const ProductButton: React.FC<GeneralCtaProps> = ({
   return (
     <LinkButton
       leftIcon={
-        <Icon as={BsFillLightningChargeFill} color="yellow" boxSize={4} />
+        <Icon as={BsFillLightningChargeFill} color="yellow.400" boxSize={4} />
       }
       px={"64px"}
       py={"28px"}
@@ -36,6 +36,7 @@ export const ProductButton: React.FC<GeneralCtaProps> = ({
       textAlign="center"
       borderRadius="md"
       href={href}
+      isExternal={href.startsWith("http")}
       _hover={{ opacity: 0.8 }}
       {...props}
     >

@@ -208,7 +208,7 @@ const HomePage: ThirdwebNextPage = () => {
                     </TrackedLink>
                   </Heading>
                   <Text size="body.lg">
-                    Building blocks for your smart contracts:{" "}
+                    Building blocks for your Smart Contracts:{" "}
                     <TrackedLink
                       category="thirdweb-deploy"
                       borderBottom="1px solid"

@@ -106,7 +106,7 @@ export const GasEstimatorBox: React.FC<GasEstimatorBoxProps> = ({
       </NextLink>
       <PriceLine
         title="Contract creation"
-        label="The price to deploy this smart contract"
+        label="The price to deploy this Smart Contract"
         gasPrice={deployContract}
       >
         {formatPrice(deployContract)}

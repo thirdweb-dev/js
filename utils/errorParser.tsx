@@ -83,13 +83,13 @@ function parseErrorCode(error: ErrorWithCode): string | JSX.Element | void {
       if (error.reason) {
         return (
           <>
-            The following error happened on the underlying smart contract:
+            The following error happened on the underlying Smart Contract:
             <br />
             <strong>{error.reason}</strong>
           </>
         );
       }
-      return "An error occurred on the underlying smart contract.";
+      return "An error occurred on the underlying Smart Contract.";
     }
     case -32602: {
       return "You denied the transaction request.";
