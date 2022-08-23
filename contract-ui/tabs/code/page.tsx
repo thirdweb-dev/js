@@ -18,7 +18,7 @@ export const ContractCodePage: React.FC<ContractCodePageProps> = ({
 
   return (
     <Flex direction="column" gap={6}>
-      <CodeOverview contractAddress={contractAddress} />
+      {contract?.contract && <CodeOverview contract={contract.contract} />}
     </Flex>
   );
 };

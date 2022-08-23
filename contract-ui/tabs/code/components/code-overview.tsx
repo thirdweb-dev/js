@@ -1,5 +1,6 @@
 import { Box, Flex, Select } from "@chakra-ui/react";
-import { useContractFunctions } from "@thirdweb-dev/react";
+import { SmartContract } from "@thirdweb-dev/sdk";
+import { useContractFunctions } from "components/contract-components/hooks";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
 import { Environment } from "components/contract-tabs/code/types";
 import { useSingleQueryParam } from "hooks/useQueryParam";
@@ -8,7 +9,7 @@ import { Card, Heading, Text } from "tw-components";
 import { SupportedNetwork } from "utils/network";
 
 interface CodeOverviewProps {
-  contractAddress?: string;
+  contract: SmartContract | null;
 }
 
 const COMMANDS = {
@@ -104,13 +105,11 @@ function formatSnippet(
   return code;
 }
 
-export const CodeOverview: React.FC<CodeOverviewProps> = ({
-  contractAddress,
-}) => {
+export const CodeOverview: React.FC<CodeOverviewProps> = ({ contract }) => {
   const chainName = useSingleQueryParam<SupportedNetwork>("networkOrAddress");
   const [environment, setEnvironment] = useState<Environment>("react");
 
-  const functionsQuery = useContractFunctions(contractAddress);
+  const functionsQuery = useContractFunctions(contract);
   const { readFunctions, writeFunctions } = useMemo(() => {
     return {
       readFunctions: functionsQuery.data?.filter(
@@ -147,7 +146,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
           environment={environment}
           setEnvironment={setEnvironment}
           snippet={formatSnippet(COMMANDS.setup as any, {
-            contractAddress,
+            contractAddress: contract?.getAddress(),
             chainName,
           })}
           hideTabs
@@ -180,7 +179,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
           environment={environment}
           setEnvironment={setEnvironment}
           snippet={formatSnippet(COMMANDS.read as any, {
-            contractAddress,
+            contractAddress: contract?.getAddress(),
             fn: read,
             args: readFunctions
               ?.find((f) => f.name === read)
@@ -215,7 +214,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
           environment={environment}
           setEnvironment={setEnvironment}
           snippet={formatSnippet(COMMANDS.write as any, {
-            contractAddress,
+            contractAddress: contract?.getAddress(),
             fn: write,
             args: writeFunctions
               ?.find((f) => f.name === write)
