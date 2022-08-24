@@ -16,8 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { AbiEvent, AbiFunction, SmartContract } from "@thirdweb-dev/sdk";
 import { MarkdownRenderer } from "components/contract-components/released-contract/markdown-renderer";
-import { useMemo, useState } from "react";
-import { BsLightningCharge } from "react-icons/bs";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { FiEdit2, FiEye } from "react-icons/fi";
 import { Badge, Button, Card, Heading, Text } from "tw-components";
 
@@ -126,26 +125,24 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
 }) => {
   const isFunction = "stateMutability" in fnsOrEvents[0];
 
-  const fnsOrEventsSorted: AbiFunction[] | AbiEvent[] = useMemo(() => {
-    if (isFunction) {
-      return fnsOrEvents.sort((a, b) => {
-        if (
-          (b as AbiFunction).stateMutability === "view" ||
-          (b as AbiFunction).stateMutability === "pure"
-        ) {
-          return -1;
-        }
-        if (
-          (a as AbiFunction).stateMutability === "view" ||
-          (a as AbiFunction).stateMutability === "pure"
-        ) {
-          return 1;
-        }
-        return 0;
-      });
-    }
-    return fnsOrEvents;
-  }, [fnsOrEvents, isFunction]);
+  const writeFunctions: AbiFunction[] = useMemo(() => {
+    return fnsOrEvents.filter(
+      (fn) =>
+        (fn as AbiFunction).stateMutability !== "pure" &&
+        (fn as AbiFunction).stateMutability !== "view" &&
+        "stateMutability" in fn,
+    ) as AbiFunction[];
+  }, [fnsOrEvents]);
+  const viewFunctions: AbiFunction[] = useMemo(() => {
+    return fnsOrEvents.filter(
+      (fn) =>
+        (fn as AbiFunction).stateMutability === "pure" ||
+        (fn as AbiFunction).stateMutability === "view",
+    ) as AbiFunction[];
+  }, [fnsOrEvents]);
+  const events = useMemo(() => {
+    return fnsOrEvents.filter((fn) => !("stateMutability" in fn)) as AbiEvent[];
+  }, [fnsOrEvents]);
 
   const [selectedFunction, setSelectedFunction] = useState<
     AbiFunction | AbiEvent
@@ -162,59 +159,52 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
         <List
           overflow="auto"
           h={{ base: "300px", md: "500px" }}
+          minH="100%"
           pr={{ base: 0, md: 3 }}
           mb={{ base: 3, md: 0 }}
           overflowX="hidden"
         >
-          {fnsOrEventsSorted.map((fn) => (
-            <ListItem
+          {writeFunctions.length ? (
+            <Flex mt={3} mb={3} gap={2}>
+              <Icon boxSize={3} as={FiEdit2} />
+              <Text size="label.sm">WRITE</Text>
+            </Flex>
+          ) : null}
+          {writeFunctions.map((fn) => (
+            <FunctionsOrEventsListItem
+              key={fn.signature}
+              fn={fn}
+              isFunction={isFunction}
+              selectedFunction={selectedFunction}
+              setSelectedFunction={setSelectedFunction}
+            />
+          ))}
+          {viewFunctions.length ? (
+            <>
+              <Divider my={3} />
+              <Flex mt={5} mb={3} gap={2}>
+                <Icon boxSize={3} as={FiEye} />
+                <Text size="label.sm">READ</Text>
+              </Flex>
+            </>
+          ) : null}
+          {viewFunctions.map((fn) => (
+            <FunctionsOrEventsListItem
+              key={fn.name}
+              fn={fn}
+              isFunction={isFunction}
+              selectedFunction={selectedFunction}
+              setSelectedFunction={setSelectedFunction}
+            />
+          ))}
+          {events.map((fn) => (
+            <FunctionsOrEventsListItem
               key={isFunction ? (fn as AbiFunction).signature : fn.name}
-              my={0.5}
-            >
-              <Button
-                size="sm"
-                fontWeight={
-                  (isFunction &&
-                    (selectedFunction as AbiFunction).signature ===
-                      (fn as AbiFunction).signature) ||
-                  (!isFunction &&
-                    (selectedFunction as AbiEvent).name ===
-                      (fn as AbiEvent).name)
-                    ? 600
-                    : 400
-                }
-                leftIcon={
-                  <Icon
-                    boxSize={3}
-                    as={
-                      isFunction
-                        ? (fn as AbiFunction).stateMutability === "view" ||
-                          (fn as AbiFunction).stateMutability === "pure"
-                          ? FiEye
-                          : FiEdit2
-                        : BsLightningCharge
-                    }
-                  />
-                }
-                opacity={
-                  (isFunction &&
-                    (selectedFunction as AbiFunction).signature ===
-                      (fn as AbiFunction).signature) ||
-                  (!isFunction &&
-                    (selectedFunction as AbiEvent).name ===
-                      (fn as AbiEvent).name)
-                    ? 1
-                    : 0.65
-                }
-                onClick={() => setSelectedFunction(fn)}
-                color="heading"
-                _hover={{ opacity: 1, textDecor: "underline" }}
-                variant="link"
-                fontFamily="mono"
-              >
-                {fn.name}
-              </Button>
-            </ListItem>
+              fn={fn}
+              isFunction={isFunction}
+              selectedFunction={selectedFunction}
+              setSelectedFunction={setSelectedFunction}
+            />
           ))}
         </List>
       </GridItem>
@@ -224,5 +214,52 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
         </Card>
       </GridItem>
     </SimpleGrid>
+  );
+};
+
+interface FunctionsOrEventsListItemProps {
+  fn: AbiFunction | AbiEvent;
+  isFunction: boolean;
+  selectedFunction: AbiFunction | AbiEvent;
+  setSelectedFunction: Dispatch<SetStateAction<AbiFunction | AbiEvent>>;
+}
+
+const FunctionsOrEventsListItem: React.FC<FunctionsOrEventsListItemProps> = ({
+  fn,
+  isFunction,
+  selectedFunction,
+  setSelectedFunction,
+}) => {
+  return (
+    <ListItem my={0.5}>
+      <Button
+        size="sm"
+        fontWeight={
+          (isFunction &&
+            (selectedFunction as AbiFunction).signature ===
+              (fn as AbiFunction).signature) ||
+          (!isFunction &&
+            (selectedFunction as AbiEvent).name === (fn as AbiEvent).name)
+            ? 600
+            : 400
+        }
+        opacity={
+          (isFunction &&
+            (selectedFunction as AbiFunction).signature ===
+              (fn as AbiFunction).signature) ||
+          (!isFunction &&
+            (selectedFunction as AbiEvent).name === (fn as AbiEvent).name)
+            ? 1
+            : 0.65
+        }
+        onClick={() => setSelectedFunction(fn)}
+        color="heading"
+        _hover={{ opacity: 1, textDecor: "underline" }}
+        variant="link"
+        fontFamily="mono"
+      >
+        {fn.name}
+      </Button>
+    </ListItem>
   );
 };
