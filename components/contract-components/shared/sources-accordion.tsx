@@ -1,4 +1,4 @@
-import { SourceFile } from "../types";
+import { Abi, SourceFile } from "../types";
 import {
   Accordion,
   AccordionButton,
@@ -10,10 +10,12 @@ import { CodeBlock, Heading } from "tw-components";
 
 interface SourcesAccordionProps {
   sources: SourceFile[];
+  abi?: Abi;
 }
 
 export const SourcesAccordion: React.FC<SourcesAccordionProps> = ({
   sources,
+  abi,
 }) => {
   return (
     <Accordion allowToggle allowMultiple>
@@ -23,6 +25,8 @@ export const SourcesAccordion: React.FC<SourcesAccordionProps> = ({
           flexDirection="column"
           key={signature.filename}
           borderColor="borderColor"
+          _first={{ borderTopWidth: 0 }}
+          _last={{ borderBottomWidth: 0 }}
         >
           <AccordionButton justifyContent="space-between" py={2}>
             <Heading size="label.md">{signature.filename}</Heading>
@@ -30,7 +34,6 @@ export const SourcesAccordion: React.FC<SourcesAccordionProps> = ({
           </AccordionButton>
           <AccordionPanel>
             <CodeBlock
-              maxH="500px"
               overflow="auto"
               code={signature.source.trim()}
               language="solidity"
@@ -38,6 +41,27 @@ export const SourcesAccordion: React.FC<SourcesAccordionProps> = ({
           </AccordionPanel>
         </AccordionItem>
       ))}
+      {abi && (
+        <AccordionItem
+          gap={4}
+          flexDirection="column"
+          borderColor="borderColor"
+          _first={{ borderTopWidth: 0 }}
+          _last={{ borderBottomWidth: 0 }}
+        >
+          <AccordionButton justifyContent="space-between" py={2}>
+            <Heading size="label.md">ABI</Heading>
+            <AccordionIcon />
+          </AccordionButton>
+          <AccordionPanel>
+            <CodeBlock
+              code={JSON.stringify(abi, null, 2)}
+              language="json"
+              overflow="auto"
+            />
+          </AccordionPanel>
+        </AccordionItem>
+      )}
     </Accordion>
   );
 };

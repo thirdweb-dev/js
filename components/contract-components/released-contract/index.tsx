@@ -144,13 +144,14 @@ Deploy it in one click`,
           StorageSingleton,
         )
       )
-        .filter((source) => !source.filename.includes("@"))
         .map((source) => {
           return {
             ...source,
             filename: source.filename.split("/").pop(),
           };
-        });
+        })
+        .slice()
+        .reverse();
     },
     { enabled: !!contractReleaseMetadata.data?.compilerMetadata?.sources },
   );
@@ -268,6 +269,19 @@ Deploy it in one click`,
                 category="released-contract"
                 label="share-twitter"
               />
+            </Flex>
+          </Flex>
+          <Divider />
+          <Flex flexDir="column" gap={4}>
+            <Flex gap={2} alignItems="center">
+              <LinkButton
+                href="https://blog.thirdweb.com/thirdweb-release/"
+                w="full"
+                variant="outline"
+                isExternal
+              >
+                Learn more about Release
+              </LinkButton>
             </Flex>
           </Flex>
         </Flex>
