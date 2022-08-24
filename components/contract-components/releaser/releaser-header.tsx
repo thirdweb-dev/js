@@ -99,6 +99,11 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
             View all contracts
           </LinkButton>
         )}
+        {ensQuery.data?.address === address &&
+          !isProfilePage &&
+          releaserProfile?.data && (
+            <EditProfile releaserProfile={releaserProfile.data} />
+          )}
       </Flex>
       {ensQuery.data?.address === address &&
         isProfilePage &&
