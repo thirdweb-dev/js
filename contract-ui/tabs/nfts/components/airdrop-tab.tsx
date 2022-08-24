@@ -24,7 +24,7 @@ export const AirdropTab: React.FC<AirdropTabProps> = ({
   tokenId,
 }) => {
   const address = useAddress();
-  const { handleSubmit, setValue, watch } = useForm<{
+  const { handleSubmit, setValue, watch, reset } = useForm<{
     addresses: AirdropAddressInput[];
   }>({
     defaultValues: { addresses: [] },
@@ -60,7 +60,6 @@ export const AirdropTab: React.FC<AirdropTabProps> = ({
             },
             {
               onSuccess: () => {
-                onSuccess();
                 trackEvent({
                   category: "nft",
                   action: "airdrop",
@@ -68,6 +67,8 @@ export const AirdropTab: React.FC<AirdropTabProps> = ({
                   contract_address: contract?.getAddress(),
                   token_id: tokenId,
                 });
+                onSuccess();
+                reset();
               },
               onError: (error) => {
                 trackEvent({

@@ -29,7 +29,6 @@ export const NFTRevealForm: React.FC<NFTRevealFormProps> = ({ contract }) => {
   const trackEvent = useTrack();
   const reveal = useRevealLazyMint(contract);
   const { data: batchesToReveal } = useBatchesToReveal(contract);
-  console.log(batchesToReveal);
   const {
     register,
     handleSubmit,

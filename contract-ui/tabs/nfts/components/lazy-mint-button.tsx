@@ -43,7 +43,7 @@ export const NFTLazyMintButton: React.FC<NFTLazyMintButtonProps> = ({
         {...restButtonProps}
         onClick={onOpen}
       >
-        Lazy Mint
+        Single Upload
       </Button>
     </>
   );

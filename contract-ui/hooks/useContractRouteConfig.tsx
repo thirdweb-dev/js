@@ -16,6 +16,13 @@ export function useContractRouteConfig(
   contractAddress?: string,
 ): EnhancedRoute[] {
   const contract = useContract(contractAddress);
+  const contractType = contract.data?.contractType;
+  const embedEnabled =
+    contractType === "nft-drop" ||
+    contractType === "marketplace" ||
+    contractType === "edition-drop" ||
+    contractType === "token-drop" ||
+    contractType === "signature-drop";
 
   return [
     {
@@ -81,6 +88,15 @@ export function useContractRouteConfig(
             <ContractPermissionsPage contractAddress={contractAddress} />
           ),
         ),
+    },
+    {
+      title: "Embed",
+      path: "embed",
+      element: () =>
+        import("../tabs/embed/page").then(({ CustomContractEmbedPage }) => (
+          <CustomContractEmbedPage contractAddress={contractAddress} />
+        )),
+      isEnabled: embedEnabled ? "enabled" : "disabled",
     },
     {
       title: "Code",

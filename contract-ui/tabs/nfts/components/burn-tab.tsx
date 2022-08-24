@@ -25,6 +25,7 @@ export const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
     handleSubmit,
     watch,
     formState: { errors },
+    reset,
   } = useForm<{ to: string; amount: string }>({
     defaultValues: { amount: "1" },
   });
@@ -60,6 +61,7 @@ export const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
                   label: "success",
                 });
                 onSuccess();
+                reset();
               },
               onError: (error) => {
                 trackEvent({

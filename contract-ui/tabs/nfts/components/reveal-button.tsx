@@ -1,6 +1,6 @@
 import { NFTRevealForm } from "./reveal-form";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import { NFTContract } from "@thirdweb-dev/react";
+import { NFTContract, useBatchesToReveal } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import React from "react";
 import { FiEye } from "react-icons/fi";
@@ -21,6 +21,8 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
     feature: ["ERC721Revealable", "ERC1155Revealable"],
   });
 
+  const { data: batchesToReveal } = useBatchesToReveal(contract);
+
   if (detectedState !== "enabled") {
     return null;
   }
@@ -36,14 +38,16 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
       >
         <NFTRevealForm contract={contract} />
       </Drawer>
-      <Button
-        colorScheme="primary"
-        leftIcon={<Icon as={FiEye} />}
-        {...restButtonProps}
-        onClick={onOpen}
-      >
-        Reveal
-      </Button>
+      {batchesToReveal?.length ? (
+        <Button
+          colorScheme="primary"
+          leftIcon={<Icon as={FiEye} />}
+          {...restButtonProps}
+          onClick={onOpen}
+        >
+          Reveal NFTs
+        </Button>
+      ) : null}
     </>
   );
 };

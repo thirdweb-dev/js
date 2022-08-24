@@ -23,6 +23,7 @@ export const TransferTab: React.FC<TransferTabProps> = ({
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<{ to: string; amount: string }>({
     defaultValues: { to: "", amount: "1" },
   });
@@ -59,6 +60,7 @@ export const TransferTab: React.FC<TransferTabProps> = ({
                   label: "success",
                 });
                 onSuccess();
+                reset();
               },
               onError: (error) => {
                 trackEvent({

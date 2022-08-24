@@ -22,6 +22,7 @@ export const MintSupplyTab: React.FC<MintSupplyTabProps> = ({
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<{ to: string; amount: string }>({
     defaultValues: { amount: "1" },
   });
@@ -58,6 +59,7 @@ export const MintSupplyTab: React.FC<MintSupplyTabProps> = ({
                     label: "success",
                   });
                   onSuccess();
+                  reset();
                 },
                 onError: (error) => {
                   trackEvent({

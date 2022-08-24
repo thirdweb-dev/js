@@ -92,10 +92,10 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
             gap={4}
           >
             <Flex direction="column">
-              <Heading size="title.md">Set phases</Heading>
+              <Heading size="title.md">Set Claim Conditions</Heading>
               <Text size="body.md" fontStyle="italic">
-                Different phases control when the {nftsOrToken} get dropped, how
-                much they cost, and more.
+                Control when the {nftsOrToken} get dropped, how much they cost,
+                and more.
               </Text>
             </Flex>
           </Flex>
@@ -251,7 +251,7 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
     if (
       query.data?.length &&
       !form.formState.isDirty &&
-      !form.getValues("phases").length
+      !form.getValues("phases")?.length
     ) {
       form.reset({
         phases: transformedQueryData,
@@ -385,10 +385,9 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
                       _hover={{ color: "red.400" }}
                       onClick={() => {
                         removePhase(index);
-                        if (isMultiPhase) {
-                          return;
+                        if (!isMultiPhase) {
+                          setResetFlag(true);
                         }
-                        setResetFlag(true);
                       }}
                     />
                   </AdminOnly>
@@ -603,7 +602,7 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
                               align="center"
                               justify="center"
                               color={
-                                field.snapshot.length === 0
+                                field.snapshot?.length === 0
                                   ? "orange.500"
                                   : "green.500"
                               }
@@ -611,7 +610,7 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
                               <Icon as={BsCircleFill} boxSize={2} />
                               <Text size="body.sm" color="inherit">
                                 <strong>
-                                  {field.snapshot.length} addresses
+                                  {field.snapshot?.length} addresses
                                 </strong>{" "}
                                 in snapshot
                               </Text>
