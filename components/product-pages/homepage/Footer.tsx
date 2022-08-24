@@ -254,6 +254,14 @@ export const HomepageFooter: React.FC = () => {
                   >
                     Blog
                   </TrackedLink>
+                  <TrackedLink
+                    isExternal
+                    href="https://careers.thirdweb.com/"
+                    category="footer"
+                    label="careers"
+                  >
+                    Careers
+                  </TrackedLink>
                 </Stack>
               </Stack>
               <Stack spacing="4" minW="36" flex="1">

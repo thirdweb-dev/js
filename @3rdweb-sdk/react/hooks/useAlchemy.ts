@@ -2,7 +2,10 @@ import { useActiveChainId, useWeb3 } from ".";
 import { useQueryWithNetwork } from "./query/useQueryWithNetwork";
 import { AlchemyWeb3, createAlchemyWeb3 } from "@alch/alchemy-web3";
 import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
-import { alchemyUrlMap } from "components/app-layouts/providers";
+import {
+  StorageSingleton,
+  alchemyUrlMap,
+} from "components/app-layouts/providers";
 import { useEffect, useState } from "react";
 
 export function useAlchemy() {
@@ -56,7 +59,7 @@ export function useWalletNFTs() {
                 metadata: (nft as any).metadata,
                 image: (nft as any).metadata?.image.replace(
                   "ipfs://",
-                  `${process.env.NEXT_PUBLIC_IPFS_GATEWAY_URL}/`,
+                  `${StorageSingleton.gatewayUrl}/`,
                 ),
                 tokenType: nft.id.tokenMetadata?.tokenType,
               };

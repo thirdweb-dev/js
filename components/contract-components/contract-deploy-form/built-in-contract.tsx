@@ -32,6 +32,7 @@ import {
   ValidContractClass,
 } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
+import { StorageSingleton } from "components/app-layouts/providers";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { RecipientForm } from "components/deployment/splits/recipients";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
@@ -309,7 +310,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                     >
                       <LinkOverlay
                         isExternal
-                        href={`${process.env.NEXT_PUBLIC_IPFS_GATEWAY_URL}/${audit}`}
+                        href={`${StorageSingleton.gatewayUrl}/${audit}`}
                         onClick={() =>
                           trackEvent({
                             category: "visit-audit",
