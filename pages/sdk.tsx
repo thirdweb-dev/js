@@ -16,7 +16,7 @@ const Web3SDK: ThirdwebNextPage = () => {
       <Hero
         name="SDKs"
         title="Everything you need to build web3 apps."
-        description="Build applications on top of your Smart Contracts. Seamlessly integrate into your apps."
+        description="Build applications on top of your smart contracts. Seamlessly integrate them into your apps."
         buttonText="Get started"
         buttonLink="https://portal.thirdweb.com/web3-sdk"
         image={require("public/assets/product-pages/sdk/hero.png")}
@@ -32,11 +32,12 @@ const Web3SDK: ThirdwebNextPage = () => {
             title="Interact with the blockchain"
             icon={require("/public/assets/product-pages/sdk/hero-icon-1.png")}
           >
-            Read and write data from your Smart Contracts, listen for events,
-            query logs and more.
+            We take care of everything between your applications and the
+            blockchain. Read and write data from your smart contracts, listen
+            for events, query logs and more.
           </ProductCard>
           <ProductCard
-            title="Hooks and Components"
+            title="Hooks and components"
             icon={require("/public/assets/product-pages/sdk/hero-icon-2.png")}
           >
             We provide frontend components like wallet connection and contract
@@ -47,7 +48,7 @@ const Web3SDK: ThirdwebNextPage = () => {
             title="Built for all developers"
             icon={require("/public/assets/product-pages/sdk/hero-icon-3.png")}
           >
-            We provide SDKs in many languages, including JavaScript/TypeScript,
+            We provide SDKs in many languages, including JavaScript, TypeScript,
             Python, and Go so you can build with whatever tools you are most
             comfortable using.
           </ProductCard>

@@ -17,7 +17,7 @@ const Deploy: ThirdwebNextPage = () => {
       <Hero
         name="Deploy"
         title="The next-gen contract deployment flow."
-        description="Deploy any Smart Contract with a single command. Get all the tools you need to get to success."
+        description="Deploy any smart contract with a single command. Get all the tools you need to get to success."
         buttonText="Get started"
         buttonLink="https://portal.thirdweb.com/deploy"
         image={require("public/assets/product-pages/deploy/hero.png")}
@@ -33,7 +33,7 @@ const Deploy: ThirdwebNextPage = () => {
             title="One-line contract deployment"
             icon={require("/public/assets/product-pages/deploy/hero-icon-1.png")}
           >
-            Compile and deploy any Smart Contract with the{" "}
+            Compile and deploy any smart contract with the{" "}
             <Text as="span" size="body.lg" fontWeight="medium" color="white">
               npx thirdweb deploy
             </Text>{" "}

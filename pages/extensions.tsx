@@ -44,11 +44,11 @@ const ContractExtensions: ThirdwebNextPage = () => {
             with a single-line of code using our contract extensions.
           </ProductCard>
           <ProductCard
-            title="Out-of-the-box security"
+            title="Out-of-the-box tooling"
             icon={require("/public/assets/product-pages/extensions/hero-icon-3.png")}
           >
-            Our base contracts and extensions are audited so you can focus on
-            your builds without worrying about security..
+            Get auto-generated SDKs and dashboards to build apps on top of your
+            contracts and easily manage them.
           </ProductCard>
         </SimpleGrid>
       </Hero>

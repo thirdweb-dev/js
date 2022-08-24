@@ -10,7 +10,7 @@ const PreBuiltContracts: ThirdwebNextPage = () => {
     <ProductPage
       seo={{
         title: "Smart Contracts",
-        description: "Prebuilt, audited and ready to go Smart Contracts.",
+        description: "Prebuilt, audited, and ready to go smart contracts.",
       }}
     >
       <Hero

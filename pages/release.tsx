@@ -16,8 +16,8 @@ const Release: ThirdwebNextPage = () => {
     >
       <Hero
         name="Release"
-        title="The on-chain registry for Smart Contracts."
-        description="Publish your contracts to the registry to enable everyone to easily deploy them in 1-click."
+        title="The on-chain registry for smart contracts."
+        description="Publish your contracts to the on-chain registry and enable everyone to easily deploy them in a single click."
         buttonText="Get started"
         buttonLink="https://portal.thirdweb.com/release"
         image={require("public/assets/product-pages/release/hero.png")}
