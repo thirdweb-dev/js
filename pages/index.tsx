@@ -7,12 +7,14 @@ import {
   Divider,
   Flex,
   Icon,
+  IconButton,
   LightMode,
   List,
   ListIcon,
   ListItem,
   SimpleGrid,
   Stack,
+  useClipboard,
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { CLISection } from "components/homepage/CLISection";
@@ -24,6 +26,7 @@ import { HomepageSection } from "components/product-pages/homepage/HomepageSecti
 import { ExamplesSection } from "components/product-pages/homepage/examples/ExamplesSection";
 import { MultiChainSVG } from "components/product-pages/homepage/multi-chain-svg";
 import { GeneralCta } from "components/shared/GeneralCta";
+import { useTrack } from "hooks/analytics/useTrack";
 import type { StaticImageData } from "next/image";
 import { PageId } from "page-id";
 // images
@@ -36,19 +39,16 @@ import WhiteLogo from "public/assets/landingpage/white-logo.png";
 // end images
 import React from "react";
 import { AiOutlineTeam } from "react-icons/ai";
-import { BsMenuButtonWide } from "react-icons/bs";
-import { FiCheck } from "react-icons/fi";
+import { BsLightningCharge, BsMenuButtonWide } from "react-icons/bs";
+import { FiCheck, FiCopy } from "react-icons/fi";
+import { IoMdCheckmark } from "react-icons/io";
 import { MdMarkEmailRead, MdOutlineAnalytics } from "react-icons/md";
-import {
-  Card,
-  CodeBlock,
-  Heading,
-  LinkButton,
-  Text,
-  TrackedLink,
-} from "tw-components";
+import { Card, Heading, LinkButton, Text, TrackedLink } from "tw-components";
 
 const HomePage: ThirdwebNextPage = () => {
+  const trackEvent = useTrack();
+
+  const { onCopy, hasCopied } = useClipboard("npx thirdweb@latest");
   return (
     <DarkMode>
       <Flex
@@ -101,19 +101,74 @@ const HomePage: ThirdwebNextPage = () => {
                     align="center"
                     gap={6}
                   >
-                    <GeneralCta size="lg" />
-                    <DarkMode>
-                      <CodeBlock
-                        prefix="$"
-                        code="npx thirdweb"
-                        language="bash"
-                        style={{
-                          background: "rgba(0,0,0,0.8)",
-                          borderColor: "black",
-                          color: "white",
+                    <LinkButton
+                      href="/dashboard"
+                      onClick={() =>
+                        trackEvent({
+                          category: "cta-button",
+                          action: "click",
+                          label: "start",
+                          title: "Start building",
+                        })
+                      }
+                      h="68px"
+                      w={{ base: "100%", md: "290px" }}
+                      fontSize="20px"
+                      leftIcon={
+                        <Icon as={BsLightningCharge} color="yellow.500" />
+                      }
+                      color="black"
+                      flexShrink={0}
+                      background="rgba(255,255,255,1)"
+                      _hover={{
+                        background: "rgba(255,255,255,0.9)!important",
+                      }}
+                    >
+                      Start building
+                    </LinkButton>
+                    <Flex
+                      background="rgba(255, 255, 255, 0.08)"
+                      border="1px solid rgba(255, 255, 255, 0.2)"
+                      pl="28px"
+                      pr="14px"
+                      borderRadius="md"
+                      h="68px"
+                      minW={{ base: "100%", md: "290px" }}
+                      gap={4}
+                      align="center"
+                    >
+                      <Text
+                        color="white"
+                        fontFamily="mono"
+                        fontSize="18px"
+                        fontWeight="500"
+                        whiteSpace="nowrap"
+                      >
+                        $ npx thirdweb@latest
+                      </Text>
+                      <IconButton
+                        ml="auto"
+                        borderRadius="md"
+                        variant="ghost"
+                        colorScheme="whiteAlpha"
+                        size="sm"
+                        aria-label="Copy npx command"
+                        onClick={() => {
+                          onCopy();
+                          trackEvent({
+                            category: "hero-section",
+                            action: "copy",
+                            label: "npx command",
+                          });
                         }}
+                        icon={
+                          <Icon
+                            as={hasCopied ? IoMdCheckmark : FiCopy}
+                            fill={hasCopied ? "green.500" : undefined}
+                          />
+                        }
                       />
-                    </DarkMode>
+                    </Flex>
                   </Flex>
                 </LightMode>
               </Flex>
