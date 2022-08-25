@@ -252,7 +252,7 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
                       cursor="pointer"
                       mx="auto"
                       align="center"
-                      gap={2}
+                      gap={{ base: 0.5, md: 2 }}
                       color="white"
                     >
                       <Heading
@@ -261,8 +261,12 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
                         lineHeight={{ base: 1.5, md: undefined }}
                         color="white"
                       >
-                        Announcing our $24m Series A: Accelerating the adoption
-                        of web3 with Haun Ventures, Coinbase, and Shopify
+                        Announcing our{" "}
+                        <Box as="span" display={{ base: "none", md: "inline" }}>
+                          $24m
+                        </Box>{" "}
+                        Series A: Accelerating the adoption of web3 with Haun
+                        Ventures, Coinbase Ventures, and Shopify
                       </Heading>
                       <Icon as={FiArrowRight} />
                     </Flex>
