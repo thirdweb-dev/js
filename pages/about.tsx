@@ -89,8 +89,8 @@ const vcs = [
     link: "https://haun.co",
   },
   {
-    name: "Coinbase",
-    logo: "/assets/investors/coinbase.svg",
+    name: "Coinbase Ventures",
+    logo: "/assets/investors/coin-ventures.png",
     link: "https://coinbase.com",
   },
   {

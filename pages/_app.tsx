@@ -236,9 +236,9 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
           <ErrorProvider>
             <DashboardThirdwebProvider queryClient={queryClient}>
               <TrackedLink
-                href="https://blog.thirdweb.com/thirdweb-series-a-announcement"
+                href="https://twitter.com/thirdweb_/status/1562842674679652352"
                 category="landingpage"
-                label="announcement"
+                label="announcement-tweet"
                 isExternal
               >
                 <Box
@@ -248,11 +248,18 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
                   bgImage="linear-gradient(95.15deg, #AA2F2F 3.36%, #6600FF 68.25%)"
                 >
                   <Container maxW="container.page" display="flex">
-                    <Flex cursor="pointer" mx="auto" align="center" gap={2}>
+                    <Flex
+                      cursor="pointer"
+                      mx="auto"
+                      align="center"
+                      gap={2}
+                      color="white"
+                    >
                       <Heading
                         size="label.lg"
                         as="p"
                         lineHeight={{ base: 1.5, md: undefined }}
+                        color="white"
                       >
                         Announcing our $24m Series A: Accelerating the adoption
                         of web3 with Haun Ventures, Coinbase, and Shopify

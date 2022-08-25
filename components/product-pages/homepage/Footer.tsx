@@ -142,6 +142,14 @@ export const HomepageFooter: React.FC = () => {
                     About
                   </TrackedLink>
                   <TrackedLink
+                    href="https://thirdweb.typeform.com/to/ZV3gUhiP"
+                    isExternal
+                    category="footer"
+                    label="sales-form"
+                  >
+                    Partner with us
+                  </TrackedLink>
+                  <TrackedLink
                     isExternal
                     href="https://portal.thirdweb.com"
                     category="footer"
@@ -149,6 +157,7 @@ export const HomepageFooter: React.FC = () => {
                   >
                     Docs
                   </TrackedLink>
+
                   <TrackedLink
                     isExternal
                     href="https://portal.thirdweb.com/guides"

@@ -39,7 +39,14 @@ import { AiOutlineTeam } from "react-icons/ai";
 import { BsMenuButtonWide } from "react-icons/bs";
 import { FiCheck } from "react-icons/fi";
 import { MdMarkEmailRead, MdOutlineAnalytics } from "react-icons/md";
-import { Card, Heading, LinkButton, Text, TrackedLink } from "tw-components";
+import {
+  Card,
+  CodeBlock,
+  Heading,
+  LinkButton,
+  Text,
+  TrackedLink,
+} from "tw-components";
 
 const HomePage: ThirdwebNextPage = () => {
   return (
@@ -95,14 +102,18 @@ const HomePage: ThirdwebNextPage = () => {
                     gap={6}
                   >
                     <GeneralCta size="lg" />
-                    <LinkButton
-                      href="https://portal.thirdweb.com"
-                      variant="ghost"
-                      colorScheme="whiteAlpha"
-                      isExternal
-                    >
-                      View Docs
-                    </LinkButton>
+                    <DarkMode>
+                      <CodeBlock
+                        prefix="$"
+                        code="npx thirdweb"
+                        language="bash"
+                        style={{
+                          background: "rgba(0,0,0,0.8)",
+                          borderColor: "black",
+                          color: "white",
+                        }}
+                      />
+                    </DarkMode>
                   </Flex>
                 </LightMode>
               </Flex>

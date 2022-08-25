@@ -29,7 +29,7 @@ export const GeneralCta: React.FC<GeneralCtaProps> = ({
       }
       color="black"
       px={size === "lg" ? 20 : 8}
-      py={size === "lg" ? { base: 6, md: 8 } : { base: 4, md: 6 }}
+      py={size === "lg" ? { base: 5, md: 7 } : { base: 4, md: 6 }}
       onClick={() =>
         trackEvent({
           category: "cta-button",

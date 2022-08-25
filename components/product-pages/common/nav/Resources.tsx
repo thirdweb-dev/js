@@ -99,7 +99,7 @@ const Resource: React.FC<IResource> = ({
       category="topnav"
       label={label}
       textDecor="none !important"
-      isExternal
+      isExternal={link.startsWith("http")}
     >
       <Box _hover={{ bg: "whiteAlpha.50" }} p="8px" borderRadius="md">
         <Stack direction="row" align="center" spacing={3}>
