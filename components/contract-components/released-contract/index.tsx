@@ -176,7 +176,7 @@ Deploy it in one click`,
           ],
         }}
       />
-      <GridItem order={{ base: 4, md: 3 }} colSpan={{ base: 12, md: 9 }}>
+      <GridItem colSpan={{ base: 12, md: 9 }}>
         <Flex flexDir="column" gap={6}>
           {releasedContractInfo.data?.publishedMetadata?.readme && (
             <Card as={Flex} flexDir="column" gap={2} p={6}>
@@ -215,7 +215,7 @@ Deploy it in one click`,
           )}
         </Flex>
       </GridItem>
-      <GridItem order={{ base: 3, md: 4 }} colSpan={{ base: 12, md: 3 }}>
+      <GridItem colSpan={{ base: 12, md: 3 }}>
         <Flex flexDir="column" gap={6}>
           {walletOrEns && <ReleaserHeader wallet={walletOrEns} />}
           <Divider />
