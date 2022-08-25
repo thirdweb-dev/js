@@ -243,7 +243,7 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
               >
                 <Box
                   position="sticky"
-                  zIndex="tooltip"
+                  zIndex="10"
                   py={3}
                   bgImage="linear-gradient(95.15deg, #AA2F2F 3.36%, #6600FF 68.25%)"
                 >
