@@ -6,19 +6,10 @@ import {
   DarkMode,
   Divider,
   Flex,
-  Icon,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  LightMode,
   SimpleGrid,
   Stack,
-  useToast,
 } from "@chakra-ui/react";
 import { Logo } from "components/logo";
-import { useForm } from "react-hook-form";
-import { HiOutlineMail } from "react-icons/hi";
-import { MdMarkEmailRead } from "react-icons/md";
 import {
   SiDiscord,
   SiGithub,
@@ -29,99 +20,16 @@ import {
   SiYoutube,
 } from "react-icons/si";
 import {
-  Button,
   Heading,
   LinkButton,
-  Text,
   TrackedIconButton,
   TrackedLink,
 } from "tw-components";
-import { sendEmailToConvertkit } from "utils/convertkit";
 
 export const HomepageFooter: React.FC = () => {
-  const { register, handleSubmit, setError } = useForm<{ email: string }>();
-  const toast = useToast();
-
   return (
     <Box bgColor="#111315" zIndex="100">
       <Container as="footer" maxW="container.page" color="gray.500">
-        <Stack
-          spacing="8"
-          direction={{ base: "column", md: "row" }}
-          justify="space-between"
-          py={{ base: "12", md: "16" }}
-        >
-          <Stack direction="row" spacing={5} align="center">
-            <Icon boxSize={8} color="white" as={MdMarkEmailRead} />
-            <Stack>
-              <Text color="white" size="label.lg">
-                Sign up for our newsletter
-              </Text>
-              <Text>
-                Join 40,000+ builders and stay up to date with our latest
-                updates and news.
-              </Text>
-            </Stack>
-          </Stack>
-
-          <Flex
-            as="form"
-            direction={{ base: "column", sm: "row" }}
-            mx="auto"
-            maxW="md"
-            gap={{ base: 4, md: 0 }}
-            onSubmit={handleSubmit(async ({ email }) => {
-              try {
-                await sendEmailToConvertkit(email, [3136080]);
-                toast({
-                  position: "bottom",
-                  variant: "solid",
-                  title: "You're in!",
-                  description: "Check your inbox to confirm your subscription.",
-                  status: "success",
-                  duration: 5000,
-                  isClosable: true,
-                });
-              } catch (err) {
-                console.error("failed to send email to convertkit", err);
-                setError("email", {
-                  message:
-                    err instanceof Error ? err.message : "Something went wrong",
-                });
-              }
-            })}
-          >
-            <InputGroup display="flex" size="md">
-              <InputLeftElement pointerEvents="none">
-                <Icon as={HiOutlineMail} />
-              </InputLeftElement>
-              <Input
-                borderEndRadius={{ base: "md", md: "none" }}
-                variant="outline"
-                borderColor="rgba(255,255,255,.2)"
-                placeholder="Email address"
-                type="email"
-                required
-                {...register("email")}
-              />
-            </InputGroup>
-            <LightMode>
-              <Button
-                borderStartRadius={{ base: "md", md: "none" }}
-                variant="gradient"
-                fromcolor="#1D64EF"
-                tocolor="#E0507A"
-                type="submit"
-                borderRadius="md"
-                borderWidth="1px"
-                flexShrink={0}
-              >
-                <Box as="span">Subscribe</Box>
-              </Button>
-            </LightMode>
-          </Flex>
-        </Stack>
-
         <DarkMode>
           <Divider borderColor="rgba(255,255,255,0.1)" />
         </DarkMode>
@@ -230,6 +138,9 @@ export const HomepageFooter: React.FC = () => {
               <Stack spacing="4" minW="36" flex="1">
                 <Heading size="label.lg">Resources</Heading>
                 <Stack spacing="3" shouldWrapChildren>
+                  <TrackedLink href="/about" category="footer" label="about">
+                    About
+                  </TrackedLink>
                   <TrackedLink
                     isExternal
                     href="https://portal.thirdweb.com"
@@ -246,6 +157,7 @@ export const HomepageFooter: React.FC = () => {
                   >
                     Guides
                   </TrackedLink>
+
                   <TrackedLink
                     isExternal
                     href="https://blog.thirdweb.com/"

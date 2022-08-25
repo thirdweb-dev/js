@@ -9,6 +9,9 @@ export enum PageId {
   // thirdweb.com
   Homepage = "homepage-landing",
 
+  // thirdweb.com
+  About = "about-page",
+
   // thirdweb.com/auth
   AuthenticationLanding = "auth-landing",
 

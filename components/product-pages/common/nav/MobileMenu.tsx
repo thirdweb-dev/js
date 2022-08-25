@@ -65,6 +65,15 @@ export const MobileMenu: React.FC<IconButtonProps> = (props) => {
           >
             Blog
           </MenuItem>
+          <MenuItem
+            as={TrackedLink}
+            href="https://careers.thirdweb.com"
+            category="topnav"
+            label="blog"
+            target="_blank"
+          >
+            Careers
+          </MenuItem>
         </MenuGroup>
       </MenuList>
     </Menu>

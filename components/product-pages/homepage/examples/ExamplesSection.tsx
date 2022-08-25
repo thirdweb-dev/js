@@ -22,12 +22,13 @@ export const ExamplesSection = () => {
         bg="#fff"
         color="#000"
         w="full"
-        maxW="container.sm"
+        maxW="420px"
         _hover={{
           bg: "whiteAlpha.800",
         }}
         href="https://portal.thirdweb.com/templates"
         isExternal
+        noIcon
         p={6}
         onClick={() =>
           trackEvent({

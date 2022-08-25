@@ -13,6 +13,13 @@ interface IResource {
 
 export const RESOURCES: IResource[] = [
   {
+    name: "About",
+    label: "about",
+    description: "Learn more about our company",
+    link: "/about",
+    icon: require("public/assets/tw-icons/general.png"),
+  },
+  {
     name: "Docs",
     label: "docs",
     description: "Complete thirdweb documentation",

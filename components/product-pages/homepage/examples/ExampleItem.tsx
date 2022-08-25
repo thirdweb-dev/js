@@ -24,7 +24,7 @@ const EXAMPLES_MAP = {
     svg: Marketplaces,
   },
   tokenGated: {
-    title: "Token-gated memberships",
+    title: "Token Gating",
     href: "https://portal.thirdweb.com/templates",
     svg: TokenGated,
   },
@@ -85,6 +85,7 @@ export const ExampleItem: React.FC<{ category: ExampleCategory }> = ({
           textAlign="center"
           size="subtitle.md"
           maxW="100%"
+          textTransform="capitalize"
         >
           {title}
         </Heading>
