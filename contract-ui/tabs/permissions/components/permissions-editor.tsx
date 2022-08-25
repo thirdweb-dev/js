@@ -1,4 +1,4 @@
-import { AdminOnly } from "@3rdweb-sdk/react";
+import { AdminOnly, AdminOrSelfOnly } from "@3rdweb-sdk/react";
 import {
   Flex,
   FormControl,
@@ -80,6 +80,7 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
           role={role}
           member={watch(`${role}.${index}`)}
           removeAddress={() => remove(index)}
+          contract={contract}
         />
       ))}
       <AdminOnly contract={contract as ValidContractInstance}>
@@ -154,17 +155,19 @@ export const PermissionEditor: React.FC<PermissionEditorProps> = ({
   );
 };
 
-interface IPermissionAddress {
+interface PermissionAddressProps {
   role: string;
   member: string;
   removeAddress: () => void;
   isSubmitting: boolean;
+  contract: ValidContractInstance | SmartContract;
 }
 
-const PermissionAddress: React.FC<IPermissionAddress> = ({
+const PermissionAddress: React.FC<PermissionAddressProps> = ({
   member,
   removeAddress,
   isSubmitting,
+  contract,
 }) => {
   const toast = useToast();
 
@@ -201,29 +204,32 @@ const PermissionAddress: React.FC<IPermissionAddress> = ({
           </Tooltip>
         </InputLeftAddon>
         <Input variant="filled" fontFamily="mono" value={member} px={2} />
-        {/*         <AdminOrSelfOnly contract={contract} self={member}> */}
-        <InputRightAddon
-          p={0}
-          border="none"
-          children={
-            <Button
-              leftIcon={<Icon as={FiTrash} boxSize={3} />}
-              size="sm"
-              borderLeftRadius="none"
-              borderRightRadius="md"
-              colorScheme="red"
-              isDisabled={isSubmitting}
-              onClick={removeAddress}
-              height="100%"
-              width="100%"
-              justifyContent="center"
-              alignItems="center"
-            >
-              Remove
-            </Button>
-          }
-        />
-        {/*         </AdminOrSelfOnly> */}
+        <AdminOrSelfOnly
+          contract={contract as ValidContractInstance}
+          self={member}
+        >
+          <InputRightAddon
+            p={0}
+            border="none"
+            children={
+              <Button
+                leftIcon={<Icon as={FiTrash} boxSize={3} />}
+                size="sm"
+                borderLeftRadius="none"
+                borderRightRadius="md"
+                colorScheme="red"
+                isDisabled={isSubmitting}
+                onClick={removeAddress}
+                height="100%"
+                width="100%"
+                justifyContent="center"
+                alignItems="center"
+              >
+                Remove
+              </Button>
+            }
+          />
+        </AdminOrSelfOnly>
       </InputGroup>
     </Flex>
   );
