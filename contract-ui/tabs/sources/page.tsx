@@ -216,11 +216,9 @@ export const CustomContractSourcesPage: React.FC<
           <Heading size="title.sm" flex={1}>
             Sources
           </Heading>
-          {!prebuiltSource && (
-            <Button variant="solid" colorScheme="purple" onClick={onOpen}>
-              Verify on {blockExplorerName(chainId)}
-            </Button>
-          )}
+          <Button variant="solid" colorScheme="purple" onClick={onOpen}>
+            Verify on {blockExplorerName(chainId)}
+          </Button>
         </Flex>
         <Card>
           <SourcesPanel sources={sources} abi={abi} />
