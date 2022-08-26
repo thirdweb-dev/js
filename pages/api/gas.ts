@@ -1,6 +1,7 @@
+import { withSentry } from "@sentry/nextjs";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "GET") {
     return res.status(400).json({ error: "invalid method" });
   }
@@ -39,3 +40,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(502).json({ error: "Invalid response" });
   }
 };
+
+export default withSentry(handler);

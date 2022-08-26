@@ -1,3 +1,4 @@
+import { withSentry } from "@sentry/nextjs";
 import { ChainId } from "@thirdweb-dev/sdk";
 import {
   ens,
@@ -8,7 +9,7 @@ import { getSSRSDK } from "lib/ssr-sdk";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSingleQueryValue } from "utils/router";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "GET") {
     return res.status(405).json({ message: "Method not allowed" });
   }
@@ -65,3 +66,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(500).send("Error revalidating");
   }
 };
+
+export default withSentry(handler);

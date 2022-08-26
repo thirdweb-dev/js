@@ -1,3 +1,4 @@
+import { withSentry } from "@sentry/nextjs";
 import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import { CURRENCIES } from "constants/currencies";
 import { constants, utils } from "ethers";
@@ -17,7 +18,7 @@ export type BalanceQueryResponse = Array<{
   display_balance: string;
 }>;
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
     return res.status(400).json({ error: "invalid method" });
   }
@@ -72,3 +73,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   return res.status(200).json(balances);
 };
+
+export default withSentry(handler);

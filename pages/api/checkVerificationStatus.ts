@@ -1,8 +1,9 @@
 import { apiKeyMap, apiMap } from "./verify";
+import { withSentry } from "@sentry/nextjs";
 import { ChainId } from "@thirdweb-dev/sdk";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "GET") {
     return res.status(400).json({ error: "invalid method" });
   }
@@ -27,3 +28,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(400).json({ error: e });
   }
 };
+
+export default withSentry(handler);

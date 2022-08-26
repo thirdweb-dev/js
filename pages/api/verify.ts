@@ -1,3 +1,4 @@
+// import { withSentry } from "@sentry/nextjs";
 import {
   ChainId,
   SUPPORTED_CHAIN_ID,
@@ -105,7 +106,7 @@ export const apiKeyMap: Record<number, string> = {
   [ChainId.OptimismTestnet]: process.env.OPTIMISMSCAN_KEY as string,
 };
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
     return res.status(400).json({ error: "invalid method" });
   }
@@ -327,3 +328,5 @@ async function fetchDeployBytecodeFromReleaseMetadata(
   }
   return undefined;
 }
+
+export default handler;

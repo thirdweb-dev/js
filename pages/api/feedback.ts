@@ -1,3 +1,4 @@
+import { withSentry } from "@sentry/nextjs";
 import { NextApiRequest, NextApiResponse } from "next";
 import invariant from "tiny-invariant";
 import { shortenAddress } from "utils/usedapp-external";
@@ -9,7 +10,7 @@ interface FeedbackPayload {
   address: string;
 }
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
     return res.status(400).json({ error: "invalid method" });
   }
@@ -61,3 +62,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   return res.status(response.status).json({ status: response.statusText });
 };
+
+export default withSentry(handler);

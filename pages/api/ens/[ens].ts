@@ -1,3 +1,4 @@
+import { withSentry } from "@sentry/nextjs";
 import { isAddress } from "ethers/lib/utils";
 import { resolveEns } from "lib/ens";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -6,7 +7,7 @@ import { getSingleQueryValue } from "utils/router";
 const FIVE_MIN_IN_S = 5 * 60;
 const ONE_DAY_IN_S = 24 * 60 * 60;
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const ensNameOrAddress = getSingleQueryValue(req.query, "ens");
 
   if (!ensNameOrAddress) {
@@ -31,3 +32,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(500).json({ error: (err as Error).message });
   }
 };
+
+export default withSentry(handler);
