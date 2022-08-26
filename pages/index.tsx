@@ -184,6 +184,7 @@ const HomePage: ThirdwebNextPage = () => {
                 mt={8}
                 src={Hero}
                 mr={12}
+                priority
               />
             </Flex>
             <Flex
@@ -197,6 +198,7 @@ const HomePage: ThirdwebNextPage = () => {
                 mt={8}
                 px={4}
                 src={MobileHero}
+                priority
               />
             </Flex>
           </SimpleGrid>
@@ -440,7 +442,12 @@ const HomePage: ThirdwebNextPage = () => {
           </Flex>
         </HomepageSection>
 
-        <HomepageSection id="developers" py={48} bottomGradient>
+        <HomepageSection
+          id="developers"
+          py={{ base: 24, md: 48 }}
+          middleGradient
+          bottomGradient
+        >
           <Flex
             flexDir="column"
             // pt={{ base: 12, lg: 1 }}

@@ -30,7 +30,7 @@ export const HomepageTopNav: React.FC<{}> = () => {
     [isMobile],
     undefined,
     false,
-    33,
+    100,
   );
 
   return (
