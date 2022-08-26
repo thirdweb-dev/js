@@ -23,12 +23,18 @@ export const ContractDescriptionCell: React.FC<
     BuiltinContractMap[value as keyof typeof BuiltinContractMap]?.description;
 
   return (
-    <Skeleton isLoaded={fullPublishMetadata.isSuccess || !!description}>
+    <Skeleton
+      isLoaded={
+        fullPublishMetadata.isSuccess ||
+        !fullPublishMetadata.isFetching ||
+        !!description
+      }
+    >
       <Text size="body.md" noOfLines={1}>
         {fullPublishMetadata.data?.latestPublishedContractMetadata
           ?.publishedMetadata.description ||
           description ||
-          "None"}
+          (!fullPublishMetadata.isFetching ? "First Release" : "None")}
       </Text>
     </Skeleton>
   );

@@ -1,5 +1,6 @@
 import { ens, useContractPrePublishMetadata } from "../../hooks";
 import { DeployableContractContractCellProps } from "../../types";
+import { Skeleton } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import { BuiltinContractMap } from "constants/mappings";
 import { useSingleQueryParam } from "hooks/useQueryParam";
@@ -21,9 +22,22 @@ export const ContractVersionCell: React.FC<
     !!BuiltinContractMap[value as keyof typeof BuiltinContractMap];
 
   return (
-    <Text size="body.md">
-      {fullPublishMetadata.data?.latestPublishedContractMetadata
-        ?.publishedMetadata.version || (isPrebuilt ? "2.0.0" : "First Release")}
-    </Text>
+    <Skeleton
+      isLoaded={
+        fullPublishMetadata.isSuccess ||
+        !fullPublishMetadata.isFetching ||
+        isPrebuilt
+      }
+    >
+      <Text size="body.md">
+        {fullPublishMetadata.data?.latestPublishedContractMetadata
+          ?.publishedMetadata.version ||
+          (isPrebuilt
+            ? "2.0.0"
+            : !fullPublishMetadata.isFetching
+            ? "First Release"
+            : "Unknown")}
+      </Text>
+    </Skeleton>
   );
 };
