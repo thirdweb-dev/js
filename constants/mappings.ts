@@ -34,7 +34,6 @@ export const UrlMap: Record<ContractType, string> = {
   pack: "",
   split: "/split",
   "token-drop": "/token-drop",
-  // TODO (byoc)
   custom: "",
   "signature-drop": "/signature-drop",
   multiwrap: "",

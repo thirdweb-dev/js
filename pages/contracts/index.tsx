@@ -52,7 +52,7 @@ const Contracts: ThirdwebNextPage = () => {
               isExternal
               color="blue.500"
             >
-              pre-built contracts
+              prebuilt contracts
             </TrackedLink>{" "}
             and your{" "}
             <TrackedLink
