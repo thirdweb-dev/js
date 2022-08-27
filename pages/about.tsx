@@ -115,7 +115,7 @@ const vcs = [
   },
   {
     name: "Shrug",
-    logo: "/assets/investors/shrug-vc.gif",
+    logo: "/assets/investors/shrug-vc.png",
     link: "https://shrug.vc",
   },
 ] as const;
