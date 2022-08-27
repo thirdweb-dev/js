@@ -289,7 +289,6 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
   );
 
   const { contract: actualContract } = useContract(contract?.getAddress());
-
   return (
     <>
       {query.isRefetching && (
@@ -349,7 +348,7 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
         <Flex direction={"column"} gap={4} px={{ base: 6, md: 10 }}>
           {controlledFields.map((field, index) => {
             return (
-              <React.Fragment key={`snapshot_${field.id}`}>
+              <React.Fragment key={`snapshot_${field.id}_${index}`}>
                 <SnapshotUpload
                   isOpen={openIndex === index}
                   onClose={() => setOpenIndex(-1)}

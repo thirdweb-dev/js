@@ -22,6 +22,7 @@ import {
 import { Erc721, Erc1155 } from "@thirdweb-dev/sdk";
 import { ClaimConditions } from "contract-ui/tabs/claim-conditions/components/claim-conditions";
 import { BigNumber } from "ethers";
+import { useMemo } from "react";
 import { Card, Drawer, Heading, Text } from "tw-components";
 
 interface NFTDrawerProps {
@@ -50,21 +51,101 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
 
   const renderData = data || prevData;
 
-  if (!renderData) {
-    return null;
-  }
-
   const isERC1155 = contract instanceof Erc1155;
   const isERC721 = contract instanceof Erc721;
   const isOwner =
     (isERC1155 && BigNumber.from(balanceOf?.data || 0).gt(0)) ||
-    (isERC721 && renderData.owner === address);
+    (isERC721 && renderData?.owner === address);
 
   const isBurnable = detectBurnable(contract);
   const isMintable = detectMintable(contract);
   const isClaimable = detectClaimable(contract);
 
-  const tokenId = renderData?.metadata.id.toString();
+  const tokenId = renderData?.metadata.id.toString() || "";
+
+  const tabs = useMemo(() => {
+    if (!renderData) {
+      return [];
+    }
+    let t = [
+      {
+        title: "Details",
+        isDisabled: false,
+        children: () => (
+          <Card as={Flex} flexDir="column" gap={3}>
+            <Text size="label.md">Token ID: {tokenId}</Text>
+            {isERC721 && <Text size="label.md">Owner: {renderData.owner}</Text>}
+            <Text size="label.md">Token Standard: {renderData.type}</Text>
+            {isERC1155 && (
+              <Text size="label.md">
+                Supply: {renderData.supply.toString()}
+              </Text>
+            )}
+          </Card>
+        ),
+      },
+      {
+        title: "Transfer",
+        isDisabled: !isOwner,
+        children: () => <TransferTab contract={contract} tokenId={tokenId} />,
+      },
+    ];
+    if (isERC1155) {
+      t = t.concat([
+        {
+          title: "Airdrop",
+          isDisabled: !isOwner,
+          children: () => <AirdropTab contract={contract} tokenId={tokenId} />,
+        },
+      ]);
+    }
+    if (isBurnable) {
+      t = t.concat([
+        {
+          title: "Burn",
+          isDisabled: !isOwner,
+          children: () => <BurnTab contract={contract} tokenId={tokenId} />,
+        },
+      ]);
+    }
+    if (isMintable && isERC1155) {
+      t = t.concat([
+        {
+          title: "Mint",
+          isDisabled: !isOwner,
+          children: () => (
+            <MintSupplyTab contract={contract} tokenId={tokenId} />
+          ),
+        },
+      ]);
+    }
+    if (isClaimable && isERC1155) {
+      t = t.concat([
+        {
+          title: "Claim Conditions",
+          isDisabled: false,
+          children: () => (
+            <ClaimConditions contract={contract} tokenId={tokenId} isColumn />
+          ),
+        },
+      ]);
+    }
+    return t;
+  }, [
+    contract,
+    isBurnable,
+    isClaimable,
+    isERC1155,
+    isERC721,
+    isMintable,
+    isOwner,
+    renderData,
+    tokenId,
+  ]);
+
+  if (!renderData) {
+    return null;
+  }
 
   return (
     <Drawer
@@ -90,78 +171,30 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
             </Text>
           </Flex>
         </Flex>
-        <Card as={Flex} flexDir="column" gap={2} p={0}>
-          <Tabs isLazy lazyBehavior="keepMounted">
-            <TabList
-              px={0}
-              borderBottomColor="borderColor"
-              borderBottomWidth="1px"
-              overflowX={{ base: "auto", md: "inherit" }}
-            >
-              <Tab gap={2}>Details</Tab>
-              <Tab gap={2} isDisabled={!isOwner}>
-                Transfer
+
+        <Tabs isLazy lazyBehavior="keepMounted">
+          <TabList
+            px={0}
+            borderBottomColor="borderColor"
+            borderBottomWidth="1px"
+            overflowX={{ base: "auto", md: "inherit" }}
+          >
+            {tabs.map((tab) => (
+              <Tab key={tab.title} gap={2} isDisabled={tab.isDisabled}>
+                {tab.title}
               </Tab>
-              {isERC1155 && (
-                <Tab gap={2} isDisabled={!isOwner}>
-                  Airdrop
-                </Tab>
-              )}
-              {isBurnable && (
-                <Tab gap={2} isDisabled={!isOwner}>
-                  Burn
-                </Tab>
-              )}
-              {isMintable && isERC1155 && <Tab gap={2}>Mint</Tab>}
-              {isClaimable && isERC1155 && <Tab gap={2}>Claim Conditions</Tab>}
-            </TabList>
-
-            <TabPanels px={{ base: 4, md: 6 }} py={2}>
-              <TabPanel px={0}>
-                <Flex flexDir="column" gap={3}>
-                  <Text size="label.md">Token ID: {tokenId}</Text>
-                  {isERC721 && (
-                    <Text size="label.md">Owner: {renderData.owner}</Text>
-                  )}
-                  <Text size="label.md">Token Standard: {renderData.type}</Text>
-                  {isERC1155 && (
-                    <Text size="label.md">
-                      Supply: {renderData.supply.toString()}
-                    </Text>
-                  )}
-                </Flex>
-              </TabPanel>
-
-              <TabPanel px={0}>
-                <TransferTab contract={contract} tokenId={tokenId} />
-              </TabPanel>
-              {isERC1155 && (
-                <TabPanel>
-                  <AirdropTab contract={contract} tokenId={tokenId} />
+            ))}
+          </TabList>
+          <TabPanels px={0} py={2}>
+            {tabs.map((tab) => {
+              return (
+                <TabPanel key={tab.title} px={0}>
+                  {tab.children()}
                 </TabPanel>
-              )}
-              {isBurnable && (
-                <TabPanel>
-                  <BurnTab contract={contract} tokenId={tokenId} />
-                </TabPanel>
-              )}
-              {isMintable && isERC1155 && (
-                <TabPanel>
-                  <MintSupplyTab contract={contract} tokenId={tokenId} />
-                </TabPanel>
-              )}
-              {isClaimable && isERC1155 && (
-                <TabPanel>
-                  <ClaimConditions
-                    contract={contract}
-                    tokenId={tokenId}
-                    isColumn
-                  />
-                </TabPanel>
-              )}
-            </TabPanels>
-          </Tabs>
-        </Card>
+              );
+            })}
+          </TabPanels>
+        </Tabs>
       </Flex>
     </Drawer>
   );
