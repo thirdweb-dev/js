@@ -15,7 +15,7 @@ import {
   Spinner,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useContract } from "@thirdweb-dev/react";
+import { ChainId, useContract } from "@thirdweb-dev/react";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
 import { Abi } from "components/contract-components/types";
 import { useContractSources } from "contract-ui/hooks/useContractSources";
@@ -57,7 +57,7 @@ function useCheckVerificationStatus(guid?: string) {
     ["verifycheck", guid],
     async () => {
       const response = await fetch(
-        `/api/checkVerificationStatus?guid=${guid}&chainId=${chainId}`,
+        `/api/check-verification-status?guid=${guid}&chainId=${chainId}`,
       );
       return response.json();
     },
@@ -176,6 +176,23 @@ export const CustomContractSourcesPage: React.FC<
 
   const abi = useMemo(() => contract?.abi as Abi, [contract]);
 
+  // clean up the source filenames and filter out libraries
+  const sources = useMemo(() => {
+    return prebuiltSource
+      ? [prebuiltSource]
+      : contractQuery.data
+      ? contractQuery.data
+          .map((source) => {
+            return {
+              ...source,
+              filename: source.filename.split("/").pop(),
+            };
+          })
+          .slice()
+          .reverse()
+      : [];
+  }, [contractQuery.data, prebuiltSource]);
+
   if (!contractAddress) {
     return <div>No contract address provided</div>;
   }
@@ -189,21 +206,6 @@ export const CustomContractSourcesPage: React.FC<
     );
   }
 
-  // clean up the source filenames and filter out libraries
-  const sources = prebuiltSource
-    ? [prebuiltSource]
-    : contractQuery.data
-    ? contractQuery.data
-        .map((source) => {
-          return {
-            ...source,
-            filename: source.filename.split("/").pop(),
-          };
-        })
-        .slice()
-        .reverse()
-    : [];
-
   return (
     <>
       <VerifyContractModal
@@ -216,11 +218,25 @@ export const CustomContractSourcesPage: React.FC<
           <Heading size="title.sm" flex={1}>
             Sources
           </Heading>
-          <Button variant="solid" colorScheme="purple" onClick={onOpen}>
-            Verify on {blockExplorerName(chainId)}
-          </Button>
+          {!prebuiltSource ? (
+            <Button variant="solid" colorScheme="purple" onClick={onOpen}>
+              Verify on {blockExplorerName(chainId)}
+            </Button>
+          ) : (
+            <LinkButton
+              variant="ghost"
+              colorScheme="green"
+              isExternal
+              size="sm"
+              noIcon
+              href={blockExplorerUrl(chainId, contractAddress)}
+              leftIcon={<Icon as={FiCheckCircle} />}
+            >
+              Verified on {blockExplorerName(chainId)}
+            </LinkButton>
+          )}
         </Flex>
-        <Card>
+        <Card p={0}>
           <SourcesPanel sources={sources} abi={abi} />
         </Card>
       </Flex>
@@ -229,7 +245,7 @@ export const CustomContractSourcesPage: React.FC<
 };
 
 function blockExplorerUrl(
-  chainId: import("@thirdweb-dev/react").ChainId | undefined,
+  chainId: ChainId | undefined,
   contractAddress: string,
 ): string {
   if (!chainId) {
@@ -242,9 +258,7 @@ function blockExplorerUrl(
   return "";
 }
 
-function blockExplorerName(
-  chainId: import("@thirdweb-dev/react").ChainId | undefined,
-): string {
+function blockExplorerName(chainId: ChainId | undefined): string {
   if (!chainId) {
     return "";
   }

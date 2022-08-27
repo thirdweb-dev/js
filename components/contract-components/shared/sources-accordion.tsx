@@ -18,7 +18,7 @@ export const SourcesAccordion: React.FC<SourcesAccordionProps> = ({
   abi,
 }) => {
   return (
-    <Accordion allowToggle allowMultiple>
+    <Accordion allowMultiple defaultIndex={[]}>
       {sources.map((signature) => (
         <AccordionItem
           gap={4}

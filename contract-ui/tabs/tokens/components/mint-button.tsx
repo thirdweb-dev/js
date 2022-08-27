@@ -1,10 +1,10 @@
 import { TokenMintForm } from "./mint-form";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import { Erc20 } from "@thirdweb-dev/sdk";
-import { ExtensionDetectButton } from "components/buttons/ExtensionDetectButton";
+import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import React from "react";
 import { FiPlus } from "react-icons/fi";
-import { Drawer } from "tw-components";
+import { Button, Drawer } from "tw-components";
 
 interface TokenMintButtonProps {
   contract: Erc20;
@@ -15,6 +15,15 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
   ...restButtonProps
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const detectedState = extensionDetectedState({
+    contract,
+    feature: ["ERC20Mintable"],
+  });
+
+  if (detectedState !== "enabled") {
+    return null;
+  }
 
   return (
     <>
@@ -27,16 +36,14 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
       >
         <TokenMintForm contract={contract} />
       </Drawer>
-      <ExtensionDetectButton
+      <Button
         colorScheme="primary"
         leftIcon={<Icon as={FiPlus} />}
         {...restButtonProps}
         onClick={onOpen}
-        contract={contract}
-        feature="ERC20Mintable"
       >
         Mint
-      </ExtensionDetectButton>
+      </Button>
     </>
   );
 };

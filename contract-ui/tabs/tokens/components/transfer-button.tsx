@@ -1,10 +1,10 @@
 import { TokenTransferForm } from "./transfer-form";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import { Erc20 } from "@thirdweb-dev/sdk";
-import { ExtensionDetectButton } from "components/buttons/ExtensionDetectButton";
+import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import React from "react";
 import { FiSend } from "react-icons/fi";
-import { Drawer } from "tw-components";
+import { Button, Drawer } from "tw-components";
 
 interface TokenTransferButtonProps {
   contract: Erc20;
@@ -15,6 +15,15 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
   ...restButtonProps
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const detectedState = extensionDetectedState({
+    contract,
+    feature: ["ERC20"],
+  });
+
+  if (detectedState !== "enabled") {
+    return null;
+  }
 
   return (
     <>
@@ -27,16 +36,14 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
       >
         <TokenTransferForm contract={contract} />
       </Drawer>
-      <ExtensionDetectButton
+      <Button
         colorScheme="primary"
         leftIcon={<Icon as={FiSend} />}
         {...restButtonProps}
         onClick={onOpen}
-        contract={contract}
-        feature="ERC20"
       >
         Transfer
-      </ExtensionDetectButton>
+      </Button>
     </>
   );
 };

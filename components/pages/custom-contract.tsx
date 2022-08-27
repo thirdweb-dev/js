@@ -24,7 +24,8 @@ import {
 import { useIsomorphicLayoutEffect } from "framer-motion";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useCallback, useRef, useState } from "react";
-import { FiCheckCircle, FiXCircle } from "react-icons/fi";
+import { FiXCircle } from "react-icons/fi";
+import { VscExtensions } from "react-icons/vsc";
 import { Button, LinkButton } from "tw-components";
 import { isBrowser } from "utils/isBrowser";
 
@@ -183,7 +184,7 @@ const ContractSubnav: React.FC<ContractSubnavProps> = ({ routes }) => {
             icon={
               route.isEnabled !== undefined ? (
                 route.isEnabled === "enabled" ? (
-                  <Icon as={FiCheckCircle} color="green.500" />
+                  <Icon as={VscExtensions} color="green.500" />
                 ) : route.isEnabled === "loading" ? (
                   <Spinner color="purple.500" size="xs" />
                 ) : (

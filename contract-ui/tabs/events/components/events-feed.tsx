@@ -94,8 +94,8 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contractAddress }) => {
             <Accordion
               as={AnimatePresence}
               initial={false}
-              allowToggle
               allowMultiple
+              defaultIndex={[]}
             >
               {activityQuery.data.slice(0, 10).map((e) => (
                 <EventsFeedItem key={e.transactionHash} transaction={e} />

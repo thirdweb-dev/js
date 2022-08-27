@@ -52,7 +52,7 @@ const DeployContract: ThirdwebNextPage = () => {
               src={require("/public/assets/add-contract/drop.png")}
               alt="token"
               href="/contracts/new/pre-built"
-              title="Pre-built contracts"
+              title="Prebuilt contracts"
               subtitle="From NFT Drop to payment splitters to marketplaces."
               onClick={() =>
                 trackEvent({
