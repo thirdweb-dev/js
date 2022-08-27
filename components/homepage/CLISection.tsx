@@ -9,7 +9,7 @@ const sections = [
     title: "Create",
     description:
       "Bootstrap your contracts or web3 powered apps with one command.",
-    link: "https://portal.thirdweb.com/cli#create",
+    link: "https://portal.thirdweb.com/create",
     img: require("/public/assets/landingpage/cli-create.png"),
     gradient: "linear-gradient(90.78deg, #486AC2 5.13%, #E41CA7 44.51%)",
   },
@@ -17,14 +17,14 @@ const sections = [
     title: "Release",
     description:
       "Publish contracts to the on-chain registry to enable 1-click deployment for everyone.",
-    link: "https://portal.thirdweb.com/cli#release",
+    link: "https://portal.thirdweb.com/release",
     img: require("/public/assets/landingpage/cli-release.png"),
     gradient: "linear-gradient(90.12deg, #6941DA 6.29%, #FFE768 47.27%)",
   },
   {
     title: "Deploy",
     description: "Deploy any smart contract with a single command.",
-    link: "https://portal.thirdweb.com/cli#deploy",
+    link: "https://portal.thirdweb.com/deploy",
     img: require("/public/assets/landingpage/cli-deploy.png"),
     gradient: "linear-gradient(128deg, #410AB6 -9.03%, #5CFFE1 98.25%)",
   },
