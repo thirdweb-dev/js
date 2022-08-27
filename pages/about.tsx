@@ -260,38 +260,13 @@ const About: ThirdwebNextPage = () => {
               justifyContent="space-evenly"
             >
               {vcs.slice(0, 3).map((backer) => (
-                <Flex key={backer.name} flexDir="column" gap={3} align="center">
-                  <Image
-                    filter={
-                      backer.name === "Shrug" || backer.name === "Protocol Labs"
-                        ? "invert(1)"
-                        : undefined
-                    }
-                    w="243px"
-                    h="75px"
-                    objectFit="contain"
-                    src={backer.logo}
-                    alt=""
-                  />
-
-                  <TrackedLink
-                    href={backer.link}
-                    isExternal
-                    category="backer"
-                    label={backer.name}
-                  >
-                    <Heading size="label.md">{backer.name}</Heading>
-                  </TrackedLink>
-                </Flex>
-              ))}
-            </SimpleGrid>
-            <SimpleGrid
-              columns={{ base: 2, md: 4 }}
-              gap={8}
-              justifyContent="space-evenly"
-            >
-              {vcs.slice(3, vcs.length).map((backer) => (
-                <Flex key={backer.name} flexDir="column" gap={3} align="center">
+                <TrackedLink
+                  key={backer.name}
+                  href={backer.link}
+                  isExternal
+                  category="backer"
+                  label={backer.name}
+                >
                   <Image
                     filter={
                       backer.name === "Shrug" || backer.name === "Protocol Labs"
@@ -302,18 +277,37 @@ const About: ThirdwebNextPage = () => {
                     h="50px"
                     objectFit="contain"
                     src={backer.logo}
-                    alt=""
+                    alt={backer.name}
                   />
-
-                  <TrackedLink
-                    href={backer.link}
-                    isExternal
-                    category="backer"
-                    label={backer.name}
-                  >
-                    <Heading size="label.md">{backer.name}</Heading>
-                  </TrackedLink>
-                </Flex>
+                </TrackedLink>
+              ))}
+            </SimpleGrid>
+            <SimpleGrid
+              columns={{ base: 2, md: 4 }}
+              gap={8}
+              justifyContent="space-evenly"
+            >
+              {vcs.slice(3, vcs.length).map((backer) => (
+                <TrackedLink
+                  key={backer.name}
+                  href={backer.link}
+                  isExternal
+                  category="backer"
+                  label={backer.name}
+                >
+                  <Image
+                    filter={
+                      backer.name === "Shrug" || backer.name === "Protocol Labs"
+                        ? "invert(1)"
+                        : undefined
+                    }
+                    w="164px"
+                    h="50px"
+                    objectFit="contain"
+                    src={backer.logo}
+                    alt={backer.name}
+                  />
+                </TrackedLink>
               ))}
             </SimpleGrid>
           </Flex>
