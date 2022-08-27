@@ -340,7 +340,7 @@ export const CONTRACT_TYPE_NAME_MAP: Record<ContractType, string> = {
 export const ROLE_DESCRIPTION_MAP: Record<Role | string, string> = {
   admin:
     "Determine who can grant or revoke roles and modify settings on this contract.",
-  minter: "Determine who can create new tokens on this contract.",
+  minter: "Determine who can mint / create new tokens on this contract.",
   pauser:
     "Determine who can pause (and unpause) all external calls made to this contract's contract.",
   transfer: "Determine who can transfer tokens on this contract.",
