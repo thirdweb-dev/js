@@ -1,0 +1,10 @@
+{
+  "name": "foundry-project",
+  "private": true,
+  "devDependencies": {},
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.5.0",
+    "@thirdweb-dev/contracts": "^2.3.14"
+  },
+  "scripts": {}
+}

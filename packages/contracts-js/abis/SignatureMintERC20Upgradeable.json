@@ -1,0 +1,206 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "signer",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "mintedTo",
+        "type": "address"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "primarySaleRecipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "quantity",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pricePerToken",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "currency",
+            "type": "address"
+          },
+          {
+            "internalType": "uint128",
+            "name": "validityStartTimestamp",
+            "type": "uint128"
+          },
+          {
+            "internalType": "uint128",
+            "name": "validityEndTimestamp",
+            "type": "uint128"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "uid",
+            "type": "bytes32"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct ISignatureMintERC20.MintRequest",
+        "name": "mintRequest",
+        "type": "tuple"
+      }
+    ],
+    "name": "TokensMintedWithSignature",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "primarySaleRecipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "quantity",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pricePerToken",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "currency",
+            "type": "address"
+          },
+          {
+            "internalType": "uint128",
+            "name": "validityStartTimestamp",
+            "type": "uint128"
+          },
+          {
+            "internalType": "uint128",
+            "name": "validityEndTimestamp",
+            "type": "uint128"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "uid",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct ISignatureMintERC20.MintRequest",
+        "name": "req",
+        "type": "tuple"
+      },
+      {
+        "internalType": "bytes",
+        "name": "signature",
+        "type": "bytes"
+      }
+    ],
+    "name": "mintWithSignature",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "signer",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "primarySaleRecipient",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "quantity",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "pricePerToken",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "currency",
+            "type": "address"
+          },
+          {
+            "internalType": "uint128",
+            "name": "validityStartTimestamp",
+            "type": "uint128"
+          },
+          {
+            "internalType": "uint128",
+            "name": "validityEndTimestamp",
+            "type": "uint128"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "uid",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct ISignatureMintERC20.MintRequest",
+        "name": "_req",
+        "type": "tuple"
+      },
+      {
+        "internalType": "bytes",
+        "name": "_signature",
+        "type": "bytes"
+      }
+    ],
+    "name": "verify",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "success",
+        "type": "bool"
+      },
+      {
+        "internalType": "address",
+        "name": "signer",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]

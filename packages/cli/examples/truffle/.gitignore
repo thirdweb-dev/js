@@ -1,0 +1,11 @@
+node_modules/
+.env
+coverage
+coverage.json
+typechain
+yarn.lock
+
+#truffle files
+cache
+build
+migrations

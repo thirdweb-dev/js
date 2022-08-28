@@ -1,0 +1,13 @@
+node_modules/
+.env
+coverage
+coverage.json
+typechain
+yarn.lock
+
+#forge files
+cache
+out
+artifacts
+package-lock.json
+yarn.lock

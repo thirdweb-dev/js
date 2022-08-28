@@ -1,0 +1,91 @@
+{
+  "name": "@thirdweb-dev/react",
+  "version": "2.7.4",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com:thirdweb-dev/js.git",
+    "directory": "packages/react"
+  },
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "license": "Apache-2.0",
+  "main": "dist/thirdweb-dev-react.cjs.js",
+  "types": "dist/thirdweb-dev-react.cjs.d.ts",
+  "module": "dist/thirdweb-dev-react.esm.js",
+  "browser": {
+    "./dist/thirdweb-dev-react.cjs.js": "./dist/thirdweb-dev-react.browser.cjs.js",
+    "./dist/thirdweb-dev-react.esm.js": "./dist/thirdweb-dev-react.browser.esm.js"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "private": false,
+  "scripts": {
+    "dev": "preconstruct watch",
+    "lint": "eslint src/",
+    "fix": "eslint src/ --fix",
+    "extract-api": "api-extractor run --local",
+    "generate:md-docs": "yarn api-documenter markdown -i ./temp -o ./docs",
+    "generate-snippets": "node ./scripts/generate-snippets.mjs",
+    "build": "tsc && preconstruct build",
+    "prepublishOnly": "yarn build"
+  },
+  "sideEffects:": false,
+  "devDependencies": {
+    "@babel/core": "^7.18.10",
+    "@babel/preset-env": "^7.18.10",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/preset-typescript": "^7.18.6",
+    "@microsoft/api-documenter": "^7.15.3",
+    "@microsoft/api-extractor": "^7.19.4",
+    "@microsoft/tsdoc": "^0.14.1",
+    "@preconstruct/cli": "^2.2.1",
+    "@trivago/prettier-plugin-sort-imports": "^3.2.0",
+    "@types/color": "^3.0.3",
+    "@types/mime": "^3.0.1",
+    "@types/react": "^18.0.5",
+    "@types/react-dom": "^18.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.2.0",
+    "@typescript-eslint/parser": "^5.2.0",
+    "eslint": "^8.9.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.24.2",
+    "eslint-plugin-inclusive-language": "^2.1.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-tsdoc": "^0.2.14",
+    "ethers": "^5.6.1",
+    "prettier": "^2.5.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "typescript": "^4.6.2"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.10.0",
+    "@emotion/styled": "^11.10.0",
+    "@gnosis.pm/safe-core-sdk": "2.1.0",
+    "@gnosis.pm/safe-ethers-adapters": "0.1.0-alpha.9",
+    "@gnosis.pm/safe-ethers-lib": "1.1.0",
+    "@tanstack/react-query": "^4.0.10",
+    "@thirdweb-dev/storage": "*",
+    "@thirdweb-dev/sdk": "*",
+    "@zag-js/menu": "^0.1.11",
+    "@zag-js/react": "^0.1.13",
+    "color": "^4.2.3",
+    "copy-to-clipboard": "^3.3.2",
+    "detect-browser": "^5.3.0",
+    "magic-sdk": "^8.1.1",
+    "mime": "^3.0.0",
+    "react-cool-dimensions": "^2.0.7",
+    "react-icons": "^4.4.0",
+    "tiny-invariant": "^1.2.0",
+    "wagmi": "^0.2.28"
+  },
+  "peerDependencies": {
+    "ethers": ">=5.5.1",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "resolutions": {
+    "ansi-regex": "^6.0.1",
+    "typescript": "^4.6.2"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "truffle-project",
+  "private": true,
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.7.1",
+    "@thirdweb-dev/contracts": "^2.3.8",
+    "truffle": "^5.5.18"
+  },
+  "scripts": {}
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@thirdweb-dev/tsconfig",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "files": [
+    "base.json",
+    "node14.json",
+    "nextjs.json",
+    "react-library.json",
+    "sdk.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

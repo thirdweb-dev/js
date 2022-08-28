@@ -1,0 +1,48 @@
+{
+  "name": "@thirdweb-dev/storage",
+  "version": "0.1.0",
+  "main": "dist/thirdweb-dev-storage.cjs.js",
+  "module": "dist/thirdweb-dev-storage.esm.js",
+  "repository": {
+    "directory": "packages/storage",
+    "type": "git",
+    "url": "https://github.com/thirdweb-dev/js.git"
+  },
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "tsc && preconstruct build",
+    "test": "ts-mocha 'test/**/*.ts' --paths -t 120000 -r esm -p tsconfig.testing.json"
+  },
+  "files": [
+    "dist/"
+  ],
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts"
+    ]
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.18.10",
+    "@babel/preset-typescript": "^7.18.6",
+    "@preconstruct/cli": "^2.2.1",
+    "@trivago/prettier-plugin-sort-imports": "^3.3.0",
+    "@types/chai": "^4.3.3",
+    "@types/mocha": "^9.1.1",
+    "@typescript-eslint/eslint-plugin": "^5.33.1",
+    "@typescript-eslint/parser": "^5.33.1",
+    "chai": "^4.3.6",
+    "eslint": "^8.22.0",
+    "esm": "^3.2.25",
+    "mocha": "^10.0.0",
+    "prettier": "^2.7.1",
+    "ts-mocha": "^10.0.0",
+    "tsc": "^2.0.4",
+    "typescript": "^4.7.4"
+  },
+  "dependencies": {
+    "@web-std/file": "^3.0.2",
+    "cross-fetch": "^3.1.5",
+    "form-data": "^4.0.0"
+  }
+}

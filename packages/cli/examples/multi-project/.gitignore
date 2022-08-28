@@ -1,0 +1,12 @@
+node_modules/
+.env
+coverage
+coverage.json
+typechain
+yarn.lock
+
+# builder stuff
+cache
+artifacts
+build
+out
