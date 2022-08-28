@@ -11,7 +11,7 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.7.1",
+    "@openzeppelin/contracts": "^4.7.3",
     "@thirdweb-dev/contracts": "^2.3.9"
   }
 }
