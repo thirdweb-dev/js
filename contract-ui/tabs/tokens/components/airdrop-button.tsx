@@ -42,7 +42,7 @@ export const TokenAirdropButton: React.FC<TokenAirdropButtonProps> = ({
         {...restButtonProps}
         onClick={onOpen}
       >
-        Mint
+        Airdrop
       </Button>
     </>
   );
