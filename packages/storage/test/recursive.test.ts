@@ -1,5 +1,5 @@
+import { IpfsStorage } from "../src/core/ipfs-storage";
 import { assert } from "chai";
-import { IpfsStorage } from "@thirdweb-dev/storage";
 
 const ipfsGatewayUrl = "https://ipfs.thirdweb.com/ipfs/";
 const storage = new IpfsStorage(ipfsGatewayUrl);
