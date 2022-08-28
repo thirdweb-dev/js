@@ -28,7 +28,8 @@
     "generate-docs": "yarn full-build && yarn generate-md-docs",
     "generate-snippets": "node ./scripts/generate-snippets.mjs && node ./scripts/generate-feature-snippets.mjs",
     "build": "tsc && preconstruct build",
-    "test": "ts-mocha --parallel --paths -t 120000 -r esm -p tsconfig.testing.json './test/**/*.test.ts'",
+    "test:all": "ts-mocha --parallel --paths -t 120000 -r esm -p tsconfig.testing.json './test/**/*.test.ts'",
+    "test": "make test",
     "test:single": "ts-mocha --paths -t 120000 -r esm -p tsconfig.testing.json"
   },
   "devDependencies": {
