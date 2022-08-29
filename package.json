@@ -15,12 +15,13 @@
     "@changesets/cli": "^2.24.3",
     "@trivago/prettier-plugin-sort-imports": "^3.3.0",
     "eslint": "^8.23.0",
-    "eslint-config-acme": "*",
+    "eslint-config-thirdweb": "*",
     "prettier": "^2.7.1",
     "turbo": "latest",
     "yarn-deduplicate": "^5.0.2"
   },
   "scripts": {
+    "postinstall": "yarn-deduplicate yarn.lock",
     "test": "turbo run test",
     "build": "turbo run build",
     "dev": "turbo run dev --no-cache --parallel --continue",
@@ -28,10 +29,8 @@
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
-    "bump-version": "changeset version",
     "release": "turbo run build && changeset publish",
-    "postinstall": "yarn-deduplicate yarn.lock",
-    "dev-version": "yarn changeset pre enter dev && yarn bump-version"
+    "ci:release:nightly": "turbo run build && yarn changeset version --snapshot nightly && yarn changeset publish --tag nightly --no-git-tag"
   },
   "preconstruct": {
     "packages": [
