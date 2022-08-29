@@ -112,7 +112,7 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
       t = t.concat([
         {
           title: "Mint",
-          isDisabled: !isOwner,
+          isDisabled: false,
           children: () => (
             <MintSupplyTab contract={contract} tokenId={tokenId} />
           ),
