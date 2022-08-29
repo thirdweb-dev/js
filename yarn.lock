@@ -6148,11 +6148,6 @@ escape-string-regexp@^2.0.0:
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-2.0.0.tgz#a30304e99daa32e23b2fd20f51babd07cffca344"
   integrity sha512-UpzcLCXolUWcNu5HtVMHYdXJjArjsF9C0aNnquZYY4uW/Vu0miy5YoWvbV345HauVvcAUnpRuhMMcqTcGOY2+w==
 
-eslint-config-acme@*:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-acme/-/eslint-config-acme-1.4.0.tgz#e0e2283913fa5c574a7b583d7718237bfd9b81d1"
-  integrity sha512-PmU8H7iU7C4XnesTMIwsgMYh57U/g107P3XfiOQFL7cKdRJE0mS0pVnRIZMf8q70PJ64WxCSxe+IroA8LsAr/A==
-
 eslint-config-next@^12.0.8:
   version "12.2.5"
   resolved "https://registry.yarnpkg.com/eslint-config-next/-/eslint-config-next-12.2.5.tgz#76ce83f18cc02f6f42ed407a127f83db54fabd3c"
