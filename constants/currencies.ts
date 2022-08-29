@@ -1,4 +1,4 @@
-import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
+import { ChainId, NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import { constants } from "ethers";
 import { OtherAddressZero } from "utils/zeroAddress";
 
@@ -347,6 +347,48 @@ const ArbitrumTestnet: CurrencyMetadata[] = [
   },
 ];
 
+const BinanceMainnet: CurrencyMetadata[] = [
+  {
+    address: constants.AddressZero,
+    name: NATIVE_TOKENS[ChainId.BinanceSmartChainMainnet].name,
+    symbol: NATIVE_TOKENS[ChainId.BinanceSmartChainMainnet].symbol,
+  },
+  {
+    address: OtherAddressZero,
+    name: NATIVE_TOKENS[ChainId.BinanceSmartChainMainnet].name,
+    symbol: NATIVE_TOKENS[ChainId.BinanceSmartChainMainnet].symbol,
+  },
+  {
+    ...NATIVE_TOKENS[ChainId.BinanceSmartChainMainnet].wrapped,
+  },
+  {
+    address: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
+    name: "Binance USD",
+    symbol: "BUSD",
+  },
+];
+
+const BinanceTestnet: CurrencyMetadata[] = [
+  {
+    address: constants.AddressZero,
+    name: NATIVE_TOKENS[ChainId.BinanceSmartChainTestnet].name,
+    symbol: NATIVE_TOKENS[ChainId.BinanceSmartChainTestnet].symbol,
+  },
+  {
+    address: OtherAddressZero,
+    name: NATIVE_TOKENS[ChainId.BinanceSmartChainTestnet].name,
+    symbol: NATIVE_TOKENS[ChainId.BinanceSmartChainTestnet].symbol,
+  },
+  {
+    ...NATIVE_TOKENS[ChainId.BinanceSmartChainTestnet].wrapped,
+  },
+  {
+    address: "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee",
+    name: "Binance USD",
+    symbol: "BUSD",
+  },
+];
+
 export const CURRENCIES: Record<SUPPORTED_CHAIN_ID, CurrencyMetadata[]> = {
   [ChainId.Mainnet]: Ethereum,
   [ChainId.Rinkeby]: Rinkeby,
@@ -361,4 +403,6 @@ export const CURRENCIES: Record<SUPPORTED_CHAIN_ID, CurrencyMetadata[]> = {
   [ChainId.OptimismTestnet]: OptimismTestnet,
   [ChainId.Arbitrum]: Arbitrum,
   [ChainId.ArbitrumTestnet]: ArbitrumTestnet,
+  [ChainId.BinanceSmartChainMainnet]: BinanceMainnet,
+  [ChainId.BinanceSmartChainTestnet]: BinanceTestnet,
 } as const;

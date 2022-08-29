@@ -40,6 +40,12 @@ const alchemyUrlMap: Record<SUPPORTED_CHAIN_ID, string> = {
   [ChainId.ArbitrumTestnet]:
     process.env.SSR_RPC_ARBITRUM_TESTNET ||
     `https://arb-rinkeby.g.alchemy.com/v2/${process.env.SSR_ALCHEMY_KEY}`,
+    [ChainId.BinanceSmartChainMainnet]:
+    process.env.SSR_RPC_BINANCE_MAINNET ||
+    "https://bsc-dataseed1.binance.org",
+  [ChainId.BinanceSmartChainTestnet]:
+    process.env.SSR_RPC_BINANCE_TESTNET ||
+    "https://data-seed-prebsc-1-s1.binance.org:8545",
 };
 
 export function getSSRRPCUrl(chainId: SUPPORTED_CHAIN_ID) {

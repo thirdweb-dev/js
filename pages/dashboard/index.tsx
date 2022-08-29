@@ -126,6 +126,14 @@ const Dashboard: ThirdwebNextPage = () => {
     ChainId.ArbitrumTestnet,
     dashboardAddress,
   );
+  const binanceQuery = useContractList(
+    ChainId.BinanceSmartChainMainnet,
+    dashboardAddress,
+  );
+  const binanceTestnetQuery = useContractList(
+    ChainId.BinanceSmartChainTestnet,
+    dashboardAddress,
+  );
 
   const combinedList = useMemo(() => {
     return (
@@ -187,6 +195,18 @@ const Dashboard: ThirdwebNextPage = () => {
           ...d,
           chainId: ChainId.ArbitrumTestnet,
         })) || [],
+      )
+      .concat(
+        binanceQuery.data?.map((d) => ({
+          ...d,
+          chainId: ChainId.BinanceSmartChainMainnet,
+        })) || [],
+      )
+      .concat(
+        binanceTestnetQuery.data?.map((d) => ({
+          ...d,
+          chainId: ChainId.BinanceSmartChainTestnet,
+        })) || [],
       );
   }, [
     mainnetQuery.data,
@@ -202,6 +222,8 @@ const Dashboard: ThirdwebNextPage = () => {
     optimismTestnetQuery.data,
     arbitrumQuery.data,
     arbitrumTestnetQuery.data,
+    binanceQuery.data,
+    binanceTestnetQuery.data,
   ]);
 
   const isFetched =
@@ -218,7 +240,9 @@ const Dashboard: ThirdwebNextPage = () => {
     optimismTestnetQuery.isFetched &&
     arbitrumQuery.isFetched &&
     arbitrumTestnetQuery.isFetched &&
-    projectsIsFetched;
+    projectsIsFetched &&
+    binanceQuery.isFetched &&
+    binanceTestnetQuery.isFetched;
 
   useEffect(() => {
     if (isFetched && combinedList.length === 0 && projects?.length === 0) {

@@ -1,8 +1,8 @@
 import { useContract } from "@thirdweb-dev/react";
 import { detectContractFeature } from "@thirdweb-dev/sdk";
-import type { FeatureName } from "@thirdweb-dev/sdk/dist/src/constants/contract-features";
-import type { ContractWrapper } from "@thirdweb-dev/sdk/dist/src/core/classes/contract-wrapper";
-import { DetectableFeature } from "@thirdweb-dev/sdk/dist/src/core/interfaces/DetectableFeature";
+import { FeatureName } from "@thirdweb-dev/sdk/dist/declarations/src/constants/contract-features";
+import { ContractWrapper } from "@thirdweb-dev/sdk/dist/declarations/src/core/classes/contract-wrapper";
+import { DetectableFeature } from "@thirdweb-dev/sdk/dist/declarations/src/core/interfaces/DetectableFeature";
 import { ButtonProps } from "tw-components";
 
 export interface FeatureDetectButtonProps

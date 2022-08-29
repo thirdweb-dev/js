@@ -16,7 +16,11 @@ import {
 } from "@thirdweb-dev/react";
 import {
   ChainId,
+  ContractInfoSchema,
   ContractType,
+  ExtraPublishMetadata,
+  ProfileMetadata,
+  PublishedContract,
   SUPPORTED_CHAIN_ID,
   SmartContract,
   ThirdwebSDK,
@@ -28,13 +32,7 @@ import {
   fetchPreDeployMetadata,
   resolveContractUriFromAddress,
 } from "@thirdweb-dev/sdk";
-import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/src/constants/contract-features";
-import {
-  ContractInfoSchema,
-  ExtraPublishMetadata,
-  ProfileMetadata,
-  PublishedContract,
-} from "@thirdweb-dev/sdk/dist/src/schema/contracts/custom";
+import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/declarations/src/constants/contract-features";
 import {
   StorageSingleton,
   alchemyUrlMap,

@@ -236,64 +236,66 @@ Deploy it in one click`,
           <Flex flexDir="column" gap={4}>
             <Heading size="title.sm">Contract details</Heading>
             <List as={Flex} flexDir="column" gap={3}>
-              {releasedContractInfo.data?.publishedTimestamp && (
+              <>
+                {releasedContractInfo.data?.publishedTimestamp && (
+                  <ListItem>
+                    <Flex gap={2} alignItems="center">
+                      <Icon as={BiTime} boxSize={5} />
+                      <Text size="label.md" lineHeight={1.2}>
+                        Released on: {releasedDate}
+                      </Text>
+                    </Flex>
+                  </ListItem>
+                )}
+                {releasedContractInfo.data?.publishedMetadata?.audit && (
+                  <ListItem>
+                    <Flex gap={2} alignItems="center">
+                      <Icon as={BsShieldCheck} boxSize={5} color="green" />
+                      <Text size="label.md">
+                        <Link
+                          href={releasedContractInfo.data?.publishedMetadata?.audit.replace(
+                            "ipfs://",
+                            `${StorageSingleton.gatewayUrl}/`,
+                          )}
+                          isExternal
+                        >
+                          Audited
+                        </Link>
+                      </Text>
+                    </Flex>
+                  </ListItem>
+                )}
                 <ListItem>
                   <Flex gap={2} alignItems="center">
-                    <Icon as={BiTime} boxSize={5} />
+                    <Icon as={IoDocumentOutline} boxSize={5} />
                     <Text size="label.md" lineHeight={1.2}>
-                      Released on: {releasedDate}
+                      License
+                      {compilerInfo?.licenses &&
+                      compilerInfo?.licenses?.length > 1
+                        ? "s"
+                        : ""}
+                      : {compilerInfo?.licenses?.join(", ") || "None"}
                     </Text>
                   </Flex>
                 </ListItem>
-              )}
-              {releasedContractInfo.data?.publishedMetadata?.audit && (
-                <ListItem>
-                  <Flex gap={2} alignItems="center">
-                    <Icon as={BsShieldCheck} boxSize={5} color="green" />
-                    <Text size="label.md">
-                      <Link
-                        href={releasedContractInfo.data?.publishedMetadata?.audit.replace(
-                          "ipfs://",
-                          `${StorageSingleton.gatewayUrl}/`,
-                        )}
-                        isExternal
-                      >
-                        Audited
-                      </Link>
-                    </Text>
-                  </Flex>
-                </ListItem>
-              )}
-              <ListItem>
-                <Flex gap={2} alignItems="center">
-                  <Icon as={IoDocumentOutline} boxSize={5} />
-                  <Text size="label.md" lineHeight={1.2}>
-                    License
-                    {compilerInfo?.licenses &&
-                    compilerInfo?.licenses?.length > 1
-                      ? "s"
-                      : ""}
-                    : {compilerInfo?.licenses?.join(", ") || "None"}
-                  </Text>
-                </Flex>
-              </ListItem>
-              {(enabledExtensions || []).map((extension) => (
-                <ListItem key={extension.name}>
-                  <Flex gap={2} alignItems="center">
-                    <Icon as={FcCheckmark} boxSize={5} />
-                    <Text size="label.md">
-                      <TrackedLink
-                        href={`https://portal.thirdweb.com/contracts/${extension.docLinks.contracts}`}
-                        isExternal
-                        category="extension"
-                        label={extension.name}
-                      >
-                        {extension.name}
-                      </TrackedLink>
-                    </Text>
-                  </Flex>
-                </ListItem>
-              ))}
+                {(enabledExtensions || []).map((extension) => (
+                  <ListItem key={extension.name}>
+                    <Flex gap={2} alignItems="center">
+                      <Icon as={FcCheckmark} boxSize={5} />
+                      <Text size="label.md">
+                        <TrackedLink
+                          href={`https://portal.thirdweb.com/contracts/${extension.docLinks.contracts}`}
+                          isExternal
+                          category="extension"
+                          label={extension.name}
+                        >
+                          {extension.name}
+                        </TrackedLink>
+                      </Text>
+                    </Flex>
+                  </ListItem>
+                ))}
+              </>
             </List>
           </Flex>
           <Divider />

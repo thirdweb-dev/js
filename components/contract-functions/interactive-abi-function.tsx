@@ -9,8 +9,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { useContractCall } from "@thirdweb-dev/react";
-import { SmartContract } from "@thirdweb-dev/sdk";
-import { AbiFunction } from "@thirdweb-dev/sdk/dist/src/schema/contracts/custom";
+import { AbiFunction, SmartContract } from "@thirdweb-dev/sdk";
 import { MismatchButton } from "components/buttons/MismatchButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BigNumber, utils } from "ethers";
