@@ -185,6 +185,32 @@ const chain: Record<string, Chain> = {
     ],
     testnet: true,
   },
+  binanceSmartChainMainnet: {
+    id: ChainId.BinanceSmartChainMainnet,
+    name: "Binance Smart Chain Mainnet",
+    nativeCurrency: NATIVE_TOKENS[ChainId.BinanceSmartChainMainnet],
+    rpcUrls: ["https://bsc-dataseed1.binance.org"],
+    blockExplorers: [
+      {
+        name: "BscScan",
+        url: "https://bscscan.com/",
+      },
+    ],
+    testnet: false,
+  },
+  binanceSmartChainTestnet: {
+    id: ChainId.BinanceSmartChainTestnet,
+    name: "Binance Smart Chain Testnet",
+    nativeCurrency: NATIVE_TOKENS[ChainId.BinanceSmartChainTestnet],
+    rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545"],
+    blockExplorers: [
+      {
+        name: "BscScan",
+        url: "https://testnet.bscscan.com/",
+      },
+    ],
+    testnet: true,
+  },
 };
 
 export const defaultSupportedChains = Object.values(chain) as Chain[];

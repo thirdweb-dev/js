@@ -1,4 +1,10 @@
-import { ContractInterface, ethers, Signer } from "ethers";
+import { fetchCurrencyValue } from "../common/currency";
+import {
+  ChainOrRpc,
+  getProviderForNetwork,
+  getReadOnlyProvider,
+  NATIVE_TOKEN_ADDRESS,
+} from "../constants";
 import {
   Edition,
   EditionDrop,
@@ -13,8 +19,15 @@ import {
   Token,
   Vote,
 } from "../contracts";
+import { Multiwrap } from "../contracts/multiwrap";
+import { SmartContract } from "../contracts/smart-contract";
+import { TokenDrop } from "../contracts/token-drop";
 import { SDKOptions } from "../schema/sdk-options";
-import { IpfsStorage, RemoteStorage, IStorage } from "@thirdweb-dev/storage";
+import { CurrencyValue } from "../types/index";
+import { WalletAuthenticator } from "./auth/wallet-authenticator";
+import { ContractMetadata } from "./classes";
+import { ContractDeployer } from "./classes/contract-deployer";
+import { ContractPublisher } from "./classes/contract-publisher";
 import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
 import type {
   ContractForContractType,
@@ -23,24 +36,11 @@ import type {
   SignerOrProvider,
   ValidContractInstance,
 } from "./types";
-import { IThirdwebContract__factory } from "@thirdweb-dev/contracts-js";
-import { ContractDeployer } from "./classes/contract-deployer";
-import { SmartContract } from "../contracts/smart-contract";
-import invariant from "tiny-invariant";
-import { TokenDrop } from "../contracts/token-drop";
-import { ContractPublisher } from "./classes/contract-publisher";
-import { ContractMetadata } from "./classes";
-import {
-  ChainOrRpc,
-  getProviderForNetwork,
-  getReadOnlyProvider,
-  NATIVE_TOKEN_ADDRESS,
-} from "../constants";
 import { UserWallet } from "./wallet/UserWallet";
-import { Multiwrap } from "../contracts/multiwrap";
-import { WalletAuthenticator } from "./auth/wallet-authenticator";
-import { CurrencyValue } from "../types/index";
-import { fetchCurrencyValue } from "../common/currency";
+import { IThirdwebContract__factory } from "@thirdweb-dev/contracts-js";
+import { IpfsStorage, RemoteStorage, IStorage } from "@thirdweb-dev/storage";
+import { ContractInterface, ethers, Signer } from "ethers";
+import invariant from "tiny-invariant";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -63,6 +63,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
    * @param options - the SDK options to use
    * @returns an instance of the SDK
+   * @param storage - optional storage implementation to use
    *
    * @beta
    */
@@ -92,6 +93,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param privateKey - the private key - **DO NOT EXPOSE THIS TO THE PUBLIC**
    * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
    * @param options - the SDK options to use
+   * @param storage - optional storage implementation to use
    * @returns an instance of the SDK
    *
    * @beta

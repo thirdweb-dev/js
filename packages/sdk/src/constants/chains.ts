@@ -18,6 +18,8 @@ export enum ChainId {
   OptimismTestnet = 69,
   Arbitrum = 42161,
   ArbitrumTestnet = 421611,
+  BinanceSmartChainMainnet = 56,
+  BinanceSmartChainTestnet = 97,
 }
 
 /**
@@ -36,7 +38,9 @@ export type SUPPORTED_CHAIN_ID =
   | ChainId.Optimism
   | ChainId.OptimismTestnet
   | ChainId.Arbitrum
-  | ChainId.ArbitrumTestnet;
+  | ChainId.ArbitrumTestnet
+  | ChainId.BinanceSmartChainMainnet
+  | ChainId.BinanceSmartChainTestnet;
 
 /**
  * @public
@@ -55,4 +59,6 @@ export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[] = [
   ChainId.OptimismTestnet,
   ChainId.Arbitrum,
   ChainId.ArbitrumTestnet,
+  ChainId.BinanceSmartChainMainnet,
+  ChainId.BinanceSmartChainTestnet,
 ];

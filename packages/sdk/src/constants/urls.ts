@@ -1,5 +1,6 @@
-import { ethers, providers } from "ethers";
 import { SignerOrProvider } from "../core/types";
+import { ethers, providers } from "ethers";
+
 /**
  * @internal
  */
@@ -45,6 +46,8 @@ export type ChainOrRpc =
   | "optimism-testnet"
   | "arbitrum"
   | "arbitrum-testnet"
+  | "binance"
+  | "binance-testnet"
   // ideally we could use `https://${string}` notation here, but doing that causes anything that is a generic string to throw a type error => not worth the hassle for now
   | (string & {});
 
@@ -97,6 +100,10 @@ export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
     case "avalanche-testnet":
     case "avalanche-fuji":
       return "https://api.avax-test.network/ext/bc/C/rpc";
+    case "binance":
+      return "https://bsc-dataseed1.binance.org";
+    case "binance-testnet":
+      return "https://data-seed-prebsc-1-s1.binance.org:8545";
     default:
       if (network.startsWith("http") || network.startsWith("ws")) {
         return network;
