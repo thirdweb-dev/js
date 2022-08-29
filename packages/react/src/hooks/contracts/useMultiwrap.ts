@@ -1,5 +1,4 @@
 import { useBuiltinContract } from "./useBuiltinContract";
-import { Multiwrap } from "@thirdweb-dev/sdk";
 
 /**
  * Hook for getting an instance of an `Multiwrap` contract. This contract is an ERC721 in which you can wrap ERC721, ERC1155 and ERC20 tokens.
@@ -23,7 +22,8 @@ import { Multiwrap } from "@thirdweb-dev/sdk";
  * }
  * ```
  * @public
+ * @depreated use `useContract()` instead
  */
-export function useMultiwrap(contractAddress?: string): Multiwrap | undefined {
+export function useMultiwrap(contractAddress?: string) {
   return useBuiltinContract("multiwrap", contractAddress);
 }

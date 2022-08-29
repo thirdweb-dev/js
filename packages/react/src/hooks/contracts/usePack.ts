@@ -1,5 +1,4 @@
 import { useBuiltinContract } from "./useBuiltinContract";
-import { Pack } from "@thirdweb-dev/sdk";
 
 /**
  * Hook for getting an instance of a `Pack` contract. This contract supports the creation of on-chain luck-based lootboxes.
@@ -24,7 +23,8 @@ import { Pack } from "@thirdweb-dev/sdk";
  * }
  * ```
  * @public
+ * @depreated use `useContract()` instead
  */
-export function usePack(contractAddress?: string): Pack | undefined {
+export function usePack(contractAddress?: string) {
   return useBuiltinContract("pack", contractAddress);
 }

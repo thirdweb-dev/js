@@ -1,5 +1,4 @@
 import { useBuiltinContract } from "./useBuiltinContract";
-import { Edition } from "@thirdweb-dev/sdk";
 
 /**
  * Hook for getting an instance of an `Edition` contract. This contract is used to interface with ERC1155 compliant NFTs.
@@ -24,7 +23,8 @@ import { Edition } from "@thirdweb-dev/sdk";
  * }
  * ```
  * @public
+ * @depreated use `useContract()` instead
  */
-export function useEdition(contractAddress?: string): Edition | undefined {
+export function useEdition(contractAddress?: string) {
   return useBuiltinContract("edition", contractAddress);
 }

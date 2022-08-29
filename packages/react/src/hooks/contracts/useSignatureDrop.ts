@@ -1,5 +1,4 @@
 import { useBuiltinContract } from "./useBuiltinContract";
-import { SignatureDrop } from "@thirdweb-dev/sdk";
 
 /**
  * Hook for getting an instance of an `SignatureDrop` contract. This contract is meant to interface with ERC721 compliant NFTs that can be lazily minted.
@@ -23,9 +22,8 @@ import { SignatureDrop } from "@thirdweb-dev/sdk";
  * }
  * ```
  * @public
+ * @depreated use `useContract()` instead
  */
-export function useSignatureDrop(
-  contractAddress?: string,
-): SignatureDrop | undefined {
+export function useSignatureDrop(contractAddress?: string) {
   return useBuiltinContract("signature-drop", contractAddress);
 }
