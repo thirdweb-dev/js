@@ -105,29 +105,6 @@ describe("Events", async () => {
     expect(events.map((e) => e.eventName)).to.include("TokensClaimed");
   });
 
-  // TODO
-  it.skip("should emit Signature events", async () => {
-    const RPC_URL = "https://rpc-mumbai.maticvigil.com/";
-    const provider = ethers.getDefaultProvider(RPC_URL);
-    const wallet = Wallet.createRandom().connect(provider);
-    const esdk = new ThirdwebSDK(wallet, {
-      gasless: {
-        openzeppelin: {
-          relayerUrl: "https://google.com", // TODO test relayer url?
-        },
-      },
-    });
-    sdk.on(EventType.Transaction, (event) => {
-      console.log(event);
-    });
-    sdk.on(EventType.Signature, (event) => {
-      console.log(event);
-    });
-    await esdk
-      .getNFTDrop(dropContract.getAddress())
-      .setApprovalForAll(ethers.constants.AddressZero, true);
-  });
-
   it("should return single event", async () => {
     await nftContract.mintToSelf({
       name: "Test1",
