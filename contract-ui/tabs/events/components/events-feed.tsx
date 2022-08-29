@@ -13,6 +13,7 @@ import {
   Icon,
   LightMode,
   List,
+  Select,
   SimpleGrid,
   Stack,
   Switch,
@@ -22,8 +23,10 @@ import {
 } from "@chakra-ui/react";
 import { ContractEvent } from "@thirdweb-dev/sdk";
 import { AnimatePresence, motion } from "framer-motion";
+import { useSingleQueryParam } from "hooks/useQueryParam";
+import { useRouter } from "next/router";
 import { bigNumberReplacer } from "pages/_app";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { FiChevronDown, FiCopy } from "react-icons/fi";
 import {
@@ -48,11 +51,63 @@ interface EventsFeedProps {
 export const EventsFeed: React.FC<EventsFeedProps> = ({ contractAddress }) => {
   const [autoUpdate, setAutoUpdate] = useState(true);
   const activityQuery = useActivity(contractAddress, autoUpdate);
+  const event = useSingleQueryParam("event");
+  const [selectedEvent, setSelectedEvent] = useState(event || "all");
+  
+  const chain = useSingleQueryParam("networkOrAddress");
+  const router = useRouter();
+
+  const eventTypes = useMemo(
+    () =>
+      activityQuery?.data
+        ? Array.from(
+            new Set([
+              ...activityQuery.data.flatMap(({ events }) =>
+                events.map(({ eventName }) => eventName),
+              ),
+            ]),
+          )
+        : [],
+    [activityQuery],
+  );
+
+  const filteredEvents = useMemo(
+    () =>
+      activityQuery?.data
+        ? selectedEvent === "all"
+          ? activityQuery.data
+          : activityQuery.data.filter(({ events }) =>
+              events.some(({ eventName }) => eventName === selectedEvent),
+            )
+        : [],
+    [activityQuery, selectedEvent],
+  );
 
   return (
     <Flex gap={6} flexDirection="column">
       <Flex align="center" justify="space-between" w="full">
-        <Heading size="title.sm">Latest Transactions</Heading>
+        <Flex gap={4} alignItems="center">
+          <Heading size="title.sm">Latest Transactions</Heading>
+          <Select
+            w="50%"
+            value={selectedEvent}
+            onChange={(e) => {
+              const path =
+                e.target.value === "all"
+                  ? `/${chain}/${contractAddress}/events`
+                  : `/${chain}/${contractAddress}/events?event=${e.target.value}`;
+              router.push(path, undefined, { shallow: true });
+              setSelectedEvent(e.target.value);
+            }}
+          >
+            <option value="all">All</option>
+            {eventTypes.map((eventType) => (
+              <option key={eventType} value={eventType}>
+                {eventType}
+              </option>
+            ))}
+          </Select>
+        </Flex>
         <Box>
           <FormControl display="flex" alignItems="center">
             <FormLabel htmlFor="auto-update" mb="0">
@@ -97,8 +152,13 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contractAddress }) => {
               allowMultiple
               defaultIndex={[]}
             >
-              {activityQuery.data.slice(0, 10).map((e) => (
-                <EventsFeedItem key={e.transactionHash} transaction={e} />
+              {filteredEvents?.slice(0, 10).map((e) => (
+                <EventsFeedItem
+                  key={e.transactionHash}
+                  transaction={e}
+                  setSelectedEvent={setSelectedEvent}
+                  contractAddress={contractAddress}
+                />
               ))}
             </Accordion>
           </List>
@@ -110,13 +170,20 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contractAddress }) => {
 
 interface EventsFeedItemProps {
   transaction: ContractTransaction;
+  setSelectedEvent: React.Dispatch<React.SetStateAction<string>>;
+  contractAddress: string;
 }
 
 export const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
   transaction,
+  setSelectedEvent,
+  contractAddress,
 }) => {
   const toast = useToast();
   const { onCopy } = useClipboard(transaction.transactionHash);
+
+  const router = useRouter();
+  const chain = useSingleQueryParam("networkOrAddress");
 
   return (
     <AccordionItem
@@ -207,15 +274,29 @@ export const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
             flexWrap="wrap"
             gap={2}
             spacing={0}
-            pointerEvents="none"
           >
             {transaction.events.slice(0, 2).map((e, idx) => (
-              <Button as="span" key={idx}>
+              <Button
+                as="span"
+                key={idx}
+                onClick={(ev) => {
+                  ev.stopPropagation();
+                  router.push(
+                    `/${chain}/${contractAddress}/events?event=${e.eventName}`,
+                    undefined,
+                    { shallow: true },
+                  );
+                  console.log(e.eventName);
+                  setSelectedEvent(e.eventName);
+                }}
+              >
                 {e.eventName}
               </Button>
             ))}
             {transaction.events.length > 2 && (
-              <Button as="span">+ {transaction.events.length - 2}</Button>
+              <Button as="span" pointerEvents="none">
+                + {transaction.events.length - 2}
+              </Button>
             )}
           </ButtonGroup>
 
