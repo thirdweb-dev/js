@@ -1,9 +1,22 @@
-import { ContractRoles } from "../core/classes/contract-roles";
-import { BigNumber, BigNumberish, constants, ethers } from "ethers";
+import { getRoleHash } from "../common";
+import { prepareClaim } from "../common/claim-conditions";
+import { uploadOrExtractURIs } from "../common/nft";
+import { FEATURE_NFT_REVEALABLE } from "../constants/erc721-features";
+import { TransactionTask } from "../core/classes/TransactionTask";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
+import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { IStorage } from "@thirdweb-dev/storage";
+import { DelayedReveal } from "../core/classes/delayed-reveal";
+import { DropClaimConditions } from "../core/classes/drop-claim-conditions";
+import { Erc721 } from "../core/classes/erc-721";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { UpdateableNetwork } from "../core/interfaces/contract";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -16,28 +29,16 @@ import {
   NFTMetadataOrUri,
   NFTMetadataOwner,
 } from "../schema/tokens/common";
-import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
-import { DropClaimConditions } from "../core/classes/drop-claim-conditions";
-import { Erc721 } from "../core/classes/erc-721";
-import { ContractPrimarySale } from "../core/classes/contract-sales";
-import { prepareClaim } from "../common/claim-conditions";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { DelayedReveal } from "../core/classes/delayed-reveal";
-import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
-import { Erc721Supply } from "../core/classes/erc-721-supply";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ClaimVerification } from "../types";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { getRoleHash } from "../common";
+import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
 import { UploadProgressEvent } from "../types/events";
-import { uploadOrExtractURIs } from "../common/nft";
-import { TransactionTask } from "../core/classes/TransactionTask";
-import { Erc721Burnable } from "../core/classes/erc-721-burnable";
-import { FEATURE_NFT_REVEALABLE } from "../constants/erc721-features";
 import { DropERC721 } from "@thirdweb-dev/contracts-js";
-import { TokensClaimedEvent, TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
+import {
+  TokensClaimedEvent,
+  TokensLazyMintedEvent,
+} from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
+import { IStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, constants, ethers } from "ethers";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -53,7 +54,7 @@ import { TokensClaimedEvent, TokensLazyMintedEvent } from "@thirdweb-dev/contrac
  *
  * @public
  */
-export class NFTDrop extends Erc721<DropERC721> {
+export class NFTDrop implements UpdateableNetwork {
   static contractType = "nft-drop" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
   static contractAbi = require("@thirdweb-dev/contracts-js/abis/DropERC721.json");
@@ -146,10 +147,9 @@ export class NFTDrop extends Erc721<DropERC721> {
    * ```
    */
   public revealer: DelayedReveal<DropERC721>;
-
-  private _query = this.query as Erc721Supply;
-  private _owned = this._query.owned as Erc721Enumerable;
-  private _burn = this.burn as Erc721Burnable;
+  private contractWrapper: ContractWrapper<DropERC721>;
+  private storage: IStorage;
+  public nft: Erc721<DropERC721>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -163,7 +163,8 @@ export class NFTDrop extends Erc721<DropERC721> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    this.contractWrapper = contractWrapper;
+    this.storage = storage;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       NFTDrop.schema,
@@ -181,13 +182,25 @@ export class NFTDrop extends Erc721<DropERC721> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
+    this.nft = new Erc721(this.contractWrapper, this.storage);
     this.revealer = new DelayedReveal<DropERC721>(
       this.contractWrapper,
       this.storage,
       FEATURE_NFT_REVEALABLE.name,
-      () => this.nextTokenIdToMint(),
+      () => this.nft.nextTokenIdToMint(),
     );
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+  }
+
+  /**
+   * @internal
+   */
+  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+    this.contractWrapper.updateSignerOrProvider(network);
+  }
+
+  getAddress(): string {
+    return this.contractWrapper.readContract.address;
   }
 
   /** ******************************
@@ -212,7 +225,7 @@ export class NFTDrop extends Erc721<DropERC721> {
   public async getAll(
     queryParams?: QueryAllParams,
   ): Promise<NFTMetadataOwner[]> {
-    return this._query.all(queryParams);
+    return this.nft.getAll(queryParams);
   }
 
   /**
@@ -231,7 +244,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    * @returns The NFT metadata for all NFTs in the contract.
    */
   public async getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]> {
-    return this._owned.all(walletAddress);
+    return this.nft.getOwned(walletAddress);
   }
 
   /**
@@ -239,7 +252,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
    */
   public async getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]> {
-    return this._owned.tokenIds(walletAddress);
+    return this.nft.getOwnedTokenIds(walletAddress);
   }
 
   /**
@@ -321,7 +334,7 @@ export class NFTDrop extends Erc721<DropERC721> {
 
     return await Promise.all(
       Array.from(Array(maxId.sub(firstTokenId).toNumber()).keys()).map((i) =>
-        this.getTokenMetadata(firstTokenId.add(i).toString()),
+        this.nft.getTokenMetadata(firstTokenId.add(i).toString()),
       ),
     );
   }
@@ -443,7 +456,7 @@ export class NFTDrop extends Erc721<DropERC721> {
       results.push({
         id,
         receipt,
-        data: () => this.getTokenMetadata(id),
+        data: () => this.nft.getTokenMetadata(id),
       });
     }
     return results;
@@ -559,8 +572,121 @@ export class NFTDrop extends Erc721<DropERC721> {
    * ```
    *
    */
-  public async burnToken(tokenId: BigNumberish): Promise<TransactionResult> {
-    return this._burn.token(tokenId);
+  public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
+    return this.nft.burn(tokenId);
+  }
+
+  /******************************
+   * STANDARD ERC721 FUNCTIONS
+   ******************************/
+
+  /**
+   * Get a single NFT Metadata
+   *
+   * @example
+   * ```javascript
+   * const tokenId = 0;
+   * const nft = await contract.get(tokenId);
+   * ```
+   * @param tokenId - the tokenId of the NFT to retrieve
+   * @returns The NFT metadata
+   */
+  public async get(tokenId: BigNumberish): Promise<NFTMetadataOwner> {
+    return this.nft.get(tokenId);
+  }
+
+  /**
+   * Get the current owner of a given NFT within this Contract
+   *
+   * @param tokenId - the tokenId of the NFT
+   * @returns the address of the owner
+   */
+  public async ownerOf(tokenId: BigNumberish): Promise<string> {
+    return this.nft.ownerOf(tokenId);
+  }
+
+  /**
+   * Get NFT Balance
+   *
+   * @remarks Get a wallets NFT balance (number of NFTs in this contract owned by the wallet).
+   *
+   * @example
+   * ```javascript
+   * const walletAddress = "{{wallet_address}}";
+   * const balance = await contract.balanceOf(walletAddress);
+   * console.log(balance);
+   * ```
+   */
+  public async balanceOf(address: string): Promise<BigNumber> {
+    return this.nft.balanceOf(address);
+  }
+
+  /**
+   * Get NFT Balance for the currently connected wallet
+   */
+  public async balance(): Promise<BigNumber> {
+    return this.nft.balance();
+  }
+
+  /**
+   * Get whether this wallet has approved transfers from the given operator
+   * @param address - the wallet address
+   * @param operator - the operator address
+   */
+  public async isApproved(address: string, operator: string): Promise<boolean> {
+    return this.nft.isApproved(address, operator);
+  }
+
+  /**
+   * Transfer a single NFT
+   *
+   * @remarks Transfer an NFT from the connected wallet to another wallet.
+   *
+   * @example
+   * ```javascript
+   * const walletAddress = "{{wallet_address}}";
+   * const tokenId = 0;
+   * await contract.transfer(walletAddress, tokenId);
+   * ```
+   */
+  public async transfer(
+    to: string,
+    tokenId: BigNumberish,
+  ): Promise<TransactionResult> {
+    return this.nft.transfer(to, tokenId);
+  }
+
+  /**
+   * Approve or remove operator as an operator for the caller. Operators can call transferFrom or safeTransferFrom for any token owned by the caller.
+   * @param operator - the operator's address
+   * @param approved - whether to approve or remove
+   *
+   * @internal
+   */
+  public async setApprovalForAll(
+    operator: string,
+    approved: boolean,
+  ): Promise<TransactionResult> {
+    return this.nft.setApprovalForAll(operator, approved);
+  }
+
+  /**
+   * Approve an operator for the NFT owner. Operators can call transferFrom or safeTransferFrom for the specified token.
+   * @param operator - the operator's address
+   * @param tokenId - the tokenId to give approval for
+   *
+   * @internal
+   */
+  public async setApprovalForToken(
+    operator: string,
+    tokenId: BigNumberish,
+  ): Promise<TransactionResult> {
+    return {
+      receipt: await this.contractWrapper.sendTransaction("approve", [
+        operator,
+        tokenId,
+      ]),
+    };
   }
 
   /** ******************************

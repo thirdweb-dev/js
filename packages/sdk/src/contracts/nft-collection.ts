@@ -1,33 +1,34 @@
-import { IStorage } from "@thirdweb-dev/storage";
+import { getRoleHash } from "../common";
+import { Erc721WithQuantitySignatureMintable } from "../core";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import { ContractRoles } from "../core/classes/contract-roles";
+import { ContractRoyalty } from "../core/classes/contract-royalty";
+import { ContractPrimarySale } from "../core/classes/contract-sales";
+import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { Erc721 } from "../core/classes/erc-721";
+import { Erc721BatchMintable } from "../core/classes/erc-721-batch-mintable";
+import { Erc721Burnable } from "../core/classes/erc-721-burnable";
+import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
+import { Erc721Mintable } from "../core/classes/erc-721-mintable";
+import { Erc721Supply } from "../core/classes/erc-721-supply";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { UpdateableNetwork } from "../core/interfaces/contract";
 import type {
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
 } from "../core/types";
-import { Erc721BatchMintable } from "../core/classes/erc-721-batch-mintable";
-import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
-import { Erc721Mintable } from "../core/classes/erc-721-mintable";
-import { Erc721Supply } from "../core/classes/erc-721-supply";
-import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { TokenERC721 } from "@thirdweb-dev/contracts-js";
-import { SDKOptions } from "../schema/sdk-options";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractRoles } from "../core/classes/contract-roles";
-import { ContractRoyalty } from "../core/classes/contract-royalty";
-import { Erc721 } from "../core/classes/erc-721";
-import { ContractPrimarySale } from "../core/classes/contract-sales";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
-import { getRoleHash } from "../common";
-import { BigNumber, BigNumberish, constants } from "ethers";
 import { NFTMetadataOrUri, NFTMetadataOwner } from "../schema";
+import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
+import { SDKOptions } from "../schema/sdk-options";
 import { QueryAllParams } from "../types";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { Erc721WithQuantitySignatureMintable } from "../core";
-import { Erc721Burnable } from "../core/classes/erc-721-burnable";
+import { TokenERC721 } from "@thirdweb-dev/contracts-js";
+import { IStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, constants } from "ethers";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -43,7 +44,7 @@ import { Erc721Burnable } from "../core/classes/erc-721-burnable";
  *
  * @public
  */
-export class NFTCollection extends Erc721<TokenERC721> {
+export class NFTCollection implements UpdateableNetwork {
   static contractType = "nft-collection" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
   static contractAbi = require("@thirdweb-dev/contracts-js/abis/TokenERC721.json");
@@ -51,6 +52,9 @@ export class NFTCollection extends Erc721<TokenERC721> {
    * @internal
    */
   static schema = TokenErc721ContractSchema;
+
+  private contractWrapper: ContractWrapper<TokenERC721>;
+  private storage: IStorage;
 
   public metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;
   public roles: ContractRoles<
@@ -80,31 +84,12 @@ export class NFTCollection extends Erc721<TokenERC721> {
    * ```
    */
   public royalties: ContractRoyalty<TokenERC721, typeof NFTCollection.schema>;
-  /**
-   * Signature Minting
-   * @remarks Generate dynamic NFTs with your own signature, and let others mint them using that signature.
-   * @example
-   * ```javascript
-   * // see how to craft a payload to sign in the `contract.signature.generate()` documentation
-   * const signedPayload = contract.signature.generate(payload);
-   *
-   * // now anyone can mint the NFT
-   * const tx = contract.signature.mint(signedPayload);
-   * const receipt = tx.receipt; // the mint transaction receipt
-   * const mintedId = tx.id; // the id of the NFT minted
-   * ```
-   */
-  override signature = super.signature as Erc721WithQuantitySignatureMintable;
+
   /**
    * @internal
    */
   public interceptor: ContractInterceptor<TokenERC721>;
-
-  private _mint = this.mint as Erc721Mintable;
-  private _burn = this.burn as Erc721Burnable;
-  private _batchMint = this._mint.batch as Erc721BatchMintable;
-  private _query = this.query as Erc721Supply;
-  private _owned = this._query.owned as Erc721Enumerable;
+  public nft: Erc721<TokenERC721>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -118,7 +103,8 @@ export class NFTCollection extends Erc721<TokenERC721> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    this.contractWrapper = contractWrapper;
+    this.storage = storage;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       NFTCollection.schema,
@@ -132,13 +118,21 @@ export class NFTCollection extends Erc721<TokenERC721> {
     this.sales = new ContractPrimarySale(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
-    this.signature = new Erc721WithQuantitySignatureMintable(
-      this.contractWrapper,
-      this.storage,
-    );
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.nft = new Erc721(this.contractWrapper, this.storage, options);
+  }
+
+  /**
+   * @internal
+   */
+  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+    this.contractWrapper.updateSignerOrProvider(network);
+  }
+
+  getAddress(): string {
+    return this.contractWrapper.readContract.address;
   }
 
   /** ******************************
@@ -163,7 +157,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
   public async getAll(
     queryParams?: QueryAllParams,
   ): Promise<NFTMetadataOwner[]> {
-    return this._query.all(queryParams);
+    return this.nft.getAll(queryParams);
   }
 
   /**
@@ -182,7 +176,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
    * @returns The NFT metadata for all NFTs in the contract.
    */
   public async getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]> {
-    return this._owned.all(walletAddress);
+    return this.nft.getOwned(walletAddress);
   }
 
   /**
@@ -190,14 +184,14 @@ export class NFTCollection extends Erc721<TokenERC721> {
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
    */
   public async getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]> {
-    return this._owned.tokenIds(walletAddress);
+    return this.nft.getOwnedTokenIds(walletAddress);
   }
 
   /**
    * Get the total count NFTs minted in this contract
    */
   public async totalSupply() {
-    return this._query.totalCirculatingSupply();
+    return this.nft.totalCirculatingSupply();
   }
 
   /**
@@ -229,17 +223,16 @@ export class NFTCollection extends Erc721<TokenERC721> {
    *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
    * };
    *
-   * const tx = await contract.mintToSelf(metadata);
+   * const tx = await contract.mint(metadata);
    * const receipt = tx.receipt; // the transaction receipt
    * const tokenId = tx.id; // the id of the NFT minted
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
    */
-  public async mintToSelf(
+  public async mint(
     metadata: NFTMetadataOrUri,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
-    const signerAddress = await this.contractWrapper.getSignerAddress();
-    return this._mint.to(signerAddress, metadata);
+    return this.nft.mint(metadata);
   }
 
   /**
@@ -269,8 +262,9 @@ export class NFTCollection extends Erc721<TokenERC721> {
     walletAddress: string,
     metadata: NFTMetadataOrUri,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
-    return this._mint.to(walletAddress, metadata);
+    return this.nft.mintTo(walletAddress, metadata);
   }
+
   /**
    * Mint Many unique NFTs
    *
@@ -298,9 +292,9 @@ export class NFTCollection extends Erc721<TokenERC721> {
   public async mintBatch(
     metadata: NFTMetadataOrUri[],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    const signerAddress = await this.contractWrapper.getSignerAddress();
-    return this._batchMint.to(signerAddress, metadata);
+    return this.nft.mintBatch(metadata);
   }
+
   /**
    * Mint Many unique NFTs
    *
@@ -332,7 +326,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
     walletAddress: string,
     metadata: NFTMetadataOrUri[],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    return this._batchMint.to(walletAddress, metadata);
+    return this.nft.mintBatchTo(walletAddress, metadata);
   }
 
   /**
@@ -344,7 +338,120 @@ export class NFTCollection extends Erc721<TokenERC721> {
    * const result = await contract.burnToken(tokenId);
    * ```
    */
-  public async burnToken(tokenId: BigNumberish): Promise<TransactionResult> {
-    return this._burn.token(tokenId);
+  public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
+    return this.nft.burn(tokenId);
+  }
+
+  /******************************
+   * STANDARD ERC721 FUNCTIONS
+   ******************************/
+
+  /**
+   * Get a single NFT Metadata
+   *
+   * @example
+   * ```javascript
+   * const tokenId = 0;
+   * const nft = await contract.get(tokenId);
+   * ```
+   * @param tokenId - the tokenId of the NFT to retrieve
+   * @returns The NFT metadata
+   */
+  public async get(tokenId: BigNumberish): Promise<NFTMetadataOwner> {
+    return this.nft.get(tokenId);
+  }
+
+  /**
+   * Get the current owner of a given NFT within this Contract
+   *
+   * @param tokenId - the tokenId of the NFT
+   * @returns the address of the owner
+   */
+  public async ownerOf(tokenId: BigNumberish): Promise<string> {
+    return this.nft.ownerOf(tokenId);
+  }
+
+  /**
+   * Get NFT Balance
+   *
+   * @remarks Get a wallets NFT balance (number of NFTs in this contract owned by the wallet).
+   *
+   * @example
+   * ```javascript
+   * const walletAddress = "{{wallet_address}}";
+   * const balance = await contract.balanceOf(walletAddress);
+   * console.log(balance);
+   * ```
+   */
+  public async balanceOf(address: string): Promise<BigNumber> {
+    return this.nft.balanceOf(address);
+  }
+
+  /**
+   * Get NFT Balance for the currently connected wallet
+   */
+  public async balance(): Promise<BigNumber> {
+    return this.nft.balance();
+  }
+
+  /**
+   * Get whether this wallet has approved transfers from the given operator
+   * @param address - the wallet address
+   * @param operator - the operator address
+   */
+  public async isApproved(address: string, operator: string): Promise<boolean> {
+    return this.nft.isApproved(address, operator);
+  }
+
+  /**
+   * Transfer a single NFT
+   *
+   * @remarks Transfer an NFT from the connected wallet to another wallet.
+   *
+   * @example
+   * ```javascript
+   * const walletAddress = "{{wallet_address}}";
+   * const tokenId = 0;
+   * await contract.transfer(walletAddress, tokenId);
+   * ```
+   */
+  public async transfer(
+    to: string,
+    tokenId: BigNumberish,
+  ): Promise<TransactionResult> {
+    return this.nft.transfer(to, tokenId);
+  }
+
+  /**
+   * Approve or remove operator as an operator for the caller. Operators can call transferFrom or safeTransferFrom for any token owned by the caller.
+   * @param operator - the operator's address
+   * @param approved - whether to approve or remove
+   *
+   * @internal
+   */
+  public async setApprovalForAll(
+    operator: string,
+    approved: boolean,
+  ): Promise<TransactionResult> {
+    return this.nft.setApprovalForAll(operator, approved);
+  }
+
+  /**
+   * Approve an operator for the NFT owner. Operators can call transferFrom or safeTransferFrom for the specified token.
+   * @param operator - the operator's address
+   * @param tokenId - the tokenId to give approval for
+   *
+   * @internal
+   */
+  public async setApprovalForToken(
+    operator: string,
+    tokenId: BigNumberish,
+  ): Promise<TransactionResult> {
+    return {
+      receipt: await this.contractWrapper.sendTransaction("approve", [
+        operator,
+        tokenId,
+      ]),
+    };
   }
 }

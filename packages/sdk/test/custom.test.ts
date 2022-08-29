@@ -290,8 +290,8 @@ describe("Custom Contracts", async () => {
     invariant(c, "Contract undefined");
     invariant(c.nft, "ERC721 undefined");
     invariant(c.nft.query, "ERC721 query undefined");
-    invariant(c.nft.mint, "ERC721 minter undefined");
-    await c.nft.mint.to(adminWallet.address, {
+    invariant(c.nft.mintable, "ERC721 minter undefined");
+    await c.nft.mintable.to(adminWallet.address, {
       name: "Custom NFT",
     });
     const nfts = await c.nft.query.all();
@@ -305,7 +305,7 @@ describe("Custom Contracts", async () => {
     invariant(c.nft, "ERC721 undefined");
     invariant(c.nft.burn, "ERC721Burnable undefined");
     invariant(c.nft.query, "ERC721 query undefined");
-    await c.nft.mint?.to(adminWallet.address, {
+    await c.nft.mintable?.to(adminWallet.address, {
       name: "Custom NFT",
     });
     let balance = await c.nft.balance();

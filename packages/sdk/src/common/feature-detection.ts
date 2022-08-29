@@ -5,6 +5,7 @@ import {
   SUPPORTED_FEATURES,
 } from "../constants/contract-features";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { DetectableFeature } from "../core/interfaces/DetectableFeature";
 import {
   AbiEvent,
   AbiFunction,
@@ -19,6 +20,7 @@ import {
   PreDeployMetadataFetchedSchema,
   PublishedMetadata,
 } from "../schema/contracts/custom";
+import { ExtensionNotImplementedError } from "./error";
 import { IStorage } from "@thirdweb-dev/storage";
 import { decodeFirstSync } from "cbor";
 import { BaseContract, ethers } from "ethers";
@@ -490,6 +492,22 @@ export function isFeatureEnabled(
 ): boolean {
   const features = detectFeatures(abi);
   return _featureEnabled(features, featureName);
+}
+
+/**
+ * Checks whether the given DetectableFeature is defined
+ * @internal
+ * @param namespace The namespace to check
+ * @param feature The corresponding feature
+ */
+export function assertEnabled<T extends DetectableFeature>(
+  namespace: T | undefined,
+  feature: Feature,
+) {
+  if (!namespace) {
+    throw new ExtensionNotImplementedError(feature);
+  }
+  return namespace as T;
 }
 
 /**
