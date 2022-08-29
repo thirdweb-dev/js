@@ -1,5 +1,16 @@
 # thirdweb
 
+## 0.7.0
+
+### Minor Changes
+
+- 3abe26c: initialze monorepo packages
+
+### Patch Changes
+
+- Updated dependencies [3abe26c]
+  - @thirdweb-dev/sdk@2.4.0
+
 ## 0.6.16
 
 ### Patch Changes
