@@ -121,6 +121,7 @@ export const CodeSelector: React.FC = () => {
           py={4}
           code={codeSnippets[activeLanguage]}
           language={activeLanguage === "react" ? "jsx" : activeLanguage}
+          backgroundColor="#0d0e10"
         />
       </Card>
 

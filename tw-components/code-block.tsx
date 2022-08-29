@@ -38,6 +38,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   borderRadius = "md",
   borderColor = "borderColor",
   borderWidth = "1px",
+  backgroundColor,
   prefix,
   canCopy = true,
   wrap = true,
@@ -50,7 +51,13 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
       {...defaultProps}
       code={prefix ? `${prefix} ${code}` : code}
       language={language as Language}
-      theme={theme}
+      theme={{
+        ...theme,
+        plain: {
+          backgroundColor:
+            (backgroundColor as string) || theme.plain.backgroundColor,
+        },
+      }}
     >
       {({ className, style, tokens, getLineProps, getTokenProps }) => (
         <Text
