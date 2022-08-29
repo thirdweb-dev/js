@@ -1,19 +1,27 @@
 import {
+  fetchCurrencyMetadata,
+  hasERC20Allowance,
+  normalizePriceValue,
+} from "../common/currency";
+import { isTokenApprovedForTransfer } from "../common/marketplace";
+import { uploadOrExtractURI } from "../common/nft";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractRoles } from "../core/classes/contract-roles";
+import { ContractRoyalty } from "../core/classes/contract-royalty";
+import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { Erc721 } from "../core/classes/erc-721";
+import { Erc721Supply } from "../core/classes/erc-721-supply";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import {
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
 } from "../core/types";
-import { Erc721 } from "../core/classes/erc-721";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractRoles } from "../core/classes/contract-roles";
-import { ContractRoyalty } from "../core/classes/contract-royalty";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { NFTMetadataOrUri, NFTMetadataOwner, SDKOptions } from "../schema";
-import { Multiwrap as MultiwrapContract } from "@thirdweb-dev/contracts-js";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { uploadOrExtractURI } from "../common/nft";
+import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
+import { QueryAllParams } from "../types";
 import {
   ERC1155Wrappable,
   ERC20Wrappable,
@@ -21,18 +29,13 @@ import {
   TokensToWrap,
   WrappedTokens,
 } from "../types/multiwrap";
+import { Multiwrap as MultiwrapContract } from "@thirdweb-dev/contracts-js";
 import {
-  fetchCurrencyMetadata,
-  hasERC20Allowance,
-  normalizePriceValue,
-} from "../common/currency";
-import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
-import { BigNumberish, ethers } from "ethers";
-import { QueryAllParams } from "../types";
-import { isTokenApprovedForTransfer } from "../common/marketplace";
-import { Erc721Supply } from "../core/classes/erc-721-supply";
+  ITokenBundle,
+  TokensWrappedEvent,
+} from "@thirdweb-dev/contracts-js/dist/declarations/src/Multiwrap";
 import { IStorage } from "@thirdweb-dev/storage";
-import { ITokenBundle, TokensWrappedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Multiwrap";
+import { BigNumberish, ethers } from "ethers";
 
 /**
  * Multiwrap lets you wrap any number of ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token bundle.
@@ -86,8 +89,6 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
    */
   public royalties: ContractRoyalty<MultiwrapContract, typeof Multiwrap.schema>;
 
-  private _query = this.query as Erc721Supply;
-
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
@@ -120,27 +121,6 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
   /** ******************************
    * READ FUNCTIONS
    *******************************/
-
-  /**
-   * Get All Wrapped Token Bundles
-   *
-   * @remarks Get all the data associated with every token bundle in this contract.
-   *
-   * By default, returns the first 100 NFTs, use queryParams to fetch more.
-   *
-   * @example
-   * ```javascript
-   * const wrappedBundles = await contract.getAll();
-   * console.log(wrappedBundles);
-   * ```
-   * @param queryParams - optional filtering to only fetch a subset of results.
-   * @returns The NFT metadata for all NFTs queried.
-   */
-  public async getAll(
-    queryParams?: QueryAllParams,
-  ): Promise<NFTMetadataOwner[]> {
-    return this._query.all(queryParams);
-  }
 
   /**
    * Get the contents of a wrapped token bundle

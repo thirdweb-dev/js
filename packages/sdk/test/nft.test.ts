@@ -52,7 +52,7 @@ describe("NFT Contract", async () => {
   it("should let authorized minters mint with detected features", async () => {
     await nftContract.roles.grant("minter", samWallet.address);
     sdk.updateSignerOrProvider(samWallet);
-    await nftContract.mint?.to(samWallet.address, {
+    await nftContract.mintable?.to(samWallet.address, {
       name: "Test1",
     });
   });
@@ -80,14 +80,14 @@ describe("NFT Contract", async () => {
     await nftContract.mintBatch(nfts);
     const total = await nftContract.totalSupply();
     expect(total.toNumber()).to.eq(100);
-    const page1 = await nftContract.getAll({
-      count: 2,
-      start: 0,
+    const page1 = await nftContract.getAll(queryParams, {
+        count: 2,
+        start: 0,
     });
     expect(page1).to.be.an("array").length(2);
-    const page2 = await nftContract.getAll({
-      count: 2,
-      start: 20,
+    const page2 = await nftContract.getAll(queryParams, {
+        count: 2,
+        start: 20,
     });
     expect(page2).to.be.an("array").length(2);
     expect(page2[0].metadata.name).to.eq("Test20");
