@@ -1,6 +1,6 @@
-import { BigNumber, BytesLike, CallOverrides, Signer, providers } from "ethers";
 import type { CONTRACTS_MAP, KNOWN_CONTRACTS_MAP } from "../contracts/maps";
-
+import { FileOrBuffer } from "@thirdweb-dev/storage";
+import { BigNumber, BytesLike, CallOverrides, Signer, providers } from "ethers";
 
 // --- utility types extracted from from ts-toolbelt --- //
 
@@ -47,10 +47,9 @@ export type BufferOrStringWithName = {
 };
 
 type JsonLiteral = boolean | null | number | string;
-type JsonLiteralOrFileOrBuffer = JsonLiteral;
+type JsonLiteralOrFileOrBuffer = JsonLiteral | FileOrBuffer;
 export type Json = JsonLiteralOrFileOrBuffer | JsonObject | Json[];
 export type JsonObject = { [key: string]: Json };
-
 
 type TransactionResultWithMetadata<T = unknown> = {
   receipt: providers.TransactionReceipt;

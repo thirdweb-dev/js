@@ -3,3 +3,4 @@ export * from "./interfaces/IStorageUpload";
 export * from "./core/ipfs-storage";
 export * from "./core/remote-storage";
 export * from "./types/index";
+export { isBufferInstance, isFileInstance } from "./helpers/storage";

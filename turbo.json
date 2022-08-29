@@ -2,7 +2,7 @@
   "$schema": "https://turborepo.org/schema.json",
   "pipeline": {
     "build": {
-      "outputs": ["dist/**", ".next/**"],
+      "outputs": ["dist/**"],
       "dependsOn": ["^build"]
     },
     "sdk#build": {
@@ -12,6 +12,9 @@
         "$registryAddress",
         "$contractPublisherAddress"
       ]
+    },
+    "auth#build": {
+      "outputs": ["dist/**", "express/**", "next/**"]
     },
     "test": {
       "outputs": [],

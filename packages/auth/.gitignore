@@ -1,9 +1,0 @@
-/node_modules
-/dist
-/express
-/next
-/.yalc
-yalc.lock
-yarn-error.log
-.DS_Store
-package-lock.json
