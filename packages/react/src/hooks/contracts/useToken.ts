@@ -1,5 +1,4 @@
 import { useBuiltinContract } from "./useBuiltinContract";
-import { Token } from "@thirdweb-dev/sdk";
 
 /**
  * Hook for getting an instance of a `Token` contract. This contract supports ERC20 compliant tokens.
@@ -24,7 +23,8 @@ import { Token } from "@thirdweb-dev/sdk";
  * }
  * ```
  * @public
+ * @depreated use `useContract()` instead
  */
-export function useToken(contractAddress?: string): Token | undefined {
+export function useToken(contractAddress?: string) {
   return useBuiltinContract("token", contractAddress);
 }

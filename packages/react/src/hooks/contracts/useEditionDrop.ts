@@ -1,5 +1,4 @@
 import { useBuiltinContract } from "./useBuiltinContract";
-import { EditionDrop } from "@thirdweb-dev/sdk";
 
 /**
  * Hook for getting an instance of an `EditionDrop` contract. This conract is used to interface with ERC1155 compliant NFTs that can be lazily minted.
@@ -23,9 +22,8 @@ import { EditionDrop } from "@thirdweb-dev/sdk";
  * }
  * ```
  * @public
+ * @depreated use `useContract()` instead
  */
-export function useEditionDrop(
-  contractAddress?: string,
-): EditionDrop | undefined {
+export function useEditionDrop(contractAddress?: string) {
   return useBuiltinContract("edition-drop", contractAddress);
 }

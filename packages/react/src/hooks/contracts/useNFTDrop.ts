@@ -1,5 +1,4 @@
 import { useBuiltinContract } from "./useBuiltinContract";
-import { NFTDrop } from "@thirdweb-dev/sdk";
 
 /**
  * Hook for getting an instance of an `NFTDrop` contract. This contract is meant to interface with ERC721 compliant NFTs that can be lazily minted.
@@ -23,7 +22,8 @@ import { NFTDrop } from "@thirdweb-dev/sdk";
  * }
  * ```
  * @public
+ * @depreated use `useContract()` instead
  */
-export function useNFTDrop(contractAddress?: string): NFTDrop | undefined {
+export function useNFTDrop(contractAddress?: string) {
   return useBuiltinContract("nft-drop", contractAddress);
 }

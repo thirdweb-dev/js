@@ -1,5 +1,4 @@
 import { useBuiltinContract } from "./useBuiltinContract";
-import { Split } from "@thirdweb-dev/sdk";
 
 /**
  * Hook for getting an instance of a `Split` contract. This contract supports fund distribution to multiple parties.
@@ -24,7 +23,8 @@ import { Split } from "@thirdweb-dev/sdk";
  * }
  * ```
  * @public
+ * @depreated use `useContract()` instead
  */
-export function useSplit(contractAddress?: string): Split | undefined {
+export function useSplit(contractAddress?: string) {
   return useBuiltinContract("split", contractAddress);
 }
