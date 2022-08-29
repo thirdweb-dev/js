@@ -21,7 +21,7 @@ import { PropsWithChildren, useMemo } from "react";
 import invariant from "tiny-invariant";
 
 interface SharedWeb3ButtonProps extends ThemeProviderProps {
-  contractAddress: `0x${string}` | `${string}.eth`;
+  contractAddress: `0x${string}` | `${string}.eth` | string;
 
   overrides?: CallOverrides;
   // called with the result
@@ -40,9 +40,9 @@ type Web3ButtonPropsOptinalProps<TExecutableFn extends ExecutableFn> =
   | {
       functionName: string;
       params?: unknown[] | (() => Promise<unknown[]>);
-      callable?: never;
+      action?: never;
     }
-  | { functionName?: never; params?: never; callable: TExecutableFn };
+  | { functionName?: never; params?: never; action: TExecutableFn };
 
 type Web3ButtonProps<TExecutableFn extends ExecutableFn> =
   SharedWeb3ButtonProps & Web3ButtonPropsOptinalProps<TExecutableFn>;
@@ -78,7 +78,7 @@ export const Web3Button = <TExecutableFn extends ExecutableFn>({
   children,
   functionName,
   params,
-  callable,
+  action,
   ...themeProps
 }: PropsWithChildren<Web3ButtonProps<TExecutableFn>>) => {
   const address = useAddress();
@@ -112,11 +112,11 @@ export const Web3Button = <TExecutableFn extends ExecutableFn>({
       if (!contractQuery.contract) {
         throw new Error("contract not ready yet");
       }
-      if (callable) {
+      if (action) {
         if (onSubmit) {
           onSubmit();
         }
-        return await callable(contractQuery.contract);
+        return await action(contractQuery.contract);
       }
 
       const vars = typeof params === "function" ? await params() : params || [];
