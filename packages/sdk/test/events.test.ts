@@ -65,7 +65,7 @@ describe("Events", async () => {
 
   it("should emit Contract events", async () => {
     const events: ContractEvent[] = [];
-    dropContract.events.listenToAllEvents((event) => {
+    dropContract.events.addEventListener("TokensLazyMinted", (event) => {
       events.push(event);
     });
     await dropContract.createBatch([
@@ -80,6 +80,29 @@ describe("Events", async () => {
     dropContract.events.removeAllListeners();
     expect(events.length).to.be.gt(0);
     expect(events.map((e) => e.eventName)).to.include("TokensLazyMinted");
+  });
+
+  it("should emit all Contract events", async () => {
+    const events: ContractEvent[] = [];
+    dropContract.events.listenToAllEvents((event) => {
+      events.push(event);
+    });
+    await dropContract.createBatch([
+      {
+        name: "1",
+      },
+      {
+        name: "2",
+      },
+    ]);
+    await dropContract.claimConditions.set([{}]);
+    await dropContract.claim(1)
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+    dropContract.events.removeAllListeners();
+    console.log(events);
+    expect(events.length).to.be.gt(0);
+    expect(events.map((e) => e.eventName)).to.include("TokensLazyMinted");
+    expect(events.map((e) => e.eventName)).to.include("TokensClaimed");
   });
 
   // TODO
