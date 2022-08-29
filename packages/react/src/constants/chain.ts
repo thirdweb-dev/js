@@ -187,7 +187,7 @@ const chain: Record<string, Chain> = {
   },
   binanceSmartChainMainnet: {
     id: ChainId.BinanceSmartChainMainnet,
-    name: "BSC Mainnet",
+    name: "Binance Smart Chain Mainnet",
     nativeCurrency: NATIVE_TOKENS[ChainId.BinanceSmartChainMainnet],
     rpcUrls: ["https://bsc-dataseed1.binance.org"],
     blockExplorers: [
@@ -200,7 +200,7 @@ const chain: Record<string, Chain> = {
   },
   binanceSmartChainTestnet: {
     id: ChainId.BinanceSmartChainTestnet,
-    name: "BSC Testnet",
+    name: "Binance Smart Chain Testnet",
     nativeCurrency: NATIVE_TOKENS[ChainId.BinanceSmartChainTestnet],
     rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545"],
     blockExplorers: [
