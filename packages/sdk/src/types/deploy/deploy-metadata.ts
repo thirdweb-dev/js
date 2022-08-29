@@ -1,5 +1,5 @@
+import { FileBufferOrString } from "@thirdweb-dev/storage";
 import { BigNumberish } from "ethers";
-import { FileBufferOrString } from "../../schema";
 
 /**
  * Options for deploying an NFT contract

@@ -1,8 +1,8 @@
 import { PINATA_IPFS_URL, TW_IPFS_SERVER_URL } from "../constants/urls";
+import { isBufferInstance, isFileInstance } from "../helpers/storage";
 import { CidWithFileName, IStorageUpload } from "../interfaces/IStorageUpload";
 import { FileOrBuffer } from "../types";
 import { UploadProgressEvent } from "../types/events";
-import { File } from "@web-std/file";
 import FormData from "form-data";
 
 /**
@@ -37,7 +37,7 @@ export class PinataUploader implements IStorageUpload {
     signerAddress?: string,
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
-    }
+    },
   ): Promise<CidWithFileName> {
     const token = await this.getUploadToken(contractAddress || "");
 
@@ -47,7 +47,7 @@ export class PinataUploader implements IStorageUpload {
       files,
       fileStartNumber,
       contractAddress,
-      signerAddress
+      signerAddress,
     );
 
     if (typeof window === "undefined") {
@@ -123,7 +123,7 @@ export class PinataUploader implements IStorageUpload {
     files: (string | FileOrBuffer)[],
     fileStartNumber = 0,
     contractAddress?: string,
-    signerAddress?: string
+    signerAddress?: string,
   ) {
     const metadata = {
       name: `CONSOLE-TS-SDK-${contractAddress}`,
@@ -141,7 +141,7 @@ export class PinataUploader implements IStorageUpload {
       // if it is a file, we passthrough the file extensions,
       // if it is a buffer or string, the filename would be fileStartNumber + index
       // if it is a buffer or string with names, the filename would be the name
-      if (file instanceof File) {
+      if (isFileInstance(file)) {
         let extensions = "";
         if (file.name) {
           const extensionStartIndex = file.name.lastIndexOf(".");
@@ -150,10 +150,10 @@ export class PinataUploader implements IStorageUpload {
           }
         }
         fileName = `${i + fileStartNumber}${extensions}`;
-      } else if (file instanceof Buffer || typeof file === "string") {
+      } else if (isBufferInstance(file) || typeof file === "string") {
         fileName = `${i + fileStartNumber}`;
-      } else if (file && file.name && file?.data) {
-        fileData = file?.data;
+      } else if (file && file.name && (file as any)?.data) {
+        fileData = (file as any)?.data;
         fileName = `${file.name}`;
       } else {
         // default behavior
@@ -163,7 +163,7 @@ export class PinataUploader implements IStorageUpload {
       const filepath = `files/${fileName}`;
       if (fileNames.indexOf(fileName) > -1) {
         throw new Error(
-          `DUPLICATE_FILE_NAME_ERROR: File name ${fileName} was passed for more than one file.`
+          `DUPLICATE_FILE_NAME_ERROR: File name ${fileName} was passed for more than one file.`,
         );
       }
       fileNames.push(fileName);

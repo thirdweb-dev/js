@@ -1,11 +1,7 @@
-import { z } from "zod";
-import {
-  BigNumberSchema,
-  FileBufferOrStringSchema,
-  HexColor,
-  JsonSchema,
-} from "../../shared";
+import { BigNumberSchema, HexColor, JsonSchema } from "../../shared";
 import { OptionalPropertiesInput } from "./properties";
+import { FileBufferOrStringSchema } from "@thirdweb-dev/storage";
+import { z } from "zod";
 
 /**
  * @internal

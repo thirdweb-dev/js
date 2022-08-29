@@ -1,8 +1,8 @@
+import { isBufferInstance, isFileInstance } from "../helpers/storage";
 import { IStorage } from "../interfaces/IStorage";
 import { UploadResult } from "../interfaces/IStorageUpload";
 import { FileOrBuffer, JsonObject } from "../types";
 import { UploadProgressEvent } from "../types/events";
-import { File } from "@web-std/file";
 
 /**
  * Fetch and upload files to IPFS or any other storage.
@@ -70,13 +70,13 @@ export class RemoteStorage {
     data: FileOrBuffer[] | JsonObject[] | FileOrBuffer | JsonObject,
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
-    }
+    },
   ): Promise<UploadResult> {
     if (!Array.isArray(data)) {
       if (
-        data instanceof File ||
-        data instanceof Buffer ||
-        (data.name && data.data && data.data instanceof Buffer)
+        isFileInstance(data) ||
+        isBufferInstance(data) ||
+        (data.name && data.data && isBufferInstance(data.data))
       ) {
         return this.uploadBatch([data as FileOrBuffer], options);
       } else {
@@ -86,12 +86,12 @@ export class RemoteStorage {
 
     const allFiles = (data as any[]).filter(
       (item: any) =>
-        item instanceof File ||
-        item instanceof Buffer ||
-        (item.name && item.data && item.data instanceof Buffer)
+        isFileInstance(item) ||
+        isBufferInstance(item) ||
+        (item.name && item.data && isBufferInstance(item.data)),
     );
     const allObjects = (data as any[]).filter(
-      (item: any) => !(item instanceof File) && !(item instanceof Buffer)
+      (item: any) => !isFileInstance(item) && !isBufferInstance(item),
     );
     if (allFiles.length === data.length) {
       return this.uploadBatch(data as FileOrBuffer[], options);
@@ -99,7 +99,7 @@ export class RemoteStorage {
       return this.uploadMetadataBatch(data as JsonObject[], options);
     } else {
       throw new Error(
-        "Data to upload must be either all files or all JSON objects"
+        "Data to upload must be either all files or all JSON objects",
       );
     }
   }
@@ -108,14 +108,14 @@ export class RemoteStorage {
     files: FileOrBuffer[],
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
-    }
+    },
   ): Promise<UploadResult> {
     return await this.storage.uploadBatch(
       files,
       undefined,
       undefined,
       undefined,
-      options
+      options,
     );
   }
 
@@ -123,14 +123,14 @@ export class RemoteStorage {
     metadatas: JsonObject[],
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
-    }
+    },
   ): Promise<UploadResult> {
     return await this.storage.uploadMetadataBatch(
       metadatas,
       undefined,
       undefined,
       undefined,
-      options
+      options,
     );
   }
 }
