@@ -96,6 +96,9 @@ const chainIdToCurrencyMap: Record<
 
   [ChainId.Polygon]: "polygon",
   [ChainId.Mumbai]: "polygon",
+
+  [ChainId.BinanceSmartChainMainnet]: "binance",
+  [ChainId.BinanceSmartChainTestnet]: "binance",
 };
 
 /**
