@@ -1,5 +1,5 @@
-import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
 import { NativeToken } from "../types/currency";
+import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
 
 /**
  * @public
@@ -152,6 +152,26 @@ export const NATIVE_TOKENS: Record<
       address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
       name: "Wrapped Ether",
       symbol: "WETH",
+    },
+  },
+  [ChainId.BinanceSmartChainMainnet]: {
+    name: "Binance Chain Native Token",
+    symbol: "BNB",
+    decimals: 18,
+    wrapped: {
+      address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      name: "Wrapped Binance Chain Token",
+      symbol: "WBNB",
+    },
+  },
+  [ChainId.BinanceSmartChainTestnet]: {
+    name: "Binance Chain Native Token",
+    symbol: "TBNB",
+    decimals: 18,
+    wrapped: {
+      address: "0x094616F0BdFB0b526bD735Bf66Eca0Ad254ca81F",
+      name: "Wrapped Binance Chain Testnet Token",
+      symbol: "WBNB",
     },
   },
 };

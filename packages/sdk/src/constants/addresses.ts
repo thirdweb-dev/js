@@ -1,5 +1,5 @@
-import { constants } from "ethers";
 import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
+import { constants } from "ethers";
 
 /**
  * @internal
@@ -100,6 +100,18 @@ export const CONTRACT_ADDRESSES: Record<
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
     twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
     twBYOCRegistry: constants.AddressZero,
+  },
+  [ChainId.BinanceSmartChainMainnet]: {
+    biconomyForwarder: constants.AddressZero,
+    twBYOCRegistry: constants.AddressZero,
+    twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
+    twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
+  },
+  [ChainId.BinanceSmartChainTestnet]: {
+    biconomyForwarder: constants.AddressZero,
+    twBYOCRegistry: constants.AddressZero,
+    twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
+    twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
   },
 };
 
