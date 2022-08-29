@@ -1,6 +1,6 @@
 ---
-"@thirdweb-dev/react": minor
-"@thirdweb-dev/sdk": minor
+"@thirdweb-dev/react": patch
+"@thirdweb-dev/sdk": patch
 ---
 
 Add support for Binance chains (BSC)
