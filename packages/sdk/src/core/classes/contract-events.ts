@@ -66,7 +66,7 @@ export class ContractEvents<TContract extends BaseContract> {
    */
   public addEventListener(
     eventName: keyof TContract["filters"] | (string & {}),
-    listener: (event: Record<string, any>) => void,
+    listener: (event: ContractEvent) => void,
   ) {
     // validates event, throws error if not found
     const event = this.contractWrapper.readContract.interface.getEvent(
@@ -74,7 +74,7 @@ export class ContractEvents<TContract extends BaseContract> {
     );
 
     const address = this.contractWrapper.readContract.address;
-    const filter = { address, topics: [event.name] };
+    const filter = { address, topics: [this.contractWrapper.readContract.interface.getEventTopic(event)] };
 
     const wrappedListener = (log: providers.Log) => {
       const parsedLog =

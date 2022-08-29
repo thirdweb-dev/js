@@ -28,9 +28,10 @@
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
-    "version-packages": "changeset version",
+    "bump-version": "changeset version",
     "release": "turbo run build && changeset publish",
-    "postinstall": "yarn-deduplicate yarn.lock"
+    "postinstall": "yarn-deduplicate yarn.lock",
+    "dev-version": "yarn changeset pre enter dev && yarn bump-version"
   },
   "preconstruct": {
     "packages": [
