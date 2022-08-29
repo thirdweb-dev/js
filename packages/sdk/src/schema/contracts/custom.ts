@@ -1,5 +1,4 @@
 import { toSemver } from "../../common/index";
-import { ChainId, CONTRACT_ADDRESSES } from "../../constants/index";
 import { AddressSchema, BigNumberishSchema, JsonSchema } from "../shared";
 import {
   CommonContractOutputSchema,
@@ -114,32 +113,16 @@ export const ChainIdToAddressSchema = z.record(z.string(), z.string());
 /**
  * @internal
  */
-// TODO should have an input and ouput version of this schema
 export const FactoryDeploymentSchema = z.object({
   implementationAddresses: ChainIdToAddressSchema,
-  implementationInitializerFunction: z.string().default("initialize"),
-  factoryAddresses: ChainIdToAddressSchema.default({
-    [ChainId.Mainnet]: CONTRACT_ADDRESSES[ChainId.Mainnet].twFactory,
-    [ChainId.Goerli]: CONTRACT_ADDRESSES[ChainId.Goerli].twFactory,
-    [ChainId.Rinkeby]: CONTRACT_ADDRESSES[ChainId.Rinkeby].twFactory,
-    [ChainId.Polygon]: CONTRACT_ADDRESSES[ChainId.Polygon].twFactory,
-    [ChainId.Mumbai]: CONTRACT_ADDRESSES[ChainId.Mumbai].twFactory,
-    [ChainId.Fantom]: CONTRACT_ADDRESSES[ChainId.Fantom].twFactory,
-    [ChainId.FantomTestnet]:
-      CONTRACT_ADDRESSES[ChainId.FantomTestnet].twFactory,
-    [ChainId.Optimism]: CONTRACT_ADDRESSES[ChainId.Optimism].twFactory,
-    [ChainId.OptimismTestnet]:
-      CONTRACT_ADDRESSES[ChainId.OptimismTestnet].twFactory,
-    [ChainId.Arbitrum]: CONTRACT_ADDRESSES[ChainId.Arbitrum].twFactory,
-    [ChainId.ArbitrumTestnet]:
-      CONTRACT_ADDRESSES[ChainId.ArbitrumTestnet].twFactory,
-  }),
+  implementationInitializerFunction: z.string(),
+  factoryAddresses: ChainIdToAddressSchema,
 });
 
 /**
  * @internal
  */
-export const ExtraPublishMetadataSchema = z
+export const ExtraPublishMetadataSchemaInput = z
   .object({
     version: z.string().refine(
       (v) => {
@@ -165,20 +148,41 @@ export const ExtraPublishMetadataSchema = z
     audit: FileBufferOrStringSchema.nullable().optional(),
     logo: FileBufferOrStringSchema.nullable().optional(),
     isDeployableViaFactory: z.boolean().optional(),
-    factoryDeploymentData: FactoryDeploymentSchema.partial().optional(),
+    factoryDeploymentData: FactoryDeploymentSchema.optional(),
   })
   .catchall(z.any());
-export type ExtraPublishMetadata = z.infer<typeof ExtraPublishMetadataSchema>;
 
 /**
  * @internal
  */
-export const FullPublishMetadataSchema = PreDeployMetadata.merge(
-  ExtraPublishMetadataSchema,
+export const ExtraPublishMetadataSchemaOutput =
+  ExtraPublishMetadataSchemaInput.extend({
+    audit: z.string().nullable().optional(),
+    logo: z.string().nullable().optional(),
+  });
+export type ExtraPublishMetadata = z.input<
+  typeof ExtraPublishMetadataSchemaInput
+>;
+
+/**
+ * @internal
+ */
+export const FullPublishMetadataSchemaInput = PreDeployMetadata.merge(
+  ExtraPublishMetadataSchemaInput,
 ).extend({
   publisher: AddressSchema.optional(),
 });
-export type FullPublishMetadata = z.infer<typeof FullPublishMetadataSchema>;
+/**
+ * @internal
+ */
+export const FullPublishMetadataSchemaOutput = PreDeployMetadata.merge(
+  ExtraPublishMetadataSchemaOutput,
+).extend({
+  publisher: AddressSchema.optional(),
+});
+export type FullPublishMetadata = z.infer<
+  typeof FullPublishMetadataSchemaOutput
+>;
 
 /**
  * @internal
