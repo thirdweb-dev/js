@@ -169,7 +169,7 @@ export const NATIVE_TOKENS: Record<
     symbol: "TBNB",
     decimals: 18,
     wrapped: {
-      address: "0x094616F0BdFB0b526bD735Bf66Eca0Ad254ca81F",
+      address: "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd",
       name: "Wrapped Binance Chain Testnet Token",
       symbol: "WBNB",
     },
