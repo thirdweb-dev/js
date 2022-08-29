@@ -15,7 +15,7 @@ describe("IPFS Uploads", async () => {
 
   async function getFile(upload: string): Promise<Response> {
     const response = await fetch(
-      `${ipfsGatewayUrl}${upload.replace("ipfs://", "")}`
+      `${ipfsGatewayUrl}${upload.replace("ipfs://", "")}`,
     )
       .then(async (res) => {
         return res;
@@ -69,7 +69,7 @@ describe("IPFS Uploads", async () => {
     it("should upload null metadata", async () => {
       try {
         const metadata = JSON.parse(
-          readFileSync("test/files/metadata.json", "utf8")
+          readFileSync("test/files/metadata.json", "utf8"),
         );
         const upload = await storage.uploadMetadataBatch([metadata]);
         assert.isTrue(upload.uris.length > 0);
@@ -85,7 +85,7 @@ describe("IPFS Uploads", async () => {
       const otherStorage = new IpfsStorage(PUBLIC_GATEWAYS[1]);
       const downloaded = await otherStorage.get(upload);
       expect(downloaded.svg).to.eq(
-        `${PUBLIC_GATEWAYS[1]}QmZsU8nTTexTxPzCKZKqo3Ntf5cUiWMRahoLmtpimeaCiT/backgrounds/SVG/Asset%20501.svg`
+        `${PUBLIC_GATEWAYS[1]}QmZsU8nTTexTxPzCKZKqo3Ntf5cUiWMRahoLmtpimeaCiT/backgrounds/SVG/Asset%20501.svg`,
       );
     });
 
@@ -104,7 +104,7 @@ describe("IPFS Uploads", async () => {
           onProgress: () => {
             updates += 1;
           },
-        }
+        },
       );
 
       expect(updates).to.be.greaterThan(0);
@@ -139,7 +139,7 @@ describe("IPFS Uploads", async () => {
       });
       assert.equal(
         upload,
-        "ipfs://QmYKJLPfwKduSfWgdLLt49SE6LvzkGzxeYMCkhXWbpJam7/0"
+        "ipfs://QmYKJLPfwKduSfWgdLLt49SE6LvzkGzxeYMCkhXWbpJam7/0",
       );
     });
 
@@ -149,7 +149,7 @@ describe("IPFS Uploads", async () => {
       });
       assert.equal(
         upload,
-        "ipfs://QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0"
+        "ipfs://QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0",
       );
     });
 
@@ -159,12 +159,12 @@ describe("IPFS Uploads", async () => {
       });
       assert.equal(
         upload,
-        "ipfs://QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0"
+        "ipfs://QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0",
       );
       const meta = await storage.get(upload);
       assert.equal(
         meta.animation_url,
-        `${ipfsGatewayUrl}QmUphf8LnNGdFwBevnxNkq8dxcZ4qxzzPjoNMDkSQfECKM/0`
+        `${ipfsGatewayUrl}QmUphf8LnNGdFwBevnxNkq8dxcZ4qxzzPjoNMDkSQfECKM/0`,
       );
     });
 
@@ -183,7 +183,7 @@ describe("IPFS Uploads", async () => {
           },
         ];
       const serialized = sampleObjects.map((o) =>
-        Buffer.from(JSON.stringify(o))
+        Buffer.from(JSON.stringify(o)),
       );
       const { baseUri: cid } = await storage.uploadBatch(serialized);
       for (const object of sampleObjects) {
@@ -210,7 +210,7 @@ describe("IPFS Uploads", async () => {
         (await getFile(`${cid}test.jpeg`)).headers
           ?.get("content-type")
           ?.toString() === "image/jpeg",
-        `${cid}`
+        `${cid}`,
       );
     });
 
@@ -223,7 +223,7 @@ describe("IPFS Uploads", async () => {
       assert(
         (await getFile(`${cid}2`)).headers?.get("content-type")?.toString() ===
           "image/jpeg",
-        `${cid}`
+        `${cid}`,
       );
     });
     it("should upload files according to start file number as 0", async () => {
@@ -235,7 +235,7 @@ describe("IPFS Uploads", async () => {
       assert(
         (await getFile(`${cid}0`)).headers?.get("content-type")?.toString() ===
           "image/jpeg",
-        `${cid}`
+        `${cid}`,
       );
     });
     it("should upload properties recursively in batch", async () => {
@@ -263,26 +263,26 @@ describe("IPFS Uploads", async () => {
         },
       ];
       const { baseUri, uris } = await storage.uploadMetadataBatch(
-        sampleObjects
+        sampleObjects,
       );
       assert(baseUri.startsWith("ipfs://") && baseUri.endsWith("/"));
       assert(uris.length === sampleObjects.length);
       const [metadata1, metadata2, metadata3] = await Promise.all(
         (
           await Promise.all(uris.map((m) => getFile(m)))
-        ).map((m: any) => m.json())
+        ).map((m: any) => m.json()),
       );
       assert(
         metadata1.image ===
-          "ipfs://QmTpv5cWy677mgABsgJgwZ6pe2bEpSWQTvcCb8Hmj3ac8E/0"
+          "ipfs://QmTpv5cWy677mgABsgJgwZ6pe2bEpSWQTvcCb8Hmj3ac8E/0",
       );
       assert(
         metadata2.image ===
-          "ipfs://QmTpv5cWy677mgABsgJgwZ6pe2bEpSWQTvcCb8Hmj3ac8E/1"
+          "ipfs://QmTpv5cWy677mgABsgJgwZ6pe2bEpSWQTvcCb8Hmj3ac8E/1",
       );
       assert(
         metadata3.image ===
-          "ipfs://QmTpv5cWy677mgABsgJgwZ6pe2bEpSWQTvcCb8Hmj3ac8E/3"
+          "ipfs://QmTpv5cWy677mgABsgJgwZ6pe2bEpSWQTvcCb8Hmj3ac8E/3",
       );
     });
 
@@ -296,12 +296,12 @@ describe("IPFS Uploads", async () => {
         sampleObjects.push(nft);
       }
       const { baseUri, uris } = await storage.uploadMetadataBatch(
-        sampleObjects
+        sampleObjects,
       );
       assert(baseUri.startsWith("ipfs://") && baseUri.endsWith("/"));
       assert(uris.length === sampleObjects.length);
       const metadatas = await Promise.all(
-        uris.map(async (m) => await storage.get(m))
+        uris.map(async (m) => await storage.get(m)),
       );
       for (let i = 0; i < metadatas.length; i++) {
         const expected = sampleObjects[i];
@@ -327,7 +327,7 @@ describe("IPFS Uploads", async () => {
         (await getFile(`${cid}TEST`)).headers
           ?.get("content-type")
           ?.toString() === "image/jpeg",
-        `${cid}`
+        `${cid}`,
       );
     });
 

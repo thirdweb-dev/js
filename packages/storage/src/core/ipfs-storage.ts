@@ -4,6 +4,8 @@ import {
   PUBLIC_GATEWAYS,
 } from "../constants/urls";
 import {
+  isBufferInstance,
+  isFileInstance,
   replaceFilePropertiesWithHashes,
   replaceGatewayUrlWithHash,
   replaceHashWithGatewayUrl,
@@ -14,7 +16,6 @@ import { IStorageUpload, UploadResult } from "../interfaces/IStorageUpload";
 import { FileOrBuffer, JsonObject } from "../types";
 import { UploadProgressEvent } from "../types/events";
 import { PinataUploader } from "../uploaders/pinata-uploader";
-import { File } from "@web-std/file";
 import fetch from "cross-fetch";
 import FormData from "form-data";
 
@@ -34,7 +35,7 @@ export class IpfsStorage implements IStorage {
 
   constructor(
     gatewayUrl: string = DEFAULT_IPFS_GATEWAY,
-    uploader: IStorageUpload = new PinataUploader()
+    uploader: IStorageUpload = new PinataUploader(),
   ) {
     this.gatewayUrl = `${gatewayUrl.replace(/\/$/, "")}/`;
     this.uploader = uploader;
@@ -42,7 +43,7 @@ export class IpfsStorage implements IStorage {
 
   private getNextPublicGateway() {
     const urlsToTry = PUBLIC_GATEWAYS.filter(
-      (url) => !this.failedUrls.includes(url)
+      (url) => !this.failedUrls.includes(url),
     ).filter((url) => url !== this.gatewayUrl);
     if (urlsToTry.length > 0) {
       return urlsToTry[0];
@@ -69,14 +70,14 @@ export class IpfsStorage implements IStorage {
     signerAddress?: string,
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
-    }
+    },
   ): Promise<string> {
     const { cid, fileNames } = await this.uploader.uploadBatchWithCid(
       [data],
       0,
       contractAddress,
       signerAddress,
-      options
+      options,
     );
 
     const baseUri = `ipfs://${cid}/`;
@@ -93,14 +94,14 @@ export class IpfsStorage implements IStorage {
     signerAddress?: string,
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
-    }
+    },
   ) {
     const { cid, fileNames } = await this.uploader.uploadBatchWithCid(
       files,
       fileStartNumber,
       contractAddress,
       signerAddress,
-      options
+      options,
     );
 
     const baseUri = `ipfs://${cid}/`;
@@ -137,7 +138,7 @@ export class IpfsStorage implements IStorage {
     signerAddress?: string,
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
-    }
+    },
   ): Promise<string> {
     // since there's only single object, always use the first index
     const { uris } = await this.uploadMetadataBatch(
@@ -145,7 +146,7 @@ export class IpfsStorage implements IStorage {
       0,
       contractAddress,
       signerAddress,
-      options
+      options,
     );
     return uris[0];
   }
@@ -160,7 +161,7 @@ export class IpfsStorage implements IStorage {
     signerAddress?: string,
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
-    }
+    },
   ): Promise<UploadResult> {
     const metadataToUpload = (
       await this.batchUploadProperties(metadatas, options)
@@ -170,7 +171,7 @@ export class IpfsStorage implements IStorage {
       metadataToUpload,
       fileStartNumber,
       contractAddress,
-      signerAddress
+      signerAddress,
     );
 
     const baseUri = `ipfs://${cid}/`;
@@ -224,17 +225,17 @@ export class IpfsStorage implements IStorage {
     metadatas: JsonObject[],
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
-    }
+    },
   ) {
     // replace all active gateway url links with their raw ipfs hash
     const sanitizedMetadatas = replaceGatewayUrlWithHash(
       metadatas,
       "ipfs://",
-      this.gatewayUrl
+      this.gatewayUrl,
     );
     // extract any binary file to upload
     const filesToUpload = sanitizedMetadatas.flatMap((m: JsonObject) =>
-      this.buildFilePropertiesMap(m, [])
+      this.buildFilePropertiesMap(m, []),
     );
     // if no binary files to upload, return the metadata
     if (filesToUpload.length === 0) {
@@ -246,7 +247,7 @@ export class IpfsStorage implements IStorage {
       undefined,
       undefined,
       undefined,
-      options
+      options,
     );
 
     const cids = [];
@@ -269,7 +270,7 @@ export class IpfsStorage implements IStorage {
    */
   private buildFilePropertiesMap(
     object: JsonObject,
-    files: (File | Buffer)[] = []
+    files: (File | Buffer)[] = [],
   ): (File | Buffer)[] {
     if (Array.isArray(object)) {
       object.forEach((element) => {
@@ -278,7 +279,7 @@ export class IpfsStorage implements IStorage {
     } else if (object) {
       const values = Object.values(object);
       for (const val of values) {
-        if (val instanceof File || val instanceof Buffer) {
+        if (isFileInstance(val) || isBufferInstance(val)) {
           files.push(val);
         } else if (typeof val === "object") {
           this.buildFilePropertiesMap(val as JsonObject, files);
@@ -298,11 +299,11 @@ export class IpfsStorage implements IStorage {
   public async uploadSingle(
     data: string | Record<string, any>,
     contractAddress?: string,
-    signerAddress?: string
+    signerAddress?: string,
   ): Promise<string> {
     // TODO move down to IStorageUpload
     const token = await (this.uploader as PinataUploader).getUploadToken(
-      contractAddress || ""
+      contractAddress || "",
     );
     const metadata = {
       name: `CONSOLE-TS-SDK-${contractAddress}`,
@@ -320,7 +321,7 @@ export class IpfsStorage implements IStorage {
       "pinataOptions",
       JSON.stringify({
         wrapWithDirectory: false,
-      })
+      }),
     );
     const res = await fetch(PINATA_IPFS_URL, {
       method: "POST",

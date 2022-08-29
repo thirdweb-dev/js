@@ -1,8 +1,13 @@
-import { FileOrBuffer, JsonObject } from "../../src/core/types";
-import { v4 as uuidv4 } from "uuid";
 import { NotFoundError } from "../../src";
-import { File } from "@web-std/file";
-import { IStorage, UploadResult } from "@thirdweb-dev/storage";
+import { JsonObject } from "../../src/core/types";
+import {
+  FileOrBuffer,
+  isBufferInstance,
+  isFileInstance,
+  IStorage,
+  UploadResult,
+} from "@thirdweb-dev/storage";
+import { v4 as uuidv4 } from "uuid";
 
 export class MockStorage implements IStorage {
   private objects: { [key: string]: any } = {};
@@ -16,9 +21,9 @@ export class MockStorage implements IStorage {
     const uuid = uuidv4();
     let serializedData = "";
 
-    if (data instanceof File) {
+    if (isFileInstance(data)) {
       serializedData = await data.text();
-    } else if (data instanceof Buffer) {
+    } else if (isBufferInstance(data)) {
       serializedData = data.toString();
     } else if (typeof data === "string") {
       serializedData = data;
@@ -42,15 +47,16 @@ export class MockStorage implements IStorage {
     let index = fileStartNumber ? fileStartNumber : 0;
     for (const file of files) {
       let contents: string;
-      if (file instanceof File) {
+      if (isFileInstance(file)) {
         contents = await file.text();
-      } else if (file instanceof Buffer) {
+      } else if (isBufferInstance(file)) {
         contents = file.toString();
       } else if (typeof file === "string") {
         contents = file;
       } else {
-        contents =
-          file.data instanceof Buffer ? file.data.toString() : file.data;
+        contents = isBufferInstance(file.data)
+          ? file.data.toString()
+          : file.data;
         const name = file.name ? file.name : `file_${index}`;
         this.folders.cid[name] = contents;
         continue;
@@ -142,7 +148,7 @@ export class MockStorage implements IStorage {
     const keys = Object.keys(object).sort();
     for (const key in keys) {
       const val = object[keys[key]];
-      const shouldUpload = val instanceof File || val instanceof Buffer;
+      const shouldUpload = isFileInstance(val) || isBufferInstance(val);
       if (shouldUpload) {
         object[keys[key]] = await this.upload(val);
       }

@@ -1,3 +1,6 @@
+import { toSemver } from "../../common/index";
+import { ChainId, CONTRACT_ADDRESSES } from "../../constants/index";
+import { AddressSchema, BigNumberishSchema, JsonSchema } from "../shared";
 import {
   CommonContractOutputSchema,
   CommonContractSchema,
@@ -8,16 +11,9 @@ import {
   CommonTrustedForwarderSchema,
   MerkleSchema,
 } from "./common";
-import { z } from "zod";
-import {
-  AddressSchema,
-  BigNumberishSchema,
-  FileBufferOrStringSchema,
-  JsonSchema,
-} from "../shared";
+import { FileBufferOrStringSchema } from "@thirdweb-dev/storage";
 import { BigNumberish } from "ethers";
-import { toSemver } from "../../common/index";
-import { ChainId, CONTRACT_ADDRESSES } from "../../constants/index";
+import { z } from "zod";
 
 /**
  * @internal

@@ -1,23 +1,8 @@
-import { isBrowser } from "../common/utils";
 import { Json } from "../core/types";
-import { File } from "@web-std/file";
 import { BigNumber, CallOverrides, utils } from "ethers";
 import { z } from "zod";
 
 export const MAX_BPS = 10_000;
-
-const fileOrBufferUnion = isBrowser()
-  ? ([z.instanceof(File), z.string()] as [
-      z.ZodType<InstanceType<typeof File>>,
-      z.ZodString,
-    ])
-  : ([z.instanceof(Buffer), z.string()] as [
-      z.ZodTypeAny, // @fixme, this is a hack to make browser happy for now
-      z.ZodString,
-    ]);
-
-export const FileBufferOrStringSchema = z.union(fileOrBufferUnion);
-export type FileBufferOrString = z.output<typeof FileBufferOrStringSchema>;
 
 export const BytesLikeSchema = z.union([z.array(z.number()), z.string()]);
 
