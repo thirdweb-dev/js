@@ -28,7 +28,7 @@ jobs:
         run: yarn
 
       - name: Create Release Pull Request or Publish to npm
-        run: yarn release:nightly
+        run: yarn ci:release:nightly
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

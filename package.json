@@ -30,7 +30,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
     "release": "turbo run build && changeset publish",
-    "release:nightly": "turbo run build && ./release-nightly.sh"
+    "ci:release:nightly": "turbo run build && yarn changeset version --snapshot nightly && yarn changeset publish --tag nightly --no-git-tag"
   },
   "preconstruct": {
     "packages": [
