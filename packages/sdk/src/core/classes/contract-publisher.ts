@@ -1,9 +1,3 @@
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
-import { SDKOptions } from "../../schema/sdk-options";
-import { IStorage } from "@thirdweb-dev/storage";
-import { RPCConnectionHandler } from "./rpc-connection-handler";
-import { constants, utils } from "ethers";
-import invariant from "tiny-invariant";
 import {
   extractConstructorParams,
   extractFunctions,
@@ -13,13 +7,15 @@ import {
   fetchRawPredeployMetadata,
   fetchSourceFilesFromMetadata,
 } from "../../common/feature-detection";
+import { isIncrementalVersion } from "../../common/version-checker";
+import { getContractPublisherAddress } from "../../constants";
 import {
   AbiFunction,
   ContractParam,
   ContractSource,
   ExtraPublishMetadata,
   FullPublishMetadata,
-  FullPublishMetadataSchema,
+  FullPublishMetadataSchemaInput,
   PreDeployMetadataFetched,
   ProfileMetadata,
   ProfileMetadataInput,
@@ -28,15 +24,19 @@ import {
   PublishedContractFetched,
   PublishedContractSchema,
 } from "../../schema/contracts/custom";
+import { SDKOptions } from "../../schema/sdk-options";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { RPCConnectionHandler } from "./rpc-connection-handler";
 import {
   ContractPublisher as OnChainContractPublisher,
   IContractPublisher,
 } from "@thirdweb-dev/contracts-js";
-import { getContractPublisherAddress } from "../../constants";
 import ContractPublisherAbi from "@thirdweb-dev/contracts-js/abis/ContractPublisher.json";
-import { isIncrementalVersion } from "../../common/version-checker";
 import { ContractPublishedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ContractPublisher";
+import { IStorage } from "@thirdweb-dev/storage";
+import { constants, utils } from "ethers";
+import invariant from "tiny-invariant";
 
 /**
  * Handles publishing contracts (EXPERIMENTAL)
@@ -331,7 +331,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     const bytecodeHash = utils.solidityKeccak256(["bytes"], [bytecode]);
     const contractId = predeployMetadata.name;
 
-    const fullMetadata = FullPublishMetadataSchema.parse({
+    const fullMetadata = FullPublishMetadataSchemaInput.parse({
       ...extraMetadata,
       ...predeployMetadata,
       publisher,

@@ -1,6 +1,10 @@
-import { BaseContract, ethers } from "ethers";
+import {
+  Feature,
+  FeatureName,
+  FeatureWithEnabled,
+  SUPPORTED_FEATURES,
+} from "../constants/contract-features";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { IStorage } from "@thirdweb-dev/storage";
 import {
   AbiEvent,
   AbiFunction,
@@ -9,21 +13,17 @@ import {
   ContractInfoSchema,
   ContractSource,
   FullPublishMetadata,
-  FullPublishMetadataSchema,
+  FullPublishMetadataSchemaOutput,
   PreDeployMetadata,
   PreDeployMetadataFetched,
   PreDeployMetadataFetchedSchema,
   PublishedMetadata,
 } from "../schema/contracts/custom";
-import { z } from "zod";
-import {
-  Feature,
-  FeatureName,
-  FeatureWithEnabled,
-  SUPPORTED_FEATURES,
-} from "../constants/contract-features";
+import { IStorage } from "@thirdweb-dev/storage";
 import { decodeFirstSync } from "cbor";
+import { BaseContract, ethers } from "ethers";
 import { toB58String } from "multihashes";
+import { z } from "zod";
 
 /**
  * @internal
@@ -450,7 +450,7 @@ export async function fetchExtendedReleaseMetadata(
   storage: IStorage,
 ): Promise<FullPublishMetadata> {
   const meta = await storage.getRaw(publishMetadataUri);
-  return FullPublishMetadataSchema.parse(JSON.parse(meta));
+  return FullPublishMetadataSchemaOutput.parse(JSON.parse(meta));
 }
 
 /**
