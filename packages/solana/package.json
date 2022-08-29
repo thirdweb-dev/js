@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/solana",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "thirdweb Solana SDK",
   "main": "dist/thirdweb-dev-solana.cjs.js",
   "repository": "git@github.com:thirdweb-dev/solana.git",

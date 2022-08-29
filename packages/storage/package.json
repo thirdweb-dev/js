@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/storage",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "dist/thirdweb-dev-storage.cjs.js",
   "module": "dist/thirdweb-dev-storage.esm.js",
   "repository": {
