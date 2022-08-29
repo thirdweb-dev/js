@@ -29,7 +29,8 @@
     "changeset": "changeset",
     "bump-version": "changeset version",
     "release": "turbo run build && changeset publish",
-    "postinstall": "yarn-deduplicate yarn.lock"
+    "postinstall": "yarn-deduplicate yarn.lock",
+    "dev-version": "yarn changeset pre enter dev && yarn bump-version"
   },
   "preconstruct": {
     "packages": [

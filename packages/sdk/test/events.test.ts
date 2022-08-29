@@ -1,8 +1,7 @@
 import { ethers, Wallet } from "ethers";
 import { sdk, signers } from "./before-setup";
-import { EventType } from "../src/constants/events";
 import { expect } from "chai";
-import { ContractEvent, NFTDrop, ThirdwebSDK, NFTCollection } from "../src";
+import { ContractEvent, NFTDrop, NFTCollection } from "../src";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
@@ -10,6 +9,7 @@ global.fetch = require("cross-fetch");
 
 describe("Events", async () => {
   let dropContract: NFTDrop;
+  let dropContract2: NFTDrop;
   let nftContract: NFTCollection;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -32,6 +32,20 @@ describe("Events", async () => {
         platform_fee_basis_points: 10,
         platform_fee_recipient: AddressZero,
       }),
+    );
+
+    dropContract2 = sdk.getNFTDrop(
+        await sdk.deployer.deployBuiltInContract(NFTDrop.contractType, {
+          name: `Testing drop from SDK`,
+          description: "Test contract from tests",
+          image:
+              "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+          primary_sale_recipient: AddressZero,
+          seller_fee_basis_points: 500,
+          fee_recipient: AddressZero,
+          platform_fee_basis_points: 10,
+          platform_fee_recipient: AddressZero,
+        }),
     );
 
     nftContract = sdk.getNFTCollection(
@@ -65,7 +79,7 @@ describe("Events", async () => {
 
   it("should emit Contract events", async () => {
     const events: ContractEvent[] = [];
-    dropContract.events.addEventListener("TokensLazyMinted", (event) => {
+    const remove = dropContract.events.addEventListener("TokensLazyMinted", (event) => {
       events.push(event);
     });
     await dropContract.createBatch([
@@ -77,17 +91,17 @@ describe("Events", async () => {
       },
     ]);
     await new Promise((resolve) => setTimeout(resolve, 5000));
-    dropContract.events.removeAllListeners();
+    remove();
     expect(events.length).to.be.gt(0);
     expect(events.map((e) => e.eventName)).to.include("TokensLazyMinted");
   });
 
   it("should emit all Contract events", async () => {
     const events: ContractEvent[] = [];
-    dropContract.events.listenToAllEvents((event) => {
+    const remove = dropContract2.events.listenToAllEvents((event) => {
       events.push(event);
     });
-    await dropContract.createBatch([
+    await dropContract2.createBatch([
       {
         name: "1",
       },
@@ -95,11 +109,10 @@ describe("Events", async () => {
         name: "2",
       },
     ]);
-    await dropContract.claimConditions.set([{}]);
-    await dropContract.claim(1)
+    await dropContract2.claimConditions.set([{}]);
+    await dropContract2.claim(1)
     await new Promise((resolve) => setTimeout(resolve, 5000));
-    dropContract.events.removeAllListeners();
-    console.log(events);
+    remove();
     expect(events.length).to.be.gt(0);
     expect(events.map((e) => e.eventName)).to.include("TokensLazyMinted");
     expect(events.map((e) => e.eventName)).to.include("TokensClaimed");
