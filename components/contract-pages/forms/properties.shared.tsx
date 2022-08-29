@@ -137,7 +137,7 @@ export const PropertiesFormControl = <
                       placeholder="value"
                     />
                     <InputRightElement>
-                      <Tooltip label="Upload file">
+                      <Tooltip label="Upload file" shouldWrapChildren>
                         <FileInput
                           setValue={(file) => {
                             setValue(

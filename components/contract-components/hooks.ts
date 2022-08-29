@@ -220,11 +220,12 @@ export function useLatestRelease(
 
       return {
         ...latestRelease,
-        version: contractInfo.publishedMetadata.version || "",
-        name: contractInfo.publishedMetadata.name || "",
+        version: contractInfo.publishedMetadata.version,
+        name: contractInfo.publishedMetadata.name,
         description: contractInfo.publishedMetadata.description || "",
         releaser: contractInfo.publishedMetadata.publisher || "",
-        tags: contractInfo.publishedMetadata.tags || [],
+        audit: contractInfo.publishedMetadata.audit || "",
+        logo: contractInfo.publishedMetadata.logo || "",
       };
     },
     {
@@ -258,7 +259,8 @@ export async function fetchAllVersions(
       name: contractInfo.publishedMetadata.name,
       description: contractInfo.publishedMetadata.description || "",
       releaser: contractInfo.publishedMetadata.publisher || "",
-      tags: contractInfo.publishedMetadata.tags || [],
+      audit: contractInfo.publishedMetadata.audit || "",
+      logo: contractInfo.publishedMetadata.logo || "",
     });
   }
 

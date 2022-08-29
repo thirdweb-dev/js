@@ -27,9 +27,12 @@ import {
 import { StorageSingleton } from "components/app-layouts/providers";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
 import { ShareButton } from "components/share-buttom";
+import { format } from "date-fns";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
+import { BiTime } from "react-icons/bi";
+import { BsShieldCheck } from "react-icons/bs";
 import { FcCheckmark } from "react-icons/fc";
 import { IoDocumentOutline } from "react-icons/io5";
 import { SiTwitter } from "react-icons/si";
@@ -37,9 +40,11 @@ import invariant from "tiny-invariant";
 import {
   Card,
   Heading,
+  Link,
   LinkButton,
   Text,
   TrackedIconButton,
+  TrackedLink,
 } from "tw-components";
 import { shortenIfAddress } from "utils/usedapp-external";
 
@@ -48,7 +53,9 @@ export interface ExtendedReleasedContractInfo extends PublishedContract {
   description: string;
   version: string;
   releaser: string;
-  tags: string[];
+  tags?: string[];
+  logo?: string;
+  audit?: string;
 }
 
 interface ReleasedContractProps {
@@ -78,8 +85,6 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
 
   const contractFunctions = useReleasedContractFunctions(release);
   const contractEvents = useReleasedContractEvents(release);
-
-  // const { onCopy, hasCopied } = useClipboard(currentRoute);
 
   const ensQuery = ens.useQuery(release.releaser);
 
@@ -156,6 +161,15 @@ Deploy it in one click`,
     { enabled: !!contractReleaseMetadata.data?.compilerMetadata?.sources },
   );
 
+  const releasedDate = format(
+    new Date(
+      parseInt(
+        releasedContractInfo?.data?.publishedTimestamp.toString() || "0",
+      ) * 1000,
+    ),
+    "MMM dd, yyyy",
+  );
+
   return (
     <>
       <NextSeo
@@ -222,6 +236,34 @@ Deploy it in one click`,
           <Flex flexDir="column" gap={4}>
             <Heading size="title.sm">Contract details</Heading>
             <List as={Flex} flexDir="column" gap={3}>
+              {releasedContractInfo.data?.publishedTimestamp && (
+                <ListItem>
+                  <Flex gap={2} alignItems="center">
+                    <Icon as={BiTime} boxSize={5} />
+                    <Text size="label.md" lineHeight={1.2}>
+                      Released on: {releasedDate}
+                    </Text>
+                  </Flex>
+                </ListItem>
+              )}
+              {releasedContractInfo.data?.publishedMetadata?.audit && (
+                <ListItem>
+                  <Flex gap={2} alignItems="center">
+                    <Icon as={BsShieldCheck} boxSize={5} color="green" />
+                    <Text size="label.md">
+                      <Link
+                        href={releasedContractInfo.data?.publishedMetadata?.audit.replace(
+                          "ipfs://",
+                          `${StorageSingleton.gatewayUrl}/`,
+                        )}
+                        isExternal
+                      >
+                        Audited
+                      </Link>
+                    </Text>
+                  </Flex>
+                </ListItem>
+              )}
               <ListItem>
                 <Flex gap={2} alignItems="center">
                   <Icon as={IoDocumentOutline} boxSize={5} />
@@ -235,11 +277,20 @@ Deploy it in one click`,
                   </Text>
                 </Flex>
               </ListItem>
-              {(enabledExtensions || []).map((feature) => (
-                <ListItem key={feature.name}>
+              {(enabledExtensions || []).map((extension) => (
+                <ListItem key={extension.name}>
                   <Flex gap={2} alignItems="center">
                     <Icon as={FcCheckmark} boxSize={5} />
-                    <Text size="label.md">{feature.name}</Text>
+                    <Text size="label.md">
+                      <TrackedLink
+                        href={`https://portal.thirdweb.com/contracts/${extension.docLinks.contracts}`}
+                        isExternal
+                        category="extension"
+                        label={extension.name}
+                      >
+                        {extension.name}
+                      </TrackedLink>
+                    </Text>
                   </Flex>
                 </ListItem>
               ))}

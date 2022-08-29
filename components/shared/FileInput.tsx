@@ -24,6 +24,7 @@ interface IFileInputProps extends BoxProps {
   showUploadButton?: true;
   maxContainerWidth?: LayoutProps["maxW"];
   renderPreview?: (fileUrl: string) => React.ReactNode;
+  helperText?: string;
 }
 
 export const FileInput: React.FC<IFileInputProps> = ({
@@ -35,6 +36,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
   children,
   maxContainerWidth,
   renderPreview,
+  helperText,
   ...restBoxProps
 }) => {
   const onDrop = useCallback<
@@ -58,11 +60,14 @@ export const FileInput: React.FC<IFileInputProps> = ({
 
   const file: File | null = value instanceof File ? value : null;
   const fileUrl = useImageFileOrUrl(value);
-  const helperText =
-    accept &&
-    Object.keys(accept).filter((k) => k.split("/")[0] !== "image").length === 1
-      ? "image"
-      : "file";
+
+  const helperTextOrFile = helperText
+    ? helperText
+    : accept &&
+      Object.keys(accept).filter((k) => k.split("/")[0] !== "image").length ===
+        1
+    ? "image"
+    : "file";
 
   // Don't display non image file types
   const noDisplay = file && !file.type.includes("image");
@@ -112,7 +117,9 @@ export const FileInput: React.FC<IFileInputProps> = ({
           >
             <Stack align="center" color="gray.600">
               <Icon boxSize={6} as={FiUpload} />
-              <Text color="gray.500">Upload Disabled</Text>
+              <Text color="gray.500" textAlign="center">
+                Upload Disabled
+              </Text>
             </Stack>
           </Center>
         ) : (
@@ -130,27 +137,31 @@ export const FileInput: React.FC<IFileInputProps> = ({
             position="relative"
             overflow="hidden"
           >
-            {renderPreview ? (
-              renderPreview(fileUrl)
-            ) : noDisplay ? (
+            {noDisplay ? (
               <Stack align="center" color="gray.600">
                 <Icon boxSize={6} as={FiImage} />
                 <Text color="gray.600">{fileType} uploaded</Text>
               </Stack>
             ) : fileUrl ? (
-              <Image
-                top={0}
-                left={0}
-                position="absolute"
-                w="100%"
-                h="100%"
-                src={fileUrl}
-                objectFit="contain"
-              />
+              renderPreview ? (
+                renderPreview(fileUrl)
+              ) : (
+                <Image
+                  top={0}
+                  left={0}
+                  position="absolute"
+                  w="100%"
+                  h="100%"
+                  src={fileUrl}
+                  objectFit="contain"
+                />
+              )
             ) : (
               <Stack align="center" color="gray.600">
                 <Icon boxSize={6} as={FiUpload} />
-                <Text color="gray.600">Upload {helperText}</Text>
+                <Text color="gray.600" textAlign="center">
+                  Upload {helperTextOrFile}
+                </Text>
               </Stack>
             )}
             <input {...getInputProps()} />
@@ -165,6 +176,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
               onClick={open}
               colorScheme="purple"
               variant="outline"
+              isDisabled={isDisabled}
             >
               Select File
             </Button>

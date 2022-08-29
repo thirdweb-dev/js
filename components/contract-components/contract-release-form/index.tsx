@@ -8,10 +8,14 @@ import {
 import { MarkdownRenderer } from "../released-contract/markdown-renderer";
 import { ContractId } from "../types";
 import {
+  Box,
   Flex,
   FormControl,
   Icon,
+  Image,
   Input,
+  InputGroup,
+  InputRightElement,
   SimpleGrid,
   Skeleton,
   Tab,
@@ -20,6 +24,7 @@ import {
   TabPanels,
   Tabs,
   Textarea,
+  Tooltip,
 } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import {
@@ -27,19 +32,21 @@ import {
   ExtraPublishMetadata,
   SUPPORTED_CHAIN_IDS,
 } from "@thirdweb-dev/sdk";
-import { ChakraNextImage } from "components/Image";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { FeatureIconMap } from "constants/mappings";
+import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { BsCode, BsEye } from "react-icons/bs";
+import { FiTrash, FiUpload } from "react-icons/fi";
 import {
   Card,
   Checkbox,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   Heading,
   LinkButton,
@@ -64,6 +71,8 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
     setValue,
     formState: { errors, isDirty },
   } = useForm<ExtraPublishMetadata>();
+  const logoUrl = useImageFileOrUrl(watch("logo"));
+
   const router = useRouter();
   const { onSuccess, onError } = useTxNotifications(
     "Successfully released contract",
@@ -155,6 +164,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
 
   // during loading and after success we should stay in loading state
   const isLoading = publishMutation.isLoading || publishMutation.isSuccess;
+
   return (
     <Card w="100%" p={{ base: 6, md: 10 }}>
       <Flex
@@ -214,11 +224,33 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
       >
         <Flex gap={8} direction="column">
           <Flex gap={4} alignItems="center">
-            <ChakraNextImage
-              src={FeatureIconMap["custom"]}
-              boxSize={14}
-              alt=""
-            />
+            <FormControl isInvalid={!!errors.logo} w="auto">
+              <Box width={{ base: "auto", md: "90px" }}>
+                <FileInput
+                  accept={{ "image/*": [] }}
+                  value={logoUrl}
+                  setValue={(file) => setValue("logo", file)}
+                  border="1px solid"
+                  borderColor="gray.200"
+                  borderRadius="md"
+                  transition="all 200ms ease"
+                  _hover={{ shadow: "sm" }}
+                  renderPreview={(fileUrl) => (
+                    <Image
+                      w="100%"
+                      h="100%"
+                      src={fileUrl}
+                      borderRadius="full"
+                    />
+                  )}
+                  helperText="logo"
+                  isDisabled={isDisabled}
+                />
+              </Box>
+              <FormErrorMessage>
+                {errors?.logo?.message as unknown as string}
+              </FormErrorMessage>
+            </FormControl>
 
             <Flex direction="column">
               <Skeleton
@@ -298,37 +330,91 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
             />
             <FormErrorMessage>{errors?.version?.message}</FormErrorMessage>
           </FormControl>
-          <FormControl isInvalid={!!errors.changelog}>
-            <Tabs isLazy lazyBehavior="keepMounted" colorScheme="purple">
-              <TabList
-                px={0}
-                borderBottomColor="borderColor"
-                borderBottomWidth="1px"
-              >
-                <Tab gap={2}>
-                  <Icon as={BsCode} my={2} />
-                  <Heading size="label.lg">Release notes</Heading>
-                </Tab>
-                <Tab gap={2}>
-                  <Icon as={BsEye} my={2} />
-                  <Heading size="label.lg">Preview</Heading>
-                </Tab>
-              </TabList>
-              <TabPanels pt={2}>
-                <TabPanel px={0} pb={0}>
-                  <Textarea {...register("changelog")} disabled={isDisabled} />
-                  <FormErrorMessage>
-                    {errors?.changelog?.message}
-                  </FormErrorMessage>
-                </TabPanel>
-                <TabPanel px={0} pb={0}>
-                  <Card>
-                    <MarkdownRenderer markdownText={watch("changelog") || ""} />
-                  </Card>
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
+          <FormControl isInvalid={!!errors.audit}>
+            <FormLabel>Audit</FormLabel>
+            {watch("audit") instanceof File ? (
+              <InputGroup>
+                <Input isDisabled value={watch("audit")?.name} />
+                <InputRightElement>
+                  <Icon
+                    as={FiTrash}
+                    cursor="pointer"
+                    color="red.300"
+                    _hover={{ color: "red.200" }}
+                    onClick={() => setValue("audit", "")}
+                  />
+                </InputRightElement>
+              </InputGroup>
+            ) : (
+              <InputGroup>
+                <Input
+                  {...register("audit")}
+                  placeholder="ipfs://..."
+                  isDisabled={isDisabled}
+                />
+                <InputRightElement pointerEvents={isDisabled ? "none" : "auto"}>
+                  <Tooltip label="Upload file" shouldWrapChildren>
+                    <FileInput
+                      setValue={(file) => {
+                        setValue("audit", file);
+                      }}
+                      isDisabled={isDisabled}
+                    >
+                      <Icon
+                        as={FiUpload}
+                        color="gray.600"
+                        _hover={{ color: "gray.500" }}
+                      />
+                    </FileInput>
+                  </Tooltip>
+                </InputRightElement>
+              </InputGroup>
+            )}
+            <FormHelperText>
+              <Text size="body.sm">
+                You can add a IPFS hash or URL pointing to an audit report, or
+                add a file and we&apos;ll upload it to IPFS.
+              </Text>
+            </FormHelperText>
           </FormControl>
+          {latestVersion && (
+            <FormControl isInvalid={!!errors.changelog}>
+              <Tabs isLazy lazyBehavior="keepMounted" colorScheme="purple">
+                <TabList
+                  px={0}
+                  borderBottomColor="borderColor"
+                  borderBottomWidth="1px"
+                >
+                  <Tab gap={2}>
+                    <Icon as={BsCode} my={2} />
+                    <Heading size="label.lg">Release notes</Heading>
+                  </Tab>
+                  <Tab gap={2}>
+                    <Icon as={BsEye} my={2} />
+                    <Heading size="label.lg">Preview</Heading>
+                  </Tab>
+                </TabList>
+                <TabPanels pt={2}>
+                  <TabPanel px={0} pb={0}>
+                    <Textarea
+                      {...register("changelog")}
+                      disabled={isDisabled}
+                    />
+                    <FormErrorMessage>
+                      {errors?.changelog?.message}
+                    </FormErrorMessage>
+                  </TabPanel>
+                  <TabPanel px={0} pb={0}>
+                    <Card>
+                      <MarkdownRenderer
+                        markdownText={watch("changelog") || ""}
+                      />
+                    </Card>
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
+            </FormControl>
+          )}
           {showProxyDeployment && (
             <Flex alignItems="center" gap={3}>
               <Checkbox

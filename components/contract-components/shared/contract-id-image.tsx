@@ -2,13 +2,12 @@ import {
   ens,
   useContractPrePublishMetadata,
   useContractPublishMetadataFromURI,
-  useReleaserProfile,
 } from "../hooks";
-import { MaskedAvatar } from "../releaser/masked-avatar";
 import { ContractId } from "../types";
 import { Image, Skeleton } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import { ChakraNextImage, ChakraNextImageProps } from "components/Image";
+import { StorageSingleton } from "components/app-layouts/providers";
 import { FeatureIconMap } from "constants/mappings";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { StaticImageData } from "next/image";
@@ -34,11 +33,10 @@ export const ContractIdImage: React.FC<ContractIdImageProps> = ({
   );
   const publishMetadata = useContractPublishMetadataFromURI(contractId);
 
-  const publisher =
+  const logo =
     fullPublishMetadata.data?.latestPublishedContractMetadata?.publishedMetadata
-      .publisher;
+      .logo;
 
-  const releaserProfile = useReleaserProfile(publisher || undefined);
   let img = publishMetadata.data?.image;
   if (typeof img === "string" && img in FeatureIconMap) {
     img = FeatureIconMap[img as keyof typeof FeatureIconMap];
@@ -47,8 +45,12 @@ export const ContractIdImage: React.FC<ContractIdImageProps> = ({
 
   return (
     <Skeleton isLoaded={publishMetadata.isSuccess}>
-      {releaserProfile.data?.avatar ? (
-        <MaskedAvatar boxSize={boxSize} src={releaserProfile.data.avatar} />
+      {logo ? (
+        <Image
+          boxSize={boxSize}
+          src={logo.replace("ipfs://", `${StorageSingleton.gatewayUrl}/`)}
+          borderRadius="full"
+        />
       ) : isStaticImage ? (
         <ChakraNextImage
           {...imgProps}

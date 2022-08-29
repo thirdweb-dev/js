@@ -4,7 +4,7 @@ import { NFTContract } from "@thirdweb-dev/react";
 import { Erc721 } from "@thirdweb-dev/sdk";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import React from "react";
-import { FiPlus } from "react-icons/fi";
+import { RiCheckboxMultipleBlankLine } from "react-icons/ri";
 import { Button, Drawer } from "tw-components";
 
 interface BatchLazyMintButtonProps {
@@ -40,7 +40,7 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
       {detectedState === "enabled" && (
         <Button
           colorScheme="primary"
-          leftIcon={<Icon as={FiPlus} />}
+          leftIcon={<Icon as={RiCheckboxMultipleBlankLine} />}
           {...restButtonProps}
           onClick={onOpen}
         >

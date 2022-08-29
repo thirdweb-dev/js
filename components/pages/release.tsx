@@ -2,12 +2,14 @@ import {
   Divider,
   Flex,
   GridItem,
+  Image,
   Select,
   SimpleGrid,
   Skeleton,
 } from "@chakra-ui/react";
 import { REMOTE_CONTRACT_TO_CONTRACT_TYPE } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
+import { StorageSingleton } from "components/app-layouts/providers";
 import { DeployFormDrawer } from "components/contract-components/contract-deploy-form/drawer";
 import { ens, useAllVersions } from "components/contract-components/hooks";
 import { ReleasedContract } from "components/contract-components/released-contract";
@@ -63,12 +65,24 @@ export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
     <SimpleGrid columns={12} gap={{ base: 6, md: 10 }} w="full">
       <GridItem colSpan={{ base: 12, md: 8 }}>
         <Flex gap={4} alignItems="center">
-          <ChakraNextImage
-            flexShrink={0}
-            src={FeatureIconMap["custom"]}
-            boxSize={12}
-            alt=""
-          />
+          {release?.logo ? (
+            <Image
+              borderRadius="full"
+              src={release.logo.replace(
+                "ipfs://",
+                `${StorageSingleton.gatewayUrl}/`,
+              )}
+              boxSize={14}
+            />
+          ) : (
+            <ChakraNextImage
+              flexShrink={0}
+              src={FeatureIconMap["custom"]}
+              boxSize={14}
+              alt=""
+            />
+          )}
+
           <Skeleton isLoaded={allVersions.isSuccess}>
             <Flex direction="column" gap={2}>
               <Heading size="title.md">{release?.name}</Heading>
