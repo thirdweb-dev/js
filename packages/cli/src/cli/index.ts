@@ -9,7 +9,6 @@ import generateDashboardUrl from "../helpers/generate-dashboard-url";
 import chalk from "chalk";
 import { Command } from "commander";
 import open from "open";
-import updateNotifier from "update-notifier";
 
 const main = async () => {
   const program = new Command();
@@ -25,12 +24,14 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
   \\$$$$  |$$ |  $$ |$$ |$$ |      \\$$$$$$$ |\\$$$$$\\$$$$  |\\$$$$$$$\\ $$$$$$$  |
    \\____/ \\__|  \\__|\\__|\\__|       \\_______| \\_____\\____/  \\_______|\\_______/ `);
   console.info(`\n 💎 thirdweb-cli v${cliVersion} 💎\n`);
-  updateNotifier({
-    pkg,
-    shouldNotifyInNpmScript: true,
-    //check every time while we're still building the CLI
-    updateCheckInterval: 0,
-  }).notify();
+  import("update-notifier").then(({ default: updateNotifier }) => {
+    updateNotifier({
+      pkg,
+      shouldNotifyInNpmScript: true,
+      //check every time while we're still building the CLI
+      updateCheckInterval: 0,
+    }).notify();
+  });
 
   program
     .name("thirdweb-cli")
