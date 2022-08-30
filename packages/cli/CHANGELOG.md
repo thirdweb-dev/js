@@ -1,5 +1,11 @@
 # thirdweb
 
+## 0.7.2
+
+### Patch Changes
+
+- 66c1a70: version cli & fix typo
+
 ## 0.7.1
 
 ### Patch Changes

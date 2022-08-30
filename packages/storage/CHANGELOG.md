@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 0.2.1
+
+### Patch Changes
+
+- b58361e: explicitly use cross-fetch for fetch calls
+
 ## 0.2.0
 
 ### Minor Changes
