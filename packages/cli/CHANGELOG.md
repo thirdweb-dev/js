@@ -1,5 +1,11 @@
 # thirdweb
 
+## 0.7.1
+
+### Patch Changes
+
+- b800302: fix the build (ESM package)
+
 ## 0.7.0
 
 ### Minor Changes
