@@ -38,13 +38,13 @@ describe("NFT Contract", async () => {
   });
 
   it("should return nfts even if some are burned", async () => {
-    await nftContract.mintToSelf({
+    await nftContract.mint({
       name: "Test1",
     });
-    const token = await nftContract.mintToSelf({
+    const token = await nftContract.mint({
       name: "Test2",
     });
-    await nftContract.burnToken(token.id);
+    await nftContract.burn(token.id);
     const nfts = await nftContract.getAll();
     expect(nfts).to.be.an("array").length(2);
   });
@@ -52,16 +52,16 @@ describe("NFT Contract", async () => {
   it("should let authorized minters mint with detected features", async () => {
     await nftContract.roles.grant("minter", samWallet.address);
     sdk.updateSignerOrProvider(samWallet);
-    await nftContract.mintable?.to(samWallet.address, {
+    await nftContract.mintTo(samWallet.address, {
       name: "Test1",
     });
   });
 
   it("should return owned token ids", async () => {
-    await nftContract.mintToSelf({
+    await nftContract.mint({
       name: "Test1",
     });
-    await nftContract.mintToSelf({
+    await nftContract.mint({
       name: "Test2",
     });
     const ids = await nftContract.getOwnedTokenIds();
@@ -80,14 +80,14 @@ describe("NFT Contract", async () => {
     await nftContract.mintBatch(nfts);
     const total = await nftContract.totalSupply();
     expect(total.toNumber()).to.eq(100);
-    const page1 = await nftContract.getAll(queryParams, {
-        count: 2,
-        start: 0,
+    const page1 = await nftContract.getAll({
+      count: 2,
+      start: 0,
     });
     expect(page1).to.be.an("array").length(2);
-    const page2 = await nftContract.getAll(queryParams, {
-        count: 2,
-        start: 20,
+    const page2 = await nftContract.getAll({
+      count: 2,
+      start: 20,
     });
     expect(page2).to.be.an("array").length(2);
     expect(page2[0].metadata.name).to.eq("Test20");
@@ -95,7 +95,7 @@ describe("NFT Contract", async () => {
   });
 
   it("should fetch a single nft", async () => {
-    await nftContract.mintToSelf({
+    await nftContract.mint({
       name: "Test1",
     });
     const nft = await nftContract.get("0");
@@ -107,7 +107,7 @@ describe("NFT Contract", async () => {
     const uri = await storage.uploadMetadata({
       name: "Test1",
     });
-    await nftContract.mintToSelf(uri);
+    await nftContract.mint(uri);
     const nft = await nftContract.get("0");
     assert.isNotNull(nft);
     assert.equal(nft.metadata.name, "Test1");
@@ -124,10 +124,10 @@ describe("NFT Contract", async () => {
   });
 
   it("should return an owner as zero address for an nft that is burned", async () => {
-    const token = await nftContract.mintToSelf({
+    const token = await nftContract.mint({
       name: "Test2",
     });
-    await nftContract.burnToken(token.id);
+    await nftContract.burn(token.id);
     const nft = await nftContract.get("0");
     assert.equal(nft.owner, AddressZero);
   });
@@ -155,14 +155,14 @@ describe("NFT Contract", async () => {
   it("should not be able to mint without permission", async () => {
     sdk.updateSignerOrProvider(samWallet);
     await expect(
-      nftContract.mintToSelf({
+      nftContract.mint({
         name: "Test2",
       }),
     ).to.throw;
   });
 
   it("should mint complex metadata", async () => {
-    const tx = await nftContract.mintToSelf({
+    const tx = await nftContract.mint({
       name: "Test2",
       description: "description",
       image: "https://img.net",
@@ -196,7 +196,7 @@ describe("NFT Contract", async () => {
   });
 
   it("should mint complex metadata 2", async () => {
-    const tx = await nftContract.mintToSelf({
+    const tx = await nftContract.mint({
       name: "Test2",
       description: "description",
       image: "https://img.net",
@@ -218,7 +218,7 @@ describe("NFT Contract", async () => {
   });
 
   it("should mint simple metadata 2", async () => {
-    const tx = await nftContract.mintToSelf({
+    const tx = await nftContract.mint({
       name: "Test2",
       description: "description",
       image: "https://img.net",
@@ -227,7 +227,7 @@ describe("NFT Contract", async () => {
   });
 
   it("should mint complex metadata 3", async () => {
-    const tx = await nftContract.mintToSelf({
+    const tx = await nftContract.mint({
       name: "Test2",
       description: "description",
       image: "https://img.net",

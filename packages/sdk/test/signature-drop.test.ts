@@ -647,7 +647,7 @@ describe("Signature drop tests", async () => {
       await signatureDropContract.claim(10);
       const ts = await signatureDropContract.totalSupply();
       expect(ts.toNumber()).to.eq(20);
-      await signatureDropContract.burnToken(0);
+      await signatureDropContract.burn(0);
       const ts2 = await signatureDropContract.totalSupply();
       expect(ts2.toNumber()).to.eq(20);
     });

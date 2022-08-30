@@ -86,6 +86,22 @@ export class NFTCollection implements UpdateableNetwork {
   public royalties: ContractRoyalty<TokenERC721, typeof NFTCollection.schema>;
 
   /**
+   * Signature Minting
+   * @remarks Generate dynamic NFTs with your own signature, and let others mint them using that signature.
+   * @example
+   * ```javascript
+   * // see how to craft a payload to sign in the `contract.signature.generate()` documentation
+   * const signedPayload = contract.signature().generate(payload);
+   *
+   * // now anyone can mint the NFT
+   * const tx = contract.signature.mint(signedPayload);
+   * const receipt = tx.receipt; // the mint transaction receipt
+   * const mintedId = tx.id; // the id of the NFT minted
+   * ```
+   */
+  public signature: Erc721WithQuantitySignatureMintable;
+
+  /**
    * @internal
    */
   public interceptor: ContractInterceptor<TokenERC721>;
@@ -122,6 +138,10 @@ export class NFTCollection implements UpdateableNetwork {
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.nft = new Erc721(this.contractWrapper, this.storage, options);
+    this.signature = new Erc721WithQuantitySignatureMintable(
+      this.contractWrapper,
+      this.storage,
+    );
   }
 
   /**
