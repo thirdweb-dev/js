@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 0.2.2
+
+### Patch Changes
+
+- 02c2b52: force version
+
 ## 0.2.1
 
 ### Patch Changes

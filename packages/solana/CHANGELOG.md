@@ -1,5 +1,13 @@
 # @thirdweb-dev/solana
 
+## 0.2.1
+
+### Patch Changes
+
+- 02c2b52: force version
+- Updated dependencies [02c2b52]
+  - @thirdweb-dev/storage@0.2.2
+
 ## 0.2.0
 
 ### Minor Changes

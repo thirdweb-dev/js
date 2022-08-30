@@ -1,5 +1,13 @@
 # thirdweb
 
+## 0.7.3
+
+### Patch Changes
+
+- 02c2b52: force version
+- Updated dependencies [02c2b52]
+  - @thirdweb-dev/sdk@2.4.1
+
 ## 0.7.2
 
 ### Patch Changes
