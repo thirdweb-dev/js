@@ -2,7 +2,6 @@ import { ProductButton } from "./ProductButton";
 import { ChevronRightIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
-  Box,
   Center,
   Container,
   Flex,
@@ -12,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { StaticImageData } from "next/image";
-import { Heading } from "tw-components";
+import { Heading, Text } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
 export interface IHero {
@@ -35,6 +34,7 @@ export const Hero: ComponentWithChildren<IHero> = ({
   gradient,
   children,
 }) => {
+  console.log("dark mode");
   return (
     <Center
       w="100%"
@@ -71,13 +71,23 @@ export const Hero: ComponentWithChildren<IHero> = ({
             opacity={0.8}
             justify={{ base: "center", md: "flex-start" }}
           >
-            <Box cursor="default" fontWeight="medium">
+            <Text
+              cursor="default"
+              fontWeight="medium"
+              color="whiteAlpha.800"
+              size="body.lg"
+            >
               Products
-            </Box>
-            <Icon as={ChevronRightIcon} />
-            <Box cursor="default" fontWeight="medium">
+            </Text>
+            <Icon as={ChevronRightIcon} color="whiteAlpha.800" />
+            <Text
+              cursor="default"
+              fontWeight="medium"
+              color="whiteAlpha.800"
+              size="body.lg"
+            >
               {name}
-            </Box>
+            </Text>
           </Stack>
           <Heading
             as="h2"
@@ -101,8 +111,8 @@ export const Hero: ComponentWithChildren<IHero> = ({
             mt="32px"
             title={buttonText}
             href={buttonLink}
-            bg="bgBlack"
-            color="headingLight"
+            color="blackAlpha.900"
+            bg="white"
           />
         </Flex>
         <Center
