@@ -47,7 +47,9 @@ export const SupportedNetworkToChainIdMap: Record<
   optimism: ChainId.Optimism, // 10
   "optimism-testnet": ChainId.OptimismTestnet, // 69
   arbitrum: ChainId.Arbitrum, // 42161
-  "arbitrum-testnet": ChainId.ArbitrumTestnet, // 421611
+  "arbitrum-testnet": ChainId.ArbitrumTestnet, // 4216111
+  binance: ChainId.BinanceSmartChainMainnet,
+  "binance-testnet": ChainId.BinanceSmartChainTestnet,
 } as const;
 
 export const NetworkToBlockTimeMap: Record<SUPPORTED_CHAIN_ID, string> = {
