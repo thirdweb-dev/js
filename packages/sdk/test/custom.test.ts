@@ -1,19 +1,19 @@
-import { expectError, signers } from "./before-setup";
-import { assert, expect } from "chai";
-import invariant from "tiny-invariant";
-import {
-  TokenERC20__factory,
-  TokenERC721__factory,
-  VoteERC20__factory,
-} from "@thirdweb-dev/contracts-js";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   NATIVE_TOKEN_ADDRESS,
   PayloadToSign20,
   SignedPayload721WithQuantitySignature,
   ThirdwebSDK,
 } from "../src";
+import { expectError, signers } from "./before-setup";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import {
+  TokenERC20__factory,
+  TokenERC721__factory,
+  VoteERC20__factory,
+} from "@thirdweb-dev/contracts-js";
+import { assert, expect } from "chai";
 import { ethers } from "ethers";
+import invariant from "tiny-invariant";
 
 require("./before-setup");
 
@@ -289,12 +289,10 @@ describe("Custom Contracts", async () => {
     const c = await sdk.getContract(nftContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.nft, "ERC721 undefined");
-    invariant(c.nft.query, "ERC721 query undefined");
-    invariant(c.nft.mintable, "ERC721 minter undefined");
-    await c.nft.mintable.to(adminWallet.address, {
+    await c.nft.mintTo(adminWallet.address, {
       name: "Custom NFT",
     });
-    const nfts = await c.nft.query.all();
+    const nfts = await c.nft.getAll();
     expect(nfts.length).to.eq(1);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });
@@ -304,13 +302,12 @@ describe("Custom Contracts", async () => {
     invariant(c, "Contract undefined");
     invariant(c.nft, "ERC721 undefined");
     invariant(c.nft.burn, "ERC721Burnable undefined");
-    invariant(c.nft.query, "ERC721 query undefined");
-    await c.nft.mintable?.to(adminWallet.address, {
+    await c.nft.mintTo(adminWallet.address, {
       name: "Custom NFT",
     });
     let balance = await c.nft.balance();
     expect(balance.toString()).to.eq("1");
-    await c.nft.burn.token(0);
+    await c.nft.burn(0);
     balance = await c.nft.balance();
     expect(balance.toString()).to.eq("0");
   });
@@ -319,9 +316,7 @@ describe("Custom Contracts", async () => {
     const c = await sdk.getContract(sigDropContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.nft, "ERC721 undefined");
-    invariant(c.nft.query, "ERC721 query undefined");
-    invariant(c.nft.drop, "ERC721 drop undefined");
-    await c.nft.drop.lazyMint([
+    await c.nft.lazyMint([
       {
         name: "Custom NFT",
       },
@@ -329,7 +324,7 @@ describe("Custom Contracts", async () => {
         name: "Another one",
       },
     ]);
-    const nfts = await c.nft.query.all();
+    const nfts = await c.nft.getAll();
     expect(nfts.length).to.eq(2);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });
@@ -338,10 +333,8 @@ describe("Custom Contracts", async () => {
     const c = await sdk.getContract(nftDropContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.nft, "ERC721 undefined");
-    invariant(c.nft.drop, "ERC721 drop");
-    invariant(c.nft.drop.revealer, "ERC721 revealer undefined");
 
-    await c.nft.drop.revealer.createDelayedRevealBatch(
+    await c.nft.revealer.createDelayedRevealBatch(
       {
         name: "Placeholder #1",
       },
@@ -349,10 +342,10 @@ describe("Custom Contracts", async () => {
       "password",
     );
 
-    const batches = await c.nft.drop.revealer.getBatchesToReveal();
+    const batches = await c.nft.revealer.getBatchesToReveal();
     expect(batches.length).to.eq(1);
 
-    await c.nft.drop.revealer.reveal(0, "password");
+    await c.nft.revealer.reveal(0, "password");
     expect((await c.nft.get(0)).metadata.name).to.be.equal("NFT #1");
   });
 
