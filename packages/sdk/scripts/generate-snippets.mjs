@@ -47,6 +47,7 @@ function languageNameToKey(languageName) {
 }
 
 const additionalClassesToParse = [
+  "ThirdwebSDK",
   "ContractDeployer",
   "MarketplaceDirect",
   "MarketplaceAuction",
@@ -63,6 +64,7 @@ const additionalClassesToParse = [
   "ContractRoyalty",
   "ContractPlatformFee",
   "WalletAuthenticator",
+  "UserWallet"
 ];
 
 const modules = json.members[0].members.filter(
