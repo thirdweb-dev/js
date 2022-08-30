@@ -8,7 +8,8 @@ build:
 
 test: FORCE
 	./scripts/install_solana.sh
-	yarn run build
+	yarn run amman:start
 	yarn run test:all
+	yarn run amman:stop
 
 FORCE: ;
