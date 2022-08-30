@@ -2153,6 +2153,20 @@
     socket.io-client "^4.4.1"
     tweetnacl "^1.0.3"
 
+"@metaplex-foundation/amman-client@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@metaplex-foundation/amman-client/-/amman-client-0.2.1.tgz#5c237d60e9d2338e508680a437bb32b0f5a96cb3"
+  integrity sha512-4cZEe7mQ+VE7TvFJK1DEcz5wlF/FX3KsiGOpNGFYDAQOBKYrjfpq2q40Or6P1pBa4Mkw1KSupNcxh3iHSAb9CA==
+  dependencies:
+    "@metaplex-foundation/cusper" "^0.0.2"
+    "@solana/spl-token-registry" "^0.2.2405"
+    "@solana/web3.js" "^1.55.0"
+    bn.js "^5.2.1"
+    debug "^4.3.3"
+    js-sha3 "^0.8.0"
+    socket.io-client "^4.4.1"
+    tweetnacl "^1.0.3"
+
 "@metaplex-foundation/amman@^0.10.0":
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/@metaplex-foundation/amman/-/amman-0.10.0.tgz#b91cd9e2d258561704422f0d46089d4c4268583f"
@@ -2896,7 +2910,7 @@
     superstruct "^0.14.2"
     tweetnacl "^1.0.3"
 
-"@solana/web3.js@^1.31.0", "@solana/web3.js@^1.32.0", "@solana/web3.js@^1.35.1", "@solana/web3.js@^1.36.0", "@solana/web3.js@^1.43.4", "@solana/web3.js@^1.44.0", "@solana/web3.js@^1.47.3", "@solana/web3.js@^1.50.1":
+"@solana/web3.js@^1.31.0", "@solana/web3.js@^1.32.0", "@solana/web3.js@^1.35.1", "@solana/web3.js@^1.36.0", "@solana/web3.js@^1.43.4", "@solana/web3.js@^1.44.0", "@solana/web3.js@^1.47.3", "@solana/web3.js@^1.50.1", "@solana/web3.js@^1.55.0":
   version "1.55.0"
   resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-1.55.0.tgz#9d7ceb7f71a7316b1e5dbd4434ef82f6537de5d9"
   integrity sha512-hXEc5CtA/5tZMvwEy0Cv6iynBpWoSLk6ud2PmoiGfWrZXZqkrfgTPkgd4yBw+VNZJRBRMKVbs/P7kT1sBwZUrw==

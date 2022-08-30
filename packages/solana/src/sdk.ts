@@ -56,7 +56,7 @@ export class ThirdwebSDK {
     this.metaplex = this.connectToMetaplex(signer, this.metaplex);
   }
 
-  public connectToMetaplex(signer: Signer, metaplex: Metaplex) {
+  private connectToMetaplex(signer: Signer, metaplex: Metaplex) {
     invariant(signer, "Wallet is not connected");
     const plugin = isKeypairSigner(signer)
       ? keypairIdentity(Keypair.fromSecretKey(signer.secretKey))

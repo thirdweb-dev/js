@@ -28,6 +28,7 @@
     "@babel/preset-env": "^7.18.10",
     "@babel/preset-typescript": "^7.18.6",
     "@metaplex-foundation/amman": "^0.10.0",
+    "@metaplex-foundation/amman-client": "^0.2.1",
     "@microsoft/api-documenter": "^7.19.4",
     "@microsoft/api-extractor": "^7.29.2",
     "@microsoft/tsdoc": "^0.14.1",
