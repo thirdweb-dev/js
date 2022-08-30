@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/auth",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": {
     "directory": "packages/auth",
     "type": "git",
