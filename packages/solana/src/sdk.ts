@@ -8,6 +8,7 @@ import {
   isKeypairSigner,
   keypairIdentity,
   Metaplex,
+  mockStorage,
   Signer,
   walletAdapterIdentity,
 } from "@metaplex-foundation/js";
