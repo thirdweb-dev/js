@@ -49,7 +49,7 @@ export class SolcBuilder extends BaseBuilder {
             return { contents: readFileSync(nodeModulesPath, "utf-8") };
           }
           return {
-            error: "file not fount",
+            error: "file not found",
           };
         },
       }),
