@@ -1,28 +1,3 @@
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { IStorage } from "@thirdweb-dev/storage";
-import {
-  NetworkOrSignerOrProvider,
-  TransactionResultWithId,
-} from "../core/types";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { SDKOptions } from "../schema/sdk-options";
-import { Pack as PackContract } from "@thirdweb-dev/contracts-js";
-import { PackContractSchema } from "../schema/contracts/packs";
-import { ContractRoles } from "../core/classes/contract-roles";
-import { ContractRoyalty } from "../core/classes/contract-royalty";
-import { Erc1155 } from "../core/classes/erc-1155";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { ContractEvents } from "../core/classes/contract-events";
-import {
-  PackMetadataInput,
-  PackMetadataInputSchema,
-  PackMetadataOutput,
-  PackRewards,
-  PackRewardsOutput,
-} from "../schema/tokens/pack";
-import { BigNumber, BigNumberish, ethers } from "ethers";
 import {
   fetchCurrencyMetadata,
   hasERC20Allowance,
@@ -30,11 +5,40 @@ import {
 } from "../common/currency";
 import { isTokenApprovedForTransfer } from "../common/marketplace";
 import { uploadOrExtractURI } from "../common/nft";
-import { EditionMetadata, EditionMetadataOwner } from "../schema";
-import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
-import { QueryAllParams } from "../types";
 import { getRoleHash } from "../common/role";
-import { ITokenBundle, PackCreatedEvent, PackOpenedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Pack";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractRoles } from "../core/classes/contract-roles";
+import { ContractRoyalty } from "../core/classes/contract-royalty";
+import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { Erc1155 } from "../core/classes/erc-1155";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { UpdateableNetwork } from "../core/interfaces/contract";
+import {
+  NetworkOrSignerOrProvider,
+  TransactionResultWithId,
+} from "../core/types";
+import { EditionMetadata, EditionMetadataOwner } from "../schema";
+import { PackContractSchema } from "../schema/contracts/packs";
+import { SDKOptions } from "../schema/sdk-options";
+import {
+  PackMetadataInput,
+  PackMetadataInputSchema,
+  PackMetadataOutput,
+  PackRewards,
+  PackRewardsOutput,
+} from "../schema/tokens/pack";
+import { QueryAllParams } from "../types";
+import { Pack as PackContract } from "@thirdweb-dev/contracts-js";
+import {
+  ITokenBundle,
+  PackCreatedEvent,
+  PackOpenedEvent,
+} from "@thirdweb-dev/contracts-js/dist/declarations/src/Pack";
+import { IStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 
 /**
  * Create lootboxes of NFTs with rarity based open mechanics.
@@ -50,7 +54,7 @@ import { ITokenBundle, PackCreatedEvent, PackOpenedEvent } from "@thirdweb-dev/c
  *
  * @public
  */
-export class Pack extends Erc1155<PackContract> {
+export class Pack implements UpdateableNetwork {
   static contractType = "pack" as const;
   static contractRoles = ["admin", "minter", "pauser", "transfer"] as const;
   static contractAbi = require("@thirdweb-dev/contracts-js/abis/Pack.json");
@@ -58,6 +62,9 @@ export class Pack extends Erc1155<PackContract> {
    * @internal
    */
   static schema = PackContractSchema;
+
+  protected contractWrapper: ContractWrapper<PackContract>;
+  protected storage: IStorage;
 
   public metadata: ContractMetadata<PackContract, typeof Pack.schema>;
   public roles: ContractRoles<PackContract, typeof Pack.contractRoles[number]>;
@@ -87,7 +94,7 @@ export class Pack extends Erc1155<PackContract> {
    */
   public interceptor: ContractInterceptor<PackContract>;
 
-  private _query = this.query as Erc1155Enumerable;
+  public erc1155: Erc1155<PackContract>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -101,7 +108,9 @@ export class Pack extends Erc1155<PackContract> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    this.contractWrapper = contractWrapper;
+    this.storage = storage;
+    this.erc1155 = new Erc1155(this.contractWrapper, this.storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       Pack.schema,
@@ -115,9 +124,37 @@ export class Pack extends Erc1155<PackContract> {
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
+  /**
+   * @internal
+   */
+  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+    this.contractWrapper.updateSignerOrProvider(network);
+  }
+
+  getAddress(): string {
+    return this.contractWrapper.readContract.address;
+  }
+
   /** ******************************
    * READ FUNCTIONS
    *******************************/
+
+  /**
+   * Get a single Pack
+   *
+   * @remarks Get all the data associated with every pack in this contract.
+   *
+   * By default, returns the first 100 packs, use queryParams to fetch more.
+   *
+   * @example
+   * ```javascript
+   * const pack = await contract.get(0);
+   * console.log(packs;
+   * ```
+   */
+  public async get(tokenId: BigNumberish): Promise<EditionMetadata> {
+    return this.erc1155.get(tokenId);
+  }
 
   /**
    * Get All Packs
@@ -137,7 +174,7 @@ export class Pack extends Erc1155<PackContract> {
   public async getAll(
     queryParams?: QueryAllParams,
   ): Promise<EditionMetadata[]> {
-    return this._query.all(queryParams);
+    return this.erc1155.getAll(queryParams);
   }
 
   /**
@@ -157,7 +194,7 @@ export class Pack extends Erc1155<PackContract> {
   public async getOwned(
     walletAddress?: string,
   ): Promise<EditionMetadataOwner[]> {
-    return this._query.owned(walletAddress);
+    return this.erc1155.getOwned(walletAddress);
   }
 
   /**
@@ -166,7 +203,7 @@ export class Pack extends Erc1155<PackContract> {
    * @public
    */
   public async getTotalCount(): Promise<BigNumber> {
-    return this._query.totalCount();
+    return this.erc1155.totalCount();
   }
 
   /**
@@ -393,7 +430,7 @@ export class Pack extends Erc1155<PackContract> {
     return {
       id: packId,
       receipt,
-      data: () => this.get(packId),
+      data: () => this.erc1155.get(packId),
     };
   }
 

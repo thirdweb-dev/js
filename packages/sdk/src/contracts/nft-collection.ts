@@ -10,11 +10,6 @@ import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Erc721 } from "../core/classes/erc-721";
-import { Erc721BatchMintable } from "../core/classes/erc-721-batch-mintable";
-import { Erc721Burnable } from "../core/classes/erc-721-burnable";
-import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
-import { Erc721Mintable } from "../core/classes/erc-721-mintable";
-import { Erc721Supply } from "../core/classes/erc-721-supply";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import type {
@@ -137,7 +132,7 @@ export class NFTCollection implements UpdateableNetwork {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.nft = new Erc721(this.contractWrapper, this.storage, options);
+    this.nft = new Erc721(this.contractWrapper, this.storage);
     this.signature = new Erc721WithQuantitySignatureMintable(
       this.contractWrapper,
       this.storage,

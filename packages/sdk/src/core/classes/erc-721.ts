@@ -16,7 +16,6 @@ import {
   FEATURE_NFT_SIGNATURE_MINTABLE,
   FEATURE_NFT_SUPPLY,
 } from "../../constants/erc721-features";
-import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import {
   NFTMetadata,
   NFTMetadataOrUri,
@@ -77,24 +76,10 @@ export class Erc721<
   private signatureMintable: Erc721WithQuantitySignatureMintable | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
-  protected options: SDKOptions;
 
-  constructor(
-    contractWrapper: ContractWrapper<T>,
-    storage: IStorage,
-    options: SDKOptions = {},
-  ) {
+  constructor(contractWrapper: ContractWrapper<T>, storage: IStorage) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
-    try {
-      this.options = SDKOptionsSchema.parse(options);
-    } catch (optionParseError) {
-      console.error(
-        "invalid contract options object passed, falling back to default options",
-        optionParseError,
-      );
-      this.options = SDKOptionsSchema.parse({});
-    }
     this.query = this.detectErc721Enumerable();
     this.mintable = this.detectErc721Mintable();
     this.burnable = this.detectErc721Burnable();
@@ -534,6 +519,14 @@ export class Erc721<
     );
   }
 
+  /**
+   * Construct a claim transaction without executing it.
+   * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
+   * @param destinationAddress
+   * @param quantity
+   * @param checkERC20Allowance
+   * @param claimData
+   */
   public async getClaimTransaction(
     destinationAddress: string,
     quantity: BigNumberish,
@@ -551,6 +544,28 @@ export class Erc721<
     );
   }
 
+  /**
+   * Configure claim conditions
+   * @remarks Define who can claim NFTs in the collection, when and how many.
+   * @example
+   * ```javascript
+   * const presaleStartTime = new Date();
+   * const publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
+   * const claimConditions = [
+   *   {
+   *     startTime: presaleStartTime, // start the presale now
+   *     maxQuantity: 2, // limit how many mints for this presale
+   *     price: 0.01, // presale price
+   *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
+   *   },
+   *   {
+   *     startTime: publicSaleStartTime, // 24h after presale, start public sale
+   *     price: 0.08, // public sale price
+   *   }
+   * ]);
+   * await contract.nft.claimConditions.set(claimConditions);
+   * ```
+   */
   get claimConditions() {
     return assertEnabled(this.droppable?.claim, FEATURE_NFT_CLAIMABLE)
       .conditions;
