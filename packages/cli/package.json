@@ -1,7 +1,7 @@
 {
   "name": "thirdweb",
   "main": "dist/cli/index.js",
-  "version": "0.6.15",
+  "version": "0.7.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com:thirdweb-dev/js.git",
@@ -42,7 +42,6 @@
     "inquirer": "^8.2.3",
     "ipfs-unixfs": "^6.0.7",
     "ipld-dag-pb": "^0.22.3",
-    "isomorphic-fetch": "^3.0.0",
     "multihashes": "^4.0.3",
     "open": "^8.4.0",
     "prompts": "^2.4.2",
