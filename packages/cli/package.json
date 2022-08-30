@@ -1,7 +1,7 @@
 {
   "name": "thirdweb",
   "main": "dist/cli/index.js",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "repository": {
     "type": "git",
     "url": "git+https://github.com:thirdweb-dev/js.git",

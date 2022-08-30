@@ -1,5 +1,13 @@
 # @thirdweb-dev/sdk
 
+## 2.4.1
+
+### Patch Changes
+
+- 02c2b52: force version
+- Updated dependencies [02c2b52]
+  - @thirdweb-dev/storage@0.2.2
+
 ## 2.4.0
 
 ### Minor Changes
