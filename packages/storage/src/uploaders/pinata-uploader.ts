@@ -3,6 +3,7 @@ import { isBufferInstance, isFileInstance } from "../helpers/storage";
 import { CidWithFileName, IStorageUpload } from "../interfaces/IStorageUpload";
 import { FileOrBuffer } from "../types";
 import { UploadProgressEvent } from "../types/events";
+import fetch from "cross-fetch";
 import FormData from "form-data";
 
 /**

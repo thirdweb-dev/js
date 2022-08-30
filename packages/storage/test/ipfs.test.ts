@@ -3,6 +3,7 @@ import { IpfsStorage } from "../src/core/ipfs-storage";
 import { RemoteStorage } from "../src/core/remote-storage";
 import { BufferOrStringWithName, FileOrBuffer } from "../src/types";
 import { assert, expect } from "chai";
+import fetch from "cross-fetch";
 import { readFileSync } from "fs";
 
 const ipfsGatewayUrl = DEFAULT_IPFS_GATEWAY;
