@@ -101,7 +101,7 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       Multiwrap.schema,

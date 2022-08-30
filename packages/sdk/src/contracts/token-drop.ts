@@ -1,23 +1,23 @@
-import { DropERC20 } from "@thirdweb-dev/contracts-js";
-import { IStorage } from "@thirdweb-dev/storage";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
-import { SDKOptions } from "../schema/sdk-options";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { constants } from "ethers";
+import { getRoleHash } from "../common";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
-import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractRoles } from "../core/classes/contract-roles";
+import { ContractPrimarySale } from "../core/classes/contract-sales";
+import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { DropClaimConditions } from "../core/classes/drop-claim-conditions";
 import { Erc20 } from "../core/classes/erc-20";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { Amount, CurrencyValue } from "../types";
-import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
-import { getRoleHash } from "../common";
 import { Erc20Burnable } from "../core/classes/erc-20-burnable";
 import { Erc20Claimable } from "../core/classes/erc-20-claimable";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
+import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
+import { SDKOptions } from "../schema/sdk-options";
+import { Amount, CurrencyValue } from "../types";
+import { DropERC20 } from "@thirdweb-dev/contracts-js";
+import { IStorage } from "@thirdweb-dev/storage";
+import { constants } from "ethers";
 
 /**
  * Create a Drop contract for a standard crypto token or cryptocurrency.
@@ -93,7 +93,7 @@ export class TokenDrop extends Erc20<DropERC20> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       TokenDrop.schema,

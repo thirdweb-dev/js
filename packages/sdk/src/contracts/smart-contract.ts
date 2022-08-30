@@ -1,8 +1,14 @@
 import {
   ALL_ROLES,
+  assertEnabled,
   detectContractFeature,
   extractFunctionsFromAbi,
 } from "../common";
+import { FEATURE_NFT } from "../constants/erc721-features";
+import {
+  FEATURE_METADATA,
+  FEATURE_PERMISSIONS,
+} from "../constants/thirdweb-features";
 import { NetworkOrSignerOrProvider } from "../core";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
@@ -267,21 +273,21 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
 
   private detectErc20() {
     if (detectContractFeature<BaseERC20>(this.contractWrapper, "ERC20")) {
-      return new Erc20(this.contractWrapper, this.storage, this.options);
+      return new Erc20(this.contractWrapper, this.storage);
     }
     return undefined;
   }
 
   private detectErc721() {
     if (detectContractFeature<BaseERC721>(this.contractWrapper, "ERC721")) {
-      return new Erc721(this.contractWrapper, this.storage, this.options);
+      return new Erc721(this.contractWrapper, this.storage);
     }
     return undefined;
   }
 
   private detectErc1155() {
     if (detectContractFeature<BaseERC1155>(this.contractWrapper, "ERC1155")) {
-      return new Erc1155(this.contractWrapper, this.storage, this.options);
+      return new Erc1155(this.contractWrapper, this.storage);
     }
     return undefined;
   }
