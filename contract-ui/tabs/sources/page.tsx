@@ -19,6 +19,7 @@ import { ChainId, useContract } from "@thirdweb-dev/react";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
 import { Abi } from "components/contract-components/types";
 import { useContractSources } from "contract-ui/hooks/useContractSources";
+import { useRouter } from "next/router";
 import { VerificationStatus, blockExplorerMap } from "pages/api/verify";
 import { useMemo } from "react";
 import { FiCheckCircle, FiXCircle } from "react-icons/fi";
@@ -170,6 +171,8 @@ export const CustomContractSourcesPage: React.FC<
   const { isOpen, onOpen, onClose } = useDisclosure();
   const contractQuery = useContractSources(contractAddress);
   const chainId = useActiveChainId();
+  const router = useRouter();
+  const forceVerifyButton = router.query.verify === "true";
 
   const { data: prebuiltSource } = usePrebuiltSource(contractAddress);
   const { contract } = useContract(contractAddress);
@@ -218,7 +221,7 @@ export const CustomContractSourcesPage: React.FC<
           <Heading size="title.sm" flex={1}>
             Sources
           </Heading>
-          {!prebuiltSource ? (
+          {!prebuiltSource || forceVerifyButton ? (
             <Button variant="solid" colorScheme="purple" onClick={onOpen}>
               Verify on {blockExplorerName(chainId)}
             </Button>

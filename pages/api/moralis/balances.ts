@@ -56,7 +56,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   );
 
   const balances = [
-    ...tokenBalances,
+    ...(tokenBalances || []),
     {
       token_address: native?.address,
       symbol: native?.symbol,
