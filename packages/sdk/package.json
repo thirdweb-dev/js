@@ -96,8 +96,8 @@
     "@microsoft/tsdoc": "^0.14.1"
   },
   "bugs": {
-    "url": "https://github.com/thirdweb-dev/typescript-sdk/issues"
+    "url": "https://github.com/thirdweb-dev/js/issues"
   },
-  "homepage": "https://github.com/thirdweb-dev/typescript-sdk#readme",
+  "homepage": "https://github.com/thirdweb-dev/js/blob/main/packages/sdk/README.md",
   "author": "thirdweb eng <eng@thirdweb.com>"
 }
