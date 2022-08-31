@@ -8,8 +8,7 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "packages/*",
-      "e2e/*"
+      "packages/*"
     ]
   },
   "devDependencies": {
@@ -26,6 +25,7 @@
   "scripts": {
     "postinstall": "yarn-deduplicate yarn.lock && yarn patch-package",
     "test": "turbo run test",
+    "e2e": "turbo run e2e",
     "build": "turbo run build",
     "dev": "turbo run dev --no-cache --parallel --continue",
     "lint": "turbo run lint",
@@ -33,7 +33,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
     "release": "turbo run build && changeset publish",
-    "ci:release:nightly": "turbo run build && yarn changeset version --snapshot nightly && yarn changeset publish --tag nightly --no-git-tag"
+    "ci:release:nightly": "turbo run build && changeset version --snapshot nightly && changeset publish --tag nightly --no-git-tag"
   },
   "preconstruct": {
     "packages": [

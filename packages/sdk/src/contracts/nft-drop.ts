@@ -1,9 +1,24 @@
-import { ContractRoles } from "../core/classes/contract-roles";
-import { BigNumber, BigNumberish, constants, ethers } from "ethers";
+import { getRoleHash } from "../common";
+import { prepareClaim } from "../common/claim-conditions";
+import { uploadOrExtractURIs } from "../common/nft";
+import { FEATURE_NFT_REVEALABLE } from "../constants/erc721-features";
+import { TransactionTask } from "../core/classes/TransactionTask";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
+import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { IStorage } from "@thirdweb-dev/storage";
+import { DelayedReveal } from "../core/classes/delayed-reveal";
+import { DropClaimConditions } from "../core/classes/drop-claim-conditions";
+import { Erc721 } from "../core/classes/erc-721";
+import { Erc721Burnable } from "../core/classes/erc-721-burnable";
+import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
+import { Erc721Supply } from "../core/classes/erc-721-supply";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -16,28 +31,17 @@ import {
   NFTMetadataOrUri,
   NFTMetadataOwner,
 } from "../schema/tokens/common";
-import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
-import { DropClaimConditions } from "../core/classes/drop-claim-conditions";
-import { Erc721 } from "../core/classes/erc-721";
-import { ContractPrimarySale } from "../core/classes/contract-sales";
-import { prepareClaim } from "../common/claim-conditions";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { DelayedReveal } from "../core/classes/delayed-reveal";
-import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
-import { Erc721Supply } from "../core/classes/erc-721-supply";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ClaimVerification } from "../types";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { getRoleHash } from "../common";
+import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
 import { UploadProgressEvent } from "../types/events";
-import { uploadOrExtractURIs } from "../common/nft";
-import { TransactionTask } from "../core/classes/TransactionTask";
-import { Erc721Burnable } from "../core/classes/erc-721-burnable";
-import { FEATURE_NFT_REVEALABLE } from "../constants/erc721-features";
 import { DropERC721 } from "@thirdweb-dev/contracts-js";
-import { TokensClaimedEvent, TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
+import ABI from "@thirdweb-dev/contracts-js/abis/DropERC721.json";
+import {
+  TokensClaimedEvent,
+  TokensLazyMintedEvent,
+} from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
+import { IStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, constants, ethers } from "ethers";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -56,7 +60,7 @@ import { TokensClaimedEvent, TokensLazyMintedEvent } from "@thirdweb-dev/contrac
 export class NFTDrop extends Erc721<DropERC721> {
   static contractType = "nft-drop" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractAbi = require("@thirdweb-dev/contracts-js/abis/DropERC721.json");
+  static contractAbi = ABI as any;
   /**
    * @internal
    */

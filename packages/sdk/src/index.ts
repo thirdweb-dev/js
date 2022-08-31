@@ -1,3 +1,6 @@
+// handle browser vs node global
+globalThis.global = globalThis;
+
 export type { ContractType, NetworkOrSignerOrProvider } from "./core/types";
 export type {
   NFTMetadataInput,
