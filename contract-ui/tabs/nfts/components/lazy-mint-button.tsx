@@ -1,6 +1,8 @@
 import { NFTMintForm } from "./mint-form";
+import { MinterOnly } from "@3rdweb-sdk/react";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import { NFTContract, useLazyMint } from "@thirdweb-dev/react";
+import { NFTContract, useContract, useLazyMint } from "@thirdweb-dev/react";
+import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import React from "react";
 import { FiPlus } from "react-icons/fi";
@@ -15,6 +17,7 @@ export const NFTLazyMintButton: React.FC<NFTLazyMintButtonProps> = ({
   ...restButtonProps
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { contract: actualContract } = useContract(contract?.getAddress());
   const mutation = useLazyMint(contract);
 
   const detectedState = extensionDetectedState({
@@ -27,7 +30,7 @@ export const NFTLazyMintButton: React.FC<NFTLazyMintButtonProps> = ({
   }
 
   return (
-    <>
+    <MinterOnly contract={actualContract as unknown as ValidContractInstance}>
       <Drawer
         allowPinchZoom
         preserveScrollBarGap
@@ -45,6 +48,6 @@ export const NFTLazyMintButton: React.FC<NFTLazyMintButtonProps> = ({
       >
         Single Upload
       </Button>
-    </>
+    </MinterOnly>
   );
 };

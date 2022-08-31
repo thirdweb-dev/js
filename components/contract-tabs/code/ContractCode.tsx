@@ -1,4 +1,3 @@
-import { ABICopyButton } from "./ABICopyButton";
 import { CodeSegment } from "./CodeSegment";
 import {
   CodeSnippet,
@@ -6,14 +5,10 @@ import {
   SnippetApiResponse,
   SnippetSchema,
 } from "./types";
-import {
-  useContractConstructor,
-  useContractName,
-  useWeb3,
-} from "@3rdweb-sdk/react";
+import { usePascalCaseContractName, useWeb3 } from "@3rdweb-sdk/react";
 import { Flex, Spinner, Stack } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { ValidContractInstance } from "@thirdweb-dev/sdk";
+import { SmartContract } from "@thirdweb-dev/sdk";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useCallback, useMemo, useState } from "react";
 import { IoDocumentOutline } from "react-icons/io5";
@@ -46,7 +41,8 @@ function replaceVariablesInCodeSnippet(
 }
 
 interface IContractCode {
-  contract?: ValidContractInstance;
+  contract?: SmartContract | null;
+  contractType: string;
 }
 
 const INSTALL_COMMANDS = {
@@ -57,11 +53,14 @@ const INSTALL_COMMANDS = {
   go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
 };
 
-export const ContractCode: React.FC<IContractCode> = ({ contract }) => {
+export const ContractCode: React.FC<IContractCode> = ({
+  contract,
+  contractType,
+}) => {
   const { data, isLoading } = useContractCodeSnippetQuery();
   const chainName = useSingleQueryParam<SupportedNetwork>("networkOrAddress");
 
-  const contractName = useContractName(contract);
+  const contractName = usePascalCaseContractName(contractType);
 
   const scopedData = useMemo(() => {
     return getContractSnippets(data, contractName);
@@ -69,11 +68,6 @@ export const ContractCode: React.FC<IContractCode> = ({ contract }) => {
 
   const { address } = useWeb3();
   const [environment, setEnvironment] = useState<Environment>("react");
-
-  const contractConstructor = useContractConstructor(contract);
-  const abi = useMemo(() => {
-    return contractConstructor ? contractConstructor.contractAbi : null;
-  }, [contractConstructor]);
 
   const replaceSnippetVars = useCallback(
     (snip: Partial<Record<Environment, string>>) =>
@@ -160,23 +154,6 @@ export const ContractCode: React.FC<IContractCode> = ({ contract }) => {
       {scopedData.properties?.map((snippet) => {
         return snippetCard(snippet);
       })}
-
-      <Card>
-        <Flex
-          direction={{ base: "column", md: "row" }}
-          gap={2}
-          justify="space-between"
-        >
-          <Flex direction="column" gap={2} mb={{ base: 2, md: 0 }}>
-            <Heading size="title.sm">Contract ABI</Heading>
-            <Text>
-              If you need the underlying contract ABI for this contract you can
-              copy it from here.
-            </Text>
-          </Flex>
-          {abi && <ABICopyButton colorScheme="purple" abi={abi} />}
-        </Flex>
-      </Card>
     </Stack>
   );
 };

@@ -9,6 +9,7 @@ import {
   Flex,
   FormControl,
   Icon,
+  IconButton,
   Input,
   InputGroup,
   InputProps,
@@ -370,15 +371,15 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
                       actualContract as unknown as ValidContractInstance
                     }
                   >
-                    <Icon
-                      color="red.500"
-                      as={FiTrash}
-                      boxSize={5}
+                    <IconButton
+                      variant="ghost"
+                      aria-label="Delete Claim Phase"
+                      colorScheme="red"
+                      icon={<Icon as={FiTrash} />}
                       top="16px"
                       right="16px"
                       position="absolute"
-                      cursor="pointer"
-                      _hover={{ color: "red.400" }}
+                      isDisabled={mutation.isLoading}
                       onClick={() => {
                         removePhase(index);
                         if (!isMultiPhase) {
@@ -733,6 +734,7 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
                 borderRadius="md"
                 leftIcon={<Icon as={FiPlus} />}
                 onClick={addPhase}
+                isDisabled={mutation.isLoading}
               >
                 Add {watchFieldArray?.length > 0 ? "Additional " : "Initial "}
                 Claim Phase
@@ -745,6 +747,7 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
                   borderRadius="md"
                   leftIcon={<Icon as={FiPlus} />}
                   onClick={addPhase}
+                  isDisabled={mutation.isLoading}
                 >
                   Add Claim Phase
                 </Button>

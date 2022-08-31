@@ -3,8 +3,7 @@ import {
   useMutationWithInvalidate,
   useQueryWithNetwork,
 } from "./query/useQueryWithNetwork";
-import { useWeb3 } from "@3rdweb-sdk/react";
-import { useContractType } from "@thirdweb-dev/react";
+import { useAddress, useContractType } from "@thirdweb-dev/react";
 import {
   Multiwrap,
   Split,
@@ -127,29 +126,53 @@ export function useIsAccountRole<TContract extends ContractWithRoles>(
 export function useIsAdmin<TContract extends ValidContractClass>(
   contract?: C.Instance<TContract>,
 ) {
-  const { address } = useWeb3();
+  const address = useAddress();
   const { data: contractType } = useContractType(contract?.getAddress());
-  if (contractType === "custom") {
-    return true;
-  }
 
   const contractHasRoles = isContractWithRoles(contract);
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useIsAccountRole(
+  const isAccountRole = useIsAccountRole(
     "admin",
     contractHasRoles ? contract : undefined,
     address,
   );
+
+  if (contractType === "custom") {
+    return true;
+  }
+  return isAccountRole;
+}
+
+export function useIsAdminOrSelf<TContract extends ValidContractClass>(
+  contract?: C.Instance<TContract>,
+  self?: string,
+) {
+  const address = useAddress();
+  const { data: contractType } = useContractType(contract?.getAddress());
+  const isAdmin = useIsAdmin(contract);
+
+  if (address === self) {
+    return true;
+  }
+  if (contractType === "custom") {
+    return true;
+  }
+  return isAdmin;
 }
 
 export function useIsMinter<TContract extends ValidContractClass>(
   contract?: C.Instance<TContract>,
 ) {
-  const { address } = useWeb3();
+  const address = useAddress();
+  const { data: contractType } = useContractType(contract?.getAddress());
   const contractHasRoles = isContractWithRoles(contract);
-  return useIsAccountRole(
+  const isAccountRole = useIsAccountRole(
     "minter",
     contractHasRoles ? contract : undefined,
     address,
   );
+
+  if (contractType === "custom") {
+    return true;
+  }
+  return isAccountRole;
 }

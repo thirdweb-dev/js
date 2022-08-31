@@ -5,7 +5,6 @@ import {
   useNFTDropSupply,
 } from "@3rdweb-sdk/react";
 import { useClaimPhases } from "@3rdweb-sdk/react/hooks/useClaimPhases";
-import { useDisclosure } from "@chakra-ui/hooks";
 import {
   Icon,
   Menu,
@@ -16,6 +15,7 @@ import {
   Stat,
   StatLabel,
   StatNumber,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useNFTDrop } from "@thirdweb-dev/react";
 import { BatchToReveal } from "@thirdweb-dev/sdk";

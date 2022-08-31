@@ -1,6 +1,5 @@
 import { MinterOnly, useEditionDropContractMetadata } from "@3rdweb-sdk/react";
-import { useDisclosure } from "@chakra-ui/hooks";
-import { Icon } from "@chakra-ui/react";
+import { Icon, useDisclosure } from "@chakra-ui/react";
 import { useEditionDrop } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
 import { DropBatchUpload } from "components/batch-upload/DropBatchUpload";

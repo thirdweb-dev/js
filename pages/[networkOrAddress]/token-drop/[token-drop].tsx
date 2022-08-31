@@ -2,13 +2,13 @@ import {
   useTokenDropContractMetadata,
   useTokenDropData,
 } from "@3rdweb-sdk/react";
-import { useDisclosure } from "@chakra-ui/hooks";
 import {
   Stack,
   Stat,
   StatHelpText,
   StatLabel,
   StatNumber,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useTokenDrop } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";

@@ -4,6 +4,7 @@ import { ContractPermissions } from "./permissions";
 import { DropPhases } from "./phases/DropPhases";
 import { ContractSettings } from "./settings/shared/ContractSettings";
 import { isContractWithRoles } from "@3rdweb-sdk/react";
+import { useContract } from "@thirdweb-dev/react";
 import {
   EditionDrop,
   Marketplace,
@@ -22,6 +23,10 @@ export interface ContractTab {
 export function useContractTabs(
   contract?: ValidContractInstance,
 ): ContractTab[] {
+  const { contract: actualContract, data } = useContract(
+    contract?.getAddress(),
+  );
+
   return useMemo(() => {
     const tabs: ContractTab[] = [];
     if (isContractWithRoles(contract)) {
@@ -54,15 +59,22 @@ export function useContractTabs(
       });
     }
 
-    tabs.push({
-      title: "Code",
-      content: <ContractCode contract={contract} />,
-    });
+    if (data?.contractType && actualContract) {
+      tabs.push({
+        title: "Code",
+        content: (
+          <ContractCode
+            contract={actualContract}
+            contractType={data.contractType}
+          />
+        ),
+      });
+    }
     tabs.push({
       title: "Settings",
       content: <ContractSettings contract={contract} />,
     });
 
     return tabs;
-  }, [contract]);
+  }, [contract, actualContract, data]);
 }

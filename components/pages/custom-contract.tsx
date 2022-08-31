@@ -14,6 +14,7 @@ import {
   Router,
   useMatchRoute,
 } from "@tanstack/react-location";
+import { useContract } from "@thirdweb-dev/react";
 import { ens } from "components/contract-components/hooks";
 import { ContractHeader } from "components/custom-contract/contract-header";
 import { Logo } from "components/logo";
@@ -21,6 +22,7 @@ import {
   EnhancedRoute,
   useContractRouteConfig,
 } from "contract-ui/hooks/useContractRouteConfig";
+import { ConditionsNotSet } from "contract-ui/tabs/claim-conditions/components/conditions-not-set";
 import { useIsomorphicLayoutEffect } from "framer-motion";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useCallback, useRef, useState } from "react";
@@ -38,6 +40,7 @@ export const CustomContractPage: React.FC<CustomContractPageProps> = ({
   contractAddress,
   network,
 }) => {
+  const { contract } = useContract(contractAddress);
   const ensQuery = ens.useQuery(contractAddress);
   const [location] = useState(() => new ReactLocation({}));
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -128,6 +131,7 @@ export const CustomContractPage: React.FC<CustomContractPageProps> = ({
         {/* main content */}
         <Container maxW="container.page">
           <Box py={8}>
+            <ConditionsNotSet contract={contract} />
             <Outlet />
           </Box>
         </Container>
