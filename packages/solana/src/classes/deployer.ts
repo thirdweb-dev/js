@@ -35,7 +35,6 @@ export class Deployer {
         mintAuthority: this.wallet.signer,
       })
       .run();
-    console.log("created collection", collectionNft);
     return collectionNft.mint.address.toBase58();
   }
 }
