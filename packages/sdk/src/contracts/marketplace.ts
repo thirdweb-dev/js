@@ -1,27 +1,28 @@
-import { Marketplace as MarketplaceContract } from "@thirdweb-dev/contracts-js";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractRoles } from "../core/classes/contract-roles";
+import { ListingNotFoundError } from "../common";
+import { getRoleHash } from "../common/role";
 import { ContractEncoder } from "../core/classes/contract-encoder";
-import { IStorage } from "@thirdweb-dev/storage";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
-import { SDKOptions } from "../schema/sdk-options";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { MarketplaceAuction } from "../core/classes/marketplace-auction";
+import { MarketplaceDirect } from "../core/classes/marketplace-direct";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { MarketplaceContractSchema } from "../schema/contracts/marketplace";
-import { AuctionListing, DirectListing } from "../types/marketplace";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
 import { ListingType } from "../enums";
+import { MarketplaceContractSchema } from "../schema/contracts/marketplace";
+import { SDKOptions } from "../schema/sdk-options";
+import { DEFAULT_QUERY_ALL_COUNT } from "../types/QueryParams";
+import { AuctionListing, DirectListing } from "../types/marketplace";
+import { MarketplaceFilter } from "../types/marketplace/MarketPlaceFilter";
+import { Marketplace as MarketplaceContract } from "@thirdweb-dev/contracts-js";
+import ABI from "@thirdweb-dev/contracts-js/abis/Marketplace.json";
+import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
 import invariant from "tiny-invariant";
-import { ListingNotFoundError } from "../common";
-import { MarketplaceFilter } from "../types/marketplace/MarketPlaceFilter";
-import { getRoleHash } from "../common/role";
-import { MarketplaceDirect } from "../core/classes/marketplace-direct";
-import { MarketplaceAuction } from "../core/classes/marketplace-auction";
-import { DEFAULT_QUERY_ALL_COUNT } from "../types/QueryParams";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -40,7 +41,7 @@ import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 export class Marketplace implements UpdateableNetwork {
   static contractType = "marketplace" as const;
   static contractRoles = ["admin", "lister", "asset"] as const;
-  static contractAbi = require("@thirdweb-dev/contracts-js/abis/Marketplace.json");
+  static contractAbi = ABI as any;
   /**
    * @internal
    */

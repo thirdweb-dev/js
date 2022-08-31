@@ -1,28 +1,3 @@
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { IStorage } from "@thirdweb-dev/storage";
-import {
-  NetworkOrSignerOrProvider,
-  TransactionResultWithId,
-} from "../core/types";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { SDKOptions } from "../schema/sdk-options";
-import { Pack as PackContract } from "@thirdweb-dev/contracts-js";
-import { PackContractSchema } from "../schema/contracts/packs";
-import { ContractRoles } from "../core/classes/contract-roles";
-import { ContractRoyalty } from "../core/classes/contract-royalty";
-import { Erc1155 } from "../core/classes/erc-1155";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { ContractEvents } from "../core/classes/contract-events";
-import {
-  PackMetadataInput,
-  PackMetadataInputSchema,
-  PackMetadataOutput,
-  PackRewards,
-  PackRewardsOutput,
-} from "../schema/tokens/pack";
-import { BigNumber, BigNumberish, ethers } from "ethers";
 import {
   fetchCurrencyMetadata,
   hasERC20Allowance,
@@ -30,11 +5,41 @@ import {
 } from "../common/currency";
 import { isTokenApprovedForTransfer } from "../common/marketplace";
 import { uploadOrExtractURI } from "../common/nft";
-import { EditionMetadata, EditionMetadataOwner } from "../schema";
-import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
-import { QueryAllParams } from "../types";
 import { getRoleHash } from "../common/role";
-import { ITokenBundle, PackCreatedEvent, PackOpenedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Pack";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractRoles } from "../core/classes/contract-roles";
+import { ContractRoyalty } from "../core/classes/contract-royalty";
+import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { Erc1155 } from "../core/classes/erc-1155";
+import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import {
+  NetworkOrSignerOrProvider,
+  TransactionResultWithId,
+} from "../core/types";
+import { EditionMetadata, EditionMetadataOwner } from "../schema";
+import { PackContractSchema } from "../schema/contracts/packs";
+import { SDKOptions } from "../schema/sdk-options";
+import {
+  PackMetadataInput,
+  PackMetadataInputSchema,
+  PackMetadataOutput,
+  PackRewards,
+  PackRewardsOutput,
+} from "../schema/tokens/pack";
+import { QueryAllParams } from "../types";
+import { Pack as PackContract } from "@thirdweb-dev/contracts-js";
+import ABI from "@thirdweb-dev/contracts-js/abis/Pack.json";
+import {
+  ITokenBundle,
+  PackCreatedEvent,
+  PackOpenedEvent,
+} from "@thirdweb-dev/contracts-js/dist/declarations/src/Pack";
+import { IStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 
 /**
  * Create lootboxes of NFTs with rarity based open mechanics.
@@ -53,7 +58,7 @@ import { ITokenBundle, PackCreatedEvent, PackOpenedEvent } from "@thirdweb-dev/c
 export class Pack extends Erc1155<PackContract> {
   static contractType = "pack" as const;
   static contractRoles = ["admin", "minter", "pauser", "transfer"] as const;
-  static contractAbi = require("@thirdweb-dev/contracts-js/abis/Pack.json");
+  static contractAbi = ABI as any;
   /**
    * @internal
    */

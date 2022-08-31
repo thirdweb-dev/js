@@ -1,10 +1,27 @@
-import { ContractRoles } from "../core/classes/contract-roles";
-import { SignatureDrop as SignatureDropContract } from "@thirdweb-dev/contracts-js";
-import { BigNumber, BigNumberish, constants } from "ethers";
+import { getRoleHash } from "../common";
+import { FEATURE_NFT_REVEALABLE } from "../constants/erc721-features";
+import { TransactionTask } from "../core/classes/TransactionTask";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
+import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { IStorage } from "@thirdweb-dev/storage";
+import { Erc721 } from "../core/classes/erc-721";
+import { Erc721Burnable } from "../core/classes/erc-721-burnable";
+import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
+import { Erc721Supply } from "../core/classes/erc-721-supply";
+import { Erc721WithQuantitySignatureMintable } from "../core/classes/erc-721-with-quantity-signature-mintable";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import {
+  DelayedReveal,
+  DropClaimConditions,
+  Erc721Claimable,
+  Erc721Droppable,
+} from "../core/index";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -17,28 +34,12 @@ import {
   NFTMetadataOrUri,
   NFTMetadataOwner,
 } from "../schema/tokens/common";
-import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
-import { Erc721 } from "../core/classes/erc-721";
-import { ContractPrimarySale } from "../core/classes/contract-sales";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
-import { Erc721Supply } from "../core/classes/erc-721-supply";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { UploadProgressEvent } from "../types";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { getRoleHash } from "../common";
-import {
-  DelayedReveal,
-  DropClaimConditions,
-  Erc721Claimable,
-  Erc721Droppable,
-} from "../core/index";
-import { Erc721WithQuantitySignatureMintable } from "../core/classes/erc-721-with-quantity-signature-mintable";
-import { TransactionTask } from "../core/classes/TransactionTask";
-import { Erc721Burnable } from "../core/classes/erc-721-burnable";
-import { FEATURE_NFT_REVEALABLE } from "../constants/erc721-features";
+import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
+import { SignatureDrop as SignatureDropContract } from "@thirdweb-dev/contracts-js";
+import ABI from "@thirdweb-dev/contracts-js/abis/SignatureDrop.json";
+import { IStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, constants } from "ethers";
 
 /**
  * Setup a collection of NFTs where when it comes to minting, you can authorize
@@ -59,7 +60,7 @@ import { FEATURE_NFT_REVEALABLE } from "../constants/erc721-features";
 export class SignatureDrop extends Erc721<SignatureDropContract> {
   static contractType = "signature-drop" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractAbi = require("@thirdweb-dev/contracts-js/abis/SignatureDrop.json");
+  static contractAbi = ABI as any;
   /**
    * @internal
    */

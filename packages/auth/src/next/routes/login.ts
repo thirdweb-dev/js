@@ -1,5 +1,5 @@
 import { ThirdwebAuthContext } from "../types";
-import { LoginPayload } from "@thirdweb-dev/sdk/dist/src/schema";
+import { LoginPayload } from "@thirdweb-dev/sdk";
 import { serialize } from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 

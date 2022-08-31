@@ -27,7 +27,8 @@
     "generate:md-docs": "yarn api-documenter markdown -i ./temp -o ./docs",
     "generate-snippets": "node ./scripts/generate-snippets.mjs",
     "build": "tsc && preconstruct build",
-    "prepublishOnly": "yarn build"
+    "e2e": "yarn test-ct",
+    "test-ct": "playwright test -c playwright-ct.config.ts"
   },
   "sideEffects:": false,
   "devDependencies": {
@@ -38,6 +39,8 @@
     "@microsoft/api-documenter": "^7.15.3",
     "@microsoft/api-extractor": "^7.19.4",
     "@microsoft/tsdoc": "^0.14.1",
+    "@playwright/experimental-ct-react": "^1.25.1",
+    "@playwright/test": "^1.25.1",
     "@preconstruct/cli": "^2.2.1",
     "@types/color": "^3.0.3",
     "@types/mime": "^3.0.1",
@@ -64,8 +67,8 @@
     "@gnosis.pm/safe-ethers-adapters": "0.1.0-alpha.9",
     "@gnosis.pm/safe-ethers-lib": "1.1.0",
     "@tanstack/react-query": "^4.0.10",
-    "@thirdweb-dev/storage": "*",
     "@thirdweb-dev/sdk": "*",
+    "@thirdweb-dev/storage": "*",
     "@zag-js/menu": "^0.1.11",
     "@zag-js/react": "^0.1.13",
     "color": "^4.2.3",
