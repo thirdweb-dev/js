@@ -6,12 +6,12 @@ import {
   MintNFTReturnType,
   MintNFTSupplyParams,
   NFT,
-  NFTContract,
   RequiredParam,
   TransferNFTParams,
   WalletAddress,
   useNFTBalanceParams,
   useTotalCirculatingSupplyParams,
+  Erc721OrErc1155,
 } from "../../types";
 import {
   cacheKeys,
@@ -27,10 +27,10 @@ import invariant from "tiny-invariant";
  * @internal
  */
 function convertResponseToNFTType(
-  contract: NFTContract,
+  contract: Erc721OrErc1155,
   metadata: Awaited<ReturnType<typeof contract["get"]>>,
 ): NFT<typeof contract> {
-  if (contract.featureName === "ERC721") {
+  if (contract instanceof Erc721) {
     return {
       type: "ERC721",
       supply: 1,
@@ -38,19 +38,22 @@ function convertResponseToNFTType(
       ...metadata,
     } as NFT<Erc721>;
   }
-  return {
-    type: "ERC1155",
-    supply: 0,
-    owner: "",
-    ...metadata,
-  } as NFT<Erc1155>;
+  if (contract instanceof Erc1155) {
+    return {
+      type: "ERC1155",
+      supply: 0,
+      owner: "",
+      ...metadata,
+    } as NFT<Erc1155>;
+  }
+  invariant(false, "Unknown NFT type");
 }
 
 /**
  * @internal
  */
 function convertResponseToNFTTypeArray(
-  contract: NFTContract,
+  contract: Erc721OrErc1155,
   metadata: Awaited<ReturnType<typeof contract["get"]>>[],
 ): NFT<typeof contract>[] {
   return metadata.map((m) => convertResponseToNFTType(contract, m));
@@ -60,7 +63,7 @@ function convertResponseToNFTTypeArray(
 /** **********************/
 
 /**
- * Use this to get an individual NFT token of your {@link NFTContract}.
+ * Use this to get an individual NFT token of your {@link Erc721OrErc1155}.
  *
  * @example
  * ```javascript
@@ -73,12 +76,12 @@ function convertResponseToNFTTypeArray(
  * const { data: nft, isLoading, error } = useNFT(contract?.nft, <tokenId>);
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
+ * @param contract - an instance of a {@link Erc721OrErc1155}
  * @param tokenId - the tokenId to look up
  * @returns a response object that includes the metadata for the given tokenId
  * @beta
  */
-export function useNFT<TContract extends NFTContract>(
+export function useNFT<TContract extends Erc721OrErc1155>(
   contract: RequiredParam<TContract>,
   tokenId: RequiredParam<BigNumberish>,
 ) {
@@ -102,7 +105,7 @@ export function useNFT<TContract extends NFTContract>(
 }
 
 /**
- * Use this to get a list of NFT tokens of your {@link NFTContract}.
+ * Use this to get a list of NFT tokens of your {@link Erc721OrErc1155}.
  *
  * @example
  * ```javascript
@@ -115,12 +118,12 @@ export function useNFT<TContract extends NFTContract>(
  * const { data: nfts, isLoading, error } = useNFTs(contract?.nft, { start: 0, count: 100 });
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
+ * @param contract - an instance of a {@link Erc721OrErc1155}
  * @param queryParams - query params to pass to the query for the sake of pagination
  * @returns a response object that includes an array of NFTs
  * @beta
  */
-export function useNFTs<TContract extends NFTContract>(
+export function useNFTs<TContract extends Erc721OrErc1155>(
   contract: RequiredParam<TContract>,
   queryParams?: QueryAllParams,
 ) {
@@ -143,7 +146,7 @@ export function useNFTs<TContract extends NFTContract>(
 }
 
 /**
- * Use this to get a the total (minted) supply of your {@link NFTContract}.
+ * Use this to get a the total (minted) supply of your {@link Erc721OrErc1155}.
  *
  *  * @example
  * ```javascript
@@ -156,11 +159,11 @@ export function useNFTs<TContract extends NFTContract>(
  * const { data: totalSupply, isLoading, error } = useNFTSupply(contract?.nft);
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
+ * @param contract - an instance of a {@link Erc721OrErc1155}
  * @returns a response object that incudes the total minted supply
  * @beta
  */
-export function useTotalCirculatingSupply<TContract extends NFTContract>(
+export function useTotalCirculatingSupply<TContract extends Erc721OrErc1155>(
   ...[contract, tokenId]: useTotalCirculatingSupplyParams<TContract>
 ) {
   const contractAddress = contract?.getAddress();
@@ -181,7 +184,7 @@ export function useTotalCirculatingSupply<TContract extends NFTContract>(
 }
 
 /**
- * Use this to get a the number of tokens in your {@link NFTContract}.
+ * Use this to get a the number of tokens in your {@link Erc721OrErc1155}.
  *
  * @remarks The `total count` and `total supply` are the same for {@link ERC721} based contracts.
  * For {@link ERC1155} the `total count` is the number of NFTs that exist on the contract, **not** the sum of all supply of each token. (Since ERC1155 can have multiple owners per token.)
@@ -197,11 +200,11 @@ export function useTotalCirculatingSupply<TContract extends NFTContract>(
  * const { data: totalCount, isLoading, error } = useTotalCount(contract?.nft);
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
+ * @param contract - an instance of a {@link Erc721OrErc1155}
  * @returns a response object that incudes the total number of tokens in the contract
  * @beta
  */
-export function useTotalCount(contract: RequiredParam<NFTContract>) {
+export function useTotalCount(contract: RequiredParam<Erc721OrErc1155>) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.nft.query.totalCount(contractAddress),
@@ -216,7 +219,7 @@ export function useTotalCount(contract: RequiredParam<NFTContract>) {
 }
 
 /**
- * Use this to get a the owned NFTs for a specific {@link NFTContract} and wallet address.
+ * Use this to get a the owned NFTs for a specific {@link Erc721OrErc1155} and wallet address.
  *
  * @example
  * ```javascript
@@ -229,12 +232,12 @@ export function useTotalCount(contract: RequiredParam<NFTContract>) {
  * const { data: ownedNFTs, isLoading, error } = useOwnedNFTs(contract?.nft, <OwnerWalletAddress>);
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
+ * @param contract - an instance of a {@link Erc721OrErc1155}
  * @param ownerWalletAddress - the wallet adress to get owned tokens for
  * @returns a response object that includes the list of owned tokens
  * @beta
  */
-export function useOwnedNFTs<TContract extends NFTContract>(
+export function useOwnedNFTs<TContract extends Erc721OrErc1155>(
   contract: RequiredParam<TContract>,
   ownerWalletAddress: RequiredParam<WalletAddress>,
 ) {
@@ -261,7 +264,7 @@ export function useOwnedNFTs<TContract extends NFTContract>(
 }
 
 /**
- * Use this to get a the total balance of a {@link NFTContract} and wallet address.
+ * Use this to get a the total balance of a {@link Erc721OrErc1155} and wallet address.
  *
  *  @example
  * ```javascript
@@ -274,12 +277,12 @@ export function useOwnedNFTs<TContract extends NFTContract>(
  * const { data: ownerBalance, isLoading, error } = useNFTBalance(contract?.nft, <OwnerWalletAddress>);
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
+ * @param contract - an instance of a {@link Erc721OrErc1155}
  * @param ownerWalletAddress - the wallet adress to check the balance of
  * @returns a response object that includes the total balance of the owner
  * @beta
  */
-export function useNFTBalance<TContract extends NFTContract>(
+export function useNFTBalance<TContract extends Erc721OrErc1155>(
   ...[contract, ownerWalletAddress, tokenId]: useNFTBalanceParams<TContract>
 ) {
   const contractAddress = contract?.getAddress();
@@ -313,7 +316,7 @@ export function useNFTBalance<TContract extends NFTContract>(
 /** **********************/
 
 /**
- * Use this to mint a new NFT on your {@link NFTContract}
+ * Use this to mint a new NFT on your {@link Erc721OrErc1155}
  *
  * @example
  * ```jsx
@@ -364,11 +367,11 @@ export function useNFTBalance<TContract extends NFTContract>(
  * };
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
+ * @param contract - an instance of a {@link Erc721OrErc1155}
  * @returns a mutation object that can be used to mint a new NFT token to the connected wallet
  * @beta
  */
-export function useMintNFT<TContract extends NFTContract>(
+export function useMintNFT<TContract extends Erc721OrErc1155>(
   contract: RequiredParam<TContract>,
 ) {
   const activeChainId = useActiveChainId();
@@ -404,7 +407,7 @@ export function useMintNFT<TContract extends NFTContract>(
 }
 
 /**
- * Use this to mint a new NFT on your {@link NFTContract}
+ * Use this to mint a new NFT on your {@link Erc721OrErc1155}
  *
  * @example
  * ```jsx
@@ -490,7 +493,7 @@ export function useMintNFTSupply(contract: Erc1155) {
 }
 
 /**
- * Use this to transfer tokens on your {@link NFTContract}
+ * Use this to transfer tokens on your {@link Erc721OrErc1155}
  *
  * @example
  * ```jsx
@@ -541,11 +544,11 @@ export function useMintNFTSupply(contract: Erc1155) {
  * };
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
+ * @param contract - an instance of a {@link Erc721OrErc1155}
  * @returns a mutation object that can be used to transfer NFTs
  * @beta
  */
-export function useTransferNFT<TContract extends NFTContract>(
+export function useTransferNFT<TContract extends Erc721OrErc1155>(
   contract: RequiredParam<TContract>,
 ) {
   const activeChainId = useActiveChainId();
@@ -661,7 +664,7 @@ export function useAirdropNFT(contract: Erc1155) {
 /** **********************/
 
 /**
- * Use this to burn an NFT on your {@link NFTContract}
+ * Use this to burn an NFT on your {@link Erc721OrErc1155}
  *
  * @example
  * ```jsx
@@ -712,11 +715,11 @@ export function useAirdropNFT(contract: Erc1155) {
  * };
  * ```
  *
- * @param contract - an instance of a {@link NFTContract}
+ * @param contract - an instance of a {@link Erc721OrErc1155}
  * @returns a mutation object that can be used to burn an NFT token from the connected wallet
  * @beta
  */
-export function useBurnNFT<TContract extends NFTContract>(
+export function useBurnNFT<TContract extends Erc721OrErc1155>(
   contract: RequiredParam<TContract>,
 ) {
   const activeChainId = useActiveChainId();

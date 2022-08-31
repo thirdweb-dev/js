@@ -16,6 +16,7 @@ import type {
   NFTCollection,
   Edition,
   TokenDrop,
+  Erc20,
 } from "@thirdweb-dev/sdk";
 import {
   NFTMetadataInput,
@@ -94,11 +95,17 @@ export type NFTContract =
   | Edition
   | Omit<DropContract, "TokenDrop">;
 
+  /**
+  * Possible NFT contract types.
+  * @beta
+  */
+export type Erc721OrErc1155 = Erc721 | Erc1155;
+
 /**
  * A single NFT token
  * @beta
  */
-export type NFT<TContract extends NFTContract> = {
+export type NFT<TContract extends Erc721OrErc1155> = {
   /**
    * The actual metadata of the NFT (name, image, etc)
    */
@@ -175,7 +182,7 @@ export type MintNFTSupplyParams = {
  *
  * @beta
  */
-export type MintNFTParams<TContract extends NFTContract> =
+export type MintNFTParams<TContract extends Erc721OrErc1155> =
   TContract extends Erc1155
     ? { metadata: NFTMetadataOrUri; supply: BigNumberish; to: WalletAddress }
     : { metadata: NFTMetadataOrUri; to: WalletAddress };
@@ -196,7 +203,7 @@ export type MintNFTReturnType<TContract> = TContract extends Erc721
  *
  * @beta
  */
-export type BurnNFTParams<TContract extends NFTContract> =
+export type BurnNFTParams<TContract extends Erc721OrErc1155> =
   TContract extends Erc1155
     ? { tokenId: BigNumberish; amount: Amount }
     : { tokenId: BigNumberish };
@@ -293,33 +300,60 @@ export type ClaimTokenParams = {
 
 // Helpers
 
-export function getErc721Or1155(
-  contract: ValidContractInstance | SmartContract,
+export function getErcs(
+  contract: RequiredParam<ValidContractInstance | SmartContract>,
 ) {
-  const ercVariant =
-    "erc721" in contract
-      ? contract.erc721
-      : "erc1155" in contract
-      ? contract.erc1155
-      : undefined;
-  invariant(ercVariant, "Contract instance does not support erc721 or erc1155");
-  return ercVariant;
+  return {
+    erc1155: getErc1155(contract),
+    erc721: getErc721(contract),
+    erc20: getErc20(contract),
+  }
 }
 
-export function getErc721Or1155OrErc20(
-  contract: ValidContractInstance | SmartContract,
-) {
-  const ercVariant =
-    "erc721" in contract
-      ? contract.erc721
-      : "erc1155" in contract
-      ? contract.erc1155
-      : "erc20" in contract
-      ? contract.erc20
-      : undefined;
-  invariant(
-    ercVariant,
-    "Contract instance does not support erc721 or erc1155 or erc20",
-  );
-  return ercVariant;
+export function getErc1155(
+  contract: RequiredParam<ValidContractInstance | SmartContract>,
+): Erc1155 | undefined {
+  if (!contract) {
+    return undefined;
+  }
+  try {
+    if ("erc1155" in contract) {
+      return contract.erc1155;
+    }
+  } catch (error) {
+    return undefined;
+  }
+  return undefined;
+}
+
+export function getErc721(
+  contract: RequiredParam<ValidContractInstance | SmartContract>,
+): Erc721 | undefined {
+  if (!contract) {
+    return undefined;
+  }
+  try {
+    if ("erc721" in contract) {
+      return contract.erc721;
+    }
+  } catch (error) {
+    return undefined;
+  }
+  return undefined;
+}
+
+export function getErc20(
+  contract: RequiredParam<ValidContractInstance | SmartContract>,
+): Erc20 | undefined {
+  if (!contract) {
+    return undefined;
+  }
+  try {
+    if ("erc20" in contract) {
+      return contract.erc20;
+    }
+  } catch (error) {
+    return undefined;
+  }
+  return undefined;
 }
