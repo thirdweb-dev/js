@@ -7,7 +7,7 @@ export type ThirdwebAuthConfig = {
   domain: string;
   callbacks?: {
     login?: (address: string) => void;
-    user?: (address: string) => ThirdwebAuthUser;
+    user?: (address: string) => Omit<ThirdwebAuthUser, "address">;
   };
 };
 
@@ -16,7 +16,7 @@ export type ThirdwebAuthContext = {
   domain: string;
   callbacks?: {
     login?: (address: string) => void;
-    user?: (address: string) => ThirdwebAuthUser;
+    user?: (address: string) => Omit<ThirdwebAuthUser, "address">;
   };
 };
 
