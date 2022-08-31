@@ -1,15 +1,13 @@
-name: Release
+name: Release Nightly
 
 on:
   push:
     branches:
       - main
 
-concurrency: ${{ github.workflow }}-${{ github.ref }}
-
 jobs:
   release:
-    name: Release
+    name: Release Nightly
     runs-on: ubuntu-latest
     # To use Remote Caching, uncomment the next lines and follow the steps below.
     env:
@@ -28,12 +26,15 @@ jobs:
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Create Release Pull Request or Publish to npm
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          # This expects you to have a script called release which does a build for your packages and calls changeset publish
-          publish: yarn release
+      - name: Create an .npmrc for nightly release
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          cat << EOF > "$HOME/.npmrc"
+            //registry.npmjs.org/:_authToken=$NPM_TOKEN
+          EOF
+
+      - name: Publish Nightly version to NPM
+        run: yarn ci:release:nightly
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
