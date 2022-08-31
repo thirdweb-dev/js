@@ -236,36 +236,12 @@ export function useClaimIneligibilityReasons(
  * @example
  * ```jsx
  * const Component = () => {
- *   const nftDrop = useNFTDrop(<ContractAddress>);
- *   const {
- *     mutate: setClaimConditions,
- *     isLoading,
- *     error,
- *   } = useSetClaimConditions(nftDrop);
- *
- *   if (error) {
- *     console.error("failed to set claim conditions", error);
- *   }
- *
- *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => setClaimConditions({ phases: [{ price: 2, maxQuantity: 100 }] })}
- *     >
- *       Set Claim Conditions!
- *     </button>
- *   );
- * };
- * ```
- * @example
- * ```jsx
- * const Component = () => {
  *   const { contract } = useContract(<ContractAddress>);
  *   const {
  *     mutate: setClaimConditions,
  *     isLoading,
  *     error,
- *   } = useSetClaimConditions(contract?.nft);
+ *   } = useSetClaimConditions(contract);
  *
  *   if (error) {
  *     console.error("failed to set claim conditions", error);
@@ -330,36 +306,12 @@ export function useSetClaimConditions(
  * @example
  * ```jsx
  * const Component = () => {
- *   const nftDrop = useNFTDrop(<ContractAddress>);
- *   const {
- *     mutate: resetClaimConditions,
- *     isLoading,
- *     error,
- *   } = useResetClaimConditions(nftDrop);
- *
- *   if (error) {
- *     console.error("failed to reset claim conditions", error);
- *   }
- *
- *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={resetClaimConditions}
- *     >
- *       Reset Claim Conditions
- *     </button>
- *   );
- * };
- * ```
- * @example
- * ```jsx
- * const Component = () => {
  *   const { contract } = useContract(<ContractAddress>);
  *   const {
  *     mutate: resetClaimConditions,
  *     isLoading,
  *     error,
- *   } = useResetClaimConditions(contract?.nft);
+ *   } = useResetClaimConditions(contract);
  *
  *   if (error) {
  *     console.error("failed to reset claim conditions", error);
