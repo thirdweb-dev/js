@@ -8,7 +8,8 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/*",
+      "e2e/*"
     ]
   },
   "devDependencies": {
@@ -18,10 +19,12 @@
     "eslint-config-thirdweb": "*",
     "prettier": "^2.7.1",
     "turbo": "latest",
-    "yarn-deduplicate": "^5.0.2"
+    "yarn-deduplicate": "^5.0.2",
+    "patch-package": "^6.4.7",
+    "postinstall-postinstall": "^2.1.0"
   },
   "scripts": {
-    "postinstall": "yarn-deduplicate yarn.lock",
+    "postinstall": "yarn-deduplicate yarn.lock && yarn patch-package",
     "test": "turbo run test",
     "build": "turbo run build",
     "dev": "turbo run dev --no-cache --parallel --continue",
