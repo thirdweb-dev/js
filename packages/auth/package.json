@@ -11,7 +11,8 @@
   "files": [
     "dist/",
     "next/",
-    "express/"
+    "express/",
+    "next-auth/"
   ],
   "scripts": {
     "build": "preconstruct build",
@@ -20,7 +21,8 @@
   "preconstruct": {
     "entrypoints": [
       "next/index.ts",
-      "express/index.ts"
+      "express/index.ts",
+      "next-auth/index.ts"
     ]
   },
   "devDependencies": {
@@ -45,6 +47,7 @@
     "ethers": ">=5.5.1",
     "express": "^4.18.1",
     "next": "12.2.0",
+    "next-auth": "^4.10.3",
     "prettier": "^2.7.1",
     "typescript": "^4.7.4"
   },
@@ -52,7 +55,8 @@
     "@thirdweb-dev/sdk": "*",
     "ethers": ">=5.5.1",
     "express": "^4.18.1",
-    "next": "12.2.0"
+    "next": "12.2.0",
+    "next-auth": "^4.10.3"
   },
   "dependencies": {
     "cookie": "^0.5.0",
