@@ -87,15 +87,11 @@ export function useActiveClaimCondition<TContract extends NFTContract | Erc20>(
     cacheKeys.extensions.claimConditions.getActive(contractAddress, tokenId),
     () => {
       invariant(contract, "No Contract instance provided");
-      invariant(
-        contract?.drop?.claim?.conditions?.getActive,
-        "Contract instance does not support contract?.drop?.claim?.conditions.getActive",
-      );
       if (contract.featureName === "ERC1155") {
         invariant(tokenId, "tokenId is required for ERC1155 claim conditions");
-        return contract?.drop?.claim?.conditions?.getActive(tokenId);
+        return contract?.claimConditions.getActive(tokenId);
       }
-      return contract?.drop?.claim?.conditions?.getActive();
+      return contract?.claimConditions.getActive();
     },
     {
       // Checks that happen here:
@@ -140,15 +136,11 @@ export function useClaimConditions<TContract extends NFTContract | Erc20>(
     cacheKeys.extensions.claimConditions.getAll(contractAddress, tokenId),
     () => {
       invariant(contract, "No Contract instance provided");
-      invariant(
-        contract?.drop?.claim?.conditions?.getAll,
-        "Contract instance does not support drop.claim.conditions.getAll",
-      );
       if (contract.featureName === "ERC1155") {
         invariant(tokenId, "tokenId is required for ERC1155 claim conditions");
-        return contract?.drop?.claim?.conditions?.getAll(tokenId);
+        return contract?.claimConditions.getAll(tokenId);
       }
-      return contract?.drop?.claim?.conditions?.getAll();
+      return contract?.claimConditions.getAll();
     },
     {
       // Checks that happen here:
@@ -197,22 +189,18 @@ export function useClaimIneligibilityReasons<
     ),
     () => {
       invariant(contract, "No Contract instance provided");
-      invariant(
-        contract?.drop?.claim?.conditions.getClaimIneligibilityReasons,
-        "Contract instance does not support claimConditions.getClaimIneligibilityReasons",
-      );
       if (contract.featureName === "ERC1155") {
         invariant(
           tokenId,
           "tokenId is required for ERC1155 claim ineligibility reasons",
         );
-        return contract?.drop?.claim?.conditions.getClaimIneligibilityReasons(
+        return contract?.claimConditions.getClaimIneligibilityReasons(
           tokenId,
           params.quantity,
           params.walletAddress,
         );
       }
-      return contract?.drop?.claim?.conditions.getClaimIneligibilityReasons(
+      return contract?.claimConditions.getClaimIneligibilityReasons(
         params.quantity,
         params.walletAddress,
       );
@@ -307,9 +295,9 @@ export function useSetClaimConditions<TContract extends NFTContract | Erc20>(
       invariant(phases, 'No "phases" provided');
       if (contract.featureName === "ERC1155") {
         invariant(tokenId, "tokenId is required for ERC1155 claim conditions");
-        return contract?.drop?.claim?.conditions.set(tokenId, phases, reset);
+        return contract?.claimConditions.set(tokenId, phases, reset);
       }
-      return contract?.drop?.claim?.conditions.set(phases, reset);
+      return contract?.claimConditions.set(phases, reset);
     },
     {
       onSettled: () => {
@@ -401,18 +389,16 @@ export function useResetClaimConditions<TContract extends NFTContract | Erc20>(
 
       if (contract.featureName === "ERC1155") {
         invariant(tokenId, "tokenId is required for ERC1155 claim conditions");
-        const claimConditions = await contract?.drop?.claim?.conditions.getAll(
-          tokenId,
-        );
-        return contract?.drop?.claim?.conditions.set(
+        const claimConditions = await contract?.claimConditions.getAll(tokenId);
+        return contract?.claimConditions.set(
           tokenId,
           cleanConditions(claimConditions || []),
           true,
         );
       }
 
-      const claimConditions = await contract?.drop?.claim?.conditions.getAll();
-      return await contract?.drop?.claim?.conditions.set(
+      const claimConditions = await contract?.claimConditions.getAll();
+      return await contract?.claimConditions.set(
         cleanConditions(claimConditions || []),
         true,
       );

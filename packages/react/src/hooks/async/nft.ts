@@ -129,14 +129,10 @@ export function useNFTs<TContract extends NFTContract>(
     cacheKeys.contract.nft.query.all(contractAddress, queryParams),
     async () => {
       invariant(contract, "No Contract instance provided");
-      invariant(
-        contract.query?.all,
-        "Contract instance does not support query.all",
-      );
 
       return convertResponseToNFTTypeArray(
         contract,
-        await contract.query.all(queryParams),
+        await contract.getAll(queryParams),
       );
     },
     {
@@ -173,18 +169,10 @@ export function useTotalCirculatingSupply<TContract extends NFTContract>(
     () => {
       invariant(contract, "No Contract instance provided");
       if (contract.featureName === "ERC721") {
-        invariant(
-          contract?.query?.totalCirculatingSupply,
-          "Contract instance does not support query.totalCirculatingSupply",
-        );
-        return contract.query.totalCirculatingSupply();
+        return contract.totalCirculatingSupply();
       }
-      invariant(
-        contract.query?.totalCirculatingSupply,
-        "Contract instance does not support query.getTotalCount",
-      );
       invariant(tokenId, "No tokenId provided");
-      return contract.query.totalCirculatingSupply(tokenId);
+      return contract.totalCirculatingSupply(tokenId);
     },
     {
       enabled: !!contract,
@@ -219,11 +207,7 @@ export function useTotalCount(contract: RequiredParam<NFTContract>) {
     cacheKeys.contract.nft.query.totalCount(contractAddress),
     () => {
       invariant(contract, "No Contract instance provided");
-      invariant(
-        contract.query?.totalCount,
-        "Contract instance does not support query.totalCount",
-      );
-      return contract.query.totalCount();
+      return contract.totalCount();
     },
     {
       enabled: !!contract,
@@ -260,22 +244,14 @@ export function useOwnedNFTs<TContract extends NFTContract>(
     async () => {
       invariant(contract, "No Contract instance provided");
       if (contract.featureName === "ERC721") {
-        invariant(
-          contract.query?.owned?.all,
-          "Contract instance does not support query.owned.all",
-        );
         return convertResponseToNFTTypeArray(
           contract,
-          await contract.query.owned.all(ownerWalletAddress),
+          await contract.getOwned(ownerWalletAddress),
         );
       }
-      invariant(
-        contract.query?.owned,
-        "Contract instance does not support query.owned",
-      );
       return convertResponseToNFTTypeArray(
         contract,
-        await contract.query.owned(ownerWalletAddress),
+        await contract.getOwned(ownerWalletAddress),
       );
     },
     {
@@ -402,16 +378,16 @@ export function useMintNFT<TContract extends NFTContract>(
   return useMutation(
     async (data: MintNFTParams<TContract>) => {
       invariant(data.to, 'No "to" address provided');
-      invariant(contract?.mint?.to, "contract does not support mint.to");
+      invariant(contract, "contract is undefined");
       if (contract.featureName === "ERC1155") {
         invariant("supply" in data, "supply not provided");
         const { to, metadata, supply } = data;
-        return (await contract.mint.to(to, {
+        return (await contract.mintTo(to, {
           metadata,
           supply: BigNumber.from(supply || 1),
         })) as MintNFTReturnType<TContract>;
       }
-      return (await contract.mint.to(
+      return (await contract.mintTo(
         data.to,
         data.metadata,
       )) as MintNFTReturnType<TContract>;
@@ -491,15 +467,12 @@ export function useMintNFTSupply(contract: Erc1155) {
   return useMutation(
     async (data: MintNFTSupplyParams) => {
       invariant(data.to, 'No "to" address provided');
-      invariant(
-        contract?.mint?.additionalSupplyTo,
-        "contract does not support mint.additionalSupplyTo",
-      );
+      invariant(contract, "contract is undefined");
 
       invariant("tokenId" in data, "tokenId not provided");
       invariant("additionalSupply" in data, "additionalSupply not provided");
       const { to, tokenId, additionalSupply } = data;
-      return await contract.mint.additionalSupplyTo(
+      return await contract.mintAdditionalSupplyTo(
         to,
         tokenId,
         additionalSupply,
@@ -753,14 +726,14 @@ export function useBurnNFT<TContract extends NFTContract>(
   return useMutation(
     async (data: BurnNFTParams<TContract>) => {
       invariant(data.tokenId, "No tokenId provided");
-      invariant(contract?.burn, "contract does not support burn");
+      invariant(contract, "contract is undefined");
       if (contract.featureName === "ERC1155") {
         invariant("amount" in data, "amount not provided");
         const { tokenId, amount } = data;
-        return await contract.burn.tokens(tokenId, amount);
+        return await contract.burn(tokenId, amount);
       }
       const { tokenId } = data;
-      return await contract.burn.token(tokenId);
+      return await contract.burn(tokenId);
     },
     {
       onSettled: () =>

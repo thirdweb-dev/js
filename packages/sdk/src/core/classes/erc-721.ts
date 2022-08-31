@@ -248,7 +248,14 @@ export class Erc721<
     return assertEnabled(this.query, FEATURE_NFT_SUPPLY).all(queryParams);
   }
 
-  public async getTotalCount() {
+  /**
+   * Get the number of NFTs minted
+   * @remarks This returns the total number of NFTs minted in this contract, **not** the total supply of a given token.
+   *
+   * @returns the total number of NFTs minted in this contract
+   * @public
+   */
+  public async totalCount() {
     return this.nextTokenIdToMint();
   }
 

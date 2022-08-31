@@ -118,8 +118,8 @@ export function useMintToken(contract: RequiredParam<Erc20>) {
   return useMutation(
     (data: TokenParams) => {
       const { to, amount } = data;
-      invariant(contract?.mint?.to, "contract does not support mint.to");
-      return contract.mint.to(to, amount);
+      invariant(contract, "contract is undefined");
+      return contract.mintTo(to, amount);
     },
     {
       onSettled: () =>
@@ -343,8 +343,8 @@ export function useBurnToken(contract: RequiredParam<Erc20>) {
   return useMutation(
     (data: TokenBurnParams) => {
       const { amount } = data;
-      invariant(contract?.burn, "contract does not support burn");
-      return contract.burn.tokens(amount);
+      invariant(contract, "contract is undefined");
+      return contract.burn(amount);
     },
     {
       onSettled: () =>

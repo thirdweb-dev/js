@@ -13,6 +13,7 @@ import {
   FEATURE_EDITION_DROPPABLE,
   FEATURE_EDITION_ENUMERABLE,
   FEATURE_EDITION_MINTABLE,
+  FEATURE_EDITION_REVEALABLE,
   FEATURE_EDITION_SIGNATURE_MINTABLE,
 } from "../../constants/erc1155-features";
 import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
@@ -898,6 +899,43 @@ export class Erc1155<
       this.signatureMintable,
       FEATURE_EDITION_SIGNATURE_MINTABLE,
     );
+  }
+
+  ////// ERC1155 DelayedReveal Extension //////
+
+  /**
+   * Delayed reveal
+   * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.
+   * @example
+   * ```javascript
+   * // the real NFTs, these will be encrypted until you reveal them
+   * const realNFTs = [{
+   *   name: "Common NFT #1",
+   *   description: "Common NFT, one of many.",
+   *   image: fs.readFileSync("path/to/image.png"),
+   * }, {
+   *   name: "Super Rare NFT #2",
+   *   description: "You got a Super Rare NFT!",
+   *   image: fs.readFileSync("path/to/image.png"),
+   * }];
+   * // A placeholder NFT that people will get immediately in their wallet, and will be converted to the real NFT at reveal time
+   * const placeholderNFT = {
+   *   name: "Hidden NFT",
+   *   description: "Will be revealed next week!"
+   * };
+   * // Create and encrypt the NFTs
+   * await contract.edition.drop.revealer.createDelayedRevealBatch(
+   *   placeholderNFT,
+   *   realNFTs,
+   *   "my secret password",
+   * );
+   * // Whenever you're ready, reveal your NFTs at any time
+   * const batchId = 0; // the batch to reveal
+   * await contract.edition.revealer.reveal(batchId, "my secret password");
+   * ```
+   */
+  get revealer() {
+    return assertEnabled(this.droppable?.revealer, FEATURE_EDITION_REVEALABLE);
   }
 
   /** ******************************

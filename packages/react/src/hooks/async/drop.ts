@@ -143,10 +143,10 @@ export function useBatchesToReveal<TContract extends NFTContract>(
     () => {
       invariant(contract, "No Contract instance provided");
       invariant(
-        contract.drop?.revealer?.getBatchesToReveal,
+        contract.revealer.getBatchesToReveal,
         "Contract instance does not support drop.revealer.getBatchesToReveal",
       );
-      return contract.drop.revealer.getBatchesToReveal();
+      return contract.revealer.getBatchesToReveal();
     },
     { enabled: !!contract },
   );
@@ -242,17 +242,14 @@ export function useLazyMint<TContract extends NFTContract>(
 
   return useMutation(
     async (data: { metadatas: NFTMetadataInput[] }) => {
-      invariant(
-        contract?.drop?.lazyMint,
-        "contract does not support drop.lazyMint",
-      );
+      invariant(contract, "contract is undefined");
       let options;
       if (onProgress) {
         options = {
           onProgress,
         };
       }
-      return await contract.drop.lazyMint(data.metadatas, options);
+      return await contract.lazyMint(data.metadatas, options);
     },
     {
       onSettled: () =>
@@ -283,17 +280,14 @@ export function useDelayedRevealLazyMint<TContract extends NFTContract>(
 
   return useMutation(
     async (data: DelayedRevealLazyMintInput) => {
-      invariant(
-        contract?.drop?.revealer?.createDelayedRevealBatch,
-        "contract does not support drop.revealer.createDelayedRevealBatch",
-      );
+      invariant(contract, "contract is undefined");
       let options;
       if (onProgress) {
         options = {
           onProgress,
         };
       }
-      return await contract.drop.revealer.createDelayedRevealBatch(
+      return await contract.revealer.createDelayedRevealBatch(
         data.placeholder,
         data.metadatas,
         data.password,
@@ -327,11 +321,8 @@ export function useRevealLazyMint<TContract extends NFTContract>(
 
   return useMutation(
     async (data: RevealLazyMintInput) => {
-      invariant(
-        contract?.drop?.revealer?.reveal,
-        "contract does not support drop.revealer.reveal",
-      );
-      return await contract.drop.revealer.reveal(data.batchId, data.password);
+      invariant(contract, "contract is undefined");
+      return await contract.revealer.reveal(data.batchId, data.password);
     },
     {
       onSettled: () =>
