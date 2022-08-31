@@ -27,7 +27,6 @@
     "generate:md-docs": "yarn api-documenter markdown -i ./temp -o ./docs",
     "generate-snippets": "node ./scripts/generate-snippets.mjs",
     "build": "tsc && preconstruct build",
-    "prepublishOnly": "yarn build",
     "e2e": "yarn test-ct",
     "test-ct": "playwright test -c playwright-ct.config.ts"
   },
