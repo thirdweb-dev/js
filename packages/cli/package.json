@@ -67,7 +67,6 @@
     "cli": "node -r ts-node/register src/cli/index.ts",
     "build": "yarn clean && tsc --noEmit && tsup --env.NODE_ENV production --minify --format cjs --external hardhat --dts-resolve",
     "build:watch": "yarn run build --watch",
-    "prepublishOnly": "yarn build",
     "generate-thirdweb-package": "node scripts/generate-thirdweb-package.js",
     "e2e": "jest"
   },
