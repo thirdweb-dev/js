@@ -61,7 +61,7 @@ export class SignatureDrop implements UpdateableNetwork {
   private contractWrapper: ContractWrapper<SignatureDropContract>;
   private storage: IStorage;
 
-  public nft: Erc721<SignatureDropContract>;
+  public erc721: Erc721<SignatureDropContract>;
   public encoder: ContractEncoder<SignatureDropContract>;
   public estimator: GasCostEstimator<SignatureDropContract>;
   public metadata: ContractMetadata<
@@ -194,7 +194,7 @@ export class SignatureDrop implements UpdateableNetwork {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.nft = new Erc721(this.contractWrapper, this.storage);
+    this.erc721 = new Erc721(this.contractWrapper, this.storage);
     this.claimConditions = new DropClaimConditions(
       this.contractWrapper,
       this.metadata,
@@ -208,7 +208,7 @@ export class SignatureDrop implements UpdateableNetwork {
       this.contractWrapper,
       this.storage,
       FEATURE_NFT_REVEALABLE.name,
-      () => this.nft.nextTokenIdToMint(),
+      () => this.erc721.nextTokenIdToMint(),
     );
     this.signature = new Erc721WithQuantitySignatureMintable(
       this.contractWrapper,
@@ -249,7 +249,7 @@ export class SignatureDrop implements UpdateableNetwork {
   public async getAll(
     queryParams?: QueryAllParams,
   ): Promise<NFTMetadataOwner[]> {
-    return this.nft.getAll(queryParams);
+    return this.erc721.getAll(queryParams);
   }
 
   /**
@@ -268,14 +268,14 @@ export class SignatureDrop implements UpdateableNetwork {
    * @returns The NFT metadata for all NFTs in the contract.
    */
   public async getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]> {
-    return this.nft.getOwned(walletAddress);
+    return this.erc721.getOwned(walletAddress);
   }
 
   /**
    * {@inheritDoc Erc721Enumerable.tokendIds}
    */
   public async getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]> {
-    return this.nft.getOwnedTokenIds(walletAddress);
+    return this.erc721.getOwnedTokenIds(walletAddress);
   }
 
   /**
@@ -352,7 +352,7 @@ export class SignatureDrop implements UpdateableNetwork {
 
     return await Promise.all(
       Array.from(Array(maxId.sub(firstTokenId).toNumber()).keys()).map((i) =>
-        this.nft.getTokenMetadata(firstTokenId.add(i).toString()),
+        this.erc721.getTokenMetadata(firstTokenId.add(i).toString()),
       ),
     );
   }
@@ -439,7 +439,7 @@ export class SignatureDrop implements UpdateableNetwork {
       onProgress: (event: UploadProgressEvent) => void;
     },
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
-    return this.nft.lazyMint(metadatas, options);
+    return this.erc721.lazyMint(metadatas, options);
   }
 
   /**
@@ -454,7 +454,7 @@ export class SignatureDrop implements UpdateableNetwork {
     quantity: BigNumberish,
     checkERC20Allowance = true, // TODO split up allowance checks
   ): Promise<TransactionTask> {
-    return this.nft.getClaimTransaction(
+    return this.erc721.getClaimTransaction(
       destinationAddress,
       quantity,
       checkERC20Allowance,
@@ -488,7 +488,11 @@ export class SignatureDrop implements UpdateableNetwork {
     quantity: BigNumberish,
     checkERC20Allowance = true,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    return this.nft.claimTo(destinationAddress, quantity, checkERC20Allowance);
+    return this.erc721.claimTo(
+      destinationAddress,
+      quantity,
+      checkERC20Allowance,
+    );
   }
 
   /**
@@ -514,7 +518,7 @@ export class SignatureDrop implements UpdateableNetwork {
    * ```
    */
   public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
-    return this.nft.burn(tokenId);
+    return this.erc721.burn(tokenId);
   }
 
   /******************************
@@ -533,7 +537,7 @@ export class SignatureDrop implements UpdateableNetwork {
    * @returns The NFT metadata
    */
   public async get(tokenId: BigNumberish): Promise<NFTMetadataOwner> {
-    return this.nft.get(tokenId);
+    return this.erc721.get(tokenId);
   }
 
   /**
@@ -543,7 +547,7 @@ export class SignatureDrop implements UpdateableNetwork {
    * @returns the address of the owner
    */
   public async ownerOf(tokenId: BigNumberish): Promise<string> {
-    return this.nft.ownerOf(tokenId);
+    return this.erc721.ownerOf(tokenId);
   }
 
   /**
@@ -559,14 +563,14 @@ export class SignatureDrop implements UpdateableNetwork {
    * ```
    */
   public async balanceOf(address: string): Promise<BigNumber> {
-    return this.nft.balanceOf(address);
+    return this.erc721.balanceOf(address);
   }
 
   /**
    * Get NFT Balance for the currently connected wallet
    */
   public async balance(): Promise<BigNumber> {
-    return this.nft.balance();
+    return this.erc721.balance();
   }
 
   /**
@@ -575,7 +579,7 @@ export class SignatureDrop implements UpdateableNetwork {
    * @param operator - the operator address
    */
   public async isApproved(address: string, operator: string): Promise<boolean> {
-    return this.nft.isApproved(address, operator);
+    return this.erc721.isApproved(address, operator);
   }
 
   /**
@@ -594,7 +598,7 @@ export class SignatureDrop implements UpdateableNetwork {
     to: string,
     tokenId: BigNumberish,
   ): Promise<TransactionResult> {
-    return this.nft.transfer(to, tokenId);
+    return this.erc721.transfer(to, tokenId);
   }
 
   /**
@@ -608,7 +612,7 @@ export class SignatureDrop implements UpdateableNetwork {
     operator: string,
     approved: boolean,
   ): Promise<TransactionResult> {
-    return this.nft.setApprovalForAll(operator, approved);
+    return this.erc721.setApprovalForAll(operator, approved);
   }
 
   /**

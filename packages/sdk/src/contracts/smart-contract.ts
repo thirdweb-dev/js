@@ -4,11 +4,9 @@ import {
   detectContractFeature,
   extractFunctionsFromAbi,
 } from "../common";
+import { FEATURE_TOKEN } from "../constants/erc20-features";
 import { FEATURE_NFT } from "../constants/erc721-features";
-import {
-  FEATURE_METADATA,
-  FEATURE_PERMISSIONS,
-} from "../constants/thirdweb-features";
+import { FEATURE_EDITION } from "../constants/erc1155-features";
 import { NetworkOrSignerOrProvider } from "../core";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
@@ -89,18 +87,31 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   public roles: ContractRoles<IPermissionsEnumerable, any> | undefined;
   public sales: ContractPrimarySale<IPrimarySale> | undefined;
   public platformFees: ContractPlatformFee<IPlatformFee> | undefined;
+
+  private token: Erc20 | undefined;
+  private nft: Erc721 | undefined;
+  private edition: Erc1155 | undefined;
+
   /**
    * Auto-detects ERC20 standard functions.
    */
-  public token: Erc20 | undefined;
+  get erc20(): Erc20 {
+    return assertEnabled(this.token, FEATURE_TOKEN);
+  }
+
   /**
    * Auto-detects ERC721 standard functions.
    */
-  public nft: Erc721 | undefined;
+  get erc721(): Erc721 {
+    return assertEnabled(this.nft, FEATURE_NFT);
+  }
+
   /**
    * Auto-detects ERC1155 standard functions.
    */
-  public edition: Erc1155 | undefined;
+  get erc1155(): Erc1155 {
+    return assertEnabled(this.edition, FEATURE_EDITION);
+  }
 
   constructor(
     network: NetworkOrSignerOrProvider,

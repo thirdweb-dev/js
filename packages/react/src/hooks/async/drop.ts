@@ -4,6 +4,7 @@ import {
   ClaimNFTReturnType,
   DelayedRevealLazyMintInput,
   DropContract,
+  getErc721Or1155,
   NFTContract,
   RequiredParam,
   RevealLazyMintInput,
@@ -19,7 +20,6 @@ import {
   NFTDrop,
   NFTMetadataInput,
   QueryAllParams,
-  SignatureDrop,
   UploadProgressEvent,
 } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
@@ -50,6 +50,7 @@ export function useUnclaimedNFTs(
     cacheKeys.contract.nft.drop.getAllUnclaimed(contractAddress, queryParams),
     () => {
       invariant(contract, "No Contract instance provided");
+      // TODO make this work for custom contracts (needs ABI change)
       invariant(
         contract.getAllUnclaimed,
         "Contract instance does not support getAllUnclaimed",
@@ -86,18 +87,16 @@ export function useClaimedNFTs(
  * @param contract - an instance of a {@link NFTDrop}
  * @returns a response object that includes the number of NFTs that are unclaimed
  */
-export function useUnclaimedNFTSupply(
-  contract: RequiredParam<NFTDrop | SignatureDrop>,
-) {
+export function useUnclaimedNFTSupply(contract: RequiredParam<DropContract>) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.nft.drop.totalUnclaimedSupply(contractAddress),
     () => {
       invariant(contract, "No Contract instance provided");
-
+      // TODO make this work for custom contracts (needs ABI change)
       invariant(
-        contract.totalUnclaimedSupply,
-        "Contract instance does not support totalUnclaimedSupply",
+        "totalUnclaimedSupply" in contract && contract.totalUnclaimedSupply,
+        "Contract instance does not support fetching unclaimed supply",
       );
       return contract.totalUnclaimedSupply();
     },
@@ -116,12 +115,10 @@ export function useClaimedNFTSupply(contract: RequiredParam<DropContract>) {
     cacheKeys.contract.nft.drop.totalClaimedSupply(contractAddress),
     () => {
       invariant(contract, "No Contract instance provided");
-      if (contract.featureName === "ERC1155") {
-        return contract.getTotalCount();
-      }
+      // TODO make this work for custom contracts (needs ABI change)
       invariant(
-        contract.totalClaimedSupply,
-        "Contract instance does not support totalClaimedSupply",
+        "totalClaimedSupply" in contract && contract.totalClaimedSupply,
+        "Contract instance does not support fetching unclaimed supply",
       );
       return contract.totalClaimedSupply();
     },
@@ -134,7 +131,7 @@ export function useClaimedNFTSupply(contract: RequiredParam<DropContract>) {
  * @param contract - an instance of a {@link NFTContract}
  * @returns a response object that gets the batches to still be revealed
  */
-export function useBatchesToReveal<TContract extends NFTContract>(
+export function useBatchesToReveal<TContract extends DropContract>(
   contract: RequiredParam<TContract>,
 ) {
   const contractAddress = contract?.getAddress();
@@ -142,11 +139,7 @@ export function useBatchesToReveal<TContract extends NFTContract>(
     cacheKeys.contract.nft.drop.revealer.getBatchesToReveal(contractAddress),
     () => {
       invariant(contract, "No Contract instance provided");
-      invariant(
-        contract.revealer.getBatchesToReveal,
-        "Contract instance does not support drop.revealer.getBatchesToReveal",
-      );
-      return contract.revealer.getBatchesToReveal();
+      return getErc721Or1155(contract).revealer.getBatchesToReveal();
     },
     { enabled: !!contract },
   );
@@ -196,22 +189,24 @@ export function useClaimNFT<TContract extends DropContract>(
   return useMutation(
     async (data: ClaimNFTParams<TContract>) => {
       invariant(data.to, 'No "to" address provided');
-      invariant(contract?.claimTo, "contract does not support claimTo");
-      if (contract.featureName === "ERC1155") {
+      invariant(contract, "contract is undefined");
+      if ("erc1155" in contract && contract.erc1155) {
         invariant("tokenId" in data, "tokenId not provided");
         const { to, tokenId, quantity } = data;
-        return (await contract.claimTo(
+        return contract.erc1155.claimTo(
           to,
           tokenId,
           quantity,
           data.checkERC20Allowance,
+        );
+      }
+      if ("erc721" in contract && contract.erc721) {
+        return (await contract.erc721.claimTo(
+          data.to,
+          data.quantity,
+          data.checkERC20Allowance,
         )) as ClaimNFTReturnType<TContract>;
       }
-      return (await contract.claimTo(
-        data.to,
-        data.quantity,
-        data.checkERC20Allowance,
-      )) as ClaimNFTReturnType<TContract>;
     },
     {
       onSettled: () =>
@@ -232,7 +227,7 @@ export function useClaimNFT<TContract extends DropContract>(
  * @returns a mutation object that can be used to lazy mint a batch of NFTs
  * @beta
  */
-export function useLazyMint<TContract extends NFTContract>(
+export function useLazyMint<TContract extends DropContract>(
   contract: RequiredParam<TContract>,
   onProgress?: (progress: UploadProgressEvent) => void,
 ) {
@@ -249,7 +244,8 @@ export function useLazyMint<TContract extends NFTContract>(
           onProgress,
         };
       }
-      return await contract.lazyMint(data.metadatas, options);
+
+      return await getErc721Or1155(contract).lazyMint(data.metadatas, options);
     },
     {
       onSettled: () =>
@@ -287,7 +283,7 @@ export function useDelayedRevealLazyMint<TContract extends NFTContract>(
           onProgress,
         };
       }
-      return await contract.revealer.createDelayedRevealBatch(
+      return await getErc721Or1155(contract).revealer.createDelayedRevealBatch(
         data.placeholder,
         data.metadatas,
         data.password,
@@ -322,7 +318,10 @@ export function useRevealLazyMint<TContract extends NFTContract>(
   return useMutation(
     async (data: RevealLazyMintInput) => {
       invariant(contract, "contract is undefined");
-      return await contract.revealer.reveal(data.batchId, data.password);
+      return await getErc721Or1155(contract).revealer.reveal(
+        data.batchId,
+        data.password,
+      );
     },
     {
       onSettled: () =>

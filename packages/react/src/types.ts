@@ -11,12 +11,18 @@ import type {
   NFTMetadata,
   Price,
   SignatureDrop,
+  ValidContractInstance,
+  SmartContract,
+  NFTCollection,
+  Edition,
+  TokenDrop,
 } from "@thirdweb-dev/sdk";
 import {
   NFTMetadataInput,
   NFTMetadataOrUri,
 } from "@thirdweb-dev/sdk/dist/declarations/src/schema";
 import type { BigNumberish } from "ethers";
+import invariant from "tiny-invariant";
 
 /**
  * Makes a parameter required to be passed, but still allowes it to be undefined.
@@ -83,7 +89,10 @@ export type TokenBurnParams = {
  * ```
  * @beta
  */
-export type NFTContract = Erc721 | Erc1155;
+export type NFTContract =
+  | NFTCollection
+  | Edition
+  | Omit<DropContract, "TokenDrop">;
 
 /**
  * A single NFT token
@@ -198,7 +207,12 @@ export type BurnNFTParams<TContract extends NFTContract> =
  * The possible DROP contract types.
  * @beta
  */
-export type DropContract = NFTDrop | EditionDrop | SignatureDrop;
+export type DropContract =
+  | NFTDrop
+  | EditionDrop
+  | SignatureDrop
+  | TokenDrop
+  | SmartContract;
 
 /**
  * The params for the {@link useDelayedRevealLazyMint} hook mutation.
@@ -227,7 +241,7 @@ export type RevealLazyMintInput = {
  * @beta
  */
 export type ClaimNFTParams<TContract extends DropContract> =
-  TContract extends Erc1155
+  keyof TContract extends Erc1155
     ? {
         to: WalletAddress;
         tokenId: BigNumberish;
@@ -276,3 +290,36 @@ export type ClaimTokenParams = {
   amount: Amount;
   checkERC20Allowance?: boolean;
 };
+
+// Helpers
+
+export function getErc721Or1155(
+  contract: ValidContractInstance | SmartContract,
+) {
+  const ercVariant =
+    "erc721" in contract
+      ? contract.erc721
+      : "erc1155" in contract
+      ? contract.erc1155
+      : undefined;
+  invariant(ercVariant, "Contract instance does not support erc721 or erc1155");
+  return ercVariant;
+}
+
+export function getErc721Or1155OrErc20(
+  contract: ValidContractInstance | SmartContract,
+) {
+  const ercVariant =
+    "erc721" in contract
+      ? contract.erc721
+      : "erc1155" in contract
+      ? contract.erc1155
+      : "erc20" in contract
+      ? contract.erc20
+      : undefined;
+  invariant(
+    ercVariant,
+    "Contract instance does not support erc721 or erc1155 or erc20",
+  );
+  return ercVariant;
+}

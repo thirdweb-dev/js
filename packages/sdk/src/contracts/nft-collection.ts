@@ -100,7 +100,7 @@ export class NFTCollection implements UpdateableNetwork {
    * @internal
    */
   public interceptor: ContractInterceptor<TokenERC721>;
-  public nft: Erc721<TokenERC721>;
+  public erc721: Erc721<TokenERC721>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -132,7 +132,7 @@ export class NFTCollection implements UpdateableNetwork {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.nft = new Erc721(this.contractWrapper, this.storage);
+    this.erc721 = new Erc721(this.contractWrapper, this.storage);
     this.signature = new Erc721WithQuantitySignatureMintable(
       this.contractWrapper,
       this.storage,
@@ -172,7 +172,7 @@ export class NFTCollection implements UpdateableNetwork {
   public async getAll(
     queryParams?: QueryAllParams,
   ): Promise<NFTMetadataOwner[]> {
-    return this.nft.getAll(queryParams);
+    return this.erc721.getAll(queryParams);
   }
 
   /**
@@ -191,7 +191,7 @@ export class NFTCollection implements UpdateableNetwork {
    * @returns The NFT metadata for all NFTs in the contract.
    */
   public async getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]> {
-    return this.nft.getOwned(walletAddress);
+    return this.erc721.getOwned(walletAddress);
   }
 
   /**
@@ -199,14 +199,14 @@ export class NFTCollection implements UpdateableNetwork {
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
    */
   public async getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]> {
-    return this.nft.getOwnedTokenIds(walletAddress);
+    return this.erc721.getOwnedTokenIds(walletAddress);
   }
 
   /**
    * Get the total count NFTs minted in this contract
    */
   public async totalSupply() {
-    return this.nft.totalCirculatingSupply();
+    return this.erc721.totalCirculatingSupply();
   }
 
   /**
@@ -247,7 +247,7 @@ export class NFTCollection implements UpdateableNetwork {
   public async mint(
     metadata: NFTMetadataOrUri,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
-    return this.nft.mint(metadata);
+    return this.erc721.mint(metadata);
   }
 
   /**
@@ -277,7 +277,7 @@ export class NFTCollection implements UpdateableNetwork {
     walletAddress: string,
     metadata: NFTMetadataOrUri,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
-    return this.nft.mintTo(walletAddress, metadata);
+    return this.erc721.mintTo(walletAddress, metadata);
   }
 
   /**
@@ -307,7 +307,7 @@ export class NFTCollection implements UpdateableNetwork {
   public async mintBatch(
     metadata: NFTMetadataOrUri[],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    return this.nft.mintBatch(metadata);
+    return this.erc721.mintBatch(metadata);
   }
 
   /**
@@ -341,7 +341,7 @@ export class NFTCollection implements UpdateableNetwork {
     walletAddress: string,
     metadata: NFTMetadataOrUri[],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    return this.nft.mintBatchTo(walletAddress, metadata);
+    return this.erc721.mintBatchTo(walletAddress, metadata);
   }
 
   /**
@@ -354,7 +354,7 @@ export class NFTCollection implements UpdateableNetwork {
    * ```
    */
   public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
-    return this.nft.burn(tokenId);
+    return this.erc721.burn(tokenId);
   }
 
   /******************************
@@ -373,7 +373,7 @@ export class NFTCollection implements UpdateableNetwork {
    * @returns The NFT metadata
    */
   public async get(tokenId: BigNumberish): Promise<NFTMetadataOwner> {
-    return this.nft.get(tokenId);
+    return this.erc721.get(tokenId);
   }
 
   /**
@@ -383,7 +383,7 @@ export class NFTCollection implements UpdateableNetwork {
    * @returns the address of the owner
    */
   public async ownerOf(tokenId: BigNumberish): Promise<string> {
-    return this.nft.ownerOf(tokenId);
+    return this.erc721.ownerOf(tokenId);
   }
 
   /**
@@ -399,14 +399,14 @@ export class NFTCollection implements UpdateableNetwork {
    * ```
    */
   public async balanceOf(address: string): Promise<BigNumber> {
-    return this.nft.balanceOf(address);
+    return this.erc721.balanceOf(address);
   }
 
   /**
    * Get NFT Balance for the currently connected wallet
    */
   public async balance(): Promise<BigNumber> {
-    return this.nft.balance();
+    return this.erc721.balance();
   }
 
   /**
@@ -415,7 +415,7 @@ export class NFTCollection implements UpdateableNetwork {
    * @param operator - the operator address
    */
   public async isApproved(address: string, operator: string): Promise<boolean> {
-    return this.nft.isApproved(address, operator);
+    return this.erc721.isApproved(address, operator);
   }
 
   /**
@@ -434,7 +434,7 @@ export class NFTCollection implements UpdateableNetwork {
     to: string,
     tokenId: BigNumberish,
   ): Promise<TransactionResult> {
-    return this.nft.transfer(to, tokenId);
+    return this.erc721.transfer(to, tokenId);
   }
 
   /**
@@ -448,7 +448,7 @@ export class NFTCollection implements UpdateableNetwork {
     operator: string,
     approved: boolean,
   ): Promise<TransactionResult> {
-    return this.nft.setApprovalForAll(operator, approved);
+    return this.erc721.setApprovalForAll(operator, approved);
   }
 
   /**
