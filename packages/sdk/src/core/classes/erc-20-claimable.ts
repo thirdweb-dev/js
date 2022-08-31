@@ -1,13 +1,15 @@
+import { FEATURE_TOKEN_ClAIMABLE } from "../../constants/erc20-features";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ClaimVerification } from "../../types";
 import { Amount } from "../../types/currency";
 import { BaseDropERC20 } from "../../types/eips";
-import { IStorage } from "@thirdweb-dev/storage";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { DropClaimConditions } from "./drop-claim-conditions";
 import { Erc20 } from "./erc-20";
+import { IStorage } from "@thirdweb-dev/storage";
 
 /**
  * Configure and claim ERC20 tokens
@@ -18,7 +20,8 @@ import { Erc20 } from "./erc-20";
  * await contract.token.drop.claim.to("0x...", quantity);
  * ```
  */
-export class Erc20Claimable {
+export class Erc20Claimable implements DetectableFeature {
+  featureName = FEATURE_TOKEN_ClAIMABLE.name;
   /**
    * Configure claim conditions
    * @remarks Define who can claim NFTs in the collection, when and how many.
@@ -38,7 +41,7 @@ export class Erc20Claimable {
    *     price: 0.08, // public sale price
    *   }
    * ]);
-   * await contract.nft.drop.claim.conditions.set(claimConditions);
+   * await contract.token.drop.claim.conditions.set(claimConditions);
    * ```
    */
   public conditions: DropClaimConditions<BaseDropERC20>;

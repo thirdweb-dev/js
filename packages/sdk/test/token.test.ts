@@ -1,9 +1,9 @@
-import { assert, expect } from "chai";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Token } from "../src";
-import { sdk, signers } from "./before-setup";
-import { ethers } from "ethers";
 import { TokenMintInput } from "../src/schema/tokens/token";
+import { sdk, signers } from "./before-setup";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { assert, expect } from "chai";
+import { ethers } from "ethers";
 
 // global.fetch = require("cross-fetch");
 
@@ -35,7 +35,7 @@ describe("Token Contract", async () => {
   });
 
   it("should mint tokens", async () => {
-    await currencyContract.mintToSelf("20");
+    await currencyContract.mint("20");
     assert.deepEqual(
       (await currencyContract.totalSupply()).value,
       ethers.utils.parseEther("20"),
@@ -49,7 +49,7 @@ describe("Token Contract", async () => {
   });
 
   it("should transfer tokens", async () => {
-    await currencyContract.mintToSelf(20.2);
+    await currencyContract.mint(20.2);
     await currencyContract.transfer(samWallet.address, 10.1);
     assert.deepEqual(
       (await currencyContract.balanceOf(adminWallet.address)).value,
@@ -64,7 +64,7 @@ describe("Token Contract", async () => {
   });
 
   it("should list current holders", async () => {
-    await currencyContract.mintToSelf(20);
+    await currencyContract.mint(20);
     await currencyContract.transfer(samWallet.address, "10");
     await currencyContract.transfer(bobWallet.address, "5");
     sdk.updateSignerOrProvider(samWallet);
@@ -85,13 +85,13 @@ describe("Token Contract", async () => {
   });
 
   it("should burn tokens", async () => {
-    await currencyContract.mintToSelf(20);
+    await currencyContract.mint(20);
     assert.deepEqual(
       (await currencyContract.balanceOf(adminWallet.address)).value,
       ethers.utils.parseEther("20"),
       `Wrong balance`,
     );
-    await currencyContract.burnTokens(10);
+    await currencyContract.burn(10);
     assert.deepEqual(
       (await currencyContract.balanceOf(adminWallet.address)).value,
       ethers.utils.parseEther("10"),
@@ -137,7 +137,7 @@ describe("Token Contract", async () => {
         amount: 10,
       },
     ];
-    await currencyContract.mintToSelf(20);
+    await currencyContract.mint(20);
     await currencyContract.transferBatch(batch);
 
     for (const b of batch) {

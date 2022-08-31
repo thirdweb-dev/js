@@ -7,9 +7,7 @@ import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { DropClaimConditions } from "../core/classes/drop-claim-conditions";
-import { Erc20 } from "../core/classes/erc-20";
-import { Erc20Burnable } from "../core/classes/erc-20-burnable";
-import { Erc20Claimable } from "../core/classes/erc-20-claimable";
+import { StandardErc20 } from "../core/classes/erc-20-standard";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
@@ -32,7 +30,7 @@ import { constants } from "ethers";
  * ```
  *
  */
-export class TokenDrop extends Erc20<DropERC20> {
+export class TokenDrop extends StandardErc20<DropERC20> {
   static contractType = "token-drop" as const;
   static contractRoles = ["admin", "transfer"] as const;
   static contractAbi = require("@thirdweb-dev/contracts-js/abis/DropERC20.json");
@@ -40,9 +38,6 @@ export class TokenDrop extends Erc20<DropERC20> {
    * @internal
    */
   static schema = DropErc20ContractSchema;
-
-  private _burn = this.burn as Erc20Burnable;
-  private _claim = this.drop?.claim as Erc20Claimable;
 
   public metadata: ContractMetadata<DropERC20, typeof TokenDrop.schema>;
   public roles: ContractRoles<
@@ -131,7 +126,7 @@ export class TokenDrop extends Erc20<DropERC20> {
   }
 
   public async getVoteBalanceOf(account: string): Promise<CurrencyValue> {
-    return await this.getValue(
+    return await this.erc20.getValue(
       await this.contractWrapper.readContract.getVotes(account),
     );
   }
@@ -213,7 +208,7 @@ export class TokenDrop extends Erc20<DropERC20> {
     amount: Amount,
     checkERC20Allowance = true,
   ): Promise<TransactionResult> {
-    return this._claim.to(destinationAddress, amount, checkERC20Allowance);
+    return this.erc20.claimTo(destinationAddress, amount, checkERC20Allowance);
   }
 
   /**
@@ -246,7 +241,7 @@ export class TokenDrop extends Erc20<DropERC20> {
    * ```
    */
   public async burnTokens(amount: Amount): Promise<TransactionResult> {
-    return this._burn.tokens(amount);
+    return this.erc20.burn(amount);
   }
 
   /**
@@ -269,6 +264,6 @@ export class TokenDrop extends Erc20<DropERC20> {
     holder: string,
     amount: Amount,
   ): Promise<TransactionResult> {
-    return this._burn.from(holder, amount);
+    return this.erc20.burnFrom(holder, amount);
   }
 }

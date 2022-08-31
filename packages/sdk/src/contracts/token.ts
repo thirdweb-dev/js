@@ -13,6 +13,7 @@ import { Erc20Burnable } from "../core/classes/erc-20-burnable";
 import { TokenERC20History } from "../core/classes/erc-20-history";
 import { Erc20Mintable } from "../core/classes/erc-20-mintable";
 import { Erc20SignatureMintable } from "../core/classes/erc-20-signature-mintable";
+import { StandardErc20 } from "../core/classes/erc-20-standard";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
 import { SDKOptions } from "../schema/sdk-options";
@@ -36,7 +37,7 @@ import { constants } from "ethers";
  *
  * @public
  */
-export class Token extends Erc20<TokenERC20> {
+export class Token extends StandardErc20<TokenERC20> {
   static contractType = "token" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
   static contractAbi = require("@thirdweb-dev/contracts-js/abis/TokenERC20.json");
@@ -64,14 +65,11 @@ export class Token extends Erc20<TokenERC20> {
    * const receipt = tx.receipt; // the mint transaction receipt
    * ```
    */
-  override signature = super.signature as Erc20SignatureMintable;
+  public signature: Erc20SignatureMintable;
   /**
    * @internal
    */
   public interceptor: ContractInterceptor<TokenERC20>;
-  private _mint = this.mint as Erc20Mintable;
-  private _batchMint = this._mint.batch as Erc20BatchMintable;
-  private _burn = this.burn as Erc20Burnable;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -120,7 +118,7 @@ export class Token extends Erc20<TokenERC20> {
   }
 
   public async getVoteBalanceOf(account: string): Promise<CurrencyValue> {
-    return await this.getValue(
+    return await this.erc20.getValue(
       await this.contractWrapper.readContract.getVotes(account),
     );
   }
@@ -165,8 +163,8 @@ export class Token extends Erc20<TokenERC20> {
    *
    * @remarks See {@link Token.mintTo}
    */
-  public async mintToSelf(amount: Amount): Promise<TransactionResult> {
-    return this._mint.to(await this.contractWrapper.getSignerAddress(), amount);
+  public async mint(amount: Amount): Promise<TransactionResult> {
+    return this.erc20.mint(amount);
   }
 
   /**
@@ -183,7 +181,7 @@ export class Token extends Erc20<TokenERC20> {
    * ```
    */
   public async mintTo(to: string, amount: Amount): Promise<TransactionResult> {
-    return this._mint.to(to, amount);
+    return this.erc20.mintTo(to, amount);
   }
 
   /**
@@ -209,7 +207,7 @@ export class Token extends Erc20<TokenERC20> {
    * ```
    */
   public async mintBatchTo(args: TokenMintInput[]): Promise<TransactionResult> {
-    return this._batchMint.to(args);
+    return this.erc20.mintBatchTo(args);
   }
 
   /**
@@ -241,8 +239,8 @@ export class Token extends Erc20<TokenERC20> {
    * await contract.burnTokens(amount);
    * ```
    */
-  public async burnTokens(amount: Amount): Promise<TransactionResult> {
-    return this._burn.tokens(amount);
+  public async burn(amount: Amount): Promise<TransactionResult> {
+    return this.erc20.burn(amount);
   }
 
   /**
@@ -265,6 +263,6 @@ export class Token extends Erc20<TokenERC20> {
     holder: string,
     amount: Amount,
   ): Promise<TransactionResult> {
-    return this._burn.from(holder, amount);
+    return this.erc20.burnFrom(holder, amount);
   }
 }

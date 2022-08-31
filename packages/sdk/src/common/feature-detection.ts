@@ -43,8 +43,8 @@ function matchesAbiInterface(
   const interfaceFn = [
     ...new Set(
       feature.abis
-        .flatMap((i) => extractFunctionsFromAbi(i))
-        .map((f) => f.name),
+        .flatMap((i: any) => extractFunctionsFromAbi(i))
+        .map((f: AbiFunction) => f.name),
     ),
   ];
 
