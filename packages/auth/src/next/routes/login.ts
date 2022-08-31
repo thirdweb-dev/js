@@ -51,5 +51,10 @@ export default async function handler(
     })
   );
 
+  if (ctx.callbacks?.login) {
+    const address = sdk.auth.verify(domain, payload);
+    ctx.callbacks.login(address);
+  }
+
   return res.status(301).redirect(req.query.redirect as string);
 }
