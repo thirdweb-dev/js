@@ -1,36 +1,36 @@
-import { Erc1155 } from "../core/classes/erc-1155";
-import { DropERC1155 } from "@thirdweb-dev/contracts-js";
+import { getRoleHash } from "../common";
+import { TransactionTask } from "../core/classes/TransactionTask";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
+import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { DropErc1155ClaimConditions } from "../core/classes/drop-erc1155-claim-conditions";
+import { DropErc1155History } from "../core/classes/drop-erc1155-history";
+import { Erc1155 } from "../core/classes/erc-1155";
+import { Erc1155Burnable } from "../core/classes/erc-1155-burnable";
+import { Erc1155Claimable } from "../core/classes/erc-1155-claimable";
 import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
-import { IStorage } from "@thirdweb-dev/storage";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { Erc1155Droppable } from "../core/index";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
 } from "../core/types";
-import { SDKOptions } from "../schema/sdk-options";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { NFTMetadata, NFTMetadataOrUri } from "../schema/tokens/common";
-import { BigNumber, BigNumberish, constants } from "ethers";
-import { DropErc1155ClaimConditions } from "../core/classes/drop-erc1155-claim-conditions";
-import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { QueryAllParams, UploadProgressEvent } from "../types";
-import { DropErc1155History } from "../core/classes/drop-erc1155-history";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { getRoleHash } from "../common";
-
 import { EditionMetadata, EditionMetadataOwner } from "../schema";
-import { TransactionTask } from "../core/classes/TransactionTask";
-import { Erc1155Burnable } from "../core/classes/erc-1155-burnable";
-import { Erc1155Droppable } from "../core/index";
-import { Erc1155Claimable } from "../core/classes/erc-1155-claimable";
+import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
+import { SDKOptions } from "../schema/sdk-options";
+import { NFTMetadata, NFTMetadataOrUri } from "../schema/tokens/common";
+import { QueryAllParams, UploadProgressEvent } from "../types";
+import { DropERC1155 } from "@thirdweb-dev/contracts-js";
+import ABI from "@thirdweb-dev/contracts-js/abis/DropERC1155.json";
+import { IStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, constants } from "ethers";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -49,7 +49,7 @@ import { Erc1155Claimable } from "../core/classes/erc-1155-claimable";
 export class EditionDrop extends Erc1155<DropERC1155> {
   static contractType = "edition-drop" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractAbi = require("@thirdweb-dev/contracts-js/abis/DropERC1155.json");
+  static contractAbi = ABI as any;
   /**
    * @internal
    */

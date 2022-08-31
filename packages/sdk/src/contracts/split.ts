@@ -1,20 +1,21 @@
-import { UpdateableNetwork } from "../core/interfaces/contract";
-import { IERC20, Split as SplitContract } from "@thirdweb-dev/contracts-js";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { IStorage } from "@thirdweb-dev/storage";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { SDKOptions } from "../schema/sdk-options";
-import { CurrencyValue } from "../types/currency";
 import { fetchCurrencyValue } from "../common/currency";
-import { BigNumber, Contract } from "ethers";
-import { SplitRecipient } from "../types/SplitRecipient";
-import { SplitsContractSchema } from "../schema/contracts/splits";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { ContractEncoder } from "../core/classes/contract-encoder";
 import { ContractEvents } from "../core/classes/contract-events";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { UpdateableNetwork } from "../core/interfaces/contract";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
+import { SplitsContractSchema } from "../schema/contracts/splits";
+import { SDKOptions } from "../schema/sdk-options";
+import { SplitRecipient } from "../types/SplitRecipient";
+import { CurrencyValue } from "../types/currency";
+import { IERC20, Split as SplitContract } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/abis/IERC20.json";
+import ABI from "@thirdweb-dev/contracts-js/abis/Split.json";
+import { IStorage } from "@thirdweb-dev/storage";
+import { BigNumber, Contract } from "ethers";
 
 /**
  * Create custom royalty splits to distribute funds.
@@ -32,7 +33,7 @@ import ERC20Abi from "@thirdweb-dev/contracts-js/abis/IERC20.json";
  */
 export class Split implements UpdateableNetwork {
   static contractType = "split" as const;
-  static contractAbi = require("@thirdweb-dev/contracts-js/abis/Split.json");
+  static contractAbi = ABI as any;
   /**
    * @internal
    */

@@ -1,36 +1,37 @@
-import { Erc1155 } from "../core/classes/erc-1155";
-import { TokenERC1155 } from "@thirdweb-dev/contracts-js";
+import { getRoleHash } from "../common";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
+import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { Erc1155 } from "../core/classes/erc-1155";
+import { Erc1155BatchMintable } from "../core/classes/erc-1155-batch-mintable";
+import { Erc1155Burnable } from "../core/classes/erc-1155-burnable";
 import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
-import { IStorage } from "@thirdweb-dev/storage";
+import { Erc1155Mintable } from "../core/classes/erc-1155-mintable";
+import { Erc1155SignatureMintable } from "../core/classes/erc-1155-signature-mintable";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
 } from "../core/types";
-import { SDKOptions } from "../schema/sdk-options";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TokenErc1155ContractSchema } from "../schema/contracts/token-erc1155";
+import { SDKOptions } from "../schema/sdk-options";
 import {
   EditionMetadata,
   EditionMetadataOrUri,
   EditionMetadataOwner,
 } from "../schema/tokens/edition";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
-import { BigNumber, BigNumberish, constants } from "ethers";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { getRoleHash } from "../common";
 import { QueryAllParams } from "../types";
-import { Erc1155Mintable } from "../core/classes/erc-1155-mintable";
-import { Erc1155BatchMintable } from "../core/classes/erc-1155-batch-mintable";
-import { Erc1155SignatureMintable } from "../core/classes/erc-1155-signature-mintable";
-import { Erc1155Burnable } from "../core/classes/erc-1155-burnable";
+import { TokenERC1155 } from "@thirdweb-dev/contracts-js";
+import ABI from "@thirdweb-dev/contracts-js/abis/TokenERC1155.json";
+import { IStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, constants } from "ethers";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -49,7 +50,7 @@ import { Erc1155Burnable } from "../core/classes/erc-1155-burnable";
 export class Edition extends Erc1155<TokenERC1155> {
   static contractType = "edition" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractAbi = require("@thirdweb-dev/contracts-js/abis/TokenERC1155.json");
+  static contractAbi = ABI as any;
   /**
    * @internal
    */

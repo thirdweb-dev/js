@@ -20,7 +20,7 @@ import {
   PublishedMetadata,
 } from "../schema/contracts/custom";
 import { IStorage } from "@thirdweb-dev/storage";
-import { decodeFirstSync } from "cbor";
+import { decodeFirstSync } from "cbor-web";
 import { BaseContract, ethers } from "ethers";
 import { toB58String } from "multihashes";
 import { z } from "zod";

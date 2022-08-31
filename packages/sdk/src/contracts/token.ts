@@ -1,26 +1,27 @@
-import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
-import { TokenERC20 } from "@thirdweb-dev/contracts-js";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractRoles } from "../core/classes/contract-roles";
+import { getRoleHash } from "../common";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../core";
-import { IStorage } from "@thirdweb-dev/storage";
-import { SDKOptions } from "../schema/sdk-options";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { TokenMintInput } from "../schema/tokens/token";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { ContractEvents } from "../core/classes/contract-events";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import { ContractRoles } from "../core/classes/contract-roles";
+import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Erc20 } from "../core/classes/erc-20";
-import { Amount, CurrencyValue } from "../types";
-import { TokenERC20History } from "../core/classes/erc-20-history";
-import { getRoleHash } from "../common";
-import { Erc20Mintable } from "../core/classes/erc-20-mintable";
 import { Erc20BatchMintable } from "../core/classes/erc-20-batch-mintable";
-import { constants } from "ethers";
-import { Erc20SignatureMintable } from "../core/classes/erc-20-signature-mintable";
 import { Erc20Burnable } from "../core/classes/erc-20-burnable";
+import { TokenERC20History } from "../core/classes/erc-20-history";
+import { Erc20Mintable } from "../core/classes/erc-20-mintable";
+import { Erc20SignatureMintable } from "../core/classes/erc-20-signature-mintable";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
+import { SDKOptions } from "../schema/sdk-options";
+import { TokenMintInput } from "../schema/tokens/token";
+import { Amount, CurrencyValue } from "../types";
+import { TokenERC20 } from "@thirdweb-dev/contracts-js";
+import ABI from "@thirdweb-dev/contracts-js/abis/TokenERC20.json";
+import { IStorage } from "@thirdweb-dev/storage";
+import { constants } from "ethers";
 
 /**
  * Create a standard crypto token or cryptocurrency.
@@ -39,7 +40,7 @@ import { Erc20Burnable } from "../core/classes/erc-20-burnable";
 export class Token extends Erc20<TokenERC20> {
   static contractType = "token" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractAbi = require("@thirdweb-dev/contracts-js/abis/TokenERC20.json");
+  static contractAbi = ABI as any;
   /**
    * @internal
    */
