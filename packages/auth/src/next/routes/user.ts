@@ -1,4 +1,4 @@
-import { ThirdwebAuthContext } from "../types";
+import { ThirdwebAuthContext, ThirdwebAuthUser } from "../types";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -30,5 +30,5 @@ export default async function handler(
     }
   }
 
-  return res.status(200).json(user);
+  return res.status(200).json(user as ThirdwebAuthUser | null);
 }

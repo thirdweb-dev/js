@@ -45,7 +45,7 @@ export function ThirdwebAuth(app: Express, cfg: ThirdwebAuthConfig) {
       }
     }
 
-    req.user = user;
+    req.user = user as ThirdwebAuthUser | null;
     next();
   });
 
