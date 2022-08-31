@@ -9,7 +9,7 @@
       "dependsOn": ["^build"]
     },
     "auth#build": {
-      "outputs": ["dist/**", "express/**", "next/**"]
+      "outputs": ["dist/**", "express/**", "next/**", "next-auth/**"]
     },
     "solana#build": {
       "outputs": ["dist/**", "server/**"]
