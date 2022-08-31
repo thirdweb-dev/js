@@ -105,12 +105,18 @@ before(async () => {
   const thirdwebRegistryAddress = await thirdwebFactoryDeployer.registry();
   registryAddress = thirdwebFactoryDeployer.address;
 
-  await thirdwebFactoryDeployer.deployed();
-
   await registryContract.grantRole(
     await registryContract.OPERATOR_ROLE(),
     thirdwebFactoryDeployer.address,
   );
+
+  const thirdwebFeeDeployer = await new ethers.ContractFactory(
+    TWFee__factory.abi,
+    TWFee__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(trustedForwarderAddress, thirdwebFactoryDeployer.address);
+  await thirdwebFactoryDeployer.deployed();
 
   // Mock publisher for tests
   const mockPublisher = (await new ethers.ContractFactory(
@@ -135,18 +141,15 @@ before(async () => {
     contractType: ContractType,
   ): Promise<ethers.Contract> {
     switch (contractType) {
-      case Vote.contractType:
-      case SignatureDrop.contractType:
-      case NFTDrop.contractType:
-      case EditionDrop.contractType:
-      case TokenDrop.contractType:
-        return await contractFactory.deploy();
       case Marketplace.contractType:
+      case Pack.contractType:
+      case Multiwrap.contractType:
         const nativeTokenWrapperAddress = getNativeTokenByChainId(
           ChainId.Hardhat,
         ).wrapped.address;
         return await contractFactory.deploy(nativeTokenWrapperAddress);
       default:
+        console.log("deploying", contractType);
         return await contractFactory.deploy();
     }
   }
