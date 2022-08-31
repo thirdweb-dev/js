@@ -1,15 +1,15 @@
-import { ThirdwebAuthConfig } from "./types";
+import { ThirdwebNextAuthConfig } from "./types";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { serialize } from "cookie";
-import { NextApiRequest, NextApiResponse } from "next";
-import { NextAuthOptions, Session } from "next-auth";
+import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next";
+import NextAuth, { NextAuthOptions, Session, unstable_getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-export function ThirdwebAuth(cfg: ThirdwebAuthConfig) {
+export function ThirdwebNextAuth(cfg: ThirdwebNextAuthConfig) {
   const sdk = ThirdwebSDK.fromPrivateKey(cfg.privateKey, "mainnet");
 
-  const ThirdwebProvider = (req: NextApiRequest, res: NextApiResponse) =>
-    CredentialsProvider({
+  function ThirdwebProvider(res: GetServerSidePropsContext["res"]) {
+    return CredentialsProvider({
       name: "ThirdwebAuth",
       credentials: {
         payload: {
@@ -22,10 +22,10 @@ export function ThirdwebAuth(cfg: ThirdwebAuthConfig) {
         try {
           const parsed = JSON.parse(payload);
           const token = await sdk.auth.generateAuthToken(
-            "thirdweb.com",
+            cfg.domain,
             parsed
           );
-          const address = await sdk.auth.authenticate("thirdweb.com", token);
+          const address = await sdk.auth.authenticate(cfg.domain, token);
 
           // Securely set httpOnly cookie on request to prevent XSS on frontend
           // And set path to / to enable thirdweb_auth_token usage on all endpoints
@@ -45,36 +45,91 @@ export function ThirdwebAuth(cfg: ThirdwebAuthConfig) {
         }
       },
     });
+  }
 
-  const authOptions = (req: NextApiRequest, res: NextApiResponse) =>
-    ({
-      callbacks: {
-        async session({ session }) {
-          const token = req.cookies.thirdweb_auth_token || "";
-          try {
-            const address = await sdk.auth.authenticate("thirdweb.com", token);
-            session.user = { ...session.user, address } as Session["user"];
-            return session;
-          } catch {
-            return session;
-          }
-        },
-      },
-      events: {
-        signOut() {
-          res.setHeader(
-            "Set-Cookie",
-            serialize("thirdweb_auth_token", "", {
-              path: "/",
-              expires: new Date(Date.now() + 5 * 1000),
-            })
-          );
-        },
-      },
-    } as Omit<NextAuthOptions, "providers">);
+  function nextOptions (
+    req: GetServerSidePropsContext["req"], 
+    res: GetServerSidePropsContext["res"]
+  ): NextAuthOptions {
+
+    async function session({ session }: { session: Session }) {
+      const token = req.cookies.thirdweb_auth_token || "";
+      try {
+        const address = await sdk.auth.authenticate(cfg.domain, token);
+        session.user = { ...session.user, address } as Session["user"];
+        return session;
+      } catch {
+        return session;
+      }
+    }
+
+    function signOut() {
+      res.setHeader(
+        "Set-Cookie",
+        serialize("thirdweb_auth_token", "", {
+          path: "/",
+          expires: new Date(Date.now() + 5 * 1000),
+        })
+      );
+    }
+
+    const providers: NextAuthOptions["providers"] = [
+      ...cfg.nextOptions.providers,
+      ThirdwebProvider(res),
+    ]
+
+    const configSession = cfg.nextOptions.callbacks?.session
+    const callbacks: NextAuthOptions["callbacks"] = {
+      ...cfg.nextOptions.callbacks,
+      session: configSession 
+        ? async (params) => {
+          params.session = await session(params);
+          return configSession(params);
+        }
+        : session
+    };
+
+    const configSignOut = cfg.nextOptions.events?.signOut
+    const events: NextAuthOptions["events"] = {
+      ...cfg.nextOptions.events,
+      signOut: configSignOut
+        ? async (params) => {
+          signOut();
+          return configSignOut(params);
+        }
+        : signOut
+    };
+
+    return {
+      ...cfg.nextOptions,
+      providers,
+      callbacks,
+      events,
+    };
+  };
+
+  async function getUser(
+    ...args: 
+      | [NextApiRequest, NextApiResponse] 
+      | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
+  ) {
+    return unstable_getServerSession(args[0], args[1], nextOptions(args[0], args[1]));
+  }
+
+  function NextAuthHandler(
+    ...args: [] | [NextApiRequest, NextApiResponse]
+  ) {
+    if (args.length === 0) {
+      return (req: NextApiRequest, res: NextApiResponse) => {
+        return NextAuth(req, res, nextOptions(req, res));
+      }
+    }
+
+    return NextAuth(args[0], args[1], nextOptions(args[0], args[1]));
+  }
 
   return {
-    ThirdwebProvider,
-    authOptions,
-  };
+    NextAuthHandler,
+    getUser
+  }
 }
