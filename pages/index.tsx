@@ -102,7 +102,7 @@ const HomePage: ThirdwebNextPage = () => {
                     gap={6}
                   >
                     <LinkButton
-                      href="/contracts"
+                      href="/dashboard"
                       onClick={() =>
                         trackEvent({
                           category: "cta-button",
