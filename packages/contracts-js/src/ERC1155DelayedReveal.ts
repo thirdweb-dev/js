@@ -23,6 +23,7 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -32,9 +33,9 @@ export interface ERC1155DelayedRevealInterface extends utils.Interface {
   functions: {
     "balanceOf(address,uint256)": FunctionFragment;
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
-    "batchMintTo(address,uint256[],uint256[],string)": FunctionFragment;
     "burn(address,uint256,uint256)": FunctionFragment;
     "burnBatch(address,uint256[],uint256[])": FunctionFragment;
+    "claim(address,uint256,uint256)": FunctionFragment;
     "contractURI()": FunctionFragment;
     "encryptDecrypt(bytes,bytes)": FunctionFragment;
     "encryptedData(uint256)": FunctionFragment;
@@ -46,7 +47,6 @@ export interface ERC1155DelayedRevealInterface extends utils.Interface {
     "isApprovedForAll(address,address)": FunctionFragment;
     "isEncryptedBatch(uint256)": FunctionFragment;
     "lazyMint(uint256,string,bytes)": FunctionFragment;
-    "mintTo(address,uint256,string,uint256)": FunctionFragment;
     "multicall(bytes[])": FunctionFragment;
     "name()": FunctionFragment;
     "nextTokenIdToMint()": FunctionFragment;
@@ -64,15 +64,16 @@ export interface ERC1155DelayedRevealInterface extends utils.Interface {
     "symbol()": FunctionFragment;
     "totalSupply(uint256)": FunctionFragment;
     "uri(uint256)": FunctionFragment;
+    "verifyClaim(address,uint256,uint256)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "balanceOf"
       | "balanceOfBatch"
-      | "batchMintTo"
       | "burn"
       | "burnBatch"
+      | "claim"
       | "contractURI"
       | "encryptDecrypt"
       | "encryptedData"
@@ -84,7 +85,6 @@ export interface ERC1155DelayedRevealInterface extends utils.Interface {
       | "isApprovedForAll"
       | "isEncryptedBatch"
       | "lazyMint"
-      | "mintTo"
       | "multicall"
       | "name"
       | "nextTokenIdToMint"
@@ -102,6 +102,7 @@ export interface ERC1155DelayedRevealInterface extends utils.Interface {
       | "symbol"
       | "totalSupply"
       | "uri"
+      | "verifyClaim"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -113,16 +114,16 @@ export interface ERC1155DelayedRevealInterface extends utils.Interface {
     values: [string[], BigNumberish[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "batchMintTo",
-    values: [string, BigNumberish[], BigNumberish[], string]
-  ): string;
-  encodeFunctionData(
     functionFragment: "burn",
     values: [string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "burnBatch",
     values: [string, BigNumberish[], BigNumberish[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "claim",
+    values: [string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "contractURI",
@@ -167,10 +168,6 @@ export interface ERC1155DelayedRevealInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "lazyMint",
     values: [BigNumberish, string, BytesLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "mintTo",
-    values: [string, BigNumberish, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "multicall",
@@ -225,18 +222,19 @@ export interface ERC1155DelayedRevealInterface extends utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "uri", values: [BigNumberish]): string;
+  encodeFunctionData(
+    functionFragment: "verifyClaim",
+    values: [string, BigNumberish, BigNumberish]
+  ): string;
 
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "balanceOfBatch",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "batchMintTo",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "burnBatch", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "claim", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "contractURI",
     data: BytesLike
@@ -278,7 +276,6 @@ export interface ERC1155DelayedRevealInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "lazyMint", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "mintTo", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "multicall", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(
@@ -326,6 +323,10 @@ export interface ERC1155DelayedRevealInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "uri", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "verifyClaim",
+    data: BytesLike
+  ): Result;
 
   events: {
     "ApprovalForAll(address,address,bool)": EventFragment;
@@ -511,14 +512,6 @@ export interface ERC1155DelayedReveal extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
-    batchMintTo(
-      _to: string,
-      _tokenIds: BigNumberish[],
-      _amounts: BigNumberish[],
-      arg3: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     burn(
       _owner: string,
       _tokenId: BigNumberish,
@@ -531,6 +524,13 @@ export interface ERC1155DelayedReveal extends BaseContract {
       _tokenIds: BigNumberish[],
       _amounts: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    claim(
+      _receiver: string,
+      _tokenId: BigNumberish,
+      _quantity: BigNumberish,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     contractURI(overrides?: CallOverrides): Promise<[string]>;
@@ -581,14 +581,6 @@ export interface ERC1155DelayedReveal extends BaseContract {
       _amount: BigNumberish,
       _baseURIForTokens: string,
       _data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    mintTo(
-      _to: string,
-      _tokenId: BigNumberish,
-      arg2: string,
-      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -677,6 +669,13 @@ export interface ERC1155DelayedReveal extends BaseContract {
     ): Promise<[BigNumber]>;
 
     uri(_tokenId: BigNumberish, overrides?: CallOverrides): Promise<[string]>;
+
+    verifyClaim(
+      _claimer: string,
+      _tokenId: BigNumberish,
+      _quantity: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[void]>;
   };
 
   balanceOf(
@@ -691,14 +690,6 @@ export interface ERC1155DelayedReveal extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
-  batchMintTo(
-    _to: string,
-    _tokenIds: BigNumberish[],
-    _amounts: BigNumberish[],
-    arg3: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   burn(
     _owner: string,
     _tokenId: BigNumberish,
@@ -711,6 +702,13 @@ export interface ERC1155DelayedReveal extends BaseContract {
     _tokenIds: BigNumberish[],
     _amounts: BigNumberish[],
     overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  claim(
+    _receiver: string,
+    _tokenId: BigNumberish,
+    _quantity: BigNumberish,
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   contractURI(overrides?: CallOverrides): Promise<string>;
@@ -758,14 +756,6 @@ export interface ERC1155DelayedReveal extends BaseContract {
     _amount: BigNumberish,
     _baseURIForTokens: string,
     _data: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  mintTo(
-    _to: string,
-    _tokenId: BigNumberish,
-    arg2: string,
-    _amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -855,6 +845,13 @@ export interface ERC1155DelayedReveal extends BaseContract {
 
   uri(_tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
+  verifyClaim(
+    _claimer: string,
+    _tokenId: BigNumberish,
+    _quantity: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<void>;
+
   callStatic: {
     balanceOf(
       arg0: string,
@@ -868,14 +865,6 @@ export interface ERC1155DelayedReveal extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
-    batchMintTo(
-      _to: string,
-      _tokenIds: BigNumberish[],
-      _amounts: BigNumberish[],
-      arg3: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     burn(
       _owner: string,
       _tokenId: BigNumberish,
@@ -887,6 +876,13 @@ export interface ERC1155DelayedReveal extends BaseContract {
       _owner: string,
       _tokenIds: BigNumberish[],
       _amounts: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    claim(
+      _receiver: string,
+      _tokenId: BigNumberish,
+      _quantity: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -940,14 +936,6 @@ export interface ERC1155DelayedReveal extends BaseContract {
       _data: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    mintTo(
-      _to: string,
-      _tokenId: BigNumberish,
-      arg2: string,
-      _amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     multicall(data: BytesLike[], overrides?: CallOverrides): Promise<string[]>;
 
@@ -1025,6 +1013,13 @@ export interface ERC1155DelayedReveal extends BaseContract {
     ): Promise<BigNumber>;
 
     uri(_tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+    verifyClaim(
+      _claimer: string,
+      _tokenId: BigNumberish,
+      _quantity: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
   };
 
   filters: {
@@ -1149,14 +1144,6 @@ export interface ERC1155DelayedReveal extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    batchMintTo(
-      _to: string,
-      _tokenIds: BigNumberish[],
-      _amounts: BigNumberish[],
-      arg3: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     burn(
       _owner: string,
       _tokenId: BigNumberish,
@@ -1169,6 +1156,13 @@ export interface ERC1155DelayedReveal extends BaseContract {
       _tokenIds: BigNumberish[],
       _amounts: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    claim(
+      _receiver: string,
+      _tokenId: BigNumberish,
+      _quantity: BigNumberish,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     contractURI(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1219,14 +1213,6 @@ export interface ERC1155DelayedReveal extends BaseContract {
       _amount: BigNumberish,
       _baseURIForTokens: string,
       _data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    mintTo(
-      _to: string,
-      _tokenId: BigNumberish,
-      arg2: string,
-      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1313,6 +1299,13 @@ export interface ERC1155DelayedReveal extends BaseContract {
     ): Promise<BigNumber>;
 
     uri(_tokenId: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
+
+    verifyClaim(
+      _claimer: string,
+      _tokenId: BigNumberish,
+      _quantity: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -1328,14 +1321,6 @@ export interface ERC1155DelayedReveal extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    batchMintTo(
-      _to: string,
-      _tokenIds: BigNumberish[],
-      _amounts: BigNumberish[],
-      arg3: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     burn(
       _owner: string,
       _tokenId: BigNumberish,
@@ -1348,6 +1333,13 @@ export interface ERC1155DelayedReveal extends BaseContract {
       _tokenIds: BigNumberish[],
       _amounts: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    claim(
+      _receiver: string,
+      _tokenId: BigNumberish,
+      _quantity: BigNumberish,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1400,14 +1392,6 @@ export interface ERC1155DelayedReveal extends BaseContract {
       _amount: BigNumberish,
       _baseURIForTokens: string,
       _data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    mintTo(
-      _to: string,
-      _tokenId: BigNumberish,
-      arg2: string,
-      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1495,6 +1479,13 @@ export interface ERC1155DelayedReveal extends BaseContract {
 
     uri(
       _tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    verifyClaim(
+      _claimer: string,
+      _tokenId: BigNumberish,
+      _quantity: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

@@ -1,12 +1,6 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_thirdwebFee",
-        "type": "address"
-      }
-    ],
+    "inputs": [],
     "stateMutability": "nonpayable",
     "type": "constructor"
   },
@@ -1224,19 +1218,6 @@
         "internalType": "string",
         "name": "",
         "type": "string"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "thirdwebFee",
-    "outputs": [
-      {
-        "internalType": "contract ITWFee",
-        "name": "",
-        "type": "address"
       }
     ],
     "stateMutability": "view",
