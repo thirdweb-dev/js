@@ -9,7 +9,6 @@
   "updateInternalDependencies": "patch",
   "ignore": [],
   "snapshot": {
-    "useCalculatedVersion": true,
     "prereleaseTemplate": "{tag}-{commit}"
   }
 }
