@@ -20,6 +20,8 @@ jobs:
         run: npx playwright install --with-deps
       - name: Run Playwright tests
         run: yarn e2e
+        env:
+          NODE_OPTIONS: "--max_old_space_size=4096"
       - uses: actions/upload-artifact@v2
         if: always()
         with:
