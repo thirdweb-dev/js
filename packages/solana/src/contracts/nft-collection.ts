@@ -45,14 +45,15 @@ export class NFTCollection {
         collectionAuthority: this.wallet.signer,
       })
       .run();
-    console.log("Minted NFT Address", mintedNFT.mint.address.toBase58());
     return mintedNFT;
   }
 
   async get(mintAddress: string) {
     return await this.metaplex
       .nfts()
-      .findByMint({ mintAddress: new PublicKey(mintAddress) })
+      .findByMint({
+        mintAddress: new PublicKey(mintAddress),
+      })
       .run(); // TODO abstract types away
   }
 
