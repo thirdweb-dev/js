@@ -11,7 +11,6 @@ import type {
   NFTMetadata,
   NFTMetadataInput,
   NFTMetadataOrUri,
-  NFTMetadataInput,
   Price,
   SignatureDrop,
   ValidContractInstance,
@@ -111,7 +110,11 @@ export type NFT<TContract extends Erc721OrErc1155> = {
  * The params to pass to `useTransferNFT`.
  * @beta
  */
-export type TransferNFTParams = { to: WalletAddress; tokenId: BigNumberish; amount?: Amount }
+export type TransferNFTParams = {
+  to: WalletAddress;
+  tokenId: BigNumberish;
+  amount?: Amount;
+};
 
 /**
  * The params to pass to `useTransferBatchNFT`.
@@ -159,7 +162,7 @@ export type MintNFTReturnType<TContract> = TContract extends Erc721
  *
  * @beta
  */
-export type BurnNFTParams = { tokenId: BigNumberish, amount?: Amount };
+export type BurnNFTParams = { tokenId: BigNumberish; amount?: Amount };
 
 // DROPS //
 

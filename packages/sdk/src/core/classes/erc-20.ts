@@ -7,7 +7,7 @@ import {
   FEATURE_TOKEN,
   FEATURE_TOKEN_BATCH_MINTABLE,
   FEATURE_TOKEN_BURNABLE,
-  FEATURE_TOKEN_ClAIMABLE,
+  FEATURE_TOKEN_CLAIMABLE,
   FEATURE_TOKEN_MINTABLE,
   FEATURE_TOKEN_SIGNATURE_MINTABLE,
 } from "../../constants/erc20-features";
@@ -492,7 +492,7 @@ export class Erc20<
     checkERC20Allowance = true,
     claimData?: ClaimVerification,
   ): Promise<TransactionResult> {
-    return assertEnabled(this.droppable?.claim, FEATURE_TOKEN_ClAIMABLE).to(
+    return assertEnabled(this.droppable?.claim, FEATURE_TOKEN_CLAIMABLE).to(
       destinationAddress,
       amount,
       checkERC20Allowance,
@@ -523,7 +523,7 @@ export class Erc20<
    * ```
    */
   get claimConditions() {
-    return assertEnabled(this.droppable?.claim, FEATURE_TOKEN_ClAIMABLE)
+    return assertEnabled(this.droppable?.claim, FEATURE_TOKEN_CLAIMABLE)
       .conditions;
   }
 
