@@ -1,8 +1,8 @@
 ---
-"thirdweb": minor
-"@thirdweb-dev/react": minor
-"@thirdweb-dev/sdk": minor
-"@thirdweb-dev/storage": minor
+"thirdweb": patch
+"@thirdweb-dev/react": patch
+"@thirdweb-dev/sdk": patch
+"@thirdweb-dev/storage": patch
 ---
 
 switch build to tsup
