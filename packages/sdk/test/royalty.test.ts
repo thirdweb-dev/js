@@ -1,7 +1,6 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Edition } from "../src/index";
 import { sdk, signers } from "./before-setup";
-
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 
 global.fetch = require("cross-fetch");
@@ -29,7 +28,7 @@ describe("Royalties", async () => {
       }),
     );
 
-    await bundleContract.mintToSelf({
+    await bundleContract.mint({
       metadata: {
         name: "Cool NFT",
       },

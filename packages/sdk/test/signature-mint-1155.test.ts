@@ -1,13 +1,13 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert, expect } from "chai";
-import { BigNumber, ethers } from "ethers";
 import { Edition, Token } from "../src";
-import { sdk, signers, storage } from "./before-setup";
+import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 import {
   PayloadToSign1155,
   SignedPayload1155,
 } from "../src/schema/contracts/common/signature";
-import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
+import { sdk, signers, storage } from "./before-setup";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { assert, expect } from "chai";
+import { BigNumber, ethers } from "ethers";
 
 global.fetch = require("cross-fetch");
 
@@ -240,7 +240,7 @@ describe("Edition sig minting", async () => {
         samWallet.address,
         "0",
       );
-      await editionContract.mintToSelf({
+      await editionContract.mint({
         metadata: { name: "test" },
         supply: 0,
       });

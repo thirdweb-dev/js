@@ -52,8 +52,8 @@ import { BaseContract, CallOverrides, ContractInterface } from "ethers";
  * // if your contract follows the ERC721 standard, contract.nft will be present
  * const allNFTs = await contract.nft.query.all()
  *
- * // if your contract extends IMintableERC721, contract.nft.mint will be present
- * const tx = await contract.nft.mint.to("0x...", {
+ * // if your contract extends IMintableERC721, contract.nft.mint() will be available
+ * const tx = await contract.nft.mint({
  *     name: "Cool NFT",
  *     image: readFileSync("some_image.png"),
  *   });

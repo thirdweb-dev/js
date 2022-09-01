@@ -149,7 +149,6 @@ before(async () => {
         ).wrapped.address;
         return await contractFactory.deploy(nativeTokenWrapperAddress);
       default:
-        console.log("deploying", contractType);
         return await contractFactory.deploy();
     }
   }
