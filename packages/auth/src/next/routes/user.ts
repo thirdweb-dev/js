@@ -1,4 +1,4 @@
-import { ThirdwebAuthContext } from "../types";
+import { ThirdwebAuthContext, ThirdwebAuthUser } from "../types";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -19,11 +19,16 @@ export default async function handler(
   if (token) {
     try {
       const address = await sdk.auth.authenticate(domain, token);
-      user = { address };
+
+      if (ctx.callbacks?.user) {
+        user = await ctx.callbacks.user(address);
+      }
+
+      user = { ...user, address };
     } catch {
       // No-op
     }
   }
 
-  return res.status(200).json(user);
+  return res.status(200).json(user as ThirdwebAuthUser | null);
 }

@@ -34,13 +34,18 @@ export function ThirdwebAuth(app: Express, cfg: ThirdwebAuthConfig) {
     if (token) {
       try {
         const address = await sdk.auth.authenticate(domain, token);
-        user = { address };
+        
+        if (ctx.callbacks?.user) {
+          user = await ctx.callbacks.user(address);
+        }
+  
+        user = { ...user, address };
       } catch {
         // No-op
       }
     }
 
-    req.user = user;
+    req.user = user as ThirdwebAuthUser | null;
     next();
   });
 
