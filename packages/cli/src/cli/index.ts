@@ -59,7 +59,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("--ci", "Continuous Integration mode")
     .action(async (options) => {
       logger.warn(
-        "'publish' is deprecated adn will be removed in a future update. Please use 'release' instead.",
+        "'publish' is deprecated and will be removed in a future update. Please use 'release' instead.",
       );
       const url = await processProject(options, "release");
       info(`Open this link to release your contracts:`);
