@@ -8,6 +8,7 @@ import {
   RequiredParam,
   RevealLazyMintInput,
   getErcs,
+  NFTContract,
 } from "../../types";
 import {
   cacheKeys,
@@ -79,7 +80,7 @@ export function useUnclaimedNFTs(
  * @beta
  */
 export function useClaimedNFTs(
-  contract: RequiredParam<Erc721OrErc1155>,
+  contract: RequiredParam<NFTContract>,
   queryParams?: QueryAllParams,
 ) {
   return useNFTs(contract, queryParams);
@@ -141,7 +142,6 @@ export function useBatchesToReveal<TContract extends DropContract>(
   return useQueryWithNetwork(
     cacheKeys.contract.nft.drop.revealer.getBatchesToReveal(contractAddress),
     () => {
-      invariant(contract, "No Contract instance provided");
       if (erc721) {
         return erc721.revealer.getBatchesToReveal();
       } 
@@ -150,7 +150,7 @@ export function useBatchesToReveal<TContract extends DropContract>(
       }
       invariant(false, "Contract instance does not support getBatchesToReveal");
     },
-    { enabled: !!contract },
+    { enabled: !!erc721 || !!erc1155 },
   );
 }
 
@@ -163,11 +163,12 @@ export function useBatchesToReveal<TContract extends DropContract>(
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract(<ContractAddress>);
  *   const {
  *     mutate: claimNft,
  *     isLoading,
  *     error,
- *   } = useClaimNFT(DropContract);
+ *   } = useClaimNFT(contract);
  *
  *   if (error) {
  *     console.error("failed to claim nft", error);
@@ -232,7 +233,7 @@ export function useClaimNFT<TContract extends DropContract>(
 /**
  * Use this to lazy mint a batch of NFTs on your {@link DropContract}
  *
- * @param contract - an instance of a {@link Erc721OrErc1155} with the drop extension
+ * @param contract - an instance of a {@link NFTContract} with the drop extension
  * @param onProgress - an optional callback that will be called with the progress of the upload
  * @returns a mutation object that can be used to lazy mint a batch of NFTs
  * @beta

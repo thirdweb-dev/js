@@ -9,9 +9,9 @@ import {
   RequiredParam,
   TransferNFTParams,
   WalletAddress,
-  useNFTBalanceParams,
-  useTotalCirculatingSupplyParams,
   Erc721OrErc1155,
+  NFTContract,
+  getErcs,
 } from "../../types";
 import {
   cacheKeys,
@@ -63,157 +63,190 @@ function convertResponseToNFTTypeArray(
 /** **********************/
 
 /**
- * Use this to get an individual NFT token of your {@link Erc721OrErc1155}.
+ * Use this to get an individual NFT token of your {@link NFTContract}.
  *
- * @example
- * ```javascript
- * const nftDrop = useNFTDrop(<ContractAddress>);
- * const { data: nft, isLoading, error } = useNFT(nftDrop, <tokenId>);
- * ```
  * @example
  * ```javascript
  * const { contract } = useContract(<ContractAddress>);
- * const { data: nft, isLoading, error } = useNFT(contract?.nft, <tokenId>);
+ * const { data: nft, isLoading, error } = useNFT(contract, <tokenId>);
  * ```
  *
- * @param contract - an instance of a {@link Erc721OrErc1155}
+ * @param contract - an instance of a {@link NFTContract}
  * @param tokenId - the tokenId to look up
  * @returns a response object that includes the metadata for the given tokenId
  * @beta
  */
-export function useNFT<TContract extends Erc721OrErc1155>(
+export function useNFT<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
   tokenId: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
+  const { erc721, erc1155 } = getErcs(contract);
 
-  return useQueryWithNetwork<NFT<TContract>>(
+  return useQueryWithNetwork<NFT<Erc721OrErc1155>>(
     cacheKeys.contract.nft.get(contractAddress, tokenId),
     async () => {
       invariant(contract, "No Contract instance provided");
-      invariant(contract.get, "Contract instance does not support get");
 
-      return convertResponseToNFTType(
-        contract,
-        await contract.get(BigNumber.from(tokenId || 0)),
-      );
+      if (erc1155) {
+        invariant(erc1155.get, "Contract instance does not support get");
+        return convertResponseToNFTType(
+          erc1155,
+          await erc1155.get(BigNumber.from(tokenId || 0)),
+        );
+      }
+      if (erc721) {
+        invariant(erc721.get, "Contract instance does not support get");
+        return convertResponseToNFTType(
+          erc721,
+          await erc721.get(BigNumber.from(tokenId || 0)),
+        );
+      }
+      invariant(false, "Unknown NFT type");
     },
     {
-      enabled: !!contract && tokenId !== undefined,
+      enabled: !!erc721 || (!!erc1155 && tokenId !== undefined),
     },
   );
 }
 
 /**
- * Use this to get a list of NFT tokens of your {@link Erc721OrErc1155}.
+ * Use this to get a list of NFT tokens of your {@link NFTContract}.
  *
- * @example
- * ```javascript
- * const nftDrop = useNFTDrop(<ContractAddress>);
- * const { data: nfts, isLoading, error } = useNFTs(nftDrop, { start: 0, count: 100 });
- * ```
  * @example
  * ```javascript
  * const { contract } = useContract(<ContractAddress>);
- * const { data: nfts, isLoading, error } = useNFTs(contract?.nft, { start: 0, count: 100 });
+ * const { data: nfts, isLoading, error } = useNFTs(contract, { start: 0, count: 100 });
  * ```
  *
- * @param contract - an instance of a {@link Erc721OrErc1155}
+ * @param contract - an instance of a {@link NFTContract}
  * @param queryParams - query params to pass to the query for the sake of pagination
  * @returns a response object that includes an array of NFTs
  * @beta
  */
-export function useNFTs<TContract extends Erc721OrErc1155>(
+export function useNFTs<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
   queryParams?: QueryAllParams,
 ) {
   const contractAddress = contract?.getAddress();
-  return useQueryWithNetwork<NFT<TContract>[]>(
+  const { erc721, erc1155 } = getErcs(contract);
+
+  return useQueryWithNetwork<NFT<Erc721OrErc1155>[]>(
     cacheKeys.contract.nft.query.all(contractAddress, queryParams),
     async () => {
       invariant(contract, "No Contract instance provided");
 
-      return convertResponseToNFTTypeArray(
-        contract,
-        await contract.getAll(queryParams),
-      );
+      if (erc721) {
+        invariant(erc721.getAll, "Contract instance does not support getAll");
+        return convertResponseToNFTTypeArray(
+          erc721,
+          await erc721.getAll(queryParams),
+        );
+      }
+      if (erc1155) {
+        invariant(erc1155.getAll, "Contract instance does not support getAll");
+        return convertResponseToNFTTypeArray(
+          erc1155,
+          await erc1155.getAll(queryParams),
+        );
+      }
+      invariant(false, "Unknown NFT type");
     },
     {
-      enabled: !!contract || !contractAddress,
-      keepPreviousData: true,
+      enabled: !!erc721 || !!erc1155,
     },
   );
 }
 
 /**
- * Use this to get a the total (minted) supply of your {@link Erc721OrErc1155}.
+ * Use this to get the total count of NFT tokens of your {@link NFTContract}.
  *
- *  * @example
- * ```javascript
- * const nftDrop = useNFTDrop(<ContractAddress>);
- * const { data: totalSupply, isLoading, error } = useNFTSupply(nftDrop);
- * ```
  * @example
  * ```javascript
  * const { contract } = useContract(<ContractAddress>);
- * const { data: totalSupply, isLoading, error } = useNFTSupply(contract?.nft);
+ * const { data: count, isLoading, error } = useTotalCount(contract);
  * ```
  *
- * @param contract - an instance of a {@link Erc721OrErc1155}
+ * @param contract - an instance of a {@link NFTContract}
+ * @returns a response object that includes the total count of NFTs
+ * @beta
+ */
+export function useTotalCount<TContract extends NFTContract>(
+  contract: RequiredParam<TContract>,
+) {
+  const contractAddress = contract?.getAddress();
+  const { erc721, erc1155 } = getErcs(contract);
+
+  return useQueryWithNetwork<BigNumber>(
+    cacheKeys.contract.nft.query.totalCount(contractAddress),
+    async () => {
+      invariant(contract, "No Contract instance provided");
+
+      if (erc1155) {
+        invariant(
+          erc1155.totalCount,
+          "Contract instance does not support totalCount",
+        );
+        return await erc1155.totalCount();
+      }
+      if (erc721) {
+        invariant(
+          erc721.totalCount,
+          "Contract instance does not support totalCount",
+        );
+        return await erc721.totalCount();
+      }
+      invariant(false, "Unknown NFT type");
+    },
+    {
+      enabled: !!erc721 || !!erc1155,
+    },
+  );
+}
+
+/**
+ * Use this to get a the total (minted) supply of your {@link NFTContract}.
+ *
+ * @example
+ * ```javascript
+ * const { contract } = useContract(<ContractAddress>);
+ * const { data: totalCirculatingSupply, isLoading, error } = useTotalCirculatingSupply(contract);
+ * ```
+ *
+ * @param contract - an instance of a {@link NFTContract}
  * @returns a response object that incudes the total minted supply
  * @beta
  */
-export function useTotalCirculatingSupply<TContract extends Erc721OrErc1155>(
-  ...[contract, tokenId]: useTotalCirculatingSupplyParams<TContract>
+export function useTotalCirculatingSupply(
+  contract: RequiredParam<NFTContract>,
+  tokenId: BigNumberish,
 ) {
   const contractAddress = contract?.getAddress();
-  return useQueryWithNetwork(
-    cacheKeys.contract.nft.query.totalCirculatingSupply(contractAddress),
-    () => {
-      invariant(contract, "No Contract instance provided");
-      if (contract.featureName === "ERC721") {
-        return contract.totalCirculatingSupply();
-      }
-      invariant(tokenId, "No tokenId provided");
-      return contract.totalCirculatingSupply(tokenId);
-    },
-    {
-      enabled: !!contract,
-    },
-  );
-}
+  const { erc721, erc1155 } = getErcs(contract);
 
-/**
- * Use this to get a the number of tokens in your {@link Erc721OrErc1155}.
- *
- * @remarks The `total count` and `total supply` are the same for {@link ERC721} based contracts.
- * For {@link ERC1155} the `total count` is the number of NFTs that exist on the contract, **not** the sum of all supply of each token. (Since ERC1155 can have multiple owners per token.)
- *
- * @example
- * ```javascript
- * const nftDrop = useNFTDrop(<ContractAddress>);
- * const { data: totalCount, isLoading, error } = useTotalCount(nftDrop);
- * ```
- * @example
- * ```javascript
- * const { contract } = useContract(<ContractAddress>);
- * const { data: totalCount, isLoading, error } = useTotalCount(contract?.nft);
- * ```
- *
- * @param contract - an instance of a {@link Erc721OrErc1155}
- * @returns a response object that incudes the total number of tokens in the contract
- * @beta
- */
-export function useTotalCount(contract: RequiredParam<Erc721OrErc1155>) {
-  const contractAddress = contract?.getAddress();
-  return useQueryWithNetwork(
-    cacheKeys.contract.nft.query.totalCount(contractAddress),
-    () => {
+  return useQueryWithNetwork<BigNumber>(
+    cacheKeys.contract.nft.query.totalCirculatingSupply(contractAddress),
+    async () => {
       invariant(contract, "No Contract instance provided");
-      return contract.totalCount();
+
+      if (erc1155) {
+        invariant(
+          erc1155.totalCirculatingSupply,
+          "Contract instance does not support totalCirculatingSupply",
+        );
+        return await erc1155.totalCirculatingSupply(tokenId);
+      }
+      if (erc721) {
+        invariant(
+          erc721.totalCirculatingSupply,
+          "Contract instance does not support totalCirculatingSupply",
+        );
+        return await erc721.totalCirculatingSupply();
+      }
+      invariant(false, "Unknown NFT type");
     },
     {
-      enabled: !!contract,
+      enabled: !!erc721 || !!erc1155,
     },
   );
 }
@@ -223,69 +256,67 @@ export function useTotalCount(contract: RequiredParam<Erc721OrErc1155>) {
  *
  * @example
  * ```javascript
- * const nftDrop = useNFTDrop(<ContractAddress>);
- * const { data: ownedNFTs, isLoading, error } = useOwnedNFTs(nftDrop, <OwnerWalletAddress>);
- * ```
- * @example
- * ```javascript
  * const { contract } = useContract(<ContractAddress>);
- * const { data: ownedNFTs, isLoading, error } = useOwnedNFTs(contract?.nft, <OwnerWalletAddress>);
+ * const { data: ownedNFTs, isLoading, error } = useOwnedNFTs(contract, <OwnerWalletAddress>);
  * ```
  *
- * @param contract - an instance of a {@link Erc721OrErc1155}
+ * @param contract - an instance of a {@link NFTContract}
  * @param ownerWalletAddress - the wallet adress to get owned tokens for
  * @returns a response object that includes the list of owned tokens
  * @beta
  */
-export function useOwnedNFTs<TContract extends Erc721OrErc1155>(
+export function useOwnedNFTs<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
   ownerWalletAddress: RequiredParam<WalletAddress>,
 ) {
   const contractAddress = contract?.getAddress();
-  return useQueryWithNetwork<NFT<TContract>[]>(
+  const { erc721, erc1155 } = getErcs(contract);
+
+  return useQueryWithNetwork<NFT<Erc721OrErc1155>[]>(
     cacheKeys.contract.nft.query.owned.all(contractAddress, ownerWalletAddress),
     async () => {
       invariant(contract, "No Contract instance provided");
-      if (contract.featureName === "ERC721") {
+      if (erc721) {
         return convertResponseToNFTTypeArray(
-          contract,
-          await contract.getOwned(ownerWalletAddress),
+          erc721,
+          await erc721.getOwned(ownerWalletAddress),
         );
       }
-      return convertResponseToNFTTypeArray(
-        contract,
-        await contract.getOwned(ownerWalletAddress),
-      );
+      if (erc1155) {
+        return convertResponseToNFTTypeArray(
+          erc1155,
+          await erc1155.getOwned(ownerWalletAddress),
+        );
+      }
+      invariant(false, "Unknown NFT type");
     },
     {
-      enabled: !!contract && !!ownerWalletAddress,
+      enabled: !!erc721 || (!!erc1155 && !!ownerWalletAddress),
     },
   );
 }
 
 /**
- * Use this to get a the total balance of a {@link Erc721OrErc1155} and wallet address.
+ * Use this to get a the total balance of a {@link NFTContract} and wallet address.
  *
- *  @example
- * ```javascript
- * const nftDrop = useNFTDrop(<ContractAddress>);
- * const { data: ownerBalance, isLoading, error } = useNFTBalance(nftDrop, <OwnerWalletAddress>);
- * ```
  * @example
  * ```javascript
  * const { contract } = useContract(<ContractAddress>);
- * const { data: ownerBalance, isLoading, error } = useNFTBalance(contract?.nft, <OwnerWalletAddress>);
+ * const { data: ownerBalance, isLoading, error } = useNFTBalance(contract, <OwnerWalletAddress>);
  * ```
  *
- * @param contract - an instance of a {@link Erc721OrErc1155}
+ * @param contract - an instance of a {@link NFTContract}
  * @param ownerWalletAddress - the wallet adress to check the balance of
  * @returns a response object that includes the total balance of the owner
  * @beta
  */
-export function useNFTBalance<TContract extends Erc721OrErc1155>(
-  ...[contract, ownerWalletAddress, tokenId]: useNFTBalanceParams<TContract>
+export function useNFTBalance(
+  contract: RequiredParam<NFTContract>,
+  ownerWalletAddress: RequiredParam<WalletAddress>,
+  tokenId: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
+  const { erc721, erc1155 } = getErcs(contract);
   return useQueryWithNetwork(
     cacheKeys.contract.nft.balanceOf(
       contractAddress,
@@ -294,19 +325,27 @@ export function useNFTBalance<TContract extends Erc721OrErc1155>(
     ),
     () => {
       invariant(contract, "No Contract instance provided");
-      invariant(
-        contract.balanceOf,
-        "Contract instance does not support balanceOf",
-      );
+
       invariant(ownerWalletAddress, "No owner wallet address provided");
-      if (contract.featureName === "ERC1155") {
+      if (erc1155) {
         invariant(tokenId, "No tokenId provided");
-        return contract.balanceOf(ownerWalletAddress, tokenId);
+        invariant(
+          erc1155.balanceOf,
+          "Contract instance does not support balanceOf",
+        );
+        return erc1155.balanceOf(ownerWalletAddress, tokenId);
       }
-      return contract.balanceOf(ownerWalletAddress);
+      if (erc721) {
+        invariant(
+          erc721.balanceOf,
+          "Contract instance does not support balanceOf",
+        );
+        return erc721.balanceOf(ownerWalletAddress);
+      }
+      invariant(false, "Unknown NFT type");
     },
     {
-      enabled: !!contract && !!ownerWalletAddress,
+      enabled: !!erc721 || (!!erc1155 && !!ownerWalletAddress),
     },
   );
 }
@@ -350,7 +389,7 @@ export function useNFTBalance<TContract extends Erc721OrErc1155>(
  *     mutate: mintNft,
  *     isLoading,
  *     error,
- *   } = useMintNFT(contract?.nft);
+ *   } = useMintNFT(contract);
  *
  *   if (error) {
  *     console.error("failed to mint nft", error);
@@ -367,33 +406,37 @@ export function useNFTBalance<TContract extends Erc721OrErc1155>(
  * };
  * ```
  *
- * @param contract - an instance of a {@link Erc721OrErc1155}
+ * @param contract - an instance of a {@link NFTContract}
  * @returns a mutation object that can be used to mint a new NFT token to the connected wallet
  * @beta
  */
-export function useMintNFT<TContract extends Erc721OrErc1155>(
+export function useMintNFT<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
 ) {
   const activeChainId = useActiveChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
+  const { erc1155, erc721 } = getErcs(contract);
 
   return useMutation(
-    async (data: MintNFTParams<TContract>) => {
+    async (data: MintNFTParams) => {
       invariant(data.to, 'No "to" address provided');
       invariant(contract, "contract is undefined");
-      if (contract.featureName === "ERC1155") {
+      if (erc1155) {
         invariant("supply" in data, "supply not provided");
         const { to, metadata, supply } = data;
-        return (await contract.mintTo(to, {
+        return (await erc1155.mintTo(to, {
           metadata,
           supply: BigNumber.from(supply || 1),
         })) as MintNFTReturnType<TContract>;
       }
-      return (await contract.mintTo(
-        data.to,
-        data.metadata,
-      )) as MintNFTReturnType<TContract>;
+      if (erc721) {
+        return (await erc721.mintTo(
+          data.to,
+          data.metadata,
+        )) as MintNFTReturnType<TContract>;
+      }
+      invariant(false, "Unknown NFT type");
     },
     {
       onSettled: () =>
@@ -407,32 +450,8 @@ export function useMintNFT<TContract extends Erc721OrErc1155>(
 }
 
 /**
- * Use this to mint a new NFT on your {@link Erc721OrErc1155}
+ * Use this to mint a new NFT on your {@link Erc1155}
  *
- * @example
- * ```jsx
- * const Component = () => {
- *   const nftDrop = useNFTDrop(<ContractAddress>);
- *   const {
- *     mutate: mintNftSupply,
- *     isLoading,
- *     error,
- *   } = useMintNFTSupply(nftDrop);
- *
- *   if (error) {
- *     console.error("failed to mint additional supply", error);
- *   }
- *
- *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => mintNftSupply({ tokenId: 0, additionalSupply: 100, to: "0x..."})}
- *     >
- *       Mint Additional Supply!
- *     </button>
- *   );
- * };
- * ```
  * @example
  * ```jsx
  * const Component = () => {
@@ -441,7 +460,7 @@ export function useMintNFT<TContract extends Erc721OrErc1155>(
  *     mutate: mintNftSupply,
  *     isLoading,
  *     error,
- *   } = useMintNFTSupply(contract?.nft);
+ *   } = useMintNFTSupply(contract);
  *
  *   if (error) {
  *     console.error("failed to mint additional supply", error);
@@ -493,32 +512,8 @@ export function useMintNFTSupply(contract: Erc1155) {
 }
 
 /**
- * Use this to transfer tokens on your {@link Erc721OrErc1155}
+ * Use this to transfer tokens on your {@link NFTContract}
  *
- * @example
- * ```jsx
- * const Component = () => {
- *   const nftDrop = useNFTDrop(<ContractAddress>);
- *   const {
- *     mutate: transferNFT,
- *     isLoading,
- *     error,
- *   } = useTransferNFT(nftDrop);
- *
- *   if (error) {
- *     console.error("failed to transfer nft", error);
- *   }
- *
- *   return (
- *     <button
- *       disabled={isLoading}
- *       onClick={() => transferNFT({ to: "0x...", tokenId: 2 })}
- *     >
- *       Transfer NFT!
- *     </button>
- *   );
- * };
- * ```
  * @example
  * ```jsx
  * const Component = () => {
@@ -527,7 +522,7 @@ export function useMintNFTSupply(contract: Erc1155) {
  *     mutate: transferNFT,
  *     isLoading,
  *     error,
- *   } = useTransferNFT(contract?.nft);
+ *   } = useTransferNFT(contract);
  *
  *   if (error) {
  *     console.error("failed to transfer nft", error);
@@ -544,26 +539,31 @@ export function useMintNFTSupply(contract: Erc1155) {
  * };
  * ```
  *
- * @param contract - an instance of a {@link Erc721OrErc1155}
+ * @param contract - an instance of a {@link NFTContract}
  * @returns a mutation object that can be used to transfer NFTs
  * @beta
  */
-export function useTransferNFT<TContract extends Erc721OrErc1155>(
+export function useTransferNFT<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
 ) {
   const activeChainId = useActiveChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
+  const { erc1155, erc721 } = getErcs(contract);
 
   return useMutation(
-    (data: TransferNFTParams<TContract>) => {
-      invariant(contract?.transfer, "contract does not support transfer");
-      if (contract.featureName === "ERC1155") {
+    (data: TransferNFTParams) => {
+      invariant("to" in data, "to not provided");
+      if (erc1155) {
+        invariant(erc1155.transfer, "contract does not support transfer");
+        invariant("tokenId" in data, "tokenId not provided");
         invariant("amount" in data, "amount not provided");
-        return contract.transfer(data.to, data.tokenId, data.amount);
+        return erc1155.transfer(data.to, data.tokenId, data.amount!);
       }
-
-      return contract.transfer(data.to, data.tokenId);
+      if (erc721) {
+        return erc721.transfer(data.to, data.tokenId);
+      }
+      invariant(false, "Unknown NFT type");
     },
     {
       onSettled: () =>
@@ -613,7 +613,7 @@ export function useTransferNFT<TContract extends Erc721OrErc1155>(
  *     mutate: airdropNFT,
  *     isLoading,
  *     error,
- *   } = useAirdropNFT(contract?.nft);
+ *   } = useAirdropNFT(contract);
  *
  *   if (error) {
  *     console.error("failed to transfer batch NFTs", error);
@@ -698,7 +698,7 @@ export function useAirdropNFT(contract: Erc1155) {
  *     mutate: burnNft,
  *     isLoading,
  *     error,
- *   } = useBurnNFT(contract?.nft);
+ *   } = useBurnNFT(contract);
  *
  *   if (error) {
  *     console.error("failed to burn nft", error);
@@ -715,28 +715,32 @@ export function useAirdropNFT(contract: Erc1155) {
  * };
  * ```
  *
- * @param contract - an instance of a {@link Erc721OrErc1155}
+ * @param contract - an instance of a {@link NFTContract}
  * @returns a mutation object that can be used to burn an NFT token from the connected wallet
  * @beta
  */
-export function useBurnNFT<TContract extends Erc721OrErc1155>(
+export function useBurnNFT<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
 ) {
   const activeChainId = useActiveChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
+  const { erc1155, erc721 } = getErcs(contract);
 
   return useMutation(
-    async (data: BurnNFTParams<TContract>) => {
+    async (data: BurnNFTParams) => {
       invariant(data.tokenId, "No tokenId provided");
       invariant(contract, "contract is undefined");
-      if (contract.featureName === "ERC1155") {
+      if (erc1155) {
         invariant("amount" in data, "amount not provided");
         const { tokenId, amount } = data;
-        return await contract.burn(tokenId, amount);
+        return await erc1155.burn(tokenId, amount!);
       }
-      const { tokenId } = data;
-      return await contract.burn(tokenId);
+      if (erc721) {
+        const { tokenId } = data;
+        return await erc721.burn(tokenId);
+      }
+      invariant(false, "Unknown NFT type");
     },
     {
       onSettled: () =>
