@@ -1,8 +1,9 @@
 import { UserWallet } from "../classes/user-wallet";
 import { METAPLEX_PROGRAM_ID } from "../constants/addresses";
 import { NFTMetadataInput } from "../types/nft";
-import { Metaplex } from "@metaplex-foundation/js";
+import { Metaplex, token } from "@metaplex-foundation/js";
 import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
+import { getAccount, getAssociatedTokenAddress } from "@solana/spl-token";
 import { ConfirmedSignatureInfo, Connection, PublicKey } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
 
@@ -48,6 +49,31 @@ export class NFTCollection {
     return mintedNFT;
   }
 
+  async transfer(receiverAddress: string, mintAddress: string) {
+    const nftToSend = await this.get(mintAddress);
+    return await this.metaplex
+      .nfts()
+      .send({
+        mintAddress: new PublicKey(mintAddress),
+        toOwner: new PublicKey(receiverAddress),
+        amount: token(1, 0, nftToSend.symbol),
+      })
+      .run();
+  }
+
+  async balanceOf(walletAddress: string, mintAddress: string): Promise<bigint> {
+    const addr = await getAssociatedTokenAddress(
+      new PublicKey(mintAddress),
+      new PublicKey(walletAddress),
+    );
+    try {
+      const account = await getAccount(this.connection, addr);
+      return account.amount;
+    } catch (e) {
+      return 0n;
+    }
+  }
+
   async get(mintAddress: string) {
     return await this.metaplex
       .nfts()
@@ -80,9 +106,7 @@ export class NFTCollection {
 
     // TODO RPC's will throttle this, need to do some optimizations here
     const batchSize = 1000; // alchemy RPC batch limit
-    console.log(`Found ${allSignatures.length} sigs`);
     for (let i = 0; i < allSignatures.length; i += batchSize) {
-      console.log(`Getting ${i} to ${i + batchSize}`);
       const batch = allSignatures.slice(
         i,
         Math.min(allSignatures.length, i + batchSize),
@@ -117,8 +141,6 @@ export class NFTCollection {
         }
       }
     }
-    console.log(`Found ${metadataAddresses.length} metadata addresses`);
-
     const metadataAccounts = await Promise.all(
       metadataAddresses.map((a) => {
         try {

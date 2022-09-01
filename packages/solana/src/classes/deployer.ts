@@ -1,6 +1,7 @@
 import { NFTCollectionMetadataInput } from "../types/contracts";
 import { UserWallet } from "./user-wallet";
 import { Metaplex } from "@metaplex-foundation/js";
+import { PublicKey } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
 
@@ -21,7 +22,6 @@ export class Deployer {
     invariant(this.wallet.signer, "Wallet is not connected");
     const uri = await this.storage.uploadMetadata(collectionMetadata);
 
-    // TODO add creator field here with rev share from input
     const { nft: collectionNft } = await this.metaplex
       .nfts()
       .create({
@@ -33,6 +33,10 @@ export class Deployer {
         collectionAuthority: this.wallet.signer,
         updateAuthority: this.wallet.signer,
         mintAuthority: this.wallet.signer,
+        creators: collectionMetadata.creators?.map((creator) => ({
+          address: new PublicKey(creator.address),
+          share: creator.share,
+        })),
       })
       .run();
     return collectionNft.mint.address.toBase58();
