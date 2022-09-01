@@ -5,6 +5,11 @@
         "internalType": "address",
         "name": "_nativeTokenWrapper",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_trustedForwarder",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -102,12 +107,6 @@
         "type": "uint256"
       },
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "packCreator",
-        "type": "address"
-      },
-      {
         "indexed": false,
         "internalType": "address",
         "name": "recipient",
@@ -180,13 +179,25 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "packId",
+        "type": "uint256"
+      },
+      {
         "indexed": false,
         "internalType": "address",
-        "name": "account",
+        "name": "recipient",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalPacksCreated",
+        "type": "uint256"
       }
     ],
-    "name": "Paused",
+    "name": "PackUpdated",
     "type": "event"
   },
   {
@@ -383,19 +394,6 @@
     "type": "event"
   },
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "account",
-        "type": "address"
-      }
-    ],
-    "name": "Unpaused",
-    "type": "event"
-  },
-  {
     "inputs": [],
     "name": "DEFAULT_ADMIN_ROLE",
     "outputs": [
@@ -409,16 +407,64 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "NATIVE_TOKEN",
-    "outputs": [
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_packId",
+        "type": "uint256"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "assetContract",
+            "type": "address"
+          },
+          {
+            "internalType": "enum ITokenBundle.TokenType",
+            "name": "tokenType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "totalAmount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ITokenBundle.Token[]",
+        "name": "_contents",
+        "type": "tuple[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_numOfRewardUnits",
+        "type": "uint256[]"
+      },
       {
         "internalType": "address",
-        "name": "",
+        "name": "_recipient",
         "type": "address"
       }
     ],
-    "stateMutability": "view",
+    "name": "addPackContents",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "packTotalSupply",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "newSupplyAdded",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -464,6 +510,25 @@
         "internalType": "uint256[]",
         "name": "",
         "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "canUpdatePack",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -902,11 +967,6 @@
         "type": "string"
       },
       {
-        "internalType": "address[]",
-        "name": "_trustedForwarders",
-        "type": "address[]"
-      },
-      {
         "internalType": "address",
         "name": "_royaltyRecipient",
         "type": "address"
@@ -1176,19 +1236,6 @@
         "internalType": "address",
         "name": "",
         "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "paused",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
       }
     ],
     "stateMutability": "view",

@@ -23,7 +23,7 @@ import { CallOverrideSchema } from "../schema/index";
 import { SDKOptions } from "../schema/sdk-options";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
 import {
-  IPermissionsEnumerable,
+  IPermissions,
   IPlatformFee,
   IPrimarySale,
   IRoyalty,
@@ -81,7 +81,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   // features
   public metadata: ContractMetadata<BaseContract, any>;
   public royalties: ContractRoyalty<IRoyalty, any> | undefined;
-  public roles: ContractRoles<IPermissionsEnumerable, any> | undefined;
+  public roles: ContractRoles<IPermissions, any> | undefined;
   public sales: ContractPrimarySale<IPrimarySale> | undefined;
   public platformFees: ContractPlatformFee<IPlatformFee> | undefined;
   /**
@@ -239,10 +239,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
 
   private detectRoles() {
     if (
-      detectContractFeature<IPermissionsEnumerable>(
-        this.contractWrapper,
-        "Permissions",
-      )
+      detectContractFeature<IPermissions>(this.contractWrapper, "Permissions")
     ) {
       return new ContractRoles(this.contractWrapper, ALL_ROLES);
     }

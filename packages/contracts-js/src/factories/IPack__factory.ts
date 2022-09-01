@@ -18,12 +18,6 @@ const _abi = [
         type: "uint256",
       },
       {
-        indexed: true,
-        internalType: "address",
-        name: "packCreator",
-        type: "address",
-      },
-      {
         indexed: false,
         internalType: "address",
         name: "recipient",
@@ -90,6 +84,31 @@ const _abi = [
       },
     ],
     name: "PackOpened",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "packId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "recipient",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "totalPacksCreated",
+        type: "uint256",
+      },
+    ],
+    name: "PackUpdated",
     type: "event",
   },
   {

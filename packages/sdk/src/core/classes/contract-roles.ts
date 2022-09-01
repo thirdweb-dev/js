@@ -1,11 +1,15 @@
-import { TransactionResult } from "../types";
-import { getRoleHash, Role } from "../../common/role";
-import invariant from "tiny-invariant";
-import { ContractWrapper } from "./contract-wrapper";
+import { hasFunction } from "../../common";
 import { MissingRoleError } from "../../common/error";
-import { IPermissionsEnumerable } from "@thirdweb-dev/contracts-js";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { getRoleHash, Role } from "../../common/role";
 import { FEATURE_PERMISSIONS } from "../../constants/thirdweb-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { TransactionResult } from "../types";
+import { ContractWrapper } from "./contract-wrapper";
+import {
+  IPermissions,
+  IPermissionsEnumerable,
+} from "@thirdweb-dev/contracts-js";
+import invariant from "tiny-invariant";
 
 /**
  * Handle contract permissions
@@ -18,10 +22,8 @@ import { FEATURE_PERMISSIONS } from "../../constants/thirdweb-features";
  * ```
  * @public
  */
-export class ContractRoles<
-  TContract extends IPermissionsEnumerable,
-  TRole extends Role,
-> implements DetectableFeature
+export class ContractRoles<TContract extends IPermissions, TRole extends Role>
+  implements DetectableFeature
 {
   featureName = FEATURE_PERMISSIONS.name;
   private contractWrapper;
@@ -83,15 +85,23 @@ export class ContractRoles<
       this.roles.includes(role),
       `this contract does not support the "${role}" role`,
     );
-
-    const roleHash = getRoleHash(role);
-    const count = (
-      await this.contractWrapper.readContract.getRoleMemberCount(roleHash)
-    ).toNumber();
-    return await Promise.all(
-      Array.from(Array(count).keys()).map((i) =>
-        this.contractWrapper.readContract.getRoleMember(roleHash, i),
-      ),
+    const wrapper = this.contractWrapper;
+    if (
+      hasFunction<IPermissionsEnumerable>("getRoleMemberCount", wrapper) &&
+      hasFunction<IPermissionsEnumerable>("getRoleMember", wrapper)
+    ) {
+      const roleHash = getRoleHash(role);
+      const count = (
+        await wrapper.readContract.getRoleMemberCount(roleHash)
+      ).toNumber();
+      return await Promise.all(
+        Array.from(Array(count).keys()).map((i) =>
+          wrapper.readContract.getRoleMember(roleHash, i),
+        ),
+      );
+    }
+    throw new Error(
+      "Contract does not support enumerating roles. Please implement IPermissionsEnumerable to unlock this functionality.",
     );
   }
 

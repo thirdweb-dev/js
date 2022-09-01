@@ -42,7 +42,6 @@ export declare namespace ITokenBundle {
 
 export interface TokenStoreInterface extends utils.Interface {
   functions: {
-    "NATIVE_TOKEN()": FunctionFragment;
     "getTokenCountOfBundle(uint256)": FunctionFragment;
     "getTokenOfBundle(uint256,uint256)": FunctionFragment;
     "getUriOfBundle(uint256)": FunctionFragment;
@@ -54,7 +53,6 @@ export interface TokenStoreInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "NATIVE_TOKEN"
       | "getTokenCountOfBundle"
       | "getTokenOfBundle"
       | "getUriOfBundle"
@@ -64,10 +62,6 @@ export interface TokenStoreInterface extends utils.Interface {
       | "supportsInterface"
   ): FunctionFragment;
 
-  encodeFunctionData(
-    functionFragment: "NATIVE_TOKEN",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "getTokenCountOfBundle",
     values: [BigNumberish]
@@ -97,10 +91,6 @@ export interface TokenStoreInterface extends utils.Interface {
     values: [BytesLike]
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "NATIVE_TOKEN",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "getTokenCountOfBundle",
     data: BytesLike
@@ -160,8 +150,6 @@ export interface TokenStore extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    NATIVE_TOKEN(overrides?: CallOverrides): Promise<[string]>;
-
     getTokenCountOfBundle(
       _bundleId: BigNumberish,
       overrides?: CallOverrides
@@ -209,8 +197,6 @@ export interface TokenStore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
   };
-
-  NATIVE_TOKEN(overrides?: CallOverrides): Promise<string>;
 
   getTokenCountOfBundle(
     _bundleId: BigNumberish,
@@ -260,8 +246,6 @@ export interface TokenStore extends BaseContract {
   ): Promise<boolean>;
 
   callStatic: {
-    NATIVE_TOKEN(overrides?: CallOverrides): Promise<string>;
-
     getTokenCountOfBundle(
       _bundleId: BigNumberish,
       overrides?: CallOverrides
@@ -313,8 +297,6 @@ export interface TokenStore extends BaseContract {
   filters: {};
 
   estimateGas: {
-    NATIVE_TOKEN(overrides?: CallOverrides): Promise<BigNumber>;
-
     getTokenCountOfBundle(
       _bundleId: BigNumberish,
       overrides?: CallOverrides
@@ -364,8 +346,6 @@ export interface TokenStore extends BaseContract {
   };
 
   populateTransaction: {
-    NATIVE_TOKEN(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     getTokenCountOfBundle(
       _bundleId: BigNumberish,
       overrides?: CallOverrides

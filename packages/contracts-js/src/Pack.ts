@@ -48,9 +48,10 @@ export declare namespace ITokenBundle {
 export interface PackInterface extends utils.Interface {
   functions: {
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
-    "NATIVE_TOKEN()": FunctionFragment;
+    "addPackContents(uint256,(address,uint8,uint256,uint256)[],uint256[],address)": FunctionFragment;
     "balanceOf(address,uint256)": FunctionFragment;
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
+    "canUpdatePack(uint256)": FunctionFragment;
     "contractType()": FunctionFragment;
     "contractURI()": FunctionFragment;
     "contractVersion()": FunctionFragment;
@@ -67,7 +68,7 @@ export interface PackInterface extends utils.Interface {
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "hasRoleWithSwitch(bytes32,address)": FunctionFragment;
-    "initialize(address,string,string,string,address[],address,uint256)": FunctionFragment;
+    "initialize(address,string,string,string,address,uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "isTrustedForwarder(address)": FunctionFragment;
     "multicall(bytes[])": FunctionFragment;
@@ -78,7 +79,6 @@ export interface PackInterface extends utils.Interface {
     "onERC721Received(address,address,uint256,bytes)": FunctionFragment;
     "openPack(uint256,uint256)": FunctionFragment;
     "owner()": FunctionFragment;
-    "paused()": FunctionFragment;
     "renounceRole(bytes32,address)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
     "royaltyInfo(uint256,uint256)": FunctionFragment;
@@ -98,9 +98,10 @@ export interface PackInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "DEFAULT_ADMIN_ROLE"
-      | "NATIVE_TOKEN"
+      | "addPackContents"
       | "balanceOf"
       | "balanceOfBatch"
+      | "canUpdatePack"
       | "contractType"
       | "contractURI"
       | "contractVersion"
@@ -128,7 +129,6 @@ export interface PackInterface extends utils.Interface {
       | "onERC721Received"
       | "openPack"
       | "owner"
-      | "paused"
       | "renounceRole"
       | "revokeRole"
       | "royaltyInfo"
@@ -150,8 +150,8 @@ export interface PackInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "NATIVE_TOKEN",
-    values?: undefined
+    functionFragment: "addPackContents",
+    values: [BigNumberish, ITokenBundle.TokenStruct[], BigNumberish[], string]
   ): string;
   encodeFunctionData(
     functionFragment: "balanceOf",
@@ -160,6 +160,10 @@ export interface PackInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "balanceOfBatch",
     values: [string[], BigNumberish[]]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "canUpdatePack",
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "contractType",
@@ -234,7 +238,7 @@ export interface PackInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [string, string, string, string, string[], string, BigNumberish]
+    values: [string, string, string, string, string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
@@ -270,7 +274,6 @@ export interface PackInterface extends utils.Interface {
     values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceRole",
     values: [BytesLike, string]
@@ -324,12 +327,16 @@ export interface PackInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "NATIVE_TOKEN",
+    functionFragment: "addPackContents",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "balanceOfBatch",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "canUpdatePack",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -416,7 +423,6 @@ export interface PackInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "openPack", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceRole",
     data: BytesLike
@@ -467,9 +473,9 @@ export interface PackInterface extends utils.Interface {
     "ContractURIUpdated(string,string)": EventFragment;
     "DefaultRoyalty(address,uint256)": EventFragment;
     "OwnerUpdated(address,address)": EventFragment;
-    "PackCreated(uint256,address,address,uint256)": EventFragment;
+    "PackCreated(uint256,address,uint256)": EventFragment;
     "PackOpened(uint256,address,uint256,tuple[])": EventFragment;
-    "Paused(address)": EventFragment;
+    "PackUpdated(uint256,address,uint256)": EventFragment;
     "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
     "RoleGranted(bytes32,address,address)": EventFragment;
     "RoleRevoked(bytes32,address,address)": EventFragment;
@@ -477,7 +483,6 @@ export interface PackInterface extends utils.Interface {
     "TransferBatch(address,address,address,uint256[],uint256[])": EventFragment;
     "TransferSingle(address,address,address,uint256,uint256)": EventFragment;
     "URI(string,uint256)": EventFragment;
-    "Unpaused(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
@@ -486,7 +491,7 @@ export interface PackInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "OwnerUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PackCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PackOpened"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PackUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
@@ -494,7 +499,6 @@ export interface PackInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "TransferBatch"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TransferSingle"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "URI"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
 }
 
 export interface ApprovalForAllEventObject {
@@ -545,12 +549,11 @@ export type OwnerUpdatedEventFilter = TypedEventFilter<OwnerUpdatedEvent>;
 
 export interface PackCreatedEventObject {
   packId: BigNumber;
-  packCreator: string;
   recipient: string;
   totalPacksCreated: BigNumber;
 }
 export type PackCreatedEvent = TypedEvent<
-  [BigNumber, string, string, BigNumber],
+  [BigNumber, string, BigNumber],
   PackCreatedEventObject
 >;
 
@@ -569,12 +572,17 @@ export type PackOpenedEvent = TypedEvent<
 
 export type PackOpenedEventFilter = TypedEventFilter<PackOpenedEvent>;
 
-export interface PausedEventObject {
-  account: string;
+export interface PackUpdatedEventObject {
+  packId: BigNumber;
+  recipient: string;
+  totalPacksCreated: BigNumber;
 }
-export type PausedEvent = TypedEvent<[string], PausedEventObject>;
+export type PackUpdatedEvent = TypedEvent<
+  [BigNumber, string, BigNumber],
+  PackUpdatedEventObject
+>;
 
-export type PausedEventFilter = TypedEventFilter<PausedEvent>;
+export type PackUpdatedEventFilter = TypedEventFilter<PackUpdatedEvent>;
 
 export interface RoleAdminChangedEventObject {
   role: string;
@@ -661,13 +669,6 @@ export type URIEvent = TypedEvent<[string, BigNumber], URIEventObject>;
 
 export type URIEventFilter = TypedEventFilter<URIEvent>;
 
-export interface UnpausedEventObject {
-  account: string;
-}
-export type UnpausedEvent = TypedEvent<[string], UnpausedEventObject>;
-
-export type UnpausedEventFilter = TypedEventFilter<UnpausedEvent>;
-
 export interface Pack extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
@@ -697,7 +698,13 @@ export interface Pack extends BaseContract {
   functions: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
-    NATIVE_TOKEN(overrides?: CallOverrides): Promise<[string]>;
+    addPackContents(
+      _packId: BigNumberish,
+      _contents: ITokenBundle.TokenStruct[],
+      _numOfRewardUnits: BigNumberish[],
+      _recipient: string,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     balanceOf(
       account: string,
@@ -710,6 +717,11 @@ export interface Pack extends BaseContract {
       ids: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
+
+    canUpdatePack(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
 
     contractType(overrides?: CallOverrides): Promise<[string]>;
 
@@ -796,7 +808,6 @@ export interface Pack extends BaseContract {
       _name: string,
       _symbol: string,
       _contractURI: string,
-      _trustedForwarders: string[],
       _royaltyRecipient: string,
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -855,8 +866,6 @@ export interface Pack extends BaseContract {
     ): Promise<ContractTransaction>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
-
-    paused(overrides?: CallOverrides): Promise<[boolean]>;
 
     renounceRole(
       role: BytesLike,
@@ -942,7 +951,13 @@ export interface Pack extends BaseContract {
 
   DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
-  NATIVE_TOKEN(overrides?: CallOverrides): Promise<string>;
+  addPackContents(
+    _packId: BigNumberish,
+    _contents: ITokenBundle.TokenStruct[],
+    _numOfRewardUnits: BigNumberish[],
+    _recipient: string,
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   balanceOf(
     account: string,
@@ -955,6 +970,11 @@ export interface Pack extends BaseContract {
     ids: BigNumberish[],
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
+
+  canUpdatePack(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
 
   contractType(overrides?: CallOverrides): Promise<string>;
 
@@ -1041,7 +1061,6 @@ export interface Pack extends BaseContract {
     _name: string,
     _symbol: string,
     _contractURI: string,
-    _trustedForwarders: string[],
     _royaltyRecipient: string,
     _royaltyBps: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -1100,8 +1119,6 @@ export interface Pack extends BaseContract {
   ): Promise<ContractTransaction>;
 
   owner(overrides?: CallOverrides): Promise<string>;
-
-  paused(overrides?: CallOverrides): Promise<boolean>;
 
   renounceRole(
     role: BytesLike,
@@ -1187,7 +1204,18 @@ export interface Pack extends BaseContract {
   callStatic: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
-    NATIVE_TOKEN(overrides?: CallOverrides): Promise<string>;
+    addPackContents(
+      _packId: BigNumberish,
+      _contents: ITokenBundle.TokenStruct[],
+      _numOfRewardUnits: BigNumberish[],
+      _recipient: string,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        packTotalSupply: BigNumber;
+        newSupplyAdded: BigNumber;
+      }
+    >;
 
     balanceOf(
       account: string,
@@ -1200,6 +1228,11 @@ export interface Pack extends BaseContract {
       ids: BigNumberish[],
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
+
+    canUpdatePack(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
 
     contractType(overrides?: CallOverrides): Promise<string>;
 
@@ -1288,7 +1321,6 @@ export interface Pack extends BaseContract {
       _name: string,
       _symbol: string,
       _contractURI: string,
-      _trustedForwarders: string[],
       _royaltyRecipient: string,
       _royaltyBps: BigNumberish,
       overrides?: CallOverrides
@@ -1344,8 +1376,6 @@ export interface Pack extends BaseContract {
     ): Promise<ITokenBundle.TokenStructOutput[]>;
 
     owner(overrides?: CallOverrides): Promise<string>;
-
-    paused(overrides?: CallOverrides): Promise<boolean>;
 
     renounceRole(
       role: BytesLike,
@@ -1462,15 +1492,13 @@ export interface Pack extends BaseContract {
       newOwner?: string | null
     ): OwnerUpdatedEventFilter;
 
-    "PackCreated(uint256,address,address,uint256)"(
+    "PackCreated(uint256,address,uint256)"(
       packId?: BigNumberish | null,
-      packCreator?: string | null,
       recipient?: null,
       totalPacksCreated?: null
     ): PackCreatedEventFilter;
     PackCreated(
       packId?: BigNumberish | null,
-      packCreator?: string | null,
       recipient?: null,
       totalPacksCreated?: null
     ): PackCreatedEventFilter;
@@ -1488,8 +1516,16 @@ export interface Pack extends BaseContract {
       rewardUnitsDistributed?: null
     ): PackOpenedEventFilter;
 
-    "Paused(address)"(account?: null): PausedEventFilter;
-    Paused(account?: null): PausedEventFilter;
+    "PackUpdated(uint256,address,uint256)"(
+      packId?: BigNumberish | null,
+      recipient?: null,
+      totalPacksCreated?: null
+    ): PackUpdatedEventFilter;
+    PackUpdated(
+      packId?: BigNumberish | null,
+      recipient?: null,
+      totalPacksCreated?: null
+    ): PackUpdatedEventFilter;
 
     "RoleAdminChanged(bytes32,bytes32,bytes32)"(
       role?: BytesLike | null,
@@ -1570,15 +1606,18 @@ export interface Pack extends BaseContract {
       id?: BigNumberish | null
     ): URIEventFilter;
     URI(value?: null, id?: BigNumberish | null): URIEventFilter;
-
-    "Unpaused(address)"(account?: null): UnpausedEventFilter;
-    Unpaused(account?: null): UnpausedEventFilter;
   };
 
   estimateGas: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
-    NATIVE_TOKEN(overrides?: CallOverrides): Promise<BigNumber>;
+    addPackContents(
+      _packId: BigNumberish,
+      _contents: ITokenBundle.TokenStruct[],
+      _numOfRewardUnits: BigNumberish[],
+      _recipient: string,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     balanceOf(
       account: string,
@@ -1589,6 +1628,11 @@ export interface Pack extends BaseContract {
     balanceOfBatch(
       accounts: string[],
       ids: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    canUpdatePack(
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1675,7 +1719,6 @@ export interface Pack extends BaseContract {
       _name: string,
       _symbol: string,
       _contractURI: string,
-      _trustedForwarders: string[],
       _royaltyRecipient: string,
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1734,8 +1777,6 @@ export interface Pack extends BaseContract {
     ): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
-
-    paused(overrides?: CallOverrides): Promise<BigNumber>;
 
     renounceRole(
       role: BytesLike,
@@ -1822,7 +1863,13 @@ export interface Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    NATIVE_TOKEN(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    addPackContents(
+      _packId: BigNumberish,
+      _contents: ITokenBundle.TokenStruct[],
+      _numOfRewardUnits: BigNumberish[],
+      _recipient: string,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     balanceOf(
       account: string,
@@ -1833,6 +1880,11 @@ export interface Pack extends BaseContract {
     balanceOfBatch(
       accounts: string[],
       ids: BigNumberish[],
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    canUpdatePack(
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1921,7 +1973,6 @@ export interface Pack extends BaseContract {
       _name: string,
       _symbol: string,
       _contractURI: string,
-      _trustedForwarders: string[],
       _royaltyRecipient: string,
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1980,8 +2031,6 @@ export interface Pack extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     renounceRole(
       role: BytesLike,

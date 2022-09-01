@@ -243,7 +243,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           packsMetadata.name,
           packsMetadata.symbol,
           contractURI,
-          trustedForwarders,
           packsMetadata.fee_recipient,
           packsMetadata.seller_fee_basis_points,
         ];

@@ -10,7 +10,7 @@
     "url": "https://github.com/thirdweb-dev/js.git"
   },
   "dependencies": {
-    "@thirdweb-dev/contracts": "3.1.5"
+    "@thirdweb-dev/contracts": "3.1.6-1"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.18.10",
