@@ -55,7 +55,6 @@ export interface SplitInterface extends utils.Interface {
     "setContractURI(string)": FunctionFragment;
     "shares(address)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
-    "thirdwebFee()": FunctionFragment;
     "totalReleased(address)": FunctionFragment;
     "totalReleased()": FunctionFragment;
     "totalShares()": FunctionFragment;
@@ -88,7 +87,6 @@ export interface SplitInterface extends utils.Interface {
       | "setContractURI"
       | "shares"
       | "supportsInterface"
-      | "thirdwebFee"
       | "totalReleased(address)"
       | "totalReleased()"
       | "totalShares"
@@ -189,10 +187,6 @@ export interface SplitInterface extends utils.Interface {
     values: [BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "thirdwebFee",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "totalReleased(address)",
     values: [string]
   ): string;
@@ -279,10 +273,6 @@ export interface SplitInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "shares", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "thirdwebFee",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -538,8 +528,6 @@ export interface Split extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    thirdwebFee(overrides?: CallOverrides): Promise<[string]>;
-
     "totalReleased(address)"(
       token: string,
       overrides?: CallOverrides
@@ -661,8 +649,6 @@ export interface Split extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  thirdwebFee(overrides?: CallOverrides): Promise<string>;
-
   "totalReleased(address)"(
     token: string,
     overrides?: CallOverrides
@@ -775,8 +761,6 @@ export interface Split extends BaseContract {
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<boolean>;
-
-    thirdwebFee(overrides?: CallOverrides): Promise<string>;
 
     "totalReleased(address)"(
       token: string,
@@ -967,8 +951,6 @@ export interface Split extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    thirdwebFee(overrides?: CallOverrides): Promise<BigNumber>;
-
     "totalReleased(address)"(
       token: string,
       overrides?: CallOverrides
@@ -1101,8 +1083,6 @@ export interface Split extends BaseContract {
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
-
-    thirdwebFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "totalReleased(address)"(
       token: string,

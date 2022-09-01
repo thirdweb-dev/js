@@ -96,6 +96,7 @@ export interface ERC721DropInterface extends utils.Interface {
     "lazyMint(uint256,string,bytes)": FunctionFragment;
     "multicall(bytes[])": FunctionFragment;
     "name()": FunctionFragment;
+    "nextTokenIdToClaim()": FunctionFragment;
     "nextTokenIdToMint()": FunctionFragment;
     "owner()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
@@ -142,6 +143,7 @@ export interface ERC721DropInterface extends utils.Interface {
       | "lazyMint"
       | "multicall"
       | "name"
+      | "nextTokenIdToClaim"
       | "nextTokenIdToMint"
       | "owner"
       | "ownerOf"
@@ -244,6 +246,10 @@ export interface ERC721DropInterface extends utils.Interface {
     values: [BytesLike[]]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "nextTokenIdToClaim",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "nextTokenIdToMint",
     values?: undefined
@@ -383,6 +389,10 @@ export interface ERC721DropInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "lazyMint", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "multicall", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "nextTokenIdToClaim",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "nextTokenIdToMint",
     data: BytesLike
@@ -776,6 +786,8 @@ export interface ERC721Drop extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
+    nextTokenIdToClaim(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     nextTokenIdToMint(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
@@ -1016,6 +1028,8 @@ export interface ERC721Drop extends BaseContract {
 
   name(overrides?: CallOverrides): Promise<string>;
 
+  nextTokenIdToClaim(overrides?: CallOverrides): Promise<BigNumber>;
+
   nextTokenIdToMint(overrides?: CallOverrides): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
@@ -1246,6 +1260,8 @@ export interface ERC721Drop extends BaseContract {
     multicall(data: BytesLike[], overrides?: CallOverrides): Promise<string[]>;
 
     name(overrides?: CallOverrides): Promise<string>;
+
+    nextTokenIdToClaim(overrides?: CallOverrides): Promise<BigNumber>;
 
     nextTokenIdToMint(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1579,6 +1595,8 @@ export interface ERC721Drop extends BaseContract {
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
+    nextTokenIdToClaim(overrides?: CallOverrides): Promise<BigNumber>;
+
     nextTokenIdToMint(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1793,6 +1811,10 @@ export interface ERC721Drop extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    nextTokenIdToClaim(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     nextTokenIdToMint(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

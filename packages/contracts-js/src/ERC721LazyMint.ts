@@ -23,6 +23,7 @@ import type {
   CallOverrides,
   ContractTransaction,
   Overrides,
+  PayableOverrides,
   PopulatedTransaction,
   Signer,
   utils,
@@ -32,8 +33,8 @@ export interface ERC721LazyMintInterface extends utils.Interface {
   functions: {
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
-    "batchMintTo(address,uint256,string,bytes)": FunctionFragment;
     "burn(uint256)": FunctionFragment;
+    "claim(address,uint256)": FunctionFragment;
     "contractURI()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getBaseURICount()": FunctionFragment;
@@ -41,11 +42,10 @@ export interface ERC721LazyMintInterface extends utils.Interface {
     "getDefaultRoyaltyInfo()": FunctionFragment;
     "getRoyaltyInfoForToken(uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
-    "isApprovedOrOwner(address,uint256)": FunctionFragment;
     "lazyMint(uint256,string,bytes)": FunctionFragment;
-    "mintTo(address,string)": FunctionFragment;
     "multicall(bytes[])": FunctionFragment;
     "name()": FunctionFragment;
+    "nextTokenIdToClaim()": FunctionFragment;
     "nextTokenIdToMint()": FunctionFragment;
     "owner()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
@@ -62,14 +62,15 @@ export interface ERC721LazyMintInterface extends utils.Interface {
     "tokenURI(uint256)": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
+    "verifyClaim(address,uint256)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
       | "approve"
       | "balanceOf"
-      | "batchMintTo"
       | "burn"
+      | "claim"
       | "contractURI"
       | "getApproved"
       | "getBaseURICount"
@@ -77,11 +78,10 @@ export interface ERC721LazyMintInterface extends utils.Interface {
       | "getDefaultRoyaltyInfo"
       | "getRoyaltyInfoForToken"
       | "isApprovedForAll"
-      | "isApprovedOrOwner"
       | "lazyMint"
-      | "mintTo"
       | "multicall"
       | "name"
+      | "nextTokenIdToClaim"
       | "nextTokenIdToMint"
       | "owner"
       | "ownerOf"
@@ -98,6 +98,7 @@ export interface ERC721LazyMintInterface extends utils.Interface {
       | "tokenURI"
       | "totalSupply"
       | "transferFrom"
+      | "verifyClaim"
   ): FunctionFragment;
 
   encodeFunctionData(
@@ -105,11 +106,11 @@ export interface ERC721LazyMintInterface extends utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "batchMintTo",
-    values: [string, BigNumberish, string, BytesLike]
-  ): string;
   encodeFunctionData(functionFragment: "burn", values: [BigNumberish]): string;
+  encodeFunctionData(
+    functionFragment: "claim",
+    values: [string, BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "contractURI",
     values?: undefined
@@ -139,22 +140,18 @@ export interface ERC721LazyMintInterface extends utils.Interface {
     values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "isApprovedOrOwner",
-    values: [string, BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "lazyMint",
     values: [BigNumberish, string, BytesLike]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "mintTo",
-    values: [string, string]
   ): string;
   encodeFunctionData(
     functionFragment: "multicall",
     values: [BytesLike[]]
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "nextTokenIdToClaim",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "nextTokenIdToMint",
     values?: undefined
@@ -210,14 +207,15 @@ export interface ERC721LazyMintInterface extends utils.Interface {
     functionFragment: "transferFrom",
     values: [string, string, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "verifyClaim",
+    values: [string, BigNumberish]
+  ): string;
 
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "batchMintTo",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "claim", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "contractURI",
     data: BytesLike
@@ -246,14 +244,13 @@ export interface ERC721LazyMintInterface extends utils.Interface {
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "isApprovedOrOwner",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "lazyMint", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "mintTo", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "multicall", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "nextTokenIdToClaim",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "nextTokenIdToMint",
     data: BytesLike
@@ -301,6 +298,10 @@ export interface ERC721LazyMintInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "verifyClaim",
     data: BytesLike
   ): Result;
 
@@ -456,17 +457,15 @@ export interface ERC721LazyMint extends BaseContract {
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    batchMintTo(
-      _to: string,
-      _quantity: BigNumberish,
-      arg2: string,
-      _data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     burn(
       _tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    claim(
+      _receiver: string,
+      _quantity: BigNumberish,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     contractURI(overrides?: CallOverrides): Promise<[string]>;
@@ -496,22 +495,10 @@ export interface ERC721LazyMint extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    isApprovedOrOwner(
-      _operator: string,
-      _tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[boolean] & { isApprovedOrOwnerOf: boolean }>;
-
     lazyMint(
       _amount: BigNumberish,
       _baseURIForTokens: string,
       _data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    mintTo(
-      _to: string,
-      arg1: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -521,6 +508,8 @@ export interface ERC721LazyMint extends BaseContract {
     ): Promise<ContractTransaction>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
+
+    nextTokenIdToClaim(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     nextTokenIdToMint(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -603,6 +592,12 @@ export interface ERC721LazyMint extends BaseContract {
       tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    verifyClaim(
+      _claimer: string,
+      _quantity: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[void]>;
   };
 
   approve(
@@ -613,17 +608,15 @@ export interface ERC721LazyMint extends BaseContract {
 
   balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  batchMintTo(
-    _to: string,
-    _quantity: BigNumberish,
-    arg2: string,
-    _data: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   burn(
     _tokenId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  claim(
+    _receiver: string,
+    _quantity: BigNumberish,
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   contractURI(overrides?: CallOverrides): Promise<string>;
@@ -653,22 +646,10 @@ export interface ERC721LazyMint extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  isApprovedOrOwner(
-    _operator: string,
-    _tokenId: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
   lazyMint(
     _amount: BigNumberish,
     _baseURIForTokens: string,
     _data: BytesLike,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  mintTo(
-    _to: string,
-    arg1: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -678,6 +659,8 @@ export interface ERC721LazyMint extends BaseContract {
   ): Promise<ContractTransaction>;
 
   name(overrides?: CallOverrides): Promise<string>;
+
+  nextTokenIdToClaim(overrides?: CallOverrides): Promise<BigNumber>;
 
   nextTokenIdToMint(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -755,6 +738,12 @@ export interface ERC721LazyMint extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  verifyClaim(
+    _claimer: string,
+    _quantity: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<void>;
+
   callStatic: {
     approve(
       to: string,
@@ -764,15 +753,13 @@ export interface ERC721LazyMint extends BaseContract {
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    batchMintTo(
-      _to: string,
+    burn(_tokenId: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    claim(
+      _receiver: string,
       _quantity: BigNumberish,
-      arg2: string,
-      _data: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    burn(_tokenId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     contractURI(overrides?: CallOverrides): Promise<string>;
 
@@ -801,12 +788,6 @@ export interface ERC721LazyMint extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    isApprovedOrOwner(
-      _operator: string,
-      _tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
     lazyMint(
       _amount: BigNumberish,
       _baseURIForTokens: string,
@@ -814,11 +795,11 @@ export interface ERC721LazyMint extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    mintTo(_to: string, arg1: string, overrides?: CallOverrides): Promise<void>;
-
     multicall(data: BytesLike[], overrides?: CallOverrides): Promise<string[]>;
 
     name(overrides?: CallOverrides): Promise<string>;
+
+    nextTokenIdToClaim(overrides?: CallOverrides): Promise<BigNumber>;
 
     nextTokenIdToMint(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -890,6 +871,12 @@ export interface ERC721LazyMint extends BaseContract {
       from: string,
       to: string,
       tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    verifyClaim(
+      _claimer: string,
+      _quantity: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -989,17 +976,15 @@ export interface ERC721LazyMint extends BaseContract {
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    batchMintTo(
-      _to: string,
-      _quantity: BigNumberish,
-      arg2: string,
-      _data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     burn(
       _tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    claim(
+      _receiver: string,
+      _quantity: BigNumberish,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     contractURI(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1029,22 +1014,10 @@ export interface ERC721LazyMint extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    isApprovedOrOwner(
-      _operator: string,
-      _tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     lazyMint(
       _amount: BigNumberish,
       _baseURIForTokens: string,
       _data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    mintTo(
-      _to: string,
-      arg1: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1054,6 +1027,8 @@ export interface ERC721LazyMint extends BaseContract {
     ): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
+
+    nextTokenIdToClaim(overrides?: CallOverrides): Promise<BigNumber>;
 
     nextTokenIdToMint(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1134,6 +1109,12 @@ export interface ERC721LazyMint extends BaseContract {
       tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    verifyClaim(
+      _claimer: string,
+      _quantity: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -1148,17 +1129,15 @@ export interface ERC721LazyMint extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    batchMintTo(
-      _to: string,
-      _quantity: BigNumberish,
-      arg2: string,
-      _data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     burn(
       _tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    claim(
+      _receiver: string,
+      _quantity: BigNumberish,
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     contractURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -1190,22 +1169,10 @@ export interface ERC721LazyMint extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    isApprovedOrOwner(
-      _operator: string,
-      _tokenId: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     lazyMint(
       _amount: BigNumberish,
       _baseURIForTokens: string,
       _data: BytesLike,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    mintTo(
-      _to: string,
-      arg1: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1215,6 +1182,10 @@ export interface ERC721LazyMint extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    nextTokenIdToClaim(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     nextTokenIdToMint(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1294,6 +1265,12 @@ export interface ERC721LazyMint extends BaseContract {
       to: string,
       tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    verifyClaim(
+      _claimer: string,
+      _quantity: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }
