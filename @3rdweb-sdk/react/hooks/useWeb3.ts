@@ -28,6 +28,8 @@ export const FAUCETS: Partial<Record<ChainId, string>> = {
   [ChainId.FantomTestnet]: "https://faucet.fantom.network/",
   [ChainId.OptimismTestnet]: "https://kovan.optifaucet.com/",
   [ChainId.ArbitrumTestnet]: "https://faucet.paradigm.xyz/",
+  [ChainId.BinanceSmartChainTestnet]:
+    "https://testnet.binance.org/faucet-smart",
 };
 
 const defaultNetworkMetadata: Record<SUPPORTED_CHAIN_ID, NetworkMetadata> = {
