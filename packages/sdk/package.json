@@ -8,25 +8,24 @@
     "url": "https://github.com/thirdweb-dev/js.git"
   },
   "license": "Apache-2.0",
-  "main": "dist/thirdweb-dev-sdk.cjs.js",
-  "module": "dist/thirdweb-dev-sdk.esm.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/**/*"
   ],
   "sideEffects": false,
   "scripts": {
     "clean": "rm -rf dist/",
-    "dev": "tsdx watch",
     "format": "prettier src/ --write",
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
-    "generate-types": "tsc",
     "extract-api": "api-extractor run --local",
     "full-build": "yarn build:lib && yarn extract-api",
     "generate-md-docs": "yarn api-documenter markdown -i ./temp -o ./docs",
     "generate-docs": "yarn full-build && yarn generate-md-docs",
     "generate-snippets": "node ./scripts/generate-snippets.mjs && node ./scripts/generate-feature-snippets.mjs",
-    "build": "tsc && preconstruct build",
+    "build": "tsup src/index.ts",
     "test:all": "ts-mocha --paths -t 120000 -r esm -p tsconfig.testing.json './test/**/*.test.ts'",
     "test": "make test",
     "test:single": "ts-mocha --paths -t 120000 -r esm -p tsconfig.testing.json",
@@ -39,7 +38,6 @@
     "@microsoft/api-extractor": "^7.18.10",
     "@microsoft/tsdoc": "^0.14.1",
     "@nomiclabs/hardhat-ethers": "2.0.5",
-    "@preconstruct/cli": "^2.2.1",
     "@swc/core": "^1.2.177",
     "@typechain/ethers-v5": "10.0.0",
     "@types/chai": "^4.3.1",
@@ -66,13 +64,9 @@
     "prettier": "^2.4.1",
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.7.0",
+    "tsup": "^6.2.3",
     "typechain": "^8.0.0",
     "typescript": "^4.6.2"
-  },
-  "preconstruct": {
-    "entrypoints": [
-      "index.ts"
-    ]
   },
   "peerDependencies": {
     "ethers": "^5"

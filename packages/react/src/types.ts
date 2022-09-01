@@ -9,6 +9,9 @@ import type {
   ListingType,
   NFTDrop,
   NFTMetadata,
+  NFTMetadataInput,
+  NFTMetadataOrUri,
+  NFTMetadataInput,
   Price,
   SignatureDrop,
   ValidContractInstance,
@@ -18,10 +21,6 @@ import type {
   TokenDrop,
   Erc20,
 } from "@thirdweb-dev/sdk";
-import {
-  NFTMetadataInput,
-  NFTMetadataOrUri,
-} from "@thirdweb-dev/sdk/dist/declarations/src/schema";
 import type { BigNumberish } from "ethers";
 
 /**

@@ -1,8 +1,9 @@
 {
   "name": "@thirdweb-dev/storage",
   "version": "0.2.2",
-  "main": "dist/thirdweb-dev-storage.cjs.js",
-  "module": "dist/thirdweb-dev-storage.esm.js",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "repository": {
     "directory": "packages/storage",
     "type": "git",
@@ -11,21 +12,15 @@
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "tsc && preconstruct build",
+    "build": "tsup src/index.ts",
     "test": "ts-mocha 'test/**/*.ts' --paths -t 120000 -r esm -p tsconfig.testing.json"
   },
   "files": [
     "dist/"
   ],
-  "preconstruct": {
-    "entrypoints": [
-      "index.ts"
-    ]
-  },
   "devDependencies": {
     "@babel/preset-env": "^7.18.10",
     "@babel/preset-typescript": "^7.18.6",
-    "@preconstruct/cli": "^2.2.1",
     "@types/chai": "^4.3.3",
     "@types/mocha": "^9.1.1",
     "@typescript-eslint/eslint-plugin": "^5.33.1",
@@ -36,6 +31,7 @@
     "mocha": "^10.0.0",
     "ts-mocha": "^10.0.0",
     "tsc": "^2.0.4",
+    "tsup": "^6.2.3",
     "typescript": "^4.7.4"
   },
   "dependencies": {

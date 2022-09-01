@@ -25,8 +25,8 @@ import {
   SignerOrProvider,
   ThirdwebSDK,
   getProviderForNetwork,
+  SDKOptionsOutput,
 } from "@thirdweb-dev/sdk";
-import { SDKOptionsOutput } from "@thirdweb-dev/sdk/dist/declarations/src/schema";
 import type { IStorage } from "@thirdweb-dev/storage";
 import { Signer } from "ethers";
 import React, { createContext, useEffect, useMemo } from "react";
