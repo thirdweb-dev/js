@@ -1,6 +1,7 @@
 // import { getPayer } from "../utils/local-config";
 import { Signer } from "@metaplex-foundation/js";
 import EventEmitter from "eventemitter3";
+import invariant from "tiny-invariant";
 
 /**
  *
@@ -31,5 +32,14 @@ export class UserWallet {
   public disconnect() {
     this.signer = undefined;
     this.events.emit("disconnected");
+  }
+
+  public getAddress() {
+    return this.signer?.publicKey.toBase58();
+  }
+
+  public getSigner() {
+    invariant(this.signer, "Wallet is not connected");
+    return this.signer;
   }
 }
