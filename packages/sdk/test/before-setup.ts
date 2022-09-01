@@ -151,7 +151,6 @@ before(async () => {
         const addr = getNativeTokenByChainId(ChainId.Hardhat).wrapped.address;
         return await contractFactory.deploy(addr, trustedForwarderAddress);
       default:
-        console.log("deploying", contractType);
         return await contractFactory.deploy();
     }
   }
