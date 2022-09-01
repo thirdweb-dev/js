@@ -8,6 +8,11 @@ module.exports = {
         // marking executable as true will cause Amman to pull the executable data account as well automatically
         executable: true,
       },
+      {
+        label: "Token Program",
+        accountId: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+        executable: true,
+      },
     ],
   },
 };
