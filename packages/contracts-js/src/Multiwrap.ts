@@ -48,9 +48,9 @@ export declare namespace ITokenBundle {
 export interface MultiwrapInterface extends utils.Interface {
   functions: {
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
-    "NATIVE_TOKEN()": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "bundle(uint256)": FunctionFragment;
     "contractType()": FunctionFragment;
     "contractURI()": FunctionFragment;
     "contractVersion()": FunctionFragment;
@@ -99,9 +99,9 @@ export interface MultiwrapInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "DEFAULT_ADMIN_ROLE"
-      | "NATIVE_TOKEN"
       | "approve"
       | "balanceOf"
+      | "bundle"
       | "contractType"
       | "contractURI"
       | "contractVersion"
@@ -152,14 +152,14 @@ export interface MultiwrapInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "NATIVE_TOKEN",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "approve",
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "bundle",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "contractType",
     values?: undefined
@@ -325,12 +325,9 @@ export interface MultiwrapInterface extends utils.Interface {
     functionFragment: "DEFAULT_ADMIN_ROLE",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "NATIVE_TOKEN",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "bundle", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "contractType",
     data: BytesLike
@@ -667,8 +664,6 @@ export interface Multiwrap extends BaseContract {
   functions: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
-    NATIVE_TOKEN(overrides?: CallOverrides): Promise<[string]>;
-
     approve(
       to: string,
       tokenId: BigNumberish,
@@ -676,6 +671,11 @@ export interface Multiwrap extends BaseContract {
     ): Promise<ContractTransaction>;
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    bundle(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, string] & { count: BigNumber; uri: string }>;
 
     contractType(overrides?: CallOverrides): Promise<[string]>;
 
@@ -914,8 +914,6 @@ export interface Multiwrap extends BaseContract {
 
   DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
-  NATIVE_TOKEN(overrides?: CallOverrides): Promise<string>;
-
   approve(
     to: string,
     tokenId: BigNumberish,
@@ -923,6 +921,11 @@ export interface Multiwrap extends BaseContract {
   ): Promise<ContractTransaction>;
 
   balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  bundle(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<[BigNumber, string] & { count: BigNumber; uri: string }>;
 
   contractType(overrides?: CallOverrides): Promise<string>;
 
@@ -1151,8 +1154,6 @@ export interface Multiwrap extends BaseContract {
   callStatic: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
-    NATIVE_TOKEN(overrides?: CallOverrides): Promise<string>;
-
     approve(
       to: string,
       tokenId: BigNumberish,
@@ -1160,6 +1161,11 @@ export interface Multiwrap extends BaseContract {
     ): Promise<void>;
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    bundle(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, string] & { count: BigNumber; uri: string }>;
 
     contractType(overrides?: CallOverrides): Promise<string>;
 
@@ -1513,8 +1519,6 @@ export interface Multiwrap extends BaseContract {
   estimateGas: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
-    NATIVE_TOKEN(overrides?: CallOverrides): Promise<BigNumber>;
-
     approve(
       to: string,
       tokenId: BigNumberish,
@@ -1522,6 +1526,8 @@ export interface Multiwrap extends BaseContract {
     ): Promise<BigNumber>;
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    bundle(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     contractType(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1760,8 +1766,6 @@ export interface Multiwrap extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    NATIVE_TOKEN(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     approve(
       to: string,
       tokenId: BigNumberish,
@@ -1770,6 +1774,11 @@ export interface Multiwrap extends BaseContract {
 
     balanceOf(
       owner: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    bundle(
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

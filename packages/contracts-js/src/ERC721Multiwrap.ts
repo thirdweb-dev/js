@@ -48,10 +48,10 @@ export declare namespace ITokenBundle {
 export interface ERC721MultiwrapInterface extends utils.Interface {
   functions: {
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
-    "NATIVE_TOKEN()": FunctionFragment;
     "TRANSFER_ROLE()": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
+    "bundle(uint256)": FunctionFragment;
     "contractURI()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getDefaultRoyaltyInfo()": FunctionFragment;
@@ -98,10 +98,10 @@ export interface ERC721MultiwrapInterface extends utils.Interface {
   getFunction(
     nameOrSignatureOrTopic:
       | "DEFAULT_ADMIN_ROLE"
-      | "NATIVE_TOKEN"
       | "TRANSFER_ROLE"
       | "approve"
       | "balanceOf"
+      | "bundle"
       | "contractURI"
       | "getApproved"
       | "getDefaultRoyaltyInfo"
@@ -150,10 +150,6 @@ export interface ERC721MultiwrapInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "NATIVE_TOKEN",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "TRANSFER_ROLE",
     values?: undefined
   ): string;
@@ -162,6 +158,10 @@ export interface ERC721MultiwrapInterface extends utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "bundle",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "contractURI",
     values?: undefined
@@ -320,15 +320,12 @@ export interface ERC721MultiwrapInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "NATIVE_TOKEN",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "TRANSFER_ROLE",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "bundle", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "contractURI",
     data: BytesLike
@@ -673,8 +670,6 @@ export interface ERC721Multiwrap extends BaseContract {
   functions: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
-    NATIVE_TOKEN(overrides?: CallOverrides): Promise<[string]>;
-
     TRANSFER_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
     approve(
@@ -684,6 +679,11 @@ export interface ERC721Multiwrap extends BaseContract {
     ): Promise<ContractTransaction>;
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    bundle(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, string] & { count: BigNumber; uri: string }>;
 
     contractURI(overrides?: CallOverrides): Promise<[string]>;
 
@@ -906,8 +906,6 @@ export interface ERC721Multiwrap extends BaseContract {
 
   DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
-  NATIVE_TOKEN(overrides?: CallOverrides): Promise<string>;
-
   TRANSFER_ROLE(overrides?: CallOverrides): Promise<string>;
 
   approve(
@@ -917,6 +915,11 @@ export interface ERC721Multiwrap extends BaseContract {
   ): Promise<ContractTransaction>;
 
   balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+  bundle(
+    arg0: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<[BigNumber, string] & { count: BigNumber; uri: string }>;
 
   contractURI(overrides?: CallOverrides): Promise<string>;
 
@@ -1133,8 +1136,6 @@ export interface ERC721Multiwrap extends BaseContract {
   callStatic: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
 
-    NATIVE_TOKEN(overrides?: CallOverrides): Promise<string>;
-
     TRANSFER_ROLE(overrides?: CallOverrides): Promise<string>;
 
     approve(
@@ -1144,6 +1145,11 @@ export interface ERC721Multiwrap extends BaseContract {
     ): Promise<void>;
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    bundle(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, string] & { count: BigNumber; uri: string }>;
 
     contractURI(overrides?: CallOverrides): Promise<string>;
 
@@ -1490,8 +1496,6 @@ export interface ERC721Multiwrap extends BaseContract {
   estimateGas: {
     DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
-    NATIVE_TOKEN(overrides?: CallOverrides): Promise<BigNumber>;
-
     TRANSFER_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
     approve(
@@ -1501,6 +1505,8 @@ export interface ERC721Multiwrap extends BaseContract {
     ): Promise<BigNumber>;
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    bundle(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
 
     contractURI(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1727,8 +1733,6 @@ export interface ERC721Multiwrap extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    NATIVE_TOKEN(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     TRANSFER_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     approve(
@@ -1739,6 +1743,11 @@ export interface ERC721Multiwrap extends BaseContract {
 
     balanceOf(
       owner: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    bundle(
+      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

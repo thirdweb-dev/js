@@ -75,22 +75,23 @@ export interface IPackInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "openPack", data: BytesLike): Result;
 
   events: {
-    "PackCreated(uint256,address,address,uint256)": EventFragment;
+    "PackCreated(uint256,address,uint256)": EventFragment;
     "PackOpened(uint256,address,uint256,tuple[])": EventFragment;
+    "PackUpdated(uint256,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "PackCreated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PackOpened"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PackUpdated"): EventFragment;
 }
 
 export interface PackCreatedEventObject {
   packId: BigNumber;
-  packCreator: string;
   recipient: string;
   totalPacksCreated: BigNumber;
 }
 export type PackCreatedEvent = TypedEvent<
-  [BigNumber, string, string, BigNumber],
+  [BigNumber, string, BigNumber],
   PackCreatedEventObject
 >;
 
@@ -108,6 +109,18 @@ export type PackOpenedEvent = TypedEvent<
 >;
 
 export type PackOpenedEventFilter = TypedEventFilter<PackOpenedEvent>;
+
+export interface PackUpdatedEventObject {
+  packId: BigNumber;
+  recipient: string;
+  totalPacksCreated: BigNumber;
+}
+export type PackUpdatedEvent = TypedEvent<
+  [BigNumber, string, BigNumber],
+  PackUpdatedEventObject
+>;
+
+export type PackUpdatedEventFilter = TypedEventFilter<PackUpdatedEvent>;
 
 export interface IPack extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -190,15 +203,13 @@ export interface IPack extends BaseContract {
   };
 
   filters: {
-    "PackCreated(uint256,address,address,uint256)"(
+    "PackCreated(uint256,address,uint256)"(
       packId?: BigNumberish | null,
-      packCreator?: string | null,
       recipient?: null,
       totalPacksCreated?: null
     ): PackCreatedEventFilter;
     PackCreated(
       packId?: BigNumberish | null,
-      packCreator?: string | null,
       recipient?: null,
       totalPacksCreated?: null
     ): PackCreatedEventFilter;
@@ -215,6 +226,17 @@ export interface IPack extends BaseContract {
       numOfPacksOpened?: null,
       rewardUnitsDistributed?: null
     ): PackOpenedEventFilter;
+
+    "PackUpdated(uint256,address,uint256)"(
+      packId?: BigNumberish | null,
+      recipient?: null,
+      totalPacksCreated?: null
+    ): PackUpdatedEventFilter;
+    PackUpdated(
+      packId?: BigNumberish | null,
+      recipient?: null,
+      totalPacksCreated?: null
+    ): PackUpdatedEventFilter;
   };
 
   estimateGas: {
