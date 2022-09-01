@@ -1,9 +1,8 @@
 {
   "name": "@thirdweb-dev/storage",
   "version": "0.2.2",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "dist/thirdweb-dev-storage.cjs.js",
+  "module": "dist/thirdweb-dev-storage.esm.js",
   "repository": {
     "directory": "packages/storage",
     "type": "git",
@@ -12,7 +11,7 @@
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "tsup src/index.ts",
+    "build": "tsc && preconstruct build",
     "test": "ts-mocha 'test/**/*.ts' --paths -t 120000 -r esm -p tsconfig.testing.json"
   },
   "files": [
@@ -31,7 +30,7 @@
     "mocha": "^10.0.0",
     "ts-mocha": "^10.0.0",
     "tsc": "^2.0.4",
-    "tsup": "^6.2.3",
+    "@preconstruct/cli": "^2.2.1",
     "typescript": "^4.7.4"
   },
   "dependencies": {
