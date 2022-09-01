@@ -1,5 +1,5 @@
 import IContractMetadataAbi from "@thirdweb-dev/contracts-js/abis/IContractMetadata.json";
-import IPermissionsEnumerableAbi from "@thirdweb-dev/contracts-js/abis/IPermissionsEnumerable.json";
+import IPermissionsAbi from "@thirdweb-dev/contracts-js/abis/IPermissions.json";
 import IThirdwebPlatformFeeAbi from "@thirdweb-dev/contracts-js/abis/IPlatformFee.json";
 import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/abis/IPrimarySale.json";
 import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/abis/IRoyalty.json";
@@ -44,7 +44,7 @@ export const FEATURE_PERMISSIONS = {
     sdk: "sdk.contractroles",
     contracts: "PermissionsEnumerable",
   },
-  abis: [IPermissionsEnumerableAbi],
+  abis: [IPermissionsAbi],
   features: {},
 } as const;
 

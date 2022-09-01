@@ -1,36 +1,35 @@
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { NetworkOrSignerOrProvider } from "../core";
-import { IStorage } from "@thirdweb-dev/storage";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { ContractPrimarySale } from "../core/classes/contract-sales";
-import { ContractRoles } from "../core/classes/contract-roles";
-import { ContractRoyalty } from "../core/classes/contract-royalty";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { Erc1155 } from "../core/classes/erc-1155";
-import { Erc20 } from "../core/classes/erc-20";
-import { Erc721 } from "../core/classes/erc-721";
-
-import { SDKOptions } from "../schema/sdk-options";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import {
-  IPermissionsEnumerable,
-  IPlatformFee,
-  IPrimarySale,
-  IRoyalty,
-} from "@thirdweb-dev/contracts-js";
-import { AbiSchema, CustomContractSchema } from "../schema/contracts/custom";
-import { UpdateableNetwork } from "../core/interfaces/contract";
-import { BaseContract, CallOverrides, ContractInterface } from "ethers";
 import {
   ALL_ROLES,
   detectContractFeature,
   extractFunctionsFromAbi,
 } from "../common";
+import { NetworkOrSignerOrProvider } from "../core";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
-import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
+import { ContractRoles } from "../core/classes/contract-roles";
+import { ContractRoyalty } from "../core/classes/contract-royalty";
+import { ContractPrimarySale } from "../core/classes/contract-sales";
+import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { Erc20 } from "../core/classes/erc-20";
+import { Erc721 } from "../core/classes/erc-721";
+import { Erc1155 } from "../core/classes/erc-1155";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { UpdateableNetwork } from "../core/interfaces/contract";
+import { AbiSchema, CustomContractSchema } from "../schema/contracts/custom";
 import { CallOverrideSchema } from "../schema/index";
+import { SDKOptions } from "../schema/sdk-options";
+import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
+import {
+  IPermissions,
+  IPlatformFee,
+  IPrimarySale,
+  IRoyalty,
+} from "@thirdweb-dev/contracts-js";
+import { IStorage } from "@thirdweb-dev/storage";
+import { BaseContract, CallOverrides, ContractInterface } from "ethers";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -81,7 +80,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   // features
   public metadata: ContractMetadata<BaseContract, any>;
   public royalties: ContractRoyalty<IRoyalty, any> | undefined;
-  public roles: ContractRoles<IPermissionsEnumerable, any> | undefined;
+  public roles: ContractRoles<IPermissions, any> | undefined;
   public sales: ContractPrimarySale<IPrimarySale> | undefined;
   public platformFees: ContractPlatformFee<IPlatformFee> | undefined;
   /**
@@ -238,10 +237,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
 
   private detectRoles() {
     if (
-      detectContractFeature<IPermissionsEnumerable>(
-        this.contractWrapper,
-        "Permissions",
-      )
+      detectContractFeature<IPermissions>(this.contractWrapper, "Permissions")
     ) {
       return new ContractRoles(this.contractWrapper, ALL_ROLES);
     }
