@@ -22,7 +22,7 @@ export const CustomContractOverviewPage: React.FC<
       <Flex direction="column" gap={6}>
         <Heading size="title.sm">Contract Explorer</Heading>
         <Skeleton isLoaded={functionsQuery.isSuccess}>
-          {contract && functionsQuery.data && (
+          {contract && (
             <ContractFunctionsOverview
               onlyFunctions
               functions={functionsQuery.data}

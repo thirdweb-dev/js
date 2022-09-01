@@ -34,7 +34,6 @@ export const Hero: ComponentWithChildren<IHero> = ({
   gradient,
   children,
 }) => {
-  console.log("dark mode");
   return (
     <Center
       w="100%"

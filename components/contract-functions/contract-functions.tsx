@@ -13,7 +13,7 @@ import { Abi, SourceFile } from "components/contract-components/types";
 import { Card, Heading } from "tw-components";
 
 interface ContractFunctionsOverview {
-  functions: AbiFunction[];
+  functions?: AbiFunction[] | null;
   events?: AbiEvent[] | null;
   contract?: SmartContract;
   sources?: SourceFile[];
@@ -32,7 +32,9 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
   if (onlyFunctions) {
     return (
       <Card as={Flex} flexDir="column" gap={2}>
-        <ContractFunctionsPanel fnsOrEvents={functions} contract={contract} />
+        {functions && functions.length > 0 && (
+          <ContractFunctionsPanel fnsOrEvents={functions} contract={contract} />
+        )}
       </Card>
     );
   }
@@ -41,7 +43,7 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
     <Card as={Flex} flexDir="column" gap={2} p={0}>
       <Tabs isLazy lazyBehavior="keepMounted" colorScheme="purple">
         <TabList px={0} borderBottomColor="borderColor" borderBottomWidth="1px">
-          {functions.length ? (
+          {functions && functions.length > 0 ? (
             <Tab gap={2}>
               <Heading color="inherit" my={1} size="label.lg">
                 Functions
@@ -64,7 +66,7 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
           )}
         </TabList>
         <TabPanels px={{ base: 2, md: 6 }} py={2}>
-          {functions.length ? (
+          {functions && functions.length > 0 ? (
             <TabPanel px={0}>
               <ContractFunctionsPanel
                 fnsOrEvents={functions}
@@ -72,7 +74,7 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
               />
             </TabPanel>
           ) : null}
-          {events?.length ? (
+          {events && events?.length > 0 ? (
             <TabPanel px={0}>
               <ContractFunctionsPanel
                 fnsOrEvents={events}
