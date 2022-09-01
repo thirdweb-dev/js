@@ -1,5 +1,5 @@
 import { ThirdwebAuthContext } from "../types";
-import { LoginPayload } from "@thirdweb-dev/sdk/dist/src/schema";
+import { LoginPayload } from "@thirdweb-dev/sdk";
 import { serialize } from "cookie";
 import { Request, Response } from "express";
 
@@ -46,6 +46,11 @@ export default async function handler(
       sameSite: "strict",
     })
   );
+
+  if (ctx.callbacks?.login) {
+    const address = sdk.auth.verify(domain, payload);
+    await ctx.callbacks.login(address);
+  }
 
   return res.status(301).redirect(req.query.redirect as string);
 }

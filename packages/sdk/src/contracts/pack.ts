@@ -32,6 +32,7 @@ import {
 } from "../schema/tokens/pack";
 import { QueryAllParams } from "../types";
 import { Pack as PackContract } from "@thirdweb-dev/contracts-js";
+import ABI from "@thirdweb-dev/contracts-js/abis/Pack.json";
 import {
   ITokenBundle,
   PackCreatedEvent,
@@ -57,7 +58,7 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
 export class Pack implements UpdateableNetwork {
   static contractType = "pack" as const;
   static contractRoles = ["admin", "minter", "pauser", "transfer"] as const;
-  static contractAbi = require("@thirdweb-dev/contracts-js/abis/Pack.json");
+  static contractAbi = ABI as any;
   /**
    * @internal
    */

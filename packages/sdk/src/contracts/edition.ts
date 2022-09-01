@@ -26,6 +26,7 @@ import {
 } from "../schema/tokens/edition";
 import { AirdropInput, QueryAllParams } from "../types";
 import { TokenERC1155 } from "@thirdweb-dev/contracts-js";
+import ABI from "@thirdweb-dev/contracts-js/abis/TokenERC1155.json";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, BytesLike, constants } from "ethers";
 
@@ -46,7 +47,7 @@ import { BigNumber, BigNumberish, BytesLike, constants } from "ethers";
 export class Edition implements UpdateableNetwork {
   static contractType = "edition" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractAbi = require("@thirdweb-dev/contracts-js/abis/TokenERC1155.json");
+  static contractAbi = ABI as any;
 
   private contractWrapper: ContractWrapper<TokenERC1155>;
   private storage: IStorage;

@@ -12,7 +12,6 @@ import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Erc721 } from "../core/classes/erc-721";
-import { Erc721Supply } from "../core/classes/erc-721-supply";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import {
   NetworkOrSignerOrProvider,
@@ -21,7 +20,6 @@ import {
 } from "../core/types";
 import { NFTMetadataOrUri, NFTMetadataOwner, SDKOptions } from "../schema";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
-import { QueryAllParams } from "../types";
 import {
   ERC1155Wrappable,
   ERC20Wrappable,
@@ -30,6 +28,7 @@ import {
   WrappedTokens,
 } from "../types/multiwrap";
 import { Multiwrap as MultiwrapContract } from "@thirdweb-dev/contracts-js";
+import ABI from "@thirdweb-dev/contracts-js/abis/Multiwrap.json";
 import {
   ITokenBundle,
   TokensWrappedEvent,
@@ -51,10 +50,11 @@ import { BigNumberish, ethers } from "ethers";
  *
  * @beta
  */
+// TODO (v3) add erc721 property instead of extending here
 export class Multiwrap extends Erc721<MultiwrapContract> {
   static contractType = "multiwrap" as const;
   static contractRoles = ["transfer", "minter", "unwrap", "asset"] as const;
-  static contractAbi = require("@thirdweb-dev/contracts-js/abis/Multiwrap.json");
+  static contractAbi = ABI as any;
 
   /**
    * @internal

@@ -33,6 +33,7 @@ import { ClaimVerification } from "../types";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
 import { UploadProgressEvent } from "../types/events";
 import { DropERC721 } from "@thirdweb-dev/contracts-js";
+import ABI from "@thirdweb-dev/contracts-js/abis/DropERC721.json";
 import {
   TokensClaimedEvent,
   TokensLazyMintedEvent,
@@ -57,7 +58,7 @@ import { BigNumber, BigNumberish, constants, ethers } from "ethers";
 export class NFTDrop implements UpdateableNetwork {
   static contractType = "nft-drop" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractAbi = require("@thirdweb-dev/contracts-js/abis/DropERC721.json");
+  static contractAbi = ABI as any;
   /**
    * @internal
    */

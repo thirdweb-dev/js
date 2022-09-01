@@ -14,6 +14,7 @@ import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { SDKOptions } from "../schema/sdk-options";
 import { Amount, CurrencyValue } from "../types";
 import { DropERC20 } from "@thirdweb-dev/contracts-js";
+import ABI from "@thirdweb-dev/contracts-js/abis/DropERC20.json";
 import { IStorage } from "@thirdweb-dev/storage";
 import { constants } from "ethers";
 
@@ -33,7 +34,7 @@ import { constants } from "ethers";
 export class TokenDrop extends StandardErc20<DropERC20> {
   static contractType = "token-drop" as const;
   static contractRoles = ["admin", "transfer"] as const;
-  static contractAbi = require("@thirdweb-dev/contracts-js/abis/DropERC20.json");
+  static contractAbi = ABI as any;
   /**
    * @internal
    */

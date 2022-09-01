@@ -9,7 +9,8 @@
       "dependsOn": ["^build"]
     },
     "auth#build": {
-      "outputs": ["dist/**", "express/**", "next/**"]
+      "outputs": ["dist/**", "express/**", "next/**", "next-auth/**"],
+      "dependsOn": ["^build", "$CI"]
     },
     "solana#build": {
       "outputs": ["dist/**", "server/**"]
@@ -18,6 +19,15 @@
       "outputs": [],
       "inputs": ["src/**", "test/**"],
       "dependsOn": ["build"]
+    },
+    "e2e": {
+      "outputs": [],
+      "inputs": ["src/**", "e2e/**"],
+      "dependsOn": ["build"]
+    },
+    "react#e2e": {
+      "inputs": ["src/**", "e2e/**", "playwright/**"],
+      "dependsOn": ["build", "$CI"]
     },
     "lint": {
       "outputs": []

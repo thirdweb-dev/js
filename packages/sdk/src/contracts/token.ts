@@ -16,6 +16,7 @@ import { SDKOptions } from "../schema/sdk-options";
 import { TokenMintInput } from "../schema/tokens/token";
 import { Amount, CurrencyValue } from "../types";
 import { TokenERC20 } from "@thirdweb-dev/contracts-js";
+import ABI from "@thirdweb-dev/contracts-js/abis/TokenERC20.json";
 import { IStorage } from "@thirdweb-dev/storage";
 import { constants } from "ethers";
 
@@ -36,7 +37,7 @@ import { constants } from "ethers";
 export class Token extends StandardErc20<TokenERC20> {
   static contractType = "token" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractAbi = require("@thirdweb-dev/contracts-js/abis/TokenERC20.json");
+  static contractAbi = ABI as any;
   /**
    * @internal
    */

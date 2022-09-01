@@ -18,7 +18,6 @@
     "clean": "rm -rf dist/",
     "dev": "tsdx watch",
     "format": "prettier src/ --write",
-    "prepublishOnly": "yarn lint && yarn build",
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "generate-types": "tsc",
@@ -30,14 +29,17 @@
     "build": "tsc && preconstruct build",
     "test:all": "ts-mocha --paths -t 120000 -r esm -p tsconfig.testing.json './test/**/*.test.ts'",
     "test": "make test",
-    "test:single": "ts-mocha --paths -t 120000 -r esm -p tsconfig.testing.json"
+    "test:single": "ts-mocha --paths -t 120000 -r esm -p tsconfig.testing.json",
+    "e2e": "ts-mocha --parallel --paths -t 120000 -r esm -p tsconfig.testing.json './e2e/**/*.test.ts'"
   },
   "devDependencies": {
     "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
+    "@gmrchk/cli-testing-library": "^0.1.2",
     "@microsoft/api-documenter": "^7.13.53",
     "@microsoft/api-extractor": "^7.18.10",
     "@microsoft/tsdoc": "^0.14.1",
     "@nomiclabs/hardhat-ethers": "2.0.5",
+    "@preconstruct/cli": "^2.2.1",
     "@swc/core": "^1.2.177",
     "@typechain/ethers-v5": "10.0.0",
     "@types/chai": "^4.3.1",
@@ -65,8 +67,7 @@
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.7.0",
     "typechain": "^8.0.0",
-    "typescript": "^4.6.2",
-    "@preconstruct/cli": "^2.2.1"
+    "typescript": "^4.6.2"
   },
   "preconstruct": {
     "entrypoints": [
@@ -77,14 +78,14 @@
     "ethers": "^5"
   },
   "dependencies": {
-    "merkletreejs": "^0.2.24",
     "@thirdweb-dev/contracts-js": "*",
     "@thirdweb-dev/storage": "*",
-    "cbor": "^8.1.0",
+    "cbor-web": "^8.1.0",
     "cross-fetch": "^3.1.5",
     "eventemitter3": "^4.0.7",
     "fast-deep-equal": "^3.1.3",
     "form-data": "^4.0.0",
+    "merkletreejs": "^0.2.24",
     "multihashes": "^4.0.3",
     "tiny-invariant": "^1.2.0",
     "uuid": "^8.3.2",

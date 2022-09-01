@@ -142,7 +142,6 @@ export interface MarketplaceInterface extends utils.Interface {
     "setContractURI(string)": FunctionFragment;
     "setPlatformFeeInfo(address,uint256)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
-    "thirdwebFee()": FunctionFragment;
     "timeBuffer()": FunctionFragment;
     "totalListings()": FunctionFragment;
     "updateListing(uint256,uint256,uint256,uint256,address,uint256,uint256)": FunctionFragment;
@@ -183,7 +182,6 @@ export interface MarketplaceInterface extends utils.Interface {
       | "setContractURI"
       | "setPlatformFeeInfo"
       | "supportsInterface"
-      | "thirdwebFee"
       | "timeBuffer"
       | "totalListings"
       | "updateListing"
@@ -316,10 +314,6 @@ export interface MarketplaceInterface extends utils.Interface {
     values: [BytesLike]
   ): string;
   encodeFunctionData(
-    functionFragment: "thirdwebFee",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "timeBuffer",
     values?: undefined
   ): string;
@@ -440,10 +434,6 @@ export interface MarketplaceInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "thirdwebFee",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "timeBuffer", data: BytesLike): Result;
@@ -859,8 +849,6 @@ export interface Marketplace extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    thirdwebFee(overrides?: CallOverrides): Promise<[string]>;
-
     timeBuffer(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     totalListings(overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -1099,8 +1087,6 @@ export interface Marketplace extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  thirdwebFee(overrides?: CallOverrides): Promise<string>;
-
   timeBuffer(overrides?: CallOverrides): Promise<BigNumber>;
 
   totalListings(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1332,8 +1318,6 @@ export interface Marketplace extends BaseContract {
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<boolean>;
-
-    thirdwebFee(overrides?: CallOverrides): Promise<string>;
 
     timeBuffer(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1670,8 +1654,6 @@ export interface Marketplace extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    thirdwebFee(overrides?: CallOverrides): Promise<BigNumber>;
-
     timeBuffer(overrides?: CallOverrides): Promise<BigNumber>;
 
     totalListings(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1871,8 +1853,6 @@ export interface Marketplace extends BaseContract {
       interfaceId: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
-
-    thirdwebFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     timeBuffer(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

@@ -25,6 +25,7 @@ import { SDKOptions } from "../schema/sdk-options";
 import { NFTMetadata, NFTMetadataOrUri } from "../schema/tokens/common";
 import { AirdropInput, QueryAllParams, UploadProgressEvent } from "../types";
 import { DropERC1155 } from "@thirdweb-dev/contracts-js";
+import ABI from "@thirdweb-dev/contracts-js/abis/DropERC1155.json";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, BytesLike, constants } from "ethers";
 
@@ -45,7 +46,7 @@ import { BigNumber, BigNumberish, BytesLike, constants } from "ethers";
 export class EditionDrop implements UpdateableNetwork {
   static contractType = "edition-drop" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractAbi = require("@thirdweb-dev/contracts-js/abis/DropERC1155.json");
+  static contractAbi = ABI as any;
   /**
    * @internal
    */
