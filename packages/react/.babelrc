@@ -2,6 +2,6 @@
   "presets": [
     "@babel/preset-typescript",
     ["@babel/preset-react", { "runtime": "automatic" }],
-    "@babel/preset-env"
+    ["@babel/preset-env", { "targets": "defaults, not ie 11" }]
   ]
 }
