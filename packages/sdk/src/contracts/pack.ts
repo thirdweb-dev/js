@@ -14,6 +14,7 @@ import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Erc1155 } from "../core/classes/erc-1155";
+import { StandardErc1155 } from "../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import {
@@ -55,7 +56,7 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
  *
  * @public
  */
-export class Pack implements UpdateableNetwork {
+export class Pack extends StandardErc1155<PackContract> {
   static contractType = "pack" as const;
   static contractRoles = ["admin", "minter", "pauser", "transfer"] as const;
   static contractAbi = ABI as any;
@@ -63,9 +64,6 @@ export class Pack implements UpdateableNetwork {
    * @internal
    */
   static schema = PackContractSchema;
-
-  protected contractWrapper: ContractWrapper<PackContract>;
-  protected storage: IStorage;
 
   public metadata: ContractMetadata<PackContract, typeof Pack.schema>;
   public roles: ContractRoles<PackContract, typeof Pack.contractRoles[number]>;
@@ -109,8 +107,7 @@ export class Pack implements UpdateableNetwork {
       options,
     ),
   ) {
-    this.contractWrapper = contractWrapper;
-    this.storage = storage;
+    super(contractWrapper, storage);
     this.erc1155 = new Erc1155(this.contractWrapper, this.storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,

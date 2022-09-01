@@ -12,8 +12,8 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { DropErc1155ClaimConditions } from "../core/classes/drop-erc1155-claim-conditions";
 import { DropErc1155History } from "../core/classes/drop-erc1155-history";
 import { Erc1155 } from "../core/classes/erc-1155";
+import { StandardErc1155 } from "../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { UpdateableNetwork } from "../core/interfaces/contract";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -23,11 +23,11 @@ import { EditionMetadata, EditionMetadataOwner } from "../schema";
 import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
 import { SDKOptions } from "../schema/sdk-options";
 import { NFTMetadata, NFTMetadataOrUri } from "../schema/tokens/common";
-import { AirdropInput, QueryAllParams, UploadProgressEvent } from "../types";
+import { QueryAllParams, UploadProgressEvent } from "../types";
 import { DropERC1155 } from "@thirdweb-dev/contracts-js";
 import ABI from "@thirdweb-dev/contracts-js/abis/DropERC1155.json";
 import { IStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, BytesLike, constants } from "ethers";
+import { BigNumber, BigNumberish, constants } from "ethers";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -43,7 +43,7 @@ import { BigNumber, BigNumberish, BytesLike, constants } from "ethers";
  *
  * @public
  */
-export class EditionDrop implements UpdateableNetwork {
+export class EditionDrop extends StandardErc1155<DropERC1155> {
   static contractType = "edition-drop" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
   static contractAbi = ABI as any;
@@ -51,9 +51,6 @@ export class EditionDrop implements UpdateableNetwork {
    * @internal
    */
   static schema = DropErc1155ContractSchema;
-
-  private contractWrapper: ContractWrapper<DropERC1155>;
-  private storage: IStorage;
 
   public sales: ContractPrimarySale<DropERC1155>;
   public platformFees: ContractPlatformFee<DropERC1155>;
@@ -124,8 +121,7 @@ export class EditionDrop implements UpdateableNetwork {
       options,
     ),
   ) {
-    this.contractWrapper = contractWrapper;
-    this.storage = storage;
+    super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       EditionDrop.schema,
@@ -378,141 +374,5 @@ export class EditionDrop implements UpdateableNetwork {
     amount: BigNumberish,
   ): Promise<TransactionResult> {
     return this.erc1155.burn(tokenId, amount);
-  }
-
-  ////// Standard ERC1155 functions //////
-
-  /**
-   * Get a single NFT Metadata
-   *
-   * @example
-   * ```javascript
-   * const nft = await contract.get("0");
-   * ```
-   * @param tokenId - the tokenId of the NFT to retrieve
-   * @returns The NFT metadata
-   */
-  public async get(tokenId: BigNumberish): Promise<EditionMetadata> {
-    return this.erc1155.get(tokenId);
-  }
-
-  /**
-   * Returns the total supply of a specific token
-   * @param tokenId - The token ID to get the total supply of
-   * @returns the total supply
-   */
-  public async totalSupply(tokenId: BigNumberish): Promise<BigNumber> {
-    return this.erc1155.totalSupply(tokenId);
-  }
-
-  /**
-   * Get NFT Balance
-   *
-   * @remarks Get a wallets NFT balance (number of NFTs in this contract owned by the wallet).
-   *
-   * @example
-   * ```javascript
-   * // Address of the wallet to check NFT balance
-   * const walletAddress = "{{wallet_address}}";
-   * const tokenId = 0; // Id of the NFT to check
-   * const balance = await contract.balanceOf(walletAddress, tokenId);
-   * ```
-   */
-  public async balanceOf(
-    address: string,
-    tokenId: BigNumberish,
-  ): Promise<BigNumber> {
-    return this.erc1155.balanceOf(address, tokenId);
-  }
-
-  /**
-   * Get NFT Balance for the currently connected wallet
-   */
-  public async balance(tokenId: BigNumberish): Promise<BigNumber> {
-    return this.erc1155.balance(tokenId);
-  }
-
-  /**
-   * Get whether this wallet has approved transfers from the given operator
-   * @param address - the wallet address
-   * @param operator - the operator address
-   */
-  public async isApproved(address: string, operator: string): Promise<boolean> {
-    return this.erc1155.isApproved(address, operator);
-  }
-
-  /**
-   * Transfer a single NFT
-   *
-   * @remarks Transfer an NFT from the connected wallet to another wallet.
-   *
-   * @example
-   * ```javascript
-   * // Address of the wallet you want to send the NFT to
-   * const toAddress = "{{wallet_address}}";
-   * const tokenId = "0"; // The token ID of the NFT you want to send
-   * const amount = 3; // How many copies of the NFTs to transfer
-   * await contract.transfer(toAddress, tokenId, amount);
-   * ```
-   */
-  public async transfer(
-    to: string,
-    tokenId: BigNumberish,
-    amount: BigNumberish,
-    data: BytesLike = [0],
-  ): Promise<TransactionResult> {
-    return this.erc1155.transfer(to, tokenId, amount, data);
-  }
-
-  /**
-   * Approve or remove operator as an operator for the caller. Operators can call transferFrom or safeTransferFrom for any token owned by the caller.
-   * @param operator - the operator's address
-   * @param approved - whether to approve or remove
-   *
-   * @internal
-   */
-  public async setApprovalForAll(
-    operator: string,
-    approved: boolean,
-  ): Promise<TransactionResult> {
-    return this.erc1155.setApprovalForAll(operator, approved);
-  }
-
-  /**
-   * Airdrop multiple NFTs
-   *
-   * @remarks Airdrop one or multiple NFTs to the provided wallet addresses.
-   *
-   * @example
-   * ```javascript
-   * // The token ID of the NFT you want to airdrop
-   * const tokenId = "0";
-   * // Array of objects of addresses and quantities to airdrop NFTs to
-   * const addresses = [
-   *  {
-   *    address: "0x...",
-   *    quantity: 2,
-   *  },
-   *  {
-   *   address: "0x...",
-   *    quantity: 3,
-   *  },
-   * ];
-   * await contract.airdrop(tokenId, addresses);
-   *
-   * // You can also pass an array of addresses, it will airdrop 1 NFT per address
-   * const tokenId = "0";
-   * const addresses = [
-   *  "0x...", "0x...", "0x...",
-   * ]
-   * await contract.airdrop(tokenId, addresses);
-   * ```
-   */
-  public async airdrop(
-    tokenId: BigNumberish,
-    addresses: AirdropInput,
-    data: BytesLike = [0],
-  ): Promise<TransactionResult> {
-    return this.erc1155.airdrop(tokenId, addresses, data);
   }
 }

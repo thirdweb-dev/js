@@ -24,12 +24,7 @@ import { BigNumber, BigNumberish } from "ethers";
  * @public
  */
 export class StandardErc721<
-  T extends
-    | Multiwrap
-    | SignatureDrop
-    | DropERC721
-    | TokenERC721
-    | BaseERC721 = BaseERC721,
+  T extends SignatureDrop | DropERC721 | TokenERC721 | BaseERC721 = BaseERC721,
 > implements UpdateableNetwork
 {
   protected contractWrapper: ContractWrapper<T>;
