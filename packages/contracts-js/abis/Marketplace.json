@@ -5,11 +5,6 @@
         "internalType": "address",
         "name": "_nativeTokenWrapper",
         "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_thirdwebFee",
-        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -1172,19 +1167,6 @@
         "internalType": "bool",
         "name": "",
         "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "thirdwebFee",
-    "outputs": [
-      {
-        "internalType": "contract ITWFee",
-        "name": "",
-        "type": "address"
       }
     ],
     "stateMutability": "view",

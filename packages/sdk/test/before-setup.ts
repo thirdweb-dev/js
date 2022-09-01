@@ -141,22 +141,16 @@ before(async () => {
     contractType: ContractType,
   ): Promise<ethers.Contract> {
     switch (contractType) {
-      case Vote.contractType:
-      case SignatureDrop.contractType:
-      case NFTDrop.contractType:
-      case EditionDrop.contractType:
-      case TokenDrop.contractType:
-        return await contractFactory.deploy();
       case Marketplace.contractType:
+      case Pack.contractType:
+      case Multiwrap.contractType:
         const nativeTokenWrapperAddress = getNativeTokenByChainId(
           ChainId.Hardhat,
         ).wrapped.address;
-        return await contractFactory.deploy(
-          nativeTokenWrapperAddress,
-          thirdwebFeeDeployer.address,
-        );
+        return await contractFactory.deploy(nativeTokenWrapperAddress);
       default:
-        return await contractFactory.deploy(thirdwebFeeDeployer.address);
+        console.log("deploying", contractType);
+        return await contractFactory.deploy();
     }
   }
 
