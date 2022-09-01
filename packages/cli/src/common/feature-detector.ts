@@ -5,13 +5,10 @@ import { logger, spinner, warn, info } from "../core/helpers/logger";
 import { createContractsPrompt } from "../core/helpers/selector";
 import { ContractFeatures, Feature } from "../core/interfaces/ContractFeatures";
 import { ContractPayload } from "../core/interfaces/ContractPayload";
-import { detectFeatures } from "@thirdweb-dev/sdk";
-import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/declarations/src/constants/contract-features";
+import { detectFeatures, FeatureWithEnabled } from "@thirdweb-dev/sdk";
 import chalk from "chalk";
 import ora from "ora";
 import path from "path";
-
-const { MultiSelect } = require("enquirer");
 
 export async function detectExtensions(options: any) {
   logger.setSettings({

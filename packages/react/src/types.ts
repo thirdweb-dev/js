@@ -11,11 +11,9 @@ import type {
   NFTMetadata,
   Price,
   SignatureDrop,
-} from "@thirdweb-dev/sdk";
-import {
-  NFTMetadataInput,
   NFTMetadataOrUri,
-} from "@thirdweb-dev/sdk/dist/declarations/src/schema";
+  NFTMetadataInput,
+} from "@thirdweb-dev/sdk";
 import type { BigNumberish } from "ethers";
 
 /**

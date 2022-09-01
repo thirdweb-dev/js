@@ -11,41 +11,29 @@ import { ConnectWallet } from "../ConnectWallet";
 import { Button } from "../shared/Button";
 import { ThemeProvider, ThemeProviderProps } from "../shared/ThemeProvider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  SmartContract,
-  TransactionError,
-  TransactionResult,
-} from "@thirdweb-dev/sdk";
+import { SmartContract } from "@thirdweb-dev/sdk";
 import type { CallOverrides } from "ethers";
 import { PropsWithChildren, useMemo } from "react";
 import invariant from "tiny-invariant";
 
-interface SharedWeb3ButtonProps extends ThemeProviderProps {
+type ActionFn = (contract: SmartContract) => any;
+
+interface Web3ButtonProps<TActionFn extends ActionFn>
+  extends ThemeProviderProps {
   contractAddress: `0x${string}` | `${string}.eth` | string;
 
   overrides?: CallOverrides;
   // called with the result
-  onSuccess?: (result: TransactionResult) => void;
+  onSuccess?: (result: Awaited<ReturnType<TActionFn>>) => void;
   // called with any error that might happen
-  onError?: (error: TransactionError) => void;
+  onError?: (error: Error) => void;
   // called when the function is called
   onSubmit?: () => void;
   // disabled state
   isDisabled?: boolean;
+  // the fn to execute
+  action: TActionFn;
 }
-
-type ExecutableFn = (contract: SmartContract) => any;
-
-type Web3ButtonPropsOptinalProps<TExecutableFn extends ExecutableFn> =
-  | {
-      functionName: string;
-      params?: unknown[] | (() => Promise<unknown[]>);
-      action?: never;
-    }
-  | { functionName?: never; params?: never; action: TExecutableFn };
-
-type Web3ButtonProps<TExecutableFn extends ExecutableFn> =
-  SharedWeb3ButtonProps & Web3ButtonPropsOptinalProps<TExecutableFn>;
 
 /**
  * A component that allows the user to call an on-chain function on a contract.
@@ -54,12 +42,12 @@ type Web3ButtonProps<TExecutableFn extends ExecutableFn> =
  *
  * @example
  * ```javascript
- * import { Web3Button } from '@thirdweb-dev/react';
+ * import { Web3Button } from "@thirdweb-dev/react";
  *
  * const App = () => {
  *  return (
  *   <div>
- *     <Web3Button contractAddress="0x..." functionName="mint" />
+ *     <Web3Button contractAddress="0x..." action={(contract) => contract.erc721.transfer("0x...", 1)} />
  *   </div>
  * )
  * }
@@ -68,7 +56,7 @@ type Web3ButtonProps<TExecutableFn extends ExecutableFn> =
  *
  * @beta
  */
-export const Web3Button = <TExecutableFn extends ExecutableFn>({
+export const Web3Button = <TAction extends ActionFn>({
   contractAddress,
   overrides,
   onSuccess,
@@ -76,11 +64,9 @@ export const Web3Button = <TExecutableFn extends ExecutableFn>({
   onSubmit,
   isDisabled,
   children,
-  functionName,
-  params,
   action,
   ...themeProps
-}: PropsWithChildren<Web3ButtonProps<TExecutableFn>>) => {
+}: PropsWithChildren<Web3ButtonProps<TAction>>) => {
   const address = useAddress();
   const walletChainId = useChainId();
   const sdkChainId = useActiveChainId();
@@ -109,34 +95,24 @@ export const Web3Button = <TExecutableFn extends ExecutableFn>({
           );
         }
       }
-      if (!contractQuery.contract) {
-        throw new Error("contract not ready yet");
-      }
-      if (action) {
-        if (onSubmit) {
-          onSubmit();
-        }
-        return await action(contractQuery.contract);
-      }
-
-      const vars = typeof params === "function" ? await params() : params || [];
-      const withOverrides =
-        vars && overrides
-          ? [...vars, overrides]
-          : overrides
-          ? [overrides]
-          : vars;
-
-      invariant(functionName, "functionName is required");
+      invariant(contractQuery.contract, "contract is not ready yet");
 
       if (onSubmit) {
         onSubmit();
       }
-      return await contractQuery.contract.call(functionName, ...withOverrides);
+      return await action(contractQuery.contract);
     },
     {
-      onSuccess,
-      onError,
+      onSuccess: (res) => {
+        if (onSuccess) {
+          onSuccess(res);
+        }
+      },
+      onError: (err) => {
+        if (onError) {
+          onError(err as Error);
+        }
+      },
       onSettled: () =>
         queryClient.invalidateQueries(
           createCacheKeyWithNetwork(

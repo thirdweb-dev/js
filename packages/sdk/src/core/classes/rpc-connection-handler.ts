@@ -1,5 +1,3 @@
-import { ethers, Signer, providers } from "ethers";
-import EventEmitter from "eventemitter3";
 import { getReadOnlyProvider } from "../../constants/urls";
 import {
   SDKOptions,
@@ -7,6 +5,8 @@ import {
   SDKOptionsSchema,
 } from "../../schema/sdk-options";
 import { NetworkOrSignerOrProvider } from "../types";
+import { ethers, Signer, providers } from "ethers";
+import EventEmitter from "eventemitter3";
 
 /**
  * @internal

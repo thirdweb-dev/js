@@ -7,7 +7,7 @@ test.use({ viewport: { width: 500, height: 500 } });
 test("should render the connect wallet button", async ({ mount }) => {
   const component = await mount(
     <ThirdwebProvider desiredChainId={1}>
-      <Web3Button contractAddress="0x123" functionName="foo">
+      <Web3Button contractAddress="0x123" action={() => undefined}>
         Do the thing
       </Web3Button>
     </ThirdwebProvider>,
