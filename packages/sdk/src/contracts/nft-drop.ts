@@ -15,8 +15,8 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { DelayedReveal } from "../core/classes/delayed-reveal";
 import { DropClaimConditions } from "../core/classes/drop-claim-conditions";
 import { Erc721 } from "../core/classes/erc-721";
+import { StandardErc721 } from "../core/classes/erc-721-standard";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { UpdateableNetwork } from "../core/interfaces/contract";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -55,7 +55,7 @@ import { BigNumber, BigNumberish, constants, ethers } from "ethers";
  *
  * @public
  */
-export class NFTDrop implements UpdateableNetwork {
+export class NFTDrop extends StandardErc721<DropERC721> {
   static contractType = "nft-drop" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
   static contractAbi = ABI as any;
@@ -148,8 +148,6 @@ export class NFTDrop implements UpdateableNetwork {
    * ```
    */
   public revealer: DelayedReveal<DropERC721>;
-  private contractWrapper: ContractWrapper<DropERC721>;
-  private storage: IStorage;
   public erc721: Erc721<DropERC721>;
 
   constructor(
@@ -164,8 +162,7 @@ export class NFTDrop implements UpdateableNetwork {
       options,
     ),
   ) {
-    this.contractWrapper = contractWrapper;
-    this.storage = storage;
+    super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       NFTDrop.schema,

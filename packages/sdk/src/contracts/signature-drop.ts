@@ -11,10 +11,10 @@ import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Erc721 } from "../core/classes/erc-721";
+import { StandardErc721 } from "../core/classes/erc-721-standard";
 import { Erc721WithQuantitySignatureMintable } from "../core/classes/erc-721-with-quantity-signature-mintable";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { DelayedReveal, DropClaimConditions } from "../core/index";
-import { UpdateableNetwork } from "../core/interfaces/contract";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -50,7 +50,7 @@ import { BigNumber, BigNumberish, constants } from "ethers";
  *
  * @public
  */
-export class SignatureDrop implements UpdateableNetwork {
+export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   static contractType = "signature-drop" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
   static contractAbi = ABI as any;
@@ -58,10 +58,6 @@ export class SignatureDrop implements UpdateableNetwork {
    * @internal
    */
   static schema = DropErc721ContractSchema;
-
-  private contractWrapper: ContractWrapper<SignatureDropContract>;
-  private storage: IStorage;
-
   public erc721: Erc721<SignatureDropContract>;
   public encoder: ContractEncoder<SignatureDropContract>;
   public estimator: GasCostEstimator<SignatureDropContract>;
@@ -177,8 +173,7 @@ export class SignatureDrop implements UpdateableNetwork {
       options,
     ),
   ) {
-    this.contractWrapper = contractWrapper;
-    this.storage = storage;
+    super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       SignatureDrop.schema,
@@ -507,7 +502,7 @@ export class SignatureDrop implements UpdateableNetwork {
     quantity: BigNumberish,
     checkERC20Allowance = true,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    return this.claim(quantity, checkERC20Allowance);
+    return this.erc721.claim(quantity, checkERC20Allowance);
   }
 
   /**
@@ -520,118 +515,5 @@ export class SignatureDrop implements UpdateableNetwork {
    */
   public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
     return this.erc721.burn(tokenId);
-  }
-
-  /******************************
-   * STANDARD ERC721 FUNCTIONS
-   ******************************/
-
-  /**
-   * Get a single NFT Metadata
-   *
-   * @example
-   * ```javascript
-   * const tokenId = 0;
-   * const nft = await contract.get(tokenId);
-   * ```
-   * @param tokenId - the tokenId of the NFT to retrieve
-   * @returns The NFT metadata
-   */
-  public async get(tokenId: BigNumberish): Promise<NFTMetadataOwner> {
-    return this.erc721.get(tokenId);
-  }
-
-  /**
-   * Get the current owner of a given NFT within this Contract
-   *
-   * @param tokenId - the tokenId of the NFT
-   * @returns the address of the owner
-   */
-  public async ownerOf(tokenId: BigNumberish): Promise<string> {
-    return this.erc721.ownerOf(tokenId);
-  }
-
-  /**
-   * Get NFT Balance
-   *
-   * @remarks Get a wallets NFT balance (number of NFTs in this contract owned by the wallet).
-   *
-   * @example
-   * ```javascript
-   * const walletAddress = "{{wallet_address}}";
-   * const balance = await contract.balanceOf(walletAddress);
-   * console.log(balance);
-   * ```
-   */
-  public async balanceOf(address: string): Promise<BigNumber> {
-    return this.erc721.balanceOf(address);
-  }
-
-  /**
-   * Get NFT Balance for the currently connected wallet
-   */
-  public async balance(): Promise<BigNumber> {
-    return this.erc721.balance();
-  }
-
-  /**
-   * Get whether this wallet has approved transfers from the given operator
-   * @param address - the wallet address
-   * @param operator - the operator address
-   */
-  public async isApproved(address: string, operator: string): Promise<boolean> {
-    return this.erc721.isApproved(address, operator);
-  }
-
-  /**
-   * Transfer a single NFT
-   *
-   * @remarks Transfer an NFT from the connected wallet to another wallet.
-   *
-   * @example
-   * ```javascript
-   * const walletAddress = "{{wallet_address}}";
-   * const tokenId = 0;
-   * await contract.transfer(walletAddress, tokenId);
-   * ```
-   */
-  public async transfer(
-    to: string,
-    tokenId: BigNumberish,
-  ): Promise<TransactionResult> {
-    return this.erc721.transfer(to, tokenId);
-  }
-
-  /**
-   * Approve or remove operator as an operator for the caller. Operators can call transferFrom or safeTransferFrom for any token owned by the caller.
-   * @param operator - the operator's address
-   * @param approved - whether to approve or remove
-   *
-   * @internal
-   */
-  public async setApprovalForAll(
-    operator: string,
-    approved: boolean,
-  ): Promise<TransactionResult> {
-    return this.erc721.setApprovalForAll(operator, approved);
-  }
-
-  /**
-   * Approve an operator for the NFT owner. Operators can call transferFrom or safeTransferFrom for the specified token.
-   * @param operator - the operator's address
-   * @param tokenId - the tokenId to give approval for
-   *
-   * @internal
-   */
-  public async setApprovalForToken(
-    operator: string,
-    tokenId: BigNumberish,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("approve", [
-        operator,
-        tokenId,
-      ]),
-    };
   }
 }

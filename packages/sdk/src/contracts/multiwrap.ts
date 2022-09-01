@@ -11,7 +11,7 @@ import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { Erc721 } from "../core/classes/erc-721";
+import { StandardErc721 } from "../core/classes/erc-721-standard";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import {
   NetworkOrSignerOrProvider,
@@ -51,7 +51,7 @@ import { BigNumberish, ethers } from "ethers";
  * @beta
  */
 // TODO (v3) add erc721 property instead of extending here
-export class Multiwrap extends Erc721<MultiwrapContract> {
+export class Multiwrap extends StandardErc721<MultiwrapContract> {
   static contractType = "multiwrap" as const;
   static contractRoles = ["transfer", "minter", "unwrap", "asset"] as const;
   static contractAbi = ABI as any;
