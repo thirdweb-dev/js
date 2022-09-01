@@ -20,5 +20,15 @@ export const CommonContractOutputSchema = CommonContractSchema.extend({
   image: z.string().optional(),
 }).catchall(z.lazy(() => JsonSchema));
 
-// TODO add royalties input (creator <> share array)
-export type NFTCollectionMetadataInput = z.input<typeof CommonContractSchema>;
+export const NFTCollectionCreatorInputSchema = z.object({
+  address: z.string(),
+  share: z.number(),
+});
+
+export const NFTCollectionMetadataInputSchema = CommonContractSchema.extend({
+  creators: z.array(NFTCollectionCreatorInputSchema).optional(),
+});
+
+export type NFTCollectionMetadataInput = z.input<
+  typeof NFTCollectionMetadataInputSchema
+>;
