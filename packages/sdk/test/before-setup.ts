@@ -142,12 +142,14 @@ before(async () => {
   ): Promise<ethers.Contract> {
     switch (contractType) {
       case Marketplace.contractType:
-      case Pack.contractType:
       case Multiwrap.contractType:
         const nativeTokenWrapperAddress = getNativeTokenByChainId(
           ChainId.Hardhat,
         ).wrapped.address;
         return await contractFactory.deploy(nativeTokenWrapperAddress);
+      case Pack.contractType:
+        const addr = getNativeTokenByChainId(ChainId.Hardhat).wrapped.address;
+        return await contractFactory.deploy(addr, trustedForwarderAddress);
       default:
         return await contractFactory.deploy();
     }

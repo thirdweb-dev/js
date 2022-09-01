@@ -3400,10 +3400,10 @@
     "@types/use-sync-external-store" "^0.0.3"
     use-sync-external-store "^1.2.0"
 
-"@thirdweb-dev/contracts@3.1.5":
-  version "3.1.5"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.1.5.tgz#58809643eebf9cb722018055e297f1f3334851cf"
-  integrity sha512-3Yw21SkPLuF8zxig1MtPWNVhnuHeiw6vc8u2XovedWlLZj4bNGT88xUdHo3NDghqCrqBW0IJsiB8Rz10z/5EnQ==
+"@thirdweb-dev/contracts@3.1.6-1":
+  version "3.1.6-1"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.1.6-1.tgz#81fc678c89b407bd577d4021500ff1a5de825179"
+  integrity sha512-dNIqIsY2JYc+GVG9fZs3HfmgRY2pn6dYSmstGW4IcQmRpM4a3HYbz6FIgX4N9012xo0aNPbBWEq9pfQ3bdY86Q==
 
 "@trivago/prettier-plugin-sort-imports@^3.3.0":
   version "3.3.0"

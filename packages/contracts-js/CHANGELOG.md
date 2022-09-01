@@ -1,5 +1,11 @@
 # @thirdweb-dev/contracts-js
 
+## 1.1.2
+
+### Patch Changes
+
+- [#52](https://github.com/thirdweb-dev/js/pull/52) [`2eb7e94`](https://github.com/thirdweb-dev/js/commit/2eb7e945b14fd47fc46408d90499888c1f87ca94) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support for audited Pack contract
+
 ## 1.1.1
 
 ### Patch Changes
