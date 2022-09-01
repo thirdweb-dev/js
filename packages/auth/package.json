@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/auth",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "exports": {
     "./package.json": "./package.json",
     "./express": {
@@ -24,10 +24,10 @@
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
   "files": [
-    "dist/",
-    "next/",
-    "express/",
-    "next-auth/"
+    "dist/**/*",
+    "next/**/*",
+    "express/**/*",
+    "next-auth/**/*"
   ],
   "scripts": {
     "build": "preconstruct build",

@@ -7,7 +7,7 @@ import {
 import { FEATURE_TOKEN } from "../constants/erc20-features";
 import { FEATURE_NFT } from "../constants/erc721-features";
 import { FEATURE_EDITION } from "../constants/erc1155-features";
-import { NetworkOrSignerOrProvider } from "../core";
+import { ContractEncoder, NetworkOrSignerOrProvider } from "../core";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractMetadata } from "../core/classes/contract-metadata";
@@ -77,6 +77,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   // utilities
   public events: ContractEvents<TContract>;
   public interceptor: ContractInterceptor<TContract>;
+  public encoder: ContractEncoder<TContract>;
   public estimator: GasCostEstimator<TContract>;
   public publishedMetadata: ContractPublishedMetadata<TContract>;
   public abi: ContractInterface;
@@ -132,6 +133,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     this.abi = abi;
 
     this.events = new ContractEvents(this.contractWrapper);
+    this.encoder = new ContractEncoder(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.publishedMetadata = new ContractPublishedMetadata(

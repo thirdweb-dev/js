@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/contracts-js",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "main": "dist/thirdweb-dev-contracts-js.cjs.js",
   "module": "dist/thirdweb-dev-contracts-js.esm.js",
   "license": "Apache-2.0",

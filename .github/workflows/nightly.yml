@@ -35,6 +35,6 @@ jobs:
           EOF
 
       - name: Publish Nightly version to NPM
-        run: yarn ci:release:nightly
+        run: yarn release:nightly
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

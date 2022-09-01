@@ -1,8 +1,9 @@
 {
   "name": "@thirdweb-dev/solana",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "thirdweb Solana SDK",
   "main": "dist/thirdweb-dev-solana.cjs.js",
+  "module": "dist/thirdweb-dev-solana.esm.js",
   "repository": "git@github.com:thirdweb-dev/solana.git",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",

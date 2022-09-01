@@ -1,3 +1,4 @@
 {
-  "main": "dist/thirdweb-dev-solana-server.cjs.js"
+  "main": "dist/thirdweb-dev-solana-server.cjs.js",
+  "module": "dist/thirdweb-dev-solana-server.esm.js"
 }

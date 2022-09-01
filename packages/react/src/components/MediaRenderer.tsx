@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { resolveIpfsUri, resolveMimeType } from "../utils/ipfs";
 import { shouldRenderAudioTag, shouldRenderVideoTag } from "../utils/media";
 import { mergeRefs } from "../utils/react";
@@ -148,6 +149,7 @@ const VideoPlayer = React.forwardRef<
           poster={poster ?? undefined}
           loop
           playsInline
+          controlsList="nodownload"
           muted={muted}
           preload={poster ? "metadata" : "auto"}
           onCanPlay={() => {
@@ -184,6 +186,7 @@ const VideoPlayer = React.forwardRef<
               right: 0,
               bottom: 0,
             }}
+            alt={alt}
           />
         )}
         <PlayButton
@@ -197,6 +200,8 @@ const VideoPlayer = React.forwardRef<
     );
   },
 );
+
+VideoPlayer.displayName = "VideoPlayer";
 
 const AudioPlayer = React.forwardRef<
   HTMLAudioElement,
@@ -245,6 +250,7 @@ const AudioPlayer = React.forwardRef<
               pointerEvents: "none",
               objectFit: "contain",
             }}
+            alt={alt}
           />
         ) : (
           <div
@@ -275,6 +281,8 @@ const AudioPlayer = React.forwardRef<
           loop
           playsInline
           muted={muted}
+          preload="none"
+          controlsList="nodownload"
           style={{
             position: "absolute",
             opacity: 0,
@@ -287,6 +295,8 @@ const AudioPlayer = React.forwardRef<
     );
   },
 );
+
+AudioPlayer.displayName = "AudioPlayer";
 
 const IframePlayer = React.forwardRef<
   HTMLIFrameElement,
@@ -335,6 +345,8 @@ const IframePlayer = React.forwardRef<
             transition: "opacity .5s",
             opacity: !poster ? 1 : playing ? 1 : 0,
           }}
+          sandbox="allow-scripts"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
         />
         {poster && (
           <img
@@ -353,6 +365,7 @@ const IframePlayer = React.forwardRef<
               right: 0,
               bottom: 0,
             }}
+            alt={alt}
           />
         )}
         <PlayButton
@@ -365,6 +378,9 @@ const IframePlayer = React.forwardRef<
     );
   },
 );
+
+IframePlayer.displayName = "IframePlayer";
+
 const LinkPlayer = React.forwardRef<
   HTMLAnchorElement,
   React.PropsWithChildren<MediaRendererProps>
@@ -432,6 +448,8 @@ const LinkPlayer = React.forwardRef<
   },
 );
 
+LinkPlayer.displayName = "LinkPlayer";
+
 /**
  * This component can be used to render any media type, including image, audio, video, and html files.
  * Its convenient for rendering NFT media files, as these can be a variety of different types.
@@ -477,6 +495,7 @@ export const MediaRenderer = React.forwardRef<
           style={mergedStyle}
           {...restProps}
           ref={ref as unknown as React.LegacyRef<HTMLImageElement>}
+          alt={alt}
         />
       );
     } else if (videoOrImageSrc.mimeType === "text/html") {
@@ -531,6 +550,8 @@ export const MediaRenderer = React.forwardRef<
     );
   },
 );
+
+MediaRenderer.displayName = "MediaRenderer";
 
 export interface MediaType {
   url?: string;
