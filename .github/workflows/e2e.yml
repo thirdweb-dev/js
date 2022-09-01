@@ -6,7 +6,7 @@ on:
   pull_request:
     types: [opened, synchronize]
 jobs:
-  test:
+  integration-tests:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
