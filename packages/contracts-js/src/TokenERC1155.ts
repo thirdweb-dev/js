@@ -119,7 +119,6 @@ export interface TokenERC1155Interface extends utils.Interface {
     "setRoyaltyInfoForToken(uint256,address,uint256)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
-    "thirdwebFee()": FunctionFragment;
     "totalSupply(uint256)": FunctionFragment;
     "uri(uint256)": FunctionFragment;
     "verify((address,address,uint256,address,uint256,string,uint256,uint256,address,uint128,uint128,bytes32),bytes)": FunctionFragment;
@@ -170,7 +169,6 @@ export interface TokenERC1155Interface extends utils.Interface {
       | "setRoyaltyInfoForToken"
       | "supportsInterface"
       | "symbol"
-      | "thirdwebFee"
       | "totalSupply"
       | "uri"
       | "verify"
@@ -348,10 +346,6 @@ export interface TokenERC1155Interface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "thirdwebFee",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "totalSupply",
     values: [BigNumberish]
   ): string;
@@ -494,10 +488,6 @@ export interface TokenERC1155Interface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "thirdwebFee",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
     data: BytesLike
@@ -950,8 +940,6 @@ export interface TokenERC1155 extends BaseContract {
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
-    thirdwebFee(overrides?: CallOverrides): Promise<[string]>;
-
     totalSupply(
       arg0: BigNumberish,
       overrides?: CallOverrides
@@ -1180,8 +1168,6 @@ export interface TokenERC1155 extends BaseContract {
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
-  thirdwebFee(overrides?: CallOverrides): Promise<string>;
-
   totalSupply(
     arg0: BigNumberish,
     overrides?: CallOverrides
@@ -1400,8 +1386,6 @@ export interface TokenERC1155 extends BaseContract {
     ): Promise<boolean>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
-
-    thirdwebFee(overrides?: CallOverrides): Promise<string>;
 
     totalSupply(
       arg0: BigNumberish,
@@ -1786,8 +1770,6 @@ export interface TokenERC1155 extends BaseContract {
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
-    thirdwebFee(overrides?: CallOverrides): Promise<BigNumber>;
-
     totalSupply(
       arg0: BigNumberish,
       overrides?: CallOverrides
@@ -2027,8 +2009,6 @@ export interface TokenERC1155 extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    thirdwebFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     totalSupply(
       arg0: BigNumberish,

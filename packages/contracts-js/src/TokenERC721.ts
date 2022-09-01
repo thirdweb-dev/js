@@ -113,7 +113,6 @@ export interface TokenERC721Interface extends utils.Interface {
     "setRoyaltyInfoForToken(uint256,address,uint256)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
-    "thirdwebFee()": FunctionFragment;
     "tokenByIndex(uint256)": FunctionFragment;
     "tokenOfOwnerByIndex(address,uint256)": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
@@ -167,7 +166,6 @@ export interface TokenERC721Interface extends utils.Interface {
       | "setRoyaltyInfoForToken"
       | "supportsInterface"
       | "symbol"
-      | "thirdwebFee"
       | "tokenByIndex"
       | "tokenOfOwnerByIndex"
       | "tokenURI"
@@ -342,10 +340,6 @@ export interface TokenERC721Interface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "thirdwebFee",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "tokenByIndex",
     values: [BigNumberish]
   ): string;
@@ -500,10 +494,6 @@ export interface TokenERC721Interface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "thirdwebFee",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "tokenByIndex",
     data: BytesLike
@@ -940,8 +930,6 @@ export interface TokenERC721 extends BaseContract {
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
-    thirdwebFee(overrides?: CallOverrides): Promise<[string]>;
-
     tokenByIndex(
       index: BigNumberish,
       overrides?: CallOverrides
@@ -1172,8 +1160,6 @@ export interface TokenERC721 extends BaseContract {
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
-  thirdwebFee(overrides?: CallOverrides): Promise<string>;
-
   tokenByIndex(
     index: BigNumberish,
     overrides?: CallOverrides
@@ -1388,8 +1374,6 @@ export interface TokenERC721 extends BaseContract {
     ): Promise<boolean>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
-
-    thirdwebFee(overrides?: CallOverrides): Promise<string>;
 
     tokenByIndex(
       index: BigNumberish,
@@ -1763,8 +1747,6 @@ export interface TokenERC721 extends BaseContract {
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
-    thirdwebFee(overrides?: CallOverrides): Promise<BigNumber>;
-
     tokenByIndex(
       index: BigNumberish,
       overrides?: CallOverrides
@@ -2012,8 +1994,6 @@ export interface TokenERC721 extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    thirdwebFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     tokenByIndex(
       index: BigNumberish,
