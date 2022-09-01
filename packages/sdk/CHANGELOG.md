@@ -1,5 +1,16 @@
 # @thirdweb-dev/sdk
 
+## 2.4.3
+
+### Patch Changes
+
+- [#49](https://github.com/thirdweb-dev/js/pull/49) [`e59735b`](https://github.com/thirdweb-dev/js/commit/e59735b6a2cdcfb660d7bdb16a038f64bd28ca74) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Added ContractEncoder to custom contracts - `contract.encoder`
+
+- [#52](https://github.com/thirdweb-dev/js/pull/52) [`2eb7e94`](https://github.com/thirdweb-dev/js/commit/2eb7e945b14fd47fc46408d90499888c1f87ca94) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support for audited Pack contract
+
+- Updated dependencies [[`2eb7e94`](https://github.com/thirdweb-dev/js/commit/2eb7e945b14fd47fc46408d90499888c1f87ca94)]:
+  - @thirdweb-dev/contracts-js@1.1.2
+
 ## 2.4.2
 
 ### Patch Changes
