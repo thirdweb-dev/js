@@ -1,4 +1,5 @@
 import { NFTMetadataOwner } from "../../schema/tokens/common";
+import { QueryAllParams } from "../../types";
 import { BaseERC721 } from "../../types/eips";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
@@ -48,9 +49,60 @@ export class StandardErc721<
     return this.contractWrapper.readContract.address;
   }
 
-  /******************************
-   * STANDARD ERC721 FUNCTIONS
-   ******************************/
+  /**
+   * Get All Minted NFTs
+   *
+   * @remarks Get all the data associated with every NFT in this contract.
+   *
+   * By default, returns the first 100 NFTs, use queryParams to fetch more.
+   *
+   * @example
+   * ```javascript
+   * const nfts = await contract.getAll();
+   * console.log(nfts);
+   * ```
+   * @param queryParams - optional filtering to only fetch a subset of results.
+   * @returns The NFT metadata for all NFTs queried.
+   */
+  public async getAll(
+    queryParams?: QueryAllParams,
+  ): Promise<NFTMetadataOwner[]> {
+    return this.erc721.getAll(queryParams);
+  }
+
+  /**
+   * Get Owned NFTs
+   *
+   * @remarks Get all the data associated with the NFTs owned by a specific wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to get the NFTs of
+   * const address = "{{wallet_address}}";
+   * const nfts = await contract.getOwned(address);
+   * console.log(nfts);
+   * ```
+   * @param walletAddress - the wallet address to query, defaults to the connected wallet
+   * @returns The NFT metadata for all NFTs in the contract.
+   */
+  public async getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]> {
+    return this.erc721.getOwned(walletAddress);
+  }
+
+  /**
+   * Get Owned Token Ids
+   * @remarks Get all the token ids of NFTs owned by a specific wallet (no metadata)
+   */
+  public async getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]> {
+    return this.erc721.getOwnedTokenIds(walletAddress);
+  }
+
+  /**
+   * Get the total count NFTs minted in this contract
+   */
+  public async totalSupply() {
+    return this.erc721.totalCirculatingSupply();
+  }
 
   /**
    * Get a single NFT Metadata

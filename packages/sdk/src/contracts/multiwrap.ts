@@ -50,7 +50,6 @@ import { BigNumberish, ethers } from "ethers";
  *
  * @beta
  */
-// TODO (v3) add erc721 property instead of extending here
 export class Multiwrap extends StandardErc721<MultiwrapContract> {
   static contractType = "multiwrap" as const;
   static contractRoles = ["transfer", "minter", "unwrap", "asset"] as const;
