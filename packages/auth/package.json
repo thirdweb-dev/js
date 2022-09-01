@@ -1,8 +1,21 @@
 {
   "name": "@thirdweb-dev/auth",
   "version": "1.0.1",
-  "main": "dist/thirdweb-dev-auth.cjs.js",
-  "module": "dist/thirdweb-dev-auth.esm.js",
+  "exports": {
+    "./package.json": "./package.json",
+    "./express": {
+      "module": "./express/dist/thirdweb-dev-auth-express.esm.js",
+      "default": "./express/dist/thirdweb-dev-auth-express.cjs.js"
+    },
+    "./next": {
+      "module": "./next/dist/thirdweb-dev-auth-next.esm.js",
+      "default": "./next/dist/thirdweb-dev-auth-express.cjs.js"
+    },
+    "./next-auth": {
+      "module": "./next-auth/dist/thirdweb-dev-auth-next-auth.esm.js",
+      "default": "./next-auth/dist/thirdweb-dev-auth-next-auth.cjs.js"
+    }
+  },
   "repository": {
     "directory": "packages/auth",
     "type": "git",
@@ -22,7 +35,6 @@
   },
   "preconstruct": {
     "entrypoints": [
-      "index.ts",
       "next/index.ts",
       "express/index.ts",
       "next-auth/index.ts"
