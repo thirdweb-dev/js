@@ -38,5 +38,6 @@
     "clean": {
       "cache": false
     }
-  }
+  },
+  "globalDependencies": ["tsup.config.ts"]
 }

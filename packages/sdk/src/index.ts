@@ -6,6 +6,7 @@ export type {
   NFTMetadataInput,
   NFTMetadataOwner,
   NFTMetadata,
+  NFTMetadataOrUri,
 } from "./schema/tokens/common";
 
 export type { Role } from "./common/role";
@@ -19,7 +20,12 @@ export * from "./schema/tokens/edition";
 export * from "./schema/contracts/common";
 export * from "./schema/contracts/custom";
 export * from "./schema/auth";
-export type { SDKOptions, SDKOptionsSchema } from "./schema/sdk-options";
+export type {
+  SDKOptions,
+  SDKOptionsSchema,
+  SDKOptionsOutput,
+} from "./schema/sdk-options";
+export type { FeatureWithEnabled } from "./constants/contract-features";
 
 export * from "./core";
 export * from "./types";
