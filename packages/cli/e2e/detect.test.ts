@@ -10,13 +10,17 @@ describe("npx thirdweb detect", () => {
     const create = await spawn("node", "./dist/cli/index.js create");
 
     await create.waitForText(CREATE_MESSAGES.typeOfProject);
+    // select contract
     await create.pressKey("arrowDown");
     await create.pressKey("enter");
     await create.waitForText(CREATE_MESSAGES.projectName);
+    // use default name
     await create.pressKey("enter");
     await create.waitForText(CREATE_MESSAGES.framework);
+    // select hardhat
     await create.pressKey("enter");
     await create.waitForText(CREATE_MESSAGES.contract);
+    // select ERC721Base
     await create.pressKey("arrowDown");
     await create.pressKey("enter");
 
@@ -26,12 +30,12 @@ describe("npx thirdweb detect", () => {
     // the process should exit with code 0
     expect(create.getExitCode()).toEqual(0);
 
-    //check if the contract was created
+    // check if the contract was created
     expect(await exists("thirdweb-contracts/contracts/Contract.sol")).toEqual(
       true,
     );
     
-    //check that hardhat config exists
+    // check that hardhat config exists
     expect(await exists("thirdweb-contracts/hardhat.config.js")).toEqual(
       true,
     );

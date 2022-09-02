@@ -19,7 +19,7 @@ describe("npx thirdweb create", () => {
     await waitForText(CREATE_MESSAGES.projectName);
     await pressKey("enter");
     await waitForText(CREATE_MESSAGES.framework);
-    // Select CRA
+    // select CRA
     await pressKey("arrowDown");
     await pressKey("enter");
     await waitForText(CREATE_MESSAGES.language);
@@ -28,7 +28,7 @@ describe("npx thirdweb create", () => {
     // wait for program to finish
     await waitForFinish();
 
-    //check if the app was created
+    // check if the app was created
     expect(await exists("thirdweb-app/package.json")).toEqual(true);
 
     // the process should exit with code 0
