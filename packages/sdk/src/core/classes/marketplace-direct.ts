@@ -1,3 +1,29 @@
+import { ListingNotFoundError, WrongListingTypeError } from "../../common";
+import {
+  fetchCurrencyValue,
+  isNativeToken,
+  normalizePriceValue,
+  setErc20Allowance,
+} from "../../common/currency";
+import {
+  handleTokenApproval,
+  isTokenApprovedForTransfer,
+  mapOffer,
+  validateNewListingParam,
+} from "../../common/marketplace";
+import { fetchTokenMetadataForContract } from "../../common/nft";
+import {
+  InterfaceId_IERC1155,
+  InterfaceId_IERC721,
+} from "../../constants/contract";
+import { ListingType } from "../../enums";
+import { Price } from "../../types/currency";
+import {
+  DirectListing,
+  NewDirectListing,
+  Offer,
+} from "../../types/marketplace";
+import { TransactionResult, TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import {
   IERC1155,
@@ -6,6 +32,11 @@ import {
   IMarketplace,
   Marketplace,
 } from "@thirdweb-dev/contracts-js";
+import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
+import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
+import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
+import { ListingAddedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
+import { IStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
   BigNumberish,
@@ -14,38 +45,7 @@ import {
   constants,
   utils,
 } from "ethers";
-import {
-  DirectListing,
-  NewDirectListing,
-  Offer,
-} from "../../types/marketplace";
-import { ListingNotFoundError, WrongListingTypeError } from "../../common";
-import { ListingType } from "../../enums";
-import { TransactionResult, TransactionResultWithId } from "../types";
-import {
-  fetchCurrencyValue,
-  isNativeToken,
-  normalizePriceValue,
-  setErc20Allowance,
-} from "../../common/currency";
-import { Price } from "../../types/currency";
-import { fetchTokenMetadataForContract } from "../../common/nft";
-import {
-  InterfaceId_IERC1155,
-  InterfaceId_IERC721,
-} from "../../constants/contract";
-import {
-  handleTokenApproval,
-  isTokenApprovedForTransfer,
-  mapOffer,
-  validateNewListingParam,
-} from "../../common/marketplace";
-import { IStorage } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
-import ERC1155Abi from "@thirdweb-dev/contracts-js/abis/IERC1155.json";
-import ERC721Abi from "@thirdweb-dev/contracts-js/abis/IERC721.json";
-import ERC165Abi from "@thirdweb-dev/contracts-js/abis/IERC165.json";
-import { ListingAddedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
 
 /**
  * Handles direct listings

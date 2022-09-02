@@ -16,7 +16,7 @@ import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { SDKOptions } from "../schema/sdk-options";
 import { Amount, CurrencyValue } from "../types";
 import { DropERC20 } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/abis/DropERC20.json";
+import ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC20.json";
 import { IStorage } from "@thirdweb-dev/storage";
 import { constants } from "ethers";
 

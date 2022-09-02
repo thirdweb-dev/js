@@ -4249,11 +4249,6 @@
   dependencies:
     "@walletconnect/window-getters" "^1.0.0"
 
-"@yarnpkg/lockfile@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.1.0.tgz#e77a97fbd345b76d83245edcd17d393b1b41fb31"
-  integrity sha512-GpSwvyXOcOOlV70vbnzjj4fW5xW/FdUF6nQEt1ENy7m4ZCczi1+/buVUPAqmGfqznsORNFzUMjctTIp8a9tuCQ==
-
 "@zag-js/core@0.1.10":
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/@zag-js/core/-/core-0.1.10.tgz#71ec3366fafd7eed1aba7989ef370b2a105cee3c"
@@ -5755,7 +5750,7 @@ commander@^8.1.0, commander@^8.2.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-8.3.0.tgz#4837ea1b2da67b9c616a67afbb0fafee567bca66"
   integrity sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==
 
-commander@^9.1.0, commander@^9.4.0:
+commander@^9.1.0:
   version "9.4.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-9.4.0.tgz#bc4a40918fefe52e22450c111ecd6b7acce6f11c"
   integrity sha512-sRPT+umqkz90UA8M1yqYfnHlZA7fF6nSphDtxeywPZ49ysjxDQybzk13CL+mXekDRG92skbcqCLVovuCusNmFw==
@@ -14160,16 +14155,6 @@ yargs@^17.1.1, yargs@^17.3.0, yargs@^17.3.1:
     string-width "^4.2.3"
     y18n "^5.0.5"
     yargs-parser "^21.0.0"
-
-yarn-deduplicate@^5.0.2:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/yarn-deduplicate/-/yarn-deduplicate-5.0.2.tgz#b56484c94d8f1163a828bf20516607f89c078675"
-  integrity sha512-pxKa+dM7DMQ4X2vYLKqGCUgtEoTtdMVk9gNoIsxsMSP0rOV51IWFcKHfRIcZjAPNgHTrxz46sKB4xr7Nte7jdw==
-  dependencies:
-    "@yarnpkg/lockfile" "^1.1.0"
-    commander "^9.4.0"
-    semver "^7.3.7"
-    tslib "^2.4.0"
 
 yn@3.1.1:
   version "3.1.1"

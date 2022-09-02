@@ -32,6 +32,7 @@ jobs:
         uses: changesets/action@v1
         with:
           publish: yarn release
+          version: yarn version-packages
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -41,7 +42,7 @@ jobs:
         if: steps.changesets.outputs.published != 'true'
         run: |
           git checkout main
-          yarn version:nightly
+          yarn version-packages:nightly
           yarn release:nightly
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

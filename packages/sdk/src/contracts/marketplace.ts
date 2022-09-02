@@ -19,7 +19,7 @@ import { DEFAULT_QUERY_ALL_COUNT } from "../types/QueryParams";
 import { AuctionListing, DirectListing } from "../types/marketplace";
 import { MarketplaceFilter } from "../types/marketplace/MarketPlaceFilter";
 import { Marketplace as MarketplaceContract } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/abis/Marketplace.json";
+import ABI from "@thirdweb-dev/contracts-js/dist/abis/Marketplace.json";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
 import invariant from "tiny-invariant";
