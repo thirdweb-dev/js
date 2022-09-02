@@ -23,6 +23,7 @@ import { CallOverrideSchema } from "../schema/index";
 import { SDKOptions } from "../schema/sdk-options";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
 import {
+  AppURI,
   IPermissions,
   IPlatformFee,
   IPrimarySale,
@@ -281,6 +282,13 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   private detectErc1155() {
     if (detectContractFeature<BaseERC1155>(this.contractWrapper, "ERC1155")) {
       return new Erc1155(this.contractWrapper, this.storage, this.options);
+    }
+    return undefined;
+  }
+
+  private detectAppURI() {
+    if (detectContractFeature<AppURI>(this.contractWrapper, "AppURI")) {
+      return new AppURI(this.contractWrapper);
     }
     return undefined;
   }
