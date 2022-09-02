@@ -27,7 +27,7 @@ describe("npx thirdweb release", () => {
     // wait for program to finish
     await waitForFinish();
 
-    expect(getStdout().at(-1)).toEqual("https://thirdweb.com/contracts/release/QmXENbPLE5wkAhyUr7y2YShsUHLTtgaG1CvQffUaek6pNN");
+    expect(getStdout().at(-1)).toContain("https://thirdweb.com/contracts/release/");
 
     // the process should exit with code 0
     expect(getExitCode()).toEqual(0);
