@@ -61,19 +61,19 @@ export const CustomContractSettingsTab: React.FC<
             <ButtonGroup colorScheme="purple" size="sm" variant="solid">
               <LinkButton
                 isExternal
-                href="https://portal.thirdweb.com/contracts-sdk/contract-extensions/platformfee"
+                href="https://portal.thirdweb.com/extensions/features/platformfee"
               >
                 Platform Fee
               </LinkButton>
               <LinkButton
                 isExternal
-                href="https://portal.thirdweb.com/contracts-sdk/contract-extensions/primarysale"
+                href="https://portal.thirdweb.com/extensions/features/primarysale"
               >
                 Primary Sale
               </LinkButton>
               <LinkButton
                 isExternal
-                href="https://portal.thirdweb.com/contracts-sdk/contract-extensions/royalty"
+                href="https://portal.thirdweb.com/extensions/features/royalty"
               >
                 Royalty
               </LinkButton>
