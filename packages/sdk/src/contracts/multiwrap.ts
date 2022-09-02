@@ -28,7 +28,7 @@ import {
   WrappedTokens,
 } from "../types/multiwrap";
 import { Multiwrap as MultiwrapContract } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/abis/Multiwrap.json";
+import ABI from "@thirdweb-dev/contracts-js/dist/abis/Multiwrap.json";
 import {
   ITokenBundle,
   TokensWrappedEvent,

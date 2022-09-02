@@ -28,7 +28,7 @@ import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
 import { SDKOptions } from "../schema/sdk-options";
 import { QueryAllParams } from "../types";
 import { TokenERC721 } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/abis/TokenERC721.json";
+import ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC721.json";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
 

@@ -1,24 +1,28 @@
-import { BigNumber, BigNumberish, ethers } from "ethers";
-import { ContractWrapper } from "./contract-wrapper";
-import { DropERC721, IThirdwebContract, SignatureDrop } from "@thirdweb-dev/contracts-js";
+import { hasFunction } from "../../common";
+import { fetchTokenMetadataForContract } from "../../common/nft";
+import { FeatureName } from "../../constants/contract-features";
 import {
   CommonNFTInput,
   NFTMetadata,
   NFTMetadataInput,
 } from "../../schema/tokens/common";
-import { TransactionResult, TransactionResultWithId } from "../index";
-import { IStorage } from "@thirdweb-dev/storage";
-import { fetchTokenMetadataForContract } from "../../common/nft";
 import { BatchToReveal } from "../../types/delayed-reveal";
-import { UploadProgressEvent } from "../../types/events";
 import {
   BaseDelayedRevealERC1155,
   BaseDelayedRevealERC721,
 } from "../../types/eips";
-import { hasFunction } from "../../common";
-import DeprecatedAbi from "@thirdweb-dev/contracts-js/abis/IDelayedRevealDeprecated.json";
-import { FeatureName } from "../../constants/contract-features";
+import { UploadProgressEvent } from "../../types/events";
+import { TransactionResult, TransactionResultWithId } from "../index";
+import { ContractWrapper } from "./contract-wrapper";
+import {
+  DropERC721,
+  IThirdwebContract,
+  SignatureDrop,
+} from "@thirdweb-dev/contracts-js";
+import DeprecatedAbi from "@thirdweb-dev/contracts-js/dist/abis/IDelayedRevealDeprecated.json";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
+import { IStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 
 /**
  * Handles delayed reveal logic

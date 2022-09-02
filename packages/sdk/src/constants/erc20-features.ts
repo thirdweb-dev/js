@@ -1,9 +1,9 @@
-import IBurnableERC20Abi from "@thirdweb-dev/contracts-js/abis/IBurnableERC20.json";
-import IDropSinglePhase from "@thirdweb-dev/contracts-js/abis/IDropSinglePhase.json";
-import ERC20Abi from "@thirdweb-dev/contracts-js/abis/IERC20.json";
-import IMintableERC20Abi from "@thirdweb-dev/contracts-js/abis/IMintableERC20.json";
-import MulticallAbi from "@thirdweb-dev/contracts-js/abis/IMulticall.json";
-import ISignatureMintERC20Abi from "@thirdweb-dev/contracts-js/abis/ISignatureMintERC20.json";
+import IBurnableERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC20.json";
+import IDropSinglePhase from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase.json";
+import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
+import IMintableERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC20.json";
+import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
+import ISignatureMintERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC20.json";
 
 export const FEATURE_TOKEN_CLAIMABLE = {
   name: "ERC20Claimable",

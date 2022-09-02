@@ -12,8 +12,8 @@ import { SDKOptions } from "../schema/sdk-options";
 import { SplitRecipient } from "../types/SplitRecipient";
 import { CurrencyValue } from "../types/currency";
 import { IERC20, Split as SplitContract } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/abis/IERC20.json";
-import ABI from "@thirdweb-dev/contracts-js/abis/Split.json";
+import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
+import ABI from "@thirdweb-dev/contracts-js/dist/abis/Split.json";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, Contract } from "ethers";
 

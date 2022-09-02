@@ -30,7 +30,7 @@ import {
 import { UploadProgressEvent } from "../types";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
 import { SignatureDrop as SignatureDropContract } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/abis/SignatureDrop.json";
+import ABI from "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop.json";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
 

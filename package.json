@@ -18,11 +18,9 @@
     "eslint": "^8.23.0",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.7.1",
-    "turbo": "latest",
-    "yarn-deduplicate": "^5.0.2"
+    "turbo": "latest"
   },
   "scripts": {
-    "postinstall": "yarn-deduplicate yarn.lock",
     "test": "turbo run test",
     "e2e": "turbo run e2e",
     "build": "turbo run build",
@@ -32,9 +30,9 @@
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
-    "version": "changeset version",
+    "version-packages": "changeset version",
     "release": "changeset publish",
-    "version:nightly": "changeset version --snapshot nightly",
+    "version-packages:nightly": "changeset version --snapshot nightly",
     "release:nightly": "changeset publish --tag nightly"
   },
   "preconstruct": {
