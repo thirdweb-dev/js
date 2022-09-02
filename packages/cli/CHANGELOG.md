@@ -1,5 +1,30 @@
 # thirdweb
 
+## 0.7.8
+
+### Patch Changes
+
+- Updated dependencies [[`6ba9cad`](https://github.com/thirdweb-dev/js/commit/6ba9cad8d8b933256599dc3b147601cd4828c89b)]:
+  - @thirdweb-dev/sdk@2.4.7
+
+## 0.7.7
+
+### Patch Changes
+
+- [`5644ccd`](https://github.com/thirdweb-dev/js/commit/5644ccd3ee2ff330e4e5840d3266033376750117) Thanks [@jnsdls](https://github.com/jnsdls)! - bump versions again
+
+- Updated dependencies [[`5644ccd`](https://github.com/thirdweb-dev/js/commit/5644ccd3ee2ff330e4e5840d3266033376750117)]:
+  - @thirdweb-dev/sdk@2.4.6
+
+## 0.7.6
+
+### Patch Changes
+
+- [`091f175`](https://github.com/thirdweb-dev/js/commit/091f1758604d40e825ea28a13c2699d67bc75d8c) Thanks [@jnsdls](https://github.com/jnsdls)! - release-all-packages
+
+- Updated dependencies [[`091f175`](https://github.com/thirdweb-dev/js/commit/091f1758604d40e825ea28a13c2699d67bc75d8c)]:
+  - @thirdweb-dev/sdk@2.4.5
+
 ## 0.7.5
 
 ### Patch Changes

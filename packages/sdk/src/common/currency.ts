@@ -1,4 +1,14 @@
+import {
+  getNativeTokenByChainId,
+  NATIVE_TOKEN_ADDRESS,
+} from "../constants/currency";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { AmountSchema } from "../schema/shared";
+import { Amount, Currency, CurrencyValue, Price } from "../types/currency";
+import { BaseERC20 } from "../types/eips";
+import { IERC20, IERC20Metadata } from "@thirdweb-dev/contracts-js";
+import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
+import ERC20MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC20Metadata.json";
 import {
   BigNumber,
   BigNumberish,
@@ -8,16 +18,6 @@ import {
   utils,
   ethers,
 } from "ethers";
-import {
-  getNativeTokenByChainId,
-  NATIVE_TOKEN_ADDRESS,
-} from "../constants/currency";
-import { Amount, Currency, CurrencyValue, Price } from "../types/currency";
-import { AmountSchema } from "../schema/shared";
-import ERC20Abi from "@thirdweb-dev/contracts-js/abis/IERC20.json";
-import ERC20MetadataAbi from "@thirdweb-dev/contracts-js/abis/IERC20Metadata.json";
-import { BaseERC20 } from "../types/eips";
-import { IERC20, IERC20Metadata } from "@thirdweb-dev/contracts-js";
 
 export function isNativeToken(tokenAddress: string): boolean {
   return (

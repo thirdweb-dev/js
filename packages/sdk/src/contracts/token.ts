@@ -19,7 +19,7 @@ import { SDKOptions } from "../schema/sdk-options";
 import { TokenMintInput } from "../schema/tokens/token";
 import { Amount, CurrencyValue } from "../types";
 import { TokenERC20 } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/abis/TokenERC20.json";
+import ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC20.json";
 import { IStorage } from "@thirdweb-dev/storage";
 import { constants } from "ethers";
 

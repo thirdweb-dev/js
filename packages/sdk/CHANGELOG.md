@@ -1,5 +1,34 @@
 # @thirdweb-dev/sdk
 
+## 2.4.7
+
+### Patch Changes
+
+- [#59](https://github.com/thirdweb-dev/js/pull/59) [`6ba9cad`](https://github.com/thirdweb-dev/js/commit/6ba9cad8d8b933256599dc3b147601cd4828c89b) Thanks [@jnsdls](https://github.com/jnsdls)! - move `abis` from top level into `dist` in contracts-js
+
+- Updated dependencies [[`6ba9cad`](https://github.com/thirdweb-dev/js/commit/6ba9cad8d8b933256599dc3b147601cd4828c89b)]:
+  - @thirdweb-dev/contracts-js@1.1.6
+
+## 2.4.6
+
+### Patch Changes
+
+- [`5644ccd`](https://github.com/thirdweb-dev/js/commit/5644ccd3ee2ff330e4e5840d3266033376750117) Thanks [@jnsdls](https://github.com/jnsdls)! - bump versions again
+
+- Updated dependencies [[`5644ccd`](https://github.com/thirdweb-dev/js/commit/5644ccd3ee2ff330e4e5840d3266033376750117)]:
+  - @thirdweb-dev/contracts-js@1.1.5
+  - @thirdweb-dev/storage@0.2.6
+
+## 2.4.5
+
+### Patch Changes
+
+- [`091f175`](https://github.com/thirdweb-dev/js/commit/091f1758604d40e825ea28a13c2699d67bc75d8c) Thanks [@jnsdls](https://github.com/jnsdls)! - release-all-packages
+
+- Updated dependencies [[`091f175`](https://github.com/thirdweb-dev/js/commit/091f1758604d40e825ea28a13c2699d67bc75d8c)]:
+  - @thirdweb-dev/contracts-js@1.1.4
+  - @thirdweb-dev/storage@0.2.5
+
 ## 2.4.4
 
 ### Patch Changes

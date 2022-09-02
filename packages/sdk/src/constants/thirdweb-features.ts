@@ -1,8 +1,8 @@
-import IContractMetadataAbi from "@thirdweb-dev/contracts-js/abis/IContractMetadata.json";
-import IPermissionsAbi from "@thirdweb-dev/contracts-js/abis/IPermissions.json";
-import IThirdwebPlatformFeeAbi from "@thirdweb-dev/contracts-js/abis/IPlatformFee.json";
-import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/abis/IPrimarySale.json";
-import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/abis/IRoyalty.json";
+import IContractMetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IContractMetadata.json";
+import IPermissionsAbi from "@thirdweb-dev/contracts-js/dist/abis/IPermissions.json";
+import IThirdwebPlatformFeeAbi from "@thirdweb-dev/contracts-js/dist/abis/IPlatformFee.json";
+import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/dist/abis/IPrimarySale.json";
+import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty.json";
 
 export const FEATURE_ROYALTY = {
   name: "Royalty",

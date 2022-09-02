@@ -1,5 +1,23 @@
 # @thirdweb-dev/solana
 
+## 0.2.5
+
+### Patch Changes
+
+- [`5644ccd`](https://github.com/thirdweb-dev/js/commit/5644ccd3ee2ff330e4e5840d3266033376750117) Thanks [@jnsdls](https://github.com/jnsdls)! - bump versions again
+
+- Updated dependencies [[`5644ccd`](https://github.com/thirdweb-dev/js/commit/5644ccd3ee2ff330e4e5840d3266033376750117)]:
+  - @thirdweb-dev/storage@0.2.6
+
+## 0.2.4
+
+### Patch Changes
+
+- [`091f175`](https://github.com/thirdweb-dev/js/commit/091f1758604d40e825ea28a13c2699d67bc75d8c) Thanks [@jnsdls](https://github.com/jnsdls)! - release-all-packages
+
+- Updated dependencies [[`091f175`](https://github.com/thirdweb-dev/js/commit/091f1758604d40e825ea28a13c2699d67bc75d8c)]:
+  - @thirdweb-dev/storage@0.2.5
+
 ## 0.2.3
 
 ### Patch Changes
