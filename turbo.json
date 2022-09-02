@@ -9,6 +9,10 @@
       "outputs": ["dist/**", "express/**", "next/**", "next-auth/**"],
       "dependsOn": ["^build"]
     },
+    "contracts-js#build": {
+      "outputs": ["dist/**", "src/**"],
+      "dependsOn": ["^build"]
+    },
     "solana#build": {
       "outputs": ["dist/**", "server/**"],
       "dependsOn": ["^build"]
