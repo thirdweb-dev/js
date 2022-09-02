@@ -16,7 +16,6 @@
     "@changesets/cli": "^2.24.3",
     "@trivago/prettier-plugin-sort-imports": "^3.3.0",
     "eslint": "^8.23.0",
-    "eslint-config-thirdweb": "*",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.7.1",
     "turbo": "latest",
@@ -33,8 +32,10 @@
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
-    "release": "yarn build:release && changeset publish",
-    "release:nightly": "yarn build:release && changeset version --snapshot nightly && changeset publish --tag nightly --no-git-tag"
+    "version": "changeset version",
+    "release": "changeset publish",
+    "version:nightly": "changeset version --snapshot nightly",
+    "release:nightly": "changeset publish --tag nightly"
   },
   "preconstruct": {
     "packages": [

@@ -55,19 +55,16 @@ jobs:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
       - name: pull the repo.
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           persist-credentials: true
           repository: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.repo.full_name }}
 
-      - name: Setup Node.js 16
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16
-          cache: "yarn"
+      - name: Install
+        uses: ./.github/composite-actions/install
 
-      - name: Install Dependencies
-        run: yarn install --frozen-lockfile
+      - name: Build
+        run: build:release
 
       - name: Configure npm
         run: |
