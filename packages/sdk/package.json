@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "2.4.3",
+  "version": "2.4.6",
   "description": "The main thirdweb SDK.",
   "repository": {
     "directory": "packages/sdk",

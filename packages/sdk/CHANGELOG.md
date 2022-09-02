@@ -1,5 +1,33 @@
 # @thirdweb-dev/sdk
 
+## 2.4.6
+
+### Patch Changes
+
+- [`5644ccd`](https://github.com/thirdweb-dev/js/commit/5644ccd3ee2ff330e4e5840d3266033376750117) Thanks [@jnsdls](https://github.com/jnsdls)! - bump versions again
+
+- Updated dependencies [[`5644ccd`](https://github.com/thirdweb-dev/js/commit/5644ccd3ee2ff330e4e5840d3266033376750117)]:
+  - @thirdweb-dev/contracts-js@1.1.5
+  - @thirdweb-dev/storage@0.2.6
+
+## 2.4.5
+
+### Patch Changes
+
+- [`091f175`](https://github.com/thirdweb-dev/js/commit/091f1758604d40e825ea28a13c2699d67bc75d8c) Thanks [@jnsdls](https://github.com/jnsdls)! - release-all-packages
+
+- Updated dependencies [[`091f175`](https://github.com/thirdweb-dev/js/commit/091f1758604d40e825ea28a13c2699d67bc75d8c)]:
+  - @thirdweb-dev/contracts-js@1.1.4
+  - @thirdweb-dev/storage@0.2.5
+
+## 2.4.4
+
+### Patch Changes
+
+- Updated dependencies [[`924247a`](https://github.com/thirdweb-dev/js/commit/924247a8ed5ef1867dccfad9479b00f71795ebf6), [`924247a`](https://github.com/thirdweb-dev/js/commit/924247a8ed5ef1867dccfad9479b00f71795ebf6)]:
+  - @thirdweb-dev/storage@0.2.4
+  - @thirdweb-dev/contracts-js@1.1.3
+
 ## 2.4.3
 
 ### Patch Changes

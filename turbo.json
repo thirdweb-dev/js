@@ -13,6 +13,10 @@
       "outputs": ["dist/**", "server/**"],
       "dependsOn": ["^build"]
     },
+    "contracts-js#build": {
+      "outputs": ["dist/**", "abis/**"],
+      "dependsOn": ["^build"]
+    },
     "test": {
       "outputs": [],
       "inputs": ["src/**", "test/**"],
@@ -36,6 +40,5 @@
     "clean": {
       "cache": false
     }
-  },
-  "globalDependencies": ["tsup.config.ts"]
+  }
 }
