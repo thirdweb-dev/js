@@ -1,6 +1,7 @@
 import { Deployer } from "./classes/deployer";
 import { UserWallet } from "./classes/user-wallet";
 import { NFTCollection } from "./contracts/nft-collection";
+import { Token } from "./contracts/token";
 import { Network } from "./types";
 import { getUrlForNetwork } from "./utils/urls";
 import {
@@ -50,6 +51,10 @@ export class ThirdwebSDK {
 
   public async getNFTCollection(address: string): Promise<NFTCollection> {
     return new NFTCollection(address, this.metaplex, this.wallet, this.storage);
+  }
+
+  public async getToken(address: string): Promise<Token> {
+    return new Token(address, this.metaplex, this.wallet, this.storage);
   }
 
   private propagateSignerUpdated(signer: Signer) {

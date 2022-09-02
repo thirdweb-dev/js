@@ -53,3 +53,12 @@ export const AmountSchema = z
     z.number().min(0, "Amount cannot be negative"),
   ])
   .transform((arg) => (typeof arg === "number" ? arg.toString() : arg));
+
+export type Amount = z.input<typeof AmountSchema>;
+
+export const CurrencyValueSchema = z.object({
+  value: z.bigint(),
+  displayValue: z.string(),
+});
+
+export type CurrencyValue = z.input<typeof CurrencyValueSchema>;

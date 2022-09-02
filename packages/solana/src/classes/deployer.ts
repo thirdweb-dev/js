@@ -23,7 +23,7 @@ export class Deployer {
     this.storage = storage;
   }
 
-  async createToken(tokenMetadata: TokenMetadataInput) {
+  async createToken(tokenMetadata: TokenMetadataInput): Promise<string> {
     const tokenMetadataParsed = TokenMetadataInputSchema.parse(tokenMetadata);
     const uri = await this.storage.uploadMetadata(tokenMetadataParsed);
     const owner = this.wallet.getSigner().publicKey;
