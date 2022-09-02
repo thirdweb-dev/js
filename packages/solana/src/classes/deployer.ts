@@ -16,10 +16,13 @@ export class Deployer {
     this.storage = storage;
   }
 
+  async createToken() {
+    const mint = await this.metaplex.tokens().createTokenWithMint({}).run();
+  }
+
   async createNftCollection(
     collectionMetadata: NFTCollectionMetadataInput,
   ): Promise<string> {
-    invariant(this.wallet.signer, "Wallet is not connected");
     const uri = await this.storage.uploadMetadata(collectionMetadata);
 
     const { nft: collectionNft } = await this.metaplex
@@ -30,9 +33,9 @@ export class Deployer {
         sellerFeeBasisPoints: 0,
         uri,
         isCollection: true,
-        collectionAuthority: this.wallet.signer,
-        updateAuthority: this.wallet.signer,
-        mintAuthority: this.wallet.signer,
+        collectionAuthority: this.wallet.getSigner(),
+        updateAuthority: this.wallet.getSigner(),
+        mintAuthority: this.wallet.getSigner(),
         creators: collectionMetadata.creators?.map((creator) => ({
           address: new PublicKey(creator.address),
           share: creator.share,

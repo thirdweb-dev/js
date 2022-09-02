@@ -1,4 +1,4 @@
-import { JsonSchema } from "./common";
+import { AmountSchema, JsonSchema } from "./common";
 import { FileBufferOrStringSchema } from "@thirdweb-dev/storage";
 import { z } from "zod";
 
@@ -20,6 +20,8 @@ export const CommonContractOutputSchema = CommonContractSchema.extend({
   image: z.string().optional(),
 }).catchall(z.lazy(() => JsonSchema));
 
+/// NFT ///
+
 export const NFTCollectionCreatorInputSchema = z.object({
   address: z.string(),
   share: z.number(),
@@ -32,3 +34,10 @@ export const NFTCollectionMetadataInputSchema = CommonContractSchema.extend({
 export type NFTCollectionMetadataInput = z.input<
   typeof NFTCollectionMetadataInputSchema
 >;
+
+/// TOKEN ///
+
+export const TokenMetadataInputSchema = CommonContractSchema.extend({
+  decimals: z.number().default(18),
+  initialSupply: AmountSchema,
+});
