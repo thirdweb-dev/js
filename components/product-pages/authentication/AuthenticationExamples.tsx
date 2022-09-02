@@ -6,28 +6,28 @@ import { Badge, Heading } from "tw-components";
 
 const EXAMPLES = [
   {
-    title: "Sign-in With Wallet",
-    label: "sign-in-with-wallet",
-    href: "https://github.com/thirdweb-example/login-with-wallet",
+    title: "Login With Wallet",
+    label: "login-with-wallet",
+    href: "https://portal.thirdweb.com/auth/quickstart",
     image: require("/public/assets/product-pages/authentication/login-with-wallet.png"),
   },
   {
-    title: "Stripe Subscriptions For Wallets",
-    label: "stripe-subscriptions-for-wallets",
-    href: "https://github.com/thirdweb-example/thirdweb-stripe",
-    image: require("/public/assets/product-pages/authentication/stripe-subscriptions.png"),
+    title: "Token-Gated Content",
+    label: "token-gated-content",
+    href: "https://github.com/thirdweb-example/nft-gated-website",
+    image: require("/public/assets/product-pages/authentication/discord-authentication.png"),
   },
   {
-    title: "Link Existing Accounts to Wallets",
-    label: "link-existing-accounts-to-wallets",
-    href: "",
+    title: "OAuth Integration",
+    label: "oauth-integration",
+    href: "https://portal.thirdweb.com/auth/integrations/next-auth",
     image: require("/public/assets/product-pages/authentication/link-accounts.png"),
   },
   {
-    title: "Authenticate With Discord Bot",
-    label: "authenticate-with-discord-bot",
-    href: "",
-    image: require("/public/assets/product-pages/authentication/discord-authentication.png"),
+    title: "Subscribe with Wallet",
+    label: "stripe-for-wallets",
+    href: "https://github.com/thirdweb-example/thirdweb-stripe",
+    image: require("/public/assets/product-pages/authentication/stripe-subscriptions.png"),
   },
 ];
 
@@ -92,12 +92,7 @@ const ExampleItem: React.FC<ExampleItemProps> = ({
           });
         }}
       >
-        <Heading
-          _groupHover={{ fontWeight: "bold" }}
-          textAlign="center"
-          size="subtitle.md"
-          maxW="100%"
-        >
+        <Heading textAlign="center" size="subtitle.md" maxW="100%">
           {title}
         </Heading>
       </LinkOverlay>
