@@ -1,7 +1,7 @@
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 import { ClaimEligibility } from "../src/enums";
 import { EditionDrop, Token } from "../src/index";
-import { expectError, sdk, signers } from "./before-setup";
+import { expectError, sdk, signers } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect, use } from "chai";

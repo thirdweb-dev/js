@@ -160,7 +160,7 @@ export class DelayedReveal<
     );
     const startingIndex = events[0].args.startTokenId;
     const endingIndex = events[0].args.endTokenId;
-    const results = [];
+    const results: TransactionResultWithId[] = [];
     for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
       results.push({
         id,

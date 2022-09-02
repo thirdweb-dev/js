@@ -10,8 +10,6 @@ describe("node", () => {
       "./e2e/node-scripts/basic.js",
     );
 
-    console.log("stderr", stderr);
-
     expect(code).to.equal(0);
     expect(stdout[0]).to.contain("mintED Toasts");
     expect(stderr.length).to.equal(0);
