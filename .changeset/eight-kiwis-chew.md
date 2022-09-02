@@ -10,4 +10,4 @@
 "@thirdweb-dev/tsconfig": patch
 ---
 
-bump versions
+bump versions again
