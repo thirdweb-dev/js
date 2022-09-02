@@ -61,7 +61,7 @@ export const FEATURE_METADATA = {
 } as const;
 
 export const FEATURE_APPURI = {
-  name: "ContractAppURI",
+  name: "AppURI",
   namespace: "appuri",
   docLinks: {
     sdk: "sdk.appuri",
