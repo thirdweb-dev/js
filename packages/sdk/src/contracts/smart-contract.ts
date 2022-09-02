@@ -4,6 +4,7 @@ import {
   extractFunctionsFromAbi,
 } from "../common";
 import { ContractEncoder, NetworkOrSignerOrProvider } from "../core";
+import { AppURI } from "../core/classes/appuri";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractMetadata } from "../core/classes/contract-metadata";
@@ -23,7 +24,7 @@ import { CallOverrideSchema } from "../schema/index";
 import { SDKOptions } from "../schema/sdk-options";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
 import {
-  AppURI,
+  AppURI as AppURIAbi,
   IPermissions,
   IPlatformFee,
   IPrimarySale,
@@ -97,6 +98,10 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
    * Auto-detects ERC1155 standard functions.
    */
   public edition: Erc1155 | undefined;
+  /**
+   * Auto-detects ERC1155 standard functions.
+   */
+  public appuri: AppURIAbi | undefined;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -140,6 +145,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     this.token = this.detectErc20();
     this.nft = this.detectErc721();
     this.edition = this.detectErc1155();
+    this.appuri = this.detectAppURI();
   }
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
@@ -287,9 +293,14 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   }
 
   private detectAppURI() {
-    if (detectContractFeature<AppURI>(this.contractWrapper, "AppURI")) {
-      return new AppURI(this.contractWrapper);
-    }
-    return undefined;
+    // ContractMetadata is stateless, it's fine to create a new one here
+    // This also makes it not order dependent in the feature detection process
+    const metadata = new ContractMetadata(
+      this.contractWrapper,
+      SmartContract.schema,
+      this.storage,
+    );
+
+    return new AppURI(this.contractWrapper, metadata);
   }
 }
