@@ -16,11 +16,7 @@
       "default": "./next-auth/dist/thirdweb-dev-auth-next-auth.cjs.js"
     }
   },
-  "repository": {
-    "directory": "packages/auth",
-    "type": "git",
-    "url": "https://github.com/thirdweb-dev/js.git"
-  },
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/auth",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
   "files": [
@@ -54,12 +50,12 @@
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
     "eslint": "^8.21.0",
-    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-inclusive-language": "^2.2.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-tsdoc": "^0.2.16",
-    "ethers": ">=5.5.1",
+    "ethers": "^5.7.0",
     "express": "^4.18.1",
     "next": "12.2.0",
     "next-auth": "^4.10.3",
