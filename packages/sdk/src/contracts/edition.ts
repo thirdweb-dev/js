@@ -29,7 +29,7 @@ import {
 } from "../schema/tokens/edition";
 import { QueryAllParams } from "../types";
 import { TokenERC1155 } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/abis/TokenERC1155.json";
+import ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC1155.json";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
 

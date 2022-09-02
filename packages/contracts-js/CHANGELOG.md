@@ -1,5 +1,11 @@
 # @thirdweb-dev/contracts-js
 
+## 1.1.6
+
+### Patch Changes
+
+- [#59](https://github.com/thirdweb-dev/js/pull/59) [`6ba9cad`](https://github.com/thirdweb-dev/js/commit/6ba9cad8d8b933256599dc3b147601cd4828c89b) Thanks [@jnsdls](https://github.com/jnsdls)! - move `abis` from top level into `dist` in contracts-js
+
 ## 1.1.5
 
 ### Patch Changes

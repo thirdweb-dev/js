@@ -1,4 +1,7 @@
-import { BigNumber, BigNumberish, Contract, ethers, providers } from "ethers";
+import {
+  InterfaceId_IERC1155,
+  InterfaceId_IERC721,
+} from "../constants/contract";
 import {
   CommonNFTInput,
   CommonNFTOutput,
@@ -6,17 +9,18 @@ import {
   NFTMetadataInput,
   NFTMetadataOrUri,
 } from "../schema/tokens/common";
-import type { IStorage } from "@thirdweb-dev/storage";
-import { IERC1155Metadata, IERC165, IERC721Metadata } from "@thirdweb-dev/contracts-js";
+import { UploadProgressEvent } from "../types/index";
 import { NotFoundError } from "./error";
 import {
-  InterfaceId_IERC1155,
-  InterfaceId_IERC721,
-} from "../constants/contract";
-import ERC721MetadataAbi from "@thirdweb-dev/contracts-js/abis/IERC721Metadata.json";
-import ERC1155MetadataAbi from "@thirdweb-dev/contracts-js/abis/IERC1155Metadata.json";
-import ERC165MetadataAbi from "@thirdweb-dev/contracts-js/abis/IERC165.json";
-import { UploadProgressEvent } from "../types/index";
+  IERC1155Metadata,
+  IERC165,
+  IERC721Metadata,
+} from "@thirdweb-dev/contracts-js";
+import ERC165MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
+import ERC721MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC721Metadata.json";
+import ERC1155MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155Metadata.json";
+import type { IStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, Contract, ethers, providers } from "ethers";
 
 const FALLBACK_METADATA = {
   name: "Failed to load NFT metadata",

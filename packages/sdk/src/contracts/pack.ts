@@ -32,7 +32,7 @@ import {
 } from "../schema/tokens/pack";
 import { QueryAllParams } from "../types";
 import { Pack as PackContract } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/abis/Pack.json";
+import ABI from "@thirdweb-dev/contracts-js/dist/abis/Pack.json";
 import {
   ITokenBundle,
   PackCreatedEvent,

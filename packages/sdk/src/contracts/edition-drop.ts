@@ -28,7 +28,7 @@ import { SDKOptions } from "../schema/sdk-options";
 import { NFTMetadata, NFTMetadataOrUri } from "../schema/tokens/common";
 import { QueryAllParams, UploadProgressEvent } from "../types";
 import { DropERC1155 } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/abis/DropERC1155.json";
+import ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC1155.json";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
 

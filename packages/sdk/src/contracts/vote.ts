@@ -22,8 +22,8 @@ import {
   VoteSettings,
 } from "../types/vote";
 import { IERC20, VoteERC20 } from "@thirdweb-dev/contracts-js";
-import ERC20Abi from "@thirdweb-dev/contracts-js/abis/IERC20.json";
-import ABI from "@thirdweb-dev/contracts-js/abis/VoteERC20.json";
+import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
+import ABI from "@thirdweb-dev/contracts-js/dist/abis/VoteERC20.json";
 import { ProposalCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/VoteERC20";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, Contract, ethers } from "ethers";
