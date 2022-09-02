@@ -23,7 +23,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "changeset publish",
+    "release": "node ./scripts/pre-release.mjs && changeset publish",
     "version-packages:nightly": "changeset version --snapshot nightly",
     "release:nightly": "changeset publish --tag nightly"
   },

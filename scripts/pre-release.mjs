@@ -28,13 +28,13 @@ packages.forEach((pkg) => {
 
   Object.entries(devDependencies).forEach(([dep, version]) => {
     if (dep in packageVersions && version === "*") {
-      packageJson.dependencies[dep] = `^${packageVersions[dep].version}`;
+      packageJson.devDependencies[dep] = `^${packageVersions[dep].version}`;
     }
   });
 
   Object.entries(peerDependencies).forEach(([dep, version]) => {
     if (dep in packageVersions && version === "*") {
-      packageJson.dependencies[dep] = `^${packageVersions[dep].version}`;
+      packageJson.peerDependencies[dep] = `^${packageVersions[dep].version}`;
     }
   });
 
