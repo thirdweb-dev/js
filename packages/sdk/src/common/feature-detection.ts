@@ -293,7 +293,7 @@ function hexToBytes(hex: string | number) {
     throw new Error(`Given value "${hex}" is not a valid hex string.`);
   }
   hex = hex.replace(/^0x/i, "");
-  const bytes = [];
+  const bytes: number[] = [];
   for (let c = 0; c < hex.length; c += 2) {
     bytes.push(parseInt(hex.slice(c, c + 2), 16));
   }

@@ -34,18 +34,20 @@ describe("npx thirdweb detect", () => {
     expect(await exists("thirdweb-contracts/contracts/Contract.sol")).toEqual(
       true,
     );
-    
+
     // check that hardhat config exists
-    expect(await exists("thirdweb-contracts/hardhat.config.js")).toEqual(
-      true,
-    );
+    expect(await exists("thirdweb-contracts/hardhat.config.js")).toEqual(true);
 
     await create.writeText("cd thirdweb-contracts");
     await create.pressKey("enter");
     await create.writeText("npm install");
     await create.pressKey("enter");
 
-    const detect = await spawn("node", "./dist/cli/index.js detect", "./thirdweb-contracts");
+    const detect = await spawn(
+      "node",
+      "./dist/cli/index.js detect",
+      "./thirdweb-contracts",
+    );
 
     // wait for program to finish
     await detect.waitForFinish();
@@ -56,23 +58,23 @@ describe("npx thirdweb detect", () => {
     expect(lines.findIndex((line) => line.includes("ERC721"))).toBeGreaterThan(
       -1,
     );
-    expect(lines.findIndex((line) => line.includes("ERC721Burnable"))).toBeGreaterThan(
-      -1,
-    );
-    expect(lines.findIndex((line) => line.includes("ERC721Mintable"))).toBeGreaterThan(
-      -1,
-    );
-    
+    expect(
+      lines.findIndex((line) => line.includes("ERC721Burnable")),
+    ).toBeGreaterThan(-1);
+    expect(
+      lines.findIndex((line) => line.includes("ERC721Mintable")),
+    ).toBeGreaterThan(-1);
+
     // Suggested extensions
-    expect(lines.findIndex((line) => line.includes("- ERC721Enumerable"))).toBeGreaterThan(
-      -1,
-    );
-    expect(lines.findIndex((line) => line.includes("- ERC721Droppable"))).toBeGreaterThan(
-      -1,
-    );
-    expect(lines.findIndex((line) => line.includes("- ERC721SignatureMint"))).toBeGreaterThan(
-      -1,
-    );
+    expect(
+      lines.findIndex((line) => line.includes("- ERC721Enumerable")),
+    ).toBeGreaterThan(-1);
+    expect(
+      lines.findIndex((line) => line.includes("- ERC721Droppable")),
+    ).toBeGreaterThan(-1);
+    expect(
+      lines.findIndex((line) => line.includes("- ERC721SignatureMint")),
+    ).toBeGreaterThan(-1);
 
     // the process should exit with code 0
     expect(detect.getExitCode()).toEqual(0);

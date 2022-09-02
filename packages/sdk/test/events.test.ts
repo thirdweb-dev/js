@@ -1,9 +1,9 @@
-import { ethers, Wallet } from "ethers";
-import { sdk, signers } from "./before-setup";
-import { expect } from "chai";
 import { ContractEvent, NFTDrop, NFTCollection } from "../src";
+import { sdk, signers } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { expect } from "chai";
+import { ethers, Wallet } from "ethers";
 
 global.fetch = require("cross-fetch");
 
@@ -35,17 +35,17 @@ describe("Events", async () => {
     );
 
     dropContract2 = sdk.getNFTDrop(
-        await sdk.deployer.deployBuiltInContract(NFTDrop.contractType, {
-          name: `Testing drop from SDK`,
-          description: "Test contract from tests",
-          image:
-              "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-          primary_sale_recipient: AddressZero,
-          seller_fee_basis_points: 500,
-          fee_recipient: AddressZero,
-          platform_fee_basis_points: 10,
-          platform_fee_recipient: AddressZero,
-        }),
+      await sdk.deployer.deployBuiltInContract(NFTDrop.contractType, {
+        name: `Testing drop from SDK`,
+        description: "Test contract from tests",
+        image:
+          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+        primary_sale_recipient: AddressZero,
+        seller_fee_basis_points: 500,
+        fee_recipient: AddressZero,
+        platform_fee_basis_points: 10,
+        platform_fee_recipient: AddressZero,
+      }),
     );
 
     nftContract = sdk.getNFTCollection(
@@ -79,9 +79,12 @@ describe("Events", async () => {
 
   it("should emit Contract events", async () => {
     const events: ContractEvent[] = [];
-    const remove = dropContract.events.addEventListener("TokensLazyMinted", (event) => {
-      events.push(event);
-    });
+    const remove = dropContract.events.addEventListener(
+      "TokensLazyMinted",
+      (event) => {
+        events.push(event);
+      },
+    );
     await dropContract.createBatch([
       {
         name: "1",
@@ -110,7 +113,7 @@ describe("Events", async () => {
       },
     ]);
     await dropContract2.claimConditions.set([{}]);
-    await dropContract2.claim(1)
+    await dropContract2.claim(1);
     await new Promise((resolve) => setTimeout(resolve, 5000));
     remove();
     expect(events.length).to.be.gt(0);
