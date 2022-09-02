@@ -14,7 +14,7 @@ const main = () => {
     "node_modules",
     "@thirdweb-dev/contracts/abi",
   );
-  const destinationFolder = "./abis";
+  const destinationFolder = "./dist/abis";
   if (existsSync(destinationFolder)) {
     rmSync(destinationFolder, { recursive: true });
   }
