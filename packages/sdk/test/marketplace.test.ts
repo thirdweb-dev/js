@@ -1,14 +1,12 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert, expect } from "chai";
-import { BigNumber, BigNumberish, ethers } from "ethers";
 import {
   AuctionAlreadyStartedError,
   ListingNotFoundError,
   WrongListingTypeError,
 } from "../src/common/error";
+import { isWinningBid } from "../src/common/marketplace";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { ListingType } from "../src/enums/marketplace";
 import { Edition, Marketplace, NFTCollection, Token } from "../src/contracts";
+import { ListingType } from "../src/enums/marketplace";
 import { AuctionListing, DirectListing, Offer } from "../src/types/marketplace";
 import {
   expectError,
@@ -17,7 +15,9 @@ import {
   sdk,
   signers,
 } from "./before-setup";
-import { isWinningBid } from "../src/common/marketplace";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { assert, expect } from "chai";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 import { ethers as hardhatEthers } from "hardhat";
 
 global.fetch = require("cross-fetch");
