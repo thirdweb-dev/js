@@ -1,13 +1,13 @@
-import Erc721Abi from "@thirdweb-dev/contracts-js/abis/IERC721.json";
-import Erc721EnumerableAbi from "@thirdweb-dev/contracts-js/abis/IERC721Enumerable.json";
-import Erc721SupplyAbi from "@thirdweb-dev/contracts-js/abis/IERC721Supply.json";
-import IMintableERC721Abi from "@thirdweb-dev/contracts-js/abis/IMintableERC721.json";
-import MulticallAbi from "@thirdweb-dev/contracts-js/abis/IMulticall.json";
-import DelayedRevealAbi from "@thirdweb-dev/contracts-js/abis/IDelayedReveal.json";
-import ILazyMintAbi from "@thirdweb-dev/contracts-js/abis/ILazyMint.json";
-import IDropSinglePhase from "@thirdweb-dev/contracts-js/abis/IDropSinglePhase.json";
-import SignatureMintERC721Abi from "@thirdweb-dev/contracts-js/abis/SignatureMintERC721.json";
-import IBurnableERC721Abi from "@thirdweb-dev/contracts-js/abis/IBurnableERC721.json";
+import IBurnableERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC721.json";
+import DelayedRevealAbi from "@thirdweb-dev/contracts-js/dist/abis/IDelayedReveal.json";
+import IDropSinglePhase from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase.json";
+import Erc721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
+import Erc721EnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC721Enumerable.json";
+import Erc721SupplyAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC721Supply.json";
+import ILazyMintAbi from "@thirdweb-dev/contracts-js/dist/abis/ILazyMint.json";
+import IMintableERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC721.json";
+import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
+import SignatureMintERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/SignatureMintERC721.json";
 
 export const FEATURE_NFT_BURNABLE = {
   name: "ERC721Burnable",

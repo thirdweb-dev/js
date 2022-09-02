@@ -1,18 +1,18 @@
-import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
-import { SDKOptions } from "../../schema";
-import invariant from "tiny-invariant";
-import { Amount, CurrencyValue } from "../../types";
 import {
   fetchCurrencyValue,
   isNativeToken,
   normalizePriceValue,
 } from "../../common/currency";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants";
-import ERC20Abi from "@thirdweb-dev/contracts-js/abis/IERC20.json";
+import { SDKOptions } from "../../schema";
+import { Amount, CurrencyValue } from "../../types";
 import { ContractWrapper } from "../classes/contract-wrapper";
+import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { IERC20 } from "@thirdweb-dev/contracts-js";
+import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { ethers, BigNumber, providers } from "ethers";
+import invariant from "tiny-invariant";
 
 /**
  * Connect and Interact with a user wallet

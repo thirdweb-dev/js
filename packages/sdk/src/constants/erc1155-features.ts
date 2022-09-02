@@ -1,12 +1,12 @@
-import DelayedRevealAbi from "@thirdweb-dev/contracts-js/abis/DelayedReveal.json";
-import DropSinglePhase1155 from "@thirdweb-dev/contracts-js/abis/DropSinglePhase1155.json";
-import IBurnableERC1155Abi from "@thirdweb-dev/contracts-js/abis/IBurnableERC1155.json";
-import Erc1155Abi from "@thirdweb-dev/contracts-js/abis/IERC1155.json";
-import Erc1155EnumerableAbi from "@thirdweb-dev/contracts-js/abis/IERC1155Enumerable.json";
-import ILazyMintAbi from "@thirdweb-dev/contracts-js/abis/ILazyMint.json";
-import IMintableERC1155Abi from "@thirdweb-dev/contracts-js/abis/IMintableERC1155.json";
-import MulticallAbi from "@thirdweb-dev/contracts-js/abis/IMulticall.json";
-import ISignatureMintERC1155Abi from "@thirdweb-dev/contracts-js/abis/ISignatureMintERC1155.json";
+import DelayedRevealAbi from "@thirdweb-dev/contracts-js/dist/abis/DelayedReveal.json";
+import DropSinglePhase1155 from "@thirdweb-dev/contracts-js/dist/abis/DropSinglePhase1155.json";
+import IBurnableERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC1155.json";
+import Erc1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
+import Erc1155EnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155Enumerable.json";
+import ILazyMintAbi from "@thirdweb-dev/contracts-js/dist/abis/ILazyMint.json";
+import IMintableERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC1155.json";
+import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
+import ISignatureMintERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC1155.json";
 
 export const FEATURE_EDITION_BURNABLE = {
   name: "ERC1155Burnable",
@@ -114,6 +114,7 @@ export const FEATURE_EDITION = {
     [FEATURE_EDITION_MINTABLE.name]: FEATURE_EDITION_MINTABLE,
     [FEATURE_EDITION_DROPPABLE.name]: FEATURE_EDITION_DROPPABLE,
     [FEATURE_EDITION_REVEALABLE.name]: FEATURE_EDITION_REVEALABLE,
-    [FEATURE_EDITION_SIGNATURE_MINTABLE.name]: FEATURE_EDITION_SIGNATURE_MINTABLE,
+    [FEATURE_EDITION_SIGNATURE_MINTABLE.name]:
+      FEATURE_EDITION_SIGNATURE_MINTABLE,
   },
 } as const;
