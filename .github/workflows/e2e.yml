@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-       - name: Install
+      - name: Install
         uses: ./.github/composite-actions/install
 
       - name: Run e2e tests
