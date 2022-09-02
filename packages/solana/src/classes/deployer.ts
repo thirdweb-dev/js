@@ -4,21 +4,13 @@ import {
   TokenMetadataInputSchema,
 } from "../types/contracts";
 import { UserWallet } from "./user-wallet";
-import {
-  createTokenWithMintBuilder,
-  findMetadataPda,
-  Metaplex,
-  token,
-  TransactionBuilder,
-} from "@metaplex-foundation/js";
+import { findMetadataPda, Metaplex, token } from "@metaplex-foundation/js";
 import {
   createCreateMetadataAccountV2Instruction,
-  createCreateMetadataAccountV3Instruction,
   DataV2,
 } from "@metaplex-foundation/mpl-token-metadata";
 import { Keypair, PublicKey } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
-import invariant from "tiny-invariant";
 
 export class Deployer {
   private wallet: UserWallet;
@@ -46,7 +38,11 @@ export class Deployer {
           tokenMetadataParsed.decimals,
         ),
         mint,
+        mintAuthority: this.wallet.getSigner(),
+        payer: this.wallet.getSigner(),
+        owner,
       });
+
     const data: DataV2 = {
       name: tokenMetadataParsed.name,
       symbol: tokenMetadataParsed.symbol || "",
@@ -73,14 +69,9 @@ export class Deployer {
       },
       { createMetadataAccountArgsV2: { data, isMutable: false } },
     );
-
-    await this.metaplex.rpc().sendAndConfirmTransaction(
-      TransactionBuilder.make()
-        .setFeePayer(this.wallet.getSigner())
-        .add(mintTx)
-        .add({ instruction: metaTx, signers: [this.wallet.getSigner()] })
-        .toTransaction(),
-    );
+    await mintTx
+      .add({ instruction: metaTx, signers: [this.wallet.getSigner()] })
+      .sendAndConfirm(this.metaplex);
 
     return mint.publicKey.toBase58();
   }
