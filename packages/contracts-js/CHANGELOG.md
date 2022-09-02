@@ -1,5 +1,11 @@
 # @thirdweb-dev/contracts-js
 
+## 1.1.5
+
+### Patch Changes
+
+- [`5644ccd`](https://github.com/thirdweb-dev/js/commit/5644ccd3ee2ff330e4e5840d3266033376750117) Thanks [@jnsdls](https://github.com/jnsdls)! - bump versions again
+
 ## 1.1.4
 
 ### Patch Changes
