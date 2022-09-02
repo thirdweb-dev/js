@@ -1,5 +1,11 @@
 # @thirdweb-dev/contracts-js
 
+## 1.1.3
+
+### Patch Changes
+
+- [#53](https://github.com/thirdweb-dev/js/pull/53) [`924247a`](https://github.com/thirdweb-dev/js/commit/924247a8ed5ef1867dccfad9479b00f71795ebf6) Thanks [@jnsdls](https://github.com/jnsdls)! - do not check-in abis output
+
 ## 1.1.2
 
 ### Patch Changes

@@ -1,5 +1,13 @@
 # @thirdweb-dev/react
 
+## 2.9.2
+
+### Patch Changes
+
+- Updated dependencies [[`924247a`](https://github.com/thirdweb-dev/js/commit/924247a8ed5ef1867dccfad9479b00f71795ebf6)]:
+  - @thirdweb-dev/storage@0.2.4
+  - @thirdweb-dev/sdk@2.4.4
+
 ## 2.9.1
 
 ### Patch Changes
