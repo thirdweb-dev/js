@@ -1,36 +1,34 @@
 import { prepareEnvironment } from "@gmrchk/cli-testing-library";
+import { CREATE_MESSAGES } from "../constants/constants";
 
 // this creates an app, can take some time that's fine
 jest.setTimeout(120_000);
 
 describe("npx thirdweb create", () => {
-  it("should create app successfully", async () => {
+  it("should create app (CRA) successfully", async () => {
     const { spawn, cleanup, exists } = await prepareEnvironment();
     const {
-      // wait,
       waitForText,
       waitForFinish,
-      // getStdout,
-      // getStderr,
       getExitCode,
-      // debug,
       pressKey,
     } = await spawn("node", "./dist/cli/index.js create");
 
-    await waitForText("What type of project do you want to create?");
+    await waitForText(CREATE_MESSAGES.typeOfProject);
     await pressKey("enter");
-    await waitForText("What is your project named?");
+    await waitForText(CREATE_MESSAGES.projectName);
     await pressKey("enter");
-    await waitForText("What framework do you want to use?");
+    await waitForText(CREATE_MESSAGES.framework);
+    // select CRA
     await pressKey("arrowDown");
     await pressKey("enter");
-    await waitForText("What language do you want to use?");
+    await waitForText(CREATE_MESSAGES.language);
     await pressKey("enter");
 
     // wait for program to finish
     await waitForFinish();
 
-    //check if the app was created
+    // check if the app was created
     expect(await exists("thirdweb-app/package.json")).toEqual(true);
 
     // the process should exit with code 0
