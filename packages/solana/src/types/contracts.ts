@@ -38,6 +38,8 @@ export type NFTCollectionMetadataInput = z.input<
 /// TOKEN ///
 
 export const TokenMetadataInputSchema = CommonContractSchema.extend({
-  decimals: z.number().default(18),
+  decimals: z.number().default(9),
   initialSupply: AmountSchema,
 });
+
+export type TokenMetadataInput = z.input<typeof TokenMetadataInputSchema>;
