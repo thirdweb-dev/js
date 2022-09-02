@@ -14,6 +14,11 @@ describe("Token", async () => {
     token = await sdk.getToken(tokenAddr);
   });
 
+  it("fetch metadata", async () => {
+    const meta = await token.getMetadata();
+    expect(meta.name).to.eq("My Token");
+  });
+
   it("mint more should update total supply", async () => {
     expect((await token.totalSupply()).toString()).to.eq("100000000000");
     await token.mint(3);
