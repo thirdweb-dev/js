@@ -8,13 +8,9 @@ describe("npx thirdweb create", () => {
   it("should create app (CRA) successfully", async () => {
     const { spawn, cleanup, exists } = await prepareEnvironment();
     const {
-      // wait,
       waitForText,
       waitForFinish,
-      // getStdout,
-      // getStderr,
       getExitCode,
-      // debug,
       pressKey,
     } = await spawn("node", "./dist/cli/index.js create");
 
