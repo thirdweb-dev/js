@@ -1,6 +1,7 @@
 import { prepareEnvironment } from "@gmrchk/cli-testing-library";
 import { copyFile } from "fs/promises";
 import { resolve } from "path";
+import { ERROR_MESSAGES } from "../constants/constants";
 
 // this creates an app, can take some time that's fine
 jest.setTimeout(120_000);
@@ -21,7 +22,7 @@ describe("npx thirdweb deploy", () => {
 
     expect(await exists("BasicContract.sol")).toEqual(true);
 
-    await waitForText("Failed to find a supported project configuration");
+    await waitForText(ERROR_MESSAGES.noConfiguration);
     await writeText("y")
 
     // wait for program to finish

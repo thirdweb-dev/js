@@ -5,3 +5,7 @@ export const CREATE_MESSAGES = {
   language: "What language do you want to use?",
   contract: "What contract do you want to start from?",
 } as const;
+
+export const ERROR_MESSAGES = {
+  noConfiguration: "Failed to find a supported project configuration file in current directory"
+}
