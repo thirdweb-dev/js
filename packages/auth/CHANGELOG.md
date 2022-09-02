@@ -1,5 +1,14 @@
 # @thirdweb-dev/auth
 
+## 1.0.5
+
+### Patch Changes
+
+- [`5644ccd`](https://github.com/thirdweb-dev/js/commit/5644ccd3ee2ff330e4e5840d3266033376750117) Thanks [@jnsdls](https://github.com/jnsdls)! - bump versions again
+
+- Updated dependencies [[`5644ccd`](https://github.com/thirdweb-dev/js/commit/5644ccd3ee2ff330e4e5840d3266033376750117)]:
+  - @thirdweb-dev/sdk@2.4.6
+
 ## 1.0.4
 
 ### Patch Changes

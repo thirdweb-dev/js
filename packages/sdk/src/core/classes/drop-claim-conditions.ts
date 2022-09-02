@@ -1,5 +1,30 @@
-import { IStorage } from "@thirdweb-dev/storage";
+import { includesErrorMessage } from "../../common";
+import {
+  getClaimerProofs,
+  prepareClaim,
+  processClaimConditionInputs,
+  transformResultToClaimCondition,
+  updateExistingClaimConditions,
+} from "../../common/claim-conditions";
+import { isNativeToken } from "../../common/currency";
+import {
+  detectContractFeature,
+  hasFunction,
+} from "../../common/feature-detection";
+import { isNode } from "../../common/utils";
+import { NATIVE_TOKEN_ADDRESS } from "../../constants/index";
+import { ClaimEligibility } from "../../enums";
+import { AmountSchema } from "../../schema";
+import {
+  Amount,
+  ClaimCondition,
+  ClaimConditionInput,
+  ClaimVerification,
+} from "../../types";
+import { BaseClaimConditionERC721, BaseDropERC20 } from "../../types/eips";
+import { TransactionResult } from "../types";
 import { ContractMetadata } from "./contract-metadata";
+import { ContractWrapper } from "./contract-wrapper";
 import {
   ContractMetadata as ContractMetadataContract,
   DropERC20,
@@ -9,36 +34,11 @@ import {
   IERC20Metadata,
   SignatureDrop,
 } from "@thirdweb-dev/contracts-js";
-import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";
-import { isNativeToken } from "../../common/currency";
-import { ContractWrapper } from "./contract-wrapper";
-import {
-  Amount,
-  ClaimCondition,
-  ClaimConditionInput,
-  ClaimVerification,
-} from "../../types";
-import { ClaimEligibility } from "../../enums";
-import { TransactionResult } from "../types";
-import {
-  getClaimerProofs,
-  prepareClaim,
-  processClaimConditionInputs,
-  transformResultToClaimCondition,
-  updateExistingClaimConditions,
-} from "../../common/claim-conditions";
-import {
-  detectContractFeature,
-  hasFunction,
-} from "../../common/feature-detection";
-import { AmountSchema } from "../../schema";
-import { includesErrorMessage } from "../../common";
-import ERC20Abi from "@thirdweb-dev/contracts-js/abis/IERC20.json";
-import { isNode } from "../../common/utils";
-import deepEqual from "fast-deep-equal";
-import { BaseClaimConditionERC721, BaseDropERC20 } from "../../types/eips";
-import { NATIVE_TOKEN_ADDRESS } from "../../constants/index";
+import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { IDropClaimCondition } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC20";
+import { IStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";
+import deepEqual from "fast-deep-equal";
 
 /**
  * Manages claim conditions for NFT Drop contracts

@@ -32,7 +32,7 @@ import {
   ContractPublisher as OnChainContractPublisher,
   IContractPublisher,
 } from "@thirdweb-dev/contracts-js";
-import ContractPublisherAbi from "@thirdweb-dev/contracts-js/abis/ContractPublisher.json";
+import ContractPublisherAbi from "@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.json";
 import { ContractPublishedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ContractPublisher";
 import { IStorage } from "@thirdweb-dev/storage";
 import { constants, utils } from "ethers";
