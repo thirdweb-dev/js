@@ -1,5 +1,15 @@
 # @thirdweb-dev/sdk
 
+## 2.4.6
+
+### Patch Changes
+
+- [`5644ccd`](https://github.com/thirdweb-dev/js/commit/5644ccd3ee2ff330e4e5840d3266033376750117) Thanks [@jnsdls](https://github.com/jnsdls)! - bump versions again
+
+- Updated dependencies [[`5644ccd`](https://github.com/thirdweb-dev/js/commit/5644ccd3ee2ff330e4e5840d3266033376750117)]:
+  - @thirdweb-dev/contracts-js@1.1.5
+  - @thirdweb-dev/storage@0.2.6
+
 ## 2.4.5
 
 ### Patch Changes
