@@ -1,5 +1,5 @@
 import { Token, Vote } from "../src";
-import { sdk, signers } from "./before-setup";
+import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
 import { ethers } from "ethers";

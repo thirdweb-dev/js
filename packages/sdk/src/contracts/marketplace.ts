@@ -404,7 +404,7 @@ export class Marketplace implements UpdateableNetwork {
    * @param contractAddress - the NFT contract address
    */
   public async allowListingFromSpecificAssetOnly(contractAddress: string) {
-    const encoded = [];
+    const encoded: string[] = [];
     const members = await this.roles.get("asset");
     if (members.includes(constants.AddressZero)) {
       encoded.push(
@@ -425,7 +425,7 @@ export class Marketplace implements UpdateableNetwork {
    * Allow listings from any NFT contract
    */
   public async allowListingFromAnyAsset() {
-    const encoded = [];
+    const encoded: string[] = [];
     const members = await this.roles.get("asset");
     for (const addr in members) {
       encoded.push(

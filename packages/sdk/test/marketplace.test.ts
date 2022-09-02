@@ -14,7 +14,7 @@ import {
   jsonProvider,
   sdk,
   signers,
-} from "./before-setup";
+} from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, BigNumberish, ethers } from "ethers";
@@ -1087,9 +1087,7 @@ describe("Marketplace Contract", async () => {
       try {
         await marketplaceContract.direct.buyoutListing(directListingId, 1);
         assert.fail("should have thrown");
-      } catch (err: any) {
-        console.error(err);
-      }
+      } catch (err: any) {}
     });
 
     it("should not return invalid direct listings", async () => {
