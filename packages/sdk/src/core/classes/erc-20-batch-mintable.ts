@@ -52,7 +52,7 @@ export class Erc20BatchMintable implements DetectableFeature {
    * ```
    */
   public async to(args: TokenMintInput[]): Promise<TransactionResult> {
-    const encoded = [];
+    const encoded: string[] = [];
     for (const arg of args) {
       encoded.push(
         this.contractWrapper.readContract.interface.encodeFunctionData(

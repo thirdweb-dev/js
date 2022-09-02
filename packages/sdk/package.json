@@ -25,13 +25,11 @@
     "generate-docs": "yarn full-build && yarn generate-md-docs",
     "generate-snippets": "node ./scripts/generate-snippets.mjs && node ./scripts/generate-feature-snippets.mjs",
     "build": "tsc && preconstruct build",
-    "test:all": "ts-mocha --parallel --paths -t 120000 -r esm -p tsconfig.testing.json './test/**/*.test.ts'",
+    "test:all": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000 --parallel './test/**/*.test.ts'",
     "test": "make test",
-    "test:single": "ts-mocha --paths -t 120000 -r esm -p tsconfig.testing.json",
-    "e2e": "ts-mocha --parallel --paths -t 120000 -r esm -p tsconfig.testing.json './e2e/**/*.test.ts'"
+    "test:single": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000 --"
   },
   "devDependencies": {
-    "cbor": "^8.1.0",
     "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
     "@gmrchk/cli-testing-library": "^0.1.2",
     "@microsoft/api-documenter": "^7.13.53",
@@ -39,6 +37,7 @@
     "@microsoft/tsdoc": "^0.14.1",
     "@nomiclabs/hardhat-ethers": "2.0.5",
     "@preconstruct/cli": "^2.2.1",
+    "@swc-node/register": "^1.5.1",
     "@swc/core": "^1.2.177",
     "@typechain/ethers-v5": "10.0.0",
     "@types/chai": "^4.3.1",
@@ -49,6 +48,7 @@
     "@types/uuid": "^8.3.3",
     "@typescript-eslint/eslint-plugin": "^5.2.0",
     "@typescript-eslint/parser": "^5.2.0",
+    "cbor": "^8.1.0",
     "chai": "^4.3.6",
     "deep-equal-in-any-order": "^1.1.18",
     "eslint": "^8",
@@ -63,8 +63,6 @@
     "mocha": "^10.0.0",
     "node-stdlib-browser": "^1.2.0",
     "prettier": "^2.4.1",
-    "ts-mocha": "^10.0.0",
-    "ts-node": "^10.7.0",
     "typechain": "^8.0.0",
     "typescript": "^4.6.2"
   },
@@ -93,6 +91,5 @@
   "bugs": {
     "url": "https://github.com/thirdweb-dev/js/issues"
   },
-  "homepage": "https://github.com/thirdweb-dev/js/blob/main/packages/sdk/README.md",
   "author": "thirdweb eng <eng@thirdweb.com>"
 }

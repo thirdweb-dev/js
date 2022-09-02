@@ -113,7 +113,7 @@ export class DropClaimConditions<
         };
       const startId = claimCondition.currentStartId.toNumber();
       const count = claimCondition.count.toNumber();
-      const conditions = [];
+      const conditions: IDropClaimCondition.ClaimConditionStructOutput[] = [];
       for (let i = startId; i < startId + count; i++) {
         conditions.push(
           await this.contractWrapper.readContract.getClaimConditionById(i),
@@ -411,7 +411,7 @@ export class DropClaimConditions<
       merkleInfo[s.merkleRoot] = s.snapshotUri;
     });
     const metadata = await this.metadata.get();
-    const encoded = [];
+    const encoded: string[] = [];
 
     // upload new merkle roots to snapshot URIs if updated
     if (!deepEqual(metadata.merkle, merkleInfo)) {

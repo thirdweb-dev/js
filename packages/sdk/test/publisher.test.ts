@@ -4,7 +4,7 @@ import {
   resolveContractUriFromAddress,
   ThirdwebSDK,
 } from "../src";
-import { implementations, signers } from "./before-setup";
+import { implementations, signers } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {

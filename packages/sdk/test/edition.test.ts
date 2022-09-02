@@ -1,5 +1,5 @@
 import { Edition } from "../src/index";
-import { expectError, sdk, signers, storage } from "./before-setup";
+import { expectError, sdk, signers, storage } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";

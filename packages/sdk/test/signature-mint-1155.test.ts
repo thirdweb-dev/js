@@ -4,10 +4,10 @@ import {
   PayloadToSign1155,
   SignedPayload1155,
 } from "../src/schema/contracts/common/signature";
-import { sdk, signers, storage } from "./before-setup";
+import { sdk, signers, storage } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber } from "ethers";
 
 global.fetch = require("cross-fetch");
 

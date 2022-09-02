@@ -4,7 +4,7 @@ import {
   SignedPayload721WithQuantitySignature,
   ThirdwebSDK,
 } from "../src";
-import { expectError, signers } from "./before-setup";
+import { expectError, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   TokenERC20__factory,
@@ -14,8 +14,6 @@ import {
 import { assert, expect } from "chai";
 import { ethers } from "ethers";
 import invariant from "tiny-invariant";
-
-require("./before-setup");
 
 global.fetch = require("cross-fetch");
 
@@ -34,7 +32,7 @@ describe("Custom Contracts", async () => {
   let sdk: ThirdwebSDK;
   let simpleContractUri: string;
 
-  before(async () => {
+  beforeAll(async () => {
     [adminWallet, samWallet, bobWallet] = signers;
     sdk = new ThirdwebSDK(adminWallet);
     simpleContractUri =

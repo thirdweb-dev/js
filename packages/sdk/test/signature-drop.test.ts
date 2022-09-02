@@ -7,7 +7,7 @@ import {
 } from "../src";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 import { SignedPayload721WithQuantitySignature } from "../src/schema/contracts/common/signature";
-import { expectError, sdk, signers, storage } from "./before-setup";
+import { expectError, sdk, signers, storage } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, ethers } from "ethers";

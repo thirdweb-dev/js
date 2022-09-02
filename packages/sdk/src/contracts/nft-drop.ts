@@ -401,7 +401,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
     );
     const startingIndex = event[0].args.startTokenId;
     const endingIndex = event[0].args.endTokenId;
-    const results = [];
+    const results: TransactionResultWithId<NFTMetadata>[] = [];
     for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
       results.push({
         id,
@@ -482,7 +482,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
     );
     const startingIndex: BigNumber = event[0].args.startTokenId;
     const endingIndex = startingIndex.add(quantity);
-    const results = [];
+    const results: TransactionResultWithId<NFTMetadataOwner>[] = [];
     for (let id = startingIndex; id.lt(endingIndex); id = id.add(1)) {
       results.push({
         id,

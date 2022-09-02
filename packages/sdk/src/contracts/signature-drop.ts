@@ -10,11 +10,12 @@ import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { DelayedReveal } from "../core/classes/delayed-reveal";
+import { DropClaimConditions } from "../core/classes/drop-claim-conditions";
 import { Erc721 } from "../core/classes/erc-721";
 import { StandardErc721 } from "../core/classes/erc-721-standard";
 import { Erc721WithQuantitySignatureMintable } from "../core/classes/erc-721-with-quantity-signature-mintable";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { DelayedReveal, DropClaimConditions } from "../core/index";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,

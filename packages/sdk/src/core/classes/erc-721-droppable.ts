@@ -156,7 +156,7 @@ export class Erc721Droppable implements DetectableFeature {
     );
     const startingIndex = event[0].args.startTokenId;
     const endingIndex = event[0].args.endTokenId;
-    const results = [];
+    const results: TransactionResultWithId<NFTMetadata>[] = [];
     for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
       results.push({
         id,

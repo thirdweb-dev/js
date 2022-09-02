@@ -1,7 +1,7 @@
-import { signers } from "./before-setup";
-import { expect } from "chai";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { ThirdwebSDK } from "../src";
+import { signers } from "./hooks";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { expect } from "chai";
 
 describe("Wallet Authentication", async () => {
   let adminWallet: SignerWithAddress,

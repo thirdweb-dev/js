@@ -245,15 +245,15 @@ export class ContractPublisher extends RPCConnectionHandler {
       publisherAddress,
     );
     // since we can fetch from multiple publisher contracts, just keep the latest one in the list
-    const map = data.reduce<
-      Record<string, IContractPublisher.CustomContractInstanceStruct>
-    >((acc, curr) => {
+    const map = data.reduce((acc, curr) => {
       // replaces the previous contract with the latest one
       acc[curr.contractId] = curr;
       return acc;
-    }, {});
+    }, {} as Record<string, IContractPublisher.CustomContractInstanceStruct>);
     return Object.entries(map).map(([_, struct]) =>
-      this.toPublishedContract(struct),
+      this.toPublishedContract(
+        struct as IContractPublisher.CustomContractInstanceStruct,
+      ),
     );
   }
 
