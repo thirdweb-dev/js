@@ -1,5 +1,15 @@
 # @thirdweb-dev/react
 
+## 2.9.3
+
+### Patch Changes
+
+- [`091f175`](https://github.com/thirdweb-dev/js/commit/091f1758604d40e825ea28a13c2699d67bc75d8c) Thanks [@jnsdls](https://github.com/jnsdls)! - release-all-packages
+
+- Updated dependencies [[`091f175`](https://github.com/thirdweb-dev/js/commit/091f1758604d40e825ea28a13c2699d67bc75d8c)]:
+  - @thirdweb-dev/sdk@2.4.5
+  - @thirdweb-dev/storage@0.2.5
+
 ## 2.9.2
 
 ### Patch Changes
