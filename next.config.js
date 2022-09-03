@@ -1,9 +1,18 @@
 /** @type {import('next').NextConfig} */
-// This file sets a custom webpack configuration to use your Next.js app
-// with Sentry.
-// https://nextjs.org/docs/api-reference/next.config.js/introduction
-// https://docs.sentry.io/platforms/javascript/guides/nextjs/
-// content security headers things
+
+const ContentSecurityPolicy = `
+  default-src 'self';
+  img-src * data: blob:;
+  object-src 'none';
+  style-src 'self' 'unsafe-inline' fonts.googleapis.com unpkg.com;
+  font-src 'self' fonts.gstatic.com;
+  frame-src *;
+  script-src 'self' 'unsafe-eval';
+  connect-src *;
+  script-src-elem 'self' 'unsafe-inline' *.thirdweb.com;
+  block-all-mixed-content;
+`;
+
 const securityHeaders = [
   {
     key: "X-DNS-Prefetch-Control",
@@ -21,10 +30,10 @@ const securityHeaders = [
     key: "Referrer-Policy",
     value: "origin-when-cross-origin",
   },
-  // {
-  //   key: "Content-Security-Policy",
-  //   value: `default-src * 'self' 'unsafe-eval' localhost:* thirdweb.com *.thirdweb.com *.vercel.app *.nftlabs.co *.ingest.sentry.io vitals.vercel-insights.com *.g.alchemy.com rpc.ftm.tools api.avax.network nftlabs.mypinata.cloud https:; style-src 'self' 'unsafe-eval' 'unsafe-inline' rsms.me fonts.googleapis.com; object-src 'none'; font-src rsms.me *.gstatic.com; base-uri 'none'; connect-src *; img-src * blob: data:;`,
-  // },
+  {
+    key: "Content-Security-Policy",
+    value: ContentSecurityPolicy.replace(/\s{2,}/g, " ").trim(),
+  },
 ];
 
 const moduleExports = {
@@ -87,12 +96,7 @@ const moduleExports = {
   images: {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    domains: [
-      "thirdweb.com",
-      "ipfs.thirdweb.com",
-      "portal.thirdweb.com",
-      "blog.thirdweb.com",
-    ],
+    domains: ["thirdweb.com", "portal.thirdweb.com", "blog.thirdweb.com"],
   },
 };
 

@@ -1,6 +1,6 @@
 import { colors } from "./colors";
 import { fontWeights, letterSpacings, lineHeights } from "./typography";
-import { DeepPartial, Theme, extendTheme } from "@chakra-ui/react";
+import { Theme, extendTheme } from "@chakra-ui/react";
 import { getColor, mode } from "@chakra-ui/theme-tools";
 
 const chakraTheme: Theme = extendTheme({
@@ -192,7 +192,7 @@ const chakraTheme: Theme = extendTheme({
         },
       },
     },
-  } as DeepPartial<Theme["components"]>,
+  },
   colors,
   fontSizes: [],
   fontWeights,
