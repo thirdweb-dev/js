@@ -3,6 +3,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { IAppURI } from "@thirdweb-dev/contracts-js";
+import { BaseContract } from "ethers";
 
 /**
  * Have an official Application URI for this contract.

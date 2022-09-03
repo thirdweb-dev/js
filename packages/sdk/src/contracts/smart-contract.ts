@@ -301,6 +301,6 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
       this.storage,
     );
 
-    return new AppURI(this.contractWrapper, metadata);
+    return new AppURI(this.contractWrapper);
   }
 }
