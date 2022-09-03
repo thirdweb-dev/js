@@ -23,13 +23,14 @@ export function isBufferInstance(data: any): data is Buffer {
 export function replaceFilePropertiesWithHashes(
   object: Record<string, any>,
   cids: string[],
+  scheme: string,
 ) {
   const keys = Object.keys(object);
   for (const key in keys) {
     const val = object[keys[key]];
     const isFile = isFileInstance(val) || isBufferInstance(val);
     if (typeof val === "object" && !isFile) {
-      replaceFilePropertiesWithHashes(val, cids);
+      replaceFilePropertiesWithHashes(val, cids, scheme);
       continue;
     }
 
@@ -37,7 +38,7 @@ export function replaceFilePropertiesWithHashes(
       continue;
     }
 
-    object[keys[key]] = `ipfs://${cids.splice(0, 1)[0]}`;
+    object[keys[key]] = `${scheme}${cids.splice(0, 1)[0]}`;
   }
   return object;
 }

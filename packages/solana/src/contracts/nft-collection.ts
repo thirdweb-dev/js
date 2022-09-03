@@ -1,7 +1,14 @@
 import { UserWallet } from "../classes/user-wallet";
 import { METAPLEX_PROGRAM_ID } from "../constants/addresses";
-import { NFTMetadataInput } from "../types/nft";
-import { Metaplex, token } from "@metaplex-foundation/js";
+import { NFTMetadata, NFTMetadataInput } from "../types/nft";
+import {
+  Metaplex,
+  Nft,
+  NftWithToken,
+  Sft,
+  SftWithToken,
+  token,
+} from "@metaplex-foundation/js";
 import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 import { getAccount, getAssociatedTokenAddress } from "@solana/spl-token";
 import { ConfirmedSignatureInfo, Connection, PublicKey } from "@solana/web3.js";
@@ -27,14 +34,16 @@ export class NFTCollection {
     this.collectionMintAddress = new PublicKey(collectionMintAddress);
   }
 
-  async getCollectionInfo() {
-    return await this.metaplex
+  async getCollectionInfo(): Promise<NFTMetadata> {
+    const meta = await this.metaplex
       .nfts()
       .findByMint({ mintAddress: this.collectionMintAddress })
-      .run(); // TODO abstract types away
+      .run();
+    // TODO Make a alias type for this
+    return this.toNFTMetadata(meta);
   }
 
-  async mint(metadata: NFTMetadataInput) {
+  async mint(metadata: NFTMetadataInput): Promise<string> {
     const uri = await this.storage.uploadMetadata(metadata);
     const { nft: mintedNFT } = await this.metaplex
       .nfts()
@@ -46,17 +55,16 @@ export class NFTCollection {
         collectionAuthority: this.wallet.signer,
       })
       .run();
-    return mintedNFT;
+    return mintedNFT.address.toBase58();
   }
 
   async transfer(receiverAddress: string, mintAddress: string) {
-    const nftToSend = await this.get(mintAddress);
     return await this.metaplex
       .nfts()
       .send({
         mintAddress: new PublicKey(mintAddress),
         toOwner: new PublicKey(receiverAddress),
-        amount: token(1, 0, nftToSend.symbol),
+        amount: token(1, 0),
       })
       .run();
   }
@@ -74,13 +82,14 @@ export class NFTCollection {
     }
   }
 
-  async get(mintAddress: string) {
-    return await this.metaplex
+  async get(mintAddress: string): Promise<NFTMetadata> {
+    const meta = await this.metaplex
       .nfts()
       .findByMint({
         mintAddress: new PublicKey(mintAddress),
       })
-      .run(); // TODO abstract types away
+      .run();
+    return this.toNFTMetadata(meta);
   }
 
   async getAll(): Promise<string[]> {
@@ -158,5 +167,15 @@ export class NFTCollection {
       }
     }
     return Array.from(mintAddresses);
+  }
+
+  private toNFTMetadata(meta: Nft | Sft | NftWithToken | SftWithToken) {
+    return {
+      id: meta.address.toBase58(),
+      uri: meta.uri,
+      name: meta.name,
+      symbol: meta.symbol,
+      ...meta.json,
+    } as NFTMetadata;
   }
 }

@@ -28,7 +28,7 @@ describe("Token", async () => {
   it("transfer should update total supply", async () => {
     expect((await token.balance()).toString()).to.eq("103000000000");
     const receiver = Keypair.generate();
-    const result = await token.transfer(receiver.publicKey.toBase58(), 10);
+    await token.transfer(receiver.publicKey.toBase58(), 10);
     expect((await token.balance()).toString()).to.eq("93000000000");
   });
 });
