@@ -159,7 +159,7 @@ export class Erc721Claimable implements DetectableFeature {
     );
     const startingIndex: BigNumber = event[0].args.startTokenId;
     const endingIndex = startingIndex.add(quantity);
-    const results = [];
+    const results: TransactionResultWithId<NFTMetadataOwner>[] = [];
     for (let id = startingIndex; id.lt(endingIndex); id = id.add(1)) {
       results.push({
         id,

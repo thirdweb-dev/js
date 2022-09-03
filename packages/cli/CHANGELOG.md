@@ -1,5 +1,16 @@
 # thirdweb
 
+## 0.7.9
+
+### Patch Changes
+
+- [#61](https://github.com/thirdweb-dev/js/pull/61) [`3287c2b`](https://github.com/thirdweb-dev/js/commit/3287c2b0f233332fe4a095f973deed8efab91db6) Thanks [@jnsdls](https://github.com/jnsdls)! - fix versions in dependencies before releasing stable
+
+- [#56](https://github.com/thirdweb-dev/js/pull/56) [`e9e71cf`](https://github.com/thirdweb-dev/js/commit/e9e71cfcd892611cd653431dc433b27532e9e3cc) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add basic tests
+
+- Updated dependencies [[`3287c2b`](https://github.com/thirdweb-dev/js/commit/3287c2b0f233332fe4a095f973deed8efab91db6)]:
+  - @thirdweb-dev/sdk@2.4.8
+
 ## 0.7.8
 
 ### Patch Changes

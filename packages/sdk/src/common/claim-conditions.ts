@@ -112,6 +112,14 @@ export async function prepareClaim(
   };
 }
 
+type Snapshot =
+  | {
+      address: string;
+      proof: string[];
+      maxClaimable: string;
+    }[]
+  | undefined;
+
 /**
  * @internal
  * @param merkleRoot
@@ -122,12 +130,12 @@ export async function fetchSnapshot(
   merkleRoot: string,
   merkleMetadata: Record<string, string> | undefined,
   storage: IStorage,
-) {
+): Promise<Snapshot> {
   if (!merkleMetadata) {
     return undefined;
   }
   const snapshotUri = merkleMetadata[merkleRoot];
-  let snapshot = undefined;
+  let snapshot: Snapshot = undefined;
   if (snapshotUri) {
     const raw = await storage.get(snapshotUri);
     const snapshotData = SnapshotSchema.parse(raw);
@@ -203,7 +211,11 @@ export async function getClaimerProofs(
   merkleMetadata: Record<string, string>,
   storage: IStorage,
 ): Promise<{ maxClaimable: BigNumber; proof: string[] }> {
-  const claims = await fetchSnapshot(merkleRoot, merkleMetadata, storage);
+  const claims: Snapshot = await fetchSnapshot(
+    merkleRoot,
+    merkleMetadata,
+    storage,
+  );
   if (claims === undefined) {
     return {
       proof: [],

@@ -1,10 +1,10 @@
-import { ContractWrapper } from "./contract-wrapper";
-import { IMintableERC20, IMulticall } from "@thirdweb-dev/contracts-js";
-import { Erc20 } from "./erc-20";
-import { TokenMintInput } from "../../schema";
-import { TransactionResult } from "../types";
 import { FEATURE_TOKEN_BATCH_MINTABLE } from "../../constants/erc20-features";
+import { TokenMintInput } from "../../schema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { TransactionResult } from "../types";
+import { ContractWrapper } from "./contract-wrapper";
+import { Erc20 } from "./erc-20";
+import { IMintableERC20, IMulticall } from "@thirdweb-dev/contracts-js";
 
 /**
  * Mint Many ERC20 Tokens at once
@@ -52,7 +52,7 @@ export class Erc20BatchMintable implements DetectableFeature {
    * ```
    */
   public async to(args: TokenMintInput[]): Promise<TransactionResult> {
-    const encoded = [];
+    const encoded: string[] = [];
     for (const arg of args) {
       encoded.push(
         this.contractWrapper.readContract.interface.encodeFunctionData(

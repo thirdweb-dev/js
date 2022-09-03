@@ -5,6 +5,7 @@ import FoundryDetector from "./foundry";
 import HardhatDetector from "./hardhat";
 import TruffleDetector from "./truffle";
 import inquirer from "inquirer";
+import { ERROR_MESSAGES } from "../../../constants/constants";
 
 const { Confirm } = require("enquirer");
 
@@ -25,7 +26,7 @@ export default async function detect(
 
   //if there is no project returned at all then just return unknown}
   if (!possibleProjectTypes.length) {
-    warn("Failed to find a supported project configuration file in current directory " + path);
+    warn(`${ERROR_MESSAGES.noConfiguration} ${path}`);
     const prompt = new Confirm({
       name: "continue",
       message: "Do you want to continue and compile this project with solc instead?",

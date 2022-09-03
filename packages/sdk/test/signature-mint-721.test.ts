@@ -5,7 +5,7 @@ import {
   Token,
 } from "../src";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { sdk, signers, storage } from "./before-setup";
+import { sdk, signers, storage } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber } from "ethers";

@@ -1,7 +1,6 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Edition } from "../src/index";
-import { sdk, signers } from "./before-setup";
-
+import { sdk, signers } from "./hooks";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 
 global.fetch = require("cross-fetch");

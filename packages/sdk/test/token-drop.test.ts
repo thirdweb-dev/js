@@ -1,15 +1,15 @@
+import { Token } from "../src";
+import { createSnapshot } from "../src/common";
+import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
+import { TokenDrop } from "../src/contracts/token-drop";
+import { ClaimEligibility } from "../src/enums";
+import { expectError, sdk, signers, storage } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, ethers } from "ethers";
 import { MerkleTree } from "merkletreejs";
-import { expectError, sdk, signers, storage } from "./before-setup";
-import { createSnapshot } from "../src/common";
-import { ClaimEligibility } from "../src/enums";
-import { Token } from "../src";
-import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 import invariant from "tiny-invariant";
-import { TokenDrop } from "../src/contracts/token-drop";
 
 global.fetch = require("cross-fetch");
 
