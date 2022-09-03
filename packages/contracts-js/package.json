@@ -4,11 +4,7 @@
   "main": "dist/thirdweb-dev-contracts-js.cjs.js",
   "module": "dist/thirdweb-dev-contracts-js.esm.js",
   "license": "Apache-2.0",
-  "repository": {
-    "directory": "packages/contracts-js",
-    "type": "git",
-    "url": "https://github.com/thirdweb-dev/js.git"
-  },
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/contracts-js",
   "dependencies": {
     "@thirdweb-dev/contracts": "3.1.6-1"
   },
@@ -18,7 +14,7 @@
     "@preconstruct/cli": "^2.2.1",
     "ethers": "^5.7.0",
     "typechain": "^8.1.0",
-    "typescript": "^4.8.2"
+    "typescript": "^4.7.4"
   },
   "peerDependencies": {
     "ethers": "^5.7.0"

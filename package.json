@@ -2,7 +2,7 @@
   "name": "@thirdweb-dev/js",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "git@github.com:thirdweb-dev/js.git",
+  "repository": "https://github.com/thirdweb-dev/js",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "MIT",
   "private": true,
@@ -11,28 +11,19 @@
       "packages/*"
     ]
   },
-  "devDependencies": {
-    "@babel/core": "^7.18.13",
-    "@changesets/changelog-github": "^0.4.6",
-    "@changesets/cli": "^2.24.3",
-    "@trivago/prettier-plugin-sort-imports": "^3.3.0",
-    "eslint": "^8.23.0",
-    "postinstall-postinstall": "^2.1.0",
-    "prettier": "^2.7.1",
-    "turbo": "latest"
-  },
   "scripts": {
     "test": "turbo run test",
     "e2e": "turbo run e2e",
     "build": "turbo run build",
     "build:release": "turbo run build --force",
     "dev": "turbo run dev --no-cache --parallel --continue",
+    "fix:repo": "manypkg fix",
     "lint": "turbo run lint",
     "clean": "turbo run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "changeset": "changeset",
     "version-packages": "changeset version",
-    "release": "changeset publish",
+    "release": "node ./scripts/pre-release.mjs && changeset publish",
     "version-packages:nightly": "changeset version --snapshot nightly",
     "release:nightly": "changeset publish --tag nightly"
   },
@@ -41,5 +32,19 @@
       "packages/*"
     ]
   },
-  "packageManager": "yarn@1.22.19"
+  "packageManager": "yarn@1.22.19",
+  "dependencies": {
+    "@changesets/changelog-github": "^0.4.6",
+    "@changesets/cli": "^2.24.3",
+    "@manypkg/cli": "^0.19.1",
+    "@manypkg/get-packages": "^1.1.3",
+    "@trivago/prettier-plugin-sort-imports": "^3.3.0",
+    "eslint": "^8.21.0",
+    "postinstall-postinstall": "^2.1.0",
+    "prettier": "^2.7.1",
+    "turbo": "latest"
+  },
+  "manypkg": {
+    "defaultBranch": "main"
+  }
 }

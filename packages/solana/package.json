@@ -4,7 +4,7 @@
   "description": "thirdweb Solana SDK",
   "main": "dist/thirdweb-dev-solana.cjs.js",
   "module": "dist/thirdweb-dev-solana.esm.js",
-  "repository": "git@github.com:thirdweb-dev/solana.git",
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/solana",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
   "scripts": {
@@ -40,7 +40,7 @@
     "@typescript-eslint/parser": "^5.33.0",
     "chai": "^4.3.6",
     "eslint": "^8.21.0",
-    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-inclusive-language": "^2.2.0",
     "eslint-plugin-prettier": "^4.2.1",

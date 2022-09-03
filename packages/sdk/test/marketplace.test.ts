@@ -15,7 +15,6 @@ import {
   sdk,
   signers,
 } from "./hooks";
-import "@nomiclabs/hardhat-ethers";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, BigNumberish, ethers } from "ethers";
@@ -216,7 +215,7 @@ describe("Marketplace Contract", async () => {
       assert.isDefined(listingId);
     });
 
-    it("should be able to restrict listing", async () => {
+    it.skip("should be able to restrict listing", async () => {
       await marketplaceContract.allowListingFromSpecificAssetOnly(
         dummyBundleContract.getAddress(),
       );
