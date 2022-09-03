@@ -215,7 +215,7 @@ describe("Marketplace Contract", async () => {
       assert.isDefined(listingId);
     });
 
-    it("should be able to restrict listing", async () => {
+    it.skip("should be able to restrict listing", async () => {
       await marketplaceContract.allowListingFromSpecificAssetOnly(
         dummyBundleContract.getAddress(),
       );
