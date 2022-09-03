@@ -1,5 +1,11 @@
 # @thirdweb-dev/tsconfig
 
+## 0.1.4
+
+### Patch Changes
+
+- [#61](https://github.com/thirdweb-dev/js/pull/61) [`3287c2b`](https://github.com/thirdweb-dev/js/commit/3287c2b0f233332fe4a095f973deed8efab91db6) Thanks [@jnsdls](https://github.com/jnsdls)! - fix versions in dependencies before releasing stable
+
 ## 0.1.3
 
 ### Patch Changes
