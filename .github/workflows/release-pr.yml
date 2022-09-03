@@ -22,7 +22,7 @@ jobs:
         id: validate_user
         if: ${{ steps.check.outputs.triggered == 'true' }}
         run: |
-          if [[ "${AUTHOR_ASSOCIATION}" != 'MEMBER' && "${AUTHOR_ASSOCIATION}" != 'OWNER' ]]
+          if [[ "${AUTHOR_ASSOCIATION}" != 'MEMBER' && "${AUTHOR_ASSOCIATION}" != 'OWNER' && "${AUTHOR_ASSOCIATION}" != 'CONTRIBUTOR' ]]
           then
             echo "User authorization failed"
             exit 1
@@ -59,6 +59,7 @@ jobs:
         with:
           persist-credentials: true
           repository: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.repo.full_name }}
+          ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
 
       - name: Install
         uses: ./.github/composite-actions/install
