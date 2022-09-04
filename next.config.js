@@ -8,7 +8,7 @@ const ContentSecurityPolicy = `
   font-src 'self' fonts.gstatic.com;
   frame-src *;
   script-src 'self' 'unsafe-eval' 'unsafe-inline' *.thirdweb.com;
-  connect-src *;
+  connect-src * data:;
   block-all-mixed-content;
 `;
 
