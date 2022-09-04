@@ -1,5 +1,6 @@
 import { UserWallet } from "../classes/user-wallet";
 import { METAPLEX_PROGRAM_ID } from "../constants/addresses";
+import { TransactionResult } from "../types/common";
 import { NFTMetadata, NFTMetadataInput } from "../types/nft";
 import {
   Metaplex,
@@ -39,7 +40,7 @@ export class NFTCollection {
       .nfts()
       .findByMint({ mintAddress: this.collectionMintAddress })
       .run();
-    // TODO Make a alias type for this
+    // TODO Make a alias type for this specific to collections
     return this.toNFTMetadata(meta);
   }
 
@@ -58,8 +59,11 @@ export class NFTCollection {
     return mintedNFT.address.toBase58();
   }
 
-  async transfer(receiverAddress: string, mintAddress: string) {
-    return await this.metaplex
+  async transfer(
+    receiverAddress: string,
+    mintAddress: string,
+  ): Promise<TransactionResult> {
+    const result = await this.metaplex
       .nfts()
       .send({
         mintAddress: new PublicKey(mintAddress),
@@ -67,6 +71,9 @@ export class NFTCollection {
         amount: token(1, 0),
       })
       .run();
+    return {
+      signature: result.response.signature,
+    };
   }
 
   async balanceOf(walletAddress: string, mintAddress: string): Promise<bigint> {

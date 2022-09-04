@@ -49,6 +49,10 @@ export const CommonNFTOutput = CommonTokenOutput.extend({
 /**
  * @public
  */
+export type TokenMetadata = z.output<typeof CommonTokenOutput>;
+/**
+ * @public
+ */
 export type NFTMetadataInput = z.input<typeof CommonNFTInput>;
 /**
  * @public

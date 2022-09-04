@@ -20,7 +20,8 @@ describe("NFTCollection", async () => {
       name: "Test NFT",
       description: "Test Description",
     });
-    expect(mint.name).to.eq("Test NFT");
+    const nft = await collection.get(mint);
+    expect(nft.name).to.eq("Test NFT");
   });
 
   it("should fetch NFTs", async () => {

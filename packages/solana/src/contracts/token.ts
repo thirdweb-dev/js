@@ -1,5 +1,6 @@
 import { UserWallet } from "../classes/user-wallet";
-import { Amount, AmountSchema, CurrencyValue } from "../types/common";
+import { Amount, AmountSchema, TransactionResult } from "../types/common";
+import { TokenMetadata } from "../types/nft";
 import {
   findMetadataPda,
   Metaplex,
@@ -38,10 +39,17 @@ export class Token {
       .run(); // TODO abstract types away
   }
 
-  async getMetadata() {
+  async getMetadata(): Promise<TokenMetadata> {
     const addr = findMetadataPda(this.tokenMintAddress);
     const account = await this.metaplex.rpc().getAccount(addr);
-    return toMetadata(toMetadataAccount(account));
+    const meta = toMetadata(toMetadataAccount(account));
+    return {
+      id: meta.address.toBase58(),
+      uri: meta.uri,
+      name: meta.name,
+      symbol: meta.symbol,
+      ...meta.json,
+    } as TokenMetadata;
   }
 
   async totalSupply(): Promise<BigInt> {
@@ -61,12 +69,17 @@ export class Token {
         mintAddress: this.tokenMintAddress,
       })
       .run();
-    return result.response;
+    return {
+      signature: result.response.signature,
+    };
   }
 
-  async transfer(receiverAddress: string, amount: Amount) {
+  async transfer(
+    receiverAddress: string,
+    amount: Amount,
+  ): Promise<TransactionResult> {
     const info = await this.getMint();
-    return await this.metaplex
+    const result = await this.metaplex
       .tokens()
       .send({
         mintAddress: this.tokenMintAddress,
@@ -74,6 +87,9 @@ export class Token {
         toOwner: new PublicKey(receiverAddress),
       })
       .run();
+    return {
+      signature: result.response.signature,
+    };
   }
 
   async balance(): Promise<bigint> {
