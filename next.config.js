@@ -7,9 +7,8 @@ const ContentSecurityPolicy = `
   style-src 'self' 'unsafe-inline' fonts.googleapis.com unpkg.com;
   font-src 'self' fonts.gstatic.com;
   frame-src *;
-  script-src 'self' 'unsafe-eval';
+  script-src 'self' 'unsafe-eval' 'unsafe-inline' *.thirdweb.com;
   connect-src *;
-  script-src-elem 'self' 'unsafe-inline' *.thirdweb.com;
   block-all-mixed-content;
 `;
 
@@ -119,6 +118,8 @@ const sentryWebpackPluginOptions = {
   silent: true,
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options.
+
+  hideSourceMaps: true,
 };
 module.exports = withBundleAnalyzer(
   withSentryConfig(moduleExports, sentryWebpackPluginOptions),
