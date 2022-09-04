@@ -8,7 +8,7 @@ import { Connection, Keypair } from "@solana/web3.js";
 const createTestSDK = async (
   solsToAirdrop: number = 100,
 ): Promise<ThirdwebSDK> => {
-  const connection = new Connection("http://localhost:8899");
+  const connection = new Connection("http://localhost:8899", "confirmed");
   const sdk = new ThirdwebSDK(connection, new MockStorage());
   const wallet = Keypair.generate();
   const amman = Amman.instance({
