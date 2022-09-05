@@ -1,35 +1,12 @@
-import { MockStorage } from "../../sdk/test/mock/MockStorage";
-import { METAPLEX_PROGRAM_ID } from "../src/constants/addresses";
 import { NFTCollection } from "../src/contracts/nft-collection";
-import { ThirdwebSDK } from "../src/sdk";
-import { Amman } from "@metaplex-foundation/amman-client";
-import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { Connection, Keypair } from "@solana/web3.js";
+import { sdk } from "./before-setup";
+import { Keypair } from "@solana/web3.js";
 import { expect } from "chai";
 
-const createTestSDK = async (
-  solsToAirdrop: number = 100,
-): Promise<ThirdwebSDK> => {
-  const connection = new Connection("http://localhost:8899");
-  const sdk = new ThirdwebSDK(connection, new MockStorage());
-  const wallet = Keypair.generate();
-  const amman = Amman.instance({
-    knownLabels: {
-      [METAPLEX_PROGRAM_ID]: "Token Metadata",
-      [TOKEN_PROGRAM_ID.toBase58()]: "Token",
-    },
-  });
-  await amman.airdrop(connection, wallet.publicKey, solsToAirdrop);
-  sdk.wallet.connect(wallet);
-  return sdk;
-};
-
 describe("NFTCollection", async () => {
-  let sdk: ThirdwebSDK;
   let collection: NFTCollection;
 
   before(async () => {
-    sdk = await createTestSDK();
     const addr = await sdk.deployer.createNftCollection({
       name: "Test Collection",
       description: "Test Description",
@@ -43,7 +20,8 @@ describe("NFTCollection", async () => {
       name: "Test NFT",
       description: "Test Description",
     });
-    expect(mint.name).to.eq("Test NFT");
+    const nft = await collection.get(mint);
+    expect(nft.name).to.eq("Test NFT");
   });
 
   it("should fetch NFTs", async () => {
