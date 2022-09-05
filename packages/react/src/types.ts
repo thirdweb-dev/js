@@ -175,7 +175,8 @@ export type DropContract =
   | EditionDrop
   | SignatureDrop
   | TokenDrop
-  | SmartContract;
+  | SmartContract
+  | null;
 
 /**
  * The params for the {@link useDelayedRevealLazyMint} hook mutation.
@@ -257,7 +258,7 @@ export type ClaimTokenParams = {
 // Helpers
 
 export function getErcs(
-  contract: RequiredParam<ValidContractInstance | SmartContract>,
+  contract: RequiredParam<ValidContractInstance | SmartContract | null>,
 ) {
   return {
     erc1155: getErc1155(contract),
@@ -267,7 +268,7 @@ export function getErcs(
 }
 
 export function getErc1155(
-  contract: RequiredParam<ValidContractInstance | SmartContract>,
+  contract: RequiredParam<ValidContractInstance | SmartContract | null>,
 ): Erc1155 | undefined {
   if (!contract) {
     return undefined;
@@ -283,7 +284,7 @@ export function getErc1155(
 }
 
 export function getErc721(
-  contract: RequiredParam<ValidContractInstance | SmartContract>,
+  contract: RequiredParam<ValidContractInstance | SmartContract | null>,
 ): Erc721 | undefined {
   if (!contract) {
     return undefined;
@@ -299,7 +300,7 @@ export function getErc721(
 }
 
 export function getErc20(
-  contract: RequiredParam<ValidContractInstance | SmartContract>,
+  contract: RequiredParam<ValidContractInstance | SmartContract | null>,
 ): Erc20 | undefined {
   if (!contract) {
     return undefined;
