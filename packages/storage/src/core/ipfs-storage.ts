@@ -13,7 +13,7 @@ import {
 } from "../helpers/storage";
 import { IStorage } from "../interfaces/IStorage";
 import { IStorageUpload, UploadResult } from "../interfaces/IStorageUpload";
-import { FileOrBuffer, JsonObject } from "../types";
+import { FileOrBuffer, JsonObject, StorageOptions } from "../types";
 import { UploadProgressEvent } from "../types/events";
 import { PinataUploader } from "../uploaders/pinata-uploader";
 import fetch from "cross-fetch";
@@ -32,13 +32,16 @@ export class IpfsStorage implements IStorage {
   public gatewayUrl: string;
   private failedUrls: string[] = [];
   private uploader: IStorageUpload;
+  private options: StorageOptions | undefined;
 
   constructor(
     gatewayUrl: string = DEFAULT_IPFS_GATEWAY,
     uploader: IStorageUpload = new PinataUploader(),
+    options?: StorageOptions,
   ) {
     this.gatewayUrl = `${gatewayUrl.replace(/\/$/, "")}/`;
     this.uploader = uploader;
+    this.options = options;
   }
 
   private getNextPublicGateway() {
@@ -50,6 +53,14 @@ export class IpfsStorage implements IStorage {
     } else {
       this.failedUrls = [];
       return undefined;
+    }
+  }
+
+  private getBaseUri() {
+    if (this.options?.appendGatewayUrl) {
+      return this.gatewayUrl;
+    } else {
+      return "ipfs://";
     }
   }
 
@@ -80,7 +91,7 @@ export class IpfsStorage implements IStorage {
       options,
     );
 
-    const baseUri = `ipfs://${cid}/`;
+    const baseUri = `${this.getBaseUri()}${cid}/`;
     return `${baseUri}${fileNames[0]}`;
   }
 
@@ -104,7 +115,7 @@ export class IpfsStorage implements IStorage {
       options,
     );
 
-    const baseUri = `ipfs://${cid}/`;
+    const baseUri = `${this.getBaseUri()}${cid}/`;
     const uris = fileNames.map((filename) => `${baseUri}${filename}`);
     return {
       baseUri,
@@ -174,7 +185,7 @@ export class IpfsStorage implements IStorage {
       signerAddress,
     );
 
-    const baseUri = `ipfs://${cid}/`;
+    const baseUri = `${this.getBaseUri()}${cid}/`;
     const uris = fileNames.map((filename) => `${baseUri}${filename}`);
 
     return {
@@ -230,7 +241,7 @@ export class IpfsStorage implements IStorage {
     // replace all active gateway url links with their raw ipfs hash
     const sanitizedMetadatas = replaceGatewayUrlWithHash(
       metadatas,
-      "ipfs://",
+      this.getBaseUri(),
       this.gatewayUrl,
     );
     // extract any binary file to upload
@@ -257,7 +268,11 @@ export class IpfsStorage implements IStorage {
     }
 
     // replace all files with their ipfs hash
-    return replaceFilePropertiesWithHashes(sanitizedMetadatas, cids);
+    return replaceFilePropertiesWithHashes(
+      sanitizedMetadatas,
+      cids,
+      this.getBaseUri(),
+    );
   }
 
   /**
