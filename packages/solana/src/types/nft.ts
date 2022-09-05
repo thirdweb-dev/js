@@ -8,6 +8,7 @@ import { z } from "zod";
 export const CommonTokenInput = z
   .object({
     name: z.string().optional(),
+    symbol: z.string().optional(),
     description: z.string().nullable().optional(),
     image: FileBufferOrStringSchema.nullable().optional(),
     external_url: FileBufferOrStringSchema.nullable().optional(),
@@ -45,6 +46,10 @@ export const CommonNFTOutput = CommonTokenOutput.extend({
   animation_url: z.string().nullable().optional(),
 });
 
+/**
+ * @public
+ */
+export type TokenMetadata = z.output<typeof CommonTokenOutput>;
 /**
  * @public
  */

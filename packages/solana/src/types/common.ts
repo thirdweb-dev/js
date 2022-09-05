@@ -46,3 +46,23 @@ export type BufferOrStringWithName = {
   name?: string;
 };
 export type FileOrBuffer = Buffer | BufferOrStringWithName;
+
+export const AmountSchema = z
+  .union([
+    z.string().regex(/^([0-9]+\.?[0-9]*|\.[0-9]+)$/, "Invalid amount"),
+    z.number().min(0, "Amount cannot be negative"),
+  ])
+  .transform((arg) => (typeof arg === "number" ? arg.toString() : arg));
+
+export type Amount = z.input<typeof AmountSchema>;
+
+export const CurrencyValueSchema = z.object({
+  value: z.bigint(),
+  displayValue: z.string(),
+});
+
+export type CurrencyValue = z.input<typeof CurrencyValueSchema>;
+
+export type TransactionResult = {
+  signature: string;
+};
