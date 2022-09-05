@@ -30,6 +30,7 @@ export const SDKOptionsSchema = z
               .string()
               .default(OZ_DEFENDER_FORWARDER_ADDRESS),
           }),
+          experimentalChainlessSupport: z.boolean().default(false),
         }),
         z.object({
           biconomy: z.object({

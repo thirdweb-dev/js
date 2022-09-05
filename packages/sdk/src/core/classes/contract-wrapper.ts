@@ -1,6 +1,7 @@
 import { convertToTWError } from "../../common";
 import {
   BiconomyForwarderAbi,
+  ChainAwareForwardRequest,
   ForwardRequest,
   getAndIncrementNonce,
 } from "../../common/forwarder";
@@ -573,25 +574,49 @@ export class ContractWrapper<
     const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
       transaction.from,
     ]);
-    const domain = {
-      name: "GSNv2 Forwarder",
-      version: "0.0.1",
-      chainId: transaction.chainId,
-      verifyingContract: forwarderAddress,
-    };
-
-    const types = {
-      ForwardRequest,
-    };
-
-    let message: ForwardRequestMessage | PermitRequestMessage = {
-      from: transaction.from,
-      to: transaction.to,
-      value: BigNumber.from(0).toString(),
-      gas: BigNumber.from(transaction.gasLimit).toString(),
-      nonce: BigNumber.from(nonce).toString(),
-      data: transaction.data,
-    };
+    let domain;
+    let types;
+    let message: ForwardRequestMessage | PermitRequestMessage;
+    if (
+      this.options.gasless &&
+      this.options.gasless?.experimentalChainlessSupport
+    ) {
+      domain = {
+        name: "GSNv2 Forwarder",
+        version: "0.0.1",
+        verifyingContract: forwarderAddress,
+      };
+      types = {
+        ChainAwareForwardRequest,
+      };
+      message = {
+        from: transaction.from,
+        to: transaction.to,
+        value: BigNumber.from(0).toString(),
+        gas: BigNumber.from(transaction.gasLimit).toString(),
+        nonce: BigNumber.from(nonce).toString(),
+        data: transaction.data,
+        chainId: transaction.chainId,
+      };
+    } else {
+      domain = {
+        name: "GSNv2 Forwarder",
+        version: "0.0.1",
+        chainId: transaction.chainId,
+        verifyingContract: forwarderAddress,
+      };
+      types = {
+        ForwardRequest,
+      };
+      message = {
+        from: transaction.from,
+        to: transaction.to,
+        value: BigNumber.from(0).toString(),
+        gas: BigNumber.from(transaction.gasLimit).toString(),
+        nonce: BigNumber.from(nonce).toString(),
+        data: transaction.data,
+      };
+    }
 
     let signature: BytesLike;
 
