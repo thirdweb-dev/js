@@ -9,6 +9,7 @@ import {
   RevealLazyMintInput,
   getErcs,
   NFTContract,
+  RevealableContract,
 } from "../../types";
 import {
   cacheKeys,
@@ -18,11 +19,13 @@ import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useNFTs } from "./nft";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+  EditionDrop,
   Erc1155,
   Erc721,
   NFTDrop,
   NFTMetadataInput,
   QueryAllParams,
+  TokenDrop,
   UploadProgressEvent,
 } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
@@ -131,20 +134,20 @@ export function useClaimedNFTSupply(contract: RequiredParam<DropContract>) {
 
 /**
  *
- * @param contract - an instance of a {@link Erc721OrErc1155}
+ * @param contract - an instance of a {@link RevealableContract}
  * @returns a response object that gets the batches to still be revealed
  */
-export function useBatchesToReveal<TContract extends DropContract>(
+export function useBatchesToReveal<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,
 ) {
   const contractAddress = contract?.getAddress();
-  const { erc721, erc1155} = getErcs(contract);
+  const { erc721, erc1155 } = getErcs(contract);
   return useQueryWithNetwork(
     cacheKeys.contract.nft.drop.revealer.getBatchesToReveal(contractAddress),
     () => {
       if (erc721) {
         return erc721.revealer.getBatchesToReveal();
-      } 
+      }
       if (erc1155) {
         return erc1155.revealer.getBatchesToReveal();
       }
@@ -279,12 +282,12 @@ export function useLazyMint<TContract extends DropContract>(
 /**
  * Use this to lazy mint a batch of delayed reveal NFTs on your {@link DropContract}
  *
- * @param contract - an instance of a {@link Erc721OrErc1155} with the drop extension
+ * @param contract - an instance of a {@link DropContract}
  * @param onProgress - an optional callback that will be called with the progress of the upload
  * @returns a mutation object that can be used to lazy mint a batch of NFTs
  * @beta
  */
-export function useDelayedRevealLazyMint<TContract extends Erc721OrErc1155>(
+export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,
   onProgress?: (progress: UploadProgressEvent) => void,
 ) {
@@ -301,12 +304,24 @@ export function useDelayedRevealLazyMint<TContract extends Erc721OrErc1155>(
           onProgress,
         };
       }
-      return await contract.revealer.createDelayedRevealBatch(
-        data.placeholder,
-        data.metadatas,
-        data.password,
-        options,
-      );
+      const { erc721, erc1155 } = getErcs(contract);
+      if (erc721) {
+        return await contract.revealer.createDelayedRevealBatch(
+          data.placeholder,
+          data.metadatas,
+          data.password,
+          options,
+        );
+      }
+      if (erc1155) {
+        return await contract.revealer.createDelayedRevealBatch(
+          data.placeholder,
+          data.metadatas,
+          data.password,
+          options,
+        );
+      }
+      invariant(false, "contract is not an Erc721 or Erc1155");
     },
     {
       onSettled: () =>
@@ -320,13 +335,13 @@ export function useDelayedRevealLazyMint<TContract extends Erc721OrErc1155>(
 }
 
 /**
- * Use this to reveal a batch of delayed reveal NFTs on your {@link DropContract}
+ * Use this to reveal a batch of delayed reveal NFTs on your {@link RevealableContract}
  *
- * @param contract - an instance of a {@link Erc721OrErc1155} with the drop extension
+ * @param contract - an instance of a {@link RevealableContract}
  * @returns a mutation object that can be used to reveal a batch of delayed reveal NFTs
  * @beta
  */
-export function useRevealLazyMint<TContract extends Erc721OrErc1155>(
+export function useRevealLazyMint<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,
 ) {
   const activeChainId = useActiveChainId();
@@ -336,7 +351,14 @@ export function useRevealLazyMint<TContract extends Erc721OrErc1155>(
   return useMutation(
     async (data: RevealLazyMintInput) => {
       invariant(contract, "contract is undefined");
-      return await contract.revealer.reveal(data.batchId, data.password);
+      const { erc721, erc1155 } = getErcs(contract);
+      if (erc721) {
+        return await contract.revealer.revealBatch(data.batchId, data.password);
+      }
+      if (erc1155) {
+        return await contract.revealer.revealBatch(data.batchId, data.password);
+      }
+      invariant(false, "contract is not an Erc721 or Erc1155");
     },
     {
       onSettled: () =>

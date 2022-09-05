@@ -179,6 +179,12 @@ export type DropContract =
   | null;
 
 /**
+ * The possible revealable contract types.
+ * @beta
+ */
+export type RevealableContract = NFTDrop | SignatureDrop | SmartContract | null;
+
+/**
  * The params for the {@link useDelayedRevealLazyMint} hook mutation.
  *
  * @beta
