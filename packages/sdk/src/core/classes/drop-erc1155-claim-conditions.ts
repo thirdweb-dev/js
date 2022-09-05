@@ -110,7 +110,7 @@ export class DropErc1155ClaimConditions<
         };
       const startId = claimCondition.currentStartId.toNumber();
       const count = claimCondition.count.toNumber();
-      const conditions = [];
+      const conditions: IDropClaimCondition.ClaimConditionStructOutput[] = [];
       for (let i = startId; i < startId + count; i++) {
         conditions.push(
           await this.contractWrapper.readContract.getClaimConditionById(
@@ -471,7 +471,7 @@ export class DropErc1155ClaimConditions<
     );
 
     const metadata = await this.metadata.get();
-    const encoded = [];
+    const encoded: string[] = [];
 
     // keep the old merkle roots from other tokenIds
     for (const key of Object.keys(metadata.merkle || {})) {

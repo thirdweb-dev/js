@@ -1,7 +1,7 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { sdk, signers } from "./before-setup";
-import { expect } from "chai";
 import { ContractRegistry } from "../src/core/classes/registry";
+import { sdk, signers } from "./hooks";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { expect } from "chai";
 
 describe("Contract Registry", () => {
   let registry: ContractRegistry;

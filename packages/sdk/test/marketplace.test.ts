@@ -1,14 +1,12 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert, expect } from "chai";
-import { BigNumber, BigNumberish, ethers } from "ethers";
 import {
   AuctionAlreadyStartedError,
   ListingNotFoundError,
   WrongListingTypeError,
 } from "../src/common/error";
+import { isWinningBid } from "../src/common/marketplace";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { ListingType } from "../src/enums/marketplace";
 import { Edition, Marketplace, NFTCollection, Token } from "../src/contracts";
+import { ListingType } from "../src/enums/marketplace";
 import { AuctionListing, DirectListing, Offer } from "../src/types/marketplace";
 import {
   expectError,
@@ -16,8 +14,10 @@ import {
   jsonProvider,
   sdk,
   signers,
-} from "./before-setup";
-import { isWinningBid } from "../src/common/marketplace";
+} from "./hooks";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { assert, expect } from "chai";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 import { ethers as hardhatEthers } from "hardhat";
 
 global.fetch = require("cross-fetch");
@@ -215,7 +215,7 @@ describe("Marketplace Contract", async () => {
       assert.isDefined(listingId);
     });
 
-    it("should be able to restrict listing", async () => {
+    it.skip("should be able to restrict listing", async () => {
       await marketplaceContract.allowListingFromSpecificAssetOnly(
         dummyBundleContract.getAddress(),
       );
@@ -1087,9 +1087,7 @@ describe("Marketplace Contract", async () => {
       try {
         await marketplaceContract.direct.buyoutListing(directListingId, 1);
         assert.fail("should have thrown");
-      } catch (err: any) {
-        console.error(err);
-      }
+      } catch (err: any) {}
     });
 
     it("should not return invalid direct listings", async () => {

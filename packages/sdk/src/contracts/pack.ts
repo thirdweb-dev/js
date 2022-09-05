@@ -207,9 +207,9 @@ export class Pack extends Erc1155<PackContract> {
     const { contents, perUnitAmounts } =
       await this.contractWrapper.readContract.getPackContents(packId);
 
-    const erc20Rewards = [];
-    const erc721Rewards = [];
-    const erc1155Rewards = [];
+    const erc20Rewards: PackRewardsOutput["erc20Rewards"] = [];
+    const erc721Rewards: PackRewardsOutput["erc721Rewards"] = [];
+    const erc1155Rewards: PackRewardsOutput["erc1155Rewards"] = [];
 
     for (let i = 0; i < contents.length; i++) {
       const reward = contents[i];
@@ -435,9 +435,9 @@ export class Pack extends Erc1155<PackContract> {
     }
     const rewards = event[0].args.rewardUnitsDistributed;
 
-    const erc20Rewards = [];
-    const erc721Rewards = [];
-    const erc1155Rewards = [];
+    const erc20Rewards: PackRewards["erc20Rewards"] = [];
+    const erc721Rewards: PackRewards["erc721Rewards"] = [];
+    const erc1155Rewards: PackRewards["erc1155Rewards"] = [];
 
     for (const reward of rewards) {
       switch (reward.tokenType) {
@@ -485,7 +485,7 @@ export class Pack extends Erc1155<PackContract> {
 
   private async toPackContentArgs(metadataWithRewards: PackMetadataOutput) {
     const contents: ITokenBundle.TokenStruct[] = [];
-    const numOfRewardUnits = [];
+    const numOfRewardUnits: string[] = [];
     const { erc20Rewards, erc721Rewards, erc1155Rewards } = metadataWithRewards;
 
     const provider = this.contractWrapper.getProvider();
@@ -544,7 +544,7 @@ export class Pack extends Erc1155<PackContract> {
         );
       }
 
-      numOfRewardUnits.push(1);
+      numOfRewardUnits.push("1");
       contents.push({
         assetContract: erc721.contractAddress,
         tokenType: 1,

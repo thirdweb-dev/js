@@ -101,7 +101,7 @@ export async function detectExtensions(options: any) {
         `Detected extension on ${chalk.blueBright(contractWithFeatures.name)}`,
       ).stopAndPersist({ symbol: "🔎" });
       contractWithFeatures.enabledFeatures.map((feature) => {
-        info(`${chalk.green(feature.name)}`);
+        logger.info(`✔️ ${chalk.green(feature.name)}`);
       });
     }
     logger.info(``);
