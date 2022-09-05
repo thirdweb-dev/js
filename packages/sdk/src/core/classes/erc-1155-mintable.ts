@@ -107,6 +107,16 @@ export class Erc1155Mintable implements DetectableFeature {
    * @param to - the address to mint to
    * @param tokenId - the token id of the NFT to increase supply of
    * @param additionalSupply - the additional amount to mint
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet you want to mint the NFT to
+   * const toAddress = "{{wallet_address}}"
+   * const tokenId = 0;
+   * const additionalSupply = 1000;
+   *
+   * const tx = await contract.edition.mint.additionalSupplyTo(toAddress, tokenId, additionalSupply);
+   * ```
    */
   public async additionalSupplyTo(
     to: string,
