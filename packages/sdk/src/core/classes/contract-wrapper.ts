@@ -265,17 +265,6 @@ export class ContractWrapper<
     args: any[],
     callOverrides?: CallOverrides,
   ): Promise<providers.TransactionReceipt> {
-    // one time verification that this is a valid contract (to avoid sending funds to wrong addresses)
-    if (!this.isValidContract) {
-      const code = await this.getProvider().getCode(this.readContract.address);
-      this.isValidContract = code !== "0x";
-      if (!this.isValidContract) {
-        throw new Error(
-          "The address you're trying to send a transaction to is not a smart contract. Make sure you are on the correct network and the contract address is correct",
-        );
-      }
-    }
-
     if (!callOverrides) {
       callOverrides = await this.getCallOverrides();
     }
@@ -298,6 +287,18 @@ export class ContractWrapper<
       this.emitTransactionEvent("completed", txHash);
       return receipt;
     } else {
+      // one time verification that this is a valid contract (to avoid sending funds to wrong addresses)
+      if (!this.isValidContract) {
+        const code = await this.getProvider().getCode(
+          this.readContract.address,
+        );
+        this.isValidContract = code !== "0x";
+        if (!this.isValidContract) {
+          throw new Error(
+            "The address you're trying to send a transaction to is not a smart contract. Make sure you are on the correct network and the contract address is correct",
+          );
+        }
+      }
       const tx = await this.sendTransactionByFunction(
         fn as keyof TContract["functions"],
         args,
@@ -357,6 +358,7 @@ export class ContractWrapper<
     const chainId = await this.getChainID();
     const from = await this.getSignerAddress();
     const to = this.writeContract.address;
+    console.log("Sending defender to", to);
     const value = callOverrides?.value || 0;
 
     if (BigNumber.from(value).gt(0)) {
@@ -562,7 +564,7 @@ export class ContractWrapper<
   ): Promise<string> {
     invariant(
       this.options.gasless && "openzeppelin" in this.options.gasless,
-      "calling biconomySendFunction without biconomy",
+      "calling openzeppelin gasless transaction without openzeppelin config in the SDK options",
     );
     const signer = this.getSigner();
     const provider = this.getProvider();
@@ -577,10 +579,7 @@ export class ContractWrapper<
     let domain;
     let types;
     let message: ForwardRequestMessage | PermitRequestMessage;
-    if (
-      this.options.gasless &&
-      this.options.gasless?.experimentalChainlessSupport
-    ) {
+    if (this.options.gasless.experimentalChainlessSupport) {
       domain = {
         name: "GSNv2 Forwarder",
         version: "0.0.1",
