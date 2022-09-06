@@ -378,9 +378,8 @@ export class ContractWrapper<
     let gas = gasEstimate.mul(2);
 
     // in some cases WalletConnect doesn't properly gives an estimate for how much gas it would actually use.
-    // it'd estimate ~21740 on polygon.
     // as a fix, we're setting it to a high arbitrary number (500k) as the gas limit that should cover for most function calls.
-    if (gasEstimate.lt(25000)) {
+    if (gasEstimate.lt(50000)) {
       gas = BigNumber.from(500000);
     }
 
@@ -586,7 +585,7 @@ export class ContractWrapper<
         verifyingContract: forwarderAddress,
       };
       types = {
-        ChainAwareForwardRequest,
+        ForwardRequest: ChainAwareForwardRequest,
       };
       message = {
         from: transaction.from,
@@ -595,7 +594,7 @@ export class ContractWrapper<
         gas: BigNumber.from(transaction.gasLimit).toString(),
         nonce: BigNumber.from(nonce).toString(),
         data: transaction.data,
-        chainId: transaction.chainId,
+        chainid: BigNumber.from(transaction.chainId).toString(),
       };
     } else {
       domain = {

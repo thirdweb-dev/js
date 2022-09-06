@@ -81,7 +81,7 @@ export type ForwardRequestMessage = {
   gas: string;
   nonce: string;
   data: BytesLike;
-  chainId?: number;
+  chainid?: string;
 };
 
 /**
