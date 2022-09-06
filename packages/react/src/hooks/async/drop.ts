@@ -353,10 +353,10 @@ export function useRevealLazyMint<TContract extends RevealableContract>(
       invariant(contract, "contract is undefined");
       const { erc721, erc1155 } = getErcs(contract);
       if (erc721) {
-        return await erc721.revealer.revealBatch(data.batchId, data.password);
+        return await erc721.revealer.reveal(data.batchId, data.password)
       }
       if (erc1155) {
-        return await erc1155.revealer.revealBatch(data.batchId, data.password);
+        return await erc1155.revealer.reveal(data.batchId, data.password);
       }
       invariant(false, "contract is not an Erc721 or Erc1155");
     },
