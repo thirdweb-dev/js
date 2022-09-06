@@ -15,6 +15,7 @@ import {
 import { Connection, Keypair } from "@solana/web3.js";
 import { IpfsStorage, IStorage } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
+import { NFTDrop } from "./contracts/nft-drop";
 
 export class ThirdwebSDK {
   static fromNetwork(
@@ -50,6 +51,10 @@ export class ThirdwebSDK {
 
   public async getNFTCollection(address: string): Promise<NFTCollection> {
     return new NFTCollection(address, this.metaplex, this.wallet, this.storage);
+  }
+
+  public async getNFTDrop(address: string): Promise<NFTDrop> {
+    return new NFTDrop(address, this.metaplex, this.wallet, this.storage);
   }
 
   private propagateSignerUpdated(signer: Signer) {

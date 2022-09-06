@@ -1,4 +1,4 @@
-import { JsonSchema } from "./common";
+import { JsonSchema } from "../common";
 import { FileBufferOrStringSchema } from "@thirdweb-dev/storage";
 import { z } from "zod";
 

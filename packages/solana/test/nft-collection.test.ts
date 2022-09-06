@@ -7,7 +7,7 @@ import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { Connection, Keypair } from "@solana/web3.js";
 import { expect } from "chai";
 
-const createTestSDK = async (
+export const createTestSDK = async (
   solsToAirdrop: number = 100,
 ): Promise<ThirdwebSDK> => {
   const connection = new Connection("http://localhost:8899");
@@ -24,7 +24,7 @@ const createTestSDK = async (
   return sdk;
 };
 
-describe("NFTCollection", async () => {
+describe.skip("NFTCollection", async () => {
   let sdk: ThirdwebSDK;
   let collection: NFTCollection;
 
