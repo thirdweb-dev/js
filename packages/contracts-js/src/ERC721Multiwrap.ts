@@ -51,7 +51,6 @@ export interface ERC721MultiwrapInterface extends utils.Interface {
     "TRANSFER_ROLE()": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
-    "bundle(uint256)": FunctionFragment;
     "contractURI()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
     "getDefaultRoyaltyInfo()": FunctionFragment;
@@ -101,7 +100,6 @@ export interface ERC721MultiwrapInterface extends utils.Interface {
       | "TRANSFER_ROLE"
       | "approve"
       | "balanceOf"
-      | "bundle"
       | "contractURI"
       | "getApproved"
       | "getDefaultRoyaltyInfo"
@@ -158,10 +156,6 @@ export interface ERC721MultiwrapInterface extends utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "bundle",
-    values: [BigNumberish]
-  ): string;
   encodeFunctionData(
     functionFragment: "contractURI",
     values?: undefined
@@ -325,7 +319,6 @@ export interface ERC721MultiwrapInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "bundle", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "contractURI",
     data: BytesLike
@@ -680,11 +673,6 @@ export interface ERC721Multiwrap extends BaseContract {
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    bundle(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, string] & { count: BigNumber; uri: string }>;
-
     contractURI(overrides?: CallOverrides): Promise<[string]>;
 
     getApproved(
@@ -916,11 +904,6 @@ export interface ERC721Multiwrap extends BaseContract {
 
   balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  bundle(
-    arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, string] & { count: BigNumber; uri: string }>;
-
   contractURI(overrides?: CallOverrides): Promise<string>;
 
   getApproved(
@@ -1145,11 +1128,6 @@ export interface ERC721Multiwrap extends BaseContract {
     ): Promise<void>;
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    bundle(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, string] & { count: BigNumber; uri: string }>;
 
     contractURI(overrides?: CallOverrides): Promise<string>;
 
@@ -1506,8 +1484,6 @@ export interface ERC721Multiwrap extends BaseContract {
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    bundle(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
     contractURI(overrides?: CallOverrides): Promise<BigNumber>;
 
     getApproved(
@@ -1743,11 +1719,6 @@ export interface ERC721Multiwrap extends BaseContract {
 
     balanceOf(
       owner: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    bundle(
-      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
