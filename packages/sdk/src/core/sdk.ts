@@ -460,6 +460,17 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param abi - the JSON abi
    * @returns the contract
    * @beta
+   * @example
+   * ```javascript
+   * // Import your ABI from a JSON file
+   * import myABI from "./path/to/myABI.json";
+   * 
+   * const contract = sdk.getContractFromAbi(
+   *   "{{contract_address}}",
+   *   // Pass in the "abi" field from the JSON file
+   *   myABI.abi
+   * );
+   * ```
    */
   public getContractFromAbi(address: string, abi: ContractInterface) {
     if (this.contractCache.has(address)) {
