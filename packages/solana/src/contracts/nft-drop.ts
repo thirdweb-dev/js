@@ -3,6 +3,7 @@ import { Connection, PublicKey } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
 import { NFTMetadataInput } from "../../../sdk/dist/thirdweb-dev-sdk.cjs";
 import { UserWallet } from "../classes/user-wallet";
+import { TransactionResult } from "../types/common.js";
 import { NFTDropContractSchema, NFTDropMetadataInput } from "../types/contracts/nft-drop.js";
 import { CommonNFTInput } from "../types/nft";
 
@@ -43,7 +44,9 @@ export class NFTDrop {
     return info.itemsMinted;
   }
 
-  async lazyMint(metadatas: NFTMetadataInput[]) {
+  async lazyMint(
+    metadatas: NFTMetadataInput[]
+  ): Promise<TransactionResult> {
     const items = await Promise.all(
       metadatas.map(async (metadata) => {
         const parsedMetadata = CommonNFTInput.parse(metadata);
@@ -55,7 +58,7 @@ export class NFTDrop {
       })
     )
 
-    return await this.metaplex
+    const result = await this.metaplex
       .candyMachines()
       .insertItems({
         candyMachine: await this.getInfo(),
@@ -63,24 +66,38 @@ export class NFTDrop {
         items,
       })
       .run()
+
+    return {
+      signature: result.response.signature
+    }
   }
 
-  async claim() {
-    return await this.metaplex
+  async claim(): Promise<TransactionResult> {
+    const result = await this.metaplex
       .candyMachines()
       .mint({ candyMachine: await this.getInfo() })
       .run()
+
+    return {
+      signature: result.response.signature
+    }
   }
 
-  async setClaimConditions(metadata: NFTDropMetadataInput) {
+  async setClaimConditions(
+    metadata: NFTDropMetadataInput
+  ): Promise<TransactionResult> {
     const parsed = NFTDropContractSchema.parse(metadata);
 
-    return await this.metaplex
+    const result = await this.metaplex
       .candyMachines()
       .update({ 
         candyMachine: await this.getInfo(),
         ...parsed,
       })
       .run()
+
+    return {
+      signature: result.response.signature
+    }
   }
 }
