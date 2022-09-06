@@ -20,7 +20,7 @@ export interface ExtensionDetectedStateParams {
   contract: ReturnType<typeof useContract> | DetectableFeature;
 
   /**
-   * the feature match stragegy (default: any)
+   * the feature match strategy (default: any)
    * - any: any of the features must be available
    * - all: all of the features must be available
    */
@@ -41,7 +41,7 @@ export function extensionDetectedState({
 
   const actualContract = "contract" in contract ? contract.contract : contract;
 
-  // we're not loading but don't have a contract, so we'll assumed feture is disabled (really this is an error state?)
+  // we're not loading but don't have a contract, so we'll assumed feature is disabled (really this is an error state?)
   if (!actualContract) {
     return "disabled";
   }

@@ -218,7 +218,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
   const deploy = useDeploy(contract.contractType);
 
   const { onSuccess, onError } = useTxNotifications(
-    "Succesfully deployed contract",
+    "Successfully deployed contract",
     "Failed to deploy contract",
   );
 

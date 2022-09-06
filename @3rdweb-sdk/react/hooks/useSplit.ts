@@ -15,8 +15,8 @@ import invariant from "tiny-invariant";
 import { parseErrorToMessage } from "utils/errorParser";
 import { isAddressZero } from "utils/zeroAddress";
 
-export function useSplitContractMetadata(contractAddres?: string) {
-  return useContractMetadata(useToken(contractAddres));
+export function useSplitContractMetadata(contractAddress?: string) {
+  return useContractMetadata(useToken(contractAddress));
 }
 
 export function useSplitData(contractAddress?: string) {
@@ -71,7 +71,7 @@ export function useSplitDistributeFunds(contract?: Split) {
                   position: "bottom",
                   variant: "solid",
                   title: `Success`,
-                  description: `Succesfully distributed ${currency.name}`,
+                  description: `Successfully distributed ${currency.name}`,
                   status: "success",
                   duration: 5000,
                   isClosable: true,
@@ -96,7 +96,7 @@ export function useSplitDistributeFunds(contract?: Split) {
                   position: "bottom",
                   variant: "solid",
                   title: `Success`,
-                  description: `Succesfully distributed ${currency.name}`,
+                  description: `Successfully distributed ${currency.name}`,
                   status: "success",
                   duration: 5000,
                   isClosable: true,

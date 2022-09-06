@@ -197,7 +197,7 @@ const MismatchNotice: React.FC<{
 
       {!actuallyCanAttemptSwitch && (
         <Text size="body.sm" fontStyle="italic">
-          Your connected wallet does not support programatic switching.
+          Your connected wallet does not support programmatic switching.
           <br />
           Please manually switch the network in your wallet.
         </Text>

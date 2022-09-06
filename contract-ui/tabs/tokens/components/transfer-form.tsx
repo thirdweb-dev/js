@@ -40,7 +40,7 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
   const modalContext = useModalContext();
 
   const { onSuccess, onError } = useTxNotifications(
-    "Succesfully transferred tokens",
+    "Successfully transferred tokens",
     "Failed to transfer tokens",
   );
 

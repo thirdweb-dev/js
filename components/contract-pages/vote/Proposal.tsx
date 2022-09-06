@@ -116,7 +116,7 @@ export const Proposal: React.FC<IProposal> = ({ proposal }) => {
   }, [proposal]);
 
   const { onSuccess: castVoteSuccess, onError: castVoteError } =
-    useTxNotifications("Vote cast succesfully", "Error casting vote");
+    useTxNotifications("Vote cast successfully", "Error casting vote");
 
   const castVote = useCallback(
     (voteType: VoteType) => {
@@ -133,7 +133,7 @@ export const Proposal: React.FC<IProposal> = ({ proposal }) => {
 
   const { onSuccess: executeSuccess, onError: executeError } =
     useTxNotifications(
-      "Proposal executed succesfully",
+      "Proposal executed successfully",
       "Error executing proposal",
     );
 

@@ -73,7 +73,7 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
     tokenId,
   );
   const { onSuccess, onError } = useTxNotifications(
-    "Succesfully reset claim eligibility",
+    "Successfully reset claim eligibility",
     "Failed to reset claim eligibility",
   );
 

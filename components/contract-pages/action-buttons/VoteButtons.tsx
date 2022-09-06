@@ -39,7 +39,7 @@ export const DelegateButton: React.FC<IVoteButton> = ({ contract }) => {
   );
 
   const { onSuccess, onError } = useTxNotifications(
-    "Tokens succesfully delegated",
+    "Tokens successfully delegated",
     "Error delegating tokens",
   );
 

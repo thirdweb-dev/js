@@ -19,7 +19,7 @@ export const MarketplaceActionsCell: React.FC<IMarketplaceActionsCellProps> = ({
 }) => {
   const { address } = useWeb3();
   const txNotifications = useTxNotifications(
-    "Succesfully cancelled listing",
+    "Successfully cancelled listing",
     "Error cancelling listing",
   );
 

@@ -23,7 +23,7 @@ const PLEASE_REACH_OUT_MESSAGE = (
   </>
 );
 
-const UNKNWON_ERROR_MESSAGE = "An unknown error occurred, please try again.";
+const UNKNOWN_ERROR_MESSAGE = "An unknown error occurred, please try again.";
 
 export function parseErrorToMessage(error: unknown): string | JSX.Element {
   const message = parseError(error);
@@ -63,7 +63,7 @@ function parseError(error: unknown): string | JSX.Element {
   console.error("unknown error", error);
   posthog.capture("unknown_error", { error });
   // worst case scenario send a generic error message back
-  return UNKNWON_ERROR_MESSAGE;
+  return UNKNOWN_ERROR_MESSAGE;
 }
 
 interface ErrorWithCode extends Error {
@@ -118,7 +118,7 @@ function parseErrorCode(error: ErrorWithCode): string | JSX.Element | void {
       return (
         error?.data.message ||
         error?.message ||
-        "An internal error occured with your transaction."
+        "An internal error occurred with your transaction."
       );
     }
     case -32002: {

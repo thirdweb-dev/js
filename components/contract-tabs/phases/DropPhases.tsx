@@ -67,7 +67,7 @@ export const DropPhases: React.FC<DropPhases> = ({ contract, tokenId }) => {
     tokenId,
   );
   const txNotifications = useTxNotifications(
-    "Succesfully reset claim eligibility",
+    "Successfully reset claim eligibility",
     "Failed to reset claim eligibility",
   );
 

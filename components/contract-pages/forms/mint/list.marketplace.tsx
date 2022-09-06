@@ -65,7 +65,7 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
   const { data: nfts, isLoading: nftsLoading } = useWalletNFTs();
   const modalContext = useModalContext();
   const { onSuccess, onError } = useTxNotifications(
-    "Succesfully created listing",
+    "Successfully created listing",
     "Error creating listing",
   );
 

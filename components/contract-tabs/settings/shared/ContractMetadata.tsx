@@ -50,7 +50,7 @@ export const ContractMetadata = <TContract extends ValidContractClass>({
   }, [formState.isDirty, metadata.data]);
 
   const { onSuccess, onError } = useTxNotifications(
-    "Succesfully updated metadata",
+    "Successfully updated metadata",
     "Error updating metadata",
   );
 
