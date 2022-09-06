@@ -1,14 +1,11 @@
-import { createTestSDK } from "./nft-collection.test";
-import { ThirdwebSDK } from "../src/sdk";
+import { sdk } from "./before-setup";
 import { NFTDrop } from "../src/contracts/nft-drop";
 import { expect } from "chai";
 
 describe("NFTDrop", async () => {
-  let sdk: ThirdwebSDK;
   let drop: NFTDrop
 
   before(async () => {
-    sdk = await createTestSDK();
     const addr = await sdk.deployer.createNftDrop({
       price: 1.25,
       sellerFeeBasisPoints: 500,

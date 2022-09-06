@@ -1,6 +1,6 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { sdk, signers } from "./before-setup";
 import { Edition, Multiwrap, NFTCollection, Token } from "../src/contracts";
+import { sdk, signers } from "./hooks";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 
 describe("Multiwrap Contract", async () => {

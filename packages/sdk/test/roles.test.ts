@@ -1,9 +1,8 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { Edition } from "../src/index";
-import { sdk, signers } from "./before-setup";
-
-import { assert } from "chai";
+import { sdk, signers } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { assert } from "chai";
 
 global.fetch = require("cross-fetch");
 

@@ -79,9 +79,6 @@ export class DelayedReveal<
    *   realNFTs,
    *   "my secret password",
    * );
-   * // Whenever you're ready, reveal your NFTs at any time!
-   * const batchId = 0; // the batch to reveal
-   * await contract.revealer.reveal(batchId, "my secret password");
    * ```
    * @public
    * @param placeholder - the placeholder NFT to show before the reveal
@@ -160,7 +157,7 @@ export class DelayedReveal<
     );
     const startingIndex = events[0].args.startTokenId;
     const endingIndex = events[0].args.endTokenId;
-    const results = [];
+    const results: TransactionResultWithId[] = [];
     for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
       results.push({
         id,

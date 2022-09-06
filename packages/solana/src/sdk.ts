@@ -1,6 +1,8 @@
 import { Deployer } from "./classes/deployer";
 import { UserWallet } from "./classes/user-wallet";
+import { DEFAULT_IPFS_GATEWAY } from "./constants/urls";
 import { NFTCollection } from "./contracts/nft-collection";
+import { Token } from "./contracts/token";
 import { Network } from "./types";
 import { getUrlForNetwork } from "./utils/urls";
 import {
@@ -8,20 +10,16 @@ import {
   isKeypairSigner,
   keypairIdentity,
   Metaplex,
-  mockStorage,
   Signer,
   walletAdapterIdentity,
 } from "@metaplex-foundation/js";
 import { Connection, Keypair } from "@solana/web3.js";
-import { IpfsStorage, IStorage } from "@thirdweb-dev/storage";
+import { IpfsStorage, IStorage, PinataUploader } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
 import { NFTDrop } from "./contracts/nft-drop";
 
 export class ThirdwebSDK {
-  static fromNetwork(
-    network: Network,
-    storage: IStorage = new IpfsStorage(),
-  ): ThirdwebSDK {
+  static fromNetwork(network: Network, storage?: IStorage): ThirdwebSDK {
     return new ThirdwebSDK(new Connection(getUrlForNetwork(network)), storage);
   }
 
@@ -32,7 +30,16 @@ export class ThirdwebSDK {
   public deployer: Deployer;
   public wallet: UserWallet;
 
-  constructor(connection: Connection, storage: IStorage = new IpfsStorage()) {
+  constructor(
+    connection: Connection,
+    storage: IStorage = new IpfsStorage(
+      DEFAULT_IPFS_GATEWAY,
+      new PinataUploader(),
+      {
+        appendGatewayUrl: true,
+      },
+    ),
+  ) {
     this.connection = connection;
     this.storage = storage;
     this.metaplex = Metaplex.make(this.connection);
@@ -55,6 +62,10 @@ export class ThirdwebSDK {
 
   public async getNFTDrop(address: string): Promise<NFTDrop> {
     return new NFTDrop(address, this.metaplex, this.wallet, this.storage);
+  }
+  
+  public async getToken(address: string): Promise<Token> {
+    return new Token(address, this.metaplex, this.wallet, this.storage);
   }
 
   private propagateSignerUpdated(signer: Signer) {

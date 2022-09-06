@@ -1,9 +1,8 @@
+import { EditionMetadataInput, Pack, Edition } from "../src";
+import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { sdk, signers } from "./before-setup";
-
 import { assert } from "chai";
 import { BigNumber } from "ethers";
-import { EditionMetadataInput, Pack, Edition } from "../src";
 
 global.fetch = require("cross-fetch");
 

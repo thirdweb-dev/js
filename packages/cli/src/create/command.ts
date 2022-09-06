@@ -8,6 +8,7 @@ import { validateNpmName } from "./helpers/validate-pkg";
 import chalk from "chalk";
 import path from "path";
 import prompts from "prompts";
+import { CREATE_MESSAGES } from "../../constants/constants";
 
 let projectType: string = "";
 let projectPath: string = "";
@@ -65,7 +66,7 @@ export async function twCreate(options: any) {
     const res = await prompts({
       type: "select",
       name: "projectType",
-      message: "What type of project do you want to create?",
+      message: CREATE_MESSAGES.typeOfProject,
       choices: [
         { title: "App", value: "app" },
         { title: "Contract", value: "contract" },
@@ -87,7 +88,7 @@ export async function twCreate(options: any) {
     const res = await prompts({
       type: "text",
       name: "path",
-      message: "What is your project named?",
+      message: CREATE_MESSAGES.projectName,
       initial: options.template || defaultName,
       validate: (name) => {
         const validation = validateNpmName(path.basename(path.resolve(name)));
@@ -123,7 +124,7 @@ export async function twCreate(options: any) {
       const res = await prompts({
         type: "select",
         name: "framework",
-        message: "What framework do you want to use?",
+        message: CREATE_MESSAGES.framework,
         choices: [
           { title: "Next.js", value: "next" },
           { title: "Create React App", value: "cra" },
@@ -140,7 +141,7 @@ export async function twCreate(options: any) {
       const res = await prompts({
         type: "select",
         name: "language",
-        message: "What language do you want to use?",
+        message: CREATE_MESSAGES.language,
         choices: [
           { title: "JavaScript", value: "javascript" },
           { title: "TypeScript", value: "typescript" },
@@ -160,7 +161,7 @@ export async function twCreate(options: any) {
       const res = await prompts({
         type: "select",
         name: "framework",
-        message: "What framework do you want to use?",
+        message: CREATE_MESSAGES.framework,
         choices: [
           { title: "Hardhat", value: "hardhat" },
           { title: "Forge", value: "forge" },
@@ -177,7 +178,7 @@ export async function twCreate(options: any) {
       const res = await prompts({
         type: "select",
         name: "baseContract",
-        message: "What contract do you want to start from?",
+        message: CREATE_MESSAGES.contract,
         choices: [
           { title: "Empty Contract", value: "" },
           { title: "ERC721 Base", value: "ERC721Base" },

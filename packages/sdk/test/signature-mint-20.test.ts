@@ -1,6 +1,6 @@
 import { PayloadToSign20, SignedPayload20, Token } from "../src";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { sdk, signers } from "./before-setup";
+import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber } from "ethers";

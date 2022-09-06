@@ -1,5 +1,4 @@
 import { getRoleHash } from "../common";
-import { Erc721WithQuantitySignatureMintable } from "../core";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
@@ -15,6 +14,7 @@ import { Erc721Burnable } from "../core/classes/erc-721-burnable";
 import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
 import { Erc721Mintable } from "../core/classes/erc-721-mintable";
 import { Erc721Supply } from "../core/classes/erc-721-supply";
+import { Erc721WithQuantitySignatureMintable } from "../core/classes/erc-721-with-quantity-signature-mintable";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import type {
   NetworkOrSignerOrProvider,

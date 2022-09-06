@@ -1,7 +1,7 @@
+import { Split, Token } from "../src";
+import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { sdk, signers } from "./before-setup";
-import { Split, Token } from "../src";
 import { ethers } from "ethers";
 
 global.fetch = require("cross-fetch");

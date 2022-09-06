@@ -28,7 +28,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     updateNotifier({
       pkg,
       shouldNotifyInNpmScript: true,
-      //check every time while we're still building the CLI
+      // check every time while we're still building the CLI
       updateCheckInterval: 0,
     }).notify();
   });

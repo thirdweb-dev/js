@@ -1,6 +1,6 @@
 import { NFTMetadataInput } from "../src";
 import { NFTCollection } from "../src/contracts";
-import { sdk, signers, storage } from "./before-setup";
+import { sdk, signers, storage } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
