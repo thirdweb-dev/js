@@ -89,7 +89,9 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
 
   const ensQuery = ens.useQuery(release.releaser);
 
-  const releaserEnsOrAddress = ensQuery.data?.ensName || release.releaser;
+  const releaserEnsOrAddress = shortenIfAddress(
+    ensQuery.data?.ensName || release.releaser,
+  );
 
   const releasedDate = format(
     new Date(
