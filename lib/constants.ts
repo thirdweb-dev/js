@@ -18,4 +18,5 @@ export const OG_IMAGE_BASE_URL = enforceHTTPS(
 );
 
 // OG IMAGE RELATED
-export const OG_IMAGE_CACHE_VERSION = "1.0.0";
+export const OG_IMAGE_CACHE_VERSION = "1.0.1";
+export const TWEMOJI_OPTIONS = { folder: "svg", ext: ".svg" };

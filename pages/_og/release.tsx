@@ -6,6 +6,7 @@ import {
   BASE_URL,
   OG_IMAGE_BASE_URL,
   OG_IMAGE_CACHE_VERSION,
+  TWEMOJI_OPTIONS,
 } from "lib/constants";
 import { correctAndUniqueLicenses } from "lib/licenses";
 import { useRouter } from "next/router";
@@ -15,6 +16,7 @@ import {
   VscExtensions,
   VscVersions,
 } from "react-icons/vsc";
+import Twemoji from "react-twemoji";
 import { Heading, Text } from "tw-components";
 import { z } from "zod";
 
@@ -23,8 +25,8 @@ const OGReleaseMetadataSchema = z.object({
   description: z.string().optional(),
   releaser: z.string(),
   releaserAvatar: z.string().optional(),
-  extension: z.array(z.string()).optional(),
-  license: z.array(z.string()).optional(),
+  extension: z.array(z.string()).or(z.string()).optional(),
+  license: z.array(z.string()).or(z.string()).optional(),
   releaseLogo: z.string().optional(),
   version: z.string(),
   releaseDate: z.string(),
@@ -50,7 +52,7 @@ export function createReleaseOGUrl(
   url.searchParams.sort();
 
   ogUrl.searchParams.append("url", url.toString());
-  ogUrl.searchParams.append("version", OG_IMAGE_CACHE_VERSION);
+  ogUrl.searchParams.append("ogv", OG_IMAGE_CACHE_VERSION);
 
   return ogUrl.toString();
 }
@@ -58,11 +60,16 @@ export function createReleaseOGUrl(
 export default function OGReleaseImage() {
   const router = useRouter();
 
+  if (!router.isReady) {
+    return null;
+  }
+
   let metadata;
 
   try {
     metadata = OGReleaseMetadataSchema.parse(router.query);
   } catch (err) {
+    console.error("failed to render", err);
     return null;
   }
 
@@ -136,7 +143,7 @@ export default function OGReleaseImage() {
                 fontSize="64px"
                 fontWeight={700}
               >
-                {metadata.name}
+                <Twemoji options={TWEMOJI_OPTIONS}>{metadata.name}</Twemoji>
               </Heading>
             </Flex>
             {metadata.description && (
@@ -146,7 +153,9 @@ export default function OGReleaseImage() {
                 fontSize="32px"
                 lineHeight={1.5}
               >
-                {metadata.description}
+                <Twemoji options={TWEMOJI_OPTIONS}>
+                  {metadata.description}
+                </Twemoji>
               </Text>
             )}
           </Flex>
@@ -165,7 +174,9 @@ export default function OGReleaseImage() {
                 `https://source.boringavatars.com/marble/120/${metadata.releaser}?colors=264653,2a9d8f,e9c46a,f4a261,e76f51&square=true`
               }
             />
-            <Heading size="subtitle.lg">{metadata.releaser}</Heading>
+            <Heading size="subtitle.lg">
+              <Twemoji options={TWEMOJI_OPTIONS}>{metadata.releaser}</Twemoji>
+            </Heading>
           </Flex>
         </Flex>
         <Flex direction="row" justify="space-between" align="flex-end">
@@ -184,7 +195,9 @@ export default function OGReleaseImage() {
                   fontFamily="mono"
                   size="subtitle.lg"
                 >
-                  {metadata.extension.join(", ")}
+                  {Array.isArray(metadata.extension)
+                    ? metadata.extension.join(", ")
+                    : metadata.extension}
                 </Heading>
               </Flex>
             )}
@@ -195,7 +208,13 @@ export default function OGReleaseImage() {
                 fontFamily="mono"
                 size="subtitle.lg"
               >
-                {correctAndUniqueLicenses(metadata.license).join(", ")}
+                {correctAndUniqueLicenses(
+                  Array.isArray(metadata.license)
+                    ? metadata.license
+                    : metadata.license
+                    ? [metadata.license]
+                    : [],
+                ).join(", ")}
               </Heading>
             </Flex>
             <Flex as={ListItem} gap="12px" align="center">

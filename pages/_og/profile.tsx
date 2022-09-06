@@ -5,9 +5,11 @@ import {
   BASE_URL,
   OG_IMAGE_BASE_URL,
   OG_IMAGE_CACHE_VERSION,
+  TWEMOJI_OPTIONS,
 } from "lib/constants";
 import { useRouter } from "next/router";
 import { VscFile } from "react-icons/vsc";
+import Twemoji from "react-twemoji";
 import { Heading } from "tw-components";
 import { z } from "zod";
 
@@ -36,13 +38,17 @@ export function createProfileOGUrl(metadata: z.infer<typeof OgProfileSchema>) {
   url.searchParams.sort();
 
   ogUrl.searchParams.append("url", url.toString());
-  ogUrl.searchParams.append("version", OG_IMAGE_CACHE_VERSION);
+  ogUrl.searchParams.append("ogv", OG_IMAGE_CACHE_VERSION);
 
   return ogUrl.toString();
 }
 
 export default function OgProfileImage() {
   const router = useRouter();
+
+  if (!router.isReady) {
+    return null;
+  }
 
   let metadata;
 
@@ -91,7 +97,7 @@ export default function OgProfileImage() {
             }
           />
           <Heading size="title.lg" fontSize="64px" noOfLines={1}>
-            {metadata.displayName}
+            <Twemoji options={TWEMOJI_OPTIONS}>{metadata.displayName}</Twemoji>
           </Heading>
           {metadata.bio && (
             <Heading
@@ -100,7 +106,7 @@ export default function OgProfileImage() {
               fontSize="36px"
               noOfLines={2}
             >
-              {metadata.bio}
+              <Twemoji options={TWEMOJI_OPTIONS}>{metadata.bio}</Twemoji>
             </Heading>
           )}
         </Flex>
