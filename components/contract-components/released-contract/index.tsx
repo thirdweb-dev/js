@@ -18,6 +18,7 @@ import {
   List,
   ListItem,
 } from "@chakra-ui/react";
+import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
 import { useQuery } from "@tanstack/react-query";
 import {
   PublishedContract,
@@ -28,14 +29,14 @@ import { StorageSingleton } from "components/app-layouts/providers";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
 import { ShareButton } from "components/share-buttom";
 import { format } from "date-fns";
+import { correctAndUniqueLicenses } from "lib/licenses";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
+import { createReleaseOGUrl } from "pages/_og/release";
 import { useMemo } from "react";
-import { BiTime } from "react-icons/bi";
 import { BsShieldCheck } from "react-icons/bs";
 import { FcCheckmark } from "react-icons/fc";
-import { IoDocumentOutline } from "react-icons/io5";
-import { SiTwitter } from "react-icons/si";
+import { VscBook, VscCalendar } from "react-icons/vsc";
 import invariant from "tiny-invariant";
 import {
   Card,
@@ -90,35 +91,42 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
 
   const releaserEnsOrAddress = ensQuery.data?.ensName || release.releaser;
 
-  const ogImageUrl = useMemo(() => {
-    const url = new URL("https://og-image.thirdweb.com/thirdweb");
-    url.searchParams.append("version", release.version);
-    url.searchParams.append("description", release.description);
-    url.searchParams.append("contractName", release.name);
-    if (compilerInfo?.licenses) {
-      compilerInfo.licenses.forEach((license) => {
-        url.searchParams.append("licenses", license);
-      });
-    }
-    if (enabledExtensions) {
-      enabledExtensions
-        .map((extension) => extension.name)
-        .forEach((extension) => {
-          url.searchParams.append("extensions", extension);
-        });
-    }
-    url.searchParams.append("releaser", releaserEnsOrAddress);
-    if (releaserProfile.data?.avatar) {
-      url.searchParams.append("avatar", releaserProfile.data.avatar);
-    }
-    return `${url.href}&.png`;
-  }, [
-    release,
-    compilerInfo,
-    enabledExtensions,
-    releaserEnsOrAddress,
-    releaserProfile?.data,
-  ]);
+  const releasedDate = format(
+    new Date(
+      parseInt(
+        releasedContractInfo?.data?.publishedTimestamp.toString() || "0",
+      ) * 1000,
+    ),
+    "MMM dd, yyyy",
+  );
+
+  const licenses = correctAndUniqueLicenses(compilerInfo?.licenses || []);
+
+  const ogImageUrl = useMemo(
+    () =>
+      createReleaseOGUrl({
+        name: release.name,
+        description: release.description,
+        version: release.version,
+        releaser: releaserEnsOrAddress,
+        extension: enabledExtensions.map((e) => e.name),
+        license: licenses,
+        releaseDate: releasedDate,
+        releaserAvatar: releaserProfile.data?.avatar || undefined,
+        releaseLogo: release.logo,
+      }),
+    [
+      enabledExtensions,
+      licenses,
+      release.description,
+      release.logo,
+      release.name,
+      release.version,
+      releasedDate,
+      releaserEnsOrAddress,
+      releaserProfile.data?.avatar,
+    ],
+  );
 
   const twitterIntentUrl = useMemo(() => {
     const url = new URL("https://twitter.com/intent/tweet");
@@ -160,16 +168,6 @@ Deploy it in one click`,
     },
     { enabled: !!contractReleaseMetadata.data?.compilerMetadata?.sources },
   );
-
-  const releasedDate = format(
-    new Date(
-      parseInt(
-        releasedContractInfo?.data?.publishedTimestamp.toString() || "0",
-      ) * 1000,
-    ),
-    "MMM dd, yyyy",
-  );
-
   return (
     <>
       <NextSeo
@@ -183,9 +181,10 @@ Deploy it in one click`,
           images: [
             {
               url: ogImageUrl,
-              width: 1200,
-              height: 650,
-              alt: "thirdweb",
+              width: 2400,
+              height: 1260,
+              alt: `${release.name} contract on thirdweb`,
+              type: "image/png",
             },
           ],
         }}
@@ -240,9 +239,9 @@ Deploy it in one click`,
                 {releasedContractInfo.data?.publishedTimestamp && (
                   <ListItem>
                     <Flex gap={2} alignItems="center">
-                      <Icon as={BiTime} boxSize={5} />
+                      <Icon color="paragraph" as={VscCalendar} boxSize={5} />
                       <Text size="label.md" lineHeight={1.2}>
-                        Released on: {releasedDate}
+                        Released: {releasedDate}
                       </Text>
                     </Flex>
                   </ListItem>
@@ -267,14 +266,11 @@ Deploy it in one click`,
                 )}
                 <ListItem>
                   <Flex gap={2} alignItems="center">
-                    <Icon as={IoDocumentOutline} boxSize={5} />
+                    <Icon color="paragraph" as={VscBook} boxSize={5} />
                     <Text size="label.md" lineHeight={1.2}>
                       License
-                      {compilerInfo?.licenses &&
-                      compilerInfo?.licenses?.length > 1
-                        ? "s"
-                        : ""}
-                      : {compilerInfo?.licenses?.join(", ") || "None"}
+                      {licenses.length > 1 ? "s" : ""}:{" "}
+                      {licenses.join(", ") || "None"}
                     </Text>
                   </Flex>
                 </ListItem>

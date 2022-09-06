@@ -1,13 +1,13 @@
 import { useTableContext } from "../table-context";
 import { useTransferMutation } from "@3rdweb-sdk/react";
 import { FormControl, Icon, Input, Stack } from "@chakra-ui/react";
+import { IoMdSend } from "@react-icons/all-files/io/IoMdSend";
 import { Edition, EditionDrop, ValidContractInstance } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { constants } from "ethers";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { IoMdSend } from "react-icons/io";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 
 interface ITransferSection {

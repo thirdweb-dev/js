@@ -8,13 +8,14 @@ import {
   IconButton,
   Input,
 } from "@chakra-ui/react";
+import { IoMdAdd } from "@react-icons/all-files/io/IoMdAdd";
+import { IoMdRemove } from "@react-icons/all-files/io/IoMdRemove";
 import type { Split } from "@thirdweb-dev/sdk";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SplitsPieChart } from "components/splits-chart/splits-chart";
 import { constants } from "ethers";
 import { useEffect } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { IoMdAdd, IoMdRemove } from "react-icons/io";
 import { Button, FormErrorMessage, Heading, Text } from "tw-components";
 import { z } from "zod";
 

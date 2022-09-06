@@ -1,13 +1,11 @@
 import { CodeSnippet, Environment, SupportedEnvironment } from "./types";
 import { ButtonGroup, Flex, Icon, Stack } from "@chakra-ui/react";
+import { SiGo } from "@react-icons/all-files/si/SiGo";
+import { SiJavascript } from "@react-icons/all-files/si/SiJavascript";
+import { SiPython } from "@react-icons/all-files/si/SiPython";
+import { SiReact } from "@react-icons/all-files/si/SiReact";
+import { SiTypescript } from "@react-icons/all-files/si/SiTypescript";
 import { Dispatch, SetStateAction, useMemo } from "react";
-import {
-  SiGo,
-  SiJavascript,
-  SiPython,
-  SiReact,
-  SiTypescript,
-} from "react-icons/si";
 import { Button, CodeBlock } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 

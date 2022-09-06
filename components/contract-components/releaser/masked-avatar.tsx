@@ -19,7 +19,7 @@ export const MaskedAvatar: React.FC<MaskedAvatarProps> = ({
   return (
     <Img
       boxSize={boxSize}
-      objectFit="contain"
+      objectFit="cover"
       {...restBoxProps}
       style={{
         WebkitMaskImage: `url("${hexagon.src}")`,

@@ -10,9 +10,11 @@ import {
   useBreakpointValue,
 } from "@chakra-ui/react";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
+import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
+import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
+import { SiYoutube } from "@react-icons/all-files/si/SiYoutube";
 import { Logo } from "components/logo";
 import React, { useState } from "react";
-import { SiDiscord, SiTwitter, SiYoutube } from "react-icons/si";
 import { LinkButton, TrackedIconButton, TrackedLink } from "tw-components";
 
 export const HomepageTopNav: React.FC<{}> = () => {

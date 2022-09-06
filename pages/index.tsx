@@ -16,6 +16,8 @@ import {
   Stack,
   useClipboard,
 } from "@chakra-ui/react";
+import { AiOutlineTeam } from "@react-icons/all-files/ai/AiOutlineTeam";
+import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
 import { ChakraNextImage } from "components/Image";
 import { CLISection } from "components/homepage/CLISection";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
@@ -38,10 +40,8 @@ import ThirdwebTeams from "public/assets/landingpage/thirdweb-teams.png";
 import WhiteLogo from "public/assets/landingpage/white-logo.png";
 // end images
 import React from "react";
-import { AiOutlineTeam } from "react-icons/ai";
 import { BsLightningCharge, BsMenuButtonWide } from "react-icons/bs";
 import { FiCheck, FiCopy } from "react-icons/fi";
-import { IoMdCheckmark } from "react-icons/io";
 import { MdMarkEmailRead, MdOutlineAnalytics } from "react-icons/md";
 import { Card, Heading, LinkButton, Text, TrackedLink } from "tw-components";
 
@@ -198,7 +198,6 @@ const HomePage: ThirdwebNextPage = () => {
                 mt={8}
                 px={4}
                 src={MobileHero}
-                priority
               />
             </Flex>
           </SimpleGrid>

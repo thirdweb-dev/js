@@ -21,13 +21,13 @@ import {
   useClipboard,
   useToast,
 } from "@chakra-ui/react";
+import { AiOutlineQuestionCircle } from "@react-icons/all-files/ai/AiOutlineQuestionCircle";
 import { ContractEvent } from "@thirdweb-dev/sdk";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
 import { bigNumberReplacer } from "pages/_app";
 import React, { useMemo, useState } from "react";
-import { AiOutlineQuestionCircle } from "react-icons/ai";
 import { FiChevronDown, FiCopy } from "react-icons/fi";
 import {
   Button,

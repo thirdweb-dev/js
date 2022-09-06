@@ -15,6 +15,8 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AiFillEye } from "@react-icons/all-files/ai/AiFillEye";
+import { AiFillEyeInvisible } from "@react-icons/all-files/ai/AiFillEyeInvisible";
 import {
   NFTContract,
   useDelayedRevealLazyMint,
@@ -32,7 +34,6 @@ import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { MouseEventHandler, useState } from "react";
 import { useForm } from "react-hook-form";
-import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import {
   Card,
   Checkbox,

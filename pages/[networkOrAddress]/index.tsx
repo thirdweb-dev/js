@@ -16,6 +16,7 @@ import {
   fetchPublishedContracts,
   fetchReleaserProfile,
   usePublishedContractsQuery,
+  useReleaserProfile,
 } from "components/contract-components/hooks";
 import { ReleaserHeader } from "components/contract-components/releaser/releaser-header";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
@@ -26,6 +27,7 @@ import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "pages/_app";
+import { createProfileOGUrl } from "pages/_og/profile";
 import { ReactElement, useEffect } from "react";
 import { IoRefreshSharp } from "react-icons/io5";
 import { Button, LinkButton, Text } from "tw-components";
@@ -55,13 +57,37 @@ const UserPage: ThirdwebNextPage = () => {
     }
   }, [wallet, router]);
 
+  const releaserProfile = useReleaserProfile(
+    ensQuery.data?.address || undefined,
+  );
+
+  const displayName = shortenIfAddress(ensQuery?.data?.ensName || wallet);
+
+  const currentRoute = `https://thirdweb.com${router.asPath}`;
+
   return (
     <>
       <NextSeo
-        title={`${shortenIfAddress(ensQuery?.data?.ensName || wallet)}`}
-        description={`Visit ${shortenIfAddress(
-          shortenIfAddress(ensQuery?.data?.ensName || wallet),
-        )} profile and view all their released contracts. Deploy them easily with one click.`}
+        title={displayName}
+        description={`Visit ${displayName}'s profile. See their releases and deploy them in one click.`}
+        openGraph={{
+          title: displayName,
+          images: [
+            {
+              url: createProfileOGUrl({
+                displayName,
+                bio: releaserProfile.data?.bio,
+                avatar: releaserProfile.data?.avatar || undefined,
+                releaseCnt: publishedContracts.data?.length.toString(),
+              }),
+              width: 2400,
+              height: 1260,
+              alt: `${displayName}'s profile`,
+              type: "image/png",
+            },
+          ],
+          url: currentRoute,
+        }}
       />
 
       <Flex flexDir="column" gap={8}>

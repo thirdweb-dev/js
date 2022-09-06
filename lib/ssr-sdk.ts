@@ -17,14 +17,11 @@ const alchemyUrlMap: Record<SUPPORTED_CHAIN_ID, string> = {
   [ChainId.Mumbai]:
     process.env.SSR_RPC_MUMBAI ||
     `https://polygon-mumbai.g.alchemy.com/v2/${process.env.SSR_ALCHEMY_KEY}`,
-  [ChainId.Fantom]:
-    process.env.SSR_RPC_FANTOM || "https://rpc.ftm.tools",
+  [ChainId.Fantom]: process.env.SSR_RPC_FANTOM || "https://rpc.ftm.tools",
   [ChainId.FantomTestnet]:
-    process.env.SSR_RPC_FANTOM_TESTNET ||
-    "https://rpc.testnet.fantom.network",
+    process.env.SSR_RPC_FANTOM_TESTNET || "https://rpc.testnet.fantom.network",
   [ChainId.Avalanche]:
-    process.env.SSR_RPC_AVALANCHE ||
-    "https://api.avax.network/ext/bc/C/rpc",
+    process.env.SSR_RPC_AVALANCHE || "https://api.avax.network/ext/bc/C/rpc",
   [ChainId.AvalancheFujiTestnet]:
     process.env.SSR_RPC_AVALANCHE_FUJI_TESTNET ||
     "https://api.avax-test.network/ext/bc/C/rpc",
@@ -40,9 +37,8 @@ const alchemyUrlMap: Record<SUPPORTED_CHAIN_ID, string> = {
   [ChainId.ArbitrumTestnet]:
     process.env.SSR_RPC_ARBITRUM_TESTNET ||
     `https://arb-rinkeby.g.alchemy.com/v2/${process.env.SSR_ALCHEMY_KEY}`,
-    [ChainId.BinanceSmartChainMainnet]:
-    process.env.SSR_RPC_BINANCE_MAINNET ||
-    "https://bsc-dataseed1.binance.org",
+  [ChainId.BinanceSmartChainMainnet]:
+    process.env.SSR_RPC_BINANCE_MAINNET || "https://bsc-dataseed1.binance.org",
   [ChainId.BinanceSmartChainTestnet]:
     process.env.SSR_RPC_BINANCE_TESTNET ||
     "https://data-seed-prebsc-1-s1.binance.org:8545",
@@ -53,8 +49,14 @@ export function getSSRRPCUrl(chainId: SUPPORTED_CHAIN_ID) {
 }
 
 export function getSSRSDK(chainId: SUPPORTED_CHAIN_ID): ThirdwebSDK {
-  return new ThirdwebSDK(getSSRRPCUrl(chainId), {readonlySettings: {
-    chainId,
-    rpcUrl: getSSRRPCUrl(chainId)
-  }}, StorageSingleton);
+  return new ThirdwebSDK(
+    getSSRRPCUrl(chainId),
+    {
+      readonlySettings: {
+        chainId,
+        rpcUrl: getSSRRPCUrl(chainId),
+      },
+    },
+    StorageSingleton,
+  );
 }

@@ -74,7 +74,6 @@ export const CLISection: React.FC = () => {
                   fontWeight="600"
                   mr="auto"
                   isExternal
-                  noIcon
                 >
                   <span>Learn More</span> <Icon as={FiArrowRight} />
                 </TrackedLink>

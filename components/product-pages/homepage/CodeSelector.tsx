@@ -1,8 +1,8 @@
 import { CodeOptionButton, CodeOptions } from "../common/CodeOptionButton";
 import { Box, Flex, Icon, SimpleGrid } from "@chakra-ui/react";
+import { SiReplDotIt } from "@react-icons/all-files/si/SiReplDotIt";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useState } from "react";
-import { SiReplit } from "react-icons/si";
 import { Card, CodeBlock, LinkButton } from "tw-components";
 
 const codeSnippets = {
@@ -147,7 +147,7 @@ export const CodeSelector: React.FC = () => {
             <Icon
               color="#E0507A"
               _groupHover={{ color: "#1D64EF" }}
-              as={SiReplit}
+              as={SiReplDotIt}
             />
           }
         >

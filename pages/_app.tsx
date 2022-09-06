@@ -7,9 +7,7 @@ import {
   PersistQueryClientProvider,
   Persister,
 } from "@tanstack/react-query-persist-client";
-import { DashboardThirdwebProvider } from "components/app-layouts/providers";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
-import { ErrorProvider } from "contexts/error-handler";
 import { BigNumber } from "ethers";
 import { NextPage } from "next";
 import { DefaultSeo } from "next-seo";
@@ -140,6 +138,23 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
   }, [pageId]);
 
   const getLayout = Component.getLayout ?? ((page) => page);
+
+  // shortcut everything and only set up the necessities for the OG renderer
+  if (router.pathname.startsWith("/_og/")) {
+    return (
+      <>
+        <Global
+          styles={css`
+            ${fontSizeCssVars}
+          `}
+        />
+        <ChakraProvider theme={chakraTheme}>
+          <Component {...pageProps} />
+        </ChakraProvider>
+      </>
+    );
+  }
+
   return (
     <PersistQueryClientProvider
       client={queryClient}
@@ -225,12 +240,8 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
         />
 
         <ChakraProvider theme={chakraTheme}>
-          <ErrorProvider>
-            <DashboardThirdwebProvider queryClient={queryClient}>
-              <AnnouncementBanner />
-              {getLayout(<Component {...pageProps} />, pageProps)}
-            </DashboardThirdwebProvider>
-          </ErrorProvider>
+          <AnnouncementBanner />
+          {getLayout(<Component {...pageProps} />, pageProps)}
         </ChakraProvider>
       </Hydrate>
     </PersistQueryClientProvider>

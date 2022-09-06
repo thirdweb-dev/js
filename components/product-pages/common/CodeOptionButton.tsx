@@ -1,8 +1,11 @@
 import { Icon, useBreakpointValue } from "@chakra-ui/react";
+import { SiGo } from "@react-icons/all-files/si/SiGo";
+import { SiJavascript } from "@react-icons/all-files/si/SiJavascript";
+import { SiPython } from "@react-icons/all-files/si/SiPython";
+import { SiReact } from "@react-icons/all-files/si/SiReact";
 import { useTrack } from "hooks/analytics/useTrack";
 import { Dispatch, SetStateAction } from "react";
 import { flushSync } from "react-dom";
-import { SiGo, SiJavascript, SiPython, SiReact } from "react-icons/si";
 import { Button, ButtonProps, PossibleButtonSize } from "tw-components";
 
 const LOGO_OPTIONS = {

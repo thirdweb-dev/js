@@ -9,10 +9,11 @@ import {
   Link,
   Stack,
 } from "@chakra-ui/react";
+import { AiFillEye } from "@react-icons/all-files/ai/AiFillEye";
+import { AiOutlineFileAdd } from "@react-icons/all-files/ai/AiOutlineFileAdd";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import React, { useCallback } from "react";
 import { Accept, DropEvent, FileRejection, useDropzone } from "react-dropzone";
-import { AiFillEye, AiOutlineFileAdd } from "react-icons/ai";
 import { FiImage, FiUpload } from "react-icons/fi";
 import { Button, Text } from "tw-components";
 

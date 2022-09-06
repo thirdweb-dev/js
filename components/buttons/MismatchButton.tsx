@@ -11,6 +11,7 @@ import {
   PopoverTrigger,
   useDisclosure,
 } from "@chakra-ui/react";
+import { AiOutlineWarning } from "@react-icons/all-files/ai/AiOutlineWarning";
 import {
   useBalance,
   useChainId,
@@ -22,7 +23,6 @@ import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import React, { useCallback, useRef } from "react";
-import { AiOutlineWarning } from "react-icons/ai";
 import { VscDebugDisconnect } from "react-icons/vsc";
 import {
   Button,

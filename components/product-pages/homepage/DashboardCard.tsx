@@ -3,7 +3,7 @@ import { AspectRatio, Box, Flex, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { StaticImageData } from "next/image";
 import * as React from "react";
-import { IconType } from "react-icons";
+import type { IconType } from "react-icons";
 import { Heading, Text } from "tw-components";
 
 interface DashboardCardProps {

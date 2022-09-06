@@ -9,6 +9,9 @@ import {
   Textarea,
   useDisclosure,
 } from "@chakra-ui/react";
+import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
+import { SiGithub } from "@react-icons/all-files/si/SiGithub";
+import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
 import { ProfileMetadata, ProfileMetadataInput } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
@@ -20,7 +23,6 @@ import { useForm } from "react-hook-form";
 import { BiImage } from "react-icons/bi";
 import { FiEdit, FiGlobe } from "react-icons/fi";
 import { HiPencilAlt } from "react-icons/hi";
-import { SiDiscord, SiGithub, SiTwitter } from "react-icons/si";
 import {
   Button,
   Drawer,

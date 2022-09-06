@@ -8,6 +8,10 @@ import {
   Icon,
   Stack,
 } from "@chakra-ui/react";
+import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
+import { SiGithub } from "@react-icons/all-files/si/SiGithub";
+import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
+import { SiYoutube } from "@react-icons/all-files/si/SiYoutube";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
 import { Logo } from "components/logo";
 import { InsufficientFunds } from "components/notices/InsufficientFunds";
@@ -15,7 +19,6 @@ import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import React from "react";
 import { RiGasStationFill } from "react-icons/ri";
-import { SiDiscord, SiGithub, SiTwitter, SiYoutube } from "react-icons/si";
 import {
   Link,
   LinkButton,

@@ -4,7 +4,8 @@ import {
   useContractTypeOfContract,
 } from "@3rdweb-sdk/react";
 import { Flex, Icon, Stack, useDisclosure } from "@chakra-ui/react";
-import { ValidContractInstance } from "@thirdweb-dev/sdk";
+import { IoMdSend } from "@react-icons/all-files/io/IoMdSend";
+import type { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import {
   AirdropAddressInput,
@@ -16,7 +17,6 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { BsCircleFill } from "react-icons/bs";
 import { FiUpload } from "react-icons/fi";
-import { IoMdSend } from "react-icons/io";
 import { Button, Text } from "tw-components";
 
 interface IAirdropSection {

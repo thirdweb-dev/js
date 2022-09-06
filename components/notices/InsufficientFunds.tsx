@@ -1,10 +1,10 @@
 import { FAUCETS, useWeb3 } from "@3rdweb-sdk/react";
 import { ButtonGroup, Container, Icon, Stack } from "@chakra-ui/react";
+import { AiOutlineWarning } from "@react-icons/all-files/ai/AiOutlineWarning";
 import { useBalance, useNetworkMismatch } from "@thirdweb-dev/react";
 import { BigNumber } from "ethers";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { AiOutlineWarning } from "react-icons/ai";
 import { Button, Card, Heading, LinkButton, Text } from "tw-components";
 
 export const InsufficientFunds: React.FC = () => {

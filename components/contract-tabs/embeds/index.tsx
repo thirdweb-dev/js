@@ -12,6 +12,7 @@ import {
   Stack,
   useClipboard,
 } from "@chakra-ui/react";
+import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
 import {
   EditionDrop,
   Marketplace,
@@ -22,7 +23,6 @@ import {
 } from "@thirdweb-dev/sdk";
 import { useState } from "react";
 import { FiCopy } from "react-icons/fi";
-import { IoMdCheckmark } from "react-icons/io";
 import {
   Button,
   Card,

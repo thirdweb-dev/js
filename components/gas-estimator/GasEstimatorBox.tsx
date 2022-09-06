@@ -1,5 +1,6 @@
 import { GasEstimate } from "@3rdweb-sdk/react/hooks/useGas";
 import { Box, BoxProps, Flex, Icon, Tooltip } from "@chakra-ui/react";
+import { AiOutlineInfoCircle } from "@react-icons/all-files/ai/AiOutlineInfoCircle";
 import { ContractType } from "@thirdweb-dev/sdk";
 import {
   CONTRACT_TYPE_NAME_MAP,
@@ -8,7 +9,6 @@ import {
 } from "constants/mappings";
 import { ethers } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
-import { AiOutlineInfoCircle } from "react-icons/ai";
 import { FiExternalLink } from "react-icons/fi";
 import { Heading, NextLink, Text } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";

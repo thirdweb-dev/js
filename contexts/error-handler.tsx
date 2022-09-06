@@ -6,10 +6,10 @@ import {
   useClipboard,
   useToast,
 } from "@chakra-ui/react";
+import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
 import { TransactionError } from "@thirdweb-dev/sdk";
 import { createContext, useCallback, useContext, useState } from "react";
 import { FiAlertTriangle, FiCheck, FiCopy } from "react-icons/fi";
-import { SiDiscord } from "react-icons/si";
 import {
   AddressCopyButton,
   Button,
