@@ -5,7 +5,7 @@ import {
 } from "../types/contracts";
 import { UserWallet } from "./user-wallet";
 import invariant from "tiny-invariant";
-import { NFTDropMetadataInput } from "../types/contracts/nft-drop";
+import { NFTDropContractSchema, NFTDropMetadataInput } from "../types/contracts/nft-drop";
 import { findMetadataPda, Metaplex, token, sol, toBigNumber } from "@metaplex-foundation/js";
 import {
   createCreateMetadataAccountV2Instruction,
@@ -103,20 +103,14 @@ export class Deployer {
     return collectionNft.mint.address.toBase58();
   }
 
-  async createNftDrop(dropMetadata: NFTDropMetadataInput): Promise<string> {
+  async createNftDrop(metadata: NFTDropMetadataInput): Promise<string> {
     invariant(this.wallet.signer, "Wallet is not connected");
+    const parsed = NFTDropContractSchema.parse(metadata)
 
-    console.log("deploying...")
     const { candyMachine: nftDrop } = await this.metaplex
       .candyMachines()
-      .create({
-        price: sol(dropMetadata.price),
-        sellerFeeBasisPoints: dropMetadata.sellerFeeBasisPoints,
-        itemsAvailable: toBigNumber(dropMetadata.itemsAvailable),
-      })
+      .create({ ...parsed })
       .run()
-
-    console.log("Deployed...")
 
     return nftDrop.address.toBase58();
   }

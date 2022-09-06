@@ -6,24 +6,34 @@ describe("NFTDrop", async () => {
   let drop: NFTDrop
 
   before(async () => {
-    const addr = await sdk.deployer.createNftDrop({
-      price: 1.25,
-      sellerFeeBasisPoints: 500,
-      itemsAvailable: 100,
+    const address = await sdk.deployer.createNftDrop({
+      price: 0,
+      sellerFeeBasisPoints: 0,
+      itemsAvailable: 2,
     });
-    drop = await sdk.getNFTDrop(addr);
+    drop = await sdk.getNFTDrop(address);
   });
 
-  it("should lazy mint an NFT", async () => {
-    let items = (await drop.info).items;
-    expect(items.length).to.equal(2)
+  it("should lazy mint NFTs", async () => {
+    let supply = (await drop.getInfo()).itemsLoaded
+    expect(supply.toNumber()).to.equal(0);
 
     await drop.lazyMint([
       { name: "NFT #1", description: "This is the #1 NFT" },
       { name: "NFT #2", description: "This is the #2 NFT" },
     ])
    
-    items = (await drop.info).items;
-    expect(items.length).to.equal(2);
+    supply = (await drop.getInfo()).itemsLoaded
+    expect(supply.toNumber()).to.equal(2);
   })
+
+  it("should claim free drop", async () => {
+    let unclaimed = await drop.totalUnclaimedSupply();
+    expect(unclaimed.toNumber()).to.equal(2)
+
+    await drop.claim()
+
+    unclaimed = await drop.totalUnclaimedSupply();
+    expect(unclaimed.toNumber()).to.equal(1);
+  });
 })

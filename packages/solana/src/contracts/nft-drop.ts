@@ -1,9 +1,9 @@
-import { isDateTime, Metaplex, toBigNumber, toDateTime } from "@metaplex-foundation/js";
+import { Metaplex } from "@metaplex-foundation/js";
 import { Connection, PublicKey } from "@solana/web3.js";
-import { BigNumberSchema } from "@thirdweb-dev/sdk/dist/declarations/src/schema/shared.js";
 import { IStorage } from "@thirdweb-dev/storage";
 import { NFTMetadataInput } from "../../../sdk/dist/thirdweb-dev-sdk.cjs";
 import { UserWallet } from "../classes/user-wallet";
+import { NFTDropContractSchema, NFTDropMetadataInput } from "../types/contracts/nft-drop.js";
 import { CommonNFTInput } from "../types/nft";
 
 export class NFTDrop {
@@ -26,11 +26,21 @@ export class NFTDrop {
     this.dropMintAddress = new PublicKey(dropMintAddress);
   }
 
-  get info() {
+  async getInfo() {
     return this.metaplex
       .candyMachines()
       .findByAddress({ address: this.dropMintAddress })
       .run()
+  }
+
+  async totalUnclaimedSupply() {
+    const info = await this.getInfo();
+    return info.itemsRemaining;
+  }
+
+  async totalClaimedSupply() {
+    const info = await this.getInfo();
+    return info.itemsMinted;
   }
 
   async lazyMint(metadatas: NFTMetadataInput[]) {
@@ -48,7 +58,7 @@ export class NFTDrop {
     return await this.metaplex
       .candyMachines()
       .insertItems({
-        candyMachine: await this.info,
+        candyMachine: await this.getInfo(),
         authority: this.metaplex.identity(),
         items,
       })
@@ -58,21 +68,18 @@ export class NFTDrop {
   async claim() {
     return await this.metaplex
       .candyMachines()
-      .mint({ candyMachine: await this.info })
+      .mint({ candyMachine: await this.getInfo() })
       .run()
   }
 
-  // End settings
-  // Whitelist
-  // Price / token amount
-  // Delayed reveal
-  // Start time
-  async setClaimConditions() {
+  async setClaimConditions(metadata: NFTDropMetadataInput) {
+    const parsed = NFTDropContractSchema.parse(metadata);
+
     return await this.metaplex
       .candyMachines()
       .update({ 
-        candyMachine: await this.info,
-        goLiveDate: toDateTime(Date.now() / 1000),
+        candyMachine: await this.getInfo(),
+        ...parsed,
       })
       .run()
   }
