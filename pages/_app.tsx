@@ -225,8 +225,6 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
             images: [
               {
                 url: "https://thirdweb.com/thirdweb.png",
-                width: 1200,
-                height: 650,
                 alt: "thirdweb",
               },
             ],

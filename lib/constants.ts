@@ -16,3 +16,6 @@ export const BASE_URL = enforceHTTPS(
 export const OG_IMAGE_BASE_URL = enforceHTTPS(
   process.env.NEXT_PUBLIC_OG_IMAGE_BASE || "https://og-image.thirdweb.com",
 );
+
+// OG IMAGE RELATED
+export const OG_IMAGE_CACHE_VERSION = "1.0.0";

@@ -1,7 +1,11 @@
 import { Box, Flex, Icon } from "@chakra-ui/react";
 import { MaskedAvatar } from "components/contract-components/releaser/masked-avatar";
 import { OgBrandIcon } from "components/og/og-brand-icon";
-import { BASE_URL, OG_IMAGE_BASE_URL } from "lib/constants";
+import {
+  BASE_URL,
+  OG_IMAGE_BASE_URL,
+  OG_IMAGE_CACHE_VERSION,
+} from "lib/constants";
 import { useRouter } from "next/router";
 import { VscFile } from "react-icons/vsc";
 import { Heading } from "tw-components";
@@ -32,6 +36,7 @@ export function createProfileOGUrl(metadata: z.infer<typeof OgProfileSchema>) {
   url.searchParams.sort();
 
   ogUrl.searchParams.append("url", url.toString());
+  ogUrl.searchParams.append("version", OG_IMAGE_CACHE_VERSION);
 
   return ogUrl.toString();
 }

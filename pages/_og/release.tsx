@@ -2,7 +2,11 @@ import { Box, Flex, Icon, Image, List, ListItem } from "@chakra-ui/react";
 import { StorageSingleton } from "components/app-layouts/providers";
 import { MaskedAvatar } from "components/contract-components/releaser/masked-avatar";
 import { OgBrandIcon } from "components/og/og-brand-icon";
-import { BASE_URL, OG_IMAGE_BASE_URL } from "lib/constants";
+import {
+  BASE_URL,
+  OG_IMAGE_BASE_URL,
+  OG_IMAGE_CACHE_VERSION,
+} from "lib/constants";
 import { correctAndUniqueLicenses } from "lib/licenses";
 import { useRouter } from "next/router";
 import {
@@ -46,6 +50,7 @@ export function createReleaseOGUrl(
   url.searchParams.sort();
 
   ogUrl.searchParams.append("url", url.toString());
+  ogUrl.searchParams.append("version", OG_IMAGE_CACHE_VERSION);
 
   return ogUrl.toString();
 }
