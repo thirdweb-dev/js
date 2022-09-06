@@ -81,6 +81,8 @@ const UserPage: ThirdwebNextPage = () => {
                 releaseCnt: publishedContracts.data?.length.toString(),
               }),
               alt: `${displayName}'s profile on thirdweb.com`,
+              width: 2400,
+              height: 1260,
             },
           ],
           url: currentRoute,
