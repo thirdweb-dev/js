@@ -95,7 +95,7 @@ export function useTokenDecimals(
     cacheKeys.contract.token.decimals(contractAddress),
     async () => {
       invariant(contract, "No Contract instance provided");
-      return await contract.getValue("decimals");
+      return (await contract.get()).decimals;
     },
     {
       enabled: !!contract,
