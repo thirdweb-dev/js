@@ -32,7 +32,6 @@ import {
   ExtraPublishMetadata,
   SUPPORTED_CHAIN_IDS,
 } from "@thirdweb-dev/sdk";
-import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
@@ -43,6 +42,7 @@ import { useForm } from "react-hook-form";
 import { BsCode, BsEye } from "react-icons/bs";
 import { FiTrash, FiUpload } from "react-icons/fi";
 import {
+  Button,
   Card,
   Checkbox,
   FormErrorMessage,
@@ -528,9 +528,11 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
                 Learn more
               </LinkButton>
             </Text>
-            <TransactionButton
+            <Button
+              borderRadius="md"
+              position="relative"
+              role="group"
               colorScheme={address ? "purple" : "blue"}
-              transactionCount={1}
               isDisabled={isDisabled}
               isLoading={isLoading}
               form="contract-release-form"
@@ -542,7 +544,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
               type="submit"
             >
               Create Release
-            </TransactionButton>
+            </Button>
           </Flex>
         </Flex>
       </Flex>
