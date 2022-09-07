@@ -1,5 +1,13 @@
 # @thirdweb-dev/react
 
+## 2.9.7
+
+### Patch Changes
+
+- Updated dependencies [[`baa87a1`](https://github.com/thirdweb-dev/js/commit/baa87a1fbd7eee24ce9a95e16028de8435f85e69), [`f2bdf47`](https://github.com/thirdweb-dev/js/commit/f2bdf47b4fd06433be367c9aac6d11a8dbbf1a1a), [`4079326`](https://github.com/thirdweb-dev/js/commit/407932680fb024f17f12f578aa22c7f8c0c13339), [`05353fd`](https://github.com/thirdweb-dev/js/commit/05353fd8da82f77fb642bb38a533fb99801aed30)]:
+  - @thirdweb-dev/sdk@2.4.9
+  - @thirdweb-dev/storage@0.2.8
+
 ## 2.9.6
 
 ### Patch Changes

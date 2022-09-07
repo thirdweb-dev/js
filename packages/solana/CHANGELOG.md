@@ -1,5 +1,14 @@
 # @thirdweb-dev/solana
 
+## 0.2.7
+
+### Patch Changes
+
+- [#63](https://github.com/thirdweb-dev/js/pull/63) [`f2bdf47`](https://github.com/thirdweb-dev/js/commit/f2bdf47b4fd06433be367c9aac6d11a8dbbf1a1a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Create and manage Tokens
+
+- Updated dependencies [[`f2bdf47`](https://github.com/thirdweb-dev/js/commit/f2bdf47b4fd06433be367c9aac6d11a8dbbf1a1a)]:
+  - @thirdweb-dev/storage@0.2.8
+
 ## 0.2.6
 
 ### Patch Changes
