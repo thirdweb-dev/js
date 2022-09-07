@@ -358,7 +358,6 @@ export class ContractWrapper<
     const chainId = await this.getChainID();
     const from = await this.getSignerAddress();
     const to = this.writeContract.address;
-    console.log("Sending defender to", to);
     const value = callOverrides?.value || 0;
 
     if (BigNumber.from(value).gt(0)) {
@@ -570,7 +569,9 @@ export class ContractWrapper<
     invariant(signer, "provider is not set");
     invariant(provider, "provider is not set");
     const forwarderAddress =
-      this.options.gasless.openzeppelin.relayerForwarderAddress || CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES].openzeppelinForwarder;
+      this.options.gasless.openzeppelin.relayerForwarderAddress ||
+      CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES]
+        .openzeppelinForwarder;
     const forwarder = Forwarder__factory.connect(forwarderAddress, provider);
     const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
       transaction.from,

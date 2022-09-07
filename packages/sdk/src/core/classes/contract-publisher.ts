@@ -295,7 +295,6 @@ export class ContractPublisher extends RPCConnectionHandler {
     predeployUri: string,
     extraMetadata: ExtraPublishMetadata,
   ): Promise<TransactionResult<PublishedContract>> {
-    console.log("Created SDK publisher", this.publisher.writeContract.address);
     const signer = this.getSigner();
     invariant(signer, "A signer is required");
     const publisher = await signer.getAddress();
