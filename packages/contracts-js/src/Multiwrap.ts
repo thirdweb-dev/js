@@ -50,7 +50,6 @@ export interface MultiwrapInterface extends utils.Interface {
     "DEFAULT_ADMIN_ROLE()": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
-    "bundle(uint256)": FunctionFragment;
     "contractType()": FunctionFragment;
     "contractURI()": FunctionFragment;
     "contractVersion()": FunctionFragment;
@@ -101,7 +100,6 @@ export interface MultiwrapInterface extends utils.Interface {
       | "DEFAULT_ADMIN_ROLE"
       | "approve"
       | "balanceOf"
-      | "bundle"
       | "contractType"
       | "contractURI"
       | "contractVersion"
@@ -156,10 +154,6 @@ export interface MultiwrapInterface extends utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
-  encodeFunctionData(
-    functionFragment: "bundle",
-    values: [BigNumberish]
-  ): string;
   encodeFunctionData(
     functionFragment: "contractType",
     values?: undefined
@@ -327,7 +321,6 @@ export interface MultiwrapInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "bundle", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "contractType",
     data: BytesLike
@@ -672,11 +665,6 @@ export interface Multiwrap extends BaseContract {
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    bundle(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, string] & { count: BigNumber; uri: string }>;
-
     contractType(overrides?: CallOverrides): Promise<[string]>;
 
     contractURI(overrides?: CallOverrides): Promise<[string]>;
@@ -922,11 +910,6 @@ export interface Multiwrap extends BaseContract {
 
   balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  bundle(
-    arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, string] & { count: BigNumber; uri: string }>;
-
   contractType(overrides?: CallOverrides): Promise<string>;
 
   contractURI(overrides?: CallOverrides): Promise<string>;
@@ -1161,11 +1144,6 @@ export interface Multiwrap extends BaseContract {
     ): Promise<void>;
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    bundle(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, string] & { count: BigNumber; uri: string }>;
 
     contractType(overrides?: CallOverrides): Promise<string>;
 
@@ -1527,8 +1505,6 @@ export interface Multiwrap extends BaseContract {
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    bundle(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
     contractType(overrides?: CallOverrides): Promise<BigNumber>;
 
     contractURI(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1774,11 +1750,6 @@ export interface Multiwrap extends BaseContract {
 
     balanceOf(
       owner: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    bundle(
-      arg0: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
