@@ -4,7 +4,7 @@ import { IStorage } from "@thirdweb-dev/storage";
 import { NFTMetadataInput } from "../../../sdk/dist/thirdweb-dev-sdk.cjs";
 import { UserWallet } from "../classes/user-wallet";
 import { TransactionResult } from "../types/common.js";
-import { NFTDropContractSchema, NFTDropMetadataInput } from "../types/contracts/nft-drop.js";
+import { NFTDropClaimInput, NFTDropClaimSchema } from "../types/contracts/nft-drop";
 import { CommonNFTInput } from "../types/nft";
 
 export class NFTDrop {
@@ -84,9 +84,9 @@ export class NFTDrop {
   }
 
   async setClaimConditions(
-    metadata: NFTDropMetadataInput
+    metadata: NFTDropClaimInput
   ): Promise<TransactionResult> {
-    const parsed = NFTDropContractSchema.parse(metadata);
+    const parsed = NFTDropClaimSchema.parse(metadata);
 
     const result = await this.metaplex
       .candyMachines()

@@ -9,7 +9,7 @@ describe("NFTDrop", async () => {
     const address = await sdk.deployer.createNftDrop({
       price: 0,
       sellerFeeBasisPoints: 0,
-      itemsAvailable: 2,
+      itemsAvailable: 5,
     });
     drop = await sdk.getNFTDrop(address);
   });
@@ -21,19 +21,33 @@ describe("NFTDrop", async () => {
     await drop.lazyMint([
       { name: "NFT #1", description: "This is the #1 NFT" },
       { name: "NFT #2", description: "This is the #2 NFT" },
+      { name: "NFT #3", description: "This is the #3 NFT" },
+      { name: "NFT #4", description: "This is the #4 NFT" },
+      { name: "NFT #5", description: "This is the #5 NFT" },
     ])
    
     supply = (await drop.getInfo()).itemsLoaded
-    expect(supply.toNumber()).to.equal(2);
+    expect(supply.toNumber()).to.equal(5);
   })
 
   it("should claim free drop", async () => {
     let unclaimed = await drop.totalUnclaimedSupply();
-    expect(unclaimed.toNumber()).to.equal(2)
+    expect(unclaimed.toNumber()).to.equal(5)
 
     await drop.claim()
 
     unclaimed = await drop.totalUnclaimedSupply();
-    expect(unclaimed.toNumber()).to.equal(1);
+    expect(unclaimed.toNumber()).to.equal(4);
   });
+
+  it("should update settings", async () => {
+    let price = (await drop.getInfo()).price
+    expect(price.basisPoints.toNumber()).to.equal(0);
+    await drop.setClaimConditions({
+      price: 2,
+    })
+
+    price = (await drop.getInfo()).price
+    expect(price.basisPoints.toNumber()).to.equal(2);
+  })
 })

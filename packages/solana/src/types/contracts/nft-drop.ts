@@ -18,3 +18,20 @@ export const NFTDropContractSchema = z.object({
 export type NFTDropMetadataInput = z.input<
   typeof NFTDropContractSchema
 >;
+
+/**
+ * @internal
+ */
+ export const NFTDropClaimSchema = z.object({
+  price: z.number().transform((p) => sol(p)).optional(),
+  sellerFeeBasisPoints: z.number().optional(),
+  itemsAvailable: z.number().transform((bn) => toBigNumber(bn)).optional(),
+  goLiveDate: z.date().transform((d) => toDateTime(d)).optional(),
+  splToken: z.string().transform((a) => new PublicKey(a)).optional(),
+  solTreasuryAccount: z.string().transform((a) => new PublicKey(a)).optional(),
+  splTokenAccount: z.string().transform((a) => new PublicKey(a)).optional(),
+});
+
+export type NFTDropClaimInput = z.input<
+  typeof NFTDropClaimSchema
+>;
