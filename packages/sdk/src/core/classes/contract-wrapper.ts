@@ -9,7 +9,7 @@ import { getPolygonGasPriorityFee } from "../../common/gas-price";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
 import { isBrowser } from "../../common/utils";
-import { ChainId } from "../../constants";
+import { CONTRACT_ADDRESSES, ChainId } from "../../constants";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import { EventType } from "../../constants/events";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -570,7 +570,7 @@ export class ContractWrapper<
     invariant(signer, "provider is not set");
     invariant(provider, "provider is not set");
     const forwarderAddress =
-      this.options.gasless.openzeppelin.relayerForwarderAddress;
+      this.options.gasless.openzeppelin.relayerForwarderAddress || CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES].openzeppelinForwarder;
     const forwarder = Forwarder__factory.connect(forwarderAddress, provider);
     const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
       transaction.from,

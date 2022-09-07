@@ -40,7 +40,6 @@ export declare namespace ITokenBundle {
 
 export interface TokenBundleInterface extends utils.Interface {
   functions: {
-    "bundle(uint256)": FunctionFragment;
     "getTokenCountOfBundle(uint256)": FunctionFragment;
     "getTokenOfBundle(uint256,uint256)": FunctionFragment;
     "getUriOfBundle(uint256)": FunctionFragment;
@@ -48,16 +47,11 @@ export interface TokenBundleInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "bundle"
       | "getTokenCountOfBundle"
       | "getTokenOfBundle"
       | "getUriOfBundle"
   ): FunctionFragment;
 
-  encodeFunctionData(
-    functionFragment: "bundle",
-    values: [BigNumberish]
-  ): string;
   encodeFunctionData(
     functionFragment: "getTokenCountOfBundle",
     values: [BigNumberish]
@@ -71,7 +65,6 @@ export interface TokenBundleInterface extends utils.Interface {
     values: [BigNumberish]
   ): string;
 
-  decodeFunctionResult(functionFragment: "bundle", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getTokenCountOfBundle",
     data: BytesLike
@@ -115,11 +108,6 @@ export interface TokenBundle extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    bundle(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, string] & { count: BigNumber; uri: string }>;
-
     getTokenCountOfBundle(
       _bundleId: BigNumberish,
       overrides?: CallOverrides
@@ -136,11 +124,6 @@ export interface TokenBundle extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
   };
-
-  bundle(
-    arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, string] & { count: BigNumber; uri: string }>;
 
   getTokenCountOfBundle(
     _bundleId: BigNumberish,
@@ -159,11 +142,6 @@ export interface TokenBundle extends BaseContract {
   ): Promise<string>;
 
   callStatic: {
-    bundle(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, string] & { count: BigNumber; uri: string }>;
-
     getTokenCountOfBundle(
       _bundleId: BigNumberish,
       overrides?: CallOverrides
@@ -184,8 +162,6 @@ export interface TokenBundle extends BaseContract {
   filters: {};
 
   estimateGas: {
-    bundle(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
     getTokenCountOfBundle(
       _bundleId: BigNumberish,
       overrides?: CallOverrides
@@ -204,11 +180,6 @@ export interface TokenBundle extends BaseContract {
   };
 
   populateTransaction: {
-    bundle(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     getTokenCountOfBundle(
       _bundleId: BigNumberish,
       overrides?: CallOverrides
