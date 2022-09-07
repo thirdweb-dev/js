@@ -29,24 +29,26 @@ export class NFTDrop {
     this.dropMintAddress = new PublicKey(dropMintAddress);
   }
 
-  async getInfo() {
+  // TODO have a private getCandyMachine()
+  async getMetatada() {
     return this.metaplex
       .candyMachines()
       .findByAddress({ address: this.dropMintAddress })
-      .run();
+      .run(); // TODO abstract return types away
   }
 
   async totalUnclaimedSupply() {
-    const info = await this.getInfo();
-    return info.itemsRemaining;
+    const info = await this.getMetatada();
+    return info.itemsRemaining; // TODO return BigInt
   }
 
   async totalClaimedSupply() {
-    const info = await this.getInfo();
-    return info.itemsMinted;
+    const info = await this.getMetatada();
+    return info.itemsMinted; // TODO return BigInt
   }
 
   async lazyMint(metadatas: NFTMetadataInput[]): Promise<TransactionResult> {
+    // TODO uploadMetadataBatch
     const items = await Promise.all(
       metadatas.map(async (metadata) => {
         const parsedMetadata = CommonNFTInput.parse(metadata);
@@ -61,7 +63,7 @@ export class NFTDrop {
     const result = await this.metaplex
       .candyMachines()
       .insertItems({
-        candyMachine: await this.getInfo(),
+        candyMachine: await this.getMetatada(),
         authority: this.metaplex.identity(),
         items,
       })
@@ -75,7 +77,7 @@ export class NFTDrop {
   async claim(): Promise<TransactionResult> {
     const result = await this.metaplex
       .candyMachines()
-      .mint({ candyMachine: await this.getInfo() })
+      .mint({ candyMachine: await this.getMetatada() })
       .run();
 
     return {
@@ -91,7 +93,7 @@ export class NFTDrop {
     const result = await this.metaplex
       .candyMachines()
       .update({
-        candyMachine: await this.getInfo(),
+        candyMachine: await this.getMetatada(),
         ...parsed,
       })
       .run();

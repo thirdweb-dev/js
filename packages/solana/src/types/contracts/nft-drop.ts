@@ -6,32 +6,65 @@ import { z } from "zod";
  * @internal
  */
 export const NFTDropContractSchema = z.object({
-  price: z.number().default(0).transform((p) => sol(p)),
+  price: z
+    .number()
+    .default(0)
+    .transform((p) => sol(p)),
   sellerFeeBasisPoints: z.number().default(0),
-  itemsAvailable: z.number().default(0).transform((bn) => toBigNumber(bn)),
-  goLiveDate: z.date().transform((d) => toDateTime(d)).optional(),
-  splToken: z.string().transform((a) => new PublicKey(a)).optional(),
-  solTreasuryAccount: z.string().transform((a) => new PublicKey(a)).optional(),
-  splTokenAccount: z.string().transform((a) => new PublicKey(a)).optional(),
+  itemsAvailable: z
+    .number()
+    .default(0)
+    .transform((bn) => toBigNumber(bn)),
+  goLiveDate: z
+    .date()
+    .transform((d) => toDateTime(d))
+    .optional(),
+  splToken: z
+    .string()
+    .transform((a) => new PublicKey(a))
+    .optional(),
+  solTreasuryAccount: z
+    .string()
+    .transform((a) => new PublicKey(a))
+    .optional(),
+  splTokenAccount: z
+    .string()
+    .transform((a) => new PublicKey(a))
+    .optional(),
 });
 
-export type NFTDropMetadataInput = z.input<
-  typeof NFTDropContractSchema
->;
+export type NFTDropMetadataInput = z.input<typeof NFTDropContractSchema>;
 
 /**
  * @internal
  */
- export const NFTDropClaimSchema = z.object({
-  price: z.number().transform((p) => sol(p)).optional(),
+// TODO add whitelist options
+export const NFTDropClaimSchema = z.object({
+  price: z
+    .number()
+    .transform((p) => sol(p))
+    .optional(),
   sellerFeeBasisPoints: z.number().optional(),
-  itemsAvailable: z.number().transform((bn) => toBigNumber(bn)).optional(),
-  goLiveDate: z.date().transform((d) => toDateTime(d)).optional(),
-  splToken: z.string().transform((a) => new PublicKey(a)).optional(),
-  solTreasuryAccount: z.string().transform((a) => new PublicKey(a)).optional(),
-  splTokenAccount: z.string().transform((a) => new PublicKey(a)).optional(),
+  itemsAvailable: z
+    .number()
+    .transform((bn) => toBigNumber(bn))
+    .optional(),
+  goLiveDate: z
+    .date()
+    .transform((d) => toDateTime(d))
+    .optional(),
+  splToken: z
+    .string()
+    .transform((a) => new PublicKey(a))
+    .optional(),
+  solTreasuryAccount: z
+    .string()
+    .transform((a) => new PublicKey(a))
+    .optional(),
+  splTokenAccount: z
+    .string()
+    .transform((a) => new PublicKey(a))
+    .optional(),
 });
 
-export type NFTDropClaimInput = z.input<
-  typeof NFTDropClaimSchema
->;
+export type NFTDropClaimInput = z.input<typeof NFTDropClaimSchema>;

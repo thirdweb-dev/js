@@ -52,7 +52,7 @@ export class Token {
     } as TokenMetadata;
   }
 
-  async totalSupply(): Promise<BigInt> {
+  async totalSupply(): Promise<bigint> {
     const info = await this.getMint();
     const value = BigInt(info.supply.basisPoints.toString());
     // TODO use CurrencyValue to provide a human readable display value

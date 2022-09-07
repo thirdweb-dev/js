@@ -35,7 +35,7 @@ export class NFTCollection {
     this.collectionMintAddress = new PublicKey(collectionMintAddress);
   }
 
-  async getCollectionInfo(): Promise<NFTMetadata> {
+  async getMetadata(): Promise<NFTMetadata> {
     const meta = await this.metaplex
       .nfts()
       .findByMint({ mintAddress: this.collectionMintAddress })
