@@ -1,5 +1,5 @@
-import { prepareEnvironment } from "@gmrchk/cli-testing-library";
 import { CREATE_MESSAGES } from "../constants/constants";
+import { prepareEnvironment } from "@gmrchk/cli-testing-library";
 
 // this creates an app, can take some time that's fine
 jest.setTimeout(120_000);
@@ -7,12 +7,10 @@ jest.setTimeout(120_000);
 describe("npx thirdweb create", () => {
   it("should create app (CRA) successfully", async () => {
     const { spawn, cleanup, exists } = await prepareEnvironment();
-    const {
-      waitForText,
-      waitForFinish,
-      getExitCode,
-      pressKey,
-    } = await spawn("node", "./dist/cli/index.js create");
+    const { waitForText, waitForFinish, getExitCode, pressKey } = await spawn(
+      "node",
+      "./dist/cli/index.js create",
+    );
 
     await waitForText(CREATE_MESSAGES.typeOfProject);
     await pressKey("enter");

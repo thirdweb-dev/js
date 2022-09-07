@@ -1,13 +1,13 @@
+import { TransactionResult } from "../types";
+import { ContractEncoder } from "./contract-encoder";
 import { ContractWrapper } from "./contract-wrapper";
+import { GasCostEstimator } from "./gas-cost-estimator";
 import {
   BigNumber,
   BigNumberish,
   CallOverrides,
   ContractTransaction,
 } from "ethers";
-import { ContractEncoder } from "./contract-encoder";
-import { GasCostEstimator } from "./gas-cost-estimator";
-import { TransactionResult } from "../types";
 
 /**
  * Arguments for creating a transaction task.

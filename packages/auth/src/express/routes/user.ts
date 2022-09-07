@@ -6,6 +6,6 @@ export default async function handler(req: Request, res: Response) {
       error: "Invalid method. Only GET supported.",
     });
   }
-  
+
   return res.status(200).json(req.user);
 }

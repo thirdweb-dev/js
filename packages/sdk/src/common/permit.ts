@@ -1,9 +1,9 @@
-import { BigNumber, BigNumberish, Contract, ethers, Signer } from "ethers";
 import {
   EIP712Domain,
   EIP712StandardDomain,
   signTypedDataInternal,
 } from "./sign";
+import { BigNumber, BigNumberish, Contract, ethers, Signer } from "ethers";
 
 const NAME_ABI = [
   {

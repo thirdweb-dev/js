@@ -1,3 +1,5 @@
+import { resolveOrGenerateId } from "../../../common/signature-minting";
+import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
 import {
   BasisPointsSchema,
   BigNumberishSchema,
@@ -6,11 +8,9 @@ import {
   AmountSchema,
   StartDateSchema,
 } from "../../shared";
-import { z } from "zod";
 import { NFTInputOrUriSchema } from "../../tokens/common";
-import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
 import { constants } from "ethers";
-import { resolveOrGenerateId } from "../../../common/signature-minting";
+import { z } from "zod";
 
 /**
  * @internal

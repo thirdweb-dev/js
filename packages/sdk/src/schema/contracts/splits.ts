@@ -1,10 +1,10 @@
+import { AddressSchema, BasisPointsSchema } from "../shared";
 import {
   CommonContractOutputSchema,
   CommonContractSchema,
   CommonTrustedForwarderSchema,
 } from "./common";
 import { z } from "zod";
-import { AddressSchema, BasisPointsSchema } from "../shared";
 
 const SplitRecipientInputSchema = z.object({
   address: AddressSchema,

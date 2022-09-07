@@ -1,5 +1,5 @@
-import { v4 as uuidv4 } from "uuid";
 import { utils } from "ethers";
+import { v4 as uuidv4 } from "uuid";
 
 export function resolveOrGenerateId(requestUId: string | undefined): string {
   if (requestUId === undefined) {

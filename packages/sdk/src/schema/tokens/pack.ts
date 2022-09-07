@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { BigNumberishSchema, AmountSchema, RawDateSchema } from "../shared";
 import { NFTInputOrUriSchema } from "./common";
 import {
@@ -6,6 +5,7 @@ import {
   ERC20WrappableSchema,
   ERC721WrappableSchema,
 } from "./common/wrap";
+import { z } from "zod";
 
 /**
  * @internal
