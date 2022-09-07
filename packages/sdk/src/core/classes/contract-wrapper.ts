@@ -1,6 +1,7 @@
 import { convertToTWError } from "../../common";
 import {
   BiconomyForwarderAbi,
+  ChainAwareForwardRequest,
   ForwardRequest,
   getAndIncrementNonce,
 } from "../../common/forwarder";
@@ -264,17 +265,6 @@ export class ContractWrapper<
     args: any[],
     callOverrides?: CallOverrides,
   ): Promise<providers.TransactionReceipt> {
-    // one time verification that this is a valid contract (to avoid sending funds to wrong addresses)
-    if (!this.isValidContract) {
-      const code = await this.getProvider().getCode(this.readContract.address);
-      this.isValidContract = code !== "0x";
-      if (!this.isValidContract) {
-        throw new Error(
-          "The address you're trying to send a transaction to is not a smart contract. Make sure you are on the correct network and the contract address is correct",
-        );
-      }
-    }
-
     if (!callOverrides) {
       callOverrides = await this.getCallOverrides();
     }
@@ -297,6 +287,18 @@ export class ContractWrapper<
       this.emitTransactionEvent("completed", txHash);
       return receipt;
     } else {
+      // one time verification that this is a valid contract (to avoid sending funds to wrong addresses)
+      if (!this.isValidContract) {
+        const code = await this.getProvider().getCode(
+          this.readContract.address,
+        );
+        this.isValidContract = code !== "0x";
+        if (!this.isValidContract) {
+          throw new Error(
+            "The address you're trying to send a transaction to is not a smart contract. Make sure you are on the correct network and the contract address is correct",
+          );
+        }
+      }
       const tx = await this.sendTransactionByFunction(
         fn as keyof TContract["functions"],
         args,
@@ -375,9 +377,8 @@ export class ContractWrapper<
     let gas = gasEstimate.mul(2);
 
     // in some cases WalletConnect doesn't properly gives an estimate for how much gas it would actually use.
-    // it'd estimate ~21740 on polygon.
     // as a fix, we're setting it to a high arbitrary number (500k) as the gas limit that should cover for most function calls.
-    if (gasEstimate.lt(25000)) {
+    if (gasEstimate.lt(50000)) {
       gas = BigNumber.from(500000);
     }
 
@@ -561,37 +562,60 @@ export class ContractWrapper<
   ): Promise<string> {
     invariant(
       this.options.gasless && "openzeppelin" in this.options.gasless,
-      "calling biconomySendFunction without biconomy",
+      "calling openzeppelin gasless transaction without openzeppelin config in the SDK options",
     );
     const signer = this.getSigner();
     const provider = this.getProvider();
     invariant(signer, "provider is not set");
     invariant(provider, "provider is not set");
     const forwarderAddress =
-      this.options.gasless.openzeppelin.relayerForwarderAddress || CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES].openzeppelinForwarder;
+      this.options.gasless.openzeppelin.relayerForwarderAddress ||
+      CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES]
+        .openzeppelinForwarder;
     const forwarder = Forwarder__factory.connect(forwarderAddress, provider);
     const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
       transaction.from,
     ]);
-    const domain = {
-      name: "GSNv2 Forwarder",
-      version: "0.0.1",
-      chainId: transaction.chainId,
-      verifyingContract: forwarderAddress,
-    };
-
-    const types = {
-      ForwardRequest,
-    };
-
-    let message: ForwardRequestMessage | PermitRequestMessage = {
-      from: transaction.from,
-      to: transaction.to,
-      value: BigNumber.from(0).toString(),
-      gas: BigNumber.from(transaction.gasLimit).toString(),
-      nonce: BigNumber.from(nonce).toString(),
-      data: transaction.data,
-    };
+    let domain;
+    let types;
+    let message: ForwardRequestMessage | PermitRequestMessage;
+    if (this.options.gasless.experimentalChainlessSupport) {
+      domain = {
+        name: "GSNv2 Forwarder",
+        version: "0.0.1",
+        verifyingContract: forwarderAddress,
+      };
+      types = {
+        ForwardRequest: ChainAwareForwardRequest,
+      };
+      message = {
+        from: transaction.from,
+        to: transaction.to,
+        value: BigNumber.from(0).toString(),
+        gas: BigNumber.from(transaction.gasLimit).toString(),
+        nonce: BigNumber.from(nonce).toString(),
+        data: transaction.data,
+        chainid: BigNumber.from(transaction.chainId).toString(),
+      };
+    } else {
+      domain = {
+        name: "GSNv2 Forwarder",
+        version: "0.0.1",
+        chainId: transaction.chainId,
+        verifyingContract: forwarderAddress,
+      };
+      types = {
+        ForwardRequest,
+      };
+      message = {
+        from: transaction.from,
+        to: transaction.to,
+        value: BigNumber.from(0).toString(),
+        gas: BigNumber.from(transaction.gasLimit).toString(),
+        nonce: BigNumber.from(nonce).toString(),
+        data: transaction.data,
+      };
+    }
 
     let signature: BytesLike;
 

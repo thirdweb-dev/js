@@ -8,7 +8,7 @@ import { ethers, Signer, providers } from "ethers";
 export interface EIP712StandardDomain {
   name: string;
   version: string;
-  chainId: number;
+  chainId?: number;
   verifyingContract: string;
 }
 
