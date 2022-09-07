@@ -21,6 +21,8 @@ export interface ThirdwebNftMediaProps extends SharedMediaProps {
  *   const contract = useNFTCollection(<your-contract-address>);
  *   const { data: nft, isLoading } = useNFT(contract, 0);
  *
+ *   console.log("Hello world")
+ *
  *   return (
  *     <div>
  *       {!isLoading && nft ? (
