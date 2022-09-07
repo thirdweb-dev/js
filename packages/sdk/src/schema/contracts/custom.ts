@@ -115,7 +115,7 @@ export const ChainIdToAddressSchema = z.record(z.string(), z.string());
  */
 export const FactoryDeploymentSchema = z.object({
   implementationAddresses: ChainIdToAddressSchema,
-  implementationInitializerFunction: z.string(),
+  implementationInitializerFunction: z.string().default("initialize"),
   factoryAddresses: ChainIdToAddressSchema,
 });
 

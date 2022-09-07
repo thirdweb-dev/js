@@ -257,8 +257,11 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     const biconomyForwarder = chainEnum
       ? CONTRACT_ADDRESSES[chainEnum].biconomyForwarder
       : constants.AddressZero;
+    const openzeppelinForwarder = chainEnum
+      ? CONTRACT_ADDRESSES[chainEnum].openzeppelinForwarder
+      : constants.AddressZero;
     return biconomyForwarder !== constants.AddressZero
-      ? [OZ_DEFENDER_FORWARDER_ADDRESS, biconomyForwarder]
-      : [OZ_DEFENDER_FORWARDER_ADDRESS];
+      ? [openzeppelinForwarder, biconomyForwarder]
+      : [openzeppelinForwarder];
   }
 }

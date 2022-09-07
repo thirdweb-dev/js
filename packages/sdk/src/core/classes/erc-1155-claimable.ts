@@ -11,6 +11,15 @@ import { BigNumberish, ethers } from "ethers";
 import { TransactionResult } from "../types";
 import { TransactionTask } from "./TransactionTask";
 
+/**
+ * Configure and claim ERC1155 NFTs
+ * @remarks Manage claim phases and claim ERC1155 NFTs that have been lazily minted.
+ * @example
+ * ```javascript
+ * const contract = await sdk.getContract("{{contract_address}}");
+ * await contract.edition.drop.claim.to("0x...", tokenId, quantity);
+ * ```
+ */
 export class Erc1155Claimable implements DetectableFeature {
   featureName = FEATURE_NFT_CLAIMABLE.name;
 
