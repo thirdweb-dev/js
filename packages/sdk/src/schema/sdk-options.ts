@@ -28,7 +28,7 @@ export const SDKOptionsSchema = z
             relayerUrl: z.string().url(),
             relayerForwarderAddress: z
               .string()
-              .default(OZ_DEFENDER_FORWARDER_ADDRESS),
+              .optional(),
           }),
         }),
         z.object({
