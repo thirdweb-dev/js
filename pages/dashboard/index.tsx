@@ -1,14 +1,9 @@
 import {
-  ConnectWallet,
-  useContractList,
+  useAllContractList,
   useContractMetadataWithAddress,
   useWeb3,
 } from "@3rdweb-sdk/react";
-import { useProjects } from "@3rdweb-sdk/react/hooks/useProjects";
 import {
-  Box,
-  Center,
-  Container,
   Flex,
   Icon,
   IconButton,
@@ -24,13 +19,7 @@ import {
   SimpleGrid,
   Skeleton,
   Spinner,
-  Stack,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
   Table,
-  Tabs,
   Tbody,
   Td,
   Th,
@@ -43,6 +32,7 @@ import { SiGo } from "@react-icons/all-files/si/SiGo";
 import { SiJavascript } from "@react-icons/all-files/si/SiJavascript";
 import { SiPython } from "@react-icons/all-files/si/SiPython";
 import { SiReact } from "@react-icons/all-files/si/SiReact";
+import { useAddress } from "@thirdweb-dev/react";
 import {
   ChainId,
   CommonContractOutputSchema,
@@ -54,11 +44,15 @@ import {
 import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
 import { useReleasesFromDeploy } from "components/contract-components/hooks";
+import { NoWallet } from "components/contract-components/shared/no-wallet";
+import { DeployedContracts } from "components/contract-components/tables/deployed-contracts";
+import { ReleasedContracts } from "components/contract-components/tables/released-contracts";
 import {
   CONTRACT_TYPE_NAME_MAP,
   FeatureIconMap,
   UrlMap,
 } from "constants/mappings";
+import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { utils } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useSingleQueryParam } from "hooks/useQueryParam";
@@ -67,27 +61,19 @@ import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "pages/_app";
 import * as React from "react";
-import { ReactElement, useEffect, useMemo } from "react";
-import { FiPlus } from "react-icons/fi";
+import { ReactElement, useMemo } from "react";
 import { IoFilterSharp } from "react-icons/io5";
 import { SiSolidity } from "react-icons/si";
 import { Column, useFilters, useGlobalFilter, useTable } from "react-table";
-import {
-  AddressCopyButton,
-  Badge,
-  Card,
-  Heading,
-  LinkButton,
-  Text,
-} from "tw-components";
+import { AddressCopyButton, Badge, Card, Heading, Text } from "tw-components";
+import { ComponentWithChildren } from "types/component-with-children";
 import { getNetworkFromChainId } from "utils/network";
 import { shortenIfAddress } from "utils/usedapp-external";
 import { z } from "zod";
 
 const Dashboard: ThirdwebNextPage = () => {
-  const router = useRouter();
   const wallet = useSingleQueryParam("wallet") || "dashboard";
-  const { address } = useWeb3();
+  const address = useAddress();
 
   const dashboardAddress = useMemo(() => {
     return wallet === "dashboard"
@@ -97,157 +83,7 @@ const Dashboard: ThirdwebNextPage = () => {
       : address;
   }, [address, wallet]);
 
-  const { data: projects, isFetched: projectsIsFetched } =
-    useProjects(dashboardAddress);
-
-  const mainnetQuery = useContractList(ChainId.Mainnet, dashboardAddress);
-  const rinkebyQuery = useContractList(ChainId.Rinkeby, dashboardAddress);
-  const goerliQuery = useContractList(ChainId.Goerli, dashboardAddress);
-  const polygonQuery = useContractList(ChainId.Polygon, dashboardAddress);
-  const mumbaiQuery = useContractList(ChainId.Mumbai, dashboardAddress);
-  const fantomQuery = useContractList(ChainId.Fantom, dashboardAddress);
-  const fantomTestnetQuery = useContractList(
-    ChainId.FantomTestnet,
-    dashboardAddress,
-  );
-  const avalancheQuery = useContractList(ChainId.Avalanche, dashboardAddress);
-  const avalancheFujiTestnetQuery = useContractList(
-    ChainId.AvalancheFujiTestnet,
-    dashboardAddress,
-  );
-  const optimismQuery = useContractList(ChainId.Optimism, dashboardAddress);
-  const optimismTestnetQuery = useContractList(
-    ChainId.OptimismTestnet,
-    dashboardAddress,
-  );
-  const arbitrumQuery = useContractList(ChainId.Arbitrum, dashboardAddress);
-  const arbitrumTestnetQuery = useContractList(
-    ChainId.ArbitrumTestnet,
-    dashboardAddress,
-  );
-  const binanceQuery = useContractList(
-    ChainId.BinanceSmartChainMainnet,
-    dashboardAddress,
-  );
-  const binanceTestnetQuery = useContractList(
-    ChainId.BinanceSmartChainTestnet,
-    dashboardAddress,
-  );
-
-  const combinedList = useMemo(() => {
-    return (
-      mainnetQuery.data?.map((d) => ({ ...d, chainId: ChainId.Mainnet })) || []
-    )
-      .concat(
-        rinkebyQuery.data?.map((d) => ({ ...d, chainId: ChainId.Rinkeby })) ||
-          [],
-      )
-      .concat(
-        goerliQuery.data?.map((d) => ({ ...d, chainId: ChainId.Goerli })) || [],
-      )
-      .concat(
-        polygonQuery.data?.map((d) => ({
-          ...d,
-          chainId: ChainId.Polygon,
-        })) || [],
-      )
-      .concat(
-        mumbaiQuery.data?.map((d) => ({ ...d, chainId: ChainId.Mumbai })) || [],
-      )
-      .concat(
-        avalancheQuery.data?.map((d) => ({
-          ...d,
-          chainId: ChainId.Avalanche,
-        })) || [],
-      )
-      .concat(
-        avalancheFujiTestnetQuery.data?.map((d) => ({
-          ...d,
-          chainId: ChainId.AvalancheFujiTestnet,
-        })) || [],
-      )
-      .concat(
-        fantomQuery.data?.map((d) => ({ ...d, chainId: ChainId.Fantom })) || [],
-      )
-      .concat(
-        fantomTestnetQuery.data?.map((d) => ({
-          ...d,
-          chainId: ChainId.FantomTestnet,
-        })) || [],
-      )
-      .concat(
-        optimismQuery.data?.map((d) => ({ ...d, chainId: ChainId.Optimism })) ||
-          [],
-      )
-      .concat(
-        optimismTestnetQuery.data?.map((d) => ({
-          ...d,
-          chainId: ChainId.OptimismTestnet,
-        })) || [],
-      )
-      .concat(
-        arbitrumQuery.data?.map((d) => ({ ...d, chainId: ChainId.Arbitrum })) ||
-          [],
-      )
-      .concat(
-        arbitrumTestnetQuery.data?.map((d) => ({
-          ...d,
-          chainId: ChainId.ArbitrumTestnet,
-        })) || [],
-      )
-      .concat(
-        binanceQuery.data?.map((d) => ({
-          ...d,
-          chainId: ChainId.BinanceSmartChainMainnet,
-        })) || [],
-      )
-      .concat(
-        binanceTestnetQuery.data?.map((d) => ({
-          ...d,
-          chainId: ChainId.BinanceSmartChainTestnet,
-        })) || [],
-      );
-  }, [
-    mainnetQuery.data,
-    rinkebyQuery.data,
-    goerliQuery.data,
-    polygonQuery.data,
-    mumbaiQuery.data,
-    fantomQuery.data,
-    fantomTestnetQuery.data,
-    avalancheQuery.data,
-    avalancheFujiTestnetQuery.data,
-    optimismQuery.data,
-    optimismTestnetQuery.data,
-    arbitrumQuery.data,
-    arbitrumTestnetQuery.data,
-    binanceQuery.data,
-    binanceTestnetQuery.data,
-  ]);
-
-  const isFetched =
-    mainnetQuery.isFetched &&
-    rinkebyQuery.isFetched &&
-    goerliQuery.isFetched &&
-    polygonQuery.isFetched &&
-    mumbaiQuery.isFetched &&
-    fantomQuery.isFetched &&
-    fantomTestnetQuery.isFetched &&
-    avalancheQuery.isFetched &&
-    avalancheFujiTestnetQuery.isFetched &&
-    optimismQuery.isFetched &&
-    optimismTestnetQuery.isFetched &&
-    arbitrumQuery.isFetched &&
-    arbitrumTestnetQuery.isFetched &&
-    projectsIsFetched &&
-    binanceQuery.isFetched &&
-    binanceTestnetQuery.isFetched;
-
-  useEffect(() => {
-    if (isFetched && combinedList.length === 0 && projects?.length === 0) {
-      router.replace("/contracts");
-    }
-  }, [isFetched, router, combinedList, projects]);
+  const allContractList = useAllContractList(dashboardAddress);
 
   return (
     <Flex direction="column" gap={8}>
@@ -255,71 +91,15 @@ const Dashboard: ThirdwebNextPage = () => {
         <NoWallet />
       ) : (
         <>
-          {combinedList.length === 0 && projects?.length === 0 ? (
-            <Box
-              position="absolute"
-              left="50%"
-              top="50%"
-              transform="translate(-50%, -50%)"
-            >
-              <Spinner
-                thickness="4px"
-                speed="0.65s"
-                emptyColor="gray.200"
-                color="blue.500"
-                size="xl"
-              />
-            </Box>
-          ) : (
-            <>
-              <Flex
-                justify="space-between"
-                align="top"
-                gap={4}
-                direction={{ base: "column", md: "row" }}
-              >
-                <Flex gap={2} direction="column">
-                  <Heading size="title.md">Deployed contracts</Heading>
-                  <Text fontStyle="italic" maxW="container.md">
-                    The list of contract instances that you have deployed with
-                    thirdweb across all networks.
-                  </Text>
-                </Flex>
-                <LinkButton
-                  leftIcon={<FiPlus />}
-                  colorScheme="primary"
-                  href="/contracts"
-                >
-                  Deploy new contract
-                </LinkButton>
-              </Flex>
-              {projects && projects.length ? (
-                <>
-                  <Tabs>
-                    <TabList>
-                      <Tab>V2 Contracts</Tab>
-                      <Tab>V1 Projects</Tab>
-                    </TabList>
-                    <TabPanels>
-                      <TabPanel px={0} pt={8}>
-                        {combinedList.length === 0 ? (
-                          <NoContracts />
-                        ) : (
-                          <ContractTable combinedList={combinedList} />
-                        )}
-                      </TabPanel>
-                      <TabPanel px={0} pt={8}>
-                        <OldProjects projects={projects} />
-                      </TabPanel>
-                    </TabPanels>
-                  </Tabs>
-                </>
-              ) : (
-                <ContractTable combinedList={combinedList} />
-              )}
-              <LearnMoreSection />
-            </>
-          )}
+          <DeployedContracts
+            address={dashboardAddress}
+            contractListQuery={allContractList}
+          />
+          {/* this section needs to be on the publishersdk context (polygon SDK) */}
+          <PublisherSDKContext>
+            <ReleasedContracts address={dashboardAddress} />
+          </PublisherSDKContext>
+          <LearnMoreSection />
         </>
       )}
     </Flex>
@@ -548,10 +328,13 @@ interface ContractTableProps {
     contractType: ContractType;
     metadata: () => Promise<z.output<typeof CommonContractOutputSchema>>;
   }[];
+  isFetching?: boolean;
 }
 
-export const ContractTable: React.FC<ContractTableProps> = ({
+export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
   combinedList,
+  children,
+  isFetching,
 }) => {
   const { getNetworkMetadata } = useWeb3();
 
@@ -677,12 +460,21 @@ export const ContractTable: React.FC<ContractTableProps> = ({
   const router = useRouter();
 
   return (
-    <Box w="100%" overflowX="auto">
+    <Card p={0} overflowX="auto" position="relative">
+      {isFetching && (
+        <Spinner
+          color="primary"
+          size="xs"
+          position="absolute"
+          top={2}
+          right={4}
+        />
+      )}
       <Table
         {...getTableProps()}
         bg="backgroundHighlight"
         p={4}
-        borderRadius="lg"
+        borderTopRadius="lg"
         overflow="hidden"
       >
         <Thead bg="blackAlpha.50" _dark={{ bg: "whiteAlpha.50" }}>
@@ -753,7 +545,8 @@ export const ContractTable: React.FC<ContractTableProps> = ({
           })}
         </Tbody>
       </Table>
-    </Box>
+      {children}
+    </Card>
   );
 };
 
@@ -876,313 +669,5 @@ const AsyncContractNameCell: React.FC<AsyncContractNameCellProps> = ({
         </Link>
       </OriginalNextLink>
     </Skeleton>
-  );
-};
-
-const NoContracts: React.FC = () => {
-  return (
-    <Center w="100%">
-      <Container as={Card}>
-        <Stack py={7} align="center" spacing={6} w="100%">
-          <ChakraNextImage
-            src={require("public/assets/illustrations/listing.png")}
-            alt="no apps"
-            boxSize={20}
-            maxW="200px"
-            mb={3}
-          />
-          <Flex direction="column" gap={2} align="center">
-            <Heading size="title.md" textAlign="center">
-              You don&apos;t have any contracts
-            </Heading>
-            <Text size="body.lg" textAlign="center">
-              We found projects on thirdweb v1, but you don&apos;t have any
-              contracts on thirdweb v2, deploy a contract go get started or
-              navigate to V1 contracts.
-            </Text>
-          </Flex>
-          <LinkButton
-            leftIcon={<FiPlus />}
-            colorScheme="primary"
-            href="/contracts"
-          >
-            Deploy new contract
-          </LinkButton>
-        </Stack>
-      </Container>
-    </Center>
-  );
-};
-
-const NoWallet: React.FC = () => {
-  return (
-    <Center w="100%">
-      <Container as={Card}>
-        <Stack py={7} align="center" spacing={6} w="100%">
-          <ChakraNextImage
-            src={require("public/assets/illustrations/wallet.png")}
-            alt="no apps"
-            boxSize={20}
-            maxW="200px"
-            mb={3}
-          />
-          <Flex direction="column" gap={2} align="center">
-            <Heading size="title.md">Connect your wallet</Heading>
-            <Text size="body.lg" textAlign="center">
-              You need to connect your wallet to deploy and interact with your
-              contracts.
-            </Text>
-          </Flex>
-          <ConnectWallet />
-        </Stack>
-      </Container>
-    </Center>
-  );
-};
-
-interface IProjectCellProps {
-  name: string;
-  chainId: ChainId;
-  address: string;
-}
-
-const ProjectCell: React.FC<IProjectCellProps> = ({
-  name,
-  chainId,
-  address,
-}) => {
-  return (
-    <Skeleton isLoaded={!!address}>
-      <OriginalNextLink
-        href={`https://v1.thirdweb.com/${getNetworkFromChainId(
-          chainId as SUPPORTED_CHAIN_ID,
-        )}/${address}`}
-        passHref
-      >
-        <Link>
-          <Text
-            color="blue.700"
-            _dark={{ color: "blue.300" }}
-            size="label.md"
-            _groupHover={{ textDecor: "underline" }}
-          >
-            {name || shortenIfAddress(address)}
-          </Text>
-        </Link>
-      </OriginalNextLink>
-    </Skeleton>
-  );
-};
-
-interface IOldProjects {
-  projects: {
-    chainId: ChainId;
-    address: string;
-    name: string;
-  }[];
-}
-
-const OldProjects: React.FC<IOldProjects> = ({ projects }) => {
-  const { getNetworkMetadata } = useWeb3();
-
-  const columns = useMemo(
-    () => [
-      {
-        Header: "Name",
-        Cell: (cell: any) => {
-          return (
-            <ProjectCell
-              name={cell.row.original.name}
-              address={cell.row.original.address}
-              chainId={cell.row.original.chainId}
-            />
-          );
-        },
-      },
-      {
-        Header: "Network",
-        accessor: (row) => row.chainId,
-        Cell: (cell: any) => {
-          const data = getNetworkMetadata(
-            cell.row.original.chainId as SUPPORTED_CHAIN_ID,
-          );
-          return (
-            <Flex align="center" gap={2}>
-              <Icon boxSize={6} as={data.icon} />
-              <Text size="label.md">{data.chainName}</Text>
-              <Badge
-                colorScheme={data.isTestnet ? "blue" : "green"}
-                textTransform="capitalize"
-              >
-                {data.isTestnet ? "Testnet" : "Mainnet"}
-              </Badge>
-            </Flex>
-          );
-        },
-        Filter: (props) => {
-          const options = SUPPORTED_CHAIN_IDS.map((chainId) =>
-            chainId.toString(),
-          );
-          return (
-            <Menu closeOnSelect={false}>
-              <MenuButton
-                as={IconButton}
-                icon={<Icon as={IoFilterSharp} boxSize={4} />}
-                aria-label="open contract type filter menu"
-                size="sm"
-                variant="ghost"
-                p={0}
-              />
-              <MenuList zIndex={10}>
-                <MenuOptionGroup
-                  defaultValue={options}
-                  title="Networks"
-                  fontSize={12}
-                  type="checkbox"
-                  value={props.filterValue}
-                  onChange={(e) => props.setFilter(props.column.id, e)}
-                >
-                  {options.map((chainId) => (
-                    <MenuItemOption value={chainId} key={chainId}>
-                      <Flex align="center" direction="row" gap={1}>
-                        <Icon
-                          boxSize={4}
-                          as={
-                            getNetworkMetadata(
-                              parseInt(chainId) as SUPPORTED_CHAIN_ID,
-                            ).icon
-                          }
-                        />
-                        <Text size="label.md">
-                          {
-                            getNetworkMetadata(
-                              parseInt(chainId) as SUPPORTED_CHAIN_ID,
-                            ).chainName
-                          }
-                        </Text>
-                      </Flex>
-                    </MenuItemOption>
-                  ))}
-                </MenuOptionGroup>
-              </MenuList>
-            </Menu>
-          );
-        },
-        filter: (rows, _columnIds, filterValue = []) => {
-          return rows.filter((row) => {
-            return filterValue.includes(row.original.chainId.toString());
-          });
-        },
-      },
-      {
-        Header: "Project Address",
-        accessor: (row) => row.address,
-        Cell: (cell: any) => {
-          return <AddressCopyButton address={cell.row.original.address} />;
-        },
-      },
-    ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  ) as Column<typeof projects[number]>[];
-
-  const defaultColumn = useMemo(
-    () => ({
-      Filter: "",
-    }),
-    [],
-  );
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-    // state,
-    // visibleColumns,
-    // preGlobalFilteredRows,
-    // setGlobalFilter,
-  } = useTable(
-    {
-      columns,
-      data: projects,
-      defaultColumn,
-    },
-    useFilters,
-    useGlobalFilter,
-  );
-
-  const router = useRouter();
-
-  return (
-    <Box w="100%" overflowX="auto">
-      <Table
-        {...getTableProps()}
-        bg="backgroundHighlight"
-        p={4}
-        borderRadius="lg"
-        overflow="hidden"
-      >
-        <Thead bg="blackAlpha.50" _dark={{ bg: "whiteAlpha.50" }}>
-          {headerGroups.map((headerGroup) => (
-            // eslint-disable-next-line react/jsx-key
-            <Tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                // eslint-disable-next-line react/jsx-key
-                <Th {...column.getHeaderProps()}>
-                  <Flex align="center" gap={2}>
-                    <Text as="label" size="label.md" color="inherit">
-                      {column.render("Header")}
-                    </Text>
-                    {column.render("Filter")}
-                  </Flex>
-                </Th>
-              ))}
-            </Tr>
-          ))}
-        </Thead>
-
-        <Tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
-            prepareRow(row);
-            return (
-              // eslint-disable-next-line react/jsx-key
-              <Tr
-                {...row.getRowProps()}
-                role="group"
-                _hover={{ bg: "blackAlpha.50" }}
-                _dark={{
-                  _hover: {
-                    bg: "whiteAlpha.50",
-                  },
-                }}
-                // this is a hack to get around the fact that safari does not handle position: relative on table rows
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  router.push(
-                    `https://v1.thirdweb.com/${getNetworkFromChainId(
-                      row.original.chainId as SUPPORTED_CHAIN_ID,
-                    )}/${row.original.address}`,
-                  );
-                }}
-                // end hack
-                borderBottomWidth={1}
-                _last={{ borderBottomWidth: 0 }}
-              >
-                {row.cells.map((cell) => {
-                  return (
-                    // eslint-disable-next-line react/jsx-key
-                    <Td borderBottomWidth="inherit" {...cell.getCellProps()}>
-                      {cell.render("Cell")}
-                    </Td>
-                  );
-                })}
-              </Tr>
-            );
-          })}
-        </Tbody>
-      </Table>
-    </Box>
   );
 };

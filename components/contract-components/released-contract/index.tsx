@@ -325,7 +325,7 @@ Deploy it in one click`,
           <Flex flexDir="column" gap={4}>
             <Flex gap={2} alignItems="center">
               <LinkButton
-                href="https://blog.thirdweb.com/thirdweb-release/"
+                href="https://portal.thirdweb.com/release"
                 w="full"
                 variant="outline"
                 isExternal
