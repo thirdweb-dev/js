@@ -4,7 +4,6 @@ import {
   ClaimNFTReturnType,
   DelayedRevealLazyMintInput,
   DropContract,
-  Erc721OrErc1155,
   RequiredParam,
   RevealLazyMintInput,
   getErcs,
@@ -19,13 +18,11 @@ import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useNFTs } from "./nft";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  EditionDrop,
   Erc1155,
   Erc721,
   NFTDrop,
   NFTMetadataInput,
   QueryAllParams,
-  TokenDrop,
   UploadProgressEvent,
 } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
