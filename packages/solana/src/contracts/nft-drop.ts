@@ -1,11 +1,13 @@
+import { UserWallet } from "../classes/user-wallet";
+import { TransactionResult } from "../types/common";
+import {
+  NFTDropClaimInput,
+  NFTDropClaimSchema,
+} from "../types/contracts/nft-drop";
+import { CommonNFTInput, NFTMetadataInput } from "../types/nft";
 import { Metaplex } from "@metaplex-foundation/js";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
-import { NFTMetadataInput } from "../../../sdk/dist/thirdweb-dev-sdk.cjs";
-import { UserWallet } from "../classes/user-wallet";
-import { TransactionResult } from "../types/common.js";
-import { NFTDropClaimInput, NFTDropClaimSchema } from "../types/contracts/nft-drop";
-import { CommonNFTInput } from "../types/nft";
 
 export class NFTDrop {
   private connection: Connection;
@@ -31,7 +33,7 @@ export class NFTDrop {
     return this.metaplex
       .candyMachines()
       .findByAddress({ address: this.dropMintAddress })
-      .run()
+      .run();
   }
 
   async totalUnclaimedSupply() {
@@ -44,19 +46,17 @@ export class NFTDrop {
     return info.itemsMinted;
   }
 
-  async lazyMint(
-    metadatas: NFTMetadataInput[]
-  ): Promise<TransactionResult> {
+  async lazyMint(metadatas: NFTMetadataInput[]): Promise<TransactionResult> {
     const items = await Promise.all(
       metadatas.map(async (metadata) => {
         const parsedMetadata = CommonNFTInput.parse(metadata);
         const uri = await this.storage.uploadMetadata(parsedMetadata);
         return {
           name: parsedMetadata.name || "",
-          uri
-        }
-      })
-    )
+          uri,
+        };
+      }),
+    );
 
     const result = await this.metaplex
       .candyMachines()
@@ -65,39 +65,39 @@ export class NFTDrop {
         authority: this.metaplex.identity(),
         items,
       })
-      .run()
+      .run();
 
     return {
-      signature: result.response.signature
-    }
+      signature: result.response.signature,
+    };
   }
 
   async claim(): Promise<TransactionResult> {
     const result = await this.metaplex
       .candyMachines()
       .mint({ candyMachine: await this.getInfo() })
-      .run()
+      .run();
 
     return {
-      signature: result.response.signature
-    }
+      signature: result.response.signature,
+    };
   }
 
   async setClaimConditions(
-    metadata: NFTDropClaimInput
+    metadata: NFTDropClaimInput,
   ): Promise<TransactionResult> {
     const parsed = NFTDropClaimSchema.parse(metadata);
 
     const result = await this.metaplex
       .candyMachines()
-      .update({ 
+      .update({
         candyMachine: await this.getInfo(),
         ...parsed,
       })
-      .run()
+      .run();
 
     return {
-      signature: result.response.signature
-    }
+      signature: result.response.signature,
+    };
   }
 }
