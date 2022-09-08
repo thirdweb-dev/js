@@ -14,6 +14,7 @@ import { ReleaserHeader } from "components/contract-components/releaser/releaser
 import { DeployedContracts } from "components/contract-components/tables/deployed-contracts";
 import { ReleasedContracts } from "components/contract-components/tables/released-contracts";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
+import { useOgImagePing } from "hooks/useOgImagePing";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { getSSRSDK } from "lib/ssr-sdk";
 import { GetStaticPaths, GetStaticProps } from "next";
@@ -22,7 +23,7 @@ import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "pages/_app";
 import { createProfileOGUrl } from "pages/_og/profile";
-import { ReactElement, useEffect } from "react";
+import { ReactElement, useEffect, useMemo } from "react";
 import { Heading, Text } from "tw-components";
 import { getSingleQueryValue } from "utils/router";
 import { shortenIfAddress } from "utils/usedapp-external";
@@ -62,6 +63,20 @@ const UserPage: ThirdwebNextPage = () => {
     ensQuery.data?.address || undefined,
   );
 
+  const ogImage = useMemo(() => {
+    if (!releaserProfile.data || !publishedContracts.data) {
+      return undefined;
+    }
+    return createProfileOGUrl({
+      displayName,
+      bio: releaserProfile.data?.bio,
+      avatar: releaserProfile.data?.avatar || undefined,
+      releaseCnt: publishedContracts.data?.length.toString(),
+    });
+  }, [displayName, publishedContracts.data, releaserProfile.data]);
+
+  useOgImagePing(ogImage);
+
   return (
     <>
       <NextSeo
@@ -69,19 +84,16 @@ const UserPage: ThirdwebNextPage = () => {
         description={`Visit ${displayName}'s profile. See their releases and deploy them in one click.`}
         openGraph={{
           title: displayName,
-          images: [
-            {
-              url: createProfileOGUrl({
-                displayName,
-                bio: releaserProfile.data?.bio,
-                avatar: releaserProfile.data?.avatar || undefined,
-                releaseCnt: publishedContracts.data?.length.toString(),
-              }),
-              alt: `${displayName}'s profile on thirdweb.com`,
-              width: 2400,
-              height: 1260,
-            },
-          ],
+          images: ogImage
+            ? [
+                {
+                  url: ogImage,
+                  alt: `${displayName}'s profile on thirdweb.com`,
+                  width: 2400,
+                  height: 1260,
+                },
+              ]
+            : undefined,
           url: currentRoute,
         }}
       />

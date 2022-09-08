@@ -10,7 +10,7 @@ export const BASE_URL = enforceHTTPS(
     ? "thirdweb.com"
     : process.env.NEXT_PUBLIC_VERCEL_ENV === "preview"
     ? process.env.NEXT_PUBLIC_VERCEL_URL || "thirdweb.com"
-    : "http://localhost:3000",
+    : "thirdweb.com",
 );
 
 export const OG_IMAGE_BASE_URL = enforceHTTPS(
