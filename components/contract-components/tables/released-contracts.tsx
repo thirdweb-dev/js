@@ -1,5 +1,6 @@
 import { DeployableContractTable } from "../contract-table";
 import { usePublishedContractsQuery } from "../hooks";
+import { ShowMoreButton } from "./show-more-button";
 import {
   Alert,
   AlertIcon,
@@ -9,19 +10,22 @@ import {
   Spinner,
 } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { IoRefreshSharp } from "react-icons/io5";
 import { Button, Heading, LinkButton, Text } from "tw-components";
 
 interface ReleasedContractsProps {
   address?: string;
   noHeader?: boolean;
+  limit?: number;
 }
 
 export const ReleasedContracts: React.FC<ReleasedContractsProps> = ({
   address,
   noHeader,
+  limit = 10,
 }) => {
+  const [showMoreLimit, setShowMoreLimit] = useState(limit);
   const trackEvent = useTrack();
   const releasedContractsQuery = usePublishedContractsQuery(address);
 
@@ -32,6 +36,13 @@ export const ReleasedContracts: React.FC<ReleasedContractsProps> = ({
       ),
     [releasedContractsQuery],
   );
+
+  const slicedData = useMemo(() => {
+    if (releasedContracts) {
+      return releasedContracts.slice(0, showMoreLimit);
+    }
+    return [];
+  }, [releasedContracts, showMoreLimit]);
 
   return (
     <>
@@ -67,7 +78,7 @@ export const ReleasedContracts: React.FC<ReleasedContractsProps> = ({
       )}
       <DeployableContractTable
         isFetching={releasedContractsQuery.isFetching}
-        contractIds={releasedContracts}
+        contractIds={slicedData}
         context="view_release"
       >
         {releasedContractsQuery.isLoading && (
@@ -106,6 +117,14 @@ export const ReleasedContracts: React.FC<ReleasedContractsProps> = ({
                 <Text>No releases found.</Text>
               </Flex>
             </Center>
+          )}
+        {releasedContractsQuery.isSuccess &&
+          releasedContractsQuery.data.length > slicedData.length && (
+            <ShowMoreButton
+              limit={limit}
+              showMoreLimit={showMoreLimit}
+              setShowMoreLimit={setShowMoreLimit}
+            />
           )}
       </DeployableContractTable>
     </>

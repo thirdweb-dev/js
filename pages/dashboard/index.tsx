@@ -94,6 +94,7 @@ const Dashboard: ThirdwebNextPage = () => {
           <DeployedContracts
             address={dashboardAddress}
             contractListQuery={allContractList}
+            limit={50}
           />
           {/* this section needs to be on the publishersdk context (polygon SDK) */}
           <PublisherSDKContext>
