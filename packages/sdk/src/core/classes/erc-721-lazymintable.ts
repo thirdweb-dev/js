@@ -194,7 +194,7 @@ export class Erc721LazyMintable implements DetectableFeature {
     if (
       detectContractFeature<BaseClaimConditionERC721>(
         this.contractWrapper,
-        "ERC721Claimable",
+        "ERC721ClaimableWithConditions",
       )
     ) {
       return new Erc721Claimable(

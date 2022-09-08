@@ -22,7 +22,6 @@ export * from "./erc-721-enumerable";
 export * from "./erc-721-mintable";
 export * from "./erc-721-batch-mintable";
 export * from "./erc-721-burnable";
-export * from "./erc-721-lazymintable";
 export * from "./erc-1155";
 export * from "./erc-1155-enumerable";
 export * from "./erc-1155-mintable";
