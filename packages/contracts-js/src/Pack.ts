@@ -51,7 +51,6 @@ export interface PackInterface extends utils.Interface {
     "addPackContents(uint256,(address,uint8,uint256,uint256)[],uint256[],address)": FunctionFragment;
     "balanceOf(address,uint256)": FunctionFragment;
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
-    "bundle(uint256)": FunctionFragment;
     "canUpdatePack(uint256)": FunctionFragment;
     "contractType()": FunctionFragment;
     "contractURI()": FunctionFragment;
@@ -60,6 +59,8 @@ export interface PackInterface extends utils.Interface {
     "getDefaultRoyaltyInfo()": FunctionFragment;
     "getPackContents(uint256)": FunctionFragment;
     "getRoleAdmin(bytes32)": FunctionFragment;
+    "getRoleMember(bytes32,uint256)": FunctionFragment;
+    "getRoleMemberCount(bytes32)": FunctionFragment;
     "getRoyaltyInfoForToken(uint256)": FunctionFragment;
     "getTokenCountOfBundle(uint256)": FunctionFragment;
     "getTokenOfBundle(uint256,uint256)": FunctionFragment;
@@ -100,7 +101,6 @@ export interface PackInterface extends utils.Interface {
       | "addPackContents"
       | "balanceOf"
       | "balanceOfBatch"
-      | "bundle"
       | "canUpdatePack"
       | "contractType"
       | "contractURI"
@@ -109,6 +109,8 @@ export interface PackInterface extends utils.Interface {
       | "getDefaultRoyaltyInfo"
       | "getPackContents"
       | "getRoleAdmin"
+      | "getRoleMember"
+      | "getRoleMemberCount"
       | "getRoyaltyInfoForToken"
       | "getTokenCountOfBundle"
       | "getTokenOfBundle"
@@ -160,10 +162,6 @@ export interface PackInterface extends utils.Interface {
     values: [string[], BigNumberish[]]
   ): string;
   encodeFunctionData(
-    functionFragment: "bundle",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "canUpdatePack",
     values: [BigNumberish]
   ): string;
@@ -200,6 +198,14 @@ export interface PackInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getRoleAdmin",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getRoleMember",
+    values: [BytesLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getRoleMemberCount",
     values: [BytesLike]
   ): string;
   encodeFunctionData(
@@ -329,7 +335,6 @@ export interface PackInterface extends utils.Interface {
     functionFragment: "balanceOfBatch",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "bundle", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "canUpdatePack",
     data: BytesLike
@@ -357,6 +362,14 @@ export interface PackInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getRoleAdmin",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getRoleMember",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getRoleMemberCount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -705,11 +718,6 @@ export interface Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
 
-    bundle(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, string] & { count: BigNumber; uri: string }>;
-
     canUpdatePack(
       arg0: BigNumberish,
       overrides?: CallOverrides
@@ -744,6 +752,17 @@ export interface Pack extends BaseContract {
     >;
 
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<[string]>;
+
+    getRoleMember(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string] & { member: string }>;
+
+    getRoleMemberCount(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { count: BigNumber }>;
 
     getRoyaltyInfoForToken(
       _tokenId: BigNumberish,
@@ -952,11 +971,6 @@ export interface Pack extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber[]>;
 
-  bundle(
-    arg0: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<[BigNumber, string] & { count: BigNumber; uri: string }>;
-
   canUpdatePack(
     arg0: BigNumberish,
     overrides?: CallOverrides
@@ -991,6 +1005,17 @@ export interface Pack extends BaseContract {
   >;
 
   getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
+
+  getRoleMember(
+    role: BytesLike,
+    index: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  getRoleMemberCount(
+    role: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   getRoyaltyInfoForToken(
     _tokenId: BigNumberish,
@@ -1204,11 +1229,6 @@ export interface Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber[]>;
 
-    bundle(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber, string] & { count: BigNumber; uri: string }>;
-
     canUpdatePack(
       arg0: BigNumberish,
       overrides?: CallOverrides
@@ -1245,6 +1265,17 @@ export interface Pack extends BaseContract {
     >;
 
     getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
+
+    getRoleMember(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    getRoleMemberCount(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     getRoyaltyInfoForToken(
       _tokenId: BigNumberish,
@@ -1600,8 +1631,6 @@ export interface Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    bundle(arg0: BigNumberish, overrides?: CallOverrides): Promise<BigNumber>;
-
     canUpdatePack(
       arg0: BigNumberish,
       overrides?: CallOverrides
@@ -1631,6 +1660,17 @@ export interface Pack extends BaseContract {
     ): Promise<BigNumber>;
 
     getRoleAdmin(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getRoleMember(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getRoleMemberCount(
       role: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -1843,11 +1883,6 @@ export interface Pack extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    bundle(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     canUpdatePack(
       arg0: BigNumberish,
       overrides?: CallOverrides
@@ -1879,6 +1914,17 @@ export interface Pack extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     getRoleAdmin(
+      role: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getRoleMember(
+      role: BytesLike,
+      index: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getRoleMemberCount(
       role: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;

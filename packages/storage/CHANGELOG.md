@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 0.2.8
+
+### Patch Changes
+
+- [#63](https://github.com/thirdweb-dev/js/pull/63) [`f2bdf47`](https://github.com/thirdweb-dev/js/commit/f2bdf47b4fd06433be367c9aac6d11a8dbbf1a1a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add storage option to include gateway url in uploaded metadata
+
 ## 0.2.7
 
 ### Patch Changes

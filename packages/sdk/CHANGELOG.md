@@ -1,5 +1,18 @@
 # @thirdweb-dev/sdk
 
+## 2.4.9
+
+### Patch Changes
+
+- [#74](https://github.com/thirdweb-dev/js/pull/74) [`baa87a1`](https://github.com/thirdweb-dev/js/commit/baa87a1fbd7eee24ce9a95e16028de8435f85e69) Thanks [@nkrishang](https://github.com/nkrishang)! - Updated forwarder address for Goerli
+
+- [#75](https://github.com/thirdweb-dev/js/pull/75) [`4079326`](https://github.com/thirdweb-dev/js/commit/407932680fb024f17f12f578aa22c7f8c0c13339) Thanks [@jnsdls](https://github.com/jnsdls)! - add a default for factory deployments initializer function ("initialize")
+
+- [#71](https://github.com/thirdweb-dev/js/pull/71) [`05353fd`](https://github.com/thirdweb-dev/js/commit/05353fd8da82f77fb642bb38a533fb99801aed30) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Allow for chain agnostic gasless tx
+
+- Updated dependencies [[`f2bdf47`](https://github.com/thirdweb-dev/js/commit/f2bdf47b4fd06433be367c9aac6d11a8dbbf1a1a)]:
+  - @thirdweb-dev/storage@0.2.8
+
 ## 2.4.8
 
 ### Patch Changes
