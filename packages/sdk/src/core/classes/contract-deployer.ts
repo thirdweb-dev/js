@@ -1,11 +1,10 @@
-import { NetworkOrSignerOrProvider, ValidContractClass } from "../types";
-import { z } from "zod";
-import { ContractRegistry } from "./registry";
+import {
+  extractConstructorParamsFromAbi,
+  extractFunctionParamsFromAbi,
+  fetchExtendedReleaseMetadata,
+  fetchPreDeployMetadata,
+} from "../../common/index";
 import { getContractAddressByChainId } from "../../constants/addresses";
-import { ContractFactory } from "./factory";
-import { SDKOptions } from "../../schema/sdk-options";
-import { IStorage } from "@thirdweb-dev/storage";
-import { RPCConnectionHandler } from "./rpc-connection-handler";
 import {
   Edition,
   EditionDrop,
@@ -18,6 +17,10 @@ import {
   Token,
   Vote,
 } from "../../contracts";
+import { Multiwrap } from "../../contracts/multiwrap";
+import { TokenDrop } from "../../contracts/token-drop";
+import { FactoryDeploymentSchema } from "../../schema/contracts/custom";
+import { SDKOptions } from "../../schema/sdk-options";
 import {
   MarketplaceContractDeployMetadata,
   MultiwrapContractDeployMetadata,
@@ -26,18 +29,15 @@ import {
   TokenContractDeployMetadata,
   VoteContractDeployMetadata,
 } from "../../types/deploy/deploy-metadata";
-import { TokenDrop } from "../../contracts/token-drop";
-import { Multiwrap } from "../../contracts/multiwrap";
 import { ThirdwebSDK } from "../sdk";
-import invariant from "tiny-invariant";
-import {
-  extractConstructorParamsFromAbi,
-  extractFunctionParamsFromAbi,
-  fetchExtendedReleaseMetadata,
-  fetchPreDeployMetadata,
-} from "../../common/index";
+import { NetworkOrSignerOrProvider, ValidContractClass } from "../types";
+import { ContractFactory } from "./factory";
+import { ContractRegistry } from "./registry";
+import { RPCConnectionHandler } from "./rpc-connection-handler";
+import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BytesLike, ContractInterface, ethers } from "ethers";
-import { FactoryDeploymentSchema } from "../../schema/contracts/custom";
+import invariant from "tiny-invariant";
+import { z } from "zod";
 
 /**
  * Handles deploying new contracts

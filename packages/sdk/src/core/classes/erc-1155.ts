@@ -16,7 +16,6 @@ import {
   FEATURE_EDITION_REVEALABLE,
   FEATURE_EDITION_SIGNATURE_MINTABLE,
 } from "../../constants/erc1155-features";
-import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 import { NFTMetadata, NFTMetadataOrUri } from "../../schema/tokens/common";
 import {
   EditionMetadata,
@@ -30,6 +29,7 @@ import {
   UploadProgressEvent,
 } from "../../types";
 import { AirdropInput } from "../../types/airdrop/airdrop";
+import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 import {
   BaseDropERC1155,
   BaseERC1155,

@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { AddressSchema, BigNumberishSchema, AmountSchema } from "../../shared";
+import { z } from "zod";
 
 /**
  * @internal

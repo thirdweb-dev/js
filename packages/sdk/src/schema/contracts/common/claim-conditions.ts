@@ -1,5 +1,4 @@
-import { z } from "zod";
-import { BigNumber, utils } from "ethers";
+import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
 import {
   BigNumberishSchema,
   BigNumberSchema,
@@ -7,10 +6,10 @@ import {
   AmountSchema,
   StartDateSchema,
 } from "../../shared";
-
-import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
 import { CurrencyValueSchema } from "./currency";
 import { SnapshotInputSchema } from "./snapshots";
+import { BigNumber, utils } from "ethers";
+import { z } from "zod";
 
 /**
  * @internal

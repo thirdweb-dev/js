@@ -39,6 +39,6 @@ export interface IStorageUpload {
     signerAddress?: string,
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
-    }
+    },
   ): Promise<CidWithFileName>;
 }

@@ -36,6 +36,16 @@ import {
 } from "@thirdweb-dev/contracts-js";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers } from "ethers";
+import { Erc20Mintable } from "./erc-20-mintable";
+import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
+import {
+  DropERC20,
+  IBurnableERC20,
+  IMintableERC20,
+  TokenERC20,
+} from "@thirdweb-dev/contracts-js";
+import { IStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 
 /**
  * Standard ERC20 Token functions

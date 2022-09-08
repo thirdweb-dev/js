@@ -1,12 +1,12 @@
-import { ContractWrapper } from "./contract-wrapper";
-import { IERC1155Enumerable } from "@thirdweb-dev/contracts-js";
-import { BigNumber, BigNumberish } from "ethers";
-import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
+import { FEATURE_EDITION_ENUMERABLE } from "../../constants/erc1155-features";
 import { EditionMetadata, EditionMetadataOwner } from "../../schema";
-import { Erc1155 } from "./erc-1155";
+import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
 import { BaseERC1155 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { FEATURE_EDITION_ENUMERABLE } from "../../constants/erc1155-features";
+import { ContractWrapper } from "./contract-wrapper";
+import { Erc1155 } from "./erc-1155";
+import { IERC1155Enumerable } from "@thirdweb-dev/contracts-js";
+import { BigNumber, BigNumberish } from "ethers";
 
 /**
  * List ERC1155 NFTs

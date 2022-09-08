@@ -1,14 +1,14 @@
 import {
-  CommonContractOutputSchema,
-  CommonContractSchema,
-  CommonTrustedForwarderSchema,
-} from "./common";
-import {
   AddressSchema,
   BigNumberishSchema,
   BigNumberSchema,
   PercentSchema,
 } from "../shared";
+import {
+  CommonContractOutputSchema,
+  CommonContractSchema,
+  CommonTrustedForwarderSchema,
+} from "./common";
 import { z } from "zod";
 
 export const VoteSettingsInputSchema = z.object({
