@@ -186,8 +186,8 @@ Deploy it in one click`,
           images: [
             {
               url: ogImageUrl,
-              width: 2400,
-              height: 1260,
+              width: 1200,
+              height: 630,
               alt: `${release.name} contract on thirdweb`,
             },
           ],

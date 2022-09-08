@@ -89,8 +89,8 @@ const UserPage: ThirdwebNextPage = () => {
                 {
                   url: ogImage,
                   alt: `${displayName}'s profile on thirdweb.com`,
-                  width: 2400,
-                  height: 1260,
+                  width: 1200,
+                  height: 630,
                 },
               ]
             : undefined,
