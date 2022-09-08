@@ -13,7 +13,7 @@ import { UpdateableNetwork } from "../interfaces/contract";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc721Burnable } from "./erc-721-burnable";
-import { Erc721Droppable } from "./erc-721-droppable";
+import { Erc721LazyMintable } from "./erc-721-lazymintable";
 import { Erc721Mintable } from "./erc-721-mintable";
 import { Erc721Supply } from "./erc-721-supply";
 import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
@@ -53,7 +53,7 @@ export class Erc721<
   public query: Erc721Supply | undefined;
   public mint: Erc721Mintable | undefined;
   public burn: Erc721Burnable | undefined;
-  public drop: Erc721Droppable | undefined;
+  public drop: Erc721LazyMintable | undefined;
   public signature: Erc721WithQuantitySignatureMintable | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
@@ -78,7 +78,7 @@ export class Erc721<
     this.query = this.detectErc721Enumerable();
     this.mint = this.detectErc721Mintable();
     this.burn = this.detectErc721Burnable();
-    this.drop = this.detectErc721Droppable();
+    this.drop = this.detectErc721LazyMintable();
     this.signature = this.detectErc721SignatureMintable();
   }
 
@@ -296,14 +296,14 @@ export class Erc721<
     return undefined;
   }
 
-  private detectErc721Droppable(): Erc721Droppable | undefined {
+  private detectErc721LazyMintable(): Erc721LazyMintable | undefined {
     if (
       detectContractFeature<BaseDropERC721>(
         this.contractWrapper,
-        "ERC721Droppable",
+        "ERC721LazyMintable",
       )
     ) {
-      return new Erc721Droppable(this, this.contractWrapper, this.storage);
+      return new Erc721LazyMintable(this, this.contractWrapper, this.storage);
     }
     return undefined;
   }

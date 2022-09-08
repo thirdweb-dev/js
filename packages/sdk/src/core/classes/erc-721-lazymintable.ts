@@ -1,7 +1,7 @@
 import { detectContractFeature } from "../../common/feature-detection";
 import { uploadOrExtractURIs } from "../../common/nft";
 import {
-  FEATURE_NFT_DROPPABLE,
+  FEATURE_NFT_LAZY_MINTABLE,
   FEATURE_NFT_REVEALABLE,
 } from "../../constants/erc721-features";
 import { NFTMetadata, NFTMetadataOrUri } from "../../schema";
@@ -30,8 +30,8 @@ import { ethers } from "ethers";
  * await contract.drop.claim(quantity);
  * ```
  */
-export class Erc721Droppable implements DetectableFeature {
-  featureName = FEATURE_NFT_DROPPABLE.name;
+export class Erc721LazyMintable implements DetectableFeature {
+  featureName = FEATURE_NFT_LAZY_MINTABLE.name;
 
   /**
    * Delayed reveal
