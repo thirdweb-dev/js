@@ -4,7 +4,7 @@ import {
 } from "../../common/feature-detection";
 import { uploadOrExtractURIs } from "../../common/nft";
 import {
-  FEATURE_EDITION_DROPPABLE,
+  FEATURE_EDITION_LAZY_MINTABLE,
   FEATURE_EDITION_REVEALABLE,
 } from "../../constants/erc1155-features";
 import { NFTMetadata, NFTMetadataOrUri } from "../../schema/tokens/common";
@@ -25,8 +25,8 @@ import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarati
 import { IStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 
-export class Erc1155Droppable implements DetectableFeature {
-  featureName = FEATURE_EDITION_DROPPABLE.name;
+export class Erc1155LazyMintable implements DetectableFeature {
+  featureName = FEATURE_EDITION_LAZY_MINTABLE.name;
 
   /**
    * Delayed reveal
@@ -182,7 +182,7 @@ export class Erc1155Droppable implements DetectableFeature {
     if (
       detectContractFeature<BaseClaimConditionERC1155>(
         this.contractWrapper,
-        "ERC1155Claimable",
+        "ERC1155ClaimableWithConditions",
       )
     ) {
       return new Erc1155Claimable(this.contractWrapper, this.storage);

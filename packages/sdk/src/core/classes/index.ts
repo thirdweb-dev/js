@@ -29,7 +29,7 @@ export * from "./erc-1155-mintable";
 export * from "./erc-1155-batch-mintable";
 export * from "./erc-1155-signature-mintable";
 export * from "./erc-1155-burnable";
-export * from "./erc-1155-droppable";
+export * from "./erc-1155-lazymintable";
 export * from "./marketplace-direct";
 export * from "./marketplace-auction";
 export * from "./contract-deployer";
