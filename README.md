@@ -1,15 +1,22 @@
 <p align="center">
-<br />
-<a href="https://thirdweb.com"><img src="https://github.com/thirdweb-dev/js/blob/main/packages/sdk/logo.svg?raw=true" width="200" alt=""/></a>
-<br />
+    <br />
+    <a href="https://thirdweb.com">
+        <img src="https://github.com/thirdweb-dev/js/blob/main/packages/sdk/logo.svg?raw=true" width="200" alt=""/></a>
+    <br />
 </p>
-<h1 align="center">thirdweb JavaScript/TypeScript monorepo</h1>
+
+<h1 align="center"><a href='http://thirdweb.com/'>thirdweb</a> JavaScript/TypeScript monorepo</h1>
+
 <p align="center">
-<a href="https://github.com/thirdweb-dev/js/actions/workflows/CI.yml"><img alt="Build Status" src="https://github.com/thirdweb-dev/js/actions/workflows/CI.yml/badge.svg"/></a>
-<a href="https://discord.gg/thirdweb"><img alt="Join our Discord!" src="https://img.shields.io/discord/834227967404146718.svg?color=7289da&label=discord&logo=discord&style=flat"/></a>
+    <a href="https://github.com/thirdweb-dev/js/actions/workflows/CI.yml">
+        <img alt="Build Status" src="https://github.com/thirdweb-dev/js/actions/workflows/CI.yml/badge.svg"/>
+    </a>
+    <a href="https://discord.gg/thirdweb">
+        <img alt="Join our Discord!" src="https://img.shields.io/discord/834227967404146718.svg?color=7289da&label=discord&logo=discord&style=flat"/>
+    </a>
 </p>
+
 <p align="center"><strong>Best in class web3 SDKs for Browser, Node and Mobile apps</strong></p>
-<br />
 
 ## Packages
 
@@ -22,23 +29,24 @@
 | [/cli](./packages/cli)         | Publish and deploy smart contracts without dealing with private keys | <a href="https://www.npmjs.com/package/thirdweb"><img src="https://img.shields.io/npm/v/thirdweb?color=red&label=npm&logo=npm" alt="npm version"/></a>                           |
 | [/solana](./packages/solana)   | Solana SDK for Browser, Node and React Native                        | <a href="https://www.npmjs.com/package/@thirdweb-dev/solana"><img src="https://img.shields.io/npm/v/@thirdweb-dev/solana?color=red&label=npm&logo=npm" alt="npm version"/></a>   |
 
-## How this monorepo functions
+## Documentation
 
-### Contributing
+Visit [https://portal.thirdweb.com/](https://portal.thirdweb.com/) to view the full documentation.
 
-1. Create PRs to the monorepo
-2. Tag PRs with `[SDK]`, `[REACT]`, `[AUTH]`, etc to indicate the package that you are engaging with (TBD a better process for this / if it is necessary)
-3. Create a `changeset` (with `yarn changeset`) for every **user impacting** change and describe what changed (try to focus on the end-user impact as much as possible -- use `major` for breaking changes, `minor` for new features, `patch` for non-breaking bug fixes, etc)
-4. when the PR builds and tests pass merge to main
+<br />
 
-### Releases
+## Contributing
 
-#### Nightly
+We welcome contributions from all developers, regardless of experience level. If you are interested in contributing, please read our [Contributing Guide](.github/CONTRIBUTING.md) where you'll learn how the repo works, how to test your changes, and how to submit a pull request.
 
-- every push to main automatically gets published to the `@nightly` tag as a snapshot version (based on the commit hash)
-- nightly versions are published to npm under the `@nightly` tag
+<br />
 
-#### Stable
+## Community
 
-- every push to main that contains a changeset automatically gets added to the [Version Packages](https://github.com/thirdweb-dev/js/tree/changeset-release/main) PR
-- to release a stable version of the code that is on main (with the change sets as the release notes / changelog) merge the `Version Packages` PR to main, this will automatically create new `@latest` packages for all of the packages in the monorepo that have changesets
+The best place to discuss your ideas, ask questions, and troubleshoot issues is our [Discord server](https://discord.gg/thirdweb).
+
+<br/>
+
+## Security
+
+If you believe you have found a security vulnerability in any of our packages, we kindly ask you not to open a public issue; and to disclose this to us by emailing `security@thirdweb.com`.
