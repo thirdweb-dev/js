@@ -1,15 +1,15 @@
 import {
-  SnapshotInfoSchema,
-  SnapshotInputSchema,
-  SnapshotSchema,
-} from "../../schema/contracts/common/snapshots";
-import { z } from "zod";
-import {
   ClaimConditionInputSchema,
   ClaimConditionOutputSchema,
   PartialClaimConditionInputSchema,
 } from "../../schema/contracts/common/claim-conditions";
+import {
+  SnapshotInfoSchema,
+  SnapshotInputSchema,
+  SnapshotSchema,
+} from "../../schema/contracts/common/snapshots";
 import { BigNumber, BigNumberish, BytesLike, CallOverrides } from "ethers";
+import { z } from "zod";
 
 /**
  * Represents a claim condition fetched from the SDK

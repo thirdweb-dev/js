@@ -1,7 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
+import type { PackageManager } from "./get-pkg-manager";
 import chalk from "chalk";
 import spawn from "cross-spawn";
-import type { PackageManager } from "./get-pkg-manager";
 
 interface InstallArgs {
   /**

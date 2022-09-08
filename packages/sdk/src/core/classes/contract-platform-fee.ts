@@ -1,10 +1,10 @@
-import { IPlatformFee } from "@thirdweb-dev/contracts-js";
-import { ContractWrapper } from "./contract-wrapper";
-import { TransactionResult } from "../types";
-import { CommonPlatformFeeSchema } from "../../schema";
-import { z } from "zod";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { FEATURE_PLATFORM_FEE } from "../../constants/thirdweb-features";
+import { CommonPlatformFeeSchema } from "../../schema";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { TransactionResult } from "../types";
+import { ContractWrapper } from "./contract-wrapper";
+import { IPlatformFee } from "@thirdweb-dev/contracts-js";
+import { z } from "zod";
 
 /**
  * Handle platform fees and recipients

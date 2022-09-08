@@ -20,7 +20,7 @@ export * from "./types";
 async function ThirdwebAuthRouter(
   req: NextApiRequest,
   res: NextApiResponse,
-  ctx: ThirdwebAuthContext
+  ctx: ThirdwebAuthContext,
 ) {
   // Catch-all route must be named with [...thirdweb]
   const { thirdweb } = req.query;
@@ -58,7 +58,7 @@ export function ThirdwebAuth(cfg: ThirdwebAuthConfig) {
   }
 
   async function getUser(
-    req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest
+    req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest,
   ) {
     const { sdk, domain } = ctx;
     let user: ThirdwebAuthUser | null = null;

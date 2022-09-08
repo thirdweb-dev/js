@@ -1,16 +1,22 @@
-import { ContractWrapper } from "./contract-wrapper";
-import { BigNumber, BigNumberish, constants } from "ethers";
-import { NFTMetadata, NFTMetadataOwner } from "../../schema/tokens/common";
-import { IStorage } from "@thirdweb-dev/storage";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
-import { UpdateableNetwork } from "../interfaces/contract";
-import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
-import { fetchTokenMetadata } from "../../common/nft";
 import {
   detectContractFeature,
   hasFunction,
   NotFoundError,
 } from "../../common";
+import { fetchTokenMetadata } from "../../common/nft";
+import { FEATURE_NFT } from "../../constants/erc721-features";
+import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
+import { NFTMetadata, NFTMetadataOwner } from "../../schema/tokens/common";
+import { BaseDropERC721, BaseERC721 } from "../../types/eips";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { UpdateableNetwork } from "../interfaces/contract";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
+import { ContractWrapper } from "./contract-wrapper";
+import { Erc721Burnable } from "./erc-721-burnable";
+import { Erc721Droppable } from "./erc-721-droppable";
+import { Erc721Mintable } from "./erc-721-mintable";
+import { Erc721Supply } from "./erc-721-supply";
+import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
 import {
   DropERC721,
   IBurnableERC721,
@@ -21,14 +27,8 @@ import {
   SignatureDrop,
   TokenERC721,
 } from "@thirdweb-dev/contracts-js";
-import { Erc721Supply } from "./erc-721-supply";
-import { Erc721Mintable } from "./erc-721-mintable";
-import { BaseDropERC721, BaseERC721 } from "../../types/eips";
-import { FEATURE_NFT } from "../../constants/erc721-features";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { Erc721Droppable } from "./erc-721-droppable";
-import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
-import { Erc721Burnable } from "./erc-721-burnable";
+import { IStorage } from "@thirdweb-dev/storage";
+import { BigNumber, BigNumberish, constants } from "ethers";
 
 /**
  * Standard ERC721 NFT functions

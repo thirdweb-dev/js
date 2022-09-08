@@ -14,7 +14,7 @@ export default async function handler(req: Request, res: Response) {
     serialize("thirdweb_auth_token", "", {
       path: "/",
       expires: new Date(Date.now() + 5 * 1000),
-    })
+    }),
   );
 
   return res.status(301).redirect(req.headers.referer as string);

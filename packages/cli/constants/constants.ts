@@ -7,5 +7,6 @@ export const CREATE_MESSAGES = {
 } as const;
 
 export const ERROR_MESSAGES = {
-  noConfiguration: "Failed to find a supported project configuration file in current directory"
-}
+  noConfiguration:
+    "Failed to find a supported project configuration file in current directory",
+};

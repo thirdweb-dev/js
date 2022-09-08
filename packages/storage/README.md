@@ -18,6 +18,7 @@ Install the latest version of the SDK with either `npm` or `yarn`:
 ```shell
 npm install @thirdweb-dev/storage
 ```
+
 ```shell
 yarn add @thirdweb-dev/storage
 ```

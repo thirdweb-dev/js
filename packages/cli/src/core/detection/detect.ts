@@ -1,3 +1,4 @@
+import { ERROR_MESSAGES } from "../../../constants/constants";
 import { info, logger, warn } from "../helpers/logger";
 import { ProjectType } from "../types/ProjectType";
 import { Detector } from "./detector";
@@ -5,7 +6,6 @@ import FoundryDetector from "./foundry";
 import HardhatDetector from "./hardhat";
 import TruffleDetector from "./truffle";
 import inquirer from "inquirer";
-import { ERROR_MESSAGES } from "../../../constants/constants";
 
 const { Confirm } = require("enquirer");
 
@@ -29,7 +29,8 @@ export default async function detect(
     warn(`${ERROR_MESSAGES.noConfiguration} ${path}`);
     const prompt = new Confirm({
       name: "continue",
-      message: "Do you want to continue and compile this project with solc instead?",
+      message:
+        "Do you want to continue and compile this project with solc instead?",
     });
     const shouldCompile = await prompt.run();
     if (!shouldCompile) {

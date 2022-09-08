@@ -1,8 +1,16 @@
 import { ThirdwebNextAuthConfig } from "./types";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { serialize } from "cookie";
-import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next";
-import NextAuth, { NextAuthOptions, Session, unstable_getServerSession } from "next-auth";
+import {
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+} from "next";
+import NextAuth, {
+  NextAuthOptions,
+  Session,
+  unstable_getServerSession,
+} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export function ThirdwebNextAuth(cfg: ThirdwebNextAuthConfig) {
@@ -21,10 +29,7 @@ export function ThirdwebNextAuth(cfg: ThirdwebNextAuthConfig) {
       async authorize({ payload }: any) {
         try {
           const parsed = JSON.parse(payload);
-          const token = await sdk.auth.generateAuthToken(
-            cfg.domain,
-            parsed
-          );
+          const token = await sdk.auth.generateAuthToken(cfg.domain, parsed);
           const address = await sdk.auth.authenticate(cfg.domain, token);
 
           // Securely set httpOnly cookie on request to prevent XSS on frontend
@@ -36,7 +41,7 @@ export function ThirdwebNextAuth(cfg: ThirdwebNextAuthConfig) {
               httpOnly: true,
               secure: true,
               sameSite: "strict",
-            })
+            }),
           );
 
           return { address };
@@ -47,11 +52,10 @@ export function ThirdwebNextAuth(cfg: ThirdwebNextAuthConfig) {
     });
   }
 
-  function nextOptions (
-    req: GetServerSidePropsContext["req"], 
-    res: GetServerSidePropsContext["res"]
+  function nextOptions(
+    req: GetServerSidePropsContext["req"],
+    res: GetServerSidePropsContext["res"],
   ): NextAuthOptions {
-
     async function session({ session }: { session: Session }) {
       const token = req.cookies.thirdweb_auth_token || "";
       try {
@@ -69,35 +73,35 @@ export function ThirdwebNextAuth(cfg: ThirdwebNextAuthConfig) {
         serialize("thirdweb_auth_token", "", {
           path: "/",
           expires: new Date(Date.now() + 5 * 1000),
-        })
+        }),
       );
     }
 
     const providers: NextAuthOptions["providers"] = [
       ...cfg.nextOptions.providers,
       ThirdwebProvider(res),
-    ]
+    ];
 
-    const configSession = cfg.nextOptions.callbacks?.session
+    const configSession = cfg.nextOptions.callbacks?.session;
     const callbacks: NextAuthOptions["callbacks"] = {
       ...cfg.nextOptions.callbacks,
-      session: configSession 
+      session: configSession
         ? async (params) => {
-          params.session = await session(params);
-          return configSession(params);
-        }
-        : session
+            params.session = await session(params);
+            return configSession(params);
+          }
+        : session,
     };
 
-    const configSignOut = cfg.nextOptions.events?.signOut
+    const configSignOut = cfg.nextOptions.events?.signOut;
     const events: NextAuthOptions["events"] = {
       ...cfg.nextOptions.events,
       signOut: configSignOut
         ? async (params) => {
-          signOut();
-          return configSignOut(params);
-        }
-        : signOut
+            signOut();
+            return configSignOut(params);
+          }
+        : signOut,
     };
 
     return {
@@ -106,23 +110,25 @@ export function ThirdwebNextAuth(cfg: ThirdwebNextAuthConfig) {
       callbacks,
       events,
     };
-  };
-
-  async function getUser(
-    ...args: 
-      | [NextApiRequest, NextApiResponse] 
-      | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
-  ) {
-    return unstable_getServerSession(args[0], args[1], nextOptions(args[0], args[1]));
   }
 
-  function NextAuthHandler(
-    ...args: [] | [NextApiRequest, NextApiResponse]
+  async function getUser(
+    ...args:
+      | [NextApiRequest, NextApiResponse]
+      | [GetServerSidePropsContext["req"], GetServerSidePropsContext["res"]]
   ) {
+    return unstable_getServerSession(
+      args[0],
+      args[1],
+      nextOptions(args[0], args[1]),
+    );
+  }
+
+  function NextAuthHandler(...args: [] | [NextApiRequest, NextApiResponse]) {
     if (args.length === 0) {
       return (req: NextApiRequest, res: NextApiResponse) => {
         return NextAuth(req, res, nextOptions(req, res));
-      }
+      };
     }
 
     return NextAuth(args[0], args[1], nextOptions(args[0], args[1]));
@@ -130,6 +136,6 @@ export function ThirdwebNextAuth(cfg: ThirdwebNextAuthConfig) {
 
   return {
     NextAuthHandler,
-    getUser
-  }
+    getUser,
+  };
 }

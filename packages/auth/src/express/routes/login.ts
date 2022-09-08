@@ -13,7 +13,7 @@ function redirectWithError(req: Request, res: Response, error: string) {
 export default async function handler(
   req: Request,
   res: Response,
-  ctx: ThirdwebAuthContext
+  ctx: ThirdwebAuthContext,
 ) {
   if (req.method !== "GET") {
     return redirectWithError(req, res, "INVALID_METHOD");
@@ -44,7 +44,7 @@ export default async function handler(
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-    })
+    }),
   );
 
   if (ctx.callbacks?.login) {
