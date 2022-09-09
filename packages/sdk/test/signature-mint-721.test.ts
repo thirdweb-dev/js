@@ -28,7 +28,7 @@ describe("NFT sig minting", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
-    nftContract = sdk.getNFTCollection(
+    nftContract = await sdk.getNFTCollection(
       await sdk.deployer.deployBuiltInContract(NFTCollection.contractType, {
         name: "OUCH VOUCH",
         symbol: "VOUCH",
@@ -48,7 +48,7 @@ describe("NFT sig minting", async () => {
       mintStartTime: new Date(),
     };
 
-    customTokenContract = sdk.getToken(
+    customTokenContract = await sdk.getToken(
       await sdk.deployer.deployBuiltInContract(Token.contractType, {
         name: "Test",
         symbol: "TEST",

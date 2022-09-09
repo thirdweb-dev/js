@@ -37,7 +37,7 @@ describe("NFT Drop Contract", async () => {
       platform_fee_basis_points: 10,
       platform_fee_recipient: AddressZero,
     });
-    dropContract = sdk.getNFTDrop(address);
+    dropContract = await sdk.getNFTDrop(address);
   });
 
   it("should lazy mint with URI", async () => {

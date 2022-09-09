@@ -34,7 +34,7 @@ describe("NFT Contract", async () => {
         platform_fee_recipient: AddressZero,
       },
     );
-    nftContract = sdk.getNFTCollection(address);
+    nftContract = await sdk.getNFTCollection(address);
   });
 
   it("should return nfts even if some are burned", async () => {

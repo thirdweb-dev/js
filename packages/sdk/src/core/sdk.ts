@@ -172,11 +172,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param contractAddress - the address of the deployed contract
    * @returns the contract
    */
-  public getNFTDrop(contractAddress: string): NFTDrop {
-    return this.getBuiltInContract(
+  public async getNFTDrop(contractAddress: string): Promise<NFTDrop> {
+    return (await this.getBuiltInContract(
       contractAddress,
       NFTDrop.contractType,
-    ) as NFTDrop;
+    )) as NFTDrop;
   }
 
   /**
@@ -184,11 +184,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param contractAddress - the address of the deployed contract
    * @returns the contract
    */
-  public getSignatureDrop(contractAddress: string): SignatureDrop {
-    return this.getBuiltInContract(
+  public async getSignatureDrop(
+    contractAddress: string,
+  ): Promise<SignatureDrop> {
+    return (await this.getBuiltInContract(
       contractAddress,
       SignatureDrop.contractType,
-    ) as SignatureDrop;
+    )) as SignatureDrop;
   }
 
   /**
@@ -196,11 +198,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getNFTCollection(address: string): NFTCollection {
-    return this.getBuiltInContract(
+  public async getNFTCollection(address: string): Promise<NFTCollection> {
+    return (await this.getBuiltInContract(
       address,
       NFTCollection.contractType,
-    ) as NFTCollection;
+    )) as NFTCollection;
   }
 
   /**
@@ -208,11 +210,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getEditionDrop(address: string): EditionDrop {
-    return this.getBuiltInContract(
+  public async getEditionDrop(address: string): Promise<EditionDrop> {
+    return (await this.getBuiltInContract(
       address,
       EditionDrop.contractType,
-    ) as EditionDrop;
+    )) as EditionDrop;
   }
 
   /**
@@ -220,8 +222,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getEdition(address: string): Edition {
-    return this.getBuiltInContract(address, Edition.contractType) as Edition;
+  public async getEdition(address: string): Promise<Edition> {
+    return (await this.getBuiltInContract(
+      address,
+      Edition.contractType,
+    )) as Edition;
   }
 
   /**
@@ -229,11 +234,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getTokenDrop(address: string): TokenDrop {
-    return this.getBuiltInContract(
+  public async getTokenDrop(address: string): Promise<TokenDrop> {
+    return (await this.getBuiltInContract(
       address,
       TokenDrop.contractType,
-    ) as TokenDrop;
+    )) as TokenDrop;
   }
 
   /**
@@ -241,8 +246,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getToken(address: string): Token {
-    return this.getBuiltInContract(address, Token.contractType) as Token;
+  public async getToken(address: string): Promise<Token> {
+    return (await this.getBuiltInContract(
+      address,
+      Token.contractType,
+    )) as Token;
   }
 
   /**
@@ -250,8 +258,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getVote(address: string): Vote {
-    return this.getBuiltInContract(address, Vote.contractType) as Vote;
+  public async getVote(address: string): Promise<Vote> {
+    return (await this.getBuiltInContract(address, Vote.contractType)) as Vote;
   }
 
   /**
@@ -259,8 +267,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getSplit(address: string): Split {
-    return this.getBuiltInContract(address, Split.contractType) as Split;
+  public async getSplit(address: string): Promise<Split> {
+    return (await this.getBuiltInContract(
+      address,
+      Split.contractType,
+    )) as Split;
   }
 
   /**
@@ -268,11 +279,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getMarketplace(address: string): Marketplace {
-    return this.getBuiltInContract(
+  public async getMarketplace(address: string): Promise<Marketplace> {
+    return (await this.getBuiltInContract(
       address,
       Marketplace.contractType,
-    ) as Marketplace;
+    )) as Marketplace;
   }
 
   /**
@@ -280,8 +291,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param address - the address of the deployed contract
    * @returns the contract
    */
-  public getPack(address: string): Pack {
-    return this.getBuiltInContract(address, Pack.contractType) as Pack;
+  public async getPack(address: string): Promise<Pack> {
+    return (await this.getBuiltInContract(address, Pack.contractType)) as Pack;
   }
 
   /**
@@ -290,11 +301,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    * @beta
    */
-  public getMultiwrap(address: string): Multiwrap {
-    return this.getBuiltInContract(
+  public async getMultiwrap(address: string): Promise<Multiwrap> {
+    return (await this.getBuiltInContract(
       address,
       Multiwrap.contractType,
-    ) as Multiwrap;
+    )) as Multiwrap;
   }
 
   /**
@@ -304,10 +315,12 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param contractType - optional, the type of contract to instantiate
    * @returns a promise that resolves with the contract instance
    */
-  public getBuiltInContract<TContractType extends ContractType = ContractType>(
+  public async getBuiltInContract<
+    TContractType extends ContractType = ContractType,
+  >(
     address: string,
     contractType: TContractType,
-  ): ContractForContractType<TContractType> {
+  ): Promise<ContractForContractType<TContractType>> {
     // if we have a contract in the cache we will return it
     // we will do this **without** checking any contract type things for simplicity, this may have to change in the future?
     if (this.contractCache.has(address)) {
@@ -321,7 +334,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         "To get an instance of a custom contract, use getContract(address)",
       );
     }
-
+    // TODO lazy import
     const newContract = new KNOWN_CONTRACTS_MAP[
       contractType as keyof typeof KNOWN_CONTRACTS_MAP
     ](this.getSignerOrProvider(), address, this.storageHandler, this.options);
@@ -388,7 +401,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
             );
           }
         } else {
-          metadata = this.getBuiltInContract(address, contractType).metadata;
+          metadata = (await this.getBuiltInContract(address, contractType))
+            .metadata;
         }
         return {
           address,

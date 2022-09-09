@@ -19,7 +19,7 @@ describe("Royalties", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
-    bundleContract = sdk.getEdition(
+    bundleContract = await sdk.getEdition(
       await sdk.deployer.deployBuiltInContract(Edition.contractType, {
         name: "NFT Contract",
         primary_sale_recipient: adminWallet.address,

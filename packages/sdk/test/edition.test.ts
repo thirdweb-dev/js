@@ -33,7 +33,7 @@ describe("Edition Contract", async () => {
       platform_fee_basis_points: 10,
       platform_fee_recipient: AddressZero,
     });
-    bundleContract = sdk.getEdition(address);
+    bundleContract = await sdk.getEdition(address);
   });
 
   it("gas cost", async () => {

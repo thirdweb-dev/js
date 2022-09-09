@@ -31,7 +31,7 @@ describe("Token Contract", async () => {
         primary_sale_recipient: adminWallet.address,
       },
     );
-    currencyContract = sdk.getToken(address);
+    currencyContract = await sdk.getToken(address);
   });
 
   it("should mint tokens", async () => {
