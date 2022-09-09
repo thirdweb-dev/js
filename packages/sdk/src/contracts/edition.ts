@@ -9,11 +9,8 @@ import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Erc1155 } from "../core/classes/erc-1155";
-import { Erc1155BatchMintable } from "../core/classes/erc-1155-batch-mintable";
-import { Erc1155Burnable } from "../core/classes/erc-1155-burnable";
-import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
-import { Erc1155Mintable } from "../core/classes/erc-1155-mintable";
 import { Erc1155SignatureMintable } from "../core/classes/erc-1155-signature-mintable";
+import { StandardErc1155 } from "../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import {
   NetworkOrSignerOrProvider,
@@ -47,10 +44,11 @@ import { BigNumber, BigNumberish, constants } from "ethers";
  *
  * @public
  */
-export class Edition extends Erc1155<TokenERC1155> {
+export class Edition extends StandardErc1155<TokenERC1155> {
   static contractType = "edition" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
   static contractAbi = ABI as any;
+
   /**
    * @internal
    */
@@ -97,15 +95,9 @@ export class Edition extends Erc1155<TokenERC1155> {
    * const mintedId = tx.id; // the id of the NFT minted
    * ```
    */
-  override signature = super.signature as Erc1155SignatureMintable;
-  /**
-   * @internal
-   */
+  public signature: Erc1155SignatureMintable;
   public interceptor: ContractInterceptor<TokenERC1155>;
-  private _query = this.query as Erc1155Enumerable;
-  private _mint = this.mint as Erc1155Mintable;
-  private _burn = this.burn as Erc1155Burnable;
-  private _batchMint = this._mint.batch as Erc1155BatchMintable;
+  public erc1155: Erc1155<TokenERC1155>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -119,7 +111,7 @@ export class Edition extends Erc1155<TokenERC1155> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       Edition.schema,
@@ -138,6 +130,18 @@ export class Edition extends Erc1155<TokenERC1155> {
       this.storage,
       this.roles,
     );
+    this.erc1155 = new Erc1155(this.contractWrapper, this.storage);
+  }
+
+  /**
+   * @internal
+   */
+  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+    this.contractWrapper.updateSignerOrProvider(network);
+  }
+
+  getAddress(): string {
+    return this.contractWrapper.readContract.address;
   }
 
   /** ******************************
@@ -161,7 +165,7 @@ export class Edition extends Erc1155<TokenERC1155> {
   public async getAll(
     queryParams?: QueryAllParams,
   ): Promise<EditionMetadata[]> {
-    return this._query.all(queryParams);
+    return this.erc1155.getAll(queryParams);
   }
 
   /**
@@ -181,7 +185,7 @@ export class Edition extends Erc1155<TokenERC1155> {
   public async getOwned(
     walletAddress?: string,
   ): Promise<EditionMetadataOwner[]> {
-    return this._query.owned(walletAddress);
+    return this.erc1155.getOwned(walletAddress);
   }
 
   /**
@@ -190,7 +194,7 @@ export class Edition extends Erc1155<TokenERC1155> {
    * @public
    */
   public async getTotalCount(): Promise<BigNumber> {
-    return this._query.totalCount();
+    return this.erc1155.totalCount();
   }
 
   /**
@@ -213,13 +217,10 @@ export class Edition extends Erc1155<TokenERC1155> {
    *
    * @remarks See {@link Edition.mintTo}
    */
-  public async mintToSelf(
+  public async mint(
     metadataWithSupply: EditionMetadataOrUri,
   ): Promise<TransactionResultWithId<EditionMetadata>> {
-    return this._mint.to(
-      await this.contractWrapper.getSignerAddress(),
-      metadataWithSupply,
-    );
+    return this.erc1155.mint(metadataWithSupply);
   }
 
   /**
@@ -254,7 +255,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     to: string,
     metadataWithSupply: EditionMetadataOrUri,
   ): Promise<TransactionResultWithId<EditionMetadata>> {
-    return this._mint.to(to, metadataWithSupply);
+    return this.erc1155.mintTo(to, metadataWithSupply);
   }
 
   /**
@@ -267,11 +268,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     tokenId: BigNumberish,
     additionalSupply: BigNumberish,
   ): Promise<TransactionResultWithId<EditionMetadata>> {
-    return this._mint.additionalSupplyTo(
-      await this.contractWrapper.getSignerAddress(),
-      tokenId,
-      additionalSupply,
-    );
+    return this.erc1155.mintAdditionalSupply(tokenId, additionalSupply);
   }
 
   /**
@@ -286,7 +283,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     tokenId: BigNumberish,
     additionalSupply: BigNumberish,
   ): Promise<TransactionResultWithId<EditionMetadata>> {
-    return this._mint.additionalSupplyTo(to, tokenId, additionalSupply);
+    return this.erc1155.mintAdditionalSupplyTo(to, tokenId, additionalSupply);
   }
 
   /**
@@ -297,10 +294,7 @@ export class Edition extends Erc1155<TokenERC1155> {
   public async mintBatch(
     metadatas: EditionMetadataOrUri[],
   ): Promise<TransactionResultWithId<EditionMetadata>[]> {
-    return this._batchMint.to(
-      await this.contractWrapper.getSignerAddress(),
-      metadatas,
-    );
+    return this.erc1155.mintBatch(metadatas);
   }
 
   /**
@@ -340,7 +334,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     to: string,
     metadataWithSupply: EditionMetadataOrUri[],
   ): Promise<TransactionResultWithId<EditionMetadata>[]> {
-    return this._batchMint.to(to, metadataWithSupply);
+    return this.erc1155.mintBatchTo(to, metadataWithSupply);
   }
 
   /**
@@ -354,10 +348,10 @@ export class Edition extends Erc1155<TokenERC1155> {
    * const result = await contract.burnTokens(tokenId, amount);
    * ```
    */
-  public async burnTokens(
+  public async burn(
     tokenId: BigNumberish,
     amount: BigNumberish,
   ): Promise<TransactionResult> {
-    return this._burn.tokens(tokenId, amount);
+    return this.erc1155.burn(tokenId, amount);
   }
 }

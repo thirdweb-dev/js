@@ -1,4 +1,3 @@
-
 export interface Feature {
   /**
    * The name of the contract (with the .sol extension)
@@ -19,7 +18,6 @@ export interface ContractFeatures {
    * The name of the contract (with the .sol extension)
    */
   name: string;
-
 
   /**
    * The features detected on the contract

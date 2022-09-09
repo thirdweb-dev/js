@@ -70,7 +70,7 @@ describe("npx thirdweb detect", () => {
       lines.findIndex((line) => line.includes("- ERC721Enumerable")),
     ).toBeGreaterThan(-1);
     expect(
-      lines.findIndex((line) => line.includes("- ERC721Droppable")),
+      lines.findIndex((line) => line.includes("- ERC721LazyMintable")),
     ).toBeGreaterThan(-1);
     expect(
       lines.findIndex((line) => line.includes("- ERC721SignatureMint")),

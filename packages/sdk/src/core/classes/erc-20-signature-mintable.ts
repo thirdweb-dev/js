@@ -1,3 +1,6 @@
+import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
+import { FEATURE_TOKEN_SIGNATURE_MINTABLE } from "../../constants/erc20-features";
+import { Token } from "../../contracts";
 import {
   FilledSignaturePayload20,
   MintRequest20,
@@ -7,16 +10,13 @@ import {
   Signature20PayloadOutput,
   SignedPayload20,
 } from "../../schema/contracts/common/signature";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
-import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
-import { BigNumber, ethers } from "ethers";
-import invariant from "tiny-invariant";
+import { ContractRoles } from "./contract-roles";
 import { ContractWrapper } from "./contract-wrapper";
 import { ITokenERC20, TokenERC20 } from "@thirdweb-dev/contracts-js";
-import { ContractRoles } from "./contract-roles";
-import { Token } from "../../contracts";
-import { FEATURE_TOKEN_SIGNATURE_MINTABLE } from "../../constants/erc20-features";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { BigNumber, ethers } from "ethers";
+import invariant from "tiny-invariant";
 
 /**
  * Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely

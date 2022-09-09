@@ -90,7 +90,7 @@ import { useMintNFT, useNFTCollection, useNFTs } from "@thirdweb-dev/react";
 
 const NFTListComponent = () => {
   const address = useAddress();
-  const nftCollection = useNFTCollection("<NFT-COLLECTION-CONTRACT-ADDRESS>");
+  const nftCollection = await useNFTCollection("<NFT-COLLECTION-CONTRACT-ADDRESS>");
   const { data: nfts } = useNFTs(nftCollection);
   const { mutate: mintNFT } = useMintNFT(nftCollection);
 

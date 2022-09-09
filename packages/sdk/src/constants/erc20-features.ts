@@ -5,11 +5,11 @@ import IMintableERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC
 import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
 import ISignatureMintERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC20.json";
 
-export const FEATURE_TOKEN_DROPPABLE = {
-  name: "ERC20Droppable",
-  namespace: "token.drop",
+export const FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS = {
+  name: "ERC20ClaimableWithConditions",
+  namespace: "token.drop.claim",
   docLinks: {
-    sdk: "sdk.erc20droppable",
+    sdk: "sdk.erc20dclaimable",
     contracts: "DropSinglePhase",
   },
   abis: [ERC20Abi, IDropSinglePhase],
@@ -73,7 +73,8 @@ export const FEATURE_TOKEN = {
   features: {
     [FEATURE_TOKEN_BURNABLE.name]: FEATURE_TOKEN_BURNABLE,
     [FEATURE_TOKEN_MINTABLE.name]: FEATURE_TOKEN_MINTABLE,
-    [FEATURE_TOKEN_DROPPABLE.name]: FEATURE_TOKEN_DROPPABLE,
+    [FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS.name]:
+      FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS,
     [FEATURE_TOKEN_SIGNATURE_MINTABLE.name]: FEATURE_TOKEN_SIGNATURE_MINTABLE,
   },
 } as const;

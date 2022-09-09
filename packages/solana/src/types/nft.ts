@@ -65,4 +65,8 @@ export type NFTMetadata = z.output<typeof CommonNFTOutput>;
 /**
  * @public
  */
+export type NFTCollectionMetadata = NFTMetadata;
+/**
+ * @public
+ */
 export type NFTMetadataOwner = { metadata: NFTMetadata; owner: string };

@@ -9,10 +9,17 @@ import type {
   ListingType,
   NFTDrop,
   NFTMetadata,
+  NFTMetadataInput,
+  NFTMetadataOrUri,
   Price,
   SignatureDrop,
-  NFTMetadataOrUri,
-  NFTMetadataInput,
+  ValidContractInstance,
+  SmartContract,
+  NFTCollection,
+  Edition,
+  TokenDrop,
+  Erc20,
+  ClaimOptions,
 } from "@thirdweb-dev/sdk";
 import type { BigNumberish } from "ethers";
 
@@ -60,34 +67,26 @@ export type TokenBurnParams = {
  * The possible NFT contract types.
  * @example
  * ```javascript
- * const nftDrop = useNFTDrop(<ContractAddress>);
- * ```
- * @example
- * ```javascript
- * const editionDrop = useEditionDrop(<ContractAddress>);
- * ```
- * @example
- * ```javascript
- * const nftCollection = useNFTCollection(<ContractAddress>);
- * ```
- * @example
- * ```javascript
- * const edition = useEdition(<ContractAddress>);
- * ```
- * @example
- * ```javascript
  * const { contract } = useContract(<ContractAddress>);
- * const nftContract = contract?.nft;
  * ```
  * @beta
  */
-export type NFTContract = Erc721 | Erc1155;
+export type NFTContract =
+  | NFTCollection
+  | Edition
+  | Exclude<DropContract, "TokenDrop">;
+
+/**
+ * Possible NFT contract types.
+ * @beta
+ */
+export type Erc721OrErc1155 = Erc721 | Erc1155;
 
 /**
  * A single NFT token
  * @beta
  */
-export type NFT<TContract extends NFTContract> = {
+export type NFT<TContract extends Erc721OrErc1155> = {
   /**
    * The actual metadata of the NFT (name, image, etc)
    */
@@ -109,36 +108,14 @@ export type NFT<TContract extends NFTContract> = {
 };
 
 /**
- * The params to pass to `useTotalCirculatingSupply`.
- * @beta
- */
-export type useTotalCirculatingSupplyParams<TContract> =
-  TContract extends Erc1155
-    ? [contract: RequiredParam<TContract>, tokenId: BigNumberish]
-    : [contract: RequiredParam<TContract>];
-
-/**
- * The params to pass to `useNftBalance`.
- * @beta
- */
-export type useNFTBalanceParams<TContract> = TContract extends Erc1155
-  ? [
-      contract: RequiredParam<TContract>,
-      ownerWalletAddress: RequiredParam<WalletAddress>,
-      tokenId: RequiredParam<BigNumberish>,
-    ]
-  : [
-      contract: RequiredParam<TContract>,
-      ownerWalletAddress: RequiredParam<WalletAddress>,
-    ];
-
-/**
  * The params to pass to `useTransferNFT`.
  * @beta
  */
-export type TransferNFTParams<TContract> = TContract extends Erc1155
-  ? { to: WalletAddress; tokenId: BigNumberish; amount: Amount }
-  : { to: WalletAddress; tokenId: BigNumberish };
+export type TransferNFTParams = {
+  to: WalletAddress;
+  tokenId: BigNumberish;
+  amount?: Amount;
+};
 
 /**
  * The params to pass to `useTransferBatchNFT`.
@@ -164,10 +141,11 @@ export type MintNFTSupplyParams = {
  *
  * @beta
  */
-export type MintNFTParams<TContract extends NFTContract> =
-  TContract extends Erc1155
-    ? { metadata: NFTMetadataOrUri; supply: BigNumberish; to: WalletAddress }
-    : { metadata: NFTMetadataOrUri; to: WalletAddress };
+export type MintNFTParams = {
+  metadata: NFTMetadataOrUri;
+  to: WalletAddress;
+  supply?: Amount;
+};
 
 /**
  * The return type of the {@link useMintNFT} hook.
@@ -185,10 +163,7 @@ export type MintNFTReturnType<TContract> = TContract extends Erc721
  *
  * @beta
  */
-export type BurnNFTParams<TContract extends NFTContract> =
-  TContract extends Erc1155
-    ? { tokenId: BigNumberish; amount: Amount }
-    : { tokenId: BigNumberish };
+export type BurnNFTParams = { tokenId: BigNumberish; amount?: Amount };
 
 // DROPS //
 
@@ -196,7 +171,19 @@ export type BurnNFTParams<TContract extends NFTContract> =
  * The possible DROP contract types.
  * @beta
  */
-export type DropContract = NFTDrop | EditionDrop | SignatureDrop;
+export type DropContract =
+  | NFTDrop
+  | EditionDrop
+  | SignatureDrop
+  | TokenDrop
+  | SmartContract
+  | null;
+
+/**
+ * The possible revealable contract types.
+ * @beta
+ */
+export type RevealableContract = NFTDrop | SignatureDrop | SmartContract | null;
 
 /**
  * The params for the {@link useDelayedRevealLazyMint} hook mutation.
@@ -225,17 +212,17 @@ export type RevealLazyMintInput = {
  * @beta
  */
 export type ClaimNFTParams<TContract extends DropContract> =
-  TContract extends Erc1155
+  keyof TContract extends Erc1155
     ? {
         to: WalletAddress;
         tokenId: BigNumberish;
         quantity: BigNumberish;
-        checkERC20Allowance?: boolean;
+        options?: ClaimOptions;
       }
     : {
         to: WalletAddress;
         quantity: BigNumberish;
-        checkERC20Allowance?: boolean;
+        options?: ClaimOptions;
       };
 
 /**
@@ -274,3 +261,63 @@ export type ClaimTokenParams = {
   amount: Amount;
   checkERC20Allowance?: boolean;
 };
+
+// Helpers
+
+export function getErcs(
+  contract: RequiredParam<ValidContractInstance | SmartContract | null>,
+) {
+  return {
+    erc1155: getErc1155(contract),
+    erc721: getErc721(contract),
+    erc20: getErc20(contract),
+  };
+}
+
+export function getErc1155(
+  contract: RequiredParam<ValidContractInstance | SmartContract | null>,
+): Erc1155 | undefined {
+  if (!contract) {
+    return undefined;
+  }
+  try {
+    if ("erc1155" in contract) {
+      return contract.erc1155;
+    }
+  } catch (error) {
+    return undefined;
+  }
+  return undefined;
+}
+
+export function getErc721(
+  contract: RequiredParam<ValidContractInstance | SmartContract | null>,
+): Erc721 | undefined {
+  if (!contract) {
+    return undefined;
+  }
+  try {
+    if ("erc721" in contract) {
+      return contract.erc721;
+    }
+  } catch (error) {
+    return undefined;
+  }
+  return undefined;
+}
+
+export function getErc20(
+  contract: RequiredParam<ValidContractInstance | SmartContract | null>,
+): Erc20 | undefined {
+  if (!contract) {
+    return undefined;
+  }
+  try {
+    if ("erc20" in contract) {
+      return contract.erc20;
+    }
+  } catch (error) {
+    return undefined;
+  }
+  return undefined;
+}

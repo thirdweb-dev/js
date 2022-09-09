@@ -1,5 +1,5 @@
-import { BigNumberish } from "ethers";
 import { Price } from "../currency";
+import { BigNumberish } from "ethers";
 
 /**
  * Represents a new marketplace auction listing.

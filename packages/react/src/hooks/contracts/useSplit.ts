@@ -9,7 +9,7 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * import { useSplit } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const split = useSplit("<YOUR-CONTRACT-ADDRESS>")
+ *   const split = await useSplit("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the split contract in the rest of the component
  *

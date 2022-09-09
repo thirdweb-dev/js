@@ -7,7 +7,7 @@ import {
 import { sdk, signers, storage } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber } from "ethers";
 
 global.fetch = require("cross-fetch");
 
@@ -27,7 +27,7 @@ describe("Edition sig minting", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
-    editionContract = sdk.getEdition(
+    editionContract = await sdk.getEdition(
       await sdk.deployer.deployBuiltInContract(Edition.contractType, {
         name: "OUCH VOUCH",
         symbol: "VOUCH",
@@ -46,7 +46,7 @@ describe("Edition sig minting", async () => {
       to: samWallet.address,
     };
 
-    customTokenContract = sdk.getToken(
+    customTokenContract = await sdk.getToken(
       await sdk.deployer.deployBuiltInContract(Token.contractType, {
         name: "Test",
         symbol: "TEST",
@@ -240,7 +240,7 @@ describe("Edition sig minting", async () => {
         samWallet.address,
         "0",
       );
-      await editionContract.mintToSelf({
+      await editionContract.mint({
         metadata: { name: "test" },
         supply: 0,
       });
