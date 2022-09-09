@@ -45,11 +45,11 @@ export class NFTCollection {
     return this.nft.get(mintAddress);
   }
 
-  async getAll(collectionMintAddress: string): Promise<string[]> {
+  async getAll(): Promise<string[]> {
     const allSignatures: ConfirmedSignatureInfo[] = [];
     // This returns the first 1000, so we need to loop through until we run out of signatures to get.
     let signatures = await this.metaplex.connection.getSignaturesForAddress(
-      new PublicKey(collectionMintAddress),
+      this.collectionMintAddress,
     );
 
     allSignatures.push(...signatures);
@@ -58,7 +58,7 @@ export class NFTCollection {
         before: signatures[signatures.length - 1]?.signature,
       };
       signatures = await this.metaplex.connection.getSignaturesForAddress(
-        new PublicKey(collectionMintAddress),
+        this.collectionMintAddress,
         options,
       );
       allSignatures.push(...signatures);
