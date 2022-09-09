@@ -1,10 +1,6 @@
-import { FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS } from "../../constants/erc721-features";
 import { FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS } from "../../constants/erc1155-features";
 import { CustomContractSchema } from "../../schema/contracts/custom";
-import {
-  ClaimOptions,
-  ClaimVerification,
-} from "../../types/claim-conditions/claim-conditions";
+import { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
 import { BaseClaimConditionERC1155 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
@@ -21,7 +17,8 @@ import { BigNumberish, ethers } from "ethers";
  * @example
  * ```javascript
  * const contract = await sdk.getContract("{{contract_address}}");
- * await contract.edition.drop.claim.to("0x...", tokenId, quantity);
+ * await contract.erc1155.claim(tokenId, quantity);
+ * await contract.erc1155.claimConditions.getActive(tokenId);
  * ```
  */
 export class Erc1155ClaimableWithConditions implements DetectableFeature {
@@ -103,7 +100,7 @@ export class Erc1155ClaimableWithConditions implements DetectableFeature {
    * const tokenId = 0; // the id of the NFT you want to claim
    * const quantity = 1; // how many NFTs you want to claim
    *
-   * const tx = await contract.edition.drop.claim.to(address, tokenId, quantity);
+   * const tx = await contract.erc1155.claimTo(address, tokenId, quantity);
    * const receipt = tx.receipt; // the transaction receipt
    * ```
    *

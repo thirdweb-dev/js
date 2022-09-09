@@ -20,7 +20,8 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
  * @example
  * ```javascript
  * const contract = await sdk.getContract("{{contract_address}}");
- * await contract.nft.drop.claim.to("0x...", quantity);
+ * await contract.erc721.claim(quantity);
+ * await contract.erc721.claimConditions.getActive();
  * ```
  */
 export class Erc721ClaimableWithConditions implements DetectableFeature {
@@ -45,7 +46,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
    *     price: 0.08, // public sale price
    *   }
    * ]);
-   * await contract.nft.drop.claim.conditions.set(claimConditions);
+   * await contract.erc721.claimConditions.set(claimConditions);
    * ```
    */
   public conditions: DropClaimConditions<BaseClaimConditionERC721>;
@@ -123,7 +124,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
    * const address = "{{wallet_address}}"; // address of the wallet you want to claim the NFTs
    * const quantity = 1; // how many unique NFTs you want to claim
    *
-   * const tx = await contract.nft.drop.claim.to(address, quantity);
+   * const tx = await contract.erc721.claimTo(address, quantity);
    * const receipt = tx[0].receipt; // the transaction receipt
    * const claimedTokenId = tx[0].id; // the id of the first NFT claimed
    * const claimedNFT = await tx[0].data(); // (optional) get the first claimed NFT metadata

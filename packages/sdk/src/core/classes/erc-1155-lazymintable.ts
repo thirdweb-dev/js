@@ -69,7 +69,7 @@ export class Erc1155LazyMintable implements DetectableFeature {
    * ```javascript
    * const quantity = 10;
    * const tokenId = 0;
-   * await contract.edition.drop.claim.to("0x...", 0, quantity);
+   * await contract.erc1155.claimTo("0x...", 0, quantity);
    * ```
    */
   public claimWithConditions: Erc1155ClaimableWithConditions | undefined;
@@ -111,7 +111,7 @@ export class Erc1155LazyMintable implements DetectableFeature {
    *   image: fs.readFileSync("path/to/image.png"),
    * }];
    *
-   * const results = await contract.edition.drop.lazyMint(metadatas); // uploads and creates the NFTs on chain
+   * const results = await contract.erc1155.lazyMint(metadatas); // uploads and creates the NFTs on chain
    * const firstTokenId = results[0].id; // token id of the first created NFT
    * const firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT
    * ```

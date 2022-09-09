@@ -1,3 +1,4 @@
+import { calculateClaimCost } from "../../common/claim-conditions";
 import {
   approveErc20Allowance,
   normalizePriceValue,
@@ -46,7 +47,8 @@ export class ERC1155Claimable implements DetectableFeature {
   ): Promise<TransactionTask> {
     let overrides: CallOverrides = {};
     if (options && options.pricePerToken) {
-      overrides = await this.calculateTotalCost(
+      overrides = await calculateClaimCost(
+        this.contractWrapper,
         options.pricePerToken,
         quantity,
         options.currencyAddress,
@@ -96,37 +98,5 @@ export class ERC1155Claimable implements DetectableFeature {
       options,
     );
     return await tx.execute();
-  }
-
-  private async calculateTotalCost(
-    pricePerToken: Price,
-    quantity: BigNumberish,
-    currencyAddress?: string,
-    checkERC20Allowance?: boolean,
-  ): Promise<Promise<CallOverrides>> {
-    let overrides: CallOverrides = {};
-    const currency = currencyAddress || NATIVE_TOKEN_ADDRESS;
-    const normalizedPrice = await normalizePriceValue(
-      this.contractWrapper.getProvider(),
-      pricePerToken,
-      currency,
-    );
-    const totalCost = normalizedPrice.mul(quantity);
-    if (totalCost.gt(0)) {
-      if (currency === NATIVE_TOKEN_ADDRESS) {
-        overrides = {
-          value: totalCost,
-        };
-      } else if (currency !== NATIVE_TOKEN_ADDRESS && checkERC20Allowance) {
-        await approveErc20Allowance(
-          this.contractWrapper,
-          currency,
-          totalCost,
-          quantity,
-          0,
-        );
-      }
-    }
-    return overrides;
   }
 }
