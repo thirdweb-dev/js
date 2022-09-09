@@ -1,6 +1,7 @@
 import {
   assertEnabled,
   detectContractFeature,
+  ExtensionNotImplementedError,
   hasFunction,
   NotFoundError,
 } from "../../common";
@@ -9,12 +10,13 @@ import {
   FEATURE_EDITION,
   FEATURE_EDITION_BATCH_MINTABLE,
   FEATURE_EDITION_BURNABLE,
-  FEATURE_EDITION_CLAIMABLE,
   FEATURE_EDITION_LAZY_MINTABLE,
   FEATURE_EDITION_ENUMERABLE,
   FEATURE_EDITION_MINTABLE,
   FEATURE_EDITION_REVEALABLE,
   FEATURE_EDITION_SIGNATURE_MINTABLE,
+  FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS,
+  FEATURE_EDITION_CLAIMABLE,
 } from "../../constants/erc1155-features";
 import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 import { NFTMetadata, NFTMetadataOrUri } from "../../schema/tokens/common";
@@ -25,6 +27,7 @@ import {
   EditionMetadataOwner,
 } from "../../schema/tokens/edition";
 import {
+  ClaimOptions,
   ClaimVerification,
   QueryAllParams,
   UploadProgressEvent,
@@ -754,26 +757,33 @@ export class Erc1155<
    * @param destinationAddress - Address you want to send the token to
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
-   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
-   * @param claimData - Optional claim verification data (e.g. price, allowlist proof, etc...)
+   * @param options - Optional claim verification data (e.g. price, currency, etc...)
    */
   public async getClaimTransaction(
     destinationAddress: string,
     tokenId: BigNumberish,
     quantity: BigNumberish,
-    checkERC20Allowance = true, // TODO split up allowance checks
-    claimData?: ClaimVerification,
+    options?: ClaimOptions,
   ): Promise<TransactionTask> {
-    return assertEnabled(
-      this.lazyMintable?.claim,
-      FEATURE_EDITION_CLAIMABLE,
-    ).getClaimTransaction(
-      destinationAddress,
-      tokenId,
-      quantity,
-      checkERC20Allowance,
-      claimData,
-    );
+    const claimWithConditions = this.lazyMintable?.claimWithConditions;
+    const claim = this.lazyMintable?.claim;
+    if (claimWithConditions) {
+      return claimWithConditions.getClaimTransaction(
+        destinationAddress,
+        tokenId,
+        quantity,
+        options,
+      );
+    }
+    if (claim) {
+      return claim.getClaimTransaction(
+        destinationAddress,
+        tokenId,
+        quantity,
+        options,
+      );
+    }
+    throw new ExtensionNotImplementedError(FEATURE_EDITION_CLAIMABLE);
   }
 
   /**
@@ -794,22 +804,20 @@ export class Erc1155<
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
-   * @param claimData - Optional claim verification data (e.g. price, allowlist proof, etc...)
+   * @param options - Optional claim verification data (e.g. price, currency, etc...)
    *
    * @returns - Receipt for the transaction
    */
   public async claim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
-    checkERC20Allowance = true,
-    claimData?: ClaimVerification,
+    options?: ClaimOptions,
   ): Promise<TransactionResult> {
     return this.claimTo(
       await this.contractWrapper.getSignerAddress(),
       tokenId,
       quantity,
-      checkERC20Allowance,
-      claimData,
+      options,
     );
   }
 
@@ -831,8 +839,7 @@ export class Erc1155<
    * @param destinationAddress - Address you want to send the token to
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
-   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
-   * @param claimData - Optional claim verification data (e.g. price, allowlist proof, etc...)
+   * @param options - Optional claim verification data (e.g. price, currency, etc...)
    *
    * @returns - Receipt for the transaction
    */
@@ -840,13 +847,22 @@ export class Erc1155<
     destinationAddress: string,
     tokenId: BigNumberish,
     quantity: BigNumberish,
-    checkERC20Allowance = true,
-    claimData?: ClaimVerification,
+    options?: ClaimOptions,
   ): Promise<TransactionResult> {
-    return assertEnabled(
-      this.lazyMintable?.claim,
-      FEATURE_EDITION_CLAIMABLE,
-    ).to(destinationAddress, tokenId, quantity, checkERC20Allowance, claimData);
+    const claimWithConditions = this.lazyMintable?.claimWithConditions;
+    const claim = this.lazyMintable?.claim;
+    if (claimWithConditions) {
+      return claimWithConditions.to(
+        destinationAddress,
+        tokenId,
+        quantity,
+        options,
+      );
+    }
+    if (claim) {
+      return claim.to(destinationAddress, tokenId, quantity, options);
+    }
+    throw new ExtensionNotImplementedError(FEATURE_EDITION_CLAIMABLE);
   }
 
   /**
@@ -872,8 +888,10 @@ export class Erc1155<
    * ```
    */
   get claimConditions() {
-    return assertEnabled(this.lazyMintable?.claim, FEATURE_EDITION_CLAIMABLE)
-      .conditions;
+    return assertEnabled(
+      this.lazyMintable?.claimWithConditions,
+      FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS,
+    ).conditions;
   }
 
   ////// ERC1155 SignatureMintable Extension //////

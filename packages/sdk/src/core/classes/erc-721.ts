@@ -9,7 +9,7 @@ import {
   FEATURE_NFT,
   FEATURE_NFT_BATCH_MINTABLE,
   FEATURE_NFT_BURNABLE,
-  FEATURE_NFT_CLAIMABLE,
+  FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS,
   FEATURE_NFT_LAZY_MINTABLE,
   FEATURE_NFT_MINTABLE,
   FEATURE_NFT_REVEALABLE,
@@ -518,12 +518,10 @@ export class Erc721<
     checkERC20Allowance = true,
     claimData?: ClaimVerification,
   ) {
-    return assertEnabled(this.lazyMintable?.claim, FEATURE_NFT_CLAIMABLE).to(
-      destinationAddress,
-      quantity,
-      checkERC20Allowance,
-      claimData,
-    );
+    return assertEnabled(
+      this.lazyMintable?.claim,
+      FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS,
+    ).to(destinationAddress, quantity, checkERC20Allowance, claimData);
   }
 
   /**
@@ -542,7 +540,7 @@ export class Erc721<
   ) {
     return assertEnabled(
       this.lazyMintable?.claim,
-      FEATURE_NFT_CLAIMABLE,
+      FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS,
     ).getClaimTransaction(
       destinationAddress,
       quantity,
@@ -574,8 +572,10 @@ export class Erc721<
    * ```
    */
   get claimConditions() {
-    return assertEnabled(this.lazyMintable?.claim, FEATURE_NFT_CLAIMABLE)
-      .conditions;
+    return assertEnabled(
+      this.lazyMintable?.claim,
+      FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS,
+    ).conditions;
   }
 
   ////// ERC721 SignatureMint Extension //////

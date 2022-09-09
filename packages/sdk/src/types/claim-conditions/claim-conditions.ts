@@ -8,6 +8,7 @@ import {
   SnapshotInputSchema,
   SnapshotSchema,
 } from "../../schema/contracts/common/snapshots";
+import { Price } from "../currency";
 import { BigNumber, BigNumberish, BytesLike, CallOverrides } from "ethers";
 import { z } from "zod";
 
@@ -60,4 +61,19 @@ export type ClaimVerification = {
 export type ClaimConditionsForToken = {
   tokenId: BigNumberish;
   claimConditions: ClaimConditionInput[];
+};
+
+export type ClaimOptions = {
+  /**
+   * The price to pay for each token claimed
+   */
+  pricePerToken?: Price;
+  /**
+   * The currency to pay for each token claimed, defaults to NATIVE_TOKEN_ADDRESS for native currency
+   */
+  currencyAddress?: string;
+  /**
+   * Whether to check the ERC20 allowance of the sender, defaults to true
+   */
+  checkERC20Allowance?: boolean;
 };
