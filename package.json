@@ -16,7 +16,6 @@
     "build:analyze": "ANALYZE=true yarn build"
   },
   "dependencies": {
-    "@alch/alchemy-web3": "^1.4.1",
     "@chakra-ui/icons": "^2.0.0",
     "@chakra-ui/react": "^2.0.0",
     "@emotion/react": "^11",

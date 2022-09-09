@@ -9,17 +9,8 @@ import React from "react";
 import { FiPlus } from "react-icons/fi";
 import { Button } from "tw-components";
 
-// currently not supported by alchemy (which we use for NFT API)
-const UNSUPPORTED_CHAINS = [
-  ChainId.Avalanche,
-  ChainId.Fantom,
-  ChainId.AvalancheFujiTestnet,
-  ChainId.FantomTestnet,
-  ChainId.Optimism,
-  ChainId.OptimismTestnet,
-  ChainId.Arbitrum,
-  ChainId.ArbitrumTestnet,
-];
+// currently not supported by alchemy or moralis
+const UNSUPPORTED_CHAINS = [ChainId.FantomTestnet];
 
 export interface IListButtonProps extends IContractActionButtonProps {}
 export const ListButton: React.FC<IListButtonProps> = ({

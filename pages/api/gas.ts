@@ -25,7 +25,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(400).json({ error: "Failed to fetch ETH price" });
     }
 
-    // cache for 10 seconds, with up to 60 seconds of stale time
+    // cache for 60 seconds, with up to 120 seconds of stale time
     res.setHeader(
       "Cache-Control",
       "public, s-maxage=60, stale-while-revalidate=119",

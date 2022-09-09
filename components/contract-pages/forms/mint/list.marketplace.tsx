@@ -1,11 +1,8 @@
 import {
   useMarketplaceAuctionListMutation,
   useMarketplaceDirectListMutation,
-} from "@3rdweb-sdk/react";
-import {
-  WalletNftData,
   useWalletNFTs,
-} from "@3rdweb-sdk/react/hooks/useAlchemy";
+} from "@3rdweb-sdk/react";
 import {
   Center,
   DrawerBody,
@@ -32,6 +29,7 @@ import {
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { WalletNFT } from "lib/wallet/nfts/types";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { FaImage } from "react-icons/fa";
@@ -53,7 +51,7 @@ interface IMarketplaceListForm {
 interface ListForm
   extends Omit<NewDirectListing, "type">,
     Omit<NewAuctionListing, "type"> {
-  selected?: WalletNftData;
+  selected?: WalletNFT;
   listingType: "direct" | "auction";
   listingDurationInSeconds: string;
   quantity: string;
@@ -84,14 +82,14 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
     },
   });
 
-  const isSelected = (nft: WalletNftData) => {
+  const isSelected = (nft: WalletNFT) => {
     return (
       watch("selected")?.tokenId === nft.tokenId &&
       watch("selected")?.contractAddress === nft.contractAddress
     );
   };
 
-  const noNfts = !nfts?.length;
+  const noNfts = !nfts?.result?.length;
 
   return (
     <>
@@ -164,10 +162,10 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
               <Center height="60px">
                 <Spinner />
               </Center>
-            ) : nfts?.length ? (
+            ) : nfts?.result?.length ? (
               <Flex gap={2} flexWrap="wrap">
-                {nfts.map((nft, id) => {
-                  if (nft.image) {
+                {nfts.result.map((nft, id) => {
+                  if (nft.metadata.image) {
                     return (
                       <Tooltip
                         key={id}
@@ -185,16 +183,18 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
                               <strong>Token ID: </strong> {nft.tokenId}
                             </ListItem>
                             <ListItem>
-                              <strong>Token Standard: </strong> {nft.tokenType}
+                              <>
+                                <strong>Token Standard: </strong> {nft.type}
+                              </>
                             </ListItem>
                           </List>
                         }
                       >
                         <Image
-                          src={nft.image}
+                          src={nft.metadata.image || undefined}
                           width="140px"
                           height="140px"
-                          alt={nft.metadata?.name || ""}
+                          alt={`${nft.metadata.name || ""}`}
                           borderRadius="md"
                           cursor="pointer"
                           onClick={() =>
@@ -229,7 +229,9 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
                               <strong>Token ID: </strong> {nft.tokenId}
                             </ListItem>
                             <ListItem>
-                              <strong>Token Standard: </strong> {nft.tokenType}
+                              <>
+                                <strong>Token Standard: </strong> {nft.type}
+                              </>
                             </ListItem>
                           </List>
                         }
@@ -273,7 +275,9 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
                             <strong>Token ID: </strong> {nft.tokenId}
                           </ListItem>
                           <ListItem>
-                            <strong>Token Standard: </strong> {nft.tokenType}
+                            <>
+                              <strong>Token Standard: </strong> {nft.type}
+                            </>
                           </ListItem>
                         </List>
                       }
@@ -367,7 +371,7 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
                 : "The price of each token you are listing for sale."}
             </FormHelperText>
           </FormControl>
-          {watch("selected")?.tokenType.toLowerCase() !== "erc721" && (
+          {watch("selected")?.type.toLowerCase() !== "erc721" && (
             <FormControl isRequired isDisabled={noNfts}>
               <Stack justify="space-between" direction="row">
                 <Heading as={FormLabel} size="label.lg">
@@ -423,7 +427,6 @@ export const MarketplaceListForm: React.FC<IMarketplaceListForm> = ({
           Cancel
         </Button>
         <TransactionButton
-          borderRadius="full"
           isLoading={directList.isLoading || auctionList.isLoading}
           isDisabled={!watch("selected")}
           transactionCount={2}

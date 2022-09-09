@@ -55,7 +55,7 @@ export const MismatchButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     if (!address) {
       return (
-        <ConnectWallet borderRadius="full" colorScheme="primary" {...props} />
+        <ConnectWallet borderRadius="md" colorScheme="primary" {...props} />
       );
     }
 

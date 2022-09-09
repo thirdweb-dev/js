@@ -2,7 +2,7 @@ import chakraTheme from "../theme";
 import { ChakraProvider, theme } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
-import { Hydrate, QueryClient } from "@tanstack/react-query";
+import { DehydratedState, Hydrate, QueryClient } from "@tanstack/react-query";
 import {
   PersistQueryClientProvider,
   Persister,
@@ -50,7 +50,7 @@ export type ThirdwebNextPage = NextPage<any> & {
   pageId: PageId | ((pageProps: any) => PageId);
 };
 
-type AppPropsWithLayout = AppProps & {
+type AppPropsWithLayout = AppProps<{ dehydratedState?: DehydratedState }> & {
   Component: ThirdwebNextPage;
 };
 
