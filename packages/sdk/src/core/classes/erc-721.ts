@@ -1,6 +1,7 @@
 import {
   assertEnabled,
   detectContractFeature,
+  ExtensionNotImplementedError,
   hasFunction,
   NotFoundError,
 } from "../../common";
@@ -9,6 +10,7 @@ import {
   FEATURE_NFT,
   FEATURE_NFT_BATCH_MINTABLE,
   FEATURE_NFT_BURNABLE,
+  FEATURE_NFT_CLAIMABLE,
   FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS,
   FEATURE_NFT_LAZY_MINTABLE,
   FEATURE_NFT_MINTABLE,
@@ -30,7 +32,11 @@ import {
 } from "../../types/index";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
+import {
+  NetworkOrSignerOrProvider,
+  TransactionResult,
+  TransactionResultWithId,
+} from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc721Burnable } from "./erc-721-burnable";
 import { Erc721LazyMintable } from "./erc-721-lazymintable";
@@ -509,11 +515,16 @@ export class Erc721<
     destinationAddress: string,
     quantity: BigNumberish,
     options?: ClaimOptions,
-  ) {
-    return assertEnabled(
-      this.lazyMintable?.claim,
-      FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS,
-    ).to(destinationAddress, quantity, options);
+  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
+    const claimWithConditions = this.lazyMintable?.claimWithConditions;
+    const claim = this.lazyMintable?.claim;
+    if (claimWithConditions) {
+      return claimWithConditions.to(destinationAddress, quantity, options);
+    }
+    if (claim) {
+      return claim.to(destinationAddress, quantity, options);
+    }
+    throw new ExtensionNotImplementedError(FEATURE_NFT_CLAIMABLE);
   }
 
   /**
@@ -527,10 +538,19 @@ export class Erc721<
     quantity: BigNumberish,
     options?: ClaimOptions,
   ) {
-    return assertEnabled(
-      this.lazyMintable?.claim,
-      FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS,
-    ).getClaimTransaction(destinationAddress, quantity, options);
+    const claimWithConditions = this.lazyMintable?.claimWithConditions;
+    const claim = this.lazyMintable?.claim;
+    if (claimWithConditions) {
+      return claimWithConditions.getClaimTransaction(
+        destinationAddress,
+        quantity,
+        options,
+      );
+    }
+    if (claim) {
+      return claim.getClaimTransaction(destinationAddress, quantity, options);
+    }
+    throw new ExtensionNotImplementedError(FEATURE_NFT_CLAIMABLE);
   }
 
   /**
@@ -557,7 +577,7 @@ export class Erc721<
    */
   get claimConditions() {
     return assertEnabled(
-      this.lazyMintable?.claim,
+      this.lazyMintable?.claimWithConditions,
       FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS,
     ).conditions;
   }

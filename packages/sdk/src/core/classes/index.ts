@@ -15,7 +15,7 @@ export * from "./erc-20-signature-mintable";
 export * from "./erc-20-burnable";
 export * from "./erc-721";
 export * from "./erc-721-lazymintable";
-export * from "./erc-721-claimable";
+export * from "./erc-721-claimable-with-conditions";
 export * from "./erc-721-with-quantity-signature-mintable";
 export * from "./erc-721-supply";
 export * from "./erc-721-enumerable";
