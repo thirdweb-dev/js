@@ -146,15 +146,28 @@ const chain: Record<string, Chain> = {
     ],
     testnet: false,
   },
-  optimismTestnet: {
-    id: ChainId.OptimismTestnet,
+  optimismKovan: {
+    id: ChainId.OptimismKovan,
     name: "Optimism Kovan",
-    nativeCurrency: NATIVE_TOKENS[ChainId.OptimismTestnet],
+    nativeCurrency: NATIVE_TOKENS[ChainId.OptimismKovan],
     rpcUrls: ["https://kovan.optimism.io"],
     blockExplorers: [
       {
         name: "Etherscan",
         url: "https://kovan-optimistic.etherscan.io/",
+      },
+    ],
+    testnet: true,
+  },
+  optimismGoerli: {
+    id: ChainId.OptimismGoerli,
+    name: "Optimism Goerli Testnet",
+    nativeCurrency: NATIVE_TOKENS[ChainId.OptimismGoerli],
+    rpcUrls: ["https://goerli.optimism.io/"],
+    blockExplorers: [
+      {
+        name: "Etherscan",
+        url: "https://goerli-optimism.etherscan.io/",
       },
     ],
     testnet: true,
@@ -172,15 +185,28 @@ const chain: Record<string, Chain> = {
     ],
     testnet: false,
   },
-  arbitrumTestnet: {
-    id: ChainId.ArbitrumTestnet,
+  arbitrumRinkeby: {
+    id: ChainId.ArbitrumRinkeby,
     name: "Arbitrum Rinkeby",
-    nativeCurrency: NATIVE_TOKENS[ChainId.ArbitrumTestnet],
+    nativeCurrency: NATIVE_TOKENS[ChainId.ArbitrumRinkeby],
     rpcUrls: ["https://rinkeby.arbitrum.io/rpc"],
     blockExplorers: [
       {
         name: "Arbiscan",
         url: "https://testnet.arbiscan.io/",
+      },
+    ],
+    testnet: true,
+  },
+  arbitrumGoerli: {
+    id: ChainId.ArbitrumGoerli,
+    name: "Arbitrum Goerli",
+    nativeCurrency: NATIVE_TOKENS[ChainId.ArbitrumGoerli],
+    rpcUrls: ["https://goerli-rollup.arbitrum.io/rpc/"],
+    blockExplorers: [
+      {
+        name: "Arbitrum Goerli Rollup Explorer",
+        url: "https://goerli-rollup-explorer.arbitrum.io",
       },
     ],
     testnet: true,
