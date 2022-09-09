@@ -164,6 +164,7 @@ const TableRow: React.FC<TableRowProps> = ({ row, context }) => {
           bg: "whiteAlpha.50",
         },
       }}
+      pointerEvents={row?.original?.contractId ? "auto" : "none"}
       onClick={() => {
         router.push(
           isContractIdBuiltInContract(row.original.contractId)

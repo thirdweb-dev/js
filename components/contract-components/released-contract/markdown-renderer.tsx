@@ -25,7 +25,7 @@ export const MarkdownRenderer: React.FC<
 > = ({ markdownText, ...restProps }) => {
   const commonHeadingProps = {
     lineHeight: "1.25",
-    mb: 4,
+    mb: 2,
     pb: 2,
   };
 
@@ -40,6 +40,7 @@ export const MarkdownRenderer: React.FC<
             borderBottom="1px solid"
             borderBottomColor="borderColor"
             {...commonHeadingProps}
+            mb={4}
             {...props}
           />
         ),
@@ -48,24 +49,35 @@ export const MarkdownRenderer: React.FC<
             size="title.md"
             borderBottom="1px solid"
             borderBottomColor="borderColor"
-            mt={6}
             {...commonHeadingProps}
+            mt={8}
+            mb={4}
             {...props}
           />
         ),
         h3: (props) => (
-          <Heading size="title.sm" {...commonHeadingProps} {...props} />
+          <Heading size="title.sm" {...commonHeadingProps} {...props} mt={4} />
         ),
         h4: (props) => (
-          <Heading size="subtitle.md" {...commonHeadingProps} {...props} />
+          <Heading
+            size="subtitle.md"
+            {...commonHeadingProps}
+            {...props}
+            mt={4}
+          />
         ),
         h5: (props) => (
-          <Heading size="subtitle.sm" {...commonHeadingProps} {...props} />
+          <Heading
+            size="subtitle.sm"
+            {...commonHeadingProps}
+            {...props}
+            mt={4}
+          />
         ),
         h6: (props) => (
-          <Heading size="label.md" {...commonHeadingProps} {...props} />
+          <Heading size="label.md" {...commonHeadingProps} {...props} mt={4} />
         ),
-        a: (props) => <Link color="primary.500" isExternal {...props} />,
+        a: (props) => <Link color="primary.500" isExternal {...props} mt={4} />,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         code: ({ inline, ...props }) => {
           if (props?.className) {
@@ -93,7 +105,9 @@ export const MarkdownRenderer: React.FC<
             />
           );
         },
-        p: (props) => <Text size="body.md" mb={4} {...props} />,
+        p: (props) => (
+          <Text size="body.md" mb={4} {...props} lineHeight={1.5} />
+        ),
         table: (props) => (
           <Card
             maxW="100%"
