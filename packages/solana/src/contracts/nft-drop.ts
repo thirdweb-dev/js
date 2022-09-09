@@ -8,6 +8,7 @@ import { CommonNFTInput, NFTMetadataInput } from "../types/nft";
 import { Metaplex } from "@metaplex-foundation/js";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
+import { parse } from "yaml";
 
 export class NFTDrop {
   private connection: Connection;
@@ -29,41 +30,30 @@ export class NFTDrop {
     this.dropMintAddress = new PublicKey(dropMintAddress);
   }
 
-  // TODO have a private getCandyMachine()
-  async getMetatada() {
-    return this.metaplex
-      .candyMachines()
-      .findByAddress({ address: this.dropMintAddress })
-      .run(); // TODO abstract return types away
+  async totalUnclaimedSupply(): Promise<bigint> {
+    const info = await this.getCandyMachine();
+    return BigInt(info.itemsRemaining.toNumber());
   }
 
-  async totalUnclaimedSupply() {
-    const info = await this.getMetatada();
-    return info.itemsRemaining; // TODO return BigInt
-  }
-
-  async totalClaimedSupply() {
-    const info = await this.getMetatada();
-    return info.itemsMinted; // TODO return BigInt
+  async totalClaimedSupply(): Promise<bigint> {
+    const info = await this.getCandyMachine();
+    return BigInt(info.itemsMinted.toNumber());
   }
 
   async lazyMint(metadatas: NFTMetadataInput[]): Promise<TransactionResult> {
-    // TODO uploadMetadataBatch
-    const items = await Promise.all(
-      metadatas.map(async (metadata) => {
-        const parsedMetadata = CommonNFTInput.parse(metadata);
-        const uri = await this.storage.uploadMetadata(parsedMetadata);
-        return {
-          name: parsedMetadata.name || "",
-          uri,
-        };
-      }),
+    const parsedMetadatas = metadatas.map((metadata) =>
+      CommonNFTInput.parse(metadata),
     );
+    const upload = await this.storage.uploadMetadataBatch(parsedMetadatas);
+    const items = upload.uris.map((uri, i) => ({
+      name: parsedMetadatas[i].name || "",
+      uri,
+    }));
 
     const result = await this.metaplex
       .candyMachines()
       .insertItems({
-        candyMachine: await this.getMetatada(),
+        candyMachine: await this.getCandyMachine(),
         authority: this.metaplex.identity(),
         items,
       })
@@ -77,7 +67,7 @@ export class NFTDrop {
   async claim(): Promise<TransactionResult> {
     const result = await this.metaplex
       .candyMachines()
-      .mint({ candyMachine: await this.getMetatada() })
+      .mint({ candyMachine: await this.getCandyMachine() })
       .run();
 
     return {
@@ -93,7 +83,7 @@ export class NFTDrop {
     const result = await this.metaplex
       .candyMachines()
       .update({
-        candyMachine: await this.getMetatada(),
+        candyMachine: await this.getCandyMachine(),
         ...parsed,
       })
       .run();
@@ -101,5 +91,12 @@ export class NFTDrop {
     return {
       signature: result.response.signature,
     };
+  }
+
+  private async getCandyMachine() {
+    return this.metaplex
+      .candyMachines()
+      .findByAddress({ address: this.dropMintAddress })
+      .run(); // TODO abstract return types away
   }
 }
