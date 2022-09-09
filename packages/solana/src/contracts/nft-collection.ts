@@ -128,6 +128,11 @@ export class NFTCollection {
     return Array.from(mintAddresses);
   }
 
+  async balance(mintAddress: string): Promise<bigint> {
+    const address = this.metaplex.identity().publicKey.toBase58();
+    return this.balanceOf(address, mintAddress);
+  }
+
   async balanceOf(walletAddress: string, mintAddress: string): Promise<bigint> {
     return this.nft.balanceOf(walletAddress, mintAddress);
   }
@@ -140,6 +145,11 @@ export class NFTCollection {
   }
 
   async mint(metadata: NFTMetadataInput): Promise<string> {
+    const address = this.metaplex.identity().publicKey.toBase58();
+    return this.mintTo(address, metadata);
+  }
+
+  async mintTo(to: string, metadata: NFTMetadataInput) {
     const uri = await this.storage.uploadMetadata(metadata);
     const { nft } = await this.metaplex
       .nfts()
@@ -149,6 +159,7 @@ export class NFTCollection {
         sellerFeeBasisPoints: 0,
         collection: this.collectionMintAddress,
         collectionAuthority: this.wallet.signer,
+        tokenOwner: new PublicKey(to),
         // Always sets max supply to unlimited so editions can be minted
         maxSupply: null,
       })
@@ -157,11 +168,20 @@ export class NFTCollection {
     return nft.address.toBase58();
   }
 
-  async mintAdditionalSupply(mintAddress: string): Promise<TransactionResult> {
+  async mintAdditionalSupply(mintAddress: string) {
+    const address = this.metaplex.identity().publicKey.toBase58();
+    return this.mintAdditionalSupplyTo(address, mintAddress);
+  }
+
+  async mintAdditionalSupplyTo(
+    to: string,
+    mintAddress: string,
+  ): Promise<TransactionResult> {
     const result = await this.metaplex
       .nfts()
       .printNewEdition({
         originalMint: new PublicKey(mintAddress),
+        newOwner: new PublicKey(to),
       })
       .run();
 
