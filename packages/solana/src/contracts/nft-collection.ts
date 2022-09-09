@@ -7,7 +7,7 @@ import {
   NFTMetadata,
   NFTMetadataInput,
 } from "../types/nft";
-import { Metaplex } from "@metaplex-foundation/js";
+import { Metaplex, toBigNumber } from "@metaplex-foundation/js";
 import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 import { ConfirmedSignatureInfo, PublicKey } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
@@ -128,6 +128,12 @@ export class NFTCollection {
     return Array.from(mintAddresses);
   }
 
+  // TODO fetch editions as well and add to balance
+  async balance(mintAddress: string): Promise<bigint> {
+    const address = this.metaplex.identity().publicKey.toBase58();
+    return this.balanceOf(address, mintAddress);
+  }
+
   async balanceOf(walletAddress: string, mintAddress: string): Promise<bigint> {
     return this.nft.balanceOf(walletAddress, mintAddress);
   }
@@ -140,6 +146,12 @@ export class NFTCollection {
   }
 
   async mint(metadata: NFTMetadataInput): Promise<string> {
+    const address = this.metaplex.identity().publicKey.toBase58();
+    return this.mintTo(address, metadata);
+  }
+
+  // TODO add options param for initial/maximum supply
+  async mintTo(to: string, metadata: NFTMetadataInput) {
     const uri = await this.storage.uploadMetadata(metadata);
     const { nft } = await this.metaplex
       .nfts()
@@ -149,24 +161,32 @@ export class NFTCollection {
         sellerFeeBasisPoints: 0,
         collection: this.collectionMintAddress,
         collectionAuthority: this.wallet.signer,
+        tokenOwner: new PublicKey(to),
         // Always sets max supply to unlimited so editions can be minted
-        maxSupply: null,
+        maxSupply: toBigNumber(100),
       })
       .run();
 
     return nft.address.toBase58();
   }
 
-  async mintAdditionalSupply(mintAddress: string): Promise<TransactionResult> {
+  async mintAdditionalSupply(mintAddress: string) {
+    const address = this.metaplex.identity().publicKey.toBase58();
+    return this.mintAdditionalSupplyTo(address, mintAddress);
+  }
+
+  // TODO add quantity param
+  async mintAdditionalSupplyTo(
+    to: string,
+    mintAddress: string,
+  ): Promise<string> {
     const result = await this.metaplex
       .nfts()
       .printNewEdition({
         originalMint: new PublicKey(mintAddress),
+        newOwner: new PublicKey(to),
       })
       .run();
-
-    return {
-      signature: result.response.signature,
-    };
+    return result.nft.address.toBase58();
   }
 }
