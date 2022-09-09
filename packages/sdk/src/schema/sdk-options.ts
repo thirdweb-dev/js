@@ -1,4 +1,3 @@
-import { OZ_DEFENDER_FORWARDER_ADDRESS } from "../constants/addresses";
 import { z } from "zod";
 
 /**
@@ -41,6 +40,15 @@ export const SDKOptionsSchema = z
           }),
         }),
       ])
+      .optional(),
+    integrations: z
+      .object({
+        paper: z
+          .object({
+            apiKey: z.string(),
+          })
+          .optional(),
+      })
       .optional(),
   })
   .default({
