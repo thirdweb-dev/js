@@ -7,7 +7,7 @@ import {
   NFTMetadata,
   NFTMetadataInput,
 } from "../types/nft";
-import { Metaplex } from "@metaplex-foundation/js";
+import { Metaplex, toBigNumber } from "@metaplex-foundation/js";
 import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
 import { ConfirmedSignatureInfo, PublicKey } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
@@ -161,7 +161,7 @@ export class NFTCollection {
         collectionAuthority: this.wallet.signer,
         tokenOwner: new PublicKey(to),
         // Always sets max supply to unlimited so editions can be minted
-        maxSupply: null,
+        maxSupply: toBigNumber(100),
       })
       .run();
 
