@@ -360,7 +360,7 @@ export function useNFTBalance(
  * @example
  * ```jsx
  * const Component = () => {
- *   const nftDrop = useNFTDrop(<ContractAddress>);
+ *   const nftDrop = await useNFTDrop(<ContractAddress>);
  *   const {
  *     mutate: mintNft,
  *     isLoading,
@@ -582,7 +582,7 @@ export function useTransferNFT<TContract extends NFTContract>(
  * @example
  * ```jsx
  * const Component = () => {
- *   const editionDrop = useEditionDrop(<ContractAddress>);
+ *   const editionDrop = await useEditionDrop(<ContractAddress>);
  *   const {
  *     mutate: airdropNFT,
  *     isLoading,
@@ -669,7 +669,7 @@ export function useAirdropNFT(contract: Erc1155) {
  * @example
  * ```jsx
  * const Component = () => {
- *   const nftDrop = useNFTDrop(<ContractAddress>);
+ *   const nftDrop = await useNFTDrop(<ContractAddress>);
  *   const {
  *     mutate: burnNft,
  *     isLoading,

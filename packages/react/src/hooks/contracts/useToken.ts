@@ -9,7 +9,7 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * import { useToken } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const token = useToken("<YOUR-CONTRACT-ADDRESS>")
+ *   const token = await useToken("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the token contract in the rest of the component
  *
