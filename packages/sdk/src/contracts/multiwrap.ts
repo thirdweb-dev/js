@@ -11,8 +11,7 @@ import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { Erc721 } from "../core/classes/erc-721";
-import { Erc721Supply } from "../core/classes/erc-721-supply";
+import { StandardErc721 } from "../core/classes/erc-721-standard";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import {
   NetworkOrSignerOrProvider,
@@ -21,7 +20,6 @@ import {
 } from "../core/types";
 import { NFTMetadataOrUri, NFTMetadataOwner, SDKOptions } from "../schema";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
-import { QueryAllParams } from "../types";
 import {
   ERC1155Wrappable,
   ERC20Wrappable,
@@ -52,7 +50,7 @@ import { BigNumberish, ethers } from "ethers";
  *
  * @beta
  */
-export class Multiwrap extends Erc721<MultiwrapContract> {
+export class Multiwrap extends StandardErc721<MultiwrapContract> {
   static contractType = "multiwrap" as const;
   static contractRoles = ["transfer", "minter", "unwrap", "asset"] as const;
   static contractAbi = ABI as any;
@@ -90,8 +88,6 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
    */
   public royalties: ContractRoyalty<MultiwrapContract, typeof Multiwrap.schema>;
 
-  private _query = this.query as Erc721Supply;
-
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
@@ -104,7 +100,7 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       Multiwrap.schema,
@@ -124,27 +120,6 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
   /** ******************************
    * READ FUNCTIONS
    *******************************/
-
-  /**
-   * Get All Wrapped Token Bundles
-   *
-   * @remarks Get all the data associated with every token bundle in this contract.
-   *
-   * By default, returns the first 100 NFTs, use queryParams to fetch more.
-   *
-   * @example
-   * ```javascript
-   * const wrappedBundles = await contract.getAll();
-   * console.log(wrappedBundles);
-   * ```
-   * @param queryParams - optional filtering to only fetch a subset of results.
-   * @returns The NFT metadata for all NFTs queried.
-   */
-  public async getAll(
-    queryParams?: QueryAllParams,
-  ): Promise<NFTMetadataOwner[]> {
-    return this._query.all(queryParams);
-  }
 
   /**
    * Get the contents of a wrapped token bundle

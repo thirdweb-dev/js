@@ -42,7 +42,7 @@ describe("Edition Drop Contract", async () => {
       platform_fee_basis_points: 10,
       platform_fee_recipient: adminWallet.address,
     });
-    bdContract = sdk.getEditionDrop(address);
+    bdContract = await sdk.getEditionDrop(address);
   });
 
   it("should estimate gas cost", async () => {
@@ -551,7 +551,7 @@ describe("Edition Drop Contract", async () => {
     });
 
     it("should check if an address has enough erc20 currency", async () => {
-      const currency = sdk.getToken(
+      const currency = await sdk.getToken(
         await sdk.deployer.deployBuiltInContract(Token.contractType, {
           name: "test",
           symbol: "test",

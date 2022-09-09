@@ -14,8 +14,9 @@ import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Erc1155 } from "../core/classes/erc-1155";
-import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
+import { StandardErc1155 } from "../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { UpdateableNetwork } from "../core/interfaces/contract";
 import {
   NetworkOrSignerOrProvider,
   TransactionResultWithId,
@@ -55,7 +56,7 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
  *
  * @public
  */
-export class Pack extends Erc1155<PackContract> {
+export class Pack extends StandardErc1155<PackContract> {
   static contractType = "pack" as const;
   static contractRoles = ["admin", "minter", "pauser", "transfer"] as const;
   static contractAbi = ABI as any;
@@ -92,7 +93,7 @@ export class Pack extends Erc1155<PackContract> {
    */
   public interceptor: ContractInterceptor<PackContract>;
 
-  private _query = this.query as Erc1155Enumerable;
+  public erc1155: Erc1155<PackContract>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -106,7 +107,8 @@ export class Pack extends Erc1155<PackContract> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage);
+    this.erc1155 = new Erc1155(this.contractWrapper, this.storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       Pack.schema,
@@ -120,9 +122,37 @@ export class Pack extends Erc1155<PackContract> {
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
+  /**
+   * @internal
+   */
+  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+    this.contractWrapper.updateSignerOrProvider(network);
+  }
+
+  getAddress(): string {
+    return this.contractWrapper.readContract.address;
+  }
+
   /** ******************************
    * READ FUNCTIONS
    *******************************/
+
+  /**
+   * Get a single Pack
+   *
+   * @remarks Get all the data associated with every pack in this contract.
+   *
+   * By default, returns the first 100 packs, use queryParams to fetch more.
+   *
+   * @example
+   * ```javascript
+   * const pack = await contract.get(0);
+   * console.log(packs;
+   * ```
+   */
+  public async get(tokenId: BigNumberish): Promise<EditionMetadata> {
+    return this.erc1155.get(tokenId);
+  }
 
   /**
    * Get All Packs
@@ -142,7 +172,7 @@ export class Pack extends Erc1155<PackContract> {
   public async getAll(
     queryParams?: QueryAllParams,
   ): Promise<EditionMetadata[]> {
-    return this._query.all(queryParams);
+    return this.erc1155.getAll(queryParams);
   }
 
   /**
@@ -162,7 +192,7 @@ export class Pack extends Erc1155<PackContract> {
   public async getOwned(
     walletAddress?: string,
   ): Promise<EditionMetadataOwner[]> {
-    return this._query.owned(walletAddress);
+    return this.erc1155.getOwned(walletAddress);
   }
 
   /**
@@ -171,7 +201,7 @@ export class Pack extends Erc1155<PackContract> {
    * @public
    */
   public async getTotalCount(): Promise<BigNumber> {
-    return this._query.totalCount();
+    return this.erc1155.totalCount();
   }
 
   /**
@@ -398,7 +428,7 @@ export class Pack extends Erc1155<PackContract> {
     return {
       id: packId,
       receipt,
-      data: () => this.get(packId),
+      data: () => this.erc1155.get(packId),
     };
   }
 

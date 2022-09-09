@@ -23,7 +23,7 @@ describe("Token sig minting", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
-    contract = sdk.getToken(
+    contract = await sdk.getToken(
       await sdk.deployer.deployToken({
         name: "Token sigmint",
         symbol: "TSIG",
@@ -39,7 +39,7 @@ describe("Token sig minting", async () => {
       primarySaleRecipient: adminWallet.address,
     };
 
-    customTokenContract = sdk.getToken(
+    customTokenContract = await sdk.getToken(
       await sdk.deployer.deployToken({
         name: "Test",
         symbol: "TEST",

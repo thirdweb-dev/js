@@ -34,14 +34,14 @@ describe("Pack Contract", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    packContract = sdk.getPack(
+    packContract = await sdk.getPack(
       await sdk.deployer.deployBuiltInContract(Pack.contractType, {
         name: "Pack Contract",
         seller_fee_basis_points: 1000,
       }),
     );
 
-    bundleContract = sdk.getEdition(
+    bundleContract = await sdk.getEdition(
       await sdk.deployer.deployBuiltInContract(Edition.contractType, {
         name: "NFT Contract",
         seller_fee_basis_points: 1000,

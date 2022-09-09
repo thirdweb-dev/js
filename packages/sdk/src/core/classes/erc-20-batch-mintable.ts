@@ -48,7 +48,7 @@ export class Erc20BatchMintable implements DetectableFeature {
    *  }
    * ]
    *
-   * await contract.mintBatchTo(data);
+   * await contract.token.mint.batch(data);
    * ```
    */
   public async to(args: TokenMintInput[]): Promise<TransactionResult> {

@@ -1,17 +1,15 @@
-import { calculateClaimCost } from "../../common/claim-conditions";
-import {
-  approveErc20Allowance,
-  normalizePriceValue,
-} from "../../common/currency";
-import { NATIVE_TOKEN_ADDRESS } from "../../constants";
-import { FEATURE_EDITION_CLAIMABLE } from "../../constants/erc1155-features";
-import { ClaimOptions, Price } from "../../types";
+import { FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS } from "../../constants/erc1155-features";
+import { CustomContractSchema } from "../../schema/contracts/custom";
+import { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
+import { BaseClaimConditionERC1155 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { TransactionTask } from "./TransactionTask";
+import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
-import { IClaimableERC1155 } from "@thirdweb-dev/contracts-js";
-import { BigNumberish, CallOverrides } from "ethers";
+import { DropErc1155ClaimConditions } from "./drop-erc1155-claim-conditions";
+import { IStorage } from "@thirdweb-dev/storage";
+import { BigNumberish, ethers } from "ethers";
 
 /**
  * Configure and claim ERC1155 NFTs
@@ -19,16 +17,34 @@ import { BigNumberish, CallOverrides } from "ethers";
  * @example
  * ```javascript
  * const contract = await sdk.getContract("{{contract_address}}");
- * await contract.edition.drop.claim.to("0x...", tokenId, quantity);
+ * await contract.erc1155.claim(tokenId, quantity);
+ * await contract.erc1155.claimConditions.getActive(tokenId);
  * ```
  */
-export class ERC1155Claimable implements DetectableFeature {
-  featureName = FEATURE_EDITION_CLAIMABLE.name;
+export class Erc1155ClaimableWithConditions implements DetectableFeature {
+  featureName = FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS.name;
 
-  private contractWrapper: ContractWrapper<IClaimableERC1155>;
+  public conditions: DropErc1155ClaimConditions<BaseClaimConditionERC1155>;
+  private contractWrapper: ContractWrapper<BaseClaimConditionERC1155>;
+  private storage: IStorage;
 
-  constructor(contractWrapper: ContractWrapper<IClaimableERC1155>) {
+  constructor(
+    contractWrapper: ContractWrapper<BaseClaimConditionERC1155>,
+    storage: IStorage,
+  ) {
     this.contractWrapper = contractWrapper;
+    this.storage = storage;
+
+    const metadata = new ContractMetadata(
+      this.contractWrapper,
+      CustomContractSchema,
+      this.storage,
+    );
+    this.conditions = new DropErc1155ClaimConditions(
+      contractWrapper,
+      metadata,
+      this.storage,
+    );
   }
 
   /**
@@ -37,7 +53,6 @@ export class ERC1155Claimable implements DetectableFeature {
    * @param destinationAddress - Address you want to send the token to
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
-   * @param options - Options for claiming the NFTs
    */
   public async getClaimTransaction(
     destinationAddress: string,
@@ -45,21 +60,32 @@ export class ERC1155Claimable implements DetectableFeature {
     quantity: BigNumberish,
     options?: ClaimOptions,
   ): Promise<TransactionTask> {
-    let overrides: CallOverrides = {};
-    if (options && options.pricePerToken) {
-      overrides = await calculateClaimCost(
-        this.contractWrapper,
-        options.pricePerToken,
-        quantity,
-        options.currencyAddress,
-        options.checkERC20Allowance,
+    if (options?.pricePerToken) {
+      throw new Error(
+        "In ERC1155ClaimableWithConditions, price per token is be set via claim conditions by calling `contract.erc1155.claimConditions.set()`",
       );
     }
+    const claimVerification = await this.conditions.prepareClaim(
+      tokenId,
+      quantity,
+      options?.checkERC20Allowance || true,
+    );
     return TransactionTask.make({
       contractWrapper: this.contractWrapper,
       functionName: "claim",
-      args: [destinationAddress, tokenId, quantity],
-      overrides,
+      args: [
+        destinationAddress,
+        tokenId,
+        quantity,
+        claimVerification.currencyAddress,
+        claimVerification.price,
+        {
+          proof: claimVerification.proofs,
+          maxQuantityInAllowlist: claimVerification.maxQuantityPerTransaction,
+        },
+        ethers.utils.toUtf8Bytes(""),
+      ],
+      overrides: claimVerification.overrides,
     });
   }
 
@@ -81,7 +107,6 @@ export class ERC1155Claimable implements DetectableFeature {
    * @param destinationAddress - Address you want to send the token to
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
-   * @param options - Options for claiming the NFTs
    *
    * @returns - Receipt for the transaction
    */

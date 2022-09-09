@@ -13,11 +13,7 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { DelayedReveal } from "../core/classes/delayed-reveal";
 import { DropClaimConditions } from "../core/classes/drop-claim-conditions";
 import { Erc721 } from "../core/classes/erc-721";
-import { Erc721Burnable } from "../core/classes/erc-721-burnable";
-import { Erc721Claimable } from "../core/classes/erc-721-claimable";
-import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
-import { Erc721LazyMintable } from "../core/classes/erc-721-lazymintable";
-import { Erc721Supply } from "../core/classes/erc-721-supply";
+import { StandardErc721 } from "../core/classes/erc-721-standard";
 import { Erc721WithQuantitySignatureMintable } from "../core/classes/erc-721-with-quantity-signature-mintable";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import {
@@ -32,7 +28,7 @@ import {
   NFTMetadataOrUri,
   NFTMetadataOwner,
 } from "../schema/tokens/common";
-import { UploadProgressEvent } from "../types";
+import { ClaimOptions, UploadProgressEvent } from "../types";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
 import { SignatureDrop as SignatureDropContract } from "@thirdweb-dev/contracts-js";
 import ABI from "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop.json";
@@ -55,7 +51,7 @@ import { BigNumber, BigNumberish, constants } from "ethers";
  *
  * @public
  */
-export class SignatureDrop extends Erc721<SignatureDropContract> {
+export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   static contractType = "signature-drop" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
   static contractAbi = ABI as any;
@@ -63,7 +59,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * @internal
    */
   static schema = DropErc721ContractSchema;
-
+  public erc721: Erc721<SignatureDropContract>;
   public encoder: ContractEncoder<SignatureDropContract>;
   public estimator: GasCostEstimator<SignatureDropContract>;
   public metadata: ContractMetadata<
@@ -117,8 +113,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * await contract.claimConditions.set([claimCondition]);
    * ```
    */
-  public claimConditions = this.drop?.claim
-    ?.conditions as DropClaimConditions<SignatureDropContract>;
+  public claimConditions: DropClaimConditions<SignatureDropContract>;
   /**
    * Delayed reveal
    * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.
@@ -165,13 +160,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * const mintedId = tx.id; // the id of the NFT minted
    * ```
    */
-  override signature = super.signature as Erc721WithQuantitySignatureMintable;
-
-  private _query = this.query as Erc721Supply;
-  private _owned = this._query.owned as Erc721Enumerable;
-  private _burn = this.burn as Erc721Burnable;
-  private _drop = this.drop as Erc721LazyMintable;
-  private _claim = this.drop?.claim as Erc721Claimable;
+  public signature: Erc721WithQuantitySignatureMintable;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -185,7 +174,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       SignatureDrop.schema,
@@ -202,11 +191,21 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.erc721 = new Erc721(this.contractWrapper, this.storage);
+    this.claimConditions = new DropClaimConditions(
+      this.contractWrapper,
+      this.metadata,
+      this.storage,
+    );
+    this.signature = new Erc721WithQuantitySignatureMintable(
+      this.contractWrapper,
+      this.storage,
+    );
     this.revealer = new DelayedReveal(
       this.contractWrapper,
       this.storage,
       FEATURE_NFT_REVEALABLE.name,
-      () => this.nextTokenIdToMint(),
+      () => this.erc721.nextTokenIdToMint(),
     );
     this.signature = new Erc721WithQuantitySignatureMintable(
       this.contractWrapper,
@@ -214,61 +213,25 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     );
   }
 
+  /**
+   * @internal
+   */
+  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+    this.contractWrapper.updateSignerOrProvider(network);
+  }
+
+  getAddress(): string {
+    return this.contractWrapper.readContract.address;
+  }
+
   /** ******************************
    * READ FUNCTIONS
    *******************************/
 
   /**
-   * Get All Minted NFTs
-   *
-   * @remarks Get all the data associated with every NFT in this contract.
-   *
-   * By default, returns the first 100 NFTs, use queryParams to fetch more.
-   *
-   * @example
-   * ```javascript
-   * const nfts = await contract.getAll();
-   * console.log(nfts);
-   * ```
-   * @param queryParams - optional filtering to only fetch a subset of results.
-   * @returns The NFT metadata for all NFTs queried.
-   */
-  public async getAll(
-    queryParams?: QueryAllParams,
-  ): Promise<NFTMetadataOwner[]> {
-    return this._query.all(queryParams);
-  }
-
-  /**
-   * Get Owned NFTs
-   *
-   * @remarks Get all the data associated with the NFTs owned by a specific wallet.
-   *
-   * @example
-   * ```javascript
-   * // Address of the wallet to get the NFTs of
-   * const address = "{{wallet_address}}";
-   * const nfts = await contract.getOwned(address);
-   * console.log(nfts);
-   * ```
-   * @param walletAddress - the wallet address to query, defaults to the connected wallet
-   * @returns The NFT metadata for all NFTs in the contract.
-   */
-  public async getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]> {
-    return this._owned.all(walletAddress);
-  }
-
-  /**
-   * {@inheritDoc Erc721Enumerable.tokendIds}
-   */
-  public async getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]> {
-    return this._owned.tokenIds(walletAddress);
-  }
-
-  /**
    * Get the total count NFTs in this drop contract, both claimed and unclaimed
    */
-  public async totalSupply() {
+  override async totalSupply() {
     const claimed = await this.totalClaimedSupply();
     const unclaimed = await this.totalUnclaimedSupply();
     return claimed.add(unclaimed);
@@ -339,7 +302,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
 
     return await Promise.all(
       Array.from(Array(maxId.sub(firstTokenId).toNumber()).keys()).map((i) =>
-        this.getTokenMetadata(firstTokenId.add(i).toString()),
+        this.erc721.getTokenMetadata(firstTokenId.add(i).toString()),
       ),
     );
   }
@@ -426,7 +389,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
       onProgress: (event: UploadProgressEvent) => void;
     },
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
-    return this._drop.lazyMint(metadatas, options);
+    return this.erc721.lazyMint(metadatas, options);
   }
 
   /**
@@ -439,12 +402,12 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
   public async getClaimTransaction(
     destinationAddress: string,
     quantity: BigNumberish,
-    checkERC20Allowance = true, // TODO split up allowance checks
+    options?: ClaimOptions,
   ): Promise<TransactionTask> {
-    return this._claim.getClaimTransaction(
+    return this.erc721.getClaimTransaction(
       destinationAddress,
       quantity,
-      checkERC20Allowance,
+      options,
     );
   }
 
@@ -473,9 +436,9 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
   public async claimTo(
     destinationAddress: string,
     quantity: BigNumberish,
-    checkERC20Allowance = true,
+    options?: ClaimOptions,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    return this._claim.to(destinationAddress, quantity, checkERC20Allowance);
+    return this.erc721.claimTo(destinationAddress, quantity, options);
   }
 
   /**
@@ -487,13 +450,9 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    */
   public async claim(
     quantity: BigNumberish,
-    checkERC20Allowance = true,
+    options?: ClaimOptions,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    return this.claimTo(
-      await this.contractWrapper.getSignerAddress(),
-      quantity,
-      checkERC20Allowance,
-    );
+    return this.erc721.claim(quantity, options);
   }
 
   /**
@@ -504,7 +463,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * const result = await contract.burnToken(tokenId);
    * ```
    */
-  public async burnToken(tokenId: BigNumberish): Promise<TransactionResult> {
-    return this._burn.token(tokenId);
+  public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
+    return this.erc721.burn(tokenId);
   }
 }

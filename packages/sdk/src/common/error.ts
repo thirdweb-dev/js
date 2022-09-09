@@ -1,3 +1,8 @@
+import {
+  Feature,
+  FeatureName,
+  SUPPORTED_FEATURES,
+} from "../constants/contract-features";
 import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../constants/index";
 import { BigNumber, BigNumberish, ethers, providers } from "ethers";
 
@@ -238,6 +243,18 @@ export class AuctionHasNotEndedError extends Error {
       `Auction has not ended yet${id ? `, id: ${id}` : ""}${
         endTime ? `, end time: ${endTime.toString()}` : ""
       }`,
+    );
+  }
+}
+
+/**
+ * Thrown when attempting to call a contract function that is not implemented
+ * @internal
+ */
+export class ExtensionNotImplementedError extends Error {
+  constructor(feature: Feature) {
+    super(
+      `This functionality is not available because the contract does not implement the '${feature.docLinks.contracts}' Extension. Learn how to unlock this functionality at https://portal.thirdweb.com/extensions `,
     );
   }
 }
