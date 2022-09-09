@@ -601,7 +601,7 @@ export class Erc20<
     if (
       detectContractFeature<BaseDropERC20>(
         this.contractWrapper,
-        "ERC20Claimable",
+        "ERC20ClaimableWithConditions",
       )
     ) {
       return new Erc20Droppable(this, this.contractWrapper, this.storage);
