@@ -1,4 +1,32 @@
+import {
+  detectContractFeature,
+  hasFunction,
+  NotFoundError,
+} from "../../common";
+import { fetchTokenMetadata } from "../../common/nft";
+import { FEATURE_EDITION } from "../../constants/erc1155-features";
+import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
+import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
+import { NFTMetadata } from "../../schema/tokens/common";
+import {
+  EditionMetadata,
+  EditionMetadataOutputSchema,
+} from "../../schema/tokens/edition";
+import { AirdropInput } from "../../types/airdrop/airdrop";
+import {
+  BaseDropERC1155,
+  BaseERC1155,
+  BaseSignatureMintERC1155,
+} from "../../types/eips";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { UpdateableNetwork } from "../interfaces/contract";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { Erc1155Burnable } from "./erc-1155-burnable";
+import { Erc1155Enumerable } from "./erc-1155-enumerable";
+import { Erc1155LazyMintable } from "./erc-1155-lazymintable";
+import { Erc1155Mintable } from "./erc-1155-mintable";
+import { Erc1155SignatureMintable } from "./erc-1155-signature-mintable";
 import {
   DropERC1155,
   IBurnableERC1155,
@@ -6,36 +34,8 @@ import {
   IMintableERC1155,
   TokenERC1155,
 } from "@thirdweb-dev/contracts-js";
-import { BigNumber, BigNumberish, BytesLike } from "ethers";
-import { NFTMetadata } from "../../schema/tokens/common";
 import { IStorage } from "@thirdweb-dev/storage";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
-import { UpdateableNetwork } from "../interfaces/contract";
-import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
-import {
-  EditionMetadata,
-  EditionMetadataOutputSchema,
-} from "../../schema/tokens/edition";
-import { fetchTokenMetadata } from "../../common/nft";
-import {
-  detectContractFeature,
-  hasFunction,
-  NotFoundError,
-} from "../../common";
-import { AirdropInput } from "../../types/airdrop/airdrop";
-import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
-import {
-  BaseDropERC1155,
-  BaseERC1155,
-  BaseSignatureMintERC1155,
-} from "../../types/eips";
-import { Erc1155Enumerable } from "./erc-1155-enumerable";
-import { Erc1155Mintable } from "./erc-1155-mintable";
-import { FEATURE_EDITION } from "../../constants/erc1155-features";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { Erc1155SignatureMintable } from "./erc-1155-signature-mintable";
-import { Erc1155Droppable } from "./erc-1155-droppable";
-import { Erc1155Burnable } from "./erc-1155-burnable";
+import { BigNumber, BigNumberish, BytesLike } from "ethers";
 
 /**
  * Standard ERC1155 NFT functions
@@ -57,7 +57,7 @@ export class Erc1155<
   public query: Erc1155Enumerable | undefined;
   public mint: Erc1155Mintable | undefined;
   public burn: Erc1155Burnable | undefined;
-  public drop: Erc1155Droppable | undefined;
+  public drop: Erc1155LazyMintable | undefined;
   public signature: Erc1155SignatureMintable | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
@@ -82,7 +82,7 @@ export class Erc1155<
     this.query = this.detectErc1155Enumerable();
     this.mint = this.detectErc1155Mintable();
     this.burn = this.detectErc1155Burnable();
-    this.drop = this.detectErc1155Droppable();
+    this.drop = this.detectErc1155LazyMintable();
     this.signature = this.detectErc1155SignatureMintable();
   }
 
@@ -363,14 +363,14 @@ export class Erc1155<
     return undefined;
   }
 
-  private detectErc1155Droppable(): Erc1155Droppable | undefined {
+  private detectErc1155LazyMintable(): Erc1155LazyMintable | undefined {
     if (
       detectContractFeature<BaseDropERC1155>(
         this.contractWrapper,
-        "ERC1155Droppable",
+        "ERC1155LazyMintable",
       )
     ) {
-      return new Erc1155Droppable(this, this.contractWrapper, this.storage);
+      return new Erc1155LazyMintable(this, this.contractWrapper, this.storage);
     }
     return undefined;
   }

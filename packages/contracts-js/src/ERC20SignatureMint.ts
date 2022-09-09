@@ -73,7 +73,7 @@ export interface ERC20SignatureMintInterface extends utils.Interface {
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "mint(address,uint256)": FunctionFragment;
+    "mintTo(address,uint256)": FunctionFragment;
     "mintWithSignature((address,address,uint256,uint256,address,uint128,uint128,bytes32),bytes)": FunctionFragment;
     "multicall(bytes[])": FunctionFragment;
     "name()": FunctionFragment;
@@ -102,7 +102,7 @@ export interface ERC20SignatureMintInterface extends utils.Interface {
       | "decimals"
       | "decreaseAllowance"
       | "increaseAllowance"
-      | "mint"
+      | "mintTo"
       | "mintWithSignature"
       | "multicall"
       | "name"
@@ -148,7 +148,7 @@ export interface ERC20SignatureMintInterface extends utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "mint",
+    functionFragment: "mintTo",
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
@@ -226,7 +226,7 @@ export interface ERC20SignatureMintInterface extends utils.Interface {
     functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "mintTo", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "mintWithSignature",
     data: BytesLike
@@ -415,7 +415,7 @@ export interface ERC20SignatureMint extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    mint(
+    mintTo(
       _to: string,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -527,7 +527,7 @@ export interface ERC20SignatureMint extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  mint(
+  mintTo(
     _to: string,
     _amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -636,7 +636,7 @@ export interface ERC20SignatureMint extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    mint(
+    mintTo(
       _to: string,
       _amount: BigNumberish,
       overrides?: CallOverrides
@@ -800,7 +800,7 @@ export interface ERC20SignatureMint extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    mint(
+    mintTo(
       _to: string,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -916,7 +916,7 @@ export interface ERC20SignatureMint extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    mint(
+    mintTo(
       _to: string,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }

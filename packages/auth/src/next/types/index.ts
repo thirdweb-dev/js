@@ -6,8 +6,12 @@ export type ThirdwebAuthConfig = {
   privateKey: string;
   domain: string;
   callbacks?: {
-    login?: (address: string) => (Promise<void> | void);
-    user?: (address: string) => (Promise<Omit<ThirdwebAuthUser, "address">> | Omit<ThirdwebAuthUser, "address">);
+    login?: (address: string) => Promise<void> | void;
+    user?: (
+      address: string,
+    ) =>
+      | Promise<Omit<ThirdwebAuthUser, "address">>
+      | Omit<ThirdwebAuthUser, "address">;
   };
 };
 
@@ -15,8 +19,12 @@ export type ThirdwebAuthContext = {
   sdk: ThirdwebSDK;
   domain: string;
   callbacks?: {
-    login?: (address: string) => (Promise<void> | void);
-    user?: (address: string) => (Promise<Omit<ThirdwebAuthUser, "address">> | Omit<ThirdwebAuthUser, "address">);
+    login?: (address: string) => Promise<void> | void;
+    user?: (
+      address: string,
+    ) =>
+      | Promise<Omit<ThirdwebAuthUser, "address">>
+      | Omit<ThirdwebAuthUser, "address">;
   };
 };
 

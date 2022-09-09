@@ -7,12 +7,12 @@ import { isFolderEmpty } from "./is-folder-empty";
 import { getOnline } from "./is-online";
 import { isWriteable } from "./is-writeable";
 import { makeDir } from "./make-dir";
+import { submodules } from "./submodules";
 import { downloadAndExtractRepo, hasTemplate } from "./templates";
 import retry from "async-retry";
 import chalk from "chalk";
 import { writeFile } from "fs/promises";
 import path from "path";
-import { submodules } from "./submodules";
 
 interface ICreateContract {
   contractPath: string;
@@ -88,7 +88,7 @@ export async function createContract({
       starter = "forge-starter";
     } else {
       console.error("Please provide a valid contracts framework.");
-      process.exit(1)
+      process.exit(1);
     }
 
     await retry(

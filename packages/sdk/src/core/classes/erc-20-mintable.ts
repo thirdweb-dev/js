@@ -1,12 +1,12 @@
-import { ContractWrapper } from "./contract-wrapper";
-import { IMintableERC20, IMulticall } from "@thirdweb-dev/contracts-js";
-import { TransactionResult } from "../types";
 import { detectContractFeature } from "../../common";
-import { Erc20 } from "./erc-20";
-import { Amount } from "../../types";
-import { Erc20BatchMintable } from "./erc-20-batch-mintable";
 import { FEATURE_TOKEN_MINTABLE } from "../../constants/erc20-features";
+import { Amount } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { TransactionResult } from "../types";
+import { ContractWrapper } from "./contract-wrapper";
+import { Erc20 } from "./erc-20";
+import { Erc20BatchMintable } from "./erc-20-batch-mintable";
+import { IMintableERC20, IMulticall } from "@thirdweb-dev/contracts-js";
 
 /**
  * Mint ERC20 Tokens

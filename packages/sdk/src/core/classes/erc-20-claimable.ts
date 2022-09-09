@@ -2,12 +2,12 @@ import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ClaimVerification } from "../../types";
 import { Amount } from "../../types/currency";
 import { BaseDropERC20 } from "../../types/eips";
-import { IStorage } from "@thirdweb-dev/storage";
 import { TransactionResult } from "../types";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { DropClaimConditions } from "./drop-claim-conditions";
 import { Erc20 } from "./erc-20";
+import { IStorage } from "@thirdweb-dev/storage";
 
 /**
  * Configure and claim ERC20 tokens

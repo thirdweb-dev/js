@@ -39,7 +39,7 @@ export interface ERC20BaseInterface extends utils.Interface {
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "mint(address,uint256)": FunctionFragment;
+    "mintTo(address,uint256)": FunctionFragment;
     "multicall(bytes[])": FunctionFragment;
     "name()": FunctionFragment;
     "nonces(address)": FunctionFragment;
@@ -64,7 +64,7 @@ export interface ERC20BaseInterface extends utils.Interface {
       | "decimals"
       | "decreaseAllowance"
       | "increaseAllowance"
-      | "mint"
+      | "mintTo"
       | "multicall"
       | "name"
       | "nonces"
@@ -106,7 +106,7 @@ export interface ERC20BaseInterface extends utils.Interface {
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "mint",
+    functionFragment: "mintTo",
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
@@ -168,7 +168,7 @@ export interface ERC20BaseInterface extends utils.Interface {
     functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "mintTo", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "multicall", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
@@ -314,7 +314,7 @@ export interface ERC20Base extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    mint(
+    mintTo(
       _to: string,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -407,7 +407,7 @@ export interface ERC20Base extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  mint(
+  mintTo(
     _to: string,
     _amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -497,7 +497,7 @@ export interface ERC20Base extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    mint(
+    mintTo(
       _to: string,
       _amount: BigNumberish,
       overrides?: CallOverrides
@@ -624,7 +624,7 @@ export interface ERC20Base extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    mint(
+    mintTo(
       _to: string,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -721,7 +721,7 @@ export interface ERC20Base extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    mint(
+    mintTo(
       _to: string,
       _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }

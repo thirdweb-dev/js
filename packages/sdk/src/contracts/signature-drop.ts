@@ -15,8 +15,8 @@ import { DropClaimConditions } from "../core/classes/drop-claim-conditions";
 import { Erc721 } from "../core/classes/erc-721";
 import { Erc721Burnable } from "../core/classes/erc-721-burnable";
 import { Erc721Claimable } from "../core/classes/erc-721-claimable";
-import { Erc721Droppable } from "../core/classes/erc-721-droppable";
 import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
+import { Erc721LazyMintable } from "../core/classes/erc-721-lazymintable";
 import { Erc721Supply } from "../core/classes/erc-721-supply";
 import { Erc721WithQuantitySignatureMintable } from "../core/classes/erc-721-with-quantity-signature-mintable";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
@@ -170,7 +170,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
   private _query = this.query as Erc721Supply;
   private _owned = this._query.owned as Erc721Enumerable;
   private _burn = this.burn as Erc721Burnable;
-  private _drop = this.drop as Erc721Droppable;
+  private _drop = this.drop as Erc721LazyMintable;
   private _claim = this.drop?.claim as Erc721Claimable;
 
   constructor(

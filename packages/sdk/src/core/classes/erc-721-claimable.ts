@@ -1,4 +1,7 @@
-import { FEATURE_NFT_CLAIMABLE } from "../../constants/erc721-features";
+import {
+  FEATURE_NFT_CLAIMABLE,
+  FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS,
+} from "../../constants/erc721-features";
 import { NFTMetadataOwner } from "../../schema";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ClaimVerification } from "../../types";
@@ -24,7 +27,7 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
  * ```
  */
 export class Erc721Claimable implements DetectableFeature {
-  featureName = FEATURE_NFT_CLAIMABLE.name;
+  featureName = FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS.name;
 
   /**
    * Configure claim conditions

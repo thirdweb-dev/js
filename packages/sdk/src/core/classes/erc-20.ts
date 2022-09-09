@@ -1,34 +1,34 @@
+import { detectContractFeature } from "../../common";
+import {
+  fetchCurrencyMetadata,
+  fetchCurrencyValue,
+} from "../../common/currency";
+import { FEATURE_TOKEN } from "../../constants/erc20-features";
+import { AmountSchema } from "../../schema";
+import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
+import { TokenMintInput } from "../../schema/tokens/token";
+import { Amount, Currency, CurrencyValue } from "../../types/currency";
+import {
+  BaseDropERC20,
+  BaseERC20,
+  BaseSignatureMintERC20,
+} from "../../types/eips";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { UpdateableNetwork } from "../interfaces/contract";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { Erc20Burnable } from "./erc-20-burnable";
+import { Erc20Droppable } from "./erc-20-droppable";
+import { Erc20Mintable } from "./erc-20-mintable";
+import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
 import {
   DropERC20,
   IBurnableERC20,
   IMintableERC20,
   TokenERC20,
 } from "@thirdweb-dev/contracts-js";
-import { BigNumber, BigNumberish, ethers } from "ethers";
 import { IStorage } from "@thirdweb-dev/storage";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
-import { UpdateableNetwork } from "../interfaces/contract";
-import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
-import { Amount, Currency, CurrencyValue } from "../../types/currency";
-import {
-  fetchCurrencyMetadata,
-  fetchCurrencyValue,
-} from "../../common/currency";
-import { TokenMintInput } from "../../schema/tokens/token";
-import { AmountSchema } from "../../schema";
-import {
-  BaseDropERC20,
-  BaseERC20,
-  BaseSignatureMintERC20,
-} from "../../types/eips";
-import { detectContractFeature } from "../../common";
-import { Erc20Mintable } from "./erc-20-mintable";
-import { FEATURE_TOKEN } from "../../constants/erc20-features";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
-import { Erc20Burnable } from "./erc-20-burnable";
-import { Erc20Droppable } from "./erc-20-droppable";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 
 /**
  * Standard ERC20 Token functions

@@ -1,10 +1,10 @@
 import { FEATURE_TOKEN_DROPPABLE } from "../../constants/erc20-features";
 import { BaseDropERC20 } from "../../types/eips";
-import { IStorage } from "@thirdweb-dev/storage";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
 import { Erc20Claimable } from "./erc-20-claimable";
+import { IStorage } from "@thirdweb-dev/storage";
 
 /**
  * Configure and claim ERC20 tokens
