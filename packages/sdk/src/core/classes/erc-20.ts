@@ -1,51 +1,44 @@
-import { detectContractFeature, assertEnabled } from "../../common";
+import { NetworkOrSignerOrProvider, TransactionResult } from "..";
+import { assertEnabled, detectContractFeature } from "../../common";
 import {
   fetchCurrencyMetadata,
   fetchCurrencyValue,
 } from "../../common/currency";
 import {
   FEATURE_TOKEN,
+  FEATURE_TOKEN_MINTABLE,
   FEATURE_TOKEN_BATCH_MINTABLE,
   FEATURE_TOKEN_BURNABLE,
-  FEATURE_TOKEN_CLAIMABLE,
-  FEATURE_TOKEN_MINTABLE,
   FEATURE_TOKEN_SIGNATURE_MINTABLE,
+  FEATURE_TOKEN_CLAIMABLE,
 } from "../../constants/erc20-features";
-import { AmountSchema } from "../../schema";
-import { TokenMintInput } from "../../schema/tokens/token";
-import { ClaimVerification } from "../../types";
-import { Amount, Currency, CurrencyValue } from "../../types/currency";
+import { TokenMintInput, AmountSchema } from "../../schema";
 import {
-  BaseDropERC20,
+  Currency,
+  CurrencyValue,
+  Amount,
+  ClaimVerification,
+} from "../../types";
+import {
   BaseERC20,
   BaseSignatureMintERC20,
+  BaseDropERC20,
 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20Burnable } from "./erc-20-burnable";
 import { Erc20Droppable } from "./erc-20-droppable";
 import { Erc20Mintable } from "./erc-20-mintable";
 import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
 import {
-  DropERC20,
-  IBurnableERC20,
-  IMintableERC20,
   TokenERC20,
+  DropERC20,
+  IMintableERC20,
+  IBurnableERC20,
 } from "@thirdweb-dev/contracts-js";
 import { IStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, ethers } from "ethers";
-import { Erc20Mintable } from "./erc-20-mintable";
-import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
-import {
-  DropERC20,
-  IBurnableERC20,
-  IMintableERC20,
-  TokenERC20,
-} from "@thirdweb-dev/contracts-js";
-import { IStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { ethers, BigNumber, BigNumberish } from "ethers";
 
 /**
  * Standard ERC20 Token functions
