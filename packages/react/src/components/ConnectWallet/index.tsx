@@ -83,7 +83,8 @@ const chainIdToCurrencyMap: Record<
   [ChainId.Rinkeby]: "ethereum",
 
   [ChainId.Arbitrum]: "arbitrum",
-  [ChainId.ArbitrumTestnet]: "arbitrum",
+  [ChainId.ArbitrumRinkeby]: "arbitrum",
+  [ChainId.ArbitrumGoerli]: "arbitrum",
 
   [ChainId.Avalanche]: "avalanche",
   [ChainId.AvalancheFujiTestnet]: "avalanche",
@@ -92,7 +93,8 @@ const chainIdToCurrencyMap: Record<
   [ChainId.FantomTestnet]: "fantom",
 
   [ChainId.Optimism]: "optimism",
-  [ChainId.OptimismTestnet]: "optimism",
+  [ChainId.OptimismKovan]: "optimism",
+  [ChainId.OptimismGoerli]: "optimism",
 
   [ChainId.Polygon]: "polygon",
   [ChainId.Mumbai]: "polygon",
