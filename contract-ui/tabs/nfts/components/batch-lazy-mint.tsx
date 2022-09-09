@@ -76,7 +76,8 @@ export const BatchLazyMint: React.FC<BatchLazyMintProps> = ({
             setCSVData(validResults);
           },
         });
-      } else if (json?.length > 0) {
+        // we know this array will always exist, but it might be empty
+      } else if (json.length > 0) {
         setJsonData(json);
       } else {
         console.error("No CSV or JSON found");

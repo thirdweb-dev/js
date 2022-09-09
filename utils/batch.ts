@@ -1,5 +1,5 @@
 import { removeEmptyValues } from "./parseAttributes";
-import { NFTMetadataInput } from "@thirdweb-dev/sdk";
+import { Json, NFTMetadataInput } from "@thirdweb-dev/sdk";
 import { useMemo } from "react";
 
 export interface CSVData extends Record<string, string | undefined> {
@@ -47,26 +47,31 @@ export const transformHeader = (h: string) => {
   return h.trim();
 };
 
-const removeSpecialCharacters = (str: string) =>
-  str.replace(/[^a-zA-Z0-9 ]/g, "");
+function removeSpecialCharacters(str: string) {
+  return str.replace(/[^a-zA-Z0-9 ]/g, "");
+}
 
-const sortAscending = (a: File, b: File) =>
-  parseInt(removeSpecialCharacters(a.name)) -
-  parseInt(removeSpecialCharacters(b.name));
+function sortAscending(a: File, b: File) {
+  return (
+    parseInt(removeSpecialCharacters(a.name)) -
+    parseInt(removeSpecialCharacters(b.name))
+  );
+}
 
 export const getAcceptedFiles = async (acceptedFiles: File[]) => {
   const jsonFiles = acceptedFiles
     .filter((f) => jsonMimeTypes.includes(f.type) || f.name.endsWith(".json"))
     .sort(sortAscending);
 
-  let json: File[] = [];
-  if (jsonFiles.length > 1) {
-    for (const f of jsonFiles) {
-      json.push(JSON.parse(await f.text()));
-    }
-  } else if (jsonFiles.length === 1) {
-    const temp = JSON.parse(await jsonFiles[0].text());
-    json = Array.isArray(temp) ? temp : [temp];
+  let json: Json[] = [];
+
+  for (const f of jsonFiles) {
+    const text = await f.text();
+    // can be either a single json object or an array of json objects
+    const parsed: Json | Json[] = JSON.parse(text);
+    //just concat it always (even if it's a single object
+    //this will add the object to the end of the array or append the array to the end of the array)
+    json = json.concat(parsed);
   }
 
   const csv = acceptedFiles.find(
