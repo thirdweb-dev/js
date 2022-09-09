@@ -1,23 +1,15 @@
-import { UserWallet } from "../classes/user-wallet";
-import { Metaplex, Pda } from "@metaplex-foundation/js";
 import {
   Program as AnchorProgram,
   Idl,
   AnchorProvider,
 } from "@project-serum/anchor";
-import { PublicKey, Signer } from "@solana/web3.js";
+import { Signer } from "@solana/web3.js";
 
 export class Program {
   private program: AnchorProgram<Idl>;
 
   constructor(programAddress: string, idl: Idl, provider: AnchorProvider) {
     this.program = new AnchorProgram(idl, programAddress, provider);
-    // console.log(this.program.account);
-    const pda = Pda.find(new PublicKey(programAddress), [
-      Buffer.from("default"),
-    ]);
-    console.log("pda", pda.toBase58());
-    PublicKey.findProgramAddress;
   }
 
   async call(

@@ -14,5 +14,12 @@ module.exports = {
         executable: true,
       },
     ],
+    programs: [
+      {
+        label: "Counter Program",
+        accountId: "89RsF5yJgRXhae6LKuCcMRgXkqxCJm3AeaYwcJN4XopA",
+        deployPath: "./test/data/counter.so",
+      },
+    ],
   },
 };
