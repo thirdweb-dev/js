@@ -1,4 +1,7 @@
-import { FEATURE_NFT_CLAIMABLE } from "../../constants/erc721-features";
+import {
+  FEATURE_NFT_CLAIMABLE,
+  FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS,
+} from "../../constants/erc721-features";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ClaimVerification } from "../../types/claim-conditions/claim-conditions";
 import { BaseClaimConditionERC1155 } from "../../types/eips";
@@ -21,7 +24,7 @@ import { BigNumberish, ethers } from "ethers";
  * ```
  */
 export class Erc1155Claimable implements DetectableFeature {
-  featureName = FEATURE_NFT_CLAIMABLE.name;
+  featureName = FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS.name;
 
   public conditions: DropErc1155ClaimConditions<BaseClaimConditionERC1155>;
   private contractWrapper: ContractWrapper<BaseClaimConditionERC1155>;

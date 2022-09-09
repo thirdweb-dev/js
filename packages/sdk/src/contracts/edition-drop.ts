@@ -16,7 +16,7 @@ import { Erc1155Burnable } from "../core/classes/erc-1155-burnable";
 import { Erc1155Claimable } from "../core/classes/erc-1155-claimable";
 import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { Erc1155Droppable } from "../core/index";
+import { Erc1155LazyMintable } from "../core/index";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -57,7 +57,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
 
   private _query = this.query as Erc1155Enumerable;
   private _burn = this.burn as Erc1155Burnable;
-  private _drop = this.drop as Erc1155Droppable;
+  private _drop = this.drop as Erc1155LazyMintable;
   private _claim = this.drop?.claim as Erc1155Claimable;
 
   public sales: ContractPrimarySale<DropERC1155>;
