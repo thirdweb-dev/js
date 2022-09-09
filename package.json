@@ -25,7 +25,7 @@
     "version-packages": "changeset version",
     "release": "node ./scripts/pre-release.mjs && changeset publish",
     "version-packages:nightly": "changeset version --snapshot nightly",
-    "release:nightly": "changeset publish --tag nightly"
+    "release:nightly": "node ./scripts/pre-release.mjs && changeset publish --tag nightly"
   },
   "preconstruct": {
     "packages": [
