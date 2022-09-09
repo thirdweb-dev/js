@@ -1,15 +1,18 @@
-import { DropErc1155ClaimConditions } from "./drop-erc1155-claim-conditions";
-import { FEATURE_NFT_CLAIMABLE } from "../../constants/erc721-features";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { BaseClaimConditionERC1155 } from "../../types/eips";
-import { IStorage } from "@thirdweb-dev/storage";
-import { ContractWrapper } from "./contract-wrapper";
-import { ContractMetadata } from "./contract-metadata";
+import {
+  FEATURE_NFT_CLAIMABLE,
+  FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS,
+} from "../../constants/erc721-features";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ClaimVerification } from "../../types/claim-conditions/claim-conditions";
-import { BigNumberish, ethers } from "ethers";
+import { BaseClaimConditionERC1155 } from "../../types/eips";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { TransactionTask } from "./TransactionTask";
+import { ContractMetadata } from "./contract-metadata";
+import { ContractWrapper } from "./contract-wrapper";
+import { DropErc1155ClaimConditions } from "./drop-erc1155-claim-conditions";
+import { IStorage } from "@thirdweb-dev/storage";
+import { BigNumberish, ethers } from "ethers";
 
 /**
  * Configure and claim ERC1155 NFTs
@@ -21,7 +24,7 @@ import { TransactionTask } from "./TransactionTask";
  * ```
  */
 export class Erc1155Claimable implements DetectableFeature {
-  featureName = FEATURE_NFT_CLAIMABLE.name;
+  featureName = FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS.name;
 
   public conditions: DropErc1155ClaimConditions<BaseClaimConditionERC1155>;
   private contractWrapper: ContractWrapper<BaseClaimConditionERC1155>;

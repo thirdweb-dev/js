@@ -1,5 +1,5 @@
-import { BigNumber, BigNumberish, ethers, providers } from "ethers";
 import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../constants/index";
+import { BigNumber, BigNumberish, ethers, providers } from "ethers";
 
 /**
  * Error that may get thrown if IPFS returns nothing for a given uri.

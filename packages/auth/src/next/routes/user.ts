@@ -4,14 +4,14 @@ import { NextApiRequest, NextApiResponse } from "next";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
-  ctx: ThirdwebAuthContext
+  ctx: ThirdwebAuthContext,
 ) {
   if (req.method !== "GET") {
     return res.status(400).json({
       error: "Invalid method. Only GET supported.",
     });
   }
-  
+
   const { sdk, domain } = ctx;
   let user = null;
   const token = req.cookies.thirdweb_auth_token;

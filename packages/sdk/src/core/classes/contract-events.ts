@@ -1,9 +1,9 @@
-import { ContractWrapper } from "./contract-wrapper";
-import { BaseContract, Event, providers } from "ethers";
 import { EventType } from "../../constants";
-import { ListenerFn } from "eventemitter3";
-import { EventFragment } from "@ethersproject/abi";
 import { ContractEvent, EventQueryFilter } from "../../types/index";
+import { ContractWrapper } from "./contract-wrapper";
+import { EventFragment } from "@ethersproject/abi";
+import { BaseContract, Event, providers } from "ethers";
+import { ListenerFn } from "eventemitter3";
 
 /**
  * Listen to Contract events in real time
@@ -74,7 +74,12 @@ export class ContractEvents<TContract extends BaseContract> {
     );
 
     const address = this.contractWrapper.readContract.address;
-    const filter = { address, topics: [this.contractWrapper.readContract.interface.getEventTopic(event)] };
+    const filter = {
+      address,
+      topics: [
+        this.contractWrapper.readContract.interface.getEventTopic(event),
+      ],
+    };
 
     const wrappedListener = (log: providers.Log) => {
       const parsedLog =
