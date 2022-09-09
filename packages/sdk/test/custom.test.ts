@@ -5,7 +5,6 @@ import {
   ThirdwebSDK,
 } from "../src";
 import { expectError, signers } from "./hooks";
-import "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   TokenERC20__factory,
@@ -233,41 +232,33 @@ describe("Custom Contracts", async () => {
 
   it("should detect feature: erc20", async () => {
     const c = await sdk.getContract(tokenContractAddress);
-    invariant(c, "Contract undefined");
-    invariant(c.token, "ERC20 undefined");
-    const token = await c.token.get();
+    const token = await c.erc20.get();
     expect(token.name).to.eq("Token");
     expect(token.decimals).to.eq(18);
-    invariant(c.token.mint, "ERC20Mintable undefined");
-    await c.token.mint.to(adminWallet.address, 100);
-    const balance = await c.token.balance();
+    await c.erc20.mint(100);
+    const balance = await c.erc20.balance();
     expect(balance.displayValue).to.eq("100.0");
-    await c.token.transfer(samWallet.address, 25);
-    expect((await c.token.balance()).displayValue).to.eq("75.0");
-    expect((await c.token.balanceOf(samWallet.address)).displayValue).to.eq(
+    await c.erc20.transfer(samWallet.address, 25);
+    expect((await c.erc20.balance()).displayValue).to.eq("75.0");
+    expect((await c.erc20.balanceOf(samWallet.address)).displayValue).to.eq(
       "25.0",
     );
   });
 
   it("should detect feature: erc20 burnable", async () => {
     const c = await sdk.getContract(tokenContractAddress);
-    invariant(c, "Contract undefined");
-    invariant(c.token, "ERC20 undefined");
-    invariant(c.token.burn, "ERC20Burnable undefined");
-    await c.token.mint?.to(adminWallet.address, 2);
-    expect((await c.token.balance()).displayValue).to.eq("2.0");
-    await c.token.burn.tokens(1);
-    expect((await c.token.balance()).displayValue).to.eq("1.0");
+    await c.erc20.mint(2);
+    expect((await c.erc20.balance()).displayValue).to.eq("2.0");
+    await c.erc20.burn(1);
+    expect((await c.erc20.balance()).displayValue).to.eq("1.0");
   });
 
   it("should detect feature: erc20 droppable", async () => {
     const c = await sdk.getContract(tokenDropContractAddress);
 
     invariant(c, "Contract undefined");
-    invariant(c.token, "ERC20 undefined");
-    invariant(c.token.drop, "ERC20 drop undefined");
 
-    await c.token.drop.claim.conditions.set([
+    await c.erc20.claimConditions.set([
       {
         startTime: new Date(new Date().getTime() - 1000 * 60 * 60),
         price: 0,
@@ -275,52 +266,40 @@ describe("Custom Contracts", async () => {
       },
     ]);
 
-    let b = await c.token.balance();
+    let b = await c.erc20.balance();
     expect(b.displayValue).to.equal("0.0");
 
-    await c.token.drop.claim.to(adminWallet.address, 5);
+    await c.erc20.claim(5);
 
-    b = await c.token.balance();
+    b = await c.erc20.balance();
     expect(b.displayValue).to.equal("5.0");
   });
 
   it("should detect feature: erc721", async () => {
     const c = await sdk.getContract(nftContractAddress);
-    invariant(c, "Contract undefined");
-    invariant(c.nft, "ERC721 undefined");
-    invariant(c.nft.query, "ERC721 query undefined");
-    invariant(c.nft.mint, "ERC721 minter undefined");
-    await c.nft.mint.to(adminWallet.address, {
+    await c.erc721.mintTo(adminWallet.address, {
       name: "Custom NFT",
     });
-    const nfts = await c.nft.query.all();
+    const nfts = await c.erc721.getAll();
     expect(nfts.length).to.eq(1);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });
 
   it("should detect feature: erc721 burnable", async () => {
     const c = await sdk.getContract(nftContractAddress);
-    invariant(c, "Contract undefined");
-    invariant(c.nft, "ERC721 undefined");
-    invariant(c.nft.burn, "ERC721Burnable undefined");
-    invariant(c.nft.query, "ERC721 query undefined");
-    await c.nft.mint?.to(adminWallet.address, {
+    await c.erc721.mintTo(adminWallet.address, {
       name: "Custom NFT",
     });
-    let balance = await c.nft.balance();
+    let balance = await c.erc721.balance();
     expect(balance.toString()).to.eq("1");
-    await c.nft.burn.token(0);
-    balance = await c.nft.balance();
+    await c.erc721.burn(0);
+    balance = await c.erc721.balance();
     expect(balance.toString()).to.eq("0");
   });
 
   it("should detect feature: erc721 lazy mint", async () => {
     const c = await sdk.getContract(sigDropContractAddress);
-    invariant(c, "Contract undefined");
-    invariant(c.nft, "ERC721 undefined");
-    invariant(c.nft.query, "ERC721 query undefined");
-    invariant(c.nft.drop, "ERC721 drop undefined");
-    await c.nft.drop.lazyMint([
+    await c.erc721.lazyMint([
       {
         name: "Custom NFT",
       },
@@ -328,19 +307,14 @@ describe("Custom Contracts", async () => {
         name: "Another one",
       },
     ]);
-    const nfts = await c.nft.query.all();
+    const nfts = await c.erc721.getAll();
     expect(nfts.length).to.eq(2);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });
 
   it("should detect feature: erc721 delay reveal", async () => {
     const c = await sdk.getContract(nftDropContractAddress);
-    invariant(c, "Contract undefined");
-    invariant(c.nft, "ERC721 undefined");
-    invariant(c.nft.drop, "ERC721 drop");
-    invariant(c.nft.drop.revealer, "ERC721 revealer undefined");
-
-    await c.nft.drop.revealer.createDelayedRevealBatch(
+    await c.erc721.revealer.createDelayedRevealBatch(
       {
         name: "Placeholder #1",
       },
@@ -348,40 +322,29 @@ describe("Custom Contracts", async () => {
       "password",
     );
 
-    const batches = await c.nft.drop.revealer.getBatchesToReveal();
+    const batches = await c.erc721.revealer.getBatchesToReveal();
     expect(batches.length).to.eq(1);
 
-    await c.nft.drop.revealer.reveal(0, "password");
-    expect((await c.nft.get(0)).metadata.name).to.be.equal("NFT #1");
+    await c.erc721.revealer.reveal(0, "password");
+    expect((await c.erc721.get(0)).metadata.name).to.be.equal("NFT #1");
   });
 
   it("should detect feature: erc1155", async () => {
     const c = await sdk.getContract(editionContractAddress);
-    invariant(c, "Contract undefined");
-    invariant(c.edition, "ERC1155 undefined");
-    invariant(c.edition.query, "ERC1155 query undefined");
-    invariant(c.edition.mint, "ERC1155 minter undefined");
-    await c.edition.mint.to(adminWallet.address, {
+    await c.erc1155.mint({
       metadata: {
         name: "Custom NFT",
       },
       supply: 100,
     });
-    const nfts = await c.edition.query.all();
+    const nfts = await c.erc1155.getAll();
     expect(nfts.length).to.eq(1);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });
 
   it("should detect feature: erc1155 burnable", async () => {
     const c = await sdk.getContract(editionContractAddress);
-    invariant(c, "Contract undefined");
-    invariant(c.edition, "ERC1155 undefined");
-    invariant(c.edition.mint, "ERC1155 mintable undefined");
-    invariant(c.edition.mint.batch, "ERC1155 batch undefined");
-    invariant(c.edition.burn, "ERC1155 burnable undefined");
-    invariant(c.edition.query, "ERC1155 query undefined");
-
-    await c.edition.mint.batch.to(adminWallet.address, [
+    await c.erc1155.mintBatchTo(adminWallet.address, [
       {
         metadata: {
           name: "Custom NFT",
@@ -396,28 +359,22 @@ describe("Custom Contracts", async () => {
       },
     ]);
 
-    let balance = await c.edition.balance(0);
+    let balance = await c.erc1155.balance(0);
     expect(balance.toString()).to.eq("100");
-    await c.edition.burn.tokens(0, 10);
-    balance = await c.edition.balance(0);
+    await c.erc1155.burn(0, 10);
+    balance = await c.erc1155.balance(0);
     expect(balance.toString()).to.eq("90");
 
-    await c.edition.burn.batch([0, 1], [10, 10]);
-    balance = await c.edition.balance(0);
+    await c.erc1155.burnBatch([0, 1], [10, 10]);
+    balance = await c.erc1155.balance(0);
     expect(balance.toString()).to.eq("80");
-    balance = await c.edition.balance(1);
+    balance = await c.erc1155.balance(1);
     expect(balance.toString()).to.eq("90");
   });
 
   it("should detect feature: erc1155 lazy mint", async () => {
     const c = await sdk.getContract(editionDropContractAddress);
-
-    invariant(c, "Contract undefined");
-    invariant(c.edition, "ERC1155 undefined");
-    invariant(c.edition.query, "ERC1155 query undefined");
-    invariant(c.edition.drop, "ERC1155 drop undefined");
-
-    await c.edition.drop.lazyMint([
+    await c.erc1155.lazyMint([
       {
         name: "Custom NFT",
       },
@@ -425,18 +382,13 @@ describe("Custom Contracts", async () => {
         name: "Another one",
       },
     ]);
-    const nfts = await c.edition.query.all();
+    const nfts = await c.erc1155.getAll();
     expect(nfts.length).to.eq(2);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });
 
   it("should detect feature: erc1155 signature mintable", async () => {
     const c = await sdk.getContract(editionContractAddress);
-
-    invariant(c, "Contract undefined");
-    invariant(c.edition, "ERC1155 undefined");
-    invariant(c.edition.signature, "ERC1155 Signature Undefined");
-
     const payload = {
       metadata: {
         name: "OUCH VOUCH",
@@ -448,12 +400,12 @@ describe("Custom Contracts", async () => {
       quantity: "1",
     };
 
-    const goodPayload = await c.edition.signature.generate(payload);
+    const goodPayload = await c.erc1155.signature.generate(payload);
 
-    const valid = await c.edition.signature.verify(goodPayload);
+    const valid = await c.erc1155.signature.verify(goodPayload);
     assert.isTrue(valid, "This voucher should be valid");
 
-    const tx = await c.edition.signature.mint(goodPayload);
+    const tx = await c.erc1155.signature.mint(goodPayload);
     // Better way to do this?
     expect(tx.id.toNumber()).to.eq(0);
   });
@@ -472,10 +424,6 @@ describe("Custom Contracts", async () => {
       primarySaleRecipient: adminWallet.address,
     };
 
-    invariant(c, "Contract undefined");
-    invariant(c.token, "ERC20 undefined");
-    invariant(c.token.signature, "ERC20 Signature Undefined");
-
     const input = [
       {
         ...meta,
@@ -491,12 +439,12 @@ describe("Custom Contracts", async () => {
       },
     ];
 
-    const batch = await c.token.signature.generateBatch(input);
+    const batch = await c.erc20.signature.generateBatch(input);
 
     for (const b of batch) {
-      await c.token.signature.mint(b);
+      await c.erc20.signature.mint(b);
     }
-    const balance = await c.token.balanceOf(samWallet.address);
+    const balance = await c.erc20.balanceOf(samWallet.address);
     expect(balance.displayValue).to.eq("6.0");
   });
 
@@ -505,10 +453,6 @@ describe("Custom Contracts", async () => {
       nftContractAddress,
       TokenERC721__factory.abi,
     );
-
-    invariant(c, "Contract undefined");
-    invariant(c.nft, "ERC721 undefined");
-    invariant(c.nft.signature, "ERC721 drop");
 
     const payload = {
       metadata: {
@@ -522,12 +466,12 @@ describe("Custom Contracts", async () => {
     };
 
     const goodPayload: SignedPayload721WithQuantitySignature =
-      await c.nft.signature.generate(payload);
+      await c.erc721.signature.generate(payload);
 
-    const valid = await c.nft.signature.verify(goodPayload);
+    const valid = await c.erc721.signature.verify(goodPayload);
     assert.isTrue(valid, "This voucher should be valid");
 
-    const tx = await c.nft.signature.mint(goodPayload);
+    const tx = await c.erc721.signature.mint(goodPayload);
     // Better way to do this?
     expect(tx.id.toNumber()).to.eq(0);
   });

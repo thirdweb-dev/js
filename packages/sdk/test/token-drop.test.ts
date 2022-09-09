@@ -39,7 +39,7 @@ describe("Token Drop Contract", async () => {
         platform_fee_recipient: AddressZero,
       },
     );
-    dropContract = sdk.getTokenDrop(address);
+    dropContract = await sdk.getTokenDrop(address);
   });
 
   it("should allow a snapshot to be set", async () => {

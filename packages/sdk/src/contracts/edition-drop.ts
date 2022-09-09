@@ -12,11 +12,8 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { DropErc1155ClaimConditions } from "../core/classes/drop-erc1155-claim-conditions";
 import { DropErc1155History } from "../core/classes/drop-erc1155-history";
 import { Erc1155 } from "../core/classes/erc-1155";
-import { Erc1155Burnable } from "../core/classes/erc-1155-burnable";
-import { Erc1155Claimable } from "../core/classes/erc-1155-claimable";
-import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
+import { StandardErc1155 } from "../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { Erc1155LazyMintable } from "../core/index";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -46,7 +43,7 @@ import { BigNumber, BigNumberish, constants } from "ethers";
  *
  * @public
  */
-export class EditionDrop extends Erc1155<DropERC1155> {
+export class EditionDrop extends StandardErc1155<DropERC1155> {
   static contractType = "edition-drop" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
   static contractAbi = ABI as any;
@@ -54,11 +51,6 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    * @internal
    */
   static schema = DropErc1155ContractSchema;
-
-  private _query = this.query as Erc1155Enumerable;
-  private _burn = this.burn as Erc1155Burnable;
-  private _drop = this.drop as Erc1155LazyMintable;
-  private _claim = this.drop?.claim as Erc1155Claimable;
 
   public sales: ContractPrimarySale<DropERC1155>;
   public platformFees: ContractPlatformFee<DropERC1155>;
@@ -114,10 +106,8 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    */
   public claimConditions: DropErc1155ClaimConditions<DropERC1155>;
   public history: DropErc1155History;
-  /**
-   * @internal
-   */
   public interceptor: ContractInterceptor<DropERC1155>;
+  public erc1155: Erc1155<DropERC1155>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -131,7 +121,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       EditionDrop.schema,
@@ -154,6 +144,18 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.erc1155 = new Erc1155(this.contractWrapper, this.storage);
+  }
+
+  /**
+   * @internal
+   */
+  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+    this.contractWrapper.updateSignerOrProvider(network);
+  }
+
+  getAddress(): string {
+    return this.contractWrapper.readContract.address;
   }
 
   /** ******************************
@@ -179,7 +181,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   public async getAll(
     queryParams?: QueryAllParams,
   ): Promise<EditionMetadata[]> {
-    return this._query.all(queryParams);
+    return this.erc1155.getAll(queryParams);
   }
 
   /**
@@ -199,7 +201,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   public async getOwned(
     walletAddress?: string,
   ): Promise<EditionMetadataOwner[]> {
-    return this._query.owned(walletAddress);
+    return this.erc1155.getOwned(walletAddress);
   }
 
   /**
@@ -208,7 +210,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    * @public
    */
   public async getTotalCount(): Promise<BigNumber> {
-    return this._query.totalCount();
+    return this.erc1155.totalCount();
   }
 
   /**
@@ -258,7 +260,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
       onProgress: (event: UploadProgressEvent) => void;
     },
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
-    return this._drop.lazyMint(metadatas, options);
+    return this.erc1155.lazyMint(metadatas, options);
   }
 
   /**
@@ -276,7 +278,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     quantity: BigNumberish,
     checkERC20Allowance = true, // TODO split up allowance checks
   ): Promise<TransactionTask> {
-    const claimVerification = await this._claim.conditions.prepareClaim(
+    const claimVerification = await this.erc1155.claimConditions.prepareClaim(
       tokenId,
       quantity,
       checkERC20Allowance,
@@ -371,6 +373,6 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     tokenId: BigNumberish,
     amount: BigNumberish,
   ): Promise<TransactionResult> {
-    return this._burn.tokens(tokenId, amount);
+    return this.erc1155.burn(tokenId, amount);
   }
 }

@@ -1,4 +1,7 @@
-import { detectContractFeature } from "../../common/feature-detection";
+import {
+  detectContractFeature,
+  hasFunction,
+} from "../../common/feature-detection";
 import { uploadOrExtractURIs } from "../../common/nft";
 import {
   FEATURE_NFT_LAZY_MINTABLE,
@@ -17,6 +20,8 @@ import { ContractWrapper } from "./contract-wrapper";
 import { DelayedReveal } from "./delayed-reveal";
 import { Erc721 } from "./erc-721";
 import { Erc721Claimable } from "./erc-721-claimable";
+import { Erc721ClaimableWithConditions } from "./erc-721-claimable-with-conditions";
+import { IClaimableERC721 } from "@thirdweb-dev/contracts-js";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
 import { IStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -61,7 +66,7 @@ export class Erc721LazyMintable implements DetectableFeature {
    * );
    * // Whenever you're ready, reveal your NFTs at any time
    * const batchId = 0; // the batch to reveal
-   * await contract.nft.drop.revealer.reveal(batchId, "my secret password");
+   * await contract.erc721.revealer.reveal(batchId, "my secret password");
    * ```
    */
   public revealer: DelayedReveal<BaseDelayedRevealERC721> | undefined;
@@ -72,9 +77,10 @@ export class Erc721LazyMintable implements DetectableFeature {
    * @example
    * ```javascript
    * const quantity = 10;
-   * await contract.nft.drop.claim.to("0x...", quantity);
+   * await contract.erc721.claim(quantity);
    * ```
    */
+  public claimWithConditions: Erc721ClaimableWithConditions | undefined;
   public claim: Erc721Claimable | undefined;
 
   private contractWrapper: ContractWrapper<BaseDropERC721>;
@@ -91,6 +97,7 @@ export class Erc721LazyMintable implements DetectableFeature {
 
     this.storage = storage;
     this.revealer = this.detectErc721Revealable();
+    this.claimWithConditions = this.detectErc721ClaimableWithConditions();
     this.claim = this.detectErc721Claimable();
   }
 
@@ -112,7 +119,7 @@ export class Erc721LazyMintable implements DetectableFeature {
    *   image: fs.readFileSync("path/to/image.png"),
    * }];
    *
-   * const results = await contract.nft.lazy.mint(metadatas); // uploads and creates the NFTs on chain
+   * const results = await contract.erc721.lazyMint(metadatas); // uploads and creates the NFTs on chain
    * const firstTokenId = results[0].id; // token id of the first created NFT
    * const firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT
    * ```
@@ -190,18 +197,33 @@ export class Erc721LazyMintable implements DetectableFeature {
     return undefined;
   }
 
-  private detectErc721Claimable(): Erc721Claimable | undefined {
+  private detectErc721ClaimableWithConditions():
+    | Erc721ClaimableWithConditions
+    | undefined {
     if (
       detectContractFeature<BaseClaimConditionERC721>(
         this.contractWrapper,
         "ERC721ClaimableWithConditions",
       )
     ) {
-      return new Erc721Claimable(
+      return new Erc721ClaimableWithConditions(
         this.erc721,
         this.contractWrapper,
         this.storage,
       );
+    }
+    return undefined;
+  }
+
+  private detectErc721Claimable(): Erc721Claimable | undefined {
+    if (
+      detectContractFeature<IClaimableERC721>(
+        this.contractWrapper,
+        "ERC721Claimable",
+      ) &&
+      !hasFunction("setClaimConditions", this.contractWrapper)
+    ) {
+      return new Erc721Claimable(this.erc721, this.contractWrapper);
     }
     return undefined;
   }

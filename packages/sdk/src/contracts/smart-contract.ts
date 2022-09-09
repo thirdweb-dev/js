@@ -1,8 +1,12 @@
 import {
   ALL_ROLES,
+  assertEnabled,
   detectContractFeature,
   extractFunctionsFromAbi,
 } from "../common";
+import { FEATURE_TOKEN } from "../constants/erc20-features";
+import { FEATURE_NFT } from "../constants/erc721-features";
+import { FEATURE_EDITION } from "../constants/erc1155-features";
 import { ContractEncoder, NetworkOrSignerOrProvider } from "../core";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
@@ -48,8 +52,8 @@ import { BaseContract, CallOverrides, ContractInterface } from "ethers";
  * // if your contract follows the ERC721 standard, contract.nft will be present
  * const allNFTs = await contract.nft.query.all()
  *
- * // if your contract extends IMintableERC721, contract.nft.mint will be present
- * const tx = await contract.nft.mint.to("0x...", {
+ * // if your contract extends IMintableERC721, contract.nft.mint() will be available
+ * const tx = await contract.nft.mint({
  *     name: "Cool NFT",
  *     image: readFileSync("some_image.png"),
  *   });
@@ -84,18 +88,31 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   public roles: ContractRoles<IPermissions, any> | undefined;
   public sales: ContractPrimarySale<IPrimarySale> | undefined;
   public platformFees: ContractPlatformFee<IPlatformFee> | undefined;
+
+  private token: Erc20 | undefined;
+  private nft: Erc721 | undefined;
+  private edition: Erc1155 | undefined;
+
   /**
    * Auto-detects ERC20 standard functions.
    */
-  public token: Erc20 | undefined;
+  get erc20(): Erc20 {
+    return assertEnabled(this.token, FEATURE_TOKEN);
+  }
+
   /**
    * Auto-detects ERC721 standard functions.
    */
-  public nft: Erc721 | undefined;
+  get erc721(): Erc721 {
+    return assertEnabled(this.nft, FEATURE_NFT);
+  }
+
   /**
    * Auto-detects ERC1155 standard functions.
    */
-  public edition: Erc1155 | undefined;
+  get erc1155(): Erc1155 {
+    return assertEnabled(this.edition, FEATURE_EDITION);
+  }
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -266,21 +283,21 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
 
   private detectErc20() {
     if (detectContractFeature<BaseERC20>(this.contractWrapper, "ERC20")) {
-      return new Erc20(this.contractWrapper, this.storage, this.options);
+      return new Erc20(this.contractWrapper, this.storage);
     }
     return undefined;
   }
 
   private detectErc721() {
     if (detectContractFeature<BaseERC721>(this.contractWrapper, "ERC721")) {
-      return new Erc721(this.contractWrapper, this.storage, this.options);
+      return new Erc721(this.contractWrapper, this.storage);
     }
     return undefined;
   }
 
   private detectErc1155() {
     if (detectContractFeature<BaseERC1155>(this.contractWrapper, "ERC1155")) {
-      return new Erc1155(this.contractWrapper, this.storage, this.options);
+      return new Erc1155(this.contractWrapper, this.storage);
     }
     return undefined;
   }
