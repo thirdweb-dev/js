@@ -10,7 +10,7 @@ import {
   FEATURE_NFT_BATCH_MINTABLE,
   FEATURE_NFT_BURNABLE,
   FEATURE_NFT_CLAIMABLE,
-  FEATURE_NFT_DROPPABLE,
+  FEATURE_NFT_LAZY_MINTABLE,
   FEATURE_NFT_MINTABLE,
   FEATURE_NFT_REVEALABLE,
   FEATURE_NFT_SIGNATURE_MINTABLE,
@@ -32,7 +32,7 @@ import { UpdateableNetwork } from "../interfaces/contract";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc721Burnable } from "./erc-721-burnable";
-import { Erc721Droppable } from "./erc-721-droppable";
+import { Erc721LazyMintable } from "./erc-721-lazymintable";
 import { Erc721Mintable } from "./erc-721-mintable";
 import { Erc721Supply } from "./erc-721-supply";
 import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
@@ -72,7 +72,7 @@ export class Erc721<
   private query: Erc721Supply | undefined;
   private mintable: Erc721Mintable | undefined;
   private burnable: Erc721Burnable | undefined;
-  private droppable: Erc721Droppable | undefined;
+  private lazyMintable: Erc721LazyMintable | undefined;
   private signatureMintable: Erc721WithQuantitySignatureMintable | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
@@ -83,7 +83,7 @@ export class Erc721<
     this.query = this.detectErc721Enumerable();
     this.mintable = this.detectErc721Mintable();
     this.burnable = this.detectErc721Burnable();
-    this.droppable = this.detectErc721Droppable();
+    this.lazyMintable = this.detectErc721LazyMintable();
     this.signatureMintable = this.detectErc721SignatureMintable();
   }
 
@@ -448,7 +448,7 @@ export class Erc721<
       onProgress: (event: UploadProgressEvent) => void;
     },
   ) {
-    return assertEnabled(this.droppable, FEATURE_NFT_DROPPABLE).lazyMint(
+    return assertEnabled(this.lazyMintable, FEATURE_NFT_LAZY_MINTABLE).lazyMint(
       metadatas,
       options,
     );
@@ -518,7 +518,7 @@ export class Erc721<
     checkERC20Allowance = true,
     claimData?: ClaimVerification,
   ) {
-    return assertEnabled(this.droppable?.claim, FEATURE_NFT_CLAIMABLE).to(
+    return assertEnabled(this.lazyMintable?.claim, FEATURE_NFT_CLAIMABLE).to(
       destinationAddress,
       quantity,
       checkERC20Allowance,
@@ -541,7 +541,7 @@ export class Erc721<
     claimData?: ClaimVerification,
   ) {
     return assertEnabled(
-      this.droppable?.claim,
+      this.lazyMintable?.claim,
       FEATURE_NFT_CLAIMABLE,
     ).getClaimTransaction(
       destinationAddress,
@@ -574,7 +574,7 @@ export class Erc721<
    * ```
    */
   get claimConditions() {
-    return assertEnabled(this.droppable?.claim, FEATURE_NFT_CLAIMABLE)
+    return assertEnabled(this.lazyMintable?.claim, FEATURE_NFT_CLAIMABLE)
       .conditions;
   }
 
@@ -635,7 +635,7 @@ export class Erc721<
    * ```
    */
   get revealer() {
-    return assertEnabled(this.droppable?.revealer, FEATURE_NFT_REVEALABLE);
+    return assertEnabled(this.lazyMintable?.revealer, FEATURE_NFT_REVEALABLE);
   }
 
   /** ******************************
@@ -706,14 +706,14 @@ export class Erc721<
     return undefined;
   }
 
-  private detectErc721Droppable(): Erc721Droppable | undefined {
+  private detectErc721LazyMintable(): Erc721LazyMintable | undefined {
     if (
       detectContractFeature<BaseDropERC721>(
         this.contractWrapper,
-        "ERC721Droppable",
+        "ERC721LazyMintable",
       )
     ) {
-      return new Erc721Droppable(this, this.contractWrapper, this.storage);
+      return new Erc721LazyMintable(this, this.contractWrapper, this.storage);
     }
     return undefined;
   }

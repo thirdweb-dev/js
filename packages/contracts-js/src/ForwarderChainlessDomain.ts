@@ -24,7 +24,7 @@ import type {
   utils,
 } from "ethers";
 
-export declare namespace Forwarder {
+export declare namespace ForwarderChainlessDomain {
   export type ForwardRequestStruct = {
     from: string;
     to: string;
@@ -32,6 +32,7 @@ export declare namespace Forwarder {
     gas: BigNumberish;
     nonce: BigNumberish;
     data: BytesLike;
+    chainid: BigNumberish;
   };
 
   export type ForwardRequestStructOutput = [
@@ -40,7 +41,8 @@ export declare namespace Forwarder {
     BigNumber,
     BigNumber,
     BigNumber,
-    string
+    string,
+    BigNumber
   ] & {
     from: string;
     to: string;
@@ -48,14 +50,15 @@ export declare namespace Forwarder {
     gas: BigNumber;
     nonce: BigNumber;
     data: string;
+    chainid: BigNumber;
   };
 }
 
-export interface ForwarderInterface extends utils.Interface {
+export interface ForwarderChainlessDomainInterface extends utils.Interface {
   functions: {
-    "execute((address,address,uint256,uint256,uint256,bytes),bytes)": FunctionFragment;
+    "execute((address,address,uint256,uint256,uint256,bytes,uint256),bytes)": FunctionFragment;
     "getNonce(address)": FunctionFragment;
-    "verify((address,address,uint256,uint256,uint256,bytes),bytes)": FunctionFragment;
+    "verify((address,address,uint256,uint256,uint256,bytes,uint256),bytes)": FunctionFragment;
   };
 
   getFunction(
@@ -64,12 +67,12 @@ export interface ForwarderInterface extends utils.Interface {
 
   encodeFunctionData(
     functionFragment: "execute",
-    values: [Forwarder.ForwardRequestStruct, BytesLike]
+    values: [ForwarderChainlessDomain.ForwardRequestStruct, BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "getNonce", values: [string]): string;
   encodeFunctionData(
     functionFragment: "verify",
-    values: [Forwarder.ForwardRequestStruct, BytesLike]
+    values: [ForwarderChainlessDomain.ForwardRequestStruct, BytesLike]
   ): string;
 
   decodeFunctionResult(functionFragment: "execute", data: BytesLike): Result;
@@ -79,12 +82,12 @@ export interface ForwarderInterface extends utils.Interface {
   events: {};
 }
 
-export interface Forwarder extends BaseContract {
+export interface ForwarderChainlessDomain extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: ForwarderInterface;
+  interface: ForwarderChainlessDomainInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -107,7 +110,7 @@ export interface Forwarder extends BaseContract {
 
   functions: {
     execute(
-      req: Forwarder.ForwardRequestStruct,
+      req: ForwarderChainlessDomain.ForwardRequestStruct,
       signature: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -115,14 +118,14 @@ export interface Forwarder extends BaseContract {
     getNonce(from: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     verify(
-      req: Forwarder.ForwardRequestStruct,
+      req: ForwarderChainlessDomain.ForwardRequestStruct,
       signature: BytesLike,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
   };
 
   execute(
-    req: Forwarder.ForwardRequestStruct,
+    req: ForwarderChainlessDomain.ForwardRequestStruct,
     signature: BytesLike,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -130,14 +133,14 @@ export interface Forwarder extends BaseContract {
   getNonce(from: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   verify(
-    req: Forwarder.ForwardRequestStruct,
+    req: ForwarderChainlessDomain.ForwardRequestStruct,
     signature: BytesLike,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   callStatic: {
     execute(
-      req: Forwarder.ForwardRequestStruct,
+      req: ForwarderChainlessDomain.ForwardRequestStruct,
       signature: BytesLike,
       overrides?: CallOverrides
     ): Promise<[boolean, string]>;
@@ -145,7 +148,7 @@ export interface Forwarder extends BaseContract {
     getNonce(from: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     verify(
-      req: Forwarder.ForwardRequestStruct,
+      req: ForwarderChainlessDomain.ForwardRequestStruct,
       signature: BytesLike,
       overrides?: CallOverrides
     ): Promise<boolean>;
@@ -155,7 +158,7 @@ export interface Forwarder extends BaseContract {
 
   estimateGas: {
     execute(
-      req: Forwarder.ForwardRequestStruct,
+      req: ForwarderChainlessDomain.ForwardRequestStruct,
       signature: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -163,7 +166,7 @@ export interface Forwarder extends BaseContract {
     getNonce(from: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     verify(
-      req: Forwarder.ForwardRequestStruct,
+      req: ForwarderChainlessDomain.ForwardRequestStruct,
       signature: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -171,7 +174,7 @@ export interface Forwarder extends BaseContract {
 
   populateTransaction: {
     execute(
-      req: Forwarder.ForwardRequestStruct,
+      req: ForwarderChainlessDomain.ForwardRequestStruct,
       signature: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
@@ -182,7 +185,7 @@ export interface Forwarder extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     verify(
-      req: Forwarder.ForwardRequestStruct,
+      req: ForwarderChainlessDomain.ForwardRequestStruct,
       signature: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;

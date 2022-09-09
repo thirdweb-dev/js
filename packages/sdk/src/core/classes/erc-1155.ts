@@ -10,12 +10,13 @@ import {
   FEATURE_EDITION_BATCH_MINTABLE,
   FEATURE_EDITION_BURNABLE,
   FEATURE_EDITION_CLAIMABLE,
-  FEATURE_EDITION_DROPPABLE,
+  FEATURE_EDITION_LAZY_MINTABLE,
   FEATURE_EDITION_ENUMERABLE,
   FEATURE_EDITION_MINTABLE,
   FEATURE_EDITION_REVEALABLE,
   FEATURE_EDITION_SIGNATURE_MINTABLE,
 } from "../../constants/erc1155-features";
+import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 import { NFTMetadata, NFTMetadataOrUri } from "../../schema/tokens/common";
 import {
   EditionMetadata,
@@ -29,7 +30,6 @@ import {
   UploadProgressEvent,
 } from "../../types";
 import { AirdropInput } from "../../types/airdrop/airdrop";
-import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 import {
   BaseDropERC1155,
   BaseERC1155,
@@ -45,8 +45,8 @@ import {
 import { TransactionTask } from "./TransactionTask";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc1155Burnable } from "./erc-1155-burnable";
-import { Erc1155Droppable } from "./erc-1155-droppable";
 import { Erc1155Enumerable } from "./erc-1155-enumerable";
+import { Erc1155LazyMintable } from "./erc-1155-lazymintable";
 import { Erc1155Mintable } from "./erc-1155-mintable";
 import { Erc1155SignatureMintable } from "./erc-1155-signature-mintable";
 import {
@@ -79,8 +79,9 @@ export class Erc1155<
   private query: Erc1155Enumerable | undefined;
   private mintable: Erc1155Mintable | undefined;
   private burnable: Erc1155Burnable | undefined;
-  private droppable: Erc1155Droppable | undefined;
+  private lazyMintable: Erc1155LazyMintable | undefined;
   private signatureMintable: Erc1155SignatureMintable | undefined;
+
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
 
@@ -90,7 +91,7 @@ export class Erc1155<
     this.query = this.detectErc1155Enumerable();
     this.mintable = this.detectErc1155Mintable();
     this.burnable = this.detectErc1155Burnable();
-    this.droppable = this.detectErc1155Droppable();
+    this.lazyMintable = this.detectErc1155LazyMintable();
     this.signatureMintable = this.detectErc1155SignatureMintable();
   }
 
@@ -739,10 +740,10 @@ export class Erc1155<
       onProgress: (event: UploadProgressEvent) => void;
     },
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
-    return assertEnabled(this.droppable, FEATURE_EDITION_DROPPABLE).lazyMint(
-      metadatas,
-      options,
-    );
+    return assertEnabled(
+      this.lazyMintable,
+      FEATURE_EDITION_LAZY_MINTABLE,
+    ).lazyMint(metadatas, options);
   }
 
   ////// ERC1155 Claimable Extension //////
@@ -764,7 +765,7 @@ export class Erc1155<
     claimData?: ClaimVerification,
   ): Promise<TransactionTask> {
     return assertEnabled(
-      this.droppable?.claim,
+      this.lazyMintable?.claim,
       FEATURE_EDITION_CLAIMABLE,
     ).getClaimTransaction(
       destinationAddress,
@@ -842,13 +843,10 @@ export class Erc1155<
     checkERC20Allowance = true,
     claimData?: ClaimVerification,
   ): Promise<TransactionResult> {
-    return assertEnabled(this.droppable?.claim, FEATURE_EDITION_CLAIMABLE).to(
-      destinationAddress,
-      tokenId,
-      quantity,
-      checkERC20Allowance,
-      claimData,
-    );
+    return assertEnabled(
+      this.lazyMintable?.claim,
+      FEATURE_EDITION_CLAIMABLE,
+    ).to(destinationAddress, tokenId, quantity, checkERC20Allowance, claimData);
   }
 
   /**
@@ -874,7 +872,7 @@ export class Erc1155<
    * ```
    */
   get claimConditions() {
-    return assertEnabled(this.droppable?.claim, FEATURE_EDITION_CLAIMABLE)
+    return assertEnabled(this.lazyMintable?.claim, FEATURE_EDITION_CLAIMABLE)
       .conditions;
   }
 
@@ -935,7 +933,10 @@ export class Erc1155<
    * ```
    */
   get revealer() {
-    return assertEnabled(this.droppable?.revealer, FEATURE_EDITION_REVEALABLE);
+    return assertEnabled(
+      this.lazyMintable?.revealer,
+      FEATURE_EDITION_REVEALABLE,
+    );
   }
 
   /** ******************************
@@ -990,14 +991,14 @@ export class Erc1155<
     return undefined;
   }
 
-  private detectErc1155Droppable(): Erc1155Droppable | undefined {
+  private detectErc1155LazyMintable(): Erc1155LazyMintable | undefined {
     if (
       detectContractFeature<BaseDropERC1155>(
         this.contractWrapper,
-        "ERC1155Droppable",
+        "ERC1155LazyMintable",
       )
     ) {
-      return new Erc1155Droppable(this, this.contractWrapper, this.storage);
+      return new Erc1155LazyMintable(this, this.contractWrapper, this.storage);
     }
     return undefined;
   }
