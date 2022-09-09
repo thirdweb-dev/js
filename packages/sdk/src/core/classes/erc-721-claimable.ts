@@ -4,7 +4,7 @@ import {
 } from "../../constants/erc721-features";
 import { NFTMetadataOwner } from "../../schema";
 import { CustomContractSchema } from "../../schema/contracts/custom";
-import { ClaimVerification } from "../../types";
+import { ClaimOptions, ClaimVerification } from "../../types";
 import { BaseClaimConditionERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
@@ -82,27 +82,22 @@ export class Erc721Claimable implements DetectableFeature {
    * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
    * @param destinationAddress
    * @param quantity
-   * @param checkERC20Allowance
-   * @param claimData
+   * @param options
    */
   public async getClaimTransaction(
     destinationAddress: string,
     quantity: BigNumberish,
-    checkERC20Allowance = true, // TODO split up allowance checks
-    claimData?: ClaimVerification,
+    options?: ClaimOptions,
   ): Promise<TransactionTask> {
-    let claimVerification = claimData;
-    if (this.conditions && !claimData) {
-      claimVerification = await this.conditions.prepareClaim(
-        quantity,
-        checkERC20Allowance,
-      );
-    }
-    if (!claimVerification) {
+    if (options?.pricePerToken) {
       throw new Error(
-        "Claim verification Data is required - either pass it in as 'claimData' or set claim conditions via 'conditions.set()'",
+        "In ERC721ClaimableWithConditions, price per token is be set via claim conditions by calling `contract.erc721.claimConditions.set()`",
       );
     }
+    const claimVerification = await this.conditions.prepareClaim(
+      quantity,
+      options?.checkERC20Allowance || true,
+    );
     return TransactionTask.make({
       contractWrapper: this.contractWrapper,
       functionName: "claim",
@@ -139,21 +134,17 @@ export class Erc721Claimable implements DetectableFeature {
    *
    * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
-   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
-   * @param claimData - Optional claim verification data (e.g. price, allowlist proof, etc...)
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   public async to(
     destinationAddress: string,
     quantity: BigNumberish,
-    checkERC20Allowance = true,
-    claimData?: ClaimVerification,
+    options?: ClaimOptions,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
     const task = await this.getClaimTransaction(
       destinationAddress,
       quantity,
-      checkERC20Allowance,
-      claimData,
+      options,
     );
     const { receipt } = await task.execute();
     const event = this.contractWrapper.parseLogs<TokensClaimedEvent>(

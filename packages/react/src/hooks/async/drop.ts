@@ -209,7 +209,7 @@ export function useClaimNFT<TContract extends DropContract>(
         return contract.claimTo(
           data.to,
           data.quantity,
-          data.checkERC20Allowance,
+          data.options,
         ) as ClaimNFTReturnType<TContract>;
       }
       invariant(false, "contract is not an Erc721 or Erc1155");

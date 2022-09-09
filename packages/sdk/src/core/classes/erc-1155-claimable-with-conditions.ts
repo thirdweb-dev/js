@@ -56,8 +56,6 @@ export class Erc1155ClaimableWithConditions implements DetectableFeature {
    * @param destinationAddress - Address you want to send the token to
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
-   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
-   * @param claimData - Optional claim verification data (e.g. price, allowlist proof, etc...)
    */
   public async getClaimTransaction(
     destinationAddress: string,
@@ -112,7 +110,6 @@ export class Erc1155ClaimableWithConditions implements DetectableFeature {
    * @param destinationAddress - Address you want to send the token to
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
-   * @param options - Optional claim verification data (e.g. price, currency, etc...)
    *
    * @returns - Receipt for the transaction
    */

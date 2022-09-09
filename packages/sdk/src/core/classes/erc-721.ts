@@ -23,6 +23,7 @@ import {
 } from "../../schema/tokens/common";
 import { BaseDropERC721, BaseERC721 } from "../../types/eips";
 import {
+  ClaimOptions,
   ClaimVerification,
   QueryAllParams,
   UploadProgressEvent,
@@ -471,22 +472,15 @@ export class Erc721<
    * const claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata
    * ```
    *
-   * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
-   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
-  public async claim(
-    quantity: BigNumberish,
-    checkERC20Allowance = true,
-    claimData?: ClaimVerification,
-  ) {
+  public async claim(quantity: BigNumberish, options?: ClaimOptions) {
     return this.claimTo(
       await this.contractWrapper.getSignerAddress(),
       quantity,
-      checkERC20Allowance,
-      claimData,
+      options,
     );
   }
 
@@ -508,20 +502,18 @@ export class Erc721<
    *
    * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
-   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   public async claimTo(
     destinationAddress: string,
     quantity: BigNumberish,
-    checkERC20Allowance = true,
-    claimData?: ClaimVerification,
+    options?: ClaimOptions,
   ) {
     return assertEnabled(
       this.lazyMintable?.claim,
       FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS,
-    ).to(destinationAddress, quantity, checkERC20Allowance, claimData);
+    ).to(destinationAddress, quantity, options);
   }
 
   /**
@@ -529,24 +521,16 @@ export class Erc721<
    * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
    * @param destinationAddress
    * @param quantity
-   * @param checkERC20Allowance
-   * @param claimData
    */
   public async getClaimTransaction(
     destinationAddress: string,
     quantity: BigNumberish,
-    checkERC20Allowance = true,
-    claimData?: ClaimVerification,
+    options?: ClaimOptions,
   ) {
     return assertEnabled(
       this.lazyMintable?.claim,
       FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS,
-    ).getClaimTransaction(
-      destinationAddress,
-      quantity,
-      checkERC20Allowance,
-      claimData,
-    );
+    ).getClaimTransaction(destinationAddress, quantity, options);
   }
 
   /**

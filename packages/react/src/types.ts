@@ -222,7 +222,7 @@ export type ClaimNFTParams<TContract extends DropContract> =
     : {
         to: WalletAddress;
         quantity: BigNumberish;
-        checkERC20Allowance?: boolean;
+        options?: ClaimOptions;
       };
 
 /**
