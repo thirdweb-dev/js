@@ -10,7 +10,7 @@ import {
   FEATURE_TOKEN_BATCH_MINTABLE,
   FEATURE_TOKEN_BURNABLE,
   FEATURE_TOKEN_SIGNATURE_MINTABLE,
-  FEATURE_TOKEN_CLAIMABLE,
+  FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS,
 } from "../../constants/erc20-features";
 import { TokenMintInput, AmountSchema } from "../../schema";
 import {
@@ -495,12 +495,10 @@ export class Erc20<
     checkERC20Allowance = true,
     claimData?: ClaimVerification,
   ): Promise<TransactionResult> {
-    return assertEnabled(this.droppable?.claim, FEATURE_TOKEN_CLAIMABLE).to(
-      destinationAddress,
-      amount,
-      checkERC20Allowance,
-      claimData,
-    );
+    return assertEnabled(
+      this.droppable?.claim,
+      FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS,
+    ).to(destinationAddress, amount, checkERC20Allowance, claimData);
   }
 
   /**
@@ -526,8 +524,10 @@ export class Erc20<
    * ```
    */
   get claimConditions() {
-    return assertEnabled(this.droppable?.claim, FEATURE_TOKEN_CLAIMABLE)
-      .conditions;
+    return assertEnabled(
+      this.droppable?.claim,
+      FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS,
+    ).conditions;
   }
 
   ////// ERC20 SignatureMint Extension //////
