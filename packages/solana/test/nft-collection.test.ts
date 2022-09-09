@@ -5,7 +5,6 @@ import { expect } from "chai";
 
 describe("NFTCollection", async () => {
   let collection: NFTCollection;
-  let mint: string;
 
   before(async () => {
     const addr = await sdk.deployer.createNftCollection({
@@ -17,7 +16,7 @@ describe("NFTCollection", async () => {
   });
 
   it("should mint an NFT", async () => {
-    mint = await collection.mint({
+    const mint = await collection.mint({
       name: "Test NFT",
       description: "Test Description",
     });
@@ -58,9 +57,14 @@ describe("NFTCollection", async () => {
   });
 
   it("should mint additional supply", async () => {
-    const balance = await collection.balance(mint);
-    await collection.mintAdditionalSupply(mint);
-    const balance2 = await collection.balance(mint);
-    expect(balance2).to.equal(balance + 1n);
+    const mint = await collection.mint({
+      name: "Test NFT",
+      description: "Test Description",
+    });
+    const printed = await collection.mintAdditionalSupply(mint);
+    let balance = await collection.balance(mint);
+    expect(balance).to.equal(1n);
+    balance = await collection.balance(printed);
+    expect(balance).to.equal(1n);
   });
 });
