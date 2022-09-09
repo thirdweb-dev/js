@@ -203,18 +203,13 @@ export function useClaimNFT<TContract extends DropContract>(
       if (contract instanceof Erc1155) {
         invariant("tokenId" in data, "tokenId not provided");
         const { to, tokenId, quantity } = data;
-        return contract.claimTo(
-          to,
-          tokenId,
-          quantity,
-          data.checkERC20Allowance,
-        );
+        return contract.claimTo(to, tokenId, quantity, data.options);
       }
       if (contract instanceof Erc721) {
         return contract.claimTo(
           data.to,
           data.quantity,
-          data.checkERC20Allowance,
+          data.options,
         ) as ClaimNFTReturnType<TContract>;
       }
       invariant(false, "contract is not an Erc721 or Erc1155");
@@ -350,7 +345,7 @@ export function useRevealLazyMint<TContract extends RevealableContract>(
       invariant(contract, "contract is undefined");
       const { erc721, erc1155 } = getErcs(contract);
       if (erc721) {
-        return await erc721.revealer.reveal(data.batchId, data.password)
+        return await erc721.revealer.reveal(data.batchId, data.password);
       }
       if (erc1155) {
         return await erc1155.revealer.reveal(data.batchId, data.password);

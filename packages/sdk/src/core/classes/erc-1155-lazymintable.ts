@@ -19,8 +19,9 @@ import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { DelayedReveal } from "./delayed-reveal";
 import { Erc1155 } from "./erc-1155";
-import { Erc1155Claimable } from "./erc-1155-claimable";
-import { TokenERC721 } from "@thirdweb-dev/contracts-js";
+import { ERC1155Claimable } from "./erc-1155-claimable";
+import { Erc1155ClaimableWithConditions } from "./erc-1155-claimable-with-conditions";
+import { IClaimableERC1155, TokenERC721 } from "@thirdweb-dev/contracts-js";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
 import { IStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -68,10 +69,11 @@ export class Erc1155LazyMintable implements DetectableFeature {
    * ```javascript
    * const quantity = 10;
    * const tokenId = 0;
-   * await contract.edition.drop.claim.to("0x...", 0, quantity);
+   * await contract.erc1155.claimTo("0x...", 0, quantity);
    * ```
    */
-  public claim: Erc1155Claimable | undefined;
+  public claimWithConditions: Erc1155ClaimableWithConditions | undefined;
+  public claim: ERC1155Claimable | undefined;
 
   private contractWrapper: ContractWrapper<BaseDropERC1155>;
   private erc1155: Erc1155;
@@ -87,6 +89,7 @@ export class Erc1155LazyMintable implements DetectableFeature {
 
     this.storage = storage;
     this.claim = this.detectErc1155Claimable();
+    this.claimWithConditions = this.detectErc1155ClaimableWithConditions();
     this.revealer = this.detectErc721Revealable();
   }
 
@@ -108,7 +111,7 @@ export class Erc1155LazyMintable implements DetectableFeature {
    *   image: fs.readFileSync("path/to/image.png"),
    * }];
    *
-   * const results = await contract.edition.drop.lazyMint(metadatas); // uploads and creates the NFTs on chain
+   * const results = await contract.erc1155.lazyMint(metadatas); // uploads and creates the NFTs on chain
    * const firstTokenId = results[0].id; // token id of the first created NFT
    * const firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT
    * ```
@@ -178,14 +181,32 @@ export class Erc1155LazyMintable implements DetectableFeature {
    * PRIVATE FUNCTIONS
    *******************************/
 
-  private detectErc1155Claimable(): Erc1155Claimable | undefined {
+  private detectErc1155Claimable(): ERC1155Claimable | undefined {
+    if (
+      detectContractFeature<IClaimableERC1155>(
+        this.contractWrapper,
+        "ERC1155Claimable",
+      ) &&
+      !hasFunction("setClaimConditions", this.contractWrapper)
+    ) {
+      return new ERC1155Claimable(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectErc1155ClaimableWithConditions():
+    | Erc1155ClaimableWithConditions
+    | undefined {
     if (
       detectContractFeature<BaseClaimConditionERC1155>(
         this.contractWrapper,
         "ERC1155ClaimableWithConditions",
       )
     ) {
-      return new Erc1155Claimable(this.contractWrapper, this.storage);
+      return new Erc1155ClaimableWithConditions(
+        this.contractWrapper,
+        this.storage,
+      );
     }
     return undefined;
   }

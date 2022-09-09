@@ -28,7 +28,7 @@ import {
   NFTMetadataOrUri,
   NFTMetadataOwner,
 } from "../schema/tokens/common";
-import { UploadProgressEvent } from "../types";
+import { ClaimOptions, UploadProgressEvent } from "../types";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
 import { SignatureDrop as SignatureDropContract } from "@thirdweb-dev/contracts-js";
 import ABI from "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop.json";
@@ -402,12 +402,12 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   public async getClaimTransaction(
     destinationAddress: string,
     quantity: BigNumberish,
-    checkERC20Allowance = true, // TODO split up allowance checks
+    options?: ClaimOptions,
   ): Promise<TransactionTask> {
     return this.erc721.getClaimTransaction(
       destinationAddress,
       quantity,
-      checkERC20Allowance,
+      options,
     );
   }
 
@@ -436,13 +436,9 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   public async claimTo(
     destinationAddress: string,
     quantity: BigNumberish,
-    checkERC20Allowance = true,
+    options?: ClaimOptions,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    return this.erc721.claimTo(
-      destinationAddress,
-      quantity,
-      checkERC20Allowance,
-    );
+    return this.erc721.claimTo(destinationAddress, quantity, options);
   }
 
   /**
@@ -454,9 +450,9 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    */
   public async claim(
     quantity: BigNumberish,
-    checkERC20Allowance = true,
+    options?: ClaimOptions,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    return this.erc721.claim(quantity, checkERC20Allowance);
+    return this.erc721.claim(quantity, options);
   }
 
   /**
