@@ -1,5 +1,11 @@
+import {
+  TSDocParser,
+  DocExcerpt,
+  TSDocConfiguration,
+  TSDocTagSyntaxKind,
+  TSDocTagDefinition,
+} from "@microsoft/tsdoc";
 import fs from "fs";
-import { TSDocParser, DocExcerpt } from "@microsoft/tsdoc";
 
 /**
  * This is a simplistic solution until we implement proper DocNode rendering APIs.
@@ -27,7 +33,15 @@ export class Formatter {
   }
 }
 
-const tsdocParser = new TSDocParser();
+const config = new TSDocConfiguration();
+const tag = new TSDocTagDefinition({
+  tagName: "@twfeature",
+  allowMultiple: true,
+  syntaxKind: TSDocTagSyntaxKind.BlockTag,
+});
+config.addTagDefinition(tag);
+config.setSupportForTag(tag, true);
+const tsdocParser = new TSDocParser(config);
 
 const json = JSON.parse(
   fs.readFileSync(`${process.cwd()}/temp/sdk.api.json`, "utf8"),
@@ -52,6 +66,7 @@ const classes = json.members[0].members.filter(
     m.kind === "Class" &&
     m.excerptTokens.filter((t) => t.text === "DetectableFeature").length > 0,
 );
+const features = {};
 
 function parseExampleTag(docComment) {
   const exampleBlocks = docComment._customBlocks.filter(
@@ -76,6 +91,14 @@ function parseExampleTag(docComment) {
   return examples;
 }
 
+function parseTWFeatureTag(docComment) {
+  const exampleBlocks = docComment._customBlocks.filter(
+    (b) => b._blockTag._tagName === "@twfeature",
+  );
+  const examplesString = Formatter.renderDocNodes(exampleBlocks);
+  return examplesString.split("\n").filter(Boolean)[1];
+}
+
 const baseDocUrl = "https://docs.thirdweb.com/typescript/sdk.";
 
 const extractReferenceLink = (m, kind, contractName) => {
@@ -85,9 +108,9 @@ const extractReferenceLink = (m, kind, contractName) => {
       .map((e) => `${baseDocUrl}${e.text.toLowerCase()}`)[0];
   }
   if (kind === "Method") {
-    return `${baseDocUrl}${contractName}.${m.name}`;
+    return `${baseDocUrl}${contractName}.${m.name}`.toLowerCase();
   }
-  return `${baseDocUrl}${m.name}`;
+  return `${baseDocUrl}${m.name}`.toLowerCase();
 };
 
 const parseMembers = (members, kind, contractName) => {
@@ -96,52 +119,36 @@ const parseMembers = (members, kind, contractName) => {
     .map((m) => {
       const parserContext = tsdocParser.parseString(m.docComment);
       const docComment = parserContext.docComment;
-      const examples = parseExampleTag(docComment);
-      if (Object.keys(examples).length > 0) {
-        return {
-          name: m.name,
-          summary: Formatter.renderDocNode(docComment.summarySection),
-          remarks: docComment.remarksBlock
-            ? Formatter.renderDocNode(docComment.remarksBlock.content)
-            : null,
-          examples,
-          reference: {
-            javascript: extractReferenceLink(m, kind, contractName),
-          },
-        };
+      const feature = parseTWFeatureTag(docComment);
+      if (feature) {
+        const examples = parseExampleTag(docComment);
+        if (Object.keys(examples).length > 0) {
+          const example = {
+            name: m.name,
+            summary: Formatter.renderDocNode(docComment.summarySection),
+            remarks: docComment.remarksBlock
+              ? Formatter.renderDocNode(docComment.remarksBlock.content)
+              : null,
+            examples,
+            reference: {
+              javascript: extractReferenceLink(m, kind, contractName),
+            },
+          };
+          features[feature] = features[feature]
+            ? features[feature].concat(example)
+            : [example];
+        }
       }
-      return null;
     })
     .filter((m) => !!m);
 };
 
-const moduleMap = classes.reduce((acc, m) => {
-  const parserContext = tsdocParser.parseString(m.docComment);
-  const docComment = parserContext.docComment;
-  const examples = parseExampleTag(docComment);
-  // if (Object.keys(examples).length > 0) {
-  const featureName = m.members
-    .filter((m) => m.kind === "Property" && m.name === "featureName")
-    .map((m) => m.excerptTokens[1].text.replace('"', "").replace('"', ""))[0];
-  acc[featureName] = {
-    name: m.name,
-    summary: Formatter.renderDocNode(docComment.summarySection),
-    remarks: docComment.remarksBlock
-      ? Formatter.renderDocNode(docComment.remarksBlock.content)
-      : null,
-    examples,
-    methods: parseMembers(m.members, "Method", m.name),
-    properties: parseMembers(m.members, "Property", m.name),
-    reference: {
-      javascript: extractReferenceLink(m),
-    },
-  };
-  // }
-
-  return acc;
-}, {});
+classes.forEach((m) => {
+  parseMembers(m.members, "Property", m.name);
+  parseMembers(m.members, "Method", m.name);
+});
 
 fs.writeFileSync(
   `${process.cwd()}/docs/feature_snippets.json`,
-  JSON.stringify(moduleMap, null, 2),
+  JSON.stringify(features, null, 2),
 );

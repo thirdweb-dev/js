@@ -26,7 +26,6 @@ import {
 import { BaseDropERC721, BaseERC721 } from "../../types/eips";
 import {
   ClaimOptions,
-  ClaimVerification,
   QueryAllParams,
   UploadProgressEvent,
 } from "../../types/index";
@@ -62,7 +61,7 @@ import { BigNumber, BigNumberish, constants } from "ethers";
  * @example
  * ```javascript
  * const contract = await sdk.getContract("{{contract_address}}");
- * await contract.nft.transfer(walletAddress, tokenId);
+ * await contract.erc721.transfer(walletAddress, tokenId);
  * ```
  * @public
  */
@@ -113,10 +112,11 @@ export class Erc721<
    * @example
    * ```javascript
    * const tokenId = 0;
-   * const nft = await contract.nft.get(tokenId);
+   * const nft = await contract.erc721.get(tokenId);
    * ```
    * @param tokenId - the tokenId of the NFT to retrieve
    * @returns The NFT metadata
+   * @twfeature ERC721
    */
   public async get(tokenId: BigNumberish): Promise<NFTMetadataOwner> {
     const [owner, metadata] = await Promise.all([
@@ -131,6 +131,7 @@ export class Erc721<
    *
    * @param tokenId - the tokenId of the NFT
    * @returns the address of the owner
+   * @twfeature ERC721
    */
   public async ownerOf(tokenId: BigNumberish): Promise<string> {
     return await this.contractWrapper.readContract.ownerOf(tokenId);
@@ -144,9 +145,10 @@ export class Erc721<
    * @example
    * ```javascript
    * const walletAddress = "{{wallet_address}}";
-   * const balance = await contract.nft.balanceOf(walletAddress);
+   * const balance = await contract.erc721.balanceOf(walletAddress);
    * console.log(balance);
    * ```
+   * @twfeature ERC721
    */
   public async balanceOf(address: string): Promise<BigNumber> {
     return await this.contractWrapper.readContract.balanceOf(address);
@@ -180,8 +182,9 @@ export class Erc721<
    * ```javascript
    * const walletAddress = "{{wallet_address}}";
    * const tokenId = 0;
-   * await contract.nft.transfer(walletAddress, tokenId);
+   * await contract.erc721.transfer(walletAddress, tokenId);
    * ```
+   * @twfeature ERC721
    */
   public async transfer(
     to: string,
@@ -245,11 +248,12 @@ export class Erc721<
    *
    * @example
    * ```javascript
-   * const nfts = await contract.nft.getAll();
+   * const nfts = await contract.erc721.getAll();
    * console.log(nfts);
    * ```
    * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs queried.
+   * @twfeature ERC721Supply
    */
   public async getAll(queryParams?: QueryAllParams) {
     return assertEnabled(this.query, FEATURE_NFT_SUPPLY).all(queryParams);
@@ -287,11 +291,12 @@ export class Erc721<
    * ```javascript
    * // Address of the wallet to get the NFTs of
    * const address = "{{wallet_address}}";
-   * const nfts = await contract.nft.getOwned(address);
+   * const nfts = await contract.erc721.getOwned(address);
    * console.log(nfts);
    * ```
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
    * @returns The NFT metadata for all NFTs in the contract.
+   * @twfeature ERC721Enumerable
    */
   public async getOwned(walletAddress?: string) {
     return assertEnabled(this.query?.owned, FEATURE_NFT_SUPPLY).all(
@@ -314,10 +319,10 @@ export class Erc721<
   /**
    * Mint a unique NFT
    *
-   * @remarks Mint a unique NFT to a specified wallet.
+   * @remarks Mint a unique NFT to the connected wallet.
    *
    * @example
-   * ```javascript*
+   * ```javascript
    * // Custom metadata of the NFT, note that you can fully customize this metadata with other properties.
    * const metadata = {
    *   name: "Cool NFT",
@@ -325,11 +330,12 @@ export class Erc721<
    *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
    * };
    *
-   * const tx = await contract.nft.mint(metadata);
+   * const tx = await contract.erc721.mint(metadata);
    * const receipt = tx.receipt; // the transaction receipt
    * const tokenId = tx.id; // the id of the NFT minted
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
+   * @twfeature ERC721Mintable
    */
   public async mint(metadata: NFTMetadataOrUri) {
     return this.mintTo(await this.contractWrapper.getSignerAddress(), metadata);
@@ -352,11 +358,12 @@ export class Erc721<
    *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
    * };
    *
-   * const tx = await contract.nft.mintTo(walletAddress, metadata);
+   * const tx = await contract.erc721.mintTo(walletAddress, metadata);
    * const receipt = tx.receipt; // the transaction receipt
    * const tokenId = tx.id; // the id of the NFT minted
    * const nft = await tx.data(); // (optional) fetch details of minted NFT
    * ```
+   * @twfeature ERC721Mintable
    */
   public async mintTo(receiver: string, metadata: NFTMetadataOrUri) {
     return assertEnabled(this.mintable, FEATURE_NFT_MINTABLE).to(
@@ -385,11 +392,12 @@ export class Erc721<
    *   image: fs.readFileSync("path/to/other/image.png"),
    * }];
    *
-   * const tx = await contract.nft.mintBatch(metadatas);
+   * const tx = await contract.erc721.mintBatch(metadatas);
    * const receipt = tx[0].receipt; // same transaction receipt for all minted NFTs
    * const firstTokenId = tx[0].id; // token id of the first minted NFT
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
+   * @twfeature ERC721BatchMintable
    */
   public async mintBatch(metadatas: NFTMetadataOrUri[]) {
     return this.mintBatchTo(
@@ -419,11 +427,12 @@ export class Erc721<
    *   image: fs.readFileSync("path/to/other/image.png"),
    * }];
    *
-   * const tx = await contract.nft.mintBatchTo(walletAddress, metadatas);
+   * const tx = await contract.erc721.mintBatchTo(walletAddress, metadatas);
    * const receipt = tx[0].receipt; // same transaction receipt for all minted NFTs
    * const firstTokenId = tx[0].id; // token id of the first minted NFT
    * const firstNFT = await tx[0].data(); // (optional) fetch details of the first minted NFT
    * ```
+   * @twfeature ERC721BatchMintable
    */
   public async mintBatchTo(receiver: string, metadatas: NFTMetadataOrUri[]) {
     return assertEnabled(this.mintable?.batch, FEATURE_NFT_BATCH_MINTABLE).to(
@@ -440,8 +449,9 @@ export class Erc721<
    *
    * @example
    * ```javascript
-   * const result = await contract.nft.burn(tokenId);
+   * const result = await contract.erc721.burn(tokenId);
    * ```
+   * @twfeature ERC721Burnable
    */
   public async burn(tokenId: BigNumberish) {
     return assertEnabled(this.burnable, FEATURE_NFT_BURNABLE).token(tokenId);
@@ -449,6 +459,33 @@ export class Erc721<
 
   ////// ERC721 LazyMint Extension //////
 
+  /**
+   * Create a batch of unique NFTs to be claimed in the future
+   *
+   * @remarks Create batch allows you to create a batch of many unique NFTs in one transaction.
+   *
+   * @example
+   * ```javascript
+   * // Custom metadata of the NFTs to create
+   * const metadatas = [{
+   *   name: "Cool NFT",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   * }, {
+   *   name: "Cool NFT",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/image.png"),
+   * }];
+   *
+   * const results = await contract.erc721.lazyMint(metadatas); // uploads and creates the NFTs on chain
+   * const firstTokenId = results[0].id; // token id of the first created NFT
+   * const firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT
+   * ```
+   *
+   * @param metadatas - The metadata to include in the batch.
+   * @param options - optional upload progress callback
+   * @twfeature ERC721LazyMint
+   */
   public async lazyMint(
     metadatas: NFTMetadataOrUri[],
     options?: {
@@ -472,7 +509,7 @@ export class Erc721<
    * ```javascript
    * const quantity = 1; // how many unique NFTs you want to claim
    *
-   * const tx = await contract.nft.claim(quantity);
+   * const tx = await contract.erc721.claim(quantity);
    * const receipt = tx.receipt; // the transaction receipt
    * const claimedTokenId = tx.id; // the id of the NFT claimed
    * const claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata
@@ -481,6 +518,7 @@ export class Erc721<
    * @param quantity - Quantity of the tokens you want to claim
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
+   * @twfeature ERC721Claimable
    */
   public async claim(quantity: BigNumberish, options?: ClaimOptions) {
     return this.claimTo(
@@ -500,7 +538,7 @@ export class Erc721<
    * const address = "{{wallet_address}}"; // address of the wallet you want to claim the NFTs
    * const quantity = 1; // how many unique NFTs you want to claim
    *
-   * const tx = await contract.nft.claimTo(address, quantity);
+   * const tx = await contract.erc721.claimTo(address, quantity);
    * const receipt = tx.receipt; // the transaction receipt
    * const claimedTokenId = tx.id; // the id of the NFT claimed
    * const claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata
@@ -508,7 +546,7 @@ export class Erc721<
    *
    * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
-   *
+   * @twfeature ERC721Claimable
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   public async claimTo(
@@ -572,8 +610,9 @@ export class Erc721<
    *     price: 0.08, // public sale price
    *   }
    * ]);
-   * await contract.nft.claimConditions.set(claimConditions);
+   * await contract.erc721.claimConditions.set(claimConditions);
    * ```
+   * @twfeature ERC721ClaimableWithConditions
    */
   get claimConditions() {
     return assertEnabled(
@@ -597,6 +636,7 @@ export class Erc721<
    * const receipt = tx.receipt; // the mint transaction receipt
    * const mintedId = tx.id; // the id of the NFT minted
    * ```
+   * @twfeature ERC721SignatureMint
    */
   get signature() {
     return assertEnabled(
@@ -628,15 +668,16 @@ export class Erc721<
    *   description: "Will be revealed next week!"
    * };
    * // Create and encrypt the NFTs
-   * await contract.nft.revealer.createDelayedRevealBatch(
+   * await contract.erc721.revealer.createDelayedRevealBatch(
    *   placeholderNFT,
    *   realNFTs,
    *   "my secret password",
    * );
    * // Whenever you're ready, reveal your NFTs at any time
    * const batchId = 0; // the batch to reveal
-   * await contract.nft.revealer.reveal(batchId, "my secret password");
+   * await contract.erc721.revealer.reveal(batchId, "my secret password");
    * ```
+   * @twfeature ERC721Revealable
    */
   get revealer() {
     return assertEnabled(this.lazyMintable?.revealer, FEATURE_NFT_REVEALABLE);
