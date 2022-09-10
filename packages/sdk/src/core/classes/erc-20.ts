@@ -46,7 +46,7 @@ import { ethers, BigNumber, BigNumberish } from "ethers";
  * @example
  * ```javascript
  * const contract = await sdk.getContract("{{contract_address}}");
- * await contract.token.transfer(walletAddress, amount);
+ * await contract.erc20.transfer(walletAddress, amount);
  * ```
  * @public
  */
@@ -97,9 +97,10 @@ export class Erc20<
    *
    * @example
    * ```javascript
-   * const token = await contract.token.get();
+   * const token = await contract.erc20.get();
    * ```
    * @returns The token metadata
+   * @twfeature ERC20
    */
   public async get(): Promise<Currency> {
     return await fetchCurrencyMetadata(
@@ -115,10 +116,11 @@ export class Erc20<
    *
    * @example
    * ```javascript
-   * const balance = await contract.token.balance();
+   * const balance = await contract.erc20.balance();
    * ```
    *
    * @returns The balance of a specific wallet.
+   * @twfeature ERC20
    */
   public async balance(): Promise<CurrencyValue> {
     return await this.balanceOf(await this.contractWrapper.getSignerAddress());
@@ -133,10 +135,11 @@ export class Erc20<
    * ```javascript
    * // Address of the wallet to check token balance
    * const walletAddress = "{{wallet_address}}";
-   * const balance = await contract.token.balanceOf(walletAddress);
+   * const balance = await contract.erc20.balanceOf(walletAddress);
    * ```
    *
    * @returns The balance of a specific wallet.
+   * @twfeature ERC20
    */
   public async balanceOf(address: string): Promise<CurrencyValue> {
     return this.getValue(
@@ -149,8 +152,9 @@ export class Erc20<
    * @remarks Get how much supply has been minted
    * @example
    * ```javascript
-   * const balance = await contract.token.totalSupply();
+   * const balance = await contract.erc20.totalSupply();
    * ```
+   * @twfeature ERC20
    */
   public async totalSupply(): Promise<CurrencyValue> {
     return await this.getValue(
@@ -167,10 +171,11 @@ export class Erc20<
    * ```javascript
    * // Address of the wallet to check token allowance
    * const spenderAddress = "0x...";
-   * const allowance = await contract.token.allowance(spenderAddress);
+   * const allowance = await contract.erc20.allowance(spenderAddress);
    * ```
    *
    * @returns The allowance of one wallet over anothers funds.
+   * @twfeature ERC20
    */
   public async allowance(spender: string): Promise<CurrencyValue> {
     return await this.allowanceOf(
@@ -190,10 +195,11 @@ export class Erc20<
    * const owner = "{{wallet_address}}";
    * // Address of the wallet to check token allowance
    * const spender = "0x...";
-   * const allowance = await contract.token.allowanceOf(owner, spender);
+   * const allowance = await contract.erc20.allowanceOf(owner, spender);
    * ```
    *
    * @returns The allowance of one wallet over anothers funds.
+   * @twfeature ERC20
    */
   public async allowanceOf(
     owner: string,
@@ -215,8 +221,9 @@ export class Erc20<
    * const toAddress = "0x...";
    * // The amount of tokens you want to send
    * const amount = 0.1;
-   * await contract.token.transfer(toAddress, amount);
+   * await contract.erc20.transfer(toAddress, amount);
    * ```
+   * @twfeature ERC20
    */
   public async transfer(
     to: string,
@@ -244,8 +251,9 @@ export class Erc20<
    * // The number of tokens you want to send
    * const amount = 1.2
    * // Note that the connected wallet must have approval to transfer the tokens of the fromAddress
-   * await contract.token.transferFrom(fromAddress, toAddress, amount);
+   * await contract.erc20.transferFrom(fromAddress, toAddress, amount);
    * ```
+   * @twfeature ERC20
    */
   public async transferFrom(
     from: string,
@@ -270,8 +278,9 @@ export class Erc20<
    * const spenderAddress = "0x...";
    * // The number of tokens to give as allowance
    * const amount = 100
-   * await contract.token.setAllowance(spenderAddress, amount);
+   * await contract.erc20.setAllowance(spenderAddress, amount);
    * ```
+   * @twfeature ERC20
    */
   public async setAllowance(
     spender: string,
@@ -304,7 +313,7 @@ export class Erc20<
    *  }
    * ]
    *
-   * await contract.token.transferBatch(data);
+   * await contract.erc20.transferBatch(data);
    * ```
    */
   public async transferBatch(args: TokenMintInput[]) {
@@ -330,8 +339,9 @@ export class Erc20<
    * @example
    * ```javascript
    * const amount = "1.5"; // The amount of this token you want to mint
-   * await contract.token.mint(toAddress, amount);
+   * await contract.erc20.mint(toAddress, amount);
    * ```
+   * @twfeature ERC20Mintable
    */
   public async mint(amount: Amount): Promise<TransactionResult> {
     return this.mintTo(await this.contractWrapper.getSignerAddress(), amount);
@@ -346,8 +356,9 @@ export class Erc20<
    * ```javascript
    * const toAddress = "{{wallet_address}}"; // Address of the wallet you want to mint the tokens to
    * const amount = "1.5"; // The amount of this token you want to mint
-   * await contract.token.mintTo(toAddress, amount);
+   * await contract.erc20.mintTo(toAddress, amount);
    * ```
+   * @twfeature ERC20Mintable
    */
   public async mintTo(
     receiver: string,
@@ -382,6 +393,7 @@ export class Erc20<
    *
    * await contract.mintBatchTo(data);
    * ```
+   * @twfeature ERC20BatchMintable
    */
   public async mintBatchTo(args: TokenMintInput[]): Promise<TransactionResult> {
     return assertEnabled(this.mintable?.batch, FEATURE_TOKEN_BATCH_MINTABLE).to(
@@ -401,8 +413,9 @@ export class Erc20<
    * // The amount of this token you want to burn
    * const amount = 1.2;
    *
-   * await contract.token.burn(amount);
+   * await contract.erc20.burn(amount);
    * ```
+   * @twfeature ERC20Burnable
    */
   public async burn(amount: Amount): Promise<TransactionResult> {
     return assertEnabled(this.burnable, FEATURE_TOKEN_BURNABLE).tokens(amount);
@@ -421,8 +434,9 @@ export class Erc20<
    * // The amount of this token you want to burn
    * const amount = 1.2;
    *
-   * await contract.token.burnFrom(holderAddress, amount);
+   * await contract.erc20.burnFrom(holderAddress, amount);
    * ```
+   * @twfeature ERC20Burnable
    */
   public async burnFrom(
     holder: string,
@@ -446,7 +460,7 @@ export class Erc20<
    * const address = "{{wallet_address}}"; // address of the wallet you want to claim the NFTs
    * const quantity = 42.69; // how many tokens you want to claim
    *
-   * const tx = await contract.token.claim(address, quantity);
+   * const tx = await contract.erc20.claim(address, quantity);
    * const receipt = tx.receipt; // the transaction receipt
    * ```
    *
@@ -455,6 +469,7 @@ export class Erc20<
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    * @param claimData
    * @returns - The transaction receipt
+   * @twfeature ERC20ClaimableWithConditions
    */
   public async claim(
     amount: Amount,
@@ -479,7 +494,7 @@ export class Erc20<
    * const address = "{{wallet_address}}"; // address of the wallet you want to claim the NFTs
    * const quantity = 42.69; // how many tokens you want to claim
    *
-   * const tx = await contract.token.claim(address, quantity);
+   * const tx = await contract.erc20.claim(address, quantity);
    * const receipt = tx.receipt; // the transaction receipt
    * ```
    *
@@ -488,6 +503,7 @@ export class Erc20<
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    * @param claimData
    * @returns - The transaction receipt
+   * @twfeature ERC20ClaimableWithConditions
    */
   public async claimTo(
     destinationAddress: string,
@@ -520,8 +536,9 @@ export class Erc20<
    *     price: 0.08, // public sale price
    *   }
    * ]);
-   * await contract.token.claimConditions.set(claimConditions);
+   * await contract.erc20.claimConditions.set(claimConditions);
    * ```
+   * @twfeature ERC20ClaimableWithConditions
    */
   get claimConditions() {
     return assertEnabled(
@@ -541,10 +558,11 @@ export class Erc20<
    * const signedPayload = contract.signature().generate(payload);
    *
    * // now anyone can mint the NFT
-   * const tx = contract.signature.mint(signedPayload);
+   * const tx = contract.erc20.signature.mint(signedPayload);
    * const receipt = tx.receipt; // the mint transaction receipt
    * const mintedId = tx.id; // the id of the NFT minted
    * ```
+   * @twfeature ERC20SignatureMintable
    */
   get signature() {
     return assertEnabled(
