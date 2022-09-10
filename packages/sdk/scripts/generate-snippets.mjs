@@ -1,5 +1,5 @@
-import fs from "fs";
 import { TSDocParser, DocExcerpt } from "@microsoft/tsdoc";
+import fs from "fs";
 
 /**
  * This is a simplistic solution until we implement proper DocNode rendering APIs.
@@ -64,7 +64,7 @@ const additionalClassesToParse = [
   "ContractRoyalty",
   "ContractPlatformFee",
   "WalletAuthenticator",
-  "UserWallet"
+  "UserWallet",
 ];
 
 const modules = json.members[0].members.filter(
@@ -76,7 +76,7 @@ const modules = json.members[0].members.filter(
     additionalClassesToParse.includes(m.name),
 );
 
-const bases = ["Erc20", "Erc721", "Erc1155"];
+const bases = ["StandardErc20", "StandardErc721", "StandardErc1155"];
 const baseClasses = json.members[0].members.filter(
   (m) => m.kind === "Class" && bases.includes(m.name),
 );
