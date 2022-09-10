@@ -112,12 +112,9 @@ export function useTestnetsContractList(address: string | undefined) {
     ChainId.AvalancheFujiTestnet,
     address,
   );
-  const optimismTestnetQuery = useContractList(
-    ChainId.OptimismTestnet,
-    address,
-  );
+  const optimismTestnetQuery = useContractList(ChainId.OptimismKovan, address);
   const arbitrumTestnetQuery = useContractList(
-    ChainId.ArbitrumTestnet,
+    ChainId.ArbitrumRinkeby,
     address,
   );
   const binanceTestnetQuery = useContractList(
@@ -150,13 +147,13 @@ export function useTestnetsContractList(address: string | undefined) {
       .concat(
         optimismTestnetQuery.data?.map((d) => ({
           ...d,
-          chainId: ChainId.OptimismTestnet,
+          chainId: ChainId.OptimismKovan,
         })) || [],
       )
       .concat(
         arbitrumTestnetQuery.data?.map((d) => ({
           ...d,
-          chainId: ChainId.ArbitrumTestnet,
+          chainId: ChainId.ArbitrumRinkeby,
         })) || [],
       )
       .concat(

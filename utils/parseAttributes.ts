@@ -1,9 +1,6 @@
-import { EditionMutationInput } from "@3rdweb-sdk/react";
 import type { Json, NFTMetadataInput } from "@thirdweb-dev/sdk";
 
-export function parseAttributes<
-  T extends NFTMetadataInput | EditionMutationInput,
->(input: T): T {
+export function parseAttributes<T extends NFTMetadataInput>(input: T): T {
   return {
     ...input,
     attributes: removeEmptyValues(input.attributes),

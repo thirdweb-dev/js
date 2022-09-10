@@ -7,24 +7,27 @@ import {
   StatNumber,
 } from "@chakra-ui/react";
 import {
+  getErcs,
   useAddress,
+  useContract,
   useTokenBalance,
   useTokenSupply,
 } from "@thirdweb-dev/react";
-import { Erc20 } from "@thirdweb-dev/sdk";
-import React from "react";
 import { Card } from "tw-components";
 
 interface TokenBalancesProps {
-  contract: Erc20;
+  contractQuery: ReturnType<typeof useContract>;
 }
 
-export const TokenSupply: React.FC<TokenBalancesProps> = ({ contract }) => {
+export const TokenSupply: React.FC<TokenBalancesProps> = ({
+  contractQuery,
+}) => {
   const address = useAddress();
+  const { erc20 } = getErcs(contractQuery.contract);
   const { data: tokenSupply, isSuccess: isTokenSupplySuccess } =
-    useTokenSupply(contract);
+    useTokenSupply(erc20);
   const { data: ownedBalance, isSuccess: isOwnedBalanceSuccess } =
-    useTokenBalance(contract, contract.getAddress());
+    useTokenBalance(erc20, address);
 
   return (
     <Stack spacing={6}>

@@ -4,7 +4,6 @@ import {
   Stack,
   VisuallyHidden,
 } from "@chakra-ui/react";
-import React from "react";
 
 export const IconLogo: React.FC<Omit<AspectRatioProps, "ratio">> = ({
   color,

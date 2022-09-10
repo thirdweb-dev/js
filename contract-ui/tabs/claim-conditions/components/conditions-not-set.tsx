@@ -2,7 +2,7 @@ import { AdminOnly } from "@3rdweb-sdk/react";
 import { Flex, Stack } from "@chakra-ui/react";
 import { useClaimConditions } from "@thirdweb-dev/react";
 import { SmartContract, ValidContractInstance } from "@thirdweb-dev/sdk";
-import { detectClaimable } from "contract-ui/tabs/nfts/components/nft-drawer";
+import { detectFeatures } from "components/contract-components/utils";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useState } from "react";
 import { Button, LinkButton, Text } from "tw-components";
@@ -15,8 +15,8 @@ export const ConditionsNotSet: React.FC<ConditionsNotSetProps> = ({
   contract,
 }) => {
   const [dismissed, setDismissed] = useState(false);
-  const isClaimable = detectClaimable(contract?.nft);
-  const claimConditions = useClaimConditions(contract?.nft);
+  const isClaimable = detectFeatures(contract, ["ERC721Claimable"]);
+  const claimConditions = useClaimConditions(contract);
 
   const noClaimConditions =
     !claimConditions?.data?.length ||

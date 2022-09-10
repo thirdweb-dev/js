@@ -5,7 +5,6 @@ import { Flex, Icon, Tooltip, useDisclosure } from "@chakra-ui/react";
 import { ChainId } from "@thirdweb-dev/react";
 import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import { MintDrawer } from "components/shared/MintDrawer";
-import React from "react";
 import { FiPlus } from "react-icons/fi";
 import { Button } from "tw-components";
 

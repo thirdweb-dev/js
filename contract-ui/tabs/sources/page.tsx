@@ -169,7 +169,7 @@ export const CustomContractSourcesPage: React.FC<
   CustomContractSourcesPageProps
 > = ({ contractAddress }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const contractQuery = useContractSources(contractAddress);
+  const contractSourcesQuery = useContractSources(contractAddress);
   const chainId = useActiveChainId();
   const router = useRouter();
   const forceVerifyButton = router.query.verify === "true";
@@ -181,10 +181,8 @@ export const CustomContractSourcesPage: React.FC<
 
   // clean up the source filenames and filter out libraries
   const sources = useMemo(() => {
-    return prebuiltSource
-      ? [prebuiltSource]
-      : contractQuery.data
-      ? contractQuery.data
+    return contractSourcesQuery.data
+      ? contractSourcesQuery.data
           .map((source) => {
             return {
               ...source,
@@ -193,14 +191,19 @@ export const CustomContractSourcesPage: React.FC<
           })
           .slice()
           .reverse()
+      : prebuiltSource
+      ? [prebuiltSource]
       : [];
-  }, [contractQuery.data, prebuiltSource]);
+  }, [contractSourcesQuery.data, prebuiltSource]);
 
   if (!contractAddress) {
     return <div>No contract address provided</div>;
   }
 
-  if ((!contractQuery || contractQuery?.isLoading) && !prebuiltSource) {
+  if (
+    (!contractSourcesQuery || contractSourcesQuery?.isLoading) &&
+    !prebuiltSource
+  ) {
     return (
       <Flex direction="row" align="center" gap={2}>
         <Spinner color="purple.500" size="xs" />

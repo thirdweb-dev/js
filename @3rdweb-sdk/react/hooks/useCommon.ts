@@ -1,9 +1,4 @@
-import {
-  CacheKeyMap,
-  platformFeeKeys,
-  recipientKeys,
-  royaltyKeys,
-} from "../cache-keys";
+import { platformFeeKeys, recipientKeys, royaltyKeys } from "../cache-keys";
 import {
   useMutationWithInvalidate,
   useQueryWithNetwork,
@@ -174,17 +169,6 @@ export function useContractName<T extends ValidContractInstance>(
   throw new Error("Contract does not have a contractType");
 }
 
-interface ITransferInput {
-  to: string;
-  amount?: string;
-  tokenId?: string;
-}
-
-interface IAirdropInput {
-  tokenId: string;
-  addresses: { address: string; quantity?: string }[];
-}
-
 export type TransferableContract =
   | NFTCollection
   | Edition
@@ -193,7 +177,6 @@ export type TransferableContract =
   | EditionDrop
   | TokenDrop
   | SignatureDrop;
-// | PackContract;
 
 export type RecipientContract = NFTDrop | EditionDrop | SignatureDrop;
 
@@ -317,121 +300,6 @@ export function useContractPlatformFeeMutation<
     {
       onSuccess: (_data, _variables, _options, invalidate) => {
         invalidate([platformFeeKeys.detail(contract?.getAddress())]);
-      },
-    },
-  );
-}
-
-export function useTransferMutation<TContract extends ValidContractInstance>(
-  contract?: TContract,
-) {
-  const contractType = useContractTypeOfContract(contract);
-
-  return useMutationWithInvalidate(
-    async (transferData: ITransferInput) => {
-      invariant(
-        contract,
-        "Contract is not a valid contract. Please use a valid contract",
-      );
-      invariant(
-        "transfer" in contract,
-        "Contract does not support transfer functionality",
-      );
-      if (
-        contract instanceof NFTCollection ||
-        contract instanceof NFTDrop ||
-        contract instanceof SignatureDrop
-      ) {
-        invariant(transferData.tokenId, "tokenId is required");
-        return await contract.transfer(transferData.to, transferData.tokenId);
-      } else if (
-        contract instanceof Edition ||
-        contract instanceof EditionDrop
-      ) {
-        invariant(transferData.amount, "amount is required");
-        invariant(transferData.tokenId, "tokenId is required");
-
-        return await contract.transfer(
-          transferData.to,
-          transferData.tokenId,
-          transferData.amount,
-        );
-      } else if (contract instanceof Token) {
-        invariant(transferData.amount, "amount is required");
-        return await contract.transfer(transferData.to, transferData.amount);
-      }
-      throw new Error("Contract is not a valid contract");
-    },
-    {
-      onSuccess: (_data, _variables, _options, invalidate) => {
-        // this should not be possible, but we need to catch it in case it does
-        // if we don't know we just invalidate everything.
-        if (!contractType) {
-          return invalidate(
-            Object.keys(CacheKeyMap)
-              .map((key) => {
-                const cacheKeys = CacheKeyMap[key as keyof typeof CacheKeyMap];
-                if ("list" in cacheKeys) {
-                  return cacheKeys.list(contract?.getAddress());
-                }
-                return undefined as never;
-              })
-              .filter((fn) => !!fn),
-          );
-        }
-
-        return invalidate([
-          CacheKeyMap[contractType].list(contract?.getAddress()),
-        ]);
-      },
-    },
-  );
-}
-
-export function useAirdropMutation<TContract extends ValidContractInstance>(
-  contract?: TContract,
-) {
-  const contractType = useContractTypeOfContract(contract);
-
-  return useMutationWithInvalidate(
-    async (airdropData: IAirdropInput) => {
-      invariant(
-        contract,
-        "Contract is not a valid contract. Please use a valid contract",
-      );
-      invariant(
-        "airdrop" in contract,
-        "Contract does not support airdrop functionality",
-      );
-      if (contract instanceof Edition || contract instanceof EditionDrop) {
-        return await contract.airdrop(
-          airdropData.tokenId,
-          airdropData.addresses,
-        );
-      }
-      throw new Error("Contract is not a valid contract");
-    },
-    {
-      onSuccess: (_data, _variables, _options, invalidate) => {
-        // this should not be possible, but we need to catch it in case it does
-        // if we don't know we just invalidate everything.
-        if (!contractType) {
-          return invalidate(
-            Object.keys(CacheKeyMap)
-              .map((key) => {
-                const cacheKeys = CacheKeyMap[key as keyof typeof CacheKeyMap];
-                if ("list" in cacheKeys) {
-                  return cacheKeys.list(contract?.getAddress());
-                }
-                return undefined as never;
-              })
-              .filter((fn) => !!fn),
-          );
-        }
-
-        return invalidate([
-          CacheKeyMap[contractType].list(contract?.getAddress()),
-        ]);
       },
     },
   );

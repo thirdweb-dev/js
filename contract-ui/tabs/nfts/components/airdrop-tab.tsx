@@ -8,7 +8,6 @@ import {
 } from "contract-ui/tabs/nfts/components/airdrop-upload";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { BsCircleFill } from "react-icons/bs";
 import { FiUpload } from "react-icons/fi";
@@ -24,7 +23,7 @@ export const AirdropTab: React.FC<AirdropTabProps> = ({
   tokenId,
 }) => {
   const address = useAddress();
-  const { handleSubmit, setValue, watch, reset } = useForm<{
+  const { handleSubmit, setValue, watch, reset, formState } = useForm<{
     addresses: AirdropAddressInput[];
   }>({
     defaultValues: { addresses: [] },
@@ -133,6 +132,7 @@ export const AirdropTab: React.FC<AirdropTabProps> = ({
             colorScheme="primary"
             disabled={!!address && addresses.length === 0}
             alignSelf="flex-end"
+            isDisabled={!formState.isDirty}
           >
             Airdrop
           </TransactionButton>

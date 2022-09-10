@@ -1,41 +1,37 @@
 import { NFTRevealForm } from "./reveal-form";
 import { MinterOnly } from "@3rdweb-sdk/react";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import {
-  NFTContract,
-  useBatchesToReveal,
-  useContract,
-} from "@thirdweb-dev/react";
+import { useBatchesToReveal, useContract } from "@thirdweb-dev/react";
 import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
-import React from "react";
 import { FiEye } from "react-icons/fi";
 import { Button, Drawer } from "tw-components";
 
 interface NFTRevealButtonProps {
-  contract: NFTContract;
+  contractQuery: ReturnType<typeof useContract>;
 }
 
 export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
-  contract,
+  contractQuery,
   ...restButtonProps
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { contract: actualContract } = useContract(contract?.getAddress());
 
   const detectedState = extensionDetectedState({
-    contract,
+    contractQuery,
     feature: ["ERC721Revealable", "ERC1155Revealable"],
   });
 
-  const { data: batchesToReveal } = useBatchesToReveal(contract);
+  const { data: batchesToReveal } = useBatchesToReveal(contractQuery.contract);
 
   if (detectedState !== "enabled") {
     return null;
   }
 
   return batchesToReveal?.length ? (
-    <MinterOnly contract={actualContract as unknown as ValidContractInstance}>
+    <MinterOnly
+      contract={contractQuery?.contract as unknown as ValidContractInstance}
+    >
       <Drawer
         allowPinchZoom
         preserveScrollBarGap
@@ -43,7 +39,7 @@ export const NFTRevealButton: React.FC<NFTRevealButtonProps> = ({
         onClose={onClose}
         isOpen={isOpen}
       >
-        <NFTRevealForm contract={contract} />
+        <NFTRevealForm contract={contractQuery.contract} />
       </Drawer>
       <Button
         colorScheme="primary"

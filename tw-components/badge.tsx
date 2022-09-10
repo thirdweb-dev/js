@@ -5,7 +5,6 @@ import {
   LightMode,
   forwardRef,
 } from "@chakra-ui/react";
-import React from "react";
 import { TextSizes } from "theme/typography";
 
 export interface BadgeProps extends ChakraBadgeProps {

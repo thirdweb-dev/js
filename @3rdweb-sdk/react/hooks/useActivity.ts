@@ -17,9 +17,9 @@ interface InternalTransaction {
 
 export function useActivity(contractAddress?: string, autoUpdate?: boolean) {
   // const provider = useProvider();
-  const contract = useContract(contractAddress);
+  const contractQuery = useContract(contractAddress);
 
-  const eventsQuery = useAllContractEvents(contract.contract, {
+  const eventsQuery = useAllContractEvents(contractQuery.contract, {
     subscribe: autoUpdate,
   });
 
@@ -80,7 +80,7 @@ export function useActivity(contractAddress?: string, autoUpdate?: boolean) {
       return Object.values(obj).sort((a, b) => b.blockNumber - a.blockNumber);
     },
     {
-      enabled: !!contract && !!eventsQuery.data,
+      enabled: !!contractQuery && !!eventsQuery.data,
     },
   );
 }

@@ -5,7 +5,6 @@ import { useMarketplace } from "@thirdweb-dev/react";
 import { AuctionListing, DirectListing } from "@thirdweb-dev/sdk";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import React from "react";
 import { FiXCircle } from "react-icons/fi";
 import { Row } from "react-table";
 import { Button } from "tw-components";

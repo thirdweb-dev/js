@@ -11,7 +11,6 @@ import {
 import { useAddress } from "@thirdweb-dev/react";
 import { Logo } from "components/logo";
 import { useLocalStorage } from "hooks/useLocalStorage";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { Button, Checkbox, Heading, Text, TrackedLink } from "tw-components";
 

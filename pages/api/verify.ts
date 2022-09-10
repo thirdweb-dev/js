@@ -49,6 +49,7 @@ export const apiMap: Record<number, string> = {
   199: "https://api.bttcscan.com/api",
   250: "https://api.ftmscan.com/api",
   256: "https://api-testnet.hecoinfo.com/api",
+  420: "https://api-goerli-optimistic.etherscan.io/api",
   1029: "https://api-testnet.bttcscan.com/api",
   1284: "https://api-moonbeam.moonscan.io/api",
   1285: "https://api-moonriver.moonscan.io/api",
@@ -58,6 +59,8 @@ export const apiMap: Record<number, string> = {
   43113: "https://api-testnet.snowtrace.io/api",
   43114: "https://api.snowtrace.io/api",
   421611: "https://api-testnet.arbiscan.io/api",
+  // eslint-disable-next-line line-comment-position
+  421613: "https://api-testnet.arbiscan.io/api", // TODO - change to correct endpoint
   80001: "https://api-testnet.polygonscan.com/api",
   1313161554: "https://api.aurorascan.dev/api",
   1313161555: "https://api-testnet.aurorascan.dev/api",
@@ -78,6 +81,10 @@ export const blockExplorerMap: Record<number, { name: string; url: string }> = {
     name: "Optimism Kovan Etherscan",
     url: "https://kovan-optimistic.etherscan.io/",
   },
+  420: {
+    name: "Optimism Goerli Etherscan",
+    url: "https://goerli-optimistic.etherscan.io/",
+  },
   97: { name: "Bscscan Testnet", url: "https://testnet.bscscan.com/" },
   137: { name: "Polygonscan", url: "https://polygonscan.com/" },
   250: { name: "FTMScan", url: "https://ftmscan.com/" },
@@ -85,7 +92,11 @@ export const blockExplorerMap: Record<number, { name: string; url: string }> = {
   42161: { name: "Arbiscan", url: "https://arbiscan.io/" },
   43113: { name: "Snowtrace Testnet", url: "https://testnet.snowtrace.io/" },
   43114: { name: "Snowtrace", url: "https://snowtrace.io/" },
-  421611: { name: "Arbiscan Testnet", url: "https://testnet.arbiscan.io/" },
+  421611: { name: "Arbiscan Rinkeby", url: "https://testnet.arbiscan.io/" },
+  421613: {
+    name: "Arbiscan Goerli",
+    url: "https://goerli-rollup-explorer.arbitrum.io/",
+  },
   80001: {
     name: "Mumbai Polygonscan",
     url: "https://mumbai.polygonscan.com/",
@@ -103,9 +114,11 @@ export const apiKeyMap: Record<number, string> = {
   [ChainId.Avalanche]: process.env.SNOWTRACE_KEY as string,
   [ChainId.AvalancheFujiTestnet]: process.env.SNOWTRACE_KEY as string,
   [ChainId.Arbitrum]: process.env.ARBITRUMSCAN_KEY as string,
-  [ChainId.ArbitrumTestnet]: process.env.ARBITRUMSCAN_KEY as string,
+  [ChainId.ArbitrumRinkeby]: process.env.ARBITRUMSCAN_KEY as string,
+  [ChainId.ArbitrumGoerli]: process.env.ARBITRUMSCAN_KEY as string,
   [ChainId.Optimism]: process.env.OPTIMISMSCAN_KEY as string,
-  [ChainId.OptimismTestnet]: process.env.OPTIMISMSCAN_KEY as string,
+  [ChainId.OptimismKovan]: process.env.OPTIMISMSCAN_KEY as string,
+  [ChainId.OptimismGoerli]: process.env.OPTIMISMSCAN_KEY as string,
   [ChainId.BinanceSmartChainMainnet]: process.env.BSCSCAN_KEY as string,
   [ChainId.BinanceSmartChainTestnet]: process.env.BSCSCAN_KEY as string,
 };

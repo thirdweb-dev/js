@@ -9,19 +9,19 @@ interface CustomContractEmbedPageProps {
 export const CustomContractEmbedPage: React.FC<
   CustomContractEmbedPageProps
 > = ({ contractAddress }) => {
-  const contract = useContract(contractAddress);
+  const contractQuery = useContract(contractAddress);
 
-  if (contract.isLoading) {
+  if (contractQuery.isLoading) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
   }
 
   return (
     <Flex direction="column" gap={6}>
-      {contract?.contract && (
+      {contractQuery?.contract && (
         <EmbedSetup
-          contract={contract.contract}
-          contractType={contract?.data?.contractType}
+          contract={contractQuery.contract}
+          contractType={contractQuery?.data?.contractType}
         />
       )}
     </Flex>

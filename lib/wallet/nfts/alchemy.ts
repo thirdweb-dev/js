@@ -15,17 +15,15 @@ const alchemyUrlMap = {
   // optimism
   [ChainId.Optimism]: `https://opt-mainnet.g.alchemy.com`,
   // deprecated
-  [ChainId.OptimismTestnet]: `https://opt-kovan.g.alchemy.com`,
+  [ChainId.OptimismKovan]: `https://opt-kovan.g.alchemy.com`,
   // new optimism testnet
-  // TODO @jnsdls get this from `ChainId`
-  [420]: `https://opt-goerli.g.alchemy.com`,
+  [ChainId.OptimismGoerli]: `https://opt-goerli.g.alchemy.com`,
 
   [ChainId.Arbitrum]: `https://arb-mainnet.g.alchemy.com`,
   // deprecated
-  [ChainId.ArbitrumTestnet]: `https://arb-rinkeby.g.alchemy.com`,
+  [ChainId.ArbitrumRinkeby]: `https://arb-rinkeby.g.alchemy.com`,
   // arbitrum testnet
-  // TODO @jnsdls get this from `ChainId`
-  [421613]: `https://arb-goerli.g.alchemy.com`,
+  [ChainId.ArbitrumGoerli]: `https://arb-goerli.g.alchemy.com`,
 } as const;
 
 type AlchemySupportedChainId = keyof typeof alchemyUrlMap;

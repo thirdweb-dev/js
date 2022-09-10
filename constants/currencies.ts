@@ -400,9 +400,13 @@ export const CURRENCIES: Record<SUPPORTED_CHAIN_ID, CurrencyMetadata[]> = {
   [ChainId.Avalanche]: Avalanche,
   [ChainId.AvalancheFujiTestnet]: AvalancheFujiTestnet,
   [ChainId.Optimism]: Optimism,
-  [ChainId.OptimismTestnet]: OptimismTestnet,
+  [ChainId.OptimismKovan]: OptimismTestnet,
+  // eslint-disable-next-line line-comment-position
+  [ChainId.OptimismGoerli]: OptimismTestnet, // TODO adjust wrapped token address
   [ChainId.Arbitrum]: Arbitrum,
-  [ChainId.ArbitrumTestnet]: ArbitrumTestnet,
+  [ChainId.ArbitrumRinkeby]: ArbitrumTestnet,
+  // eslint-disable-next-line line-comment-position
+  [ChainId.ArbitrumGoerli]: ArbitrumTestnet, // TODO adjust wrapped token address
   [ChainId.BinanceSmartChainMainnet]: BinanceMainnet,
   [ChainId.BinanceSmartChainTestnet]: BinanceTestnet,
 } as const;

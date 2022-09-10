@@ -6,15 +6,16 @@ import {
 import { Flex } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { PotentialContractInstance } from "contract-ui/types/types";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { Card, Heading, Text, TrackedLink } from "tw-components";
 
-export const OnDashboard = <TContract extends PotentialContractInstance>({
-  contract,
-}: {
-  contract: TContract;
+interface OnDashboardProps {
+  contractAddress?: string;
+}
+
+export const OnDashboard: React.FC<OnDashboardProps> = ({
+  contractAddress,
 }) => {
   const trackEvent = useTrack();
   const activeChainId = useActiveChainId();
@@ -35,10 +36,10 @@ export const OnDashboard = <TContract extends PotentialContractInstance>({
 
   const onDashboard =
     contractList.isFetched &&
-    contractList.data?.find((c) => c.address === contract?.getAddress()) &&
+    contractList.data?.find((c) => c.address === contractAddress) &&
     contractList.isSuccess;
 
-  return address ? (
+  return address && contractAddress ? (
     <Card p={0}>
       <Flex direction="column">
         <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
@@ -83,13 +84,13 @@ export const OnDashboard = <TContract extends PotentialContractInstance>({
                 category: "settings",
                 action: "remove-from-dashboard",
                 label: "attempt",
-                contractAddress: contract?.getAddress(),
+                contractAddress,
               });
 
-              if (contract) {
+              if (contractAddress) {
                 removeContract.mutate(
                   {
-                    contractAddress: contract?.getAddress(),
+                    contractAddress,
                   },
                   {
                     onSuccess: () => {
@@ -98,7 +99,7 @@ export const OnDashboard = <TContract extends PotentialContractInstance>({
                         category: "settings",
                         action: "remove-from-dashboard",
                         label: "success",
-                        contractAddress: contract?.getAddress(),
+                        contractAddress,
                       });
                     },
                     onError: (err) => {
@@ -107,7 +108,7 @@ export const OnDashboard = <TContract extends PotentialContractInstance>({
                         category: "settings",
                         action: "remove-from-dashboard",
                         label: "error",
-                        contractAddress: contract?.getAddress(),
+                        contractAddress,
                         error: err,
                       });
                     },
@@ -137,13 +138,13 @@ export const OnDashboard = <TContract extends PotentialContractInstance>({
                 category: "settings",
                 action: "add-to-dashboard",
                 label: "attempt",
-                contractAddress: contract?.getAddress(),
+                contractAddress,
               });
 
-              if (contract?.getAddress()) {
+              if (contractAddress) {
                 addContract.mutate(
                   {
-                    contractAddress: contract?.getAddress(),
+                    contractAddress,
                   },
                   {
                     onSuccess: () => {
@@ -152,7 +153,7 @@ export const OnDashboard = <TContract extends PotentialContractInstance>({
                         category: "settings",
                         action: "add-to-dashboard",
                         label: "success",
-                        contractAddress: contract?.getAddress(),
+                        contractAddress,
                       });
                     },
                     onError: (err) => {
@@ -161,7 +162,7 @@ export const OnDashboard = <TContract extends PotentialContractInstance>({
                         category: "settings",
                         action: "add-to-dashboard",
                         label: "error",
-                        contractAddress: contract?.getAddress(),
+                        contractAddress,
                         error: err,
                       });
                     },

@@ -1,7 +1,6 @@
 import { MarketplaceActionsCell } from "./actions/MarketplaceActionsCell";
 import { MediaCell } from "./cells/media-cell";
 import { AuctionListing, DirectListing, ListingType } from "@thirdweb-dev/sdk";
-import React from "react";
 import { Cell, Column } from "react-table";
 import { AddressCopyButton, Text } from "tw-components";
 

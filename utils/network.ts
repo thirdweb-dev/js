@@ -22,9 +22,11 @@ export const SupportedChainIdToNetworkMap: Record<SUPPORTED_CHAIN_ID, string> =
     [ChainId.Avalanche]: "avalanche",
     [ChainId.AvalancheFujiTestnet]: "avalanche-fuji",
     [ChainId.Optimism]: "optimism",
-    [ChainId.OptimismTestnet]: "optimism-testnet",
+    [ChainId.OptimismKovan]: "optimism-kovan",
+    [ChainId.OptimismGoerli]: "optimism-goerli",
     [ChainId.Arbitrum]: "arbitrum",
-    [ChainId.ArbitrumTestnet]: "arbitrum-testnet",
+    [ChainId.ArbitrumRinkeby]: "arbitrum-rinkeby",
+    [ChainId.ArbitrumGoerli]: "arbitrum-goerli",
     [ChainId.BinanceSmartChainMainnet]: "binance",
     [ChainId.BinanceSmartChainTestnet]: "binance-testnet",
   } as const;
@@ -45,9 +47,11 @@ export const SupportedNetworkToChainIdMap: Record<
   avalanche: ChainId.Avalanche, // 43114
   "avalanche-fuji": ChainId.AvalancheFujiTestnet, // 43113
   optimism: ChainId.Optimism, // 10
-  "optimism-testnet": ChainId.OptimismTestnet, // 69
+  "optimism-kovan": ChainId.OptimismKovan, // 69
+  "optimism-goerli": ChainId.OptimismGoerli, // 420
   arbitrum: ChainId.Arbitrum, // 42161
-  "arbitrum-testnet": ChainId.ArbitrumTestnet, // 4216111
+  "arbitrum-rinkeby": ChainId.ArbitrumRinkeby, // 4216111
+  "arbitrum-goerli": ChainId.ArbitrumGoerli, // 4216113
   binance: ChainId.BinanceSmartChainMainnet,
   "binance-testnet": ChainId.BinanceSmartChainTestnet,
 } as const;
@@ -63,9 +67,11 @@ export const NetworkToBlockTimeMap: Record<SUPPORTED_CHAIN_ID, string> = {
   [ChainId.Avalanche]: "3",
   [ChainId.AvalancheFujiTestnet]: "3",
   [ChainId.Optimism]: "13",
-  [ChainId.OptimismTestnet]: "13",
+  [ChainId.OptimismKovan]: "13",
+  [ChainId.OptimismGoerli]: "13",
   [ChainId.Arbitrum]: "15",
-  [ChainId.ArbitrumTestnet]: "15",
+  [ChainId.ArbitrumGoerli]: "15",
+  [ChainId.ArbitrumRinkeby]: "15",
   [ChainId.BinanceSmartChainMainnet]: "3",
   [ChainId.BinanceSmartChainTestnet]: "3",
 };

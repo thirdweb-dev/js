@@ -17,7 +17,6 @@ import { Logo } from "components/logo";
 import { InsufficientFunds } from "components/notices/InsufficientFunds";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
-import React from "react";
 import { RiGasStationFill } from "react-icons/ri";
 import {
   Link,

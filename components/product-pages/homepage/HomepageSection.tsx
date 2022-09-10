@@ -1,5 +1,4 @@
 import { AspectRatio, Box, BoxProps, Container } from "@chakra-ui/react";
-import React from "react";
 import { ComponentWithChildren } from "types/component-with-children";
 
 interface IHomepageSection extends BoxProps {

@@ -7,13 +7,12 @@ import {
   Stack,
   useModalContext,
 } from "@chakra-ui/react";
-import { useTransferToken } from "@thirdweb-dev/react";
+import { useTokenDecimals, useTransferToken } from "@thirdweb-dev/react";
 import type { Erc20 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { constants } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import React from "react";
 import { useForm } from "react-hook-form";
 import {
   FormErrorMessage,
@@ -24,7 +23,7 @@ import {
 
 const TRANSFER_FORM_ID = "token-transfer-form";
 interface TokenTransferFormProps {
-  contract: Erc20;
+  contract?: Erc20;
 }
 
 export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
@@ -35,7 +34,7 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm({ defaultValues: { amount: "0", to: "" } });
   const modalContext = useModalContext();
 
@@ -43,6 +42,8 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
     "Successfully transferred tokens",
     "Failed to transfer tokens",
   );
+
+  const decimals = useTokenDecimals(contract);
 
   return (
     <>
@@ -60,7 +61,11 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
             </FormControl>
             <FormControl isRequired isInvalid={!!errors.amount}>
               <FormLabel>Amount</FormLabel>
-              <Input placeholder="1" {...register("amount")} />
+              <Input
+                type="text"
+                pattern={`^\\d+(\\.\\d{1,${decimals?.data || 18}})?$`}
+                {...register("amount")}
+              />
               <FormHelperText>
                 How many would you like to transfer?
               </FormHelperText>
@@ -76,6 +81,7 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
           isLoading={transfer.isLoading}
           type="submit"
           colorScheme="primary"
+          isDisabled={!isDirty}
           onClick={handleSubmit((d) => {
             trackEvent({
               category: "token",

@@ -1,18 +1,10 @@
 import { ContractCode } from "./code/ContractCode";
-import { EmbedSetup } from "./embeds";
 import { ContractPermissions } from "./permissions";
-import { DropPhases } from "./phases/DropPhases";
 import { ContractSettings } from "./settings/shared/ContractSettings";
 import { isContractWithRoles } from "@3rdweb-sdk/react";
 import { useContract } from "@thirdweb-dev/react";
-import {
-  EditionDrop,
-  Marketplace,
-  NFTDrop,
-  SignatureDrop,
-  TokenDrop,
-  ValidContractInstance,
-} from "@thirdweb-dev/sdk";
+import { Marketplace, ValidContractInstance } from "@thirdweb-dev/sdk";
+import { EmbedSetup } from "contract-ui/tabs/embed/components/embed-setup";
 import React, { useMemo } from "react";
 
 export interface ContractTab {
@@ -35,27 +27,15 @@ export function useContractTabs(
         content: <ContractPermissions contract={contract} />,
       });
     }
-
-    if (
-      contract instanceof NFTDrop ||
-      contract instanceof TokenDrop ||
-      contract instanceof SignatureDrop
-    ) {
-      tabs.push({
-        title: "Claim Phases",
-        content: <DropPhases contract={contract} />,
-      });
-    }
-    if (
-      contract instanceof NFTDrop ||
-      contract instanceof EditionDrop ||
-      contract instanceof Marketplace ||
-      contract instanceof TokenDrop ||
-      contract instanceof SignatureDrop
-    ) {
+    if (contract instanceof Marketplace) {
       tabs.push({
         title: "Embed",
-        content: <EmbedSetup contract={contract} />,
+        content: (
+          <EmbedSetup
+            contract={actualContract}
+            contractType={data?.contractType}
+          />
+        ),
       });
     }
 

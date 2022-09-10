@@ -28,15 +28,21 @@ const alchemyUrlMap: Record<SUPPORTED_CHAIN_ID, string> = {
   [ChainId.Optimism]:
     process.env.SSR_RPC_OPTIMISM ||
     `https://opt-mainnet.g.alchemy.com/v2/${process.env.SSR_ALCHEMY_KEY}`,
-  [ChainId.OptimismTestnet]:
-    process.env.SSR_RPC_OPTIMISM_TESTNET ||
+  [ChainId.OptimismKovan]:
+    process.env.SSR_RPC_OPTIMISM_KOVAN ||
     `https://opt-kovan.g.alchemy.com/v2/${process.env.SSR_ALCHEMY_KEY}`,
+  [ChainId.OptimismGoerli]:
+    process.env.SSR_RPC_OPTIMISM_GOERLI ||
+    `https://opt-goerli.g.alchemy.com/v2/${process.env.SSR_ALCHEMY_KEY}`,
   [ChainId.Arbitrum]:
     process.env.SSR_RPC_ARBITRUM ||
     `https://arb-mainnet.g.alchemy.com/v2/${process.env.SSR_ALCHEMY_KEY}`,
-  [ChainId.ArbitrumTestnet]:
+  [ChainId.ArbitrumRinkeby]:
     process.env.SSR_RPC_ARBITRUM_TESTNET ||
     `https://arb-rinkeby.g.alchemy.com/v2/${process.env.SSR_ALCHEMY_KEY}`,
+  [ChainId.ArbitrumGoerli]:
+    process.env.SSR_RPC_ARBITRUM_TESTNET ||
+    `https://arb-goerli.g.alchemy.com/v2/${process.env.SSR_ALCHEMY_KEY}`,
   [ChainId.BinanceSmartChainMainnet]:
     process.env.SSR_RPC_BINANCE_MAINNET || "https://bsc-dataseed1.binance.org",
   [ChainId.BinanceSmartChainTestnet]:

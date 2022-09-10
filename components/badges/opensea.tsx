@@ -1,5 +1,4 @@
 import { Tooltip } from "@chakra-ui/react";
-import React from "react";
 import { Badge, BadgeProps } from "tw-components";
 
 export const OpenSeaPropertyBadge: React.FC<BadgeProps> = (props) => {

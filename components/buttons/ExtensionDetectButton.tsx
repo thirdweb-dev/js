@@ -17,7 +17,7 @@ export interface ExtensionDetectedStateParams {
   /**
    * The contract instance to check
    */
-  contract: ReturnType<typeof useContract> | DetectableFeature;
+  contractQuery: ReturnType<typeof useContract> | DetectableFeature;
 
   /**
    * the feature match strategy (default: any)
@@ -30,16 +30,17 @@ export interface ExtensionDetectedStateParams {
 export type ExtensionDetectedState = "enabled" | "disabled" | "loading";
 
 export function extensionDetectedState({
-  contract,
+  contractQuery,
   feature,
   matchStrategy = "any",
 }: ExtensionDetectedStateParams): ExtensionDetectedState {
   // if contract is loading return "loading"
-  if ("contract" in contract && contract.isLoading) {
+  if ("contract" in contractQuery && contractQuery.isLoading) {
     return "loading";
   }
 
-  const actualContract = "contract" in contract ? contract.contract : contract;
+  const actualContract =
+    "contract" in contractQuery ? contractQuery.contract : contractQuery;
 
   // we're not loading but don't have a contract, so we'll assumed feature is disabled (really this is an error state?)
   if (!actualContract) {

@@ -65,7 +65,7 @@ export function useTokensDelegated(contractAddress?: string) {
 
       const metadata = await voteContract?.metadata.get();
       const tokenAddress = metadata?.voting_token_address;
-      const tokenContract = sdk?.getToken(tokenAddress);
+      const tokenContract = await sdk?.getToken(tokenAddress);
       const delegation = await tokenContract?.getDelegationOf(address);
       return delegation?.toLowerCase() === address.toLowerCase();
     },
@@ -136,7 +136,7 @@ export function useDelegateMutation(contractAddress?: string) {
 
       const metadata = await voteContract?.metadata.get();
       const tokenAddress = metadata?.voting_token_address;
-      const tokenContract = sdk?.getToken(tokenAddress);
+      const tokenContract = await sdk?.getToken(tokenAddress);
       return tokenContract?.delegateTo(address);
     },
     {

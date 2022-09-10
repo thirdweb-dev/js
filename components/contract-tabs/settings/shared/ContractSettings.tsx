@@ -39,7 +39,7 @@ export const ContractSettings: React.FC<IContractSettings> = ({ contract }) => {
         <ContractPlatformFee contract={contract} isDisabled={!isAdmin} />
       )}
       {contract instanceof Vote && <VoteConfiguration contract={contract} />}
-      <OnDashboard contract={contract} />
+      <OnDashboard contractAddress={contract.getAddress()} />
     </Stack>
   );
 };

@@ -10,13 +10,13 @@ import {
 } from "@chakra-ui/react";
 import {
   NFTContract,
+  RevealableContract,
   useBatchesToReveal,
   useRevealLazyMint,
 } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { FormErrorMessage, FormLabel, Heading } from "tw-components";
 
@@ -27,12 +27,14 @@ interface NFTRevealFormProps {
 
 export const NFTRevealForm: React.FC<NFTRevealFormProps> = ({ contract }) => {
   const trackEvent = useTrack();
-  const reveal = useRevealLazyMint(contract);
-  const { data: batchesToReveal } = useBatchesToReveal(contract);
+  const reveal = useRevealLazyMint(contract as RevealableContract);
+  const { data: batchesToReveal } = useBatchesToReveal(
+    contract as RevealableContract,
+  );
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<{ batchId: string; password: string }>();
   const modalContext = useModalContext();
 
@@ -117,6 +119,7 @@ export const NFTRevealForm: React.FC<NFTRevealFormProps> = ({ contract }) => {
           form={REVEAL_FORM_ID}
           type="submit"
           colorScheme="primary"
+          isDisabled={!isDirty}
         >
           Reveal NFTs
         </TransactionButton>

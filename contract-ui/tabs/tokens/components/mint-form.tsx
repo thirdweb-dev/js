@@ -7,18 +7,21 @@ import {
   Stack,
   useModalContext,
 } from "@chakra-ui/react";
-import { useAddress, useMintToken } from "@thirdweb-dev/react";
+import {
+  useAddress,
+  useMintToken,
+  useTokenDecimals,
+} from "@thirdweb-dev/react";
 import type { Erc20 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { Button, FormErrorMessage, FormLabel, Heading } from "tw-components";
 
 const MINT_FORM_ID = "token-mint-form";
 interface TokenMintFormProps {
-  contract: Erc20;
+  contract?: Erc20;
 }
 
 export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
@@ -28,7 +31,7 @@ export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm({ defaultValues: { amount: "0" } });
   const modalContext = useModalContext();
 
@@ -36,6 +39,8 @@ export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
     "Tokens minted successfully",
     "Failed to mint tokens",
   );
+
+  const decimals = useTokenDecimals(contract);
 
   return (
     <>
@@ -83,9 +88,8 @@ export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
           <FormControl isRequired isInvalid={!!errors.amount}>
             <FormLabel>Additional Supply</FormLabel>
             <Input
-              type="number"
-              step="1"
-              pattern="/(\.)?\d+(\.\d*)?/g"
+              type="text"
+              pattern={`^\\d+(\\.\\d{1,${decimals?.data || 18}})?$`}
               {...register("amount")}
             />
             <FormErrorMessage>{errors?.amount?.message}</FormErrorMessage>
@@ -107,6 +111,7 @@ export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
           form={MINT_FORM_ID}
           type="submit"
           colorScheme="primary"
+          isDisabled={!isDirty}
         >
           Mint Tokens
         </TransactionButton>

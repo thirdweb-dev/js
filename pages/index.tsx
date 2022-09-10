@@ -17,6 +17,8 @@ import {
   useClipboard,
 } from "@chakra-ui/react";
 import { AiOutlineTeam } from "@react-icons/all-files/ai/AiOutlineTeam";
+import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
+import { FiCopy } from "@react-icons/all-files/fi/FiCopy";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
 import { ChakraNextImage } from "components/Image";
 import { CLISection } from "components/homepage/CLISection";
@@ -39,9 +41,7 @@ import MobileHero from "public/assets/landingpage/mobile-hero.png";
 import ThirdwebTeams from "public/assets/landingpage/thirdweb-teams.png";
 import WhiteLogo from "public/assets/landingpage/white-logo.png";
 // end images
-import React from "react";
 import { BsLightningCharge, BsMenuButtonWide } from "react-icons/bs";
-import { FiCheck, FiCopy } from "react-icons/fi";
 import { MdMarkEmailRead, MdOutlineAnalytics } from "react-icons/md";
 import { Card, Heading, LinkButton, Text, TrackedLink } from "tw-components";
 

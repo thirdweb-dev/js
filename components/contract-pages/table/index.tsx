@@ -2,9 +2,8 @@ import {
   ContractEmptyState,
   IContractEmptyState,
 } from "../contract-emptystate";
-import { useExpandedRow } from "./expansions/useExpandedRow";
 import { useTableColumns } from "./table-columns/useTableColumns";
-import { TableProvider, useTableContext } from "./table-context";
+import { TableProvider } from "./table-context";
 import { TTableType } from "./types";
 import {
   ContractWithGetAll,
@@ -14,8 +13,6 @@ import {
 import {
   Box,
   Center,
-  CloseButton,
-  Divider,
   Flex,
   HStack,
   Icon,
@@ -70,7 +67,6 @@ const RawContractItemsTable = <TContract extends ContractWithGetAll>({
     nextPage,
     previousPage,
     setPageSize,
-    visibleColumns,
     state: { pageIndex, pageSize },
   } = useTable(
     {
@@ -91,8 +87,6 @@ const RawContractItemsTable = <TContract extends ContractWithGetAll>({
     },
     usePagination,
   );
-  const { closeAllRows } = useTableContext();
-  const { renderExpandedRow, title } = useExpandedRow(contract);
 
   useEffect(() => {
     setQueryParams({ start: pageIndex * pageSize, count: pageSize });
@@ -146,14 +140,12 @@ const RawContractItemsTable = <TContract extends ContractWithGetAll>({
           <Tbody {...getTableBodyProps()} position="relative">
             {page.map((row: Row<TTableType<TContract>>) => {
               prepareRow(row);
-              const expandedRow = renderExpandedRow(row.id);
               return (
                 <React.Fragment key={`row_${row.id}`}>
                   <Tr
-                    // shadow={expandedRow ? "md" : "none"}
-                    bg={expandedRow ? "blackAlpha.50" : "transparent"}
+                    bg="transparent"
                     _dark={{
-                      bg: expandedRow ? "whiteAlpha.50" : "transparent",
+                      bg: "transparent",
                     }}
                     transition="all 0.1s"
                     borderBottomWidth={1}
@@ -170,32 +162,6 @@ const RawContractItemsTable = <TContract extends ContractWithGetAll>({
                       </Td>
                     ))}
                   </Tr>
-                  {expandedRow && (
-                    <Tr
-                      bg="blackAlpha.50"
-                      _dark={{ bg: "whiteAlpha.50" }}
-                      key={`${row.id}_expansion`}
-                      position="relative"
-                    >
-                      <Td
-                        colSpan={visibleColumns.length}
-                        borderBottom="none"
-                        borderBottomRadius="md"
-                        overflow="hidden"
-                      >
-                        <Stack w="100%">
-                          <Flex justify="space-between" align="center">
-                            <Heading size="label.xl" textTransform="uppercase">
-                              {title}
-                            </Heading>
-                            <CloseButton onClick={closeAllRows} />
-                          </Flex>
-                          <Divider />
-                          {expandedRow}
-                        </Stack>
-                      </Td>
-                    </Tr>
-                  )}
                 </React.Fragment>
               );
             })}

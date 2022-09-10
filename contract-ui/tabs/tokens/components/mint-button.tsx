@@ -1,26 +1,26 @@
 import { TokenMintForm } from "./mint-form";
 import { MinterOnly } from "@3rdweb-sdk/react";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import { useContract } from "@thirdweb-dev/react";
-import { Erc20, ValidContractInstance } from "@thirdweb-dev/sdk";
+import { getErcs, useContract } from "@thirdweb-dev/react";
+import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
-import React from "react";
 import { FiPlus } from "react-icons/fi";
 import { Button, Drawer } from "tw-components";
 
 interface TokenMintButtonProps {
-  contract: Erc20;
+  contractQuery: ReturnType<typeof useContract>;
 }
 
 export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
-  contract,
+  contractQuery,
   ...restButtonProps
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { contract: actualContract } = useContract(contract?.getAddress());
+  const { erc20 } = getErcs(contractQuery.contract);
+  const { contract: actualContract } = useContract(erc20?.getAddress());
 
   const detectedState = extensionDetectedState({
-    contract,
+    contractQuery,
     feature: ["ERC20Mintable"],
   });
 
@@ -37,7 +37,7 @@ export const TokenMintButton: React.FC<TokenMintButtonProps> = ({
         onClose={onClose}
         isOpen={isOpen}
       >
-        <TokenMintForm contract={contract} />
+        <TokenMintForm contract={erc20} />
       </Drawer>
       <Button
         colorScheme="primary"

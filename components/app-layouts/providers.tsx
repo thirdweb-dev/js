@@ -4,7 +4,6 @@ import { ThirdwebProvider, WalletConnector } from "@thirdweb-dev/react";
 import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import { IpfsStorage } from "@thirdweb-dev/storage";
 import { useNativeColorMode } from "hooks/useNativeColorMode";
-import React from "react";
 import { ComponentWithChildren } from "types/component-with-children";
 
 export const StorageSingleton = new IpfsStorage(
@@ -41,15 +40,21 @@ export const alchemyUrlMap: Record<SUPPORTED_CHAIN_ID, string> = {
   [ChainId.Optimism]:
     process.env.NEXT_PUBLIC_RPC_OPTIMISM ||
     `https://opt-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
-  [ChainId.OptimismTestnet]:
-    process.env.NEXT_PUBLIC_RPC_OPTIMISM_TESTNET ||
+  [ChainId.OptimismKovan]:
+    process.env.NEXT_PUBLIC_RPC_OPTIMISM_KOVAN ||
     `https://opt-kovan.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
+  [ChainId.OptimismGoerli]:
+    process.env.NEXT_PUBLIC_RPC_OPTIMISM_GOERLI ||
+    `https://opt-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
   [ChainId.Arbitrum]:
     process.env.NEXT_PUBLIC_RPC_ARBITRUM ||
     `https://arb-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
-  [ChainId.ArbitrumTestnet]:
-    process.env.NEXT_PUBLIC_RPC_ARBITRUM_TESTNET ||
+  [ChainId.ArbitrumRinkeby]:
+    process.env.NEXT_PUBLIC_RPC_ARBITRUM_RINKEBY ||
     `https://arb-rinkeby.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
+  [ChainId.ArbitrumGoerli]:
+    process.env.NEXT_PUBLIC_RPC_ARBITRUM_GOERLI ||
+    `https://arb-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
   [ChainId.BinanceSmartChainMainnet]:
     process.env.NEXT_PUBLIC_RPC_BINANCE_MAINNET ||
     "https://bsc-dataseed1.binance.org",

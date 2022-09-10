@@ -10,22 +10,27 @@ interface ContractCodePageProps {
 export const ContractCodePage: React.FC<ContractCodePageProps> = ({
   contractAddress,
 }) => {
-  const contract = useContract(contractAddress);
-  const contractType = contract.data?.contractType;
+  const contractQuery = useContract(contractAddress);
+  const contractType = contractQuery.data?.contractType;
 
-  if (contract.isLoading) {
+  const useCustomCodeTab =
+    contractType === "custom" ||
+    contractType === "multiwrap" ||
+    contractType === "pack";
+
+  if (contractQuery.isLoading) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
   }
 
   return (
     <Flex direction="column" gap={6}>
-      {contract?.contract && contractType === "custom" ? (
-        <CodeOverview contract={contract.contract} />
+      {contractQuery?.contract && useCustomCodeTab ? (
+        <CodeOverview contract={contractQuery.contract} />
       ) : (
         contractType && (
           <ContractCode
-            contract={contract.contract}
+            contract={contractQuery.contract}
             contractType={contractType}
           />
         )

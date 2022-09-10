@@ -1,16 +1,15 @@
 import { FormControl, Input, Stack } from "@chakra-ui/react";
 import { NFTContract, useTransferNFT } from "@thirdweb-dev/react";
-import { Erc1155 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { detectFeatures } from "components/contract-components/utils";
 import { constants } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { FormErrorMessage, FormHelperText, FormLabel } from "tw-components";
 
 interface TransferTabProps {
-  contract: NFTContract | undefined;
+  contract: NFTContract;
   tokenId: string;
 }
 
@@ -22,7 +21,7 @@ export const TransferTab: React.FC<TransferTabProps> = ({
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
   } = useForm<{ to: string; amount: string }>({
     defaultValues: { to: "", amount: "1" },
@@ -35,7 +34,7 @@ export const TransferTab: React.FC<TransferTabProps> = ({
     "Error transferring",
   );
 
-  const requiresAmount = contract instanceof Erc1155;
+  const isErc1155 = detectFeatures(contract, ["ERC1155"]);
 
   return (
     <Stack pt={3}>
@@ -83,8 +82,8 @@ export const TransferTab: React.FC<TransferTabProps> = ({
               <FormHelperText>Enter the address to transfer to.</FormHelperText>
               <FormErrorMessage>{errors.to?.message}</FormErrorMessage>
             </FormControl>
-            {requiresAmount && (
-              <FormControl isRequired={requiresAmount} isInvalid={!!errors.to}>
+            {isErc1155 && (
+              <FormControl isRequired={isErc1155} isInvalid={!!errors.to}>
                 <FormLabel>Amount</FormLabel>
                 <Input placeholder={"1"} {...register("amount")} />
                 <FormHelperText>
@@ -100,6 +99,7 @@ export const TransferTab: React.FC<TransferTabProps> = ({
             type="submit"
             colorScheme="primary"
             alignSelf="flex-end"
+            isDisabled={!isDirty}
           >
             Transfer
           </TransactionButton>

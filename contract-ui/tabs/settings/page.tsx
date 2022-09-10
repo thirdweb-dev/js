@@ -15,26 +15,26 @@ interface CustomContractOverviewPageProps {
 export const CustomContractSettingsTab: React.FC<
   CustomContractOverviewPageProps
 > = ({ contractAddress }) => {
-  const contract = useContract(contractAddress);
+  const contractQuery = useContract(contractAddress);
 
   const detectedMetadata = extensionDetectedState({
-    contract,
+    contractQuery,
     feature: "ContractMetadata",
   });
   const detectedPrimarySale = extensionDetectedState({
-    contract,
+    contractQuery,
     feature: "PrimarySale",
   });
   const detectedRoyalties = extensionDetectedState({
-    contract,
+    contractQuery,
     feature: "Royalty",
   });
   const detectedPlatformFees = extensionDetectedState({
-    contract,
+    contractQuery,
     feature: "PlatformFee",
   });
 
-  if (contract.isLoading) {
+  if (contractQuery.isLoading) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
   }
@@ -80,7 +80,7 @@ export const CustomContractSettingsTab: React.FC<
             </ButtonGroup>
           </Flex>
         </Card>
-        <OnDashboard contract={contract.contract} />
+        <OnDashboard contractAddress={contractQuery.contract?.getAddress()} />
       </Flex>
     );
   }
@@ -90,18 +90,18 @@ export const CustomContractSettingsTab: React.FC<
       <Flex gap={8} w="100%">
         <Flex flexDir="column" w="100%" gap={8}>
           {detectedMetadata === "enabled" && (
-            <SettingsMetadata contract={contract.contract} />
+            <SettingsMetadata contract={contractQuery.contract} />
           )}
           {detectedPrimarySale === "enabled" && (
-            <SettingsPrimarySale contract={contract.contract} />
+            <SettingsPrimarySale contract={contractQuery.contract} />
           )}
           {detectedRoyalties === "enabled" && (
-            <SettingsRoyalties contract={contract.contract} />
+            <SettingsRoyalties contract={contractQuery.contract} />
           )}
           {detectedPlatformFees === "enabled" && (
-            <SettingsPlatformFees contract={contract.contract} />
+            <SettingsPlatformFees contract={contractQuery.contract} />
           )}
-          <OnDashboard contract={contract.contract} />
+          <OnDashboard contractAddress={contractQuery.contract?.getAddress()} />
         </Flex>
       </Flex>
     </Flex>

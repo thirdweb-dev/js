@@ -86,7 +86,7 @@ const moduleExports = {
       //  old (deprecated) routes
       {
         source:
-          "/:network/(edition|nft-collection|token|pack|nft-drop|signature-drop|edition-drop)/:address",
+          "/:network/(edition|nft-collection|token|pack|nft-drop|signature-drop|edition-drop|token-drop)/:address",
         destination: "/:network/:address",
         permanent: false,
       },

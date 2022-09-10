@@ -29,6 +29,13 @@ export const SupportedNetworkSelect = forwardRef<
         return getNetworkMetadata(supportedChain);
       }).filter((n) => !n.isTestnet);
     }, [getNetworkMetadata]);
+
+    const deprecatedChains = [
+      ChainId.Rinkeby,
+      ChainId.OptimismKovan,
+      ChainId.ArbitrumRinkeby,
+    ];
+
     return (
       <Select {...selectProps} ref={ref}>
         <option disabled value={-1}>
@@ -56,7 +63,7 @@ export const SupportedNetworkSelect = forwardRef<
               disabled={disabledChainIds?.includes(tn.chainId)}
             >
               {tn.chainName} ({tn.symbol})
-              {tn.chainId === ChainId.Rinkeby && " - Deprecated"}
+              {deprecatedChains.includes(tn.chainId) && " - Deprecated"}
               {disabledChainIds?.includes(tn.chainId)
                 ? ` - ${disabledChainIdText}`
                 : ""}

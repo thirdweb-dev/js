@@ -2,7 +2,6 @@ import { useContractTypeOfContract } from "@3rdweb-sdk/react";
 import { Container, Stack } from "@chakra-ui/react";
 import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
-import React from "react";
 import { Heading } from "tw-components";
 
 export interface IContractEmptyState {

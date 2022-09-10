@@ -1,8 +1,7 @@
 import { ClaimConditions } from "./components/claim-conditions";
 import { ButtonGroup, Divider, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
-import { SmartContract } from "@thirdweb-dev/sdk";
-import React from "react";
+import { detectFeatures } from "components/contract-components/utils";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 
 interface ContractClaimConditionsPageProps {
@@ -12,11 +11,14 @@ interface ContractClaimConditionsPageProps {
 export const ContractClaimConditionsPage: React.FC<
   ContractClaimConditionsPageProps
 > = ({ contractAddress }) => {
-  const contract = useContract(contractAddress);
+  const contractQuery = useContract(contractAddress);
 
-  const detectedFeature = detectClaimConditions(contract?.contract);
+  const detectedFeature = detectFeatures(contractQuery.contract, [
+    "ERC721ClaimableWithConditions",
+    "ERC20ClaimableWithConditions",
+  ]);
 
-  if (contract.isLoading) {
+  if (contractQuery.isLoading) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
   }
@@ -49,19 +51,7 @@ export const ContractClaimConditionsPage: React.FC<
 
   return (
     <Flex direction="column" gap={6}>
-      <ClaimConditions contract={contract.contract?.nft} />
+      <ClaimConditions contract={contractQuery.contract} />
     </Flex>
   );
 };
-
-export function detectClaimConditions(contract: SmartContract | null) {
-  const ercContract = contract?.nft || contract?.token;
-
-  if (!contract || !ercContract) {
-    return undefined;
-  }
-  if ("drop" in ercContract) {
-    return ercContract?.drop;
-  }
-  return undefined;
-}

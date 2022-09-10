@@ -1,27 +1,25 @@
 import { BatchLazyMint } from "./batch-lazy-mint";
 import { MinterOnly } from "@3rdweb-sdk/react";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import { NFTContract, useContract } from "@thirdweb-dev/react";
-import { Erc721, ValidContractInstance } from "@thirdweb-dev/sdk";
+import { useContract } from "@thirdweb-dev/react";
+import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
-import React from "react";
 import { RiCheckboxMultipleBlankLine } from "react-icons/ri";
 import { Button, Drawer } from "tw-components";
 
 interface BatchLazyMintButtonProps {
-  contract: NFTContract;
+  contractQuery: ReturnType<typeof useContract>;
 }
 
 export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
-  contract,
+  contractQuery,
   ...restButtonProps
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { contract: actualContract } = useContract(contract?.getAddress());
 
   const detectedState = extensionDetectedState({
-    contract,
-    feature: ["ERC721Droppable", "ERC1155Droppable"],
+    contractQuery,
+    feature: ["ERC721LazyMintable", "ERC1155LazyMintable"],
   });
 
   if (detectedState !== "enabled") {
@@ -29,7 +27,9 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
   }
 
   return (
-    <MinterOnly contract={actualContract as unknown as ValidContractInstance}>
+    <MinterOnly
+      contract={contractQuery?.contract as unknown as ValidContractInstance}
+    >
       <Drawer
         allowPinchZoom
         preserveScrollBarGap
@@ -38,7 +38,7 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
         isOpen={isOpen}
       >
         <BatchLazyMint
-          contract={contract as Erc721}
+          contract={contractQuery.contract}
           isOpen={isOpen}
           onClose={onClose}
         />

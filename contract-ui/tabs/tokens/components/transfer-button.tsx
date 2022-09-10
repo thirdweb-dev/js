@@ -1,28 +1,32 @@
 import { TokenTransferForm } from "./transfer-form";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import { useAddress, useTokenBalance } from "@thirdweb-dev/react";
-import { Erc20 } from "@thirdweb-dev/sdk";
+import {
+  getErcs,
+  useAddress,
+  useContract,
+  useTokenBalance,
+} from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { BigNumber } from "ethers";
-import React from "react";
 import { FiSend } from "react-icons/fi";
 import { Button, Drawer } from "tw-components";
 
 interface TokenTransferButtonProps {
-  contract: Erc20;
+  contractQuery: ReturnType<typeof useContract>;
 }
 
 export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
-  contract,
+  contractQuery,
   ...restButtonProps
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const address = useAddress();
-  const tokenBalance = useTokenBalance(contract, address);
+  const { erc20 } = getErcs(contractQuery.contract);
+  const tokenBalance = useTokenBalance(erc20, address);
   const hasBalance = BigNumber.from(tokenBalance?.data?.value || 0).gt(0);
 
   const detectedState = extensionDetectedState({
-    contract,
+    contractQuery,
     feature: ["ERC20"],
   });
 
@@ -39,7 +43,7 @@ export const TokenTransferButton: React.FC<TokenTransferButtonProps> = ({
         onClose={onClose}
         isOpen={isOpen}
       >
-        <TokenTransferForm contract={contract} />
+        <TokenTransferForm contract={erc20} />
       </Drawer>
       <Button
         colorScheme="primary"

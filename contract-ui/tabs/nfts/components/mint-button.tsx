@@ -1,27 +1,25 @@
 import { NFTMintForm } from "./mint-form";
 import { MinterOnly } from "@3rdweb-sdk/react";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import { NFTContract, useContract, useMintNFT } from "@thirdweb-dev/react";
+import { useContract, useMintNFT } from "@thirdweb-dev/react";
 import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
-import React from "react";
 import { FiPlus } from "react-icons/fi";
 import { Button, Drawer } from "tw-components";
 
 interface NFTMintButtonProps {
-  contract: NFTContract;
+  contractQuery: ReturnType<typeof useContract>;
 }
 
 export const NFTMintButton: React.FC<NFTMintButtonProps> = ({
-  contract,
+  contractQuery,
   ...restButtonProps
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { contract: actualContract } = useContract(contract?.getAddress());
-  const mutation = useMintNFT(contract);
+  const mutation = useMintNFT(contractQuery.contract);
 
   const detectedState = extensionDetectedState({
-    contract,
+    contractQuery,
     feature: ["ERC721Mintable", "ERC1155Mintable"],
   });
 
@@ -30,7 +28,9 @@ export const NFTMintButton: React.FC<NFTMintButtonProps> = ({
   }
 
   return (
-    <MinterOnly contract={actualContract as unknown as ValidContractInstance}>
+    <MinterOnly
+      contract={contractQuery?.contract as unknown as ValidContractInstance}
+    >
       <Drawer
         allowPinchZoom
         preserveScrollBarGap
@@ -38,7 +38,10 @@ export const NFTMintButton: React.FC<NFTMintButtonProps> = ({
         onClose={onClose}
         isOpen={isOpen}
       >
-        <NFTMintForm contract={contract} mintMutation={mutation} />
+        <NFTMintForm
+          contract={contractQuery.contract}
+          mintMutation={mutation}
+        />
       </Drawer>
       <Button
         colorScheme="primary"

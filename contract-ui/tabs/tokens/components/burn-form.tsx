@@ -7,12 +7,15 @@ import {
   Stack,
   useModalContext,
 } from "@chakra-ui/react";
-import { useAddress, useBurnToken } from "@thirdweb-dev/react";
+import {
+  useAddress,
+  useBurnToken,
+  useTokenDecimals,
+} from "@thirdweb-dev/react";
 import type { Erc20 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import React from "react";
 import { useForm } from "react-hook-form";
 import {
   FormErrorMessage,
@@ -24,7 +27,7 @@ import {
 
 const BURN_FORM_ID = "token-burn-form";
 interface TokenBurnFormProps {
-  contract: Erc20;
+  contract?: Erc20;
 }
 
 export const TokenBurnForm: React.FC<TokenBurnFormProps> = ({ contract }) => {
@@ -35,7 +38,7 @@ export const TokenBurnForm: React.FC<TokenBurnFormProps> = ({ contract }) => {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm({ defaultValues: { amount: "0" } });
   const modalContext = useModalContext();
 
@@ -43,6 +46,8 @@ export const TokenBurnForm: React.FC<TokenBurnFormProps> = ({ contract }) => {
     "Tokens burned successfully",
     "Failed to burn tokens",
   );
+
+  const decimals = useTokenDecimals(contract);
 
   return (
     <>
@@ -54,7 +59,11 @@ export const TokenBurnForm: React.FC<TokenBurnFormProps> = ({ contract }) => {
           <Stack spacing={6} w="100%" direction={{ base: "column", md: "row" }}>
             <FormControl isRequired isInvalid={!!errors.amount}>
               <FormLabel>Amount</FormLabel>
-              <Input placeholder="1" {...register("amount")} />
+              <Input
+                type="text"
+                pattern={`^\\d+(\\.\\d{1,${decimals?.data || 18}})?$`}
+                {...register("amount")}
+              />
               <FormHelperText>How many would you like to burn?</FormHelperText>
               <FormErrorMessage>{errors.amount?.message}</FormErrorMessage>
             </FormControl>
@@ -74,6 +83,7 @@ export const TokenBurnForm: React.FC<TokenBurnFormProps> = ({ contract }) => {
           isLoading={burn.isLoading}
           type="submit"
           colorScheme="primary"
+          isDisabled={!isDirty}
           onClick={handleSubmit((d) => {
             if (address) {
               trackEvent({

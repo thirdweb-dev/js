@@ -1,6 +1,5 @@
 import { EventsFeed } from "./components/events-feed";
 import { Flex } from "@chakra-ui/react";
-import { useContract } from "@thirdweb-dev/react";
 
 interface ContractEventsPageProps {
   contractAddress?: string;
@@ -9,9 +8,7 @@ interface ContractEventsPageProps {
 export const ContractEventsPage: React.FC<ContractEventsPageProps> = ({
   contractAddress,
 }) => {
-  const contract = useContract(contractAddress);
-
-  if (contract.isLoading) {
+  if (!contractAddress) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
   }

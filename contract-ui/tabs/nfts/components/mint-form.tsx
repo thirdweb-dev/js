@@ -20,15 +20,14 @@ import {
   useLazyMint,
   useMintNFT,
 } from "@thirdweb-dev/react";
-import { Erc1155 } from "@thirdweb-dev/sdk";
 import { OpenSeaPropertyBadge } from "components/badges/opensea";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { detectFeatures } from "components/contract-components/utils";
 import { PropertiesFormControl } from "components/contract-pages/forms/properties.shared";
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import React from "react";
 import { useForm } from "react-hook-form";
 import {
   Button,
@@ -69,7 +68,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
     register,
     watch,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<NFTMetadataInputLimited & { supply: number }>();
 
   const modalContext = useModalContext();
@@ -142,6 +141,8 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
     watch("animation_url") instanceof File ||
     watch("external_url") instanceof File;
 
+  const isErc1155 = detectFeatures(contract, ["ERC1155"]);
+
   return (
     <>
       <DrawerHeader>
@@ -213,7 +214,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
                     onSuccess();
                     modalContext.onClose();
                   },
-                  onError: (error) => {
+                  onError: (error: any) => {
                     trackEvent({
                       category: "nft",
                       action: "mint",
@@ -285,7 +286,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
             <Textarea {...register("description")} />
             <FormErrorMessage>{errors?.description?.message}</FormErrorMessage>
           </FormControl>
-          {contract instanceof Erc1155 && mintMutation && (
+          {isErc1155 && mintMutation && (
             <FormControl isRequired isInvalid={!!errors.supply}>
               <FormLabel>Initial Supply</FormLabel>
               <Input
@@ -364,6 +365,7 @@ export const NFTMintForm: React.FC<NFTMintForm> = ({
           form={MINT_FORM_ID}
           type="submit"
           colorScheme="primary"
+          isDisabled={!isDirty}
         >
           {lazyMintMutation && "Lazy "} Mint NFT
         </TransactionButton>
