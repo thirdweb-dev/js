@@ -2,6 +2,8 @@
 "@thirdweb-dev/sdk": major
 ---
 
+3.0.0 update
+
 ## _MAJOR VERSION CHANGE_
 
 #### Breaking changes:
@@ -49,5 +51,5 @@ const contract.erc721.claimConditions.set(...)
 // ERC1155 contracts
 const contract.erc1155.mintTo(...)
 // ERC20 contracts
-const contract.erc29.burn(...)
+const contract.erc20.burn(...)
 ```
