@@ -153,7 +153,7 @@ export class NFTCollection {
     cursedBitwiseLogicLoop: while (true) {
       const editionMarkerAddress = findEditionMarkerPda(
         new PublicKey(mintAddress),
-        toBigNumber(0),
+        toBigNumber(editionMarkerNumber),
       );
       const editionMarker = await EditionMarker.fromAccountAddress(
         this.metaplex.connection,
