@@ -2,6 +2,7 @@ import { Deployer } from "./classes/deployer";
 import { UserWallet } from "./classes/user-wallet";
 import { DEFAULT_IPFS_GATEWAY } from "./constants/urls";
 import { NFTCollection } from "./contracts/nft-collection";
+import { NFTDrop } from "./contracts/nft-drop";
 import { Token } from "./contracts/token";
 import { Network } from "./types";
 import { getUrlForNetwork } from "./utils/urls";
@@ -16,7 +17,6 @@ import {
 import { Connection, Keypair } from "@solana/web3.js";
 import { IpfsStorage, IStorage, PinataUploader } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
-import { NFTDrop } from "./contracts/nft-drop";
 
 export class ThirdwebSDK {
   static fromNetwork(network: Network, storage?: IStorage): ThirdwebSDK {
@@ -63,7 +63,7 @@ export class ThirdwebSDK {
   public async getNFTDrop(address: string): Promise<NFTDrop> {
     return new NFTDrop(address, this.metaplex, this.wallet, this.storage);
   }
-  
+
   public async getToken(address: string): Promise<Token> {
     return new Token(address, this.metaplex, this.wallet, this.storage);
   }

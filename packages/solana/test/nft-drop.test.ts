@@ -37,7 +37,7 @@ describe("NFTDrop", async () => {
     expect(unclaimed).to.equal(5n);
     expect(claimed).to.equal(0n);
 
-    await drop.claim();
+    const address = await drop.claim();
 
     unclaimed = await drop.totalUnclaimedSupply();
     claimed = await drop.totalClaimedSupply();

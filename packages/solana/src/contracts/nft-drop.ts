@@ -1,3 +1,4 @@
+import { NFTHelper } from "../classes/helpers/nft-helper";
 import { UserWallet } from "../classes/user-wallet";
 import { TransactionResult } from "../types/common";
 import {
@@ -5,7 +6,7 @@ import {
   NFTDropClaimSchema,
   NFTDropOutput,
 } from "../types/contracts/nft-drop";
-import { CommonNFTInput, NFTMetadataInput } from "../types/nft";
+import { CommonNFTInput, NFTMetadata, NFTMetadataInput } from "../types/nft";
 import { Metaplex } from "@metaplex-foundation/js";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
@@ -16,6 +17,7 @@ export class NFTDrop {
   private wallet: UserWallet;
   private metaplex: Metaplex;
   private storage: IStorage;
+  private nft: NFTHelper;
   dropMintAddress: PublicKey;
 
   constructor(
@@ -28,7 +30,21 @@ export class NFTDrop {
     this.storage = storage;
     this.metaplex = metaplex;
     this.connection = metaplex.connection;
+    this.nft = new NFTHelper(metaplex);
     this.dropMintAddress = new PublicKey(dropMintAddress);
+  }
+
+  async get(mintAddress: string): Promise<NFTMetadata> {
+    return this.nft.get(mintAddress);
+  }
+
+  async balance(mintAddress: string): Promise<bigint> {
+    const address = this.metaplex.identity().publicKey.toBase58();
+    return this.balanceOf(address, mintAddress);
+  }
+
+  async balanceOf(walletAddress: string, mintAddress: string): Promise<bigint> {
+    return this.nft.balanceOf(walletAddress, mintAddress);
   }
 
   async totalUnclaimedSupply(): Promise<bigint> {
@@ -41,6 +57,13 @@ export class NFTDrop {
   async totalClaimedSupply(): Promise<bigint> {
     const info = await this.getCandyMachine();
     return BigInt(info.itemsMinted.toNumber());
+  }
+
+  async transfer(
+    receiverAddress: string,
+    mintAddress: string,
+  ): Promise<TransactionResult> {
+    return this.nft.transfer(receiverAddress, mintAddress);
   }
 
   async lazyMint(metadatas: NFTMetadataInput[]): Promise<TransactionResult> {
@@ -67,15 +90,13 @@ export class NFTDrop {
     };
   }
 
-  async claim(): Promise<TransactionResult> {
+  async claim(): Promise<string> {
     const result = await this.metaplex
       .candyMachines()
       .mint({ candyMachine: await this.getCandyMachine() })
       .run();
 
-    return {
-      signature: result.response.signature,
-    };
+    return result.nft.address.toBase58();
   }
 
   async getClaimConditions(): Promise<NFTDropOutput> {
