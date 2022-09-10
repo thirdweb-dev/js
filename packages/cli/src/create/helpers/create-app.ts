@@ -10,6 +10,8 @@ import { makeDir } from "./make-dir";
 import { downloadAndExtractRepo, hasTemplate } from "./templates";
 import retry from "async-retry";
 import chalk from "chalk";
+import fs from "fs";
+import os from "os";
 import path from "path";
 
 export class DownloadError extends Error {}
@@ -113,6 +115,23 @@ export async function createApp({
       );
     }
 
+    const jsonFile = path.join(root, "package.json");
+    const packageString = fs.readFileSync(jsonFile);
+    try {
+      const packageJson = JSON.parse(packageString.toString());
+      if (packageJson) {
+        packageJson.name = appName;
+      }
+
+      fs.writeFileSync(jsonFile, JSON.stringify(packageJson, null, 2) + os.EOL);
+
+      console.log("Updated package.json.");
+      console.log();
+    } catch (e) {
+      console.log("Reading JSON error");
+      console.log();
+    }
+
     console.log("Installing packages. This might take a couple of minutes.");
     console.log();
 
@@ -139,6 +158,23 @@ export async function createApp({
       throw new DownloadError(
         isErrorLike(reason) ? reason.message : reason + "",
       );
+    }
+
+    const jsonFile = path.join(root, "package.json");
+    const packageString = fs.readFileSync(jsonFile);
+    try {
+      const packageJson = JSON.parse(packageString.toString());
+      if (packageJson) {
+        packageJson.name = appName;
+      }
+
+      fs.writeFileSync(jsonFile, JSON.stringify(packageJson, null, 2) + os.EOL);
+
+      console.log("Updated package.json.");
+      console.log();
+    } catch (e) {
+      console.log("Reading JSON error");
+      console.log();
     }
 
     console.log("Installing packages. This might take a couple of minutes.");
