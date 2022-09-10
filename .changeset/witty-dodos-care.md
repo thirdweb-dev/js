@@ -2,6 +2,8 @@
 "@thirdweb-dev/sdk": major
 ---
 
+3.0.0 update
+
 ## _MAJOR VERSION CHANGE_
 
 #### Breaking changes:
