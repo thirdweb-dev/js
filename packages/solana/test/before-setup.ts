@@ -15,6 +15,7 @@ const createTestSDK = async (
     knownLabels: {
       [METAPLEX_PROGRAM_ID]: "Token Metadata",
       [TOKEN_PROGRAM_ID.toBase58()]: "Token",
+      "89RsF5yJgRXhae6LKuCcMRgXkqxCJm3AeaYwcJN4XopA": "Counter Program",
     },
   });
   await amman.airdrop(connection, wallet.publicKey, solsToAirdrop);
