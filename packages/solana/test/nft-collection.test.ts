@@ -67,4 +67,16 @@ describe("NFTCollection", async () => {
     balance = await collection.balance(printed);
     expect(balance).to.equal(1n);
   });
+
+  it("test supply of", async () => {
+    const mint = await collection.mint({
+      name: "Test NFT",
+      description: "Test Description",
+    });
+    await collection.mintAdditionalSupply(mint);
+    await collection.mintAdditionalSupply(mint);
+
+    const supply = await collection.supplyOf(mint);
+    expect(supply).to.equal(3n);
+  });
 });

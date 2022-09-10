@@ -7,8 +7,17 @@ import {
   NFTMetadata,
   NFTMetadataInput,
 } from "../types/nft";
-import { Metaplex, toBigNumber } from "@metaplex-foundation/js";
-import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
+import {
+  findEditionMarkerPda,
+  findEditionPda,
+  Metaplex,
+  toBigNumber,
+  TokenMetadataProgram,
+} from "@metaplex-foundation/js";
+import {
+  EditionMarker,
+  Metadata,
+} from "@metaplex-foundation/mpl-token-metadata";
 import { ConfirmedSignatureInfo, PublicKey } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
 
@@ -128,7 +137,6 @@ export class NFTCollection {
     return Array.from(mintAddresses);
   }
 
-  // TODO fetch editions as well and add to balance
   async balance(mintAddress: string): Promise<bigint> {
     const address = this.metaplex.identity().publicKey.toBase58();
     return this.balanceOf(address, mintAddress);
@@ -136,6 +144,39 @@ export class NFTCollection {
 
   async balanceOf(walletAddress: string, mintAddress: string): Promise<bigint> {
     return this.nft.balanceOf(walletAddress, mintAddress);
+  }
+
+  async supplyOf(mintAddress: string): Promise<bigint> {
+    let editionMarkerNumber = 0;
+    let totalSupply = 1;
+
+    cursedBitwiseLogicLoop: while (true) {
+      const editionMarkerAddress = findEditionMarkerPda(
+        new PublicKey(mintAddress),
+        toBigNumber(0),
+      );
+      const editionMarker = await EditionMarker.fromAccountAddress(
+        this.metaplex.connection,
+        editionMarkerAddress,
+      );
+
+      // WARNING: Ugly bitwise operations because of Rust :(
+      for (let editionIndex = 0; editionIndex < 248; editionIndex++) {
+        const ledgerIndex = Math.floor(editionIndex / 8);
+        const bitmask = 0b10000000 >> editionIndex % (ledgerIndex * 8);
+        const editionExists =
+          (editionMarker.ledger[ledgerIndex] & bitmask) !== 0;
+
+        if (!editionExists) {
+          totalSupply += editionMarkerNumber + editionIndex;
+          break cursedBitwiseLogicLoop;
+        }
+      }
+
+      editionMarkerNumber++;
+    }
+
+    return BigInt(totalSupply);
   }
 
   async transfer(
