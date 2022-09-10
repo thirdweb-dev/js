@@ -73,10 +73,13 @@ describe("NFTCollection", async () => {
       name: "Test NFT",
       description: "Test Description",
     });
-    await collection.mintAdditionalSupply(mint);
-    await collection.mintAdditionalSupply(mint);
+
+    const amount = 32;
+    for (let i = 0; i < amount; i++) {
+      await collection.mintAdditionalSupply(mint);
+    }
 
     const supply = await collection.supplyOf(mint);
-    expect(supply).to.equal(3n);
+    expect(supply).to.equal(BigInt(amount + 1));
   });
 });

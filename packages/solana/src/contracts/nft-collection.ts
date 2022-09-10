@@ -159,13 +159,30 @@ export class NFTCollection {
         this.metaplex.connection,
         editionMarkerAddress,
       );
+      console.log(editionMarker);
 
       // WARNING: Ugly bitwise operations because of Rust :(
       for (let editionIndex = 0; editionIndex < 248; editionIndex++) {
         const ledgerIndex = Math.floor(editionIndex / 8);
-        const bitmask = 0b10000000 >> editionIndex % (ledgerIndex * 8);
+        const size = 7; //ledgerIndex === 0 ? 7 : 8;
+        const shiftBase = 0b1 << (size - 1);
+
+        const bitmask =
+          ledgerIndex === 0
+            ? shiftBase >> editionIndex
+            : shiftBase >> editionIndex % (ledgerIndex * 8);
+        //console.log("bitmask", bitmask);
+
         const editionExists =
           (editionMarker.ledger[ledgerIndex] & bitmask) !== 0;
+
+        console.log("editionExists", {
+          shiftBase,
+          editionIndex,
+          ledgerIndex,
+          editionExists,
+        });
+        //console.log("ledgerIndex", editionMarker.ledger[ledgerIndex]);
 
         if (!editionExists) {
           totalSupply += editionMarkerNumber + editionIndex;
@@ -204,7 +221,7 @@ export class NFTCollection {
         collectionAuthority: this.wallet.signer,
         tokenOwner: new PublicKey(to),
         // Always sets max supply to unlimited so editions can be minted
-        maxSupply: toBigNumber(100),
+        maxSupply: null,
       })
       .run();
 
