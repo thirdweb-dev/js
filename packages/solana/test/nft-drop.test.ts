@@ -1,5 +1,6 @@
 import { NFTDrop } from "../src/contracts/nft-drop";
 import { sdk } from "./before-setup";
+import { sol } from "@metaplex-foundation/js";
 import { expect } from "chai";
 
 describe("NFTDrop", async () => {
@@ -44,16 +45,14 @@ describe("NFTDrop", async () => {
     expect(claimed).to.equal(1n);
   });
 
-  // it("should update settings", async () => {
-  //   let price = (await drop.getMetatada()).price;
-  //   expect(price.basisPoints.toNumber()).to.equal(0);
-  //   await drop.setClaimConditions({
-  //     price: 2,
-  //   });
+  it("should update claim condition", async () => {
+    let condition = await drop.getClaimConditions();
+    expect(condition.price).to.equal(0n);
+    await drop.setClaimConditions({
+      price: 2,
+    });
 
-  //   price = (await drop.getMetatada()).price;
-  //   expect(price.basisPoints.toNumber()).to.equal(
-  //     sol(2).basisPoints.toNumber(),
-  //   );
-  // });
+    condition = await drop.getClaimConditions();
+    expect(condition.price).to.equal(BigInt(sol(2).basisPoints.toNumber()));
+  });
 });
