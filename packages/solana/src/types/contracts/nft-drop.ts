@@ -38,7 +38,7 @@ export type NFTDropMetadataInput = z.input<typeof NFTDropContractSchema>;
 /**
  * @internal
  */
-// TODO add whitelist options
+// TODO add whitelist options and end settings
 export const NFTDropClaimSchema = z.object({
   price: z
     .number()
@@ -67,4 +67,16 @@ export const NFTDropClaimSchema = z.object({
     .optional(),
 });
 
+/**
+ * @internal
+ */
+export const NFTDropOutputSchema = z.object({
+  price: z.bigint(),
+  sellerFeeBasisPoints: z.bigint(),
+  itemsAvailable: z.bigint(),
+  goLiveDate: z.date().optional(),
+});
+
 export type NFTDropClaimInput = z.input<typeof NFTDropClaimSchema>;
+
+export type NFTDropOutput = z.output<typeof NFTDropOutputSchema>;

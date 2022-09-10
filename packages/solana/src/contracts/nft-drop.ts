@@ -3,6 +3,7 @@ import { TransactionResult } from "../types/common";
 import {
   NFTDropClaimInput,
   NFTDropClaimSchema,
+  NFTDropOutput,
 } from "../types/contracts/nft-drop";
 import { CommonNFTInput, NFTMetadataInput } from "../types/nft";
 import { Metaplex } from "@metaplex-foundation/js";
@@ -32,7 +33,9 @@ export class NFTDrop {
 
   async totalUnclaimedSupply(): Promise<bigint> {
     const info = await this.getCandyMachine();
-    return BigInt(info.itemsRemaining.toNumber());
+    return BigInt(
+      Math.min(info.itemsLoaded.toNumber(), info.itemsRemaining.toNumber()),
+    );
   }
 
   async totalClaimedSupply(): Promise<bigint> {
@@ -72,6 +75,19 @@ export class NFTDrop {
 
     return {
       signature: result.response.signature,
+    };
+  }
+
+  async getClaimConditions(): Promise<NFTDropOutput> {
+    const candyMachine = await this.getCandyMachine();
+
+    return {
+      price: BigInt(candyMachine.price.basisPoints.toNumber()),
+      sellerFeeBasisPoints: BigInt(candyMachine.sellerFeeBasisPoints),
+      itemsAvailable: BigInt(candyMachine.itemsAvailable.toNumber()),
+      goLiveDate: candyMachine.goLiveDate
+        ? new Date(candyMachine.goLiveDate.toNumber() * 1000)
+        : undefined,
     };
   }
 
