@@ -74,7 +74,7 @@ describe("NFTCollection", async () => {
       description: "Test Description",
     });
 
-    const amount = 32;
+    const amount = 8;
     for (let i = 0; i < amount; i++) {
       await collection.mintAdditionalSupply(mint);
     }

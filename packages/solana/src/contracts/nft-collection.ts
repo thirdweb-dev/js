@@ -150,47 +150,52 @@ export class NFTCollection {
     let editionMarkerNumber = 0;
     let totalSupply = 1;
 
-    cursedBitwiseLogicLoop: while (true) {
-      const editionMarkerAddress = findEditionMarkerPda(
-        new PublicKey(mintAddress),
-        toBigNumber(editionMarkerNumber),
-      );
-      const editionMarker = await EditionMarker.fromAccountAddress(
-        this.metaplex.connection,
-        editionMarkerAddress,
-      );
-      console.log(editionMarker);
+    try {
+      cursedBitwiseLogicLoop: while (true) {
+        const editionMarkerAddress = findEditionMarkerPda(
+          new PublicKey(mintAddress),
+          toBigNumber(editionMarkerNumber * 248),
+        );
+        const editionMarker = await EditionMarker.fromAccountAddress(
+          this.metaplex.connection,
+          editionMarkerAddress,
+        );
 
-      // WARNING: Ugly bitwise operations because of Rust :(
-      for (let editionIndex = 0; editionIndex < 248; editionIndex++) {
-        const ledgerIndex = Math.floor(editionIndex / 8);
-        const size = 7; //ledgerIndex === 0 ? 7 : 8;
-        const shiftBase = 0b1 << (size - 1);
+        // WARNING: Ugly bitwise operations because of Rust :(
+        const indexCap = editionMarkerNumber === 0 ? 247 : 248;
+        for (let editionIndex = 0; editionIndex < indexCap; editionIndex++) {
+          const ledgerIndex =
+            editionMarkerNumber > 0
+              ? Math.floor(editionIndex / 8)
+              : editionIndex < 7
+              ? 0
+              : Math.floor((editionIndex - 7) / 8) + 1;
+          const size = editionMarkerNumber === 0 && ledgerIndex === 0 ? 7 : 8;
+          const shiftBase = 0b1 << (size - 1);
 
-        const bitmask =
-          ledgerIndex === 0
-            ? shiftBase >> editionIndex
-            : shiftBase >> editionIndex % (ledgerIndex * 8);
-        //console.log("bitmask", bitmask);
+          const bitmask =
+            ledgerIndex === 0
+              ? shiftBase >> editionIndex
+              : editionMarkerNumber > 0
+              ? shiftBase >> editionIndex % (ledgerIndex * 8)
+              : ledgerIndex === 1
+              ? shiftBase >> (editionIndex - 7)
+              : shiftBase >> (editionIndex - 7) % ((ledgerIndex - 1) * 8);
 
-        const editionExists =
-          (editionMarker.ledger[ledgerIndex] & bitmask) !== 0;
+          const editionExists =
+            (editionMarker.ledger[ledgerIndex] & bitmask) !== 0;
 
-        console.log("editionExists", {
-          shiftBase,
-          editionIndex,
-          ledgerIndex,
-          editionExists,
-        });
-        //console.log("ledgerIndex", editionMarker.ledger[ledgerIndex]);
-
-        if (!editionExists) {
-          totalSupply += editionMarkerNumber + editionIndex;
-          break cursedBitwiseLogicLoop;
+          if (editionExists) {
+            totalSupply += 1;
+          } else {
+            break cursedBitwiseLogicLoop;
+          }
         }
-      }
 
-      editionMarkerNumber++;
+        editionMarkerNumber++;
+      }
+    } catch (err) {
+      console.log(err);
     }
 
     return BigInt(totalSupply);
