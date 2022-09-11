@@ -1,15 +1,17 @@
-import { DropErc1155ClaimConditions } from "./drop-erc1155-claim-conditions";
-import { FEATURE_NFT_CLAIMABLE } from "../../constants/erc721-features";
+import { calculateClaimCost } from "../../common/claim-conditions";
+import {
+  approveErc20Allowance,
+  normalizePriceValue,
+} from "../../common/currency";
+import { NATIVE_TOKEN_ADDRESS } from "../../constants";
+import { FEATURE_EDITION_CLAIMABLE } from "../../constants/erc1155-features";
+import { ClaimOptions, Price } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { BaseClaimConditionERC1155 } from "../../types/eips";
-import { IStorage } from "@thirdweb-dev/storage";
-import { ContractWrapper } from "./contract-wrapper";
-import { ContractMetadata } from "./contract-metadata";
-import { CustomContractSchema } from "../../schema/contracts/custom";
-import { ClaimVerification } from "../../types/claim-conditions/claim-conditions";
-import { BigNumberish, ethers } from "ethers";
 import { TransactionResult } from "../types";
 import { TransactionTask } from "./TransactionTask";
+import { ContractWrapper } from "./contract-wrapper";
+import { IClaimableERC1155 } from "@thirdweb-dev/contracts-js";
+import { BigNumberish, CallOverrides } from "ethers";
 
 /**
  * Configure and claim ERC1155 NFTs
@@ -20,30 +22,13 @@ import { TransactionTask } from "./TransactionTask";
  * await contract.edition.drop.claim.to("0x...", tokenId, quantity);
  * ```
  */
-export class Erc1155Claimable implements DetectableFeature {
-  featureName = FEATURE_NFT_CLAIMABLE.name;
+export class ERC1155Claimable implements DetectableFeature {
+  featureName = FEATURE_EDITION_CLAIMABLE.name;
 
-  public conditions: DropErc1155ClaimConditions<BaseClaimConditionERC1155>;
-  private contractWrapper: ContractWrapper<BaseClaimConditionERC1155>;
-  private storage: IStorage;
+  private contractWrapper: ContractWrapper<IClaimableERC1155>;
 
-  constructor(
-    contractWrapper: ContractWrapper<BaseClaimConditionERC1155>,
-    storage: IStorage,
-  ) {
+  constructor(contractWrapper: ContractWrapper<IClaimableERC1155>) {
     this.contractWrapper = contractWrapper;
-    this.storage = storage;
-
-    const metadata = new ContractMetadata(
-      this.contractWrapper,
-      CustomContractSchema,
-      this.storage,
-    );
-    this.conditions = new DropErc1155ClaimConditions(
-      contractWrapper,
-      metadata,
-      this.storage,
-    );
   }
 
   /**
@@ -52,45 +37,29 @@ export class Erc1155Claimable implements DetectableFeature {
    * @param destinationAddress - Address you want to send the token to
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
-   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
-   * @param claimData - Optional claim verification data (e.g. price, allowlist proof, etc...)
+   * @param options - Options for claiming the NFTs
    */
   public async getClaimTransaction(
     destinationAddress: string,
     tokenId: BigNumberish,
     quantity: BigNumberish,
-    checkERC20Allowance = true, // TODO split up allowance checks
-    claimData?: ClaimVerification,
+    options?: ClaimOptions,
   ): Promise<TransactionTask> {
-    let claimVerification = claimData;
-    if (this.conditions && !claimData) {
-      claimVerification = await this.conditions.prepareClaim(
-        tokenId,
+    let overrides: CallOverrides = {};
+    if (options && options.pricePerToken) {
+      overrides = await calculateClaimCost(
+        this.contractWrapper,
+        options.pricePerToken,
         quantity,
-        checkERC20Allowance,
-      );
-    }
-    if (!claimVerification) {
-      throw new Error(
-        "Claim verification Data is required - either pass it in as 'claimData' or set claim conditions via 'conditions.set()'",
+        options.currencyAddress,
+        options.checkERC20Allowance,
       );
     }
     return TransactionTask.make({
       contractWrapper: this.contractWrapper,
       functionName: "claim",
-      args: [
-        destinationAddress,
-        tokenId,
-        quantity,
-        claimVerification.currencyAddress,
-        claimVerification.price,
-        {
-          proof: claimVerification.proofs,
-          maxQuantityInAllowlist: claimVerification.maxQuantityPerTransaction,
-        },
-        ethers.utils.toUtf8Bytes(""),
-      ],
-      overrides: claimVerification.overrides,
+      args: [destinationAddress, tokenId, quantity],
+      overrides,
     });
   }
 
@@ -105,15 +74,14 @@ export class Erc1155Claimable implements DetectableFeature {
    * const tokenId = 0; // the id of the NFT you want to claim
    * const quantity = 1; // how many NFTs you want to claim
    *
-   * const tx = await contract.edition.drop.claim.to(address, tokenId, quantity);
+   * const tx = await contract.erc1155.claimTo(address, tokenId, quantity);
    * const receipt = tx.receipt; // the transaction receipt
    * ```
    *
    * @param destinationAddress - Address you want to send the token to
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
-   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
-   * @param claimData - Optional claim verification data (e.g. price, allowlist proof, etc...)
+   * @param options - Options for claiming the NFTs
    *
    * @returns - Receipt for the transaction
    */
@@ -121,15 +89,13 @@ export class Erc1155Claimable implements DetectableFeature {
     destinationAddress: string,
     tokenId: BigNumberish,
     quantity: BigNumberish,
-    checkERC20Allowance = true,
-    claimData?: ClaimVerification,
+    options?: ClaimOptions,
   ): Promise<TransactionResult> {
     const tx = await this.getClaimTransaction(
       destinationAddress,
       tokenId,
       quantity,
-      checkERC20Allowance,
-      claimData,
+      options,
     );
     return await tx.execute();
   }

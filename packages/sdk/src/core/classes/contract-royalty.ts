@@ -1,16 +1,16 @@
+import { hasFunction } from "../../common";
+import { FEATURE_ROYALTY } from "../../constants/thirdweb-features";
+import { CommonRoyaltySchema } from "../../schema/contracts/common";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { TransactionResult } from "../types";
+import { ContractMetadata, IGenericSchemaType } from "./contract-metadata";
+import { ContractWrapper } from "./contract-wrapper";
 import {
   ContractMetadata as ContractMetadataContract,
   IRoyalty,
 } from "@thirdweb-dev/contracts-js";
-import { CommonRoyaltySchema } from "../../schema/contracts/common";
-import { ContractMetadata, IGenericSchemaType } from "./contract-metadata";
-import { ContractWrapper } from "./contract-wrapper";
-import { z } from "zod";
-import { TransactionResult } from "../types";
 import { BigNumberish } from "ethers";
-import { FEATURE_ROYALTY } from "../../constants/thirdweb-features";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { hasFunction } from "../../common";
+import { z } from "zod";
 
 /**
  * Handle contract royalties
@@ -46,6 +46,12 @@ export class ContractRoyalty<
   /**
    * Gets the royalty recipient and BPS (basis points) of the contract
    * @returns - The royalty recipient and BPS
+   * @example
+   * ```javascript
+   * const royaltyInfo = await contract.royalties.getDefaultRoyaltyInfo();
+   * ```
+   * @public
+   * @twfeature Royalty
    */
   public async getDefaultRoyaltyInfo() {
     const [royaltyRecipient, royaltyBps] =
@@ -60,6 +66,12 @@ export class ContractRoyalty<
   /**
    * Gets the royalty recipient and BPS (basis points) of a particular token
    * @returns - The royalty recipient and BPS
+   * @example
+   * ```javascript
+   * const royaltyInfo = await contract.royalties.getDefaultRoyaltyInfo();
+   * ```
+   * @public
+   * @twfeature Royalty
    */
   public async getTokenRoyaltyInfo(tokenId: BigNumberish) {
     const [royaltyRecipient, royaltyBps] =
@@ -73,6 +85,15 @@ export class ContractRoyalty<
   /**
    * Set the royalty recipient and fee for a contract
    * @param royaltyData - the royalty recipient and fee
+   *  @example
+   * ```javascript
+   * await contract.roles.setDefaultRoyaltyInfo({
+   *   seller_fee_basis_points: 100, // 1% royalty fee
+   *   fee_recipient: "0x...", // the fee recipient
+   * });
+   * ```
+   * @public
+   * @twfeature Royalty
    */
   public async setDefaultRoyaltyInfo(
     royaltyData: z.input<typeof CommonRoyaltySchema>,
@@ -129,6 +150,15 @@ export class ContractRoyalty<
    * Set the royalty recipient and fee for a particular token
    * @param tokenId - the token id
    * @param royaltyData - the royalty recipient and fee
+   * @example
+   * ```javascript
+   * await contract.roles.setTokenRoyaltyInfo(tokenId, {
+   *   seller_fee_basis_points: 100, // 1% royalty fee
+   *   fee_recipient: "0x...", // the fee recipient
+   * });
+   * ```
+   * @public
+   * @twfeature Royalty
    */
   public async setTokenRoyaltyInfo(
     tokenId: BigNumberish,

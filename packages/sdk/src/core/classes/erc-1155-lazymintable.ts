@@ -1,37 +1,33 @@
-import { detectContractFeature } from "../../common/feature-detection";
+import {
+  detectContractFeature,
+  hasFunction,
+} from "../../common/feature-detection";
 import { uploadOrExtractURIs } from "../../common/nft";
 import {
-  FEATURE_NFT_DROPPABLE,
-  FEATURE_NFT_REVEALABLE,
-} from "../../constants/erc721-features";
-import { NFTMetadata, NFTMetadataOrUri } from "../../schema";
-import { UploadProgressEvent } from "../../types";
+  FEATURE_EDITION_LAZY_MINTABLE,
+  FEATURE_EDITION_REVEALABLE,
+} from "../../constants/erc1155-features";
+import { NFTMetadata, NFTMetadataOrUri } from "../../schema/tokens/common";
 import {
-  BaseClaimConditionERC721,
-  BaseDelayedRevealERC721,
-  BaseDropERC721,
+  BaseClaimConditionERC1155,
+  BaseDelayedRevealERC1155,
+  BaseDropERC1155,
 } from "../../types/eips";
+import { UploadProgressEvent } from "../../types/events";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { DelayedReveal } from "./delayed-reveal";
-import { Erc721 } from "./erc-721";
-import { Erc721Claimable } from "./erc-721-claimable";
+import { Erc1155 } from "./erc-1155";
+import { ERC1155Claimable } from "./erc-1155-claimable";
+import { Erc1155ClaimableWithConditions } from "./erc-1155-claimable-with-conditions";
+import { IClaimableERC1155, TokenERC721 } from "@thirdweb-dev/contracts-js";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
 import { IStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 
-/**
- * Lazily mint and claim ERC721 NFTs
- * @remarks Manage claim phases and claim ERC721 NFTs that have been lazily minted.
- * @example
- * ```javascript
- * const contract = await sdk.getContract("{{contract_address}}");
- * await contract.drop.claim(quantity);
- * ```
- */
-export class Erc721Droppable implements DetectableFeature {
-  featureName = FEATURE_NFT_DROPPABLE.name;
+export class Erc1155LazyMintable implements DetectableFeature {
+  featureName = FEATURE_EDITION_LAZY_MINTABLE.name;
 
   /**
    * Delayed reveal
@@ -54,17 +50,17 @@ export class Erc721Droppable implements DetectableFeature {
    *   description: "Will be revealed next week!"
    * };
    * // Create and encrypt the NFTs
-   * await contract.nft.drop.revealer.createDelayedRevealBatch(
+   * await contract.edition.drop.revealer.createDelayedRevealBatch(
    *   placeholderNFT,
    *   realNFTs,
    *   "my secret password",
    * );
    * // Whenever you're ready, reveal your NFTs at any time
    * const batchId = 0; // the batch to reveal
-   * await contract.nft.drop.revealer.reveal(batchId, "my secret password");
+   * await contract.edition.drop.revealer.reveal(batchId, "my secret password");
    * ```
    */
-  public revealer: DelayedReveal<BaseDelayedRevealERC721> | undefined;
+  public revealer: DelayedReveal<BaseDelayedRevealERC1155> | undefined;
 
   /**
    * Claim tokens and configure claim conditions
@@ -72,32 +68,35 @@ export class Erc721Droppable implements DetectableFeature {
    * @example
    * ```javascript
    * const quantity = 10;
-   * await contract.nft.drop.claim.to("0x...", quantity);
+   * const tokenId = 0;
+   * await contract.erc1155.claimTo("0x...", 0, quantity);
    * ```
    */
-  public claim: Erc721Claimable | undefined;
+  public claimWithConditions: Erc1155ClaimableWithConditions | undefined;
+  public claim: ERC1155Claimable | undefined;
 
-  private contractWrapper: ContractWrapper<BaseDropERC721>;
-  private erc721: Erc721;
+  private contractWrapper: ContractWrapper<BaseDropERC1155>;
+  private erc1155: Erc1155;
   private storage: IStorage;
 
   constructor(
-    erc721: Erc721,
-    contractWrapper: ContractWrapper<BaseDropERC721>,
+    erc1155: Erc1155,
+    contractWrapper: ContractWrapper<BaseDropERC1155>,
     storage: IStorage,
   ) {
-    this.erc721 = erc721;
+    this.erc1155 = erc1155;
     this.contractWrapper = contractWrapper;
 
     this.storage = storage;
+    this.claim = this.detectErc1155Claimable();
+    this.claimWithConditions = this.detectErc1155ClaimableWithConditions();
     this.revealer = this.detectErc721Revealable();
-    this.claim = this.detectErc721Claimable();
   }
 
   /**
-   * Create a batch of unique NFTs to be claimed in the future
+   * Create a batch of NFTs to be claimed in the future
    *
-   * @remarks Create batch allows you to create a batch of many unique NFTs in one transaction.
+   * @remarks Create batch allows you to create a batch of many NFTs in one transaction.
    *
    * @example
    * ```javascript
@@ -112,7 +111,7 @@ export class Erc721Droppable implements DetectableFeature {
    *   image: fs.readFileSync("path/to/image.png"),
    * }];
    *
-   * const results = await contract.nft.lazy.mint(metadatas); // uploads and creates the NFTs on chain
+   * const results = await contract.erc1155.lazyMint(metadatas); // uploads and creates the NFTs on chain
    * const firstTokenId = results[0].id; // token id of the first created NFT
    * const firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT
    * ```
@@ -126,7 +125,7 @@ export class Erc721Droppable implements DetectableFeature {
       onProgress: (event: UploadProgressEvent) => void;
     },
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
-    const startFileNumber = await this.erc721.nextTokenIdToMint();
+    const startFileNumber = await this.erc1155.nextTokenIdToMint();
     const batch = await uploadOrExtractURIs(
       metadatas,
       this.storage,
@@ -145,11 +144,22 @@ export class Erc721Droppable implements DetectableFeature {
         );
       }
     }
-    const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      batch.length,
-      baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
-      ethers.utils.toUtf8Bytes(""),
-    ]);
+    const isLegacyEditionDropContract =
+      await this.isLegacyEditionDropContract();
+    let receipt;
+    if (isLegacyEditionDropContract) {
+      receipt = await this.contractWrapper.sendTransaction("lazyMint", [
+        batch.length,
+        `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
+      ]);
+    } else {
+      // new contracts/extensions have support for delayed reveal that adds an extra parameter to lazyMint
+      receipt = await this.contractWrapper.sendTransaction("lazyMint", [
+        batch.length,
+        `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
+        ethers.utils.toUtf8Bytes(""),
+      ]);
+    }
     const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
       "TokensLazyMinted",
       receipt?.logs,
@@ -161,7 +171,7 @@ export class Erc721Droppable implements DetectableFeature {
       results.push({
         id,
         receipt,
-        data: () => this.erc721.getTokenMetadata(id),
+        data: () => this.erc1155.getTokenMetadata(id),
       });
     }
     return results;
@@ -171,38 +181,67 @@ export class Erc721Droppable implements DetectableFeature {
    * PRIVATE FUNCTIONS
    *******************************/
 
-  private detectErc721Revealable():
-    | DelayedReveal<BaseDelayedRevealERC721>
+  private detectErc1155Claimable(): ERC1155Claimable | undefined {
+    if (
+      detectContractFeature<IClaimableERC1155>(
+        this.contractWrapper,
+        "ERC1155Claimable",
+      ) &&
+      !hasFunction("setClaimConditions", this.contractWrapper)
+    ) {
+      return new ERC1155Claimable(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectErc1155ClaimableWithConditions():
+    | Erc1155ClaimableWithConditions
     | undefined {
     if (
-      detectContractFeature<BaseDelayedRevealERC721>(
+      detectContractFeature<BaseClaimConditionERC1155>(
         this.contractWrapper,
-        "ERC721Revealable",
+        "ERC1155ClaimableWithConditions",
       )
     ) {
-      return new DelayedReveal(
+      return new Erc1155ClaimableWithConditions(
         this.contractWrapper,
         this.storage,
-        FEATURE_NFT_REVEALABLE.name,
-        () => this.erc721.nextTokenIdToMint(),
       );
     }
     return undefined;
   }
 
-  private detectErc721Claimable(): Erc721Claimable | undefined {
+  private detectErc721Revealable():
+    | DelayedReveal<BaseDelayedRevealERC1155>
+    | undefined {
     if (
-      detectContractFeature<BaseClaimConditionERC721>(
+      detectContractFeature<BaseDelayedRevealERC1155>(
         this.contractWrapper,
-        "ERC721Claimable",
+        "ERC1155Revealable",
       )
     ) {
-      return new Erc721Claimable(
-        this.erc721,
+      return new DelayedReveal(
         this.contractWrapper,
         this.storage,
+        FEATURE_EDITION_REVEALABLE.name,
+        () => this.erc1155.nextTokenIdToMint(),
       );
     }
     return undefined;
+  }
+
+  private async isLegacyEditionDropContract() {
+    if (hasFunction<TokenERC721>("contractType", this.contractWrapper)) {
+      try {
+        const contractType = ethers.utils.toUtf8String(
+          await this.contractWrapper.readContract.contractType(),
+        );
+        return contractType.includes("DropERC1155");
+      } catch (e) {
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
 }

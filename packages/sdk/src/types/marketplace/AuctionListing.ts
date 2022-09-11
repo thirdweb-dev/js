@@ -1,7 +1,7 @@
-import { BigNumber, BigNumberish } from "ethers";
 import { ListingType } from "../../enums/marketplace";
 import { NFTMetadata } from "../../schema/tokens/common";
 import { CurrencyValue } from "../currency";
+import { BigNumber, BigNumberish } from "ethers";
 
 /**
  * Represents a new marketplace auction listing.

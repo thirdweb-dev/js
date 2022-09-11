@@ -33,7 +33,7 @@ describe("Vote Contract", async () => {
         primary_sale_recipient: adminWallet.address,
       },
     );
-    currencyContract = sdk.getToken(tokenContractAddress);
+    currencyContract = await sdk.getToken(tokenContractAddress);
     const voteContractAddress = await sdk.deployer.deployBuiltInContract(
       Vote.contractType,
       {
@@ -43,7 +43,7 @@ describe("Vote Contract", async () => {
         proposal_token_threshold: ethers.utils.parseUnits("1", 18),
       },
     );
-    voteContract = sdk.getVote(voteContractAddress);
+    voteContract = await sdk.getVote(voteContractAddress);
 
     // step 1: mint 1000 governance tokens to my wallet
     await currencyContract.mintTo(samWallet.address, "100");

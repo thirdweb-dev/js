@@ -1,5 +1,3 @@
-import { IStorage } from "@thirdweb-dev/storage";
-import MerkleTree from "merkletreejs";
 import {
   SnapshotInputSchema,
   SnapshotSchema,
@@ -9,7 +7,9 @@ import {
   SnapshotInput,
 } from "../types/claim-conditions/claim-conditions";
 import { DuplicateLeafsError } from "./error";
+import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, utils } from "ethers";
+import MerkleTree from "merkletreejs";
 
 /**
  * Create a snapshot (merkle tree) from a list of addresses and uploads it to IPFS

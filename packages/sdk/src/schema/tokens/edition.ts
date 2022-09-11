@@ -1,6 +1,6 @@
-import { z } from "zod";
 import { BigNumberishSchema, BigNumberSchema } from "../shared";
 import { CommonNFTInput, CommonNFTOutput, NFTInputOrUriSchema } from "./common";
+import { z } from "zod";
 
 /**
  * @internal

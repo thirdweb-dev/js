@@ -4,9 +4,11 @@ import {
   ClaimNFTReturnType,
   DelayedRevealLazyMintInput,
   DropContract,
-  NFTContract,
   RequiredParam,
   RevealLazyMintInput,
+  getErcs,
+  NFTContract,
+  RevealableContract,
 } from "../../types";
 import {
   cacheKeys,
@@ -16,10 +18,11 @@ import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useNFTs } from "./nft";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+  Erc1155,
+  Erc721,
   NFTDrop,
   NFTMetadataInput,
   QueryAllParams,
-  SignatureDrop,
   UploadProgressEvent,
 } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
@@ -50,6 +53,7 @@ export function useUnclaimedNFTs(
     cacheKeys.contract.nft.drop.getAllUnclaimed(contractAddress, queryParams),
     () => {
       invariant(contract, "No Contract instance provided");
+      // TODO make this work for custom contracts (needs ABI change)
       invariant(
         contract.getAllUnclaimed,
         "Contract instance does not support getAllUnclaimed",
@@ -76,7 +80,7 @@ export function useUnclaimedNFTs(
  * @beta
  */
 export function useClaimedNFTs(
-  contract: RequiredParam<DropContract>,
+  contract: RequiredParam<NFTContract>,
   queryParams?: QueryAllParams,
 ) {
   return useNFTs(contract, queryParams);
@@ -86,18 +90,16 @@ export function useClaimedNFTs(
  * @param contract - an instance of a {@link NFTDrop}
  * @returns a response object that includes the number of NFTs that are unclaimed
  */
-export function useUnclaimedNFTSupply(
-  contract: RequiredParam<NFTDrop | SignatureDrop>,
-) {
+export function useUnclaimedNFTSupply(contract: RequiredParam<DropContract>) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.nft.drop.totalUnclaimedSupply(contractAddress),
     () => {
       invariant(contract, "No Contract instance provided");
-
+      // TODO make this work for custom contracts (needs ABI change)
       invariant(
-        contract.totalUnclaimedSupply,
-        "Contract instance does not support totalUnclaimedSupply",
+        "totalUnclaimedSupply" in contract && contract.totalUnclaimedSupply,
+        "Contract instance does not support fetching unclaimed supply",
       );
       return contract.totalUnclaimedSupply();
     },
@@ -116,12 +118,10 @@ export function useClaimedNFTSupply(contract: RequiredParam<DropContract>) {
     cacheKeys.contract.nft.drop.totalClaimedSupply(contractAddress),
     () => {
       invariant(contract, "No Contract instance provided");
-      if (contract.featureName === "ERC1155") {
-        return contract.getTotalCount();
-      }
+      // TODO make this work for custom contracts (needs ABI change)
       invariant(
-        contract.totalClaimedSupply,
-        "Contract instance does not support totalClaimedSupply",
+        "totalClaimedSupply" in contract && contract.totalClaimedSupply,
+        "Contract instance does not support fetching unclaimed supply",
       );
       return contract.totalClaimedSupply();
     },
@@ -131,24 +131,26 @@ export function useClaimedNFTSupply(contract: RequiredParam<DropContract>) {
 
 /**
  *
- * @param contract - an instance of a {@link NFTContract}
+ * @param contract - an instance of a {@link RevealableContract}
  * @returns a response object that gets the batches to still be revealed
  */
-export function useBatchesToReveal<TContract extends NFTContract>(
+export function useBatchesToReveal<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,
 ) {
   const contractAddress = contract?.getAddress();
+  const { erc721, erc1155 } = getErcs(contract);
   return useQueryWithNetwork(
     cacheKeys.contract.nft.drop.revealer.getBatchesToReveal(contractAddress),
     () => {
-      invariant(contract, "No Contract instance provided");
-      invariant(
-        contract.drop?.revealer?.getBatchesToReveal,
-        "Contract instance does not support drop.revealer.getBatchesToReveal",
-      );
-      return contract.drop.revealer.getBatchesToReveal();
+      if (erc721) {
+        return erc721.revealer.getBatchesToReveal();
+      }
+      if (erc1155) {
+        return erc1155.revealer.getBatchesToReveal();
+      }
+      invariant(false, "Contract instance does not support getBatchesToReveal");
     },
-    { enabled: !!contract },
+    { enabled: !!erc721 || !!erc1155 },
   );
 }
 
@@ -161,11 +163,12 @@ export function useBatchesToReveal<TContract extends NFTContract>(
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract(<ContractAddress>);
  *   const {
  *     mutate: claimNft,
  *     isLoading,
  *     error,
- *   } = useClaimNFT(DropContract);
+ *   } = useClaimNFT(contract);
  *
  *   if (error) {
  *     console.error("failed to claim nft", error);
@@ -196,22 +199,20 @@ export function useClaimNFT<TContract extends DropContract>(
   return useMutation(
     async (data: ClaimNFTParams<TContract>) => {
       invariant(data.to, 'No "to" address provided');
-      invariant(contract?.claimTo, "contract does not support claimTo");
-      if (contract.featureName === "ERC1155") {
+      invariant(contract, "contract is undefined");
+      if (contract instanceof Erc1155) {
         invariant("tokenId" in data, "tokenId not provided");
         const { to, tokenId, quantity } = data;
-        return (await contract.claimTo(
-          to,
-          tokenId,
-          quantity,
-          data.checkERC20Allowance,
-        )) as ClaimNFTReturnType<TContract>;
+        return contract.claimTo(to, tokenId, quantity, data.options);
       }
-      return (await contract.claimTo(
-        data.to,
-        data.quantity,
-        data.checkERC20Allowance,
-      )) as ClaimNFTReturnType<TContract>;
+      if (contract instanceof Erc721) {
+        return contract.claimTo(
+          data.to,
+          data.quantity,
+          data.options,
+        ) as ClaimNFTReturnType<TContract>;
+      }
+      invariant(false, "contract is not an Erc721 or Erc1155");
     },
     {
       onSettled: () =>
@@ -232,27 +233,32 @@ export function useClaimNFT<TContract extends DropContract>(
  * @returns a mutation object that can be used to lazy mint a batch of NFTs
  * @beta
  */
-export function useLazyMint<TContract extends NFTContract>(
+export function useLazyMint<TContract extends DropContract>(
   contract: RequiredParam<TContract>,
   onProgress?: (progress: UploadProgressEvent) => void,
 ) {
   const activeChainId = useActiveChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
+  const { erc721, erc1155 } = getErcs(contract);
 
   return useMutation(
     async (data: { metadatas: NFTMetadataInput[] }) => {
-      invariant(
-        contract?.drop?.lazyMint,
-        "contract does not support drop.lazyMint",
-      );
+      invariant(contract, "contract is undefined");
       let options;
       if (onProgress) {
         options = {
           onProgress,
         };
       }
-      return await contract.drop.lazyMint(data.metadatas, options);
+
+      if (erc721) {
+        return erc721.lazyMint(data.metadatas, options);
+      }
+      if (erc1155) {
+        return erc1155.lazyMint(data.metadatas, options);
+      }
+      invariant(false, "contract is not an Erc721 or Erc1155");
     },
     {
       onSettled: () =>
@@ -268,12 +274,12 @@ export function useLazyMint<TContract extends NFTContract>(
 /**
  * Use this to lazy mint a batch of delayed reveal NFTs on your {@link DropContract}
  *
- * @param contract - an instance of a {@link NFTContract} with the drop extension
+ * @param contract - an instance of a {@link DropContract}
  * @param onProgress - an optional callback that will be called with the progress of the upload
  * @returns a mutation object that can be used to lazy mint a batch of NFTs
  * @beta
  */
-export function useDelayedRevealLazyMint<TContract extends NFTContract>(
+export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,
   onProgress?: (progress: UploadProgressEvent) => void,
 ) {
@@ -283,22 +289,31 @@ export function useDelayedRevealLazyMint<TContract extends NFTContract>(
 
   return useMutation(
     async (data: DelayedRevealLazyMintInput) => {
-      invariant(
-        contract?.drop?.revealer?.createDelayedRevealBatch,
-        "contract does not support drop.revealer.createDelayedRevealBatch",
-      );
+      invariant(contract, "contract is undefined");
       let options;
       if (onProgress) {
         options = {
           onProgress,
         };
       }
-      return await contract.drop.revealer.createDelayedRevealBatch(
-        data.placeholder,
-        data.metadatas,
-        data.password,
-        options,
-      );
+      const { erc721, erc1155 } = getErcs(contract);
+      if (erc721) {
+        return await erc721.revealer.createDelayedRevealBatch(
+          data.placeholder,
+          data.metadatas,
+          data.password,
+          options,
+        );
+      }
+      if (erc1155) {
+        return await erc1155.revealer.createDelayedRevealBatch(
+          data.placeholder,
+          data.metadatas,
+          data.password,
+          options,
+        );
+      }
+      invariant(false, "contract is not an Erc721 or Erc1155");
     },
     {
       onSettled: () =>
@@ -312,13 +327,13 @@ export function useDelayedRevealLazyMint<TContract extends NFTContract>(
 }
 
 /**
- * Use this to reveal a batch of delayed reveal NFTs on your {@link DropContract}
+ * Use this to reveal a batch of delayed reveal NFTs on your {@link RevealableContract}
  *
- * @param contract - an instance of a {@link NFTContract} with the drop extension
+ * @param contract - an instance of a {@link RevealableContract}
  * @returns a mutation object that can be used to reveal a batch of delayed reveal NFTs
  * @beta
  */
-export function useRevealLazyMint<TContract extends NFTContract>(
+export function useRevealLazyMint<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,
 ) {
   const activeChainId = useActiveChainId();
@@ -327,11 +342,15 @@ export function useRevealLazyMint<TContract extends NFTContract>(
 
   return useMutation(
     async (data: RevealLazyMintInput) => {
-      invariant(
-        contract?.drop?.revealer?.reveal,
-        "contract does not support drop.revealer.reveal",
-      );
-      return await contract.drop.revealer.reveal(data.batchId, data.password);
+      invariant(contract, "contract is undefined");
+      const { erc721, erc1155 } = getErcs(contract);
+      if (erc721) {
+        return await erc721.revealer.reveal(data.batchId, data.password);
+      }
+      if (erc1155) {
+        return await erc1155.revealer.reveal(data.batchId, data.password);
+      }
+      invariant(false, "contract is not an Erc721 or Erc1155");
     },
     {
       onSettled: () =>

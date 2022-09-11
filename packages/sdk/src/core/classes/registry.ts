@@ -1,9 +1,9 @@
-import { TWRegistry, TWRegistry__factory } from "@thirdweb-dev/contracts-js";
+import { TransactionResult } from "..";
 import { SDKOptions } from "../../schema/sdk-options";
 import { NetworkOrSignerOrProvider } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { TWRegistry, TWRegistry__factory } from "@thirdweb-dev/contracts-js";
 import { constants, utils } from "ethers";
-import { TransactionResult } from "..";
 
 /**
  * @internal

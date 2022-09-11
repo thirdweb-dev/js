@@ -6,7 +6,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 function redirectWithError(
   req: NextApiRequest,
   res: NextApiResponse,
-  error: string
+  error: string,
 ) {
   const encodedError = encodeURIComponent(error);
   const url = new URL(req.headers.referer as string);
@@ -17,7 +17,7 @@ function redirectWithError(
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
-  ctx: ThirdwebAuthContext
+  ctx: ThirdwebAuthContext,
 ) {
   if (req.method !== "GET") {
     return redirectWithError(req, res, "INVALID_METHOD");
@@ -48,7 +48,7 @@ export default async function handler(
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-    })
+    }),
   );
 
   if (ctx.callbacks?.login) {

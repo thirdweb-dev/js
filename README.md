@@ -37,7 +37,7 @@ Visit [https://portal.thirdweb.com/](https://portal.thirdweb.com/) to view the f
 
 ## Contributing
 
-We welcome contributions from all developers, regardless of experience level. If you are interested in contributing, please read our [Contributing Guide](.github/CONTRIBUTING.md) where you'll learn how the repo works, how to test your changes, and how to submit a pull request.
+We welcome contributions from all developers, regardless of experience level. If you are interested in contributing, please read our [Contributing Guide](.github/contributing.md) where you'll learn how the repo works, how to test your changes, and how to submit a pull request.
 
 <br />
 

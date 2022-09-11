@@ -27,9 +27,9 @@ describe("Multiwrap Contract", async () => {
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
     });
-    multiwrapContract = sdk.getMultiwrap(address);
+    multiwrapContract = await sdk.getMultiwrap(address);
 
-    nftContract = sdk.getNFTCollection(
+    nftContract = await sdk.getNFTCollection(
       await sdk.deployer.deployBuiltInContract(NFTCollection.contractType, {
         name: "TEST NFT",
         seller_fee_basis_points: 200,
@@ -55,7 +55,7 @@ describe("Multiwrap Contract", async () => {
     // TODO should this be done inside wrap() ? might result in a ton of different transactions :/
     await nftContract.setApprovalForAll(multiwrapContract.getAddress(), true);
 
-    editionContract = sdk.getEdition(
+    editionContract = await sdk.getEdition(
       await sdk.deployer.deployBuiltInContract(Edition.contractType, {
         name: "TEST BUNDLE",
         seller_fee_basis_points: 100,
@@ -82,7 +82,7 @@ describe("Multiwrap Contract", async () => {
       true,
     );
 
-    tokenContract = sdk.getToken(
+    tokenContract = await sdk.getToken(
       await sdk.deployer.deployBuiltInContract(Token.contractType, {
         name: "Test",
         symbol: "TEST",
@@ -106,7 +106,7 @@ describe("Multiwrap Contract", async () => {
 
     await tokenContract.setAllowance(multiwrapContract.getAddress(), 1000);
 
-    tokenContract2 = sdk.getToken(
+    tokenContract2 = await sdk.getToken(
       await sdk.deployer.deployBuiltInContract(Token.contractType, {
         name: "Test2",
         symbol: "TEST2",

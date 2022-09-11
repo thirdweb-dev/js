@@ -192,6 +192,8 @@ export const cacheKeys = {
     token: {
       totalSupply: (contractAddress: RequiredParam<ContractAddress>) =>
         createContractCacheKey(contractAddress, ["totalSupply"]),
+      decimals: (contractAddress: RequiredParam<ContractAddress>) =>
+        createContractCacheKey(contractAddress, ["decimals"]),
       balanceOf: (
         contractAddress: RequiredParam<ContractAddress>,
         walletAddress: RequiredParam<ContractAddress>,

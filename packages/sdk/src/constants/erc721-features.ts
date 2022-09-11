@@ -1,4 +1,5 @@
 import IBurnableERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC721.json";
+import IClaimableERC721 from "@thirdweb-dev/contracts-js/dist/abis/IClaimableERC721.json";
 import DelayedRevealAbi from "@thirdweb-dev/contracts-js/dist/abis/IDelayedReveal.json";
 import IDropSinglePhase from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase.json";
 import Erc721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
@@ -31,9 +32,8 @@ export const FEATURE_NFT_REVEALABLE = {
   features: {},
 } as const;
 
-// Update ABI dependencies
-export const FEATURE_NFT_CLAIMABLE = {
-  name: "ERC721Claimable",
+export const FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS = {
+  name: "ERC721ClaimableWithConditions",
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
@@ -43,17 +43,30 @@ export const FEATURE_NFT_CLAIMABLE = {
   features: {},
 } as const;
 
-export const FEATURE_NFT_DROPPABLE = {
-  name: "ERC721Droppable",
+export const FEATURE_NFT_CLAIMABLE = {
+  name: "ERC721Claimable",
+  namespace: "nft.drop.claim",
+  docLinks: {
+    sdk: "sdk.erc721claimable",
+    contracts: "IClaimableERC721",
+  },
+  abis: [Erc721Abi, ILazyMintAbi, IClaimableERC721],
+  features: {},
+} as const;
+
+export const FEATURE_NFT_LAZY_MINTABLE = {
+  name: "ERC721LazyMintable",
   namespace: "nft.drop",
   docLinks: {
-    sdk: "sdk.erc721droppable",
+    sdk: "sdk.erc721lazymintable",
     contracts: "LazyMint",
   },
   abis: [Erc721Abi, ILazyMintAbi],
   features: {
     [FEATURE_NFT_REVEALABLE.name]: FEATURE_NFT_REVEALABLE,
     [FEATURE_NFT_CLAIMABLE.name]: FEATURE_NFT_CLAIMABLE,
+    [FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS.name]:
+      FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS,
   },
 } as const;
 
@@ -128,7 +141,7 @@ export const FEATURE_NFT = {
     [FEATURE_NFT_BURNABLE.name]: FEATURE_NFT_BURNABLE,
     [FEATURE_NFT_SUPPLY.name]: FEATURE_NFT_SUPPLY,
     [FEATURE_NFT_MINTABLE.name]: FEATURE_NFT_MINTABLE,
-    [FEATURE_NFT_DROPPABLE.name]: FEATURE_NFT_DROPPABLE,
+    [FEATURE_NFT_LAZY_MINTABLE.name]: FEATURE_NFT_LAZY_MINTABLE,
     [FEATURE_NFT_SIGNATURE_MINTABLE.name]: FEATURE_NFT_SIGNATURE_MINTABLE,
   },
 } as const;

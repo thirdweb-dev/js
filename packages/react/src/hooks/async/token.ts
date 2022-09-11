@@ -12,7 +12,7 @@ import {
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { Erc20, TokenDrop } from "@thirdweb-dev/sdk";
+import type { Erc20 } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
 
 /** **********************/
@@ -27,7 +27,7 @@ import invariant from "tiny-invariant";
  * const { data: totalSupply, isLoading, error } = useTokenSupply(<YourTokenContractInstance>);
  * ```
  *
- * @param contract - an instance of a Token contract.
+ * @param contract - an instance of a ERC20 contract.
  * @returns a response object that incudes the total minted supply
  * @beta
  */
@@ -53,7 +53,7 @@ export function useTokenSupply(contract: RequiredParam<Erc20>) {
  * const { data: balance, isLoading, error } = useTokenBalance(<YourTokenContractInstance>);
  * ```
  *
- * @param contract - an instance of a Token contract.
+ * @param contract - an instance of a ERC20 contract.
  * @returns a response object that includes the balance of the address
  * @beta
  */
@@ -71,6 +71,34 @@ export function useTokenBalance(
     },
     {
       enabled: !!walletAddress && !!contract,
+    },
+  );
+}
+
+/**
+ * Use this to get the decimals of your {@link Erc20} contract for a given address.
+ *
+ * @example
+ * ```javascript
+ * const { data: decimals, isLoading, error } = useTokenDecimals(<YourTokenContractInstance>);
+ * ```
+ *
+ * @param contract - an instance of an ERC20 contract.
+ * @returns a response object that includes the decimals of the ERC20 token
+ * @beta
+ */
+export function useTokenDecimals(
+  contract: RequiredParam<Erc20>,
+) {
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.token.decimals(contractAddress),
+    async () => {
+      invariant(contract, "No Contract instance provided");
+      return (await contract.get()).decimals;
+    },
+    {
+      enabled: !!contract,
     },
   );
 }
@@ -118,8 +146,8 @@ export function useMintToken(contract: RequiredParam<Erc20>) {
   return useMutation(
     (data: TokenParams) => {
       const { to, amount } = data;
-      invariant(contract?.mint?.to, "contract does not support mint.to");
-      return contract.mint.to(to, amount);
+      invariant(contract, "contract is undefined");
+      return contract.mintTo(to, amount);
     },
     {
       onSettled: () =>
@@ -133,7 +161,7 @@ export function useMintToken(contract: RequiredParam<Erc20>) {
 }
 
 /**
- * Use this to claim tokens on your {@link TokenDrop}
+ * Use this to claim tokens on your {@link Erc20}
  *
  * @example
  * ```jsx
@@ -159,11 +187,11 @@ export function useMintToken(contract: RequiredParam<Erc20>) {
  * };
  * ```
  *
- * @param contract - an instance of a {@link TokenDrop}
+ * @param contract - an instance of a {@link Erc20}
  * @returns a mutation object that can be used to tokens to the wallet specificed in the params
  * @beta
  */
-export function useClaimToken<TContract extends TokenDrop>(
+export function useClaimToken<TContract extends Erc20>(
   contract: RequiredParam<TContract>,
 ) {
   const activeChainId = useActiveChainId();
@@ -343,8 +371,8 @@ export function useBurnToken(contract: RequiredParam<Erc20>) {
   return useMutation(
     (data: TokenBurnParams) => {
       const { amount } = data;
-      invariant(contract?.burn, "contract does not support burn");
-      return contract.burn.tokens(amount);
+      invariant(contract, "contract is undefined");
+      return contract.burn(amount);
     },
     {
       onSettled: () =>

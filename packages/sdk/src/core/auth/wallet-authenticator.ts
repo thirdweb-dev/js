@@ -27,7 +27,7 @@ import { UserWallet } from "../wallet";
  * @example
  * ```javascript
  * // We specify the domain of the application to authenticate to
- * const domain = "thirdweb.com"
+ * const domain = "example.com"
  *
  * // On the client side, we can generate a payload for the connected wallet to login
  * const loginPayload = await sdk.auth.login(domain);
@@ -68,7 +68,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
    * @example
    * ```javascript
    * // Add the domain of the application users will login to, this will be used throughout the login process
-   * const domain = "thirdweb.com";
+   * const domain = "example.com";
    * // Generate a signed login payload for the connected wallet to authenticate with
    * const loginPayload = await sdk.auth.login(domain);
    * ```
@@ -110,7 +110,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
    *
    * @example
    * ```javascript
-   * const domain = "thirdweb.com";
+   * const domain = "example.com";
    * const loginPayload = await sdk.auth.login(domain);
    *
    * // Verify the login request
@@ -171,7 +171,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
    *
    * @example
    * ```javascript
-   * const domain = "thirdweb.com";
+   * const domain = "example.com";
    * const loginPayload = await sdk.auth.login(domain);
    *
    * // Generate a JWT token that can be sent to the client-side wallet and used for authentication
@@ -239,7 +239,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
    *
    * @example
    * ```javascript
-   * const domain = "thirdweb.com";
+   * const domain = "example.com";
    * const loginPayload = await sdk.auth.login(domain);
    * const token = await sdk.auth.generateAuthToken(domain, loginPayload);
    *
