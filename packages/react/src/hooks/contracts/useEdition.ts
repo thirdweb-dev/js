@@ -1,4 +1,5 @@
-import { useBuiltinContract } from "./useBuiltinContract";
+import { useContract } from "../async/contracts";
+import type { Edition } from "@thirdweb-dev/sdk";
 
 /**
  * Hook for getting an instance of an `Edition` contract. This contract is used to interface with ERC1155 compliant NFTs.
@@ -9,7 +10,7 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * import { useEdition } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const edition = await useEdition("<YOUR-CONTRACT-ADDRESS>")
+ *   const edition = useEdition("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the edition contract in the rest of the component
  *
@@ -26,5 +27,8 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * @depreated use `useContract()` instead
  */
 export function useEdition(contractAddress?: string) {
-  return useBuiltinContract("edition", contractAddress);
+  console.warn(
+    `useEdition() is deprecated. Please use useContract<Edition>() instead.`,
+  );
+  return useContract<Edition>(contractAddress).contract;
 }

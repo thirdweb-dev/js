@@ -26,7 +26,7 @@ import invariant from "tiny-invariant";
 /**
  * @internal
  */
-function convertResponseToNFTType(
+export function convertResponseToNFTType(
   contract: Erc721OrErc1155,
   metadata: Awaited<ReturnType<typeof contract["get"]>>,
 ): NFT<typeof contract> {
@@ -52,7 +52,7 @@ function convertResponseToNFTType(
 /**
  * @internal
  */
-function convertResponseToNFTTypeArray(
+export function convertResponseToNFTTypeArray(
   contract: Erc721OrErc1155,
   metadata: Awaited<ReturnType<typeof contract["get"]>>[],
 ): NFT<typeof contract>[] {

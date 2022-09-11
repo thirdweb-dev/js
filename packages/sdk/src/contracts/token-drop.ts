@@ -1,5 +1,6 @@
 import { getRoleHash } from "../common";
 import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
@@ -49,6 +50,7 @@ export class TokenDrop extends StandardErc20<DropERC20> {
   public estimator: GasCostEstimator<DropERC20>;
   public sales: ContractPrimarySale<DropERC20>;
   public platformFees: ContractPlatformFee<DropERC20>;
+  public events: ContractEvents<DropERC20>;
   /**
    * Configure claim conditions
    * @remarks Define who can claim Tokens, when and how many.
@@ -101,6 +103,7 @@ export class TokenDrop extends StandardErc20<DropERC20> {
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
+    this.events = new ContractEvents(this.contractWrapper);
     this.sales = new ContractPrimarySale(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);

@@ -1,4 +1,5 @@
-import { useBuiltinContract } from "./useBuiltinContract";
+import { useContract } from "../async/contracts";
+import type { Token } from "@thirdweb-dev/sdk";
 
 /**
  * Hook for getting an instance of a `Token` contract. This contract supports ERC20 compliant tokens.
@@ -26,5 +27,5 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * @depreated use `useContract()` instead
  */
 export function useToken(contractAddress?: string) {
-  return useBuiltinContract("token", contractAddress);
+  return useContract<Token>(contractAddress).contract;
 }

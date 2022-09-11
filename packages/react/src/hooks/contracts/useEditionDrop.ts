@@ -1,4 +1,5 @@
-import { useBuiltinContract } from "./useBuiltinContract";
+import { useContract } from "../async/contracts";
+import type { EditionDrop } from "@thirdweb-dev/sdk";
 
 /**
  * Hook for getting an instance of an `EditionDrop` contract. This conract is used to interface with ERC1155 compliant NFTs that can be lazily minted.
@@ -9,7 +10,7 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * import { useEditionDrop } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const editionDrop = await useEditionDrop("<YOUR-CONTRACT-ADDRESS>")
+ *   const editionDrop = useEditionDrop("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the edition drop contract in the rest of the component
  *
@@ -25,5 +26,5 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * @depreated use `useContract()` instead
  */
 export function useEditionDrop(contractAddress?: string) {
-  return useBuiltinContract("edition-drop", contractAddress);
+  return useContract<EditionDrop>(contractAddress).contract;
 }

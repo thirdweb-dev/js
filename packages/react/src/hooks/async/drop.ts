@@ -18,8 +18,6 @@ import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useNFTs } from "./nft";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  Erc1155,
-  Erc721,
   NFTDrop,
   NFTMetadataInput,
   QueryAllParams,
@@ -196,21 +194,28 @@ export function useClaimNFT<TContract extends DropContract>(
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
+  const { erc721, erc1155 } = getErcs(contract);
+
   return useMutation(
-    async (data: ClaimNFTParams<TContract>) => {
+    async (data: ClaimNFTParams) => {
       invariant(data.to, 'No "to" address provided');
       invariant(contract, "contract is undefined");
-      if (contract instanceof Erc1155) {
-        invariant("tokenId" in data, "tokenId not provided");
-        const { to, tokenId, quantity } = data;
-        return contract.claimTo(to, tokenId, quantity, data.options);
+
+      if (erc1155) {
+        invariant(!!data.tokenId, "tokenId not provided");
+        return (await erc1155.claimTo(
+          data.to,
+          data.tokenId,
+          data.quantity,
+          data.options,
+        )) as ClaimNFTReturnType;
       }
-      if (contract instanceof Erc721) {
-        return contract.claimTo(
+      if (erc721) {
+        return (await erc721.claimTo(
           data.to,
           data.quantity,
           data.options,
-        ) as ClaimNFTReturnType<TContract>;
+        )) as ClaimNFTReturnType;
       }
       invariant(false, "contract is not an Erc721 or Erc1155");
     },

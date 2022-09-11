@@ -1,4 +1,5 @@
-import { useBuiltinContract } from "./useBuiltinContract";
+import { useContract } from "../async/contracts";
+import type { Pack } from "@thirdweb-dev/sdk";
 
 /**
  * Hook for getting an instance of a `Pack` contract. This contract supports the creation of on-chain luck-based lootboxes.
@@ -26,5 +27,5 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * @depreated use `useContract()` instead
  */
 export function usePack(contractAddress?: string) {
-  return useBuiltinContract("pack", contractAddress);
+  return useContract<Pack>(contractAddress).contract;
 }

@@ -1,22 +1,15 @@
 import { useActiveChainId } from "../../Provider";
-import { useContract } from "../../hooks/async/contracts";
+import { Contract, useContract } from "../../hooks/async/contracts";
 import { useAddress } from "../../hooks/useAddress";
 import { useChainId } from "../../hooks/useChainId";
 import { useNetwork } from "../../hooks/useNetwork";
-import {
-  createCacheKeyWithNetwork,
-  createContractCacheKey,
-} from "../../utils/cache-keys";
 import { ConnectWallet } from "../ConnectWallet";
 import { Button } from "../shared/Button";
 import { ThemeProvider, ThemeProviderProps } from "../shared/ThemeProvider";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { SmartContract } from "@thirdweb-dev/sdk";
 import type { CallOverrides } from "ethers";
 import { PropsWithChildren, useMemo } from "react";
-import invariant from "tiny-invariant";
 
-type ActionFn = (contract: SmartContract) => any;
+type ActionFn = (contract: Contract) => any;
 
 interface Web3ButtonProps<TActionFn extends ActionFn>
   extends ThemeProviderProps {
@@ -72,8 +65,6 @@ export const Web3Button = <TAction extends ActionFn>({
   const sdkChainId = useActiveChainId();
   const [, switchNetwork] = useNetwork();
 
-  const queryClient = useQueryClient();
-
   const switchToChainId = useMemo(() => {
     if (sdkChainId && walletChainId && sdkChainId !== walletChainId) {
       return sdkChainId;
@@ -81,47 +72,25 @@ export const Web3Button = <TAction extends ActionFn>({
     return null;
   }, [sdkChainId, walletChainId]);
 
-  const contractQuery = useContract(contractAddress);
+  const { useWrite, isLoading } = useContract(contractAddress);
 
-  const mutation = useMutation(
-    async () => {
-      if (switchToChainId) {
-        if (switchNetwork) {
-          await switchNetwork(switchToChainId);
-          await new Promise((resolve) => setTimeout(resolve, 500));
-        } else {
-          throw new Error(
-            "need to switch chain but connected wallet does not support switching",
-          );
-        }
+  const mutation = useWrite(async (contract) => {
+    if (switchToChainId) {
+      if (switchNetwork) {
+        await switchNetwork(switchToChainId);
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      } else {
+        throw new Error(
+          "need to switch chain but connected wallet does not support switching",
+        );
       }
-      invariant(contractQuery.contract, "contract is not ready yet");
+    }
+    if (onSubmit) {
+      onSubmit();
+    }
+    return action(contract);
+  });
 
-      if (onSubmit) {
-        onSubmit();
-      }
-      return await action(contractQuery.contract);
-    },
-    {
-      onSuccess: (res) => {
-        if (onSuccess) {
-          onSuccess(res);
-        }
-      },
-      onError: (err) => {
-        if (onError) {
-          onError(err as Error);
-        }
-      },
-      onSettled: () =>
-        queryClient.invalidateQueries(
-          createCacheKeyWithNetwork(
-            createContractCacheKey(contractAddress),
-            sdkChainId,
-          ),
-        ),
-    },
-  );
   if (!address) {
     return <ConnectWallet {...themeProps} />;
   }
@@ -130,8 +99,21 @@ export const Web3Button = <TAction extends ActionFn>({
     <ThemeProvider {...themeProps}>
       <Button
         style={{ height: "50px" }}
-        isLoading={mutation.isLoading || !contractQuery.contract}
-        onClick={() => mutation.mutate()}
+        isLoading={mutation.isLoading || !isLoading}
+        onClick={() =>
+          mutation.mutate(undefined, {
+            onSuccess: (res) => {
+              if (onSuccess) {
+                onSuccess(res);
+              }
+            },
+            onError: (err) => {
+              if (onError) {
+                onError(err as Error);
+              }
+            },
+          })
+        }
         isDisabled={isDisabled}
       >
         {children}

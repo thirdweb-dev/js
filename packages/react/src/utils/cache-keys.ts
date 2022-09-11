@@ -84,6 +84,10 @@ export const cacheKeys = {
       ),
   },
   contract: {
+    read: (
+      contractAddress: RequiredParam<ContractAddress>,
+      fnIdentity: string,
+    ) => createContractCacheKey(contractAddress, ["read", fnIdentity]),
     type: (contractAddress: RequiredParam<ContractAddress>) =>
       createContractCacheKey(contractAddress, ["contract-type"]),
     compilerMetadata: (contractAddress: RequiredParam<ContractAddress>) =>

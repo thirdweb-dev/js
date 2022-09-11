@@ -1,4 +1,5 @@
-import { useBuiltinContract } from "./useBuiltinContract";
+import { useContract } from "../async/contracts";
+import type { NFTCollection } from "@thirdweb-dev/sdk";
 
 /**
  * Hook for getting an instance of an `NFTCollection` contract. This contract is meant to interface with ERC721 compliant NFTs.
@@ -26,5 +27,5 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * @depreated use `useContract()` instead
  */
 export function useNFTCollection(contractAddress?: string) {
-  return useBuiltinContract("nft-collection", contractAddress);
+  return useContract<NFTCollection>(contractAddress).contract;
 }

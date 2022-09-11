@@ -3,270 +3,233 @@ import { ContractAddress, RequiredParam } from "../../types";
 import {
   cacheKeys,
   createCacheKeyWithNetwork,
-  createContractCacheKey,
+  invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import {
   QueryClient,
   useMutation,
+  UseMutationResult,
   useQuery,
   useQueryClient,
+  UseQueryResult,
 } from "@tanstack/react-query";
 import {
   ContractEvent,
-  CONTRACTS_MAP,
-  CustomContractMetadata,
   EventQueryFilter,
-  PublishedMetadata,
+  SmartContract,
+  SUPPORTED_CHAIN_ID,
   ThirdwebSDK,
+  ValidContractInstance,
 } from "@thirdweb-dev/sdk";
-import { CallOverrides } from "ethers";
 import { useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
 
+// contract type
+
 async function fetchContractType(
-  contractAddress: RequiredParam<string>,
+  contractAddress: RequiredParam<ContractAddress>,
   sdk: RequiredParam<ThirdwebSDK>,
 ) {
   if (!contractAddress || !sdk) {
-    return;
+    return null;
   }
   try {
     return await sdk.resolveContractType(contractAddress);
   } catch (err) {
-    // expected error, return custom type instead
+    // this error can happen if the contract is a custom contract -> assume "custom"
     return "custom" as const;
   }
 }
 
-async function fetchContractCompilerMetadata(
-  contractAddress: RequiredParam<string>,
-  sdk: RequiredParam<ThirdwebSDK>,
-) {
-  if (!contractAddress || !sdk) {
-    return;
-  }
-
-  return await (
-    await sdk.getPublisher()
-  ).fetchCompilerMetadataFromAddress(contractAddress);
-}
-async function fetchContractTypeAndCompilerMetadata(
-  queryClient: QueryClient,
-  contractAddress?: string,
-  sdk?: ThirdwebSDK,
-) {
-  if (!contractAddress || !sdk) {
-    return;
-  }
-  const contractType = await queryClient.fetchQuery(
-    createCacheKeyWithNetwork(
-      cacheKeys.contract.type(contractAddress),
-      (sdk as any)._chainId,
-    ),
-    () => fetchContractType(contractAddress, sdk),
-    // is immutable, so infinite stale time
-    { staleTime: Infinity },
-  );
-  if (contractType !== "custom") {
-    return {
-      contractType,
-      compilerMetadata: null,
-    };
-  }
-  const compilerMetadata = await queryClient.fetchQuery(
-    createCacheKeyWithNetwork(
-      cacheKeys.contract.compilerMetadata(contractAddress),
-      (sdk as any)._chainId,
-    ),
-    () => fetchContractCompilerMetadata(contractAddress, sdk),
-    // is immutable, so infinite stale time
-    { staleTime: Infinity },
-  );
-  return {
-    contractType,
-    compilerMetadata,
-  };
-}
-
-function getContractAbi(
-  input: RequiredParam<
-    Awaited<ReturnType<typeof fetchContractTypeAndCompilerMetadata>>
-  >,
-) {
-  if (!input || !input.contractType) {
-    return null;
-  }
-  let contractAbi: PublishedMetadata["abi"] | null = null;
-  if (input.contractType !== "custom") {
-    contractAbi = CONTRACTS_MAP[input.contractType].contractAbi;
-  }
-  if (input.contractType === "custom" && input.compilerMetadata) {
-    contractAbi = input.compilerMetadata?.abi;
-  }
-
-  return contractAbi;
-}
-
-function getContractFromCombinedTypeAndCompilerMetadata(
-  contractAddress: RequiredParam<ContractAddress>,
-  input: RequiredParam<
-    Awaited<ReturnType<typeof fetchContractTypeAndCompilerMetadata>>
-  >,
-  sdk: RequiredParam<ThirdwebSDK>,
-) {
-  if (!input || !sdk || !contractAddress || !input.contractType) {
-    return null;
-  }
-
-  const contractAbi = getContractAbi(input);
-
-  invariant(
-    contractAbi,
-    `could not resolve any ABI for contract${contractAddress}`,
-  );
-  return sdk.getContractFromAbi(contractAddress, contractAbi);
-}
-
-/**
- *
- * @internal
- *
- * @param contractAddress - contract address
- * @returns the contract abi
- */
-export function useContractAbi(
-  contractAddress: RequiredParam<ContractAddress>,
-) {
+function useContractType(contractAddress: RequiredParam<ContractAddress>) {
   const sdk = useSDK();
 
-  const contractTypeAndCompilerMetadata =
-    useContractTypeAndCompilerMetadata(contractAddress);
-
-  if (
-    !contractAddress ||
-    !sdk ||
-    !contractTypeAndCompilerMetadata.data?.contractType
-  ) {
-    return {
-      ...contractTypeAndCompilerMetadata,
-      abi: null,
-    };
-  }
-
-  const abi = getContractAbi(contractTypeAndCompilerMetadata.data);
-  return { ...contractTypeAndCompilerMetadata, abi };
-}
-
-/**
- * Use this to get the contract type for a (built-in or custom) contract.
- *
- * @example
- * ```javascript
- * const { data: contractType, isLoading, error } = useContractType("{{contract_address}}");
- * ```
- *
- * @param contractAddress - the address of the deployed contract
- * @returns a response object that includes the contract type of the contract
- * @beta
- */
-export function useContractType(
-  contractAddress: RequiredParam<ContractAddress>,
-) {
-  const sdk = useSDK();
   return useQueryWithNetwork(
     cacheKeys.contract.type(contractAddress),
     () => fetchContractType(contractAddress, sdk),
-    {
-      enabled: !!sdk && !!contractAddress,
-      // never stale, a contract's publish metadata is immutable
-      staleTime: Infinity,
-    },
+    // is immutable, so infinite stale time
+    { staleTime: Infinity, enabled: !!contractAddress && !!sdk },
   );
 }
 
-/**
- * Use this to get the publish metadata for a deployed contract.
- *
- * @example
- * ```javascript
- * const { data: compilerMetadata, isLoading, error } = useContractCompilerMetadata("{{contract_address}}");
- * ```
- *
- * @param contractAddress - the address of the deployed contract
- * @returns a response object that includes the published metadata (name, abi, bytecode) of the contract
- * @beta
- */
-export function useContractCompilerMetadata(
+export const contractType = {
+  cacheKey: (
+    contractAddress: RequiredParam<ContractAddress>,
+    chainId: RequiredParam<SUPPORTED_CHAIN_ID>,
+  ) =>
+    createCacheKeyWithNetwork(
+      cacheKeys.contract.type(contractAddress),
+      chainId,
+    ),
+  useQuery: useContractType,
+  fetchQuery: fetchContractType,
+};
+
+// end contract type
+
+// contract compiler metadata
+
+function fetchCompilerMetadata(
   contractAddress: RequiredParam<ContractAddress>,
+  sdk: RequiredParam<ThirdwebSDK>,
 ) {
+  if (!contractAddress || !sdk) {
+    return null;
+  }
+  try {
+    return sdk.getPublisher().fetchCompilerMetadataFromAddress(contractAddress);
+  } catch (err) {
+    // if we fail to get contract metadata just return null;
+    return null;
+  }
+}
+
+function useCompilerMetadata(contractAddress: RequiredParam<ContractAddress>) {
   const sdk = useSDK();
+
   return useQueryWithNetwork(
     cacheKeys.contract.compilerMetadata(contractAddress),
-    () => fetchContractCompilerMetadata(contractAddress, sdk),
-    {
-      enabled: !!sdk && !!contractAddress,
-      // never stale, a contract's publish metadata is immutable
-      staleTime: Infinity,
-    },
+    () => fetchCompilerMetadata(contractAddress, sdk),
+    // is immutable, so infinite stale time
+    { staleTime: Infinity, enabled: !!contractAddress && !!sdk },
   );
 }
 
-/**
- * @internal
- */
-function useContractTypeAndCompilerMetadata(
+export const compilerMetadata = {
+  cacheKey: (
+    contractAddress: RequiredParam<ContractAddress>,
+    chainId: RequiredParam<SUPPORTED_CHAIN_ID>,
+  ) =>
+    createCacheKeyWithNetwork(
+      cacheKeys.contract.compilerMetadata(contractAddress),
+      chainId,
+    ),
+  useQuery: useCompilerMetadata,
+  fetchQuery: fetchCompilerMetadata,
+};
+
+// end compiler metadata
+
+// useContract
+
+export type Contract = SmartContract | ValidContractInstance;
+
+function createReadHook<TContract extends Contract>(
+  contract: RequiredParam<TContract>,
+) {
+  return function <TData>(
+    action: (contract: TContract) => Promise<TData> | TData,
+  ) {
+    return useQueryWithNetwork(
+      cacheKeys.contract.read(contract?.getAddress(), action.toString()),
+      async () => {
+        // cann happen if contract is not yet ready
+        if (!contract) {
+          return undefined;
+        }
+        return (await action(contract as TContract)) as Awaited<TData>;
+      },
+    );
+  };
+}
+
+type ActionFn = (...args: any[]) => any;
+
+function createWriteHook<TContract extends Contract>(
+  contract: RequiredParam<TContract>,
+  queryClient: QueryClient,
+  activeChainId: RequiredParam<SUPPORTED_CHAIN_ID>,
+) {
+  return function <TAction extends ActionFn>(
+    action:
+      | ((contract: TContract) => Promise<TAction>)
+      | ((contract: TContract) => TAction),
+  ) {
+    return useMutation<
+      Awaited<ReturnType<TAction>>,
+      unknown,
+      Parameters<TAction> | void
+    >(
+      async (variables: Parameters<TAction> | void) => {
+        return await (
+          await action(contract as TContract)
+        ).call(contract, ...variables);
+      },
+      {
+        onSettled: () =>
+          invalidateContractAndBalances(
+            queryClient,
+            contract?.getAddress(),
+            activeChainId,
+          ),
+      },
+    );
+  };
+}
+
+export type UseContractResult<TContract extends Contract = Contract> =
+  UseQueryResult<TContract | undefined> & {
+    contract: TContract | undefined;
+    useRead: <TData>(
+      action: (contract: TContract) => TData | Promise<TData>,
+    ) => UseQueryResult<TData | undefined, unknown>;
+    useWrite: <TAction extends (...args: any[]) => any>(
+      action:
+        | ((contract: TContract) => Promise<TAction>)
+        | ((contract: TContract) => TAction),
+    ) => UseMutationResult<Awaited<ReturnType<TAction>>>;
+  };
+
+export function useContract<TContract extends Contract = Contract>(
   contractAddress: RequiredParam<ContractAddress>,
 ) {
   const sdk = useSDK();
   const queryClient = useQueryClient();
-  return useQueryWithNetwork(
-    cacheKeys.contract.typeAndCompilerMetadata(contractAddress),
-    () =>
-      fetchContractTypeAndCompilerMetadata(queryClient, contractAddress, sdk),
+  const activeChainId = useActiveChainId();
+
+  const contractQuery = useQueryWithNetwork(
+    ["contract-instance", contractAddress],
+    async () => {
+      invariant(contractAddress, "contract address is required");
+      invariant(sdk, "SDK not initialized");
+      invariant(activeChainId, "active chain id is required");
+      // first fetch the contract type (we fetch this explicitly via the queryClient so **it** gets cached!)
+      const cType = await queryClient.fetchQuery(
+        contractType.cacheKey(contractAddress, activeChainId),
+        () => contractType.fetchQuery(contractAddress, sdk),
+      );
+      // if we can't get the contract type, we need to exit
+      invariant(cType, "could not get contract type");
+      // if the contract type is NOT "custom", we can use the built-in contract method from the SDK
+      if (cType !== "custom") {
+        return await sdk.getBuiltInContract(contractAddress, cType);
+      }
+      // if the contract type is "custom", we need to fetch the compiler metadata
+
+      const compMetadata = await queryClient.fetchQuery(
+        compilerMetadata.cacheKey(contractAddress, activeChainId),
+        () => compilerMetadata.fetchQuery(contractAddress, sdk),
+      );
+      // if we can't get the compiler metadata, we need to exit
+      invariant(compMetadata, "could not get compiler metadata");
+      // if we have the compiler metadata, we can use the custom contract
+      return sdk.getContractFromAbi(contractAddress, compMetadata.abi);
+    },
     {
-      enabled: !!sdk && !!contractAddress,
-      // combination of type and publish metadata is immutable
-      staleTime: Infinity,
+      // never actually cache this query, it returns a class!
+      cacheTime: 0,
+      enabled: !!contractAddress && !!sdk && !!activeChainId,
     },
   );
-}
 
-/**
- * Use this resolve a contract address to a smart contract instance.
- *
- * @example
- * ```javascript
- * const { contract, isLoading, error } = useContract("{{contract_address}}");
- * ```
- *
- * @param contractAddress - the address of the deployed contract
- * @returns a response object that includes the contract once it is resolved
- * @public
- */
-export function useContract(contractAddress: RequiredParam<ContractAddress>) {
-  const sdk = useSDK();
-
-  const contractTypeAndCompilerMetadata =
-    useContractTypeAndCompilerMetadata(contractAddress);
-
-  if (
-    !contractAddress ||
-    !sdk ||
-    !contractTypeAndCompilerMetadata.data?.contractType
-  ) {
-    return {
-      ...contractTypeAndCompilerMetadata,
-      contract: null,
-    };
-  }
-
-  const contract = getContractFromCombinedTypeAndCompilerMetadata(
-    contractAddress,
-    contractTypeAndCompilerMetadata.data,
-    sdk,
-  );
-  return { ...contractTypeAndCompilerMetadata, contract };
+  // we return an array (similar to useState()) so the use-case ends up being `const [contract, {isLoading, error}] = useContract("0x...")`
+  return {
+    ...contractQuery,
+    contract: contractQuery.data,
+    useRead: createReadHook(contractQuery.data),
+    useWrite: createWriteHook(contractQuery.data, queryClient, activeChainId),
+  } as UseContractResult<TContract>;
 }
 
 /**
@@ -277,286 +240,71 @@ export function useContract(contractAddress: RequiredParam<ContractAddress>) {
  * const { data: contractMetadata, isLoading, error } = useContractMetadata("{{contract_address}}");
  * ```
  *
- * @param contractAddress - the address of the deployed contract
+ * @param contract - the address of the deployed contract
  * @returns a response object that includes the contract metadata of the deployed contract
  * @beta
  */
-export function useContractMetadata(
-  contractAddress: RequiredParam<ContractAddress>,
-) {
-  const sdk = useSDK();
-  const queryClient = useQueryClient();
-  const activeChainId = useActiveChainId();
-  return useQueryWithNetwork(
-    cacheKeys.contract.metadata(contractAddress),
-    async () => {
-      const typeAndCompilerMetadata = await queryClient.fetchQuery(
-        createCacheKeyWithNetwork(
-          cacheKeys.contract.typeAndCompilerMetadata(contractAddress),
-          activeChainId,
-        ),
-        () =>
-          fetchContractTypeAndCompilerMetadata(
-            queryClient,
-            contractAddress,
-            sdk,
-          ),
-        // is immutable, so infinite stale time
-        { staleTime: Infinity },
-      );
-      const contract = getContractFromCombinedTypeAndCompilerMetadata(
-        contractAddress,
-        typeAndCompilerMetadata,
-        sdk,
-      );
-      invariant(contract?.metadata?.get, "contract metadata is not available");
-      return (await contract.metadata.get()) as CustomContractMetadata;
-    },
-    {
-      enabled: !!contractAddress || !!sdk,
-    },
-  );
+export function useContractMetadata(contract: UseContractResult) {
+  return contract.useRead((contract) => contract.metadata.get());
 }
 
+// const { mutate: setMetadata, data } = useContractWrite(
+//   "0x...",
+//   (contract) => contract.,
+// );
+
+// setMetadata([{ name: "foo" }]);
+
 /**
- @internal
+ * CONTRACT EVENTS
  */
-export function useContractFunctions(
-  contractAddress: RequiredParam<ContractAddress>,
-) {
-  const sdk = useSDK();
-  const queryClient = useQueryClient();
-  const activeChainId = useActiveChainId();
-  return useQueryWithNetwork(
-    cacheKeys.contract.extractFunctions(contractAddress),
-    async () => {
-      const typeAndCompilerMetadata = await queryClient.fetchQuery(
-        createCacheKeyWithNetwork(
-          cacheKeys.contract.typeAndCompilerMetadata(contractAddress),
-          activeChainId,
-        ),
-        () =>
-          fetchContractTypeAndCompilerMetadata(
-            queryClient,
-            contractAddress,
-            sdk,
-          ),
-        // is immutable, so infinite stale time
-        { staleTime: Infinity },
-      );
-      const contract = getContractFromCombinedTypeAndCompilerMetadata(
-        contractAddress,
-        typeAndCompilerMetadata,
-        sdk,
-      );
-      if (contract?.publishedMetadata.extractFunctions) {
-        return contract.publishedMetadata.extractFunctions();
-      }
-      return null;
-    },
-    {
-      enabled: !!contractAddress || !!sdk,
-      // functions are based on publish metadata (abi), so this is immutable
-      staleTime: Infinity,
-    },
-  );
-}
 
 /**
- * Use this to get data from a contract read-function call.
+ * Use this to query (and subscribe) to events or a specific event on a contract.
  *
- * @example
- * ```javascript
- * const { contract } = useContract("{{contract_address}}");
- * const { data, isLoading, error } = useContractData(contract, "functionName", ...args);
- *```
- *
- * @param contract - the contract instance of the contract to call a function on
- * @param functionName - the name of the function to call
- * @param args - The arguments to pass to the function (if any), with optional call arguments as the last parameter
- * @returns a response object that includes the data returned by the function call
- *
- * @beta
- */
-export function useContractData(
-  contract: RequiredParam<ReturnType<typeof useContract>["contract"]>,
-  functionName: RequiredParam<string>,
-  ...args: unknown[] | [...unknown[], CallOverrides]
-) {
-  const contractAddress = contract?.getAddress();
-  return useQueryWithNetwork(
-    cacheKeys.contract.call(contractAddress, functionName, args),
-    () => {
-      invariant(contract, "contract must be defined");
-      invariant(functionName, "function name must be provided");
-      return contract.call(functionName, ...args);
-    },
-    {
-      enabled: !!contract && !!functionName,
-    },
-  );
-}
-
-/**
- * Use this to get a function to make a write call to your contract
- *
- * @example
- * ```javascript
- * const { contract } = useContract("{{contract_address}}");
- * const { mutate: myFunction, isLoading, error } = useContractCall(contract, "myFunction");
- *
- * // the function can be called as follows:
- * // myFunction(["param 1", "param 2", ...])
- *```
- *
- * @param contract - the contract instance of the contract to call a function on
- * @param functionName - the name of the function to call
- * @returns a response object that includes the write function to call
- *
- * @beta
- */
-export function useContractCall(
-  contract: RequiredParam<ReturnType<typeof useContract>["contract"]>,
-  functionName: RequiredParam<string>,
-) {
-  const activeChainId = useActiveChainId();
-  const contractAddress = contract?.getAddress();
-  const queryClient = useQueryClient();
-
-  return useMutation(
-    async (callParams?: unknown[] | [...unknown[], CallOverrides]) => {
-      invariant(contract, "contract must be defined");
-      invariant(functionName, "function name must be provided");
-      if (!callParams?.length) {
-        return contract.call(functionName);
-      }
-      return contract.call(functionName, ...callParams);
-    },
-    {
-      onSettled: () =>
-        queryClient.invalidateQueries(
-          createCacheKeyWithNetwork(
-            createContractCacheKey(contractAddress),
-            activeChainId,
-          ),
-        ),
-    },
-  );
-}
-
-/**
- * Use this to query (and subscribe) to all events on a contract.
- *
- * @param contract - the contract instance of the contract to call a function on
- * @param options - options incldues the filters ({@link QueryAllEvents}) for the query as well as if you want to subscribe to real-time updates (default: true)
- * @returns a response object that includes the contract events
- * @beta
- */
-export function useAllContractEvents(
-  contract: RequiredParam<ReturnType<typeof useContract>["contract"]>,
-  options: { queryFilter?: EventQueryFilter; subscribe?: boolean } = {
-    subscribe: true,
-  },
-) {
-  const contractAddress = contract?.getAddress();
-  const queryEnabled = !!contract;
-  const queryClient = useQueryClient();
-  const activeChainId = useActiveChainId();
-
-  const cacheKey = useMemo(
-    () =>
-      createCacheKeyWithNetwork(
-        cacheKeys.contract.events.getAllEvents(contractAddress),
-        activeChainId,
-      ),
-    [activeChainId, contractAddress],
-  );
-  useEffect(() => {
-    // if we're not subscribing or query is not enabled yet we can early exit
-    if (!options.subscribe || !queryEnabled || !contract) {
-      return;
-    }
-
-    const cleanupListener = contract.events.listenToAllEvents(
-      (contractEvent) => {
-        // insert new event to the front of the array (no duplicates, though)
-        queryClient.setQueryData(
-          cacheKey,
-          (oldData: ContractEvent[] | undefined) => {
-            if (!oldData) {
-              return [contractEvent];
-            }
-            const eventIsNotAlreadyInEventsList =
-              oldData.findIndex(
-                (e) =>
-                  e.transaction.transactionHash ===
-                    contractEvent.transaction.transactionHash &&
-                  e.transaction.logIndex === contractEvent.transaction.logIndex,
-              ) === -1;
-            if (eventIsNotAlreadyInEventsList) {
-              return [contractEvent, ...oldData];
-            }
-            return oldData;
-          },
-        );
-      },
-    );
-    // cleanup listener on unmount
-    return cleanupListener;
-  }, [queryEnabled, options.subscribe, cacheKey, contract, queryClient]);
-
-  return useQuery(
-    cacheKey,
-    () => {
-      invariant(contract, "contract must be defined");
-      return contract.events.getAllEvents(options.queryFilter);
-    },
-    {
-      enabled: queryEnabled,
-      // we do not need to re-fetch if we're subscribing
-      refetchOnWindowFocus: !options.subscribe,
-      refetchOnMount: true,
-      refetchOnReconnect: true,
-    },
-  );
-}
-
-/**
- * Use this to query (and subscribe) to a specific event on a contract.
- *
- * @param contract - the contract instance of the contract to call a function on
+ * @param contract - the {@link Contract} instance of the contract to call a function on
+ * @param eventName - the name of the event to query for (omit this or pass `undefined` to query for all events)
  * @param options - options incldues the filters ({@link QueryAllEvents}) for the query as well as if you want to subscribe to real-time updates (default: true)
  * @returns a response object that includes the contract events
  * @beta
  */
 export function useContractEvents(
-  contract: RequiredParam<ReturnType<typeof useContract>["contract"]>,
-  eventName: string,
+  contract: RequiredParam<Contract>,
+  eventName?: string,
   options: { queryFilter?: EventQueryFilter; subscribe?: boolean } = {
     subscribe: true,
   },
 ) {
   const contractAddress = contract?.getAddress();
-  const queryEnabled = !!contract && !!eventName;
+
   const queryClient = useQueryClient();
   const activeChainId = useActiveChainId();
 
   const cacheKey = useMemo(
     () =>
       createCacheKeyWithNetwork(
-        cacheKeys.contract.events.getAllEvents(contractAddress),
+        eventName
+          ? cacheKeys.contract.events.getAllEvents(contractAddress)
+          : cacheKeys.contract.events.getEvents(
+              contractAddress,
+              eventName as string,
+            ),
         activeChainId,
       ),
-    [activeChainId, contractAddress],
+    [activeChainId, contractAddress, eventName],
   );
   useEffect(() => {
     // if we're not subscribing or query is not enabled yet we can early exit
-    if (!options.subscribe || !queryEnabled || !contract || !eventName) {
+    if (!options.subscribe || !contract || !contract) {
       return;
     }
 
     const cleanupListener = contract.events.listenToAllEvents(
       (contractEvent) => {
+        // if we have a specific event name we are looking for we can early exist if it doesn't match
+        if (eventName && eventName !== contractEvent.eventName) {
+          return;
+        }
         // insert new event to the front of the array (no duplicates, though)
         queryClient.setQueryData(
           cacheKey,
@@ -581,23 +329,19 @@ export function useContractEvents(
     );
     // cleanup listener on unmount
     return cleanupListener;
-  }, [
-    queryEnabled,
-    options.subscribe,
-    cacheKey,
-    eventName,
-    contract,
-    queryClient,
-  ]);
+  }, [options.subscribe, cacheKey, contract, queryClient, eventName]);
 
   return useQuery(
     cacheKey,
     () => {
       invariant(contract, "contract must be defined");
-      return contract.events.getEvents(eventName, options.queryFilter);
+      if (eventName) {
+        return contract.events.getEvents(eventName, options.queryFilter);
+      }
+      return contract.events.getAllEvents(options.queryFilter);
     },
     {
-      enabled: queryEnabled,
+      enabled: !!contract,
       // we do not need to re-fetch if we're subscribing
       refetchOnWindowFocus: !options.subscribe,
       refetchOnMount: true,

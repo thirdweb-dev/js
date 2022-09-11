@@ -1,4 +1,5 @@
-import { useBuiltinContract } from "./useBuiltinContract";
+import { useContract } from "../async/contracts";
+import type { Vote } from "@thirdweb-dev/sdk";
 
 /**
  * Hook for getting an instance of an `Vote` contract. This contract enables fully featured voting-based decentralized governance systems.
@@ -26,5 +27,5 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * @depreated use `useContract()` instead
  */
 export function useVote(contractAddress?: string) {
-  return useBuiltinContract("vote", contractAddress);
+  return useContract<Vote>(contractAddress).contract;
 }

@@ -1,4 +1,5 @@
-import { useBuiltinContract } from "./useBuiltinContract";
+import { useContract } from "../async/contracts";
+import type { Marketplace } from "@thirdweb-dev/sdk";
 
 /**
  * Hook for getting an instance of a `Marketplace` contract. This contract is used to support marketplace for purchase and sale of on-chain assets.
@@ -26,5 +27,5 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * @depreated use `useContract()` instead
  */
 export function useMarketplace(contractAddress?: string) {
-  return useBuiltinContract("marketplace", contractAddress);
+  return useContract<Marketplace>(contractAddress).contract;
 }

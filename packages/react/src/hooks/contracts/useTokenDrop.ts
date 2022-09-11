@@ -1,4 +1,5 @@
-import { useBuiltinContract } from "./useBuiltinContract";
+import { useContract } from "../async/contracts";
+import { TokenDrop } from "@thirdweb-dev/sdk";
 
 /**
  * Hook for getting an instance of a `Token Drop` contract.
@@ -26,5 +27,5 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * @depreated use `useContract()` instead
  */
 export function useTokenDrop(contractAddress?: string) {
-  return useBuiltinContract("token-drop", contractAddress);
+  return useContract<TokenDrop>(contractAddress).contract;
 }

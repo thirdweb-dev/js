@@ -20,6 +20,7 @@ import type {
   TokenDrop,
   Erc20,
   ClaimOptions,
+  StandardErc1155,
 } from "@thirdweb-dev/sdk";
 import type { BigNumberish } from "ethers";
 
@@ -211,31 +212,24 @@ export type RevealLazyMintInput = {
  *
  * @beta
  */
-export type ClaimNFTParams<TContract extends DropContract> =
-  keyof TContract extends Erc1155
-    ? {
-        to: WalletAddress;
-        tokenId: BigNumberish;
-        quantity: BigNumberish;
-        options?: ClaimOptions;
-      }
-    : {
-        to: WalletAddress;
-        quantity: BigNumberish;
-        options?: ClaimOptions;
-      };
+export type ClaimNFTParams = {
+  to: WalletAddress;
+  quantity: BigNumberish;
+  options?: ClaimOptions;
+  /**
+   * tokenId is only used for ERC1155 tokens
+   */
+  tokenId?: BigNumberish;
+};
 
 /**
  * The return type of the {@link useClaimNFT} hook.
  *
  * @beta
  */
-export type ClaimNFTReturnType<TContract extends DropContract> =
-  TContract extends Erc721
-    ? Awaited<ReturnType<TContract["claimTo"]>>
-    : TContract extends Erc1155
-    ? Awaited<ReturnType<TContract["claimTo"]>>
-    : never;
+export type ClaimNFTReturnType =
+  | Awaited<ReturnType<Erc721["claimTo"]>>
+  | Awaited<ReturnType<Erc1155["claimTo"]>>;
 
 // MARKETPLACE //
 
