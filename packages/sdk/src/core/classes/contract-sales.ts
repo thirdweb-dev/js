@@ -11,7 +11,7 @@ import { IPrimarySale } from "@thirdweb-dev/contracts-js";
  * ```javascript
  * const contract = await sdk.getContract("{{contract_address}}");
  * const salesRecipient = await contract.sales.getRecipient();
- * await contract.roles.setRecipient(recipientWalletAddress);
+ * await contract.sales.setRecipient(recipientWalletAddress);
  * ```
  * @public
  */
@@ -28,6 +28,12 @@ export class ContractPrimarySale<TContract extends IPrimarySale>
   /**
    * Get the primary sale recipient.
    * @returns the wallet address.
+   * @example
+   * ```javascript
+   * const salesRecipient = await contract.sales.getRecipient();
+   * ```
+   * @public
+   * @twfeature PrimarySale
    */
   public async getRecipient(): Promise<string> {
     return await this.contractWrapper.readContract.primarySaleRecipient();
@@ -36,6 +42,12 @@ export class ContractPrimarySale<TContract extends IPrimarySale>
   /**
    * Set the primary sale recipient
    * @param recipient - the wallet address
+   * @example
+   * ```javascript
+   * await contract.sales.setRecipient(recipientWalletAddress);
+   * ```
+   * @public
+   * @twfeature PrimarySale
    */
   public async setRecipient(recipient: string): Promise<TransactionResult> {
     return {
