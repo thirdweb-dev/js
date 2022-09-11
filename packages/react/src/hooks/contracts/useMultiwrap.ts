@@ -1,3 +1,4 @@
+import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 import type { Multiwrap } from "@thirdweb-dev/sdk";
 
@@ -26,5 +27,6 @@ import type { Multiwrap } from "@thirdweb-dev/sdk";
  * @depreated use `useContract()` instead
  */
 export function useMultiwrap(contractAddress?: string) {
+  showDeprecationWarning("useMultiwrap()", "useContract<Multiwrap>()");
   return useContract<Multiwrap>(contractAddress).contract;
 }

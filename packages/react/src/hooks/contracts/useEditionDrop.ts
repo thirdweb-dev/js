@@ -1,3 +1,4 @@
+import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 import type { EditionDrop } from "@thirdweb-dev/sdk";
 
@@ -26,5 +27,6 @@ import type { EditionDrop } from "@thirdweb-dev/sdk";
  * @depreated use `useContract()` instead
  */
 export function useEditionDrop(contractAddress?: string) {
+  showDeprecationWarning("useEditionDrop()", "useContract<EditionDrop>()");
   return useContract<EditionDrop>(contractAddress).contract;
 }

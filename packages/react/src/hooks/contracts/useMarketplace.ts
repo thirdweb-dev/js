@@ -1,3 +1,4 @@
+import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 import type { Marketplace } from "@thirdweb-dev/sdk";
 
@@ -27,5 +28,6 @@ import type { Marketplace } from "@thirdweb-dev/sdk";
  * @depreated use `useContract()` instead
  */
 export function useMarketplace(contractAddress?: string) {
+  showDeprecationWarning("useMarketplace()", "useContract<Marketplace>()");
   return useContract<Marketplace>(contractAddress).contract;
 }

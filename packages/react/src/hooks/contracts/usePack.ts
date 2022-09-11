@@ -1,3 +1,4 @@
+import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 import type { Pack } from "@thirdweb-dev/sdk";
 
@@ -27,5 +28,6 @@ import type { Pack } from "@thirdweb-dev/sdk";
  * @depreated use `useContract()` instead
  */
 export function usePack(contractAddress?: string) {
+  showDeprecationWarning("usePack()", "useContract<Pack>()");
   return useContract<Pack>(contractAddress).contract;
 }

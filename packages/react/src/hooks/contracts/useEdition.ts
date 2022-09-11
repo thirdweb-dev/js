@@ -1,3 +1,4 @@
+import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 import type { Edition } from "@thirdweb-dev/sdk";
 
@@ -27,8 +28,6 @@ import type { Edition } from "@thirdweb-dev/sdk";
  * @depreated use `useContract()` instead
  */
 export function useEdition(contractAddress?: string) {
-  console.warn(
-    `useEdition() is deprecated. Please use useContract<Edition>() instead.`,
-  );
+  showDeprecationWarning("useEdition()", "useContract<Edition>()");
   return useContract<Edition>(contractAddress).contract;
 }

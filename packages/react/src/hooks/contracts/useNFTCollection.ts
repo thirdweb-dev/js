@@ -1,3 +1,4 @@
+import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 import type { NFTCollection } from "@thirdweb-dev/sdk";
 
@@ -27,5 +28,6 @@ import type { NFTCollection } from "@thirdweb-dev/sdk";
  * @depreated use `useContract()` instead
  */
 export function useNFTCollection(contractAddress?: string) {
+  showDeprecationWarning("useNFTCollection()", "useContract<NFTCollection>()");
   return useContract<NFTCollection>(contractAddress).contract;
 }

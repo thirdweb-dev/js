@@ -1,3 +1,4 @@
+import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 import type { Split } from "@thirdweb-dev/sdk";
 
@@ -27,5 +28,6 @@ import type { Split } from "@thirdweb-dev/sdk";
  * @depreated use `useContract()` instead
  */
 export function useSplit(contractAddress?: string) {
+  showDeprecationWarning("useSplit()", "useContract<Split>()");
   return useContract<Split>(contractAddress).contract;
 }

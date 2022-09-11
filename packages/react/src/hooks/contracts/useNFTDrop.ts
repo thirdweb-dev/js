@@ -1,3 +1,4 @@
+import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 import type { NFTDrop } from "@thirdweb-dev/sdk";
 
@@ -26,5 +27,6 @@ import type { NFTDrop } from "@thirdweb-dev/sdk";
  * @depreated use `useContract()` instead
  */
 export function useNFTDrop(contractAddress?: string) {
+  showDeprecationWarning("useNFTDrop()", "useContract<NFTDrop>()");
   return useContract<NFTDrop>(contractAddress).contract;
 }

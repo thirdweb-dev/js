@@ -1,3 +1,4 @@
+import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 import type { Token } from "@thirdweb-dev/sdk";
 
@@ -27,5 +28,6 @@ import type { Token } from "@thirdweb-dev/sdk";
  * @depreated use `useContract()` instead
  */
 export function useToken(contractAddress?: string) {
+  showDeprecationWarning("useToken()", "useContract<Token>()");
   return useContract<Token>(contractAddress).contract;
 }
