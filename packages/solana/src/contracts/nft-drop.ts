@@ -1,16 +1,11 @@
+import { ClaimConditions } from "../classes/claim-conditions";
 import { NFTHelper } from "../classes/helpers/nft-helper";
 import { UserWallet } from "../classes/user-wallet";
 import { TransactionResult } from "../types/common";
-import {
-  NFTDropClaimInput,
-  NFTDropClaimSchema,
-  NFTDropOutput,
-} from "../types/contracts/nft-drop";
 import { CommonNFTInput, NFTMetadata, NFTMetadataInput } from "../types/nft";
 import { Metaplex } from "@metaplex-foundation/js";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
-import { parse } from "yaml";
 
 export class NFTDrop {
   private connection: Connection;
@@ -18,7 +13,8 @@ export class NFTDrop {
   private metaplex: Metaplex;
   private storage: IStorage;
   private nft: NFTHelper;
-  dropMintAddress: PublicKey;
+  public dropMintAddress: PublicKey;
+  public claimConditions: ClaimConditions;
 
   constructor(
     dropMintAddress: string,
@@ -32,6 +28,7 @@ export class NFTDrop {
     this.connection = metaplex.connection;
     this.nft = new NFTHelper(metaplex);
     this.dropMintAddress = new PublicKey(dropMintAddress);
+    this.claimConditions = new ClaimConditions(dropMintAddress, metaplex);
   }
 
   async get(mintAddress: string): Promise<NFTMetadata> {
@@ -97,37 +94,6 @@ export class NFTDrop {
       .run();
 
     return result.nft.address.toBase58();
-  }
-
-  async getClaimConditions(): Promise<NFTDropOutput> {
-    const candyMachine = await this.getCandyMachine();
-
-    return {
-      price: BigInt(candyMachine.price.basisPoints.toNumber()),
-      sellerFeeBasisPoints: BigInt(candyMachine.sellerFeeBasisPoints),
-      itemsAvailable: BigInt(candyMachine.itemsAvailable.toNumber()),
-      goLiveDate: candyMachine.goLiveDate
-        ? new Date(candyMachine.goLiveDate.toNumber() * 1000)
-        : undefined,
-    };
-  }
-
-  async setClaimConditions(
-    metadata: NFTDropClaimInput,
-  ): Promise<TransactionResult> {
-    const parsed = NFTDropClaimSchema.parse(metadata);
-
-    const result = await this.metaplex
-      .candyMachines()
-      .update({
-        candyMachine: await this.getCandyMachine(),
-        ...parsed,
-      })
-      .run();
-
-    return {
-      signature: result.response.signature,
-    };
   }
 
   private async getCandyMachine() {
