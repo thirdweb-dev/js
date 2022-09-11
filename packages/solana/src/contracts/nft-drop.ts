@@ -35,6 +35,28 @@ export class NFTDrop {
     return this.nft.get(mintAddress);
   }
 
+  async getAll(): Promise<NFTMetadata[]> {
+    const info = await this.getCandyMachine();
+    const nfts = await Promise.all(
+      info.items.map(async (item) => {
+        const metadata = await this.storage.get(item.uri);
+        return { uri: item.uri, ...metadata };
+      }),
+    );
+
+    return nfts;
+  }
+
+  async getAllClaimed(): Promise<NFTMetadata[]> {
+    const nfts = await this.metaplex
+      .candyMachines()
+      .findMintedNfts({ candyMachine: this.dropMintAddress })
+      .run();
+
+    const metadatas = nfts.map((nft) => this.nft.toNFTMetadata(nft));
+    return metadatas;
+  }
+
   async balance(mintAddress: string): Promise<bigint> {
     const address = this.metaplex.identity().publicKey.toBase58();
     return this.balanceOf(address, mintAddress);

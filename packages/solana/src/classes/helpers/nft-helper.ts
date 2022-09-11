@@ -1,6 +1,8 @@
 import { TransactionResult } from "../../types/common";
 import { NFTMetadata } from "../../types/nft";
 import {
+  JsonMetadata,
+  Metadata,
   Metaplex,
   Nft,
   NftWithToken,
@@ -64,7 +66,14 @@ export class NFTHelper {
     }
   }
 
-  toNFTMetadata(meta: Nft | Sft | NftWithToken | SftWithToken) {
+  toNFTMetadata(
+    meta:
+      | Nft
+      | Sft
+      | NftWithToken
+      | SftWithToken
+      | Metadata<JsonMetadata<string>>,
+  ) {
     return {
       id: meta.address.toBase58(),
       uri: meta.uri,
