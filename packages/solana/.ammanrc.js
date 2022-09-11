@@ -1,3 +1,10 @@
+const path = require("path");
+const MOCK_STORAGE_ID = "thirdweb-sdk";
+
+function localDeployPath(programName) {
+  return path.join(__dirname, "test/data", `${programName}.so`);
+}
+
 module.exports = {
   validator: {
     accountsCluster: "https://api.metaplex.solana.com",
@@ -17,9 +24,13 @@ module.exports = {
     programs: [
       {
         label: "Counter Program",
-        accountId: "89RsF5yJgRXhae6LKuCcMRgXkqxCJm3AeaYwcJN4XopA",
-        deployPath: "./test/data/counter.so",
+        programId: "89RsF5yJgRXhae6LKuCcMRgXkqxCJm3AeaYwcJN4XopA",
+        deployPath: localDeployPath("counter"),
       },
     ],
+  },
+  storage: {
+    storageId: MOCK_STORAGE_ID,
+    clearOnStart: true,
   },
 };
