@@ -17,49 +17,49 @@ export const PRODUCTS: IProduct[] = [
     label: "sdk",
     description: "Integrate web3 into your app",
     link: "/sdk",
-    icon: require("public/assets/tw-icons/general.png"),
+    icon: require("public/assets/product-icons/sdks.png"),
   },
   {
     name: "Smart Contracts",
     label: "smart-contracts",
     description: "Prebuilt and audited",
     link: "/smart-contracts",
-    icon: require("public/assets/tw-icons/pack.png"),
+    icon: require("public/assets/product-icons/contracts.png"),
   },
   {
     name: "Extensions",
     label: "extensions",
     description: "Building blocks for your contracts",
     link: "/extensions",
-    icon: require("public/assets/tw-icons/edition.png"),
+    icon: require("public/assets/product-icons/extensions.png"),
   },
   {
     name: "Dashboards",
     label: "dashboards",
     description: "On-chain analytics and management",
     link: "/dashboards",
-    icon: require("public/assets/tw-icons/data.png"),
+    icon: require("public/assets/product-icons/dashboards.png"),
   },
   {
     name: "Auth",
     label: "auth",
     description: "Decentralized login for your app",
     link: "/auth",
-    icon: require("public/assets/tw-icons/access-nft.png"),
+    icon: require("public/assets/product-icons/auth.png"),
   },
   {
     name: "Release",
     label: "release",
     description: "Publish your contracts on-chain",
     link: "/release",
-    icon: require("public/assets/tw-icons/marketplace.png"),
+    icon: require("public/assets/product-icons/release.png"),
   },
   {
     name: "Deploy",
     label: "deploy",
     description: "Seamless contract deployment",
     link: "/deploy",
-    icon: require("public/assets/tw-icons/dynamic-nft.png"),
+    icon: require("public/assets/product-icons/deploy.png"),
   },
 ];
 
@@ -129,7 +129,7 @@ const Product: React.FC<IProduct> = ({
     >
       <Box _hover={{ bg: "whiteAlpha.50" }} p="8px" borderRadius="md">
         <Stack direction="row" align="center" spacing={3}>
-          <ChakraNextImage boxSize={6} mb="-4px" src={icon} alt="icon" />
+          <ChakraNextImage boxSize={7} mb="-4px" src={icon} alt="icon" />
           <Flex direction="column">
             <Text fontWeight="bold" color="white">
               {name}
