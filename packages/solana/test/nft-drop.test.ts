@@ -37,12 +37,15 @@ describe("NFTDrop", async () => {
     expect(unclaimed).to.equal(5n);
     expect(claimed).to.equal(0n);
 
-    await drop.claim();
+    const address = await drop.claim();
 
     unclaimed = await drop.totalUnclaimedSupply();
     claimed = await drop.totalClaimedSupply();
     expect(unclaimed).to.equal(4n);
     expect(claimed).to.equal(1n);
+
+    const balance = await drop.balance(address);
+    expect(balance).to.equal(1n);
   });
 
   it("should update claim condition", async () => {
