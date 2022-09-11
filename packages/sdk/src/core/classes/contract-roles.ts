@@ -56,6 +56,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * @throws If the contract does not support roles this will throw an error.
    *
    * @public
+   * @twfeature Permissions
    */
   public async getAll(): Promise<Record<TRole, string[]>> {
     invariant(this.roles.length, "this contract has no support for roles");
@@ -79,6 +80,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * ```
    *
    * @public
+   * @twfeature Permissions
    */
   public async get(role: TRole): Promise<string[]> {
     invariant(
@@ -121,6 +123,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * console.log(await contract.roles.get("minter")); // No matter what members had the role before, the new list will be set to []
    * ```
    * @public
+   * @twfeature Permissions
    *
    * */
   public async setAll(rolesWithAddresses: {
@@ -217,6 +220,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * @throws If you are trying to grant does not exist on the contract this will throw an error.
    *
    * @public
+   * @twfeature Permissions
    */
   public async grant(role: TRole, address: string): Promise<TransactionResult> {
     invariant(
@@ -253,6 +257,7 @@ export class ContractRoles<TContract extends IPermissions, TRole extends Role>
    * @throws If you are trying to revoke does not exist on the module this will throw an error.
    *
    * @public
+   * @twfeature Permissions
    */
   public async revoke(
     role: TRole,
