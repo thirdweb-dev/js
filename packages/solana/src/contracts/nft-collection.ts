@@ -7,8 +7,17 @@ import {
   NFTMetadata,
   NFTMetadataInput,
 } from "../types/nft";
-import { Metaplex, toBigNumber } from "@metaplex-foundation/js";
-import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
+import {
+  findEditionMarkerPda,
+  findEditionPda,
+  Metaplex,
+  toBigNumber,
+  TokenMetadataProgram,
+} from "@metaplex-foundation/js";
+import {
+  EditionMarker,
+  Metadata,
+} from "@metaplex-foundation/mpl-token-metadata";
 import { ConfirmedSignatureInfo, PublicKey } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
 
@@ -128,7 +137,6 @@ export class NFTCollection {
     return Array.from(mintAddresses);
   }
 
-  // TODO fetch editions as well and add to balance
   async balance(mintAddress: string): Promise<bigint> {
     const address = this.metaplex.identity().publicKey.toBase58();
     return this.balanceOf(address, mintAddress);
@@ -136,6 +144,57 @@ export class NFTCollection {
 
   async balanceOf(walletAddress: string, mintAddress: string): Promise<bigint> {
     return this.nft.balanceOf(walletAddress, mintAddress);
+  }
+
+  async supplyOf(mintAddress: string): Promise<bigint> {
+    let editionMarkerNumber = 0;
+    let totalSupply = 1;
+
+    cursedBitwiseLogicLoop: while (true) {
+      const editionMarkerAddress = findEditionMarkerPda(
+        new PublicKey(mintAddress),
+        toBigNumber(editionMarkerNumber * 248),
+      );
+      const editionMarker = await EditionMarker.fromAccountAddress(
+        this.metaplex.connection,
+        editionMarkerAddress,
+      );
+
+      // WARNING: Ugly bitwise operations because of Rust :(
+      const indexCap = editionMarkerNumber === 0 ? 247 : 248;
+      for (let editionIndex = 0; editionIndex < indexCap; editionIndex++) {
+        const ledgerIndex =
+          editionMarkerNumber > 0
+            ? Math.floor(editionIndex / 8)
+            : editionIndex < 7
+            ? 0
+            : Math.floor((editionIndex - 7) / 8) + 1;
+        const size = editionMarkerNumber === 0 && ledgerIndex === 0 ? 7 : 8;
+        const shiftBase = 0b1 << (size - 1);
+
+        const bitmask =
+          ledgerIndex === 0
+            ? shiftBase >> editionIndex
+            : editionMarkerNumber > 0
+            ? shiftBase >> editionIndex % (ledgerIndex * 8)
+            : ledgerIndex === 1
+            ? shiftBase >> (editionIndex - 7)
+            : shiftBase >> (editionIndex - 7) % ((ledgerIndex - 1) * 8);
+
+        const editionExists =
+          (editionMarker.ledger[ledgerIndex] & bitmask) !== 0;
+
+        if (editionExists) {
+          totalSupply += 1;
+        } else {
+          break cursedBitwiseLogicLoop;
+        }
+      }
+
+      editionMarkerNumber++;
+    }
+
+    return BigInt(totalSupply);
   }
 
   async transfer(
@@ -163,7 +222,7 @@ export class NFTCollection {
         collectionAuthority: this.wallet.signer,
         tokenOwner: new PublicKey(to),
         // Always sets max supply to unlimited so editions can be minted
-        maxSupply: toBigNumber(100),
+        maxSupply: null,
       })
       .run();
 
