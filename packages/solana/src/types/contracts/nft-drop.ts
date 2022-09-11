@@ -38,7 +38,6 @@ export type NFTDropMetadataInput = z.input<typeof NFTDropContractSchema>;
 /**
  * @internal
  */
-// TODO add whitelist options and end settings
 export const NFTDropClaimSchema = NFTDropContractSchema.extend({
   price: z
     .number()
