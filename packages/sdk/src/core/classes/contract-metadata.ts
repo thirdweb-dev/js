@@ -76,6 +76,7 @@ export class ContractMetadata<
    * ```
    * @public
    * @returns the metadata of the given contract
+   * @twfeature ContractMetadata
    */
   public async get() {
     let data;
@@ -125,7 +126,7 @@ export class ContractMetadata<
    * ```
    * @public
    * @param metadata - the metadata to set
-   * @returns
+   * @twfeature ContractMetadata
    */
   public async set(metadata: z.input<TSchema["input"]>) {
     const uri = await this._parseAndUploadMetadata(metadata);
@@ -153,6 +154,7 @@ export class ContractMetadata<
    * ```
    * @public
    * @param metadata - the metadata to update
+   * @twfeature ContractMetadata
    * */
   public async update(metadata: Partial<z.input<TSchema["input"]>>) {
     return await this.set({

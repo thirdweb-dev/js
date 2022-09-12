@@ -1,4 +1,7 @@
-import { METAPLEX_PROGRAM_ID } from "../src/constants/addresses";
+import {
+  CANDYMACHINE_PROGRAM_ID,
+  METAPLEX_PROGRAM_ID,
+} from "../src/constants/addresses";
 import { ThirdwebSDK } from "../src/sdk";
 import { MockStorage } from "./mock/MockStorage";
 import { Amman } from "@metaplex-foundation/amman-client";
@@ -15,6 +18,8 @@ const createTestSDK = async (
     knownLabels: {
       [METAPLEX_PROGRAM_ID]: "Token Metadata",
       [TOKEN_PROGRAM_ID.toBase58()]: "Token",
+      [CANDYMACHINE_PROGRAM_ID]: "Candy Machine",
+      "89RsF5yJgRXhae6LKuCcMRgXkqxCJm3AeaYwcJN4XopA": "Counter Program",
     },
   });
   await amman.airdrop(connection, wallet.publicKey, solsToAirdrop);
