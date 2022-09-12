@@ -68,7 +68,7 @@ export interface PackInterface extends utils.Interface {
     "grantRole(bytes32,address)": FunctionFragment;
     "hasRole(bytes32,address)": FunctionFragment;
     "hasRoleWithSwitch(bytes32,address)": FunctionFragment;
-    "initialize(address,string,string,string,address,uint256)": FunctionFragment;
+    "initialize(address,string,string,string,address[],address,uint256)": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "isTrustedForwarder(address)": FunctionFragment;
     "multicall(bytes[])": FunctionFragment;
@@ -238,7 +238,7 @@ export interface PackInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
-    values: [string, string, string, string, string, BigNumberish]
+    values: [string, string, string, string, string[], string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
@@ -808,6 +808,7 @@ export interface Pack extends BaseContract {
       _name: string,
       _symbol: string,
       _contractURI: string,
+      _trustedForwarders: string[],
       _royaltyRecipient: string,
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1061,6 +1062,7 @@ export interface Pack extends BaseContract {
     _name: string,
     _symbol: string,
     _contractURI: string,
+    _trustedForwarders: string[],
     _royaltyRecipient: string,
     _royaltyBps: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
@@ -1321,6 +1323,7 @@ export interface Pack extends BaseContract {
       _name: string,
       _symbol: string,
       _contractURI: string,
+      _trustedForwarders: string[],
       _royaltyRecipient: string,
       _royaltyBps: BigNumberish,
       overrides?: CallOverrides
@@ -1719,6 +1722,7 @@ export interface Pack extends BaseContract {
       _name: string,
       _symbol: string,
       _contractURI: string,
+      _trustedForwarders: string[],
       _royaltyRecipient: string,
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
@@ -1973,6 +1977,7 @@ export interface Pack extends BaseContract {
       _name: string,
       _symbol: string,
       _contractURI: string,
+      _trustedForwarders: string[],
       _royaltyRecipient: string,
       _royaltyBps: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
