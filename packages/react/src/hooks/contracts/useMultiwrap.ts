@@ -1,6 +1,6 @@
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { MultiwrapImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/multiwrap";
+import { MultiwrapImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/multiwrap";
 
 /**
  * Hook for getting an instance of an `Multiwrap` contract. This contract is an ERC721 in which you can wrap ERC721, ERC1155 and ERC20 tokens.

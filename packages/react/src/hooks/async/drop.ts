@@ -22,7 +22,7 @@ import {
   QueryAllParams,
   UploadProgressEvent,
 } from "@thirdweb-dev/sdk";
-import { NFTDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/nft-drop";
+import { NFTDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/nft-drop";
 import invariant from "tiny-invariant";
 
 /** **********************/

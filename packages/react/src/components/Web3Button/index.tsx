@@ -11,12 +11,12 @@ import { ConnectWallet } from "../ConnectWallet";
 import { Button } from "../shared/Button";
 import { ThemeProvider, ThemeProviderProps } from "../shared/ThemeProvider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { SmartContractImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/smart-contract";
+import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/smart-contract";
 import type { CallOverrides } from "ethers";
 import { PropsWithChildren, useMemo } from "react";
 import invariant from "tiny-invariant";
 
-type ActionFn = (contract: SmartContractImpl) => any;
+type ActionFn = (contract: SmartContract) => any;
 
 interface Web3ButtonProps<TActionFn extends ActionFn>
   extends ThemeProviderProps {

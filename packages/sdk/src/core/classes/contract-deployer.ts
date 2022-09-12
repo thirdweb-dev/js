@@ -6,7 +6,7 @@ import {
 } from "../../common/index";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import {
-  CONTRACTS_MAP,
+  PREBUILT_CONTRACTS_MAP,
   Edition,
   EditionDrop,
   Marketplace,
@@ -32,9 +32,9 @@ import {
 } from "../../types/deploy/deploy-metadata";
 import { ThirdwebSDK } from "../sdk";
 import {
-  ContractType,
-  DeploySchemaForContractType,
+  DeploySchemaForPrebuiltContractType,
   NetworkOrSignerOrProvider,
+  PrebuiltContractType,
 } from "../types";
 import { ContractFactory } from "./factory";
 import { ContractRegistry } from "./registry";
@@ -347,12 +347,18 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param contractMetadata - the metadata to deploy the contract with
    * @returns a promise of the address of the newly deployed contract
    */
-  public async deployBuiltInContract<TContractType extends ContractType>(
+  public async deployBuiltInContract<
+    TContractType extends PrebuiltContractType,
+  >(
     contractType: TContractType,
-    contractMetadata: z.input<DeploySchemaForContractType<TContractType>>,
+    contractMetadata: z.input<
+      DeploySchemaForPrebuiltContractType<TContractType>
+    >,
   ): Promise<string> {
     const parsed =
-      CONTRACTS_MAP[contractType].schema.deploy.parse(contractMetadata);
+      PREBUILT_CONTRACTS_MAP[contractType].schema.deploy.parse(
+        contractMetadata,
+      );
     const factory = await this.getFactory();
     return await factory.deploy(contractType, parsed);
   }

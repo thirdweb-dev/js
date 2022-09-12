@@ -14,13 +14,13 @@ import type {
   Erc20,
   ClaimOptions,
 } from "@thirdweb-dev/sdk";
-import { EditionImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/edition";
-import { EditionDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/edition-drop";
-import { NFTCollectionImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/nft-collection";
-import { NFTDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/nft-drop";
-import { SignatureDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/signature-drop";
-import { SmartContractImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/smart-contract";
-import { TokenDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/token-drop";
+import type { EditionImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/edition";
+import type { EditionDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/edition-drop";
+import type { NFTCollectionImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/nft-collection";
+import type { NFTDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/nft-drop";
+import type { SignatureDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/signature-drop";
+import type { TokenDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/token-drop";
+import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/smart-contract";
 import type { BigNumberish } from "ethers";
 
 /**
@@ -176,7 +176,7 @@ export type DropContract =
   | EditionDropImpl
   | SignatureDropImpl
   | TokenDropImpl
-  | SmartContractImpl
+  | SmartContract
   | null;
 
 /**
@@ -186,7 +186,7 @@ export type DropContract =
 export type RevealableContract =
   | NFTDropImpl
   | SignatureDropImpl
-  | SmartContractImpl
+  | SmartContract
   | null;
 
 /**

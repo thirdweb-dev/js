@@ -1,6 +1,6 @@
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { TokenDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/token-drop";
+import { TokenDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/token-drop";
 
 /**
  * Hook for getting an instance of a `Token Drop` contract.

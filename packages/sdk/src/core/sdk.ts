@@ -20,7 +20,7 @@ import {
   TokenDrop,
   Vote,
 } from "../contracts";
-import { SmartContractImpl } from "../contracts/classes/smart-contract";
+import { SmartContract } from "../contracts/smart-contract";
 import { SDKOptions } from "../schema/sdk-options";
 import { CurrencyValue } from "../types/index";
 import { WalletAuthenticator } from "./auth/wallet-authenticator";
@@ -29,7 +29,7 @@ import { ContractDeployer } from "./classes/contract-deployer";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
 import type {
-  ContractForContractType,
+  ContractForPrebuiltContractType,
   ContractType,
   NetworkOrSignerOrProvider,
   PrebuiltContractType,
@@ -288,13 +288,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   >(
     address: string,
     contractType: TContractType,
-  ): Promise<ContractForContractType<TContractType>> {
+  ): Promise<ContractForPrebuiltContractType<TContractType>> {
     // if we have a contract in the cache we will return it
     // we will do this **without** checking any contract type things for simplicity, this may have to change in the future?
     if (this.contractCache.has(address)) {
       return this.contractCache.get(
         address,
-      ) as ContractForContractType<TContractType>;
+      ) as ContractForPrebuiltContractType<TContractType>;
     }
 
     //@ts-expect-error - this is just extra runtime safety
@@ -315,7 +315,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     this.contractCache.set(address, newContract);
 
     // return the new contract
-    return newContract as ContractForContractType<TContractType>;
+    return newContract as ContractForPrebuiltContractType<TContractType>;
   }
 
   /**
@@ -430,7 +430,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public async getContract(address: string) {
     if (this.contractCache.has(address)) {
-      return this.contractCache.get(address) as SmartContractImpl;
+      return this.contractCache.get(address) as SmartContract;
     }
     try {
       // try built in contract first, eventually all our contracts will have bytecode metadata
@@ -470,10 +470,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public getContractFromAbi(address: string, abi: ContractInterface) {
     if (this.contractCache.has(address)) {
-      return this.contractCache.get(address) as SmartContractImpl;
+      return this.contractCache.get(address) as SmartContract;
     }
     // TODO we still might want to lazy-fy this
-    const contract = new SmartContractImpl(
+    const contract = new SmartContract(
       this.getSignerOrProvider(),
       address,
       abi,

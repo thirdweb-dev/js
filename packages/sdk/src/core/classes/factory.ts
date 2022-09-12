@@ -1,7 +1,7 @@
 import { TransactionError } from "../../common";
 import { CONTRACT_ADDRESSES, SUPPORTED_CHAIN_IDS } from "../../constants";
 import {
-  CONTRACTS_MAP,
+  PREBUILT_CONTRACTS_MAP,
   Edition,
   EditionDrop,
   Marketplace,
@@ -17,9 +17,9 @@ import {
 } from "../../contracts";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
-  ContractType,
-  DeploySchemaForContractType,
+  DeploySchemaForPrebuiltContractType,
   NetworkOrSignerOrProvider,
+  PrebuiltContractType,
 } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import type { TWFactory } from "@thirdweb-dev/contracts-js";
@@ -33,7 +33,6 @@ import {
   ContractInterface,
   ethers,
 } from "ethers";
-import invariant from "tiny-invariant";
 import { z } from "zod";
 
 /**
@@ -52,11 +51,13 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     this.storage = storage;
   }
 
-  public async deploy<TContractType extends ContractType>(
+  public async deploy<TContractType extends PrebuiltContractType>(
     contractType: TContractType,
-    contractMetadata: z.input<DeploySchemaForContractType<TContractType>>,
+    contractMetadata: z.input<
+      DeploySchemaForPrebuiltContractType<TContractType>
+    >,
   ): Promise<string> {
-    const contract = CONTRACTS_MAP[contractType];
+    const contract = PREBUILT_CONTRACTS_MAP[contractType];
     const metadata = contract.schema.deploy.parse(contractMetadata);
 
     // TODO: is there any special pre-processing we need to do before uploading?
@@ -67,7 +68,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     );
 
     const ABI = await contract.getAbi();
-    invariant(ABI, `ABI not found for contract type "${contractType}"`);
 
     const encodedFunc = Contract.getInterface(ABI).encodeFunctionData(
       "initialize",
@@ -143,9 +143,9 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     return events[0].args.proxy;
   }
 
-  private async getDeployArguments<TContractType extends ContractType>(
+  private async getDeployArguments<TContractType extends PrebuiltContractType>(
     contractType: TContractType,
-    metadata: z.input<DeploySchemaForContractType<TContractType>>,
+    metadata: z.input<DeploySchemaForPrebuiltContractType<TContractType>>,
     contractURI: string,
   ): Promise<any[]> {
     let trustedForwarders =

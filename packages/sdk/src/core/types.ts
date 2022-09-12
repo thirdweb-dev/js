@@ -1,4 +1,5 @@
 import type { CONTRACTS_MAP, PREBUILT_CONTRACTS_MAP } from "../contracts";
+import type { SmartContract } from "../contracts/smart-contract";
 import { FileOrBuffer } from "@thirdweb-dev/storage";
 import { BigNumber, BytesLike, CallOverrides, Signer, providers } from "ethers";
 
@@ -22,31 +23,21 @@ export type ContractsMap = typeof CONTRACTS_MAP;
 export type PrebuiltContractType = keyof PrebuiltContractsMap;
 export type ContractType = keyof ContractsMap;
 
-export type ValidPrebuiltContractType = Awaited<
-  ReturnType<PrebuiltContractsMap[keyof PrebuiltContractsMap]["initialize"]>
->;
-export type ValidContractInstance = Awaited<
-  ReturnType<ContractsMap[keyof ContractsMap]["initialize"]>
->;
+export type ValidContractInstance =
+  | Awaited<ReturnType<ContractsMap[keyof PrebuiltContractsMap]["initialize"]>>
+  | SmartContract;
 
 export type SchemaForPrebuiltContractType<
   TContractType extends PrebuiltContractType,
 > = PrebuiltContractsMap[TContractType]["schema"];
 
-export type SchemaForContractType<TContractType extends ContractType> =
-  ContractsMap[TContractType]["schema"];
-
 export type DeploySchemaForPrebuiltContractType<
   TContractType extends PrebuiltContractType,
 > = SchemaForPrebuiltContractType<TContractType>["deploy"];
-export type DeploySchemaForContractType<TContractType extends ContractType> =
-  SchemaForContractType<TContractType>["deploy"];
 
 export type ContractForPrebuiltContractType<
   TContractType extends PrebuiltContractType,
 > = Awaited<ReturnType<PrebuiltContractsMap[TContractType]["initialize"]>>;
-export type ContractForContractType<TContractType extends ContractType> =
-  Awaited<ReturnType<ContractsMap[TContractType]["initialize"]>>;
 
 export type NetworkOrSignerOrProvider =
   | providers.Networkish

@@ -14,7 +14,7 @@ import {
   ThirdwebSDK,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
-import { SmartContractImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/smart-contract";
+import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/smart-contract";
 import { useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
 
@@ -107,13 +107,13 @@ export const compilerMetadata = {
 // useContract
 
 export type UseContractResult<
-  TContract extends ValidContractInstance = SmartContractImpl,
+  TContract extends ValidContractInstance = SmartContract,
 > = UseQueryResult<TContract | undefined> & {
   contract: TContract | undefined;
 };
 
 export function useContract<
-  TContract extends ValidContractInstance = SmartContractImpl,
+  TContract extends ValidContractInstance = SmartContract,
 >(contractAddress: RequiredParam<ContractAddress>) {
   const sdk = useSDK();
   const queryClient = useQueryClient();

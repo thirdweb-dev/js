@@ -7,10 +7,10 @@ import {
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Role, ValidContractInstance } from "@thirdweb-dev/sdk";
-import { MultiwrapImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/multiwrap";
-import { SmartContractImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/smart-contract";
-import { SplitImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/split";
-import { VoteImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/vote";
+import type { MultiwrapImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/multiwrap";
+import type { SplitImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/split";
+import type { VoteImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/vote";
+import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/smart-contract";
 import { constants } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -30,11 +30,9 @@ export type ContractWithRoles = Exclude<
  * @internal
  */
 export type RolesForContract<TContract extends ContractWithRoles> =
-  TContract extends SmartContractImpl
+  TContract extends SmartContract
     ? Role | (string & {})
-    : NonNullable<
-        Exclude<TContract, SmartContractImpl>["roles"]
-      >["roles"][number];
+    : NonNullable<Exclude<TContract, SmartContract>["roles"]>["roles"][number];
 
 /**
  * @internal

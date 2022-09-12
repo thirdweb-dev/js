@@ -14,7 +14,7 @@ import type {
 } from "@thirdweb-dev/sdk";
 // eslint-disable-next-line no-duplicate-imports
 import { ListingType } from "@thirdweb-dev/sdk";
-import { MarketplaceImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/marketplace";
+import { MarketplaceImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/marketplace";
 import { BigNumber, BigNumberish } from "ethers";
 import invariant from "tiny-invariant";
 

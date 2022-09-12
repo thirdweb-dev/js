@@ -15,8 +15,7 @@ import {
 import { CustomContractSchema } from "../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
-import { IStorage } from "@thirdweb-dev/storage";
-import { ContractInterface } from "ethers";
+import type { IStorage } from "@thirdweb-dev/storage";
 
 type InitalizeParams = [
   network: NetworkOrSignerOrProvider,
@@ -35,7 +34,7 @@ export const EditionDrop = {
   ) => {
     const [abi, contract] = await Promise.all([
       EditionDrop.getAbi(),
-      import("./classes/edition-drop"),
+      import("./prebuilt-implementations/edition-drop"),
     ]);
 
     return new contract.EditionDropImpl(
@@ -61,7 +60,7 @@ export const Edition = {
   ) => {
     const [abi, contract] = await Promise.all([
       Edition.getAbi(),
-      import("./classes/edition"),
+      import("./prebuilt-implementations/edition"),
     ]);
 
     return new contract.EditionImpl(network, address, storage, options, abi);
@@ -81,7 +80,7 @@ export const Marketplace = {
   ) => {
     const [abi, contract] = await Promise.all([
       Marketplace.getAbi(),
-      import("./classes/marketplace"),
+      import("./prebuilt-implementations/marketplace"),
     ]);
 
     return new contract.MarketplaceImpl(
@@ -107,7 +106,7 @@ export const Multiwrap = {
   ) => {
     const [abi, contract] = await Promise.all([
       Multiwrap.getAbi(),
-      import("./classes/multiwrap"),
+      import("./prebuilt-implementations/multiwrap"),
     ]);
 
     return new contract.MultiwrapImpl(network, address, storage, options, abi);
@@ -128,7 +127,7 @@ export const NFTCollection = {
   ) => {
     const [abi, contract] = await Promise.all([
       NFTCollection.getAbi(),
-      import("./classes/nft-collection"),
+      import("./prebuilt-implementations/nft-collection"),
     ]);
 
     return new contract.NFTCollectionImpl(
@@ -154,7 +153,7 @@ export const NFTDrop = {
   ) => {
     const [abi, contract] = await Promise.all([
       NFTDrop.getAbi(),
-      import("./classes/nft-drop"),
+      import("./prebuilt-implementations/nft-drop"),
     ]);
 
     return new contract.NFTDropImpl(network, address, storage, options, abi);
@@ -175,7 +174,7 @@ export const Pack = {
   ) => {
     const [abi, contract] = await Promise.all([
       Pack.getAbi(),
-      import("./classes/pack"),
+      import("./prebuilt-implementations/pack"),
     ]);
 
     return new contract.PackImpl(network, address, storage, options, abi);
@@ -195,7 +194,7 @@ export const SignatureDrop = {
   ) => {
     const [abi, contract] = await Promise.all([
       SignatureDrop.getAbi(),
-      import("./classes/signature-drop"),
+      import("./prebuilt-implementations/signature-drop"),
     ]);
 
     return new contract.SignatureDropImpl(
@@ -211,30 +210,6 @@ export const SignatureDrop = {
       .default,
 };
 
-export const SmartContract = {
-  name: "SmartContract" as const,
-  contractType: "custom" as const,
-  schema: CustomContractSchema,
-  roles: ALL_ROLES,
-  initialize: async (
-    network: NetworkOrSignerOrProvider,
-    address: string,
-    abi: ContractInterface,
-    storage: IStorage,
-    options: SDKOptions = {},
-  ) => {
-    const contract = await import("./classes/smart-contract");
-    return new contract.SmartContractImpl(
-      network,
-      address,
-      abi,
-      storage,
-      options,
-    );
-  },
-  getAbi: async () => undefined,
-};
-
 export const Split = {
   name: "Split" as const,
   contractType: "split" as const,
@@ -246,7 +221,7 @@ export const Split = {
   ) => {
     const [abi, contract] = await Promise.all([
       Split.getAbi(),
-      import("./classes/split"),
+      import("./prebuilt-implementations/split"),
     ]);
 
     return new contract.SplitImpl(network, address, storage, options, abi);
@@ -266,7 +241,7 @@ export const TokenDrop = {
   ) => {
     const [abi, contract] = await Promise.all([
       TokenDrop.getAbi(),
-      import("./classes/token-drop"),
+      import("./prebuilt-implementations/token-drop"),
     ]);
 
     return new contract.TokenDropImpl(network, address, storage, options, abi);
@@ -286,7 +261,7 @@ export const Token = {
   ) => {
     const [abi, contract] = await Promise.all([
       Token.getAbi(),
-      import("./classes/token"),
+      import("./prebuilt-implementations/token"),
     ]);
 
     return new contract.TokenImpl(network, address, storage, options, abi);
@@ -307,7 +282,7 @@ export const Vote = {
   ) => {
     const [abi, contract] = await Promise.all([
       Vote.getAbi(),
-      import("./classes/vote"),
+      import("./prebuilt-implementations/vote"),
     ]);
 
     return new contract.VoteImpl(network, address, storage, options, abi);
@@ -335,6 +310,13 @@ export const PREBUILT_CONTRACTS_MAP = {
   [Token.contractType]: Token,
   [Vote.contractType]: Vote,
 } as const;
+
+const SmartContract = {
+  name: "SmartContract" as const,
+  contractType: "custom" as const,
+  schema: CustomContractSchema,
+  roles: ALL_ROLES,
+};
 
 export const CONTRACTS_MAP = {
   ...PREBUILT_CONTRACTS_MAP,
