@@ -116,7 +116,7 @@ export const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
             type="submit"
             colorScheme="primary"
             alignSelf="flex-end"
-            isDisabled={!isDirty}
+            isDisabled={!isDirty && isErc1155}
           >
             Burn
           </TransactionButton>
