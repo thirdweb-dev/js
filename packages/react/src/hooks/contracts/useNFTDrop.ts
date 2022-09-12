@@ -1,6 +1,6 @@
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import type { NFTDrop } from "@thirdweb-dev/sdk";
+import { NFTDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/nft-drop";
 
 /**
  * Hook for getting an instance of an `NFTDrop` contract. This contract is meant to interface with ERC721 compliant NFTs that can be lazily minted.
@@ -28,5 +28,5 @@ import type { NFTDrop } from "@thirdweb-dev/sdk";
  */
 export function useNFTDrop(contractAddress?: string) {
   showDeprecationWarning("useNFTDrop()", "useContract<NFTDrop>()");
-  return useContract<NFTDrop>(contractAddress).contract;
+  return useContract<NFTDropImpl>(contractAddress).contract;
 }

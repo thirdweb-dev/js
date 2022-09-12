@@ -558,6 +558,7 @@ export function useTransferNFT<TContract extends NFTContract>(
         invariant(erc1155.transfer, "contract does not support transfer");
         invariant("tokenId" in data, "tokenId not provided");
         invariant("amount" in data, "amount not provided");
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         return erc1155.transfer(data.to, data.tokenId, data.amount!);
       }
       if (erc721) {
@@ -734,6 +735,7 @@ export function useBurnNFT<TContract extends NFTContract>(
       if (erc1155) {
         invariant("amount" in data, "amount not provided");
         const { tokenId, amount } = data;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         return await erc1155.burn(tokenId, amount!);
       }
       if (erc721) {

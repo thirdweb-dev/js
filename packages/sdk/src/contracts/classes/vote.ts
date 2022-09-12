@@ -1,29 +1,32 @@
-import { fetchCurrencyMetadata, fetchCurrencyValue } from "../common/currency";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { UpdateableNetwork } from "../core/interfaces/contract";
+import {
+  fetchCurrencyMetadata,
+  fetchCurrencyValue,
+} from "../../common/currency";
+import { ContractEncoder } from "../../core/classes/contract-encoder";
+import { ContractEvents } from "../../core/classes/contract-events";
+import { ContractInterceptor } from "../../core/classes/contract-interceptor";
+import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
+import { UpdateableNetwork } from "../../core/interfaces/contract";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
-} from "../core/types";
-import { VoteType } from "../enums";
-import { VoteContractSchema } from "../schema/contracts/vote";
-import { SDKOptions } from "../schema/sdk-options";
-import { CurrencyValue } from "../types/currency";
+} from "../../core/types";
+import { VoteType } from "../../enums";
+import { VoteContractSchema } from "../../schema/contracts/vote";
+import { SDKOptions } from "../../schema/sdk-options";
+import { CurrencyValue } from "../../types/currency";
 import {
   Proposal,
   ProposalExecutable,
   ProposalVote,
   VoteSettings,
-} from "../types/vote";
-import { IERC20, VoteERC20 } from "@thirdweb-dev/contracts-js";
+} from "../../types/vote";
+import type { IERC20, VoteERC20 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
-import ABI from "@thirdweb-dev/contracts-js/dist/abis/VoteERC20.json";
+import type ABI from "@thirdweb-dev/contracts-js/dist/abis/VoteERC20.json";
 import { ProposalCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/VoteERC20";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, Contract, ethers } from "ethers";
@@ -42,18 +45,11 @@ import { BigNumber, BigNumberish, Contract, ethers } from "ethers";
  *
  * @public
  */
-export class Vote implements UpdateableNetwork {
-  static contractType = "vote" as const;
-  static contractAbi = ABI as any;
-  /**
-   * @internal
-   */
-  static schema = VoteContractSchema;
-
+export class VoteImpl implements UpdateableNetwork {
   private contractWrapper: ContractWrapper<VoteERC20>;
   private storage: IStorage;
 
-  public metadata: ContractMetadata<VoteERC20, typeof Vote.schema>;
+  public metadata: ContractMetadata<VoteERC20, typeof VoteContractSchema>;
   public encoder: ContractEncoder<VoteERC20>;
   public estimator: GasCostEstimator<VoteERC20>;
   public events: ContractEvents<VoteERC20>;
@@ -67,10 +63,11 @@ export class Vote implements UpdateableNetwork {
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
+    abi: typeof ABI,
     contractWrapper = new ContractWrapper<VoteERC20>(
       network,
       address,
-      Vote.contractAbi,
+      abi,
       options,
     ),
   ) {
@@ -78,7 +75,7 @@ export class Vote implements UpdateableNetwork {
     this.storage = storage;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      Vote.schema,
+      VoteContractSchema,
       this.storage,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);

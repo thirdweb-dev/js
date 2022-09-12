@@ -2,7 +2,7 @@ import { FEATURE_EDITION_BURNABLE } from "../../constants/erc1155-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { IBurnableERC1155 } from "@thirdweb-dev/contracts-js";
+import type { IBurnableERC1155 } from "@thirdweb-dev/contracts-js";
 import { BigNumberish } from "ethers";
 
 export class Erc1155Burnable implements DetectableFeature {

@@ -3,30 +3,30 @@ import {
   assertEnabled,
   detectContractFeature,
   extractFunctionsFromAbi,
-} from "../common";
-import { FEATURE_TOKEN } from "../constants/erc20-features";
-import { FEATURE_NFT } from "../constants/erc721-features";
-import { FEATURE_EDITION } from "../constants/erc1155-features";
-import { ContractEncoder, NetworkOrSignerOrProvider } from "../core";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
-import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
-import { ContractRoles } from "../core/classes/contract-roles";
-import { ContractRoyalty } from "../core/classes/contract-royalty";
-import { ContractPrimarySale } from "../core/classes/contract-sales";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { Erc20 } from "../core/classes/erc-20";
-import { Erc721 } from "../core/classes/erc-721";
-import { Erc1155 } from "../core/classes/erc-1155";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { UpdateableNetwork } from "../core/interfaces/contract";
-import { AbiSchema, CustomContractSchema } from "../schema/contracts/custom";
-import { CallOverrideSchema } from "../schema/index";
-import { SDKOptions } from "../schema/sdk-options";
-import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
-import {
+} from "../../common";
+import { FEATURE_TOKEN } from "../../constants/erc20-features";
+import { FEATURE_NFT } from "../../constants/erc721-features";
+import { FEATURE_EDITION } from "../../constants/erc1155-features";
+import { ContractEncoder, NetworkOrSignerOrProvider } from "../../core";
+import { ContractEvents } from "../../core/classes/contract-events";
+import { ContractInterceptor } from "../../core/classes/contract-interceptor";
+import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
+import { ContractPublishedMetadata } from "../../core/classes/contract-published-metadata";
+import { ContractRoles } from "../../core/classes/contract-roles";
+import { ContractRoyalty } from "../../core/classes/contract-royalty";
+import { ContractPrimarySale } from "../../core/classes/contract-sales";
+import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { Erc20 } from "../../core/classes/erc-20";
+import { Erc721 } from "../../core/classes/erc-721";
+import { Erc1155 } from "../../core/classes/erc-1155";
+import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
+import { UpdateableNetwork } from "../../core/interfaces/contract";
+import { AbiSchema, CustomContractSchema } from "../../schema/contracts/custom";
+import { CallOverrideSchema } from "../../schema/index";
+import { SDKOptions } from "../../schema/sdk-options";
+import { BaseERC1155, BaseERC20, BaseERC721 } from "../../types/eips";
+import type {
   IPermissions,
   IPlatformFee,
   IPrimarySale,
@@ -61,15 +61,9 @@ import { BaseContract, CallOverrides, ContractInterface } from "ethers";
  *
  * @beta
  */
-export class SmartContract<TContract extends BaseContract = BaseContract>
+export class SmartContractImpl<TContract extends BaseContract = BaseContract>
   implements UpdateableNetwork
 {
-  static contractType = "custom" as const;
-  /**
-   * @internal
-   */
-  static schema = CustomContractSchema;
-
   private contractWrapper;
   private storage;
   private options;
@@ -143,7 +137,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
 
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      SmartContract.schema,
+      CustomContractSchema,
       this.storage,
     );
 
@@ -246,7 +240,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
       // This also makes it not order dependent in the feature detection process
       const metadata = new ContractMetadata(
         this.contractWrapper,
-        SmartContract.schema,
+        CustomContractSchema,
         this.storage,
       );
       return new ContractRoyalty(this.contractWrapper, metadata);

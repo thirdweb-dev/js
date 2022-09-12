@@ -1,6 +1,6 @@
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import type { Vote } from "@thirdweb-dev/sdk";
+import { VoteImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/vote";
 
 /**
  * Hook for getting an instance of an `Vote` contract. This contract enables fully featured voting-based decentralized governance systems.
@@ -29,5 +29,5 @@ import type { Vote } from "@thirdweb-dev/sdk";
  */
 export function useVote(contractAddress?: string) {
   showDeprecationWarning("useVote()", "useContract<Vote>()");
-  return useContract<Vote>(contractAddress).contract;
+  return useContract<VoteImpl>(contractAddress).contract;
 }

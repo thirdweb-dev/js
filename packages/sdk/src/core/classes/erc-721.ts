@@ -42,7 +42,7 @@ import { Erc721LazyMintable } from "./erc-721-lazymintable";
 import { Erc721Mintable } from "./erc-721-mintable";
 import { Erc721Supply } from "./erc-721-supply";
 import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
-import {
+import type {
   DropERC721,
   IBurnableERC721,
   IERC721Supply,

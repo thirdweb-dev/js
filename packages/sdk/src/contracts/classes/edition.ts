@@ -1,32 +1,32 @@
-import { getRoleHash } from "../common";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
-import { ContractRoles } from "../core/classes/contract-roles";
-import { ContractRoyalty } from "../core/classes/contract-royalty";
-import { ContractPrimarySale } from "../core/classes/contract-sales";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { Erc1155 } from "../core/classes/erc-1155";
-import { Erc1155SignatureMintable } from "../core/classes/erc-1155-signature-mintable";
-import { StandardErc1155 } from "../core/classes/erc-1155-standard";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { getRoleHash } from "../../common";
+import { ContractEncoder } from "../../core/classes/contract-encoder";
+import { ContractEvents } from "../../core/classes/contract-events";
+import { ContractInterceptor } from "../../core/classes/contract-interceptor";
+import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
+import { ContractRoles } from "../../core/classes/contract-roles";
+import { ContractRoyalty } from "../../core/classes/contract-royalty";
+import { ContractPrimarySale } from "../../core/classes/contract-sales";
+import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { Erc1155 } from "../../core/classes/erc-1155";
+import { Erc1155SignatureMintable } from "../../core/classes/erc-1155-signature-mintable";
+import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
+import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
-} from "../core/types";
-import { TokenErc1155ContractSchema } from "../schema/contracts/token-erc1155";
-import { SDKOptions } from "../schema/sdk-options";
+} from "../../core/types";
+import { TokenErc1155ContractSchema } from "../../schema/contracts/token-erc1155";
+import { SDKOptions } from "../../schema/sdk-options";
 import {
   EditionMetadata,
   EditionMetadataOrUri,
   EditionMetadataOwner,
-} from "../schema/tokens/edition";
-import { QueryAllParams } from "../types";
-import { TokenERC1155 } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC1155.json";
+} from "../../schema/tokens/edition";
+import { QueryAllParams } from "../../types";
+import type { TokenERC1155 } from "@thirdweb-dev/contracts-js";
+import type ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC1155.json";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
 
@@ -44,19 +44,16 @@ import { BigNumber, BigNumberish, constants } from "ethers";
  *
  * @public
  */
-export class Edition extends StandardErc1155<TokenERC1155> {
-  static contractType = "edition" as const;
+export class EditionImpl extends StandardErc1155<TokenERC1155> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractAbi = ABI as any;
 
-  /**
-   * @internal
-   */
-  static schema = TokenErc1155ContractSchema;
-  public metadata: ContractMetadata<TokenERC1155, typeof Edition.schema>;
+  public metadata: ContractMetadata<
+    TokenERC1155,
+    typeof TokenErc1155ContractSchema
+  >;
   public roles: ContractRoles<
     TokenERC1155,
-    typeof Edition.contractRoles[number]
+    typeof EditionImpl.contractRoles[number]
   >;
   public sales: ContractPrimarySale<TokenERC1155>;
   public platformFees: ContractPlatformFee<TokenERC1155>;
@@ -80,7 +77,10 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * });
    * ```
    */
-  public royalties: ContractRoyalty<TokenERC1155, typeof Edition.schema>;
+  public royalties: ContractRoyalty<
+    TokenERC1155,
+    typeof TokenErc1155ContractSchema
+  >;
   /**
    * Signature Minting
    * @remarks Generate dynamic NFTs with your own signature, and let others mint them using that signature.
@@ -104,20 +104,24 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
+    abi: typeof ABI,
     contractWrapper = new ContractWrapper<TokenERC1155>(
       network,
       address,
-      Edition.contractAbi,
+      abi,
       options,
     ),
   ) {
     super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      Edition.schema,
+      TokenErc1155ContractSchema,
       this.storage,
     );
-    this.roles = new ContractRoles(this.contractWrapper, Edition.contractRoles);
+    this.roles = new ContractRoles(
+      this.contractWrapper,
+      EditionImpl.contractRoles,
+    );
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);

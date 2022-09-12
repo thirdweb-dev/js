@@ -5,7 +5,7 @@ import { FEATURE_PERMISSIONS } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import {
+import type {
   IPermissions,
   IPermissionsEnumerable,
 } from "@thirdweb-dev/contracts-js";

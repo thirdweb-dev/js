@@ -1,18 +1,23 @@
 import { Token, Vote } from "../src";
+import { TokenImpl } from "../src/contracts/classes/token";
+import { VoteImpl } from "../src/contracts/classes/vote";
 import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
 import { ethers } from "ethers";
-import { ethers as hardhatEthers } from "hardhat";
+import hardhat from "hardhat";
+
+// it's there, trust me bro
+const hardhatEthers = (hardhat as any).ethers;
 
 global.fetch = require("cross-fetch");
 
 describe("Vote Contract", async () => {
-  let voteContract: Vote;
-  let currencyContract: Token;
+  let voteContract: VoteImpl;
+  let currencyContract: TokenImpl;
 
-  const voteStartWaitTimeInSeconds = 0;
-  const voteWaitTimeInSeconds = 5;
+  // const voteStartWaitTimeInSeconds = 0;
+  // const voteWaitTimeInSeconds = 5;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -123,7 +128,7 @@ describe("Vote Contract", async () => {
       blockTimes.push(diff);
     }
 
-    const sum = blockTimes.reduce((result, a) => result + a, 0);
+    // const sum = blockTimes.reduce((result, a) => result + a, 0);
   });
 
   it("should permit a proposal to be passed if it receives the right votes", async () => {

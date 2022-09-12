@@ -1,19 +1,22 @@
-import { fetchCurrencyValue } from "../common/currency";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { UpdateableNetwork } from "../core/interfaces/contract";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
-import { SplitsContractSchema } from "../schema/contracts/splits";
-import { SDKOptions } from "../schema/sdk-options";
-import { SplitRecipient } from "../types/SplitRecipient";
-import { CurrencyValue } from "../types/currency";
-import { IERC20, Split as SplitContract } from "@thirdweb-dev/contracts-js";
+import { fetchCurrencyValue } from "../../common/currency";
+import { ContractEncoder } from "../../core/classes/contract-encoder";
+import { ContractEvents } from "../../core/classes/contract-events";
+import { ContractInterceptor } from "../../core/classes/contract-interceptor";
+import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
+import { UpdateableNetwork } from "../../core/interfaces/contract";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../../core/types";
+import { SplitsContractSchema } from "../../schema/contracts/splits";
+import { SDKOptions } from "../../schema/sdk-options";
+import { SplitRecipient } from "../../types/SplitRecipient";
+import { CurrencyValue } from "../../types/currency";
+import type {
+  IERC20,
+  Split as SplitContract,
+} from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
-import ABI from "@thirdweb-dev/contracts-js/dist/abis/Split.json";
+import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Split.json";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, Contract } from "ethers";
 
@@ -31,18 +34,11 @@ import { BigNumber, Contract } from "ethers";
  *
  * @public
  */
-export class Split implements UpdateableNetwork {
-  static contractType = "split" as const;
-  static contractAbi = ABI as any;
-  /**
-   * @internal
-   */
-  static schema = SplitsContractSchema;
-
+export class SplitImpl implements UpdateableNetwork {
   private contractWrapper: ContractWrapper<SplitContract>;
   private storage: IStorage;
 
-  public metadata: ContractMetadata<SplitContract, typeof Split.schema>;
+  public metadata: ContractMetadata<SplitContract, typeof SplitsContractSchema>;
   public encoder: ContractEncoder<SplitContract>;
   public estimator: GasCostEstimator<SplitContract>;
   public events: ContractEvents<SplitContract>;
@@ -56,10 +52,11 @@ export class Split implements UpdateableNetwork {
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
+    abi: typeof ABI,
     contractWrapper = new ContractWrapper<SplitContract>(
       network,
       address,
-      Split.contractAbi,
+      abi,
       options,
     ),
   ) {
@@ -67,7 +64,7 @@ export class Split implements UpdateableNetwork {
     this.storage = storage;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      Split.schema,
+      SplitsContractSchema,
       this.storage,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);

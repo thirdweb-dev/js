@@ -1,6 +1,6 @@
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import type { SignatureDrop } from "@thirdweb-dev/sdk";
+import { SignatureDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/signature-drop";
 
 /**
  * Hook for getting an instance of an `SignatureDrop` contract. This contract is meant to interface with ERC721 compliant NFTs that can be lazily minted.
@@ -28,5 +28,5 @@ import type { SignatureDrop } from "@thirdweb-dev/sdk";
  */
 export function useSignatureDrop(contractAddress?: string) {
   showDeprecationWarning("useSignatureDrop()", "useContract<SignatureDrop>()");
-  return useContract<SignatureDrop>(contractAddress).contract;
+  return useContract<SignatureDropImpl>(contractAddress).contract;
 }

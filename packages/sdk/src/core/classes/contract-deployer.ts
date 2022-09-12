@@ -6,19 +6,20 @@ import {
 } from "../../common/index";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import {
+  CONTRACTS_MAP,
   Edition,
   EditionDrop,
   Marketplace,
+  Multiwrap,
   NFTCollection,
   NFTDrop,
   Pack,
   SignatureDrop,
   Split,
   Token,
+  TokenDrop,
   Vote,
 } from "../../contracts";
-import { Multiwrap } from "../../contracts/multiwrap";
-import { TokenDrop } from "../../contracts/token-drop";
 import { FactoryDeploymentSchema } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
@@ -30,7 +31,11 @@ import {
   VoteContractDeployMetadata,
 } from "../../types/deploy/deploy-metadata";
 import { ThirdwebSDK } from "../sdk";
-import { NetworkOrSignerOrProvider, ValidContractClass } from "../types";
+import {
+  ContractType,
+  DeploySchemaForContractType,
+  NetworkOrSignerOrProvider,
+} from "../types";
 import { ContractFactory } from "./factory";
 import { ContractRegistry } from "./registry";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
@@ -194,8 +199,7 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployEditionDrop(
     metadata: NFTContractDeployMetadata,
   ): Promise<string> {
-    const parsed = EditionDrop.schema.deploy.parse(metadata);
-    return await this.deployBuiltInContract(EditionDrop.contractType, parsed);
+    return await this.deployBuiltInContract(EditionDrop.contractType, metadata);
   }
 
   /**
@@ -343,12 +347,14 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param contractMetadata - the metadata to deploy the contract with
    * @returns a promise of the address of the newly deployed contract
    */
-  public async deployBuiltInContract<TContract extends ValidContractClass>(
-    contractType: TContract["contractType"],
-    contractMetadata: z.input<TContract["schema"]["deploy"]>,
+  public async deployBuiltInContract<TContractType extends ContractType>(
+    contractType: TContractType,
+    contractMetadata: z.input<DeploySchemaForContractType<TContractType>>,
   ): Promise<string> {
+    const parsed =
+      CONTRACTS_MAP[contractType].schema.deploy.parse(contractMetadata);
     const factory = await this.getFactory();
-    return await factory.deploy(contractType, contractMetadata);
+    return await factory.deploy(contractType, parsed);
   }
 
   /**
@@ -469,13 +475,21 @@ export class ContractDeployer extends RPCConnectionHandler {
 
   private updateContractSignerOrProvider() {
     // has to be promises now
-    this._factory?.then((factory) => {
-      factory.updateSignerOrProvider(this.getSignerOrProvider());
-    });
+    this._factory
+      ?.then((factory) => {
+        factory.updateSignerOrProvider(this.getSignerOrProvider());
+      })
+      .catch(() => {
+        // ignore
+      });
     // has to be promises now
-    this._registry?.then((registry) => {
-      registry.updateSignerOrProvider(this.getSignerOrProvider());
-    });
+    this._registry
+      ?.then((registry) => {
+        registry.updateSignerOrProvider(this.getSignerOrProvider());
+      })
+      .catch(() => {
+        // ignore
+      });
   }
 
   /**

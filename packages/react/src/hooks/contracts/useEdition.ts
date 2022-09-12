@@ -1,6 +1,6 @@
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import type { Edition } from "@thirdweb-dev/sdk";
+import { EditionImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/edition";
 
 /**
  * Hook for getting an instance of an `Edition` contract. This contract is used to interface with ERC1155 compliant NFTs.
@@ -29,5 +29,5 @@ import type { Edition } from "@thirdweb-dev/sdk";
  */
 export function useEdition(contractAddress?: string) {
   showDeprecationWarning("useEdition()", "useContract<Edition>()");
-  return useContract<Edition>(contractAddress).contract;
+  return useContract<EditionImpl>(contractAddress).contract;
 }

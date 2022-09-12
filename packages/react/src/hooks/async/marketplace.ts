@@ -8,13 +8,13 @@ import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useAddress } from "../useAddress";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type {
-  Marketplace,
   MarketplaceFilter,
   NewAuctionListing,
   NewDirectListing,
 } from "@thirdweb-dev/sdk";
 // eslint-disable-next-line no-duplicate-imports
 import { ListingType } from "@thirdweb-dev/sdk";
+import { MarketplaceImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/marketplace";
 import { BigNumber, BigNumberish } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -36,7 +36,7 @@ import invariant from "tiny-invariant";
  * @beta
  */
 export function useListing(
-  contract: RequiredParam<Marketplace>,
+  contract: RequiredParam<MarketplaceImpl>,
   listingId: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
@@ -67,7 +67,7 @@ export function useListing(
  * @beta
  */
 export function useListings(
-  contract: RequiredParam<Marketplace>,
+  contract: RequiredParam<MarketplaceImpl>,
   filter?: MarketplaceFilter,
 ) {
   const contractAddress = contract?.getAddress();
@@ -98,7 +98,7 @@ export function useListings(
  * @beta
  */
 export function useActiveListings(
-  contract: RequiredParam<Marketplace>,
+  contract: RequiredParam<MarketplaceImpl>,
   filter?: MarketplaceFilter,
 ) {
   const contractAddress = contract?.getAddress();
@@ -130,7 +130,7 @@ export function useActiveListings(
  * @beta
  */
 export function useWinningBid(
-  contract: RequiredParam<Marketplace>,
+  contract: RequiredParam<MarketplaceImpl>,
   listingId: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
@@ -163,7 +163,7 @@ export function useWinningBid(
  * @beta
  */
 export function useAuctionWinner(
-  contract: RequiredParam<Marketplace>,
+  contract: RequiredParam<MarketplaceImpl>,
   listingId: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
@@ -205,7 +205,7 @@ export function useAuctionWinner(
  * @returns a response object that includes an array of listings
  * @beta
  */
-export function useBidBuffer(contract: RequiredParam<Marketplace>) {
+export function useBidBuffer(contract: RequiredParam<MarketplaceImpl>) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.marketplace.getBidBufferBps(contractAddress),
@@ -254,7 +254,9 @@ export function useBidBuffer(contract: RequiredParam<Marketplace>) {
  * @returns a mutation object that can be used to create a new direct listing
  * @beta
  */
-export function useCreateDirectListing(contract: RequiredParam<Marketplace>) {
+export function useCreateDirectListing(
+  contract: RequiredParam<MarketplaceImpl>,
+) {
   const activeChainId = useActiveChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
@@ -310,7 +312,9 @@ export function useCreateDirectListing(contract: RequiredParam<Marketplace>) {
  * @returns a mutation object that can be used to create a new auction listing
  * @beta
  */
-export function useCreateAuctionListing(contract: RequiredParam<Marketplace>) {
+export function useCreateAuctionListing(
+  contract: RequiredParam<MarketplaceImpl>,
+) {
   const activeChainId = useActiveChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
@@ -366,7 +370,7 @@ export function useCreateAuctionListing(contract: RequiredParam<Marketplace>) {
  * @returns a mutation object that can be used to make a bid on an auction listing
  * @beta
  */
-export function useMakeBid(contract: RequiredParam<Marketplace>) {
+export function useMakeBid(contract: RequiredParam<MarketplaceImpl>) {
   const activeChainId = useActiveChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
@@ -422,7 +426,7 @@ export function useMakeBid(contract: RequiredParam<Marketplace>) {
  * @returns a mutation object that can be used to buy out an auction listing
  * @beta
  */
-export function useBuyNow(contract: RequiredParam<Marketplace>) {
+export function useBuyNow(contract: RequiredParam<MarketplaceImpl>) {
   const activeChainId = useActiveChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();

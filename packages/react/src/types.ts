@@ -1,27 +1,26 @@
 import type {
   AirdropInput,
   Amount,
-  EditionDrop,
   Erc721,
   Erc721Mintable,
   Erc1155,
   Erc1155Mintable,
   ListingType,
-  NFTDrop,
   NFTMetadata,
   NFTMetadataInput,
   NFTMetadataOrUri,
   Price,
-  SignatureDrop,
   ValidContractInstance,
-  SmartContract,
-  NFTCollection,
-  Edition,
-  TokenDrop,
   Erc20,
   ClaimOptions,
-  StandardErc1155,
 } from "@thirdweb-dev/sdk";
+import { EditionImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/edition";
+import { EditionDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/edition-drop";
+import { NFTCollectionImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/nft-collection";
+import { NFTDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/nft-drop";
+import { SignatureDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/signature-drop";
+import { SmartContractImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/smart-contract";
+import { TokenDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/token-drop";
 import type { BigNumberish } from "ethers";
 
 /**
@@ -73,8 +72,8 @@ export type TokenBurnParams = {
  * @beta
  */
 export type NFTContract =
-  | NFTCollection
-  | Edition
+  | NFTCollectionImpl
+  | EditionImpl
   | Exclude<DropContract, "TokenDrop">;
 
 /**
@@ -173,18 +172,22 @@ export type BurnNFTParams = { tokenId: BigNumberish; amount?: Amount };
  * @beta
  */
 export type DropContract =
-  | NFTDrop
-  | EditionDrop
-  | SignatureDrop
-  | TokenDrop
-  | SmartContract
+  | NFTDropImpl
+  | EditionDropImpl
+  | SignatureDropImpl
+  | TokenDropImpl
+  | SmartContractImpl
   | null;
 
 /**
  * The possible revealable contract types.
  * @beta
  */
-export type RevealableContract = NFTDrop | SignatureDrop | SmartContract | null;
+export type RevealableContract =
+  | NFTDropImpl
+  | SignatureDropImpl
+  | SmartContractImpl
+  | null;
 
 /**
  * The params for the {@link useDelayedRevealLazyMint} hook mutation.
@@ -258,9 +261,7 @@ export type ClaimTokenParams = {
 
 // Helpers
 
-export function getErcs(
-  contract: RequiredParam<ValidContractInstance | SmartContract | null>,
-) {
+export function getErcs(contract: RequiredParam<ValidContractInstance | null>) {
   return {
     erc1155: getErc1155(contract),
     erc721: getErc721(contract),
@@ -269,7 +270,7 @@ export function getErcs(
 }
 
 export function getErc1155(
-  contract: RequiredParam<ValidContractInstance | SmartContract | null>,
+  contract: RequiredParam<ValidContractInstance | null>,
 ): Erc1155 | undefined {
   if (!contract) {
     return undefined;
@@ -285,7 +286,7 @@ export function getErc1155(
 }
 
 export function getErc721(
-  contract: RequiredParam<ValidContractInstance | SmartContract | null>,
+  contract: RequiredParam<ValidContractInstance | null>,
 ): Erc721 | undefined {
   if (!contract) {
     return undefined;
@@ -301,7 +302,7 @@ export function getErc721(
 }
 
 export function getErc20(
-  contract: RequiredParam<ValidContractInstance | SmartContract | null>,
+  contract: RequiredParam<ValidContractInstance | null>,
 ): Erc20 | undefined {
   if (!contract) {
     return undefined;

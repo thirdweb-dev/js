@@ -356,7 +356,7 @@ export async function fetchContractMetadata(
   });
   const licenses: string[] = [
     ...new Set(
-      Object.entries(metadata.sources).map(([_, src]) => (src as any).license),
+      Object.entries(metadata.sources).map(([, src]) => (src as any).license),
     ),
   ];
   return {

@@ -2,7 +2,7 @@ import { FEATURE_PRIMARY_SALE } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { IPrimarySale } from "@thirdweb-dev/contracts-js";
+import type { IPrimarySale } from "@thirdweb-dev/contracts-js";
 
 /**
  * Handle primary sales recipients

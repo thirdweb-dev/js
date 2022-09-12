@@ -1,6 +1,7 @@
 import { ContractType } from "../types";
-import { IThirdwebContract__factory } from "@thirdweb-dev/contracts-js";
-import { Signer, providers } from "ethers";
+import type { IThirdwebContract } from "@thirdweb-dev/contracts-js";
+import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
+import { Signer, providers, Contract } from "ethers";
 
 /**
  * @internal
@@ -15,9 +16,10 @@ export async function getContractTypeForAddress<
   contractAddress: string,
   signerOrProvider: Signer | providers.Provider,
 ): Promise<TContractType> {
-  const contract = IThirdwebContract__factory.connect(
+  const contract = new Contract(
     contractAddress,
+    IThirdwebContractABI,
     signerOrProvider,
-  );
+  ) as IThirdwebContract;
   return (await contract.contractType()) as TContractType;
 }

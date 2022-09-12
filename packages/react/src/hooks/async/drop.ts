@@ -18,11 +18,11 @@ import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useNFTs } from "./nft";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  NFTDrop,
   NFTMetadataInput,
   QueryAllParams,
   UploadProgressEvent,
 } from "@thirdweb-dev/sdk";
+import { NFTDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/nft-drop";
 import invariant from "tiny-invariant";
 
 /** **********************/
@@ -43,7 +43,7 @@ import invariant from "tiny-invariant";
  * @beta
  */
 export function useUnclaimedNFTs(
-  contract: RequiredParam<NFTDrop>,
+  contract: RequiredParam<NFTDropImpl>,
   queryParams?: QueryAllParams,
 ) {
   const contractAddress = contract?.getAddress();

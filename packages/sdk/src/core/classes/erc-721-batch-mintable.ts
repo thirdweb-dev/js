@@ -5,7 +5,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc721 } from "./erc-721";
-import { IMintableERC721, IMulticall } from "@thirdweb-dev/contracts-js";
+import type { IMintableERC721, IMulticall } from "@thirdweb-dev/contracts-js";
 import { TokensMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IMintableERC721";
 import { IStorage } from "@thirdweb-dev/storage";
 

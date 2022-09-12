@@ -38,15 +38,16 @@ import {
   TokenERC721__factory,
   TWFactory,
   TWFactory__factory,
-  TWFee__factory,
   TWRegistry,
   TWRegistry__factory,
   VoteERC20__factory,
 } from "@thirdweb-dev/contracts-js";
 import { IStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
-//@ts-expext-error TS2551: Cannot find name 'ethers'.
-import { ethers as hardhatEthers } from "hardhat";
+import hardhat from "hardhat";
+
+// it's there, trust me bro
+const hardhatEthers = (hardhat as any).ethers;
 
 const RPC_URL = "http://localhost:8545";
 
@@ -111,14 +112,6 @@ export const mochaHooks = {
       await registryContract.OPERATOR_ROLE(),
       thirdwebFactoryDeployer.address,
     );
-
-    const thirdwebFeeDeployer = await new ethers.ContractFactory(
-      TWFee__factory.abi,
-      TWFee__factory.bytecode,
-    )
-      .connect(signer)
-      .deploy(trustedForwarderAddress, thirdwebFactoryDeployer.address);
-    await thirdwebFactoryDeployer.deployed();
 
     // Mock publisher for tests
     const mockPublisher = (await new ethers.ContractFactory(

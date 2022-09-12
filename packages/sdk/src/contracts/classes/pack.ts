@@ -2,38 +2,37 @@ import {
   fetchCurrencyMetadata,
   hasERC20Allowance,
   normalizePriceValue,
-} from "../common/currency";
-import { isTokenApprovedForTransfer } from "../common/marketplace";
-import { uploadOrExtractURI } from "../common/nft";
-import { getRoleHash } from "../common/role";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractRoles } from "../core/classes/contract-roles";
-import { ContractRoyalty } from "../core/classes/contract-royalty";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { Erc1155 } from "../core/classes/erc-1155";
-import { StandardErc1155 } from "../core/classes/erc-1155-standard";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { UpdateableNetwork } from "../core/interfaces/contract";
+} from "../../common/currency";
+import { isTokenApprovedForTransfer } from "../../common/marketplace";
+import { uploadOrExtractURI } from "../../common/nft";
+import { getRoleHash } from "../../common/role";
+import { ContractEncoder } from "../../core/classes/contract-encoder";
+import { ContractEvents } from "../../core/classes/contract-events";
+import { ContractInterceptor } from "../../core/classes/contract-interceptor";
+import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractRoles } from "../../core/classes/contract-roles";
+import { ContractRoyalty } from "../../core/classes/contract-royalty";
+import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { Erc1155 } from "../../core/classes/erc-1155";
+import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
+import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import {
   NetworkOrSignerOrProvider,
   TransactionResultWithId,
-} from "../core/types";
-import { EditionMetadata, EditionMetadataOwner } from "../schema";
-import { PackContractSchema } from "../schema/contracts/packs";
-import { SDKOptions } from "../schema/sdk-options";
+} from "../../core/types";
+import { EditionMetadata, EditionMetadataOwner } from "../../schema";
+import { PackContractSchema } from "../../schema/contracts/packs";
+import { SDKOptions } from "../../schema/sdk-options";
 import {
   PackMetadataInput,
   PackMetadataInputSchema,
   PackMetadataOutput,
   PackRewards,
   PackRewardsOutput,
-} from "../schema/tokens/pack";
-import { QueryAllParams } from "../types";
-import { Pack as PackContract } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/dist/abis/Pack.json";
+} from "../../schema/tokens/pack";
+import { QueryAllParams } from "../../types";
+import type { Pack as PackContract } from "@thirdweb-dev/contracts-js";
+import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Pack.json";
 import {
   ITokenBundle,
   PackCreatedEvent,
@@ -56,17 +55,14 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
  *
  * @public
  */
-export class Pack extends StandardErc1155<PackContract> {
-  static contractType = "pack" as const;
+export class PackImpl extends StandardErc1155<PackContract> {
   static contractRoles = ["admin", "minter", "pauser", "transfer"] as const;
-  static contractAbi = ABI as any;
-  /**
-   * @internal
-   */
-  static schema = PackContractSchema;
 
-  public metadata: ContractMetadata<PackContract, typeof Pack.schema>;
-  public roles: ContractRoles<PackContract, typeof Pack.contractRoles[number]>;
+  public metadata: ContractMetadata<PackContract, typeof PackContractSchema>;
+  public roles: ContractRoles<
+    PackContract,
+    typeof PackImpl.contractRoles[number]
+  >;
   public encoder: ContractEncoder<PackContract>;
   public events: ContractEvents<PackContract>;
   public estimator: GasCostEstimator<PackContract>;
@@ -87,7 +83,7 @@ export class Pack extends StandardErc1155<PackContract> {
    * });
    * ```
    */
-  public royalties: ContractRoyalty<PackContract, typeof Pack.schema>;
+  public royalties: ContractRoyalty<PackContract, typeof PackContractSchema>;
   /**
    * @internal
    */
@@ -100,10 +96,11 @@ export class Pack extends StandardErc1155<PackContract> {
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
+    abi: typeof ABI,
     contractWrapper = new ContractWrapper<PackContract>(
       network,
       address,
-      Pack.contractAbi,
+      abi,
       options,
     ),
   ) {
@@ -111,10 +108,13 @@ export class Pack extends StandardErc1155<PackContract> {
     this.erc1155 = new Erc1155(this.contractWrapper, this.storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      Pack.schema,
+      PackContractSchema,
       this.storage,
     );
-    this.roles = new ContractRoles(this.contractWrapper, Pack.contractRoles);
+    this.roles = new ContractRoles(
+      this.contractWrapper,
+      PackImpl.contractRoles,
+    );
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);

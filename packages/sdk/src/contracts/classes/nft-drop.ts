@@ -1,39 +1,42 @@
-import { getRoleHash } from "../common";
-import { prepareClaim } from "../common/claim-conditions";
-import { uploadOrExtractURIs } from "../common/nft";
-import { FEATURE_NFT_REVEALABLE } from "../constants/erc721-features";
-import { TransactionTask } from "../core/classes/TransactionTask";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
-import { ContractRoles } from "../core/classes/contract-roles";
-import { ContractRoyalty } from "../core/classes/contract-royalty";
-import { ContractPrimarySale } from "../core/classes/contract-sales";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { DelayedReveal } from "../core/classes/delayed-reveal";
-import { DropClaimConditions } from "../core/classes/drop-claim-conditions";
-import { Erc721 } from "../core/classes/erc-721";
-import { StandardErc721 } from "../core/classes/erc-721-standard";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { getRoleHash } from "../../common";
+import { prepareClaim } from "../../common/claim-conditions";
+import { uploadOrExtractURIs } from "../../common/nft";
+import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
+import { TransactionTask } from "../../core/classes/TransactionTask";
+import { ContractEncoder } from "../../core/classes/contract-encoder";
+import { ContractEvents } from "../../core/classes/contract-events";
+import { ContractInterceptor } from "../../core/classes/contract-interceptor";
+import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
+import { ContractRoles } from "../../core/classes/contract-roles";
+import { ContractRoyalty } from "../../core/classes/contract-royalty";
+import { ContractPrimarySale } from "../../core/classes/contract-sales";
+import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { DelayedReveal } from "../../core/classes/delayed-reveal";
+import { DropClaimConditions } from "../../core/classes/drop-claim-conditions";
+import { Erc721 } from "../../core/classes/erc-721";
+import { StandardErc721 } from "../../core/classes/erc-721-standard";
+import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
-} from "../core/types";
-import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
-import { SDKOptions } from "../schema/sdk-options";
+} from "../../core/types";
+import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
+import { SDKOptions } from "../../schema/sdk-options";
 import {
   NFTMetadata,
   NFTMetadataOrUri,
   NFTMetadataOwner,
-} from "../schema/tokens/common";
-import { ClaimVerification } from "../types";
-import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
-import { UploadProgressEvent } from "../types/events";
-import { DropERC721 } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC721.json";
+} from "../../schema/tokens/common";
+import { ClaimVerification } from "../../types";
+import {
+  DEFAULT_QUERY_ALL_COUNT,
+  QueryAllParams,
+} from "../../types/QueryParams";
+import { UploadProgressEvent } from "../../types/events";
+import type { DropERC721 } from "@thirdweb-dev/contracts-js";
+import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC721.json";
 import {
   TokensClaimedEvent,
   TokensLazyMintedEvent,
@@ -55,22 +58,22 @@ import { BigNumber, BigNumberish, constants, ethers } from "ethers";
  *
  * @public
  */
-export class NFTDrop extends StandardErc721<DropERC721> {
-  static contractType = "nft-drop" as const;
+export class NFTDropImpl extends StandardErc721<DropERC721> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractAbi = ABI as any;
-  /**
-   * @internal
-   */
-  static schema = DropErc721ContractSchema;
 
   public encoder: ContractEncoder<DropERC721>;
   public estimator: GasCostEstimator<DropERC721>;
-  public metadata: ContractMetadata<DropERC721, typeof NFTDrop.schema>;
+  public metadata: ContractMetadata<
+    DropERC721,
+    typeof DropErc721ContractSchema
+  >;
   public sales: ContractPrimarySale<DropERC721>;
   public platformFees: ContractPlatformFee<DropERC721>;
   public events: ContractEvents<DropERC721>;
-  public roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
+  public roles: ContractRoles<
+    DropERC721,
+    typeof NFTDropImpl.contractRoles[number]
+  >;
   /**
    * @internal
    */
@@ -92,7 +95,10 @@ export class NFTDrop extends StandardErc721<DropERC721> {
    * });
    * ```
    */
-  public royalties: ContractRoyalty<DropERC721, typeof NFTDrop.schema>;
+  public royalties: ContractRoyalty<
+    DropERC721,
+    typeof DropErc721ContractSchema
+  >;
   /**
    * Configure claim conditions
    * @remarks Define who can claim NFTs in the collection, when and how many.
@@ -155,20 +161,24 @@ export class NFTDrop extends StandardErc721<DropERC721> {
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
+    abi: typeof ABI,
     contractWrapper = new ContractWrapper<DropERC721>(
       network,
       address,
-      NFTDrop.contractAbi,
+      abi,
       options,
     ),
   ) {
     super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      NFTDrop.schema,
+      DropErc721ContractSchema,
       this.storage,
     );
-    this.roles = new ContractRoles(this.contractWrapper, NFTDrop.contractRoles);
+    this.roles = new ContractRoles(
+      this.contractWrapper,
+      NFTDropImpl.contractRoles,
+    );
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);
     this.claimConditions = new DropClaimConditions(

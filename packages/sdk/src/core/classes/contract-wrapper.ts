@@ -20,7 +20,7 @@ import {
   PermitRequestMessage,
 } from "../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import { Forwarder__factory } from "@thirdweb-dev/contracts-js";
+import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
 import fetch from "cross-fetch";
 import {
   BaseContract,
@@ -572,7 +572,8 @@ export class ContractWrapper<
       this.options.gasless.openzeppelin.relayerForwarderAddress ||
       CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES]
         .openzeppelinForwarder;
-    const forwarder = Forwarder__factory.connect(forwarderAddress, provider);
+
+    const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
     const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
       transaction.from,
     ]);

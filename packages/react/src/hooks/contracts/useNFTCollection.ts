@@ -1,6 +1,6 @@
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import type { NFTCollection } from "@thirdweb-dev/sdk";
+import { NFTCollectionImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/nft-collection";
 
 /**
  * Hook for getting an instance of an `NFTCollection` contract. This contract is meant to interface with ERC721 compliant NFTs.
@@ -29,5 +29,5 @@ import type { NFTCollection } from "@thirdweb-dev/sdk";
  */
 export function useNFTCollection(contractAddress?: string) {
   showDeprecationWarning("useNFTCollection()", "useContract<NFTCollection>()");
-  return useContract<NFTCollection>(contractAddress).contract;
+  return useContract<NFTCollectionImpl>(contractAddress).contract;
 }

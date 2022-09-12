@@ -17,11 +17,11 @@ import {
 import {
   ContractEvent,
   EventQueryFilter,
-  SmartContract,
   SUPPORTED_CHAIN_ID,
   ThirdwebSDK,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
+import { SmartContractImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/smart-contract";
 import { useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
 
@@ -113,7 +113,7 @@ export const compilerMetadata = {
 
 // useContract
 
-export type Contract = SmartContract | ValidContractInstance;
+export type Contract = ValidContractInstance;
 
 function createReadHook<TContract extends Contract>(
   contract: RequiredParam<TContract>,
@@ -168,7 +168,7 @@ function createWriteHook<TContract extends Contract>(
   };
 }
 
-export type UseContractResult<TContract extends Contract = Contract> =
+export type UseContractResult<TContract extends Contract = SmartContractImpl> =
   UseQueryResult<TContract | undefined> & {
     contract: TContract | undefined;
     useRead: <TData>(
@@ -181,7 +181,7 @@ export type UseContractResult<TContract extends Contract = Contract> =
     ) => UseMutationResult<Awaited<ReturnType<TAction>>>;
   };
 
-export function useContract<TContract extends Contract = Contract>(
+export function useContract<TContract extends Contract = SmartContractImpl>(
   contractAddress: RequiredParam<ContractAddress>,
 ) {
   const sdk = useSDK();
@@ -245,7 +245,7 @@ export function useContract<TContract extends Contract = Contract>(
  * @beta
  */
 export function useContractMetadata(contract: UseContractResult) {
-  return contract.useRead((contract) => contract.metadata.get());
+  return contract.useRead((c) => c.metadata.get());
 }
 
 // const { mutate: setMetadata, data } = useContractWrite(

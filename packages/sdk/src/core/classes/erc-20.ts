@@ -31,7 +31,7 @@ import { Erc20Burnable } from "./erc-20-burnable";
 import { Erc20Droppable } from "./erc-20-droppable";
 import { Erc20Mintable } from "./erc-20-mintable";
 import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
-import {
+import type {
   TokenERC20,
   DropERC20,
   IMintableERC20,

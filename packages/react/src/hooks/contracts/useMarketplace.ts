@@ -1,6 +1,6 @@
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import type { Marketplace } from "@thirdweb-dev/sdk";
+import { MarketplaceImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/marketplace";
 
 /**
  * Hook for getting an instance of a `Marketplace` contract. This contract is used to support marketplace for purchase and sale of on-chain assets.
@@ -29,5 +29,5 @@ import type { Marketplace } from "@thirdweb-dev/sdk";
  */
 export function useMarketplace(contractAddress?: string) {
   showDeprecationWarning("useMarketplace()", "useContract<Marketplace>()");
-  return useContract<Marketplace>(contractAddress).contract;
+  return useContract<MarketplaceImpl>(contractAddress).contract;
 }

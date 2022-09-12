@@ -1,21 +1,21 @@
-import { getRoleHash } from "../common";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
-import { ContractRoles } from "../core/classes/contract-roles";
-import { ContractPrimarySale } from "../core/classes/contract-sales";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { DropClaimConditions } from "../core/classes/drop-claim-conditions";
-import { StandardErc20 } from "../core/classes/erc-20-standard";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
-import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
-import { SDKOptions } from "../schema/sdk-options";
-import { Amount, CurrencyValue } from "../types";
-import { DropERC20 } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC20.json";
+import { getRoleHash } from "../../common";
+import { ContractEncoder } from "../../core/classes/contract-encoder";
+import { ContractEvents } from "../../core/classes/contract-events";
+import { ContractInterceptor } from "../../core/classes/contract-interceptor";
+import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
+import { ContractRoles } from "../../core/classes/contract-roles";
+import { ContractPrimarySale } from "../../core/classes/contract-sales";
+import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { DropClaimConditions } from "../../core/classes/drop-claim-conditions";
+import { StandardErc20 } from "../../core/classes/erc-20-standard";
+import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../../core/types";
+import { DropErc20ContractSchema } from "../../schema/contracts/drop-erc20";
+import { SDKOptions } from "../../schema/sdk-options";
+import { Amount, CurrencyValue } from "../../types";
+import type { DropERC20 } from "@thirdweb-dev/contracts-js";
+import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC20.json";
 import { IStorage } from "@thirdweb-dev/storage";
 import { constants } from "ethers";
 
@@ -32,19 +32,13 @@ import { constants } from "ethers";
  * ```
  *
  */
-export class TokenDrop extends StandardErc20<DropERC20> {
-  static contractType = "token-drop" as const;
+export class TokenDropImpl extends StandardErc20<DropERC20> {
   static contractRoles = ["admin", "transfer"] as const;
-  static contractAbi = ABI as any;
-  /**
-   * @internal
-   */
-  static schema = DropErc20ContractSchema;
 
-  public metadata: ContractMetadata<DropERC20, typeof TokenDrop.schema>;
+  public metadata: ContractMetadata<DropERC20, typeof DropErc20ContractSchema>;
   public roles: ContractRoles<
     DropERC20,
-    typeof TokenDrop.contractRoles[number]
+    typeof TokenDropImpl.contractRoles[number]
   >;
   public encoder: ContractEncoder<DropERC20>;
   public estimator: GasCostEstimator<DropERC20>;
@@ -84,22 +78,23 @@ export class TokenDrop extends StandardErc20<DropERC20> {
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
+    abi: typeof ABI,
     contractWrapper = new ContractWrapper<DropERC20>(
       network,
       address,
-      TokenDrop.contractAbi,
+      abi,
       options,
     ),
   ) {
     super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      TokenDrop.schema,
+      DropErc20ContractSchema,
       this.storage,
     );
     this.roles = new ContractRoles(
       this.contractWrapper,
-      TokenDrop.contractRoles,
+      TokenDropImpl.contractRoles,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);

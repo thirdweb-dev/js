@@ -1,6 +1,6 @@
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import type { Multiwrap } from "@thirdweb-dev/sdk";
+import { MultiwrapImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/multiwrap";
 
 /**
  * Hook for getting an instance of an `Multiwrap` contract. This contract is an ERC721 in which you can wrap ERC721, ERC1155 and ERC20 tokens.
@@ -28,5 +28,5 @@ import type { Multiwrap } from "@thirdweb-dev/sdk";
  */
 export function useMultiwrap(contractAddress?: string) {
   showDeprecationWarning("useMultiwrap()", "useContract<Multiwrap>()");
-  return useContract<Multiwrap>(contractAddress).contract;
+  return useContract<MultiwrapImpl>(contractAddress).contract;
 }

@@ -1,3 +1,4 @@
+import { Edition, Marketplace, NFTCollection, Token } from "../src";
 import {
   AuctionAlreadyStartedError,
   ListingNotFoundError,
@@ -5,7 +6,10 @@ import {
 } from "../src/common/error";
 import { isWinningBid } from "../src/common/marketplace";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { Edition, Marketplace, NFTCollection, Token } from "../src/contracts";
+import { EditionImpl } from "../src/contracts/classes/edition";
+import { MarketplaceImpl } from "../src/contracts/classes/marketplace";
+import { NFTCollectionImpl } from "../src/contracts/classes/nft-collection";
+import { TokenImpl } from "../src/contracts/classes/token";
 import { ListingType } from "../src/enums/marketplace";
 import { AuctionListing, DirectListing, Offer } from "../src/types/marketplace";
 import {
@@ -18,7 +22,10 @@ import {
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import { ethers as hardhatEthers } from "hardhat";
+import hardhat from "hardhat";
+
+// it's there, trust me bro
+const hardhatEthers = (hardhat as any).ethers;
 
 global.fetch = require("cross-fetch");
 
@@ -31,30 +38,31 @@ let tokenAddress = NATIVE_TOKEN_ADDRESS;
  * Bog and Sam and Abby wallets will be used for direct listings and auctions.
  */
 describe("Marketplace Contract", async () => {
-  let marketplaceContract: Marketplace;
-  let dummyNftContract: NFTCollection;
-  let dummyBundleContract: Edition;
-  let customTokenContract: Token;
+  let marketplaceContract: MarketplaceImpl;
+  let dummyNftContract: NFTCollectionImpl;
+  let dummyBundleContract: EditionImpl;
+  let customTokenContract: TokenImpl;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
-    abbyWallet: SignerWithAddress,
+    // abbyWallet: SignerWithAddress,
     bobWallet: SignerWithAddress,
-    w1: SignerWithAddress,
-    w2: SignerWithAddress,
-    w3: SignerWithAddress,
+    // w1: SignerWithAddress,
+    // w2: SignerWithAddress,
+    // w3: SignerWithAddress,
     w4: SignerWithAddress;
 
   beforeEach(async () => {
     await jsonProvider.send("hardhat_reset", []);
-    [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
+    [adminWallet, samWallet, bobWallet, , , , , w4] = signers;
 
-    await sdk.updateSignerOrProvider(adminWallet);
+    sdk.updateSignerOrProvider(adminWallet);
 
     marketplaceContract = await sdk.getMarketplace(
       await sdk.deployer.deployBuiltInContract(Marketplace.contractType, {
         name: "Test Marketplace",
-        seller_fee_basis_points: 0,
+        // TODO @joaquim this used to be here but was never part of the marketplace deploy schema? is it needed?
+        // seller_fee_basis_points: 0,
       }),
     );
     dummyNftContract = await sdk.getNFTCollection(

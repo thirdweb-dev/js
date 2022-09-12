@@ -1,6 +1,6 @@
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import type { Token } from "@thirdweb-dev/sdk";
+import { TokenImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/token";
 
 /**
  * Hook for getting an instance of a `Token` contract. This contract supports ERC20 compliant tokens.
@@ -29,5 +29,5 @@ import type { Token } from "@thirdweb-dev/sdk";
  */
 export function useToken(contractAddress?: string) {
   showDeprecationWarning("useToken()", "useContract<Token>()");
-  return useContract<Token>(contractAddress).contract;
+  return useContract<TokenImpl>(contractAddress).contract;
 }
