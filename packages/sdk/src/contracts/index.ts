@@ -297,7 +297,7 @@ export const Token = {
 };
 
 export const Vote = {
-  name: "Vote" as const,
+  name: "VoteERC20" as const,
   contractType: "vote" as const,
   schema: VoteContractSchema,
   roles: [] as const,
