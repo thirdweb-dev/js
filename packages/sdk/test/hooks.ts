@@ -244,4 +244,5 @@ export {
   fastForwardTime,
   storage,
   implementations,
+  hardhatEthers,
 };

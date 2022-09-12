@@ -1,14 +1,10 @@
 import { Token, Vote } from "../src";
 import { TokenImpl } from "../src/contracts/classes/token";
 import { VoteImpl } from "../src/contracts/classes/vote";
-import { sdk, signers } from "./hooks";
+import { sdk, signers, hardhatEthers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
 import { ethers } from "ethers";
-import hardhat from "hardhat";
-
-// it's there, trust me bro
-const hardhatEthers = (hardhat as any).ethers;
 
 global.fetch = require("cross-fetch");
 

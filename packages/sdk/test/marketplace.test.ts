@@ -18,14 +18,11 @@ import {
   jsonProvider,
   sdk,
   signers,
+  hardhatEthers,
 } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import hardhat from "hardhat";
-
-// it's there, trust me bro
-const hardhatEthers = (hardhat as any).ethers;
 
 global.fetch = require("cross-fetch");
 
@@ -45,11 +42,7 @@ describe("Marketplace Contract", async () => {
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
-    // abbyWallet: SignerWithAddress,
     bobWallet: SignerWithAddress,
-    // w1: SignerWithAddress,
-    // w2: SignerWithAddress,
-    // w3: SignerWithAddress,
     w4: SignerWithAddress;
 
   beforeEach(async () => {
@@ -61,8 +54,6 @@ describe("Marketplace Contract", async () => {
     marketplaceContract = await sdk.getMarketplace(
       await sdk.deployer.deployBuiltInContract(Marketplace.contractType, {
         name: "Test Marketplace",
-        // TODO @joaquim this used to be here but was never part of the marketplace deploy schema? is it needed?
-        // seller_fee_basis_points: 0,
       }),
     );
     dummyNftContract = await sdk.getNFTCollection(
