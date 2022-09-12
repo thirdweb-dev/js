@@ -35,6 +35,7 @@ export class NFTDrop {
     return this.nft.get(mintAddress);
   }
 
+  // TODO: Add pagination to get NFT functions
   async getAll(): Promise<NFTMetadata[]> {
     const info = await this.getCandyMachine();
     const nfts = await Promise.all(
@@ -122,6 +123,6 @@ export class NFTDrop {
     return this.metaplex
       .candyMachines()
       .findByAddress({ address: this.dropMintAddress })
-      .run(); // TODO abstract return types away
+      .run();
   }
 }

@@ -6,6 +6,7 @@ import { z } from "zod";
 /**
  * @internal
  */
+// TODO: Handle allow lists and end times
 export const NFTDropContractSchema = z.object({
   price: z
     .number()
