@@ -121,14 +121,18 @@ function createReadHook<TContract extends Contract>(
   return function <TData>(
     action: (contract: TContract) => Promise<TData> | TData,
   ) {
+    const contractAddress = contract?.getAddress();
+    const actionKey = action.toString();
+
     return useQueryWithNetwork(
-      cacheKeys.contract.read(contract?.getAddress(), action.toString()),
+      cacheKeys.contract.read(contractAddress, actionKey),
       async () => {
         // cann happen if contract is not yet ready
-        if (!contract) {
-          return undefined;
-        }
+        invariant(contract, "Contract is not ready");
         return (await action(contract as TContract)) as Awaited<TData>;
+      },
+      {
+        enabled: !!contractAddress && !!actionKey,
       },
     );
   };
