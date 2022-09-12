@@ -60,13 +60,12 @@ const GasPage: ThirdwebNextPage = () => {
           ethOrUsd={ethOrUsd}
           data={data}
           borderTopLeftRadius="xl"
+          borderTopRightRadius={{ base: "xl", md: "0" }}
         />
         <GasEstimatorBox
           contractType="nft-drop"
           ethOrUsd={ethOrUsd}
           data={data}
-          borderTopLeftRadius="xl"
-          borderTopRightRadius={{ base: "xl", md: "0" }}
         />
         <GasEstimatorBox
           contractType="edition-drop"
@@ -77,24 +76,21 @@ const GasPage: ThirdwebNextPage = () => {
           contractType="nft-collection"
           ethOrUsd={ethOrUsd}
           data={data}
+          borderTopRightRadius={{ base: "0", md: "xl" }}
         />
         <GasEstimatorBox
           contractType="edition"
           ethOrUsd={ethOrUsd}
           data={data}
-          borderTopRightRadius={{ base: "0", md: "xl" }}
-        />
-        <GasEstimatorBox
-          contractType="token"
-          ethOrUsd={ethOrUsd}
-          data={data}
           borderBottomLeftRadius={{ base: "0", md: "xl" }}
         />
+        <GasEstimatorBox contractType="token" ethOrUsd={ethOrUsd} data={data} />
         <GasEstimatorBox contractType="split" ethOrUsd={ethOrUsd} data={data} />
         <GasEstimatorBox
           contractType="marketplace"
           ethOrUsd={ethOrUsd}
           data={data}
+          borderBottomRightRadius="xl"
           borderBottomLeftRadius={{ base: "xl", md: "0" }}
         />
       </SimpleGrid>
