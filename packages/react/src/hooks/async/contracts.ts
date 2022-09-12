@@ -1,15 +1,8 @@
 import { useActiveChainId, useSDK } from "../../Provider";
 import { ContractAddress, RequiredParam } from "../../types";
-import {
-  cacheKeys,
-  createCacheKeyWithNetwork,
-  invalidateContractAndBalances,
-} from "../../utils/cache-keys";
+import { cacheKeys, createCacheKeyWithNetwork } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import {
-  QueryClient,
-  useMutation,
-  UseMutationResult,
   useQuery,
   useQueryClient,
   UseQueryResult,
@@ -113,81 +106,15 @@ export const compilerMetadata = {
 
 // useContract
 
-export type Contract = ValidContractInstance;
+export type UseContractResult<
+  TContract extends ValidContractInstance = SmartContractImpl,
+> = UseQueryResult<TContract | undefined> & {
+  contract: TContract | undefined;
+};
 
-function createReadHook<TContract extends Contract>(
-  contract: RequiredParam<TContract>,
-) {
-  return function <TData>(
-    action: (contract: TContract) => Promise<TData> | TData,
-  ) {
-    const contractAddress = contract?.getAddress();
-    const actionKey = action.toString();
-
-    return useQueryWithNetwork(
-      cacheKeys.contract.read(contractAddress, actionKey),
-      async () => {
-        // cann happen if contract is not yet ready
-        invariant(contract, "Contract is not ready");
-        return (await action(contract as TContract)) as Awaited<TData>;
-      },
-      {
-        enabled: !!contractAddress && !!actionKey,
-      },
-    );
-  };
-}
-
-type ActionFn = (...args: any[]) => any;
-
-function createWriteHook<TContract extends Contract>(
-  contract: RequiredParam<TContract>,
-  queryClient: QueryClient,
-  activeChainId: RequiredParam<SUPPORTED_CHAIN_ID>,
-) {
-  return function <TAction extends ActionFn>(
-    action:
-      | ((contract: TContract) => Promise<TAction>)
-      | ((contract: TContract) => TAction),
-  ) {
-    return useMutation<
-      Awaited<ReturnType<TAction>>,
-      unknown,
-      Parameters<TAction> | void
-    >(
-      async (variables: Parameters<TAction> | void) => {
-        return await (
-          await action(contract as TContract)
-        ).call(contract, ...variables);
-      },
-      {
-        onSettled: () =>
-          invalidateContractAndBalances(
-            queryClient,
-            contract?.getAddress(),
-            activeChainId,
-          ),
-      },
-    );
-  };
-}
-
-export type UseContractResult<TContract extends Contract = SmartContractImpl> =
-  UseQueryResult<TContract | undefined> & {
-    contract: TContract | undefined;
-    useRead: <TData>(
-      action: (contract: TContract) => TData | Promise<TData>,
-    ) => UseQueryResult<TData | undefined, unknown>;
-    useWrite: <TAction extends (...args: any[]) => any>(
-      action:
-        | ((contract: TContract) => Promise<TAction>)
-        | ((contract: TContract) => TAction),
-    ) => UseMutationResult<Awaited<ReturnType<TAction>>>;
-  };
-
-export function useContract<TContract extends Contract = SmartContractImpl>(
-  contractAddress: RequiredParam<ContractAddress>,
-) {
+export function useContract<
+  TContract extends ValidContractInstance = SmartContractImpl,
+>(contractAddress: RequiredParam<ContractAddress>) {
   const sdk = useSDK();
   const queryClient = useQueryClient();
   const activeChainId = useActiveChainId();
@@ -227,12 +154,9 @@ export function useContract<TContract extends Contract = SmartContractImpl>(
     },
   );
 
-  // we return an array (similar to useState()) so the use-case ends up being `const [contract, {isLoading, error}] = useContract("0x...")`
   return {
     ...contractQuery,
     contract: contractQuery.data,
-    useRead: createReadHook(contractQuery.data),
-    useWrite: createWriteHook(contractQuery.data, queryClient, activeChainId),
   } as UseContractResult<TContract>;
 }
 
@@ -241,23 +165,27 @@ export function useContract<TContract extends Contract = SmartContractImpl>(
  *
  * @example
  * ```javascript
- * const { data: contractMetadata, isLoading, error } = useContractMetadata("{{contract_address}}");
+ * const { data: contractMetadata, isLoading, error } = useContractMetadata(>);
  * ```
  *
- * @param contract - the address of the deployed contract
+ * @param contract - the {@link ValidContractInstance} instance of the contract to get the metadata for
  * @returns a response object that includes the contract metadata of the deployed contract
  * @beta
  */
-export function useContractMetadata(contract: UseContractResult) {
-  return contract.useRead((c) => c.metadata.get());
+export function useContractMetadata(
+  contract: RequiredParam<ValidContractInstance>,
+) {
+  return useQueryWithNetwork(
+    cacheKeys.contract.metadata(contract?.getAddress()),
+    async () => {
+      invariant(contract, "contract is required");
+      return await contract.metadata.get();
+    },
+    {
+      enabled: !!contract,
+    },
+  );
 }
-
-// const { mutate: setMetadata, data } = useContractWrite(
-//   "0x...",
-//   (contract) => contract.,
-// );
-
-// setMetadata([{ name: "foo" }]);
 
 /**
  * CONTRACT EVENTS
@@ -266,14 +194,14 @@ export function useContractMetadata(contract: UseContractResult) {
 /**
  * Use this to query (and subscribe) to events or a specific event on a contract.
  *
- * @param contract - the {@link Contract} instance of the contract to call a function on
+ * @param contract - the {@link ValidContractInstance} instance of the contract to listen to events for
  * @param eventName - the name of the event to query for (omit this or pass `undefined` to query for all events)
  * @param options - options incldues the filters ({@link QueryAllEvents}) for the query as well as if you want to subscribe to real-time updates (default: true)
  * @returns a response object that includes the contract events
  * @beta
  */
 export function useContractEvents(
-  contract: RequiredParam<Contract>,
+  contract: RequiredParam<ValidContractInstance>,
   eventName?: string,
   options: { queryFilter?: EventQueryFilter; subscribe?: boolean } = {
     subscribe: true,

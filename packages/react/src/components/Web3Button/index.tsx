@@ -1,24 +1,28 @@
 import { useActiveChainId } from "../../Provider";
-import { Contract, useContract } from "../../hooks/async/contracts";
+import { useContract } from "../../hooks/async/contracts";
 import { useAddress } from "../../hooks/useAddress";
 import { useChainId } from "../../hooks/useChainId";
 import { useNetwork } from "../../hooks/useNetwork";
+import {
+  createCacheKeyWithNetwork,
+  createContractCacheKey,
+} from "../../utils/cache-keys";
 import { ConnectWallet } from "../ConnectWallet";
 import { Button } from "../shared/Button";
 import { ThemeProvider, ThemeProviderProps } from "../shared/ThemeProvider";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SmartContractImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/smart-contract";
+import type { CallOverrides } from "ethers";
 import { PropsWithChildren, useMemo } from "react";
+import invariant from "tiny-invariant";
 
-type ActionFn<TContract extends Contract = SmartContractImpl> = (
-  contract: TContract,
-) => any;
+type ActionFn = (contract: SmartContractImpl) => any;
 
-interface Web3ButtonProps<
-  TActionFn extends ActionFn<TContract>,
-  TContract extends Contract = SmartContractImpl,
-> extends ThemeProviderProps {
+interface Web3ButtonProps<TActionFn extends ActionFn>
+  extends ThemeProviderProps {
   contractAddress: `0x${string}` | `${string}.eth` | string;
 
+  overrides?: CallOverrides;
   // called with the result
   onSuccess?: (result: Awaited<ReturnType<TActionFn>>) => void;
   // called with any error that might happen
@@ -67,6 +71,8 @@ export const Web3Button = <TAction extends ActionFn>({
   const sdkChainId = useActiveChainId();
   const [, switchNetwork] = useNetwork();
 
+  const queryClient = useQueryClient();
+
   const switchToChainId = useMemo(() => {
     if (sdkChainId && walletChainId && sdkChainId !== walletChainId) {
       return sdkChainId;
@@ -74,25 +80,47 @@ export const Web3Button = <TAction extends ActionFn>({
     return null;
   }, [sdkChainId, walletChainId]);
 
-  const { useWrite, isLoading } = useContract(contractAddress);
+  const { contract } = useContract(contractAddress);
 
-  const mutation = useWrite(async (contract) => {
-    if (switchToChainId) {
-      if (switchNetwork) {
-        await switchNetwork(switchToChainId);
-        await new Promise((resolve) => setTimeout(resolve, 500));
-      } else {
-        throw new Error(
-          "need to switch chain but connected wallet does not support switching",
-        );
+  const mutation = useMutation(
+    async () => {
+      if (switchToChainId) {
+        if (switchNetwork) {
+          await switchNetwork(switchToChainId);
+          await new Promise((resolve) => setTimeout(resolve, 500));
+        } else {
+          throw new Error(
+            "need to switch chain but connected wallet does not support switching",
+          );
+        }
       }
-    }
-    if (onSubmit) {
-      onSubmit();
-    }
-    return await action(contract);
-  });
+      invariant(contract, "contract is not ready yet");
 
+      if (onSubmit) {
+        onSubmit();
+      }
+      return await action(contract);
+    },
+    {
+      onSuccess: (res) => {
+        if (onSuccess) {
+          onSuccess(res);
+        }
+      },
+      onError: (err) => {
+        if (onError) {
+          onError(err as Error);
+        }
+      },
+      onSettled: () =>
+        queryClient.invalidateQueries(
+          createCacheKeyWithNetwork(
+            createContractCacheKey(contractAddress),
+            sdkChainId,
+          ),
+        ),
+    },
+  );
   if (!address) {
     return <ConnectWallet {...themeProps} />;
   }
@@ -101,21 +129,8 @@ export const Web3Button = <TAction extends ActionFn>({
     <ThemeProvider {...themeProps}>
       <Button
         style={{ height: "50px" }}
-        isLoading={mutation.isLoading || !isLoading}
-        onClick={() =>
-          mutation.mutate(undefined, {
-            onSuccess: (res) => {
-              if (onSuccess) {
-                onSuccess(res);
-              }
-            },
-            onError: (err) => {
-              if (onError) {
-                onError(err as Error);
-              }
-            },
-          })
-        }
+        isLoading={mutation.isLoading || !contract}
+        onClick={() => mutation.mutate()}
         isDisabled={isDisabled}
       >
         {children}
