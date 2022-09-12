@@ -22,7 +22,7 @@ export type ContractsMap = typeof CONTRACTS_MAP;
 export type PrebuiltContractType = keyof PrebuiltContractsMap;
 export type ContractType = keyof ContractsMap;
 
-export type ValidPrebuiltContraxtType = Awaited<
+export type ValidPrebuiltContractType = Awaited<
   ReturnType<PrebuiltContractsMap[keyof PrebuiltContractsMap]["initialize"]>
 >;
 export type ValidContractInstance = Awaited<
