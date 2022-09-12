@@ -6,16 +6,19 @@ import { useNetwork } from "../../hooks/useNetwork";
 import { ConnectWallet } from "../ConnectWallet";
 import { Button } from "../shared/Button";
 import { ThemeProvider, ThemeProviderProps } from "../shared/ThemeProvider";
-import type { CallOverrides } from "ethers";
+import { SmartContractImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/classes/smart-contract";
 import { PropsWithChildren, useMemo } from "react";
 
-type ActionFn = (contract: Contract) => any;
+type ActionFn<TContract extends Contract = SmartContractImpl> = (
+  contract: TContract,
+) => any;
 
-interface Web3ButtonProps<TActionFn extends ActionFn>
-  extends ThemeProviderProps {
+interface Web3ButtonProps<
+  TActionFn extends ActionFn<TContract>,
+  TContract extends Contract = SmartContractImpl,
+> extends ThemeProviderProps {
   contractAddress: `0x${string}` | `${string}.eth` | string;
 
-  overrides?: CallOverrides;
   // called with the result
   onSuccess?: (result: Awaited<ReturnType<TActionFn>>) => void;
   // called with any error that might happen
@@ -51,7 +54,6 @@ interface Web3ButtonProps<TActionFn extends ActionFn>
  */
 export const Web3Button = <TAction extends ActionFn>({
   contractAddress,
-  overrides,
   onSuccess,
   onError,
   onSubmit,
@@ -88,7 +90,7 @@ export const Web3Button = <TAction extends ActionFn>({
     if (onSubmit) {
       onSubmit();
     }
-    return action(contract);
+    return await action(contract);
   });
 
   if (!address) {
