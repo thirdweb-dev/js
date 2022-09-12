@@ -30,6 +30,7 @@ import {
   PackMetadataOutput,
   PackRewards,
   PackRewardsOutput,
+  PackRewardsOutputSchema,
 } from "../schema/tokens/pack";
 import { QueryAllParams } from "../types";
 import { Pack as PackContract } from "@thirdweb-dev/contracts-js";
@@ -386,10 +387,11 @@ export class Pack extends StandardErc1155<PackContract> {
    * const tx = await contract.addPackContents(packId, packContents);
    * ```
    */
-  public async addPackContents(packId: BigNumberish, packContents: PackRewardsOutput) {
+  public async addPackContents(packId: BigNumberish, packContents: PackRewards) {
     const signerAddress = await this.contractWrapper.getSignerAddress();
+    const parsedContents = PackRewardsOutputSchema.parse(packContents);
     const { contents, numOfRewardUnits } = await this.toPackContentArgs(
-      packContents,
+      parsedContents,
     );
 
     const receipt = await this.contractWrapper.sendTransaction("addPackContents", [
@@ -406,12 +408,12 @@ export class Pack extends StandardErc1155<PackContract> {
     if (event.length === 0) {
       throw new Error("PackUpdated event not found");
     }
-    const newSupplyAdded = event[2].args.totalPacksCreated;
+    const id = event[0].args.packId;
 
     return {
-      newSupplyAdded,
+      id: id,
       receipt,
-      data: () => this.erc1155.get(packId),
+      data: () => this.erc1155.get(id),
     };
   }
 
