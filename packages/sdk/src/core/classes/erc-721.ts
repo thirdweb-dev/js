@@ -299,9 +299,13 @@ export class Erc721<
    * @twfeature ERC721Enumerable
    */
   public async getOwned(walletAddress?: string) {
-    return assertEnabled(this.query?.owned, FEATURE_NFT_SUPPLY).all(
-      walletAddress,
-    );
+    if (this.query?.owned) {
+      return this.query.owned.all(walletAddress)
+    } else {
+      const allNFTs = await this.getAll();
+      return (allNFTs || []).filter(({ owner }) =>
+        walletAddress === owner)
+    }
   }
 
   /**
@@ -309,9 +313,14 @@ export class Erc721<
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
    */
   public async getOwnedTokenIds(walletAddress?: string) {
-    return assertEnabled(this.query?.owned, FEATURE_NFT_SUPPLY).tokenIds(
-      walletAddress,
-    );
+    if (this.query?.owned) {
+      return this.query.owned.tokenIds(walletAddress)
+    } else {
+      const allNFTs = await this.getAll();
+      return (allNFTs || []).filter(({ owner }) =>
+        walletAddress === owner).map(({ metadata: { id } }) => id)
+    }
+  }
   }
 
   ////// ERC721 Mintable Extension //////
