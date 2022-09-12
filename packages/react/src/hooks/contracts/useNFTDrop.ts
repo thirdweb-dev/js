@@ -9,7 +9,7 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * import { useNFTDrop } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const nftDrop = await useNFTDrop("<YOUR-CONTRACT-ADDRESS>")
+ *   const nftDrop = useNFTDrop("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the nft drop contract in the rest of the component
  *

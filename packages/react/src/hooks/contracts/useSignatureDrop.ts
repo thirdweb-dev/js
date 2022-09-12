@@ -9,7 +9,7 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * import { useSignatureDrop } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const signatureDrop = await useSignatureDrop("<YOUR-CONTRACT-ADDRESS>")
+ *   const signatureDrop = useSignatureDrop("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the Signature drop contract in the rest of the component
  *
