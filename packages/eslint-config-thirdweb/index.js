@@ -30,5 +30,20 @@ module.exports = {
 
     "no-unused-expressions": "error",
     "no-useless-computed-key": "error",
+
+    // no restricted imports
+    "@typescript-eslint/no-restricted-imports": [
+      "error",
+      {
+        paths: [
+          {
+            name: "@thirdweb-dev/contracts-js",
+            message:
+              "Please only import types directly from @thirdweb-dev/contracts-js",
+            allowTypeImports: true,
+          },
+        ],
+      },
+    ],
   },
 };

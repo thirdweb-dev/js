@@ -27,7 +27,10 @@
   ],
   "scripts": {
     "build": "preconstruct build",
-    "lint": "eslint"
+    "format": "prettier --write 'src/**/*'",
+    "lint": "eslint src/",
+    "fix": "eslint src/ --fix",
+    "clean": "rm -rf dist/ && rm -rf node_modules/"
   },
   "preconstruct": {
     "entrypoints": [

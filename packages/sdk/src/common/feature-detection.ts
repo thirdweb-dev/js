@@ -22,9 +22,7 @@ import {
 } from "../schema/contracts/custom";
 import { ExtensionNotImplementedError } from "./error";
 import { IStorage } from "@thirdweb-dev/storage";
-import { decodeFirstSync } from "cbor-web";
 import { BaseContract, ethers } from "ethers";
-import { toB58String } from "multihashes";
 import { z } from "zod";
 
 /**
@@ -259,14 +257,16 @@ export async function resolveContractUriFromAddress(
     );
   }
   // TODO support other types of proxies like erc1967
-  return extractIPFSHashFromBytecode(bytecode);
+  return await extractIPFSHashFromBytecode(bytecode);
 }
 
 /**
  * @internal
  * @param bytecode
  */
-function extractIPFSHashFromBytecode(bytecode: string): string | undefined {
+async function extractIPFSHashFromBytecode(
+  bytecode: string,
+): Promise<string | undefined> {
   const numericBytecode = hexToBytes(bytecode);
   const cborLength: number =
     numericBytecode[numericBytecode.length - 2] * 0x100 +
@@ -275,9 +275,15 @@ function extractIPFSHashFromBytecode(bytecode: string): string | undefined {
     numericBytecode.slice(numericBytecode.length - 2 - cborLength, -2),
   );
 
-  const cborData = decodeFirstSync(bytecodeBuffer);
+  // load these lazily to avoid loading them when they are not needed
+  const [cbor, multiHashes] = await Promise.all([
+    import("cbor-web"),
+    import("multihashes"),
+  ]);
+
+  const cborData = cbor.decodeFirstSync(bytecodeBuffer);
   if (cborData["ipfs"]) {
-    return `ipfs://${toB58String(cborData["ipfs"])}`;
+    return `ipfs://${multiHashes.toB58String(cborData["ipfs"])}`;
   }
   return undefined;
 }

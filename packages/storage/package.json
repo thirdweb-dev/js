@@ -7,6 +7,10 @@
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
   "scripts": {
+    "format": "prettier --write 'src/**/*'",
+    "lint": "eslint src/",
+    "fix": "eslint src/ --fix",
+    "clean": "rm -rf dist/ && rm -rf node_modules/",
     "build": "tsc && preconstruct build",
     "test": "ts-mocha 'test/**/*.ts' --paths -t 120000 -r esm -p tsconfig.testing.json"
   },

@@ -8,7 +8,7 @@ import { getOnline } from "./is-online";
 import { isWriteable } from "./is-writeable";
 import { makeDir } from "./make-dir";
 import { submodules } from "./submodules";
-import { downloadAndExtractRepo, hasTemplate } from "./templates";
+import { downloadAndExtractRepo } from "./templates";
 import retry from "async-retry";
 import chalk from "chalk";
 import { writeFile } from "fs/promises";
@@ -115,7 +115,9 @@ export async function createContract({
       await writeFile(contractFile, baseContractText);
     }
   } catch (reason) {
-    throw new DownloadError(isErrorLike(reason) ? reason.message : reason + "");
+    throw new DownloadError(
+      isErrorLike(reason) ? reason.message : String(reason),
+    );
   }
 
   console.log("Installing packages. This might take a couple of minutes.");

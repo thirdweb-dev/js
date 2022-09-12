@@ -58,8 +58,10 @@
     "thirdweb": "./dist/cli/index.js"
   },
   "scripts": {
-    "prettier": "prettier --write 'src/**/*'",
-    "clean": "rm -rf dist/",
+    "format": "prettier --write 'src/**/*'",
+    "lint": "eslint src/",
+    "fix": "eslint src/ --fix",
+    "clean": "rm -rf dist/ && rm -rf node_modules/",
     "cli": "node -r ts-node/register src/cli/index.ts",
     "build": "yarn clean && tsc --noEmit && tsup --env.NODE_ENV production --minify --format cjs --external hardhat --dts-resolve",
     "build:watch": "yarn run build --watch",

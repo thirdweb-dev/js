@@ -1,6 +1,6 @@
 import { findFiles } from "../../common/file-helper";
 import { execute } from "../helpers/exec";
-import { logger, spinner } from "../helpers/logger";
+import { logger } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";

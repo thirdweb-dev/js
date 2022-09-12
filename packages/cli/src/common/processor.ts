@@ -2,7 +2,7 @@ import { THIRDWEB_URL, cliVersion } from "../constants/urls";
 import build from "../core/builder/build";
 import detect from "../core/detection/detect";
 import { execute } from "../core/helpers/exec";
-import { error, info, logger, spinner, warn } from "../core/helpers/logger";
+import { error, info, logger, spinner } from "../core/helpers/logger";
 import { createContractsPrompt } from "../core/helpers/selector";
 import { ContractPayload } from "../core/interfaces/ContractPayload";
 import { IpfsStorage } from "@thirdweb-dev/storage";
@@ -65,7 +65,7 @@ export async function processProject(
   }
   compileLoader.succeed("Compilation successful");
 
-  if (compiledResult.contracts.length == 0) {
+  if (compiledResult.contracts.length === 0) {
     logger.error(
       "No deployable contract detected. Run with the '--debug' option to see what contracts were skipped and why.",
     );
@@ -73,7 +73,7 @@ export async function processProject(
   }
 
   let selectedContracts: ContractPayload[] = [];
-  if (compiledResult.contracts.length == 1) {
+  if (compiledResult.contracts.length === 1) {
     selectedContracts = [compiledResult.contracts[0]];
     info(
       `Processing contract: ${chalk.blueBright(
@@ -167,7 +167,7 @@ export async function processProject(
       };
     });
     let combinedURIs: string[] = [];
-    if (combinedContents.length == 1) {
+    if (combinedContents.length === 1) {
       // use upload single if only one contract to get a clean IPFS hash
       const metadataUri = await storage.uploadSingle(
         JSON.stringify(combinedContents[0]),
@@ -190,7 +190,7 @@ export async function processProject(
 
 export function getUrl(hashes: string[], command: string) {
   let url;
-  if (hashes.length == 1) {
+  if (hashes.length === 1) {
     url = new URL(
       THIRDWEB_URL +
         `/contracts/${command}/` +
