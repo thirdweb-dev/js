@@ -53,15 +53,9 @@ describe("NFTDrop", async () => {
 
     const all = await drop.getAll();
     const claimed = await drop.getAllClaimed();
-    const unclaimed = await drop.getAllUnclaimed();
 
     expect(all.length).to.equal(5);
-
     expect(claimed.length).to.equal(2);
-    console.log(claimed);
-
-    expect(unclaimed.length).to.equal(3);
-    console.log(unclaimed);
   });
 
   it("should update claim condition", async () => {

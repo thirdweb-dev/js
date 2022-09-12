@@ -111,7 +111,6 @@ export class Deployer {
     const parsed = NFTDropContractSchema.parse(metadata);
 
     // TODO create a collection with metadata and associate it with the drop
-
     const { candyMachine: nftDrop } = await this.metaplex
       .candyMachines()
       .create({ ...parsed })

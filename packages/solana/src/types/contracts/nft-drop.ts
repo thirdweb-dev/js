@@ -1,3 +1,4 @@
+import { NFTCollectionMetadataInputSchema } from ".";
 import { sol, toBigNumber, toDateTime } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
 import { z } from "zod";
@@ -62,4 +63,4 @@ export const NFTDropOutputSchema = z.object({
 
 export type NFTDropClaimInput = z.input<typeof NFTDropClaimSchema>;
 
-export type NFTDropOutput = z.output<typeof NFTDropOutputSchema>;
+export type NFTDropClaimOutput = z.output<typeof NFTDropOutputSchema>;

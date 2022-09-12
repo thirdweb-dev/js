@@ -2,7 +2,7 @@ import { TransactionResult } from "../types/common";
 import {
   NFTDropClaimInput,
   NFTDropClaimSchema,
-  NFTDropOutput,
+  NFTDropClaimOutput,
 } from "../types/contracts/nft-drop";
 import { Metaplex } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
@@ -16,7 +16,7 @@ export class ClaimConditions {
     this.metaplex = metaplex;
   }
 
-  async get(): Promise<NFTDropOutput> {
+  async get(): Promise<NFTDropClaimOutput> {
     const candyMachine = await this.getCandyMachine();
 
     return {
