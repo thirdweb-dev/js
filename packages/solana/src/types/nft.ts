@@ -19,7 +19,7 @@ export const CommonTokenInput = z
  * @internal
  */
 export const CommonTokenOutput = CommonTokenInput.extend({
-  id: z.string(),
+  id: z.string().optional(),
   uri: z.string(),
   image: z.string().nullable().optional(),
   external_url: z.string().nullable().optional(),

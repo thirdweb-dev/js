@@ -2,6 +2,7 @@ import { Deployer } from "./classes/deployer";
 import { UserWallet } from "./classes/user-wallet";
 import { DEFAULT_IPFS_GATEWAY } from "./constants/urls";
 import { NFTCollection } from "./contracts/nft-collection";
+import { NFTDrop } from "./contracts/nft-drop";
 import { Program } from "./contracts/program";
 import { Token } from "./contracts/token";
 import { Network } from "./types";
@@ -69,6 +70,10 @@ export class ThirdwebSDK {
 
   public async getNFTCollection(address: string): Promise<NFTCollection> {
     return new NFTCollection(address, this.metaplex, this.wallet, this.storage);
+  }
+
+  public async getNFTDrop(address: string): Promise<NFTDrop> {
+    return new NFTDrop(address, this.metaplex, this.wallet, this.storage);
   }
 
   public async getToken(address: string): Promise<Token> {

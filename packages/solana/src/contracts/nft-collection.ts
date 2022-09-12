@@ -9,10 +9,8 @@ import {
 } from "../types/nft";
 import {
   findEditionMarkerPda,
-  findEditionPda,
   Metaplex,
   toBigNumber,
-  TokenMetadataProgram,
 } from "@metaplex-foundation/js";
 import {
   EditionMarker,

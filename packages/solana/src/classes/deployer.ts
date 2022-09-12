@@ -3,6 +3,10 @@ import {
   TokenMetadataInput,
   TokenMetadataInputSchema,
 } from "../types/contracts";
+import {
+  NFTDropContractSchema,
+  NFTDropMetadataInput,
+} from "../types/contracts/nft-drop";
 import { UserWallet } from "./user-wallet";
 import { findMetadataPda, Metaplex, token } from "@metaplex-foundation/js";
 import {
@@ -11,6 +15,7 @@ import {
 } from "@metaplex-foundation/mpl-token-metadata";
 import { Keypair, PublicKey } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
+import invariant from "tiny-invariant";
 
 export class Deployer {
   private wallet: UserWallet;
@@ -99,5 +104,18 @@ export class Deployer {
       })
       .run();
     return collectionNft.mint.address.toBase58();
+  }
+
+  async createNftDrop(metadata: NFTDropMetadataInput): Promise<string> {
+    invariant(this.wallet.signer, "Wallet is not connected");
+    const parsed = NFTDropContractSchema.parse(metadata);
+
+    // TODO create a collection with metadata and associate it with the drop
+    const { candyMachine: nftDrop } = await this.metaplex
+      .candyMachines()
+      .create({ ...parsed })
+      .run();
+
+    return nftDrop.address.toBase58();
   }
 }
