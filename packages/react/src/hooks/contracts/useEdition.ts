@@ -9,7 +9,7 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * import { useEdition } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const edition = await useEdition("<YOUR-CONTRACT-ADDRESS>")
+ *   const edition = useEdition("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the edition contract in the rest of the component
  *
