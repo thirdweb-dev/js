@@ -11,7 +11,7 @@ import { TokenImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/pre
  * import { useToken } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const token = await useToken("<YOUR-CONTRACT-ADDRESS>")
+ *   const token = useToken("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the token contract in the rest of the component
  *

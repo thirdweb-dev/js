@@ -27,6 +27,9 @@ export function useUser() {
       const res = await fetch(`${authConfig.authUrl}/user`);
       return (await res.json()) as ThirdwebAuthUser;
     },
+    {
+      enabled: !!authConfig,
+    },
   );
 
   return { user, isLoading };

@@ -11,7 +11,7 @@ import { TokenDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts
  * import { useTokenDrop } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const tokenDrop = await useTokenDrop("<YOUR-CONTRACT-ADDRESS>")
+ *   const tokenDrop = useTokenDrop("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the token drop contract in the rest of the component
  *
