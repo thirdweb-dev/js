@@ -175,7 +175,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     metadata: z.input<TContract["schema"]["deploy"]>,
     contractURI: string,
   ): Promise<any[]> {
-    let trustedForwarders = await this.getDefaultTrustedForwarders();
+    let trustedForwarders = contractType === Pack.contractType ? [] : await this.getDefaultTrustedForwarders();
     // override default forwarders if custom ones are passed in
     if (metadata.trusted_forwarders && metadata.trusted_forwarders.length > 0) {
       trustedForwarders = metadata.trusted_forwarders;
@@ -287,6 +287,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           packsMetadata.name,
           packsMetadata.symbol,
           contractURI,
+          trustedForwarders,
           packsMetadata.fee_recipient,
           packsMetadata.seller_fee_basis_points,
         ];
