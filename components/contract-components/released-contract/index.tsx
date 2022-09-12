@@ -206,7 +206,7 @@ Deploy it in one click`,
           )}
           {releasedContractInfo.data?.publishedMetadata?.readme && (
             <Card as={Flex} flexDir="column" gap={2} p={6} position="relative">
-              {walletOrEns === release.releaser && (
+              {ensQuery?.data?.address === release.releaser && (
                 <TrackedIconButton
                   icon={<Icon as={BiPencil} />}
                   aria-label="Edit readme"
