@@ -11,7 +11,7 @@ import { MarketplaceImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contrac
  * import { useMarketplace } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const marketplace = await useMarketplace("<YOUR-CONTRACT-ADDRESS>")
+ *   const marketplace = useMarketplace("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the marketplace contract in the rest of the component
  *

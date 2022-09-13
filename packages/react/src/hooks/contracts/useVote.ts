@@ -11,7 +11,7 @@ import { VoteImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/preb
  * import { useVote } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const vote = await useVote("<YOUR-CONTRACT-ADDRESS>")
+ *   const vote = useVote("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the vote contract in the rest of the component
  *
