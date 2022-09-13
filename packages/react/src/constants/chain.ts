@@ -2,7 +2,7 @@ import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import { ChainId } from "@thirdweb-dev/sdk";
 import type { Chain as WagmiChain } from "wagmi";
 
-export type Chain = WagmiChain;
+export type Chain = WagmiChain & { deprecated?: boolean };
 const chain: Record<string, Chain> = {
   mainnet: {
     id: ChainId.Mainnet,
@@ -28,6 +28,7 @@ const chain: Record<string, Chain> = {
       },
     ],
     testnet: true,
+    deprecated: true,
   },
   goerli: {
     id: ChainId.Goerli,
@@ -158,6 +159,7 @@ const chain: Record<string, Chain> = {
       },
     ],
     testnet: true,
+    deprecated: true,
   },
   optimismGoerli: {
     id: ChainId.OptimismGoerli,
@@ -197,6 +199,7 @@ const chain: Record<string, Chain> = {
       },
     ],
     testnet: true,
+    deprecated: true,
   },
   arbitrumGoerli: {
     id: ChainId.ArbitrumGoerli,
