@@ -304,7 +304,7 @@ export class Erc721<
     } else {
       const allNFTs = await this.getAll();
       return (allNFTs || []).filter(({ owner }) =>
-        walletAddress === owner)
+        walletAddress?.toLowerCase() === owner?.toLowerCase())
     }
   }
 
@@ -318,7 +318,7 @@ export class Erc721<
     } else {
       const allNFTs = await this.getAll();
       return (allNFTs || []).filter(({ owner }) =>
-        walletAddress === owner).map(({ metadata: { id } }) => id)
+        walletAddress?.toLowerCase() === owner?.toLowerCase()).map(({ metadata: { id } }) => id)
     }
   }
   }
