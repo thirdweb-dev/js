@@ -7,8 +7,6 @@ import {
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Role, ValidContractInstance } from "@thirdweb-dev/sdk";
-import type { MultiwrapImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/multiwrap";
-import type { SplitImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/split";
 import type { VoteImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/vote";
 import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/smart-contract";
 import { constants } from "ethers";
@@ -21,10 +19,7 @@ import invariant from "tiny-invariant";
 /**
  * @internal
  */
-export type ContractWithRoles = Exclude<
-  ValidContractInstance,
-  VoteImpl | SplitImpl | MultiwrapImpl
->;
+export type ContractWithRoles = Exclude<ValidContractInstance, VoteImpl>;
 
 /**
  * @internal

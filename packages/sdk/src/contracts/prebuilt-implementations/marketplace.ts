@@ -21,7 +21,7 @@ import { MarketplaceFilter } from "../../types/marketplace/MarketPlaceFilter";
 import type { Marketplace as MarketplaceContract } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Marketplace.json";
 import { IStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, constants } from "ethers";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -541,4 +541,14 @@ export class MarketplaceImpl implements UpdateableNetwork {
   //     }),
   //   );
   // }
+
+  /**
+   * @internal
+   */
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    return this.contractWrapper.call(functionName, ...args);
+  }
 }

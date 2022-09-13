@@ -185,49 +185,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     functionName: string,
     ...args: unknown[] | [...unknown[], CallOverrides]
   ): Promise<any> {
-    // parse last arg as tx options if present
-    let txOptions: CallOverrides | undefined;
-    try {
-      if (args.length > 0 && typeof args[args.length - 1] === "object") {
-        const last = args[args.length - 1];
-        txOptions = CallOverrideSchema.parse(last);
-        // if call overrides found, remove it from args array
-        args = args.slice(0, args.length - 1);
-      }
-    } catch (e) {
-      // no-op
-    }
-
-    const functions = extractFunctionsFromAbi(
-      AbiSchema.parse(this.contractWrapper.abi),
-    );
-    const fn = functions.find((f) => f.name === functionName);
-    if (!fn) {
-      throw new Error(
-        `Function "${functionName}" not found in contract. Check your dashboard for the list of functions available`,
-      );
-    }
-    // TODO extract this and re-use for deploy function to check constructor args
-    if (fn.inputs.length !== args.length) {
-      throw new Error(
-        `Function "${functionName}" requires ${fn.inputs.length} arguments, but ${args.length} were provided.\nExpected function signature: ${fn.signature}`,
-      );
-    }
-    // TODO validate each argument
-    if (fn.stateMutability === "view" || fn.stateMutability === "pure") {
-      // read function
-      return (this.contractWrapper.readContract as any)[functionName](...args);
-    } else {
-      // write function
-      const receipt = await this.contractWrapper.sendTransaction(
-        functionName,
-        args,
-        txOptions,
-      );
-      return {
-        receipt,
-      };
-    }
+    return this.contractWrapper.call(functionName, ...args);
   }
 
   /** ********************

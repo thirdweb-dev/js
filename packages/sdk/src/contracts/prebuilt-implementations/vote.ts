@@ -29,7 +29,13 @@ import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/VoteERC20.json";
 import { ProposalCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/VoteERC20";
 import { IStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, Contract, ethers } from "ethers";
+import {
+  BigNumber,
+  BigNumberish,
+  CallOverrides,
+  Contract,
+  ethers,
+} from "ethers";
 
 /**
  * Create a decentralized organization for token holders to vote on proposals.
@@ -457,5 +463,15 @@ export class VoteImpl implements UpdateableNetwork {
         descriptionHash,
       ]),
     };
+  }
+
+  /**
+   * @internal
+   */
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    return this.contractWrapper.call(functionName, ...args);
   }
 }

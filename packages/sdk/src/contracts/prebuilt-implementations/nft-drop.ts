@@ -42,7 +42,13 @@ import {
   TokensLazyMintedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
 import { IStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, constants, ethers } from "ethers";
+import {
+  BigNumber,
+  BigNumberish,
+  CallOverrides,
+  constants,
+  ethers,
+} from "ethers";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -673,5 +679,15 @@ export class NFTDropImpl extends StandardErc721<DropERC721> {
       this.storage,
       checkERC20Allowance,
     );
+  }
+
+  /**
+   * @internal
+   */
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    return this.contractWrapper.call(functionName, ...args);
   }
 }

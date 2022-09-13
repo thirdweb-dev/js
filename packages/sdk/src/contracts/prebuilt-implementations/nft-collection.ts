@@ -23,7 +23,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import type { TokenERC721 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC721.json";
 import { IStorage } from "@thirdweb-dev/storage";
-import { BigNumberish, constants } from "ethers";
+import { BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -299,5 +299,15 @@ export class NFTCollectionImpl extends StandardErc721<TokenERC721> {
    */
   public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
     return this.erc721.burn(tokenId);
+  }
+
+  /**
+   * @internal
+   */
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    return this.contractWrapper.call(functionName, ...args);
   }
 }

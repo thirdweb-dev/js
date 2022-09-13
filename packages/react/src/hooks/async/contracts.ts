@@ -1,13 +1,19 @@
 import { useActiveChainId, useSDK } from "../../Provider";
 import { ContractAddress, RequiredParam } from "../../types";
-import { cacheKeys, createCacheKeyWithNetwork } from "../../utils/cache-keys";
+import {
+  cacheKeys,
+  createCacheKeyWithNetwork,
+  createContractCacheKey,
+} from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import {
+  useMutation,
   useQuery,
   useQueryClient,
   UseQueryResult,
 } from "@tanstack/react-query";
 import {
+  CommonContractSchemaInput,
   ContractEvent,
   EventQueryFilter,
   SUPPORTED_CHAIN_ID,
@@ -15,6 +21,7 @@ import {
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
 import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/smart-contract";
+import { CallOverrides } from "ethers";
 import { useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
 
@@ -195,6 +202,34 @@ export function useContractMetadata(
 }
 
 /**
+ * @internal
+ */
+export function useContractMetadataUpdate(
+  contract: RequiredParam<ValidContractInstance>,
+) {
+  const activeChainId = useActiveChainId();
+  const contractAddress = contract?.getAddress();
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (metadata: CommonContractSchemaInput) => {
+      invariant(contract, "contract must be defined");
+
+      return contract.metadata.update(metadata);
+    },
+    {
+      onSettled: () =>
+        queryClient.invalidateQueries(
+          createCacheKeyWithNetwork(
+            createContractCacheKey(contractAddress),
+            activeChainId,
+          ),
+        ),
+    },
+  );
+}
+
+/**
  * CONTRACT EVENTS
  */
 
@@ -285,6 +320,88 @@ export function useContractEvents(
       refetchOnWindowFocus: !options.subscribe,
       refetchOnMount: true,
       refetchOnReconnect: true,
+    },
+  );
+}
+
+/**
+ * Use this to get data from a contract read-function call.
+ *
+ * @example
+ * ```javascript
+ * const { contract } = useContract("{{contract_address}}");
+ * const { data, isLoading, error } = useContractRead(contract, "functionName", ...args);
+ *```
+ *
+ * @param contract - the contract instance of the contract to call a function on
+ * @param functionName - the name of the function to call
+ * @param args - The arguments to pass to the function (if any), with optional call arguments as the last parameter
+ * @returns a response object that includes the data returned by the function call
+ *
+ * @beta
+ */
+export function useContractRead(
+  contract: RequiredParam<ValidContractInstance>,
+  functionName: RequiredParam<string>,
+  ...args: unknown[] | [...unknown[], CallOverrides]
+) {
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.call(contractAddress, functionName, args),
+    () => {
+      invariant(contract, "contract must be defined");
+      invariant(functionName, "function name must be provided");
+      return contract.call(functionName, ...args);
+    },
+    {
+      enabled: !!contract && !!functionName,
+    },
+  );
+}
+
+/**
+ * Use this to get a function to make a write call to your contract
+ *
+ * @example
+ * ```javascript
+ * const { contract } = useContract("{{contract_address}}");
+ * const { mutate: myFunction, isLoading, error } = useContractWrite(contract, "myFunction");
+ *
+ * // the function can be called as follows:
+ * // myFunction(["param 1", "param 2", ...])
+ *```
+ *
+ * @param contract - the contract instance of the contract to call a function on
+ * @param functionName - the name of the function to call
+ * @returns a response object that includes the write function to call
+ *
+ * @beta
+ */
+export function useContractWrite(
+  contract: RequiredParam<ValidContractInstance>,
+  functionName: RequiredParam<string>,
+) {
+  const activeChainId = useActiveChainId();
+  const contractAddress = contract?.getAddress();
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    async (callParams?: unknown[] | [...unknown[], CallOverrides]) => {
+      invariant(contract, "contract must be defined");
+      invariant(functionName, "function name must be provided");
+      if (!callParams?.length) {
+        return contract.call(functionName);
+      }
+      return contract.call(functionName, ...callParams);
+    },
+    {
+      onSettled: () =>
+        queryClient.invalidateQueries(
+          createCacheKeyWithNetwork(
+            createContractCacheKey(contractAddress),
+            activeChainId,
+          ),
+        ),
     },
   );
 }

@@ -19,7 +19,7 @@ import type {
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Split.json";
 import { IStorage } from "@thirdweb-dev/storage";
-import { BigNumber, Contract } from "ethers";
+import { BigNumber, CallOverrides, Contract } from "ethers";
 
 /**
  * Create custom royalty splits to distribute funds.
@@ -365,5 +365,15 @@ export class SplitImpl implements UpdateableNetwork {
       await this.contractWrapper.readContract.totalShares(),
     );
     return totalRoyaltyAvailable.sub(alreadyReleased);
+  }
+
+  /**
+   * @internal
+   */
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    return this.contractWrapper.call(functionName, ...args);
   }
 }

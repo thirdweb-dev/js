@@ -18,7 +18,7 @@ import { Amount, CurrencyValue } from "../../types";
 import type { TokenERC20 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC20.json";
 import { IStorage } from "@thirdweb-dev/storage";
-import { constants } from "ethers";
+import { CallOverrides, constants } from "ethers";
 
 /**
  * Create a standard crypto token or cryptocurrency.
@@ -268,5 +268,15 @@ export class TokenImpl extends StandardErc20<TokenERC20> {
     amount: Amount,
   ): Promise<TransactionResult> {
     return this.erc20.burnFrom(holder, amount);
+  }
+
+  /**
+   * @internal
+   */
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    return this.contractWrapper.call(functionName, ...args);
   }
 }

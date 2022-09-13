@@ -28,7 +28,7 @@ import { QueryAllParams } from "../../types";
 import type { TokenERC1155 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC1155.json";
 import { IStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, constants } from "ethers";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -359,5 +359,15 @@ export class EditionImpl extends StandardErc1155<TokenERC1155> {
     amount: BigNumberish,
   ): Promise<TransactionResult> {
     return this.erc1155.burn(tokenId, amount);
+  }
+
+  /**
+   * @internal
+   */
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    return this.contractWrapper.call(functionName, ...args);
   }
 }

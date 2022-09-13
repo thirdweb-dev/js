@@ -39,7 +39,7 @@ import {
   PackOpenedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/Pack";
 import { IStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, BigNumberish, CallOverrides, ethers } from "ethers";
 
 /**
  * Create lootboxes of NFTs with rarity based open mechanics.
@@ -619,5 +619,15 @@ export class PackImpl extends StandardErc1155<PackContract> {
       contents,
       numOfRewardUnits,
     };
+  }
+
+  /**
+   * @internal
+   */
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    return this.contractWrapper.call(functionName, ...args);
   }
 }

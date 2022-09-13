@@ -27,7 +27,7 @@ import { QueryAllParams, UploadProgressEvent } from "../../types";
 import type { DropERC1155 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC1155.json";
 import { IStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, constants } from "ethers";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -377,5 +377,15 @@ export class EditionDropImpl extends StandardErc1155<DropERC1155> {
     amount: BigNumberish,
   ): Promise<TransactionResult> {
     return this.erc1155.burn(tokenId, amount);
+  }
+
+  /**
+   * @internal
+   */
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    return this.contractWrapper.call(functionName, ...args);
   }
 }
