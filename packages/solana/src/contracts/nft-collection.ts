@@ -1,25 +1,29 @@
+import { NFTHelper } from "../classes/helpers/nft-helper";
 import { UserWallet } from "../classes/user-wallet";
 import { METAPLEX_PROGRAM_ID } from "../constants/addresses";
 import { TransactionResult } from "../types/common";
-import { NFTMetadata, NFTMetadataInput } from "../types/nft";
 import {
+  NFTCollectionMetadata,
+  NFTMetadata,
+  NFTMetadataInput,
+} from "../types/nft";
+import {
+  findEditionMarkerPda,
   Metaplex,
-  Nft,
-  NftWithToken,
-  Sft,
-  SftWithToken,
-  token,
+  toBigNumber,
 } from "@metaplex-foundation/js";
-import { Metadata } from "@metaplex-foundation/mpl-token-metadata";
-import { getAccount, getAssociatedTokenAddress } from "@solana/spl-token";
-import { ConfirmedSignatureInfo, Connection, PublicKey } from "@solana/web3.js";
+import {
+  EditionMarker,
+  Metadata,
+} from "@metaplex-foundation/mpl-token-metadata";
+import { ConfirmedSignatureInfo, PublicKey } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
 
 export class NFTCollection {
-  private connection: Connection;
   private wallet: UserWallet;
   private metaplex: Metaplex;
   private storage: IStorage;
+  private nft: NFTHelper;
   collectionMintAddress: PublicKey;
 
   constructor(
@@ -31,86 +35,36 @@ export class NFTCollection {
     this.wallet = wallet;
     this.storage = storage;
     this.metaplex = metaplex;
-    this.connection = metaplex.connection;
+    this.nft = new NFTHelper(metaplex);
     this.collectionMintAddress = new PublicKey(collectionMintAddress);
   }
 
-  async getCollectionInfo(): Promise<NFTMetadata> {
-    const meta = await this.metaplex
+  async getMetadata(): Promise<NFTCollectionMetadata> {
+    const metadata = await this.metaplex
       .nfts()
       .findByMint({ mintAddress: this.collectionMintAddress })
       .run();
-    // TODO Make a alias type for this specific to collections
-    return this.toNFTMetadata(meta);
-  }
 
-  async mint(metadata: NFTMetadataInput): Promise<string> {
-    const uri = await this.storage.uploadMetadata(metadata);
-    const { nft: mintedNFT } = await this.metaplex
-      .nfts()
-      .create({
-        name: metadata.name || "",
-        uri,
-        sellerFeeBasisPoints: 0,
-        collection: this.collectionMintAddress,
-        collectionAuthority: this.wallet.signer,
-      })
-      .run();
-    return mintedNFT.address.toBase58();
-  }
-
-  async transfer(
-    receiverAddress: string,
-    mintAddress: string,
-  ): Promise<TransactionResult> {
-    const result = await this.metaplex
-      .nfts()
-      .send({
-        mintAddress: new PublicKey(mintAddress),
-        toOwner: new PublicKey(receiverAddress),
-        amount: token(1, 0),
-      })
-      .run();
-    return {
-      signature: result.response.signature,
-    };
-  }
-
-  async balanceOf(walletAddress: string, mintAddress: string): Promise<bigint> {
-    const addr = await getAssociatedTokenAddress(
-      new PublicKey(mintAddress),
-      new PublicKey(walletAddress),
-    );
-    try {
-      const account = await getAccount(this.connection, addr);
-      return account.amount;
-    } catch (e) {
-      return 0n;
-    }
+    return this.nft.toNFTMetadata(metadata);
   }
 
   async get(mintAddress: string): Promise<NFTMetadata> {
-    const meta = await this.metaplex
-      .nfts()
-      .findByMint({
-        mintAddress: new PublicKey(mintAddress),
-      })
-      .run();
-    return this.toNFTMetadata(meta);
+    return this.nft.get(mintAddress);
   }
 
   async getAll(): Promise<string[]> {
     const allSignatures: ConfirmedSignatureInfo[] = [];
     // This returns the first 1000, so we need to loop through until we run out of signatures to get.
-    let signatures = await this.connection.getSignaturesForAddress(
+    let signatures = await this.metaplex.connection.getSignaturesForAddress(
       this.collectionMintAddress,
     );
+
     allSignatures.push(...signatures);
     do {
       const options = {
         before: signatures[signatures.length - 1]?.signature,
       };
-      signatures = await this.connection.getSignaturesForAddress(
+      signatures = await this.metaplex.connection.getSignaturesForAddress(
         this.collectionMintAddress,
         options,
       );
@@ -127,9 +81,11 @@ export class NFTCollection {
         i,
         Math.min(allSignatures.length, i + batchSize),
       );
-      const transactions = await this.connection.getTransactions(
+
+      const transactions = await this.metaplex.connection.getTransactions(
         batch.map((s) => s.signature),
       );
+
       for (const tx of transactions) {
         if (tx) {
           const programIds = tx.transaction.message
@@ -157,32 +113,137 @@ export class NFTCollection {
         }
       }
     }
+
     const metadataAccounts = await Promise.all(
       metadataAddresses.map((a) => {
         try {
-          return this.connection.getAccountInfo(a);
+          return this.metaplex.connection.getAccountInfo(a);
         } catch (e) {
           console.log(e);
           return undefined;
         }
       }),
     );
+
     for (const account of metadataAccounts) {
       if (account) {
         const [metadata] = Metadata.deserialize(account.data);
         mintAddresses.add(metadata.mint.toBase58());
       }
     }
+
     return Array.from(mintAddresses);
   }
 
-  private toNFTMetadata(meta: Nft | Sft | NftWithToken | SftWithToken) {
-    return {
-      id: meta.address.toBase58(),
-      uri: meta.uri,
-      name: meta.name,
-      symbol: meta.symbol,
-      ...meta.json,
-    } as NFTMetadata;
+  async balance(mintAddress: string): Promise<bigint> {
+    const address = this.metaplex.identity().publicKey.toBase58();
+    return this.balanceOf(address, mintAddress);
+  }
+
+  async balanceOf(walletAddress: string, mintAddress: string): Promise<bigint> {
+    return this.nft.balanceOf(walletAddress, mintAddress);
+  }
+
+  async supplyOf(mintAddress: string): Promise<bigint> {
+    let editionMarkerNumber = 0;
+    let totalSupply = 1;
+
+    cursedBitwiseLogicLoop: while (true) {
+      const editionMarkerAddress = findEditionMarkerPda(
+        new PublicKey(mintAddress),
+        toBigNumber(editionMarkerNumber * 248),
+      );
+      const editionMarker = await EditionMarker.fromAccountAddress(
+        this.metaplex.connection,
+        editionMarkerAddress,
+      );
+
+      // WARNING: Ugly bitwise operations because of Rust :(
+      const indexCap = editionMarkerNumber === 0 ? 247 : 248;
+      for (let editionIndex = 0; editionIndex < indexCap; editionIndex++) {
+        const ledgerIndex =
+          editionMarkerNumber > 0
+            ? Math.floor(editionIndex / 8)
+            : editionIndex < 7
+            ? 0
+            : Math.floor((editionIndex - 7) / 8) + 1;
+        const size = editionMarkerNumber === 0 && ledgerIndex === 0 ? 7 : 8;
+        const shiftBase = 0b1 << (size - 1);
+
+        const bitmask =
+          ledgerIndex === 0
+            ? shiftBase >> editionIndex
+            : editionMarkerNumber > 0
+            ? shiftBase >> editionIndex % (ledgerIndex * 8)
+            : ledgerIndex === 1
+            ? shiftBase >> (editionIndex - 7)
+            : shiftBase >> (editionIndex - 7) % ((ledgerIndex - 1) * 8);
+
+        const editionExists =
+          (editionMarker.ledger[ledgerIndex] & bitmask) !== 0;
+
+        if (editionExists) {
+          totalSupply += 1;
+        } else {
+          break cursedBitwiseLogicLoop;
+        }
+      }
+
+      editionMarkerNumber++;
+    }
+
+    return BigInt(totalSupply);
+  }
+
+  async transfer(
+    receiverAddress: string,
+    mintAddress: string,
+  ): Promise<TransactionResult> {
+    return this.nft.transfer(receiverAddress, mintAddress);
+  }
+
+  async mint(metadata: NFTMetadataInput): Promise<string> {
+    const address = this.metaplex.identity().publicKey.toBase58();
+    return this.mintTo(address, metadata);
+  }
+
+  // TODO add options param for initial/maximum supply
+  async mintTo(to: string, metadata: NFTMetadataInput) {
+    const uri = await this.storage.uploadMetadata(metadata);
+    const { nft } = await this.metaplex
+      .nfts()
+      .create({
+        name: metadata.name || "",
+        uri,
+        sellerFeeBasisPoints: 0,
+        collection: this.collectionMintAddress,
+        collectionAuthority: this.wallet.signer,
+        tokenOwner: new PublicKey(to),
+        // Always sets max supply to unlimited so editions can be minted
+        maxSupply: null,
+      })
+      .run();
+
+    return nft.address.toBase58();
+  }
+
+  async mintAdditionalSupply(mintAddress: string) {
+    const address = this.metaplex.identity().publicKey.toBase58();
+    return this.mintAdditionalSupplyTo(address, mintAddress);
+  }
+
+  // TODO add quantity param
+  async mintAdditionalSupplyTo(
+    to: string,
+    mintAddress: string,
+  ): Promise<string> {
+    const result = await this.metaplex
+      .nfts()
+      .printNewEdition({
+        originalMint: new PublicKey(mintAddress),
+        newOwner: new PublicKey(to),
+      })
+      .run();
+    return result.nft.address.toBase58();
   }
 }

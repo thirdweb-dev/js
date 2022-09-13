@@ -51,13 +51,13 @@ describe("Marketplace Contract", async () => {
 
     await sdk.updateSignerOrProvider(adminWallet);
 
-    marketplaceContract = sdk.getMarketplace(
+    marketplaceContract = await sdk.getMarketplace(
       await sdk.deployer.deployBuiltInContract(Marketplace.contractType, {
         name: "Test Marketplace",
         seller_fee_basis_points: 0,
       }),
     );
-    dummyNftContract = sdk.getNFTCollection(
+    dummyNftContract = await sdk.getNFTCollection(
       await sdk.deployer.deployBuiltInContract(NFTCollection.contractType, {
         name: "TEST NFT",
         seller_fee_basis_points: 200,
@@ -79,7 +79,7 @@ describe("Marketplace Contract", async () => {
         name: "Test 4",
       },
     ]);
-    dummyBundleContract = sdk.getEdition(
+    dummyBundleContract = await sdk.getEdition(
       await sdk.deployer.deployBuiltInContract(Edition.contractType, {
         name: "TEST BUNDLE",
         seller_fee_basis_points: 100,
@@ -101,7 +101,7 @@ describe("Marketplace Contract", async () => {
       },
     ]);
 
-    customTokenContract = sdk.getToken(
+    customTokenContract = await sdk.getToken(
       await sdk.deployer.deployBuiltInContract(Token.contractType, {
         name: "Test",
         symbol: "TEST",

@@ -1,16 +1,16 @@
-import { IContractMetadata, IERC20Metadata } from "@thirdweb-dev/contracts-js";
-import { z } from "zod";
-import { IStorage } from "@thirdweb-dev/storage";
-import { TransactionResult } from "../types";
-import { ContractWrapper } from "./contract-wrapper";
 import {
   detectContractFeature,
   fetchContractMetadataFromAddress,
   hasFunction,
 } from "../../common";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { FEATURE_METADATA } from "../../constants/thirdweb-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { TransactionResult } from "../types";
+import { ContractWrapper } from "./contract-wrapper";
+import { IContractMetadata, IERC20Metadata } from "@thirdweb-dev/contracts-js";
+import { IStorage } from "@thirdweb-dev/storage";
 import { BaseContract } from "ethers";
+import { z } from "zod";
 
 /**
  * @internal
@@ -76,6 +76,7 @@ export class ContractMetadata<
    * ```
    * @public
    * @returns the metadata of the given contract
+   * @twfeature ContractMetadata
    */
   public async get() {
     let data;
@@ -125,7 +126,7 @@ export class ContractMetadata<
    * ```
    * @public
    * @param metadata - the metadata to set
-   * @returns
+   * @twfeature ContractMetadata
    */
   public async set(metadata: z.input<TSchema["input"]>) {
     const uri = await this._parseAndUploadMetadata(metadata);
@@ -153,6 +154,7 @@ export class ContractMetadata<
    * ```
    * @public
    * @param metadata - the metadata to update
+   * @twfeature ContractMetadata
    * */
   public async update(metadata: Partial<z.input<TSchema["input"]>>) {
     return await this.set({

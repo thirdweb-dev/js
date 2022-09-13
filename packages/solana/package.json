@@ -53,6 +53,7 @@
   "dependencies": {
     "@metaplex-foundation/js": "^0.15.0",
     "@metaplex-foundation/mpl-token-metadata": "^2.2.2",
+    "@project-serum/anchor": "^0.25.0",
     "@solana/spl-token": "^0.2.0",
     "@solana/web3.js": "^1.50.1",
     "@thirdweb-dev/storage": "*",

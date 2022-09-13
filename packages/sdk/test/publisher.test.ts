@@ -280,9 +280,7 @@ describe("Publishing", async () => {
       [],
     );
     const c = await realSDK.getContract(deployedAddr);
-    invariant(c.nft, "no nft detected");
-    invariant(c.nft.query, "no nft query detected");
-    const all = await c.nft.query.all();
+    const all = await c.erc721.getAll();
     expect(all.length).to.eq(0);
   });
 
@@ -298,16 +296,12 @@ describe("Publishing", async () => {
       [10, "bar"],
     );
     const c = await sdk.getContract(deployedAddr);
-    invariant(c.nft, "no nft detected");
-    invariant(c.nft.mint, "no minter detected");
-    const tx2 = await c.nft.mint.to(adminWallet.address, {
+    const tx2 = await c.erc721.mintTo(adminWallet.address, {
       name: "cool nft",
     });
-    invariant(c.nft, "no nft detected");
-    const nft = await c.nft.get(tx2.id);
+    const nft = await c.erc721.get(tx2.id);
     expect(nft.metadata.name).to.eq("cool nft");
-    invariant(c.nft.query, "no nft query detected");
-    const all = await c.nft.query.all();
+    const all = await c.erc721.getAll();
     expect(all.length).to.eq(1);
     invariant(c.royalties, "no royalties detected");
     const prevMeta = await c.metadata.get();
@@ -327,14 +321,10 @@ describe("Publishing", async () => {
     const addr = await sdk.deployer.deployContractFromUri(ipfsUri, []);
     const c = await sdk.getContract(addr);
 
-    invariant(c.nft, "nft must be defined");
-    invariant(c.nft.drop, "drop must be defined");
-    invariant(c.nft.drop.claim, "claim conditions must be defined");
-
-    let claimConditions = await c.nft.drop.claim.conditions.getAll();
+    let claimConditions = await c.erc721.claimConditions.getAll();
     expect(claimConditions.length).to.equal(0);
 
-    await c.nft.drop.claim.conditions.set([
+    await c.erc721.claimConditions.set([
       {
         price: "0",
         startTime: new Date(0),
@@ -345,7 +335,7 @@ describe("Publishing", async () => {
       },
     ]);
 
-    claimConditions = await c.nft.drop.claim.conditions.getAll();
+    claimConditions = await c.erc721.claimConditions.getAll();
     expect(claimConditions.length).to.equal(2);
   });
 
@@ -354,15 +344,10 @@ describe("Publishing", async () => {
     const addr = await sdk.deployer.deployContractFromUri(ipfsUri, []);
     const c = await sdk.getContract(addr);
 
-    invariant(c.nft, "nft must be defined");
-    invariant(c.nft.query, "query must be defined");
-    invariant(c.nft.drop, "drop must be defined");
-    invariant(c.nft.drop.claim, "claim conditions must be defined");
-
-    const nftsBefore = await c.nft.query.all();
+    const nftsBefore = await c.erc721.getAll();
     expect(nftsBefore.length).to.equal(0);
 
-    const tx = await c.nft.drop.lazyMint([
+    const tx = await c.erc721.lazyMint([
       {
         name: "cool nft 1",
       },
@@ -372,16 +357,16 @@ describe("Publishing", async () => {
     ]);
     expect(tx.length).to.eq(2);
 
-    await c.nft.drop.claim.conditions.set([
+    await c.erc721.claimConditions.set([
       {
         price: "0",
         maxQuantity: 2,
         startTime: new Date(0),
       },
     ]);
-    await c.nft.drop.claim.to(adminWallet.address, 1);
+    await c.erc721.claimTo(adminWallet.address, 1);
 
-    const nftsAfter = await c.nft.query.all();
+    const nftsAfter = await c.erc721.getAll();
     expect(nftsAfter.length).to.equal(2);
     expect(nftsAfter[0].metadata.name).to.equal("cool nft 1");
     expect(nftsAfter[0].owner).to.equal(adminWallet.address);
@@ -397,15 +382,10 @@ describe("Publishing", async () => {
     ]);
     const c = await sdk.getContract(addr);
 
-    invariant(c.edition, "edition must be defined");
-    invariant(c.edition.query, "query must be defined");
-    invariant(c.edition.drop, "drop must be defined");
-    invariant(c.edition.drop.claim, "claim conditions must be defined");
-
-    const nftsBefore = await c.edition.query.all();
+    const nftsBefore = await c.erc1155.getAll();
     expect(nftsBefore.length).to.equal(0);
 
-    const tx = await c.edition.drop.lazyMint([
+    const tx = await c.erc1155.lazyMint([
       {
         name: "cool nft 1",
       },
@@ -415,16 +395,16 @@ describe("Publishing", async () => {
     ]);
     expect(tx.length).to.eq(2);
 
-    await c.edition.drop.claim.conditions.set(0, [
+    await c.erc1155.claimConditions.set(0, [
       {
         price: "0",
         maxQuantity: 2,
         startTime: new Date(0),
       },
     ]);
-    await c.edition.drop.claim.to(adminWallet.address, 0, 1);
+    await c.erc1155.claimTo(adminWallet.address, 0, 1);
 
-    const nftsAfter = await c.edition.query.all();
+    const nftsAfter = await c.erc1155.getAll();
     expect(nftsAfter.length).to.equal(2);
     expect(nftsAfter[0].metadata.name).to.equal("cool nft 1");
     expect(nftsAfter[0].supply.toNumber()).to.equal(1);

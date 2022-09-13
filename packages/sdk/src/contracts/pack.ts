@@ -14,8 +14,9 @@ import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Erc1155 } from "../core/classes/erc-1155";
-import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
+import { StandardErc1155 } from "../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { UpdateableNetwork } from "../core/interfaces/contract";
 import {
   NetworkOrSignerOrProvider,
   TransactionResultWithId,
@@ -29,6 +30,7 @@ import {
   PackMetadataOutput,
   PackRewards,
   PackRewardsOutput,
+  PackRewardsOutputSchema,
 } from "../schema/tokens/pack";
 import { QueryAllParams } from "../types";
 import { Pack as PackContract } from "@thirdweb-dev/contracts-js";
@@ -40,6 +42,7 @@ import {
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/Pack";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers } from "ethers";
+import { PackUpdatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IPack";
 
 /**
  * Create lootboxes of NFTs with rarity based open mechanics.
@@ -55,7 +58,7 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
  *
  * @public
  */
-export class Pack extends Erc1155<PackContract> {
+export class Pack extends StandardErc1155<PackContract> {
   static contractType = "pack" as const;
   static contractRoles = ["admin", "minter", "pauser", "transfer"] as const;
   static contractAbi = ABI as any;
@@ -92,7 +95,7 @@ export class Pack extends Erc1155<PackContract> {
    */
   public interceptor: ContractInterceptor<PackContract>;
 
-  private _query = this.query as Erc1155Enumerable;
+  public erc1155: Erc1155<PackContract>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -106,7 +109,8 @@ export class Pack extends Erc1155<PackContract> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage);
+    this.erc1155 = new Erc1155(this.contractWrapper, this.storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       Pack.schema,
@@ -120,9 +124,37 @@ export class Pack extends Erc1155<PackContract> {
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
+  /**
+   * @internal
+   */
+  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+    this.contractWrapper.updateSignerOrProvider(network);
+  }
+
+  getAddress(): string {
+    return this.contractWrapper.readContract.address;
+  }
+
   /** ******************************
    * READ FUNCTIONS
    *******************************/
+
+  /**
+   * Get a single Pack
+   *
+   * @remarks Get all the data associated with every pack in this contract.
+   *
+   * By default, returns the first 100 packs, use queryParams to fetch more.
+   *
+   * @example
+   * ```javascript
+   * const pack = await contract.get(0);
+   * console.log(packs;
+   * ```
+   */
+  public async get(tokenId: BigNumberish): Promise<EditionMetadata> {
+    return this.erc1155.get(tokenId);
+  }
 
   /**
    * Get All Packs
@@ -142,7 +174,7 @@ export class Pack extends Erc1155<PackContract> {
   public async getAll(
     queryParams?: QueryAllParams,
   ): Promise<EditionMetadata[]> {
-    return this._query.all(queryParams);
+    return this.erc1155.getAll(queryParams);
   }
 
   /**
@@ -162,7 +194,7 @@ export class Pack extends Erc1155<PackContract> {
   public async getOwned(
     walletAddress?: string,
   ): Promise<EditionMetadataOwner[]> {
-    return this._query.owned(walletAddress);
+    return this.erc1155.getOwned(walletAddress);
   }
 
   /**
@@ -171,7 +203,7 @@ export class Pack extends Erc1155<PackContract> {
    * @public
    */
   public async getTotalCount(): Promise<BigNumber> {
-    return this._query.totalCount();
+    return this.erc1155.totalCount();
   }
 
   /**
@@ -316,6 +348,76 @@ export class Pack extends Erc1155<PackContract> {
   }
 
   /**
+   * Add Pack Contents
+   * @remarks Add contents to an existing pack.
+   * @remarks See {@link Pack.addPackContents}
+   *
+   * @param packId - token Id of the pack to add contents to
+   * @param packContents - the rewards to include in the pack
+   * @example
+   * ```javascript
+   * const packContents = {
+   *   // ERC20 rewards to be included in the pack
+   *   erc20Rewards: [
+   *     {
+   *       assetContract: "0x...",
+   *       quantityPerReward: 5,
+   *       quantity: 100,
+   *       totalRewards: 20,
+   *     }
+   *   ],
+   *   // ERC721 rewards to be included in the pack
+   *   erc721Rewards: [
+   *     {
+   *       assetContract: "0x...",
+   *       tokenId: 0,
+   *     }
+   *   ],
+   *   // ERC1155 rewards to be included in the pack
+   *   erc1155Rewards: [
+   *     {
+   *       assetContract: "0x...",
+   *       tokenId: 0,
+   *       quantityPerReward: 1,
+   *       totalRewards: 100,
+   *     }
+   *   ],
+   * }
+   *
+   * const tx = await contract.addPackContents(packId, packContents);
+   * ```
+   */
+  public async addPackContents(packId: BigNumberish, packContents: PackRewards) {
+    const signerAddress = await this.contractWrapper.getSignerAddress();
+    const parsedContents = PackRewardsOutputSchema.parse(packContents);
+    const { contents, numOfRewardUnits } = await this.toPackContentArgs(
+      parsedContents,
+    );
+
+    const receipt = await this.contractWrapper.sendTransaction("addPackContents", [
+      packId,
+      contents,
+      numOfRewardUnits,
+      signerAddress,
+    ]);
+
+    const event = this.contractWrapper.parseLogs<PackUpdatedEvent>(
+      "PackUpdated",
+      receipt?.logs,
+    );
+    if (event.length === 0) {
+      throw new Error("PackUpdated event not found");
+    }
+    const id = event[0].args.packId;
+
+    return {
+      id: id,
+      receipt,
+      data: () => this.erc1155.get(id),
+    };
+  }
+
+  /**
    * Create Pack To Wallet
    * @remarks Create a new pack with the given metadata and rewards and mint it to the specified address.
    *
@@ -373,8 +475,10 @@ export class Pack extends Erc1155<PackContract> {
     );
 
     const parsedMetadata = PackMetadataInputSchema.parse(metadataWithRewards);
+    const { erc20Rewards, erc721Rewards, erc1155Rewards } = parsedMetadata;
+    const rewardsData: PackRewardsOutput = { erc20Rewards, erc721Rewards, erc1155Rewards }; 
     const { contents, numOfRewardUnits } = await this.toPackContentArgs(
-      parsedMetadata,
+      rewardsData,
     );
 
     const receipt = await this.contractWrapper.sendTransaction("createPack", [
@@ -398,7 +502,7 @@ export class Pack extends Erc1155<PackContract> {
     return {
       id: packId,
       receipt,
-      data: () => this.get(packId),
+      data: () => this.erc1155.get(packId),
     };
   }
 
@@ -483,7 +587,7 @@ export class Pack extends Erc1155<PackContract> {
    * PRIVATE FUNCTIONS
    *******************************/
 
-  private async toPackContentArgs(metadataWithRewards: PackMetadataOutput) {
+  private async toPackContentArgs(metadataWithRewards: PackRewardsOutput) {
     const contents: ITokenBundle.TokenStruct[] = [];
     const numOfRewardUnits: string[] = [];
     const { erc20Rewards, erc721Rewards, erc1155Rewards } = metadataWithRewards;

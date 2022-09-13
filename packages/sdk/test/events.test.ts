@@ -20,7 +20,7 @@ describe("Events", async () => {
   });
 
   beforeEach(async () => {
-    dropContract = sdk.getNFTDrop(
+    dropContract = await sdk.getNFTDrop(
       await sdk.deployer.deployBuiltInContract(NFTDrop.contractType, {
         name: `Testing drop from SDK`,
         description: "Test contract from tests",
@@ -34,7 +34,7 @@ describe("Events", async () => {
       }),
     );
 
-    dropContract2 = sdk.getNFTDrop(
+    dropContract2 = await sdk.getNFTDrop(
       await sdk.deployer.deployBuiltInContract(NFTDrop.contractType, {
         name: `Testing drop from SDK`,
         description: "Test contract from tests",
@@ -48,7 +48,7 @@ describe("Events", async () => {
       }),
     );
 
-    nftContract = sdk.getNFTCollection(
+    nftContract = await sdk.getNFTCollection(
       await sdk.deployer.deployBuiltInContract(NFTCollection.contractType, {
         name: "NFT Contract",
         description: "Test NFT contract from tests",
@@ -122,7 +122,7 @@ describe("Events", async () => {
   });
 
   it("should return single event", async () => {
-    await nftContract.mintToSelf({
+    await nftContract.mint({
       name: "Test1",
     });
 
@@ -131,7 +131,7 @@ describe("Events", async () => {
   });
 
   it("should return multiple events", async () => {
-    await nftContract.mintToSelf({
+    await nftContract.mint({
       name: "Test1",
     });
 

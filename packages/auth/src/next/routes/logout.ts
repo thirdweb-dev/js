@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   if (req.method !== "GET") {
     return res.status(400).json({
@@ -17,7 +17,7 @@ export default async function handler(
     serialize("thirdweb_auth_token", "", {
       path: "/",
       expires: new Date(Date.now() + 5 * 1000),
-    })
+    }),
   );
 
   return res.status(301).redirect(req.headers.referer as string);

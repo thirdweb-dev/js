@@ -38,7 +38,7 @@ export interface IStorage {
     signerAddress?: string,
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
-    }
+    },
   ): Promise<string>;
 
   /**
@@ -58,7 +58,7 @@ export interface IStorage {
     signerAddress?: string,
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
-    }
+    },
   ): Promise<UploadResult>;
 
   /**
@@ -77,7 +77,7 @@ export interface IStorage {
     signerAddress?: string,
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
-    }
+    },
   ): Promise<string>;
 
   /**
@@ -97,6 +97,6 @@ export interface IStorage {
     signerAddress?: string,
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
-    }
+    },
   ): Promise<UploadResult>;
 }

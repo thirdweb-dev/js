@@ -1,6 +1,7 @@
 import DelayedRevealAbi from "@thirdweb-dev/contracts-js/dist/abis/DelayedReveal.json";
 import DropSinglePhase1155 from "@thirdweb-dev/contracts-js/dist/abis/DropSinglePhase1155.json";
 import IBurnableERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC1155.json";
+import IClaimableERC1155 from "@thirdweb-dev/contracts-js/dist/abis/IClaimableERC1155.json";
 import Erc1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
 import Erc1155EnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155Enumerable.json";
 import ILazyMintAbi from "@thirdweb-dev/contracts-js/dist/abis/ILazyMint.json";
@@ -19,19 +20,30 @@ export const FEATURE_EDITION_BURNABLE = {
   features: {},
 } as const;
 
-export const FEATURE_EDITION_CLAIMABLE = {
-  name: "ERC1155Claimable",
+export const FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS = {
+  name: "ERC1155ClaimableWithConditions",
   namespace: "edition.drop.claim",
   docLinks: {
     sdk: "sdk.erc1155claimable",
-    contracts: "",
+    contracts: "DropSinglePhase1155",
   },
   abis: [Erc1155Abi, ILazyMintAbi, DropSinglePhase1155],
   features: {},
 } as const;
 
-export const FEATURE_EDITION_DROPPABLE = {
-  name: "ERC1155Droppable",
+export const FEATURE_EDITION_CLAIMABLE = {
+  name: "ERC1155Claimable",
+  namespace: "edition.drop.claim",
+  docLinks: {
+    sdk: "sdk.erc1155claimable",
+    contracts: "IClaimableERC1155",
+  },
+  abis: [Erc1155Abi, ILazyMintAbi, IClaimableERC1155],
+  features: {},
+} as const;
+
+export const FEATURE_EDITION_LAZY_MINTABLE = {
+  name: "ERC1155LazyMintable",
   namespace: "edition.drop",
   docLinks: {
     sdk: "sdk.erc1155droppable",
@@ -40,6 +52,8 @@ export const FEATURE_EDITION_DROPPABLE = {
   abis: [Erc1155Abi, ILazyMintAbi],
   features: {
     [FEATURE_EDITION_CLAIMABLE.name]: FEATURE_EDITION_CLAIMABLE,
+    [FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS.name]:
+      FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS,
   },
 } as const;
 
@@ -112,7 +126,7 @@ export const FEATURE_EDITION = {
     [FEATURE_EDITION_BURNABLE.name]: FEATURE_EDITION_BURNABLE,
     [FEATURE_EDITION_ENUMERABLE.name]: FEATURE_EDITION_ENUMERABLE,
     [FEATURE_EDITION_MINTABLE.name]: FEATURE_EDITION_MINTABLE,
-    [FEATURE_EDITION_DROPPABLE.name]: FEATURE_EDITION_DROPPABLE,
+    [FEATURE_EDITION_LAZY_MINTABLE.name]: FEATURE_EDITION_LAZY_MINTABLE,
     [FEATURE_EDITION_REVEALABLE.name]: FEATURE_EDITION_REVEALABLE,
     [FEATURE_EDITION_SIGNATURE_MINTABLE.name]:
       FEATURE_EDITION_SIGNATURE_MINTABLE,

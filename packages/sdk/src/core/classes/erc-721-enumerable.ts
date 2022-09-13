@@ -1,11 +1,11 @@
+import { FEATURE_NFT_ENUMERABLE } from "../../constants/erc721-features";
+import { NFTMetadataOwner } from "../../schema";
+import { BaseERC721 } from "../../types/eips";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
+import { Erc721 } from "./erc-721";
 import { IERC721Enumerable } from "@thirdweb-dev/contracts-js";
 import { BigNumber } from "ethers";
-import { NFTMetadataOwner } from "../../schema";
-import { Erc721 } from "./erc-721";
-import { BaseERC721 } from "../../types/eips";
-import { FEATURE_NFT_ENUMERABLE } from "../../constants/erc721-features";
-import { DetectableFeature } from "../interfaces/DetectableFeature";
 
 /**
  * List owned ERC721 NFTs

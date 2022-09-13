@@ -1,7 +1,6 @@
-import { IThirdwebContract__factory } from "@thirdweb-dev/contracts-js";
-
-import { Signer, providers } from "ethers";
 import { ContractType } from "../types";
+import { IThirdwebContract__factory } from "@thirdweb-dev/contracts-js";
+import { Signer, providers } from "ethers";
 
 /**
  * @internal

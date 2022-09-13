@@ -1,6 +1,6 @@
+import { ProposalState, VoteType } from "../enums";
 import { Currency } from "./currency";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
-import { ProposalState, VoteType } from "../enums";
 
 export interface VoteSettings {
   votingDelay: string;

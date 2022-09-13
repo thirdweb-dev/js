@@ -29,7 +29,7 @@ describe("Wallet", async () => {
       name: "My Token",
       primary_sale_recipient: adminWallet.address,
     });
-    await sdk.getToken(tokenAddr).mintToSelf(100);
+    await (await sdk.getToken(tokenAddr)).mint(100);
 
     const oldBalance = await sdk.wallet.balance(tokenAddr);
     expect(oldBalance.displayValue).to.eq("100.0");

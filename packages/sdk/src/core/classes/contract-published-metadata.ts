@@ -1,16 +1,16 @@
-import { ContractWrapper } from "./contract-wrapper";
 import {
   extractEventsFromAbi,
   extractFunctionsFromAbi,
   fetchContractMetadataFromAddress,
 } from "../../common";
-import { IStorage } from "@thirdweb-dev/storage";
 import {
   AbiEvent,
   AbiFunction,
   AbiSchema,
   PublishedMetadata,
 } from "../../schema/contracts/custom";
+import { ContractWrapper } from "./contract-wrapper";
+import { IStorage } from "@thirdweb-dev/storage";
 import { BaseContract } from "ethers";
 
 /**

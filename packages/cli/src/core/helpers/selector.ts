@@ -5,7 +5,7 @@ const { MultiSelect } = require("enquirer");
 
 export function createContractsPrompt(
   choices: { name: string; value: ContractPayload }[],
-  message: string
+  message: string,
 ) {
   return new MultiSelect({
     name: "value",

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 /* eslint-disable import/no-extraneous-dependencies */
+import { CREATE_MESSAGES } from "../../constants/constants";
 import { DownloadError, createApp } from "./helpers/create-app";
 import { createContract } from "./helpers/create-contract";
 import { getPkgManager } from "./helpers/get-pkg-manager";
@@ -8,7 +9,6 @@ import { validateNpmName } from "./helpers/validate-pkg";
 import chalk from "chalk";
 import path from "path";
 import prompts from "prompts";
-import { CREATE_MESSAGES } from "../../constants/constants";
 
 let projectType: string = "";
 let projectPath: string = "";

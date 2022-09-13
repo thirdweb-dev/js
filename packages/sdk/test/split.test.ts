@@ -39,7 +39,7 @@ describe("Splits Contract", async () => {
         ],
       },
     );
-    splitsContract = sdk.getSplit(address);
+    splitsContract = await sdk.getSplit(address);
   });
 
   it("should fetch contract balance", async () => {

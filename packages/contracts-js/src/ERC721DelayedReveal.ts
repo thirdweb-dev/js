@@ -360,6 +360,7 @@ export interface ERC721DelayedRevealInterface extends utils.Interface {
     "OwnerUpdated(address,address)": EventFragment;
     "RoyaltyForToken(uint256,address,uint256)": EventFragment;
     "TokenURIRevealed(uint256,string)": EventFragment;
+    "TokensClaimed(address,address,uint256,uint256)": EventFragment;
     "TokensLazyMinted(uint256,uint256,string,bytes)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
@@ -371,6 +372,7 @@ export interface ERC721DelayedRevealInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "OwnerUpdated"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RoyaltyForToken"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TokenURIRevealed"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TokensClaimed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TokensLazyMinted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
@@ -456,6 +458,19 @@ export type TokenURIRevealedEvent = TypedEvent<
 
 export type TokenURIRevealedEventFilter =
   TypedEventFilter<TokenURIRevealedEvent>;
+
+export interface TokensClaimedEventObject {
+  claimer: string;
+  receiver: string;
+  startTokenId: BigNumber;
+  quantityClaimed: BigNumber;
+}
+export type TokensClaimedEvent = TypedEvent<
+  [string, string, BigNumber, BigNumber],
+  TokensClaimedEventObject
+>;
+
+export type TokensClaimedEventFilter = TypedEventFilter<TokensClaimedEvent>;
 
 export interface TokensLazyMintedEventObject {
   startTokenId: BigNumber;
@@ -1092,6 +1107,19 @@ export interface ERC721DelayedReveal extends BaseContract {
       index?: BigNumberish | null,
       revealedURI?: null
     ): TokenURIRevealedEventFilter;
+
+    "TokensClaimed(address,address,uint256,uint256)"(
+      claimer?: string | null,
+      receiver?: string | null,
+      startTokenId?: BigNumberish | null,
+      quantityClaimed?: null
+    ): TokensClaimedEventFilter;
+    TokensClaimed(
+      claimer?: string | null,
+      receiver?: string | null,
+      startTokenId?: BigNumberish | null,
+      quantityClaimed?: null
+    ): TokensClaimedEventFilter;
 
     "TokensLazyMinted(uint256,uint256,string,bytes)"(
       startTokenId?: BigNumberish | null,
