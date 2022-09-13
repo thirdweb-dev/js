@@ -1,4 +1,5 @@
 import { Deployer } from "./classes/deployer";
+import { Registry } from "./classes/registry";
 import { UserWallet } from "./classes/user-wallet";
 import { DEFAULT_IPFS_GATEWAY } from "./constants/urls";
 import { NFTCollection } from "./contracts/nft-collection";
@@ -20,6 +21,7 @@ import {
   Idl,
   Program as AnchorProgram,
 } from "@project-serum/anchor";
+import { registry } from "@project-serum/anchor/dist/cjs/utils";
 import { Connection, Keypair } from "@solana/web3.js";
 import { IpfsStorage, IStorage, PinataUploader } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
@@ -34,6 +36,7 @@ export class ThirdwebSDK {
   private anchorProvider: AnchorProvider;
   private storage: IStorage;
 
+  public registry: Registry;
   public deployer: Deployer;
   public wallet: UserWallet;
 
@@ -52,6 +55,7 @@ export class ThirdwebSDK {
     this.metaplex = Metaplex.make(this.connection);
     this.wallet = new UserWallet();
     this.deployer = new Deployer(this.metaplex, this.wallet, this.storage);
+    this.registry = new Registry(this.metaplex);
     this.anchorProvider = new AnchorProvider(
       this.metaplex.connection,
       this.metaplex.identity(),

@@ -110,10 +110,18 @@ export class Deployer {
     invariant(this.wallet.signer, "Wallet is not connected");
     const parsed = NFTDropContractSchema.parse(metadata);
 
-    // TODO create a collection with metadata and associate it with the drop
+    const collection = await this.createNftCollection(metadata);
     const { candyMachine: nftDrop } = await this.metaplex
       .candyMachines()
-      .create({ ...parsed })
+      .create({
+        ...parsed,
+        collection: new PublicKey(collection),
+        creators: parsed.creators?.map((creator) => ({
+          address: new PublicKey(creator.address),
+          share: creator.share,
+          verified: creator.verified,
+        })),
+      })
       .run();
 
     return nftDrop.address.toBase58();
