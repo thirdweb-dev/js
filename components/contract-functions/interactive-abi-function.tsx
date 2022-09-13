@@ -166,10 +166,14 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
   } = useContractWrite(contract, abiFunction?.name);
 
   useEffect(() => {
-    if (watch("params").length === 0) {
+    if (
+      watch("params").length === 0 &&
+      (abiFunction?.stateMutability === "view" ||
+        abiFunction?.stateMutability === "pure")
+    ) {
       mutate([]);
     }
-  }, [mutate, watch]);
+  }, [mutate, watch, abiFunction?.stateMutability]);
 
   return (
     <Card
