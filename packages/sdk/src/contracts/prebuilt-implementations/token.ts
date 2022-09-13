@@ -37,6 +37,7 @@ import { constants } from "ethers";
 export class TokenImpl extends StandardErc20<TokenERC20> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
+  public abi: typeof ABI;
   public metadata: ContractMetadata<
     TokenERC20,
     typeof TokenErc20ContractSchema
@@ -83,6 +84,7 @@ export class TokenImpl extends StandardErc20<TokenERC20> {
     ),
   ) {
     super(contractWrapper, storage);
+    this.abi = abi;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       TokenErc20ContractSchema,

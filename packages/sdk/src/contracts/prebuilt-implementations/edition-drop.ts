@@ -46,6 +46,7 @@ import { BigNumber, BigNumberish, constants } from "ethers";
 export class EditionDropImpl extends StandardErc1155<DropERC1155> {
   private static contractRoles = ["admin", "minter", "transfer"] as const;
 
+  public abi: typeof ABI;
   public sales: ContractPrimarySale<DropERC1155>;
   public platformFees: ContractPlatformFee<DropERC1155>;
   public encoder: ContractEncoder<DropERC1155>;
@@ -123,6 +124,7 @@ export class EditionDropImpl extends StandardErc1155<DropERC1155> {
     ),
   ) {
     super(contractWrapper, storage);
+    this.abi = abi;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       DropErc1155ContractSchema,

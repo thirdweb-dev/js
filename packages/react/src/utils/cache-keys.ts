@@ -221,6 +221,8 @@ export const cacheKeys = {
           contractAddress,
           params ? ["getAllListings", params] : ["getAllListings"],
         ),
+      getTotalCount: (contractAddress: RequiredParam<ContractAddress>) =>
+        createContractCacheKey(contractAddress, ["getTotalCount"]),
       getActiveListings: (
         contractAddress: RequiredParam<ContractAddress>,
         params?: MarketplaceFilter,

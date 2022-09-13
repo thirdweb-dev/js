@@ -47,6 +47,7 @@ import { BigNumber, BigNumberish, constants } from "ethers";
 export class EditionImpl extends StandardErc1155<TokenERC1155> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
+  public abi: typeof ABI;
   public metadata: ContractMetadata<
     TokenERC1155,
     typeof TokenErc1155ContractSchema
@@ -113,6 +114,7 @@ export class EditionImpl extends StandardErc1155<TokenERC1155> {
     ),
   ) {
     super(contractWrapper, storage);
+    this.abi = abi;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       TokenErc1155ContractSchema,

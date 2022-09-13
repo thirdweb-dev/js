@@ -61,6 +61,7 @@ import { BigNumber, BigNumberish, constants, ethers } from "ethers";
 export class NFTDropImpl extends StandardErc721<DropERC721> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
+  public abi: typeof ABI;
   public encoder: ContractEncoder<DropERC721>;
   public estimator: GasCostEstimator<DropERC721>;
   public metadata: ContractMetadata<
@@ -170,6 +171,7 @@ export class NFTDropImpl extends StandardErc721<DropERC721> {
     ),
   ) {
     super(contractWrapper, storage);
+    this.abi = abi;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       DropErc721ContractSchema,

@@ -41,6 +41,7 @@ import invariant from "tiny-invariant";
 export class MarketplaceImpl implements UpdateableNetwork {
   static contractRoles = ["admin", "lister", "asset"] as const;
 
+  public abi: typeof ABI;
   private contractWrapper: ContractWrapper<MarketplaceContract>;
   private storage: IStorage;
 
@@ -144,6 +145,7 @@ export class MarketplaceImpl implements UpdateableNetwork {
       options,
     ),
   ) {
+    this.abi = abi;
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.metadata = new ContractMetadata(

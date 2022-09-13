@@ -8,6 +8,7 @@ import {
 import {
   Edition,
   EditionDrop,
+  getContractTypeForRemoteName,
   Marketplace,
   Multiwrap,
   NFTCollection,
@@ -325,7 +326,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public async resolveContractType(
     contractAddress: string,
-  ): Promise<Exclude<ContractType, "custom">> {
+  ): Promise<ContractType> {
     const contract = new Contract(
       contractAddress,
       IThirdwebContractABI,
@@ -335,13 +336,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       .toUtf8String(await contract.contractType())
       // eslint-disable-next-line no-control-regex
       .replace(/\x00/g, "");
-    invariant(
-      remoteContractType in PREBUILT_CONTRACTS_MAP,
-      `${remoteContractType} is not a valid contract type, falling back to custom contract`,
-    );
-    return PREBUILT_CONTRACTS_MAP[
-      remoteContractType as keyof typeof PREBUILT_CONTRACTS_MAP
-    ].contractType;
+    return getContractTypeForRemoteName(remoteContractType);
   }
 
   /**
@@ -435,6 +430,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     try {
       // try built in contract first, eventually all our contracts will have bytecode metadata
       const contractType = await this.resolveContractType(address);
+      invariant(contractType !== "custom", "custom contract type");
       const contractAbi = await PREBUILT_CONTRACTS_MAP[contractType].getAbi();
       return this.getContractFromAbi(address, contractAbi);
     } catch (err) {

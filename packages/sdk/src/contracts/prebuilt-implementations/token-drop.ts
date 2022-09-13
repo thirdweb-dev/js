@@ -35,6 +35,7 @@ import { constants } from "ethers";
 export class TokenDropImpl extends StandardErc20<DropERC20> {
   static contractRoles = ["admin", "transfer"] as const;
 
+  public abi: typeof ABI;
   public metadata: ContractMetadata<DropERC20, typeof DropErc20ContractSchema>;
   public roles: ContractRoles<
     DropERC20,
@@ -87,6 +88,7 @@ export class TokenDropImpl extends StandardErc20<DropERC20> {
     ),
   ) {
     super(contractWrapper, storage);
+    this.abi = abi;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       DropErc20ContractSchema,

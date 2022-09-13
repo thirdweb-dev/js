@@ -42,6 +42,7 @@ import { BigNumberish, constants } from "ethers";
 export class NFTCollectionImpl extends StandardErc721<TokenERC721> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
+  public abi: typeof ABI;
   public metadata: ContractMetadata<
     TokenERC721,
     typeof TokenErc721ContractSchema
@@ -113,6 +114,7 @@ export class NFTCollectionImpl extends StandardErc721<TokenERC721> {
     ),
   ) {
     super(contractWrapper, storage);
+    this.abi = abi;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       TokenErc721ContractSchema,

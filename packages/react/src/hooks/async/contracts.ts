@@ -30,12 +30,15 @@ async function fetchContractType(
   try {
     return await sdk.resolveContractType(contractAddress);
   } catch (err) {
+    console.error("failed to resolve contract type", err);
     // this error can happen if the contract is a custom contract -> assume "custom"
     return "custom" as const;
   }
 }
 
-function useContractType(contractAddress: RequiredParam<ContractAddress>) {
+export function useContractType(
+  contractAddress: RequiredParam<ContractAddress>,
+) {
   const sdk = useSDK();
 
   return useQueryWithNetwork(
@@ -78,7 +81,9 @@ function fetchCompilerMetadata(
   }
 }
 
-function useCompilerMetadata(contractAddress: RequiredParam<ContractAddress>) {
+export function useCompilerMetadata(
+  contractAddress: RequiredParam<ContractAddress>,
+) {
   const sdk = useSDK();
 
   return useQueryWithNetwork(
@@ -129,6 +134,7 @@ export function useContract<
       const cType = await queryClient.fetchQuery(
         contractType.cacheKey(contractAddress, activeChainId),
         () => contractType.fetchQuery(contractAddress, sdk),
+        { staleTime: Infinity },
       );
       // if we can't get the contract type, we need to exit
       invariant(cType, "could not get contract type");
@@ -141,6 +147,7 @@ export function useContract<
       const compMetadata = await queryClient.fetchQuery(
         compilerMetadata.cacheKey(contractAddress, activeChainId),
         () => compilerMetadata.fetchQuery(contractAddress, sdk),
+        { staleTime: Infinity },
       );
       // if we can't get the compiler metadata, we need to exit
       invariant(compMetadata, "could not get compiler metadata");

@@ -53,6 +53,7 @@ import { BigNumberish, ethers } from "ethers";
 export class MultiwrapImpl extends StandardErc721<MultiwrapContract> {
   static contractRoles = ["transfer", "minter", "unwrap", "asset"] as const;
 
+  public abi: typeof ABI;
   public encoder: ContractEncoder<MultiwrapContract>;
   public estimator: GasCostEstimator<MultiwrapContract>;
   public metadata: ContractMetadata<
@@ -101,6 +102,7 @@ export class MultiwrapImpl extends StandardErc721<MultiwrapContract> {
     ),
   ) {
     super(contractWrapper, storage);
+    this.abi = abi;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       MultiwrapContractSchema,

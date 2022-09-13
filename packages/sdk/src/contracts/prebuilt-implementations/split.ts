@@ -3,6 +3,7 @@ import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
@@ -35,13 +36,20 @@ import { BigNumber, Contract } from "ethers";
  * @public
  */
 export class SplitImpl implements UpdateableNetwork {
+  static contractRoles = ["admin"] as const;
+
   private contractWrapper: ContractWrapper<SplitContract>;
   private storage: IStorage;
 
+  public abi: typeof ABI;
   public metadata: ContractMetadata<SplitContract, typeof SplitsContractSchema>;
   public encoder: ContractEncoder<SplitContract>;
   public estimator: GasCostEstimator<SplitContract>;
   public events: ContractEvents<SplitContract>;
+  public roles: ContractRoles<
+    SplitContract,
+    typeof SplitImpl.contractRoles[number]
+  >;
   /**
    * @internal
    */
@@ -60,12 +68,17 @@ export class SplitImpl implements UpdateableNetwork {
       options,
     ),
   ) {
+    this.abi = abi;
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       SplitsContractSchema,
       this.storage,
+    );
+    this.roles = new ContractRoles(
+      this.contractWrapper,
+      SplitImpl.contractRoles,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);

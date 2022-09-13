@@ -1,5 +1,5 @@
 import { ALL_ROLES } from "../common/role";
-import { NetworkOrSignerOrProvider } from "../core/types";
+import type { ContractType, NetworkOrSignerOrProvider } from "../core/types";
 import {
   DropErc1155ContractSchema,
   DropErc721ContractSchema,
@@ -214,7 +214,7 @@ export const Split = {
   name: "Split" as const,
   contractType: "split" as const,
   schema: SplitsContractSchema,
-  roles: [] as const,
+  roles: ["admin"] as const,
 
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
@@ -322,3 +322,13 @@ export const CONTRACTS_MAP = {
   ...PREBUILT_CONTRACTS_MAP,
   [SmartContract.contractType]: SmartContract,
 } as const;
+
+/**
+ * @internal
+ */
+export function getContractTypeForRemoteName(name: string): ContractType {
+  return (
+    Object.values(CONTRACTS_MAP).find((contract) => contract.name === name)
+      ?.contractType || "custom"
+  );
+}

@@ -49,6 +49,7 @@ export class VoteImpl implements UpdateableNetwork {
   private contractWrapper: ContractWrapper<VoteERC20>;
   private storage: IStorage;
 
+  public abi: typeof ABI;
   public metadata: ContractMetadata<VoteERC20, typeof VoteContractSchema>;
   public encoder: ContractEncoder<VoteERC20>;
   public estimator: GasCostEstimator<VoteERC20>;
@@ -71,6 +72,7 @@ export class VoteImpl implements UpdateableNetwork {
       options,
     ),
   ) {
+    this.abi = abi;
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.metadata = new ContractMetadata(

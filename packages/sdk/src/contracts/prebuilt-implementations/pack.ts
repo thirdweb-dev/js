@@ -58,6 +58,7 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
 export class PackImpl extends StandardErc1155<PackContract> {
   static contractRoles = ["admin", "minter", "pauser", "transfer"] as const;
 
+  public abi: typeof ABI;
   public metadata: ContractMetadata<PackContract, typeof PackContractSchema>;
   public roles: ContractRoles<
     PackContract,
@@ -105,6 +106,7 @@ export class PackImpl extends StandardErc1155<PackContract> {
     ),
   ) {
     super(contractWrapper, storage);
+    this.abi = abi;
     this.erc1155 = new Erc1155(this.contractWrapper, this.storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
