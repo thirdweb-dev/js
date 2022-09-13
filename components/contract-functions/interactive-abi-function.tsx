@@ -10,13 +10,13 @@ import {
 } from "@chakra-ui/react";
 import { useContractCall } from "@thirdweb-dev/react";
 import { AbiFunction, SmartContract } from "@thirdweb-dev/sdk";
-import { MismatchButton } from "components/buttons/MismatchButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BigNumber, utils } from "ethers";
-import { useId, useMemo } from "react";
+import { useEffect, useId, useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FiPlay } from "react-icons/fi";
 import {
+  Button,
   Card,
   CodeBlock,
   FormHelperText,
@@ -134,7 +134,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
   contract,
 }) => {
   const formId = useId();
-  const { register, control, getValues, handleSubmit } = useForm({
+  const { register, control, getValues, watch, handleSubmit } = useForm({
     defaultValues: {
       params:
         abiFunction?.inputs.map((i) => ({
@@ -164,6 +164,12 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
     error,
     isLoading: mutationLoading,
   } = useContractCall(contract, abiFunction?.name);
+
+  useEffect(() => {
+    if (watch("params").length === 0) {
+      mutate([]);
+    }
+  }, [mutate, watch]);
 
   return (
     <Card
@@ -278,7 +284,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
       <Divider mt="auto" />
       <ButtonGroup ml="auto">
         {isView ? (
-          <MismatchButton
+          <Button
             isDisabled={!abiFunction}
             rightIcon={<Icon as={FiPlay} />}
             colorScheme="primary"
@@ -287,7 +293,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
             form={formId}
           >
             Run
-          </MismatchButton>
+          </Button>
         ) : (
           <TransactionButton
             isDisabled={!abiFunction}
