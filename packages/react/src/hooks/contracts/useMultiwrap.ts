@@ -9,7 +9,7 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * import { useMultiwrap } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const multiwrap = await useMultiwrap("<YOUR-CONTRACT-ADDRESS>")
+ *   const multiwrap = useMultiwrap("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the multiwrap contract in the rest of the component
  *
