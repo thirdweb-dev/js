@@ -6,6 +6,11 @@
 
 ## _MAJOR VERSION CHANGE_
 
+- 85% reduction in package size!
+- Custom contracts are now first class citizens
+
+[Full changelog](https://blog.thirdweb.com/sdk-major-update/)
+
 #### Breaking changes:
 
 1. Getting contracts is now async. This allows dynamically importing contracts and reduces the weight of the SDK significantly.
