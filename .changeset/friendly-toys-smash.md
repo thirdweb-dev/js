@@ -6,6 +6,11 @@
 
 ## _MAJOR VERSION CHANGE_
 
+- 85% reduction in package size!
+- Custom contracts are now first class citizens
+
+Full changelog:
+
 #### Breaking changes:
 
 1. Hooks now accept custom contracts direclty and handle the logic internally
@@ -27,7 +32,25 @@ const { data: nfts} = useNFTs(contract)
 const { mutation: claim } = useClaimNFT(contract)
 ```
 
-2. Web3Button benefits from the new Extension detection API:
+2. Custom contract hooks for reading and writing have been renamed:
+
+before
+
+```javascript
+const { contract } = useContract(...)
+const { data } = useContractData(contract, "myReadFunction", ...args);
+const { mutate: myFunction } = useContractCall(contract, "myWriteFunction");
+```
+
+after
+
+```javascript
+const { contract } = useContract(...)
+const { data } = useContractRead(contract, "myReadFunction", ...args);
+const { mutate: myFunction } = useContractWrite(contract, "myWriteFunction");
+```
+
+3. Web3Button benefits from the new Extension detection API:
 
 before
 
