@@ -209,26 +209,6 @@ export class NFTCollection {
 
   // TODO add options param for initial/maximum supply
   async mintTo(to: string, metadata: NFTMetadataInput) {
-    // const newMint = await PublicKey.createWithSeed(
-    //   this.metaplex.identity().publicKey,
-    //   "thirdweb",
-    //   TOKEN_PROGRAM_ID,
-    // );
-    // const tx = new Transaction().add(
-    //   SystemProgram.createAccountWithSeed({
-    //     fromPubkey: this.metaplex.identity().publicKey, // funder
-    //     newAccountPubkey: newMint,
-    //     basePubkey: this.metaplex.identity().publicKey,
-    //     seed: "thirdweb",
-    //     lamports: 1e8, // 0.1 SOL
-    //     space: 0,
-    //     programId: TOKEN_PROGRAM_ID,
-    //   }),
-    // );
-
-    // const t = await this.metaplex.rpc().sendTransaction(tx);
-    // console.log(t);
-
     const uri = await this.storage.uploadMetadata(metadata);
     const { nft } = await this.metaplex
       .nfts()
