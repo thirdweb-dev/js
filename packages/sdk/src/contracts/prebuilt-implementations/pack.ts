@@ -26,13 +26,14 @@ import { SDKOptions } from "../../schema/sdk-options";
 import {
   PackMetadataInput,
   PackMetadataInputSchema,
-  PackMetadataOutput,
   PackRewards,
   PackRewardsOutput,
+  PackRewardsOutputSchema,
 } from "../../schema/tokens/pack";
 import { QueryAllParams } from "../../types";
 import type { Pack as PackContract } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Pack.json";
+import { PackUpdatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IPack";
 import {
   ITokenBundle,
   PackCreatedEvent,
@@ -348,6 +349,77 @@ export class PackImpl extends StandardErc1155<PackContract> {
   }
 
   /**
+   * Add Pack Contents
+   * @remarks Add contents to an existing pack.
+   * @remarks See {@link Pack.addPackContents}
+   *
+   * @param packId - token Id of the pack to add contents to
+   * @param packContents - the rewards to include in the pack
+   * @example
+   * ```javascript
+   * const packContents = {
+   *   // ERC20 rewards to be included in the pack
+   *   erc20Rewards: [
+   *     {
+   *       assetContract: "0x...",
+   *       quantityPerReward: 5,
+   *       quantity: 100,
+   *       totalRewards: 20,
+   *     }
+   *   ],
+   *   // ERC721 rewards to be included in the pack
+   *   erc721Rewards: [
+   *     {
+   *       assetContract: "0x...",
+   *       tokenId: 0,
+   *     }
+   *   ],
+   *   // ERC1155 rewards to be included in the pack
+   *   erc1155Rewards: [
+   *     {
+   *       assetContract: "0x...",
+   *       tokenId: 0,
+   *       quantityPerReward: 1,
+   *       totalRewards: 100,
+   *     }
+   *   ],
+   * }
+   *
+   * const tx = await contract.addPackContents(packId, packContents);
+   * ```
+   */
+  public async addPackContents(
+    packId: BigNumberish,
+    packContents: PackRewards,
+  ) {
+    const signerAddress = await this.contractWrapper.getSignerAddress();
+    const parsedContents = PackRewardsOutputSchema.parse(packContents);
+    const { contents, numOfRewardUnits } = await this.toPackContentArgs(
+      parsedContents,
+    );
+
+    const receipt = await this.contractWrapper.sendTransaction(
+      "addPackContents",
+      [packId, contents, numOfRewardUnits, signerAddress],
+    );
+
+    const event = this.contractWrapper.parseLogs<PackUpdatedEvent>(
+      "PackUpdated",
+      receipt?.logs,
+    );
+    if (event.length === 0) {
+      throw new Error("PackUpdated event not found");
+    }
+    const id = event[0].args.packId;
+
+    return {
+      id: id,
+      receipt,
+      data: () => this.erc1155.get(id),
+    };
+  }
+
+  /**
    * Create Pack To Wallet
    * @remarks Create a new pack with the given metadata and rewards and mint it to the specified address.
    *
@@ -405,8 +477,14 @@ export class PackImpl extends StandardErc1155<PackContract> {
     );
 
     const parsedMetadata = PackMetadataInputSchema.parse(metadataWithRewards);
+    const { erc20Rewards, erc721Rewards, erc1155Rewards } = parsedMetadata;
+    const rewardsData: PackRewardsOutput = {
+      erc20Rewards,
+      erc721Rewards,
+      erc1155Rewards,
+    };
     const { contents, numOfRewardUnits } = await this.toPackContentArgs(
-      parsedMetadata,
+      rewardsData,
     );
 
     const receipt = await this.contractWrapper.sendTransaction("createPack", [
@@ -515,7 +593,7 @@ export class PackImpl extends StandardErc1155<PackContract> {
    * PRIVATE FUNCTIONS
    *******************************/
 
-  private async toPackContentArgs(metadataWithRewards: PackMetadataOutput) {
+  private async toPackContentArgs(metadataWithRewards: PackRewardsOutput) {
     const contents: ITokenBundle.TokenStruct[] = [];
     const numOfRewardUnits: string[] = [];
     const { erc20Rewards, erc721Rewards, erc1155Rewards } = metadataWithRewards;
