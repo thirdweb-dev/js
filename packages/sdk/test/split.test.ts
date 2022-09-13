@@ -1,4 +1,5 @@
 import { Split, Token } from "../src";
+import { SplitImpl } from "../src/contracts/classes/split";
 import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
@@ -7,7 +8,7 @@ import { ethers } from "ethers";
 global.fetch = require("cross-fetch");
 
 describe("Splits Contract", async () => {
-  let splitsContract: Split;
+  let splitsContract: SplitImpl;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress,

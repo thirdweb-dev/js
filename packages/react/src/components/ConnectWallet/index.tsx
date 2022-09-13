@@ -20,19 +20,17 @@ import { Spinner } from "../shared/Spinner";
 import { ThemeProvider, ThemeProviderProps } from "../shared/ThemeProvider";
 import { fontFamily } from "../theme";
 import { SupportedNetworkSelect } from "./NetworkSelect";
+import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
+import { FiChevronDown } from "@react-icons/all-files/fi/FiChevronDown";
+import { FiCopy } from "@react-icons/all-files/fi/FiCopy";
+import { FiLock } from "@react-icons/all-files/fi/FiLock";
+import { FiShuffle } from "@react-icons/all-files/fi/FiShuffle";
+import { FiWifi } from "@react-icons/all-files/fi/FiWifi";
+import { FiXCircle } from "@react-icons/all-files/fi/FiXCircle";
 import { ChainId, LoginOptions, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import * as menu from "@zag-js/menu";
 import { normalizeProps, useMachine } from "@zag-js/react";
 import React, { useId, useMemo } from "react";
-import {
-  FiCheck,
-  FiChevronDown,
-  FiCopy,
-  FiLock,
-  FiShuffle,
-  FiWifi,
-  FiXCircle,
-} from "react-icons/fi";
 import { Connector } from "wagmi";
 
 const SUPPORTED_CONNECTORS = [

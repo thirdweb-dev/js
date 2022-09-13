@@ -36,7 +36,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
   program
     .name("thirdweb-cli")
     .description("Official thirdweb command line interface")
-    .version(cliVersion, "-v, --version", "output the current version");
+    .version(cliVersion, "-v, --version");
 
   program
     .command("detect")

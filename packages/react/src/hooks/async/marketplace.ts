@@ -8,13 +8,14 @@ import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useAddress } from "../useAddress";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type {
-  Marketplace,
+  AuctionListing,
+  DirectListing,
   MarketplaceFilter,
   NewAuctionListing,
   NewDirectListing,
 } from "@thirdweb-dev/sdk";
-// eslint-disable-next-line no-duplicate-imports
 import { ListingType } from "@thirdweb-dev/sdk";
+import { MarketplaceImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/marketplace";
 import { BigNumber, BigNumberish } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -36,7 +37,7 @@ import invariant from "tiny-invariant";
  * @beta
  */
 export function useListing(
-  contract: RequiredParam<Marketplace>,
+  contract: RequiredParam<MarketplaceImpl>,
   listingId: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
@@ -47,7 +48,7 @@ export function useListing(
       return contract.getListing(BigNumber.from(listingId || 0));
     },
     {
-      enabled: !!contract || !contractAddress,
+      enabled: !!contract,
       keepPreviousData: true,
     },
   );
@@ -67,7 +68,7 @@ export function useListing(
  * @beta
  */
 export function useListings(
-  contract: RequiredParam<Marketplace>,
+  contract: RequiredParam<MarketplaceImpl>,
   filter?: MarketplaceFilter,
 ) {
   const contractAddress = contract?.getAddress();
@@ -78,8 +79,34 @@ export function useListings(
       return contract.getAllListings(filter);
     },
     {
-      enabled: !!contract || !contractAddress,
+      enabled: !!contract,
       keepPreviousData: true,
+    },
+  );
+}
+
+/**
+ * Use this to get a count of all listings on your marketplace contract.
+ *
+ * @example
+ * ```javascript
+ * const { data: listings, isLoading, error } = useListings(<YourMarketplaceContractInstance>);
+ * ```
+ *
+ * @param contract - an instance of a marketplace contract
+ * @returns a response object that includes an array of listings
+ * @beta
+ */
+export function useListingsCount(contract: RequiredParam<MarketplaceImpl>) {
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.marketplace.getTotalCount(contractAddress),
+    () => {
+      invariant(contract, "No Contract instance provided");
+      return contract.getTotalCount();
+    },
+    {
+      enabled: !!contract,
     },
   );
 }
@@ -98,7 +125,7 @@ export function useListings(
  * @beta
  */
 export function useActiveListings(
-  contract: RequiredParam<Marketplace>,
+  contract: RequiredParam<MarketplaceImpl>,
   filter?: MarketplaceFilter,
 ) {
   const contractAddress = contract?.getAddress();
@@ -110,7 +137,7 @@ export function useActiveListings(
       return contract.getActiveListings(filter);
     },
     {
-      enabled: !!contract || !contractAddress,
+      enabled: !!contract,
       keepPreviousData: true,
     },
   );
@@ -130,7 +157,7 @@ export function useActiveListings(
  * @beta
  */
 export function useWinningBid(
-  contract: RequiredParam<Marketplace>,
+  contract: RequiredParam<MarketplaceImpl>,
   listingId: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
@@ -163,7 +190,7 @@ export function useWinningBid(
  * @beta
  */
 export function useAuctionWinner(
-  contract: RequiredParam<Marketplace>,
+  contract: RequiredParam<MarketplaceImpl>,
   listingId: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
@@ -205,7 +232,7 @@ export function useAuctionWinner(
  * @returns a response object that includes an array of listings
  * @beta
  */
-export function useBidBuffer(contract: RequiredParam<Marketplace>) {
+export function useBidBuffer(contract: RequiredParam<MarketplaceImpl>) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.marketplace.getBidBufferBps(contractAddress),
@@ -254,7 +281,9 @@ export function useBidBuffer(contract: RequiredParam<Marketplace>) {
  * @returns a mutation object that can be used to create a new direct listing
  * @beta
  */
-export function useCreateDirectListing(contract: RequiredParam<Marketplace>) {
+export function useCreateDirectListing(
+  contract: RequiredParam<MarketplaceImpl>,
+) {
   const activeChainId = useActiveChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
@@ -310,7 +339,9 @@ export function useCreateDirectListing(contract: RequiredParam<Marketplace>) {
  * @returns a mutation object that can be used to create a new auction listing
  * @beta
  */
-export function useCreateAuctionListing(contract: RequiredParam<Marketplace>) {
+export function useCreateAuctionListing(
+  contract: RequiredParam<MarketplaceImpl>,
+) {
   const activeChainId = useActiveChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
@@ -323,6 +354,60 @@ export function useCreateAuctionListing(contract: RequiredParam<Marketplace>) {
         "contract does not support auction.createListing",
       );
       return await contract.auction.createListing(data);
+    },
+    {
+      onSettled: () =>
+        invalidateContractAndBalances(
+          queryClient,
+          contractAddress,
+          activeChainId,
+        ),
+    },
+  );
+}
+
+/**
+ * Use this to cancel a listing on your marketplace contract.
+ *
+ * @example
+ * ```jsx
+ * const Component = () => {
+ *   const {
+ *     mutate: cancelListing,
+ *     isLoading,
+ *     error,
+ *   } = useCancelListing(">>YourMarketplaceContractInstance<<");
+ *
+ *   if (error) {
+ *     console.error("failed to cancel auction listing", error);
+ *   }
+ *
+ *   return (
+ *     <button
+ *       disabled={isLoading}
+ *       onClick={() => cancelListing()}
+ *     >
+ *       Create Auction Listing!
+ *     </button>
+ *   );
+ * };
+ * ```
+ *
+ * @param contract - an instance of a Marketplace contract
+ * @returns a mutation object that can be used to create a new auction listing
+ * @beta
+ */
+export function useCancelListing(contract: RequiredParam<MarketplaceImpl>) {
+  const activeChainId = useActiveChainId();
+  const contractAddress = contract?.getAddress();
+  const queryClient = useQueryClient();
+  return useMutation(
+    async (data: Pick<AuctionListing | DirectListing, "type" | "id">) => {
+      if (data.type === ListingType.Auction) {
+        return await contract?.auction.cancelListing(data.id);
+      } else {
+        return await contract?.direct.cancelListing(data.id);
+      }
     },
     {
       onSettled: () =>
@@ -366,7 +451,7 @@ export function useCreateAuctionListing(contract: RequiredParam<Marketplace>) {
  * @returns a mutation object that can be used to make a bid on an auction listing
  * @beta
  */
-export function useMakeBid(contract: RequiredParam<Marketplace>) {
+export function useMakeBid(contract: RequiredParam<MarketplaceImpl>) {
   const activeChainId = useActiveChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
@@ -422,7 +507,7 @@ export function useMakeBid(contract: RequiredParam<Marketplace>) {
  * @returns a mutation object that can be used to buy out an auction listing
  * @beta
  */
-export function useBuyNow(contract: RequiredParam<Marketplace>) {
+export function useBuyNow(contract: RequiredParam<MarketplaceImpl>) {
   const activeChainId = useActiveChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();

@@ -3,11 +3,11 @@ import { FEATURE_NFT_CLAIMABLE } from "../../constants/erc721-features";
 import { NFTMetadataOwner } from "../../schema";
 import { ClaimOptions } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { TransactionResult, TransactionResultWithId } from "../types";
+import { TransactionResultWithId } from "../types";
 import { TransactionTask } from "./TransactionTask";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc721 } from "./erc-721";
-import { IClaimableERC721 } from "@thirdweb-dev/contracts-js";
+import type { IClaimableERC721 } from "@thirdweb-dev/contracts-js";
 import { TokensClaimedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IClaimableERC721";
 import { BigNumber, BigNumberish, CallOverrides } from "ethers";
 

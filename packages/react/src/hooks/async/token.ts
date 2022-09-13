@@ -87,9 +87,7 @@ export function useTokenBalance(
  * @returns a response object that includes the decimals of the ERC20 token
  * @beta
  */
-export function useTokenDecimals(
-  contract: RequiredParam<Erc20>,
-) {
+export function useTokenDecimals(contract: RequiredParam<Erc20>) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.token.decimals(contractAddress),

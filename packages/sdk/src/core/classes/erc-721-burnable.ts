@@ -2,7 +2,7 @@ import { FEATURE_NFT_BURNABLE } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { IBurnableERC721 } from "@thirdweb-dev/contracts-js";
+import type { IBurnableERC721 } from "@thirdweb-dev/contracts-js";
 import { BigNumberish } from "ethers";
 
 export class Erc721Burnable implements DetectableFeature {

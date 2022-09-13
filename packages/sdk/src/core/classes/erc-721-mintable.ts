@@ -7,7 +7,7 @@ import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc721 } from "./erc-721";
 import { Erc721BatchMintable } from "./erc-721-batch-mintable";
-import { IMintableERC721, IMulticall } from "@thirdweb-dev/contracts-js";
+import type { IMintableERC721, IMulticall } from "@thirdweb-dev/contracts-js";
 import { TransferEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ITokenERC721";
 import { IStorage } from "@thirdweb-dev/storage";
 

@@ -23,6 +23,10 @@
     "dist/"
   ],
   "scripts": {
+    "format": "prettier --write 'src/**/*'",
+    "lint": "eslint src/",
+    "fix": "eslint src/ --fix",
+    "clean": "rm -rf dist/",
     "typechain": "rm -rf ./src && typechain --target ethers-v5 --out-dir src '../../node_modules/@thirdweb-dev/contracts/abi/*.json'",
     "extract-abi": "node ./scripts/extract-abis.mjs",
     "build": "yarn typechain && tsc && yarn preconstruct build && yarn extract-abi"

@@ -9,7 +9,7 @@ import { Amount, CurrencyValue } from "../../types";
 import { ContractWrapper } from "../classes/contract-wrapper";
 import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
-import { IERC20 } from "@thirdweb-dev/contracts-js";
+import type { IERC20 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { ethers, BigNumber, providers } from "ethers";
 import invariant from "tiny-invariant";

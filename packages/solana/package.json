@@ -8,6 +8,10 @@
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
   "scripts": {
+    "format": "prettier --write 'src/**/*'",
+    "lint": "eslint src/",
+    "fix": "eslint src/ --fix",
+    "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
     "node:start": "DEBUG='amman:(info|error|debug)' amman start",
     "node:stop": "amman stop",

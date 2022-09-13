@@ -2,47 +2,45 @@ import {
   fetchCurrencyMetadata,
   hasERC20Allowance,
   normalizePriceValue,
-} from "../common/currency";
-import { isTokenApprovedForTransfer } from "../common/marketplace";
-import { uploadOrExtractURI } from "../common/nft";
-import { getRoleHash } from "../common/role";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractRoles } from "../core/classes/contract-roles";
-import { ContractRoyalty } from "../core/classes/contract-royalty";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { Erc1155 } from "../core/classes/erc-1155";
-import { StandardErc1155 } from "../core/classes/erc-1155-standard";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { UpdateableNetwork } from "../core/interfaces/contract";
+} from "../../common/currency";
+import { isTokenApprovedForTransfer } from "../../common/marketplace";
+import { uploadOrExtractURI } from "../../common/nft";
+import { getRoleHash } from "../../common/role";
+import { ContractEncoder } from "../../core/classes/contract-encoder";
+import { ContractEvents } from "../../core/classes/contract-events";
+import { ContractInterceptor } from "../../core/classes/contract-interceptor";
+import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractRoles } from "../../core/classes/contract-roles";
+import { ContractRoyalty } from "../../core/classes/contract-royalty";
+import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { Erc1155 } from "../../core/classes/erc-1155";
+import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
+import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import {
   NetworkOrSignerOrProvider,
   TransactionResultWithId,
-} from "../core/types";
-import { EditionMetadata, EditionMetadataOwner } from "../schema";
-import { PackContractSchema } from "../schema/contracts/packs";
-import { SDKOptions } from "../schema/sdk-options";
+} from "../../core/types";
+import { EditionMetadata, EditionMetadataOwner } from "../../schema";
+import { PackContractSchema } from "../../schema/contracts/packs";
+import { SDKOptions } from "../../schema/sdk-options";
 import {
   PackMetadataInput,
   PackMetadataInputSchema,
-  PackMetadataOutput,
   PackRewards,
   PackRewardsOutput,
   PackRewardsOutputSchema,
-} from "../schema/tokens/pack";
-import { QueryAllParams } from "../types";
-import { Pack as PackContract } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/dist/abis/Pack.json";
+} from "../../schema/tokens/pack";
+import { QueryAllParams } from "../../types";
+import type { Pack as PackContract } from "@thirdweb-dev/contracts-js";
+import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Pack.json";
+import { PackUpdatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IPack";
 import {
   ITokenBundle,
   PackCreatedEvent,
   PackOpenedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/Pack";
 import { IStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, ethers } from "ethers";
-import { PackUpdatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IPack";
+import { BigNumber, BigNumberish, CallOverrides, ethers } from "ethers";
 
 /**
  * Create lootboxes of NFTs with rarity based open mechanics.
@@ -58,17 +56,15 @@ import { PackUpdatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/s
  *
  * @public
  */
-export class Pack extends StandardErc1155<PackContract> {
-  static contractType = "pack" as const;
+export class PackImpl extends StandardErc1155<PackContract> {
   static contractRoles = ["admin", "minter", "pauser", "transfer"] as const;
-  static contractAbi = ABI as any;
-  /**
-   * @internal
-   */
-  static schema = PackContractSchema;
 
-  public metadata: ContractMetadata<PackContract, typeof Pack.schema>;
-  public roles: ContractRoles<PackContract, typeof Pack.contractRoles[number]>;
+  public abi: typeof ABI;
+  public metadata: ContractMetadata<PackContract, typeof PackContractSchema>;
+  public roles: ContractRoles<
+    PackContract,
+    typeof PackImpl.contractRoles[number]
+  >;
   public encoder: ContractEncoder<PackContract>;
   public events: ContractEvents<PackContract>;
   public estimator: GasCostEstimator<PackContract>;
@@ -89,7 +85,7 @@ export class Pack extends StandardErc1155<PackContract> {
    * });
    * ```
    */
-  public royalties: ContractRoyalty<PackContract, typeof Pack.schema>;
+  public royalties: ContractRoyalty<PackContract, typeof PackContractSchema>;
   /**
    * @internal
    */
@@ -102,21 +98,26 @@ export class Pack extends StandardErc1155<PackContract> {
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
+    abi: typeof ABI,
     contractWrapper = new ContractWrapper<PackContract>(
       network,
       address,
-      Pack.contractAbi,
+      abi,
       options,
     ),
   ) {
     super(contractWrapper, storage);
+    this.abi = abi;
     this.erc1155 = new Erc1155(this.contractWrapper, this.storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      Pack.schema,
+      PackContractSchema,
       this.storage,
     );
-    this.roles = new ContractRoles(this.contractWrapper, Pack.contractRoles);
+    this.roles = new ContractRoles(
+      this.contractWrapper,
+      PackImpl.contractRoles,
+    );
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
@@ -387,19 +388,20 @@ export class Pack extends StandardErc1155<PackContract> {
    * const tx = await contract.addPackContents(packId, packContents);
    * ```
    */
-  public async addPackContents(packId: BigNumberish, packContents: PackRewards) {
+  public async addPackContents(
+    packId: BigNumberish,
+    packContents: PackRewards,
+  ) {
     const signerAddress = await this.contractWrapper.getSignerAddress();
     const parsedContents = PackRewardsOutputSchema.parse(packContents);
     const { contents, numOfRewardUnits } = await this.toPackContentArgs(
       parsedContents,
     );
 
-    const receipt = await this.contractWrapper.sendTransaction("addPackContents", [
-      packId,
-      contents,
-      numOfRewardUnits,
-      signerAddress,
-    ]);
+    const receipt = await this.contractWrapper.sendTransaction(
+      "addPackContents",
+      [packId, contents, numOfRewardUnits, signerAddress],
+    );
 
     const event = this.contractWrapper.parseLogs<PackUpdatedEvent>(
       "PackUpdated",
@@ -476,7 +478,11 @@ export class Pack extends StandardErc1155<PackContract> {
 
     const parsedMetadata = PackMetadataInputSchema.parse(metadataWithRewards);
     const { erc20Rewards, erc721Rewards, erc1155Rewards } = parsedMetadata;
-    const rewardsData: PackRewardsOutput = { erc20Rewards, erc721Rewards, erc1155Rewards }; 
+    const rewardsData: PackRewardsOutput = {
+      erc20Rewards,
+      erc721Rewards,
+      erc1155Rewards,
+    };
     const { contents, numOfRewardUnits } = await this.toPackContentArgs(
       rewardsData,
     );
@@ -691,5 +697,15 @@ export class Pack extends StandardErc1155<PackContract> {
       contents,
       numOfRewardUnits,
     };
+  }
+
+  /**
+   * @internal
+   */
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    return this.contractWrapper.call(functionName, ...args);
   }
 }
