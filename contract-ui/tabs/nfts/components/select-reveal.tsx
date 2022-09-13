@@ -23,11 +23,7 @@ import {
   useDelayedRevealLazyMint,
   useLazyMint,
 } from "@thirdweb-dev/react";
-import {
-  EditionDrop,
-  NFTMetadataInput,
-  UploadProgressEvent,
-} from "@thirdweb-dev/sdk";
+import { NFTMetadataInput, UploadProgressEvent } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { detectFeatures } from "components/contract-components/utils";
 import { FileInput } from "components/shared/FileInput";
@@ -115,7 +111,7 @@ const SelectOption: React.FC<SelectOptionProps> = ({
 };
 
 interface SelectRevealProps {
-  contract: DropContract;
+  contract?: DropContract;
   mergedData: NFTMetadataInput[];
   onClose: () => void;
 }
@@ -213,7 +209,7 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
               You&apos;re ready to go! Now you can upload the files, we will be
               uploading each file to IPFS so it might take a while.
             </Text>
-            {contract instanceof EditionDrop ? null : (
+            {contract && "erc1155" in contract ? null : (
               <Flex alignItems="center" gap={3}>
                 <Checkbox {...register("shuffle")} />
                 <Flex gap={1}>

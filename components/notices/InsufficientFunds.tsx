@@ -1,7 +1,12 @@
 import { FAUCETS, useWeb3 } from "@3rdweb-sdk/react";
 import { ButtonGroup, Container, Icon, Stack } from "@chakra-ui/react";
 import { AiOutlineWarning } from "@react-icons/all-files/ai/AiOutlineWarning";
-import { useBalance, useNetworkMismatch } from "@thirdweb-dev/react";
+import {
+  useAddress,
+  useBalance,
+  useChainId,
+  useNetworkMismatch,
+} from "@thirdweb-dev/react";
 import { BigNumber } from "ethers";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -10,7 +15,9 @@ import { Button, Card, Heading, LinkButton, Text } from "tw-components";
 export const InsufficientFunds: React.FC = () => {
   const router = useRouter();
   const mismatchExists = useNetworkMismatch();
-  const { address, chainId, getNetworkMetadata } = useWeb3();
+  const address = useAddress();
+  const chainId = useChainId();
+  const { getNetworkMetadata } = useWeb3();
   const balanceQuery = useBalance();
   const [dismissed, setDismissed] = useState(false);
   const [delayExpired, setDelayExpired] = useState(false);

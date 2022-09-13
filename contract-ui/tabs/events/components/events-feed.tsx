@@ -15,6 +15,7 @@ import {
   List,
   Select,
   SimpleGrid,
+  Spinner,
   Stack,
   Switch,
   Tooltip,
@@ -50,7 +51,7 @@ interface EventsFeedProps {
 
 export const EventsFeed: React.FC<EventsFeedProps> = ({ contractAddress }) => {
   const [autoUpdate, setAutoUpdate] = useState(true);
-  const activityQuery = useActivity(contractAddress, autoUpdate);
+  const allEvents = useActivity(contractAddress, autoUpdate);
   const event = useSingleQueryParam("event");
   const [selectedEvent, setSelectedEvent] = useState(event || "all");
 
@@ -59,35 +60,33 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contractAddress }) => {
 
   const eventTypes = useMemo(
     () =>
-      activityQuery?.data
-        ? Array.from(
-            new Set([
-              ...activityQuery.data.flatMap(({ events }) =>
-                events.map(({ eventName }) => eventName),
-              ),
-            ]),
-          )
-        : [],
-    [activityQuery],
+      Array.from(
+        new Set([
+          ...allEvents.flatMap(({ events }) =>
+            events.map(({ eventName }) => eventName),
+          ),
+        ]),
+      ),
+    [allEvents],
   );
 
   const filteredEvents = useMemo(
     () =>
-      activityQuery?.data
-        ? selectedEvent === "all"
-          ? activityQuery.data
-          : activityQuery.data.filter(({ events }) =>
-              events.some(({ eventName }) => eventName === selectedEvent),
-            )
-        : [],
-    [activityQuery, selectedEvent],
+      selectedEvent === "all"
+        ? allEvents
+        : allEvents.filter(({ events }) =>
+            events.some(({ eventName }) => eventName === selectedEvent),
+          ),
+    [allEvents, selectedEvent],
   );
 
   return (
     <Flex gap={6} flexDirection="column">
       <Flex align="center" justify="space-between" w="full">
         <Flex gap={4} alignItems="center">
-          <Heading size="title.sm">Latest Transactions</Heading>
+          <Heading flexShrink={0} size="title.sm">
+            Latest Transactions
+          </Heading>
           <Select
             w="50%"
             value={selectedEvent}
@@ -123,7 +122,7 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contractAddress }) => {
           </FormControl>
         </Box>
       </Flex>
-      {activityQuery.data && contractAddress && (
+      {contractAddress && (
         <Card p={0} overflow="hidden">
           <SimpleGrid
             gap={2}
@@ -146,6 +145,16 @@ export const EventsFeed: React.FC<EventsFeedProps> = ({ contractAddress }) => {
           </SimpleGrid>
 
           <List overflow="auto">
+            {filteredEvents.length === 0 && (
+              <Center py={4}>
+                <Flex align="center" gap={2}>
+                  {autoUpdate && <Spinner size="sm" speed="0.69s" />}
+                  <Text size="body.md" fontStyle="italic">
+                    {autoUpdate ? "listening for events" : "no events to show"}
+                  </Text>
+                </Flex>
+              </Center>
+            )}
             <Accordion
               as={AnimatePresence}
               initial={false}

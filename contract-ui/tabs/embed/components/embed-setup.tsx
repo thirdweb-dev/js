@@ -13,11 +13,7 @@ import {
   useClipboard,
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
-import {
-  ContractType,
-  SmartContract,
-  ValidContractInstance,
-} from "@thirdweb-dev/sdk";
+import { ContractType, ValidContractInstance } from "@thirdweb-dev/sdk";
 import { useState } from "react";
 import { FiCopy } from "react-icons/fi";
 import {
@@ -30,8 +26,8 @@ import {
 } from "tw-components";
 
 interface EmbedSetupProps {
-  contract?: SmartContract | null;
-  contractType?: string;
+  contract?: ValidContractInstance | null;
+  contractType?: string | null;
 }
 
 const IPFS_URI = "ipfs://Qma5FgmS9s3hkQrURfG4XDnh5Dxp9Fx9ZjBYkPFUNdQwfi";

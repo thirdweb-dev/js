@@ -7,11 +7,9 @@ import {
 } from "@thirdweb-dev/react";
 import {
   CommonPrimarySaleSchema,
-  SmartContract,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { PotentialContractInstance } from "contract-ui/types/types";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect } from "react";
@@ -25,16 +23,12 @@ import {
 } from "tw-components";
 import { z } from "zod";
 
-export const SettingsPrimarySale = <
-  TContract extends PotentialContractInstance,
->({
-  contract,
-}: {
-  contract: TContract;
-}) => {
+export const SettingsPrimarySale: React.FC<{
+  contract?: ValidContractInstance;
+}> = ({ contract }) => {
   const trackEvent = useTrack();
-  const query = usePrimarySaleRecipient(contract as SmartContract);
-  const mutation = useUpdatePrimarySaleRecipient(contract as SmartContract);
+  const query = usePrimarySaleRecipient(contract);
+  const mutation = useUpdatePrimarySaleRecipient(contract);
   const { handleSubmit, getFieldState, formState, register, reset } = useForm<
     z.input<typeof CommonPrimarySaleSchema>
   >({

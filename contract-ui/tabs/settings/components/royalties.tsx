@@ -5,14 +5,9 @@ import {
   useRoyaltySettings,
   useUpdateRoyaltySettings,
 } from "@thirdweb-dev/react";
-import {
-  CommonRoyaltySchema,
-  SmartContract,
-  ValidContractInstance,
-} from "@thirdweb-dev/sdk";
+import { CommonRoyaltySchema, ValidContractInstance } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
-import { PotentialContractInstance } from "contract-ui/types/types";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect } from "react";
@@ -26,14 +21,12 @@ import {
 } from "tw-components";
 import { z } from "zod";
 
-export const SettingsRoyalties = <TContract extends PotentialContractInstance>({
-  contract,
-}: {
-  contract: TContract;
-}) => {
+export const SettingsRoyalties: React.FC<{
+  contract?: ValidContractInstance;
+}> = ({ contract }) => {
   const trackEvent = useTrack();
-  const query = useRoyaltySettings(contract as SmartContract);
-  const mutation = useUpdateRoyaltySettings(contract as SmartContract);
+  const query = useRoyaltySettings(contract);
+  const mutation = useUpdateRoyaltySettings(contract);
   const {
     handleSubmit,
     getFieldState,

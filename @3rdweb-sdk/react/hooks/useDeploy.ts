@@ -1,18 +1,23 @@
 import { useMutationWithInvalidate } from "./query/useQueryWithNetwork";
 import { contractKeys } from "@3rdweb-sdk/react";
 import { useSDK } from "@thirdweb-dev/react";
-import { ValidContractClass } from "@thirdweb-dev/sdk";
+import {
+  DeploySchemaForPrebuiltContractType,
+  PrebuiltContractType,
+} from "@thirdweb-dev/sdk";
 import { AnalyticsEvents } from "constants/analytics";
 import posthog from "posthog-js";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 
-export function useDeploy<TContract extends ValidContractClass>(
-  contractType?: TContract["contractType"],
+export function useDeploy<TContractType extends PrebuiltContractType>(
+  contractType?: TContractType,
 ) {
   const sdk = useSDK();
   return useMutationWithInvalidate(
-    async (metadata: z.input<TContract["schema"]["deploy"]>) => {
+    async (
+      metadata: z.input<DeploySchemaForPrebuiltContractType<TContractType>>,
+    ) => {
       invariant(
         sdk,
         `[Contract:deploy] - attempting to deploy ${contractType} contract without an active sdk`,

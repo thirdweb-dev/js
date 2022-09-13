@@ -1,7 +1,7 @@
 import { PermissionEditor } from "./permissions-editor";
 import { useIsAdmin } from "@3rdweb-sdk/react";
 import { Flex, Icon, Select, Spinner, Stack } from "@chakra-ui/react";
-import { SmartContract, ValidContractInstance } from "@thirdweb-dev/sdk";
+import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { constants } from "ethers";
 import { useFormContext } from "react-hook-form";
 import { FiInfo } from "react-icons/fi";
@@ -12,7 +12,7 @@ interface ContractPermissionProps {
   description: string;
   isLoading: boolean;
   isPrebuilt: boolean;
-  contract: ValidContractInstance | SmartContract;
+  contract: ValidContractInstance;
 }
 
 export const ContractPermission: React.FC<ContractPermissionProps> = ({

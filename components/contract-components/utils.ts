@@ -1,7 +1,6 @@
 import { Abi, ContractId } from "./types";
 import {
-  KNOWN_CONTRACTS_MAP,
-  SmartContract,
+  PREBUILT_CONTRACTS_MAP,
   ValidContractInstance,
   isFeatureEnabled,
 } from "@thirdweb-dev/sdk";
@@ -9,21 +8,18 @@ import { FeatureName } from "@thirdweb-dev/sdk/dist/declarations/src/constants/c
 
 export function isContractIdBuiltInContract(
   contractId: ContractId,
-): contractId is keyof typeof KNOWN_CONTRACTS_MAP {
-  return contractId in KNOWN_CONTRACTS_MAP;
+): contractId is keyof typeof PREBUILT_CONTRACTS_MAP {
+  return contractId in PREBUILT_CONTRACTS_MAP;
 }
 
-export function detectFeatures<
-  TContract extends SmartContract | ValidContractInstance | null,
->(
-  contract: SmartContract | ValidContractInstance | null,
+export function detectFeatures<TContract extends ValidContractInstance | null>(
+  contract: ValidContractInstance | null | undefined,
   features: FeatureName[],
   strategy: "any" | "all" = "any",
 ): contract is TContract {
   if (!contract) {
     return false;
   }
-
   if (!("abi" in contract)) {
     return false;
   }

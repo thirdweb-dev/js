@@ -58,7 +58,7 @@ import * as z from "zod";
 import { ZodError } from "zod";
 
 interface ClaimConditionsProps {
-  contract: DropContract;
+  contract?: DropContract;
   tokenId?: string;
   isColumn?: true;
 }

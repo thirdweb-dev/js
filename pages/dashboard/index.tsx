@@ -37,9 +37,10 @@ import {
   ChainId,
   CommonContractOutputSchema,
   ContractType,
+  PrebuiltContractType,
   SUPPORTED_CHAIN_ID,
   SUPPORTED_CHAIN_IDS,
-  ValidContractClass,
+  SchemaForPrebuiltContractType,
 } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
@@ -47,11 +48,7 @@ import { useReleasesFromDeploy } from "components/contract-components/hooks";
 import { NoWallet } from "components/contract-components/shared/no-wallet";
 import { DeployedContracts } from "components/contract-components/tables/deployed-contracts";
 import { ReleasedContracts } from "components/contract-components/tables/released-contracts";
-import {
-  CONTRACT_TYPE_NAME_MAP,
-  FeatureIconMap,
-  UrlMap,
-} from "constants/mappings";
+import { CONTRACT_TYPE_NAME_MAP, FeatureIconMap } from "constants/mappings";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { utils } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -519,9 +516,7 @@ export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
                 onClick={() => {
                   const href = `/${getNetworkFromChainId(
                     row.original.chainId as SUPPORTED_CHAIN_ID,
-                  )}${UrlMap[row.original.contractType]}/${
-                    row.original.address
-                  }`;
+                  )}/${row.original.address}`;
 
                   router.push(href);
                 }}
@@ -554,9 +549,11 @@ export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
 interface AsyncContractTypeCellProps {
   cell: {
     address: string;
-    chainId: ChainId;
+    chainId: SUPPORTED_CHAIN_ID;
     contractType: ContractType;
-    metadata: () => Promise<z.output<ValidContractClass["schema"]["output"]>>;
+    metadata: () => Promise<
+      z.infer<SchemaForPrebuiltContractType<PrebuiltContractType>["output"]>
+    >;
   };
 }
 
@@ -636,9 +633,11 @@ const AsyncContractTypeCell: React.FC<AsyncContractTypeCellProps> = ({
 interface AsyncContractNameCellProps {
   cell: {
     address: string;
-    chainId: ChainId;
+    chainId: SUPPORTED_CHAIN_ID;
     contractType: ContractType;
-    metadata: () => Promise<z.output<ValidContractClass["schema"]["output"]>>;
+    metadata: () => Promise<
+      z.infer<SchemaForPrebuiltContractType<PrebuiltContractType>["output"]>
+    >;
   };
 }
 
@@ -651,9 +650,9 @@ const AsyncContractNameCell: React.FC<AsyncContractNameCellProps> = ({
     cell.chainId,
   );
 
-  const href = `/${getNetworkFromChainId(cell.chainId as SUPPORTED_CHAIN_ID)}${
-    UrlMap[cell.contractType]
-  }/${cell.address}`;
+  const href = `/${getNetworkFromChainId(cell.chainId as SUPPORTED_CHAIN_ID)}/${
+    cell.address
+  }`;
 
   return (
     <Skeleton isLoaded={!metadataQuery.isLoading}>

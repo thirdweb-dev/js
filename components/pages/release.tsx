@@ -7,7 +7,7 @@ import {
   SimpleGrid,
   Skeleton,
 } from "@chakra-ui/react";
-import { REMOTE_CONTRACT_TO_CONTRACT_TYPE } from "@thirdweb-dev/sdk";
+import { PREBUILT_CONTRACTS_MAP } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
 import { StorageSingleton } from "components/app-layouts/providers";
 import { DeployFormDrawer } from "components/contract-components/contract-deploy-form/drawer";
@@ -53,9 +53,9 @@ export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
   // If this release is released by us and is a prebuilt contract we know about, open the custom deploy form
   const prebuiltContractName =
     release?.releaser === THIRDWEB_DEPLOYER_ADDRESS
-      ? REMOTE_CONTRACT_TO_CONTRACT_TYPE[
-          contractName as keyof typeof REMOTE_CONTRACT_TO_CONTRACT_TYPE
-        ]
+      ? Object.values(PREBUILT_CONTRACTS_MAP).find(
+          (value) => value.name === contractName,
+        )?.contractType
       : undefined;
 
   const deployContractId =

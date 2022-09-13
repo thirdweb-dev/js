@@ -1,10 +1,7 @@
 import { Abi, ContractId } from "./types";
 import { isContractIdBuiltInContract } from "./utils";
 import { contractKeys, networkKeys } from "@3rdweb-sdk/react";
-import {
-  useMutationWithInvalidate,
-  useQueryWithNetwork,
-} from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
+import { useMutationWithInvalidate } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   useActiveChainId,
@@ -20,8 +17,8 @@ import {
   ProfileMetadata,
   PublishedContract,
   SUPPORTED_CHAIN_ID,
-  SmartContract,
   ThirdwebSDK,
+  ValidContractInstance,
   detectFeatures,
   extractConstructorParamsFromAbi,
   extractEventsFromAbi,
@@ -612,41 +609,10 @@ export const ens = {
   useQuery: useEns,
   fetch: fetchEns,
 };
-
-export function useContractEvents(contract: SmartContract | null) {
-  const sdk = useSDK();
-  const activeChainId = useActiveChainId();
-  return useQueryWithNetwork(
-    ["contract-events", contract?.getAddress(), activeChainId],
-    async () => {
-      if (contract instanceof SmartContract) {
-        return contract.publishedMetadata.extractEvents();
-      }
-      return null;
-    },
-    {
-      enabled: !!contract?.getAddress() || !!sdk,
-      // functions are based on publish metadata (abi), so this is immutable
-      staleTime: Infinity,
-    },
-  );
-}
-
-export function useContractFunctions(contract: SmartContract | null) {
-  const sdk = useSDK();
-  const activeChainId = useActiveChainId();
-  return useQueryWithNetwork(
-    ["contract-functions", contract?.getAddress(), activeChainId],
-    async () => {
-      if (contract instanceof SmartContract) {
-        return contract.publishedMetadata.extractFunctions();
-      }
-      return null;
-    },
-    {
-      enabled: !!contract?.getAddress() || !!sdk,
-      // functions are based on publish metadata (abi), so this is immutable
-      staleTime: Infinity,
-    },
-  );
+export function useContractFunctions(
+  contract: ValidContractInstance | null | undefined,
+) {
+  return contract?.abi
+    ? extractFunctionsFromAbi(contract.abi as any)
+    : undefined;
 }

@@ -1,6 +1,6 @@
 import { CodeOverview } from "./components/code-overview";
 import { Flex } from "@chakra-ui/react";
-import { useContract } from "@thirdweb-dev/react";
+import { useContract, useContractType } from "@thirdweb-dev/react";
 import { ContractCode } from "components/contract-tabs/code/ContractCode";
 
 interface ContractCodePageProps {
@@ -11,14 +11,14 @@ export const ContractCodePage: React.FC<ContractCodePageProps> = ({
   contractAddress,
 }) => {
   const contractQuery = useContract(contractAddress);
-  const contractType = contractQuery.data?.contractType;
+  const { data: contractType, isLoading } = useContractType(contractAddress);
 
   const useCustomCodeTab =
     contractType === "custom" ||
     contractType === "multiwrap" ||
     contractType === "pack";
 
-  if (contractQuery.isLoading) {
+  if (contractQuery.isLoading || isLoading) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
   }

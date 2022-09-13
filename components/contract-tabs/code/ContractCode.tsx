@@ -5,10 +5,11 @@ import {
   SnippetApiResponse,
   SnippetSchema,
 } from "./types";
-import { usePascalCaseContractName, useWeb3 } from "@3rdweb-sdk/react";
+import { usePascalCaseContractName } from "@3rdweb-sdk/react";
 import { Flex, Spinner, Stack } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { SmartContract } from "@thirdweb-dev/sdk";
+import { useAddress } from "@thirdweb-dev/react";
+import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useCallback, useMemo, useState } from "react";
 import { IoDocumentOutline } from "react-icons/io5";
@@ -41,7 +42,7 @@ function replaceVariablesInCodeSnippet(
 }
 
 interface IContractCode {
-  contract?: SmartContract | null;
+  contract?: ValidContractInstance | null;
   contractType: string;
 }
 
@@ -66,7 +67,7 @@ export const ContractCode: React.FC<IContractCode> = ({
     return getContractSnippets(data, contractName);
   }, [data, contractName]);
 
-  const { address } = useWeb3();
+  const address = useAddress();
   const [environment, setEnvironment] = useState<Environment>("react");
 
   const replaceSnippetVars = useCallback(

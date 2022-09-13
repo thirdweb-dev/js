@@ -2478,10 +2478,10 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/chain-icons/-/chain-icons-1.0.5.tgz#8a351024337d26a2ceee394f927513d72e1d31a0"
   integrity sha512-NsDboaLji7IOOjgoz/A/qf7A5EDfZN3qgyqt+GOxr5/YXzzyH2Obk8grwv2gDwP2mF5T5RjNex0I8kwA+tyKrw==
 
-"@thirdweb-dev/contracts-js@1.1.8-nightly-8158a55":
-  version "1.1.8-nightly-8158a55"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts-js/-/contracts-js-1.1.8-nightly-8158a55.tgz#128ebdda864068f5aefcf33d38c1add402381255"
-  integrity sha512-UnSAhYIEcudaeLmSecutoPillpaWSSUy4Q3r5geVXtG0hRIloX2lm0G855ZanxeItChLAZhE0T+0WLyVqEDYHA==
+"@thirdweb-dev/contracts-js@1.1.8-nightly-a37bc00":
+  version "1.1.8-nightly-a37bc00"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts-js/-/contracts-js-1.1.8-nightly-a37bc00.tgz#ea1d49655386692a9a50d0a39ad7ea32dfb7b561"
+  integrity sha512-rrhwEHLdNg0g1NMR5cHS2r+EvzyZy8U+sp5jQZzomS7GHja4acsgrh+vaOAFeAOx1+gji4YFG/XLU0jK5evAzw==
   dependencies:
     "@thirdweb-dev/contracts" "3.1.8-0"
 
@@ -2490,19 +2490,18 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.1.8-0.tgz#847af3fe9a53368e7be04b7b6e6afe076d3d1676"
   integrity sha512-PiQjdRcAUBlu3poc4g6dN9KvjTgYsA1Vi+B/IgryptCgcJeMY4cldMabKCgPaCg9dPVpUq4O+SOM00P6mBNvGw==
 
-"@thirdweb-dev/react@^3.0.0-nightly-8158a55":
-  version "3.0.0-nightly-8158a55"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-3.0.0-nightly-8158a55.tgz#7c9bf0fb11c87882d05a15183e8a2787531664a1"
-  integrity sha512-36ZFJVuOgIPVvc34UvVmA4mi8caWObzgYEWpR431HcfZuheuKy/PNbbBKkn+YiO6w3m+LWw3UzxKMvkvq6TNNA==
+"@thirdweb-dev/react@^3.0.0-nightly-a37bc00":
+  version "3.0.0-nightly-a37bc00"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-3.0.0-nightly-a37bc00.tgz#a063b29fa3f0bc91b9deae87ebd07033f3229be8"
+  integrity sha512-j23k87C40xSOoJGRkynF9U+FZTs1lLkc3F1gT3cmvl+IMdlqeJ5DAhof1dCHQs2KrtCTzbO0RQ3p8UijuIAMsQ==
   dependencies:
     "@emotion/react" "^11.10.0"
     "@emotion/styled" "^11.10.0"
     "@gnosis.pm/safe-core-sdk" "2.1.0"
     "@gnosis.pm/safe-ethers-adapters" "0.1.0-alpha.9"
     "@gnosis.pm/safe-ethers-lib" "1.1.0"
+    "@react-icons/all-files" "^4.1.0"
     "@tanstack/react-query" "^4.0.10"
-    "@thirdweb-dev/sdk" "3.0.0-nightly-8158a55"
-    "@thirdweb-dev/storage" "^0.2.8"
     "@zag-js/menu" "^0.1.11"
     "@zag-js/react" "0.1.16"
     color "^4.2.3"
@@ -2511,16 +2510,15 @@
     magic-sdk "^8.1.1"
     mime "^3.0.0"
     react-cool-dimensions "^2.0.7"
-    react-icons "^4.4.0"
     tiny-invariant "^1.2.0"
     wagmi "^0.2.28"
 
-"@thirdweb-dev/sdk@3.0.0-nightly-8158a55", "@thirdweb-dev/sdk@^3.0.0-nightly-8158a55":
-  version "3.0.0-nightly-8158a55"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-3.0.0-nightly-8158a55.tgz#7f0a8302eb3821bff2a91bb82daaafb7509d20c3"
-  integrity sha512-0kmofndVA9SwglaB3M6j9ueL8nAaQe0sc/BWX5TLAplC8hi8hDTU3pLs7e23az/sQLetd0FMG5K7eKzig7io3Q==
+"@thirdweb-dev/sdk@^3.0.0-nightly-a37bc00":
+  version "3.0.0-nightly-a37bc00"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-3.0.0-nightly-a37bc00.tgz#75438d2fdc2825b4464d227c8e7dbed19a2f9aba"
+  integrity sha512-EIcLQWkEAIsKW3TNVcMBr/WkBDbuo4SMLVjJGL37955gj4Ek6Kbzj45syUyzxd2bJ8zXNJRicwXOeXLbqLYhmA==
   dependencies:
-    "@thirdweb-dev/contracts-js" "1.1.8-nightly-8158a55"
+    "@thirdweb-dev/contracts-js" "1.1.8-nightly-a37bc00"
     "@thirdweb-dev/storage" "^0.2.8"
     cbor-web "^8.1.0"
     cross-fetch "^3.1.5"
@@ -8414,7 +8412,7 @@ react-hook-form@^7.32.2:
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.34.2.tgz#9ac6d1a309a7c4aaa369d1269357a70e9e9bf4de"
   integrity sha512-1lYWbEqr0GW7HHUjMScXMidGvV0BE2RJV3ap2BL7G0EJirkqpccTaawbsvBO8GZaB3JjCeFBEbnEWI1P8ZoLRQ==
 
-react-icons@^4.2.0, react-icons@^4.4.0:
+react-icons@^4.2.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.4.0.tgz#a13a8a20c254854e1ec9aecef28a95cdf24ef703"
   integrity sha512-fSbvHeVYo/B5/L4VhB7sBA1i2tS8MkT0Hb9t2H1AVPkwGfVHLJCqyr2Py9dKMxsyM63Eng1GkdZfbWj+Fmv8Rg==

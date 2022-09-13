@@ -1,22 +1,22 @@
 import { contractKeys, networkKeys } from "../cache-keys";
-import { useActiveChainId } from "./useActiveChainId";
-import { useWeb3 } from "./useWeb3";
 import { useQuery } from "@tanstack/react-query";
-import { ChainId, ValidContractClass } from "@thirdweb-dev/sdk";
+import {
+  PrebuiltContractType,
+  SUPPORTED_CHAIN_ID,
+  SchemaForPrebuiltContractType,
+} from "@thirdweb-dev/sdk";
 import { z } from "zod";
 
 export function useContractMetadataWithAddress(
   address: string,
-  queryFn: () => Promise<z.output<ValidContractClass["schema"]["output"]>>,
-  chainId?: ChainId,
+  queryFn: () => Promise<
+    z.infer<SchemaForPrebuiltContractType<PrebuiltContractType>["output"]>
+  >,
+  chainId: SUPPORTED_CHAIN_ID,
 ) {
-  const activeChainId = useActiveChainId();
-  const web3 = useWeb3();
-  const cId = chainId || activeChainId || web3.chainId;
-
   return useQuery(
-    [...networkKeys.chain(cId), ...contractKeys.detail(address)],
+    [...networkKeys.chain(chainId), ...contractKeys.detail(address)],
     () => queryFn(),
-    { enabled: !!address && typeof queryFn === "function" && !!cId },
+    { enabled: !!address && typeof queryFn === "function" && !!chainId },
   );
 }

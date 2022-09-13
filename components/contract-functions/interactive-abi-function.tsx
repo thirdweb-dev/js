@@ -8,8 +8,8 @@ import {
   Input,
   Textarea,
 } from "@chakra-ui/react";
-import { useContractCall } from "@thirdweb-dev/react";
-import { AbiFunction, SmartContract } from "@thirdweb-dev/sdk";
+import { useContractWrite } from "@thirdweb-dev/react";
+import { AbiFunction, ValidContractInstance } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BigNumber, utils } from "ethers";
 import { useEffect, useId, useMemo } from "react";
@@ -126,7 +126,7 @@ function formatContractCall(params: unknown[], value?: BigNumber) {
 
 interface InteractiveAbiFunctionProps {
   abiFunction?: AbiFunction;
-  contract: SmartContract;
+  contract: ValidContractInstance;
 }
 
 export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
@@ -163,7 +163,7 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
     data,
     error,
     isLoading: mutationLoading,
-  } = useContractCall(contract, abiFunction?.name);
+  } = useContractWrite(contract, abiFunction?.name);
 
   useEffect(() => {
     if (watch("params").length === 0) {

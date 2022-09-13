@@ -7,7 +7,11 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import type { AbiEvent, AbiFunction, SmartContract } from "@thirdweb-dev/sdk";
+import type {
+  AbiEvent,
+  AbiFunction,
+  ValidContractInstance,
+} from "@thirdweb-dev/sdk";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
 import { Abi, SourceFile } from "components/contract-components/types";
 import { Card, Heading } from "tw-components";
@@ -15,7 +19,7 @@ import { Card, Heading } from "tw-components";
 interface ContractFunctionsOverview {
   functions?: AbiFunction[] | null;
   events?: AbiEvent[] | null;
-  contract?: SmartContract;
+  contract?: ValidContractInstance;
   sources?: SourceFile[];
   abi?: Abi;
   onlyFunctions?: boolean;

@@ -1,7 +1,6 @@
 import { Permissions } from "./components";
 import { ButtonGroup, Divider, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
-import { SmartContract } from "@thirdweb-dev/sdk";
 import { detectFeatures } from "components/contract-components/utils";
 import { Card, Heading, LinkButton, Text } from "tw-components";
 
@@ -17,7 +16,6 @@ export const ContractPermissionsPage: React.FC<
   const detectedFeature = detectFeatures(contractQuery.contract, [
     "Permissions",
   ]);
-
   if (contractQuery.isLoading) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
@@ -48,10 +46,13 @@ export const ContractPermissionsPage: React.FC<
       </Card>
     );
   }
+  if (!contractQuery.contract) {
+    return null;
+  }
 
   return (
     <Flex direction="column" gap={6}>
-      <Permissions contract={contractQuery.contract as SmartContract} />
+      <Permissions contract={contractQuery.contract} />
     </Flex>
   );
 };

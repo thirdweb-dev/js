@@ -1,12 +1,11 @@
-import { useActiveChainId, useContractMetadata } from ".";
 import { splitsKeys } from "..";
 import {
   useMutationWithInvalidate,
   useQueryWithNetwork,
 } from "./query/useQueryWithNetwork";
 import { useToast } from "@chakra-ui/react";
-import { useSplit, useToken } from "@thirdweb-dev/react";
-import { Split } from "@thirdweb-dev/sdk";
+import { useActiveChainId } from "@thirdweb-dev/react";
+import { SplitImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/split";
 import {
   BalanceQueryRequest,
   BalanceQueryResponse,
@@ -15,18 +14,12 @@ import invariant from "tiny-invariant";
 import { parseErrorToMessage } from "utils/errorParser";
 import { isAddressZero } from "utils/zeroAddress";
 
-export function useSplitContractMetadata(contractAddress?: string) {
-  return useContractMetadata(useToken(contractAddress));
-}
-
-export function useSplitData(contractAddress?: string) {
-  const splitsContract = useSplit(contractAddress);
-
+export function useSplitData(contract?: SplitImpl) {
   return useQueryWithNetwork(
-    splitsKeys.list(contractAddress),
-    async () => splitsContract?.getAllRecipients(),
+    splitsKeys.list(contract?.getAddress()),
+    async () => contract?.getAllRecipients(),
     {
-      enabled: !!splitsContract && !!contractAddress,
+      enabled: !!contract,
     },
   );
 }
@@ -50,7 +43,7 @@ export function useSplitBalances(contractAddress?: string) {
   return currencies;
 }
 
-export function useSplitDistributeFunds(contract?: Split) {
+export function useSplitDistributeFunds(contract?: SplitImpl) {
   const contractAddress = contract?.getAddress();
   const balances = useSplitBalances(contractAddress);
   const toast = useToast();

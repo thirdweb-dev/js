@@ -11,9 +11,9 @@ import {
   Proposal as ProposalType,
   VoteType,
 } from "@thirdweb-dev/sdk";
+import { VoteImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/vote";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { ethers } from "ethers";
-import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React, { useCallback, useMemo } from "react";
 import { FiCheck, FiMinus, FiX } from "react-icons/fi";
@@ -69,26 +69,26 @@ const ProposalStateToMetadataMap: Record<ProposalState, IProposalMetadata> = {
 
 interface IProposal {
   proposal: ProposalType;
+  contract?: VoteImpl;
 }
 
-export const Proposal: React.FC<IProposal> = ({ proposal }) => {
-  const voteAddress = useSingleQueryParam("vote");
+export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
   const { data: hasVoted, isLoading: hasVotedLoading } = useHasVotedOnProposal(
+    contract,
     proposal.proposalId.toString(),
-    voteAddress,
   );
   const { data: canExecute } = useCanExecuteProposal(
+    contract,
     proposal.proposalId.toString(),
-    voteAddress,
   );
-  const { data: delegated } = useTokensDelegated(voteAddress);
+  const { data: delegated } = useTokensDelegated(contract);
   const { mutate: execute, isLoading: isExecuting } =
-    useExecuteProposalMutation(proposal.proposalId.toString(), voteAddress);
+    useExecuteProposalMutation(contract, proposal.proposalId.toString());
   const {
     mutate: vote,
     isLoading: isVoting,
     variables,
-  } = useCastVoteMutation(proposal.proposalId.toString(), voteAddress);
+  } = useCastVoteMutation(contract, proposal.proposalId.toString());
   const votes = useMemo(() => {
     return {
       for: parseFloat(

@@ -13,7 +13,7 @@ import {
   useClipboard,
   useToast,
 } from "@chakra-ui/react";
-import { SmartContract, ValidContractInstance } from "@thirdweb-dev/sdk";
+import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { constants, utils } from "ethers";
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
@@ -23,7 +23,7 @@ import { Button, FormErrorMessage, Text } from "tw-components";
 
 interface PermissionEditorProps {
   role: string;
-  contract: ValidContractInstance | SmartContract;
+  contract: ValidContractInstance;
 }
 
 export const PermissionEditor: React.FC<PermissionEditorProps> = ({
@@ -160,7 +160,7 @@ interface PermissionAddressProps {
   member: string;
   removeAddress: () => void;
   isSubmitting: boolean;
-  contract: ValidContractInstance | SmartContract;
+  contract: ValidContractInstance;
 }
 
 const PermissionAddress: React.FC<PermissionAddressProps> = ({

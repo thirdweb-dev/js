@@ -1,5 +1,5 @@
 import { Route } from "@tanstack/react-location";
-import { useContract } from "@thirdweb-dev/react";
+import { contractType, useContract } from "@thirdweb-dev/react";
 import {
   ExtensionDetectedState,
   extensionDetectedState,
@@ -15,13 +15,14 @@ export function useContractRouteConfig(
   contractAddress?: string,
 ): EnhancedRoute[] {
   const contractQuery = useContract(contractAddress);
-  const contractType = contractQuery.data?.contractType;
+
+  const contractTypeQuery = contractType.useQuery(contractAddress);
   const embedEnabled =
-    contractType === "nft-drop" ||
-    contractType === "marketplace" ||
-    contractType === "edition-drop" ||
-    contractType === "token-drop" ||
-    contractType === "signature-drop";
+    contractTypeQuery.data === "nft-drop" ||
+    contractTypeQuery.data === "marketplace" ||
+    contractTypeQuery.data === "edition-drop" ||
+    contractTypeQuery.data === "token-drop" ||
+    contractTypeQuery.data === "signature-drop";
 
   return [
     {
@@ -64,6 +65,45 @@ export function useContractRouteConfig(
         )),
     },
     {
+      title: "Listings",
+      path: "listings",
+      isEnabled: contractTypeQuery.isLoading
+        ? "loading"
+        : contractTypeQuery.data === "marketplace"
+        ? "enabled"
+        : "disabled",
+      element: () =>
+        import("../tabs/listings/page").then(({ ContractListingsPage }) => (
+          <ContractListingsPage contractAddress={contractAddress} />
+        )),
+    },
+    {
+      title: "Balances",
+      path: "split",
+      isEnabled: contractTypeQuery.isLoading
+        ? "loading"
+        : contractTypeQuery.data === "split"
+        ? "enabled"
+        : "disabled",
+      element: () =>
+        import("../tabs/split/page").then(({ ContractSplitPage }) => (
+          <ContractSplitPage contractAddress={contractAddress} />
+        )),
+    },
+    {
+      title: "Proposals",
+      path: "proposals",
+      isEnabled: contractTypeQuery.isLoading
+        ? "loading"
+        : contractTypeQuery.data === "vote"
+        ? "enabled"
+        : "disabled",
+      element: () =>
+        import("../tabs/proposals/page").then(({ ContractProposalsPage }) => (
+          <ContractProposalsPage contractAddress={contractAddress} />
+        )),
+    },
+    {
       title: "Claim Conditions",
       path: "claim-conditions",
       isEnabled: extensionDetectedState({
@@ -101,7 +141,11 @@ export function useContractRouteConfig(
         import("../tabs/embed/page").then(({ CustomContractEmbedPage }) => (
           <CustomContractEmbedPage contractAddress={contractAddress} />
         )),
-      isEnabled: embedEnabled ? "enabled" : "disabled",
+      isEnabled: contractTypeQuery.isLoading
+        ? "loading"
+        : embedEnabled
+        ? "enabled"
+        : "disabled",
     },
     {
       title: "Code",

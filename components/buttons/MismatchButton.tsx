@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { AiOutlineWarning } from "@react-icons/all-files/ai/AiOutlineWarning";
 import {
+  useAddress,
   useBalance,
   useChainId,
   useDesiredChainId,
@@ -39,7 +40,7 @@ import {
 
 export const MismatchButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ children, isDisabled, onClick, loadingText, type, ...props }, ref) => {
-    const { address } = useWeb3();
+    const address = useAddress();
     const balance = useBalance();
 
     const isBalanceZero = BigNumber.from(balance.data?.value || 0).eq(0);
@@ -50,7 +51,8 @@ export const MismatchButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const trackEvent = useTrack();
-    const { chainId, getNetworkMetadata } = useWeb3();
+    const chainId = useChainId();
+    const { getNetworkMetadata } = useWeb3();
     const { isTestnet } = getNetworkMetadata(chainId || 0);
 
     if (!address) {
@@ -129,7 +131,8 @@ const MismatchNotice: React.FC<{
   initialFocusRef: React.RefObject<HTMLButtonElement>;
   onClose: () => void;
 }> = ({ initialFocusRef, onClose }) => {
-  const { chainId, getNetworkMetadata } = useWeb3();
+  const chainId = useChainId();
+  const { getNetworkMetadata } = useWeb3();
   const desiredChainId = useDesiredChainId();
 
   const signerChainId = chainId as SUPPORTED_CHAIN_ID;

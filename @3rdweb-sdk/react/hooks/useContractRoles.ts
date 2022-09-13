@@ -1,116 +1,29 @@
-import { contractRoleKeys } from "../cache-keys";
 import {
-  useMutationWithInvalidate,
-  useQueryWithNetwork,
-} from "./query/useQueryWithNetwork";
-import { useAddress, useContractType } from "@thirdweb-dev/react";
-import {
-  Multiwrap,
-  Split,
-  ValidContractClass,
-  ValidContractInstance,
-  Vote,
-} from "@thirdweb-dev/sdk";
+  ContractWithRoles,
+  RolesForContract,
+  useAddress,
+  useContractType,
+  useRoleMembers,
+} from "@thirdweb-dev/react";
+import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { constants } from "ethers";
-import invariant from "tiny-invariant";
-import { C, U } from "ts-toolbelt";
-
-export type ContractWithRoles = U.Exclude<
-  ValidContractClass,
-  typeof Vote | typeof Split | typeof Multiwrap
->;
-
-export type ContractWithRolesInstance = C.Instance<ContractWithRoles>;
 
 export function isContractWithRoles(
   contract?: ValidContractInstance,
-): contract is C.Instance<ContractWithRoles> {
+): contract is ContractWithRoles {
   if (contract && "roles" in contract) {
     return true;
   }
   return false;
 }
 
-export function useContractRoleMembersList<TContract extends ContractWithRoles>(
-  contract?: C.Instance<TContract>,
-) {
-  return useQueryWithNetwork(
-    contractRoleKeys.list(contract?.getAddress()),
-    async () => {
-      invariant(
-        contract?.roles.getAll,
-        "[Contract:useContractRoleMembersList] - contract has no roles",
-      );
-      return await contract.roles.getAll();
-    },
-    {
-      enabled: !!contract && !!contract.getAddress(),
-    },
-  );
-}
-
-export function useContractRoleMembers<TContract extends ContractWithRoles>(
-  role: TContract["contractRoles"][number],
-  contract?: C.Instance<TContract>,
-) {
-  return useQueryWithNetwork(
-    contractRoleKeys.detail(contract?.getAddress(), role),
-    async () => await contract?.roles.get(role as any),
-    {
-      enabled: !!contract && !!contract.getAddress() && !!role,
-    },
-  );
-}
-
-export function useSetAllRoleMembersMutation<
-  TContract extends ContractWithRoles,
->(contract?: C.Instance<TContract>) {
-  return useMutationWithInvalidate(
-    async (rolesWithAddresses: {
-      [role in TContract["contractRoles"][number]]: string[];
-    }) => {
-      invariant(contract, "contract is required");
-      await contract.roles.setAll(rolesWithAddresses);
-    },
-    {
-      onSuccess: (_data, variables, _options, invalidate) => {
-        return invalidate([contractRoleKeys.list(contract?.getAddress())]);
-      },
-    },
-  );
-}
-
-export function useAddRoleMemberMutation<TContract extends ContractWithRoles>(
-  contract?: C.Instance<TContract>,
-) {
-  return useMutationWithInvalidate(
-    async (variables: {
-      role: TContract["contractRoles"][number];
-      address: string;
-    }) => {
-      invariant(contract, "contract is required");
-      await contract.roles.grant(variables.role as any, variables.address);
-    },
-    {
-      onSuccess: (_data, variables, _options, invalidate) => {
-        return invalidate([
-          contractRoleKeys.list(contract?.getAddress()),
-          contractRoleKeys.detail(contract?.getAddress(), variables.role),
-        ]);
-      },
-    },
-  );
-}
 export function useIsAccountRole<TContract extends ContractWithRoles>(
-  role: TContract["contractRoles"][number],
-  contract?: C.Instance<TContract>,
+  role: RolesForContract<TContract>[number],
+  contract?: TContract,
   account?: string,
 ): boolean {
   const contractHasRoles = isContractWithRoles(contract);
-  const { data } = useContractRoleMembers(
-    role,
-    contractHasRoles ? contract : undefined,
-  );
+  const { data } = useRoleMembers(contract, role);
 
   if (contractHasRoles === false) {
     return false;
@@ -123,8 +36,8 @@ export function useIsAccountRole<TContract extends ContractWithRoles>(
   return !!(account && data?.includes(account));
 }
 
-export function useIsAdmin<TContract extends ValidContractClass>(
-  contract?: C.Instance<TContract>,
+export function useIsAdmin<TContract extends ValidContractInstance>(
+  contract?: TContract,
 ) {
   const address = useAddress();
   const { data: contractType } = useContractType(contract?.getAddress());
@@ -142,8 +55,8 @@ export function useIsAdmin<TContract extends ValidContractClass>(
   return isAccountRole;
 }
 
-export function useIsAdminOrSelf<TContract extends ValidContractClass>(
-  contract?: C.Instance<TContract>,
+export function useIsAdminOrSelf<TContract extends ValidContractInstance>(
+  contract?: TContract,
   self?: string,
 ) {
   const address = useAddress();
@@ -159,14 +72,32 @@ export function useIsAdminOrSelf<TContract extends ValidContractClass>(
   return isAdmin;
 }
 
-export function useIsMinter<TContract extends ValidContractClass>(
-  contract?: C.Instance<TContract>,
+export function useIsMinter<TContract extends ValidContractInstance>(
+  contract?: TContract,
 ) {
   const address = useAddress();
   const { data: contractType } = useContractType(contract?.getAddress());
   const contractHasRoles = isContractWithRoles(contract);
   const isAccountRole = useIsAccountRole(
     "minter",
+    contractHasRoles ? contract : undefined,
+    address,
+  );
+
+  if (contractType === "custom") {
+    return true;
+  }
+  return isAccountRole;
+}
+
+export function useIsLister<TContract extends ValidContractInstance>(
+  contract?: TContract,
+) {
+  const address = useAddress();
+  const { data: contractType } = useContractType(contract?.getAddress());
+  const contractHasRoles = isContractWithRoles(contract);
+  const isAccountRole = useIsAccountRole(
+    "lister",
     contractHasRoles ? contract : undefined,
     address,
   );

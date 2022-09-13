@@ -1,5 +1,5 @@
 import { Box, Flex, Select } from "@chakra-ui/react";
-import { SmartContract } from "@thirdweb-dev/sdk";
+import { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/smart-contract";
 import { useContractFunctions } from "components/contract-components/hooks";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
 import { Environment } from "components/contract-tabs/code/types";
@@ -42,22 +42,22 @@ contract, err := sdk.GetContract("{{contract_address}}")
   },
   read: {
     javascript: `const data = await contract.call("{{function}}", {{args}})`,
-    react: `import { useContract, useContractData } from "@thirdweb-dev/react";
+    react: `import { useContract, useContractRead } from "@thirdweb-dev/react";
 
 export default function Component() {
   const { contract } = useContract("{{contract_address}}");
-  const { data, isLoading } = useContractData(contract, "{{function}}", {{args}})
+  const { data, isLoading } = useContractRead(contract, "{{function}}", {{args}})
 }`,
     python: `data = contract.call("{{function}}", {{args}})`,
     go: `data, err := contract.Call("{{function}}", {{args}})`,
   },
   write: {
     javascript: `const data = await contract.call("{{function}}", {{args}})`,
-    react: `import { useContract, useContractCall } from "@thirdweb-dev/react";
+    react: `import { useContract, useContractWrite } from "@thirdweb-dev/react";
 
 export default function Component() {
   const { contract } = useContract("{{contract_address}}");
-  const { mutateAsync: {{function}}, isLoading } = useContractCall(contract, "{{function}}")
+  const { mutateAsync: {{function}}, isLoading } = useContractWrite(contract, "{{function}}")
 
   const call = async () => {
     try {
@@ -109,17 +109,17 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({ contract }) => {
   const chainName = useSingleQueryParam<SupportedNetwork>("networkOrAddress");
   const [environment, setEnvironment] = useState<Environment>("react");
 
-  const functionsQuery = useContractFunctions(contract);
+  const functions = useContractFunctions(contract);
   const { readFunctions, writeFunctions } = useMemo(() => {
     return {
-      readFunctions: functionsQuery.data?.filter(
+      readFunctions: functions?.filter(
         (f) => f.stateMutability === "view" || f.stateMutability === "pure",
       ),
-      writeFunctions: functionsQuery.data?.filter(
+      writeFunctions: functions?.filter(
         (f) => f.stateMutability !== "view" && f.stateMutability !== "pure",
       ),
     };
-  }, [functionsQuery.data]);
+  }, [functions]);
 
   const [read, setRead] = useState(
     readFunctions && readFunctions.length > 0 ? readFunctions[0].name : "",

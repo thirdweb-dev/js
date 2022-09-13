@@ -23,22 +23,6 @@ export const FeatureIconMap: Record<ContractType, StaticImageData> = {
   multiwrap: require("public/assets/tw-icons/edition.png"),
 } as const;
 
-export const UrlMap: Record<ContractType, string> = {
-  "nft-drop": "",
-  "nft-collection": "",
-  "edition-drop": "",
-  edition: "",
-  token: "",
-  vote: "/vote",
-  marketplace: "/marketplace",
-  pack: "",
-  split: "/split",
-  "token-drop": "",
-  custom: "",
-  "signature-drop": "",
-  multiwrap: "",
-};
-
 export interface BuiltinContractDetails {
   title: string;
   description: string;
@@ -182,6 +166,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       icon: FeatureIconMap["split"],
       contractType: "split",
       href: "/contracts/new/pre-built/governance/split",
+      roles: ["admin"],
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/Split.sol",
     },

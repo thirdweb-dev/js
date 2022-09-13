@@ -27,9 +27,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddress } from "@thirdweb-dev/react";
 import {
   ContractType,
-  KNOWN_CONTRACTS_MAP,
+  DeploySchemaForPrebuiltContractType,
+  PREBUILT_CONTRACTS_MAP,
+  PrebuiltContractType,
   SUPPORTED_CHAIN_ID,
-  ValidContractClass,
 } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
 import { StorageSingleton } from "components/app-layouts/providers";
@@ -38,11 +39,7 @@ import { RecipientForm } from "components/deployment/splits/recipients";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelect";
 import { FileInput } from "components/shared/FileInput";
-import {
-  BuiltinContractMap,
-  DisabledChainsMap,
-  UrlMap,
-} from "constants/mappings";
+import { BuiltinContractMap, DisabledChainsMap } from "constants/mappings";
 import { constants, utils } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
@@ -73,8 +70,8 @@ import {
 } from "utils/network";
 import { z } from "zod";
 
-function useDeployForm<TContract extends ValidContractClass>(
-  deploySchema: TContract["schema"]["deploy"],
+function useDeployForm<TContractType extends PrebuiltContractType>(
+  deploySchema: DeploySchemaForPrebuiltContractType<TContractType>,
 ) {
   const { handleSubmit: _handleSubmit, ...restForm } = useForm<
     z.infer<typeof deploySchema>
@@ -120,7 +117,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
   const publishMetadata = useContractPublishMetadataFromURI(contractType);
 
   const contract =
-    KNOWN_CONTRACTS_MAP[contractType as keyof typeof KNOWN_CONTRACTS_MAP];
+    PREBUILT_CONTRACTS_MAP[contractType as keyof typeof PREBUILT_CONTRACTS_MAP];
 
   const form = useDeployForm(contract.schema.deploy);
 
@@ -266,7 +263,9 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
               });
               onSuccess();
               router.push(
-                `/${SupportedChainIdToNetworkMap[selectedChain]}${UrlMap[contractType]}/${contractAddress}`,
+                `/${SupportedChainIdToNetworkMap[selectedChain]}/${contractAddress}`,
+                undefined,
+                { shallow: true },
               );
             },
             onError: (err) => {

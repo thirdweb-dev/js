@@ -1,4 +1,4 @@
-import { Flex, Skeleton } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import { useContractFunctions } from "components/contract-components/hooks";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
@@ -12,7 +12,7 @@ export const CustomContractOverviewPage: React.FC<
   CustomContractOverviewPageProps
 > = ({ contractAddress }) => {
   const { contract } = useContract(contractAddress);
-  const functionsQuery = useContractFunctions(contract);
+  const functions = useContractFunctions(contract);
 
   if (!contractAddress) {
     return <div>No contract address provided</div>;
@@ -21,15 +21,14 @@ export const CustomContractOverviewPage: React.FC<
     <Flex direction="column" gap={8}>
       <Flex direction="column" gap={6}>
         <Heading size="title.sm">Contract Explorer</Heading>
-        <Skeleton isLoaded={functionsQuery.isSuccess}>
-          {contract && (
-            <ContractFunctionsOverview
-              onlyFunctions
-              functions={functionsQuery.data}
-              contract={contract}
-            />
-          )}
-        </Skeleton>
+
+        {contract && (
+          <ContractFunctionsOverview
+            onlyFunctions
+            functions={functions}
+            contract={contract}
+          />
+        )}
       </Flex>
     </Flex>
   );

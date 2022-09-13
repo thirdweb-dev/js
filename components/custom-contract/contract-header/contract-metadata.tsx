@@ -1,5 +1,9 @@
 import { Box, Flex, Image, Skeleton } from "@chakra-ui/react";
-import { useContractMetadata, useContractType } from "@thirdweb-dev/react";
+import {
+  contractType,
+  useContract,
+  useContractMetadata,
+} from "@thirdweb-dev/react";
 import { ChakraNextImage } from "components/Image";
 import { ens } from "components/contract-components/hooks";
 import { FeatureIconMap } from "constants/mappings";
@@ -13,20 +17,20 @@ interface ContractMetadataProps {
 export const ContractMetadata: React.FC<ContractMetadataProps> = ({
   contractAddress,
 }) => {
+  const { contract } = useContract(contractAddress);
+
   const ensQuery = ens.useQuery(contractAddress);
-  const metadataQuery = useContractMetadata(
+  const metadataQuery = useContractMetadata(contract);
+  const { data: cType } = contractType.useQuery(
     ensQuery.data?.address || undefined,
   );
-  const contractType = useContractType(ensQuery.data?.address || undefined);
 
   const contractTypeImage = useMemo(() => {
     return (
-      (contractType.data &&
-        contractType.data !== "custom" &&
-        FeatureIconMap[contractType.data]) ||
+      (cType && cType !== "custom" && FeatureIconMap[cType]) ||
       FeatureIconMap["custom"]
     );
-  }, [contractType.data]);
+  }, [cType]);
 
   if (metadataQuery.isError) {
     return <Box>Failed to load contract metadata</Box>;
