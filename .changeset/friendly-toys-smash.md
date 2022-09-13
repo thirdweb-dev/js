@@ -9,7 +9,7 @@
 - 85% reduction in package size!
 - Custom contracts are now first class citizens
 
-Full changelog:
+[Full changelog](https://blog.thirdweb.com/sdk-major-update/)
 
 #### Breaking changes:
 
