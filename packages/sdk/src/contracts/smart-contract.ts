@@ -1,9 +1,4 @@
-import {
-  ALL_ROLES,
-  assertEnabled,
-  detectContractFeature,
-  extractFunctionsFromAbi,
-} from "../common";
+import { ALL_ROLES, assertEnabled, detectContractFeature } from "../common";
 import { FEATURE_TOKEN } from "../constants/erc20-features";
 import { FEATURE_NFT } from "../constants/erc721-features";
 import { FEATURE_EDITION } from "../constants/erc1155-features";
@@ -22,8 +17,7 @@ import { Erc721 } from "../core/classes/erc-721";
 import { Erc1155 } from "../core/classes/erc-1155";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { AbiSchema, CustomContractSchema } from "../schema/contracts/custom";
-import { CallOverrideSchema } from "../schema/index";
+import { CustomContractSchema } from "../schema/contracts/custom";
 import { SDKOptions } from "../schema/sdk-options";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
 import type {

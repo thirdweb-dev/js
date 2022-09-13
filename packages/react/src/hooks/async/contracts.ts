@@ -6,6 +6,8 @@ import {
   createContractCacheKey,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
+import { useAddress } from "../useAddress";
+import { useChainId } from "../useChainId";
 import {
   useMutation,
   useQuery,
@@ -52,7 +54,11 @@ export function useContractType(
     cacheKeys.contract.type(contractAddress),
     () => fetchContractType(contractAddress, sdk),
     // is immutable, so infinite stale time
-    { staleTime: Infinity, enabled: !!contractAddress && !!sdk },
+    {
+      cacheTime: Infinity,
+      staleTime: Infinity,
+      enabled: !!contractAddress && !!sdk,
+    },
   );
 }
 
@@ -97,7 +103,11 @@ export function useCompilerMetadata(
     cacheKeys.contract.compilerMetadata(contractAddress),
     () => fetchCompilerMetadata(contractAddress, sdk),
     // is immutable, so infinite stale time
-    { staleTime: Infinity, enabled: !!contractAddress && !!sdk },
+    {
+      cacheTime: Infinity,
+      staleTime: Infinity,
+      enabled: !!contractAddress && !!sdk,
+    },
   );
 }
 
@@ -130,9 +140,19 @@ export function useContract<
   const sdk = useSDK();
   const queryClient = useQueryClient();
   const activeChainId = useActiveChainId();
+  const wallet = useAddress();
+  const walletChainId = useChainId();
+
+  // it's there because we put it there.
+  const sdkTimestamp = (sdk as any)?._constructedAt;
 
   const contractQuery = useQueryWithNetwork(
-    ["contract-instance", contractAddress],
+    // need to add the wallet and walletChainId into the query key so this gets refreshed when the wallet / chain changes!
+    [
+      "contract-instance",
+      contractAddress,
+      { wallet, walletChainId, sdkTimestamp },
+    ],
     async () => {
       invariant(contractAddress, "contract address is required");
       invariant(sdk, "SDK not initialized");
@@ -141,7 +161,7 @@ export function useContract<
       const cType = await queryClient.fetchQuery(
         contractType.cacheKey(contractAddress, activeChainId),
         () => contractType.fetchQuery(contractAddress, sdk),
-        { staleTime: Infinity },
+        { cacheTime: Infinity, staleTime: Infinity },
       );
       // if we can't get the contract type, we need to exit
       invariant(cType, "could not get contract type");
@@ -154,7 +174,7 @@ export function useContract<
       const compMetadata = await queryClient.fetchQuery(
         compilerMetadata.cacheKey(contractAddress, activeChainId),
         () => compilerMetadata.fetchQuery(contractAddress, sdk),
-        { staleTime: Infinity },
+        { cacheTime: Infinity, staleTime: Infinity },
       );
       // if we can't get the compiler metadata, we need to exit
       invariant(compMetadata, "could not get compiler metadata");
@@ -162,14 +182,21 @@ export function useContract<
       return sdk.getContractFromAbi(contractAddress, compMetadata.abi);
     },
     {
-      // never actually cache this query, it returns a class!
-      cacheTime: 0,
+      // keep the previous value around while we fetch the new one
+      // this is important because otherwise it can lead to flickering (because we need to re-fetch the contract when sdk things change)
+      keepPreviousData: true,
+      // is immutable, so infinite cache & stale time (for a given key)
+      cacheTime: Infinity,
+      staleTime: Infinity,
       enabled: !!contractAddress && !!sdk && !!activeChainId,
     },
   );
 
+  // const previousCountract = usePrevious(contractQuery.data);
+
   return {
     ...contractQuery,
+    data: contractQuery.data,
     contract: contractQuery.data,
   } as UseContractResult<TContract>;
 }

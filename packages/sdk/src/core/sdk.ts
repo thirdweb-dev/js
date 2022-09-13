@@ -331,7 +331,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       const contract = new Contract(
         contractAddress,
         IThirdwebContractABI,
-        this.getSignerOrProvider(),
+        // !provider only! - signer can break things here!
+        this.getProvider(),
       );
       const remoteContractType = ethers.utils
         .toUtf8String(await contract.contractType())
