@@ -300,11 +300,12 @@ export class Erc721<
    */
   public async getOwned(walletAddress?: string) {
     if (this.query?.owned) {
-      return this.query.owned.all(walletAddress)
+      return this.query.owned.all(walletAddress);
     } else {
       const allNFTs = await this.getAll();
-      return (allNFTs || []).filter(({ owner }) =>
-        walletAddress?.toLowerCase() === owner?.toLowerCase())
+      return (allNFTs || []).filter(
+        ({ owner }) => walletAddress?.toLowerCase() === owner?.toLowerCase(),
+      );
     }
   }
 
@@ -314,13 +315,15 @@ export class Erc721<
    */
   public async getOwnedTokenIds(walletAddress?: string) {
     if (this.query?.owned) {
-      return this.query.owned.tokenIds(walletAddress)
+      return this.query.owned.tokenIds(walletAddress);
     } else {
       const allNFTs = await this.getAll();
-      return (allNFTs || []).filter(({ owner }) =>
-        walletAddress?.toLowerCase() === owner?.toLowerCase()).map(({ metadata: { id } }) => id)
+      return (allNFTs || [])
+        .filter(
+          ({ owner }) => walletAddress?.toLowerCase() === owner?.toLowerCase(),
+        )
+        .map(({ metadata: { id } }) => id);
     }
-  }
   }
 
   ////// ERC721 Mintable Extension //////
