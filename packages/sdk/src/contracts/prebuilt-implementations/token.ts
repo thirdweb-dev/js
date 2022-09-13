@@ -5,6 +5,7 @@ import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
 import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
 import { ContractRoles } from "../../core/classes/contract-roles";
+import { ContractPrimarySale } from "../../core/classes/contract-sales";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { TokenERC20History } from "../../core/classes/erc-20-history";
 import { Erc20SignatureMintable } from "../../core/classes/erc-20-signature-mintable";
@@ -51,6 +52,7 @@ export class TokenImpl extends StandardErc20<TokenERC20> {
   public history: TokenERC20History;
   public events: ContractEvents<TokenERC20>;
   public platformFees: ContractPlatformFee<TokenERC20>;
+  public sales: ContractPrimarySale<TokenERC20>;
   /**
    * Signature Minting
    * @remarks Generate tokens that can be minted only with your own signature, attaching your own set of mint conditions.
@@ -94,6 +96,7 @@ export class TokenImpl extends StandardErc20<TokenERC20> {
       this.contractWrapper,
       TokenImpl.contractRoles,
     );
+    this.sales = new ContractPrimarySale(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.history = new TokenERC20History(this.contractWrapper, this.events);
     this.encoder = new ContractEncoder(this.contractWrapper);
