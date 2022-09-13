@@ -14,19 +14,19 @@ export const SupportedNetworkSelect: React.FC<SupportedNetworkSelectProps> = ({
   const deprecatedNetworks = useMemo(() => {
     return SUPPORTED_CHAIN_IDS.map((supportedChain) => {
       return getChainFromChainId(supportedChain);
-    }).filter((n) => n.id === ChainId.Rinkeby);
+    }).filter((n) => !!n.deprecated);
   }, []);
 
   const testnets = useMemo(() => {
     return SUPPORTED_CHAIN_IDS.map((supportedChain) => {
       return getChainFromChainId(supportedChain);
-    }).filter((n) => n.testnet && n.id !== ChainId.Rinkeby);
+    }).filter((n) => n.testnet && !n.deprecated);
   }, []);
 
   const mainnets = useMemo(() => {
     return SUPPORTED_CHAIN_IDS.map((supportedChain) => {
       return getChainFromChainId(supportedChain);
-    }).filter((n) => !n.testnet);
+    }).filter((n) => !n.testnet && !n.deprecated);
   }, []);
   return (
     <Select {...selectProps}>
