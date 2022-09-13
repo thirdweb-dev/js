@@ -112,16 +112,26 @@ export class Deployer {
 
     // TODO make it a single tx
     const collection = await this.createNftCollection(metadata);
+    const creators =
+      parsed.creators.length > 0
+        ? parsed.creators.map((creator) => ({
+            address: new PublicKey(creator.address),
+            share: creator.share,
+            verified: creator.verified,
+          }))
+        : [
+            {
+              address: this.metaplex.identity().publicKey,
+              share: 100,
+              verified: true,
+            },
+          ];
     const { candyMachine: nftDrop } = await this.metaplex
       .candyMachines()
       .create({
         ...parsed,
         collection: new PublicKey(collection),
-        creators: parsed.creators?.map((creator) => ({
-          address: new PublicKey(creator.address),
-          share: creator.share,
-          verified: creator.verified,
-        })),
+        creators,
       })
       .run();
 
