@@ -367,7 +367,7 @@ export function useCreateAuctionListing(
 }
 
 /**
- * Use this to create a new Auction Listing on your marketplace contract.
+ * Use this to cancel a listing on your marketplace contract.
  *
  * @example
  * ```jsx
@@ -379,7 +379,7 @@ export function useCreateAuctionListing(
  *   } = useCancelListing(">>YourMarketplaceContractInstance<<");
  *
  *   if (error) {
- *     console.error("failed to create auction listing", error);
+ *     console.error("failed to cancel auction listing", error);
  *   }
  *
  *   return (
