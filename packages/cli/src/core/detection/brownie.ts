@@ -1,4 +1,3 @@
-import { logger } from "../helpers/logger";
 import { ProjectType } from "../types/ProjectType";
 import { Detector } from "./detector";
 import { existsSync } from "fs";

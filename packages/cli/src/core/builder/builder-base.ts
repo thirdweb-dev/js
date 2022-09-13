@@ -2,8 +2,6 @@ import { extractIPFSHashFromBytecode } from "../helpers/ipfs";
 import { logger } from "../helpers/logger";
 import { CompileOptions, IBuilder } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
-import { existsSync, readdirSync, statSync } from "fs";
-import { basename, join } from "path";
 
 export abstract class BaseBuilder implements IBuilder {
   abstract compile(
@@ -20,7 +18,7 @@ export abstract class BaseBuilder implements IBuilder {
       bytecode === "" ||
       bytecode === "0x" ||
       !abi ||
-      abi.length == 0
+      abi.length === 0
     ) {
       return false;
     }

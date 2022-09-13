@@ -11,10 +11,7 @@ import {
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  ClaimCondition,
-  ClaimConditionInput,
-} from "@thirdweb-dev/sdk";
+import { ClaimCondition, ClaimConditionInput } from "@thirdweb-dev/sdk";
 import { BigNumberish } from "ethers";
 import invariant from "tiny-invariant";
 

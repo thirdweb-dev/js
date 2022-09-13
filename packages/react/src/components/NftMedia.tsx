@@ -52,3 +52,5 @@ export const ThirdwebNftMedia = React.forwardRef<
     />
   );
 });
+
+ThirdwebNftMedia.displayName = "ThirdwebNftMedia";

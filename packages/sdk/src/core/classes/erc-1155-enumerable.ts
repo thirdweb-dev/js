@@ -5,7 +5,7 @@ import { BaseERC1155 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc1155 } from "./erc-1155";
-import { IERC1155Enumerable } from "@thirdweb-dev/contracts-js";
+import type { IERC1155Enumerable } from "@thirdweb-dev/contracts-js";
 import { BigNumber, BigNumberish } from "ethers";
 
 /**

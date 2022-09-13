@@ -2,7 +2,8 @@ import { TransactionResult } from "..";
 import { SDKOptions } from "../../schema/sdk-options";
 import { NetworkOrSignerOrProvider } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { TWRegistry, TWRegistry__factory } from "@thirdweb-dev/contracts-js";
+import type { TWRegistry } from "@thirdweb-dev/contracts-js";
+import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWRegistry.json";
 import { constants, utils } from "ethers";
 
 /**
@@ -14,7 +15,7 @@ export class ContractRegistry extends ContractWrapper<TWRegistry> {
     network: NetworkOrSignerOrProvider,
     options?: SDKOptions,
   ) {
-    super(network, registryAddress, TWRegistry__factory.abi, options);
+    super(network, registryAddress, TWRegistryABI, options);
   }
 
   public async getContractAddresses(walletAddress: string) {

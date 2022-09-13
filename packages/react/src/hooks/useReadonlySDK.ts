@@ -22,5 +22,7 @@ export function useReadonlySDK(
       },
       storageInterface,
     );
+    // storageInterface should be constant!
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [readonlyRpcUrl, sdkOptions]);
 }

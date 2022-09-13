@@ -3,7 +3,9 @@ import dns from "dns";
 import url from "url";
 
 function getProxy(): string | undefined {
+  // eslint-disable-next-line turbo/no-undeclared-env-vars
   if (process.env.https_proxy) {
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
     return process.env.https_proxy;
   }
 
@@ -33,7 +35,7 @@ export function getOnline(): Promise<boolean> {
       }
 
       dns.lookup(hostname, (proxyErr) => {
-        resolve(proxyErr == null);
+        resolve(proxyErr === null);
       });
     });
   });

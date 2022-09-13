@@ -1,39 +1,42 @@
-import { getRoleHash } from "../common";
-import { FEATURE_NFT_REVEALABLE } from "../constants/erc721-features";
-import { TransactionTask } from "../core/classes/TransactionTask";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
-import { ContractRoles } from "../core/classes/contract-roles";
-import { ContractRoyalty } from "../core/classes/contract-royalty";
-import { ContractPrimarySale } from "../core/classes/contract-sales";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { DelayedReveal } from "../core/classes/delayed-reveal";
-import { DropClaimConditions } from "../core/classes/drop-claim-conditions";
-import { Erc721 } from "../core/classes/erc-721";
-import { StandardErc721 } from "../core/classes/erc-721-standard";
-import { Erc721WithQuantitySignatureMintable } from "../core/classes/erc-721-with-quantity-signature-mintable";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { getRoleHash } from "../../common";
+import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
+import { TransactionTask } from "../../core/classes/TransactionTask";
+import { ContractEncoder } from "../../core/classes/contract-encoder";
+import { ContractEvents } from "../../core/classes/contract-events";
+import { ContractInterceptor } from "../../core/classes/contract-interceptor";
+import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
+import { ContractRoles } from "../../core/classes/contract-roles";
+import { ContractRoyalty } from "../../core/classes/contract-royalty";
+import { ContractPrimarySale } from "../../core/classes/contract-sales";
+import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { DelayedReveal } from "../../core/classes/delayed-reveal";
+import { DropClaimConditions } from "../../core/classes/drop-claim-conditions";
+import { Erc721 } from "../../core/classes/erc-721";
+import { StandardErc721 } from "../../core/classes/erc-721-standard";
+import { Erc721WithQuantitySignatureMintable } from "../../core/classes/erc-721-with-quantity-signature-mintable";
+import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
-} from "../core/types";
-import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
-import { SDKOptions } from "../schema/sdk-options";
+} from "../../core/types";
+import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
+import { SDKOptions } from "../../schema/sdk-options";
 import {
   NFTMetadata,
   NFTMetadataOrUri,
   NFTMetadataOwner,
-} from "../schema/tokens/common";
-import { ClaimOptions, UploadProgressEvent } from "../types";
-import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
-import { SignatureDrop as SignatureDropContract } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop.json";
+} from "../../schema/tokens/common";
+import { ClaimOptions, UploadProgressEvent } from "../../types";
+import {
+  DEFAULT_QUERY_ALL_COUNT,
+  QueryAllParams,
+} from "../../types/QueryParams";
+import type { SignatureDrop as SignatureDropContract } from "@thirdweb-dev/contracts-js";
+import type ABI from "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop.json";
 import { IStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, constants } from "ethers";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
  * Setup a collection of NFTs where when it comes to minting, you can authorize
@@ -51,27 +54,23 @@ import { BigNumber, BigNumberish, constants } from "ethers";
  *
  * @public
  */
-export class SignatureDrop extends StandardErc721<SignatureDropContract> {
-  static contractType = "signature-drop" as const;
+export class SignatureDropImpl extends StandardErc721<SignatureDropContract> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractAbi = ABI as any;
-  /**
-   * @internal
-   */
-  static schema = DropErc721ContractSchema;
+
+  public abi: typeof ABI;
   public erc721: Erc721<SignatureDropContract>;
   public encoder: ContractEncoder<SignatureDropContract>;
   public estimator: GasCostEstimator<SignatureDropContract>;
   public metadata: ContractMetadata<
     SignatureDropContract,
-    typeof SignatureDrop.schema
+    typeof DropErc721ContractSchema
   >;
   public sales: ContractPrimarySale<SignatureDropContract>;
   public platformFees: ContractPlatformFee<SignatureDropContract>;
   public events: ContractEvents<SignatureDropContract>;
   public roles: ContractRoles<
     SignatureDropContract,
-    typeof SignatureDrop.contractRoles[number]
+    typeof SignatureDropImpl.contractRoles[number]
   >;
   /**
    * @internal
@@ -96,7 +95,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    */
   public royalties: ContractRoyalty<
     SignatureDropContract,
-    typeof SignatureDrop.schema
+    typeof DropErc721ContractSchema
   >;
   /**
    * Configure claim conditions
@@ -167,22 +166,24 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
+    abi: typeof ABI,
     contractWrapper = new ContractWrapper<SignatureDropContract>(
       network,
       address,
-      SignatureDrop.contractAbi,
+      abi,
       options,
     ),
   ) {
     super(contractWrapper, storage);
+    this.abi = abi;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      SignatureDrop.schema,
+      DropErc721ContractSchema,
       this.storage,
     );
     this.roles = new ContractRoles(
       this.contractWrapper,
-      SignatureDrop.contractRoles,
+      SignatureDropImpl.contractRoles,
     );
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);
@@ -465,5 +466,15 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    */
   public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
     return this.erc721.burn(tokenId);
+  }
+
+  /**
+   * @internal
+   */
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    return this.contractWrapper.call(functionName, ...args);
   }
 }

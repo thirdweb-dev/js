@@ -1,5 +1,7 @@
 import { Edition, Token } from "../src";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
+import { EditionImpl } from "../src/contracts/classes/edition";
+import { TokenImpl } from "../src/contracts/classes/token";
 import {
   PayloadToSign1155,
   SignedPayload1155,
@@ -12,8 +14,8 @@ import { BigNumber } from "ethers";
 global.fetch = require("cross-fetch");
 
 describe("Edition sig minting", async () => {
-  let editionContract: Edition;
-  let customTokenContract: Token;
+  let editionContract: EditionImpl;
+  let customTokenContract: TokenImpl;
   let tokenAddress: string;
 
   let adminWallet: SignerWithAddress, samWallet: SignerWithAddress;

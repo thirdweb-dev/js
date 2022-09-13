@@ -4,7 +4,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
-import { IMintableERC20, IMulticall } from "@thirdweb-dev/contracts-js";
+import type { IMintableERC20, IMulticall } from "@thirdweb-dev/contracts-js";
 
 /**
  * Mint Many ERC20 Tokens at once

@@ -4,6 +4,7 @@ export type PackageManager = "npm" | "pnpm" | "yarn";
 
 export function getPkgManager(): PackageManager {
   try {
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
     const userAgent = process.env.npm_config_user_agent;
     if (userAgent) {
       if (userAgent.startsWith("yarn")) {

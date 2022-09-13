@@ -1,24 +1,24 @@
-import { getRoleHash } from "../common";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../core";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
-import { ContractRoles } from "../core/classes/contract-roles";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { TokenERC20History } from "../core/classes/erc-20-history";
-import { Erc20SignatureMintable } from "../core/classes/erc-20-signature-mintable";
-import { StandardErc20 } from "../core/classes/erc-20-standard";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
-import { SDKOptions } from "../schema/sdk-options";
-import { TokenMintInput } from "../schema/tokens/token";
-import { Amount, CurrencyValue } from "../types";
-import { TokenERC20 } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC20.json";
+import { getRoleHash } from "../../common";
+import { ContractEncoder } from "../../core/classes/contract-encoder";
+import { ContractEvents } from "../../core/classes/contract-events";
+import { ContractInterceptor } from "../../core/classes/contract-interceptor";
+import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
+import { ContractRoles } from "../../core/classes/contract-roles";
+import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { TokenERC20History } from "../../core/classes/erc-20-history";
+import { Erc20SignatureMintable } from "../../core/classes/erc-20-signature-mintable";
+import { StandardErc20 } from "../../core/classes/erc-20-standard";
+import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../../core/types";
+import { TokenErc20ContractSchema } from "../../schema/contracts/token-erc20";
+import { SDKOptions } from "../../schema/sdk-options";
+import { TokenMintInput } from "../../schema/tokens/token";
+import { Amount, CurrencyValue } from "../../types";
+import type { TokenERC20 } from "@thirdweb-dev/contracts-js";
+import type ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC20.json";
 import { IStorage } from "@thirdweb-dev/storage";
-import { constants } from "ethers";
+import { CallOverrides, constants } from "ethers";
 
 /**
  * Create a standard crypto token or cryptocurrency.
@@ -34,16 +34,18 @@ import { constants } from "ethers";
  *
  * @public
  */
-export class Token extends StandardErc20<TokenERC20> {
-  static contractType = "token" as const;
+export class TokenImpl extends StandardErc20<TokenERC20> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractAbi = ABI as any;
-  /**
-   * @internal
-   */
-  static schema = TokenErc20ContractSchema;
-  public metadata: ContractMetadata<TokenERC20, typeof Token.schema>;
-  public roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>;
+
+  public abi: typeof ABI;
+  public metadata: ContractMetadata<
+    TokenERC20,
+    typeof TokenErc20ContractSchema
+  >;
+  public roles: ContractRoles<
+    TokenERC20,
+    typeof TokenImpl.contractRoles[number]
+  >;
   public encoder: ContractEncoder<TokenERC20>;
   public estimator: GasCostEstimator<TokenERC20>;
   public history: TokenERC20History;
@@ -73,20 +75,25 @@ export class Token extends StandardErc20<TokenERC20> {
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
+    abi: typeof ABI,
     contractWrapper = new ContractWrapper<TokenERC20>(
       network,
       address,
-      Token.contractAbi,
+      abi,
       options,
     ),
   ) {
     super(contractWrapper, storage);
+    this.abi = abi;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      Token.schema,
+      TokenErc20ContractSchema,
       this.storage,
     );
-    this.roles = new ContractRoles(this.contractWrapper, Token.contractRoles);
+    this.roles = new ContractRoles(
+      this.contractWrapper,
+      TokenImpl.contractRoles,
+    );
     this.events = new ContractEvents(this.contractWrapper);
     this.history = new TokenERC20History(this.contractWrapper, this.events);
     this.encoder = new ContractEncoder(this.contractWrapper);
@@ -261,5 +268,15 @@ export class Token extends StandardErc20<TokenERC20> {
     amount: Amount,
   ): Promise<TransactionResult> {
     return this.erc20.burnFrom(holder, amount);
+  }
+
+  /**
+   * @internal
+   */
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    return this.contractWrapper.call(functionName, ...args);
   }
 }
