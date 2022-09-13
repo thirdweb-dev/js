@@ -1,5 +1,11 @@
 # eslint-config-thirdweb
 
+## 0.1.4
+
+### Patch Changes
+
+- [#106](https://github.com/thirdweb-dev/js/pull/106) [`0fa6f3f`](https://github.com/thirdweb-dev/js/commit/0fa6f3fcfbd571579baf9d2a0dbeee556ddbd5fe) Thanks [@jnsdls](https://github.com/jnsdls)! - add sane eslint warns & errors
+
 ## 0.1.3
 
 ### Patch Changes

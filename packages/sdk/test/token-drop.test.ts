@@ -1,7 +1,7 @@
-import { Token } from "../src";
+import { Token, TokenDrop } from "../src";
 import { createSnapshot } from "../src/common";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { TokenDrop } from "../src/contracts/token-drop";
+import { TokenDropImpl } from "../src/contracts/classes/token-drop";
 import { ClaimEligibility } from "../src/enums";
 import { expectError, sdk, signers, storage } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
@@ -14,7 +14,7 @@ import invariant from "tiny-invariant";
 global.fetch = require("cross-fetch");
 
 describe("Token Drop Contract", async () => {
-  let dropContract: TokenDrop;
+  let dropContract: TokenDropImpl;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     abbyWallet: SignerWithAddress,

@@ -36,7 +36,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
   program
     .name("thirdweb-cli")
     .description("Official thirdweb command line interface")
-    .version(cliVersion, "-v, --version", "output the current version");
+    .version(cliVersion, "-v, --version");
 
   program
     .command("detect")
@@ -48,23 +48,6 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("-a, --all", "run detection on all contracts")
     .action(async (options) => {
       await detectExtensions(options);
-    });
-
-  program
-    .command("publish")
-    .description("[Deprecated] use 'release' instead.")
-    .option("-p, --path <project-path>", "path to project", ".")
-    .option("--dry-run", "dry run (skip actually publishing)")
-    .option("-d, --debug", "show debug logs")
-    .option("--ci", "Continuous Integration mode")
-    .action(async (options) => {
-      logger.warn(
-        "'publish' is deprecated and will be removed in a future update. Please use 'release' instead.",
-      );
-      const url = await processProject(options, "release");
-      info(`Open this link to release your contracts:`);
-      logger.info(chalk.blueBright(url.toString()));
-      open(url.toString());
     });
 
   program

@@ -1,4 +1,3 @@
-import { OZ_DEFENDER_FORWARDER_ADDRESS } from "../constants/addresses";
 import { z } from "zod";
 
 /**

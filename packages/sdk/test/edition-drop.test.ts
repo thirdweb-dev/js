@@ -1,6 +1,7 @@
+import { Token } from "../src";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
+import { EditionDropImpl } from "../src/contracts/classes/edition-drop";
 import { ClaimEligibility } from "../src/enums";
-import { EditionDrop, Token } from "../src/index";
 import { expectError, sdk, signers } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -15,7 +16,7 @@ const deepEqualInAnyOrder = require("deep-equal-in-any-order");
 use(deepEqualInAnyOrder);
 
 describe("Edition Drop Contract", async () => {
-  let bdContract: EditionDrop;
+  let bdContract: EditionDropImpl;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     abbyWallet: SignerWithAddress,

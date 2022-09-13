@@ -9,7 +9,6 @@ import {
 import { DuplicateLeafsError } from "./error";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, utils } from "ethers";
-import MerkleTree from "merkletreejs";
 
 /**
  * Create a snapshot (merkle tree) from a list of addresses and uploads it to IPFS
@@ -34,6 +33,8 @@ export async function createSnapshot(
   const hashedLeafs = input.map((i) =>
     hashLeafNode(i.address, utils.parseUnits(i.maxClaimable, tokenDecimals)),
   );
+  // import dynamically to avoid bloating bundle size for non-merkle tree users
+  const MerkleTree = (await import("merkletreejs")).MerkleTree;
   const tree = new MerkleTree(hashedLeafs, utils.keccak256, {
     sort: true,
   });

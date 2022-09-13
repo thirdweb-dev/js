@@ -1,6 +1,6 @@
 import { findFiles } from "../../common/file-helper";
 import { execute } from "../helpers/exec";
-import { logger, spinner } from "../helpers/logger";
+import { logger } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
@@ -21,7 +21,10 @@ export class BrownieBuilder extends BaseBuilder {
       config?.project_structure?.build || "./build",
     );
 
-    existsSync(buildPath) && rmSync(buildPath, { recursive: true });
+    if (existsSync(buildPath)) {
+      rmSync(buildPath, { recursive: true });
+    }
+
     await execute("brownie compile", options.projectPath);
 
     const contractsPath = join(buildPath, "contracts/");

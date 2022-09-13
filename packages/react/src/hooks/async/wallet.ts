@@ -35,6 +35,9 @@ export function useBalance(tokenAddress?: ContractAddress) {
       });
     }
     return undefined;
+
+    // we're not apssing rpcUrlMap as a dependency because it should be constant anyways
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signer, chainId]);
 
   const cacheKey = useMemo(() => {

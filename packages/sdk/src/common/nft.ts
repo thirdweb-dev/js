@@ -11,7 +11,7 @@ import {
 } from "../schema/tokens/common";
 import { UploadProgressEvent } from "../types/index";
 import { NotFoundError } from "./error";
-import {
+import type {
   IERC1155Metadata,
   IERC165,
   IERC721Metadata,

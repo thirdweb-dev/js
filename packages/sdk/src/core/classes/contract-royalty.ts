@@ -5,7 +5,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractMetadata, IGenericSchemaType } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
-import {
+import type {
   ContractMetadata as ContractMetadataContract,
   IRoyalty,
 } from "@thirdweb-dev/contracts-js";

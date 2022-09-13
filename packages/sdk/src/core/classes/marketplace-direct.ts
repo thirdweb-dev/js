@@ -25,7 +25,7 @@ import {
 } from "../../types/marketplace";
 import { TransactionResult, TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import {
+import type {
   IERC1155,
   IERC165,
   IERC721,

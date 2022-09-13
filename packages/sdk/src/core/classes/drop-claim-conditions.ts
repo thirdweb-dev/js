@@ -25,7 +25,7 @@ import { BaseClaimConditionERC721, BaseDropERC20 } from "../../types/eips";
 import { TransactionResult } from "../types";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
-import {
+import type {
   ContractMetadata as ContractMetadataContract,
   DropERC20,
   DropERC721,

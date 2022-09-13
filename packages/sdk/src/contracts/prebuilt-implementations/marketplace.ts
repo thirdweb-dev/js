@@ -1,27 +1,27 @@
-import { ListingNotFoundError } from "../common";
-import { getRoleHash } from "../common/role";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
-import { ContractRoles } from "../core/classes/contract-roles";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { MarketplaceAuction } from "../core/classes/marketplace-auction";
-import { MarketplaceDirect } from "../core/classes/marketplace-direct";
-import { UpdateableNetwork } from "../core/interfaces/contract";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
-import { ListingType } from "../enums";
-import { MarketplaceContractSchema } from "../schema/contracts/marketplace";
-import { SDKOptions } from "../schema/sdk-options";
-import { DEFAULT_QUERY_ALL_COUNT } from "../types/QueryParams";
-import { AuctionListing, DirectListing } from "../types/marketplace";
-import { MarketplaceFilter } from "../types/marketplace/MarketPlaceFilter";
-import { Marketplace as MarketplaceContract } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/dist/abis/Marketplace.json";
+import { ListingNotFoundError } from "../../common";
+import { getRoleHash } from "../../common/role";
+import { ContractEncoder } from "../../core/classes/contract-encoder";
+import { ContractEvents } from "../../core/classes/contract-events";
+import { ContractInterceptor } from "../../core/classes/contract-interceptor";
+import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
+import { ContractRoles } from "../../core/classes/contract-roles";
+import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
+import { MarketplaceAuction } from "../../core/classes/marketplace-auction";
+import { MarketplaceDirect } from "../../core/classes/marketplace-direct";
+import { UpdateableNetwork } from "../../core/interfaces/contract";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../../core/types";
+import { ListingType } from "../../enums";
+import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
+import { SDKOptions } from "../../schema/sdk-options";
+import { DEFAULT_QUERY_ALL_COUNT } from "../../types/QueryParams";
+import { AuctionListing, DirectListing } from "../../types/marketplace";
+import { MarketplaceFilter } from "../../types/marketplace/MarketPlaceFilter";
+import type { Marketplace as MarketplaceContract } from "@thirdweb-dev/contracts-js";
+import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Marketplace.json";
 import { IStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, constants } from "ethers";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -38,15 +38,10 @@ import invariant from "tiny-invariant";
  *
  * @public
  */
-export class Marketplace implements UpdateableNetwork {
-  static contractType = "marketplace" as const;
+export class MarketplaceImpl implements UpdateableNetwork {
   static contractRoles = ["admin", "lister", "asset"] as const;
-  static contractAbi = ABI as any;
-  /**
-   * @internal
-   */
-  static schema = MarketplaceContractSchema;
 
+  public abi: typeof ABI;
   private contractWrapper: ContractWrapper<MarketplaceContract>;
   private storage: IStorage;
 
@@ -56,11 +51,11 @@ export class Marketplace implements UpdateableNetwork {
   public platformFees: ContractPlatformFee<MarketplaceContract>;
   public metadata: ContractMetadata<
     MarketplaceContract,
-    typeof Marketplace.schema
+    typeof MarketplaceContractSchema
   >;
   public roles: ContractRoles<
     MarketplaceContract,
-    typeof Marketplace.contractRoles[number]
+    typeof MarketplaceImpl.contractRoles[number]
   >;
   /**
    * @internal
@@ -142,23 +137,25 @@ export class Marketplace implements UpdateableNetwork {
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
+    abi: typeof ABI,
     contractWrapper = new ContractWrapper<MarketplaceContract>(
       network,
       address,
-      Marketplace.contractAbi,
+      abi,
       options,
     ),
   ) {
+    this.abi = abi;
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      Marketplace.schema,
+      MarketplaceContractSchema,
       this.storage,
     );
     this.roles = new ContractRoles(
       this.contractWrapper,
-      Marketplace.contractRoles,
+      MarketplaceImpl.contractRoles,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
@@ -544,4 +541,14 @@ export class Marketplace implements UpdateableNetwork {
   //     }),
   //   );
   // }
+
+  /**
+   * @internal
+   */
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    return this.contractWrapper.call(functionName, ...args);
+  }
 }

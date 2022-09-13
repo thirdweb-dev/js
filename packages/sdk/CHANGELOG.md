@@ -1,5 +1,87 @@
 # @thirdweb-dev/sdk
 
+## 3.0.0
+
+### Major Changes
+
+- [#19](https://github.com/thirdweb-dev/js/pull/19) [`82627ea`](https://github.com/thirdweb-dev/js/commit/82627ea0311f612119d0596ed0f568267a7af16b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - 3.0.0 update
+
+  ## _MAJOR VERSION CHANGE_
+
+  - 85% reduction in package size!
+  - Custom contracts are now first class citizens
+
+  [Full changelog](https://blog.thirdweb.com/sdk-major-update/)
+
+  #### Breaking changes:
+
+  1. Getting contracts is now async. This allows dynamically importing contracts and reduces the weight of the SDK significantly.
+
+  before:
+
+  ```javascript
+  const token = sdk.getToken(...)
+  const nftDrop = sdk.getNFTDrop(...)
+  ```
+
+  after:
+
+  ```javascript
+  const token = await sdk.getToken(...)
+  const nftDrop = await sdk.getNFTDrop(...)
+  ```
+
+  2. New Extension API for custom contracts
+
+  When working with custom contracts using `await sdk.getContract(...)`, we now expose all the convenient high level APIs for each ERC standard top level. Calling a function that is not supported in your contract will give you an error with instructions on how to unlock that functionality.
+
+  before:
+
+  ```javascript
+  const contract = await sdk.getContract(...)
+  // ERC721 contracts
+  const contract.nft?.drop?.claim?.to(...)
+  const contract.nft?.drop?.claim?.conditions.set(...)
+  // ERC1155 contracts
+  const contract.edition?.mint?.to(...)
+  // ERC20 contracts
+  const contract.token?.burn.tokens(...)
+  ```
+
+  after:
+
+  ```javascript
+  const contract = await sdk.getContract(...)
+  // ERC721 contracts
+  const contract.erc721.claimTo(...)
+  const contract.erc721.claimConditions.set(...)
+  // ERC1155 contracts
+  const contract.erc1155.mintTo(...)
+  // ERC20 contracts
+  const contract.erc20.burn(...)
+  ```
+
+### Patch Changes
+
+- [#99](https://github.com/thirdweb-dev/js/pull/99) [`a70b590`](https://github.com/thirdweb-dev/js/commit/a70b590be1efa7c0ad93a724afb24870439558ed) Thanks [@jnsdls](https://github.com/jnsdls)! - do not prompt to deploy again if user rejected the first call
+
+- [#115](https://github.com/thirdweb-dev/js/pull/115) [`a37bc00`](https://github.com/thirdweb-dev/js/commit/a37bc00991bf1a359f5f8aa8e24e2c388dcd99d8) Thanks [@jnsdls](https://github.com/jnsdls)! - add `sales` module to token pre-built contract
+
+- [#111](https://github.com/thirdweb-dev/js/pull/111) [`b442c97`](https://github.com/thirdweb-dev/js/commit/b442c970808f6cb7457d29542bd826dba711579c) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Use Enumerable to getOwned NFTs if no Supply extension found
+
+- [#106](https://github.com/thirdweb-dev/js/pull/106) [`0fa6f3f`](https://github.com/thirdweb-dev/js/commit/0fa6f3fcfbd571579baf9d2a0dbeee556ddbd5fe) Thanks [@jnsdls](https://github.com/jnsdls)! - add "events" to token-drop, make "getBuiltInContract" async properly
+
+- [#91](https://github.com/thirdweb-dev/js/pull/91) [`2adb8ff`](https://github.com/thirdweb-dev/js/commit/2adb8ff6673768a91fa411c2d069245190ad9397) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Add arbitrum and optimism goerli; rename testnets
+
+- [#108](https://github.com/thirdweb-dev/js/pull/108) [`5a5bc36`](https://github.com/thirdweb-dev/js/commit/5a5bc361507bd8707dc12e9000bb9a218221cf61) Thanks [@kumaryash90](https://github.com/kumaryash90)! - function for adding contents to pack
+
+- [#90](https://github.com/thirdweb-dev/js/pull/90) [`820a519`](https://github.com/thirdweb-dev/js/commit/820a5191b5e7af5aba5e4d1cc90cd895c0dade11) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose ERC721/1155Claimable detected extensions
+
+- [#106](https://github.com/thirdweb-dev/js/pull/106) [`0fa6f3f`](https://github.com/thirdweb-dev/js/commit/0fa6f3fcfbd571579baf9d2a0dbeee556ddbd5fe) Thanks [@jnsdls](https://github.com/jnsdls)! - make prebuilt contracts entirely async
+
+- Updated dependencies [[`820a519`](https://github.com/thirdweb-dev/js/commit/820a5191b5e7af5aba5e4d1cc90cd895c0dade11)]:
+  - @thirdweb-dev/contracts-js@1.1.8
+
 ## 2.4.9
 
 ### Patch Changes

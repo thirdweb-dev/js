@@ -14,7 +14,7 @@ import {
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import {
+import type {
   ISignatureMintERC721,
   ITokenERC721,
   SignatureMintERC721,

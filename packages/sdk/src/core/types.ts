@@ -1,15 +1,9 @@
-import type { CONTRACTS_MAP, KNOWN_CONTRACTS_MAP } from "../contracts/maps";
+import type { CONTRACTS_MAP, PREBUILT_CONTRACTS_MAP } from "../contracts";
+import type { SmartContract } from "../contracts/smart-contract";
 import { FileOrBuffer } from "@thirdweb-dev/storage";
 import { BigNumber, BytesLike, CallOverrides, Signer, providers } from "ethers";
 
 // --- utility types extracted from from ts-toolbelt --- //
-
-// class instance
-type List<A = any> = ReadonlyArray<A>;
-type Class<P extends List = any[], R extends object = object> = {
-  new (...args: P): R;
-};
-type Instance<C extends Class> = C extends Class<any[], infer R> ? R : any;
 
 // if
 type TBoolean = 0 | 1;
@@ -23,15 +17,27 @@ type Equals<A1, A2> = (<A>() => A extends A2 ? 1 : 0) extends <
   : 0;
 
 // --- end utility types --- //
+export type PrebuiltContractsMap = typeof PREBUILT_CONTRACTS_MAP;
+export type ContractsMap = typeof CONTRACTS_MAP;
 
-export type ContractType = keyof typeof CONTRACTS_MAP;
+export type PrebuiltContractType = keyof PrebuiltContractsMap;
+export type ContractType = keyof ContractsMap;
 
-export type ValidContractClass = ValueOf<typeof KNOWN_CONTRACTS_MAP>;
+export type ValidContractInstance =
+  | Awaited<ReturnType<ContractsMap[keyof PrebuiltContractsMap]["initialize"]>>
+  | SmartContract;
 
-export type ValidContractInstance = Instance<ValidContractClass>;
+export type SchemaForPrebuiltContractType<
+  TContractType extends PrebuiltContractType,
+> = PrebuiltContractsMap[TContractType]["schema"];
 
-export type ContractForContractType<TContractType extends ContractType> =
-  Instance<typeof CONTRACTS_MAP[TContractType]>;
+export type DeploySchemaForPrebuiltContractType<
+  TContractType extends PrebuiltContractType,
+> = SchemaForPrebuiltContractType<TContractType>["deploy"];
+
+export type ContractForPrebuiltContractType<
+  TContractType extends PrebuiltContractType,
+> = Awaited<ReturnType<PrebuiltContractsMap[TContractType]["initialize"]>>;
 
 export type NetworkOrSignerOrProvider =
   | providers.Networkish
