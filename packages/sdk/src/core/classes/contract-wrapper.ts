@@ -303,13 +303,17 @@ export class ContractWrapper<
       .map((i) => i.type)
       .join()})`;
 
+    // check if the function exists on the contract, otherwise use the name passed in
+    const fnName =
+      ethersFnName in this.readContract.functions ? ethersFnName : functionName;
+
     // TODO validate each argument
     if (fn.stateMutability === "view" || fn.stateMutability === "pure") {
       // read function
-      return (this.readContract as any)[ethersFnName](...args);
+      return (this.readContract as any)[fnName](...args);
     } else {
       // write function
-      const receipt = await this.sendTransaction(ethersFnName, args, txOptions);
+      const receipt = await this.sendTransaction(fnName, args, txOptions);
       return {
         receipt,
       };
