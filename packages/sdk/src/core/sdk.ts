@@ -322,21 +322,25 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * @param contractAddress - the address of the contract to attempt to resolve the contract type for
    * @returns the {@link ContractType} for the given contract address
-   * @throws if the contract type cannot be determined (is not a valid thirdweb contract)
+   *
    */
   public async resolveContractType(
     contractAddress: string,
   ): Promise<ContractType> {
-    const contract = new Contract(
-      contractAddress,
-      IThirdwebContractABI,
-      this.getSignerOrProvider(),
-    );
-    const remoteContractType = ethers.utils
-      .toUtf8String(await contract.contractType())
-      // eslint-disable-next-line no-control-regex
-      .replace(/\x00/g, "");
-    return getContractTypeForRemoteName(remoteContractType);
+    try {
+      const contract = new Contract(
+        contractAddress,
+        IThirdwebContractABI,
+        this.getSignerOrProvider(),
+      );
+      const remoteContractType = ethers.utils
+        .toUtf8String(await contract.contractType())
+        // eslint-disable-next-line no-control-regex
+        .replace(/\x00/g, "");
+      return getContractTypeForRemoteName(remoteContractType);
+    } catch (err) {
+      return "custom";
+    }
   }
 
   /**
