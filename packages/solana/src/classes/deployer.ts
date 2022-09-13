@@ -110,6 +110,7 @@ export class Deployer {
     invariant(this.wallet.signer, "Wallet is not connected");
     const parsed = NFTDropContractSchema.parse(metadata);
 
+    // TODO make it a single tx
     const collection = await this.createNftCollection(metadata);
     const { candyMachine: nftDrop } = await this.metaplex
       .candyMachines()

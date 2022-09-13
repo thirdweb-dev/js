@@ -19,13 +19,22 @@ export class Registry {
     this.metaplex = metaplex;
   }
 
-  public async getAllMetadataAccontsForWallet(walletAddress: string) {
-    const pubKeys = await this.getAllMetadataAddressesForWallet(walletAddress);
+  public async getAccountsForWallet(walletAddress: string) {
+    const pubKeys = await this.getMetadataAddressesForWallet(walletAddress);
     const metadatas = await this.metaplex
       .nfts()
       .findAllByMintList({ mints: pubKeys })
       .run();
 
+    const candyMachines = await this.metaplex
+      .candyMachines()
+      .findAllBy({
+        type: "wallet",
+        publicKey: new PublicKey(walletAddress),
+      })
+      .run();
+
+    console.log(candyMachines[0]?.collectionMintAddress?.toBase58());
     return metadatas.reduce(
       (accounts, mintMetadata) => {
         const meta = mintMetadata as Metadata;
@@ -33,7 +42,17 @@ export class Registry {
           return accounts;
         }
         if (meta?.collectionDetails) {
-          accounts.nftCollections.push(meta.mintAddress.toBase58());
+          // check if it's part of a candy machine
+          const drop = candyMachines.find(
+            (candyMachine) =>
+              candyMachine.collectionMintAddress?.toBase58() ===
+              meta.mintAddress.toBase58(),
+          );
+          if (drop) {
+            accounts.drops.push(drop.address.toBase58());
+          } else {
+            accounts.nftCollections.push(meta.mintAddress.toBase58());
+          }
         } else {
           if (meta.tokenStandard === TokenStandard.Fungible) {
             accounts.tokens.push(meta.mintAddress.toBase58());
@@ -49,22 +68,7 @@ export class Registry {
     );
   }
 
-  public async getAllMetadataAddressesForWallet(walletAddress: string) {
-    // const accounts = await this.metaplex
-    //   .nfts()
-    //   .findAllByOwner({ owner: new PublicKey(walletAddress) })
-    //   .run();
-
-    // console.log("owned", accounts.length);
-
-    // const created = await this.metaplex
-    //   .nfts()
-    //   .findAllByCreator({ creator: new PublicKey(walletAddress) })
-    //   .run();
-
-    // console.log("created", created.length);
-
-    //accounts.reduce((acc, curr) => {}, []);
+  public async getMetadataAddressesForWallet(walletAddress: string) {
     const mints = await TokenMetadataProgram.metadataV1Accounts(this.metaplex)
       .selectMint()
       .whereCreator(1, new PublicKey(walletAddress))

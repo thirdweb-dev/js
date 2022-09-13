@@ -1,8 +1,9 @@
 import { sdk } from "./before-setup";
+import { expect } from "chai";
 
 describe("Registry", async () => {
   before(async () => {
-    const addr = await sdk.deployer.createNftCollection({
+    await sdk.deployer.createNftCollection({
       name: "Test Collection",
       description: "Test Description",
       symbol: "TC",
@@ -16,17 +17,18 @@ describe("Registry", async () => {
     });
   });
 
-  it("test regsitry", async () => {
-    const t = await sdk.registry.getAllMetadataAccontsForWallet(
+  it("should fetch accounts grouped by type", async () => {
+    const t = await sdk.registry.getAccountsForWallet(
       sdk.wallet.getAddress() || "",
     );
-    console.log(t);
-
     const colls = t.nftCollections[0];
     const nftCollection = await sdk.getNFTCollection(colls);
-    console.log(await nftCollection.getMetadata());
+    expect((await nftCollection.getMetadata()).name).to.eq("Test Collection");
 
     const token = await sdk.getToken(t.tokens[0]);
-    console.log(await token.getMetadata());
+    expect((await token.getMetadata()).name).to.eq("Test Token");
+
+    const drop = await sdk.getNFTDrop(t.drops[0]);
+    expect((await drop.getMetadata()).name).to.eq("Test Drop");
   });
 });
