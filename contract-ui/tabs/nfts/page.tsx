@@ -36,7 +36,7 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
     <Flex direction="column" gap={6}>
       <Flex direction="row" justify="space-between" align="center">
         <Heading size="title.sm">Contract NFTs</Heading>
-        <Flex gap={4}>
+        <Flex gap={2} flexDir={{ base: "column", md: "row" }}>
           <NFTRevealButton contractQuery={contractQuery} />
           <NFTMintButton contractQuery={contractQuery} />
           <NFTLazyMintButton contractQuery={contractQuery} />

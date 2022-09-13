@@ -26,7 +26,7 @@ import { detectFeatures } from "components/contract-components/utils";
 import { ClaimConditions } from "contract-ui/tabs/claim-conditions/components/claim-conditions";
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
-import { Card, Drawer, Heading, Text } from "tw-components";
+import { Card, CodeBlock, Drawer, Heading, Text } from "tw-components";
 
 interface NFTDrawerProps {
   contract: NFTContract;
@@ -81,16 +81,38 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
         title: "Details",
         isDisabled: false,
         children: () => (
-          <Card as={Flex} flexDir="column" gap={3}>
-            <Text size="label.md">Token ID: {tokenId}</Text>
-            {isERC721 && <Text size="label.md">Owner: {renderData.owner}</Text>}
-            <Text size="label.md">Token Standard: {renderData.type}</Text>
-            {isERC1155 && (
-              <Text size="label.md">
-                Supply: {renderData.supply.toString()}
-              </Text>
-            )}
-          </Card>
+          <Flex flexDir="column" gap={4}>
+            <Card as={Flex} flexDir="column" gap={3}>
+              <Text size="label.md">Token ID: {tokenId}</Text>
+              {isERC721 && (
+                <Text size="label.md">Owned by: {renderData.owner}</Text>
+              )}
+              <Text size="label.md">Token Standard: {renderData.type}</Text>
+              {isERC1155 && (
+                <Text size="label.md">
+                  Supply: {renderData.supply.toString()}
+                </Text>
+              )}
+            </Card>
+            {data?.metadata.attributes || data?.metadata.properties ? (
+              <Card as={Flex} flexDir="column" gap={4}>
+                <Heading size="label.md">Properties</Heading>
+                <CodeBlock
+                  code={
+                    JSON.stringify(
+                      data?.metadata.attributes || data?.metadata.properties,
+                      null,
+                      2,
+                    ) || ""
+                  }
+                  language="json"
+                  canCopy={false}
+                  wrap={false}
+                  overflow="auto"
+                />
+              </Card>
+            ) : null}
+          </Flex>
         ),
       },
       {
@@ -151,6 +173,7 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
     tokenId,
     erc1155,
     isClaimable,
+    data,
   ]);
 
   if (!renderData) {
@@ -161,7 +184,7 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
     <Drawer
       allowPinchZoom
       preserveScrollBarGap
-      size="xl"
+      size="lg"
       onClose={onClose}
       isOpen={isOpen}
     >

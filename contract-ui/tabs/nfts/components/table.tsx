@@ -21,11 +21,12 @@ import {
   useNFTs,
   useTotalCount,
 } from "@thirdweb-dev/react";
-import { Erc721, Erc1155, Json } from "@thirdweb-dev/sdk";
+import { Erc721, Erc1155 } from "@thirdweb-dev/sdk";
 import { detectFeatures } from "components/contract-components/utils";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import { BigNumber } from "ethers";
 import React, { useEffect, useMemo, useState } from "react";
+import { FiArrowRight } from "react-icons/fi";
 import {
   MdFirstPage,
   MdLastPage,
@@ -33,13 +34,7 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { Cell, Column, usePagination, useTable } from "react-table";
-import {
-  AddressCopyButton,
-  Card,
-  CodeBlock,
-  Heading,
-  Text,
-} from "tw-components";
+import { AddressCopyButton, Card, Heading, Text } from "tw-components";
 
 interface ContractOverviewNFTGetAllProps {
   contract: NFTContract;
@@ -68,21 +63,6 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
       {
         Header: "Description",
         accessor: (row) => row.metadata.description,
-      },
-      {
-        Header: "Properties",
-        accessor: (row) => row.metadata.attributes || row.metadata.properties,
-        Cell: ({ cell }: { cell: Cell<NFT<Erc721OrErc1155>, Json> }) =>
-          cell.value ? (
-            <CodeBlock
-              code={JSON.stringify(cell.value, null, 2) || ""}
-              language="json"
-              canCopy={false}
-              wrap={false}
-            />
-          ) : (
-            <Text fontStyle="italic">none set</Text>
-          ),
       },
     ];
     if (isErc721) {
@@ -181,6 +161,8 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                     </Text>
                   </Th>
                 ))}
+                {/* // Need to add an empty header for the drawer button */}
+                <Th />
               </Tr>
             ))}
           </Thead>
@@ -207,10 +189,13 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                 >
                   {row.cells.map((cell) => (
                     // eslint-disable-next-line react/jsx-key
-                    <Td {...cell.getCellProps()} borderBottomWidth={"inherit"}>
+                    <Td {...cell.getCellProps()} borderBottomWidth="inherit">
                       {cell.render("Cell")}
                     </Td>
                   ))}
+                  <Td borderBottomWidth="inherit">
+                    <Icon as={FiArrowRight} />
+                  </Td>
                 </Tr>
               );
             })}
