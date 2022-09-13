@@ -1,4 +1,8 @@
-import { Json } from "../types";
+import { IStorageUploader, Json, JsonObject } from "../types";
+
+export function isBrowser() {
+  return typeof window !== "undefined";
+}
 
 export function isFileInstance(data: any): data is File {
   return global.File && data instanceof File;
@@ -6,6 +10,74 @@ export function isFileInstance(data: any): data is File {
 
 export function isBufferInstance(data: any): data is Buffer {
   return global.Buffer && data instanceof Buffer;
+}
+
+/**
+ * Pre-processes metadata and uploads all file properties
+ * to storage in *bulk*, then performs a string replacement of
+ * all file properties -\> the resulting ipfs uri. This is
+ * called internally by `uploadMetadataBatch`.
+ *
+ * @internal
+ *
+ * @returns - The processed metadata with properties pointing at ipfs in place of `File | Buffer`
+ * @param metadatas
+ * @param options
+ */
+export async function batchUploadProperties(
+  metadatas: JsonObject[],
+  uploader: IStorageUploader,
+  gatewayUrl: string,
+  baseUri: string,
+) {
+  // replace all active gateway url links with their raw ipfs hash
+  const sanitizedMetadatas = replaceGatewayUrlWithHash(
+    metadatas,
+    baseUri,
+    gatewayUrl,
+  );
+  // extract any binary file to upload
+  const filesToUpload = sanitizedMetadatas.flatMap((m: JsonObject) =>
+    buildFilePropertiesMap(m, []),
+  );
+  // if no binary files to upload, return the metadata
+  if (filesToUpload.length === 0) {
+    return sanitizedMetadatas;
+  }
+  // otherwise upload those files
+  const uris = await uploader.uploadBatch(filesToUpload);
+
+  // replace all files with their ipfs hash
+  return replaceFilePropertiesWithHashes(sanitizedMetadatas, uris, baseUri);
+}
+
+/**
+ * This function recurisely traverses an object and hashes any
+ * `Buffer` or `File` objects into the returned map.
+ *
+ * @param object - the Json Object
+ * @param files - The running array of files or buffer to upload
+ * @returns - The final map of all hashes to files
+ */
+export function buildFilePropertiesMap(
+  object: JsonObject,
+  files: (File | Buffer)[] = [],
+): (File | Buffer)[] {
+  if (Array.isArray(object)) {
+    object.forEach((element) => {
+      buildFilePropertiesMap(element, files);
+    });
+  } else if (object) {
+    const values = Object.values(object);
+    for (const val of values) {
+      if (isFileInstance(val) || isBufferInstance(val)) {
+        files.push(val);
+      } else if (typeof val === "object") {
+        buildFilePropertiesMap(val as JsonObject, files);
+      }
+    }
+  }
+  return files;
 }
 
 /**

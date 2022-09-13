@@ -1,0 +1,1 @@
+export { ThirdwebStorage } from "./storage";
