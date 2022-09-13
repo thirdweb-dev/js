@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/auth",
-  "version": "1.0.8",
+  "version": "2.0.0",
   "exports": {
     "./package.json": "./package.json",
     "./express": {

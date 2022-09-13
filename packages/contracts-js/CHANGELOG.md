@@ -1,5 +1,11 @@
 # @thirdweb-dev/contracts-js
 
+## 1.1.8
+
+### Patch Changes
+
+- [#90](https://github.com/thirdweb-dev/js/pull/90) [`820a519`](https://github.com/thirdweb-dev/js/commit/820a5191b5e7af5aba5e4d1cc90cd895c0dade11) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update to contracts v3.1.7
+
 ## 1.1.7
 
 ### Patch Changes
