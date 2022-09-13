@@ -144,21 +144,16 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
 
   const ensQuery = ens.useQuery(address);
 
+  const ensNameOrAddress = useMemo(() => {
+    return ensQuery?.data?.ensName || ensQuery.data?.address;
+  }, [ensQuery.data]);
+
   const successRedirectUrl = useMemo(() => {
-    if (
-      (!ensQuery.data?.ensName && !ensQuery.data?.address) ||
-      !publishMetadata.data?.name
-    ) {
+    if (!ensNameOrAddress || !publishMetadata.data?.name) {
       return undefined;
     }
-    return `/${ensQuery.data.ensName || ensQuery.data.address}/${
-      publishMetadata.data.name
-    }`;
-  }, [
-    ensQuery.data?.address,
-    ensQuery.data?.ensName,
-    publishMetadata.data?.name,
-  ]);
+    return `/${ensNameOrAddress}/${publishMetadata.data.name}`;
+  }, [ensNameOrAddress, publishMetadata.data?.name]);
 
   const isDisabled = !successRedirectUrl || !address;
   const isDeployableViaFactory = watch("isDeployableViaFactory");
@@ -182,6 +177,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
             action: "click",
             label: "attempt",
             uris: contractId,
+            release_id: `${ensNameOrAddress}/${publishMetadata.data?.name}`,
           });
           publishMutation.mutate(
             {
@@ -197,6 +193,8 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
                   action: "click",
                   label: "success",
                   uris: contractId,
+                  release_id: `${ensNameOrAddress}/${publishMetadata.data?.name}`,
+                  version: data.version,
                 });
                 if (successRedirectUrl) {
                   router.push(
@@ -215,6 +213,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
                   action: "click",
                   label: "error",
                   uris: contractId,
+                  release_id: `${ensNameOrAddress}/${publishMetadata.data?.name}`,
                 });
               },
             },
