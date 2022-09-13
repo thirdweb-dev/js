@@ -94,21 +94,4 @@ export enum PageId {
   // thirdweb.com/:network/:contractAddress
   // example: thirdweb.com/goerli/0x2eaDAa60dBB74Ead3E20b23E4C5A0Dd789932846
   DeployedContract = "deployed-contract",
-
-  // ---------------------------------------------------------------------------
-  //  pre-built deployed contracts
-  //  (will bedeprecated in favor of the new "deployed-contract" page over time)
-  // ---------------------------------------------------------------------------
-
-  EditionContract = "edition-contract",
-  EditionDropContract = "edition-drop-contract",
-  MarketplaceContract = "marketplace-contract",
-  NftCollectionContract = "nft-collection-contract",
-  NftDropContract = "nft-drop-contract",
-  PackContract = "pack-contract",
-  SignatureDropContract = "signature-drop-contract",
-  SplitContract = "split-contract",
-  TokenContract = "token-contract",
-  TokenDropContract = "token-drop-contract",
-  VoteContract = "vote-contract",
 }
