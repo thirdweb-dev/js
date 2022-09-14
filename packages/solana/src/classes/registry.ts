@@ -6,6 +6,12 @@ import {
 import { TokenStandard } from "@metaplex-foundation/mpl-token-metadata";
 import { PublicKey } from "@solana/web3.js";
 
+export type WalletAccount = {
+  type: "nft-collection" | "nft-drop" | "token";
+  address: string;
+  name: string;
+};
+
 type RelevantWalletAccounts = {
   tokens: string[];
   nftCollections: string[];
