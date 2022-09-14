@@ -34,7 +34,6 @@ export class Registry {
       })
       .run();
 
-    console.log(candyMachines[0]?.collectionMintAddress?.toBase58());
     return metadatas.reduce(
       (accounts, mintMetadata) => {
         const meta = mintMetadata as Metadata;

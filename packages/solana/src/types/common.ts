@@ -1,3 +1,4 @@
+import { Signer, WalletAdapter } from "@metaplex-foundation/js";
 import { z } from "zod";
 
 export const MAX_BPS = 10_000;
@@ -66,3 +67,5 @@ export type CurrencyValue = z.input<typeof CurrencyValueSchema>;
 export type TransactionResult = {
   signature: string;
 };
+
+export type WalletSigner = Signer | WalletAdapter;
