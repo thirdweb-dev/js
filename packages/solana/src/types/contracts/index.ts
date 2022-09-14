@@ -1,4 +1,4 @@
-import { AmountSchema, JsonSchema } from "./common";
+import { AmountSchema, JsonSchema } from "../common";
 import { FileBufferOrStringSchema } from "@thirdweb-dev/storage";
 import { z } from "zod";
 
@@ -25,10 +25,11 @@ export const CommonContractOutputSchema = CommonContractSchema.extend({
 export const NFTCollectionCreatorInputSchema = z.object({
   address: z.string(),
   share: z.number(),
+  verified: z.boolean().default(false),
 });
 
 export const NFTCollectionMetadataInputSchema = CommonContractSchema.extend({
-  creators: z.array(NFTCollectionCreatorInputSchema).optional(),
+  creators: z.array(NFTCollectionCreatorInputSchema).default([]),
 });
 
 export type NFTCollectionMetadataInput = z.input<

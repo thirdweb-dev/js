@@ -1,4 +1,6 @@
-import { useBuiltinContract } from "./useBuiltinContract";
+import { showDeprecationWarning } from "../../utils/deprecation-warning";
+import { useContract } from "../async/contracts";
+import { PackImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/pack";
 
 /**
  * Hook for getting an instance of a `Pack` contract. This contract supports the creation of on-chain luck-based lootboxes.
@@ -9,7 +11,7 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * import { usePack } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const pack = await usePack("<YOUR-CONTRACT-ADDRESS>")
+ *   const pack = usePack("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the pack contract in the rest of the component
  *
@@ -26,5 +28,6 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * @depreated use `useContract()` instead
  */
 export function usePack(contractAddress?: string) {
-  return useBuiltinContract("pack", contractAddress);
+  showDeprecationWarning("usePack()", "useContract<Pack>()");
+  return useContract<PackImpl>(contractAddress).contract;
 }

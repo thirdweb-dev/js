@@ -6,7 +6,7 @@ jest.setTimeout(120_000);
 
 describe("npx thirdweb detect", () => {
   it("should detect ERC721Base extensions", async () => {
-    const { spawn, cleanup, exists, path } = await prepareEnvironment();
+    const { spawn, cleanup, exists } = await prepareEnvironment();
     const create = await spawn("node", "./dist/cli/index.js create");
 
     await create.waitForText(CREATE_MESSAGES.typeOfProject);

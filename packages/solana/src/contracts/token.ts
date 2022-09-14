@@ -1,4 +1,3 @@
-import { UserWallet } from "../classes/user-wallet";
 import { Amount, AmountSchema, TransactionResult } from "../types/common";
 import { TokenMetadata } from "../types/nft";
 import {
@@ -14,18 +13,11 @@ import { IStorage } from "@thirdweb-dev/storage";
 
 export class Token {
   private connection: Connection;
-  private wallet: UserWallet;
   private metaplex: Metaplex;
   private storage: IStorage;
   tokenMintAddress: PublicKey;
 
-  constructor(
-    tokenMintAddress: string,
-    metaplex: Metaplex,
-    wallet: UserWallet,
-    storage: IStorage,
-  ) {
-    this.wallet = wallet;
+  constructor(tokenMintAddress: string, metaplex: Metaplex, storage: IStorage) {
     this.storage = storage;
     this.metaplex = metaplex;
     this.connection = metaplex.connection;
@@ -52,7 +44,7 @@ export class Token {
     } as TokenMetadata;
   }
 
-  async totalSupply(): Promise<BigInt> {
+  async totalSupply(): Promise<bigint> {
     const info = await this.getMint();
     const value = BigInt(info.supply.basisPoints.toString());
     // TODO use CurrencyValue to provide a human readable display value
@@ -93,7 +85,7 @@ export class Token {
   }
 
   async balance(): Promise<bigint> {
-    return this.balanceOf(this.wallet.getSigner().publicKey.toBase58());
+    return this.balanceOf(this.metaplex.identity().publicKey.toBase58());
   }
 
   async balanceOf(walletAddress: string): Promise<bigint> {

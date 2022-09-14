@@ -18,7 +18,7 @@ export interface ThirdwebNftMediaProps extends SharedMediaProps {
  * ```jsx
  * import { ThirdwebNftMedia, useNFTCollection, useNFT } from "@thirdweb-dev/react";
  * export default function NFTCollectionRender() {
- *   const contract = await useNFTCollection(<your-contract-address>);
+ *   const contract = useNFTCollection(<your-contract-address>);
  *   const { data: nft, isLoading } = useNFT(contract, 0);
  *
  *   return (
@@ -52,3 +52,5 @@ export const ThirdwebNftMedia = React.forwardRef<
     />
   );
 });
+
+ThirdwebNftMedia.displayName = "ThirdwebNftMedia";

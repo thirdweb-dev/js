@@ -1,4 +1,6 @@
-import { useBuiltinContract } from "./useBuiltinContract";
+import { showDeprecationWarning } from "../../utils/deprecation-warning";
+import { useContract } from "../async/contracts";
+import { VoteImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/vote";
 
 /**
  * Hook for getting an instance of an `Vote` contract. This contract enables fully featured voting-based decentralized governance systems.
@@ -9,7 +11,7 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * import { useVote } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const vote = await useVote("<YOUR-CONTRACT-ADDRESS>")
+ *   const vote = useVote("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the vote contract in the rest of the component
  *
@@ -26,5 +28,6 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * @depreated use `useContract()` instead
  */
 export function useVote(contractAddress?: string) {
-  return useBuiltinContract("vote", contractAddress);
+  showDeprecationWarning("useVote()", "useContract<Vote>()");
+  return useContract<VoteImpl>(contractAddress).contract;
 }

@@ -8,7 +8,6 @@ import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type {
   CustomContractMetadata,
-  SmartContract,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
@@ -28,7 +27,7 @@ import invariant from "tiny-invariant";
  * @beta
  */
 export function usePrimarySaleRecipient(
-  contract: RequiredParam<SmartContract | ValidContractInstance>,
+  contract: RequiredParam<ValidContractInstance>,
 ) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
@@ -77,7 +76,7 @@ export function usePrimarySaleRecipient(
  * @beta
  */
 export function useUpdatePrimarySaleRecipient(
-  contract: RequiredParam<SmartContract | ValidContractInstance>,
+  contract: RequiredParam<ValidContractInstance>,
 ) {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
@@ -119,7 +118,7 @@ export function useUpdatePrimarySaleRecipient(
  * @beta
  */
 export function useRoyaltySettings(
-  contract: RequiredParam<SmartContract | ValidContractInstance>,
+  contract: RequiredParam<ValidContractInstance>,
 ) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
@@ -168,7 +167,7 @@ export function useRoyaltySettings(
  * @beta
  */
 export function useUpdateRoyaltySettings(
-  contract: RequiredParam<SmartContract | ValidContractInstance>,
+  contract: RequiredParam<ValidContractInstance>,
 ) {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
@@ -213,7 +212,7 @@ export function useUpdateRoyaltySettings(
  * @beta
  */
 export function usePlatformFees(
-  contract: RequiredParam<SmartContract | ValidContractInstance>,
+  contract: RequiredParam<ValidContractInstance>,
 ) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
@@ -261,7 +260,7 @@ export function usePlatformFees(
  * @beta
  */
 export function useUpdatePlatformFees(
-  contract: RequiredParam<SmartContract | ValidContractInstance>,
+  contract: RequiredParam<ValidContractInstance>,
 ) {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
@@ -305,9 +304,7 @@ export function useUpdatePlatformFees(
  * @returns a {@link CustomContractMetadata} object containing the metadata
  * @beta
  */
-export function useMetadata(
-  contract: RequiredParam<SmartContract | ValidContractInstance>,
-) {
+export function useMetadata(contract: RequiredParam<ValidContractInstance>) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.extensions.metadata.get(contractAddress),
@@ -353,7 +350,7 @@ export function useMetadata(
  * @beta
  */
 export function useUpdateMetadata(
-  contract: RequiredParam<SmartContract | ValidContractInstance>,
+  contract: RequiredParam<ValidContractInstance>,
 ) {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();

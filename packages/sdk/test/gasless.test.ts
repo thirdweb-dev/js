@@ -24,15 +24,14 @@ describe("Gasless Forwarder", async () => {
   });
 
   it.skip("should use sdk with openzeppelin defender", async () => {
-    const BUNDLE_DROP_ADDRESS = "0x41c1f16fAd38381727b327b26F282C7798ee0655";
-    const provider = ethers.getDefaultProvider(RPC_URL);
-    const wallet = Wallet.createRandom().connect(provider);
-    const sdk = new ThirdwebSDK(wallet, {
-      gasless: {
-        openzeppelin: {
-          relayerUrl: process.env.OZ_DEFENDER_RELAYER_URL as string,
-        },
-      },
-    });
+    // const provider = ethers.getDefaultProvider(RPC_URL);
+    // const wallet = Wallet.createRandom().connect(provider);
+    // const sdk = new ThirdwebSDK(wallet, {
+    //   gasless: {
+    //     openzeppelin: {
+    //       relayerUrl: process.env.OZ_DEFENDER_RELAYER_URL as string,
+    //     },
+    //   },
+    // });
   });
 });

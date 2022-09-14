@@ -1,5 +1,4 @@
 import { NFTHelper } from "../classes/helpers/nft-helper";
-import { UserWallet } from "../classes/user-wallet";
 import { METAPLEX_PROGRAM_ID } from "../constants/addresses";
 import { TransactionResult } from "../types/common";
 import {
@@ -9,10 +8,8 @@ import {
 } from "../types/nft";
 import {
   findEditionMarkerPda,
-  findEditionPda,
   Metaplex,
   toBigNumber,
-  TokenMetadataProgram,
 } from "@metaplex-foundation/js";
 import {
   EditionMarker,
@@ -22,7 +19,6 @@ import { ConfirmedSignatureInfo, PublicKey } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
 
 export class NFTCollection {
-  private wallet: UserWallet;
   private metaplex: Metaplex;
   private storage: IStorage;
   private nft: NFTHelper;
@@ -31,10 +27,8 @@ export class NFTCollection {
   constructor(
     collectionMintAddress: string,
     metaplex: Metaplex,
-    wallet: UserWallet,
     storage: IStorage,
   ) {
-    this.wallet = wallet;
     this.storage = storage;
     this.metaplex = metaplex;
     this.nft = new NFTHelper(metaplex);
@@ -215,11 +209,12 @@ export class NFTCollection {
     const { nft } = await this.metaplex
       .nfts()
       .create({
+        // useExistingMint: newMint,
         name: metadata.name || "",
         uri,
         sellerFeeBasisPoints: 0,
         collection: this.collectionMintAddress,
-        collectionAuthority: this.wallet.signer,
+        collectionAuthority: this.metaplex.identity(),
         tokenOwner: new PublicKey(to),
         // Always sets max supply to unlimited so editions can be minted
         maxSupply: null,

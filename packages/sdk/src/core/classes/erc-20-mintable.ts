@@ -6,7 +6,7 @@ import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
 import { Erc20BatchMintable } from "./erc-20-batch-mintable";
-import { IMintableERC20, IMulticall } from "@thirdweb-dev/contracts-js";
+import type { IMintableERC20, IMulticall } from "@thirdweb-dev/contracts-js";
 
 /**
  * Mint ERC20 Tokens

@@ -21,13 +21,13 @@ import { BaseClaimConditionERC1155 } from "../../types/eips";
 import { TransactionResult } from "../index";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
-import {
+import type {
   ContractMetadata as ContractMetadataContract,
   DropERC1155,
   DropSinglePhase1155,
   IERC20,
-  IERC20__factory,
 } from "@thirdweb-dev/contracts-js";
+import IERC20ABI from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { IDropClaimCondition } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC1155";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";
@@ -319,9 +319,10 @@ export class DropErc1155ClaimConditions<
         const erc20 = new ContractWrapper<IERC20>(
           provider,
           claimCondition.currencyAddress,
-          IERC20__factory.abi,
+          IERC20ABI,
           {},
         );
+
         const balance = await erc20.readContract.balanceOf(addressToCheck);
         if (balance.lt(totalPrice)) {
           reasons.push(ClaimEligibility.NotEnoughTokens);
