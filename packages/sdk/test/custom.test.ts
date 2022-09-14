@@ -32,7 +32,7 @@ describe("Custom Contracts", async () => {
   let sdk: ThirdwebSDK;
   let simpleContractUri: string;
 
-  beforeAll(async () => {
+  before(async () => {
     [adminWallet, samWallet, bobWallet] = signers;
     sdk = new ThirdwebSDK(adminWallet);
     simpleContractUri =
