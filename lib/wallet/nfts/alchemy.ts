@@ -49,9 +49,9 @@ export async function transformAlchemyResponseToNFT(
   alchemyResponse: AlchemyResponse,
   owner: string,
 ): Promise<WalletNFT[]> {
-  return await Promise.all(
-    alchemyResponse.ownedNfts
-      .map(async (alchemyNFT) => {
+  return (
+    await Promise.all(
+      alchemyResponse.ownedNfts.map(async (alchemyNFT) => {
         const rawUri = alchemyNFT.tokenUri.raw;
 
         try {
@@ -68,9 +68,9 @@ export async function transformAlchemyResponseToNFT(
         } catch (e) {
           return undefined as unknown as WalletNFT;
         }
-      })
-      .filter(Boolean),
-  );
+      }),
+    )
+  ).filter(Boolean);
 }
 
 type AlchemyResponse = {

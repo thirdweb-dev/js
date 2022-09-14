@@ -41,9 +41,9 @@ export async function transformMoralisResponseToNFT(
   moralisResponse: MoralisResponse,
   owner: string,
 ): Promise<WalletNFT[]> {
-  return await Promise.all(
-    moralisResponse.result
-      .map(async (moralisNft) => {
+  return (
+    await Promise.all(
+      moralisResponse.result.map(async (moralisNft) => {
         try {
           return {
             contractAddress: moralisNft.token_address,
@@ -60,9 +60,9 @@ export async function transformMoralisResponseToNFT(
         } catch (e) {
           return undefined as unknown as WalletNFT;
         }
-      })
-      .filter(Boolean),
-  );
+      }),
+    )
+  ).filter(Boolean);
 }
 
 type MoralisResponse = {
