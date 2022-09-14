@@ -8,23 +8,15 @@ import { Program } from "./contracts/program";
 import { Token } from "./contracts/token";
 import { Network } from "./types";
 import { getUrlForNetwork } from "./utils/urls";
-import {
-  isIdentitySigner,
-  isKeypairSigner,
-  keypairIdentity,
-  Metaplex,
-  Signer,
-  walletAdapterIdentity,
-} from "@metaplex-foundation/js";
+import { Metaplex } from "@metaplex-foundation/js";
 import {
   AnchorProvider,
   Idl,
   Program as AnchorProgram,
+  setProvider,
 } from "@project-serum/anchor";
-import { registry } from "@project-serum/anchor/dist/cjs/utils";
-import { Connection, Keypair } from "@solana/web3.js";
+import { Connection } from "@solana/web3.js";
 import { IpfsStorage, IStorage, PinataUploader } from "@thirdweb-dev/storage";
-import invariant from "tiny-invariant";
 
 export class ThirdwebSDK {
   static fromNetwork(network: Network, storage?: IStorage): ThirdwebSDK {
@@ -53,35 +45,32 @@ export class ThirdwebSDK {
     this.connection = connection;
     this.storage = storage;
     this.metaplex = Metaplex.make(this.connection);
-    this.wallet = new UserWallet();
-    this.deployer = new Deployer(this.metaplex, this.wallet, this.storage);
+    this.wallet = new UserWallet(this.metaplex);
+    this.deployer = new Deployer(this.metaplex, this.storage);
     this.registry = new Registry(this.metaplex);
     this.anchorProvider = new AnchorProvider(
       this.metaplex.connection,
       this.metaplex.identity(),
       {},
     );
-    // when there is a new signer connected in the wallet sdk, update that signer
-    this.wallet.events.on("connected", (s) => {
-      this.propagateSignerUpdated(s);
+    this.wallet.events.on("connected", () => {
+      this.propagateWalletConnected();
     });
-    // when the wallet disconnects, update the signer to undefined
     this.wallet.events.on("disconnected", () => {
-      // reset connection to Metaplex
-      this.metaplex = Metaplex.make(this.connection);
+      this.propagateWalletDisconnected();
     });
   }
 
   public async getNFTCollection(address: string): Promise<NFTCollection> {
-    return new NFTCollection(address, this.metaplex, this.wallet, this.storage);
+    return new NFTCollection(address, this.metaplex, this.storage);
   }
 
   public async getNFTDrop(address: string): Promise<NFTDrop> {
-    return new NFTDrop(address, this.metaplex, this.wallet, this.storage);
+    return new NFTDrop(address, this.metaplex, this.storage);
   }
 
   public async getToken(address: string): Promise<Token> {
-    return new Token(address, this.metaplex, this.wallet, this.storage);
+    return new Token(address, this.metaplex, this.storage);
   }
 
   public async getProgram(address: string) {
@@ -98,23 +87,16 @@ export class ThirdwebSDK {
     return new Program(address, idl, this.anchorProvider);
   }
 
-  private propagateSignerUpdated(signer: Signer) {
-    this.metaplex = this.connectToMetaplex(signer, this.metaplex);
-    this.anchorProvider = new AnchorProvider(
-      this.metaplex.connection,
-      this.metaplex.identity(),
-      {},
+  private propagateWalletConnected() {
+    setProvider(
+      new AnchorProvider(this.connection, this.metaplex.identity(), {}),
     );
   }
 
-  private connectToMetaplex(signer: Signer, metaplex: Metaplex) {
-    invariant(signer, "Wallet is not connected");
-    const plugin = isKeypairSigner(signer)
-      ? keypairIdentity(Keypair.fromSecretKey(signer.secretKey))
-      : isIdentitySigner(signer)
-      ? walletAdapterIdentity(signer)
-      : undefined;
-    invariant(plugin, "Wallet is not compatible with Metaplex");
-    return metaplex.use(plugin);
+  private propagateWalletDisconnected() {
+    // metaplex.identity() will return a guest identity
+    setProvider(
+      new AnchorProvider(this.connection, this.metaplex.identity(), {}),
+    );
   }
 }
