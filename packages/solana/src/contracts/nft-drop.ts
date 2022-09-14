@@ -2,10 +2,16 @@ import { ClaimConditions } from "../classes/claim-conditions";
 import { NFTHelper } from "../classes/helpers/nft-helper";
 import { UserWallet } from "../classes/user-wallet";
 import { TransactionResult } from "../types/common";
-import { CommonNFTInput, NFTMetadata, NFTMetadataInput } from "../types/nft";
+import {
+  CommonNFTInput,
+  NFTCollectionMetadata,
+  NFTMetadata,
+  NFTMetadataInput,
+} from "../types/nft";
 import { Metaplex } from "@metaplex-foundation/js";
 import { Connection, PublicKey } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
+import invariant from "tiny-invariant";
 
 export class NFTDrop {
   private connection: Connection;
@@ -29,6 +35,16 @@ export class NFTDrop {
     this.nft = new NFTHelper(metaplex);
     this.dropMintAddress = new PublicKey(dropMintAddress);
     this.claimConditions = new ClaimConditions(dropMintAddress, metaplex);
+  }
+
+  async getMetadata(): Promise<NFTCollectionMetadata> {
+    const info = await this.getCandyMachine();
+    invariant(info.collectionMintAddress, "Collection mint address not found");
+    const metadata = await this.metaplex
+      .nfts()
+      .findByMint({ mintAddress: info.collectionMintAddress })
+      .run();
+    return this.nft.toNFTMetadata(metadata);
   }
 
   async get(mintAddress: string): Promise<NFTMetadata> {

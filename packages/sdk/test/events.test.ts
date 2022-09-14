@@ -1,22 +1,22 @@
-import { ContractEvent, NFTDrop, NFTCollection } from "../src";
+import { ContractEvent, NFTCollection, NFTDrop } from "../src";
+import { NFTCollectionImpl } from "../src/contracts/classes/nft-collection";
+import { NFTDropImpl } from "../src/contracts/classes/nft-drop";
 import { sdk, signers } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
-import { ethers, Wallet } from "ethers";
+import { ethers } from "ethers";
 
 global.fetch = require("cross-fetch");
 
 describe("Events", async () => {
-  let dropContract: NFTDrop;
-  let dropContract2: NFTDrop;
-  let nftContract: NFTCollection;
-  let adminWallet: SignerWithAddress,
-    samWallet: SignerWithAddress,
-    bobWallet: SignerWithAddress;
+  let dropContract: NFTDropImpl;
+  let dropContract2: NFTDropImpl;
+  let nftContract: NFTCollectionImpl;
+  let samWallet: SignerWithAddress;
 
   before(() => {
-    [adminWallet, samWallet, bobWallet] = signers;
+    [, samWallet] = signers;
   });
 
   beforeEach(async () => {

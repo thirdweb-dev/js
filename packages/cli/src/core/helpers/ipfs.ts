@@ -1,4 +1,3 @@
-import { logger } from "./logger";
 import { decodeFirstSync } from "cbor";
 import { UnixFS } from "ipfs-unixfs";
 import { DAGNode } from "ipld-dag-pb";
@@ -53,8 +52,9 @@ function hexToBytes(hex: string | number) {
 
   hex = hex.replace(/^0x/i, "");
 
-  for (var bytes = [], c = 0; c < hex.length; c += 2)
+  for (var bytes = [], c = 0; c < hex.length; c += 2) {
     bytes.push(parseInt(hex.slice(c, c + 2), 16));
+  }
   return bytes;
 }
 

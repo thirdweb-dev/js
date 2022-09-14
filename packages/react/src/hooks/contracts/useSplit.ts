@@ -1,4 +1,6 @@
-import { useBuiltinContract } from "./useBuiltinContract";
+import { showDeprecationWarning } from "../../utils/deprecation-warning";
+import { useContract } from "../async/contracts";
+import { SplitImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/split";
 
 /**
  * Hook for getting an instance of a `Split` contract. This contract supports fund distribution to multiple parties.
@@ -9,7 +11,7 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * import { useSplit } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const split = await useSplit("<YOUR-CONTRACT-ADDRESS>")
+ *   const split = useSplit("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the split contract in the rest of the component
  *
@@ -26,5 +28,6 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * @depreated use `useContract()` instead
  */
 export function useSplit(contractAddress?: string) {
-  return useBuiltinContract("split", contractAddress);
+  showDeprecationWarning("useSplit()", "useContract<Split>()");
+  return useContract<SplitImpl>(contractAddress).contract;
 }

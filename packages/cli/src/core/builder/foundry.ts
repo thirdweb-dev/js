@@ -111,9 +111,10 @@ export class FoundryBuilder extends BaseBuilder {
   }
 
   private sort(object: any) {
-    if (typeof object != "object" || object instanceof Array)
+    if (typeof object !== "object" || object instanceof Array) {
       // Not to sort the array
       return object;
+    }
     var keys = Object.keys(object);
     keys.sort();
     var newObject: any = {};

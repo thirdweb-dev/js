@@ -5,9 +5,8 @@ import { UpdateableNetwork } from "../interfaces/contract";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc721 } from "./erc-721";
-import {
+import type {
   DropERC721,
-  Multiwrap,
   SignatureDrop,
   TokenERC721,
 } from "@thirdweb-dev/contracts-js";

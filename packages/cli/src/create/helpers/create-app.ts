@@ -111,7 +111,7 @@ export async function createApp({
       );
     } catch (reason) {
       throw new DownloadError(
-        isErrorLike(reason) ? reason.message : reason + "",
+        isErrorLike(reason) ? reason.message : String(reason),
       );
     }
 
@@ -156,7 +156,7 @@ export async function createApp({
       );
     } catch (reason) {
       throw new DownloadError(
-        isErrorLike(reason) ? reason.message : reason + "",
+        isErrorLike(reason) ? reason.message : String(reason),
       );
     }
 

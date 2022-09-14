@@ -213,6 +213,7 @@ export class NFTCollection {
     const { nft } = await this.metaplex
       .nfts()
       .create({
+        // useExistingMint: newMint,
         name: metadata.name || "",
         uri,
         sellerFeeBasisPoints: 0,

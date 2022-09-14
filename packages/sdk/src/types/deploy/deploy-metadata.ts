@@ -1,5 +1,5 @@
 import { FileBufferOrString } from "@thirdweb-dev/storage";
-import { BigNumberish } from "ethers";
+import type { BigNumberish, Bytes } from "ethers";
 
 /**
  * Options for deploying an NFT contract
@@ -172,7 +172,7 @@ export interface VoteContractDeployMetadata {
   /**
    * The minimum amount in governance token owned to be able to create a proposal
    */
-  proposal_token_threshold?: BigNumberish;
+  proposal_token_threshold?: Exclude<BigNumberish, Bytes>;
   /**
    * The minimum fraction to be met to pass a proposal
    */

@@ -1,5 +1,5 @@
 import { findFiles } from "../../common/file-helper";
-import { logger, spinner } from "../helpers/logger";
+import { logger } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
@@ -122,7 +122,7 @@ export class SolcBuilder extends BaseBuilder {
         continue;
       }
 
-      const sources = Object.keys(parsedMetadata.sources)
+      const _sources = Object.keys(parsedMetadata.sources)
         .map((path) => {
           const matchingSourcePath = inputPaths.find((p) => p.includes(path));
           if (matchingSourcePath && existsSync(matchingSourcePath)) {
@@ -145,7 +145,7 @@ export class SolcBuilder extends BaseBuilder {
           metadata,
           bytecode,
           name: contractName,
-          sources,
+          sources: _sources,
         });
       }
     }

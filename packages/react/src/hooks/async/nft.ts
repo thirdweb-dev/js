@@ -26,7 +26,7 @@ import invariant from "tiny-invariant";
 /**
  * @internal
  */
-function convertResponseToNFTType(
+export function convertResponseToNFTType(
   contract: Erc721OrErc1155,
   metadata: Awaited<ReturnType<typeof contract["get"]>>,
 ): NFT<typeof contract> {
@@ -52,7 +52,7 @@ function convertResponseToNFTType(
 /**
  * @internal
  */
-function convertResponseToNFTTypeArray(
+export function convertResponseToNFTTypeArray(
   contract: Erc721OrErc1155,
   metadata: Awaited<ReturnType<typeof contract["get"]>>[],
 ): NFT<typeof contract>[] {
@@ -360,7 +360,7 @@ export function useNFTBalance(
  * @example
  * ```jsx
  * const Component = () => {
- *   const nftDrop = await useNFTDrop(<ContractAddress>);
+ *   const nftDrop = useNFTDrop(<ContractAddress>);
  *   const {
  *     mutate: mintNft,
  *     isLoading,
@@ -558,6 +558,7 @@ export function useTransferNFT<TContract extends NFTContract>(
         invariant(erc1155.transfer, "contract does not support transfer");
         invariant("tokenId" in data, "tokenId not provided");
         invariant("amount" in data, "amount not provided");
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         return erc1155.transfer(data.to, data.tokenId, data.amount!);
       }
       if (erc721) {
@@ -582,7 +583,7 @@ export function useTransferNFT<TContract extends NFTContract>(
  * @example
  * ```jsx
  * const Component = () => {
- *   const editionDrop = await useEditionDrop(<ContractAddress>);
+ *   const editionDrop = useEditionDrop(<ContractAddress>);
  *   const {
  *     mutate: airdropNFT,
  *     isLoading,
@@ -669,7 +670,7 @@ export function useAirdropNFT(contract: Erc1155) {
  * @example
  * ```jsx
  * const Component = () => {
- *   const nftDrop = await useNFTDrop(<ContractAddress>);
+ *   const nftDrop = useNFTDrop(<ContractAddress>);
  *   const {
  *     mutate: burnNft,
  *     isLoading,
@@ -734,6 +735,7 @@ export function useBurnNFT<TContract extends NFTContract>(
       if (erc1155) {
         invariant("amount" in data, "amount not provided");
         const { tokenId, amount } = data;
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         return await erc1155.burn(tokenId, amount!);
       }
       if (erc721) {

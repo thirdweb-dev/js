@@ -1,5 +1,5 @@
 import { ContractEvents } from "./contract-events";
-import { DropERC1155 } from "@thirdweb-dev/contracts-js";
+import type { DropERC1155 } from "@thirdweb-dev/contracts-js";
 import { BigNumber, BigNumberish } from "ethers";
 
 /**

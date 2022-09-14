@@ -1,6 +1,7 @@
-import { NFTDrop, NFTMetadata, NFTMetadataInput, Token } from "../src";
+import { NFTMetadataInput, Token } from "../src";
 import { createSnapshot } from "../src/common";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
+import { NFTDropImpl } from "../src/contracts/classes/nft-drop";
 import { ClaimEligibility } from "../src/enums";
 import { expectError, sdk, signers, storage } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
@@ -13,7 +14,7 @@ import invariant from "tiny-invariant";
 global.fetch = require("cross-fetch");
 
 describe("NFT Drop Contract", async () => {
-  let dropContract: NFTDrop;
+  let dropContract: NFTDropImpl;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     abbyWallet: SignerWithAddress,

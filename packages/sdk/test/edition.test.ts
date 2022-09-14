@@ -1,4 +1,4 @@
-import { Edition } from "../src/index";
+import { EditionImpl } from "../src/contracts/classes/edition";
 import { expectError, sdk, signers, storage } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -8,7 +8,7 @@ import { ethers } from "ethers";
 global.fetch = require("cross-fetch");
 
 describe("Edition Contract", async () => {
-  let bundleContract: Edition;
+  let bundleContract: EditionImpl;
   // let nftContract: NFTContract;
   // let currencyContract: CurrencyContract;
 

@@ -1,14 +1,18 @@
-import { Edition, Multiwrap, NFTCollection, Token } from "../src/contracts";
+import { Edition, NFTCollection, Token } from "../src";
+import { EditionImpl } from "../src/contracts/classes/edition";
+import { MultiwrapImpl } from "../src/contracts/classes/multiwrap";
+import { NFTCollectionImpl } from "../src/contracts/classes/nft-collection";
+import { TokenImpl } from "../src/contracts/classes/token";
 import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 
 describe("Multiwrap Contract", async () => {
-  let multiwrapContract: Multiwrap;
-  let nftContract: NFTCollection;
-  let editionContract: Edition;
-  let tokenContract: Token;
-  let tokenContract2: Token;
+  let multiwrapContract: MultiwrapImpl;
+  let nftContract: NFTCollectionImpl;
+  let editionContract: EditionImpl;
+  let tokenContract: TokenImpl;
+  let tokenContract2: TokenImpl;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,

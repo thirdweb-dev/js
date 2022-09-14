@@ -53,7 +53,7 @@ export class MagicConnector extends Connector {
   }
 
   async connect(isAutoConnect?: true) {
-    const { apiKey, doNotAutoConnect, rpcUrls, ...options } = this.options;
+    const { apiKey, ...options } = this.options;
     const configuration = this.getConfiguration();
 
     try {

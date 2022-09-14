@@ -1,4 +1,6 @@
-import { EditionMetadataInput, Pack, Edition } from "../src";
+import { Edition, EditionMetadataInput, Pack } from "../src";
+import { EditionImpl } from "../src/contracts/prebuilt-implementations/edition";
+import { PackImpl } from "../src/contracts/prebuilt-implementations/pack";
 import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
@@ -7,20 +9,18 @@ import { BigNumber } from "ethers";
 global.fetch = require("cross-fetch");
 
 describe("Pack Contract", async () => {
-  let packContract: Pack;
-  let bundleContract: Edition;
+  let packContract: PackImpl;
+  let bundleContract: EditionImpl;
 
-  let adminWallet: SignerWithAddress,
-    samWallet: SignerWithAddress,
-    bobWallet: SignerWithAddress;
+  let adminWallet: SignerWithAddress, samWallet: SignerWithAddress;
 
   before(() => {
-    [adminWallet, samWallet, bobWallet] = signers;
+    [adminWallet, samWallet] = signers;
   });
 
   const createBundles = async () => {
     const batch: EditionMetadataInput[] = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 6; i++) {
       batch.push({
         metadata: {
           name: `NFT ${i}`,
@@ -110,6 +110,33 @@ describe("Pack Contract", async () => {
     return [packOne, packTwo];
   };
 
+  const getContentToAdd = async () => {
+    const content = {
+      erc1155Rewards: [
+        {
+          contractAddress: bundleContract.getAddress(),
+          tokenId: "3",
+          quantityPerReward: 1,
+          totalRewards: 50,
+        },
+        {
+          contractAddress: bundleContract.getAddress(),
+          tokenId: "4",
+          quantityPerReward: 1,
+          totalRewards: 50,
+        },
+        {
+          contractAddress: bundleContract.getAddress(),
+          tokenId: "5",
+          quantityPerReward: 1,
+          totalRewards: 50,
+        },
+      ],
+    };
+
+    return content;
+  };
+
   it("should allow you to create a batch of packs", async () => {
     const [pack] = await createPacks();
     const data = await pack.data();
@@ -179,5 +206,54 @@ describe("Pack Contract", async () => {
 
     adminOwned = await packContract.getOwned();
     assert.equal(adminOwned[0].quantityOwned.toString(), "100");
+  });
+
+  // ------------- test `addPackContent` ---------
+
+  it("should return the correct rewards after update", async () => {
+    const [pack] = await createPacks();
+
+    const content = await getContentToAdd();
+    await packContract.addPackContents(pack.id, content);
+
+    const rewards = await packContract.getPackContents(pack.id);
+
+    const first = rewards.erc1155Rewards.find(
+      (reward) =>
+        reward.tokenId === "3" &&
+        reward.totalRewards === "50" &&
+        reward.quantityPerReward === "1",
+    );
+
+    const second = rewards.erc1155Rewards.find(
+      (reward) =>
+        reward.tokenId === "4" &&
+        reward.totalRewards === "50" &&
+        reward.quantityPerReward === "1",
+    );
+
+    const third = rewards.erc1155Rewards.find(
+      (reward) =>
+        reward.tokenId === "5" &&
+        reward.totalRewards === "50" &&
+        reward.quantityPerReward === "1",
+    );
+
+    assert.isDefined(first, "First NFT not found");
+    assert.isDefined(second, "Second NFT not found");
+    assert.isDefined(third, "Third NFT not found");
+  });
+
+  it("should return correct pack supply after update", async () => {
+    const [pack] = await createPacks();
+    let balance = await packContract.balance(pack.id);
+
+    assert.equal("150", balance.toString());
+
+    const content = await getContentToAdd();
+    await packContract.addPackContents(pack.id, content);
+    balance = await packContract.balance(pack.id);
+
+    assert.equal("300", balance.toString());
   });
 });
