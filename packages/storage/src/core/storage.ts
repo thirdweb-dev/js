@@ -1,10 +1,11 @@
 import { batchUploadProperties } from "../common/utils";
 import {
   CleanedUploadData,
+  FileOrBuffer,
   FileOrBufferSchema,
   IStorageDownloader,
   IStorageUploader,
-  UploadData,
+  JsonObject,
   UploadDataSchema,
 } from "../types";
 import { StorageDownloader } from "./downloaders/storage-downloader";
@@ -26,23 +27,33 @@ export class ThirdwebStorage {
     return this.downloader.download(url);
   }
 
-  async upload(data: UploadData): Promise<string> {
-    const [uri] = await this.uploadBatch([data]);
+  async upload(data: JsonObject | FileOrBuffer): Promise<string> {
+    const [uri] = await this.uploadBatch([data] as
+      | JsonObject[]
+      | FileOrBuffer[]);
     return uri;
   }
 
-  async uploadBatch(data: UploadData[]): Promise<string[]> {
-    const parsed = UploadDataSchema.parse(data);
-    const cleaned = parsed.map((item) => {
-      const { success } = FileOrBufferSchema.safeParse(item);
+  async uploadBatch(data: JsonObject[] | FileOrBuffer[]): Promise<string[]> {
+    const parsed: JsonObject[] | FileOrBuffer[] = UploadDataSchema.parse(data);
+    const { success: isFileArray } = FileOrBufferSchema.safeParse(parsed[0]);
 
-      if (success) {
-        return item;
-      }
+    // If data is an array of files, pass it through to upload directly
+    if (isFileArray) {
+      return this.uploader.uploadBatch(parsed as FileOrBuffer[]);
+    }
 
-      return JSON.stringify(item);
-    }) as CleanedUploadData[];
+    // Otherwise it is an array of JSON objects, so we have to prepare it first
+    const metadata = (
+      await batchUploadProperties(
+        parsed as JsonObject[],
+        this.uploader,
+        // TODO: Change baseUrl and gatewayUrl
+        "https://example.com",
+        "ipfs://",
+      )
+    ).map((item) => JSON.stringify(item));
 
-    return this.uploader.uploadBatch(cleaned);
+    return this.uploader.uploadBatch(metadata);
   }
 }

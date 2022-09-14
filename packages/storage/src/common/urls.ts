@@ -1,16 +1,15 @@
-/**
- * @internal
- */
-export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
+import { GatewayUrls } from "../types";
 
 /**
  * @internal
  */
-export const PUBLIC_GATEWAYS = [
-  "https://gateway.ipfscdn.io/ipfs/",
-  "https://cloudflare-ipfs.com/ipfs/",
-  "https://ipfs.io/ipfs/",
-];
+export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
+  "ipfs://": [
+    "https://gateway.ipfscdn.io/ipfs/",
+    "https://cloudflare-ipfs.com/ipfs/",
+    "https://ipfs.io/ipfs/",
+  ],
+};
 
 /**
  * @internal
