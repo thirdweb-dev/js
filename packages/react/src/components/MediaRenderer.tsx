@@ -99,17 +99,13 @@ const PlayButton: React.VFC<PlayButtonProps> = ({ onClick, isPlaying }) => {
   );
 };
 
-const VideoPlayer = React.forwardRef<
-  HTMLVideoElement,
-  React.PropsWithChildren<MediaRendererProps>
->(
+const VideoPlayer = React.forwardRef<HTMLVideoElement, MediaRendererProps>(
   (
     {
       src,
       alt,
       poster,
       requireInteraction,
-      children,
       style,
       width,
       height,
@@ -203,25 +199,8 @@ const VideoPlayer = React.forwardRef<
 
 VideoPlayer.displayName = "VideoPlayer";
 
-const AudioPlayer = React.forwardRef<
-  HTMLAudioElement,
-  React.PropsWithChildren<MediaRendererProps>
->(
-  (
-    {
-      src,
-      alt,
-      poster,
-      requireInteraction,
-      children,
-      style,
-      height,
-      width,
-      controls,
-      ...restProps
-    },
-    ref,
-  ) => {
+const AudioPlayer = React.forwardRef<HTMLAudioElement, MediaRendererProps>(
+  ({ src, alt, poster, style, height, width, ...restProps }, ref) => {
     const audioRef = useRef<HTMLAudioElement>(null);
     const [playing, setPlaying] = useState(false);
     const [muted, setMuted] = useState(true);
@@ -298,25 +277,8 @@ const AudioPlayer = React.forwardRef<
 
 AudioPlayer.displayName = "AudioPlayer";
 
-const IframePlayer = React.forwardRef<
-  HTMLIFrameElement,
-  React.PropsWithChildren<MediaRendererProps>
->(
-  (
-    {
-      src,
-      alt,
-      poster,
-      requireInteraction,
-      children,
-      style,
-      height,
-      width,
-      controls,
-      ...restProps
-    },
-    ref,
-  ) => {
+const IframePlayer = React.forwardRef<HTMLIFrameElement, MediaRendererProps>(
+  ({ src, alt, poster, requireInteraction, style, ...restProps }, ref) => {
     const { observe, width: elWidth } = useDimensions<HTMLDivElement | null>();
     const [playing, setPlaying] = useState(!requireInteraction);
 
@@ -381,25 +343,8 @@ const IframePlayer = React.forwardRef<
 
 IframePlayer.displayName = "IframePlayer";
 
-const LinkPlayer = React.forwardRef<
-  HTMLAnchorElement,
-  React.PropsWithChildren<MediaRendererProps>
->(
-  (
-    {
-      src,
-      alt,
-      poster,
-      requireInteraction,
-      children,
-      style,
-      height,
-      width,
-      controls,
-      ...restProps
-    },
-    ref,
-  ) => {
+const LinkPlayer = React.forwardRef<HTMLAnchorElement, MediaRendererProps>(
+  ({ src, alt, style, ...restProps }, ref) => {
     return (
       <div style={{ position: "relative", ...style }} {...restProps}>
         <div
@@ -472,18 +417,10 @@ LinkPlayer.displayName = "LinkPlayer";
  */
 export const MediaRenderer = React.forwardRef<
   HTMLMediaElement,
-  React.PropsWithChildren<MediaRendererProps>
+  MediaRendererProps
 >(
   (
-    {
-      children,
-      src,
-      poster,
-      alt,
-      requireInteraction = false,
-      style,
-      ...restProps
-    },
+    { src, poster, alt, requireInteraction = false, style, ...restProps },
     ref,
   ) => {
     const mergedStyle: React.CSSProperties = { objectFit: "contain", ...style };

@@ -1,26 +1,29 @@
 import { TransactionError } from "../../common";
+import { CONTRACT_ADDRESSES, SUPPORTED_CHAIN_IDS } from "../../constants";
 import {
-  CONTRACT_ADDRESSES,
-  OZ_DEFENDER_FORWARDER_ADDRESS,
-  SUPPORTED_CHAIN_IDS,
-} from "../../constants";
-import { Edition } from "../../contracts/edition";
-import { EditionDrop } from "../../contracts/edition-drop";
-import { CONTRACTS_MAP, REMOTE_CONTRACT_NAME } from "../../contracts/maps";
-import { Marketplace } from "../../contracts/marketplace";
-import { Multiwrap } from "../../contracts/multiwrap";
-import { NFTCollection } from "../../contracts/nft-collection";
-import { NFTDrop } from "../../contracts/nft-drop";
-import { Pack } from "../../contracts/pack";
-import { SignatureDrop } from "../../contracts/signature-drop";
-import { Split } from "../../contracts/split";
-import { Token } from "../../contracts/token";
-import { TokenDrop } from "../../contracts/token-drop";
-import { Vote } from "../../contracts/vote";
+  PREBUILT_CONTRACTS_MAP,
+  Edition,
+  EditionDrop,
+  Marketplace,
+  Multiwrap,
+  NFTCollection,
+  NFTDrop,
+  Pack,
+  SignatureDrop,
+  Split,
+  Token,
+  TokenDrop,
+  Vote,
+} from "../../contracts";
 import { SDKOptions } from "../../schema/sdk-options";
-import { NetworkOrSignerOrProvider, ValidContractClass } from "../types";
+import {
+  DeploySchemaForPrebuiltContractType,
+  NetworkOrSignerOrProvider,
+  PrebuiltContractType,
+} from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { TWFactory, TWFactory__factory } from "@thirdweb-dev/contracts-js";
+import type { TWFactory } from "@thirdweb-dev/contracts-js";
+import TWFactoryAbi from "@thirdweb-dev/contracts-js/dist/abis/TWFactory.json";
 import { ProxyDeployedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TWFactory";
 import { IStorage } from "@thirdweb-dev/storage";
 import {
@@ -31,37 +34,6 @@ import {
   ethers,
 } from "ethers";
 import { z } from "zod";
-
-/*
-
-Contract transaction failed
-
-Message: user rejected transaction
-
-| Transaction info |
-
-from:      0x00eb009e9ECDF9753a5624e19742FB79217c713C
-to:        0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0
-chain:     bnbt (97)
-
-| Failed contract call info |
-
-function:  deployProxyDeterministic(bytes32,bytes,bytes32)
-arguments: {
-  "_type": "0x5369676e617475726544726f7000000000000000000000000000000000000000",
-  "_data": "0xe159163400000000000000000000000000eb009e9ecdf9753a5624e19742fb79217c713c0000000000000000000000000000000000000000000000000000000000000140000000000000000000000000000000000000000000000000000000000000018000000000000000000000000000000000000000000000000000000000000001a0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000eb009e9ecdf9753a5624e19742fb79217c713c00000000000000000000000000eb009e9ecdf9753a5624e19742fb79217c713c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000eb009e9ecdf9753a5624e19742fb79217c713c0000000000000000000000000000000000000000000000000000000000000004746573740000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000037697066733a2f2f516d61684a624b397a427a7370345861724d58693854665037556b4545576870777236424b4769443575707267772f300000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000c82bbe41f2cf04e3a8efa18f7032bdd7f6d98a81",
-  "_salt": "0x3232373032343135000000000000000000000000000000000000000000000000"
-}
-
-Need help with this error? Join our community: https://discord.gg/thirdweb
-
-
-
-| Raw error |
-
-user rejected transaction (action="sendTransaction", transaction={"data":"0x1e5e1e995369676e617475726544726f7000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006032323730323431350000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000244e159163400000000000000000000000000eb009e9ecdf9753a5624e19742fb79217c713c0000000000000000000000000000000000000000000000000000000000000140000000000000000000000000000000000000000000000000000000000000018000000000000000000000000000000000000000000000000000000000000001a0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000eb009e9ecdf9753a5624e19742fb79217c713c00000000000000000000000000eb009e9ecdf9753a5624e19742fb79217c713c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000eb009e9ecdf9753a5624e19742fb79217c713c0000000000000000000000000000000000000000000000000000000000000004746573740000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000037697066733a2f2f516d61684a624b397a427a7370345861724d58693854665037556b4545576870777236424b4769443575707267772f300000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000c82bbe41f2cf04e3a8efa18f7032bdd7f6d98a8100000000000000000000000000000000000000000000000000000000","to":"0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0","from":"0x00eb009e9ECDF9753a5624e19742FB79217c713C","gasLimit":{"type":"BigNumber","hex":"0x0b2f6e"}}, code=ACTION_REJECTED, version=providers/5.7.0)
-
-*/
 
 /**
  * @internal
@@ -75,15 +47,17 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     storage: IStorage,
     options?: SDKOptions,
   ) {
-    super(network, factoryAddr, TWFactory__factory.abi, options);
+    super(network, factoryAddr, TWFactoryAbi, options);
     this.storage = storage;
   }
 
-  public async deploy<TContract extends ValidContractClass>(
-    contractType: TContract["contractType"],
-    contractMetadata: z.input<TContract["schema"]["deploy"]>,
+  public async deploy<TContractType extends PrebuiltContractType>(
+    contractType: TContractType,
+    contractMetadata: z.input<
+      DeploySchemaForPrebuiltContractType<TContractType>
+    >,
   ): Promise<string> {
-    const contract = CONTRACTS_MAP[contractType];
+    const contract = PREBUILT_CONTRACTS_MAP[contractType];
     const metadata = contract.schema.deploy.parse(contractMetadata);
 
     // TODO: is there any special pre-processing we need to do before uploading?
@@ -93,15 +67,14 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       await this.getSigner()?.getAddress(),
     );
 
-    const encodedFunc = Contract.getInterface(
-      contract.contractAbi,
-    ).encodeFunctionData(
+    const ABI = await contract.getAbi();
+
+    const encodedFunc = Contract.getInterface(ABI).encodeFunctionData(
       "initialize",
       await this.getDeployArguments(contractType, metadata, contractURI),
     );
 
-    const contractName = REMOTE_CONTRACT_NAME[contractType];
-    const encodedType = ethers.utils.formatBytes32String(contractName);
+    const encodedType = ethers.utils.formatBytes32String(contract.name);
     let receipt;
     try {
       receipt = await this.sendTransaction("deployProxy", [
@@ -170,12 +143,15 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     return events[0].args.proxy;
   }
 
-  private async getDeployArguments<TContract extends ValidContractClass>(
-    contractType: TContract["contractType"],
-    metadata: z.input<TContract["schema"]["deploy"]>,
+  private async getDeployArguments<TContractType extends PrebuiltContractType>(
+    contractType: TContractType,
+    metadata: z.input<DeploySchemaForPrebuiltContractType<TContractType>>,
     contractURI: string,
   ): Promise<any[]> {
-    let trustedForwarders = contractType === Pack.contractType ? [] : await this.getDefaultTrustedForwarders();
+    let trustedForwarders =
+      contractType === Pack.contractType
+        ? []
+        : await this.getDefaultTrustedForwarders();
     // override default forwarders if custom ones are passed in
     if (metadata.trusted_forwarders && metadata.trusted_forwarders.length > 0) {
       trustedForwarders = metadata.trusted_forwarders;

@@ -5,7 +5,7 @@ import { UpdateableNetwork } from "../interfaces/contract";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc1155 } from "./erc-1155";
-import { DropERC1155, TokenERC1155 } from "@thirdweb-dev/contracts-js";
+import type { DropERC1155, TokenERC1155 } from "@thirdweb-dev/contracts-js";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 

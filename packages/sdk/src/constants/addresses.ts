@@ -155,8 +155,10 @@ export function getContractAddressByChainId(
   // for testing only
   if (chainId === ChainId.Hardhat) {
     if (contractName === "twFactory") {
+      // eslint-disable-next-line turbo/no-undeclared-env-vars
       return process.env.factoryAddress as string;
     } else if (contractName === "twRegistry") {
+      // eslint-disable-next-line turbo/no-undeclared-env-vars
       return process.env.registryAddress as string;
     } else {
       return constants.AddressZero;
@@ -170,7 +172,9 @@ export function getContractAddressByChainId(
  * @internal
  */
 export function getContractPublisherAddress() {
+  // eslint-disable-next-line turbo/no-undeclared-env-vars
   if (process.env.contractPublisherAddress) {
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
     return process.env.contractPublisherAddress as string;
   } else {
     return ContractPublisher_address;

@@ -21,7 +21,7 @@ import { DelayedReveal } from "./delayed-reveal";
 import { Erc721 } from "./erc-721";
 import { Erc721Claimable } from "./erc-721-claimable";
 import { Erc721ClaimableWithConditions } from "./erc-721-claimable-with-conditions";
-import { IClaimableERC721 } from "@thirdweb-dev/contracts-js";
+import type { IClaimableERC721 } from "@thirdweb-dev/contracts-js";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
 import { IStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";

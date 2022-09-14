@@ -97,7 +97,7 @@ export async function twCreate(options: any) {
         if (validation.valid) {
           return true;
         }
-        return "Invalid project name: " + validation.problems![0];
+        return "Invalid project name: " + validation.problems?.[0];
       },
     });
 
@@ -232,7 +232,7 @@ export async function twCreate(options: any) {
       )} because of npm naming restrictions:`,
     );
 
-    problems!.forEach((p) => console.error(`    ${chalk.red.bold("*")} ${p}`));
+    problems?.forEach((p) => console.error(`    ${chalk.red.bold("*")} ${p}`));
     process.exit(1);
   }
 

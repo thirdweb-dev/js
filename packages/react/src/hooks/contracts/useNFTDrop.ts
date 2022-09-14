@@ -1,4 +1,6 @@
-import { useBuiltinContract } from "./useBuiltinContract";
+import { showDeprecationWarning } from "../../utils/deprecation-warning";
+import { useContract } from "../async/contracts";
+import { NFTDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/nft-drop";
 
 /**
  * Hook for getting an instance of an `NFTDrop` contract. This contract is meant to interface with ERC721 compliant NFTs that can be lazily minted.
@@ -9,7 +11,7 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * import { useNFTDrop } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const nftDrop = await useNFTDrop("<YOUR-CONTRACT-ADDRESS>")
+ *   const nftDrop = useNFTDrop("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the nft drop contract in the rest of the component
  *
@@ -25,5 +27,6 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * @depreated use `useContract()` instead
  */
 export function useNFTDrop(contractAddress?: string) {
-  return useBuiltinContract("nft-drop", contractAddress);
+  showDeprecationWarning("useNFTDrop()", "useContract<NFTDrop>()");
+  return useContract<NFTDropImpl>(contractAddress).contract;
 }

@@ -164,6 +164,7 @@ describe("Publishing", async () => {
     expect(versions.length).to.be.eq(5);
     expect(all[all.length - 1] === versions[versions.length - 1]);
     const last = await publisher.getLatest(samWallet.address, id);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const c = await publisher.fetchPublishedContractInfo(last!);
     expect(c.publishedMetadata.version).to.eq("4.0.0");
   });
@@ -200,6 +201,7 @@ describe("Publishing", async () => {
     });
     const contract = await tx.data();
     const last = await publisher.getLatest(adminWallet.address, contract.id);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const c = await publisher.fetchPublishedContractInfo(last!);
     expect(c.publishedMetadata.version).to.eq("3.0.1");
     expect(c.publishedMetadata.description).to.eq("description");

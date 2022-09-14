@@ -1,4 +1,4 @@
-import { convertToTWError } from "../../common";
+import { convertToTWError, extractFunctionsFromAbi } from "../../common";
 import {
   BiconomyForwarderAbi,
   ChainAwareForwardRequest,
@@ -12,7 +12,9 @@ import { isBrowser } from "../../common/utils";
 import { CONTRACT_ADDRESSES, ChainId } from "../../constants";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import { EventType } from "../../constants/events";
+import { AbiSchema } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
+import { CallOverrideSchema } from "../../schema/shared";
 import {
   ForwardRequestMessage,
   GaslessTransaction,
@@ -20,7 +22,7 @@ import {
   PermitRequestMessage,
 } from "../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import { Forwarder__factory } from "@thirdweb-dev/contracts-js";
+import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
 import fetch from "cross-fetch";
 import {
   BaseContract,
@@ -255,6 +257,67 @@ export class ContractWrapper<
    */
   public withTransactionOverride(hook: () => CallOverrides) {
     this.customOverrides = hook;
+  }
+
+  /**
+   * @internal
+   */
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    // parse last arg as tx options if present
+    let txOptions: CallOverrides | undefined;
+    try {
+      if (args.length > 0 && typeof args[args.length - 1] === "object") {
+        const last = args[args.length - 1];
+        txOptions = CallOverrideSchema.parse(last);
+        // if call overrides found, remove it from args array
+        args = args.slice(0, args.length - 1);
+      }
+    } catch (e) {
+      // no-op
+    }
+
+    const functions = extractFunctionsFromAbi(AbiSchema.parse(this.abi)).filter(
+      (f) => f.name === functionName,
+    );
+
+    if (!functions.length) {
+      throw new Error(
+        `Function "${functionName}" not found in contract. Check your dashboard for the list of functions available`,
+      );
+    }
+    const fn = functions.find(
+      (f) => f.name === functionName && f.inputs.length === args.length,
+    );
+
+    // TODO extract this and re-use for deploy function to check constructor args
+    if (!fn) {
+      throw new Error(
+        `Function "${functionName}" requires ${functions[0].inputs.length} arguments, but ${args.length} were provided.\nExpected function signature: ${functions[0].signature}`,
+      );
+    }
+
+    const ethersFnName = `${functionName}(${fn.inputs
+      .map((i) => i.type)
+      .join()})`;
+
+    // check if the function exists on the contract, otherwise use the name passed in
+    const fnName =
+      ethersFnName in this.readContract.functions ? ethersFnName : functionName;
+
+    // TODO validate each argument
+    if (fn.stateMutability === "view" || fn.stateMutability === "pure") {
+      // read function
+      return (this.readContract as any)[fnName](...args);
+    } else {
+      // write function
+      const receipt = await this.sendTransaction(fnName, args, txOptions);
+      return {
+        receipt,
+      };
+    }
   }
 
   /**
@@ -572,7 +635,8 @@ export class ContractWrapper<
       this.options.gasless.openzeppelin.relayerForwarderAddress ||
       CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES]
         .openzeppelinForwarder;
-    const forwarder = Forwarder__factory.connect(forwarderAddress, provider);
+
+    const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
     const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
       transaction.from,
     ]);

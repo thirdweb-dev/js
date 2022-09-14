@@ -1,4 +1,6 @@
-import { useBuiltinContract } from "./useBuiltinContract";
+import { showDeprecationWarning } from "../../utils/deprecation-warning";
+import { useContract } from "../async/contracts";
+import { TokenDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/token-drop";
 
 /**
  * Hook for getting an instance of a `Token Drop` contract.
@@ -9,7 +11,7 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * import { useTokenDrop } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const tokenDrop = await useTokenDrop("<YOUR-CONTRACT-ADDRESS>")
+ *   const tokenDrop = useTokenDrop("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the token drop contract in the rest of the component
  *
@@ -26,5 +28,6 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * @depreated use `useContract()` instead
  */
 export function useTokenDrop(contractAddress?: string) {
-  return useBuiltinContract("token-drop", contractAddress);
+  showDeprecationWarning("useTokenDrop()", "useContract<TokenDrop>()");
+  return useContract<TokenDropImpl>(contractAddress).contract;
 }

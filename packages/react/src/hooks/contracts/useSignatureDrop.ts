@@ -1,4 +1,6 @@
-import { useBuiltinContract } from "./useBuiltinContract";
+import { showDeprecationWarning } from "../../utils/deprecation-warning";
+import { useContract } from "../async/contracts";
+import { SignatureDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/signature-drop";
 
 /**
  * Hook for getting an instance of an `SignatureDrop` contract. This contract is meant to interface with ERC721 compliant NFTs that can be lazily minted.
@@ -9,7 +11,7 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * import { useSignatureDrop } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const signatureDrop = await useSignatureDrop("<YOUR-CONTRACT-ADDRESS>")
+ *   const signatureDrop = useSignatureDrop("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the Signature drop contract in the rest of the component
  *
@@ -25,5 +27,6 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * @depreated use `useContract()` instead
  */
 export function useSignatureDrop(contractAddress?: string) {
-  return useBuiltinContract("signature-drop", contractAddress);
+  showDeprecationWarning("useSignatureDrop()", "useContract<SignatureDrop>()");
+  return useContract<SignatureDropImpl>(contractAddress).contract;
 }

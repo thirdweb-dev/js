@@ -11,7 +11,7 @@ import { ConnectWallet } from "../ConnectWallet";
 import { Button } from "../shared/Button";
 import { ThemeProvider, ThemeProviderProps } from "../shared/ThemeProvider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { SmartContract } from "@thirdweb-dev/sdk";
+import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/smart-contract";
 import type { CallOverrides } from "ethers";
 import { PropsWithChildren, useMemo } from "react";
 import invariant from "tiny-invariant";
@@ -58,7 +58,6 @@ interface Web3ButtonProps<TActionFn extends ActionFn>
  */
 export const Web3Button = <TAction extends ActionFn>({
   contractAddress,
-  overrides,
   onSuccess,
   onError,
   onSubmit,
@@ -81,7 +80,7 @@ export const Web3Button = <TAction extends ActionFn>({
     return null;
   }, [sdkChainId, walletChainId]);
 
-  const contractQuery = useContract(contractAddress);
+  const { contract } = useContract(contractAddress);
 
   const mutation = useMutation(
     async () => {
@@ -95,12 +94,12 @@ export const Web3Button = <TAction extends ActionFn>({
           );
         }
       }
-      invariant(contractQuery.contract, "contract is not ready yet");
+      invariant(contract, "contract is not ready yet");
 
       if (onSubmit) {
         onSubmit();
       }
-      return await action(contractQuery.contract);
+      return await action(contract);
     },
     {
       onSuccess: (res) => {
@@ -130,7 +129,7 @@ export const Web3Button = <TAction extends ActionFn>({
     <ThemeProvider {...themeProps}>
       <Button
         style={{ height: "50px" }}
-        isLoading={mutation.isLoading || !contractQuery.contract}
+        isLoading={mutation.isLoading || !contract}
         onClick={() => mutation.mutate()}
         isDisabled={isDisabled}
       >
