@@ -42,20 +42,26 @@ export async function transformMoralisResponseToNFT(
   owner: string,
 ): Promise<WalletNFT[]> {
   return await Promise.all(
-    moralisResponse.result.map(async (moralisNft) => {
-      return {
-        contractAddress: moralisNft.token_address,
-        tokenId: parseInt(moralisNft.token_id, 16),
-        metadata: shouldDownloadURI(moralisNft.token_uri)
-          ? await StorageSingleton.get(
-              handleArbitraryTokenURI(moralisNft.token_uri),
-            )
-          : moralisNft.token_uri,
-        owner,
-        supply: parseInt(moralisNft.amount || "1"),
-        type: moralisNft.contract_type,
-      } as WalletNFT;
-    }),
+    moralisResponse.result
+      .map(async (moralisNft) => {
+        try {
+          return {
+            contractAddress: moralisNft.token_address,
+            tokenId: parseInt(moralisNft.token_id, 16),
+            metadata: shouldDownloadURI(moralisNft.token_uri)
+              ? await StorageSingleton.get(
+                  handleArbitraryTokenURI(moralisNft.token_uri),
+                )
+              : moralisNft.token_uri,
+            owner,
+            supply: parseInt(moralisNft.amount || "1"),
+            type: moralisNft.contract_type,
+          } as WalletNFT;
+        } catch (e) {
+          return undefined as unknown as WalletNFT;
+        }
+      })
+      .filter(Boolean),
   );
 }
 
