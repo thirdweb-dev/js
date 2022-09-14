@@ -61,6 +61,7 @@
     "@solana/spl-token": "^0.2.0",
     "@solana/web3.js": "^1.50.1",
     "@thirdweb-dev/storage": "*",
+    "bn.js": "^5.2.1",
     "eventemitter3": "^4.0.7",
     "form-data": "^4.0.0",
     "formdata-polyfill": "^4.0.10",

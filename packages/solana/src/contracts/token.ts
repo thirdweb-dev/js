@@ -1,8 +1,15 @@
-import { Amount, AmountSchema, TransactionResult } from "../types/common";
+import {
+  Amount,
+  AmountSchema,
+  CurrencyValue,
+  TransactionResult,
+} from "../types/common";
 import { TokenMetadata } from "../types/nft";
+import { toCurrencyValue } from "../utils/token";
 import {
   findMetadataPda,
   Metaplex,
+  toBigNumber,
   token,
   toMetadata,
   toMetadataAccount,
@@ -32,6 +39,7 @@ export class Token {
   }
 
   async getMetadata(): Promise<TokenMetadata> {
+    const mint = await this.getMint();
     const addr = findMetadataPda(this.tokenMintAddress);
     const account = await this.metaplex.rpc().getAccount(addr);
     const meta = toMetadata(toMetadataAccount(account));
@@ -40,15 +48,15 @@ export class Token {
       uri: meta.uri,
       name: meta.name,
       symbol: meta.symbol,
+      decimals: mint.decimals,
+      supply: toCurrencyValue(mint.supply),
       ...meta.json,
     } as TokenMetadata;
   }
 
-  async totalSupply(): Promise<bigint> {
+  async totalSupply(): Promise<CurrencyValue> {
     const info = await this.getMint();
-    const value = BigInt(info.supply.basisPoints.toString());
-    // TODO use CurrencyValue to provide a human readable display value
-    return value;
+    return toCurrencyValue(info.supply);
   }
 
   async mint(amount: Amount) {
@@ -84,20 +92,28 @@ export class Token {
     };
   }
 
-  async balance(): Promise<bigint> {
+  async balance(): Promise<CurrencyValue> {
     return this.balanceOf(this.metaplex.identity().publicKey.toBase58());
   }
 
-  async balanceOf(walletAddress: string): Promise<bigint> {
+  async balanceOf(walletAddress: string): Promise<CurrencyValue> {
+    const mint = await this.getMint();
     const addr = await getAssociatedTokenAddress(
       this.tokenMintAddress,
       new PublicKey(walletAddress),
     );
     try {
       const account = await getAccount(this.connection, addr);
-      return account.amount;
+      return toCurrencyValue({
+        basisPoints: toBigNumber(account.amount.toString()),
+        currency: {
+          symbol: "",
+          decimals: mint.decimals,
+          namespace: "spl-token",
+        },
+      });
     } catch (e) {
-      return 0n;
+      throw Error(`No balance found for address '${walletAddress}' - ${e}`);
     }
   }
 }

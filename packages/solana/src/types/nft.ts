@@ -47,9 +47,16 @@ export const CommonNFTOutput = CommonTokenOutput.extend({
 });
 
 /**
+ * @internal
+ */
+export const CommonFungibleTokenOutput = CommonTokenOutput.extend({
+  decimals: z.number(),
+});
+
+/**
  * @public
  */
-export type TokenMetadata = z.output<typeof CommonTokenOutput>;
+export type TokenMetadata = z.output<typeof CommonFungibleTokenOutput>;
 /**
  * @public
  */
