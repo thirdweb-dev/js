@@ -45,6 +45,7 @@ export class UserWallet {
   }
 
   public disconnect() {
+    // TODO implement our own read only identity plugin with our own error messages
     this.metaplex.use(guestIdentity());
     this.events.emit("disconnected");
   }
