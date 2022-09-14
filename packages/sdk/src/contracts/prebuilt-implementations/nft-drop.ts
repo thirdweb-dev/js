@@ -440,24 +440,10 @@ export class NFTDropImpl extends StandardErc721<DropERC721> {
   public async getClaimTransaction(
     destinationAddress: string,
     quantity: BigNumberish,
-    checkERC20Allowance = true, // TODO split up allowance checks
+    checkERC20Allowance = true,
   ): Promise<TransactionTask> {
-    const claimVerification = await this.prepareClaim(
-      quantity,
+    return this.erc721.getClaimTransaction(destinationAddress, quantity, {
       checkERC20Allowance,
-    );
-    return TransactionTask.make({
-      contractWrapper: this.contractWrapper,
-      functionName: "claim",
-      args: [
-        destinationAddress,
-        quantity,
-        claimVerification.currencyAddress,
-        claimVerification.price,
-        claimVerification.proofs,
-        claimVerification.maxQuantityPerTransaction,
-      ],
-      overrides: claimVerification.overrides,
     });
   }
 
@@ -488,27 +474,9 @@ export class NFTDropImpl extends StandardErc721<DropERC721> {
     quantity: BigNumberish,
     checkERC20Allowance = true,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    const task = await this.getClaimTransaction(
-      destinationAddress,
-      quantity,
+    return this.erc721.claimTo(destinationAddress, quantity, {
       checkERC20Allowance,
-    );
-    const { receipt } = await task.execute();
-    const event = this.contractWrapper.parseLogs<TokensClaimedEvent>(
-      "TokensClaimed",
-      receipt?.logs,
-    );
-    const startingIndex: BigNumber = event[0].args.startTokenId;
-    const endingIndex = startingIndex.add(quantity);
-    const results: TransactionResultWithId<NFTMetadataOwner>[] = [];
-    for (let id = startingIndex; id.lt(endingIndex); id = id.add(1)) {
-      results.push({
-        id,
-        receipt,
-        data: () => this.get(id),
-      });
-    }
-    return results;
+    });
   }
 
   /**
