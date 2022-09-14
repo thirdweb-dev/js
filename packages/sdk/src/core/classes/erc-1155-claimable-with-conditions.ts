@@ -1,6 +1,10 @@
+import { hasFunction } from "../../common";
 import { FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS } from "../../constants/erc1155-features";
 import { CustomContractSchema } from "../../schema/contracts/custom";
-import { ClaimOptions } from "../../types/claim-conditions/claim-conditions";
+import {
+  ClaimOptions,
+  ClaimVerification,
+} from "../../types/claim-conditions/claim-conditions";
 import { BaseClaimConditionERC1155 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
@@ -8,6 +12,7 @@ import { TransactionTask } from "./TransactionTask";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { DropErc1155ClaimConditions } from "./drop-erc1155-claim-conditions";
+import { DropERC1155 } from "@thirdweb-dev/contracts-js";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumberish, ethers } from "ethers";
 
@@ -73,18 +78,12 @@ export class Erc1155ClaimableWithConditions implements DetectableFeature {
     return TransactionTask.make({
       contractWrapper: this.contractWrapper,
       functionName: "claim",
-      args: [
-        destinationAddress,
+      args: await this.getArgs(
         tokenId,
+        destinationAddress,
         quantity,
-        claimVerification.currencyAddress,
-        claimVerification.price,
-        {
-          proof: claimVerification.proofs,
-          maxQuantityInAllowlist: claimVerification.maxQuantityPerTransaction,
-        },
-        ethers.utils.toUtf8Bytes(""),
-      ],
+        claimVerification,
+      ),
       overrides: claimVerification.overrides,
     });
   }
@@ -123,5 +122,52 @@ export class Erc1155ClaimableWithConditions implements DetectableFeature {
       options,
     );
     return await tx.execute();
+  }
+
+  private async getArgs(
+    tokenId: BigNumberish,
+    destinationAddress: string,
+    quantity: BigNumberish,
+    claimVerification: ClaimVerification,
+  ): Promise<any[]> {
+    const isLegacyNFTContract = await this.isLegacyNFTContract();
+    if (isLegacyNFTContract) {
+      return [
+        destinationAddress,
+        tokenId,
+        quantity,
+        claimVerification.currencyAddress,
+        claimVerification.price,
+        claimVerification.proofs,
+        claimVerification.maxQuantityPerTransaction,
+      ];
+    }
+    return [
+      destinationAddress,
+      tokenId,
+      quantity,
+      claimVerification.currencyAddress,
+      claimVerification.price,
+      {
+        proof: claimVerification.proofs,
+        maxQuantityInAllowlist: claimVerification.maxQuantityPerTransaction,
+      },
+      ethers.utils.toUtf8Bytes(""),
+    ];
+  }
+
+  private async isLegacyNFTContract() {
+    if (hasFunction<DropERC1155>("contractType", this.contractWrapper)) {
+      try {
+        const contractType = ethers.utils.toUtf8String(
+          await this.contractWrapper.readContract.contractType(),
+        );
+        return contractType.includes("DropERC1155");
+      } catch (e) {
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
 }
