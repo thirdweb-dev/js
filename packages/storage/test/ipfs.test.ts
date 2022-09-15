@@ -1,18 +1,20 @@
-import { PUBLIC_GATEWAYS, DEFAULT_IPFS_GATEWAY } from "../src/constants/urls";
-import { IpfsStorage } from "../src/core/ipfs-storage";
-import { RemoteStorage } from "../src/core/remote-storage";
-import { BufferOrStringWithName, FileOrBuffer } from "../src/types";
+import { ThirdwebStorage } from "../src";
+import { DEFAULT_GATEWAY_URLS } from "../src/common/urls";
+import {
+  BufferOrStringWithName,
+  FileOrBuffer,
+  IpfsUploadBatchOptions,
+} from "../src/types";
 import { assert, expect } from "chai";
 import fetch from "cross-fetch";
 import { readFileSync } from "fs";
 
-const ipfsGatewayUrl = DEFAULT_IPFS_GATEWAY;
+const ipfsGatewayUrl = DEFAULT_GATEWAY_URLS["ipfs://"][0];
 
 global.fetch = require("cross-fetch");
 
 describe("IPFS Uploads", async () => {
-  const storage: IpfsStorage = new IpfsStorage(ipfsGatewayUrl);
-  const remoteStorage: RemoteStorage = new RemoteStorage(storage);
+  const storage = new ThirdwebStorage();
 
   async function getFile(upload: string): Promise<Response> {
     const response = await fetch(
@@ -30,21 +32,19 @@ describe("IPFS Uploads", async () => {
 
   describe("SDK storage interface", async () => {
     it("Should single upload and fetch", async () => {
-      const {
-        uris: [uri],
-      } = await remoteStorage.upload({
+      const uri = await storage.upload({
         name: "Test Name",
         description: "Test Description",
       });
 
-      const data = await remoteStorage.fetch(uri);
+      const data = await storage.download(uri);
 
       expect(data.name).to.equal("Test Name");
       expect(data.description).to.equal("Test Description");
     });
 
     it("Should batch upload and fetch", async () => {
-      const { uris } = await remoteStorage.upload([
+      const uris = await storage.uploadBatch([
         {
           name: "Test Name 1",
           description: "Test Description 1",
@@ -55,8 +55,8 @@ describe("IPFS Uploads", async () => {
         },
       ]);
 
-      const data1 = await remoteStorage.fetch(uris[0]);
-      const data2 = await remoteStorage.fetch(uris[1]);
+      const data1 = await storage.download(uris[0]);
+      const data2 = await storage.download(uris[1]);
 
       expect(data1.name).to.equal("Test Name 1");
       expect(data1.description).to.equal("Test Description 1");
@@ -72,21 +72,20 @@ describe("IPFS Uploads", async () => {
         const metadata = JSON.parse(
           readFileSync("test/files/metadata.json", "utf8"),
         );
-        const upload = await storage.uploadMetadataBatch([metadata]);
-        assert.isTrue(upload.uris.length > 0);
+        const uris = await storage.uploadBatch([metadata]);
+        assert.isTrue(uris.length > 0);
       } catch (err) {
         assert.fail(err as string);
       }
     });
 
     it("should upload metadata and replace gateway urls on upload/download", async () => {
-      const upload = await storage.uploadMetadata({
+      const upload = await storage.upload({
         svg: `${ipfsGatewayUrl}QmZsU8nTTexTxPzCKZKqo3Ntf5cUiWMRahoLmtpimeaCiT/backgrounds/SVG/Asset%20501.svg`,
       });
-      const otherStorage = new IpfsStorage(PUBLIC_GATEWAYS[1]);
-      const downloaded = await otherStorage.get(upload);
+      const downloaded = await storage.download(upload);
       expect(downloaded.svg).to.eq(
-        `${PUBLIC_GATEWAYS[1]}QmZsU8nTTexTxPzCKZKqo3Ntf5cUiWMRahoLmtpimeaCiT/backgrounds/SVG/Asset%20501.svg`,
+        `${DEFAULT_GATEWAY_URLS[1]}QmZsU8nTTexTxPzCKZKqo3Ntf5cUiWMRahoLmtpimeaCiT/backgrounds/SVG/Asset%20501.svg`,
       );
     });
 
@@ -98,9 +97,6 @@ describe("IPFS Uploads", async () => {
           readFileSync("test/files/1.jpg"),
           readFileSync("test/files/test.mp4"),
         ],
-        undefined,
-        undefined,
-        undefined,
         {
           onProgress: () => {
             updates += 1;
@@ -113,7 +109,7 @@ describe("IPFS Uploads", async () => {
 
     it("should upload a file through any property, even when it is in an object nested inside another object", async () => {
       try {
-        const upload = await storage.uploadMetadata({
+        const upload = await storage.upload({
           name: "test",
           image: readFileSync("test/files/bone.jpg"),
           test: {
@@ -134,7 +130,7 @@ describe("IPFS Uploads", async () => {
     });
 
     it("should not upload the string to IPFS", async () => {
-      const upload = await storage.uploadMetadata({
+      const upload = await storage.upload({
         image:
           "ipfs://QmZsU8nTTexTxPzCKZKqo3Ntf5cUiWMRahoLmtpimeaCiT/face_parts/Asset%20331.svg",
       });
@@ -145,7 +141,7 @@ describe("IPFS Uploads", async () => {
     });
 
     it("should upload an MP4 file when passed in the animation_url property", async () => {
-      const upload = await storage.uploadMetadata({
+      const upload = await storage.upload({
         animation_url: readFileSync("test/files/test.mp4"),
       });
       assert.equal(
@@ -155,14 +151,14 @@ describe("IPFS Uploads", async () => {
     });
 
     it("should upload an media file and resolve to gateway URL when fetching it", async () => {
-      const upload = await storage.uploadMetadata({
+      const upload = await storage.upload({
         animation_url: readFileSync("test/files/test.mp4"),
       });
       assert.equal(
         upload,
         "ipfs://QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0",
       );
-      const meta = await storage.get(upload);
+      const meta = await storage.download(upload);
       assert.equal(
         meta.animation_url,
         `${ipfsGatewayUrl}QmUphf8LnNGdFwBevnxNkq8dxcZ4qxzzPjoNMDkSQfECKM/0`,
@@ -186,9 +182,14 @@ describe("IPFS Uploads", async () => {
       const serialized = sampleObjects.map((o) =>
         Buffer.from(JSON.stringify(o)),
       );
-      const { baseUri: cid } = await storage.uploadBatch(serialized);
+      const uris = await storage.uploadBatch(serialized, {
+        rewriteFileNames: {
+          fileStartNumber: 1,
+        },
+      } as IpfsUploadBatchOptions);
       for (const object of sampleObjects) {
-        const parsed = await storage.get(`${cid}${object.id}`);
+        assert(uris[object.id].endsWith(object.id.toString()));
+        const parsed = await storage.download(uris[object.id]);
         assert.equal(parsed.description, object.description);
         assert.equal(parsed.id, object.id);
       }
@@ -206,12 +207,10 @@ describe("IPFS Uploads", async () => {
           name: "test.jpeg",
         },
       ];
-      const { baseUri: cid } = await storage.uploadBatch(sampleObjects);
+      const uris = await storage.uploadBatch(sampleObjects);
       assert(
-        (await getFile(`${cid}test.jpeg`)).headers
-          ?.get("content-type")
-          ?.toString() === "image/jpeg",
-        `${cid}`,
+        (await getFile(uris[2])).headers?.get("content-type")?.toString() ===
+          "image/jpeg",
       );
     });
 
@@ -220,11 +219,14 @@ describe("IPFS Uploads", async () => {
         readFileSync("test/files/test.mp4"),
         readFileSync("test/files/bone.jpg"),
       ];
-      const { baseUri: cid } = await storage.uploadBatch(sampleObjects, 1);
+      const uris = await storage.uploadBatch(sampleObjects, {
+        rewriteFileNames: {
+          fileStartNumber: 1,
+        },
+      } as IpfsUploadBatchOptions);
       assert(
-        (await getFile(`${cid}2`)).headers?.get("content-type")?.toString() ===
+        (await getFile(uris[1])).headers?.get("content-type")?.toString() ===
           "image/jpeg",
-        `${cid}`,
       );
     });
     it("should upload files according to start file number as 0", async () => {
@@ -232,11 +234,10 @@ describe("IPFS Uploads", async () => {
         readFileSync("test/files/bone.jpg"),
         readFileSync("test/files/test.mp4"),
       ];
-      const { baseUri: cid } = await storage.uploadBatch(sampleObjects);
+      const uris = await storage.uploadBatch(sampleObjects);
       assert(
-        (await getFile(`${cid}0`)).headers?.get("content-type")?.toString() ===
+        (await getFile(uris[0])).headers?.get("content-type")?.toString() ===
           "image/jpeg",
-        `${cid}`,
       );
     });
     it("should upload properties recursively in batch", async () => {
@@ -263,10 +264,7 @@ describe("IPFS Uploads", async () => {
           },
         },
       ];
-      const { baseUri, uris } = await storage.uploadMetadataBatch(
-        sampleObjects,
-      );
-      assert(baseUri.startsWith("ipfs://") && baseUri.endsWith("/"));
+      const uris = await storage.uploadBatch(sampleObjects);
       assert(uris.length === sampleObjects.length);
       const [metadata1, metadata2, metadata3] = await Promise.all(
         (
@@ -296,13 +294,10 @@ describe("IPFS Uploads", async () => {
         };
         sampleObjects.push(nft);
       }
-      const { baseUri, uris } = await storage.uploadMetadataBatch(
-        sampleObjects,
-      );
-      assert(baseUri.startsWith("ipfs://") && baseUri.endsWith("/"));
+      const uris = await storage.uploadBatch(sampleObjects);
       assert(uris.length === sampleObjects.length);
       const metadatas = await Promise.all(
-        uris.map(async (m) => await storage.get(m)),
+        uris.map(async (m) => await storage.download(m)),
       );
       for (let i = 0; i < metadatas.length; i++) {
         const expected = sampleObjects[i];
@@ -323,12 +318,10 @@ describe("IPFS Uploads", async () => {
           name: "TEST",
         },
       ];
-      const { baseUri: cid } = await storage.uploadBatch(sampleObjects);
+      const uris = await storage.uploadBatch(sampleObjects);
       assert(
-        (await getFile(`${cid}TEST`)).headers
-          ?.get("content-type")
-          ?.toString() === "image/jpeg",
-        `${cid}`,
+        (await getFile(uris[1])).headers?.get("content-type")?.toString() ===
+          "image/jpeg",
       );
     });
 

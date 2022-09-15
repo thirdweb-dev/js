@@ -29,7 +29,7 @@ export class ThirdwebStorage {
     this.downloader = downloader;
   }
 
-  async download(url: string): Promise<Json> {
+  async download(url: string): Promise<any> {
     const res = await this.downloader.download(url);
 
     const text = await res.text();
