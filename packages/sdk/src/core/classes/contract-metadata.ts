@@ -1,5 +1,6 @@
 import {
   detectContractFeature,
+  ExtensionNotImplementedError,
   fetchContractMetadataFromAddress,
   hasFunction,
 } from "../../common";
@@ -141,7 +142,7 @@ export class ContractMetadata<
         z.output<TSchema["output"]>
       >;
     } else {
-      throw new Error("Contract does not support updating contract metadata");
+      throw new ExtensionNotImplementedError(FEATURE_METADATA);
     }
   }
 

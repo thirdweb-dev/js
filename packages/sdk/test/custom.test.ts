@@ -32,7 +32,7 @@ describe("Custom Contracts", async () => {
   let sdk: ThirdwebSDK;
   let simpleContractUri: string;
 
-  beforeAll(async () => {
+  before(async () => {
     [adminWallet, samWallet, bobWallet] = signers;
     sdk = new ThirdwebSDK(adminWallet);
     simpleContractUri =
@@ -227,7 +227,14 @@ describe("Custom Contracts", async () => {
     const c = await sdk.getContractFromAbi("", VoteERC20__factory.abi);
     invariant(c, "Contract undefined");
     invariant(c.metadata, "Metadata undefined");
-    expect(c.roles).to.eq(undefined);
+    try {
+      c.roles.get("admin");
+    } catch (e) {
+      expectError(
+        e,
+        "contract does not implement the 'PermissionsEnumerable' Extension",
+      );
+    }
   });
 
   it("should detect feature: erc20", async () => {
