@@ -1,7 +1,11 @@
-import {WalletAccount} from "../types/common";
-import {Metadata, Metaplex, TokenMetadataProgram,} from "@metaplex-foundation/js";
-import {TokenStandard} from "@metaplex-foundation/mpl-token-metadata";
-import {PublicKey} from "@solana/web3.js";
+import { WalletAccount } from "../types/common";
+import {
+  Metadata,
+  Metaplex,
+  TokenMetadataProgram,
+} from "@metaplex-foundation/js";
+import { TokenStandard } from "@metaplex-foundation/mpl-token-metadata";
+import { PublicKey } from "@solana/web3.js";
 
 export class Registry {
   private metaplex: Metaplex;
@@ -68,8 +72,8 @@ export class Registry {
 
   public async getMetadataAddressesForWallet(walletAddress: string) {
     return await TokenMetadataProgram.metadataV1Accounts(this.metaplex)
-        .selectMint()
-        .whereCreator(1, new PublicKey(walletAddress))
-        .getDataAsPublicKeys();
+      .selectMint()
+      .whereCreator(1, new PublicKey(walletAddress))
+      .getDataAsPublicKeys();
   }
 }
