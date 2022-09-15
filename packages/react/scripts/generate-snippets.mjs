@@ -115,13 +115,13 @@ const NETWORK_INFO_HOOKS = ["useChainId", "useNetwork", "useNetworkMismatch"];
 
 const CUSTOM_CONTRACT_HOOKS = [
   "useContract",
-  "useContractData",
+  "useContractRead",
+  "useContractWrite",
   "useAllContractEvents",
   "useContractEvents",
   "useContractType",
   "useContractPublishMetadata",
   "useContractMetadata",
-  "useContractCall",
 ];
 
 const CONTRACT_SETTINGS_HOOKS = [

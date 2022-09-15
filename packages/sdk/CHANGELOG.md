@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 3.0.1
+
+### Patch Changes
+
+- [#122](https://github.com/thirdweb-dev/js/pull/122) [`98dd64a`](https://github.com/thirdweb-dev/js/commit/98dd64a375c302a879aab3c628ecfb84b4dd19da) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - handle legacy claim method signature in extensions
+
 ## 3.0.0
 
 ### Major Changes

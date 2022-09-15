@@ -1,6 +1,5 @@
 import { ClaimConditions } from "../classes/claim-conditions";
 import { NFTHelper } from "../classes/helpers/nft-helper";
-import { UserWallet } from "../classes/user-wallet";
 import { TransactionResult } from "../types/common";
 import {
   CommonNFTInput,
@@ -9,29 +8,20 @@ import {
   NFTMetadataInput,
 } from "../types/nft";
 import { Metaplex } from "@metaplex-foundation/js";
-import { Connection, PublicKey } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
 
 export class NFTDrop {
-  private connection: Connection;
-  private wallet: UserWallet;
   private metaplex: Metaplex;
   private storage: IStorage;
   private nft: NFTHelper;
   public dropMintAddress: PublicKey;
   public claimConditions: ClaimConditions;
 
-  constructor(
-    dropMintAddress: string,
-    metaplex: Metaplex,
-    wallet: UserWallet,
-    storage: IStorage,
-  ) {
-    this.wallet = wallet;
+  constructor(dropMintAddress: string, metaplex: Metaplex, storage: IStorage) {
     this.storage = storage;
     this.metaplex = metaplex;
-    this.connection = metaplex.connection;
     this.nft = new NFTHelper(metaplex);
     this.dropMintAddress = new PublicKey(dropMintAddress);
     this.claimConditions = new ClaimConditions(dropMintAddress, metaplex);
