@@ -28,7 +28,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import {
+import type {
   ContractPublisher as OnChainContractPublisher,
   IContractPublisher,
 } from "@thirdweb-dev/contracts-js";
@@ -250,7 +250,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       acc[curr.contractId] = curr;
       return acc;
     }, {} as Record<string, IContractPublisher.CustomContractInstanceStruct>);
-    return Object.entries(map).map(([_, struct]) =>
+    return Object.entries(map).map(([, struct]) =>
       this.toPublishedContract(
         struct as IContractPublisher.CustomContractInstanceStruct,
       ),

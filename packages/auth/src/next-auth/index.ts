@@ -56,14 +56,18 @@ export function ThirdwebNextAuth(cfg: ThirdwebNextAuthConfig) {
     req: GetServerSidePropsContext["req"],
     res: GetServerSidePropsContext["res"],
   ): NextAuthOptions {
-    async function session({ session }: { session: Session }) {
+    async function session({
+      session: _session,
+    }: {
+      session: Session;
+    }): Promise<Session> {
       const token = req.cookies.thirdweb_auth_token || "";
       try {
         const address = await sdk.auth.authenticate(cfg.domain, token);
-        session.user = { ...session.user, address } as Session["user"];
-        return session;
+        _session.user = { ..._session.user, address } as Session["user"];
+        return _session;
       } catch {
-        return session;
+        return _session;
       }
     }
 

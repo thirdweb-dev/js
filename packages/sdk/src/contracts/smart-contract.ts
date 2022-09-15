@@ -1,9 +1,4 @@
-import {
-  ALL_ROLES,
-  assertEnabled,
-  detectContractFeature,
-  extractFunctionsFromAbi,
-} from "../common";
+import { ALL_ROLES, assertEnabled, detectContractFeature } from "../common";
 import { FEATURE_TOKEN } from "../constants/erc20-features";
 import { FEATURE_NFT } from "../constants/erc721-features";
 import { FEATURE_EDITION } from "../constants/erc1155-features";
@@ -23,12 +18,10 @@ import { Erc721 } from "../core/classes/erc-721";
 import { Erc1155 } from "../core/classes/erc-1155";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { AbiSchema, CustomContractSchema } from "../schema/contracts/custom";
-import { CallOverrideSchema } from "../schema/index";
+import { CustomContractSchema } from "../schema/contracts/custom";
 import { SDKOptions } from "../schema/sdk-options";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
-import {
-  AppURI as AppURIAbi,
+import type {
   IPermissions,
   IPlatformFee,
   IPrimarySale,
@@ -66,12 +59,6 @@ import { BaseContract, CallOverrides, ContractInterface } from "ethers";
 export class SmartContract<TContract extends BaseContract = BaseContract>
   implements UpdateableNetwork
 {
-  static contractType = "custom" as const;
-  /**
-   * @internal
-   */
-  static schema = CustomContractSchema;
-
   private contractWrapper;
   private storage;
   private options;
@@ -145,7 +132,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
 
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      SmartContract.schema,
+      CustomContractSchema,
       this.storage,
     );
 
@@ -194,49 +181,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     functionName: string,
     ...args: unknown[] | [...unknown[], CallOverrides]
   ): Promise<any> {
-    // parse last arg as tx options if present
-    let txOptions: CallOverrides | undefined;
-    try {
-      if (args.length > 0 && typeof args[args.length - 1] === "object") {
-        const last = args[args.length - 1];
-        txOptions = CallOverrideSchema.parse(last);
-        // if call overrides found, remove it from args array
-        args = args.slice(0, args.length - 1);
-      }
-    } catch (e) {
-      // no-op
-    }
-
-    const functions = extractFunctionsFromAbi(
-      AbiSchema.parse(this.contractWrapper.abi),
-    );
-    const fn = functions.find((f) => f.name === functionName);
-    if (!fn) {
-      throw new Error(
-        `Function "${functionName}" not found in contract. Check your dashboard for the list of functions available`,
-      );
-    }
-    // TODO extract this and re-use for deploy function to check constructor args
-    if (fn.inputs.length !== args.length) {
-      throw new Error(
-        `Function "${functionName}" requires ${fn.inputs.length} arguments, but ${args.length} were provided.\nExpected function signature: ${fn.signature}`,
-      );
-    }
-    // TODO validate each argument
-    if (fn.stateMutability === "view" || fn.stateMutability === "pure") {
-      // read function
-      return (this.contractWrapper.readContract as any)[functionName](...args);
-    } else {
-      // write function
-      const receipt = await this.contractWrapper.sendTransaction(
-        functionName,
-        args,
-        txOptions,
-      );
-      return {
-        receipt,
-      };
-    }
+    return this.contractWrapper.call(functionName, ...args);
   }
 
   /** ********************
@@ -249,7 +194,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
       // This also makes it not order dependent in the feature detection process
       const metadata = new ContractMetadata(
         this.contractWrapper,
-        SmartContract.schema,
+        CustomContractSchema,
         this.storage,
       );
       return new ContractRoyalty(this.contractWrapper, metadata);
@@ -308,12 +253,6 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   private detectAppURI() {
     // ContractMetadata is stateless, it's fine to create a new one here
     // This also makes it not order dependent in the feature detection process
-    const metadata = new ContractMetadata(
-      this.contractWrapper,
-      SmartContract.schema,
-      this.storage,
-    );
-
     return new AppURI(this.contractWrapper);
   }
 }

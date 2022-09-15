@@ -6,6 +6,8 @@ import {
   Token,
 } from "../src";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
+import { SignatureDropImpl } from "../src/contracts/classes/signature-drop";
+import { TokenImpl } from "../src/contracts/classes/token";
 import { SignedPayload721WithQuantitySignature } from "../src/schema/contracts/common/signature";
 import { expectError, sdk, signers, storage } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -18,8 +20,8 @@ import invariant from "tiny-invariant";
 global.fetch = require("cross-fetch");
 
 describe("Signature drop tests", async () => {
-  let signatureDropContract: SignatureDrop;
-  let customTokenContract: Token;
+  let signatureDropContract: SignatureDropImpl;
+  let customTokenContract: TokenImpl;
   let tokenAddress: string;
 
   let adminWallet: SignerWithAddress,
@@ -784,8 +786,8 @@ describe("Signature drop tests", async () => {
         expect(err).to.have.property("message", "Batch already created!", "");
       }
 
-      const token = await signatureDropContract.claim(2);
-      assert.lengthOf(token, 2);
+      const _token = await signatureDropContract.claim(2);
+      assert.lengthOf(_token, 2);
     });
   });
 });

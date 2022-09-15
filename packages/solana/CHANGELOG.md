@@ -1,5 +1,15 @@
 # @thirdweb-dev/solana
 
+## 0.2.8
+
+### Patch Changes
+
+- [#97](https://github.com/thirdweb-dev/js/pull/97) [`4581894`](https://github.com/thirdweb-dev/js/commit/45818944e530ad99d1371f2170da7cfc8bf6d94e) Thanks [@adam-maj](https://github.com/adam-maj)! - Added balanceOf and mintTo functions
+
+- [#78](https://github.com/thirdweb-dev/js/pull/78) [`78b40a9`](https://github.com/thirdweb-dev/js/commit/78b40a94df929a84ba36a96fd85eef5e7a1ff8ed) Thanks [@adam-maj](https://github.com/adam-maj)! - Add NFT Drop support to Solana
+
+- [#94](https://github.com/thirdweb-dev/js/pull/94) [`1244c38`](https://github.com/thirdweb-dev/js/commit/1244c38162d23212cea50a4b8e86e65d5514504d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add support for custom programs
+
 ## 0.2.7
 
 ### Patch Changes

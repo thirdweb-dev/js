@@ -1,4 +1,6 @@
-import { EditionMetadataInput, Pack, Edition } from "../src";
+import { Edition, EditionMetadataInput, Pack } from "../src";
+import { EditionImpl } from "../src/contracts/prebuilt-implementations/edition";
+import { PackImpl } from "../src/contracts/prebuilt-implementations/pack";
 import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
@@ -7,15 +9,13 @@ import { BigNumber } from "ethers";
 global.fetch = require("cross-fetch");
 
 describe("Pack Contract", async () => {
-  let packContract: Pack;
-  let bundleContract: Edition;
+  let packContract: PackImpl;
+  let bundleContract: EditionImpl;
 
-  let adminWallet: SignerWithAddress,
-    samWallet: SignerWithAddress,
-    bobWallet: SignerWithAddress;
+  let adminWallet: SignerWithAddress, samWallet: SignerWithAddress;
 
   before(() => {
-    [adminWallet, samWallet, bobWallet] = signers;
+    [adminWallet, samWallet] = signers;
   });
 
   const createBundles = async () => {
@@ -212,7 +212,7 @@ describe("Pack Contract", async () => {
 
   it("should return the correct rewards after update", async () => {
     const [pack] = await createPacks();
-    
+
     const content = await getContentToAdd();
     await packContract.addPackContents(pack.id, content);
 

@@ -8,7 +8,7 @@ import { Signer } from "@solana/web3.js";
 export class Program {
   private program: AnchorProgram<Idl>;
 
-  constructor(programAddress: string, idl: Idl, provider: AnchorProvider) {
+  constructor(programAddress: string, idl: Idl, provider?: AnchorProvider) {
     this.program = new AnchorProgram(idl, programAddress, provider);
   }
 

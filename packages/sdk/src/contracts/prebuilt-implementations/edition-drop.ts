@@ -1,33 +1,33 @@
-import { getRoleHash } from "../common";
-import { TransactionTask } from "../core/classes/TransactionTask";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
-import { ContractRoles } from "../core/classes/contract-roles";
-import { ContractRoyalty } from "../core/classes/contract-royalty";
-import { ContractPrimarySale } from "../core/classes/contract-sales";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { DropErc1155ClaimConditions } from "../core/classes/drop-erc1155-claim-conditions";
-import { DropErc1155History } from "../core/classes/drop-erc1155-history";
-import { Erc1155 } from "../core/classes/erc-1155";
-import { StandardErc1155 } from "../core/classes/erc-1155-standard";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { getRoleHash } from "../../common";
+import { TransactionTask } from "../../core/classes/TransactionTask";
+import { ContractEncoder } from "../../core/classes/contract-encoder";
+import { ContractEvents } from "../../core/classes/contract-events";
+import { ContractInterceptor } from "../../core/classes/contract-interceptor";
+import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
+import { ContractRoles } from "../../core/classes/contract-roles";
+import { ContractRoyalty } from "../../core/classes/contract-royalty";
+import { ContractPrimarySale } from "../../core/classes/contract-sales";
+import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { DropErc1155ClaimConditions } from "../../core/classes/drop-erc1155-claim-conditions";
+import { DropErc1155History } from "../../core/classes/drop-erc1155-history";
+import { Erc1155 } from "../../core/classes/erc-1155";
+import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
+import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
-} from "../core/types";
-import { EditionMetadata, EditionMetadataOwner } from "../schema";
-import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
-import { SDKOptions } from "../schema/sdk-options";
-import { NFTMetadata, NFTMetadataOrUri } from "../schema/tokens/common";
-import { QueryAllParams, UploadProgressEvent } from "../types";
-import { DropERC1155 } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC1155.json";
+} from "../../core/types";
+import { EditionMetadata, EditionMetadataOwner } from "../../schema";
+import { DropErc1155ContractSchema } from "../../schema/contracts/drop-erc1155";
+import { SDKOptions } from "../../schema/sdk-options";
+import { NFTMetadata, NFTMetadataOrUri } from "../../schema/tokens/common";
+import { QueryAllParams, UploadProgressEvent } from "../../types";
+import type { DropERC1155 } from "@thirdweb-dev/contracts-js";
+import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC1155.json";
 import { IStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, constants } from "ethers";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -43,24 +43,22 @@ import { BigNumber, BigNumberish, constants } from "ethers";
  *
  * @public
  */
-export class EditionDrop extends StandardErc1155<DropERC1155> {
-  static contractType = "edition-drop" as const;
-  static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractAbi = ABI as any;
-  /**
-   * @internal
-   */
-  static schema = DropErc1155ContractSchema;
+export class EditionDropImpl extends StandardErc1155<DropERC1155> {
+  private static contractRoles = ["admin", "minter", "transfer"] as const;
 
+  public abi: typeof ABI;
   public sales: ContractPrimarySale<DropERC1155>;
   public platformFees: ContractPlatformFee<DropERC1155>;
   public encoder: ContractEncoder<DropERC1155>;
   public estimator: GasCostEstimator<DropERC1155>;
   public events: ContractEvents<DropERC1155>;
-  public metadata: ContractMetadata<DropERC1155, typeof EditionDrop.schema>;
+  public metadata: ContractMetadata<
+    DropERC1155,
+    typeof DropErc1155ContractSchema
+  >;
   public roles: ContractRoles<
     DropERC1155,
-    typeof EditionDrop.contractRoles[number]
+    typeof EditionDropImpl.contractRoles[number]
   >;
   /**
    * Configure royalties
@@ -79,7 +77,10 @@ export class EditionDrop extends StandardErc1155<DropERC1155> {
    * });
    * ```
    */
-  public royalties: ContractRoyalty<DropERC1155, typeof EditionDrop.schema>;
+  public royalties: ContractRoyalty<
+    DropERC1155,
+    typeof DropErc1155ContractSchema
+  >;
   /**
    * Configure claim conditions for each NFT
    * @remarks Define who can claim each NFT in the edition, when and how many.
@@ -114,22 +115,24 @@ export class EditionDrop extends StandardErc1155<DropERC1155> {
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
+    abi: typeof ABI,
     contractWrapper = new ContractWrapper<DropERC1155>(
       network,
       address,
-      EditionDrop.contractAbi,
+      abi,
       options,
     ),
   ) {
     super(contractWrapper, storage);
+    this.abi = abi;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      EditionDrop.schema,
+      DropErc1155ContractSchema,
       this.storage,
     );
     this.roles = new ContractRoles(
       this.contractWrapper,
-      EditionDrop.contractRoles,
+      EditionDropImpl.contractRoles,
     );
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);
@@ -374,5 +377,15 @@ export class EditionDrop extends StandardErc1155<DropERC1155> {
     amount: BigNumberish,
   ): Promise<TransactionResult> {
     return this.erc1155.burn(tokenId, amount);
+  }
+
+  /**
+   * @internal
+   */
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    return this.contractWrapper.call(functionName, ...args);
   }
 }

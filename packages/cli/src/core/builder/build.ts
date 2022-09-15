@@ -1,5 +1,5 @@
 import { ContractPayload } from "../interfaces/ContractPayload";
-import { ProjectType } from "./../types/ProjectType";
+import { ProjectType } from "../types/ProjectType";
 import { BrownieBuilder } from "./brownie";
 import { FoundryBuilder } from "./foundry";
 import { HardhatBuilder } from "./hardhat";

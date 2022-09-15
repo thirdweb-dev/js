@@ -4,7 +4,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
-import { IBurnableERC20 } from "@thirdweb-dev/contracts-js";
+import type { IBurnableERC20 } from "@thirdweb-dev/contracts-js";
 
 export class Erc20Burnable implements DetectableFeature {
   featureName = FEATURE_TOKEN_BURNABLE.name;

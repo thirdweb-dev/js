@@ -13,6 +13,8 @@ export const CommonContractSchema = z.object({
   external_link: z.string().url().optional(),
 });
 
+export type CommonContractSchemaInput = z.input<typeof CommonContractSchema>;
+
 /**
  * @internal
  */

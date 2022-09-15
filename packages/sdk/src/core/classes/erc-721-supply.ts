@@ -7,7 +7,10 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc721 } from "./erc-721";
 import { Erc721Enumerable } from "./erc-721-enumerable";
-import { IERC721Enumerable, IERC721Supply } from "@thirdweb-dev/contracts-js";
+import type {
+  IERC721Enumerable,
+  IERC721Supply,
+} from "@thirdweb-dev/contracts-js";
 import { BigNumber } from "ethers";
 
 /**

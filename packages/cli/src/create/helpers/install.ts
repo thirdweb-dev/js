@@ -53,9 +53,13 @@ export function install(
          * Call `yarn add --exact (--offline)? (-D)? ...`.
          */
         args = ["add", "--exact"];
-        if (!isOnline) args.push("--offline");
+        if (!isOnline) {
+          args.push("--offline");
+        }
         args.push("--cwd", root);
-        if (devDependencies) args.push("--dev");
+        if (devDependencies) {
+          args.push("--dev");
+        }
         args.push(...dependencies);
       } else {
         /**

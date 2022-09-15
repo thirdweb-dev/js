@@ -514,6 +514,7 @@ export const ThirdwebSDKProvider: React.FC<
       return undefined;
     }
     const _sdk = new ThirdwebSDK(provider, sdkOptions, storageInterface);
+    (_sdk as any)._constructedAt = Date.now();
     (_sdk as any)._chainId = desiredChainId;
     return _sdk;
   }, [provider, sdkOptions, storageInterface, desiredChainId]);

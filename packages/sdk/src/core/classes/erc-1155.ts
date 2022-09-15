@@ -47,7 +47,7 @@ import { Erc1155Enumerable } from "./erc-1155-enumerable";
 import { Erc1155LazyMintable } from "./erc-1155-lazymintable";
 import { Erc1155Mintable } from "./erc-1155-mintable";
 import { Erc1155SignatureMintable } from "./erc-1155-signature-mintable";
-import {
+import type {
   DropERC1155,
   IBurnableERC1155,
   IERC1155Enumerable,

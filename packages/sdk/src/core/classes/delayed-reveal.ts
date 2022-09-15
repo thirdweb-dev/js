@@ -14,7 +14,7 @@ import {
 import { UploadProgressEvent } from "../../types/events";
 import { TransactionResult, TransactionResultWithId } from "../index";
 import { ContractWrapper } from "./contract-wrapper";
-import {
+import type {
   DropERC721,
   IThirdwebContract,
   SignatureDrop,

@@ -1,8 +1,4 @@
-import {
-  Feature,
-  FeatureName,
-  SUPPORTED_FEATURES,
-} from "../constants/contract-features";
+import { Feature } from "../constants/contract-features";
 import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../constants/index";
 import { BigNumber, BigNumberish, ethers, providers } from "ethers";
 

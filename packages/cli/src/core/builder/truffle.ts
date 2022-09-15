@@ -1,6 +1,6 @@
 import { findFiles } from "../../common/file-helper";
 import { execute } from "../helpers/exec";
-import { logger, spinner } from "../helpers/logger";
+import { logger } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
@@ -22,7 +22,10 @@ export class TruffleBuilder extends BaseBuilder {
       truffleConfig.contracts_build_directory || "./build/contracts",
     );
 
-    existsSync(buildPath) && rmSync(buildPath, { recursive: true });
+    if (existsSync(buildPath)) {
+      rmSync(buildPath, { recursive: true });
+    }
+
     await execute("npx --yes truffle compile", options.projectPath);
 
     const contracts: ContractPayload[] = [];

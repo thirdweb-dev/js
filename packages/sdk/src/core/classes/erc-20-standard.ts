@@ -3,9 +3,10 @@ import { Amount, Currency, CurrencyValue } from "../../types/currency";
 import { BaseERC20, BaseSignatureMintERC20 } from "../../types/eips";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
+import { ContractPrimarySale } from "./contract-sales";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
-import { DropERC20, TokenERC20 } from "@thirdweb-dev/contracts-js";
+import type { DropERC20, TokenERC20 } from "@thirdweb-dev/contracts-js";
 import { IStorage } from "@thirdweb-dev/storage";
 
 /**
