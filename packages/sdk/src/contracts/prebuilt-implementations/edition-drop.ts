@@ -281,25 +281,12 @@ export class EditionDropImpl extends StandardErc1155<DropERC1155> {
     quantity: BigNumberish,
     checkERC20Allowance = true, // TODO split up allowance checks
   ): Promise<TransactionTask> {
-    const claimVerification = await this.erc1155.claimConditions.prepareClaim(
+    return this.erc1155.getClaimTransaction(
+      destinationAddress,
       tokenId,
       quantity,
-      checkERC20Allowance,
+      { checkERC20Allowance },
     );
-    return TransactionTask.make({
-      contractWrapper: this.contractWrapper,
-      functionName: "claim",
-      args: [
-        destinationAddress,
-        tokenId,
-        quantity,
-        claimVerification.currencyAddress,
-        claimVerification.price,
-        claimVerification.proofs,
-        claimVerification.maxQuantityPerTransaction,
-      ],
-      overrides: claimVerification.overrides,
-    });
   }
 
   /**
@@ -331,13 +318,9 @@ export class EditionDropImpl extends StandardErc1155<DropERC1155> {
     quantity: BigNumberish,
     checkERC20Allowance = true,
   ): Promise<TransactionResult> {
-    const tx = await this.getClaimTransaction(
-      destinationAddress,
-      tokenId,
-      quantity,
+    return this.erc1155.claimTo(destinationAddress, tokenId, quantity, {
       checkERC20Allowance,
-    );
-    return await tx.execute();
+    });
   }
 
   /**

@@ -3,6 +3,7 @@ import IPermissionsAbi from "@thirdweb-dev/contracts-js/dist/abis/IPermissions.j
 import IThirdwebPlatformFeeAbi from "@thirdweb-dev/contracts-js/dist/abis/IPlatformFee.json";
 import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/dist/abis/IPrimarySale.json";
 import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty.json";
+import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable.json";
 
 export const FEATURE_ROYALTY = {
   name: "Royalty",
@@ -56,5 +57,16 @@ export const FEATURE_METADATA = {
     contracts: "ContractMetadata",
   },
   abis: [IContractMetadataAbi],
+  features: {},
+} as const;
+
+export const FEATURE_OWNER = {
+  name: "Ownable",
+  namespace: "owner",
+  docLinks: {
+    sdk: "sdk.owner",
+    contracts: "Ownable",
+  },
+  abis: [IOwnableAbi],
   features: {},
 } as const;

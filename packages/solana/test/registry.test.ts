@@ -21,14 +21,18 @@ describe("Registry", async () => {
     const t = await sdk.registry.getAccountsForWallet(
       sdk.wallet.getAddress() || "",
     );
-    const colls = t.nftCollections[0];
-    const nftCollection = await sdk.getNFTCollection(colls);
-    expect((await nftCollection.getMetadata()).name).to.eq("Test Collection");
-
-    const token = await sdk.getToken(t.tokens[0]);
-    expect((await token.getMetadata()).name).to.eq("Test Token");
-
-    const drop = await sdk.getNFTDrop(t.drops[0]);
-    expect((await drop.getMetadata()).name).to.eq("Test Drop");
+    t.forEach((account) => {
+      switch (account.type) {
+        case "nft-collection":
+          expect(account.name).to.equal("Test Collection");
+          break;
+        case "nft-drop":
+          expect(account.name).to.equal("Test Drop");
+          break;
+        case "token":
+          expect(account.name).to.equal("Test Token");
+          break;
+      }
+    });
   });
 });
