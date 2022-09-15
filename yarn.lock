@@ -2490,10 +2490,10 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.1.8-0.tgz#847af3fe9a53368e7be04b7b6e6afe076d3d1676"
   integrity sha512-PiQjdRcAUBlu3poc4g6dN9KvjTgYsA1Vi+B/IgryptCgcJeMY4cldMabKCgPaCg9dPVpUq4O+SOM00P6mBNvGw==
 
-"@thirdweb-dev/react@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-3.0.0.tgz#175c28cb86eba359bbe18363cdd100efa48760ea"
-  integrity sha512-DgqxeXkce1eN90qkV0MtSwi8hGK2yh1P9970fmDIeks2U47BfgHNJwe0vgIKsToexnkr1CgqL098ThYLPufNbw==
+"@thirdweb-dev/react@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-3.0.2.tgz#e1ca55cfa2d1b662f0d235c8af8dcb1db94e81ea"
+  integrity sha512-8C/eiCFbsX+FMYeEID4hYxNKz2viDTkJ1sZP+/LcK85KVS93yhP/WzrkyacD5qenv1jDI4rbH6gZ5JC9BlAqog==
   dependencies:
     "@emotion/react" "^11.10.0"
     "@emotion/styled" "^11.10.0"
@@ -2513,10 +2513,10 @@
     tiny-invariant "^1.2.0"
     wagmi "^0.2.28"
 
-"@thirdweb-dev/sdk@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-3.0.0.tgz#7b3dd991ced32a78c53e44deb5588b555470334f"
-  integrity sha512-FKzOG12n92uF2jrYNb0XbCsfQs57Q2lsSWqMwLZqIscTqmm4BGIaJ380J2fJ5V1yQoVfwdS3lG8Z1AxrwDDdVQ==
+"@thirdweb-dev/sdk@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-3.0.2.tgz#3e5c271193d0300d3d26e32f856ce2c47ac09443"
+  integrity sha512-rZxWSlZ6XuTSn9s3Fo7mzfzEZI9l2mSYhBqEvZttH0sbftioeG8KT5GUpsHFxTVRLw634J3aHzP0X+zKmyGIHw==
   dependencies:
     "@thirdweb-dev/contracts-js" "^1.1.8"
     "@thirdweb-dev/storage" "^0.2.8"

@@ -29,7 +29,7 @@ interface CustomContractFormProps {
   ipfsHash: string;
   selectedChain: SUPPORTED_CHAIN_ID | undefined;
   onChainSelect: (chainId: SUPPORTED_CHAIN_ID) => void;
-  restrictToSelectedChainId?: boolean;
+  isImplementationDeploy?: boolean;
   onSuccessCallback?: (contractAddress: string) => void;
 }
 
@@ -37,7 +37,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
   ipfsHash,
   selectedChain,
   onChainSelect,
-  restrictToSelectedChainId,
+  isImplementationDeploy,
   onSuccessCallback,
 }) => {
   const trackEvent = useTrack();
@@ -51,7 +51,8 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     fullReleaseMetadata.data?.factoryDeploymentData
       ?.implementationInitializerFunction || "initialize",
   );
-  const isFactoryDeployment = fullReleaseMetadata.data?.isDeployableViaFactory;
+  const isFactoryDeployment =
+    fullReleaseMetadata.data?.isDeployableViaFactory && !isImplementationDeploy;
   const deployParams = isFactoryDeployment
     ? initializerParams
     : constructorParams;
@@ -219,7 +220,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           <SupportedNetworkSelect
             disabledChainIds={DisabledChainsMap["custom" as ContractType]}
             isDisabled={
-              restrictToSelectedChainId ||
+              isImplementationDeploy ||
               deploy.isLoading ||
               !compilerMetadata.isSuccess
             }

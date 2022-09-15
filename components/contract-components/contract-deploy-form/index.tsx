@@ -57,7 +57,7 @@ export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
           ipfsHash={contractId}
           selectedChain={selectedChain}
           onChainSelect={setSelectedChain}
-          restrictToSelectedChainId={!!chainIdProp}
+          isImplementationDeploy={!!chainIdProp}
           onSuccessCallback={onSuccessCallback}
         />
       )}
