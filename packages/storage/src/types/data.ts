@@ -1,5 +1,8 @@
-import { isBrowser } from "../common/utils";
 import { z } from "zod";
+
+function isBrowser() {
+  return typeof window !== "undefined";
+}
 
 const JsonLiteralSchema = z.union([
   z.string(),

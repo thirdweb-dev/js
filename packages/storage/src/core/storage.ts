@@ -7,6 +7,7 @@ import {
 import {
   FileOrBuffer,
   FileOrBufferSchema,
+  IpfsUploadBatchOptions,
   IStorageDownloader,
   IStorageUploader,
   Json,
@@ -17,49 +18,44 @@ import {
 import { StorageDownloader } from "./downloaders/storage-downloader";
 import { IpfsUploader } from "./uploaders/ipfs-uploader";
 
-export class ThirdwebStorage {
-  private uploader: IStorageUploader;
+export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
+  private uploader: IStorageUploader<T>;
   private downloader: IStorageDownloader;
 
   constructor(
-    uploader: IStorageUploader = new IpfsUploader(),
+    uploader: IStorageUploader<T> = new IpfsUploader(),
     downloader: IStorageDownloader = new StorageDownloader(),
   ) {
     this.uploader = uploader;
     this.downloader = downloader;
   }
 
-  async download(url: string): Promise<any> {
-    const res = await this.downloader.download(url);
-
-    const text = await res.text();
-
-    // Handle both JSON and standard text data types
-    try {
-      // If we get a JSON object, recursively replace any schemes with gatewayUrls
-      const json = JSON.parse(text);
-      return replaceObjectSchemesWithGatewayUrls(
-        json,
-        this.downloader.gatewayUrls,
-      );
-    } catch {
-      return text;
-    }
+  async download(url: string): Promise<Response> {
+    return this.downloader.download(url);
   }
 
-  async upload(
-    data: JsonObject | FileOrBuffer,
-    options?: UploadOptions,
-  ): Promise<string> {
-    const [uri] = await this.uploadBatch([data] as
-      | JsonObject[]
-      | FileOrBuffer[]);
+  async downloadJSON<T = any>(url: string): Promise<T> {
+    const res = await this.download(url);
+
+    // If we get a JSON object, recursively replace any schemes with gatewayUrls
+    const json = await res.json();
+    return replaceObjectSchemesWithGatewayUrls(
+      json,
+      this.downloader.gatewayUrls,
+    ) as T;
+  }
+
+  async upload(data: JsonObject | FileOrBuffer, options?: T): Promise<string> {
+    const [uri] = await this.uploadBatch(
+      [data] as JsonObject[] | FileOrBuffer[],
+      options,
+    );
     return uri;
   }
 
   async uploadBatch(
     data: JsonObject[] | FileOrBuffer[],
-    options?: UploadOptions,
+    options?: T,
   ): Promise<string[]> {
     const parsed: JsonObject[] | FileOrBuffer[] = UploadDataSchema.parse(data);
     const { success: isFileArray } = FileOrBufferSchema.safeParse(parsed[0]);
@@ -81,11 +77,11 @@ export class ThirdwebStorage {
     data: JsonObject[],
   ): Promise<JsonObject[]> {
     let cleaned = data;
-    if (this.downloader.gatewayUrls) {
+    if (this.uploader.gatewayUrls) {
       // Replace any gateway URLs with their hashes
       cleaned = replaceObjectGatewayUrlsWithSchemes(
         data,
-        this.downloader.gatewayUrls,
+        this.uploader.gatewayUrls,
       ) as JsonObject[];
     }
 
@@ -100,6 +96,10 @@ export class ThirdwebStorage {
 
     // Recurse through data and extract files to upload
     const files = extractObjectFiles(data);
+
+    if (!files.length) {
+      return data;
+    }
 
     // Upload all files that came from the object
     const uris = await this.uploader.uploadBatch(files);

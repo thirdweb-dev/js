@@ -73,6 +73,11 @@ export function replaceObjectGatewayUrlsWithSchemes(
         return data;
       }
 
+      const { success } = FileOrBufferSchema.safeParse(data);
+      if (success) {
+        return data;
+      }
+
       if (Array.isArray(data)) {
         return data.map((entry) =>
           replaceObjectGatewayUrlsWithSchemes(
@@ -82,12 +87,15 @@ export function replaceObjectGatewayUrlsWithSchemes(
         );
       }
 
-      return Object.keys(data).map((key) =>
-        replaceObjectGatewayUrlsWithSchemes(
-          data[key] as Exclude<Json, FileOrBuffer>,
-          gatewayUrls,
-        ),
+      const json: Json = {};
+      Object.keys(data).forEach(
+        (key) =>
+          (json[key] = replaceObjectGatewayUrlsWithSchemes(
+            data[key] as Exclude<Json, FileOrBuffer>,
+            gatewayUrls,
+          )),
       );
+      return json;
   }
 
   return data;
@@ -105,6 +113,11 @@ export function replaceObjectSchemesWithGatewayUrls(
         return data;
       }
 
+      const { success } = FileOrBufferSchema.safeParse(data);
+      if (success) {
+        return data;
+      }
+
       if (Array.isArray(data)) {
         return data.map((entry) =>
           replaceObjectSchemesWithGatewayUrls(
@@ -114,12 +127,14 @@ export function replaceObjectSchemesWithGatewayUrls(
         );
       }
 
-      return Object.keys(data).map((key) =>
-        replaceObjectSchemesWithGatewayUrls(
+      const json: Json = {};
+      Object.keys(data).forEach((key) => {
+        json[key] = replaceObjectSchemesWithGatewayUrls(
           data[key] as Exclude<Json, FileOrBuffer>,
           gatewayUrls,
-        ),
-      );
+        );
+      });
+      return json;
   }
 
   return data;
@@ -143,22 +158,25 @@ export function extractObjectFiles(
 
     if (Array.isArray(data)) {
       data.forEach((entry) => extractObjectFiles(entry, files));
+    } else {
+      Object.keys(data).map((key) =>
+        extractObjectFiles((data as JsonObject)[key], files),
+      );
     }
-
-    Object.keys(data).map((key) =>
-      extractObjectFiles((data as JsonObject)[key], files),
-    );
   }
 
   return files;
 }
 
 export function replaceObjectFilesWithUris(data: Json, uris: string[]): Json {
-  // If item is a FileOrBuffer add it to our list of files
   const { success: isFileOrBuffer } = FileOrBufferSchema.safeParse(data);
   if (isFileOrBuffer) {
-    data = uris.splice(0, 1);
-    return data;
+    if (uris.length) {
+      data = uris.shift() as string;
+      return data;
+    } else {
+      console.warn("Not enough URIs to replace all files in object.");
+    }
   }
 
   if (typeof data === "object") {
@@ -167,12 +185,18 @@ export function replaceObjectFilesWithUris(data: Json, uris: string[]): Json {
     }
 
     if (Array.isArray(data)) {
-      data.forEach((entry) => replaceObjectFilesWithUris(entry, uris));
+      return data.map((entry) => replaceObjectFilesWithUris(entry, uris));
+    } else {
+      const json: Json = {};
+      Object.keys(data).map(
+        (key) =>
+          (json[key] = replaceObjectFilesWithUris(
+            (data as JsonObject)[key],
+            uris,
+          )),
+      );
+      return json;
     }
-
-    Object.keys(data).map((key) =>
-      replaceObjectFilesWithUris((data as JsonObject)[key], uris),
-    );
   }
 
   return data;

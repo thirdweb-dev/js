@@ -18,7 +18,7 @@ import {
 import fetch from "cross-fetch";
 import FormData from "form-data";
 
-export class IpfsUploader implements IStorageUploader {
+export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   public gatewayUrls: GatewayUrls;
   public uploadWithGatewayUrl: boolean;
 
@@ -31,8 +31,8 @@ export class IpfsUploader implements IStorageUploader {
     data: (string | FileOrBuffer)[],
     options?: IpfsUploadBatchOptions,
   ): Promise<string[]> {
-    const form = new FormData();
-    const { fileNames } = this.buildFormData(form, data);
+    const formData = new FormData();
+    const { form, fileNames } = this.buildFormData(formData, data);
 
     if (isBrowser()) {
       return this.uploadBatchBrowser(form, fileNames, options);
@@ -50,6 +50,9 @@ export class IpfsUploader implements IStorageUploader {
   private async getUploadToken(): Promise<string> {
     const res = await fetch(`${TW_IPFS_SERVER_URL}/grant`, {
       method: "GET",
+      headers: {
+        "X-APP-NAME": "Storage SDK",
+      },
     });
     if (!res.ok) {
       throw new Error(`Failed to get upload token`);
@@ -114,6 +117,9 @@ export class IpfsUploader implements IStorageUploader {
         form.append("file", new Blob([fileData as any]), filepath);
       }
     });
+
+    const metadata = { name: `Storage SDK`, keyvalues: {} };
+    form.append("pinataMetadata", JSON.stringify(metadata));
 
     return {
       form,
@@ -185,6 +191,7 @@ export class IpfsUploader implements IStorageUploader {
     });
     const body = await res.json();
     if (!res.ok) {
+      console.warn(body);
       throw new Error("Failed to upload files to IPFS");
     }
 

@@ -3,13 +3,10 @@ import { GatewayUrls } from "./download";
 
 export type UploadOptions = { [key: string]: any };
 
-export interface IStorageUploader {
+export interface IStorageUploader<T extends UploadOptions> {
   gatewayUrls?: GatewayUrls;
   uploadWithGatewayUrl?: boolean;
-  uploadBatch(
-    data: (string | FileOrBuffer)[],
-    options?: UploadOptions,
-  ): Promise<string[]>;
+  uploadBatch(data: (string | FileOrBuffer)[], options?: T): Promise<string[]>;
 }
 
 export type UploadProgressEvent = {
