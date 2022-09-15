@@ -1,5 +1,12 @@
 # @thirdweb-dev/auth
 
+## 2.0.2
+
+### Patch Changes
+
+- Updated dependencies [[`42c79e9`](https://github.com/thirdweb-dev/js/commit/42c79e93dc958ca46a55d705aeea44ffdbbcc5f6), [`fe8751e`](https://github.com/thirdweb-dev/js/commit/fe8751eeae7ad013b890a8092ddbd091ecbd6708)]:
+  - @thirdweb-dev/sdk@3.0.2
+
 ## 2.0.1
 
 ### Patch Changes
