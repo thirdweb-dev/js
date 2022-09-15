@@ -333,7 +333,10 @@ export class ContractPublisher extends RPCConnectionHandler {
 
     const fullMetadata = FullPublishMetadataSchemaInput.parse({
       ...extraMetadata,
-      ...predeployMetadata,
+      metadataUri: predeployMetadata.metadataUri,
+      bytecodeUri: predeployMetadata.bytecodeUri,
+      name: predeployMetadata.name,
+      analytics: predeployMetadata.analytics,
       publisher,
     });
     const fullMetadataUri = await this.storage.uploadMetadata(fullMetadata);
