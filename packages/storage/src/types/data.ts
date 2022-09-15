@@ -24,7 +24,7 @@ export const FileOrBufferSchema = z.union([
 
 export type FileOrBuffer = File | Buffer | BufferOrStringWithName;
 
-type BufferOrStringWithName = {
+export type BufferOrStringWithName = {
   data: Buffer | string;
   name: string;
 };

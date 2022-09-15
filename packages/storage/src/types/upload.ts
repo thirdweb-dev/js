@@ -1,6 +1,18 @@
 import { FileOrBuffer } from "./data";
+import { GatewayUrls } from "./download";
 
-export interface UploadProgressEvent {
+export type UploadOptions = { [key: string]: any };
+
+export interface IStorageUploader {
+  gatewayUrls?: GatewayUrls;
+  uploadWithGatewayUrl?: boolean;
+  uploadBatch(
+    data: (string | FileOrBuffer)[],
+    options?: UploadOptions,
+  ): Promise<string[]>;
+}
+
+export type UploadProgressEvent = {
   /**
    * The number of bytes uploaded.
    */
@@ -10,11 +22,16 @@ export interface UploadProgressEvent {
    * The total number of bytes to be uploaded.
    */
   total: number;
-}
+};
 
-export interface IStorageUploader {
-  uploadBatch(
-    data: (string | FileOrBuffer)[],
-    onProgress?: (event: UploadProgressEvent) => void,
-  ): Promise<string[]>;
-}
+export type IpfsUploaderOptions = {
+  gatewayUrls?: GatewayUrls;
+  uploadWithGatewayUrl?: boolean;
+};
+
+export type IpfsUploadBatchOptions = {
+  rewriteFileNames?: {
+    fileStartNumber: number;
+  };
+  onProgress?: (event: UploadProgressEvent) => void;
+};

@@ -1,18 +1,16 @@
-import { DEFAULT_GATEWAY_URLS } from "../../common/urls";
-import {
-  replaceObjectSchemesWithGatewayUrls,
-  replaceSchemeWithGatewayUrl,
-} from "../../common/utils";
-import { GatewayUrls, IStorageDownloader, Json } from "../../types";
+import { prepareGatewayUrls } from "../../common/urls";
+import { replaceSchemeWithGatewayUrl } from "../../common/utils";
+import { GatewayUrls, IStorageDownloader } from "../../types";
+import fetch from "cross-fetch";
 
 export class StorageDownloader implements IStorageDownloader {
   public gatewayUrls: GatewayUrls;
 
   constructor(gatewayUrls?: GatewayUrls) {
-    this.gatewayUrls = this.prepareGatewayUrls(gatewayUrls);
+    this.gatewayUrls = prepareGatewayUrls(gatewayUrls);
   }
 
-  async download(uri: string, attempts = 0): Promise<Json> {
+  async download(uri: string, attempts = 0): Promise<Response> {
     // Replace recognized scheme with the highest priority gateway URL that hasn't already been attempted
     let resolvedUri;
     try {
@@ -42,33 +40,6 @@ export class StorageDownloader implements IStorageDownloader {
       return this.download(uri, attempts + 1);
     }
 
-    const text = await res.text();
-
-    // Handle both JSON and standard text data types
-    try {
-      // If we get a JSON object, recursively replace any schemes with gatewayUrls
-      const json = JSON.parse(text);
-      return replaceObjectSchemesWithGatewayUrls(json, this.gatewayUrls);
-    } catch {
-      return text;
-    }
-  }
-
-  private prepareGatewayUrls(gatewayUrls?: GatewayUrls): GatewayUrls {
-    const allGatewayUrls = {
-      ...gatewayUrls,
-      ...DEFAULT_GATEWAY_URLS,
-    };
-
-    for (const key of Object.keys(DEFAULT_GATEWAY_URLS)) {
-      if (gatewayUrls && gatewayUrls[key]) {
-        allGatewayUrls[key] = [
-          ...gatewayUrls[key],
-          ...DEFAULT_GATEWAY_URLS[key],
-        ];
-      }
-    }
-
-    return allGatewayUrls;
+    return res;
   }
 }

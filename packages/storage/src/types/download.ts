@@ -1,5 +1,6 @@
 export interface IStorageDownloader {
-  download(url: string): Promise<any>;
+  gatewayUrls: GatewayUrls;
+  download(url: string): Promise<Response>;
 }
 
 export type GatewayUrls = {
