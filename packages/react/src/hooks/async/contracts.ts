@@ -134,6 +134,18 @@ export type UseContractResult<
   contract: TContract | undefined;
 };
 
+/**
+ * Use this resolve a contract address to a smart contract instance.
+ *
+ * @example
+ * ```javascript
+ * const { contract, isLoading, error } = useContract("{{contract_address}}");
+ * ```
+ *
+ * @param contractAddress - the address of the deployed contract
+ * @returns a response object that includes the contract once it is resolved
+ * @public
+ */
 export function useContract<
   TContract extends ValidContractInstance = SmartContract,
 >(contractAddress: RequiredParam<ContractAddress>) {

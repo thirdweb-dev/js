@@ -1,5 +1,6 @@
 // import { getPayer } from "../utils/local-config";
-import { WalletSigner } from "../types/common";
+import { CurrencyValue, WalletSigner } from "../types/common";
+import { toCurrencyValue } from "../utils/token";
 import {
   guestIdentity,
   isIdentitySigner,
@@ -7,6 +8,7 @@ import {
   keypairIdentity,
   Metaplex,
   Signer,
+  sol,
   walletAdapterIdentity,
 } from "@metaplex-foundation/js";
 import { Keypair } from "@solana/web3.js";
@@ -56,6 +58,13 @@ export class UserWallet {
 
   public getSigner() {
     return this.metaplex.identity();
+  }
+
+  public async getBalance(): Promise<CurrencyValue> {
+    const value = await this.metaplex.connection.getBalance(
+      this.metaplex.identity().publicKey,
+    );
+    return toCurrencyValue(sol(value));
   }
 
   private connectToMetaplex(signer: WalletSigner) {

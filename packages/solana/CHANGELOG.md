@@ -1,5 +1,15 @@
 # @thirdweb-dev/solana
 
+## 0.2.9
+
+### Patch Changes
+
+- [#120](https://github.com/thirdweb-dev/js/pull/120) [`e25dd1a`](https://github.com/thirdweb-dev/js/commit/e25dd1ac8e5ef25d844b2d570ac557b0440e6e51) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Proper handling of WalletAdapter connections
+
+- [#117](https://github.com/thirdweb-dev/js/pull/117) [`84beda1`](https://github.com/thirdweb-dev/js/commit/84beda1cbb17f1e5ffb1edbea2acb7c42f47fbab) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Account registry implementation
+
+- [#123](https://github.com/thirdweb-dev/js/pull/123) [`5aa3c43`](https://github.com/thirdweb-dev/js/commit/5aa3c433d790a2f65515758171f5822864826367) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add ability to fetch native balance for the connected wallet
+
 ## 0.2.8
 
 ### Patch Changes

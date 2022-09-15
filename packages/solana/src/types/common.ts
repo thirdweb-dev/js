@@ -58,7 +58,7 @@ export const AmountSchema = z
 export type Amount = z.input<typeof AmountSchema>;
 
 export const CurrencyValueSchema = z.object({
-  value: z.bigint(),
+  value: z.string(),
   displayValue: z.string(),
 });
 
