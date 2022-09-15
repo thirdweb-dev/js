@@ -69,3 +69,9 @@ export type TransactionResult = {
 };
 
 export type WalletSigner = Signer | WalletAdapter;
+
+export type WalletAccount = {
+  type: "nft-collection" | "nft-drop" | "token";
+  address: string;
+  name: string;
+};
