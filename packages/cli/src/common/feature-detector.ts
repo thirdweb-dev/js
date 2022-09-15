@@ -70,13 +70,13 @@ export async function detectExtensions(options: any) {
       const enabledFeatures: Feature[] = features.enabledFeatures.map(
         (feature) => ({
           name: feature.name,
-          reference: `https://portal.thirdweb.com/contracts/${feature.docLinks.contracts}`,
+          reference: `https://portal.thirdweb.com/extensions/${feature.name.toLowerCase()}`,
         }),
       );
       const suggestedFeatures: Feature[] = features.suggestedFeatures.map(
         (feature) => ({
           name: feature.name,
-          reference: `https://portal.thirdweb.com/contracts/${feature.docLinks.contracts}`,
+          reference: `https://portal.thirdweb.com/extensions/${feature.name.toLowerCase()}`,
         }),
       );
 
