@@ -1,3 +1,4 @@
+import { WalletAccount } from "../types/common";
 import {
   Metadata,
   Metaplex,
@@ -6,18 +7,6 @@ import {
 import { TokenStandard } from "@metaplex-foundation/mpl-token-metadata";
 import { PublicKey } from "@solana/web3.js";
 
-export type WalletAccount = {
-  type: "nft-collection" | "nft-drop" | "token";
-  address: string;
-  name: string;
-};
-
-type RelevantWalletAccounts = {
-  tokens: string[];
-  nftCollections: string[];
-  drops: string[];
-};
-
 export class Registry {
   private metaplex: Metaplex;
 
@@ -25,7 +14,9 @@ export class Registry {
     this.metaplex = metaplex;
   }
 
-  public async getAccountsForWallet(walletAddress: string) {
+  public async getAccountsForWallet(
+    walletAddress: string,
+  ): Promise<WalletAccount[]> {
     const pubKeys = await this.getMetadataAddressesForWallet(walletAddress);
     const metadatas = await this.metaplex
       .nfts()
@@ -40,11 +31,11 @@ export class Registry {
       })
       .run();
 
-    return metadatas.reduce(
-      (accounts, mintMetadata) => {
+    return metadatas
+      .map((mintMetadata) => {
         const meta = mintMetadata as Metadata;
         if (!meta) {
-          return accounts;
+          return undefined;
         }
         if (meta?.collectionDetails) {
           // check if it's part of a candy machine
@@ -54,31 +45,35 @@ export class Registry {
               meta.mintAddress.toBase58(),
           );
           if (drop) {
-            accounts.drops.push(drop.address.toBase58());
+            return {
+              type: "nft-drop",
+              address: drop.address.toBase58(),
+              name: meta.name,
+            };
           } else {
-            accounts.nftCollections.push(meta.mintAddress.toBase58());
+            return {
+              type: "nft-collection",
+              address: meta.mintAddress.toBase58(),
+              name: meta.name,
+            };
           }
         } else {
           if (meta.tokenStandard === TokenStandard.Fungible) {
-            accounts.tokens.push(meta.mintAddress.toBase58());
+            return {
+              type: "token",
+              address: meta.mintAddress.toBase58(),
+              name: meta.name,
+            };
           }
         }
-        return accounts;
-      },
-      {
-        tokens: [],
-        nftCollections: [],
-        drops: [],
-      } as RelevantWalletAccounts,
-    );
+      })
+      .filter((account) => account !== undefined) as WalletAccount[];
   }
 
   public async getMetadataAddressesForWallet(walletAddress: string) {
-    const mints = await TokenMetadataProgram.metadataV1Accounts(this.metaplex)
+    return await TokenMetadataProgram.metadataV1Accounts(this.metaplex)
       .selectMint()
       .whereCreator(1, new PublicKey(walletAddress))
       .getDataAsPublicKeys();
-
-    return mints;
   }
 }
