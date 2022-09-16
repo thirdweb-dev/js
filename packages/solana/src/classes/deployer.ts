@@ -95,22 +95,49 @@ export class Deployer {
 
   async createNftDrop(metadata: NFTDropMetadataInput): Promise<string> {
     const parsed = NFTDropContractSchema.parse(metadata);
+    const uri = await this.storage.uploadMetadata(
+      NFTCollectionMetadataInputSchema.parse(metadata),
+    );
 
-    // TODO make it a single tx
-    const collection = await this.createNftCollection(metadata);
-
-    const { candyMachine: nftDrop } = await this.metaplex
-      .candyMachines()
+    const collectionMint = Keypair.generate();
+    const collectionTx = await this.metaplex
+      .nfts()
+      .builders()
       .create({
-        ...parsed,
-        collection: new PublicKey(collection),
+        useNewMint: collectionMint,
+        name: parsed.name,
+        symbol: parsed.symbol,
+        sellerFeeBasisPoints: 0,
+        uri,
+        isCollection: true,
         creators: enforceCreator(
           parsed.creators,
           this.metaplex.identity().publicKey,
         ),
-      })
-      .run();
+      });
 
-    return nftDrop.address.toBase58();
+    const candyMachineKeypair = Keypair.generate();
+    const candyMachineTx = await this.metaplex
+      .candyMachines()
+      .builders()
+      .create({
+        ...parsed,
+        candyMachine: candyMachineKeypair,
+        collection: collectionMint.publicKey,
+        creators: enforceCreator(
+          parsed.creators,
+          this.metaplex.identity().publicKey,
+        ),
+      });
+
+    const result = await collectionTx
+      .add(candyMachineTx)
+      .sendAndConfirm(this.metaplex);
+
+    if (!result.response.signature) {
+      throw new Error("Transaction failed");
+    }
+
+    return candyMachineKeypair.publicKey.toBase58();
   }
 }

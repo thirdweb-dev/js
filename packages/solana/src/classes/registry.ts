@@ -3,7 +3,7 @@ import {
   CandyMachine,
   Metadata,
   Metaplex,
-  TokenMetadataProgram,
+  TokenProgram,
 } from "@metaplex-foundation/js";
 import { TokenStandard } from "@metaplex-foundation/mpl-token-metadata";
 import { PublicKey } from "@solana/web3.js";
@@ -31,6 +31,7 @@ export class Registry {
       .nfts()
       .findByMint({ mintAddress: new PublicKey(address) })
       .run();
+
     if (metadata) {
       if (metadata.collectionDetails) {
         return "nft-collection";
@@ -46,12 +47,11 @@ export class Registry {
   public async getAccountsForWallet(
     walletAddress: string,
   ): Promise<WalletAccount[]> {
+    const mints = await this.getOwnedTokenAccountsForWallet(walletAddress);
     const metadatas = await this.metaplex
       .nfts()
-      .findAllByOwner({ owner: new PublicKey(walletAddress) })
+      .findAllByMintList({ mints })
       .run();
-
-    console.log({ metadatas });
 
     const candyMachines = await this.metaplex
       .candyMachines()
@@ -60,8 +60,6 @@ export class Registry {
         publicKey: new PublicKey(walletAddress),
       })
       .run();
-
-    console.log({ candyMachines });
 
     return metadatas
       .map((mintMetadata) => {
@@ -104,5 +102,12 @@ export class Registry {
         candyMachine.collectionMintAddress?.toBase58() ===
         meta.mintAddress.toBase58(),
     );
+  }
+
+  private async getOwnedTokenAccountsForWallet(walletAddress: string) {
+    return await TokenProgram.tokenAccounts(this.metaplex)
+      .selectMint()
+      .whereOwner(new PublicKey(walletAddress))
+      .getDataAsPublicKeys();
   }
 }
