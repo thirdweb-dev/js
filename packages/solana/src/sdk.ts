@@ -1,7 +1,6 @@
 import { Deployer } from "./classes/deployer";
 import { Registry } from "./classes/registry";
 import { UserWallet } from "./classes/user-wallet";
-import { DEFAULT_IPFS_GATEWAY } from "./constants/urls";
 import { NFTCollection } from "./contracts/nft-collection";
 import { NFTDrop } from "./contracts/nft-drop";
 import { Program } from "./contracts/program";
@@ -16,17 +15,17 @@ import {
   setProvider,
 } from "@project-serum/anchor";
 import { Connection } from "@solana/web3.js";
-import { IpfsStorage, IStorage, PinataUploader } from "@thirdweb-dev/storage";
+import { IpfsUploader, ThirdwebStorage } from "@thirdweb-dev/storage";
 
 export class ThirdwebSDK {
-  static fromNetwork(network: Network, storage?: IStorage): ThirdwebSDK {
+  static fromNetwork(network: Network, storage?: ThirdwebStorage): ThirdwebSDK {
     return new ThirdwebSDK(new Connection(getUrlForNetwork(network)), storage);
   }
 
   private connection: Connection;
   private metaplex: Metaplex;
   private anchorProvider: AnchorProvider;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   public registry: Registry;
   public deployer: Deployer;
@@ -34,12 +33,8 @@ export class ThirdwebSDK {
 
   constructor(
     connection: Connection,
-    storage: IStorage = new IpfsStorage(
-      DEFAULT_IPFS_GATEWAY,
-      new PinataUploader(),
-      {
-        appendGatewayUrl: true,
-      },
+    storage: ThirdwebStorage = new ThirdwebStorage(
+      new IpfsUploader({ uploadWithGatewayUrl: true }),
     ),
   ) {
     this.connection = connection;

@@ -21,21 +21,20 @@ import {
   DataV2,
 } from "@metaplex-foundation/mpl-token-metadata";
 import { Keypair } from "@solana/web3.js";
-import { IStorage } from "@thirdweb-dev/storage";
-import BN from "bn.js";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 export class Deployer {
   private metaplex: Metaplex;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
-  constructor(metaplex: Metaplex, storage: IStorage) {
+  constructor(metaplex: Metaplex, storage: ThirdwebStorage) {
     this.metaplex = metaplex;
     this.storage = storage;
   }
 
   async createToken(tokenMetadata: TokenMetadataInput): Promise<string> {
     const tokenMetadataParsed = TokenMetadataInputSchema.parse(tokenMetadata);
-    const uri = await this.storage.uploadMetadata(tokenMetadataParsed);
+    const uri = await this.storage.upload(tokenMetadataParsed);
     const mint = Keypair.generate();
     const owner = this.metaplex.identity().publicKey;
     const mintTx = await this.metaplex
@@ -81,7 +80,7 @@ export class Deployer {
     collectionMetadata: NFTCollectionMetadataInput,
   ): Promise<string> {
     const parsed = NFTCollectionMetadataInputSchema.parse(collectionMetadata);
-    const uri = await this.storage.uploadMetadata(parsed);
+    const uri = await this.storage.upload(parsed);
 
     const { nft: collectionNft } = await this.metaplex
       .nfts()
@@ -103,7 +102,7 @@ export class Deployer {
   async createNftDrop(metadata: NFTDropMetadataInput): Promise<string> {
     const collectionInfo = NFTCollectionMetadataInputSchema.parse(metadata);
     const candyMachineInfo = NFTDropConditionsOutputSchema.parse(metadata);
-    const uri = await this.storage.uploadMetadata(collectionInfo);
+    const uri = await this.storage.upload(collectionInfo);
 
     const collectionMint = Keypair.generate();
     const collectionTx = await this.metaplex

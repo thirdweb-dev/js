@@ -1,5 +1,5 @@
 import { AmountSchema, JsonSchema } from "../common";
-import { FileBufferOrStringSchema } from "@thirdweb-dev/storage";
+import { FileOrBufferOrStringSchema } from "@thirdweb-dev/storage";
 import { z } from "zod";
 
 /**
@@ -9,7 +9,7 @@ export const CommonContractSchema = z.object({
   name: z.string(),
   symbol: z.string().optional(),
   description: z.string().optional(),
-  image: FileBufferOrStringSchema.optional(),
+  image: FileOrBufferOrStringSchema.optional(),
   external_link: z.string().url().optional(),
 });
 

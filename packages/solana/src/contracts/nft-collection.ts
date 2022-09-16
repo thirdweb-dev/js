@@ -16,11 +16,11 @@ import {
   Metadata,
 } from "@metaplex-foundation/mpl-token-metadata";
 import { ConfirmedSignatureInfo, PublicKey } from "@solana/web3.js";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 export class NFTCollection {
   private metaplex: Metaplex;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
   private nft: NFTHelper;
   public publicKey: PublicKey;
   public accountType = "nft-collection" as const;
@@ -28,7 +28,7 @@ export class NFTCollection {
   constructor(
     collectionMintAddress: string,
     metaplex: Metaplex,
-    storage: IStorage,
+    storage: ThirdwebStorage,
   ) {
     this.storage = storage;
     this.metaplex = metaplex;
@@ -206,7 +206,7 @@ export class NFTCollection {
 
   // TODO add options param for initial/maximum supply
   async mintTo(to: string, metadata: NFTMetadataInput) {
-    const uri = await this.storage.uploadMetadata(metadata);
+    const uri = await this.storage.upload(metadata);
     const { nft } = await this.metaplex
       .nfts()
       .create({

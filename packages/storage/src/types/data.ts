@@ -32,6 +32,13 @@ export type BufferOrStringWithName = {
   name: string;
 };
 
+export const FileOrBufferOrStringSchema = z.union([
+  FileOrBufferSchema,
+  z.string(),
+]);
+
+export type FileOrBufferOrString = FileOrBuffer | string;
+
 const JsonSchema: z.ZodType<Json> = z.lazy(() =>
   z.union([
     JsonLiteralSchema,

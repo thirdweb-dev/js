@@ -9,7 +9,7 @@ import {
   isFileInstance,
 } from "../../common/utils";
 import {
-  FileOrBuffer,
+  FileOrBufferOrString,
   GatewayUrls,
   IpfsUploadBatchOptions,
   IpfsUploaderOptions,
@@ -28,7 +28,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   }
 
   async uploadBatch(
-    data: (string | FileOrBuffer)[],
+    data: FileOrBufferOrString[],
     options?: IpfsUploadBatchOptions,
   ): Promise<string[]> {
     if (options?.uploadWithoutDirectory && data.length > 1) {
@@ -69,7 +69,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
 
   private buildFormData(
     form: FormData,
-    files: (string | FileOrBuffer)[],
+    files: FileOrBufferOrString[],
     options?: IpfsUploadBatchOptions,
   ) {
     const fileNames: string[] = [];
