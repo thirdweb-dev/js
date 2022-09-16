@@ -19,7 +19,7 @@ import { ContractRoles } from "./contract-roles";
 import { ContractWrapper } from "./contract-wrapper";
 import type { ITokenERC1155, TokenERC1155 } from "@thirdweb-dev/contracts-js";
 import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ITokenERC1155";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, ethers } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -33,14 +33,14 @@ export class Erc1155SignatureMintable implements DetectableFeature {
   private contractWrapper: ContractWrapper<
     BaseSignatureMintERC1155 | TokenERC1155
   >;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
   private roles:
     | ContractRoles<TokenERC1155, typeof NFTCollection.roles[number]>
     | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<BaseSignatureMintERC1155 | TokenERC1155>,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     roles?: ContractRoles<TokenERC1155, typeof NFTCollection.roles[number]>,
   ) {
     this.contractWrapper = contractWrapper;

@@ -188,7 +188,7 @@ describe("NFT sig minting", async () => {
     });
 
     it("should mint with URI", async () => {
-      const uri = await storage.uploadMetadata({
+      const uri = await storage.upload({
         name: "Test1",
       });
       const toSign = {
@@ -201,10 +201,10 @@ describe("NFT sig minting", async () => {
     });
 
     it("should mint batch with URI", async () => {
-      const uri1 = await storage.uploadMetadata({
+      const uri1 = await storage.upload({
         name: "Test1",
       });
-      const uri2 = await storage.uploadMetadata({
+      const uri2 = await storage.upload({
         name: "Test2",
       });
       const toSign1 = {

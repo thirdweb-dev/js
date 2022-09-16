@@ -7,7 +7,7 @@ import { ContractWrapper } from "./contract-wrapper";
 import { Erc721 } from "./erc-721";
 import type { IMintableERC721, IMulticall } from "@thirdweb-dev/contracts-js";
 import { TokensMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IMintableERC721";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 /**
  * Mint Many ERC721 NFTs at once
@@ -22,13 +22,13 @@ import { IStorage } from "@thirdweb-dev/storage";
 export class Erc721BatchMintable implements DetectableFeature {
   featureName = FEATURE_NFT_BATCH_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC721 & IMulticall>;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
   private erc721: Erc721;
 
   constructor(
     erc721: Erc721,
     contractWrapper: ContractWrapper<IMintableERC721 & IMulticall>,
-    storage: IStorage,
+    storage: ThirdwebStorage,
   ) {
     this.erc721 = erc721;
     this.contractWrapper = contractWrapper;

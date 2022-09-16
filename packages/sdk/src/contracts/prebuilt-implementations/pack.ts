@@ -39,7 +39,7 @@ import {
   PackCreatedEvent,
   PackOpenedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/Pack";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, ethers } from "ethers";
 
 /**
@@ -96,7 +96,7 @@ export class PackImpl extends StandardErc1155<PackContract> {
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
     contractWrapper = new ContractWrapper<PackContract>(

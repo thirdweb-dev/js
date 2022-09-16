@@ -35,7 +35,7 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import ContractPublisherAbi from "@thirdweb-dev/contracts-js/dist/abis/ContractPublisher.json";
 import { ContractPublishedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ContractPublisher";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, utils } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -44,13 +44,13 @@ import invariant from "tiny-invariant";
  * @internal
  */
 export class ContractPublisher extends RPCConnectionHandler {
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
   private publisher: ContractWrapper<OnChainContractPublisher>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
     options: SDKOptions,
-    storage: IStorage,
+    storage: ThirdwebStorage,
   ) {
     super(network, options);
     this.storage = storage;
@@ -225,7 +225,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     const signer = this.getSigner();
     invariant(signer, "A signer is required");
     const publisher = await signer.getAddress();
-    const profileUri = await this.storage.uploadMetadata(profileMetadata);
+    const profileUri = await this.storage.upload(profileMetadata);
     return {
       receipt: await this.publisher.sendTransaction("setPublisherProfileUri", [
         publisher,
@@ -247,7 +247,9 @@ export class ContractPublisher extends RPCConnectionHandler {
     if (!profileUri || profileUri.length === 0) {
       return {};
     }
-    return ProfileSchemaOutput.parse(await this.storage.get(profileUri));
+    return ProfileSchemaOutput.parse(
+      await this.storage.downloadJSON(profileUri),
+    );
   }
 
   /**
@@ -335,9 +337,9 @@ export class ContractPublisher extends RPCConnectionHandler {
       }
     }
 
-    const fetchedBytecode = await this.storage.getRaw(
-      predeployMetadata.bytecodeUri,
-    );
+    const fetchedBytecode = await (
+      await this.storage.download(predeployMetadata.bytecodeUri)
+    ).text();
     const bytecode = fetchedBytecode.startsWith("0x")
       ? fetchedBytecode
       : `0x${fetchedBytecode}`;
@@ -353,7 +355,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       analytics: predeployMetadata.analytics,
       publisher,
     });
-    const fullMetadataUri = await this.storage.uploadMetadata(fullMetadata);
+    const fullMetadataUri = await this.storage.upload(fullMetadata);
     const receipt = await this.publisher.sendTransaction("publishContract", [
       publisher,
       contractId,

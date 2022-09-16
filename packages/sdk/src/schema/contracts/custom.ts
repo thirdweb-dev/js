@@ -10,7 +10,7 @@ import {
   CommonTrustedForwarderSchema,
   MerkleSchema,
 } from "./common";
-import { FileBufferOrStringSchema } from "@thirdweb-dev/storage";
+import { FileOrBufferOrStringSchema } from "@thirdweb-dev/storage";
 import { BigNumberish } from "ethers";
 import { z } from "zod";
 
@@ -145,8 +145,8 @@ export const ExtraPublishMetadataSchemaInput = z
     license: z.string().optional(),
     changelog: z.string().optional(),
     tags: z.array(z.string()).optional(),
-    audit: FileBufferOrStringSchema.nullable().optional(),
-    logo: FileBufferOrStringSchema.nullable().optional(),
+    audit: FileOrBufferOrStringSchema.nullable().optional(),
+    logo: FileOrBufferOrStringSchema.nullable().optional(),
     isDeployableViaFactory: z.boolean().optional(),
     factoryDeploymentData: FactoryDeploymentSchema.optional(),
   })
@@ -190,7 +190,7 @@ export type FullPublishMetadata = z.infer<
 export const ProfileSchemaInput = z.object({
   name: z.string().optional(),
   bio: z.string().optional(),
-  avatar: FileBufferOrStringSchema.nullable().optional(),
+  avatar: FileOrBufferOrStringSchema.nullable().optional(),
   website: z.string().optional(),
   twitter: z.string().optional(),
   telegram: z.string().optional(),

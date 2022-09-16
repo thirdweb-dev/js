@@ -1,15 +1,13 @@
 import { NotFoundError } from "../../src";
 import { JsonObject } from "../../src/core/types";
-import {
-  FileOrBuffer,
-  isBufferInstance,
-  isFileInstance,
-  IStorage,
-  UploadResult,
-} from "@thirdweb-dev/storage";
+import { FileOrBuffer, ThirdwebStorage } from "@thirdweb-dev/storage";
 import { v4 as uuidv4 } from "uuid";
 
-export class MockStorage implements IStorage {
+export function MockStorage() {
+  return new ThirdwebStorage();
+}
+
+export class MocStorage implements IStorage {
   private objects: { [key: string]: any } = {};
   private folders: { [cid: string]: { [id: string]: any } } = {};
 

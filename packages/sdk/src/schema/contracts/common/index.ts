@@ -1,5 +1,5 @@
 import { AddressSchema, BasisPointsSchema, JsonSchema } from "../../shared";
-import { FileBufferOrStringSchema } from "@thirdweb-dev/storage";
+import { FileOrBufferOrStringSchema } from "@thirdweb-dev/storage";
 import { constants } from "ethers";
 import { z } from "zod";
 
@@ -9,7 +9,7 @@ import { z } from "zod";
 export const CommonContractSchema = z.object({
   name: z.string(),
   description: z.string().optional(),
-  image: FileBufferOrStringSchema.optional(),
+  image: FileOrBufferOrStringSchema.optional(),
   external_link: z.string().url().optional(),
 });
 

@@ -42,7 +42,7 @@ import {
   TWRegistry__factory,
   VoteERC20__factory,
 } from "@thirdweb-dev/contracts-js";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 import hardhat from "hardhat";
 
@@ -59,7 +59,7 @@ let sdk: ThirdwebSDK;
 const ipfsGatewayUrl = DEFAULT_IPFS_GATEWAY;
 let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
-let storage: IStorage;
+let storage: ThirdwebStorage;
 let implementations: { [key in ContractType]?: string };
 
 const fastForwardTime = async (timeInSeconds: number): Promise<void> => {

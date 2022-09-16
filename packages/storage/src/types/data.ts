@@ -56,7 +56,7 @@ export type JsonObject = { [key: string]: Json };
 
 export const UploadDataSchema = z.union(
   [
-    z.array(JsonObjectSchema).nonempty({
+    z.array(JsonSchema).nonempty({
       message: "Cannot pass an empty array.",
     }),
     z.array(FileOrBufferSchema).nonempty({

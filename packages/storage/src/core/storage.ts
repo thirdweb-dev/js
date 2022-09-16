@@ -10,7 +10,7 @@ import {
   IpfsUploadBatchOptions,
   IStorageDownloader,
   IStorageUploader,
-  JsonObject,
+  Json,
   UploadDataSchema,
   UploadOptions,
 } from "../types";
@@ -44,19 +44,19 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
     ) as TJSON;
   }
 
-  async upload(data: JsonObject | FileOrBuffer, options?: T): Promise<string> {
+  async upload(data: Json | FileOrBuffer, options?: T): Promise<string> {
     const [uri] = await this.uploadBatch(
-      [data] as JsonObject[] | FileOrBuffer[],
+      [data] as Json[] | FileOrBuffer[],
       options,
     );
     return uri;
   }
 
   async uploadBatch(
-    data: JsonObject[] | FileOrBuffer[],
+    data: Json[] | FileOrBuffer[],
     options?: T,
   ): Promise<string[]> {
-    const parsed: JsonObject[] | FileOrBuffer[] = UploadDataSchema.parse(data);
+    const parsed: Json[] | FileOrBuffer[] = UploadDataSchema.parse(data);
     const { success: isFileArray } = FileOrBufferSchema.safeParse(parsed[0]);
 
     // If data is an array of files, pass it through to upload directly
@@ -66,19 +66,16 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
 
     // Otherwise it is an array of JSON objects, so we have to prepare it first
     const metadata = (
-      await this.uploadAndReplaceFilesWithHashes(
-        parsed as JsonObject[],
-        options,
-      )
+      await this.uploadAndReplaceFilesWithHashes(parsed as Json[], options)
     ).map((item) => JSON.stringify(item));
 
     return this.uploader.uploadBatch(metadata, options);
   }
 
   private async uploadAndReplaceFilesWithHashes(
-    data: JsonObject[],
+    data: Json[],
     options?: T,
-  ): Promise<JsonObject[]> {
+  ): Promise<Json[]> {
     let cleaned = data;
     // TODO: Gateway URLs should probably be top-level since both uploader and downloader need them
     if (this.uploader.gatewayUrls || this.downloader.gatewayUrls) {
@@ -86,7 +83,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
       cleaned = replaceObjectGatewayUrlsWithSchemes(
         cleaned,
         this.uploader.gatewayUrls || this.downloader.gatewayUrls,
-      ) as JsonObject[];
+      ) as Json[];
 
       if (options?.uploadWithGatewayUrl || this.uploader.uploadWithGatewayUrl) {
         // If flag is set, replace all schemes with their preferred gateway URL
@@ -94,7 +91,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
         cleaned = replaceObjectSchemesWithGatewayUrls(
           cleaned,
           this.uploader.gatewayUrls || this.downloader.gatewayUrls,
-        ) as JsonObject[];
+        ) as Json[];
       }
     }
 
@@ -109,6 +106,6 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
     const uris = await this.uploader.uploadBatch(files);
 
     // Recurse through data and replace files with hashes
-    return replaceObjectFilesWithUris(cleaned, uris) as JsonObject[];
+    return replaceObjectFilesWithUris(cleaned, uris) as Json[];
   }
 }
