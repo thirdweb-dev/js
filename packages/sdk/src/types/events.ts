@@ -13,9 +13,9 @@ export interface UploadProgressEvent {
 /**
  * Standardized return type for contract events that returns event arguments
  */
-export type ContractEvent = {
+export type ContractEvent<TEvent = Record<string, any>> = {
   eventName: string;
-  data: Record<string, unknown>;
+  data: TEvent;
   // from ethers.providers.Log
   transaction: {
     blockNumber: number;

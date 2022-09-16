@@ -64,9 +64,9 @@ export class ContractEvents<TContract extends BaseContract> {
    * @param listener - the callback function that will be called on every new event
    * @returns a function to un-subscribe from the event
    */
-  public addEventListener(
+  public addEventListener<TEvent extends Record<string, any>>(
     eventName: keyof TContract["filters"] | (string & {}),
-    listener: (event: ContractEvent) => void,
+    listener: (event: ContractEvent<TEvent>) => void,
   ) {
     // validates event, throws error if not found
     const event = this.contractWrapper.readContract.interface.getEvent(
@@ -109,7 +109,9 @@ export class ContractEvents<TContract extends BaseContract> {
    * @param listener - the callback function that will be called on every new event
    * @returns A function that can be called to stop listening to events
    */
-  public listenToAllEvents(listener: (event: ContractEvent) => void) {
+  public listenToAllEvents<TEvent extends Record<string, any>>(
+    listener: (event: ContractEvent<TEvent>) => void,
+  ) {
     const address = this.contractWrapper.readContract.address;
     const filter = { address };
 
@@ -119,7 +121,11 @@ export class ContractEvents<TContract extends BaseContract> {
           this.contractWrapper.readContract.interface.parseLog(log);
 
         listener(
-          this.toContractEvent(parsedLog.eventFragment, parsedLog.args, log),
+          this.toContractEvent<TEvent>(
+            parsedLog.eventFragment,
+            parsedLog.args,
+            log,
+          ),
         );
       } catch (e) {
         console.error("Could not parse event:", log, e);
@@ -191,13 +197,13 @@ export class ContractEvents<TContract extends BaseContract> {
    * @param filters - Specify the from and to block numbers to get events for, defaults to all blocks
    * @returns The event objects of the events emitted with event names and data for each event
    */
-  public async getAllEvents(
+  public async getAllEvents<TEvent extends Record<string, any>>(
     filters: EventQueryFilter = {
       fromBlock: 0,
       toBlock: "latest",
       order: "desc",
     },
-  ): Promise<ContractEvent[]> {
+  ): Promise<ContractEvent<TEvent>[]> {
     const events = await this.contractWrapper.readContract.queryFilter(
       {},
       filters.fromBlock,
@@ -234,14 +240,14 @@ export class ContractEvents<TContract extends BaseContract> {
    * @param filters - Specify the from and to block numbers to get events for, defaults to all blocks. @see EventQueryFilter
    * @returns The requested event objects with event data
    */
-  public async getEvents(
+  public async getEvents<TEvent extends Record<string, any>>(
     eventName: string,
     filters: EventQueryFilter = {
       fromBlock: 0,
       toBlock: "latest",
       order: "desc",
     },
-  ): Promise<ContractEvent[]> {
+  ): Promise<ContractEvent<TEvent>[]> {
     const event = this.contractWrapper.readContract.interface.getEvent(
       eventName as string,
     );
@@ -262,7 +268,9 @@ export class ContractEvents<TContract extends BaseContract> {
     return this.parseEvents(orderedEvents);
   }
 
-  private parseEvents(events: Event[]): ContractEvent[] {
+  private parseEvents<TEvent extends Record<string, any>>(
+    events: Event[],
+  ): ContractEvent<TEvent>[] {
     return events.map((e) => {
       const transaction = Object.fromEntries(
         Object.entries(e).filter(
@@ -280,30 +288,30 @@ export class ContractEvents<TContract extends BaseContract> {
 
         return {
           eventName: e.event || "",
-          data,
+          data: data as TEvent,
           transaction,
         };
       }
 
       return {
         eventName: e.event || "",
-        data: {},
+        data: {} as TEvent,
         transaction,
       };
     });
   }
 
-  private toContractEvent(
+  private toContractEvent<TEvent extends Record<string, any>>(
     event: EventFragment,
     args: ReadonlyArray<any>,
     rawLog: providers.Log,
-  ): ContractEvent {
+  ): ContractEvent<TEvent> {
     const transaction = Object.fromEntries(
       Object.entries(rawLog).filter(
         (a) => typeof a[1] !== "function" && a[0] !== "args",
       ),
     ) as providers.Log;
-    const results: Record<string, unknown> = {};
+    const results: Record<string, any> = {};
     event.inputs.forEach((param, index) => {
       if (Array.isArray(args[index])) {
         const obj: Record<string, unknown> = {};
@@ -322,7 +330,7 @@ export class ContractEvents<TContract extends BaseContract> {
     });
     return {
       eventName: event.name,
-      data: results,
+      data: results as TEvent,
       transaction,
     };
   }
