@@ -2,39 +2,39 @@ import {
   fetchCurrencyMetadata,
   hasERC20Allowance,
   normalizePriceValue,
-} from "../common/currency";
-import { isTokenApprovedForTransfer } from "../common/marketplace";
-import { uploadOrExtractURI } from "../common/nft";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractRoles } from "../core/classes/contract-roles";
-import { ContractRoyalty } from "../core/classes/contract-royalty";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { StandardErc721 } from "../core/classes/erc-721-standard";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+} from "../../common/currency";
+import { isTokenApprovedForTransfer } from "../../common/marketplace";
+import { uploadOrExtractURI } from "../../common/nft";
+import { ContractEncoder } from "../../core/classes/contract-encoder";
+import { ContractEvents } from "../../core/classes/contract-events";
+import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractRoles } from "../../core/classes/contract-roles";
+import { ContractRoyalty } from "../../core/classes/contract-royalty";
+import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { StandardErc721 } from "../../core/classes/erc-721-standard";
+import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
-} from "../core/types";
-import { NFTMetadataOrUri, NFTMetadataOwner, SDKOptions } from "../schema";
-import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
+} from "../../core/types";
+import { NFTMetadataOrUri, NFTMetadataOwner, SDKOptions } from "../../schema";
+import { MultiwrapContractSchema } from "../../schema/contracts/multiwrap";
 import {
   ERC1155Wrappable,
   ERC20Wrappable,
   ERC721Wrappable,
   TokensToWrap,
   WrappedTokens,
-} from "../types/multiwrap";
-import { Multiwrap as MultiwrapContract } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/dist/abis/Multiwrap.json";
+} from "../../types/multiwrap";
+import type { Multiwrap as MultiwrapContract } from "@thirdweb-dev/contracts-js";
+import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Multiwrap.json";
 import {
   ITokenBundle,
   TokensWrappedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/Multiwrap";
 import { IStorage } from "@thirdweb-dev/storage";
-import { BigNumberish, ethers } from "ethers";
+import { BigNumberish, CallOverrides, ethers } from "ethers";
 
 /**
  * Multiwrap lets you wrap any number of ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token bundle.
@@ -50,23 +50,20 @@ import { BigNumberish, ethers } from "ethers";
  *
  * @beta
  */
-export class Multiwrap extends StandardErc721<MultiwrapContract> {
-  static contractType = "multiwrap" as const;
+export class MultiwrapImpl extends StandardErc721<MultiwrapContract> {
   static contractRoles = ["transfer", "minter", "unwrap", "asset"] as const;
-  static contractAbi = ABI as any;
 
-  /**
-   * @internal
-   */
-  static schema = MultiwrapContractSchema;
-
+  public abi: typeof ABI;
   public encoder: ContractEncoder<MultiwrapContract>;
   public estimator: GasCostEstimator<MultiwrapContract>;
-  public metadata: ContractMetadata<MultiwrapContract, typeof Multiwrap.schema>;
+  public metadata: ContractMetadata<
+    MultiwrapContract,
+    typeof MultiwrapContractSchema
+  >;
   public events: ContractEvents<MultiwrapContract>;
   public roles: ContractRoles<
     MultiwrapContract,
-    typeof Multiwrap.contractRoles[number]
+    typeof MultiwrapImpl.contractRoles[number]
   >;
 
   /**
@@ -86,30 +83,35 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
    * });
    * ```
    */
-  public royalties: ContractRoyalty<MultiwrapContract, typeof Multiwrap.schema>;
+  public royalties: ContractRoyalty<
+    MultiwrapContract,
+    typeof MultiwrapContractSchema
+  >;
 
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
+    abi: typeof ABI,
     contractWrapper = new ContractWrapper<MultiwrapContract>(
       network,
       address,
-      Multiwrap.contractAbi,
+      abi,
       options,
     ),
   ) {
     super(contractWrapper, storage);
+    this.abi = abi;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      Multiwrap.schema,
+      MultiwrapContractSchema,
       this.storage,
     );
 
     this.roles = new ContractRoles(
       this.contractWrapper,
-      Multiwrap.contractRoles,
+      MultiwrapImpl.contractRoles,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
@@ -374,5 +376,15 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
       }
     }
     return tokens;
+  }
+
+  /**
+   * @internal
+   */
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    return this.contractWrapper.call(functionName, ...args);
   }
 }

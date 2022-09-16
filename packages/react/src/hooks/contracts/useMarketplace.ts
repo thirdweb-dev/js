@@ -1,4 +1,6 @@
-import { useBuiltinContract } from "./useBuiltinContract";
+import { showDeprecationWarning } from "../../utils/deprecation-warning";
+import { useContract } from "../async/contracts";
+import { MarketplaceImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/marketplace";
 
 /**
  * Hook for getting an instance of a `Marketplace` contract. This contract is used to support marketplace for purchase and sale of on-chain assets.
@@ -9,7 +11,7 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * import { useMarketplace } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const marketplace = await useMarketplace("<YOUR-CONTRACT-ADDRESS>")
+ *   const marketplace = useMarketplace("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the marketplace contract in the rest of the component
  *
@@ -26,5 +28,6 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * @depreated use `useContract()` instead
  */
 export function useMarketplace(contractAddress?: string) {
-  return useBuiltinContract("marketplace", contractAddress);
+  showDeprecationWarning("useMarketplace()", "useContract<Marketplace>()");
+  return useContract<MarketplaceImpl>(contractAddress).contract;
 }

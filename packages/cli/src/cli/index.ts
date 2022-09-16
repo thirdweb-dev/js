@@ -36,51 +36,37 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
   program
     .name("thirdweb-cli")
     .description("Official thirdweb command line interface")
-    .version(cliVersion, "-v, --version", "output the current version");
+    .version(cliVersion, "-v, --version");
 
   program
-    .command("detect")
+    .command("create")
     .description(
-      "Compile contracts and detect implemented thirdweb contract extensions",
+      "Create a thirdweb app from any of our official templates. Checkout some examples you can use here: https://github.com/thirdweb-example/",
     )
-    .option("-p, --path <project-path>", "path to project", ".")
-    .option("-d, --debug", "show debug logs")
-    .option("-a, --all", "run detection on all contracts")
-    .action(async (options) => {
-      await detectExtensions(options);
-    });
-
-  program
-    .command("publish")
-    .description("[Deprecated] use 'release' instead.")
-    .option("-p, --path <project-path>", "path to project", ".")
-    .option("--dry-run", "dry run (skip actually publishing)")
-    .option("-d, --debug", "show debug logs")
-    .option("--ci", "Continuous Integration mode")
-    .action(async (options) => {
-      logger.warn(
-        "'publish' is deprecated and will be removed in a future update. Please use 'release' instead.",
-      );
-      const url = await processProject(options, "release");
-      info(`Open this link to release your contracts:`);
-      logger.info(chalk.blueBright(url.toString()));
-      open(url.toString());
-    });
-
-  program
-    .command("release")
-    .description(
-      "Release contracts, making them available for others to deploy and unlocking SDKs, Dashboards and Analytics.",
+    .option("--app", `Create a thirdweb app.`)
+    .option("--contract", `Create a thirdweb contracts project.`)
+    .option("--ts, --typescript", `Initialize as a TypeScript project.`)
+    .option("--js, --javascript", `Initialize as a JavaScript project.`)
+    .option("--forge", `Initialize as a Forge project.`)
+    .option("--hardhat", `Initialize as a Hardhat project.`)
+    .option("--cra", `Initialize as a Create React App project.`)
+    .option("--next", `Initialize as a Next.js project.`)
+    .option("--vite", `Initialize as a Vite project.`)
+    .option(
+      "--use-npm",
+      `Explicitly tell the CLI to bootstrap the app using npm`,
     )
-    .option("-p, --path <project-path>", "path to project", ".")
-    .option("--dry-run", "dry run (skip actually publishing)")
-    .option("-d, --debug", "show debug logs")
-    .option("--ci", "Continuous Integration mode")
+    .option(
+      "--use-pnpm",
+      `Explicitly tell the CLI to bootstrap the app using pnpm`,
+    )
+    .option("--framework [name]", `The preferred framework.`)
+    .option(
+      "-t, --template [name]",
+      `A template to start your project from. You can use an template repository name from the official thirdweb-example org.`,
+    )
     .action(async (options) => {
-      const url = await processProject(options, "release");
-      info(`Open this link to release your contracts:`);
-      logger.info(chalk.blueBright(url.toString()));
-      open(url.toString());
+      await twCreate(options);
     });
 
   program
@@ -128,34 +114,31 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     });
 
   program
-    .command("create")
+    .command("release")
     .description(
-      "Create a thirdweb app from any of our official templates. Checkout some examples you can use here: https://github.com/thirdweb-example/",
+      "Release contracts, making them available for others to deploy and unlocking SDKs, Dashboards and Analytics.",
     )
-    .option("--app", `Create a thirdweb app.`)
-    .option("--contract", `Create a thirdweb contracts project.`)
-    .option("--ts, --typescript", `Initialize as a TypeScript project.`)
-    .option("--js, --javascript", `Initialize as a JavaScript project.`)
-    .option("--forge", `Initialize as a Forge project.`)
-    .option("--hardhat", `Initialize as a Hardhat project.`)
-    .option("--cra", `Initialize as a Create React App project.`)
-    .option("--next", `Initialize as a Next.js project.`)
-    .option("--vite", `Initialize as a Vite project.`)
-    .option(
-      "--use-npm",
-      `Explicitly tell the CLI to bootstrap the app using npm`,
-    )
-    .option(
-      "--use-pnpm",
-      `Explicitly tell the CLI to bootstrap the app using pnpm`,
-    )
-    .option("--framework [name]", `The preferred framework.`)
-    .option(
-      "-t, --template [name]",
-      `A template to start your project from. You can use an template repository name from the official thirdweb-example org.`,
-    )
+    .option("-p, --path <project-path>", "path to project", ".")
+    .option("--dry-run", "dry run (skip actually publishing)")
+    .option("-d, --debug", "show debug logs")
+    .option("--ci", "Continuous Integration mode")
     .action(async (options) => {
-      await twCreate(options);
+      const url = await processProject(options, "release");
+      info(`Open this link to release your contracts:`);
+      logger.info(chalk.blueBright(url.toString()));
+      open(url.toString());
+    });
+
+  program
+    .command("detect")
+    .description(
+      "Compile contracts and detect implemented thirdweb contract extensions",
+    )
+    .option("-p, --path <project-path>", "path to project", ".")
+    .option("-d, --debug", "show debug logs")
+    .option("-a, --all", "run detection on all contracts")
+    .action(async (options) => {
+      await detectExtensions(options);
     });
 
   program

@@ -1,26 +1,26 @@
 import type {
   AirdropInput,
   Amount,
-  EditionDrop,
   Erc721,
   Erc721Mintable,
   Erc1155,
   Erc1155Mintable,
   ListingType,
-  NFTDrop,
   NFTMetadata,
   NFTMetadataInput,
   NFTMetadataOrUri,
   Price,
-  SignatureDrop,
   ValidContractInstance,
-  SmartContract,
-  NFTCollection,
-  Edition,
-  TokenDrop,
   Erc20,
   ClaimOptions,
 } from "@thirdweb-dev/sdk";
+import type { EditionImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/edition";
+import type { EditionDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/edition-drop";
+import type { NFTCollectionImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/nft-collection";
+import type { NFTDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/nft-drop";
+import type { SignatureDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/signature-drop";
+import type { TokenDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/token-drop";
+import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/smart-contract";
 import type { BigNumberish } from "ethers";
 
 /**
@@ -72,8 +72,8 @@ export type TokenBurnParams = {
  * @beta
  */
 export type NFTContract =
-  | NFTCollection
-  | Edition
+  | NFTCollectionImpl
+  | EditionImpl
   | Exclude<DropContract, "TokenDrop">;
 
 /**
@@ -172,10 +172,10 @@ export type BurnNFTParams = { tokenId: BigNumberish; amount?: Amount };
  * @beta
  */
 export type DropContract =
-  | NFTDrop
-  | EditionDrop
-  | SignatureDrop
-  | TokenDrop
+  | NFTDropImpl
+  | EditionDropImpl
+  | SignatureDropImpl
+  | TokenDropImpl
   | SmartContract
   | null;
 
@@ -183,7 +183,11 @@ export type DropContract =
  * The possible revealable contract types.
  * @beta
  */
-export type RevealableContract = NFTDrop | SignatureDrop | SmartContract | null;
+export type RevealableContract =
+  | NFTDropImpl
+  | SignatureDropImpl
+  | SmartContract
+  | null;
 
 /**
  * The params for the {@link useDelayedRevealLazyMint} hook mutation.
@@ -211,31 +215,24 @@ export type RevealLazyMintInput = {
  *
  * @beta
  */
-export type ClaimNFTParams<TContract extends DropContract> =
-  keyof TContract extends Erc1155
-    ? {
-        to: WalletAddress;
-        tokenId: BigNumberish;
-        quantity: BigNumberish;
-        options?: ClaimOptions;
-      }
-    : {
-        to: WalletAddress;
-        quantity: BigNumberish;
-        options?: ClaimOptions;
-      };
+export type ClaimNFTParams = {
+  to: WalletAddress;
+  quantity: BigNumberish;
+  options?: ClaimOptions;
+  /**
+   * tokenId is only used for ERC1155 tokens
+   */
+  tokenId?: BigNumberish;
+};
 
 /**
  * The return type of the {@link useClaimNFT} hook.
  *
  * @beta
  */
-export type ClaimNFTReturnType<TContract extends DropContract> =
-  TContract extends Erc721
-    ? Awaited<ReturnType<TContract["claimTo"]>>
-    : TContract extends Erc1155
-    ? Awaited<ReturnType<TContract["claimTo"]>>
-    : never;
+export type ClaimNFTReturnType =
+  | Awaited<ReturnType<Erc721["claimTo"]>>
+  | Awaited<ReturnType<Erc1155["claimTo"]>>;
 
 // MARKETPLACE //
 
@@ -264,9 +261,7 @@ export type ClaimTokenParams = {
 
 // Helpers
 
-export function getErcs(
-  contract: RequiredParam<ValidContractInstance | SmartContract | null>,
-) {
+export function getErcs(contract: RequiredParam<ValidContractInstance | null>) {
   return {
     erc1155: getErc1155(contract),
     erc721: getErc721(contract),
@@ -275,7 +270,7 @@ export function getErcs(
 }
 
 export function getErc1155(
-  contract: RequiredParam<ValidContractInstance | SmartContract | null>,
+  contract: RequiredParam<ValidContractInstance | null>,
 ): Erc1155 | undefined {
   if (!contract) {
     return undefined;
@@ -291,7 +286,7 @@ export function getErc1155(
 }
 
 export function getErc721(
-  contract: RequiredParam<ValidContractInstance | SmartContract | null>,
+  contract: RequiredParam<ValidContractInstance | null>,
 ): Erc721 | undefined {
   if (!contract) {
     return undefined;
@@ -307,7 +302,7 @@ export function getErc721(
 }
 
 export function getErc20(
-  contract: RequiredParam<ValidContractInstance | SmartContract | null>,
+  contract: RequiredParam<ValidContractInstance | null>,
 ): Erc20 | undefined {
   if (!contract) {
     return undefined;

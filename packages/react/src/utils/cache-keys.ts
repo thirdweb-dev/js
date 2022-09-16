@@ -13,11 +13,11 @@ const TW_CACHE_KEY_PREFIX = "tw-cache";
 /**
  * @internal
  */
-function createCachekey(input: QueryKey): QueryKey {
-  if (input[0] === TW_CACHE_KEY_PREFIX) {
-    return input;
-  }
-  return [TW_CACHE_KEY_PREFIX, ...input];
+function enforceCachePrefix(input: QueryKey): QueryKey {
+  return [
+    TW_CACHE_KEY_PREFIX,
+    ...input.filter((i) => typeof i !== "string" || i !== TW_CACHE_KEY_PREFIX),
+  ];
 }
 
 /**
@@ -27,7 +27,7 @@ export function createContractCacheKey(
   contractAddress: string = constants.AddressZero,
   input: QueryKey = [],
 ): QueryKey {
-  return createCachekey(["contract", contractAddress, ...input]);
+  return enforceCachePrefix(["contract", contractAddress, ...input]);
 }
 
 /**
@@ -37,7 +37,7 @@ export function createCacheKeyWithNetwork(
   input: QueryKey,
   chainId: RequiredParam<SUPPORTED_CHAIN_ID>,
 ): QueryKey {
-  return cacheKeys.network.active(chainId).concat(input);
+  return enforceCachePrefix(cacheKeys.network.active(chainId).concat(input));
 }
 
 /**
@@ -50,13 +50,15 @@ export function invalidateContractAndBalances(
 ): Promise<unknown> {
   return Promise.all([
     queryClient.invalidateQueries(
-      createCacheKeyWithNetwork(
-        createContractCacheKey(contractAddress),
-        chainId,
+      enforceCachePrefix(
+        createCacheKeyWithNetwork(
+          createContractCacheKey(contractAddress),
+          chainId,
+        ),
       ),
     ),
     queryClient.invalidateQueries(
-      createCacheKeyWithNetwork(createCachekey(["balance"]), chainId),
+      enforceCachePrefix(createCacheKeyWithNetwork(["balance"], chainId)),
     ),
   ]);
 }
@@ -66,11 +68,11 @@ export function invalidateContractAndBalances(
  */
 export const cacheKeys = {
   auth: {
-    user: () => createCachekey(["user"]),
+    user: () => enforceCachePrefix(["user"]),
   },
   network: {
     active: (chainId: RequiredParam<SUPPORTED_CHAIN_ID>) =>
-      createCachekey(["chainId", chainId]),
+      enforceCachePrefix(["chainId", chainId]),
   },
   wallet: {
     balance: (
@@ -78,12 +80,18 @@ export const cacheKeys = {
       walletAddress: RequiredParam<WalletAddress>,
       tokenAddress?: ContractAddress,
     ) =>
-      createCacheKeyWithNetwork(
-        createCachekey(["balance", { walletAddress, tokenAddress }]),
-        chainId,
+      enforceCachePrefix(
+        createCacheKeyWithNetwork(
+          enforceCachePrefix(["balance", { walletAddress, tokenAddress }]),
+          chainId,
+        ),
       ),
   },
   contract: {
+    read: (
+      contractAddress: RequiredParam<ContractAddress>,
+      fnIdentity: string,
+    ) => createContractCacheKey(contractAddress, ["read", fnIdentity]),
     type: (contractAddress: RequiredParam<ContractAddress>) =>
       createContractCacheKey(contractAddress, ["contract-type"]),
     compilerMetadata: (contractAddress: RequiredParam<ContractAddress>) =>
@@ -217,6 +225,8 @@ export const cacheKeys = {
           contractAddress,
           params ? ["getAllListings", params] : ["getAllListings"],
         ),
+      getTotalCount: (contractAddress: RequiredParam<ContractAddress>) =>
+        createContractCacheKey(contractAddress, ["getTotalCount"]),
       getActiveListings: (
         contractAddress: RequiredParam<ContractAddress>,
         params?: MarketplaceFilter,

@@ -1,19 +1,18 @@
-import { Edition } from "../src/index";
+import { Edition } from "../src";
+import { EditionImpl } from "../src/contracts/classes/edition";
 import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert, expect } from "chai";
+import { expect } from "chai";
 
 global.fetch = require("cross-fetch");
 
 describe("Royalties", async () => {
-  let bundleContract: Edition;
+  let bundleContract: EditionImpl;
 
-  let adminWallet: SignerWithAddress,
-    samWallet: SignerWithAddress,
-    bobWallet: SignerWithAddress;
+  let adminWallet: SignerWithAddress, samWallet: SignerWithAddress;
 
   before(() => {
-    [adminWallet, samWallet, bobWallet] = signers;
+    [adminWallet, samWallet] = signers;
   });
 
   beforeEach(async () => {

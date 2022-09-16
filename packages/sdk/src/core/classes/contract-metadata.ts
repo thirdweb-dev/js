@@ -1,5 +1,6 @@
 import {
   detectContractFeature,
+  ExtensionNotImplementedError,
   fetchContractMetadataFromAddress,
   hasFunction,
 } from "../../common";
@@ -7,7 +8,10 @@ import { FEATURE_METADATA } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { IContractMetadata, IERC20Metadata } from "@thirdweb-dev/contracts-js";
+import type {
+  IContractMetadata,
+  IERC20Metadata,
+} from "@thirdweb-dev/contracts-js";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BaseContract } from "ethers";
 import { z } from "zod";
@@ -138,7 +142,7 @@ export class ContractMetadata<
         z.output<TSchema["output"]>
       >;
     } else {
-      throw new Error("Contract does not support updating contract metadata");
+      throw new ExtensionNotImplementedError(FEATURE_METADATA);
     }
   }
 

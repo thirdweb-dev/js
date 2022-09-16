@@ -1,36 +1,29 @@
-import { getRoleHash } from "../common";
-import { ContractEncoder } from "../core/classes/contract-encoder";
-import { ContractEvents } from "../core/classes/contract-events";
-import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { ContractMetadata } from "../core/classes/contract-metadata";
-import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
-import { ContractRoles } from "../core/classes/contract-roles";
-import { ContractRoyalty } from "../core/classes/contract-royalty";
-import { ContractPrimarySale } from "../core/classes/contract-sales";
-import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { Erc721 } from "../core/classes/erc-721";
-import { Erc721BatchMintable } from "../core/classes/erc-721-batch-mintable";
-import { Erc721Burnable } from "../core/classes/erc-721-burnable";
-import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
-import { Erc721Mintable } from "../core/classes/erc-721-mintable";
-import { StandardErc721 } from "../core/classes/erc-721-standard";
-import { Erc721Supply } from "../core/classes/erc-721-supply";
-import { Erc721WithQuantitySignatureMintable } from "../core/classes/erc-721-with-quantity-signature-mintable";
-import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { UpdateableNetwork } from "../core/interfaces/contract";
+import { getRoleHash } from "../../common";
+import { ContractEncoder } from "../../core/classes/contract-encoder";
+import { ContractEvents } from "../../core/classes/contract-events";
+import { ContractInterceptor } from "../../core/classes/contract-interceptor";
+import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
+import { ContractRoles } from "../../core/classes/contract-roles";
+import { ContractRoyalty } from "../../core/classes/contract-royalty";
+import { ContractPrimarySale } from "../../core/classes/contract-sales";
+import { ContractWrapper } from "../../core/classes/contract-wrapper";
+import { Erc721 } from "../../core/classes/erc-721";
+import { StandardErc721 } from "../../core/classes/erc-721-standard";
+import { Erc721WithQuantitySignatureMintable } from "../../core/classes/erc-721-with-quantity-signature-mintable";
+import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import type {
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
-} from "../core/types";
-import { NFTMetadataOrUri, NFTMetadataOwner } from "../schema";
-import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
-import { SDKOptions } from "../schema/sdk-options";
-import { QueryAllParams } from "../types";
-import { TokenERC721 } from "@thirdweb-dev/contracts-js";
-import ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC721.json";
+} from "../../core/types";
+import { NFTMetadataOrUri, NFTMetadataOwner } from "../../schema";
+import { TokenErc721ContractSchema } from "../../schema/contracts/token-erc721";
+import { SDKOptions } from "../../schema/sdk-options";
+import type { TokenERC721 } from "@thirdweb-dev/contracts-js";
+import type ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC721.json";
 import { IStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, constants } from "ethers";
+import { BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -46,18 +39,17 @@ import { BigNumber, BigNumberish, constants } from "ethers";
  *
  * @public
  */
-export class NFTCollection extends StandardErc721<TokenERC721> {
-  static contractType = "nft-collection" as const;
+export class NFTCollectionImpl extends StandardErc721<TokenERC721> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
-  static contractAbi = ABI as any;
-  /**
-   * @internal
-   */
-  static schema = TokenErc721ContractSchema;
-  public metadata: ContractMetadata<TokenERC721, typeof NFTCollection.schema>;
+
+  public abi: typeof ABI;
+  public metadata: ContractMetadata<
+    TokenERC721,
+    typeof TokenErc721ContractSchema
+  >;
   public roles: ContractRoles<
     TokenERC721,
-    typeof NFTCollection.contractRoles[number]
+    typeof NFTCollectionImpl.contractRoles[number]
   >;
   public encoder: ContractEncoder<TokenERC721>;
   public estimator: GasCostEstimator<TokenERC721>;
@@ -81,7 +73,10 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    * });
    * ```
    */
-  public royalties: ContractRoyalty<TokenERC721, typeof NFTCollection.schema>;
+  public royalties: ContractRoyalty<
+    TokenERC721,
+    typeof TokenErc721ContractSchema
+  >;
 
   /**
    * Signature Minting
@@ -110,22 +105,24 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
+    abi: typeof ABI,
     contractWrapper = new ContractWrapper<TokenERC721>(
       network,
       address,
-      NFTCollection.contractAbi,
+      abi,
       options,
     ),
   ) {
     super(contractWrapper, storage);
+    this.abi = abi;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      NFTCollection.schema,
+      TokenErc721ContractSchema,
       this.storage,
     );
     this.roles = new ContractRoles(
       this.contractWrapper,
-      NFTCollection.contractRoles,
+      NFTCollectionImpl.contractRoles,
     );
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);
@@ -302,5 +299,15 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    */
   public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
     return this.erc721.burn(tokenId);
+  }
+
+  /**
+   * @internal
+   */
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    return this.contractWrapper.call(functionName, ...args);
   }
 }

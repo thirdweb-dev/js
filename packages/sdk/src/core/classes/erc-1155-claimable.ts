@@ -1,16 +1,11 @@
 import { calculateClaimCost } from "../../common/claim-conditions";
-import {
-  approveErc20Allowance,
-  normalizePriceValue,
-} from "../../common/currency";
-import { NATIVE_TOKEN_ADDRESS } from "../../constants";
 import { FEATURE_EDITION_CLAIMABLE } from "../../constants/erc1155-features";
-import { ClaimOptions, Price } from "../../types";
+import { ClaimOptions } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { TransactionTask } from "./TransactionTask";
 import { ContractWrapper } from "./contract-wrapper";
-import { IClaimableERC1155 } from "@thirdweb-dev/contracts-js";
+import type { IClaimableERC1155 } from "@thirdweb-dev/contracts-js";
 import { BigNumberish, CallOverrides } from "ethers";
 
 /**

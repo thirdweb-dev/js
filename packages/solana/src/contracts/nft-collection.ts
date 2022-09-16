@@ -1,5 +1,4 @@
 import { NFTHelper } from "../classes/helpers/nft-helper";
-import { UserWallet } from "../classes/user-wallet";
 import { METAPLEX_PROGRAM_ID } from "../constants/addresses";
 import { TransactionResult } from "../types/common";
 import {
@@ -20,29 +19,27 @@ import { ConfirmedSignatureInfo, PublicKey } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
 
 export class NFTCollection {
-  private wallet: UserWallet;
   private metaplex: Metaplex;
   private storage: IStorage;
   private nft: NFTHelper;
-  collectionMintAddress: PublicKey;
+  public publicKey: PublicKey;
+  public accountType = "nft-collection" as const;
 
   constructor(
     collectionMintAddress: string,
     metaplex: Metaplex,
-    wallet: UserWallet,
     storage: IStorage,
   ) {
-    this.wallet = wallet;
     this.storage = storage;
     this.metaplex = metaplex;
     this.nft = new NFTHelper(metaplex);
-    this.collectionMintAddress = new PublicKey(collectionMintAddress);
+    this.publicKey = new PublicKey(collectionMintAddress);
   }
 
   async getMetadata(): Promise<NFTCollectionMetadata> {
     const metadata = await this.metaplex
       .nfts()
-      .findByMint({ mintAddress: this.collectionMintAddress })
+      .findByMint({ mintAddress: this.publicKey })
       .run();
 
     return this.nft.toNFTMetadata(metadata);
@@ -56,7 +53,7 @@ export class NFTCollection {
     const allSignatures: ConfirmedSignatureInfo[] = [];
     // This returns the first 1000, so we need to loop through until we run out of signatures to get.
     let signatures = await this.metaplex.connection.getSignaturesForAddress(
-      this.collectionMintAddress,
+      this.publicKey,
     );
 
     allSignatures.push(...signatures);
@@ -65,7 +62,7 @@ export class NFTCollection {
         before: signatures[signatures.length - 1]?.signature,
       };
       signatures = await this.metaplex.connection.getSignaturesForAddress(
-        this.collectionMintAddress,
+        this.publicKey,
         options,
       );
       allSignatures.push(...signatures);
@@ -213,11 +210,12 @@ export class NFTCollection {
     const { nft } = await this.metaplex
       .nfts()
       .create({
+        // useExistingMint: newMint,
         name: metadata.name || "",
         uri,
         sellerFeeBasisPoints: 0,
-        collection: this.collectionMintAddress,
-        collectionAuthority: this.wallet.signer,
+        collection: this.publicKey,
+        collectionAuthority: this.metaplex.identity(),
         tokenOwner: new PublicKey(to),
         // Always sets max supply to unlimited so editions can be minted
         maxSupply: null,

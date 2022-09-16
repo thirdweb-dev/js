@@ -1,13 +1,19 @@
-import {
-  ALL_ROLES,
-  assertEnabled,
-  detectContractFeature,
-  extractFunctionsFromAbi,
-} from "../common";
+import { ALL_ROLES, assertEnabled, detectContractFeature } from "../common";
 import { FEATURE_TOKEN } from "../constants/erc20-features";
 import { FEATURE_NFT } from "../constants/erc721-features";
 import { FEATURE_EDITION } from "../constants/erc1155-features";
-import { ContractEncoder, NetworkOrSignerOrProvider } from "../core";
+import {
+  FEATURE_OWNER,
+  FEATURE_PERMISSIONS,
+  FEATURE_PLATFORM_FEE,
+  FEATURE_PRIMARY_SALE,
+  FEATURE_ROYALTY,
+} from "../constants/thirdweb-features";
+import {
+  ContractEncoder,
+  ContractOwner,
+  NetworkOrSignerOrProvider,
+} from "../core";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractMetadata } from "../core/classes/contract-metadata";
@@ -22,15 +28,15 @@ import { Erc721 } from "../core/classes/erc-721";
 import { Erc1155 } from "../core/classes/erc-1155";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { AbiSchema, CustomContractSchema } from "../schema/contracts/custom";
-import { CallOverrideSchema } from "../schema/index";
+import { CustomContractSchema } from "../schema/contracts/custom";
 import { SDKOptions } from "../schema/sdk-options";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
-import {
+import type {
   IPermissions,
   IPlatformFee,
   IPrimarySale,
   IRoyalty,
+  Ownable,
 } from "@thirdweb-dev/contracts-js";
 import { IStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides, ContractInterface } from "ethers";
@@ -50,10 +56,10 @@ import { BaseContract, CallOverrides, ContractInterface } from "ethers";
  * await contract.call("myCustomFunction", param1, param2);
  *
  * // if your contract follows the ERC721 standard, contract.nft will be present
- * const allNFTs = await contract.nft.query.all()
+ * const allNFTs = await contract.erc721.query.all()
  *
  * // if your contract extends IMintableERC721, contract.nft.mint() will be available
- * const tx = await contract.nft.mint({
+ * const tx = await contract.erc721.mint({
  *     name: "Cool NFT",
  *     image: readFileSync("some_image.png"),
  *   });
@@ -64,15 +70,8 @@ import { BaseContract, CallOverrides, ContractInterface } from "ethers";
 export class SmartContract<TContract extends BaseContract = BaseContract>
   implements UpdateableNetwork
 {
-  static contractType = "custom" as const;
-  /**
-   * @internal
-   */
-  static schema = CustomContractSchema;
-
   private contractWrapper;
   private storage;
-  private options;
 
   // utilities
   public events: ContractEvents<TContract>;
@@ -81,37 +80,62 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   public estimator: GasCostEstimator<TContract>;
   public publishedMetadata: ContractPublishedMetadata<TContract>;
   public abi: ContractInterface;
-
-  // features
   public metadata: ContractMetadata<BaseContract, any>;
-  public royalties: ContractRoyalty<IRoyalty, any> | undefined;
-  public roles: ContractRoles<IPermissions, any> | undefined;
-  public sales: ContractPrimarySale<IPrimarySale> | undefined;
-  public platformFees: ContractPlatformFee<IPlatformFee> | undefined;
 
-  private token: Erc20 | undefined;
-  private nft: Erc721 | undefined;
-  private edition: Erc1155 | undefined;
+  /**
+   * Handle royalties
+   */
+  get royalties(): ContractRoyalty<IRoyalty, any> {
+    return assertEnabled(this.detectRoyalties(), FEATURE_ROYALTY);
+  }
+
+  /**
+   * Handle permissions
+   */
+  get roles(): ContractRoles<IPermissions, any> {
+    return assertEnabled(this.detectRoles(), FEATURE_PERMISSIONS);
+  }
+
+  /**
+   * Handle primary sales
+   */
+  get sales(): ContractPrimarySale<IPrimarySale> {
+    return assertEnabled(this.detectPrimarySales(), FEATURE_PRIMARY_SALE);
+  }
+
+  /**
+   * Handle platform fees
+   */
+  get platformFees(): ContractPlatformFee<IPlatformFee> {
+    return assertEnabled(this.detectPlatformFees(), FEATURE_PLATFORM_FEE);
+  }
+
+  /**
+   * Set and get the owner of the contract
+   */
+  get owner(): ContractOwner<Ownable> {
+    return assertEnabled(this.detectOwnable(), FEATURE_OWNER);
+  }
 
   /**
    * Auto-detects ERC20 standard functions.
    */
   get erc20(): Erc20 {
-    return assertEnabled(this.token, FEATURE_TOKEN);
+    return assertEnabled(this.detectErc20(), FEATURE_TOKEN);
   }
 
   /**
    * Auto-detects ERC721 standard functions.
    */
   get erc721(): Erc721 {
-    return assertEnabled(this.nft, FEATURE_NFT);
+    return assertEnabled(this.detectErc721(), FEATURE_NFT);
   }
 
   /**
    * Auto-detects ERC1155 standard functions.
    */
   get erc1155(): Erc1155 {
-    return assertEnabled(this.edition, FEATURE_EDITION);
+    return assertEnabled(this.detectErc1155(), FEATURE_EDITION);
   }
 
   constructor(
@@ -127,7 +151,6 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
       options,
     ),
   ) {
-    this.options = options;
     this.storage = storage;
     this.contractWrapper = contractWrapper;
     this.abi = abi;
@@ -143,19 +166,9 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
 
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      SmartContract.schema,
+      CustomContractSchema,
       this.storage,
     );
-
-    // feature detection
-    this.royalties = this.detectRoyalties();
-    this.roles = this.detectRoles();
-    this.sales = this.detectPrimarySales();
-    this.platformFees = this.detectPlatformFees();
-
-    this.token = this.detectErc20();
-    this.nft = this.detectErc721();
-    this.edition = this.detectErc1155();
   }
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
@@ -191,49 +204,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     functionName: string,
     ...args: unknown[] | [...unknown[], CallOverrides]
   ): Promise<any> {
-    // parse last arg as tx options if present
-    let txOptions: CallOverrides | undefined;
-    try {
-      if (args.length > 0 && typeof args[args.length - 1] === "object") {
-        const last = args[args.length - 1];
-        txOptions = CallOverrideSchema.parse(last);
-        // if call overrides found, remove it from args array
-        args = args.slice(0, args.length - 1);
-      }
-    } catch (e) {
-      // no-op
-    }
-
-    const functions = extractFunctionsFromAbi(
-      AbiSchema.parse(this.contractWrapper.abi),
-    );
-    const fn = functions.find((f) => f.name === functionName);
-    if (!fn) {
-      throw new Error(
-        `Function "${functionName}" not found in contract. Check your dashboard for the list of functions available`,
-      );
-    }
-    // TODO extract this and re-use for deploy function to check constructor args
-    if (fn.inputs.length !== args.length) {
-      throw new Error(
-        `Function "${functionName}" requires ${fn.inputs.length} arguments, but ${args.length} were provided.\nExpected function signature: ${fn.signature}`,
-      );
-    }
-    // TODO validate each argument
-    if (fn.stateMutability === "view" || fn.stateMutability === "pure") {
-      // read function
-      return (this.contractWrapper.readContract as any)[functionName](...args);
-    } else {
-      // write function
-      const receipt = await this.contractWrapper.sendTransaction(
-        functionName,
-        args,
-        txOptions,
-      );
-      return {
-        receipt,
-      };
-    }
+    return this.contractWrapper.call(functionName, ...args);
   }
 
   /** ********************
@@ -246,7 +217,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
       // This also makes it not order dependent in the feature detection process
       const metadata = new ContractMetadata(
         this.contractWrapper,
-        SmartContract.schema,
+        CustomContractSchema,
         this.storage,
       );
       return new ContractRoyalty(this.contractWrapper, metadata);
@@ -298,6 +269,13 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   private detectErc1155() {
     if (detectContractFeature<BaseERC1155>(this.contractWrapper, "ERC1155")) {
       return new Erc1155(this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  private detectOwnable() {
+    if (detectContractFeature<Ownable>(this.contractWrapper, "Ownable")) {
+      return new ContractOwner(this.contractWrapper);
     }
     return undefined;
   }

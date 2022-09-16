@@ -1,3 +1,4 @@
+import { Signer, WalletAdapter } from "@metaplex-foundation/js";
 import { z } from "zod";
 
 export const MAX_BPS = 10_000;
@@ -57,7 +58,7 @@ export const AmountSchema = z
 export type Amount = z.input<typeof AmountSchema>;
 
 export const CurrencyValueSchema = z.object({
-  value: z.bigint(),
+  value: z.string(),
   displayValue: z.string(),
 });
 
@@ -65,4 +66,12 @@ export type CurrencyValue = z.input<typeof CurrencyValueSchema>;
 
 export type TransactionResult = {
   signature: string;
+};
+
+export type WalletSigner = Signer | WalletAdapter;
+export type AccountType = "nft-collection" | "nft-drop" | "token";
+export type WalletAccount = {
+  type: AccountType;
+  address: string;
+  name: string;
 };

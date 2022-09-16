@@ -1,4 +1,5 @@
-import { Edition } from "../src/index";
+import { Edition } from "../src";
+import { EditionImpl } from "../src/contracts/classes/edition";
 import { sdk, signers } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -7,7 +8,7 @@ import { assert } from "chai";
 global.fetch = require("cross-fetch");
 
 describe("Roles Contract", async () => {
-  let bundleContract: Edition;
+  let bundleContract: EditionImpl;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,

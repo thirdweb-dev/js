@@ -2,7 +2,7 @@ import { fetchCurrencyValue } from "../../common/currency";
 import { TokenHolderBalance } from "../../types";
 import { ContractEvents } from "./contract-events";
 import { ContractWrapper } from "./contract-wrapper";
-import { TokenERC20 } from "@thirdweb-dev/contracts-js";
+import type { TokenERC20 } from "@thirdweb-dev/contracts-js";
 import { BigNumber, constants } from "ethers";
 
 /**

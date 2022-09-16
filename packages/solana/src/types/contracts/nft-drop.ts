@@ -7,16 +7,26 @@ import { z } from "zod";
  * @internal
  */
 // TODO: Handle allow lists and end times
-export const NFTDropContractSchema = z.object({
+export const NFTDropConditionsInputSchema = z.object({
+  price: z.number().default(0),
+  sellerFeeBasisPoints: z.number().default(0),
+  itemsAvailable: z.number().default(0),
+  goLiveDate: z.date().optional(),
+  splToken: z.string().optional(),
+  solTreasuryAccount: z.string().optional(),
+  splTokenAccount: z.string().optional(),
+});
+
+export const NFTDropConditionsOutputSchema = z.object({
   price: z
     .number()
-    .default(0)
-    .transform((p) => sol(p)),
-  sellerFeeBasisPoints: z.number().default(0),
+    .transform((p) => sol(p))
+    .optional(),
+  sellerFeeBasisPoints: z.number().optional(),
   itemsAvailable: z
     .number()
-    .default(0)
-    .transform((bn) => toBigNumber(bn)),
+    .transform((bn) => toBigNumber(bn))
+    .optional(),
   goLiveDate: z
     .date()
     .transform((d) => toDateTime(d))
@@ -35,33 +45,7 @@ export const NFTDropContractSchema = z.object({
     .optional(),
 });
 
-export type NFTDropMetadataInput = z.input<typeof NFTDropContractSchema>;
+export const NFTDropContractInputSchema =
+  NFTCollectionMetadataInputSchema.merge(NFTDropConditionsInputSchema);
 
-/**
- * @internal
- */
-export const NFTDropClaimSchema = NFTDropContractSchema.extend({
-  price: z
-    .number()
-    .transform((p) => sol(p))
-    .optional(),
-  sellerFeeBasisPoints: z.number().optional(),
-  itemsAvailable: z
-    .number()
-    .transform((bn) => toBigNumber(bn))
-    .optional(),
-});
-
-/**
- * @internal
- */
-export const NFTDropOutputSchema = z.object({
-  price: z.bigint(),
-  sellerFeeBasisPoints: z.bigint(),
-  itemsAvailable: z.bigint(),
-  goLiveDate: z.date().optional(),
-});
-
-export type NFTDropClaimInput = z.input<typeof NFTDropClaimSchema>;
-
-export type NFTDropClaimOutput = z.output<typeof NFTDropOutputSchema>;
+export type NFTDropMetadataInput = z.input<typeof NFTDropConditionsInputSchema>;

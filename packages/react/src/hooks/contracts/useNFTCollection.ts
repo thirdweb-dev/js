@@ -1,4 +1,6 @@
-import { useBuiltinContract } from "./useBuiltinContract";
+import { showDeprecationWarning } from "../../utils/deprecation-warning";
+import { useContract } from "../async/contracts";
+import { NFTCollectionImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/nft-collection";
 
 /**
  * Hook for getting an instance of an `NFTCollection` contract. This contract is meant to interface with ERC721 compliant NFTs.
@@ -9,7 +11,7 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * import { useNFTCollection } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const nftCollection = await useNFTCollection("<YOUR-CONTRACT-ADDRESS>")
+ *   const nftCollection = useNFTCollection("<YOUR-CONTRACT-ADDRESS>")
  *
  *   // Now you can use the nftCollection contract in the rest of the component
  *
@@ -26,5 +28,6 @@ import { useBuiltinContract } from "./useBuiltinContract";
  * @depreated use `useContract()` instead
  */
 export function useNFTCollection(contractAddress?: string) {
-  return useBuiltinContract("nft-collection", contractAddress);
+  showDeprecationWarning("useNFTCollection()", "useContract<NFTCollection>()");
+  return useContract<NFTCollectionImpl>(contractAddress).contract;
 }

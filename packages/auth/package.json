@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/auth",
-  "version": "1.0.8",
+  "version": "2.0.2",
   "exports": {
     "./package.json": "./package.json",
     "./express": {
@@ -27,7 +27,10 @@
   ],
   "scripts": {
     "build": "preconstruct build",
-    "lint": "eslint"
+    "format": "prettier --write 'src/**/*'",
+    "lint": "eslint src/",
+    "fix": "eslint src/ --fix",
+    "clean": "rm -rf dist/ && rm -rf node_modules/"
   },
   "preconstruct": {
     "entrypoints": [

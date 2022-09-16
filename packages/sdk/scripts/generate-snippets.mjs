@@ -65,14 +65,12 @@ const additionalClassesToParse = [
   "ContractPlatformFee",
   "WalletAuthenticator",
   "UserWallet",
+  "SmartContract",
 ];
 
 const modules = json.members[0].members.filter(
   (m) =>
-    (m.kind === "Class" &&
-      m.members
-        .filter((cMember) => cMember.kind === "Property")
-        .findIndex((property) => property.name === "contractType") > -1) ||
+    (m.kind === "Class" && m.name.endsWith("Impl")) ||
     additionalClassesToParse.includes(m.name),
 );
 
@@ -154,7 +152,7 @@ const moduleMap = modules.reduce((acc, m) => {
   const baseClassMembers = baseClassCode
     ? parseMembers(baseClassCode.members, "Method", baseClassCode.name)
     : [];
-  acc[m.name] = {
+  acc[m.name.replace("Impl", "")] = {
     name: m.name,
     summary: Formatter.renderDocNode(docComment.summarySection),
     remarks: docComment.remarksBlock

@@ -1,5 +1,110 @@
 # @thirdweb-dev/react
 
+## 3.0.2
+
+### Patch Changes
+
+- Updated dependencies [[`42c79e9`](https://github.com/thirdweb-dev/js/commit/42c79e93dc958ca46a55d705aeea44ffdbbcc5f6), [`fe8751e`](https://github.com/thirdweb-dev/js/commit/fe8751eeae7ad013b890a8092ddbd091ecbd6708)]:
+  - @thirdweb-dev/sdk@3.0.2
+
+## 3.0.1
+
+### Patch Changes
+
+- Updated dependencies [[`98dd64a`](https://github.com/thirdweb-dev/js/commit/98dd64a375c302a879aab3c628ecfb84b4dd19da)]:
+  - @thirdweb-dev/sdk@3.0.1
+
+## 3.0.0
+
+### Major Changes
+
+- [#19](https://github.com/thirdweb-dev/js/pull/19) [`82627ea`](https://github.com/thirdweb-dev/js/commit/82627ea0311f612119d0596ed0f568267a7af16b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - 3.0.0 update
+
+  ## _MAJOR VERSION CHANGE_
+
+  - 85% reduction in package size!
+  - Custom contracts are now first class citizens
+
+  [Full changelog](https://blog.thirdweb.com/sdk-major-update/)
+
+  #### Breaking changes:
+
+  1. Hooks now accept custom contracts direclty and handle the logic internally
+
+  before
+
+  ```javascript
+  const { contract } = useContract(...)
+  const { data: nfts } = useNFTs(contract?.nft)
+  const { mutation: claim } = useClaimNFT(contract?.nft)
+  ```
+
+  after
+
+  ```javascript
+  const { contract } = useContract(...)
+  // works with any ERC721/ERC1155 contract
+  const { data: nfts} = useNFTs(contract)
+  const { mutation: claim } = useClaimNFT(contract)
+  ```
+
+  2. Custom contract hooks for reading and writing have been renamed:
+
+  before
+
+  ```javascript
+  const { contract } = useContract(...)
+  const { data } = useContractData(contract, "myReadFunction", ...args);
+  const { mutate: myFunction } = useContractCall(contract, "myWriteFunction");
+  ```
+
+  after
+
+  ```javascript
+  const { contract } = useContract(...)
+  const { data } = useContractRead(contract, "myReadFunction", ...args);
+  const { mutate: myFunction } = useContractWrite(contract, "myWriteFunction");
+  ```
+
+  3. Web3Button benefits from the new Extension detection API:
+
+  before
+
+  ```jsx
+  <Web3Button
+    contractAddress={...}
+    action={(contract) => contract.nft?.drop?.claim?.to(...)}
+    >
+    Claim
+    </Web3Button>
+  ```
+
+  after
+
+  ```jsx
+  <Web3Button
+    contractAddress={...}
+    action={(contract) => contract.erc721.claim(...) }
+    >
+    Claim
+    </Web3Button>
+  ```
+
+### Minor Changes
+
+- [#106](https://github.com/thirdweb-dev/js/pull/106) [`0fa6f3f`](https://github.com/thirdweb-dev/js/commit/0fa6f3fcfbd571579baf9d2a0dbeee556ddbd5fe) Thanks [@jnsdls](https://github.com/jnsdls)! - switch all contracts to a new, universal `useContract()` hook
+
+### Patch Changes
+
+- [#109](https://github.com/thirdweb-dev/js/pull/109) [`f7ccc30`](https://github.com/thirdweb-dev/js/commit/f7ccc30f9da9bda8759c66e53bf2efdb4f975bf9) Thanks [@adam-maj](https://github.com/adam-maj)! - Add enabled check to useUser
+
+- [#114](https://github.com/thirdweb-dev/js/pull/114) [`1df2dea`](https://github.com/thirdweb-dev/js/commit/1df2dea18f85f6760040c9000f2eb8aee8a6011b) Thanks [@jnsdls](https://github.com/jnsdls)! - only show deprecation method once & add optimism kovan and arbitrum rinkeby to deprecated networks
+
+- [#91](https://github.com/thirdweb-dev/js/pull/91) [`2adb8ff`](https://github.com/thirdweb-dev/js/commit/2adb8ff6673768a91fa411c2d069245190ad9397) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Add arbitrum and optimism goerli; rename testnets
+
+- Updated dependencies [[`a70b590`](https://github.com/thirdweb-dev/js/commit/a70b590be1efa7c0ad93a724afb24870439558ed), [`a37bc00`](https://github.com/thirdweb-dev/js/commit/a37bc00991bf1a359f5f8aa8e24e2c388dcd99d8), [`b442c97`](https://github.com/thirdweb-dev/js/commit/b442c970808f6cb7457d29542bd826dba711579c), [`0fa6f3f`](https://github.com/thirdweb-dev/js/commit/0fa6f3fcfbd571579baf9d2a0dbeee556ddbd5fe), [`2adb8ff`](https://github.com/thirdweb-dev/js/commit/2adb8ff6673768a91fa411c2d069245190ad9397), [`5a5bc36`](https://github.com/thirdweb-dev/js/commit/5a5bc361507bd8707dc12e9000bb9a218221cf61), [`820a519`](https://github.com/thirdweb-dev/js/commit/820a5191b5e7af5aba5e4d1cc90cd895c0dade11), [`0fa6f3f`](https://github.com/thirdweb-dev/js/commit/0fa6f3fcfbd571579baf9d2a0dbeee556ddbd5fe), [`82627ea`](https://github.com/thirdweb-dev/js/commit/82627ea0311f612119d0596ed0f568267a7af16b)]:
+  - @thirdweb-dev/sdk@3.0.0
+
 ## 2.9.7
 
 ### Patch Changes

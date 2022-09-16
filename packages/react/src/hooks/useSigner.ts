@@ -29,7 +29,7 @@ export function useSigner() {
         });
       }
     }
-  }, [address, chainId, previousAddress, previousChainId]);
+  }, [address, chainId, getSigner, previousAddress, previousChainId]);
 
   return Signer.isSigner(signer.data) ? signer.data : undefined;
 }

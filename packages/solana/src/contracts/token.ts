@@ -1,9 +1,15 @@
-import { UserWallet } from "../classes/user-wallet";
-import { Amount, AmountSchema, TransactionResult } from "../types/common";
+import {
+  Amount,
+  AmountSchema,
+  CurrencyValue,
+  TransactionResult,
+} from "../types/common";
 import { TokenMetadata } from "../types/nft";
+import { toCurrencyValue } from "../utils/token";
 import {
   findMetadataPda,
   Metaplex,
+  toBigNumber,
   token,
   toMetadata,
   toMetadataAccount,
@@ -14,33 +20,28 @@ import { IStorage } from "@thirdweb-dev/storage";
 
 export class Token {
   private connection: Connection;
-  private wallet: UserWallet;
   private metaplex: Metaplex;
   private storage: IStorage;
-  tokenMintAddress: PublicKey;
+  public accountType = "token" as const;
+  public publicKey: PublicKey;
 
-  constructor(
-    tokenMintAddress: string,
-    metaplex: Metaplex,
-    wallet: UserWallet,
-    storage: IStorage,
-  ) {
-    this.wallet = wallet;
+  constructor(tokenMintAddress: string, metaplex: Metaplex, storage: IStorage) {
     this.storage = storage;
     this.metaplex = metaplex;
     this.connection = metaplex.connection;
-    this.tokenMintAddress = new PublicKey(tokenMintAddress);
+    this.publicKey = new PublicKey(tokenMintAddress);
   }
 
   async getMint() {
     return await this.metaplex
       .tokens()
-      .findMintByAddress({ address: this.tokenMintAddress })
+      .findMintByAddress({ address: this.publicKey })
       .run(); // TODO abstract types away
   }
 
   async getMetadata(): Promise<TokenMetadata> {
-    const addr = findMetadataPda(this.tokenMintAddress);
+    const mint = await this.getMint();
+    const addr = findMetadataPda(this.publicKey);
     const account = await this.metaplex.rpc().getAccount(addr);
     const meta = toMetadata(toMetadataAccount(account));
     return {
@@ -48,15 +49,15 @@ export class Token {
       uri: meta.uri,
       name: meta.name,
       symbol: meta.symbol,
+      decimals: mint.decimals,
+      supply: toCurrencyValue(mint.supply),
       ...meta.json,
     } as TokenMetadata;
   }
 
-  async totalSupply(): Promise<bigint> {
+  async totalSupply(): Promise<CurrencyValue> {
     const info = await this.getMint();
-    const value = BigInt(info.supply.basisPoints.toString());
-    // TODO use CurrencyValue to provide a human readable display value
-    return value;
+    return toCurrencyValue(info.supply);
   }
 
   async mint(amount: Amount) {
@@ -66,7 +67,7 @@ export class Token {
       .tokens()
       .mint({
         amount: token(amountParsed, info.decimals),
-        mintAddress: this.tokenMintAddress,
+        mintAddress: this.publicKey,
       })
       .run();
     return {
@@ -82,7 +83,7 @@ export class Token {
     const result = await this.metaplex
       .tokens()
       .send({
-        mintAddress: this.tokenMintAddress,
+        mintAddress: this.publicKey,
         amount: token(amount, info.decimals),
         toOwner: new PublicKey(receiverAddress),
       })
@@ -92,20 +93,28 @@ export class Token {
     };
   }
 
-  async balance(): Promise<bigint> {
-    return this.balanceOf(this.wallet.getSigner().publicKey.toBase58());
+  async balance(): Promise<CurrencyValue> {
+    return this.balanceOf(this.metaplex.identity().publicKey.toBase58());
   }
 
-  async balanceOf(walletAddress: string): Promise<bigint> {
+  async balanceOf(walletAddress: string): Promise<CurrencyValue> {
+    const mint = await this.getMint();
     const addr = await getAssociatedTokenAddress(
-      this.tokenMintAddress,
+      this.publicKey,
       new PublicKey(walletAddress),
     );
     try {
       const account = await getAccount(this.connection, addr);
-      return account.amount;
+      return toCurrencyValue({
+        basisPoints: toBigNumber(account.amount.toString()),
+        currency: {
+          symbol: "",
+          decimals: mint.decimals,
+          namespace: "spl-token",
+        },
+      });
     } catch (e) {
-      return 0n;
+      throw Error(`No balance found for address '${walletAddress}' - ${e}`);
     }
   }
 }

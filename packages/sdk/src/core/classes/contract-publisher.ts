@@ -6,6 +6,7 @@ import {
   fetchPreDeployMetadata,
   fetchRawPredeployMetadata,
   fetchSourceFilesFromMetadata,
+  resolveContractUriFromAddress,
 } from "../../common/feature-detection";
 import { isIncrementalVersion } from "../../common/version-checker";
 import { getContractPublisherAddress } from "../../constants";
@@ -28,7 +29,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import {
+import type {
   ContractPublisher as OnChainContractPublisher,
   IContractPublisher,
 } from "@thirdweb-dev/contracts-js";
@@ -192,6 +193,19 @@ export class ContractPublisher extends RPCConnectionHandler {
 
   /**
    * @internal
+   * TODO clean this up (see method above, too)
+   */
+  public async resolveReleasesFromAddress(address: string) {
+    const contractUri = await resolveContractUriFromAddress(
+      address,
+      this.getProvider(),
+    );
+    invariant(contractUri, "Could not resolve contract URI from address");
+    return await this.resolvePublishMetadataFromCompilerMetadata(contractUri);
+  }
+
+  /**
+   * @internal
    * @param address
    */
   public async fetchContractSourcesFromAddress(
@@ -250,7 +264,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       acc[curr.contractId] = curr;
       return acc;
     }, {} as Record<string, IContractPublisher.CustomContractInstanceStruct>);
-    return Object.entries(map).map(([_, struct]) =>
+    return Object.entries(map).map(([, struct]) =>
       this.toPublishedContract(
         struct as IContractPublisher.CustomContractInstanceStruct,
       ),
@@ -333,7 +347,10 @@ export class ContractPublisher extends RPCConnectionHandler {
 
     const fullMetadata = FullPublishMetadataSchemaInput.parse({
       ...extraMetadata,
-      ...predeployMetadata,
+      metadataUri: predeployMetadata.metadataUri,
+      bytecodeUri: predeployMetadata.bytecodeUri,
+      name: predeployMetadata.name,
+      analytics: predeployMetadata.analytics,
       publisher,
     });
     const fullMetadataUri = await this.storage.uploadMetadata(fullMetadata);

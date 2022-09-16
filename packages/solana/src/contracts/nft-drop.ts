@@ -1,34 +1,41 @@
 import { ClaimConditions } from "../classes/claim-conditions";
 import { NFTHelper } from "../classes/helpers/nft-helper";
-import { UserWallet } from "../classes/user-wallet";
 import { TransactionResult } from "../types/common";
-import { CommonNFTInput, NFTMetadata, NFTMetadataInput } from "../types/nft";
+import {
+  CommonNFTInput,
+  NFTCollectionMetadata,
+  NFTMetadata,
+  NFTMetadataInput,
+} from "../types/nft";
 import { Metaplex } from "@metaplex-foundation/js";
-import { Connection, PublicKey } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
+import invariant from "tiny-invariant";
 
 export class NFTDrop {
-  private connection: Connection;
-  private wallet: UserWallet;
   private metaplex: Metaplex;
   private storage: IStorage;
   private nft: NFTHelper;
-  public dropMintAddress: PublicKey;
+  public accountType = "nft-drop" as const;
+  public publicKey: PublicKey;
   public claimConditions: ClaimConditions;
 
-  constructor(
-    dropMintAddress: string,
-    metaplex: Metaplex,
-    wallet: UserWallet,
-    storage: IStorage,
-  ) {
-    this.wallet = wallet;
+  constructor(dropMintAddress: string, metaplex: Metaplex, storage: IStorage) {
     this.storage = storage;
     this.metaplex = metaplex;
-    this.connection = metaplex.connection;
     this.nft = new NFTHelper(metaplex);
-    this.dropMintAddress = new PublicKey(dropMintAddress);
+    this.publicKey = new PublicKey(dropMintAddress);
     this.claimConditions = new ClaimConditions(dropMintAddress, metaplex);
+  }
+
+  async getMetadata(): Promise<NFTCollectionMetadata> {
+    const info = await this.getCandyMachine();
+    invariant(info.collectionMintAddress, "Collection mint address not found");
+    const metadata = await this.metaplex
+      .nfts()
+      .findByMint({ mintAddress: info.collectionMintAddress })
+      .run();
+    return this.nft.toNFTMetadata(metadata);
   }
 
   async get(mintAddress: string): Promise<NFTMetadata> {
@@ -51,7 +58,7 @@ export class NFTDrop {
   async getAllClaimed(): Promise<NFTMetadata[]> {
     const nfts = await this.metaplex
       .candyMachines()
-      .findMintedNfts({ candyMachine: this.dropMintAddress })
+      .findMintedNfts({ candyMachine: this.publicKey })
       .run();
 
     const metadatas = nfts.map((nft) => this.nft.toNFTMetadata(nft));
@@ -122,7 +129,7 @@ export class NFTDrop {
   private async getCandyMachine() {
     return this.metaplex
       .candyMachines()
-      .findByAddress({ address: this.dropMintAddress })
+      .findByAddress({ address: this.publicKey })
       .run();
   }
 }
