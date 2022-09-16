@@ -9,13 +9,20 @@ import {
   NFTDropMetadataInput,
 } from "../types/contracts/nft-drop";
 import { enforceCreator } from "./helpers/creators-helper";
-import { findMetadataPda, Metaplex, token } from "@metaplex-foundation/js";
+import {
+  findMetadataPda,
+  Metaplex,
+  sol,
+  toBigNumber,
+  token,
+} from "@metaplex-foundation/js";
 import {
   createCreateMetadataAccountV2Instruction,
   DataV2,
 } from "@metaplex-foundation/mpl-token-metadata";
 import { Keypair } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
+import BN from "bn.js";
 
 export class Deployer {
   private metaplex: Metaplex;
@@ -121,6 +128,9 @@ export class Deployer {
       .builders()
       .create({
         ...candyMachineInfo,
+        price: candyMachineInfo.price || sol(0),
+        sellerFeeBasisPoints: candyMachineInfo.sellerFeeBasisPoints || 0,
+        itemsAvailable: candyMachineInfo.itemsAvailable || toBigNumber(0),
         candyMachine: candyMachineKeypair,
         collection: collectionMint.publicKey,
         creators: enforceCreator(
