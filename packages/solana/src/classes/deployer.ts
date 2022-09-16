@@ -1,5 +1,6 @@
 import {
   NFTCollectionMetadataInput,
+  NFTCollectionMetadataInputSchema,
   TokenMetadataInput,
   TokenMetadataInputSchema,
 } from "../types/contracts";
@@ -7,6 +8,7 @@ import {
   NFTDropContractSchema,
   NFTDropMetadataInput,
 } from "../types/contracts/nft-drop";
+import { enforceCreator } from "./helpers/creators-helper";
 import { findMetadataPda, Metaplex, token } from "@metaplex-foundation/js";
 import {
   createCreateMetadataAccountV2Instruction,
@@ -46,13 +48,7 @@ export class Deployer {
       symbol: tokenMetadataParsed.symbol || "",
       sellerFeeBasisPoints: 0,
       uri,
-      creators: [
-        {
-          address: owner,
-          share: 100,
-          verified: false,
-        },
-      ],
+      creators: enforceCreator([], this.metaplex.identity().publicKey),
       collection: null,
       uses: null,
     };
@@ -77,20 +73,21 @@ export class Deployer {
   async createNftCollection(
     collectionMetadata: NFTCollectionMetadataInput,
   ): Promise<string> {
-    const uri = await this.storage.uploadMetadata(collectionMetadata);
+    const parsed = NFTCollectionMetadataInputSchema.parse(collectionMetadata);
+    const uri = await this.storage.uploadMetadata(parsed);
 
     const { nft: collectionNft } = await this.metaplex
       .nfts()
       .create({
-        name: collectionMetadata.name,
-        symbol: collectionMetadata.symbol,
+        name: parsed.name,
+        symbol: parsed.symbol,
         sellerFeeBasisPoints: 0,
         uri,
         isCollection: true,
-        creators: collectionMetadata.creators?.map((creator) => ({
-          address: new PublicKey(creator.address),
-          share: creator.share,
-        })),
+        creators: enforceCreator(
+          parsed.creators,
+          this.metaplex.identity().publicKey,
+        ),
       })
       .run();
     return collectionNft.mint.address.toBase58();
@@ -101,26 +98,16 @@ export class Deployer {
 
     // TODO make it a single tx
     const collection = await this.createNftCollection(metadata);
-    const creators =
-      parsed.creators.length > 0
-        ? parsed.creators.map((creator) => ({
-            address: new PublicKey(creator.address),
-            share: creator.share,
-            verified: creator.verified,
-          }))
-        : [
-            {
-              address: this.metaplex.identity().publicKey,
-              share: 100,
-              verified: true,
-            },
-          ];
+
     const { candyMachine: nftDrop } = await this.metaplex
       .candyMachines()
       .create({
         ...parsed,
         collection: new PublicKey(collection),
-        creators,
+        creators: enforceCreator(
+          parsed.creators,
+          this.metaplex.identity().publicKey,
+        ),
       })
       .run();
 

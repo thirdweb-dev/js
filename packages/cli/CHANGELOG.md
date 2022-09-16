@@ -1,5 +1,14 @@
 # thirdweb
 
+## 0.7.13
+
+### Patch Changes
+
+- [#128](https://github.com/thirdweb-dev/js/pull/128) [`4dca5b2`](https://github.com/thirdweb-dev/js/commit/4dca5b21a66fe8ff4c4b24663e1b9ad6c446b7e2) Thanks [@jarrodwatts](https://github.com/jarrodwatts)! - Add new documentation for detectable features
+
+- Updated dependencies [[`42c79e9`](https://github.com/thirdweb-dev/js/commit/42c79e93dc958ca46a55d705aeea44ffdbbcc5f6), [`fe8751e`](https://github.com/thirdweb-dev/js/commit/fe8751eeae7ad013b890a8092ddbd091ecbd6708)]:
+  - @thirdweb-dev/sdk@3.0.2
+
 ## 0.7.12
 
 ### Patch Changes

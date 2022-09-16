@@ -1,5 +1,6 @@
 import { WalletAccount } from "../types/common";
 import {
+  CandyMachine,
   Metadata,
   Metaplex,
   TokenMetadataProgram,
@@ -12,6 +13,37 @@ export class Registry {
 
   constructor(metaplex: Metaplex) {
     this.metaplex = metaplex;
+  }
+
+  public async getAccountType(address: string) {
+    try {
+      const metadata = await this.metaplex
+        .nfts()
+        .findByMint({ mintAddress: new PublicKey(address) })
+        .run();
+      if (metadata) {
+        if (metadata.collectionDetails) {
+          return "nft-collection";
+        } else {
+          if (metadata.tokenStandard === TokenStandard.Fungible) {
+            return "token";
+          }
+        }
+      }
+    } catch (e) {
+      try {
+        const candyMachine = await this.metaplex
+          .candyMachines()
+          .findByAddress({ address: new PublicKey(address) })
+          .run();
+        if (candyMachine) {
+          return "nft-drop";
+        }
+      } catch (err) {
+        return undefined;
+      }
+    }
+    return undefined;
   }
 
   public async getAccountsForWallet(
@@ -39,11 +71,7 @@ export class Registry {
         }
         if (meta?.collectionDetails) {
           // check if it's part of a candy machine
-          const drop = candyMachines.find(
-            (candyMachine) =>
-              candyMachine.collectionMintAddress?.toBase58() ===
-              meta.mintAddress.toBase58(),
-          );
+          const drop = this.getDropForCollection(candyMachines, meta);
           if (drop) {
             return {
               type: "nft-drop",
@@ -68,6 +96,14 @@ export class Registry {
         }
       })
       .filter((account) => account !== undefined) as WalletAccount[];
+  }
+
+  private getDropForCollection(candyMachines: CandyMachine[], meta: Metadata) {
+    return candyMachines.find(
+      (candyMachine) =>
+        candyMachine.collectionMintAddress?.toBase58() ===
+        meta.mintAddress.toBase58(),
+    );
   }
 
   public async getMetadataAddressesForWallet(walletAddress: string) {

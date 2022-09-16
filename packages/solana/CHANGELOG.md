@@ -1,5 +1,15 @@
 # @thirdweb-dev/solana
 
+## 0.2.10
+
+### Patch Changes
+
+- [#129](https://github.com/thirdweb-dev/js/pull/129) [`a0cd47e`](https://github.com/thirdweb-dev/js/commit/a0cd47ec3596d23f974e58d668ce02e34bfe3528) Thanks [@jnsdls](https://github.com/jnsdls)! - explicitly export the program schemata from the package
+
+- [#132](https://github.com/thirdweb-dev/js/pull/132) [`3e425bf`](https://github.com/thirdweb-dev/js/commit/3e425bf8e65db99fc4043ea5d2bc4b863eabce52) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Get account type for a given address
+
+- [#130](https://github.com/thirdweb-dev/js/pull/130) [`2951b55`](https://github.com/thirdweb-dev/js/commit/2951b5533c13d1d7633c491df7e5710b0a6608dd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New return type for `registry.getAccountsForWallet`
+
 ## 0.2.9
 
 ### Patch Changes
