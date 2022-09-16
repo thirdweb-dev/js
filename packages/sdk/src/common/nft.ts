@@ -55,7 +55,7 @@ export async function fetchTokenMetadata(
     );
     try {
       jsonMetadata = await storage.downloadJSON(unparsedTokenIdUri);
-    } catch (e) {
+    } catch (e: any) {
       console.warn(
         `failed to get token metadata: ${JSON.stringify({
           tokenId: tokenId.toString(),

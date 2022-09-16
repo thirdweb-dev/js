@@ -31,7 +31,7 @@ describe("Snapshots", async () => {
   let storage: ThirdwebStorage;
 
   beforeEach(async () => {
-    storage = new MockStorage();
+    storage = MockStorage();
   });
 
   beforeEach(async () => {
@@ -88,7 +88,7 @@ describe("Snapshots", async () => {
   });
 
   it("should upload the snapshot to storage", async () => {
-    const rawSnapshotJson = await storage.get(uri);
+    const rawSnapshotJson = await storage.download(uri);
     expect(rawSnapshotJson).to.deep.equalInAnyOrder(snapshot);
   });
 });

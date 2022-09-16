@@ -221,7 +221,7 @@ export const mochaHooks = {
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     process.env.contractPublisherAddress = contractPublisher.address;
 
-    storage = new MockStorage();
+    storage = MockStorage();
     sdk = new ThirdwebSDK(
       signer,
       {
