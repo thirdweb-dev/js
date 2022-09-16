@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import { ThirdwebStorage } from "../src";
 import { DEFAULT_GATEWAY_URLS } from "../src/common/urls";
 import { expect } from "chai";

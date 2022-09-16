@@ -10,7 +10,6 @@ import {
   IpfsUploadBatchOptions,
   IStorageDownloader,
   IStorageUploader,
-  Json,
   JsonObject,
   UploadDataSchema,
   UploadOptions,
@@ -34,7 +33,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
     return this.downloader.download(url);
   }
 
-  async downloadJSON<T = any>(url: string): Promise<T> {
+  async downloadJSON<TJSON = any>(url: string): Promise<TJSON> {
     const res = await this.download(url);
 
     // If we get a JSON object, recursively replace any schemes with gatewayUrls
@@ -42,7 +41,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
     return replaceObjectSchemesWithGatewayUrls(
       json,
       this.downloader.gatewayUrls,
-    ) as T;
+    ) as TJSON;
   }
 
   async upload(data: JsonObject | FileOrBuffer, options?: T): Promise<string> {
