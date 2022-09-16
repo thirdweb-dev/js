@@ -1,4 +1,5 @@
 import { SignerOrProvider } from "../core/types";
+import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
 import { ethers, providers } from "ethers";
 
 /**
@@ -134,7 +135,12 @@ export function getReadOnlyProvider(network: string, chainId?: number) {
     if (match) {
       switch (match[1]) {
         case "http":
-          return new providers.JsonRpcBatchProvider(network, chainId);
+          return chainId
+            ? // if we know the chainId we should use the StaticJsonRpcBatchProvider
+              new StaticJsonRpcBatchProvider(network, chainId)
+            : // otherwise fall back to the built in json rpc batch provider
+              new providers.JsonRpcBatchProvider(network, chainId);
+
         case "ws":
           return new providers.WebSocketProvider(network, chainId);
         default:

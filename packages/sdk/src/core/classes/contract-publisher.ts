@@ -6,6 +6,7 @@ import {
   fetchPreDeployMetadata,
   fetchRawPredeployMetadata,
   fetchSourceFilesFromMetadata,
+  resolveContractUriFromAddress,
 } from "../../common/feature-detection";
 import { isIncrementalVersion } from "../../common/version-checker";
 import { getContractPublisherAddress } from "../../constants";
@@ -188,6 +189,19 @@ export class ContractPublisher extends RPCConnectionHandler {
         .filter((uri) => uri.length > 0)
         .map((uri) => this.fetchFullPublishMetadata(uri)),
     );
+  }
+
+  /**
+   * @internal
+   * TODO clean this up (see method above, too)
+   */
+  public async resolveReleasesFromAddress(address: string) {
+    const contractUri = await resolveContractUriFromAddress(
+      address,
+      this.getProvider(),
+    );
+    invariant(contractUri, "Could not resolve contract URI from address");
+    return await this.resolvePublishMetadataFromCompilerMetadata(contractUri);
   }
 
   /**
