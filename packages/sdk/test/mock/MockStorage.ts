@@ -3,7 +3,6 @@ import {
   FileOrBufferOrString,
   GatewayUrls,
   IpfsUploadBatchOptions,
-  IpfsUploaderOptions,
   isBufferInstance,
   isFileInstance,
   IStorageDownloader,
