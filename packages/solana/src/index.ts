@@ -12,4 +12,4 @@ export {
   TokenMetadataInputSchema,
   NFTCollectionMetadataInputSchema,
 } from "./types/contracts";
-export { NFTDropContractSchema } from "./types/contracts/nft-drop";
+export { NFTDropContractInputSchema } from "./types/contracts/nft-drop";

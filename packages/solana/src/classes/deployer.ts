@@ -5,7 +5,7 @@ import {
   TokenMetadataInputSchema,
 } from "../types/contracts";
 import {
-  NFTDropContractSchema,
+  NFTDropConditionsOutputSchema,
   NFTDropMetadataInput,
 } from "../types/contracts/nft-drop";
 import { enforceCreator } from "./helpers/creators-helper";
@@ -14,7 +14,7 @@ import {
   createCreateMetadataAccountV2Instruction,
   DataV2,
 } from "@metaplex-foundation/mpl-token-metadata";
-import { Keypair, PublicKey } from "@solana/web3.js";
+import { Keypair } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
 
 export class Deployer {
@@ -94,10 +94,9 @@ export class Deployer {
   }
 
   async createNftDrop(metadata: NFTDropMetadataInput): Promise<string> {
-    const parsed = NFTDropContractSchema.parse(metadata);
-    const uri = await this.storage.uploadMetadata(
-      NFTCollectionMetadataInputSchema.parse(metadata),
-    );
+    const collectionInfo = NFTCollectionMetadataInputSchema.parse(metadata);
+    const candyMachineInfo = NFTDropConditionsOutputSchema.parse(metadata);
+    const uri = await this.storage.uploadMetadata(collectionInfo);
 
     const collectionMint = Keypair.generate();
     const collectionTx = await this.metaplex
@@ -105,13 +104,13 @@ export class Deployer {
       .builders()
       .create({
         useNewMint: collectionMint,
-        name: parsed.name,
-        symbol: parsed.symbol,
+        name: collectionInfo.name,
+        symbol: collectionInfo.symbol,
         sellerFeeBasisPoints: 0,
         uri,
         isCollection: true,
         creators: enforceCreator(
-          parsed.creators,
+          collectionInfo.creators,
           this.metaplex.identity().publicKey,
         ),
       });
@@ -121,11 +120,11 @@ export class Deployer {
       .candyMachines()
       .builders()
       .create({
-        ...parsed,
+        ...candyMachineInfo,
         candyMachine: candyMachineKeypair,
         collection: collectionMint.publicKey,
         creators: enforceCreator(
-          parsed.creators,
+          collectionInfo.creators,
           this.metaplex.identity().publicKey,
         ),
       });
