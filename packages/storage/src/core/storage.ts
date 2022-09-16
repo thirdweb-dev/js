@@ -67,7 +67,10 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
 
     // Otherwise it is an array of JSON objects, so we have to prepare it first
     const metadata = (
-      await this.uploadAndReplaceFilesWithHashes(parsed as JsonObject[])
+      await this.uploadAndReplaceFilesWithHashes(
+        parsed as JsonObject[],
+        options,
+      )
     ).map((item) => JSON.stringify(item));
 
     return this.uploader.uploadBatch(metadata, options);
@@ -75,36 +78,37 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
 
   private async uploadAndReplaceFilesWithHashes(
     data: JsonObject[],
+    options?: T,
   ): Promise<JsonObject[]> {
     let cleaned = data;
     if (this.uploader.gatewayUrls) {
       // Replace any gateway URLs with their hashes
       cleaned = replaceObjectGatewayUrlsWithSchemes(
-        data,
+        cleaned,
         this.uploader.gatewayUrls,
       ) as JsonObject[];
     }
 
-    if (this.uploader.uploadWithGatewayUrl) {
+    if (options?.uploadWithGatewayUrl) {
       // If flag is set, replace all schemes with their preferred gateway URL
       // Ex: used for Solana, where services don't resolve schemes for you, so URLs must be useable by default
       cleaned = replaceObjectSchemesWithGatewayUrls(
-        data,
+        cleaned,
         this.uploader.gatewayUrls || this.downloader.gatewayUrls,
       ) as JsonObject[];
     }
 
     // Recurse through data and extract files to upload
-    const files = extractObjectFiles(data);
+    const files = extractObjectFiles(cleaned);
 
     if (!files.length) {
-      return data;
+      return cleaned;
     }
 
     // Upload all files that came from the object
     const uris = await this.uploader.uploadBatch(files);
 
     // Recurse through data and replace files with hashes
-    return replaceObjectFilesWithUris(data, uris) as JsonObject[];
+    return replaceObjectFilesWithUris(cleaned, uris) as JsonObject[];
   }
 }

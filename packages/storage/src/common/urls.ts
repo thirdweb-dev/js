@@ -4,6 +4,7 @@ import { GatewayUrls } from "../types";
  * @internal
  */
 export const DEFAULT_GATEWAY_URLS: GatewayUrls = {
+  // Note: Gateway URLs should have trailing slashes (we clean this on user input)
   "ipfs://": [
     "https://gateway.ipfscdn.io/ipfs/",
     "https://cloudflare-ipfs.com/ipfs/",
@@ -29,7 +30,14 @@ export function prepareGatewayUrls(gatewayUrls?: GatewayUrls): GatewayUrls {
 
   for (const key of Object.keys(DEFAULT_GATEWAY_URLS)) {
     if (gatewayUrls && gatewayUrls[key]) {
-      allGatewayUrls[key] = [...gatewayUrls[key], ...DEFAULT_GATEWAY_URLS[key]];
+      // Make sure that all user gateway URLs have trailing slashes
+      const cleanedGatewayUrls = gatewayUrls[key].map(
+        (url) => url.replace(/\/$/, "") + "/",
+      );
+      allGatewayUrls[key] = [
+        ...cleanedGatewayUrls,
+        ...DEFAULT_GATEWAY_URLS[key],
+      ];
     }
   }
 

@@ -20,11 +20,9 @@ import FormData from "form-data";
 
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   public gatewayUrls: GatewayUrls;
-  public uploadWithGatewayUrl: boolean;
 
   constructor(options?: IpfsUploaderOptions) {
     this.gatewayUrls = prepareGatewayUrls(options?.gatewayUrls);
-    this.uploadWithGatewayUrl = options?.uploadWithGatewayUrl || false;
   }
 
   async uploadBatch(
@@ -32,7 +30,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     options?: IpfsUploadBatchOptions,
   ): Promise<string[]> {
     const formData = new FormData();
-    const { form, fileNames } = this.buildFormData(formData, data);
+    const { form, fileNames } = this.buildFormData(formData, data, options);
 
     if (isBrowser()) {
       return this.uploadBatchBrowser(form, fileNames, options);
@@ -100,7 +98,6 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           fileName = `${i}`;
         }
       }
-
       const filepath = `files/${fileName}`;
       if (fileNames.indexOf(fileName) > -1) {
         throw new Error(
