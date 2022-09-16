@@ -149,6 +149,45 @@ describe("IPFS", async () => {
     );
   });
 
+  it("Should upload without directory if specified", async () => {
+    const uri = await storage.upload(
+      {
+        name: "Upload Without Directory",
+        description: "Uploading alone without a directory...",
+      },
+      {
+        uploadWithoutDirectory: true,
+      },
+    );
+
+    expect(uri).to.equal(
+      "ipfs://QmdnBEP9UFcRfbuAyXFefNccNbuKWTscHrpWZatvqz9VcV",
+    );
+
+    const json = await storage.downloadJSON(uri);
+
+    expect(json.name).to.equal("Upload Without Directory");
+    expect(json.description).to.equal("Uploading alone without a directory...");
+  });
+
+  it("Should throw an error on upload without directory with multiple uploads", async () => {
+    try {
+      await storage.uploadBatch(
+        [readFileSync("test/files/0.jpg"), readFileSync("test/files/1.jpg")],
+        {
+          uploadWithoutDirectory: true,
+        },
+      );
+      expect.fail(
+        "Failed to throw an error on uploading multiple files without directory",
+      );
+    } catch (err: any) {
+      expect(err.message).to.contain(
+        "[UPLOAD_WITHOUT_DIRECTORY_ERROR] Cannot upload more than one file or object without directory!",
+      );
+    }
+  });
+
   it("Should replace gateway URLs with schemes on upload", async () => {
     const uri = await storage.upload({
       image: `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,

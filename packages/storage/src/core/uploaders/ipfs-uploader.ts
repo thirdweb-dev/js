@@ -29,6 +29,12 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     data: (string | FileOrBuffer)[],
     options?: IpfsUploadBatchOptions,
   ): Promise<string[]> {
+    if (options?.uploadWithoutDirectory && data.length > 1) {
+      throw new Error(
+        "[UPLOAD_WITHOUT_DIRECTORY_ERROR] Cannot upload more than one file or object without directory!",
+      );
+    }
+
     const formData = new FormData();
     const { form, fileNames } = this.buildFormData(formData, data, options);
 
@@ -98,7 +104,12 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           fileName = `${i}`;
         }
       }
-      const filepath = `files/${fileName}`;
+
+      // If we don't want to wrap with directory, adjust the filepath
+      const filepath = options?.uploadWithoutDirectory
+        ? `files`
+        : `files/${fileName}`;
+
       if (fileNames.indexOf(fileName) > -1) {
         throw new Error(
           `[DUPLICATE_FILE_NAME_ERROR] File name ${fileName} was passed for more than one file.`,
@@ -117,6 +128,15 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
 
     const metadata = { name: `Storage SDK`, keyvalues: {} };
     form.append("pinataMetadata", JSON.stringify(metadata));
+
+    if (options?.uploadWithoutDirectory) {
+      form.append(
+        "pinataOptions",
+        JSON.stringify({
+          wrapWithDirectory: false,
+        }),
+      );
+    }
 
     return {
       form,
@@ -146,7 +166,11 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           throw new Error("Failed to upload files to IPFS");
         }
 
-        resolve(fileNames.map((name) => `ipfs://${cid}/${name}`));
+        if (options?.uploadWithoutDirectory) {
+          resolve([`ipfs://${cid}`]);
+        } else {
+          resolve(fileNames.map((name) => `ipfs://${cid}/${name}`));
+        }
       };
 
       xhr.onerror = (err) => {
@@ -197,6 +221,10 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       throw new Error("Failed to upload files to IPFS");
     }
 
-    return fileNames.map((name) => `ipfs://${cid}/${name}`);
+    if (options?.uploadWithoutDirectory) {
+      return [`ipfs://${cid}`];
+    } else {
+      return fileNames.map((name) => `ipfs://${cid}/${name}`);
+    }
   }
 }
