@@ -61,13 +61,13 @@ describe("NFTDrop", async () => {
 
   it("should update claim condition", async () => {
     let condition = await drop.claimConditions.get();
-    expect(condition.price).to.equal(0n);
+    expect(condition.price).to.equal(0);
 
     await drop.claimConditions.set({
       price: 2,
     });
 
     condition = await drop.claimConditions.get();
-    expect(condition.price).to.equal(BigInt(sol(2).basisPoints.toNumber()));
+    expect(condition.price).to.equal(sol(2).basisPoints.toNumber());
   });
 });

@@ -20,13 +20,13 @@ export const NFTDropConditionsInputSchema = z.object({
 export const NFTDropConditionsOutputSchema = z.object({
   price: z
     .number()
-    .default(0)
-    .transform((p) => sol(p)),
-  sellerFeeBasisPoints: z.number().default(0),
+    .transform((p) => sol(p))
+    .optional(),
+  sellerFeeBasisPoints: z.number().optional(),
   itemsAvailable: z
     .number()
-    .default(0)
-    .transform((bn) => toBigNumber(bn)),
+    .transform((bn) => toBigNumber(bn))
+    .optional(),
   goLiveDate: z
     .date()
     .transform((d) => toDateTime(d))
