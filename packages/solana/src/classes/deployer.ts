@@ -5,17 +5,24 @@ import {
   TokenMetadataInputSchema,
 } from "../types/contracts";
 import {
-  NFTDropContractSchema,
+  NFTDropConditionsOutputSchema,
   NFTDropMetadataInput,
 } from "../types/contracts/nft-drop";
 import { enforceCreator } from "./helpers/creators-helper";
-import { findMetadataPda, Metaplex, token } from "@metaplex-foundation/js";
+import {
+  findMetadataPda,
+  Metaplex,
+  sol,
+  toBigNumber,
+  token,
+} from "@metaplex-foundation/js";
 import {
   createCreateMetadataAccountV2Instruction,
   DataV2,
 } from "@metaplex-foundation/mpl-token-metadata";
-import { Keypair, PublicKey } from "@solana/web3.js";
+import { Keypair } from "@solana/web3.js";
 import { IStorage } from "@thirdweb-dev/storage";
+import BN from "bn.js";
 
 export class Deployer {
   private metaplex: Metaplex;
@@ -94,23 +101,52 @@ export class Deployer {
   }
 
   async createNftDrop(metadata: NFTDropMetadataInput): Promise<string> {
-    const parsed = NFTDropContractSchema.parse(metadata);
+    const collectionInfo = NFTCollectionMetadataInputSchema.parse(metadata);
+    const candyMachineInfo = NFTDropConditionsOutputSchema.parse(metadata);
+    const uri = await this.storage.uploadMetadata(collectionInfo);
 
-    // TODO make it a single tx
-    const collection = await this.createNftCollection(metadata);
-
-    const { candyMachine: nftDrop } = await this.metaplex
-      .candyMachines()
+    const collectionMint = Keypair.generate();
+    const collectionTx = await this.metaplex
+      .nfts()
+      .builders()
       .create({
-        ...parsed,
-        collection: new PublicKey(collection),
+        useNewMint: collectionMint,
+        name: collectionInfo.name,
+        symbol: collectionInfo.symbol,
+        sellerFeeBasisPoints: 0,
+        uri,
+        isCollection: true,
         creators: enforceCreator(
-          parsed.creators,
+          collectionInfo.creators,
           this.metaplex.identity().publicKey,
         ),
-      })
-      .run();
+      });
 
-    return nftDrop.address.toBase58();
+    const candyMachineKeypair = Keypair.generate();
+    const candyMachineTx = await this.metaplex
+      .candyMachines()
+      .builders()
+      .create({
+        ...candyMachineInfo,
+        price: candyMachineInfo.price || sol(0),
+        sellerFeeBasisPoints: candyMachineInfo.sellerFeeBasisPoints || 0,
+        itemsAvailable: candyMachineInfo.itemsAvailable || toBigNumber(0),
+        candyMachine: candyMachineKeypair,
+        collection: collectionMint.publicKey,
+        creators: enforceCreator(
+          collectionInfo.creators,
+          this.metaplex.identity().publicKey,
+        ),
+      });
+
+    const result = await collectionTx
+      .add(candyMachineTx)
+      .sendAndConfirm(this.metaplex);
+
+    if (!result.response.signature) {
+      throw new Error("Transaction failed");
+    }
+
+    return candyMachineKeypair.publicKey.toBase58();
   }
 }

@@ -16,14 +16,15 @@ export class NFTDrop {
   private metaplex: Metaplex;
   private storage: IStorage;
   private nft: NFTHelper;
-  public dropMintAddress: PublicKey;
+  public accountType = "nft-drop" as const;
+  public publicKey: PublicKey;
   public claimConditions: ClaimConditions;
 
   constructor(dropMintAddress: string, metaplex: Metaplex, storage: IStorage) {
     this.storage = storage;
     this.metaplex = metaplex;
     this.nft = new NFTHelper(metaplex);
-    this.dropMintAddress = new PublicKey(dropMintAddress);
+    this.publicKey = new PublicKey(dropMintAddress);
     this.claimConditions = new ClaimConditions(dropMintAddress, metaplex);
   }
 
@@ -57,7 +58,7 @@ export class NFTDrop {
   async getAllClaimed(): Promise<NFTMetadata[]> {
     const nfts = await this.metaplex
       .candyMachines()
-      .findMintedNfts({ candyMachine: this.dropMintAddress })
+      .findMintedNfts({ candyMachine: this.publicKey })
       .run();
 
     const metadatas = nfts.map((nft) => this.nft.toNFTMetadata(nft));
@@ -128,7 +129,7 @@ export class NFTDrop {
   private async getCandyMachine() {
     return this.metaplex
       .candyMachines()
-      .findByAddress({ address: this.dropMintAddress })
+      .findByAddress({ address: this.publicKey })
       .run();
   }
 }
