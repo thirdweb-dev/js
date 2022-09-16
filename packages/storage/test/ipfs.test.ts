@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import { ThirdwebStorage } from "../src";
+import { IpfsUploader, ThirdwebStorage } from "../src";
 import { DEFAULT_GATEWAY_URLS } from "../src/common/urls";
 import { expect } from "chai";
 import { readFileSync } from "fs";
@@ -149,8 +149,33 @@ describe("IPFS", async () => {
     );
   });
 
-  it("Should upload without directory if specified", async () => {
+  it("Should upload without directory if specified on function", async () => {
     const uri = await storage.upload(
+      {
+        name: "Upload Without Directory",
+        description: "Uploading alone without a directory...",
+      },
+      {
+        uploadWithoutDirectory: true,
+      },
+    );
+
+    expect(uri).to.equal(
+      "ipfs://QmdnBEP9UFcRfbuAyXFefNccNbuKWTscHrpWZatvqz9VcV",
+    );
+
+    const json = await storage.downloadJSON(uri);
+
+    expect(json.name).to.equal("Upload Without Directory");
+    expect(json.description).to.equal("Uploading alone without a directory...");
+  });
+
+  it("Should upload without directory if specified on class", async () => {
+    const solanaStorage = new ThirdwebStorage(
+      new IpfsUploader({ uploadWithGatewayUrl: true }),
+    );
+
+    const uri = await solanaStorage.upload(
       {
         name: "Upload Without Directory",
         description: "Uploading alone without a directory...",

@@ -20,9 +20,11 @@ import FormData from "form-data";
 
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   public gatewayUrls: GatewayUrls;
+  public uploadWithGatewayUrl: boolean;
 
   constructor(options?: IpfsUploaderOptions) {
     this.gatewayUrls = prepareGatewayUrls(options?.gatewayUrls);
+    this.uploadWithGatewayUrl = options?.uploadWithGatewayUrl || false;
   }
 
   async uploadBatch(

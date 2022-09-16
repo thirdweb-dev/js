@@ -80,21 +80,22 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
     options?: T,
   ): Promise<JsonObject[]> {
     let cleaned = data;
-    if (this.uploader.gatewayUrls) {
+    // TODO: Gateway URLs should probably be top-level since both uploader and downloader need them
+    if (this.uploader.gatewayUrls || this.downloader.gatewayUrls) {
       // Replace any gateway URLs with their hashes
       cleaned = replaceObjectGatewayUrlsWithSchemes(
         cleaned,
-        this.uploader.gatewayUrls,
-      ) as JsonObject[];
-    }
-
-    if (options?.uploadWithGatewayUrl) {
-      // If flag is set, replace all schemes with their preferred gateway URL
-      // Ex: used for Solana, where services don't resolve schemes for you, so URLs must be useable by default
-      cleaned = replaceObjectSchemesWithGatewayUrls(
-        cleaned,
         this.uploader.gatewayUrls || this.downloader.gatewayUrls,
       ) as JsonObject[];
+
+      if (options?.uploadWithGatewayUrl || this.uploader.uploadWithGatewayUrl) {
+        // If flag is set, replace all schemes with their preferred gateway URL
+        // Ex: used for Solana, where services don't resolve schemes for you, so URLs must be useable by default
+        cleaned = replaceObjectSchemesWithGatewayUrls(
+          cleaned,
+          this.uploader.gatewayUrls || this.downloader.gatewayUrls,
+        ) as JsonObject[];
+      }
     }
 
     // Recurse through data and extract files to upload
