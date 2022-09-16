@@ -23,6 +23,7 @@ export class NFTCollection {
   private storage: IStorage;
   private nft: NFTHelper;
   public publicKey: PublicKey;
+  public accountType = "nft-collection" as const;
 
   constructor(
     collectionMintAddress: string,

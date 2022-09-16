@@ -16,6 +16,7 @@ export class NFTDrop {
   private metaplex: Metaplex;
   private storage: IStorage;
   private nft: NFTHelper;
+  public accountType = "nft-drop" as const;
   public publicKey: PublicKey;
   public claimConditions: ClaimConditions;
 

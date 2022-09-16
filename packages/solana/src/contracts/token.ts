@@ -22,6 +22,7 @@ export class Token {
   private connection: Connection;
   private metaplex: Metaplex;
   private storage: IStorage;
+  public accountType = "token" as const;
   public publicKey: PublicKey;
 
   constructor(tokenMintAddress: string, metaplex: Metaplex, storage: IStorage) {
