@@ -1,4 +1,5 @@
 import { ThirdwebSDK } from "../src/index";
+import { createThirdwebSDK } from "../src/server/index";
 import { createTestSDK } from "./before-setup";
 import { expect } from "chai";
 
@@ -28,6 +29,7 @@ describe("Registry", async () => {
     const t = await freshSDK.registry.getAccountsForWallet(
       freshSDK.wallet.getAddress() || "",
     );
+    expect(t.length).to.eq(3);
     t.forEach((account) => {
       switch (account.type) {
         case "nft-collection":

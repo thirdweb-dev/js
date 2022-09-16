@@ -17,51 +17,51 @@ export class Registry {
 
   public async getAccountType(address: string) {
     try {
-      const metadata = await this.metaplex
-        .nfts()
-        .findByMint({ mintAddress: new PublicKey(address) })
+      const candyMachine = await this.metaplex
+        .candyMachines()
+        .findByAddress({ address: new PublicKey(address) })
         .run();
-      if (metadata) {
-        if (metadata.collectionDetails) {
-          return "nft-collection";
-        } else {
-          if (metadata.tokenStandard === TokenStandard.Fungible) {
-            return "token";
-          }
-        }
+      if (candyMachine) {
+        return "nft-drop";
       }
-    } catch (e) {
-      try {
-        const candyMachine = await this.metaplex
-          .candyMachines()
-          .findByAddress({ address: new PublicKey(address) })
-          .run();
-        if (candyMachine) {
-          return "nft-drop";
+    } catch (err) {
+      // ignore and try next
+    }
+    const metadata = await this.metaplex
+      .nfts()
+      .findByMint({ mintAddress: new PublicKey(address) })
+      .run();
+    if (metadata) {
+      if (metadata.collectionDetails) {
+        return "nft-collection";
+      } else {
+        if (metadata.tokenStandard === TokenStandard.Fungible) {
+          return "token";
         }
-      } catch (err) {
-        return undefined;
       }
     }
-    return undefined;
+    throw new Error("Unknown account type");
   }
 
   public async getAccountsForWallet(
     walletAddress: string,
   ): Promise<WalletAccount[]> {
-    const pubKeys = await this.getMetadataAddressesForWallet(walletAddress);
     const metadatas = await this.metaplex
       .nfts()
-      .findAllByMintList({ mints: pubKeys })
+      .findAllByOwner({ owner: new PublicKey(walletAddress) })
       .run();
+
+    console.log({ metadatas });
 
     const candyMachines = await this.metaplex
       .candyMachines()
       .findAllBy({
-        type: "wallet",
+        type: "authority",
         publicKey: new PublicKey(walletAddress),
       })
       .run();
+
+    console.log({ candyMachines });
 
     return metadatas
       .map((mintMetadata) => {
@@ -104,12 +104,5 @@ export class Registry {
         candyMachine.collectionMintAddress?.toBase58() ===
         meta.mintAddress.toBase58(),
     );
-  }
-
-  public async getMetadataAddressesForWallet(walletAddress: string) {
-    return await TokenMetadataProgram.metadataV1Accounts(this.metaplex)
-      .selectMint()
-      .whereCreator(1, new PublicKey(walletAddress))
-      .getDataAsPublicKeys();
   }
 }

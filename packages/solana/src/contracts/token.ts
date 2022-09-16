@@ -22,25 +22,25 @@ export class Token {
   private connection: Connection;
   private metaplex: Metaplex;
   private storage: IStorage;
-  tokenMintAddress: PublicKey;
+  public publicKey: PublicKey;
 
   constructor(tokenMintAddress: string, metaplex: Metaplex, storage: IStorage) {
     this.storage = storage;
     this.metaplex = metaplex;
     this.connection = metaplex.connection;
-    this.tokenMintAddress = new PublicKey(tokenMintAddress);
+    this.publicKey = new PublicKey(tokenMintAddress);
   }
 
   async getMint() {
     return await this.metaplex
       .tokens()
-      .findMintByAddress({ address: this.tokenMintAddress })
+      .findMintByAddress({ address: this.publicKey })
       .run(); // TODO abstract types away
   }
 
   async getMetadata(): Promise<TokenMetadata> {
     const mint = await this.getMint();
-    const addr = findMetadataPda(this.tokenMintAddress);
+    const addr = findMetadataPda(this.publicKey);
     const account = await this.metaplex.rpc().getAccount(addr);
     const meta = toMetadata(toMetadataAccount(account));
     return {
@@ -66,7 +66,7 @@ export class Token {
       .tokens()
       .mint({
         amount: token(amountParsed, info.decimals),
-        mintAddress: this.tokenMintAddress,
+        mintAddress: this.publicKey,
       })
       .run();
     return {
@@ -82,7 +82,7 @@ export class Token {
     const result = await this.metaplex
       .tokens()
       .send({
-        mintAddress: this.tokenMintAddress,
+        mintAddress: this.publicKey,
         amount: token(amount, info.decimals),
         toOwner: new PublicKey(receiverAddress),
       })
@@ -99,7 +99,7 @@ export class Token {
   async balanceOf(walletAddress: string): Promise<CurrencyValue> {
     const mint = await this.getMint();
     const addr = await getAssociatedTokenAddress(
-      this.tokenMintAddress,
+      this.publicKey,
       new PublicKey(walletAddress),
     );
     try {
