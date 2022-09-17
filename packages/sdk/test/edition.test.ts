@@ -241,14 +241,12 @@ describe("Edition Contract", async () => {
       {
         metadata: {
           name: "Test0",
-          image: "ipfs://myownipfs0",
         },
         supply: 5,
       },
       {
         metadata: {
           name: "Test1",
-          image: "ipfs://myownipfs1",
         },
         supply: 5,
       },
@@ -258,7 +256,6 @@ describe("Edition Contract", async () => {
     let i = 0;
     nfts.forEach((nft) => {
       expect(nft.metadata.name).to.be.equal(`Test${i}`);
-      expect(nft.metadata.image).to.be.equal(`ipfs://myownipfs${i}`);
       i++;
     });
   });

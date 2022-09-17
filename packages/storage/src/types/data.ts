@@ -53,20 +53,3 @@ export const JsonObjectSchema = z.record(z.string(), JsonSchema);
 export type Json = JsonLiteral | FileOrBuffer | JsonObject | Json[];
 
 export type JsonObject = { [key: string]: Json };
-
-export const UploadDataSchema = z.union(
-  [
-    z.array(JsonSchema).nonempty({
-      message: "Cannot pass an empty array.",
-    }),
-    z.array(FileOrBufferSchema).nonempty({
-      message: "Cannot pass an empty array.",
-    }),
-  ],
-  {
-    invalid_type_error:
-      "Must pass a an array of all files or buffer objects or an array of all JSON objects.",
-  },
-);
-
-export type CleanedUploadData = string | FileOrBuffer;

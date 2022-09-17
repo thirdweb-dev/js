@@ -88,7 +88,7 @@ describe("Snapshots", async () => {
   });
 
   it("should upload the snapshot to storage", async () => {
-    const rawSnapshotJson = await storage.download(uri);
+    const rawSnapshotJson = await storage.downloadJSON(uri);
     expect(rawSnapshotJson).to.deep.equalInAnyOrder(snapshot);
   });
 });

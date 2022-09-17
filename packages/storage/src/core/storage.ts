@@ -11,7 +11,6 @@ import {
   IStorageDownloader,
   IStorageUploader,
   Json,
-  UploadDataSchema,
   UploadOptions,
 } from "../types";
 import { StorageDownloader } from "./downloaders/storage-downloader";
@@ -56,17 +55,20 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
     data: Json[] | FileOrBuffer[],
     options?: T,
   ): Promise<string[]> {
-    const parsed: Json[] | FileOrBuffer[] = UploadDataSchema.parse(data);
-    const { success: isFileArray } = FileOrBufferSchema.safeParse(parsed[0]);
+    if (!data.length) {
+      return [];
+    }
+
+    const { success: isFileArray } = FileOrBufferSchema.safeParse(data[0]);
 
     // If data is an array of files, pass it through to upload directly
     if (isFileArray) {
-      return this.uploader.uploadBatch(parsed as FileOrBuffer[], options);
+      return this.uploader.uploadBatch(data as FileOrBuffer[], options);
     }
 
     // Otherwise it is an array of JSON objects, so we have to prepare it first
     const metadata = (
-      await this.uploadAndReplaceFilesWithHashes(parsed as Json[], options)
+      await this.uploadAndReplaceFilesWithHashes(data as Json[], options)
     ).map((item) => JSON.stringify(item));
 
     return this.uploader.uploadBatch(metadata, options);
