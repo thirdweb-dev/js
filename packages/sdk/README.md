@@ -32,7 +32,8 @@ yarn add @thirdweb-dev/sdk ethers
 ### 1. Deploy & customize your contracts
 
 - Using your [thirdweb dashboard](https://thirdweb.com/dashboard) (recommended)
-- Using the SDK directly (for advanced use cases)
+- Using the [SDK directly](https://portal.thirdweb.com/typescript/sdk.contractdeployer)
+- Using the [thirdweb CLI](https://portal.thirdweb.com/deploy)
 
 ### 2. Reading data from your contracts
 
@@ -44,16 +45,18 @@ This will allow you to query data from any contract with no additional setup.
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
 // instantiate the SDK in read-only mode (our example is running on `polygon` here)
-// all major chains and testnets are supported (e.g. `mainnet`, `rinkeby`, `goerli`, 'polygon', 'mumbai', etc.)
+// all major chains and testnets are supported (e.g. `mainnet`, 'optimism`, 'arbitrum', 'polygon', `goerli`, 'mumbai', etc.)
 const sdk = new ThirdwebSDK("polygon");
 
 // access your deployed contracts
-const nftDrop = sdk.getNFTDrop("0x...");
-const marketplace = sdk.getMarketplace("0x...");
+const contract = await sdk.getContract("0x...");
 
-// Read from your contracts
-const claimedNFTs = await nftDrop.getAllClaimed();
-const listings = await marketplace.getActiveListings();
+// Read data using direct calls to your contract
+const myData = await contract.call("myFunction");
+
+// Or Using the extensions API matching to your contract extensions
+const allNFTs = await contract.erc721.getAll();
+const tokenSupply = await contract.erc20.totalSupply();
 ```
 
 You can execute this code as a node script by executing:
@@ -61,6 +64,8 @@ You can execute this code as a node script by executing:
 ```shell
 node my_script.js
 ```
+
+Note that you can also access any deployed contract using its ABI, using `sdk.getContractFromAbi(address, abi)` and get the same functionality. For contracts deployed via thirdweb, we handle the ABI for you.
 
 ### 3. Executing transactions on your contracts
 
@@ -83,18 +88,20 @@ const privateKey = "<your-private-key-here>";
 // instantiate the SDK based on your private key, with the desired chain to connect to
 const sdk = ThirdwebSDK.fromPrivateKey(privateKey, "polygon");
 
-// deploy contracts
+// deploy existing contracts, or your own using the thirdweb CLI
 const deployedAddress = sdk.deployer.deployNFTCollection({
   name: "My NFT Collection",
   primary_sale_recipient: "0x...",
 });
 
 // access your deployed contracts
-const nftCollection = sdk.getNFTCollection(deployedAddress);
+const contract = await sdk.getContract(deployedAddress);
 
-// Execute transactions on your contracts from the connected wallet
-const walletAddress = "0x...";
-await nftCollection.mintTo(walletAddress, {
+// Execute any of your functions on your contracts from the connected wallet
+await contract.call("myFunction", arg1, arg2);
+
+// Or execute transactions using the extensions API
+await contract.erc721.mint({
   name: "Cool NFT",
   description: "Minted NFT from code!",
   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
