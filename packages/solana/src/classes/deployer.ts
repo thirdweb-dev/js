@@ -6,6 +6,7 @@ import {
 } from "../types/contracts";
 import {
   NFTDropConditionsOutputSchema,
+  NFTDropContractInput,
   NFTDropMetadataInput,
 } from "../types/contracts/nft-drop";
 import { enforceCreator } from "./helpers/creators-helper";
@@ -100,7 +101,7 @@ export class Deployer {
     return collectionNft.mint.address.toBase58();
   }
 
-  async createNftDrop(metadata: NFTDropMetadataInput): Promise<string> {
+  async createNftDrop(metadata: NFTDropContractInput): Promise<string> {
     const collectionInfo = NFTCollectionMetadataInputSchema.parse(metadata);
     const candyMachineInfo = NFTDropConditionsOutputSchema.parse(metadata);
     const uri = await this.storage.uploadMetadata(collectionInfo);

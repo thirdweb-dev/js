@@ -72,16 +72,17 @@ export class NFTDrop {
     return this.nft.balanceOf(walletAddress, mintAddress);
   }
 
-  async totalUnclaimedSupply(): Promise<bigint> {
+  async totalUnclaimedSupply(): Promise<number> {
     const info = await this.getCandyMachine();
-    return BigInt(
-      Math.min(info.itemsLoaded.toNumber(), info.itemsRemaining.toNumber()),
+    return Math.min(
+      info.itemsLoaded.toNumber(),
+      info.itemsRemaining.toNumber(),
     );
   }
 
-  async totalClaimedSupply(): Promise<bigint> {
+  async totalClaimedSupply(): Promise<number> {
     const info = await this.getCandyMachine();
-    return BigInt(info.itemsMinted.toNumber());
+    return info.itemsMinted.toNumber();
   }
 
   async transfer(

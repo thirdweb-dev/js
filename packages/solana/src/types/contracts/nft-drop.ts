@@ -1,4 +1,5 @@
 import { NFTCollectionMetadataInputSchema } from ".";
+import { AmountSchema } from "../common";
 import { sol, toBigNumber, toDateTime } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
 import { z } from "zod";
@@ -8,9 +9,9 @@ import { z } from "zod";
  */
 // TODO: Handle allow lists and end times
 export const NFTDropConditionsInputSchema = z.object({
+  itemsAvailable: AmountSchema,
   price: z.number().default(0),
   sellerFeeBasisPoints: z.number().default(0),
-  itemsAvailable: z.number().default(0),
   goLiveDate: z.date().optional(),
   splToken: z.string().optional(),
   solTreasuryAccount: z.string().optional(),
@@ -23,10 +24,7 @@ export const NFTDropConditionsOutputSchema = z.object({
     .transform((p) => sol(p))
     .optional(),
   sellerFeeBasisPoints: z.number().optional(),
-  itemsAvailable: z
-    .number()
-    .transform((bn) => toBigNumber(bn))
-    .optional(),
+  itemsAvailable: AmountSchema.transform((bn) => toBigNumber(bn)).optional(),
   goLiveDate: z
     .date()
     .transform((d) => toDateTime(d))
@@ -47,5 +45,7 @@ export const NFTDropConditionsOutputSchema = z.object({
 
 export const NFTDropContractInputSchema =
   NFTCollectionMetadataInputSchema.merge(NFTDropConditionsInputSchema);
+
+export type NFTDropContractInput = z.input<typeof NFTDropContractInputSchema>;
 
 export type NFTDropMetadataInput = z.input<typeof NFTDropConditionsInputSchema>;
