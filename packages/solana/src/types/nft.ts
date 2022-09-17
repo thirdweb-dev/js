@@ -32,6 +32,7 @@ export const CommonNFTInput = CommonTokenInput.extend({
   animation_url: FileBufferOrStringSchema.optional(),
   background_color: HexColor.optional(),
   properties: OptionalPropertiesInput,
+  attributes: OptionalPropertiesInput,
 });
 
 /**
