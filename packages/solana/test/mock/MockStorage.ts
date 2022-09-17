@@ -1,56 +1,30 @@
 import {
-  FileOrBuffer,
+  DEFAULT_GATEWAY_URLS,
+  FileOrBufferOrString,
+  GatewayUrls,
+  IpfsUploadBatchOptions,
   isBufferInstance,
   isFileInstance,
-  IStorage,
-  JsonObject,
-  UploadResult,
+  IStorageDownloader,
+  IStorageUploader,
+  ThirdwebStorage,
 } from "@thirdweb-dev/storage";
 import { v4 as uuidv4 } from "uuid";
 
-class NotFoundError extends Error {
-  constructor(message: string) {
-    super(message);
-  }
-}
+// Store mapping of URIs to files/objects
+const ipfs: Record<string, any> = {};
 
-export class MockStorage implements IStorage {
-  private objects: { [key: string]: any } = {};
-  private folders: { [cid: string]: { [id: string]: any } } = {};
-
-  public async upload(
-    data: string | FileOrBuffer,
-    _contractAddress?: string,
-    _signerAddress?: string,
-  ): Promise<string> {
-    const uuid = uuidv4();
-    let serializedData = "";
-
-    if (isFileInstance(data)) {
-      serializedData = await data.text();
-    } else if (isBufferInstance(data)) {
-      serializedData = data.toString();
-    } else if (typeof data === "string") {
-      serializedData = data;
-    }
-
-    const key = `mock://${uuid}`;
-    this.objects[uuid] = serializedData;
-    return Promise.resolve(key);
-  }
-
-  public async uploadBatch(
-    files: (string | FileOrBuffer)[],
-    fileStartNumber?: number,
-    _contractAddress?: string,
-    _signerAddress?: string,
-  ): Promise<UploadResult> {
+class MockStorageUploader implements IStorageUploader<IpfsUploadBatchOptions> {
+  async uploadBatch(
+    data: FileOrBufferOrString[],
+    options?: IpfsUploadBatchOptions | undefined,
+  ): Promise<string[]> {
     const cid = uuidv4();
     const uris: string[] = [];
-    this.folders[cid] = {};
+    ipfs[cid] = {};
 
-    let index = fileStartNumber ? fileStartNumber : 0;
-    for (const file of files) {
+    let index = options?.rewriteFileNames?.fileStartNumber || 0;
+    for (const file of data) {
       let contents: string;
       if (isFileInstance(file)) {
         contents = await file.text();
@@ -63,113 +37,39 @@ export class MockStorage implements IStorage {
           ? file.data.toString()
           : file.data;
         const name = file.name ? file.name : `file_${index}`;
-        this.folders.cid[name] = contents;
+        ipfs[cid][name] = contents;
+        uris.push(`mock://${cid}/${name}`);
         continue;
       }
-      this.folders[cid][index.toString()] = contents;
-      uris.push(`${cid}/${index}`);
+
+      ipfs[cid][index.toString()] = contents;
+      uris.push(`mock://${cid}/${index}`);
       index += 1;
     }
 
-    return Promise.resolve({
-      baseUri: `mock://${cid}`,
-      uris,
-    });
+    return uris;
   }
+}
 
-  public async getUploadToken(_contractAddress: string): Promise<string> {
-    return Promise.resolve("mock-token");
-  }
+class MockStorageDownloader implements IStorageDownloader {
+  gatewayUrls: GatewayUrls = DEFAULT_GATEWAY_URLS;
 
-  private _get(hash: string): string {
-    hash = hash.replace("mock://", "").replace("fake://", "");
-    const split = hash.split("/");
-    if (split.length === 1) {
-      if (hash in this.objects) {
-        return this.objects[hash];
-      } else {
-        throw new NotFoundError(hash);
-      }
-    }
-    const [cid, index] = split;
-    if (!(cid in this.folders)) {
-      throw new NotFoundError(cid);
-    }
-    if (!(index in this.folders[cid])) {
-      throw new NotFoundError(`${cid}/${index}`);
-    }
-    return this.folders[cid][index.toString()];
-  }
-
-  get(hash: string): Promise<Record<string, any>> {
-    return Promise.resolve(JSON.parse(this._get(hash)));
-  }
-
-  getRaw(hash: string): Promise<string> {
-    return Promise.resolve(this._get(hash));
-  }
-
-  public async uploadMetadata(
-    metadata: JsonObject,
-    contractAddress?: string,
-    _signerAddress?: string,
-  ): Promise<string> {
-    // since there's only single object, always use the first index
-    const { uris } = await this.uploadMetadataBatch(
-      [metadata],
-      0,
-      contractAddress,
-    );
-
-    return uris[0];
-  }
-
-  public async uploadMetadataBatch(
-    metadatas: JsonObject[],
-    fileStartNumber?: number,
-    contractAddress?: string,
-    signerAddress?: string,
-  ): Promise<UploadResult> {
-    await this.batchUploadProperties(metadatas);
-
-    const metadataToUpload: string[] = metadatas.map((m: any) =>
-      JSON.stringify(m),
-    );
-
-    const { baseUri: cid } = await this.uploadBatch(
-      metadataToUpload,
-      fileStartNumber,
-      contractAddress,
-      signerAddress,
-    );
-    const baseUri = `${cid}/`;
+  async download(url: string): Promise<Response> {
+    const [cid, name] = url.replace("mock://", "").split("/");
+    const data = ipfs[cid][name];
     return {
-      uris: metadataToUpload.map((_, i) => `${baseUri}${i}`),
-      baseUri,
-    };
+      async json() {
+        return Promise.resolve(JSON.parse(data));
+      },
+      async text() {
+        return Promise.resolve(data);
+      },
+    } as Response;
   }
+}
 
-  private async uploadProperties(object: Record<string, any>): Promise<void> {
-    const keys = Object.keys(object).sort();
-    for (const key in keys) {
-      const val = object[keys[key]];
-      const shouldUpload = isFileInstance(val) || isBufferInstance(val);
-      if (shouldUpload) {
-        object[keys[key]] = await this.upload(val);
-      }
-
-      if (typeof val === "object") {
-        await this.uploadProperties(val);
-      }
-    }
-  }
-
-  private async batchUploadProperties(metadatas: JsonObject[]): Promise<any> {
-    for (const file of metadatas) {
-      if (typeof file === "string") {
-        continue;
-      }
-      await this.uploadProperties(file);
-    }
-  }
+export function MockStorage(): ThirdwebStorage {
+  const uploader = new MockStorageUploader();
+  const downloader = new MockStorageDownloader();
+  return new ThirdwebStorage(uploader, downloader);
 }

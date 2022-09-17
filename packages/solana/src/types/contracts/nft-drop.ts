@@ -48,4 +48,6 @@ export const NFTDropConditionsOutputSchema = z.object({
 export const NFTDropContractInputSchema =
   NFTCollectionMetadataInputSchema.merge(NFTDropConditionsInputSchema);
 
+export type NFTDropContractInput = z.input<typeof NFTDropContractInputSchema>;
+
 export type NFTDropMetadataInput = z.input<typeof NFTDropConditionsInputSchema>;

@@ -8,7 +8,7 @@ describe("NFTDrop", async () => {
 
   before(async () => {
     const address = await sdk.deployer.createNftDrop({
-      name: "Test Drop",
+      name: "NFT Drop #1",
       price: 0,
       sellerFeeBasisPoints: 0,
       itemsAvailable: 5,
