@@ -6,3 +6,10 @@ export * from "./classes/user-wallet";
 export * from "./contracts/nft-collection";
 // sdk
 export * from "./sdk";
+
+//schema for dashboard use
+export {
+  TokenMetadataInputSchema,
+  NFTCollectionMetadataInputSchema,
+} from "./types/contracts";
+export { NFTDropContractInputSchema } from "./types/contracts/nft-drop";

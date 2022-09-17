@@ -22,7 +22,8 @@ export class NFTCollection {
   private metaplex: Metaplex;
   private storage: IStorage;
   private nft: NFTHelper;
-  collectionMintAddress: PublicKey;
+  public publicKey: PublicKey;
+  public accountType = "nft-collection" as const;
 
   constructor(
     collectionMintAddress: string,
@@ -32,13 +33,13 @@ export class NFTCollection {
     this.storage = storage;
     this.metaplex = metaplex;
     this.nft = new NFTHelper(metaplex);
-    this.collectionMintAddress = new PublicKey(collectionMintAddress);
+    this.publicKey = new PublicKey(collectionMintAddress);
   }
 
   async getMetadata(): Promise<NFTCollectionMetadata> {
     const metadata = await this.metaplex
       .nfts()
-      .findByMint({ mintAddress: this.collectionMintAddress })
+      .findByMint({ mintAddress: this.publicKey })
       .run();
 
     return this.nft.toNFTMetadata(metadata);
@@ -48,11 +49,16 @@ export class NFTCollection {
     return this.nft.get(mintAddress);
   }
 
-  async getAll(): Promise<string[]> {
+  async getAll(): Promise<NFTMetadata[]> {
+    const addresses = await this.getAllNFTAddresses();
+    return await Promise.all(addresses.map((a) => this.get(a)));
+  }
+
+  async getAllNFTAddresses(): Promise<string[]> {
     const allSignatures: ConfirmedSignatureInfo[] = [];
     // This returns the first 1000, so we need to loop through until we run out of signatures to get.
     let signatures = await this.metaplex.connection.getSignaturesForAddress(
-      this.collectionMintAddress,
+      this.publicKey,
     );
 
     allSignatures.push(...signatures);
@@ -61,7 +67,7 @@ export class NFTCollection {
         before: signatures[signatures.length - 1]?.signature,
       };
       signatures = await this.metaplex.connection.getSignaturesForAddress(
-        this.collectionMintAddress,
+        this.publicKey,
         options,
       );
       allSignatures.push(...signatures);
@@ -131,12 +137,12 @@ export class NFTCollection {
     return Array.from(mintAddresses);
   }
 
-  async balance(mintAddress: string): Promise<bigint> {
+  async balance(mintAddress: string): Promise<number> {
     const address = this.metaplex.identity().publicKey.toBase58();
     return this.balanceOf(address, mintAddress);
   }
 
-  async balanceOf(walletAddress: string, mintAddress: string): Promise<bigint> {
+  async balanceOf(walletAddress: string, mintAddress: string): Promise<number> {
     return this.nft.balanceOf(walletAddress, mintAddress);
   }
 
@@ -209,11 +215,10 @@ export class NFTCollection {
     const { nft } = await this.metaplex
       .nfts()
       .create({
-        // useExistingMint: newMint,
-        name: metadata.name || "",
+        name: metadata.name?.toString() || "",
         uri,
         sellerFeeBasisPoints: 0,
-        collection: this.collectionMintAddress,
+        collection: this.publicKey,
         collectionAuthority: this.metaplex.identity(),
         tokenOwner: new PublicKey(to),
         // Always sets max supply to unlimited so editions can be minted

@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "The main thirdweb SDK.",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/sdk",
   "license": "Apache-2.0",
@@ -20,7 +20,7 @@
     "build": "tsc && preconstruct build",
     "test:all": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000 --parallel './test/**/*.test.ts'",
     "test": "make test",
-    "test:single": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000 --"
+    "test:single": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000"
   },
   "devDependencies": {
     "@esbuild-plugins/node-modules-polyfill": "^0.1.4",

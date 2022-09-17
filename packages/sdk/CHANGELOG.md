@@ -1,5 +1,13 @@
 # @thirdweb-dev/sdk
 
+## 3.0.2
+
+### Patch Changes
+
+- [#131](https://github.com/thirdweb-dev/js/pull/131) [`42c79e9`](https://github.com/thirdweb-dev/js/commit/42c79e93dc958ca46a55d705aeea44ffdbbcc5f6) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix editing releases from the dashboard
+
+- [#124](https://github.com/thirdweb-dev/js/pull/124) [`fe8751e`](https://github.com/thirdweb-dev/js/commit/fe8751eeae7ad013b890a8092ddbd091ecbd6708) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add feature detection for Ownable
+
 ## 3.0.1
 
 ### Patch Changes

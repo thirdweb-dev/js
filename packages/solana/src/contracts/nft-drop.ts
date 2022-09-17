@@ -16,14 +16,15 @@ export class NFTDrop {
   private metaplex: Metaplex;
   private storage: IStorage;
   private nft: NFTHelper;
-  public dropMintAddress: PublicKey;
+  public accountType = "nft-drop" as const;
+  public publicKey: PublicKey;
   public claimConditions: ClaimConditions;
 
   constructor(dropMintAddress: string, metaplex: Metaplex, storage: IStorage) {
     this.storage = storage;
     this.metaplex = metaplex;
     this.nft = new NFTHelper(metaplex);
-    this.dropMintAddress = new PublicKey(dropMintAddress);
+    this.publicKey = new PublicKey(dropMintAddress);
     this.claimConditions = new ClaimConditions(dropMintAddress, metaplex);
   }
 
@@ -44,45 +45,44 @@ export class NFTDrop {
   // TODO: Add pagination to get NFT functions
   async getAll(): Promise<NFTMetadata[]> {
     const info = await this.getCandyMachine();
-    const nfts = await Promise.all(
+    // TODO merge with getAllClaimed()
+    return await Promise.all(
       info.items.map(async (item) => {
         const metadata = await this.storage.get(item.uri);
         return { uri: item.uri, ...metadata };
       }),
     );
-
-    return nfts;
   }
 
   async getAllClaimed(): Promise<NFTMetadata[]> {
     const nfts = await this.metaplex
       .candyMachines()
-      .findMintedNfts({ candyMachine: this.dropMintAddress })
+      .findMintedNfts({ candyMachine: this.publicKey })
       .run();
 
-    const metadatas = nfts.map((nft) => this.nft.toNFTMetadata(nft));
-    return metadatas;
+    return nfts.map((nft) => this.nft.toNFTMetadata(nft));
   }
 
-  async balance(mintAddress: string): Promise<bigint> {
+  async balance(mintAddress: string): Promise<number> {
     const address = this.metaplex.identity().publicKey.toBase58();
     return this.balanceOf(address, mintAddress);
   }
 
-  async balanceOf(walletAddress: string, mintAddress: string): Promise<bigint> {
+  async balanceOf(walletAddress: string, mintAddress: string): Promise<number> {
     return this.nft.balanceOf(walletAddress, mintAddress);
   }
 
-  async totalUnclaimedSupply(): Promise<bigint> {
+  async totalUnclaimedSupply(): Promise<number> {
     const info = await this.getCandyMachine();
-    return BigInt(
-      Math.min(info.itemsLoaded.toNumber(), info.itemsRemaining.toNumber()),
+    return Math.min(
+      info.itemsLoaded.toNumber(),
+      info.itemsRemaining.toNumber(),
     );
   }
 
-  async totalClaimedSupply(): Promise<bigint> {
+  async totalClaimedSupply(): Promise<number> {
     const info = await this.getCandyMachine();
-    return BigInt(info.itemsMinted.toNumber());
+    return info.itemsMinted.toNumber();
   }
 
   async transfer(
@@ -98,7 +98,7 @@ export class NFTDrop {
     );
     const upload = await this.storage.uploadMetadataBatch(parsedMetadatas);
     const items = upload.uris.map((uri, i) => ({
-      name: parsedMetadatas[i].name || "",
+      name: parsedMetadatas[i].name?.toString() || "",
       uri,
     }));
 
@@ -128,7 +128,7 @@ export class NFTDrop {
   private async getCandyMachine() {
     return this.metaplex
       .candyMachines()
-      .findByAddress({ address: this.dropMintAddress })
+      .findByAddress({ address: this.publicKey })
       .run();
   }
 }
