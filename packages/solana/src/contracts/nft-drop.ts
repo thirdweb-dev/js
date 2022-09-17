@@ -45,14 +45,13 @@ export class NFTDrop {
   // TODO: Add pagination to get NFT functions
   async getAll(): Promise<NFTMetadata[]> {
     const info = await this.getCandyMachine();
-    const nfts = await Promise.all(
+    // TODO merge with getAllClaimed()
+    return await Promise.all(
       info.items.map(async (item) => {
         const metadata = await this.storage.get(item.uri);
         return { uri: item.uri, ...metadata };
       }),
     );
-
-    return nfts;
   }
 
   async getAllClaimed(): Promise<NFTMetadata[]> {
@@ -61,16 +60,15 @@ export class NFTDrop {
       .findMintedNfts({ candyMachine: this.publicKey })
       .run();
 
-    const metadatas = nfts.map((nft) => this.nft.toNFTMetadata(nft));
-    return metadatas;
+    return nfts.map((nft) => this.nft.toNFTMetadata(nft));
   }
 
-  async balance(mintAddress: string): Promise<bigint> {
+  async balance(mintAddress: string): Promise<number> {
     const address = this.metaplex.identity().publicKey.toBase58();
     return this.balanceOf(address, mintAddress);
   }
 
-  async balanceOf(walletAddress: string, mintAddress: string): Promise<bigint> {
+  async balanceOf(walletAddress: string, mintAddress: string): Promise<number> {
     return this.nft.balanceOf(walletAddress, mintAddress);
   }
 
@@ -99,7 +97,7 @@ export class NFTDrop {
     );
     const upload = await this.storage.uploadMetadataBatch(parsedMetadatas);
     const items = upload.uris.map((uri, i) => ({
-      name: parsedMetadatas[i].name || "",
+      name: parsedMetadatas[i].name?.toString() || "",
       uri,
     }));
 

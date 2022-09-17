@@ -20,7 +20,13 @@ import { IpfsStorage, IStorage, PinataUploader } from "@thirdweb-dev/storage";
 
 export class ThirdwebSDK {
   static fromNetwork(network: Network, storage?: IStorage): ThirdwebSDK {
-    return new ThirdwebSDK(new Connection(getUrlForNetwork(network)), storage);
+    return new ThirdwebSDK(
+      new Connection(getUrlForNetwork(network), {
+        disableRetryOnRateLimit: true,
+        commitment: "confirmed",
+      }),
+      storage,
+    );
   }
 
   private connection: Connection;

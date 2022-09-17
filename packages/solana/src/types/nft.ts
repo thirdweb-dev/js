@@ -7,7 +7,7 @@ import { z } from "zod";
  */
 export const CommonTokenInput = z
   .object({
-    name: z.string().optional(),
+    name: z.union([z.string(), z.number()]).optional(),
     symbol: z.string().optional(),
     description: z.string().nullable().optional(),
     image: FileBufferOrStringSchema.nullable().optional(),
