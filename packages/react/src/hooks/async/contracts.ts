@@ -1,8 +1,8 @@
 import {
   useActiveChainId,
+  useActiveSignerAddress,
+  useActiveSignerChainId,
   useSDK,
-  useSDKSignerAddress,
-  useSDKSignerChainId,
 } from "../../Provider";
 import { ContractAddress, RequiredParam } from "../../types";
 import {
@@ -155,8 +155,8 @@ export function useContract<
   const sdk = useSDK();
   const queryClient = useQueryClient();
   const activeChainId = useActiveChainId();
-  const wallet = useSDKSignerAddress();
-  const walletChainId = useSDKSignerChainId();
+  const wallet = useActiveSignerAddress();
+  const walletChainId = useActiveSignerChainId();
 
   // it's there because we put it there.
   const sdkTimestamp = (sdk as any)?._constructedAt;

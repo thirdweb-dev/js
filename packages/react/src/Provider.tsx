@@ -29,7 +29,7 @@ import {
 } from "@thirdweb-dev/sdk";
 import type { IStorage } from "@thirdweb-dev/storage";
 import { Signer } from "ethers";
-import React, { createContext, useEffect, useMemo } from "react";
+import React, { createContext, useEffect, useMemo, useState } from "react";
 import invariant from "tiny-invariant";
 import {
   WagmiProvider,
@@ -525,21 +525,6 @@ export const ThirdwebSDKProvider: React.FC<
     }
   }, [signer, sdk, desiredChainId]);
 
-  useEffect(() => {
-    if (sdk) {
-      sdk.wallet.events.on(
-        "signerChanged",
-        async (newSigner: Signer | undefined) => {
-          (sdk as any)._signerAddress = await newSigner?.getAddress();
-          (sdk as any)._signerChainId = await newSigner?.getChainId();
-        },
-      );
-      return () => {
-        sdk.wallet.events.off("signerChanged");
-      };
-    }
-  }, [sdk]);
-
   const ctxValue = useMemo(
     () => ({
       sdk,
@@ -606,12 +591,50 @@ export function useActiveChainId(): SUPPORTED_CHAIN_ID | undefined {
 /**
  * @internal
  */
-export function useSDKSignerAddress(): string | undefined {
+export function useActiveSigner(): Signer | undefined {
   const sdk = useSDK();
-  return (sdk as any)?._signerAddress;
+  const [signer, setSigner] = useState<Signer | undefined>(undefined);
+  useEffect(() => {
+    if (sdk) {
+      sdk.wallet.events.on("signerChanged", (newSigner: Signer | undefined) => {
+        setSigner(newSigner);
+      });
+      return () => {
+        sdk.wallet.events.off("signerChanged");
+      };
+    }
+  }, [sdk]);
+  return signer;
 }
 
-export function useSDKSignerChainId(): number | undefined {
-  const sdk = useSDK();
-  return (sdk as any)?._signerChainId;
+/**
+ * @internal
+ */
+export function useActiveSignerAddress(): string | undefined {
+  const signer = useActiveSigner();
+  const [address, setAddress] = useState<string | undefined>(undefined);
+  useEffect(() => {
+    if (signer) {
+      signer.getAddress().then((a) => {
+        setAddress(a);
+      });
+    }
+  }, [signer]);
+  return address;
+}
+
+/**
+ * @internal
+ */
+export function useActiveSignerChainId(): number | undefined {
+  const signer = useActiveSigner();
+  const [chainId, setChainId] = useState<number | undefined>(undefined);
+  useEffect(() => {
+    if (signer) {
+      signer.getChainId().then((id) => {
+        setChainId(id);
+      });
+    }
+  }, [signer]);
+  return chainId;
 }
