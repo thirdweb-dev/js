@@ -1,4 +1,9 @@
-import { useActiveChainId, useSDK } from "../../Provider";
+import {
+  useActiveChainId,
+  useSDK,
+  useSDKSignerAddress,
+  useSDKSignerChainId,
+} from "../../Provider";
 import { ContractAddress, RequiredParam } from "../../types";
 import {
   cacheKeys,
@@ -6,8 +11,6 @@ import {
   createContractCacheKey,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useAddress } from "../useAddress";
-import { useChainId } from "../useChainId";
 import {
   useMutation,
   useQuery,
@@ -152,8 +155,8 @@ export function useContract<
   const sdk = useSDK();
   const queryClient = useQueryClient();
   const activeChainId = useActiveChainId();
-  const wallet = useAddress();
-  const walletChainId = useChainId();
+  const wallet = useSDKSignerAddress();
+  const walletChainId = useSDKSignerChainId();
 
   // it's there because we put it there.
   const sdkTimestamp = (sdk as any)?._constructedAt;

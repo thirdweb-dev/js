@@ -525,6 +525,21 @@ export const ThirdwebSDKProvider: React.FC<
     }
   }, [signer, sdk, desiredChainId]);
 
+  useEffect(() => {
+    if (sdk) {
+      sdk.wallet.events.on(
+        "signerChanged",
+        async (newSigner: Signer | undefined) => {
+          (sdk as any)._signerAddress = await newSigner?.getAddress();
+          (sdk as any)._signerChainId = await newSigner?.getChainId();
+        },
+      );
+      return () => {
+        sdk.wallet.events.off("signerChanged");
+      };
+    }
+  }, [sdk]);
+
   const ctxValue = useMemo(
     () => ({
       sdk,
@@ -586,4 +601,17 @@ export function useDesiredChainId(): number {
 export function useActiveChainId(): SUPPORTED_CHAIN_ID | undefined {
   const sdk = useSDK();
   return (sdk as any)?._chainId;
+}
+
+/**
+ * @internal
+ */
+export function useSDKSignerAddress(): string | undefined {
+  const sdk = useSDK();
+  return (sdk as any)?._signerAddress;
+}
+
+export function useSDKSignerChainId(): number | undefined {
+  const sdk = useSDK();
+  return (sdk as any)?._signerChainId;
 }
