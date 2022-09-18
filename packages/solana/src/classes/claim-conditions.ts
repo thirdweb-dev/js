@@ -1,8 +1,7 @@
 import { TransactionResult } from "../types/common";
 import {
-  NFTDropClaimInput,
-  NFTDropClaimSchema,
-  NFTDropClaimOutput,
+  NFTDropConditionsOutputSchema,
+  NFTDropMetadataInput,
 } from "../types/contracts/nft-drop";
 import { Metaplex } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
@@ -16,21 +15,21 @@ export class ClaimConditions {
     this.metaplex = metaplex;
   }
 
-  async get(): Promise<NFTDropClaimOutput> {
+  async get(): Promise<NFTDropMetadataInput> {
     const candyMachine = await this.getCandyMachine();
 
     return {
-      price: BigInt(candyMachine.price.basisPoints.toNumber()),
-      sellerFeeBasisPoints: BigInt(candyMachine.sellerFeeBasisPoints),
-      itemsAvailable: BigInt(candyMachine.itemsAvailable.toNumber()),
+      price: candyMachine.price.basisPoints.toNumber(),
+      sellerFeeBasisPoints: candyMachine.sellerFeeBasisPoints,
+      itemsAvailable: candyMachine.itemsAvailable.toNumber(),
       goLiveDate: candyMachine.goLiveDate
         ? new Date(candyMachine.goLiveDate.toNumber() * 1000)
         : undefined,
     };
   }
 
-  async set(metadata: NFTDropClaimInput): Promise<TransactionResult> {
-    const parsed = NFTDropClaimSchema.parse(metadata);
+  async set(metadata: NFTDropMetadataInput): Promise<TransactionResult> {
+    const parsed = NFTDropConditionsOutputSchema.parse(metadata);
 
     const result = await this.metaplex
       .candyMachines()

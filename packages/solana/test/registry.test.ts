@@ -1,34 +1,58 @@
-import { sdk } from "./before-setup";
+import { ThirdwebSDK } from "../src/index";
+import { createThirdwebSDK } from "../src/server/index";
+import { createTestSDK } from "./before-setup";
 import { expect } from "chai";
 
 describe("Registry", async () => {
+  let nftColl: string;
+  let nftDrop: string;
+  let token: string;
+  let freshSDK: ThirdwebSDK;
+
   before(async () => {
-    await sdk.deployer.createNftCollection({
-      name: "Test Collection",
+    freshSDK = await createTestSDK();
+    nftColl = await freshSDK.deployer.createNftCollection({
+      name: "Reg Test Collection",
       description: "Test Description",
       symbol: "TC",
     });
-    await sdk.deployer.createToken({
-      name: "Test Token",
+    token = await freshSDK.deployer.createToken({
+      name: "Reg Test Token",
       initialSupply: 100,
     });
-    await sdk.deployer.createNftDrop({
-      name: "Test Drop",
+    nftDrop = await freshSDK.deployer.createNftDrop({
+      name: "Reg Test Drop",
     });
   });
 
   it("should fetch accounts grouped by type", async () => {
-    const t = await sdk.registry.getAccountsForWallet(
-      sdk.wallet.getAddress() || "",
+    const t = await freshSDK.registry.getAccountsForWallet(
+      freshSDK.wallet.getAddress() || "",
     );
-    const colls = t.nftCollections[0];
-    const nftCollection = await sdk.getNFTCollection(colls);
-    expect((await nftCollection.getMetadata()).name).to.eq("Test Collection");
+    expect(t.length).to.eq(3);
+    t.forEach((account) => {
+      switch (account.type) {
+        case "nft-collection":
+          expect(account.name).to.equal("Reg Test Collection");
+          expect(account.address).to.equal(nftColl);
+          break;
+        case "nft-drop":
+          expect(account.name).to.equal("Reg Test Drop");
+          expect(account.address).to.equal(nftDrop);
+          break;
+        case "token":
+          expect(account.name).to.equal("Reg Test Token");
+          expect(account.address).to.equal(token);
+          break;
+      }
+    });
+  });
 
-    const token = await sdk.getToken(t.tokens[0]);
-    expect((await token.getMetadata()).name).to.eq("Test Token");
-
-    const drop = await sdk.getNFTDrop(t.drops[0]);
-    expect((await drop.getMetadata()).name).to.eq("Test Drop");
+  it("should resolve account addresses", async () => {
+    expect(await freshSDK.registry.getAccountType(nftColl)).to.eq(
+      "nft-collection",
+    );
+    expect(await freshSDK.registry.getAccountType(nftDrop)).to.eq("nft-drop");
+    expect(await freshSDK.registry.getAccountType(token)).to.eq("token");
   });
 });

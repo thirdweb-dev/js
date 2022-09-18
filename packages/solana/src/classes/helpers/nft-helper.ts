@@ -52,7 +52,7 @@ export class NFTHelper {
     };
   }
 
-  async balanceOf(walletAddress: string, mintAddress: string): Promise<bigint> {
+  async balanceOf(walletAddress: string, mintAddress: string): Promise<number> {
     const address = await getAssociatedTokenAddress(
       new PublicKey(mintAddress),
       new PublicKey(walletAddress),
@@ -60,9 +60,9 @@ export class NFTHelper {
 
     try {
       const account = await getAccount(this.connection, address);
-      return account.amount;
+      return Number(account.amount);
     } catch (e) {
-      return BigInt(0);
+      return 0;
     }
   }
 

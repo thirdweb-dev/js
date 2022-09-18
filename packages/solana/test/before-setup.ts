@@ -8,7 +8,7 @@ import { Amman } from "@metaplex-foundation/amman-client";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { Connection, Keypair } from "@solana/web3.js";
 
-const createTestSDK = async (
+export const createTestSDK = async (
   solsToAirdrop: number = 100,
 ): Promise<ThirdwebSDK> => {
   const connection = new Connection("http://localhost:8899", "confirmed");

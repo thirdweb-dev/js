@@ -27,33 +27,32 @@ describe("NFTCollection", async () => {
   it("should fetch NFTs", async () => {
     const all = await collection.getAll();
     expect(all.length).to.eq(1);
-    const single = await collection.get(all[0]);
-    expect(single.name).to.eq("Test NFT");
+    expect(all[0].name).to.eq("Test NFT");
   });
 
   it("should fetch balance of NFTs", async () => {
     const all = await collection.getAll();
     const balance = await collection.balanceOf(
       sdk.wallet.getAddress() || "",
-      all[0],
+      all[0].id,
     );
-    expect(balance).to.eq(1n);
+    expect(balance).to.eq(1);
   });
 
   it("should transfer NFTs", async () => {
     const all = await collection.getAll();
     const wallet = Keypair.generate();
-    await collection.transfer(wallet.publicKey.toBase58() || "", all[0]);
+    await collection.transfer(wallet.publicKey.toBase58() || "", all[0].id);
     const balance = await collection.balanceOf(
       wallet.publicKey.toBase58() || "",
-      all[0],
+      all[0].id,
     );
-    expect(balance).to.eq(1n);
+    expect(balance).to.eq(1);
     const balance2 = await collection.balanceOf(
       sdk.wallet.getAddress() || "",
-      all[0],
+      all[0].id,
     );
-    expect(balance2).to.eq(0n);
+    expect(balance2).to.eq(0);
   });
 
   it("should mint additional supply", async () => {
@@ -63,9 +62,9 @@ describe("NFTCollection", async () => {
     });
     const printed = await collection.mintAdditionalSupply(mint);
     let balance = await collection.balance(mint);
-    expect(balance).to.equal(1n);
+    expect(balance).to.equal(1);
     balance = await collection.balance(printed);
-    expect(balance).to.equal(1n);
+    expect(balance).to.equal(1);
   });
 
   it("test supply of", async () => {

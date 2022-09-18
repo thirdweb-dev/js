@@ -1,22 +1,12 @@
+import { WalletAccount } from "../types/common";
 import {
+  CandyMachine,
   Metadata,
   Metaplex,
-  TokenMetadataProgram,
+  TokenProgram,
 } from "@metaplex-foundation/js";
 import { TokenStandard } from "@metaplex-foundation/mpl-token-metadata";
 import { PublicKey } from "@solana/web3.js";
-
-export type WalletAccount = {
-  type: "nft-collection" | "nft-drop" | "token";
-  address: string;
-  name: string;
-};
-
-type RelevantWalletAccounts = {
-  tokens: string[];
-  nftCollections: string[];
-  drops: string[];
-};
 
 export class Registry {
   private metaplex: Metaplex;
@@ -25,60 +15,99 @@ export class Registry {
     this.metaplex = metaplex;
   }
 
-  public async getAccountsForWallet(walletAddress: string) {
-    const pubKeys = await this.getMetadataAddressesForWallet(walletAddress);
+  public async getAccountType(address: string) {
+    try {
+      const candyMachine = await this.metaplex
+        .candyMachines()
+        .findByAddress({ address: new PublicKey(address) })
+        .run();
+      if (candyMachine) {
+        return "nft-drop";
+      }
+    } catch (err) {
+      // ignore and try next
+    }
+    const metadata = await this.metaplex
+      .nfts()
+      .findByMint({ mintAddress: new PublicKey(address) })
+      .run();
+
+    if (metadata) {
+      if (metadata.collectionDetails) {
+        return "nft-collection";
+      } else {
+        if (metadata.tokenStandard === TokenStandard.Fungible) {
+          return "token";
+        }
+      }
+    }
+    throw new Error("Unknown account type");
+  }
+
+  public async getAccountsForWallet(
+    walletAddress: string,
+  ): Promise<WalletAccount[]> {
+    const mints = await this.getOwnedTokenAccountsForWallet(walletAddress);
     const metadatas = await this.metaplex
       .nfts()
-      .findAllByMintList({ mints: pubKeys })
+      .findAllByMintList({ mints })
       .run();
 
     const candyMachines = await this.metaplex
       .candyMachines()
       .findAllBy({
-        type: "wallet",
+        type: "authority",
         publicKey: new PublicKey(walletAddress),
       })
       .run();
 
-    return metadatas.reduce(
-      (accounts, mintMetadata) => {
+    return metadatas
+      .map((mintMetadata) => {
         const meta = mintMetadata as Metadata;
         if (!meta) {
-          return accounts;
+          return undefined;
         }
         if (meta?.collectionDetails) {
           // check if it's part of a candy machine
-          const drop = candyMachines.find(
-            (candyMachine) =>
-              candyMachine.collectionMintAddress?.toBase58() ===
-              meta.mintAddress.toBase58(),
-          );
+          const drop = this.getDropForCollection(candyMachines, meta);
           if (drop) {
-            accounts.drops.push(drop.address.toBase58());
+            return {
+              type: "nft-drop",
+              address: drop.address.toBase58(),
+              name: meta.name,
+            };
           } else {
-            accounts.nftCollections.push(meta.mintAddress.toBase58());
+            return {
+              type: "nft-collection",
+              address: meta.mintAddress.toBase58(),
+              name: meta.name,
+            };
           }
         } else {
           if (meta.tokenStandard === TokenStandard.Fungible) {
-            accounts.tokens.push(meta.mintAddress.toBase58());
+            return {
+              type: "token",
+              address: meta.mintAddress.toBase58(),
+              name: meta.name,
+            };
           }
         }
-        return accounts;
-      },
-      {
-        tokens: [],
-        nftCollections: [],
-        drops: [],
-      } as RelevantWalletAccounts,
+      })
+      .filter((account) => account !== undefined) as WalletAccount[];
+  }
+
+  private getDropForCollection(candyMachines: CandyMachine[], meta: Metadata) {
+    return candyMachines.find(
+      (candyMachine) =>
+        candyMachine.collectionMintAddress?.toBase58() ===
+        meta.mintAddress.toBase58(),
     );
   }
 
-  public async getMetadataAddressesForWallet(walletAddress: string) {
-    const mints = await TokenMetadataProgram.metadataV1Accounts(this.metaplex)
+  private async getOwnedTokenAccountsForWallet(walletAddress: string) {
+    return await TokenProgram.tokenAccounts(this.metaplex)
       .selectMint()
-      .whereCreator(1, new PublicKey(walletAddress))
+      .whereOwner(new PublicKey(walletAddress))
       .getDataAsPublicKeys();
-
-    return mints;
   }
 }
