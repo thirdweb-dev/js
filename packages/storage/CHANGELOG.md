@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 1.0.0
+
+### Major Changes
+
+- [#139](https://github.com/thirdweb-dev/js/pull/139) [`57432d2`](https://github.com/thirdweb-dev/js/commit/57432d21c4c9e880a36c61f4988c60af61ac9d44) Thanks [@adam-maj](https://github.com/adam-maj)! - Upgrade to initial storage SDK with IPFS support
+
 ## 0.2.8
 
 ### Patch Changes

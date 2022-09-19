@@ -1,5 +1,14 @@
 # thirdweb
 
+## 0.7.14
+
+### Patch Changes
+
+- [#134](https://github.com/thirdweb-dev/js/pull/134) [`b1ae844`](https://github.com/thirdweb-dev/js/commit/b1ae844e8bbed59c0225b32f4115ae384fa23ef5) Thanks [@adam-maj](https://github.com/adam-maj)! - Update ordering of commands in npx thirdweb
+
+- Updated dependencies [[`51dde28`](https://github.com/thirdweb-dev/js/commit/51dde28224209f1b8b26f436c204a5e702281564), [`9d74a43`](https://github.com/thirdweb-dev/js/commit/9d74a43aac21448beba63ba4e2637945965a3634), [`b234c58`](https://github.com/thirdweb-dev/js/commit/b234c58d44d8322e44b2d2ba87ad4ec7d699e961)]:
+  - @thirdweb-dev/sdk@3.0.3
+
 ## 0.7.13
 
 ### Patch Changes

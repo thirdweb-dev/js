@@ -1,5 +1,18 @@
 # @thirdweb-dev/solana
 
+## 0.2.11
+
+### Patch Changes
+
+- [#137](https://github.com/thirdweb-dev/js/pull/137) [`9c7e551`](https://github.com/thirdweb-dev/js/commit/9c7e5518fffa1c1628179fc69d524be7105d3a75) Thanks [@jnsdls](https://github.com/jnsdls)! - enforce creator value to include the creator at a minimum
+
+- [#140](https://github.com/thirdweb-dev/js/pull/140) [`5a52585`](https://github.com/thirdweb-dev/js/commit/5a52585a7a2cd0041dfbb5124582a3c0403b285b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fixes for dashboard integration
+
+- [#138](https://github.com/thirdweb-dev/js/pull/138) [`6b48b92`](https://github.com/thirdweb-dev/js/commit/6b48b9288b38b66c1177b19c00bfab9fee7c529d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Optimize Drop creation flow, cleanup types
+
+- Updated dependencies [[`57432d2`](https://github.com/thirdweb-dev/js/commit/57432d21c4c9e880a36c61f4988c60af61ac9d44)]:
+  - @thirdweb-dev/storage@1.0.0
+
 ## 0.2.10
 
 ### Patch Changes
