@@ -6,7 +6,7 @@ import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc1155 } from "./erc-1155";
 import type { DropERC1155, TokenERC1155 } from "@thirdweb-dev/contracts-js";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 
 /**
@@ -26,10 +26,10 @@ export class StandardErc1155<
 > implements UpdateableNetwork
 {
   protected contractWrapper: ContractWrapper<T>;
-  protected storage: IStorage;
+  protected storage: ThirdwebStorage;
   public erc1155: Erc1155;
 
-  constructor(contractWrapper: ContractWrapper<T>, storage: IStorage) {
+  constructor(contractWrapper: ContractWrapper<T>, storage: ThirdwebStorage) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.erc1155 = new Erc1155(this.contractWrapper, this.storage);

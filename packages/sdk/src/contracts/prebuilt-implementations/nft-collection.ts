@@ -22,7 +22,7 @@ import { TokenErc721ContractSchema } from "../../schema/contracts/token-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import type { TokenERC721 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC721.json";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
@@ -103,7 +103,7 @@ export class NFTCollectionImpl extends StandardErc721<TokenERC721> {
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
     contractWrapper = new ContractWrapper<TokenERC721>(

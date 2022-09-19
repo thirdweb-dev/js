@@ -29,7 +29,7 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import IERC20ABI from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { IDropClaimCondition } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC1155";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";
 import deepEqual from "fast-deep-equal";
 
@@ -42,12 +42,12 @@ export class DropErc1155ClaimConditions<
 > {
   private contractWrapper;
   private metadata;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   constructor(
     contractWrapper: ContractWrapper<TContract>,
     metadata: ContractMetadata<TContract, any>,
-    storage: IStorage,
+    storage: ThirdwebStorage,
   ) {
     this.storage = storage;
     this.contractWrapper = contractWrapper;

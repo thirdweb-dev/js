@@ -5,7 +5,7 @@ import { execute } from "../core/helpers/exec";
 import { error, info, logger, spinner } from "../core/helpers/logger";
 import { createContractsPrompt } from "../core/helpers/selector";
 import { ContractPayload } from "../core/interfaces/ContractPayload";
-import { IpfsStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
 import { readFileSync } from "fs";
 import path from "path";
@@ -15,7 +15,7 @@ export async function processProject(
   command: "deploy" | "release",
 ) {
   // TODO: allow overriding the default storage
-  const storage = new IpfsStorage();
+  const storage = new ThirdwebStorage();
 
   logger.setSettings({
     minLevel: options.debug ? "debug" : "info",
@@ -129,7 +129,9 @@ export async function processProject(
               if (file.includes(soliditySDKPackage)) {
                 usesSoliditySDK = true;
               }
-              return await storage.uploadSingle(file);
+              return await storage.upload(file, {
+                uploadWithoutDirectory: true,
+              });
             }),
           );
         }
@@ -140,14 +142,16 @@ export async function processProject(
     const metadataURIs = await Promise.all(
       selectedContracts.map(async (c) => {
         logger.debug(`Uploading ${c.name}...`);
-        const hash = await storage.uploadSingle(c.metadata);
+        const hash = await storage.upload(c.metadata, {
+          uploadWithoutDirectory: true,
+        });
         return `ipfs://${hash}`;
       }),
     );
 
     // Upload batch all bytecodes
     const bytecodes = selectedContracts.map((c) => c.bytecode);
-    const { uris: bytecodeURIs } = await storage.uploadBatch(bytecodes);
+    const bytecodeURIs = await storage.uploadBatch(bytecodes);
 
     const combinedContents = selectedContracts.map((c, i) => {
       // attach analytics blob to metadata
@@ -169,13 +173,14 @@ export async function processProject(
     let combinedURIs: string[] = [];
     if (combinedContents.length === 1) {
       // use upload single if only one contract to get a clean IPFS hash
-      const metadataUri = await storage.uploadSingle(
+      const metadataUri = await storage.upload(
         JSON.stringify(combinedContents[0]),
+        { uploadWithoutDirectory: true },
       );
       combinedURIs.push(metadataUri);
     } else {
       // otherwise upload batch
-      const { uris } = await storage.uploadMetadataBatch(combinedContents);
+      const uris = await storage.uploadBatch(combinedContents);
       combinedURIs = uris;
     }
 

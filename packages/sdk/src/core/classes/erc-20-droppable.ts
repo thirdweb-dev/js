@@ -2,7 +2,7 @@ import { BaseDropERC20 } from "../../types/eips";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
 import { Erc20Claimable } from "./erc-20-claimable";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 /**
  * Configure and claim ERC20 tokens
@@ -39,12 +39,12 @@ export class Erc20Droppable {
   public claim: Erc20Claimable;
   private contractWrapper: ContractWrapper<BaseDropERC20>;
   private erc20: Erc20;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   constructor(
     erc20: Erc20,
     contractWrapper: ContractWrapper<BaseDropERC20>,
-    storage: IStorage,
+    storage: ThirdwebStorage,
   ) {
     this.erc20 = erc20;
     this.contractWrapper = contractWrapper;

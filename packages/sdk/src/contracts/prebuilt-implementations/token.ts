@@ -18,7 +18,7 @@ import { TokenMintInput } from "../../schema/tokens/token";
 import { Amount, CurrencyValue } from "../../types";
 import type { TokenERC20 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC20.json";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { CallOverrides, constants } from "ethers";
 
 /**
@@ -75,7 +75,7 @@ export class TokenImpl extends StandardErc20<TokenERC20> {
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
     contractWrapper = new ContractWrapper<TokenERC20>(

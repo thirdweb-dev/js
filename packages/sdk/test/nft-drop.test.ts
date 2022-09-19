@@ -42,7 +42,7 @@ describe("NFT Drop Contract", async () => {
   });
 
   it("should lazy mint with URI", async () => {
-    const uri = await storage.uploadMetadata({
+    const uri = await storage.upload({
       name: "Test1",
     });
     await dropContract.createBatch([uri]);

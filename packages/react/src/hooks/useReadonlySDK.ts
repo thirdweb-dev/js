@@ -1,5 +1,5 @@
 import { SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk";
-import type { IStorage } from "@thirdweb-dev/storage";
+import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { useMemo } from "react";
 
 /**
@@ -8,7 +8,7 @@ import { useMemo } from "react";
 export function useReadonlySDK(
   readonlyRpcUrl: string,
   sdkOptions: SDKOptions,
-  storageInterface?: IStorage,
+  storageInterface?: ThirdwebStorage,
 ): ThirdwebSDK {
   return useMemo(() => {
     return new ThirdwebSDK(

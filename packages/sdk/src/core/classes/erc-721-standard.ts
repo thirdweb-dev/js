@@ -10,7 +10,7 @@ import type {
   SignatureDrop,
   TokenERC721,
 } from "@thirdweb-dev/contracts-js";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish } from "ethers";
 
 /**
@@ -28,10 +28,10 @@ export class StandardErc721<
 > implements UpdateableNetwork
 {
   protected contractWrapper: ContractWrapper<T>;
-  protected storage: IStorage;
+  protected storage: ThirdwebStorage;
   public erc721: Erc721<T>;
 
-  constructor(contractWrapper: ContractWrapper<T>, storage: IStorage) {
+  constructor(contractWrapper: ContractWrapper<T>, storage: ThirdwebStorage) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.erc721 = new Erc721(this.contractWrapper, this.storage);

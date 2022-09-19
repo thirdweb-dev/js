@@ -1,6 +1,6 @@
-import { BigNumberSchema, HexColor, JsonSchema } from "../../shared";
+import { BigNumberSchema, HexColor } from "../../shared";
 import { OptionalPropertiesInput } from "./properties";
-import { FileBufferOrStringSchema } from "@thirdweb-dev/storage";
+import { FileOrBufferOrStringSchema, JsonSchema } from "@thirdweb-dev/storage";
 import { z } from "zod";
 
 /**
@@ -10,8 +10,8 @@ export const CommonTokenInput = z
   .object({
     name: z.union([z.string(), z.number()]).optional(),
     description: z.string().nullable().optional(),
-    image: FileBufferOrStringSchema.nullable().optional(),
-    external_url: FileBufferOrStringSchema.nullable().optional(),
+    image: FileOrBufferOrStringSchema.nullable().optional(),
+    external_url: FileOrBufferOrStringSchema.nullable().optional(),
   })
   .catchall(z.lazy(() => JsonSchema));
 
@@ -29,7 +29,7 @@ export const CommonTokenOutput = CommonTokenInput.extend({
  * @internal
  */
 export const CommonNFTInput = CommonTokenInput.extend({
-  animation_url: FileBufferOrStringSchema.optional(),
+  animation_url: FileOrBufferOrStringSchema.optional(),
   background_color: HexColor.optional(),
   properties: OptionalPropertiesInput,
   attributes: OptionalPropertiesInput,

@@ -2,7 +2,7 @@ import {
   detectContractFeature,
   hasFunction,
 } from "../../common/feature-detection";
-import { uploadOrExtractURIs } from "../../common/nft";
+import { getBaseUriFromBatch, uploadOrExtractURIs } from "../../common/nft";
 import {
   FEATURE_NFT_LAZY_MINTABLE,
   FEATURE_NFT_REVEALABLE,
@@ -23,7 +23,7 @@ import { Erc721Claimable } from "./erc-721-claimable";
 import { Erc721ClaimableWithConditions } from "./erc-721-claimable-with-conditions";
 import type { IClaimableERC721 } from "@thirdweb-dev/contracts-js";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 
 /**
@@ -85,12 +85,12 @@ export class Erc721LazyMintable implements DetectableFeature {
 
   private contractWrapper: ContractWrapper<BaseDropERC721>;
   private erc721: Erc721;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   constructor(
     erc721: Erc721,
     contractWrapper: ContractWrapper<BaseDropERC721>,
-    storage: IStorage,
+    storage: ThirdwebStorage,
   ) {
     this.erc721 = erc721;
     this.contractWrapper = contractWrapper;
@@ -138,20 +138,11 @@ export class Erc721LazyMintable implements DetectableFeature {
       metadatas,
       this.storage,
       startFileNumber.toNumber(),
-      this.contractWrapper.readContract.address,
-      await this.contractWrapper.getSigner()?.getAddress(),
       options,
     );
     // ensure baseUri is the same for the entire batch
-    const baseUri = batch[0].substring(0, batch[0].lastIndexOf("/"));
-    for (let i = 0; i < batch.length; i++) {
-      const uri = batch[i].substring(0, batch[i].lastIndexOf("/"));
-      if (baseUri !== uri) {
-        throw new Error(
-          `Can only create batches with the same base URI for every entry in the batch. Expected '${baseUri}' but got '${uri}'`,
-        );
-      }
-    }
+    const baseUri = getBaseUriFromBatch(batch);
+
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
       batch.length,
       baseUri.endsWith("/") ? baseUri : `${baseUri}/`,

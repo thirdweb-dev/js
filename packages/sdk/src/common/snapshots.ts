@@ -7,7 +7,7 @@ import {
   SnapshotInput,
 } from "../types/claim-conditions/claim-conditions";
 import { DuplicateLeafsError } from "./error";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, utils } from "ethers";
 
 /**
@@ -21,7 +21,7 @@ import { BigNumber, BigNumberish, utils } from "ethers";
 export async function createSnapshot(
   snapshotInput: SnapshotInput,
   tokenDecimals: number,
-  storage: IStorage,
+  storage: ThirdwebStorage,
 ): Promise<SnapshotInfo> {
   const input = SnapshotInputSchema.parse(snapshotInput);
   const addresses = input.map((i) => i.address);
@@ -51,7 +51,7 @@ export async function createSnapshot(
     }),
   });
 
-  const uri = await storage.uploadMetadata(snapshot);
+  const uri = await storage.upload(snapshot);
   return {
     merkleRoot: tree.getHexRoot(),
     snapshotUri: uri,

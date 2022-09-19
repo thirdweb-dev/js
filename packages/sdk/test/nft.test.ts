@@ -102,7 +102,7 @@ describe("NFT Contract", async () => {
   });
 
   it("should mint with URI", async () => {
-    const uri = await storage.uploadMetadata({
+    const uri = await storage.upload({
       name: "Test1",
     });
     await nftContract.mint(uri);
@@ -112,7 +112,7 @@ describe("NFT Contract", async () => {
   });
 
   it("should mint batch with URI", async () => {
-    const uri = await storage.uploadMetadata({
+    const uri = await storage.upload({
       name: "Test1",
     });
     await nftContract.mintBatch([uri]);

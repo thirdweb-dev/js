@@ -28,7 +28,7 @@ import type { IERC20, VoteERC20 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/VoteERC20.json";
 import { ProposalCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/VoteERC20";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
   BigNumberish,
@@ -53,7 +53,7 @@ import {
  */
 export class VoteImpl implements UpdateableNetwork {
   private contractWrapper: ContractWrapper<VoteERC20>;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   public abi: typeof ABI;
   public metadata: ContractMetadata<VoteERC20, typeof VoteContractSchema>;
@@ -68,7 +68,7 @@ export class VoteImpl implements UpdateableNetwork {
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
     contractWrapper = new ContractWrapper<VoteERC20>(

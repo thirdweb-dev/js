@@ -18,7 +18,7 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Split.json";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, CallOverrides, Contract } from "ethers";
 
 /**
@@ -39,7 +39,7 @@ export class SplitImpl implements UpdateableNetwork {
   static contractRoles = ["admin"] as const;
 
   private contractWrapper: ContractWrapper<SplitContract>;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   public abi: typeof ABI;
   public metadata: ContractMetadata<SplitContract, typeof SplitsContractSchema>;
@@ -58,7 +58,7 @@ export class SplitImpl implements UpdateableNetwork {
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
     contractWrapper = new ContractWrapper<SplitContract>(
