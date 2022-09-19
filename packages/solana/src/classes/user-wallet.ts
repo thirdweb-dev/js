@@ -1,4 +1,3 @@
-// import { getPayer } from "../utils/local-config";
 import { CurrencyValue, WalletSigner } from "../types/common";
 import { toCurrencyValue } from "../utils/token";
 import {
