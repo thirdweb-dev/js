@@ -35,7 +35,7 @@ import {
 } from "../../types/QueryParams";
 import type { SignatureDrop as SignatureDropContract } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop.json";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
@@ -164,7 +164,7 @@ export class SignatureDropImpl extends StandardErc721<SignatureDropContract> {
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
     contractWrapper = new ContractWrapper<SignatureDropContract>(

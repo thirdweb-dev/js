@@ -1,4 +1,5 @@
 import { Signer, WalletAdapter } from "@metaplex-foundation/js";
+import { JsonObjectSchema } from "@thirdweb-dev/storage";
 import { z } from "zod";
 
 export const MAX_BPS = 10_000;
@@ -19,10 +20,6 @@ export const JsonLiteral = z.union([
   z.null(),
 ]);
 
-export const JsonSchema: z.ZodSchema<Json> = z.lazy(() =>
-  z.union([JsonLiteral, z.array(JsonSchema), z.record(JsonSchema)]),
-);
-export const JsonObjectSchema = z.record(JsonSchema);
 export const HexColor = z.union([
   z
     .string()
@@ -37,16 +34,6 @@ export const HexColor = z.union([
 export const OptionalPropertiesInput = z
   .union([z.array(JsonObjectSchema), JsonObjectSchema])
   .optional();
-
-type JsonLiteral = boolean | null | number | string;
-type JsonLiteralOrFileOrBuffer = JsonLiteral | FileOrBuffer;
-export type Json = JsonLiteralOrFileOrBuffer | JsonObject | Json[];
-export type JsonObject = { [key: string]: Json };
-export type BufferOrStringWithName = {
-  data: Buffer | string;
-  name?: string;
-};
-export type FileOrBuffer = Buffer | BufferOrStringWithName;
 
 export const AmountSchema = z
   .union([

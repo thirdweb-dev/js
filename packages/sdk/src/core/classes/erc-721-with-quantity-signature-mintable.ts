@@ -21,7 +21,7 @@ import type {
   TokenERC721,
 } from "@thirdweb-dev/contracts-js";
 import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/SignatureDrop";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, ethers } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -34,11 +34,11 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
 
   private contractWrapper: ContractWrapper<SignatureMintERC721 | TokenERC721>;
 
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   constructor(
     contractWrapper: ContractWrapper<SignatureMintERC721 | TokenERC721>,
-    storage: IStorage,
+    storage: ThirdwebStorage,
   ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;

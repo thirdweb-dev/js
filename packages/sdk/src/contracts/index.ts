@@ -15,12 +15,12 @@ import {
 import { CustomContractSchema } from "../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
-import type { IStorage } from "@thirdweb-dev/storage";
+import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 type InitalizeParams = [
   network: NetworkOrSignerOrProvider,
   address: string,
-  storage: IStorage,
+  storage: ThirdwebStorage,
   options?: SDKOptions,
 ];
 

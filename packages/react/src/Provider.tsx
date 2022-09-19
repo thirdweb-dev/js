@@ -27,7 +27,7 @@ import {
   getProviderForNetwork,
   SDKOptionsOutput,
 } from "@thirdweb-dev/sdk";
-import type { IStorage } from "@thirdweb-dev/storage";
+import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Signer } from "ethers";
 import React, { createContext, useEffect, useMemo, useState } from "react";
 import invariant from "tiny-invariant";
@@ -181,7 +181,7 @@ export interface ThirdwebProviderProps<
   /**
    * The storage interface to use with the sdk.
    */
-  storageInterface?: IStorage;
+  storageInterface?: ThirdwebStorage;
 
   /**
    * The react-query client to use. (Defaults to a default client.)

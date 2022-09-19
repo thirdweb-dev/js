@@ -33,7 +33,7 @@ import {
   ITokenBundle,
   TokensWrappedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/Multiwrap";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumberish, CallOverrides, ethers } from "ethers";
 
 /**
@@ -91,7 +91,7 @@ export class MultiwrapImpl extends StandardErc721<MultiwrapContract> {
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
     contractWrapper = new ContractWrapper<MultiwrapContract>(

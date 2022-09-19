@@ -12,7 +12,7 @@ import type {
   IContractMetadata,
   IERC20Metadata,
 } from "@thirdweb-dev/contracts-js";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract } from "ethers";
 import { z } from "zod";
 
@@ -52,7 +52,7 @@ export class ContractMetadata<
   constructor(
     contractWrapper: ContractWrapper<TContract>,
     schema: TSchema,
-    storage: IStorage,
+    storage: ThirdwebStorage,
   ) {
     this.contractWrapper = contractWrapper;
     this.schema = schema;
@@ -87,7 +87,7 @@ export class ContractMetadata<
     if (this.supportsContractMetadata(this.contractWrapper)) {
       const uri = await this.contractWrapper.readContract.contractURI();
       if (uri && uri.includes("://")) {
-        data = await this.storage.get(uri);
+        data = await this.storage.downloadJSON(uri);
       }
     }
 
@@ -175,7 +175,7 @@ export class ContractMetadata<
    */
   public async _parseAndUploadMetadata(metadata: z.input<TSchema["input"]>) {
     const parsedMetadata = this.parseInputMetadata(metadata);
-    return this.storage.uploadMetadata(parsedMetadata);
+    return this.storage.upload(parsedMetadata);
   }
 
   private supportsContractMetadata(

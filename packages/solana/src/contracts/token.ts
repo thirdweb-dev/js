@@ -16,16 +16,20 @@ import {
 } from "@metaplex-foundation/js";
 import { getAccount, getAssociatedTokenAddress } from "@solana/spl-token";
 import { Connection, PublicKey } from "@solana/web3.js";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 export class Token {
   private connection: Connection;
   private metaplex: Metaplex;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
   public accountType = "token" as const;
   public publicKey: PublicKey;
 
-  constructor(tokenMintAddress: string, metaplex: Metaplex, storage: IStorage) {
+  constructor(
+    tokenMintAddress: string,
+    metaplex: Metaplex,
+    storage: ThirdwebStorage,
+  ) {
     this.storage = storage;
     this.metaplex = metaplex;
     this.connection = metaplex.connection;

@@ -39,7 +39,7 @@ import {
 import { ContractFactory } from "./factory";
 import { ContractRegistry } from "./registry";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BytesLike, ContractInterface, ethers } from "ethers";
 import invariant from "tiny-invariant";
 import { z } from "zod";
@@ -59,12 +59,12 @@ export class ContractDeployer extends RPCConnectionHandler {
    * should never be accessed directly, use {@link ContractDeployer.getRegistry} instead
    */
   private _registry: Promise<ContractRegistry> | undefined;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   constructor(
     network: NetworkOrSignerOrProvider,
     options: SDKOptions,
-    storage: IStorage,
+    storage: ThirdwebStorage,
   ) {
     super(network, options);
     this.storage = storage;

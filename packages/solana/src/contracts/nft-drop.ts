@@ -9,18 +9,22 @@ import {
 } from "../types/nft";
 import { Metaplex } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
 
 export class NFTDrop {
   private metaplex: Metaplex;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
   private nft: NFTHelper;
   public accountType = "nft-drop" as const;
   public publicKey: PublicKey;
   public claimConditions: ClaimConditions;
 
-  constructor(dropMintAddress: string, metaplex: Metaplex, storage: IStorage) {
+  constructor(
+    dropMintAddress: string,
+    metaplex: Metaplex,
+    storage: ThirdwebStorage,
+  ) {
     this.storage = storage;
     this.metaplex = metaplex;
     this.nft = new NFTHelper(metaplex);
@@ -48,7 +52,7 @@ export class NFTDrop {
     // TODO merge with getAllClaimed()
     return await Promise.all(
       info.items.map(async (item) => {
-        const metadata = await this.storage.get(item.uri);
+        const metadata = await this.storage.downloadJSON(item.uri);
         return { uri: item.uri, ...metadata };
       }),
     );
@@ -96,8 +100,8 @@ export class NFTDrop {
     const parsedMetadatas = metadatas.map((metadata) =>
       CommonNFTInput.parse(metadata),
     );
-    const upload = await this.storage.uploadMetadataBatch(parsedMetadatas);
-    const items = upload.uris.map((uri, i) => ({
+    const uris = await this.storage.uploadBatch(parsedMetadatas);
+    const items = uris.map((uri, i) => ({
       name: parsedMetadatas[i].name?.toString() || "",
       uri,
     }));

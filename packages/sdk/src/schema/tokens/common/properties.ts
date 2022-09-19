@@ -1,4 +1,4 @@
-import { JsonObjectSchema } from "../../shared";
+import { JsonObjectSchema } from "@thirdweb-dev/storage";
 import { z } from "zod";
 
 /**

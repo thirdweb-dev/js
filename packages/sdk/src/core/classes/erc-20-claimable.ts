@@ -9,7 +9,7 @@ import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { DropClaimConditions } from "./drop-claim-conditions";
 import { Erc20 } from "./erc-20";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 /**
  * Configure and claim ERC20 tokens
@@ -47,12 +47,12 @@ export class Erc20Claimable implements DetectableFeature {
   public conditions: DropClaimConditions<BaseDropERC20>;
   private contractWrapper: ContractWrapper<BaseDropERC20>;
   private erc20: Erc20;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   constructor(
     erc20: Erc20,
     contractWrapper: ContractWrapper<BaseDropERC20>,
-    storage: IStorage,
+    storage: ThirdwebStorage,
   ) {
     this.erc20 = erc20;
     this.contractWrapper = contractWrapper;
