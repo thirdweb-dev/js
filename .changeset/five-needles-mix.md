@@ -1,5 +1,5 @@
 ---
-"@thirdweb-dev/auth": patch
+"@thirdweb-dev/storage": patch
 "thirdweb": patch
 ---
 
