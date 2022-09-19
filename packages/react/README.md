@@ -111,9 +111,7 @@ export default function Home() {
 
 You can then use [`useContractRead`](https://portal.thirdweb.com/sdk/interacting-with-contracts/custom-contracts/using-contracts) and [`useContractWrite`](https://portal.thirdweb.com/sdk/interacting-with-contracts/custom-contracts/using-contracts) to read data and write transactions to the contract.
 
-You pass the `contract` object returned from `useContract` to these hooks as the first parameter and the name of the function (or view/mapping, etc.) on your smart contract as the second parameter.
-
-If your function has parameters, you can pass them as the third parameter.
+You pass the `contract` object returned from `useContract` to these hooks as the first parameter and the name of the function (or view/mapping, etc.) on your smart contract as the second parameter. If your function requires parameters, you can pass them as additional arguments.
 
 For example, we can read the `name` of our contract like so:
 
@@ -145,7 +143,7 @@ Each [extension](https://portal.thirdweb.com/extensions) you implement in your s
 
 These hooks make it easy to interact with your smart contracts by implementing the complex logic for you under the hood.
 
-For example, if your smart contract implements [ERC721Supply](https://portal.thirdweb.com/extensions/erc721supply#unlocked-features), you unlock the ability to [view all NFTs](https://portal.thirdweb.com/sdk/interacting-with-contracts/erc721Supply#get-all-minted-nfts) on that contract using the SDK; which fetches all of your NFT metadata and the current owner of each NFT in parallel:
+For example, if your smart contract implements [ERC721Supply](https://portal.thirdweb.com/extensions/erc721supply#unlocked-features), you unlock the ability to [view all NFTs](https://portal.thirdweb.com/sdk/interacting-with-contracts/erc721Supply#get-all-minted-nfts) on that contract using the SDK; which fetches all of your NFT metadata and the current owner of each NFT in parallel. In the React SDK, that is available using `useNFTs`:
 
 ```jsx
 import { useContract, useNFTs } from "@thirdweb-dev/react";
