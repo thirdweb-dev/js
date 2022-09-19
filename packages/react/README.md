@@ -57,27 +57,21 @@ Now you'll be able to use all the hooks provided by the React SDK! Let's take a 
 
 **Let Users Connect Wallets**
 
-Next, we'll add a button to our app which will let users connect their wallets. For now, we'll make it so that users with MetaMask wallets can connect.
+Next, we'll add a button to our app which will let users connect their wallets.
 
 ```jsx title="ConnectMetamaskButton.jsx"
-import { useAddress, useDisconnect, useMetamask } from "@thirdweb-dev/react";
+import { ConnectWallet } from "@thirdweb-dev/react";
 
-export const ConnectMetamaskButtonComponent = () => {
-  const connectWithMetamask = useMetamask();
-  const address = useAddress();
+export const YourApp = () => {
   return (
     <div>
-      {address ? (
-        <h4>Connected as {address}</h4>
-      ) : (
-        <button onClick={connectWithMetamask}>Connect Metamask Wallet</button>
-      )}
+      <ConnectWallet />
     </div>
   );
 };
 ```
 
-Here, we use the `useMetamask` hook to handle metamask connection. When a user clicks the button, we'll call the `connectWithMetamask` function, which will prompt users to connect their metamask wallet.
+The `ConnectWallet` component handles everything for us, including switching networks, accounts, displaying balances and more. We can then get the connected address using the `useAddress()` hook anywhere in the app.
 
 **Interact With Contracts**
 
@@ -90,9 +84,9 @@ import { useMintNFT, useNFTCollection, useNFTs } from "@thirdweb-dev/react";
 
 const NFTListComponent = () => {
   const address = useAddress();
-  const nftCollection = useNFTCollection("<NFT-COLLECTION-CONTRACT-ADDRESS>");
-  const { data: nfts } = useNFTs(nftCollection);
-  const { mutate: mintNFT } = useMintNFT(nftCollection);
+  const { conrtact } = useContract("<NFT-COLLECTION-CONTRACT-ADDRESS>");
+  const { data: nfts } = useNFTs(conrtact);
+  const { mutate: mintNFT } = useMintNFT(conrtact);
 
   const mint = () => {
     mintNFT({
@@ -117,7 +111,7 @@ const NFTListComponent = () => {
 };
 ```
 
-Here, we get an `NFT Collection` contract instance from the [TypeScript SDK](https://docs.thirdweb.com/typescript). We can then use all the methods on this thirdweb contract SDK instance - here we use the `mintTo` method to mint an NFT on the contract, and we use `useNFTList` to display all the NFTs in the collection on the page.
+Here, we get a contract instance using `useContract`. We can then use all the methods on this contract instance - here we use the `useMintNFT` hook to mint an NFT on the contract, and we use the `useNFTList` hook to display all the NFTs in the collection on the page.
 
 And that's all for the setup! Just like that, you can setup a `ThirdwebProvider` and use all the hooks of the SDK, allowing you to let users connect wallets, interact with contracts, and more!
 

@@ -19,7 +19,13 @@ import { IpfsUploader, ThirdwebStorage } from "@thirdweb-dev/storage";
 
 export class ThirdwebSDK {
   static fromNetwork(network: Network, storage?: ThirdwebStorage): ThirdwebSDK {
-    return new ThirdwebSDK(new Connection(getUrlForNetwork(network)), storage);
+    return new ThirdwebSDK(
+      new Connection(getUrlForNetwork(network), {
+        disableRetryOnRateLimit: true,
+        commitment: "confirmed",
+      }),
+      storage,
+    );
   }
 
   private connection: Connection;

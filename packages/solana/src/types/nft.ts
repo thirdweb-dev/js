@@ -7,7 +7,7 @@ import { z } from "zod";
  */
 export const CommonTokenInput = z
   .object({
-    name: z.string().optional(),
+    name: z.union([z.string(), z.number()]).optional(),
     symbol: z.string().optional(),
     description: z.string().nullable().optional(),
     image: FileOrBufferOrStringSchema.nullable().optional(),
@@ -32,6 +32,7 @@ export const CommonNFTInput = CommonTokenInput.extend({
   animation_url: FileOrBufferOrStringSchema.optional(),
   background_color: HexColor.optional(),
   properties: OptionalPropertiesInput,
+  attributes: OptionalPropertiesInput,
 });
 
 /**

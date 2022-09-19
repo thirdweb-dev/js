@@ -49,7 +49,12 @@ export class NFTCollection {
     return this.nft.get(mintAddress);
   }
 
-  async getAll(): Promise<string[]> {
+  async getAll(): Promise<NFTMetadata[]> {
+    const addresses = await this.getAllNFTAddresses();
+    return await Promise.all(addresses.map((a) => this.get(a)));
+  }
+
+  async getAllNFTAddresses(): Promise<string[]> {
     const allSignatures: ConfirmedSignatureInfo[] = [];
     // This returns the first 1000, so we need to loop through until we run out of signatures to get.
     let signatures = await this.metaplex.connection.getSignaturesForAddress(
@@ -132,12 +137,12 @@ export class NFTCollection {
     return Array.from(mintAddresses);
   }
 
-  async balance(mintAddress: string): Promise<bigint> {
+  async balance(mintAddress: string): Promise<number> {
     const address = this.metaplex.identity().publicKey.toBase58();
     return this.balanceOf(address, mintAddress);
   }
 
-  async balanceOf(walletAddress: string, mintAddress: string): Promise<bigint> {
+  async balanceOf(walletAddress: string, mintAddress: string): Promise<number> {
     return this.nft.balanceOf(walletAddress, mintAddress);
   }
 
@@ -210,8 +215,7 @@ export class NFTCollection {
     const { nft } = await this.metaplex
       .nfts()
       .create({
-        // useExistingMint: newMint,
-        name: metadata.name || "",
+        name: metadata.name?.toString() || "",
         uri,
         sellerFeeBasisPoints: 0,
         collection: this.publicKey,
