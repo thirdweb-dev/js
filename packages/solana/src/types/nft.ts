@@ -1,5 +1,5 @@
-import { HexColor, JsonSchema, OptionalPropertiesInput } from "./common";
-import { FileOrBufferOrStringSchema } from "@thirdweb-dev/storage";
+import { HexColor, OptionalPropertiesInput } from "./common";
+import { FileOrBufferOrStringSchema, JsonSchema } from "@thirdweb-dev/storage";
 import { z } from "zod";
 
 /**

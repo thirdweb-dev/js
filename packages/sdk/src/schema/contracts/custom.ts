@@ -1,5 +1,5 @@
 import { toSemver } from "../../common/index";
-import { AddressSchema, BigNumberishSchema, JsonSchema } from "../shared";
+import { AddressSchema, BigNumberishSchema } from "../shared";
 import {
   CommonContractOutputSchema,
   CommonContractSchema,
@@ -10,7 +10,7 @@ import {
   CommonTrustedForwarderSchema,
   MerkleSchema,
 } from "./common";
-import { FileOrBufferOrStringSchema } from "@thirdweb-dev/storage";
+import { FileOrBufferOrStringSchema, JsonSchema } from "@thirdweb-dev/storage";
 import { BigNumberish } from "ethers";
 import { z } from "zod";
 
