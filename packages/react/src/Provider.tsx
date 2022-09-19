@@ -593,7 +593,7 @@ export function useActiveChainId(): SUPPORTED_CHAIN_ID | undefined {
  */
 export function useActiveSigner(): Signer | undefined {
   const sdk = useSDK();
-  const [signer, setSigner] = useState<Signer | undefined>(undefined);
+  const [signer, setSigner] = useState<Signer | undefined>(sdk?.getSigner());
   useEffect(() => {
     if (sdk) {
       sdk.wallet.events.on("signerChanged", (newSigner: Signer | undefined) => {
