@@ -16,6 +16,26 @@ import {
 import { StorageDownloader } from "./downloaders/storage-downloader";
 import { IpfsUploader } from "./uploaders/ipfs-uploader";
 
+/**
+ * Upload and download files from decentralized storage systems.
+ *
+ * @example
+ * ```jsx
+ * // Create a default storage class without any configuration
+ * const storage = new ThirdwebStorage();
+ *
+ * // Upload any file or JSON object
+ * const uri = await storage.upload(data);
+ * const result = await storage.download(uri);
+ *
+ * // Or configure a custom uploader and downloader
+ * const downloader = new StorageDownloader();
+ * const uploader = new IpfsUploader();
+ * const storage = new ThirdwebStorage(uploader, downloader)
+ * ```
+ *
+ * @public
+ */
 export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
   private uploader: IStorageUploader<T>;
   private downloader: IStorageDownloader;
@@ -28,10 +48,35 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
     this.downloader = downloader;
   }
 
+  /**
+   * Downloads arbitrary data from any URL scheme.
+   *
+   * @param url - The URL of the data to download
+   * @returns The response object fetched from the resolved URL
+   *
+   * @example
+   * ```jsx
+   * const uri = "ipfs://example";
+   * const data = await storage.download(uri);
+   * ```
+   */
   async download(url: string): Promise<Response> {
     return this.downloader.download(url);
   }
 
+  /**
+   * Downloads JSON data from any URL scheme.
+   * Resolves any URLs with schemes to retrievable gateway URLs.
+   *
+   * @param url - The URL of the JSON data to download
+   * @returns The JSON data fetched from the resolved URL
+   *
+   * @example
+   * ```jsx
+   * const uri = "ipfs://example"
+   * const json = await storage.downloadJSON(uri);
+   * ```
+   */
   async downloadJSON<TJSON = any>(url: string): Promise<TJSON> {
     const res = await this.download(url);
 
@@ -43,6 +88,25 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
     ) as TJSON;
   }
 
+  /**
+   * Upload arbitrary file or JSON data using the configured decentralized storage system.
+   * Automatically uploads any file data within JSON objects and replaces them with hashes.
+   *
+   * @param data - Arbitrary file or JSON data to upload
+   * @param options - Options to pass through to the storage uploader class
+   * @returns - The URI of the uploaded data
+   *
+   * @example
+   * ```jsx
+   * // Upload file data
+   * const file = readFileSync("../file.jpg");
+   * const fileUri = await storage.upload(file);
+   *
+   * // Or upload a JSON object
+   * const json = { name: "JSON", image: file };
+   * const jsonUri = await storage.upload(json);
+   * ```
+   */
   async upload(data: Json | FileOrBuffer, options?: T): Promise<string> {
     const [uri] = await this.uploadBatch(
       [data] as Json[] | FileOrBuffer[],
@@ -51,6 +115,31 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
     return uri;
   }
 
+  /**
+   * Batch upload arbitrary file or JSON data using the configured decentralized storage system.
+   * Automatically uploads any file data within JSON objects and replaces them with hashes.
+   *
+   * @param data - Array of arbitrary file or JSON data to upload
+   * @param options - Options to pass through to the storage uploader class
+   * @returns - The URIs of the uploaded data
+   *
+   * @example
+   * ```jsx
+   * // Upload an array of file data
+   * const files = [
+   *  readFileSync("../file1.jpg"),
+   *  readFileSync("../file2.jpg"),
+   * ];
+   * const fileUris = await storage.uploadBatch(files);
+   *
+   * // Upload an array of JSON objects
+   * const objects = [
+   *  { name: "JSON 1", image: files[0] },
+   *  { name: "JSON 2", image: files[1] },
+   * ];
+   * const jsonUris = await storage.uploadBatch(objects);
+   * ```
+   */
   async uploadBatch(
     data: Json[] | FileOrBuffer[],
     options?: T,
