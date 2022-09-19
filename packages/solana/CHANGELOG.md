@@ -1,5 +1,12 @@
 # @thirdweb-dev/solana
 
+## 0.2.12
+
+### Patch Changes
+
+- Updated dependencies [[`964add6`](https://github.com/thirdweb-dev/js/commit/964add6f205577298b8f4b9ce7298e5bf09e88e7)]:
+  - @thirdweb-dev/storage@1.0.1
+
 ## 0.2.11
 
 ### Patch Changes
