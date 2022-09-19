@@ -13,9 +13,17 @@
 <p align="center"><strong>Ultimate collection of React hooks for your web3 apps</strong></p>
 <br />
 
+<br />
+
 ## Installation
 
-You can install this SDK with either `npm` or `yarn`:
+The easiest way to get started with the React SDK is to use the CLI:
+
+```sh
+npx thirdweb create --app
+```
+
+Alternatively, you can install the SDK into your existing project using npm or yarn:
 
 ```sh
 npm install @thirdweb-dev/react @thirdweb-dev/sdk ethers
@@ -25,21 +33,19 @@ npm install @thirdweb-dev/react @thirdweb-dev/sdk ethers
 yarn add @thirdweb-dev/react @thirdweb-dev/sdk ethers
 ```
 
-## Starter Templates
+<br />
 
-We provide template repositories that already have the thirdweb React SDK setup and ready-to-go to help you get started with thirdweb quickly. You can find all the available starter respositories below.
+## Getting Started
 
-- Next.js ([typescript](https://github.com/thirdweb-example/next-typescript-starter) / [javascript](https://github.com/thirdweb-example/next-javascript-starter))
-- Create React App ([typescript](https://github.com/thirdweb-example/cra-typescript-starter) / [javascript](https://github.com/thirdweb-example/cra-javascript-starter))
-- Vite ([typescript](https://github.com/thirdweb-example/vite-typescript-starter) / [javascript](https://github.com/thirdweb-example/vite-javascript-starter))
+Our SDK uses a [Provider Pattern](https://flexiple.com/react/provider-pattern-with-react-context-api/); meaning any component within the `ThirdwebProvider` will have access to the SDK. If you use the CLI to initialize your project, this is already set up for you.
 
-## Quick Start
+Let's take a look at a typical setup:
 
-**Configure the thirdweb Provider**
+<br />
 
-In order to use the hooks offered by the React SDK, you need to first setup a `ThirdwebProvider` for your app which lets you optionally configure your app. You can use this configuration to control what networks you want users to connect to, what types of wallets can connect to your app, and the settings for the [Typescript SDK](https://docs.thirdweb.com/typescript).
+### Configure the `ThirdwebProvider`
 
-At the top level of your application, add a `ThirdwebProvider` as follows:
+Specify the network your smart contracts are deployed to in the `desiredChainId` prop and wrap your application like so:
 
 ```jsx title="App.jsx"
 import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
@@ -53,16 +59,27 @@ const App = () => {
 };
 ```
 
-Now you'll be able to use all the hooks provided by the React SDK! Let's take a look.
+Below are examples of where to set this up in your application:
 
-**Let Users Connect Wallets**
+<p>
+  <a href="https://github.com/thirdweb-example/cra-javascript-starter/blob/main/src/index.js">Create React App</a> •
+  <a href="https://github.com/thirdweb-example/next-javascript-starter/blob/main/pages/_app.js">Next.js</a> •
+  <a href="https://github.com/thirdweb-example/vite-javascript-starter/blob/main/src/main.jsx">Vite</a>
+</p>
 
-Next, we'll add a button to our app which will let users connect their wallets.
+<br />
+
+### Connect to a User's Wallet
+
+Now the provider is set up, we can use all of the hooks and UI components available in the SDK, such as the [ConnectWallet](https://portal.thirdweb.com/sdk/ui-components/connectwalletbutton) component.
+
+Once the user has connected their wallet, all the calls we make to interact with contracts using the SDK will be on behalf of the user.
 
 ```jsx title="ConnectMetamaskButton.jsx"
-import { ConnectWallet } from "@thirdweb-dev/react";
+import { ConnectWallet, useAddress } from "@thirdweb-dev/react";
 
 export const YourApp = () => {
+  const address = useAddress();
   return (
     <div>
       <ConnectWallet />
@@ -71,55 +88,169 @@ export const YourApp = () => {
 };
 ```
 
-The `ConnectWallet` component handles everything for us, including switching networks, accounts, displaying balances and more. We can then get the connected address using the `useAddress()` hook anywhere in the app.
+The `ConnectWallet` component handles everything for us, including switching networks, accounts, displaying balances and more.
 
-**Interact With Contracts**
+We can then get the connected address using the `useAddress` hook anywhere in the app.
 
-The thirdweb React SDK also enables you to interact directly with contracts through simple hooks!
+<br/>
 
-Let's setup a simple component to interact with an NFT Collection contract and get the data of all the NFTs on the contract.
+### Interact With Contracts
 
-```jsx title="NFTList.jsx"
-import { useMintNFT, useNFTCollection, useNFTs } from "@thirdweb-dev/react";
+Connect to your smart contract using the [`useContract`](https://portal.thirdweb.com/sdk/interacting-with-contracts/custom-contracts/getting-a-contract#connect-to-a-contract)
+hook like so:
 
-const NFTListComponent = () => {
-  const address = useAddress();
-  const { conrtact } = useContract("<NFT-COLLECTION-CONTRACT-ADDRESS>");
-  const { data: nfts } = useNFTs(conrtact);
-  const { mutate: mintNFT } = useMintNFT(conrtact);
+```jsx title="pages/index.jsx"
+import { useContract } from "@thirdweb-dev/react";
 
-  const mint = () => {
-    mintNFT({
-      to: address,
-      metadata: {
-        name: "Cool NFT",
-        description: "Minted from react",
-      },
-    });
-  };
+export default function Home() {
+  const { contract } = useContract("<CONTRACT_ADDRESS>");
+
+  // Now you can use the contract in the rest of the component!
+}
+```
+
+You can then use [`useContractRead`](https://portal.thirdweb.com/sdk/interacting-with-contracts/custom-contracts/using-contracts) and [`useContractWrite`](https://portal.thirdweb.com/sdk/interacting-with-contracts/custom-contracts/using-contracts) to read data and write transactions to the contract.
+
+You pass the `contract` object returned from `useContract` to these hooks as the first parameter and the name of the function (or view/mapping, etc.) on your smart contract as the second parameter.
+
+If your function has parameters, you can pass them as the third parameter.
+
+For example, we can read the `name` of our contract like so:
+
+```jsx title="pages/index.jsx"
+import {
+  useContract,
+  useContractRead,
+  useContractWrite,
+} from "@thirdweb-dev/react";
+
+export default function Home() {
+  const { contract } = useContract("<CONTRACT_ADDRESS>");
+  const { data: name, isLoading: loadingName } = useContractRead(
+    contract,
+    "name", // The name of the view/mapping/variable on your contract
+  );
+  const { mutate: setName, isLoading: settingName } = useContractWrite(
+    contract,
+    "setName", // The name of the function on your contract
+  );
+}
+```
+
+<br />
+
+### Using Extensions
+
+Each [extension](https://portal.thirdweb.com/extensions) you implement in your smart contract unlocks new functionality in the SDK.
+
+These hooks make it easy to interact with your smart contracts by implementing the complex logic for you under the hood.
+
+For example, if your smart contract implements [ERC721Supply](https://portal.thirdweb.com/extensions/erc721supply#unlocked-features), you unlock the ability to [view all NFTs](https://portal.thirdweb.com/sdk/interacting-with-contracts/erc721Supply#get-all-minted-nfts) on that contract using the SDK; which fetches all of your NFT metadata and the current owner of each NFT in parallel:
+
+```jsx
+import { useContract, useNFTs } from "@thirdweb-dev/react";
+
+export default function Home() {
+  const { contract } = useContract("<CONTRACT_ADDRESS>");
+  const { data: nfts, isLoading: isReadingNfts } = useNFTs(contract);
+}
+```
+
+If we want to mint an NFT and our contract implements [ERC721Mintable](https://portal.thirdweb.com/extensions/erc721mintable#unlocked-features), we can use the [`useMintNFT`](https://portal.thirdweb.com/sdk/interacting-with-contracts/erc721mintable) hook to mint an NFT from the connected wallet; handling all of the logic of uploading and pinning the metadata to IPFS for us behind the scenes.
+
+```jsx
+import { useContract, useNFTs, useMintNFT } from "@thirdweb-dev/react";
+
+export default function Home() {
+  const { contract } = useContract("<CONTRACT_ADDRESS>");
+  const { data: nfts, isLoading: isReadingNfts } = useNFTs(contract);
+  const { mutate: mintNFT, isLoading: isMintingNFT } = useMintNFT(contract);
+}
+```
+
+<br />
+
+### UI Components
+
+The SDK provides many UI components to help you build your application.
+
+For example, we can render each of the NFTs using the [`NFT Media Renderer`](https://portal.thirdweb.com/sdk/ui-components/nft-renderer)
+component, making use of the loading state from `useNFTs`:
+
+```jsx title="pages/index.jsx"
+import { useContract, useNFTs, ThirdwebNftMedia } from "@thirdweb-dev/react";
+
+export default function Home() {
+  const { contract } = useContract("<CONTRACT_ADDRESS>");
+  const { data: nfts, isLoading: isReadingNfts } = useNFTs(contract);
 
   return (
     <div>
-      <button onClick={mint}>Mint</button>
-      <ul>
-        {nfts?.map((nft) => (
-          <li key={nft.metadata.id.toString()}>{nft.metadata.name}</li>
-        ))}
-      </ul>
+      <h2>My NFTs</h2>
+      {isReadingNfts ? (
+        <p>Loading...</p>
+      ) : (
+        <div>
+          {nfts.map((nft) => (
+            <ThirdwebNftMedia
+              key={nft.tokenId}
+              metadata={nft.metadata}
+              height={200}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
-};
+}
 ```
 
-Here, we get a contract instance using `useContract`. We can then use all the methods on this contract instance - here we use the `useMintNFT` hook to mint an NFT on the contract, and we use the `useNFTList` hook to display all the NFTs in the collection on the page.
+The [`Web3Button`](https://portal.thirdweb.com/sdk/ui-components/web3button) component ensures the user has connected their wallet and is currently configured to the same network as your smart contract before calling the function. It also has access to the `contract` directly, allowing you to perform any action on your smart contract when the button is clicked.
 
-And that's all for the setup! Just like that, you can setup a `ThirdwebProvider` and use all the hooks of the SDK, allowing you to let users connect wallets, interact with contracts, and more!
+For example, we can mint an NFT like so:
+
+```jsx title="pages/index.jsx"
+import {
+  useContract,
+  useNFTs,
+  ThirdwebNftMedia,
+  Web3Button,
+} from "@thirdweb-dev/react";
+
+const contractAddress = "<CONTRACT_ADDRESS>";
+export default function Home() {
+  const { contract } = useContract(contractAddress);
+  const { data: nfts, isLoading: isReadingNfts } = useNFTs(contract);
+
+  return (
+    <div>
+      {/* ... Existing Display Logic here ... */}
+
+      <Web3Button
+        contractAddress={contractAddress}
+        action={(contract) =>
+          contract.erc721.mint({
+            name: "Hello world!",
+            image:
+              // You can use a file or URL here!
+              "ipfs://QmZbovNXznTHpYn2oqgCFQYP4ZCpKDquenv5rFCX8irseo/0.png",
+          })
+        }
+      >
+        Mint NFT
+      </Web3Button>
+    </div>
+  );
+}
+```
+
+<br />
 
 ## Advanced Configuration
 
 The `ThirdwebProvider` offers a number of configuration options to control the behavior of the React and Typescript SDK.
 
-These all the configuration options of the `<ThirdwebProvider />`.
+These are all the configuration options of the `<ThirdwebProvider />`.
 We provide defaults for all of these, but you customize them to suit your needs.
 
 ```jsx title="App.jsx"
