@@ -6,3 +6,5 @@ export interface IStorageDownloader {
 export type GatewayUrls = {
   [key: string]: string[];
 };
+
+export type MemoryStorage = Record<string, Record<string, any>>;
