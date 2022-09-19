@@ -1,8 +1,14 @@
 import { FileOrBufferOrString } from "./data";
 import { GatewayUrls } from "./download";
 
+/**
+ * @public
+ */
 export type UploadOptions = { [key: string]: any };
 
+/**
+ * @public
+ */
 export interface IStorageUploader<T extends UploadOptions> {
   /**
    * If specified, will be used to replace any gateway URLs with schemes on upload
@@ -22,6 +28,9 @@ export interface IStorageUploader<T extends UploadOptions> {
   uploadBatch(data: FileOrBufferOrString[], options?: T): Promise<string[]>;
 }
 
+/**
+ * @public
+ */
 export type UploadProgressEvent = {
   /**
    * The number of bytes uploaded.
@@ -34,6 +43,9 @@ export type UploadProgressEvent = {
   total: number;
 };
 
+/**
+ * @public
+ */
 export type IpfsUploaderOptions = {
   /**
    * Mapping of URL schemes to gateway URLs to resolve to
@@ -45,9 +57,13 @@ export type IpfsUploaderOptions = {
   uploadWithGatewayUrl?: boolean;
 };
 
+/**
+ * @public
+ */
 export type IpfsUploadBatchOptions = {
   /**
-   * If specified, will rewrite file names to numbers for use on-chain
+   * If specified, will rewrite file names to numbers for use on-chain.
+   * Useful to use with NFT contracts that map token IDs to files.
    */
   rewriteFileNames?: {
     /**

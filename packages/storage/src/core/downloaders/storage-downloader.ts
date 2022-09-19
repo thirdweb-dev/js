@@ -24,6 +24,8 @@ import fetch from "cross-fetch";
  * const downloader = new StorageDownloader(gatewayUrls);
  * const storage = new ThirdwebStorage(undefined, downloader);
  * ```
+ *
+ * @public
  */
 export class StorageDownloader implements IStorageDownloader {
   public gatewayUrls: GatewayUrls;

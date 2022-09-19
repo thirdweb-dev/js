@@ -1,3 +1,6 @@
+/**
+ * @public
+ */
 export interface IStorageDownloader {
   /**
    * Gateway URLs used to replace schemes on download
@@ -12,8 +15,14 @@ export interface IStorageDownloader {
   download(url: string): Promise<Response>;
 }
 
+/**
+ * @public
+ */
 export type GatewayUrls = {
   [key: string]: string[];
 };
 
+/**
+ * @internal
+ */
 export type MemoryStorage = Record<string, Record<string, any>>;

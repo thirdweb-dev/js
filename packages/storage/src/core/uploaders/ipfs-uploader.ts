@@ -44,6 +44,8 @@ import FormData from "form-data";
  * }
  * const storage = new ThirdwebStorage(options);
  * ```
+ *
+ * @public
  */
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   public gatewayUrls: GatewayUrls;
