@@ -1,4 +1,4 @@
-import { THIRDWEB_URL, cliVersion } from "../constants/urls";
+import { cliVersion, THIRDWEB_URL } from "../constants/urls";
 import build from "../core/builder/build";
 import detect from "../core/detection/detect";
 import { execute } from "../core/helpers/exec";
@@ -142,10 +142,9 @@ export async function processProject(
     const metadataURIs = await Promise.all(
       selectedContracts.map(async (c) => {
         logger.debug(`Uploading ${c.name}...`);
-        const hash = await storage.upload(c.metadata, {
+        return await storage.upload(JSON.parse(c.metadata), {
           uploadWithoutDirectory: true,
         });
-        return `ipfs://${hash}`;
       }),
     );
 
@@ -173,15 +172,13 @@ export async function processProject(
     let combinedURIs: string[] = [];
     if (combinedContents.length === 1) {
       // use upload single if only one contract to get a clean IPFS hash
-      const metadataUri = await storage.upload(
-        JSON.stringify(combinedContents[0]),
-        { uploadWithoutDirectory: true },
-      );
+      const metadataUri = await storage.upload(combinedContents[0], {
+        uploadWithoutDirectory: true,
+      });
       combinedURIs.push(metadataUri);
     } else {
       // otherwise upload batch
-      const uris = await storage.uploadBatch(combinedContents);
-      combinedURIs = uris;
+      combinedURIs = await storage.uploadBatch(combinedContents);
     }
 
     loader.succeed("Upload successful");
