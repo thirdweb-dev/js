@@ -142,10 +142,9 @@ export async function processProject(
     const metadataURIs = await Promise.all(
       selectedContracts.map(async (c) => {
         logger.debug(`Uploading ${c.name}...`);
-        const hash = await storage.upload(c.metadata, {
+        return await storage.upload(c.metadata, {
           uploadWithoutDirectory: true,
         });
-        return `ipfs://${hash}`;
       }),
     );
 
@@ -194,18 +193,9 @@ export async function processProject(
 }
 
 export function getUrl(hashes: string[], command: string) {
-  let url;
-  if (hashes.length === 1) {
-    url = new URL(
-      THIRDWEB_URL +
-        `/contracts/${command}/` +
-        encodeURIComponent(hashes[0].replace("ipfs://", "")),
-    );
-  } else {
-    url = new URL(THIRDWEB_URL + "/contracts/" + command);
-    for (let hash of hashes) {
-      url.searchParams.append("ipfs", hash.replace("ipfs://", ""));
-    }
+  const url = new URL(THIRDWEB_URL + "/contracts/" + command);
+  for (let hash of hashes) {
+    url.searchParams.append("ipfs", hash.replace("ipfs://", ""));
   }
   return url;
 }
