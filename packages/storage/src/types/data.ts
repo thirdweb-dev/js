@@ -1,9 +1,5 @@
 import { z } from "zod";
 
-function isBrowser() {
-  return typeof window !== "undefined";
-}
-
 const JsonLiteralSchema = z.union([
   z.string(),
   z.number(),
@@ -13,16 +9,22 @@ const JsonLiteralSchema = z.union([
 
 type JsonLiteral = z.infer<typeof JsonLiteralSchema>;
 
+const isBrowser = () => typeof window !== "undefined";
 const FileOrBufferUnionSchema = isBrowser()
   ? (z.instanceof(File) as z.ZodType<InstanceType<typeof File>>)
-  : (z.instanceof(Buffer) as z.ZodTypeAny); // TODO: fix, this is a hack to make browser happy for now
+  : (z.instanceof(Buffer) as z.ZodTypeAny); // @fixme, this is a hack to make browser happy for now
 
 export const FileOrBufferSchema = z.union([
   FileOrBufferUnionSchema,
   z.object({
-    data: z.union([z.instanceof(Buffer), z.string()]),
+    data: FileOrBufferUnionSchema,
     name: z.string(),
   }),
+]);
+
+export const FileOrBufferOrStringSchema = z.union([
+  FileOrBufferSchema,
+  z.string(),
 ]);
 
 export type FileOrBuffer = File | Buffer | BufferOrStringWithName;
@@ -31,11 +33,6 @@ export type BufferOrStringWithName = {
   data: Buffer | string;
   name: string;
 };
-
-export const FileOrBufferOrStringSchema = z.union([
-  FileOrBufferSchema,
-  z.string(),
-]);
 
 export type FileOrBufferOrString = FileOrBuffer | string;
 
