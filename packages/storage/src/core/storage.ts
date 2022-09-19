@@ -158,7 +158,12 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
     // Otherwise it is an array of JSON objects, so we have to prepare it first
     const metadata = (
       await this.uploadAndReplaceFilesWithHashes(data as Json[], options)
-    ).map((item) => JSON.stringify(item));
+    ).map((item) => {
+      if (typeof item === "string") {
+        return item;
+      }
+      return JSON.stringify(item);
+    });
 
     return this.uploader.uploadBatch(metadata, options);
   }
