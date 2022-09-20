@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/solana",
-  "version": "0.2.10",
+  "version": "0.2.12",
   "description": "thirdweb Solana SDK",
   "main": "dist/thirdweb-dev-solana.cjs.js",
   "module": "dist/thirdweb-dev-solana.esm.js",

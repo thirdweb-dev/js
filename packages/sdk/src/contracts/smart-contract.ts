@@ -38,7 +38,7 @@ import type {
   IRoyalty,
   Ownable,
 } from "@thirdweb-dev/contracts-js";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides, ContractInterface } from "ethers";
 
 /**
@@ -142,7 +142,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     network: NetworkOrSignerOrProvider,
     address: string,
     abi: ContractInterface,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<TContract>(
       network,

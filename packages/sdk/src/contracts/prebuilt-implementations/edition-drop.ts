@@ -26,7 +26,7 @@ import { NFTMetadata, NFTMetadataOrUri } from "../../schema/tokens/common";
 import { QueryAllParams, UploadProgressEvent } from "../../types";
 import type { DropERC1155 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC1155.json";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
@@ -113,7 +113,7 @@ export class EditionDropImpl extends StandardErc1155<DropERC1155> {
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
     contractWrapper = new ContractWrapper<DropERC1155>(

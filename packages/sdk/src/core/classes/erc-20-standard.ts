@@ -3,11 +3,10 @@ import { Amount, Currency, CurrencyValue } from "../../types/currency";
 import { BaseERC20, BaseSignatureMintERC20 } from "../../types/eips";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
-import { ContractPrimarySale } from "./contract-sales";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
 import type { DropERC20, TokenERC20 } from "@thirdweb-dev/contracts-js";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 /**
  * Standard ERC20 Token functions
@@ -26,11 +25,11 @@ export class StandardErc20<
 > implements UpdateableNetwork
 {
   protected contractWrapper: ContractWrapper<T>;
-  protected storage: IStorage;
+  protected storage: ThirdwebStorage;
 
   public erc20: Erc20<T>;
 
-  constructor(contractWrapper: ContractWrapper<T>, storage: IStorage) {
+  constructor(contractWrapper: ContractWrapper<T>, storage: ThirdwebStorage) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.erc20 = new Erc20(this.contractWrapper, this.storage);

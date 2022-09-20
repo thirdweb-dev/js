@@ -1,6 +1,6 @@
 import { createSnapshot, Snapshot } from "../src/index";
 import { MockStorage } from "./mock/MockStorage";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 const chai = require("chai");
 const deepEqualInAnyOrder = require("deep-equal-in-any-order");
@@ -28,10 +28,10 @@ describe("Snapshots", async () => {
     maxClaimable: 0,
   }));
 
-  let storage: IStorage;
+  let storage: ThirdwebStorage;
 
   beforeEach(async () => {
-    storage = new MockStorage();
+    storage = MockStorage();
   });
 
   beforeEach(async () => {
@@ -88,7 +88,7 @@ describe("Snapshots", async () => {
   });
 
   it("should upload the snapshot to storage", async () => {
-    const rawSnapshotJson = await storage.get(uri);
+    const rawSnapshotJson = await storage.downloadJSON(uri);
     expect(rawSnapshotJson).to.deep.equalInAnyOrder(snapshot);
   });
 });

@@ -1,4 +1,4 @@
-import { Json } from "../core/types";
+import { Json } from "@thirdweb-dev/storage";
 import { BigNumber, CallOverrides, utils } from "ethers";
 import { z } from "zod";
 
@@ -31,17 +31,6 @@ export const PercentSchema = z
   .max(100, "Cannot exeed 100%")
   .min(0, "Cannot be below 0%");
 
-export const JsonLiteral = z.union([
-  z.string(),
-  z.number(),
-  z.boolean(),
-  z.null(),
-]);
-
-export const JsonSchema: z.ZodSchema<Json> = z.lazy(() =>
-  z.union([JsonLiteral, z.array(JsonSchema), z.record(JsonSchema)]),
-);
-export const JsonObjectSchema = z.record(JsonSchema);
 export const HexColor = z.union([
   z
     .string()
