@@ -5,16 +5,16 @@ import { DropERC721 } from "@thirdweb-dev/contracts-js/dist/declarations/src/Dro
 import { DropERC1155 } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC1155";
 import { SignatureDrop } from "@thirdweb-dev/contracts-js/dist/declarations/src/SignatureDrop";
 import fetch from "cross-fetch";
-import type { BigNumberish } from "ethers";
 import invariant from "tiny-invariant";
 
-const PAPER_API_BASE = `https://paper.xyz/api`;
-const PAPER_API_VERSION = `2022-08-12`;
+const PAPER_API_BASE = `https://paper.xyz/api` as const;
+const PAPER_API_VERSION = `2022-08-12` as const;
 
 /**
  * @internal
  */
-export const PAPER_API_URL = `${PAPER_API_BASE}/${PAPER_API_VERSION}/platform/thirdweb`;
+export const PAPER_API_URL =
+  `${PAPER_API_BASE}/${PAPER_API_VERSION}/platform/thirdweb` as const;
 
 const PAPER_CHAIN_ID_MAP = {
   [ChainId.Mainnet]: "Ethereum",
@@ -50,7 +50,7 @@ type RegisterContractSuccessResponse = {
  * @returns the paper xyz contract id
  * @throws if the contract is not registered on paper xyz
  */
-export async function fetchRegisteredContractId(
+export async function fetchRegisteredCheckoutId(
   contractAddress: string,
   chainId: number,
 ): Promise<string> {
@@ -69,21 +69,21 @@ export async function fetchRegisteredContractId(
  */
 export type PaperCreateCheckoutLinkShardParams = {
   /**
-   * The wallet address that the NFT will be sent to.
-   */
-  walletAddress: string;
-  /**
-   * The email address of the recipient.
-   */
-  email: string;
-  /**
-   * The number of NFTs that will be purchased through the checkout flow.
-   */
-  quantity: number;
-  /**
    * The title of the checkout.
    */
   title: string;
+  /**
+   * The number of NFTs that will be purchased through the checkout flow.
+   */
+  quantity?: number;
+  /**
+   * The wallet address that the NFT will be sent to.
+   */
+  walletAddress?: string;
+  /**
+   * The email address of the recipient.
+   */
+  email?: string;
   /**
    * The description of the checkout.
    */
@@ -138,7 +138,7 @@ export type PaperCreateCheckoutLinkIntentParams<
 > = PaperCreateCheckoutLinkShardParams &
   (TContract extends DropERC1155
     ? {
-        contractArgs: { tokenId: BigNumberish };
+        contractArgs: { tokenId: string };
       }
     : TContract extends SignatureDrop
     ? {
@@ -186,10 +186,10 @@ export async function createCheckoutLinkIntent<
       },
       // overrides that are hard coded
       hideNativeMint: true,
-      hidePaperWallet: true,
+      hidePaperWallet: !!params.walletAddress,
       hideExternalWallet: true,
       hidePayWithCrypto: true,
-      usePaperKey: true,
+      usePaperKey: false,
     }),
   });
   const json = (await res.json()) as PaperCreateCheckoutLinkIntentResult;
@@ -212,8 +212,8 @@ export class PaperCheckout<
     this.contractWrapper = contractWrapper;
   }
 
-  private async getContractId(): Promise<string> {
-    return fetchRegisteredContractId(
+  private async getCheckoutId(): Promise<string> {
+    return fetchRegisteredCheckoutId(
       this.contractWrapper.readContract.address,
       await this.contractWrapper.getChainID(),
     );
@@ -221,7 +221,7 @@ export class PaperCheckout<
 
   public async isEnabled(): Promise<boolean> {
     try {
-      return !!(await this.getContractId());
+      return !!(await this.getCheckoutId());
     } catch (err) {
       return false;
     }
@@ -231,7 +231,7 @@ export class PaperCheckout<
     params: PaperCreateCheckoutLinkIntentParams<TContract>,
   ): Promise<string> {
     return await createCheckoutLinkIntent<TContract>(
-      await this.getContractId(),
+      await this.getCheckoutId(),
       params,
     );
   }
