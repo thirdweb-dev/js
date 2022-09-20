@@ -11,38 +11,20 @@ import fetch from "cross-fetch";
  * // Can instantiate the downloader with the default gateway URLs
  * const downloader = new StorageDownloader();
  * const storage = new ThirdwebStorage(undefined, downloader);
- *
- * // Or optionally, can specify your own mapping of URLs
- * const gatewayUrls = {
- *   // We define a mapping of schemes to gateway URLs
- *   "ipfs://": [
- *     "https://gateway.ipfscdn.io/ipfs/",
- *     "https://cloudflare-ipfs.com/ipfs/",
- *     "https://ipfs.io/ipfs/",
- *   ],
- * };
- * const downloader = new StorageDownloader(gatewayUrls);
- * const storage = new ThirdwebStorage(undefined, downloader);
  * ```
  *
  * @public
  */
 export class StorageDownloader implements IStorageDownloader {
-  public gatewayUrls: GatewayUrls;
-
-  constructor(gatewayUrls?: GatewayUrls) {
-    this.gatewayUrls = prepareGatewayUrls(gatewayUrls);
-  }
-
-  async download(uri: string, attempts = 0): Promise<Response> {
+  async download(
+    uri: string,
+    gatewayUrls: GatewayUrls,
+    attempts = 0,
+  ): Promise<Response> {
     // Replace recognized scheme with the highest priority gateway URL that hasn't already been attempted
     let resolvedUri;
     try {
-      resolvedUri = replaceSchemeWithGatewayUrl(
-        uri,
-        this.gatewayUrls,
-        attempts,
-      );
+      resolvedUri = replaceSchemeWithGatewayUrl(uri, gatewayUrls, attempts);
     } catch (err: any) {
       // If every gateway URL we know about for the designated scheme has been tried (via recursion) and failed, throw an error
       if (err.includes("[GATEWAY_URL_ERROR]")) {
@@ -61,7 +43,7 @@ export class StorageDownloader implements IStorageDownloader {
       console.warn(
         `Request to ${resolvedUri} failed with status ${res.status} - ${res.statusText}`,
       );
-      return this.download(uri, attempts + 1);
+      return this.download(uri, gatewayUrls, attempts + 1);
     }
 
     return res;
