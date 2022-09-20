@@ -31,6 +31,11 @@ export interface UserWalletEvents {
   disconnected: void;
 }
 
+/**
+ *
+ *
+ * @public
+ */
 export class UserWallet {
   public signer: Signer | undefined;
   public events = new EventEmitter<UserWalletEvents>();

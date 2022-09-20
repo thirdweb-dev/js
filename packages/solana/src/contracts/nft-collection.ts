@@ -36,6 +36,16 @@ export class NFTCollection {
     this.publicKey = new PublicKey(collectionMintAddress);
   }
 
+  /**
+   * Get the metadata for this program.
+   * @returns program metadata
+   *
+   * @example
+   * ```jsx
+   * const metadata = await program.getMetadata();
+   * console.log(metadata.name);
+   * ```
+   */
   async getMetadata(): Promise<NFTCollectionMetadata> {
     const metadata = await this.metaplex
       .nfts()
@@ -45,15 +55,44 @@ export class NFTCollection {
     return this.nft.toNFTMetadata(metadata);
   }
 
+  /**
+   * Get the metadata for a specific NFT
+   * @param mintAddress - the mint address of the NFT to get
+   * @returns the metadata of the NFT
+   *
+   * @example
+   * ```jsx
+   * const mintAddress = "...";
+   * const nft = await program.get(mintAddress);
+   * ```
+   */
   async get(mintAddress: string): Promise<NFTMetadata> {
     return this.nft.get(mintAddress);
   }
 
+  /**
+   * Get the metadata for all NFTs on this collection
+   * @returns metadata for all minted NFTs
+   *
+   * @example
+   * ```jsx
+   * const nfts = await program.getAll();
+   * ```
+   */
   async getAll(): Promise<NFTMetadata[]> {
     const addresses = await this.getAllNFTAddresses();
     return await Promise.all(addresses.map((a) => this.get(a)));
   }
 
+  /**
+   * Get the mint addresses for all NFTs on this collection
+   * @returns mint addresses for all minted NFTs
+   *
+   * @example
+   * ```jsx
+   * const nfts = await program.getAllNFTAddresses();
+   * ```
+   */
   async getAllNFTAddresses(): Promise<string[]> {
     const allSignatures: ConfirmedSignatureInfo[] = [];
     // This returns the first 1000, so we need to loop through until we run out of signatures to get.
@@ -137,15 +176,48 @@ export class NFTCollection {
     return Array.from(mintAddresses);
   }
 
+  /**
+   * Get the NFT balance of the connected wallet
+   * @returns the NFT balance
+   *
+   * @example
+   * ```jsx
+   * const balance = await program.balance();
+   * ```
+   */
   async balance(mintAddress: string): Promise<number> {
     const address = this.metaplex.identity().publicKey.toBase58();
     return this.balanceOf(address, mintAddress);
   }
 
+  /**
+   * Get the NFT balance of the specified wallet
+   * @param walletAddress - the wallet address to get the balance of
+   * @param mintAddress - the mint address of the NFT to get the balance of
+   * @returns the NFT balance
+   *
+   * @example
+   * ```jsx
+   * const walletAddress = "..."
+   * const mintAddress = "..."
+   * const balance = await program.balanceOf(walletAddress, mintAddress);
+   * ```
+   */
   async balanceOf(walletAddress: string, mintAddress: string): Promise<number> {
     return this.nft.balanceOf(walletAddress, mintAddress);
   }
 
+  /**
+   * Get the supply of NFT editions minted from a specific NFT
+   * @param mintAddress - the mint address of the NFT to check the supply of
+   * @returns the supply of the specified NFT
+   *
+   * @example
+   * ```jsx
+   * const address = "...";
+   * const supply = await program.supplyOf(addres);
+   * ```
+   */
   async supplyOf(mintAddress: string): Promise<bigint> {
     let editionMarkerNumber = 0;
     let totalSupply = 1;
@@ -197,6 +269,19 @@ export class NFTCollection {
     return BigInt(totalSupply);
   }
 
+  /**
+   * Transfer the specified NFTs to another wallet
+   * @param receiverAddress - The address to send the tokens to
+   * @param mintAddress - The mint address of the NFT to transfer
+   * @returns the transaction result of the transfer
+   *
+   * @example
+   * ```jsx
+   * const to = "...";
+   * const mintAddress = "...";
+   * const tx = await program.transfer(to, mintAddress);
+   * ```
+   */
   async transfer(
     receiverAddress: string,
     mintAddress: string,
@@ -204,13 +289,43 @@ export class NFTCollection {
     return this.nft.transfer(receiverAddress, mintAddress);
   }
 
+  /**
+   * Mint NFTs to the connected wallet
+   * @param metadata - the metadata of the NFT to mint
+   * @returns the mint address of the minted NFT
+   *
+   * @example
+   * ```jsx
+   * const metadata = {
+   *   name: "NFT #1",
+   *   image: readFileSync("files/image.jpg"),
+   * }
+   * const address = await program.mint(metadata);
+   * ```
+   */
   async mint(metadata: NFTMetadataInput): Promise<string> {
     const address = this.metaplex.identity().publicKey.toBase58();
     return this.mintTo(address, metadata);
   }
 
-  // TODO add options param for initial/maximum supply
+  /**
+   * Mint an NFT to the specified wallet
+   * @param to - the address to mint the NFT to
+   * @param metadata - the metadata of the NFT to mint
+   * @returns the mint address of the minted NFT
+   *
+   * @example
+   * ```jsx
+   * const to = "..."
+   * const metadata = {
+   *   name: "NFT #1",
+   *   image: readFileSync("files/image.jpg"),
+   * }
+   * const address = await program.mintTo(to, metadata);
+   * ```
+   */
   async mintTo(to: string, metadata: NFTMetadataInput) {
+    // TODO add options param for initial/maximum supply
     const uri = await this.storage.upload(metadata);
     const { nft } = await this.metaplex
       .nfts()
@@ -229,16 +344,40 @@ export class NFTCollection {
     return nft.address.toBase58();
   }
 
+  /**
+   * Mint additional supply of an NFT to the connected wallet
+   * @param mintAddress - the mint address to mint additional supply to
+   * @returns the mint address of the minted NFT
+   *
+   * @example
+   * ```jsx
+   * const mintAddress = "..."
+   * const address = await program.mintTo(mintAddress);
+   * ```
+   */
   async mintAdditionalSupply(mintAddress: string) {
     const address = this.metaplex.identity().publicKey.toBase58();
     return this.mintAdditionalSupplyTo(address, mintAddress);
   }
 
-  // TODO add quantity param
+  /**
+   * Mint additional supply of an NFT to the specified wallet
+   * @param to - the address to mint the NFT to
+   * @param mintAddress - the mint address to mint additional supply to
+   * @returns the mint address of the minted NFT
+   *
+   * @example
+   * ```jsx
+   * const to = "..."
+   * const mintAddress = "..."
+   * const address = await program.mintTo(to, mintAddress);
+   * ```
+   */
   async mintAdditionalSupplyTo(
     to: string,
     mintAddress: string,
   ): Promise<string> {
+    // TODO add quantity param
     const result = await this.metaplex
       .nfts()
       .printNewEdition({
