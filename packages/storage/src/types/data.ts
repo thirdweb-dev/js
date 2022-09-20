@@ -14,6 +14,9 @@ const FileOrBufferUnionSchema = isBrowser()
   ? (z.instanceof(File) as z.ZodType<InstanceType<typeof File>>)
   : (z.instanceof(Buffer) as z.ZodTypeAny); // @fixme, this is a hack to make browser happy for now
 
+/**
+ * @internal
+ */
 export const FileOrBufferSchema = z.union([
   FileOrBufferUnionSchema,
   z.object({
@@ -22,24 +25,42 @@ export const FileOrBufferSchema = z.union([
   }),
 ]);
 
+/**
+ * @internal
+ */
 export const FileOrBufferOrStringSchema = z.union([
   FileOrBufferSchema,
   z.string(),
 ]);
 
+/**
+ * @internal
+ */
 export const FileOrBufferOrStringArraySchema = z.array(
   FileOrBufferOrStringSchema,
 );
 
+/**
+ * @internal
+ */
 export type FileOrBuffer = File | Buffer | BufferOrStringWithName;
 
+/**
+ * @internal
+ */
 export type BufferOrStringWithName = {
   data: Buffer | string;
   name: string;
 };
 
+/**
+ * @internal
+ */
 export type FileOrBufferOrString = FileOrBuffer | string;
 
+/**
+ * @internal
+ */
 export const JsonSchema: z.ZodType<Json> = z.lazy(() =>
   z.union([
     JsonLiteralSchema,
@@ -49,8 +70,17 @@ export const JsonSchema: z.ZodType<Json> = z.lazy(() =>
   ]),
 );
 
+/**
+ * @internal
+ */
 export const JsonObjectSchema = z.record(z.string(), JsonSchema);
 
+/**
+ * @internal
+ */
 export type Json = JsonLiteral | FileOrBuffer | JsonObject | Json[];
 
+/**
+ * @internal
+ */
 export type JsonObject = { [key: string]: Json };

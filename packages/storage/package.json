@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/storage",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/thirdweb-dev-storage.cjs.js",
   "module": "dist/thirdweb-dev-storage.esm.js",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/storage",
@@ -10,6 +10,7 @@
     "format": "prettier --write 'src/**/*'",
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
+    "generate-docs": "api-extractor run --local && api-documenter markdown -i ./temp -o ./docs",
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
     "test": "ts-mocha 'test/**/*.ts' --paths -t 120000 -r esm -p tsconfig.testing.json"
@@ -20,6 +21,8 @@
   "devDependencies": {
     "@babel/preset-env": "^7.18.10",
     "@babel/preset-typescript": "^7.18.6",
+    "@microsoft/api-documenter": "^7.19.13",
+    "@microsoft/api-extractor": "^7.31.1",
     "@preconstruct/cli": "^2.2.1",
     "@types/chai": "^4.3.3",
     "@types/mocha": "^9.1.1",
@@ -34,6 +37,7 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
+    "@microsoft/tsdoc": "^0.14.2",
     "cross-fetch": "^3.1.5",
     "form-data": "^4.0.0",
     "uuid": "^9.0.0",
