@@ -3,6 +3,30 @@ import { replaceSchemeWithGatewayUrl } from "../../common/utils";
 import { GatewayUrls, IStorageDownloader } from "../../types";
 import fetch from "cross-fetch";
 
+/**
+ * Default downloader used - handles downloading from all schemes specified in the gateway URLs configuration.
+ *
+ * @example
+ * ```jsx
+ * // Can instantiate the downloader with the default gateway URLs
+ * const downloader = new StorageDownloader();
+ * const storage = new ThirdwebStorage(undefined, downloader);
+ *
+ * // Or optionally, can specify your own mapping of URLs
+ * const gatewayUrls = {
+ *   // We define a mapping of schemes to gateway URLs
+ *   "ipfs://": [
+ *     "https://gateway.ipfscdn.io/ipfs/",
+ *     "https://cloudflare-ipfs.com/ipfs/",
+ *     "https://ipfs.io/ipfs/",
+ *   ],
+ * };
+ * const downloader = new StorageDownloader(gatewayUrls);
+ * const storage = new ThirdwebStorage(undefined, downloader);
+ * ```
+ *
+ * @public
+ */
 export class StorageDownloader implements IStorageDownloader {
   public gatewayUrls: GatewayUrls;
 

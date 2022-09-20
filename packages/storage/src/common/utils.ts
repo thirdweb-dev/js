@@ -7,24 +7,39 @@ import {
   JsonObject,
 } from "../types";
 
+/**
+ * @internal
+ */
 export function isBrowser() {
   return typeof window !== "undefined";
 }
 
+/**
+ * @internal
+ */
 export function isFileInstance(data: any): data is File {
   return global.File && data instanceof File;
 }
 
+/**
+ * @internal
+ */
 export function isBufferInstance(data: any): data is Buffer {
   return global.Buffer && data instanceof Buffer;
 }
 
+/**
+ * @internal
+ */
 export function isBufferOrStringWithName(
   data: any,
 ): data is BufferOrStringWithName {
   return data && data.name && data.data;
 }
 
+/**
+ * @internal
+ */
 export function replaceGatewayUrlWithScheme(
   uri: string,
   gatewayUrls: GatewayUrls,
@@ -40,6 +55,9 @@ export function replaceGatewayUrlWithScheme(
   return uri;
 }
 
+/**
+ * @internal
+ */
 export function replaceSchemeWithGatewayUrl(
   uri: string,
   gatewayUrls: GatewayUrls,
@@ -61,6 +79,9 @@ export function replaceSchemeWithGatewayUrl(
   return uri.replace(scheme, schemeGatewayUrls[index]);
 }
 
+/**
+ * @internal
+ */
 export function replaceObjectGatewayUrlsWithSchemes(
   data: Exclude<Json, FileOrBuffer>,
   gatewayUrls: GatewayUrls,
@@ -101,6 +122,9 @@ export function replaceObjectGatewayUrlsWithSchemes(
   return data;
 }
 
+/**
+ * @internal
+ */
 export function replaceObjectSchemesWithGatewayUrls(
   data: Exclude<Json, FileOrBuffer>,
   gatewayUrls: GatewayUrls,
@@ -140,6 +164,9 @@ export function replaceObjectSchemesWithGatewayUrls(
   return data;
 }
 
+/**
+ * @internal
+ */
 export function extractObjectFiles(
   data: Json,
   files: FileOrBuffer[] = [],
@@ -168,6 +195,9 @@ export function extractObjectFiles(
   return files;
 }
 
+/**
+ * @internal
+ */
 export function replaceObjectFilesWithUris(data: Json, uris: string[]): Json {
   const { success: isFileOrBuffer } = FileOrBufferSchema.safeParse(data);
   if (isFileOrBuffer) {

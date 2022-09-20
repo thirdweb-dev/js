@@ -1,5 +1,12 @@
 # @thirdweb-dev/sdk
 
+## 3.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`964add6`](https://github.com/thirdweb-dev/js/commit/964add6f205577298b8f4b9ce7298e5bf09e88e7)]:
+  - @thirdweb-dev/storage@1.0.1
+
 ## 3.0.3
 
 ### Patch Changes

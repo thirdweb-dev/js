@@ -1,5 +1,12 @@
 # @thirdweb-dev/auth
 
+## 2.0.4
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.0.4
+
 ## 2.0.3
 
 ### Patch Changes

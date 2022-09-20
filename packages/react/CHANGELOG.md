@@ -1,5 +1,12 @@
 # @thirdweb-dev/react
 
+## 3.0.4
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.0.4
+
 ## 3.0.3
 
 ### Patch Changes

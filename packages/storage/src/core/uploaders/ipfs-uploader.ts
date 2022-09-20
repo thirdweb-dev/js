@@ -18,6 +18,35 @@ import {
 import fetch from "cross-fetch";
 import FormData from "form-data";
 
+/**
+ * Default uploader used - handles uploading arbitrary data to IPFS
+ *
+ * @example
+ * ```jsx
+ * // Can instantiate the uploader with default configuration
+ * const uploader = new StorageUploader();
+ * const storage = new ThirdwebStorage(uploader);
+ *
+ * // Or optionally, can pass configuration
+ * const gatewayUrls = {
+ *   // We define a mapping of schemes to gateway URLs
+ *   "ipfs://": [
+ *     "https://gateway.ipfscdn.io/ipfs/",
+ *     "https://cloudflare-ipfs.com/ipfs/",
+ *     "https://ipfs.io/ipfs/",
+ *   ],
+ * };
+ * const options = {
+ *   // Define cutom gateway URLs
+ *   gatewayUrls,
+ *   // Upload objects with resolvable URLs
+ *   uploadWithGatewayUrl: true,
+ * }
+ * const storage = new ThirdwebStorage(options);
+ * ```
+ *
+ * @public
+ */
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
   public gatewayUrls: GatewayUrls;
   public uploadWithGatewayUrl: boolean;
