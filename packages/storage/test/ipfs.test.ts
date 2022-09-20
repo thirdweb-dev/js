@@ -41,6 +41,29 @@ describe("IPFS", async () => {
     expect(data.properties.length).to.equal(1);
   });
 
+  it("Should batch upload strings with names", async () => {
+    const uris = await storage.uploadBatch([
+      {
+        data: "data1",
+        name: "first",
+      },
+      {
+        data: "data2",
+        name: "second",
+      },
+    ]);
+
+    expect(uris[0].endsWith("first"), `${uris[0]} does not end with 'first'`).to
+      .be.true;
+    expect(uris[1].endsWith("second"), `${uris[1]} does not end with 'second'`)
+      .to.be.true;
+
+    const data1 = await (await storage.download(uris[0])).text();
+    expect(data1).to.equal("data1");
+    const data2 = await (await storage.download(uris[1])).text();
+    expect(data2).to.equal("data2");
+  });
+
   it("Should batch upload buffers with names", async () => {
     const uris = await storage.uploadBatch([
       {
