@@ -23,6 +23,29 @@ import {
 import { Keypair } from "@solana/web3.js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
+/**
+ * Deploy new programs
+ *
+ * @example
+ * ```jsx
+ * import { ThirdwebSDK } from "@thirdweb-dev/solana";
+ *
+ * // Instantiate the SDK and pass in a signer
+ * const sdk = ThirdwebSDK.fromNetwork("devnet");
+ * sdk.wallet.connect(signer);
+ *
+ * // Define the metadata for your program
+ * const metadata = {
+ *   name: "NFT Contract",
+ *   image: readFileSync("files/image.jpg"),
+ * };
+ *
+ * // And deploy a new program from the connected wallet
+ * const address = await sdk.deployer.createNftCollection(metadata);
+ * ```
+ *
+ * @public
+ */
 export class Deployer {
   private metaplex: Metaplex;
   private storage: ThirdwebStorage;
@@ -32,6 +55,22 @@ export class Deployer {
     this.storage = storage;
   }
 
+  /**
+   * Create a new token program
+   * @param tokenMetadata - the metadata of the token program
+   * @returns - the address of the new token program
+   *
+   * @example
+   * ```jsx
+   * const metadata = {
+   *   name: "Token",
+   *   symbol: "TKN",
+   *   initialSupply: 100,
+   * };
+   *
+   * const address = await sdk.deployer.createToken(metadata);
+   * ```
+   */
   async createToken(tokenMetadata: TokenMetadataInput): Promise<string> {
     const tokenMetadataParsed = TokenMetadataInputSchema.parse(tokenMetadata);
     const uri = await this.storage.upload(tokenMetadataParsed);
@@ -76,6 +115,21 @@ export class Deployer {
     return mint.publicKey.toBase58();
   }
 
+  /**
+   * Create a new NFT collection program
+   * @param collectionMetadata - the metadata of the nft collection program
+   * @returns - the address of the new nft collection program
+   *
+   * @example
+   * ```jsx
+   * const metadata = {
+   *   name: "NFT",
+   *   symbol: "NFT",
+   * };
+   *
+   * const address = await sdk.deployer.createNftCollection(metadata);
+   * ```
+   */
   async createNftCollection(
     collectionMetadata: NFTCollectionMetadataInput,
   ): Promise<string> {
@@ -99,6 +153,24 @@ export class Deployer {
     return collectionNft.mint.address.toBase58();
   }
 
+  /**
+   * Create a new NFT drop program
+   * @param metadata - the metadata of the nft drop program
+   * @returns - the address of the new nft drop program
+   *
+   * @example
+   * ```jsx
+   * const metadata = {
+   *   name: "NFT",
+   *   symbol: "NFT",
+   *   price: 0,
+   *   sellerFeeBasisPoints: 0,
+   *   itemsAvailable: 5,
+   * };
+   *
+   * const address = await sdk.deployer.createNftDrop(metadata);
+   * ```
+   */
   async createNftDrop(metadata: NFTDropContractInput): Promise<string> {
     const collectionInfo = NFTCollectionMetadataInputSchema.parse(metadata);
     const candyMachineInfo = NFTDropConditionsOutputSchema.parse(metadata);

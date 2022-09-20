@@ -7,6 +7,12 @@ import { readFileSync } from "fs";
 describe("IPFS", async () => {
   const storage = new ThirdwebStorage();
 
+  it("Should resolve scheme with gateway URL", async () => {
+    const uri = `ipfs://example`;
+    const url = storage.resolveScheme(uri);
+    expect(url).to.equal(`${DEFAULT_GATEWAY_URLS["ipfs://"][0]}example`);
+  });
+
   it("Should upload buffer with file number", async () => {
     const uri = await storage.upload(readFileSync("test/files/0.jpg"));
 
@@ -39,6 +45,29 @@ describe("IPFS", async () => {
     expect(data.name).to.equal("Goku");
     expect(data.description).to.equal("The strongest human in the world");
     expect(data.properties.length).to.equal(1);
+  });
+
+  it("Should batch upload strings with names", async () => {
+    const uris = await storage.uploadBatch([
+      {
+        data: "data1",
+        name: "first",
+      },
+      {
+        data: "data2",
+        name: "second",
+      },
+    ]);
+
+    expect(uris[0].endsWith("first"), `${uris[0]} does not end with 'first'`).to
+      .be.true;
+    expect(uris[1].endsWith("second"), `${uris[1]} does not end with 'second'`)
+      .to.be.true;
+
+    const data1 = await (await storage.download(uris[0])).text();
+    expect(data1).to.equal("data1");
+    const data2 = await (await storage.download(uris[1])).text();
+    expect(data2).to.equal("data2");
   });
 
   it("Should batch upload buffers with names", async () => {

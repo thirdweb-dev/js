@@ -1,5 +1,14 @@
 # thirdweb
 
+## 0.7.15
+
+### Patch Changes
+
+- [#148](https://github.com/thirdweb-dev/js/pull/148) [`964add6`](https://github.com/thirdweb-dev/js/commit/964add6f205577298b8f4b9ce7298e5bf09e88e7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix deploy/release CLI uploads
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.0.4
+
 ## 0.7.14
 
 ### Patch Changes
