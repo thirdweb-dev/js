@@ -33,7 +33,7 @@ import {
   SUPPORTED_CHAIN_ID,
 } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
-import { StorageSingleton } from "components/app-layouts/providers";
+import { replaceIpfsUrl } from "components/app-layouts/providers";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { RecipientForm } from "components/deployment/splits/recipients";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
@@ -309,7 +309,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                     >
                       <LinkOverlay
                         isExternal
-                        href={`${StorageSingleton.gatewayUrl}/${audit}`}
+                        href={replaceIpfsUrl(audit)}
                         onClick={() =>
                           trackEvent({
                             category: "visit-audit",

@@ -7,7 +7,7 @@ import { ContractId } from "../types";
 import { Image, Skeleton } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import { ChakraNextImage, ChakraNextImageProps } from "components/Image";
-import { StorageSingleton } from "components/app-layouts/providers";
+import { replaceIpfsUrl } from "components/app-layouts/providers";
 import { FeatureIconMap } from "constants/mappings";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { StaticImageData } from "next/image";
@@ -48,7 +48,7 @@ export const ContractIdImage: React.FC<ContractIdImageProps> = ({
       {logo ? (
         <Image
           boxSize={boxSize}
-          src={logo.replace("ipfs://", `${StorageSingleton.gatewayUrl}/`)}
+          src={replaceIpfsUrl(logo)}
           borderRadius="full"
         />
       ) : isStaticImage ? (

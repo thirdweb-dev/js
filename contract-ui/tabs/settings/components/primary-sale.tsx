@@ -1,3 +1,4 @@
+import { SettingDetectedState } from "./detected-state";
 import { AdminOnly } from "@3rdweb-sdk/react";
 import { Flex, FormControl, Input } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,6 +10,7 @@ import {
   CommonPrimarySaleSchema,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
+import { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -23,9 +25,15 @@ import {
 } from "tw-components";
 import { z } from "zod";
 
-export const SettingsPrimarySale: React.FC<{
-  contract?: ValidContractInstance;
-}> = ({ contract }) => {
+export const SettingsPrimarySale = <
+  TContract extends ValidContractInstance | undefined,
+>({
+  contract,
+  detectedState,
+}: {
+  contract: TContract;
+  detectedState: ExtensionDetectedState;
+}) => {
   const trackEvent = useTrack();
   const query = usePrimarySaleRecipient(contract);
   const mutation = useUpdatePrimarySaleRecipient(contract);
@@ -48,7 +56,8 @@ export const SettingsPrimarySale: React.FC<{
   );
 
   return (
-    <Card p={0}>
+    <Card p={0} position="relative" overflow="hidden">
+      <SettingDetectedState type="primarySale" detectedState={detectedState} />
       <Flex
         as="form"
         onSubmit={handleSubmit((d) => {

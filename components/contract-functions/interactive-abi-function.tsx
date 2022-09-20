@@ -25,7 +25,7 @@ import {
   Text,
 } from "tw-components";
 
-function formatResponseData(data: unknown): string {
+export function formatResponseData(data: unknown): string {
   if (BigNumber.isBigNumber(data)) {
     data = data.toString();
   }
@@ -87,7 +87,7 @@ function formatHint(type: string, components?: FunctionComponents): string {
     .replaceAll("}", " }");
 }
 
-function formatError(error: Error): string {
+export function formatError(error: Error): string {
   if (error.message) {
     return error.message.split("| Raw error |\n")[0].trim();
   }

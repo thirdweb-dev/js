@@ -19,7 +19,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { NFTMetadata } from "@thirdweb-dev/sdk";
-import { StorageSingleton } from "components/app-layouts/providers";
+import { replaceIpfsUrl } from "components/app-layouts/providers";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useMemo } from "react";
 import {
@@ -71,10 +71,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
               flexShrink={0}
               boxSize={24}
               objectFit="contain"
-              src={value.replace(
-                "ipfs://",
-                `${StorageSingleton.gatewayUrl}/` || "",
-              )}
+              src={value ? replaceIpfsUrl(value) : undefined}
               alt=""
             />
           ) : value ? (
@@ -97,10 +94,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
               flexShrink={0}
               boxSize={24}
               objectFit="contain"
-              src={value.replace(
-                "ipfs://",
-                `${StorageSingleton.gatewayUrl}/` || "",
-              )}
+              src={value ? replaceIpfsUrl(value) : undefined}
               autoPlay
               playsInline
               muted

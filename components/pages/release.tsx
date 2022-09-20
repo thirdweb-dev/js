@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { PREBUILT_CONTRACTS_MAP } from "@thirdweb-dev/sdk";
 import { ChakraNextImage } from "components/Image";
-import { StorageSingleton } from "components/app-layouts/providers";
+import { replaceIpfsUrl } from "components/app-layouts/providers";
 import { DeployFormDrawer } from "components/contract-components/contract-deploy-form/drawer";
 import { ens, useAllVersions } from "components/contract-components/hooks";
 import { ReleasedContract } from "components/contract-components/released-contract";
@@ -68,10 +68,7 @@ export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
           {release?.logo ? (
             <Image
               borderRadius="full"
-              src={release.logo.replace(
-                "ipfs://",
-                `${StorageSingleton.gatewayUrl}/`,
-              )}
+              src={replaceIpfsUrl(release.logo)}
               boxSize={14}
             />
           ) : (

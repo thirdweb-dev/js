@@ -340,7 +340,7 @@ async function fetchDeployBytecodeFromReleaseMetadata(
       .getPublisher()
       .resolvePublishMetadataFromCompilerMetadata(compialierMetaUri);
     return pubmeta.length > 0
-      ? await StorageSingleton.getRaw(pubmeta[0].bytecodeUri)
+      ? await (await StorageSingleton.download(pubmeta[0].bytecodeUri)).text()
       : undefined;
   }
   return undefined;

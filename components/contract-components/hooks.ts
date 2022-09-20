@@ -314,7 +314,7 @@ export function useReleasesFromDeploy(
           .resolvePublishMetadataFromCompilerMetadata(compilerMetaUri);
       }
 
-      return undefined;
+      return null;
     },
     {
       enabled: !!contractAddress && !!provider,

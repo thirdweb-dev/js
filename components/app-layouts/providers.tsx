@@ -2,13 +2,21 @@ import { useActiveChainId } from "@3rdweb-sdk/react";
 import { QueryClient } from "@tanstack/react-query";
 import { ThirdwebProvider, WalletConnector } from "@thirdweb-dev/react";
 import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
-import { IpfsStorage } from "@thirdweb-dev/storage";
+import {
+  IpfsUploader,
+  ThirdwebStorage,
+  replaceSchemeWithGatewayUrl,
+} from "@thirdweb-dev/storage";
 import { useNativeColorMode } from "hooks/useNativeColorMode";
 import { ComponentWithChildren } from "types/component-with-children";
 
-export const StorageSingleton = new IpfsStorage(
-  process.env.NEXT_PUBLIC_IPFS_GATEWAY_URL,
-);
+const IpfsUploaderSingleton = new IpfsUploader();
+
+export const StorageSingleton = new ThirdwebStorage(IpfsUploaderSingleton);
+
+export function replaceIpfsUrl(url: string) {
+  return replaceSchemeWithGatewayUrl(url, IpfsUploaderSingleton.gatewayUrls, 0);
+}
 
 export const alchemyUrlMap: Record<SUPPORTED_CHAIN_ID, string> = {
   [ChainId.Mainnet]:

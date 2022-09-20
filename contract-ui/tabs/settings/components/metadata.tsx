@@ -1,8 +1,10 @@
+import { SettingDetectedState } from "./detected-state";
 import { AdminOnly } from "@3rdweb-sdk/react";
 import { Flex, FormControl, Input, Textarea } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMetadata, useUpdateMetadata } from "@thirdweb-dev/react";
 import { CommonContractSchema, ValidContractInstance } from "@thirdweb-dev/sdk";
+import { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -19,9 +21,15 @@ import {
 } from "tw-components";
 import { z } from "zod";
 
-export const SettingsMetadata: React.FC<{
-  contract?: ValidContractInstance;
-}> = ({ contract }) => {
+export const SettingsMetadata = <
+  TContract extends ValidContractInstance | undefined,
+>({
+  contract,
+  detectedState,
+}: {
+  contract: TContract;
+  detectedState: ExtensionDetectedState;
+}) => {
   const trackEvent = useTrack();
   const metadata = useMetadata(contract);
   const metadataMutation = useUpdateMetadata(contract);
@@ -49,7 +57,8 @@ export const SettingsMetadata: React.FC<{
   );
 
   return (
-    <Card p={0}>
+    <Card p={0} position="relative" overflow="hidden">
+      <SettingDetectedState type="metadata" detectedState={detectedState} />
       <Flex
         as="form"
         onSubmit={handleSubmit((d) => {
@@ -82,7 +91,7 @@ export const SettingsMetadata: React.FC<{
       >
         <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
           <Flex direction="column">
-            <Heading size="title.md">General Settings</Heading>
+            <Heading size="title.md">Metadata</Heading>
             <Text size="body.md" fontStyle="italic">
               Settings to organize and distinguish between your different
               contracts.

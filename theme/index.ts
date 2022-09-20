@@ -224,6 +224,10 @@ const chakraTheme: Theme = extendTheme({
         _dark: "rgba(39, 46, 54, 0.9)",
       },
       borderColor: { default: "gray.200", _dark: "whiteAlpha.100" },
+      opaqueBg: {
+        default: "whiteAlpha.500",
+        _dark: "blackAlpha.600",
+      },
     },
   },
 }) as Theme;

@@ -1,4 +1,5 @@
-import type { Json, NFTMetadataInput } from "@thirdweb-dev/sdk";
+import type { NFTMetadataInput } from "@thirdweb-dev/sdk";
+import { Json } from "@thirdweb-dev/storage";
 
 export function parseAttributes<T extends NFTMetadataInput>(input: T): T {
   return {

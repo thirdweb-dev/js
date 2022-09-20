@@ -32,7 +32,7 @@ import {
   ExtraPublishMetadata,
   SUPPORTED_CHAIN_IDS,
 } from "@thirdweb-dev/sdk";
-import { StorageSingleton } from "components/app-layouts/providers";
+import { replaceIpfsUrl } from "components/app-layouts/providers";
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
@@ -239,10 +239,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
                     <Image
                       w="100%"
                       h="100%"
-                      src={fileUrl.replace(
-                        "ipfs://",
-                        `${StorageSingleton.gatewayUrl}/`,
-                      )}
+                      src={replaceIpfsUrl(fileUrl)}
                       borderRadius="full"
                     />
                   )}

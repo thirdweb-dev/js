@@ -1,5 +1,4 @@
 import { useWeb3 } from "@3rdweb-sdk/react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Center,
   Flex,
@@ -49,7 +48,7 @@ import { StaticImageData } from "next/image";
 import posthog from "posthog-js";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { FiCheck, FiCopy, FiUser } from "react-icons/fi";
+import { FiCheck, FiChevronDown, FiCopy, FiUser } from "react-icons/fi";
 import {
   Badge,
   Button,
@@ -139,7 +138,7 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
             {...buttonProps}
             variant="outline"
             colorScheme="gray"
-            rightIcon={<ChevronDownIcon />}
+            rightIcon={<FiChevronDown />}
           >
             <Flex direction="row" gap={3} align="center">
               <Icon boxSize={6} as={SVG} />
@@ -328,7 +327,7 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
           isLoading={connector.loading}
           as={Button}
           colorScheme="primary"
-          rightIcon={<ChevronDownIcon />}
+          rightIcon={<FiChevronDown />}
           {...buttonProps}
         >
           Connect Wallet

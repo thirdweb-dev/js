@@ -1,6 +1,7 @@
 import {
   Drawer as ChakraDrawer,
   DrawerProps as ChakraDrawerProps,
+  CloseButtonProps,
   Divider,
   DrawerBody,
   DrawerCloseButton,
@@ -18,6 +19,7 @@ import { ComponentWithChildren } from "types/component-with-children";
 export interface DrawerProps extends Omit<ChakraDrawerProps, "placement"> {
   header?: ModalHeaderProps;
   drawerBodyProps?: ModalBodyProps;
+  closeButtonProps?: CloseButtonProps;
   footer?: ModalFooterProps;
   hideCloseButton?: true;
 }
@@ -28,6 +30,7 @@ export const Drawer: ComponentWithChildren<DrawerProps> = ({
   drawerBodyProps,
   footer,
   hideCloseButton,
+  closeButtonProps,
   ...restDrawerProps
 }) => {
   const isMobile = useBreakpointValue(
@@ -48,7 +51,7 @@ export const Drawer: ComponentWithChildren<DrawerProps> = ({
         overflow="hidden"
         borderTopRadius={{ base: "lg", md: "none" }}
       >
-        {!hideCloseButton && <DrawerCloseButton />}
+        {!hideCloseButton && <DrawerCloseButton {...closeButtonProps} />}
         {header && (
           <>
             <DrawerHeader {...header} />

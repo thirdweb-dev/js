@@ -26,7 +26,10 @@ import {
   PublishedMetadata,
   fetchSourceFilesFromMetadata,
 } from "@thirdweb-dev/sdk";
-import { StorageSingleton } from "components/app-layouts/providers";
+import {
+  StorageSingleton,
+  replaceIpfsUrl,
+} from "components/app-layouts/providers";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
 import { ShareButton } from "components/share-buttom";
 import { format } from "date-fns";
@@ -278,9 +281,8 @@ Deploy it in one click`,
                       <Icon as={BsShieldCheck} boxSize={5} color="green" />
                       <Text size="label.md">
                         <Link
-                          href={releasedContractInfo.data?.publishedMetadata?.audit.replace(
-                            "ipfs://",
-                            `${StorageSingleton.gatewayUrl}/`,
+                          href={replaceIpfsUrl(
+                            releasedContractInfo.data?.publishedMetadata?.audit,
                           )}
                           isExternal
                         >
