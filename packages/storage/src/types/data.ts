@@ -61,23 +61,6 @@ export type FileOrBufferOrString = FileOrBuffer | string;
 /**
  * @internal
  */
-export const JsonSchema: z.ZodType<Json> = z.lazy(() =>
-  z.union([
-    JsonLiteralSchema,
-    JsonObjectSchema,
-    FileOrBufferSchema,
-    z.array(JsonSchema),
-  ]),
-);
-
-/**
- * @internal
- */
-export const JsonObjectSchema = z.record(z.string(), JsonSchema);
-
-/**
- * @internal
- */
 export type Json = JsonLiteral | FileOrBuffer | JsonObject | Json[];
 
 /**

@@ -1,5 +1,4 @@
 import { Signer, WalletAdapter } from "@metaplex-foundation/js";
-import { JsonObjectSchema } from "@thirdweb-dev/storage";
 import { z } from "zod";
 
 /**
@@ -32,6 +31,33 @@ export const JsonLiteral = z.union([
   z.boolean(),
   z.null(),
 ]);
+
+/**
+ * @internal
+ */
+export const JsonSchema: z.ZodType<Json> = z.lazy(() =>
+  z.union([JsonLiteral, JsonObjectSchema, z.array(JsonSchema)]),
+);
+
+/**
+ * @internal
+ */
+export const JsonObjectSchema = z.record(z.string(), JsonSchema);
+
+/**
+ * @internal
+ */
+export type JsonLiteral = number | string | null | boolean;
+
+/**
+ * @internal
+ */
+export type Json = JsonLiteral | JsonObject | Json[];
+
+/**
+ * @internal
+ */
+export type JsonObject = { [key: string]: Json };
 
 /**
  * @internal

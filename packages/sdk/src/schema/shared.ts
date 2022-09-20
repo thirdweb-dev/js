@@ -1,4 +1,4 @@
-import { Json } from "@thirdweb-dev/storage";
+import { Json } from "../core/types";
 import { BigNumber, CallOverrides, utils } from "ethers";
 import { z } from "zod";
 
@@ -47,6 +47,23 @@ export const AddressSchema = z.string().refine(
     };
   },
 );
+
+export const JsonLiteral = z.union([
+  z.string(),
+  z.number(),
+  z.boolean(),
+  z.null(),
+]);
+
+export const JsonSchema: z.ZodSchema<Json> = z.lazy(() =>
+  z.union([
+    JsonLiteral,
+    BigNumberishSchema,
+    z.array(JsonSchema),
+    z.record(JsonSchema),
+  ]),
+);
+export const JsonObjectSchema = z.record(JsonSchema);
 
 export const AmountSchema = z
   .union([
