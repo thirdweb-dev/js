@@ -1,6 +1,9 @@
 import { Network } from "../types/index";
 import { Cluster, clusterApiUrl } from "@solana/web3.js";
 
+/**
+ * @internal
+ */
 export function getUrlForNetwork(network: Network) {
   switch (network) {
     case "localhost":

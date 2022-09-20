@@ -1,11 +1,20 @@
-// types
-export * from "./types/index";
 // classes
 export * from "./classes/user-wallet";
+export * from "./classes/deployer";
 // contracts
 export * from "./contracts/nft-collection";
+export * from "./contracts/nft-drop";
+export * from "./contracts/program";
+export * from "./contracts/token";
 // sdk
 export * from "./sdk";
+export { createThirdwebSDK } from "./server/index";
+// types
+export * from "./types/nft";
+export * from "./types/index";
+export * from "./types/common";
+export * from "./types/contracts";
+export * from "./types/contracts/nft-drop";
 
 //schema for dashboard use
 export {

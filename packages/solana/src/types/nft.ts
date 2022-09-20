@@ -1,4 +1,8 @@
-import { HexColor, OptionalPropertiesInput } from "./common";
+import {
+  CurrencyValueSchema,
+  HexColor,
+  OptionalPropertiesInput,
+} from "./common";
 import { FileOrBufferOrStringSchema, JsonSchema } from "@thirdweb-dev/storage";
 import { z } from "zod";
 
@@ -52,6 +56,7 @@ export const CommonNFTOutput = CommonTokenOutput.extend({
  */
 export const CommonFungibleTokenOutput = CommonTokenOutput.extend({
   decimals: z.number(),
+  supply: CurrencyValueSchema,
 });
 
 /**
