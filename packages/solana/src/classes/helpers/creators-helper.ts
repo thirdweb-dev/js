@@ -2,6 +2,9 @@ import { NFTCollectionMetadataInput } from "../../types/contracts";
 import type { Creator } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
 
+/**
+ * @internal
+ */
 export function enforceCreator(
   creators: NFTCollectionMetadataInput["creators"] = [],
   owner: PublicKey,

@@ -2,6 +2,9 @@ import { CurrencyValue } from "../types/common";
 import { Amount } from "@metaplex-foundation/js";
 import BN from "bn.js";
 
+/**
+ * @internal
+ */
 export function toCurrencyValue(amount: Amount): CurrencyValue {
   return {
     value: amount.basisPoints.toString(),
