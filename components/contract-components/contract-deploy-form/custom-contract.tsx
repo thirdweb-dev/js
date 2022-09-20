@@ -69,7 +69,10 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     });
   }, []);
 
-  const deploy = useCustomContractDeployMutation(ipfsHash);
+  const deploy = useCustomContractDeployMutation(
+    ipfsHash,
+    isImplementationDeploy,
+  );
 
   const router = useRouter();
   const { onSuccess, onError } = useTxNotifications(

@@ -15,7 +15,7 @@ const IpfsUploaderSingleton = new IpfsUploader();
 export const StorageSingleton = new ThirdwebStorage(IpfsUploaderSingleton);
 
 export function replaceIpfsUrl(url: string) {
-  return replaceSchemeWithGatewayUrl(url, IpfsUploaderSingleton.gatewayUrls, 0);
+  return StorageSingleton.resolveScheme(url);
 }
 
 export const alchemyUrlMap: Record<SUPPORTED_CHAIN_ID, string> = {
