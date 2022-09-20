@@ -22,6 +22,7 @@ import {
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
+import { PaperCheckout } from "../../integrations/paper-xyz";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
@@ -161,6 +162,13 @@ export class NFTDropImpl extends StandardErc721<DropERC721> {
    * ```
    */
   public revealer: DelayedReveal<DropERC721>;
+
+  /**
+   * Checkout
+   * @remarks Create a FIAT currency checkout for your NFT drop.
+   */
+  public checkout: PaperCheckout<DropERC721>;
+
   public erc721: Erc721<DropERC721>;
 
   constructor(
@@ -206,6 +214,8 @@ export class NFTDropImpl extends StandardErc721<DropERC721> {
       () => this.erc721.nextTokenIdToMint(),
     );
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+
+    this.checkout = new PaperCheckout(this.contractWrapper);
   }
 
   /**
