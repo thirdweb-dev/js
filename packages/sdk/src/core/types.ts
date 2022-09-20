@@ -116,16 +116,11 @@ export interface GaslessTransaction {
   callOverrides: CallOverrides;
 }
 
-type BufferOrStringWithName = {
-  data: Buffer | string;
-  name: string;
-};
-type FileOrBuffer = File | Buffer | BufferOrStringWithName;
-type JsonLiteral = boolean | null | number | string;
-export type Json =
-  | FileOrBuffer
-  | JsonLiteral
-  | JsonObject
-  | Json[]
-  | BigNumberish;
-export type JsonObject = { [key: string]: Json };
+type JsonLiteralOutput = boolean | null | number | string;
+type JsonLiteralInput = JsonLiteralOutput | BigNumber | bigint;
+
+export type JsonOutput = JsonLiteralOutput | JsonObjectOutput | JsonOutput[];
+export type JsonObjectOutput = { [key: string]: JsonOutput };
+
+export type JsonInput = JsonLiteralInput | JsonObjectInput | JsonInput[];
+export type JsonObjectInput = { [key: string]: JsonInput };

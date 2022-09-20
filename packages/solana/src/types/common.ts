@@ -130,3 +130,27 @@ export type WalletAccount = {
   address: string;
   name: string;
 };
+
+const isBrowser = () => typeof window !== "undefined";
+const FileOrBufferUnionSchema = isBrowser()
+  ? (z.instanceof(File) as z.ZodType<InstanceType<typeof File>>)
+  : (z.instanceof(Buffer) as z.ZodTypeAny); // @fixme, this is a hack to make browser happy for now
+
+/**
+ * @internal
+ */
+export const FileOrBufferSchema = z.union([
+  FileOrBufferUnionSchema,
+  z.object({
+    data: z.union([FileOrBufferUnionSchema, z.string()]),
+    name: z.string(),
+  }),
+]);
+
+/**
+ * @internal
+ */
+export const FileOrBufferOrStringSchema = z.union([
+  FileOrBufferSchema,
+  z.string(),
+]);

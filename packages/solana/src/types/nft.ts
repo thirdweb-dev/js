@@ -1,10 +1,10 @@
 import {
   CurrencyValueSchema,
+  FileOrBufferOrStringSchema,
   HexColor,
   JsonSchema,
   OptionalPropertiesInput,
 } from "./common";
-import { FileOrBufferOrStringSchema } from "@thirdweb-dev/storage";
 import { z } from "zod";
 
 /**

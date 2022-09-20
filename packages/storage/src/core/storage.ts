@@ -1,19 +1,18 @@
 import { prepareGatewayUrls } from "../common";
 import {
   extractObjectFiles,
+  isFileOrBuffer,
   replaceObjectFilesWithUris,
   replaceObjectGatewayUrlsWithSchemes,
   replaceObjectSchemesWithGatewayUrls,
   replaceSchemeWithGatewayUrl,
 } from "../common/utils";
 import {
-  FileOrBuffer,
-  FileOrBufferOrStringArraySchema,
+  FileOrBufferOrString,
   GatewayUrls,
   IpfsUploadBatchOptions,
   IStorageDownloader,
   IStorageUploader,
-  Json,
   UploadOptions,
 } from "../types";
 import { StorageDownloader } from "./downloaders/storage-downloader";
@@ -135,11 +134,8 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
    * const jsonUri = await storage.upload(json);
    * ```
    */
-  async upload(data: Json | FileOrBuffer, options?: T): Promise<string> {
-    const [uri] = await this.uploadBatch(
-      [data] as Json[] | FileOrBuffer[],
-      options,
-    );
+  async upload(data: unknown, options?: T): Promise<string> {
+    const [uri] = await this.uploadBatch([data], options);
     return uri;
   }
 
@@ -168,25 +164,25 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
    * const jsonUris = await storage.uploadBatch(objects);
    * ```
    */
-  async uploadBatch(
-    data: Json[] | FileOrBuffer[],
-    options?: T,
-  ): Promise<string[]> {
+  async uploadBatch(data: unknown[], options?: T): Promise<string[]> {
+    data = data.filter((item) => item !== undefined);
+
     if (!data.length) {
       return [];
     }
 
-    const { success: isFileArray } =
-      FileOrBufferOrStringArraySchema.safeParse(data);
+    const isFileArray = data
+      .map((item) => isFileOrBuffer(item) || typeof item === "string")
+      .every((item) => !!item);
 
     // If data is an array of files, pass it through to upload directly
     if (isFileArray) {
-      return this.uploader.uploadBatch(data as FileOrBuffer[], options);
+      return this.uploader.uploadBatch(data as FileOrBufferOrString[], options);
     }
 
     // Otherwise it is an array of JSON objects, so we have to prepare it first
     const metadata = (
-      await this.uploadAndReplaceFilesWithHashes(data as Json[], options)
+      await this.uploadAndReplaceFilesWithHashes(data, options)
     ).map((item) => {
       if (typeof item === "string") {
         return item;
@@ -198,9 +194,9 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
   }
 
   private async uploadAndReplaceFilesWithHashes(
-    data: Json[],
+    data: unknown[],
     options?: T,
-  ): Promise<Json[]> {
+  ): Promise<unknown[]> {
     let cleaned = data;
     // TODO: Gateway URLs should probably be top-level since both uploader and downloader need them
     if (this.gatewayUrls) {
@@ -208,7 +204,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
       cleaned = replaceObjectGatewayUrlsWithSchemes(
         cleaned,
         this.gatewayUrls,
-      ) as Json[];
+      ) as unknown[];
 
       if (options?.uploadWithGatewayUrl || this.uploader.uploadWithGatewayUrl) {
         // If flag is set, replace all schemes with their preferred gateway URL
@@ -216,7 +212,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
         cleaned = replaceObjectSchemesWithGatewayUrls(
           cleaned,
           this.gatewayUrls,
-        ) as Json[];
+        ) as unknown[];
       }
     }
 
@@ -231,6 +227,6 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
     const uris = await this.uploader.uploadBatch(files);
 
     // Recurse through data and replace files with hashes
-    return replaceObjectFilesWithUris(cleaned, uris) as Json[];
+    return replaceObjectFilesWithUris(cleaned, uris) as unknown[];
   }
 }
