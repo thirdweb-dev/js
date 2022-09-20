@@ -13,6 +13,9 @@ import {
 import { getAccount, getAssociatedTokenAddress } from "@solana/spl-token";
 import { Connection, PublicKey } from "@solana/web3.js";
 
+/**
+ * @internal
+ */
 export class NFTHelper {
   private metaplex: Metaplex;
   private connection: Connection;

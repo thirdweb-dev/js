@@ -8,6 +8,9 @@ import {
 import { TokenStandard } from "@metaplex-foundation/mpl-token-metadata";
 import { PublicKey } from "@solana/web3.js";
 
+/**
+ * @internal
+ */
 export class Registry {
   private metaplex: Metaplex;
 
