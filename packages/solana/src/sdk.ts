@@ -52,7 +52,13 @@ export class ThirdwebSDK {
    * Handles getting data about accounts and programs associated with a wallet
    */
   public registry: Registry;
+  /**
+   * Deploy new programs
+   */
   public deployer: Deployer;
+  /**
+   * Manage and get info about the connected wallet
+   */
   public wallet: UserWallet;
 
   constructor(

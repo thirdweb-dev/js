@@ -18,6 +18,22 @@ import {
 import { ConfirmedSignatureInfo, PublicKey } from "@solana/web3.js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
+/**
+ * A collection of associated NFTs
+ *
+ * @example
+ * ```jsx
+ * import { ThirdwebSDK } from "@thirdweb-dev/solana";
+ *
+ * const sdk = ThirdwebSDK.fromNetwork("devnet");
+ * sdk.wallet.connect(signer);
+ *
+ * // Get the interface for your NFT collection program
+ * const program = await sdk.getNFTCollection("{{contract_address}}");
+ * ```
+ *
+ * @public
+ */
 export class NFTCollection {
   private metaplex: Metaplex;
   private storage: ThirdwebStorage;

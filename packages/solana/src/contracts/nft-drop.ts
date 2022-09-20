@@ -12,6 +12,22 @@ import { PublicKey } from "@solana/web3.js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
 
+/**
+ * A collection of NFTs that can be lazy minted and claimed
+ *
+ * @example
+ * ```jsx
+ * import { ThirdwebSDK } from "@thirdweb-dev/solana";
+ *
+ * const sdk = ThirdwebSDK.fromNetwork("devnet");
+ * sdk.wallet.connect(signer);
+ *
+ * // Get the interface for your NFT collection program
+ * const program = await sdk.getNFTCollection("{{contract_address}}");
+ * ```
+ *
+ * @public
+ */
 export class NFTDrop {
   private metaplex: Metaplex;
   private storage: ThirdwebStorage;

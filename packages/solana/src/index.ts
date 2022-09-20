@@ -1,5 +1,6 @@
 // classes
 export * from "./classes/user-wallet";
+export * from "./classes/deployer";
 // contracts
 export * from "./contracts/nft-collection";
 export * from "./contracts/nft-drop";

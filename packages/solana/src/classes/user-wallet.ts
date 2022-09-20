@@ -32,7 +32,16 @@ export interface UserWalletEvents {
 }
 
 /**
+ * Handle and view info about the wallet connected to the SDK.
  *
+ * @example
+ * ```jsx
+ * // Connect a wallet to the SDK, pass in a keypair or browser wallet adapter
+ * sdk.wallet.connect(signer)
+ *
+ * // Then you can read data about the connected wallet
+ * const address = sdk.wallet.getAddress();
+ * ```
  *
  * @public
  */
@@ -45,25 +54,71 @@ export class UserWallet {
     this.metaplex = metaplex;
   }
 
+  /**
+   * Connect a signer to the SDK. Can pass in a keypair or browser wallet adapter
+   * @param wallet - The signer to connect to the SDK
+   *
+   * @example
+   * ```jsx
+   * const signer = Keypair.generate();
+   * sdk.wallet.connect(signer);
+   * ```
+   */
   public connect(wallet: WalletSigner) {
     this.connectToMetaplex(wallet);
     this.events.emit("connected", wallet);
   }
 
+  /**
+   * Disconnect the connect wallet from the SDK
+   *
+   * @example
+   * ```jsx
+   * sdk.wallet.disconnect();
+   * ```
+   */
   public disconnect() {
     // TODO implement our own read only identity plugin with our own error messages
     this.metaplex.use(guestIdentity());
     this.events.emit("disconnected");
   }
 
+  /**
+   * Get the address of the connected wallet
+   * @returns the address of the connected wallet
+   *
+   * @example
+   * ```jsx
+   * const address = sdk.wallet.getAddress()
+   * ```
+   */
   public getAddress() {
     return this.metaplex.identity().publicKey.toBase58();
   }
 
+  /**
+   * Get the connected signer
+   * @returns the signer
+   *
+   * @example
+   * ```jsx
+   * const signer = sdk.wallet.getSigner()
+   * ```
+   */
   public getSigner() {
     return this.metaplex.identity();
   }
 
+  /**
+   * Get the native balance of the connected wallet
+   * @returns the native balance currency value
+   *
+   * @example
+   * ```jsx
+   * const balance = await sdk.wallet.getBalance();
+   * console.log(balance.displayValue);
+   * ```
+   */
   public async getBalance(): Promise<CurrencyValue> {
     const value = await this.metaplex.connection.getBalance(
       this.metaplex.identity().publicKey,
