@@ -143,7 +143,7 @@ Each [extension](https://portal.thirdweb.com/extensions) you implement in your s
 
 These hooks make it easy to interact with your smart contracts by implementing the complex logic for you under the hood.
 
-For example, if your smart contract implements [ERC721Supply](https://portal.thirdweb.com/extensions/erc721supply#unlocked-features), you unlock the ability to [view all NFTs](https://portal.thirdweb.com/sdk/interacting-with-contracts/erc721Supply#get-all-minted-nfts) on that contract using the SDK; which fetches all of your NFT metadata and the current owner of each NFT in parallel. In the React SDK, that is available using `useNFTs`:
+For example, if your smart contract implements [ERC721Supply](https://portal.thirdweb.com/extensions/erc721supply#unlocked-features), you unlock the ability to [view all NFTs](https://portal.thirdweb.com/sdk/interacting-with-contracts/erc721supply#get-all-minted-nfts) on that contract using the SDK; which fetches all of your NFT metadata and the current owner of each NFT in parallel. In the React SDK, that is available using `useNFTs`:
 
 ```jsx
 import { useContract, useNFTs } from "@thirdweb-dev/react";
