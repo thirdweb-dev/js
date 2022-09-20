@@ -28,17 +28,7 @@ import FormData from "form-data";
  * const storage = new ThirdwebStorage(uploader);
  *
  * // Or optionally, can pass configuration
- * const gatewayUrls = {
- *   // We define a mapping of schemes to gateway URLs
- *   "ipfs://": [
- *     "https://gateway.ipfscdn.io/ipfs/",
- *     "https://cloudflare-ipfs.com/ipfs/",
- *     "https://ipfs.io/ipfs/",
- *   ],
- * };
  * const options = {
- *   // Define cutom gateway URLs
- *   gatewayUrls,
  *   // Upload objects with resolvable URLs
  *   uploadWithGatewayUrl: true,
  * }
@@ -48,11 +38,9 @@ import FormData from "form-data";
  * @public
  */
 export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
-  public gatewayUrls: GatewayUrls;
   public uploadWithGatewayUrl: boolean;
 
   constructor(options?: IpfsUploaderOptions) {
-    this.gatewayUrls = prepareGatewayUrls(options?.gatewayUrls);
     this.uploadWithGatewayUrl = options?.uploadWithGatewayUrl || false;
   }
 
