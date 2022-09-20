@@ -1,11 +1,11 @@
-import { cliVersion, THIRDWEB_URL } from "../constants/urls";
+import { THIRDWEB_URL, cliVersion } from "../constants/urls";
 import build from "../core/builder/build";
 import detect from "../core/detection/detect";
 import { execute } from "../core/helpers/exec";
 import { error, info, logger, spinner } from "../core/helpers/logger";
 import { createContractsPrompt } from "../core/helpers/selector";
 import { ContractPayload } from "../core/interfaces/ContractPayload";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { IpfsStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
 import { readFileSync } from "fs";
 import path from "path";
@@ -15,7 +15,7 @@ export async function processProject(
   command: "deploy" | "release",
 ) {
   // TODO: allow overriding the default storage
-  const storage = new ThirdwebStorage();
+  const storage = new IpfsStorage();
 
   logger.setSettings({
     minLevel: options.debug ? "debug" : "info",
@@ -129,9 +129,7 @@ export async function processProject(
               if (file.includes(soliditySDKPackage)) {
                 usesSoliditySDK = true;
               }
-              return await storage.upload(file, {
-                uploadWithoutDirectory: true,
-              });
+              return await storage.uploadSingle(file);
             }),
           );
         }
@@ -142,15 +140,14 @@ export async function processProject(
     const metadataURIs = await Promise.all(
       selectedContracts.map(async (c) => {
         logger.debug(`Uploading ${c.name}...`);
-        return await storage.upload(JSON.parse(c.metadata), {
-          uploadWithoutDirectory: true,
-        });
+        const hash = await storage.uploadSingle(c.metadata);
+        return `ipfs://${hash}`;
       }),
     );
 
     // Upload batch all bytecodes
     const bytecodes = selectedContracts.map((c) => c.bytecode);
-    const bytecodeURIs = await storage.uploadBatch(bytecodes);
+    const { uris: bytecodeURIs } = await storage.uploadBatch(bytecodes);
 
     const combinedContents = selectedContracts.map((c, i) => {
       // attach analytics blob to metadata
@@ -172,13 +169,14 @@ export async function processProject(
     let combinedURIs: string[] = [];
     if (combinedContents.length === 1) {
       // use upload single if only one contract to get a clean IPFS hash
-      const metadataUri = await storage.upload(combinedContents[0], {
-        uploadWithoutDirectory: true,
-      });
+      const metadataUri = await storage.uploadSingle(
+        JSON.stringify(combinedContents[0]),
+      );
       combinedURIs.push(metadataUri);
     } else {
       // otherwise upload batch
-      combinedURIs = await storage.uploadBatch(combinedContents);
+      const { uris } = await storage.uploadMetadataBatch(combinedContents);
+      combinedURIs = uris;
     }
 
     loader.succeed("Upload successful");

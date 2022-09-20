@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@thirdweb-dev/sdk": "*",
+    "@thirdweb-dev/storage": "0.2.8",
     "async-retry": "^1.3.3",
     "cbor": "^8.1.0",
     "commander": "^9.1.0",
