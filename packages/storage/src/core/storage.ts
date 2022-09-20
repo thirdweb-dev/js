@@ -7,7 +7,6 @@ import {
 import {
   FileOrBuffer,
   FileOrBufferOrStringArraySchema,
-  FileOrBufferSchema,
   IpfsUploadBatchOptions,
   IStorageDownloader,
   IStorageUploader,
