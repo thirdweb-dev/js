@@ -60,7 +60,7 @@ export type SetClaimConditionsParams = {
  * @param contract - an instance of a contract that extends the ERC721 or ERC1155 spec and implements the `claimConditions` extension.
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
  * @returns a response object with the currently active claim condition
- *
+ * @twfeature
  * @beta
  */
 export function useActiveClaimCondition(
