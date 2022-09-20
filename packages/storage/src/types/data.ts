@@ -67,6 +67,7 @@ export const JsonSchema: z.ZodType<Json> = z.lazy(() =>
     JsonObjectSchema,
     FileOrBufferSchema,
     z.array(JsonSchema),
+    z.record(JsonSchema),
   ]),
 );
 
