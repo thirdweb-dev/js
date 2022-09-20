@@ -6,7 +6,7 @@ import {
 } from "../common/utils";
 import {
   FileOrBuffer,
-  FileOrBufferSchema,
+  FileOrBufferOrStringArraySchema,
   IpfsUploadBatchOptions,
   IStorageDownloader,
   IStorageUploader,
@@ -148,7 +148,8 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
       return [];
     }
 
-    const { success: isFileArray } = FileOrBufferSchema.safeParse(data[0]);
+    const { success: isFileArray } =
+      FileOrBufferOrStringArraySchema.safeParse(data);
 
     // If data is an array of files, pass it through to upload directly
     if (isFileArray) {
