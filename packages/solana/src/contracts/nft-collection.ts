@@ -368,7 +368,7 @@ export class NFTCollection {
    * @example
    * ```jsx
    * const mintAddress = "..."
-   * const address = await program.mintTo(mintAddress);
+   * const address = await program.mintAdditionalSupply(mintAddress);
    * ```
    */
   async mintAdditionalSupply(mintAddress: string) {
@@ -386,7 +386,7 @@ export class NFTCollection {
    * ```jsx
    * const to = "..."
    * const mintAddress = "..."
-   * const address = await program.mintTo(to, mintAddress);
+   * const address = await program.mintAdditionalSupplyTo(to, mintAddress);
    * ```
    */
   async mintAdditionalSupplyTo(
