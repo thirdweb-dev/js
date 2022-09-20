@@ -22,6 +22,7 @@ import {
   TransactionResult,
   TransactionResultWithId,
 } from "../core/types";
+import { PaperCheckout } from "../integrations/paper_xyz";
 import { EditionMetadata, EditionMetadataOwner } from "../schema";
 import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
 import { SDKOptions } from "../schema/sdk-options";
@@ -113,6 +114,13 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    * ```
    */
   public claimConditions: DropErc1155ClaimConditions<DropERC1155>;
+
+  /**
+   * Checkout
+   * @remarks Create a FIAT currency checkout for your NFT drop.
+   */
+  public checkout: PaperCheckout<DropERC1155>;
+
   public history: DropErc1155History;
   /**
    * @internal
@@ -154,6 +162,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.checkout = new PaperCheckout(this.contractWrapper);
   }
 
   /** ******************************

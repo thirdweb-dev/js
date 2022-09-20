@@ -24,6 +24,7 @@ import {
   TransactionResult,
   TransactionResultWithId,
 } from "../core/types";
+import { PaperCheckout } from "../integrations/paper_xyz";
 import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
 import { SDKOptions } from "../schema/sdk-options";
 import {
@@ -73,6 +74,7 @@ export class NFTDrop extends Erc721<DropERC721> {
   public platformFees: ContractPlatformFee<DropERC721>;
   public events: ContractEvents<DropERC721>;
   public roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
+
   /**
    * @internal
    */
@@ -151,6 +153,12 @@ export class NFTDrop extends Erc721<DropERC721> {
    */
   public revealer: DelayedReveal<DropERC721>;
 
+  /**
+   * Checkout
+   * @remarks Create a FIAT currency checkout for your NFT drop.
+   */
+  public checkout: PaperCheckout<DropERC721>;
+
   private _query = this.query as Erc721Supply;
   private _owned = this._query.owned as Erc721Enumerable;
   private _burn = this.burn as Erc721Burnable;
@@ -192,6 +200,7 @@ export class NFTDrop extends Erc721<DropERC721> {
       () => this.nextTokenIdToMint(),
     );
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.checkout = new PaperCheckout(this.contractWrapper);
   }
 
   /** ******************************
