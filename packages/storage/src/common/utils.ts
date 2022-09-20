@@ -22,7 +22,7 @@ export function isBufferInstance(data: any): data is Buffer {
 export function isBufferOrStringWithName(
   data: any,
 ): data is BufferOrStringWithName {
-  return data && data.name && data.data;
+  return !!(data && data.name && data.data);
 }
 
 export function replaceGatewayUrlWithScheme(

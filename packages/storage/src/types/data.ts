@@ -17,7 +17,7 @@ const FileOrBufferUnionSchema = isBrowser()
 export const FileOrBufferSchema = z.union([
   FileOrBufferUnionSchema,
   z.object({
-    data: FileOrBufferUnionSchema,
+    data: z.union([FileOrBufferUnionSchema, z.string()]),
     name: z.string(),
   }),
 ]);
@@ -26,6 +26,10 @@ export const FileOrBufferOrStringSchema = z.union([
   FileOrBufferSchema,
   z.string(),
 ]);
+
+export const FileOrBufferOrStringArraySchema = z.array(
+  FileOrBufferOrStringSchema,
+);
 
 export type FileOrBuffer = File | Buffer | BufferOrStringWithName;
 
