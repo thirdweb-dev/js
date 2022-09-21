@@ -121,6 +121,7 @@ export class Erc1155LazyMintable implements DetectableFeature {
    *
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
+   * @twfeature ERC1155LazyMintable
    */
   public async lazyMint(
     metadatas: NFTMetadataOrUri[],
