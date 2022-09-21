@@ -395,10 +395,13 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
                     })}
                     onClick={async () => {
                       if (!connecting) {
-                        connecting = true;
-                        await connectWithMetamask();
-                        connecting = false;
-                        api.close();
+                        try {
+                          connecting = true;
+                          await connectWithMetamask();
+                          api.close();
+                        } finally {
+                          connecting = false;
+                        }
                       }
                     }}
                     leftElement={<Icon boxSize="1.5em" name="metamask" />}
@@ -420,10 +423,13 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
                           })}
                           onClick={async () => {
                             if (!connecting) {
-                              connecting = true;
-                              await connect(c);
-                              connecting = false;
-                              api.close();
+                              try {
+                                connecting = true;
+                                await connect(c);
+                                api.close();
+                              } finally {
+                                connecting = false;
+                              }
                             }
                           }}
                           leftElement={getIconForConnector(c)}
