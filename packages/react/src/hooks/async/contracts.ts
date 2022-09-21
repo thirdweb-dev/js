@@ -230,7 +230,9 @@ export function useContractMetadata<TContract extends ValidContractInstance>(
   contract: RequiredParam<TContract>,
 ) {
   return useQueryWithNetwork<
-    Awaited<ReturnType<TContract["metadata"]["get"]>> | undefined
+    typeof contract extends undefined
+      ? undefined
+      : Awaited<ReturnType<TContract["metadata"]["get"]>>
   >(
     cacheKeys.contract.metadata(contract?.getAddress()),
     async () => {

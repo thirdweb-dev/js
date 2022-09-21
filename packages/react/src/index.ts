@@ -28,6 +28,7 @@ export * from "./hooks/useChainId";
 export * from "./hooks/useNetworkMismatch";
 
 // require to be inside `<ThirdwebProvider />`
+export * from "./hooks/wagmi-required/useAccount";
 export * from "./hooks/wagmi-required/useNetwork";
 export * from "./hooks/wagmi-required/useDisconnect";
 export * from "./hooks/wagmi-required/useConnect";
