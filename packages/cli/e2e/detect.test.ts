@@ -20,8 +20,11 @@ describe("npx thirdweb detect", () => {
     // select hardhat
     await create.pressKey("enter");
     await create.waitForText(CREATE_MESSAGES.contract);
-    // select ERC721Base
+    // select ERC721
     await create.pressKey("arrowDown");
+    await create.pressKey("enter");
+    await create.waitForText(CREATE_MESSAGES.extensions);
+    // select no extra extensions
     await create.pressKey("enter");
 
     // wait for program to finish
