@@ -103,7 +103,17 @@ export class PackImpl extends StandardErc1155<PackContract> {
       network,
       address,
       abi,
-      options,
+      options.gasless && "openzeppelin" in options.gasless
+        ? {
+            ...options,
+            gasless: {
+              openzeppelin: {
+                ...options.gasless.openzeppelin,
+                useEOAForwader: true,
+              },
+            },
+          }
+        : options,
     ),
   ) {
     super(contractWrapper, storage);
