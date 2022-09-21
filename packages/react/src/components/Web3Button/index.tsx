@@ -1,7 +1,6 @@
 import { useContract } from "../../hooks/async/contracts";
-import { useAddress } from "../../hooks/useAddress";
-import { useChainId } from "../../hooks/useChainId";
 import { useNetwork } from "../../hooks/wagmi-required/useNetwork";
+import { useAddress, useChainId } from "../../hooks/wallet";
 import { useSDKChainId } from "../../providers/base";
 import {
   createCacheKeyWithNetwork,

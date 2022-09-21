@@ -6,8 +6,7 @@ import {
   createContractCacheKey,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useAddress } from "../useAddress";
-import { useChainId } from "../useChainId";
+import { useAddress, useChainId } from "../wallet";
 import {
   useMutation,
   useQuery,

@@ -11,17 +11,16 @@ export * from "./hooks/async/drop";
 export * from "./hooks/async/marketplace";
 export * from "./hooks/async/token";
 export * from "./hooks/async/claim-conditions";
-export * from "./hooks/async/wallet";
+
 export * from "./hooks/async/contract-settings";
 export * from "./hooks/async/roles";
 
 // thirdweb hooks (work as long as at least `<ThirdwebSDkProvider>` is used)
 export * from "./hooks/auth";
 export * from "./hooks/useSigner";
-export * from "./hooks/useAddress";
 export * from "./hooks/useReadonlySDK";
-export * from "./hooks/useChainId";
 export * from "./hooks/useNetworkMismatch";
+export * from "./hooks/wallet";
 
 // require to be inside `<ThirdwebProvider />`
 export * from "./hooks/wagmi-required/useAccount";

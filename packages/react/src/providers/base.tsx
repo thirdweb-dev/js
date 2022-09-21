@@ -2,6 +2,10 @@ import {
   ThirdwebAuthConfig,
   ThirdwebAuthConfigProvider,
 } from "../contexts/thirdweb-auth";
+import {
+  ThirdwebConnectedWalletProvider,
+  useThirdwebConnectedWalletContext,
+} from "../contexts/thirdweb-wallet";
 import { RequiredParam } from "../types";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
@@ -38,22 +42,17 @@ export interface ThirdwebSDKProviderProps {
 }
 
 /**
- * A basic wrapper around the Thirdweb SDK.
  *
- * You can use this in order to be able to pass a provider & signer directly to the SDK.
- *
- * @remarks Utilizing this provider will mean hooks for wallet management are not available, if you need those please use the {@link ThirdwebProvider} instead.
- *
- * @public
+ * @internal
  */
-export const ThirdwebSDKProvider: React.FC<
-  React.PropsWithChildren<ThirdwebSDKProviderProps>
+export const WrappedThirdwebSDKProvider: React.FC<
+  React.PropsWithChildren<Omit<ThirdwebSDKProviderProps, "signer">>
 > = ({
   sdkOptions,
   desiredChainId,
   storageInterface,
   provider,
-  signer,
+
   queryClient,
   authConfig,
   children,
@@ -61,6 +60,8 @@ export const ThirdwebSDKProvider: React.FC<
   const queryClientWithDefault: QueryClient = useMemo(() => {
     return queryClient ? queryClient : new QueryClient();
   }, [queryClient]);
+
+  const { signer } = useThirdwebConnectedWalletContext();
 
   const sdk = useMemo(() => {
     if (!desiredChainId || typeof window === "undefined") {
@@ -95,6 +96,27 @@ export const ThirdwebSDKProvider: React.FC<
         </ThirdwebSDKContext.Provider>
       </QueryClientProvider>
     </ThirdwebAuthConfigProvider>
+  );
+};
+
+/**
+ * A basic wrapper around the Thirdweb SDK.
+ *
+ * You can use this in order to be able to pass a provider & signer directly to the SDK.
+ *
+ * @remarks Utilizing this provider will mean hooks for wallet management are not available, if you need those please use the {@link ThirdwebProvider} instead.
+ *
+ * @public
+ */
+export const ThirdwebSDKProvider: React.FC<
+  React.PropsWithChildren<ThirdwebSDKProviderProps>
+> = ({ signer, children, ...restProps }) => {
+  return (
+    <ThirdwebConnectedWalletProvider signer={signer}>
+      <WrappedThirdwebSDKProvider {...restProps}>
+        {children}
+      </WrappedThirdwebSDKProvider>
+    </ThirdwebConnectedWalletProvider>
   );
 };
 

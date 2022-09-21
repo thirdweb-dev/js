@@ -1,12 +1,10 @@
 import { useThirdwebAuthConfig } from "../../contexts/thirdweb-auth";
-import { useBalance } from "../../hooks/async/wallet";
 import { LoginConfig, useAuth } from "../../hooks/auth";
 import { useMetamask } from "../../hooks/connectors/useMetamask";
-import { useAddress } from "../../hooks/useAddress";
-import { useChainId } from "../../hooks/useChainId";
 import { useConnect } from "../../hooks/wagmi-required/useConnect";
 import { useDisconnect } from "../../hooks/wagmi-required/useDisconnect";
 import { useNetwork } from "../../hooks/wagmi-required/useNetwork";
+import { useAddress, useBalance, useChainId } from "../../hooks/wallet";
 import { Portal } from "../../lib/portal";
 import { shortenIfAddress } from "../../utils/addresses";
 import { useClipboard } from "../hooks/useCopyClipboard";

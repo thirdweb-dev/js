@@ -1,5 +1,5 @@
 import { useDesiredChainId } from "../providers/base";
-import { useChainId } from "./useChainId";
+import { useChainId } from "./wallet";
 
 /**
  * Hook for checking whether the connected wallet is on the correct network specified by the `desiredChainId` passed to the `<ThirdwebProvider />`.

@@ -5,7 +5,7 @@ import {
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useAddress } from "../useAddress";
+import { useAddress } from "../wallet";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type {
   AuctionListing,
