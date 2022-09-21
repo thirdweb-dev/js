@@ -7,6 +7,7 @@ import { ContractFeatures, Feature } from "../core/interfaces/ContractFeatures";
 import { ContractPayload } from "../core/interfaces/ContractPayload";
 import { detectFeatures, FeatureWithEnabled } from "@thirdweb-dev/sdk";
 import chalk from "chalk";
+import { existsSync, readFileSync } from "fs";
 import ora from "ora";
 import path from "path";
 
@@ -113,6 +114,22 @@ export async function detectExtensions(options: any) {
         )} - ${chalk.dim(chalk.gray(feature.reference))}`,
       );
     });
+
+    let deployCmd = `npx thirdweb@latest deploy`;
+    if (existsSync("package.json")) {
+      const pkgJson = JSON.parse(readFileSync("package.json", "utf-8"));
+      if (pkgJson?.scripts?.deploy === deployCmd) {
+        deployCmd = `yarn deploy`;
+      }
+    }
+
+    logger.info(``);
+    ora(
+      `Once you're done writing your contracts, you can run the following command to deploy them:`,
+    ).info();
+    logger.info(``);
+    logger.info(`     ${chalk.cyan(deployCmd)}`);
+    logger.info(``);
   });
 }
 
