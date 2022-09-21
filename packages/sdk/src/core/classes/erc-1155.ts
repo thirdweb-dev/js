@@ -263,6 +263,7 @@ export class Erc1155<
    * ]
    * await contract.erc1155.airdrop(tokenId, addresses);
    * ```
+   * @twfeature ERC1155
    */
   public async airdrop(
     tokenId: BigNumberish,
