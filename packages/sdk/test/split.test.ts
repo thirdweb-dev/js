@@ -1,5 +1,5 @@
-import { Split, Token } from "../src";
-import { SplitImpl } from "../src/contracts/classes/split";
+import { SplitInitializer, TokenInitializer } from "../src";
+import { Split } from "../src/contracts/prebuilt-implementations/split";
 import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
@@ -8,7 +8,7 @@ import { ethers } from "ethers";
 global.fetch = require("cross-fetch");
 
 describe("Splits Contract", async () => {
-  let splitsContract: SplitImpl;
+  let splitsContract: Split;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress,
@@ -21,7 +21,7 @@ describe("Splits Contract", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
     const address = await sdk.deployer.deployBuiltInContract(
-      Split.contractType,
+      SplitInitializer.contractType,
       {
         name: "Splits Contract",
         recipients: [
@@ -81,11 +81,14 @@ describe("Splits Contract", async () => {
   });
 
   it("should return all the recipients along with their token balances", async () => {
-    const addr = await sdk.deployer.deployBuiltInContract(Token.contractType, {
-      name: "Test Token",
-      symbol: "TST",
-      primary_sale_recipient: adminWallet.address,
-    });
+    const addr = await sdk.deployer.deployBuiltInContract(
+      TokenInitializer.contractType,
+      {
+        name: "Test Token",
+        symbol: "TST",
+        primary_sale_recipient: adminWallet.address,
+      },
+    );
     const balances = await splitsContract.balanceOfTokenAllRecipients(addr);
     assert.equal(
       Object.keys(balances).length,
