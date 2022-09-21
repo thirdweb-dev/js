@@ -985,7 +985,7 @@ describe("NFT Drop Contract", async () => {
       await dropContract.revealer.reveal(0, "my secret password");
       const transactions =
         (await adminWallet.provider?.getBlockWithTransactions("latest"))
-          ?.transactions ?? [];
+          ?.transactions || [];
 
       const { index, _key } = dropContract.encoder.decode(
         "reveal",

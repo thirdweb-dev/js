@@ -148,7 +148,7 @@ export class StandardErc1155<
    * Airdrop multiple NFTs
    *
    * @remarks Airdrop one or multiple NFTs to the provided wallet addresses.
-   *
+   * @twfeature ERC1155
    * @example
    * ```javascript
    * // The token ID of the NFT you want to airdrop

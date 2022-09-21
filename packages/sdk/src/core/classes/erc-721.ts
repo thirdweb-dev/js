@@ -496,7 +496,7 @@ export class Erc721<
    *
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
-   * @twfeature ERC721LazyMint
+   * @twfeature ERC721LazyMintable
    */
   public async lazyMint(
     metadatas: NFTMetadataOrUri[],
