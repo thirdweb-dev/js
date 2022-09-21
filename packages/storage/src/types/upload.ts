@@ -11,10 +11,6 @@ export type UploadOptions = { [key: string]: any };
  */
 export interface IStorageUploader<T extends UploadOptions> {
   /**
-   * If specified, will be used to replace any gateway URLs with schemes on upload
-   */
-  gatewayUrls?: GatewayUrls;
-  /**
    * If specified, will upload objects with gateway URLs instead of schemes
    */
   uploadWithGatewayUrl?: boolean;
@@ -47,10 +43,6 @@ export type UploadProgressEvent = {
  * @public
  */
 export type IpfsUploaderOptions = {
-  /**
-   * Mapping of URL schemes to gateway URLs to resolve to
-   */
-  gatewayUrls?: GatewayUrls;
   /**
    * Whether or not to replace any URLs with schemes with resolved URLs before upload
    */

@@ -18,6 +18,9 @@ export const NFTDropConditionsInputSchema = z.object({
   splTokenAccount: z.string().optional(),
 });
 
+/**
+ * @internal
+ */
 export const NFTDropConditionsOutputSchema = z.object({
   price: z
     .number()
@@ -43,9 +46,18 @@ export const NFTDropConditionsOutputSchema = z.object({
     .optional(),
 });
 
+/**
+ * @internal
+ */
 export const NFTDropContractInputSchema =
   NFTCollectionMetadataInputSchema.merge(NFTDropConditionsInputSchema);
 
+/**
+ * @internal
+ */
 export type NFTDropContractInput = z.input<typeof NFTDropContractInputSchema>;
 
+/**
+ * @internal
+ */
 export type NFTDropMetadataInput = z.input<typeof NFTDropConditionsInputSchema>;

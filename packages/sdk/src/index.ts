@@ -34,6 +34,9 @@ export * from "./common";
 export * from "./constants";
 export * from "./contracts";
 
+// export integration things
+export * from "./integrations/paper-xyz";
+
 // explcitly export the *TYPES* of prebuilt contracts
 export type { EditionImpl } from "./contracts/prebuilt-implementations/edition";
 export type { EditionDropImpl } from "./contracts/prebuilt-implementations/edition-drop";

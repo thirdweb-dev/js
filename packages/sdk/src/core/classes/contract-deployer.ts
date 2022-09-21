@@ -502,10 +502,14 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @internal
    * @param publishMetadataUri
    * @param constructorParamValues
+   * @param options
    */
   public async deployContractFromUri(
     publishMetadataUri: string,
     constructorParamValues: any[],
+    options?: {
+      forceDirectDeploy?: boolean;
+    },
   ) {
     const signer = this.getSigner();
     invariant(signer, "A signer is required");
@@ -527,8 +531,8 @@ export class ContractDeployer extends RPCConnectionHandler {
     } catch (e) {
       // not a factory deployment, ignore
     }
-
-    if (isDeployableViaFactory && factoryDeploymentData) {
+    const forceDirectDeploy = options?.forceDirectDeploy || false;
+    if (isDeployableViaFactory && factoryDeploymentData && !forceDirectDeploy) {
       const chainId = (await this.getProvider().getNetwork()).chainId;
       invariant(
         factoryDeploymentData.factoryAddresses,

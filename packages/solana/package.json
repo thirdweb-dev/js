@@ -13,6 +13,7 @@
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
     "build": "tsc && preconstruct build",
+    "generate-docs": "api-extractor run --local && api-documenter markdown -i ./temp -o ./docs",
     "node:start": "DEBUG='amman:(info|error|debug)' amman start",
     "node:stop": "amman stop",
     "test:all": "ts-mocha --paths -t 120000 -r esm -p tsconfig.testing.json './test/**/*.test.ts'",
