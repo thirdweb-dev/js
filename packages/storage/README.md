@@ -54,7 +54,7 @@ const metadata = [
     description: "This is my first NFT",
     image: readFileSync("path/to/file.jpg"),
     properties: {
-      Coolness: 100,
+      coolness: 100,
     },
   },
   {
@@ -62,7 +62,7 @@ const metadata = [
     description: "This is my second NFT",
     image: readFileSync("path/to/file.jpg"),
     properties: {
-      Coolness: 200,
+      coolness: 200,
     },
   },
 ];
