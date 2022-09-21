@@ -8,7 +8,6 @@ export * from "./contracts/program";
 export * from "./contracts/token";
 // sdk
 export * from "./sdk";
-export { createThirdwebSDK } from "./server/index";
 // types
 export * from "./types/nft";
 export * from "./types/index";

@@ -145,15 +145,21 @@ export async function createContract({
   console.log(
     `${chalk.green("Success!")} Created ${projectName} at ${contractPath}`,
   );
+  console.log();
   console.log("Inside that directory, you can run several commands:");
   console.log();
-  console.log(chalk.cyan(`  ${packageManager} ${useYarn ? "" : "run"} deploy`));
+  console.log(chalk.cyan(`  ${packageManager}${useYarn ? "" : " run"} build`));
+  console.log(
+    "    Compiles your contracts and detects thirdweb extensions implemented on them.",
+  );
+  console.log();
+  console.log(chalk.cyan(`  ${packageManager}${useYarn ? "" : " run"} deploy`));
   console.log("    Deploys your contracts with the thirdweb deploy flow.");
   console.log();
   console.log(
-    chalk.cyan(`  ${packageManager} ${useYarn ? "" : "run"} release`),
+    chalk.cyan(`  ${packageManager}${useYarn ? "" : " run"} release`),
   );
-  console.log("    Releases your contracts with the thirdweb release flow..");
+  console.log("    Releases your contracts with the thirdweb release flow.");
   console.log();
   console.log("We suggest that you begin by typing:");
   console.log();
