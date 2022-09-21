@@ -5,6 +5,7 @@ import { logger, spinner } from "../core/helpers/logger";
 import { createContractsPrompt } from "../core/helpers/selector";
 import { ContractFeatures, Feature } from "../core/interfaces/ContractFeatures";
 import { ContractPayload } from "../core/interfaces/ContractPayload";
+import { getPkgManager } from "../create/helpers/get-pkg-manager";
 import { detectFeatures, FeatureWithEnabled } from "@thirdweb-dev/sdk";
 import chalk from "chalk";
 import { existsSync, readFileSync } from "fs";
@@ -117,9 +118,11 @@ export async function detectExtensions(options: any) {
 
     let deployCmd = `npx thirdweb@latest deploy`;
     if (existsSync("package.json")) {
+      const packageManager = getPkgManager();
+      const useYarn = packageManager === "yarn";
       const pkgJson = JSON.parse(readFileSync("package.json", "utf-8"));
       if (pkgJson?.scripts?.deploy === deployCmd) {
-        deployCmd = `yarn deploy`;
+        deployCmd = `${packageManager}${useYarn ? "" : " run"} deploy`;
       }
     }
 

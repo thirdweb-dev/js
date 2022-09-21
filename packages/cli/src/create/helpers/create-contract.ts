@@ -147,11 +147,11 @@ export async function createContract({
   );
   console.log("Inside that directory, you can run several commands:");
   console.log();
-  console.log(chalk.cyan(`  ${packageManager} ${useYarn ? "" : "run"} deploy`));
+  console.log(chalk.cyan(`  ${packageManager}${useYarn ? "" : " run"} deploy`));
   console.log("    Deploys your contracts with the thirdweb deploy flow.");
   console.log();
   console.log(
-    chalk.cyan(`  ${packageManager} ${useYarn ? "" : "run"} release`),
+    chalk.cyan(`  ${packageManager}${useYarn ? "" : " run"} release`),
   );
   console.log("    Releases your contracts with the thirdweb release flow..");
   console.log();
