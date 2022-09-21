@@ -226,10 +226,12 @@ export function useContract<
  * @twfeature ContractMetadata
  * @beta
  */
-export function useContractMetadata(
-  contract: RequiredParam<ValidContractInstance>,
+export function useContractMetadata<TContract extends ValidContractInstance>(
+  contract: RequiredParam<TContract>,
 ) {
-  return useQueryWithNetwork(
+  return useQueryWithNetwork<
+    Awaited<ReturnType<TContract["metadata"]["get"]>> | undefined
+  >(
     cacheKeys.contract.metadata(contract?.getAddress()),
     async () => {
       invariant(contract, "contract is required");
