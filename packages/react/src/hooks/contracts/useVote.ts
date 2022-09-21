@@ -25,7 +25,7 @@ import { VoteImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/preb
  * }
  * ```
  * @public
- * @depreated use `useContract()` instead
+ * @deprecated use `useContract()` instead
  */
 export function useVote(contractAddress?: string) {
   showDeprecationWarning("useVote()", "useContract<Vote>()");
