@@ -1,7 +1,3 @@
-// define `__DEV__` as global variable
-// eslint-disable-next-line turbo/no-undeclared-env-vars
-__DEV__ = process.env.NODE_ENV !== "production";
-
 // providers
 export * from "./providers/base";
 export * from "./providers/full";

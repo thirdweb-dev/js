@@ -1,3 +1,5 @@
+import { __DEV__ } from "../constants/runtime";
+
 const warnSet = new Set<`${string}:${string}`>();
 
 export const showDeprecationWarning = (
