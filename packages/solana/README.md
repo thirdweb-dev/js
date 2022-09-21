@@ -58,7 +58,7 @@ const nfts = await program.getAll();
 
 // Or we can write data/send transactions to our program, like minting a new NFT
 const mintAddress = await program.mint({
-  "New NFT",
+  name: "New NFT",
 });
 const nft = await program.get(mintAddress);
 ```
