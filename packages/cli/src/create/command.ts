@@ -175,36 +175,64 @@ export async function twCreate(options: any) {
 
     // Select base contract
     if (projectType === "contract" && !baseContract) {
-      const res = await prompts({
+      let standard = "none";
+      const standardPrompt = await prompts({
         type: "select",
-        name: "baseContract",
+        name: "standard",
         message: CREATE_MESSAGES.contract,
         choices: [
-          { title: "Empty Contract", value: "" },
-          { title: "ERC721 Base", value: "ERC721Base" },
-          { title: "ERC721 + Signature Mint", value: "ERC721Signature" },
-          { title: "ERC721 + Lazy Mint", value: "ERC721LazyMint" },
-          { title: "ERC721 + Delayed Reveal", value: "ERC721DelayedReveal" },
-          { title: "ERC721 + Drop", value: "ERC721Drop" },
-          { title: "ERC1155 Base", value: "ERC1155Base" },
-          { title: "ERC1155 + Signature Mint", value: "ERC1155Signature" },
-          { title: "ERC1155 + Lazy Mint", value: "ERC1155LazyMint" },
-          { title: "ERC1155 + Delayed Reveal", value: "ERC1155DelayedReveal" },
-          { title: "ERC1155 + Drop", value: "ERC1155Drop" },
-          { title: "ERC20 Base", value: "ERC20Base" },
-          { title: "ERC20 + Vote", value: "ERC20Vote" },
-          { title: "ERC20 + Signature Mint", value: "ERC20SignatureMint" },
-          {
-            title: "ERC20 + Vote + Signature Mint",
-            value: "ERC20SignatureMintVote",
-          },
-          { title: "ERC20 + Drop", value: "ERC20Drop" },
-          { title: "ERC20 + Vote + Drop", value: "ERC20DropVote" },
+          { title: "Empty Contract", value: "none" },
+          { title: "ERC721", value: "erc721" },
+          { title: "ERC20", value: "erc20" },
+          { title: "ERC1155", value: "erc1155" },
         ],
       });
 
-      if (typeof res.baseContract === "string") {
-        baseContract = res.baseContract.trim();
+      if (typeof standardPrompt.standard === "string") {
+        standard = standardPrompt.standard.trim();
+      }
+
+      if (standard === "none") {
+        baseContract = "";
+      } else {
+        let choices: prompts.Choice[] = [];
+        if (standard === "erc721") {
+          choices = [
+            { title: "None", value: "ERC721Base" },
+            { title: "Signature Mint", value: "ERC721SignatureMint" },
+            { title: "Lazy Mint", value: "ERC721LazyMint" },
+            { title: "Delayed Reveal", value: "ERC721DelayedReveal" },
+            { title: "Drop", value: "ERC721Drop" },
+          ];
+        } else if (standard === "erc20") {
+          choices = [
+            { title: "None", value: "ERC20Base" },
+            { title: "Vote", value: "ERC20Vote" },
+            { title: "Signature Mint", value: "ERC20SignatureMint" },
+            { title: "Vote + Signature Mint", value: "ERC20SignatureMintVote" },
+            { title: "Drop", value: "ERC20Drop" },
+            { title: "Vote + Drop", value: "ERC20DropVote" },
+          ];
+        } else if (standard === "erc1155") {
+          choices = [
+            { title: "None", value: "ERC1155Base" },
+            { title: "Signature Mint", value: "ERC1155SignatureMint" },
+            { title: "Lazy Mint", value: "ERC1155LazyMint" },
+            { title: "Delayed Reveal", value: "ERC1155DelayedReveal" },
+            { title: "Drop", value: "ERC1155Drop" },
+          ];
+        }
+
+        const res = await prompts({
+          type: "select",
+          name: "baseContract",
+          message: CREATE_MESSAGES.extensions,
+          choices: choices,
+        });
+
+        if (typeof res.baseContract === "string") {
+          baseContract = res.baseContract.trim();
+        }
       }
     }
 
