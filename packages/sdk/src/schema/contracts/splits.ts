@@ -34,7 +34,7 @@ export const SplitsContractInput = CommonContractSchema.extend({
         }
         addressMap[entry.address] = true;
         totalShares += entry.sharesBps;
-        if (totalShares > 10_000) {
+        if (totalShares > 10000) {
           context.addIssue({
             code: z.ZodIssueCode.custom,
             message: `Total shares cannot go over 100%.`,
@@ -42,7 +42,7 @@ export const SplitsContractInput = CommonContractSchema.extend({
           });
         }
       }
-      if (totalShares !== 10_000) {
+      if (totalShares !== 10000) {
         context.addIssue({
           code: z.ZodIssueCode.custom,
           message: `Total shares need to add up to 100%. Total shares are currently ${

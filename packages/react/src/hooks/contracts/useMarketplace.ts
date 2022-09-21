@@ -25,7 +25,7 @@ import { MarketplaceImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contrac
  * }
  * ```
  * @public
- * @depreated use `useContract()` instead
+ * @deprecated use `useContract()` instead
  */
 export function useMarketplace(contractAddress?: string) {
   showDeprecationWarning("useMarketplace()", "useContract<Marketplace>()");

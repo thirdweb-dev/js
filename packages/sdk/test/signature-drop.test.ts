@@ -446,7 +446,7 @@ describe("Signature drop tests", async () => {
       await signatureDropContract.revealer.reveal(0, "my secret password");
       const transactions =
         (await adminWallet.provider?.getBlockWithTransactions("latest"))
-          ?.transactions ?? [];
+          ?.transactions || [];
 
       const { _index, _key } = signatureDropContract.encoder.decode(
         "reveal",

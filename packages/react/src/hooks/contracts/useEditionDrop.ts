@@ -24,7 +24,7 @@ import { EditionDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contrac
  * }
  * ```
  * @public
- * @depreated use `useContract()` instead
+ * @deprecated use `useContract()` instead
  */
 export function useEditionDrop(contractAddress?: string) {
   showDeprecationWarning("useEditionDrop()", "useContract<EditionDrop>()");

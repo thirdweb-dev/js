@@ -2,7 +2,7 @@ import { JsonOutput, JsonInput } from "../core/types";
 import { BigNumber, CallOverrides, utils } from "ethers";
 import { z, ZodTypeDef } from "zod";
 
-export const MAX_BPS = 10_000;
+export const MAX_BPS = 10000;
 
 export const BytesLikeSchema = z.union([z.array(z.number()), z.string()]);
 
