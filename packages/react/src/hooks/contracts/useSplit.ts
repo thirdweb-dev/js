@@ -25,7 +25,7 @@ import { SplitImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/pre
  * }
  * ```
  * @public
- * @depreated use `useContract()` instead
+ * @deprecated use `useContract()` instead
  */
 export function useSplit(contractAddress?: string) {
   showDeprecationWarning("useSplit()", "useContract<Split>()");

@@ -25,7 +25,7 @@ import { PackImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/preb
  * }
  * ```
  * @public
- * @depreated use `useContract()` instead
+ * @deprecated use `useContract()` instead
  */
 export function usePack(contractAddress?: string) {
   showDeprecationWarning("usePack()", "useContract<Pack>()");
