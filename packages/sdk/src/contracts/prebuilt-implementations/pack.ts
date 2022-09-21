@@ -56,15 +56,12 @@ import { BigNumber, BigNumberish, CallOverrides, ethers } from "ethers";
  *
  * @public
  */
-export class PackImpl extends StandardErc1155<PackContract> {
+export class Pack extends StandardErc1155<PackContract> {
   static contractRoles = ["admin", "minter", "pauser", "transfer"] as const;
 
   public abi: typeof ABI;
   public metadata: ContractMetadata<PackContract, typeof PackContractSchema>;
-  public roles: ContractRoles<
-    PackContract,
-    typeof PackImpl.contractRoles[number]
-  >;
+  public roles: ContractRoles<PackContract, typeof Pack.contractRoles[number]>;
   public encoder: ContractEncoder<PackContract>;
   public events: ContractEvents<PackContract>;
   public estimator: GasCostEstimator<PackContract>;
@@ -114,10 +111,7 @@ export class PackImpl extends StandardErc1155<PackContract> {
       PackContractSchema,
       this.storage,
     );
-    this.roles = new ContractRoles(
-      this.contractWrapper,
-      PackImpl.contractRoles,
-    );
+    this.roles = new ContractRoles(this.contractWrapper, Pack.contractRoles);
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);

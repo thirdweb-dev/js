@@ -1,4 +1,5 @@
-import { useNetwork } from "wagmi";
+import { useSigner } from "./useSigner";
+import { useEffect, useState } from "react";
 
 /**
  * Hook for accessing the chain ID of the network the current wallet is connected to
@@ -21,5 +22,35 @@ import { useNetwork } from "wagmi";
  * @public
  */
 export function useChainId(): number | undefined {
-  return useNetwork()["0"].data.chain?.id;
+  const signer = useSigner();
+  const [chainId, setChainId] = useState<number | undefined>(undefined);
+  useEffect(() => {
+    let s = signer;
+    if (signer) {
+      signer
+        .getChainId()
+        .then((id) => {
+          // check if this is still the signr we're looking for
+          if (s === signer) {
+            setChainId(id);
+          }
+        })
+        .catch((err) => {
+          if (__DEV__) {
+            console.warn(
+              "failed to get chainId from signer in `useChainId()`",
+              err,
+            );
+          }
+        });
+    } else {
+      // if we don't have a signer, we don't have a a chain id
+      setChainId(undefined);
+    }
+    return () => {
+      // set the previous signer to undefined because it is invalid
+      s = undefined;
+    };
+  }, [signer]);
+  return chainId;
 }

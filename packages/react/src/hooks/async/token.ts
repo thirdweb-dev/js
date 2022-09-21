@@ -1,4 +1,4 @@
-import { useActiveChainId } from "../../Provider";
+import { useSDKChainId } from "../../providers/base";
 import {
   ClaimTokenParams,
   RequiredParam,
@@ -137,7 +137,7 @@ export function useTokenDecimals(contract: RequiredParam<Erc20>) {
  * @beta
  */
 export function useMintToken(contract: RequiredParam<Erc20>) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
@@ -192,7 +192,7 @@ export function useMintToken(contract: RequiredParam<Erc20>) {
 export function useClaimToken<TContract extends Erc20>(
   contract: RequiredParam<TContract>,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
@@ -249,7 +249,7 @@ export function useClaimToken<TContract extends Erc20>(
  * @beta
  */
 export function useTransferToken(contract: RequiredParam<Erc20>) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
@@ -302,7 +302,7 @@ export function useTransferToken(contract: RequiredParam<Erc20>) {
  * @beta
  */
 export function useTransferBatchToken(contract: RequiredParam<Erc20>) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
@@ -362,7 +362,7 @@ export function useTransferBatchToken(contract: RequiredParam<Erc20>) {
  * @beta
  */
 export function useBurnToken(contract: RequiredParam<Erc20>) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 

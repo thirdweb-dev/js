@@ -44,7 +44,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
  *
  * @public
  */
-export class EditionImpl extends StandardErc1155<TokenERC1155> {
+export class Edition extends StandardErc1155<TokenERC1155> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
   public abi: typeof ABI;
@@ -54,7 +54,7 @@ export class EditionImpl extends StandardErc1155<TokenERC1155> {
   >;
   public roles: ContractRoles<
     TokenERC1155,
-    typeof EditionImpl.contractRoles[number]
+    typeof Edition.contractRoles[number]
   >;
   public sales: ContractPrimarySale<TokenERC1155>;
   public platformFees: ContractPlatformFee<TokenERC1155>;
@@ -120,10 +120,7 @@ export class EditionImpl extends StandardErc1155<TokenERC1155> {
       TokenErc1155ContractSchema,
       this.storage,
     );
-    this.roles = new ContractRoles(
-      this.contractWrapper,
-      EditionImpl.contractRoles,
-    );
+    this.roles = new ContractRoles(this.contractWrapper, Edition.contractRoles);
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);

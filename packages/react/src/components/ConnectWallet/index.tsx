@@ -4,9 +4,9 @@ import { LoginConfig, useAuth } from "../../hooks/auth";
 import { useMetamask } from "../../hooks/connectors/useMetamask";
 import { useAddress } from "../../hooks/useAddress";
 import { useChainId } from "../../hooks/useChainId";
-import { useConnect } from "../../hooks/useConnect";
-import { useDisconnect } from "../../hooks/useDisconnect";
-import { useNetwork } from "../../hooks/useNetwork";
+import { useConnect } from "../../hooks/wagmi-required/useConnect";
+import { useDisconnect } from "../../hooks/wagmi-required/useDisconnect";
+import { useNetwork } from "../../hooks/wagmi-required/useNetwork";
 import { Portal } from "../../lib/portal";
 import { shortenIfAddress } from "../../utils/addresses";
 import { useClipboard } from "../hooks/useCopyClipboard";
@@ -31,7 +31,7 @@ import { ChainId, LoginOptions, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import * as menu from "@zag-js/menu";
 import { normalizeProps, useMachine } from "@zag-js/react";
 import React, { useId, useMemo } from "react";
-import { Connector } from "wagmi";
+import type { Connector } from "wagmi";
 
 const SUPPORTED_CONNECTORS = [
   "injected",

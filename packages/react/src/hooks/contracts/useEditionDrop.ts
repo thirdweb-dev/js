@@ -1,6 +1,6 @@
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { EditionDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/edition-drop";
+import { EditionDrop } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/edition-drop";
 
 /**
  * Hook for getting an instance of an `EditionDrop` contract. This conract is used to interface with ERC1155 compliant NFTs that can be lazily minted.
@@ -28,5 +28,5 @@ import { EditionDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contrac
  */
 export function useEditionDrop(contractAddress?: string) {
   showDeprecationWarning("useEditionDrop()", "useContract<EditionDrop>()");
-  return useContract<EditionDropImpl>(contractAddress).contract;
+  return useContract<EditionDrop>(contractAddress).contract;
 }

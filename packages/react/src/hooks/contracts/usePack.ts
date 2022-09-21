@@ -1,6 +1,6 @@
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { PackImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/pack";
+import { Pack } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/pack";
 
 /**
  * Hook for getting an instance of a `Pack` contract. This contract supports the creation of on-chain luck-based lootboxes.
@@ -29,5 +29,5 @@ import { PackImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/preb
  */
 export function usePack(contractAddress?: string) {
   showDeprecationWarning("usePack()", "useContract<Pack>()");
-  return useContract<PackImpl>(contractAddress).contract;
+  return useContract<Pack>(contractAddress).contract;
 }

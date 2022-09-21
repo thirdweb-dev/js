@@ -1,8 +1,8 @@
-import { useActiveChainId } from "../../Provider";
 import { useContract } from "../../hooks/async/contracts";
 import { useAddress } from "../../hooks/useAddress";
 import { useChainId } from "../../hooks/useChainId";
-import { useNetwork } from "../../hooks/useNetwork";
+import { useNetwork } from "../../hooks/wagmi-required/useNetwork";
+import { useSDKChainId } from "../../providers/base";
 import {
   createCacheKeyWithNetwork,
   createContractCacheKey,
@@ -68,7 +68,7 @@ export const Web3Button = <TAction extends ActionFn>({
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
   const address = useAddress();
   const walletChainId = useChainId();
-  const sdkChainId = useActiveChainId();
+  const sdkChainId = useSDKChainId();
   const [, switchNetwork] = useNetwork();
 
   const queryClient = useQueryClient();

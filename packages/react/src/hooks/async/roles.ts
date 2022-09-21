@@ -1,4 +1,4 @@
-import { useActiveChainId } from "../../Provider";
+import { useSDKChainId } from "../../providers/base";
 import { RequiredParam, WalletAddress } from "../../types";
 import {
   cacheKeys,
@@ -7,7 +7,7 @@ import {
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Role, ValidContractInstance } from "@thirdweb-dev/sdk";
-import type { VoteImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/vote";
+import type { Vote } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/vote";
 import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/smart-contract";
 import { constants } from "ethers";
 import invariant from "tiny-invariant";
@@ -19,7 +19,7 @@ import invariant from "tiny-invariant";
 /**
  * @internal
  */
-export type ContractWithRoles = Exclude<ValidContractInstance, VoteImpl>;
+export type ContractWithRoles = Exclude<ValidContractInstance, Vote>;
 
 /**
  * @internal
@@ -179,7 +179,7 @@ export function useIsAddressRole<TContract extends ContractWithRoles>(
 export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
   contract: RequiredParam<TContract>,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
@@ -238,7 +238,7 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
 export function useGrantRole<TContract extends ContractWithRoles>(
   contract: RequiredParam<TContract>,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
@@ -296,7 +296,7 @@ export function useGrantRole<TContract extends ContractWithRoles>(
 export function useRevokeRole<TContract extends ContractWithRoles>(
   contract: RequiredParam<TContract>,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   return useMutation(

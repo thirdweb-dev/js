@@ -1,4 +1,4 @@
-import { useActiveChainId } from "../../Provider";
+import { useSDKChainId } from "../../providers/base";
 import {
   getErcs,
   DropContract,
@@ -263,7 +263,7 @@ export function useSetClaimConditions(
   contract: RequiredParam<DropContract>,
   tokenId?: BigNumberish,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   const { erc1155, erc721, erc20 } = getErcs(contract);
@@ -333,7 +333,7 @@ export function useResetClaimConditions(
   contract: RequiredParam<DropContract>,
   tokenId?: BigNumberish,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   const { erc1155, erc721, erc20 } = getErcs(contract);

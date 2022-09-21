@@ -1,4 +1,4 @@
-import { useActiveChainId } from "../../Provider";
+import { useSDKChainId } from "../../providers/base";
 import { RequiredParam, WalletAddress } from "../../types";
 import {
   cacheKeys,
@@ -80,7 +80,7 @@ export function useUpdatePrimarySaleRecipient(
 ) {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   return useMutation(
     (newRecipient: WalletAddress) => {
       invariant(contract, "No contract provided");
@@ -171,7 +171,7 @@ export function useUpdateRoyaltySettings(
 ) {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   return useMutation(
     (updatePayload: {
       seller_fee_basis_points?: number;
@@ -264,7 +264,7 @@ export function useUpdatePlatformFees(
 ) {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   return useMutation(
     (updatePayload: {
       platform_fee_basis_points?: number;
@@ -354,7 +354,7 @@ export function useUpdateMetadata(
 ) {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   return useMutation(
     (updatePayload: CustomContractMetadata) => {
       invariant(contract, "No contract provided");
