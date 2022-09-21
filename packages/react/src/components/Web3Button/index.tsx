@@ -20,6 +20,7 @@ type ActionFn = (contract: SmartContract) => any;
 
 interface Web3ButtonProps<TActionFn extends ActionFn>
   extends ThemeProviderProps {
+  className?: string;
   contractAddress: `0x${string}` | `${string}.eth` | string;
 
   overrides?: CallOverrides;
@@ -64,6 +65,7 @@ export const Web3Button = <TAction extends ActionFn>({
   isDisabled,
   children,
   action,
+  className,
   ...themeProps
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
   const address = useAddress();
@@ -122,13 +124,14 @@ export const Web3Button = <TAction extends ActionFn>({
     },
   );
   if (!address) {
-    return <ConnectWallet {...themeProps} />;
+    return <ConnectWallet className={className} {...themeProps} />;
   }
 
   return (
     <ThemeProvider {...themeProps}>
       <Button
-        style={{ height: "50px" }}
+        className={className}
+        style={{ height: "50px", minWidth: "200px", width: "100%" }}
         isLoading={mutation.isLoading || !contract}
         onClick={() => mutation.mutate()}
         isDisabled={isDisabled}
