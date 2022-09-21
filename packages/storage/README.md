@@ -22,3 +22,62 @@ npm install @thirdweb-dev/storage
 ```shell
 yarn add @thirdweb-dev/storage
 ```
+
+## Quick Start
+
+Once you have the Thirdweb Storage SDK installed, you can use it to easily upload and download files and other data using decentralized storage systems.
+
+Here's a simple example using the SDK to upload and download a file from IPFS:
+
+```jsx
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
+
+// First, instantiate the SDK
+const storage = new ThirdwebStorage();
+
+// Now we can upload a file and get the upload URI
+const file = readFileSync("path/to/file.jpg");
+const uri = await storage.upload(file);
+
+// Finally we can download the file data again
+const res = await storage.download(uri);
+const data = await res.text();
+```
+
+Alternatively, we can use the SDK to upload and download metadata and JSON objects, and we can also upload multiple items at once:
+
+```jsx
+// We define metadata for 2 different NFTs
+const metadata = [
+  {
+    name: "NFT #1",
+    description: "This is my first NFT",
+    image: readFileSync("path/to/file.jpg"),
+    properties: {
+      coolness: 100,
+    },
+  },
+  {
+    name: "NFT #2",
+    description: "This is my second NFT",
+    image: readFileSync("path/to/file.jpg"),
+    properties: {
+      coolness: 200,
+    },
+  },
+];
+
+// And now we can upload it all at once to a single directory
+const uris = await storage.uploadBatch(metadata);
+
+// And easily retrieve the metadata
+const metadata = await storage.downloadJSON(uris);
+```
+
+## Learn More
+
+You can learn more about thirdweb and the Storage SDK with the following resources:
+
+- [Storage Docs](https://portal.thirdweb.com/storage)
+- [Thirdweb Twitter](https://twitter.com/thirdweb_)
+- [Thirdweb Discord](https://discord.com/invite/thirdweb)
