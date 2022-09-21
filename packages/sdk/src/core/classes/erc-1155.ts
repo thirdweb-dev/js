@@ -968,7 +968,7 @@ export class Erc1155<
    * const batchId = 0; // the batch to reveal
    * await contract.erc1155.revealer.reveal(batchId, "my secret password");
    * ```
-   * @twfeature ERC1155Reavealable
+   * @twfeature ERC1155Revealable
    */
   get revealer() {
     return assertEnabled(
