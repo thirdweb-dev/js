@@ -25,7 +25,7 @@ import { TokenDrop } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/pre
  * }
  * ```
  * @public
- * @depreated use `useContract()` instead
+ * @deprecated use `useContract()` instead
  */
 export function useTokenDrop(contractAddress?: string) {
   showDeprecationWarning("useTokenDrop()", "useContract<TokenDrop>()");

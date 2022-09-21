@@ -24,7 +24,7 @@ import { SignatureDrop } from "@thirdweb-dev/sdk/dist/declarations/src/contracts
  * }
  * ```
  * @public
- * @depreated use `useContract()` instead
+ * @deprecated use `useContract()` instead
  */
 export function useSignatureDrop(contractAddress?: string) {
   showDeprecationWarning("useSignatureDrop()", "useContract<SignatureDrop>()");

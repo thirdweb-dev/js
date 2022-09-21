@@ -112,7 +112,7 @@ export function extractConstructorParamsFromAbi(
 ) {
   for (const input of abi) {
     if (input.type === "constructor") {
-      return input.inputs ?? [];
+      return input.inputs || [];
     }
   }
   return [];
@@ -131,7 +131,7 @@ export function extractFunctionParamsFromAbi(
 ) {
   for (const input of abi) {
     if (input.type === "function" && input.name === functionName) {
-      return input.inputs ?? [];
+      return input.inputs || [];
     }
   }
   return [];
@@ -159,11 +159,11 @@ export function extractFunctionsFromAbi(
     const promise = out ? `: Promise<${out}>` : `: Promise<TransactionResult>`;
     const signature = `contract.call("${f.name}"${fargs})${promise}`;
     parsed.push({
-      inputs: f.inputs ?? [],
-      outputs: f.outputs ?? [],
-      name: f.name ?? "unknown",
+      inputs: f.inputs || [],
+      outputs: f.outputs || [],
+      name: f.name || "unknown",
       signature,
-      stateMutability: f.stateMutability ?? "",
+      stateMutability: f.stateMutability || "",
       comment: doc,
     });
   }
@@ -184,9 +184,9 @@ export function extractEventsFromAbi(
   for (const e of events) {
     const doc = extractCommentFromMetadata(e.name, metadata, "events");
     parsed.push({
-      inputs: e.inputs ?? [],
-      outputs: e.outputs ?? [],
-      name: e.name ?? "unknown",
+      inputs: e.inputs || [],
+      outputs: e.outputs || [],
+      name: e.name || "unknown",
       comment: doc,
     });
   }

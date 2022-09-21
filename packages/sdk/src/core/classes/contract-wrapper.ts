@@ -434,14 +434,19 @@ export class ContractWrapper<
       args as any,
     );
 
-    const gasEstimate = await (this.writeContract.estimateGas as any)[fn](
-      ...args,
-    );
-    let gas = gasEstimate.mul(2);
+    let gas = BigNumber.from(0);
+    try {
+      const gasEstimate = await (this.readContract.estimateGas as any)[fn](
+        ...args,
+      );
+      gas = gasEstimate.mul(2);
+    } catch (e) {
+      // ignore
+    }
 
     // in some cases WalletConnect doesn't properly gives an estimate for how much gas it would actually use.
     // as a fix, we're setting it to a high arbitrary number (500k) as the gas limit that should cover for most function calls.
-    if (gasEstimate.lt(50000)) {
+    if (gas.lt(100000)) {
       gas = BigNumber.from(500000);
     }
 

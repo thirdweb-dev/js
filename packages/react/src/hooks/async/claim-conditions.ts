@@ -60,7 +60,7 @@ export type SetClaimConditionsParams = {
  * @param contract - an instance of a contract that extends the ERC721 or ERC1155 spec and implements the `claimConditions` extension.
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
  * @returns a response object with the currently active claim condition
- *
+ * @twfeature ERC721ClaimableWithConditions | ERC1155ClaimableWithConditions | ERC20ClaimableWithConditions
  * @beta
  */
 export function useActiveClaimCondition(
@@ -113,7 +113,7 @@ export function useActiveClaimCondition(
  * @param contract - an instance of a contract that extends the ERC721 or ERC1155 spec and implements the `claimConditions` extension.
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
  * @returns a response object with the list of claim conditions
- *
+ * @twfeature ERC721ClaimableWithConditions | ERC1155ClaimableWithConditions | ERC20ClaimableWithConditions
  * @beta
  */
 export function useClaimConditions(
@@ -166,7 +166,7 @@ export function useClaimConditions(
  * @param eligibilityParams - the parameters for the eligibility check, see: {@link ClaimIneligibilityParams}
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
  * @returns a response object with the resons for the claim ineligibility
- *
+ * @twfeature ERC721ClaimableWithConditions | ERC1155ClaimableWithConditions | ERC20ClaimableWithConditions
  * @beta
  */
 export function useClaimIneligibilityReasons(
@@ -257,6 +257,7 @@ export function useClaimIneligibilityReasons(
  *
  * @param contract - an instance of a {@link DropContract}
  * @returns a mutation object that can be used to set claim conditions
+ * @twfeature ERC721ClaimableWithConditions | ERC1155ClaimableWithConditions | ERC20ClaimableWithConditions
  * @beta
  */
 export function useSetClaimConditions(
@@ -327,6 +328,7 @@ export function useSetClaimConditions(
  *
  * @param contract - an instance of a {@link DropContract}
  * @returns a mutation object that can be used to reset claim conditions
+ * @twfeature ERC721ClaimableWithConditions | ERC1155ClaimableWithConditions | ERC20ClaimableWithConditions
  * @beta
  */
 export function useResetClaimConditions(

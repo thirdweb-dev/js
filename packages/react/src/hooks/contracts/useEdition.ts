@@ -25,7 +25,7 @@ import { Edition } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebu
  * }
  * ```
  * @public
- * @depreated use `useContract()` instead
+ * @deprecated use `useContract()` instead
  */
 export function useEdition(contractAddress?: string) {
   showDeprecationWarning("useEdition()", "useContract<Edition>()");

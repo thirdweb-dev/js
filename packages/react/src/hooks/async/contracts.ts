@@ -223,6 +223,7 @@ export function useContract<
  *
  * @param contract - the {@link ValidContractInstance} instance of the contract to get the metadata for
  * @returns a response object that includes the contract metadata of the deployed contract
+ * @twfeature ContractMetadata
  * @beta
  */
 export function useContractMetadata(

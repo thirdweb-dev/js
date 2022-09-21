@@ -5,7 +5,7 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const MAX_BPS = 10_000;
+export const MAX_BPS = 10000;
 
 /**
  * @internal

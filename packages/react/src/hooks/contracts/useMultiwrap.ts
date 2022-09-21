@@ -24,7 +24,7 @@ import { Multiwrap } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/pre
  * }
  * ```
  * @public
- * @depreated use `useContract()` instead
+ * @deprecated use `useContract()` instead
  */
 export function useMultiwrap(contractAddress?: string) {
   showDeprecationWarning("useMultiwrap()", "useContract<Multiwrap>()");

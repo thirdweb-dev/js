@@ -29,6 +29,7 @@ import invariant from "tiny-invariant";
  *
  * @param contract - an instance of a ERC20 contract.
  * @returns a response object that incudes the total minted supply
+ * @twfeature ERC20
  * @beta
  */
 export function useTokenSupply(contract: RequiredParam<Erc20>) {
@@ -55,6 +56,7 @@ export function useTokenSupply(contract: RequiredParam<Erc20>) {
  *
  * @param contract - an instance of a ERC20 contract.
  * @returns a response object that includes the balance of the address
+ * @twfeature ERC20
  * @beta
  */
 export function useTokenBalance(
@@ -85,6 +87,7 @@ export function useTokenBalance(
  *
  * @param contract - an instance of an ERC20 contract.
  * @returns a response object that includes the decimals of the ERC20 token
+ * @twfeature ERC20
  * @beta
  */
 export function useTokenDecimals(contract: RequiredParam<Erc20>) {
@@ -134,6 +137,7 @@ export function useTokenDecimals(contract: RequiredParam<Erc20>) {
  *
  * @param contract - an instance of a contract that extends the ERC20 spec (token, token drop, custom contract that follows the ERC20 spec)
  * @returns a mutation object that can be used to mint new tokens to the connected wallet
+ * @twfeature ERC20Mintable
  * @beta
  */
 export function useMintToken(contract: RequiredParam<Erc20>) {
@@ -187,6 +191,7 @@ export function useMintToken(contract: RequiredParam<Erc20>) {
  *
  * @param contract - an instance of a {@link Erc20}
  * @returns a mutation object that can be used to tokens to the wallet specificed in the params
+ * @twfeature ERC20ClaimableWithConditions
  * @beta
  */
 export function useClaimToken<TContract extends Erc20>(
@@ -246,6 +251,7 @@ export function useClaimToken<TContract extends Erc20>(
  *
  * @param contract - an instance of a contract that extends the ERC20 spec (token, token drop, custom contract that follows the ERC20 spec)
  * @returns a mutation object that can be used to transfer tokens
+ * @twfeature ERC20
  * @beta
  */
 export function useTransferToken(contract: RequiredParam<Erc20>) {
@@ -299,6 +305,7 @@ export function useTransferToken(contract: RequiredParam<Erc20>) {
  *
  * @param contract - an instance of a contract that extends the ERC20 spec (token, token drop, custom contract that follows the ERC20 spec)
  * @returns a mutation object that can be used to transfer batch tokens
+ * @twfeature ERC20
  * @beta
  */
 export function useTransferBatchToken(contract: RequiredParam<Erc20>) {
@@ -359,6 +366,7 @@ export function useTransferBatchToken(contract: RequiredParam<Erc20>) {
  *
  * @param contract - an instance of a contract that extends the ERC20 spec (token, token drop, custom contract that follows the ERC20 spec)
  * @returns a mutation object that can be used to burn tokens from the connected wallet
+ * @twfeature ERC20Burnable
  * @beta
  */
 export function useBurnToken(contract: RequiredParam<Erc20>) {
