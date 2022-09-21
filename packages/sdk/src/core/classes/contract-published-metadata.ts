@@ -10,7 +10,7 @@ import {
   PublishedMetadata,
 } from "../../schema/contracts/custom";
 import { ContractWrapper } from "./contract-wrapper";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract } from "ethers";
 
 /**
@@ -19,11 +19,14 @@ import { BaseContract } from "ethers";
  */
 export class ContractPublishedMetadata<TContract extends BaseContract> {
   private contractWrapper;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   private _cachedMetadata: PublishedMetadata | undefined;
 
-  constructor(contractWrapper: ContractWrapper<TContract>, storage: IStorage) {
+  constructor(
+    contractWrapper: ContractWrapper<TContract>,
+    storage: ThirdwebStorage,
+  ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
   }

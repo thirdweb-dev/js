@@ -13,7 +13,7 @@ import { DropClaimConditions } from "./drop-claim-conditions";
 import { Erc721 } from "./erc-721";
 import type { DropERC721 } from "@thirdweb-dev/contracts-js";
 import { TokensClaimedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Drop";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 
 /**
@@ -54,12 +54,12 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
   public conditions: DropClaimConditions<BaseClaimConditionERC721>;
   private contractWrapper: ContractWrapper<BaseClaimConditionERC721>;
   private erc721: Erc721;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   constructor(
     erc721: Erc721,
     contractWrapper: ContractWrapper<BaseClaimConditionERC721>,
-    storage: IStorage,
+    storage: ThirdwebStorage,
   ) {
     this.erc721 = erc721;
     this.contractWrapper = contractWrapper;

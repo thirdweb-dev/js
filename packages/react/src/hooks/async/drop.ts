@@ -40,6 +40,7 @@ import invariant from "tiny-invariant";
  * @param contract - an instance of a contract that extends the Erc721 spec (nft drop, custom contract that follows the Erc721 & drop spec)
  * @param queryParams - query params to pass to the query for the sake of pagination
  * @returns a response object that includes an array of NFTs that are unclaimed
+ * @twfeature ERC721LazyMintable | ERC1155LazyMintable
  * @beta
  */
 export function useUnclaimedNFTs(
@@ -75,6 +76,7 @@ export function useUnclaimedNFTs(
  * @param contract - an instance of a {@link DropContract}
  * @param queryParams - query params to pass to the query for the sake of pagination
  * @returns a response object that includes an array of NFTs that are claimed
+ * @twfeature ERC721LazyMintable | ERC1155LazyMintable
  * @beta
  */
 export function useClaimedNFTs(
@@ -83,10 +85,12 @@ export function useClaimedNFTs(
 ) {
   return useNFTs(contract, queryParams);
 }
+
 /**
  *
  * @param contract - an instance of a {@link NFTDrop}
  * @returns a response object that includes the number of NFTs that are unclaimed
+ * @twfeature ERC721LazyMintable | ERC1155LazyMintable
  */
 export function useUnclaimedNFTSupply(contract: RequiredParam<DropContract>) {
   const contractAddress = contract?.getAddress();
@@ -106,9 +110,11 @@ export function useUnclaimedNFTSupply(contract: RequiredParam<DropContract>) {
 }
 
 /**
+
  *
  * @param contract - an instance of a {@link DropContract}
  * @returns a response object that includes the number of NFTs that are claimed
+ * @twfeature ERC721LazyMintable | ERC1155LazyMintable
  */
 export function useClaimedNFTSupply(contract: RequiredParam<DropContract>) {
   const contractAddress = contract?.getAddress();
@@ -131,6 +137,7 @@ export function useClaimedNFTSupply(contract: RequiredParam<DropContract>) {
  *
  * @param contract - an instance of a {@link RevealableContract}
  * @returns a response object that gets the batches to still be revealed
+ * @twfeature ERC721Revealable | ERC1155Revealable
  */
 export function useBatchesToReveal<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,
@@ -185,6 +192,7 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
  *
  * @param contract - an instance of a {@link DropContract}
  * @returns a mutation object that can be used to claim a NFT to the wallet specificed in the params
+ * @twfeature ERC721Claimable | ERC1155Claimable
  * @beta
  */
 export function useClaimNFT<TContract extends DropContract>(
@@ -236,6 +244,7 @@ export function useClaimNFT<TContract extends DropContract>(
  * @param contract - an instance of a {@link NFTContract} with the drop extension
  * @param onProgress - an optional callback that will be called with the progress of the upload
  * @returns a mutation object that can be used to lazy mint a batch of NFTs
+ * @twfeature ERC721LazyMintable | ERC1155LazyMintable
  * @beta
  */
 export function useLazyMint<TContract extends DropContract>(
@@ -282,6 +291,7 @@ export function useLazyMint<TContract extends DropContract>(
  * @param contract - an instance of a {@link DropContract}
  * @param onProgress - an optional callback that will be called with the progress of the upload
  * @returns a mutation object that can be used to lazy mint a batch of NFTs
+ * @twfeature ERC721Revealable | ERC1155Revealable
  * @beta
  */
 export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
@@ -336,6 +346,7 @@ export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
  *
  * @param contract - an instance of a {@link RevealableContract}
  * @returns a mutation object that can be used to reveal a batch of delayed reveal NFTs
+ * @twfeature ERC721Revealable | ERC1155Revealable
  * @beta
  */
 export function useRevealLazyMint<TContract extends RevealableContract>(

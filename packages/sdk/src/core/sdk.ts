@@ -39,7 +39,7 @@ import type {
 } from "./types";
 import { UserWallet } from "./wallet/UserWallet";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
-import { IpfsStorage, RemoteStorage, IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Contract, ContractInterface, ethers, Signer } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -72,7 +72,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     signer: Signer,
     network?: ChainOrRpc,
     options: SDKOptions = {},
-    storage: IStorage = new IpfsStorage(),
+    storage: ThirdwebStorage = new ThirdwebStorage(),
   ): ThirdwebSDK {
     const sdk = new ThirdwebSDK(network || signer, options, storage);
     sdk.updateSignerOrProvider(signer);
@@ -103,7 +103,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     privateKey: string,
     network: ChainOrRpc,
     options: SDKOptions = {},
-    storage: IStorage = new IpfsStorage(),
+    storage: ThirdwebStorage = new ThirdwebStorage(),
   ): ThirdwebSDK {
     const signerOrProvider = getProviderForNetwork(network);
     const provider = Signer.isSigner(signerOrProvider)
@@ -128,7 +128,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * Internal handler for uploading and downloading files
    */
-  private storageHandler: IStorage;
+  private storageHandler: ThirdwebStorage;
   /**
    * New contract deployer
    */
@@ -140,7 +140,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * Upload and download files from IPFS or from your own storage service
    */
-  public storage: RemoteStorage;
+  public storage: ThirdwebStorage;
   /**
    * Enable authentication with the connected wallet
    */
@@ -149,12 +149,12 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   constructor(
     network: ChainOrRpc | SignerOrProvider,
     options: SDKOptions = {},
-    storage: IStorage = new IpfsStorage(),
+    storage: ThirdwebStorage = new ThirdwebStorage(),
   ) {
     const signerOrProvider = getProviderForNetwork(network);
     super(signerOrProvider, options);
     this.storageHandler = storage;
-    this.storage = new RemoteStorage(storage);
+    this.storage = storage;
     this.wallet = new UserWallet(signerOrProvider, options);
     this.deployer = new ContractDeployer(signerOrProvider, options, storage);
     this.auth = new WalletAuthenticator(signerOrProvider, this.wallet, options);
@@ -409,8 +409,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   }
 
   private updateContractSignerOrProvider() {
+    this.wallet.connect(this.getSignerOrProvider());
     this.auth.updateSignerOrProvider(this.getSignerOrProvider());
-    this.wallet.onNetworkUpdated(this.getSignerOrProvider());
     this.deployer.updateSignerOrProvider(this.getSignerOrProvider());
     this._publisher.updateSignerOrProvider(this.getSignerOrProvider());
     for (const [, contract] of this.contractCache) {

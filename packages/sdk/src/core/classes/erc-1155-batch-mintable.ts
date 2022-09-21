@@ -7,7 +7,7 @@ import { ContractWrapper } from "./contract-wrapper";
 import { Erc1155 } from "./erc-1155";
 import type { IMintableERC1155, IMulticall } from "@thirdweb-dev/contracts-js";
 import { TokensMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TokenERC1155";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 
 /**
@@ -24,12 +24,12 @@ export class Erc1155BatchMintable implements DetectableFeature {
   featureName = FEATURE_EDITION_BATCH_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC1155 & IMulticall>;
   private erc1155: Erc1155;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   constructor(
     erc1155: Erc1155,
     contractWrapper: ContractWrapper<IMintableERC1155 & IMulticall>,
-    storage: IStorage,
+    storage: ThirdwebStorage,
   ) {
     this.erc1155 = erc1155;
     this.contractWrapper = contractWrapper;

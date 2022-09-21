@@ -25,7 +25,7 @@ import {
 } from "./currency";
 import { createSnapshot } from "./snapshots";
 import { IDropClaimCondition } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC20";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
   BigNumberish,
@@ -47,7 +47,7 @@ export async function prepareClaim(
   merkleMetadataFetcher: () => Promise<Record<string, string>>,
   tokenDecimals: number,
   contractWrapper: ContractWrapper<any>,
-  storage: IStorage,
+  storage: ThirdwebStorage,
   checkERC20Allowance: boolean,
 ): Promise<ClaimVerification> {
   const addressToClaim = await contractWrapper.getSignerAddress();
@@ -131,7 +131,7 @@ type Snapshot =
 export async function fetchSnapshot(
   merkleRoot: string,
   merkleMetadata: Record<string, string> | undefined,
-  storage: IStorage,
+  storage: ThirdwebStorage,
 ): Promise<Snapshot> {
   if (!merkleMetadata) {
     return undefined;
@@ -139,7 +139,7 @@ export async function fetchSnapshot(
   const snapshotUri = merkleMetadata[merkleRoot];
   let snapshot: Snapshot = undefined;
   if (snapshotUri) {
-    const raw = await storage.get(snapshotUri);
+    const raw = await storage.downloadJSON(snapshotUri);
     const snapshotData = SnapshotSchema.parse(raw);
     if (merkleRoot === snapshotData.merkleRoot) {
       snapshot = snapshotData.claims;
@@ -211,7 +211,7 @@ export async function getClaimerProofs(
   merkleRoot: string,
   tokenDecimals: number,
   merkleMetadata: Record<string, string>,
-  storage: IStorage,
+  storage: ThirdwebStorage,
 ): Promise<{ maxClaimable: BigNumber; proof: string[] }> {
   const claims: Snapshot = await fetchSnapshot(
     merkleRoot,
@@ -252,7 +252,7 @@ export async function processClaimConditionInputs(
   claimConditionInputs: ClaimConditionInput[],
   tokenDecimals: number,
   provider: providers.Provider,
-  storage: IStorage,
+  storage: ThirdwebStorage,
 ) {
   const snapshotInfos: SnapshotInfo[] = [];
   const inputsWithSnapshots = await Promise.all(
@@ -355,7 +355,7 @@ export async function transformResultToClaimCondition(
   tokenDecimals: number,
   provider: providers.Provider,
   merkleMetadata: Record<string, string> | undefined,
-  storage: IStorage,
+  storage: ThirdwebStorage,
 ): Promise<ClaimCondition> {
   const cv = await fetchCurrencyValue(provider, pm.currency, pm.pricePerToken);
 

@@ -22,6 +22,7 @@ import {
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
+import { PaperCheckout } from "../../integrations/paper-xyz";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
@@ -41,7 +42,7 @@ import {
   TokensClaimedEvent,
   TokensLazyMintedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
   BigNumberish,
@@ -161,12 +162,19 @@ export class NFTDropImpl extends StandardErc721<DropERC721> {
    * ```
    */
   public revealer: DelayedReveal<DropERC721>;
+
+  /**
+   * Checkout
+   * @remarks Create a FIAT currency checkout for your NFT drop.
+   */
+  public checkout: PaperCheckout<DropERC721>;
+
   public erc721: Erc721<DropERC721>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
     contractWrapper = new ContractWrapper<DropERC721>(
@@ -206,6 +214,8 @@ export class NFTDropImpl extends StandardErc721<DropERC721> {
       () => this.erc721.nextTokenIdToMint(),
     );
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+
+    this.checkout = new PaperCheckout(this.contractWrapper);
   }
 
   /**
@@ -394,8 +404,6 @@ export class NFTDropImpl extends StandardErc721<DropERC721> {
       metadatas,
       this.storage,
       startFileNumber.toNumber(),
-      this.contractWrapper.readContract.address,
-      await this.contractWrapper.getSigner()?.getAddress(),
       options,
     );
     // ensure baseUri is the same for the entire batch

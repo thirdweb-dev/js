@@ -25,7 +25,7 @@ import { ContractWrapper } from "./contract-wrapper";
 import type { TWFactory } from "@thirdweb-dev/contracts-js";
 import TWFactoryAbi from "@thirdweb-dev/contracts-js/dist/abis/TWFactory.json";
 import { ProxyDeployedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TWFactory";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
   constants,
@@ -39,12 +39,12 @@ import { z } from "zod";
  * @internal
  */
 export class ContractFactory extends ContractWrapper<TWFactory> {
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   constructor(
     factoryAddr: string,
     network: NetworkOrSignerOrProvider,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     options?: SDKOptions,
   ) {
     super(network, factoryAddr, TWFactoryAbi, options);
@@ -61,11 +61,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     const metadata = contract.schema.deploy.parse(contractMetadata);
 
     // TODO: is there any special pre-processing we need to do before uploading?
-    const contractURI = await this.storage.uploadMetadata(
-      metadata,
-      this.readContract.address,
-      await this.getSigner()?.getAddress(),
-    );
+    const contractURI = await this.storage.upload(metadata);
 
     const ABI = await contract.getAbi();
 
