@@ -7,6 +7,12 @@ import { readFileSync } from "fs";
 describe("IPFS", async () => {
   const storage = new ThirdwebStorage();
 
+  it("Should resolve scheme with gateway URL", async () => {
+    const uri = `ipfs://example`;
+    const url = storage.resolveScheme(uri);
+    expect(url).to.equal(`${DEFAULT_GATEWAY_URLS["ipfs://"][0]}example`);
+  });
+
   it("Should upload buffer with file number", async () => {
     const uri = await storage.upload(readFileSync("test/files/0.jpg"));
 
