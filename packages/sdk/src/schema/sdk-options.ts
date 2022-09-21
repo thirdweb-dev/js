@@ -26,7 +26,7 @@ export const SDKOptionsSchema = z
           openzeppelin: z.object({
             relayerUrl: z.string().url(),
             relayerForwarderAddress: z.string().optional(),
-            useEOAForwader: z.boolean().default(false),
+            useEOAForwarder: z.boolean().default(false),
           }),
           experimentalChainlessSupport: z.boolean().default(false),
         }),

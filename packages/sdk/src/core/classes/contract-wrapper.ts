@@ -638,7 +638,7 @@ export class ContractWrapper<
     invariant(provider, "provider is not set");
     const forwarderAddress =
       this.options.gasless.openzeppelin.relayerForwarderAddress 
-      || (this.options.gasless.openzeppelin.useEOAForwader 
+      || (this.options.gasless.openzeppelin.useEOAForwarder 
           ? CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES].openzeppelinForwarderEOA 
           : CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES].openzeppelinForwarder);
 

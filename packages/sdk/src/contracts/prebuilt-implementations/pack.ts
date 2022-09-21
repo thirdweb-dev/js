@@ -109,7 +109,7 @@ export class PackImpl extends StandardErc1155<PackContract> {
             gasless: {
               openzeppelin: {
                 ...options.gasless.openzeppelin,
-                useEOAForwader: true,
+                useEOAForwarder: true,
               },
             },
           }
