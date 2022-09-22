@@ -1,6 +1,7 @@
-import { Edition, EditionMetadataInput, Pack } from "../src";
-import { EditionImpl } from "../src/contracts/prebuilt-implementations/edition";
-import { PackImpl } from "../src/contracts/prebuilt-implementations/pack";
+import { EditionInitializer, PackInitializer } from "../src";
+import { Edition } from "../src/contracts/prebuilt-implementations/edition";
+import { Pack } from "../src/contracts/prebuilt-implementations/pack";
+import { EditionMetadataInput } from "../src/schema/tokens/edition";
 import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
@@ -9,8 +10,8 @@ import { BigNumber } from "ethers";
 global.fetch = require("cross-fetch");
 
 describe("Pack Contract", async () => {
-  let packContract: PackImpl;
-  let bundleContract: EditionImpl;
+  let packContract: Pack;
+  let bundleContract: Edition;
 
   let adminWallet: SignerWithAddress, samWallet: SignerWithAddress;
 
@@ -35,18 +36,21 @@ describe("Pack Contract", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
     packContract = await sdk.getPack(
-      await sdk.deployer.deployBuiltInContract(Pack.contractType, {
+      await sdk.deployer.deployBuiltInContract(PackInitializer.contractType, {
         name: "Pack Contract",
         seller_fee_basis_points: 1000,
       }),
     );
 
     bundleContract = await sdk.getEdition(
-      await sdk.deployer.deployBuiltInContract(Edition.contractType, {
-        name: "NFT Contract",
-        seller_fee_basis_points: 1000,
-        primary_sale_recipient: adminWallet.address,
-      }),
+      await sdk.deployer.deployBuiltInContract(
+        EditionInitializer.contractType,
+        {
+          name: "NFT Contract",
+          seller_fee_basis_points: 1000,
+          primary_sale_recipient: adminWallet.address,
+        },
+      ),
     );
 
     await bundleContract.setApprovalForAll(packContract.getAddress(), true);

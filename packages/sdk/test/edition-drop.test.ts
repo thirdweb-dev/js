@@ -1,6 +1,6 @@
-import { Token } from "../src";
+import { TokenInitializer } from "../src";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { EditionDropImpl } from "../src/contracts/classes/edition-drop";
+import { EditionDrop } from "../src/contracts/prebuilt-implementations/edition-drop";
 import { ClaimEligibility } from "../src/enums";
 import { expectError, sdk, signers } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
@@ -16,7 +16,7 @@ const deepEqualInAnyOrder = require("deep-equal-in-any-order");
 use(deepEqualInAnyOrder);
 
 describe("Edition Drop Contract", async () => {
-  let bdContract: EditionDropImpl;
+  let bdContract: EditionDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     abbyWallet: SignerWithAddress,
@@ -553,11 +553,14 @@ describe("Edition Drop Contract", async () => {
 
     it("should check if an address has enough erc20 currency", async () => {
       const currency = await sdk.getToken(
-        await sdk.deployer.deployBuiltInContract(Token.contractType, {
-          name: "test",
-          symbol: "test",
-          primary_sale_recipient: adminWallet.address,
-        }),
+        await sdk.deployer.deployBuiltInContract(
+          TokenInitializer.contractType,
+          {
+            name: "test",
+            symbol: "test",
+            primary_sale_recipient: adminWallet.address,
+          },
+        ),
       );
 
       await bdContract.claimConditions.set("0", [

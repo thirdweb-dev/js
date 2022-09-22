@@ -1,4 +1,4 @@
-import { useActiveChainId } from "../../Provider";
+import { useSDKChainId } from "../../providers/base";
 import {
   AirdropNFTParams,
   BurnNFTParams,
@@ -420,7 +420,7 @@ export function useNFTBalance(
 export function useMintNFT<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   const { erc1155, erc721 } = getErcs(contract);
@@ -490,7 +490,7 @@ export function useMintNFT<TContract extends NFTContract>(
  * @twfeature ERC1155Mintable
  */
 export function useMintNFTSupply(contract: Erc1155) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
@@ -555,7 +555,7 @@ export function useMintNFTSupply(contract: Erc1155) {
 export function useTransferNFT<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   const { erc1155, erc721 } = getErcs(contract);
@@ -649,7 +649,7 @@ export function useTransferNFT<TContract extends NFTContract>(
  * @beta
  */
 export function useAirdropNFT(contract: Erc1155) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
@@ -734,7 +734,7 @@ export function useAirdropNFT(contract: Erc1155) {
 export function useBurnNFT<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   const { erc1155, erc721 } = getErcs(contract);

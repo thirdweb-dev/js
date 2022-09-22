@@ -1,18 +1,22 @@
-import { Edition, NFTCollection, Token } from "../src";
-import { EditionImpl } from "../src/contracts/classes/edition";
-import { MultiwrapImpl } from "../src/contracts/classes/multiwrap";
-import { NFTCollectionImpl } from "../src/contracts/classes/nft-collection";
-import { TokenImpl } from "../src/contracts/classes/token";
+import {
+  EditionInitializer,
+  NFTCollectionInitializer,
+  TokenInitializer,
+} from "../src";
+import { Edition } from "../src/contracts/prebuilt-implementations/edition";
+import { Multiwrap } from "../src/contracts/prebuilt-implementations/multiwrap";
+import { NFTCollection } from "../src/contracts/prebuilt-implementations/nft-collection";
+import { Token } from "../src/contracts/prebuilt-implementations/token";
 import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 
 describe("Multiwrap Contract", async () => {
-  let multiwrapContract: MultiwrapImpl;
-  let nftContract: NFTCollectionImpl;
-  let editionContract: EditionImpl;
-  let tokenContract: TokenImpl;
-  let tokenContract2: TokenImpl;
+  let multiwrapContract: Multiwrap;
+  let nftContract: NFTCollection;
+  let editionContract: Edition;
+  let tokenContract: Token;
+  let tokenContract2: Token;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -34,12 +38,15 @@ describe("Multiwrap Contract", async () => {
     multiwrapContract = await sdk.getMultiwrap(address);
 
     nftContract = await sdk.getNFTCollection(
-      await sdk.deployer.deployBuiltInContract(NFTCollection.contractType, {
-        name: "TEST NFT",
-        seller_fee_basis_points: 200,
-        fee_recipient: adminWallet.address,
-        primary_sale_recipient: adminWallet.address,
-      }),
+      await sdk.deployer.deployBuiltInContract(
+        NFTCollectionInitializer.contractType,
+        {
+          name: "TEST NFT",
+          seller_fee_basis_points: 200,
+          fee_recipient: adminWallet.address,
+          primary_sale_recipient: adminWallet.address,
+        },
+      ),
     );
     await nftContract.mintBatch([
       {
@@ -60,11 +67,14 @@ describe("Multiwrap Contract", async () => {
     await nftContract.setApprovalForAll(multiwrapContract.getAddress(), true);
 
     editionContract = await sdk.getEdition(
-      await sdk.deployer.deployBuiltInContract(Edition.contractType, {
-        name: "TEST BUNDLE",
-        seller_fee_basis_points: 100,
-        primary_sale_recipient: adminWallet.address,
-      }),
+      await sdk.deployer.deployBuiltInContract(
+        EditionInitializer.contractType,
+        {
+          name: "TEST BUNDLE",
+          seller_fee_basis_points: 100,
+          primary_sale_recipient: adminWallet.address,
+        },
+      ),
     );
     await editionContract.mintBatch([
       {
@@ -87,7 +97,7 @@ describe("Multiwrap Contract", async () => {
     );
 
     tokenContract = await sdk.getToken(
-      await sdk.deployer.deployBuiltInContract(Token.contractType, {
+      await sdk.deployer.deployBuiltInContract(TokenInitializer.contractType, {
         name: "Test",
         symbol: "TEST",
         primary_sale_recipient: adminWallet.address,
@@ -111,7 +121,7 @@ describe("Multiwrap Contract", async () => {
     await tokenContract.setAllowance(multiwrapContract.getAddress(), 1000);
 
     tokenContract2 = await sdk.getToken(
-      await sdk.deployer.deployBuiltInContract(Token.contractType, {
+      await sdk.deployer.deployBuiltInContract(TokenInitializer.contractType, {
         name: "Test2",
         symbol: "TEST2",
         primary_sale_recipient: adminWallet.address,
