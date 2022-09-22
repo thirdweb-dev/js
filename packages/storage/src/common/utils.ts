@@ -49,6 +49,45 @@ export function isFileOrBuffer(
 /**
  * @internal
  */
+export function isFileBufferOrStringEqual(input1: any, input2: any): boolean {
+  if (isFileInstance(input1) && isFileInstance(input2)) {
+    // if both are File types, compare the name, size, and last modified date (best guess that these are the same files)
+    if (
+      input1.name === input2.name &&
+      input1.lastModified === input2.lastModified &&
+      input1.size === input2.size
+    ) {
+      return true;
+    }
+  } else if (isBufferInstance(input1) && isBufferInstance(input2)) {
+    // buffer gives us an easy way to compare the contents!
+
+    return input1.equals(input2);
+  } else if (
+    isBufferOrStringWithName(input1) &&
+    isBufferOrStringWithName(input2)
+  ) {
+    // first check the names
+    if (input1.name === input2.name) {
+      // if the data for both is a string, compare the strings
+      if (typeof input1.data === "string" && typeof input2.data === "string") {
+        return input1.data === input2.data;
+      } else if (
+        isBufferInstance(input1.data) &&
+        isBufferInstance(input2.data)
+      ) {
+        // otherwise we know it's buffers, so compare the buffers
+        return input1.data.equals(input2.data);
+      }
+    }
+  }
+  // otherwise if we have not found a match, return false
+  return false;
+}
+
+/**
+ * @internal
+ */
 export function replaceGatewayUrlWithScheme(
   uri: string,
   gatewayUrls: GatewayUrls,
