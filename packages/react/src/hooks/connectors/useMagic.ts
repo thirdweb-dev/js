@@ -1,7 +1,8 @@
 import { MagicConnector } from "../../connectors/magic";
-import { useConnect } from "../useConnect";
+import { useConnect } from "../wagmi-required/useConnect";
 import { LoginWithMagicLinkConfiguration } from "magic-sdk";
 import invariant from "tiny-invariant";
+import { useContext as useWagmiContext } from "wagmi";
 
 /**
  * Hook for connecting to an email wallet using magic link.
@@ -66,6 +67,11 @@ import invariant from "tiny-invariant";
  * @public
  */
 export function useMagic() {
+  const wagmiContext = useWagmiContext();
+  invariant(
+    wagmiContext,
+    `useMagic() can only be used inside <ThirdwebProvider />. If you are using <ThirdwebSDKProvider /> you will have to use your own wallet-connection logic.`,
+  );
   const [connectors, connect] = useConnect();
   if (connectors.loading) {
     return () => Promise.reject("Magic connector not ready to be used, yet");

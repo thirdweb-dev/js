@@ -1,16 +1,13 @@
 import { useThirdwebAuthConfig } from "../../contexts/thirdweb-auth";
-import { useBalance } from "../../hooks/async/wallet";
 import { LoginConfig, useAuth } from "../../hooks/auth";
 import { useMetamask } from "../../hooks/connectors/useMetamask";
-import { useAddress } from "../../hooks/useAddress";
-import { useChainId } from "../../hooks/useChainId";
-import { useConnect } from "../../hooks/useConnect";
-import { useDisconnect } from "../../hooks/useDisconnect";
-import { useNetwork } from "../../hooks/useNetwork";
+import { useConnect } from "../../hooks/wagmi-required/useConnect";
+import { useDisconnect } from "../../hooks/wagmi-required/useDisconnect";
+import { useNetwork } from "../../hooks/wagmi-required/useNetwork";
+import { useAddress, useBalance, useChainId } from "../../hooks/wallet";
 import { Portal } from "../../lib/portal";
 import { shortenIfAddress } from "../../utils/addresses";
 import { useClipboard } from "../hooks/useCopyClipboard";
-import { useIsMounted } from "../hooks/useIsMounted";
 import { Box } from "../shared/Box";
 import { Button } from "../shared/Button";
 import { Icon } from "../shared/Icon";
@@ -30,8 +27,8 @@ import { FiXCircle } from "@react-icons/all-files/fi/FiXCircle";
 import { ChainId, LoginOptions, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import * as menu from "@zag-js/menu";
 import { normalizeProps, useMachine } from "@zag-js/react";
-import React, { useId, useMemo } from "react";
-import { Connector } from "wagmi";
+import React, { useId } from "react";
+import type { Connector } from "wagmi";
 
 const SUPPORTED_CONNECTORS = [
   "injected",
@@ -65,6 +62,7 @@ interface ConnectWalletProps extends ThemeProviderProps {
     loginConfig?: LoginConfig;
     loginOptional?: boolean;
   };
+  className?: string;
 }
 
 let connecting = false;
@@ -124,15 +122,12 @@ const chainIdToCurrencyMap: Record<
  */
 export const ConnectWallet: React.FC<ConnectWalletProps> = ({
   auth,
+  className,
   ...themeProps
 }) => {
   const id = useId();
-  const isMounted = useIsMounted();
-  const address = useAddress();
 
-  const mountedAddress = useMemo(() => {
-    return isMounted ? address : null;
-  }, [address, isMounted]);
+  const walletAddress = useAddress();
 
   const [state, send] = useMachine(
     menu.machine({
@@ -165,24 +160,26 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
 
   const balanceQuery = useBalance();
 
-  const { onCopy, hasCopied } = useClipboard(mountedAddress || "");
+  const { onCopy, hasCopied } = useClipboard(walletAddress || "");
 
   const authConfig = useThirdwebAuthConfig();
   const { user, isLoading, login, logout } = useAuth(auth?.loginConfig);
 
   const requiresSignIn = auth?.loginOptional
     ? false
-    : !!authConfig?.authUrl && !!mountedAddress && !user?.address;
+    : !!authConfig?.authUrl && !!walletAddress && !user?.address;
 
   return (
     <ThemeProvider {...themeProps}>
       <div
         style={{
           position: "relative",
+          width: "100%",
         }}
       >
         <Button
-          style={{ height: "50px", minWidth: "200px" }}
+          className={className}
+          style={{ height: "50px", minWidth: "200px", width: "100%" }}
           onClick={async (e) => {
             if (requiresSignIn) {
               e.preventDefault();
@@ -204,7 +201,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
               ) : (
                 <FiLock />
               )
-            ) : mountedAddress && chainId && chainId in chainIdToCurrencyMap ? (
+            ) : walletAddress && chainId && chainId in chainIdToCurrencyMap ? (
               <Icon
                 boxSize="1.5em"
                 name={chainIdToCurrencyMap[chainId as SUPPORTED_CHAIN_ID]}
@@ -225,7 +222,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
             )
           }
         >
-          {mountedAddress ? (
+          {walletAddress ? (
             requiresSignIn ? (
               <span style={{ whiteSpace: "nowrap" }}>Sign in</span>
             ) : (
@@ -249,7 +246,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
                   )}
                 </span>
                 <span style={{ fontSize: "0.9em" }}>
-                  {shortenIfAddress(mountedAddress)}
+                  {shortenIfAddress(walletAddress)}
                 </span>
               </span>
             )
@@ -267,7 +264,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
             }}
           >
             <Menu {...api.contentProps}>
-              {!api.isOpen ? null : mountedAddress ? (
+              {!api.isOpen ? null : walletAddress ? (
                 <>
                   {authConfig?.authUrl && !user?.address && !requiresSignIn ? (
                     <MenuItem
@@ -396,10 +393,13 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
                     })}
                     onClick={async () => {
                       if (!connecting) {
-                        connecting = true;
-                        await connectWithMetamask();
-                        connecting = false;
-                        api.close();
+                        try {
+                          connecting = true;
+                          await connectWithMetamask();
+                          api.close();
+                        } finally {
+                          connecting = false;
+                        }
                       }
                     }}
                     leftElement={<Icon boxSize="1.5em" name="metamask" />}
@@ -421,10 +421,13 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
                           })}
                           onClick={async () => {
                             if (!connecting) {
-                              connecting = true;
-                              await connect(c);
-                              connecting = false;
-                              api.close();
+                              try {
+                                connecting = true;
+                                await connect(c);
+                                api.close();
+                              } finally {
+                                connecting = false;
+                              }
                             }
                           }}
                           leftElement={getIconForConnector(c)}

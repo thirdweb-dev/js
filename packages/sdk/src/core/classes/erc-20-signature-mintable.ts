@@ -1,6 +1,6 @@
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { FEATURE_TOKEN_SIGNATURE_MINTABLE } from "../../constants/erc20-features";
-import type { Token } from "../../contracts";
+import type { TokenInitializer } from "../../contracts";
 import {
   FilledSignaturePayload20,
   MintRequest20,
@@ -28,12 +28,12 @@ export class Erc20SignatureMintable implements DetectableFeature {
 
   private contractWrapper: ContractWrapper<TokenERC20>;
   private roles:
-    | ContractRoles<TokenERC20, typeof Token.roles[number]>
+    | ContractRoles<TokenERC20, typeof TokenInitializer.roles[number]>
     | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<TokenERC20>,
-    roles?: ContractRoles<TokenERC20, typeof Token.roles[number]>,
+    roles?: ContractRoles<TokenERC20, typeof TokenInitializer.roles[number]>,
   ) {
     this.contractWrapper = contractWrapper;
     this.roles = roles;

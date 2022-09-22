@@ -1,6 +1,6 @@
 import { PayloadToSign20, SignedPayload20 } from "../src";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { TokenImpl } from "../src/contracts/classes/token";
+import { Token } from "../src/contracts/prebuilt-implementations/token";
 import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
@@ -9,8 +9,8 @@ import { BigNumber } from "ethers";
 global.fetch = require("cross-fetch");
 
 describe("Token sig minting", async () => {
-  let contract: TokenImpl;
-  let customTokenContract: TokenImpl;
+  let contract: Token;
+  let customTokenContract: Token;
   let tokenAddress: string;
 
   let adminWallet: SignerWithAddress, samWallet: SignerWithAddress;
