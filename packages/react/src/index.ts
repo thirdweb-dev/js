@@ -1,35 +1,40 @@
+// providers
+export * from "./providers/base";
+export * from "./providers/full";
+
 // contract hooks
-export * from "./Provider";
-export * from "./hooks/auth";
 export * from "./hooks/contracts";
-export * from "./hooks/useDisconnect";
-export * from "./hooks/useConnect";
-export * from "./hooks/useSigner";
-export * from "./hooks/useAddress";
-export * from "./hooks/useReadonlySDK";
-export * from "./hooks/connectors/useMetamask";
-export * from "./hooks/connectors/useWalletConnect";
-export * from "./hooks/connectors/useWalletLink";
-export * from "./hooks/connectors/useGnosis";
-export * from "./hooks/connectors/useMagic";
-export * from "./hooks/useChainId";
-export * from "./hooks/useNetworkMismatch";
-export * from "./hooks/useNetwork";
-
-// re-exports
-export { defaultChains, defaultL2Chains, useAccount, useProvider } from "wagmi";
-export { ChainId } from "@thirdweb-dev/sdk";
-
-// async hooks
+// async contract hooks
 export * from "./hooks/async/contracts";
 export * from "./hooks/async/nft";
 export * from "./hooks/async/drop";
 export * from "./hooks/async/marketplace";
 export * from "./hooks/async/token";
 export * from "./hooks/async/claim-conditions";
-export * from "./hooks/async/wallet";
+
 export * from "./hooks/async/contract-settings";
 export * from "./hooks/async/roles";
+
+// thirdweb hooks (work as long as at least `<ThirdwebSDkProvider>` is used)
+export * from "./hooks/auth";
+export * from "./hooks/useSigner";
+export * from "./hooks/useReadonlySDK";
+export * from "./hooks/useNetworkMismatch";
+export * from "./hooks/wallet";
+
+// require to be inside `<ThirdwebProvider />`
+export * from "./hooks/wagmi-required/useAccount";
+export * from "./hooks/wagmi-required/useNetwork";
+export * from "./hooks/wagmi-required/useDisconnect";
+export * from "./hooks/wagmi-required/useConnect";
+export * from "./hooks/connectors/useMetamask";
+export * from "./hooks/connectors/useWalletConnect";
+export * from "./hooks/connectors/useWalletLink";
+export * from "./hooks/connectors/useGnosis";
+export * from "./hooks/connectors/useMagic";
+
+// re-exports
+export { ChainId } from "@thirdweb-dev/sdk";
 
 // types
 export * from "./types";

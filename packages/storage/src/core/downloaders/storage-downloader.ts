@@ -1,4 +1,3 @@
-import { prepareGatewayUrls } from "../../common/urls";
 import { replaceSchemeWithGatewayUrl } from "../../common/utils";
 import { GatewayUrls, IStorageDownloader } from "../../types";
 import fetch from "cross-fetch";
@@ -10,7 +9,7 @@ import fetch from "cross-fetch";
  * ```jsx
  * // Can instantiate the downloader with the default gateway URLs
  * const downloader = new StorageDownloader();
- * const storage = new ThirdwebStorage(undefined, downloader);
+ * const storage = new ThirdwebStorage({ downloader });
  * ```
  *
  * @public

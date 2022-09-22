@@ -1,5 +1,5 @@
 import { ConnectWallet } from ".";
-import { ThirdwebProvider } from "../..";
+import { ThirdwebProvider } from "../../providers/full";
 import { test, expect } from "@playwright/experimental-ct-react";
 
 test.use({ viewport: { width: 500, height: 500 } });
@@ -10,5 +10,6 @@ test("should render the connect wallet button", async ({ mount }) => {
       <ConnectWallet />
     </ThirdwebProvider>,
   );
+
   await expect(component).toContainText("Connect Wallet");
 });

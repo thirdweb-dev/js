@@ -1,5 +1,5 @@
-import { NFTCollection, NFTMetadataInput } from "../src";
-import { NFTCollectionImpl } from "../src/contracts/classes/nft-collection";
+import { NFTCollectionInitializer, NFTMetadataInput } from "../src";
+import { NFTCollection } from "../src/contracts/prebuilt-implementations/nft-collection";
 import { sdk, signers, storage } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -8,7 +8,7 @@ import { assert, expect } from "chai";
 global.fetch = require("cross-fetch");
 
 describe("NFT Contract", async () => {
-  type NewType = NFTCollectionImpl;
+  type NewType = NFTCollection;
   let nftContract: NewType;
   let adminWallet: SignerWithAddress, samWallet: SignerWithAddress;
 
@@ -19,7 +19,7 @@ describe("NFT Contract", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
     const address = await sdk.deployer.deployBuiltInContract(
-      NFTCollection.contractType,
+      NFTCollectionInitializer.contractType,
       {
         name: "NFT Contract",
         description: "Test NFT contract from tests",

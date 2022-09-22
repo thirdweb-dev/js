@@ -35,7 +35,7 @@ import { BigNumber, CallOverrides, Contract } from "ethers";
  *
  * @public
  */
-export class SplitImpl implements UpdateableNetwork {
+export class Split implements UpdateableNetwork {
   static contractRoles = ["admin"] as const;
 
   private contractWrapper: ContractWrapper<SplitContract>;
@@ -48,7 +48,7 @@ export class SplitImpl implements UpdateableNetwork {
   public events: ContractEvents<SplitContract>;
   public roles: ContractRoles<
     SplitContract,
-    typeof SplitImpl.contractRoles[number]
+    typeof Split.contractRoles[number]
   >;
   /**
    * @internal
@@ -76,10 +76,7 @@ export class SplitImpl implements UpdateableNetwork {
       SplitsContractSchema,
       this.storage,
     );
-    this.roles = new ContractRoles(
-      this.contractWrapper,
-      SplitImpl.contractRoles,
-    );
+    this.roles = new ContractRoles(this.contractWrapper, Split.contractRoles);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);

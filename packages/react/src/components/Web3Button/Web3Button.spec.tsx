@@ -1,5 +1,5 @@
 import { Web3Button } from ".";
-import { ThirdwebProvider } from "../..";
+import { ThirdwebProvider } from "../../providers/full";
 import { test, expect } from "@playwright/experimental-ct-react";
 
 test.use({ viewport: { width: 500, height: 500 } });
