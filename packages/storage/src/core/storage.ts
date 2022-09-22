@@ -199,35 +199,32 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
     options?: T,
   ): Promise<Json[]> {
     let cleaned = data;
-    // TODO: Gateway URLs should probably be top-level since both uploader and downloader need them
-    if (this.gatewayUrls) {
-      // Replace any gateway URLs with their hashes
-      cleaned = replaceObjectGatewayUrlsWithSchemes(
-        cleaned,
-        this.gatewayUrls,
-      ) as Json[];
-
-      if (options?.uploadWithGatewayUrl || this.uploader.uploadWithGatewayUrl) {
-        // If flag is set, replace all schemes with their preferred gateway URL
-        // Ex: used for Solana, where services don't resolve schemes for you, so URLs must be useable by default
-        cleaned = replaceObjectSchemesWithGatewayUrls(
-          cleaned,
-          this.gatewayUrls,
-        ) as Json[];
-      }
-    }
+    // Replace any gateway URLs with their hashes
+    cleaned = replaceObjectGatewayUrlsWithSchemes(
+      cleaned,
+      this.gatewayUrls,
+    ) as Json[];
 
     // Recurse through data and extract files to upload
     const files = extractObjectFiles(cleaned);
 
-    if (!files.length) {
-      return cleaned;
+    if (files.length) {
+      // Upload all files that came from the object
+      const uris = await this.uploader.uploadBatch(files);
+
+      // Recurse through data and replace files with hashes
+      cleaned = replaceObjectFilesWithUris(cleaned, uris) as Json[];
     }
 
-    // Upload all files that came from the object
-    const uris = await this.uploader.uploadBatch(files);
+    if (options?.uploadWithGatewayUrl || this.uploader.uploadWithGatewayUrl) {
+      // If flag is set, replace all schemes with their preferred gateway URL
+      // Ex: used for Solana, where services don't resolve schemes for you, so URLs must be useable by default
+      cleaned = replaceObjectSchemesWithGatewayUrls(
+        cleaned,
+        this.gatewayUrls,
+      ) as Json[];
+    }
 
-    // Recurse through data and replace files with hashes
-    return replaceObjectFilesWithUris(cleaned, uris) as Json[];
+    return cleaned;
   }
 }

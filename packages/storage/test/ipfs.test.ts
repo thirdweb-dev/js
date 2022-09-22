@@ -199,31 +199,6 @@ describe("IPFS", async () => {
     expect(json.description).to.equal("Uploading alone without a directory...");
   });
 
-  it("Should upload without directory if specified on class", async () => {
-    const solanaStorage = new ThirdwebStorage({
-      uploader: new IpfsUploader({ uploadWithGatewayUrl: true }),
-    });
-
-    const uri = await solanaStorage.upload(
-      {
-        name: "Upload Without Directory",
-        description: "Uploading alone without a directory...",
-      },
-      {
-        uploadWithoutDirectory: true,
-      },
-    );
-
-    expect(uri).to.equal(
-      "ipfs://QmdnBEP9UFcRfbuAyXFefNccNbuKWTscHrpWZatvqz9VcV",
-    );
-
-    const json = await storage.downloadJSON(uri);
-
-    expect(json.name).to.equal("Upload Without Directory");
-    expect(json.description).to.equal("Uploading alone without a directory...");
-  });
-
   it("Should throw an error on upload without directory with multiple uploads", async () => {
     try {
       await storage.uploadBatch(
@@ -267,7 +242,28 @@ describe("IPFS", async () => {
     );
   });
 
-  it("Should upload files with gateway URLs if specified", async () => {
+  it("Should upload files with gateway URLs if specified on class", async () => {
+    const uploader = new IpfsUploader({ uploadWithGatewayUrl: true });
+    const singleStorage = new ThirdwebStorage({ uploader });
+
+    const uri = await singleStorage.upload({
+      // Gateway URLs should first be converted back to ipfs:// and then all ipfs:// should convert to first gateway URL
+      image: readFileSync("test/images/0.jpg"),
+      animation_url: "ipfs://QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0",
+    });
+
+    const res = await singleStorage.download(uri);
+    const json = await res.json();
+
+    expect(json.image).to.equal(
+      `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0`,
+    );
+    expect(json.animation_url).to.equal(
+      `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
+    );
+  });
+
+  it("Should upload files with gateway URLs if specified on function", async () => {
     const uri = await storage.upload(
       {
         // Gateway URLs should first be converted back to ipfs:// and then all ipfs:// should convert to first gateway URL
