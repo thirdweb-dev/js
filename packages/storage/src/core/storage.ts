@@ -206,7 +206,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
 
     if (files.length) {
       // Upload all files that came from the object
-      const uris = await this.uploader.uploadBatch(files);
+      const uris = await this.uploader.uploadBatch(files, options);
 
       // Recurse through data and replace files with hashes
       cleaned = replaceObjectFilesWithUris(cleaned, uris) as unknown[];
