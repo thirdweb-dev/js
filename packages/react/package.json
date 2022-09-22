@@ -69,6 +69,8 @@
     "@gnosis.pm/safe-ethers-adapters": "0.1.0-alpha.9",
     "@gnosis.pm/safe-ethers-lib": "1.1.0",
     "@react-icons/all-files": "^4.1.0",
+    "@solana/wallet-adapter-base": "^0.9.17",
+    "@solana/wallet-adapter-wallets": "^0.19.0",
     "@tanstack/react-query": "^4.0.10",
     "@zag-js/menu": "^0.1.11",
     "@zag-js/react": "0.1.16",
@@ -82,9 +84,9 @@
     "wagmi": "^0.2.28"
   },
   "peerDependencies": {
+    "@solana/wallet-adapter-react": "^0.15.19",
     "@thirdweb-dev/sdk": "*",
     "@thirdweb-dev/solana": "*",
-    "@solana/wallet-adapter-react": "^0.15.19",
     "ethers": ">=5.5.1",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"

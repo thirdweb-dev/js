@@ -1,21 +1,18 @@
-import {
-  ConnectionProvider,
-  WalletProvider,
-  useWallet,
-  useConnection,
-} from "@solana/wallet-adapter-react";
+import { Adapter } from "@solana/wallet-adapter-base";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { ThirdwebSDK } from "@thirdweb-dev/solana";
 import {
   createContext,
   FC,
   PropsWithChildren,
-  useContext,
   useEffect,
-  useMemo,
   useState,
 } from "react";
 
-interface TWSolanaProviderProps {}
+interface ThirdwebSDKProviderProps {
+  connection: Connection;
+  wallet: Adapter;
+}
 
 /**
  * Gives access to the ThirdwebSDK instance and other useful hooks to the rest of the app.
@@ -40,8 +37,8 @@ interface TWSolanaProviderProps {}
  * )};
  * ```
  */
-export const ThirdwebSDKProvider: FC<
-  PropsWithChildren<TWSolanaProviderProps>
+export const ThirdwebSDKBaseProvider: FC<
+  PropsWithChildren<ThirdwebSDKProviderProps>
 > = ({ children }) => {
   const { connection } = useConnection();
   const wallet = useWallet();
@@ -65,8 +62,10 @@ export const ThirdwebSDKProvider: FC<
   }, [sdk, wallet]);
 
   return (
-    <TWSolanaContext.Provider value={sdk}>{children}</TWSolanaContext.Provider>
+    <ThirdwebSDKContext.Provider value={sdk}>
+      {children}
+    </ThirdwebSDKContext.Provider>
   );
 };
 
-export const TWSolanaContext = createContext<ThirdwebSDK | null>(null);
+export const ThirdwebSDKContext = createContext<ThirdwebSDK | null>(null);
