@@ -248,7 +248,7 @@ describe("IPFS", async () => {
 
     const uri = await singleStorage.upload({
       // Gateway URLs should first be converted back to ipfs:// and then all ipfs:// should convert to first gateway URL
-      image: readFileSync("test/images/0.jpg"),
+      image: readFileSync("test/files/0.jpg"),
       animation_url: "ipfs://QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0",
     });
 
@@ -336,5 +336,53 @@ describe("IPFS", async () => {
     expect(uris[1]).to.equal(
       "ipfs://QmTtEY2WSTDpzYSXw2G3xsYw3eMs8YephvrfVYd8qia9F9/1",
     );
+  });
+
+  it("Should successfully upload string", async () => {
+    const metadata =
+      '{"inputs":[],"name":"ApprovalCallerNotOwnerNorApproved","type":"error"}';
+    const uri = await storage.upload(metadata);
+    const data = await (await storage.download(uri)).text();
+
+    expect(data).to.equal(metadata);
+
+    const json = await storage.downloadJSON(uri);
+    expect(JSON.stringify(json)).to.equal(metadata);
+  });
+
+  it("Should succesfully upload boolean", async () => {
+    const uri = await storage.upload(false);
+    const data = await storage.downloadJSON(uri);
+
+    expect(data).to.equal(false);
+  });
+
+  it("Should succesfully upload number", async () => {
+    const uri = await storage.upload(42);
+    const data = await storage.downloadJSON(uri);
+
+    expect(data).to.equal(42);
+  });
+
+  it("Should succesfully upload null", async () => {
+    const uri = await storage.upload(null);
+    const data = await storage.downloadJSON(uri);
+
+    expect(data).to.equal(null);
+  });
+
+  it("Should succesfully upload array", async () => {
+    const uri = await storage.upload(["Name", "Description"]);
+    const data = await storage.downloadJSON(uri);
+
+    expect(Array.isArray(data)).to.equal(true);
+    expect(data.length).to.equal(2);
+    expect(data[0]).to.equal("Name");
+    expect(data[1]).to.equal("Description");
+  });
+
+  it("Should not upload undefined", async () => {
+    const uri = await storage.upload(undefined);
+    expect(uri).to.equal(undefined);
   });
 });

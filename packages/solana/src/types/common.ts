@@ -1,5 +1,4 @@
 import { Signer, WalletAdapter } from "@metaplex-foundation/js";
-import { JsonObjectSchema } from "@thirdweb-dev/storage";
 import { z } from "zod";
 
 /**
@@ -32,6 +31,33 @@ export const JsonLiteral = z.union([
   z.boolean(),
   z.null(),
 ]);
+
+/**
+ * @internal
+ */
+export const JsonSchema: z.ZodType<Json> = z.lazy(() =>
+  z.union([JsonLiteral, JsonObjectSchema, z.array(JsonSchema)]),
+);
+
+/**
+ * @internal
+ */
+export const JsonObjectSchema = z.record(z.string(), JsonSchema);
+
+/**
+ * @internal
+ */
+export type JsonLiteral = number | string | null | boolean;
+
+/**
+ * @internal
+ */
+export type Json = JsonLiteral | JsonObject | Json[];
+
+/**
+ * @internal
+ */
+export type JsonObject = { [key: string]: Json };
 
 /**
  * @internal
@@ -104,3 +130,27 @@ export type WalletAccount = {
   address: string;
   name: string;
 };
+
+const isBrowser = () => typeof window !== "undefined";
+const FileOrBufferUnionSchema = isBrowser()
+  ? (z.instanceof(File) as z.ZodType<InstanceType<typeof File>>)
+  : (z.instanceof(Buffer) as z.ZodTypeAny); // @fixme, this is a hack to make browser happy for now
+
+/**
+ * @internal
+ */
+export const FileOrBufferSchema = z.union([
+  FileOrBufferUnionSchema,
+  z.object({
+    data: z.union([FileOrBufferUnionSchema, z.string()]),
+    name: z.string(),
+  }),
+]);
+
+/**
+ * @internal
+ */
+export const FileOrBufferOrStringSchema = z.union([
+  FileOrBufferSchema,
+  z.string(),
+]);

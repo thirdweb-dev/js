@@ -1,8 +1,4 @@
-import {
-  PINATA_IPFS_URL,
-  prepareGatewayUrls,
-  TW_IPFS_SERVER_URL,
-} from "../../common/urls";
+import { PINATA_IPFS_URL, TW_IPFS_SERVER_URL } from "../../common/urls";
 import {
   isBrowser,
   isBufferOrStringWithName,
@@ -10,7 +6,6 @@ import {
 } from "../../common/utils";
 import {
   FileOrBufferOrString,
-  GatewayUrls,
   IpfsUploadBatchOptions,
   IpfsUploaderOptions,
   IStorageUploader,
