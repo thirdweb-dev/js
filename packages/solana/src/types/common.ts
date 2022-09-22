@@ -1,17 +1,30 @@
 import { Signer, WalletAdapter } from "@metaplex-foundation/js";
 import { z } from "zod";
 
-export const MAX_BPS = 10_000;
+/**
+ * @internal
+ */
+export const MAX_BPS = 10000;
+
+/**
+ * @internal
+ */
 export const BasisPointsSchema = z
   .number()
   .max(MAX_BPS, "Cannot exeed 100%")
   .min(0, "Cannot be below 0%");
 
+/**
+ * @internal
+ */
 export const PercentSchema = z
   .number()
   .max(100, "Cannot exeed 100%")
   .min(0, "Cannot be below 0%");
 
+/**
+ * @internal
+ */
 export const JsonLiteral = z.union([
   z.string(),
   z.number(),
@@ -19,10 +32,36 @@ export const JsonLiteral = z.union([
   z.null(),
 ]);
 
-export const JsonSchema: z.ZodSchema<Json> = z.lazy(() =>
-  z.union([JsonLiteral, z.array(JsonSchema), z.record(JsonSchema)]),
+/**
+ * @internal
+ */
+export const JsonSchema: z.ZodType<Json> = z.lazy(() =>
+  z.union([JsonLiteral, JsonObjectSchema, z.array(JsonSchema)]),
 );
-export const JsonObjectSchema = z.record(JsonSchema);
+
+/**
+ * @internal
+ */
+export const JsonObjectSchema = z.record(z.string(), JsonSchema);
+
+/**
+ * @internal
+ */
+export type JsonLiteral = number | string | null | boolean;
+
+/**
+ * @internal
+ */
+export type Json = JsonLiteral | JsonObject | Json[];
+
+/**
+ * @internal
+ */
+export type JsonObject = { [key: string]: Json };
+
+/**
+ * @internal
+ */
 export const HexColor = z.union([
   z
     .string()
@@ -38,16 +77,9 @@ export const OptionalPropertiesInput = z
   .union([z.array(JsonObjectSchema), JsonObjectSchema])
   .optional();
 
-type JsonLiteral = boolean | null | number | string;
-type JsonLiteralOrFileOrBuffer = JsonLiteral | FileOrBuffer;
-export type Json = JsonLiteralOrFileOrBuffer | JsonObject | Json[];
-export type JsonObject = { [key: string]: Json };
-export type BufferOrStringWithName = {
-  data: Buffer | string;
-  name?: string;
-};
-export type FileOrBuffer = Buffer | BufferOrStringWithName;
-
+/**
+ * @internal
+ */
 export const AmountSchema = z
   .union([
     z.string().regex(/^([0-9]+\.?[0-9]*|\.[0-9]+)$/, "Invalid amount"),
@@ -55,23 +87,70 @@ export const AmountSchema = z
   ])
   .transform((arg) => (typeof arg === "number" ? arg.toString() : arg));
 
+/**
+ * @internal
+ */
 export type Amount = z.input<typeof AmountSchema>;
 
+/**
+ * @internal
+ */
 export const CurrencyValueSchema = z.object({
   value: z.string(),
   displayValue: z.string(),
 });
 
+/**
+ * @internal
+ */
 export type CurrencyValue = z.input<typeof CurrencyValueSchema>;
 
+/**
+ * @internal
+ */
 export type TransactionResult = {
   signature: string;
 };
 
+/**
+ * @internal
+ */
 export type WalletSigner = Signer | WalletAdapter;
 
+/**
+ * @internal
+ */
+export type AccountType = "nft-collection" | "nft-drop" | "token";
+
+/**
+ * @internal
+ */
 export type WalletAccount = {
-  type: "nft-collection" | "nft-drop" | "token";
+  type: AccountType;
   address: string;
   name: string;
 };
+
+const isBrowser = () => typeof window !== "undefined";
+const FileOrBufferUnionSchema = isBrowser()
+  ? (z.instanceof(File) as z.ZodType<InstanceType<typeof File>>)
+  : (z.instanceof(Buffer) as z.ZodTypeAny); // @fixme, this is a hack to make browser happy for now
+
+/**
+ * @internal
+ */
+export const FileOrBufferSchema = z.union([
+  FileOrBufferUnionSchema,
+  z.object({
+    data: z.union([FileOrBufferUnionSchema, z.string()]),
+    name: z.string(),
+  }),
+]);
+
+/**
+ * @internal
+ */
+export const FileOrBufferOrStringSchema = z.union([
+  FileOrBufferSchema,
+  z.string(),
+]);

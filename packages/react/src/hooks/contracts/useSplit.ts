@@ -1,6 +1,6 @@
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { SplitImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/split";
+import { Split } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/split";
 
 /**
  * Hook for getting an instance of a `Split` contract. This contract supports fund distribution to multiple parties.
@@ -25,9 +25,9 @@ import { SplitImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/pre
  * }
  * ```
  * @public
- * @depreated use `useContract()` instead
+ * @deprecated use `useContract()` instead
  */
 export function useSplit(contractAddress?: string) {
   showDeprecationWarning("useSplit()", "useContract<Split>()");
-  return useContract<SplitImpl>(contractAddress).contract;
+  return useContract<Split>(contractAddress).contract;
 }

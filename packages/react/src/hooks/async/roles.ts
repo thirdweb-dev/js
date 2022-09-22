@@ -1,4 +1,4 @@
-import { useActiveChainId } from "../../Provider";
+import { useSDKChainId } from "../../providers/base";
 import { RequiredParam, WalletAddress } from "../../types";
 import {
   cacheKeys,
@@ -7,7 +7,7 @@ import {
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Role, ValidContractInstance } from "@thirdweb-dev/sdk";
-import type { VoteImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/vote";
+import type { Vote } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/vote";
 import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/smart-contract";
 import { constants } from "ethers";
 import invariant from "tiny-invariant";
@@ -19,7 +19,7 @@ import invariant from "tiny-invariant";
 /**
  * @internal
  */
-export type ContractWithRoles = Exclude<ValidContractInstance, VoteImpl>;
+export type ContractWithRoles = Exclude<ValidContractInstance, Vote>;
 
 /**
  * @internal
@@ -50,6 +50,7 @@ type GetAllReturnType<TContract extends ContractWithRoles> = Promise<
  *
  * @param contract - an instance of a {@link SmartContract}
  * @returns a list of addresses for all supported roles on the contract.
+ * @twfeature PermissionsEnumerable
  * @beta
  */
 export function useAllRoleMembers<TContract extends ContractWithRoles>(
@@ -81,6 +82,7 @@ export function useAllRoleMembers<TContract extends ContractWithRoles>(
  * @param contract - an instance of a {@link SmartContract}
  * @param role - the role to get the members of, see {@link Role}
  * @returns a list of addresses that are members of the role
+ * @twfeature PermissionsEnumerable
  * @beta
  */
 export function useRoleMembers<TContract extends ContractWithRoles>(
@@ -113,6 +115,7 @@ export function useRoleMembers<TContract extends ContractWithRoles>(
  * @param role - the role to check the member against, see {@link Role}
  * @param walletAddress - the address to check
  * @returns true if the address is a member of the role, or false if not
+ * @twfeature Permissions
  * @beta
  */
 export function useIsAddressRole<TContract extends ContractWithRoles>(
@@ -174,12 +177,13 @@ export function useIsAddressRole<TContract extends ContractWithRoles>(
  *
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to overwrite all roles on the contract
+ * @twfeature PermissionsEnumerable
  * @beta
  */
 export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
   contract: RequiredParam<TContract>,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
@@ -233,12 +237,13 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
  *
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to grant a member of a role on the contract
+ * @twfeature Permissions
  * @beta
  */
 export function useGrantRole<TContract extends ContractWithRoles>(
   contract: RequiredParam<TContract>,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
@@ -291,12 +296,13 @@ export function useGrantRole<TContract extends ContractWithRoles>(
  *
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to revoke a role from a member on the contract
+ * @twfeature Permissions
  * @beta
  */
 export function useRevokeRole<TContract extends ContractWithRoles>(
   contract: RequiredParam<TContract>,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   return useMutation(

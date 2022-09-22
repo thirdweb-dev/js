@@ -1,4 +1,4 @@
-import { useActiveChainId, useSDK } from "../../Provider";
+import { useSDK, useSDKChainId } from "../../providers/base";
 import { ContractAddress, RequiredParam } from "../../types";
 import {
   cacheKeys,
@@ -6,8 +6,7 @@ import {
   createContractCacheKey,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useAddress } from "../useAddress";
-import { useChainId } from "../useChainId";
+import { useAddress, useChainId } from "../wallet";
 import {
   useMutation,
   useQuery,
@@ -151,7 +150,7 @@ export function useContract<
 >(contractAddress: RequiredParam<ContractAddress>) {
   const sdk = useSDK();
   const queryClient = useQueryClient();
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const wallet = useAddress();
   const walletChainId = useChainId();
 
@@ -223,12 +222,17 @@ export function useContract<
  *
  * @param contract - the {@link ValidContractInstance} instance of the contract to get the metadata for
  * @returns a response object that includes the contract metadata of the deployed contract
+ * @twfeature ContractMetadata
  * @beta
  */
-export function useContractMetadata(
-  contract: RequiredParam<ValidContractInstance>,
+export function useContractMetadata<TContract extends ValidContractInstance>(
+  contract: RequiredParam<TContract>,
 ) {
-  return useQueryWithNetwork(
+  return useQueryWithNetwork<
+    typeof contract extends undefined
+      ? undefined
+      : Awaited<ReturnType<TContract["metadata"]["get"]>>
+  >(
     cacheKeys.contract.metadata(contract?.getAddress()),
     async () => {
       invariant(contract, "contract is required");
@@ -246,7 +250,7 @@ export function useContractMetadata(
 export function useContractMetadataUpdate(
   contract: RequiredParam<ValidContractInstance>,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
@@ -291,7 +295,7 @@ export function useContractEvents(
   const contractAddress = contract?.getAddress();
 
   const queryClient = useQueryClient();
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
 
   const cacheKey = useMemo(
     () =>
@@ -420,7 +424,7 @@ export function useContractWrite(
   contract: RequiredParam<ValidContractInstance>,
   functionName: RequiredParam<string>,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 

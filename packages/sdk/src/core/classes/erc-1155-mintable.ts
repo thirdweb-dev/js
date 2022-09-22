@@ -9,7 +9,7 @@ import { Erc1155 } from "./erc-1155";
 import { Erc1155BatchMintable } from "./erc-1155-batch-mintable";
 import type { IMintableERC1155, IMulticall } from "@thirdweb-dev/contracts-js";
 import { TransferSingleEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/ITokenERC1155";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 
 /**
@@ -26,7 +26,7 @@ export class Erc1155Mintable implements DetectableFeature {
   featureName = FEATURE_EDITION_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC1155>;
   private erc1155: Erc1155;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   /**
    * Batch mint Tokens to many addresses
@@ -36,7 +36,7 @@ export class Erc1155Mintable implements DetectableFeature {
   constructor(
     erc1155: Erc1155,
     contractWrapper: ContractWrapper<IMintableERC1155>,
-    storage: IStorage,
+    storage: ThirdwebStorage,
   ) {
     this.erc1155 = erc1155;
     this.contractWrapper = contractWrapper;

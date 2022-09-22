@@ -1,5 +1,5 @@
-import { useDesiredChainId } from "../Provider";
-import { useChainId } from "./useChainId";
+import { useDesiredChainId } from "../providers/base";
+import { useChainId } from "./wallet";
 
 /**
  * Hook for checking whether the connected wallet is on the correct network specified by the `desiredChainId` passed to the `<ThirdwebProvider />`.
@@ -28,16 +28,16 @@ import { useChainId } from "./useChainId";
  */
 export function useNetworkMismatch() {
   const desiredChainId = useDesiredChainId();
-  const activeChainId = useChainId();
+  const walletChainId = useChainId();
 
   if (desiredChainId === -1) {
     // means no desiredChainId is set in the <ThirdwebProvider />, so we don't care about the network mismatch
     return false;
   }
-  if (!activeChainId) {
+  if (!walletChainId) {
     // means no wallet is connected yet, so we don't care about the network mismatch
     return false;
   }
   // check if the chainIds are different
-  return desiredChainId !== activeChainId;
+  return desiredChainId !== walletChainId;
 }

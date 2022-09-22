@@ -22,6 +22,7 @@ import {
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
+import { PaperCheckout } from "../../integrations/paper-xyz";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
@@ -41,7 +42,7 @@ import {
   TokensClaimedEvent,
   TokensLazyMintedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
   BigNumberish,
@@ -64,7 +65,7 @@ import {
  *
  * @public
  */
-export class NFTDropImpl extends StandardErc721<DropERC721> {
+export class NFTDrop extends StandardErc721<DropERC721> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
   public abi: typeof ABI;
@@ -77,10 +78,7 @@ export class NFTDropImpl extends StandardErc721<DropERC721> {
   public sales: ContractPrimarySale<DropERC721>;
   public platformFees: ContractPlatformFee<DropERC721>;
   public events: ContractEvents<DropERC721>;
-  public roles: ContractRoles<
-    DropERC721,
-    typeof NFTDropImpl.contractRoles[number]
-  >;
+  public roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
   /**
    * @internal
    */
@@ -161,12 +159,19 @@ export class NFTDropImpl extends StandardErc721<DropERC721> {
    * ```
    */
   public revealer: DelayedReveal<DropERC721>;
+
+  /**
+   * Checkout
+   * @remarks Create a FIAT currency checkout for your NFT drop.
+   */
+  public checkout: PaperCheckout<DropERC721>;
+
   public erc721: Erc721<DropERC721>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
     contractWrapper = new ContractWrapper<DropERC721>(
@@ -183,10 +188,7 @@ export class NFTDropImpl extends StandardErc721<DropERC721> {
       DropErc721ContractSchema,
       this.storage,
     );
-    this.roles = new ContractRoles(
-      this.contractWrapper,
-      NFTDropImpl.contractRoles,
-    );
+    this.roles = new ContractRoles(this.contractWrapper, NFTDrop.contractRoles);
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);
     this.claimConditions = new DropClaimConditions(
@@ -206,6 +208,8 @@ export class NFTDropImpl extends StandardErc721<DropERC721> {
       () => this.erc721.nextTokenIdToMint(),
     );
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+
+    this.checkout = new PaperCheckout(this.contractWrapper);
   }
 
   /**
@@ -394,8 +398,6 @@ export class NFTDropImpl extends StandardErc721<DropERC721> {
       metadatas,
       this.storage,
       startFileNumber.toNumber(),
-      this.contractWrapper.readContract.address,
-      await this.contractWrapper.getSigner()?.getAddress(),
       options,
     );
     // ensure baseUri is the same for the entire batch

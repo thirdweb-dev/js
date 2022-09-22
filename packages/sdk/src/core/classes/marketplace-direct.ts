@@ -36,7 +36,7 @@ import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
 import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
 import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
 import { ListingAddedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
   BigNumberish,
@@ -53,11 +53,11 @@ import invariant from "tiny-invariant";
  */
 export class MarketplaceDirect {
   private contractWrapper: ContractWrapper<Marketplace>;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   constructor(
     contractWrapper: ContractWrapper<Marketplace>,
-    storage: IStorage,
+    storage: ThirdwebStorage,
   ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;

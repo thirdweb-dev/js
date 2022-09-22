@@ -1,7 +1,13 @@
 import type { CONTRACTS_MAP, PREBUILT_CONTRACTS_MAP } from "../contracts";
 import type { SmartContract } from "../contracts/smart-contract";
-import { FileOrBuffer } from "@thirdweb-dev/storage";
-import { BigNumber, BytesLike, CallOverrides, Signer, providers } from "ethers";
+import {
+  BigNumber,
+  BytesLike,
+  CallOverrides,
+  Signer,
+  providers,
+  BigNumberish,
+} from "ethers";
 
 // --- utility types extracted from from ts-toolbelt --- //
 
@@ -46,16 +52,6 @@ export type NetworkOrSignerOrProvider =
 export type ValueOf<T> = T[keyof T];
 
 export type SignerOrProvider = Signer | providers.Provider;
-
-export type BufferOrStringWithName = {
-  data: Buffer | string;
-  name?: string;
-};
-
-type JsonLiteral = boolean | null | number | string;
-type JsonLiteralOrFileOrBuffer = JsonLiteral | FileOrBuffer;
-export type Json = JsonLiteralOrFileOrBuffer | JsonObject | Json[];
-export type JsonObject = { [key: string]: Json };
 
 type TransactionResultWithMetadata<T = unknown> = {
   receipt: providers.TransactionReceipt;
@@ -119,3 +115,12 @@ export interface GaslessTransaction {
   functionArgs: any[];
   callOverrides: CallOverrides;
 }
+
+type JsonLiteralOutput = boolean | null | number | string;
+type JsonLiteralInput = JsonLiteralOutput | BigNumber | bigint;
+
+export type JsonOutput = JsonLiteralOutput | JsonObjectOutput | JsonOutput[];
+export type JsonObjectOutput = { [key: string]: JsonOutput };
+
+export type JsonInput = JsonLiteralInput | JsonObjectInput | JsonInput[];
+export type JsonObjectInput = { [key: string]: JsonInput };

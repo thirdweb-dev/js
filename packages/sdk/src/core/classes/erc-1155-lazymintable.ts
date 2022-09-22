@@ -26,7 +26,7 @@ import type {
   TokenERC721,
 } from "@thirdweb-dev/contracts-js";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 
 export class Erc1155LazyMintable implements DetectableFeature {
@@ -80,12 +80,12 @@ export class Erc1155LazyMintable implements DetectableFeature {
 
   private contractWrapper: ContractWrapper<BaseDropERC1155>;
   private erc1155: Erc1155;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   constructor(
     erc1155: Erc1155,
     contractWrapper: ContractWrapper<BaseDropERC1155>,
-    storage: IStorage,
+    storage: ThirdwebStorage,
   ) {
     this.erc1155 = erc1155;
     this.contractWrapper = contractWrapper;
@@ -133,8 +133,6 @@ export class Erc1155LazyMintable implements DetectableFeature {
       metadatas,
       this.storage,
       startFileNumber.toNumber(),
-      this.contractWrapper.readContract.address,
-      await this.contractWrapper.getSigner()?.getAddress(),
       options,
     );
     // ensure baseUri is the same for the entire batch

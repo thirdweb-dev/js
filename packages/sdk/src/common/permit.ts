@@ -130,8 +130,8 @@ export async function signDAIPermit(
     verifyingContract: currencyAddress,
   });
 
-  nonce = nonce ?? (await getSignerNonce(signer, currencyAddress)).toString();
-  deadline = deadline ?? ethers.constants.MaxUint256;
+  nonce = nonce || (await getSignerNonce(signer, currencyAddress)).toString();
+  deadline = deadline || ethers.constants.MaxUint256;
 
   const message = {
     owner,
@@ -185,8 +185,8 @@ export async function signEIP2612Permit(
     verifyingContract: currencyAddress,
   });
 
-  nonce = nonce ?? (await getSignerNonce(signer, currencyAddress)).toString();
-  deadline = deadline ?? ethers.constants.MaxUint256;
+  nonce = nonce || (await getSignerNonce(signer, currencyAddress)).toString();
+  deadline = deadline || ethers.constants.MaxUint256;
 
   const message = {
     owner,

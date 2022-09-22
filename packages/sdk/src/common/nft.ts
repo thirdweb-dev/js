@@ -9,7 +9,6 @@ import {
   NFTMetadataInput,
   NFTMetadataOrUri,
 } from "../schema/tokens/common";
-import { UploadProgressEvent } from "../types/index";
 import { NotFoundError } from "./error";
 import type {
   IERC1155Metadata,
@@ -19,7 +18,10 @@ import type {
 import ERC165MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
 import ERC721MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC721Metadata.json";
 import ERC1155MetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155Metadata.json";
-import type { IStorage } from "@thirdweb-dev/storage";
+import type {
+  ThirdwebStorage,
+  UploadProgressEvent,
+} from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, Contract, ethers, providers } from "ethers";
 
 const FALLBACK_METADATA = {
@@ -37,7 +39,7 @@ const FALLBACK_METADATA = {
 export async function fetchTokenMetadata(
   tokenId: BigNumberish,
   tokenUri: string,
-  storage: IStorage,
+  storage: ThirdwebStorage,
 ): Promise<NFTMetadata> {
   const parsedUri = tokenUri.replace(
     "{id}",
@@ -45,15 +47,15 @@ export async function fetchTokenMetadata(
   );
   let jsonMetadata;
   try {
-    jsonMetadata = await storage.get(parsedUri);
+    jsonMetadata = await storage.downloadJSON(parsedUri);
   } catch (err) {
     const unparsedTokenIdUri = tokenUri.replace(
       "{id}",
       BigNumber.from(tokenId).toString(),
     );
     try {
-      jsonMetadata = await storage.get(unparsedTokenIdUri);
-    } catch (e) {
+      jsonMetadata = await storage.downloadJSON(unparsedTokenIdUri);
+    } catch (e: any) {
       console.warn(
         `failed to get token metadata: ${JSON.stringify({
           tokenId: tokenId.toString(),
@@ -83,7 +85,7 @@ export async function fetchTokenMetadataForContract(
   contractAddress: string,
   provider: providers.Provider,
   tokenId: BigNumberish,
-  storage: IStorage,
+  storage: ThirdwebStorage,
 ) {
   let uri: string | undefined;
   const erc165 = new Contract(
@@ -123,12 +125,12 @@ export async function fetchTokenMetadataForContract(
  */
 export async function uploadOrExtractURI(
   metadata: NFTMetadataOrUri,
-  storage: IStorage,
+  storage: ThirdwebStorage,
 ): Promise<string> {
   if (typeof metadata === "string") {
     return metadata;
   } else {
-    return await storage.uploadMetadata(CommonNFTInput.parse(metadata));
+    return await storage.upload(CommonNFTInput.parse(metadata));
   }
 }
 
@@ -143,10 +145,8 @@ export async function uploadOrExtractURI(
  */
 export async function uploadOrExtractURIs(
   metadatas: NFTMetadataOrUri[],
-  storage: IStorage,
+  storage: ThirdwebStorage,
   startNumber?: number,
-  contractAddress?: string,
-  signerAddress?: string,
   options?: {
     onProgress: (event: UploadProgressEvent) => void;
   },
@@ -154,12 +154,14 @@ export async function uploadOrExtractURIs(
   if (isUriList(metadatas)) {
     return metadatas;
   } else if (isMetadataList(metadatas)) {
-    const { uris } = await storage.uploadMetadataBatch(
+    const uris = await storage.uploadBatch(
       metadatas.map((m) => CommonNFTInput.parse(m)),
-      startNumber,
-      contractAddress,
-      signerAddress,
-      options,
+      {
+        rewriteFileNames: {
+          fileStartNumber: startNumber || 0,
+        },
+        onProgress: options?.onProgress,
+      },
     );
     return uris;
   } else {
@@ -167,6 +169,21 @@ export async function uploadOrExtractURIs(
       "NFT metadatas must all be of the same type (all URI or all NFTMetadataInput)",
     );
   }
+}
+
+export function getBaseUriFromBatch(uris: string[]): string {
+  const baseUri = uris[0].substring(0, uris[0].lastIndexOf("/"));
+  for (let i = 0; i < uris.length; i++) {
+    const uri = uris[i].substring(0, uris[i].lastIndexOf("/"));
+    if (baseUri !== uri) {
+      throw new Error(
+        `Can only create batches with the same base URI for every entry in the batch. Expected '${baseUri}' but got '${uri}'`,
+      );
+    }
+  }
+
+  // Ensure that baseUri ends with trailing slash
+  return baseUri.replace(/\/$/, "") + "/";
 }
 
 function isUriList(metadatas: NFTMetadataOrUri[]): metadatas is string[] {

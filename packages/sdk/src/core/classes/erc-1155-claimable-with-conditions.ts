@@ -12,8 +12,8 @@ import { TransactionTask } from "./TransactionTask";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { DropErc1155ClaimConditions } from "./drop-erc1155-claim-conditions";
-import { DropERC1155 } from "@thirdweb-dev/contracts-js";
-import { IStorage } from "@thirdweb-dev/storage";
+import type { DropERC1155 } from "@thirdweb-dev/contracts-js";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumberish, ethers } from "ethers";
 
 /**
@@ -31,11 +31,11 @@ export class Erc1155ClaimableWithConditions implements DetectableFeature {
 
   public conditions: DropErc1155ClaimConditions<BaseClaimConditionERC1155>;
   private contractWrapper: ContractWrapper<BaseClaimConditionERC1155>;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   constructor(
     contractWrapper: ContractWrapper<BaseClaimConditionERC1155>,
-    storage: IStorage,
+    storage: ThirdwebStorage,
   ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;

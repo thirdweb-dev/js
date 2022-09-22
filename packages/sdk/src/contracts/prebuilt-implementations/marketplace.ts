@@ -20,7 +20,7 @@ import { AuctionListing, DirectListing } from "../../types/marketplace";
 import { MarketplaceFilter } from "../../types/marketplace/MarketPlaceFilter";
 import type { Marketplace as MarketplaceContract } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Marketplace.json";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -38,12 +38,12 @@ import invariant from "tiny-invariant";
  *
  * @public
  */
-export class MarketplaceImpl implements UpdateableNetwork {
+export class Marketplace implements UpdateableNetwork {
   static contractRoles = ["admin", "lister", "asset"] as const;
 
   public abi: typeof ABI;
   private contractWrapper: ContractWrapper<MarketplaceContract>;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   public encoder: ContractEncoder<MarketplaceContract>;
   public events: ContractEvents<MarketplaceContract>;
@@ -55,7 +55,7 @@ export class MarketplaceImpl implements UpdateableNetwork {
   >;
   public roles: ContractRoles<
     MarketplaceContract,
-    typeof MarketplaceImpl.contractRoles[number]
+    typeof Marketplace.contractRoles[number]
   >;
   /**
    * @internal
@@ -135,7 +135,7 @@ export class MarketplaceImpl implements UpdateableNetwork {
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
     contractWrapper = new ContractWrapper<MarketplaceContract>(
@@ -155,7 +155,7 @@ export class MarketplaceImpl implements UpdateableNetwork {
     );
     this.roles = new ContractRoles(
       this.contractWrapper,
-      MarketplaceImpl.contractRoles,
+      Marketplace.contractRoles,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);

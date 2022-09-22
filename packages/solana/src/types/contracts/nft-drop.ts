@@ -1,4 +1,5 @@
 import { NFTCollectionMetadataInputSchema } from ".";
+import { AmountSchema } from "../common";
 import { sol, toBigNumber, toDateTime } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
 import { z } from "zod";
@@ -7,16 +8,26 @@ import { z } from "zod";
  * @internal
  */
 // TODO: Handle allow lists and end times
-export const NFTDropConditionsSchema = z.object({
+export const NFTDropConditionsInputSchema = z.object({
+  itemsAvailable: AmountSchema,
+  price: z.number().default(0),
+  sellerFeeBasisPoints: z.number().default(0),
+  goLiveDate: z.date().optional(),
+  splToken: z.string().optional(),
+  solTreasuryAccount: z.string().optional(),
+  splTokenAccount: z.string().optional(),
+});
+
+/**
+ * @internal
+ */
+export const NFTDropConditionsOutputSchema = z.object({
   price: z
     .number()
-    .default(0)
-    .transform((p) => sol(p)),
-  sellerFeeBasisPoints: z.number().default(0),
-  itemsAvailable: z
-    .number()
-    .default(0)
-    .transform((bn) => toBigNumber(bn)),
+    .transform((p) => sol(p))
+    .optional(),
+  sellerFeeBasisPoints: z.number().optional(),
+  itemsAvailable: AmountSchema.transform((bn) => toBigNumber(bn)).optional(),
   goLiveDate: z
     .date()
     .transform((d) => toDateTime(d))
@@ -35,37 +46,18 @@ export const NFTDropConditionsSchema = z.object({
     .optional(),
 });
 
-export const NFTDropContractSchema = NFTCollectionMetadataInputSchema.merge(
-  NFTDropConditionsSchema,
-);
-
-export type NFTDropMetadataInput = z.input<typeof NFTDropContractSchema>;
+/**
+ * @internal
+ */
+export const NFTDropContractInputSchema =
+  NFTCollectionMetadataInputSchema.merge(NFTDropConditionsInputSchema);
 
 /**
  * @internal
  */
-export const NFTDropClaimSchema = NFTDropConditionsSchema.extend({
-  price: z
-    .number()
-    .transform((p) => sol(p))
-    .optional(),
-  sellerFeeBasisPoints: z.number().optional(),
-  itemsAvailable: z
-    .number()
-    .transform((bn) => toBigNumber(bn))
-    .optional(),
-});
+export type NFTDropContractInput = z.input<typeof NFTDropContractInputSchema>;
 
 /**
  * @internal
  */
-export const NFTDropClaimOutputSchema = z.object({
-  price: z.bigint(),
-  sellerFeeBasisPoints: z.bigint(),
-  itemsAvailable: z.bigint(),
-  goLiveDate: z.date().optional(),
-});
-
-export type NFTDropClaimInput = z.input<typeof NFTDropClaimSchema>;
-
-export type NFTDropClaimOutput = z.output<typeof NFTDropClaimOutputSchema>;
+export type NFTDropMetadataInput = z.input<typeof NFTDropConditionsInputSchema>;

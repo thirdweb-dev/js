@@ -16,7 +16,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { Amount, CurrencyValue } from "../../types";
 import type { DropERC20 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC20.json";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { CallOverrides, constants } from "ethers";
 
 /**
@@ -32,14 +32,14 @@ import { CallOverrides, constants } from "ethers";
  * ```
  *
  */
-export class TokenDropImpl extends StandardErc20<DropERC20> {
+export class TokenDrop extends StandardErc20<DropERC20> {
   static contractRoles = ["admin", "transfer"] as const;
 
   public abi: typeof ABI;
   public metadata: ContractMetadata<DropERC20, typeof DropErc20ContractSchema>;
   public roles: ContractRoles<
     DropERC20,
-    typeof TokenDropImpl.contractRoles[number]
+    typeof TokenDrop.contractRoles[number]
   >;
   public encoder: ContractEncoder<DropERC20>;
   public estimator: GasCostEstimator<DropERC20>;
@@ -77,7 +77,7 @@ export class TokenDropImpl extends StandardErc20<DropERC20> {
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
     contractWrapper = new ContractWrapper<DropERC20>(
@@ -96,7 +96,7 @@ export class TokenDropImpl extends StandardErc20<DropERC20> {
     );
     this.roles = new ContractRoles(
       this.contractWrapper,
-      TokenDropImpl.contractRoles,
+      TokenDrop.contractRoles,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);

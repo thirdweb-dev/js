@@ -37,7 +37,7 @@ import type {
   IMintableERC20,
   IBurnableERC20,
 } from "@thirdweb-dev/contracts-js";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers, BigNumber, BigNumberish } from "ethers";
 
 /**
@@ -65,9 +65,9 @@ export class Erc20<
   private droppable: Erc20Droppable | undefined;
   private signatureMintable: Erc20SignatureMintable | undefined;
   protected contractWrapper: ContractWrapper<T>;
-  protected storage: IStorage;
+  protected storage: ThirdwebStorage;
 
-  constructor(contractWrapper: ContractWrapper<T>, storage: IStorage) {
+  constructor(contractWrapper: ContractWrapper<T>, storage: ThirdwebStorage) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.mintable = this.detectErc20Mintable();

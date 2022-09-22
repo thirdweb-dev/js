@@ -11,8 +11,22 @@ import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import type { IERC20 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
-import { ethers, BigNumber, providers } from "ethers";
+import { ethers, BigNumber, providers, Signer } from "ethers";
+import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
+
+/**
+ *
+ * {@link UserWallet} events that you can subscribe to using `sdk.wallet.events`.
+ *
+ * @public
+ */
+export interface UserWalletEvents {
+  /**
+   * Emitted when `sdk.wallet.connect()` is called.
+   */
+  signerChanged: [Signer | undefined];
+}
 
 /**
  * Connect and Interact with a user wallet
@@ -25,22 +39,24 @@ import invariant from "tiny-invariant";
 export class UserWallet {
   private connection: RPCConnectionHandler;
   private options: SDKOptions;
+  public events = new EventEmitter<UserWalletEvents>();
 
   constructor(network: NetworkOrSignerOrProvider, options: SDKOptions) {
     this.connection = new RPCConnectionHandler(network, options);
     this.options = options;
+    this.events = new EventEmitter();
   }
 
-  // TODO connect()
   // TODO disconnect()
   // TODO switchChain()
-  // TODO event listener
   // TODO tokens()
   // TODO NFTs()
 
   // TODO this will become the source of truth of the signer and have every contract read from it
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+  // TODO separate signer and provider logics
+  public connect(network: NetworkOrSignerOrProvider) {
     this.connection.updateSignerOrProvider(network);
+    this.events.emit("signerChanged", this.connection.getSigner());
   }
 
   /**

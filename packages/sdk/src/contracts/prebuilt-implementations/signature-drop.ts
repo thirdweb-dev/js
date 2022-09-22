@@ -21,6 +21,7 @@ import {
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
+import { PaperCheckout } from "../../integrations/paper-xyz";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
@@ -35,7 +36,7 @@ import {
 } from "../../types/QueryParams";
 import type { SignatureDrop as SignatureDropContract } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop.json";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
@@ -54,7 +55,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
  *
  * @public
  */
-export class SignatureDropImpl extends StandardErc721<SignatureDropContract> {
+export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
   public abi: typeof ABI;
@@ -70,7 +71,7 @@ export class SignatureDropImpl extends StandardErc721<SignatureDropContract> {
   public events: ContractEvents<SignatureDropContract>;
   public roles: ContractRoles<
     SignatureDropContract,
-    typeof SignatureDropImpl.contractRoles[number]
+    typeof SignatureDrop.contractRoles[number]
   >;
   /**
    * @internal
@@ -161,10 +162,16 @@ export class SignatureDropImpl extends StandardErc721<SignatureDropContract> {
    */
   public signature: Erc721WithQuantitySignatureMintable;
 
+  /**
+   * Checkout
+   * @remarks Create a FIAT currency checkout for your NFT drop.
+   */
+  public checkout: PaperCheckout<SignatureDropContract>;
+
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
     contractWrapper = new ContractWrapper<SignatureDropContract>(
@@ -183,7 +190,7 @@ export class SignatureDropImpl extends StandardErc721<SignatureDropContract> {
     );
     this.roles = new ContractRoles(
       this.contractWrapper,
-      SignatureDropImpl.contractRoles,
+      SignatureDrop.contractRoles,
     );
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);
@@ -212,6 +219,8 @@ export class SignatureDropImpl extends StandardErc721<SignatureDropContract> {
       this.contractWrapper,
       this.storage,
     );
+
+    this.checkout = new PaperCheckout(this.contractWrapper);
   }
 
   /**

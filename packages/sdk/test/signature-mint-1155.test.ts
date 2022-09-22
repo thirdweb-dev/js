@@ -1,7 +1,7 @@
-import { Edition, Token } from "../src";
+import { EditionInitializer, TokenInitializer } from "../src";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { EditionImpl } from "../src/contracts/classes/edition";
-import { TokenImpl } from "../src/contracts/classes/token";
+import { Edition } from "../src/contracts/prebuilt-implementations/edition";
+import { Token } from "../src/contracts/prebuilt-implementations/token";
 import {
   PayloadToSign1155,
   SignedPayload1155,
@@ -14,8 +14,8 @@ import { BigNumber } from "ethers";
 global.fetch = require("cross-fetch");
 
 describe("Edition sig minting", async () => {
-  let editionContract: EditionImpl;
-  let customTokenContract: TokenImpl;
+  let editionContract: Edition;
+  let customTokenContract: Token;
   let tokenAddress: string;
 
   let adminWallet: SignerWithAddress, samWallet: SignerWithAddress;
@@ -30,12 +30,15 @@ describe("Edition sig minting", async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
     editionContract = await sdk.getEdition(
-      await sdk.deployer.deployBuiltInContract(Edition.contractType, {
-        name: "OUCH VOUCH",
-        symbol: "VOUCH",
-        primary_sale_recipient: adminWallet.address,
-        seller_fee_basis_points: 0,
-      }),
+      await sdk.deployer.deployBuiltInContract(
+        EditionInitializer.contractType,
+        {
+          name: "OUCH VOUCH",
+          symbol: "VOUCH",
+          primary_sale_recipient: adminWallet.address,
+          seller_fee_basis_points: 0,
+        },
+      ),
     );
 
     meta = {
@@ -49,7 +52,7 @@ describe("Edition sig minting", async () => {
     };
 
     customTokenContract = await sdk.getToken(
-      await sdk.deployer.deployBuiltInContract(Token.contractType, {
+      await sdk.deployer.deployBuiltInContract(TokenInitializer.contractType, {
         name: "Test",
         symbol: "TEST",
         primary_sale_recipient: adminWallet.address,
@@ -169,7 +172,7 @@ describe("Edition sig minting", async () => {
     });
 
     it("should mint with URI", async () => {
-      const uri = await storage.uploadMetadata({
+      const uri = await storage.upload({
         name: "Test1",
       });
       const toSign = {
@@ -183,10 +186,10 @@ describe("Edition sig minting", async () => {
     });
 
     it("should mint batch with URI", async () => {
-      const uri1 = await storage.uploadMetadata({
+      const uri1 = await storage.upload({
         name: "Test1",
       });
-      const uri2 = await storage.uploadMetadata({
+      const uri2 = await storage.upload({
         name: "Test2",
       });
       const toSign1 = {

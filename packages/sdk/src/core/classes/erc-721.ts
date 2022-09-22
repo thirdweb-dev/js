@@ -52,7 +52,7 @@ import type {
   SignatureDrop,
   TokenERC721,
 } from "@thirdweb-dev/contracts-js";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
 
 /**
@@ -81,9 +81,9 @@ export class Erc721<
   private lazyMintable: Erc721LazyMintable | undefined;
   private signatureMintable: Erc721WithQuantitySignatureMintable | undefined;
   protected contractWrapper: ContractWrapper<T>;
-  protected storage: IStorage;
+  protected storage: ThirdwebStorage;
 
-  constructor(contractWrapper: ContractWrapper<T>, storage: IStorage) {
+  constructor(contractWrapper: ContractWrapper<T>, storage: ThirdwebStorage) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.query = this.detectErc721Enumerable();
@@ -496,7 +496,7 @@ export class Erc721<
    *
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
-   * @twfeature ERC721LazyMint
+   * @twfeature ERC721LazyMintable
    */
   public async lazyMint(
     metadatas: NFTMetadataOrUri[],

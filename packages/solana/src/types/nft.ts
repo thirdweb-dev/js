@@ -1,5 +1,10 @@
-import { HexColor, JsonSchema, OptionalPropertiesInput } from "./common";
-import { FileBufferOrStringSchema } from "@thirdweb-dev/storage";
+import {
+  CurrencyValueSchema,
+  FileOrBufferOrStringSchema,
+  HexColor,
+  JsonSchema,
+  OptionalPropertiesInput,
+} from "./common";
 import { z } from "zod";
 
 /**
@@ -7,11 +12,11 @@ import { z } from "zod";
  */
 export const CommonTokenInput = z
   .object({
-    name: z.string().optional(),
+    name: z.union([z.string(), z.number()]).optional(),
     symbol: z.string().optional(),
     description: z.string().nullable().optional(),
-    image: FileBufferOrStringSchema.nullable().optional(),
-    external_url: FileBufferOrStringSchema.nullable().optional(),
+    image: FileOrBufferOrStringSchema.nullable().optional(),
+    external_url: FileOrBufferOrStringSchema.nullable().optional(),
   })
   .catchall(z.lazy(() => JsonSchema));
 
@@ -29,9 +34,10 @@ export const CommonTokenOutput = CommonTokenInput.extend({
  * @internal
  */
 export const CommonNFTInput = CommonTokenInput.extend({
-  animation_url: FileBufferOrStringSchema.optional(),
+  animation_url: FileOrBufferOrStringSchema.optional(),
   background_color: HexColor.optional(),
   properties: OptionalPropertiesInput,
+  attributes: OptionalPropertiesInput,
 });
 
 /**
@@ -51,6 +57,7 @@ export const CommonNFTOutput = CommonTokenOutput.extend({
  */
 export const CommonFungibleTokenOutput = CommonTokenOutput.extend({
   decimals: z.number(),
+  supply: CurrencyValueSchema,
 });
 
 /**

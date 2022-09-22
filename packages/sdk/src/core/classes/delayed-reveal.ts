@@ -1,5 +1,8 @@
 import { hasFunction } from "../../common";
-import { fetchTokenMetadataForContract } from "../../common/nft";
+import {
+  fetchTokenMetadataForContract,
+  getBaseUriFromBatch,
+} from "../../common/nft";
 import { FeatureName } from "../../constants/contract-features";
 import {
   CommonNFTInput,
@@ -21,7 +24,7 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import DeprecatedAbi from "@thirdweb-dev/contracts-js/dist/abis/IDelayedRevealDeprecated.json";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 
 /**
@@ -38,12 +41,12 @@ export class DelayedReveal<
   featureName;
 
   private contractWrapper: ContractWrapper<T>;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
   private nextTokenIdToMintFn: () => Promise<BigNumber>;
 
   constructor(
     contractWrapper: ContractWrapper<T>,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     fetureName: FeatureName,
     nextTokenIdToMintFn: () => Promise<BigNumber>,
   ) {
@@ -98,26 +101,29 @@ export class DelayedReveal<
       throw new Error("Password is required");
     }
 
-    const { baseUri: placeholderUri } = await this.storage.uploadMetadataBatch(
+    const placeholderUris = await this.storage.uploadBatch(
       [CommonNFTInput.parse(placeholder)],
-      0,
-      this.contractWrapper.readContract.address,
-      await this.contractWrapper.getSigner()?.getAddress(),
+      {
+        rewriteFileNames: {
+          fileStartNumber: 0,
+        },
+      },
     );
+    const placeholderUri = getBaseUriFromBatch(placeholderUris);
 
     const startFileNumber = await this.nextTokenIdToMintFn();
 
-    const batch = await this.storage.uploadMetadataBatch(
+    const uris = await this.storage.uploadBatch(
       metadatas.map((m) => CommonNFTInput.parse(m)),
-      startFileNumber.toNumber(),
-      this.contractWrapper.readContract.address,
-      await this.contractWrapper.getSigner()?.getAddress(),
-      options,
+      {
+        onProgress: options?.onProgress,
+        rewriteFileNames: {
+          fileStartNumber: startFileNumber.toNumber(),
+        },
+      },
     );
 
-    const baseUri = batch.baseUri.endsWith("/")
-      ? batch.baseUri
-      : `${batch.baseUri}/`;
+    const baseUri = getBaseUriFromBatch(uris);
     const baseUriId = await this.contractWrapper.readContract.getBaseURICount();
     const hashedPassword = await this.hashDelayRevealPasword(
       baseUriId,
@@ -146,7 +152,7 @@ export class DelayedReveal<
     }
 
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      batch.uris.length,
+      uris.length,
       placeholderUri.endsWith("/") ? placeholderUri : `${placeholderUri}/`,
       data,
     ]);
