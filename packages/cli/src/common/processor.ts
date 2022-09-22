@@ -8,6 +8,7 @@ import { ContractPayload } from "../core/interfaces/ContractPayload";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
 import { readFileSync } from "fs";
+import ora from "ora";
 import path from "path";
 
 export async function processProject(
@@ -34,6 +35,27 @@ export async function processProject(
   logger.debug("Processing project at path " + projectPath);
 
   const projectType = await detect(projectPath, options);
+
+  if (projectType === "none") {
+    if (command === "deploy") {
+      info(
+        "No contracts detected in this directory. Redirecting to the thirdweb contract deployment page.",
+      );
+      return "https://thirdweb.com/contracts";
+    }
+
+    error("No detected contracts in this directory.");
+    logger.info(``);
+    ora(
+      `Detected contract files must end with the '.sol' extension and exist in this directory or the '/contracts' subdirectory`,
+    ).info();
+    logger.info(``);
+    ora("To create a new contracts project, run the following command:").info();
+    logger.info(``);
+    logger.info(`     ${chalk.cyan(`npx thirdweb@latest create --contract`)}`);
+    logger.info(``);
+    process.exit(1);
+  }
 
   if (options.ci) {
     logger.info("Installing dependencies...");
