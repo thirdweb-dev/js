@@ -100,7 +100,17 @@ export class Pack extends StandardErc1155<PackContract> {
       network,
       address,
       abi,
-      options,
+      options.gasless && "openzeppelin" in options.gasless
+        ? {
+            ...options,
+            gasless: {
+              openzeppelin: {
+                ...options.gasless.openzeppelin,
+                useEOAForwarder: true,
+              },
+            },
+          }
+        : options,
     ),
   ) {
     super(contractWrapper, storage);
