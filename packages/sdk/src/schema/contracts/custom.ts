@@ -2,8 +2,8 @@ import { toSemver } from "../../common/index";
 import {
   AddressSchema,
   BigNumberishSchema,
+  BigNumberTransformSchema,
   FileOrBufferOrStringSchema,
-  JsonSchema,
 } from "../shared";
 import {
   CommonContractOutputSchema,
@@ -22,7 +22,7 @@ import { z } from "zod";
  * @internal
  */
 export const BYOCContractMetadataSchema = CommonContractSchema.catchall(
-  z.lazy(() => JsonSchema),
+  z.union([BigNumberTransformSchema, z.unknown()]),
 );
 
 /**
