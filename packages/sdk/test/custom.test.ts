@@ -418,7 +418,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: erc20 signature mintable", async () => {
-    const c = await sdk.getContractFromAbi(
+    const c = sdk.getContractFromAbi(
       tokenContractAddress,
       TokenERC20__factory.abi,
     );
