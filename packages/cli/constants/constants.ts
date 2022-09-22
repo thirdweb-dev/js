@@ -3,7 +3,8 @@ export const CREATE_MESSAGES = {
   projectName: "What is your project named?",
   framework: "What framework do you want to use?",
   language: "What language do you want to use?",
-  contract: "What contract do you want to start from?",
+  contract: "What type of contract do you want to start from?",
+  extensions: "What extensions do you want to add to your contract?",
 } as const;
 
 export const ERROR_MESSAGES = {
