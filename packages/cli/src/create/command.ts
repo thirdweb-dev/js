@@ -90,8 +90,11 @@ export async function twCreate(options: any) {
       name: "path",
       message: CREATE_MESSAGES.projectName,
       initial: options.template || defaultName,
-      validate: (name) => {
-        const validation = validateNpmName(path.basename(path.resolve(name)));
+      format: (name: string) => name.toLowerCase(),
+      validate: (name: string) => {
+        const validation = validateNpmName(
+          path.basename(path.resolve(name.toLowerCase())),
+        );
         if (validation.valid) {
           return true;
         }
