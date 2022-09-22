@@ -1,5 +1,4 @@
 import { FileOrBufferOrString } from "./data";
-import { GatewayUrls } from "./download";
 
 /**
  * @public
