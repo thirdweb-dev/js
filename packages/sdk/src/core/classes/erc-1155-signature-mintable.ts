@@ -1,7 +1,7 @@
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { FEATURE_EDITION_SIGNATURE_MINTABLE } from "../../constants/erc1155-features";
-import type { NFTCollection } from "../../contracts";
+import type { NFTCollectionInitializer } from "../../contracts";
 import {
   FilledSignaturePayload1155WithTokenId,
   MintRequest1155,
@@ -35,13 +35,16 @@ export class Erc1155SignatureMintable implements DetectableFeature {
   >;
   private storage: ThirdwebStorage;
   private roles:
-    | ContractRoles<TokenERC1155, typeof NFTCollection.roles[number]>
+    | ContractRoles<TokenERC1155, typeof NFTCollectionInitializer.roles[number]>
     | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<BaseSignatureMintERC1155 | TokenERC1155>,
     storage: ThirdwebStorage,
-    roles?: ContractRoles<TokenERC1155, typeof NFTCollection.roles[number]>,
+    roles?: ContractRoles<
+      TokenERC1155,
+      typeof NFTCollectionInitializer.roles[number]
+    >,
   ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;

@@ -55,7 +55,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
  *
  * @public
  */
-export class SignatureDropImpl extends StandardErc721<SignatureDropContract> {
+export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
   public abi: typeof ABI;
@@ -71,7 +71,7 @@ export class SignatureDropImpl extends StandardErc721<SignatureDropContract> {
   public events: ContractEvents<SignatureDropContract>;
   public roles: ContractRoles<
     SignatureDropContract,
-    typeof SignatureDropImpl.contractRoles[number]
+    typeof SignatureDrop.contractRoles[number]
   >;
   /**
    * @internal
@@ -190,7 +190,7 @@ export class SignatureDropImpl extends StandardErc721<SignatureDropContract> {
     );
     this.roles = new ContractRoles(
       this.contractWrapper,
-      SignatureDropImpl.contractRoles,
+      SignatureDrop.contractRoles,
     );
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);

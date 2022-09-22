@@ -1,4 +1,8 @@
-import { useNetwork as useWagmiNetwork } from "wagmi";
+import invariant from "tiny-invariant";
+import {
+  useNetwork as useWagmiNetwork,
+  useContext as useWagmiContext,
+} from "wagmi";
 
 /**
  * Hook for getting metadata about the network the current wallet is connected to and switching networks
@@ -25,5 +29,10 @@ import { useNetwork as useWagmiNetwork } from "wagmi";
  */
 
 export function useNetwork() {
+  const wagmiContext = useWagmiContext();
+  invariant(
+    wagmiContext,
+    `useNetwork() can only be used inside <ThirdwebProvider />. If you are using <ThirdwebSDKProvider /> you will have to use your own network logic.`,
+  );
   return useWagmiNetwork();
 }

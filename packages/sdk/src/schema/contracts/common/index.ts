@@ -1,5 +1,9 @@
-import { AddressSchema, BasisPointsSchema } from "../../shared";
-import { FileOrBufferOrStringSchema, JsonSchema } from "@thirdweb-dev/storage";
+import {
+  AddressSchema,
+  BasisPointsSchema,
+  FileOrBufferOrStringSchema,
+  JsonSchema,
+} from "../../shared";
 import { constants } from "ethers";
 import { z } from "zod";
 

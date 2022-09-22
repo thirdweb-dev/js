@@ -1,5 +1,5 @@
-import { Edition } from "../src";
-import { EditionImpl } from "../src/contracts/classes/edition";
+import { EditionInitializer } from "../src";
+import { Edition } from "../src/contracts/prebuilt-implementations/edition";
 import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
@@ -7,7 +7,7 @@ import { expect } from "chai";
 global.fetch = require("cross-fetch");
 
 describe("Royalties", async () => {
-  let bundleContract: EditionImpl;
+  let bundleContract: Edition;
 
   let adminWallet: SignerWithAddress, samWallet: SignerWithAddress;
 
@@ -19,12 +19,15 @@ describe("Royalties", async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
     bundleContract = await sdk.getEdition(
-      await sdk.deployer.deployBuiltInContract(Edition.contractType, {
-        name: "NFT Contract",
-        primary_sale_recipient: adminWallet.address,
-        fee_recipient: adminWallet.address,
-        seller_fee_basis_points: 1000,
-      }),
+      await sdk.deployer.deployBuiltInContract(
+        EditionInitializer.contractType,
+        {
+          name: "NFT Contract",
+          primary_sale_recipient: adminWallet.address,
+          fee_recipient: adminWallet.address,
+          seller_fee_basis_points: 1000,
+        },
+      ),
     );
 
     await bundleContract.mint({
