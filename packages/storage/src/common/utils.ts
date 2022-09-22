@@ -7,10 +7,6 @@ export function isBrowser() {
   return typeof window !== "undefined";
 }
 
-export function isString(data: any): data is string {
-  return typeof data === "string";
-}
-
 /**
  * @internal
  */
@@ -95,34 +91,34 @@ export function replaceSchemeWithGatewayUrl(
 /**
  * @internal
  */
-export function replaceObjectGatewayUrlsWithSchemes(
-  data: unknown,
+export function replaceObjectGatewayUrlsWithSchemes<TData = unknown>(
+  data: TData,
   gatewayUrls: GatewayUrls,
-): unknown {
-  switch (typeof data) {
-    case "string":
-      return replaceGatewayUrlWithScheme(data, gatewayUrls);
-    case "object":
-      if (!data) {
-        return data;
-      }
+): TData {
+  if (typeof data === "string") {
+    return replaceGatewayUrlWithScheme(data, gatewayUrls) as TData;
+  }
+  if (typeof data === "object") {
+    if (!data) {
+      return data;
+    }
 
-      if (isFileOrBuffer(data)) {
-        return data;
-      }
+    if (isFileOrBuffer(data)) {
+      return data;
+    }
 
-      if (Array.isArray(data)) {
-        return data.map((entry) =>
-          replaceObjectGatewayUrlsWithSchemes(entry, gatewayUrls),
-        );
-      }
+    if (Array.isArray(data)) {
+      return data.map((entry) =>
+        replaceObjectGatewayUrlsWithSchemes(entry, gatewayUrls),
+      ) as TData;
+    }
 
-      return Object.fromEntries(
-        Object.entries(data).map(([key, value]) => [
-          key,
-          replaceObjectGatewayUrlsWithSchemes(value, gatewayUrls),
-        ]),
-      );
+    return Object.fromEntries(
+      Object.entries(data).map(([key, value]) => [
+        key,
+        replaceObjectGatewayUrlsWithSchemes(value, gatewayUrls),
+      ]),
+    ) as TData;
   }
 
   return data;
@@ -131,38 +127,31 @@ export function replaceObjectGatewayUrlsWithSchemes(
 /**
  * @internal
  */
-export function replaceObjectSchemesWithGatewayUrls<TData>(
+export function replaceObjectSchemesWithGatewayUrls<TData = unknown>(
   data: TData,
   gatewayUrls: GatewayUrls,
-): unknown {
-  if (isString(data)) {
-    return replaceSchemeWithGatewayUrl(data, gatewayUrls);
+): TData {
+  if (typeof data === "string") {
+    return replaceSchemeWithGatewayUrl(data, gatewayUrls) as TData;
   }
-
-  switch (typeof data) {
-    case "string":
-      return replaceSchemeWithGatewayUrl(data, gatewayUrls);
-    case "object":
-      if (!data) {
-        return data;
-      }
-
-      if (isFileOrBuffer(data)) {
-        return data;
-      }
-
-      if (Array.isArray(data)) {
-        return data.map((entry) =>
-          replaceObjectSchemesWithGatewayUrls(entry, gatewayUrls),
-        );
-      }
-
-      return Object.fromEntries(
-        Object.entries(data).map(([key, value]) => [
-          key,
-          replaceObjectSchemesWithGatewayUrls(value, gatewayUrls),
-        ]),
-      );
+  if (typeof data === "object") {
+    if (!data) {
+      return data;
+    }
+    if (isFileOrBuffer(data)) {
+      return data;
+    }
+    if (Array.isArray(data)) {
+      return data.map((entry) =>
+        replaceObjectSchemesWithGatewayUrls(entry, gatewayUrls),
+      ) as TData;
+    }
+    return Object.fromEntries(
+      Object.entries(data).map(([key, value]) => [
+        key,
+        replaceObjectSchemesWithGatewayUrls(value, gatewayUrls),
+      ]),
+    ) as TData;
   }
 
   return data;
