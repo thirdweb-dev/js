@@ -10,5 +10,5 @@ export function MockStorage(): ThirdwebStorage {
 
   const uploader = new MockUploader(storage);
   const downloader = new MockDownloader(storage);
-  return new ThirdwebStorage(uploader, downloader);
+  return new ThirdwebStorage({ uploader, downloader });
 }
