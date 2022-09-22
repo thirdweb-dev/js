@@ -35,7 +35,7 @@ import { CallOverrides, constants } from "ethers";
  *
  * @public
  */
-export class TokenImpl extends StandardErc20<TokenERC20> {
+export class Token extends StandardErc20<TokenERC20> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
   public abi: typeof ABI;
@@ -43,10 +43,7 @@ export class TokenImpl extends StandardErc20<TokenERC20> {
     TokenERC20,
     typeof TokenErc20ContractSchema
   >;
-  public roles: ContractRoles<
-    TokenERC20,
-    typeof TokenImpl.contractRoles[number]
-  >;
+  public roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>;
   public encoder: ContractEncoder<TokenERC20>;
   public estimator: GasCostEstimator<TokenERC20>;
   public history: TokenERC20History;
@@ -92,10 +89,7 @@ export class TokenImpl extends StandardErc20<TokenERC20> {
       TokenErc20ContractSchema,
       this.storage,
     );
-    this.roles = new ContractRoles(
-      this.contractWrapper,
-      TokenImpl.contractRoles,
-    );
+    this.roles = new ContractRoles(this.contractWrapper, Token.contractRoles);
     this.sales = new ContractPrimarySale(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.history = new TokenERC20History(this.contractWrapper, this.events);

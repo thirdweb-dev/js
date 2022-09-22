@@ -1,12 +1,12 @@
 import {
-  NFTCollection,
+  NFTCollectionInitializer,
   PayloadToSign721withQuantity,
   SignedPayload721WithQuantitySignature,
-  Token,
+  TokenInitializer,
 } from "../src";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { NFTCollectionImpl } from "../src/contracts/classes/nft-collection";
-import { TokenImpl } from "../src/contracts/classes/token";
+import { NFTCollection } from "../src/contracts/prebuilt-implementations/nft-collection";
+import { Token } from "../src/contracts/prebuilt-implementations/token";
 import { sdk, signers, storage } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
@@ -15,8 +15,8 @@ import { BigNumber } from "ethers";
 global.fetch = require("cross-fetch");
 
 describe("NFT sig minting", async () => {
-  let nftContract: NFTCollectionImpl;
-  let customTokenContract: TokenImpl;
+  let nftContract: NFTCollection;
+  let customTokenContract: Token;
   let tokenAddress: string;
 
   let adminWallet: SignerWithAddress, samWallet: SignerWithAddress;
@@ -31,12 +31,15 @@ describe("NFT sig minting", async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
     nftContract = await sdk.getNFTCollection(
-      await sdk.deployer.deployBuiltInContract(NFTCollection.contractType, {
-        name: "OUCH VOUCH",
-        symbol: "VOUCH",
-        primary_sale_recipient: adminWallet.address,
-        seller_fee_basis_points: 0,
-      }),
+      await sdk.deployer.deployBuiltInContract(
+        NFTCollectionInitializer.contractType,
+        {
+          name: "OUCH VOUCH",
+          symbol: "VOUCH",
+          primary_sale_recipient: adminWallet.address,
+          seller_fee_basis_points: 0,
+        },
+      ),
     );
 
     meta = {
@@ -51,7 +54,7 @@ describe("NFT sig minting", async () => {
     };
 
     customTokenContract = await sdk.getToken(
-      await sdk.deployer.deployBuiltInContract(Token.contractType, {
+      await sdk.deployer.deployBuiltInContract(TokenInitializer.contractType, {
         name: "Test",
         symbol: "TEST",
         primary_sale_recipient: adminWallet.address,

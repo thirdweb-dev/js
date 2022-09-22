@@ -1,6 +1,6 @@
-import { Token, Vote } from "../src";
-import { TokenImpl } from "../src/contracts/classes/token";
-import { VoteImpl } from "../src/contracts/classes/vote";
+import { TokenInitializer, VoteInitializer } from "../src";
+import { Token } from "../src/contracts/prebuilt-implementations/token";
+import { Vote } from "../src/contracts/prebuilt-implementations/vote";
 import { sdk, signers, hardhatEthers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";
@@ -9,8 +9,8 @@ import { ethers } from "ethers";
 global.fetch = require("cross-fetch");
 
 describe("Vote Contract", async () => {
-  let voteContract: VoteImpl;
-  let currencyContract: TokenImpl;
+  let voteContract: Vote;
+  let currencyContract: Token;
 
   // const voteStartWaitTimeInSeconds = 0;
   // const voteWaitTimeInSeconds = 5;
@@ -27,7 +27,7 @@ describe("Vote Contract", async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
     const tokenContractAddress = await sdk.deployer.deployBuiltInContract(
-      Token.contractType,
+      TokenInitializer.contractType,
       {
         name: "DAOToken #1",
         symbol: "DAO1",
@@ -36,7 +36,7 @@ describe("Vote Contract", async () => {
     );
     currencyContract = await sdk.getToken(tokenContractAddress);
     const voteContractAddress = await sdk.deployer.deployBuiltInContract(
-      Vote.contractType,
+      VoteInitializer.contractType,
       {
         name: "DAO #1",
         voting_token_address: currencyContract.getAddress(),

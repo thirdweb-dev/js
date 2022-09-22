@@ -38,7 +38,7 @@ import invariant from "tiny-invariant";
  *
  * @public
  */
-export class MarketplaceImpl implements UpdateableNetwork {
+export class Marketplace implements UpdateableNetwork {
   static contractRoles = ["admin", "lister", "asset"] as const;
 
   public abi: typeof ABI;
@@ -55,7 +55,7 @@ export class MarketplaceImpl implements UpdateableNetwork {
   >;
   public roles: ContractRoles<
     MarketplaceContract,
-    typeof MarketplaceImpl.contractRoles[number]
+    typeof Marketplace.contractRoles[number]
   >;
   /**
    * @internal
@@ -155,7 +155,7 @@ export class MarketplaceImpl implements UpdateableNetwork {
     );
     this.roles = new ContractRoles(
       this.contractWrapper,
-      MarketplaceImpl.contractRoles,
+      Marketplace.contractRoles,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);

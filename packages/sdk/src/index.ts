@@ -38,15 +38,15 @@ export * from "./contracts";
 export * from "./integrations/paper-xyz";
 
 // explcitly export the *TYPES* of prebuilt contracts
-export type { EditionImpl } from "./contracts/prebuilt-implementations/edition";
-export type { EditionDropImpl } from "./contracts/prebuilt-implementations/edition-drop";
-export type { MarketplaceImpl } from "./contracts/prebuilt-implementations/marketplace";
-export type { MultiwrapImpl } from "./contracts/prebuilt-implementations/multiwrap";
-export type { NFTCollectionImpl } from "./contracts/prebuilt-implementations/nft-collection";
-export type { NFTDropImpl } from "./contracts/prebuilt-implementations/nft-drop";
-export type { PackImpl } from "./contracts/prebuilt-implementations/pack";
-export type { SignatureDropImpl } from "./contracts/prebuilt-implementations/signature-drop";
-export type { SplitImpl } from "./contracts/prebuilt-implementations/split";
-export type { TokenImpl } from "./contracts/prebuilt-implementations/token";
-export type { TokenDropImpl } from "./contracts/prebuilt-implementations/token-drop";
-export type { VoteImpl } from "./contracts/prebuilt-implementations/vote";
+export type { Edition } from "./contracts/prebuilt-implementations/edition";
+export type { EditionDrop } from "./contracts/prebuilt-implementations/edition-drop";
+export type { Marketplace } from "./contracts/prebuilt-implementations/marketplace";
+export type { Multiwrap } from "./contracts/prebuilt-implementations/multiwrap";
+export type { NFTCollection } from "./contracts/prebuilt-implementations/nft-collection";
+export type { NFTDrop } from "./contracts/prebuilt-implementations/nft-drop";
+export type { Pack } from "./contracts/prebuilt-implementations/pack";
+export type { SignatureDrop } from "./contracts/prebuilt-implementations/signature-drop";
+export type { Split } from "./contracts/prebuilt-implementations/split";
+export type { Token } from "./contracts/prebuilt-implementations/token";
+export type { TokenDrop } from "./contracts/prebuilt-implementations/token-drop";
+export type { Vote } from "./contracts/prebuilt-implementations/vote";

@@ -1,8 +1,7 @@
-import { useActiveChainId } from "../../Provider";
 import { useContract } from "../../hooks/async/contracts";
-import { useAddress } from "../../hooks/useAddress";
-import { useChainId } from "../../hooks/useChainId";
-import { useNetwork } from "../../hooks/useNetwork";
+import { useNetwork } from "../../hooks/wagmi-required/useNetwork";
+import { useAddress, useChainId } from "../../hooks/wallet";
+import { useSDKChainId } from "../../providers/base";
 import {
   createCacheKeyWithNetwork,
   createContractCacheKey,
@@ -20,6 +19,7 @@ type ActionFn = (contract: SmartContract) => any;
 
 interface Web3ButtonProps<TActionFn extends ActionFn>
   extends ThemeProviderProps {
+  className?: string;
   contractAddress: `0x${string}` | `${string}.eth` | string;
 
   overrides?: CallOverrides;
@@ -64,11 +64,12 @@ export const Web3Button = <TAction extends ActionFn>({
   isDisabled,
   children,
   action,
+  className,
   ...themeProps
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
   const address = useAddress();
   const walletChainId = useChainId();
-  const sdkChainId = useActiveChainId();
+  const sdkChainId = useSDKChainId();
   const [, switchNetwork] = useNetwork();
 
   const queryClient = useQueryClient();
@@ -87,7 +88,7 @@ export const Web3Button = <TAction extends ActionFn>({
       if (switchToChainId) {
         if (switchNetwork) {
           await switchNetwork(switchToChainId);
-          await new Promise((resolve) => setTimeout(resolve, 500));
+          return "__NETWORK_SWITCHED__";
         } else {
           throw new Error(
             "need to switch chain but connected wallet does not support switching",
@@ -99,10 +100,14 @@ export const Web3Button = <TAction extends ActionFn>({
       if (onSubmit) {
         onSubmit();
       }
+
       return await action(contract);
     },
     {
       onSuccess: (res) => {
+        if (res === "__NETWORK_SWITCHED__") {
+          return;
+        }
         if (onSuccess) {
           onSuccess(res);
         }
@@ -122,13 +127,14 @@ export const Web3Button = <TAction extends ActionFn>({
     },
   );
   if (!address) {
-    return <ConnectWallet {...themeProps} />;
+    return <ConnectWallet className={className} {...themeProps} />;
   }
 
   return (
     <ThemeProvider {...themeProps}>
       <Button
-        style={{ height: "50px" }}
+        className={className}
+        style={{ height: "50px", minWidth: "200px", width: "100%" }}
         isLoading={mutation.isLoading || !contract}
         onClick={() => mutation.mutate()}
         isDisabled={isDisabled}
