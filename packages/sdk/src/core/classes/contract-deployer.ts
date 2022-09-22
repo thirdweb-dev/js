@@ -6,19 +6,19 @@ import {
 } from "../../common/index";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import {
+  EditionDropInitializer,
+  EditionInitializer,
+  MarketplaceInitializer,
+  MultiwrapInitializer,
+  NFTCollectionInitializer,
+  NFTDropInitializer,
+  PackInitializer,
   PREBUILT_CONTRACTS_MAP,
-  Edition,
-  EditionDrop,
-  Marketplace,
-  Multiwrap,
-  NFTCollection,
-  NFTDrop,
-  Pack,
-  SignatureDrop,
-  Split,
-  Token,
-  TokenDrop,
-  Vote,
+  SignatureDropInitializer,
+  SplitInitializer,
+  TokenDropInitializer,
+  TokenInitializer,
+  VoteInitializer,
 } from "../../contracts";
 import { FactoryDeploymentSchema } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -39,7 +39,7 @@ import {
 import { ContractFactory } from "./factory";
 import { ContractRegistry } from "./registry";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BytesLike, ContractInterface, ethers } from "ethers";
 import invariant from "tiny-invariant";
 import { z } from "zod";
@@ -59,12 +59,12 @@ export class ContractDeployer extends RPCConnectionHandler {
    * should never be accessed directly, use {@link ContractDeployer.getRegistry} instead
    */
   private _registry: Promise<ContractRegistry> | undefined;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   constructor(
     network: NetworkOrSignerOrProvider,
     options: SDKOptions,
-    storage: IStorage,
+    storage: ThirdwebStorage,
   ) {
     super(network, options);
     this.storage = storage;
@@ -89,7 +89,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     metadata: NFTContractDeployMetadata,
   ): Promise<string> {
     return await this.deployBuiltInContract(
-      NFTCollection.contractType,
+      NFTCollectionInitializer.contractType,
       metadata,
     );
   }
@@ -112,7 +112,10 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployNFTDrop(
     metadata: NFTContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployBuiltInContract(NFTDrop.contractType, metadata);
+    return await this.deployBuiltInContract(
+      NFTDropInitializer.contractType,
+      metadata,
+    );
   }
 
   /**
@@ -134,7 +137,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     metadata: NFTContractDeployMetadata,
   ): Promise<string> {
     return await this.deployBuiltInContract(
-      SignatureDrop.contractType,
+      SignatureDropInitializer.contractType,
       metadata,
     );
   }
@@ -157,7 +160,10 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployMultiwrap(
     metadata: MultiwrapContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Multiwrap.contractType, metadata);
+    return await this.deployBuiltInContract(
+      MultiwrapInitializer.contractType,
+      metadata,
+    );
   }
 
   /**
@@ -178,7 +184,10 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployEdition(
     metadata: NFTContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Edition.contractType, metadata);
+    return await this.deployBuiltInContract(
+      EditionInitializer.contractType,
+      metadata,
+    );
   }
 
   /**
@@ -199,7 +208,10 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployEditionDrop(
     metadata: NFTContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployBuiltInContract(EditionDrop.contractType, metadata);
+    return await this.deployBuiltInContract(
+      EditionDropInitializer.contractType,
+      metadata,
+    );
   }
 
   /**
@@ -220,7 +232,10 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployToken(
     metadata: TokenContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Token.contractType, metadata);
+    return await this.deployBuiltInContract(
+      TokenInitializer.contractType,
+      metadata,
+    );
   }
 
   /**
@@ -241,7 +256,10 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployTokenDrop(
     metadata: TokenContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployBuiltInContract(TokenDrop.contractType, metadata);
+    return await this.deployBuiltInContract(
+      TokenDropInitializer.contractType,
+      metadata,
+    );
   }
 
   /**
@@ -262,7 +280,10 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployMarketplace(
     metadata: MarketplaceContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Marketplace.contractType, metadata);
+    return await this.deployBuiltInContract(
+      MarketplaceInitializer.contractType,
+      metadata,
+    );
   }
 
   /**
@@ -283,7 +304,10 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployPack(
     metadata: NFTContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Pack.contractType, metadata);
+    return await this.deployBuiltInContract(
+      PackInitializer.contractType,
+      metadata,
+    );
   }
 
   /**
@@ -314,7 +338,10 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deploySplit(
     metadata: SplitContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Split.contractType, metadata);
+    return await this.deployBuiltInContract(
+      SplitInitializer.contractType,
+      metadata,
+    );
   }
 
   /**
@@ -336,7 +363,10 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployVote(
     metadata: VoteContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Vote.contractType, metadata);
+    return await this.deployBuiltInContract(
+      VoteInitializer.contractType,
+      metadata,
+    );
   }
 
   /**
@@ -502,10 +532,14 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @internal
    * @param publishMetadataUri
    * @param constructorParamValues
+   * @param options
    */
   public async deployContractFromUri(
     publishMetadataUri: string,
     constructorParamValues: any[],
+    options?: {
+      forceDirectDeploy?: boolean;
+    },
   ) {
     const signer = this.getSigner();
     invariant(signer, "A signer is required");
@@ -527,8 +561,8 @@ export class ContractDeployer extends RPCConnectionHandler {
     } catch (e) {
       // not a factory deployment, ignore
     }
-
-    if (isDeployableViaFactory && factoryDeploymentData) {
+    const forceDirectDeploy = options?.forceDirectDeploy || false;
+    if (isDeployableViaFactory && factoryDeploymentData && !forceDirectDeploy) {
       const chainId = (await this.getProvider().getNetwork()).chainId;
       invariant(
         factoryDeploymentData.factoryAddresses,

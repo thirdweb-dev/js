@@ -1,5 +1,5 @@
 import { spinner } from "../core/helpers/logger";
-import { IpfsStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { existsSync, mkdirSync, writeFileSync } from "fs";
 import path, { join } from "path";
 
@@ -13,10 +13,10 @@ export async function installGithubAction(options: any) {
       : path.resolve(`${projectPath}/${options.path}`);
     projectPath = resolvedPath;
   }
-  const storage = new IpfsStorage();
+  const storage = new ThirdwebStorage();
   const log = spinner("Installing thirdweb Github Action...");
   try {
-    const ghActionData = await storage.getRaw(ghActionHash);
+    const ghActionData = await (await storage.download(ghActionHash)).text();
     const dir = join(projectPath, ".github/workflows");
     if (!existsSync(dir)) {
       mkdirSync(dir, { recursive: true });

@@ -6,20 +6,20 @@ import {
   NATIVE_TOKEN_ADDRESS,
 } from "../constants";
 import {
-  Edition,
-  EditionDrop,
+  EditionDropInitializer,
+  EditionInitializer,
   getContractTypeForRemoteName,
-  Marketplace,
-  Multiwrap,
-  NFTCollection,
-  NFTDrop,
-  Pack,
+  MarketplaceInitializer,
+  MultiwrapInitializer,
+  NFTCollectionInitializer,
+  NFTDropInitializer,
+  PackInitializer,
   PREBUILT_CONTRACTS_MAP,
-  SignatureDrop,
-  Split,
-  Token,
-  TokenDrop,
-  Vote,
+  SignatureDropInitializer,
+  SplitInitializer,
+  TokenDropInitializer,
+  TokenInitializer,
+  VoteInitializer,
 } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
 import { SDKOptions } from "../schema/sdk-options";
@@ -39,7 +39,7 @@ import type {
 } from "./types";
 import { UserWallet } from "./wallet/UserWallet";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
-import { IpfsStorage, RemoteStorage, IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Contract, ContractInterface, ethers, Signer } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -72,7 +72,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     signer: Signer,
     network?: ChainOrRpc,
     options: SDKOptions = {},
-    storage: IStorage = new IpfsStorage(),
+    storage: ThirdwebStorage = new ThirdwebStorage(),
   ): ThirdwebSDK {
     const sdk = new ThirdwebSDK(network || signer, options, storage);
     sdk.updateSignerOrProvider(signer);
@@ -103,7 +103,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     privateKey: string,
     network: ChainOrRpc,
     options: SDKOptions = {},
-    storage: IStorage = new IpfsStorage(),
+    storage: ThirdwebStorage = new ThirdwebStorage(),
   ): ThirdwebSDK {
     const signerOrProvider = getProviderForNetwork(network);
     const provider = Signer.isSigner(signerOrProvider)
@@ -128,7 +128,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * Internal handler for uploading and downloading files
    */
-  private storageHandler: IStorage;
+  private storageHandler: ThirdwebStorage;
   /**
    * New contract deployer
    */
@@ -140,7 +140,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * Upload and download files from IPFS or from your own storage service
    */
-  public storage: RemoteStorage;
+  public storage: ThirdwebStorage;
   /**
    * Enable authentication with the connected wallet
    */
@@ -149,12 +149,12 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   constructor(
     network: ChainOrRpc | SignerOrProvider,
     options: SDKOptions = {},
-    storage: IStorage = new IpfsStorage(),
+    storage: ThirdwebStorage = new ThirdwebStorage(),
   ) {
     const signerOrProvider = getProviderForNetwork(network);
     super(signerOrProvider, options);
     this.storageHandler = storage;
-    this.storage = new RemoteStorage(storage);
+    this.storage = storage;
     this.wallet = new UserWallet(signerOrProvider, options);
     this.deployer = new ContractDeployer(signerOrProvider, options, storage);
     this.auth = new WalletAuthenticator(signerOrProvider, this.wallet, options);
@@ -171,7 +171,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getNFTDrop(contractAddress: string) {
-    return await this.getBuiltInContract(contractAddress, NFTDrop.contractType);
+    return await this.getBuiltInContract(
+      contractAddress,
+      NFTDropInitializer.contractType,
+    );
   }
 
   /**
@@ -182,7 +185,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public async getSignatureDrop(contractAddress: string) {
     return await this.getBuiltInContract(
       contractAddress,
-      SignatureDrop.contractType,
+      SignatureDropInitializer.contractType,
     );
   }
 
@@ -192,7 +195,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getNFTCollection(address: string) {
-    return await this.getBuiltInContract(address, NFTCollection.contractType);
+    return await this.getBuiltInContract(
+      address,
+      NFTCollectionInitializer.contractType,
+    );
   }
 
   /**
@@ -201,7 +207,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getEditionDrop(address: string) {
-    return await this.getBuiltInContract(address, EditionDrop.contractType);
+    return await this.getBuiltInContract(
+      address,
+      EditionDropInitializer.contractType,
+    );
   }
 
   /**
@@ -210,7 +219,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getEdition(address: string) {
-    return await this.getBuiltInContract(address, Edition.contractType);
+    return await this.getBuiltInContract(
+      address,
+      EditionInitializer.contractType,
+    );
   }
 
   /**
@@ -219,7 +231,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getTokenDrop(address: string) {
-    return await this.getBuiltInContract(address, TokenDrop.contractType);
+    return await this.getBuiltInContract(
+      address,
+      TokenDropInitializer.contractType,
+    );
   }
 
   /**
@@ -228,7 +243,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getToken(address: string) {
-    return await this.getBuiltInContract(address, Token.contractType);
+    return await this.getBuiltInContract(
+      address,
+      TokenInitializer.contractType,
+    );
   }
 
   /**
@@ -237,7 +255,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getVote(address: string) {
-    return await this.getBuiltInContract(address, Vote.contractType);
+    return await this.getBuiltInContract(address, VoteInitializer.contractType);
   }
 
   /**
@@ -246,7 +264,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getSplit(address: string) {
-    return await this.getBuiltInContract(address, Split.contractType);
+    return await this.getBuiltInContract(
+      address,
+      SplitInitializer.contractType,
+    );
   }
 
   /**
@@ -255,7 +276,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getMarketplace(address: string) {
-    return await this.getBuiltInContract(address, Marketplace.contractType);
+    return await this.getBuiltInContract(
+      address,
+      MarketplaceInitializer.contractType,
+    );
   }
 
   /**
@@ -264,7 +288,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getPack(address: string) {
-    return await this.getBuiltInContract(address, Pack.contractType);
+    return await this.getBuiltInContract(address, PackInitializer.contractType);
   }
 
   /**
@@ -274,7 +298,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @beta
    */
   public async getMultiwrap(address: string) {
-    return await this.getBuiltInContract(address, Multiwrap.contractType);
+    return await this.getBuiltInContract(
+      address,
+      MultiwrapInitializer.contractType,
+    );
   }
 
   /**
@@ -409,8 +436,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   }
 
   private updateContractSignerOrProvider() {
+    this.wallet.connect(this.getSignerOrProvider());
     this.auth.updateSignerOrProvider(this.getSignerOrProvider());
-    this.wallet.onNetworkUpdated(this.getSignerOrProvider());
     this.deployer.updateSignerOrProvider(this.getSignerOrProvider());
     this._publisher.updateSignerOrProvider(this.getSignerOrProvider());
     for (const [, contract] of this.contractCache) {

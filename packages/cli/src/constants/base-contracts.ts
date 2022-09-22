@@ -21,7 +21,7 @@ contract Contract is ERC721Base {
     {}
 
 }`,
-  ERC721Signature: `// SPDX-License-Identifier: Apache-2.0
+  ERC721SignatureMint: `// SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC721SignatureMint.sol";
@@ -113,7 +113,7 @@ contract Contract is ERC1155Base {
     {}
 
 }`,
-  ERC1155Signature: `// SPDX-License-Identifier: Apache-2.0
+  ERC1155SignatureMint: `// SPDX-License-Identifier: Apache-2.0
 pragma solidity ^0.8.0;
 
 import "@thirdweb-dev/contracts/base/ERC1155SignatureMint.sol";

@@ -19,6 +19,7 @@ import {
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
+import { PaperCheckout } from "../../integrations/paper-xyz";
 import { EditionMetadata, EditionMetadataOwner } from "../../schema";
 import { DropErc1155ContractSchema } from "../../schema/contracts/drop-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -26,7 +27,7 @@ import { NFTMetadata, NFTMetadataOrUri } from "../../schema/tokens/common";
 import { QueryAllParams, UploadProgressEvent } from "../../types";
 import type { DropERC1155 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC1155.json";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
@@ -43,7 +44,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
  *
  * @public
  */
-export class EditionDropImpl extends StandardErc1155<DropERC1155> {
+export class EditionDrop extends StandardErc1155<DropERC1155> {
   private static contractRoles = ["admin", "minter", "transfer"] as const;
 
   public abi: typeof ABI;
@@ -58,7 +59,7 @@ export class EditionDropImpl extends StandardErc1155<DropERC1155> {
   >;
   public roles: ContractRoles<
     DropERC1155,
-    typeof EditionDropImpl.contractRoles[number]
+    typeof EditionDrop.contractRoles[number]
   >;
   /**
    * Configure royalties
@@ -106,6 +107,13 @@ export class EditionDropImpl extends StandardErc1155<DropERC1155> {
    * ```
    */
   public claimConditions: DropErc1155ClaimConditions<DropERC1155>;
+
+  /**
+   * Checkout
+   * @remarks Create a FIAT currency checkout for your NFT drop.
+   */
+  public checkout: PaperCheckout<DropERC1155>;
+
   public history: DropErc1155History;
   public interceptor: ContractInterceptor<DropERC1155>;
   public erc1155: Erc1155<DropERC1155>;
@@ -113,7 +121,7 @@ export class EditionDropImpl extends StandardErc1155<DropERC1155> {
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
     contractWrapper = new ContractWrapper<DropERC1155>(
@@ -132,7 +140,7 @@ export class EditionDropImpl extends StandardErc1155<DropERC1155> {
     );
     this.roles = new ContractRoles(
       this.contractWrapper,
-      EditionDropImpl.contractRoles,
+      EditionDrop.contractRoles,
     );
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);
@@ -148,6 +156,7 @@ export class EditionDropImpl extends StandardErc1155<DropERC1155> {
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.erc1155 = new Erc1155(this.contractWrapper, this.storage);
+    this.checkout = new PaperCheckout(this.contractWrapper);
   }
 
   /**

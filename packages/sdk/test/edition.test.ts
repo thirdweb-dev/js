@@ -1,4 +1,4 @@
-import { EditionImpl } from "../src/contracts/classes/edition";
+import { Edition } from "../src/contracts/prebuilt-implementations/edition";
 import { expectError, sdk, signers, storage } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -8,7 +8,7 @@ import { ethers } from "ethers";
 global.fetch = require("cross-fetch");
 
 describe("Edition Contract", async () => {
-  let bundleContract: EditionImpl;
+  let bundleContract: Edition;
   // let nftContract: NFTContract;
   // let currencyContract: CurrencyContract;
 
@@ -98,7 +98,7 @@ describe("Edition Contract", async () => {
   });
 
   it("should mint with URI", async () => {
-    const uri = await storage.uploadMetadata({
+    const uri = await storage.upload({
       name: "Test1",
     });
     const tx = await bundleContract.mint({
@@ -111,7 +111,7 @@ describe("Edition Contract", async () => {
   });
 
   it("should mint batch with URI", async () => {
-    const uri = await storage.uploadMetadata({
+    const uri = await storage.upload({
       name: "Test1",
     });
     await bundleContract.mintBatch([
@@ -241,14 +241,12 @@ describe("Edition Contract", async () => {
       {
         metadata: {
           name: "Test0",
-          image: "ipfs://myownipfs0",
         },
         supply: 5,
       },
       {
         metadata: {
           name: "Test1",
-          image: "ipfs://myownipfs1",
         },
         supply: 5,
       },
@@ -258,7 +256,6 @@ describe("Edition Contract", async () => {
     let i = 0;
     nfts.forEach((nft) => {
       expect(nft.metadata.name).to.be.equal(`Test${i}`);
-      expect(nft.metadata.image).to.be.equal(`ipfs://myownipfs${i}`);
       i++;
     });
   });

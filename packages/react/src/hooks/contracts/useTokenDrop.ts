@@ -1,6 +1,6 @@
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { TokenDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/token-drop";
+import { TokenDrop } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/token-drop";
 
 /**
  * Hook for getting an instance of a `Token Drop` contract.
@@ -25,9 +25,9 @@ import { TokenDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts
  * }
  * ```
  * @public
- * @depreated use `useContract()` instead
+ * @deprecated use `useContract()` instead
  */
 export function useTokenDrop(contractAddress?: string) {
   showDeprecationWarning("useTokenDrop()", "useContract<TokenDrop>()");
-  return useContract<TokenDropImpl>(contractAddress).contract;
+  return useContract<TokenDrop>(contractAddress).contract;
 }

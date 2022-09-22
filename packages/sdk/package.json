@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "3.0.1",
+  "version": "3.0.4",
   "description": "The main thirdweb SDK.",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/sdk",
   "license": "Apache-2.0",
@@ -73,7 +73,7 @@
     "merkletreejs": "^0.2.24",
     "multihashes": "^4.0.3",
     "tiny-invariant": "^1.2.0",
-    "uuid": "^8.3.2",
+    "uuid": "^9.0.0",
     "zod": "^3.11.6"
   },
   "resolutions": {

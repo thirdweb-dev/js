@@ -1,5 +1,33 @@
 # @thirdweb-dev/sdk
 
+## 3.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`964add6`](https://github.com/thirdweb-dev/js/commit/964add6f205577298b8f4b9ce7298e5bf09e88e7)]:
+  - @thirdweb-dev/storage@1.0.1
+
+## 3.0.3
+
+### Patch Changes
+
+- [#143](https://github.com/thirdweb-dev/js/pull/143) [`51dde28`](https://github.com/thirdweb-dev/js/commit/51dde28224209f1b8b26f436c204a5e702281564) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix using external signers with ThirdwebSDKProvider
+
+- [#133](https://github.com/thirdweb-dev/js/pull/133) [`9d74a43`](https://github.com/thirdweb-dev/js/commit/9d74a43aac21448beba63ba4e2637945965a3634) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Make contract events data generic for better DX
+
+- [#135](https://github.com/thirdweb-dev/js/pull/135) [`b234c58`](https://github.com/thirdweb-dev/js/commit/b234c58d44d8322e44b2d2ba87ad4ec7d699e961) Thanks [@jnsdls](https://github.com/jnsdls)! - add a new StaticJsonRpcBatchProvider to stop calling `eth_getChainId` when possible
+
+- Updated dependencies [[`57432d2`](https://github.com/thirdweb-dev/js/commit/57432d21c4c9e880a36c61f4988c60af61ac9d44)]:
+  - @thirdweb-dev/storage@1.0.0
+
+## 3.0.2
+
+### Patch Changes
+
+- [#131](https://github.com/thirdweb-dev/js/pull/131) [`42c79e9`](https://github.com/thirdweb-dev/js/commit/42c79e93dc958ca46a55d705aeea44ffdbbcc5f6) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix editing releases from the dashboard
+
+- [#124](https://github.com/thirdweb-dev/js/pull/124) [`fe8751e`](https://github.com/thirdweb-dev/js/commit/fe8751eeae7ad013b890a8092ddbd091ecbd6708) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add feature detection for Ownable
+
 ## 3.0.1
 
 ### Patch Changes

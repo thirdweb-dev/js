@@ -11,7 +11,7 @@ import {
   DropERC721__factory,
   TokenERC721__factory,
 } from "@thirdweb-dev/contracts-js";
-import { IpfsStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { expect } from "chai";
 import { ethers } from "ethers";
 import { readFileSync } from "fs";
@@ -21,7 +21,7 @@ global.fetch = require("cross-fetch");
 
 export const uploadContractMetadata = async (
   contractName: string,
-  storage: IpfsStorage,
+  storage: ThirdwebStorage,
 ) => {
   const buildinfo = JSON.parse(
     readFileSync("test/test_abis/hardhat-build-info.json", "utf-8"),
@@ -29,14 +29,18 @@ export const uploadContractMetadata = async (
   const info =
     buildinfo.output.contracts[`contracts/${contractName}.sol`][contractName];
   const bytecode = `0x${info.evm.bytecode.object}`;
-  const metadataUri = await storage.uploadSingle(info.metadata);
-  const bytecodeUri = await storage.uploadSingle(bytecode);
+  const metadataUri = await storage.upload(info.metadata, {
+    uploadWithoutDirectory: true,
+  });
+  const bytecodeUri = await storage.upload(bytecode, {
+    uploadWithoutDirectory: true,
+  });
   const model = {
     name: contractName,
     metadataUri: `ipfs://${metadataUri}`,
     bytecodeUri: `ipfs://${bytecodeUri}`,
   };
-  return await storage.uploadMetadata(model);
+  return await storage.upload(model);
 };
 
 describe("Publishing", async () => {

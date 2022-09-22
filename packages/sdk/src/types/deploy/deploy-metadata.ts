@@ -1,4 +1,4 @@
-import { FileBufferOrString } from "@thirdweb-dev/storage";
+import { FileOrBufferOrString } from "@thirdweb-dev/storage";
 import type { BigNumberish, Bytes } from "ethers";
 
 /**
@@ -17,7 +17,7 @@ export interface NFTContractDeployMetadata {
   /**
    * Optional image for the contract
    */
-  image?: FileBufferOrString;
+  image?: FileOrBufferOrString;
   /**
    * Optional url for the contract
    */
@@ -68,7 +68,7 @@ export interface TokenContractDeployMetadata {
   /**
    * Optional image for the contract
    */
-  image?: FileBufferOrString;
+  image?: FileOrBufferOrString;
   /**
    * Optional url for the contract
    */
@@ -111,7 +111,7 @@ export interface MarketplaceContractDeployMetadata {
   /**
    * Optional image for the contract
    */
-  image?: FileBufferOrString;
+  image?: FileOrBufferOrString;
   /**
    * Optional url for the contract
    */
@@ -146,7 +146,7 @@ export interface VoteContractDeployMetadata {
   /**
    * Optional image for the contract
    */
-  image?: FileBufferOrString;
+  image?: FileOrBufferOrString;
   /**
    * Optional url for the contract
    */
@@ -209,7 +209,7 @@ export interface SplitContractDeployMetadata {
   /**
    * Optional image for the contract
    */
-  image?: FileBufferOrString;
+  image?: FileOrBufferOrString;
   /**
    * Optional url for the contract
    */
@@ -240,7 +240,7 @@ export interface MultiwrapContractDeployMetadata {
   /**
    * Optional image for the contract
    */
-  image?: FileBufferOrString;
+  image?: FileOrBufferOrString;
   /**
    * Optional url for the contract
    */

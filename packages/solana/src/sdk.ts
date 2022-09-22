@@ -1,7 +1,6 @@
 import { Deployer } from "./classes/deployer";
 import { Registry } from "./classes/registry";
 import { UserWallet } from "./classes/user-wallet";
-import { DEFAULT_IPFS_GATEWAY } from "./constants/urls";
 import { NFTCollection } from "./contracts/nft-collection";
 import { NFTDrop } from "./contracts/nft-drop";
 import { Program } from "./contracts/program";
@@ -16,31 +15,57 @@ import {
   setProvider,
 } from "@project-serum/anchor";
 import { Connection } from "@solana/web3.js";
-import { IpfsStorage, IStorage, PinataUploader } from "@thirdweb-dev/storage";
+import { IpfsUploader, ThirdwebStorage } from "@thirdweb-dev/storage";
 
+/**
+ * The main entry-point for the thirdweb Solana SDK.
+ *
+ * @example
+ * ```jsx
+ * import { ThirdwebSDK } from "@thirdweb-dev/solana";
+ *
+ * // Create SDK on specified network, and then pass a signer
+ * const sdk = ThirdwebSDK.fromNetwork("devnet");
+ * // Signer can be a keypair or browser wallet adapter
+ * sdk.wallet.connect(signer);
+ * ```
+ *
+ * @public
+ */
 export class ThirdwebSDK {
-  static fromNetwork(network: Network, storage?: IStorage): ThirdwebSDK {
-    return new ThirdwebSDK(new Connection(getUrlForNetwork(network)), storage);
+  static fromNetwork(network: Network, storage?: ThirdwebStorage): ThirdwebSDK {
+    return new ThirdwebSDK(
+      new Connection(getUrlForNetwork(network), {
+        disableRetryOnRateLimit: true,
+        commitment: "confirmed",
+      }),
+      storage,
+    );
   }
 
   private connection: Connection;
   private metaplex: Metaplex;
   private anchorProvider: AnchorProvider;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
+  /**
+   * Handles getting data about accounts and programs associated with a wallet
+   */
   public registry: Registry;
+  /**
+   * Deploy new programs
+   */
   public deployer: Deployer;
+  /**
+   * Manage and get info about the connected wallet
+   */
   public wallet: UserWallet;
 
   constructor(
     connection: Connection,
-    storage: IStorage = new IpfsStorage(
-      DEFAULT_IPFS_GATEWAY,
-      new PinataUploader(),
-      {
-        appendGatewayUrl: true,
-      },
-    ),
+    storage: ThirdwebStorage = new ThirdwebStorage({
+      uploader: new IpfsUploader({ uploadWithGatewayUrl: true }),
+    }),
   ) {
     this.connection = connection;
     this.storage = storage;
@@ -61,18 +86,38 @@ export class ThirdwebSDK {
     });
   }
 
+  /**
+   * Get an SDK interface for an NFT Collection program
+   * @param address - Address of the program
+   * @returns SDK interface for the program
+   */
   public async getNFTCollection(address: string): Promise<NFTCollection> {
     return new NFTCollection(address, this.metaplex, this.storage);
   }
 
+  /**
+   * Get an SDK interface for an NFT Drop program
+   * @param address - Address of the program
+   * @returns SDK interface for the program
+   */
   public async getNFTDrop(address: string): Promise<NFTDrop> {
     return new NFTDrop(address, this.metaplex, this.storage);
   }
 
+  /**
+   * Get an SDK interface for an Token program
+   * @param address - Address of the program
+   * @returns SDK interface for the program
+   */
   public async getToken(address: string): Promise<Token> {
     return new Token(address, this.metaplex, this.storage);
   }
 
+  /**
+   * Get an SDK interface for a deployed program
+   * @param address - Address of the program
+   * @returns SDK interface for the program
+   */
   public async getProgram(address: string) {
     const idl = await AnchorProgram.fetchIdl(address, this.anchorProvider);
     if (!idl) {
@@ -83,6 +128,12 @@ export class ThirdwebSDK {
     return this.getProgramWithIdl(address, idl);
   }
 
+  /**
+   * Get an SDK interface for a deployed program
+   * @param address - Address of the program
+   * @param idl - The IDL of the program
+   * @returns SDK interface for the program
+   */
   public async getProgramWithIdl(address: string, idl: Idl) {
     return new Program(address, idl, this.anchorProvider);
   }

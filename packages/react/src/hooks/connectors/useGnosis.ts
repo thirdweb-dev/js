@@ -2,9 +2,10 @@ import {
   GnosisConnectorArguments,
   GnosisSafeConnector,
 } from "../../connectors/gnosis-safe";
-import { useConnect } from "../useConnect";
+import { useConnect } from "../wagmi-required/useConnect";
 import { utils } from "ethers";
 import invariant from "tiny-invariant";
+import { useContext as useWagmiContext } from "wagmi";
 
 /**
  * Hook for connecting to a Gnosis Safe. This enables multisig wallets to connect to your application and sing transactions.
@@ -32,6 +33,11 @@ import invariant from "tiny-invariant";
  * @public
  */
 export function useGnosis() {
+  const wagmiContext = useWagmiContext();
+  invariant(
+    wagmiContext,
+    `useGnosis() can only be used inside <ThirdwebProvider />. If you are using <ThirdwebSDKProvider /> you will have to use your own wallet-connection logic.`,
+  );
   const [connectors, connect] = useConnect();
   if (connectors.loading) {
     return () => Promise.reject("Gnosis connector not ready to be used, yet");

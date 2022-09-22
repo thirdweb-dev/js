@@ -22,7 +22,7 @@ import { TokenErc721ContractSchema } from "../../schema/contracts/token-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import type { TokenERC721 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC721.json";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
@@ -39,7 +39,7 @@ import { BigNumberish, CallOverrides, constants } from "ethers";
  *
  * @public
  */
-export class NFTCollectionImpl extends StandardErc721<TokenERC721> {
+export class NFTCollection extends StandardErc721<TokenERC721> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
   public abi: typeof ABI;
@@ -49,7 +49,7 @@ export class NFTCollectionImpl extends StandardErc721<TokenERC721> {
   >;
   public roles: ContractRoles<
     TokenERC721,
-    typeof NFTCollectionImpl.contractRoles[number]
+    typeof NFTCollection.contractRoles[number]
   >;
   public encoder: ContractEncoder<TokenERC721>;
   public estimator: GasCostEstimator<TokenERC721>;
@@ -103,7 +103,7 @@ export class NFTCollectionImpl extends StandardErc721<TokenERC721> {
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
     contractWrapper = new ContractWrapper<TokenERC721>(
@@ -122,7 +122,7 @@ export class NFTCollectionImpl extends StandardErc721<TokenERC721> {
     );
     this.roles = new ContractRoles(
       this.contractWrapper,
-      NFTCollectionImpl.contractRoles,
+      NFTCollection.contractRoles,
     );
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);

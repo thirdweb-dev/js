@@ -46,33 +46,8 @@ function languageNameToKey(languageName) {
   }
 }
 
-const additionalClassesToParse = [
-  "ThirdwebSDK",
-  "ContractDeployer",
-  "MarketplaceDirect",
-  "MarketplaceAuction",
-  "ContractMetadata",
-  "ContractEvents",
-  "DelayedReveal",
-  "ContractRoles",
-  "RemoteStorage",
-  "GasCostEstimator",
-  "ContractInterceptor",
-  "ContractRoles",
-  "DropClaimConditions",
-  "ContractPrimarySale",
-  "ContractRoyalty",
-  "ContractPlatformFee",
-  "WalletAuthenticator",
-  "UserWallet",
-  "SmartContract",
-];
-
-const modules = json.members[0].members.filter(
-  (m) =>
-    (m.kind === "Class" && m.name.endsWith("Impl")) ||
-    additionalClassesToParse.includes(m.name),
-);
+// just include all classes
+const modules = json.members[0].members.filter((m) => m.kind === "Class");
 
 const bases = ["StandardErc20", "StandardErc721", "StandardErc1155"];
 const baseClasses = json.members[0].members.filter(
@@ -152,7 +127,7 @@ const moduleMap = modules.reduce((acc, m) => {
   const baseClassMembers = baseClassCode
     ? parseMembers(baseClassCode.members, "Method", baseClassCode.name)
     : [];
-  acc[m.name.replace("Impl", "")] = {
+  acc[m.name] = {
     name: m.name,
     summary: Formatter.renderDocNode(docComment.summarySection),
     remarks: docComment.remarksBlock

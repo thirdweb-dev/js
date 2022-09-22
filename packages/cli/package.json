@@ -1,7 +1,7 @@
 {
   "name": "thirdweb",
   "main": "dist/cli/index.js",
-  "version": "0.7.12",
+  "version": "0.7.15",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/cli",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -25,7 +25,6 @@
     "prettier": "^2.7.1",
     "ts-jest": "^28.0.8",
     "ts-node": "^10.7.0",
-    "tsc": "^2.0.4",
     "tsup": "^6.2.3",
     "typescript": "^4.7.4"
   },

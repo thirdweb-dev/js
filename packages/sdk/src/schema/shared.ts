@@ -1,8 +1,8 @@
-import { Json } from "../core/types";
+import { JsonOutput, JsonInput } from "../core/types";
 import { BigNumber, CallOverrides, utils } from "ethers";
-import { z } from "zod";
+import { z, ZodTypeDef } from "zod";
 
-export const MAX_BPS = 10_000;
+export const MAX_BPS = 10000;
 
 export const BytesLikeSchema = z.union([z.array(z.number()), z.string()]);
 
@@ -31,17 +31,6 @@ export const PercentSchema = z
   .max(100, "Cannot exeed 100%")
   .min(0, "Cannot be below 0%");
 
-export const JsonLiteral = z.union([
-  z.string(),
-  z.number(),
-  z.boolean(),
-  z.null(),
-]);
-
-export const JsonSchema: z.ZodSchema<Json> = z.lazy(() =>
-  z.union([JsonLiteral, z.array(JsonSchema), z.record(JsonSchema)]),
-);
-export const JsonObjectSchema = z.record(JsonSchema);
 export const HexColor = z.union([
   z
     .string()
@@ -58,6 +47,18 @@ export const AddressSchema = z.string().refine(
     };
   },
 );
+
+export const JsonLiteral = z.union([
+  z.string(),
+  z.number(),
+  z.boolean(),
+  z.null(),
+  BigNumberishSchema,
+]);
+
+export const JsonSchema: z.ZodSchema<JsonOutput, ZodTypeDef, JsonInput> =
+  z.lazy(() => z.union([JsonLiteral, JsonObjectSchema, z.array(JsonSchema)]));
+export const JsonObjectSchema = z.record(JsonSchema);
 
 export const AmountSchema = z
   .union([
@@ -95,3 +96,27 @@ export const CallOverrideSchema: z.ZodType<CallOverrides> = z
     type: z.number().optional(),
   })
   .strict();
+
+const isBrowser = () => typeof window !== "undefined";
+const FileOrBufferUnionSchema = isBrowser()
+  ? (z.instanceof(File) as z.ZodType<InstanceType<typeof File>>)
+  : (z.instanceof(Buffer) as z.ZodTypeAny); // @fixme, this is a hack to make browser happy for now
+
+/**
+ * @internal
+ */
+export const FileOrBufferSchema = z.union([
+  FileOrBufferUnionSchema,
+  z.object({
+    data: z.union([FileOrBufferUnionSchema, z.string()]),
+    name: z.string(),
+  }),
+]);
+
+/**
+ * @internal
+ */
+export const FileOrBufferOrStringSchema = z.union([
+  FileOrBufferSchema,
+  z.string(),
+]);

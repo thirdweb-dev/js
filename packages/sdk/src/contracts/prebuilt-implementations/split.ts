@@ -18,7 +18,7 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Split.json";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, CallOverrides, Contract } from "ethers";
 
 /**
@@ -35,11 +35,11 @@ import { BigNumber, CallOverrides, Contract } from "ethers";
  *
  * @public
  */
-export class SplitImpl implements UpdateableNetwork {
+export class Split implements UpdateableNetwork {
   static contractRoles = ["admin"] as const;
 
   private contractWrapper: ContractWrapper<SplitContract>;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   public abi: typeof ABI;
   public metadata: ContractMetadata<SplitContract, typeof SplitsContractSchema>;
@@ -48,7 +48,7 @@ export class SplitImpl implements UpdateableNetwork {
   public events: ContractEvents<SplitContract>;
   public roles: ContractRoles<
     SplitContract,
-    typeof SplitImpl.contractRoles[number]
+    typeof Split.contractRoles[number]
   >;
   /**
    * @internal
@@ -58,7 +58,7 @@ export class SplitImpl implements UpdateableNetwork {
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
     contractWrapper = new ContractWrapper<SplitContract>(
@@ -76,10 +76,7 @@ export class SplitImpl implements UpdateableNetwork {
       SplitsContractSchema,
       this.storage,
     );
-    this.roles = new ContractRoles(
-      this.contractWrapper,
-      SplitImpl.contractRoles,
-    );
+    this.roles = new ContractRoles(this.contractWrapper, Split.contractRoles);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);

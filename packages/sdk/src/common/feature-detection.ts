@@ -21,7 +21,7 @@ import {
   PublishedMetadata,
 } from "../schema/contracts/custom";
 import { ExtensionNotImplementedError } from "./error";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, ethers } from "ethers";
 import { z } from "zod";
 
@@ -57,7 +57,7 @@ function matchesAbiInterface(
  */
 export async function extractConstructorParams(
   predeployMetadataUri: string,
-  storage: IStorage,
+  storage: ThirdwebStorage,
 ) {
   const meta = await fetchPreDeployMetadata(predeployMetadataUri, storage);
   return extractConstructorParamsFromAbi(meta.abi);
@@ -70,7 +70,7 @@ export async function extractConstructorParams(
  */
 export async function extractFunctions(
   predeployMetadataUri: string,
-  storage: IStorage,
+  storage: ThirdwebStorage,
 ): Promise<AbiFunction[]> {
   const metadata = await fetchPreDeployMetadata(predeployMetadataUri, storage);
   return extractFunctionsFromAbi(metadata.abi, metadata.metadata);
@@ -112,7 +112,7 @@ export function extractConstructorParamsFromAbi(
 ) {
   for (const input of abi) {
     if (input.type === "constructor") {
-      return input.inputs ?? [];
+      return input.inputs || [];
     }
   }
   return [];
@@ -131,7 +131,7 @@ export function extractFunctionParamsFromAbi(
 ) {
   for (const input of abi) {
     if (input.type === "function" && input.name === functionName) {
-      return input.inputs ?? [];
+      return input.inputs || [];
     }
   }
   return [];
@@ -159,11 +159,11 @@ export function extractFunctionsFromAbi(
     const promise = out ? `: Promise<${out}>` : `: Promise<TransactionResult>`;
     const signature = `contract.call("${f.name}"${fargs})${promise}`;
     parsed.push({
-      inputs: f.inputs ?? [],
-      outputs: f.outputs ?? [],
-      name: f.name ?? "unknown",
+      inputs: f.inputs || [],
+      outputs: f.outputs || [],
+      name: f.name || "unknown",
       signature,
-      stateMutability: f.stateMutability ?? "",
+      stateMutability: f.stateMutability || "",
       comment: doc,
     });
   }
@@ -184,9 +184,9 @@ export function extractEventsFromAbi(
   for (const e of events) {
     const doc = extractCommentFromMetadata(e.name, metadata, "events");
     parsed.push({
-      inputs: e.inputs ?? [],
-      outputs: e.outputs ?? [],
-      name: e.name ?? "unknown",
+      inputs: e.inputs || [],
+      outputs: e.outputs || [],
+      name: e.name || "unknown",
       comment: doc,
     });
   }
@@ -328,7 +328,7 @@ function isHexStrict(hex: string | number) {
 export async function fetchContractMetadataFromAddress(
   address: string,
   provider: ethers.providers.Provider,
-  storage: IStorage,
+  storage: ThirdwebStorage,
 ) {
   const compilerMetadataUri = await resolveContractUriFromAddress(
     address,
@@ -347,9 +347,9 @@ export async function fetchContractMetadataFromAddress(
  */
 export async function fetchContractMetadata(
   compilerMetadataUri: string,
-  storage: IStorage,
+  storage: ThirdwebStorage,
 ): Promise<PublishedMetadata> {
-  const metadata = await storage.get(compilerMetadataUri);
+  const metadata = await storage.downloadJSON(compilerMetadataUri);
   const abi = AbiSchema.parse(metadata.output.abi);
   const compilationTarget = metadata.settings.compilationTarget;
   const targets = Object.keys(compilationTarget);
@@ -381,7 +381,7 @@ export async function fetchContractMetadata(
  */
 export async function fetchSourceFilesFromMetadata(
   publishedMetadata: PublishedMetadata,
-  storage: IStorage,
+  storage: ThirdwebStorage,
 ): Promise<ContractSource[]> {
   return await Promise.all(
     Object.entries(publishedMetadata.metadata.sources).map(
@@ -395,7 +395,7 @@ export async function fetchSourceFilesFromMetadata(
             setTimeout(() => rej("timeout"), 5000),
           );
           const source = await Promise.race([
-            storage.getRaw(`ipfs://${ipfsHash}`),
+            (await storage.download(`ipfs://${ipfsHash}`)).text(),
             timeout,
           ]);
           return {
@@ -420,10 +420,10 @@ export async function fetchSourceFilesFromMetadata(
  */
 export async function fetchRawPredeployMetadata(
   publishMetadataUri: string,
-  storage: IStorage,
+  storage: ThirdwebStorage,
 ) {
   return PreDeployMetadata.parse(
-    JSON.parse(await storage.getRaw(publishMetadataUri)),
+    JSON.parse(await (await storage.download(publishMetadataUri)).text()),
   );
 }
 
@@ -435,10 +435,12 @@ export async function fetchRawPredeployMetadata(
  */
 export async function fetchPreDeployMetadata(
   publishMetadataUri: string,
-  storage: IStorage,
+  storage: ThirdwebStorage,
 ): Promise<PreDeployMetadataFetched> {
   const rawMeta = await fetchRawPredeployMetadata(publishMetadataUri, storage);
-  const deployBytecode = await storage.getRaw(rawMeta.bytecodeUri);
+  const deployBytecode = await (
+    await storage.download(rawMeta.bytecodeUri)
+  ).text();
   const parsedMeta = await fetchContractMetadata(rawMeta.metadataUri, storage);
   return PreDeployMetadataFetchedSchema.parse({
     ...rawMeta,
@@ -455,9 +457,9 @@ export async function fetchPreDeployMetadata(
  */
 export async function fetchExtendedReleaseMetadata(
   publishMetadataUri: string,
-  storage: IStorage,
+  storage: ThirdwebStorage,
 ): Promise<FullPublishMetadata> {
-  const meta = await storage.getRaw(publishMetadataUri);
+  const meta = await (await storage.download(publishMetadataUri)).text();
   return FullPublishMetadataSchemaOutput.parse(JSON.parse(meta));
 }
 

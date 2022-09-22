@@ -28,7 +28,7 @@ import { TransactionResult, TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import type { IMarketplace, Marketplace } from "@thirdweb-dev/contracts-js";
 import { ListingAddedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers, constants } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -38,11 +38,11 @@ import invariant from "tiny-invariant";
  */
 export class MarketplaceAuction {
   private contractWrapper: ContractWrapper<Marketplace>;
-  private storage: IStorage;
+  private storage: ThirdwebStorage;
 
   constructor(
     contractWrapper: ContractWrapper<Marketplace>,
-    storage: IStorage,
+    storage: ThirdwebStorage,
   ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;

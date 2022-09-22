@@ -33,7 +33,7 @@ import {
   ITokenBundle,
   TokensWrappedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/Multiwrap";
-import { IStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumberish, CallOverrides, ethers } from "ethers";
 
 /**
@@ -50,7 +50,7 @@ import { BigNumberish, CallOverrides, ethers } from "ethers";
  *
  * @beta
  */
-export class MultiwrapImpl extends StandardErc721<MultiwrapContract> {
+export class Multiwrap extends StandardErc721<MultiwrapContract> {
   static contractRoles = ["transfer", "minter", "unwrap", "asset"] as const;
 
   public abi: typeof ABI;
@@ -63,7 +63,7 @@ export class MultiwrapImpl extends StandardErc721<MultiwrapContract> {
   public events: ContractEvents<MultiwrapContract>;
   public roles: ContractRoles<
     MultiwrapContract,
-    typeof MultiwrapImpl.contractRoles[number]
+    typeof Multiwrap.contractRoles[number]
   >;
 
   /**
@@ -91,7 +91,7 @@ export class MultiwrapImpl extends StandardErc721<MultiwrapContract> {
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
-    storage: IStorage,
+    storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
     contractWrapper = new ContractWrapper<MultiwrapContract>(
@@ -111,7 +111,7 @@ export class MultiwrapImpl extends StandardErc721<MultiwrapContract> {
 
     this.roles = new ContractRoles(
       this.contractWrapper,
-      MultiwrapImpl.contractRoles,
+      Multiwrap.contractRoles,
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);

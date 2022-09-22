@@ -1,4 +1,4 @@
-import { useActiveChainId } from "../../Provider";
+import { useSDKChainId } from "../../providers/base";
 import { RequiredParam, WalletAddress } from "../../types";
 import {
   cacheKeys,
@@ -24,6 +24,7 @@ import invariant from "tiny-invariant";
  * Use this to get the primary sales recipient of your {@link SmartContract}
  * @param contract - an instance of a {@link SmartContract}
  * @returns the wallet address of the primary sales recipient
+ * @twfeature PrimarySale
  * @beta
  */
 export function usePrimarySaleRecipient(
@@ -73,6 +74,7 @@ export function usePrimarySaleRecipient(
  *
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to update the primary sales recipient
+ * @twfeature PrimarySale
  * @beta
  */
 export function useUpdatePrimarySaleRecipient(
@@ -80,7 +82,7 @@ export function useUpdatePrimarySaleRecipient(
 ) {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   return useMutation(
     (newRecipient: WalletAddress) => {
       invariant(contract, "No contract provided");
@@ -115,6 +117,7 @@ export function useUpdatePrimarySaleRecipient(
  *
  * @param contract - an instance of a {@link SmartContract}
  * @returns an object containing recipient address and the royalty basis points
+ * @twfeature Royalty
  * @beta
  */
 export function useRoyaltySettings(
@@ -164,6 +167,7 @@ export function useRoyaltySettings(
  *
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to update the royalty settings
+ * @twfeature Royalty
  * @beta
  */
 export function useUpdateRoyaltySettings(
@@ -171,7 +175,7 @@ export function useUpdateRoyaltySettings(
 ) {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   return useMutation(
     (updatePayload: {
       seller_fee_basis_points?: number;
@@ -209,6 +213,7 @@ export function useUpdateRoyaltySettings(
  *
  * @param contract - an instance of a {@link SmartContract}
  * @returns an object containing the platform fee basis points and the fee recipient address
+ * @twfeature PlatformFee
  * @beta
  */
 export function usePlatformFees(
@@ -257,6 +262,7 @@ export function usePlatformFees(
  * ```
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to update the platform fees settings
+ * @twfeature PlatformFee
  * @beta
  */
 export function useUpdatePlatformFees(
@@ -264,7 +270,7 @@ export function useUpdatePlatformFees(
 ) {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   return useMutation(
     (updatePayload: {
       platform_fee_basis_points?: number;
@@ -302,6 +308,7 @@ export function useUpdatePlatformFees(
  *
  * @param contract - an instance of a {@link SmartContract}
  * @returns a {@link CustomContractMetadata} object containing the metadata
+ * @twfeature ContractMetadata
  * @beta
  */
 export function useMetadata(contract: RequiredParam<ValidContractInstance>) {
@@ -347,6 +354,7 @@ export function useMetadata(contract: RequiredParam<ValidContractInstance>) {
  * ```
  * @param contract - an instance of a {@link SmartContract}
  * @returns a mutation object that can be used to update the metadata
+ * @twfeature ContractMetadata
  * @beta
  */
 export function useUpdateMetadata(
@@ -354,7 +362,7 @@ export function useUpdateMetadata(
 ) {
   const queryClient = useQueryClient();
   const contractAddress = contract?.getAddress();
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   return useMutation(
     (updatePayload: CustomContractMetadata) => {
       invariant(contract, "No contract provided");

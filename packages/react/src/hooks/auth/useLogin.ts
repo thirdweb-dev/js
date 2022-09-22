@@ -1,5 +1,5 @@
-import { useSDK } from "../../Provider";
 import { useThirdwebAuthConfig } from "../../contexts/thirdweb-auth";
+import { useSDK } from "../../providers/base";
 import { cacheKeys } from "../../utils/cache-keys";
 import { useQueryClient } from "@tanstack/react-query";
 import { LoginOptions } from "@thirdweb-dev/sdk";
