@@ -1,9 +1,13 @@
-import { JsonObjectSchema } from "../../shared";
+import { BigNumberTransformSchema } from "../../shared";
 import { z } from "zod";
+
+const PropertiesInput = z
+  .object({})
+  .catchall(z.union([BigNumberTransformSchema, z.unknown()]));
 
 /**
  * @internal
  */
 export const OptionalPropertiesInput = z
-  .union([z.array(JsonObjectSchema), JsonObjectSchema])
+  .union([z.array(PropertiesInput), PropertiesInput])
   .optional();
