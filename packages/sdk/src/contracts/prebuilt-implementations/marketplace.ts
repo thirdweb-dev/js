@@ -447,14 +447,17 @@ export class Marketplace implements UpdateableNetwork {
   ): Promise<BigNumberish> {
     const currentAuction = this.auction;
     const currentBidBuffer = await this.getBidBufferBps();
-    const minimumBid: BigNumberish = await this.getMinimumNextBid(listingId);
     const winningBid = await currentAuction.getWinningBid(listingId);
+    const activeListing: AuctionListing = await currentAuction.getListing(
+      listingId,
+    );
     if (currentAuction && winningBid) {
       return winningBid.currencyValue.value.add(
         currentBidBuffer.mul(winningBid.currencyValue.value),
       );
     } else {
-      return minimumBid;
+      const activeListingPrice = activeListing.reservePrice;
+      return activeListingPrice.add(currentBidBuffer.mul(activeListingPrice));
     }
   }
 
