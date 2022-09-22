@@ -42,6 +42,7 @@
     "@playwright/experimental-ct-react": "1.25.1",
     "@playwright/test": "1.25.1",
     "@preconstruct/cli": "^2.2.1",
+    "@solana/wallet-adapter-react": "^0.15.19",
     "@thirdweb-dev/sdk": "*",
     "@types/color": "^3.0.3",
     "@types/mime": "^3.0.1",
