@@ -4,8 +4,8 @@ import {
   useQueryWithNetwork,
 } from "./query/useQueryWithNetwork";
 import { useToast } from "@chakra-ui/react";
-import { useActiveChainId } from "@thirdweb-dev/react";
-import { SplitImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/split";
+import { useSDKChainId } from "@thirdweb-dev/react";
+import { Split } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/split";
 import {
   BalanceQueryRequest,
   BalanceQueryResponse,
@@ -14,7 +14,7 @@ import invariant from "tiny-invariant";
 import { parseErrorToMessage } from "utils/errorParser";
 import { isAddressZero } from "utils/zeroAddress";
 
-export function useSplitData(contract?: SplitImpl) {
+export function useSplitData(contract?: Split) {
   return useQueryWithNetwork(
     splitsKeys.list(contract?.getAddress()),
     async () => contract?.getAllRecipients(),
@@ -24,7 +24,7 @@ export function useSplitData(contract?: SplitImpl) {
   );
 }
 export function useSplitBalances(contractAddress?: string) {
-  const chainId = useActiveChainId();
+  const chainId = useSDKChainId();
   const currencies = useQueryWithNetwork(
     splitsKeys.currencies(contractAddress),
     () =>
@@ -43,7 +43,7 @@ export function useSplitBalances(contractAddress?: string) {
   return currencies;
 }
 
-export function useSplitDistributeFunds(contract?: SplitImpl) {
+export function useSplitDistributeFunds(contract?: Split) {
   const contractAddress = contract?.getAddress();
   const balances = useSplitBalances(contractAddress);
   const toast = useToast();

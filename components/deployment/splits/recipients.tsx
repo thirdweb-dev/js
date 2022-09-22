@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { IoMdAdd } from "@react-icons/all-files/io/IoMdAdd";
 import { IoMdRemove } from "@react-icons/all-files/io/IoMdRemove";
-import type { Split } from "@thirdweb-dev/sdk";
+import type { SplitInitializer } from "@thirdweb-dev/sdk";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SplitsPieChart } from "components/splits-chart/splits-chart";
 import { constants } from "ethers";
@@ -21,7 +21,7 @@ import { z } from "zod";
 
 export const RecipientForm: React.FC = () => {
   const { register, control, getFieldState, formState, watch, setValue } =
-    useFormContext<z.infer<typeof Split["schema"]["deploy"]>>();
+    useFormContext<z.infer<typeof SplitInitializer["schema"]["deploy"]>>();
   const { fields, append, remove } = useFieldArray({
     name: "recipients",
     control,

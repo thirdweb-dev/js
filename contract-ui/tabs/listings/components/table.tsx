@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import { useListings, useListingsCount } from "@thirdweb-dev/react";
 import { AuctionListing, DirectListing, ListingType } from "@thirdweb-dev/sdk";
-import { MarketplaceImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/marketplace";
+import { Marketplace } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/marketplace";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import { BigNumber } from "ethers";
 import React, { useEffect, useState } from "react";
@@ -72,7 +72,7 @@ const tableColumns: Column<ListingMetadata>[] = [
 ];
 
 interface ListingsTableProps {
-  contract: MarketplaceImpl;
+  contract: Marketplace;
 }
 export const ListingsTable: React.FC<ListingsTableProps> = ({ contract }) => {
   const [queryParams, setQueryParams] = useState({ count: 50, start: 0 });

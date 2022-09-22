@@ -11,7 +11,7 @@ import {
   Proposal as ProposalType,
   VoteType,
 } from "@thirdweb-dev/sdk";
-import { VoteImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/vote";
+import { Vote } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/vote";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { ethers } from "ethers";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -69,7 +69,7 @@ const ProposalStateToMetadataMap: Record<ProposalState, IProposalMetadata> = {
 
 interface IProposal {
   proposal: ProposalType;
-  contract?: VoteImpl;
+  contract?: Vote;
 }
 
 export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {

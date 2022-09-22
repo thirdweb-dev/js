@@ -2,19 +2,19 @@ import { useActiveChainId } from "@3rdweb-sdk/react";
 import { QueryClient } from "@tanstack/react-query";
 import { ThirdwebProvider, WalletConnector } from "@thirdweb-dev/react";
 import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
-import {
-  IpfsUploader,
-  ThirdwebStorage,
-  replaceSchemeWithGatewayUrl,
-} from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { useNativeColorMode } from "hooks/useNativeColorMode";
 import { ComponentWithChildren } from "types/component-with-children";
 
-const IpfsUploaderSingleton = new IpfsUploader();
-
-export const StorageSingleton = new ThirdwebStorage(IpfsUploaderSingleton);
+export const StorageSingleton = new ThirdwebStorage({
+  gatewayUrls: {
+    "ipfs://": [process.env.NEXT_PUBLIC_IPFS_GATEWAY_URL as string],
+  },
+});
 
 export function replaceIpfsUrl(url: string) {
+  // sometimes the url passed in does not start with ipfs:// (because reasons but we should fix this)
+  url = url.startsWith("ipfs://") ? url : `ipfs://${url}`;
   return StorageSingleton.resolveScheme(url);
 }
 

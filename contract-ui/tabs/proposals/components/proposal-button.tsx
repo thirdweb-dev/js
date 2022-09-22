@@ -1,13 +1,13 @@
 import { CreateProposalForm } from "./proposal-form";
 import { useProposalCreateMutation } from "@3rdweb-sdk/react/hooks/useVote";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import { VoteImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/vote";
+import { Vote } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/vote";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FiPlus } from "react-icons/fi";
 import { Button, Drawer } from "tw-components";
 
 interface VoteButtonProps {
-  contract?: VoteImpl;
+  contract?: Vote;
 }
 
 const PROPOSAL_FORM_ID = "proposal-form-id";

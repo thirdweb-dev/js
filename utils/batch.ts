@@ -1,6 +1,5 @@
 import { removeEmptyValues } from "./parseAttributes";
 import { NFTMetadataInput } from "@thirdweb-dev/sdk";
-import { Json } from "@thirdweb-dev/storage";
 import { useMemo } from "react";
 
 export interface CSVData extends Record<string, string | undefined> {
@@ -64,12 +63,12 @@ export const getAcceptedFiles = async (acceptedFiles: File[]) => {
     .filter((f) => jsonMimeTypes.includes(f.type) || f.name.endsWith(".json"))
     .sort(sortAscending);
 
-  let json: Json[] = [];
+  let json: unknown[] = [];
 
   for (const f of jsonFiles) {
     const text = await f.text();
     // can be either a single json object or an array of json objects
-    const parsed: Json | Json[] = JSON.parse(text);
+    const parsed: unknown | unknown[] = JSON.parse(text);
     // just concat it always (even if it's a single object
     // this will add the object to the end of the array or append the array to the end of the array)
     json = json.concat(parsed);

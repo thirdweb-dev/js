@@ -1,5 +1,4 @@
 import type { NFTMetadataInput } from "@thirdweb-dev/sdk";
-import { Json } from "@thirdweb-dev/storage";
 
 export function parseAttributes<T extends NFTMetadataInput>(input: T): T {
   return {
@@ -27,5 +26,5 @@ export function removeEmptyValues(data: NFTMetadataInput["attributes"]) {
       acc[key] = value;
     }
     return acc;
-  }, {} as Record<string, Json>);
+  }, {} as Record<string, unknown>);
 }

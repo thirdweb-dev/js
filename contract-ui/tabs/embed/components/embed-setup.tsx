@@ -30,7 +30,7 @@ interface EmbedSetupProps {
   contractType?: string | null;
 }
 
-const IPFS_URI = "ipfs://Qma5FgmS9s3hkQrURfG4XDnh5Dxp9Fx9ZjBYkPFUNdQwfi";
+const IPFS_URI = "ipfs://QmRJ1qPfNF3aaVymeTFQfKs55R3gZ5GeXNc9HzB9x6VGXN";
 
 interface IframeSrcOptions {
   rpcUrl: string;
@@ -45,11 +45,11 @@ interface IframeSrcOptions {
 }
 
 const colorOptions = [
+  "purple",
   "blue",
   "orange",
   "pink",
   "green",
-  "purple",
   "red",
   "teal",
   "cyan",
@@ -120,7 +120,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   const [tokenId, setTokenId] = useState(0);
   const [listingId, setListingId] = useState(0);
   const [theme, setTheme] = useState("light");
-  const [primaryColor, setPrimaryColor] = useState("blue");
+  const [primaryColor, setPrimaryColor] = useState("purple");
   const [secondaryColor, setSecondaryColor] = useState("orange");
 
   const chainId = useActiveChainId();

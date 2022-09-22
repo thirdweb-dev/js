@@ -14,7 +14,7 @@ import {
   StatNumber,
 } from "@chakra-ui/react";
 import { useAddress, useContract } from "@thirdweb-dev/react";
-import { VoteImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/vote";
+import { Vote } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/vote";
 import { useMemo } from "react";
 import { Card, Heading } from "tw-components";
 
@@ -26,7 +26,7 @@ export const ContractProposalsPage: React.FC<ProposalsPageProps> = ({
   contractAddress,
 }) => {
   const address = useAddress();
-  const contractQuery = useContract<VoteImpl>(contractAddress);
+  const contractQuery = useContract<Vote>(contractAddress);
 
   const data = useVoteProposalList(contractQuery.contract);
 

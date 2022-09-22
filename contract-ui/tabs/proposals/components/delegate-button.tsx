@@ -3,12 +3,12 @@ import {
   useTokensDelegated,
 } from "@3rdweb-sdk/react/hooks/useVote";
 import { Tooltip } from "@chakra-ui/react";
-import { VoteImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/vote";
+import { Vote } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/vote";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
 
 interface VoteButtonProps {
-  contract?: VoteImpl;
+  contract?: Vote;
 }
 
 export const DelegateButton: React.FC<VoteButtonProps> = ({ contract }) => {

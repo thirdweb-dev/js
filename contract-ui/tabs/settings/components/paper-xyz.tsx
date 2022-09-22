@@ -1,7 +1,7 @@
 import { AdminOnly, useActiveNetwork } from "@3rdweb-sdk/react";
 import { Code, Divider, Flex, Icon } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import type { EditionDropImpl, NFTDropImpl } from "@thirdweb-dev/sdk";
+import type { EditionDrop, NFTDrop } from "@thirdweb-dev/sdk";
 import {
   formatError,
   formatResponseData,
@@ -21,9 +21,7 @@ export function usePaperJWT() {
   return useLocalStorage("paperxyz_jwt", "");
 }
 
-function useCreateCheckoutIntentMutation(
-  contract: NFTDropImpl | EditionDropImpl,
-) {
+function useCreateCheckoutIntentMutation(contract: NFTDrop | EditionDrop) {
   return useMutation(async () => {
     invariant(contract, "Contract is not defined");
     return await contract.checkout.createLinkIntent({
@@ -36,7 +34,7 @@ function useCreateCheckoutIntentMutation(
 }
 
 export const PaperCheckoutSetting: React.FC<{
-  contract: NFTDropImpl | EditionDropImpl;
+  contract: NFTDrop | EditionDrop;
 }> = ({ contract }) => {
   const activeNetwork = useActiveNetwork();
   const [jwt, setJWT] = usePaperJWT();
@@ -157,9 +155,8 @@ export const PaperCheckoutSetting: React.FC<{
           />
         ) : (
           <PaperKYBButton
-            onSuccess={(_jtw) => {
-              console.log("*** onSuccess", _jtw);
-              setJWT(_jtw);
+            onSuccess={(_jwt) => {
+              setJWT(_jwt);
             }}
             borderRadius="xl"
             borderTopLeftRadius="0"

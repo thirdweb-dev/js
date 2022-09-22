@@ -1,11 +1,13 @@
-import { Split } from "@thirdweb-dev/sdk";
+import { SplitInitializer } from "@thirdweb-dev/sdk";
 import React, { useMemo, useState } from "react";
 import { Hint, RadialChart, RadialChartPoint } from "react-vis";
 import { Card, Text } from "tw-components";
 import { z } from "zod";
 
 interface SplitsPieChartProps {
-  recipients: z.infer<typeof Split["schema"]["output"]>["recipients"];
+  recipients: z.infer<
+    typeof SplitInitializer["schema"]["output"]
+  >["recipients"];
 }
 
 export const SplitsPieChart: React.FC<SplitsPieChartProps> = ({

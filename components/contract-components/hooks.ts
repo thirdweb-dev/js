@@ -4,10 +4,10 @@ import { contractKeys, networkKeys } from "@3rdweb-sdk/react";
 import { useMutationWithInvalidate } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  useActiveChainId,
   useAddress,
   useChainId,
   useSDK,
+  useSDKChainId,
 } from "@thirdweb-dev/react";
 import {
   ChainId,
@@ -278,7 +278,7 @@ export function useReleasesFromDeploy(
   contractAddress?: string,
   chainId?: SUPPORTED_CHAIN_ID,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const cId = chainId || activeChainId;
 
   const provider = cId

@@ -6,7 +6,7 @@ import {
   useCreateAuctionListing,
   useCreateDirectListing,
 } from "@thirdweb-dev/react";
-import { MarketplaceImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/marketplace";
+import { Marketplace } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/marketplace";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FiPlus } from "react-icons/fi";
 import { Button, Drawer } from "tw-components";
@@ -14,7 +14,7 @@ import { Button, Drawer } from "tw-components";
 const LIST_FORM_ID = "marketplace-list-form";
 
 interface CreateListingButtonProps {
-  contractQuery: UseContractResult<MarketplaceImpl>;
+  contractQuery: UseContractResult<Marketplace>;
 }
 
 export const CreateListingButton: React.FC<CreateListingButtonProps> = ({
