@@ -117,10 +117,12 @@ export async function detectExtensions(options: any) {
     });
 
     let deployCmd = `npx thirdweb@latest deploy`;
-    if (existsSync("package.json")) {
+    if (existsSync(projectPath + "/package.json")) {
       const packageManager = getPkgManager();
       const useYarn = packageManager === "yarn";
-      const pkgJson = JSON.parse(readFileSync("package.json", "utf-8"));
+      const pkgJson = JSON.parse(
+        readFileSync(projectPath + "/package.json", "utf-8"),
+      );
       if (pkgJson?.scripts?.deploy === deployCmd) {
         deployCmd = `${packageManager}${useYarn ? "" : " run"} deploy`;
       }
