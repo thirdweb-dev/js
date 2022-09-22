@@ -16,7 +16,7 @@ import { ListingType } from "../../enums";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
 import { DEFAULT_QUERY_ALL_COUNT } from "../../types/QueryParams";
-import { AuctionListing, DirectListing } from "../../types/marketplace";
+import { AuctionListing, DirectListing, Offer } from "../../types/marketplace";
 import { MarketplaceFilter } from "../../types/marketplace/MarketPlaceFilter";
 import type { Marketplace as MarketplaceContract } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Marketplace.json";
@@ -294,6 +294,39 @@ export class Marketplace implements UpdateableNetwork {
    */
   public async getTimeBufferInSeconds(): Promise<BigNumber> {
     return this.contractWrapper.readContract.timeBuffer();
+  }
+
+  /**
+   * Get all the offers
+   *
+   * @remarks Fetch all the offers for a specified direct listing.
+   * @example
+   * ```javascript
+   * const offers = await marketplaceContract.getOffers(listingId);
+   * const firstOffer = offers[0];
+   * ```
+   *
+   * @param listingId - the id of the listing to fetch offers for 
+   */
+   public async getOffers(
+    listingId: BigNumberish,
+  ): Promise<(Offer)[]> {
+    // get all new offer events from this contract
+    const events = await this.events.getEvents("NewOffer");
+    // get only the events for this listing id
+    const listingEvents = events.filter((e) => e.data.args.listingId.eq(listingId));
+    // derive the offers from the events
+    const offers = listingEvents.map((e) : Offer  => {
+      return {
+        listingId: e.data.args.listingId,
+        buyerAddress: e.data.args.offeror,
+        quantityDesired: e.data.args.quantityWanted,
+        pricePerToken: (e.data.args.totalOfferAmount).div(e.data.args.quantity),
+        currencyValue: e.data.args.totalOfferAmount,
+        currencyContractAddress: e.data.args.currency,
+      };
+    });
+    return offers;
   }
 
   /** ******************************
