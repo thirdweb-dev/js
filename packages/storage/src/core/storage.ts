@@ -14,6 +14,7 @@ import {
   IStorageDownloader,
   IStorageUploader,
   Json,
+  ThirdwebStorageOptions,
   UploadOptions,
 } from "../types";
 import { StorageDownloader } from "./downloaders/storage-downloader";
@@ -42,7 +43,7 @@ import { IpfsUploader } from "./uploaders/ipfs-uploader";
  * };
  * const downloader = new StorageDownloader();
  * const uploader = new IpfsUploader();
- * const storage = new ThirdwebStorage(uploader, downloader, gatewayUrls)
+ * const storage = new ThirdwebStorage({ uploader, downloader, gatewayUrls })
  * ```
  *
  * @public
@@ -52,14 +53,10 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
   private downloader: IStorageDownloader;
   public gatewayUrls: GatewayUrls;
 
-  constructor(
-    uploader: IStorageUploader<T> = new IpfsUploader(),
-    downloader: IStorageDownloader = new StorageDownloader(),
-    gatewayUrls?: GatewayUrls,
-  ) {
-    this.uploader = uploader;
-    this.downloader = downloader;
-    this.gatewayUrls = prepareGatewayUrls(gatewayUrls);
+  constructor(options?: ThirdwebStorageOptions<T>) {
+    this.uploader = options?.uploader || new IpfsUploader();
+    this.downloader = options?.downloader || new StorageDownloader();
+    this.gatewayUrls = prepareGatewayUrls(options?.gatewayUrls);
   }
 
   /**

@@ -63,9 +63,9 @@ export class ThirdwebSDK {
 
   constructor(
     connection: Connection,
-    storage: ThirdwebStorage = new ThirdwebStorage(
-      new IpfsUploader({ uploadWithGatewayUrl: true }),
-    ),
+    storage: ThirdwebStorage = new ThirdwebStorage({
+      uploader: new IpfsUploader({ uploadWithGatewayUrl: true }),
+    }),
   ) {
     this.connection = connection;
     this.storage = storage;
