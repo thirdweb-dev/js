@@ -1,6 +1,10 @@
-import { BigNumberSchema, HexColor } from "../../shared";
+import {
+  BigNumberSchema,
+  FileOrBufferOrStringSchema,
+  HexColor,
+  JsonSchema,
+} from "../../shared";
 import { OptionalPropertiesInput } from "./properties";
-import { FileOrBufferOrStringSchema, JsonSchema } from "@thirdweb-dev/storage";
 import { z } from "zod";
 
 /**

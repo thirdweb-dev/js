@@ -1,16 +1,12 @@
-import {
-  PINATA_IPFS_URL,
-  prepareGatewayUrls,
-  TW_IPFS_SERVER_URL,
-} from "../../common/urls";
+import { PINATA_IPFS_URL, TW_IPFS_SERVER_URL } from "../../common/urls";
 import {
   isBrowser,
   isBufferOrStringWithName,
+  isFileBufferOrStringEqual,
   isFileInstance,
 } from "../../common/utils";
 import {
   FileOrBufferOrString,
-  GatewayUrls,
   IpfsUploadBatchOptions,
   IpfsUploaderOptions,
   IStorageUploader,
@@ -90,8 +86,10 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     files: FileOrBufferOrString[],
     options?: IpfsUploadBatchOptions,
   ) {
+    const fileNameToFileMap = new Map<string, FileOrBufferOrString>();
     const fileNames: string[] = [];
-    files.forEach((file, i) => {
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
       let fileName = "";
       let fileData = file;
 
@@ -130,12 +128,23 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         ? `files`
         : `files/${fileName}`;
 
-      if (fileNames.indexOf(fileName) > -1) {
+      if (fileNameToFileMap.has(fileName)) {
+        // if the file in the map is the same as the file we are already looking at then just skip and continue
+        if (isFileBufferOrStringEqual(fileNameToFileMap.get(fileName), file)) {
+          // we add it to the filenames array so that we can return the correct number of urls,
+          fileNames.push(fileName);
+          // but then we skip because we don't need to upload it multiple times
+          continue;
+        }
+        // otherwise if file names are the same but they are not the same file then we should throw an error (trying to upload to differnt files but with the same names)
         throw new Error(
-          `[DUPLICATE_FILE_NAME_ERROR] File name ${fileName} was passed for more than one file.`,
+          `[DUPLICATE_FILE_NAME_ERROR] File name ${fileName} was passed for more than one different file.`,
         );
       }
 
+      // add it to the map so that we can check for duplicates
+      fileNameToFileMap.set(fileName, file);
+      // add it to the filenames array so that we can return the correct number of urls
       fileNames.push(fileName);
       if (!isBrowser()) {
         form.append("file", fileData as any, { filepath } as any);
@@ -144,7 +153,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         // pls pinata?
         form.append("file", new Blob([fileData as any]), filepath);
       }
-    });
+    }
 
     const metadata = { name: `Storage SDK`, keyvalues: {} };
     form.append("pinataMetadata", JSON.stringify(metadata));

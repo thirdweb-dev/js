@@ -199,31 +199,6 @@ describe("IPFS", async () => {
     expect(json.description).to.equal("Uploading alone without a directory...");
   });
 
-  it("Should upload without directory if specified on class", async () => {
-    const solanaStorage = new ThirdwebStorage({
-      uploader: new IpfsUploader({ uploadWithGatewayUrl: true }),
-    });
-
-    const uri = await solanaStorage.upload(
-      {
-        name: "Upload Without Directory",
-        description: "Uploading alone without a directory...",
-      },
-      {
-        uploadWithoutDirectory: true,
-      },
-    );
-
-    expect(uri).to.equal(
-      "ipfs://QmdnBEP9UFcRfbuAyXFefNccNbuKWTscHrpWZatvqz9VcV",
-    );
-
-    const json = await storage.downloadJSON(uri);
-
-    expect(json.name).to.equal("Upload Without Directory");
-    expect(json.description).to.equal("Uploading alone without a directory...");
-  });
-
   it("Should throw an error on upload without directory with multiple uploads", async () => {
     try {
       await storage.uploadBatch(
@@ -267,7 +242,28 @@ describe("IPFS", async () => {
     );
   });
 
-  it("Should upload files with gateway URLs if specified", async () => {
+  it("Should upload files with gateway URLs if specified on class", async () => {
+    const uploader = new IpfsUploader({ uploadWithGatewayUrl: true });
+    const singleStorage = new ThirdwebStorage({ uploader });
+
+    const uri = await singleStorage.upload({
+      // Gateway URLs should first be converted back to ipfs:// and then all ipfs:// should convert to first gateway URL
+      image: readFileSync("test/files/0.jpg"),
+      animation_url: "ipfs://QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0",
+    });
+
+    const res = await singleStorage.download(uri);
+    const json = await res.json();
+
+    expect(json.image).to.equal(
+      `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0`,
+    );
+    expect(json.animation_url).to.equal(
+      `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmbaNzUcv7KPgdwq9u2qegcptktpUK6CdRZF72eSjSa6iJ/0`,
+    );
+  });
+
+  it("Should upload files with gateway URLs if specified on function", async () => {
     const uri = await storage.upload(
       {
         // Gateway URLs should first be converted back to ipfs:// and then all ipfs:// should convert to first gateway URL
@@ -291,7 +287,7 @@ describe("IPFS", async () => {
     );
   });
 
-  it("Should throw an error when trying to upload files with the same name", async () => {
+  it("Should throw an error when trying to upload different files with the same name", async () => {
     try {
       await storage.uploadBatch([
         {
@@ -306,9 +302,27 @@ describe("IPFS", async () => {
       expect.fail("Uploading files with same name did not throw an error.");
     } catch (err: any) {
       expect(err.message).to.contain(
-        "[DUPLICATE_FILE_NAME_ERROR] File name 0.jpg was passed for more than one file.",
+        "[DUPLICATE_FILE_NAME_ERROR] File name 0.jpg",
       );
     }
+  });
+
+  it("Should allow to batch upload the same file multiple times even if they have the same name", async () => {
+    const fileNameWithBufferOne = {
+      name: "0.jpg",
+      data: readFileSync("test/files/0.jpg"),
+    };
+    const fileNameWithBufferTwo = {
+      name: "0.jpg",
+      data: readFileSync("test/files/0.jpg"),
+    };
+
+    const uris = await storage.uploadBatch([
+      fileNameWithBufferOne,
+      fileNameWithBufferTwo,
+    ]);
+
+    expect(uris[0]).to.equal(uris[1]);
   });
 
   it("Should recursively upload and replace files", async () => {
@@ -340,5 +354,53 @@ describe("IPFS", async () => {
     expect(uris[1]).to.equal(
       "ipfs://QmTtEY2WSTDpzYSXw2G3xsYw3eMs8YephvrfVYd8qia9F9/1",
     );
+  });
+
+  it("Should successfully upload string", async () => {
+    const metadata =
+      '{"inputs":[],"name":"ApprovalCallerNotOwnerNorApproved","type":"error"}';
+    const uri = await storage.upload(metadata);
+    const data = await (await storage.download(uri)).text();
+
+    expect(data).to.equal(metadata);
+
+    const json = await storage.downloadJSON(uri);
+    expect(JSON.stringify(json)).to.equal(metadata);
+  });
+
+  it("Should succesfully upload boolean", async () => {
+    const uri = await storage.upload(false);
+    const data = await storage.downloadJSON(uri);
+
+    expect(data).to.equal(false);
+  });
+
+  it("Should succesfully upload number", async () => {
+    const uri = await storage.upload(42);
+    const data = await storage.downloadJSON(uri);
+
+    expect(data).to.equal(42);
+  });
+
+  it("Should succesfully upload null", async () => {
+    const uri = await storage.upload(null);
+    const data = await storage.downloadJSON(uri);
+
+    expect(data).to.equal(null);
+  });
+
+  it("Should succesfully upload array", async () => {
+    const uri = await storage.upload(["Name", "Description"]);
+    const data = await storage.downloadJSON(uri);
+
+    expect(Array.isArray(data)).to.equal(true);
+    expect(data.length).to.equal(2);
+    expect(data[0]).to.equal("Name");
+    expect(data[1]).to.equal("Description");
+  });
+
+  it("Should not upload undefined", async () => {
+    const uri = await storage.upload(undefined);
+    expect(uri).to.equal(undefined);
   });
 });
