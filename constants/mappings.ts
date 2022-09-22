@@ -1,9 +1,4 @@
-import {
-  ChainId,
-  ContractType,
-  Role,
-  SUPPORTED_CHAIN_ID,
-} from "@thirdweb-dev/sdk";
+import { ContractType, Role, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import { StaticImageData } from "next/image";
 
 export const FeatureIconMap: Record<ContractType, StaticImageData> = {
@@ -44,20 +39,7 @@ export const DisabledChainsMap: Record<ContractType, SUPPORTED_CHAIN_ID[]> = {
   token: [],
   vote: [],
   marketplace: [],
-  pack: [
-    ChainId.Mainnet,
-    ChainId.Polygon,
-    ChainId.Fantom,
-    ChainId.Avalanche,
-    ChainId.Optimism,
-    ChainId.Arbitrum,
-    ChainId.ArbitrumRinkeby,
-    ChainId.ArbitrumGoerli,
-    ChainId.OptimismKovan,
-    ChainId.OptimismGoerli,
-    ChainId.BinanceSmartChainMainnet,
-    ChainId.BinanceSmartChainTestnet,
-  ],
+  pack: [],
   split: [],
   "token-drop": [],
   "signature-drop": [],
