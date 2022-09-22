@@ -3,4 +3,5 @@ export type ProjectType =
   | "foundry"
   | "hardhat"
   | "truffle"
-  | "unknown";
+  | "solc"
+  | "none";
