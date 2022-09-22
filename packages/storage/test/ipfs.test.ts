@@ -403,4 +403,18 @@ describe("IPFS", async () => {
     const uri = await storage.upload(undefined);
     expect(uri).to.equal(undefined);
   });
+
+  it("should successfully upload files with special characters in their file names", async () => {
+    const bufferWithSpecialCharFileName = {
+      name: "#specialChar^file$Name.jpg",
+      data: readFileSync("test/files/0.jpg"),
+    };
+    const uri = await storage.upload(bufferWithSpecialCharFileName);
+
+    const fileNameEncoded = uri.split("/").at(-1);
+
+    expect(fileNameEncoded).to.equal(
+      encodeURIComponent(bufferWithSpecialCharFileName.name),
+    );
+  });
 });
