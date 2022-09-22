@@ -169,7 +169,8 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
 
     return {
       form,
-      fileNames,
+      // encode the file names on the way out (which is what the upload backend expects)
+      fileNames: fileNames.map((fName) => encodeURIComponent(fName)),
     };
   }
 
