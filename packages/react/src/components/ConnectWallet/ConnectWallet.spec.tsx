@@ -4,7 +4,7 @@ import { test, expect } from "@playwright/experimental-ct-react";
 
 test.use({ viewport: { width: 500, height: 500 } });
 
-test.skip("should render the connect wallet button", async ({ mount }) => {
+test("should render the connect wallet button", async ({ mount }) => {
   const component = await mount(
     <ThirdwebProvider desiredChainId={1}>
       <ConnectWallet />
