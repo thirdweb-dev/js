@@ -51,8 +51,9 @@ export const BigNumberTransformSchema = z
       return BigNumber.isBigNumber(data);
     }),
   ])
-  .transform((arg) => BigNumber.from(arg))
-  .transform((arg) => arg.toString());
+  .transform((arg) => {
+    return BigNumber.from(arg).toString();
+  });
 
 export const BasisPointsSchema = z
   .number()
