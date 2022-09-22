@@ -88,7 +88,7 @@ export const Web3Button = <TAction extends ActionFn>({
       if (switchToChainId) {
         if (switchNetwork) {
           await switchNetwork(switchToChainId);
-          await new Promise((resolve) => setTimeout(resolve, 500));
+          return "__NETWORK_SWITCHED__";
         } else {
           throw new Error(
             "need to switch chain but connected wallet does not support switching",
@@ -100,10 +100,14 @@ export const Web3Button = <TAction extends ActionFn>({
       if (onSubmit) {
         onSubmit();
       }
+
       return await action(contract);
     },
     {
       onSuccess: (res) => {
+        if (res === "__NETWORK_SWITCHED__") {
+          return;
+        }
         if (onSuccess) {
           onSuccess(res);
         }
