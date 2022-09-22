@@ -44,6 +44,16 @@ export const BigNumberishSchema = BigNumberSchema.transform((arg) =>
   arg.toString(),
 );
 
+export const BigNumberTransformSchema = z
+  .union([
+    z.bigint(),
+    z.custom<BigNumber>((data) => {
+      return BigNumber.isBigNumber(data);
+    }),
+  ])
+  .transform((arg) => BigNumber.from(arg))
+  .transform((arg) => arg.toString());
+
 export const BasisPointsSchema = z
   .number()
   .max(MAX_BPS, "Cannot exeed 100%")

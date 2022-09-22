@@ -1,6 +1,6 @@
 import {
-  BigNumberishSchema,
   BigNumberSchema,
+  BigNumberTransformSchema,
   FileOrBufferOrStringSchema,
   HexColor,
 } from "../../shared";
@@ -17,7 +17,7 @@ export const CommonTokenInput = z
     image: FileOrBufferOrStringSchema.nullable().optional(),
     external_url: FileOrBufferOrStringSchema.nullable().optional(),
   })
-  .catchall(z.union([BigNumberishSchema, z.unknown()]));
+  .catchall(z.union([BigNumberTransformSchema, z.unknown()]));
 
 /**
  * @internal

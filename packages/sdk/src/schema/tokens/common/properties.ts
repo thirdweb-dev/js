@@ -1,9 +1,9 @@
-import { BigNumberishSchema } from "../../shared";
+import { BigNumberTransformSchema } from "../../shared";
 import { z } from "zod";
 
 const PropertiesInput = z
   .object({})
-  .catchall(z.union([BigNumberishSchema, z.unknown()]));
+  .catchall(z.union([BigNumberTransformSchema, z.unknown()]));
 
 /**
  * @internal

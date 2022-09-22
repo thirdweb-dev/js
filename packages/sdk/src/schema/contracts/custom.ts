@@ -2,6 +2,7 @@ import { toSemver } from "../../common/index";
 import {
   AddressSchema,
   BigNumberishSchema,
+  BigNumberTransformSchema,
   FileOrBufferOrStringSchema,
 } from "../shared";
 import {
@@ -21,7 +22,7 @@ import { z } from "zod";
  * @internal
  */
 export const BYOCContractMetadataSchema = CommonContractSchema.catchall(
-  z.union([BigNumberishSchema, z.unknown()]),
+  z.union([BigNumberTransformSchema, z.unknown()]),
 );
 
 /**
