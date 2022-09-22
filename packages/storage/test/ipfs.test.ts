@@ -287,7 +287,7 @@ describe("IPFS", async () => {
     );
   });
 
-  it("Should throw an error when trying to upload files with the same name", async () => {
+  it("Should throw an error when trying to upload different files with the same name", async () => {
     try {
       await storage.uploadBatch([
         {
@@ -302,9 +302,27 @@ describe("IPFS", async () => {
       expect.fail("Uploading files with same name did not throw an error.");
     } catch (err: any) {
       expect(err.message).to.contain(
-        "[DUPLICATE_FILE_NAME_ERROR] File name 0.jpg was passed for more than one file.",
+        "[DUPLICATE_FILE_NAME_ERROR] File name 0.jpg",
       );
     }
+  });
+
+  it("Should allow to batch upload the same file multiple times even if they have the same name", async () => {
+    const fileNameWithBufferOne = {
+      name: "0.jpg",
+      data: readFileSync("test/files/0.jpg"),
+    };
+    const fileNameWithBufferTwo = {
+      name: "0.jpg",
+      data: readFileSync("test/files/0.jpg"),
+    };
+
+    const uris = await storage.uploadBatch([
+      fileNameWithBufferOne,
+      fileNameWithBufferTwo,
+    ]);
+
+    expect(uris[0]).to.equal(uris[1]);
   });
 
   it("Should recursively upload and replace files", async () => {
