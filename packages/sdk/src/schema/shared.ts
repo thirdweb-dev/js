@@ -2,6 +2,30 @@ import { JsonOutput, JsonInput } from "../core/types";
 import { BigNumber, CallOverrides, utils } from "ethers";
 import { z, ZodTypeDef } from "zod";
 
+const isBrowser = () => typeof window !== "undefined";
+const FileOrBufferUnionSchema = isBrowser()
+  ? (z.instanceof(File) as z.ZodType<InstanceType<typeof File>>)
+  : (z.instanceof(Buffer) as z.ZodTypeAny); // @fixme, this is a hack to make browser happy for now
+
+/**
+ * @internal
+ */
+export const FileOrBufferSchema = z.union([
+  FileOrBufferUnionSchema,
+  z.object({
+    data: z.union([FileOrBufferUnionSchema, z.string()]),
+    name: z.string(),
+  }),
+]);
+
+/**
+ * @internal
+ */
+export const FileOrBufferOrStringSchema = z.union([
+  FileOrBufferSchema,
+  z.string(),
+]);
+
 export const MAX_BPS = 10000;
 
 export const BytesLikeSchema = z.union([z.array(z.number()), z.string()]);
@@ -48,18 +72,6 @@ export const AddressSchema = z.string().refine(
   },
 );
 
-export const JsonLiteral = z.union([
-  z.string(),
-  z.number(),
-  z.boolean(),
-  z.null(),
-  BigNumberishSchema,
-]);
-
-export const JsonSchema: z.ZodSchema<JsonOutput, ZodTypeDef, JsonInput> =
-  z.lazy(() => z.union([JsonLiteral, JsonObjectSchema, z.array(JsonSchema)]));
-export const JsonObjectSchema = z.record(JsonSchema);
-
 export const AmountSchema = z
   .union([
     z.string().regex(/^([0-9]+\.?[0-9]*|\.[0-9]+)$/, "Invalid amount"),
@@ -96,27 +108,3 @@ export const CallOverrideSchema: z.ZodType<CallOverrides> = z
     type: z.number().optional(),
   })
   .strict();
-
-const isBrowser = () => typeof window !== "undefined";
-const FileOrBufferUnionSchema = isBrowser()
-  ? (z.instanceof(File) as z.ZodType<InstanceType<typeof File>>)
-  : (z.instanceof(Buffer) as z.ZodTypeAny); // @fixme, this is a hack to make browser happy for now
-
-/**
- * @internal
- */
-export const FileOrBufferSchema = z.union([
-  FileOrBufferUnionSchema,
-  z.object({
-    data: z.union([FileOrBufferUnionSchema, z.string()]),
-    name: z.string(),
-  }),
-]);
-
-/**
- * @internal
- */
-export const FileOrBufferOrStringSchema = z.union([
-  FileOrBufferSchema,
-  z.string(),
-]);

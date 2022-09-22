@@ -3,7 +3,6 @@ import {
   AddressSchema,
   BigNumberishSchema,
   FileOrBufferOrStringSchema,
-  JsonSchema,
 } from "../shared";
 import {
   CommonContractOutputSchema,
@@ -22,7 +21,7 @@ import { z } from "zod";
  * @internal
  */
 export const BYOCContractMetadataSchema = CommonContractSchema.catchall(
-  z.lazy(() => JsonSchema),
+  z.union([BigNumberishSchema, z.unknown()]),
 );
 
 /**

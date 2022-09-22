@@ -1,8 +1,8 @@
 import {
+  BigNumberishSchema,
   BigNumberSchema,
   FileOrBufferOrStringSchema,
   HexColor,
-  JsonSchema,
 } from "../../shared";
 import { OptionalPropertiesInput } from "./properties";
 import { z } from "zod";
@@ -17,7 +17,7 @@ export const CommonTokenInput = z
     image: FileOrBufferOrStringSchema.nullable().optional(),
     external_url: FileOrBufferOrStringSchema.nullable().optional(),
   })
-  .catchall(z.lazy(() => JsonSchema));
+  .catchall(z.union([BigNumberishSchema, z.unknown()]));
 
 /**
  * @internal
