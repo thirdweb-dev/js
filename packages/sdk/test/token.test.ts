@@ -1,5 +1,5 @@
-import { Token } from "../src";
-import { TokenImpl } from "../src/contracts/classes/token";
+import { TokenInitializer } from "../src";
+import { Token } from "../src/contracts/prebuilt-implementations/token";
 import { TokenMintInput } from "../src/schema/tokens/token";
 import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -9,7 +9,7 @@ import { ethers } from "ethers";
 // global.fetch = require("cross-fetch");
 
 describe("Token Contract", async () => {
-  let currencyContract: TokenImpl;
+  let currencyContract: Token;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -22,7 +22,7 @@ describe("Token Contract", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
     const address = await sdk.deployer.deployBuiltInContract(
-      Token.contractType,
+      TokenInitializer.contractType,
       {
         name: `Testing token from SDK`,
         symbol: `TEST`,

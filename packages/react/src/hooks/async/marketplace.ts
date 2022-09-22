@@ -1,11 +1,11 @@
-import { useActiveChainId } from "../../Provider";
+import { useSDKChainId } from "../../providers/base";
 import { BuyNowParams, MakeBidParams, RequiredParam } from "../../types";
 import {
   cacheKeys,
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useAddress } from "../useAddress";
+import { useAddress } from "../wallet";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type {
   AuctionListing,
@@ -15,7 +15,7 @@ import type {
   NewDirectListing,
 } from "@thirdweb-dev/sdk";
 import { ListingType } from "@thirdweb-dev/sdk";
-import { MarketplaceImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/marketplace";
+import { Marketplace } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/marketplace";
 import { BigNumber, BigNumberish } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -37,7 +37,7 @@ import invariant from "tiny-invariant";
  * @beta
  */
 export function useListing(
-  contract: RequiredParam<MarketplaceImpl>,
+  contract: RequiredParam<Marketplace>,
   listingId: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
@@ -68,7 +68,7 @@ export function useListing(
  * @beta
  */
 export function useListings(
-  contract: RequiredParam<MarketplaceImpl>,
+  contract: RequiredParam<Marketplace>,
   filter?: MarketplaceFilter,
 ) {
   const contractAddress = contract?.getAddress();
@@ -97,7 +97,7 @@ export function useListings(
  * @returns a response object that includes an array of listings
  * @beta
  */
-export function useListingsCount(contract: RequiredParam<MarketplaceImpl>) {
+export function useListingsCount(contract: RequiredParam<Marketplace>) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.marketplace.getTotalCount(contractAddress),
@@ -125,7 +125,7 @@ export function useListingsCount(contract: RequiredParam<MarketplaceImpl>) {
  * @beta
  */
 export function useActiveListings(
-  contract: RequiredParam<MarketplaceImpl>,
+  contract: RequiredParam<Marketplace>,
   filter?: MarketplaceFilter,
 ) {
   const contractAddress = contract?.getAddress();
@@ -157,7 +157,7 @@ export function useActiveListings(
  * @beta
  */
 export function useWinningBid(
-  contract: RequiredParam<MarketplaceImpl>,
+  contract: RequiredParam<Marketplace>,
   listingId: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
@@ -190,7 +190,7 @@ export function useWinningBid(
  * @beta
  */
 export function useAuctionWinner(
-  contract: RequiredParam<MarketplaceImpl>,
+  contract: RequiredParam<Marketplace>,
   listingId: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
@@ -232,7 +232,7 @@ export function useAuctionWinner(
  * @returns a response object that includes an array of listings
  * @beta
  */
-export function useBidBuffer(contract: RequiredParam<MarketplaceImpl>) {
+export function useBidBuffer(contract: RequiredParam<Marketplace>) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.marketplace.getBidBufferBps(contractAddress),
@@ -281,10 +281,8 @@ export function useBidBuffer(contract: RequiredParam<MarketplaceImpl>) {
  * @returns a mutation object that can be used to create a new direct listing
  * @beta
  */
-export function useCreateDirectListing(
-  contract: RequiredParam<MarketplaceImpl>,
-) {
-  const activeChainId = useActiveChainId();
+export function useCreateDirectListing(contract: RequiredParam<Marketplace>) {
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   const walletAddress = useAddress();
@@ -339,10 +337,8 @@ export function useCreateDirectListing(
  * @returns a mutation object that can be used to create a new auction listing
  * @beta
  */
-export function useCreateAuctionListing(
-  contract: RequiredParam<MarketplaceImpl>,
-) {
-  const activeChainId = useActiveChainId();
+export function useCreateAuctionListing(contract: RequiredParam<Marketplace>) {
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   const walletAddress = useAddress();
@@ -397,8 +393,8 @@ export function useCreateAuctionListing(
  * @returns a mutation object that can be used to create a new auction listing
  * @beta
  */
-export function useCancelListing(contract: RequiredParam<MarketplaceImpl>) {
-  const activeChainId = useActiveChainId();
+export function useCancelListing(contract: RequiredParam<Marketplace>) {
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   return useMutation(
@@ -451,8 +447,8 @@ export function useCancelListing(contract: RequiredParam<MarketplaceImpl>) {
  * @returns a mutation object that can be used to make a bid on an auction listing
  * @beta
  */
-export function useMakeBid(contract: RequiredParam<MarketplaceImpl>) {
-  const activeChainId = useActiveChainId();
+export function useMakeBid(contract: RequiredParam<Marketplace>) {
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   const walletAddress = useAddress();
@@ -507,8 +503,8 @@ export function useMakeBid(contract: RequiredParam<MarketplaceImpl>) {
  * @returns a mutation object that can be used to buy out an auction listing
  * @beta
  */
-export function useBuyNow(contract: RequiredParam<MarketplaceImpl>) {
-  const activeChainId = useActiveChainId();
+export function useBuyNow(contract: RequiredParam<Marketplace>) {
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   const walletAddress = useAddress();

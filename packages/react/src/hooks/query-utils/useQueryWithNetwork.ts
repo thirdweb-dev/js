@@ -1,4 +1,4 @@
-import { useActiveChainId } from "../../Provider";
+import { useSDKChainId } from "../../providers/base";
 import { createCacheKeyWithNetwork } from "../../utils/cache-keys";
 import {
   QueryFunction,
@@ -22,7 +22,7 @@ export function useQueryWithNetwork<
     "queryKey" | "queryFn"
   >,
 ): UseQueryResult<TData, TError> {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
 
   const mergedOptions: Omit<
     UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>,

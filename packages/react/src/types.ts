@@ -14,12 +14,12 @@ import type {
   Erc20,
   ClaimOptions,
 } from "@thirdweb-dev/sdk";
-import type { EditionImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/edition";
-import type { EditionDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/edition-drop";
-import type { NFTCollectionImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/nft-collection";
-import type { NFTDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/nft-drop";
-import type { SignatureDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/signature-drop";
-import type { TokenDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/token-drop";
+import type { Edition } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/edition";
+import type { EditionDrop } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/edition-drop";
+import type { NFTCollection } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/nft-collection";
+import type { NFTDrop } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/nft-drop";
+import type { SignatureDrop } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/signature-drop";
+import type { TokenDrop } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/token-drop";
 import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/smart-contract";
 import type { BigNumberish } from "ethers";
 
@@ -72,8 +72,8 @@ export type TokenBurnParams = {
  * @beta
  */
 export type NFTContract =
-  | NFTCollectionImpl
-  | EditionImpl
+  | NFTCollection
+  | Edition
   | Exclude<DropContract, "TokenDrop">;
 
 /**
@@ -172,10 +172,10 @@ export type BurnNFTParams = { tokenId: BigNumberish; amount?: Amount };
  * @beta
  */
 export type DropContract =
-  | NFTDropImpl
-  | EditionDropImpl
-  | SignatureDropImpl
-  | TokenDropImpl
+  | NFTDrop
+  | EditionDrop
+  | SignatureDrop
+  | TokenDrop
   | SmartContract
   | null;
 
@@ -183,11 +183,7 @@ export type DropContract =
  * The possible revealable contract types.
  * @beta
  */
-export type RevealableContract =
-  | NFTDropImpl
-  | SignatureDropImpl
-  | SmartContract
-  | null;
+export type RevealableContract = NFTDrop | SignatureDrop | SmartContract | null;
 
 /**
  * The params for the {@link useDelayedRevealLazyMint} hook mutation.

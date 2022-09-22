@@ -1,4 +1,9 @@
-import { Edition, Marketplace, NFTCollection, Token } from "../src";
+import {
+  EditionInitializer,
+  MarketplaceInitializer,
+  NFTCollectionInitializer,
+  TokenInitializer,
+} from "../src";
 import {
   AuctionAlreadyStartedError,
   ListingNotFoundError,
@@ -6,10 +11,10 @@ import {
 } from "../src/common/error";
 import { isWinningBid } from "../src/common/marketplace";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { EditionImpl } from "../src/contracts/classes/edition";
-import { MarketplaceImpl } from "../src/contracts/classes/marketplace";
-import { NFTCollectionImpl } from "../src/contracts/classes/nft-collection";
-import { TokenImpl } from "../src/contracts/classes/token";
+import { Edition } from "../src/contracts/prebuilt-implementations/edition";
+import { Marketplace } from "../src/contracts/prebuilt-implementations/marketplace";
+import { NFTCollection } from "../src/contracts/prebuilt-implementations/nft-collection";
+import { Token } from "../src/contracts/prebuilt-implementations/token";
 import { ListingType } from "../src/enums/marketplace";
 import { AuctionListing, DirectListing, Offer } from "../src/types/marketplace";
 import {
@@ -35,10 +40,10 @@ let tokenAddress = NATIVE_TOKEN_ADDRESS;
  * Bog and Sam and Abby wallets will be used for direct listings and auctions.
  */
 describe("Marketplace Contract", async () => {
-  let marketplaceContract: MarketplaceImpl;
-  let dummyNftContract: NFTCollectionImpl;
-  let dummyBundleContract: EditionImpl;
-  let customTokenContract: TokenImpl;
+  let marketplaceContract: Marketplace;
+  let dummyNftContract: NFTCollection;
+  let dummyBundleContract: Edition;
+  let customTokenContract: Token;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -52,17 +57,23 @@ describe("Marketplace Contract", async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
     marketplaceContract = await sdk.getMarketplace(
-      await sdk.deployer.deployBuiltInContract(Marketplace.contractType, {
-        name: "Test Marketplace",
-      }),
+      await sdk.deployer.deployBuiltInContract(
+        MarketplaceInitializer.contractType,
+        {
+          name: "Test Marketplace",
+        },
+      ),
     );
     dummyNftContract = await sdk.getNFTCollection(
-      await sdk.deployer.deployBuiltInContract(NFTCollection.contractType, {
-        name: "TEST NFT",
-        seller_fee_basis_points: 200,
-        fee_recipient: adminWallet.address,
-        primary_sale_recipient: adminWallet.address,
-      }),
+      await sdk.deployer.deployBuiltInContract(
+        NFTCollectionInitializer.contractType,
+        {
+          name: "TEST NFT",
+          seller_fee_basis_points: 200,
+          fee_recipient: adminWallet.address,
+          primary_sale_recipient: adminWallet.address,
+        },
+      ),
     );
     await dummyNftContract.mintBatch([
       {
@@ -79,11 +90,14 @@ describe("Marketplace Contract", async () => {
       },
     ]);
     dummyBundleContract = await sdk.getEdition(
-      await sdk.deployer.deployBuiltInContract(Edition.contractType, {
-        name: "TEST BUNDLE",
-        seller_fee_basis_points: 100,
-        primary_sale_recipient: adminWallet.address,
-      }),
+      await sdk.deployer.deployBuiltInContract(
+        EditionInitializer.contractType,
+        {
+          name: "TEST BUNDLE",
+          seller_fee_basis_points: 100,
+          primary_sale_recipient: adminWallet.address,
+        },
+      ),
     );
     await dummyBundleContract.mintBatch([
       {
@@ -101,7 +115,7 @@ describe("Marketplace Contract", async () => {
     ]);
 
     customTokenContract = await sdk.getToken(
-      await sdk.deployer.deployBuiltInContract(Token.contractType, {
+      await sdk.deployer.deployBuiltInContract(TokenInitializer.contractType, {
         name: "Test",
         symbol: "TEST",
         primary_sale_recipient: adminWallet.address,
