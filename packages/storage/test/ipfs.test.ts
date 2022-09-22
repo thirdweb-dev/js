@@ -416,5 +416,9 @@ describe("IPFS", async () => {
     expect(fileNameEncoded).to.equal(
       encodeURIComponent(bufferWithSpecialCharFileName.name),
     );
+
+    const res = await storage.download(uri);
+
+    expect(res.status).to.equal(200);
   });
 });

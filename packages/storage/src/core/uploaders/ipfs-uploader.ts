@@ -122,8 +122,6 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
           fileName = `${i}`;
         }
       }
-      // encode the filename to avoid issues with special characters
-      fileName = encodeURIComponent(fileName);
 
       // If we don't want to wrap with directory, adjust the filepath
       const filepath = options?.uploadWithoutDirectory
@@ -171,7 +169,8 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
 
     return {
       form,
-      fileNames,
+      // encode the file names on the way out (which is what the upload backend expects)
+      fileNames: fileNames.map((fName) => encodeURIComponent(fName)),
     };
   }
 
