@@ -37,8 +37,8 @@ export const ContractMetadata: React.FC<ContractMetadataProps> = ({
   }
 
   return (
-    <Flex align="center" gap={2}>
-      <Skeleton isLoaded={metadataQuery.isSuccess}>
+    <Flex align="center" gap={4}>
+      <Skeleton flexShrink={0} isLoaded={metadataQuery.isSuccess}>
         {metadataQuery.data?.image ? (
           <Image
             objectFit="contain"
@@ -63,7 +63,12 @@ export const ContractMetadata: React.FC<ContractMetadataProps> = ({
           </Heading>
         </Skeleton>
         <Skeleton isLoaded={metadataQuery.isSuccess}>
-          <Text size="body.md">
+          <Text
+            cursor="default"
+            size="body.md"
+            noOfLines={3}
+            title={metadataQuery.data?.description}
+          >
             {metadataQuery.isSuccess
               ? metadataQuery.data?.description
               : "foo bar baz"}

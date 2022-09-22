@@ -14,6 +14,7 @@ export const MediaCell: React.FC<MediaCellProps> = ({ cell }) => {
   const nftMetadata = cell.value;
   return (
     <ChakraThirdwebNftMedia
+      pointerEvents="none"
       metadata={nftMetadata}
       requireInteraction
       flexShrink={0}
