@@ -131,8 +131,8 @@ export function replaceObjectGatewayUrlsWithSchemes(
 /**
  * @internal
  */
-export function replaceObjectSchemesWithGatewayUrls(
-  data: unknown,
+export function replaceObjectSchemesWithGatewayUrls<TData>(
+  data: TData,
   gatewayUrls: GatewayUrls,
 ): unknown {
   if (isString(data)) {

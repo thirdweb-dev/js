@@ -200,9 +200,9 @@ describe("IPFS", async () => {
   });
 
   it("Should upload without directory if specified on class", async () => {
-    const solanaStorage = new ThirdwebStorage(
-      new IpfsUploader({ uploadWithGatewayUrl: true }),
-    );
+    const solanaStorage = new ThirdwebStorage({
+      uploader: new IpfsUploader({ uploadWithGatewayUrl: true }),
+    });
 
     const uri = await solanaStorage.upload(
       {
