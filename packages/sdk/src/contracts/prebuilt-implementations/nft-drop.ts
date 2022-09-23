@@ -7,6 +7,7 @@ import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractOwner } from "../../core/classes/contract-owner";
 import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
@@ -167,6 +168,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
   public checkout: PaperCheckout<DropERC721>;
 
   public erc721: Erc721<DropERC721>;
+  public owner: ContractOwner<DropERC721>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -208,6 +210,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
       () => this.erc721.nextTokenIdToMint(),
     );
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.owner = new ContractOwner(this.contractWrapper);
 
     this.checkout = new PaperCheckout(this.contractWrapper);
   }
@@ -354,6 +357,19 @@ export class NFTDrop extends StandardErc721<DropERC721> {
       constants.AddressZero,
     );
     return !anyoneCanTransfer;
+  }
+
+  /**
+   * Get current owner of the contract
+   *
+   * @example
+   * ```javascript
+   * const owner = await contract.getOwner();
+   * ```
+   * @returns The owner address.
+   */
+  public async getOwner(): Promise<string> {
+    return this.owner.get();
   }
 
   /** ******************************
@@ -512,6 +528,21 @@ export class NFTDrop extends StandardErc721<DropERC721> {
    */
   public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
     return this.erc721.burn(tokenId);
+  }
+
+  /**
+   * Set the new owner of the contract
+   * @remarks Can only be called by the current owner.
+   *
+   * @param newOwner - the address of the new owner
+   *
+   * @example
+   * ```javascript
+   * await contract.setOwner(newOwner);
+   * ```
+   */
+  public async setOwner(newOwner: string): Promise<void> {
+    this.owner.set(newOwner);
   }
 
   /******************************

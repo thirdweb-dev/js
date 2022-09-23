@@ -8,6 +8,7 @@ import { uploadOrExtractURI } from "../../common/nft";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractOwner } from "../../core/classes/contract-owner";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
@@ -87,6 +88,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
     MultiwrapContract,
     typeof MultiwrapContractSchema
   >;
+  public owner: ContractOwner<MultiwrapContract>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -117,6 +119,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
+    this.owner = new ContractOwner(this.contractWrapper);
   }
 
   /** ******************************
@@ -184,6 +187,19 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
       erc721Tokens,
       erc1155Tokens,
     };
+  }
+
+  /**
+   * Get current owner of the contract
+   *
+   * @example
+   * ```javascript
+   * const owner = await contract.getOwner();
+   * ```
+   * @returns The owner address.
+   */
+  public async getOwner(): Promise<string> {
+    return this.owner.get();
   }
 
   /** ******************************
@@ -376,6 +392,21 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
       }
     }
     return tokens;
+  }
+
+  /**
+   * Set the new owner of the contract
+   * @remarks Can only be called by the current owner.
+   *
+   * @param newOwner - the address of the new owner
+   *
+   * @example
+   * ```javascript
+   * await contract.setOwner(newOwner);
+   * ```
+   */
+  public async setOwner(newOwner: string): Promise<void> {
+    this.owner.set(newOwner);
   }
 
   /**
