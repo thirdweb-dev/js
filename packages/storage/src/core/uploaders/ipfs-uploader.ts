@@ -169,7 +169,8 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
 
     return {
       form,
-      fileNames,
+      // encode the file names on the way out (which is what the upload backend expects)
+      fileNames: fileNames.map((fName) => encodeURIComponent(fName)),
     };
   }
 
@@ -182,40 +183,101 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
 
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
+
+      let timer = setTimeout(() => {
+        xhr.abort();
+        reject(
+          new Error(
+            "Request to upload timed out! No upload progress received in 30s",
+          ),
+        );
+      }, 30000);
+
+      xhr.upload.addEventListener("loadstart", () => {
+        console.log(`[${Date.now()}] [IPFS] Started`);
+      });
+
+      xhr.upload.addEventListener("progress", (event) => {
+        console.log(`[IPFS] Progress Event ${event.loaded}/${event.total}`);
+
+        clearTimeout(timer);
+
+        if (event.loaded < event.total) {
+          timer = setTimeout(() => {
+            xhr.abort();
+            reject(
+              new Error(
+                "Request to upload timed out! No upload progress received in 30s",
+              ),
+            );
+          }, 30000);
+        } else {
+          console.log(
+            `[${Date.now()}] [IPFS] Uploaded files. Waiting for response.`,
+          );
+        }
+
+        if (event.lengthComputable && options?.onProgress) {
+          options?.onProgress({
+            progress: event.loaded,
+            total: event.total,
+          });
+        }
+      });
+
+      xhr.addEventListener("load", () => {
+        console.log(`[${Date.now()}] [IPFS] Load`);
+        clearTimeout(timer);
+
+        if (xhr.status >= 200 && xhr.status < 300) {
+          let body;
+          try {
+            body = JSON.parse(xhr.responseText);
+          } catch (err) {
+            return reject(
+              new Error("Failed to parse JSON from upload response"),
+            );
+          }
+
+          const cid = body.IpfsHash;
+          if (!cid) {
+            throw new Error("Failed to get IPFS hash from upload response");
+          }
+
+          if (options?.uploadWithoutDirectory) {
+            return resolve([`ipfs://${cid}`]);
+          } else {
+            return resolve(fileNames.map((name) => `ipfs://${cid}/${name}`));
+          }
+        }
+
+        return reject(
+          new Error(
+            `Upload failed with status ${xhr.status} - ${xhr.responseText}`,
+          ),
+        );
+      });
+
+      xhr.addEventListener("error", () => {
+        console.log("[IPFS] Load");
+        clearTimeout(timer);
+
+        if (
+          (xhr.readyState !== 0 && xhr.readyState !== 4) ||
+          xhr.status === 0
+        ) {
+          return reject(
+            new Error(
+              "This looks like a network error, the endpoint might be blocked by an internet provider or a firewall.",
+            ),
+          );
+        }
+
+        return reject(new Error("Unknown upload error occured"));
+      });
+
       xhr.open("POST", PINATA_IPFS_URL);
       xhr.setRequestHeader("Authorization", `Bearer ${token}`);
-
-      xhr.onloadend = () => {
-        if (xhr.status !== 200) {
-          throw new Error("Failed to upload files to IPFS");
-        }
-
-        const cid = JSON.parse(xhr.responseText).IpfsHash;
-        if (!cid) {
-          throw new Error("Failed to upload files to IPFS");
-        }
-
-        if (options?.uploadWithoutDirectory) {
-          resolve([`ipfs://${cid}`]);
-        } else {
-          resolve(fileNames.map((name) => `ipfs://${cid}/${name}`));
-        }
-      };
-
-      xhr.onerror = (err) => {
-        reject(err);
-      };
-
-      if (xhr.upload) {
-        xhr.upload.onprogress = (event) => {
-          if (options?.onProgress) {
-            options?.onProgress({
-              progress: event.loaded,
-              total: event.total,
-            });
-          }
-        };
-      }
 
       xhr.send(form as any);
     });

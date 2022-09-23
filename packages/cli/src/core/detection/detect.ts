@@ -5,7 +5,9 @@ import { Detector } from "./detector";
 import FoundryDetector from "./foundry";
 import HardhatDetector from "./hardhat";
 import TruffleDetector from "./truffle";
+import fs, { exists, existsSync } from "fs";
 import inquirer from "inquirer";
+import { parse } from "path";
 
 const { Confirm } = require("enquirer");
 
@@ -26,18 +28,24 @@ export default async function detect(
 
   //if there is no project returned at all then just return unknown}
   if (!possibleProjectTypes.length) {
-    warn(`${ERROR_MESSAGES.noConfiguration} ${path}`);
-    const prompt = new Confirm({
-      name: "continue",
-      message:
-        "Do you want to continue and compile this project with solc instead?",
-    });
-    const shouldCompile = await prompt.run();
-    if (!shouldCompile) {
-      logger.warn("Aborted contract compilation");
-      process.exit(1);
+    const canCompile = hasContracts(path);
+
+    if (canCompile) {
+      warn(`${ERROR_MESSAGES.noConfiguration} ${path}`);
+      const prompt = new Confirm({
+        name: "continue",
+        message:
+          "Do you want to continue and compile this project with solc instead?",
+      });
+      const shouldCompile = await prompt.run();
+      if (!shouldCompile) {
+        logger.warn("Aborted contract compilation");
+        process.exit(1);
+      }
+      return "solc";
+    } else {
+      return "none";
     }
-    return "unknown";
   }
   //if there is only one possible option just return it
   if (possibleProjectTypes.length === 1) {
@@ -63,4 +71,25 @@ export default async function detect(
     });
     return answer[question];
   }
+}
+
+// Check if a directory has any .sol files or a /contracts folder with .sol files
+function hasContracts(path: any) {
+  return (
+    ["", "/contracts"].filter((p) => {
+      const dirPath = path + p;
+
+      if (!existsSync(dirPath)) {
+        return false;
+      }
+
+      const files = fs.readdirSync(dirPath);
+      const contracts = files.filter((filePath) => {
+        const { ext } = parse(filePath);
+        return ext === ".sol";
+      });
+
+      return contracts.length > 0;
+    }).length > 0
+  );
 }

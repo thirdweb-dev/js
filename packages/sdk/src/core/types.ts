@@ -1,13 +1,6 @@
 import type { CONTRACTS_MAP, PREBUILT_CONTRACTS_MAP } from "../contracts";
 import type { SmartContract } from "../contracts/smart-contract";
-import {
-  BigNumber,
-  BytesLike,
-  CallOverrides,
-  Signer,
-  providers,
-  BigNumberish,
-} from "ethers";
+import { BigNumber, BytesLike, CallOverrides, Signer, providers } from "ethers";
 
 // --- utility types extracted from from ts-toolbelt --- //
 
@@ -115,12 +108,3 @@ export interface GaslessTransaction {
   functionArgs: any[];
   callOverrides: CallOverrides;
 }
-
-type JsonLiteralOutput = boolean | null | number | string;
-type JsonLiteralInput = JsonLiteralOutput | BigNumber | bigint;
-
-export type JsonOutput = JsonLiteralOutput | JsonObjectOutput | JsonOutput[];
-export type JsonObjectOutput = { [key: string]: JsonOutput };
-
-export type JsonInput = JsonLiteralInput | JsonObjectInput | JsonInput[];
-export type JsonObjectInput = { [key: string]: JsonInput };

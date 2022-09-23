@@ -2,4 +2,4 @@
 "@thirdweb-dev/storage": patch
 ---
 
-Add resolveScheme method to storage
+Use XHR for upload

@@ -39,10 +39,7 @@ import {
 import { UploadProgressEvent } from "../../types/events";
 import type { DropERC721 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC721.json";
-import {
-  TokensClaimedEvent,
-  TokensLazyMintedEvent,
-} from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
+import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,

@@ -287,6 +287,33 @@ describe("IPFS", async () => {
     );
   });
 
+  it("Should return URIs with gateway URLs if specified on function", async () => {
+    const uri = await storage.upload(
+      {
+        name: "String",
+        image: readFileSync("test/files/0.jpg"),
+      },
+      {
+        uploadWithGatewayUrl: true,
+      },
+    );
+
+    expect(uri.startsWith(`${DEFAULT_GATEWAY_URLS["ipfs://"][0]}`)).to.equal(
+      true,
+    );
+  });
+
+  it("Should return URIs with gateway URLs if specified on class", async () => {
+    const uploader = new IpfsUploader({ uploadWithGatewayUrl: true });
+    const storageSingleton = new ThirdwebStorage({ uploader });
+
+    const uri = await storageSingleton.upload(readFileSync("test/files/0.jpg"));
+
+    expect(uri).to.equal(
+      `${DEFAULT_GATEWAY_URLS["ipfs://"][0]}QmcCJC4T37rykDjR6oorM8hpB9GQWHKWbAi2YR1uTabUZu/0`,
+    );
+  });
+
   it("Should throw an error when trying to upload different files with the same name", async () => {
     try {
       await storage.uploadBatch([
@@ -402,5 +429,23 @@ describe("IPFS", async () => {
   it("Should not upload undefined", async () => {
     const uri = await storage.upload(undefined);
     expect(uri).to.equal(undefined);
+  });
+
+  it("should successfully upload files with special characters in their file names", async () => {
+    const bufferWithSpecialCharFileName = {
+      name: "#specialChar^file$Name.jpg",
+      data: readFileSync("test/files/0.jpg"),
+    };
+    const uri = await storage.upload(bufferWithSpecialCharFileName);
+
+    const fileNameEncoded = uri.split("/").at(-1);
+
+    expect(fileNameEncoded).to.equal(
+      encodeURIComponent(bufferWithSpecialCharFileName.name),
+    );
+
+    const res = await storage.download(uri);
+
+    expect(res.status).to.equal(200);
   });
 });
