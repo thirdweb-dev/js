@@ -8,13 +8,15 @@ import {
 } from "@solana/wallet-adapter-react";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { getUrlForNetwork, Network } from "@thirdweb-dev/solana";
-import { PropsWithChildren, useMemo } from "react";
+import { PropsWithChildren } from "react";
 
 interface ThirdwebProviderProps {
   endpoint: Network;
   wallets?: WalletAdapter[];
   autoConnect?: boolean;
 }
+
+const DEFAULT_WALLETS = [new PhantomWalletAdapter()];
 
 /**
  * Gives access to the ThirdwebSDK instance and other useful hooks to the rest of the app.
@@ -36,15 +38,10 @@ export const ThirdwebProvider: React.FC<
   PropsWithChildren<ThirdwebProviderProps>
 > = ({ endpoint, wallets, autoConnect, children }) => {
   const clusterUrl = getUrlForNetwork(endpoint);
-  const walletsWithDefault = useMemo(
-    () => wallets || [new PhantomWalletAdapter()],
-    [wallets],
-  );
-  console.log(walletsWithDefault);
   return (
     <ConnectionProvider endpoint={clusterUrl}>
       <WalletProvider
-        wallets={walletsWithDefault}
+        wallets={wallets || DEFAULT_WALLETS}
         autoConnect={autoConnect || true}
       >
         <ThirdwebWrapperProvider>{children}</ThirdwebWrapperProvider>

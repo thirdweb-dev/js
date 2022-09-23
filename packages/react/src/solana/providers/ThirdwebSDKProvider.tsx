@@ -31,7 +31,7 @@ interface ThirdwebSDKProviderProps {
  *  return (
  *    <ThirdwebSDKProvider connection={connection} wallet={wallet}>
  *      <YourApp />
- *    </ThirdwebProvider>
+ *    </ThirdwebSDKProvider>
  * )};
  * ```
  */
@@ -43,6 +43,8 @@ export const ThirdwebSDKProvider: FC<
   useEffect(() => {
     if (connection) {
       setSDK(new ThirdwebSDK(connection));
+    } else {
+      setSDK(null);
     }
   }, [connection]);
 
