@@ -1,5 +1,5 @@
-import { Adapter } from "@solana/wallet-adapter-base";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import type { WalletContextState } from "@solana/wallet-adapter-react";
+import type { Connection } from "@solana/web3.js";
 import { ThirdwebSDK } from "@thirdweb-dev/solana";
 import {
   createContext,
@@ -11,7 +11,7 @@ import {
 
 interface ThirdwebSDKProviderProps {
   connection: Connection;
-  wallet: Adapter;
+  wallet?: WalletContextState;
 }
 
 /**
@@ -20,29 +20,24 @@ interface ThirdwebSDKProviderProps {
  * @example
  * ```tsx
  * import {
- *   ConnectionProvider,
- *   WalletProvider,
+ *   useConnection,
+ *   useWallet,
  * } from "@solana/wallet-adapter-react";
  * import { ThirdwebProvider } from "@thirdweb-dev/react/solana";
  *
- * const App = () => {
+ * const ThirdwebApp = () => {
+ *  const { connection } = useConnection();
+ *  const wallet = useWallet();
  *  return (
- *      <ConnectionProvider endpoint={endpoint}>
- *          <WalletProvider wallets={wallets} autoConnect>
- *              <ThirdwebSDKProvider>
- *                  <YourApp />
- *              </ThirdwebProvider>
- *          </WalletProvider>
- *      </ConnectionProvider>
+ *    <ThirdwebSDKProvider connection={connection} wallet={wallet}>
+ *      <YourApp />
+ *    </ThirdwebProvider>
  * )};
  * ```
  */
-export const ThirdwebSDKBaseProvider: FC<
+export const ThirdwebSDKProvider: FC<
   PropsWithChildren<ThirdwebSDKProviderProps>
-> = ({ children }) => {
-  const { connection } = useConnection();
-  const wallet = useWallet();
-
+> = ({ children, connection, wallet }) => {
   const [sdk, setSDK] = useState<ThirdwebSDK | null>(null);
 
   useEffect(() => {
@@ -53,7 +48,7 @@ export const ThirdwebSDKBaseProvider: FC<
 
   useEffect(() => {
     if (sdk) {
-      if (wallet.publicKey) {
+      if (wallet?.publicKey) {
         sdk.wallet.connect(wallet);
       } else {
         sdk.wallet.disconnect();

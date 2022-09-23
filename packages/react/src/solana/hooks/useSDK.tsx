@@ -1,6 +1,6 @@
-import { TWSolanaContext } from "../providers/ThirdwebSDKProvider";
+import { ThirdwebSDKContext } from "../providers/ThirdwebSDKProvider";
 import { useContext } from "react";
 
 export function useSDK() {
-  return useContext(TWSolanaContext);
+  return useContext(ThirdwebSDKContext);
 }
