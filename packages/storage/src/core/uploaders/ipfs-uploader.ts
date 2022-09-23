@@ -243,6 +243,12 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
             return resolve(fileNames.map((name) => `ipfs://${cid}/${name}`));
           }
         }
+
+        return reject(
+          new Error(
+            `Upload failed with status ${xhr.status} - ${xhr.responseText}`,
+          ),
+        );
       });
 
       xhr.addEventListener("error", () => {
