@@ -310,7 +310,7 @@ export class Marketplace implements UpdateableNetwork {
    */
    public async getOffers(
     listingId: BigNumberish,
-  ): Promise<(Offer)[]> {
+  ): Promise<Offer[]> {
     // get all new offer events from this contract
     const events = await this.events.getEvents("NewOffer");
     // get only the events for this listing id
