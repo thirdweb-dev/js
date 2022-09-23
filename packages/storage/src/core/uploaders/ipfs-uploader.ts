@@ -194,21 +194,28 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       }, 30000);
 
       xhr.upload.addEventListener("loadstart", () => {
-        console.log("[IPFS] Started");
+        console.log(`[${Date.now()}] [IPFS] Started`);
       });
 
       xhr.upload.addEventListener("progress", (event) => {
         console.log(`[IPFS] Progress Event ${event.loaded}/${event.total}`);
 
         clearTimeout(timer);
-        timer = setTimeout(() => {
-          xhr.abort();
-          reject(
-            new Error(
-              "Request to upload timed out! No upload progress received in 30s",
-            ),
+
+        if (event.loaded < event.total) {
+          timer = setTimeout(() => {
+            xhr.abort();
+            reject(
+              new Error(
+                "Request to upload timed out! No upload progress received in 30s",
+              ),
+            );
+          }, 30000);
+        } else {
+          console.log(
+            `[${Date.now()}] [IPFS] Uploaded files. Waiting for response.`,
           );
-        }, 30000);
+        }
 
         if (event.lengthComputable && options?.onProgress) {
           options?.onProgress({
@@ -219,7 +226,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       });
 
       xhr.addEventListener("load", () => {
-        console.log("[IPFS] Load");
+        console.log(`[${Date.now()}] [IPFS] Load`);
         clearTimeout(timer);
 
         if (xhr.status >= 200 && xhr.status < 300) {
