@@ -35,18 +35,6 @@ export const JsonLiteral = z.union([
 /**
  * @internal
  */
-export const JsonSchema: z.ZodType<Json> = z.lazy(() =>
-  z.union([JsonLiteral, JsonObjectSchema, z.array(JsonSchema)]),
-);
-
-/**
- * @internal
- */
-export const JsonObjectSchema = z.record(z.string(), JsonSchema);
-
-/**
- * @internal
- */
 export type JsonLiteral = number | string | null | boolean;
 
 /**
@@ -73,8 +61,13 @@ export const HexColor = z.union([
 /**
  * @internal
  */
+const PropertiesInput = z.object({}).catchall(z.unknown());
+
+/**
+ * @internal
+ */
 export const OptionalPropertiesInput = z
-  .union([z.array(JsonObjectSchema), JsonObjectSchema])
+  .union([z.array(PropertiesInput), PropertiesInput])
   .optional();
 
 /**
