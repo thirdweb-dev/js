@@ -314,16 +314,16 @@ export class Marketplace implements UpdateableNetwork {
     // get all new offer events from this contract
     const events = await this.events.getEvents("NewOffer");
     // get only the events for this listing id
-    const listingEvents = events.filter((e) => e.data.args.listingId.eq(listingId));
+    const listingEvents = events.filter((e) => e.data.listingId.eq(listingId));
     // derive the offers from the events
-    const offers = listingEvents.map((e) : Offer  => {
+    const offers = listingEvents.map((e): Offer  => {
       return {
-        listingId: e.data.args.listingId,
-        buyerAddress: e.data.args.offeror,
-        quantityDesired: e.data.args.quantityWanted,
-        pricePerToken: (e.data.args.totalOfferAmount).div(e.data.args.quantity),
-        currencyValue: e.data.args.totalOfferAmount,
-        currencyContractAddress: e.data.args.currency,
+        listingId: e.data.listingId,
+        buyerAddress: e.data.offeror,
+        quantityDesired: e.data.quantityWanted,
+        pricePerToken: (e.data.totalOfferAmount).div(e.data.quantityWanted),
+        currencyValue: e.data.totalOfferAmount,
+        currencyContractAddress: e.data.currency,
       };
     });
     return offers;

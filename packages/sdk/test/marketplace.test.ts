@@ -598,6 +598,35 @@ describe("Marketplace Contract", async () => {
         auctionListingId.toString(),
       );
     });
+
+    it("should return all offers for a listing when queried", async () => {
+      // make an offer as bob
+      sdk.updateSignerOrProvider(bobWallet);
+      await marketplaceContract.direct.makeOffer(
+        directListingId,
+        1,
+        tokenAddress,
+        "0.5",
+      );
+
+      // make an offer as sam
+      sdk.updateSignerOrProvider(samWallet);
+      await marketplaceContract.direct.makeOffer(
+        directListingId,
+        1,
+        tokenAddress,
+        "1",
+      );
+
+      // fetch all offers for the listing
+      sdk.updateSignerOrProvider(adminWallet);
+      const offers: Offer[] = await marketplaceContract.getOffers(
+        directListingId,
+      );
+      
+      // check that the offers are returned
+      assert.equal(offers.length, 2);
+    });
   });
 
   describe("Validators", () => {
