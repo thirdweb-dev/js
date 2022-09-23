@@ -1,4 +1,10 @@
-import { ContractType, Role, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
+import {
+  CONTRACTS_MAP,
+  ContractType,
+  FullPublishMetadata,
+  Role,
+  SUPPORTED_CHAIN_ID,
+} from "@thirdweb-dev/sdk";
 import { StaticImageData } from "next/image";
 
 export const FeatureIconMap: Record<ContractType, StaticImageData> = {
@@ -19,16 +25,19 @@ export const FeatureIconMap: Record<ContractType, StaticImageData> = {
 } as const;
 
 export interface BuiltinContractDetails {
+  id: string;
   title: string;
   description: string;
   icon: StaticImageData;
+  href: string;
   comingSoon?: boolean;
   contractType: ContractType;
-  href: string;
   sourceUrl: string;
   erc?: "ERC721" | "ERC20" | "ERC1155" | "ERC721A";
   audit?: string;
-  roles?: Role[];
+  roles?: readonly Role[];
+  ecosytem: "evm" | "solana";
+  metadata: Omit<FullPublishMetadata, "logo"> & { logo: StaticImageData };
 }
 
 export const DisabledChainsMap: Record<ContractType, SUPPORTED_CHAIN_ID[]> = {
@@ -46,152 +55,156 @@ export const DisabledChainsMap: Record<ContractType, SUPPORTED_CHAIN_ID[]> = {
   multiwrap: [],
   custom: [],
 };
+function buildContractForContractMap(
+  type: ContractType,
+  details: Omit<
+    BuiltinContractDetails,
+    "id" | "contractType" | "roles" | "metadata" | "icon"
+  >,
+): BuiltinContractDetails {
+  const icon = FeatureIconMap[type];
+  const sdkData = CONTRACTS_MAP[type];
+  return {
+    ...details,
+    id: sdkData.name,
+    contractType: sdkData.contractType,
+    roles: sdkData.roles,
+    icon,
+
+    metadata: {
+      name: details.title,
+      description: details.description,
+      logo: icon,
+      version: "2.0.0",
+      bytecodeUri: "",
+      metadataUri: "",
+      audit: details.audit,
+      publisher: "deployer.thirdweb.eth",
+    },
+  };
+}
 
 export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
   {
-    "nft-drop": {
+    "nft-drop": buildContractForContractMap("nft-drop", {
       title: "NFT Drop",
       description: "One NFT, one owner",
-      icon: FeatureIconMap["nft-drop"],
-      contractType: "nft-drop",
       erc: "ERC721",
       audit: "ipfs://QmNgNaLwzgMxcx9r6qDvJmTFam6xxUxX7Vp8E99oRt7i74",
-      href: "/contracts/new/pre-built/drop/nft-drop",
-      roles: ["admin", "transfer", "minter"],
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/drop/DropERC721.sol",
-    },
-    "signature-drop": {
+      ecosytem: "evm",
+      href: "/contracts/new/pre-built/drop/nft-drop",
+    }),
+    "signature-drop": buildContractForContractMap("signature-drop", {
       title: "Signature Drop",
       description: "ERC721A NFTs that other people can claim",
-      icon: FeatureIconMap["nft-drop"],
-      contractType: "signature-drop",
       erc: "ERC721A",
       audit: "ipfs://QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
-      href: "/contracts/new/pre-built/drop/signature-drop",
-      roles: ["admin", "transfer", "minter"],
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/signature-drop/SignatureDrop.sol",
-    },
-    marketplace: {
+      ecosytem: "evm",
+      href: "/contracts/new/pre-built/drop/signature-drop",
+    }),
+    marketplace: buildContractForContractMap("marketplace", {
       title: "Marketplace",
       description: "Marketplace for ERC721/ERC1155 NFTs",
-      icon: FeatureIconMap["marketplace"],
-      contractType: "marketplace",
       audit: "ipfs://QmNgNaLwzgMxcx9r6qDvJmTFam6xxUxX7Vp8E99oRt7i74",
-      href: "/contracts/new/pre-built/marketplace/marketplace",
-      roles: ["admin", "lister", "asset"],
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/marketplace/Marketplace.sol",
-    },
-    "edition-drop": {
+      ecosytem: "evm",
+      href: "/contracts/new/pre-built/marketplace/marketplace",
+    }),
+    "edition-drop": buildContractForContractMap("edition-drop", {
       title: "Edition Drop",
       description: "One NFT, multiple owners",
-      icon: FeatureIconMap["edition-drop"],
-      contractType: "edition-drop",
       erc: "ERC1155",
       audit: "ipfs://QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
-      href: "/contracts/new/pre-built/drop/edition-drop",
-      roles: ["admin", "transfer", "minter"],
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/drop/DropERC1155.sol",
-    },
-    multiwrap: {
+      ecosytem: "evm",
+      href: "/contracts/new/pre-built/drop/edition-drop",
+    }),
+    multiwrap: buildContractForContractMap("multiwrap", {
       title: "Multiwrap",
       description:
         "Bundle multiple ERC721/ERC1155/ERC20 tokens into a single ERC721",
-      icon: FeatureIconMap["token-drop"],
-      contractType: "multiwrap",
       erc: "ERC721",
       audit: "ipfs://QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
-      href: "/contracts/new/pre-built/token/multiwrap",
-      roles: ["admin", "transfer", "minter", "unwrap", "asset"],
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/multiwrap/Multiwrap.sol",
-    },
-    token: {
+      ecosytem: "evm",
+      href: "/contracts/new/pre-built/token/multiwrap",
+    }),
+    token: buildContractForContractMap("token", {
       title: "Token",
       description: "ERC20 token",
-      icon: FeatureIconMap["token"],
-      contractType: "token",
       erc: "ERC20",
-      href: "/contracts/new/pre-built/token/token",
-      roles: ["admin", "transfer", "minter"],
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/token/TokenERC20.sol",
-    },
-    edition: {
+      ecosytem: "evm",
+      href: "/contracts/new/pre-built/token/token",
+    }),
+    edition: buildContractForContractMap("edition", {
       title: "Edition",
       description: "ERC1155 mintable NFTs",
-      icon: FeatureIconMap["edition"],
-      contractType: "edition",
       erc: "ERC1155",
-      href: "/contracts/new/pre-built/token/edition",
-      roles: ["admin", "transfer", "minter"],
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/token/TokenERC1155.sol",
-    },
-    "token-drop": {
+      ecosytem: "evm",
+      href: "/contracts/new/pre-built/token/edition",
+    }),
+    "token-drop": buildContractForContractMap("token-drop", {
       title: "Token Drop",
       description: "ERC20 token that you can sell for other tokens",
-      icon: FeatureIconMap["token-drop"],
-      contractType: "token-drop",
       erc: "ERC20",
-      href: "/contracts/new/pre-built/drop/token-drop",
-      roles: ["admin", "transfer", "minter"],
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/drop/DropERC20.sol",
-    },
-    split: {
+      ecosytem: "evm",
+      href: "/contracts/new/pre-built/drop/token-drop",
+    }),
+    split: buildContractForContractMap("split", {
       title: "Split",
       description: "Fee splitting for your primary sales and royalties",
-      icon: FeatureIconMap["split"],
-      contractType: "split",
-      href: "/contracts/new/pre-built/governance/split",
-      roles: ["admin"],
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/Split.sol",
-    },
-    "nft-collection": {
+      ecosytem: "evm",
+      href: "/contracts/new/pre-built/governance/split",
+    }),
+    "nft-collection": buildContractForContractMap("nft-collection", {
       title: "NFT Collection",
       description: "ERC721 mintable NFTs",
-      icon: FeatureIconMap["nft-collection"],
-      contractType: "nft-collection",
       erc: "ERC721",
-      href: "/contracts/new/pre-built/token/nft-collection",
-      roles: ["admin", "transfer", "minter"],
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/token/TokenERC721.sol",
-    },
-    vote: {
+      ecosytem: "evm",
+      href: "/contracts/new/pre-built/token/nft-collection",
+    }),
+    vote: buildContractForContractMap("vote", {
       title: "Vote",
       description: "On-chain ERC20-based voting",
-      icon: FeatureIconMap["vote"],
-      contractType: "vote",
-      href: "/contracts/new/pre-built/governance/vote",
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/vote/VoteERC20.sol",
-    },
-    pack: {
+      ecosytem: "evm",
+      href: "/contracts/new/pre-built/governance/vote",
+    }),
+    pack: buildContractForContractMap("pack", {
       title: "Pack",
       description:
         "Bundle ERC721/ERC1155/ERC20 into a single token, with lootbox mechanics",
-      icon: FeatureIconMap["pack"],
-      contractType: "pack",
       erc: "ERC1155",
-      href: "/contracts/new/pre-built/token/pack",
-      roles: ["admin", "transfer", "minter"],
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/pack/Pack.sol",
-    },
-    custom: {
+      ecosytem: "evm",
+      href: "/contracts/new/pre-built/token/pack",
+    }),
+    custom: buildContractForContractMap("custom", {
       title: "NOT IMPLEMENTED",
       description: "NOT IMPLEMENTED",
-      icon: FeatureIconMap["custom"],
-      contractType: "custom",
-      href: "NOT IMPLEMENTED",
       sourceUrl: "NOT IMPLEMENTED",
-    },
+      ecosytem: "evm",
+      href: "/contracts",
+    }),
   };
 
 interface ContractDeployMap {
