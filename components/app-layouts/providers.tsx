@@ -13,8 +13,6 @@ export const StorageSingleton = new ThirdwebStorage({
 });
 
 export function replaceIpfsUrl(url: string) {
-  // sometimes the url passed in does not start with ipfs:// (because reasons but we should fix this)
-  url = url.startsWith("ipfs://") ? url : `ipfs://${url}`;
   return StorageSingleton.resolveScheme(url);
 }
 

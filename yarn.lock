@@ -2354,13 +2354,13 @@
     tiny-invariant "^1.2.0"
     wagmi "^0.2.28"
 
-"@thirdweb-dev/sdk@^3.0.5-nightly-0ccbca7":
-  version "3.0.5-nightly-0ccbca7"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-3.0.5-nightly-0ccbca7.tgz#c08846d61de3c859d9e706656578ec5a33dbb5c4"
-  integrity sha512-ZEJ72hDjXzLcs3aQc6X0z0a/Ce3Z6WbKNUH4njHYbzx/w0QWx9eU1fpbMiCeElHM02mZjVsbB5mWgGVbVj02ag==
+"@thirdweb-dev/sdk@3.0.5-nightly-d608cea":
+  version "3.0.5-nightly-d608cea"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-3.0.5-nightly-d608cea.tgz#ae7f729f5eaffaad5fdf2dad88313f24cb4928a4"
+  integrity sha512-och+CVm+X8PFY2SiPKG3DE861RhCyK9gp1ZMnBeK4xWhpIVxbXEgeIcFufG1V4HMdYTzuEeZD/gXNG7rTKol6A==
   dependencies:
     "@thirdweb-dev/contracts-js" "^1.1.8"
-    "@thirdweb-dev/storage" "1.0.2-nightly-0ccbca7"
+    "@thirdweb-dev/storage" "1.0.2-nightly-d608cea"
     cbor-web "^8.1.0"
     cross-fetch "^3.1.5"
     eventemitter3 "^4.0.7"
@@ -2372,10 +2372,10 @@
     uuid "^9.0.0"
     zod "^3.11.6"
 
-"@thirdweb-dev/storage@1.0.2-nightly-0ccbca7", "@thirdweb-dev/storage@^1.0.2-nightly-0ccbca7":
-  version "1.0.2-nightly-0ccbca7"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/storage/-/storage-1.0.2-nightly-0ccbca7.tgz#2ed937b3289f1a505cf37d7064e098ed123e912f"
-  integrity sha512-L8QFuos5c6UbEaSNZW0Wflt86LP8cmSdhue1PYYhl+B9wrn1B2EzgatASjUewZjBq1DZZmslsprhDiKn+ZX4ow==
+"@thirdweb-dev/storage@1.0.2-nightly-d608cea":
+  version "1.0.2-nightly-d608cea"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/storage/-/storage-1.0.2-nightly-d608cea.tgz#4c342e76fcbebb61d54f45fb64d477030cc22678"
+  integrity sha512-lZBOfszZ7LLdG1j2tw9LG7bFhW3ru+Y74b6SDWEGs7Iw8MHZ5YGwwLvIGaWHTawZBkviRMFYSqUvHBGhSc2KzA==
   dependencies:
     cross-fetch "^3.1.5"
     form-data "^4.0.0"

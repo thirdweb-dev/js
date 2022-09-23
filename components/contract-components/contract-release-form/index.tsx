@@ -160,7 +160,6 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
 
   // during loading and after success we should stay in loading state
   const isLoading = publishMutation.isLoading || publishMutation.isSuccess;
-
   return (
     <Card w="100%" p={{ base: 6, md: 10 }}>
       <Flex

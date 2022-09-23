@@ -55,7 +55,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       icon: FeatureIconMap["nft-drop"],
       contractType: "nft-drop",
       erc: "ERC721",
-      audit: "QmNgNaLwzgMxcx9r6qDvJmTFam6xxUxX7Vp8E99oRt7i74",
+      audit: "ipfs://QmNgNaLwzgMxcx9r6qDvJmTFam6xxUxX7Vp8E99oRt7i74",
       href: "/contracts/new/pre-built/drop/nft-drop",
       roles: ["admin", "transfer", "minter"],
       sourceUrl:
@@ -67,7 +67,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       icon: FeatureIconMap["nft-drop"],
       contractType: "signature-drop",
       erc: "ERC721A",
-      audit: "QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
+      audit: "ipfs://QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
       href: "/contracts/new/pre-built/drop/signature-drop",
       roles: ["admin", "transfer", "minter"],
       sourceUrl:
@@ -78,7 +78,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       description: "Marketplace for ERC721/ERC1155 NFTs",
       icon: FeatureIconMap["marketplace"],
       contractType: "marketplace",
-      audit: "QmNgNaLwzgMxcx9r6qDvJmTFam6xxUxX7Vp8E99oRt7i74",
+      audit: "ipfs://QmNgNaLwzgMxcx9r6qDvJmTFam6xxUxX7Vp8E99oRt7i74",
       href: "/contracts/new/pre-built/marketplace/marketplace",
       roles: ["admin", "lister", "asset"],
       sourceUrl:
@@ -90,7 +90,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       icon: FeatureIconMap["edition-drop"],
       contractType: "edition-drop",
       erc: "ERC1155",
-      audit: "QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
+      audit: "ipfs://QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
       href: "/contracts/new/pre-built/drop/edition-drop",
       roles: ["admin", "transfer", "minter"],
       sourceUrl:
@@ -103,7 +103,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       icon: FeatureIconMap["token-drop"],
       contractType: "multiwrap",
       erc: "ERC721",
-      audit: "QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
+      audit: "ipfs://QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
       href: "/contracts/new/pre-built/token/multiwrap",
       roles: ["admin", "transfer", "minter", "unwrap", "asset"],
       sourceUrl:
