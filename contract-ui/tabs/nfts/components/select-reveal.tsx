@@ -30,7 +30,7 @@ import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { MouseEventHandler, useState } from "react";
+import { MouseEventHandler, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Card,
@@ -180,6 +180,21 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
     "ERC1155Revealable",
   ]);
 
+  const isFinished = progress.progress >= progress.total;
+  const [takingLong, setTakingLong] = useState(false);
+
+  useEffect(() => {
+    if (isFinished) {
+      const t = setTimeout(() => {
+        setTakingLong(true);
+      }, 10000);
+
+      return () => {
+        clearTimeout(t);
+      };
+    }
+  }, [isFinished]);
+
   return (
     <Flex flexDir="column">
       <Flex
@@ -229,8 +244,8 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
               type="submit"
               isLoading={mintBatch.isLoading}
               loadingText={
-                progress.progress >= progress.total
-                  ? `Waiting for approval...`
+                isFinished
+                  ? `Finishing upload...`
                   : `Uploading ${mergedData.length} NFTs...`
               }
               onClick={() => {
@@ -274,6 +289,11 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
             >
               Upload {mergedData.length} NFTs
             </TransactionButton>
+            {takingLong && (
+              <Text size="body.sm" textAlign="center">
+                This may take a while.
+              </Text>
+            )}
             {mintBatch.isLoading && (
               <Progress
                 borderRadius="md"
@@ -442,13 +462,18 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
                   type="submit"
                   isLoading={mintDelayedRevealBatch.isLoading}
                   loadingText={
-                    progress.progress >= progress.total
-                      ? `Waiting for approval...`
+                    isFinished
+                      ? `Finishing upload...`
                       : `Uploading ${mergedData.length} NFTs...`
                   }
                 >
                   Upload {mergedData.length} NFTs
                 </TransactionButton>
+                {takingLong && (
+                  <Text size="body.sm" textAlign="center">
+                    This may take a while.
+                  </Text>
+                )}
                 {mintDelayedRevealBatch.isLoading && (
                   <Progress
                     borderRadius="md"
