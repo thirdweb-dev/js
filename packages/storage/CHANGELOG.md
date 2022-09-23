@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 1.0.3
+
+### Patch Changes
+
+- [#192](https://github.com/thirdweb-dev/js/pull/192) [`24f66e3`](https://github.com/thirdweb-dev/js/commit/24f66e38c256f7bd69341b92ba30bd35d14b1caa) Thanks [@adam-maj](https://github.com/adam-maj)! - Use XHR for upload
+
 ## 1.0.2
 
 ### Patch Changes
