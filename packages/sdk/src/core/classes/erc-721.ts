@@ -260,6 +260,15 @@ export class Erc721<
   }
 
   /**
+   * Get All owners of minted NFTs on this contract
+   * @returns an array of token ids and owners
+   * @twfeature ERC721Supply
+   */
+  public async getAllOwners() {
+    return assertEnabled(this.query, FEATURE_NFT_SUPPLY).allOwners();
+  }
+
+  /**
    * Get the number of NFTs minted
    * @remarks This returns the total number of NFTs minted in this contract, **not** the total supply of a given token.
    *
@@ -302,9 +311,13 @@ export class Erc721<
     if (this.query?.owned) {
       return this.query.owned.all(walletAddress);
     } else {
-      const allNFTs = await this.getAll();
-      return (allNFTs || []).filter(
-        ({ owner }) => walletAddress?.toLowerCase() === owner?.toLowerCase(),
+      const address =
+        walletAddress || (await this.contractWrapper.getSignerAddress());
+      const allOwners = await this.getAllOwners();
+      return Promise.all(
+        (allOwners || [])
+          .filter((i) => address?.toLowerCase() === i.owner?.toLowerCase())
+          .map(async (i) => await this.get(i.tokenId)),
       );
     }
   }
@@ -317,12 +330,12 @@ export class Erc721<
     if (this.query?.owned) {
       return this.query.owned.tokenIds(walletAddress);
     } else {
-      const allNFTs = await this.getAll();
-      return (allNFTs || [])
-        .filter(
-          ({ owner }) => walletAddress?.toLowerCase() === owner?.toLowerCase(),
-        )
-        .map(({ metadata: { id } }) => id);
+      const address =
+        walletAddress || (await this.contractWrapper.getSignerAddress());
+      const allOwners = await this.getAllOwners();
+      return (allOwners || [])
+        .filter((i) => address?.toLowerCase() === i.owner?.toLowerCase())
+        .map((i) => BigNumber.from(i.tokenId));
     }
   }
 
