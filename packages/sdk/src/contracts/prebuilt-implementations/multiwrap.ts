@@ -52,7 +52,13 @@ import { BigNumberish, CallOverrides, ethers } from "ethers";
  * @beta
  */
 export class Multiwrap extends StandardErc721<MultiwrapContract> {
-  static contractRoles = ["transfer", "minter", "unwrap", "asset"] as const;
+  static contractRoles = [
+    "admin",
+    "transfer",
+    "minter",
+    "unwrap",
+    "asset",
+  ] as const;
 
   public abi: typeof ABI;
   public encoder: ContractEncoder<MultiwrapContract>;

@@ -1,5 +1,14 @@
 # @thirdweb-dev/sdk
 
+## 3.0.6
+
+### Patch Changes
+
+- [#195](https://github.com/thirdweb-dev/js/pull/195) [`a80fc97`](https://github.com/thirdweb-dev/js/commit/a80fc97b6a1e72ed46a400b4b602e180947fb870) Thanks [@jnsdls](https://github.com/jnsdls)! - add missing roles for pre-built contracts
+
+- Updated dependencies [[`24f66e3`](https://github.com/thirdweb-dev/js/commit/24f66e38c256f7bd69341b92ba30bd35d14b1caa)]:
+  - @thirdweb-dev/storage@1.0.3
+
 ## 3.0.5
 
 ### Patch Changes

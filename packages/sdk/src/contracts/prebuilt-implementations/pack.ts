@@ -58,7 +58,7 @@ import { BigNumber, BigNumberish, CallOverrides, ethers } from "ethers";
  * @public
  */
 export class Pack extends StandardErc1155<PackContract> {
-  static contractRoles = ["admin", "minter", "pauser", "transfer"] as const;
+  static contractRoles = ["admin", "minter", "asset", "transfer"] as const;
 
   public abi: typeof ABI;
   public metadata: ContractMetadata<PackContract, typeof PackContractSchema>;

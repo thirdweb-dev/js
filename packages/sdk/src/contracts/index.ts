@@ -88,7 +88,7 @@ export const MultiwrapInitializer = {
   name: "Multiwrap" as const,
   contractType: "multiwrap" as const,
   schema: MultiwrapContractSchema,
-  roles: ["transfer", "minter", "unwrap", "asset"] as const,
+  roles: ["admin", "transfer", "minter", "unwrap", "asset"] as const,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
@@ -149,7 +149,7 @@ export const PackInitializer = {
   name: "Pack" as const,
   contractType: "pack" as const,
   schema: PackContractSchema,
-  roles: ["admin", "minter", "pauser", "transfer"] as const,
+  roles: ["admin", "minter", "asset", "transfer"] as const,
 
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
