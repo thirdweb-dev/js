@@ -1,9 +1,4 @@
-import {
-  useActiveChainId,
-  useActiveSignerAddress,
-  useActiveSignerChainId,
-  useSDK,
-} from "../../Provider";
+import { useSDK, useSDKChainId } from "../../providers/base";
 import { ContractAddress, RequiredParam } from "../../types";
 import {
   cacheKeys,
@@ -11,6 +6,7 @@ import {
   createContractCacheKey,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
+import { useAddress, useChainId } from "../wallet";
 import {
   useMutation,
   useQuery,
@@ -154,9 +150,9 @@ export function useContract<
 >(contractAddress: RequiredParam<ContractAddress>) {
   const sdk = useSDK();
   const queryClient = useQueryClient();
-  const activeChainId = useActiveChainId();
-  const wallet = useActiveSignerAddress();
-  const walletChainId = useActiveSignerChainId();
+  const activeChainId = useSDKChainId();
+  const wallet = useAddress();
+  const walletChainId = useChainId();
 
   // it's there because we put it there.
   const sdkTimestamp = (sdk as any)?._constructedAt;
@@ -229,10 +225,14 @@ export function useContract<
  * @twfeature ContractMetadata
  * @beta
  */
-export function useContractMetadata(
-  contract: RequiredParam<ValidContractInstance>,
+export function useContractMetadata<TContract extends ValidContractInstance>(
+  contract: RequiredParam<TContract>,
 ) {
-  return useQueryWithNetwork(
+  return useQueryWithNetwork<
+    typeof contract extends undefined
+      ? undefined
+      : Awaited<ReturnType<TContract["metadata"]["get"]>>
+  >(
     cacheKeys.contract.metadata(contract?.getAddress()),
     async () => {
       invariant(contract, "contract is required");
@@ -250,7 +250,7 @@ export function useContractMetadata(
 export function useContractMetadataUpdate(
   contract: RequiredParam<ValidContractInstance>,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
@@ -295,7 +295,7 @@ export function useContractEvents(
   const contractAddress = contract?.getAddress();
 
   const queryClient = useQueryClient();
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
 
   const cacheKey = useMemo(
     () =>
@@ -424,7 +424,7 @@ export function useContractWrite(
   contract: RequiredParam<ValidContractInstance>,
   functionName: RequiredParam<string>,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 

@@ -22,6 +22,7 @@ describe("Registry", async () => {
     });
     nftDrop = await freshSDK.deployer.createNftDrop({
       name: "Reg Test Drop",
+      itemsAvailable: 10,
     });
   });
 

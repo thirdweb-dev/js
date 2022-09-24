@@ -1,7 +1,7 @@
-import { NFTMetadataInput, Token } from "../src";
+import { NFTMetadataInput, TokenInitializer } from "../src";
 import { createSnapshot } from "../src/common";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { NFTDropImpl } from "../src/contracts/classes/nft-drop";
+import { NFTDrop } from "../src/contracts/prebuilt-implementations/nft-drop";
 import { ClaimEligibility } from "../src/enums";
 import { expectError, sdk, signers, storage } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
@@ -14,7 +14,7 @@ import invariant from "tiny-invariant";
 global.fetch = require("cross-fetch");
 
 describe("NFT Drop Contract", async () => {
-  let dropContract: NFTDropImpl;
+  let dropContract: NFTDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     abbyWallet: SignerWithAddress,
@@ -541,7 +541,7 @@ describe("NFT Drop Contract", async () => {
 
     it("should check if an address has enough erc20 currency", async () => {
       const currencyAddress = await sdk.deployer.deployBuiltInContract(
-        Token.contractType,
+        TokenInitializer.contractType,
         {
           name: "test",
           symbol: "test",
@@ -985,7 +985,7 @@ describe("NFT Drop Contract", async () => {
       await dropContract.revealer.reveal(0, "my secret password");
       const transactions =
         (await adminWallet.provider?.getBlockWithTransactions("latest"))
-          ?.transactions ?? [];
+          ?.transactions || [];
 
       const { index, _key } = dropContract.encoder.decode(
         "reveal",

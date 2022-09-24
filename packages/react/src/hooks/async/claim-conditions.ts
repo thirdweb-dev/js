@@ -1,4 +1,4 @@
-import { useActiveChainId } from "../../Provider";
+import { useSDKChainId } from "../../providers/base";
 import {
   getErcs,
   DropContract,
@@ -83,7 +83,7 @@ export function useActiveClaimCondition(
       if (erc20) {
         return erc20.claimConditions.getActive();
       }
-      return undefined;
+      throw new Error("Contract must be ERC721, ERC1155 or ERC20");
     },
     {
       // Checks that happen here:
@@ -136,7 +136,7 @@ export function useClaimConditions(
       if (erc20) {
         return erc20.claimConditions.getAll();
       }
-      return undefined;
+      throw new Error("Contract must be ERC721, ERC1155 or ERC20");
     },
     {
       // Checks that happen here:
@@ -207,7 +207,7 @@ export function useClaimIneligibilityReasons(
           params.walletAddress,
         );
       }
-      return undefined;
+      throw new Error("Contract must be ERC721, ERC1155 or ERC20");
     },
     {
       // Checks that happen here:
@@ -264,7 +264,7 @@ export function useSetClaimConditions(
   contract: RequiredParam<DropContract>,
   tokenId?: BigNumberish,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   const { erc1155, erc721, erc20 } = getErcs(contract);
@@ -284,7 +284,7 @@ export function useSetClaimConditions(
       if (erc20) {
         return erc20.claimConditions.set(phases, reset);
       }
-      return undefined;
+      throw new Error("Contract must be ERC721, ERC1155 or ERC20");
     },
     {
       onSettled: () => {
@@ -335,7 +335,7 @@ export function useResetClaimConditions(
   contract: RequiredParam<DropContract>,
   tokenId?: BigNumberish,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   const { erc1155, erc721, erc20 } = getErcs(contract);
@@ -374,7 +374,7 @@ export function useResetClaimConditions(
           true,
         );
       }
-      return undefined;
+      throw new Error("Contract must be ERC721, ERC1155 or ERC20");
     },
     {
       onSettled: () => {

@@ -12,7 +12,7 @@ import { TransactionTask } from "./TransactionTask";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { DropErc1155ClaimConditions } from "./drop-erc1155-claim-conditions";
-import { DropERC1155 } from "@thirdweb-dev/contracts-js";
+import type { DropERC1155 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumberish, ethers } from "ethers";
 

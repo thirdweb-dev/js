@@ -44,7 +44,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
  *
  * @public
  */
-export class EditionDropImpl extends StandardErc1155<DropERC1155> {
+export class EditionDrop extends StandardErc1155<DropERC1155> {
   private static contractRoles = ["admin", "minter", "transfer"] as const;
 
   public abi: typeof ABI;
@@ -59,7 +59,7 @@ export class EditionDropImpl extends StandardErc1155<DropERC1155> {
   >;
   public roles: ContractRoles<
     DropERC1155,
-    typeof EditionDropImpl.contractRoles[number]
+    typeof EditionDrop.contractRoles[number]
   >;
   /**
    * Configure royalties
@@ -140,7 +140,7 @@ export class EditionDropImpl extends StandardErc1155<DropERC1155> {
     );
     this.roles = new ContractRoles(
       this.contractWrapper,
-      EditionDropImpl.contractRoles,
+      EditionDrop.contractRoles,
     );
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);

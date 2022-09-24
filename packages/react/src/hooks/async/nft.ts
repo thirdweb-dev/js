@@ -1,4 +1,4 @@
-import { useActiveChainId } from "../../Provider";
+import { useSDKChainId } from "../../providers/base";
 import {
   AirdropNFTParams,
   BurnNFTParams,
@@ -223,7 +223,7 @@ export function useTotalCount<TContract extends NFTContract>(
  */
 export function useTotalCirculatingSupply(
   contract: RequiredParam<NFTContract>,
-  tokenId: BigNumberish,
+  tokenId: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
   const { erc721, erc1155 } = getErcs(contract);
@@ -238,6 +238,7 @@ export function useTotalCirculatingSupply(
           erc1155.totalCirculatingSupply,
           "Contract instance does not support totalCirculatingSupply",
         );
+        invariant(tokenId, "No tokenId provided");
         return await erc1155.totalCirculatingSupply(tokenId);
       }
       if (erc721) {
@@ -250,7 +251,7 @@ export function useTotalCirculatingSupply(
       invariant(false, "Unknown NFT type");
     },
     {
-      enabled: !!erc721 || !!erc1155,
+      enabled: !!erc721 || (!!erc1155 && tokenId !== undefined),
     },
   );
 }
@@ -420,7 +421,7 @@ export function useNFTBalance(
 export function useMintNFT<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   const { erc1155, erc721 } = getErcs(contract);
@@ -490,7 +491,7 @@ export function useMintNFT<TContract extends NFTContract>(
  * @twfeature ERC1155Mintable
  */
 export function useMintNFTSupply(contract: Erc1155) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
@@ -555,7 +556,7 @@ export function useMintNFTSupply(contract: Erc1155) {
 export function useTransferNFT<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   const { erc1155, erc721 } = getErcs(contract);
@@ -649,7 +650,7 @@ export function useTransferNFT<TContract extends NFTContract>(
  * @beta
  */
 export function useAirdropNFT(contract: Erc1155) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
@@ -734,7 +735,7 @@ export function useAirdropNFT(contract: Erc1155) {
 export function useBurnNFT<TContract extends NFTContract>(
   contract: RequiredParam<TContract>,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   const { erc1155, erc721 } = getErcs(contract);

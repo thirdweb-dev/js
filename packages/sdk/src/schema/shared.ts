@@ -1,8 +1,31 @@
-import { Json } from "@thirdweb-dev/storage";
 import { BigNumber, CallOverrides, utils } from "ethers";
 import { z } from "zod";
 
-export const MAX_BPS = 10_000;
+const isBrowser = () => typeof window !== "undefined";
+const FileOrBufferUnionSchema = isBrowser()
+  ? (z.instanceof(File) as z.ZodType<InstanceType<typeof File>>)
+  : (z.instanceof(Buffer) as z.ZodTypeAny); // @fixme, this is a hack to make browser happy for now
+
+/**
+ * @internal
+ */
+export const FileOrBufferSchema = z.union([
+  FileOrBufferUnionSchema,
+  z.object({
+    data: z.union([FileOrBufferUnionSchema, z.string()]),
+    name: z.string(),
+  }),
+]);
+
+/**
+ * @internal
+ */
+export const FileOrBufferOrStringSchema = z.union([
+  FileOrBufferSchema,
+  z.string(),
+]);
+
+export const MAX_BPS = 10000;
 
 export const BytesLikeSchema = z.union([z.array(z.number()), z.string()]);
 
@@ -20,6 +43,17 @@ export const BigNumberSchema = z
 export const BigNumberishSchema = BigNumberSchema.transform((arg) =>
   arg.toString(),
 );
+
+export const BigNumberTransformSchema = z
+  .union([
+    z.bigint(),
+    z.custom<BigNumber>((data) => {
+      return BigNumber.isBigNumber(data);
+    }),
+  ])
+  .transform((arg) => {
+    return BigNumber.from(arg).toString();
+  });
 
 export const BasisPointsSchema = z
   .number()

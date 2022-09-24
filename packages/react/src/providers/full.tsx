@@ -1,40 +1,32 @@
 import {
   GnosisConnectorArguments,
   GnosisSafeConnector,
-} from "./connectors/gnosis-safe";
-import { MagicConnector, MagicConnectorArguments } from "./connectors/magic";
+} from "../connectors/gnosis-safe";
+import { MagicConnector, MagicConnectorArguments } from "../connectors/magic";
 import {
   Chain,
   SupportedChain,
   defaultSupportedChains,
-} from "./constants/chain";
-import {
-  ThirdwebAuthConfig,
-  ThirdwebAuthConfigProvider,
-} from "./contexts/thirdweb-auth";
+} from "../constants/chain";
+import { ThirdwebAuthConfig } from "../contexts/thirdweb-auth";
 import {
   ThirdwebConfigProvider,
   defaultChainRpc,
-} from "./contexts/thirdweb-config";
-import { useSigner } from "./hooks/useSigner";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+} from "../contexts/thirdweb-config";
+import { ThirdwebSDKProvider, ThirdwebSDKProviderProps } from "./base";
+import { QueryClient } from "@tanstack/react-query";
 import {
-  ChainOrRpc,
   SDKOptions,
-  SUPPORTED_CHAIN_ID,
-  SignerOrProvider,
-  ThirdwebSDK,
   getProviderForNetwork,
   SDKOptionsOutput,
 } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { Signer } from "ethers";
-import React, { createContext, useEffect, useMemo, useState } from "react";
-import invariant from "tiny-invariant";
+import React, { useMemo } from "react";
 import {
   WagmiProvider,
   ProviderProps as WagmiproviderProps,
   useProvider,
+  useSigner,
 } from "wagmi";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { InjectedConnector } from "wagmi/connectors/injected";
@@ -447,194 +439,14 @@ export const ThirdwebProvider = <
   );
 };
 
-export interface ThirdwebSDKProviderWagmiWrapper
-  extends Pick<
-    ThirdwebProviderProps,
-    "desiredChainId" | "sdkOptions" | "storageInterface" | "authConfig"
-  > {
-  signer?: Signer;
-  provider: ChainOrRpc | SignerOrProvider;
-  queryClient?: QueryClient;
-}
-
 const ThirdwebSDKProviderWagmiWrapper: React.FC<
-  React.PropsWithChildren<
-    Omit<ThirdwebSDKProviderWagmiWrapper, "signer" | "provider">
-  >
+  React.PropsWithChildren<Omit<ThirdwebSDKProviderProps, "signer" | "provider">>
 > = ({ children, ...props }) => {
   const provider = useProvider();
-  const signer = useSigner();
+  const [signer] = useSigner();
   return (
-    <ThirdwebSDKProvider signer={signer} provider={provider} {...props}>
+    <ThirdwebSDKProvider signer={signer.data} provider={provider} {...props}>
       {children}
     </ThirdwebSDKProvider>
   );
 };
-
-interface SDKContext {
-  sdk?: ThirdwebSDK;
-  _inProvider?: true;
-  desiredChainId: number;
-}
-
-const ThirdwebSDKContext = createContext<SDKContext>({ desiredChainId: -1 });
-
-export interface ThirdwebSDKProviderProps
-  extends Omit<ThirdwebSDKProviderWagmiWrapper, "queryClient"> {
-  queryClient?: QueryClient;
-}
-
-/**
- * A barebones wrapper around the Thirdweb SDK.
- *
- * You can use this in order to be able to pass a provider & signer directly to the SDK.
- *
- * @remarks Utilizing this provider will mean hooks for wallet management are not available, if you need those please use the {@link ThirdwebProvider} instead.
- *
- * @beta
- */
-export const ThirdwebSDKProvider: React.FC<
-  React.PropsWithChildren<ThirdwebSDKProviderProps>
-> = ({
-  sdkOptions,
-  desiredChainId,
-  storageInterface,
-  provider,
-  signer,
-  queryClient,
-  authConfig,
-  children,
-}) => {
-  const queryClientWithDefault: QueryClient = useMemo(() => {
-    return queryClient ? queryClient : new QueryClient();
-  }, [queryClient]);
-
-  const sdk = useMemo(() => {
-    if (!desiredChainId || typeof window === "undefined") {
-      return undefined;
-    }
-    const _sdk = new ThirdwebSDK(provider, sdkOptions, storageInterface);
-    (_sdk as any)._constructedAt = Date.now();
-    (_sdk as any)._chainId = desiredChainId;
-    return _sdk;
-  }, [provider, sdkOptions, storageInterface, desiredChainId]);
-
-  useEffect(() => {
-    if (signer && sdk && (sdk as any)._chainId === desiredChainId) {
-      sdk.updateSignerOrProvider(signer);
-    }
-  }, [signer, sdk, desiredChainId]);
-
-  const ctxValue = useMemo(
-    () => ({
-      sdk,
-      desiredChainId: desiredChainId || -1,
-      _inProvider: true as const,
-    }),
-    [desiredChainId, sdk],
-  );
-
-  return (
-    <ThirdwebAuthConfigProvider value={authConfig}>
-      <QueryClientProvider client={queryClientWithDefault}>
-        <ThirdwebSDKContext.Provider value={ctxValue}>
-          {children}
-        </ThirdwebSDKContext.Provider>
-      </QueryClientProvider>
-    </ThirdwebAuthConfigProvider>
-  );
-};
-
-/**
- * @internal
- */
-function useSDKContext(): SDKContext {
-  const ctx = React.useContext(ThirdwebSDKContext);
-  invariant(
-    ctx._inProvider,
-    "useSDK must be called from within a ThirdwebProvider, did you forget to wrap your app in a <ThirdwebProvider />?",
-  );
-  return ctx;
-}
-
-/**
- *
- * @returns {@link ThirdwebSDK}
- * Access the instance of the thirdweb SDK created by the ThirdwebProvider
- * to call methods using the connected wallet on the desiredChainId.
- * @example
- * ```javascript
- * const sdk = useSDK();
- * ```
- */
-export function useSDK(): ThirdwebSDK | undefined {
-  const { sdk } = useSDKContext();
-  return sdk;
-}
-
-/**
- * @internal
- */
-export function useDesiredChainId(): number {
-  const { desiredChainId } = useSDKContext();
-  return desiredChainId;
-}
-
-/**
- * @internal
- */
-export function useActiveChainId(): SUPPORTED_CHAIN_ID | undefined {
-  const sdk = useSDK();
-  return (sdk as any)?._chainId;
-}
-
-/**
- * @internal
- */
-export function useActiveSigner(): Signer | undefined {
-  const sdk = useSDK();
-  const [signer, setSigner] = useState<Signer | undefined>(sdk?.getSigner());
-  useEffect(() => {
-    if (sdk) {
-      sdk.wallet.events.on("signerChanged", (newSigner: Signer | undefined) => {
-        setSigner(newSigner);
-      });
-      return () => {
-        sdk.wallet.events.off("signerChanged");
-      };
-    }
-  }, [sdk]);
-  return signer;
-}
-
-/**
- * @internal
- */
-export function useActiveSignerAddress(): string | undefined {
-  const signer = useActiveSigner();
-  const [address, setAddress] = useState<string | undefined>(undefined);
-  useEffect(() => {
-    if (signer) {
-      signer.getAddress().then((a) => {
-        setAddress(a);
-      });
-    }
-  }, [signer]);
-  return address;
-}
-
-/**
- * @internal
- */
-export function useActiveSignerChainId(): number | undefined {
-  const signer = useActiveSigner();
-  const [chainId, setChainId] = useState<number | undefined>(undefined);
-  useEffect(() => {
-    if (signer) {
-      signer.getChainId().then((id) => {
-        setChainId(id);
-      });
-    }
-  }, [signer]);
-  return chainId;
-}

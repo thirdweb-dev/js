@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/solana",
-  "version": "0.2.12",
+  "version": "0.2.15",
   "description": "thirdweb Solana SDK",
   "main": "dist/thirdweb-dev-solana.cjs.js",
   "module": "dist/thirdweb-dev-solana.esm.js",
@@ -16,9 +16,10 @@
     "generate-docs": "api-extractor run --local && api-documenter markdown -i ./temp -o ./docs",
     "node:start": "DEBUG='amman:(info|error|debug)' amman start",
     "node:stop": "amman stop",
-    "test:all": "ts-mocha --paths -t 120000 -r esm -p tsconfig.testing.json './test/**/*.test.ts'",
+    "test:all": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000 --parallel './test/**/*.test.ts'",
     "test": "make test",
-    "test:single": "ts-mocha --paths -t 120000 -r esm -p tsconfig.testing.json"
+    "test:single": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000",
+    "push": "yalc push"
   },
   "files": [
     "dist/",
@@ -39,6 +40,7 @@
     "@microsoft/api-extractor": "^7.29.2",
     "@microsoft/tsdoc": "^0.14.1",
     "@preconstruct/cli": "^2.2.1",
+    "@swc-node/register": "^1.5.1",
     "@types/chai": "^4.3.3",
     "@types/mocha": "^9.1.1",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
@@ -50,9 +52,8 @@
     "eslint-plugin-inclusive-language": "^2.2.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-tsdoc": "^0.2.16",
+    "mocha": "^10.0.0",
     "prettier": "^2.7.1",
-    "ts-mocha": "^10.0.0",
-    "tsc": "^2.0.4",
     "typescript": "^4.7.4"
   },
   "dependencies": {

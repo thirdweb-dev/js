@@ -1,4 +1,4 @@
-import { useActiveChainId } from "../../Provider";
+import { useSDKChainId } from "../../providers/base";
 import {
   ClaimNFTParams,
   ClaimNFTReturnType,
@@ -22,7 +22,7 @@ import {
   QueryAllParams,
   UploadProgressEvent,
 } from "@thirdweb-dev/sdk";
-import { NFTDropImpl } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/nft-drop";
+import { NFTDrop } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/nft-drop";
 import invariant from "tiny-invariant";
 
 /** **********************/
@@ -44,7 +44,7 @@ import invariant from "tiny-invariant";
  * @beta
  */
 export function useUnclaimedNFTs(
-  contract: RequiredParam<NFTDropImpl>,
+  contract: RequiredParam<NFTDrop>,
   queryParams?: QueryAllParams,
 ) {
   const contractAddress = contract?.getAddress();
@@ -198,7 +198,7 @@ export function useBatchesToReveal<TContract extends RevealableContract>(
 export function useClaimNFT<TContract extends DropContract>(
   contract: RequiredParam<TContract>,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
@@ -251,7 +251,7 @@ export function useLazyMint<TContract extends DropContract>(
   contract: RequiredParam<TContract>,
   onProgress?: (progress: UploadProgressEvent) => void,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   const { erc721, erc1155 } = getErcs(contract);
@@ -298,7 +298,7 @@ export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,
   onProgress?: (progress: UploadProgressEvent) => void,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
@@ -352,7 +352,7 @@ export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
 export function useRevealLazyMint<TContract extends RevealableContract>(
   contract: RequiredParam<TContract>,
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
 
