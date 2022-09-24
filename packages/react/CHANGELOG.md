@@ -1,5 +1,15 @@
 # @thirdweb-dev/react
 
+## 3.0.7
+
+### Patch Changes
+
+- [#197](https://github.com/thirdweb-dev/js/pull/197) [`f4f05bd`](https://github.com/thirdweb-dev/js/commit/f4f05bd9a4ec98e9abc6716006353f330b7be055) Thanks [@jnsdls](https://github.com/jnsdls)! - make it obvious when the <Web3Button /> will trigger a network switch
+
+- Updated dependencies [[`5f5ab01`](https://github.com/thirdweb-dev/js/commit/5f5ab015e1dd3c471d6affe995ef36ec88932b3c), [`5f5ab01`](https://github.com/thirdweb-dev/js/commit/5f5ab015e1dd3c471d6affe995ef36ec88932b3c)]:
+  - @thirdweb-dev/sdk@3.0.7
+  - @thirdweb-dev/solana@0.2.15
+
 ## 3.0.6
 
 ### Patch Changes
