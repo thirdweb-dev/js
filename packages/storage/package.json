@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/storage",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/thirdweb-dev-storage.cjs.js",
   "module": "dist/thirdweb-dev-storage.esm.js",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/storage",
@@ -15,7 +15,8 @@
     "build": "tsc && preconstruct build",
     "test:all": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000 --parallel './test/**/*.test.ts'",
     "test": "yarn test:all",
-    "test:single": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000"
+    "test:single": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000",
+    "push": "yalc push"
   },
   "files": [
     "dist/"
