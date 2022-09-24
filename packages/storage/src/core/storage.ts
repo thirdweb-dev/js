@@ -172,22 +172,33 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
       .map((item) => isFileOrBuffer(item) || typeof item === "string")
       .every((item) => !!item);
 
+    let uris: string[] = [];
+
     // If data is an array of files, pass it through to upload directly
     if (isFileArray) {
-      return this.uploader.uploadBatch(data as FileOrBufferOrString[], options);
+      uris = await this.uploader.uploadBatch(
+        data as FileOrBufferOrString[],
+        options,
+      );
+    } else {
+      // Otherwise it is an array of JSON objects, so we have to prepare it first
+      const metadata = (
+        await this.uploadAndReplaceFilesWithHashes(data, options)
+      ).map((item) => {
+        if (typeof item === "string") {
+          return item;
+        }
+        return JSON.stringify(item);
+      });
+
+      uris = await this.uploader.uploadBatch(metadata, options);
     }
 
-    // Otherwise it is an array of JSON objects, so we have to prepare it first
-    const metadata = (
-      await this.uploadAndReplaceFilesWithHashes(data, options)
-    ).map((item) => {
-      if (typeof item === "string") {
-        return item;
-      }
-      return JSON.stringify(item);
-    });
-
-    return this.uploader.uploadBatch(metadata, options);
+    if (options?.uploadWithGatewayUrl || this.uploader.uploadWithGatewayUrl) {
+      return uris.map((uri) => this.resolveScheme(uri));
+    } else {
+      return uris;
+    }
   }
 
   private async uploadAndReplaceFilesWithHashes(
@@ -206,7 +217,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
 
     if (files.length) {
       // Upload all files that came from the object
-      const uris = await this.uploader.uploadBatch(files);
+      const uris = await this.uploader.uploadBatch(files, options);
 
       // Recurse through data and replace files with hashes
       cleaned = replaceObjectFilesWithUris(cleaned, uris) as unknown[];

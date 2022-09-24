@@ -14,6 +14,8 @@ export * from "./types/index";
 export * from "./types/common";
 export * from "./types/contracts";
 export * from "./types/contracts/nft-drop";
+// utils
+export * from "./utils/urls";
 
 //schema for dashboard use
 export {
