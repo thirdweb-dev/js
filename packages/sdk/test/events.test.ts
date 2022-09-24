@@ -1,6 +1,10 @@
-import { ContractEvent, NFTCollection, NFTDrop } from "../src";
-import { NFTCollectionImpl } from "../src/contracts/classes/nft-collection";
-import { NFTDropImpl } from "../src/contracts/classes/nft-drop";
+import {
+  ContractEvent,
+  NFTCollectionInitializer,
+  NFTDropInitializer,
+} from "../src";
+import { NFTCollection } from "../src/contracts/prebuilt-implementations/nft-collection";
+import { NFTDrop } from "../src/contracts/prebuilt-implementations/nft-drop";
 import { sdk, signers } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -10,9 +14,9 @@ import { ethers } from "ethers";
 global.fetch = require("cross-fetch");
 
 describe("Events", async () => {
-  let dropContract: NFTDropImpl;
-  let dropContract2: NFTDropImpl;
-  let nftContract: NFTCollectionImpl;
+  let dropContract: NFTDrop;
+  let dropContract2: NFTDrop;
+  let nftContract: NFTCollection;
   let samWallet: SignerWithAddress;
 
   before(() => {
@@ -21,45 +25,54 @@ describe("Events", async () => {
 
   beforeEach(async () => {
     dropContract = await sdk.getNFTDrop(
-      await sdk.deployer.deployBuiltInContract(NFTDrop.contractType, {
-        name: `Testing drop from SDK`,
-        description: "Test contract from tests",
-        image:
-          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-        primary_sale_recipient: AddressZero,
-        seller_fee_basis_points: 500,
-        fee_recipient: AddressZero,
-        platform_fee_basis_points: 10,
-        platform_fee_recipient: AddressZero,
-      }),
+      await sdk.deployer.deployBuiltInContract(
+        NFTDropInitializer.contractType,
+        {
+          name: `Testing drop from SDK`,
+          description: "Test contract from tests",
+          image:
+            "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+          primary_sale_recipient: AddressZero,
+          seller_fee_basis_points: 500,
+          fee_recipient: AddressZero,
+          platform_fee_basis_points: 10,
+          platform_fee_recipient: AddressZero,
+        },
+      ),
     );
 
     dropContract2 = await sdk.getNFTDrop(
-      await sdk.deployer.deployBuiltInContract(NFTDrop.contractType, {
-        name: `Testing drop from SDK`,
-        description: "Test contract from tests",
-        image:
-          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-        primary_sale_recipient: AddressZero,
-        seller_fee_basis_points: 500,
-        fee_recipient: AddressZero,
-        platform_fee_basis_points: 10,
-        platform_fee_recipient: AddressZero,
-      }),
+      await sdk.deployer.deployBuiltInContract(
+        NFTDropInitializer.contractType,
+        {
+          name: `Testing drop from SDK`,
+          description: "Test contract from tests",
+          image:
+            "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+          primary_sale_recipient: AddressZero,
+          seller_fee_basis_points: 500,
+          fee_recipient: AddressZero,
+          platform_fee_basis_points: 10,
+          platform_fee_recipient: AddressZero,
+        },
+      ),
     );
 
     nftContract = await sdk.getNFTCollection(
-      await sdk.deployer.deployBuiltInContract(NFTCollection.contractType, {
-        name: "NFT Contract",
-        description: "Test NFT contract from tests",
-        image:
-          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-        primary_sale_recipient: AddressZero,
-        seller_fee_basis_points: 1000,
-        fee_recipient: AddressZero,
-        platform_fee_basis_points: 10,
-        platform_fee_recipient: AddressZero,
-      }),
+      await sdk.deployer.deployBuiltInContract(
+        NFTCollectionInitializer.contractType,
+        {
+          name: "NFT Contract",
+          description: "Test NFT contract from tests",
+          image:
+            "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+          primary_sale_recipient: AddressZero,
+          seller_fee_basis_points: 1000,
+          fee_recipient: AddressZero,
+          platform_fee_basis_points: 10,
+          platform_fee_recipient: AddressZero,
+        },
+      ),
     );
   });
 

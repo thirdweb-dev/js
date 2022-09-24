@@ -1,9 +1,9 @@
 import {
   CurrencyValueSchema,
+  FileOrBufferOrStringSchema,
   HexColor,
   OptionalPropertiesInput,
 } from "./common";
-import { FileOrBufferOrStringSchema, JsonSchema } from "@thirdweb-dev/storage";
 import { z } from "zod";
 
 /**
@@ -17,7 +17,7 @@ export const CommonTokenInput = z
     image: FileOrBufferOrStringSchema.nullable().optional(),
     external_url: FileOrBufferOrStringSchema.nullable().optional(),
   })
-  .catchall(z.lazy(() => JsonSchema));
+  .catchall(z.unknown());
 
 /**
  * @internal

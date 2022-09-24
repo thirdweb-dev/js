@@ -51,7 +51,7 @@ import {
  *
  * @public
  */
-export class VoteImpl implements UpdateableNetwork {
+export class Vote implements UpdateableNetwork {
   private contractWrapper: ContractWrapper<VoteERC20>;
   private storage: ThirdwebStorage;
 

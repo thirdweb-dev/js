@@ -1,7 +1,7 @@
-import { Token, TokenDrop } from "../src";
+import { TokenDropInitializer, TokenInitializer } from "../src";
 import { createSnapshot } from "../src/common";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { TokenDropImpl } from "../src/contracts/classes/token-drop";
+import { TokenDrop } from "../src/contracts/prebuilt-implementations/token-drop";
 import { ClaimEligibility } from "../src/enums";
 import { expectError, sdk, signers, storage } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
@@ -14,7 +14,7 @@ import invariant from "tiny-invariant";
 global.fetch = require("cross-fetch");
 
 describe("Token Drop Contract", async () => {
-  let dropContract: TokenDropImpl;
+  let dropContract: TokenDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     abbyWallet: SignerWithAddress,
@@ -28,7 +28,7 @@ describe("Token Drop Contract", async () => {
     [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
     sdk.updateSignerOrProvider(adminWallet);
     const address = await sdk.deployer.deployBuiltInContract(
-      TokenDrop.contractType,
+      TokenDropInitializer.contractType,
       {
         name: `Testing drop from SDK`,
         description: "Test contract from tests",
@@ -396,7 +396,7 @@ describe("Token Drop Contract", async () => {
 
     it("should check if an address has enough erc20 currency", async () => {
       const currencyAddress = await sdk.deployer.deployBuiltInContract(
-        Token.contractType,
+        TokenInitializer.contractType,
         {
           name: "test",
           symbol: "test",

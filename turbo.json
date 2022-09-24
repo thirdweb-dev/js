@@ -29,7 +29,7 @@
     },
     "react#e2e": {
       "inputs": ["src/**", "e2e/**", "playwright/**"],
-      "dependsOn": ["build", "$CI"]
+      "dependsOn": ["build"]
     },
     "lint": {
       "outputs": []
@@ -42,6 +42,10 @@
     },
     "clean": {
       "cache": false
+    },
+    "push": {
+      "cache": false,
+      "dependsOn": ["build"]
     }
   }
 }

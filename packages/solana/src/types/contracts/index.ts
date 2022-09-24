@@ -1,5 +1,4 @@
-import { AmountSchema } from "../common";
-import { FileOrBufferOrStringSchema, JsonSchema } from "@thirdweb-dev/storage";
+import { AmountSchema, FileOrBufferOrStringSchema } from "../common";
 import { z } from "zod";
 
 /**
@@ -18,7 +17,7 @@ export const CommonContractSchema = z.object({
  */
 export const CommonContractOutputSchema = CommonContractSchema.extend({
   image: z.string().optional(),
-}).catchall(z.lazy(() => JsonSchema));
+}).catchall(z.unknown());
 
 /// NFT ///
 

@@ -637,9 +637,10 @@ export class ContractWrapper<
     invariant(signer, "provider is not set");
     invariant(provider, "provider is not set");
     const forwarderAddress =
-      this.options.gasless.openzeppelin.relayerForwarderAddress ||
-      CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES]
-        .openzeppelinForwarder;
+      this.options.gasless.openzeppelin.relayerForwarderAddress 
+      || (this.options.gasless.openzeppelin.useEOAForwarder 
+          ? CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES].openzeppelinForwarderEOA 
+          : CONTRACT_ADDRESSES[transaction.chainId as keyof typeof CONTRACT_ADDRESSES].openzeppelinForwarder);
 
     const forwarder = new Contract(forwarderAddress, ForwarderABI, provider);
     const nonce = await getAndIncrementNonce(forwarder, "getNonce", [
@@ -745,6 +746,7 @@ export class ContractWrapper<
     const body = JSON.stringify({
       request: message,
       signature,
+      forwarderAddress,
       type: messageType,
     });
 

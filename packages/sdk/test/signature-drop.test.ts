@@ -2,12 +2,12 @@ import {
   createSnapshot,
   NFTMetadataInput,
   PayloadToSign721withQuantity,
-  SignatureDrop,
-  Token,
+  SignatureDropInitializer,
+  TokenInitializer,
 } from "../src";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { SignatureDropImpl } from "../src/contracts/classes/signature-drop";
-import { TokenImpl } from "../src/contracts/classes/token";
+import { SignatureDrop } from "../src/contracts/prebuilt-implementations/signature-drop";
+import { Token } from "../src/contracts/prebuilt-implementations/token";
 import { SignedPayload721WithQuantitySignature } from "../src/schema/contracts/common/signature";
 import { expectError, sdk, signers, storage } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -20,8 +20,8 @@ import invariant from "tiny-invariant";
 global.fetch = require("cross-fetch");
 
 describe("Signature drop tests", async () => {
-  let signatureDropContract: SignatureDropImpl;
-  let customTokenContract: TokenImpl;
+  let signatureDropContract: SignatureDrop;
+  let customTokenContract: Token;
   let tokenAddress: string;
 
   let adminWallet: SignerWithAddress,
@@ -43,12 +43,15 @@ describe("Signature drop tests", async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
     signatureDropContract = await sdk.getSignatureDrop(
-      await sdk.deployer.deployBuiltInContract(SignatureDrop.contractType, {
-        name: "OUCH VOUCH",
-        symbol: "VOUCH",
-        primary_sale_recipient: adminWallet.address,
-        seller_fee_basis_points: 0,
-      }),
+      await sdk.deployer.deployBuiltInContract(
+        SignatureDropInitializer.contractType,
+        {
+          name: "OUCH VOUCH",
+          symbol: "VOUCH",
+          primary_sale_recipient: adminWallet.address,
+          seller_fee_basis_points: 0,
+        },
+      ),
     );
 
     meta = {
@@ -62,7 +65,7 @@ describe("Signature drop tests", async () => {
     };
 
     customTokenContract = await sdk.getToken(
-      await sdk.deployer.deployBuiltInContract(Token.contractType, {
+      await sdk.deployer.deployBuiltInContract(TokenInitializer.contractType, {
         name: "Test",
         symbol: "TEST",
         primary_sale_recipient: adminWallet.address,

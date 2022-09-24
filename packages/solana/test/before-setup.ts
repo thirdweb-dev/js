@@ -29,8 +29,10 @@ export const createTestSDK = async (
 
 let sdk: ThirdwebSDK;
 
-before(async () => {
-  sdk = await createTestSDK();
-});
+export const mochaHooks = {
+  beforeAll: async () => {
+    sdk = await createTestSDK();
+  },
+};
 
 export { sdk };

@@ -1,6 +1,7 @@
-import { GnosisSafeConnector } from "../connectors/gnosis-safe";
+import { GnosisSafeConnector } from "../../connectors/gnosis-safe";
 import { useConnect } from "./useConnect";
-import { useAccount } from "wagmi";
+import invariant from "tiny-invariant";
+import { useAccount, useContext as useWagmiContext } from "wagmi";
 
 /**
  * Hook for disconnecting the currently connected wallet
@@ -31,6 +32,11 @@ import { useAccount } from "wagmi";
  * @public
  */
 export function useDisconnect(options?: { reconnectAfterGnosis?: boolean }) {
+  const wagmiContext = useWagmiContext();
+  invariant(
+    wagmiContext,
+    `useDisconnect() can only be used inside <ThirdwebProvider />. If you are using <ThirdwebSDKProvider /> you will have to use your own connection logic.`,
+  );
   const optsWithDefaults = { ...{ reconnectAfterGnosis: true }, ...options };
   const [, connect] = useConnect();
   const [data, disconnect] = useAccount();

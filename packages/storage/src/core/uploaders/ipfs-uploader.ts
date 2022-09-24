@@ -1,16 +1,12 @@
-import {
-  PINATA_IPFS_URL,
-  prepareGatewayUrls,
-  TW_IPFS_SERVER_URL,
-} from "../../common/urls";
+import { PINATA_IPFS_URL, TW_IPFS_SERVER_URL } from "../../common/urls";
 import {
   isBrowser,
   isBufferOrStringWithName,
+  isFileBufferOrStringEqual,
   isFileInstance,
 } from "../../common/utils";
 import {
   FileOrBufferOrString,
-  GatewayUrls,
   IpfsUploadBatchOptions,
   IpfsUploaderOptions,
   IStorageUploader,
@@ -25,14 +21,15 @@ import FormData from "form-data";
  * ```jsx
  * // Can instantiate the uploader with default configuration
  * const uploader = new StorageUploader();
- * const storage = new ThirdwebStorage(uploader);
+ * const storage = new ThirdwebStorage({ uploader });
  *
  * // Or optionally, can pass configuration
  * const options = {
  *   // Upload objects with resolvable URLs
  *   uploadWithGatewayUrl: true,
  * }
- * const storage = new ThirdwebStorage(options);
+ * const uploader = new StorageUploader(options);
+ * const storage = new ThirdwebStorage({ uploader });
  * ```
  *
  * @public
@@ -89,8 +86,10 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     files: FileOrBufferOrString[],
     options?: IpfsUploadBatchOptions,
   ) {
+    const fileNameToFileMap = new Map<string, FileOrBufferOrString>();
     const fileNames: string[] = [];
-    files.forEach((file, i) => {
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
       let fileName = "";
       let fileData = file;
 
@@ -129,12 +128,23 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         ? `files`
         : `files/${fileName}`;
 
-      if (fileNames.indexOf(fileName) > -1) {
+      if (fileNameToFileMap.has(fileName)) {
+        // if the file in the map is the same as the file we are already looking at then just skip and continue
+        if (isFileBufferOrStringEqual(fileNameToFileMap.get(fileName), file)) {
+          // we add it to the filenames array so that we can return the correct number of urls,
+          fileNames.push(fileName);
+          // but then we skip because we don't need to upload it multiple times
+          continue;
+        }
+        // otherwise if file names are the same but they are not the same file then we should throw an error (trying to upload to differnt files but with the same names)
         throw new Error(
-          `[DUPLICATE_FILE_NAME_ERROR] File name ${fileName} was passed for more than one file.`,
+          `[DUPLICATE_FILE_NAME_ERROR] File name ${fileName} was passed for more than one different file.`,
         );
       }
 
+      // add it to the map so that we can check for duplicates
+      fileNameToFileMap.set(fileName, file);
+      // add it to the filenames array so that we can return the correct number of urls
       fileNames.push(fileName);
       if (!isBrowser()) {
         form.append("file", fileData as any, { filepath } as any);
@@ -143,7 +153,7 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
         // pls pinata?
         form.append("file", new Blob([fileData as any]), filepath);
       }
-    });
+    }
 
     const metadata = { name: `Storage SDK`, keyvalues: {} };
     form.append("pinataMetadata", JSON.stringify(metadata));
@@ -159,7 +169,8 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
 
     return {
       form,
-      fileNames,
+      // encode the file names on the way out (which is what the upload backend expects)
+      fileNames: fileNames.map((fName) => encodeURIComponent(fName)),
     };
   }
 
@@ -172,40 +183,101 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
 
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
+
+      let timer = setTimeout(() => {
+        xhr.abort();
+        reject(
+          new Error(
+            "Request to upload timed out! No upload progress received in 30s",
+          ),
+        );
+      }, 30000);
+
+      xhr.upload.addEventListener("loadstart", () => {
+        console.log(`[${Date.now()}] [IPFS] Started`);
+      });
+
+      xhr.upload.addEventListener("progress", (event) => {
+        console.log(`[IPFS] Progress Event ${event.loaded}/${event.total}`);
+
+        clearTimeout(timer);
+
+        if (event.loaded < event.total) {
+          timer = setTimeout(() => {
+            xhr.abort();
+            reject(
+              new Error(
+                "Request to upload timed out! No upload progress received in 30s",
+              ),
+            );
+          }, 30000);
+        } else {
+          console.log(
+            `[${Date.now()}] [IPFS] Uploaded files. Waiting for response.`,
+          );
+        }
+
+        if (event.lengthComputable && options?.onProgress) {
+          options?.onProgress({
+            progress: event.loaded,
+            total: event.total,
+          });
+        }
+      });
+
+      xhr.addEventListener("load", () => {
+        console.log(`[${Date.now()}] [IPFS] Load`);
+        clearTimeout(timer);
+
+        if (xhr.status >= 200 && xhr.status < 300) {
+          let body;
+          try {
+            body = JSON.parse(xhr.responseText);
+          } catch (err) {
+            return reject(
+              new Error("Failed to parse JSON from upload response"),
+            );
+          }
+
+          const cid = body.IpfsHash;
+          if (!cid) {
+            throw new Error("Failed to get IPFS hash from upload response");
+          }
+
+          if (options?.uploadWithoutDirectory) {
+            return resolve([`ipfs://${cid}`]);
+          } else {
+            return resolve(fileNames.map((name) => `ipfs://${cid}/${name}`));
+          }
+        }
+
+        return reject(
+          new Error(
+            `Upload failed with status ${xhr.status} - ${xhr.responseText}`,
+          ),
+        );
+      });
+
+      xhr.addEventListener("error", () => {
+        console.log("[IPFS] Load");
+        clearTimeout(timer);
+
+        if (
+          (xhr.readyState !== 0 && xhr.readyState !== 4) ||
+          xhr.status === 0
+        ) {
+          return reject(
+            new Error(
+              "This looks like a network error, the endpoint might be blocked by an internet provider or a firewall.",
+            ),
+          );
+        }
+
+        return reject(new Error("Unknown upload error occured"));
+      });
+
       xhr.open("POST", PINATA_IPFS_URL);
       xhr.setRequestHeader("Authorization", `Bearer ${token}`);
-
-      xhr.onloadend = () => {
-        if (xhr.status !== 200) {
-          throw new Error("Failed to upload files to IPFS");
-        }
-
-        const cid = JSON.parse(xhr.responseText).IpfsHash;
-        if (!cid) {
-          throw new Error("Failed to upload files to IPFS");
-        }
-
-        if (options?.uploadWithoutDirectory) {
-          resolve([`ipfs://${cid}`]);
-        } else {
-          resolve(fileNames.map((name) => `ipfs://${cid}/${name}`));
-        }
-      };
-
-      xhr.onerror = (err) => {
-        reject(err);
-      };
-
-      if (xhr.upload) {
-        xhr.upload.onprogress = (event) => {
-          if (options?.onProgress) {
-            options?.onProgress({
-              progress: event.loaded,
-              total: event.total,
-            });
-          }
-        };
-      }
 
       xhr.send(form as any);
     });

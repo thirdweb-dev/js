@@ -24,7 +24,7 @@ type InitalizeParams = [
   options?: SDKOptions,
 ];
 
-export const EditionDrop = {
+export const EditionDropInitializer = {
   name: "DropERC1155" as const,
   contractType: "edition-drop" as const,
   schema: DropErc1155ContractSchema,
@@ -33,24 +33,18 @@ export const EditionDrop = {
     ...[network, address, storage, options]: InitalizeParams
   ) => {
     const [abi, contract] = await Promise.all([
-      EditionDrop.getAbi(),
+      EditionDropInitializer.getAbi(),
       import("./prebuilt-implementations/edition-drop"),
     ]);
 
-    return new contract.EditionDropImpl(
-      network,
-      address,
-      storage,
-      options,
-      abi,
-    );
+    return new contract.EditionDrop(network, address, storage, options, abi);
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC1155.json"))
       .default,
 };
 
-export const Edition = {
+export const EditionInitializer = {
   name: "TokenERC1155" as const,
   contractType: "edition" as const,
   schema: TokenErc1155ContractSchema,
@@ -59,18 +53,18 @@ export const Edition = {
     ...[network, address, storage, options]: InitalizeParams
   ) => {
     const [abi, contract] = await Promise.all([
-      Edition.getAbi(),
+      EditionInitializer.getAbi(),
       import("./prebuilt-implementations/edition"),
     ]);
 
-    return new contract.EditionImpl(network, address, storage, options, abi);
+    return new contract.Edition(network, address, storage, options, abi);
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/TokenERC1155.json"))
       .default,
 };
 
-export const Marketplace = {
+export const MarketplaceInitializer = {
   name: "Marketplace" as const,
   contractType: "marketplace" as const,
   schema: MarketplaceContractSchema,
@@ -79,44 +73,38 @@ export const Marketplace = {
     ...[network, address, storage, options]: InitalizeParams
   ) => {
     const [abi, contract] = await Promise.all([
-      Marketplace.getAbi(),
+      MarketplaceInitializer.getAbi(),
       import("./prebuilt-implementations/marketplace"),
     ]);
 
-    return new contract.MarketplaceImpl(
-      network,
-      address,
-      storage,
-      options,
-      abi,
-    );
+    return new contract.Marketplace(network, address, storage, options, abi);
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/Marketplace.json"))
       .default,
 };
 
-export const Multiwrap = {
+export const MultiwrapInitializer = {
   name: "Multiwrap" as const,
   contractType: "multiwrap" as const,
   schema: MultiwrapContractSchema,
-  roles: ["transfer", "minter", "unwrap", "asset"] as const,
+  roles: ["admin", "transfer", "minter", "unwrap", "asset"] as const,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
     const [abi, contract] = await Promise.all([
-      Multiwrap.getAbi(),
+      MultiwrapInitializer.getAbi(),
       import("./prebuilt-implementations/multiwrap"),
     ]);
 
-    return new contract.MultiwrapImpl(network, address, storage, options, abi);
+    return new contract.Multiwrap(network, address, storage, options, abi);
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/Multiwrap.json"))
       .default,
 };
 
-export const NFTCollection = {
+export const NFTCollectionInitializer = {
   name: "TokenERC721" as const,
   contractType: "nft-collection" as const,
   schema: TokenErc721ContractSchema,
@@ -126,24 +114,18 @@ export const NFTCollection = {
     ...[network, address, storage, options]: InitalizeParams
   ) => {
     const [abi, contract] = await Promise.all([
-      NFTCollection.getAbi(),
+      NFTCollectionInitializer.getAbi(),
       import("./prebuilt-implementations/nft-collection"),
     ]);
 
-    return new contract.NFTCollectionImpl(
-      network,
-      address,
-      storage,
-      options,
-      abi,
-    );
+    return new contract.NFTCollection(network, address, storage, options, abi);
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/TokenERC721.json"))
       .default,
 };
 
-export const NFTDrop = {
+export const NFTDropInitializer = {
   name: "DropERC721" as const,
   contractType: "nft-drop" as const,
   schema: DropErc721ContractSchema,
@@ -152,38 +134,38 @@ export const NFTDrop = {
     ...[network, address, storage, options]: InitalizeParams
   ) => {
     const [abi, contract] = await Promise.all([
-      NFTDrop.getAbi(),
+      NFTDropInitializer.getAbi(),
       import("./prebuilt-implementations/nft-drop"),
     ]);
 
-    return new contract.NFTDropImpl(network, address, storage, options, abi);
+    return new contract.NFTDrop(network, address, storage, options, abi);
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC721.json"))
       .default,
 };
 
-export const Pack = {
+export const PackInitializer = {
   name: "Pack" as const,
   contractType: "pack" as const,
   schema: PackContractSchema,
-  roles: ["admin", "minter", "pauser", "transfer"] as const,
+  roles: ["admin", "minter", "asset", "transfer"] as const,
 
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
     const [abi, contract] = await Promise.all([
-      Pack.getAbi(),
+      PackInitializer.getAbi(),
       import("./prebuilt-implementations/pack"),
     ]);
 
-    return new contract.PackImpl(network, address, storage, options, abi);
+    return new contract.Pack(network, address, storage, options, abi);
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/Pack.json")).default,
 };
 
-export const SignatureDrop = {
+export const SignatureDropInitializer = {
   name: "SignatureDrop" as const,
   contractType: "signature-drop" as const,
   schema: DropErc721ContractSchema,
@@ -193,24 +175,18 @@ export const SignatureDrop = {
     ...[network, address, storage, options]: InitalizeParams
   ) => {
     const [abi, contract] = await Promise.all([
-      SignatureDrop.getAbi(),
+      SignatureDropInitializer.getAbi(),
       import("./prebuilt-implementations/signature-drop"),
     ]);
 
-    return new contract.SignatureDropImpl(
-      network,
-      address,
-      storage,
-      options,
-      abi,
-    );
+    return new contract.SignatureDrop(network, address, storage, options, abi);
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/SignatureDrop.json"))
       .default,
 };
 
-export const Split = {
+export const SplitInitializer = {
   name: "Split" as const,
   contractType: "split" as const,
   schema: SplitsContractSchema,
@@ -220,17 +196,17 @@ export const Split = {
     ...[network, address, storage, options]: InitalizeParams
   ) => {
     const [abi, contract] = await Promise.all([
-      Split.getAbi(),
+      SplitInitializer.getAbi(),
       import("./prebuilt-implementations/split"),
     ]);
 
-    return new contract.SplitImpl(network, address, storage, options, abi);
+    return new contract.Split(network, address, storage, options, abi);
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/Split.json")).default,
 };
 
-export const TokenDrop = {
+export const TokenDropInitializer = {
   name: "DropERC20" as const,
   contractType: "token-drop" as const,
   schema: DropErc20ContractSchema,
@@ -240,18 +216,18 @@ export const TokenDrop = {
     ...[network, address, storage, options]: InitalizeParams
   ) => {
     const [abi, contract] = await Promise.all([
-      TokenDrop.getAbi(),
+      TokenDropInitializer.getAbi(),
       import("./prebuilt-implementations/token-drop"),
     ]);
 
-    return new contract.TokenDropImpl(network, address, storage, options, abi);
+    return new contract.TokenDrop(network, address, storage, options, abi);
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC20.json"))
       .default,
 };
 
-export const Token = {
+export const TokenInitializer = {
   name: "TokenERC20" as const,
   contractType: "token" as const,
   schema: TokenErc20ContractSchema,
@@ -260,18 +236,18 @@ export const Token = {
     ...[network, address, storage, options]: InitalizeParams
   ) => {
     const [abi, contract] = await Promise.all([
-      Token.getAbi(),
+      TokenInitializer.getAbi(),
       import("./prebuilt-implementations/token"),
     ]);
 
-    return new contract.TokenImpl(network, address, storage, options, abi);
+    return new contract.Token(network, address, storage, options, abi);
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/TokenERC20.json"))
       .default,
 };
 
-export const Vote = {
+export const VoteInitializer = {
   name: "VoteERC20" as const,
   contractType: "vote" as const,
   schema: VoteContractSchema,
@@ -281,11 +257,11 @@ export const Vote = {
     ...[network, address, storage, options]: InitalizeParams
   ) => {
     const [abi, contract] = await Promise.all([
-      Vote.getAbi(),
+      VoteInitializer.getAbi(),
       import("./prebuilt-implementations/vote"),
     ]);
 
-    return new contract.VoteImpl(network, address, storage, options, abi);
+    return new contract.Vote(network, address, storage, options, abi);
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/VoteERC20.json"))
@@ -297,18 +273,18 @@ export const Vote = {
  * @internal
  */
 export const PREBUILT_CONTRACTS_MAP = {
-  [EditionDrop.contractType]: EditionDrop,
-  [Edition.contractType]: Edition,
-  [Marketplace.contractType]: Marketplace,
-  [Multiwrap.contractType]: Multiwrap,
-  [NFTCollection.contractType]: NFTCollection,
-  [NFTDrop.contractType]: NFTDrop,
-  [Pack.contractType]: Pack,
-  [SignatureDrop.contractType]: SignatureDrop,
-  [Split.contractType]: Split,
-  [TokenDrop.contractType]: TokenDrop,
-  [Token.contractType]: Token,
-  [Vote.contractType]: Vote,
+  [EditionDropInitializer.contractType]: EditionDropInitializer,
+  [EditionInitializer.contractType]: EditionInitializer,
+  [MarketplaceInitializer.contractType]: MarketplaceInitializer,
+  [MultiwrapInitializer.contractType]: MultiwrapInitializer,
+  [NFTCollectionInitializer.contractType]: NFTCollectionInitializer,
+  [NFTDropInitializer.contractType]: NFTDropInitializer,
+  [PackInitializer.contractType]: PackInitializer,
+  [SignatureDropInitializer.contractType]: SignatureDropInitializer,
+  [SplitInitializer.contractType]: SplitInitializer,
+  [TokenDropInitializer.contractType]: TokenDropInitializer,
+  [TokenInitializer.contractType]: TokenInitializer,
+  [VoteInitializer.contractType]: VoteInitializer,
 } as const;
 
 const SmartContract = {

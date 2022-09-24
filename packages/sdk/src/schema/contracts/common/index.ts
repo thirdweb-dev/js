@@ -1,5 +1,8 @@
-import { AddressSchema, BasisPointsSchema } from "../../shared";
-import { FileOrBufferOrStringSchema, JsonSchema } from "@thirdweb-dev/storage";
+import {
+  AddressSchema,
+  BasisPointsSchema,
+  FileOrBufferOrStringSchema,
+} from "../../shared";
 import { constants } from "ethers";
 import { z } from "zod";
 
@@ -20,7 +23,7 @@ export type CommonContractSchemaInput = z.input<typeof CommonContractSchema>;
  */
 export const CommonContractOutputSchema = CommonContractSchema.extend({
   image: z.string().optional(),
-}).catchall(z.lazy(() => JsonSchema));
+}).catchall(z.unknown());
 
 /**
  * @internal

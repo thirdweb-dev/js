@@ -38,10 +38,7 @@ import {
 import { UploadProgressEvent } from "../../types/events";
 import type { DropERC721 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC721.json";
-import {
-  TokensClaimedEvent,
-  TokensLazyMintedEvent,
-} from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
+import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
@@ -65,7 +62,7 @@ import {
  *
  * @public
  */
-export class NFTDropImpl extends StandardErc721<DropERC721> {
+export class NFTDrop extends StandardErc721<DropERC721> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
   public abi: typeof ABI;
@@ -78,10 +75,7 @@ export class NFTDropImpl extends StandardErc721<DropERC721> {
   public sales: ContractPrimarySale<DropERC721>;
   public platformFees: ContractPlatformFee<DropERC721>;
   public events: ContractEvents<DropERC721>;
-  public roles: ContractRoles<
-    DropERC721,
-    typeof NFTDropImpl.contractRoles[number]
-  >;
+  public roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
   /**
    * @internal
    */
@@ -191,10 +185,7 @@ export class NFTDropImpl extends StandardErc721<DropERC721> {
       DropErc721ContractSchema,
       this.storage,
     );
-    this.roles = new ContractRoles(
-      this.contractWrapper,
-      NFTDropImpl.contractRoles,
-    );
+    this.roles = new ContractRoles(this.contractWrapper, NFTDrop.contractRoles);
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);
     this.claimConditions = new DropClaimConditions(

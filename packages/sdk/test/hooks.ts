@@ -2,20 +2,20 @@ import {
   CONTRACTS_MAP,
   ContractType,
   DEFAULT_IPFS_GATEWAY,
-  Edition,
-  EditionDrop,
+  EditionDropInitializer,
+  EditionInitializer,
   getNativeTokenByChainId,
-  Marketplace,
-  Multiwrap,
-  NFTCollection,
-  NFTDrop,
-  Pack,
-  SignatureDrop,
-  Split,
+  MarketplaceInitializer,
+  MultiwrapInitializer,
+  NFTCollectionInitializer,
+  NFTDropInitializer,
+  PackInitializer,
+  SignatureDropInitializer,
+  SplitInitializer,
   ThirdwebSDK,
-  Token,
-  TokenDrop,
-  Vote,
+  TokenDropInitializer,
+  TokenInitializer,
+  VoteInitializer,
 } from "../src";
 import { ChainId } from "../src/constants/chains";
 import { MockStorage } from "./mock/MockStorage";
@@ -136,13 +136,13 @@ export const mochaHooks = {
       contractType: ContractType,
     ): Promise<ethers.Contract> {
       switch (contractType) {
-        case Marketplace.contractType:
-        case Multiwrap.contractType:
+        case MarketplaceInitializer.contractType:
+        case MultiwrapInitializer.contractType:
           const nativeTokenWrapperAddress = getNativeTokenByChainId(
             ChainId.Hardhat,
           ).wrapped.address;
           return await contractFactory.deploy(nativeTokenWrapperAddress);
-        case Pack.contractType:
+        case PackInitializer.contractType:
           const addr = getNativeTokenByChainId(ChainId.Hardhat).wrapped.address;
           return await contractFactory.deploy(addr, trustedForwarderAddress);
         default:
@@ -156,40 +156,40 @@ export const mochaHooks = {
       }
       let factory;
       switch (contractType) {
-        case Token.contractType:
+        case TokenInitializer.contractType:
           factory = TokenERC20__factory;
           break;
-        case TokenDrop.contractType:
+        case TokenDropInitializer.contractType:
           factory = DropERC20__factory;
           break;
-        case NFTCollection.contractType:
+        case NFTCollectionInitializer.contractType:
           factory = TokenERC721__factory;
           break;
-        case NFTDrop.contractType:
+        case NFTDropInitializer.contractType:
           factory = DropERC721__factory;
           break;
-        case SignatureDrop.contractType:
+        case SignatureDropInitializer.contractType:
           factory = SignatureDrop__factory;
           break;
-        case Edition.contractType:
+        case EditionInitializer.contractType:
           factory = TokenERC1155__factory;
           break;
-        case EditionDrop.contractType:
+        case EditionDropInitializer.contractType:
           factory = DropERC1155__factory;
           break;
-        case Split.contractType:
+        case SplitInitializer.contractType:
           factory = Split__factory;
           break;
-        case Vote.contractType:
+        case VoteInitializer.contractType:
           factory = VoteERC20__factory;
           break;
-        case Marketplace.contractType:
+        case MarketplaceInitializer.contractType:
           factory = Marketplace__factory;
           break;
-        case Pack.contractType:
+        case PackInitializer.contractType:
           factory = Pack__factory;
           break;
-        case Multiwrap.contractType:
+        case MultiwrapInitializer.contractType:
           factory = Multiwrap__factory;
           break;
         default:

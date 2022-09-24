@@ -6,20 +6,20 @@ import {
   NATIVE_TOKEN_ADDRESS,
 } from "../constants";
 import {
-  Edition,
-  EditionDrop,
+  EditionDropInitializer,
+  EditionInitializer,
   getContractTypeForRemoteName,
-  Marketplace,
-  Multiwrap,
-  NFTCollection,
-  NFTDrop,
-  Pack,
+  MarketplaceInitializer,
+  MultiwrapInitializer,
+  NFTCollectionInitializer,
+  NFTDropInitializer,
+  PackInitializer,
   PREBUILT_CONTRACTS_MAP,
-  SignatureDrop,
-  Split,
-  Token,
-  TokenDrop,
-  Vote,
+  SignatureDropInitializer,
+  SplitInitializer,
+  TokenDropInitializer,
+  TokenInitializer,
+  VoteInitializer,
 } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
 import { SDKOptions } from "../schema/sdk-options";
@@ -171,7 +171,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getNFTDrop(contractAddress: string) {
-    return await this.getBuiltInContract(contractAddress, NFTDrop.contractType);
+    return await this.getBuiltInContract(
+      contractAddress,
+      NFTDropInitializer.contractType,
+    );
   }
 
   /**
@@ -182,7 +185,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public async getSignatureDrop(contractAddress: string) {
     return await this.getBuiltInContract(
       contractAddress,
-      SignatureDrop.contractType,
+      SignatureDropInitializer.contractType,
     );
   }
 
@@ -192,7 +195,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getNFTCollection(address: string) {
-    return await this.getBuiltInContract(address, NFTCollection.contractType);
+    return await this.getBuiltInContract(
+      address,
+      NFTCollectionInitializer.contractType,
+    );
   }
 
   /**
@@ -201,7 +207,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getEditionDrop(address: string) {
-    return await this.getBuiltInContract(address, EditionDrop.contractType);
+    return await this.getBuiltInContract(
+      address,
+      EditionDropInitializer.contractType,
+    );
   }
 
   /**
@@ -210,7 +219,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getEdition(address: string) {
-    return await this.getBuiltInContract(address, Edition.contractType);
+    return await this.getBuiltInContract(
+      address,
+      EditionInitializer.contractType,
+    );
   }
 
   /**
@@ -219,7 +231,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getTokenDrop(address: string) {
-    return await this.getBuiltInContract(address, TokenDrop.contractType);
+    return await this.getBuiltInContract(
+      address,
+      TokenDropInitializer.contractType,
+    );
   }
 
   /**
@@ -228,7 +243,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getToken(address: string) {
-    return await this.getBuiltInContract(address, Token.contractType);
+    return await this.getBuiltInContract(
+      address,
+      TokenInitializer.contractType,
+    );
   }
 
   /**
@@ -237,7 +255,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getVote(address: string) {
-    return await this.getBuiltInContract(address, Vote.contractType);
+    return await this.getBuiltInContract(address, VoteInitializer.contractType);
   }
 
   /**
@@ -246,7 +264,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getSplit(address: string) {
-    return await this.getBuiltInContract(address, Split.contractType);
+    return await this.getBuiltInContract(
+      address,
+      SplitInitializer.contractType,
+    );
   }
 
   /**
@@ -255,7 +276,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getMarketplace(address: string) {
-    return await this.getBuiltInContract(address, Marketplace.contractType);
+    return await this.getBuiltInContract(
+      address,
+      MarketplaceInitializer.contractType,
+    );
   }
 
   /**
@@ -264,7 +288,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @returns the contract
    */
   public async getPack(address: string) {
-    return await this.getBuiltInContract(address, Pack.contractType);
+    return await this.getBuiltInContract(address, PackInitializer.contractType);
   }
 
   /**
@@ -274,7 +298,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @beta
    */
   public async getMultiwrap(address: string) {
-    return await this.getBuiltInContract(address, Multiwrap.contractType);
+    return await this.getBuiltInContract(
+      address,
+      MultiwrapInitializer.contractType,
+    );
   }
 
   /**

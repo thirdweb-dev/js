@@ -1,5 +1,31 @@
 # @thirdweb-dev/storage
 
+## 1.0.3
+
+### Patch Changes
+
+- [#192](https://github.com/thirdweb-dev/js/pull/192) [`24f66e3`](https://github.com/thirdweb-dev/js/commit/24f66e38c256f7bd69341b92ba30bd35d14b1caa) Thanks [@adam-maj](https://github.com/adam-maj)! - Use XHR for upload
+
+## 1.0.2
+
+### Patch Changes
+
+- [#190](https://github.com/thirdweb-dev/js/pull/190) [`493ebf0`](https://github.com/thirdweb-dev/js/commit/493ebf032e82a66006b3d5b68f8eeff1973fc97a) Thanks [@adam-maj](https://github.com/adam-maj)! - Return URIs with gateway URLs
+
+- [#163](https://github.com/thirdweb-dev/js/pull/163) [`b54f95d`](https://github.com/thirdweb-dev/js/commit/b54f95dc906928ff2f9251748f254a16fe1f2cee) Thanks [@adam-maj](https://github.com/adam-maj)! - Use independent JSON types by package
+
+- [#156](https://github.com/thirdweb-dev/js/pull/156) [`cfe8bba`](https://github.com/thirdweb-dev/js/commit/cfe8bbafa464a9e768e6d31fbd9dd9760fdced16) Thanks [@adam-maj](https://github.com/adam-maj)! - Add resolveScheme method to storage
+
+- [#180](https://github.com/thirdweb-dev/js/pull/180) [`f4074dd`](https://github.com/thirdweb-dev/js/commit/f4074ddadc9fb6e18dcc9251a936376c3f4a9144) Thanks [@adam-maj](https://github.com/adam-maj)! - Replace schemes after files are uploaded
+
+- [#189](https://github.com/thirdweb-dev/js/pull/189) [`d608cea`](https://github.com/thirdweb-dev/js/commit/d608cea1977dd418b6892c1c9368b06b17a9748b) Thanks [@adam-maj](https://github.com/adam-maj)! - Pass through options
+
+- [#183](https://github.com/thirdweb-dev/js/pull/183) [`3580182`](https://github.com/thirdweb-dev/js/commit/3580182fa903ed7a661444f0daa160c330e62ec5) Thanks [@jnsdls](https://github.com/jnsdls)! - allow uploading of the same file with the same file name
+
+- [#185](https://github.com/thirdweb-dev/js/pull/185) [`0ccbca7`](https://github.com/thirdweb-dev/js/commit/0ccbca78dce38926ccfd5c902c06adff2f440f42) Thanks [@jnsdls](https://github.com/jnsdls)! - url encode filenames
+
+- [#178](https://github.com/thirdweb-dev/js/pull/178) [`45a400f`](https://github.com/thirdweb-dev/js/commit/45a400fd9287582bfb5f21ab2cb2d7a4332434c5) Thanks [@adam-maj](https://github.com/adam-maj)! - Update API for instantiating storage
+
 ## 1.0.1
 
 ### Patch Changes
