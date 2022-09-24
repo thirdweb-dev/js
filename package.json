@@ -26,7 +26,8 @@
     "version-packages": "changeset version",
     "release": "node ./scripts/pre-release.mjs && changeset publish",
     "version-packages:nightly": "changeset version --snapshot nightly",
-    "release:nightly": "node ./scripts/pre-release.mjs && changeset publish --tag nightly"
+    "release:nightly": "node ./scripts/pre-release.mjs && changeset publish --tag nightly",
+    "push": "turbo run push"
   },
   "preconstruct": {
     "packages": [
@@ -47,5 +48,8 @@
   },
   "manypkg": {
     "defaultBranch": "main"
+  },
+  "devDependencies": {
+    "yalc": "^1.0.0-pre.53"
   }
 }

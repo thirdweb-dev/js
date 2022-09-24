@@ -223,7 +223,7 @@ export function useTotalCount<TContract extends NFTContract>(
  */
 export function useTotalCirculatingSupply(
   contract: RequiredParam<NFTContract>,
-  tokenId: BigNumberish,
+  tokenId: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
   const { erc721, erc1155 } = getErcs(contract);
@@ -238,6 +238,7 @@ export function useTotalCirculatingSupply(
           erc1155.totalCirculatingSupply,
           "Contract instance does not support totalCirculatingSupply",
         );
+        invariant(tokenId, "No tokenId provided");
         return await erc1155.totalCirculatingSupply(tokenId);
       }
       if (erc721) {
@@ -250,7 +251,7 @@ export function useTotalCirculatingSupply(
       invariant(false, "Unknown NFT type");
     },
     {
-      enabled: !!erc721 || !!erc1155,
+      enabled: !!erc721 || (!!erc1155 && tokenId !== undefined),
     },
   );
 }
