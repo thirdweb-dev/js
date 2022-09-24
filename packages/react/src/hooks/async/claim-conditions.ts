@@ -83,7 +83,7 @@ export function useActiveClaimCondition(
       if (erc20) {
         return erc20.claimConditions.getActive();
       }
-      return undefined;
+      throw new Error("Contract must be ERC721, ERC1155 or ERC20");
     },
     {
       // Checks that happen here:
@@ -136,7 +136,7 @@ export function useClaimConditions(
       if (erc20) {
         return erc20.claimConditions.getAll();
       }
-      return undefined;
+      throw new Error("Contract must be ERC721, ERC1155 or ERC20");
     },
     {
       // Checks that happen here:
@@ -207,7 +207,7 @@ export function useClaimIneligibilityReasons(
           params.walletAddress,
         );
       }
-      return undefined;
+      throw new Error("Contract must be ERC721, ERC1155 or ERC20");
     },
     {
       // Checks that happen here:
@@ -284,7 +284,7 @@ export function useSetClaimConditions(
       if (erc20) {
         return erc20.claimConditions.set(phases, reset);
       }
-      return undefined;
+      throw new Error("Contract must be ERC721, ERC1155 or ERC20");
     },
     {
       onSettled: () => {
@@ -374,7 +374,7 @@ export function useResetClaimConditions(
           true,
         );
       }
-      return undefined;
+      throw new Error("Contract must be ERC721, ERC1155 or ERC20");
     },
     {
       onSettled: () => {
