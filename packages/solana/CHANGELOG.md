@@ -1,5 +1,18 @@
 # @thirdweb-dev/solana
 
+## 0.2.15
+
+### Patch Changes
+
+- [#199](https://github.com/thirdweb-dev/js/pull/199) [`5f5ab01`](https://github.com/thirdweb-dev/js/commit/5f5ab015e1dd3c471d6affe995ef36ec88932b3c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix getting wallet balance
+
+## 0.2.14
+
+### Patch Changes
+
+- Updated dependencies [[`24f66e3`](https://github.com/thirdweb-dev/js/commit/24f66e38c256f7bd69341b92ba30bd35d14b1caa)]:
+  - @thirdweb-dev/storage@1.0.3
+
 ## 0.2.13
 
 ### Patch Changes

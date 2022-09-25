@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/solana",
-  "version": "0.2.13",
+  "version": "0.2.15",
   "description": "thirdweb Solana SDK",
   "main": "dist/thirdweb-dev-solana.cjs.js",
   "module": "dist/thirdweb-dev-solana.esm.js",
@@ -18,7 +18,8 @@
     "node:stop": "amman stop",
     "test:all": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000 --parallel './test/**/*.test.ts'",
     "test": "make test",
-    "test:single": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000"
+    "test:single": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000",
+    "push": "yalc push"
   },
   "files": [
     "dist/",

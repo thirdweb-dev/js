@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react",
-  "version": "3.0.5",
+  "version": "3.0.7",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -8,9 +8,15 @@
   "types": "dist/thirdweb-dev-react.cjs.d.ts",
   "module": "dist/thirdweb-dev-react.esm.js",
   "files": [
-    "dist/**/*",
-    "patches/**/*"
+    "dist/",
+    "solana/"
   ],
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts",
+      "solana/index.ts"
+    ]
+  },
   "private": false,
   "scripts": {
     "format": "prettier --write 'src/**/*'",
@@ -22,7 +28,8 @@
     "generate-snippets": "node ./scripts/generate-snippets.mjs && node ./scripts/generate-feature-snippets.mjs",
     "build": "tsc && preconstruct build",
     "e2e": "yarn test-ct",
-    "test-ct": "playwright test -c playwright-ct.config.ts"
+    "test-ct": "playwright test -c playwright-ct.config.ts",
+    "push": "yalc push"
   },
   "sideEffects:": false,
   "devDependencies": {
@@ -36,6 +43,10 @@
     "@playwright/experimental-ct-react": "1.25.1",
     "@playwright/test": "1.25.1",
     "@preconstruct/cli": "^2.2.1",
+    "@solana/wallet-adapter-base": "^0.9.17",
+    "@solana/wallet-adapter-react": "^0.15.19",
+    "@solana/wallet-adapter-wallets": "^0.19.0",
+    "@solana/web3.js": "^1.63.0",
     "@thirdweb-dev/sdk": "*",
     "@types/color": "^3.0.3",
     "@types/mime": "^3.0.1",
@@ -75,7 +86,12 @@
     "wagmi": "^0.2.28"
   },
   "peerDependencies": {
+    "@solana/wallet-adapter-base": "^0.9.17",
+    "@solana/wallet-adapter-react": "^0.15.19",
+    "@solana/wallet-adapter-wallets": "^0.19.0",
+    "@solana/web3.js": "^1.63.0",
     "@thirdweb-dev/sdk": "*",
+    "@thirdweb-dev/solana": "*",
     "ethers": ">=5.5.1",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
@@ -83,5 +99,22 @@
   "resolutions": {
     "ansi-regex": "^6.0.1",
     "typescript": "^4.6.2"
+  },
+  "peerDependenciesMeta": {
+    "@solana/wallet-adapter-base": {
+      "optional": true
+    },
+    "@solana/wallet-adapter-react": {
+      "optional": true
+    },
+    "@solana/wallet-adapter-wallets": {
+      "optional": true
+    },
+    "@solana/web3.js": {
+      "optional": true
+    },
+    "@thirdweb-dev/solana": {
+      "optional": true
+    }
   }
 }
