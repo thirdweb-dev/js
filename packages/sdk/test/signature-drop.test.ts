@@ -631,9 +631,14 @@ describe("Signature drop tests", async () => {
       }
       await signatureDropContract.createBatch(metadatas);
       const all = await signatureDropContract.getAll();
+      let owned = await signatureDropContract.getOwned();
       expect(all.length).to.eq(100);
+      expect(owned.length).to.eq(0);
       await signatureDropContract.claimConditions.set([{}]);
       await signatureDropContract.claim(1);
+      owned = await signatureDropContract.getOwned();
+      expect(owned.length).to.eq(1);
+      expect(owned[0].owner).to.eq(adminWallet.address);
       const claimed = await signatureDropContract.totalClaimedSupply();
       const unclaimed = await signatureDropContract.totalUnclaimedSupply();
       expect(claimed.toNumber()).to.eq(1);

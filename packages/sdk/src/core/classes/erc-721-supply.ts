@@ -11,7 +11,7 @@ import type {
   IERC721Enumerable,
   IERC721Supply,
 } from "@thirdweb-dev/contracts-js";
-import { BigNumber } from "ethers";
+import { BigNumber, constants } from "ethers";
 
 /**
  * List ERC721 NFTs
@@ -64,6 +64,23 @@ export class Erc721Supply implements DetectableFeature {
     return await Promise.all(
       [...Array(maxId - start).keys()].map((i) =>
         this.erc721.get((start + i).toString()),
+      ),
+    );
+  }
+
+  /**
+   * Return all the owners of each token id in this contract
+   * @returns
+   */
+  public async allOwners() {
+    return Promise.all(
+      [...new Array((await this.totalCount()).toNumber()).keys()].map(
+        async (i) => ({
+          tokenId: i,
+          owner: await this.erc721
+            .ownerOf(i)
+            .catch(() => constants.AddressZero),
+        }),
       ),
     );
   }
