@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 3.0.7
+
+### Patch Changes
+
+- [#199](https://github.com/thirdweb-dev/js/pull/199) [`5f5ab01`](https://github.com/thirdweb-dev/js/commit/5f5ab015e1dd3c471d6affe995ef36ec88932b3c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix getOwned for signature drop
+
 ## 3.0.6
 
 ### Patch Changes
