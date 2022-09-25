@@ -1,4 +1,5 @@
 import { ListingNotFoundError } from "../../common";
+import { mapOffer } from "../../common/marketplace";
 import { getRoleHash } from "../../common/role";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
@@ -20,6 +21,7 @@ import { AuctionListing, DirectListing, Offer } from "../../types/marketplace";
 import { MarketplaceFilter } from "../../types/marketplace/MarketPlaceFilter";
 import type { Marketplace as MarketplaceContract } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Marketplace.json";
+import { NewOfferEventObject } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 import invariant from "tiny-invariant";
@@ -306,26 +308,31 @@ export class Marketplace implements UpdateableNetwork {
    * const firstOffer = offers[0];
    * ```
    *
-   * @param listingId - the id of the listing to fetch offers for 
+   * @param listingId - the id of the listing to fetch offers for
    */
-   public async getOffers(
-    listingId: BigNumberish,
-  ): Promise<Offer[]> {
+  public async getOffers(listingId: BigNumberish): Promise<Offer[]> {
     // get all new offer events from this contract
-    const events = await this.events.getEvents("NewOffer");
+    const events = await this.events.getEvents<NewOfferEventObject>("NewOffer");
     // get only the events for this listing id
     const listingEvents = events.filter((e) => e.data.listingId.eq(listingId));
     // derive the offers from the events
-    const offers = listingEvents.map((e): Offer  => {
-      return {
-        listingId: e.data.listingId,
-        buyerAddress: e.data.offeror,
-        quantityDesired: e.data.quantityWanted,
-        pricePerToken: (e.data.totalOfferAmount).div(e.data.quantityWanted),
-        currencyValue: e.data.totalOfferAmount,
-        currencyContractAddress: e.data.currency,
-      };
-    });
+    const offers = await Promise.all(
+      listingEvents.map(async (e): Promise<Offer> => {
+        const offer = await mapOffer(
+          this.contractWrapper.getProvider(),
+          BigNumber.from(listingId),
+          {
+            quantityWanted: e.data.quantityWanted,
+            pricePerToken: e.data.totalOfferAmount.div(e.data.quantityWanted),
+            currencyContractAddres: e.data.currency,
+            buyerAddress: e.data.offeror,
+            currency: e.data.currency,
+            listingId: e.data.listingId,
+          },
+        );
+        return offer;
+      }),
+    );
     return offers;
   }
 
