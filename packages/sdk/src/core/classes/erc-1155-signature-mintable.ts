@@ -63,10 +63,9 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    *
    * // now anyone can mint the NFT
    * const tx = contract.signature.mint(signedPayload);
-   * const receipt = tx.receipt; // the mint transaction receipt
-   * const mintedId = tx.id; // the id of the NFT minted
    * ```
    * @param signedPayload - the previously generated payload and signature with {@link Erc1155SignatureMintable.generate}
+   * @twfeature ERC1155SignatureMintable
    */
   public async mint(
     signedPayload: SignedPayload1155,
@@ -104,6 +103,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * Mint any number of dynamically generated NFT at once
    * @remarks Mint multiple dynamic NFTs in one transaction. Note that this is only possible for free mints (cannot batch mints with a price attached to it for security reasons)
    * @param signedPayloads - the array of signed payloads to mint
+   * @twfeature ERC1155SignatureMintable
    */
   public async mintBatch(
     signedPayloads: SignedPayload1155[],
@@ -148,6 +148,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
   /**
    * Verify that a payload is correctly signed
    * @param signedPayload - the payload to verify
+   * @twfeature ERC1155SignatureMintable
    */
   public async verify(signedPayload: SignedPayload1155): Promise<boolean> {
     const mintRequest = signedPayload.payload;
@@ -191,6 +192,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * ```
    * @param payloadToSign - the payload to sign
    * @returns the signed payload and the corresponding signature
+   * @twfeature ERC1155SignatureMintable
    */
   public async generate(
     payloadToSign: PayloadToSign1155,
@@ -235,6 +237,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * ```
    * @param payloadToSign - the payload to sign
    * @returns the signed payload and the corresponding signature
+   * @twfeature ERC1155SignatureMintable
    */
   public async generateFromTokenId(
     payloadToSign: PayloadToSign1155WithTokenId,
@@ -250,6 +253,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    *
    * @param payloadsToSign - the payloads to sign
    * @returns an array of payloads and signatures
+   * @twfeature ERC1155SignatureMintable
    */
   public async generateBatch(
     payloadsToSign: PayloadToSign1155[],
@@ -268,6 +272,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    *
    * @param payloadsToSign - the payloads to sign with tokenIds specified
    * @returns an array of payloads and signatures
+   * @twfeature ERC1155SignatureMintable
    */
   public async generateBatchFromTokenIds(
     payloadsToSign: PayloadToSign1155WithTokenId[],

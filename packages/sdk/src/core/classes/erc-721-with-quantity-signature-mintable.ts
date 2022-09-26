@@ -60,6 +60,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    * const mintedId = tx.id; // the id of the NFT minted
    * ```
    * @param signedPayload - the previously generated payload and signature with {@link Erc721WithQuantitySignatureMintable.generate}
+   * @twfeature ERC721SignatureMint
    */
   public async mint(
     signedPayload: SignedPayload721WithQuantitySignature,
@@ -111,6 +112,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    * Mint any number of dynamically generated NFT at once
    * @remarks Mint multiple dynamic NFTs in one transaction. Note that this is only possible for free mints (cannot batch mints with a price attached to it for security reasons)
    * @param signedPayloads - the array of signed payloads to mint
+   * @twfeature ERC721SignatureMint
    */
   public async mintBatch(
     signedPayloads: SignedPayload721WithQuantitySignature[],
@@ -174,6 +176,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   /**
    * Verify that a payload is correctly signed
    * @param signedPayload - the payload to verify
+   * @twfeature ERC721SignatureMint
    */
   public async verify(
     signedPayload: SignedPayload721WithQuantitySignature,
@@ -232,6 +235,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    * ```
    * @param mintRequest - the payload to sign
    * @returns the signed payload and the corresponding signature
+   * @twfeature ERC721SignatureMint
    */
   public async generate(
     mintRequest: PayloadToSign721withQuantity,
@@ -246,6 +250,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    *
    * @param payloadsToSign - the payloads to sign
    * @returns an array of payloads and signatures
+   * @twfeature ERC721SignatureMint
    */
   public async generateBatch(
     payloadsToSign: PayloadToSign721withQuantity[],
