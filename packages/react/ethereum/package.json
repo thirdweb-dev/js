@@ -1,4 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-react-ethereum.cjs.js",
-  "module": "dist/thirdweb-dev-react-ethereum.esm.js"
-}
