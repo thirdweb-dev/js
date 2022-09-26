@@ -450,6 +450,11 @@ export class ContractWrapper<
       gas = BigNumber.from(500000);
     }
 
+    // check for gas override in callOverrides
+    if(BigNumber.from(callOverrides?.gasLimit).gt(gas)) {
+      gas = BigNumber.from(callOverrides?.gasLimit);
+    }
+
     const tx: GaslessTransaction = {
       from,
       to,
