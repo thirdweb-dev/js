@@ -1,15 +1,7 @@
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { FEATURE_TOKEN_SIGNATURE_MINTABLE } from "../../constants/erc20-features";
 import type { TokenInitializer } from "../../contracts";
-import {
-  FilledSignaturePayload20,
-  MintRequest20,
-  PayloadToSign20,
-  PayloadWithUri20,
-  Signature20PayloadInput,
-  Signature20PayloadOutput,
-  SignedPayload20,
-} from "../../schema/contracts/common/signature";
+import { FilledSignaturePayload20, MintRequest20, PayloadToSign20, PayloadWithUri20, Signature20PayloadInput, Signature20PayloadOutput, SignedPayload20 } from "../../schema/contracts/common/signature";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractRoles } from "./contract-roles";
@@ -17,6 +9,7 @@ import { ContractWrapper } from "./contract-wrapper";
 import type { ITokenERC20, TokenERC20 } from "@thirdweb-dev/contracts-js";
 import { BigNumber, ethers } from "ethers";
 import invariant from "tiny-invariant";
+
 
 /**
  * Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely
@@ -51,8 +44,6 @@ export class Erc20SignatureMintable implements DetectableFeature {
    *
    * // Use the signed payload to mint the tokens
    * const tx = contract.erc20.signature.mint(signedPayload);
-   * const receipt = tx.receipt; // the mint transaction receipt
-   * const mintedId = tx.id; // the id of the NFT minted
    * ```
    * @param signedPayload - the previously generated payload and signature with {@link Erc20SignatureMintable.generate}
    * @twfeature ERC20SignatureMintable
