@@ -195,19 +195,6 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
     };
   }
 
-  /**
-   * Get current owner of the contract
-   *
-   * @example
-   * ```javascript
-   * const owner = await contract.getOwner();
-   * ```
-   * @returns The owner address.
-   */
-  public async getOwner(): Promise<string> {
-    return this.owner.get();
-  }
-
   /** ******************************
    * WRITE FUNCTIONS
    *******************************/
@@ -398,21 +385,6 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
       }
     }
     return tokens;
-  }
-
-  /**
-   * Set the new owner of the contract
-   * @remarks Can only be called by the current owner.
-   *
-   * @param newOwner - the address of the new owner
-   *
-   * @example
-   * ```javascript
-   * await contract.setOwner(newOwner);
-   * ```
-   */
-  public async setOwner(newOwner: string): Promise<void> {
-    this.owner.set(newOwner);
   }
 
   /**

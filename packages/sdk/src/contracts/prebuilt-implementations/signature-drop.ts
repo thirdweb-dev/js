@@ -356,19 +356,6 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   }
 
   /**
-   * Get current owner of the contract
-   *
-   * @example
-   * ```javascript
-   * const owner = await contract.getOwner();
-   * ```
-   * @returns The owner address.
-   */
-  public async getOwner(): Promise<string> {
-    return this.owner.get();
-  }
-
-  /**
    * Get whether users can transfer NFTs from this contract
    */
   public async isTransferRestricted(): Promise<boolean> {
@@ -491,21 +478,6 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    */
   public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
     return this.erc721.burn(tokenId);
-  }
-
-  /**
-   * Set the new owner of the contract
-   * @remarks Can only be called by the current owner.
-   *
-   * @param newOwner - the address of the new owner
-   *
-   * @example
-   * ```javascript
-   * await contract.setOwner(newOwner);
-   * ```
-   */
-  public async setOwner(newOwner: string): Promise<void> {
-    this.owner.set(newOwner);
   }
 
   /**

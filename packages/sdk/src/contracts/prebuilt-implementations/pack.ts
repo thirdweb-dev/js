@@ -299,19 +299,6 @@ export class Pack extends StandardErc1155<PackContract> {
     };
   }
 
-  /**
-   * Get current owner of the contract
-   *
-   * @example
-   * ```javascript
-   * const owner = await contract.getOwner();
-   * ```
-   * @returns The owner address.
-   */
-  public async getOwner(): Promise<string> {
-    return this.owner.get();
-  }
-
   /** ******************************
    * WRITE FUNCTIONS
    *******************************/
@@ -607,21 +594,6 @@ export class Pack extends StandardErc1155<PackContract> {
       erc721Rewards,
       erc1155Rewards,
     };
-  }
-
-  /**
-   * Set the new owner of the contract
-   * @remarks Can only be called by the current owner.
-   *
-   * @param newOwner - the address of the new owner
-   *
-   * @example
-   * ```javascript
-   * await contract.setOwner(newOwner);
-   * ```
-   */
-  public async setOwner(newOwner: string): Promise<void> {
-    this.owner.set(newOwner);
   }
 
   /** *****************************

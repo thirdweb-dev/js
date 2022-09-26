@@ -356,19 +356,6 @@ export class NFTDrop extends StandardErc721<DropERC721> {
     return !anyoneCanTransfer;
   }
 
-  /**
-   * Get current owner of the contract
-   *
-   * @example
-   * ```javascript
-   * const owner = await contract.getOwner();
-   * ```
-   * @returns The owner address.
-   */
-  public async getOwner(): Promise<string> {
-    return this.owner.get();
-  }
-
   /** ******************************
    * WRITE FUNCTIONS
    *******************************/
@@ -525,21 +512,6 @@ export class NFTDrop extends StandardErc721<DropERC721> {
    */
   public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
     return this.erc721.burn(tokenId);
-  }
-
-  /**
-   * Set the new owner of the contract
-   * @remarks Can only be called by the current owner.
-   *
-   * @param newOwner - the address of the new owner
-   *
-   * @example
-   * ```javascript
-   * await contract.setOwner(newOwner);
-   * ```
-   */
-  public async setOwner(newOwner: string): Promise<void> {
-    this.owner.set(newOwner);
   }
 
   /******************************
