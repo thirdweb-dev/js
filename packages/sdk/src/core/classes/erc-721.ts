@@ -260,6 +260,15 @@ export class Erc721<
   }
 
   /**
+   * Get All owners of minted NFTs on this contract
+   * @returns an array of token ids and owners
+   * @twfeature ERC721Supply
+   */
+  public async getAllOwners() {
+    return assertEnabled(this.query, FEATURE_NFT_SUPPLY).allOwners();
+  }
+
+  /**
    * Get the number of NFTs minted
    * @remarks This returns the total number of NFTs minted in this contract, **not** the total supply of a given token.
    *
@@ -302,9 +311,13 @@ export class Erc721<
     if (this.query?.owned) {
       return this.query.owned.all(walletAddress);
     } else {
-      const allNFTs = await this.getAll();
-      return (allNFTs || []).filter(
-        ({ owner }) => walletAddress?.toLowerCase() === owner?.toLowerCase(),
+      const address =
+        walletAddress || (await this.contractWrapper.getSignerAddress());
+      const allOwners = await this.getAllOwners();
+      return Promise.all(
+        (allOwners || [])
+          .filter((i) => address?.toLowerCase() === i.owner?.toLowerCase())
+          .map(async (i) => await this.get(i.tokenId)),
       );
     }
   }
@@ -317,12 +330,12 @@ export class Erc721<
     if (this.query?.owned) {
       return this.query.owned.tokenIds(walletAddress);
     } else {
-      const allNFTs = await this.getAll();
-      return (allNFTs || [])
-        .filter(
-          ({ owner }) => walletAddress?.toLowerCase() === owner?.toLowerCase(),
-        )
-        .map(({ metadata: { id } }) => id);
+      const address =
+        walletAddress || (await this.contractWrapper.getSignerAddress());
+      const allOwners = await this.getAllOwners();
+      return (allOwners || [])
+        .filter((i) => address?.toLowerCase() === i.owner?.toLowerCase())
+        .map((i) => BigNumber.from(i.tokenId));
     }
   }
 
@@ -640,11 +653,11 @@ export class Erc721<
    * @remarks Generate dynamic NFTs with your own signature, and let others mint them using that signature.
    * @example
    * ```javascript
-   * // see how to craft a payload to sign in the `contract.signature.generate()` documentation
-   * const signedPayload = contract.signature().generate(payload);
+   * // see how to craft a payload to sign in the `contract.erc721.signature.generate()` documentation
+   * const signedPayload = contract.erc721.signature().generate(payload);
    *
    * // now anyone can mint the NFT
-   * const tx = contract.signature.mint(signedPayload);
+   * const tx = contract.erc721.signature.mint(signedPayload);
    * const receipt = tx.receipt; // the mint transaction receipt
    * const mintedId = tx.id; // the id of the NFT minted
    * ```

@@ -1,5 +1,12 @@
 # thirdweb
 
+## 0.7.18
+
+### Patch Changes
+
+- Updated dependencies [[`5f5ab01`](https://github.com/thirdweb-dev/js/commit/5f5ab015e1dd3c471d6affe995ef36ec88932b3c)]:
+  - @thirdweb-dev/sdk@3.0.7
+
 ## 0.7.17
 
 ### Patch Changes

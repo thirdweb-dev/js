@@ -1,16 +1,17 @@
 import { CurrencyValue, WalletSigner } from "../types/common";
 import { toCurrencyValue } from "../utils/token";
 import {
+  amount,
   guestIdentity,
   isIdentitySigner,
   isKeypairSigner,
   keypairIdentity,
   Metaplex,
   Signer,
-  sol,
+  SOL,
   walletAdapterIdentity,
 } from "@metaplex-foundation/js";
-import { Keypair } from "@solana/web3.js";
+import { Keypair, PublicKey } from "@solana/web3.js";
 import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
 
@@ -84,6 +85,13 @@ export class UserWallet {
   }
 
   /**
+   * Return whether a wallet is connected
+   */
+  public isConnected() {
+    return this.metaplex.identity().publicKey !== PublicKey.default;
+  }
+
+  /**
    * Get the address of the connected wallet
    * @returns the address of the connected wallet
    *
@@ -123,7 +131,7 @@ export class UserWallet {
     const value = await this.metaplex.connection.getBalance(
       this.metaplex.identity().publicKey,
     );
-    return toCurrencyValue(sol(value));
+    return toCurrencyValue(amount(value, SOL));
   }
 
   private connectToMetaplex(signer: WalletSigner) {
