@@ -33,13 +33,10 @@ import { ThirdwebSDK } from "@thirdweb-dev/solana";
 // First, we instantiate the SDK and connect to Solana devnet
 const sdk = ThirdwebSDK.fromNetwork("devnet");
 
-// Next, we pass in a signer to the SDK (you can generate this or use your own)
-// If you want to generate this, you can use Kepair.generate() from @solana/web3.js
-const signer = {
-  publicKey: "...",
-  secretKey: "...",
-};
-sdk.wallet.connect(signer);
+// Next, we pass in a keypair to the SDK (you can generate this or use your own)
+// You can also generate one, using Kepair.generate() from @solana/web3.js
+const keypair = Keypair.fromSecretKey(...)
+sdk.wallet.connect(keypair);
 
 // Finally, we can deploy a new NFT Collection program
 const address = await sdk.deployer.createNftCollection({

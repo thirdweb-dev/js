@@ -473,7 +473,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         );
         return this.getContractFromAbi(address, metadata.abi);
       } catch (e) {
-        throw new Error(`Error fetching ABI for this contract\n\n${err}`);
+        throw new Error(`Error fetching ABI for this contract\n\n${e}`);
       }
     }
   }
