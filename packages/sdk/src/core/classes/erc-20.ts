@@ -554,8 +554,8 @@ export class Erc20<
    * @remarks Generate dynamic tokens with your own signature, and let others mint them using that signature.
    * @example
    * ```javascript
-   * // see how to craft a payload to sign in the `contract.signature.generate()` documentation
-   * const signedPayload = contract.signature().generate(payload);
+   * // see how to craft a payload to sign in the `contract.erc20.signature.generate()` documentation
+   * const signedPayload = contract.erc20.signature().generate(payload);
    *
    * // now the payload can be used to mint tokens
    * const tx = contract.erc20.signature.mint(signedPayload);

@@ -52,10 +52,10 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    * @example
    * ```javascript
    * // see how to craft a payload to sign in the `generate()` documentation
-   * const signedPayload = contract.signature.generate(payload);
+   * const signedPayload = contract.erc721.signature.generate(payload);
    *
    * // now anyone can mint the NFT
-   * const tx = contract.signature.mint(signedPayload);
+   * const tx = contract.erc721.signature.mint(signedPayload);
    * const receipt = tx.receipt; // the mint transaction receipt
    * const mintedId = tx.id; // the id of the NFT minted
    * ```
@@ -230,8 +230,8 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    *   primarySaleRecipient: "0x...", // custom sale recipient for this NFT
    * };
    *
-   * const signedPayload = contract.signature.generate(payload);
-   * // now anyone can use these to mint the NFT using `contract.signature.mint(signedPayload)`
+   * const signedPayload = contract.erc721.signature.generate(payload);
+   * // now anyone can use these to mint the NFT using `contract.erc721.signature.mint(signedPayload)`
    * ```
    * @param mintRequest - the payload to sign
    * @returns the signed payload and the corresponding signature

@@ -40,12 +40,10 @@ export class Erc20SignatureMintable implements DetectableFeature {
    * @example
    * ```javascript
    * // see how to craft a payload to sign in the `generate()` documentation
-   * const signedPayload = contract.signature.generate(payload);
+   * const signedPayload = contract.erc20.signature.generate(payload);
    *
    * // Use the signed payload to mint the tokens
-   * const tx = contract.signature.mint(signedPayload);
-   * const receipt = tx.receipt; // the mint transaction receipt
-   * const mintedId = tx.id; // the id of the NFT minted
+   * const tx = contract.erc20.signature.mint(signedPayload);
    * ```
    * @param signedPayload - the previously generated payload and signature with {@link Erc20SignatureMintable.generate}
    * @twfeature ERC20SignatureMintable
@@ -141,8 +139,8 @@ export class Erc20SignatureMintable implements DetectableFeature {
    *   primarySaleRecipient: "0x...", // custom sale recipient for this token mint
    * };
    *
-   * const signedPayload = contract.signature.generate(payload);
-   * // now anyone can use these to mint the NFT using `contract.signature.mint(signedPayload)`
+   * const signedPayload = contract.erc20.signature.generate(payload);
+   * // now anyone can use these to mint the NFT using `contract.erc20.signature.mint(signedPayload)`
    * ```
    * @param mintRequest - the payload to sign
    * @returns the signed payload and the corresponding signature
