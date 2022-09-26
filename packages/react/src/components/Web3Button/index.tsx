@@ -69,6 +69,7 @@ export const Web3Button = <TAction extends ActionFn>({
   className,
   ...themeProps
 }: PropsWithChildren<Web3ButtonProps<TAction>>) => {
+  console.log("Hello jarrod");
   const address = useAddress();
   const walletChainId = useChainId();
   const sdkChainId = useSDKChainId();
