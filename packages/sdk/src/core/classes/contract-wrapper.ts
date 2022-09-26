@@ -451,7 +451,10 @@ export class ContractWrapper<
     }
 
     // check for gas override in callOverrides
-    if (BigNumber.from(callOverrides?.gasLimit).gt(gas)) {
+    if (
+      callOverrides.gasLimit &&
+      BigNumber.from(callOverrides?.gasLimit).gt(gas)
+    ) {
       gas = BigNumber.from(callOverrides?.gasLimit);
     }
 
