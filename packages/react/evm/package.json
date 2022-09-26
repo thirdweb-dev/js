@@ -1,0 +1,4 @@
+{
+  "main": "dist/thirdweb-dev-react-evm.cjs.js",
+  "module": "dist/thirdweb-dev-react-evm.esm.js"
+}
