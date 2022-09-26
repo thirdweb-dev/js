@@ -1,7 +1,15 @@
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { FEATURE_TOKEN_SIGNATURE_MINTABLE } from "../../constants/erc20-features";
 import type { TokenInitializer } from "../../contracts";
-import { FilledSignaturePayload20, MintRequest20, PayloadToSign20, PayloadWithUri20, Signature20PayloadInput, Signature20PayloadOutput, SignedPayload20 } from "../../schema/contracts/common/signature";
+import {
+  FilledSignaturePayload20,
+  MintRequest20,
+  PayloadToSign20,
+  PayloadWithUri20,
+  Signature20PayloadInput,
+  Signature20PayloadOutput,
+  SignedPayload20,
+} from "../../schema/contracts/common/signature";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractRoles } from "./contract-roles";
@@ -9,7 +17,6 @@ import { ContractWrapper } from "./contract-wrapper";
 import type { ITokenERC20, TokenERC20 } from "@thirdweb-dev/contracts-js";
 import { BigNumber, ethers } from "ethers";
 import invariant from "tiny-invariant";
-
 
 /**
  * Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely
@@ -40,10 +47,10 @@ export class Erc20SignatureMintable implements DetectableFeature {
    * @example
    * ```javascript
    * // see how to craft a payload to sign in the `generate()` documentation
-   * const signedPayload = contract.signature.generate(payload);
+   * const signedPayload = contract.erc20.signature.generate(payload);
    *
    * // Use the signed payload to mint the tokens
-   * const tx = contract.signature.mint(signedPayload);
+   * const tx = contract.erc20.signature.mint(signedPayload);
    * const receipt = tx.receipt; // the mint transaction receipt
    * const mintedId = tx.id; // the id of the NFT minted
    * ```
@@ -141,8 +148,8 @@ export class Erc20SignatureMintable implements DetectableFeature {
    *   primarySaleRecipient: "0x...", // custom sale recipient for this token mint
    * };
    *
-   * const signedPayload = contract.signature.generate(payload);
-   * // now anyone can use these to mint the NFT using `contract.signature.mint(signedPayload)`
+   * const signedPayload = contract.erc20.signature.generate(payload);
+   * // now anyone can use these to mint the NFT using `contract.erc20.signature.mint(signedPayload)`
    * ```
    * @param mintRequest - the payload to sign
    * @returns the signed payload and the corresponding signature

@@ -59,10 +59,10 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * @example
    * ```javascript
    * // see how to craft a payload to sign in the `generate()` documentation
-   * const signedPayload = contract.signature.generate(payload);
+   * const signedPayload = contract.erc1155.signature.generate(payload);
    *
    * // now anyone can mint the NFT
-   * const tx = contract.signature.mint(signedPayload);
+   * const tx = contract.erc1155.signature.mint(signedPayload);
    * ```
    * @param signedPayload - the previously generated payload and signature with {@link Erc1155SignatureMintable.generate}
    * @twfeature ERC1155SignatureMintable
@@ -102,6 +102,16 @@ export class Erc1155SignatureMintable implements DetectableFeature {
   /**
    * Mint any number of dynamically generated NFT at once
    * @remarks Mint multiple dynamic NFTs in one transaction. Note that this is only possible for free mints (cannot batch mints with a price attached to it for security reasons)
+   *
+   * @example
+   * ```javascript
+   * // see how to craft a batch of payloads to sign in the `generateBatch()` documentation
+   * const signedPayloads = contract.erc1155.signature.generateBatch(payloads);
+   *
+   * // now anyone can mint the NFT
+   * const tx = contract.erc1155.signature.mintBatch(signedPayloads);
+   * ```
+   *
    * @param signedPayloads - the array of signed payloads to mint
    * @twfeature ERC1155SignatureMintable
    */
@@ -187,8 +197,8 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    *   primarySaleRecipient: "0x...", // custom sale recipient for this NFT
    * };
    *
-   * const signedPayload = contract.signature.generate(payload);
-   * // now anyone can use these to mint the NFT using `contract.signature.mint(signedPayload)`
+   * const signedPayload = contract.erc1155.signature.generate(payload);
+   * // now anyone can use these to mint the NFT using `contract.erc1155.signature.mint(signedPayload)`
    * ```
    * @param payloadToSign - the payload to sign
    * @returns the signed payload and the corresponding signature
@@ -232,8 +242,8 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    *   primarySaleRecipient: "0x...", // custom sale recipient for this NFT
    * };
    *
-   * const signedPayload = contract.signature.generate(payload);
-   * // now anyone can use these to mint the NFT using `contract.signature.mint(signedPayload)`
+   * const signedPayload = contract.erc1155.signature.generate(payload);
+   * // now anyone can use these to mint the NFT using `contract.erc1155.signature.mint(signedPayload)`
    * ```
    * @param payloadToSign - the payload to sign
    * @returns the signed payload and the corresponding signature
