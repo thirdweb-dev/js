@@ -2,7 +2,7 @@
 
 You can find a full video tutorial on how to contribute to thirdweb below:
 
-https://www.youtube.com/embed/TXsQ3qok3B0
+https://www.youtube.com/watch?v=TXsQ3qok3B0
 
 ## Getting Started
 
