@@ -9,14 +9,14 @@
   "module": "dist/thirdweb-dev-react.esm.js",
   "files": [
     "dist/",
-    "evm/",
+    "ethereum/",
     "solana/"
   ],
   "preconstruct": {
     "entrypoints": [
       "index.ts",
       "solana/index.ts",
-      "evm/index.ts"
+      "ethereum/index.ts"
     ]
   },
   "private": false,
