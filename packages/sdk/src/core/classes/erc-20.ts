@@ -551,16 +551,14 @@ export class Erc20<
 
   /**
    * Signature Minting
-   * @remarks Generate dynamic NFTs with your own signature, and let others mint them using that signature.
+   * @remarks Generate dynamic tokens with your own signature, and let others mint them using that signature.
    * @example
    * ```javascript
    * // see how to craft a payload to sign in the `contract.signature.generate()` documentation
    * const signedPayload = contract.signature().generate(payload);
    *
-   * // now anyone can mint the NFT
+   * // now the payload can be used to mint tokens
    * const tx = contract.erc20.signature.mint(signedPayload);
-   * const receipt = tx.receipt; // the mint transaction receipt
-   * const mintedId = tx.id; // the id of the NFT minted
    * ```
    * @twfeature ERC20SignatureMintable
    */
