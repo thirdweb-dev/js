@@ -1,5 +1,9 @@
 # Contributing to thirdweb
 
+You can find a full video tutorial on how to contribute to thirdweb below:
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/TXsQ3qok3B0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 ## Getting Started
 
 To get started, read the [How this repo works](#how-this-repo-works) section below to learn about the structure of this repo.
@@ -16,7 +20,7 @@ If you have any questions about the issue, feel free to ask on our [Discord serv
 
 We use [Turborepo](https://turborepo.org/docs/getting-started) to manage the monorepo, and help speed up the [CI/CD](https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment) pipeline to ship to production faster 🚢.
 
-You can see a quick outline of each of the projects within this repo below, which each live within the [/packages](/packages) directory:
+You can see a quick outline of each of the projects within this repo below, each living within the [/packages](/packages) directory:
 
 | Package                        | Description                                                          | Latest Version                                                                                                                                                                   |
 | ------------------------------ | -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -58,75 +62,75 @@ To begin:
 
 Now you have got the repo on your local machine, and you're ready to start making your changes!
 
+### Test Your Changes
+
+We use [yalc](https://github.com/wclr/yalc) to test changes locally.
+
+Install the yalc CLI globally:
+
+```bash
+yarn global add yalc
+```
+
+First, create a test project where you can experiment with your changes:
+
+You can create a basic starter project with the `sdk` and `react` packages installed using the CLI:
+
+```bash
+npx thirdweb create --app
+```
+
+Use `yalc` to link your local changes in the monorepo to the test project, by running the following command from your test repo:
+
+```bash
+yalc add @thirdweb-dev/react # Link the react package
+yalc add @thirdweb-dev/sdk # Link the sdk package
+# etc...
+```
+
+From the monorepo, run the following command to publish your local changes to the test project:
+
+```bash
+yarn push
+```
+
+Now, each time you make a change to the monorepo, you can run `yarn push` to publish your changes to the test project.
+
+In your test project, you need to:
+
+1. Delete the dependencies cache. If you're using Next.js, that is the `.next` directory, and if you're using CRA, that is the `node_modules/.cache` directory.
+2. Restart the development server.
+
 <br/>
 
 ### Publish Your Changes
 
+Once you're satisfied with your changes, you are ready to submit them for review!
+
 1. Use [changeset](https://github.com/changesets/changesets) to generate a changeset file:
 
-   ```
-   yarn changeset
-   ```
+```
+yarn changeset
+```
 
-   We follow [semantic versioning](https://semver.org/) for generating versioned releases of our packages (i.e. version = `MAJOR.MINOR.PATCH`)
+We follow [semantic versioning](https://semver.org/) for generating versioned releases of our packages (i.e. version = `MAJOR.MINOR.PATCH`)
 
-   - Update `major` for breaking changes
-   - Update `minor` for new features,
-   - Update `patch` for non-breaking bug fixes, etc)
+- Update `major` for breaking changes
+- Update `minor` for new features,
+- Update `patch` for non-breaking bug fixes, etc)
 
 2. Commit the changeset along with your changes:
 
-   ```
-   git commit -am "My commit message"
-   ```
+```
+git commit -am "My commit message"
+```
 
 3. Push your changes to the SDK:
 
-   ```
-    git push origin MY_BRANCH_NAME
-   ```
+```
+git push origin MY_BRANCH_NAME
+```
 
 4. Create a [pull request](https://www.atlassian.com/git/tutorials/making-a-pull-request) to the `main` branch of the official (not your fork) SDK repo.
 
-   It's helpful to tag PRs with `[SDK]`, `[REACT]`, `[AUTH]`, (the name of the package you're modifying) to indicate the package that you are engaging with.
-
-<br/>
-
-### Testing Your Changes
-
-When you make a pull request, your changes will be tested automatically by our CI/CD pipeline using [GitHub Actions](https://github.com/features/actions).
-
-On your pull request, you can release your changes to a `dev` version by adding a **comment** with the following text:
-
-```
-/release-pr
-```
-
-This comment triggers the `release-pr` GitHub Action that publishes your changes to a `dev` version of the package(s) you are modifying.
-
-Once this is done, you can test your changes by installing the `dev` version of the package(s).
-
-If you don't already have a test project, you can use the [CLI](https://github.com/thirdweb-dev/thirdweb-cli) to create one:
-
-```bash
-npx thirdweb create
-```
-
-Inside your test project, you can install the `dev` version of the package(s) you are modifying.
-
-For example, if you are modifying the `@thirdweb-dev/react` package, you can install the `dev` version of the package by running:
-
-```
-yarn add @thirdweb-dev/sdk@dev
-```
-
-This will install the `dev` version of the `@thirdweb-dev/react` package in your project, as you can see in the `package.json` file:
-
-```diff
-  "dependencies": {
--    "@thirdweb-dev/react": "^2",
-+    "@thirdweb-dev/react": "^2.9.7-dev-b073878",
-   }
-```
-
-You can now test your changes in your test project!
+It's helpful to tag PRs with `[SDK]`, `[REACT]`, `[AUTH]`, (the name of the package you're modifying) to indicate the package that you are engaging with.
