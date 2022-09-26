@@ -7,20 +7,19 @@ import { Heading, Text, TrackedLink } from "tw-components";
 const settingTypeMap = {
   metadata: {
     name: "Contract Metadata",
-    portalLink:
-      "https://portal.thirdweb.com/extensions/features/contractmetadata",
+    portalLink: "https://portal.thirdweb.com/extensions/contractmetadata",
   },
   primarySale: {
     name: "Primary Sales",
-    portalLink: "https://portal.thirdweb.com/extensions/features/primarysale",
+    portalLink: "https://portal.thirdweb.com/extensions/primarysale",
   },
   royalties: {
     name: "Royalties",
-    portalLink: "https://portal.thirdweb.com/extensions/features/royalty",
+    portalLink: "https://portal.thirdweb.com/extensions/royalty",
   },
   platformFee: {
     name: "Platform Fee",
-    portalLink: "https://portal.thirdweb.com/extensions/features/platformfee",
+    portalLink: "https://portal.thirdweb.com/extensions/platformfee",
   },
 } as const;
 
@@ -50,6 +49,8 @@ export const SettingDetectedState: React.FC<SettingDetectedStateProps> = ({
       zIndex={1}
       backdropFilter="blur(4px)"
       placeItems="center"
+      px={{ base: 6, md: 0 }}
+      borderRadius="md"
     >
       {detectedState === "loading" ? (
         <Spinner size="sm" />

@@ -37,7 +37,7 @@ export const ContractPermissionsPage: React.FC<
           <ButtonGroup colorScheme="purple" size="sm" variant="solid">
             <LinkButton
               isExternal
-              href="https://portal.thirdweb.com/extensions/features/permissions#permissions-enumerable"
+              href="https://portal.thirdweb.com/extensions/permissions#permissions-enumerable-contract"
             >
               Permissions Enumerable
             </LinkButton>
