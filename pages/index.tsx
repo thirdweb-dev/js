@@ -48,7 +48,7 @@ import { Card, Heading, LinkButton, Text, TrackedLink } from "tw-components";
 const HomePage: ThirdwebNextPage = () => {
   const trackEvent = useTrack();
 
-  const { onCopy, hasCopied } = useClipboard("npx thirdweb");
+  const { onCopy, hasCopied } = useClipboard("npx thirdweb@latest");
   return (
     <DarkMode>
       <Flex
@@ -144,7 +144,7 @@ const HomePage: ThirdwebNextPage = () => {
                         fontWeight="500"
                         whiteSpace="nowrap"
                       >
-                        $ npx thirdweb
+                        $ npx thirdweb@latest
                       </Text>
                       <IconButton
                         ml="auto"

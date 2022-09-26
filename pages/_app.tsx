@@ -99,7 +99,7 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
         if (process.env.NODE_ENV === "production") {
           (window as any).routeTransitionTimeout = setTimeout(() => {
             (window as any).location = url;
-          }, 350);
+          }, 1000);
         }
         NProgress.start();
       }
