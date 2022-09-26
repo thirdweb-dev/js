@@ -814,7 +814,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
             Select a network to deploy this contract on. We recommend starting
             with a testnet.{" "}
             <TrackedLink
-              href="https://portal.thirdweb.com/guides/which-network-should-you-use"
+              href="https://blog.thirdweb.com/guides/which-network-should-you-use"
               color="primary.600"
               category="deploy"
               label="learn-networks"

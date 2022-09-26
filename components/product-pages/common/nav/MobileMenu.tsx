@@ -49,7 +49,7 @@ export const MobileMenu: React.FC<IconButtonProps> = (props) => {
           </MenuItem>
           <MenuItem
             as={TrackedLink}
-            href="https://portal.thirdweb.com/guides"
+            href="https://blog.thirdweb.com/guides"
             category="topnav"
             label="guides"
             target="_blank"

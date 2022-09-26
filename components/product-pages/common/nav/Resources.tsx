@@ -30,7 +30,7 @@ export const RESOURCES: IResource[] = [
     name: "Guides",
     label: "guides",
     description: "Learn how to build with thirdweb",
-    link: "https://portal.thirdweb.com/guides",
+    link: "https://blog.thirdweb.com/guides",
     icon: require("public/assets/tw-icons/edition.png"),
   },
   {

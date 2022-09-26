@@ -118,7 +118,7 @@ export const AuthenticationCode: React.FC = () => {
           fontSize="20px"
           px={8}
           py={8}
-          href="https://portal.thirdweb.com/building-web3-apps/authenticating-users"
+          href="https://portal.thirdweb.com/auth"
           w={{ base: "full", md: "inherit" }}
         />
       </LightMode>

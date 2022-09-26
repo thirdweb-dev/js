@@ -218,7 +218,7 @@ frameborder="0"
                 <Link
                   isExternal
                   color="blue.500"
-                  href="https://portal.thirdweb.com/guides/setup-gasless-transactions"
+                  href="https://blog.thirdweb.com/guides/setup-gasless-transactions"
                 >
                   Learn more
                 </Link>

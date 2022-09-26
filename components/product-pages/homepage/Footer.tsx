@@ -158,7 +158,7 @@ export const HomepageFooter: React.FC = () => {
 
                   <TrackedLink
                     isExternal
-                    href="https://portal.thirdweb.com/guides"
+                    href="https://blog.thirdweb.com/guides"
                     category="footer"
                     label="guides"
                   >

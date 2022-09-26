@@ -88,7 +88,7 @@ const ContractDeployDetailPage: ThirdwebNextPage = () => {
                       <Box>
                         <Heading size="subtitle.md">
                           <TrackedLink
-                            href="https://portal.thirdweb.com/contracts-sdk"
+                            href="https://portal.thirdweb.com/extensions"
                             category="extensions-deploy"
                             label="header"
                             isExternal
@@ -123,7 +123,7 @@ const ContractDeployDetailPage: ThirdwebNextPage = () => {
             <LinkButton
               variant="outline"
               isExternal
-              href="https://portal.thirdweb.com/contracts-sdk"
+              href="https://portal.thirdweb.com/extensions"
             >
               Learn about thirdweb extensions
             </LinkButton>

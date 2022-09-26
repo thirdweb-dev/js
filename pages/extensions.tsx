@@ -18,7 +18,7 @@ const ContractExtensions: ThirdwebNextPage = () => {
         title="Contract development made simple."
         description="Fast-track your contract development pipeline with our plug-and-play base contracts and extensions."
         buttonText="Get started"
-        buttonLink="https://portal.thirdweb.com/contracts-sdk"
+        buttonLink="https://portal.thirdweb.com/extensions"
         image={require("public/assets/product-pages/extensions/hero.png")}
         gradient="linear-gradient(147.15deg, #410AB6 30.17%, #D45CFF 100.01%)"
       >
