@@ -21,7 +21,7 @@ dispatch(Object.create(null));
 }
 
 
-export const useIsomorphicLayoutEffect = canUseDOM() ? useLayoutEffect : useEffect;
+const useIsomorphicLayoutEffect = canUseDOM() ? useLayoutEffect : useEffect;
 
 
  /**
@@ -39,7 +39,7 @@ export const useIsomorphicLayoutEffect = canUseDOM() ? useLayoutEffect : useEffe
    const forceUpdate = useForceUpdate();
 
 
-   useLayoutEffect(() => {
+   useIsomorphicLayoutEffect(() => {
      // This ref may be null when a hot-loader replaces components on the page
      if (!mountNode.current) {return;}
      // It's possible that the content of the portal has, itself, been portaled.
