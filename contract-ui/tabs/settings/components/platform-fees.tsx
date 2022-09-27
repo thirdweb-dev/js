@@ -59,7 +59,7 @@ export const SettingsPlatformFees = <
   );
 
   return (
-    <Card p={0} position="relative" overflow="hidden">
+    <Card p={0} position="relative">
       <SettingDetectedState type="platformFee" detectedState={detectedState} />
       <Flex
         as="form"

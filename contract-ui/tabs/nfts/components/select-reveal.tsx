@@ -305,17 +305,16 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
                 value={(progress.progress / progress.total) * 100}
               />
             )}
-            <TrackedLink
-              href="https://thirdweb.notion.site/Batch-Upload-Troubleshooting-dbfc0d3afa6e4d1b98b6199b449c1596"
-              mt="24px"
-              isExternal
-              category="batch-upload"
-              label="issues"
-            >
-              <Text size="body.sm">
+            <Text size="body.sm" mt={2}>
+              <TrackedLink
+                href="https://thirdweb.notion.site/Batch-Upload-Troubleshooting-dbfc0d3afa6e4d1b98b6199b449c1596"
+                isExternal
+                category="batch-upload"
+                label="issues"
+              >
                 Experiencing issues uploading your files?
-              </Text>
-            </TrackedLink>
+              </TrackedLink>
+            </Text>
           </Flex>
         ) : selectedReveal === "delayed" ? (
           <>
@@ -496,17 +495,16 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
                     value={(progress.progress / progress.total) * 100}
                   />
                 )}
-                <TrackedLink
-                  href="https://thirdweb.notion.site/Batch-Upload-Troubleshooting-dbfc0d3afa6e4d1b98b6199b449c1596"
-                  mt="24px"
-                  isExternal
-                  category="batch-upload"
-                  label="issues"
-                >
-                  <Text size="body.sm">
+                <Text size="body.sm" mt={2}>
+                  <TrackedLink
+                    href="https://thirdweb.notion.site/Batch-Upload-Troubleshooting-dbfc0d3afa6e4d1b98b6199b449c1596"
+                    isExternal
+                    category="batch-upload"
+                    label="issues"
+                  >
                     Experiencing issues uploading your files?
-                  </Text>
-                </TrackedLink>
+                  </TrackedLink>
+                </Text>
               </Stack>
             </Stack>
           </>
