@@ -36,7 +36,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
  */
 export class Token {
   private connection: Connection;
-  private metaplex: Metaplex;
+  public metaplex: Metaplex;
   private storage: ThirdwebStorage;
   public accountType = "token" as const;
   public publicKey: PublicKey;

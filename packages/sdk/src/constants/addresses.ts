@@ -44,7 +44,7 @@ export const CONTRACT_ADDRESSES: Record<
   [ChainId.Goerli]: {
     openzeppelinForwarder: "0x5001A14CA6163143316a7C614e30e6041033Ac20",
     openzeppelinForwarderEOA: "0xe73c50cB9c5B378627ff625BB6e6725A4A5D65d2",
-    biconomyForwarder: constants.AddressZero,
+    biconomyForwarder: "0xE041608922d06a4F26C0d4c27d8bCD01daf1f792",
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0xB1Bd9d7942A250BA2Dce27DD601F2ED4211A60C4",
@@ -84,7 +84,7 @@ export const CONTRACT_ADDRESSES: Record<
   [ChainId.Fantom]: {
     openzeppelinForwarder: OZ_DEFENDER_FORWARDER_ADDRESS,
     openzeppelinForwarderEOA: "0xb1A2883fc4d287d9cB8Dbb96cFF60C76BEf2D250",
-    biconomyForwarder: constants.AddressZero,
+    biconomyForwarder: "0x64CD353384109423a966dCd3Aa30D884C9b2E057",
     twFactory: "0x97EA0Fcc552D5A8Fb5e9101316AAd0D62Ea0876B",
     twRegistry: TWRegistry_address,
     twBYOCRegistry: constants.AddressZero,
@@ -92,7 +92,7 @@ export const CONTRACT_ADDRESSES: Record<
   [ChainId.FantomTestnet]: {
     openzeppelinForwarder: OZ_DEFENDER_FORWARDER_ADDRESS,
     openzeppelinForwarderEOA: "0x42D3048b595B6e1c28a588d70366CcC2AA4dB47b",
-    biconomyForwarder: constants.AddressZero,
+    biconomyForwarder: "0x69FB8Dca8067A5D38703b9e8b39cf2D51473E4b4",
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
     twBYOCRegistry: "0x3E6eE864f850F5e5A98bc950B68E181Cf4010F23",
@@ -100,7 +100,7 @@ export const CONTRACT_ADDRESSES: Record<
   [ChainId.Arbitrum]: {
     openzeppelinForwarder: OZ_DEFENDER_FORWARDER_ADDRESS,
     openzeppelinForwarderEOA: "0x4f247c69184ad61036EC2Bb3213b69F10FbEDe1F",
-    biconomyForwarder: constants.AddressZero,
+    biconomyForwarder: "0xfe0fa3C06d03bDC7fb49c892BbB39113B534fB57",
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
     twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
     twBYOCRegistry: constants.AddressZero,
@@ -108,7 +108,7 @@ export const CONTRACT_ADDRESSES: Record<
   [ChainId.ArbitrumRinkeby]: {
     openzeppelinForwarder: OZ_DEFENDER_FORWARDER_ADDRESS,
     openzeppelinForwarderEOA: "0xE1eE43D23f247b6A9aF81fcE2766E76709482728",
-    biconomyForwarder: constants.AddressZero,
+    biconomyForwarder: "0x67454E169d613a8e9BA6b06af2D267696EAaAf41",
     twFactory: "0xb0435b47ad26115A39c59735b814f3769F07C2c1",
     twRegistry: "0xcF4c511551aE4dab1F997866FC3900cd2aaeC40D",
     twBYOCRegistry: constants.AddressZero,
@@ -124,7 +124,7 @@ export const CONTRACT_ADDRESSES: Record<
   [ChainId.Optimism]: {
     openzeppelinForwarder: OZ_DEFENDER_FORWARDER_ADDRESS,
     openzeppelinForwarderEOA: "0x7e80648EB2071E26937F9D42A513ccf4815fc702",
-    biconomyForwarder: constants.AddressZero,
+    biconomyForwarder: "0xefba8a2a82ec1fb1273806174f5e28fbb917cf95",
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
     twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
     twBYOCRegistry: constants.AddressZero,
@@ -132,7 +132,7 @@ export const CONTRACT_ADDRESSES: Record<
   [ChainId.OptimismKovan]: {
     openzeppelinForwarder: OZ_DEFENDER_FORWARDER_ADDRESS,
     openzeppelinForwarderEOA: "0xE8dd2Ff0212F86d3197b4AfDC6dAC6ac47eb10aC",
-    biconomyForwarder: constants.AddressZero,
+    biconomyForwarder: "0x9C73373C70F23920EA54F7883dCB1F85b162Df40",
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
     twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
     twBYOCRegistry: constants.AddressZero,
@@ -148,7 +148,7 @@ export const CONTRACT_ADDRESSES: Record<
   [ChainId.BinanceSmartChainMainnet]: {
     openzeppelinForwarder: "0x8cbc8B5d71702032904750A66AEfE8B603eBC538",
     openzeppelinForwarderEOA: "0xE8dd2Ff0212F86d3197b4AfDC6dAC6ac47eb10aC",
-    biconomyForwarder: constants.AddressZero,
+    biconomyForwarder: "0x86C80a8aa58e0A4fa09A69624c31Ab2a6CAD56b8",
     twBYOCRegistry: constants.AddressZero,
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
     twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
@@ -156,7 +156,7 @@ export const CONTRACT_ADDRESSES: Record<
   [ChainId.BinanceSmartChainTestnet]: {
     openzeppelinForwarder: "0x8cbc8B5d71702032904750A66AEfE8B603eBC538",
     openzeppelinForwarderEOA: "0x7e80648EB2071E26937F9D42A513ccf4815fc702",
-    biconomyForwarder: constants.AddressZero,
+    biconomyForwarder: "0x61456BF1715C1415730076BB79ae118E806E74d2",
     twBYOCRegistry: constants.AddressZero,
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
     twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
