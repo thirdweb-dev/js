@@ -30,7 +30,7 @@ describe("Gasless Forwarder", async () => {
     const sdk = new ThirdwebSDK(wallet, {
       gasless: {
         openzeppelin: {
-          relayerUrl: "<Enter URL>",
+          relayerUrl: "",
         },
       },
     });
@@ -41,6 +41,10 @@ describe("Gasless Forwarder", async () => {
     const pack = await sdk.getPack(
       "0x3A85026217Ca7DA710bf42bbD641991632DAB685",
     );
+    await pack.interceptor.overrideNextTransaction(() => ({
+      gasLimit: 1234567,
+    }));
+
     await pack.open(0, 0);
   });
 });
