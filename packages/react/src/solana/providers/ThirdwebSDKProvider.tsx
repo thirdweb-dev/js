@@ -1,6 +1,6 @@
 import type { WalletContextState } from "@solana/wallet-adapter-react";
 import type { Connection } from "@solana/web3.js";
-import { ThirdwebSDK } from "@thirdweb-dev/solana";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
 import {
   createContext,
   FC,
