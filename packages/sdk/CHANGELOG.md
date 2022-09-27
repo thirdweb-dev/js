@@ -1,5 +1,17 @@
 # @thirdweb-dev/sdk
 
+## 3.0.8
+
+### Patch Changes
+
+- [#205](https://github.com/thirdweb-dev/js/pull/205) [`ce05bfd`](https://github.com/thirdweb-dev/js/commit/ce05bfd8615a9c79664856bce53de8b43bed5c87) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix Buffer usage in SDK
+
+## 3.0.7
+
+### Patch Changes
+
+- [#199](https://github.com/thirdweb-dev/js/pull/199) [`5f5ab01`](https://github.com/thirdweb-dev/js/commit/5f5ab015e1dd3c471d6affe995ef36ec88932b3c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix getOwned for signature drop
+
 ## 3.0.6
 
 ### Patch Changes

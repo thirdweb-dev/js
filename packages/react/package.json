@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react",
-  "version": "3.0.6",
+  "version": "3.0.8",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -9,12 +9,14 @@
   "module": "dist/thirdweb-dev-react.esm.js",
   "files": [
     "dist/",
+    "evm/",
     "solana/"
   ],
   "preconstruct": {
     "entrypoints": [
       "index.ts",
-      "solana/index.ts"
+      "solana/index.ts",
+      "evm/index.ts"
     ]
   },
   "private": false,
@@ -48,6 +50,7 @@
     "@solana/wallet-adapter-wallets": "^0.19.0",
     "@solana/web3.js": "^1.63.0",
     "@thirdweb-dev/sdk": "*",
+    "@thirdweb-dev/solana": "*",
     "@types/color": "^3.0.3",
     "@types/mime": "^3.0.1",
     "@types/react": "^18.0.5",

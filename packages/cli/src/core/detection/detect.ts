@@ -5,7 +5,7 @@ import { Detector } from "./detector";
 import FoundryDetector from "./foundry";
 import HardhatDetector from "./hardhat";
 import TruffleDetector from "./truffle";
-import fs, { exists, existsSync } from "fs";
+import fs, { existsSync } from "fs";
 import inquirer from "inquirer";
 import { parse } from "path";
 
