@@ -1,5 +1,5 @@
 ---
-"@thirdweb-dev/react": patch
+"@thirdweb-dev/react": minor
 ---
 
 New @thirdweb-dev/react/solana entrypoint
