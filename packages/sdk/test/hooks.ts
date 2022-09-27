@@ -1,4 +1,5 @@
 import {
+  ChainId,
   CONTRACTS_MAP,
   ContractType,
   DEFAULT_IPFS_GATEWAY,
@@ -17,7 +18,6 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../src";
-import { ChainId } from "../src/constants/chains";
 import { MockStorage } from "./mock/MockStorage";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
