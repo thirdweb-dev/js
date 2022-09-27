@@ -129,7 +129,7 @@ export const NATIVE_TOKENS: Record<
     symbol: "AGOR",
     decimals: 18,
     wrapped: {
-      address: "",
+      address: "0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3",
       name: "Wrapped Ether",
       symbol: "WETH",
     },
@@ -159,7 +159,7 @@ export const NATIVE_TOKENS: Record<
     symbol: "ETH",
     decimals: 18,
     wrapped: {
-      address: "",
+      address: "0x4200000000000000000000000000000000000006",
       name: "Wrapped Ether",
       symbol: "WETH",
     },
