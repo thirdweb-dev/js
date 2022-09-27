@@ -624,16 +624,12 @@ export class NFTDrop extends StandardErc721<DropERC721> {
     };
   }
 
-  /** ******************************
-   * PRIVATE FUNCTIONS
-   *******************************/
-
   /**
    * Returns proofs and the overrides required for the transaction.
    *
    * @returns - `overrides` and `proofs` as an object.
    */
-  private async prepareClaim(
+  public async prepareClaim(
     quantity: BigNumberish,
     checkERC20Allowance: boolean,
   ): Promise<ClaimVerification> {
