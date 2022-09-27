@@ -1,5 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  // no idea why this fixes tests but it does?
-  "files": true
-}
