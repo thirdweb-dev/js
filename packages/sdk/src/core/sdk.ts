@@ -452,7 +452,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @beta
    * @example
    * ```javascript
-   * const contract = sdk.getContract("{{contract_address}}");
+   * const contract = await sdk.getContract("{{contract_address}}");
    * ```
    */
   public async getContract(address: string) {
