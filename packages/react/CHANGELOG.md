@@ -1,5 +1,14 @@
 # @thirdweb-dev/react
 
+## 3.0.8
+
+### Patch Changes
+
+- [#209](https://github.com/thirdweb-dev/js/pull/209) [`1bda83b`](https://github.com/thirdweb-dev/js/commit/1bda83b1142406892acfb64576fce25d2647afa7) Thanks [@jnsdls](https://github.com/jnsdls)! - fix useLayoutEffect during SSR warning
+
+- Updated dependencies [[`ce05bfd`](https://github.com/thirdweb-dev/js/commit/ce05bfd8615a9c79664856bce53de8b43bed5c87)]:
+  - @thirdweb-dev/sdk@3.0.8
+
 ## 3.0.7
 
 ### Patch Changes
