@@ -1,4 +1,4 @@
-import { ThirdwebSDKProvider } from "./ThirdwebSDKProvider";
+import { ThirdwebSDKProvider } from "./base";
 import type { WalletAdapter } from "@solana/wallet-adapter-base";
 import {
   ConnectionProvider,
@@ -36,14 +36,11 @@ const DEFAULT_WALLETS = [new PhantomWalletAdapter()];
  */
 export const ThirdwebProvider: React.FC<
   PropsWithChildren<ThirdwebProviderProps>
-> = ({ endpoint, wallets, autoConnect, children }) => {
+> = ({ endpoint, wallets = DEFAULT_WALLETS, autoConnect = true, children }) => {
   const clusterUrl = getUrlForNetwork(endpoint);
   return (
     <ConnectionProvider endpoint={clusterUrl}>
-      <WalletProvider
-        wallets={wallets || DEFAULT_WALLETS}
-        autoConnect={autoConnect || true}
-      >
+      <WalletProvider wallets={wallets} autoConnect={autoConnect}>
         <ThirdwebWrapperProvider>{children}</ThirdwebWrapperProvider>
       </WalletProvider>
     </ConnectionProvider>

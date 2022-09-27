@@ -1,4 +1,9 @@
 import {
+  QueryClientProviderProps,
+  QueryClientProviderWithDefault,
+} from "../../core/providers/query-client";
+import { ComponentWithChildren } from "../../core/types/component";
+import {
   ThirdwebAuthConfig,
   ThirdwebAuthConfigProvider,
 } from "../contexts/thirdweb-auth";
@@ -7,7 +12,6 @@ import {
   useThirdwebConnectedWalletContext,
 } from "../contexts/thirdweb-wallet";
 import { RequiredParam } from "../types";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   ChainOrRpc,
   SDKOptions,
@@ -28,7 +32,7 @@ interface TWSDKContext {
 
 const ThirdwebSDKContext = createContext<TWSDKContext>({ desiredChainId: -1 });
 
-export interface ThirdwebSDKProviderProps {
+export interface ThirdwebSDKProviderProps extends QueryClientProviderProps {
   desiredChainId: RequiredParam<SUPPORTED_CHAIN_ID>;
   provider: ChainOrRpc | SignerOrProvider;
 
@@ -37,30 +41,23 @@ export interface ThirdwebSDKProviderProps {
   sdkOptions?: SDKOptions;
   storageInterface?: ThirdwebStorage;
   authConfig?: ThirdwebAuthConfig;
-
-  queryClient?: QueryClient;
 }
 
 /**
  *
  * @internal
  */
-export const WrappedThirdwebSDKProvider: React.FC<
-  React.PropsWithChildren<Omit<ThirdwebSDKProviderProps, "signer">>
+export const WrappedThirdwebSDKProvider: ComponentWithChildren<
+  Omit<ThirdwebSDKProviderProps, "signer">
 > = ({
   sdkOptions,
   desiredChainId,
   storageInterface,
   provider,
-
   queryClient,
   authConfig,
   children,
 }) => {
-  const queryClientWithDefault: QueryClient = useMemo(() => {
-    return queryClient ? queryClient : new QueryClient();
-  }, [queryClient]);
-
   const { signer } = useThirdwebConnectedWalletContext();
 
   const sdk = useMemo(() => {
@@ -89,13 +86,13 @@ export const WrappedThirdwebSDKProvider: React.FC<
   );
 
   return (
-    <ThirdwebAuthConfigProvider value={authConfig}>
-      <QueryClientProvider client={queryClientWithDefault}>
+    <QueryClientProviderWithDefault queryClient={queryClient}>
+      <ThirdwebAuthConfigProvider value={authConfig}>
         <ThirdwebSDKContext.Provider value={ctxValue}>
           {children}
         </ThirdwebSDKContext.Provider>
-      </QueryClientProvider>
-    </ThirdwebAuthConfigProvider>
+      </ThirdwebAuthConfigProvider>
+    </QueryClientProviderWithDefault>
   );
 };
 
@@ -108,8 +105,8 @@ export const WrappedThirdwebSDKProvider: React.FC<
  *
  * @public
  */
-export const ThirdwebSDKProvider: React.FC<
-  React.PropsWithChildren<ThirdwebSDKProviderProps>
+export const ThirdwebSDKProvider: ComponentWithChildren<
+  ThirdwebSDKProviderProps
 > = ({ signer, children, ...restProps }) => {
   return (
     <ThirdwebConnectedWalletProvider signer={signer}>
