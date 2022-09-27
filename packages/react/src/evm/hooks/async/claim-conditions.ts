@@ -1,10 +1,6 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { useSDKChainId } from "../../providers/base";
-import {
-  getErcs,
-  DropContract,
-  RequiredParam,
-  WalletAddress,
-} from "../../types";
+import { getErcs, DropContract, WalletAddress } from "../../types";
 import {
   cacheKeys,
   invalidateContractAndBalances,

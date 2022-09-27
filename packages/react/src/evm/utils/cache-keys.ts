@@ -1,5 +1,6 @@
+import { RequiredParam } from "../../core/types/shared";
 import { SupportedChainId } from "../constants/chain";
-import { ContractAddress, RequiredParam, WalletAddress } from "../types";
+import { ContractAddress, WalletAddress } from "../types";
 import { QueryClient, QueryKey } from "@tanstack/react-query";
 import type {
   MarketplaceFilter,
@@ -24,7 +25,7 @@ function enforceCachePrefix(input: QueryKey): QueryKey {
  * @internal
  */
 export function createContractCacheKey(
-  contractAddress: string = constants.AddressZero,
+  contractAddress: string | null = constants.AddressZero,
   input: QueryKey = [],
 ): QueryKey {
   return enforceCachePrefix(["contract", contractAddress, ...input]);

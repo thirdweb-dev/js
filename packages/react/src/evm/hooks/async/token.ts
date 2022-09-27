@@ -1,7 +1,7 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { useSDKChainId } from "../../providers/base";
 import {
   ClaimTokenParams,
-  RequiredParam,
   TokenBurnParams,
   TokenParams,
   WalletAddress,

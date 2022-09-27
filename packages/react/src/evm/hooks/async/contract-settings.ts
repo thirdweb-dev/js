@@ -1,5 +1,6 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { useSDKChainId } from "../../providers/base";
-import { RequiredParam, WalletAddress } from "../../types";
+import { WalletAddress } from "../../types";
 import {
   cacheKeys,
   invalidateContractAndBalances,

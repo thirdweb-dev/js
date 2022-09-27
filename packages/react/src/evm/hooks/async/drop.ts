@@ -1,10 +1,10 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { useSDKChainId } from "../../providers/base";
 import {
   ClaimNFTParams,
   ClaimNFTReturnType,
   DelayedRevealLazyMintInput,
   DropContract,
-  RequiredParam,
   RevealLazyMintInput,
   getErcs,
   NFTContract,
