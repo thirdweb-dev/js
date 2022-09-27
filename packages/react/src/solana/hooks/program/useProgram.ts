@@ -6,14 +6,27 @@ import { RequiredParam } from "../../../core/types/shared";
 import { useSDK } from "../../providers/base";
 import { programAccountTypeQuery } from "./useProgramAccountType";
 import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { ThirdwebSDK } from "@thirdweb-dev/solana";
+import type {
+  NFTCollection,
+  NFTDrop,
+  ThirdwebSDK,
+  Token,
+} from "@thirdweb-dev/solana";
 import invariant from "tiny-invariant";
 
-export function programQuery(
+type ProgramMap = Readonly<{
+  "nft-collection": NFTCollection;
+  "nft-drop": NFTDrop;
+  token: Token;
+}>;
+
+type ProgramType = keyof ProgramMap;
+
+export function programQuery<TProgramType extends ProgramType>(
   queryClient: QueryClient,
   sdk: RequiredParam<ThirdwebSDK>,
   address: RequiredParam<string>,
-  type?: "nft-collection" | "nft-drop" | "token",
+  type?: TProgramType,
 ) {
   const network = sdk?.metaplex.cluster;
   return {
@@ -23,7 +36,7 @@ export function programQuery(
         network || null,
       ),
     ),
-    queryFn: async () => {
+    queryFn: (async () => {
       invariant(sdk, "sdk is required");
       invariant(address, "Address is required");
       // if the type is not passed in explicitly then we'll try to resolve it
@@ -45,7 +58,8 @@ export function programQuery(
         default:
           throw new Error("Unknown account type");
       }
-    },
+      // this is the magic that makes the type inference work
+    }) as () => Promise<ProgramMap[TProgramType]>,
     enabled: !!sdk && !!network && !!address,
     // this cannot change as it is unique by address & network
     cacheTime: Infinity,
@@ -53,9 +67,9 @@ export function programQuery(
   };
 }
 
-export function useProgram(
+export function useProgram<TProgramType extends ProgramType>(
   address: RequiredParam<string>,
-  type?: "nft-collection" | "nft-drop" | "token",
+  type?: TProgramType,
 ) {
   const queryClient = useQueryClient();
   const sdk = useSDK();
