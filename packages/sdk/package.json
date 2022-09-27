@@ -7,8 +7,17 @@
   "main": "dist/thirdweb-dev-sdk.cjs.js",
   "module": "dist/thirdweb-dev-sdk.esm.js",
   "files": [
-    "dist/**/*"
+    "dist/",
+    "evm/",
+    "solana/"
   ],
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts",
+      "evm/index.ts",
+      "solana/index.ts"
+    ]
+  },
   "sideEffects": false,
   "scripts": {
     "format": "prettier --write 'src/**/*'",
