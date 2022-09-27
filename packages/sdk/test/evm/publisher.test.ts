@@ -273,6 +273,42 @@ describe("Publishing", async () => {
     expect(deployedAddr.length).to.be.gt(0);
   });
 
+  it("test proxy deploy", async () => {
+    const realSDK = new ThirdwebSDK(adminWallet);
+    const pub = realSDK.getPublisher();
+    const tx = await pub.publish(
+      "ipfs://QmfGqbJKvrVDhw747YPXKf26GiuXXo4GkwUg3FcjgYzx8r",
+      {
+        version: "0.0.2",
+        isDeployableViaProxy: true,
+        factoryDeploymentData: {
+          implementationInitializerFunction: "initialize",
+          implementationAddresses: {
+            [ChainId.Hardhat]: implementations["nft-collection"] || "",
+          },
+        },
+      },
+    );
+    const contract = await tx.data();
+    expect(contract.id).to.eq("TokenERC721");
+    const deployedAddr = await realSDK.deployer.deployContractFromUri(
+      contract.metadataUri,
+      [
+        adminWallet.address,
+        "test factory",
+        "ffs",
+        "",
+        [],
+        adminWallet.address,
+        adminWallet.address,
+        0,
+        0,
+        adminWallet.address,
+      ],
+    );
+    expect(deployedAddr.length).to.be.gt(0);
+  });
+
   it("SimpleAzuki enumerable", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
