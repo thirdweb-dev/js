@@ -1,5 +1,6 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { useSDKChainId } from "../../providers/base";
-import { BuyNowParams, MakeBidParams, RequiredParam } from "../../types";
+import { BuyNowParams, MakeBidParams } from "../../types";
 import {
   cacheKeys,
   invalidateContractAndBalances,

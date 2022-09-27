@@ -1,6 +1,7 @@
 import { neverPersist } from "../../../core/query-utils/query-key";
+import { RequiredParam } from "../../../core/types/shared";
 import { useSDK, useSDKChainId } from "../../providers/base";
-import { ContractAddress, RequiredParam } from "../../types";
+import { ContractAddress } from "../../types";
 import {
   cacheKeys,
   createCacheKeyWithNetwork,

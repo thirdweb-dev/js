@@ -1,3 +1,4 @@
+import { RequiredParam } from "../core/types/shared";
 import type {
   AirdropInput,
   Amount,
@@ -22,13 +23,6 @@ import type { SignatureDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/
 import type { TokenDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/token-drop";
 import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/smart-contract";
 import type { BigNumberish } from "ethers";
-
-/**
- * Makes a parameter required to be passed, but still allowes it to be undefined.
- *
- * @beta
- */
-export type RequiredParam<T> = T | undefined;
 
 /**
  * A wallet address.

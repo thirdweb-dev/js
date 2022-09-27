@@ -3,6 +3,7 @@ import {
   QueryClientProviderWithDefault,
 } from "../../core/providers/query-client";
 import { ComponentWithChildren } from "../../core/types/component";
+import { RequiredParam } from "../../core/types/shared";
 import {
   ThirdwebAuthConfig,
   ThirdwebAuthConfigProvider,
@@ -11,7 +12,6 @@ import {
   ThirdwebConnectedWalletProvider,
   useThirdwebConnectedWalletContext,
 } from "../contexts/thirdweb-wallet";
-import { RequiredParam } from "../types";
 import {
   ChainOrRpc,
   SDKOptions,
