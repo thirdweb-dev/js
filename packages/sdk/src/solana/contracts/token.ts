@@ -94,7 +94,7 @@ export class Token {
   }
 
   /**
-   * Mints the specified amount of new tokens
+   * Mints the specified amount of new tokens to the connected wallet
    * @param amount - The amount of tokens to mint
    * @returns the transaction result of the mint
    *
@@ -104,6 +104,24 @@ export class Token {
    * ```
    */
   async mint(amount: Amount): Promise<TransactionResult> {
+    return this.mintTo(this.metaplex.identity().publicKey.toBase58(), amount);
+  }
+
+  /**
+   * Mints the specified amount of new tokens to a specific wallet
+   * @param amount - The amount of tokens to mint
+   * @returns the transaction result of the mint
+   *
+   * @example
+   * ```jsx
+   * const address = "{{wallet_address}}"";
+   * const tx = await program.mintTo(address, 1);
+   * ```
+   */
+  async mintTo(
+    receiverAddress: string,
+    amount: Amount,
+  ): Promise<TransactionResult> {
     const amountParsed = AmountSchema.parse(amount);
     const info = await this.getMint();
     const result = await this.metaplex
@@ -111,6 +129,7 @@ export class Token {
       .mint({
         amount: token(amountParsed, info.decimals),
         mintAddress: this.publicKey,
+        toOwner: new PublicKey(receiverAddress),
       })
       .run();
     return {

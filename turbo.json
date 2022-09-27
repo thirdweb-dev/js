@@ -28,17 +28,16 @@
     "test": {
       "outputs": [],
       "inputs": ["src/**", "test/**"],
-      "dependsOn": ["build"]
+      "dependsOn": ["^build"]
     },
     "test:solana": {
       "outputs": [],
-      "inputs": ["src/solana/**", "test/solana/**"],
-      "dependsOn": ["build"]
+      "inputs": ["src/solana/**", "test/solana/**"]
     },
     "test:evm": {
       "outputs": [],
       "inputs": ["src/evm/**", "test/evm/**"],
-      "dependsOn": ["build"]
+      "dependsOn": ["^build"]
     },
     "e2e": {
       "outputs": [],
@@ -46,7 +45,7 @@
       "dependsOn": ["build"]
     },
     "react#e2e": {
-      "inputs": ["src/**", "e2e/**", "playwright/**"],
+      "inputs": ["src/**", "playwright/**"],
       "dependsOn": ["build"]
     },
     "lint": {
