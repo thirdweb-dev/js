@@ -44,7 +44,7 @@ export class ThirdwebSDK {
   }
 
   private connection: Connection;
-  private metaplex: Metaplex;
+  public metaplex: Metaplex;
   private anchorProvider: AnchorProvider;
   private storage: ThirdwebStorage;
 

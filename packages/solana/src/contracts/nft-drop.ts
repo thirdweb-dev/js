@@ -29,7 +29,7 @@ import invariant from "tiny-invariant";
  * @public
  */
 export class NFTDrop {
-  private metaplex: Metaplex;
+  public metaplex: Metaplex;
   private storage: ThirdwebStorage;
   private nft: NFTHelper;
   public accountType = "nft-drop" as const;
