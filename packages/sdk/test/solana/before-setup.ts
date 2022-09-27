@@ -1,8 +1,8 @@
+import { ThirdwebSDK } from "../../src/solana";
 import { MockStorage } from "./mock/MockStorage";
 import { Amman } from "@metaplex-foundation/amman-client";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import { Connection, Keypair } from "@solana/web3.js";
-import { ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
 
 export const createTestSDK = async (
   solsToAirdrop: number = 100,

@@ -1,6 +1,6 @@
+import { Token } from "../../src/solana";
 import { sdk } from "./before-setup";
 import { Keypair } from "@solana/web3.js";
-import { Token } from "@thirdweb-dev/sdk/solana";
 import { expect } from "chai";
 
 describe("Token", async () => {

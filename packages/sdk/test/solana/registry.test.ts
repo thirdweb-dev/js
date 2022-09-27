@@ -1,5 +1,5 @@
+import { ThirdwebSDK } from "../../src/solana";
 import { createTestSDK } from "./before-setup";
-import { ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
 import { expect } from "chai";
 
 describe("Registry", async () => {

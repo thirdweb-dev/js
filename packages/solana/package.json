@@ -11,25 +11,8 @@
     "format": "prettier --write 'src/**/*'",
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
-    "clean": "rm -rf dist/",
-    "build": "tsc && preconstruct build",
-    "generate-docs": "api-extractor run --local && api-documenter markdown -i ./temp -o ./docs",
     "node:start": "DEBUG='amman:(info|error|debug)' amman start",
-    "node:stop": "amman stop",
-    "test:all": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000 --parallel './test/**/*.test.ts'",
-    "test": "make test",
-    "test:single": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --timeout 30000",
-    "push": "yalc push"
-  },
-  "files": [
-    "dist/",
-    "server/"
-  ],
-  "preconstruct": {
-    "entrypoints": [
-      "index.ts",
-      "server/index.ts"
-    ]
+    "node:stop": "amman stop"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.18.10",
@@ -57,18 +40,6 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "@metaplex-foundation/js": "^0.15.0",
-    "@metaplex-foundation/mpl-token-metadata": "^2.2.2",
-    "@project-serum/anchor": "^0.25.0",
-    "@solana/spl-token": "^0.2.0",
-    "@solana/web3.js": "^1.50.1",
-    "@thirdweb-dev/storage": "*",
-    "bn.js": "^5.2.1",
-    "eventemitter3": "^4.0.7",
-    "form-data": "^4.0.0",
-    "formdata-polyfill": "^4.0.10",
-    "tiny-invariant": "^1.2.0",
-    "yaml": "^2.1.1",
-    "zod": "^3.11.6"
+    "@thirdweb-dev/sdk": "*"
   }
 }

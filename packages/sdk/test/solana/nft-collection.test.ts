@@ -1,6 +1,6 @@
+import { NFTCollection } from "../../src/solana";
 import { sdk } from "./before-setup";
 import { Keypair } from "@solana/web3.js";
-import { NFTCollection } from "@thirdweb-dev/sdk/solana";
 import { expect } from "chai";
 
 describe("NFTCollection", async () => {

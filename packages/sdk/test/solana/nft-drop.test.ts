@@ -1,6 +1,6 @@
+import { NFTDrop } from "../../src/solana";
 import { sdk } from "./before-setup";
 import { sol } from "@metaplex-foundation/js";
-import { NFTDrop } from "@thirdweb-dev/sdk/solana";
 import { expect } from "chai";
 
 describe("NFTDrop", async () => {
