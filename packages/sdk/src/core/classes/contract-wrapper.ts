@@ -453,9 +453,9 @@ export class ContractWrapper<
     // check for gas override in callOverrides
     if (
       callOverrides.gasLimit &&
-      BigNumber.from(callOverrides?.gasLimit).gt(gas)
+      BigNumber.from(callOverrides.gasLimit).gt(gas)
     ) {
-      gas = BigNumber.from(callOverrides?.gasLimit);
+      gas = BigNumber.from(callOverrides.gasLimit);
     }
 
     const tx: GaslessTransaction = {
