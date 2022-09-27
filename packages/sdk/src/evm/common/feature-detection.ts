@@ -22,7 +22,7 @@ import {
 } from "../schema/contracts/custom";
 import { ExtensionNotImplementedError } from "./error";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BaseContract, ethers } from "ethers";
+import { BaseContract, BigNumber, ethers } from "ethers";
 import { z } from "zod";
 
 /**
@@ -251,12 +251,30 @@ export async function resolveContractUriFromAddress(
   // EIP-1167 clone proxy - https://eips.ethereum.org/EIPS/eip-1167
   if (bytecode.startsWith("0x363d3d373d3d3d363d")) {
     const implementationAddress = bytecode.slice(22, 62);
-    return resolveContractUriFromAddress(
+    return await resolveContractUriFromAddress(
       `0x${implementationAddress}`,
       provider,
     );
   }
-  // TODO support other types of proxies like erc1967
+  // EIP-1967 proxy storage slots - https://eips.ethereum.org/EIPS/eip-1967
+  try {
+    const proxyStorage = await provider.getStorageAt(
+      address,
+      BigNumber.from(
+        "0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc",
+      ),
+    );
+    const implementationAddress = ethers.utils.hexStripZeros(proxyStorage);
+    if (implementationAddress !== "0x") {
+      return await resolveContractUriFromAddress(
+        implementationAddress,
+        provider,
+      );
+    }
+  } catch (e) {
+    // ignore
+  }
+  // TODO support other types of proxies
   return await extractIPFSHashFromBytecode(bytecode);
 }
 
