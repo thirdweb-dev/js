@@ -67,5 +67,3 @@ The `Web3Button`'s `contract` benefits from these changes as well:
   Claim
 </Web3Button>
 ```
-
-For breaking changes to the underlying TypeScript SDK, see the [SDK migration guide](../sdk/MIGRATION_GUIDE.md).
