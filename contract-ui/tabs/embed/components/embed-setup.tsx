@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
 import { ContractType, ValidContractInstance } from "@thirdweb-dev/sdk";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { FiCopy } from "react-icons/fi";
 import {
   Button,
@@ -30,18 +30,20 @@ interface EmbedSetupProps {
   contractType?: string | null;
 }
 
-const IPFS_URI = "ipfs://Qmd58GBFkctycME4B1s3BRzG4VQJQMCEc4QX9g13VioFYb";
+const IPFS_URI = "ipfs://QmRcP9Q89tCjmumNWSLvLmvKqypimEeWSAKQQSWaDKbHML";
 
 interface IframeSrcOptions {
   rpcUrl: string;
   ipfsGateway: string;
   chainId?: number;
-  tokenId?: number;
-  listingId?: number;
+  tokenId?: string;
+  listingId?: string;
   relayUrl?: string;
   theme?: string;
   primaryColor?: string;
   secondaryColor?: string;
+  biconomyApiKey?: string;
+  biconomyApiId?: string;
 }
 
 const colorOptions = [
@@ -77,6 +79,8 @@ const buildIframeSrc = (
     theme,
     primaryColor,
     secondaryColor,
+    biconomyApiKey,
+    biconomyApiId,
   } = options;
 
   const url = new URL(contractEmbedHash.replace("ipfs://", ipfsGateway));
@@ -96,10 +100,16 @@ const buildIframeSrc = (
   if (relayUrl) {
     url.searchParams.append("relayUrl", relayUrl);
   }
+  if (biconomyApiKey) {
+    url.searchParams.append("biconomyApiKey", biconomyApiKey);
+  }
+  if (biconomyApiId) {
+    url.searchParams.append("biconomyApiId", biconomyApiId);
+  }
   if (theme && theme !== "light") {
     url.searchParams.append("theme", theme);
   }
-  if (primaryColor && primaryColor !== "blue") {
+  if (primaryColor && primaryColor !== "purple") {
     url.searchParams.append("primaryColor", primaryColor);
   }
   if (secondaryColor && secondaryColor !== "orange") {
@@ -112,16 +122,29 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   contract,
   contractType,
 }) => {
-  const [ipfsGateway, setIpfsGateway] = useState(
-    "https://gateway.ipfscdn.io/ipfs/",
-  );
-  const [rpcUrl, setRpcUrl] = useState("");
-  const [relayUrl, setRelayUrl] = useState("");
-  const [tokenId, setTokenId] = useState(0);
-  const [listingId, setListingId] = useState(0);
-  const [theme, setTheme] = useState("light");
-  const [primaryColor, setPrimaryColor] = useState("purple");
-  const [secondaryColor, setSecondaryColor] = useState("orange");
+  const { register, watch } = useForm<{
+    ipfsGateway: string;
+    rpcUrl: string;
+    relayUrl: string;
+    tokenId: string;
+    listingId: string;
+    theme: string;
+    primaryColor: string;
+    secondaryColor: string;
+    biconomyApiKey: string;
+    biconomyApiId: string;
+    gasless: string;
+  }>({
+    defaultValues: {
+      ipfsGateway: "https://gateway.ipfscdn.io/ipfs/",
+      tokenId: "0",
+      listingId: "0",
+      theme: "light",
+      primaryColor: "purple",
+      secondaryColor: "orange",
+    },
+    reValidateMode: "onChange",
+  });
 
   const chainId = useActiveChainId();
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -131,14 +154,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
     contractType as ContractType,
     {
       chainId,
-      ipfsGateway,
-      rpcUrl,
-      tokenId,
-      listingId,
-      relayUrl,
-      theme,
-      primaryColor,
-      secondaryColor,
+      ...watch(),
     },
   );
 
@@ -156,23 +172,17 @@ frameborder="0"
     <Flex gap={8} direction="column">
       <Flex gap={8} direction={{ base: "column", md: "row" }}>
         <Stack as={Card} w={{ base: "100%", md: "50%" }}>
-          <Heading size="title.sm">Configuration</Heading>
+          <Heading size="title.sm" mb={4}>
+            Configuration
+          </Heading>
           <FormControl>
             <FormLabel>IPFS Gateway</FormLabel>
-            <Input
-              type="url"
-              value={ipfsGateway}
-              onChange={(e) => setIpfsGateway(e.target.value)}
-            />
+            <Input type="url" {...register("ipfsGateway")} />
           </FormControl>
           {contractType === "marketplace" ? (
             <FormControl>
               <FormLabel>Listing ID</FormLabel>
-              <Input
-                type="number"
-                value={listingId}
-                onChange={(e) => setListingId(parseInt(e.target.value))}
-              />
+              <Input type="number" {...register("listingId")} />
               <FormHelperText>
                 The listing ID the embed should display
               </FormHelperText>
@@ -181,11 +191,7 @@ frameborder="0"
           {contractType === "edition-drop" ? (
             <FormControl>
               <FormLabel>Token ID</FormLabel>
-              <Input
-                type="number"
-                value={tokenId}
-                onChange={(e) => setTokenId(parseInt(e.target.value))}
-              />
+              <Input type="number" {...register("tokenId")} />
               <FormHelperText>
                 The token ID the embed should display
               </FormHelperText>
@@ -193,11 +199,7 @@ frameborder="0"
           ) : null}
           <FormControl>
             <FormLabel>RPC Url</FormLabel>
-            <Input
-              type="url"
-              value={rpcUrl}
-              onChange={(e) => setRpcUrl(e.target.value)}
-            />
+            <Input type="url" {...register("rpcUrl")} />
             <FormHelperText>
               Provide your own RPC url to use for this embed.
               <strong>(Recommended for production use!)</strong>
@@ -205,16 +207,36 @@ frameborder="0"
           </FormControl>
 
           {contractType === "marketplace" ? null : (
-            <FormControl>
-              <FormLabel>Relayer Url</FormLabel>
-              <Input
-                type="url"
-                value={relayUrl}
-                onChange={(e) => setRelayUrl(e.target.value)}
-              />
+            <FormControl gap={4}>
+              <Heading size="title.sm" my={4}>
+                Gasless
+              </Heading>
+              <Select {...register("gasless")} mb={4}>
+                <option value="false">Disabled</option>
+                <option value="openZeppelin">OpenZeppelin Relayer</option>
+                <option value="biconomy">Biconomy Relayer</option>
+              </Select>
+              {watch("gasless") === "openZeppelin" && (
+                <FormControl>
+                  <FormLabel>OpenZeppelin Relayer URL</FormLabel>
+                  <Input type="url" {...register("relayUrl")} />
+                </FormControl>
+              )}
+              {watch("gasless") === "biconomy" && (
+                <Flex gap={4} flexDir="column">
+                  <FormControl>
+                    <FormLabel>Biconomy API key</FormLabel>
+                    <Input type="url" {...register("biconomyApiKey")} />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Biconomy API ID</FormLabel>
+                    <Input type="url" {...register("biconomyApiId")} />
+                  </FormControl>
+                </Flex>
+              )}
               <FormHelperText>
-                Provide a relayer url to use for this embed. A relayer can be
-                used to make the transaction gas-less for the end user.{" "}
+                A relayer can be used to make the transaction gasless for the
+                end user.{" "}
                 <Link
                   isExternal
                   color="blue.500"
@@ -225,10 +247,12 @@ frameborder="0"
               </FormHelperText>
             </FormControl>
           )}
-          <Heading size="title.sm">Customization</Heading>
           <FormControl>
+            <Heading size="title.sm" my={4}>
+              Customization
+            </Heading>
             <FormLabel>Theme</FormLabel>
-            <Select onChange={(e) => setTheme(e.target.value)} value={theme}>
+            <Select {...register("theme")}>
               <option value="light">Light</option>
               <option value="dark">Dark</option>
               <option value="system">User system</option>
@@ -240,10 +264,7 @@ frameborder="0"
           </FormControl>
           <FormControl>
             <FormLabel>Primary Color</FormLabel>
-            <Select
-              onChange={(e) => setPrimaryColor(e.target.value)}
-              value={primaryColor}
-            >
+            <Select {...register("primaryColor")}>
               {colorOptions.map((color) => (
                 <option key={color} value={color}>
                   {color[0].toUpperCase() + color.substring(1)}
@@ -254,23 +275,22 @@ frameborder="0"
               Used for the main actions button backgrounds.
             </FormHelperText>
           </FormControl>
-          <FormControl>
-            <FormLabel>Secondary Color</FormLabel>
-            <Select
-              onChange={(e) => setSecondaryColor(e.target.value)}
-              value={secondaryColor}
-            >
-              {colorOptions.map((color) => (
-                <option key={color} value={color}>
-                  {color[0].toUpperCase() + color.substring(1)}
-                </option>
-              ))}
-            </Select>
-            <FormHelperText>
-              Use for secondary actions (like when the user is connected to the
-              wrong network)
-            </FormHelperText>
-          </FormControl>
+          {contractType === "marketplace" ? (
+            <FormControl>
+              <FormLabel>Secondary Color</FormLabel>
+              <Select {...register("secondaryColor")}>
+                {colorOptions.map((color) => (
+                  <option key={color} value={color}>
+                    {color[0].toUpperCase() + color.substring(1)}
+                  </option>
+                ))}
+              </Select>
+              <FormHelperText>
+                Use for secondary actions (like when the user is connected to
+                the wrong network)
+              </FormHelperText>
+            </FormControl>
+          ) : null}
         </Stack>
         <Stack as={Card} w={{ base: "100%", md: "50%" }}>
           <Heading size="title.sm">Embed Code</Heading>
@@ -304,7 +324,7 @@ frameborder="0"
           />
         ) : (
           <>
-            {!ipfsGateway && (
+            {!watch("ipfsGateway") && (
               <Alert status="error">
                 <AlertIcon />
                 <AlertTitle mr={2}>Missing IPFS Gateway</AlertTitle>
