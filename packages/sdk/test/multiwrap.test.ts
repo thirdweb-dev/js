@@ -1,12 +1,12 @@
 import {
+  Edition,
   EditionInitializer,
+  Multiwrap,
+  NFTCollection,
   NFTCollectionInitializer,
+  Token,
   TokenInitializer,
 } from "../src";
-import { Edition } from "../src/contracts/prebuilt-implementations/edition";
-import { Multiwrap } from "../src/contracts/prebuilt-implementations/multiwrap";
-import { NFTCollection } from "../src/contracts/prebuilt-implementations/nft-collection";
-import { Token } from "../src/contracts/prebuilt-implementations/token";
 import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";

@@ -1,6 +1,4 @@
-import { TokenInitializer, VoteInitializer } from "../src";
-import { Token } from "../src/contracts/prebuilt-implementations/token";
-import { Vote } from "../src/contracts/prebuilt-implementations/vote";
+import { Token, TokenInitializer, Vote, VoteInitializer } from "../src";
 import { sdk, signers, hardhatEthers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";

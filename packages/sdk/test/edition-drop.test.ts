@@ -1,7 +1,9 @@
-import { TokenInitializer } from "../src";
-import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { EditionDrop } from "../src/contracts/prebuilt-implementations/edition-drop";
-import { ClaimEligibility } from "../src/enums";
+import {
+  ClaimEligibility,
+  EditionDrop,
+  NATIVE_TOKEN_ADDRESS,
+  TokenInitializer,
+} from "../src";
 import { expectError, sdk, signers } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";

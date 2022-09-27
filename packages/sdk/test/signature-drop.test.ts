@@ -1,14 +1,14 @@
 import {
   createSnapshot,
+  NATIVE_TOKEN_ADDRESS,
   NFTMetadataInput,
   PayloadToSign721withQuantity,
+  SignatureDrop,
   SignatureDropInitializer,
+  SignedPayload721WithQuantitySignature,
+  Token,
   TokenInitializer,
 } from "../src";
-import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { SignatureDrop } from "../src/contracts/prebuilt-implementations/signature-drop";
-import { Token } from "../src/contracts/prebuilt-implementations/token";
-import { SignedPayload721WithQuantitySignature } from "../src/schema/contracts/common/signature";
 import { expectError, sdk, signers, storage } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";

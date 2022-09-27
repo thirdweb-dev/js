@@ -1,5 +1,4 @@
-import { EditionInitializer } from "../src";
-import { Edition } from "../src/contracts/prebuilt-implementations/edition";
+import { Edition, EditionInitializer } from "../src";
 import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";

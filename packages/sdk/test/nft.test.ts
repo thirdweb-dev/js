@@ -1,5 +1,8 @@
-import { NFTCollectionInitializer, NFTMetadataInput } from "../src";
-import { NFTCollection } from "../src/contracts/prebuilt-implementations/nft-collection";
+import {
+  NFTCollection,
+  NFTCollectionInitializer,
+  NFTMetadataInput,
+} from "../src";
 import { sdk, signers, storage } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";

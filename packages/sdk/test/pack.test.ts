@@ -1,7 +1,10 @@
-import { EditionInitializer, PackInitializer } from "../src";
-import { Edition } from "../src/contracts/prebuilt-implementations/edition";
-import { Pack } from "../src/contracts/prebuilt-implementations/pack";
-import { EditionMetadataInput } from "../src/schema/tokens/edition";
+import {
+  Edition,
+  EditionInitializer,
+  EditionMetadataInput,
+  Pack,
+  PackInitializer,
+} from "../src";
 import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert } from "chai";

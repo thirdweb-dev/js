@@ -1,10 +1,10 @@
 import {
   ContractEvent,
+  NFTCollection,
   NFTCollectionInitializer,
+  NFTDrop,
   NFTDropInitializer,
 } from "../src";
-import { NFTCollection } from "../src/contracts/prebuilt-implementations/nft-collection";
-import { NFTDrop } from "../src/contracts/prebuilt-implementations/nft-drop";
 import { sdk, signers } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";

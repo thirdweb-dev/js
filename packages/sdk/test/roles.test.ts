@@ -1,5 +1,4 @@
-import { EditionInitializer } from "../src";
-import { Edition } from "../src/contracts/prebuilt-implementations/edition";
+import { Edition, EditionInitializer } from "../src";
 import { sdk, signers } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";

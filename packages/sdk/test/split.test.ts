@@ -1,5 +1,4 @@
-import { SplitInitializer, TokenInitializer } from "../src";
-import { Split } from "../src/contracts/prebuilt-implementations/split";
+import { Split, SplitInitializer, TokenInitializer } from "../src";
 import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";

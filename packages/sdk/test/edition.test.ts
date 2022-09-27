@@ -1,4 +1,4 @@
-import { Edition } from "../src/contracts/prebuilt-implementations/edition";
+import { Edition } from "../src/evm";
 import { expectError, sdk, signers, storage } from "./hooks";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";

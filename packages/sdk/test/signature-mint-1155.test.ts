@@ -1,11 +1,12 @@
-import { EditionInitializer, TokenInitializer } from "../src";
-import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { Edition } from "../src/contracts/prebuilt-implementations/edition";
-import { Token } from "../src/contracts/prebuilt-implementations/token";
 import {
+  Edition,
+  EditionInitializer,
+  NATIVE_TOKEN_ADDRESS,
   PayloadToSign1155,
   SignedPayload1155,
-} from "../src/schema/contracts/common/signature";
+  Token,
+  TokenInitializer,
+} from "../src";
 import { sdk, signers, storage } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";

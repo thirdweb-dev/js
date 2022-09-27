@@ -1,6 +1,9 @@
-import { PayloadToSign20, SignedPayload20 } from "../src";
-import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { Token } from "../src/contracts/prebuilt-implementations/token";
+import {
+  NATIVE_TOKEN_ADDRESS,
+  PayloadToSign20,
+  SignedPayload20,
+  Token,
+} from "../src";
 import { sdk, signers } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";

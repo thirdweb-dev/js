@@ -1,22 +1,22 @@
 import {
-  EditionInitializer,
-  MarketplaceInitializer,
-  NFTCollectionInitializer,
-  TokenInitializer,
-} from "../src";
-import {
   AuctionAlreadyStartedError,
+  AuctionListing,
+  DirectListing,
+  Edition,
+  EditionInitializer,
   ListingNotFoundError,
+  ListingType,
+  Marketplace,
+  MarketplaceInitializer,
+  NATIVE_TOKEN_ADDRESS,
+  NFTCollection,
+  NFTCollectionInitializer,
+  Offer,
+  Token,
+  TokenInitializer,
   WrongListingTypeError,
-} from "../src/common/error";
-import { isWinningBid } from "../src/common/marketplace";
-import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { Edition } from "../src/contracts/prebuilt-implementations/edition";
-import { Marketplace } from "../src/contracts/prebuilt-implementations/marketplace";
-import { NFTCollection } from "../src/contracts/prebuilt-implementations/nft-collection";
-import { Token } from "../src/contracts/prebuilt-implementations/token";
-import { ListingType } from "../src/enums/marketplace";
-import { AuctionListing, DirectListing, Offer } from "../src/types/marketplace";
+} from "../src";
+import { isWinningBid } from "../src/evm/common/marketplace";
 import {
   expectError,
   fastForwardTime,

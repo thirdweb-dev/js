@@ -1,12 +1,12 @@
 import {
+  NATIVE_TOKEN_ADDRESS,
+  NFTCollection,
   NFTCollectionInitializer,
   PayloadToSign721withQuantity,
   SignedPayload721WithQuantitySignature,
+  Token,
   TokenInitializer,
 } from "../src";
-import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
-import { NFTCollection } from "../src/contracts/prebuilt-implementations/nft-collection";
-import { Token } from "../src/contracts/prebuilt-implementations/token";
 import { sdk, signers, storage } from "./hooks";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
