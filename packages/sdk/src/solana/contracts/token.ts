@@ -7,6 +7,7 @@ import {
 import { TokenMetadata } from "../types/nft";
 import { toCurrencyValue } from "../utils/token";
 import {
+  Cluster,
   findMetadataPda,
   Metaplex,
   toBigNumber,
@@ -40,6 +41,9 @@ export class Token {
   private storage: ThirdwebStorage;
   public accountType = "token" as const;
   public publicKey: PublicKey;
+  public get network() {
+    return this.metaplex.cluster;
+  }
 
   constructor(
     tokenMintAddress: string,

@@ -7,7 +7,7 @@ import {
   NFTMetadata,
   NFTMetadataInput,
 } from "../types/nft";
-import { Metaplex } from "@metaplex-foundation/js";
+import { Cluster, Metaplex } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
@@ -35,6 +35,9 @@ export class NFTDrop {
   public accountType = "nft-drop" as const;
   public publicKey: PublicKey;
   public claimConditions: ClaimConditions;
+  public get network() {
+    return this.metaplex.cluster;
+  }
 
   constructor(
     dropMintAddress: string,

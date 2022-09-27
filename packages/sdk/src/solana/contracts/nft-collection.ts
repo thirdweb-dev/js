@@ -10,6 +10,8 @@ import {
   findEditionMarkerPda,
   Metaplex,
   toBigNumber,
+  Cluster,
+  resolveClusterFromConnection,
 } from "@metaplex-foundation/js";
 import {
   EditionMarker,
@@ -40,6 +42,9 @@ export class NFTCollection {
   private nft: NFTHelper;
   public publicKey: PublicKey;
   public accountType = "nft-collection" as const;
+  public get network() {
+    return this.metaplex.cluster;
+  }
 
   constructor(
     collectionMintAddress: string,

@@ -60,6 +60,12 @@ export class ThirdwebSDK {
    * Manage and get info about the connected wallet
    */
   public wallet: UserWallet;
+  /**
+   * The currently connected network
+   */
+  public get network() {
+    return this.metaplex.cluster;
+  }
 
   constructor(
     connection: Connection,

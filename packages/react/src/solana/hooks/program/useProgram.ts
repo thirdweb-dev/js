@@ -11,7 +11,7 @@ import type {
   NFTDrop,
   ThirdwebSDK,
   Token,
-} from "@thirdweb-dev/solana";
+} from "@thirdweb-dev/sdk/solana";
 import invariant from "tiny-invariant";
 
 type ProgramMap = Readonly<{
@@ -28,7 +28,7 @@ export function programQuery<TProgramType extends ProgramType>(
   address: RequiredParam<string>,
   type?: TProgramType,
 ) {
-  const network = sdk?.metaplex.cluster;
+  const network = sdk?.network;
   return {
     queryKey: neverPersist(
       createSOLQueryKeyWithNetwork(
