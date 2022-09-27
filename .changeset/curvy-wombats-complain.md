@@ -1,5 +1,5 @@
 ---
-"@thirdweb-dev/sdk": patch
+"@thirdweb-dev/sdk": minor
 ---
 
 new @thirdweb-dev/sdk/solana entrypoint
