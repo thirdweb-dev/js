@@ -12,7 +12,7 @@ import { Button } from "../shared/Button";
 import { ThemeProvider, ThemeProviderProps } from "../shared/ThemeProvider";
 import { FiWifi } from "@react-icons/all-files/fi/FiWifi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/smart-contract";
+import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/smart-contract";
 import type { CallOverrides } from "ethers";
 import { PropsWithChildren, useMemo } from "react";
 import invariant from "tiny-invariant";

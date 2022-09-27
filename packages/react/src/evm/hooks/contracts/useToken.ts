@@ -1,6 +1,6 @@
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { Token } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/token";
+import { Token } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/token";
 
 /**
  * Hook for getting an instance of a `Token` contract. This contract supports ERC20 compliant tokens.
