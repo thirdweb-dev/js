@@ -39,8 +39,8 @@ import {
   FormHelperText,
   FormLabel,
   Heading,
-  Link,
   Text,
+  TrackedLink,
 } from "tw-components";
 import { shuffleData } from "utils/batch";
 import z from "zod";
@@ -305,15 +305,17 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
                 value={(progress.progress / progress.total) * 100}
               />
             )}
-            <Link
+            <TrackedLink
               href="https://thirdweb.notion.site/Batch-Upload-Troubleshooting-dbfc0d3afa6e4d1b98b6199b449c1596"
               mt="24px"
               isExternal
+              category="batch-upload"
+              label="issues"
             >
               <Text size="body.sm">
                 Experiencing issues uploading your files?
               </Text>
-            </Link>
+            </TrackedLink>
           </Flex>
         ) : selectedReveal === "delayed" ? (
           <>
@@ -494,15 +496,17 @@ export const SelectReveal: React.FC<SelectRevealProps> = ({
                     value={(progress.progress / progress.total) * 100}
                   />
                 )}
-                <Link
+                <TrackedLink
                   href="https://thirdweb.notion.site/Batch-Upload-Troubleshooting-dbfc0d3afa6e4d1b98b6199b449c1596"
                   mt="24px"
                   isExternal
+                  category="batch-upload"
+                  label="issues"
                 >
                   <Text size="body.sm">
                     Experiencing issues uploading your files?
                   </Text>
-                </Link>
+                </TrackedLink>
               </Stack>
             </Stack>
           </>
