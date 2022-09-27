@@ -65,7 +65,9 @@ const ContractDeployDetailPage: ThirdwebNextPage = () => {
                 icon={<Icon boxSize={6} as={FiArrowLeft} />}
               />
             )}
-            <ContractIdImage boxSize={12} contractId={contractId || "custom"} />
+            {contractId && (
+              <ContractIdImage boxSize={12} contractId={contractId} />
+            )}
             <Flex direction="column" gap={1} align="flex-start">
               <Skeleton isLoaded={publishMetadataQuery.isSuccess}>
                 <Heading size="title.md">
