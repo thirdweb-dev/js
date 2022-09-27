@@ -1,3 +1,4 @@
+import { neverPersist } from "../../../core/query-utils/query-key";
 import { useSDK, useSDKChainId } from "../../providers/base";
 import { ContractAddress, RequiredParam } from "../../types";
 import {
@@ -159,11 +160,11 @@ export function useContract<
 
   const contractQuery = useQueryWithNetwork(
     // need to add the wallet and walletChainId into the query key so this gets refreshed when the wallet / chain changes!
-    [
+    neverPersist([
       "contract-instance",
       contractAddress,
       { wallet, walletChainId, sdkTimestamp },
-    ],
+    ]),
     async () => {
       invariant(contractAddress, "contract address is required");
       invariant(sdk, "SDK not initialized");
