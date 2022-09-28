@@ -24,7 +24,8 @@
       "module": "./factories/TWRegistry__factory/dist/thirdweb-dev-contracts-js-factories-TWRegistry__factory.esm.js",
       "default": "./factories/TWRegistry__factory/dist/thirdweb-dev-contracts-js-factories-TWRegistry__factory.cjs.js"
     },
-    "./package.json": "./package.json"
+    "./package.json": "./package.json",
+    "./dist/abis": "./dist/abis"
   },
   "license": "Apache-2.0",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/contracts-js",
@@ -54,7 +55,11 @@
     "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
       "exports": true
     },
-    "exports": true
+    "exports": {
+      "extra": {
+        "./dist/abis": "./dist/abis"
+      }
+    }
   },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
