@@ -18,7 +18,7 @@
       "dependsOn": ["^build"]
     },
     "contracts-js#build": {
-      "cache": false,
+      "inputs": ["package.json", "scripts/**"],
       "outputs": ["dist/**", "src/**", "factories/**"],
       "dependsOn": ["^build"]
     },
