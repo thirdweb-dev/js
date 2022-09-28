@@ -1,4 +1,4 @@
-name: CI
+name: Lint
 
 on:
   push:
@@ -11,11 +11,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: Build and Test
+  lint:
+    name: Lint
     # timeout-minutes: 15
     # try out buildjet to speed up build and test
-    runs-on: buildjet-32vcpu-ubuntu-2204
+    runs-on: ubuntu-latest
     # To use Remote Caching, uncomment the next lines and follow the steps below.
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
@@ -30,8 +30,5 @@ jobs:
       - name: Install
         uses: ./.github/composite-actions/install
 
-      - name: Build
-        run: yarn build
-
-      - name: Test
-        run: yarn test
+      - name: Lint
+        run: yarn lint

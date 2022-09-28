@@ -8,7 +8,6 @@ import {
   NFTMetadataInput,
 } from "../types/nft";
 import {
-  Cluster,
   Metaplex,
   MintCandyMachineOutput,
 } from "@metaplex-foundation/js";

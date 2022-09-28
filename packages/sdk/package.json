@@ -7,10 +7,13 @@
   "main": "dist/thirdweb-dev-sdk.cjs.js",
   "module": "dist/thirdweb-dev-sdk.esm.js",
   "exports": {
-    "./package.json": "./package.json",
     ".": {
       "module": "./dist/thirdweb-dev-sdk.esm.js",
       "default": "./dist/thirdweb-dev-sdk.cjs.js"
+    },
+    "./evm": {
+      "module": "./evm/dist/thirdweb-dev-sdk-evm.esm.js",
+      "default": "./evm/dist/thirdweb-dev-sdk-evm.cjs.js"
     },
     "./solana": {
       "module": "./solana/dist/thirdweb-dev-sdk-solana.esm.js",
@@ -20,10 +23,7 @@
       "module": "./solana/server/dist/thirdweb-dev-sdk-solana-server.esm.js",
       "default": "./solana/server/dist/thirdweb-dev-sdk-solana-server.cjs.js"
     },
-    "./evm": {
-      "module": "./evm/dist/thirdweb-dev-sdk-evm.esm.js",
-      "default": "./evm/dist/thirdweb-dev-sdk-evm.cjs.js"
-    }
+    "./package.json": "./package.json"
   },
   "files": [
     "dist/",
@@ -37,7 +37,11 @@
       "evm/index.ts",
       "solana/index.ts",
       "solana/server/index.ts"
-    ]
+    ],
+    "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
+      "exports": true
+    },
+    "exports": true
   },
   "sideEffects": false,
   "scripts": {
@@ -45,8 +49,10 @@
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
-    "generate-docs": "api-extractor run --local && api-documenter markdown -i ./temp -o ./docs && yarn generate-snippets",
-    "generate-snippets": "node ./scripts/generate-snippets.mjs && node ./scripts/generate-feature-snippets.mjs",
+    "generate-docs": "yarn generate-docs:evm && yarn generate-docs:solana",
+    "generate-docs:evm": "api-extractor run --local --config ./config/api-extractor-evm.json && api-documenter markdown -i ./temp -o ./docs/evm && yarn generate-snippets:evm",
+    "generate-docs:solana": "api-extractor run --local --config ./config/api-extractor-solana.json && api-documenter markdown -i ./temp -o ./docs/solana",
+    "generate-snippets:evm": "node ./scripts/generate-snippets-evm.mjs && node ./scripts/generate-feature-snippets-evm.mjs",
     "build": "tsc && preconstruct build",
     "test:evm:all": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --config './test/evm/.mocharc.json' --timeout 30000 --parallel './test/evm/**/*.test.ts'",
     "test:evm": "make test-evm",
