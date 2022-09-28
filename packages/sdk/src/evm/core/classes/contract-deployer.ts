@@ -39,7 +39,6 @@ import {
 import { ContractFactory } from "./factory";
 import { ContractRegistry } from "./registry";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import { TWProxy__factory } from "@thirdweb-dev/contracts-js/factories/TWProxy__factory";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
@@ -473,6 +472,9 @@ export class ContractDeployer extends RPCConnectionHandler {
     const encodedInitializer = Contract.getInterface(
       implementationAbi,
     ).encodeFunctionData(initializerFunction, initializerArgs);
+    const { TWProxy__factory } = await import(
+      "@thirdweb-dev/contracts-js/factories/TWProxy__factory"
+    );
     return this.deployContractWithAbi(
       TWProxy__factory.abi,
       TWProxy__factory.bytecode,
