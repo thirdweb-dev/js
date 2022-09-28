@@ -28,16 +28,17 @@
     "test": {
       "outputs": [],
       "inputs": ["src/**", "test/**"],
-      "dependsOn": ["^build"]
+      "dependsOn": ["build"]
     },
     "test:solana": {
       "outputs": [],
-      "inputs": ["src/solana/**", "test/solana/**"]
+      "inputs": ["src/solana/**", "test/solana/**"],
+      "dependsOn": ["build"]
     },
     "test:evm": {
       "outputs": [],
       "inputs": ["src/evm/**", "test/evm/**"],
-      "dependsOn": ["^build"]
+      "dependsOn": ["build"]
     },
     "e2e": {
       "outputs": [],
