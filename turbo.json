@@ -18,8 +18,8 @@
       "dependsOn": ["^build"]
     },
     "contracts-js#build": {
-      "inputs": ["package.json", "scripts/**"],
-      "outputs": ["dist/**", "src/**", "factories/**"],
+      "inputs": [],
+      "outputs": ["dist/**", "factories/**"],
       "dependsOn": ["^build"]
     },
     "solana#build": {
