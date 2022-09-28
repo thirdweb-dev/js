@@ -7,6 +7,7 @@ import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractOwner } from "../../core/classes/contract-owner";
 import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
@@ -164,6 +165,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
   public checkout: PaperCheckout<DropERC721>;
 
   public erc721: Erc721<DropERC721>;
+  public owner: ContractOwner<DropERC721>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -205,6 +207,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
       () => this.erc721.nextTokenIdToMint(),
     );
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.owner = new ContractOwner(this.contractWrapper);
 
     this.checkout = new PaperCheckout(this.contractWrapper);
   }

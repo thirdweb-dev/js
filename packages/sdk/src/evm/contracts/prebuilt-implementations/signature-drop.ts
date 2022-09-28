@@ -5,6 +5,7 @@ import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractOwner } from "../../core/classes/contract-owner";
 import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
@@ -60,6 +61,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
 
   public abi: typeof ABI;
   public erc721: Erc721<SignatureDropContract>;
+  public owner: ContractOwner<SignatureDropContract>;
   public encoder: ContractEncoder<SignatureDropContract>;
   public estimator: GasCostEstimator<SignatureDropContract>;
   public metadata: ContractMetadata<
@@ -219,6 +221,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
       this.contractWrapper,
       this.storage,
     );
+    this.owner = new ContractOwner(this.contractWrapper);
 
     this.checkout = new PaperCheckout(this.contractWrapper);
   }

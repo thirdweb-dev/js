@@ -3,6 +3,7 @@ import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractOwner } from "../../core/classes/contract-owner";
 import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
@@ -99,6 +100,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
   public signature: Erc1155SignatureMintable;
   public interceptor: ContractInterceptor<TokenERC1155>;
   public erc1155: Erc1155<TokenERC1155>;
+  public owner: ContractOwner<TokenERC1155>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -134,6 +136,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
       this.roles,
     );
     this.erc1155 = new Erc1155(this.contractWrapper, this.storage);
+    this.owner = new ContractOwner(this.contractWrapper);
   }
 
   /**

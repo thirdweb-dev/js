@@ -8,6 +8,7 @@ import { uploadOrExtractURI } from "../../common/nft";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractOwner } from "../../core/classes/contract-owner";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
@@ -93,6 +94,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
     MultiwrapContract,
     typeof MultiwrapContractSchema
   >;
+  public owner: ContractOwner<MultiwrapContract>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -123,6 +125,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
+    this.owner = new ContractOwner(this.contractWrapper);
   }
 
   /** ******************************
