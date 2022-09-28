@@ -14,8 +14,9 @@ import {
   Program as AnchorProgram,
   setProvider,
 } from "@project-serum/anchor";
-import { Connection } from "@solana/web3.js";
+import { Connection, Keypair } from "@solana/web3.js";
 import { IpfsUploader, ThirdwebStorage } from "@thirdweb-dev/storage";
+import Bs58 from "bs58";
 
 /**
  * The main entry-point for the thirdweb Solana SDK.
@@ -33,6 +34,12 @@ import { IpfsUploader, ThirdwebStorage } from "@thirdweb-dev/storage";
  * @public
  */
 export class ThirdwebSDK {
+  /**
+   * Create a new SDK instance for the specified network
+   * @param network - The network to connect to
+   * @param storage - The storage provider to use or IPFS by default
+   * @returns an SDK instance
+   */
   static fromNetwork(network: Network, storage?: ThirdwebStorage): ThirdwebSDK {
     return new ThirdwebSDK(
       new Connection(getUrlForNetwork(network), {
@@ -41,6 +48,24 @@ export class ThirdwebSDK {
       }),
       storage,
     );
+  }
+
+  /**
+   * reate a new SDK instance connected with the given private key
+   * @param network - The network to connect to
+   * @param privateKey - The private key to use
+   * @param storage - The storage provider to use or IPFS by default
+   * @returns an SDK instance
+   */
+  static fromPrivateKey(
+    network: Network,
+    privateKey: string,
+    storage?: ThirdwebStorage,
+  ): ThirdwebSDK {
+    const sdk = ThirdwebSDK.fromNetwork(network, storage);
+    const keypair = Keypair.fromSecretKey(Bs58.decode(privateKey));
+    sdk.wallet.connect(keypair);
+    return sdk;
   }
 
   private connection: Connection;

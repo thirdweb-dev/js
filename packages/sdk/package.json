@@ -59,10 +59,10 @@
     "push": "yalc push"
   },
   "devDependencies": {
-    "@metaplex-foundation/amman": "^0.10.0",
-    "@metaplex-foundation/amman-client": "^0.2.1",
     "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
     "@gmrchk/cli-testing-library": "^0.1.2",
+    "@metaplex-foundation/amman": "^0.10.0",
+    "@metaplex-foundation/amman-client": "^0.2.1",
     "@microsoft/api-documenter": "^7.19.4",
     "@microsoft/api-extractor": "^7.29.2",
     "@microsoft/tsdoc": "^0.14.1",
@@ -101,7 +101,6 @@
     "ethers": "^5"
   },
   "dependencies": {
-    "bn.js": "^5.2.1",
     "@metaplex-foundation/js": "^0.15.0",
     "@metaplex-foundation/mpl-token-metadata": "^2.2.2",
     "@project-serum/anchor": "^0.25.0",
@@ -109,6 +108,8 @@
     "@solana/web3.js": "^1.50.1",
     "@thirdweb-dev/contracts-js": "*",
     "@thirdweb-dev/storage": "*",
+    "bn.js": "^5.2.1",
+    "bs58": "^5.0.0",
     "cbor-web": "^8.1.0",
     "cross-fetch": "^3.1.5",
     "eventemitter3": "^4.0.7",
