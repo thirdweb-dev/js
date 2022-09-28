@@ -1,5 +1,34 @@
 # @thirdweb-dev/react
 
+## 3.1.1
+
+### Patch Changes
+
+- [#221](https://github.com/thirdweb-dev/js/pull/221) [`c295a47`](https://github.com/thirdweb-dev/js/commit/c295a47144cd722c6f8861c1ec567b53a05ea0bf) Thanks [@jnsdls](https://github.com/jnsdls)! - fix esm exports
+
+## 3.1.0
+
+### Minor Changes
+
+- [#213](https://github.com/thirdweb-dev/js/pull/213) [`e187d21`](https://github.com/thirdweb-dev/js/commit/e187d21e123a506fac0459da18f2d4fc94abae29) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New @thirdweb-dev/react/solana entrypoint
+
+### Patch Changes
+
+- [#208](https://github.com/thirdweb-dev/js/pull/208) [`7c86bab`](https://github.com/thirdweb-dev/js/commit/7c86babb86e02f08a630ed7578036202eb3dbe66) Thanks [@jnsdls](https://github.com/jnsdls)! - add a bunch of initial solana hooks
+
+- [#218](https://github.com/thirdweb-dev/js/pull/218) [`1eaedc2`](https://github.com/thirdweb-dev/js/commit/1eaedc262f0665de2a6a0446402b570371136e05) Thanks [@jnsdls](https://github.com/jnsdls)! - allow both `null` and `undefined` to be passed as a `RequiredParam`
+
+- [#220](https://github.com/thirdweb-dev/js/pull/220) [`37a707f`](https://github.com/thirdweb-dev/js/commit/37a707f98c00140ddedb1d876a4b2f99fe25556a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix chakra zag-menu breaking update
+
+## 3.0.8
+
+### Patch Changes
+
+- [#209](https://github.com/thirdweb-dev/js/pull/209) [`1bda83b`](https://github.com/thirdweb-dev/js/commit/1bda83b1142406892acfb64576fce25d2647afa7) Thanks [@jnsdls](https://github.com/jnsdls)! - fix useLayoutEffect during SSR warning
+
+- Updated dependencies [[`ce05bfd`](https://github.com/thirdweb-dev/js/commit/ce05bfd8615a9c79664856bce53de8b43bed5c87)]:
+  - @thirdweb-dev/sdk@3.0.8
+
 ## 3.0.7
 
 ### Patch Changes

@@ -1,21 +1,42 @@
 {
   "name": "@thirdweb-dev/react",
-  "version": "3.0.7",
+  "version": "3.1.1",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
   "main": "dist/thirdweb-dev-react.cjs.js",
   "types": "dist/thirdweb-dev-react.cjs.d.ts",
   "module": "dist/thirdweb-dev-react.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/thirdweb-dev-react.esm.js",
+      "default": "./dist/thirdweb-dev-react.cjs.js"
+    },
+    "./evm": {
+      "module": "./evm/dist/thirdweb-dev-react-evm.esm.js",
+      "default": "./evm/dist/thirdweb-dev-react-evm.cjs.js"
+    },
+    "./solana": {
+      "module": "./solana/dist/thirdweb-dev-react-solana.esm.js",
+      "default": "./solana/dist/thirdweb-dev-react-solana.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "dist/",
+    "evm/",
     "solana/"
   ],
   "preconstruct": {
     "entrypoints": [
       "index.ts",
-      "solana/index.ts"
-    ]
+      "solana/index.ts",
+      "evm/index.ts"
+    ],
+    "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
+      "exports": true
+    },
+    "exports": true
   },
   "private": false,
   "scripts": {
@@ -48,6 +69,7 @@
     "@solana/wallet-adapter-wallets": "^0.19.0",
     "@solana/web3.js": "^1.63.0",
     "@thirdweb-dev/sdk": "*",
+    "@thirdweb-dev/solana": "*",
     "@types/color": "^3.0.3",
     "@types/mime": "^3.0.1",
     "@types/react": "^18.0.5",
@@ -74,7 +96,7 @@
     "@gnosis.pm/safe-ethers-lib": "1.1.0",
     "@react-icons/all-files": "^4.1.0",
     "@tanstack/react-query": "^4.0.10",
-    "@zag-js/menu": "^0.1.11",
+    "@zag-js/menu": "0.1.14",
     "@zag-js/react": "0.1.16",
     "color": "^4.2.3",
     "copy-to-clipboard": "^3.3.2",
@@ -91,7 +113,6 @@
     "@solana/wallet-adapter-wallets": "^0.19.0",
     "@solana/web3.js": "^1.63.0",
     "@thirdweb-dev/sdk": "*",
-    "@thirdweb-dev/solana": "*",
     "ethers": ">=5.5.1",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"

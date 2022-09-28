@@ -1,20 +1,20 @@
 {
   "name": "@thirdweb-dev/auth",
-  "version": "2.0.7",
+  "version": "2.0.10",
   "exports": {
-    "./package.json": "./package.json",
+    "./next": {
+      "module": "./next/dist/thirdweb-dev-auth-next.esm.js",
+      "default": "./next/dist/thirdweb-dev-auth-next.cjs.js"
+    },
     "./express": {
       "module": "./express/dist/thirdweb-dev-auth-express.esm.js",
       "default": "./express/dist/thirdweb-dev-auth-express.cjs.js"
     },
-    "./next": {
-      "module": "./next/dist/thirdweb-dev-auth-next.esm.js",
-      "default": "./next/dist/thirdweb-dev-auth-express.cjs.js"
-    },
     "./next-auth": {
       "module": "./next-auth/dist/thirdweb-dev-auth-next-auth.esm.js",
       "default": "./next-auth/dist/thirdweb-dev-auth-next-auth.cjs.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/auth",
   "author": "thirdweb eng <eng@thirdweb.com>",
@@ -37,7 +37,11 @@
       "next/index.ts",
       "express/index.ts",
       "next-auth/index.ts"
-    ]
+    ],
+    "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
+      "exports": true
+    },
+    "exports": true
   },
   "devDependencies": {
     "@babel/preset-env": "^7.18.10",
