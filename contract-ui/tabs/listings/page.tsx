@@ -2,7 +2,7 @@ import { CreateListingButton } from "./components/list-button";
 import { ListingsTable } from "./components/table";
 import { Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
-import { Marketplace } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/marketplace";
+import { Marketplace } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/marketplace";
 import { Heading } from "tw-components";
 
 interface ListingsPageProps {

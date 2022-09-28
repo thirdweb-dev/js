@@ -3,7 +3,7 @@ import {
   useTokensDelegated,
 } from "@3rdweb-sdk/react/hooks/useVote";
 import { Tooltip } from "@chakra-ui/react";
-import { Vote } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/vote";
+import { Vote } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/vote";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTxNotifications } from "hooks/useTxNotifications";
 

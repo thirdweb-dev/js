@@ -20,7 +20,10 @@ interface PaperRegisterContractButtonProps
 export const PaperRegisterContractButton: React.FC<
   PaperRegisterContractButtonProps
 > = ({ jwt, contractAddress, ...restButtonProps }) => {
-  const mutation = usePaperRegisterContractMutation(jwt, contractAddress);
+  const mutation = usePaperRegisterContractMutation(
+    jwt,
+    contractAddress || undefined,
+  );
 
   return (
     <Button

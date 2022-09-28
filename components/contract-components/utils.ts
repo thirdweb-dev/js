@@ -4,7 +4,7 @@ import {
   ValidContractInstance,
   isFeatureEnabled,
 } from "@thirdweb-dev/sdk";
-import { FeatureName } from "@thirdweb-dev/sdk/dist/declarations/src/constants/contract-features";
+import { FeatureName } from "@thirdweb-dev/sdk/dist/declarations/src/evm/constants/contract-features";
 
 export function isContractIdBuiltInContract(
   contractId: ContractId,

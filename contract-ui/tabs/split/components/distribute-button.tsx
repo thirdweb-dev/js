@@ -3,7 +3,7 @@ import {
   useSplitDistributeFunds,
 } from "@3rdweb-sdk/react/hooks/useSplit";
 import { UseContractResult } from "@thirdweb-dev/react";
-import { Split } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/split";
+import { Split } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/split";
 import { MismatchButton } from "components/buttons/MismatchButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useMemo } from "react";

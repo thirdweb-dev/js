@@ -27,7 +27,7 @@ import {
   fetchPreDeployMetadata,
   resolveContractUriFromAddress,
 } from "@thirdweb-dev/sdk";
-import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/declarations/src/constants/contract-features";
+import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/declarations/src/evm/constants/contract-features";
 import {
   StorageSingleton,
   alchemyUrlMap,

@@ -14,7 +14,7 @@ import {
   StatNumber,
 } from "@chakra-ui/react";
 import { useAddress, useContract } from "@thirdweb-dev/react";
-import { Vote } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/vote";
+import { Vote } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/vote";
 import { useMemo } from "react";
 import { Card, Heading } from "tw-components";
 

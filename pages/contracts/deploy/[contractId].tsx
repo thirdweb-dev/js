@@ -9,7 +9,7 @@ import {
   LinkOverlay,
   Skeleton,
 } from "@chakra-ui/react";
-import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/declarations/src/constants/contract-features";
+import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/declarations/src/evm/constants/contract-features";
 import { AppLayout } from "components/app-layouts/app";
 import { ContractDeployForm } from "components/contract-components/contract-deploy-form";
 import {

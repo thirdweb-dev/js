@@ -6,7 +6,11 @@ import {
   useFunctionParamsFromABI,
 } from "../hooks";
 import { Divider, Flex, FormControl, Input } from "@chakra-ui/react";
-import { ContractType, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
+import {
+  ContractType,
+  SUPPORTED_CHAIN_ID,
+  SUPPORTED_CHAIN_IDS,
+} from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelect";
 import { DisabledChainsMap } from "constants/mappings";
@@ -52,10 +56,24 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       ?.implementationInitializerFunction || "initialize",
   );
   const isFactoryDeployment =
-    fullReleaseMetadata.data?.isDeployableViaFactory && !isImplementationDeploy;
+    fullReleaseMetadata.data?.isDeployableViaFactory ||
+    (fullReleaseMetadata.data?.isDeployableViaProxy && !isImplementationDeploy);
   const deployParams = isFactoryDeployment
     ? initializerParams
     : constructorParams;
+
+  const disabledChains =
+    isFactoryDeployment && fullReleaseMetadata.data?.factoryDeploymentData
+      ? SUPPORTED_CHAIN_IDS.filter((chain) => {
+          const implementationAddress =
+            fullReleaseMetadata.data?.factoryDeploymentData
+              ?.implementationAddresses?.[chain];
+          return (
+            !implementationAddress ||
+            (implementationAddress && implementationAddress.length === 0)
+          );
+        })
+      : undefined;
 
   const form = useForm<{ addToDashboard: true }>();
 
@@ -98,6 +116,8 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           contractMetadata: d,
           publishMetadata: compilerMetadata.data,
           chainId: selectedChain,
+          is_proxy: fullReleaseMetadata.data?.isDeployableViaProxy,
+          is_factory: fullReleaseMetadata.data?.isDeployableViaProxy,
         };
         trackEvent({
           category: "custom-contract",
@@ -221,7 +241,9 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       <Flex gap={4} direction={{ base: "column", md: "row" }}>
         <FormControl>
           <SupportedNetworkSelect
-            disabledChainIds={DisabledChainsMap["custom" as ContractType]}
+            disabledChainIds={DisabledChainsMap[
+              "custom" as ContractType
+            ].concat(disabledChains || [])}
             isDisabled={
               isImplementationDeploy ||
               deploy.isLoading ||

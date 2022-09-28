@@ -9,6 +9,7 @@ import { MarkdownRenderer } from "../released-contract/markdown-renderer";
 import { ContractId } from "../types";
 import {
   Box,
+  Divider,
   Flex,
   FormControl,
   Icon,
@@ -50,6 +51,7 @@ import {
   FormHelperText,
   FormLabel,
   Heading,
+  Link,
   LinkButton,
   Text,
 } from "tw-components";
@@ -81,7 +83,6 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
   );
   const address = useAddress();
   const publishMutation = usePublishMutation();
-  const showProxyDeployment = router.query.proxyDeploy === "true";
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const publishMetadata = useContractPublishMetadataFromURI(contractId);
@@ -157,6 +158,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
 
   const isDisabled = !successRedirectUrl || !address;
   const isDeployableViaFactory = watch("isDeployableViaFactory");
+  const isDeployableViaProxy = watch("isDeployableViaProxy");
 
   // during loading and after success we should stay in loading state
   const isLoading = publishMutation.isLoading || publishMutation.isSuccess;
@@ -194,6 +196,8 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
                   uris: contractId,
                   release_id: `${ensNameOrAddress}/${publishMetadata.data?.name}`,
                   version: data.version,
+                  is_proxy: data.isDeployableViaProxy,
+                  is_factory: data.isDeployableViaFactory,
                 });
                 if (successRedirectUrl) {
                   router.push(
@@ -213,6 +217,8 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
                   label: "error",
                   uris: contractId,
                   release_id: `${ensNameOrAddress}/${publishMetadata.data?.name}`,
+                  is_proxy: data.isDeployableViaProxy,
+                  is_factory: data.isDeployableViaFactory,
                 });
               },
             },
@@ -414,28 +420,27 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
               </Tabs>
             </FormControl>
           )}
-          {showProxyDeployment && (
-            <Flex alignItems="center" gap={3}>
-              <Checkbox
-                {...register("isDeployableViaFactory")}
-                isChecked={isDeployableViaFactory}
-              />
-              <Flex gap={4} alignItems="center">
-                <Heading size="label.lg">Deployable via factory</Heading>
-                <Text>
-                  Enable cheaper deploys for your users by using proxies of
-                  pre-deployed contracts
-                </Text>
-              </Flex>
+          <Divider />
+          <Flex alignItems="center" gap={4}>
+            <Checkbox
+              {...register("isDeployableViaProxy")}
+              isChecked={isDeployableViaProxy}
+            />
+            <Flex gap={1} alignItems="left" flexDir={"column"}>
+              <Heading size="label.lg">Deployable via proxy</Heading>
+              <Text>
+                Enable cheaper deploys for your users by using proxies of
+                pre-deployed contracts
+              </Text>
             </Flex>
-          )}
-          {showProxyDeployment && isDeployableViaFactory && (
+          </Flex>
+          {isDeployableViaProxy && (
             <Flex flexDir={"column"} gap={2}>
               <Heading size="label.lg">
                 Addresses of your deployed implementations
               </Heading>
               <Text>
-                Factory deployment requires having deployed implementations of
+                Proxy deployment requires having deployed implementations of
                 your contract already available on each chain you want to
                 support.
               </Text>
@@ -488,30 +493,51 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
                   disabled={isDisabled}
                 />
               </FormControl>
-              <Heading size="label.lg" mt={8}>
-                Addresses of your factory contracts
-              </Heading>
-              <Text>
-                Enter the addresses of your deployed factory contracts. These
-                need to conform to a known interface for deploying proxy
-                contracts.
-              </Text>
-              <SimpleGrid columns={{ base: 1, md: 2 }} gap={4} mt={8}>
-                {SUPPORTED_CHAIN_IDS.map((chainId) => (
-                  <FormControl key={`factory${chainId}`}>
-                    <FormLabel flex="1">
-                      {SupportedChainIdToNetworkMap[chainId]}
-                    </FormLabel>
-                    <Input
-                      {...register(
-                        `factoryDeploymentData.factoryAddresses.${chainId}`,
-                      )}
-                      placeholder="0x..."
-                      disabled={isDisabled}
-                    />
-                  </FormControl>
-                ))}
-              </SimpleGrid>
+              <Flex alignItems="center" gap={4} mt={8}>
+                <Checkbox
+                  {...register("isDeployableViaFactory")}
+                  isChecked={isDeployableViaFactory}
+                />
+                <Flex gap={1} alignItems="left" flexDir={"column"}>
+                  <Heading size="label.lg" flexShrink={0}>
+                    Deployable via factory (optional)
+                  </Heading>
+                  <Text>
+                    Use a factory contract to deploy clones of your
+                    implementation contracts using your custom logic.
+                  </Text>
+                </Flex>
+              </Flex>
+              {isDeployableViaFactory && (
+                <>
+                  <Heading size="label.lg" mt={8}>
+                    Addresses of your factory contracts
+                  </Heading>
+                  <Text>
+                    Enter the addresses of your deployed factory contracts.
+                    These need to conform to the{" "}
+                    <Link href="https://portal.thirdweb.com/contracts/IContractFactory">
+                      IContractFactory interface.
+                    </Link>
+                  </Text>
+                  <SimpleGrid columns={{ base: 1, md: 2 }} gap={4} mt={8}>
+                    {SUPPORTED_CHAIN_IDS.map((chainId) => (
+                      <FormControl key={`factory${chainId}`}>
+                        <FormLabel flex="1">
+                          {SupportedChainIdToNetworkMap[chainId]}
+                        </FormLabel>
+                        <Input
+                          {...register(
+                            `factoryDeploymentData.factoryAddresses.${chainId}`,
+                          )}
+                          placeholder="0x..."
+                          disabled={isDisabled}
+                        />
+                      </FormControl>
+                    ))}
+                  </SimpleGrid>
+                </>
+              )}
             </Flex>
           )}
           <Flex justifyContent="space-between" alignItems="center">

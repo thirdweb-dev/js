@@ -3,7 +3,7 @@ import type {
   DirectListing,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
-import { Marketplace } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/marketplace";
+import { Marketplace } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/marketplace";
 
 type ListingMetadata = AuctionListing | DirectListing;
 

@@ -1,5 +1,5 @@
 import { Box, Flex, Select } from "@chakra-ui/react";
-import { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/smart-contract";
+import { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/smart-contract";
 import { useContractFunctions } from "components/contract-components/hooks";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
 import { Environment } from "components/contract-tabs/code/types";
