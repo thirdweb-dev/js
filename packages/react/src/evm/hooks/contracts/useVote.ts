@@ -1,6 +1,6 @@
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { Vote } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/vote";
+import { Vote } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/vote";
 
 /**
  * Hook for getting an instance of an `Vote` contract. This contract enables fully featured voting-based decentralized governance systems.

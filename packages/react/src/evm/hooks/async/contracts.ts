@@ -1,6 +1,7 @@
 import { neverPersist } from "../../../core/query-utils/query-key";
+import { RequiredParam } from "../../../core/types/shared";
 import { useSDK, useSDKChainId } from "../../providers/base";
-import { ContractAddress, RequiredParam } from "../../types";
+import { ContractAddress } from "../../types";
 import {
   cacheKeys,
   createCacheKeyWithNetwork,
@@ -22,7 +23,7 @@ import {
   ThirdwebSDK,
   ValidContractInstance,
 } from "@thirdweb-dev/sdk";
-import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/smart-contract";
+import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/smart-contract";
 import { CallOverrides } from "ethers";
 import { useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";

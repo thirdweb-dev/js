@@ -2,14 +2,14 @@ import { createSOLQueryKeyWithNetwork } from "../../../core/query-utils/query-ke
 import { RequiredParam } from "../../../core/types/shared";
 import { useSDK } from "../../providers/base";
 import { useQuery } from "@tanstack/react-query";
-import type { ThirdwebSDK } from "@thirdweb-dev/solana";
+import type { ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
 import invariant from "tiny-invariant";
 
 export function programAccountTypeQuery(
   sdk: RequiredParam<ThirdwebSDK>,
   address: RequiredParam<string>,
 ) {
-  const network = sdk?.metaplex.cluster;
+  const network = sdk?.network;
   return {
     queryKey: createSOLQueryKeyWithNetwork(
       ["program", address, "type"] as const,

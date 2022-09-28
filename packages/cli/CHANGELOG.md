@@ -1,5 +1,19 @@
 # thirdweb
 
+## 0.7.21
+
+### Patch Changes
+
+- Updated dependencies [[`666ff5f`](https://github.com/thirdweb-dev/js/commit/666ff5f694f1e146150ddb9fa3233f00533b6d60), [`0dade96`](https://github.com/thirdweb-dev/js/commit/0dade96d0d2553d25b386d822e534eb7ed0aefa9), [`c295a47`](https://github.com/thirdweb-dev/js/commit/c295a47144cd722c6f8861c1ec567b53a05ea0bf)]:
+  - @thirdweb-dev/sdk@3.1.1
+
+## 0.7.20
+
+### Patch Changes
+
+- Updated dependencies [[`3c8f620`](https://github.com/thirdweb-dev/js/commit/3c8f6205e9b49ae9fea1f9629678210c6c9c36e6), [`e187d21`](https://github.com/thirdweb-dev/js/commit/e187d21e123a506fac0459da18f2d4fc94abae29), [`acbabc8`](https://github.com/thirdweb-dev/js/commit/acbabc8999b2b7b6e0eb89cae97e2f1ef7143501), [`b030a86`](https://github.com/thirdweb-dev/js/commit/b030a866080953bbf4e504ddc41d7050b250d2d7)]:
+  - @thirdweb-dev/sdk@3.1.0
+
 ## 0.7.19
 
 ### Patch Changes
