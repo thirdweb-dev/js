@@ -20,8 +20,15 @@
     "ethers": "^5.7.0"
   },
   "files": [
-    "dist/"
+    "dist/",
+    "factories/"
   ],
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts",
+      "./factories/TW*.ts"
+    ]
+  },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
     "lint": "eslint src/",

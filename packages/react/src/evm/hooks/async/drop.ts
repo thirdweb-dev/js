@@ -1,10 +1,10 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { useSDKChainId } from "../../providers/base";
 import {
   ClaimNFTParams,
   ClaimNFTReturnType,
   DelayedRevealLazyMintInput,
   DropContract,
-  RequiredParam,
   RevealLazyMintInput,
   getErcs,
   NFTContract,
@@ -22,7 +22,7 @@ import {
   QueryAllParams,
   UploadProgressEvent,
 } from "@thirdweb-dev/sdk";
-import { NFTDrop } from "@thirdweb-dev/sdk/dist/declarations/src/contracts/prebuilt-implementations/nft-drop";
+import { NFTDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/nft-drop";
 import invariant from "tiny-invariant";
 
 /** **********************/

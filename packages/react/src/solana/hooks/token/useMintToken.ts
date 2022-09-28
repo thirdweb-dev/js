@@ -2,7 +2,7 @@ import { createSOLProgramQueryKey } from "../../../core/query-utils/query-key";
 import { RequiredParam } from "../../../core/types/shared";
 import type { TokenParams } from "../../../evm";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { Token } from "@thirdweb-dev/solana";
+import type { Token } from "@thirdweb-dev/sdk/solana";
 import invariant from "tiny-invariant";
 
 export function useMintToken(program: RequiredParam<Token>) {

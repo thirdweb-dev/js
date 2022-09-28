@@ -1,0 +1,4 @@
+{
+  "main": "dist/thirdweb-dev-sdk-solana-server.cjs.js",
+  "module": "dist/thirdweb-dev-sdk-solana-server.esm.js"
+}

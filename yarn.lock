@@ -4380,6 +4380,25 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.1.8-0.tgz#847af3fe9a53368e7be04b7b6e6afe076d3d1676"
   integrity sha512-PiQjdRcAUBlu3poc4g6dN9KvjTgYsA1Vi+B/IgryptCgcJeMY4cldMabKCgPaCg9dPVpUq4O+SOM00P6mBNvGw==
 
+"@thirdweb-dev/solana@*":
+  version "0.2.15"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/solana/-/solana-0.2.15.tgz#841a8cec31920e82f98b88b87bc06bafc178d4f8"
+  integrity sha512-vsmjV04Sn2kZlyCVTvBDO0l/VHJb+U0saABcb4Mv40JzXFyn3oMQVH34TlKP/nQwl4cs0olRoTd7GdhvLWNnIw==
+  dependencies:
+    "@metaplex-foundation/js" "^0.15.0"
+    "@metaplex-foundation/mpl-token-metadata" "^2.2.2"
+    "@project-serum/anchor" "^0.25.0"
+    "@solana/spl-token" "^0.2.0"
+    "@solana/web3.js" "^1.50.1"
+    "@thirdweb-dev/storage" "^1.0.3"
+    bn.js "^5.2.1"
+    eventemitter3 "^4.0.7"
+    form-data "^4.0.0"
+    formdata-polyfill "^4.0.10"
+    tiny-invariant "^1.2.0"
+    yaml "^2.1.1"
+    zod "^3.11.6"
+
 "@toruslabs/base-controllers@^2.2.3":
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/@toruslabs/base-controllers/-/base-controllers-2.2.6.tgz#bf49027131010baff818b8000babffc1fcb388cd"
@@ -5452,7 +5471,7 @@
   resolved "https://registry.yarnpkg.com/@zag-js/interact-outside/-/interact-outside-0.1.4.tgz#9ab962abb48494b6821c0508054f2b608e795276"
   integrity sha512-GeDWrb9WrJ8tQTaPF1KaUUfVbAotM/1ltdHnksa+03uQ+WVOgmDF+6Qmd57EnQgGu7htpA2dNLHsqXAp6aPrrQ==
 
-"@zag-js/menu@^0.1.11":
+"@zag-js/menu@0.1.14":
   version "0.1.14"
   resolved "https://registry.yarnpkg.com/@zag-js/menu/-/menu-0.1.14.tgz#696434a8f3b222fb0fe9f9342ab92bbdac081195"
   integrity sha512-T/NUHMjiI50IOQS4I9DyMLHL/LUwoXvOLrYoVgNCxyyDWfCtBWSztBYNiVHUhJFCVlPfLkyevcxl6JRIjvQkPA==
