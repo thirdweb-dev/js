@@ -18,8 +18,7 @@
       "dependsOn": ["^build"]
     },
     "contracts-js#build": {
-      "cache": false,
-      "outputs": ["dist/**", "src/**", "factories/**"],
+      "outputs": ["dist/**", "factories/**", "src/**"],
       "dependsOn": ["^build"]
     },
     "solana#build": {
