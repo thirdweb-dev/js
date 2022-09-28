@@ -2606,10 +2606,10 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.1.8-0.tgz#847af3fe9a53368e7be04b7b6e6afe076d3d1676"
   integrity sha512-PiQjdRcAUBlu3poc4g6dN9KvjTgYsA1Vi+B/IgryptCgcJeMY4cldMabKCgPaCg9dPVpUq4O+SOM00P6mBNvGw==
 
-"@thirdweb-dev/react@^3.1.0-nightly-3c8f620":
-  version "3.1.0-nightly-3c8f620"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-3.1.0-nightly-3c8f620.tgz#d80f5121bb41a14834ead83f4a5f72af2806bf80"
-  integrity sha512-73Kcd07g5ZaN+YehvLgl6xDKf3StDMRtz7m1VxiMF3Ga0WKuJVILb8MxKguARQyQQti+RXqyIdJ6br5GKzSG4A==
+"@thirdweb-dev/react@^3.1.1-nightly-0dade96":
+  version "3.1.1-nightly-0dade96"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-3.1.1-nightly-0dade96.tgz#40b91dcc18c817dbea11841e4f8a233b8283a7b5"
+  integrity sha512-g4hcHVLvbjWiO+SUZrR+TNTXig9uwwOH0V4vz4JI8DNNU5WwzuC/R6/yOaitPlXubONG453A6TdZ14KyAs7oXg==
   dependencies:
     "@emotion/react" "^11.10.0"
     "@emotion/styled" "^11.10.0"
@@ -2618,7 +2618,7 @@
     "@gnosis.pm/safe-ethers-lib" "1.1.0"
     "@react-icons/all-files" "^4.1.0"
     "@tanstack/react-query" "^4.0.10"
-    "@zag-js/menu" "^0.1.11"
+    "@zag-js/menu" "0.1.14"
     "@zag-js/react" "0.1.16"
     color "^4.2.3"
     copy-to-clipboard "^3.3.2"
@@ -2629,10 +2629,10 @@
     tiny-invariant "^1.2.0"
     wagmi "^0.2.28"
 
-"@thirdweb-dev/sdk@^3.1.0-nightly-3c8f620":
-  version "3.1.0-nightly-3c8f620"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-3.1.0-nightly-3c8f620.tgz#170c637e38eb6a04811bf27873c8e905b93f90fb"
-  integrity sha512-mUSAjFHsxRJ+D43Mb1rT3ZhVkID6TiGyoBgD613Rt/CRIOuNyUOkvd+xU/KE5iVz2aNEW0aPTBc24r5dOB65mQ==
+"@thirdweb-dev/sdk@^3.1.1-nightly-0dade96":
+  version "3.1.1-nightly-0dade96"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-3.1.1-nightly-0dade96.tgz#49b3dbaa6cca42aba98f5011a231b9694b85bb84"
+  integrity sha512-Lt8GQnfndIzAUczQ/2476RFF/iV7o69VZ5MflmscuWyPPA7GDziD4qMRbXV22YC2ACIDdSaQFxG4tEYEBuG6BQ==
   dependencies:
     "@metaplex-foundation/js" "^0.15.0"
     "@metaplex-foundation/mpl-token-metadata" "^2.2.2"
@@ -2642,6 +2642,7 @@
     "@thirdweb-dev/contracts-js" "^1.1.8"
     "@thirdweb-dev/storage" "^1.0.3"
     bn.js "^5.2.1"
+    bs58 "^5.0.0"
     cbor-web "^8.1.0"
     cross-fetch "^3.1.5"
     eventemitter3 "^4.0.7"
@@ -3236,7 +3237,7 @@
   resolved "https://registry.yarnpkg.com/@zag-js/interact-outside/-/interact-outside-0.1.4.tgz#9ab962abb48494b6821c0508054f2b608e795276"
   integrity sha512-GeDWrb9WrJ8tQTaPF1KaUUfVbAotM/1ltdHnksa+03uQ+WVOgmDF+6Qmd57EnQgGu7htpA2dNLHsqXAp6aPrrQ==
 
-"@zag-js/menu@^0.1.11":
+"@zag-js/menu@0.1.14":
   version "0.1.14"
   resolved "https://registry.yarnpkg.com/@zag-js/menu/-/menu-0.1.14.tgz#696434a8f3b222fb0fe9f9342ab92bbdac081195"
   integrity sha512-T/NUHMjiI50IOQS4I9DyMLHL/LUwoXvOLrYoVgNCxyyDWfCtBWSztBYNiVHUhJFCVlPfLkyevcxl6JRIjvQkPA==
