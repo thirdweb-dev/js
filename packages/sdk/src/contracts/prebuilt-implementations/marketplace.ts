@@ -25,6 +25,7 @@ import { NewOfferEventObject } from "@thirdweb-dev/contracts-js/dist/declaration
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 import invariant from "tiny-invariant";
+import { UnmappedOffer } from "../../types/marketplace/UnmappedOffer";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -324,11 +325,9 @@ export class Marketplace implements UpdateableNetwork {
           {
             quantityWanted: e.data.quantityWanted,
             pricePerToken: e.data.totalOfferAmount.div(e.data.quantityWanted),
-            currencyContractAddres: e.data.currency,
-            buyerAddress: e.data.offeror,
             currency: e.data.currency,
-            listingId: e.data.listingId,
-          },
+            offeror: e.data.offeror,
+          } as UnmappedOffer,
         );
         return offer;
       }),

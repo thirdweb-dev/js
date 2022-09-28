@@ -657,7 +657,7 @@ describe("Marketplace Contract", async () => {
         offers[0].listingId.toString(),
         directListingId.toString(),
       );
-      
+
       // check that the currency value is correct
       assert.isTrue(
         offers[0].currencyValue.value.eq(
