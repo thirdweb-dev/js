@@ -438,29 +438,6 @@ export class Marketplace implements UpdateableNetwork {
     await this.contractWrapper.multiCall(encoded);
   }
 
-  /**
-   * returns the minimum bid a user can place to outbid the previous highest bid
-   * @param listingId - the listing id of the auction
-   */
-  public async getMinimumNextBid(
-    listingId: BigNumberish,
-  ): Promise<BigNumberish> {
-    const currentAuction = this.auction;
-    const currentBidBuffer = await this.getBidBufferBps();
-    const winningBid = await currentAuction.getWinningBid(listingId);
-    const activeListing: AuctionListing = await currentAuction.getListing(
-      listingId,
-    );
-    if (currentAuction && winningBid) {
-      return winningBid.currencyValue.value.add(
-        currentBidBuffer.mul(winningBid.currencyValue.value),
-      );
-    } else {
-      const activeListingPrice = activeListing.reservePrice;
-      return activeListingPrice.add(currentBidBuffer.mul(activeListingPrice));
-    }
-  }
-
   /** ******************************
    * PRIVATE FUNCTIONS
    *******************************/

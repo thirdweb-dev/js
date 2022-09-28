@@ -26,7 +26,7 @@ import {
 } from "../../types/marketplace";
 import { TransactionResult, TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import type { IMarketplace, Marketplace } from "@thirdweb-dev/contracts-js";
+import { IMarketplace, Marketplace } from "@thirdweb-dev/contracts-js";
 import { ListingAddedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers, constants } from "ethers";
@@ -457,6 +457,32 @@ export class MarketplaceAuction {
         listing.endTimeInEpochSeconds,
       ]),
     };
+  }
+
+  /**
+   * Get the buffer in basis points between offers
+   */
+  public async getBidBufferBps(): Promise<BigNumber> {
+    return this.contractWrapper.readContract.bidBufferBps();
+  }
+
+  /**
+   * returns the minimum bid a user can place to outbid the previous highest bid
+   * @param listingId - the listing id of the auction
+   */
+  public async getMinimumNextBid(
+    listingId: BigNumberish,
+  ): Promise<BigNumberish> {
+    const currentBidBuffer = await this.getBidBufferBps();
+    const winningBid = await this.getWinningBid(listingId);
+    const listing: AuctionListing = await this.getListing(listingId);
+    if (winningBid) {
+      const winningBidPrice = winningBid.currencyValue.value;
+      return winningBidPrice.add(currentBidBuffer.mul(winningBidPrice));
+    } else {
+      const price = listing.reservePrice;
+      return price.add(currentBidBuffer.mul(price));
+    }
   }
 
   /** ******************************
