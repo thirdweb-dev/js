@@ -14,7 +14,7 @@ import { AuctionListing, DirectListing } from "@thirdweb-dev/sdk";
 import { Marketplace } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/marketplace";
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
-import { Card, Drawer, Heading, Text } from "tw-components";
+import { Card, CodeBlock, Drawer, Heading, Text } from "tw-components";
 
 interface NFTDrawerProps {
   contract: Marketplace;
@@ -48,14 +48,35 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
         title: "Details",
         isDisabled: false,
         children: () => (
-          <Card as={Flex} flexDir="column" gap={3}>
-            <Text size="label.md">Token ID: {tokenId}</Text>
-            <Text size="label.md">Owner: {renderData.sellerAddress}</Text>
-            <Text size="label.md">Token Standard: {renderData.type}</Text>
-            <Text size="label.md">
-              Quantity: {BigNumber.from(renderData.quantity || "0").toString()}
-            </Text>
-          </Card>
+          <Flex flexDir="column" gap={4}>
+            <Card as={Flex} flexDir="column" gap={3}>
+              <Text size="label.md">Token ID: {tokenId}</Text>
+              <Text size="label.md">Owner: {renderData.sellerAddress}</Text>
+              <Text size="label.md">Token Standard: {renderData.type}</Text>
+              <Text size="label.md">
+                Quantity:{" "}
+                {BigNumber.from(renderData.quantity || "0").toString()}
+              </Text>
+            </Card>
+            {data?.asset.attributes || data?.asset.properties ? (
+              <Card as={Flex} flexDir="column" gap={4}>
+                <Heading size="label.md">Properties</Heading>
+                <CodeBlock
+                  code={
+                    JSON.stringify(
+                      data?.asset.attributes || data?.asset.properties,
+                      null,
+                      2,
+                    ) || ""
+                  }
+                  language="json"
+                  canCopy={false}
+                  wrap={false}
+                  overflow="auto"
+                />
+              </Card>
+            ) : null}
+          </Flex>
         ),
       },
       {
@@ -72,7 +93,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
     ];
 
     return t;
-  }, [contract, isOwner, renderData, tokenId]);
+  }, [contract, isOwner, renderData, tokenId, data?.asset]);
 
   if (!renderData) {
     return null;

@@ -82,8 +82,8 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
   const modalContext = useModalContext();
 
   const { onSuccess, onError } = useTxNotifications(
-    "NFT minted successfully",
-    "Failed to mint NFT",
+    "NFT listed successfully",
+    "Failed to list NFT",
   );
   return (
     <Stack
