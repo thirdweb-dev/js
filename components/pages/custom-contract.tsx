@@ -18,6 +18,7 @@ import { useContract } from "@thirdweb-dev/react";
 import { ens } from "components/contract-components/hooks";
 import { ContractHeader } from "components/custom-contract/contract-header";
 import { Logo } from "components/logo";
+import { ChainDeprecation } from "components/notices/ChainDeprecation";
 import {
   EnhancedRoute,
   useContractRouteConfig,
@@ -131,6 +132,7 @@ export const CustomContractPage: React.FC<CustomContractPageProps> = ({
         {/* main content */}
         <Container maxW="container.page">
           <Box py={8}>
+            <ChainDeprecation />
             <ConditionsNotSet contract={contract} />
             <Outlet />
           </Box>

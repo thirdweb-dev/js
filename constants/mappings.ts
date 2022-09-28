@@ -1,5 +1,6 @@
 import {
   CONTRACTS_MAP,
+  ChainId,
   ContractType,
   FullPublishMetadata,
   Role,
@@ -40,21 +41,28 @@ export interface BuiltinContractDetails {
   metadata: Omit<FullPublishMetadata, "logo"> & { logo: StaticImageData };
 }
 
+export const deprecatedChains: SUPPORTED_CHAIN_ID[] = [
+  ChainId.Rinkeby,
+  ChainId.ArbitrumRinkeby,
+  ChainId.OptimismKovan,
+];
+
 export const DisabledChainsMap: Record<ContractType, SUPPORTED_CHAIN_ID[]> = {
-  "nft-drop": [],
-  "nft-collection": [],
-  "edition-drop": [],
-  edition: [],
-  token: [],
-  vote: [],
-  marketplace: [],
-  pack: [],
-  split: [],
-  "token-drop": [],
-  "signature-drop": [],
-  multiwrap: [],
-  custom: [],
+  "nft-drop": [...deprecatedChains],
+  "nft-collection": [...deprecatedChains],
+  "edition-drop": [...deprecatedChains],
+  edition: [...deprecatedChains],
+  token: [...deprecatedChains],
+  vote: [...deprecatedChains],
+  marketplace: [...deprecatedChains],
+  pack: [...deprecatedChains],
+  split: [...deprecatedChains],
+  "token-drop": [...deprecatedChains],
+  "signature-drop": [...deprecatedChains],
+  multiwrap: [...deprecatedChains],
+  custom: [...deprecatedChains],
 };
+
 function buildContractForContractMap(
   type: ContractType,
   details: Omit<

@@ -20,8 +20,9 @@ export const ConditionsNotSet: React.FC<ConditionsNotSetProps> = ({
   const claimConditions = useClaimConditions(contract);
 
   const noClaimConditions =
-    !claimConditions?.data?.length ||
-    claimConditions.data.every((cc) => cc.maxQuantity === "0");
+    !claimConditions.isLoading &&
+    (!claimConditions?.data?.length ||
+      claimConditions.data.every((cc) => cc.maxQuantity === "0"));
 
   const chainName = useSingleQueryParam("networkOrAddress");
 
@@ -33,7 +34,7 @@ export const ConditionsNotSet: React.FC<ConditionsNotSetProps> = ({
     <AdminOnly contract={contract}>
       <Flex
         padding="20px"
-        borderRadius="md"
+        borderRadius="xl"
         bg="orange.500"
         opacity={0.8}
         direction="column"

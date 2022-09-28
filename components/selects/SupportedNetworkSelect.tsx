@@ -1,6 +1,11 @@
 import { useWeb3 } from "@3rdweb-sdk/react";
 import { Select, SelectProps, forwardRef } from "@chakra-ui/react";
-import { ChainId, SUPPORTED_CHAIN_IDS } from "@thirdweb-dev/sdk";
+import {
+  ChainId,
+  SUPPORTED_CHAIN_ID,
+  SUPPORTED_CHAIN_IDS,
+} from "@thirdweb-dev/sdk";
+import { deprecatedChains } from "constants/mappings";
 import { useMemo } from "react";
 
 export interface SupportedNetworkSelectProps
@@ -30,12 +35,6 @@ export const SupportedNetworkSelect = forwardRef<
       }).filter((n) => !n.isTestnet);
     }, [getNetworkMetadata]);
 
-    const deprecatedChains = [
-      ChainId.Rinkeby,
-      ChainId.OptimismKovan,
-      ChainId.ArbitrumRinkeby,
-    ];
-
     return (
       <Select {...selectProps} ref={ref}>
         <option disabled value={-1}>
@@ -63,8 +62,10 @@ export const SupportedNetworkSelect = forwardRef<
               disabled={disabledChainIds?.includes(tn.chainId)}
             >
               {tn.chainName} ({tn.symbol})
-              {deprecatedChains.includes(tn.chainId) && " - Deprecated"}
-              {disabledChainIds?.includes(tn.chainId)
+              {deprecatedChains.includes(tn.chainId as SUPPORTED_CHAIN_ID) &&
+                " - Deprecated"}
+              {disabledChainIds?.includes(tn.chainId) &&
+              !deprecatedChains.includes(tn.chainId as SUPPORTED_CHAIN_ID)
                 ? ` - ${disabledChainIdText}`
                 : ""}
             </option>
