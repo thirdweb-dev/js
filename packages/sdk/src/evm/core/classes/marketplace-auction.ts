@@ -26,7 +26,7 @@ import {
 } from "../../types/marketplace";
 import { TransactionResult, TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { IMarketplace, Marketplace } from "@thirdweb-dev/contracts-js";
+import type { IMarketplace, Marketplace } from "@thirdweb-dev/contracts-js";
 import { ListingAddedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers, constants } from "ethers";
