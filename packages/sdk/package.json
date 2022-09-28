@@ -6,6 +6,25 @@
   "license": "Apache-2.0",
   "main": "dist/thirdweb-dev-sdk.cjs.js",
   "module": "dist/thirdweb-dev-sdk.esm.js",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "module": "./dist/thirdweb-dev-sdk.esm.js",
+      "default": "./dist/thirdweb-dev-sdk.cjs.js"
+    },
+    "./solana": {
+      "module": "./solana/dist/thirdweb-dev-sdk-solana.esm.js",
+      "default": "./solana/dist/thirdweb-dev-sdk-solana.cjs.js"
+    },
+    "./solana/server": {
+      "module": "./solana/server/dist/thirdweb-dev-sdk-solana-server.esm.js",
+      "default": "./solana/server/dist/thirdweb-dev-sdk-solana-server.cjs.js"
+    },
+    "./evm": {
+      "module": "./evm/dist/thirdweb-dev-sdk-evm.esm.js",
+      "default": "./evm/dist/thirdweb-dev-sdk-evm.cjs.js"
+    }
+  },
   "files": [
     "dist/",
     "evm/",
