@@ -37,11 +37,11 @@ import {
   TokenERC20__factory,
   TokenERC721__factory,
   TWFactory,
-  TWFactory__factory,
   TWRegistry,
-  TWRegistry__factory,
   VoteERC20__factory,
 } from "@thirdweb-dev/contracts-js";
+import { TWFactory__factory } from "@thirdweb-dev/contracts-js/factories/TWFactory__factory";
+import { TWRegistry__factory } from "@thirdweb-dev/contracts-js/factories/TWRegistry__factory";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 import hardhat from "hardhat";
