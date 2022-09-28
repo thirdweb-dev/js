@@ -1,5 +1,19 @@
 # @thirdweb-dev/sdk
 
+## 3.1.0
+
+### Minor Changes
+
+- [#213](https://github.com/thirdweb-dev/js/pull/213) [`e187d21`](https://github.com/thirdweb-dev/js/commit/e187d21e123a506fac0459da18f2d4fc94abae29) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - new @thirdweb-dev/sdk/solana entrypoint
+
+### Patch Changes
+
+- [#217](https://github.com/thirdweb-dev/js/pull/217) [`3c8f620`](https://github.com/thirdweb-dev/js/commit/3c8f6205e9b49ae9fea1f9629678210c6c9c36e6) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enable proxy deploys for released contracts
+
+- [#206](https://github.com/thirdweb-dev/js/pull/206) [`acbabc8`](https://github.com/thirdweb-dev/js/commit/acbabc8999b2b7b6e0eb89cae97e2f1ef7143501) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Gas override for relayer txns
+
+- [#216](https://github.com/thirdweb-dev/js/pull/216) [`b030a86`](https://github.com/thirdweb-dev/js/commit/b030a866080953bbf4e504ddc41d7050b250d2d7) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update addresses
+
 ## 3.0.8
 
 ### Patch Changes
