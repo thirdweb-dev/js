@@ -598,6 +598,73 @@ describe("Marketplace Contract", async () => {
         auctionListingId.toString(),
       );
     });
+
+    it("should return all offers for a listing when queried", async () => {
+      // make an offer as bob
+      sdk.updateSignerOrProvider(bobWallet);
+      await marketplaceContract.direct.makeOffer(
+        directListingId,
+        1,
+        tokenAddress,
+        "0.5",
+      );
+
+      // make an offer as sam
+      sdk.updateSignerOrProvider(samWallet);
+      await marketplaceContract.direct.makeOffer(
+        directListingId,
+        1,
+        tokenAddress,
+        "1",
+      );
+
+      // fetch all offers for the listing
+      sdk.updateSignerOrProvider(adminWallet);
+      const offers: Offer[] = await marketplaceContract.getOffers(
+        directListingId,
+      );
+      
+      // check that the offers are returned
+      assert.equal(offers.length, 2);
+
+      // check the value of the price per token is correct
+      assert.isTrue(
+        offers[0].pricePerToken.eq(
+          ethers.utils.parseEther("1")
+        )
+      );
+
+      // check the value of the buyer address is correct
+      assert.equal(
+        offers[0].buyerAddress,
+        samWallet.address,
+      );
+
+      // check the value of the quantity is correct
+      assert.equal(
+        offers[0].quantityDesired.toString(),
+        "1",
+      );
+
+      // check the value of the currency contract address is correct
+      assert.equal(
+        offers[0].currencyContractAddress,
+        tokenAddress,
+      );
+
+      // check the value of the listing id is correct
+      assert.equal(
+        offers[0].listingId.toString(),
+        directListingId.toString(),
+      );
+
+      // check that the currency value is correct
+      assert.isTrue(
+        offers[0].currencyValue.value.eq(
+          ethers.utils.parseEther("1")
+        )
+      );
+    });
   });
 
   describe("Validators", () => {

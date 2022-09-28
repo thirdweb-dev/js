@@ -9,6 +9,7 @@ import {
   NewAuctionListing,
   NewDirectListing,
   Offer,
+  UnmappedOffer,
 } from "../types/marketplace";
 import { fetchCurrencyValue } from "./currency";
 import type { IERC1155, IERC165, IERC721 } from "@thirdweb-dev/contracts-js";
@@ -199,7 +200,7 @@ export function validateNewListingParam(
 export async function mapOffer(
   provider: providers.Provider,
   listingId: BigNumber,
-  offer: any,
+  offer: UnmappedOffer,
 ): Promise<Offer> {
   return {
     quantity: offer.quantityDesired,
