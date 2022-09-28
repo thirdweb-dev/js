@@ -38,25 +38,25 @@ describe("NFTDrop", async () => {
     expect(unclaimed).to.equal(5);
     expect(claimed).to.equal(0);
 
-    const address = await drop.claim();
+    const address = await drop.claim(1);
 
     unclaimed = await drop.totalUnclaimedSupply();
     claimed = await drop.totalClaimedSupply();
     expect(unclaimed).to.equal(4);
     expect(claimed).to.equal(1);
 
-    const balance = await drop.balance(address);
+    const balance = await drop.balance(address[0]);
     expect(balance).to.equal(1);
   });
 
   it("should get all nfts", async () => {
-    await drop.claim();
+    await drop.claim(2);
 
     const all = await drop.getAll();
     const claimed = await drop.getAllClaimed();
 
     expect(all.length).to.equal(5);
-    expect(claimed.length).to.equal(2);
+    expect(claimed.length).to.equal(3);
   });
 
   it("should update claim condition", async () => {
