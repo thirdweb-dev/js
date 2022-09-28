@@ -18,6 +18,7 @@
       "dependsOn": ["^build"]
     },
     "contracts-js#build": {
+      "env": ["CI"],
       "outputs": ["dist/**", "src/**", "factories/**"],
       "dependsOn": ["^build"]
     },
