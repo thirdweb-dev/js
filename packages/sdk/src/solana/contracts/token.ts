@@ -7,7 +7,6 @@ import {
 import { TokenMetadata } from "../types/nft";
 import { toCurrencyValue } from "../utils/token";
 import {
-  Cluster,
   findMetadataPda,
   Metaplex,
   toBigNumber,

@@ -3,6 +3,29 @@
   "version": "1.1.8",
   "main": "dist/thirdweb-dev-contracts-js.cjs.js",
   "module": "dist/thirdweb-dev-contracts-js.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/thirdweb-dev-contracts-js.esm.js",
+      "default": "./dist/thirdweb-dev-contracts-js.cjs.js"
+    },
+    "./factories/TWFee__factory": {
+      "module": "./factories/TWFee__factory/dist/thirdweb-dev-contracts-js-factories-TWFee__factory.esm.js",
+      "default": "./factories/TWFee__factory/dist/thirdweb-dev-contracts-js-factories-TWFee__factory.cjs.js"
+    },
+    "./factories/TWProxy__factory": {
+      "module": "./factories/TWProxy__factory/dist/thirdweb-dev-contracts-js-factories-TWProxy__factory.esm.js",
+      "default": "./factories/TWProxy__factory/dist/thirdweb-dev-contracts-js-factories-TWProxy__factory.cjs.js"
+    },
+    "./factories/TWFactory__factory": {
+      "module": "./factories/TWFactory__factory/dist/thirdweb-dev-contracts-js-factories-TWFactory__factory.esm.js",
+      "default": "./factories/TWFactory__factory/dist/thirdweb-dev-contracts-js-factories-TWFactory__factory.cjs.js"
+    },
+    "./factories/TWRegistry__factory": {
+      "module": "./factories/TWRegistry__factory/dist/thirdweb-dev-contracts-js-factories-TWRegistry__factory.esm.js",
+      "default": "./factories/TWRegistry__factory/dist/thirdweb-dev-contracts-js-factories-TWRegistry__factory.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
   "license": "Apache-2.0",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/contracts-js",
   "dependencies": {
@@ -20,8 +43,19 @@
     "ethers": "^5.7.0"
   },
   "files": [
-    "dist/"
+    "dist/",
+    "factories/"
   ],
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts",
+      "./factories/TW*.ts"
+    ],
+    "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
+      "exports": true
+    },
+    "exports": true
+  },
   "scripts": {
     "format": "prettier --write 'src/**/*'",
     "lint": "eslint src/",

@@ -7,7 +7,7 @@ import {
   NFTMetadata,
   NFTMetadataInput,
 } from "../types/nft";
-import { Cluster, Metaplex } from "@metaplex-foundation/js";
+import { Metaplex } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";

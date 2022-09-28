@@ -10,8 +10,6 @@ import {
   findEditionMarkerPda,
   Metaplex,
   toBigNumber,
-  Cluster,
-  resolveClusterFromConnection,
 } from "@metaplex-foundation/js";
 import {
   EditionMarker,

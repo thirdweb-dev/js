@@ -39,7 +39,7 @@ import {
 import { ContractFactory } from "./factory";
 import { ContractRegistry } from "./registry";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import { TWProxy__factory } from "@thirdweb-dev/contracts-js";
+import { TWProxy__factory } from "@thirdweb-dev/contracts-js/factories/TWProxy__factory";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
