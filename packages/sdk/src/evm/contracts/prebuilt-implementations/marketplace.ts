@@ -19,13 +19,13 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { DEFAULT_QUERY_ALL_COUNT } from "../../types/QueryParams";
 import { AuctionListing, DirectListing, Offer } from "../../types/marketplace";
 import { MarketplaceFilter } from "../../types/marketplace/MarketPlaceFilter";
+import { UnmappedOffer } from "../../types/marketplace/UnmappedOffer";
 import type { Marketplace as MarketplaceContract } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Marketplace.json";
 import { NewOfferEventObject } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 import invariant from "tiny-invariant";
-import { UnmappedOffer } from "../../types/marketplace/UnmappedOffer";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -300,9 +300,9 @@ export class Marketplace implements UpdateableNetwork {
   }
 
   /**
-   * Get all the offers
+   * Get all the offers for a listing
    *
-   * @remarks Fetch all the offers for a specified direct listing.
+   * @remarks Fetch all the offers for a specified direct or auction listing.
    * @example
    * ```javascript
    * const offers = await marketplaceContract.getOffers(listingId);
@@ -561,25 +561,6 @@ export class Marketplace implements UpdateableNetwork {
     }
     return rawListings;
   }
-
-  // TODO: Complete method implementation with subgraph
-  // /**
-  //  * @beta - This method is not yet complete.
-  //  *
-  //  * @param listingId
-  //  * @returns
-  //  */
-  // public async getActiveOffers(listingId: BigNumberish): Promise<Offer[]> {
-  //   const listing = await this.validateDirectListing(BigNumber.from(listingId));
-
-  //   const offers = await this.readOnlyContract.offers(listing.id, "");
-
-  //   return await Promise.all(
-  //     offers.map(async (offer: any) => {
-  //       return await this.mapOffer(BigNumber.from(listingId), offer);
-  //     }),
-  //   );
-  // }
 
   /**
    * @internal
