@@ -1,3 +1,4 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { useSDKChainId } from "../../providers/base";
 import {
   AirdropNFTParams,
@@ -6,7 +7,6 @@ import {
   MintNFTReturnType,
   MintNFTSupplyParams,
   NFT,
-  RequiredParam,
   TransferNFTParams,
   WalletAddress,
   Erc721OrErc1155,
@@ -282,6 +282,7 @@ export function useOwnedNFTs<TContract extends NFTContract>(
     cacheKeys.contract.nft.query.owned.all(contractAddress, ownerWalletAddress),
     async () => {
       invariant(contract, "No Contract instance provided");
+      invariant(ownerWalletAddress, "No wallet address provided");
       if (erc721) {
         return convertResponseToNFTTypeArray(
           erc721,

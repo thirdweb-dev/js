@@ -7,7 +7,7 @@ import {
   WalletProvider,
 } from "@solana/wallet-adapter-react";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
-import { getUrlForNetwork, Network } from "@thirdweb-dev/solana";
+import { getUrlForNetwork, Network } from "@thirdweb-dev/sdk/solana";
 import { PropsWithChildren } from "react";
 
 interface ThirdwebProviderProps {

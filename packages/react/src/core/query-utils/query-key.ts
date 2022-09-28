@@ -6,7 +6,7 @@ import type {
   NFTCollection,
   NFTDrop,
   Token,
-} from "@thirdweb-dev/solana";
+} from "@thirdweb-dev/sdk/solana";
 
 // we prefix all our query keys with this to avoid possible collisions with user-defined queries that share the same query client
 const TW_QUERY_KEY_PREFIX = "__tw__";
@@ -59,7 +59,7 @@ export function createSOLProgramQueryKey<TKey extends QueryKey>(
   program: RequiredParam<NFTCollection | NFTDrop | Token>,
   key: TKey = [] as unknown as TKey,
 ) {
-  const network = program?.metaplex.cluster;
+  const network = program?.network;
   const address = program?.publicKey.toBase58();
   return createSOLQueryKeyWithNetwork(
     ["program", address, ...key] as const,
