@@ -42,3 +42,4 @@ export * from "./contract-interceptor";
 export * from "./contract-platform-fee";
 export * from "./contract-published-metadata";
 export * from "./contract-owner";
+export * from "./TransactionTask";
