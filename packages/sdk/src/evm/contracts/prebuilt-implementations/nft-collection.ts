@@ -3,6 +3,7 @@ import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
 import { ContractMetadata } from "../../core/classes/contract-metadata";
+import { ContractOwner } from "../../core/classes/contract-owner";
 import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractRoyalty } from "../../core/classes/contract-royalty";
@@ -77,6 +78,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
     TokenERC721,
     typeof TokenErc721ContractSchema
   >;
+  public owner: ContractOwner<TokenERC721>;
 
   /**
    * Signature Minting
@@ -136,6 +138,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
       this.contractWrapper,
       this.storage,
     );
+    this.owner = new ContractOwner(this.contractWrapper);
   }
 
   /**
