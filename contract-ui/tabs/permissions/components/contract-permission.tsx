@@ -279,8 +279,7 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
           {isLoading ? (
             <Spinner />
           ) : (
-            isRestricted &&
-            isPrebuilt && <PermissionEditor role={role} contract={contract} />
+            isRestricted && <PermissionEditor role={role} contract={contract} />
           )}
         </Stack>
       </Flex>
