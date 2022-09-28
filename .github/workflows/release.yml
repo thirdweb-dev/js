@@ -14,7 +14,8 @@ concurrency:
 jobs:
   release:
     name: Release
-    runs-on: ubuntu-latest
+    # try out buildjet to speed up build and test
+    runs-on: buildjet-32vcpu-ubuntu-2204
     steps:
       - name: Checkout branch
         uses: actions/checkout@v3
