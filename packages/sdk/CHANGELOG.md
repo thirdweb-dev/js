@@ -1,5 +1,15 @@
 # @thirdweb-dev/sdk
 
+## 3.1.1
+
+### Patch Changes
+
+- [#222](https://github.com/thirdweb-dev/js/pull/222) [`666ff5f`](https://github.com/thirdweb-dev/js/commit/666ff5f694f1e146150ddb9fa3233f00533b6d60) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] expose ThirdwebSDK.fromPrivateKey()
+
+- [#224](https://github.com/thirdweb-dev/js/pull/224) [`0dade96`](https://github.com/thirdweb-dev/js/commit/0dade96d0d2553d25b386d822e534eb7ed0aefa9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [EVM] Ensure that factory/proxy flags are set before deploying via proxy
+
+- [#221](https://github.com/thirdweb-dev/js/pull/221) [`c295a47`](https://github.com/thirdweb-dev/js/commit/c295a47144cd722c6f8861c1ec567b53a05ea0bf) Thanks [@jnsdls](https://github.com/jnsdls)! - fix esm exports
+
 ## 3.1.0
 
 ### Minor Changes

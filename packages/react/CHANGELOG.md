@@ -1,5 +1,11 @@
 # @thirdweb-dev/react
 
+## 3.1.1
+
+### Patch Changes
+
+- [#221](https://github.com/thirdweb-dev/js/pull/221) [`c295a47`](https://github.com/thirdweb-dev/js/commit/c295a47144cd722c6f8861c1ec567b53a05ea0bf) Thanks [@jnsdls](https://github.com/jnsdls)! - fix esm exports
+
 ## 3.1.0
 
 ### Minor Changes
