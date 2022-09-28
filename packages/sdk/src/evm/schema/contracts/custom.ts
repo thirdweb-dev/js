@@ -120,7 +120,7 @@ export const ChainIdToAddressSchema = z.record(z.string(), z.string());
 export const FactoryDeploymentSchema = z.object({
   implementationAddresses: ChainIdToAddressSchema,
   implementationInitializerFunction: z.string().default("initialize"),
-  factoryAddresses: ChainIdToAddressSchema,
+  factoryAddresses: ChainIdToAddressSchema.optional(),
 });
 
 /**
@@ -152,6 +152,7 @@ export const ExtraPublishMetadataSchemaInput = z
     audit: FileOrBufferOrStringSchema.nullable().optional(),
     logo: FileOrBufferOrStringSchema.nullable().optional(),
     isDeployableViaFactory: z.boolean().optional(),
+    isDeployableViaProxy: z.boolean().optional(),
     factoryDeploymentData: FactoryDeploymentSchema.optional(),
   })
   .catchall(z.any());

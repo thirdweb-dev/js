@@ -39,8 +39,15 @@ import {
 import { ContractFactory } from "./factory";
 import { ContractRegistry } from "./registry";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
+import { TWProxy__factory } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BytesLike, ContractInterface, ethers } from "ethers";
+import {
+  BigNumber,
+  BytesLike,
+  Contract,
+  ContractInterface,
+  ethers,
+} from "ethers";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 
@@ -451,6 +458,29 @@ export class ContractDeployer extends RPCConnectionHandler {
   }
 
   /**
+   * Deploy a proxy contract of a given implementation directly
+   * @param implementationAddress
+   * @param implementationAbi
+   * @param initializerFunction
+   * @param initializerArgs
+   */
+  public async deployProxy(
+    implementationAddress: string,
+    implementationAbi: ContractInterface,
+    initializerFunction: string,
+    initializerArgs: any[],
+  ): Promise<string> {
+    const encodedInitializer = Contract.getInterface(
+      implementationAbi,
+    ).encodeFunctionData(initializerFunction, initializerArgs);
+    return this.deployContractWithAbi(
+      TWProxy__factory.abi,
+      TWProxy__factory.bytecode,
+      [implementationAddress, encodedInitializer],
+    );
+  }
+
+  /**
    * @internal
    */
   public async getRegistry(): Promise<ContractRegistry> {
@@ -548,6 +578,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       this.storage,
     );
     let isDeployableViaFactory;
+    let isDeployableViaProxy;
     let factoryDeploymentData;
     try {
       const extendedMetadata = await fetchExtendedReleaseMetadata(
@@ -555,6 +586,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         this.storage,
       );
       isDeployableViaFactory = extendedMetadata.isDeployableViaFactory;
+      isDeployableViaProxy = extendedMetadata.isDeployableViaProxy;
       factoryDeploymentData = FactoryDeploymentSchema.parse(
         extendedMetadata.factoryDeploymentData,
       );
@@ -562,23 +594,15 @@ export class ContractDeployer extends RPCConnectionHandler {
       // not a factory deployment, ignore
     }
     const forceDirectDeploy = options?.forceDirectDeploy || false;
-    if (isDeployableViaFactory && factoryDeploymentData && !forceDirectDeploy) {
+    if (factoryDeploymentData && !forceDirectDeploy) {
       const chainId = (await this.getProvider().getNetwork()).chainId;
-      invariant(
-        factoryDeploymentData.factoryAddresses,
-        "factoryAddresses is required",
-      );
       invariant(
         factoryDeploymentData.implementationAddresses,
         "implementationAddresses is required",
       );
-      const factoryAddress = factoryDeploymentData.factoryAddresses[chainId];
       const implementationAddress =
         factoryDeploymentData.implementationAddresses[chainId];
-      invariant(
-        factoryAddress,
-        `factoryAddress not found for chainId '${chainId}'`,
-      );
+
       invariant(
         implementationAddress,
         `implementationAddress not found for chainId '${chainId}'`,
@@ -595,13 +619,34 @@ export class ContractDeployer extends RPCConnectionHandler {
         initializerParamTypes,
         constructorParamValues,
       );
-      return await this.deployViaFactory(
-        factoryAddress,
-        implementationAddress,
-        compilerMetadata.abi,
-        factoryDeploymentData.implementationInitializerFunction,
-        paramValues,
-      );
+
+      if (isDeployableViaProxy) {
+        // deploy a proxy directly
+        return await this.deployProxy(
+          implementationAddress,
+          compilerMetadata.abi,
+          factoryDeploymentData.implementationInitializerFunction,
+          paramValues,
+        );
+      } else if (isDeployableViaFactory) {
+        // deploy via a factory
+        invariant(
+          factoryDeploymentData.factoryAddresses,
+          "isDeployableViaFactory is true so factoryAddresses is required",
+        );
+        const factoryAddress = factoryDeploymentData.factoryAddresses[chainId];
+        invariant(
+          factoryAddress,
+          `isDeployableViaFactory is true and factoryAddress not found for chainId '${chainId}'`,
+        );
+        return await this.deployViaFactory(
+          factoryAddress,
+          implementationAddress,
+          compilerMetadata.abi,
+          factoryDeploymentData.implementationInitializerFunction,
+          paramValues,
+        );
+      }
     }
 
     const bytecode = compilerMetadata.bytecode.startsWith("0x")
