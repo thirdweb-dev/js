@@ -7,7 +7,10 @@ import {
   NFTMetadata,
   NFTMetadataInput,
 } from "../types/nft";
-import { Metaplex } from "@metaplex-foundation/js";
+import {
+  Metaplex,
+  MintCandyMachineOutput,
+} from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
@@ -73,7 +76,7 @@ export class NFTDrop {
 
   /**
    * Get the metadata for a specific NFT
-   * @param mintAddress - the mint address of the NFT to get
+   * @param nftAddress - the mint address of the NFT to get
    * @returns the metadata of the NFT
    *
    * @example
@@ -82,8 +85,8 @@ export class NFTDrop {
    * const nft = await program.get(mintAddress);
    * ```
    */
-  async get(mintAddress: string): Promise<NFTMetadata> {
-    return this.nft.get(mintAddress);
+  async get(nftAddress: string): Promise<NFTMetadata> {
+    return this.nft.get(nftAddress);
   }
 
   /**
@@ -134,15 +137,15 @@ export class NFTDrop {
    * const balance = await program.balance();
    * ```
    */
-  async balance(mintAddress: string): Promise<number> {
+  async balance(nftAddress: string): Promise<number> {
     const address = this.metaplex.identity().publicKey.toBase58();
-    return this.balanceOf(address, mintAddress);
+    return this.balanceOf(address, nftAddress);
   }
 
   /**
    * Get the NFT balance of the specified wallet
    * @param walletAddress - the wallet address to get the balance of
-   * @param mintAddress - the mint address of the NFT to get the balance of
+   * @param nftAddress - the mint address of the NFT to get the balance of
    * @returns the NFT balance
    *
    * @example
@@ -152,8 +155,8 @@ export class NFTDrop {
    * const balance = await program.balanceOf(walletAddress, mintAddress);
    * ```
    */
-  async balanceOf(walletAddress: string, mintAddress: string): Promise<number> {
-    return this.nft.balanceOf(walletAddress, mintAddress);
+  async balanceOf(walletAddress: string, nftAddress: string): Promise<number> {
+    return this.nft.balanceOf(walletAddress, nftAddress);
   }
 
   /**
@@ -190,7 +193,7 @@ export class NFTDrop {
   /**
    * Transfer the specified NFTs to another wallet
    * @param receiverAddress - The address to send the tokens to
-   * @param mintAddress - The mint address of the NFT to transfer
+   * @param nftAddress - The mint address of the NFT to transfer
    * @returns the transaction result of the transfer
    *
    * @example
@@ -202,9 +205,9 @@ export class NFTDrop {
    */
   async transfer(
     receiverAddress: string,
-    mintAddress: string,
+    nftAddress: string,
   ): Promise<TransactionResult> {
-    return this.nft.transfer(receiverAddress, mintAddress);
+    return this.nft.transfer(receiverAddress, nftAddress);
   }
 
   /**
@@ -254,16 +257,39 @@ export class NFTDrop {
    *
    * @example
    * ```jsx
-   * const address = await program.claim();
+   * const claimedAddresses = await program.claim(1);
+   * console.log("Claimed NFT at address", claimedAddresses[0]);
    * ```
    */
-  async claim(): Promise<string> {
-    const result = await this.metaplex
-      .candyMachines()
-      .mint({ candyMachine: await this.getCandyMachine() })
-      .run();
+  async claim(quantity: number): Promise<string[]> {
+    const address = this.metaplex.identity().publicKey.toBase58();
+    return this.claimTo(address, quantity);
+  }
 
-    return result.nft.address.toBase58();
+  /**
+   * Claim an NFT from the drop for the specified wallet
+   * @returns - the mint address of the claimed NFT
+   *
+   * @example
+   * ```jsx
+   * const receiverAddress =  "...";
+   * const claimedAddresses = await program.claimTo(receiverAddress, 1);
+   * console.log("Claimed NFT at address", claimedAddresses[0]);
+   * ```
+   */
+  async claimTo(receiverAddress: string, quantity: number): Promise<string[]> {
+    const candyMachine = await this.getCandyMachine();
+    const results: MintCandyMachineOutput[] = [];
+    // has to claim sequentially
+    for (let i = 0; i < quantity; i++) {
+      results.push(
+        await this.metaplex
+          .candyMachines()
+          .mint({ candyMachine, newOwner: new PublicKey(receiverAddress) })
+          .run(),
+      );
+    }
+    return results.map((result) => result.nft.address.toBase58());
   }
 
   private async getCandyMachine() {
