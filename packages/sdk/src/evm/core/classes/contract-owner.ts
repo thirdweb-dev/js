@@ -22,14 +22,22 @@ export class ContractOwner<TContract extends Ownable>
    * Return the current owner of the contract
    * @returns the owner address
    */
-  public async get(): Promise<string> {
+   public async get(): Promise<string> {
     return this.contractWrapper.readContract.owner();
   }
 
   /**
-   * set tje new owner of the contract
+   * Set the new owner of the contract
+   * @remarks Can only be called by the current owner.
+   *
+   * @param address - the address of the new owner
+   * 
+   * @example
+   * ```javascript
+   * await contract.owner.set("0x1234567890123456789012345678901234567890");
+   * ```
    */
-  public async set(address: string): Promise<TransactionResult> {
+   public async set(address: string): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction("setOwner", [
         address,
