@@ -7,10 +7,13 @@
   "main": "dist/thirdweb-dev-sdk.cjs.js",
   "module": "dist/thirdweb-dev-sdk.esm.js",
   "exports": {
-    "./package.json": "./package.json",
     ".": {
       "module": "./dist/thirdweb-dev-sdk.esm.js",
       "default": "./dist/thirdweb-dev-sdk.cjs.js"
+    },
+    "./evm": {
+      "module": "./evm/dist/thirdweb-dev-sdk-evm.esm.js",
+      "default": "./evm/dist/thirdweb-dev-sdk-evm.cjs.js"
     },
     "./solana": {
       "module": "./solana/dist/thirdweb-dev-sdk-solana.esm.js",
@@ -20,10 +23,7 @@
       "module": "./solana/server/dist/thirdweb-dev-sdk-solana-server.esm.js",
       "default": "./solana/server/dist/thirdweb-dev-sdk-solana-server.cjs.js"
     },
-    "./evm": {
-      "module": "./evm/dist/thirdweb-dev-sdk-evm.esm.js",
-      "default": "./evm/dist/thirdweb-dev-sdk-evm.cjs.js"
-    }
+    "./package.json": "./package.json"
   },
   "files": [
     "dist/",
@@ -37,7 +37,11 @@
       "evm/index.ts",
       "solana/index.ts",
       "solana/server/index.ts"
-    ]
+    ],
+    "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
+      "exports": true
+    },
+    "exports": true
   },
   "sideEffects": false,
   "scripts": {

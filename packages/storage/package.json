@@ -3,6 +3,13 @@
   "version": "1.0.3",
   "main": "dist/thirdweb-dev-storage.cjs.js",
   "module": "dist/thirdweb-dev-storage.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/thirdweb-dev-storage.esm.js",
+      "default": "./dist/thirdweb-dev-storage.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/storage",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -21,6 +28,12 @@
   "files": [
     "dist/"
   ],
+  "preconstruct": {
+    "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
+      "exports": true
+    },
+    "exports": true
+  },
   "devDependencies": {
     "@babel/preset-env": "^7.18.10",
     "@babel/preset-typescript": "^7.18.6",
