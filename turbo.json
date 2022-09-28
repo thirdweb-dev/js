@@ -18,7 +18,7 @@
       "dependsOn": ["^build"]
     },
     "contracts-js#build": {
-      "outputs": ["dist/**", "src/**"],
+      "outputs": ["dist/**", "src/**", "factories/**"],
       "dependsOn": ["^build"]
     },
     "solana#build": {
