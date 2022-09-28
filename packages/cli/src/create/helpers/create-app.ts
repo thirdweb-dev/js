@@ -166,11 +166,9 @@ export async function createApp({
       }
 
       fs.writeFileSync(jsonFile, JSON.stringify(packageJson, null, 2) + os.EOL);
-
-      console.log("Updated package.json.");
-      console.log();
     } catch (e) {
-      console.log("Reading JSON error");
+      console.log("Failed to re-name package.json, continuing...");
+
       console.log();
     }
 
