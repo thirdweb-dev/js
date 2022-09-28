@@ -271,7 +271,7 @@ async function extractIPFSHashFromBytecode(
   const cborLength: number =
     numericBytecode[numericBytecode.length - 2] * 0x100 +
     numericBytecode[numericBytecode.length - 1];
-  const bytecodeBuffer = Buffer.from(
+  const bytecodeBuffer = Uint8Array.from(
     numericBytecode.slice(numericBytecode.length - 2 - cborLength, -2),
   );
 

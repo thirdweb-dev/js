@@ -9,7 +9,6 @@ import {
   Metaplex,
   Signer,
   SOL,
-  sol,
   walletAdapterIdentity,
 } from "@metaplex-foundation/js";
 import { Keypair, PublicKey } from "@solana/web3.js";

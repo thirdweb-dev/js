@@ -35,7 +35,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
  * @public
  */
 export class NFTCollection {
-  private metaplex: Metaplex;
+  public metaplex: Metaplex;
   private storage: ThirdwebStorage;
   private nft: NFTHelper;
   public publicKey: PublicKey;

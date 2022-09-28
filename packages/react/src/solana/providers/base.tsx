@@ -1,15 +1,14 @@
+import {
+  QueryClientProviderProps,
+  QueryClientProviderWithDefault,
+} from "../../core/providers/query-client";
+import { ComponentWithChildren } from "../../core/types/component";
 import type { WalletContextState } from "@solana/wallet-adapter-react";
 import type { Connection } from "@solana/web3.js";
 import { ThirdwebSDK } from "@thirdweb-dev/solana";
-import {
-  createContext,
-  FC,
-  PropsWithChildren,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
-interface ThirdwebSDKProviderProps {
+interface ThirdwebSDKProviderProps extends QueryClientProviderProps {
   connection: Connection;
   wallet?: WalletContextState;
 }
@@ -35,9 +34,9 @@ interface ThirdwebSDKProviderProps {
  * )};
  * ```
  */
-export const ThirdwebSDKProvider: FC<
-  PropsWithChildren<ThirdwebSDKProviderProps>
-> = ({ children, connection, wallet }) => {
+export const ThirdwebSDKProvider: ComponentWithChildren<
+  ThirdwebSDKProviderProps
+> = ({ children, connection, queryClient, wallet }) => {
   const [sdk, setSDK] = useState<ThirdwebSDK | null>(null);
 
   useEffect(() => {
@@ -59,10 +58,16 @@ export const ThirdwebSDKProvider: FC<
   }, [sdk, wallet]);
 
   return (
-    <ThirdwebSDKContext.Provider value={sdk}>
-      {children}
-    </ThirdwebSDKContext.Provider>
+    <QueryClientProviderWithDefault queryClient={queryClient}>
+      <ThirdwebSDKContext.Provider value={sdk}>
+        {children}
+      </ThirdwebSDKContext.Provider>
+    </QueryClientProviderWithDefault>
   );
 };
 
-export const ThirdwebSDKContext = createContext<ThirdwebSDK | null>(null);
+const ThirdwebSDKContext = createContext<ThirdwebSDK | null>(null);
+
+export function useSDK() {
+  return useContext(ThirdwebSDKContext);
+}
