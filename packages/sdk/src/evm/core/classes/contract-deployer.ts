@@ -594,7 +594,11 @@ export class ContractDeployer extends RPCConnectionHandler {
       // not a factory deployment, ignore
     }
     const forceDirectDeploy = options?.forceDirectDeploy || false;
-    if (factoryDeploymentData && !forceDirectDeploy) {
+    if (
+      factoryDeploymentData &&
+      (isDeployableViaProxy || isDeployableViaFactory) &&
+      !forceDirectDeploy
+    ) {
       const chainId = (await this.getProvider().getNetwork()).chainId;
       invariant(
         factoryDeploymentData.implementationAddresses,
