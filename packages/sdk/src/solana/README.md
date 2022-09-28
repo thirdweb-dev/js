@@ -16,11 +16,11 @@
 Install the latest version of the SDK with either `npm` or `yarn`:
 
 ```shell
-npm install @thirdweb-dev/solana
+npm install @thirdweb-dev/sdk
 ```
 
 ```shell
-yarn add @thirdweb-dev/solana
+yarn add @thirdweb-dev/sdk
 ```
 
 ## Quick Start
@@ -28,7 +28,7 @@ yarn add @thirdweb-dev/solana
 The first thing to do to get started with Solana using thirdweb is to deploy a program. You can do this via the [Dashboard](https://thirdweb.com/dashboard), or via the SDK with the following snippet:
 
 ```jsx
-import { ThirdwebSDK } from "@thirdweb-dev/solana";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
 
 // First, we instantiate the SDK and connect to Solana devnet
 const sdk = ThirdwebSDK.fromNetwork("devnet");
