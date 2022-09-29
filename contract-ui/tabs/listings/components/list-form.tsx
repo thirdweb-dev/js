@@ -1,3 +1,4 @@
+import { useActiveNetwork } from "@3rdweb-sdk/react";
 import { useWalletNFTs } from "@3rdweb-sdk/react/hooks/useWalletNFTs";
 import {
   Center,
@@ -24,6 +25,7 @@ import {
   NewDirectListing,
 } from "@thirdweb-dev/sdk";
 import { CurrencySelector } from "components/shared/CurrencySelector";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { WalletNFT } from "lib/wallet/nfts/types";
 import { useForm } from "react-hook-form";
@@ -52,8 +54,8 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
   auctionList,
   formId,
 }) => {
-  // const trackEvent = useTrack();
-  // const address = useAddress();
+  const trackEvent = useTrack();
+  const network = useActiveNetwork();
 
   const { data: nfts, isLoading: nftsLoading } = useWalletNFTs();
 
@@ -129,9 +131,24 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
             {
               onSuccess: () => {
                 onSuccess();
+                trackEvent({
+                  category: "marketplace",
+                  action: "add-listing",
+                  label: "success",
+                  network,
+                });
                 modalContext.onClose();
               },
-              onError,
+              onError: (error) => {
+                trackEvent({
+                  category: "marketplace",
+                  action: "add-listing",
+                  label: "error",
+                  network,
+                  error,
+                });
+                onError(error);
+              },
             },
           );
         }

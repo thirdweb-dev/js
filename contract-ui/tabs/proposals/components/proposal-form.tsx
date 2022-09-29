@@ -8,6 +8,7 @@ import {
   Textarea,
   useModalContext,
 } from "@chakra-ui/react";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
 import { FormErrorMessage, FormLabel } from "tw-components";
@@ -26,6 +27,7 @@ export const CreateProposalForm: React.FC<ProposalFormProps> = ({
     handleSubmit,
     formState: { errors },
   } = useForm<IProposalInput>();
+  const trackEvent = useTrack();
 
   const modalContext = useModalContext();
 
@@ -43,9 +45,22 @@ export const CreateProposalForm: React.FC<ProposalFormProps> = ({
         propose.mutate(data, {
           onSuccess: () => {
             onSuccess();
+            trackEvent({
+              category: "vote",
+              action: "create-proposal",
+              label: "success",
+            });
             modalContext.onClose();
           },
-          onError,
+          onError: (error) => {
+            trackEvent({
+              category: "vote",
+              action: "create-proposal",
+              label: "error",
+              error,
+            });
+            onError(error);
+          },
         });
       })}
     >

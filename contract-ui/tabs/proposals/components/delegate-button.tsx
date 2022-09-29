@@ -5,6 +5,7 @@ import {
 import { Tooltip } from "@chakra-ui/react";
 import { Vote } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/vote";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 
 interface VoteButtonProps {
@@ -12,6 +13,7 @@ interface VoteButtonProps {
 }
 
 export const DelegateButton: React.FC<VoteButtonProps> = ({ contract }) => {
+  const trackEvent = useTrack();
   const { data: delegated, isLoading } = useTokensDelegated(contract);
   const { mutate: delegate, isLoading: isDelegating } =
     useDelegateMutation(contract);
@@ -31,8 +33,23 @@ export const DelegateButton: React.FC<VoteButtonProps> = ({ contract }) => {
         transactionCount={1}
         onClick={() =>
           delegate(undefined, {
-            onSuccess,
-            onError,
+            onSuccess: () => {
+              onSuccess();
+              trackEvent({
+                category: "vote",
+                action: "delegate",
+                label: "success",
+              });
+            },
+            onError: (error) => {
+              trackEvent({
+                category: "vote",
+                action: "delegate",
+                label: "error",
+                error,
+              });
+              onError(error);
+            },
           })
         }
         isLoading={isDelegating}

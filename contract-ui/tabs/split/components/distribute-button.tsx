@@ -6,6 +6,8 @@ import { UseContractResult } from "@thirdweb-dev/react";
 import { Split } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/split";
 import { MismatchButton } from "components/buttons/MismatchButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { useTrack } from "hooks/analytics/useTrack";
+import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo } from "react";
 import { Button } from "tw-components";
 
@@ -19,6 +21,7 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
   balances,
   ...restButtonProps
 }) => {
+  const trackEvent = useTrack();
   const numTransactions = useMemo(() => {
     if (!balances.data || balances.isLoading) {
       return 0;
@@ -30,6 +33,33 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
     contractQuery?.contract,
   );
 
+  const { onSuccess, onError } = useTxNotifications(
+    "Funds splitted successfully",
+    "Failed to process transaction",
+  );
+
+  const distributeFunds = () => {
+    distibutedFundsMutation.mutate(undefined, {
+      onSuccess: () => {
+        onSuccess();
+        trackEvent({
+          category: "split",
+          action: "distribute",
+          label: "success",
+        });
+      },
+      onError: (error) => {
+        trackEvent({
+          category: "split",
+          action: "distribute",
+          label: "error",
+          error,
+        });
+        onError(error);
+      },
+    });
+  };
+
   if (balances.isError) {
     // if we fail to get the balances, we can't know how many transactions there are going to be
     // we still want to show the button, so we'll just show the mismatch button
@@ -37,7 +67,7 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
       <MismatchButton
         isLoading={distibutedFundsMutation.isLoading}
         colorScheme="primary"
-        onClick={() => distibutedFundsMutation.mutate()}
+        onClick={distributeFunds}
         {...restButtonProps}
       >
         Distribute Funds
@@ -58,7 +88,7 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
       transactionCount={numTransactions}
       isLoading={balances.isLoading || distibutedFundsMutation.isLoading}
       colorScheme="primary"
-      onClick={() => distibutedFundsMutation.mutate()}
+      onClick={distributeFunds}
       {...restButtonProps}
     >
       Distribute Funds
