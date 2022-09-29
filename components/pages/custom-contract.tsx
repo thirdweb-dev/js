@@ -152,7 +152,6 @@ const ContractSubnav: React.FC<ContractSubnavProps> = ({ routes }) => {
 
   return (
     <Flex
-      marginLeft={2}
       direction="row"
       gap={0}
       position="relative"
