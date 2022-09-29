@@ -1,5 +1,11 @@
 # @thirdweb-dev/react
 
+## 3.1.2
+
+### Patch Changes
+
+- [#229](https://github.com/thirdweb-dev/js/pull/229) [`9c8a3fb`](https://github.com/thirdweb-dev/js/commit/9c8a3fb6d4520dd6cdf2d1c17f33b764e871599e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Expose useClaimNFT hook
+
 ## 3.1.1
 
 ### Patch Changes

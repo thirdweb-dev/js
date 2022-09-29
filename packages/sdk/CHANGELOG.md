@@ -1,5 +1,25 @@
 # @thirdweb-dev/sdk
 
+## 3.1.2
+
+### Patch Changes
+
+- [#191](https://github.com/thirdweb-dev/js/pull/191) [`8239763`](https://github.com/thirdweb-dev/js/commit/82397636f41faa2b44cfe70e75212f0f42291092) Thanks [@mykcryptodev](https://github.com/mykcryptodev)! - Get all offers for a listing
+
+- [#194](https://github.com/thirdweb-dev/js/pull/194) [`27a30e3`](https://github.com/thirdweb-dev/js/commit/27a30e3ffb56dd7fa8412a066bc3ac0977aca8e2) Thanks [@aeither](https://github.com/aeither)! - Add ability to view and update owner of a contract
+
+- [#226](https://github.com/thirdweb-dev/js/pull/226) [`f2a6211`](https://github.com/thirdweb-dev/js/commit/f2a62110c43e7b8f35c86a197730e732f8fcc786) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] shrink size by importing TWProxy\_\_factory individually
+
+- [#232](https://github.com/thirdweb-dev/js/pull/232) [`d26b768`](https://github.com/thirdweb-dev/js/commit/d26b76872a6c85651ee06aa0732ee2967f70db27) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Dynamic imports for anchor programs
+
+- [#182](https://github.com/thirdweb-dev/js/pull/182) [`ba7dcbb`](https://github.com/thirdweb-dev/js/commit/ba7dcbbad8db2b73baf1435f4175d19933cb7d4f) Thanks [@jnebab](https://github.com/jnebab)! - added getMinimumNextBid function in marketplace contract to get the minimum bid a user can place to outbid the previous highest bid
+
+- [#229](https://github.com/thirdweb-dev/js/pull/229) [`9c8a3fb`](https://github.com/thirdweb-dev/js/commit/9c8a3fb6d4520dd6cdf2d1c17f33b764e871599e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Allow passing a quantity to claim, and new claimTo function
+
+- Updated dependencies [[`f2a6211`](https://github.com/thirdweb-dev/js/commit/f2a62110c43e7b8f35c86a197730e732f8fcc786), [`f2a6211`](https://github.com/thirdweb-dev/js/commit/f2a62110c43e7b8f35c86a197730e732f8fcc786)]:
+  - @thirdweb-dev/storage@1.0.4
+  - @thirdweb-dev/contracts-js@1.1.9
+
 ## 3.1.1
 
 ### Patch Changes
