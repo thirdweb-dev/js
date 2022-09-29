@@ -3,17 +3,11 @@ import { Registry } from "./classes/registry";
 import { UserWallet } from "./classes/user-wallet";
 import { NFTCollection } from "./contracts/nft-collection";
 import { NFTDrop } from "./contracts/nft-drop";
-import { Program } from "./contracts/program";
 import { Token } from "./contracts/token";
 import { Network } from "./types";
 import { getUrlForNetwork } from "./utils/urls";
 import { Metaplex } from "@metaplex-foundation/js";
-import {
-  AnchorProvider,
-  Idl,
-  Program as AnchorProgram,
-  setProvider,
-} from "@project-serum/anchor";
+import type { Idl } from "@project-serum/anchor";
 import { Connection, Keypair } from "@solana/web3.js";
 import { IpfsUploader, ThirdwebStorage } from "@thirdweb-dev/storage";
 import Bs58 from "bs58";
@@ -70,7 +64,6 @@ export class ThirdwebSDK {
 
   private connection: Connection;
   private metaplex: Metaplex;
-  private anchorProvider: AnchorProvider;
   private storage: ThirdwebStorage;
 
   /**
@@ -104,17 +97,6 @@ export class ThirdwebSDK {
     this.wallet = new UserWallet(this.metaplex);
     this.deployer = new Deployer(this.metaplex, this.storage);
     this.registry = new Registry(this.metaplex);
-    this.anchorProvider = new AnchorProvider(
-      this.metaplex.connection,
-      this.metaplex.identity(),
-      {},
-    );
-    this.wallet.events.on("connected", () => {
-      this.propagateWalletConnected();
-    });
-    this.wallet.events.on("disconnected", () => {
-      this.propagateWalletDisconnected();
-    });
   }
 
   /**
@@ -150,7 +132,11 @@ export class ThirdwebSDK {
    * @returns SDK interface for the program
    */
   public async getProgram(address: string) {
-    const idl = await AnchorProgram.fetchIdl(address, this.anchorProvider);
+    const anchor = await import("@project-serum/anchor");
+    const idl = await anchor.Program.fetchIdl(
+      address,
+      new anchor.AnchorProvider(this.connection, this.metaplex.identity(), {}),
+    );
     if (!idl) {
       throw new Error(
         `Could not fetch IDL for program at address '${address}'`,
@@ -166,19 +152,7 @@ export class ThirdwebSDK {
    * @returns SDK interface for the program
    */
   public async getProgramWithIdl(address: string, idl: Idl) {
-    return new Program(address, idl, this.anchorProvider);
-  }
-
-  private propagateWalletConnected() {
-    setProvider(
-      new AnchorProvider(this.connection, this.metaplex.identity(), {}),
-    );
-  }
-
-  private propagateWalletDisconnected() {
-    // metaplex.identity() will return a guest identity
-    setProvider(
-      new AnchorProvider(this.connection, this.metaplex.identity(), {}),
-    );
+    const program = await import("./contracts/program");
+    return new program.Program(address, idl, this.connection, this.wallet);
   }
 }

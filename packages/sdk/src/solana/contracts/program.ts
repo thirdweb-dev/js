@@ -1,9 +1,12 @@
+import { UserWallet } from "../classes/user-wallet";
+import { Cluster, resolveClusterFromConnection } from "@metaplex-foundation/js";
 import {
   Program as AnchorProgram,
   Idl,
   AnchorProvider,
+  setProvider,
 } from "@project-serum/anchor";
-import { Signer } from "@solana/web3.js";
+import { Connection, PublicKey, Signer } from "@solana/web3.js";
 
 /**
  * Dynamic interface for interacting with Solana programs.
@@ -23,9 +26,27 @@ import { Signer } from "@solana/web3.js";
  */
 export class Program {
   private program: AnchorProgram<Idl>;
+  public publicKey: PublicKey;
+  public accountType = "program" as const;
+  public network: Cluster;
 
-  constructor(programAddress: string, idl: Idl, provider?: AnchorProvider) {
-    this.program = new AnchorProgram(idl, programAddress, provider);
+  constructor(
+    programAddress: string,
+    idl: Idl,
+    connection: Connection,
+    wallet: UserWallet,
+  ) {
+    this.publicKey = new PublicKey(programAddress);
+    this.network = resolveClusterFromConnection(connection);
+    setProvider(new AnchorProvider(connection, wallet.getSigner(), {}));
+    this.program = new AnchorProgram(idl, programAddress);
+    wallet.events.on("connected", () => {
+      setProvider(new AnchorProvider(connection, wallet.getSigner(), {}));
+    });
+    wallet.events.on("disconnected", () => {
+      // identity will be guest in this case
+      setProvider(new AnchorProvider(connection, wallet.getSigner(), {}));
+    });
   }
 
   /**
