@@ -61,6 +61,13 @@ export const PRODUCTS: IProduct[] = [
     link: "/deploy",
     icon: require("public/assets/product-icons/deploy.png"),
   },
+  {
+    name: "UI Components",
+    label: "ui-components",
+    description: "Plug-and-play frontend components",
+    link: "/ui-components",
+    icon: require("public/assets/product-icons/ui-components.png"),
+  },
 ];
 
 export const Products: React.FC = () => {
