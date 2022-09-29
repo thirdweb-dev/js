@@ -1,25 +1,20 @@
-import { Link } from "@chakra-ui/react";
+import { Flex, Link } from "@chakra-ui/react";
 import posthog from "posthog-js";
 import { Text } from "tw-components";
 
 const PLEASE_REACH_OUT_MESSAGE = (
-  <>
-    <br />
-    <br />
-    <Text as="span" color="inherit">
-      If you believe this is incorrect or the error persists, please reach out
-      in{" "}
-      <Link
-        fontWeight="700"
-        href="https://discord.gg/thirdweb"
-        isExternal
-        textDecor="underline"
-      >
-        discord
-      </Link>
-      .
-    </Text>
-  </>
+  <Text as="span" color="inherit">
+    If you believe this is incorrect or the error persists, please reach out in{" "}
+    <Link
+      fontWeight="700"
+      href="https://discord.gg/thirdweb"
+      isExternal
+      textDecor="underline"
+    >
+      discord
+    </Link>
+    .
+  </Text>
 );
 
 const UNKNOWN_ERROR_MESSAGE = "An unknown error occurred, please try again.";
@@ -28,10 +23,14 @@ export function parseErrorToMessage(error: unknown): string | JSX.Element {
   const message = parseError(error);
 
   return (
-    <Text as="span" color="inherit">
-      {message}
-      <i>{PLEASE_REACH_OUT_MESSAGE}</i>
-    </Text>
+    <Flex gap={4} flexDir="column">
+      <Text as="span" color="inherit" noOfLines={3}>
+        {message}
+      </Text>
+      <Text fontStyle="italic" as="span" color="inherit">
+        {PLEASE_REACH_OUT_MESSAGE}
+      </Text>
+    </Flex>
   );
 }
 
