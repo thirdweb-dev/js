@@ -102,7 +102,7 @@ export class NFTDrop {
     return await Promise.all(
       info.items.map(async (item) => {
         const metadata = await this.storage.downloadJSON(item.uri);
-        return { uri: item.uri, ...metadata };
+        return { id: "", uri: item.uri, ...metadata };
       }),
     );
   }
