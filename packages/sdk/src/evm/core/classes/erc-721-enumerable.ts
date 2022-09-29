@@ -1,5 +1,5 @@
+import { NFT } from "../../../core/schema/nft";
 import { FEATURE_NFT_ENUMERABLE } from "../../constants/erc721-features";
-import { NFTMetadataOwner } from "../../schema";
 import { BaseERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";
@@ -45,7 +45,7 @@ export class Erc721Enumerable implements DetectableFeature {
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async all(walletAddress?: string): Promise<NFTMetadataOwner[]> {
+  public async all(walletAddress?: string): Promise<NFT[]> {
     const tokenIds = await this.tokenIds(walletAddress);
     return await Promise.all(
       tokenIds.map((tokenId) => this.erc721.get(tokenId.toString())),

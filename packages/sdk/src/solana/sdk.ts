@@ -1,9 +1,9 @@
 import { Deployer } from "./classes/deployer";
 import { Registry } from "./classes/registry";
 import { UserWallet } from "./classes/user-wallet";
-import { NFTCollection } from "./contracts/nft-collection";
-import { NFTDrop } from "./contracts/nft-drop";
-import { Token } from "./contracts/token";
+import { NFTCollection } from "./programs/nft-collection";
+import { NFTDrop } from "./programs/nft-drop";
+import { Token } from "./programs/token";
 import { Network } from "./types";
 import { getUrlForNetwork } from "./utils/urls";
 import { Metaplex } from "@metaplex-foundation/js";
@@ -161,7 +161,7 @@ export class ThirdwebSDK {
    * @returns SDK interface for the program
    */
   public async getProgramWithIdl(address: string, idl: Idl) {
-    const program = await import("./contracts/program");
+    const program = await import("./programs/program");
     return new program.Program(address, idl, this.connection, this.wallet);
   }
 }

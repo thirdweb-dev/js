@@ -1,4 +1,4 @@
-import { EditionMetadata } from "../../schema/tokens/edition";
+import { NFT } from "../../../core/schema/nft";
 import { AirdropInput } from "../../types/airdrop/airdrop";
 import { BaseERC1155, BaseSignatureMintERC1155 } from "../../types/eips";
 import { UpdateableNetwork } from "../interfaces/contract";
@@ -58,7 +58,7 @@ export class StandardErc1155<
    * @param tokenId - the tokenId of the NFT to retrieve
    * @returns The NFT metadata
    */
-  public async get(tokenId: BigNumberish): Promise<EditionMetadata> {
+  public async get(tokenId: BigNumberish): Promise<NFT> {
     return this.erc1155.get(tokenId);
   }
 

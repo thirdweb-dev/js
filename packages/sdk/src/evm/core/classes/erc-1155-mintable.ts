@@ -1,7 +1,8 @@
+import { NFT } from "../../../core/schema/nft";
 import { detectContractFeature } from "../../common";
 import { uploadOrExtractURI } from "../../common/nft";
 import { FEATURE_EDITION_MINTABLE } from "../../constants/erc1155-features";
-import { EditionMetadata, EditionMetadataOrUri } from "../../schema";
+import { EditionMetadataOrUri } from "../../schema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
@@ -75,7 +76,7 @@ export class Erc1155Mintable implements DetectableFeature {
   public async to(
     to: string,
     metadataWithSupply: EditionMetadataOrUri,
-  ): Promise<TransactionResultWithId<EditionMetadata>> {
+  ): Promise<TransactionResultWithId<NFT>> {
     const uri = await uploadOrExtractURI(
       metadataWithSupply.metadata,
       this.storage,
@@ -122,7 +123,7 @@ export class Erc1155Mintable implements DetectableFeature {
     to: string,
     tokenId: BigNumberish,
     additionalSupply: BigNumberish,
-  ): Promise<TransactionResultWithId<EditionMetadata>> {
+  ): Promise<TransactionResultWithId<NFT>> {
     const metadata = await this.erc1155.getTokenMetadata(tokenId);
     const receipt = await this.contractWrapper.sendTransaction("mintTo", [
       to,

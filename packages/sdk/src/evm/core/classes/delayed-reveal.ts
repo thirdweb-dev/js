@@ -1,14 +1,14 @@
+import {
+  CommonNFTInput,
+  NFTMetadata,
+  NFTMetadataInput,
+} from "../../../core/schema/nft";
 import { hasFunction } from "../../common";
 import {
   fetchTokenMetadataForContract,
   getBaseUriFromBatch,
 } from "../../common/nft";
 import { FeatureName } from "../../constants/contract-features";
-import {
-  CommonNFTInput,
-  NFTMetadata,
-  NFTMetadataInput,
-} from "../../schema/tokens/common";
 import { BatchToReveal } from "../../types/delayed-reveal";
 import {
   BaseDelayedRevealERC1155,

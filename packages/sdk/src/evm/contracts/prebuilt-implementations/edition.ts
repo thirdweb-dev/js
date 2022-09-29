@@ -1,3 +1,4 @@
+import { NFT } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
@@ -20,11 +21,7 @@ import {
 } from "../../core/types";
 import { TokenErc1155ContractSchema } from "../../schema/contracts/token-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
-import {
-  EditionMetadata,
-  EditionMetadataOrUri,
-  EditionMetadataOwner,
-} from "../../schema/tokens/edition";
+import { EditionMetadataOrUri } from "../../schema/tokens/edition";
 import { QueryAllParams } from "../../types";
 import type { TokenERC1155 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC1155.json";
@@ -168,9 +165,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs queried.
    */
-  public async getAll(
-    queryParams?: QueryAllParams,
-  ): Promise<EditionMetadata[]> {
+  public async getAll(queryParams?: QueryAllParams): Promise<NFT[]> {
     return this.erc1155.getAll(queryParams);
   }
 
@@ -188,9 +183,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    *
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async getOwned(
-    walletAddress?: string,
-  ): Promise<EditionMetadataOwner[]> {
+  public async getOwned(walletAddress?: string): Promise<NFT[]> {
     return this.erc1155.getOwned(walletAddress);
   }
 
@@ -225,7 +218,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    */
   public async mint(
     metadataWithSupply: EditionMetadataOrUri,
-  ): Promise<TransactionResultWithId<EditionMetadata>> {
+  ): Promise<TransactionResultWithId<NFT>> {
     return this.erc1155.mint(metadataWithSupply);
   }
 
@@ -260,7 +253,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
   public async mintTo(
     to: string,
     metadataWithSupply: EditionMetadataOrUri,
-  ): Promise<TransactionResultWithId<EditionMetadata>> {
+  ): Promise<TransactionResultWithId<NFT>> {
     return this.erc1155.mintTo(to, metadataWithSupply);
   }
 
@@ -273,7 +266,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
   public async mintAdditionalSupply(
     tokenId: BigNumberish,
     additionalSupply: BigNumberish,
-  ): Promise<TransactionResultWithId<EditionMetadata>> {
+  ): Promise<TransactionResultWithId<NFT>> {
     return this.erc1155.mintAdditionalSupply(tokenId, additionalSupply);
   }
 
@@ -288,7 +281,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     to: string,
     tokenId: BigNumberish,
     additionalSupply: BigNumberish,
-  ): Promise<TransactionResultWithId<EditionMetadata>> {
+  ): Promise<TransactionResultWithId<NFT>> {
     return this.erc1155.mintAdditionalSupplyTo(to, tokenId, additionalSupply);
   }
 
@@ -299,7 +292,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
    */
   public async mintBatch(
     metadatas: EditionMetadataOrUri[],
-  ): Promise<TransactionResultWithId<EditionMetadata>[]> {
+  ): Promise<TransactionResultWithId<NFT>[]> {
     return this.erc1155.mintBatch(metadatas);
   }
 
@@ -339,7 +332,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
   public async mintBatchTo(
     to: string,
     metadataWithSupply: EditionMetadataOrUri[],
-  ): Promise<TransactionResultWithId<EditionMetadata>[]> {
+  ): Promise<TransactionResultWithId<NFT>[]> {
     return this.erc1155.mintBatchTo(to, metadataWithSupply);
   }
 

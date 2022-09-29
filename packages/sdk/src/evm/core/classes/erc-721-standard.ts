@@ -1,4 +1,4 @@
-import { NFTMetadataOwner } from "../../schema/tokens/common";
+import { NFT } from "../../../core/schema/nft";
 import { QueryAllParams } from "../../types";
 import { BaseERC721 } from "../../types/eips";
 import { UpdateableNetwork } from "../interfaces/contract";
@@ -63,9 +63,7 @@ export class StandardErc721<
    * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs queried.
    */
-  public async getAll(
-    queryParams?: QueryAllParams,
-  ): Promise<NFTMetadataOwner[]> {
+  public async getAll(queryParams?: QueryAllParams): Promise<NFT[]> {
     return this.erc721.getAll(queryParams);
   }
 
@@ -84,7 +82,7 @@ export class StandardErc721<
    * @param walletAddress - the wallet address to query, defaults to the connected wallet
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]> {
+  public async getOwned(walletAddress?: string): Promise<NFT[]> {
     return this.erc721.getOwned(walletAddress);
   }
 
@@ -114,7 +112,7 @@ export class StandardErc721<
    * @param tokenId - the tokenId of the NFT to retrieve
    * @returns The NFT metadata
    */
-  public async get(tokenId: BigNumberish): Promise<NFTMetadataOwner> {
+  public async get(tokenId: BigNumberish): Promise<NFT> {
     return this.erc721.get(tokenId);
   }
 

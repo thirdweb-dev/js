@@ -1,3 +1,4 @@
+import { NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import {
   detectContractFeature,
   hasFunction,
@@ -7,7 +8,6 @@ import {
   FEATURE_NFT_LAZY_MINTABLE,
   FEATURE_NFT_REVEALABLE,
 } from "../../constants/erc721-features";
-import { NFTMetadata, NFTMetadataOrUri } from "../../schema";
 import { UploadProgressEvent } from "../../types";
 import {
   BaseClaimConditionERC721,

@@ -1,3 +1,4 @@
+import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
 import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
 import { TransactionTask } from "../../core/classes/TransactionTask";
@@ -25,11 +26,6 @@ import {
 import { PaperCheckout } from "../../integrations/paper-xyz";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
-import {
-  NFTMetadata,
-  NFTMetadataOrUri,
-  NFTMetadataOwner,
-} from "../../schema/tokens/common";
 import { ClaimOptions, UploadProgressEvent } from "../../types";
 import {
   DEFAULT_QUERY_ALL_COUNT,
@@ -264,9 +260,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata and their ownersfor all NFTs queried.
    */
-  public async getAllClaimed(
-    queryParams?: QueryAllParams,
-  ): Promise<NFTMetadataOwner[]> {
+  public async getAllClaimed(queryParams?: QueryAllParams): Promise<NFT[]> {
     const start = BigNumber.from(queryParams?.start || 0).toNumber();
     const count = BigNumber.from(
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
@@ -450,7 +444,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     destinationAddress: string,
     quantity: BigNumberish,
     options?: ClaimOptions,
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
+  ): Promise<TransactionResultWithId<NFT>[]> {
     return this.erc721.claimTo(destinationAddress, quantity, options);
   }
 
@@ -464,7 +458,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   public async claim(
     quantity: BigNumberish,
     options?: ClaimOptions,
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
+  ): Promise<TransactionResultWithId<NFT>[]> {
     return this.erc721.claim(quantity, options);
   }
 
