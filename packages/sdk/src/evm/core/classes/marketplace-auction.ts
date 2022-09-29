@@ -18,7 +18,7 @@ import {
 } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { ListingType } from "../../enums";
-import { Price } from "../../types/currency";
+import { CurrencyValue, Price } from "../../types/currency";
 import {
   AuctionListing,
   NewAuctionListing,
@@ -472,26 +472,32 @@ export class MarketplaceAuction {
    */
   public async getMinimumNextBid(
     listingId: BigNumberish,
-  ): Promise<BigNumberish> {
-    // we can fetch both of these at the same time using promise.all
-    const [currentBidBufferBps, winningBid] = await Promise.all([
+  ): Promise<CurrencyValue> {
+    // we can fetch all of these at the same time using promise.all
+    const [currentBidBufferBps, winningBid, listing] = await Promise.all([
       this.getBidBufferBps(),
       this.getWinningBid(listingId),
+      await this.validateListing(BigNumber.from(listingId)),
     ]);
 
-    // we need to turn the basis points (BPS) value into a fraction to use in the calculation
-    // BPS is out of 10,000, so we divide by 10000 to get the bps/10,000 fraction
-    const bidBufferPercentage = currentBidBufferBps.div(10000);
+    const currentBidOrReservePrice = winningBid
+      ? // if there is a winning bid use the value of it
+        winningBid.currencyValue.value
+      : // if there is no winning bid use the reserve price
+        listing.reservePrice;
 
-    if (winningBid) {
-      const winningBidPrice = winningBid.currencyValue.value;
-      return winningBidPrice.add(bidBufferPercentage.mul(winningBidPrice));
-    } else {
-      // we can delay getting the listing until we know there is no winning bid (since we don't need it for the calculation unless there is no winning bid)
-      const listing = await this.getListing(listingId);
-      const price = listing.reservePrice;
-      return price.add(bidBufferPercentage.mul(price));
-    }
+    const minimumNextBid = currentBidOrReservePrice.add(
+      // the addition of the current bid and the buffer
+      // (have to divide by 10000 to get the fraction of the buffer (since it's in basis points))
+      currentBidOrReservePrice.mul(currentBidBufferBps).div(10000),
+    );
+
+    // it's more useful to return a currency value here
+    return fetchCurrencyValue(
+      this.contractWrapper.getProvider(),
+      listing.currencyContractAddress,
+      minimumNextBid,
+    );
   }
 
   /** ******************************
