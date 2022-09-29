@@ -474,19 +474,23 @@ export class MarketplaceAuction {
     listingId: BigNumberish,
   ): Promise<BigNumberish> {
     // we can fetch both of these at the same time using promise.all
-    const [currentBidBuffer, winningBid] = await Promise.all([
+    const [currentBidBufferBps, winningBid] = await Promise.all([
       this.getBidBufferBps(),
       this.getWinningBid(listingId),
     ]);
 
+    // we need to turn the basis points (BPS) value into a fraction to use in the calculation
+    // BPS is out of 10,000, so we divide by 10000 to get the bps/10,000 fraction
+    const bidBufferPercentage = currentBidBufferBps.div(10000);
+
     if (winningBid) {
       const winningBidPrice = winningBid.currencyValue.value;
-      return winningBidPrice.add(currentBidBuffer.mul(winningBidPrice));
+      return winningBidPrice.add(bidBufferPercentage.mul(winningBidPrice));
     } else {
       // we can delay getting the listing until we know there is no winning bid (since we don't need it for the calculation unless there is no winning bid)
       const listing = await this.getListing(listingId);
       const price = listing.reservePrice;
-      return price.add(currentBidBuffer.mul(price));
+      return price.add(bidBufferPercentage.mul(price));
     }
   }
 
