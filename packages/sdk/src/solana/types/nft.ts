@@ -82,4 +82,7 @@ export type NFTCollectionMetadata = NFTMetadata;
 /**
  * @public
  */
-export type NFTMetadataOwner = { metadata: NFTMetadata; owner: string };
+export type NFTMetadataOwner = {
+  metadata: NFTMetadata;
+  owner: string;
+};

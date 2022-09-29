@@ -7,5 +7,5 @@ export type Network =
   | "devnet"
   | "testnet"
   | "mainnet-beta"
-  | "localhost"
+  | "localnet"
   | (string & {});

@@ -82,7 +82,7 @@ export class NFTDrop {
    * const nft = await program.get(mintAddress);
    * ```
    */
-  async get(nftAddress: string): Promise<NFTMetadata> {
+  async get(nftAddress: string): Promise<NFTMetadata | undefined> {
     return this.nft.get(nftAddress);
   }
 
