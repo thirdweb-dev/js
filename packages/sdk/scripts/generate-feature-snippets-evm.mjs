@@ -44,7 +44,7 @@ config.setSupportForTag(tag, true);
 const tsdocParser = new TSDocParser(config);
 
 const json = JSON.parse(
-  fs.readFileSync(`${process.cwd()}/temp/sdk.api.json`, "utf8"),
+  fs.readFileSync(`${process.cwd()}/temp-evm/sdk.api.json`, "utf8"),
 );
 
 function languageNameToKey(languageName) {
