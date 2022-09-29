@@ -473,13 +473,18 @@ export class MarketplaceAuction {
   public async getMinimumNextBid(
     listingId: BigNumberish,
   ): Promise<BigNumberish> {
-    const currentBidBuffer = await this.getBidBufferBps();
-    const winningBid = await this.getWinningBid(listingId);
-    const listing: AuctionListing = await this.getListing(listingId);
+    // we can fetch both of these at the same time using promise.all
+    const [currentBidBuffer, winningBid] = await Promise.all([
+      this.getBidBufferBps(),
+      this.getWinningBid(listingId),
+    ]);
+
     if (winningBid) {
       const winningBidPrice = winningBid.currencyValue.value;
       return winningBidPrice.add(currentBidBuffer.mul(winningBidPrice));
     } else {
+      // we can delay getting the listing until we know there is no winning bid (since we don't need it for the calculation unless there is no winning bid)
+      const listing = await this.getListing(listingId);
       const price = listing.reservePrice;
       return price.add(currentBidBuffer.mul(price));
     }
