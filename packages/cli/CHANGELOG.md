@@ -1,5 +1,14 @@
 # thirdweb
 
+## 0.7.22
+
+### Patch Changes
+
+- [#103](https://github.com/thirdweb-dev/js/pull/103) [`e1bcc67`](https://github.com/thirdweb-dev/js/commit/e1bcc67cebfc95fce615439ff03871b4fef0eed9) Thanks [@b4s36t4](https://github.com/b4s36t4)! - automatically re-name the created example repo to the user provided app name
+
+- Updated dependencies [[`8239763`](https://github.com/thirdweb-dev/js/commit/82397636f41faa2b44cfe70e75212f0f42291092), [`27a30e3`](https://github.com/thirdweb-dev/js/commit/27a30e3ffb56dd7fa8412a066bc3ac0977aca8e2), [`f2a6211`](https://github.com/thirdweb-dev/js/commit/f2a62110c43e7b8f35c86a197730e732f8fcc786), [`d26b768`](https://github.com/thirdweb-dev/js/commit/d26b76872a6c85651ee06aa0732ee2967f70db27), [`ba7dcbb`](https://github.com/thirdweb-dev/js/commit/ba7dcbbad8db2b73baf1435f4175d19933cb7d4f), [`9c8a3fb`](https://github.com/thirdweb-dev/js/commit/9c8a3fb6d4520dd6cdf2d1c17f33b764e871599e)]:
+  - @thirdweb-dev/sdk@3.1.2
+
 ## 0.7.21
 
 ### Patch Changes
