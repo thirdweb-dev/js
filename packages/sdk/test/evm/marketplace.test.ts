@@ -161,6 +161,7 @@ describe("Marketplace Contract", async () => {
     tokenId: BigNumberish,
     quantity: BigNumberish = 1,
     startTime: Date = new Date(),
+    reservePricePerToken = 0.05,
   ): Promise<BigNumber> => {
     return (
       await marketplaceContract.auction.createListing({
@@ -171,7 +172,7 @@ describe("Marketplace Contract", async () => {
         listingDurationInSeconds: 60 * 60 * 24,
         tokenId,
         quantity,
-        reservePricePerToken: 0.05,
+        reservePricePerToken,
       })
     ).id;
   };
@@ -623,46 +624,28 @@ describe("Marketplace Contract", async () => {
       const offers: Offer[] = await marketplaceContract.getOffers(
         directListingId,
       );
-      
+
       // check that the offers are returned
       assert.equal(offers.length, 2);
 
       // check the value of the price per token is correct
-      assert.isTrue(
-        offers[0].pricePerToken.eq(
-          ethers.utils.parseEther("1")
-        )
-      );
+      assert.isTrue(offers[0].pricePerToken.eq(ethers.utils.parseEther("1")));
 
       // check the value of the buyer address is correct
-      assert.equal(
-        offers[0].buyerAddress,
-        samWallet.address,
-      );
+      assert.equal(offers[0].buyerAddress, samWallet.address);
 
       // check the value of the quantity is correct
-      assert.equal(
-        offers[0].quantityDesired.toString(),
-        "1",
-      );
+      assert.equal(offers[0].quantityDesired.toString(), "1");
 
       // check the value of the currency contract address is correct
-      assert.equal(
-        offers[0].currencyContractAddress,
-        tokenAddress,
-      );
+      assert.equal(offers[0].currencyContractAddress, tokenAddress);
 
       // check the value of the listing id is correct
-      assert.equal(
-        offers[0].listingId.toString(),
-        directListingId.toString(),
-      );
+      assert.equal(offers[0].listingId.toString(), directListingId.toString());
 
       // check that the currency value is correct
       assert.isTrue(
-        offers[0].currencyValue.value.eq(
-          ethers.utils.parseEther("1")
-        )
+        offers[0].currencyValue.value.eq(ethers.utils.parseEther("1")),
       );
     });
   });
@@ -1144,6 +1127,57 @@ describe("Marketplace Contract", async () => {
       await marketplaceContract.setTimeBufferInSeconds(1000);
       const buffer = await marketplaceContract.getTimeBufferInSeconds();
       assert.equal(buffer.toNumber(), 1000);
+    });
+
+    it("should calculate the correct bid buffer for a listing without an offer", async () => {
+      // 10% bid buffer
+      await marketplaceContract.setBidBufferBps(1000);
+      // create a listing so we know the listing id
+      const startTime = new Date();
+      const reservePricePerToken = 0.05;
+      const listingId = await createAuctionListing(
+        dummyNftContract.getAddress(),
+        2,
+        1,
+        startTime,
+        reservePricePerToken,
+      );
+      const minimumNextBid =
+        await marketplaceContract.auction.getMinimumNextBid(listingId);
+
+      assert.equal(
+        minimumNextBid.displayValue,
+        // 0.05 + 0.05 * 0.1 = 0.055
+        "0.055",
+      );
+    });
+
+    it("should calculate the correct bid buffer for a listing with an offer", async () => {
+      // 10% bid buffer
+      await marketplaceContract.setBidBufferBps(1000);
+      // create a listing so we know the listing id
+      const startTime = new Date();
+      const reservePricePerToken = 0.05;
+      const listingId = await createAuctionListing(
+        dummyNftContract.getAddress(),
+        2,
+        1,
+        startTime,
+        reservePricePerToken,
+      );
+
+      // place a bid
+      sdk.updateSignerOrProvider(samWallet);
+      await marketplaceContract.auction.makeBid(listingId, 0.06);
+
+      const minimumNextBid =
+        await marketplaceContract.auction.getMinimumNextBid(listingId);
+
+      assert.equal(
+        minimumNextBid.displayValue,
+        // 0.06 + 0.06 * 0.1 = 0.066
+        "0.066",
+      );
     });
   });
 
