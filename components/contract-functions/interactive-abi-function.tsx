@@ -81,7 +81,7 @@ function formatInputType(type: string, components?: FunctionComponents): any {
 function formatHint(type: string, components?: FunctionComponents): string {
   const placeholder = formatInputType(type, components);
   return JSON.stringify(placeholder)
-    .replaceAll(",", ", ")
+    ?.replaceAll(",", ", ")
     .replaceAll(":", ": ")
     .replaceAll("{", "{ ")
     .replaceAll("}", " }");

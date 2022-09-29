@@ -52,7 +52,7 @@ export const ContractFunction: React.FC<ContractFunctionProps> = ({
       {fn.comment && (
         <MarkdownRenderer
           markdownText={fn.comment
-            .replaceAll(/See \{(.+)\}(\.)?/gm, "")
+            ?.replaceAll(/See \{(.+)\}(\.)?/gm, "")
             .replaceAll("{", '"')
             .replaceAll("}", '"')
             .replaceAll("'", '"')}

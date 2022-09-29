@@ -22,6 +22,9 @@ export const sentryOptions = {
     "conduitPage",
     // Avast extension error
     "_avast_submit",
+    // Common non-actionable errors
+    "rejected transaction",
+    "User closed modal",
   ],
   denyUrls: [
     // Google Adsense
