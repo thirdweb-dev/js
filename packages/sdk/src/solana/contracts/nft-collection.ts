@@ -41,6 +41,14 @@ export class NFTCollection {
   public publicKey: PublicKey;
   public accountType = "nft-collection" as const;
   public get network() {
+    const url = new URL(this.metaplex.connection.rpcEndpoint);
+    // try this first to avoid hitting `custom` network for alchemy urls
+    if (url.hostname.includes("devnet")) {
+      return "devnet";
+    }
+    if (url.hostname.includes("mainnet")) {
+      return "mainnet-beta";
+    }
     return this.metaplex.cluster;
   }
 

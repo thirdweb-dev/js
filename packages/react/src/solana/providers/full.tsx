@@ -2,7 +2,6 @@ import { ThirdwebSDKProvider } from "./base";
 import type { WalletAdapter } from "@solana/wallet-adapter-base";
 import {
   ConnectionProvider,
-  useConnection,
   useWallet,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
@@ -11,7 +10,7 @@ import { getUrlForNetwork, Network } from "@thirdweb-dev/sdk/solana";
 import { PropsWithChildren } from "react";
 
 interface ThirdwebProviderProps {
-  endpoint: Network;
+  network: Network;
   wallets?: WalletAdapter[];
   autoConnect?: boolean;
 }
@@ -27,7 +26,7 @@ const DEFAULT_WALLETS = [new PhantomWalletAdapter()];
  *
  * const App = () => {
  *  return (
- *     <ThirdwebProvider endpoint="devnet">
+ *     <ThirdwebProvider network="devnet">
  *       <YourApp />
  *     </ThirdwebProvider>
  * )};
@@ -36,12 +35,14 @@ const DEFAULT_WALLETS = [new PhantomWalletAdapter()];
  */
 export const ThirdwebProvider: React.FC<
   PropsWithChildren<ThirdwebProviderProps>
-> = ({ endpoint, wallets = DEFAULT_WALLETS, autoConnect = true, children }) => {
-  const clusterUrl = getUrlForNetwork(endpoint);
+> = ({ network, wallets = DEFAULT_WALLETS, autoConnect = true, children }) => {
+  const clusterUrl = getUrlForNetwork(network);
   return (
     <ConnectionProvider endpoint={clusterUrl}>
       <WalletProvider wallets={wallets} autoConnect={autoConnect}>
-        <ThirdwebWrapperProvider>{children}</ThirdwebWrapperProvider>
+        <ThirdwebWrapperProvider network={network}>
+          {children}
+        </ThirdwebWrapperProvider>
       </WalletProvider>
     </ConnectionProvider>
   );
@@ -50,13 +51,12 @@ export const ThirdwebProvider: React.FC<
 /**
  * @internal
  */
-export const ThirdwebWrapperProvider: React.FC<PropsWithChildren> = ({
-  children,
-}) => {
-  const { connection } = useConnection();
+export const ThirdwebWrapperProvider: React.FC<
+  PropsWithChildren<{ network?: Network }>
+> = ({ network, children }) => {
   const wallet = useWallet();
   return (
-    <ThirdwebSDKProvider connection={connection} wallet={wallet}>
+    <ThirdwebSDKProvider network={network} wallet={wallet}>
       {children}
     </ThirdwebSDKProvider>
   );

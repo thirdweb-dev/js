@@ -82,6 +82,14 @@ export class ThirdwebSDK {
    * The currently connected network
    */
   public get network() {
+    const url = new URL(this.connection.rpcEndpoint);
+    // try this first to avoid hitting `custom` network for alchemy urls
+    if (url.hostname.includes("devnet")) {
+      return "devnet";
+    }
+    if (url.hostname.includes("mainnet")) {
+      return "mainnet-beta";
+    }
     return this.metaplex.cluster;
   }
 
@@ -92,6 +100,7 @@ export class ThirdwebSDK {
     }),
   ) {
     this.connection = connection;
+
     this.storage = storage;
     this.metaplex = Metaplex.make(this.connection);
     this.wallet = new UserWallet(this.metaplex);
