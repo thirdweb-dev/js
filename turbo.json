@@ -5,48 +5,49 @@
       "outputs": ["dist/**"],
       "dependsOn": ["^build"]
     },
-    "sdk#build": {
+    "@thirdweb-dev/sdk#build": {
+      "outputs": ["dist/**"],
+      "dependsOn": ["^build"]
+    },
+    "@thirdweb-dev/react#build": {
       "outputs": ["dist/**", "evm/**", "solana/**"],
       "dependsOn": ["^build"]
     },
-    "react#build": {
-      "outputs": ["dist/**", "evm/**", "solana/**"],
-      "dependsOn": ["^build"]
-    },
-    "auth#build": {
+    "@thirdweb-dev/auth#build": {
       "outputs": ["dist/**", "express/**", "next/**", "next-auth/**"],
       "dependsOn": ["^build"]
     },
-    "contracts-js#build": {
-      "cache": false,
-      "outputs": ["dist/**", "src/**", "factories/**"],
-      "dependsOn": ["^build"]
-    },
-    "solana#build": {
-      "outputs": ["dist/**", "server/**"],
+    "@thirdweb-dev/contracts-js#build": {
+      "outputs": ["dist/**", "factories/**", "src/**"],
       "dependsOn": ["^build"]
     },
     "test": {
       "outputs": [],
       "inputs": ["src/**", "test/**"],
-      "dependsOn": ["^build"]
+      "dependsOn": ["build"]
     },
     "test:solana": {
       "outputs": [],
-      "inputs": ["src/solana/**", "test/solana/**"]
+      "inputs": ["src/solana/**", "test/solana/**"],
+      "dependsOn": ["build"]
     },
     "test:evm": {
       "outputs": [],
       "inputs": ["src/evm/**", "test/evm/**"],
-      "dependsOn": ["^build"]
+      "dependsOn": ["build"]
     },
     "e2e": {
+      "outputs": [],
+      "inputs": ["src/**"],
+      "dependsOn": ["build"]
+    },
+    "thirdweb#e2e": {
       "outputs": [],
       "inputs": ["src/**", "e2e/**"],
       "dependsOn": ["build"]
     },
-    "react#e2e": {
-      "inputs": ["src/**", "playwright/**"],
+    "@thirdweb-dev/react#e2e": {
+      "inputs": ["src/**", "playwright/index.ts", "playwright/index.html"],
       "dependsOn": ["build"]
     },
     "lint": {
