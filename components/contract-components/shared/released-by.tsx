@@ -44,6 +44,7 @@ export const ReleasedBy: React.FC<ReleasedByProps> = ({ contractAddress }) => {
   return (
     <Card
       w={{ base: "100%", md: "330px" }}
+      flexShrink={0}
       bg="backgroundCardHighlight"
       as={LinkBox}
     >

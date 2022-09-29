@@ -179,39 +179,46 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
           maxW="container.page"
           w="100%"
           py={4}
-          mt={{ base: 24, md: 24 }}
+          mt={{ base: 12, md: 24 }}
         >
           <Stack>
             <Divider mb={4} />
-            <Stack direction="row" spacing="4" align="center" justify="center">
-              <Text alignSelf="center">
+            <Flex
+              direction={{ base: "column", md: "row" }}
+              gap={4}
+              align="center"
+              justify="center"
+            >
+              <Text alignSelf="center" order={{ base: 2, md: 0 }}>
                 thirdweb &copy; {new Date().getFullYear()}
               </Text>
-              <TrackedLink
-                isExternal
-                href="https://feedback.thirdweb.com"
-                category="footer"
-                label="feedback"
-              >
-                Feedback
-              </TrackedLink>
-              <TrackedLink
-                isExternal
-                href="/privacy"
-                category="footer"
-                label="privacy"
-              >
-                Privacy Policy
-              </TrackedLink>
-              <TrackedLink
-                isExternal
-                href="/tos"
-                category="footer"
-                label="terms"
-              >
-                Terms of Service
-              </TrackedLink>
-            </Stack>
+              <Flex align="center" justify="center" gap={4}>
+                <TrackedLink
+                  isExternal
+                  href="https://feedback.thirdweb.com"
+                  category="footer"
+                  label="feedback"
+                >
+                  Feedback
+                </TrackedLink>
+                <TrackedLink
+                  isExternal
+                  href="/privacy"
+                  category="footer"
+                  label="privacy"
+                >
+                  Privacy Policy
+                </TrackedLink>
+                <TrackedLink
+                  isExternal
+                  href="/tos"
+                  category="footer"
+                  label="terms"
+                >
+                  Terms of Service
+                </TrackedLink>
+              </Flex>
+            </Flex>
           </Stack>
         </Container>
         {pathname === "/contracts" && <InsufficientFunds />}

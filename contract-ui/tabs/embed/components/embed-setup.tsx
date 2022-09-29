@@ -313,7 +313,7 @@ frameborder="0"
         </Stack>
       </Flex>
 
-      <Stack align="center">
+      <Stack align="center" gap={2}>
         <Heading size="title.sm">Preview</Heading>
         {iframeSrc ? (
           <iframe
