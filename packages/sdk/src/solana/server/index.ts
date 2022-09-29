@@ -9,7 +9,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
  *
  * @example
  * ```jsx
- * import { createThirdwebSDK } from "@thirdweb-dev/solana";
+ * import { createThirdwebSDK } from "@thirdweb-dev/sdk/solana";
  *
  * // Select the network to create the SDK on
  * const sdk = createThirdwebSDK("devnet");

@@ -28,7 +28,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
  *
  * @example
  * ```jsx
- * import { ThirdwebSDK } from "@thirdweb-dev/solana";
+ * import { ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
  *
  * // Instantiate the SDK and pass in a signer
  * const sdk = ThirdwebSDK.fromNetwork("devnet");
