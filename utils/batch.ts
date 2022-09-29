@@ -123,6 +123,13 @@ export const useMergedData = (
 ) => {
   return useMemo(() => {
     if (csvData?.data) {
+      const isImageMapped = csvData.data.some((row) =>
+        imageFiles.find((img) => img?.name === row.image),
+      );
+      const isAnimationUrlMapped = csvData.data.some((row) =>
+        videoFiles.find((video) => video?.name === row.animation_url),
+      );
+
       return csvData.data.map((row, index) => {
         const {
           name,
@@ -146,28 +153,35 @@ export const useMergedData = (
           ),
           image:
             imageFiles.find((img) => img?.name === image) ||
-            imageFiles[index] ||
+            (!isImageMapped && imageFiles[index]) ||
             image ||
             undefined,
           animation_url:
             videoFiles.find((video) => video?.name === animation_url) ||
-            videoFiles[index] ||
+            (!isAnimationUrlMapped && videoFiles[index]) ||
             animation_url ||
             undefined,
         });
       });
     } else if (Array.isArray(jsonData)) {
+      const isImageMapped = jsonData.some((row) =>
+        imageFiles.find((img) => img?.name === row.image),
+      );
+      const isAnimationUrlMapped = jsonData.some((row) =>
+        videoFiles.find((video) => video?.name === row.animation_url),
+      );
+
       return jsonData.map((nft: any, index: number) => ({
         ...nft,
         image:
           imageFiles.find((img) => img?.name === nft?.image) ||
-          imageFiles[index] ||
+          (!isImageMapped && imageFiles[index]) ||
           nft.image ||
           nft.file_url ||
           undefined,
         animation_url:
           videoFiles.find((video) => video?.name === nft?.animation_url) ||
-          videoFiles[index] ||
+          (!isAnimationUrlMapped && videoFiles[index]) ||
           nft.animation_url ||
           undefined,
       }));
