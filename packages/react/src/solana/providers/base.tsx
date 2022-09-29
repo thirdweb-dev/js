@@ -3,13 +3,14 @@ import {
   QueryClientProviderWithDefault,
 } from "../../core/providers/query-client";
 import { ComponentWithChildren } from "../../core/types/component";
+import { RequiredParam } from "../../core/types/shared";
 import type { WalletContextState } from "@solana/wallet-adapter-react";
-import type { Connection } from "@solana/web3.js";
-import { ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
+import { Network, ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
 import { createContext, useContext, useEffect, useState } from "react";
+import invariant from "tiny-invariant";
 
 interface ThirdwebSDKProviderProps extends QueryClientProviderProps {
-  connection: Connection;
+  network: RequiredParam<Network>;
   wallet?: WalletContextState;
 }
 
@@ -36,16 +37,18 @@ interface ThirdwebSDKProviderProps extends QueryClientProviderProps {
  */
 export const ThirdwebSDKProvider: ComponentWithChildren<
   ThirdwebSDKProviderProps
-> = ({ children, connection, queryClient, wallet }) => {
+> = ({ children, network, queryClient, wallet }) => {
   const [sdk, setSDK] = useState<ThirdwebSDK | null>(null);
 
   useEffect(() => {
-    if (connection) {
-      setSDK(new ThirdwebSDK(connection));
+    if (network) {
+      const _sdk = ThirdwebSDK.fromNetwork(network);
+      (_sdk as any)._network = network;
+      setSDK(_sdk);
     } else {
       setSDK(null);
     }
-  }, [connection]);
+  }, [network]);
 
   useEffect(() => {
     if (sdk) {
@@ -59,15 +62,36 @@ export const ThirdwebSDKProvider: ComponentWithChildren<
 
   return (
     <QueryClientProviderWithDefault queryClient={queryClient}>
-      <ThirdwebSDKContext.Provider value={sdk}>
+      <ThirdwebSDKContext.Provider
+        value={{ sdk, desiredNetwork: network || "unknown", _inProvider: true }}
+      >
         {children}
       </ThirdwebSDKContext.Provider>
     </QueryClientProviderWithDefault>
   );
 };
 
-const ThirdwebSDKContext = createContext<ThirdwebSDK | null>(null);
+interface ThirdwebSDKContext {
+  sdk: ThirdwebSDK | null;
+  desiredNetwork: string;
+  _inProvider?: true;
+}
+const ThirdwebSDKContext = createContext<ThirdwebSDKContext>({
+  sdk: null,
+  desiredNetwork: "unknown",
+});
 
 export function useSDK() {
-  return useContext(ThirdwebSDKContext);
+  const ctxValue = useContext(ThirdwebSDKContext);
+  invariant(
+    ctxValue._inProvider,
+    "useSDK must be used within a ThirdwebSDKProvider",
+  );
+  if (
+    !ctxValue.sdk ||
+    (ctxValue.sdk as any)._network !== ctxValue.desiredNetwork
+  ) {
+    return null;
+  }
+  return ctxValue.sdk;
 }
