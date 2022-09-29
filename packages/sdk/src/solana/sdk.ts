@@ -17,7 +17,7 @@ import Bs58 from "bs58";
  *
  * @example
  * ```jsx
- * import { ThirdwebSDK } from "@thirdweb-dev/solana";
+ * import { ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
  *
  * // Create SDK on specified network, and then pass a signer
  * const sdk = ThirdwebSDK.fromNetwork("devnet");
