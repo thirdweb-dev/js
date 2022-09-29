@@ -20,6 +20,7 @@ import {
   Tooltip,
   Tr,
   UnorderedList,
+  VStack,
 } from "@chakra-ui/react";
 import { ClaimCondition, SnapshotAddressInput } from "@thirdweb-dev/sdk";
 import { Logo } from "components/logo";
@@ -27,6 +28,7 @@ import { utils } from "ethers";
 import Papa from "papaparse";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { DropzoneOptions, useDropzone } from "react-dropzone";
+import { BsFillCloudUploadFill } from "react-icons/bs";
 import { IoAlertCircleOutline } from "react-icons/io5";
 import {
   MdFirstPage,
@@ -175,7 +177,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                     borderRadius="md"
                     {...getRootProps()}
                     cursor="pointer"
-                    bg="inputBg"
+                    bg={noCsv ? "red.200" : "inputBg"}
                     _hover={{
                       bg: "inputBgHover",
                       borderColor: "blue.500",
@@ -184,17 +186,29 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                     borderWidth="1px"
                   >
                     <input {...getInputProps()} />
-                    {isDragActive ? (
-                      <Heading as={Text} size="label.md">
-                        Drop the files here
-                      </Heading>
-                    ) : (
-                      <Heading as={Text} size="label.md">
-                        {noCsv
-                          ? "No valid CSV file found, make sure you have an address column."
-                          : "Drag & Drop a CSV file here"}
-                      </Heading>
-                    )}
+                    <VStack p={6}>
+                      <Icon
+                        as={BsFillCloudUploadFill}
+                        boxSize={8}
+                        mb={2}
+                        color={noCsv ? "red.500" : "gray.600"}
+                      />
+                      {isDragActive ? (
+                        <Heading as={Text} size="label.md">
+                          Drop the files here
+                        </Heading>
+                      ) : (
+                        <Heading
+                          as={Text}
+                          size="label.md"
+                          color={noCsv ? "red.500" : "gray.600"}
+                        >
+                          {noCsv
+                            ? `No valid CSV file found, make sure your CSV includes the "address" column.`
+                            : "Drag & Drop a CSV file here"}
+                        </Heading>
+                      )}
+                    </VStack>
                   </Center>
                 </AspectRatio>
                 <Flex gap={2} flexDir="column">

@@ -37,7 +37,7 @@ export const UploadStep: React.FC<UploadStepProps> = ({
               cursor="pointer"
               bg={noFile ? "red.200" : "inputBg"}
               _hover={{
-                bg: "inputBgHover",
+                bg: noFile ? "red.200" : "inputBgHover",
                 borderColor: "blue.500",
               }}
               borderColor="inputBorder"
@@ -49,16 +49,21 @@ export const UploadStep: React.FC<UploadStepProps> = ({
                   as={BsFillCloudUploadFill}
                   boxSize={8}
                   mb={2}
-                  color="gray.600"
+                  color={noFile ? "red.500" : "gray.600"}
                 />
                 {isDragActive ? (
                   <Heading as={Text} size="label.md" color="gray.600">
                     Drop the files here
                   </Heading>
                 ) : (
-                  <Heading as={Text} size="label.md" color="gray.600">
+                  <Heading
+                    as={Text}
+                    size="label.md"
+                    lineHeight={1.2}
+                    color={noFile ? "red.500" : "gray.600"}
+                  >
                     {noFile
-                      ? "No CSV or valid JSON file found, please try again"
+                      ? `No valid CSV or JSON file found. Please make sure your NFT metadata includes at least a "name" field and try again.`
                       : "Drag & Drop files or folders here, or click to select files"}
                   </Heading>
                 )}
