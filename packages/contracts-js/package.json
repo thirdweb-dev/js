@@ -21,8 +21,7 @@
   },
   "files": [
     "dist/",
-    "factories/",
-    "src/"
+    "factories/"
   ],
   "preconstruct": {
     "entrypoints": [
