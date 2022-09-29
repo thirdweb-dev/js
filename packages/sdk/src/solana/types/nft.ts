@@ -23,7 +23,7 @@ export const CommonTokenInput = z
  * @internal
  */
 export const CommonTokenOutput = CommonTokenInput.extend({
-  id: z.string().optional(),
+  id: z.string(),
   uri: z.string(),
   image: z.string().nullable().optional(),
   external_url: z.string().nullable().optional(),
@@ -82,4 +82,7 @@ export type NFTCollectionMetadata = NFTMetadata;
 /**
  * @public
  */
-export type NFTMetadataOwner = { metadata: NFTMetadata; owner: string };
+export type NFTMetadataOwner = {
+  metadata: NFTMetadata;
+  owner: string;
+};

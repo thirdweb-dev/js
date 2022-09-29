@@ -73,12 +73,24 @@ describe("NFTCollection", async () => {
       description: "Test Description",
     });
 
-    const amount = 8;
+    const amount = 2;
     for (let i = 0; i < amount; i++) {
       await collection.mintAdditionalSupply(mint);
     }
 
     const supply = await collection.supplyOf(mint);
     expect(supply).to.equal(BigInt(amount + 1));
+  });
+
+  it("should burn nfts", async () => {
+    const mint = await collection.mint({
+      name: "Test NFT to burn",
+      description: "Test Description",
+    });
+    const all = await collection.getAll();
+    expect(all.length).to.eq(4);
+    await collection.burn(mint);
+    const all2 = await collection.getAll();
+    expect(all2.length).to.eq(3);
   });
 });

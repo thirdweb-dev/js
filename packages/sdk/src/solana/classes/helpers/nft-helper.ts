@@ -12,6 +12,7 @@ import {
 } from "@metaplex-foundation/js";
 import { getAccount, getAssociatedTokenAddress } from "@solana/spl-token";
 import { Connection, PublicKey } from "@solana/web3.js";
+import { BN } from "bn.js";
 
 /**
  * @internal
@@ -25,14 +26,17 @@ export class NFTHelper {
     this.connection = metaplex.connection;
   }
 
-  async get(mintAddress: string): Promise<NFTMetadata> {
+  async get(mintAddress: string): Promise<NFTMetadata | undefined> {
     const meta = await this.metaplex
       .nfts()
       .findByMint({
         mintAddress: new PublicKey(mintAddress),
       })
       .run();
-
+    if (meta.mint.supply.basisPoints.eq(new BN(0))) {
+      // token was burned
+      return undefined;
+    }
     return this.toNFTMetadata(meta);
   }
 

@@ -626,16 +626,8 @@ export class ContractDeployer extends RPCConnectionHandler {
         constructorParamValues,
       );
 
-      if (isDeployableViaProxy) {
-        // deploy a proxy directly
-        return await this.deployProxy(
-          implementationAddress,
-          compilerMetadata.abi,
-          factoryDeploymentData.implementationInitializerFunction,
-          paramValues,
-        );
-      } else if (isDeployableViaFactory) {
-        // deploy via a factory
+      if (isDeployableViaFactory) {
+        // deploy via a factory (prioritise factory)
         invariant(
           factoryDeploymentData.factoryAddresses,
           "isDeployableViaFactory is true so factoryAddresses is required",
@@ -647,6 +639,14 @@ export class ContractDeployer extends RPCConnectionHandler {
         );
         return await this.deployViaFactory(
           factoryAddress,
+          implementationAddress,
+          compilerMetadata.abi,
+          factoryDeploymentData.implementationInitializerFunction,
+          paramValues,
+        );
+      } else if (isDeployableViaProxy) {
+        // deploy a proxy directly
+        return await this.deployProxy(
           implementationAddress,
           compilerMetadata.abi,
           factoryDeploymentData.implementationInitializerFunction,
