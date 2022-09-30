@@ -1,3 +1,4 @@
+import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import {
   assertEnabled,
   detectContractFeature,
@@ -19,13 +20,7 @@ import {
   FEATURE_EDITION_CLAIMABLE,
 } from "../../constants/erc1155-features";
 import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
-import { NFTMetadata, NFTMetadataOrUri } from "../../schema/tokens/common";
-import {
-  EditionMetadata,
-  EditionMetadataOrUri,
-  EditionMetadataOutputSchema,
-  EditionMetadataOwner,
-} from "../../schema/tokens/edition";
+import { EditionMetadataOrUri } from "../../schema/tokens/edition";
 import { ClaimOptions, QueryAllParams, UploadProgressEvent } from "../../types";
 import { AirdropInput } from "../../types/airdrop/airdrop";
 import {
@@ -55,7 +50,7 @@ import type {
   TokenERC1155,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, BytesLike } from "ethers";
+import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 
 /**
  * Standard ERC1155 NFT functions
@@ -117,17 +112,19 @@ export class Erc1155<
    * @returns The NFT metadata
    * @twfeature ERC1155
    */
-  public async get(tokenId: BigNumberish): Promise<EditionMetadata> {
+  public async get(tokenId: BigNumberish): Promise<NFT> {
     const [supply, metadata] = await Promise.all([
       this.contractWrapper.readContract
         .totalSupply(tokenId)
         .catch(() => BigNumber.from(0)),
       this.getTokenMetadata(tokenId),
     ]);
-    return EditionMetadataOutputSchema.parse({
-      supply,
+    return {
+      owner: ethers.constants.AddressZero,
       metadata,
-    });
+      type: "ERC1155",
+      supply: supply.toNumber(),
+    };
   }
 
   /**
@@ -328,9 +325,7 @@ export class Erc1155<
    * @returns The NFT metadata for all NFTs queried.
    * @twfeature ERC1155Enumerable
    */
-  public async getAll(
-    queryParams?: QueryAllParams,
-  ): Promise<EditionMetadata[]> {
+  public async getAll(queryParams?: QueryAllParams): Promise<NFT[]> {
     return assertEnabled(this.query, FEATURE_EDITION_ENUMERABLE).all(
       queryParams,
     );
@@ -378,9 +373,7 @@ export class Erc1155<
    * @returns The NFT metadata for all NFTs in the contract.
    * @twfeature ERC1155Enumerable
    */
-  public async getOwned(
-    walletAddress?: string,
-  ): Promise<EditionMetadataOwner[]> {
+  public async getOwned(walletAddress?: string): Promise<NFT[]> {
     return assertEnabled(this.query, FEATURE_EDITION_ENUMERABLE).owned(
       walletAddress,
     );
@@ -419,7 +412,7 @@ export class Erc1155<
    */
   public async mint(
     metadataWithSupply: EditionMetadataOrUri,
-  ): Promise<TransactionResultWithId<EditionMetadata>> {
+  ): Promise<TransactionResultWithId<NFT>> {
     return this.mintTo(
       await this.contractWrapper.getSignerAddress(),
       metadataWithSupply,
@@ -458,7 +451,7 @@ export class Erc1155<
   public async mintTo(
     receiver: string,
     metadataWithSupply: EditionMetadataOrUri,
-  ): Promise<TransactionResultWithId<EditionMetadata>> {
+  ): Promise<TransactionResultWithId<NFT>> {
     return assertEnabled(this.mintable, FEATURE_EDITION_MINTABLE).to(
       receiver,
       metadataWithSupply,
@@ -482,7 +475,7 @@ export class Erc1155<
   public async mintAdditionalSupply(
     tokenId: BigNumberish,
     additionalSupply: BigNumberish,
-  ): Promise<TransactionResultWithId<EditionMetadata>> {
+  ): Promise<TransactionResultWithId<NFT>> {
     return assertEnabled(
       this.mintable,
       FEATURE_EDITION_MINTABLE,
@@ -504,7 +497,7 @@ export class Erc1155<
     receiver: string,
     tokenId: BigNumberish,
     additionalSupply: BigNumberish,
-  ): Promise<TransactionResultWithId<EditionMetadata>> {
+  ): Promise<TransactionResultWithId<NFT>> {
     return assertEnabled(
       this.mintable,
       FEATURE_EDITION_MINTABLE,
@@ -546,7 +539,7 @@ export class Erc1155<
    */
   public async mintBatch(
     metadataWithSupply: EditionMetadataOrUri[],
-  ): Promise<TransactionResultWithId<EditionMetadata>[]> {
+  ): Promise<TransactionResultWithId<NFT>[]> {
     return this.mintBatchTo(
       await this.contractWrapper.getSignerAddress(),
       metadataWithSupply,
@@ -590,7 +583,7 @@ export class Erc1155<
   public async mintBatchTo(
     receiver: string,
     metadataWithSupply: EditionMetadataOrUri[],
-  ): Promise<TransactionResultWithId<EditionMetadata>[]> {
+  ): Promise<TransactionResultWithId<NFT>[]> {
     return assertEnabled(
       this.mintable?.batch,
       FEATURE_EDITION_BATCH_MINTABLE,

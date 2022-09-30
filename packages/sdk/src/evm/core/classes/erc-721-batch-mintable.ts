@@ -1,6 +1,6 @@
+import { NFT, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { FEATURE_NFT_BATCH_MINTABLE } from "../../constants/erc721-features";
-import { NFTMetadataOrUri, NFTMetadataOwner } from "../../schema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
@@ -65,7 +65,7 @@ export class Erc721BatchMintable implements DetectableFeature {
   public async to(
     to: string,
     metadatas: NFTMetadataOrUri[],
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
+  ): Promise<TransactionResultWithId<NFT>[]> {
     const uris = await uploadOrExtractURIs(metadatas, this.storage);
     const encoded = uris.map((uri) =>
       this.contractWrapper.readContract.interface.encodeFunctionData("mintTo", [

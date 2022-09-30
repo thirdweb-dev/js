@@ -1,3 +1,4 @@
+import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import {
   assertEnabled,
   detectContractFeature,
@@ -18,11 +19,6 @@ import {
   FEATURE_NFT_SIGNATURE_MINTABLE,
   FEATURE_NFT_SUPPLY,
 } from "../../constants/erc721-features";
-import {
-  NFTMetadata,
-  NFTMetadataOrUri,
-  NFTMetadataOwner,
-} from "../../schema/tokens/common";
 import { BaseDropERC721, BaseERC721 } from "../../types/eips";
 import {
   ClaimOptions,
@@ -118,12 +114,12 @@ export class Erc721<
    * @returns The NFT metadata
    * @twfeature ERC721
    */
-  public async get(tokenId: BigNumberish): Promise<NFTMetadataOwner> {
+  public async get(tokenId: BigNumberish): Promise<NFT> {
     const [owner, metadata] = await Promise.all([
       this.ownerOf(tokenId).catch(() => constants.AddressZero),
       this.getTokenMetadata(tokenId),
     ]);
-    return { owner, metadata };
+    return { owner, metadata, type: "ERC721", supply: 1 };
   }
 
   /**
@@ -578,7 +574,7 @@ export class Erc721<
     destinationAddress: string,
     quantity: BigNumberish,
     options?: ClaimOptions,
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
+  ): Promise<TransactionResultWithId<NFT>[]> {
     const claimWithConditions = this.lazyMintable?.claimWithConditions;
     const claim = this.lazyMintable?.claim;
     if (claimWithConditions) {

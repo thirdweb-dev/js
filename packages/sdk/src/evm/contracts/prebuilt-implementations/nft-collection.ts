@@ -1,3 +1,4 @@
+import { NFT, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
@@ -18,7 +19,6 @@ import type {
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
-import { NFTMetadataOrUri, NFTMetadataOwner } from "../../schema";
 import { TokenErc721ContractSchema } from "../../schema/contracts/token-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import type { TokenERC721 } from "@thirdweb-dev/contracts-js";
@@ -193,7 +193,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    */
   public async mint(
     metadata: NFTMetadataOrUri,
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
+  ): Promise<TransactionResultWithId<NFT>> {
     return this.erc721.mint(metadata);
   }
 
@@ -223,7 +223,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
   public async mintTo(
     walletAddress: string,
     metadata: NFTMetadataOrUri,
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
+  ): Promise<TransactionResultWithId<NFT>> {
     return this.erc721.mintTo(walletAddress, metadata);
   }
 
@@ -253,7 +253,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
    */
   public async mintBatch(
     metadata: NFTMetadataOrUri[],
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
+  ): Promise<TransactionResultWithId<NFT>[]> {
     return this.erc721.mintBatch(metadata);
   }
 
@@ -287,7 +287,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
   public async mintBatchTo(
     walletAddress: string,
     metadata: NFTMetadataOrUri[],
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
+  ): Promise<TransactionResultWithId<NFT>[]> {
     return this.erc721.mintBatchTo(walletAddress, metadata);
   }
 

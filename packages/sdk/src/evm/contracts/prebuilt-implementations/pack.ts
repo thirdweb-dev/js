@@ -1,3 +1,4 @@
+import { NFT } from "../../../core/schema/nft";
 import {
   fetchCurrencyMetadata,
   hasERC20Allowance,
@@ -21,7 +22,6 @@ import {
   NetworkOrSignerOrProvider,
   TransactionResultWithId,
 } from "../../core/types";
-import { EditionMetadata, EditionMetadataOwner } from "../../schema";
 import { PackContractSchema } from "../../schema/contracts/packs";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
@@ -160,7 +160,7 @@ export class Pack extends StandardErc1155<PackContract> {
    * console.log(packs;
    * ```
    */
-  public async get(tokenId: BigNumberish): Promise<EditionMetadata> {
+  public async get(tokenId: BigNumberish): Promise<NFT> {
     return this.erc1155.get(tokenId);
   }
 
@@ -179,9 +179,7 @@ export class Pack extends StandardErc1155<PackContract> {
    * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The pack metadata for all packs queried.
    */
-  public async getAll(
-    queryParams?: QueryAllParams,
-  ): Promise<EditionMetadata[]> {
+  public async getAll(queryParams?: QueryAllParams): Promise<NFT[]> {
     return this.erc1155.getAll(queryParams);
   }
 
@@ -199,9 +197,7 @@ export class Pack extends StandardErc1155<PackContract> {
    *
    * @returns The pack metadata for all the owned packs in the contract.
    */
-  public async getOwned(
-    walletAddress?: string,
-  ): Promise<EditionMetadataOwner[]> {
+  public async getOwned(walletAddress?: string): Promise<NFT[]> {
     return this.erc1155.getOwned(walletAddress);
   }
 
@@ -477,7 +473,7 @@ export class Pack extends StandardErc1155<PackContract> {
   public async createTo(
     to: string,
     metadataWithRewards: PackMetadataInput,
-  ): Promise<TransactionResultWithId<EditionMetadata>> {
+  ): Promise<TransactionResultWithId<NFT>> {
     const uri = await uploadOrExtractURI(
       metadataWithRewards.packMetadata,
       this.storage,

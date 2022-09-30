@@ -88,19 +88,6 @@ export type Amount = z.input<typeof AmountSchema>;
 /**
  * @internal
  */
-export const CurrencyValueSchema = z.object({
-  value: z.string(),
-  displayValue: z.string(),
-});
-
-/**
- * @internal
- */
-export type CurrencyValue = z.input<typeof CurrencyValueSchema>;
-
-/**
- * @internal
- */
 export type TransactionResult = {
   signature: string;
 };

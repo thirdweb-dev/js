@@ -1,5 +1,9 @@
+import {
+  CommonNFTInput,
+  CommonNFTOutput,
+  NFTInputOrUriSchema,
+} from "../../../core/schema/nft";
 import { BigNumberishSchema, BigNumberSchema } from "../shared";
-import { CommonNFTInput, CommonNFTOutput, NFTInputOrUriSchema } from "./common";
 import { z } from "zod";
 
 /**
@@ -35,16 +39,6 @@ export const EditionMetadataInputOrUriSchema = z.object({
   metadata: NFTInputOrUriSchema,
 });
 
-/**
- * @public
- */
-export type EditionMetadata = z.output<typeof EditionMetadataOutputSchema>;
-/**
- * @public
- */
-export type EditionMetadataOwner = z.output<
-  typeof EditionMetadataWithOwnerOutputSchema
->;
 /**
  * @public
  */

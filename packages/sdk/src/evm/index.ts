@@ -2,12 +2,6 @@
 globalThis.global = globalThis;
 
 export type { ContractType, NetworkOrSignerOrProvider } from "./core/types";
-export type {
-  NFTMetadataInput,
-  NFTMetadataOwner,
-  NFTMetadata,
-  NFTMetadataOrUri,
-} from "./schema/tokens/common";
 
 export type { Role } from "./common/role";
 

@@ -1,3 +1,4 @@
+import { NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import {
   detectContractFeature,
   hasFunction,
@@ -7,7 +8,6 @@ import {
   FEATURE_EDITION_LAZY_MINTABLE,
   FEATURE_EDITION_REVEALABLE,
 } from "../../constants/erc1155-features";
-import { NFTMetadata, NFTMetadataOrUri } from "../../schema/tokens/common";
 import {
   BaseClaimConditionERC1155,
   BaseDelayedRevealERC1155,

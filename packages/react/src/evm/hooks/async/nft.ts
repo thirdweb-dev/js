@@ -6,10 +6,8 @@ import {
   MintNFTParams,
   MintNFTReturnType,
   MintNFTSupplyParams,
-  NFT,
   TransferNFTParams,
   WalletAddress,
-  Erc721OrErc1155,
   NFTContract,
   getErcs,
 } from "../../types";
@@ -19,45 +17,10 @@ import {
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Erc721, Erc1155, QueryAllParams } from "@thirdweb-dev/sdk";
+import { Erc1155, QueryAllParams, NFT } from "@thirdweb-dev/sdk";
 import { BigNumber, BigNumberish } from "ethers";
 import invariant from "tiny-invariant";
 
-/**
- * @internal
- */
-export function convertResponseToNFTType(
-  contract: Erc721OrErc1155,
-  metadata: Awaited<ReturnType<typeof contract["get"]>>,
-): NFT<typeof contract> {
-  if (contract instanceof Erc721) {
-    return {
-      type: "ERC721",
-      supply: 1,
-      owner: "",
-      ...metadata,
-    } as NFT<Erc721>;
-  }
-  if (contract instanceof Erc1155) {
-    return {
-      type: "ERC1155",
-      supply: 0,
-      owner: "",
-      ...metadata,
-    } as NFT<Erc1155>;
-  }
-  invariant(false, "Unknown NFT type");
-}
-
-/**
- * @internal
- */
-export function convertResponseToNFTTypeArray(
-  contract: Erc721OrErc1155,
-  metadata: Awaited<ReturnType<typeof contract["get"]>>[],
-): NFT<typeof contract>[] {
-  return metadata.map((m) => convertResponseToNFTType(contract, m));
-}
 /** **********************/
 /**     READ  HOOKS     **/
 /** **********************/
@@ -84,24 +47,18 @@ export function useNFT<TContract extends NFTContract>(
   const contractAddress = contract?.getAddress();
   const { erc721, erc1155 } = getErcs(contract);
 
-  return useQueryWithNetwork<NFT<Erc721OrErc1155>>(
+  return useQueryWithNetwork<NFT>(
     cacheKeys.contract.nft.get(contractAddress, tokenId),
     async () => {
       invariant(contract, "No Contract instance provided");
 
       if (erc1155) {
         invariant(erc1155.get, "Contract instance does not support get");
-        return convertResponseToNFTType(
-          erc1155,
-          await erc1155.get(BigNumber.from(tokenId || 0)),
-        );
+        return await erc1155.get(BigNumber.from(tokenId || 0));
       }
       if (erc721) {
         invariant(erc721.get, "Contract instance does not support get");
-        return convertResponseToNFTType(
-          erc721,
-          await erc721.get(BigNumber.from(tokenId || 0)),
-        );
+        return await erc721.get(BigNumber.from(tokenId || 0));
       }
       invariant(false, "Unknown NFT type");
     },
@@ -133,24 +90,18 @@ export function useNFTs<TContract extends NFTContract>(
   const contractAddress = contract?.getAddress();
   const { erc721, erc1155 } = getErcs(contract);
 
-  return useQueryWithNetwork<NFT<Erc721OrErc1155>[]>(
+  return useQueryWithNetwork<NFT[]>(
     cacheKeys.contract.nft.query.all(contractAddress, queryParams),
     async () => {
       invariant(contract, "No Contract instance provided");
 
       if (erc721) {
         invariant(erc721.getAll, "Contract instance does not support getAll");
-        return convertResponseToNFTTypeArray(
-          erc721,
-          await erc721.getAll(queryParams),
-        );
+        return await erc721.getAll(queryParams);
       }
       if (erc1155) {
         invariant(erc1155.getAll, "Contract instance does not support getAll");
-        return convertResponseToNFTTypeArray(
-          erc1155,
-          await erc1155.getAll(queryParams),
-        );
+        return await erc1155.getAll(queryParams);
       }
       invariant(false, "Unknown NFT type");
     },
@@ -278,22 +229,16 @@ export function useOwnedNFTs<TContract extends NFTContract>(
   const contractAddress = contract?.getAddress();
   const { erc721, erc1155 } = getErcs(contract);
 
-  return useQueryWithNetwork<NFT<Erc721OrErc1155>[]>(
+  return useQueryWithNetwork<NFT[]>(
     cacheKeys.contract.nft.query.owned.all(contractAddress, ownerWalletAddress),
     async () => {
       invariant(contract, "No Contract instance provided");
       invariant(ownerWalletAddress, "No wallet address provided");
       if (erc721) {
-        return convertResponseToNFTTypeArray(
-          erc721,
-          await erc721.getOwned(ownerWalletAddress),
-        );
+        return await erc721.getOwned(ownerWalletAddress);
       }
       if (erc1155) {
-        return convertResponseToNFTTypeArray(
-          erc1155,
-          await erc1155.getOwned(ownerWalletAddress),
-        );
+        return await erc1155.getOwned(ownerWalletAddress);
       }
       invariant(false, "Unknown NFT type");
     },

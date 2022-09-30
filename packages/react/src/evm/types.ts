@@ -7,13 +7,12 @@ import type {
   Erc1155,
   Erc1155Mintable,
   ListingType,
-  NFTMetadata,
   NFTMetadataInput,
-  NFTMetadataOrUri,
   Price,
   ValidContractInstance,
   Erc20,
   ClaimOptions,
+  NFTMetadataOrUri,
 } from "@thirdweb-dev/sdk";
 import type { Edition } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/edition";
 import type { EditionDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/edition-drop";
@@ -75,31 +74,6 @@ export type NFTContract =
  * @beta
  */
 export type Erc721OrErc1155 = Erc721 | Erc1155;
-
-/**
- * A single NFT token
- * @beta
- */
-export type NFT<TContract extends Erc721OrErc1155> = {
-  /**
-   * The actual metadata of the NFT (name, image, etc)
-   */
-  metadata: NFTMetadata;
-  /**
-   * The owner of the nft (this will be an empty string for ERC1155 tokens)
-   */
-  owner: string;
-  /**
-   * The type of the NFT (ERC721 or ERC1155)
-   */
-  type: TContract extends Erc721 ? "ERC721" : "ERC1155";
-  /**
-   * The total supply of the NFT (this will *always* be 1 for ERC721 tokens)
-   */
-  supply: TContract extends Erc721 ? 1 : number;
-
-  [key: string]: unknown;
-};
 
 /**
  * The params to pass to `useTransferNFT`.
