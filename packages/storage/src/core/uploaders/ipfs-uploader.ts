@@ -73,7 +73,9 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       headers: {
         "X-APP-NAME":
           // eslint-disable-next-line turbo/no-undeclared-env-vars
-          process.env.NODE_ENV === "test" ? "Storage SDK CI" : "Storage SDK",
+          process.env.NODE_ENV === "test" || !!process.env.CI
+            ? "Storage SDK CI"
+            : "Storage SDK",
       },
     });
     if (!res.ok) {
