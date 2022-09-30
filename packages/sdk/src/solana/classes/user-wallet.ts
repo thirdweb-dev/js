@@ -1,4 +1,5 @@
-import { CurrencyValue, WalletSigner } from "../types/common";
+import { CurrencyValue } from "../../core/schema/token";
+import { WalletSigner } from "../types/common";
 import { toCurrencyValue } from "../utils/token";
 import {
   amount,

@@ -1,6 +1,6 @@
+import { NFT } from "../../../core/schema/nft";
 import { detectContractFeature } from "../../common";
 import { FEATURE_NFT_SUPPLY } from "../../constants/erc721-features";
-import { NFTMetadataOwner } from "../../schema";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
 import { BaseERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
@@ -53,7 +53,7 @@ export class Erc721Supply implements DetectableFeature {
    * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs queried.
    */
-  public async all(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]> {
+  public async all(queryParams?: QueryAllParams): Promise<NFT[]> {
     const start = BigNumber.from(queryParams?.start || 0).toNumber();
     const count = BigNumber.from(
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,

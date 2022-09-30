@@ -1,3 +1,4 @@
+import { NFT, NFTMetadataOrUri } from "../../../core/schema/nft";
 import {
   fetchCurrencyMetadata,
   hasERC20Allowance,
@@ -19,7 +20,7 @@ import {
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
-import { NFTMetadataOrUri, NFTMetadataOwner, SDKOptions } from "../../schema";
+import { SDKOptions } from "../../schema";
 import { MultiwrapContractSchema } from "../../schema/contracts/multiwrap";
 import {
   ERC1155Wrappable,
@@ -233,7 +234,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
     contents: TokensToWrap,
     wrappedTokenMetadata: NFTMetadataOrUri,
     recipientAddress?: string,
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
+  ): Promise<TransactionResultWithId<NFT>> {
     const uri = await uploadOrExtractURI(wrappedTokenMetadata, this.storage);
 
     const recipient = recipientAddress

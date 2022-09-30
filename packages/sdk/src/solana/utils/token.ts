@@ -1,4 +1,4 @@
-import { CurrencyValue } from "../types/common";
+import { CurrencyValue } from "../../core/schema/token";
 import { Amount } from "@metaplex-foundation/js";
 import BN from "bn.js";
 

@@ -1,14 +1,14 @@
 import {
-  InterfaceId_IERC1155,
-  InterfaceId_IERC721,
-} from "../constants/contract";
-import {
   CommonNFTInput,
   CommonNFTOutput,
   NFTMetadata,
   NFTMetadataInput,
   NFTMetadataOrUri,
-} from "../schema/tokens/common";
+} from "../../core/schema/nft";
+import {
+  InterfaceId_IERC1155,
+  InterfaceId_IERC721,
+} from "../constants/contract";
 import { NotFoundError } from "./error";
 import type {
   IERC1155Metadata,
@@ -67,7 +67,7 @@ export async function fetchTokenMetadata(
   }
 
   return CommonNFTOutput.parse({
-    id: BigNumber.from(tokenId),
+    id: BigNumber.from(tokenId).toString(),
     uri: tokenUri,
     ...jsonMetadata,
   });

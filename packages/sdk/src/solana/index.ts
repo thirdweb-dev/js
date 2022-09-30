@@ -2,14 +2,13 @@
 export * from "./classes/user-wallet";
 export * from "./classes/deployer";
 // contracts
-export * from "./contracts/nft-collection";
-export * from "./contracts/nft-drop";
-export * from "./contracts/program";
-export * from "./contracts/token";
+export * from "./programs/nft-collection";
+export * from "./programs/nft-drop";
+export * from "./programs/program";
+export * from "./programs/token";
 // sdk
 export * from "./sdk";
 // types
-export * from "./types/nft";
 export * from "./types/index";
 export * from "./types/common";
 export * from "./types/contracts";

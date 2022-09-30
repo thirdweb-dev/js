@@ -1,5 +1,5 @@
+import { NFT } from "../../../core/schema/nft";
 import { FEATURE_EDITION_ENUMERABLE } from "../../constants/erc1155-features";
-import { EditionMetadata, EditionMetadataOwner } from "../../schema";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
 import { BaseERC1155 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
@@ -45,7 +45,7 @@ export class Erc1155Enumerable implements DetectableFeature {
    * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs queried.
    */
-  public async all(queryParams?: QueryAllParams): Promise<EditionMetadata[]> {
+  public async all(queryParams?: QueryAllParams): Promise<NFT[]> {
     const start = BigNumber.from(queryParams?.start || 0).toNumber();
     const count = BigNumber.from(
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
@@ -96,7 +96,7 @@ export class Erc1155Enumerable implements DetectableFeature {
    *
    * @returns The NFT metadata for all NFTs in the contract.
    */
-  public async owned(walletAddress?: string): Promise<EditionMetadataOwner[]> {
+  public async owned(walletAddress?: string): Promise<NFT[]> {
     const address =
       walletAddress || (await this.contractWrapper.getSignerAddress());
     const maxId = await this.contractWrapper.readContract.nextTokenIdToMint();
@@ -119,7 +119,7 @@ export class Erc1155Enumerable implements DetectableFeature {
         return {
           ...editionMetadata,
           owner: address,
-          quantityOwned: b.balance,
+          quantityOwned: b.balance.toNumber(),
         };
       }),
     );

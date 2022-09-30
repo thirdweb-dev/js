@@ -1,3 +1,4 @@
+import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
 import { prepareClaim } from "../../common/claim-conditions";
 import { uploadOrExtractURIs } from "../../common/nft";
@@ -26,11 +27,6 @@ import {
 import { PaperCheckout } from "../../integrations/paper-xyz";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
-import {
-  NFTMetadata,
-  NFTMetadataOrUri,
-  NFTMetadataOwner,
-} from "../../schema/tokens/common";
 import { ClaimVerification } from "../../types";
 import {
   DEFAULT_QUERY_ALL_COUNT,
@@ -250,9 +246,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
    * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata and their ownersfor all NFTs queried.
    */
-  public async getAllClaimed(
-    queryParams?: QueryAllParams,
-  ): Promise<NFTMetadataOwner[]> {
+  public async getAllClaimed(queryParams?: QueryAllParams): Promise<NFT[]> {
     const start = BigNumber.from(queryParams?.start || 0).toNumber();
     const count = BigNumber.from(
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
@@ -475,7 +469,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
     destinationAddress: string,
     quantity: BigNumberish,
     checkERC20Allowance = true,
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
+  ): Promise<TransactionResultWithId<NFT>[]> {
     return this.erc721.claimTo(destinationAddress, quantity, {
       checkERC20Allowance,
     });
@@ -491,7 +485,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
   public async claim(
     quantity: BigNumberish,
     checkERC20Allowance = true,
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
+  ): Promise<TransactionResultWithId<NFT>[]> {
     return this.claimTo(
       await this.contractWrapper.getSignerAddress(),
       quantity,
@@ -529,7 +523,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
    * @param tokenId - the tokenId of the NFT to retrieve
    * @returns The NFT metadata
    */
-  public async get(tokenId: BigNumberish): Promise<NFTMetadataOwner> {
+  public async get(tokenId: BigNumberish): Promise<NFT> {
     return this.erc721.get(tokenId);
   }
 

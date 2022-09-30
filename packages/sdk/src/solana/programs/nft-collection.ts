@@ -1,11 +1,7 @@
+import { NFT, NFTMetadataInput, NFTMetadataOrUri } from "../../core/schema/nft";
 import { NFTHelper } from "../classes/helpers/nft-helper";
 import { METAPLEX_PROGRAM_ID } from "../constants/addresses";
 import { TransactionResult } from "../types/common";
-import {
-  NFTCollectionMetadata,
-  NFTMetadata,
-  NFTMetadataInput,
-} from "../types/nft";
 import {
   findEditionMarkerPda,
   Metaplex,
@@ -73,7 +69,7 @@ export class NFTCollection {
    * console.log(metadata.name);
    * ```
    */
-  async getMetadata(): Promise<NFTCollectionMetadata> {
+  async getMetadata(): Promise<NFT> {
     const metadata = await this.metaplex
       .nfts()
       .findByMint({ mintAddress: this.publicKey })
@@ -97,7 +93,7 @@ export class NFTCollection {
    * console.log(nft.name);
    * ```
    */
-  async get(nftAddress: string): Promise<NFTMetadata | undefined> {
+  async get(nftAddress: string): Promise<NFT> {
     return this.nft.get(nftAddress);
   }
 
@@ -113,11 +109,16 @@ export class NFTCollection {
    * console.log(nfts[0].name);
    * ```
    */
-  async getAll(): Promise<NFTMetadata[]> {
+  async getAll(options?: { filterBurnedTokens: boolean }): Promise<NFT[]> {
     const addresses = await this.getAllNFTAddresses();
     return (
       await Promise.all(addresses.map(async (a) => await this.get(a)))
-    ).filter((a) => a !== undefined) as NFTMetadata[];
+    ).filter((a) => {
+      if (!options?.filterBurnedTokens) {
+        return true;
+      }
+      return a.supply > 0;
+    });
   }
 
   /**
@@ -387,13 +388,18 @@ export class NFTCollection {
    * console.log(address);
    * ```
    */
-  async mintTo(to: string, metadata: NFTMetadataInput) {
+  async mintTo(to: string, metadata: NFTMetadataOrUri) {
     // TODO add options param for initial/maximum supply
-    const uri = await this.storage.upload(metadata);
+    const uri =
+      typeof metadata === "string"
+        ? metadata
+        : await this.storage.upload(metadata);
+    const name =
+      typeof metadata === "string" ? "" : metadata.name?.toString() || "";
     const { nft } = await this.metaplex
       .nfts()
       .create({
-        name: metadata.name?.toString() || "",
+        name,
         uri,
         sellerFeeBasisPoints: 0,
         collection: this.publicKey,

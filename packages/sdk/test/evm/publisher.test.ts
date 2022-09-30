@@ -449,9 +449,9 @@ describe("Publishing", async () => {
     const nftsAfter = await c.erc1155.getAll();
     expect(nftsAfter.length).to.equal(2);
     expect(nftsAfter[0].metadata.name).to.equal("cool nft 1");
-    expect(nftsAfter[0].supply.toNumber()).to.equal(1);
+    expect(nftsAfter[0].supply).to.equal(1);
     expect(nftsAfter[1].metadata.name).to.equal("cool nft 2");
-    expect(nftsAfter[1].supply.toNumber()).to.equal(0);
+    expect(nftsAfter[1].supply).to.equal(0);
   });
 
   it("Constructor params with tuples", async () => {

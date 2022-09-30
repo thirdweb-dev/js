@@ -1,10 +1,5 @@
-import {
-  Amount,
-  AmountSchema,
-  CurrencyValue,
-  TransactionResult,
-} from "../types/common";
-import { TokenMetadata } from "../types/nft";
+import { CurrencyValue, TokenMetadata } from "../../core/schema/token";
+import { Amount, AmountSchema, TransactionResult } from "../types/common";
 import { toCurrencyValue } from "../utils/token";
 import {
   findMetadataPda,
@@ -80,13 +75,13 @@ export class Token {
     const account = await this.metaplex.rpc().getAccount(addr);
     const meta = toMetadata(toMetadataAccount(account));
     return {
+      ...meta.json,
       id: meta.address.toBase58(),
       uri: meta.uri,
       name: meta.name,
       symbol: meta.symbol,
       decimals: mint.decimals,
       supply: toCurrencyValue(mint.supply),
-      ...meta.json,
     } as TokenMetadata;
   }
 

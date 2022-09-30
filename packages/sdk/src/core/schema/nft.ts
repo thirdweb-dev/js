@@ -1,43 +1,26 @@
+import { OptionalPropertiesInput } from "./properties";
 import {
-  BigNumberSchema,
   BigNumberTransformSchema,
   FileOrBufferOrStringSchema,
   HexColor,
-} from "../../shared";
-import { OptionalPropertiesInput } from "./properties";
+} from "./shared";
 import { z } from "zod";
 
 /**
  * @internal
  */
-export const CommonTokenInput = z
+export const CommonNFTInput = z
   .object({
     name: z.union([z.string(), z.number()]).optional(),
     description: z.string().nullable().optional(),
     image: FileOrBufferOrStringSchema.nullable().optional(),
     external_url: FileOrBufferOrStringSchema.nullable().optional(),
+    animation_url: FileOrBufferOrStringSchema.optional(),
+    background_color: HexColor.optional(),
+    properties: OptionalPropertiesInput,
+    attributes: OptionalPropertiesInput,
   })
   .catchall(z.union([BigNumberTransformSchema, z.unknown()]));
-
-/**
- * @internal
- */
-export const CommonTokenOutput = CommonTokenInput.extend({
-  id: BigNumberSchema,
-  uri: z.string(),
-  image: z.string().nullable().optional(),
-  external_url: z.string().nullable().optional(),
-});
-
-/**
- * @internal
- */
-export const CommonNFTInput = CommonTokenInput.extend({
-  animation_url: FileOrBufferOrStringSchema.optional(),
-  background_color: HexColor.optional(),
-  properties: OptionalPropertiesInput,
-  attributes: OptionalPropertiesInput,
-});
 
 /**
  * @internal
@@ -47,7 +30,11 @@ export const NFTInputOrUriSchema = z.union([CommonNFTInput, z.string()]);
 /**
  * @internal
  */
-export const CommonNFTOutput = CommonTokenOutput.extend({
+export const CommonNFTOutput = CommonNFTInput.extend({
+  id: z.string(),
+  uri: z.string(),
+  image: z.string().nullable().optional(),
+  external_url: z.string().nullable().optional(),
   animation_url: z.string().nullable().optional(),
 });
 
@@ -66,4 +53,10 @@ export type NFTMetadata = z.output<typeof CommonNFTOutput>;
 /**
  * @public
  */
-export type NFTMetadataOwner = { metadata: NFTMetadata; owner: string };
+export type NFT = {
+  metadata: NFTMetadata;
+  owner: string;
+  type: "ERC1155" | "ERC721" | "metaplex";
+  supply: number;
+  quantityOwned?: number;
+};

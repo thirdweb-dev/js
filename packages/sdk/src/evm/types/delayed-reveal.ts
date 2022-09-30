@@ -1,4 +1,4 @@
-import { NFTMetadata } from "../schema/tokens/common";
+import { NFTMetadata } from "../../core/schema/nft";
 import { BigNumber } from "ethers";
 
 export interface BatchToReveal {

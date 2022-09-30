@@ -1,6 +1,6 @@
+import { NFT } from "../../../core/schema/nft";
 import { hasFunction } from "../../common";
 import { FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS } from "../../constants/erc721-features";
-import { NFTMetadataOwner } from "../../schema";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ClaimOptions, ClaimVerification } from "../../types";
 import { BaseClaimConditionERC721 } from "../../types/eips";
@@ -131,7 +131,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
     destinationAddress: string,
     quantity: BigNumberish,
     options?: ClaimOptions,
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
+  ): Promise<TransactionResultWithId<NFT>[]> {
     const task = await this.getClaimTransaction(
       destinationAddress,
       quantity,
@@ -144,7 +144,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
     );
     const startingIndex: BigNumber = event[0].args.startTokenId;
     const endingIndex = startingIndex.add(quantity);
-    const results: TransactionResultWithId<NFTMetadataOwner>[] = [];
+    const results: TransactionResultWithId<NFT>[] = [];
     for (let id = startingIndex; id.lt(endingIndex); id = id.add(1)) {
       results.push({
         id,
