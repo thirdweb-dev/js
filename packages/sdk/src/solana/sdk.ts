@@ -139,6 +139,12 @@ export class ThirdwebSDK {
    * Get an SDK interface for a deployed program
    * @param address - Address of the program
    * @returns SDK interface for the program
+   *
+   * @example
+   * ```jsx
+   * // Get the interface for your anchor program
+   * const program = await sdk.getProgram("{{contract_address}}");
+   * ```
    */
   public async getProgram(address: string) {
     const anchor = await import("@project-serum/anchor");
@@ -159,6 +165,14 @@ export class ThirdwebSDK {
    * @param address - Address of the program
    * @param idl - The IDL of the program
    * @returns SDK interface for the program
+   *
+   * @example
+   * ```jsx
+   * import idl from "path/to/idl.json"
+   *
+   * // Alternatively, you can pass in your own IDL
+   * const program = await sdk.getProgramWithIdl(address, idl);
+   * ```
    */
   public async getProgramWithIdl(address: string, idl: Idl) {
     const program = await import("./contracts/program");

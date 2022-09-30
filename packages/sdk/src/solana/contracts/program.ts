@@ -59,10 +59,13 @@ export class Program {
    * ```jsx
    * const counterAccount = Keypair.generate();
    * await program.call("increment", {
+   *   // We need to pass in the public keys of any accounts to interact with
    *   accounts: {
    *     counterAccount: counterAccount.publicKey.toBase58(),
    *   },
+   *   // As well as the arguments to pass to the data parameters
    *   data: ["..."],
+   *   // And the signer of the account that will be signing the message
    *   signers: [counterAccount]
    * })
    * ```
@@ -86,6 +89,19 @@ export class Program {
       .rpc();
   }
 
+  /**
+   * Read account data associated with this program
+   * @param accountName - The name of the account type to fetch the data of
+   * @param address - The address of the specific account to fetch
+   * @returns - The data of the requested account
+   *
+   * @example
+   * ```jsx
+   * const accountAddress = "...";
+   * // Get the counterAccount at specified address
+   * const counterAccount = await program.fetch("counterAccount", accountaddress);
+   * ```
+   */
   async fetch(accountName: string, address: string) {
     const account = this.program.account[accountName];
     if (!account) {

@@ -89,8 +89,12 @@ export class NFTCollection {
    *
    * @example
    * ```jsx
+   * // Specify the mint address of the NFT to get the data of
    * const nftAddress = "...";
+   * // And get the data for the NFT
    * const nft = await program.get(nftAddress);
+   *
+   * console.log(nft.name);
    * ```
    */
   async get(nftAddress: string): Promise<NFTMetadata | undefined> {
@@ -103,7 +107,10 @@ export class NFTCollection {
    *
    * @example
    * ```jsx
+   * // Get all the NFTs that have been minted on this contract
    * const nfts = await program.getAll();
+   *
+   * console.log(nfts[0].name);
    * ```
    */
   async getAll(): Promise<NFTMetadata[]> {
@@ -119,7 +126,10 @@ export class NFTCollection {
    *
    * @example
    * ```jsx
+   * // Get just the addresses of the minted NFTs on this contract
    * const nfts = await program.getAllNFTAddresses();
+   *
+   * console.log(nfts);
    * ```
    */
   async getAllNFTAddresses(): Promise<string[]> {
@@ -203,7 +213,11 @@ export class NFTCollection {
    *
    * @example
    * ```jsx
-   * const balance = await program.balance();
+   * // The mint address of the NFT to check the balance of
+   * const mintAddress = "..."
+   * // Get the NFT balance of the currently connected wallet
+   * const balance = await program.balance(mintAddress);
+   * console.log(balance);
    * ```
    */
   async balance(nftAddress: string): Promise<number> {
@@ -219,7 +233,9 @@ export class NFTCollection {
    *
    * @example
    * ```jsx
+   * // Specify the address of the wallet to get the balance of
    * const walletAddress = "..."
+   * // Specify the mint address of the NFT to get the balance of
    * const mintAddress = "..."
    * const balance = await program.balanceOf(walletAddress, mintAddress);
    * ```
@@ -298,7 +314,9 @@ export class NFTCollection {
    *
    * @example
    * ```jsx
+   * // The wallet address to transfer the NFTs to
    * const to = "...";
+   * // The mint address of the NFT to transfer
    * const mintAddress = "...";
    * const tx = await program.transfer(to, mintAddress);
    * ```
@@ -317,11 +335,22 @@ export class NFTCollection {
    *
    * @example
    * ```jsx
+   * // Add the metadata of your NFT
    * const metadata = {
    *   name: "NFT #1",
+   *   description: "My first NFT!",
    *   image: readFileSync("files/image.jpg"),
+   *   properties: [
+   *     {
+   *        name: "coolness",
+   *        value: "very cool!"
+   *     }
+   *   ]
    * }
+   *
+   * // Then mint the new NFT and get its address
    * const address = await program.mint(metadata);
+   * console.log(address);
    * ```
    */
   async mint(metadata: NFTMetadataInput): Promise<string> {
@@ -337,12 +366,25 @@ export class NFTCollection {
    *
    * @example
    * ```jsx
-   * const to = "..."
+   * // Specify who to mint the NFT to
+   * const to = "...";
+   *
+   * // Add the metadata of your NFT
    * const metadata = {
    *   name: "NFT #1",
+   *   description: "My first NFT!",
    *   image: readFileSync("files/image.jpg"),
+   *   properties: [
+   *     {
+   *        name: "coolness",
+   *        value: "very cool!"
+   *     }
+   *   ]
    * }
+   *
+   * // Then mint the new NFT and get its address
    * const address = await program.mintTo(to, metadata);
+   * console.log(address);
    * ```
    */
   async mintTo(to: string, metadata: NFTMetadataInput) {
@@ -372,7 +414,9 @@ export class NFTCollection {
    *
    * @example
    * ```jsx
+   * // The address of the already minted NFT
    * const nftAddress = "..."
+   * // Mint an additional NFT of the original NFT
    * const address = await program.mintAdditionalSupply(nftAddress);
    * ```
    */
@@ -389,8 +433,11 @@ export class NFTCollection {
    *
    * @example
    * ```jsx
+   * // Specify who to mint the additional NFT to
    * const to = "..."
+   * // The address of the already minted NFT
    * const nftAddress = "..."
+   * // Mint an additional NFT of the original NFT
    * const address = await program.mintAdditionalSupplyTo(to, nftAddress);
    * ```
    */
@@ -413,6 +460,14 @@ export class NFTCollection {
    * Burn an NFT
    * @param nftAddress - the mint address of the NFT to burn
    * @returns the transaction signature
+   *
+   * @example
+   * ```jsx
+   * // Specify the address of the NFT to burn
+   * const nftAddress = "..."
+   * // And send the actual burn transaction
+   * const tx = await program.burn(nftAddress);
+   * ```
    */
   async burn(nftAddress: string): Promise<TransactionResult> {
     const tx = await this.metaplex

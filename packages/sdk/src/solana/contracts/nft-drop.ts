@@ -22,8 +22,8 @@ import invariant from "tiny-invariant";
  * const sdk = ThirdwebSDK.fromNetwork("devnet");
  * sdk.wallet.connect(signer);
  *
- * // Get the interface for your NFT collection program
- * const program = await sdk.getNFTCollection("{{contract_address}}");
+ * // Get the interface for your NFT Drop program
+ * const program = await sdk.getNFTDrop("{{contract_address}}");
  * ```
  *
  * @public
@@ -86,8 +86,12 @@ export class NFTDrop {
    *
    * @example
    * ```jsx
-   * const mintAddress = "...";
-   * const nft = await program.get(mintAddress);
+   * // Specify the mint address of the NFT to get the data of
+   * const nftAddress = "...";
+   * // And get the data for the NFT
+   * const nft = await program.get(nftAddress);
+   *
+   * console.log(nft.name);
    * ```
    */
   async get(nftAddress: string): Promise<NFTMetadata | undefined> {
@@ -100,7 +104,10 @@ export class NFTDrop {
    *
    * @example
    * ```jsx
+   * // Get all the NFTs that have been minted on this contract
    * const nfts = await program.getAll();
+   *
+   * console.log(nfts[0].name);
    * ```
    */
   async getAll(): Promise<NFTMetadata[]> {
@@ -121,7 +128,9 @@ export class NFTDrop {
    *
    * @example
    * ```jsx
+   * // Get all the NFTs that have already been claimed from this drop
    * const nfts = await program.getAllClaimed();
+   * console.log(nfts[0].name)
    * ```
    */
   async getAllClaimed(): Promise<NFTMetadata[]> {
@@ -139,7 +148,11 @@ export class NFTDrop {
    *
    * @example
    * ```jsx
-   * const balance = await program.balance();
+   * // The mint address of the NFT to check the balance of
+   * const mintAddress = "..."
+   * // Get the NFT balance of the currently connected wallet
+   * const balance = await program.balance(mintAddress);
+   * console.log(balance);
    * ```
    */
   async balance(nftAddress: string): Promise<number> {
@@ -155,8 +168,11 @@ export class NFTDrop {
    *
    * @example
    * ```jsx
+   * // The address of the wallet to check the balance of
    * const walletAddress = "..."
+   * // The mint address of the NFT to check the balance of
    * const mintAddress = "..."
+   * // Get the actual NFT balance of the specified wallet
    * const balance = await program.balanceOf(walletAddress, mintAddress);
    * ```
    */
@@ -170,6 +186,7 @@ export class NFTDrop {
    *
    * @example
    * ```jsx
+   * // Get the total number of lazy minted NFTs that aren't yet claimed
    * const supply = await program.totalUnclaimedSupply();
    * ```
    */
@@ -187,6 +204,7 @@ export class NFTDrop {
    *
    * @example
    * ```jsx
+   * // Get the total number of lazy minted NFTs that have already been claimed
    * const supply = await program.totalClaimedSupply();
    * ```
    */
@@ -203,7 +221,9 @@ export class NFTDrop {
    *
    * @example
    * ```jsx
+   * // The wallet address to transfer the NFTs to
    * const to = "...";
+   * // The mint address of the NFT to transfer
    * const mintAddress = "...";
    * const tx = await program.transfer(to, mintAddress);
    * ```
@@ -222,13 +242,22 @@ export class NFTDrop {
    *
    * @example
    * ```jsx
-   * const metadatas = [
+   * // Add the metadata of your NFTs
+   * const metadata = [
    *   {
    *     name: "NFT #1",
-   *     image: readFileSync("test/file.jpg"),
+   *     description: "My first NFT!",
+   *     image: readFileSync("files/image.jpg"),
+   *     properties: [
+   *       {
+   *         name: "coolness",
+   *         value: "very cool!"
+   *       }
+   *     ]
    *   }
-   * ]
+   * ];
    *
+   * // And lazy mint NFTs to your program
    * const tx = await program.lazyMint(metadatas);
    * ```
    */
@@ -262,7 +291,10 @@ export class NFTDrop {
    *
    * @example
    * ```jsx
-   * const claimedAddresses = await program.claim(1);
+   * // Specify the quantity of NFTs to claim
+   * const quantity = 1;
+   * // Claim NFTs and get their mint addresses
+   * const claimedAddresses = await program.claim(quantity);
    * console.log("Claimed NFT at address", claimedAddresses[0]);
    * ```
    */
@@ -277,7 +309,9 @@ export class NFTDrop {
    *
    * @example
    * ```jsx
+   * // Specify which address to claim the NFTs to
    * const receiverAddress =  "...";
+   * // Claim the NFTs to the specified wallet and get the mint addresses of the NFTs
    * const claimedAddresses = await program.claimTo(receiverAddress, 1);
    * console.log("Claimed NFT at address", claimedAddresses[0]);
    * ```
