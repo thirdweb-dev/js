@@ -6,7 +6,7 @@
       "dependsOn": ["^build"]
     },
     "@thirdweb-dev/sdk#build": {
-      "outputs": ["dist/**"],
+      "outputs": ["dist/**", "evm/**", "solana/**"],
       "dependsOn": ["^build"]
     },
     "@thirdweb-dev/react#build": {
