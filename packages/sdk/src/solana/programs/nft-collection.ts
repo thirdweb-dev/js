@@ -1,4 +1,9 @@
-import { NFT, NFTMetadataInput, NFTMetadataOrUri } from "../../core/schema/nft";
+import {
+  NFT,
+  NFTMetadata,
+  NFTMetadataInput,
+  NFTMetadataOrUri,
+} from "../../core/schema/nft";
 import { NFTHelper } from "../classes/helpers/nft-helper";
 import { METAPLEX_PROGRAM_ID } from "../constants/addresses";
 import { TransactionResult } from "../types/common";
@@ -69,13 +74,13 @@ export class NFTCollection {
    * console.log(metadata.name);
    * ```
    */
-  async getMetadata(): Promise<NFT> {
+  async getMetadata(): Promise<NFTMetadata> {
     const metadata = await this.metaplex
       .nfts()
       .findByMint({ mintAddress: this.publicKey })
       .run();
 
-    return this.nft.toNFTMetadata(metadata);
+    return this.nft.toNFTMetadata(metadata).metadata;
   }
 
   /**

@@ -82,7 +82,7 @@ export class Token {
       symbol: meta.symbol,
       decimals: mint.decimals,
       supply: toCurrencyValue(mint.supply),
-    } as TokenMetadata;
+    };
   }
 
   /**

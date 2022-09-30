@@ -69,14 +69,14 @@ export class NFTDrop {
    * console.log(metadata.name);
    * ```
    */
-  async getMetadata(): Promise<NFT> {
+  async getMetadata(): Promise<NFTMetadata> {
     const info = await this.getCandyMachine();
     invariant(info.collectionMintAddress, "Collection mint address not found");
     const metadata = await this.metaplex
       .nfts()
       .findByMint({ mintAddress: info.collectionMintAddress })
       .run();
-    return this.nft.toNFTMetadata(metadata);
+    return this.nft.toNFTMetadata(metadata).metadata;
   }
 
   /**
