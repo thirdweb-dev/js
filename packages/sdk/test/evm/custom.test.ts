@@ -4,7 +4,7 @@ import {
   SignedPayload721WithQuantitySignature,
   ThirdwebSDK,
 } from "../../src/evm";
-import { expectError, signers } from "./before-setup";
+import { expectError, signers, sdk } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   TokenERC20__factory,
@@ -29,23 +29,27 @@ describe("Custom Contracts", async () => {
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
-  let sdk: ThirdwebSDK;
+  let realSDK: ThirdwebSDK;
   let simpleContractUri: string;
 
   before(async () => {
     [adminWallet, samWallet, bobWallet] = signers;
-    sdk = new ThirdwebSDK(adminWallet);
+    realSDK = new ThirdwebSDK(adminWallet);
     simpleContractUri =
       "ipfs://QmNPcYsXDAZvQZXCG73WSjdiwffZkNkoJYwrDDtcgM142A/0";
     // if we update the test data - await uploadContractMetadata("Greeter", storage);
+
+    // only create this once by default (hits IPFS!)
+    customContractAddress = await realSDK.deployer.deployContractFromUri(
+      simpleContractUri,
+      [],
+    );
   });
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    customContractAddress = await sdk.deployer.deployContractFromUri(
-      simpleContractUri,
-      [],
-    );
+    realSDK.updateSignerOrProvider(adminWallet);
+
     nftContractAddress = await sdk.deployer.deployNFTCollection({
       name: `Drop`,
       description: "Test contract from tests",
@@ -96,7 +100,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should call raw ABI functions and read deployer address", async () => {
-    const c = await sdk.getContract(customContractAddress);
+    const c = await realSDK.getContract(customContractAddress);
     invariant(c, "Contract undefined");
     expect(await c.call("decimals")).to.eq(18);
     const owner = await c.call("owner");
@@ -109,7 +113,12 @@ describe("Custom Contracts", async () => {
   });
 
   it("should call raw ABI functions with call overrides", async () => {
-    const c = await sdk.getContract(customContractAddress);
+    //need to re-create it here because owner is changed and it would otherwise fail
+    customContractAddress = await realSDK.deployer.deployContractFromUri(
+      simpleContractUri,
+      [],
+    );
+    const c = await realSDK.getContract(customContractAddress);
     invariant(c, "Contract undefined");
 
     try {
@@ -135,7 +144,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should fetch published metadata", async () => {
-    const c = await sdk.getContract(customContractAddress);
+    const c = await realSDK.getContract(customContractAddress);
     invariant(c, "Contract undefined");
     const meta = await c.publishedMetadata.get();
     expect(meta.name).to.eq("Greeter");
@@ -143,21 +152,21 @@ describe("Custom Contracts", async () => {
   });
 
   it("should extract functions", async () => {
-    const c = await sdk.getContract(customContractAddress);
+    const c = await realSDK.getContract(customContractAddress);
     invariant(c, "Contract undefined");
     const functions = await c.publishedMetadata.extractFunctions();
     expect(functions.length).gt(0);
   });
 
   it("should extract events", async () => {
-    const c = await sdk.getContract(customContractAddress);
+    const c = await realSDK.getContract(customContractAddress);
     invariant(c, "Contract undefined");
     const events = await c.publishedMetadata.extractEvents();
     expect(events.length).gt(0);
   });
 
   it("should detect feature: metadata", async () => {
-    const c = await sdk.getContract(customContractAddress);
+    const c = await realSDK.getContract(customContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.metadata, "Contract undefined");
     const meta = await c.metadata.get();
@@ -224,7 +233,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should not detect feature if missing from ABI", async () => {
-    const c = await sdk.getContractFromAbi("", VoteERC20__factory.abi);
+    const c = sdk.getContractFromAbi("", VoteERC20__factory.abi);
     invariant(c, "Contract undefined");
     invariant(c.metadata, "Metadata undefined");
     try {

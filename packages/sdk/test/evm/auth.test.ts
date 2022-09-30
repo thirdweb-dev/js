@@ -1,5 +1,4 @@
-import { ThirdwebSDK } from "../../src/evm";
-import { signers } from "./before-setup";
+import { signers, sdk } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 
@@ -7,12 +6,10 @@ describe("Wallet Authentication", async () => {
   let adminWallet: SignerWithAddress,
     signerWallet: SignerWithAddress,
     attackerWallet: SignerWithAddress;
-  let sdk: ThirdwebSDK;
   const domain = "thirdweb.com";
 
   before(async () => {
     [adminWallet, signerWallet, attackerWallet] = signers;
-    sdk = new ThirdwebSDK(adminWallet);
   });
 
   beforeEach(async () => {
