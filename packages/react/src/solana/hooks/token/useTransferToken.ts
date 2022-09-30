@@ -9,6 +9,28 @@ export type TransferTokenMutationParams = {
   receiverAddress: string;
 };
 
+/**
+ * Transfer tokens from the connected wallet to another wallet
+ * @param program - The program instance of the program to mint on
+ *
+ * @example
+ * ```jsx
+ * import { useProgram, useTransferToken } from "@thirdweb-dev/react/solana";
+ *
+ * export default function Component() {
+ *   const program = useProgram("{{program_address}}");
+ *   const { mutateAsync: transfer, isLoading, error } = useTransferToken(program);
+ *
+ *   return (
+ *     <button onClick={() => transfer({ to: "{{wallet_address}}", amount: 1 })}>
+ *       Transfer
+ *     </button>
+ *   )
+ * }
+ * ```
+ *
+ * @public
+ */
 export function useTransferToken(program: RequiredParam<Token>) {
   const queryClient = useQueryClient();
   return useMutation(

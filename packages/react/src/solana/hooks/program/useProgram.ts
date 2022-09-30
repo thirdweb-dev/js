@@ -67,6 +67,31 @@ export function programQuery<TProgramType extends ProgramType>(
   };
 }
 
+/**
+ * Get an SDK instance to interact with any program
+ * @param address - the address of the program to get an interface for
+ * @param type - optionally, pass in the program type to get static typing
+ *
+ * @example
+ * ```jsx
+ * import { useProgram } from "@thirdweb-dev/react/solana";
+ *
+ * export default function Component() {
+ *   const program = useProgram("{{program_address}}");
+ *
+ *   // Now you can use the program in the rest of the component
+ *
+ *   // For example, we can make a transaction
+ *   async function functionCall() {
+ *     await program.call("mint", ...);
+ *   }
+ *
+ *   ...
+ * }
+ * ```
+ *
+ * @public
+ */
 export function useProgram<TProgramType extends ProgramType>(
   address: RequiredParam<string>,
   type?: TProgramType,

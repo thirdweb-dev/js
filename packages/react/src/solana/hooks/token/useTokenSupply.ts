@@ -16,6 +16,26 @@ export function tokenSupplyQuery(program: RequiredParam<Token>) {
   };
 }
 
+/**
+ * Get the total circulating supply of a token
+ * @param program - The token program to get the supply of
+ *
+ * @example
+ * ```jsx
+ * import { useProgram, useMintToken } from "@thirdweb-dev/react/solana";
+ *
+ * export default function Component() {
+ *   const program = useProgram("{{program_address}}");
+ *   const { data: totalSupply, isLoading } = useTokenSupply(program);
+ *
+ *   return (
+ *     <p>{totalSupply}</p>
+ *   )
+ * }
+ * ```
+ *
+ * @public
+ */
 export function useTokenSupply(program: RequiredParam<Token>) {
   return useQuery(tokenSupplyQuery(program));
 }

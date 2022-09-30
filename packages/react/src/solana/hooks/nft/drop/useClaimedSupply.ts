@@ -19,6 +19,26 @@ export function dropTotalClaimedSupplyQuery(program: RequiredParam<NFTDrop>) {
   };
 }
 
+/**
+ * Get the total claimed supply of NFTs on an NFT Drop
+ * @param program - The NFT Drop program to get the claimed supply on
+ *
+ * @example
+ * ```jsx
+ * import { useProgram, useDropTotalClaimedSupply } from "@thirdweb-dev/react/solana";
+ *
+ * export default function Component() {
+ *   const program = useProgram("{{program_address}}");
+ *   const { data: claimedSupply, isLoading } = useDropTotalClaimedSupply(program);
+ *
+ *   return (
+ *     <p>{claimedSupply}</p>
+ *   )
+ * }
+ * ```
+ *
+ * @public
+ */
 export function useDropTotalClaimedSupply(program: RequiredParam<NFTDrop>) {
   return useQuery(dropTotalClaimedSupplyQuery(program));
 }

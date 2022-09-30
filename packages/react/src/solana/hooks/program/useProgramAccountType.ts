@@ -28,6 +28,9 @@ export function programAccountTypeQuery(
   };
 }
 
+/**
+ * @internal
+ */
 export function useProgramAccountType(address: RequiredParam<string>) {
   const sdk = useSDK();
   return useQuery(programAccountTypeQuery(sdk, address));
