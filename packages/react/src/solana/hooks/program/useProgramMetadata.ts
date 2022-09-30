@@ -18,6 +18,9 @@ export function programMetadataQuery(
   };
 }
 
+/**
+ * @internal
+ */
 export function useProgramMetadata(
   program: RequiredParam<UseProgramResult["data"]>,
 ) {

@@ -23,6 +23,27 @@ export function tokenBalanceQuery(
   };
 }
 
+/**
+ * Get the token balance of a specified wallet
+ * @param program - The token program to get the balance on
+ * @param walletAddress - The address of the wallet to get the balance of
+ *
+ * @example
+ * ```jsx
+ * import { useProgram, useTokenBalance } from "@thirdweb-dev/react/solana";
+ *
+ * export default function Component() {
+ *   const program = useProgram("{{program_address}}");
+ *   const { data: balance, isLoading } = useTokenBalance(program, "{{wallet_address}}");
+ *
+ *   return (
+ *     <p>{balance}</p>
+ *   )
+ * }
+ * ```
+ *
+ * @public
+ */
 export function useTokenBalance(
   program: RequiredParam<Token>,
   walletAddress: RequiredParam<string>,

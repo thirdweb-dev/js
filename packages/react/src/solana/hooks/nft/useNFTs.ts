@@ -18,6 +18,26 @@ export function nftGetAllQuery(
   };
 }
 
+/**
+ * Get the metadata for every NFT on an NFT program
+ * @param program - The NFT program to get NFTs metadata from
+ *
+ * @example
+ * ```jsx
+ * import { useProgram, useNFTs } from "@thirdweb-dev/react/solana";
+ *
+ * export default function Component() {
+ *   const program = useProgram("{{program_address}}");
+ *   const { data: metadata, isLoading } = useNFTs(program);
+ *
+ *   return (
+ *     <pre>{JSON.stringify(metadata)}</pre>
+ *   )
+ * }
+ * ```
+ *
+ * @public
+ */
 export function useNFTs(program: RequiredParam<NFTCollection | NFTDrop>) {
   return useQuery(nftGetAllQuery(program));
 }

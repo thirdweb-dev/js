@@ -27,41 +27,6 @@ export class Formatter {
   }
 }
 
-const tsdocParser = new TSDocParser();
-
-const json = JSON.parse(
-  fs.readFileSync(`${process.cwd()}/temp/react.api.json`, "utf8"),
-);
-
-function languageNameToKey(languageName) {
-  switch (languageName) {
-    case "js":
-    case "jsx":
-      return "javascript";
-    case "ts":
-    case "tsx":
-      return "typescript";
-    default:
-      return languageName;
-  }
-}
-
-const CONTRACT_HOOKS = [
-  "useSignatureDrop",
-  "useNFTDrop",
-  "useEditionDrop",
-  "useNFTCollection",
-  "useEdition",
-  "useTokenDrop",
-  "useToken",
-  "useMarketplace",
-  "useSplit",
-  "useVote",
-  "usePack",
-  "useMultiwrap",
-  "useContract",
-];
-
 const NFT_HOOKS = [
   "useNFT",
   "useNFTs",
@@ -141,7 +106,7 @@ const CONTRACT_SETTINGS_HOOKS = [
   "useRevokeRole",
 ];
 
-const CONTRACT_SUBHOOKS = {
+const HOOKS_CONFIG = {
   useSignatureDrop: [...NFT_HOOKS, ...DROP_HOOKS, ...CLAIM_CONDITIONS_HOOKS],
   useNFTDrop: [...NFT_HOOKS, ...DROP_HOOKS, ...CLAIM_CONDITIONS_HOOKS],
   useEditionDrop: [...NFT_HOOKS, ...DROP_HOOKS, ...CLAIM_CONDITIONS_HOOKS],
@@ -162,8 +127,27 @@ const CONTRACT_SUBHOOKS = {
   ],
 };
 
+const tsdocParser = new TSDocParser();
+
+const json = JSON.parse(
+  fs.readFileSync(`${process.cwd()}/temp-evm/react.api.json`, "utf8"),
+);
+
+function languageNameToKey(languageName) {
+  switch (languageName) {
+    case "js":
+    case "jsx":
+      return "javascript";
+    case "ts":
+    case "tsx":
+      return "typescript";
+    default:
+      return languageName;
+  }
+}
+
 const hooks = json.members[0].members.filter(
-  (m) => m.kind === "Function" && CONTRACT_HOOKS.includes(m.name),
+  (m) => m.kind === "Function" && Object.keys(HOOKS_CONFIG).includes(m.name),
 );
 
 function parseExampleTag(docComment) {
@@ -192,7 +176,7 @@ function parseExampleTag(docComment) {
   return examples;
 }
 
-const baseDocUrl = "https://docs.thirdweb.com/typescript/react.";
+const baseDocUrl = "https://portal.thirdweb.com/react/react.";
 
 const extractReferenceLink = (m, kind, contractName) => {
   if (kind === "Property") {
@@ -212,7 +196,7 @@ const moduleMap = hooks.reduce((acc, m) => {
   const examples = parseExampleTag(docComment);
 
   const contractSubhooks = json.members[0].members.filter(
-    (f) => f.kind === "Function" && CONTRACT_SUBHOOKS[m.name].includes(f.name),
+    (f) => f.kind === "Function" && HOOKS_CONFIG[m.name].includes(f.name),
   );
 
   const contractHooks = contractSubhooks.map((subhookContent) => {
@@ -223,7 +207,7 @@ const moduleMap = hooks.reduce((acc, m) => {
     return {
       name: subhookContent.name,
       example: subhookExamples?.javascript || "",
-      reference: `https://portal.thirdweb.com/react/react.${subhookContent.name.toLowerCase()}`,
+      reference: `${baseDocUrl}${subhookContent.name.toLowerCase()}`,
     };
   });
 
@@ -241,6 +225,6 @@ const moduleMap = hooks.reduce((acc, m) => {
 }, {});
 
 fs.writeFileSync(
-  `${process.cwd()}/docs/snippets.json`,
+  `${process.cwd()}/docs/evm/snippets.json`,
   JSON.stringify(moduleMap, null, 2),
 );

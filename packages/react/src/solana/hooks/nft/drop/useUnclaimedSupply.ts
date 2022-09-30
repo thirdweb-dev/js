@@ -19,6 +19,26 @@ export function dropUnclaimedSupplyQuery(program: RequiredParam<NFTDrop>) {
   };
 }
 
+/**
+ * Get the total unclaimed supply of NFTs on an NFT Drop
+ * @param program - The NFT Drop program to get the unclaimed supply on
+ *
+ * @example
+ * ```jsx
+ * import { useProgram, useDropTotalUnclaimedSupply } from "@thirdweb-dev/react/solana";
+ *
+ * export default function Component() {
+ *   const program = useProgram("{{program_address}}");
+ *   const { data: unclaimedSupply, isLoading } = useDropTotalUnclaimedSupply(program);
+ *
+ *   return (
+ *     <p>{unclaimedSupply}</p>
+ *   )
+ * }
+ * ```
+ *
+ * @public
+ */
 export function useDropUnclaimedSupply(program: RequiredParam<NFTDrop>) {
   return useQuery(dropUnclaimedSupplyQuery(program));
 }

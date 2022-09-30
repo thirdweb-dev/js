@@ -44,7 +44,7 @@ config.setSupportForTag(tag, true);
 const tsdocParser = new TSDocParser(config);
 
 const json = JSON.parse(
-  fs.readFileSync(`${process.cwd()}/temp/react.api.json`, "utf8"),
+  fs.readFileSync(`${process.cwd()}/temp-evm/react.api.json`, "utf8"),
 );
 
 function languageNameToKey(languageName) {
@@ -160,6 +160,6 @@ classes.forEach((m) => {
 });
 
 fs.writeFileSync(
-  `${process.cwd()}/docs/feature_snippets.json`,
+  `${process.cwd()}/docs/evm/feature_snippets.json`,
   JSON.stringify(features, null, 2),
 );
