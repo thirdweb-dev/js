@@ -28,12 +28,12 @@
     },
     "test:solana": {
       "outputs": [],
-      "inputs": ["src/solana/**", "test/solana/**"],
+      "inputs": ["src/core/**", "src/solana/**", "test/solana/**"],
       "dependsOn": ["build"]
     },
     "test:evm": {
       "outputs": [],
-      "inputs": ["src/evm/**", "test/evm/**"],
+      "inputs": ["src/core/**", "src/evm/**", "test/evm/**"],
       "dependsOn": ["build"]
     },
     "e2e": {

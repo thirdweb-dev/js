@@ -12,7 +12,7 @@
     ]
   },
   "scripts": {
-    "test": "turbo run test && turbo run test:evm && turbo run test:solana",
+    "test": "turbo run test test:evm test:solana",
     "e2e": "turbo run e2e",
     "build": "turbo run build",
     "build:release": "turbo run build --force",

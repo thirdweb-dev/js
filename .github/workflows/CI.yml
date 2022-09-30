@@ -30,8 +30,6 @@ jobs:
       - name: Install
         uses: ./.github/composite-actions/install
 
-      - name: Build
-        run: yarn build
-
-      - name: Test
+        # this already builds anything that changed...
+      - name: Build & Test
         run: yarn test
