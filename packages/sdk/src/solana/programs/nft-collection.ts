@@ -94,8 +94,8 @@ export class NFTCollection {
    * const nftAddress = "...";
    * // And get the data for the NFT
    * const nft = await program.get(nftAddress);
-   *
-   * console.log(nft.name);
+   * console.log(nft.metadata.name);
+   * console.log(nft.owner);
    * ```
    */
   async get(nftAddress: string): Promise<NFT> {
@@ -110,8 +110,8 @@ export class NFTCollection {
    * ```jsx
    * // Get all the NFTs that have been minted on this contract
    * const nfts = await program.getAll();
-   *
-   * console.log(nfts[0].name);
+   * console.log(nfts[0].metadata.name);
+   * console.log(nfts[0].owner);
    * ```
    */
   async getAll(options?: { filterBurnedTokens: boolean }): Promise<NFT[]> {
@@ -133,9 +133,8 @@ export class NFTCollection {
    * @example
    * ```jsx
    * // Get just the addresses of the minted NFTs on this contract
-   * const nfts = await program.getAllNFTAddresses();
-   *
-   * console.log(nfts);
+   * const nftsAdresses = await program.getAllNFTAddresses();
+   * console.log(nftsAdresses);
    * ```
    */
   async getAllNFTAddresses(): Promise<string[]> {
@@ -220,9 +219,9 @@ export class NFTCollection {
    * @example
    * ```jsx
    * // The mint address of the NFT to check the balance of
-   * const mintAddress = "..."
+   * const nftAddress = "..."
    * // Get the NFT balance of the currently connected wallet
-   * const balance = await program.balance(mintAddress);
+   * const balance = await program.balance(nftAddress);
    * console.log(balance);
    * ```
    */
@@ -234,7 +233,7 @@ export class NFTCollection {
   /**
    * Get the NFT balance of the specified wallet
    * @param walletAddress - the wallet address to get the balance of
-   * @param mintAddress - the mint address of the NFT to get the balance of
+   * @param nftAddress - the mint address of the NFT to get the balance of
    * @returns the NFT balance
    *
    * @example
@@ -242,8 +241,8 @@ export class NFTCollection {
    * // Specify the address of the wallet to get the balance of
    * const walletAddress = "..."
    * // Specify the mint address of the NFT to get the balance of
-   * const mintAddress = "..."
-   * const balance = await program.balanceOf(walletAddress, mintAddress);
+   * const nftAddress = "..."
+   * const balance = await program.balanceOf(walletAddress, nftAddress);
    * ```
    */
   async balanceOf(walletAddress: string, nftAddress: string): Promise<number> {
@@ -323,8 +322,8 @@ export class NFTCollection {
    * // The wallet address to transfer the NFTs to
    * const to = "...";
    * // The mint address of the NFT to transfer
-   * const mintAddress = "...";
-   * const tx = await program.transfer(to, mintAddress);
+   * const nftAddress = "...";
+   * const tx = await program.transfer(to, nftAddress);
    * ```
    */
   async transfer(

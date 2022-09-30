@@ -48,15 +48,15 @@ export class NFTDrop {
   }
 
   constructor(
-    dropMintAddress: string,
+    dropAddress: string,
     metaplex: Metaplex,
     storage: ThirdwebStorage,
   ) {
     this.storage = storage;
     this.metaplex = metaplex;
     this.nft = new NFTHelper(metaplex);
-    this.publicKey = new PublicKey(dropMintAddress);
-    this.claimConditions = new ClaimConditions(dropMintAddress, metaplex);
+    this.publicKey = new PublicKey(dropAddress);
+    this.claimConditions = new ClaimConditions(dropAddress, metaplex);
   }
 
   /**
@@ -107,7 +107,7 @@ export class NFTDrop {
    * // Get all the NFTs that have been minted on this contract
    * const nfts = await program.getAll();
    *
-   * console.log(nfts[0].name);
+   * console.log(nfts[0].metadata.name);
    * ```
    */
   async getAll(): Promise<NFT[]> {
@@ -158,9 +158,9 @@ export class NFTDrop {
    * @example
    * ```jsx
    * // The mint address of the NFT to check the balance of
-   * const mintAddress = "..."
+   * const nftAddress = "..."
    * // Get the NFT balance of the currently connected wallet
-   * const balance = await program.balance(mintAddress);
+   * const balance = await program.balance(nftAddress);
    * console.log(balance);
    * ```
    */
@@ -180,9 +180,9 @@ export class NFTDrop {
    * // The address of the wallet to check the balance of
    * const walletAddress = "..."
    * // The mint address of the NFT to check the balance of
-   * const mintAddress = "..."
+   * const nftAddress = "..."
    * // Get the actual NFT balance of the specified wallet
-   * const balance = await program.balanceOf(walletAddress, mintAddress);
+   * const balance = await program.balanceOf(walletAddress, nftAddress);
    * ```
    */
   async balanceOf(walletAddress: string, nftAddress: string): Promise<number> {
@@ -233,8 +233,8 @@ export class NFTDrop {
    * // The wallet address to transfer the NFTs to
    * const to = "...";
    * // The mint address of the NFT to transfer
-   * const mintAddress = "...";
-   * const tx = await program.transfer(to, mintAddress);
+   * const nftAddress = "...";
+   * const tx = await program.transfer(to, nftAddress);
    * ```
    */
   async transfer(

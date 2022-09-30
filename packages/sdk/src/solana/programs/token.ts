@@ -48,14 +48,14 @@ export class Token {
   }
 
   constructor(
-    tokenMintAddress: string,
+    tokenAddress: string,
     metaplex: Metaplex,
     storage: ThirdwebStorage,
   ) {
     this.storage = storage;
     this.metaplex = metaplex;
     this.connection = metaplex.connection;
-    this.publicKey = new PublicKey(tokenMintAddress);
+    this.publicKey = new PublicKey(tokenAddress);
   }
 
   /**

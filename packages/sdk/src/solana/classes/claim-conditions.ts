@@ -27,8 +27,8 @@ export class ClaimConditions {
   private dropMintAddress: PublicKey;
   private metaplex: Metaplex;
 
-  constructor(dropMintAddress: string, metaplex: Metaplex) {
-    this.dropMintAddress = new PublicKey(dropMintAddress);
+  constructor(dropAddress: string, metaplex: Metaplex) {
+    this.dropMintAddress = new PublicKey(dropAddress);
     this.metaplex = metaplex;
   }
 
