@@ -71,7 +71,9 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
     const res = await fetch(`${TW_IPFS_SERVER_URL}/grant`, {
       method: "GET",
       headers: {
-        "X-APP-NAME": "Storage SDK",
+        "X-APP-NAME":
+          // eslint-disable-next-line turbo/no-undeclared-env-vars
+          process.env.NODE_ENV === "test" ? "Storage SDK CI" : "Storage SDK",
       },
     });
     if (!res.ok) {
