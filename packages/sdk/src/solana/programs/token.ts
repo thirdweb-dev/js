@@ -106,7 +106,10 @@ export class Token {
    *
    * @example
    * ```jsx
-   * const tx = await program.mint(1);
+   * // Specify the amount of tokens to mint
+   * const amount = 1;
+   * // And then you can mint the tokens
+   * const tx = await program.mint(amount);
    * ```
    */
   async mint(amount: Amount): Promise<TransactionResult> {
@@ -120,7 +123,11 @@ export class Token {
    *
    * @example
    * ```jsx
+   * // Specify the address to mint tokens to
    * const address = "{{wallet_address}}"";
+   * // And the amount of tokens to mint
+   * const amount = 1;
+   * // And then you can make a mint transaction
    * const tx = await program.mintTo(address, 1);
    * ```
    */
@@ -151,8 +158,11 @@ export class Token {
    *
    * @example
    * ```jsx
+   * // Specify the address to transfer tokens to
    * const to = "...";
+   * // And the amount of tokens to transfer
    * const amount = 1;
+   * // And then you can make the transfer transaction
    * const tx = await program.transfer(to, amount);
    * ```
    */
