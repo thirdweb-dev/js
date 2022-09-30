@@ -38,6 +38,7 @@ export const ProductButton: React.FC<GeneralCtaProps> = ({
       href={href}
       isExternal={href.startsWith("http")}
       _hover={{ opacity: 0.8 }}
+      noIcon
       {...props}
     >
       {title}

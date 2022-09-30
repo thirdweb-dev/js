@@ -9,16 +9,16 @@ const ContractExtensions: ThirdwebNextPage = () => {
   return (
     <ProductPage
       seo={{
-        title: "Extensions",
+        title: "ContractKit",
         description: "Contract development made simple.",
       }}
     >
       <Hero
-        name="Extensions"
+        name="ContractKit"
         title="Contract development made simple."
         description="Fast-track your contract development pipeline with our plug-and-play base contracts and extensions."
         buttonText="Get started"
-        buttonLink="https://portal.thirdweb.com/extensions"
+        buttonLink="https://portal.thirdweb.com/contractkit"
         image={require("public/assets/product-pages/extensions/hero.png")}
         gradient="linear-gradient(147.15deg, #410AB6 30.17%, #D45CFF 100.01%)"
       >

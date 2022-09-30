@@ -126,7 +126,6 @@ export const HomepageFooter: React.FC = () => {
                       href={product.link}
                       category="footer"
                       label={product.label}
-                      isExternal
                     >
                       {product.name}
                     </TrackedLink>
