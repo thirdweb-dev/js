@@ -27,7 +27,7 @@ export function neverPersist<TKey extends QueryKey>(key: TKey) {
 export function shouldNeverPersistQuery<TKey extends QueryKey>(
   key: TKey,
 ): boolean {
-  return key[key.length] === NEVER_PERSIST_QUERY_POSTFIX;
+  return key[key.length - 1] === NEVER_PERSIST_QUERY_POSTFIX;
 }
 
 // EVM
