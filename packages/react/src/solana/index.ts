@@ -15,6 +15,7 @@ export * from "./hooks/nft/useNFTs";
 export * from "./hooks/nft/useMintNFT";
 export * from "./hooks/nft/useNFT";
 export * from "./hooks/nft/useTransferNFT";
+export * from "./hooks/nft/useBurnNFT";
 
 // NFT Drop
 export * from "./hooks/nft/drop/useLazyMintNFT";
