@@ -346,4 +346,30 @@ export class NFTDrop {
       .findByAddress({ address: this.publicKey })
       .run();
   }
+
+  /**
+   * Burn an NFT
+   * @param nftAddress - the mint address of the NFT to burn
+   * @returns the transaction signature
+   *
+   * @example
+   * ```jsx
+   * // Specify the address of the NFT to burn
+   * const nftAddress = "..."
+   * // And send the actual burn transaction
+   * const tx = await program.burn(nftAddress);
+   * ```
+   */
+  async burn(nftAddress: string): Promise<TransactionResult> {
+    const tx = await this.metaplex
+      .nfts()
+      .delete({
+        mintAddress: new PublicKey(nftAddress),
+        collection: this.publicKey,
+      })
+      .run();
+    return {
+      signature: tx.response.signature,
+    };
+  }
 }

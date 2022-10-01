@@ -4,31 +4,23 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { NFTCollection, NFTDrop } from "@thirdweb-dev/sdk/solana";
 import invariant from "tiny-invariant";
 
-export type TransferNFTMutationParams = {
-  receiverAddress: string;
-  tokenAddress: string;
-};
-
 /**
- * Transfer NFTs from the connected wallet to another wallet
- * @param program - The NFT program instance to transfer NFTs on
+ * Burn an NFT owned by the connected wallet
+ * @param program - The NFT program instance to burn NFTs on
  *
  * @example
  * ```jsx
- * import { useProgram, useTransferNFT } from "@thirdweb-dev/react/solana";
+ * import { useProgram, useBurnNFT } from "@thirdweb-dev/react/solana";
  *
  * export default function Component() {
  *   const program = useProgram("{{program_address}}");
- *   const { mutateAsync: transfer, isLoading, error } = useTransferNFT(program);
+ *   const { mutateAsync: burn, isLoading, error } = useBurnNFT(program);
  *
  *   return (
  *     <button
- *       onClick={() => transfer({
- *         receiverAddress: "{{wallet_address}}",
- *         tokenAddress: "..."
- *       })}
+ *       onClick={() => burn("...")}
  *     >
- *       Transfer
+ *       Burn
  *     </button>
  *   )
  * }
@@ -36,14 +28,12 @@ export type TransferNFTMutationParams = {
  *
  * @public
  */
-export function useTransferNFT(
-  program: RequiredParam<NFTCollection | NFTDrop>,
-) {
+export function useBurnNFT(program: RequiredParam<NFTCollection | NFTDrop>) {
   const queryClient = useQueryClient();
   return useMutation(
-    async ({ tokenAddress, receiverAddress }: TransferNFTMutationParams) => {
+    async (nftAddress: string) => {
       invariant(program, "program is required");
-      return await program.transfer(receiverAddress, tokenAddress);
+      return await program.burn(nftAddress);
     },
     {
       onSettled: () =>
