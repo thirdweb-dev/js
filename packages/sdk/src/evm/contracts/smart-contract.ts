@@ -275,8 +275,6 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   }
 
   private detectAppURI() {
-    // ContractMetadata is stateless, it's fine to create a new one here
-    // This also makes it not order dependent in the feature detection process
     return new AppURI(this.contractWrapper);
   }
   private detectOwnable() {
