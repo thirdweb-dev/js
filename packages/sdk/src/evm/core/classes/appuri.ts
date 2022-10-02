@@ -13,7 +13,7 @@ import type { AppURI } from "@thirdweb-dev/contracts-js";
  * const appURI = await contract.appURI.get();
  * appURI = "ipfs://some_ipfs_hash";
  *
- * await contract.platformFee.set(appURI)
+ * await contract.appURI.set(appURI)
  * ```
  * @public
  */
