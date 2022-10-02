@@ -10,10 +10,10 @@ import type { AppURI } from "@thirdweb-dev/contracts-js";
  * @example
  * ```javascript
  * const contract = await sdk.getContract("{{contract_address}}");
- * const appURI = await contract.appURI.get();
+ * const appURI = await contract.appuri.get();
  * appURI = "ipfs://some_ipfs_hash";
  *
- * await contract.appURI.set(appURI)
+ * await contract.appuri.set(appURI)
  * ```
  * @public
  */
