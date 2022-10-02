@@ -3,6 +3,7 @@ import { FEATURE_TOKEN } from "../constants/erc20-features";
 import { FEATURE_NFT } from "../constants/erc721-features";
 import { FEATURE_EDITION } from "../constants/erc1155-features";
 import {
+  FEATURE_APPURI,
   FEATURE_OWNER,
   FEATURE_PERMISSIONS,
   FEATURE_PLATFORM_FEE,
@@ -14,7 +15,7 @@ import {
   ContractOwner,
   NetworkOrSignerOrProvider,
 } from "../core";
-import { AppURI } from "../core/classes/appuri";
+import { ContractAppURI } from "../core/classes/appuri";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractMetadata } from "../core/classes/contract-metadata";
@@ -38,6 +39,7 @@ import type {
   IPrimarySale,
   IRoyalty,
   Ownable,
+  AppURI,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BaseContract, CallOverrides, ContractInterface } from "ethers";
@@ -116,6 +118,13 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
    */
   get owner(): ContractOwner<Ownable> {
     return assertEnabled(this.detectOwnable(), FEATURE_OWNER);
+  }
+
+  /**
+   * Set and get the appuri of the contract
+   */
+  get appuri(): ContractAppURI<AppURI> {
+    return assertEnabled(this.detectAppURI(), FEATURE_APPURI);
   }
 
   /**
@@ -275,7 +284,10 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   }
 
   private detectAppURI() {
-    return new AppURI(this.contractWrapper);
+    if (detectContractFeature<AppURI>(this.contractWrapper, "Ownable")) {
+      return new ContractAppURI(this.contractWrapper);
+    }
+    return undefined;
   }
   private detectOwnable() {
     if (detectContractFeature<Ownable>(this.contractWrapper, "Ownable")) {

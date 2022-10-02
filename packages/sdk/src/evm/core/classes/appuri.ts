@@ -2,8 +2,7 @@ import { FEATURE_APPURI } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import { IAppURI } from "@thirdweb-dev/contracts-js";
-import { BaseContract } from "ethers";
+import type { AppURI } from "@thirdweb-dev/contracts-js";
 
 /**
  * Have an official Application URI for this contract.
@@ -18,7 +17,9 @@ import { BaseContract } from "ethers";
  * ```
  * @public
  */
-export class AppURI<TContract extends IAppURI> implements DetectableFeature {
+export class ContractAppURI<TContract extends AppURI>
+  implements DetectableFeature
+{
   featureName = FEATURE_APPURI.name;
   private contractWrapper;
 
