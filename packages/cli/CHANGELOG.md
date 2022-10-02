@@ -1,5 +1,35 @@
 # thirdweb
 
+## 0.7.22
+
+### Patch Changes
+
+- [#103](https://github.com/thirdweb-dev/js/pull/103) [`e1bcc67`](https://github.com/thirdweb-dev/js/commit/e1bcc67cebfc95fce615439ff03871b4fef0eed9) Thanks [@b4s36t4](https://github.com/b4s36t4)! - automatically re-name the created example repo to the user provided app name
+
+- Updated dependencies [[`8239763`](https://github.com/thirdweb-dev/js/commit/82397636f41faa2b44cfe70e75212f0f42291092), [`27a30e3`](https://github.com/thirdweb-dev/js/commit/27a30e3ffb56dd7fa8412a066bc3ac0977aca8e2), [`f2a6211`](https://github.com/thirdweb-dev/js/commit/f2a62110c43e7b8f35c86a197730e732f8fcc786), [`d26b768`](https://github.com/thirdweb-dev/js/commit/d26b76872a6c85651ee06aa0732ee2967f70db27), [`ba7dcbb`](https://github.com/thirdweb-dev/js/commit/ba7dcbbad8db2b73baf1435f4175d19933cb7d4f), [`9c8a3fb`](https://github.com/thirdweb-dev/js/commit/9c8a3fb6d4520dd6cdf2d1c17f33b764e871599e)]:
+  - @thirdweb-dev/sdk@3.1.2
+
+## 0.7.21
+
+### Patch Changes
+
+- Updated dependencies [[`666ff5f`](https://github.com/thirdweb-dev/js/commit/666ff5f694f1e146150ddb9fa3233f00533b6d60), [`0dade96`](https://github.com/thirdweb-dev/js/commit/0dade96d0d2553d25b386d822e534eb7ed0aefa9), [`c295a47`](https://github.com/thirdweb-dev/js/commit/c295a47144cd722c6f8861c1ec567b53a05ea0bf)]:
+  - @thirdweb-dev/sdk@3.1.1
+
+## 0.7.20
+
+### Patch Changes
+
+- Updated dependencies [[`3c8f620`](https://github.com/thirdweb-dev/js/commit/3c8f6205e9b49ae9fea1f9629678210c6c9c36e6), [`e187d21`](https://github.com/thirdweb-dev/js/commit/e187d21e123a506fac0459da18f2d4fc94abae29), [`acbabc8`](https://github.com/thirdweb-dev/js/commit/acbabc8999b2b7b6e0eb89cae97e2f1ef7143501), [`b030a86`](https://github.com/thirdweb-dev/js/commit/b030a866080953bbf4e504ddc41d7050b250d2d7)]:
+  - @thirdweb-dev/sdk@3.1.0
+
+## 0.7.19
+
+### Patch Changes
+
+- Updated dependencies [[`ce05bfd`](https://github.com/thirdweb-dev/js/commit/ce05bfd8615a9c79664856bce53de8b43bed5c87)]:
+  - @thirdweb-dev/sdk@3.0.8
+
 ## 0.7.18
 
 ### Patch Changes

@@ -2,14 +2,15 @@
   "$schema": "https://unpkg.com/@changesets/config@2.1.1/schema.json",
   "changelog": ["@changesets/changelog-github", { "repo": "thirdweb-dev/js" }],
   "commit": false,
-  "fixed": [],
+  "fixed": [["@thirdweb-dev/sdk", "@thirdweb-dev/react"]],
   "linked": [],
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
   "ignore": [],
   "___experimentalUnsafeOptions_WILL_CHANGE_IN_PATCH": {
-    "updateInternalDependents": "always"
+    "updateInternalDependents": "always",
+    "onlyUpdatePeerDependentsWhenOutOfRange": true
   },
   "snapshot": {
     "useCalculatedVersion": true,

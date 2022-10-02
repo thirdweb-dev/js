@@ -1,5 +1,11 @@
 # @thirdweb-dev/contracts-js
 
+## 1.1.9
+
+### Patch Changes
+
+- [#226](https://github.com/thirdweb-dev/js/pull/226) [`f2a6211`](https://github.com/thirdweb-dev/js/commit/f2a62110c43e7b8f35c86a197730e732f8fcc786) Thanks [@jnsdls](https://github.com/jnsdls)! - expose some factories as separate exports
+
 ## 1.1.8
 
 ### Patch Changes

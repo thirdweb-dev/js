@@ -9,7 +9,7 @@ runs:
       with:
         node-version: 16
         registry-url: "https://registry.npmjs.org"
-        cache: "yarn"
+        # cache: "yarn"
 
     - name: Install dependencies
       shell: bash

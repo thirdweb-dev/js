@@ -1,0 +1,4 @@
+{
+  "main": "dist/thirdweb-dev-sdk-evm.cjs.js",
+  "module": "dist/thirdweb-dev-sdk-evm.esm.js"
+}
