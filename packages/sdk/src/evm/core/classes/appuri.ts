@@ -29,7 +29,7 @@ export class ContractAppURI<TContract extends AppURI>
 
   /**
    * Get the appURI for the contract
-   * @returns the wallet address.
+   * @returns the appURI object
    */
   public async get() {
     return await this.contractWrapper.readContract.appURI();
@@ -40,8 +40,6 @@ export class ContractAppURI<TContract extends AppURI>
    * @param appURI - the uri to set (typically an IPFS hash)
    */
   public async set(appURI: string): Promise<TransactionResult> {
-    // TODO make it work with ContractMetadata
-    // if (detectContractFeature(this.contractWrapper, "AppURI"))
     return {
       receipt: await this.contractWrapper.sendTransaction("setAppURI", [
         appURI,
