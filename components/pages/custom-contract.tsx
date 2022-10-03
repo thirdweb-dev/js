@@ -278,7 +278,7 @@ const ContractSubNavLinkButton: React.FC<ContractSubNavLinkButton> = (
       href={props.href}
       onClick={onClick}
     >
-      {props.label}
+      {props.isDisabled ? null : props.label}
     </LinkButton>
   );
 };
