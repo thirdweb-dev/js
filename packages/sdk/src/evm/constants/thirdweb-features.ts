@@ -1,3 +1,4 @@
+import IAppURI from "@thirdweb-dev/contracts-js/dist/abis/IAppURI.json";
 import IContractMetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IContractMetadata.json";
 import IPermissionsAbi from "@thirdweb-dev/contracts-js/dist/abis/IPermissions.json";
 import IThirdwebPlatformFeeAbi from "@thirdweb-dev/contracts-js/dist/abis/IPlatformFee.json";
@@ -57,6 +58,17 @@ export const FEATURE_METADATA = {
     contracts: "ContractMetadata",
   },
   abis: [IContractMetadataAbi],
+  features: {},
+} as const;
+
+export const FEATURE_APPURI = {
+  name: "AppURI",
+  namespace: "appURI",
+  docLinks: {
+    sdk: "sdk.appURI",
+    contracts: "AppURI",
+  },
+  abis: [IAppURI],
   features: {},
 } as const;
 
