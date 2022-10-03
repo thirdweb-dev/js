@@ -7,6 +7,7 @@ import {
 } from "@thirdweb-dev/sdk";
 import { AppLayout } from "components/app-layouts/app";
 import BuiltinContractForm from "components/contract-components/contract-deploy-form/built-in-contract";
+import { isContractIdBuiltInContract } from "components/contract-components/utils";
 import { CustomSDKContext } from "contexts/custom-sdk-context";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { PageId } from "page-id";
@@ -29,11 +30,18 @@ const DeployContractType: ThirdwebNextPage = () => {
     }
   }, [chainId, selectedChain]);
 
+  if (!contractType) {
+    return null;
+  }
+  if (contractType === "custom") {
+    return <div>Invalid attempt to deploy &quot;custom&quot; contract.</div>;
+  }
+
   return (
     <Card p={{ base: 6, md: 10 }}>
       <Box>
         <CustomSDKContext desiredChainId={selectedChain}>
-          {contractType ? (
+          {isContractIdBuiltInContract(contractType) ? (
             <BuiltinContractForm
               contractType={contractType}
               selectedChain={selectedChain}
