@@ -1,6 +1,5 @@
 import { NFTDrop } from "../../src/solana";
 import { sdk } from "./before-setup";
-import { sol } from "@metaplex-foundation/js";
 import { expect } from "chai";
 
 describe("NFTDrop", async () => {
@@ -9,8 +8,6 @@ describe("NFTDrop", async () => {
   before(async () => {
     const address = await sdk.deployer.createNftDrop({
       name: "NFT Drop #1",
-      price: 0,
-      sellerFeeBasisPoints: 0,
       itemsAvailable: 5,
     });
     drop = await sdk.getNFTDrop(address);
@@ -61,22 +58,19 @@ describe("NFTDrop", async () => {
 
   it("should update claim condition", async () => {
     let condition = await drop.claimConditions.get();
-    expect(condition.price).to.equal(0);
+    expect(condition.price.displayValue).to.equal("0.000000000");
 
     await drop.claimConditions.set({
       price: 2,
-      itemsAvailable: 5,
     });
 
     condition = await drop.claimConditions.get();
-    expect(condition.price).to.equal(sol(2).basisPoints.toNumber());
+    expect(condition.price.displayValue).to.equal("2.000000000");
   });
 
   it.skip("should burn nfts", async () => {
     const address = await sdk.deployer.createNftDrop({
       name: "NFT Drop #2",
-      price: 0,
-      sellerFeeBasisPoints: 0,
       itemsAvailable: 5,
     });
     const burnDrop = await sdk.getNFTDrop(address);

@@ -271,6 +271,7 @@ export class NFTDrop {
    * ```
    */
   async lazyMint(metadatas: NFTMetadataInput[]): Promise<TransactionResult> {
+    // TODO check itemsLoaded and show helpful error message if going over
     const parsedMetadatas = metadatas.map((metadata) =>
       CommonNFTInput.parse(metadata),
     );
@@ -327,6 +328,9 @@ export class NFTDrop {
    */
   async claimTo(receiverAddress: string, quantity: number): Promise<string[]> {
     const candyMachine = await this.getCandyMachine();
+    // if (!candyMachine.isFullyLoaded) {
+    //   throw new Error("Candy machine is not fully loaded yet");
+    // }
     const results: MintCandyMachineOutput[] = [];
     // has to claim sequentially
     for (let i = 0; i < quantity; i++) {
