@@ -53,6 +53,7 @@ describe("NFTDrop", async () => {
     const claimed = await drop.getAllClaimed();
 
     expect(all.length).to.equal(5);
+    expect(all.filter((nft) => nft.supply > 0).length).to.equal(3);
     expect(claimed.length).to.equal(3);
   });
 

@@ -113,9 +113,19 @@ export class NFTDrop {
   async getAll(): Promise<NFT[]> {
     // TODO: Add pagination to get NFT functions
     const info = await this.getCandyMachine();
-    // TODO merge with getAllClaimed()
+    const claimed = await this.getAllClaimed();
     return await Promise.all(
       info.items.map(async (item) => {
+        // Check if the NFT has been claimed
+        // TODO: This only checks name/uri which is potentially not unique
+        const claimedNFT = claimed.find(
+          (nft) =>
+            nft.metadata.name === item.name && nft.metadata.uri === item.uri,
+        );
+        if (claimedNFT) {
+          return claimedNFT;
+        }
+        // not claimed yet, return a unclaimed NFT with just the metadata
         const metadata: NFTMetadata = await this.storage.downloadJSON(item.uri);
         return {
           metadata: {
