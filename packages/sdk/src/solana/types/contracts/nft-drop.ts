@@ -1,63 +1,58 @@
 import { NFTCollectionMetadataInputSchema } from ".";
+import { BasisPointsSchema } from "../../../core/schema/shared";
+import { CurrencyValueSchema } from "../../../core/schema/token";
 import { AmountSchema } from "../common";
-import { sol, toBigNumber, toDateTime } from "@metaplex-foundation/js";
-import { PublicKey } from "@solana/web3.js";
 import { z } from "zod";
 
 /**
  * @internal
  */
-// TODO: Handle allow lists and end times
-export const NFTDropConditionsInputSchema = z.object({
+export const NFTDropInitialConditionsInputSchema = z.object({
   itemsAvailable: AmountSchema,
-  price: z.number().default(0),
-  sellerFeeBasisPoints: z.number().default(0),
+});
+/**
+ * @internal
+ */
+// TODO: Handle allow lists and end times
+export const NFTDropUpdateableConditionsInputSchema = z.object({
+  price: AmountSchema.optional(),
+  currencyAddress: z.string().optional(),
+  primarySaleRecipient: z.string().optional(),
+  sellerFeeBasisPoints: BasisPointsSchema.optional(),
   goLiveDate: z.date().optional(),
-  splToken: z.string().optional(),
-  solTreasuryAccount: z.string().optional(),
-  splTokenAccount: z.string().optional(),
 });
 
 /**
  * @internal
  */
-export const NFTDropConditionsOutputSchema = z.object({
-  price: z
-    .number()
-    .transform((p) => sol(p))
-    .optional(),
-  sellerFeeBasisPoints: z.number().optional(),
-  itemsAvailable: AmountSchema.transform((bn) => toBigNumber(bn)).optional(),
-  goLiveDate: z
-    .date()
-    .transform((d) => toDateTime(d))
-    .optional(),
-  splToken: z
-    .string()
-    .transform((a) => new PublicKey(a))
-    .optional(),
-  solTreasuryAccount: z
-    .string()
-    .transform((a) => new PublicKey(a))
-    .optional(),
-  splTokenAccount: z
-    .string()
-    .transform((a) => new PublicKey(a))
-    .optional(),
+export const NFTDropUpdateableConditionsOutputSchema = z.object({
+  price: CurrencyValueSchema,
+  currencyAddress: z.string().nullable(),
+  primarySaleRecipient: z.string(),
+  sellerFeeBasisPoints: BasisPointsSchema,
+  goLiveDate: z.date().nullable(),
 });
 
 /**
  * @internal
  */
 export const NFTDropContractInputSchema =
-  NFTCollectionMetadataInputSchema.merge(NFTDropConditionsInputSchema);
+  NFTCollectionMetadataInputSchema.merge(NFTDropInitialConditionsInputSchema);
 
 /**
- * @internal
+ * @public
  */
 export type NFTDropContractInput = z.input<typeof NFTDropContractInputSchema>;
 
 /**
- * @internal
+ * @public
  */
-export type NFTDropMetadataInput = z.input<typeof NFTDropConditionsInputSchema>;
+export type NFTDropConditionsInput = z.input<
+  typeof NFTDropUpdateableConditionsInputSchema
+>;
+/**
+ * @public
+ */
+export type NFTDropConditions = z.output<
+  typeof NFTDropUpdateableConditionsOutputSchema
+>;
