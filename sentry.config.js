@@ -25,6 +25,20 @@ export const sentryOptions = {
     // Common non-actionable errors
     "rejected transaction",
     "User closed modal",
+    "Loading chunk",
+    "Failed to execute '",
+    "NetworkError when attempting to fetch resource.",
+    "googlefc is not defined",
+    "__cmp is not defined",
+    "Cannot read properties of undefined (reading 'cmp')",
+    "Cannot read properties of undefined (reading 'outputCurrentConfiguration')",
+    "apstagLOADED is not defined",
+    "moat_px is not defined",
+    "window.ReactNativeWebView.postMessage is not a function",
+    "_reportEvent is not defined",
+    "requestAnimationFrame is not defined",
+    "window.requestAnimationFrame is not a function",
+    "tronLink.setAddress is not a function",
   ],
   denyUrls: [
     // Google Adsense
