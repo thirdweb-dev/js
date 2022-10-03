@@ -15,7 +15,7 @@ import {
   ContractOwner,
   NetworkOrSignerOrProvider,
 } from "../core";
-import { ContractAppURI } from "../core/classes/appuri";
+import { ContractAppURI } from "../core/classes/contract-appuri";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractMetadata } from "../core/classes/contract-metadata";
@@ -123,7 +123,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   /**
    * Set and get the appuri of the contract
    */
-  get appuri(): ContractAppURI<AppURI> {
+  get appURI(): ContractAppURI<AppURI> {
     return assertEnabled(this.detectAppURI(), FEATURE_APPURI);
   }
 

@@ -63,9 +63,9 @@ export const FEATURE_METADATA = {
 
 export const FEATURE_APPURI = {
   name: "AppURI",
-  namespace: "appuri",
+  namespace: "appURI",
   docLinks: {
-    sdk: "sdk.appuri",
+    sdk: "sdk.appURI",
     contracts: "AppURI",
   },
   abis: [IAppURI],
