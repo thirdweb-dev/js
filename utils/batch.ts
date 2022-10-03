@@ -68,7 +68,12 @@ export const getAcceptedFiles = async (acceptedFiles: File[]) => {
   for (const f of jsonFiles) {
     const text = await f.text();
     // can be either a single json object or an array of json objects
-    const parsed: unknown | unknown[] = JSON.parse(text);
+    let parsed: unknown | unknown[] = [];
+    try {
+      parsed = JSON.parse(text);
+    } catch (e) {
+      console.error(e);
+    }
     // just concat it always (even if it's a single object
     // this will add the object to the end of the array or append the array to the end of the array)
     json = json.concat(parsed);
