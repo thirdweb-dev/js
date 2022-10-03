@@ -76,7 +76,7 @@ export class NFTDrop {
       .nfts()
       .findByMint({ mintAddress: info.collectionMintAddress })
       .run();
-    return this.nft.toNFTMetadata(metadata).metadata;
+    return (await this.nft.toNFTMetadata(metadata)).metadata;
   }
 
   /**
@@ -148,7 +148,9 @@ export class NFTDrop {
       .findMintedNfts({ candyMachine: this.publicKey })
       .run();
 
-    return nfts.map((nft) => this.nft.toNFTMetadata(nft));
+    return await Promise.all(
+      nfts.map(async (nft) => this.nft.toNFTMetadata(nft)),
+    );
   }
 
   /**
@@ -271,7 +273,7 @@ export class NFTDrop {
    * ```
    */
   async lazyMint(metadatas: NFTMetadataInput[]): Promise<TransactionResult> {
-    // TODO check itemsLoaded and show helpful error message if going over
+    const candyMachine = await this.getCandyMachine();
     const parsedMetadatas = metadatas.map((metadata) =>
       CommonNFTInput.parse(metadata),
     );
@@ -284,7 +286,7 @@ export class NFTDrop {
     const result = await this.metaplex
       .candyMachines()
       .insertItems({
-        candyMachine: await this.getCandyMachine(),
+        candyMachine,
         authority: this.metaplex.identity(),
         items,
       })
@@ -328,9 +330,11 @@ export class NFTDrop {
    */
   async claimTo(receiverAddress: string, quantity: number): Promise<string[]> {
     const candyMachine = await this.getCandyMachine();
-    // if (!candyMachine.isFullyLoaded) {
-    //   throw new Error("Candy machine is not fully loaded yet");
-    // }
+    if (!candyMachine.isFullyLoaded) {
+      throw new Error(
+        `Drop is not to be claimed - Only ${candyMachine.itemsLoaded} out of ${candyMachine.itemsAvailable} NFTs have been lazy minted`,
+      );
+    }
     const results: MintCandyMachineOutput[] = [];
     // has to claim sequentially
     for (let i = 0; i < quantity; i++) {
@@ -365,11 +369,15 @@ export class NFTDrop {
    * ```
    */
   async burn(nftAddress: string): Promise<TransactionResult> {
+    const candyMachine = await this.getCandyMachine();
+    const collection = candyMachine.collectionMintAddress
+      ? candyMachine.collectionMintAddress
+      : undefined;
     const tx = await this.metaplex
       .nfts()
       .delete({
         mintAddress: new PublicKey(nftAddress),
-        collection: this.publicKey,
+        collection,
       })
       .run();
     return {

@@ -68,34 +68,24 @@ describe("NFTDrop", async () => {
     expect(condition.price.displayValue).to.equal("2.000000000");
   });
 
-  it.skip("should burn nfts", async () => {
+  it("should burn nfts", async () => {
     const address = await sdk.deployer.createNftDrop({
       name: "NFT Drop #2",
-      itemsAvailable: 5,
+      itemsAvailable: 2,
     });
     const burnDrop = await sdk.getNFTDrop(address);
     await burnDrop.lazyMint([
       { name: "NFT #1", description: "This is the #1 NFT" },
-      { name: "NFT #2", description: "This is the #2 NFT" },
-      { name: "NFT #3", description: "This is the #3 NFT" },
-      { name: "NFT #4", description: "This is the #4 NFT" },
-      { name: "NFT #5", description: "This is the #5 NFT" },
+      { name: "NFT #1", description: "This is the #2 NFT" },
     ]);
-    await burnDrop.claim(5);
+    await burnDrop.claim(2);
 
-    // TODO @joaquim - getAllClaimed does *not* return a supply field at all (so it ends up being 0)
     const all = await burnDrop.getAllClaimed();
-
-    expect(all.length).to.eq(5);
-
+    expect(all.length).to.eq(2);
     expect(all[0].supply).to.eq(1);
 
     await burnDrop.burn(all[0].metadata.id);
     const all2 = await burnDrop.getAllClaimed();
-
-    // will not reduce length
-    expect(all2.length).to.eq(5);
-    // should reduce supply to 0
-    expect(all2[0].supply).to.eq(0);
+    expect(all2.length).to.eq(1);
   });
 });

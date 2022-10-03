@@ -32,7 +32,7 @@ export class NFTHelper {
         mintAddress: new PublicKey(nftAddress),
       })
       .run();
-    return this.toNFTMetadata(meta);
+    return await this.toNFTMetadata(meta);
   }
 
   async transfer(
@@ -68,25 +68,36 @@ export class NFTHelper {
     }
   }
 
-  toNFTMetadata(
+  async toNFTMetadata(
     meta:
       | Nft
       | Sft
       | NftWithToken
       | SftWithToken
       | Metadata<JsonMetadata<string>>,
-  ): NFT {
-    const mint = "mint" in meta ? meta.mint : undefined;
+  ): Promise<NFT> {
+    let mint = "mint" in meta ? meta.mint : undefined;
+    if (meta.model === "metadata") {
+      const fetchedMint = await this.metaplex
+        .nfts()
+        .findByMint({ mintAddress: meta.mintAddress })
+        .run();
+      mint = fetchedMint.mint;
+    }
+    if (!mint) {
+      throw new Error("No mint found for NFT");
+    }
+    const id = mint.address.toBase58();
     return {
       metadata: {
-        id: meta.address.toBase58(),
+        id,
         uri: meta.uri,
         name: meta.name,
         symbol: meta.symbol,
         ...meta.json,
       },
       owner: meta.updateAuthorityAddress.toBase58(),
-      supply: mint ? mint.supply.basisPoints.toNumber() : 0,
+      supply: mint.supply.basisPoints.toNumber(),
       type: "metaplex",
     };
   }
