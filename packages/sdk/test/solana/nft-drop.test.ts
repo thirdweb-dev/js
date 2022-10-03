@@ -67,6 +67,9 @@ describe("NFTDrop", async () => {
 
     condition = await drop.claimConditions.get();
     expect(condition.price.displayValue).to.equal("2.000000000");
+    expect(condition.totalAvailableSupply).to.equal(5);
+    expect(condition.lazyMintedSupply).to.equal(5);
+    expect(condition.isReadyToClaim).to.equal(true);
   });
 
   it("should burn nfts", async () => {

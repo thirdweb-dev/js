@@ -358,13 +358,6 @@ export class NFTDrop {
     return results.map((result) => result.nft.address.toBase58());
   }
 
-  private async getCandyMachine() {
-    return this.metaplex
-      .candyMachines()
-      .findByAddress({ address: this.publicKey })
-      .run();
-  }
-
   /**
    * Burn an NFT
    * @param nftAddress - the mint address of the NFT to burn
@@ -393,5 +386,12 @@ export class NFTDrop {
     return {
       signature: tx.response.signature,
     };
+  }
+
+  private async getCandyMachine() {
+    return this.metaplex
+      .candyMachines()
+      .findByAddress({ address: this.publicKey })
+      .run();
   }
 }

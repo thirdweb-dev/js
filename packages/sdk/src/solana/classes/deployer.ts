@@ -63,7 +63,7 @@ export class Deployer {
    * @example
    * ```jsx
    * const metadata = {
-   *   name: "Token",
+   *   name: "My Token",
    *   symbol: "TKN",
    *   initialSupply: 100,
    * };
@@ -123,7 +123,7 @@ export class Deployer {
    * @example
    * ```jsx
    * const metadata = {
-   *   name: "NFT",
+   *   name: "My NFT Collection",
    *   symbol: "NFT",
    * };
    *
@@ -161,10 +161,8 @@ export class Deployer {
    * @example
    * ```jsx
    * const metadata = {
-   *   name: "NFT",
+   *   name: "My NFT Drop",
    *   symbol: "NFT",
-   *   price: 0,
-   *   sellerFeeBasisPoints: 0,
    *   itemsAvailable: 5,
    * };
    *
