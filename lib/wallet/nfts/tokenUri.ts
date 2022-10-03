@@ -5,7 +5,9 @@ export function handleArbitraryTokenURI(rawUri: string): string {
   if (!rawUri.includes("ipfs")) {
     return rawUri;
   }
-  return `ipfs://${rawUri.split("/ipfs/").at(-1)}`;
+  const uriSplitted =  `ipfs://${rawUri.split("/ipfs/")}`;
+  
+  return uriSplitted[uriSplitted.length - 1];
 }
 
 export function shouldDownloadURI(rawUri: string): boolean {

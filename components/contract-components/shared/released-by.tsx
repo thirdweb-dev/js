@@ -27,7 +27,7 @@ export const ReleasedBy: React.FC<ReleasedByProps> = ({ contractAddress }) => {
       releasesFromDeploy.data?.find(
         (release) => release.publisher === address,
       ) ||
-      releasesFromDeploy.data?.at(-1) ||
+      releasesFromDeploy.data?.[releasesFromDeploy.data.length - 1] ||
       undefined
     );
   }, [releasesFromDeploy.data, address]);
