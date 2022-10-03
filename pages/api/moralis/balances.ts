@@ -55,6 +55,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     (c) => c.address === constants.AddressZero,
   );
 
+  if (tokenBalances?.message) {
+    return res.status(400).json({ error: tokenBalances.message });
+  }
+
+  if (nativeBalance?.message) {
+    return res.status(400).json({ error: nativeBalance.message });
+  }
+
   const balances = [
     ...(tokenBalances || []),
     {

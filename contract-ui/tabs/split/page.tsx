@@ -79,30 +79,41 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
             </Center>
           ) : (
             <Stack direction="row">
-              {balanceQuery.data?.map((balance) => (
-                <Card as={Stat} key={balance.token_address} maxWidth="2xs">
-                  <StatLabel as={Heading} size="label.lg">
-                    {balance.symbol || shortenIfAddress(balance.token_address)}
-                  </StatLabel>
-                  <StatNumber>
-                    <Text size="body.md">{balance.display_balance}</Text>
-                  </StatNumber>
-                  {shareOfBalancesForConnectedWallet[balance.token_address] && (
+              {balanceQuery.isError ? (
+                <Text color="red.500">
+                  {(balanceQuery?.error as any).message === "Invalid chain!"
+                    ? "Showing live balances for this network is not currently supported."
+                    : "Error loading balances"}
+                </Text>
+              ) : (
+                (balanceQuery?.data || [])?.map((balance) => (
+                  <Card as={Stat} key={balance.token_address} maxWidth="2xs">
+                    <StatLabel as={Heading} size="label.lg">
+                      {balance.symbol ||
+                        shortenIfAddress(balance.token_address)}
+                    </StatLabel>
                     <StatNumber>
-                      <Text size="body.md">
-                        <Text as="span" size="label.md">
-                          Your Share:
-                        </Text>{" "}
-                        {
-                          shareOfBalancesForConnectedWallet[
-                            balance.token_address
-                          ]
-                        }
-                      </Text>
+                      <Text size="body.md">{balance.display_balance}</Text>
                     </StatNumber>
-                  )}
-                </Card>
-              ))}
+                    {shareOfBalancesForConnectedWallet[
+                      balance.token_address
+                    ] && (
+                      <StatNumber>
+                        <Text size="body.md">
+                          <Text as="span" size="label.md">
+                            Your Share:
+                          </Text>{" "}
+                          {
+                            shareOfBalancesForConnectedWallet[
+                              balance.token_address
+                            ]
+                          }
+                        </Text>
+                      </StatNumber>
+                    )}
+                  </Card>
+                ))
+              )}
             </Stack>
           )}
           <Text fontStyle="italic" maxW="lg">

@@ -27,8 +27,8 @@ export function useSplitBalances(contractAddress?: string) {
   const chainId = useSDKChainId();
   const currencies = useQueryWithNetwork(
     splitsKeys.currencies(contractAddress),
-    () =>
-      fetch("/api/moralis/balances", {
+    async () => {
+      const query = await fetch("/api/moralis/balances", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,8 +37,14 @@ export function useSplitBalances(contractAddress?: string) {
           chainId,
           address: contractAddress,
         } as BalanceQueryRequest),
-      }).then((res) => res.json()) as Promise<BalanceQueryResponse>,
-    { enabled: !!chainId && !!contractAddress },
+      });
+
+      if (query.status >= 400) {
+        throw new Error(await query.json().then((r) => r.error));
+      }
+      return query.json() as Promise<BalanceQueryResponse>;
+    },
+    { enabled: !!chainId && !!contractAddress, retry: false },
   );
   return currencies;
 }

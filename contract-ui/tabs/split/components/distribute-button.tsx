@@ -26,7 +26,7 @@ export const DistributeButton: React.FC<DistributeButtonProps> = ({
     if (!balances.data || balances.isLoading) {
       return 0;
     }
-    return balances.data.filter((b) => b.display_balance !== "0.0").length;
+    return balances.data?.filter((b) => b.display_balance !== "0.0").length;
   }, [balances.data, balances.isLoading]);
 
   const distibutedFundsMutation = useSplitDistributeFunds(
