@@ -35,9 +35,7 @@ import invariant from "tiny-invariant";
  * @twfeature ERC20
  * @beta
  */
-export function useTokenSupply<TContract extends TokenContract>(
-  contract: RequiredParam<TContract>,
-) {
+export function useTokenSupply(contract: RequiredParam<TokenContract>) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.token.totalSupply(contractAddress),
