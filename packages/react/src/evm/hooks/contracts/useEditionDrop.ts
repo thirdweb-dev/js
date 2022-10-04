@@ -1,6 +1,6 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { EditionDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/edition-drop";
 
 /**
  * Hook for getting an instance of an `EditionDrop` contract. This conract is used to interface with ERC1155 compliant NFTs that can be lazily minted.
@@ -26,7 +26,10 @@ import { EditionDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contrac
  * @public
  * @deprecated use `useContract()` instead
  */
-export function useEditionDrop(contractAddress?: string) {
-  showDeprecationWarning("useEditionDrop()", "useContract<EditionDrop>()");
-  return useContract<EditionDrop>(contractAddress).contract;
+export function useEditionDrop(contractAddress?: RequiredParam<string>) {
+  showDeprecationWarning(
+    `useEditionDrop("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "edition-drop")`,
+  );
+  return useContract(contractAddress, "edition-drop").contract;
 }

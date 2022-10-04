@@ -1,6 +1,6 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { Pack } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/pack";
 
 /**
  * Hook for getting an instance of a `Pack` contract. This contract supports the creation of on-chain luck-based lootboxes.
@@ -27,7 +27,10 @@ import { Pack } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/preb
  * @public
  * @deprecated use `useContract()` instead
  */
-export function usePack(contractAddress?: string) {
-  showDeprecationWarning("usePack()", "useContract<Pack>()");
-  return useContract<Pack>(contractAddress).contract;
+export function usePack(contractAddress?: RequiredParam<string>) {
+  showDeprecationWarning(
+    `usePack("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "pack")`,
+  );
+  return useContract(contractAddress, "pack").contract;
 }

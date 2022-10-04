@@ -18,7 +18,10 @@ import {
 import {
   CommonContractSchemaInput,
   ContractEvent,
+  ContractForPrebuiltContractType,
+  ContractType,
   EventQueryFilter,
+  PrebuiltContractType,
   SUPPORTED_CHAIN_ID,
   ThirdwebSDK,
   ValidContractInstance,
@@ -149,7 +152,11 @@ export type UseContractResult<
  */
 export function useContract<
   TContract extends ValidContractInstance = SmartContract,
->(contractAddress: RequiredParam<ContractAddress>) {
+  TContractType extends ContractType = "custom",
+>(
+  contractAddress: RequiredParam<ContractAddress>,
+  _contractType?: TContractType,
+) {
   const sdk = useSDK();
   const queryClient = useQueryClient();
   const activeChainId = useSDKChainId();
@@ -171,11 +178,13 @@ export function useContract<
       invariant(sdk, "SDK not initialized");
       invariant(activeChainId, "active chain id is required");
       // first fetch the contract type (we fetch this explicitly via the queryClient so **it** gets cached!)
-      const cType = await queryClient.fetchQuery(
-        contractType.cacheKey(contractAddress, activeChainId),
-        () => contractType.fetchQuery(contractAddress, sdk),
-        { cacheTime: Infinity, staleTime: Infinity },
-      );
+      const cType =
+        _contractType ||
+        (await queryClient.fetchQuery(
+          contractType.cacheKey(contractAddress, activeChainId),
+          () => contractType.fetchQuery(contractAddress, sdk),
+          { cacheTime: Infinity, staleTime: Infinity },
+        ));
       // if we can't get the contract type, we need to exit
       invariant(cType, "could not get contract type");
       // if the contract type is NOT "custom", we can use the built-in contract method from the SDK
@@ -211,7 +220,11 @@ export function useContract<
     ...contractQuery,
     data: contractQuery.data,
     contract: contractQuery.data,
-  } as UseContractResult<TContract>;
+  } as UseContractResult<
+    TContractType extends PrebuiltContractType
+      ? ContractForPrebuiltContractType<TContractType>
+      : TContract
+  >;
 }
 
 /**

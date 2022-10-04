@@ -1,6 +1,6 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { TokenDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/token-drop";
 
 /**
  * Hook for getting an instance of a `Token Drop` contract.
@@ -27,7 +27,10 @@ import { TokenDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts
  * @public
  * @deprecated use `useContract()` instead
  */
-export function useTokenDrop(contractAddress?: string) {
-  showDeprecationWarning("useTokenDrop()", "useContract<TokenDrop>()");
-  return useContract<TokenDrop>(contractAddress).contract;
+export function useTokenDrop(contractAddress?: RequiredParam<string>) {
+  showDeprecationWarning(
+    `useTokenDrop("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "token-drop")`,
+  );
+  return useContract(contractAddress, "token-drop").contract;
 }
