@@ -65,7 +65,6 @@
     "push": "yalc push"
   },
   "devDependencies": {
-    "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
     "@gmrchk/cli-testing-library": "^0.1.2",
     "@metaplex-foundation/amman": "^0.10.0",
     "@metaplex-foundation/amman-client": "^0.2.1",
@@ -76,10 +75,8 @@
     "@preconstruct/cli": "^2.2.1",
     "@swc-node/register": "^1.5.1",
     "@swc/core": "^1.2.177",
-    "@typechain/ethers-v5": "10.0.0",
     "@types/chai": "^4.3.3",
     "@types/deep-equal-in-any-order": "^1.0.1",
-    "@types/expect": "^24.3.0",
     "@types/mocha": "^9.1.1",
     "@types/node": "^18.0.0",
     "@types/uuid": "^8.3.3",
@@ -100,7 +97,6 @@
     "mocha": "^10.0.0",
     "node-stdlib-browser": "^1.2.0",
     "prettier": "^2.7.1",
-    "typechain": "^8.1.0",
     "typescript": "^4.7.4"
   },
   "peerDependencies": {
@@ -129,7 +125,7 @@
     "zod": "^3.11.6"
   },
   "resolutions": {
-    "bn.js": "5.2.1",
+    "bn.js": "^5.2.1",
     "nanoid": "^3.1.31",
     "typescript": "^4.6.2",
     "@microsoft/tsdoc": "^0.14.1"
