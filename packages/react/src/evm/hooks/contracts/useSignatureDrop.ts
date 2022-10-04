@@ -1,6 +1,6 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { SignatureDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/signature-drop";
 
 /**
  * Hook for getting an instance of an `SignatureDrop` contract. This contract is meant to interface with ERC721 compliant NFTs that can be lazily minted.
@@ -26,7 +26,10 @@ import { SignatureDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contr
  * @public
  * @deprecated use `useContract()` instead
  */
-export function useSignatureDrop(contractAddress?: string) {
-  showDeprecationWarning("useSignatureDrop()", "useContract<SignatureDrop>()");
-  return useContract<SignatureDrop>(contractAddress).contract;
+export function useSignatureDrop(contractAddress?: RequiredParam<string>) {
+  showDeprecationWarning(
+    `useSignatureDrop("0x...")`,
+    `useContract("0x...", "signature-drop")`,
+  );
+  return useContract(contractAddress, "signature-drop").contract;
 }

@@ -1,6 +1,6 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { NFTDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/nft-drop";
 
 /**
  * Hook for getting an instance of an `NFTDrop` contract. This contract is meant to interface with ERC721 compliant NFTs that can be lazily minted.
@@ -26,7 +26,10 @@ import { NFTDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/p
  * @public
  * @deprecated use `useContract()` instead
  */
-export function useNFTDrop(contractAddress?: string) {
-  showDeprecationWarning("useNFTDrop()", "useContract<NFTDrop>()");
-  return useContract<NFTDrop>(contractAddress).contract;
+export function useNFTDrop(contractAddress?: RequiredParam<string>) {
+  showDeprecationWarning(
+    `useNFTDrop("0x...")`,
+    `useContract("0x...", "nft-drop")`,
+  );
+  return useContract(contractAddress, "nft-drop").contract;
 }

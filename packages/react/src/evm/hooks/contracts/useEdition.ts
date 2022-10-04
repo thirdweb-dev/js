@@ -1,6 +1,6 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { Edition } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/edition";
 
 /**
  * Hook for getting an instance of an `Edition` contract. This contract is used to interface with ERC1155 compliant NFTs.
@@ -27,7 +27,10 @@ import { Edition } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/p
  * @public
  * @deprecated use `useContract()` instead
  */
-export function useEdition(contractAddress?: string) {
-  showDeprecationWarning("useEdition()", "useContract<Edition>()");
-  return useContract<Edition>(contractAddress).contract;
+export function useEdition(contractAddress?: RequiredParam<string>) {
+  showDeprecationWarning(
+    `useEdition("0x...")`,
+    `useContract("0x...", "edition")`,
+  );
+  return useContract(contractAddress, "edition").contract;
 }
