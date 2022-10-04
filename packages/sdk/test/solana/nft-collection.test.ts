@@ -5,9 +5,10 @@ import { expect } from "chai";
 
 describe("NFTCollection", async () => {
   let collection: NFTCollection;
+  let addr: string;
 
   before(async () => {
-    const addr = await sdk.deployer.createNftCollection({
+    addr = await sdk.deployer.createNftCollection({
       name: "Test Collection",
       description: "Test Description",
       symbol: "TC",

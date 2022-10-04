@@ -24,9 +24,9 @@ export const CommonContractOutputSchema = CommonContractSchema.extend({
 /**
  * @internal
  */
-export const NFTCollectionCreatorInputSchema = z.object({
+export const CreatorInputSchema = z.object({
   address: z.string(),
-  share: z.number(),
+  sharePercentage: z.number(),
   verified: z.boolean().default(false),
 });
 
@@ -34,7 +34,7 @@ export const NFTCollectionCreatorInputSchema = z.object({
  * @internal
  */
 export const NFTCollectionMetadataInputSchema = CommonContractSchema.extend({
-  creators: z.array(NFTCollectionCreatorInputSchema).default([]),
+  creators: z.array(CreatorInputSchema).default([]),
 });
 
 /**
@@ -55,6 +55,11 @@ export const TokenMetadataInputSchema = CommonContractSchema.extend({
 });
 
 /**
- * @internal
+ * @public
  */
 export type TokenMetadataInput = z.input<typeof TokenMetadataInputSchema>;
+
+/**
+ * @public
+ */
+export type CreatorInput = z.input<typeof CreatorInputSchema>;

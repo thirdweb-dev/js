@@ -9,7 +9,11 @@ import { NFTHelper } from "../classes/helpers/nft-helper";
 import { TransactionResult } from "../types/common";
 import { Metaplex, MintCandyMachineOutput } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import {
+  ThirdwebStorage,
+  UploadOptions,
+  UploadProgressEvent,
+} from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
 
 /**
@@ -282,12 +286,17 @@ export class NFTDrop {
    * const tx = await program.lazyMint(metadatas);
    * ```
    */
-  async lazyMint(metadatas: NFTMetadataInput[]): Promise<TransactionResult> {
+  async lazyMint(
+    metadatas: NFTMetadataInput[],
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
+  ): Promise<TransactionResult> {
     const candyMachine = await this.getCandyMachine();
     const parsedMetadatas = metadatas.map((metadata) =>
       CommonNFTInput.parse(metadata),
     );
-    const uris = await this.storage.uploadBatch(parsedMetadatas);
+    const uris = await this.storage.uploadBatch(parsedMetadatas, options);
     const items = uris.map((uri, i) => ({
       name: parsedMetadatas[i].name?.toString() || "",
       uri,
