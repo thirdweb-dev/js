@@ -14,4 +14,4 @@ jobs:
       - uses: preactjs/compressed-size-action@v2
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          strip-hash: "\\b\\w{7}\\."
+          strip-hash: "\\-(\\w{8})(?:\\.esm|\\.cjs)"
