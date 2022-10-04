@@ -6,7 +6,7 @@ import { RequiredParam } from "../../../core/types/shared";
 import { useSDK } from "../../providers/base";
 import { programAccountTypeQuery } from "./useProgramAccountType";
 import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
+import type {
   NFTCollection,
   NFTDrop,
   ThirdwebSDK,
