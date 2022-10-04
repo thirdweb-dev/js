@@ -1,7 +1,4 @@
-import {
-  CreatorInput,
-  NFTCollectionMetadataInput,
-} from "../../types/contracts";
+import { CreatorInput } from "../../types/contracts";
 import type { Creator } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
 

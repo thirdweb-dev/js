@@ -22,12 +22,7 @@ type ProgramMap = Readonly<{
 
 type ProgramType = keyof ProgramMap;
 
-export type ValidProgram = NFTCollection | NFTDrop | Token;
-
-export function programQuery<
-  TProgram extends ValidProgram,
-  TProgramType extends ProgramType | undefined = undefined,
->(
+export function programQuery<TProgramType extends ProgramType>(
   queryClient: QueryClient,
   sdk: RequiredParam<ThirdwebSDK>,
   address: RequiredParam<string>,
@@ -64,9 +59,7 @@ export function programQuery<
           throw new Error("Unknown account type");
       }
       // this is the magic that makes the type inference work
-    }) as () => Promise<
-      TProgramType extends ProgramType ? ProgramMap[TProgramType] : TProgram
-    >,
+    }) as () => Promise<ProgramMap[TProgramType]>,
     enabled: !!sdk && !!network && !!address,
     // this cannot change as it is unique by address & network
     cacheTime: Infinity,
@@ -99,15 +92,13 @@ export function programQuery<
  *
  * @public
  */
-export function useProgram<
-  TProgram extends ValidProgram,
-  TProgramType extends ProgramType | undefined = undefined,
->(address: RequiredParam<string>, type?: TProgramType) {
+export function useProgram<TProgramType extends ProgramType>(
+  address: RequiredParam<string>,
+  type?: TProgramType,
+) {
   const queryClient = useQueryClient();
   const sdk = useSDK();
-  return useQuery(
-    programQuery<TProgram, TProgramType>(queryClient, sdk, address, type),
-  );
+  return useQuery(programQuery(queryClient, sdk, address, type));
 }
 
 export type UseProgramResult = ReturnType<typeof useProgram>;
