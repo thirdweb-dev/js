@@ -25,9 +25,14 @@ import { useContract } from "../async/contracts";
  * }
  * ```
  * @public
- * @deprecated use `useContract()` instead
+ * @deprecated
+ * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
+ * ```diff
+ * - const nftCollection = await sdk.useNFTCollection("0x1234...");
+ * + const nftCollection = await sdk.useContract("0x1234...", "nft-collection").contract;
+ * ```
  */
-export function useNFTCollection(contractAddress?: RequiredParam<string>) {
+export function useNFTCollection(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(
     `useNFTCollection("${contractAddress || "0x..."}")`,
     `useContract("${contractAddress || "0x..."}", "nft-collection")`,

@@ -17,6 +17,11 @@ type Equals<A1, A2> = (<A>() => A extends A2 ? 1 : 0) extends <
 
 // --- end utility types --- //
 export type PrebuiltContractsMap = typeof PREBUILT_CONTRACTS_MAP;
+export type PrebuiltContractsInstances = {
+  [K in keyof PrebuiltContractsMap]: Awaited<
+    ReturnType<typeof PREBUILT_CONTRACTS_MAP[K]["initialize"]>
+  >;
+};
 export type ContractsMap = typeof CONTRACTS_MAP;
 
 export type PrebuiltContractType = keyof PrebuiltContractsMap;
@@ -36,7 +41,7 @@ export type DeploySchemaForPrebuiltContractType<
 
 export type ContractForPrebuiltContractType<
   TContractType extends PrebuiltContractType,
-> = Awaited<ReturnType<PrebuiltContractsMap[TContractType]["initialize"]>>;
+> = PrebuiltContractsInstances[TContractType];
 
 export type NetworkOrSignerOrProvider =
   | providers.Networkish

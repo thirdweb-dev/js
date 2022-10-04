@@ -19,11 +19,9 @@ import {
   CommonContractSchemaInput,
   ContractEvent,
   ContractForPrebuiltContractType,
-  CONTRACTS_MAP,
   ContractType,
   EventQueryFilter,
   PrebuiltContractType,
-  PREBUILT_CONTRACTS_MAP,
   SUPPORTED_CHAIN_ID,
   ThirdwebSDK,
   ValidContractInstance,
@@ -169,10 +167,14 @@ export function useContract(
  * @returns a response object that includes the contract once it is resolved
  * @public
  */
-export function useContract<TContractType extends PrebuiltContractType>(
+export function useContract<TContractType extends ContractType>(
   contractAddress: RequiredParam<ContractAddress>,
   _contractType: TContractType,
-): UseContractResult<ContractForPrebuiltContractType<TContractType>>;
+): UseContractResult<
+  TContractType extends PrebuiltContractType
+    ? ContractForPrebuiltContractType<TContractType>
+    : SmartContract
+>;
 
 /**
  * Use this resolve a contract address to a smart contract instance.
@@ -218,50 +220,32 @@ export function useContract(
       invariant(sdk, "SDK not initialized");
       invariant(activeChainId, "active chain id is required");
 
-      // if a contract type is provided, use that
-      if (contractTypeOrABI && contractTypeOrABI !== "custom") {
-        return await sdk.getBuiltInContract(
-          contractAddress,
-          contractTypeOrABI as PrebuiltContractType,
+      // if we don't have a contractType or ABI then we will have to resolve it regardless
+      // we also handle it being "custom" just in case...
+      if (!contractTypeOrABI || contractTypeOrABI === "custom") {
+        // we just resolve here (sdk does this internally anyway)
+        const resolvedContractType = await queryClient.fetchQuery(
+          contractType.cacheKey(contractAddress, activeChainId),
+          () => contractType.fetchQuery(contractAddress, sdk),
+          { cacheTime: Infinity, staleTime: Infinity },
         );
+        let abi: ContractInterface | undefined;
+        if (resolvedContractType === "custom") {
+          abi = (
+            await queryClient.fetchQuery(
+              compilerMetadata.cacheKey(contractAddress, activeChainId),
+              () => compilerMetadata.fetchQuery(contractAddress, sdk),
+              { cacheTime: Infinity, staleTime: Infinity },
+            )
+          )?.abi;
+        }
+        invariant(resolvedContractType, "failed to resolve contract type");
+        // just let the sdk handle the rest
+        // if we have resolved an ABI for a custom contract, use that otherwise use contract type
+        return sdk.getContract(contractAddress, abi || resolvedContractType);
       }
-
-      //if it's possibly an ABI, use that
-      if (
-        contractTypeOrABI &&
-        (typeof contractTypeOrABI !== "string" ||
-          !(contractTypeOrABI in CONTRACTS_MAP))
-      ) {
-        return sdk.getContractFromAbi(contractAddress, contractTypeOrABI);
-      }
-
-      // first fetch the contract type (we fetch this explicitly via the queryClient so **it** gets cached!)
-      const cType = await queryClient.fetchQuery(
-        contractType.cacheKey(contractAddress, activeChainId),
-        () => contractType.fetchQuery(contractAddress, sdk),
-        { cacheTime: Infinity, staleTime: Infinity },
-      );
-      // if we can't get the contract type, we need to exit
-      invariant(cType, "could not get contract type");
-
-      // if the contract type is NOT "custom", we can use the built-in contract method from the SDK
-      if (cType !== "custom") {
-        return sdk.getContractFromAbi(
-          contractAddress,
-          await PREBUILT_CONTRACTS_MAP[cType].getAbi(),
-        );
-      }
-      // if the contract type is "custom", we need to fetch the compiler metadata
-
-      const compMetadata = await queryClient.fetchQuery(
-        compilerMetadata.cacheKey(contractAddress, activeChainId),
-        () => compilerMetadata.fetchQuery(contractAddress, sdk),
-        { cacheTime: Infinity, staleTime: Infinity },
-      );
-      // if we can't get the compiler metadata, we need to exit
-      invariant(compMetadata, "could not get compiler metadata");
-      // if we have the compiler metadata, we can use the custom contract
-      return sdk.getContractFromAbi(contractAddress, compMetadata.abi);
+      // every other case can just be handled by the sdk directly
+      return sdk.getContract(contractAddress, contractTypeOrABI);
     },
     {
       // keep the previous value around while we fetch the new one

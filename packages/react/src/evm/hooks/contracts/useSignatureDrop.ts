@@ -24,7 +24,12 @@ import { useContract } from "../async/contracts";
  * }
  * ```
  * @public
- * @deprecated use `useContract()` instead
+ * @deprecated
+ * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
+ * ```diff
+ * - const signatureDrop = await sdk.useSignatureDrop("0x1234...");
+ * + const signatureDrop = await sdk.useContract("0x1234...", "signature-drop").contract;
+ * ```
  */
 export function useSignatureDrop(contractAddress?: RequiredParam<string>) {
   showDeprecationWarning(
