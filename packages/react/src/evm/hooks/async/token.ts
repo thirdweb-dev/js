@@ -4,6 +4,7 @@ import {
   ClaimTokenParams,
   getErc20,
   TokenBurnParams,
+  TokenContract,
   TokenParams,
   WalletAddress,
 } from "../../types";
@@ -14,7 +15,6 @@ import {
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Erc20 } from "@thirdweb-dev/sdk";
-import { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/smart-contract";
 import invariant from "tiny-invariant";
 
 /** **********************/
@@ -30,12 +30,14 @@ import invariant from "tiny-invariant";
  * const { data: totalSupply, isLoading, error } = useTokenSupply(contract);
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
+ * @param contract - an instance of a {@link TokenContract}
  * @returns a response object that incudes the total minted supply
  * @twfeature ERC20
  * @beta
  */
-export function useTokenSupply(contract: RequiredParam<SmartContract>) {
+export function useTokenSupply<TContract extends TokenContract>(
+  contract: RequiredParam<TContract>,
+) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.token.totalSupply(contractAddress),
@@ -62,13 +64,13 @@ export function useTokenSupply(contract: RequiredParam<SmartContract>) {
  * const { data: balance, isLoading, error } = useTokenBalance(contract);
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
+ * @param contract - an instance of a {@link TokenContract}
  * @returns a response object that includes the balance of the address
  * @twfeature ERC20
  * @beta
  */
 export function useTokenBalance(
-  contract: RequiredParam<SmartContract>,
+  contract: RequiredParam<TokenContract>,
   walletAddress: RequiredParam<WalletAddress>,
 ) {
   const contractAddress = contract?.getAddress();
@@ -99,12 +101,12 @@ export function useTokenBalance(
  * const { data: decimals, isLoading, error } = useTokenDecimals(contract);
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
+ * @param contract - an instance of a {@link TokenContract}
  * @returns a response object that includes the decimals of the ERC20 token
  * @twfeature ERC20
  * @beta
  */
-export function useTokenDecimals(contract: RequiredParam<SmartContract>) {
+export function useTokenDecimals(contract: RequiredParam<TokenContract>) {
   const contractAddress = contract?.getAddress();
   const erc20 = getErc20(contract);
   return useQueryWithNetwork(
@@ -155,12 +157,12 @@ export function useTokenDecimals(contract: RequiredParam<SmartContract>) {
  * };
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
+ * @param contract - an instance of a {@link TokenContract}
  * @returns a mutation object that can be used to mint new tokens to the connected wallet
  * @twfeature ERC20Mintable
  * @beta
  */
-export function useMintToken(contract: RequiredParam<SmartContract>) {
+export function useMintToken(contract: RequiredParam<TokenContract>) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
@@ -214,12 +216,12 @@ export function useMintToken(contract: RequiredParam<SmartContract>) {
  * };
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
+ * @param contract - an instance of a {@link TokenContract}
  * @returns a mutation object that can be used to tokens to the wallet specificed in the params
  * @twfeature ERC20ClaimableWithConditions
  * @beta
  */
-export function useClaimToken(contract: RequiredParam<SmartContract>) {
+export function useClaimToken(contract: RequiredParam<TokenContract>) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
@@ -277,12 +279,12 @@ export function useClaimToken(contract: RequiredParam<SmartContract>) {
  * };
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
+ * @param contract - an instance of a {@link TokenContract}
  * @returns a mutation object that can be used to transfer tokens
  * @twfeature ERC20
  * @beta
  */
-export function useTransferToken(contract: RequiredParam<SmartContract>) {
+export function useTransferToken(contract: RequiredParam<TokenContract>) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
@@ -336,12 +338,12 @@ export function useTransferToken(contract: RequiredParam<SmartContract>) {
  * };
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
+ * @param contract - an instance of a {@link TokenContract}
  * @returns a mutation object that can be used to transfer batch tokens
  * @twfeature ERC20
  * @beta
  */
-export function useTransferBatchToken(contract: RequiredParam<SmartContract>) {
+export function useTransferBatchToken(contract: RequiredParam<TokenContract>) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
@@ -402,12 +404,12 @@ export function useTransferBatchToken(contract: RequiredParam<SmartContract>) {
  * };
  * ```
  *
- * @param contract - an instance of a {@link SmartContract}
+ * @param contract - an instance of a {@link TokenContract}
  * @returns a mutation object that can be used to burn tokens from the connected wallet
  * @twfeature ERC20Burnable
  * @beta
  */
-export function useBurnToken(contract: RequiredParam<SmartContract>) {
+export function useBurnToken(contract: RequiredParam<TokenContract>) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
