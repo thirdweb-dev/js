@@ -40,17 +40,6 @@ export const FEATURE_PLATFORM_FEE = {
   features: {},
 } as const;
 
-export const FEATURE_PERMISSIONS = {
-  name: "Permissions",
-  namespace: "roles",
-  docLinks: {
-    sdk: "sdk.contractroles",
-    contracts: "Permissions",
-  },
-  abis: [IPermissionsAbi],
-  features: {},
-} as const;
-
 export const FEATURE_PERMISSIONS_ENUMERABLE = {
   name: "PermissionsEnumerable",
   namespace: "roles",
@@ -60,6 +49,19 @@ export const FEATURE_PERMISSIONS_ENUMERABLE = {
   },
   abis: [IPermissionsEnumerableAbi],
   features: {},
+} as const;
+
+export const FEATURE_PERMISSIONS = {
+  name: "Permissions",
+  namespace: "roles",
+  docLinks: {
+    sdk: "sdk.contractroles",
+    contracts: "Permissions",
+  },
+  abis: [IPermissionsAbi],
+  features: {
+    [FEATURE_PERMISSIONS_ENUMERABLE.name]: FEATURE_PERMISSIONS_ENUMERABLE,
+  },
 } as const;
 
 export const FEATURE_METADATA = {
