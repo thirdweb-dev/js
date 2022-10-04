@@ -2,7 +2,9 @@ import { RequiredParam } from "../../../core/types/shared";
 import { useSDKChainId } from "../../providers/base";
 import {
   ClaimTokenParams,
+  getErc20,
   TokenBurnParams,
+  TokenContract,
   TokenParams,
   WalletAddress,
 } from "../../types";
@@ -24,21 +26,26 @@ import invariant from "tiny-invariant";
  *
  * @example
  * ```javascript
- * const { data: totalSupply, isLoading, error } = useTokenSupply(<YourTokenContractInstance>);
+ * const { contract } = useContract(<ContractAddress>);
+ * const { data: totalSupply, isLoading, error } = useTokenSupply(contract);
  * ```
  *
- * @param contract - an instance of a ERC20 contract.
+ * @param contract - an instance of a {@link TokenContract}
  * @returns a response object that incudes the total minted supply
  * @twfeature ERC20
  * @beta
  */
-export function useTokenSupply(contract: RequiredParam<Erc20>) {
+export function useTokenSupply(contract: RequiredParam<TokenContract>) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.token.totalSupply(contractAddress),
     () => {
       invariant(contract, "No Contract instance provided");
-      return contract.totalSupply();
+      const erc20 = getErc20(contract);
+      if (erc20) {
+        return erc20.totalSupply();
+      }
+      invariant(false, "Smart contract is not a valid erc20 contract");
     },
     {
       enabled: !!contract || !!contractAddress,
@@ -51,26 +58,32 @@ export function useTokenSupply(contract: RequiredParam<Erc20>) {
  *
  * @example
  * ```javascript
- * const { data: balance, isLoading, error } = useTokenBalance(<YourTokenContractInstance>);
+ * const { contract } = useContract(<ContractAddress>);
+ * const { data: balance, isLoading, error } = useTokenBalance(contract);
  * ```
  *
- * @param contract - an instance of a ERC20 contract.
+ * @param contract - an instance of a {@link TokenContract}
  * @returns a response object that includes the balance of the address
  * @twfeature ERC20
  * @beta
  */
 export function useTokenBalance(
-  contract: RequiredParam<Erc20>,
+  contract: RequiredParam<TokenContract>,
   walletAddress: RequiredParam<WalletAddress>,
 ) {
   const contractAddress = contract?.getAddress();
+  const erc20 = getErc20(contract);
   return useQueryWithNetwork(
     cacheKeys.contract.token.balanceOf(contractAddress, walletAddress),
     async () => {
       invariant(contract, "No Contract instance provided");
       invariant(walletAddress, "No address provided");
-      return await contract.balanceOf(walletAddress);
+      if (erc20) {
+        return await erc20.balanceOf(walletAddress);
+      }
+      invariant(false, "Smart contract is not a valid erc20 contract");
     },
+
     {
       enabled: !!walletAddress && !!contract,
     },
@@ -82,21 +95,27 @@ export function useTokenBalance(
  *
  * @example
  * ```javascript
- * const { data: decimals, isLoading, error } = useTokenDecimals(<YourTokenContractInstance>);
+ * const { contract } = useContract(<ContractAddress>);
+ * const { data: decimals, isLoading, error } = useTokenDecimals(contract);
  * ```
  *
- * @param contract - an instance of an ERC20 contract.
+ * @param contract - an instance of a {@link TokenContract}
  * @returns a response object that includes the decimals of the ERC20 token
  * @twfeature ERC20
  * @beta
  */
-export function useTokenDecimals(contract: RequiredParam<Erc20>) {
+export function useTokenDecimals(contract: RequiredParam<TokenContract>) {
   const contractAddress = contract?.getAddress();
+  const erc20 = getErc20(contract);
   return useQueryWithNetwork(
     cacheKeys.contract.token.decimals(contractAddress),
     async () => {
       invariant(contract, "No Contract instance provided");
-      return (await contract.get()).decimals;
+
+      if (erc20) {
+        return (await erc20.get()).decimals;
+      }
+      invariant(false, "Smart contract is not a valid erc20 contract");
     },
     {
       enabled: !!contract,
@@ -114,11 +133,12 @@ export function useTokenDecimals(contract: RequiredParam<Erc20>) {
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract(<ContractAddress>);
  *   const {
  *     mutate: mintTokens,
  *     isLoading,
  *     error,
- *   } = useMintToken(">>YourERC20ContractInstance<<");
+ *   } = useMintToken(contract);
  *
  *   if (error) {
  *     console.error("failed to mint tokens", error);
@@ -135,21 +155,25 @@ export function useTokenDecimals(contract: RequiredParam<Erc20>) {
  * };
  * ```
  *
- * @param contract - an instance of a contract that extends the ERC20 spec (token, token drop, custom contract that follows the ERC20 spec)
+ * @param contract - an instance of a {@link TokenContract}
  * @returns a mutation object that can be used to mint new tokens to the connected wallet
  * @twfeature ERC20Mintable
  * @beta
  */
-export function useMintToken(contract: RequiredParam<Erc20>) {
+export function useMintToken(contract: RequiredParam<TokenContract>) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
+  const erc20 = getErc20(contract);
 
   return useMutation(
     (data: TokenParams) => {
       const { to, amount } = data;
       invariant(contract, "contract is undefined");
-      return contract.mintTo(to, amount);
+      if (erc20) {
+        return erc20.mintTo(to, amount);
+      }
+      invariant(false, "Smart contract is not a valid erc20 contract");
     },
     {
       onSettled: () =>
@@ -168,11 +192,12 @@ export function useMintToken(contract: RequiredParam<Erc20>) {
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract(<ContractAddress>);
  *   const {
  *     mutate: claimTokens,
  *     isLoading,
  *     error,
- *   } = useClaimToken(TokenDropContract);
+ *   } = useClaimToken(contract);
  *
  *   if (error) {
  *     console.error("failed to claim tokens", error);
@@ -189,27 +214,29 @@ export function useMintToken(contract: RequiredParam<Erc20>) {
  * };
  * ```
  *
- * @param contract - an instance of a {@link Erc20}
+ * @param contract - an instance of a {@link TokenContract}
  * @returns a mutation object that can be used to tokens to the wallet specificed in the params
  * @twfeature ERC20ClaimableWithConditions
  * @beta
  */
-export function useClaimToken<TContract extends Erc20>(
-  contract: RequiredParam<TContract>,
-) {
+export function useClaimToken(contract: RequiredParam<TokenContract>) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
+  const erc20 = getErc20(contract);
 
   return useMutation(
     async (data: ClaimTokenParams) => {
       invariant(data.to, 'No "to" address provided');
-      invariant(contract?.claimTo, "contract does not support claimTo");
-      return await contract.claimTo(
-        data.to,
-        data.amount,
-        data.checkERC20Allowance,
-      );
+      if (erc20) {
+        invariant(erc20?.claimTo, "contract does not support claimTo");
+        return await erc20.claimTo(
+          data.to,
+          data.amount,
+          data.checkERC20Allowance,
+        );
+      }
+      invariant(false, "Smart contract is not a valid erc20 contract");
     },
     {
       onSettled: () =>
@@ -228,11 +255,12 @@ export function useClaimToken<TContract extends Erc20>(
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract(<ContractAddress>);
  *   const {
  *     mutate: transferTokens,
  *     isLoading,
  *     error,
- *   } = useTransferToken(">>YourERC20ContractInstance<<");
+ *   } = useTransferToken(contract);
  *
  *   if (error) {
  *     console.error("failed to transfer tokens", error);
@@ -249,21 +277,25 @@ export function useClaimToken<TContract extends Erc20>(
  * };
  * ```
  *
- * @param contract - an instance of a contract that extends the ERC20 spec (token, token drop, custom contract that follows the ERC20 spec)
+ * @param contract - an instance of a {@link TokenContract}
  * @returns a mutation object that can be used to transfer tokens
  * @twfeature ERC20
  * @beta
  */
-export function useTransferToken(contract: RequiredParam<Erc20>) {
+export function useTransferToken(contract: RequiredParam<TokenContract>) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
+  const erc20 = getErc20(contract);
 
   return useMutation(
     (data: TokenParams) => {
       const { to, amount } = data;
-      invariant(contract?.transfer, "contract does not support transfer");
-      return contract.transfer(to, amount);
+      if (erc20) {
+        invariant(erc20?.transfer, "contract does not support transfer");
+        return erc20.transfer(to, amount);
+      }
+      invariant(false, "Smart contract is not a valid erc20 contract");
     },
     {
       onSettled: () =>
@@ -282,11 +314,12 @@ export function useTransferToken(contract: RequiredParam<Erc20>) {
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract(<ContractAddress>);
  *   const {
  *     mutate: transferBatchTokens,
  *     isLoading,
  *     error,
- *   } = useTransferToken(">>YourERC20ContractInstance<<");
+ *   } = useTransferToken(contract);
  *
  *   if (error) {
  *     console.error("failed to transfer batch tokens", error);
@@ -303,28 +336,32 @@ export function useTransferToken(contract: RequiredParam<Erc20>) {
  * };
  * ```
  *
- * @param contract - an instance of a contract that extends the ERC20 spec (token, token drop, custom contract that follows the ERC20 spec)
+ * @param contract - an instance of a {@link TokenContract}
  * @returns a mutation object that can be used to transfer batch tokens
  * @twfeature ERC20
  * @beta
  */
-export function useTransferBatchToken(contract: RequiredParam<Erc20>) {
+export function useTransferBatchToken(contract: RequiredParam<TokenContract>) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
+  const erc20 = getErc20(contract);
 
   return useMutation(
     (data: TokenParams[]) => {
-      invariant(
-        contract?.transferBatch,
-        "contract does not support transferBatch",
-      );
-      const convertedData = data.map((token) => ({
-        toAddress: token.to,
-        amount: token.amount,
-      }));
+      if (erc20) {
+        invariant(
+          erc20?.transferBatch,
+          "contract does not support transferBatch",
+        );
+        const convertedData = data.map((token) => ({
+          toAddress: token.to,
+          amount: token.amount,
+        }));
 
-      return contract.transferBatch(convertedData);
+        return erc20.transferBatch(convertedData);
+      }
+      invariant(false, "Smart contract is not a valid erc20 contract");
     },
     {
       onSettled: () =>
@@ -343,11 +380,12 @@ export function useTransferBatchToken(contract: RequiredParam<Erc20>) {
  * @example
  * ```jsx
  * const Component = () => {
+ *   const { contract } = useContract(<ContractAddress>);
  *   const {
  *     mutate: burnTokens,
  *     isLoading,
  *     error,
- *   } = useBurnToken(">>YourERC20ContractInstance<<");
+ *   } = useBurnToken(contract);
  *
  *   if (error) {
  *     console.error("failed to burn tokens", error);
@@ -364,21 +402,26 @@ export function useTransferBatchToken(contract: RequiredParam<Erc20>) {
  * };
  * ```
  *
- * @param contract - an instance of a contract that extends the ERC20 spec (token, token drop, custom contract that follows the ERC20 spec)
+ * @param contract - an instance of a {@link TokenContract}
  * @returns a mutation object that can be used to burn tokens from the connected wallet
  * @twfeature ERC20Burnable
  * @beta
  */
-export function useBurnToken(contract: RequiredParam<Erc20>) {
+export function useBurnToken(contract: RequiredParam<TokenContract>) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
+  const erc20 = getErc20(contract);
 
   return useMutation(
     (data: TokenBurnParams) => {
       const { amount } = data;
       invariant(contract, "contract is undefined");
-      return contract.burn(amount);
+      if (erc20) {
+        invariant(erc20?.burn, "contract does not support burn");
+        return erc20.burn(amount);
+      }
+      invariant(false, "Smart contract is not a valid erc20 contract");
     },
     {
       onSettled: () =>
