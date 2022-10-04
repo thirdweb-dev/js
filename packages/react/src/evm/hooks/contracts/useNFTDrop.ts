@@ -28,8 +28,8 @@ import { useContract } from "../async/contracts";
  */
 export function useNFTDrop(contractAddress?: RequiredParam<string>) {
   showDeprecationWarning(
-    `useNFTDrop("0x...")`,
-    `useContract("0x...", "nft-drop")`,
+    `useNFTDrop("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "nft-drop")`,
   );
   return useContract(contractAddress, "nft-drop").contract;
 }

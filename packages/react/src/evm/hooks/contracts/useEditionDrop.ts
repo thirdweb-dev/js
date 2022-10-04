@@ -28,8 +28,8 @@ import { useContract } from "../async/contracts";
  */
 export function useEditionDrop(contractAddress?: RequiredParam<string>) {
   showDeprecationWarning(
-    `useEditionDrop("0x...")`,
-    `useContract("0x...", "edition-drop")`,
+    `useEditionDrop("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "edition-drop")`,
   );
   return useContract(contractAddress, "edition-drop").contract;
 }

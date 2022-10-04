@@ -28,6 +28,9 @@ import { useContract } from "../async/contracts";
  * @deprecated use `useContract()` instead
  */
 export function usePack(contractAddress?: RequiredParam<string>) {
-  showDeprecationWarning(`usePack("0x...")`, `useContract("0x...", "pack")`);
+  showDeprecationWarning(
+    `usePack("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "pack")`,
+  );
   return useContract(contractAddress, "pack").contract;
 }

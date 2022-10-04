@@ -28,6 +28,9 @@ import { useContract } from "../async/contracts";
  * @deprecated use `useContract()` instead
  */
 export function useSplit(contractAddress?: RequiredParam<string>) {
-  showDeprecationWarning(`useSplit("0x...")`, `useContract("0x...", "split")`);
+  showDeprecationWarning(
+    `useSplit("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "split")`,
+  );
   return useContract(contractAddress, "split").contract;
 }

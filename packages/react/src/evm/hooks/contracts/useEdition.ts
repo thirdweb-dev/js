@@ -29,8 +29,8 @@ import { useContract } from "../async/contracts";
  */
 export function useEdition(contractAddress?: RequiredParam<string>) {
   showDeprecationWarning(
-    `useEdition("0x...")`,
-    `useContract("0x...", "edition")`,
+    `useEdition("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "edition")`,
   );
   return useContract(contractAddress, "edition").contract;
 }

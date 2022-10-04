@@ -29,8 +29,8 @@ import { useContract } from "../async/contracts";
  */
 export function useTokenDrop(contractAddress?: RequiredParam<string>) {
   showDeprecationWarning(
-    `useTokenDrop("0x...")`,
-    `useContract("0x...", "token-drop")`,
+    `useTokenDrop("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "token-drop")`,
   );
   return useContract(contractAddress, "token-drop").contract;
 }

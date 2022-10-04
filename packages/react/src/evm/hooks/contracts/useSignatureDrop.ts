@@ -28,8 +28,8 @@ import { useContract } from "../async/contracts";
  */
 export function useSignatureDrop(contractAddress?: RequiredParam<string>) {
   showDeprecationWarning(
-    `useSignatureDrop("0x...")`,
-    `useContract("0x...", "signature-drop")`,
+    `useSignatureDrop("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "signature-drop")`,
   );
   return useContract(contractAddress, "signature-drop").contract;
 }

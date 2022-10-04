@@ -29,8 +29,8 @@ import { useContract } from "../async/contracts";
  */
 export function useNFTCollection(contractAddress?: RequiredParam<string>) {
   showDeprecationWarning(
-    `useNFTCollection("0x...")`,
-    `useContract("0x...", "nft-collection")`,
+    `useNFTCollection("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "nft-collection")`,
   );
   return useContract(contractAddress, "nft-collection").contract;
 }

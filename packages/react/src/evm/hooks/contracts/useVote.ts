@@ -28,6 +28,9 @@ import { useContract } from "../async/contracts";
  * @deprecated use `useContract()` instead
  */
 export function useVote(contractAddress?: RequiredParam<string>) {
-  showDeprecationWarning(`useVote("0x...")`, `useContract("0x...", "vote")`);
+  showDeprecationWarning(
+    `useVote("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "vote")`,
+  );
   return useContract(contractAddress, "vote").contract;
 }

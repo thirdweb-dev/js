@@ -28,8 +28,8 @@ import { useContract } from "../async/contracts";
  */
 export function useMultiwrap(contractAddress?: RequiredParam<string>) {
   showDeprecationWarning(
-    `useMultiwrap("0x...")`,
-    `useContract("0x...", "multiwrap")`,
+    `useMultiwrap("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "multiwrap")`,
   );
   return useContract(contractAddress, "multiwrap").contract;
 }

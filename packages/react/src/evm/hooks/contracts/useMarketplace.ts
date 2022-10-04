@@ -29,8 +29,8 @@ import { useContract } from "../async/contracts";
  */
 export function useMarketplace(contractAddress?: RequiredParam<string>) {
   showDeprecationWarning(
-    `useMarketplace("0x...")`,
-    `useContract("0x...", "marketplace")`,
+    `useMarketplace("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "marketplace")`,
   );
   return useContract(contractAddress, "marketplace").contract;
 }
