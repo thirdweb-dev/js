@@ -9,11 +9,7 @@ import { NFTHelper } from "../classes/helpers/nft-helper";
 import { TransactionResult } from "../types/common";
 import { Metaplex, MintCandyMachineOutput } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
-import {
-  ThirdwebStorage,
-  UploadOptions,
-  UploadProgressEvent,
-} from "@thirdweb-dev/storage";
+import { ThirdwebStorage, UploadProgressEvent } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
 
 /**
