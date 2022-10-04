@@ -14,14 +14,13 @@ import {
 } from "@chakra-ui/react";
 import {
   DropContract,
-  Erc721OrErc1155,
-  NFT,
   NFTContract,
   ThirdwebNftMedia,
   getErcs,
   useAddress,
   useNFTBalance,
 } from "@thirdweb-dev/react";
+import { NFT } from "@thirdweb-dev/sdk";
 import { detectFeatures } from "components/contract-components/utils";
 import { ClaimConditions } from "contract-ui/tabs/claim-conditions/components/claim-conditions";
 import { BigNumber } from "ethers";
@@ -32,7 +31,7 @@ interface NFTDrawerProps {
   contract: NFTContract;
   isOpen: boolean;
   onClose: () => void;
-  data: NFT<Erc721OrErc1155> | null;
+  data: NFT | null;
 }
 
 const ChakraThirdwebNftMedia = chakra(ThirdwebNftMedia);

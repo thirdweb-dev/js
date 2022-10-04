@@ -1,17 +1,13 @@
 import { NFTMintForm } from "./mint-form";
 import { MinterOnly } from "@3rdweb-sdk/react";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import {
-  DropContract,
-  UseContractResult,
-  useLazyMint,
-} from "@thirdweb-dev/react";
+import { useContract, useLazyMint } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { FiPlus } from "react-icons/fi";
 import { Button, Drawer } from "tw-components";
 
 interface NFTLazyMintButtonProps {
-  contractQuery: UseContractResult<NonNullable<DropContract>>;
+  contractQuery: ReturnType<typeof useContract>;
 }
 
 export const NFTLazyMintButton: React.FC<NFTLazyMintButtonProps> = ({

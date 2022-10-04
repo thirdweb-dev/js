@@ -1,12 +1,12 @@
 import { TokenBurnForm } from "./burn-form";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import {
-  getErcs,
+  TokenContract,
   useAddress,
   useContract,
   useTokenBalance,
 } from "@thirdweb-dev/react";
-import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import { detectFeatures } from "components/contract-components/utils";
 import { BigNumber } from "ethers";
 import { FaBurn } from "react-icons/fa";
 import { Button, Drawer } from "tw-components";
@@ -21,18 +21,19 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const address = useAddress();
-  const { erc20 } = getErcs(contractQuery.contract);
-  const tokenBalance = useTokenBalance(erc20, address);
-  const hasBalance = BigNumber.from(tokenBalance?.data?.value || 0).gt(0);
 
-  const detectedState = extensionDetectedState({
-    contractQuery,
-    feature: ["ERC20Burnable"],
-  });
+  const tokenBalance = useTokenBalance(contractQuery.contract, address);
 
-  if (detectedState !== "enabled") {
+  const isERC20Burnable = detectFeatures<TokenContract>(
+    contractQuery.contract,
+    ["ERC20Burnable"],
+  );
+
+  if (!isERC20Burnable || !contractQuery.contract) {
     return null;
   }
+
+  const hasBalance = BigNumber.from(tokenBalance?.data?.value || 0).gt(0);
 
   return (
     <>
@@ -43,7 +44,7 @@ export const TokenBurnButton: React.FC<TokenBurnButtonProps> = ({
         onClose={onClose}
         isOpen={isOpen}
       >
-        <TokenBurnForm contract={erc20} />
+        <TokenBurnForm contract={contractQuery.contract} />
       </Drawer>
       <Button
         colorScheme="primary"

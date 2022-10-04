@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 import {
   DropContract,
-  getErcs,
+  TokenContract,
   useClaimConditions,
   useContractType,
   useResetClaimConditions,
@@ -74,7 +74,7 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
     "Failed to reset claim eligibility",
   );
 
-  const isErc20 = detectFeatures(contract, ["ERC20"]);
+  const isErc20 = detectFeatures<TokenContract>(contract, ["ERC20"]);
 
   const nftsOrToken = isErc20 ? "tokens" : "NFTs";
 
@@ -196,14 +196,13 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
 }) => {
   const trackEvent = useTrack();
   const [resetFlag, setResetFlag] = useState(false);
-  const isAdmin = useIsAdmin(contract as unknown as ValidContractInstance);
+  const isAdmin = useIsAdmin(contract);
 
   const query = useClaimConditions(contract, tokenId);
   const mutation = useSetClaimConditions(contract, tokenId);
-  const isErc20 = detectFeatures(contract, ["ERC20"]);
+  const isErc20 = detectFeatures<TokenContract>(contract, ["ERC20"]);
 
-  const { erc20 } = getErcs(contract);
-  const tokenDecimals = useTokenDecimals(erc20);
+  const tokenDecimals = useTokenDecimals(isErc20 ? contract : undefined);
 
   const decimals = tokenDecimals.data ?? 0;
   const nftsOrToken = isErc20 ? "tokens" : "NFTs";

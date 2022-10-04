@@ -8,11 +8,11 @@ import {
   useModalContext,
 } from "@chakra-ui/react";
 import {
+  TokenContract,
   useAddress,
   useMintToken,
   useTokenDecimals,
 } from "@thirdweb-dev/react";
-import type { Erc20 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -21,7 +21,7 @@ import { Button, FormErrorMessage, FormLabel, Heading } from "tw-components";
 
 const MINT_FORM_ID = "token-mint-form";
 interface TokenMintFormProps {
-  contract?: Erc20;
+  contract: TokenContract;
 }
 
 export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {

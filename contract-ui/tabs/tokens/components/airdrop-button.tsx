@@ -1,12 +1,12 @@
 import { TokenAirdropForm } from "./airdrop-form";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import {
-  getErcs,
+  TokenContract,
   useAddress,
   useContract,
   useTokenBalance,
 } from "@thirdweb-dev/react";
-import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
+import { detectFeatures } from "components/contract-components/utils";
 import { BigNumber } from "ethers";
 import { FiDroplet } from "react-icons/fi";
 import { Button, Drawer } from "tw-components";
@@ -21,16 +21,14 @@ export const TokenAirdropButton: React.FC<TokenAirdropButtonProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const address = useAddress();
-  const { erc20 } = getErcs(contractQuery.contract);
-  const tokenBalance = useTokenBalance(erc20, address);
+  const tokenBalance = useTokenBalance(contractQuery.contract, address);
   const hasBalance = BigNumber.from(tokenBalance?.data?.value || 0).gt(0);
 
-  const detectedState = extensionDetectedState({
-    contractQuery,
-    feature: ["ERC20"],
-  });
+  const isErc20 = detectFeatures<TokenContract>(contractQuery.contract, [
+    "ERC20",
+  ]);
 
-  if (detectedState !== "enabled") {
+  if (!isErc20 || !contractQuery.contract) {
     return null;
   }
 
@@ -43,7 +41,7 @@ export const TokenAirdropButton: React.FC<TokenAirdropButtonProps> = ({
         onClose={onClose}
         isOpen={isOpen}
       >
-        <TokenAirdropForm contract={erc20} />
+        <TokenAirdropForm contract={contractQuery.contract} />
       </Drawer>
       <Button
         colorScheme="primary"

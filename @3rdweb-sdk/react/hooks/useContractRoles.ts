@@ -1,5 +1,6 @@
 import {
   ContractWithRoles,
+  RequiredParam,
   RolesForContract,
   useAddress,
   useContractType,
@@ -9,7 +10,7 @@ import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { constants } from "ethers";
 
 export function isContractWithRoles(
-  contract?: ValidContractInstance,
+  contract: RequiredParam<ValidContractInstance>,
 ): contract is ContractWithRoles {
   if (contract && "roles" in contract) {
     return true;
@@ -19,8 +20,8 @@ export function isContractWithRoles(
 
 export function useIsAccountRole<TContract extends ContractWithRoles>(
   role: RolesForContract<TContract>[number],
-  contract?: TContract,
-  account?: string,
+  contract: RequiredParam<TContract>,
+  account: RequiredParam<string>,
 ): boolean {
   const contractHasRoles = isContractWithRoles(contract);
   const { data } = useRoleMembers(contract, role);
@@ -37,7 +38,7 @@ export function useIsAccountRole<TContract extends ContractWithRoles>(
 }
 
 export function useIsAdmin<TContract extends ValidContractInstance>(
-  contract?: TContract,
+  contract: RequiredParam<TContract>,
 ) {
   const address = useAddress();
   const { data: contractType } = useContractType(contract?.getAddress());
@@ -56,8 +57,8 @@ export function useIsAdmin<TContract extends ValidContractInstance>(
 }
 
 export function useIsAdminOrSelf<TContract extends ValidContractInstance>(
-  contract?: TContract,
-  self?: string,
+  contract: RequiredParam<TContract>,
+  self: RequiredParam<string>,
 ) {
   const address = useAddress();
   const { data: contractType } = useContractType(contract?.getAddress());
@@ -73,7 +74,7 @@ export function useIsAdminOrSelf<TContract extends ValidContractInstance>(
 }
 
 export function useIsMinter<TContract extends ValidContractInstance>(
-  contract?: TContract,
+  contract: RequiredParam<TContract>,
 ) {
   const address = useAddress();
   const { data: contractType } = useContractType(contract?.getAddress());
@@ -91,7 +92,7 @@ export function useIsMinter<TContract extends ValidContractInstance>(
 }
 
 export function useIsLister<TContract extends ValidContractInstance>(
-  contract?: TContract,
+  contract: RequiredParam<TContract>,
 ) {
   const address = useAddress();
   const { data: contractType } = useContractType(contract?.getAddress());

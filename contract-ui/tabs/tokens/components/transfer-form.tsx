@@ -7,8 +7,11 @@ import {
   Stack,
   useModalContext,
 } from "@chakra-ui/react";
-import { useTokenDecimals, useTransferToken } from "@thirdweb-dev/react";
-import type { Erc20 } from "@thirdweb-dev/sdk";
+import {
+  TokenContract,
+  useTokenDecimals,
+  useTransferToken,
+} from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { constants } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -23,7 +26,7 @@ import {
 
 const TRANSFER_FORM_ID = "token-transfer-form";
 interface TokenTransferFormProps {
-  contract?: Erc20;
+  contract: TokenContract;
 }
 
 export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({

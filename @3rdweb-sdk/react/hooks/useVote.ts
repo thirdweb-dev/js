@@ -10,7 +10,7 @@ import {
   useContractMetadata,
   useSDK,
 } from "@thirdweb-dev/react";
-import type { Token, Vote, VoteType } from "@thirdweb-dev/sdk";
+import type { Vote, VoteType } from "@thirdweb-dev/sdk";
 import invariant from "tiny-invariant";
 
 export function useVoteProposalList(contract?: Vote) {
@@ -78,7 +78,10 @@ export function useTokensDelegated(contract?: Vote) {
 
 export function useVoteTokenBalances(contract?: Vote, addresses?: string[]) {
   const { data } = useContractMetadata(contract);
-  const tokenContract = useContract<Token>(data?.voting_token_address).contract;
+  const tokenContract = useContract(
+    data?.voting_token_address,
+    "token",
+  ).contract;
 
   return useQueryWithNetwork(
     voteKeys.balances(contract?.getAddress(), addresses),
@@ -107,7 +110,7 @@ export interface IProposalInput {
 }
 
 export function useProposalCreateMutation(contractAddress?: string) {
-  const voteContract = useContract<Vote>(contractAddress).contract;
+  const voteContract = useContract(contractAddress, "vote").contract;
   return useMutationWithInvalidate(
     (proposal: IProposalInput) => {
       invariant(voteContract, "contract is required");

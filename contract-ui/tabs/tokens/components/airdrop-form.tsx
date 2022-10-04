@@ -8,12 +8,13 @@ import {
   useModalContext,
 } from "@chakra-ui/react";
 import {
+  TokenContract,
   TokenParams,
   WalletAddress,
   useAddress,
   useTransferBatchToken,
 } from "@thirdweb-dev/react";
-import { Amount, Erc20 } from "@thirdweb-dev/sdk";
+import { Amount } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import {
   AirdropAddressInput,
@@ -27,7 +28,7 @@ import { FiUpload } from "react-icons/fi";
 import { Button, Heading, Text } from "tw-components";
 
 interface TokenAirdropFormProps {
-  contract?: Erc20;
+  contract: TokenContract;
 }
 
 export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({

@@ -8,11 +8,11 @@ import {
   useModalContext,
 } from "@chakra-ui/react";
 import {
+  TokenContract,
   useAddress,
   useBurnToken,
   useTokenDecimals,
 } from "@thirdweb-dev/react";
-import type { Erc20 } from "@thirdweb-dev/sdk";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -27,7 +27,7 @@ import {
 
 const BURN_FORM_ID = "token-burn-form";
 interface TokenBurnFormProps {
-  contract?: Erc20;
+  contract: TokenContract;
 }
 
 export const TokenBurnForm: React.FC<TokenBurnFormProps> = ({ contract }) => {

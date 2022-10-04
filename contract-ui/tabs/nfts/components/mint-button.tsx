@@ -1,17 +1,13 @@
 import { NFTMintForm } from "./mint-form";
 import { MinterOnly } from "@3rdweb-sdk/react";
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import {
-  NFTContract,
-  UseContractResult,
-  useMintNFT,
-} from "@thirdweb-dev/react";
+import { useContract, useMintNFT } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { FiPlus } from "react-icons/fi";
 import { Button, Drawer } from "tw-components";
 
 interface NFTMintButtonProps {
-  contractQuery: UseContractResult<NonNullable<NFTContract>>;
+  contractQuery: ReturnType<typeof useContract>;
 }
 
 export const NFTMintButton: React.FC<NFTMintButtonProps> = ({

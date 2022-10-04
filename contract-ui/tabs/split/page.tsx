@@ -13,7 +13,6 @@ import {
   StatNumber,
 } from "@chakra-ui/react";
 import { useAddress, useContract } from "@thirdweb-dev/react";
-import { Split } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/split";
 import { BigNumber, ethers } from "ethers";
 import { useMemo } from "react";
 import { Card, Heading, Text } from "tw-components";
@@ -27,7 +26,7 @@ export const ContractSplitPage: React.FC<SplitPageProps> = ({
   contractAddress,
 }) => {
   const address = useAddress();
-  const contractQuery = useContract<Split>(contractAddress);
+  const contractQuery = useContract(contractAddress, "split");
 
   const splitQuery = useSplitData(contractQuery.contract);
   const balanceQuery = useSplitBalances(contractAddress);

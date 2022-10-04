@@ -1,8 +1,8 @@
 import { Permissions } from "./components";
-import { ButtonGroup, Divider, Flex } from "@chakra-ui/react";
+import { ButtonGroup, Code, Divider, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
-import { Card, Heading, LinkButton, Text } from "tw-components";
+import { Card, Heading, Link, LinkButton, Text } from "tw-components";
 
 interface ContractPermissionsPageProps {
   contractAddress?: string;
@@ -13,22 +13,30 @@ export const ContractPermissionsPage: React.FC<
 > = ({ contractAddress }) => {
   const contractQuery = useContract(contractAddress);
 
-  const detectedFeature = detectFeatures(contractQuery.contract, [
-    "Permissions",
+  const detectedEnumerable = detectFeatures(contractQuery.contract, [
+    "PermissionsEnumerable",
   ]);
   if (contractQuery.isLoading) {
     // TODO build a skeleton for this
     return <div>Loading...</div>;
   }
 
-  if (!detectedFeature) {
+  if (!detectedEnumerable) {
     return (
       <Card as={Flex} flexDir="column" gap={3}>
         {/* TODO  extract this out into it's own component and make it better */}
-        <Heading size="subtitle.md">No Permissions Enumerable enabled</Heading>
+        <Heading size="subtitle.md">
+          Missing PermissionsEnumerable Extension
+        </Heading>
         <Text>
-          To enable Permissions features you will have to extend the required
-          interfaces in your contract.
+          This contract does not support the <Code>PermissionsEnumerable</Code>{" "}
+          extension.
+          <br />
+          As a result, you can only view and manage basic permissions via the{" "}
+          <Link href="/" color="blue.500">
+            Explorer
+          </Link>{" "}
+          at the moment.
         </Text>
 
         <Divider my={1} />
@@ -37,9 +45,9 @@ export const ContractPermissionsPage: React.FC<
           <ButtonGroup colorScheme="purple" size="sm" variant="solid">
             <LinkButton
               isExternal
-              href="https://portal.thirdweb.com/contractkit/permissions#permissions-enumerable-contract"
+              href="https://portal.thirdweb.com/contractkit/extension-contracts/permissions"
             >
-              Permissions Enumerable
+              Permissions
             </LinkButton>
           </ButtonGroup>
         </Flex>

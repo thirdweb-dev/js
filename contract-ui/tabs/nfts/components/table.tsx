@@ -14,14 +14,8 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import {
-  Erc721OrErc1155,
-  NFT,
-  NFTContract,
-  useNFTs,
-  useTotalCount,
-} from "@thirdweb-dev/react";
-import { Erc721, Erc1155 } from "@thirdweb-dev/sdk";
+import { NFTContract, useNFTs, useTotalCount } from "@thirdweb-dev/react";
+import { NFT } from "@thirdweb-dev/sdk";
 import { detectFeatures } from "components/contract-components/utils";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import { BigNumber } from "ethers";
@@ -46,7 +40,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
   const isErc1155 = detectFeatures(contract, ["ERC1155"]);
 
   const tableColumns = useMemo(() => {
-    const cols: Column<NFT<Erc721OrErc1155>>[] = [
+    const cols: Column<NFT>[] = [
       {
         Header: "Token Id",
         accessor: (row) => row.metadata.id.toString(),
@@ -69,7 +63,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
       cols.push({
         Header: "Owned By",
         accessor: (row) => row.owner,
-        Cell: ({ cell }: { cell: Cell<NFT<Erc721OrErc1155>, string> }) => (
+        Cell: ({ cell }: { cell: Cell<NFT, string> }) => (
           <AddressCopyButton address={cell.value} />
         ),
       });
@@ -126,9 +120,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
     setQueryParams({ start: pageIndex * pageSize, count: pageSize });
   }, [pageIndex, pageSize]);
 
-  const [tokenRow, setTokenRow] = useState<NFT<
-    Erc721<any> | Erc1155<any>
-  > | null>(null);
+  const [tokenRow, setTokenRow] = useState<NFT | null>(null);
 
   return (
     <Flex gap={4} direction="column">
