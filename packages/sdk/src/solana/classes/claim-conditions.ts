@@ -57,15 +57,24 @@ export class ClaimConditions {
    */
   async get(): Promise<NFTDropConditions> {
     const candyMachine = await this.getCandyMachine();
+    const totalAvailableSupply = candyMachine.itemsAvailable.toNumber();
+    const lazyMintedSupply = candyMachine.itemsLoaded.toNumber();
+    const goLiveDate = candyMachine.goLiveDate
+      ? new Date(candyMachine.goLiveDate.toNumber() * 1000)
+      : null;
+    const isWithinGoLiveDate = candyMachine.goLiveDate
+      ? candyMachine.goLiveDate.toNumber() * 1000 >= Date.now()
+      : true;
     // TODO add allowlist/hidden settings here
     return {
       price: toCurrencyValue(candyMachine.price),
       currencyAddress: candyMachine.tokenMintAddress?.toBase58() || null,
       primarySaleRecipient: candyMachine.walletAddress.toBase58(),
       sellerFeeBasisPoints: candyMachine.sellerFeeBasisPoints,
-      goLiveDate: candyMachine.goLiveDate
-        ? new Date(candyMachine.goLiveDate.toNumber() * 1000)
-        : null,
+      goLiveDate,
+      totalAvailableSupply,
+      lazyMintedSupply,
+      isReadyToClaim: candyMachine.isFullyLoaded && isWithinGoLiveDate,
     };
   }
 

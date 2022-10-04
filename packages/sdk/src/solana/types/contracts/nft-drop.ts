@@ -31,6 +31,9 @@ export const NFTDropUpdateableConditionsOutputSchema = z.object({
   primarySaleRecipient: z.string(),
   sellerFeeBasisPoints: BasisPointsSchema,
   goLiveDate: z.date().nullable(),
+  totalAvailableSupply: z.number(),
+  lazyMintedSupply: z.number(),
+  isReadyToClaim: z.boolean(),
 });
 
 /**
