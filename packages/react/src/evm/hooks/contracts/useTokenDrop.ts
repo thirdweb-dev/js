@@ -25,9 +25,14 @@ import { useContract } from "../async/contracts";
  * }
  * ```
  * @public
- * @deprecated use `useContract()` instead
+ * @deprecated
+ * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
+ * ```diff
+ * - const token = await sdk.useTokenDrop("0x1234...");
+ * + const token = await sdk.useContract("0x1234...", "token-drop").contract;
+ * ```
  */
-export function useTokenDrop(contractAddress?: RequiredParam<string>) {
+export function useTokenDrop(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(
     `useTokenDrop("${contractAddress || "0x..."}")`,
     `useContract("${contractAddress || "0x..."}", "token-drop")`,

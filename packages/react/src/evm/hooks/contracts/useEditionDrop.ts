@@ -24,9 +24,14 @@ import { useContract } from "../async/contracts";
  * }
  * ```
  * @public
- * @deprecated use `useContract()` instead
+ * @deprecated
+ * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
+ * ```diff
+ * - const editionDrop = await sdk.useEditionDrop("0x1234...");
+ * + const editionDrop = await sdk.useContract("0x1234...", "edition-drop").contract;
+ * ```
  */
-export function useEditionDrop(contractAddress?: RequiredParam<string>) {
+export function useEditionDrop(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(
     `useEditionDrop("${contractAddress || "0x..."}")`,
     `useContract("${contractAddress || "0x..."}", "edition-drop")`,

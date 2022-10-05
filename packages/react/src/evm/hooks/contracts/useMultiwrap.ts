@@ -24,9 +24,14 @@ import { useContract } from "../async/contracts";
  * }
  * ```
  * @public
- * @deprecated use `useContract()` instead
+ * @deprecated
+ * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
+ * ```diff
+ * - const multiwrap = await sdk.useMultiwrap("0x1234...");
+ * + const multiwrap = await sdk.useContract("0x1234...", "multiwrap").contract;
+ * ```
  */
-export function useMultiwrap(contractAddress?: RequiredParam<string>) {
+export function useMultiwrap(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(
     `useMultiwrap("${contractAddress || "0x..."}")`,
     `useContract("${contractAddress || "0x..."}", "multiwrap")`,

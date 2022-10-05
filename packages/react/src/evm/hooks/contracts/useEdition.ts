@@ -25,9 +25,14 @@ import { useContract } from "../async/contracts";
  * }
  * ```
  * @public
- * @deprecated use `useContract()` instead
+ * @deprecated
+ * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
+ * ```diff
+ * - const edition = await sdk.useEdition("0x1234...");
+ * + const edition = await sdk.useContract("0x1234...", "edition").contract;
+ * ```
  */
-export function useEdition(contractAddress?: RequiredParam<string>) {
+export function useEdition(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(
     `useEdition("${contractAddress || "0x..."}")`,
     `useContract("${contractAddress || "0x..."}", "edition")`,

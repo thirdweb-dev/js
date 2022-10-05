@@ -6,20 +6,8 @@ import {
   NATIVE_TOKEN_ADDRESS,
 } from "../constants";
 import {
-  EditionDropInitializer,
-  EditionInitializer,
   getContractTypeForRemoteName,
-  MarketplaceInitializer,
-  MultiwrapInitializer,
-  NFTCollectionInitializer,
-  NFTDropInitializer,
-  PackInitializer,
   PREBUILT_CONTRACTS_MAP,
-  SignatureDropInitializer,
-  SplitInitializer,
-  TokenDropInitializer,
-  TokenInitializer,
-  VoteInitializer,
 } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
 import { SDKOptions } from "../schema/sdk-options";
@@ -166,184 +154,290 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   }
 
   /**
-   * Get an instance of a Drop contract
+   * Get an instance of a NFT Drop contract
    * @param contractAddress - the address of the deployed contract
-   * @returns the contract
+   * @deprecated
+   * This method is deprecated and will be removed in a future major version. You should use {@link getContract} instead.
+   * ```diff
+   * - const dropContract = await sdk.getDropContract("0x1234...");
+   * + const dropContract = await sdk.getContract("0x1234...", "nft-drop");
+   * ```
    */
   public async getNFTDrop(contractAddress: string) {
-    return await this.getBuiltInContract(
-      contractAddress,
-      NFTDropInitializer.contractType,
-    );
+    return await this.getContract(contractAddress, "nft-drop");
   }
 
   /**
-   * Get an instance of a SignatureDrop contract
+   * Get an instance of a Signature Drop contract
    * @param contractAddress - the address of the deployed contract
-   * @returns the contract
+   * @deprecated
+   * This method is deprecated and will be removed in a future major version. You should use {@link getContract} instead.
+   * ```diff
+   * - const signatureDrop = await sdk.getSignatureDrop("0x1234...");
+   * + const signatureDrop = await sdk.getContract("0x1234...", "signature-drop");
+   * ```
    */
   public async getSignatureDrop(contractAddress: string) {
-    return await this.getBuiltInContract(
-      contractAddress,
-      SignatureDropInitializer.contractType,
-    );
+    return await this.getContract(contractAddress, "signature-drop");
   }
 
   /**
-   * Get an instance of a NFT Collection contract
-   * @param address - the address of the deployed contract
-   * @returns the contract
+   * Get an instance of a NFT Collection Drop contract
+   * @param contractAddress - the address of the deployed contract
+   * @deprecated
+   * This method is deprecated and will be removed in a future major version. You should use {@link getContract} instead.
+   * ```diff
+   * - const signatureDrop = await sdk.getNFTCollection("0x1234...");
+   * + const signatureDrop = await sdk.getContract("0x1234...", "nft-collection");
+   * ```
    */
-  public async getNFTCollection(address: string) {
-    return await this.getBuiltInContract(
-      address,
-      NFTCollectionInitializer.contractType,
-    );
+  public async getNFTCollection(contractAddress: string) {
+    return await this.getContract(contractAddress, "nft-collection");
   }
 
   /**
    * Get an instance of a Edition Drop contract
-   * @param address - the address of the deployed contract
-   * @returns the contract
+   * @param contractAddress - the address of the deployed contract
+   * @deprecated
+   * This method is deprecated and will be removed in a future major version. You should use {@link getContract} instead.
+   * ```diff
+   * - const editionDrop = await sdk.getEditionDrop("0x1234...");
+   * + const editionDrop = await sdk.getContract("0x1234...", "edition-drop");
+   * ```
    */
-  public async getEditionDrop(address: string) {
-    return await this.getBuiltInContract(
-      address,
-      EditionDropInitializer.contractType,
-    );
+  public async getEditionDrop(contractAddress: string) {
+    return await this.getContract(contractAddress, "edition-drop");
   }
 
   /**
-   * Get an instance of an Edition contract
-   * @param address - the address of the deployed contract
-   * @returns the contract
+   * Get an instance of a Edition contract
+   * @param contractAddress - the address of the deployed contract
+   * @deprecated
+   * This method is deprecated and will be removed in a future major version. You should use {@link getContract} instead.
+   * ```diff
+   * - const edition = await sdk.getEdition("0x1234...");
+   * + const edition = await sdk.getContract("0x1234...", "edition");
+   * ```
    */
-  public async getEdition(address: string) {
-    return await this.getBuiltInContract(
-      address,
-      EditionInitializer.contractType,
-    );
+  public async getEdition(contractAddress: string) {
+    return await this.getContract(contractAddress, "edition");
   }
 
   /**
    * Get an instance of a Token Drop contract
-   * @param address - the address of the deployed contract
-   * @returns the contract
+   * @param contractAddress - the address of the deployed contract
+   * @deprecated
+   * This method is deprecated and will be removed in a future major version. You should use {@link getContract} instead.
+   * ```diff
+   * - const tokenDrop = await sdk.getTokenDrop("0x1234...");
+   * + const tokenDrop = await sdk.getContract("0x1234...", "token-drop");
+   * ```
    */
-  public async getTokenDrop(address: string) {
-    return await this.getBuiltInContract(
-      address,
-      TokenDropInitializer.contractType,
-    );
+  public async getTokenDrop(contractAddress: string) {
+    return await this.getContract(contractAddress, "token-drop");
   }
 
   /**
    * Get an instance of a Token contract
-   * @param address - the address of the deployed contract
-   * @returns the contract
+   * @param contractAddress - the address of the deployed contract
+   * @deprecated
+   * This method is deprecated and will be removed in a future major version. You should use {@link getContract} instead.
+   * ```diff
+   * - const token = await sdk.getToken("0x1234...");
+   * + const token = await sdk.getContract("0x1234...", "token");
+   * ```
    */
-  public async getToken(address: string) {
-    return await this.getBuiltInContract(
-      address,
-      TokenInitializer.contractType,
-    );
+  public async getToken(contractAddress: string) {
+    return await this.getContract(contractAddress, "token");
   }
 
   /**
    * Get an instance of a Vote contract
-   * @param address - the address of the deployed contract
-   * @returns the contract
+   * @param contractAddress - the address of the deployed contract
+   * @deprecated
+   * This method is deprecated and will be removed in a future major version. You should use {@link getContract} instead.
+   * ```diff
+   * - const vote = await sdk.getVote("0x1234...");
+   * + const vote = await sdk.getContract("0x1234...", "vote");
+   * ```
    */
-  public async getVote(address: string) {
-    return await this.getBuiltInContract(address, VoteInitializer.contractType);
+  public async getVote(contractAddress: string) {
+    return await this.getContract(contractAddress, "vote");
   }
 
   /**
-   * Get an instance of a Splits contract
-   * @param address - the address of the deployed contract
-   * @returns the contract
+   * Get an instance of a Split contract
+   * @param contractAddress - the address of the deployed contract
+   * @deprecated
+   * This method is deprecated and will be removed in a future major version. You should use {@link getContract} instead.
+   * ```diff
+   * - const split = await sdk.getSplit("0x1234...");
+   * + const split = await sdk.getContract("0x1234...", "split");
+   * ```
    */
-  public async getSplit(address: string) {
-    return await this.getBuiltInContract(
-      address,
-      SplitInitializer.contractType,
-    );
+  public async getSplit(contractAddress: string) {
+    return await this.getContract(contractAddress, "split");
   }
 
   /**
    * Get an instance of a Marketplace contract
-   * @param address - the address of the deployed contract
-   * @returns the contract
+   * @param contractAddress - the address of the deployed contract
+   * @deprecated
+   * This method is deprecated and will be removed in a future major version. You should use {@link getContract} instead.
+   * ```diff
+   * - const marketplace = await sdk.getMarketplace("0x1234...");
+   * + const marketplace = await sdk.getContract("0x1234...", "marketplace");
+   * ```
    */
-  public async getMarketplace(address: string) {
-    return await this.getBuiltInContract(
-      address,
-      MarketplaceInitializer.contractType,
-    );
+  public async getMarketplace(contractAddress: string) {
+    return await this.getContract(contractAddress, "marketplace");
   }
 
   /**
    * Get an instance of a Pack contract
-   * @param address - the address of the deployed contract
-   * @returns the contract
+   * @param contractAddress - the address of the deployed contract
+   * @deprecated
+   * This method is deprecated and will be removed in a future major version. You should use {@link getContract} instead.
+   * ```diff
+   * - const pack = await sdk.getPack("0x1234...");
+   * + const pack = await sdk.getContract("0x1234...", "pack");
+   * ```
    */
-  public async getPack(address: string) {
-    return await this.getBuiltInContract(address, PackInitializer.contractType);
+  public async getPack(contractAddress: string) {
+    return await this.getContract(contractAddress, "pack");
   }
 
   /**
-   * Get an instance of a Multiwrap contract
-   * @param address - the address of the deployed contract
-   * @returns the contract
-   * @beta
+   * Get an instance of a Pack contract
+   * @param contractAddress - the address of the deployed contract
+   * @deprecated
+   * This method is deprecated and will be removed in a future major version. You should use {@link getContract} instead.
+   * ```diff
+   * - const multiWrap = await sdk.getMultiwrap("0x1234...");
+   * + const multiWrap = await sdk.getContract("0x1234...", "multiwrap");
+   * ```
    */
-  public async getMultiwrap(address: string) {
-    return await this.getBuiltInContract(
-      address,
-      MultiwrapInitializer.contractType,
-    );
+  public async getMultiwrap(contractAddress: string) {
+    return await this.getContract(contractAddress, "multiwrap");
   }
 
   /**
-   *
-   * @internal
-   * @param address - the address of the contract to instantiate
-   * @param contractType - optional, the type of contract to instantiate
-   * @returns a promise that resolves with the contract instance
+   * Get an instance of a Custom ThirdwebContract
+   * @param address - the address of the deployed contract
+   * @returns the contract
+   * @public
+   * @example
+   * ```javascript
+   * const contract = await sdk.getContract("{{contract_address}}");
+   * ```
    */
-  public async getBuiltInContract<
-    TContractType extends PrebuiltContractType = PrebuiltContractType,
-  >(
+  public async getContract(address: string): Promise<SmartContract>;
+  /**
+   * Get an instance of a Custom ThirdwebContract
+   * @param address - the address of the deployed contract
+   * @param contractType - the {@link ContractType} of the contract to load
+   * @returns the contract
+   * @public
+   * @example
+   * ```javascript
+   * const contract = await sdk.getContract("{{contract_address}}", "nft-drop");
+   * ```
+   */
+  public async getContract<TContractType extends ContractType>(
     address: string,
     contractType: TContractType,
-  ): Promise<ContractForPrebuiltContractType<TContractType>> {
+  ): Promise<
+    TContractType extends PrebuiltContractType
+      ? ContractForPrebuiltContractType<TContractType>
+      : SmartContract
+  >;
+  /**
+   * Get an instance of a Custom ThirdwebContract
+   * @param address - the address of the deployed contract
+   * @param abi - the ABI ({@link ContractInterface}) of the contract to load
+   * @returns the contract
+   * @public
+   * @example
+   * ```javascript
+   * const contract = await sdk.getContract("{{contract_address}}", ABI);
+   * ```
+   */
+  public async getContract(
+    address: string,
+    abi: ContractInterface,
+  ): Promise<SmartContract>;
+  public async getContract(
+    address: string,
+    contractTypeOrABI?: PrebuiltContractType | ContractInterface,
+  ): Promise<ValidContractInstance> {
     // if we have a contract in the cache we will return it
     // we will do this **without** checking any contract type things for simplicity, this may have to change in the future?
     if (this.contractCache.has(address)) {
-      return this.contractCache.get(
-        address,
-      ) as ContractForPrebuiltContractType<TContractType>;
+      // we know this will be there since we check the has above
+      return this.contractCache.get(address) as ValidContractInstance;
     }
 
-    //@ts-expect-error - this is just extra runtime safety
-    if (contractType === "custom") {
-      throw new Error(
-        "To get an instance of a custom contract, use getContract(address)",
+    let newContract: ValidContractInstance;
+
+    // if we don't have a contractType or ABI then we will have to resolve it regardless
+    // we also handle it being "custom" just in case...
+    if (!contractTypeOrABI || contractTypeOrABI === "custom") {
+      const resolvedContractType = await this.resolveContractType(address);
+      if (resolvedContractType === "custom") {
+        // if it's a custom contract we gotta fetch the compilet metadata
+        try {
+          const publisher = this.getPublisher();
+          const metadata = await publisher.fetchCompilerMetadataFromAddress(
+            address,
+          );
+          newContract = this.getContractFromAbi(address, metadata.abi);
+        } catch (e) {
+          throw new Error(`Error fetching ABI for this contract\n\n${e}`);
+        }
+      } else {
+        // otherwise if it's a prebuilt contract we can just use the contract type
+        const contractAbi = await PREBUILT_CONTRACTS_MAP[
+          resolvedContractType
+        ].getAbi();
+        newContract = this.getContractFromAbi(address, contractAbi);
+      }
+    }
+    // if it's a builtin contract type we can just use the contract type to initialize the contract instance
+    else if (
+      typeof contractTypeOrABI === "string" &&
+      contractTypeOrABI in PREBUILT_CONTRACTS_MAP
+    ) {
+      newContract = await PREBUILT_CONTRACTS_MAP[
+        contractTypeOrABI as keyof typeof PREBUILT_CONTRACTS_MAP
+      ].initialize(
+        this.getSignerOrProvider(),
+        address,
+        this.storage,
+        this.options,
       );
     }
+    // otherwise it has to be an ABI
+    else {
+      newContract = this.getContractFromAbi(address, contractTypeOrABI);
+    }
 
-    //lazy import the contract from the map
-    const newContract = await PREBUILT_CONTRACTS_MAP[contractType].initialize(
-      this.getSignerOrProvider(),
-      address,
-      this.storageHandler,
-      this.options,
-    );
-
+    // set whatever we have on the cache
     this.contractCache.set(address, newContract);
+    // return it
+    return newContract;
+  }
 
-    // return the new contract
-    return newContract as ContractForPrebuiltContractType<TContractType>;
+  /**
+   * @internal
+   * @deprecated use {@link getContract} directly instead
+   */
+  public async getBuiltInContract<TContractType extends PrebuiltContractType>(
+    address: string,
+    contractType: TContractType,
+  ): Promise<ContractForPrebuiltContractType<TContractType>> {
+    return (await this.getContract(address, contractType)) as Promise<
+      ContractForPrebuiltContractType<TContractType>
+    >;
   }
 
   /**
@@ -403,8 +497,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
             );
           }
         } else {
-          metadata = (await this.getBuiltInContract(address, contractType))
-            .metadata;
+          metadata = (await this.getContract(address, contractType)).metadata;
         }
         return {
           address,
@@ -442,39 +535,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     this._publisher.updateSignerOrProvider(this.getSignerOrProvider());
     for (const [, contract] of this.contractCache) {
       contract.onNetworkUpdated(this.getSignerOrProvider());
-    }
-  }
-
-  /**
-   * Get an instance of a Custom ThirdwebContract
-   * @param address - the address of the deployed contract
-   * @returns the contract
-   * @beta
-   * @example
-   * ```javascript
-   * const contract = await sdk.getContract("{{contract_address}}");
-   * ```
-   */
-  public async getContract(address: string) {
-    if (this.contractCache.has(address)) {
-      return this.contractCache.get(address) as SmartContract;
-    }
-    try {
-      // try built in contract first, eventually all our contracts will have bytecode metadata
-      const contractType = await this.resolveContractType(address);
-      invariant(contractType !== "custom", "custom contract type");
-      const contractAbi = await PREBUILT_CONTRACTS_MAP[contractType].getAbi();
-      return this.getContractFromAbi(address, contractAbi);
-    } catch (err) {
-      try {
-        const publisher = this.getPublisher();
-        const metadata = await publisher.fetchCompilerMetadataFromAddress(
-          address,
-        );
-        return this.getContractFromAbi(address, metadata.abi);
-      } catch (e) {
-        throw new Error(`Error fetching ABI for this contract\n\n${e}`);
-      }
     }
   }
 
