@@ -1,58 +1,49 @@
 import { useSDK } from "../../providers/base";
+import { useMutation } from "@tanstack/react-query";
 import { IpfsUploadBatchOptions, UploadOptions } from "@thirdweb-dev/storage";
-import { useCallback } from "react";
-import { useDropzone } from "react-dropzone";
+import invariant from "tiny-invariant";
 
-export interface UseStorageOptions<T extends UploadOptions> {
-  onUpload: (uris: string[]) => void;
-  uploadOptions?: T;
+interface StorageUploadOptions<T extends UploadOptions> {
+  data: unknown[];
+  options?: T;
 }
 
 /**
- * Hook used to turn any component into a file input that uploads files to decentralized storage
- * systems like IPFS, using the `storageInterface` configured on the `ThirdwebProvider`
+ * Hook used to upload any files or JSON data to decentralized storage systems like IPFS,
+ * using the `storageInterface` configured on the `ThirdwebProvider`
  *
  * @param options - Configure the options for your upload
- * @param options.onUpload - A callback function to call on the URIs of the uploaded files
- * @param options.uploadOptions - Options to pass to the storage `uploadBatch` function
- * @returns Standard dropzone compatible hooks for uploading to decentralized storage
+ * @returns Function used to upload files or JSON to decentralized storage systems
  *
  * @example
  * ```jsx
  * import { useStorageUpload } from "@thirdweb-dev/react";
  *
  * export default function Component() {
- *   const onUpload = React.useCallback((uris) => {
- *     // Do something with the URIs here
+ *   const { mutateAsync: upload, isLoading } = useStorageUpload();
+ *
+ *   async function uploadData() {
+ *     const filesToUpload = [...];
+ *     const uris = await upload({ data: files });
  *     console.log(uris);
- *   })
- *   const { getRootProps, getInputProps } = useStorageUpload({ onUpload });
+ *   }
  *
  *   return (
- *     <div {...getRootProps()}>
- *       <input {...getInputProps()} />
- *       <p>Drag files here to upload to decentralized storage</p>
- *     </div>
+ *     <button onClick={uploadData}>
+ *       Upload
+ *     </button>
  *   )
  * }
  * ```
  */
 export function useStorageUpload<
   T extends UploadOptions = IpfsUploadBatchOptions,
->({ onUpload, uploadOptions }: UseStorageOptions<T>) {
+>(uploadOptions?: T) {
   const sdk = useSDK();
-  const onDrop = useCallback(
-    async (acceptedFiles: File[]) => {
-      if (sdk) {
-        const uris = await sdk.storage.uploadBatch(
-          acceptedFiles,
-          uploadOptions,
-        );
-        onUpload(uris);
-      }
-    },
-    [sdk, onUpload, uploadOptions],
-  );
 
-  return useDropzone({ onDrop });
+  return useMutation(async ({ data, options }: StorageUploadOptions<T>) => {
+    invariant(sdk, "sdk must be defined");
+
+    return await sdk.storage.uploadBatch(data, options || uploadOptions);
+  });
 }
