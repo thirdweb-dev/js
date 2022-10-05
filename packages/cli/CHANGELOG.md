@@ -1,5 +1,14 @@
 # thirdweb
 
+## 0.7.24
+
+### Patch Changes
+
+- [#259](https://github.com/thirdweb-dev/js/pull/259) [`6f95a52`](https://github.com/thirdweb-dev/js/commit/6f95a520e6cc69e08f734705e8adc71431b091cc) Thanks [@adam-maj](https://github.com/adam-maj)! - Add npx thirdweb upload command
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.2.1
+
 ## 0.7.23
 
 ### Patch Changes

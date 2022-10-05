@@ -1,5 +1,11 @@
 # @thirdweb-dev/react
 
+## 3.2.1
+
+### Patch Changes
+
+- [#264](https://github.com/thirdweb-dev/js/pull/264) [`f669d3e`](https://github.com/thirdweb-dev/js/commit/f669d3ef4a84368c23f0359aec304f66a4063042) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Standarize data between evm/solana for useLazyMint hook
+
 ## 3.2.0
 
 ### Patch Changes
