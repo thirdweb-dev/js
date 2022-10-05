@@ -1,9 +1,9 @@
+import { NFTMetadataInput } from "../../src/core/schema/nft";
 import {
   ClaimEligibility,
   createSnapshot,
   NATIVE_TOKEN_ADDRESS,
   NFTDrop,
-  NFTMetadataInput,
   TokenInitializer,
 } from "../../src/evm";
 import { expectError, sdk, signers, storage } from "./before-setup";

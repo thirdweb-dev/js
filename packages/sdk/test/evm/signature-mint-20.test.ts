@@ -112,7 +112,7 @@ describe("Token sig minting", async () => {
       ];
       const batch = await contract.signature.generateBatch(input);
 
-      for (const [_, v] of batch.entries()) {
+      for (const [, v] of batch.entries()) {
         await contract.signature.mint(v);
       }
       const balance = await contract.balanceOf(samWallet.address);

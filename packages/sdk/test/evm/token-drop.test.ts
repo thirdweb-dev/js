@@ -345,6 +345,8 @@ describe("Token Drop Contract", async () => {
         },
       ]);
       const active = await dropContract.claimConditions.getActive();
+      expect(active.maxQuantity).to.be("10.8");
+      expect(active.quantityLimitPerTransaction).to.be("1.2");
     });
 
     it("should check if its been long enough since the last claim", async () => {
