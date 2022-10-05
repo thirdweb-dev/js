@@ -25,9 +25,14 @@ import { useContract } from "../async/contracts";
  * }
  * ```
  * @public
- * @deprecated use `useContract()` instead
+ * @deprecated
+ * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
+ * ```diff
+ * - const split = await sdk.useSplit("0x1234...");
+ * + const split = await sdk.useContract("0x1234...", "split").contract;
+ * ```
  */
-export function useSplit(contractAddress?: RequiredParam<string>) {
+export function useSplit(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(
     `useSplit("${contractAddress || "0x..."}")`,
     `useContract("${contractAddress || "0x..."}", "split")`,

@@ -25,9 +25,14 @@ import { useContract } from "../async/contracts";
  * }
  * ```
  * @public
- * @deprecated use `useContract()` instead
+ * @deprecated
+ * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
+ * ```diff
+ * - const vote = await sdk.useVote("0x1234...");
+ * + const vote = await sdk.useContract("0x1234...", "vote").contract;
+ * ```
  */
-export function useVote(contractAddress?: RequiredParam<string>) {
+export function useVote(contractAddress: RequiredParam<string>) {
   showDeprecationWarning(
     `useVote("${contractAddress || "0x..."}")`,
     `useContract("${contractAddress || "0x..."}", "vote")`,

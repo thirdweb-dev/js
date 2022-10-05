@@ -4,7 +4,8 @@ on: [pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # try out buildjet to speed up build and test
+    runs-on: buildjet-32vcpu-ubuntu-2204
 
     steps:
       - uses: actions/checkout@v3
@@ -12,4 +13,6 @@ jobs:
           fetch-depth: 1
       - uses: preactjs/compressed-size-action@v2
         with:
-          repo-token: '${{ secrets.GITHUB_TOKEN }}'
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          strip-hash: "\\-(\\w{8})(?:\\.esm|\\.cjs)"
+          minimum-change-threshold: 100
