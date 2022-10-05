@@ -3,11 +3,17 @@ import { Registry } from "./classes/registry";
 import { UserWallet } from "./classes/user-wallet";
 import { NFTCollection } from "./programs/nft-collection";
 import { NFTDrop } from "./programs/nft-drop";
+import type { Program } from "./programs/program";
 import { Token } from "./programs/token";
+import {
+  PrebuiltProgramType,
+  ProgramForPrebuiltProgramType,
+  ProgramType,
+} from "./programs/types";
 import { Network } from "./types";
 import { getUrlForNetwork } from "./utils/urls";
 import { Metaplex } from "@metaplex-foundation/js";
-import type { Idl } from "@project-serum/anchor";
+import type { Idl, Program as AnchorProgram } from "@project-serum/anchor";
 import { Connection, Keypair } from "@solana/web3.js";
 import { IpfsUploader, ThirdwebStorage } from "@thirdweb-dev/storage";
 import Bs58 from "bs58";
@@ -114,7 +120,7 @@ export class ThirdwebSDK {
    * @returns SDK interface for the program
    */
   public async getNFTCollection(address: string): Promise<NFTCollection> {
-    return new NFTCollection(address, this.metaplex, this.storage);
+    return this.getProgram(address, "nft-collection");
   }
 
   /**
@@ -123,7 +129,7 @@ export class ThirdwebSDK {
    * @returns SDK interface for the program
    */
   public async getNFTDrop(address: string): Promise<NFTDrop> {
-    return new NFTDrop(address, this.metaplex, this.storage);
+    return this.getProgram(address, "nft-drop");
   }
 
   /**
@@ -132,7 +138,7 @@ export class ThirdwebSDK {
    * @returns SDK interface for the program
    */
   public async getToken(address: string): Promise<Token> {
-    return new Token(address, this.metaplex, this.storage);
+    return this.getProgram(address, "token");
   }
 
   /**
@@ -146,7 +152,65 @@ export class ThirdwebSDK {
    * const program = await sdk.getProgram("{{contract_address}}");
    * ```
    */
-  public async getProgram(address: string) {
+  public async getProgram(address: string): Promise<AnchorProgram>;
+  /**
+   * Get an SDK interface for a deployed program
+   * @param address - Address of the program
+   * @param programType - the type of program
+   * @returns SDK interface for the program
+   *
+   * @example
+   * ```jsx
+   * // Get the interface for your anchor program
+   * const program = await sdk.getProgram("{{contract_address}}", "token");
+   * ```
+   */
+  public async getProgram<TProgramType extends ProgramType>(
+    address: string,
+    programType: TProgramType,
+  ): Promise<
+    TProgramType extends PrebuiltProgramType
+      ? ProgramForPrebuiltProgramType<TProgramType>
+      : Program
+  >;
+  /**
+   * Get an SDK interface for a deployed program
+   * @param address - Address of the program
+   * @param Idl - the IDL of the program
+   * @returns SDK interface for the program
+   *
+   * @example
+   * ```jsx
+   * // Get the interface for your anchor program
+   * const program = await sdk.getProgram("{{contract_address}}", Idl);
+   * ```
+   */
+  public async getProgram<TIdl extends Idl>(
+    address: string,
+    Idl: TIdl,
+  ): Promise<AnchorProgram<TIdl>>;
+  public async getProgram(
+    address: string,
+    programTypeOrIdl?: ProgramType | Idl,
+  ): Promise<AnchorProgram | Program | NFTCollection | NFTDrop | Token> {
+    // if we have a programType or IDL
+    if (programTypeOrIdl) {
+      // if it's a prebuilt program type
+      if (typeof programTypeOrIdl === "string") {
+        switch (programTypeOrIdl) {
+          case "nft-collection":
+            return new NFTCollection(address, this.metaplex, this.storage);
+          case "nft-drop":
+            return new NFTDrop(address, this.metaplex, this.storage);
+          case "token":
+            return new Token(address, this.metaplex, this.storage);
+          default:
+            throw new Error("Invalid program type");
+        }
+      }
+      // otherwise, it's an IDL, so return a program with that IDL
+      return this.getProgramWithIdl(address, programTypeOrIdl);
+    }
     const anchor = await import("@project-serum/anchor");
     const idl = await anchor.Program.fetchIdl(
       address,

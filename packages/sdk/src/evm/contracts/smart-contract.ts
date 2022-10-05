@@ -148,12 +148,18 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     return assertEnabled(this.detectErc1155(), FEATURE_EDITION);
   }
 
+  private _chainId: number;
+  get chainId() {
+    return this._chainId;
+  }
+
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
     abi: ContractInterface,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
+    chainId: number,
     contractWrapper = new ContractWrapper<TContract>(
       network,
       address,
@@ -161,6 +167,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
       options,
     ),
   ) {
+    this._chainId = chainId;
     this.storage = storage;
     this.contractWrapper = contractWrapper;
     this.abi = abi;
@@ -264,21 +271,21 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
 
   private detectErc20() {
     if (detectContractFeature<BaseERC20>(this.contractWrapper, "ERC20")) {
-      return new Erc20(this.contractWrapper, this.storage);
+      return new Erc20(this.contractWrapper, this.storage, this.chainId);
     }
     return undefined;
   }
 
   private detectErc721() {
     if (detectContractFeature<BaseERC721>(this.contractWrapper, "ERC721")) {
-      return new Erc721(this.contractWrapper, this.storage);
+      return new Erc721(this.contractWrapper, this.storage, this.chainId);
     }
     return undefined;
   }
 
   private detectErc1155() {
     if (detectContractFeature<BaseERC1155>(this.contractWrapper, "ERC1155")) {
-      return new Erc1155(this.contractWrapper, this.storage);
+      return new Erc1155(this.contractWrapper, this.storage, this.chainId);
     }
     return undefined;
   }

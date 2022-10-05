@@ -36,7 +36,7 @@ import invariant from "tiny-invariant";
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
  * const sdk = new ThirdwebSDK("{{chainName}}");
- * const contract = sdk.getMarketplace("{{contract_address}}");
+ * const { contract } = sdk.getContract("{{contract_address}}", "marketplace");
  * ```
  *
  * @public
@@ -135,12 +135,18 @@ export class Marketplace implements UpdateableNetwork {
    */
   public auction: MarketplaceAuction;
 
+  private _chainId;
+  get chainId() {
+    return this._chainId;
+  }
+
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
+    chainId: number,
     contractWrapper = new ContractWrapper<MarketplaceContract>(
       network,
       address,
@@ -148,6 +154,7 @@ export class Marketplace implements UpdateableNetwork {
       options,
     ),
   ) {
+    this._chainId = chainId;
     this.abi = abi;
     this.contractWrapper = contractWrapper;
     this.storage = storage;

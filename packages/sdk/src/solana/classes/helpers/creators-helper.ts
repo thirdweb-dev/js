@@ -1,4 +1,4 @@
-import { CreatorInput } from "../../types/contracts";
+import { CreatorInput } from "../../types/programs";
 import type { Creator } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
 

@@ -79,7 +79,16 @@ export class Erc721<
   protected contractWrapper: ContractWrapper<T>;
   protected storage: ThirdwebStorage;
 
-  constructor(contractWrapper: ContractWrapper<T>, storage: ThirdwebStorage) {
+  private _chainId: number;
+  get chainId() {
+    return this._chainId;
+  }
+
+  constructor(
+    contractWrapper: ContractWrapper<T>,
+    storage: ThirdwebStorage,
+    chainId: number,
+  ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.query = this.detectErc721Enumerable();
@@ -87,6 +96,7 @@ export class Erc721<
     this.burnable = this.detectErc721Burnable();
     this.lazyMintable = this.detectErc721LazyMintable();
     this.signatureMintable = this.detectErc721SignatureMintable();
+    this._chainId = chainId;
   }
 
   /**

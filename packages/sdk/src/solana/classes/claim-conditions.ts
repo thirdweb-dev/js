@@ -3,7 +3,7 @@ import {
   NFTDropConditionsInput,
   NFTDropConditions,
   NFTDropUpdateableConditionsInputSchema,
-} from "../types/contracts/nft-drop";
+} from "../types/programs/nft-drop";
 import { toCurrencyValue } from "../utils/token";
 import {
   Amount,

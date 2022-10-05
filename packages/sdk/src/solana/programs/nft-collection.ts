@@ -8,7 +8,7 @@ import { enforceCreator } from "../classes/helpers/creators-helper";
 import { NFTHelper } from "../classes/helpers/nft-helper";
 import { METAPLEX_PROGRAM_ID } from "../constants/addresses";
 import { TransactionResult } from "../types/common";
-import { CreatorInput } from "../types/contracts";
+import { CreatorInput } from "../types/programs";
 import {
   findEditionMarkerPda,
   Metaplex,

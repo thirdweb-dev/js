@@ -18,7 +18,7 @@ export class RPCConnectionHandler extends EventEmitter {
 
   constructor(network: NetworkOrSignerOrProvider, options: SDKOptions) {
     super();
-    const [signer, provider] = this.getSignerAndProvider(network, options);
+    const [signer, provider] = getSignerAndProvider(network, options);
     this.signer = signer;
     this.provider = provider;
 
@@ -38,7 +38,7 @@ export class RPCConnectionHandler extends EventEmitter {
    * @param network - a network, signer or provider that ethers js can interpret
    */
   public updateSignerOrProvider(network: NetworkOrSignerOrProvider) {
-    const [signer, provider] = this.getSignerAndProvider(network, this.options);
+    const [signer, provider] = getSignerAndProvider(network, this.options);
     this.signer = signer;
     this.provider = provider;
   }
@@ -73,56 +73,55 @@ export class RPCConnectionHandler extends EventEmitter {
   public getSignerOrProvider(): Signer | providers.Provider {
     return this.getSigner() || this.getProvider();
   }
+}
 
-  /** ********************
-   * PRIVATE FUNCTIONS
-   *********************/
+/**
+ * @internal
+ */
+export function getSignerAndProvider(
+  network: NetworkOrSignerOrProvider,
+  options: SDKOptions,
+): [Signer | undefined, providers.Provider] {
+  let signer: Signer | undefined;
+  let provider: providers.Provider | undefined;
 
-  private getSignerAndProvider(
-    network: NetworkOrSignerOrProvider,
-    options: SDKOptions,
-  ): [Signer | undefined, providers.Provider] {
-    let signer: Signer | undefined;
-    let provider: providers.Provider | undefined;
-
-    if (Signer.isSigner(network)) {
-      signer = network;
-      if (network.provider) {
-        provider = network.provider;
-      }
+  if (Signer.isSigner(network)) {
+    signer = network;
+    if (network.provider) {
+      provider = network.provider;
     }
-
-    if (options?.readonlySettings) {
-      provider = getReadOnlyProvider(
-        options.readonlySettings.rpcUrl,
-        options.readonlySettings.chainId,
-      );
-    }
-
-    if (!provider) {
-      if (providers.Provider.isProvider(network)) {
-        provider = network;
-      } else if (!Signer.isSigner(network)) {
-        if (typeof network === "string") {
-          provider = getReadOnlyProvider(
-            network,
-            options?.readonlySettings?.chainId,
-          );
-        } else {
-          // no a signer, not a provider, not a string? try with default provider
-          provider = ethers.getDefaultProvider(network);
-        }
-      }
-    }
-
-    if (!provider) {
-      // we should really never hit this case!
-      provider = ethers.getDefaultProvider();
-      console.error(
-        "No provider found, using default provider on default chain!",
-      );
-    }
-
-    return [signer, provider];
   }
+
+  if (options?.readonlySettings) {
+    provider = getReadOnlyProvider(
+      options.readonlySettings.rpcUrl,
+      options.readonlySettings.chainId,
+    );
+  }
+
+  if (!provider) {
+    if (providers.Provider.isProvider(network)) {
+      provider = network;
+    } else if (!Signer.isSigner(network)) {
+      if (typeof network === "string") {
+        provider = getReadOnlyProvider(
+          network,
+          options?.readonlySettings?.chainId,
+        );
+      } else {
+        // no a signer, not a provider, not a string? try with default provider
+        provider = ethers.getDefaultProvider(network);
+      }
+    }
+  }
+
+  if (!provider) {
+    // we should really never hit this case!
+    provider = ethers.getDefaultProvider();
+    console.error(
+      "No provider found, using default provider on default chain!",
+    );
+  }
+
+  return [signer, provider];
 }
