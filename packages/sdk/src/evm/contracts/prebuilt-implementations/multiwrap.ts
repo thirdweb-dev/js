@@ -47,7 +47,7 @@ import { BigNumberish, CallOverrides, ethers } from "ethers";
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
  * const sdk = new ThirdwebSDK("{{chainName}}");
- * const contract = sdk.getMultiwrap("{{contract_address}}");
+ * const contract = sdk.getContract("{{contract_address}}", "multiwrap");
  * ```
  *
  * @beta
@@ -103,6 +103,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
     storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
+    chainId: number,
     contractWrapper = new ContractWrapper<MultiwrapContract>(
       network,
       address,
@@ -110,7 +111,8 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
       options,
     ),
   ) {
-    super(contractWrapper, storage);
+    super(contractWrapper, storage, chainId);
+
     this.abi = abi;
     this.metadata = new ContractMetadata(
       this.contractWrapper,

@@ -46,7 +46,7 @@ import {
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
  * const sdk = new ThirdwebSDK("{{chainName}}");
- * const contract = sdk.getVote("{{contract_address}}");
+ * const contract = sdk.getContract("{{contract_address}}", "vote");
  * ```
  *
  * @public
@@ -65,12 +65,18 @@ export class Vote implements UpdateableNetwork {
    */
   public interceptor: ContractInterceptor<VoteERC20>;
 
+  private _chainId: number;
+  get chainId() {
+    return this._chainId;
+  }
+
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
+    chainId: number,
     contractWrapper = new ContractWrapper<VoteERC20>(
       network,
       address,
@@ -78,6 +84,7 @@ export class Vote implements UpdateableNetwork {
       options,
     ),
   ) {
+    this._chainId = chainId;
     this.abi = abi;
     this.contractWrapper = contractWrapper;
     this.storage = storage;

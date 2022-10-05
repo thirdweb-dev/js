@@ -3,11 +3,11 @@ import {
   NFTCollectionMetadataInputSchema,
   TokenMetadataInput,
   TokenMetadataInputSchema,
-} from "../types/contracts";
+} from "../types/programs";
 import {
   NFTDropContractInput,
   NFTDropInitialConditionsInputSchema,
-} from "../types/contracts/nft-drop";
+} from "../types/programs/nft-drop";
 import { enforceCreator } from "./helpers/creators-helper";
 import {
   findMetadataPda,

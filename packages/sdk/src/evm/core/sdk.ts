@@ -16,7 +16,10 @@ import { WalletAuthenticator } from "./auth/wallet-authenticator";
 import type { ContractMetadata } from "./classes";
 import { ContractDeployer } from "./classes/contract-deployer";
 import { ContractPublisher } from "./classes/contract-publisher";
-import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
+import {
+  getSignerAndProvider,
+  RPCConnectionHandler,
+} from "./classes/rpc-connection-handler";
 import type {
   ContractForPrebuiltContractType,
   ContractType,
@@ -390,7 +393,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           const metadata = await publisher.fetchCompilerMetadataFromAddress(
             address,
           );
-          newContract = this.getContractFromAbi(address, metadata.abi);
+          newContract = await this.getContractFromAbi(address, metadata.abi);
         } catch (e) {
           throw new Error(`Error fetching ABI for this contract\n\n${e}`);
         }
@@ -399,7 +402,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         const contractAbi = await PREBUILT_CONTRACTS_MAP[
           resolvedContractType
         ].getAbi();
-        newContract = this.getContractFromAbi(address, contractAbi);
+        newContract = await this.getContractFromAbi(address, contractAbi);
       }
     }
     // if it's a builtin contract type we can just use the contract type to initialize the contract instance
@@ -418,7 +421,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     }
     // otherwise it has to be an ABI
     else {
-      newContract = this.getContractFromAbi(address, contractTypeOrABI);
+      newContract = await this.getContractFromAbi(address, contractTypeOrABI);
     }
 
     // set whatever we have on the cache
@@ -556,10 +559,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * );
    * ```
    */
-  public getContractFromAbi(address: string, abi: ContractInterface) {
+  public async getContractFromAbi(address: string, abi: ContractInterface) {
     if (this.contractCache.has(address)) {
       return this.contractCache.get(address) as SmartContract;
     }
+    const [, provider] = getSignerAndProvider(
+      this.getSignerOrProvider(),
+      this.options,
+    );
     // TODO we still might want to lazy-fy this
     const contract = new SmartContract(
       this.getSignerOrProvider(),
@@ -567,6 +574,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       abi,
       this.storageHandler,
       this.options,
+      (await provider.getNetwork()).chainId,
     );
     this.contractCache.set(address, contract);
     return contract;

@@ -1,7 +1,7 @@
+import { NFTMetadataInput } from "../../src/core/schema/nft";
 import {
   createSnapshot,
   NATIVE_TOKEN_ADDRESS,
-  NFTMetadataInput,
   PayloadToSign721withQuantity,
   SignatureDrop,
   SignatureDropInitializer,

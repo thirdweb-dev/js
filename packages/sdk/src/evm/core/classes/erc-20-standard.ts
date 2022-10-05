@@ -29,10 +29,20 @@ export class StandardErc20<
 
   public erc20: Erc20<T>;
 
-  constructor(contractWrapper: ContractWrapper<T>, storage: ThirdwebStorage) {
+  private _chainId: number;
+  get chainId() {
+    return this._chainId;
+  }
+
+  constructor(
+    contractWrapper: ContractWrapper<T>,
+    storage: ThirdwebStorage,
+    chainId: number,
+  ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
-    this.erc20 = new Erc20(this.contractWrapper, this.storage);
+    this.erc20 = new Erc20(this.contractWrapper, this.storage, chainId);
+    this._chainId = chainId;
   }
 
   /**

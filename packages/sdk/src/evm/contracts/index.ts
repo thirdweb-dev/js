@@ -1,4 +1,5 @@
 import { ALL_ROLES } from "../common/role";
+import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
 import type { ContractType, NetworkOrSignerOrProvider } from "../core/types";
 import {
   DropErc1155ContractSchema,
@@ -32,12 +33,21 @@ export const EditionDropInitializer = {
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
-    const [abi, contract] = await Promise.all([
+    const [, provider] = getSignerAndProvider(network, options);
+    const [abi, contract, _network] = await Promise.all([
       EditionDropInitializer.getAbi(),
       import("./prebuilt-implementations/edition-drop"),
+      provider.getNetwork(),
     ]);
 
-    return new contract.EditionDrop(network, address, storage, options, abi);
+    return new contract.EditionDrop(
+      network,
+      address,
+      storage,
+      options,
+      abi,
+      _network.chainId,
+    );
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC1155.json"))
@@ -52,12 +62,21 @@ export const EditionInitializer = {
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
-    const [abi, contract] = await Promise.all([
+    const [, provider] = getSignerAndProvider(network, options);
+    const [abi, contract, _network] = await Promise.all([
       EditionInitializer.getAbi(),
       import("./prebuilt-implementations/edition"),
+      provider.getNetwork(),
     ]);
 
-    return new contract.Edition(network, address, storage, options, abi);
+    return new contract.Edition(
+      network,
+      address,
+      storage,
+      options,
+      abi,
+      _network.chainId,
+    );
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/TokenERC1155.json"))
@@ -72,12 +91,21 @@ export const MarketplaceInitializer = {
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
-    const [abi, contract] = await Promise.all([
+    const [, provider] = getSignerAndProvider(network, options);
+    const [abi, contract, _network] = await Promise.all([
       MarketplaceInitializer.getAbi(),
       import("./prebuilt-implementations/marketplace"),
+      provider.getNetwork(),
     ]);
 
-    return new contract.Marketplace(network, address, storage, options, abi);
+    return new contract.Marketplace(
+      network,
+      address,
+      storage,
+      options,
+      abi,
+      _network.chainId,
+    );
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/Marketplace.json"))
@@ -92,12 +120,21 @@ export const MultiwrapInitializer = {
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
-    const [abi, contract] = await Promise.all([
+    const [, provider] = getSignerAndProvider(network, options);
+    const [abi, contract, _network] = await Promise.all([
       MultiwrapInitializer.getAbi(),
       import("./prebuilt-implementations/multiwrap"),
+      provider.getNetwork(),
     ]);
 
-    return new contract.Multiwrap(network, address, storage, options, abi);
+    return new contract.Multiwrap(
+      network,
+      address,
+      storage,
+      options,
+      abi,
+      _network.chainId,
+    );
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/Multiwrap.json"))
@@ -113,12 +150,21 @@ export const NFTCollectionInitializer = {
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
-    const [abi, contract] = await Promise.all([
+    const [, provider] = getSignerAndProvider(network, options);
+    const [abi, contract, _network] = await Promise.all([
       NFTCollectionInitializer.getAbi(),
       import("./prebuilt-implementations/nft-collection"),
+      provider.getNetwork(),
     ]);
 
-    return new contract.NFTCollection(network, address, storage, options, abi);
+    return new contract.NFTCollection(
+      network,
+      address,
+      storage,
+      options,
+      abi,
+      _network.chainId,
+    );
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/TokenERC721.json"))
@@ -133,12 +179,21 @@ export const NFTDropInitializer = {
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
-    const [abi, contract] = await Promise.all([
+    const [, provider] = getSignerAndProvider(network, options);
+    const [abi, contract, _network] = await Promise.all([
       NFTDropInitializer.getAbi(),
       import("./prebuilt-implementations/nft-drop"),
+      provider.getNetwork(),
     ]);
 
-    return new contract.NFTDrop(network, address, storage, options, abi);
+    return new contract.NFTDrop(
+      network,
+      address,
+      storage,
+      options,
+      abi,
+      _network.chainId,
+    );
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC721.json"))
@@ -154,12 +209,21 @@ export const PackInitializer = {
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
-    const [abi, contract] = await Promise.all([
+    const [, provider] = getSignerAndProvider(network, options);
+    const [abi, contract, _network] = await Promise.all([
       PackInitializer.getAbi(),
       import("./prebuilt-implementations/pack"),
+      provider.getNetwork(),
     ]);
 
-    return new contract.Pack(network, address, storage, options, abi);
+    return new contract.Pack(
+      network,
+      address,
+      storage,
+      options,
+      abi,
+      _network.chainId,
+    );
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/Pack.json")).default,
@@ -174,12 +238,21 @@ export const SignatureDropInitializer = {
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
-    const [abi, contract] = await Promise.all([
+    const [, provider] = getSignerAndProvider(network, options);
+    const [abi, contract, _network] = await Promise.all([
       SignatureDropInitializer.getAbi(),
       import("./prebuilt-implementations/signature-drop"),
+      provider.getNetwork(),
     ]);
 
-    return new contract.SignatureDrop(network, address, storage, options, abi);
+    return new contract.SignatureDrop(
+      network,
+      address,
+      storage,
+      options,
+      abi,
+      _network.chainId,
+    );
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/SignatureDrop.json"))
@@ -195,12 +268,21 @@ export const SplitInitializer = {
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
-    const [abi, contract] = await Promise.all([
+    const [, provider] = getSignerAndProvider(network, options);
+    const [abi, contract, _network] = await Promise.all([
       SplitInitializer.getAbi(),
       import("./prebuilt-implementations/split"),
+      provider.getNetwork(),
     ]);
 
-    return new contract.Split(network, address, storage, options, abi);
+    return new contract.Split(
+      network,
+      address,
+      storage,
+      options,
+      abi,
+      _network.chainId,
+    );
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/Split.json")).default,
@@ -215,12 +297,21 @@ export const TokenDropInitializer = {
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
-    const [abi, contract] = await Promise.all([
+    const [, provider] = getSignerAndProvider(network, options);
+    const [abi, contract, _network] = await Promise.all([
       TokenDropInitializer.getAbi(),
       import("./prebuilt-implementations/token-drop"),
+      provider.getNetwork(),
     ]);
 
-    return new contract.TokenDrop(network, address, storage, options, abi);
+    return new contract.TokenDrop(
+      network,
+      address,
+      storage,
+      options,
+      abi,
+      _network.chainId,
+    );
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC20.json"))
@@ -235,12 +326,21 @@ export const TokenInitializer = {
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
-    const [abi, contract] = await Promise.all([
+    const [, provider] = getSignerAndProvider(network, options);
+    const [abi, contract, _network] = await Promise.all([
       TokenInitializer.getAbi(),
       import("./prebuilt-implementations/token"),
+      provider.getNetwork(),
     ]);
 
-    return new contract.Token(network, address, storage, options, abi);
+    return new contract.Token(
+      network,
+      address,
+      storage,
+      options,
+      abi,
+      _network.chainId,
+    );
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/TokenERC20.json"))
@@ -256,12 +356,21 @@ export const VoteInitializer = {
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
   ) => {
-    const [abi, contract] = await Promise.all([
+    const [, provider] = getSignerAndProvider(network, options);
+    const [abi, contract, _network] = await Promise.all([
       VoteInitializer.getAbi(),
       import("./prebuilt-implementations/vote"),
+      provider.getNetwork(),
     ]);
 
-    return new contract.Vote(network, address, storage, options, abi);
+    return new contract.Vote(
+      network,
+      address,
+      storage,
+      options,
+      abi,
+      _network.chainId,
+    );
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/VoteERC20.json"))
