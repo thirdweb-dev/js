@@ -65,14 +65,6 @@ export const PercentSchema = z
   .max(100, "Cannot exeed 100%")
   .min(0, "Cannot be below 0%");
 
-export const HexColor = z.union([
-  z
-    .string()
-    .regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid hex color")
-    .transform((val) => val.replace("#", "")),
-  z.string().length(0),
-]);
-
 export const AddressSchema = z.string().refine(
   (arg) => utils.isAddress(arg),
   (out) => {
