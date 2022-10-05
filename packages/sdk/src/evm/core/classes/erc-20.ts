@@ -67,13 +67,23 @@ export class Erc20<
   protected contractWrapper: ContractWrapper<T>;
   protected storage: ThirdwebStorage;
 
-  constructor(contractWrapper: ContractWrapper<T>, storage: ThirdwebStorage) {
+  private _chainId: number;
+  get chainId() {
+    return this._chainId;
+  }
+
+  constructor(
+    contractWrapper: ContractWrapper<T>,
+    storage: ThirdwebStorage,
+    chainId: number,
+  ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.mintable = this.detectErc20Mintable();
     this.burnable = this.detectErc20Burnable();
     this.droppable = this.detectErc20Droppable();
     this.signatureMintable = this.detectErc20SignatureMintable();
+    this._chainId = chainId;
   }
 
   /**

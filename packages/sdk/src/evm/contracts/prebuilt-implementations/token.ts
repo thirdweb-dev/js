@@ -30,7 +30,7 @@ import { CallOverrides, constants } from "ethers";
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
  * const sdk = new ThirdwebSDK("{{chainName}}");
- * const contract = sdk.getToken("{{contract_address}}");
+ * const contract = sdk.getContract("{{contract_address}}", "token");
  * ```
  *
  * @public
@@ -75,6 +75,7 @@ export class Token extends StandardErc20<TokenERC20> {
     storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
+    chainId: number,
     contractWrapper = new ContractWrapper<TokenERC20>(
       network,
       address,
@@ -82,7 +83,7 @@ export class Token extends StandardErc20<TokenERC20> {
       options,
     ),
   ) {
-    super(contractWrapper, storage);
+    super(contractWrapper, storage, chainId);
     this.abi = abi;
     this.metadata = new ContractMetadata(
       this.contractWrapper,

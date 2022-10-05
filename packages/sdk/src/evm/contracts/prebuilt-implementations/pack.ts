@@ -52,7 +52,7 @@ import { BigNumber, BigNumberish, CallOverrides, ethers } from "ethers";
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
  * const sdk = new ThirdwebSDK("{{chainName}}");
- * const contract = sdk.getPack("{{contract_address}}");
+ * const contract = sdk.getContract("{{contract_address}}", "pack");
  * ```
  *
  * @public
@@ -98,6 +98,7 @@ export class Pack extends StandardErc1155<PackContract> {
     storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
+    chainId: number,
     contractWrapper = new ContractWrapper<PackContract>(
       network,
       address,
@@ -115,9 +116,9 @@ export class Pack extends StandardErc1155<PackContract> {
         : options,
     ),
   ) {
-    super(contractWrapper, storage);
+    super(contractWrapper, storage, chainId);
     this.abi = abi;
-    this.erc1155 = new Erc1155(this.contractWrapper, this.storage);
+    this.erc1155 = new Erc1155(this.contractWrapper, this.storage, chainId);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       PackContractSchema,

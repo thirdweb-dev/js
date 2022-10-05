@@ -35,7 +35,7 @@ import { BigNumberish, CallOverrides, constants } from "ethers";
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
  * const sdk = new ThirdwebSDK("{{chainName}}");
- * const contract = sdk.getNFTCollection("{{contract_address}}");
+ * const contract = sdk.getContract("{{contract_address}}", "nft-collection");
  * ```
  *
  * @public
@@ -108,6 +108,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
     storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
+    chainId: number,
     contractWrapper = new ContractWrapper<TokenERC721>(
       network,
       address,
@@ -115,7 +116,8 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
       options,
     ),
   ) {
-    super(contractWrapper, storage);
+    super(contractWrapper, storage, chainId);
+
     this.abi = abi;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
@@ -133,7 +135,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.erc721 = new Erc721(this.contractWrapper, this.storage);
+    this.erc721 = new Erc721(this.contractWrapper, this.storage, chainId);
     this.signature = new Erc721WithQuantitySignatureMintable(
       this.contractWrapper,
       this.storage,

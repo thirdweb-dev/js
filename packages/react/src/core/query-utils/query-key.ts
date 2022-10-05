@@ -1,6 +1,6 @@
 import { RequiredParam } from "../types/shared";
-import { QueryKey } from "@tanstack/react-query";
-import type { ChainId } from "@thirdweb-dev/sdk";
+import type { QueryKey } from "@tanstack/react-query";
+import type { ValidContractInstance } from "@thirdweb-dev/sdk";
 import type {
   Network,
   NFTCollection,
@@ -37,9 +37,21 @@ export function createEVMQueryKey<TKey extends QueryKey>(key: TKey) {
 }
 export function createEVMQueryKeyWithChain<TKey extends QueryKey>(
   key: TKey,
-  chainId: RequiredParam<ChainId>,
+  chainId: RequiredParam<number>,
 ) {
   return ensureTWPrefix([chainId, ...key] as const);
+}
+
+export function createEVMContractQueryKey<TKey extends QueryKey>(
+  contract: RequiredParam<ValidContractInstance>,
+  key: TKey = [] as unknown as TKey,
+) {
+  const chainId = contract?.chainId;
+  const address = contract?.getAddress();
+  return createEVMQueryKeyWithChain(
+    ["contract", address, ...key] as const,
+    chainId,
+  );
 }
 
 // SOL
