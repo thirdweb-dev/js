@@ -41,6 +41,13 @@ export const PRODUCTS: IProduct[] = [
     icon: require("public/assets/product-icons/dashboards.png"),
   },
   {
+    name: "UI Components",
+    label: "ui-components",
+    description: "Plug-and-play frontend components",
+    link: "/ui-components",
+    icon: require("public/assets/product-icons/ui-components.png"),
+  },
+  {
     name: "Auth",
     label: "auth",
     description: "Decentralized login for your app",
@@ -62,11 +69,11 @@ export const PRODUCTS: IProduct[] = [
     icon: require("public/assets/product-icons/deploy.png"),
   },
   {
-    name: "UI Components",
-    label: "ui-components",
-    description: "Plug-and-play frontend components",
-    link: "/ui-components",
-    icon: require("public/assets/product-icons/ui-components.png"),
+    name: "Storage",
+    label: "storage",
+    description: "Fast, reliable, decentralized storage",
+    link: "/storage",
+    icon: require("public/assets/product-icons/storage.png"),
   },
 ];
 
@@ -102,12 +109,17 @@ export const Products: React.FC = () => {
           >
             <Flex>
               <Stack width="300px">
-                {PRODUCTS.slice(0, 4).map((product, id) => (
-                  <Product key={id} {...product} />
-                ))}
+                {PRODUCTS.slice(0, Math.ceil(PRODUCTS.length / 2)).map(
+                  (product, id) => (
+                    <Product key={id} {...product} />
+                  ),
+                )}
               </Stack>
               <Stack width="300px">
-                {PRODUCTS.slice(4, 8).map((product, id) => (
+                {PRODUCTS.slice(
+                  Math.ceil(PRODUCTS.length / 2),
+                  PRODUCTS.length,
+                ).map((product, id) => (
                   <Product key={id} {...product} />
                 ))}
               </Stack>

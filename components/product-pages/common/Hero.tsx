@@ -21,7 +21,7 @@ export interface IHero {
   buttonText: string;
   buttonLink: string;
   gradient: string;
-  image: StaticImageData;
+  image?: StaticImageData;
 }
 
 export const Hero: ComponentWithChildren<IHero> = ({
@@ -54,10 +54,11 @@ export const Hero: ComponentWithChildren<IHero> = ({
         minHeight="578px"
       >
         <Flex
-          gridColumnEnd={{ base: undefined, md: "span 4" }}
+          gridColumnEnd={{ base: undefined, md: image ? "span 4" : "span 7" }}
           padding={{ base: "24px", md: "48px" }}
           pt={{ base: "36px", md: undefined }}
           bg="rgba(0, 0, 0, 0.5)"
+          borderLeftRadius={{ base: 0, md: 24 }}
           flexDir="column"
           gap={{ base: 6, md: "32px" }}
           align={{ base: "initial", md: "start" }}
@@ -114,22 +115,24 @@ export const Hero: ComponentWithChildren<IHero> = ({
             bg="white"
           />
         </Flex>
-        <Center
-          padding={{ base: "24px", md: "48px" }}
-          gridColumnEnd={{ base: undefined, md: "span 3" }}
-        >
-          <Flex justifyContent={{ base: "center", md: "flex-end" }} w="100%">
-            <AspectRatio ratio={1} maxW={96} w="100%">
-              <ChakraNextImage
-                alt=""
-                src={image}
-                layout="fill"
-                objectFit="contain"
-                priority
-              />
-            </AspectRatio>
-          </Flex>
-        </Center>
+        {image && (
+          <Center
+            padding={{ base: "24px", md: "48px" }}
+            gridColumnEnd={{ base: undefined, md: "span 3" }}
+          >
+            <Flex justifyContent={{ base: "center", md: "flex-end" }} w="100%">
+              <AspectRatio ratio={1} maxW={96} w="100%">
+                <ChakraNextImage
+                  alt=""
+                  src={image}
+                  layout="fill"
+                  objectFit="contain"
+                  priority
+                />
+              </AspectRatio>
+            </Flex>
+          </Center>
+        )}
       </SimpleGrid>
 
       <Container
