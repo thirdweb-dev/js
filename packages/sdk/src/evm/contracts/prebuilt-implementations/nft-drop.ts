@@ -54,7 +54,7 @@ import {
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
  * const sdk = new ThirdwebSDK("{{chainName}}");
- * const { contract } = sdk.getContract("{{contract_address}}", "nft-drop");
+ * const contract = sdk.getContract("{{contract_address}}", "nft-drop");
  * ```
  *
  * @public

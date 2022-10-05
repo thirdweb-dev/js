@@ -35,7 +35,7 @@ import { BigNumberish, CallOverrides, constants } from "ethers";
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
  * const sdk = new ThirdwebSDK("{{chainName}}");
- * const { contract } = sdk.getContract("{{contract_address}}", "nft-collection");
+ * const contract = sdk.getContract("{{contract_address}}", "nft-collection");
  * ```
  *
  * @public
