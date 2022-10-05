@@ -33,7 +33,7 @@ export function useLazyMint(
 ) {
   const queryClient = useQueryClient();
   return useMutation(
-    async (metadata: NFTMetadataInput[]) => {
+    async (data: { metadatas: NFTMetadataInput[] }) => {
       invariant(program, "program is required");
       let options;
       if (onProgress) {
@@ -41,7 +41,7 @@ export function useLazyMint(
           onProgress,
         };
       }
-      return await program.lazyMint(metadata, options);
+      return await program.lazyMint(data.metadatas, options);
     },
     {
       onSettled: () =>
