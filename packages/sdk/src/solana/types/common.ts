@@ -50,17 +50,6 @@ export type JsonObject = { [key: string]: Json };
 /**
  * @internal
  */
-export const HexColor = z.union([
-  z
-    .string()
-    .regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid hex color")
-    .transform((val) => val.replace("#", "")),
-  z.string().length(0),
-]);
-
-/**
- * @internal
- */
 const PropertiesInput = z.object({}).catchall(z.unknown());
 
 /**

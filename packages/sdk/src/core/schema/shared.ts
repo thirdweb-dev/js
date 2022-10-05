@@ -81,6 +81,7 @@ export const PercentSchema = z
   .min(0, "Cannot be below 0%");
 
 export const HexColor = z.union([
+  z.string().regex(/^([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid hex color"),
   z
     .string()
     .regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid hex color")
