@@ -26,7 +26,11 @@ export async function upload(
     const filePaths = subPaths
       .map((subPath) => path.join(uploadPath, subPath))
       .filter((subPath) => fs.lstatSync(subPath).isFile());
-    const files = filePaths.map((filePath) => fs.readFileSync(filePath));
+    const files = filePaths.map((filePath) => {
+      const fileName = path.parse(filePath).base;
+      const fileData = fs.readFileSync(filePath);
+      return { name: fileName, data: fileData };
+    });
 
     if (files.length === 0) {
       logger.error(
@@ -44,11 +48,14 @@ export async function upload(
     spin.succeed("Successfully uploaded directory to IPFS");
     uri = uris[0].substring(0, uris[0].lastIndexOf("/"));
   } else if (fileType.isFile()) {
-    const file = fs.readFileSync(uploadPath);
+    const fileName = path.parse(uploadPath).base;
+    const fileData = fs.readFileSync(uploadPath);
+    const file = { name: fileName, data: fileData };
+
     const spin = spinner(
       "Uploading file to IPFS. This may take a while depending on file sizes.",
     );
-    uri = await storage.upload(file);
+    uri = await storage.upload(file, { uploadWithoutDirectory: true });
     spin.succeed("Succesfully uploaded file to IPFS.");
   } else {
     logger.error(
