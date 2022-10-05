@@ -156,7 +156,6 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       const url = storage.resolveScheme(uri);
       info(`Open this link to view your upload:`);
       logger.info(chalk.blueBright(url.toString()));
-      open(url.toString());
     });
 
   program
