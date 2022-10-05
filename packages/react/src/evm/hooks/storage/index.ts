@@ -20,7 +20,11 @@ interface UseStorageOptions<T extends UploadOptions> {
  * @example
  * ```jsx
  * export default function Component() {
- *   const { getRootProps, getInputProps } = useStorage();
+ *   const onUpload = React.useCallback((uris) => {
+ *     // Do something with the URIs here
+ *     console.log(uris);
+ *   })
+ *   const { getRootProps, getInputProps } = useStorage({ onUpload });
  *
  *   return (
  *     <div {...getRootProps()}>
