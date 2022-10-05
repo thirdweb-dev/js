@@ -18,7 +18,7 @@ const Storage: ThirdwebNextPage = () => {
         title="Fast, reliable, decentralized storage"
         description="A blazing fast API for all your decentralized storage needs"
         buttonText="Get started"
-        buttonLink="https://portal.thirdweb.com/web3-storage"
+        buttonLink="https://portal.thirdweb.com/storage"
         gradient="linear-gradient(147.15deg, #410AB6 30.17%, #FFAE63 100.01%)"
       >
         <SimpleGrid
