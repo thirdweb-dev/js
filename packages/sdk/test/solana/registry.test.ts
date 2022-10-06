@@ -15,28 +15,35 @@ describe("Registry", async () => {
     //   description: "Test Description",
     //   symbol: "TC",
     // });
-    // token = await freshSDK.deployer.createToken({
-    //   name: "Reg Test Token",
-    //   initialSupply: 100,
-    // });
-    // nftDrop = await freshSDK.deployer.createNftDrop({
-    //   name: "Reg Test Drop",
-    //   itemsAvailable: 10,
-    // });
   });
 
-  it("should create an entry in registry", async () => {
-    const wallet = freshSDK.wallet.getSigner().publicKey;
-    const t = await freshSDK.registry.getInitializeRegistrarTransaction(wallet);
-
-    console.log(t);
+  it("deploying should create entries in the registry", async () => {
+    const wallet = freshSDK.wallet.getAddress();
     nftColl = await freshSDK.deployer.createNftCollection({
       name: "Reg Test Collection",
       description: "Test Description",
       symbol: "TC",
     });
-    console.log(nftColl);
-    console.log(await freshSDK.registry.getTotalProgramsRegistered(wallet));
+    console.log({ nftColl });
+    token = await freshSDK.deployer.createToken({
+      name: "Reg Test Token",
+      initialSupply: 100,
+    });
+    console.log({ token });
+    nftDrop = await freshSDK.deployer.createNftDrop({
+      name: "Reg Test Drop",
+      itemsAvailable: 10,
+    });
+    console.log({ nftDrop });
+    const allPrograms = await freshSDK.registry.getDeployedPrograms(wallet);
+    console.log(allPrograms);
+    expect(allPrograms).length(3);
+    expect(allPrograms[0].programName).to.equal("Reg Test Collection");
+    expect(allPrograms[0].programType).to.equal("nft-collection");
+    expect(allPrograms[1].programName).to.equal("Reg Test Token");
+    expect(allPrograms[1].programType).to.equal("token");
+    expect(allPrograms[2].programName).to.equal("Reg Test Drop");
+    expect(allPrograms[2].programType).to.equal("nft-drop");
   });
   /**
   it("should fetch accounts grouped by type", async () => {
@@ -61,13 +68,12 @@ describe("Registry", async () => {
       }
     });
   });
-
+*/
   it("should resolve account addresses", async () => {
-    expect(await freshSDK.registry.getAccountType(nftColl)).to.eq(
+    expect(await freshSDK.registry.getProgramType(nftColl)).to.eq(
       "nft-collection",
     );
-    expect(await freshSDK.registry.getAccountType(nftDrop)).to.eq("nft-drop");
-    expect(await freshSDK.registry.getAccountType(token)).to.eq("token");
+    expect(await freshSDK.registry.getProgramType(nftDrop)).to.eq("nft-drop");
+    expect(await freshSDK.registry.getProgramType(token)).to.eq("token");
   });
-   */
 });

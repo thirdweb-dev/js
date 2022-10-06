@@ -121,4 +121,29 @@ export class Program {
     }
     return await account.fetch(address);
   }
+
+  /**
+   * Read multiple accounts data associated with this program
+   * @param accountName - The name of the account type to fetch the data of
+   * @param addresses - The addresses of the each account to fetch
+   * @returns - The data of the requested accounts
+   *
+   * @example
+   * ```jsx
+   * const accountAddresses = ["...", "..."];
+   * const counterAccounts = await program.fetchMultiple("counterAccount", accountAddresses);
+   * ```
+   */
+  async fetchMultiple(
+    accountName: string,
+    addresses: string[],
+  ): Promise<Record<string, unknown>[]> {
+    const account = this.program.account[accountName];
+    if (!account) {
+      throw new Error(`Account ${account} not found`);
+    }
+    return (await account.fetchMultiple(addresses)).filter(
+      (a) => a !== null,
+    ) as Record<string, unknown>[];
+  }
 }

@@ -12,11 +12,13 @@ import { enforceCreator } from "./helpers/creators-helper";
 import { Registry } from "./registry";
 import {
   findMetadataPda,
+  getSignerHistogram,
   InstructionWithSigners,
   Metaplex,
   sol,
   toBigNumber,
   token,
+  TransactionBuilder,
 } from "@metaplex-foundation/js";
 import {
   createCreateMetadataAccountV2Instruction,
@@ -96,8 +98,9 @@ export class Deployer {
         mint,
       });
 
+    const name = tokenMetadataParsed.name;
     const data: DataV2 = {
-      name: tokenMetadataParsed.name,
+      name,
       symbol: tokenMetadataParsed.symbol || "",
       sellerFeeBasisPoints: 0,
       uri,
@@ -118,7 +121,11 @@ export class Deployer {
     );
 
     const registryInstructions =
-      await this.regsitry.getAddToRegistryInstructions(mint.publicKey, "token");
+      await this.regsitry.getAddToRegistryInstructions(
+        mint.publicKey,
+        name,
+        "token",
+      );
 
     await mintTx
       .add({ instruction: metaTx, signers: [this.metaplex.identity()] })
@@ -150,12 +157,13 @@ export class Deployer {
     const uri = await this.storage.upload(parsed);
 
     const collectionMint = Keypair.generate();
+    const name = parsed.name;
     const collectionTx = await this.metaplex
       .nfts()
       .builders()
       .create({
         useNewMint: collectionMint,
-        name: parsed.name,
+        name,
         symbol: parsed.symbol,
         sellerFeeBasisPoints: 0,
         uri,
@@ -169,6 +177,7 @@ export class Deployer {
     const registryInstructions =
       await this.regsitry.getAddToRegistryInstructions(
         collectionMint.publicKey,
+        name,
         "nft-collection",
       );
     const result = await collectionTx
@@ -205,12 +214,13 @@ export class Deployer {
     const uri = await this.storage.upload(collectionInfo);
 
     const collectionMint = Keypair.generate();
+    const name = collectionInfo.name;
     const collectionTx = await this.metaplex
       .nfts()
       .builders()
       .create({
         useNewMint: collectionMint,
-        name: collectionInfo.name,
+        name,
         symbol: collectionInfo.symbol,
         sellerFeeBasisPoints: 0,
         uri,
@@ -242,15 +252,60 @@ export class Deployer {
     const registryInstructions =
       await this.regsitry.getAddToRegistryInstructions(
         candyMachineKeypair.publicKey,
+        name,
         "nft-drop",
       );
 
-    const result = await collectionTx
-      .add(candyMachineTx)
-      .append(...registryInstructions)
-      .sendAndConfirm(this.metaplex);
+    const block = await this.metaplex.connection.getLatestBlockhash(
+      "finalized",
+    );
 
-    if (!result.response.signature) {
+    const dropTx = collectionTx
+      .add(candyMachineTx)
+      .setFeePayer(this.metaplex.identity())
+      .setTransactionOptions({
+        blockhash: block.blockhash,
+        feePayer: this.metaplex.identity().publicKey,
+        lastValidBlockHeight: block.lastValidBlockHeight,
+      });
+    const regTx = TransactionBuilder.make()
+      .add(...registryInstructions)
+      .setFeePayer(this.metaplex.identity())
+      .setTransactionOptions({
+        blockhash: block.blockhash,
+        feePayer: this.metaplex.identity().publicKey,
+        lastValidBlockHeight: block.lastValidBlockHeight,
+      });
+
+    // const txSigners = dropTx.getSigners().concat(regTx.getSigners());
+
+    const dropSigners = [this.metaplex.identity(), ...dropTx.getSigners()];
+    const { keypairs, identities } = getSignerHistogram(dropSigners);
+    const dropTransaction = dropTx.toTransaction();
+    console.log({ keypairs, identities });
+    if (keypairs.length > 0) {
+      dropTransaction.partialSign(...keypairs);
+    }
+    const signedTx = await this.metaplex
+      .identity()
+      .signAllTransactions([dropTransaction, regTx.toTransaction()]);
+
+    const signatures = await Promise.all(
+      signedTx.map(
+        async (tx) =>
+          await this.metaplex.connection.sendRawTransaction(tx.serialize()),
+      ),
+    );
+
+    const confirmations = await Promise.all(
+      signatures.map((sig) => {
+        return this.metaplex.rpc().confirmTransaction(sig);
+      }),
+    );
+
+    // const result = await fullTx.sendAndConfirm(this.metaplex);
+
+    if (confirmations.length === 0) {
       throw new Error("Transaction failed");
     }
 
