@@ -19,13 +19,11 @@ interface NetworkMetadata {
 }
 
 export const FAUCETS: Partial<Record<ChainId, string>> = {
-  [ChainId.Rinkeby]: "https://rinkebyfaucet.com",
   [ChainId.Goerli]: "https://faucet.paradigm.xyz/",
   [ChainId.Mumbai]: "https://mumbaifaucet.com",
   [ChainId.AvalancheFujiTestnet]: "https://faucet.avax.network/",
   [ChainId.FantomTestnet]: "https://faucet.fantom.network/",
-  [ChainId.OptimismKovan]: "https://kovan.optifaucet.com/",
-  [ChainId.ArbitrumRinkeby]: "https://faucet.paradigm.xyz/",
+
   [ChainId.BinanceSmartChainTestnet]:
     "https://testnet.binance.org/faucet-smart",
   [ChainId.OptimismGoerli]: "https://app.optimism.io/bridge/deposit",
@@ -40,13 +38,7 @@ const defaultNetworkMetadata: Record<SUPPORTED_CHAIN_ID, NetworkMetadata> = {
     isTestnet: false,
     chainId: ChainId.Mainnet,
   },
-  [ChainId.Rinkeby]: {
-    chainName: "Rinkeby",
-    icon: Ethereum,
-    symbol: NATIVE_TOKENS[ChainId.Rinkeby].symbol,
-    isTestnet: true,
-    chainId: ChainId.Rinkeby,
-  },
+
   [ChainId.Goerli]: {
     chainName: "Goerli",
     icon: Ethereum,
@@ -103,13 +95,7 @@ const defaultNetworkMetadata: Record<SUPPORTED_CHAIN_ID, NetworkMetadata> = {
     isTestnet: false,
     chainId: ChainId.Optimism,
   },
-  [ChainId.OptimismKovan]: {
-    chainName: "Optimism Kovan",
-    icon: Optimism,
-    symbol: NATIVE_TOKENS[ChainId.OptimismKovan].symbol,
-    isTestnet: true,
-    chainId: ChainId.OptimismKovan,
-  },
+
   [ChainId.OptimismGoerli]: {
     chainName: "Optimism Goerli",
     icon: Optimism,
@@ -124,13 +110,7 @@ const defaultNetworkMetadata: Record<SUPPORTED_CHAIN_ID, NetworkMetadata> = {
     isTestnet: false,
     chainId: ChainId.Arbitrum,
   },
-  [ChainId.ArbitrumRinkeby]: {
-    chainName: "Arbitrum Rinkeby",
-    icon: Arbitrum,
-    symbol: NATIVE_TOKENS[ChainId.ArbitrumRinkeby].symbol,
-    isTestnet: true,
-    chainId: ChainId.ArbitrumRinkeby,
-  },
+
   [ChainId.ArbitrumGoerli]: {
     chainName: "Arbitrum Goerli",
     icon: Arbitrum,

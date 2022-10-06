@@ -5,9 +5,6 @@ const alchemyUrlMap: Record<SUPPORTED_CHAIN_ID, string> = {
   [ChainId.Mainnet]:
     process.env.SSR_RPC_MAINNET ||
     `https://eth-mainnet.g.alchemy.com/v2/${process.env.SSR_ALCHEMY_KEY}`,
-  [ChainId.Rinkeby]:
-    process.env.SSR_RPC_RINKEBY ||
-    `https://eth-rinkeby.g.alchemy.com/v2/${process.env.SSR_ALCHEMY_KEY}`,
   [ChainId.Goerli]:
     process.env.SSR_RPC_GOERLI ||
     `https://eth-goerli.g.alchemy.com/v2/${process.env.SSR_ALCHEMY_KEY}`,
@@ -28,18 +25,12 @@ const alchemyUrlMap: Record<SUPPORTED_CHAIN_ID, string> = {
   [ChainId.Optimism]:
     process.env.SSR_RPC_OPTIMISM ||
     `https://opt-mainnet.g.alchemy.com/v2/${process.env.SSR_ALCHEMY_KEY}`,
-  [ChainId.OptimismKovan]:
-    process.env.SSR_RPC_OPTIMISM_KOVAN ||
-    `https://opt-kovan.g.alchemy.com/v2/${process.env.SSR_ALCHEMY_KEY}`,
   [ChainId.OptimismGoerli]:
     process.env.SSR_RPC_OPTIMISM_GOERLI ||
     `https://opt-goerli.g.alchemy.com/v2/${process.env.SSR_ALCHEMY_KEY}`,
   [ChainId.Arbitrum]:
     process.env.SSR_RPC_ARBITRUM ||
     `https://arb-mainnet.g.alchemy.com/v2/${process.env.SSR_ALCHEMY_KEY}`,
-  [ChainId.ArbitrumRinkeby]:
-    process.env.SSR_RPC_ARBITRUM_TESTNET ||
-    `https://arb-rinkeby.g.alchemy.com/v2/${process.env.SSR_ALCHEMY_KEY}`,
   [ChainId.ArbitrumGoerli]:
     process.env.SSR_RPC_ARBITRUM_TESTNET ||
     `https://arb-goerli.g.alchemy.com/v2/${process.env.SSR_ALCHEMY_KEY}`,

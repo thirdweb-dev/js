@@ -1,6 +1,5 @@
 import {
   CONTRACTS_MAP,
-  ChainId,
   ContractType,
   FullPublishMetadata,
   Role,
@@ -41,11 +40,7 @@ export interface BuiltinContractDetails {
   metadata: Omit<FullPublishMetadata, "logo"> & { logo: StaticImageData };
 }
 
-export const deprecatedChains: SUPPORTED_CHAIN_ID[] = [
-  ChainId.Rinkeby,
-  ChainId.ArbitrumRinkeby,
-  ChainId.OptimismKovan,
-];
+export const deprecatedChains: SUPPORTED_CHAIN_ID[] = [];
 
 export const DisabledChainsMap: Record<ContractType, SUPPORTED_CHAIN_ID[]> = {
   "nft-drop": [...deprecatedChains],

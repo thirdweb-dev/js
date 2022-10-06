@@ -105,7 +105,6 @@ export const blockExplorerMap: Record<number, { name: string; url: string }> = {
 
 export const apiKeyMap: Record<number, string> = {
   [ChainId.Mainnet]: process.env.ETHERSCAN_KEY as string,
-  [ChainId.Rinkeby]: process.env.ETHERSCAN_KEY as string,
   [ChainId.Goerli]: process.env.ETHERSCAN_KEY as string,
   [ChainId.Polygon]: process.env.POLYGONSCAN_KEY as string,
   [ChainId.Mumbai]: process.env.POLYGONSCAN_KEY as string,
@@ -114,10 +113,8 @@ export const apiKeyMap: Record<number, string> = {
   [ChainId.Avalanche]: process.env.SNOWTRACE_KEY as string,
   [ChainId.AvalancheFujiTestnet]: process.env.SNOWTRACE_KEY as string,
   [ChainId.Arbitrum]: process.env.ARBITRUMSCAN_KEY as string,
-  [ChainId.ArbitrumRinkeby]: process.env.ARBITRUMSCAN_KEY as string,
   [ChainId.ArbitrumGoerli]: process.env.ARBITRUMSCAN_KEY as string,
   [ChainId.Optimism]: process.env.OPTIMISMSCAN_KEY as string,
-  [ChainId.OptimismKovan]: process.env.OPTIMISMSCAN_KEY as string,
   [ChainId.OptimismGoerli]: process.env.OPTIMISMSCAN_KEY as string,
   [ChainId.BinanceSmartChainMainnet]: process.env.BSCSCAN_KEY as string,
   [ChainId.BinanceSmartChainTestnet]: process.env.BSCSCAN_KEY as string,

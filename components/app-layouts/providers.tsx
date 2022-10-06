@@ -15,14 +15,10 @@ export const StorageSingleton = new ThirdwebStorage({
 export function replaceIpfsUrl(url: string) {
   return StorageSingleton.resolveScheme(url);
 }
-
 export const alchemyUrlMap: Record<SUPPORTED_CHAIN_ID, string> = {
   [ChainId.Mainnet]:
     process.env.NEXT_PUBLIC_RPC_MAINNET ||
     `https://eth-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
-  [ChainId.Rinkeby]:
-    process.env.NEXT_PUBLIC_RPC_RINKEBY ||
-    `https://eth-rinkeby.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
   [ChainId.Goerli]:
     process.env.NEXT_PUBLIC_RPC_GOERLI ||
     `https://eth-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
@@ -46,18 +42,12 @@ export const alchemyUrlMap: Record<SUPPORTED_CHAIN_ID, string> = {
   [ChainId.Optimism]:
     process.env.NEXT_PUBLIC_RPC_OPTIMISM ||
     `https://opt-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
-  [ChainId.OptimismKovan]:
-    process.env.NEXT_PUBLIC_RPC_OPTIMISM_KOVAN ||
-    `https://opt-kovan.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
   [ChainId.OptimismGoerli]:
     process.env.NEXT_PUBLIC_RPC_OPTIMISM_GOERLI ||
     `https://opt-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
   [ChainId.Arbitrum]:
     process.env.NEXT_PUBLIC_RPC_ARBITRUM ||
     `https://arb-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
-  [ChainId.ArbitrumRinkeby]:
-    process.env.NEXT_PUBLIC_RPC_ARBITRUM_RINKEBY ||
-    `https://arb-rinkeby.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
   [ChainId.ArbitrumGoerli]:
     process.env.NEXT_PUBLIC_RPC_ARBITRUM_GOERLI ||
     `https://arb-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,

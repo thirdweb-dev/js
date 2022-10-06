@@ -5,7 +5,6 @@ import invariant from "tiny-invariant";
 
 export const PAPER_CHAIN_ID_MAP = {
   [ChainId.Mainnet]: "Ethereum",
-  [ChainId.Rinkeby]: "Rinkeby",
   [ChainId.Goerli]: "Goerli",
   [ChainId.Polygon]: "Polygon",
   [ChainId.Mumbai]: "Mumbai",

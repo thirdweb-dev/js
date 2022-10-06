@@ -46,34 +46,6 @@ const Ethereum: CurrencyMetadata[] = [
   },
 ];
 
-const Rinkeby: CurrencyMetadata[] = [
-  {
-    address: constants.AddressZero,
-    name: "Ethereum",
-    symbol: "ETH",
-  },
-  {
-    address: OtherAddressZero,
-    name: "Ethereum",
-    symbol: "ETH",
-  },
-  {
-    address: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
-    name: "Wrapped Ether",
-    symbol: "WETH",
-  },
-  {
-    address: "0xeb8f08a975ab53e34d8a0330e0d34de942c95926",
-    name: "USD Coin",
-    symbol: "USDC",
-  },
-  {
-    address: "0x3b00ef435fa4fcff5c209a37d1f3dcff37c705ad",
-    name: "Tether USD",
-    symbol: "USDT",
-  },
-];
-
 const Goerli: CurrencyMetadata[] = [
   {
     address: constants.AddressZero,
@@ -391,7 +363,6 @@ const BinanceTestnet: CurrencyMetadata[] = [
 
 export const CURRENCIES: Record<SUPPORTED_CHAIN_ID, CurrencyMetadata[]> = {
   [ChainId.Mainnet]: Ethereum,
-  [ChainId.Rinkeby]: Rinkeby,
   [ChainId.Goerli]: Goerli,
   [ChainId.Polygon]: Polygon,
   [ChainId.Mumbai]: Mumbai,
@@ -400,11 +371,9 @@ export const CURRENCIES: Record<SUPPORTED_CHAIN_ID, CurrencyMetadata[]> = {
   [ChainId.Avalanche]: Avalanche,
   [ChainId.AvalancheFujiTestnet]: AvalancheFujiTestnet,
   [ChainId.Optimism]: Optimism,
-  [ChainId.OptimismKovan]: OptimismTestnet,
   // eslint-disable-next-line line-comment-position
   [ChainId.OptimismGoerli]: OptimismTestnet, // TODO adjust wrapped token address
   [ChainId.Arbitrum]: Arbitrum,
-  [ChainId.ArbitrumRinkeby]: ArbitrumTestnet,
   // eslint-disable-next-line line-comment-position
   [ChainId.ArbitrumGoerli]: ArbitrumTestnet, // TODO adjust wrapped token address
   [ChainId.BinanceSmartChainMainnet]: BinanceMainnet,

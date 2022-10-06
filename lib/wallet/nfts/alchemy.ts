@@ -6,7 +6,6 @@ import { StorageSingleton } from "components/app-layouts/providers";
 const alchemyUrlMap = {
   // eth
   [ChainId.Mainnet]: `https://eth-mainnet.g.alchemy.com`,
-  [ChainId.Rinkeby]: `https://eth-rinkeby.g.alchemy.com`,
   [ChainId.Goerli]: `https://eth-goerli.g.alchemy.com`,
   // polygon
   [ChainId.Polygon]: `https://polygon-mainnet.g.alchemy.com`,
@@ -14,14 +13,10 @@ const alchemyUrlMap = {
 
   // optimism
   [ChainId.Optimism]: `https://opt-mainnet.g.alchemy.com`,
-  // deprecated
-  [ChainId.OptimismKovan]: `https://opt-kovan.g.alchemy.com`,
   // new optimism testnet
   [ChainId.OptimismGoerli]: `https://opt-goerli.g.alchemy.com`,
 
   [ChainId.Arbitrum]: `https://arb-mainnet.g.alchemy.com`,
-  // deprecated
-  [ChainId.ArbitrumRinkeby]: `https://arb-rinkeby.g.alchemy.com`,
   // arbitrum testnet
   [ChainId.ArbitrumGoerli]: `https://arb-goerli.g.alchemy.com`,
 } as const;
