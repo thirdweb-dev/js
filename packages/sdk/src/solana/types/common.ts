@@ -111,7 +111,7 @@ export type WalletAccount = {
 /**
  * @internal
  */
-export const PublicKeySchema = z.union([
+export const AddressSchema = z.union([
   z.string(),
   z.instanceof(PublicKey).transform((key) => key.toBase58()),
 ]);

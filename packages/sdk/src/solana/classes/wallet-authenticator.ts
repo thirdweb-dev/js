@@ -10,7 +10,6 @@ import {
   LoginPayloadDataSchema,
 } from "../types/auth";
 import { UserWallet } from "./user-wallet";
-import { PublicKey } from "@solana/web3.js";
 import { isBrowser } from "@thirdweb-dev/storage";
 
 /**
@@ -70,7 +69,7 @@ export class WalletAuthenticator {
   ): Promise<LoginPayload> {
     const parsedOptions = LoginOptionsSchema.parse(options);
 
-    const signerAddress = await this.wallet.getAddress();
+    const signerAddress = this.wallet.getAddress();
     const expirationTime =
       parsedOptions?.expirationTime || new Date(Date.now() + 1000 * 60 * 5);
     const payloadData = LoginPayloadDataSchema.parse({
@@ -107,7 +106,7 @@ export class WalletAuthenticator {
    * const address = sdk.auth.verify(domain, loginPayload);
    * ```
    */
-  public verify(domain: string, payload: LoginPayload): PublicKey {
+  public verify(domain: string, payload: LoginPayload): string {
     // Check that the intended domain matches the domain of the payload
     if (payload.payload.domain !== domain) {
       throw new Error(
@@ -126,15 +125,15 @@ export class WalletAuthenticator {
     const isValid = this.wallet.verifySignature(
       message,
       payload.signature,
-      payload.payload.public_key,
+      payload.payload.address,
     );
     if (!isValid) {
       throw new Error(
-        `Signer address '${payload.payload.public_key}' did not sign the provided message`,
+        `Signer address '${payload.payload.address}' did not sign the provided message`,
       );
     }
 
-    return new PublicKey(payload.payload.public_key);
+    return payload.payload.address;
   }
 
   /**
@@ -173,7 +172,7 @@ export class WalletAuthenticator {
     const adminAddress = this.wallet.getAddress();
     const payloadData = AuthenticationPayloadDataSchema.parse({
       iss: adminAddress,
-      sub: userAddress.toBase58(),
+      sub: userAddress,
       aud: domain,
       nbf: parsedOptions?.invalidBefore || new Date(),
       exp:
@@ -291,7 +290,7 @@ export class WalletAuthenticator {
     let message = ``;
 
     // Add the domain and login address for transparency
-    message += `${payload.domain} wants you to sign in with your account:\n${payload.public_key}\n\n`;
+    message += `${payload.domain} wants you to sign in with your account:\n${payload.address}\n\n`;
 
     // Prompt user to make sure domain is correct to prevent phishing attacks
     message += `Make sure that the requesting domain above matches the URL of the current website.\n\n`;

@@ -1,4 +1,4 @@
-import { PublicKeySchema, RawDateSchema } from "./common";
+import { AddressSchema, RawDateSchema } from "./common";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 
@@ -29,7 +29,7 @@ export const LoginPayloadDataSchema = z.object({
   /**
    * The public key of the account that is logging in
    */
-  public_key: PublicKeySchema,
+  address: AddressSchema,
   /**
    * The nonce of the login request used to prevent replay attacks, defaults to a random UUID
    */

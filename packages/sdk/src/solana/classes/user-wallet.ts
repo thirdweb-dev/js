@@ -124,7 +124,7 @@ export class UserWallet {
     const signer = this.getSigner();
     const encodedMessage = new TextEncoder().encode(message);
     const signedMessage = await signer.signMessage(encodedMessage);
-    const signature = new TextDecoder().decode(signedMessage);
+    const signature = bs58.encode(signedMessage);
 
     return signature;
   }
