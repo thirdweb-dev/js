@@ -1,0 +1,169 @@
+{
+  "version": "0.1.0",
+  "name": "tw_registry",
+  "instructions": [
+    {
+      "name": "initializeRegistrar",
+      "accounts": [
+        {
+          "name": "registrarAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "register",
+      "accounts": [
+        {
+          "name": "registrarAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "registeredProgramAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "program",
+          "type": "publicKey"
+        },
+        {
+          "name": "programType",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "setVisibility",
+      "accounts": [
+        {
+          "name": "registeredProgramAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "programIndex",
+          "type": "u64"
+        },
+        {
+          "name": "visible",
+          "type": "bool"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "RegistrarAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "count",
+            "type": "u64"
+          },
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RegisteredProgramAccount",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "program",
+            "type": "publicKey"
+          },
+          {
+            "name": "programType",
+            "type": "string"
+          },
+          {
+            "name": "visible",
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "RegistrarInitialized",
+      "fields": [
+        {
+          "name": "authority",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
+    },
+    {
+      "name": "RegisterEvent",
+      "fields": [
+        {
+          "name": "authority",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "program",
+          "type": "publicKey",
+          "index": false
+        },
+        {
+          "name": "programType",
+          "type": "string",
+          "index": false
+        }
+      ]
+    }
+  ]
+}

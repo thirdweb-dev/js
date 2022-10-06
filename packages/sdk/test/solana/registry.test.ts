@@ -10,21 +10,35 @@ describe("Registry", async () => {
 
   before(async () => {
     freshSDK = await createTestSDK();
+    // nftColl = await freshSDK.deployer.createNftCollection({
+    //   name: "Reg Test Collection",
+    //   description: "Test Description",
+    //   symbol: "TC",
+    // });
+    // token = await freshSDK.deployer.createToken({
+    //   name: "Reg Test Token",
+    //   initialSupply: 100,
+    // });
+    // nftDrop = await freshSDK.deployer.createNftDrop({
+    //   name: "Reg Test Drop",
+    //   itemsAvailable: 10,
+    // });
+  });
+
+  it("should create an entry in registry", async () => {
+    const wallet = freshSDK.wallet.getSigner().publicKey;
+    const t = await freshSDK.registry.getInitializeRegistrarTransaction(wallet);
+
+    console.log(t);
     nftColl = await freshSDK.deployer.createNftCollection({
       name: "Reg Test Collection",
       description: "Test Description",
       symbol: "TC",
     });
-    token = await freshSDK.deployer.createToken({
-      name: "Reg Test Token",
-      initialSupply: 100,
-    });
-    nftDrop = await freshSDK.deployer.createNftDrop({
-      name: "Reg Test Drop",
-      itemsAvailable: 10,
-    });
+    console.log(nftColl);
+    console.log(await freshSDK.registry.getTotalProgramsRegistered(wallet));
   });
-
+  /**
   it("should fetch accounts grouped by type", async () => {
     const t = await freshSDK.registry.getAccountsForWallet(
       freshSDK.wallet.getAddress() || "",
@@ -55,4 +69,5 @@ describe("Registry", async () => {
     expect(await freshSDK.registry.getAccountType(nftDrop)).to.eq("nft-drop");
     expect(await freshSDK.registry.getAccountType(token)).to.eq("token");
   });
+   */
 });

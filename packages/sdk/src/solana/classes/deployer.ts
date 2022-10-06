@@ -9,8 +9,10 @@ import {
   NFTDropInitialConditionsInputSchema,
 } from "../types/programs/nft-drop";
 import { enforceCreator } from "./helpers/creators-helper";
+import { Registry } from "./registry";
 import {
   findMetadataPda,
+  InstructionWithSigners,
   Metaplex,
   sol,
   toBigNumber,
@@ -49,10 +51,16 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 export class Deployer {
   private metaplex: Metaplex;
   private storage: ThirdwebStorage;
+  private regsitry: Registry;
 
-  constructor(metaplex: Metaplex, storage: ThirdwebStorage) {
+  constructor(
+    registry: Registry,
+    metaplex: Metaplex,
+    storage: ThirdwebStorage,
+  ) {
     this.metaplex = metaplex;
     this.storage = storage;
+    this.regsitry = registry;
   }
 
   /**
@@ -136,9 +144,12 @@ export class Deployer {
     const parsed = NFTCollectionMetadataInputSchema.parse(collectionMetadata);
     const uri = await this.storage.upload(parsed);
 
-    const { nft: collectionNft } = await this.metaplex
+    const collectionMint = Keypair.generate();
+    const collectionTx = await this.metaplex
       .nfts()
+      .builders()
       .create({
+        useNewMint: collectionMint,
         name: parsed.name,
         symbol: parsed.symbol,
         sellerFeeBasisPoints: 0,
@@ -148,9 +159,44 @@ export class Deployer {
           parsed.creators,
           this.metaplex.identity().publicKey,
         ),
-      })
-      .run();
-    return collectionNft.mint.address.toBase58();
+      });
+
+    const wallet = this.metaplex.identity().publicKey;
+    const instructions: InstructionWithSigners[] = [];
+    const registrarAccountExists = await this.regsitry.registrarAccountExists(
+      wallet,
+    );
+    if (!registrarAccountExists) {
+      console.log("creating registrar account");
+      instructions.push({
+        instruction: (
+          await this.regsitry.getInitializeRegistrarTransaction(wallet)
+        ).instructions[0],
+        signers: [this.metaplex.identity()],
+      });
+    }
+    instructions.push({
+      instruction: (
+        await this.regsitry.getRegisterProgramTransaction(
+          wallet,
+          collectionMint.publicKey,
+          "nft-collection",
+        )
+      ).instructions[0],
+      signers: [this.metaplex.identity()],
+    });
+
+    console.log({ instructions });
+
+    const result = await collectionTx
+      .append(...instructions)
+      .sendAndConfirm(this.metaplex);
+
+    if (!result.response.signature) {
+      throw new Error("Transaction failed");
+    }
+
+    return collectionMint.publicKey.toBase58();
   }
 
   /**

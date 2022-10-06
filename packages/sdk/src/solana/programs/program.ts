@@ -1,5 +1,9 @@
 import { UserWallet } from "../classes/user-wallet";
-import { Cluster, resolveClusterFromConnection } from "@metaplex-foundation/js";
+import {
+  Cluster,
+  resolveClusterFromConnection,
+  TransactionBuilder,
+} from "@metaplex-foundation/js";
 import {
   Program as AnchorProgram,
   Idl,
@@ -78,15 +82,23 @@ export class Program {
       signers?: Signer[];
     },
   ) {
+    return await this.prepareCall(functionName, args).rpc();
+  }
+
+  prepareCall(
+    functionName: string,
+    args: {
+      accounts: Record<string, string>;
+      data?: any[];
+      signers?: Signer[];
+    },
+  ) {
     const fn = this.program.methods[functionName];
     if (!fn) {
       throw new Error(`Function ${functionName} not found`);
     }
     const fnWithArgs = args.data ? fn(...args.data) : fn();
-    return await fnWithArgs
-      .accounts(args.accounts)
-      .signers(args.signers || [])
-      .rpc();
+    return fnWithArgs.accounts(args.accounts).signers(args.signers || []);
   }
 
   /**

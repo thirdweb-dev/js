@@ -32,6 +32,11 @@ module.exports = {
         programId: "89RsF5yJgRXhae6LKuCcMRgXkqxCJm3AeaYwcJN4XopA",
         deployPath: localDeployPath("counter"),
       },
+      {
+        label: "TWRegistry Program",
+        programId: "twregzGdRmyFeAKjPgbPMkRkzgFNy8BHrB4HzwjyH14",
+        deployPath: localDeployPath("tw_registry"),
+      },
     ],
   },
   storage: {

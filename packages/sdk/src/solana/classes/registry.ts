@@ -1,21 +1,107 @@
+import { TWREGISTRY_PROGRAM_ID } from "../constants/addresses";
+import TWRegistryIDL from "../idl/tw_registry.json";
+import { Program } from "../programs/program";
 import { WalletAccount } from "../types/common";
+import { UserWallet } from "./user-wallet";
 import {
   CandyMachine,
   Metadata,
   Metaplex,
+  Pda,
   TokenProgram,
 } from "@metaplex-foundation/js";
 import { TokenStandard } from "@metaplex-foundation/mpl-token-metadata";
-import { PublicKey } from "@solana/web3.js";
+import type { Idl } from "@project-serum/anchor";
+import { PublicKey, Transaction } from "@solana/web3.js";
+import { Buffer } from "buffer/";
 
 /**
  * @internal
  */
 export class Registry {
   private metaplex: Metaplex;
+  private twRegistry: Program;
 
-  constructor(metaplex: Metaplex) {
+  constructor(metaplex: Metaplex, userWallet: UserWallet) {
     this.metaplex = metaplex;
+    this.twRegistry = new Program(
+      TWREGISTRY_PROGRAM_ID,
+      TWRegistryIDL as Idl,
+      this.metaplex.connection,
+      userWallet,
+    );
+  }
+
+  public async registrarAccountExists(wallet: PublicKey) {
+    const registrarPda = this.getRegistrarAddress(wallet);
+    const account = await this.metaplex.rpc().getAccount(registrarPda);
+    return account.exists;
+  }
+
+  public async getInitializeRegistrarTransaction(
+    wallet: PublicKey,
+  ): Promise<Transaction> {
+    const registrarPda = this.getRegistrarAddress(wallet);
+    return this.twRegistry
+      .prepareCall("initializeRegistrar", {
+        accounts: {
+          authority: wallet.toBase58(),
+          registrarAccount: registrarPda.toBase58(),
+        },
+      })
+      .transaction();
+  }
+
+  public async getRegisterProgramTransaction(
+    wallet: PublicKey,
+    programAddress: PublicKey,
+    programType: string,
+  ): Promise<Transaction> {
+    const registrarPda = this.getRegistrarAddress(wallet);
+    const registeredProgramAddress = this.getRegisteredProgramAddress(
+      wallet,
+      await this.getTotalProgramsRegistered(wallet),
+    );
+    const accounts = {
+      authority: wallet.toBase58(),
+      registrarAccount: registrarPda.toBase58(),
+      registeredProgramAccount: registeredProgramAddress.toBase58(),
+    };
+    console.log(accounts);
+    return this.twRegistry
+      .prepareCall("register", {
+        accounts,
+        data: [programAddress, programType],
+      })
+      .transaction();
+  }
+
+  public async getTotalProgramsRegistered(wallet: PublicKey) {
+    const accountExists = await this.registrarAccountExists(wallet);
+    if (!accountExists) {
+      return 0;
+    }
+    const registrarPda = this.getRegistrarAddress(wallet);
+    const data = await this.twRegistry.fetch(
+      "registrarAccount",
+      registrarPda.toBase58(),
+    );
+    return data.count as number;
+  }
+
+  public getRegistrarAddress(wallet: PublicKey) {
+    return Pda.find(new PublicKey(TWREGISTRY_PROGRAM_ID), [
+      Buffer.from("registrar", "utf8"),
+      wallet.toBuffer(),
+    ]);
+  }
+
+  public getRegisteredProgramAddress(wallet: PublicKey, index: number) {
+    return Pda.find(new PublicKey(TWREGISTRY_PROGRAM_ID), [
+      Buffer.from("registered_program"),
+      wallet.toBuffer(),
+      Buffer.from(index.toString()),
+    ]);
   }
 
   public async getAccountType(address: string) {
