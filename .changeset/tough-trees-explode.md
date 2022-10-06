@@ -2,4 +2,4 @@
 "@thirdweb-dev/react": patch
 ---
 
-fix persister logic
+Add storage hooks to react

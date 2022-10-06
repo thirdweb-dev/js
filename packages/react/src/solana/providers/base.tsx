@@ -19,17 +19,13 @@ interface ThirdwebSDKProviderProps extends QueryClientProviderProps {
  * Requires to be wrapped with a ConnectionProvider and a WalletProvider from @solana/wallet-adapter-react.
  * @example
  * ```tsx
- * import {
- *   useConnection,
- *   useWallet,
- * } from "@solana/wallet-adapter-react";
+ * import { useWallet } from "@solana/wallet-adapter-react";
  * import { ThirdwebProvider } from "@thirdweb-dev/react/solana";
  *
  * const ThirdwebApp = () => {
- *  const { connection } = useConnection();
  *  const wallet = useWallet();
  *  return (
- *    <ThirdwebSDKProvider connection={connection} wallet={wallet}>
+ *    <ThirdwebSDKProvider network={"devnet"} wallet={wallet}>
  *      <YourApp />
  *    </ThirdwebSDKProvider>
  * )};

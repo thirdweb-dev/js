@@ -4,9 +4,11 @@ import {
   NFTMetadataInput,
   NFTMetadataOrUri,
 } from "../../core/schema/nft";
+import { enforceCreator } from "../classes/helpers/creators-helper";
 import { NFTHelper } from "../classes/helpers/nft-helper";
 import { METAPLEX_PROGRAM_ID } from "../constants/addresses";
 import { TransactionResult } from "../types/common";
+import { CreatorInput } from "../types/programs";
 import {
   findEditionMarkerPda,
   Metaplex,
@@ -80,7 +82,7 @@ export class NFTCollection {
       .findByMint({ mintAddress: this.publicKey })
       .run();
 
-    return this.nft.toNFTMetadata(metadata).metadata;
+    return (await this.nft.toNFTMetadata(metadata)).metadata;
   }
 
   /**
@@ -114,16 +116,9 @@ export class NFTCollection {
    * console.log(nfts[0].owner);
    * ```
    */
-  async getAll(options?: { filterBurnedTokens: boolean }): Promise<NFT[]> {
+  async getAll(): Promise<NFT[]> {
     const addresses = await this.getAllNFTAddresses();
-    return (
-      await Promise.all(addresses.map(async (a) => await this.get(a)))
-    ).filter((a) => {
-      if (!options?.filterBurnedTokens) {
-        return true;
-      }
-      return a.supply > 0;
-    });
+    return await Promise.all(addresses.map(async (a) => await this.get(a)));
   }
 
   /**
@@ -490,5 +485,31 @@ export class NFTCollection {
     return {
       signature: tx.response.signature,
     };
+  }
+
+  /**
+   * Update the settings of the collection
+   * @param settings - the settings to update
+   */
+  async updateSettings(settings: { creators?: CreatorInput[] }) {
+    const updateData = {
+      ...(settings.creators && {
+        creators: enforceCreator(
+          settings.creators,
+          this.metaplex.identity().publicKey,
+        ),
+      }),
+    };
+    this.metaplex.nfts().update({
+      nftOrSft: await this.getCollection(),
+      ...updateData,
+    });
+  }
+
+  private async getCollection() {
+    return await this.metaplex
+      .nfts()
+      .findByMint({ mintAddress: this.publicKey })
+      .run();
   }
 }

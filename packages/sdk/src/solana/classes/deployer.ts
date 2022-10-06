@@ -3,11 +3,11 @@ import {
   NFTCollectionMetadataInputSchema,
   TokenMetadataInput,
   TokenMetadataInputSchema,
-} from "../types/contracts";
+} from "../types/programs";
 import {
-  NFTDropConditionsOutputSchema,
   NFTDropContractInput,
-} from "../types/contracts/nft-drop";
+  NFTDropInitialConditionsInputSchema,
+} from "../types/programs/nft-drop";
 import { enforceCreator } from "./helpers/creators-helper";
 import {
   findMetadataPda,
@@ -63,7 +63,7 @@ export class Deployer {
    * @example
    * ```jsx
    * const metadata = {
-   *   name: "Token",
+   *   name: "My Token",
    *   symbol: "TKN",
    *   initialSupply: 100,
    * };
@@ -123,7 +123,7 @@ export class Deployer {
    * @example
    * ```jsx
    * const metadata = {
-   *   name: "NFT",
+   *   name: "My NFT Collection",
    *   symbol: "NFT",
    * };
    *
@@ -161,10 +161,8 @@ export class Deployer {
    * @example
    * ```jsx
    * const metadata = {
-   *   name: "NFT",
+   *   name: "My NFT Drop",
    *   symbol: "NFT",
-   *   price: 0,
-   *   sellerFeeBasisPoints: 0,
    *   itemsAvailable: 5,
    * };
    *
@@ -173,7 +171,8 @@ export class Deployer {
    */
   async createNftDrop(metadata: NFTDropContractInput): Promise<string> {
     const collectionInfo = NFTCollectionMetadataInputSchema.parse(metadata);
-    const candyMachineInfo = NFTDropConditionsOutputSchema.parse(metadata);
+    const candyMachineInfo =
+      NFTDropInitialConditionsInputSchema.parse(metadata);
     const uri = await this.storage.upload(collectionInfo);
 
     const collectionMint = Keypair.generate();
@@ -194,14 +193,15 @@ export class Deployer {
       });
 
     const candyMachineKeypair = Keypair.generate();
+    // initialize candy machine with default config
+    // final claim conditions can be updated later
     const candyMachineTx = await this.metaplex
       .candyMachines()
       .builders()
       .create({
-        ...candyMachineInfo,
-        price: candyMachineInfo.price || sol(0),
-        sellerFeeBasisPoints: candyMachineInfo.sellerFeeBasisPoints || 0,
-        itemsAvailable: candyMachineInfo.itemsAvailable || toBigNumber(0),
+        itemsAvailable: toBigNumber(candyMachineInfo.itemsAvailable),
+        price: sol(0),
+        sellerFeeBasisPoints: 0,
         candyMachine: candyMachineKeypair,
         collection: collectionMint.publicKey,
         creators: enforceCreator(

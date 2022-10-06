@@ -1,6 +1,6 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { Token } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/token";
 
 /**
  * Hook for getting an instance of a `Token` contract. This contract supports ERC20 compliant tokens.
@@ -25,9 +25,17 @@ import { Token } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/pre
  * }
  * ```
  * @public
- * @deprecated use `useContract()` instead
+ * @deprecated
+ * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
+ * ```diff
+ * - const token = await sdk.useToken("0x1234...");
+ * + const token = await sdk.useContract("0x1234...", "token").contract;
+ * ```
  */
-export function useToken(contractAddress?: string) {
-  showDeprecationWarning("useToken()", "useContract<Token>()");
-  return useContract<Token>(contractAddress).contract;
+export function useToken(contractAddress: RequiredParam<string>) {
+  showDeprecationWarning(
+    `useToken("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "token")`,
+  );
+  return useContract(contractAddress, "token").contract;
 }

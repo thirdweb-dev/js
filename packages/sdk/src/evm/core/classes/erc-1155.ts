@@ -78,7 +78,16 @@ export class Erc1155<
   protected contractWrapper: ContractWrapper<T>;
   protected storage: ThirdwebStorage;
 
-  constructor(contractWrapper: ContractWrapper<T>, storage: ThirdwebStorage) {
+  private _chainId: number;
+  get chainId() {
+    return this._chainId;
+  }
+
+  constructor(
+    contractWrapper: ContractWrapper<T>,
+    storage: ThirdwebStorage,
+    chainId: number,
+  ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.query = this.detectErc1155Enumerable();
@@ -86,6 +95,7 @@ export class Erc1155<
     this.burnable = this.detectErc1155Burnable();
     this.lazyMintable = this.detectErc1155LazyMintable();
     this.signatureMintable = this.detectErc1155SignatureMintable();
+    this._chainId = chainId;
   }
 
   /**

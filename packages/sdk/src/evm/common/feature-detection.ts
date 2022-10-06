@@ -146,7 +146,7 @@ export function extractFunctionsFromAbi(
   abi: z.input<typeof AbiSchema>,
   metadata?: Record<string, any>,
 ): AbiFunction[] {
-  const functions = abi.filter((el) => el.type === "function");
+  const functions = (abi || []).filter((el) => el.type === "function");
 
   const parsed: AbiFunction[] = [];
   for (const f of functions) {

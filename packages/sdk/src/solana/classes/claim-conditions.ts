@@ -1,9 +1,18 @@
 import { TransactionResult } from "../types/common";
 import {
-  NFTDropConditionsOutputSchema,
-  NFTDropMetadataInput,
-} from "../types/contracts/nft-drop";
-import { Metaplex } from "@metaplex-foundation/js";
+  NFTDropConditionsInput,
+  NFTDropConditions,
+  NFTDropUpdateableConditionsInputSchema,
+} from "../types/programs/nft-drop";
+import { toCurrencyValue } from "../utils/token";
+import {
+  Amount,
+  DateTime,
+  Metaplex,
+  sol,
+  toDateTime,
+  token,
+} from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
 
 /**
@@ -46,16 +55,26 @@ export class ClaimConditions {
    * console.log(claimCondition.goLiveDate);
    * ```
    */
-  async get(): Promise<NFTDropMetadataInput> {
+  async get(): Promise<NFTDropConditions> {
     const candyMachine = await this.getCandyMachine();
-
+    const totalAvailableSupply = candyMachine.itemsAvailable.toNumber();
+    const lazyMintedSupply = candyMachine.itemsLoaded.toNumber();
+    const goLiveDate = candyMachine.goLiveDate
+      ? new Date(candyMachine.goLiveDate.toNumber() * 1000)
+      : null;
+    const isWithinGoLiveDate = candyMachine.goLiveDate
+      ? candyMachine.goLiveDate.toNumber() * 1000 >= Date.now()
+      : true;
+    // TODO add allowlist/hidden settings here
     return {
-      price: candyMachine.price.basisPoints.toNumber(),
+      price: toCurrencyValue(candyMachine.price),
+      currencyAddress: candyMachine.tokenMintAddress?.toBase58() || null,
+      primarySaleRecipient: candyMachine.walletAddress.toBase58(),
       sellerFeeBasisPoints: candyMachine.sellerFeeBasisPoints,
-      itemsAvailable: candyMachine.itemsAvailable.toNumber(),
-      goLiveDate: candyMachine.goLiveDate
-        ? new Date(candyMachine.goLiveDate.toNumber() * 1000)
-        : undefined,
+      goLiveDate,
+      totalAvailableSupply,
+      lazyMintedSupply,
+      isReadyToClaim: candyMachine.isFullyLoaded && isWithinGoLiveDate,
     };
   }
 
@@ -68,8 +87,8 @@ export class ClaimConditions {
    * ```jsx
    * // Specify the settings for your claim condition
    * const claimCondition = {
-   *   // The price of each NFT in this drop
-   *   price: 0,
+   *   // The price of each NFT in this drop (in SOL or SPL tokens)
+   *   price: 0.1,
    *   // The date for this drop to start
    *   goLiveDate: new Date(),
    *   // ...
@@ -78,14 +97,49 @@ export class ClaimConditions {
    * const tx = await program.claimConditions.set(claimCondition);
    * ```
    */
-  async set(metadata: NFTDropMetadataInput): Promise<TransactionResult> {
-    const parsed = NFTDropConditionsOutputSchema.parse(metadata);
+  async set(metadata: NFTDropConditionsInput): Promise<TransactionResult> {
+    const parsed = NFTDropUpdateableConditionsInputSchema.parse(metadata);
+
+    // recipients
+    const wallet: PublicKey | undefined = parsed.primarySaleRecipient
+      ? new PublicKey(parsed.primarySaleRecipient)
+      : undefined;
+    const sellerFeeBasisPoints = parsed.sellerFeeBasisPoints;
+
+    // price
+    let price: Amount | undefined = parsed.price
+      ? sol(Number(parsed.price))
+      : undefined;
+    let tokenMint: PublicKey | undefined = undefined;
+    if (parsed.currencyAddress && parsed.price) {
+      const fetchedToken = await this.metaplex
+        .tokens()
+        .findMintByAddress({ address: new PublicKey(parsed.currencyAddress) })
+        .run();
+      price = token(Number(parsed.price), fetchedToken.decimals);
+      tokenMint = fetchedToken.address;
+    }
+
+    // dates
+    const goLiveDate: DateTime | undefined = parsed.goLiveDate
+      ? toDateTime(parsed.goLiveDate)
+      : undefined;
+
+    // TODO add allowlist/hidden settings here
+
+    const data = {
+      ...(wallet && { wallet }),
+      ...(tokenMint && { tokenMint }),
+      ...(price && { price }),
+      ...(goLiveDate && { goLiveDate }),
+      ...(sellerFeeBasisPoints && { sellerFeeBasisPoints }),
+    };
 
     const result = await this.metaplex
       .candyMachines()
       .update({
         candyMachine: await this.getCandyMachine(),
-        ...parsed,
+        ...data,
       })
       .run();
 
@@ -98,6 +152,6 @@ export class ClaimConditions {
     return this.metaplex
       .candyMachines()
       .findByAddress({ address: this.dropMintAddress })
-      .run(); // TODO abstract return types away
+      .run();
   }
 }

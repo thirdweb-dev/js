@@ -1,6 +1,6 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { Vote } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/vote";
 
 /**
  * Hook for getting an instance of an `Vote` contract. This contract enables fully featured voting-based decentralized governance systems.
@@ -25,9 +25,17 @@ import { Vote } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/preb
  * }
  * ```
  * @public
- * @deprecated use `useContract()` instead
+ * @deprecated
+ * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
+ * ```diff
+ * - const vote = await sdk.useVote("0x1234...");
+ * + const vote = await sdk.useContract("0x1234...", "vote").contract;
+ * ```
  */
-export function useVote(contractAddress?: string) {
-  showDeprecationWarning("useVote()", "useContract<Vote>()");
-  return useContract<Vote>(contractAddress).contract;
+export function useVote(contractAddress: RequiredParam<string>) {
+  showDeprecationWarning(
+    `useVote("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "vote")`,
+  );
+  return useContract(contractAddress, "vote").contract;
 }

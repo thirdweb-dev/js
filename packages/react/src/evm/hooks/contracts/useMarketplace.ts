@@ -1,6 +1,6 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { Marketplace } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/marketplace";
 
 /**
  * Hook for getting an instance of a `Marketplace` contract. This contract is used to support marketplace for purchase and sale of on-chain assets.
@@ -25,9 +25,17 @@ import { Marketplace } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contrac
  * }
  * ```
  * @public
- * @deprecated use `useContract()` instead
+ * @deprecated
+ * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
+ * ```diff
+ * - const marketplace = await sdk.useMarketplace("0x1234...");
+ * + const marketplace = await sdk.useContract("0x1234...", "marketplace").contract;
+ * ```
  */
-export function useMarketplace(contractAddress?: string) {
-  showDeprecationWarning("useMarketplace()", "useContract<Marketplace>()");
-  return useContract<Marketplace>(contractAddress).contract;
+export function useMarketplace(contractAddress: RequiredParam<string>) {
+  showDeprecationWarning(
+    `useMarketplace("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "marketplace")`,
+  );
+  return useContract(contractAddress, "marketplace").contract;
 }

@@ -1,5 +1,31 @@
 # @thirdweb-dev/react
 
+## 3.2.1
+
+### Patch Changes
+
+- [#264](https://github.com/thirdweb-dev/js/pull/264) [`f669d3e`](https://github.com/thirdweb-dev/js/commit/f669d3ef4a84368c23f0359aec304f66a4063042) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Standarize data between evm/solana for useLazyMint hook
+
+## 3.2.0
+
+### Patch Changes
+
+- [#261](https://github.com/thirdweb-dev/js/pull/261) [`c8261b7`](https://github.com/thirdweb-dev/js/commit/c8261b74b5828ac66ea3a6d7636aa57e40ea1a14) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - align behavior of `useContract()` and `getContract()` across react & sdk to both allow passing optional second params of contract types or ABIs
+
+- [#236](https://github.com/thirdweb-dev/js/pull/236) [`cac373b`](https://github.com/thirdweb-dev/js/commit/cac373b010ce3be3615a36671b66815a27785061) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - do not require a connection, instead handle a network directly
+
+- [#251](https://github.com/thirdweb-dev/js/pull/251) [`ea41231`](https://github.com/thirdweb-dev/js/commit/ea41231b3ec4a2aef6a203db195d0e450c45ef56) Thanks [@jnsdls](https://github.com/jnsdls)! - fix missing Buffer implementation for WalletConnect and CoinbaseWallet connectors
+
+- [#253](https://github.com/thirdweb-dev/js/pull/253) [`b6fc298`](https://github.com/thirdweb-dev/js/commit/b6fc298d0cf63bc7129104f7779cc9d84e405093) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - allow passing contractType as second param to `useContract()`
+
+- [#243](https://github.com/thirdweb-dev/js/pull/243) [`1136d95`](https://github.com/thirdweb-dev/js/commit/1136d959baf936c166e5f7c051d5173d68d9eb9b) Thanks [@jnsdls](https://github.com/jnsdls)! - fix persister logic
+
+- [#258](https://github.com/thirdweb-dev/js/pull/258) [`ac232b5`](https://github.com/thirdweb-dev/js/commit/ac232b5affe31780ef1c10ec76edb21596850e7e) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Accept SmartContract instead of erc20 instance
+
+- [#245](https://github.com/thirdweb-dev/js/pull/245) [`1972f3e`](https://github.com/thirdweb-dev/js/commit/1972f3ec0d511fbc17642b2a30852a177092a09e) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - expose `useBurnNFT` hook
+
+- [#255](https://github.com/thirdweb-dev/js/pull/255) [`9b92697`](https://github.com/thirdweb-dev/js/commit/9b92697fb77d3072e3e53b451f9b348595ae410e) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - `useContract()` and `<Web3Button />` can now accept an optional ABI directly and will return a `SmartContract` based on it
+
 ## 3.1.2
 
 ### Patch Changes

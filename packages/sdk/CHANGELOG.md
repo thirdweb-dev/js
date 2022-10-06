@@ -1,5 +1,50 @@
 # @thirdweb-dev/sdk
 
+## 3.2.1
+
+## 3.2.0
+
+### Minor Changes
+
+- [#247](https://github.com/thirdweb-dev/js/pull/247) [`caf9795`](https://github.com/thirdweb-dev/js/commit/caf979537b5acb1610f182c94afa5d95c208ec3f) Thanks [@furqanrydhan](https://github.com/furqanrydhan)! - AppURI detection now enabled
+
+- [#238](https://github.com/thirdweb-dev/js/pull/238) [`6647f70`](https://github.com/thirdweb-dev/js/commit/6647f707bdd050725264a8a74220c11912f68e57) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Unify NFT return types for EVM and Solana
+
+  #### NFT Types are now consistent accross EVM (both ERC721 and ERC1155) and Solana
+
+  This is a transparent upgrade, except for one type change for ERC1155 NFTs
+
+  - nft.id is now of type `string` instead of `BigNumber`
+  - edition.supply is now of type `number` instead of `BigNumber`
+
+  This should make it much easer to deal with in applications, instead of having to manipulate BigNumber objects.
+
+  Most people convert BigNumber to strings, which is compatible with this upgrade.
+
+### Patch Changes
+
+- [#257](https://github.com/thirdweb-dev/js/pull/257) [`ba6f450`](https://github.com/thirdweb-dev/js/commit/ba6f45027a6ec11aebb4a1918ab2ba4f88894ede) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - fix permission enumerable export
+
+- [#261](https://github.com/thirdweb-dev/js/pull/261) [`c8261b7`](https://github.com/thirdweb-dev/js/commit/c8261b74b5828ac66ea3a6d7636aa57e40ea1a14) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - align behavior of `useContract()` and `getContract()` across react & sdk to both allow passing optional second params of contract types or ABIs
+
+- [#250](https://github.com/thirdweb-dev/js/pull/250) [`20745f8`](https://github.com/thirdweb-dev/js/commit/20745f8cd603235eb5039e61a39c0959c5860bca) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add check if abi exists on extractFunctionsFromAbi function
+
+- [#252](https://github.com/thirdweb-dev/js/pull/252) [`2ea3f00`](https://github.com/thirdweb-dev/js/commit/2ea3f00c41b5e70d9bb634cd86790890520fc4d6) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose a way to update collection settings, pass in upload options to lazyMint
+
+- [#234](https://github.com/thirdweb-dev/js/pull/234) [`9412d41`](https://github.com/thirdweb-dev/js/commit/9412d416832c87ab2c858cb120c6c5de03459c50) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Add burn NFT functionality + misc API refinement
+
+- [#256](https://github.com/thirdweb-dev/js/pull/256) [`d677e9d`](https://github.com/thirdweb-dev/js/commit/d677e9d6341252013762882d25408ea8f93791e5) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - make PermissiosEnumerable feature available
+
+- [#240](https://github.com/thirdweb-dev/js/pull/240) [`e662408`](https://github.com/thirdweb-dev/js/commit/e662408e1936983485936609552f80a56cbed082) Thanks [@jnsdls](https://github.com/jnsdls)! - unify program metadata return type
+
+- [#249](https://github.com/thirdweb-dev/js/pull/249) [`e4b10bc`](https://github.com/thirdweb-dev/js/commit/e4b10bc5bd12178cba8856b60255732123cb7ae5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Update NFT Drop API for claim conditions + multiple fixes
+
+- [#262](https://github.com/thirdweb-dev/js/pull/262) [`028cb78`](https://github.com/thirdweb-dev/js/commit/028cb781252b0050943b14cfdf38132c18753a4b) Thanks [@jnsdls](https://github.com/jnsdls)! - [CORE] - fix HexColor schema
+
+- [#245](https://github.com/thirdweb-dev/js/pull/245) [`1972f3e`](https://github.com/thirdweb-dev/js/commit/1972f3ec0d511fbc17642b2a30852a177092a09e) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - allow burning of drop'd NFTs
+
+- [#236](https://github.com/thirdweb-dev/js/pull/236) [`cac373b`](https://github.com/thirdweb-dev/js/commit/cac373b010ce3be3615a36671b66815a27785061) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - attempt to resolve network more agressively
+
 ## 3.1.2
 
 ### Patch Changes

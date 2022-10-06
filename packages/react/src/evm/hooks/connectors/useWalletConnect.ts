@@ -2,6 +2,9 @@ import { useConnect } from "../wagmi-required/useConnect";
 import invariant from "tiny-invariant";
 import { useContext as useWagmiContext } from "wagmi";
 
+if (!globalThis.Buffer) {
+  globalThis.Buffer = require("buffer/").Buffer;
+}
 /**
  * Hook for connecting to a mobile wallet with Wallet Connect
  *

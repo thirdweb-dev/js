@@ -1,6 +1,6 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { NFTCollection } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/nft-collection";
 
 /**
  * Hook for getting an instance of an `NFTCollection` contract. This contract is meant to interface with ERC721 compliant NFTs.
@@ -25,9 +25,17 @@ import { NFTCollection } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contr
  * }
  * ```
  * @public
- * @deprecated use `useContract()` instead
+ * @deprecated
+ * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
+ * ```diff
+ * - const nftCollection = await sdk.useNFTCollection("0x1234...");
+ * + const nftCollection = await sdk.useContract("0x1234...", "nft-collection").contract;
+ * ```
  */
-export function useNFTCollection(contractAddress?: string) {
-  showDeprecationWarning("useNFTCollection()", "useContract<NFTCollection>()");
-  return useContract<NFTCollection>(contractAddress).contract;
+export function useNFTCollection(contractAddress: RequiredParam<string>) {
+  showDeprecationWarning(
+    `useNFTCollection("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "nft-collection")`,
+  );
+  return useContract(contractAddress, "nft-collection").contract;
 }

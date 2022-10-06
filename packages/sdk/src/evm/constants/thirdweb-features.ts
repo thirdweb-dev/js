@@ -1,6 +1,7 @@
 import IAppURI from "@thirdweb-dev/contracts-js/dist/abis/IAppURI.json";
 import IContractMetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IContractMetadata.json";
 import IPermissionsAbi from "@thirdweb-dev/contracts-js/dist/abis/IPermissions.json";
+import IPermissionsEnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IPermissionsEnumerable.json";
 import IThirdwebPlatformFeeAbi from "@thirdweb-dev/contracts-js/dist/abis/IPlatformFee.json";
 import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/dist/abis/IPrimarySale.json";
 import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty.json";
@@ -39,15 +40,28 @@ export const FEATURE_PLATFORM_FEE = {
   features: {},
 } as const;
 
-export const FEATURE_PERMISSIONS = {
-  name: "Permissions",
+export const FEATURE_PERMISSIONS_ENUMERABLE = {
+  name: "PermissionsEnumerable",
   namespace: "roles",
   docLinks: {
     sdk: "sdk.contractroles",
     contracts: "PermissionsEnumerable",
   },
-  abis: [IPermissionsAbi],
+  abis: [IPermissionsEnumerableAbi],
   features: {},
+} as const;
+
+export const FEATURE_PERMISSIONS = {
+  name: "Permissions",
+  namespace: "roles",
+  docLinks: {
+    sdk: "sdk.contractroles",
+    contracts: "Permissions",
+  },
+  abis: [IPermissionsAbi],
+  features: {
+    [FEATURE_PERMISSIONS_ENUMERABLE.name]: FEATURE_PERMISSIONS_ENUMERABLE,
+  },
 } as const;
 
 export const FEATURE_METADATA = {

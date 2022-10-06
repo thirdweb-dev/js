@@ -1,6 +1,6 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { SignatureDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/signature-drop";
 
 /**
  * Hook for getting an instance of an `SignatureDrop` contract. This contract is meant to interface with ERC721 compliant NFTs that can be lazily minted.
@@ -24,9 +24,17 @@ import { SignatureDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contr
  * }
  * ```
  * @public
- * @deprecated use `useContract()` instead
+ * @deprecated
+ * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
+ * ```diff
+ * - const signatureDrop = await sdk.useSignatureDrop("0x1234...");
+ * + const signatureDrop = await sdk.useContract("0x1234...", "signature-drop").contract;
+ * ```
  */
-export function useSignatureDrop(contractAddress?: string) {
-  showDeprecationWarning("useSignatureDrop()", "useContract<SignatureDrop>()");
-  return useContract<SignatureDrop>(contractAddress).contract;
+export function useSignatureDrop(contractAddress?: RequiredParam<string>) {
+  showDeprecationWarning(
+    `useSignatureDrop("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "signature-drop")`,
+  );
+  return useContract(contractAddress, "signature-drop").contract;
 }

@@ -233,16 +233,13 @@ describe("Custom Contracts", async () => {
   });
 
   it("should not detect feature if missing from ABI", async () => {
-    const c = sdk.getContractFromAbi("", VoteERC20__factory.abi);
+    const c = await sdk.getContractFromAbi("", VoteERC20__factory.abi);
     invariant(c, "Contract undefined");
     invariant(c.metadata, "Metadata undefined");
     try {
       c.roles.get("admin");
     } catch (e) {
-      expectError(
-        e,
-        "contract does not implement the 'PermissionsEnumerable' Extension",
-      );
+      expectError(e, "contract does not implement the 'Permissions' Extension");
     }
   });
 
@@ -427,7 +424,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: erc20 signature mintable", async () => {
-    const c = sdk.getContractFromAbi(
+    const c = await sdk.getContractFromAbi(
       tokenContractAddress,
       TokenERC20__factory.abi,
     );

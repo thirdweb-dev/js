@@ -47,7 +47,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
  * const sdk = new ThirdwebSDK("{{chainName}}");
- * const contract = sdk.getSignatureDrop("{{contract_address}}");
+ * const contract = sdk.getContract("{{contract_address}}", "signature-drop");
  * ```
  *
  * @public
@@ -172,6 +172,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: typeof ABI,
+    chainId: number,
     contractWrapper = new ContractWrapper<SignatureDropContract>(
       network,
       address,
@@ -179,7 +180,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
       options,
     ),
   ) {
-    super(contractWrapper, storage);
+    super(contractWrapper, storage, chainId);
     this.abi = abi;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
@@ -197,7 +198,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.erc721 = new Erc721(this.contractWrapper, this.storage);
+    this.erc721 = new Erc721(this.contractWrapper, this.storage, chainId);
     this.claimConditions = new DropClaimConditions(
       this.contractWrapper,
       this.metadata,

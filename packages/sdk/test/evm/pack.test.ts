@@ -203,16 +203,16 @@ describe("Pack Contract", async () => {
 
     let adminOwned = await packContract.getOwned();
     assert.equal(adminOwned.length, 2);
-    assert.equal(adminOwned[0].quantityOwned.toString(), "150");
-    assert.equal(adminOwned[1].quantityOwned.toString(), "75");
+    assert.equal(adminOwned[0]?.quantityOwned?.toString(), "150");
+    assert.equal(adminOwned[1]?.quantityOwned?.toString(), "75");
 
     await packContract.transfer(samWallet.address, "0", BigNumber.from(50));
     const samOwned = await packContract.getOwned(samWallet.address);
     assert.equal(samOwned.length, 1);
-    assert.equal(samOwned[0].quantityOwned.toString(), "50");
+    assert.equal(samOwned[0]?.quantityOwned?.toString(), "50");
 
     adminOwned = await packContract.getOwned();
-    assert.equal(adminOwned[0].quantityOwned.toString(), "100");
+    assert.equal(adminOwned[0]?.quantityOwned?.toString(), "100");
   });
 
   // ------------- test `addPackContent` ---------

@@ -1,6 +1,6 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { NFTDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/nft-drop";
 
 /**
  * Hook for getting an instance of an `NFTDrop` contract. This contract is meant to interface with ERC721 compliant NFTs that can be lazily minted.
@@ -24,9 +24,17 @@ import { NFTDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/p
  * }
  * ```
  * @public
- * @deprecated use `useContract()` instead
+ * @deprecated
+ * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
+ * ```diff
+ * - const nftDrop = await sdk.useNFTDrop("0x1234...");
+ * + const nftDrop = await sdk.useContract("0x1234...", "nft-drop").contract;
+ * ```
  */
-export function useNFTDrop(contractAddress?: string) {
-  showDeprecationWarning("useNFTDrop()", "useContract<NFTDrop>()");
-  return useContract<NFTDrop>(contractAddress).contract;
+export function useNFTDrop(contractAddress: RequiredParam<string>) {
+  showDeprecationWarning(
+    `useNFTDrop("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "nft-drop")`,
+  );
+  return useContract(contractAddress, "nft-drop").contract;
 }

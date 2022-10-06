@@ -6,6 +6,8 @@ import { cliVersion, pkg } from "../constants/urls";
 import { info, logger } from "../core/helpers/logger";
 import { twCreate } from "../create/command";
 import generateDashboardUrl from "../helpers/generate-dashboard-url";
+import { upload } from "../storage/command";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
 import { Command } from "commander";
 import open from "open";
@@ -139,6 +141,21 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("-a, --all", "run detection on all contracts")
     .action(async (options) => {
       await detectExtensions(options);
+    });
+
+  program
+    .command("upload")
+    .description("Upload any file or directory using decentralized storage")
+    .argument("<upload-path>", "path to file or directory to upload")
+    .action(async (path) => {
+      const storage = new ThirdwebStorage();
+      const uri = await upload(storage, path);
+      info(`Files stored at the following IPFS URI:`);
+      logger.info(chalk.blueBright(uri.toString()));
+
+      const url = storage.resolveScheme(uri);
+      info(`Open this link to view your upload:`);
+      logger.info(chalk.blueBright(url.toString()));
     });
 
   program

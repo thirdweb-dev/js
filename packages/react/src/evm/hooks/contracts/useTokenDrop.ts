@@ -1,6 +1,6 @@
+import { RequiredParam } from "../../../core/types/shared";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
-import { TokenDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/token-drop";
 
 /**
  * Hook for getting an instance of a `Token Drop` contract.
@@ -25,9 +25,17 @@ import { TokenDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts
  * }
  * ```
  * @public
- * @deprecated use `useContract()` instead
+ * @deprecated
+ * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
+ * ```diff
+ * - const token = await sdk.useTokenDrop("0x1234...");
+ * + const token = await sdk.useContract("0x1234...", "token-drop").contract;
+ * ```
  */
-export function useTokenDrop(contractAddress?: string) {
-  showDeprecationWarning("useTokenDrop()", "useContract<TokenDrop>()");
-  return useContract<TokenDrop>(contractAddress).contract;
+export function useTokenDrop(contractAddress: RequiredParam<string>) {
+  showDeprecationWarning(
+    `useTokenDrop("${contractAddress || "0x..."}")`,
+    `useContract("${contractAddress || "0x..."}", "token-drop")`,
+  );
+  return useContract(contractAddress, "token-drop").contract;
 }

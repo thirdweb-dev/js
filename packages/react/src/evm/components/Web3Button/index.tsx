@@ -13,7 +13,7 @@ import { ThemeProvider, ThemeProviderProps } from "../shared/ThemeProvider";
 import { FiWifi } from "@react-icons/all-files/fi/FiWifi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/smart-contract";
-import type { CallOverrides } from "ethers";
+import type { CallOverrides, ContractInterface } from "ethers";
 import { PropsWithChildren, useMemo } from "react";
 import invariant from "tiny-invariant";
 
@@ -23,6 +23,7 @@ interface Web3ButtonProps<TActionFn extends ActionFn>
   extends ThemeProviderProps {
   className?: string;
   contractAddress: `0x${string}` | `${string}.eth` | string;
+  contractAbi?: ContractInterface;
 
   overrides?: CallOverrides;
   // called with the result
@@ -64,6 +65,7 @@ export const Web3Button = <TAction extends ActionFn>({
   onError,
   onSubmit,
   isDisabled,
+  contractAbi,
   children,
   action,
   className,
@@ -85,7 +87,7 @@ export const Web3Button = <TAction extends ActionFn>({
     return null;
   }, [sdkChainId, walletChainId]);
 
-  const { contract } = useContract(contractAddress);
+  const { contract } = useContract(contractAddress, contractAbi || "custom");
 
   const mutation = useMutation(
     async () => {

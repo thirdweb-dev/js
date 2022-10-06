@@ -13,6 +13,7 @@ import type {
   Erc20,
   ClaimOptions,
   NFTMetadataOrUri,
+  Token,
 } from "@thirdweb-dev/sdk";
 import type { Edition } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/edition";
 import type { EditionDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/edition-drop";
@@ -68,6 +69,16 @@ export type NFTContract =
   | NFTCollection
   | Edition
   | Exclude<DropContract, "TokenDrop">;
+
+/**
+ * The possible Token contract types.
+ * @example
+ * ```javascript
+ * const { contract } = useContract(<ContractAddress>);
+ * ```
+ * @beta
+ */
+export type TokenContract = TokenDrop | Token | SmartContract | null;
 
 /**
  * Possible NFT contract types.

@@ -11,8 +11,8 @@ export * from "./sdk";
 // types
 export * from "./types/index";
 export * from "./types/common";
-export * from "./types/contracts";
-export * from "./types/contracts/nft-drop";
+export * from "./types/programs";
+export * from "./types/programs/nft-drop";
 // utils
 export * from "./utils/urls";
 
@@ -20,5 +20,5 @@ export * from "./utils/urls";
 export {
   TokenMetadataInputSchema,
   NFTCollectionMetadataInputSchema,
-} from "./types/contracts";
-export { NFTDropContractInputSchema } from "./types/contracts/nft-drop";
+} from "./types/programs";
+export { NFTDropContractInputSchema } from "./types/programs/nft-drop";
