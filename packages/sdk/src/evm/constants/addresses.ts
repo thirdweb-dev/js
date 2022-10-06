@@ -33,14 +33,7 @@ export const CONTRACT_ADDRESSES: Record<
     twRegistry: TWRegistry_address,
     twBYOCRegistry: constants.AddressZero,
   },
-  [ChainId.Rinkeby]: {
-    openzeppelinForwarder: OZ_DEFENDER_FORWARDER_ADDRESS,
-    openzeppelinForwarderEOA: "0x0bBA31EAf82C649C0B9579F5F44374C74F4605Ea",
-    biconomyForwarder: "0xFD4973FeB2031D4409fB57afEE5dF2051b171104",
-    twFactory: TWFactory_address,
-    twRegistry: TWRegistry_address,
-    twBYOCRegistry: "0x3E6eE864f850F5e5A98bc950B68E181Cf4010F23",
-  },
+
   [ChainId.Goerli]: {
     openzeppelinForwarder: "0x5001A14CA6163143316a7C614e30e6041033Ac20",
     openzeppelinForwarderEOA: "0xe73c50cB9c5B378627ff625BB6e6725A4A5D65d2",
@@ -105,14 +98,7 @@ export const CONTRACT_ADDRESSES: Record<
     twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
     twBYOCRegistry: constants.AddressZero,
   },
-  [ChainId.ArbitrumRinkeby]: {
-    openzeppelinForwarder: OZ_DEFENDER_FORWARDER_ADDRESS,
-    openzeppelinForwarderEOA: "0xE1eE43D23f247b6A9aF81fcE2766E76709482728",
-    biconomyForwarder: "0x67454E169d613a8e9BA6b06af2D267696EAaAf41",
-    twFactory: "0xb0435b47ad26115A39c59735b814f3769F07C2c1",
-    twRegistry: "0xcF4c511551aE4dab1F997866FC3900cd2aaeC40D",
-    twBYOCRegistry: constants.AddressZero,
-  },
+
   [ChainId.ArbitrumGoerli]: {
     openzeppelinForwarder: "0x8cbc8B5d71702032904750A66AEfE8B603eBC538",
     openzeppelinForwarderEOA: "0x119704314Ef304EaAAE4b3c7C9ABd59272A28310",
@@ -129,14 +115,7 @@ export const CONTRACT_ADDRESSES: Record<
     twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
     twBYOCRegistry: constants.AddressZero,
   },
-  [ChainId.OptimismKovan]: {
-    openzeppelinForwarder: OZ_DEFENDER_FORWARDER_ADDRESS,
-    openzeppelinForwarderEOA: "0xE8dd2Ff0212F86d3197b4AfDC6dAC6ac47eb10aC",
-    biconomyForwarder: "0x9C73373C70F23920EA54F7883dCB1F85b162Df40",
-    twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
-    twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
-    twBYOCRegistry: constants.AddressZero,
-  },
+
   [ChainId.OptimismGoerli]: {
     openzeppelinForwarder: "0x8cbc8B5d71702032904750A66AEfE8B603eBC538",
     openzeppelinForwarderEOA: "0x119704314Ef304EaAAE4b3c7C9ABd59272A28310",

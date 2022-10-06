@@ -16,20 +16,7 @@ const chain: Record<string, Chain> = {
       },
     ],
   },
-  rinkeby: {
-    id: ChainId.Rinkeby,
-    name: "Rinkeby",
-    nativeCurrency: NATIVE_TOKENS[ChainId.Rinkeby],
-    rpcUrls: ["https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161"],
-    blockExplorers: [
-      {
-        name: "Etherscan",
-        url: "https://rinkeby.etherscan.io",
-      },
-    ],
-    testnet: true,
-    deprecated: true,
-  },
+
   goerli: {
     id: ChainId.Goerli,
     name: "Goerli",
@@ -147,20 +134,7 @@ const chain: Record<string, Chain> = {
     ],
     testnet: false,
   },
-  optimismKovan: {
-    id: ChainId.OptimismKovan,
-    name: "Optimism Kovan",
-    nativeCurrency: NATIVE_TOKENS[ChainId.OptimismKovan],
-    rpcUrls: ["https://kovan.optimism.io"],
-    blockExplorers: [
-      {
-        name: "Etherscan",
-        url: "https://kovan-optimistic.etherscan.io/",
-      },
-    ],
-    testnet: true,
-    deprecated: true,
-  },
+
   optimismGoerli: {
     id: ChainId.OptimismGoerli,
     name: "Optimism Goerli Testnet",
@@ -187,20 +161,7 @@ const chain: Record<string, Chain> = {
     ],
     testnet: false,
   },
-  arbitrumRinkeby: {
-    id: ChainId.ArbitrumRinkeby,
-    name: "Arbitrum Rinkeby",
-    nativeCurrency: NATIVE_TOKENS[ChainId.ArbitrumRinkeby],
-    rpcUrls: ["https://rinkeby.arbitrum.io/rpc"],
-    blockExplorers: [
-      {
-        name: "Arbiscan",
-        url: "https://testnet.arbiscan.io/",
-      },
-    ],
-    testnet: true,
-    deprecated: true,
-  },
+
   arbitrumGoerli: {
     id: ChainId.ArbitrumGoerli,
     name: "Arbitrum Goerli",
