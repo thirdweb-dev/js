@@ -13,7 +13,34 @@ import { UserWallet } from "./user-wallet";
 import { PublicKey } from "@solana/web3.js";
 import { isBrowser } from "@thirdweb-dev/storage";
 
-class WalletAuthenticator {
+/**
+ * Wallet Authenticator
+ * @remarks The wallet authenticator enables server-side applications to securely identify the
+ * connected wallet address of users on the client-side, and also enables users to authenticate
+ * to any backend using just their wallet. It implements the JSON Web Token (JWT) authentication
+ * standard.
+ *
+ * @example
+ * ```javascript
+ * // We specify the domain of the application to authenticate to
+ * const domain = "example.com"
+ *
+ * // On the client side, we can generate a payload for the connected wallet to login
+ * const loginPayload = await sdk.auth.login(domain);
+ *
+ * // Then on the server side, we can securely verify the connected client-side address
+ * const address = sdk.auth.verify(domain, loginPayload);
+ *
+ * // And we can also generate an authentication token to send to the client
+ * const token = sdk.auth.generate(domain, loginPayload);
+ *
+ * // Finally, the token can be send from the client to the server to make authenticated requests
+ * // And the server can use the following function to authenticate a token and verify the associated address
+ * const address = sdk.auth.authenticate(domain, token);
+ * ```
+ * @public
+ */
+export class WalletAuthenticator {
   private wallet: UserWallet;
 
   constructor(wallet: UserWallet) {
