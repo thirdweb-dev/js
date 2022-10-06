@@ -1,6 +1,7 @@
 import { TWREGISTRY_PROGRAM_ID } from "../constants/addresses";
 import TWRegistryIDL from "../idl/tw_registry.json";
 import { Program } from "../programs/program";
+import { ProgramType } from "../programs/types";
 import { WalletAccount } from "../types/common";
 import { UserWallet } from "./user-wallet";
 import {
@@ -69,7 +70,7 @@ export class Registry {
 
   public async getAddToRegistryInstructions(
     programToAdd: PublicKey,
-    programType: string,
+    programType: ProgramType,
   ) {
     const wallet = this.metaplex.identity().publicKey;
     const instructions: InstructionWithSigners[] = [];
@@ -86,7 +87,7 @@ export class Registry {
         await this.getRegisterProgramTransaction(
           wallet,
           programToAdd,
-          "nft-collection",
+          programType,
         )
       ).instructions[0],
       signers: [this.metaplex.identity()],
