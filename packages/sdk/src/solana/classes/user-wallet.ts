@@ -13,8 +13,10 @@ import {
   walletAdapterIdentity,
 } from "@metaplex-foundation/js";
 import { Keypair, PublicKey } from "@solana/web3.js";
+import bs58 from "bs58";
 import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
+import nacl from "tweetnacl";
 
 /**
  *
@@ -116,6 +118,27 @@ export class UserWallet {
    */
   public getSigner() {
     return this.metaplex.identity();
+  }
+
+  public async sign(message: string): Promise<string> {
+    const signer = this.getSigner();
+    const encodedMessage = new TextEncoder().encode(message);
+    const signedMessage = await signer.signMessage(encodedMessage);
+    const signature = new TextDecoder().decode(signedMessage);
+
+    return signature;
+  }
+
+  public verifySignature(
+    message: string,
+    signature: string,
+    publicKey: string,
+  ): boolean {
+    return nacl.sign.detached.verify(
+      new TextEncoder().encode(message),
+      bs58.decode(signature),
+      bs58.decode(publicKey),
+    );
   }
 
   /**
