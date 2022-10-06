@@ -256,10 +256,9 @@ export class Deployer {
         "nft-drop",
       );
 
-    const block = await this.metaplex.connection.getLatestBlockhash(
-      "finalized",
-    );
-
+    // Have to split transactions here because it goes over the single transaction size limit
+    // We use `signAllTransactions` to sign all the transactions at once so the user only has to sign once
+    const block = await this.metaplex.connection.getLatestBlockhash();
     const dropTx = collectionTx
       .add(candyMachineTx)
       .setFeePayer(this.metaplex.identity())
@@ -276,20 +275,19 @@ export class Deployer {
         feePayer: this.metaplex.identity().publicKey,
         lastValidBlockHeight: block.lastValidBlockHeight,
       });
-
-    // const txSigners = dropTx.getSigners().concat(regTx.getSigners());
-
     const dropSigners = [this.metaplex.identity(), ...dropTx.getSigners()];
-    const { keypairs, identities } = getSignerHistogram(dropSigners);
+    const { keypairs } = getSignerHistogram(dropSigners);
     const dropTransaction = dropTx.toTransaction();
-    console.log({ keypairs, identities });
+    // partially sign with the PDA keypairs
     if (keypairs.length > 0) {
       dropTransaction.partialSign(...keypairs);
     }
+    // make the connected wallet sign both candyMachine + registry transactions
     const signedTx = await this.metaplex
       .identity()
       .signAllTransactions([dropTransaction, regTx.toTransaction()]);
 
+    // send the signed transactions
     const signatures = await Promise.all(
       signedTx.map(
         async (tx) =>
@@ -297,13 +295,12 @@ export class Deployer {
       ),
     );
 
+    // wait for confirmations
     const confirmations = await Promise.all(
       signatures.map((sig) => {
         return this.metaplex.rpc().confirmTransaction(sig);
       }),
     );
-
-    // const result = await fullTx.sendAndConfirm(this.metaplex);
 
     if (confirmations.length === 0) {
       throw new Error("Transaction failed");
