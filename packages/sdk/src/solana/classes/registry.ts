@@ -35,6 +35,53 @@ export class Registry {
     );
   }
 
+  public async getProgramType(address: string) {
+    try {
+      const candyMachine = await this.metaplex
+        .candyMachines()
+        .findByAddress({ address: new PublicKey(address) })
+        .run();
+      if (candyMachine) {
+        return "nft-drop";
+      }
+    } catch (err) {
+      // ignore and try next
+    }
+    const metadata = await this.metaplex
+      .nfts()
+      .findByMint({ mintAddress: new PublicKey(address) })
+      .run();
+
+    if (metadata) {
+      if (metadata.collectionDetails) {
+        return "nft-collection";
+      } else {
+        if (metadata.tokenStandard === TokenStandard.Fungible) {
+          return "token";
+        }
+      }
+    }
+    throw new Error("Unknown account type");
+  }
+
+  public async getDeployedPrograms(
+    walletAddress: string,
+  ): Promise<RegisteredProgram[]> {
+    const wallet = new PublicKey(walletAddress);
+    const count = await this.getTotalProgramsRegistered(wallet);
+    const programAddresses = [];
+    for (let i = 0; i < count; i++) {
+      programAddresses.push(
+        this.getRegisteredProgramAddress(wallet, i).toBase58(),
+      );
+    }
+    const programsRaw = await this.twRegistry.fetchMultiple(
+      "registeredProgramAccount",
+      programAddresses,
+    );
+    return programsRaw.map((raw) => this.toRegisteredProgram(raw));
+  }
+
   public async getTotalProgramsRegistered(wallet: PublicKey) {
     const accountExists = await this.registrarAccountExists(wallet);
     if (!accountExists) {
@@ -144,53 +191,6 @@ export class Registry {
       .transaction();
   }
 
-  public async getProgramType(address: string) {
-    try {
-      const candyMachine = await this.metaplex
-        .candyMachines()
-        .findByAddress({ address: new PublicKey(address) })
-        .run();
-      if (candyMachine) {
-        return "nft-drop";
-      }
-    } catch (err) {
-      // ignore and try next
-    }
-    const metadata = await this.metaplex
-      .nfts()
-      .findByMint({ mintAddress: new PublicKey(address) })
-      .run();
-
-    if (metadata) {
-      if (metadata.collectionDetails) {
-        return "nft-collection";
-      } else {
-        if (metadata.tokenStandard === TokenStandard.Fungible) {
-          return "token";
-        }
-      }
-    }
-    throw new Error("Unknown account type");
-  }
-
-  public async getDeployedPrograms(
-    walletAddress: string,
-  ): Promise<RegisteredProgram[]> {
-    const wallet = new PublicKey(walletAddress);
-    const count = await this.getTotalProgramsRegistered(wallet);
-    const programAddresses = [];
-    for (let i = 0; i < count; i++) {
-      programAddresses.push(
-        this.getRegisteredProgramAddress(wallet, i).toBase58(),
-      );
-    }
-    const programsRaw = await this.twRegistry.fetchMultiple(
-      "registeredProgramAccount",
-      programAddresses,
-    );
-    return programsRaw.map((raw) => this.toRegisteredProgram(raw));
-  }
-
   private async registrarAccountExists(wallet: PublicKey) {
     const registrarPda = this.getRegistrarAddress(wallet);
     const account = await this.metaplex.rpc().getAccount(registrarPda);
@@ -205,6 +205,7 @@ export class Registry {
     );
   }
 
+  // TODO probably don't need this anymore, rely on registry instead
   private async getOwnedTokenAccounts(
     walletAddress: string,
   ): Promise<WalletAccount[]> {
