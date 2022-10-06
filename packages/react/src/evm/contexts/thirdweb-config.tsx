@@ -13,7 +13,6 @@ interface ThirdwebConfigContext {
 
 export const defaultChainRpc: Record<SupportedChainId | number, string> = {
   [ChainId.Mainnet]: "mainnet",
-  [ChainId.Rinkeby]: "rinkeby",
   [ChainId.Goerli]: "goerli",
   [ChainId.Polygon]: "polygon",
   [ChainId.Mumbai]: "mumbai",
