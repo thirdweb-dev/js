@@ -116,8 +116,13 @@ export class Deployer {
       },
       { createMetadataAccountArgsV2: { data, isMutable: false } },
     );
+
+    const registryInstructions =
+      await this.regsitry.getAddToRegistryInstructions(mint.publicKey, "token");
+
     await mintTx
       .add({ instruction: metaTx, signers: [this.metaplex.identity()] })
+      .append(...registryInstructions)
       .sendAndConfirm(this.metaplex);
 
     return mint.publicKey.toBase58();
@@ -161,35 +166,13 @@ export class Deployer {
         ),
       });
 
-    const wallet = this.metaplex.identity().publicKey;
-    const instructions: InstructionWithSigners[] = [];
-    const registrarAccountExists = await this.regsitry.registrarAccountExists(
-      wallet,
-    );
-    if (!registrarAccountExists) {
-      console.log("creating registrar account");
-      instructions.push({
-        instruction: (
-          await this.regsitry.getInitializeRegistrarTransaction(wallet)
-        ).instructions[0],
-        signers: [this.metaplex.identity()],
-      });
-    }
-    instructions.push({
-      instruction: (
-        await this.regsitry.getRegisterProgramTransaction(
-          wallet,
-          collectionMint.publicKey,
-          "nft-collection",
-        )
-      ).instructions[0],
-      signers: [this.metaplex.identity()],
-    });
-
-    console.log({ instructions });
-
+    const registryInstructions =
+      await this.regsitry.getAddToRegistryInstructions(
+        collectionMint.publicKey,
+        "nft-collection",
+      );
     const result = await collectionTx
-      .append(...instructions)
+      .append(...registryInstructions)
       .sendAndConfirm(this.metaplex);
 
     if (!result.response.signature) {
@@ -256,8 +239,15 @@ export class Deployer {
         ),
       });
 
+    const registryInstructions =
+      await this.regsitry.getAddToRegistryInstructions(
+        candyMachineKeypair.publicKey,
+        "nft-drop",
+      );
+
     const result = await collectionTx
       .add(candyMachineTx)
+      .append(...registryInstructions)
       .sendAndConfirm(this.metaplex);
 
     if (!result.response.signature) {

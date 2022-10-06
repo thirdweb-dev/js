@@ -5,6 +5,7 @@ import { WalletAccount } from "../types/common";
 import { UserWallet } from "./user-wallet";
 import {
   CandyMachine,
+  InstructionWithSigners,
   Metadata,
   Metaplex,
   Pda,
@@ -38,44 +39,6 @@ export class Registry {
     return account.exists;
   }
 
-  public async getInitializeRegistrarTransaction(
-    wallet: PublicKey,
-  ): Promise<Transaction> {
-    const registrarPda = this.getRegistrarAddress(wallet);
-    return this.twRegistry
-      .prepareCall("initializeRegistrar", {
-        accounts: {
-          authority: wallet.toBase58(),
-          registrarAccount: registrarPda.toBase58(),
-        },
-      })
-      .transaction();
-  }
-
-  public async getRegisterProgramTransaction(
-    wallet: PublicKey,
-    programAddress: PublicKey,
-    programType: string,
-  ): Promise<Transaction> {
-    const registrarPda = this.getRegistrarAddress(wallet);
-    const registeredProgramAddress = this.getRegisteredProgramAddress(
-      wallet,
-      await this.getTotalProgramsRegistered(wallet),
-    );
-    const accounts = {
-      authority: wallet.toBase58(),
-      registrarAccount: registrarPda.toBase58(),
-      registeredProgramAccount: registeredProgramAddress.toBase58(),
-    };
-    console.log(accounts);
-    return this.twRegistry
-      .prepareCall("register", {
-        accounts,
-        data: [programAddress, programType],
-      })
-      .transaction();
-  }
-
   public async getTotalProgramsRegistered(wallet: PublicKey) {
     const accountExists = await this.registrarAccountExists(wallet);
     if (!accountExists) {
@@ -102,6 +65,71 @@ export class Registry {
       wallet.toBuffer(),
       Buffer.from(index.toString()),
     ]);
+  }
+
+  public async getAddToRegistryInstructions(
+    programToAdd: PublicKey,
+    programType: string,
+  ) {
+    const wallet = this.metaplex.identity().publicKey;
+    const instructions: InstructionWithSigners[] = [];
+    const registrarAccountExists = await this.registrarAccountExists(wallet);
+    if (!registrarAccountExists) {
+      instructions.push({
+        instruction: (await this.getInitializeRegistrarTransaction(wallet))
+          .instructions[0],
+        signers: [this.metaplex.identity()],
+      });
+    }
+    instructions.push({
+      instruction: (
+        await this.getRegisterProgramTransaction(
+          wallet,
+          programToAdd,
+          "nft-collection",
+        )
+      ).instructions[0],
+      signers: [this.metaplex.identity()],
+    });
+    return instructions;
+  }
+
+  private async getInitializeRegistrarTransaction(
+    wallet: PublicKey,
+  ): Promise<Transaction> {
+    const registrarPda = this.getRegistrarAddress(wallet);
+    return this.twRegistry
+      .prepareCall("initializeRegistrar", {
+        accounts: {
+          authority: wallet.toBase58(),
+          registrarAccount: registrarPda.toBase58(),
+        },
+      })
+      .transaction();
+  }
+
+  private async getRegisterProgramTransaction(
+    wallet: PublicKey,
+    programAddress: PublicKey,
+    programType: string,
+  ): Promise<Transaction> {
+    const registrarPda = this.getRegistrarAddress(wallet);
+    const registeredProgramAddress = this.getRegisteredProgramAddress(
+      wallet,
+      await this.getTotalProgramsRegistered(wallet),
+    );
+    const accounts = {
+      authority: wallet.toBase58(),
+      registrarAccount: registrarPda.toBase58(),
+      registeredProgramAccount: registeredProgramAddress.toBase58(),
+    };
+    console.log(accounts);
+    return this.twRegistry
+      .prepareCall("register", {
+        accounts,
+        data: [programAddress, programType],
+      })
+      .transaction();
   }
 
   public async getAccountType(address: string) {
