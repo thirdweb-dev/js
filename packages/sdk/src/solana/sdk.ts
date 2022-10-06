@@ -110,8 +110,8 @@ export class ThirdwebSDK {
     this.storage = storage;
     this.metaplex = Metaplex.make(this.connection);
     this.wallet = new UserWallet(this.metaplex);
-    this.deployer = new Deployer(this.metaplex, this.storage);
-    this.registry = new Registry(this.metaplex);
+    this.registry = new Registry(this.metaplex, this.wallet);
+    this.deployer = new Deployer(this.registry, this.metaplex, this.storage);
   }
 
   /**
