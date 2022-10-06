@@ -24,16 +24,7 @@ export const NATIVE_TOKENS: Record<
       symbol: "WETH",
     },
   },
-  [ChainId.Rinkeby]: {
-    name: "Rinkeby Ether",
-    symbol: "RIN",
-    decimals: 18,
-    wrapped: {
-      address: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
-      name: "Wrapped Ether",
-      symbol: "WETH",
-    },
-  },
+
   [ChainId.Goerli]: {
     name: "Görli Ether",
     symbol: "GOR",
@@ -114,16 +105,7 @@ export const NATIVE_TOKENS: Record<
       symbol: "WETH",
     },
   },
-  [ChainId.ArbitrumRinkeby]: {
-    name: "Arbitrum Rinkeby Ether",
-    symbol: "ARETH",
-    decimals: 18,
-    wrapped: {
-      address: "0xEBbc3452Cc911591e4F18f3b36727Df45d6bd1f9",
-      name: "Wrapped Ether",
-      symbol: "WETH",
-    },
-  },
+
   [ChainId.ArbitrumGoerli]: {
     name: "Arbitrum Goerli Ether",
     symbol: "AGOR",
@@ -144,16 +126,7 @@ export const NATIVE_TOKENS: Record<
       symbol: "WETH",
     },
   },
-  [ChainId.OptimismKovan]: {
-    name: "Kovan Ether",
-    symbol: "KOR",
-    decimals: 18,
-    wrapped: {
-      address: "0xbC6F6b680bc61e30dB47721c6D1c5cde19C1300d",
-      name: "Wrapped Ether",
-      symbol: "WETH",
-    },
-  },
+
   [ChainId.OptimismGoerli]: {
     name: "Goerli Ether",
     symbol: "ETH",

@@ -76,10 +76,8 @@ const chainIdToCurrencyMap: Record<
 > = {
   [ChainId.Mainnet]: "ethereum",
   [ChainId.Goerli]: "ethereum",
-  [ChainId.Rinkeby]: "ethereum",
 
   [ChainId.Arbitrum]: "arbitrum",
-  [ChainId.ArbitrumRinkeby]: "arbitrum",
   [ChainId.ArbitrumGoerli]: "arbitrum",
 
   [ChainId.Avalanche]: "avalanche",
@@ -89,7 +87,6 @@ const chainIdToCurrencyMap: Record<
   [ChainId.FantomTestnet]: "fantom",
 
   [ChainId.Optimism]: "optimism",
-  [ChainId.OptimismKovan]: "optimism",
   [ChainId.OptimismGoerli]: "optimism",
 
   [ChainId.Polygon]: "polygon",
