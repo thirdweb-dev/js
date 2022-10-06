@@ -9,12 +9,16 @@ import {
   NFTDropInitialConditionsInputSchema,
 } from "../types/programs/nft-drop";
 import { enforceCreator } from "./helpers/creators-helper";
+import { Registry } from "./registry";
 import {
   findMetadataPda,
+  getSignerHistogram,
+  InstructionWithSigners,
   Metaplex,
   sol,
   toBigNumber,
   token,
+  TransactionBuilder,
 } from "@metaplex-foundation/js";
 import {
   createCreateMetadataAccountV2Instruction,
@@ -49,10 +53,16 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 export class Deployer {
   private metaplex: Metaplex;
   private storage: ThirdwebStorage;
+  private regsitry: Registry;
 
-  constructor(metaplex: Metaplex, storage: ThirdwebStorage) {
+  constructor(
+    registry: Registry,
+    metaplex: Metaplex,
+    storage: ThirdwebStorage,
+  ) {
     this.metaplex = metaplex;
     this.storage = storage;
+    this.regsitry = registry;
   }
 
   /**
@@ -88,8 +98,9 @@ export class Deployer {
         mint,
       });
 
+    const name = tokenMetadataParsed.name;
     const data: DataV2 = {
-      name: tokenMetadataParsed.name,
+      name,
       symbol: tokenMetadataParsed.symbol || "",
       sellerFeeBasisPoints: 0,
       uri,
@@ -108,8 +119,17 @@ export class Deployer {
       },
       { createMetadataAccountArgsV2: { data, isMutable: false } },
     );
+
+    const registryInstructions =
+      await this.regsitry.getAddToRegistryInstructions(
+        mint.publicKey,
+        name,
+        "token",
+      );
+
     await mintTx
       .add({ instruction: metaTx, signers: [this.metaplex.identity()] })
+      .append(...registryInstructions)
       .sendAndConfirm(this.metaplex);
 
     return mint.publicKey.toBase58();
@@ -136,10 +156,14 @@ export class Deployer {
     const parsed = NFTCollectionMetadataInputSchema.parse(collectionMetadata);
     const uri = await this.storage.upload(parsed);
 
-    const { nft: collectionNft } = await this.metaplex
+    const collectionMint = Keypair.generate();
+    const name = parsed.name;
+    const collectionTx = await this.metaplex
       .nfts()
+      .builders()
       .create({
-        name: parsed.name,
+        useNewMint: collectionMint,
+        name,
         symbol: parsed.symbol,
         sellerFeeBasisPoints: 0,
         uri,
@@ -148,9 +172,23 @@ export class Deployer {
           parsed.creators,
           this.metaplex.identity().publicKey,
         ),
-      })
-      .run();
-    return collectionNft.mint.address.toBase58();
+      });
+
+    const registryInstructions =
+      await this.regsitry.getAddToRegistryInstructions(
+        collectionMint.publicKey,
+        name,
+        "nft-collection",
+      );
+    const result = await collectionTx
+      .append(...registryInstructions)
+      .sendAndConfirm(this.metaplex);
+
+    if (!result.response.signature) {
+      throw new Error("Transaction failed");
+    }
+
+    return collectionMint.publicKey.toBase58();
   }
 
   /**
@@ -176,12 +214,13 @@ export class Deployer {
     const uri = await this.storage.upload(collectionInfo);
 
     const collectionMint = Keypair.generate();
+    const name = collectionInfo.name;
     const collectionTx = await this.metaplex
       .nfts()
       .builders()
       .create({
         useNewMint: collectionMint,
-        name: collectionInfo.name,
+        name,
         symbol: collectionInfo.symbol,
         sellerFeeBasisPoints: 0,
         uri,
@@ -210,11 +249,60 @@ export class Deployer {
         ),
       });
 
-    const result = await collectionTx
-      .add(candyMachineTx)
-      .sendAndConfirm(this.metaplex);
+    const registryInstructions =
+      await this.regsitry.getAddToRegistryInstructions(
+        candyMachineKeypair.publicKey,
+        name,
+        "nft-drop",
+      );
 
-    if (!result.response.signature) {
+    // Have to split transactions here because it goes over the single transaction size limit
+    // We use `signAllTransactions` to sign all the transactions at once so the user only has to sign once
+    const block = await this.metaplex.connection.getLatestBlockhash();
+    const dropTx = collectionTx
+      .add(candyMachineTx)
+      .setFeePayer(this.metaplex.identity())
+      .setTransactionOptions({
+        blockhash: block.blockhash,
+        feePayer: this.metaplex.identity().publicKey,
+        lastValidBlockHeight: block.lastValidBlockHeight,
+      });
+    const regTx = TransactionBuilder.make()
+      .add(...registryInstructions)
+      .setFeePayer(this.metaplex.identity())
+      .setTransactionOptions({
+        blockhash: block.blockhash,
+        feePayer: this.metaplex.identity().publicKey,
+        lastValidBlockHeight: block.lastValidBlockHeight,
+      });
+    const dropSigners = [this.metaplex.identity(), ...dropTx.getSigners()];
+    const { keypairs } = getSignerHistogram(dropSigners);
+    const dropTransaction = dropTx.toTransaction();
+    // partially sign with the PDA keypairs
+    if (keypairs.length > 0) {
+      dropTransaction.partialSign(...keypairs);
+    }
+    // make the connected wallet sign both candyMachine + registry transactions
+    const signedTx = await this.metaplex
+      .identity()
+      .signAllTransactions([dropTransaction, regTx.toTransaction()]);
+
+    // send the signed transactions
+    const signatures = await Promise.all(
+      signedTx.map(
+        async (tx) =>
+          await this.metaplex.connection.sendRawTransaction(tx.serialize()),
+      ),
+    );
+
+    // wait for confirmations
+    const confirmations = await Promise.all(
+      signatures.map((sig) => {
+        return this.metaplex.rpc().confirmTransaction(sig);
+      }),
+    );
+
+    if (confirmations.length === 0) {
       throw new Error("Transaction failed");
     }
 
