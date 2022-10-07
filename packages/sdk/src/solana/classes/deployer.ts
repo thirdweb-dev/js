@@ -241,6 +241,10 @@ export class Deployer {
         itemsAvailable: toBigNumber(candyMachineInfo.itemsAvailable),
         price: sol(0),
         sellerFeeBasisPoints: 0,
+        endSettings: {
+          endSettingType: 1,
+          number: toBigNumber(0),
+        },
         candyMachine: candyMachineKeypair,
         collection: collectionMint.publicKey,
         creators: enforceCreator(

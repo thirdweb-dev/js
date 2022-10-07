@@ -7,9 +7,11 @@ import {
 import { toCurrencyValue } from "../utils/token";
 import {
   Amount,
+  CandyMachineEndSettings,
   DateTime,
   Metaplex,
   sol,
+  toBigNumber,
   toDateTime,
   token,
 } from "@metaplex-foundation/js";
@@ -65,17 +67,69 @@ export class ClaimConditions {
     const isWithinGoLiveDate = candyMachine.goLiveDate
       ? candyMachine.goLiveDate.toNumber() * 1000 >= Date.now()
       : true;
+    const maxClaimable =
+      candyMachine.endSettings && candyMachine.endSettings.endSettingType === 1
+        ? candyMachine.endSettings.number.toNumber()
+        : "unlimited";
+
+    const claimedSupply = candyMachine.itemsMinted.toNumber();
+    const isBelowMaxClaimable =
+      maxClaimable !== "unlimited"
+        ? claimedSupply < maxClaimable
+        : claimedSupply < lazyMintedSupply;
+
     // TODO add allowlist/hidden settings here
     return {
       price: toCurrencyValue(candyMachine.price),
       currencyAddress: candyMachine.tokenMintAddress?.toBase58() || null,
       primarySaleRecipient: candyMachine.walletAddress.toBase58(),
       sellerFeeBasisPoints: candyMachine.sellerFeeBasisPoints,
-      goLiveDate,
+      startTime: goLiveDate,
       totalAvailableSupply,
       lazyMintedSupply,
-      isReadyToClaim: candyMachine.isFullyLoaded && isWithinGoLiveDate,
+      claimedSupply,
+      maxClaimable: maxClaimable.toString(),
+      isReadyToClaim:
+        candyMachine.isFullyLoaded && isWithinGoLiveDate && isBelowMaxClaimable,
     };
+  }
+
+  async assertCanClaimable(quantity: number) {
+    const conditions = await this.get();
+    if (!conditions.isReadyToClaim) {
+      if (conditions.lazyMintedSupply < conditions.totalAvailableSupply) {
+        throw new Error(
+          `NFT Drop is not fully loaded yet. Only ${conditions.lazyMintedSupply} out of ${conditions.totalAvailableSupply} NFTs have been lazy minted.`,
+        );
+      }
+      if (conditions.maxClaimable === "0") {
+        throw new Error(
+          `Max Claimable is 0. No NFTs can be claimed. Set your claim conditions to enable claiming.`,
+        );
+      }
+      const maxClaimable =
+        conditions.maxClaimable === "unlimited"
+          ? null
+          : parseInt(conditions.maxClaimable);
+      if (
+        (maxClaimable !== null &&
+          conditions.claimedSupply + quantity > maxClaimable) ||
+        conditions.claimedSupply + quantity > conditions.lazyMintedSupply
+      ) {
+        throw new Error(
+          `Max claimable reached - ${conditions.claimedSupply} out of ${
+            conditions.maxClaimable !== null
+              ? conditions.maxClaimable
+              : conditions.lazyMintedSupply
+          } NFTs have been claimed.`,
+        );
+      }
+      if (conditions.startTime && conditions.startTime > new Date()) {
+        throw new Error(
+          `Drop is not to ready be claimed yet, start date is ${conditions.startTime}`,
+        );
+      }
+    }
   }
 
   /**
@@ -121,9 +175,20 @@ export class ClaimConditions {
     }
 
     // dates
-    const goLiveDate: DateTime | undefined = parsed.goLiveDate
-      ? toDateTime(parsed.goLiveDate)
+    const goLiveDate: DateTime | undefined = parsed.startTime
+      ? toDateTime(parsed.startTime)
       : undefined;
+
+    // max claimable
+    const endSettings: CandyMachineEndSettings | null | undefined =
+      parsed.maxClaimable
+        ? parsed.maxClaimable === "unlimited"
+          ? null
+          : {
+              endSettingType: 1,
+              number: toBigNumber(parsed.maxClaimable),
+            }
+        : undefined;
 
     // TODO add allowlist/hidden settings here
 
@@ -133,6 +198,7 @@ export class ClaimConditions {
       ...(price && { price }),
       ...(goLiveDate && { goLiveDate }),
       ...(sellerFeeBasisPoints && { sellerFeeBasisPoints }),
+      ...(endSettings !== undefined && { endSettings }),
     };
 
     const result = await this.metaplex

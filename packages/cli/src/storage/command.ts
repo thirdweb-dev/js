@@ -1,14 +1,46 @@
 import { logger } from "../core/helpers/logger";
 import { spinner } from "../core/helpers/logger";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BufferOrStringWithName, ThirdwebStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
 import fs from "fs";
 import path from "path";
+
+function recurseFiles(
+  uploadPath: string,
+  basePath: string,
+): BufferOrStringWithName[] {
+  const files = [];
+
+  const fileType = fs.lstatSync(uploadPath);
+  if (fileType.isFile()) {
+    const fileName = path.relative(basePath, uploadPath);
+    const fileData = fs.readFileSync(uploadPath);
+    files.push({ name: fileName, data: fileData });
+  } else if (fileType.isDirectory()) {
+    const paths = fs.readdirSync(uploadPath);
+    paths.forEach((subPath) => {
+      const fullSubPath = path.join(uploadPath, subPath);
+      const subFiles = recurseFiles(fullSubPath, basePath);
+      subFiles.forEach((file) => files.push(file));
+    });
+  }
+
+  return files;
+}
 
 export async function upload(
   storage: ThirdwebStorage,
   uploadPath: string,
 ): Promise<string> {
+  if (!uploadPath) {
+    logger.error(
+      `Please pass a path to a file or directory to upload with the following format:\n   ${chalk.blueBright(
+        `npx thirdweb@latest upload path/to/file.jpg`,
+      )}\n`,
+    );
+    process.exit(1);
+  }
+
   const pathExists = fs.existsSync(uploadPath);
   if (!pathExists) {
     logger.error(
@@ -22,15 +54,7 @@ export async function upload(
   let uri = "";
   const fileType = fs.lstatSync(uploadPath);
   if (fileType.isDirectory()) {
-    const subPaths = fs.readdirSync(uploadPath);
-    const filePaths = subPaths
-      .map((subPath) => path.join(uploadPath, subPath))
-      .filter((subPath) => fs.lstatSync(subPath).isFile());
-    const files = filePaths.map((filePath) => {
-      const fileName = path.parse(filePath).base;
-      const fileData = fs.readFileSync(filePath);
-      return { name: fileName, data: fileData };
-    });
+    const files = recurseFiles(uploadPath, uploadPath);
 
     if (files.length === 0) {
       logger.error(
