@@ -1,5 +1,5 @@
 import { NFTCollectionMetadataInputSchema } from ".";
-import { BasisPointsSchema } from "../../../core/schema/shared";
+import { BasisPointsSchema, QuantitySchema } from "../../../core/schema/shared";
 import { CurrencyValueSchema } from "../../../core/schema/token";
 import { AmountSchema } from "../common";
 import { z } from "zod";
@@ -10,6 +10,7 @@ import { z } from "zod";
 export const NFTDropInitialConditionsInputSchema = z.object({
   itemsAvailable: AmountSchema,
 });
+
 /**
  * @internal
  */
@@ -19,7 +20,8 @@ export const NFTDropUpdateableConditionsInputSchema = z.object({
   currencyAddress: z.string().nullable().optional(),
   primarySaleRecipient: z.string().optional(),
   sellerFeeBasisPoints: BasisPointsSchema.optional(),
-  goLiveDate: z.date().optional(),
+  startTime: z.date().optional(),
+  maxClaimable: QuantitySchema.optional(),
 });
 
 /**
@@ -30,9 +32,11 @@ export const NFTDropUpdateableConditionsOutputSchema = z.object({
   currencyAddress: z.string().nullable(),
   primarySaleRecipient: z.string(),
   sellerFeeBasisPoints: BasisPointsSchema,
-  goLiveDate: z.date().nullable(),
+  startTime: z.date().nullable(),
   totalAvailableSupply: z.number(),
   lazyMintedSupply: z.number(),
+  claimedSupply: z.number(),
+  maxClaimable: QuantitySchema,
   isReadyToClaim: z.boolean(),
 });
 
