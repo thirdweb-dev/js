@@ -96,9 +96,10 @@ export class Registry {
   }
 
   public async getProgramAt(
-    wallet: PublicKey,
+    walletAddress: string,
     index: number,
   ): Promise<RegisteredProgram> {
+    const wallet = new PublicKey(walletAddress);
     const pda = this.getRegisteredProgramAddress(wallet, index);
     const data = await this.twRegistry.fetch(
       "registeredProgramAccount",

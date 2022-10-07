@@ -1,3 +1,4 @@
+import { QuantitySchema } from "../../../../core/schema/shared";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
 import {
   BigNumberishSchema,
@@ -10,13 +11,6 @@ import { CurrencyValueSchema } from "./currency";
 import { SnapshotInputSchema } from "./snapshots";
 import { BigNumber, utils } from "ethers";
 import { z } from "zod";
-
-/**
- * @internal
- */
-export const QuantitySchema = z
-  .union([AmountSchema, z.literal("unlimited")])
-  .default("unlimited");
 
 /**
  * @internal
