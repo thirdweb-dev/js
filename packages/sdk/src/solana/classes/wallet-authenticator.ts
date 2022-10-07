@@ -1,21 +1,16 @@
-import { isBrowser } from "../../common/utils";
-import { SDKOptions } from "../../schema";
 import {
-  LoginOptions,
-  LoginPayload,
   AuthenticationOptions,
+  AuthenticationOptionsSchema,
+  AuthenticationPayloadData,
+  AuthenticationPayloadDataSchema,
+  LoginOptions,
+  LoginOptionsSchema,
+  LoginPayload,
   LoginPayloadData,
   LoginPayloadDataSchema,
-  AuthenticationPayloadDataSchema,
-  AuthenticationPayloadData,
-  LoginOptionsSchema,
-  VerifyOptionsSchema,
-  VerifyOptions,
-  AuthenticationOptionsSchema,
-} from "../../schema/auth";
-import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
-import { NetworkOrSignerOrProvider } from "../types";
-import { UserWallet } from "../wallet";
+} from "../types/auth";
+import { UserWallet } from "./user-wallet";
+import { isBrowser } from "@thirdweb-dev/storage";
 
 /**
  * Wallet Authenticator
@@ -44,15 +39,10 @@ import { UserWallet } from "../wallet";
  * ```
  * @public
  */
-export class WalletAuthenticator extends RPCConnectionHandler {
+export class WalletAuthenticator {
   private wallet: UserWallet;
 
-  constructor(
-    network: NetworkOrSignerOrProvider,
-    wallet: UserWallet,
-    options: SDKOptions,
-  ) {
-    super(network, options);
+  constructor(wallet: UserWallet) {
     this.wallet = wallet;
   }
 
@@ -79,7 +69,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
   ): Promise<LoginPayload> {
     const parsedOptions = LoginOptionsSchema.parse(options);
 
-    const signerAddress = await this.wallet.getAddress();
+    const signerAddress = this.wallet.getAddress();
     const expirationTime =
       parsedOptions?.expirationTime || new Date(Date.now() + 1000 * 60 * 5);
     const payloadData = LoginPayloadDataSchema.parse({
@@ -87,7 +77,6 @@ export class WalletAuthenticator extends RPCConnectionHandler {
       address: signerAddress,
       nonce: parsedOptions?.nonce,
       expiration_time: expirationTime,
-      chain_id: parsedOptions?.chainId,
     });
 
     const message = this.generateMessage(payloadData);
@@ -106,7 +95,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
    *
    * @param domain - The domain of the server-side application to verify the login request for
    * @param payload - The login payload to verify
-   * @returns Address of the logged in wallet
+   * @returns The public key of the logged in wallet
    *
    * @example
    * ```javascript
@@ -117,13 +106,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
    * const address = sdk.auth.verify(domain, loginPayload);
    * ```
    */
-  public verify(
-    domain: string,
-    payload: LoginPayload,
-    options?: VerifyOptions,
-  ): string {
-    const parsedOptions = VerifyOptionsSchema.parse(options);
-
+  public verify(domain: string, payload: LoginPayload): string {
     // Check that the intended domain matches the domain of the payload
     if (payload.payload.domain !== domain) {
       throw new Error(
@@ -137,26 +120,20 @@ export class WalletAuthenticator extends RPCConnectionHandler {
       throw new Error(`Login request has expired`);
     }
 
-    // If chain ID is specified, check that it matches the chain ID of the signature
-    if (
-      parsedOptions?.chainId !== undefined &&
-      parsedOptions.chainId !== payload.payload.chain_id
-    ) {
-      throw new Error(
-        `Chain ID '${parsedOptions.chainId}' does not match payload chain ID '${payload.payload.chain_id}'`,
-      );
-    }
-
     // Check that the signing address is the claimed wallet address
     const message = this.generateMessage(payload.payload);
-    const userAddress = this.wallet.recoverAddress(message, payload.signature);
-    if (userAddress.toLowerCase() !== payload.payload.address.toLowerCase()) {
+    const isValid = this.wallet.verifySignature(
+      message,
+      payload.signature,
+      payload.payload.address,
+    );
+    if (!isValid) {
       throw new Error(
-        `Signer address '${userAddress.toLowerCase()}' does not match payload address '${payload.payload.address.toLowerCase()}'`,
+        `Signer address '${payload.payload.address}' did not sign the provided message`,
       );
     }
 
-    return userAddress;
+    return payload.payload.address;
   }
 
   /**
@@ -192,7 +169,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     const parsedOptions = AuthenticationOptionsSchema.parse(options);
 
     const userAddress = this.verify(domain, payload);
-    const adminAddress = await this.wallet.getAddress();
+    const adminAddress = this.wallet.getAddress();
     const payloadData = AuthenticationPayloadDataSchema.parse({
       iss: adminAddress,
       sub: userAddress,
@@ -284,7 +261,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     }
 
     // Check that the connected wallet matches the token issuer
-    const connectedAddress = await this.wallet.getAddress();
+    const connectedAddress = this.wallet.getAddress();
     if (connectedAddress.toLowerCase() !== payload.iss.toLowerCase()) {
       throw new Error(
         `Expected the connected wallet address '${connectedAddress}' to match the token issuer address '${payload.iss}'`,
@@ -292,11 +269,12 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     }
 
     // Check that the connected wallet signed the token
-    const adminAddress = this.wallet.recoverAddress(
+    const isValid = this.wallet.verifySignature(
       JSON.stringify(payload),
       signature,
+      connectedAddress,
     );
-    if (connectedAddress.toLowerCase() !== adminAddress.toLowerCase()) {
+    if (!isValid) {
       throw new Error(
         `The connected wallet address '${connectedAddress}' did not sign the token`,
       );
@@ -306,7 +284,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
   }
 
   /**
-   * Generates a EIP-4361 compliant message to sign based on the login payload
+   * Generates a SIWS compliant message to sign based on the login payload
    */
   private generateMessage(payload: LoginPayloadData): string {
     let message = ``;
@@ -316,11 +294,6 @@ export class WalletAuthenticator extends RPCConnectionHandler {
 
     // Prompt user to make sure domain is correct to prevent phishing attacks
     message += `Make sure that the requesting domain above matches the URL of the current website.\n\n`;
-
-    // Add data fields in compliance with the EIP-4361 standard
-    if (payload.chain_id) {
-      message += `Chain ID: ${payload.chain_id}\n`;
-    }
 
     message += `Nonce: ${payload.nonce}\n`;
     message += `Expiration Time: ${payload.expiration_time}\n`;

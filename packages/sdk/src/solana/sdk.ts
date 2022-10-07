@@ -1,6 +1,7 @@
 import { Deployer } from "./classes/deployer";
 import { Registry } from "./classes/registry";
 import { UserWallet } from "./classes/user-wallet";
+import { WalletAuthenticator } from "./classes/wallet-authenticator";
 import { NFTCollection } from "./programs/nft-collection";
 import { NFTDrop } from "./programs/nft-drop";
 import type { Program } from "./programs/program";
@@ -85,6 +86,10 @@ export class ThirdwebSDK {
    */
   public wallet: UserWallet;
   /**
+   * Enable wallet-based server-side authentication
+   */
+  public auth: WalletAuthenticator;
+  /**
    * The currently connected network
    */
   public get network() {
@@ -110,8 +115,9 @@ export class ThirdwebSDK {
     this.storage = storage;
     this.metaplex = Metaplex.make(this.connection);
     this.wallet = new UserWallet(this.metaplex);
-    this.deployer = new Deployer(this.metaplex, this.storage);
-    this.registry = new Registry(this.metaplex);
+    this.auth = new WalletAuthenticator(this.wallet);
+    this.registry = new Registry(this.metaplex, this.wallet);
+    this.deployer = new Deployer(this.registry, this.metaplex, this.storage);
   }
 
   /**

@@ -1,3 +1,4 @@
+import { ProgramType } from "../../programs/types";
 import { AmountSchema, FileOrBufferOrStringSchema } from "../common";
 import { z } from "zod";
 
@@ -63,3 +64,14 @@ export type TokenMetadataInput = z.input<typeof TokenMetadataInputSchema>;
  * @public
  */
 export type CreatorInput = z.input<typeof CreatorInputSchema>;
+
+/**
+ * @internal
+ */
+export type RegisteredProgram = {
+  deployer: string;
+  programAddress: string;
+  programName: string;
+  programType: string;
+  visible: boolean;
+};
