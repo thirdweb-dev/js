@@ -146,7 +146,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
   program
     .command("upload")
     .description("Upload any file or directory using decentralized storage")
-    .argument("<upload-path>", "path to file or directory to upload")
+    .argument("[upload-path]", "path to file or directory to upload")
     .action(async (path) => {
       const storage = new ThirdwebStorage();
       const uri = await upload(storage, path);
