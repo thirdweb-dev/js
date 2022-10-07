@@ -22,6 +22,8 @@ export * from "./hooks/nft/drop/useLazyMint";
 export * from "./hooks/nft/drop/useClaimedSupply";
 export * from "./hooks/nft/drop/useUnclaimedSupply";
 export * from "./hooks/nft/drop/useClaimNFT";
+export * from "./hooks/nft/drop/useClaimConditions";
+export * from "./hooks/nft/drop/useSetClaimConditions";
 
 // Token
 export * from "./hooks/token/useTokenSupply";

@@ -16,7 +16,7 @@ export const NFTDropInitialConditionsInputSchema = z.object({
 // TODO: Handle allow lists and end times
 export const NFTDropUpdateableConditionsInputSchema = z.object({
   price: AmountSchema.optional(),
-  currencyAddress: z.string().optional(),
+  currencyAddress: z.string().nullable().optional(),
   primarySaleRecipient: z.string().optional(),
   sellerFeeBasisPoints: BasisPointsSchema.optional(),
   goLiveDate: z.date().optional(),
