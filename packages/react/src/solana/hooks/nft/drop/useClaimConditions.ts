@@ -32,7 +32,7 @@ export function claimConditionsQuery(program: RequiredParam<NFTDrop>) {
  *   const { data: claimConditions, isLoading } = useClaimConditions(program);
  *
  *   return (
- *     <p>{claimConditions}</p>
+ *     <p>{claimConditions?.price.displayValue}</p>
  *   )
  * }
  * ```
