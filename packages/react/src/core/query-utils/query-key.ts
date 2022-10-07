@@ -13,7 +13,7 @@ const TW_QUERY_KEY_PREFIX = "__tw__";
 // marker to make sure the query will not get stored in local storage by a query persister
 const NEVER_PERSIST_QUERY_POSTFIX = { persist: false } as const;
 
-function ensureTWPrefix<TKey extends QueryKey>(key: TKey) {
+export function ensureTWPrefix<TKey extends QueryKey>(key: TKey) {
   if (key[0] === TW_QUERY_KEY_PREFIX) {
     return key as unknown as Readonly<[typeof TW_QUERY_KEY_PREFIX, ...TKey]>;
   }
