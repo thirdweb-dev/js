@@ -1,3 +1,4 @@
+import { ThirdwebAuthConfig } from "../contexts/thirdweb-auth";
 import { ThirdwebSDKProvider } from "./base";
 import type { WalletAdapter } from "@solana/wallet-adapter-base";
 import {
@@ -13,6 +14,7 @@ interface ThirdwebProviderProps {
   network: Network;
   wallets?: WalletAdapter[];
   autoConnect?: boolean;
+  authConfig?: ThirdwebAuthConfig;
 }
 
 const DEFAULT_WALLETS = [new PhantomWalletAdapter()];

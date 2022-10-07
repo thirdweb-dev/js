@@ -10,9 +10,17 @@
       "module": "./express/dist/thirdweb-dev-auth-express.esm.js",
       "default": "./express/dist/thirdweb-dev-auth-express.cjs.js"
     },
+    "./next/evm": {
+      "module": "./next/evm/dist/thirdweb-dev-auth-next-evm.esm.js",
+      "default": "./next/evm/dist/thirdweb-dev-auth-next-evm.cjs.js"
+    },
     "./next-auth": {
       "module": "./next-auth/dist/thirdweb-dev-auth-next-auth.esm.js",
       "default": "./next-auth/dist/thirdweb-dev-auth-next-auth.cjs.js"
+    },
+    "./next/solana": {
+      "module": "./next/solana/dist/thirdweb-dev-auth-next-solana.esm.js",
+      "default": "./next/solana/dist/thirdweb-dev-auth-next-solana.cjs.js"
     },
     "./package.json": "./package.json"
   },
@@ -35,6 +43,8 @@
   "preconstruct": {
     "entrypoints": [
       "next/index.ts",
+      "next/evm/index.ts",
+      "next/solana/index.ts",
       "express/index.ts",
       "next-auth/index.ts"
     ],
