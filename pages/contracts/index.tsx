@@ -98,18 +98,18 @@ const Contracts: ThirdwebNextPage = () => {
           >
             <Flex gap={6} direction="column">
               <Heading size="title.md">
-                Don&apos;t see the contract you want? Release your own!
+                Don&apos;t see the contract you want? Deploy your own!
               </Heading>
 
               <Box>
-                <CodeBlock code="npx thirdweb release" language="bash" />
+                <CodeBlock code="npx thirdweb@latest deploy" language="bash" />
               </Box>
             </Flex>
             <LinkButton
               colorScheme="purple"
               w={{ base: "full", md: "auto" }}
               isExternal
-              href="https://portal.thirdweb.com/release"
+              href="https://portal.thirdweb.com/deploy"
               size="md"
             >
               Learn more
