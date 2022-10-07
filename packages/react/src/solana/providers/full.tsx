@@ -37,12 +37,18 @@ const DEFAULT_WALLETS = [new PhantomWalletAdapter()];
  */
 export const ThirdwebProvider: React.FC<
   PropsWithChildren<ThirdwebProviderProps>
-> = ({ network, wallets = DEFAULT_WALLETS, autoConnect = true, children }) => {
+> = ({
+  network,
+  wallets = DEFAULT_WALLETS,
+  autoConnect = true,
+  authConfig,
+  children,
+}) => {
   const clusterUrl = getUrlForNetwork(network);
   return (
     <ConnectionProvider endpoint={clusterUrl}>
       <WalletProvider wallets={wallets} autoConnect={autoConnect}>
-        <ThirdwebWrapperProvider network={network}>
+        <ThirdwebWrapperProvider network={network} authConfig={authConfig}>
           {children}
         </ThirdwebWrapperProvider>
       </WalletProvider>
@@ -54,11 +60,15 @@ export const ThirdwebProvider: React.FC<
  * @internal
  */
 export const ThirdwebWrapperProvider: React.FC<
-  PropsWithChildren<{ network?: Network }>
-> = ({ network, children }) => {
+  PropsWithChildren<{ network?: Network; authConfig?: ThirdwebAuthConfig }>
+> = ({ network, authConfig, children }) => {
   const wallet = useWallet();
   return (
-    <ThirdwebSDKProvider network={network} wallet={wallet}>
+    <ThirdwebSDKProvider
+      network={network}
+      wallet={wallet}
+      authConfig={authConfig}
+    >
       {children}
     </ThirdwebSDKProvider>
   );
