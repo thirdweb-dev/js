@@ -1,4 +1,5 @@
 import { Signer, WalletAdapter } from "@metaplex-foundation/js";
+import { PublicKey } from "@solana/web3.js";
 import { z } from "zod";
 
 /**
@@ -72,6 +73,13 @@ export const AmountSchema = z
 /**
  * @internal
  */
+export const RawDateSchema = z.date().transform((i) => {
+  return Math.floor(i.getTime() / 1000);
+});
+
+/**
+ * @internal
+ */
 export type Amount = z.input<typeof AmountSchema>;
 
 /**
@@ -99,6 +107,14 @@ export type WalletAccount = {
   address: string;
   name: string;
 };
+
+/**
+ * @internal
+ */
+export const AddressSchema = z.union([
+  z.string(),
+  z.instanceof(PublicKey).transform((key) => key.toBase58()),
+]);
 
 const isBrowser = () => typeof window !== "undefined";
 const FileOrBufferUnionSchema = isBrowser()

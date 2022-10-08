@@ -42,7 +42,7 @@ import { UserWallet } from "../wallet";
  * // And the server can use the following function to authenticate a token and verify the associated address
  * const address = sdk.auth.authenticate(domain, token);
  * ```
- * @beta
+ * @public
  */
 export class WalletAuthenticator extends RPCConnectionHandler {
   private wallet: UserWallet;

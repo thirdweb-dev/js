@@ -1,4 +1,5 @@
 import { ThirdwebSDK } from "../../src/solana";
+import { TWREGISTRY_PROGRAM_ID } from "../../src/solana/constants/addresses";
 import { MockStorage } from "./mock/MockStorage";
 import { Amman } from "@metaplex-foundation/amman-client";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
@@ -16,6 +17,7 @@ export const createTestSDK = async (
       [TOKEN_PROGRAM_ID.toBase58()]: "Token",
       cndy3Z4yapfJBmL3ShUp5exZKqR3z33thTzeNMm2gRZ: "Candy Machine",
       "89RsF5yJgRXhae6LKuCcMRgXkqxCJm3AeaYwcJN4XopA": "Counter Program",
+      [TWREGISTRY_PROGRAM_ID]: "TWRegistry Program",
     },
   });
   await amman.airdrop(connection, wallet.publicKey, solsToAirdrop);
