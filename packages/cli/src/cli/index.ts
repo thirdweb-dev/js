@@ -72,6 +72,18 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     });
 
   program
+    .command("build")
+    .description(
+      "Compile contracts and detect implemented thirdweb contract extensions",
+    )
+    .option("-p, --path <project-path>", "path to project", ".")
+    .option("-d, --debug", "show debug logs")
+    .option("-a, --all", "run detection on all contracts")
+    .action(async (options) => {
+      await detectExtensions(options);
+    });
+
+  program
     .command("deploy")
     .description(
       "Deploy contracts through your thirdweb dashboard, without dealing with private keys.",
@@ -132,18 +144,6 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     });
 
   program
-    .command("detect")
-    .description(
-      "Compile contracts and detect implemented thirdweb contract extensions",
-    )
-    .option("-p, --path <project-path>", "path to project", ".")
-    .option("-d, --debug", "show debug logs")
-    .option("-a, --all", "run detection on all contracts")
-    .action(async (options) => {
-      await detectExtensions(options);
-    });
-
-  program
     .command("upload")
     .description("Upload any file or directory using decentralized storage")
     .argument("[upload-path]", "path to file or directory to upload")
@@ -159,12 +159,15 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     });
 
   program
-    .command("install-ci")
+    .command("detect")
     .description(
-      "(alpha) Set up continuous integration for your contracts. This adds a github action to deploy the project on pull requests and pushes to branches. Publishes on push the the main branch.",
+      "(deprecated) Compile contracts and detect implemented thirdweb contract extensions",
     )
+    .option("-p, --path <project-path>", "path to project", ".")
+    .option("-d, --debug", "show debug logs")
+    .option("-a, --all", "run detection on all contracts")
     .action(async (options) => {
-      await installGithubAction(options);
+      await detectExtensions(options);
     });
 
   await program.parseAsync();
