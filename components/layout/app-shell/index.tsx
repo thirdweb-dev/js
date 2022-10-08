@@ -107,7 +107,7 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
                   as={LinkButton}
                   isExternal
                   noIcon
-                  href="https://twitter.com/thirdweb_"
+                  href="https://twitter.com/thirdweb"
                   bg="transparent"
                   aria-label="twitter"
                   icon={<Icon boxSize="1rem" as={SiTwitter} />}

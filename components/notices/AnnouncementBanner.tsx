@@ -21,7 +21,7 @@ export const AnnouncementBanner = () => {
       <Flex w="full" justifyContent="space-between" alignItems="center">
         <Box ml={4} />
         <TrackedLink
-          href="https://twitter.com/thirdweb_/status/1562842674679652352"
+          href="https://twitter.com/thirdweb/status/1562842674679652352"
           category="landingpage"
           label="announcement-tweet"
           isExternal

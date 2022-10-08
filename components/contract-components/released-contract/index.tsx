@@ -143,7 +143,7 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
     const url = new URL("https://twitter.com/intent/tweet");
     url.searchParams.append(
       "text",
-      `Check out this ${release.name} contract on @thirdweb_
+      `Check out this ${release.name} contract on @thirdweb
       
 Deploy it in one click`,
     );

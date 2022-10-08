@@ -45,7 +45,7 @@ export const HomepageFooter: React.FC = () => {
                 as={LinkButton}
                 isExternal
                 noIcon
-                href="https://twitter.com/thirdweb_"
+                href="https://twitter.com/thirdweb"
                 icon={<SiTwitter fontSize="1.25rem" />}
                 category="footer"
                 aria-label="Twitter"

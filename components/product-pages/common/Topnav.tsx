@@ -90,7 +90,7 @@ export const HomepageTopNav: React.FC<{}> = () => {
               as={LinkButton}
               isExternal
               noIcon
-              href="https://twitter.com/thirdweb_"
+              href="https://twitter.com/thirdweb"
               color="gray.50"
               bg="transparent"
               aria-label="twitter"

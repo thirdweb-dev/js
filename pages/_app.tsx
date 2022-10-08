@@ -261,8 +261,8 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
             ],
           }}
           twitter={{
-            handle: "@thirdweb_",
-            site: "@thirdweb_",
+            handle: "@thirdweb",
+            site: "@thirdweb",
             cardType: "summary_large_image",
           }}
           canonical={`https://thirdweb.com${router.asPath}`}
