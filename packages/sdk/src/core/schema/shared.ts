@@ -96,6 +96,13 @@ export const AmountSchema = z
   ])
   .transform((arg) => (typeof arg === "number" ? arg.toString() : arg));
 
+/**
+ * @internal
+ */
+export const QuantitySchema = z
+  .union([AmountSchema, z.literal("unlimited")])
+  .default("unlimited");
+
 export const RawDateSchema = z.date().transform((i) => {
   return BigNumber.from(Math.floor(i.getTime() / 1000));
 });

@@ -345,11 +345,7 @@ export class NFTDrop {
    */
   async claimTo(receiverAddress: string, quantity: number): Promise<string[]> {
     const candyMachine = await this.getCandyMachine();
-    if (!candyMachine.isFullyLoaded) {
-      throw new Error(
-        `Drop is not to be claimed - Only ${candyMachine.itemsLoaded} out of ${candyMachine.itemsAvailable} NFTs have been lazy minted`,
-      );
-    }
+    await this.claimConditions.assertCanClaimable(quantity);
     const results: MintCandyMachineOutput[] = [];
     // has to claim sequentially
     for (let i = 0; i < quantity; i++) {

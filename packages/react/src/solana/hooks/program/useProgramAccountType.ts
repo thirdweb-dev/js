@@ -19,7 +19,7 @@ export function programAccountTypeQuery(
       invariant(sdk, "sdk is required");
       invariant(address, "Address is required");
 
-      return await sdk.registry.getAccountType(address);
+      return await sdk.registry.getProgramType(address);
     },
     enabled: !!sdk && !!network && !!address,
     // this cannot change as it is unique by address & network
