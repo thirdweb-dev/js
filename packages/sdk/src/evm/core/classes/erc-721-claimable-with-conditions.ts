@@ -59,7 +59,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
   constructor(
     erc721: Erc721,
     contractWrapper: ContractWrapper<BaseClaimConditionERC721>,
-    storage: ThirdwebStorage,
+    storage: ThirdwebStorage
   ) {
     this.erc721 = erc721;
     this.contractWrapper = contractWrapper;
@@ -68,12 +68,12 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
     const metadata = new ContractMetadata(
       this.contractWrapper,
       CustomContractSchema,
-      this.storage,
+      this.storage
     );
     this.conditions = new DropClaimConditions(
       this.contractWrapper,
       metadata,
-      this.storage,
+      this.storage
     );
   }
 
@@ -87,16 +87,18 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
   public async getClaimTransaction(
     destinationAddress: string,
     quantity: BigNumberish,
-    options?: ClaimOptions,
+    options?: ClaimOptions
   ): Promise<TransactionTask> {
     if (options?.pricePerToken) {
       throw new Error(
-        "In ERC721ClaimableWithConditions, price per token is be set via claim conditions by calling `contract.erc721.claimConditions.set()`",
+        "In ERC721ClaimableWithConditions, price per token is be set via claim conditions by calling `contract.erc721.claimConditions.set()`"
       );
     }
     const claimVerification = await this.conditions.prepareClaim(
       quantity,
-      options?.checkERC20Allowance || true,
+      options?.checkERC20Allowance === undefined
+        ? true
+        : options.checkERC20Allowance
     );
 
     return TransactionTask.make({
@@ -130,17 +132,17 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
   public async to(
     destinationAddress: string,
     quantity: BigNumberish,
-    options?: ClaimOptions,
+    options?: ClaimOptions
   ): Promise<TransactionResultWithId<NFT>[]> {
     const task = await this.getClaimTransaction(
       destinationAddress,
       quantity,
-      options,
+      options
     );
     const { receipt } = await task.execute();
     const event = this.contractWrapper.parseLogs<TokensClaimedEvent>(
       "TokensClaimed",
-      receipt?.logs,
+      receipt?.logs
     );
     const startingIndex: BigNumber = event[0].args.startTokenId;
     const endingIndex = startingIndex.add(quantity);
@@ -158,7 +160,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
   private async getArgs(
     destinationAddress: string,
     quantity: BigNumberish,
-    claimVerification: ClaimVerification,
+    claimVerification: ClaimVerification
   ): Promise<any[]> {
     const isLegacyNFTContract = await this.isLegacyNFTContract();
     if (isLegacyNFTContract) {
@@ -188,7 +190,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
     if (hasFunction<DropERC721>("contractType", this.contractWrapper)) {
       try {
         const contractType = ethers.utils.toUtf8String(
-          await this.contractWrapper.readContract.contractType(),
+          await this.contractWrapper.readContract.contractType()
         );
         return contractType.includes("DropERC721");
       } catch (e) {
