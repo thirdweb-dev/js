@@ -43,10 +43,10 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
   program
     .command("create")
     .description(
-      "Create a thirdweb app from any of our official templates. Checkout some examples you can use here: https://github.com/thirdweb-example/",
+      "Create a web3 app from any of our official templates: https://github.com/thirdweb-example/",
     )
-    .option("--app", `Create a thirdweb app.`)
-    .option("--contract", `Create a thirdweb contracts project.`)
+    .option("--app", `Create a web3 app.`)
+    .option("--contract", `Create a web3 contract project`)
     .option("--ts, --typescript", `Initialize as a TypeScript project.`)
     .option("--js, --javascript", `Initialize as a JavaScript project.`)
     .option("--forge", `Initialize as a Forge project.`)
@@ -73,9 +73,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
 
   program
     .command("build")
-    .description(
-      "Compile contracts and detect implemented thirdweb contract extensions",
-    )
+    .description("Compile contract and detect thirdweb contract extensions")
     .option("-p, --path <project-path>", "path to project", ".")
     .option("-d, --debug", "show debug logs")
     .option("-a, --all", "run detection on all contracts")
@@ -85,9 +83,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
 
   program
     .command("deploy")
-    .description(
-      "Deploy contracts through your thirdweb dashboard, without dealing with private keys.",
-    )
+    .description("Deploy your (or team) contracts securely to blockchains")
     .option("-p, --path <project-path>", "path to project", ".")
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
@@ -130,7 +126,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
   program
     .command("release")
     .description(
-      "Release contracts, making them available for others to deploy and unlocking SDKs, Dashboards and Analytics.",
+      "Release your protocol so other devs can deploy them and unlock SDKs, Dashboards and Analytics",
     )
     .option("-p, --path <project-path>", "path to project", ".")
     .option("--dry-run", "dry run (skip actually publishing)")
@@ -145,8 +141,8 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
 
   program
     .command("upload")
-    .description("Upload any file or directory using decentralized storage")
-    .argument("[upload-path]", "path to file or directory to upload")
+    .description("Upload any file or directory to decentralized storage (IPFS)")
+    .argument("[upload]", "path to file or directory to upload")
     .action(async (path) => {
       const storage = new ThirdwebStorage();
       const uri = await upload(storage, path);
