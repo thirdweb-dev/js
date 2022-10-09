@@ -33,7 +33,7 @@ export function tryGitInit(root: string): boolean {
     execSync("git checkout -b main", { stdio: "ignore" });
 
     execSync("git add -A", { stdio: "ignore" });
-    execSync('git commit -m "Initial commit from Create thirdweb app"', {
+    execSync('git commit -m "Initial commit from npx thirdweb create"', {
       stdio: "ignore",
     });
     return true;

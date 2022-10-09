@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 1.0.4
+
+### Patch Changes
+
+- [#226](https://github.com/thirdweb-dev/js/pull/226) [`f2a6211`](https://github.com/thirdweb-dev/js/commit/f2a62110c43e7b8f35c86a197730e732f8fcc786) Thanks [@jnsdls](https://github.com/jnsdls)! - add exports field
+
 ## 1.0.3
 
 ### Patch Changes

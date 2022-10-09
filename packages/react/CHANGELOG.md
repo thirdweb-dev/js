@@ -1,5 +1,66 @@
 # @thirdweb-dev/react
 
+## 3.2.1
+
+### Patch Changes
+
+- [#264](https://github.com/thirdweb-dev/js/pull/264) [`f669d3e`](https://github.com/thirdweb-dev/js/commit/f669d3ef4a84368c23f0359aec304f66a4063042) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Standarize data between evm/solana for useLazyMint hook
+
+## 3.2.0
+
+### Patch Changes
+
+- [#261](https://github.com/thirdweb-dev/js/pull/261) [`c8261b7`](https://github.com/thirdweb-dev/js/commit/c8261b74b5828ac66ea3a6d7636aa57e40ea1a14) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - align behavior of `useContract()` and `getContract()` across react & sdk to both allow passing optional second params of contract types or ABIs
+
+- [#236](https://github.com/thirdweb-dev/js/pull/236) [`cac373b`](https://github.com/thirdweb-dev/js/commit/cac373b010ce3be3615a36671b66815a27785061) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - do not require a connection, instead handle a network directly
+
+- [#251](https://github.com/thirdweb-dev/js/pull/251) [`ea41231`](https://github.com/thirdweb-dev/js/commit/ea41231b3ec4a2aef6a203db195d0e450c45ef56) Thanks [@jnsdls](https://github.com/jnsdls)! - fix missing Buffer implementation for WalletConnect and CoinbaseWallet connectors
+
+- [#253](https://github.com/thirdweb-dev/js/pull/253) [`b6fc298`](https://github.com/thirdweb-dev/js/commit/b6fc298d0cf63bc7129104f7779cc9d84e405093) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - allow passing contractType as second param to `useContract()`
+
+- [#243](https://github.com/thirdweb-dev/js/pull/243) [`1136d95`](https://github.com/thirdweb-dev/js/commit/1136d959baf936c166e5f7c051d5173d68d9eb9b) Thanks [@jnsdls](https://github.com/jnsdls)! - fix persister logic
+
+- [#258](https://github.com/thirdweb-dev/js/pull/258) [`ac232b5`](https://github.com/thirdweb-dev/js/commit/ac232b5affe31780ef1c10ec76edb21596850e7e) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Accept SmartContract instead of erc20 instance
+
+- [#245](https://github.com/thirdweb-dev/js/pull/245) [`1972f3e`](https://github.com/thirdweb-dev/js/commit/1972f3ec0d511fbc17642b2a30852a177092a09e) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - expose `useBurnNFT` hook
+
+- [#255](https://github.com/thirdweb-dev/js/pull/255) [`9b92697`](https://github.com/thirdweb-dev/js/commit/9b92697fb77d3072e3e53b451f9b348595ae410e) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - `useContract()` and `<Web3Button />` can now accept an optional ABI directly and will return a `SmartContract` based on it
+
+## 3.1.2
+
+### Patch Changes
+
+- [#229](https://github.com/thirdweb-dev/js/pull/229) [`9c8a3fb`](https://github.com/thirdweb-dev/js/commit/9c8a3fb6d4520dd6cdf2d1c17f33b764e871599e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Expose useClaimNFT hook
+
+## 3.1.1
+
+### Patch Changes
+
+- [#221](https://github.com/thirdweb-dev/js/pull/221) [`c295a47`](https://github.com/thirdweb-dev/js/commit/c295a47144cd722c6f8861c1ec567b53a05ea0bf) Thanks [@jnsdls](https://github.com/jnsdls)! - fix esm exports
+
+## 3.1.0
+
+### Minor Changes
+
+- [#213](https://github.com/thirdweb-dev/js/pull/213) [`e187d21`](https://github.com/thirdweb-dev/js/commit/e187d21e123a506fac0459da18f2d4fc94abae29) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New @thirdweb-dev/react/solana entrypoint
+
+### Patch Changes
+
+- [#208](https://github.com/thirdweb-dev/js/pull/208) [`7c86bab`](https://github.com/thirdweb-dev/js/commit/7c86babb86e02f08a630ed7578036202eb3dbe66) Thanks [@jnsdls](https://github.com/jnsdls)! - add a bunch of initial solana hooks
+
+- [#218](https://github.com/thirdweb-dev/js/pull/218) [`1eaedc2`](https://github.com/thirdweb-dev/js/commit/1eaedc262f0665de2a6a0446402b570371136e05) Thanks [@jnsdls](https://github.com/jnsdls)! - allow both `null` and `undefined` to be passed as a `RequiredParam`
+
+- [#220](https://github.com/thirdweb-dev/js/pull/220) [`37a707f`](https://github.com/thirdweb-dev/js/commit/37a707f98c00140ddedb1d876a4b2f99fe25556a) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix chakra zag-menu breaking update
+
+## 3.0.8
+
+### Patch Changes
+
+- [#209](https://github.com/thirdweb-dev/js/pull/209) [`1bda83b`](https://github.com/thirdweb-dev/js/commit/1bda83b1142406892acfb64576fce25d2647afa7) Thanks [@jnsdls](https://github.com/jnsdls)! - fix useLayoutEffect during SSR warning
+
+- Updated dependencies [[`ce05bfd`](https://github.com/thirdweb-dev/js/commit/ce05bfd8615a9c79664856bce53de8b43bed5c87)]:
+  - @thirdweb-dev/sdk@3.0.8
+
 ## 3.0.7
 
 ### Patch Changes

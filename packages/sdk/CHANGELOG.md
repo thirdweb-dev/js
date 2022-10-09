@@ -1,5 +1,100 @@
 # @thirdweb-dev/sdk
 
+## 3.2.1
+
+## 3.2.0
+
+### Minor Changes
+
+- [#247](https://github.com/thirdweb-dev/js/pull/247) [`caf9795`](https://github.com/thirdweb-dev/js/commit/caf979537b5acb1610f182c94afa5d95c208ec3f) Thanks [@furqanrydhan](https://github.com/furqanrydhan)! - AppURI detection now enabled
+
+- [#238](https://github.com/thirdweb-dev/js/pull/238) [`6647f70`](https://github.com/thirdweb-dev/js/commit/6647f707bdd050725264a8a74220c11912f68e57) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Unify NFT return types for EVM and Solana
+
+  #### NFT Types are now consistent accross EVM (both ERC721 and ERC1155) and Solana
+
+  This is a transparent upgrade, except for one type change for ERC1155 NFTs
+
+  - nft.id is now of type `string` instead of `BigNumber`
+  - edition.supply is now of type `number` instead of `BigNumber`
+
+  This should make it much easer to deal with in applications, instead of having to manipulate BigNumber objects.
+
+  Most people convert BigNumber to strings, which is compatible with this upgrade.
+
+### Patch Changes
+
+- [#257](https://github.com/thirdweb-dev/js/pull/257) [`ba6f450`](https://github.com/thirdweb-dev/js/commit/ba6f45027a6ec11aebb4a1918ab2ba4f88894ede) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - fix permission enumerable export
+
+- [#261](https://github.com/thirdweb-dev/js/pull/261) [`c8261b7`](https://github.com/thirdweb-dev/js/commit/c8261b74b5828ac66ea3a6d7636aa57e40ea1a14) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - align behavior of `useContract()` and `getContract()` across react & sdk to both allow passing optional second params of contract types or ABIs
+
+- [#250](https://github.com/thirdweb-dev/js/pull/250) [`20745f8`](https://github.com/thirdweb-dev/js/commit/20745f8cd603235eb5039e61a39c0959c5860bca) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add check if abi exists on extractFunctionsFromAbi function
+
+- [#252](https://github.com/thirdweb-dev/js/pull/252) [`2ea3f00`](https://github.com/thirdweb-dev/js/commit/2ea3f00c41b5e70d9bb634cd86790890520fc4d6) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose a way to update collection settings, pass in upload options to lazyMint
+
+- [#234](https://github.com/thirdweb-dev/js/pull/234) [`9412d41`](https://github.com/thirdweb-dev/js/commit/9412d416832c87ab2c858cb120c6c5de03459c50) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Add burn NFT functionality + misc API refinement
+
+- [#256](https://github.com/thirdweb-dev/js/pull/256) [`d677e9d`](https://github.com/thirdweb-dev/js/commit/d677e9d6341252013762882d25408ea8f93791e5) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - make PermissiosEnumerable feature available
+
+- [#240](https://github.com/thirdweb-dev/js/pull/240) [`e662408`](https://github.com/thirdweb-dev/js/commit/e662408e1936983485936609552f80a56cbed082) Thanks [@jnsdls](https://github.com/jnsdls)! - unify program metadata return type
+
+- [#249](https://github.com/thirdweb-dev/js/pull/249) [`e4b10bc`](https://github.com/thirdweb-dev/js/commit/e4b10bc5bd12178cba8856b60255732123cb7ae5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Update NFT Drop API for claim conditions + multiple fixes
+
+- [#262](https://github.com/thirdweb-dev/js/pull/262) [`028cb78`](https://github.com/thirdweb-dev/js/commit/028cb781252b0050943b14cfdf38132c18753a4b) Thanks [@jnsdls](https://github.com/jnsdls)! - [CORE] - fix HexColor schema
+
+- [#245](https://github.com/thirdweb-dev/js/pull/245) [`1972f3e`](https://github.com/thirdweb-dev/js/commit/1972f3ec0d511fbc17642b2a30852a177092a09e) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - allow burning of drop'd NFTs
+
+- [#236](https://github.com/thirdweb-dev/js/pull/236) [`cac373b`](https://github.com/thirdweb-dev/js/commit/cac373b010ce3be3615a36671b66815a27785061) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - attempt to resolve network more agressively
+
+## 3.1.2
+
+### Patch Changes
+
+- [#191](https://github.com/thirdweb-dev/js/pull/191) [`8239763`](https://github.com/thirdweb-dev/js/commit/82397636f41faa2b44cfe70e75212f0f42291092) Thanks [@mykcryptodev](https://github.com/mykcryptodev)! - Get all offers for a listing
+
+- [#194](https://github.com/thirdweb-dev/js/pull/194) [`27a30e3`](https://github.com/thirdweb-dev/js/commit/27a30e3ffb56dd7fa8412a066bc3ac0977aca8e2) Thanks [@aeither](https://github.com/aeither)! - Add ability to view and update owner of a contract
+
+- [#226](https://github.com/thirdweb-dev/js/pull/226) [`f2a6211`](https://github.com/thirdweb-dev/js/commit/f2a62110c43e7b8f35c86a197730e732f8fcc786) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] shrink size by importing TWProxy\_\_factory individually
+
+- [#232](https://github.com/thirdweb-dev/js/pull/232) [`d26b768`](https://github.com/thirdweb-dev/js/commit/d26b76872a6c85651ee06aa0732ee2967f70db27) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Dynamic imports for anchor programs
+
+- [#182](https://github.com/thirdweb-dev/js/pull/182) [`ba7dcbb`](https://github.com/thirdweb-dev/js/commit/ba7dcbbad8db2b73baf1435f4175d19933cb7d4f) Thanks [@jnebab](https://github.com/jnebab)! - added getMinimumNextBid function in marketplace contract to get the minimum bid a user can place to outbid the previous highest bid
+
+- [#229](https://github.com/thirdweb-dev/js/pull/229) [`9c8a3fb`](https://github.com/thirdweb-dev/js/commit/9c8a3fb6d4520dd6cdf2d1c17f33b764e871599e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Allow passing a quantity to claim, and new claimTo function
+
+- Updated dependencies [[`f2a6211`](https://github.com/thirdweb-dev/js/commit/f2a62110c43e7b8f35c86a197730e732f8fcc786), [`f2a6211`](https://github.com/thirdweb-dev/js/commit/f2a62110c43e7b8f35c86a197730e732f8fcc786)]:
+  - @thirdweb-dev/storage@1.0.4
+  - @thirdweb-dev/contracts-js@1.1.9
+
+## 3.1.1
+
+### Patch Changes
+
+- [#222](https://github.com/thirdweb-dev/js/pull/222) [`666ff5f`](https://github.com/thirdweb-dev/js/commit/666ff5f694f1e146150ddb9fa3233f00533b6d60) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] expose ThirdwebSDK.fromPrivateKey()
+
+- [#224](https://github.com/thirdweb-dev/js/pull/224) [`0dade96`](https://github.com/thirdweb-dev/js/commit/0dade96d0d2553d25b386d822e534eb7ed0aefa9) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [EVM] Ensure that factory/proxy flags are set before deploying via proxy
+
+- [#221](https://github.com/thirdweb-dev/js/pull/221) [`c295a47`](https://github.com/thirdweb-dev/js/commit/c295a47144cd722c6f8861c1ec567b53a05ea0bf) Thanks [@jnsdls](https://github.com/jnsdls)! - fix esm exports
+
+## 3.1.0
+
+### Minor Changes
+
+- [#213](https://github.com/thirdweb-dev/js/pull/213) [`e187d21`](https://github.com/thirdweb-dev/js/commit/e187d21e123a506fac0459da18f2d4fc94abae29) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - new @thirdweb-dev/sdk/solana entrypoint
+
+### Patch Changes
+
+- [#217](https://github.com/thirdweb-dev/js/pull/217) [`3c8f620`](https://github.com/thirdweb-dev/js/commit/3c8f6205e9b49ae9fea1f9629678210c6c9c36e6) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enable proxy deploys for released contracts
+
+- [#206](https://github.com/thirdweb-dev/js/pull/206) [`acbabc8`](https://github.com/thirdweb-dev/js/commit/acbabc8999b2b7b6e0eb89cae97e2f1ef7143501) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Gas override for relayer txns
+
+- [#216](https://github.com/thirdweb-dev/js/pull/216) [`b030a86`](https://github.com/thirdweb-dev/js/commit/b030a866080953bbf4e504ddc41d7050b250d2d7) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update addresses
+
+## 3.0.8
+
+### Patch Changes
+
+- [#205](https://github.com/thirdweb-dev/js/pull/205) [`ce05bfd`](https://github.com/thirdweb-dev/js/commit/ce05bfd8615a9c79664856bce53de8b43bed5c87) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix Buffer usage in SDK
+
 ## 3.0.7
 
 ### Patch Changes

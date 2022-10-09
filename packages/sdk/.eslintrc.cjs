@@ -7,7 +7,7 @@ module.exports = {
   // allow all imports from within tests
   overrides: [
     {
-      files: "./test/*",
+      files: "./test/**/*",
       rules: {
         "@typescript-eslint/no-restricted-imports": "off",
       },

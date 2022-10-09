@@ -1,5 +1,53 @@
 # thirdweb
 
+## 0.7.24
+
+### Patch Changes
+
+- [#259](https://github.com/thirdweb-dev/js/pull/259) [`6f95a52`](https://github.com/thirdweb-dev/js/commit/6f95a520e6cc69e08f734705e8adc71431b091cc) Thanks [@adam-maj](https://github.com/adam-maj)! - Add npx thirdweb upload command
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.2.1
+
+## 0.7.23
+
+### Patch Changes
+
+- [#246](https://github.com/thirdweb-dev/js/pull/246) [`ef0bac7`](https://github.com/thirdweb-dev/js/commit/ef0bac7f44b93939bfc9e2706b39edaa22992eec) Thanks [@simonlim94](https://github.com/simonlim94)! - Renamed initial commit message during thirdweb cli createApp
+
+- Updated dependencies [[`ba6f450`](https://github.com/thirdweb-dev/js/commit/ba6f45027a6ec11aebb4a1918ab2ba4f88894ede), [`c8261b7`](https://github.com/thirdweb-dev/js/commit/c8261b74b5828ac66ea3a6d7636aa57e40ea1a14), [`20745f8`](https://github.com/thirdweb-dev/js/commit/20745f8cd603235eb5039e61a39c0959c5860bca), [`2ea3f00`](https://github.com/thirdweb-dev/js/commit/2ea3f00c41b5e70d9bb634cd86790890520fc4d6), [`9412d41`](https://github.com/thirdweb-dev/js/commit/9412d416832c87ab2c858cb120c6c5de03459c50), [`d677e9d`](https://github.com/thirdweb-dev/js/commit/d677e9d6341252013762882d25408ea8f93791e5), [`e662408`](https://github.com/thirdweb-dev/js/commit/e662408e1936983485936609552f80a56cbed082), [`e4b10bc`](https://github.com/thirdweb-dev/js/commit/e4b10bc5bd12178cba8856b60255732123cb7ae5), [`caf9795`](https://github.com/thirdweb-dev/js/commit/caf979537b5acb1610f182c94afa5d95c208ec3f), [`028cb78`](https://github.com/thirdweb-dev/js/commit/028cb781252b0050943b14cfdf38132c18753a4b), [`1972f3e`](https://github.com/thirdweb-dev/js/commit/1972f3ec0d511fbc17642b2a30852a177092a09e), [`6647f70`](https://github.com/thirdweb-dev/js/commit/6647f707bdd050725264a8a74220c11912f68e57), [`cac373b`](https://github.com/thirdweb-dev/js/commit/cac373b010ce3be3615a36671b66815a27785061)]:
+  - @thirdweb-dev/sdk@3.2.0
+
+## 0.7.22
+
+### Patch Changes
+
+- [#103](https://github.com/thirdweb-dev/js/pull/103) [`e1bcc67`](https://github.com/thirdweb-dev/js/commit/e1bcc67cebfc95fce615439ff03871b4fef0eed9) Thanks [@b4s36t4](https://github.com/b4s36t4)! - automatically re-name the created example repo to the user provided app name
+
+- Updated dependencies [[`8239763`](https://github.com/thirdweb-dev/js/commit/82397636f41faa2b44cfe70e75212f0f42291092), [`27a30e3`](https://github.com/thirdweb-dev/js/commit/27a30e3ffb56dd7fa8412a066bc3ac0977aca8e2), [`f2a6211`](https://github.com/thirdweb-dev/js/commit/f2a62110c43e7b8f35c86a197730e732f8fcc786), [`d26b768`](https://github.com/thirdweb-dev/js/commit/d26b76872a6c85651ee06aa0732ee2967f70db27), [`ba7dcbb`](https://github.com/thirdweb-dev/js/commit/ba7dcbbad8db2b73baf1435f4175d19933cb7d4f), [`9c8a3fb`](https://github.com/thirdweb-dev/js/commit/9c8a3fb6d4520dd6cdf2d1c17f33b764e871599e)]:
+  - @thirdweb-dev/sdk@3.1.2
+
+## 0.7.21
+
+### Patch Changes
+
+- Updated dependencies [[`666ff5f`](https://github.com/thirdweb-dev/js/commit/666ff5f694f1e146150ddb9fa3233f00533b6d60), [`0dade96`](https://github.com/thirdweb-dev/js/commit/0dade96d0d2553d25b386d822e534eb7ed0aefa9), [`c295a47`](https://github.com/thirdweb-dev/js/commit/c295a47144cd722c6f8861c1ec567b53a05ea0bf)]:
+  - @thirdweb-dev/sdk@3.1.1
+
+## 0.7.20
+
+### Patch Changes
+
+- Updated dependencies [[`3c8f620`](https://github.com/thirdweb-dev/js/commit/3c8f6205e9b49ae9fea1f9629678210c6c9c36e6), [`e187d21`](https://github.com/thirdweb-dev/js/commit/e187d21e123a506fac0459da18f2d4fc94abae29), [`acbabc8`](https://github.com/thirdweb-dev/js/commit/acbabc8999b2b7b6e0eb89cae97e2f1ef7143501), [`b030a86`](https://github.com/thirdweb-dev/js/commit/b030a866080953bbf4e504ddc41d7050b250d2d7)]:
+  - @thirdweb-dev/sdk@3.1.0
+
+## 0.7.19
+
+### Patch Changes
+
+- Updated dependencies [[`ce05bfd`](https://github.com/thirdweb-dev/js/commit/ce05bfd8615a9c79664856bce53de8b43bed5c87)]:
+  - @thirdweb-dev/sdk@3.0.8
+
 ## 0.7.18
 
 ### Patch Changes

@@ -12,7 +12,7 @@
     ]
   },
   "scripts": {
-    "test": "turbo run test",
+    "test": "turbo run test test:evm test:solana",
     "e2e": "turbo run e2e",
     "build": "turbo run build",
     "build:release": "turbo run build --force",
@@ -44,12 +44,10 @@
     "eslint": "^8.21.0",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.7.1",
-    "turbo": "^1.4.6"
+    "turbo": "^1.4.6",
+    "yalc": "^1.0.0-pre.53"
   },
   "manypkg": {
     "defaultBranch": "main"
-  },
-  "devDependencies": {
-    "yalc": "^1.0.0-pre.53"
   }
 }
