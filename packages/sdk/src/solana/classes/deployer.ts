@@ -291,15 +291,15 @@ export class Deployer {
       .identity()
       .signAllTransactions([dropTransaction, regTx.toTransaction()]);
 
-    // send the signed transactions
-    const signatures = await Promise.all(
-      signedTx.map(
-        async (tx) =>
-          await this.metaplex.connection.sendRawTransaction(tx.serialize()),
-      ),
-    );
+    // send the signed transactions *sequentially* the drop creation needs to succeed first before adding to registry
+    const signatures: string[] = [];
+    for (const tx of signedTx) {
+      signatures.push(
+        await this.metaplex.connection.sendRawTransaction(tx.serialize()),
+      );
+    }
 
-    // wait for confirmations
+    // wait for confirmations in parallel
     const confirmations = await Promise.all(
       signatures.map((sig) => {
         return this.metaplex.rpc().confirmTransaction(sig);
