@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import { installGithubAction } from "../common/ci-installer";
 import { detectExtensions } from "../common/feature-detector";
 import { processProject } from "../common/processor";
 import { cliVersion, pkg } from "../constants/urls";
@@ -114,8 +113,9 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
           return;
         }
 
-        info(`Open this link to deploy your contract:`);
-        logger.info(chalk.blueBright(url));
+        info(
+          `Open this link to deploy your contract: ${chalk.blueBright(url)}`,
+        );
         open(url.toString());
         return;
       }
@@ -123,8 +123,9 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       if (options.app) {
         try {
           let url = await deployApp();
-          info(`Here is the link to your app: `);
-          logger.info(chalk.blueBright(url.toString()));
+          info(
+            `Here is the link to your app: ${chalk.blueBright(url.toString())}`,
+          );
           open(url.toString());
         } catch (err) {
           logger.error(
@@ -134,8 +135,11 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
         }
       } else {
         const url = await processProject(options, "deploy");
-        info(`Open this link to deploy your contracts:`);
-        logger.info(chalk.blueBright(url.toString()));
+        info(
+          `Open this link to deploy your contracts: ${chalk.blueBright(
+            url.toString(),
+          )}`,
+        );
         open(url.toString());
       }
     });
@@ -151,8 +155,11 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("--ci", "Continuous Integration mode")
     .action(async (options) => {
       const url = await processProject(options, "release");
-      info(`Open this link to release your contracts:`);
-      logger.info(chalk.blueBright(url.toString()));
+      info(
+        `Open this link to release your contracts: ${chalk.blueBright(
+          url.toString(),
+        )}`,
+      );
       open(url.toString());
     });
 
@@ -162,13 +169,23 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .argument("[upload]", "path to file or directory to upload")
     .action(async (path) => {
       const storage = new ThirdwebStorage();
-      const uri = await upload(storage, path);
-      info(`Files stored at the following IPFS URI:`);
-      logger.info(chalk.blueBright(uri.toString()));
+      try {
+        const uri = await upload(storage, path);
+        info(
+          `Files stored at the following IPFS URI: ${chalk.blueBright(
+            uri.toString(),
+          )}`,
+        );
 
-      const url = storage.resolveScheme(uri);
-      info(`Open this link to view your upload:`);
-      logger.info(chalk.blueBright(url.toString()));
+        const url = storage.resolveScheme(uri);
+        info(
+          `Open this link to view your upload: ${chalk.blueBright(
+            url.toString(),
+          )}`,
+        );
+      } catch (err) {
+        logger.error(chalk.redBright("Failed to upload files"), err);
+      }
     });
 
   program
