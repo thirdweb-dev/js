@@ -70,7 +70,10 @@ export function useActiveClaimCondition(
     cacheKeys.extensions.claimConditions.getActive(contractAddress, tokenId),
     () => {
       if (erc1155) {
-        invariant(tokenId, "tokenId is required for ERC1155 claim conditions");
+        invariant(
+          tokenId !== undefined,
+          "tokenId is required for ERC1155 claim conditions",
+        );
         return erc1155.claimConditions.getActive(tokenId);
       }
       if (erc721) {
