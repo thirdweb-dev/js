@@ -1,4 +1,4 @@
-import { QueryAllParams } from "../QueryParams";
+import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { BigNumberish } from "ethers";
 
 /**

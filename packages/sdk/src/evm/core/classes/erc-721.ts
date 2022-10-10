@@ -1,3 +1,4 @@
+import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import {
   assertEnabled,
@@ -20,11 +21,7 @@ import {
   FEATURE_NFT_SUPPLY,
 } from "../../constants/erc721-features";
 import { BaseDropERC721, BaseERC721 } from "../../types/eips";
-import {
-  ClaimOptions,
-  QueryAllParams,
-  UploadProgressEvent,
-} from "../../types/index";
+import { ClaimOptions, UploadProgressEvent } from "../../types/index";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import {

@@ -1,6 +1,9 @@
+import {
+  DEFAULT_QUERY_ALL_COUNT,
+  QueryAllParams,
+} from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
 import { FEATURE_EDITION_ENUMERABLE } from "../../constants/erc1155-features";
-import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
 import { BaseERC1155 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { ContractWrapper } from "./contract-wrapper";

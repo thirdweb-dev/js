@@ -4,6 +4,7 @@ import {
   JsonMetadata,
   Metadata,
   Metaplex,
+  Mint,
   Nft,
   NftWithToken,
   Sft,
@@ -87,16 +88,27 @@ export class NFTHelper {
     if (!mint) {
       throw new Error("No mint found for NFT");
     }
-    const id = mint.address.toBase58();
+    return this.toNFTMetadataResolved(mint, meta);
+  }
+
+  private toNFTMetadataResolved(
+    mint: Mint,
+    metadata:
+      | Nft
+      | Sft
+      | NftWithToken
+      | SftWithToken
+      | Metadata<JsonMetadata<string>>,
+  ): NFT {
     return {
       metadata: {
-        id,
-        uri: meta.uri,
-        name: meta.name,
-        symbol: meta.symbol,
-        ...meta.json,
+        id: mint.address.toBase58(),
+        uri: metadata.uri,
+        name: metadata.name,
+        symbol: metadata.symbol,
+        ...metadata.json,
       },
-      owner: meta.updateAuthorityAddress.toBase58(),
+      owner: metadata.updateAuthorityAddress.toBase58(),
       supply: mint.supply.basisPoints.toNumber(),
       type: "metaplex",
     };

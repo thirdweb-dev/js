@@ -1,5 +1,5 @@
+import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
-import { QueryAllParams } from "../../types";
 import { BaseERC721 } from "../../types/eips";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";

@@ -1,3 +1,4 @@
+import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
 import {
   fetchCurrencyMetadata,
@@ -31,7 +32,6 @@ import {
   PackRewardsOutput,
   PackRewardsOutputSchema,
 } from "../../schema/tokens/pack";
-import { QueryAllParams } from "../../types";
 import type { Pack as PackContract } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Pack.json";
 import { PackUpdatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IPack";
