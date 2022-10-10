@@ -5,6 +5,7 @@ import { processProject } from "../common/processor";
 import { cliVersion, pkg } from "../constants/urls";
 import { info, logger } from "../core/helpers/logger";
 import { twCreate } from "../create/command";
+import { deployApp } from "../deploy/app";
 import generateDashboardUrl from "../helpers/generate-dashboard-url";
 import { upload } from "../storage/command";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -100,6 +101,8 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       "-cv, --contract-version [version]",
       "Version of the released contract",
     )
+    .option("--app", "Deploy a web app to decentralized storage")
+    .option("--contract", "Deploy a smart contract to blockchains")
     .action(async (options) => {
       if (options.name) {
         const url = generateDashboardUrl(options.name, options.contractVersion);
@@ -121,10 +124,26 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
         return;
       }
 
-      const url = await processProject(options, "deploy");
-      info(`Open this link to deploy your contracts:`);
-      logger.info(chalk.blueBright(url.toString()));
-      open(url.toString());
+      if (options.app) {
+        try {
+          await deployApp({
+            path: options.path,
+          });
+          //info(`Open this link to deploy your contracts:`);
+          //logger.info(chalk.blueBright(url.toString()));
+          //open(url.toString());
+        } catch (err) {
+          logger.error(
+            "Failed to deploy app, No compatible project found",
+            err,
+          );
+        }
+      } else {
+        const url = await processProject(options, "deploy");
+        info(`Open this link to deploy your contracts:`);
+        logger.info(chalk.blueBright(url.toString()));
+        open(url.toString());
+      }
     });
 
   program
