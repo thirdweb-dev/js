@@ -71,7 +71,7 @@ Below are examples of where to set this up in your application:
 
 ### Connect to a User's Wallet
 
-Now the provider is set up, we can use all of the hooks and UI components available in the SDK, such as the [ConnectWallet](https://portal.thirdweb.com/sdk/ui-components/connectwalletbutton) component.
+Now the provider is set up, we can use all of the hooks and UI components available in the SDK, such as the [ConnectWallet](https://portal.thirdweb.com/ui-components/connectwalletbutton) component.
 
 Once the user has connected their wallet, all the calls we make to interact with contracts using the SDK will be on behalf of the user.
 
@@ -143,7 +143,7 @@ Each [extension](https://portal.thirdweb.com/extensions) you implement in your s
 
 These hooks make it easy to interact with your smart contracts by implementing the complex logic for you under the hood.
 
-For example, if your smart contract implements [ERC721Supply](https://portal.thirdweb.com/extensions/erc721supply#unlocked-features), you unlock the ability to [view all NFTs](https://portal.thirdweb.com/sdk/interacting-with-contracts/erc721supply#get-all-minted-nfts) on that contract using the SDK; which fetches all of your NFT metadata and the current owner of each NFT in parallel. In the React SDK, that is available using `useNFTs`:
+For example, if your smart contract implements [ERC721Supply](https://portal.thirdweb.com/contractkit/interfaces/erc721supply#unlocked-features), you unlock the ability to [view all NFTs](https://portal.thirdweb.com/sdk/interacting-with-contracts/erc721supply#get-all-minted-nfts) on that contract using the SDK; which fetches all of your NFT metadata and the current owner of each NFT in parallel. In the React SDK, that is available using `useNFTs`:
 
 ```jsx
 import { useContract, useNFTs } from "@thirdweb-dev/react";
@@ -154,7 +154,7 @@ export default function Home() {
 }
 ```
 
-If we want to mint an NFT and our contract implements [ERC721Mintable](https://portal.thirdweb.com/extensions/erc721mintable#unlocked-features), we can use the [`useMintNFT`](https://portal.thirdweb.com/sdk/interacting-with-contracts/erc721mintable) hook to mint an NFT from the connected wallet; handling all of the logic of uploading and pinning the metadata to IPFS for us behind the scenes.
+If we want to mint an NFT and our contract implements [ERC721Mintable](https://portal.thirdweb.com/contractkit/interfaces/erc721mintable#unlocked-features), we can use the [`useMintNFT`](https://portal.thirdweb.com/sdk/interacting-with-contracts/erc721mintable) hook to mint an NFT from the connected wallet; handling all of the logic of uploading and pinning the metadata to IPFS for us behind the scenes.
 
 ```jsx
 import { useContract, useNFTs, useMintNFT } from "@thirdweb-dev/react";
@@ -172,7 +172,7 @@ export default function Home() {
 
 The SDK provides many UI components to help you build your application.
 
-For example, we can render each of the NFTs using the [`NFT Media Renderer`](https://portal.thirdweb.com/sdk/ui-components/nft-renderer)
+For example, we can render each of the NFTs using the [`NFT Media Renderer`](https://portal.thirdweb.com/ui-components/nft-renderer)
 component, making use of the loading state from `useNFTs`:
 
 ```jsx title="pages/index.jsx"
@@ -203,7 +203,7 @@ export default function Home() {
 }
 ```
 
-The [`Web3Button`](https://portal.thirdweb.com/sdk/ui-components/web3button) component ensures the user has connected their wallet and is currently configured to the same network as your smart contract before calling the function. It also has access to the `contract` directly, allowing you to perform any action on your smart contract when the button is clicked.
+The [`Web3Button`](https://portal.thirdweb.com/ui-components/web3button) component ensures the user has connected their wallet and is currently configured to the same network as your smart contract before calling the function. It also has access to the `contract` directly, allowing you to perform any action on your smart contract when the button is clicked.
 
 For example, we can mint an NFT like so:
 

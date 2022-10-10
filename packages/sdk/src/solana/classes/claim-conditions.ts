@@ -22,7 +22,7 @@ import { PublicKey } from "@solana/web3.js";
  *
  * @example
  * ```jsx
- * const program = await sdk.getNFTDrop("{{contract_address}}");
+ * const program = await sdk.getProgram("{{program_address}}", "nft-drop");
  *
  * // Get the data of the claim condition on the drop
  * const claimCondition = await program.claimConditions.get();
