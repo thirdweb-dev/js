@@ -56,9 +56,7 @@ export async function upload(
   let uri = "";
   const fileType = fs.lstatSync(uploadPath);
   if (fileType.isDirectory()) {
-    logger.info("isDirectory, uploadPath: " + uploadPath);
     const files = recurseFiles(uploadPath, uploadPath);
-    logger.info("recursedFiles, length: ", files.length);
 
     if (files.length === 0) {
       //TODO move up

@@ -3,19 +3,19 @@ import ViteDetector from "../core/detection/vite";
 import YarnDetector from "../core/detection/yarn";
 import { runCommand } from "../create/helpers/run-command";
 import { upload } from "../storage/command";
+import { DEFAULT_IPFS_GATEWAY } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
-type AppOptions = {
-  path?: string;
-};
+export async function deployApp() {
+  const distPath = "dist";
+  const projectPath = ".";
 
-export async function deployApp({ path = "dist" }: AppOptions) {
   const storage = new ThirdwebStorage();
 
   const supportedFrameworks = [new ViteDetector()];
 
   const possibleProjects = supportedFrameworks
-    .filter((detector) => detector.matches(path))
+    .filter((detector) => detector.matches(projectPath))
     .map((detector) => detector.projectType);
 
   const hasYarn = new YarnDetector().matches(".");
@@ -38,6 +38,7 @@ export async function deployApp({ path = "dist" }: AppOptions) {
     return Promise.reject("Can't build project");
   }
 
-  const uri = await upload(storage, path);
-  return uri;
+  let url = await upload(storage, distPath);
+  url = url.replace("ipfs://", DEFAULT_IPFS_GATEWAY);
+  return `${url}/index.html`;
 }

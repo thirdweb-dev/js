@@ -122,12 +122,10 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
 
       if (options.app) {
         try {
-          await deployApp({
-            path: options.path,
-          });
-          //info(`Open this link to deploy your contracts:`);
-          //logger.info(chalk.blueBright(url.toString()));
-          //open(url.toString());
+          let url = await deployApp();
+          info(`Here is the link to your app: `);
+          logger.info(chalk.blueBright(url.toString()));
+          open(url.toString());
         } catch (err) {
           logger.error(
             "Failed to deploy app, No compatible project found",
