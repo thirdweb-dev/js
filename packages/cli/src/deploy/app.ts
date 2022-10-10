@@ -9,7 +9,7 @@ type AppOptions = {
   path?: string;
 };
 
-export async function deployApp({ path = "./dist" }: AppOptions) {
+export async function deployApp({ path = "dist" }: AppOptions) {
   const storage = new ThirdwebStorage();
 
   const supportedFrameworks = [new ViteDetector()];
