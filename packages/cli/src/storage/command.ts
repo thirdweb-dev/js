@@ -1,7 +1,5 @@
-import { logger } from "../core/helpers/logger";
 import { spinner } from "../core/helpers/logger";
 import { BufferOrStringWithName, ThirdwebStorage } from "@thirdweb-dev/storage";
-import chalk from "chalk";
 import fs from "fs";
 import path from "path";
 
