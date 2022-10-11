@@ -21,7 +21,7 @@ describe("NFTCollection", async () => {
     for (let i = 0; i < AMOUNT; i++) {
       await collection.mint({
         name: `Test NFT ${i}`,
-        description: "Test Description",
+        description: `Test Description ${i}`,
       });
     }
   });

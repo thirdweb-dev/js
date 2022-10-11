@@ -238,7 +238,7 @@ export class Deployer {
       .candyMachines()
       .builders()
       .create({
-        itemsAvailable: toBigNumber(candyMachineInfo.itemsAvailable),
+        itemsAvailable: toBigNumber(candyMachineInfo.totalSupply),
         price: sol(0),
         sellerFeeBasisPoints: 0,
         endSettings: {

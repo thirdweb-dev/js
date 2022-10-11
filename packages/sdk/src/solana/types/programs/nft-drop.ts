@@ -8,7 +8,7 @@ import { z } from "zod";
  * @internal
  */
 export const NFTDropInitialConditionsInputSchema = z.object({
-  itemsAvailable: AmountSchema,
+  totalSupply: AmountSchema,
 });
 
 /**

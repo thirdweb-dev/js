@@ -78,22 +78,23 @@ export class NFTHelper {
       | Metadata<JsonMetadata<string>>,
   ): Promise<NFT> {
     let mint = "mint" in meta ? meta.mint : undefined;
+    let fullModel = meta;
     if (meta.model === "metadata") {
-      const fetchedMint = await this.metaplex
+      fullModel = await this.metaplex
         .nfts()
         .findByMint({ mintAddress: meta.mintAddress })
         .run();
-      mint = fetchedMint.mint;
+      mint = fullModel.mint;
     }
     if (!mint) {
       throw new Error("No mint found for NFT");
     }
-    return this.toNFTMetadataResolved(mint, meta);
+    return this.toNFTMetadataResolved(mint, fullModel);
   }
 
   private toNFTMetadataResolved(
     mint: Mint,
-    metadata:
+    fullModel:
       | Nft
       | Sft
       | NftWithToken
@@ -103,12 +104,12 @@ export class NFTHelper {
     return {
       metadata: {
         id: mint.address.toBase58(),
-        uri: metadata.uri,
-        name: metadata.name,
-        symbol: metadata.symbol,
-        ...metadata.json,
+        uri: fullModel.uri,
+        name: fullModel.name,
+        symbol: fullModel.symbol,
+        ...fullModel.json,
       },
-      owner: metadata.updateAuthorityAddress.toBase58(),
+      owner: fullModel.updateAuthorityAddress.toBase58(),
       supply: mint.supply.basisPoints.toNumber(),
       type: "metaplex",
     };
