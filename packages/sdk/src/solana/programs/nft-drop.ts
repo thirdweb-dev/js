@@ -6,7 +6,7 @@ import {
 } from "../../core/schema/nft";
 import { ClaimConditions } from "../classes/claim-conditions";
 import { NFTHelper } from "../classes/helpers/nft-helper";
-import { TransactionResult } from "../types/common";
+import { Amount, TransactionResult } from "../types/common";
 import type { Metaplex, MintCandyMachineOutput } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
 import { ThirdwebStorage, UploadProgressEvent } from "@thirdweb-dev/storage";
@@ -343,9 +343,9 @@ export class NFTDrop {
    * console.log("Claimed NFT at address", claimedAddresses[0]);
    * ```
    */
-  async claimTo(receiverAddress: string, quantity: number): Promise<string[]> {
+  async claimTo(receiverAddress: string, quantity: Amount): Promise<string[]> {
     const candyMachine = await this.getCandyMachine();
-    await this.claimConditions.assertCanClaimable(quantity);
+    await this.claimConditions.assertCanClaimable(Number(quantity));
     const results: MintCandyMachineOutput[] = [];
     // has to claim sequentially
     for (let i = 0; i < quantity; i++) {
