@@ -1,9 +1,9 @@
 import { createSOLProgramQueryKey } from "../../../../core/query-utils/query-key";
 import { RequiredParam } from "../../../../core/types/shared";
+import { ClaimNFTParams } from "../../../types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { NFTDrop } from "@thirdweb-dev/sdk/solana";
 import invariant from "tiny-invariant";
-import { ClaimNFTParams } from "../../../types";
 
 /**
  * Claim NFTs from an NFT Drop program
@@ -18,7 +18,7 @@ import { ClaimNFTParams } from "../../../types";
  *   const { mutateAsync: claim, isLoading, error } = useClaimNFT(program);
  *
  *   return (
- *     <button onClick={() => claim(1)}>
+ *     <button onClick={() => claim({amount: 1})}>
  *       Claim
  *     </button>
  *   )
@@ -32,6 +32,9 @@ export function useClaimNFT(program: RequiredParam<NFTDrop>) {
   return useMutation(
     async (data: ClaimNFTParams) => {
       invariant(program, "program is required");
+      if (!data.to) {
+        return await program.claim(data.amount);
+      }
       return await program.claimTo(data.to, data.amount);
     },
     {
