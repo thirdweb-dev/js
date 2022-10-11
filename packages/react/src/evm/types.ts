@@ -191,7 +191,7 @@ export type RevealLazyMintInput = {
  * @beta
  */
 export type ClaimNFTParams = {
-  to: WalletAddress;
+  to?: WalletAddress;
   quantity: BigNumberish;
   options?: ClaimOptions;
   /**

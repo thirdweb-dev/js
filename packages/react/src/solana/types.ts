@@ -5,7 +5,7 @@ import { Amount } from "@thirdweb-dev/sdk";
  *
  * @beta
  */
- export type ClaimNFTParams = {
-  to: string;
+export type ClaimNFTParams = {
+  to?: string;
   amount: Amount;
 };
