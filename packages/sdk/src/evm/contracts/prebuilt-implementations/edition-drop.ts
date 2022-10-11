@@ -1,3 +1,4 @@
+import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
 import { TransactionTask } from "../../core/classes/TransactionTask";
@@ -24,10 +25,9 @@ import {
 import { PaperCheckout } from "../../integrations/paper-xyz";
 import { DropErc1155ContractSchema } from "../../schema/contracts/drop-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
-import { QueryAllParams, UploadProgressEvent } from "../../types";
 import type { DropERC1155 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC1155.json";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage, UploadProgressEvent } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
