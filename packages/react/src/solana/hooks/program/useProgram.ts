@@ -5,7 +5,12 @@ import {
 import { RequiredParam } from "../../../core/types/shared";
 import { useSDK } from "../../providers/base";
 import { programAccountTypeQuery } from "./useProgramAccountType";
-import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useQuery,
+  useQueryClient,
+  UseQueryResult,
+} from "@tanstack/react-query";
 import type {
   NFTCollection,
   NFTDrop,
@@ -77,7 +82,7 @@ export function programQuery<TProgramType extends ProgramType>(
  * import { useProgram } from "@thirdweb-dev/react/solana";
  *
  * export default function Component() {
- *   const program = useProgram("{{program_address}}");
+ *   const program = useProgram("{{program_address}}").program;
  *
  *   // Now you can use the program in the rest of the component
  *
@@ -98,7 +103,22 @@ export function useProgram<TProgramType extends ProgramType>(
 ) {
   const queryClient = useQueryClient();
   const sdk = useSDK();
-  return useQuery(programQuery(queryClient, sdk, address, type));
+  const queryResult = useQuery(programQuery(queryClient, sdk, address, type));
+
+  return { ...queryResult, program: queryResult.data } as UseQueryResult<
+    Readonly<{
+      "nft-collection": NFTCollection;
+      "nft-drop": NFTDrop;
+      token: Token;
+    }>[TProgramType],
+    unknown
+  > & {
+    program: Readonly<{
+      "nft-collection": NFTCollection;
+      "nft-drop": NFTDrop;
+      token: Token;
+    }>[TProgramType];
+  };
 }
 
 export type UseProgramResult = ReturnType<typeof useProgram>;
