@@ -25,7 +25,7 @@ describe("Registry", async () => {
     });
     nftDrop = await freshSDK.deployer.createNftDrop({
       name: "Reg Test Drop",
-      itemsAvailable: 10,
+      totalSupply: 10,
     });
     const allPrograms = await freshSDK.registry.getDeployedPrograms(wallet);
     expect(allPrograms).length(3);
