@@ -325,7 +325,7 @@ export class NFTDrop {
    * console.log("Claimed NFT at address", claimedAddresses[0]);
    * ```
    */
-  async claim(quantity: number): Promise<string[]> {
+  async claim(quantity: Amount): Promise<string[]> {
     const address = this.metaplex.identity().publicKey.toBase58();
     return this.claimTo(address, quantity);
   }
