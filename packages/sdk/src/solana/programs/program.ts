@@ -1,9 +1,5 @@
 import { UserWallet } from "../classes/user-wallet";
-import {
-  Cluster,
-  resolveClusterFromConnection,
-  TransactionBuilder,
-} from "@metaplex-foundation/js";
+import { Cluster, resolveClusterFromConnection } from "@metaplex-foundation/js";
 import {
   Program as AnchorProgram,
   Idl,
@@ -23,7 +19,7 @@ import { Connection, PublicKey, Signer } from "@solana/web3.js";
  * sdk.wallet.connect(signer);
  *
  * // Get the interface for your program
- * const program = await sdk.getProgram("{{contract_address}}");
+ * const program = await sdk.getProgram("{{program_address}}");
  * ```
  *
  * @public

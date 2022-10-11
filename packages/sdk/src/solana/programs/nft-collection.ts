@@ -1,4 +1,8 @@
 import {
+  DEFAULT_QUERY_ALL_COUNT,
+  QueryAllParams,
+} from "../../core/schema/QueryParams";
+import {
   NFT,
   NFTMetadata,
   NFTMetadataInput,
@@ -11,13 +15,15 @@ import { TransactionResult } from "../types/common";
 import { CreatorInput } from "../types/programs";
 import {
   findEditionMarkerPda,
+  GmaBuilder,
+  JsonMetadata,
   Metaplex,
   toBigNumber,
-} from "@metaplex-foundation/js";
-import {
-  EditionMarker,
+  toMetadata,
+  toMetadataAccount,
   Metadata,
-} from "@metaplex-foundation/mpl-token-metadata";
+} from "@metaplex-foundation/js";
+import { EditionMarker } from "@metaplex-foundation/mpl-token-metadata";
 import { ConfirmedSignatureInfo, PublicKey } from "@solana/web3.js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
@@ -32,7 +38,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
  * sdk.wallet.connect(signer);
  *
  * // Get the interface for your NFT collection program
- * const program = await sdk.getNFTCollection("{{contract_address}}");
+ * const program = await sdk.getProgram("{{program_address}}", "nft-collection");
  * ```
  *
  * @public
@@ -106,6 +112,7 @@ export class NFTCollection {
 
   /**
    * Get the metadata for all NFTs on this collection
+   * @remarks This method is paginated. Use the `start` and `count` properties of the queryParams object to control pagination. By default the first 100 NFTs are returned
    * @returns metadata for all minted NFTs
    *
    * @example
@@ -116,23 +123,11 @@ export class NFTCollection {
    * console.log(nfts[0].owner);
    * ```
    */
-  async getAll(): Promise<NFT[]> {
-    const addresses = await this.getAllNFTAddresses();
-    return await Promise.all(addresses.map(async (a) => await this.get(a)));
-  }
+  async getAll(queryParams?: QueryAllParams): Promise<NFT[]> {
+    const start = queryParams?.start || 0;
+    const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
 
-  /**
-   * Get the mint addresses for all NFTs on this collection
-   * @returns mint addresses for all minted NFTs
-   *
-   * @example
-   * ```jsx
-   * // Get just the addresses of the minted NFTs on this contract
-   * const nftsAdresses = await program.getAllNFTAddresses();
-   * console.log(nftsAdresses);
-   * ```
-   */
-  async getAllNFTAddresses(): Promise<string[]> {
+    // TODO cache signatures <> transactions mapping in memory so pagination doesn't re-request this everytime
     const allSignatures: ConfirmedSignatureInfo[] = [];
     // This returns the first 1000, so we need to loop through until we run out of signatures to get.
     let signatures = await this.metaplex.connection.getSignaturesForAddress(
@@ -152,7 +147,6 @@ export class NFTCollection {
     } while (signatures.length > 0);
 
     const metadataAddresses: PublicKey[] = [];
-    const mintAddresses = new Set<string>();
 
     // TODO RPC's will throttle this, need to do some optimizations here
     const batchSize = 1000; // alchemy RPC batch limit
@@ -162,9 +156,11 @@ export class NFTCollection {
         Math.min(allSignatures.length, i + batchSize),
       );
 
-      const transactions = await this.metaplex.connection.getTransactions(
-        batch.map((s) => s.signature),
-      );
+      const transactions = (
+        await this.metaplex.connection.getTransactions(
+          batch.map((s) => s.signature),
+        )
+      ).reverse();
 
       for (const tx of transactions) {
         if (tx) {
@@ -194,17 +190,34 @@ export class NFTCollection {
       }
     }
 
-    const metadataAccounts = await this.metaplex
-      .rpc()
-      .getMultipleAccounts(metadataAddresses);
+    // Metaplex GmaBuilder has a weird thing where they always start at 1 not 0
+    // so we workaround it by adding an extra address, and shifting the count to get the actual count we want
+    const fixedMetadataAddresses = (
+      start === 0 ? [PublicKey.default] : []
+    ).concat(metadataAddresses);
+    const metadataInfos = await GmaBuilder.make(
+      this.metaplex,
+      fixedMetadataAddresses,
+    ).getBetween(start, start === 0 ? count + 1 : start + count);
 
-    for (const account of metadataAccounts) {
-      if (account.exists) {
-        const [metadata] = Metadata.deserialize(account.data);
-        mintAddresses.add(metadata.mint.toBase58());
+    // parse each account into a metadata account
+    const metadataParsed: Metadata<JsonMetadata<string>>[] = [];
+    for (const metadataInfo of metadataInfos) {
+      if (metadataInfo.exists) {
+        try {
+          metadataParsed.push(toMetadata(toMetadataAccount(metadataInfo)));
+        } catch (error) {
+          // ignore
+        }
       }
     }
-    return Array.from(mintAddresses);
+
+    // finally fetch the metadta + mint for each in parallel
+    const nfts = await Promise.all(
+      metadataParsed.map((m) => this.nft.toNFTMetadata(m)),
+    );
+    // TODO sort by minted date
+    return nfts;
   }
 
   /**
