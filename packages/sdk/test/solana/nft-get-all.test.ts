@@ -6,7 +6,7 @@ describe("NFTCollection", async () => {
   let collection: NFTCollection;
   let addr: string;
 
-  const AMOUNT = 100;
+  const AMOUNT = 5;
 
   before(async () => {
     addr = await sdk.deployer.createNftCollection({
@@ -18,23 +18,29 @@ describe("NFTCollection", async () => {
   });
 
   it("mint NFTs", async () => {
-    await Promise.all(
-      [...Array(AMOUNT)].map((_, i) => {
-        return collection.mint({
-          name: `Test NFT ${i}`,
-          description: "Test Description",
-        });
-      }),
-    );
+    for (let i = 0; i < AMOUNT; i++) {
+      await collection.mint({
+        name: `Test NFT ${i}`,
+        description: "Test Description",
+      });
+    }
   });
 
   it("fetch all NFTs", async () => {
-    const all = await collection.getAll({
+    let all = await collection.getAll({
       start: 0,
-      count: 5,
+      count: 2,
     });
-    console.log(all.map((a) => a.metadata.name));
-    expect(all.length).to.eq(AMOUNT);
-    //expect(all[0].metadata.name).to.eq("Test NFT 0");
+    expect(all.length).to.eq(2);
+    expect(all[0].metadata.name).to.eq("Test NFT 0");
+    expect(all[1].metadata.name).to.eq("Test NFT 1");
+    all = await collection.getAll({
+      start: 2,
+      count: 3,
+    });
+    expect(all.length).to.eq(3);
+    expect(all[0].metadata.name).to.eq("Test NFT 2");
+    expect(all[1].metadata.name).to.eq("Test NFT 3");
+    expect(all[2].metadata.name).to.eq("Test NFT 4");
   });
 });

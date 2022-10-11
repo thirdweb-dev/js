@@ -156,9 +156,11 @@ export class NFTCollection {
         Math.min(allSignatures.length, i + batchSize),
       );
 
-      const transactions = await this.metaplex.connection.getTransactions(
-        batch.map((s) => s.signature),
-      );
+      const transactions = (
+        await this.metaplex.connection.getTransactions(
+          batch.map((s) => s.signature),
+        )
+      ).reverse();
 
       for (const tx of transactions) {
         if (tx) {
@@ -190,13 +192,13 @@ export class NFTCollection {
 
     // Metaplex GmaBuilder has a weird thing where they always start at 1 not 0
     // so we workaround it by adding an extra address, and shifting the count to get the actual count we want
-    const fixedMetadataAddresses = [PublicKey.default].concat(
-      metadataAddresses,
-    );
+    const fixedMetadataAddresses = (
+      start === 0 ? [PublicKey.default] : []
+    ).concat(metadataAddresses);
     const metadataInfos = await GmaBuilder.make(
       this.metaplex,
       fixedMetadataAddresses,
-    ).getBetween(start, start === 0 ? count + 1 : count);
+    ).getBetween(start, start === 0 ? count + 1 : start + count);
 
     // parse each account into a metadata account
     const metadataParsed: Metadata<JsonMetadata<string>>[] = [];
