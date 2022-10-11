@@ -160,14 +160,10 @@ export class NFTDrop {
    * ```
    */
   async getAllClaimed(): Promise<NFT[]> {
-    const nfts = await this.metaplex
-      .candyMachines()
-      .findMintedNfts({ candyMachine: this.publicKey })
-      .run();
-
-    return await Promise.all(
-      nfts.map(async (nft) => this.nft.toNFTMetadata(nft)),
-    );
+    // using getAll from collection here because candy machin findAllMinted doesn't return anything
+    const candy = await this.getCandyMachine();
+    invariant(candy.collectionMintAddress, "Collection mint address not found");
+    return await this.nft.getAll(candy.collectionMintAddress.toBase58());
   }
 
   /**

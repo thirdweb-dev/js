@@ -1,6 +1,15 @@
+import {
+  QueryAllParams,
+  DEFAULT_QUERY_ALL_COUNT,
+} from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
+import {
+  CANDYMACHINE_PROGRAM_ID,
+  METAPLEX_PROGRAM_ID,
+} from "../../constants/addresses";
 import { TransactionResult } from "../../types/common";
 import {
+  GmaBuilder,
   JsonMetadata,
   Metadata,
   Metaplex,
@@ -10,9 +19,11 @@ import {
   Sft,
   SftWithToken,
   token,
+  toMetadata,
+  toMetadataAccount,
 } from "@metaplex-foundation/js";
 import { getAccount, getAssociatedTokenAddress } from "@solana/spl-token";
-import { Connection, PublicKey } from "@solana/web3.js";
+import { ConfirmedSignatureInfo, Connection, PublicKey } from "@solana/web3.js";
 
 /**
  * @internal
@@ -67,6 +78,119 @@ export class NFTHelper {
     } catch (e) {
       return 0;
     }
+  }
+
+  async getAll(
+    collectionAddress: string,
+    queryParams?: QueryAllParams,
+  ): Promise<NFT[]> {
+    const collectionKey = new PublicKey(collectionAddress);
+    const start = queryParams?.start || 0;
+    const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
+
+    // TODO cache signatures <> transactions mapping in memory so pagination doesn't re-request this everytime
+    const allSignatures: ConfirmedSignatureInfo[] = [];
+    // This returns the first 1000, so we need to loop through until we run out of signatures to get.
+    let signatures = await this.metaplex.connection.getSignaturesForAddress(
+      collectionKey,
+    );
+
+    allSignatures.push(...signatures);
+    do {
+      const options = {
+        before: signatures[signatures.length - 1]?.signature,
+      };
+      signatures = await this.metaplex.connection.getSignaturesForAddress(
+        collectionKey,
+        options,
+      );
+      allSignatures.push(...signatures);
+    } while (signatures.length > 0);
+
+    const metadataAddresses: PublicKey[] = [];
+
+    // TODO RPC's will throttle this, need to do some optimizations here
+    const batchSize = 1000; // alchemy RPC batch limit
+    for (let i = 0; i < allSignatures.length; i += batchSize) {
+      const batch = allSignatures.slice(
+        i,
+        Math.min(allSignatures.length, i + batchSize),
+      );
+
+      const transactions = (
+        await this.metaplex.connection.getTransactions(
+          batch.map((s) => s.signature),
+        )
+      ).reverse();
+
+      for (const tx of transactions) {
+        if (tx) {
+          const programIds = tx.transaction.message
+            .programIds()
+            .map((p) => p.toString());
+          const accountKeys = tx.transaction.message.accountKeys.map((p) =>
+            p.toString(),
+          );
+          // Only look in transactions that call the Metaplex token metadata program
+          if (programIds.includes(METAPLEX_PROGRAM_ID)) {
+            // Go through all instructions in a given transaction
+            for (const ix of tx.transaction.message.instructions) {
+              // Filter for setAndVerify or verify instructions in the Metaplex token metadata program
+              if (
+                (ix.data === "K" || ix.data === "S" || ix.data === "X") &&
+                accountKeys[ix.programIdIndex] === METAPLEX_PROGRAM_ID
+              ) {
+                const metadataAddressIndex = ix.accounts[0];
+                const metadata_address =
+                  tx.transaction.message.accountKeys[metadataAddressIndex];
+                metadataAddresses.push(metadata_address);
+              }
+            }
+          } else if (programIds.includes(CANDYMACHINE_PROGRAM_ID)) {
+            for (const ix of tx.transaction.message.instructions) {
+              // filter for SetCollectionDuringMint from CandyMachineV2
+              if (
+                accountKeys[ix.programIdIndex] === CANDYMACHINE_PROGRAM_ID &&
+                ix.data === "JEuNFGs7wrU"
+              ) {
+                const metadataAddressIndex = ix.accounts[1];
+                const metadata_address =
+                  tx.transaction.message.accountKeys[metadataAddressIndex];
+                metadataAddresses.push(metadata_address);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Metaplex GmaBuilder has a weird thing where they always start at 1 not 0
+    // so we workaround it by adding an extra address, and shifting the count to get the actual count we want
+    const fixedMetadataAddresses = (
+      start === 0 ? [PublicKey.default] : []
+    ).concat(metadataAddresses);
+    const metadataInfos = await GmaBuilder.make(
+      this.metaplex,
+      fixedMetadataAddresses,
+    ).getBetween(start, start === 0 ? count + 1 : start + count);
+
+    // parse each account into a metadata account
+    const metadataParsed: Metadata<JsonMetadata<string>>[] = [];
+    for (const metadataInfo of metadataInfos) {
+      if (metadataInfo.exists) {
+        try {
+          metadataParsed.push(toMetadata(toMetadataAccount(metadataInfo)));
+        } catch (error) {
+          // ignore
+        }
+      }
+    }
+
+    // finally fetch the metadta + mint for each in parallel
+    const nfts = await Promise.all(
+      metadataParsed.map((m) => this.toNFTMetadata(m)),
+    );
+    return nfts;
   }
 
   async toNFTMetadata(
