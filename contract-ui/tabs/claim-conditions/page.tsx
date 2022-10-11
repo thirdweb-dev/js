@@ -39,7 +39,7 @@ export const ContractClaimConditionsPage: React.FC<
           <ButtonGroup colorScheme="purple" size="sm" variant="solid">
             <LinkButton
               isExternal
-              href="https://portal.thirdweb.com/contractkit/"
+              href="https://portal.thirdweb.com/contractkit/interfaces/erc721claimablewithconditions"
             >
               Claim Conditions
             </LinkButton>
