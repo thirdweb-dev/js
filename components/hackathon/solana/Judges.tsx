@@ -8,16 +8,19 @@ export const Judges: React.FC = () => {
       name: "Samina Kabir",
       twitter: "saminacodes",
       image: "/assets/landingpage/samina.jpeg",
+      company: "thirdweb",
     },
     {
       name: "Farza Majeed",
       twitter: "FarzaTV",
       image: "/assets/landingpage/farza.jpeg",
+      company: "Buildspace",
     },
     {
       name: "Noah Hein",
       twitter: "nheindev",
       image: "/assets/landingpage/noah.png",
+      company: "Phantom",
     },
   ];
 
@@ -39,6 +42,9 @@ export const Judges: React.FC = () => {
               category="solanathon"
               label={judge.name}
             >
+              <Text size="body.lg" color="gray.500">
+                {judge.company}
+              </Text>
               <Text size="label.md" color="gray.500">
                 @{judge.twitter}
               </Text>

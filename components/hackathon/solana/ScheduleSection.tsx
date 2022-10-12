@@ -13,15 +13,41 @@ export const ScheduleSection: React.FC = () => {
       href: "https://lu.ma/sol-1",
     },
     {
+      day: 18,
+      title: "Build an NFT Minting Site With Solana",
+      href: "https://lu.ma/eng-2",
+    },
+    {
+      day: 19,
+      title: "Learn to build on Solana",
+      href: "https://lu.ma/build-on-sol",
+    },
+    {
       day: 19,
       title: "Solana-thon NYC Kickoff",
       href: "https://lu.ma/solanathonkickoff.thirdweb",
       irl: "NYC",
     },
     {
+      day: 19,
+      title: "Solana-thon SF Kickoff",
+      href: "https://lu.ma/sf-kickoff",
+      irl: "SF",
+    },
+    {
       day: 20,
-      title: "Introduction to Phantom Wallet",
+      title: "Introduction to Solana with Phantom Wallet",
       href: "https://lu.ma/tw-phantom",
+    },
+    {
+      day: 25,
+      title: "Create A Token Gated Website With Web3 Auth and Solana",
+      href: "https://lu.ma/eng-3",
+    },
+    {
+      day: 27,
+      title: "Meet Solana University",
+      href: "https://lu.ma/tw-sol-u",
     },
   ];
 
