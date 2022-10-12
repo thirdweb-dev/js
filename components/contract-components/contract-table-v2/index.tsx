@@ -503,6 +503,7 @@ const WrappedSolanaDeployDrawer: React.FC<
             label: "attempt",
             programId: contractDetails.contractType,
             deployData: d,
+            network,
           });
           deployMutation.mutate(d, {
             onSuccess: (contractAddress, variables) => {
@@ -513,6 +514,7 @@ const WrappedSolanaDeployDrawer: React.FC<
                 programId: contractDetails.contractType,
                 deployData: variables,
                 contractAddress,
+                network,
               });
               onSuccess();
               router.push(
@@ -533,6 +535,7 @@ const WrappedSolanaDeployDrawer: React.FC<
                 programId: contractDetails.contractType,
                 deployData: variables,
                 error,
+                network,
               });
               onError(error);
             },
