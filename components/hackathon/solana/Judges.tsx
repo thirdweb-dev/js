@@ -5,19 +5,19 @@ import { Heading, Text, TrackedLink } from "tw-components";
 export const Judges: React.FC = () => {
   const judges = [
     {
-      name: "Furqan Rhydan",
-      twitter: "FurqanR",
-      image: "/assets/landingpage/furqan-rydhan.png",
-    },
-    {
       name: "Samina Kabir",
       twitter: "saminacodes",
       image: "/assets/landingpage/samina.jpeg",
     },
     {
-      name: "Joaquim Vergès",
-      twitter: "joenrv",
-      image: "/assets/landingpage/joaquim.jpeg",
+      name: "Farza Majeed",
+      twitter: "FarzaTV",
+      image: "/assets/landingpage/farza.jpeg",
+    },
+    {
+      name: "Noah Hein",
+      twitter: "nheindev",
+      image: "/assets/landingpage/noah.png",
     },
   ];
 
