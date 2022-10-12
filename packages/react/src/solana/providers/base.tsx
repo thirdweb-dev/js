@@ -10,7 +10,7 @@ import {
 } from "../contexts/thirdweb-auth";
 import type { WalletContextState } from "@solana/wallet-adapter-react";
 import { Network, ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import invariant from "tiny-invariant";
 
 interface ThirdwebSDKProviderProps extends QueryClientProviderProps {
@@ -44,33 +44,44 @@ export const ThirdwebSDKProvider: ComponentWithChildren<
   useEffect(() => {
     if (network) {
       const _sdk = ThirdwebSDK.fromNetwork(network);
+      if (wallet && wallet.publicKey) {
+        _sdk.wallet.connect(wallet);
+      }
       (_sdk as any)._network = network;
       setSDK(_sdk);
     } else {
       setSDK(null);
     }
+    // disabled wallet on purpose because we handle that below
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [network]);
 
   useEffect(() => {
-    if (sdk) {
-      if (wallet?.publicKey) {
-        sdk.wallet.connect(wallet);
-      } else {
-        sdk.wallet.disconnect();
-      }
+    if (
+      wallet &&
+      wallet.publicKey &&
+      sdk &&
+      (sdk as any)._network === network
+    ) {
+      sdk.wallet.connect(wallet);
+      return;
     }
-  }, [sdk, wallet]);
+  }, [network, sdk, wallet]);
+
+  const ctxValue = useMemo(
+    () =>
+      ({
+        sdk,
+        desiredNetwork: network || "unknown",
+        _inProvider: true,
+      } as const),
+    [sdk, network],
+  );
 
   return (
     <QueryClientProviderWithDefault queryClient={queryClient}>
       <ThirdwebAuthConfigProvider value={authConfig}>
-        <ThirdwebSDKContext.Provider
-          value={{
-            sdk,
-            desiredNetwork: network || "unknown",
-            _inProvider: true,
-          }}
-        >
+        <ThirdwebSDKContext.Provider value={ctxValue}>
           {children}
         </ThirdwebSDKContext.Provider>
       </ThirdwebAuthConfigProvider>
