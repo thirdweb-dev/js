@@ -7,10 +7,17 @@ import {
 import { ClaimConditions } from "../classes/claim-conditions";
 import { NFTHelper } from "../classes/helpers/nft-helper";
 import { Amount, TransactionResult } from "../types/common";
-import type { Metaplex, MintCandyMachineOutput } from "@metaplex-foundation/js";
+import {
+  CandyMachineItem,
+  Metaplex,
+  MintCandyMachineOutput,
+  toBigNumber,
+} from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
 import { ThirdwebStorage, UploadProgressEvent } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
+
+const LAZY_MINT_BATCH_SIZE = 5;
 
 /**
  * A collection of NFTs that can be lazy minted and claimed
@@ -287,29 +294,68 @@ export class NFTDrop {
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
     },
-  ): Promise<TransactionResult> {
+  ): Promise<TransactionResult[]> {
     const candyMachine = await this.getCandyMachine();
     const parsedMetadatas = metadatas.map((metadata) =>
       CommonNFTInput.parse(metadata),
     );
     const uris = await this.storage.uploadBatch(parsedMetadatas, options);
-    const items = uris.map((uri, i) => ({
+    const items: CandyMachineItem[] = uris.map((uri, i) => ({
       name: parsedMetadatas[i].name?.toString() || "",
       uri,
     }));
 
-    const result = await this.metaplex
-      .candyMachines()
-      .insertItems({
-        candyMachine,
-        authority: this.metaplex.identity(),
-        items,
-      })
-      .run();
+    // turn items into batches of $LAZY_MINT_BATCH_SIZE
+    const batches: CandyMachineItem[][] = [];
+    while (items.length) {
+      batches.push(items.splice(0, LAZY_MINT_BATCH_SIZE));
+    }
 
-    return {
-      signature: result.response.signature,
-    };
+    const block = await this.metaplex.connection.getLatestBlockhash();
+
+    const txns = batches.map((batch, i) =>
+      this.metaplex
+        .candyMachines()
+        .builders()
+        .insertItems({
+          candyMachine,
+          authority: this.metaplex.identity(),
+          items: batch,
+          index: toBigNumber(
+            i * LAZY_MINT_BATCH_SIZE + candyMachine.itemsLoaded.toNumber(),
+          ),
+        })
+        .setTransactionOptions({
+          blockhash: block.blockhash,
+          feePayer: this.metaplex.identity().publicKey,
+          lastValidBlockHeight: block.lastValidBlockHeight,
+        })
+        .setFeePayer(this.metaplex.identity())
+        .toTransaction(),
+    );
+
+    // make the connected wallet sign both candyMachine + registry transactions
+    const signedTx = await this.metaplex.identity().signAllTransactions(txns);
+
+    // send the signed transactions
+    const signatures = await Promise.all(
+      signedTx.map((tx) =>
+        this.metaplex.connection.sendRawTransaction(tx.serialize()),
+      ),
+    );
+
+    // wait for confirmations in parallel
+    const confirmations = await Promise.all(
+      signatures.map((sig) => {
+        return this.metaplex.rpc().confirmTransaction(sig);
+      }),
+    );
+
+    if (confirmations.length === 0) {
+      throw new Error("Transaction failed");
+    }
+
+    return signatures.map((signature) => ({ signature }));
   }
 
   /**
