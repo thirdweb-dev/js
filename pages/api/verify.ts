@@ -235,7 +235,6 @@ async function fetchConstructorParams(
   if (constructorParamTypes.length === 0) {
     return "";
   }
-  const construtctorParamByteLength = constructorParamTypes.length * 64;
   const requestBody = {
     apiKey: apiKeyMap[chainId],
     module: "account",
@@ -257,51 +256,73 @@ async function fetchConstructorParams(
     data.status === RequestStatus.OK &&
     data.result[0] !== undefined
   ) {
-    const txData = data.result[0].input;
-    let constructorArgs = txData.substring(
-      txData.length - construtctorParamByteLength,
-    );
     const contract = new utils.Interface(abi);
+    const txDeployBytecode = data.result[0].input;
+    let constructorArgs = "";
+
+    if (contract.deploy.inputs.length === 0) {
+      return "";
+    }
+
+    // first: attempt to get it from Release
+    try {
+      const bytecode = await fetchDeployBytecodeFromReleaseMetadata(
+        contractAddress,
+        provider,
+      );
+
+      if (bytecode) {
+        // contract was realeased, use the deployable bytecode method (proper solution)
+        const bytecodeHex = bytecode.startsWith("0x")
+          ? bytecode
+          : `0x${bytecode}`;
+
+        constructorArgs = txDeployBytecode.substring(bytecodeHex.length);
+      }
+    } catch (e) {
+      // contracts not released through thirdweb
+    }
+
+    // second: attempt to decode it from solc metadata bytecode
+    if (!constructorArgs) {
+      // couldn't find bytecode from release, using regex to locate consturctor args thruogh solc metadata
+      // https://docs.soliditylang.org/en/v0.8.17/metadata.html#encoding-of-the-metadata-hash-in-the-bytecode
+      // {6} = solc version
+      // {4} = 0033, but noticed some contracts have values other than 00 33. (uniswap)
+      const matches = [
+        ...txDeployBytecode.matchAll(
+          /(64736f6c6343[\w]{6}[\w]{4})(?!.*\1)(.*)$/g,
+        ),
+      ];
+
+      // regex finds the LAST occurence of solc metadata bytes, result always in same position
+      if (matches.length > 0) {
+        // TODO: we currently don't handle error string embedded in the bytecode, need to strip ascii (upgradeableProxy) in patterns[2]
+        // https://etherscan.io/address/0xee6a57ec80ea46401049e92587e52f5ec1c24785#code
+        constructorArgs = matches[0][2];
+      }
+    }
+
+    // third: attempt to guess it from the ABI inputs
+    if (!constructorArgs) {
+      // TODO: need to guess array / struct properly
+      const constructorParamByteLength = constructorParamTypes.length * 64;
+      constructorArgs = txDeployBytecode.substring(
+        txDeployBytecode.length - constructorParamByteLength,
+      );
+    }
+
     try {
       // sanity check that the constructor params are valid
+      // TODO: should we sanity check after each attempt?
       ethers.utils.defaultAbiCoder.decode(
         contract.deploy.inputs,
         `0x${constructorArgs}`,
       );
     } catch (e) {
-      // if that fails, try to grab the deployable bytecode from the release metadata
-      try {
-        const bytecode = await fetchDeployBytecodeFromReleaseMetadata(
-          contractAddress,
-          provider,
-        );
-        if (bytecode) {
-          // contract was realeased, use the deployable bytecode method (proper solution)
-          const bytecodeHex = bytecode.startsWith("0x")
-            ? bytecode
-            : `0x${bytecode}`;
-          constructorArgs = txData.substring(bytecodeHex.length);
-          try {
-            // re-do the sanity check
-            ethers.utils.defaultAbiCoder.decode(
-              contract.deploy.inputs,
-              `0x${constructorArgs}`,
-            );
-          } catch (err) {
-            throw new Error(`Error decoding contract parameters: ${err}`);
-          }
-        } else {
-          // contract was not released, throw an error
-          throw new Error(
-            "Verifying this contract requires a release. Run `npx thirdweb release` to create a release for this contract, then try again.",
-          );
-        }
-      } catch (err) {
-        // contract was not released, throw an error
-        throw new Error(
-          "Verifying this contract requires a release. Run `npx thirdweb release` to create a release for this contract, then try again.",
-        );
-      }
+      throw new Error(
+        "Verifying this contract requires a release. Run `npx thirdweb release` to create a release for this contract, then try again.",
+      );
     }
 
     return constructorArgs;
