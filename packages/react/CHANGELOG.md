@@ -1,5 +1,11 @@
 # @thirdweb-dev/react
 
+## 3.2.4
+
+### Patch Changes
+
+- [#301](https://github.com/thirdweb-dev/js/pull/301) [`86f0cef`](https://github.com/thirdweb-dev/js/commit/86f0ceff46f72df8ebd81f843e3c66a245f23992) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Remove useAddress hook for now
+
 ## 3.2.3
 
 ### Patch Changes
