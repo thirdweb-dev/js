@@ -2,12 +2,12 @@ import { createSOLQueryKeyWithNetwork } from "../../../core/query-utils/query-ke
 import { RequiredParam } from "../../../core/types/shared";
 import { useSDK } from "../../providers/base";
 import { useQuery } from "@tanstack/react-query";
-import { UserWallet } from "@thirdweb-dev/sdk/solana";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
 import invariant from "tiny-invariant";
 
-export function balanceQuery(wallet: RequiredParam<UserWallet>) {
-  const address = wallet?.getAddress();
-  const network = wallet?.network;
+export function balanceQuery(sdk: RequiredParam<ThirdwebSDK>) {
+  const address = sdk?.wallet?.getAddress();
+  const network = sdk?.network;
 
   return {
     queryKey: createSOLQueryKeyWithNetwork(
@@ -15,12 +15,12 @@ export function balanceQuery(wallet: RequiredParam<UserWallet>) {
       network,
     ),
 
-    queryFn: async () => {
-      invariant(wallet, "wallet is required");
+    queryFn: () => {
+      invariant(sdk, "sdk is required");
 
-      return await wallet.getBalance();
+      return sdk.wallet.getBalance();
     },
-    enabled: !!wallet && !!address && !!network,
+    enabled: !!sdk && !!address && !!network,
   };
 }
 
@@ -30,6 +30,6 @@ export function balanceQuery(wallet: RequiredParam<UserWallet>) {
  * @returns the balace of the connected wallet
  */
 export function useBalance() {
-  const wallet = useSDK()?.wallet;
-  return useQuery(balanceQuery(wallet));
+  const sdk = useSDK();
+  return useQuery(balanceQuery(sdk));
 }
