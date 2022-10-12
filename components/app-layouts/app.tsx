@@ -31,17 +31,21 @@ const PHIdentifier: React.FC = () => {
   useEffect(() => {
     if (address) {
       posthog.identify(address);
-    }
-    if (publicKey) {
+    } else if (publicKey) {
       posthog.identify(publicKey.toBase58());
     }
   }, [address, publicKey]);
 
   useEffect(() => {
     if (chainId) {
+      posthog.unregister("network");
       posthog.register({ chain_id: chainId, ecosystem: "evm" });
     } else if (solSDKNetwork) {
-      posthog.register({ network: solSDKNetwork, ecosystem: "solana" });
+      posthog.unregister("chain_id");
+      posthog.register({
+        network: solSDKNetwork || "unknown_network",
+        ecosystem: "solana",
+      });
     }
   }, [chainId, solSDKNetwork]);
 

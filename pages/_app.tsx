@@ -27,7 +27,7 @@ import React, {
 import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
 import { isBrowser } from "utils/isBrowser";
 
-const __CACHE_BUSTER = "v3.2.0-SOL";
+const __CACHE_BUSTER = "v3.2.0-SOL.1";
 
 export function bigNumberReplacer(_key: string, value: any) {
   // if we find a BigNumber then make it into a string (since that is safe)
