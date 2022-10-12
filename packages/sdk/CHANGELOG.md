@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 3.2.5
+
+### Patch Changes
+
+- [#303](https://github.com/thirdweb-dev/js/pull/303) [`712b11a`](https://github.com/thirdweb-dev/js/commit/712b11a43e389ae10b7f09648779a69c05b2c913) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Fix getting real NFT owners
+
 ## 3.2.4
 
 ## 3.2.3
