@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import { installGithubAction } from "../common/ci-installer";
 import { detectExtensions } from "../common/feature-detector";
 import { processProject } from "../common/processor";
 import { cliVersion, pkg } from "../constants/urls";
