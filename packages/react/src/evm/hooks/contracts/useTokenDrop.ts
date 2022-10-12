@@ -8,16 +8,16 @@ import { useContract } from "../async/contracts";
  *
  * @example
  * ```javascript
- * import { useTokenDrop } from '@thirdweb-dev/react'
+ * import { useContract } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const tokenDrop = useTokenDrop("<YOUR-CONTRACT-ADDRESS>")
+ *   const { contract } = useContract("<YOUR-CONTRACT-ADDRESS>", "token-drop")
  *
  *   // Now you can use the token drop contract in the rest of the component
  *
  *   // For example, this function will get the connected wallets token balance
  *   async function balance() {
- *     const balance = await tokenDrop.balance()
+ *     const balance = await contract.balance()
  *     return balance
  *   }
  *

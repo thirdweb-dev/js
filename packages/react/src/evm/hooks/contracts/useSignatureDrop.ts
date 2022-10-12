@@ -8,16 +8,16 @@ import { useContract } from "../async/contracts";
  *
  * @example
  * ```javascript
- * import { useSignatureDrop } from '@thirdweb-dev/react'
+ * import { useContract } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const signatureDrop = useSignatureDrop("<YOUR-CONTRACT-ADDRESS>")
+ *   const { contract } = useContract("<YOUR-CONTRACT-ADDRESS>", "signature-drop")
  *
  *   // Now you can use the Signature drop contract in the rest of the component
  *
  *   // For example, this function will let the connected wallet claim a new NFT
  *   async function claim(quantity) {
- *     await signatureDrop.claim(quantity)
+ *     await contract.claim(quantity)
  *   }
  *
  *   ...
