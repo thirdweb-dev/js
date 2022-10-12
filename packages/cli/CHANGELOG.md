@@ -1,5 +1,12 @@
 # thirdweb
 
+## 0.8.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.2.3
+
 ## 0.8.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @thirdweb-dev/react
 
+## 3.2.3
+
+### Patch Changes
+
+- [#299](https://github.com/thirdweb-dev/js/pull/299) [`b1218cb`](https://github.com/thirdweb-dev/js/commit/b1218cbd7d97ca7949d94a7e4ab93fef4ffbacd5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Recreate SDK on wallet changes for hook propagation
+
 ## 3.2.2
 
 ### Patch Changes
