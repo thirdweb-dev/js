@@ -79,7 +79,8 @@ export function generateSnippets(ecosystem) {
     return examples;
   }
 
-  const baseDocUrl = "https://portal.thirdweb.com/typescript/sdk.";
+  const path = ecosystem === "solana" ? "solana-sdk" : "typescript";
+  const baseDocUrl = `https://portal.thirdweb.com/${path}/sdk.`;
 
   const extractReferenceLink = (m, kind, contractName) => {
     if (kind === "Property") {
