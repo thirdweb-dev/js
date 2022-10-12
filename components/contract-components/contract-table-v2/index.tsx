@@ -102,7 +102,7 @@ export const ReleasedContractTable: ComponentWithChildren<
         Cell: (cell: any) =>
           cell.value ? (
             typeof cell.value === "string" ? (
-              <Image alt="" src={cell.value} boxSize={8} />
+              <Image alt="" src={replaceIpfsUrl(cell.value)} boxSize={8} />
             ) : (
               <ChakraNextImage alt="" src={cell.value} boxSize={8} />
             )
