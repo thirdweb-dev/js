@@ -7,6 +7,7 @@ import {
 import { ClaimConditions } from "../classes/claim-conditions";
 import { NFTHelper } from "../classes/helpers/nft-helper";
 import { Amount, TransactionResult } from "../types/common";
+import { getNework } from "../utils/urls";
 import {
   CandyMachineItem,
   Metaplex,
@@ -42,15 +43,7 @@ export class NFTDrop {
   public accountType = "nft-drop" as const;
   public publicKey: PublicKey;
   public get network() {
-    const url = new URL(this.metaplex.connection.rpcEndpoint);
-    // try this first to avoid hitting `custom` network for alchemy urls
-    if (url.hostname.includes("devnet")) {
-      return "devnet";
-    }
-    if (url.hostname.includes("mainnet")) {
-      return "mainnet-beta";
-    }
-    return this.metaplex.cluster;
+    return getNework(this.metaplex);
   }
 
   /**

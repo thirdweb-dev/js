@@ -9,6 +9,7 @@ import { enforceCreator } from "../classes/helpers/creators-helper";
 import { NFTHelper } from "../classes/helpers/nft-helper";
 import { TransactionResult } from "../types/common";
 import { CreatorInput } from "../types/programs";
+import { getNework } from "../utils/urls";
 import {
   findEditionMarkerPda,
   Metaplex,
@@ -41,15 +42,7 @@ export class NFTCollection {
   public publicKey: PublicKey;
   public accountType = "nft-collection" as const;
   public get network() {
-    const url = new URL(this.metaplex.connection.rpcEndpoint);
-    // try this first to avoid hitting `custom` network for alchemy urls
-    if (url.hostname.includes("devnet")) {
-      return "devnet";
-    }
-    if (url.hostname.includes("mainnet")) {
-      return "mainnet-beta";
-    }
-    return this.metaplex.cluster;
+    return getNework(this.metaplex);
   }
 
   constructor(

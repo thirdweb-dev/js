@@ -8,6 +8,7 @@ import {
   METAPLEX_PROGRAM_ID,
 } from "../../constants/addresses";
 import { TransactionResult } from "../../types/common";
+import { getNework, getPublicRpc } from "../../utils/urls";
 import {
   GmaBuilder,
   JsonMetadata,
@@ -24,6 +25,7 @@ import {
 } from "@metaplex-foundation/js";
 import { getAccount, getAssociatedTokenAddress } from "@solana/spl-token";
 import {
+  clusterApiUrl,
   ConfirmedSignatureInfo,
   Connection,
   ParsedAccountData,
@@ -87,18 +89,18 @@ export class NFTHelper {
 
   async ownerOf(nftAddress: string): Promise<string | undefined> {
     try {
-      const largestAccounts =
-        await this.metaplex.connection.getTokenLargestAccounts(
-          new PublicKey(nftAddress),
-        );
-      const largestAccountInfo =
-        await this.metaplex.connection.getParsedAccountInfo(
-          largestAccounts.value[0].address,
-        );
+      // TODO switch back to normal connection when alchemy supports getTokenLargestAccounts
+      const connection = new Connection(getPublicRpc(this.metaplex));
+      const largestAccounts = await connection.getTokenLargestAccounts(
+        new PublicKey(nftAddress),
+      );
+      const largestAccountInfo = await connection.getParsedAccountInfo(
+        largestAccounts.value[0].address,
+      );
       const parsedData = largestAccountInfo?.value?.data as ParsedAccountData;
       const owner = parsedData ? parsedData.parsed.info.owner : undefined;
       return owner;
-    } catch {
+    } catch (err) {
       return undefined;
     }
   }
