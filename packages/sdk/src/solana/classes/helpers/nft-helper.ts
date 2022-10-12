@@ -8,6 +8,7 @@ import {
   METAPLEX_PROGRAM_ID,
 } from "../../constants/addresses";
 import { TransactionResult } from "../../types/common";
+import { getNework, getPublicRpc } from "../../utils/urls";
 import {
   GmaBuilder,
   JsonMetadata,
@@ -23,7 +24,13 @@ import {
   toMetadataAccount,
 } from "@metaplex-foundation/js";
 import { getAccount, getAssociatedTokenAddress } from "@solana/spl-token";
-import { ConfirmedSignatureInfo, Connection, PublicKey } from "@solana/web3.js";
+import {
+  clusterApiUrl,
+  ConfirmedSignatureInfo,
+  Connection,
+  ParsedAccountData,
+  PublicKey,
+} from "@solana/web3.js";
 
 /**
  * @internal
@@ -77,6 +84,27 @@ export class NFTHelper {
       return Number(account.amount);
     } catch (e) {
       return 0;
+    }
+  }
+
+  async ownerOf(nftAddress: string): Promise<string | undefined> {
+    try {
+      // TODO switch back to normal connection when alchemy supports getTokenLargestAccounts
+      const connection = new Connection(
+        getPublicRpc(this.metaplex),
+        "confirmed",
+      );
+      const largestAccounts = await connection.getTokenLargestAccounts(
+        new PublicKey(nftAddress),
+      );
+      const largestAccountInfo = await connection.getParsedAccountInfo(
+        largestAccounts.value[0].address,
+      );
+      const parsedData = largestAccountInfo?.value?.data as ParsedAccountData;
+      const owner = parsedData ? parsedData.parsed.info.owner : undefined;
+      return owner;
+    } catch (err) {
+      return undefined;
     }
   }
 
@@ -213,11 +241,13 @@ export class NFTHelper {
     if (!mint) {
       throw new Error("No mint found for NFT");
     }
-    return this.toNFTMetadataResolved(mint, fullModel);
+    const owner = await this.ownerOf(mint.address.toBase58());
+    return this.toNFTMetadataResolved(mint, owner, fullModel);
   }
 
   private toNFTMetadataResolved(
     mint: Mint,
+    owner: string | undefined,
     fullModel:
       | Nft
       | Sft
@@ -233,7 +263,7 @@ export class NFTHelper {
         symbol: fullModel.symbol,
         ...fullModel.json,
       },
-      owner: fullModel.updateAuthorityAddress.toBase58(),
+      owner: owner || PublicKey.default.toBase58(),
       supply: mint.supply.basisPoints.toNumber(),
       type: "metaplex",
     };

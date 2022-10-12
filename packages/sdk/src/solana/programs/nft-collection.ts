@@ -9,6 +9,7 @@ import { enforceCreator } from "../classes/helpers/creators-helper";
 import { NFTHelper } from "../classes/helpers/nft-helper";
 import { TransactionResult } from "../types/common";
 import { CreatorInput } from "../types/programs";
+import { getNework } from "../utils/urls";
 import {
   findEditionMarkerPda,
   Metaplex,
@@ -41,15 +42,7 @@ export class NFTCollection {
   public publicKey: PublicKey;
   public accountType = "nft-collection" as const;
   public get network() {
-    const url = new URL(this.metaplex.connection.rpcEndpoint);
-    // try this first to avoid hitting `custom` network for alchemy urls
-    if (url.hostname.includes("devnet")) {
-      return "devnet";
-    }
-    if (url.hostname.includes("mainnet")) {
-      return "mainnet-beta";
-    }
-    return this.metaplex.cluster;
+    return getNework(this.metaplex);
   }
 
   constructor(
@@ -156,6 +149,21 @@ export class NFTCollection {
   }
 
   /**
+   * Get the current owner of the given NFT
+   * @param nftAddress - the mint address of the NFT to get the owner of
+   * @returns the owner of the NFT
+   * @example
+   * ```jsx
+   * const nftAddress = "..."
+   * const owner = await program.ownerOf(nftAddress);
+   * console.log(owner);
+   * ```
+   */
+  async ownerOf(nftAddress: string): Promise<string | undefined> {
+    return this.nft.ownerOf(nftAddress);
+  }
+
+  /**
    * Get the supply of NFT editions minted from a specific NFT
    * @param nftAddress - the mint address of the NFT to check the supply of
    * @returns the supply of the specified NFT
@@ -163,7 +171,7 @@ export class NFTCollection {
    * @example
    * ```jsx
    * const address = "...";
-   * const supply = await program.supplyOf(addres);
+   * const supply = await program.supplyOf(address);
    * ```
    */
   async supplyOf(nftAddress: string): Promise<bigint> {

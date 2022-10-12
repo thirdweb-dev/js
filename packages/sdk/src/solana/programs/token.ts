@@ -1,6 +1,7 @@
 import { CurrencyValue, TokenMetadata } from "../../core/schema/token";
 import { Amount, AmountSchema, TransactionResult } from "../types/common";
 import { toCurrencyValue } from "../utils/token";
+import { getNework } from "../utils/urls";
 import {
   findMetadataPda,
   Metaplex,
@@ -36,15 +37,7 @@ export class Token {
   public accountType = "token" as const;
   public publicKey: PublicKey;
   public get network() {
-    const url = new URL(this.metaplex.connection.rpcEndpoint);
-    // try this first to avoid hitting `custom` network for alchemy urls
-    if (url.hostname.includes("devnet")) {
-      return "devnet";
-    }
-    if (url.hostname.includes("mainnet")) {
-      return "mainnet-beta";
-    }
-    return this.metaplex.cluster;
+    return getNework(this.metaplex);
   }
 
   constructor(

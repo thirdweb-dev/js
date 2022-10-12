@@ -7,6 +7,7 @@ import {
 import { ClaimConditions } from "../classes/claim-conditions";
 import { NFTHelper } from "../classes/helpers/nft-helper";
 import { Amount, TransactionResult } from "../types/common";
+import { getNework } from "../utils/urls";
 import {
   CandyMachineItem,
   Metaplex,
@@ -42,15 +43,7 @@ export class NFTDrop {
   public accountType = "nft-drop" as const;
   public publicKey: PublicKey;
   public get network() {
-    const url = new URL(this.metaplex.connection.rpcEndpoint);
-    // try this first to avoid hitting `custom` network for alchemy urls
-    if (url.hostname.includes("devnet")) {
-      return "devnet";
-    }
-    if (url.hostname.includes("mainnet")) {
-      return "mainnet-beta";
-    }
-    return this.metaplex.cluster;
+    return getNework(this.metaplex);
   }
 
   /**
@@ -221,6 +214,21 @@ export class NFTDrop {
    */
   async balanceOf(walletAddress: string, nftAddress: string): Promise<number> {
     return this.nft.balanceOf(walletAddress, nftAddress);
+  }
+
+  /**
+   * Get the current owner of the given NFT
+   * @param nftAddress - the mint address of the NFT to get the owner of
+   * @returns the owner of the NFT
+   * @example
+   * ```jsx
+   * const nftAddress = "..."
+   * const owner = await program.ownerOf(nftAddress);
+   * console.log(owner);
+   * ```
+   */
+  async ownerOf(nftAddress: string): Promise<string | undefined> {
+    return this.nft.ownerOf(nftAddress);
   }
 
   /**
