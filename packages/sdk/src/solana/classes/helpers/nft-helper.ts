@@ -90,7 +90,10 @@ export class NFTHelper {
   async ownerOf(nftAddress: string): Promise<string | undefined> {
     try {
       // TODO switch back to normal connection when alchemy supports getTokenLargestAccounts
-      const connection = new Connection(getPublicRpc(this.metaplex));
+      const connection = new Connection(
+        getPublicRpc(this.metaplex),
+        "confirmed",
+      );
       const largestAccounts = await connection.getTokenLargestAccounts(
         new PublicKey(nftAddress),
       );
