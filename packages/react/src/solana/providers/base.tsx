@@ -54,19 +54,7 @@ export const ThirdwebSDKProvider: ComponentWithChildren<
     }
     // disabled wallet on purpose because we handle that below
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [network]);
-
-  useEffect(() => {
-    if (
-      wallet &&
-      wallet.publicKey &&
-      sdk &&
-      (sdk as any)._network === network
-    ) {
-      sdk.wallet.connect(wallet);
-      return;
-    }
-  }, [network, sdk, wallet]);
+  }, [network, wallet]);
 
   const ctxValue = useMemo(
     () =>

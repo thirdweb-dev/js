@@ -8,16 +8,16 @@ import { useContract } from "../async/contracts";
  *
  * @example
  * ```javascript
- * import { useEditionDrop } from '@thirdweb-dev/react'
+ * import { useContract } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const editionDrop = useEditionDrop("<YOUR-CONTRACT-ADDRESS>")
+ *   const { contract } = useContract("<YOUR-CONTRACT-ADDRESS>", "edition-drop")
  *
  *   // Now you can use the edition drop contract in the rest of the component
  *
  *   // For example, this function will let the connected wallet claim a new NFT
  *   async function claim(tokenId, quantity) {
- *     await editionDrop.claim(tokenId, quantity)
+ *     await contract.claim(tokenId, quantity)
  *   }
  *
  *   ...
