@@ -200,7 +200,7 @@ export class Deployer {
    * const metadata = {
    *   name: "My NFT Drop",
    *   symbol: "NFT",
-   *   itemsAvailable: 5,
+   *   totalSuppply: 5,
    * };
    *
    * const address = await sdk.deployer.createNftDrop(metadata);
