@@ -13,7 +13,7 @@ import invariant from "tiny-invariant";
  * import { useProgram, useBurnNFT } from "@thirdweb-dev/react/solana";
  *
  * export default function Component() {
- *   const program = useProgram("{{program_address}}");
+ *   const { program } = useProgram("{{program_address}}");
  *   const { mutateAsync: burn, isLoading, error } = useBurnNFT(program);
  *
  *   return (

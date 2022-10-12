@@ -25,7 +25,7 @@ export function tokenSupplyQuery(program: RequiredParam<Token>) {
  * import { useProgram, useMintToken } from "@thirdweb-dev/react/solana";
  *
  * export default function Component() {
- *   const program = useProgram("{{program_address}}");
+ *   const { program } = useProgram("{{program_address}}");
  *   const { data: totalSupply, isLoading } = useTokenSupply(program);
  *
  *   return (
