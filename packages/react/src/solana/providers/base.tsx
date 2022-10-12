@@ -52,7 +52,9 @@ export const ThirdwebSDKProvider: ComponentWithChildren<
     } else {
       setSDK(null);
     }
-  }, [network, wallet]);
+    // disabled wallet on purpose because we handle that below
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [network]);
 
   useEffect(() => {
     if (
