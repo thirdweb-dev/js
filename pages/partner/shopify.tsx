@@ -125,7 +125,7 @@ const Shopify: ThirdwebNextPage = () => {
               <ProductButton
                 maxW="260px"
                 title="Start building"
-                href="/programs"
+                href="https://blog.thirdweb.com/tag/shopify/"
                 color="blackAlpha.900"
                 bg="white"
               />
