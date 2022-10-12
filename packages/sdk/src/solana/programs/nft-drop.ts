@@ -41,7 +41,6 @@ export class NFTDrop {
   private nft: NFTHelper;
   public accountType = "nft-drop" as const;
   public publicKey: PublicKey;
-  public claimConditions: ClaimConditions;
   public get network() {
     const url = new URL(this.metaplex.connection.rpcEndpoint);
     // try this first to avoid hitting `custom` network for alchemy urls
@@ -53,6 +52,26 @@ export class NFTDrop {
     }
     return this.metaplex.cluster;
   }
+
+  /**
+   * Manage the claim conditions for this drop
+   *
+   * @example
+   * ```jsx
+   * // set your claim conditions
+   * await program.claimConditions.set({
+   *  maxClaimable: 100,
+   *  price: 0.5,
+   *  startTime: new Date(),
+   * });
+   *
+   * // get your claim conditions
+   * const conditions = await program.claimConditions.get();
+   * console.log(conditions.maxClaimable);
+   * console.log(conditions.claimedSupply);
+   * ```
+   */
+  public claimConditions: ClaimConditions;
 
   constructor(
     dropAddress: string,
