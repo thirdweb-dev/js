@@ -46,8 +46,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                We are excited to announce that thirdweb developer toolkit is
-                now available on <strong>Solana!</strong>
+                We are excited to announce that thirdweb&apos;s developer
+                toolkit is now available on <strong>Solana!</strong>
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
