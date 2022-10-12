@@ -1,3 +1,7 @@
+import {
+  DEFAULT_QUERY_ALL_COUNT,
+  QueryAllParams,
+} from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
 import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
@@ -27,10 +31,6 @@ import { PaperCheckout } from "../../integrations/paper-xyz";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import { ClaimOptions, UploadProgressEvent } from "../../types";
-import {
-  DEFAULT_QUERY_ALL_COUNT,
-  QueryAllParams,
-} from "../../types/QueryParams";
 import type { SignatureDrop as SignatureDropContract } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";

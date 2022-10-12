@@ -96,7 +96,9 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
     }
     const claimVerification = await this.conditions.prepareClaim(
       quantity,
-      options?.checkERC20Allowance || true,
+      options?.checkERC20Allowance === undefined
+        ? true
+        : options.checkERC20Allowance
     );
 
     return TransactionTask.make({

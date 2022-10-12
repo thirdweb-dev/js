@@ -13,7 +13,6 @@ import { Registry } from "./registry";
 import {
   findMetadataPda,
   getSignerHistogram,
-  InstructionWithSigners,
   Metaplex,
   sol,
   toBigNumber,
@@ -201,7 +200,7 @@ export class Deployer {
    * const metadata = {
    *   name: "My NFT Drop",
    *   symbol: "NFT",
-   *   itemsAvailable: 5,
+   *   totalSuppply: 5,
    * };
    *
    * const address = await sdk.deployer.createNftDrop(metadata);
@@ -238,7 +237,7 @@ export class Deployer {
       .candyMachines()
       .builders()
       .create({
-        itemsAvailable: toBigNumber(candyMachineInfo.itemsAvailable),
+        itemsAvailable: toBigNumber(candyMachineInfo.totalSupply),
         price: sol(0),
         sellerFeeBasisPoints: 0,
         endSettings: {
@@ -291,15 +290,15 @@ export class Deployer {
       .identity()
       .signAllTransactions([dropTransaction, regTx.toTransaction()]);
 
-    // send the signed transactions
-    const signatures = await Promise.all(
-      signedTx.map(
-        async (tx) =>
-          await this.metaplex.connection.sendRawTransaction(tx.serialize()),
-      ),
-    );
+    // send the signed transactions *sequentially* the drop creation needs to succeed first before adding to registry
+    const signatures: string[] = [];
+    for (const tx of signedTx) {
+      signatures.push(
+        await this.metaplex.connection.sendRawTransaction(tx.serialize()),
+      );
+    }
 
-    // wait for confirmations
+    // wait for confirmations in parallel
     const confirmations = await Promise.all(
       signatures.map((sig) => {
         return this.metaplex.rpc().confirmTransaction(sig);

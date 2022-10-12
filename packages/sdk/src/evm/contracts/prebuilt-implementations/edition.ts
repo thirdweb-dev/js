@@ -1,3 +1,4 @@
+import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
@@ -22,7 +23,6 @@ import {
 import { TokenErc1155ContractSchema } from "../../schema/contracts/token-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
 import { EditionMetadataOrUri } from "../../schema/tokens/edition";
-import { QueryAllParams } from "../../types";
 import type { TokenERC1155 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC1155.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";

@@ -1,3 +1,7 @@
+import {
+  DEFAULT_QUERY_ALL_COUNT,
+  QueryAllParams,
+} from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
 import { prepareClaim } from "../../common/claim-conditions";
@@ -28,10 +32,6 @@ import { PaperCheckout } from "../../integrations/paper-xyz";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import { ClaimVerification } from "../../types";
-import {
-  DEFAULT_QUERY_ALL_COUNT,
-  QueryAllParams,
-} from "../../types/QueryParams";
 import { UploadProgressEvent } from "../../types/events";
 import type { DropERC721 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC721.json";

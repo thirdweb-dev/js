@@ -8,7 +8,7 @@ describe("NFTDrop", async () => {
   before(async () => {
     const address = await sdk.deployer.createNftDrop({
       name: "NFT Drop #1",
-      itemsAvailable: 5,
+      totalSupply: 5,
     });
     drop = await sdk.getNFTDrop(address);
   });
@@ -97,7 +97,7 @@ describe("NFTDrop", async () => {
   it("should burn nfts", async () => {
     const address = await sdk.deployer.createNftDrop({
       name: "NFT Drop #2",
-      itemsAvailable: 2,
+      totalSupply: 2,
     });
     const burnDrop = await sdk.getNFTDrop(address);
     await burnDrop.lazyMint([

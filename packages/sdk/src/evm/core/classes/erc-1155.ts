@@ -1,3 +1,4 @@
+import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import {
   assertEnabled,
@@ -21,7 +22,7 @@ import {
 } from "../../constants/erc1155-features";
 import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 import { EditionMetadataOrUri } from "../../schema/tokens/edition";
-import { ClaimOptions, QueryAllParams, UploadProgressEvent } from "../../types";
+import { ClaimOptions, UploadProgressEvent } from "../../types";
 import { AirdropInput } from "../../types/airdrop/airdrop";
 import {
   BaseDropERC1155,

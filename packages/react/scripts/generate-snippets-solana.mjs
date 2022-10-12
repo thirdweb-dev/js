@@ -70,7 +70,7 @@ function parseExampleTag(docComment) {
   return examples;
 }
 
-const baseDocUrl = "https://portal.thirdweb.com/react/react.";
+const baseDocUrl = "https://portal.thirdweb.com/react/solana/react.";
 
 const extractReferenceLink = (m, kind, contractName) => {
   if (kind === "Property") {

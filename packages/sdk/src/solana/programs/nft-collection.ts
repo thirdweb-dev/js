@@ -1,3 +1,4 @@
+import { QueryAllParams } from "../../core/schema/QueryParams";
 import {
   NFT,
   NFTMetadata,
@@ -6,7 +7,6 @@ import {
 } from "../../core/schema/nft";
 import { enforceCreator } from "../classes/helpers/creators-helper";
 import { NFTHelper } from "../classes/helpers/nft-helper";
-import { METAPLEX_PROGRAM_ID } from "../constants/addresses";
 import { TransactionResult } from "../types/common";
 import { CreatorInput } from "../types/programs";
 import {
@@ -14,11 +14,8 @@ import {
   Metaplex,
   toBigNumber,
 } from "@metaplex-foundation/js";
-import {
-  EditionMarker,
-  Metadata,
-} from "@metaplex-foundation/mpl-token-metadata";
-import { ConfirmedSignatureInfo, PublicKey } from "@solana/web3.js";
+import { EditionMarker } from "@metaplex-foundation/mpl-token-metadata";
+import { PublicKey } from "@solana/web3.js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 /**
@@ -32,7 +29,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
  * sdk.wallet.connect(signer);
  *
  * // Get the interface for your NFT collection program
- * const program = await sdk.getNFTCollection("{{contract_address}}");
+ * const program = await sdk.getProgram("{{program_address}}", "nft-collection");
  * ```
  *
  * @public
@@ -106,6 +103,7 @@ export class NFTCollection {
 
   /**
    * Get the metadata for all NFTs on this collection
+   * @remarks This method is paginated. Use the `start` and `count` properties of the queryParams object to control pagination. By default the first 100 NFTs are returned
    * @returns metadata for all minted NFTs
    *
    * @example
@@ -116,95 +114,8 @@ export class NFTCollection {
    * console.log(nfts[0].owner);
    * ```
    */
-  async getAll(): Promise<NFT[]> {
-    const addresses = await this.getAllNFTAddresses();
-    return await Promise.all(addresses.map(async (a) => await this.get(a)));
-  }
-
-  /**
-   * Get the mint addresses for all NFTs on this collection
-   * @returns mint addresses for all minted NFTs
-   *
-   * @example
-   * ```jsx
-   * // Get just the addresses of the minted NFTs on this contract
-   * const nftsAdresses = await program.getAllNFTAddresses();
-   * console.log(nftsAdresses);
-   * ```
-   */
-  async getAllNFTAddresses(): Promise<string[]> {
-    const allSignatures: ConfirmedSignatureInfo[] = [];
-    // This returns the first 1000, so we need to loop through until we run out of signatures to get.
-    let signatures = await this.metaplex.connection.getSignaturesForAddress(
-      this.publicKey,
-    );
-
-    allSignatures.push(...signatures);
-    do {
-      const options = {
-        before: signatures[signatures.length - 1]?.signature,
-      };
-      signatures = await this.metaplex.connection.getSignaturesForAddress(
-        this.publicKey,
-        options,
-      );
-      allSignatures.push(...signatures);
-    } while (signatures.length > 0);
-
-    const metadataAddresses: PublicKey[] = [];
-    const mintAddresses = new Set<string>();
-
-    // TODO RPC's will throttle this, need to do some optimizations here
-    const batchSize = 1000; // alchemy RPC batch limit
-    for (let i = 0; i < allSignatures.length; i += batchSize) {
-      const batch = allSignatures.slice(
-        i,
-        Math.min(allSignatures.length, i + batchSize),
-      );
-
-      const transactions = await this.metaplex.connection.getTransactions(
-        batch.map((s) => s.signature),
-      );
-
-      for (const tx of transactions) {
-        if (tx) {
-          const programIds = tx.transaction.message
-            .programIds()
-            .map((p) => p.toString());
-          const accountKeys = tx.transaction.message.accountKeys.map((p) =>
-            p.toString(),
-          );
-          // Only look in transactions that call the Metaplex token metadata program
-          if (programIds.includes(METAPLEX_PROGRAM_ID)) {
-            // Go through all instructions in a given transaction
-            for (const ix of tx.transaction.message.instructions) {
-              // Filter for setAndVerify or verify instructions in the Metaplex token metadata program
-              if (
-                (ix.data === "K" || ix.data === "S" || ix.data === "X") &&
-                accountKeys[ix.programIdIndex] === METAPLEX_PROGRAM_ID
-              ) {
-                const metadataAddressIndex = ix.accounts[0];
-                const metadata_address =
-                  tx.transaction.message.accountKeys[metadataAddressIndex];
-                metadataAddresses.push(metadata_address);
-              }
-            }
-          }
-        }
-      }
-    }
-
-    const metadataAccounts = await this.metaplex
-      .rpc()
-      .getMultipleAccounts(metadataAddresses);
-
-    for (const account of metadataAccounts) {
-      if (account.exists) {
-        const [metadata] = Metadata.deserialize(account.data);
-        mintAddresses.add(metadata.mint.toBase58());
-      }
-    }
-    return Array.from(mintAddresses);
+  async getAll(queryParams?: QueryAllParams): Promise<NFT[]> {
+    return this.nft.getAll(this.publicKey.toBase58(), queryParams);
   }
 
   /**

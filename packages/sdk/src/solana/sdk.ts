@@ -155,7 +155,7 @@ export class ThirdwebSDK {
    * @example
    * ```jsx
    * // Get the interface for your anchor program
-   * const program = await sdk.getProgram("{{contract_address}}");
+   * const program = await sdk.getProgram("{{program_address}}");
    * ```
    */
   public async getProgram(address: string): Promise<AnchorProgram>;
@@ -167,8 +167,8 @@ export class ThirdwebSDK {
    *
    * @example
    * ```jsx
-   * // Get the interface for your anchor program
-   * const program = await sdk.getProgram("{{contract_address}}", "token");
+   * // Get the interface a given program type
+   * const program = await sdk.getProgram("{{program_address}}", "token");
    * ```
    */
   public async getProgram<TProgramType extends ProgramType>(
@@ -188,7 +188,7 @@ export class ThirdwebSDK {
    * @example
    * ```jsx
    * // Get the interface for your anchor program
-   * const program = await sdk.getProgram("{{contract_address}}", Idl);
+   * const program = await sdk.getProgram("{{program_address}}", Idl);
    * ```
    */
   public async getProgram<TIdl extends Idl>(

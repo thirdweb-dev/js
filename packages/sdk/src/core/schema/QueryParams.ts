@@ -1,5 +1,3 @@
-import { BigNumberish } from "ethers";
-
 /**
  * @internal
  */
@@ -13,9 +11,9 @@ export interface QueryAllParams {
   /**
    * the index to start from (default: 0)
    */
-  start?: BigNumberish;
+  start?: number;
   /**
    * how many items to return (default: 100)
    */
-  count?: BigNumberish;
+  count?: number;
 }
