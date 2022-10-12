@@ -1,5 +1,11 @@
 # @thirdweb-dev/auth
 
+## 2.0.14
+
+### Patch Changes
+
+- [#274](https://github.com/thirdweb-dev/js/pull/274) [`ad06c5b`](https://github.com/thirdweb-dev/js/commit/ad06c5b28902422f9b416d65255c64c937a5e046) Thanks [@adam-maj](https://github.com/adam-maj)! - Add solana auth support and plugins for react and auth package
+
 ## 2.0.13
 
 ## 2.0.12

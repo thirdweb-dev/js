@@ -1,5 +1,22 @@
 # thirdweb
 
+## 0.8.0
+
+### Minor Changes
+
+- [#276](https://github.com/thirdweb-dev/js/pull/276) [`24514a6`](https://github.com/thirdweb-dev/js/commit/24514a6e9fc1316622c1494e5be225e53f88d26e) Thanks [@furqanrydhan](https://github.com/furqanrydhan)! - build is now default compile command, reorganized the help list
+
+- [#279](https://github.com/thirdweb-dev/js/pull/279) [`1918495`](https://github.com/thirdweb-dev/js/commit/1918495f2ee7f50d94083d9577dab0bf1c828c94) Thanks [@furqanrydhan](https://github.com/furqanrydhan)! - Updating command list order, helper text and changed detect -> build
+
+### Patch Changes
+
+- [#277](https://github.com/thirdweb-dev/js/pull/277) [`9de3f8c`](https://github.com/thirdweb-dev/js/commit/9de3f8c8e954733bfc3eb6e8e0e786ff5b296f0c) Thanks [@adam-maj](https://github.com/adam-maj)! - Add recursive folder upload support
+
+- [#268](https://github.com/thirdweb-dev/js/pull/268) [`57b9c67`](https://github.com/thirdweb-dev/js/commit/57b9c671aaf7fce0076dd332c171ba6944752e7a) Thanks [@adam-maj](https://github.com/adam-maj)! - Update storage upload cLI
+
+- Updated dependencies [[`521a49c`](https://github.com/thirdweb-dev/js/commit/521a49c6ec6a73068adcfbc1d94d2f3f17afae86), [`8b3b97c`](https://github.com/thirdweb-dev/js/commit/8b3b97c8f7b3710ce62ed86cfeb4f6de3c23d559), [`25a4773`](https://github.com/thirdweb-dev/js/commit/25a4773bba406f4e270ac86e68c5266d24c08330), [`b2cadf1`](https://github.com/thirdweb-dev/js/commit/b2cadf164cfe9fb27081df7530356baf70ec2b3a), [`d6bb61b`](https://github.com/thirdweb-dev/js/commit/d6bb61b7fac759fff7d6293edd46f693f5a7889c), [`78d6d3c`](https://github.com/thirdweb-dev/js/commit/78d6d3c15968a449924b3f24354e151a90e4b20d), [`89d87a5`](https://github.com/thirdweb-dev/js/commit/89d87a5eb31e78e68e097718e9ae6e4c4d101868), [`41507d3`](https://github.com/thirdweb-dev/js/commit/41507d32a78c556f50c88de81c4d6109b1783c78), [`8096c78`](https://github.com/thirdweb-dev/js/commit/8096c78b466a7f5f9c2aac6e2c56a06f9d3a25d6), [`b1fa171`](https://github.com/thirdweb-dev/js/commit/b1fa17158dcac00265bc8f4d64f1f9708482cdb5), [`18381fa`](https://github.com/thirdweb-dev/js/commit/18381fac73741826934212ac6441842ed42a64a0), [`df048af`](https://github.com/thirdweb-dev/js/commit/df048af605f449279b01d7352b604e7856ac223c), [`d6bb61b`](https://github.com/thirdweb-dev/js/commit/d6bb61b7fac759fff7d6293edd46f693f5a7889c), [`cf88795`](https://github.com/thirdweb-dev/js/commit/cf88795376d3110f9d3aa839928d22276904b15a), [`89b5c6f`](https://github.com/thirdweb-dev/js/commit/89b5c6fe079e4df2cf12cb557aa9784f88c5d159)]:
+  - @thirdweb-dev/sdk@3.2.2
+
 ## 0.7.24
 
 ### Patch Changes
