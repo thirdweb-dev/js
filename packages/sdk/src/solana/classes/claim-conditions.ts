@@ -7,7 +7,7 @@ import {
 import { toCurrencyValue } from "../utils/token";
 import {
   Amount,
-  CandyMachineEndSettings,
+  CandyMachineV2EndSettings,
   DateTime,
   Metaplex,
   sol,
@@ -168,8 +168,7 @@ export class ClaimConditions {
     if (parsed.currencyAddress && parsed.price) {
       const fetchedToken = await this.metaplex
         .tokens()
-        .findMintByAddress({ address: new PublicKey(parsed.currencyAddress) })
-        .run();
+        .findMintByAddress({ address: new PublicKey(parsed.currencyAddress) });
       price = token(Number(parsed.price), fetchedToken.decimals);
       tokenMint = fetchedToken.address;
     }
@@ -180,7 +179,7 @@ export class ClaimConditions {
       : undefined;
 
     // max claimable
-    const endSettings: CandyMachineEndSettings | null | undefined =
+    const endSettings: CandyMachineV2EndSettings | null | undefined =
       parsed.maxClaimable
         ? parsed.maxClaimable === "unlimited"
           ? null
@@ -201,13 +200,10 @@ export class ClaimConditions {
       ...(endSettings !== undefined && { endSettings }),
     };
 
-    const result = await this.metaplex
-      .candyMachines()
-      .update({
-        candyMachine: await this.getCandyMachine(),
-        ...data,
-      })
-      .run();
+    const result = await this.metaplex.candyMachinesV2().update({
+      candyMachine: await this.getCandyMachine(),
+      ...data,
+    });
 
     return {
       signature: result.response.signature,
@@ -216,8 +212,7 @@ export class ClaimConditions {
 
   private async getCandyMachine() {
     return this.metaplex
-      .candyMachines()
-      .findByAddress({ address: this.dropMintAddress })
-      .run();
+      .candyMachinesV2()
+      .findByAddress({ address: this.dropMintAddress });
   }
 }

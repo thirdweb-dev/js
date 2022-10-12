@@ -70,7 +70,6 @@ export class NFTCollection {
     const metadata = await this.metaplex
       .nfts()
       .findByMint({ mintAddress: this.publicKey })
-      .run();
 
     return (await this.nft.toNFTMetadata(metadata)).metadata;
   }
@@ -326,7 +325,6 @@ export class NFTCollection {
         // Always sets max supply to unlimited so editions can be minted
         maxSupply: null,
       })
-      .run();
 
     return nft.address.toBase58();
   }
@@ -376,7 +374,6 @@ export class NFTCollection {
         originalMint: new PublicKey(nftAddress),
         newOwner: new PublicKey(to),
       })
-      .run();
     return result.nft.address.toBase58();
   }
 
@@ -400,7 +397,6 @@ export class NFTCollection {
         mintAddress: new PublicKey(nftAddress),
         collection: this.publicKey,
       })
-      .run();
     return {
       signature: tx.response.signature,
     };
@@ -429,6 +425,5 @@ export class NFTCollection {
     return await this.metaplex
       .nfts()
       .findByMint({ mintAddress: this.publicKey })
-      .run();
   }
 }

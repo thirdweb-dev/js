@@ -45,12 +45,9 @@ export class NFTHelper {
   }
 
   async get(nftAddress: string): Promise<NFT> {
-    const meta = await this.metaplex
-      .nfts()
-      .findByMint({
-        mintAddress: new PublicKey(nftAddress),
-      })
-      .run();
+    const meta = await this.metaplex.nfts().findByMint({
+      mintAddress: new PublicKey(nftAddress),
+    });
     return await this.toNFTMetadata(meta);
   }
 
@@ -59,14 +56,11 @@ export class NFTHelper {
     nftAddress: string,
     quantity: number = 1,
   ): Promise<TransactionResult> {
-    const result = await this.metaplex
-      .nfts()
-      .send({
-        mintAddress: new PublicKey(nftAddress),
-        toOwner: new PublicKey(receiverAddress),
-        amount: token(quantity, 0),
-      })
-      .run();
+    const result = await this.metaplex.nfts().send({
+      mintAddress: new PublicKey(nftAddress),
+      toOwner: new PublicKey(receiverAddress),
+      amount: token(quantity, 0),
+    });
 
     return {
       signature: result.response.signature,
@@ -234,8 +228,7 @@ export class NFTHelper {
     if (meta.model === "metadata") {
       fullModel = await this.metaplex
         .nfts()
-        .findByMint({ mintAddress: meta.mintAddress })
-        .run();
+        .findByMint({ mintAddress: meta.mintAddress });
       mint = fullModel.mint;
     }
     if (!mint) {

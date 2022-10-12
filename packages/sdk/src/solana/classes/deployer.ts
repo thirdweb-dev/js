@@ -234,7 +234,7 @@ export class Deployer {
     // initialize candy machine with default config
     // final claim conditions can be updated later
     const candyMachineTx = await this.metaplex
-      .candyMachines()
+      .candyMachinesV2()
       .builders()
       .create({
         itemsAvailable: toBigNumber(candyMachineInfo.totalSupply),
@@ -264,23 +264,20 @@ export class Deployer {
     const block = await this.metaplex.connection.getLatestBlockhash();
     const dropTx = collectionTx
       .add(candyMachineTx)
-      .setFeePayer(this.metaplex.identity())
-      .setTransactionOptions({
-        blockhash: block.blockhash,
-        feePayer: this.metaplex.identity().publicKey,
-        lastValidBlockHeight: block.lastValidBlockHeight,
-      });
-    const regTx = TransactionBuilder.make()
+      .setFeePayer(this.metaplex.identity());
+    const regTransaction = TransactionBuilder.make()
       .add(...registryInstructions)
       .setFeePayer(this.metaplex.identity())
-      .setTransactionOptions({
+      .toTransaction({
         blockhash: block.blockhash,
-        feePayer: this.metaplex.identity().publicKey,
         lastValidBlockHeight: block.lastValidBlockHeight,
       });
     const dropSigners = [this.metaplex.identity(), ...dropTx.getSigners()];
     const { keypairs } = getSignerHistogram(dropSigners);
-    const dropTransaction = dropTx.toTransaction();
+    const dropTransaction = dropTx.toTransaction({
+      blockhash: block.blockhash,
+      lastValidBlockHeight: block.lastValidBlockHeight,
+    });
     // partially sign with the PDA keypairs
     if (keypairs.length > 0) {
       dropTransaction.partialSign(...keypairs);
@@ -288,7 +285,7 @@ export class Deployer {
     // make the connected wallet sign both candyMachine + registry transactions
     const signedTx = await this.metaplex
       .identity()
-      .signAllTransactions([dropTransaction, regTx.toTransaction()]);
+      .signAllTransactions([dropTransaction, regTransaction]);
 
     // send the signed transactions *sequentially* the drop creation needs to succeed first before adding to registry
     const signatures: string[] = [];
@@ -301,7 +298,10 @@ export class Deployer {
     // wait for confirmations in parallel
     const confirmations = await Promise.all(
       signatures.map((sig) => {
-        return this.metaplex.rpc().confirmTransaction(sig);
+        return this.metaplex.rpc().confirmTransaction(sig, {
+          blockhash: block.blockhash,
+          lastValidBlockHeight: block.lastValidBlockHeight,
+        });
       }),
     );
 
