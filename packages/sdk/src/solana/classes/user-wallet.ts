@@ -116,7 +116,9 @@ export class UserWallet {
    * ```
    */
   public getAddress() {
-    return this.metaplex.identity().publicKey.toBase58();
+    return this.isConnected()
+      ? this.metaplex.identity().publicKey.toBase58()
+      : undefined;
   }
 
   /**
