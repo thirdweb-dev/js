@@ -2,13 +2,19 @@ import { Abi, ContractId } from "./types";
 import { isContractIdBuiltInContract } from "./utils";
 import { contractKeys, networkKeys } from "@3rdweb-sdk/react";
 import { useMutationWithInvalidate } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   useAddress,
   useChainId,
   useSDK,
   useSDKChainId,
 } from "@thirdweb-dev/react";
+import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/declarations/src/evm/constants/contract-features";
 import {
   ChainId,
   ContractInfoSchema,
@@ -25,17 +31,12 @@ import {
   extractFunctionParamsFromAbi,
   extractFunctionsFromAbi,
   fetchPreDeployMetadata,
-  resolveContractUriFromAddress,
-} from "@thirdweb-dev/sdk";
-import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/declarations/src/evm/constants/contract-features";
-import {
-  StorageSingleton,
-  alchemyUrlMap,
-} from "components/app-layouts/providers";
+} from "@thirdweb-dev/sdk/evm";
 import { BuiltinContractMap } from "constants/mappings";
-import { ethers } from "ethers";
-import { isAddress } from "ethers/lib/utils";
+import { utils } from "ethers";
 import { ENSResolveResult, isEnsName } from "lib/ens";
+import { StorageSingleton, getEVMThirdwebSDK } from "lib/sdk";
+import { PHASE_PRODUCTION_BUILD } from "next/dist/shared/lib/constants";
 import { StaticImageData } from "next/image";
 import { useMemo } from "react";
 import invariant from "tiny-invariant";
@@ -146,10 +147,38 @@ export function useContractPrePublishMetadata(uri: string, address?: string) {
   );
 }
 
+async function fetchFullPublishMetadata(
+  sdk: ThirdwebSDK,
+  uri: string,
+  queryClient: QueryClient,
+) {
+  const rawPublishMetadata = await sdk
+    .getPublisher()
+    .fetchFullPublishMetadata(uri);
+
+  const ensResult = rawPublishMetadata.publisher
+    ? await queryClient.fetchQuery(
+        ens.queryKey(rawPublishMetadata.publisher),
+        () =>
+          rawPublishMetadata.publisher
+            ? fetchEns(rawPublishMetadata.publisher)
+            : undefined,
+      )
+    : undefined;
+
+  return {
+    ...rawPublishMetadata,
+    publisher:
+      ensResult?.ensName || ensResult?.address || rawPublishMetadata.publisher,
+  };
+}
+
 // Metadata POST release, contains all the extra information filled in by the user
 export function useContractFullPublishMetadata(uri: string) {
   const contractIdIpfsHash = toContractIdIpfsHash(uri);
   const sdk = useSDK();
+  const queryClient = useQueryClient();
+
   return useQuery(
     ["full-publish-metadata", uri],
     async () => {
@@ -157,14 +186,18 @@ export function useContractFullPublishMetadata(uri: string) {
         !isContractIdBuiltInContract(uri),
         "Skipping publish metadata fetch for built-in contract",
       );
+
+      invariant(sdk, "sdk is not defined");
       // TODO: Make this nicer.
       invariant(uri !== "ipfs://undefined", "uri can't be undefined");
-      return await sdk
-        ?.getPublisher()
-        .fetchFullPublishMetadata(contractIdIpfsHash);
+      return await fetchFullPublishMetadata(
+        sdk,
+        contractIdIpfsHash,
+        queryClient,
+      );
     },
     {
-      enabled: !!uri,
+      enabled: !!uri && !!sdk,
     },
   );
 }
@@ -280,21 +313,6 @@ export function useReleasesFromDeploy(
 ) {
   const activeChainId = useSDKChainId();
   const cId = chainId || activeChainId;
-
-  const provider = cId
-    ? new ethers.providers.StaticJsonRpcProvider(alchemyUrlMap[cId])
-    : undefined;
-
-  const polygonSdk = new ThirdwebSDK(
-    alchemyUrlMap[ChainId.Polygon],
-    {
-      readonlySettings: {
-        chainId: ChainId.Polygon,
-        rpcUrl: alchemyUrlMap[ChainId.Polygon],
-      },
-    },
-    StorageSingleton,
-  );
   return useQuery(
     (networkKeys.chain(cId) as readonly unknown[]).concat([
       "release-from-deploy",
@@ -302,22 +320,16 @@ export function useReleasesFromDeploy(
     ]),
     async () => {
       invariant(contractAddress, "contractAddress is not defined");
-      invariant(provider, "provider is not defined");
-      const compilerMetaUri = await resolveContractUriFromAddress(
-        contractAddress,
-        provider,
-      );
+      invariant(cId, "chain not defined");
 
-      if (compilerMetaUri) {
-        return await polygonSdk
-          .getPublisher()
-          .resolvePublishMetadataFromCompilerMetadata(compilerMetaUri);
-      }
+      const sdk = getEVMThirdwebSDK(ChainId.Polygon);
 
-      return null;
+      return await sdk
+        .getPublisher()
+        .resolveReleasesFromAddress(contractAddress);
     },
     {
-      enabled: !!contractAddress && !!provider,
+      enabled: !!contractAddress && !!cId,
     },
   );
 }
@@ -488,19 +500,36 @@ export function useCustomContractDeployMutation(
 }
 
 export async function fetchPublishedContracts(
-  sdk?: ThirdwebSDK,
+  sdk: ThirdwebSDK,
+  queryClient: QueryClient,
   address?: string | null,
 ) {
   invariant(sdk, "sdk not provided");
   invariant(address, "address is not defined");
-  return ((await sdk.getPublisher().getAll(address)) || []).filter((c) => c.id);
+  const tempResult = ((await sdk.getPublisher().getAll(address)) || []).filter(
+    (c) => c.id,
+  );
+  return await Promise.all(
+    tempResult.map(async (c) => ({
+      ...c,
+      metadata: await fetchFullPublishMetadata(sdk, c.metadataUri, queryClient),
+    })),
+  );
 }
+
+export type ReleasedContractDetails = Awaited<
+  ReturnType<typeof fetchPublishedContracts>
+>[number];
 
 export function usePublishedContractsQuery(address?: string) {
   const sdk = useSDK();
-  return useQuery(
+  const queryClient = useQueryClient();
+  return useQuery<ReleasedContractDetails[]>(
     ["published-contracts", address],
-    () => fetchPublishedContracts(sdk, address),
+    () => {
+      invariant(sdk, "sdk not provided");
+      return fetchPublishedContracts(sdk, queryClient, address);
+    },
     {
       enabled: !!address && !!sdk,
     },
@@ -569,7 +598,9 @@ function getAbsoluteUrlForSSR(path: string) {
     return path;
   }
   const url = new URL(
-    process.env.VERCEL_URL
+    process.env.NEXT_PHASE === PHASE_PRODUCTION_BUILD
+      ? `https://thirdweb.com`
+      : process.env.VERCEL_URL
       ? `https://${process.env.VERCEL_URL}`
       : "http://localhost:3000",
   );
@@ -596,14 +627,16 @@ function useEns(addressOrEnsName?: string) {
     {
       enabled:
         !!addressOrEnsName &&
-        (isAddress(addressOrEnsName) || isEnsName(addressOrEnsName)),
+        (utils.isAddress(addressOrEnsName) || isEnsName(addressOrEnsName)),
       // 24h
       cacheTime: 60 * 60 * 24 * 1000,
       // 1h
       staleTime: 60 * 60 * 1000,
       // default to the one we know already
       placeholderData: {
-        address: isAddress(addressOrEnsName || "") ? addressOrEnsName : null,
+        address: utils.isAddress(addressOrEnsName || "")
+          ? addressOrEnsName
+          : null,
         ensName: isEnsName(addressOrEnsName || "") ? addressOrEnsName : null,
       },
     },

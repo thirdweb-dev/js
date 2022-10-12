@@ -1,10 +1,8 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { ThirdwebSDKProvider, useSigner } from "@thirdweb-dev/react";
-import { ChainId, SDKOptions, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
-import {
-  StorageSingleton,
-  alchemyUrlMap,
-} from "components/app-layouts/providers";
+import { ChainId, SDKOptions, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
+import { getEVMRPC } from "constants/rpc";
+import { StorageSingleton } from "lib/sdk";
 import { ComponentWithChildren } from "types/component-with-children";
 import { useProvider } from "wagmi";
 
@@ -30,7 +28,7 @@ export const CustomSDKContext: ComponentWithChildren<{
           desiredChainId && desiredChainId !== -1
             ? {
                 chainId: desiredChainId,
-                rpcUrl: alchemyUrlMap[desiredChainId],
+                rpcUrl: getEVMRPC(desiredChainId),
               }
             : undefined,
         ...options,

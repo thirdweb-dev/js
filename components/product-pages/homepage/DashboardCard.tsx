@@ -1,5 +1,12 @@
 import Icon from "@chakra-ui/icon";
-import { AspectRatio, Box, Flex, SimpleGrid } from "@chakra-ui/react";
+import {
+  AspectRatio,
+  Box,
+  Flex,
+  LinkBox,
+  LinkOverlay,
+  Stack,
+} from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { StaticImageData } from "next/image";
 import * as React from "react";
@@ -7,12 +14,13 @@ import type { IconType } from "react-icons";
 import { Heading, Text } from "tw-components";
 
 interface DashboardCardProps {
-  headingTitle: string;
-  headingIcon: IconType;
+  headingTitle?: string;
+  headingIcon?: IconType;
   title: string | JSX.Element;
   subtitle: string;
   rightImage: StaticImageData;
   gradientBGs?: CardGradientBackgroundProps;
+  href?: string;
 }
 
 export const DashboardCard: React.FC<DashboardCardProps> = ({
@@ -22,46 +30,53 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
   subtitle,
   rightImage,
   gradientBGs,
+  href,
 }) => {
+  const titleElem = href ? (
+    <LinkOverlay isExternal={href.startsWith("http")} href={href}>
+      <Heading size="title.sm">{title}</Heading>
+    </LinkOverlay>
+  ) : (
+    <Heading size="title.sm">{title}</Heading>
+  );
   return (
-    <SimpleGrid
-      borderRadius="2xl"
-      border="1px solid"
-      borderColor="#ffffff26"
-      overflow="hidden"
-      columns={1}
-    >
-      <Flex
-        justifyContent="center"
-        alignItems="center"
-        position="relative"
+    <LinkBox>
+      <Stack
+        borderRadius="2xl"
+        border="1px solid"
+        borderColor="#ffffff26"
         overflow="hidden"
-        flexGrow={0}
-        flexShrink={0}
-        h={64}
       >
-        <CardGradientBackground {...gradientBGs} />
-        <ChakraNextImage p={6} alt="" src={rightImage} w="100%" />
-      </Flex>
-      <Flex
-        flexShrink={0}
-        flexGrow={0}
-        flexDir="column"
-        justifyContent="space-between"
-        p={{ base: 6, md: 10 }}
-        gap={4}
-        bgColor="blackAlpha.300"
-      >
-        <Flex alignItems="center" gap={1.5}>
-          <Icon as={headingIcon} boxSize={4} />
-          <Text size="label.sm" textTransform="uppercase">
-            {headingTitle}
-          </Text>
+        <Flex
+          justifyContent="center"
+          alignItems="center"
+          position="relative"
+          overflow="hidden"
+          h={64}
+        >
+          <CardGradientBackground {...gradientBGs} />
+          <ChakraNextImage p={6} alt="" src={rightImage} w="100%" />
         </Flex>
-        <Heading size="title.sm">{title}</Heading>
-        <Text size="body.lg">{subtitle}</Text>
-      </Flex>
-    </SimpleGrid>
+        <Flex
+          flexDir="column"
+          p={{ base: 6, md: 10 }}
+          flexGrow={1}
+          gap={4}
+          bgColor="blackAlpha.300"
+        >
+          {headingTitle && (
+            <Flex alignItems="center" gap={1.5}>
+              {headingIcon && <Icon as={headingIcon} boxSize={4} />}
+              <Text size="label.sm" textTransform="uppercase">
+                {headingTitle}
+              </Text>
+            </Flex>
+          )}
+          {titleElem}
+          <Text size="body.lg">{subtitle}</Text>
+        </Flex>
+      </Stack>
+    </LinkBox>
   );
 };
 
@@ -85,7 +100,9 @@ export const CardGradientBackground: React.FC<CardGradientBackgroundProps> = (
       w="full"
       h="full"
       opacity={1}
-      background="linear-gradient(225.96deg, #000000 -0.79%, #4400D5 42.2%, #000000 101.89%)"
+      background={
+        "linear-gradient(225.96deg, #000000 -0.79%, #4400D5 42.2%, #000000 101.89%)"
+      }
       borderTopRadius="xl"
     >
       {props.topGradient && (

@@ -6,6 +6,7 @@ module.exports = {
     "plugin:prettier/recommended",
     "plugin:react/recommended",
     "plugin:@next/next/recommended",
+    "next/core-web-vitals",
   ],
   rules: {
     // typescript
@@ -34,7 +35,8 @@ module.exports = {
     // import
     "import/first": "error",
     "import/newline-after-import": "error",
-    "import/no-cycle": "error",
+    // off for now
+    "import/no-cycle": "off",
     "import/no-default-export": "off",
     "import/no-useless-path-segments": "error",
     // react
@@ -174,9 +176,34 @@ module.exports = {
     },
   },
   overrides: [
+    {
+      files: "core-ui/**/*",
+      rules: {
+        // no restricted imports
+        "@typescript-eslint/no-restricted-imports": [
+          "error",
+          {
+            paths: [
+              {
+                name: "@thirdweb-dev/sdk",
+                message:
+                  "core-ui should not import from @thirdweb-dev/sdk. (except for types)",
+                allowTypeImports: true,
+              },
+              {
+                name: "@thirdweb-dev/react",
+                message:
+                  "core-ui should not import from @thirdweb-dev/react. (except for types)",
+                allowTypeImports: true,
+              },
+            ],
+          },
+        ],
+      },
+    },
     // disable restricted imports in tw-components
     {
-      files: "tw-components/*",
+      files: "tw-components/**/*",
       rules: {
         "no-restricted-imports": ["off"],
       },

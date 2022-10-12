@@ -1,4 +1,4 @@
-import { networkKeys, useActiveChainId } from "@3rdweb-sdk/react";
+import { networkKeys, useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import {
   MutationFunction,
   QueryFunction,
@@ -25,7 +25,7 @@ export function useQueryWithNetwork<
     "queryKey" | "queryFn"
   >,
 ): UseQueryResult<TData, TError> {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useDashboardEVMChainId();
 
   const mergedOptions: Omit<
     UseQueryOptions<TQueryFnData, TError, TData, TQueryKey>,
@@ -61,7 +61,7 @@ export function useMutationWithInvalidate<
     ) => Promise<unknown> | void;
   },
 ) {
-  const activeChainId = useActiveChainId();
+  const activeChainId = useDashboardEVMChainId();
   const queryClient = useQueryClient();
 
   const invalidate = useCallback(

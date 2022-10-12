@@ -4,7 +4,7 @@ import {
   PrebuiltContractType,
   SUPPORTED_CHAIN_ID,
   SchemaForPrebuiltContractType,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/evm";
 import { z } from "zod";
 
 export function useContractMetadataWithAddress(

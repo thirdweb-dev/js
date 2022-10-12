@@ -38,6 +38,7 @@ export const NFTLazyMintButton: React.FC<NFTLazyMintButtonProps> = ({
         <NFTMintForm
           contract={contractQuery.contract}
           lazyMintMutation={mutation}
+          ecosystem={"evm"}
         />
       </Drawer>
       <Button

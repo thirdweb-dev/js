@@ -1,6 +1,6 @@
 import { removeEmptyValues } from "./parseAttributes";
-import { NFTMetadataInput } from "@thirdweb-dev/sdk";
-import { useMemo } from "react";
+import type { NFTMetadataInput } from "@thirdweb-dev/sdk";
+import Papa from "papaparse";
 
 export interface CSVData extends Record<string, string | undefined> {
   name: string;
@@ -58,7 +58,7 @@ function sortAscending(a: File, b: File) {
   );
 }
 
-export const getAcceptedFiles = async (acceptedFiles: File[]) => {
+const getAcceptedFiles = async (acceptedFiles: File[]) => {
   const jsonFiles = acceptedFiles
     .filter((f) => jsonMimeTypes.includes(f.type) || f.name.endsWith(".json"))
     .sort(sortAscending);
@@ -120,81 +120,110 @@ export const convertToOsStandard = (obj: NFTMetadataInput["attributes"]) => {
   return removeEmptyValues(attributes);
 };
 
-export const useMergedData = (
+const getMergedData = (
   csvData: Papa.ParseResult<CSVData> | undefined,
   jsonData: any,
   imageFiles: File[],
   videoFiles: File[],
-) => {
-  return useMemo(() => {
-    if (csvData?.data) {
-      const isImageMapped = csvData.data.some((row) =>
-        imageFiles.find((img) => img?.name === row.image),
-      );
-      const isAnimationUrlMapped = csvData.data.some((row) =>
-        videoFiles.find((video) => video?.name === row.animation_url),
-      );
+): NFTMetadataInput[] => {
+  if (csvData?.data) {
+    const isImageMapped = csvData.data.some((row) =>
+      imageFiles.find((img) => img?.name === row.image),
+    );
+    const isAnimationUrlMapped = csvData.data.some((row) =>
+      videoFiles.find((video) => video?.name === row.animation_url),
+    );
 
-      return csvData.data.map((row, index) => {
-        const {
-          name,
-          description,
-          image,
-          animation_url,
-          external_url,
-          background_color,
-          youtube_url,
-          ...properties
-        } = row;
+    return csvData.data.map((row, index) => {
+      const {
+        name,
+        description,
+        image,
+        animation_url,
+        external_url,
+        background_color,
+        youtube_url,
+        ...properties
+      } = row;
 
-        return removeEmptyKeysFromObject({
-          name: name.toString(),
-          description: description?.toString(),
-          external_url,
-          background_color,
-          youtube_url,
-          attributes: convertToOsStandard(
-            removeEmptyKeysFromObject(properties),
-          ),
-          image:
-            imageFiles.find((img) => img?.name === image) ||
-            (!isImageMapped && imageFiles[index]) ||
-            image ||
-            undefined,
-          animation_url:
-            videoFiles.find((video) => video?.name === animation_url) ||
-            (!isAnimationUrlMapped && videoFiles[index]) ||
-            animation_url ||
-            undefined,
-        });
-      });
-    } else if (Array.isArray(jsonData)) {
-      const isImageMapped = jsonData.some((row) =>
-        imageFiles.find((img) => img?.name === row.image),
-      );
-      const isAnimationUrlMapped = jsonData.some((row) =>
-        videoFiles.find((video) => video?.name === row.animation_url),
-      );
-
-      return jsonData.map((nft: any, index: number) => ({
-        ...nft,
+      return removeEmptyKeysFromObject({
+        name: name.toString(),
+        description: description?.toString(),
+        external_url,
+        background_color,
+        youtube_url,
+        attributes: convertToOsStandard(removeEmptyKeysFromObject(properties)),
         image:
-          imageFiles.find((img) => img?.name === nft?.image) ||
+          imageFiles.find((img) => img?.name === image) ||
           (!isImageMapped && imageFiles[index]) ||
-          nft.image ||
-          nft.file_url ||
+          image ||
           undefined,
         animation_url:
-          videoFiles.find((video) => video?.name === nft?.animation_url) ||
+          videoFiles.find((video) => video?.name === animation_url) ||
           (!isAnimationUrlMapped && videoFiles[index]) ||
-          nft.animation_url ||
+          animation_url ||
           undefined,
-      }));
-    } else {
-      return [];
-    }
-  }, [csvData, jsonData, imageFiles, videoFiles]);
+      });
+    });
+  } else if (Array.isArray(jsonData)) {
+    const isImageMapped = jsonData.some((row) =>
+      imageFiles.find((img) => img?.name === row.image),
+    );
+    const isAnimationUrlMapped = jsonData.some((row) =>
+      videoFiles.find((video) => video?.name === row.animation_url),
+    );
+
+    return jsonData.map((nft: any, index: number) => ({
+      ...nft,
+      image:
+        imageFiles.find((img) => img?.name === nft?.image) ||
+        (!isImageMapped && imageFiles[index]) ||
+        nft.image ||
+        nft.file_url ||
+        undefined,
+      animation_url:
+        videoFiles.find((video) => video?.name === nft?.animation_url) ||
+        (!isAnimationUrlMapped && videoFiles[index]) ||
+        nft.animation_url ||
+        undefined,
+    }));
+  } else {
+    return [];
+  }
 };
+
+export async function processInputData(
+  files: File[],
+  setData: (data: NFTMetadataInput[]) => void,
+) {
+  const { csv, json, images, videos } = await getAcceptedFiles(files);
+  if (json.length > 0) {
+    setData(getMergedData(undefined, json, images, videos));
+  } else if (csv) {
+    Papa.parse<CSVData>(csv, {
+      header: true,
+      transformHeader,
+      complete: (results) => {
+        const validResults: Papa.ParseResult<CSVData> = {
+          ...results,
+          data: [],
+        };
+        for (let i = 0; i < results.data.length; i++) {
+          if (!results.errors.find((e) => e.row === i)) {
+            if (results.data[i].name) {
+              validResults.data.push(results.data[i]);
+            }
+          }
+        }
+        setData(getMergedData(validResults, undefined, images, videos));
+      },
+    });
+  } else {
+    throw new Error(
+      'No valid files found. Please upload a ".csv" or ".json" file.',
+    );
+  }
+}
 
 export const shuffleData = (array: NFTMetadataInput[]) =>
   array

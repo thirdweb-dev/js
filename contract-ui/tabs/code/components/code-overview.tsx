@@ -20,7 +20,7 @@ const COMMANDS = {
     go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
   },
   setup: {
-    javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+    javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 
 const sdk = new ThirdwebSDK("{{chainName}}");
 const contract = await sdk.getContract("{{contract_address}}");`,

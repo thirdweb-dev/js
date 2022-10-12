@@ -1,5 +1,4 @@
 import { ProductButton } from "./ProductButton";
-import { ChevronRightIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
   Center,
@@ -11,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { StaticImageData } from "next/image";
+import { FiChevronRight } from "react-icons/fi";
 import { Heading, Text } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
@@ -79,7 +79,7 @@ export const Hero: ComponentWithChildren<IHero> = ({
             >
               Products
             </Text>
-            <Icon as={ChevronRightIcon} color="whiteAlpha.800" />
+            <Icon as={FiChevronRight} color="whiteAlpha.800" />
             <Text
               cursor="default"
               fontWeight="medium"

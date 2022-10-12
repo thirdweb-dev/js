@@ -6,13 +6,13 @@ import React, { useMemo, useState } from "react";
 import { Button } from "tw-components";
 import { OtherAddressZero } from "utils/zeroAddress";
 
-interface ICurrencySelector extends SelectProps {
+interface CurrencySelectorProps extends SelectProps {
   value: string;
   small?: boolean;
   hideDefaultCurrencies?: boolean;
 }
 
-export const CurrencySelector: React.FC<ICurrencySelector> = ({
+export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
   value,
   onChange,
   small,

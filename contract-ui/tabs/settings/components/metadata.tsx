@@ -3,7 +3,10 @@ import { AdminOnly } from "@3rdweb-sdk/react";
 import { Flex, FormControl, Input, Textarea } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMetadata, useUpdateMetadata } from "@thirdweb-dev/react";
-import { CommonContractSchema, ValidContractInstance } from "@thirdweb-dev/sdk";
+import {
+  CommonContractSchema,
+  ValidContractInstance,
+} from "@thirdweb-dev/sdk/evm";
 import { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FileInput } from "components/shared/FileInput";

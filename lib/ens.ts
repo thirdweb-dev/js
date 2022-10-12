@@ -1,7 +1,6 @@
-import { getSSRRPCUrl } from "./ssr-sdk";
-import { ChainId } from "@thirdweb-dev/sdk";
-import { ethers } from "ethers";
-import { isAddress } from "ethers/lib/utils";
+import { getEVMThirdwebSDK } from "./sdk";
+import { ChainId } from "@thirdweb-dev/sdk/evm";
+import { utils } from "ethers";
 import invariant from "tiny-invariant";
 
 export interface ENSResolveResult {
@@ -16,31 +15,33 @@ export function isEnsName(name: string): boolean {
 export async function resolveAddressToEnsName(
   address: string,
 ): Promise<ENSResolveResult> {
-  invariant(isAddress(address), "address must be a valid address");
-  const provider = new ethers.providers.StaticJsonRpcProvider(
-    getSSRRPCUrl(ChainId.Mainnet),
-  );
-  const ensName = await provider.lookupAddress(address);
+  invariant(utils.isAddress(address), "address must be a valid address");
 
-  return { ensName, address };
+  const provider = getEVMThirdwebSDK(ChainId.Mainnet).getProvider();
+
+  return {
+    ensName: await provider.lookupAddress(address),
+    address,
+  };
 }
 
 export async function resolveEnsNameToAddress(
   ensName: string,
 ): Promise<ENSResolveResult> {
   invariant(isEnsName(ensName), "ensName must be a valid ens name");
-  const provider = new ethers.providers.StaticJsonRpcProvider(
-    getSSRRPCUrl(ChainId.Mainnet),
-  );
-  let address = await provider.resolveName(ensName);
 
-  return { ensName, address };
+  const provider = getEVMThirdwebSDK(ChainId.Mainnet).getProvider();
+
+  return {
+    ensName,
+    address: await provider.resolveName(ensName),
+  };
 }
 
 export async function resolveEns(
   ensNameOrAddress: string,
 ): Promise<ENSResolveResult> {
-  if (isAddress(ensNameOrAddress)) {
+  if (utils.isAddress(ensNameOrAddress)) {
     return resolveAddressToEnsName(ensNameOrAddress);
   }
 

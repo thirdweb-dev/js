@@ -29,19 +29,20 @@ import { ComponentWithChildren } from "types/component-with-children";
 
 export interface AppShellProps {
   layout?: "custom-contract";
+  ecosystem?: "evm" | "solana" | "either";
 }
 
 export const AppShell: ComponentWithChildren<AppShellProps> = ({
   children,
   layout,
+  ecosystem = "either",
 }) => {
   const { pathname } = useRouter();
 
   const isCustomContractLayout = layout === "custom-contract";
   return (
     <Flex
-      h="calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))"
-      w="calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right))"
+      minH="calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))"
       position="relative"
       overflow="hidden"
       backgroundColor="backgroundBody"
@@ -160,7 +161,7 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
                 />
               </ButtonGroup>
               <ColorModeToggle />
-              <ConnectWallet colorScheme="primary" />
+              <ConnectWallet colorScheme="primary" ecosystem={ecosystem} />
             </Stack>
           </Container>
         </Box>

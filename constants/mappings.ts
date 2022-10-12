@@ -4,7 +4,7 @@ import {
   FullPublishMetadata,
   Role,
   SUPPORTED_CHAIN_ID,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/evm";
 import { StaticImageData } from "next/image";
 
 export const FeatureIconMap: Record<ContractType, StaticImageData> = {
@@ -29,7 +29,6 @@ export interface BuiltinContractDetails {
   title: string;
   description: string;
   icon: StaticImageData;
-  href: string;
   comingSoon?: boolean;
   contractType: ContractType;
   sourceUrl: string;
@@ -94,20 +93,20 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       description: "One NFT, one owner",
       erc: "ERC721",
       audit: "ipfs://QmNgNaLwzgMxcx9r6qDvJmTFam6xxUxX7Vp8E99oRt7i74",
+
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/drop/DropERC721.sol",
       ecosytem: "evm",
-      href: "/contracts/new/pre-built/drop/nft-drop",
     }),
     "signature-drop": buildContractForContractMap("signature-drop", {
       title: "Signature Drop",
       description: "ERC721A NFTs that other people can claim",
       erc: "ERC721A",
       audit: "ipfs://QmWfueeKQrggrVQNjWkF4sYJECp56vNnuAXCPVecFFKz2j",
+
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/signature-drop/SignatureDrop.sol",
       ecosytem: "evm",
-      href: "/contracts/new/pre-built/drop/signature-drop",
     }),
     marketplace: buildContractForContractMap("marketplace", {
       title: "Marketplace",
@@ -116,7 +115,6 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/marketplace/Marketplace.sol",
       ecosytem: "evm",
-      href: "/contracts/new/pre-built/marketplace/marketplace",
     }),
     "edition-drop": buildContractForContractMap("edition-drop", {
       title: "Edition Drop",
@@ -126,7 +124,6 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/drop/DropERC1155.sol",
       ecosytem: "evm",
-      href: "/contracts/new/pre-built/drop/edition-drop",
     }),
     multiwrap: buildContractForContractMap("multiwrap", {
       title: "Multiwrap",
@@ -137,7 +134,6 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/multiwrap/Multiwrap.sol",
       ecosytem: "evm",
-      href: "/contracts/new/pre-built/token/multiwrap",
     }),
     token: buildContractForContractMap("token", {
       title: "Token",
@@ -146,7 +142,6 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/token/TokenERC20.sol",
       ecosytem: "evm",
-      href: "/contracts/new/pre-built/token/token",
     }),
     edition: buildContractForContractMap("edition", {
       title: "Edition",
@@ -155,7 +150,6 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/token/TokenERC1155.sol",
       ecosytem: "evm",
-      href: "/contracts/new/pre-built/token/edition",
     }),
     "token-drop": buildContractForContractMap("token-drop", {
       title: "Token Drop",
@@ -164,7 +158,6 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/drop/DropERC20.sol",
       ecosytem: "evm",
-      href: "/contracts/new/pre-built/drop/token-drop",
     }),
     split: buildContractForContractMap("split", {
       title: "Split",
@@ -172,7 +165,6 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/Split.sol",
       ecosytem: "evm",
-      href: "/contracts/new/pre-built/governance/split",
     }),
     "nft-collection": buildContractForContractMap("nft-collection", {
       title: "NFT Collection",
@@ -181,7 +173,6 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/token/TokenERC721.sol",
       ecosytem: "evm",
-      href: "/contracts/new/pre-built/token/nft-collection",
     }),
     vote: buildContractForContractMap("vote", {
       title: "Vote",
@@ -189,7 +180,6 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/vote/VoteERC20.sol",
       ecosytem: "evm",
-      href: "/contracts/new/pre-built/governance/vote",
     }),
     pack: buildContractForContractMap("pack", {
       title: "Pack",
@@ -199,16 +189,81 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/pack/Pack.sol",
       ecosytem: "evm",
-      href: "/contracts/new/pre-built/token/pack",
     }),
     custom: buildContractForContractMap("custom", {
       title: "NOT IMPLEMENTED",
       description: "NOT IMPLEMENTED",
       sourceUrl: "NOT IMPLEMENTED",
       ecosytem: "evm",
-      href: "/contracts",
     }),
   };
+
+export type SolContractType = "nft-collection" | "nft-drop" | "token";
+
+export const PREBUILT_SOLANA_CONTRACTS_MAP: Record<
+  SolContractType,
+  Omit<BuiltinContractDetails, "contractType"> & {
+    contractType: SolContractType;
+  }
+> = {
+  "nft-collection": {
+    id: "SolNFTCollection",
+    title: "NFT Collection",
+    description: "Solana NFTs",
+    icon: FeatureIconMap["nft-collection"],
+    contractType: "nft-collection",
+    roles: [],
+    sourceUrl: "",
+    ecosytem: "solana",
+    metadata: {
+      name: "NFT Collection",
+      description: "Solana NFTs",
+      version: "1.0.0",
+      bytecodeUri: "",
+      metadataUri: "",
+      logo: FeatureIconMap["nft-collection"],
+      publisher: "deployer.thirdweb.eth",
+    },
+  },
+  "nft-drop": {
+    id: "SolNFTDrop",
+    title: "NFT Drop",
+    description: "Solana NFT Drop",
+    icon: FeatureIconMap["nft-drop"],
+    contractType: "nft-drop",
+    roles: [],
+    sourceUrl: "",
+    ecosytem: "solana",
+    metadata: {
+      name: "NFT Drop",
+      description: "Solana NFT Drop",
+      version: "1.0.0",
+      bytecodeUri: "",
+      metadataUri: "",
+      logo: FeatureIconMap["nft-drop"],
+      publisher: "deployer.thirdweb.eth",
+    },
+  },
+  token: {
+    id: "SolToken",
+    title: "Token",
+    description: "Solana Token",
+    icon: FeatureIconMap["token"],
+    contractType: "token",
+    roles: [],
+    sourceUrl: "",
+    ecosytem: "solana",
+    metadata: {
+      name: "Token",
+      description: "Solana Token",
+      version: "1.0.0",
+      bytecodeUri: "",
+      metadataUri: "",
+      logo: FeatureIconMap["token"],
+      publisher: "deployer.thirdweb.eth",
+    },
+  },
+};
 
 interface ContractDeployMap {
   drop: BuiltinContractDetails[];

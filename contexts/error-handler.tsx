@@ -7,7 +7,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
-import { TransactionError } from "@thirdweb-dev/sdk";
+import { TransactionError } from "@thirdweb-dev/sdk/evm";
 import { createContext, useCallback, useContext, useState } from "react";
 import { FiAlertTriangle, FiCheck, FiCopy } from "react-icons/fi";
 import {

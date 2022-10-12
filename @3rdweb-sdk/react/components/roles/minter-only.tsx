@@ -1,5 +1,5 @@
 import { useIsMinter } from "@3rdweb-sdk/react";
-import { ValidContractInstance } from "@thirdweb-dev/sdk";
+import { ValidContractInstance } from "@thirdweb-dev/sdk/evm";
 import { ComponentWithChildren } from "types/component-with-children";
 
 interface IMinterOnlyProps {

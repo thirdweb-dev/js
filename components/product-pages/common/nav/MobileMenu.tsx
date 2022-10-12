@@ -1,5 +1,4 @@
 import { PRODUCTS } from "./Products";
-import { HamburgerIcon } from "@chakra-ui/icons";
 import {
   Divider,
   IconButton,
@@ -8,6 +7,7 @@ import {
   MenuButton,
   MenuList,
 } from "@chakra-ui/react";
+import { FiMenu } from "react-icons/fi";
 import { MenuGroup, MenuItem, TrackedLink } from "tw-components";
 
 export const MobileMenu: React.FC<IconButtonProps> = (props) => {
@@ -17,7 +17,7 @@ export const MobileMenu: React.FC<IconButtonProps> = (props) => {
         {...props}
         as={IconButton}
         aria-label="Menu"
-        icon={<HamburgerIcon />}
+        icon={<FiMenu />}
         variant="outline"
       />
       <MenuList bgColor="black" color="white">

@@ -12,7 +12,7 @@ import {
 import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
 import { SiGithub } from "@react-icons/all-files/si/SiGithub";
 import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
-import { ProfileMetadata, ProfileMetadataInput } from "@thirdweb-dev/sdk";
+import { ProfileMetadata, ProfileMetadataInput } from "@thirdweb-dev/sdk/evm";
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";

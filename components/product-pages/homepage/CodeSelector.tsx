@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Card, CodeBlock, LinkButton } from "tw-components";
 
 const codeSnippets = {
-  javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+  javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 
 const sdk = new ThirdwebSDK("goerli");
 const nftCollection = sdk.getNFTCollection("0xb1c42E0C4289E68f1C337Eb0Da6a38C4c9F3f58e");

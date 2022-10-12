@@ -13,7 +13,7 @@ import {
   useClipboard,
   useToast,
 } from "@chakra-ui/react";
-import { ValidContractInstance } from "@thirdweb-dev/sdk";
+import { ValidContractInstance } from "@thirdweb-dev/sdk/evm";
 import { constants, utils } from "ethers";
 import { useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";

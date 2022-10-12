@@ -10,7 +10,7 @@ import {
   ContractType,
   SUPPORTED_CHAIN_ID,
   SUPPORTED_CHAIN_IDS,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/evm";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelect";
 import { DisabledChainsMap } from "constants/mappings";

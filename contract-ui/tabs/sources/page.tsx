@@ -1,4 +1,4 @@
-import { useActiveChainId } from "@3rdweb-sdk/react";
+import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { useQueryWithNetwork } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
 import { usePrebuiltSource } from "@3rdweb-sdk/react/hooks/usePrebuiltSource";
 import {
@@ -30,7 +30,7 @@ interface CustomContractSourcesPageProps {
 }
 
 function useVerifyCall(shouldFetch: boolean, contractAddress?: string) {
-  const chainId = useActiveChainId();
+  const chainId = useDashboardEVMChainId();
   return useQueryWithNetwork(
     ["verify", contractAddress],
     async () => {
@@ -53,7 +53,7 @@ function useVerifyCall(shouldFetch: boolean, contractAddress?: string) {
 }
 
 function useCheckVerificationStatus(guid?: string) {
-  const chainId = useActiveChainId();
+  const chainId = useDashboardEVMChainId();
   return useQueryWithNetwork(
     ["verifycheck", guid],
     async () => {
@@ -95,7 +95,7 @@ const VerifyContractModal: React.FC<ConnectorModalProps> = ({
   const showLinkButton =
     verifyResult?.error === VerificationStatus.ALREADY_VERIFIED ||
     verificationStatus?.result === VerificationStatus.SUCCESS;
-  const chainId = useActiveChainId();
+  const chainId = useDashboardEVMChainId();
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
@@ -170,7 +170,7 @@ export const CustomContractSourcesPage: React.FC<
 > = ({ contractAddress }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const contractSourcesQuery = useContractSources(contractAddress);
-  const chainId = useActiveChainId();
+  const chainId = useDashboardEVMChainId();
   const router = useRouter();
   const forceVerifyButton = router.query.verify === "true";
 

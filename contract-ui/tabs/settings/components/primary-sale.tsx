@@ -9,7 +9,7 @@ import {
 import {
   CommonPrimarySaleSchema,
   ValidContractInstance,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/evm";
 import { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";

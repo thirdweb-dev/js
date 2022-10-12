@@ -1,7 +1,7 @@
-import { AdminOnly, useActiveNetwork } from "@3rdweb-sdk/react";
+import { AdminOnly, useDashboardNetwork } from "@3rdweb-sdk/react";
 import { Code, Divider, Flex, Icon } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import type { EditionDrop, NFTDrop } from "@thirdweb-dev/sdk";
+import type { EditionDrop, NFTDrop } from "@thirdweb-dev/sdk/evm";
 import {
   formatError,
   formatResponseData,
@@ -36,7 +36,7 @@ function useCreateCheckoutIntentMutation(contract: NFTDrop | EditionDrop) {
 export const PaperCheckoutSetting: React.FC<{
   contract: NFTDrop | EditionDrop;
 }> = ({ contract }) => {
-  const activeNetwork = useActiveNetwork();
+  const activeNetwork = useDashboardNetwork();
   const [jwt, setJWT] = usePaperJWT();
 
   const [environment, setEnvironment] = useState<Environment>("react");
@@ -177,7 +177,7 @@ function createCodeSnippet(
   let code = "";
   if (language === "javascript") {
     code = `
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 
 async function createCheckoutIntent() {
   const sdk = new ThirdwebSDK("${network}");

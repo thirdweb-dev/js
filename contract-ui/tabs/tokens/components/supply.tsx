@@ -1,18 +1,10 @@
-import {
-  Skeleton,
-  Stack,
-  Stat,
-  StatHelpText,
-  StatLabel,
-  StatNumber,
-} from "@chakra-ui/react";
+import { TokenSupplyLayout } from "./supply-layout";
 import {
   useAddress,
   useContract,
   useTokenBalance,
   useTokenSupply,
 } from "@thirdweb-dev/react";
-import { Card } from "tw-components";
 
 interface TokenBalancesProps {
   contractQuery: ReturnType<typeof useContract>;
@@ -29,39 +21,12 @@ export const TokenSupply: React.FC<TokenBalancesProps> = ({
   const { data: ownedBalance, isSuccess: isOwnedBalanceSuccess } =
     useTokenBalance(contractQuery.contract, address);
   return (
-    <Stack spacing={6}>
-      <Stack direction={{ base: "column", md: "row" }} spacing={6}>
-        <Card as={Stat}>
-          <StatLabel>Total Supply</StatLabel>
-          <Skeleton isLoaded={isTokenSupplySuccess}>
-            <StatNumber>
-              {tokenSupply?.displayValue} {tokenSupply?.symbol}
-            </StatNumber>
-          </Skeleton>
-        </Card>
-        <Card as={Stat}>
-          <StatLabel>Owned by you</StatLabel>
-          <Skeleton isLoaded={isOwnedBalanceSuccess || !address}>
-            <StatNumber>
-              {address ? (
-                <>
-                  {ownedBalance?.displayValue} {ownedBalance?.symbol}
-                </>
-              ) : (
-                <StatHelpText>
-                  Connect your wallet to see your balance
-                </StatHelpText>
-              )}
-            </StatNumber>
-          </Skeleton>
-        </Card>
-        <Card as={Stat}>
-          <StatLabel>Decimals</StatLabel>
-          <Skeleton isLoaded={isTokenSupplySuccess}>
-            <StatNumber>{tokenSupply?.decimals}</StatNumber>
-          </Skeleton>
-        </Card>
-      </Stack>
-    </Stack>
+    <TokenSupplyLayout
+      isTokenSupplySuccess={isTokenSupplySuccess}
+      tokenSupply={tokenSupply}
+      isOwnedBalanceSuccess={isOwnedBalanceSuccess}
+      address={address}
+      ownedBalance={ownedBalance}
+    />
   );
 };

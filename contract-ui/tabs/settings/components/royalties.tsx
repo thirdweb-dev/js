@@ -6,7 +6,10 @@ import {
   useRoyaltySettings,
   useUpdateRoyaltySettings,
 } from "@thirdweb-dev/react";
-import { CommonRoyaltySchema, ValidContractInstance } from "@thirdweb-dev/sdk";
+import {
+  CommonRoyaltySchema,
+  ValidContractInstance,
+} from "@thirdweb-dev/sdk/evm";
 import { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";

@@ -1,5 +1,4 @@
-import { Icon } from "@chakra-ui/icons";
-import { ButtonGroup } from "@chakra-ui/react";
+import { ButtonGroup, Icon } from "@chakra-ui/react";
 import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
 import { SiFacebook } from "@react-icons/all-files/si/SiFacebook";
 import { SiGithub } from "@react-icons/all-files/si/SiGithub";
@@ -8,7 +7,7 @@ import { SiMedium } from "@react-icons/all-files/si/SiMedium";
 import { SiReddit } from "@react-icons/all-files/si/SiReddit";
 import { SiTelegram } from "@react-icons/all-files/si/SiTelegram";
 import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
-import type { ProfileMetadata } from "@thirdweb-dev/sdk";
+import type { ProfileMetadata } from "@thirdweb-dev/sdk/evm";
 import { FiGlobe } from "react-icons/fi";
 import { LinkButton, TrackedIconButton } from "tw-components";
 

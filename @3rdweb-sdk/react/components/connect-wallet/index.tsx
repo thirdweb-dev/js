@@ -1,10 +1,11 @@
-import { useWeb3 } from "@3rdweb-sdk/react";
+import { useWeb3 } from "@3rdweb-sdk/react/hooks/useWeb3";
 import {
   Center,
   Flex,
   FormControl,
   Icon,
   IconButton,
+  Image,
   Input,
   Menu,
   MenuButton,
@@ -24,6 +25,11 @@ import {
 } from "@chakra-ui/react";
 import { AiOutlineDisconnect } from "@react-icons/all-files/ai/AiOutlineDisconnect";
 import { GiWavyChains } from "@react-icons/all-files/gi/GiWavyChains";
+import {
+  WalletNotSelectedError,
+  useWallet,
+} from "@solana/wallet-adapter-react";
+import Solana from "@thirdweb-dev/chain-icons/dist/solana";
 import {
   ChainId,
   useAddress,
@@ -63,7 +69,7 @@ import {
   MenuItem,
   Text,
 } from "tw-components";
-import { shortenIfAddress } from "utils/usedapp-external";
+import { shortenIfAddress, shortenString } from "utils/usedapp-external";
 import { Connector } from "wagmi-core";
 
 const connectorIdToImageUrl: Record<string, StaticImageData> = {
@@ -80,7 +86,16 @@ const registerConnector = (_connector: string) => {
   posthog.capture("wallet_connected", { connector: _connector });
 };
 
-export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
+export interface EcosystemButtonprops extends ButtonProps {
+  ecosystem?: "evm" | "solana" | "either";
+}
+
+export const ConnectWallet: React.FC<EcosystemButtonprops> = ({
+  ecosystem = "either",
+  ...buttonProps
+}) => {
+  const solWallet = useWallet();
+
   const [connector, connect] = useConnect();
   const { getNetworkMetadata } = useWeb3();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -91,6 +106,10 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
   const chainId = useChainId();
 
   const { hasCopied, onCopy } = useClipboard(address || "");
+
+  const { hasCopied: hasCopiedSol, onCopy: onCopySol } = useClipboard(
+    solWallet.publicKey?.toBase58() || "",
+  );
   function handleConnect(_connector: Connector<any, any>) {
     if (_connector.name.toLowerCase() === "magic") {
       onOpen();
@@ -124,7 +143,51 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
 
   const ensQuery = ens.useQuery(address);
 
-  if (address && chainId) {
+  // if solana is connected we hit this
+  if (solWallet.publicKey && ecosystem !== "evm") {
+    return (
+      <Menu isLazy>
+        <MenuButton
+          as={Button}
+          {...buttonProps}
+          variant="outline"
+          colorScheme="gray"
+          rightIcon={<FiChevronDown />}
+        >
+          <Flex direction="row" gap={3} align="center">
+            <Image alt="" boxSize={6} src={solWallet.wallet?.adapter.icon} />
+            <Text size="label.sm">
+              {shortenString(solWallet.publicKey.toBase58())}
+            </Text>
+          </Flex>
+        </MenuButton>
+        <MenuList borderRadius="lg" py={2}>
+          <MenuItem
+            closeOnSelect={false}
+            icon={
+              <Icon
+                color={hasCopiedSol ? "green.500" : "inherit"}
+                as={hasCopiedSol ? FiCheck : FiCopy}
+              />
+            }
+            onClick={onCopySol}
+          >
+            Copy public key
+          </MenuItem>
+          <MenuItem
+            icon={<AiOutlineDisconnect />}
+            onClick={async () => {
+              await solWallet.disconnect();
+            }}
+          >
+            Disconnect
+          </MenuItem>
+        </MenuList>
+      </Menu>
+    );
+  }
+  // if EVM is connected we hit this
+  if (address && chainId && ecosystem !== "solana") {
     const SVG = getNetworkMetadata(chainId).icon;
     return (
       <>
@@ -334,73 +397,117 @@ export const ConnectWallet: React.FC<ButtonProps> = (buttonProps) => {
         </MenuButton>
 
         <MenuList>
-          <MenuItem
-            py={3}
-            icon={
-              <ChakraNextImage
-                boxSize={4}
-                borderRadius="md"
-                src={connectorIdToImageUrl.MetaMask}
-                placeholder="empty"
-                alt=""
-              />
-            }
-            onClick={() => {
-              try {
-                posthog.capture("wallet_connected_attempt", {
-                  connector: "metamask",
-                });
-                connectWithMetamask();
-                registerConnector("metamask");
-              } catch (error) {
-                posthog.capture("wallet_connected_fail", {
-                  connector: "metamask",
-                  error,
-                });
+          {ecosystem !== "solana" && (
+            <MenuItem
+              py={3}
+              icon={
+                <ChakraNextImage
+                  boxSize={4}
+                  borderRadius="md"
+                  src={connectorIdToImageUrl.MetaMask}
+                  placeholder="empty"
+                  alt=""
+                />
               }
-            }}
-          >
-            MetaMask
-          </MenuItem>
-          {connector.data.connectors
-            .filter((c) => c.id !== "gnosis" && c.name !== "MetaMask")
-            .map((_connector) => {
-              if (!_connector.ready) {
-                return null;
-              }
-
+              onClick={() => {
+                try {
+                  posthog.capture("wallet_connected_attempt", {
+                    connector: "metamask",
+                  });
+                  connectWithMetamask();
+                  registerConnector("metamask");
+                } catch (error) {
+                  posthog.capture("wallet_connected_fail", {
+                    connector: "metamask",
+                    error,
+                  });
+                }
+              }}
+            >
+              MetaMask
+            </MenuItem>
+          )}
+          {ecosystem !== "evm" &&
+            solWallet.wallets.map((sWallet) => {
               return (
                 <MenuItem
+                  key={sWallet.adapter.name}
                   py={3}
-                  key={_connector.name}
                   icon={
-                    <ChakraNextImage
+                    <Image
                       boxSize={4}
                       borderRadius="md"
-                      src={
-                        _connector.id === "gnosis"
-                          ? connectorIdToImageUrl["Gnosis"]
-                          : Object.keys(connectorIdToImageUrl).includes(
-                              _connector.name,
-                            )
-                          ? connectorIdToImageUrl[_connector.name]
-                          : connectorIdToImageUrl["Injected"]
-                      }
+                      src={sWallet.adapter.icon}
                       placeholder="empty"
                       alt=""
                     />
                   }
-                  onClick={() => handleConnect(_connector)}
+                  w="100%"
+                  onClick={async () => {
+                    solWallet.select(sWallet.adapter.name);
+                    try {
+                      await solWallet.connect();
+                    } catch (e) {
+                      if (e instanceof WalletNotSelectedError) {
+                        // seems safe to ignore?
+                      } else {
+                        console.error(
+                          "failed to connect to solana wallet",
+                          e,
+                          sWallet,
+                        );
+                      }
+                    }
+                  }}
                 >
-                  {_connector.id === "magic"
-                    ? "Email Wallet"
-                    : _connector.name === "Injected"
-                    ? "Mobile Wallet"
-                    : _connector.name}
+                  <Flex as="span" align="center" justify="space-between">
+                    <span>{sWallet.adapter.name}</span>
+                    <Icon as={Solana} />
+                  </Flex>
                 </MenuItem>
               );
             })}
-          {gnosisConnector ? (
+
+          {ecosystem !== "solana" &&
+            connector.data.connectors
+              .filter((c) => c.id !== "gnosis" && c.name !== "MetaMask")
+              .map((_connector) => {
+                if (!_connector.ready) {
+                  return null;
+                }
+
+                return (
+                  <MenuItem
+                    py={3}
+                    key={_connector.name}
+                    icon={
+                      <ChakraNextImage
+                        boxSize={4}
+                        borderRadius="md"
+                        src={
+                          _connector.id === "gnosis"
+                            ? connectorIdToImageUrl["Gnosis"]
+                            : Object.keys(connectorIdToImageUrl).includes(
+                                _connector.name,
+                              )
+                            ? connectorIdToImageUrl[_connector.name]
+                            : connectorIdToImageUrl["Injected"]
+                        }
+                        placeholder="empty"
+                        alt=""
+                      />
+                    }
+                    onClick={() => handleConnect(_connector)}
+                  >
+                    {_connector.id === "magic"
+                      ? "Email Wallet"
+                      : _connector.name === "Injected"
+                      ? "Mobile Wallet"
+                      : _connector.name}
+                  </MenuItem>
+                );
+              })}
+          {ecosystem !== "solana" && gnosisConnector ? (
             <>
               <MenuDivider py={0} />
               <Tooltip

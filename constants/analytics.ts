@@ -1,4 +1,4 @@
-import { ContractType } from "@thirdweb-dev/sdk";
+import { ContractType } from "@thirdweb-dev/sdk/evm";
 
 export class AnalyticsEvents {
   static ContractDeployed = "App-ContractDeployed";

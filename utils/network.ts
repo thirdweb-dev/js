@@ -1,5 +1,5 @@
 /* eslint-disable line-comment-position */
-import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
+import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
 
 export const SUPPORTED_CHAIN_IDS_V1: SUPPORTED_CHAIN_ID[] = [
   ChainId.Mainnet,
@@ -27,12 +27,7 @@ export const SupportedChainIdToNetworkMap: Record<SUPPORTED_CHAIN_ID, string> =
     [ChainId.BinanceSmartChainTestnet]: "binance-testnet",
   } as const;
 
-export type ValueOf<T> = T[keyof T];
-
-export const SupportedNetworkToChainIdMap: Record<
-  ValueOf<typeof SupportedChainIdToNetworkMap>,
-  SUPPORTED_CHAIN_ID
-> = {
+export const SupportedNetworkToChainIdMap = {
   ethereum: ChainId.Mainnet, // 1
 
   goerli: ChainId.Goerli, // 5
@@ -54,7 +49,6 @@ export const SupportedNetworkToChainIdMap: Record<
 
 export const NetworkToBlockTimeMap: Record<SUPPORTED_CHAIN_ID, string> = {
   [ChainId.Mainnet]: "14",
-
   [ChainId.Goerli]: "14",
   [ChainId.Polygon]: "2",
   [ChainId.Mumbai]: "2",
@@ -69,25 +63,76 @@ export const NetworkToBlockTimeMap: Record<SUPPORTED_CHAIN_ID, string> = {
   [ChainId.BinanceSmartChainMainnet]: "3",
   [ChainId.BinanceSmartChainTestnet]: "3",
 };
+export const SupportedSolanaNetworkToUrlMap = {
+  "mainnet-beta": "solana",
+  devnet: "sol-devnet",
+} as const;
 
-export type SupportedNetwork = keyof typeof SupportedNetworkToChainIdMap;
+export const SupportedSolanaUrlToNetworkMap = {
+  solana: "mainnet-beta",
+  "sol-devnet": "devnet",
+} as const;
 
-export function getChainIdFromNetwork(
-  network?: SupportedNetwork,
+export type DashboardSolanaNetwork =
+  keyof typeof SupportedSolanaNetworkToUrlMap;
+
+export type SupportedNetwork =
+  | keyof typeof SupportedNetworkToChainIdMap
+  | DashboardSolanaNetwork;
+
+export type DashboardChainIdMode = "evm" | "solana" | "both";
+
+export function getChainIdFromNetworkPath(
+  network?: string,
 ): SUPPORTED_CHAIN_ID | undefined {
-  if (!network || !SupportedNetworkToChainIdMap[network]) {
-    return undefined;
+  if (isSupportedEVMNetwork(network)) {
+    return SupportedNetworkToChainIdMap[network];
   }
-
-  return SupportedNetworkToChainIdMap[network];
+  return undefined;
 }
 
-export function isSupportedNetwork(network?: string): boolean {
+export function getSolNetworkFromNetworkPath(
+  network?: string,
+): DashboardSolanaNetwork | undefined {
+  if (isSupportedSOLNetwork(network)) {
+    return SupportedSolanaUrlToNetworkMap[network];
+  }
+  return undefined;
+}
+
+export function isSupportedEVMNetwork(
+  network?: string,
+): network is keyof typeof SupportedNetworkToChainIdMap {
   return network ? network in SupportedNetworkToChainIdMap : false;
 }
 
-export function getNetworkFromChainId<T extends SUPPORTED_CHAIN_ID>(
-  chainId: T,
-): SupportedNetwork {
-  return SupportedChainIdToNetworkMap[chainId] || "";
+export function isSupportedSOLNetwork(
+  network?: string,
+): network is keyof typeof SupportedSolanaUrlToNetworkMap {
+  return network ? network in SupportedSolanaUrlToNetworkMap : false;
+}
+
+function isChainIdSolanaNetwork(
+  chainId: SUPPORTED_CHAIN_ID | DashboardSolanaNetwork,
+): chainId is DashboardSolanaNetwork {
+  if (chainId in SupportedSolanaNetworkToUrlMap) {
+    return true;
+  }
+
+  return false;
+}
+export function isSupportedNetwork(
+  network?: string,
+): network is SupportedNetwork {
+  return isSupportedEVMNetwork(network) || isSupportedSOLNetwork(network);
+}
+
+export function getNetworkFromChainId(
+  chainId: SUPPORTED_CHAIN_ID | DashboardSolanaNetwork,
+) {
+  if (isChainIdSolanaNetwork(chainId)) {
+    return SupportedSolanaNetworkToUrlMap[chainId];
+  } else {
+    return SupportedChainIdToNetworkMap[chainId] || "";
+  }
 }

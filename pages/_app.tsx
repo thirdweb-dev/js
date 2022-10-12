@@ -7,6 +7,7 @@ import {
   PersistQueryClientProvider,
   Persister,
 } from "@tanstack/react-query-persist-client";
+import { shouldNeverPersistQuery } from "@thirdweb-dev/react";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 import { BigNumber } from "ethers";
 import { NextPage } from "next";
@@ -26,7 +27,7 @@ import React, {
 import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
 import { isBrowser } from "utils/isBrowser";
 
-const __CACHE_BUSTER = "v3.1.0";
+const __CACHE_BUSTER = "v3.2.0-SOL";
 
 export function bigNumberReplacer(_key: string, value: any) {
   // if we find a BigNumber then make it into a string (since that is safe)
@@ -63,7 +64,8 @@ const persister: Persister = createSyncStoragePersister({
         clientState: {
           ...data.clientState,
           queries: data.clientState.queries.filter(
-            (q) => !q.queryKey.includes("contract-instance"),
+            // covers solana as well as evm
+            (q) => !shouldNeverPersistQuery(q.queryKey),
           ),
         },
       },

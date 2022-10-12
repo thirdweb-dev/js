@@ -1,8 +1,5 @@
-import { chakra } from "@chakra-ui/react";
-import { ThirdwebNftMedia } from "@thirdweb-dev/react";
-import { NFTMetadata } from "@thirdweb-dev/sdk";
-
-const ChakraThirdwebNftMedia = chakra(ThirdwebNftMedia);
+import type { NFTMetadata } from "@thirdweb-dev/sdk";
+import { NFTMedia } from "tw-components";
 
 interface MediaCellProps {
   cell: {
@@ -13,7 +10,7 @@ interface MediaCellProps {
 export const MediaCell: React.FC<MediaCellProps> = ({ cell }) => {
   const nftMetadata = cell.value;
   return (
-    <ChakraThirdwebNftMedia
+    <NFTMedia
       pointerEvents="none"
       metadata={nftMetadata}
       requireInteraction

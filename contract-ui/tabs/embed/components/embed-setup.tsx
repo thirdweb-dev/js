@@ -1,4 +1,4 @@
-import { useActiveChainId } from "@3rdweb-sdk/react";
+import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { useBreakpointValue } from "@chakra-ui/media-query";
 import {
   Alert,
@@ -13,7 +13,7 @@ import {
   useClipboard,
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
-import { ContractType, ValidContractInstance } from "@thirdweb-dev/sdk";
+import { ContractType, ValidContractInstance } from "@thirdweb-dev/sdk/evm";
 import { useForm } from "react-hook-form";
 import { FiCopy } from "react-icons/fi";
 import {
@@ -146,7 +146,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
     reValidateMode: "onChange",
   });
 
-  const chainId = useActiveChainId();
+  const chainId = useDashboardEVMChainId();
   const isMobile = useBreakpointValue({ base: true, md: false });
 
   const iframeSrc = buildIframeSrc(

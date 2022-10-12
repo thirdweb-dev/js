@@ -1,7 +1,7 @@
 import { useMainnetsContractList } from "@3rdweb-sdk/react";
 import { Flex } from "@chakra-ui/react";
 import { QueryClient, dehydrate } from "@tanstack/react-query";
-import { ChainId } from "@thirdweb-dev/sdk";
+import { ChainId } from "@thirdweb-dev/sdk/evm";
 import { AppLayout } from "components/app-layouts/app";
 import {
   ens,
@@ -16,7 +16,7 @@ import { ReleasedContracts } from "components/contract-components/tables/release
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { useOgImagePing } from "hooks/useOgImagePing";
 import { useSingleQueryParam } from "hooks/useQueryParam";
-import { getSSRSDK } from "lib/ssr-sdk";
+import { getEVMThirdwebSDK } from "lib/sdk";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
@@ -128,9 +128,7 @@ const UserPage: ThirdwebNextPage = () => {
           </Flex>
           {ensQuery.data?.address && (
             <DeployedContracts
-              address={ensQuery.data?.address}
               noHeader
-              noProjects
               contractListQuery={mainnetsContractList}
             />
           )}
@@ -156,7 +154,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   const queryClient = new QueryClient();
   // TODO make this use alchemy / other RPC
   // currently blocked because our alchemy RPC does not allow us to call this from the server (since we have an allow-list)
-  const polygonSdk = getSSRSDK(ChainId.Polygon);
+  const polygonSdk = getEVMThirdwebSDK(ChainId.Polygon);
 
   const networkOrAddress = getSingleQueryValue(ctx.params, "networkOrAddress");
 
@@ -202,7 +200,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
       fetchReleaserProfile(polygonSdk, address),
     ),
     queryClient.prefetchQuery(["published-contracts", address], () =>
-      fetchPublishedContracts(polygonSdk, address),
+      fetchPublishedContracts(polygonSdk, queryClient, address),
     ),
   ]);
 
@@ -216,6 +214,6 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     fallback: "blocking",
-    paths: [],
+    paths: [{ params: { networkOrAddress: "deployer.thirdweb.eth" } }],
   };
 };

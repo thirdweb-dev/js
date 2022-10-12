@@ -32,12 +32,12 @@ import {
   CONTRACT_ADDRESSES,
   ExtraPublishMetadata,
   SUPPORTED_CHAIN_IDS,
-} from "@thirdweb-dev/sdk";
-import { replaceIpfsUrl } from "components/app-layouts/providers";
+} from "@thirdweb-dev/sdk/evm";
 import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { replaceIpfsUrl } from "lib/sdk";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -242,6 +242,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
                   _hover={{ shadow: "sm" }}
                   renderPreview={(fileUrl) => (
                     <Image
+                      alt=""
                       w="100%"
                       h="100%"
                       src={replaceIpfsUrl(fileUrl)}

@@ -36,7 +36,7 @@ const Storage: ThirdwebNextPage = () => {
             infrastructure.
           </ProductCard>
           <ProductCard
-            title="Gauranteed availability"
+            title="Guaranteed availability"
             icon={require("/public/assets/product-pages/storage/hero-icon-2.png")}
           >
             Upload and forget - we ensure that you&apos;re files are stored in

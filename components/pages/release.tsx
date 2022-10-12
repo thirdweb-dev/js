@@ -7,15 +7,15 @@ import {
   SimpleGrid,
   Skeleton,
 } from "@chakra-ui/react";
-import { PREBUILT_CONTRACTS_MAP } from "@thirdweb-dev/sdk";
+import { PREBUILT_CONTRACTS_MAP } from "@thirdweb-dev/sdk/evm";
 import { ChakraNextImage } from "components/Image";
-import { replaceIpfsUrl } from "components/app-layouts/providers";
 import { DeployFormDrawer } from "components/contract-components/contract-deploy-form/drawer";
 import { ens, useAllVersions } from "components/contract-components/hooks";
 import { ReleasedContract } from "components/contract-components/released-contract";
 import { THIRDWEB_DEPLOYER_ADDRESS } from "constants/addresses";
 import { FeatureIconMap } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
+import { replaceIpfsUrl } from "lib/sdk";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
 import { Heading, Text } from "tw-components";
@@ -67,6 +67,7 @@ export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
         <Flex gap={4} alignItems="center">
           {release?.logo ? (
             <Image
+              alt={release.name}
               borderRadius="full"
               src={replaceIpfsUrl(release.logo)}
               boxSize={14}

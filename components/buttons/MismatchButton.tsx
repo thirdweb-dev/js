@@ -1,7 +1,11 @@
-import { ConnectWallet, FAUCETS, useWeb3 } from "@3rdweb-sdk/react";
+import {
+  ConnectWallet,
+  EcosystemButtonprops,
+  FAUCETS,
+  useWeb3,
+} from "@3rdweb-sdk/react";
 import {
   Box,
-  ButtonGroup,
   Flex,
   Icon,
   Popover,
@@ -12,6 +16,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { AiOutlineWarning } from "@react-icons/all-files/ai/AiOutlineWarning";
+import { useWallet } from "@solana/wallet-adapter-react";
 import {
   useAddress,
   useBalance,
@@ -20,74 +25,119 @@ import {
   useNetwork,
   useNetworkMismatch,
 } from "@thirdweb-dev/react";
-import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
+import {
+  useSDK,
+  useBalance as useSolBalance,
+} from "@thirdweb-dev/react/solana";
+import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
 import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import React, { useCallback, useRef } from "react";
 import { VscDebugDisconnect } from "react-icons/vsc";
-import {
-  Button,
-  ButtonProps,
-  Card,
-  Heading,
-  LinkButton,
-  Text,
-} from "tw-components";
+import { Button, Card, Heading, LinkButton, Text } from "tw-components";
 import {
   SupportedChainIdToNetworkMap,
   getNetworkFromChainId,
 } from "utils/network";
 
-export const MismatchButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ children, isDisabled, onClick, loadingText, type, ...props }, ref) => {
+export const MismatchButton = React.forwardRef<
+  HTMLButtonElement,
+  EcosystemButtonprops
+>(
+  (
+    {
+      children,
+      isDisabled,
+      onClick,
+      loadingText,
+      type,
+      ecosystem = "evm",
+      ...props
+    },
+    ref,
+  ) => {
     const address = useAddress();
-    const balance = useBalance();
-
-    const isBalanceZero = BigNumber.from(balance.data?.value || 0).eq(0);
-
+    const { publicKey } = useWallet();
+    const evmBalance = useBalance();
+    const solBalance = useSolBalance();
+    const solNetwork = useSDK()?.network;
     const initialFocusRef = useRef<HTMLButtonElement>(null);
 
-    const networksMismatch = useNetworkMismatch();
+    const networksMismatch = useNetworkMismatch() && ecosystem === "evm";
 
     const { isOpen, onOpen, onClose } = useDisclosure();
     const trackEvent = useTrack();
     const chainId = useChainId();
     const { getNetworkMetadata } = useWeb3();
-    const { isTestnet } = getNetworkMetadata(chainId || 0);
+    const {
+      isTestnet,
+      symbol,
+      chainId: resolvedChainId,
+    } = getNetworkMetadata(chainId || 0);
 
-    if (!address) {
+    if (!address && ecosystem === "evm") {
       return (
-        <ConnectWallet borderRadius="md" colorScheme="primary" {...props} />
+        <ConnectWallet
+          borderRadius="md"
+          colorScheme="primary"
+          ecosystem={ecosystem}
+          {...props}
+        />
       );
     }
+
+    if (!publicKey && ecosystem === "solana") {
+      return (
+        <ConnectWallet
+          borderRadius="md"
+          colorScheme="primary"
+          ecosystem={ecosystem}
+          {...props}
+        />
+      );
+    }
+
+    const isSolanaBalanceZero =
+      ecosystem === "solana" &&
+      BigNumber.from(solBalance.data?.value || 0).eq(0) &&
+      solNetwork === "devnet";
+
+    const isEVMBalanceZero =
+      ecosystem === "evm" &&
+      BigNumber.from(evmBalance.data?.value || 0).eq(0) &&
+      isTestnet;
+
+    const isEitherBalanceZero = isSolanaBalanceZero || isEVMBalanceZero;
 
     return (
       <Popover
         initialFocusRef={initialFocusRef}
         isLazy
         isOpen={isOpen}
-        onOpen={
-          networksMismatch || (isBalanceZero && isTestnet) ? onOpen : undefined
-        }
+        onOpen={networksMismatch || isEitherBalanceZero ? onOpen : undefined}
         onClose={onClose}
       >
         <PopoverTrigger>
           <Button
             {...props}
-            type={
-              networksMismatch || (isBalanceZero && isTestnet) ? "button" : type
-            }
+            type={networksMismatch || isEitherBalanceZero ? "button" : type}
             loadingText={loadingText}
             onClick={(e) => {
-              if (isBalanceZero && isTestnet) {
+              if (isEVMBalanceZero) {
                 trackEvent({
                   category: "no-funds",
                   action: "popover",
                   label:
                     SupportedChainIdToNetworkMap[chainId as SUPPORTED_CHAIN_ID],
                 });
+              } else if (isSolanaBalanceZero) {
+                trackEvent({
+                  category: "no-funds",
+                  action: "popover",
+                  label: solNetwork,
+                });
               }
-              if (networksMismatch || (isBalanceZero && isTestnet)) {
+              if (networksMismatch || isEitherBalanceZero) {
                 return undefined;
               }
               if (onClick) {
@@ -116,7 +166,21 @@ export const MismatchButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
                 onClose={onClose}
               />
             ) : (
-              <NoFundsNotice />
+              <NoFundsNotice
+                symbol={ecosystem === "solana" ? "SOL" : symbol}
+                faucetUrl={
+                  ecosystem === "solana"
+                    ? "/faucet/solana"
+                    : FAUCETS[resolvedChainId]
+                }
+                label={
+                  (ecosystem === "solana"
+                    ? solNetwork
+                    : SupportedChainIdToNetworkMap[
+                        chainId as SUPPORTED_CHAIN_ID
+                      ]) || "unknown_network"
+                }
+              />
             )}
           </PopoverBody>
         </Card>
@@ -209,10 +273,17 @@ const MismatchNotice: React.FC<{
   );
 };
 
-const NoFundsNotice = () => {
-  const chainId = useChainId();
-  const { getNetworkMetadata } = useWeb3();
-  const { symbol, isTestnet } = getNetworkMetadata(chainId || 0);
+interface NoFundsNoticeProps {
+  faucetUrl?: string;
+  symbol: string;
+  label: string;
+}
+
+const NoFundsNotice: React.FC<NoFundsNoticeProps> = ({
+  faucetUrl,
+  symbol,
+  label,
+}) => {
   const trackEvent = useTrack();
 
   return (
@@ -227,30 +298,26 @@ const NoFundsNotice = () => {
       <Text>
         You don&apos;t have any funds on this network. You&apos;ll need some{" "}
         {symbol} to pay for gas.
-        {isTestnet &&
-          FAUCETS[chainId as keyof typeof FAUCETS] &&
-          " You can get some from the faucet below."}
+        {faucetUrl && " You can get some from the faucet below."}
       </Text>
 
-      <ButtonGroup size="sm">
-        {isTestnet && FAUCETS[chainId as keyof typeof FAUCETS] && (
-          <LinkButton
-            colorScheme="orange"
-            href={FAUCETS[chainId as keyof typeof FAUCETS] || ""}
-            isExternal
-            onClick={() =>
-              trackEvent({
-                category: "no-funds",
-                action: "click",
-                label:
-                  SupportedChainIdToNetworkMap[chainId as SUPPORTED_CHAIN_ID],
-              })
-            }
-          >
-            Get {symbol} from faucet
-          </LinkButton>
-        )}
-      </ButtonGroup>
+      {faucetUrl && (
+        <LinkButton
+          size="sm"
+          colorScheme="orange"
+          href={faucetUrl}
+          isExternal
+          onClick={() =>
+            trackEvent({
+              category: "no-funds",
+              action: "click",
+              label,
+            })
+          }
+        >
+          Get {symbol} from faucet
+        </LinkButton>
+      )}
     </Flex>
   );
 };

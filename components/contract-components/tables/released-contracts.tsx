@@ -1,4 +1,4 @@
-import { DeployableContractTable } from "../contract-table";
+import { ReleasedContractTable } from "../contract-table-v2";
 import { usePublishedContractsQuery } from "../hooks";
 import { ShowMoreButton } from "./show-more-button";
 import {
@@ -29,20 +29,12 @@ export const ReleasedContracts: React.FC<ReleasedContractsProps> = ({
   const trackEvent = useTrack();
   const releasedContractsQuery = usePublishedContractsQuery(address);
 
-  const releasedContracts = useMemo(
-    () =>
-      (releasedContractsQuery.data || [])?.map((d) =>
-        d.metadataUri.replace("ipfs://", ""),
-      ),
-    [releasedContractsQuery],
-  );
-
   const slicedData = useMemo(() => {
-    if (releasedContracts) {
-      return releasedContracts.slice(0, showMoreLimit);
+    if (releasedContractsQuery.data) {
+      return releasedContractsQuery.data.slice(0, showMoreLimit);
     }
     return [];
-  }, [releasedContracts, showMoreLimit]);
+  }, [releasedContractsQuery.data, showMoreLimit]);
 
   return (
     <>
@@ -76,10 +68,10 @@ export const ReleasedContracts: React.FC<ReleasedContractsProps> = ({
           </LinkButton>
         </Flex>
       )}
-      <DeployableContractTable
+      <ReleasedContractTable
         isFetching={releasedContractsQuery.isFetching}
-        contractIds={slicedData}
-        context="view_release"
+        contractDetails={slicedData}
+        hideReleasedBy
       >
         {releasedContractsQuery.isLoading && (
           <Center>
@@ -126,7 +118,7 @@ export const ReleasedContracts: React.FC<ReleasedContractsProps> = ({
               setShowMoreLimit={setShowMoreLimit}
             />
           )}
-      </DeployableContractTable>
+      </ReleasedContractTable>
     </>
   );
 };

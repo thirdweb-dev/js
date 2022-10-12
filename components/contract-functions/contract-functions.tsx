@@ -11,7 +11,7 @@ import type {
   AbiEvent,
   AbiFunction,
   ValidContractInstance,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/evm";
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
 import { Abi, SourceFile } from "components/contract-components/types";
 import { Card, Heading } from "tw-components";

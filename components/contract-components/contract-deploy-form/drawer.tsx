@@ -1,8 +1,9 @@
 import { ContractDeployForm } from ".";
 import { ContractId } from "../types";
-import { Box, useDisclosure } from "@chakra-ui/react";
-import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
+import { Box, Icon, useDisclosure } from "@chakra-ui/react";
+import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
 import { useTrack } from "hooks/analytics/useTrack";
+import { FiChevronsRight } from "react-icons/fi";
 import { Button, Drawer } from "tw-components";
 
 interface DeployFormDrawerProps {
@@ -35,6 +36,7 @@ export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
           onOpen();
           onDrawerVisibilityChanged?.(true);
         }}
+        rightIcon={<Icon as={FiChevronsRight} />}
       >
         Deploy Now
       </Button>

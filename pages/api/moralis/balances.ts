@@ -1,5 +1,5 @@
 import { withSentry } from "@sentry/nextjs";
-import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
+import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
 import { CURRENCIES } from "constants/currencies";
 import { constants, utils } from "ethers";
 import { NextApiRequest, NextApiResponse } from "next";

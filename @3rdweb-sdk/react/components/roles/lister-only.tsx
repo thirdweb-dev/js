@@ -1,5 +1,5 @@
 import { useIsLister } from "@3rdweb-sdk/react/hooks/useContractRoles";
-import { ValidContractInstance } from "@thirdweb-dev/sdk";
+import { ValidContractInstance } from "@thirdweb-dev/sdk/evm";
 import { ComponentWithChildren } from "types/component-with-children";
 
 interface IListerOnlyProps {

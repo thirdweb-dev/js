@@ -1,5 +1,5 @@
 import { QueryClient, dehydrate } from "@tanstack/react-query";
-import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
+import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
 import { AppLayout } from "components/app-layouts/app";
 import {
   ens,
@@ -8,22 +8,29 @@ import {
   fetchReleasedContractInfo,
   fetchReleaserProfile,
 } from "components/contract-components/hooks";
-import { CustomContractPage } from "components/pages/custom-contract";
 import {
   ReleaseWithVersionPage,
   ReleaseWithVersionPageProps,
 } from "components/pages/release";
+import { BuiltinContractMap } from "constants/mappings";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
-import { isAddress } from "ethers/lib/utils";
-import { isEnsName } from "lib/ens";
-import { getSSRSDK } from "lib/ssr-sdk";
+import { ContractTabRouter } from "contract-ui/layout/tab-router";
+import {
+  isPossibleEVMAddress,
+  isPossibleSolanaAddress,
+} from "lib/address-utils";
+import { getEVMThirdwebSDK } from "lib/sdk";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "pages/_app";
 import { ReactElement } from "react";
 import {
+  DashboardSolanaNetwork,
+  SupportedNetwork,
   SupportedNetworkToChainIdMap,
-  getChainIdFromNetwork,
+  getChainIdFromNetworkPath,
+  getSolNetworkFromNetworkPath,
+  isSupportedSOLNetwork,
 } from "utils/network";
 import { getSingleQueryValue } from "utils/router";
 
@@ -32,8 +39,18 @@ const CatchAllPage: ThirdwebNextPage = (
 ) => {
   if (props.pageType === "contract") {
     return (
-      <CustomContractPage
-        contractAddress={props.contractAddress}
+      <ContractTabRouter
+        address={props.contractAddress}
+        ecosystem="evm"
+        network={props.network}
+      />
+    );
+  }
+  if (props.pageType === "program") {
+    return (
+      <ContractTabRouter
+        address={props.programAddress}
+        ecosystem="solana"
         network={props.network}
       />
     );
@@ -58,7 +75,7 @@ CatchAllPage.getLayout = function (
 ) {
   return (
     <AppLayout
-      layout={props.pageType === "contract" ? "custom-contract" : undefined}
+      layout={props.pageType !== "release" ? "custom-contract" : undefined}
     >
       {page}
     </AppLayout>
@@ -71,9 +88,13 @@ CatchAllPage.pageId = (
   if (props.pageType === "contract") {
     return PageId.DeployedContract;
   }
+  if (props.pageType === "program") {
+    return PageId.DeployedProgram;
+  }
   if (props.pageType === "release") {
     return PageId.ReleasedContract;
   }
+
   return PageId.Unknown;
 };
 
@@ -86,6 +107,11 @@ type PossiblePageProps =
       contractAddress: string;
       network: string;
       chainId: SUPPORTED_CHAIN_ID;
+    }
+  | {
+      pageType: "program";
+      programAddress: string;
+      network: DashboardSolanaNetwork;
     };
 
 export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
@@ -95,6 +121,15 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
     ctx.params,
     "networkOrAddress",
   ) as string;
+  // handle old contract paths
+  if (networkOrAddress === "contracts") {
+    return {
+      redirect: {
+        destination: "/contracts",
+        permanent: false,
+      },
+    };
+  }
   // handle old dashboard urls
   if (networkOrAddress === "dashboard") {
     const pathSegments = ctx.params?.catchAll as string[];
@@ -122,13 +157,12 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
   }
 
   const queryClient = new QueryClient();
-  const polygonSdk = getSSRSDK(ChainId.Polygon);
 
-  // handle the case where the user is trying to access a custom contract
+  // handle the case where the user is trying to access a EVM contract
   if (networkOrAddress in SupportedNetworkToChainIdMap) {
-    const [contractAddress] = ctx.params?.catchAll as (string | undefined)[];
+    const [contractAddress] = ctx.params?.catchAll as string[];
 
-    if (contractAddress && isPossibleAddress(contractAddress)) {
+    if (isPossibleEVMAddress(contractAddress)) {
       await queryClient.prefetchQuery(ens.queryKey(contractAddress), () =>
         ens.fetch(contractAddress),
       );
@@ -139,13 +173,45 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
           pageType: "contract",
           contractAddress: contractAddress as string,
           network: networkOrAddress,
-          chainId: getChainIdFromNetwork(
-            networkOrAddress,
+          chainId: getChainIdFromNetworkPath(
+            networkOrAddress as SupportedNetwork,
           ) as SUPPORTED_CHAIN_ID,
         },
       };
     }
-  } else if (isPossibleAddress(networkOrAddress)) {
+  }
+  // handle the case where the user is trying to access a solana contract
+  else if (isSupportedSOLNetwork(networkOrAddress)) {
+    const network = getSolNetworkFromNetworkPath(networkOrAddress);
+    if (!network) {
+      return {
+        notFound: true,
+      };
+    }
+    const [programAddress] = ctx.params?.catchAll as (string | undefined)[];
+    if (isPossibleSolanaAddress(programAddress)) {
+      // lets get the program type and metadata right here
+      // TODO this would be great if it was fast, but alas it is slow af!
+      // const solSDK = getSOLThirdwebSDK(network);
+      // const program = await queryClient.fetchQuery(
+      //   programQuery(queryClient, solSDK, programAddress),
+      // );
+      // await queryClient.prefetchQuery(programMetadataQuery(program));
+      return {
+        props: {
+          dehydratedState: dehydrate(queryClient, {
+            shouldDehydrateQuery: (query) =>
+              // TODO this should use the util function, but for some reason it doesn't work
+              !query.queryHash.includes("-instance"),
+          }),
+          pageType: "program",
+          programAddress: programAddress as string,
+          network: networkOrAddress as DashboardSolanaNetwork,
+        },
+      };
+    }
+  } else if (isPossibleEVMAddress(networkOrAddress)) {
+    const polygonSdk = getEVMThirdwebSDK(ChainId.Polygon);
     // we're in release world
     const [contractName, version = ""] = ctx.params?.catchAll as (
       | string
@@ -164,6 +230,8 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
         };
       }
 
+      // TODO get the latest version instead of all versions
+      // OR wait till contract upgrade to have a faster call for this
       const allVersions = await queryClient.fetchQuery(
         ["all-releases", address, contractName],
         () => fetchAllVersions(polygonSdk, address, contractName),
@@ -219,11 +287,17 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     fallback: true,
-    paths: [],
+    paths: generateBuildTimePaths(),
   };
 };
 
-// if a string is a valid address or ens name
-function isPossibleAddress(address: string) {
-  return isAddress(address) || isEnsName(".eth");
+function generateBuildTimePaths() {
+  return Object.values(BuiltinContractMap)
+    .filter((c) => c.contractType !== "custom")
+    .map((v) => ({
+      params: {
+        networkOrAddress: "deployer.thirdweb.eth",
+        catchAll: [v.id],
+      },
+    }));
 }

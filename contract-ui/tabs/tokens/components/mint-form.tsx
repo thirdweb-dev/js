@@ -7,8 +7,10 @@ import {
   Stack,
   useModalContext,
 } from "@chakra-ui/react";
+import { UseMutationResult } from "@tanstack/react-query";
 import {
   TokenContract,
+  TokenParams,
   useAddress,
   useMintToken,
   useTokenDecimals,
@@ -25,23 +27,37 @@ interface TokenMintFormProps {
 }
 
 export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
-  const trackEvent = useTrack();
   const address = useAddress();
   const mint = useMintToken(contract);
+  const decimals = useTokenDecimals(contract);
+
+  return (
+    <TokenMintFormLayout
+      mintQuery={mint}
+      decimals={decimals.data}
+      address={address}
+      ecosystem="evm"
+    />
+  );
+};
+
+export const TokenMintFormLayout: React.FC<{
+  mintQuery: UseMutationResult<unknown, unknown, TokenParams>;
+  decimals: number | undefined;
+  address: string | undefined;
+  ecosystem: "evm" | "solana";
+}> = ({ mintQuery, decimals, address, ecosystem }) => {
+  const trackEvent = useTrack();
   const {
     register,
     handleSubmit,
     formState: { errors, isDirty },
   } = useForm({ defaultValues: { amount: "0" } });
   const modalContext = useModalContext();
-
   const { onSuccess, onError } = useTxNotifications(
     "Tokens minted successfully",
     "Failed to mint tokens",
   );
-
-  const decimals = useTokenDecimals(contract);
-
   return (
     <>
       <DrawerHeader>
@@ -59,7 +75,7 @@ export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
                 action: "mint",
                 label: "attempt",
               });
-              mint.mutate(
+              mintQuery.mutate(
                 { amount: d.amount, to: address },
                 {
                   onSuccess: () => {
@@ -89,7 +105,7 @@ export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
             <FormLabel>Additional Supply</FormLabel>
             <Input
               type="text"
-              pattern={`^\\d+(\\.\\d{1,${decimals?.data || 18}})?$`}
+              pattern={`^\\d+(\\.\\d{1,${decimals || 18}})?$`}
               {...register("amount")}
             />
             <FormErrorMessage>{errors?.amount?.message}</FormErrorMessage>
@@ -98,7 +114,7 @@ export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
       </DrawerBody>
       <DrawerFooter>
         <Button
-          isDisabled={mint.isLoading}
+          isDisabled={mintQuery.isLoading}
           variant="outline"
           mr={3}
           onClick={modalContext.onClose}
@@ -106,8 +122,9 @@ export const TokenMintForm: React.FC<TokenMintFormProps> = ({ contract }) => {
           Cancel
         </Button>
         <TransactionButton
+          ecosystem={ecosystem}
           transactionCount={1}
-          isLoading={mint.isLoading}
+          isLoading={mintQuery.isLoading}
           form={MINT_FORM_ID}
           type="submit"
           colorScheme="primary"

@@ -1,18 +1,19 @@
 import { AdminOnly } from "@3rdweb-sdk/react";
 import { Flex, Stack } from "@chakra-ui/react";
-import { DropContract, useClaimConditions } from "@thirdweb-dev/react";
+import { useClaimConditions, useContract } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useState } from "react";
 import { Button, LinkButton, Text } from "tw-components";
 
 interface ConditionsNotSetProps {
-  contract: DropContract | null | undefined;
+  address: string;
 }
 
 export const ConditionsNotSet: React.FC<ConditionsNotSetProps> = ({
-  contract,
+  address,
 }) => {
+  const { contract } = useContract(address);
   const [dismissed, setDismissed] = useState(false);
   const isClaimable = detectFeatures(contract, [
     "ERC721ClaimableWithConditions",

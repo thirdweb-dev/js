@@ -18,7 +18,7 @@ import {
   AbiEvent,
   AbiFunction,
   ValidContractInstance,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/evm";
 import { MarkdownRenderer } from "components/contract-components/released-contract/markdown-renderer";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { FiEdit2, FiEye } from "react-icons/fi";

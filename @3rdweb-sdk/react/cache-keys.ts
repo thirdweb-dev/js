@@ -1,4 +1,4 @@
-import type { ContractType, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
+import type { ContractType, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
 import { constants } from "ethers";
 
 export const networkKeys = {

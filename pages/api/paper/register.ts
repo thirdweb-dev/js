@@ -1,5 +1,5 @@
 import { withSentry } from "@sentry/nextjs";
-import { PAPER_API_URL } from "@thirdweb-dev/sdk";
+import { PAPER_API_URL } from "@thirdweb-dev/sdk/evm";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const POSSIBLE_METHODS = ["GET", "POST"];

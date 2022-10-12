@@ -1,4 +1,4 @@
-import { QuestionIcon } from "@chakra-ui/icons";
+import { VscQuestion } from "@react-icons/all-files/vsc/VscQuestion";
 import Arbitrum from "@thirdweb-dev/chain-icons/dist/arbitrum";
 import Avalanche from "@thirdweb-dev/chain-icons/dist/avalanche";
 import BinanceCoin from "@thirdweb-dev/chain-icons/dist/binance-coin";
@@ -7,7 +7,7 @@ import Fantom from "@thirdweb-dev/chain-icons/dist/fantom";
 import Optimism from "@thirdweb-dev/chain-icons/dist/optimism";
 import Polygon from "@thirdweb-dev/chain-icons/dist/polygon";
 import { ChainId, useNetwork } from "@thirdweb-dev/react";
-import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
+import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
 import { useCallback } from "react";
 
 interface NetworkMetadata {
@@ -141,7 +141,7 @@ export function useWeb3() {
     (chainId: SUPPORTED_CHAIN_ID) => {
       const cData: NetworkMetadata = {
         chainName: "Unsupported Chain",
-        icon: QuestionIcon,
+        icon: VscQuestion,
         isTestnet: false,
         symbol: "",
         chainId,

@@ -148,6 +148,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
                 renderPreview(fileUrl)
               ) : (
                 <Image
+                  alt=""
                   top={0}
                   left={0}
                   position="absolute"

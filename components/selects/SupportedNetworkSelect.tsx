@@ -4,7 +4,7 @@ import {
   ChainId,
   SUPPORTED_CHAIN_ID,
   SUPPORTED_CHAIN_IDS,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/evm";
 import { deprecatedChains } from "constants/mappings";
 import { useMemo } from "react";
 

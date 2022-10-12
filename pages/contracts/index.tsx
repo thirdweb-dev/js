@@ -1,7 +1,7 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import { AppLayout } from "components/app-layouts/app";
-import { DeployableContractTable } from "components/contract-components/contract-table";
+import { ReleasedContractTable } from "components/contract-components/contract-table-v2";
 import { usePublishedContractsQuery } from "components/contract-components/hooks";
 import { BuiltinContractMap } from "constants/mappings";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
@@ -21,65 +21,60 @@ const Contracts: ThirdwebNextPage = () => {
   const walletAddress = useAddress();
   const releasedContractsQuery = usePublishedContractsQuery(walletAddress);
 
-  const prebuiltContracts = Object.keys(BuiltinContractMap).filter(
-    (contract) => contract !== "custom",
+  const prebuiltContracts = Object.values(BuiltinContractMap).filter(
+    (contract) => contract.contractType !== "custom",
   );
-
   const releasedContracts = useMemo(
-    () =>
-      (releasedContractsQuery.data || [])?.map((d) =>
-        d.metadataUri.replace("ipfs://", ""),
-      ),
+    () => releasedContractsQuery.data || [],
     [releasedContractsQuery],
   );
 
   const allContracts = useMemo(
     () => [...releasedContracts, ...prebuiltContracts],
+
     [prebuiltContracts, releasedContracts],
   );
 
   return (
     <>
       <Flex gap={8} direction="column">
-        <Flex gap={2} direction="column">
-          <Heading size="title.md">Contracts</Heading>
-          <Text fontStyle="italic">
-            A combination of our{" "}
-            <TrackedLink
-              category="contracts"
-              label="pre-built"
-              href="https://portal.thirdweb.com/pre-built-contracts"
-              isExternal
-              color="blue.500"
-            >
-              prebuilt contracts
-            </TrackedLink>{" "}
-            and your{" "}
-            <TrackedLink
-              category="contracts"
-              label="released"
-              href="https://portal.thirdweb.com/release"
-              isExternal
-              color="blue.500"
-            >
-              released contracts
-            </TrackedLink>
-            . Not sure which contract is right for your use-case?{" "}
-            <TrackedLink
-              category="contracts"
-              label="take-quiz"
-              href="https://portal.thirdweb.com/pre-built-contracts/choosing-the-right-pre-built-contract"
-              isExternal
-              color="blue.500"
-            >
-              Help me choose.
-            </TrackedLink>
-          </Text>
-        </Flex>
-        <DeployableContractTable
+        <Heading>Contracts</Heading>
+        <Text fontStyle="italic">
+          A combination of our{" "}
+          <TrackedLink
+            category="contracts"
+            label="pre-built"
+            href="https://portal.thirdweb.com/pre-built-contracts"
+            isExternal
+            color="blue.500"
+          >
+            prebuilt contracts
+          </TrackedLink>{" "}
+          and your{" "}
+          <TrackedLink
+            category="contracts"
+            label="released"
+            href="https://portal.thirdweb.com/release"
+            isExternal
+            color="blue.500"
+          >
+            released contracts
+          </TrackedLink>
+          . Not sure which contract is right for your use-case?{" "}
+          <TrackedLink
+            category="contracts"
+            label="take-quiz"
+            href="https://portal.thirdweb.com/pre-built-contracts/choosing-the-right-pre-built-contract"
+            isExternal
+            color="blue.500"
+          >
+            Help me choose.
+          </TrackedLink>
+        </Text>
+
+        <ReleasedContractTable
+          contractDetails={allContracts}
           isFetching={releasedContractsQuery.isFetching}
-          contractIds={allContracts}
-          context="view_release"
         />
 
         <Card

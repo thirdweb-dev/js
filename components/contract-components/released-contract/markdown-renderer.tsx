@@ -156,9 +156,12 @@ export const MarkdownRenderer: React.FC<
             _last={{ borderBottomWidth: 0 }}
           />
         ),
-        ul: (props) => <UnorderedList {...props} mb={4} />,
-        ol: (props) => <OrderedList {...props} mb={4} />,
-        li: ({ children: c, ...props }) => (
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        ul: ({ ordered, ...props }) => <UnorderedList {...props} mb={4} />,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        ol: ({ ordered, ...props }) => <OrderedList {...props} mb={4} />,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        li: ({ children: c, ordered, ...props }) => (
           <ListItem {...props}>
             <Text>{c}</Text>
           </ListItem>

@@ -15,8 +15,12 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useListings, useListingsCount } from "@thirdweb-dev/react";
-import { AuctionListing, DirectListing, ListingType } from "@thirdweb-dev/sdk";
-import { Marketplace } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/marketplace";
+import { ListingType } from "@thirdweb-dev/sdk/evm";
+import type {
+  AuctionListing,
+  DirectListing,
+  Marketplace,
+} from "@thirdweb-dev/sdk/evm";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import { BigNumber } from "ethers";
 import React, { useEffect, useState } from "react";

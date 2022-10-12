@@ -96,6 +96,12 @@ const moduleExports = {
         destination: "/:network/:address",
         permanent: false,
       },
+      // prebuilt contract deploys
+      {
+        source: "/contracts/new/:slug*",
+        destination: "/contracts",
+        permanent: false,
+      },
     ];
   },
   images: {

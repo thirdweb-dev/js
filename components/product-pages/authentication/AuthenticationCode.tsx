@@ -7,7 +7,7 @@ import { Card, CodeBlock } from "tw-components";
 //
 
 const codeSnippets = {
-  javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+  javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 
 const sdk = new ThirdwebSDK("goerli");
 

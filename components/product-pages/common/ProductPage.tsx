@@ -1,4 +1,4 @@
-import { DarkMode, Flex } from "@chakra-ui/react";
+import { Box, DarkMode, Flex } from "@chakra-ui/react";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { HomepageFooter } from "components/product-pages/homepage/Footer";
 import { NextSeo, NextSeoProps } from "next-seo";
@@ -28,9 +28,8 @@ export const ProductPage: React.FC<PropsWithChildren<IProductPage>> = ({
         bg="#000"
       >
         <HomepageTopNav />
-
-        {children}
-
+        {/* pull it up by as much as the topnav is tall */}
+        <Box mt={{ base: "-35px", md: "-82px" }}>{children}</Box>
         <HomepageFooter />
       </Flex>
     </DarkMode>

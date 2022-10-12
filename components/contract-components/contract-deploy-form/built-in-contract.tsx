@@ -10,7 +10,6 @@ import {
   Divider,
   Flex,
   FormControl,
-  IconButton,
   Input,
   LinkBox,
   LinkOverlay,
@@ -31,9 +30,8 @@ import {
   PREBUILT_CONTRACTS_MAP,
   PrebuiltContractType,
   SUPPORTED_CHAIN_ID,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/evm";
 import { ChakraNextImage } from "components/Image";
-import { replaceIpfsUrl } from "components/app-layouts/providers";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { RecipientForm } from "components/deployment/splits/recipients";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
@@ -44,6 +42,7 @@ import { constants, utils } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { replaceIpfsUrl } from "lib/sdk";
 import { useRouter } from "next/router";
 import twAudited from "public/brand/thirdweb-audited-2.png";
 import { useEffect, useMemo } from "react";
@@ -54,7 +53,6 @@ import {
   SubmitHandler,
   useForm,
 } from "react-hook-form";
-import { FiChevronLeft } from "react-icons/fi";
 import {
   FormErrorMessage,
   FormHelperText,
@@ -287,13 +285,6 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
           gap={6}
         >
           <Flex gap={4} align="center">
-            <IconButton
-              as={LinkButton}
-              href="/contracts"
-              size="sm"
-              aria-label="back"
-              icon={<FiChevronLeft />}
-            />
             <ContractIdImage boxSize={12} contractId={contractType} />
             <Flex direction="column">
               <Skeleton isLoaded={publishMetadata.isSuccess}>

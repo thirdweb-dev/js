@@ -1,7 +1,7 @@
 import { withSentry } from "@sentry/nextjs";
 import { NextApiRequest, NextApiResponse } from "next";
 import invariant from "tiny-invariant";
-import { shortenAddress } from "utils/usedapp-external";
+import { shortenIfAddress } from "utils/usedapp-external";
 
 interface FeedbackPayload {
   scope: string;
@@ -33,7 +33,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         title: "New Product Feedback",
         timestamp: new Date(),
         author: {
-          name: shortenAddress(address),
+          name: shortenIfAddress(address),
           url: `https://thirdweb.com/${address}`,
         },
         fields: [

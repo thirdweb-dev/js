@@ -1,16 +1,9 @@
-import { ens, useContractPublishMetadataFromURI } from "../hooks";
 import { ContractCellContext, ContractId } from "../types";
-import { isContractIdBuiltInContract } from "../utils";
 import { ContractDeployActionCell } from "./cells/deploy-action";
 import { ContractDescriptionCell } from "./cells/description";
 import { ContractImageCell } from "./cells/image";
 import { ContractNameCell } from "./cells/name";
-import { ContractReleasedByCell } from "./cells/released-by";
-import { ContractVersionCell } from "./cells/version";
 import { Spinner, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
-import { useAddress } from "@thirdweb-dev/react";
-import { BuiltinContractMap } from "constants/mappings";
-import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
 import { Column, Row, useTable } from "react-table";
@@ -50,21 +43,6 @@ export const DeployableContractTable: ComponentWithChildren<
         },
       ];
     }
-    if (context === "view_release" || context === "create_release") {
-      cols = [
-        ...cols,
-        {
-          Header: "Version",
-          accessor: (row) => row.contractId,
-          Cell: (cell: any) => <ContractVersionCell cell={cell} />,
-        },
-        {
-          Header: "Released By",
-          accessor: (row) => row.contractId,
-          Cell: (cell: any) => <ContractReleasedByCell cell={cell} />,
-        },
-      ];
-    }
 
     cols = [
       ...cols,
@@ -100,12 +78,14 @@ export const DeployableContractTable: ComponentWithChildren<
       <Table {...tableInstance.getTableProps()}>
         <Thead bg="blackAlpha.50" _dark={{ bg: "whiteAlpha.50" }}>
           {tableInstance.headerGroups.map((headerGroup) => (
-            // eslint-disable-next-line react/jsx-key
-            <Tr {...headerGroup.getHeaderGroupProps()}>
+            <Tr
+              {...headerGroup.getHeaderGroupProps()}
+              key={headerGroup.getHeaderGroupProps().key}
+            >
               {headerGroup.headers.map((column) => (
-                // eslint-disable-next-line react/jsx-key
                 <Th
                   {...column.getHeaderProps()}
+                  key={column.getHeaderProps().key}
                   py={5}
                   borderBottomColor="borderColor"
                 >
@@ -141,16 +121,7 @@ interface TableRowProps {
 }
 
 const TableRow: React.FC<TableRowProps> = ({ row, context }) => {
-  const publishMetadata = useContractPublishMetadataFromURI(
-    row.original.contractId,
-  );
-  const address = useAddress();
-
-  const wallet = useSingleQueryParam("networkOrAddress");
   const router = useRouter();
-
-  const connectedWalletEns = ens.useQuery(address);
-  const walletEns = ens.useQuery(wallet);
 
   return (
     <Tr
@@ -167,20 +138,7 @@ const TableRow: React.FC<TableRowProps> = ({ row, context }) => {
       pointerEvents={row?.original?.contractId ? "auto" : "none"}
       onClick={() => {
         router.push(
-          isContractIdBuiltInContract(row.original.contractId)
-            ? BuiltinContractMap[
-                row.original.contractId as keyof typeof BuiltinContractMap
-              ]?.href
-            : actionUrlPath(
-                context,
-                row.original.contractId,
-                walletEns.data?.ensName ||
-                  walletEns.data?.address ||
-                  connectedWalletEns.data?.ensName ||
-                  connectedWalletEns.data?.address ||
-                  address,
-                publishMetadata.data?.name,
-              ),
+          actionUrlPath(context, row.original.contractId),
           undefined,
           {
             scroll: true,
@@ -191,9 +149,9 @@ const TableRow: React.FC<TableRowProps> = ({ row, context }) => {
       {...row.getRowProps()}
     >
       {row.cells.map((cell) => (
-        // eslint-disable-next-line react/jsx-key
         <Td
           {...cell.getCellProps()}
+          key={cell.getCellProps().key}
           borderBottomWidth="inherit"
           borderBottomColor="borderColor"
           _last={{ textAlign: "end" }}
@@ -205,15 +163,8 @@ const TableRow: React.FC<TableRowProps> = ({ row, context }) => {
   );
 };
 
-function actionUrlPath(
-  context: ContractCellContext | undefined,
-  hash: string,
-  address?: string,
-  name?: string,
-) {
+function actionUrlPath(context: ContractCellContext | undefined, hash: string) {
   switch (context) {
-    case "view_release":
-      return `/${address}/${name}`;
     case "create_release":
       return `/contracts/release/${encodeURIComponent(hash)}`;
     case "deploy":

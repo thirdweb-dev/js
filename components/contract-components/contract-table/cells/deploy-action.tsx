@@ -1,8 +1,8 @@
 import { DeployableContractContractCellProps } from "../../types";
 import { Icon, Tooltip } from "@chakra-ui/react";
-import { replaceIpfsUrl } from "components/app-layouts/providers";
 import { BuiltinContractMap } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
+import { replaceIpfsUrl } from "lib/sdk";
 import { BsShieldFillCheck } from "react-icons/bs";
 import { LinkButton, TrackedIconButton } from "tw-components";
 

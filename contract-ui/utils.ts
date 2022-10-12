@@ -4,7 +4,7 @@ import {
   EditionDrop,
   NFTDrop,
   ValidContractInstance,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/evm";
 
 export function isPrebuiltContract(
   contract: ValidContractInstance | null | undefined,

@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { IoMdAdd } from "@react-icons/all-files/io/IoMdAdd";
 import { IoMdRemove } from "@react-icons/all-files/io/IoMdRemove";
-import type { SplitInitializer } from "@thirdweb-dev/sdk";
+import type { SplitInitializer } from "@thirdweb-dev/sdk/evm";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SplitsPieChart } from "components/splits-chart/splits-chart";
 import { constants } from "ethers";

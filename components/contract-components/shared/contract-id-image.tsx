@@ -7,9 +7,9 @@ import { ContractId } from "../types";
 import { Image, Skeleton } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import { ChakraNextImage, ChakraNextImageProps } from "components/Image";
-import { replaceIpfsUrl } from "components/app-layouts/providers";
 import { FeatureIconMap } from "constants/mappings";
 import { useSingleQueryParam } from "hooks/useQueryParam";
+import { replaceIpfsUrl } from "lib/sdk";
 import { StaticImageData } from "next/image";
 
 export interface ContractIdImageProps
@@ -47,6 +47,7 @@ export const ContractIdImage: React.FC<ContractIdImageProps> = ({
     <Skeleton isLoaded={publishMetadata.isSuccess}>
       {logo ? (
         <Image
+          alt=""
           boxSize={boxSize}
           src={replaceIpfsUrl(logo)}
           borderRadius="full"

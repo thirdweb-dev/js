@@ -1,4 +1,4 @@
-import { useActiveChainId, useContractList } from "@3rdweb-sdk/react";
+import { useContractList, useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import {
   useAddContractMutation,
   useRemoveContractMutation,
@@ -18,7 +18,7 @@ export const OnDashboard: React.FC<OnDashboardProps> = ({
   contractAddress,
 }) => {
   const trackEvent = useTrack();
-  const activeChainId = useActiveChainId();
+  const activeChainId = useDashboardEVMChainId();
   const address = useAddress();
   const contractList = useContractList(activeChainId || -1, address);
   const addContract = useAddContractMutation();

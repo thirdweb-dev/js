@@ -9,3 +9,4 @@ export * from "./heading";
 export * from "./text";
 export * from "./form";
 export * from "./menu";
+export * from "./nft-media";

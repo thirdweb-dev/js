@@ -1,7 +1,8 @@
 import { handleArbitraryTokenURI, shouldDownloadURI } from "./tokenUri";
 import { WalletNFT } from "./types";
-import { ChainId, NFTMetadata } from "@thirdweb-dev/sdk";
-import { StorageSingleton } from "components/app-layouts/providers";
+import type { NFTMetadata } from "@thirdweb-dev/sdk";
+import { ChainId } from "@thirdweb-dev/sdk/evm";
+import { StorageSingleton } from "lib/sdk";
 
 const alchemyUrlMap = {
   // eth

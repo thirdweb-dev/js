@@ -1,28 +1,25 @@
 import { contractKeys, networkKeys } from "../cache-keys";
 import { useQuery } from "@tanstack/react-query";
-import { useReadonlySDK } from "@thirdweb-dev/react";
-import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
-import {
-  StorageSingleton,
-  alchemyUrlMap,
-} from "components/app-layouts/providers";
+import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
+import { getEVMThirdwebSDK, getSOLThirdwebSDK } from "lib/sdk";
 import { useMemo } from "react";
+import invariant from "tiny-invariant";
+import { DashboardSolanaNetwork } from "utils/network";
 
 export function useContractList(
   chainId: SUPPORTED_CHAIN_ID,
   walletAddress?: string,
 ) {
-  const sdk = useReadonlySDK(
-    alchemyUrlMap[chainId],
-    undefined,
-    StorageSingleton,
-  );
   return useQuery(
     [...networkKeys.chain(chainId), ...contractKeys.list(walletAddress)],
-    async () =>
-      [...((await sdk?.getContractList(walletAddress || "")) || [])].reverse(),
+    async () => {
+      const sdk = getEVMThirdwebSDK(chainId);
+      return [
+        ...((await sdk.getContractList(walletAddress || "")) || []),
+      ].reverse();
+    },
     {
-      enabled: !!sdk && !!walletAddress && !!chainId,
+      enabled: !!walletAddress && !!chainId,
     },
   );
 }
@@ -206,5 +203,38 @@ export function useAllContractList(address: string | undefined) {
     data: allList,
     isLoading: mainnetQuery.isLoading || testnetQuery.isLoading,
     isFetched: mainnetQuery.isFetched && testnetQuery.isFetched,
+  };
+}
+
+function useProgramList(
+  address: string | undefined,
+  network: DashboardSolanaNetwork,
+) {
+  return useQuery(
+    ["sol", network, address, "program-list"],
+    async () => {
+      invariant(address, "address is required");
+      const sdk = getSOLThirdwebSDK(network);
+      // TODO remove this sorting when we have a stable return array from the SDK
+      return (await sdk.registry.getDeployedPrograms(address))
+        .sort((a, b) => (a.programName > b.programName ? 1 : -1))
+        .map((p) => ({ ...p, network }));
+    },
+    { enabled: !!address && !!network },
+  );
+}
+
+export function useAllProgramsList(address: string | undefined) {
+  const mainnetQuery = useProgramList(address, "mainnet-beta");
+  const devnetQuery = useProgramList(address, "devnet");
+
+  const allList = useMemo(() => {
+    return (mainnetQuery.data || []).concat(devnetQuery.data || []);
+  }, [mainnetQuery.data, devnetQuery.data]);
+
+  return {
+    data: allList,
+    isLoading: mainnetQuery.isLoading || devnetQuery.isLoading,
+    isFetched: mainnetQuery.isFetched && devnetQuery.isFetched,
   };
 }

@@ -6,7 +6,7 @@ import {
   useCreateAuctionListing,
   useCreateDirectListing,
 } from "@thirdweb-dev/react";
-import { Marketplace } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/marketplace";
+import type { Marketplace } from "@thirdweb-dev/sdk/evm";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { FiPlus } from "react-icons/fi";
 import { Button, Drawer } from "tw-components";

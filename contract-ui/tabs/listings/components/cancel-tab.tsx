@@ -1,8 +1,7 @@
-import { useActiveNetwork } from "@3rdweb-sdk/react";
+import { useDashboardNetwork } from "@3rdweb-sdk/react";
 import { Stack } from "@chakra-ui/react";
 import { useCancelListing } from "@thirdweb-dev/react";
-import { ListingType } from "@thirdweb-dev/sdk";
-import { Marketplace } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/marketplace";
+import type { ListingType, Marketplace } from "@thirdweb-dev/sdk/evm";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -19,7 +18,7 @@ export const CancelTab: React.FC<CancelTabProps> = ({
   listingType,
 }) => {
   const trackEvent = useTrack();
-  const network = useActiveNetwork();
+  const network = useDashboardNetwork();
 
   const cancelListing = useCancelListing(contract);
 

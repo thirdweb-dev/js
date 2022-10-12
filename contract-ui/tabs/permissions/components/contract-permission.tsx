@@ -1,7 +1,7 @@
 import { PermissionEditor } from "./permissions-editor";
 import { useIsAdmin } from "@3rdweb-sdk/react";
 import { Flex, Icon, Select, Spinner, Stack } from "@chakra-ui/react";
-import { ValidContractInstance } from "@thirdweb-dev/sdk";
+import { ValidContractInstance } from "@thirdweb-dev/sdk/evm";
 import { constants } from "ethers";
 import { useFormContext } from "react-hook-form";
 import { FiInfo } from "react-icons/fi";

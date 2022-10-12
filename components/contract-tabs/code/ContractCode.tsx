@@ -7,9 +7,9 @@ import {
 } from "./types";
 import { usePascalCaseContractName } from "@3rdweb-sdk/react";
 import { Flex, Spinner, Stack } from "@chakra-ui/react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { useQuery } from "@tanstack/react-query";
 import { useAddress } from "@thirdweb-dev/react";
-import { ValidContractInstance } from "@thirdweb-dev/sdk";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useCallback, useMemo, useState } from "react";
 import { IoDocumentOutline } from "react-icons/io5";
@@ -27,6 +27,7 @@ function replaceVariablesInCodeSnippet(
     if (contractAddress) {
       snippet[env] = snippet[env]
         ?.replace(/{{contract_address}}/gm, contractAddress)
+        ?.replace(/{{program_address}}/gm, contractAddress)
         ?.replace(/{{chainName}}/gm, chainName || "goerli")
         .replace(/<YOUR-CONTRACT-ADDRESS>/gm, contractAddress);
     }
@@ -42,23 +43,40 @@ function replaceVariablesInCodeSnippet(
 }
 
 interface IContractCode {
-  contract?: ValidContractInstance | null;
+  contractAddress: string | undefined;
   contractType: string;
+  ecosystem: "evm" | "solana";
 }
 
 const INSTALL_COMMANDS = {
-  typescript: "npm install @thirdweb-dev/sdk",
-  javascript: "npm install @thirdweb-dev/sdk",
-  react: "npm install @thirdweb-dev/react",
-  python: "pip install thirdweb-sdk",
-  go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
+  evm: {
+    typescript: "npm install @thirdweb-dev/sdk ethers",
+    javascript: "npm install @thirdweb-dev/sdk ethers",
+    react: "npm install @thirdweb-dev/sdk @thirdweb-dev/react ethers",
+    python: "pip install thirdweb-sdk",
+    go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
+  },
+  solana: {
+    typescript: "npm install @thirdweb-dev/sdk",
+    javascript: "npm install @thirdweb-dev/sdk",
+    react:
+      "npm install @thirdweb-dev/sdk @thirdweb-dev/react @solana/wallet-adapter-wallets @solana/wallet-adapter-react",
+    python: "pip install thirdweb-sdk",
+    go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
+  },
+};
+
+const CREATE_APP_COMMANDS = {
+  evm: "npx thirdweb@latest create --app",
+  solana: "npx thirdweb create --template next-typescript-solana-starter",
 };
 
 export const ContractCode: React.FC<IContractCode> = ({
-  contract,
+  contractAddress,
   contractType,
+  ecosystem,
 }) => {
-  const { data, isLoading } = useContractCodeSnippetQuery();
+  const { data, isLoading } = useContractCodeSnippetQuery(ecosystem);
   const chainName = useSingleQueryParam<SupportedNetwork>("networkOrAddress");
 
   const contractName = usePascalCaseContractName(contractType);
@@ -67,18 +85,15 @@ export const ContractCode: React.FC<IContractCode> = ({
     return getContractSnippets(data, contractName);
   }, [data, contractName]);
 
-  const address = useAddress();
+  const evmAddress = useAddress();
+  const solanaAddress = useWallet().publicKey?.toBase58();
+  const address = evmAddress || solanaAddress;
   const [environment, setEnvironment] = useState<Environment>("react");
 
   const replaceSnippetVars = useCallback(
     (snip: Partial<Record<Environment, string>>) =>
-      replaceVariablesInCodeSnippet(
-        snip,
-        contract?.getAddress(),
-        address,
-        chainName,
-      ),
-    [address, contract, chainName],
+      replaceVariablesInCodeSnippet(snip, contractAddress, address, chainName),
+    [address, contractAddress, chainName],
   );
 
   if (isLoading) {
@@ -135,9 +150,27 @@ export const ContractCode: React.FC<IContractCode> = ({
     <Stack spacing={4}>
       <Card>
         <Stack spacing={3}>
-          <Heading size="title.sm">Getting Started</Heading>
-          <Text>First, install the latest version of the SDK.</Text>
-          <CodeBlock language="bash" code={INSTALL_COMMANDS[environment]} />
+          {environment === "react" ? (
+            <>
+              <Heading size="title.sm">Create a new Project</Heading>
+              <Text>
+                Get up and running in seconds using a template React project
+              </Text>
+              <CodeBlock
+                language="bash"
+                code={CREATE_APP_COMMANDS[ecosystem]}
+              />
+            </>
+          ) : (
+            <>
+              <Heading size="title.sm">Getting started</Heading>
+              <Text>First, install the latest version of the SDK.</Text>
+              <CodeBlock
+                language="bash"
+                code={INSTALL_COMMANDS[ecosystem][environment]}
+              />
+            </>
+          )}
           <Text>
             Follow along below to get started using this contract in your code.
           </Text>
@@ -166,10 +199,11 @@ function getContractSnippets(
   return contractName && snippets ? snippets[contractName] : null;
 }
 
-function useContractCodeSnippetQuery() {
+function useContractCodeSnippetQuery(ecosystem: "evm" | "solana") {
   return useQuery(["code-snippet"], async () => {
+    const filename = ecosystem === "evm" ? "snippets" : "snippets_solana";
     const res = await fetch(
-      `https://raw.githubusercontent.com/thirdweb-dev/docs/main/docs/snippets.json`,
+      `https://raw.githubusercontent.com/thirdweb-dev/docs/main/docs/${filename}.json`,
     );
     return (await res.json()) as SnippetApiResponse;
   });

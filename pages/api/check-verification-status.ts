@@ -1,6 +1,6 @@
 import { apiKeyMap, apiMap } from "./verify";
 import { withSentry } from "@sentry/nextjs";
-import { ChainId } from "@thirdweb-dev/sdk";
+import { ChainId } from "@thirdweb-dev/sdk/evm";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {

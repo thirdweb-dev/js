@@ -4,7 +4,7 @@ import { useSDK } from "@thirdweb-dev/react";
 import {
   DeploySchemaForPrebuiltContractType,
   PrebuiltContractType,
-} from "@thirdweb-dev/sdk";
+} from "@thirdweb-dev/sdk/evm";
 import { AnalyticsEvents } from "constants/analytics";
 import posthog from "posthog-js";
 import invariant from "tiny-invariant";

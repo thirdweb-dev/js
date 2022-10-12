@@ -9,7 +9,7 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { useContractWrite } from "@thirdweb-dev/react";
-import { AbiFunction, ValidContractInstance } from "@thirdweb-dev/sdk";
+import { AbiFunction, ValidContractInstance } from "@thirdweb-dev/sdk/evm";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BigNumber, utils } from "ethers";
 import { useEffect, useId, useMemo } from "react";
