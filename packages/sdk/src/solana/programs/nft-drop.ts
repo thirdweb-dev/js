@@ -224,6 +224,21 @@ export class NFTDrop {
   }
 
   /**
+   * Get the current owner of the given NFT
+   * @param nftAddress - the mint address of the NFT to get the owner of
+   * @returns the owner of the NFT
+   * @example
+   * ```jsx
+   * const nftAddress = "..."
+   * const owner = await program.ownerOf(nftAddress);
+   * console.log(owner);
+   * ```
+   */
+  async ownerOf(nftAddress: string): Promise<string | undefined> {
+    return this.nft.ownerOf(nftAddress);
+  }
+
+  /**
    * Get the total unclaimed supply of this drop
    * @returns the total supply
    *
