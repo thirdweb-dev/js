@@ -28,7 +28,7 @@ export function dropUnclaimedSupplyQuery(program: RequiredParam<NFTDrop>) {
  * import { useProgram, useDropTotalUnclaimedSupply } from "@thirdweb-dev/react/solana";
  *
  * export default function Component() {
- *   const program = useProgram("{{program_address}}");
+ *   const { program } = useProgram("{{program_address}}");
  *   const { data: unclaimedSupply, isLoading } = useDropTotalUnclaimedSupply(program);
  *
  *   return (
