@@ -13,7 +13,6 @@ import { Registry } from "./registry";
 import {
   findMetadataPda,
   getSignerHistogram,
-  InstructionWithSigners,
   Metaplex,
   sol,
   toBigNumber,
