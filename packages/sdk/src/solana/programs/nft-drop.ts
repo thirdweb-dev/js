@@ -6,11 +6,19 @@ import {
 } from "../../core/schema/nft";
 import { ClaimConditions } from "../classes/claim-conditions";
 import { NFTHelper } from "../classes/helpers/nft-helper";
-import { TransactionResult } from "../types/common";
-import type { Metaplex, MintCandyMachineOutput } from "@metaplex-foundation/js";
+import { Amount, TransactionResult } from "../types/common";
+import { getNework } from "../utils/urls";
+import {
+  CandyMachineItem,
+  Metaplex,
+  MintCandyMachineOutput,
+  toBigNumber,
+} from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
 import { ThirdwebStorage, UploadProgressEvent } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
+
+const LAZY_MINT_BATCH_SIZE = 5;
 
 /**
  * A collection of NFTs that can be lazy minted and claimed
@@ -34,18 +42,29 @@ export class NFTDrop {
   private nft: NFTHelper;
   public accountType = "nft-drop" as const;
   public publicKey: PublicKey;
-  public claimConditions: ClaimConditions;
   public get network() {
-    const url = new URL(this.metaplex.connection.rpcEndpoint);
-    // try this first to avoid hitting `custom` network for alchemy urls
-    if (url.hostname.includes("devnet")) {
-      return "devnet";
-    }
-    if (url.hostname.includes("mainnet")) {
-      return "mainnet-beta";
-    }
-    return this.metaplex.cluster;
+    return getNework(this.metaplex);
   }
+
+  /**
+   * Manage the claim conditions for this drop
+   *
+   * @example
+   * ```jsx
+   * // set your claim conditions
+   * await program.claimConditions.set({
+   *  maxClaimable: 100,
+   *  price: 0.5,
+   *  startTime: new Date(),
+   * });
+   *
+   * // get your claim conditions
+   * const conditions = await program.claimConditions.get();
+   * console.log(conditions.maxClaimable);
+   * console.log(conditions.claimedSupply);
+   * ```
+   */
+  public claimConditions: ClaimConditions;
 
   constructor(
     dropAddress: string,
@@ -153,14 +172,10 @@ export class NFTDrop {
    * ```
    */
   async getAllClaimed(): Promise<NFT[]> {
-    const nfts = await this.metaplex
-      .candyMachines()
-      .findMintedNfts({ candyMachine: this.publicKey })
-      .run();
-
-    return await Promise.all(
-      nfts.map(async (nft) => this.nft.toNFTMetadata(nft)),
-    );
+    // using getAll from collection here because candy machin findAllMinted doesn't return anything
+    const candy = await this.getCandyMachine();
+    invariant(candy.collectionMintAddress, "Collection mint address not found");
+    return await this.nft.getAll(candy.collectionMintAddress.toBase58());
   }
 
   /**
@@ -199,6 +214,21 @@ export class NFTDrop {
    */
   async balanceOf(walletAddress: string, nftAddress: string): Promise<number> {
     return this.nft.balanceOf(walletAddress, nftAddress);
+  }
+
+  /**
+   * Get the current owner of the given NFT
+   * @param nftAddress - the mint address of the NFT to get the owner of
+   * @returns the owner of the NFT
+   * @example
+   * ```jsx
+   * const nftAddress = "..."
+   * const owner = await program.ownerOf(nftAddress);
+   * console.log(owner);
+   * ```
+   */
+  async ownerOf(nftAddress: string): Promise<string | undefined> {
+    return this.nft.ownerOf(nftAddress);
   }
 
   /**
@@ -287,29 +317,68 @@ export class NFTDrop {
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
     },
-  ): Promise<TransactionResult> {
+  ): Promise<TransactionResult[]> {
     const candyMachine = await this.getCandyMachine();
     const parsedMetadatas = metadatas.map((metadata) =>
       CommonNFTInput.parse(metadata),
     );
     const uris = await this.storage.uploadBatch(parsedMetadatas, options);
-    const items = uris.map((uri, i) => ({
+    const items: CandyMachineItem[] = uris.map((uri, i) => ({
       name: parsedMetadatas[i].name?.toString() || "",
       uri,
     }));
 
-    const result = await this.metaplex
-      .candyMachines()
-      .insertItems({
-        candyMachine,
-        authority: this.metaplex.identity(),
-        items,
-      })
-      .run();
+    // turn items into batches of $LAZY_MINT_BATCH_SIZE
+    const batches: CandyMachineItem[][] = [];
+    while (items.length) {
+      batches.push(items.splice(0, LAZY_MINT_BATCH_SIZE));
+    }
 
-    return {
-      signature: result.response.signature,
-    };
+    const block = await this.metaplex.connection.getLatestBlockhash();
+
+    const txns = batches.map((batch, i) =>
+      this.metaplex
+        .candyMachines()
+        .builders()
+        .insertItems({
+          candyMachine,
+          authority: this.metaplex.identity(),
+          items: batch,
+          index: toBigNumber(
+            i * LAZY_MINT_BATCH_SIZE + candyMachine.itemsLoaded.toNumber(),
+          ),
+        })
+        .setTransactionOptions({
+          blockhash: block.blockhash,
+          feePayer: this.metaplex.identity().publicKey,
+          lastValidBlockHeight: block.lastValidBlockHeight,
+        })
+        .setFeePayer(this.metaplex.identity())
+        .toTransaction(),
+    );
+
+    // make the connected wallet sign both candyMachine + registry transactions
+    const signedTx = await this.metaplex.identity().signAllTransactions(txns);
+
+    // send the signed transactions
+    const signatures = await Promise.all(
+      signedTx.map((tx) =>
+        this.metaplex.connection.sendRawTransaction(tx.serialize()),
+      ),
+    );
+
+    // wait for confirmations in parallel
+    const confirmations = await Promise.all(
+      signatures.map((sig) => {
+        return this.metaplex.rpc().confirmTransaction(sig);
+      }),
+    );
+
+    if (confirmations.length === 0) {
+      throw new Error("Transaction failed");
+    }
+
+    return signatures.map((signature) => ({ signature }));
   }
 
   /**
@@ -325,7 +394,7 @@ export class NFTDrop {
    * console.log("Claimed NFT at address", claimedAddresses[0]);
    * ```
    */
-  async claim(quantity: number): Promise<string[]> {
+  async claim(quantity: Amount): Promise<string[]> {
     const address = this.metaplex.identity().publicKey.toBase58();
     return this.claimTo(address, quantity);
   }
@@ -343,9 +412,9 @@ export class NFTDrop {
    * console.log("Claimed NFT at address", claimedAddresses[0]);
    * ```
    */
-  async claimTo(receiverAddress: string, quantity: number): Promise<string[]> {
+  async claimTo(receiverAddress: string, quantity: Amount): Promise<string[]> {
     const candyMachine = await this.getCandyMachine();
-    await this.claimConditions.assertCanClaimable(quantity);
+    await this.claimConditions.assertCanClaimable(Number(quantity));
     const results: MintCandyMachineOutput[] = [];
     // has to claim sequentially
     for (let i = 0; i < quantity; i++) {

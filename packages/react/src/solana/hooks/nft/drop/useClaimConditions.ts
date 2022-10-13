@@ -6,9 +6,7 @@ import invariant from "tiny-invariant";
 
 export function claimConditionsQuery(program: RequiredParam<NFTDrop>) {
   return {
-    queryKey: createSOLProgramQueryKey(program, [
-      "claimConditions",
-    ] as const),
+    queryKey: createSOLProgramQueryKey(program, ["claimConditions"] as const),
 
     queryFn: async () => {
       invariant(program, "program is required");
@@ -28,7 +26,7 @@ export function claimConditionsQuery(program: RequiredParam<NFTDrop>) {
  * import { useProgram, useClaimConditions } from "@thirdweb-dev/react/solana";
  *
  * export default function Component() {
- *   const program = useProgram("{{program_address}}");
+ *   const { program } = useProgram("{{program_address}}");
  *   const { data: claimConditions, isLoading } = useClaimConditions(program);
  *
  *   return (

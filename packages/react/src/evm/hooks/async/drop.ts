@@ -206,11 +206,17 @@ export function useClaimNFT<TContract extends DropContract>(
 
   return useMutation(
     async (data: ClaimNFTParams) => {
-      invariant(data.to, 'No "to" address provided');
       invariant(contract, "contract is undefined");
 
       if (erc1155) {
         invariant(!!data.tokenId, "tokenId not provided");
+        if (!data.to) {
+          return (await erc1155.claim(
+            data.tokenId,
+            data.quantity,
+            data.options,
+          )) as ClaimNFTReturnType;
+        }
         return (await erc1155.claimTo(
           data.to,
           data.tokenId,
@@ -219,6 +225,12 @@ export function useClaimNFT<TContract extends DropContract>(
         )) as ClaimNFTReturnType;
       }
       if (erc721) {
+        if (!data.to) {
+          return (await erc721.claim(
+            data.quantity,
+            data.options,
+          )) as ClaimNFTReturnType;
+        }
         return (await erc721.claimTo(
           data.to,
           data.quantity,

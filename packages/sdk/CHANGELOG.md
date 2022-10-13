@@ -1,5 +1,49 @@
 # @thirdweb-dev/sdk
 
+## 3.2.5
+
+### Patch Changes
+
+- [#303](https://github.com/thirdweb-dev/js/pull/303) [`712b11a`](https://github.com/thirdweb-dev/js/commit/712b11a43e389ae10b7f09648779a69c05b2c913) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Fix getting real NFT owners
+
+## 3.2.4
+
+## 3.2.3
+
+## 3.2.2
+
+### Patch Changes
+
+- [#289](https://github.com/thirdweb-dev/js/pull/289) [`521a49c`](https://github.com/thirdweb-dev/js/commit/521a49c6ec6a73068adcfbc1d94d2f3f17afae86) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Standarize useClaimNFT to evm
+
+- [#293](https://github.com/thirdweb-dev/js/pull/293) [`8b3b97c`](https://github.com/thirdweb-dev/js/commit/8b3b97c8f7b3710ce62ed86cfeb4f6de3c23d559) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Fix getAllClaimed for NFT Drops
+
+- [#286](https://github.com/thirdweb-dev/js/pull/286) [`25a4773`](https://github.com/thirdweb-dev/js/commit/25a4773bba406f4e270ac86e68c5266d24c08330) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Add pagination for nftCollection.getAll()
+
+- [#269](https://github.com/thirdweb-dev/js/pull/269) [`b2cadf1`](https://github.com/thirdweb-dev/js/commit/b2cadf164cfe9fb27081df7530356baf70ec2b3a) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - remove deprecated chains from support
+
+- [#263](https://github.com/thirdweb-dev/js/pull/263) [`d6bb61b`](https://github.com/thirdweb-dev/js/commit/d6bb61b7fac759fff7d6293edd46f693f5a7889c) Thanks [@jnsdls](https://github.com/jnsdls)! - [Solana] - align `getProgram` with `getContract` from EVM
+
+- [#297](https://github.com/thirdweb-dev/js/pull/297) [`78d6d3c`](https://github.com/thirdweb-dev/js/commit/78d6d3c15968a449924b3f24354e151a90e4b20d) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - fix getAddress to return undefined if wallet is not connected
+
+- [#294](https://github.com/thirdweb-dev/js/pull/294) [`89d87a5`](https://github.com/thirdweb-dev/js/commit/89d87a5eb31e78e68e097718e9ae6e4c4d101868) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - batch uploads for NFT drop to satisfy solana size limits
+
+- [#270](https://github.com/thirdweb-dev/js/pull/270) [`41507d3`](https://github.com/thirdweb-dev/js/commit/41507d32a78c556f50c88de81c4d6109b1783c78) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Add to registry when deploying new programs
+
+- [#290](https://github.com/thirdweb-dev/js/pull/290) [`8096c78`](https://github.com/thirdweb-dev/js/commit/8096c78b466a7f5f9c2aac6e2c56a06f9d3a25d6) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - make `claim()` take a typeof `Amount` instead of `number`
+
+- [#273](https://github.com/thirdweb-dev/js/pull/273) [`b1fa171`](https://github.com/thirdweb-dev/js/commit/b1fa17158dcac00265bc8f4d64f1f9708482cdb5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [Solana] Expose maxClaimable for claim conditions and disallow claiming by default
+
+- [#280](https://github.com/thirdweb-dev/js/pull/280) [`18381fa`](https://github.com/thirdweb-dev/js/commit/18381fac73741826934212ac6441842ed42a64a0) Thanks [@ElasticBottle](https://github.com/ElasticBottle)! - Fix errorneous ERC20 Allowance check
+
+- [#271](https://github.com/thirdweb-dev/js/pull/271) [`df048af`](https://github.com/thirdweb-dev/js/commit/df048af605f449279b01d7352b604e7856ac223c) Thanks [@adam-maj](https://github.com/adam-maj)! - Add auth support to Solana
+
+- [#263](https://github.com/thirdweb-dev/js/pull/263) [`d6bb61b`](https://github.com/thirdweb-dev/js/commit/d6bb61b7fac759fff7d6293edd46f693f5a7889c) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - add chainId getter on contracts
+
+- [#296](https://github.com/thirdweb-dev/js/pull/296) [`cf88795`](https://github.com/thirdweb-dev/js/commit/cf88795376d3110f9d3aa839928d22276904b15a) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - add network to userwallet
+
+- [#285](https://github.com/thirdweb-dev/js/pull/285) [`89b5c6f`](https://github.com/thirdweb-dev/js/commit/89b5c6fe079e4df2cf12cb557aa9784f88c5d159) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Make creating NFTDrop transactions sequential
+
 ## 3.2.1
 
 ## 3.2.0

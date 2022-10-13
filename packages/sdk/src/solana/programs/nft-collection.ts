@@ -1,7 +1,4 @@
-import {
-  DEFAULT_QUERY_ALL_COUNT,
-  QueryAllParams,
-} from "../../core/schema/QueryParams";
+import { QueryAllParams } from "../../core/schema/QueryParams";
 import {
   NFT,
   NFTMetadata,
@@ -10,21 +7,16 @@ import {
 } from "../../core/schema/nft";
 import { enforceCreator } from "../classes/helpers/creators-helper";
 import { NFTHelper } from "../classes/helpers/nft-helper";
-import { METAPLEX_PROGRAM_ID } from "../constants/addresses";
 import { TransactionResult } from "../types/common";
 import { CreatorInput } from "../types/programs";
+import { getNework } from "../utils/urls";
 import {
   findEditionMarkerPda,
-  GmaBuilder,
-  JsonMetadata,
   Metaplex,
   toBigNumber,
-  toMetadata,
-  toMetadataAccount,
-  Metadata,
 } from "@metaplex-foundation/js";
 import { EditionMarker } from "@metaplex-foundation/mpl-token-metadata";
-import { ConfirmedSignatureInfo, PublicKey } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 /**
@@ -50,15 +42,7 @@ export class NFTCollection {
   public publicKey: PublicKey;
   public accountType = "nft-collection" as const;
   public get network() {
-    const url = new URL(this.metaplex.connection.rpcEndpoint);
-    // try this first to avoid hitting `custom` network for alchemy urls
-    if (url.hostname.includes("devnet")) {
-      return "devnet";
-    }
-    if (url.hostname.includes("mainnet")) {
-      return "mainnet-beta";
-    }
-    return this.metaplex.cluster;
+    return getNework(this.metaplex);
   }
 
   constructor(
@@ -124,100 +108,7 @@ export class NFTCollection {
    * ```
    */
   async getAll(queryParams?: QueryAllParams): Promise<NFT[]> {
-    const start = queryParams?.start || 0;
-    const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
-
-    // TODO cache signatures <> transactions mapping in memory so pagination doesn't re-request this everytime
-    const allSignatures: ConfirmedSignatureInfo[] = [];
-    // This returns the first 1000, so we need to loop through until we run out of signatures to get.
-    let signatures = await this.metaplex.connection.getSignaturesForAddress(
-      this.publicKey,
-    );
-
-    allSignatures.push(...signatures);
-    do {
-      const options = {
-        before: signatures[signatures.length - 1]?.signature,
-      };
-      signatures = await this.metaplex.connection.getSignaturesForAddress(
-        this.publicKey,
-        options,
-      );
-      allSignatures.push(...signatures);
-    } while (signatures.length > 0);
-
-    const metadataAddresses: PublicKey[] = [];
-
-    // TODO RPC's will throttle this, need to do some optimizations here
-    const batchSize = 1000; // alchemy RPC batch limit
-    for (let i = 0; i < allSignatures.length; i += batchSize) {
-      const batch = allSignatures.slice(
-        i,
-        Math.min(allSignatures.length, i + batchSize),
-      );
-
-      const transactions = (
-        await this.metaplex.connection.getTransactions(
-          batch.map((s) => s.signature),
-        )
-      ).reverse();
-
-      for (const tx of transactions) {
-        if (tx) {
-          const programIds = tx.transaction.message
-            .programIds()
-            .map((p) => p.toString());
-          const accountKeys = tx.transaction.message.accountKeys.map((p) =>
-            p.toString(),
-          );
-          // Only look in transactions that call the Metaplex token metadata program
-          if (programIds.includes(METAPLEX_PROGRAM_ID)) {
-            // Go through all instructions in a given transaction
-            for (const ix of tx.transaction.message.instructions) {
-              // Filter for setAndVerify or verify instructions in the Metaplex token metadata program
-              if (
-                (ix.data === "K" || ix.data === "S" || ix.data === "X") &&
-                accountKeys[ix.programIdIndex] === METAPLEX_PROGRAM_ID
-              ) {
-                const metadataAddressIndex = ix.accounts[0];
-                const metadata_address =
-                  tx.transaction.message.accountKeys[metadataAddressIndex];
-                metadataAddresses.push(metadata_address);
-              }
-            }
-          }
-        }
-      }
-    }
-
-    // Metaplex GmaBuilder has a weird thing where they always start at 1 not 0
-    // so we workaround it by adding an extra address, and shifting the count to get the actual count we want
-    const fixedMetadataAddresses = (
-      start === 0 ? [PublicKey.default] : []
-    ).concat(metadataAddresses);
-    const metadataInfos = await GmaBuilder.make(
-      this.metaplex,
-      fixedMetadataAddresses,
-    ).getBetween(start, start === 0 ? count + 1 : start + count);
-
-    // parse each account into a metadata account
-    const metadataParsed: Metadata<JsonMetadata<string>>[] = [];
-    for (const metadataInfo of metadataInfos) {
-      if (metadataInfo.exists) {
-        try {
-          metadataParsed.push(toMetadata(toMetadataAccount(metadataInfo)));
-        } catch (error) {
-          // ignore
-        }
-      }
-    }
-
-    // finally fetch the metadta + mint for each in parallel
-    const nfts = await Promise.all(
-      metadataParsed.map((m) => this.nft.toNFTMetadata(m)),
-    );
-    // TODO sort by minted date
-    return nfts;
+    return this.nft.getAll(this.publicKey.toBase58(), queryParams);
   }
 
   /**
@@ -258,6 +149,21 @@ export class NFTCollection {
   }
 
   /**
+   * Get the current owner of the given NFT
+   * @param nftAddress - the mint address of the NFT to get the owner of
+   * @returns the owner of the NFT
+   * @example
+   * ```jsx
+   * const nftAddress = "..."
+   * const owner = await program.ownerOf(nftAddress);
+   * console.log(owner);
+   * ```
+   */
+  async ownerOf(nftAddress: string): Promise<string | undefined> {
+    return this.nft.ownerOf(nftAddress);
+  }
+
+  /**
    * Get the supply of NFT editions minted from a specific NFT
    * @param nftAddress - the mint address of the NFT to check the supply of
    * @returns the supply of the specified NFT
@@ -265,7 +171,7 @@ export class NFTCollection {
    * @example
    * ```jsx
    * const address = "...";
-   * const supply = await program.supplyOf(addres);
+   * const supply = await program.supplyOf(address);
    * ```
    */
   async supplyOf(nftAddress: string): Promise<bigint> {

@@ -262,7 +262,7 @@ export class WalletAuthenticator {
 
     // Check that the connected wallet matches the token issuer
     const connectedAddress = this.wallet.getAddress();
-    if (connectedAddress.toLowerCase() !== payload.iss.toLowerCase()) {
+    if (connectedAddress?.toLowerCase() !== payload.iss.toLowerCase()) {
       throw new Error(
         `Expected the connected wallet address '${connectedAddress}' to match the token issuer address '${payload.iss}'`,
       );

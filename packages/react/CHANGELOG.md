@@ -1,5 +1,48 @@
 # @thirdweb-dev/react
 
+## 3.2.5
+
+## 3.2.4
+
+### Patch Changes
+
+- [#301](https://github.com/thirdweb-dev/js/pull/301) [`86f0cef`](https://github.com/thirdweb-dev/js/commit/86f0ceff46f72df8ebd81f843e3c66a245f23992) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Remove useAddress hook for now
+
+## 3.2.3
+
+### Patch Changes
+
+- [#299](https://github.com/thirdweb-dev/js/pull/299) [`b1218cb`](https://github.com/thirdweb-dev/js/commit/b1218cbd7d97ca7949d94a7e4ab93fef4ffbacd5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Recreate SDK on wallet changes for hook propagation
+
+## 3.2.2
+
+### Patch Changes
+
+- [#289](https://github.com/thirdweb-dev/js/pull/289) [`521a49c`](https://github.com/thirdweb-dev/js/commit/521a49c6ec6a73068adcfbc1d94d2f3f17afae86) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Standarize useClaimNFT to evm
+
+- [#274](https://github.com/thirdweb-dev/js/pull/274) [`ad06c5b`](https://github.com/thirdweb-dev/js/commit/ad06c5b28902422f9b416d65255c64c937a5e046) Thanks [@adam-maj](https://github.com/adam-maj)! - Add solana auth support and plugins for react and auth package
+
+- [#269](https://github.com/thirdweb-dev/js/pull/269) [`b2cadf1`](https://github.com/thirdweb-dev/js/commit/b2cadf164cfe9fb27081df7530356baf70ec2b3a) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - remove deprecated chains from support
+
+- [#272](https://github.com/thirdweb-dev/js/pull/272) [`2bdf198`](https://github.com/thirdweb-dev/js/commit/2bdf1984cb97121c447cffd27aa6a5f4f92679b3) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add claim conditions hook for Solana
+
+- [#291](https://github.com/thirdweb-dev/js/pull/291) [`86f6083`](https://github.com/thirdweb-dev/js/commit/86f608390a7848cda82c0f7e8913ca60f7d3901f) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - expose `.program` on `useProgram()` return type to mirror `.contract` on EVM
+
+- [#292](https://github.com/thirdweb-dev/js/pull/292) [`492a818`](https://github.com/thirdweb-dev/js/commit/492a818079aff67c7f88bc43666c87c3714cc957) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] expose `useAddress()` hook that returns the connected wallet address in base58
+
+- [#290](https://github.com/thirdweb-dev/js/pull/290) [`8096c78`](https://github.com/thirdweb-dev/js/commit/8096c78b466a7f5f9c2aac6e2c56a06f9d3a25d6) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - `useClaimNFT()` allow claiming to connected wallet without passing address explicitly
+  [EVM] - `useClaimNFT()` allow claiming to connected wallet without passing address explicitly
+
+- [#298](https://github.com/thirdweb-dev/js/pull/298) [`e8c25ed`](https://github.com/thirdweb-dev/js/commit/e8c25ed0f28d566203d70bf59a8908e59216334a) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - fix useBalance
+
+- [#263](https://github.com/thirdweb-dev/js/pull/263) [`d6bb61b`](https://github.com/thirdweb-dev/js/commit/d6bb61b7fac759fff7d6293edd46f693f5a7889c) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - add chainId getter on contracts
+
+- [#266](https://github.com/thirdweb-dev/js/pull/266) [`3b7d10e`](https://github.com/thirdweb-dev/js/commit/3b7d10ed93d8e3b698e9f905c93ba79863b35325) Thanks [@adam-maj](https://github.com/adam-maj)! - Add storage hooks to react
+
+- [#282](https://github.com/thirdweb-dev/js/pull/282) [`1f41adb`](https://github.com/thirdweb-dev/js/commit/1f41adbd2ccfbc367757620e0842ef32bc783a08) Thanks [@jarrodwatts](https://github.com/jarrodwatts)! - Fix useActiveClaimCondition invariant failing for token ID 0
+
+- [#296](https://github.com/thirdweb-dev/js/pull/296) [`cf88795`](https://github.com/thirdweb-dev/js/commit/cf88795376d3110f9d3aa839928d22276904b15a) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - add `useBalance` hook
+
 ## 3.2.1
 
 ### Patch Changes

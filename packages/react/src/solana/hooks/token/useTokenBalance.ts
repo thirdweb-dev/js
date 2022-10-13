@@ -33,7 +33,7 @@ export function tokenBalanceQuery(
  * import { useProgram, useTokenBalance } from "@thirdweb-dev/react/solana";
  *
  * export default function Component() {
- *   const program = useProgram("{{program_address}}");
+ *   const { program } = useProgram("{{program_address}}");
  *   const { data: balance, isLoading } = useTokenBalance(program, "{{wallet_address}}");
  *
  *   return (

@@ -1,4 +1,3 @@
-import { ProgramType } from "../../programs/types";
 import { AmountSchema, FileOrBufferOrStringSchema } from "../common";
 import { z } from "zod";
 

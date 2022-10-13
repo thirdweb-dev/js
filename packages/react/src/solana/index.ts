@@ -33,3 +33,6 @@ export * from "./hooks/token/useTransferToken";
 
 // Auth
 export * from "./hooks/auth";
+
+//Wallet
+export * from "./hooks/wallet/useBalance";

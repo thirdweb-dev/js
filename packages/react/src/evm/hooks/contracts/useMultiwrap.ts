@@ -8,16 +8,16 @@ import { useContract } from "../async/contracts";
  *
  * @example
  * ```javascript
- * import { useMultiwrap } from '@thirdweb-dev/react'
+ * import { useContract } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const multiwrap = useMultiwrap("<YOUR-CONTRACT-ADDRESS>")
+ *   const { contract } = useContract("<YOUR-CONTRACT-ADDRESS>", "multiwrap")
  *
  *   // Now you can use the multiwrap contract in the rest of the component
  *
  *   // For example, this function will let the connected wallet wrap tokens
  *   async function wrap(tokensToWrap, wrappedNFTMetadata) {
- *     await multiwrap.wrap(tokensToWrap, wrappedNFTMetadata)
+ *     await contract.wrap(tokensToWrap, wrappedNFTMetadata)
  *   }
  *
  *   ...

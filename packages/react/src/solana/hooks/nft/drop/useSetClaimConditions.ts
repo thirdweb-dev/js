@@ -13,7 +13,7 @@ import invariant from "tiny-invariant";
  * import { useProgram, useSetClaimConditions } from "@thirdweb-dev/react/solana";
  *
  * export default function Component() {
- *   const program = useProgram("{{program_address}}");
+ *   const { program } = useProgram("{{program_address}}");
  *   const { mutateAsync: setClaimConditions, isLoading, error } = useSetClaimConditions(program);
  *
  *   return (
@@ -31,7 +31,7 @@ export function useSetClaimConditions(program: RequiredParam<NFTDrop>) {
   return useMutation(
     async (metadata: NFTDropConditionsInput) => {
       invariant(program, "program is required");
-      return await program.claimConditions.set(metadata)
+      return await program.claimConditions.set(metadata);
     },
     {
       onSettled: () =>

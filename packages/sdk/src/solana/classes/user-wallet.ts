@@ -54,6 +54,18 @@ export class UserWallet {
   public events = new EventEmitter<UserWalletEvents>();
   private metaplex: Metaplex;
 
+  public get network() {
+    const url = new URL(this.metaplex.connection.rpcEndpoint);
+    // try this first to avoid hitting `custom` network for alchemy urls
+    if (url.hostname.includes("devnet")) {
+      return "devnet";
+    }
+    if (url.hostname.includes("mainnet")) {
+      return "mainnet-beta";
+    }
+    return this.metaplex.cluster;
+  }
+
   constructor(metaplex: Metaplex) {
     this.metaplex = metaplex;
   }
@@ -104,7 +116,9 @@ export class UserWallet {
    * ```
    */
   public getAddress() {
-    return this.metaplex.identity().publicKey.toBase58();
+    return this.isConnected()
+      ? this.metaplex.identity().publicKey.toBase58()
+      : undefined;
   }
 
   /**
