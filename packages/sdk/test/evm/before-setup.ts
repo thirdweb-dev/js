@@ -38,8 +38,8 @@ import {
   TokenERC721__factory,
   TWFactory,
   TWFactory__factory,
-  TWRegistry,
-  TWRegistry__factory,
+  TWRegistryLegacy,
+  TWRegistryLegacy__factory,
   VoteERC20__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -89,11 +89,11 @@ export const mochaHooks = {
     await jsonProvider.send("hardhat_reset", []);
 
     const registry = (await new ethers.ContractFactory(
-      TWRegistry__factory.abi,
-      TWRegistry__factory.bytecode,
+      TWRegistryLegacy__factory.abi,
+      TWRegistryLegacy__factory.bytecode,
     )
       .connect(signer)
-      .deploy(trustedForwarderAddress)) as TWRegistry;
+      .deploy(trustedForwarderAddress)) as TWRegistryLegacy;
     const registryContract = await registry.deployed();
 
     const thirdwebFactoryDeployer = (await new ethers.ContractFactory(
