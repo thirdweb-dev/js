@@ -1,0 +1,20 @@
+{
+  "name": "@thirdweb-dev/contracts",
+  "description": "Collection of smart contracts deployable via the thirdweb SDK, dashboard and CLI",
+  "version": "3.1.9",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thirdweb-dev/contracts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/thirdweb-dev/contracts/issues"
+  },
+  "author": "thirdweb engineering <eng@thirdweb.com>",
+  "homepage": "https://thirdweb.com",
+  "files": [
+    "**/*.sol",
+    "/abi"
+  ],
+  "yalcSig": "7f4c05fd806576eb66f7730a2b12e9a4"
+}
