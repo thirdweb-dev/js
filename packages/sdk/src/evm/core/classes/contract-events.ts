@@ -10,7 +10,7 @@ import { ListenerFn } from "eventemitter3";
  * @public
  */
 export class ContractEvents<TContract extends BaseContract> {
-  private contractWrapper;
+  protected contractWrapper;
 
   constructor(contractWrapper: ContractWrapper<TContract>) {
     this.contractWrapper = contractWrapper;
