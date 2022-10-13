@@ -1,5 +1,6 @@
 /* eslint-disable turbo/no-undeclared-env-vars */
 import { ThirdwebSDK } from "../../src/evm";
+import { assert, expect } from "chai";
 import { ethers, Wallet } from "ethers";
 
 const RPC_URL = "https://rpc-mumbai.maticvigil.com/";
@@ -46,5 +47,44 @@ describe("Gasless Forwarder", async () => {
     }));
 
     await pack.open(0, 0);
+  });
+
+  it.skip("should mint batch via multicall tx with relayer", async () => {
+    const NFT_COLLECTION_ADDRESS = "0x24A5aB2878B63716B001aa9AbE816c2662192B12";
+    const provider = ethers.getDefaultProvider(RPC_URL);
+    // const wallet = Wallet.createRandom().connect(provider);
+    const wallet = new Wallet("<PRIVATE KEY>", provider);
+    const sdk = new ThirdwebSDK(wallet, {
+      gasless: {
+        openzeppelin: {
+          relayerUrl: "<RELAYER URL>",
+        },
+      },
+    });
+
+    const nftCollection = await sdk.getContract(
+      NFT_COLLECTION_ADDRESS,
+      "nft-collection",
+    );
+
+    const metas = [
+      {
+        name: "Test5",
+      },
+      {
+        name: "Test6",
+      },
+    ];
+
+    const batch = await nftCollection.mintBatch(metas);
+
+    assert.lengthOf(batch, 2);
+
+    for (const meta of metas) {
+      const nft = batch.find(
+        async (n) => (await n.data()).metadata.name === meta.name,
+      );
+      assert.isDefined(nft);
+    }
   });
 });
