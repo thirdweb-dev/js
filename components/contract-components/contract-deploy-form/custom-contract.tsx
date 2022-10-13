@@ -268,7 +268,11 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           type="submit"
           form="custom-contract-form"
           isLoading={deploy.isLoading}
-          isDisabled={!compilerMetadata.isSuccess || !selectedChain}
+          isDisabled={
+            !compilerMetadata.isSuccess ||
+            !selectedChain ||
+            !!disabledChains?.find((chain) => chain === selectedChain)
+          }
           colorScheme="primary"
           transactionCount={!watch("addToDashboard") ? 1 : 2}
         >
