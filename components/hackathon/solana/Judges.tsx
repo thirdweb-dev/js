@@ -22,6 +22,12 @@ export const Judges: React.FC = () => {
       image: "/assets/landingpage/noah.png",
       company: "Phantom",
     },
+    {
+      name: "Chris Ahn",
+      twitter: "ahnchrisj",
+      image: "/assets/landingpage/chris.jpg",
+      company: "Haun Ventures",
+    },
   ];
 
   return (

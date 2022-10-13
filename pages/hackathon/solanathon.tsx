@@ -81,11 +81,14 @@ const SolanaHackathon: ThirdwebNextPage = () => {
               objectFit="contain"
             />
             <Flex flexDir="column">
+              <Heading size="display.sm" textAlign="center">
+                Build Web3 apps on Solana
+              </Heading>
               <Heading size="display.lg" textAlign="center">
-                $10,000 in prizes.
+                $10,000 in prizes
               </Heading>
               <Heading size="display.sm" textAlign="center">
-                Oct 19th - Oct 26th.
+                Oct 19th - Oct 26th
               </Heading>
             </Flex>
 
