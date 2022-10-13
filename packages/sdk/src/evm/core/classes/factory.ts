@@ -78,6 +78,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         encodedFunc,
       ]);
     } catch (e) {
+      console.log(e);
       // if the error is caused by user cancelling the transaction, just re-throw it
       if (
         (e as TransactionError).message
