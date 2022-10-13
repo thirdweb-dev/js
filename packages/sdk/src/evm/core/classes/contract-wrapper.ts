@@ -239,19 +239,6 @@ export class ContractWrapper<
   public async multiCall(
     encoded: string[],
   ): Promise<providers.TransactionReceipt> {
-    if (
-      this.options?.gasless &&
-      ("openzeppelin" in this.options.gasless ||
-        "biconomy" in this.options.gasless)
-    ) {
-      const from = await this.getSignerAddress();
-      for (let i = 0; i < encoded.length; i++) {
-        encoded[i] = ethers.utils.solidityPack(
-          ["bytes", "address"],
-          [encoded[i], from],
-        );
-      }
-    }
     return this.sendTransaction("multicall", [encoded]);
   }
 
@@ -356,6 +343,13 @@ export class ContractWrapper<
       ("openzeppelin" in this.options.gasless ||
         "biconomy" in this.options.gasless)
     ) {
+      if (fn === "multicall" && Array.isArray(args[0]) && args[0].length > 0) {
+        const from = await this.getSignerAddress();
+        args[0] = args[0].map((tx: any) =>
+          ethers.utils.solidityPack(["bytes", "address"], [tx, from]),
+        );
+      }
+
       const provider = this.getProvider();
       const txHash = await this.sendGaslessTransaction(fn, args, callOverrides);
       this.emitTransactionEvent("submitted", txHash);
