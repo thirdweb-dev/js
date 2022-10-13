@@ -34,7 +34,7 @@ export const Judges: React.FC = () => {
     <VStack mb={20} spacing={8}>
       <Heading size="title.2xl">Judges</Heading>
       <SimpleGrid
-        columns={{ base: 1, md: 3 }}
+        columns={{ base: 1, md: 4 }}
         gap={{ base: 8, md: 24 }}
         justifyContent="space-evenly"
       >

@@ -25,11 +25,19 @@ export const HackathonFooter: FC = () => {
         objectFit="contain"
       />
       <Flex flexDir="column" gap={2}>
-        <Heading size="display.sm" textAlign="center">
-          $10,000 in prizes.
+        <Heading size="title.xl" textAlign="center">
+          Build Web3 apps on Solana
         </Heading>
-        <Heading size="title.2xl" textAlign="center">
-          Oct 19th - Oct 26th.
+        <Heading
+          bgImage="linear-gradient(128deg, #9945FF -9.03%, #14EE92 98.25%)"
+          bgClip="text"
+          size="display.lg"
+          textAlign="center"
+        >
+          $10,000 in prizes
+        </Heading>
+        <Heading size="title.xl" textAlign="center">
+          Oct 19th - Oct 26th
         </Heading>
       </Flex>
 

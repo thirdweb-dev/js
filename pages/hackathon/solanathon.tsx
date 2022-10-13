@@ -80,14 +80,19 @@ const SolanaHackathon: ThirdwebNextPage = () => {
               w={{ base: "300px", md: "600px" }}
               objectFit="contain"
             />
-            <Flex flexDir="column">
-              <Heading size="display.sm" textAlign="center">
+            <Flex flexDir="column" gap={2}>
+              <Heading size="title.xl" textAlign="center">
                 Build Web3 apps on Solana
               </Heading>
-              <Heading size="display.lg" textAlign="center">
+              <Heading
+                bgImage="linear-gradient(128deg, #9945FF -9.03%, #14EE92 98.25%)"
+                bgClip="text"
+                size="display.lg"
+                textAlign="center"
+              >
                 $10,000 in prizes
               </Heading>
-              <Heading size="display.sm" textAlign="center">
+              <Heading size="title.xl" textAlign="center">
                 Oct 19th - Oct 26th
               </Heading>
             </Flex>
