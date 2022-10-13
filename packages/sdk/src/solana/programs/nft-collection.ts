@@ -272,7 +272,7 @@ export class NFTCollection {
    * console.log(address);
    * ```
    */
-  async mint(metadata: NFTMetadataInput): Promise<string> {
+  async mint(metadata: NFTMetadataOrUri): Promise<string> {
     const address = this.metaplex.identity().publicKey.toBase58();
     return this.mintTo(address, metadata);
   }
