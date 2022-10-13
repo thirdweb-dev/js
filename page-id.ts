@@ -45,6 +45,9 @@ export enum PageId {
   // thirdweb.com/hackathon/solanathon
   SolanaHackathonLanding = "solanathon",
 
+  // thirdweb.com/404
+  PageNotFound = "page-not-found",
+
   // ---------------------------------------------------------------------------
   //  general product pages
   // ---------------------------------------------------------------------------
