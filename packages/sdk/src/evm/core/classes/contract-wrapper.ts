@@ -239,6 +239,19 @@ export class ContractWrapper<
   public async multiCall(
     encoded: string[],
   ): Promise<providers.TransactionReceipt> {
+    if (
+      this.options?.gasless &&
+      ("openzeppelin" in this.options.gasless ||
+        "biconomy" in this.options.gasless)
+    ) {
+      const from = await this.getSignerAddress();
+      for (let i = 0; i < encoded.length; i++) {
+        encoded[i] = ethers.utils.solidityPack(
+          ["bytes", "address"],
+          [encoded[i], from],
+        );
+      }
+    }
     return this.sendTransaction("multicall", [encoded]);
   }
 
