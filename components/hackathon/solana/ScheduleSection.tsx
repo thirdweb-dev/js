@@ -55,13 +55,13 @@ export const ScheduleSection: React.FC = () => {
     <Flex
       flexDir="column"
       mt={{ base: 4, md: 12 }}
-      px={{ base: 6, md: 20 }}
+      px={{ base: 0, md: 20 }}
       alignItems="center"
     >
       <Heading size="title.2xl">Schedule</Heading>
       <Flex
         w="full"
-        justify="space-between"
+        justify={{ base: "center", md: "space-between" }}
         flexDir="column"
         align="center"
         mt={8}
@@ -76,16 +76,17 @@ export const ScheduleSection: React.FC = () => {
             align="center"
             justify="space-between"
             w="full"
-            px={10}
+            px={{ base: 4, md: 8 }}
             bg="whiteAlpha.100"
             _hover={{ bg: "whiteAlpha.200" }}
             py={2}
+            gap={4}
           >
             <Flex flexDir="column">
+              <Text color="gray.300">Oct</Text>
               <Heading size="title.lg" color="white">
                 {day}
               </Heading>
-              <Text color="gray.300">Oct</Text>
             </Flex>
             <Flex gap={4} width={96} alignItems="center">
               <Icon
@@ -110,13 +111,7 @@ export const ScheduleSection: React.FC = () => {
                   width={{ base: "full", md: "500px" }}
                   gap={2}
                 >
-                  <Heading
-                    textAlign={{ base: "right", md: "left" }}
-                    mt={1}
-                    fontSize="20px"
-                    maxW="350px"
-                    fontWeight={500}
-                  >
+                  <Heading size="subtitle.sm" fontWeight={500}>
                     {title}
                   </Heading>
                   {irl && (

@@ -14,7 +14,7 @@ export const Judges: React.FC = () => {
       name: "Farza Majeed",
       twitter: "FarzaTV",
       image: "/assets/landingpage/farza.jpeg",
-      company: "Buildspace",
+      company: "buildspace",
     },
     {
       name: "Noah Hein",
@@ -36,15 +36,15 @@ export const Judges: React.FC = () => {
           <Flex key={judge.name} flexDir="column" gap={2} alignItems="center">
             <MaskedAvatar src={judge.image} alt="" boxSize={40} />
             <Heading size="title.sm">{judge.name}</Heading>
+            <Text size="body.lg" color="gray.500">
+              {judge.company}
+            </Text>
             <TrackedLink
               href={`https://twitter.com/${judge.twitter}`}
               isExternal
               category="solanathon"
               label={judge.name}
             >
-              <Text size="body.lg" color="gray.500">
-                {judge.company}
-              </Text>
               <Text size="label.md" color="gray.500">
                 @{judge.twitter}
               </Text>
