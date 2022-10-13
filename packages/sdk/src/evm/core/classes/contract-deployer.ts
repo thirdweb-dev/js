@@ -36,9 +36,12 @@ import {
   NetworkOrSignerOrProvider,
   PrebuiltContractType,
 } from "../types";
+import { ContractEvents } from "./contract-events";
 import { ContractFactory } from "./factory";
+import { FactoryEvents } from "./factory-events";
 import { ContractRegistry } from "./registry";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
+import type { TWFactory } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
@@ -65,6 +68,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * should never be accessed directly, use {@link ContractDeployer.getRegistry} instead
    */
   private _registry: Promise<ContractRegistry> | undefined;
+  public events: FactoryEvents | undefined;
   private storage: ThirdwebStorage;
 
   constructor(
@@ -74,6 +78,10 @@ export class ContractDeployer extends RPCConnectionHandler {
   ) {
     super(network, options);
     this.storage = storage;
+
+    // Initialize factory and registry (we don't need to make these calls async)
+    this.getFactory();
+    this.getRegistry();
   }
 
   /**
@@ -527,12 +535,15 @@ export class ContractDeployer extends RPCConnectionHandler {
           chainId,
           "twFactory",
         );
-        return new ContractFactory(
+        const factory = new ContractFactory(
           factoryAddress,
           this.getSignerOrProvider(),
           this.storage,
           this.options,
         );
+        this.events = new FactoryEvents(factory);
+
+        return factory;
       }));
   }
 
