@@ -12,8 +12,12 @@ import { CreatorInput } from "../types/programs";
 import { getNework } from "../utils/urls";
 import {
   findEditionMarkerPda,
+  findMasterEditionV2Pda,
+  getSignerHistogram,
   Metaplex,
   toBigNumber,
+  toNftOriginalEdition,
+  toOriginalEditionAccount,
 } from "@metaplex-foundation/js";
 import { EditionMarker } from "@metaplex-foundation/mpl-token-metadata";
 import { PublicKey } from "@solana/web3.js";
@@ -175,54 +179,16 @@ export class NFTCollection {
    * ```
    */
   async supplyOf(nftAddress: string): Promise<bigint> {
-    let editionMarkerNumber = 0;
-    let totalSupply = 1;
+    const originalEditionAccount = await this.metaplex
+      .rpc()
+      .getAccount(findMasterEditionV2Pda(new PublicKey(nftAddress)));
 
-    cursedBitwiseLogicLoop: while (true) {
-      const editionMarkerAddress = findEditionMarkerPda(
-        new PublicKey(nftAddress),
-        toBigNumber(editionMarkerNumber * 248),
-      );
-      const editionMarker = await EditionMarker.fromAccountAddress(
-        this.metaplex.connection,
-        editionMarkerAddress,
-      );
+    const originalEdition = toNftOriginalEdition(
+      toOriginalEditionAccount(originalEditionAccount),
+    );
 
-      // WARNING: Ugly bitwise operations because of Rust :(
-      const indexCap = editionMarkerNumber === 0 ? 247 : 248;
-      for (let editionIndex = 0; editionIndex < indexCap; editionIndex++) {
-        const ledgerIndex =
-          editionMarkerNumber > 0
-            ? Math.floor(editionIndex / 8)
-            : editionIndex < 7
-            ? 0
-            : Math.floor((editionIndex - 7) / 8) + 1;
-        const size = editionMarkerNumber === 0 && ledgerIndex === 0 ? 7 : 8;
-        const shiftBase = 0b1 << (size - 1);
-
-        const bitmask =
-          ledgerIndex === 0
-            ? shiftBase >> editionIndex
-            : editionMarkerNumber > 0
-            ? shiftBase >> editionIndex % (ledgerIndex * 8)
-            : ledgerIndex === 1
-            ? shiftBase >> (editionIndex - 7)
-            : shiftBase >> (editionIndex - 7) % ((ledgerIndex - 1) * 8);
-
-        const editionExists =
-          (editionMarker.ledger[ledgerIndex] & bitmask) !== 0;
-
-        if (editionExists) {
-          totalSupply += 1;
-        } else {
-          break cursedBitwiseLogicLoop;
-        }
-      }
-
-      editionMarkerNumber++;
-    }
-
-    return BigInt(totalSupply);
+    // Add one to supply to account for the master edition
+    return BigInt(originalEdition.supply.add(toBigNumber(1)).toNumber());
   }
 
   /**
@@ -344,9 +310,9 @@ export class NFTCollection {
    * const address = await program.mintAdditionalSupply(nftAddress);
    * ```
    */
-  async mintAdditionalSupply(nftAddress: string) {
+  async mintAdditionalSupply(nftAddress: string, amount: number = 1) {
     const address = this.metaplex.identity().publicKey.toBase58();
-    return this.mintAdditionalSupplyTo(address, nftAddress);
+    return this.mintAdditionalSupplyTo(address, nftAddress, amount);
   }
 
   /**
@@ -368,16 +334,82 @@ export class NFTCollection {
   async mintAdditionalSupplyTo(
     to: string,
     nftAddress: string,
-  ): Promise<string> {
-    // TODO add quantity param
-    const result = await this.metaplex
-      .nfts()
-      .printNewEdition({
-        originalMint: new PublicKey(nftAddress),
-        newOwner: new PublicKey(to),
-      })
-      .run();
-    return result.nft.address.toBase58();
+    amount: number = 1,
+  ): Promise<string[]> {
+    const block = await this.metaplex.connection.getLatestBlockhash();
+
+    // Better to use metaplex functions directly then our supplyOf function for types/consistency
+    const originalEditionAccount = await this.metaplex
+      .rpc()
+      .getAccount(findMasterEditionV2Pda(new PublicKey(nftAddress)));
+    const originalEdition = toNftOriginalEdition(
+      toOriginalEditionAccount(originalEditionAccount),
+    );
+
+    const mintAddresses: string[] = [];
+    const txns = await Promise.all(
+      [...Array(amount).keys()].map(async (_, i) => {
+        const builder = await this.metaplex
+          .nfts()
+          .builders()
+          .printNewEdition({
+            originalSupply: toBigNumber(
+              originalEdition.supply.add(toBigNumber(i)),
+            ),
+            originalMint: new PublicKey(nftAddress),
+            newOwner: new PublicKey(to),
+          });
+
+        const ctx = builder.getContext();
+        mintAddresses.push(ctx.mintSigner.publicKey.toBase58());
+
+        const builderTx = builder
+          .setTransactionOptions({
+            blockhash: block.blockhash,
+            feePayer: this.metaplex.identity().publicKey,
+            lastValidBlockHeight: block.lastValidBlockHeight,
+          })
+          .setFeePayer(this.metaplex.identity());
+
+        const dropSigners = [
+          this.metaplex.identity(),
+          ...builderTx.getSigners(),
+        ];
+        const { keypairs } = getSignerHistogram(dropSigners);
+        const tx = builderTx.toTransaction();
+
+        if (keypairs.length > 0) {
+          tx.partialSign(...keypairs);
+        }
+
+        return tx;
+      }),
+    );
+
+    // make the connected wallet sign all transactions
+    const signedTx = await this.metaplex.identity().signAllTransactions(txns);
+
+    // send the signed transactions
+    let signatures = [];
+    for (const tx of signedTx) {
+      const signature = await this.metaplex.connection.sendRawTransaction(
+        tx.serialize(),
+      );
+      signatures.push(signature);
+    }
+
+    // wait for confirmations in parallel
+    const confirmations = await Promise.all(
+      signatures.map((sig) => {
+        return this.metaplex.rpc().confirmTransaction(sig);
+      }),
+    );
+
+    if (confirmations.length === 0) {
+      throw new Error("Transaction failed");
+    }
+
+    return mintAddresses;
   }
 
   /**
