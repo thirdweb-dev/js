@@ -179,7 +179,7 @@ export function extractEventsFromAbi(
   abi: z.input<typeof AbiSchema>,
   metadata?: Record<string, any>,
 ): AbiEvent[] {
-  const events = abi.filter((el) => el.type === "event");
+  const events = (abi || []).filter((el) => el.type === "event");
   const parsed: AbiEvent[] = [];
   for (const e of events) {
     const doc = extractCommentFromMetadata(e.name, metadata, "events");
