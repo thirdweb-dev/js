@@ -194,10 +194,12 @@ describe("Edition sig minting", async () => {
         name: "Test2",
       });
       const toSign1 = {
+        to: samWallet.address,
         metadata: uri1,
         quantity: 10,
       };
       const toSign2 = {
+        to: samWallet.address,
         metadata: uri2,
         quantity: 10,
       };
@@ -233,6 +235,7 @@ describe("Edition sig minting", async () => {
     it("should mint additional supply", async () => {
       const tx = await editionContract.signature.mint(v1);
       const additional = await editionContract.signature.generateFromTokenId({
+        to: samWallet.address,
         tokenId: tx.id,
         quantity: 100,
       });
@@ -251,6 +254,7 @@ describe("Edition sig minting", async () => {
         supply: 0,
       });
       const payload = await editionContract.signature.generateFromTokenId({
+        to: samWallet.address,
         tokenId: "0",
         quantity: "1",
         metadata: "",
@@ -267,6 +271,7 @@ describe("Edition sig minting", async () => {
     it("should mint the right custom token price", async () => {
       const oldBalance = await samWallet.getBalance();
       const payload = await editionContract.signature.generate({
+        to: samWallet.address,
         price: 1,
         currencyAddress: tokenAddress,
         metadata: {
@@ -288,6 +293,7 @@ describe("Edition sig minting", async () => {
     it("should mint the right native price", async () => {
       const oldBalance = await samWallet.getBalance();
       const payload = await editionContract.signature.generate({
+        to: samWallet.address,
         price: 1,
         metadata: {
           name: "native token test",
@@ -308,6 +314,7 @@ describe("Edition sig minting", async () => {
     it("should mint the right native price with multiple tokens", async () => {
       const oldBalance = await samWallet.getBalance();
       const payload = await editionContract.signature.generate({
+        to: samWallet.address,
         price: 1,
         metadata: {
           name: "native token test with quantity",

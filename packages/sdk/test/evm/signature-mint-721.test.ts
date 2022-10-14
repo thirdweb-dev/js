@@ -211,9 +211,11 @@ describe("NFT sig minting", async () => {
         name: "Test2",
       });
       const toSign1 = {
+        to: samWallet.address,
         metadata: uri1,
       };
       const toSign2 = {
+        to: samWallet.address,
         metadata: uri2,
       };
       const payloads = await nftContract.signature.generateBatch([
@@ -230,6 +232,7 @@ describe("NFT sig minting", async () => {
     it("should mint the right custom token price", async () => {
       const oldBalance = await samWallet.getBalance();
       const payload = await nftContract.signature.generate({
+        to: samWallet.address,
         price: 1,
         currencyAddress: tokenAddress,
         metadata: {
@@ -250,6 +253,7 @@ describe("NFT sig minting", async () => {
     it("should mint the right native price", async () => {
       const oldBalance = await samWallet.getBalance();
       const payload = await nftContract.signature.generate({
+        to: samWallet.address,
         price: 1,
         metadata: {
           name: "native token test",

@@ -16,7 +16,7 @@ import { z } from "zod";
  * @internal
  */
 export const BaseSignaturePayloadInput = z.object({
-  to: z.string().default(constants.AddressZero),
+  to: z.string(),
   price: AmountSchema.default(0),
   currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
   mintStartTime: StartDateSchema,
