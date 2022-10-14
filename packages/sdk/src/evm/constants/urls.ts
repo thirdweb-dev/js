@@ -1,5 +1,7 @@
 import { SignerOrProvider } from "../core/types";
 import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
+import { SDKOptions } from "../schema";
+import { ChainId } from "./chains";
 import { ethers, providers } from "ethers";
 
 /**
@@ -153,4 +155,33 @@ export function getReadOnlyProvider(network: string, chainId?: number) {
     // fallback to the default provider
     return ethers.getDefaultProvider(network);
   }
+}
+
+const ChainIdToName: Record<number, string> = {
+  [ChainId.Polygon]: "polygon",
+  [ChainId.Mumbai]: "mumbai",
+  [ChainId.Goerli]: "goerli",
+  [ChainId.Mainnet]: "mainnet",
+  [ChainId.Optimism]: "optimism",
+  [ChainId.OptimismGoerli]: "optimism-goerli",
+  [ChainId.Arbitrum]: "arbitrum",
+  [ChainId.ArbitrumGoerli]: "arbitrum-goerli",
+  [ChainId.Fantom]: "fantom",
+  [ChainId.FantomTestnet]: "fantom-testnet",
+  [ChainId.Avalanche]: "avalanche",
+  [ChainId.AvalancheFujiTestnet]: "avalanche-fuji",
+  [ChainId.BinanceSmartChainMainnet]: "binance",
+  [ChainId.BinanceSmartChainTestnet]: "binance-testnet",
+};
+
+export function getRpcUrlForChainId(chainId: number, options: SDKOptions = {}) {
+  const currentPolygonReadRpc =
+    options.readonlySettings?.chainId === chainId
+      ? options.readonlySettings?.rpcUrl
+      : undefined;
+  return (
+    currentPolygonReadRpc ||
+    options.chainIdToRPCUrlMap?.[chainId] ||
+    getProviderForNetwork(ChainIdToName[chainId])
+  );
 }

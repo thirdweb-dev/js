@@ -9,7 +9,11 @@ import {
   resolveContractUriFromAddress,
 } from "../../common/feature-detection";
 import { isIncrementalVersion } from "../../common/version-checker";
-import { getContractPublisherAddress } from "../../constants";
+import {
+  ChainId,
+  getContractPublisherAddress,
+  getRpcUrlForChainId,
+} from "../../constants";
 import {
   AbiFunction,
   ContractParam,
@@ -52,16 +56,18 @@ export class ContractPublisher extends RPCConnectionHandler {
     options: SDKOptions,
     storage: ThirdwebStorage,
   ) {
-    super(network, options);
+    const polygonNetwork = getRpcUrlForChainId(ChainId.Polygon, options);
+    super(polygonNetwork, options);
     this.storage = storage;
     this.publisher = new ContractWrapper<OnChainContractPublisher>(
-      network,
+      polygonNetwork,
       getContractPublisherAddress(),
       ContractPublisherAbi,
       options,
     );
   }
 
+  // FIXME this needs to only assign the signer, not the provider
   public override updateSignerOrProvider(
     network: NetworkOrSignerOrProvider,
   ): void {

@@ -154,11 +154,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     this.wallet = new UserWallet(signerOrProvider, options);
     this.deployer = new ContractDeployer(signerOrProvider, options, storage);
     this.auth = new WalletAuthenticator(signerOrProvider, this.wallet, options);
-    this.registry = new MultichainRegistry(
-      signerOrProvider,
-      this.storageHandler,
-      this.options,
-    );
+    this.registry = new MultichainRegistry(this.storageHandler, this.options);
     this._publisher = new ContractPublisher(
       signerOrProvider,
       this.options,
@@ -397,15 +393,26 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     if (!contractTypeOrABI || contractTypeOrABI === "custom") {
       const resolvedContractType = await this.resolveContractType(address);
       if (resolvedContractType === "custom") {
-        // if it's a custom contract we gotta fetch the compilet metadata
+        // if it's a custom contract we gotta fetch the compiler metadata
         try {
-          const publisher = this.getPublisher();
-          const metadata = await publisher.fetchCompilerMetadataFromAddress(
+          // try the multichain registry first (imported contracts)
+          const chainId = (await this.getProvider().getNetwork()).chainId;
+          const metadata = await this.registry.getContractMetadata(
+            chainId,
             address,
           );
           newContract = await this.getContractFromAbi(address, metadata.abi);
-        } catch (e) {
-          throw new Error(`Error fetching ABI for this contract\n\n${e}`);
+        } catch {
+          try {
+            // otherwise try to fetch metadata from bytecode
+            const publisher = this.getPublisher();
+            const metadata = await publisher.fetchCompilerMetadataFromAddress(
+              address,
+            );
+            newContract = await this.getContractFromAbi(address, metadata.abi);
+          } catch (e) {
+            throw new Error(`Error fetching ABI for this contract\n\n${e}`);
+          }
         }
       } else {
         // otherwise if it's a prebuilt contract we can just use the contract type
@@ -546,6 +553,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     this.auth.updateSignerOrProvider(this.getSignerOrProvider());
     this.deployer.updateSignerOrProvider(this.getSignerOrProvider());
     this._publisher.updateSignerOrProvider(this.getSignerOrProvider());
+    this.registry.updateSigner(this.getSignerOrProvider());
     for (const [, contract] of this.contractCache) {
       contract.onNetworkUpdated(this.getSignerOrProvider());
     }
