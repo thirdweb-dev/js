@@ -182,7 +182,7 @@ export const HomepageFooter: React.FC = () => {
                   </TrackedLink>
                 </Stack>
 
-                <Heading size="label.lg">Partners</Heading>
+                {/* <Heading size="label.lg">Partners</Heading>
                 <Stack spacing="3" shouldWrapChildren>
                   <TrackedLink
                     href="/partner/shopify"
@@ -191,7 +191,7 @@ export const HomepageFooter: React.FC = () => {
                   >
                     Shopify
                   </TrackedLink>
-                </Stack>
+                </Stack> */}
               </Stack>
               <Stack spacing="4" minW="36" flex="1">
                 <Heading size="label.lg">SDKs</Heading>
