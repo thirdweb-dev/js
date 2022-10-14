@@ -66,7 +66,7 @@ describe("NFTCollection", async () => {
       name: "Test NFT",
       description: "Test Description",
     });
-    const [printed] = await collection.mintAdditionalSupply(mint);
+    const [printed] = await collection.mintAdditionalSupply(mint, 1);
     let balance = await collection.balance(mint);
     expect(balance).to.equal(1);
     balance = await collection.balance(printed);
@@ -79,7 +79,7 @@ describe("NFTCollection", async () => {
     expect(balance).to.equal(1);
 
     const supply = await collection.supplyOf(mint);
-    expect(supply).to.equal(4n);
+    expect(supply).to.equal(4);
   });
 
   it("test supply of", async () => {
@@ -90,11 +90,25 @@ describe("NFTCollection", async () => {
 
     const amount = 2;
     for (let i = 0; i < amount; i++) {
-      await collection.mintAdditionalSupply(mint);
+      await collection.mintAdditionalSupply(mint, 1);
     }
 
     const supply = await collection.supplyOf(mint);
-    expect(supply).to.equal(BigInt(amount + 1));
+    expect(supply).to.equal(amount + 1);
+  });
+
+  it("test burn supply", async () => {
+    const mint = await collection.mint({
+      name: "Test NFT",
+      description: "Test Description",
+    });
+
+    let supply = await collection.supplyOf(mint);
+    expect(supply).to.equal(1);
+
+    await collection.burn(mint);
+    supply = await collection.supplyOf(mint);
+    expect(supply).to.equal(0);
   });
 
   it("should burn nfts", async () => {
@@ -103,9 +117,8 @@ describe("NFTCollection", async () => {
       description: "Test Description",
     });
     const all = await collection.getAll();
-    expect(all.length).to.eq(4);
     await collection.burn(mint);
     const all2 = await collection.getAll();
-    expect(all2.length).to.eq(3);
+    expect(all2.length).to.eq(all.length - 1);
   });
 });

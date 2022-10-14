@@ -178,17 +178,27 @@ export class NFTCollection {
    * const supply = await program.supplyOf(address);
    * ```
    */
-  async supplyOf(nftAddress: string): Promise<bigint> {
-    const originalEditionAccount = await this.metaplex
-      .rpc()
-      .getAccount(findMasterEditionV2Pda(new PublicKey(nftAddress)));
+  async supplyOf(nftAddress: string): Promise<number> {
+    let originalEdition;
+    try {
+      const originalEditionAccount = await this.metaplex
+        .rpc()
+        .getAccount(findMasterEditionV2Pda(new PublicKey(nftAddress)));
 
-    const originalEdition = toNftOriginalEdition(
-      toOriginalEditionAccount(originalEditionAccount),
-    );
+      originalEdition = toNftOriginalEdition(
+        toOriginalEditionAccount(originalEditionAccount),
+      );
+    } catch (err: any) {
+      // If the NFT is burned, return 0 supply
+      if (err.key === "metaplex.errors.sdk.account_not_found") {
+        return 0;
+      }
+
+      throw err;
+    }
 
     // Add one to supply to account for the master edition
-    return BigInt(originalEdition.supply.add(toBigNumber(1)).toNumber());
+    return originalEdition.supply.toNumber() + 1;
   }
 
   /**
@@ -300,17 +310,20 @@ export class NFTCollection {
   /**
    * Mint additional supply of an NFT to the connected wallet
    * @param nftAddress - the mint address to mint additional supply to
+   * @param amount - the amount of NFTs to mint
    * @returns the mint address of the minted NFT
    *
    * @example
    * ```jsx
    * // The address of the already minted NFT
    * const nftAddress = "..."
+   * // The amount of NFTs to mint
+   * const amount = 1;
    * // Mint an additional NFT of the original NFT
-   * const address = await program.mintAdditionalSupply(nftAddress);
+   * const addresses = await program.mintAdditionalSupply(nftAddress);
    * ```
    */
-  async mintAdditionalSupply(nftAddress: string, amount: number = 1) {
+  async mintAdditionalSupply(nftAddress: string, amount: number) {
     const address = this.metaplex.identity().publicKey.toBase58();
     return this.mintAdditionalSupplyTo(address, nftAddress, amount);
   }
@@ -319,6 +332,7 @@ export class NFTCollection {
    * Mint additional supply of an NFT to the specified wallet
    * @param to - the address to mint the NFT to
    * @param nftAddress - the mint address to mint additional supply to
+   * @param amount - the amount of NFTs to mint
    * @returns the mint address of the minted NFT
    *
    * @example
@@ -328,13 +342,13 @@ export class NFTCollection {
    * // The address of the already minted NFT
    * const nftAddress = "..."
    * // Mint an additional NFT of the original NFT
-   * const address = await program.mintAdditionalSupplyTo(to, nftAddress);
+   * const addresses = await program.mintAdditionalSupplyTo(to, nftAddress);
    * ```
    */
   async mintAdditionalSupplyTo(
     to: string,
     nftAddress: string,
-    amount: number = 1,
+    amount: number,
   ): Promise<string[]> {
     const block = await this.metaplex.connection.getLatestBlockhash();
 
