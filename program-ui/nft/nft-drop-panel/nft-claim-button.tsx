@@ -1,9 +1,9 @@
-import { useDisclosure, Icon } from "@chakra-ui/react";
-import { NFTDrop } from "@thirdweb-dev/sdk/solana";
-import { GiDiamondHard } from "@react-icons/all-files/gi/GiDiamondHard";
 import { NFTClaimForm } from "./nft-claim";
-import { Button, Drawer } from "tw-components"
+import { Icon, useDisclosure } from "@chakra-ui/react";
+import { GiDiamondHard } from "@react-icons/all-files/gi/GiDiamondHard";
 import { useDropUnclaimedSupply } from "@thirdweb-dev/react/solana";
+import { NFTDrop } from "@thirdweb-dev/sdk/solana";
+import { Button, Drawer } from "tw-components";
 
 export const NFTClaimButton: React.FC<{ program: NFTDrop }> = ({
   program,
@@ -25,7 +25,7 @@ export const NFTClaimButton: React.FC<{ program: NFTDrop }> = ({
       </Drawer>
       <Button
         colorScheme="primary"
-        leftIcon={<Icon as={GiDiamondHard} color="white"/>}
+        leftIcon={<Icon as={GiDiamondHard} color="white" />}
         {...restButtonProps}
         onClick={onOpen}
         disabled={unclaimedSupply === 0}

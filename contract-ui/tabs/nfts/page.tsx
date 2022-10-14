@@ -1,4 +1,5 @@
 import { BatchLazyMintButton } from "./components/batch-lazy-mint-button";
+import { NFTClaimButton } from "./components/claim-button";
 import { NFTLazyMintButton } from "./components/lazy-mint-button";
 import { NFTMintButton } from "./components/mint-button";
 import { NFTRevealButton } from "./components/reveal-button";
@@ -38,6 +39,7 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
         <Heading size="title.sm">Contract NFTs</Heading>
         <Flex gap={2} flexDir={{ base: "column", md: "row" }}>
           <NFTRevealButton contractQuery={contractQuery} />
+          <NFTClaimButton contractQuery={contractQuery} />
           <NFTMintButton contractQuery={contractQuery} />
           <NFTLazyMintButton contractQuery={contractQuery} />
           <BatchLazyMintButton contractQuery={contractQuery} />

@@ -173,8 +173,21 @@ export function useNFTDrawerTabs(
                   <ClaimConditions
                     contract={contractOrProgram}
                     tokenId={tokenId}
+                    isColumn
                   />
                 ),
+              ),
+            ),
+          },
+          {
+            title: "Claim",
+            isDisabled: false,
+            children: dynamic(() =>
+              import("contract-ui/tabs/nfts/components/claim-tab").then(
+                ({ ClaimTab }) =>
+                  // eslint-disable-next-line react/display-name
+                  () =>
+                    <ClaimTab contract={contractOrProgram} tokenId={tokenId} />,
               ),
             ),
           },

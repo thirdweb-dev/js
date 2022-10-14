@@ -1,4 +1,10 @@
-import { DrawerBody, DrawerHeader, FormControl, Input, Stack } from "@chakra-ui/react";
+import {
+  DrawerBody,
+  DrawerHeader,
+  FormControl,
+  Input,
+  Stack,
+} from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import { useClaimNFT } from "@thirdweb-dev/react/solana";
@@ -7,7 +13,12 @@ import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useForm } from "react-hook-form";
-import { FormErrorMessage, FormHelperText, FormLabel, Heading } from "tw-components";
+import {
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
+  Heading,
+} from "tw-components";
 
 interface NFTClaimFormProps {
   program: NFTDrop;
