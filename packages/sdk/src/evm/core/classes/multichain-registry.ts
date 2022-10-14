@@ -45,6 +45,11 @@ export class MultichainRegistry {
     address: string,
   ): Promise<PublishedMetadata> {
     const uri = await this.getContractMetadataURI(chainId, address);
+    if (!uri) {
+      throw new Error(
+        `No metadata URI found for contract ${address} on chain ${chainId}`,
+      );
+    }
     return await this.storage.downloadJSON<PublishedMetadata>(uri);
   }
 

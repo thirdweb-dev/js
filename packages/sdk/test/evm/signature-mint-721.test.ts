@@ -1,3 +1,4 @@
+import { NFTMetadataOrUri } from "../../src/core/schema/nft";
 import {
   NATIVE_TOKEN_ADDRESS,
   NFTCollection,
@@ -46,6 +47,7 @@ describe("NFT sig minting", async () => {
       currencyAddress: NATIVE_TOKEN_ADDRESS,
       metadata: {
         name: "OUCH VOUCH",
+        background_color: "ff0000",
       },
       price: "1",
       to: samWallet.address,
@@ -195,6 +197,7 @@ describe("NFT sig minting", async () => {
         name: "Test1",
       });
       const toSign = {
+        to: samWallet.address,
         metadata: uri,
       };
       const payload = await nftContract.signature.generate(toSign);
