@@ -1,4 +1,3 @@
-import { NFTMetadataOrUri } from "../../src/core/schema/nft";
 import {
   NATIVE_TOKEN_ADDRESS,
   NFTCollection,

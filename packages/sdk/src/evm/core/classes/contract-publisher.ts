@@ -56,11 +56,11 @@ export class ContractPublisher extends RPCConnectionHandler {
     options: SDKOptions,
     storage: ThirdwebStorage,
   ) {
-    const polygonNetwork = getRpcUrlForChainId(ChainId.Polygon, options);
-    super(polygonNetwork, options);
+    // TODO this should always be on Polygon
+    super(network, options);
     this.storage = storage;
     this.publisher = new ContractWrapper<OnChainContractPublisher>(
-      polygonNetwork,
+      network,
       getContractPublisherAddress(),
       ContractPublisherAbi,
       options,
