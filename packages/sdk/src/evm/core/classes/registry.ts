@@ -2,14 +2,14 @@ import { TransactionResult } from "..";
 import { SDKOptions } from "../../schema/sdk-options";
 import { NetworkOrSignerOrProvider } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import type { TWRegistryLegacy } from "@thirdweb-dev/contracts-js";
-import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWRegistryLegacy.json";
+import type { TWRegistry } from "@thirdweb-dev/contracts-js";
+import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWRegistry.json";
 import { constants, utils } from "ethers";
 
 /**
  * @internal
  */
-export class ContractRegistry extends ContractWrapper<TWRegistryLegacy> {
+export class ContractRegistry extends ContractWrapper<TWRegistry> {
   constructor(
     registryAddress: string,
     network: NetworkOrSignerOrProvider,

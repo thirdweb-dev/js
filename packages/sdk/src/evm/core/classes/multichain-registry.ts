@@ -5,8 +5,8 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { AddContractInput, ContractInput, DeployedContract } from "../../types";
 import { NetworkOrSignerOrProvider } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import type { TWRegistry } from "@thirdweb-dev/contracts-js";
-import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWRegistry.json";
+import type { TWMultichainRegistry } from "@thirdweb-dev/contracts-js";
+import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistry.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, utils } from "ethers";
 
@@ -14,7 +14,7 @@ import { constants, utils } from "ethers";
  * @internal
  */
 export class MultichainRegistry {
-  private registry: ContractWrapper<TWRegistry>;
+  private registry: ContractWrapper<TWMultichainRegistry>;
   private storage: ThirdwebStorage;
 
   constructor(
@@ -23,7 +23,7 @@ export class MultichainRegistry {
     options: SDKOptions = {},
   ) {
     this.storage = storage;
-    this.registry = new ContractWrapper<TWRegistry>(
+    this.registry = new ContractWrapper<TWMultichainRegistry>(
       network,
       getMultichainRegistryAddress(),
       TWRegistryABI,

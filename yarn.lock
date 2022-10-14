@@ -4442,13 +4442,10 @@
     "@tanstack/query-core" "4.3.4"
     use-sync-external-store "^1.2.0"
 
-"@thirdweb-dev/contracts@3.1.8-0":
-  version "3.1.8-0"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.1.8-0.tgz#847af3fe9a53368e7be04b7b6e6afe076d3d1676"
-  integrity sha512-PiQjdRcAUBlu3poc4g6dN9KvjTgYsA1Vi+B/IgryptCgcJeMY4cldMabKCgPaCg9dPVpUq4O+SOM00P6mBNvGw==
-
-"@thirdweb-dev/contracts@file:.yalc/@thirdweb-dev/contracts":
-  version "3.1.9"
+"@thirdweb-dev/contracts@3.1.10-0":
+  version "3.1.10-0"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.1.10-0.tgz#714f5f3996a12f822e5ed707ff3826bb758786d0"
+  integrity sha512-l+PvqF37jHzPoy11bU0cwgJc1cc0CuDI2rmhYQP0gO8CK/tXjyJDOWM/u8+bpO8kdGfbktgnQBl7c7gN3ttmJA==
 
 "@thirdweb-dev/solana@*":
   version "0.2.15"
