@@ -1,9 +1,9 @@
 import { createSOLProgramQueryKey } from "../../../../core/query-utils/query-key";
 import { RequiredParam } from "../../../../core/types/shared";
+import { MintNFTSupplyParams } from "../../../types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { NFTCollection } from "@thirdweb-dev/sdk/solana";
 import invariant from "tiny-invariant";
-import { MintNFTSupplyParams } from "../../../types";
 
 /**
  * Mint additional supply for an NFT on your NFT program
@@ -33,9 +33,13 @@ export function useMintNFTSupply(program: RequiredParam<NFTCollection>) {
     async (data: MintNFTSupplyParams) => {
       invariant(program, "program is required");
       if (!data.to) {
-        return await program.mintAdditionalSupply(data.nftAddress);
+        return await program.mintAdditionalSupply(data.nftAddress, data.amount);
       }
-      return await program.mintAdditionalSupplyTo(data.to, data.nftAddress);
+      return await program.mintAdditionalSupplyTo(
+        data.to,
+        data.nftAddress,
+        data.amount,
+      );
     },
     {
       onSettled: () =>

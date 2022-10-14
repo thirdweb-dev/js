@@ -8,7 +8,7 @@ import {
   METAPLEX_PROGRAM_ID,
 } from "../../constants/addresses";
 import { TransactionResult } from "../../types/common";
-import { getNework, getPublicRpc } from "../../utils/urls";
+import { getPublicRpc } from "../../utils/urls";
 import {
   GmaBuilder,
   JsonMetadata,
@@ -25,7 +25,6 @@ import {
 } from "@metaplex-foundation/js";
 import { getAccount, getAssociatedTokenAddress } from "@solana/spl-token";
 import {
-  clusterApiUrl,
   ConfirmedSignatureInfo,
   Connection,
   ParsedAccountData,

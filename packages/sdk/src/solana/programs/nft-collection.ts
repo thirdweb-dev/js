@@ -1,17 +1,11 @@
 import { QueryAllParams } from "../../core/schema/QueryParams";
-import {
-  NFT,
-  NFTMetadata,
-  NFTMetadataInput,
-  NFTMetadataOrUri,
-} from "../../core/schema/nft";
+import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../core/schema/nft";
 import { enforceCreator } from "../classes/helpers/creators-helper";
 import { NFTHelper } from "../classes/helpers/nft-helper";
-import { TransactionResult } from "../types/common";
+import { Amount, TransactionResult } from "../types/common";
 import { CreatorInput } from "../types/programs";
 import { getNework } from "../utils/urls";
 import {
-  findEditionMarkerPda,
   findMasterEditionV2Pda,
   getSignerHistogram,
   Metaplex,
@@ -19,9 +13,9 @@ import {
   toNftOriginalEdition,
   toOriginalEditionAccount,
 } from "@metaplex-foundation/js";
-import { EditionMarker } from "@metaplex-foundation/mpl-token-metadata";
 import { PublicKey } from "@solana/web3.js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import invariant from "tiny-invariant";
 
 /**
  * A collection of associated NFTs
@@ -310,20 +304,20 @@ export class NFTCollection {
   /**
    * Mint additional supply of an NFT to the connected wallet
    * @param nftAddress - the mint address to mint additional supply to
-   * @param amount - the amount of NFTs to mint
+   * @param amount - the amount of additional NFTs to mint
    * @returns the mint address of the minted NFT
    *
    * @example
    * ```jsx
    * // The address of the already minted NFT
    * const nftAddress = "..."
-   * // The amount of NFTs to mint
+   * // The amount of additional NFTs to mint
    * const amount = 1;
    * // Mint an additional NFT of the original NFT
-   * const addresses = await program.mintAdditionalSupply(nftAddress);
+   * const addresses = await program.mintAdditionalSupply(nftAddress, amount);
    * ```
    */
-  async mintAdditionalSupply(nftAddress: string, amount: number) {
+  async mintAdditionalSupply(nftAddress: string, amount: Amount) {
     const address = this.metaplex.identity().publicKey.toBase58();
     return this.mintAdditionalSupplyTo(address, nftAddress, amount);
   }
@@ -341,15 +335,25 @@ export class NFTCollection {
    * const to = "..."
    * // The address of the already minted NFT
    * const nftAddress = "..."
+   * * // The amount of additional NFTs to mint
+   * const amount = 1;
    * // Mint an additional NFT of the original NFT
-   * const addresses = await program.mintAdditionalSupplyTo(to, nftAddress);
+   * const addresses = await program.mintAdditionalSupplyTo(to, nftAddress, amount);
    * ```
    */
   async mintAdditionalSupplyTo(
     to: string,
     nftAddress: string,
-    amount: number,
+    amount: Amount,
   ): Promise<string[]> {
+    // need to coerce amount to number always (to make the Array(<number>) work)
+    amount = typeof amount === "string" ? parseInt(amount) : amount;
+    // ensure that whatever got passed actually is a number now
+    invariant(
+      isNaN(amount) === false,
+      "amount must be possible to convert to a number",
+    );
+
     const block = await this.metaplex.connection.getLatestBlockhash();
 
     // Better to use metaplex functions directly then our supplyOf function for types/consistency
