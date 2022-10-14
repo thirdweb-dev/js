@@ -16,6 +16,7 @@ import { WalletAuthenticator } from "./auth/wallet-authenticator";
 import type { ContractMetadata } from "./classes";
 import { ContractDeployer } from "./classes/contract-deployer";
 import { ContractPublisher } from "./classes/contract-publisher";
+import { MultichainRegistry } from "./classes/multichain-registry";
 import {
   getSignerAndProvider,
   RPCConnectionHandler,
@@ -125,6 +126,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public deployer: ContractDeployer;
   /**
+   * The registry of contracts
+   */
+  public registry: MultichainRegistry;
+  /**
    * Interact with the connected wallet
    */
   public wallet: UserWallet;
@@ -149,6 +154,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     this.wallet = new UserWallet(signerOrProvider, options);
     this.deployer = new ContractDeployer(signerOrProvider, options, storage);
     this.auth = new WalletAuthenticator(signerOrProvider, this.wallet, options);
+    this.registry = new MultichainRegistry(
+      signerOrProvider,
+      this.options,
+      this.storageHandler,
+    );
     this._publisher = new ContractPublisher(
       signerOrProvider,
       this.options,

@@ -10,6 +10,7 @@ export const OZ_DEFENDER_FORWARDER_ADDRESS =
 const TWRegistry_address = "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd";
 const TWFactory_address = "0x5DBC7B840baa9daBcBe9D2492E45D7244B54A2A0";
 const ContractPublisher_address = "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7"; // Polygon only
+const MultichainRegistry_address = ""; // Polygon only
 
 /**
  * @internal
@@ -175,5 +176,18 @@ export function getContractPublisherAddress() {
     return process.env.contractPublisherAddress as string;
   } else {
     return ContractPublisher_address;
+  }
+}
+
+/**
+ * @internal
+ */
+export function getMultichainRegistryAddress() {
+  // eslint-disable-next-line turbo/no-undeclared-env-vars
+  if (process.env.multiChainRegistryAddress) {
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
+    return process.env.multiChainRegistryAddress as string;
+  } else {
+    return MultichainRegistry_address;
   }
 }
