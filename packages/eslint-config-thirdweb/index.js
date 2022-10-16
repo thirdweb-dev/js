@@ -11,7 +11,8 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-non-null-assertion": "error",
     "@typescript-eslint/no-parameter-properties": "error",
-    "@typescript-eslint/no-unused-vars": "warn",
+    // making this an error going forward
+    "@typescript-eslint/no-unused-vars": "error",
 
     // import rules
     "import/first": "error",

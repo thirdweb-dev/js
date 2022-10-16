@@ -1,6 +1,6 @@
-import { createSOLProgramQueryKey } from "../../../core/query-utils/query-key";
-import { RequiredParam } from "../../../core/types/shared";
-import { MintNFTParams } from "../../../evm/types";
+import { createSOLProgramQueryKey } from "../../../../core/query-utils/query-key";
+import { RequiredParam } from "../../../../core/types/shared";
+import { MintNFTParams } from "../../../types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { NFTCollection } from "@thirdweb-dev/sdk/solana";
 import invariant from "tiny-invariant";
@@ -15,15 +15,10 @@ import invariant from "tiny-invariant";
  *
  * export default function Component() {
  *   const { program } = useProgram("{{program_address}}");
- *   const { mutateAsync: mint, isLoading, error } = useMintNFT(program);
- *
- *   function mintNFT() {
- *     const metadata = { name: "First NFT", description: "This is a cool NFT!" };
- *     mint({ to: "{{wallet_address}}", metadata });
- *   }
+ *   const { mutateAsync: mintNFT, isLoading, error } = useMintNFT(program);
  *
  *   return (
- *     <button onClick={() => mintNFT()}>
+ *     <button onClick={() => mintNFT({ metadata: { name: "First NFT" } })}>
  *       Mint
  *     </button>
  *   )
@@ -37,6 +32,9 @@ export function useMintNFT(program: RequiredParam<NFTCollection>) {
   return useMutation(
     async (data: MintNFTParams) => {
       invariant(program, "program is required");
+      if (!data.to) {
+        return await program.mint(data.metadata);
+      }
       return await program.mintTo(data.to, data.metadata);
     },
     {

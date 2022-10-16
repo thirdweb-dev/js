@@ -36,12 +36,10 @@ import {
   NetworkOrSignerOrProvider,
   PrebuiltContractType,
 } from "../types";
-import { ContractEvents } from "./contract-events";
 import { ContractFactory } from "./factory";
 import { FactoryEvents } from "./factory-events";
 import { ContractRegistry } from "./registry";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import type { TWFactory } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
