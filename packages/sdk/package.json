@@ -113,6 +113,7 @@
     "bn.js": "^5.2.1",
     "bs58": "^5.0.0",
     "cbor-web": "^8.1.0",
+    "cbor-x": "^1.4.1",
     "cross-fetch": "^3.1.5",
     "eventemitter3": "^4.0.7",
     "fast-deep-equal": "^3.1.3",
