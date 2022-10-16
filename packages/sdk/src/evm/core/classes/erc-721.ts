@@ -7,7 +7,7 @@ import {
   hasFunction,
   NotFoundError,
 } from "../../common";
-import { fetchTokenMetadata } from "../../common/nft";
+import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
 import {
   FEATURE_NFT,
   FEATURE_NFT_BATCH_MINTABLE,
@@ -124,7 +124,11 @@ export class Erc721<
   public async get(tokenId: BigNumberish): Promise<NFT> {
     const [owner, metadata] = await Promise.all([
       this.ownerOf(tokenId).catch(() => constants.AddressZero),
-      this.getTokenMetadata(tokenId),
+      this.getTokenMetadata(tokenId).catch(() => ({
+        id: tokenId.toString(),
+        uri: "",
+        ...FALLBACK_METADATA,
+      })),
     ]);
     return { owner, metadata, type: "ERC721", supply: 1 };
   }
