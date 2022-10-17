@@ -1,5 +1,6 @@
 import { SignerOrProvider } from "../core/types";
 import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
+import { ChainId, SUPPORTED_CHAIN_ID, SUPPORTED_CHAIN_IDS } from "./chains";
 import { ethers, providers } from "ethers";
 
 /**
@@ -26,13 +27,15 @@ export const PINATA_IPFS_URL = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 
 /**
  * @internal
+ * This is a community API key that is subject to rate limiting. Please use your own key.
  */
-export type ChainOrRpc =
+const DEFAULT_API_KEY = "_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC";
+
+type ChainNames =
   | "mumbai"
   | "polygon"
   // common alias for `polygon`
   | "matic"
-  | "rinkeby"
   | "goerli"
   | "mainnet"
   // common alias for `mainnet`
@@ -44,21 +47,53 @@ export type ChainOrRpc =
   // actual name
   | "avalanche-fuji"
   | "optimism"
-  | "optimism-kovan"
   | "optimism-goerli"
   | "arbitrum"
-  | "arbitrum-rinkeby"
   | "arbitrum-goerli"
   | "binance"
-  | "binance-testnet"
-  // ideally we could use `https://${string}` notation here, but doing that causes anything that is a generic string to throw a type error => not worth the hassle for now
-  | (string & {});
-
+  | "binance-testnet";
 /**
  * @internal
- * This is a community API key that is subject to rate limiting. Please use your own key.
  */
-const DEFAULT_API_KEY = "_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC";
+export type ChainOrRpc =
+  // ideally we could use `https://${string}` notation here, but doing that causes anything that is a generic string to throw a type error => not worth the hassle for now
+  ChainNames | (string & {});
+
+export const CHAIN_NAME_TO_ID: Record<ChainNames, SUPPORTED_CHAIN_ID> = {
+  "avalanche-fuji": ChainId.AvalancheFujiTestnet,
+  "avalanche-testnet": ChainId.AvalancheFujiTestnet,
+  "fantom-testnet": ChainId.FantomTestnet,
+  ethereum: ChainId.Mainnet,
+  matic: ChainId.Polygon,
+  mumbai: ChainId.Mumbai,
+  goerli: ChainId.Goerli,
+  polygon: ChainId.Polygon,
+  mainnet: ChainId.Mainnet,
+  optimism: ChainId.Optimism,
+  "optimism-goerli": ChainId.OptimismGoerli,
+  arbitrum: ChainId.Arbitrum,
+  "arbitrum-goerli": ChainId.ArbitrumGoerli,
+  fantom: ChainId.Fantom,
+  avalanche: ChainId.Avalanche,
+  binance: ChainId.BinanceSmartChainMainnet,
+  "binance-testnet": ChainId.BinanceSmartChainTestnet,
+};
+
+export const CHAIN_ID_TO_NAME = Object.fromEntries(
+  Object.entries(CHAIN_NAME_TO_ID).map(([name, id]) => [id, name]),
+) as Record<ChainId, ChainNames>;
+
+function buildDefaultMap() {
+  return SUPPORTED_CHAIN_IDS.reduce((previousValue, currentValue) => {
+    previousValue[currentValue] = getProviderForNetwork(
+      CHAIN_ID_TO_NAME[currentValue],
+    ) as string;
+    return previousValue;
+  }, {} as Record<SUPPORTED_CHAIN_ID, string>);
+}
+
+export const DEFAULT_RPC_URLS: Record<SUPPORTED_CHAIN_ID, string> =
+  buildDefaultMap();
 
 /**
  * @internal

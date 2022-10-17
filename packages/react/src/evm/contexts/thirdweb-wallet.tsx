@@ -30,6 +30,8 @@ const ThirdwebConnectedWalletContext =
 export const ThirdwebConnectedWalletProvider: React.FC<
   PropsWithChildren<{ signer?: Signer }>
 > = ({ signer, children }) => {
+  const { rpcUrlMap } = useThirdwebConfigContext();
+
   const [contextValue, setContextValue] =
     useState<ThirdwebConnectedWalletContext>(INITIAL_CONTEXT_VALUE);
 
@@ -39,9 +41,17 @@ export const ThirdwebConnectedWalletProvider: React.FC<
       // just get both of these up front and keep them around with the context
       Promise.all([signer.getAddress(), signer.getChainId()])
         .then(([address, chainId]) => {
+          const rpcUrl = rpcUrlMap[chainId];
           // only if the signer is still the same!
           if (signer === s) {
-            const wallet = new UserWallet(signer, {});
+            const wallet = new UserWallet(signer, {
+              readonlySettings: rpcUrl
+                ? {
+                    rpcUrl,
+                    chainId,
+                  }
+                : undefined,
+            });
             setContextValue({ wallet, address, chainId, signer });
           }
         })
