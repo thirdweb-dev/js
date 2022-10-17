@@ -47,7 +47,7 @@ export function useListing(
     () => {
       invariant(contract, "No Contract instance provided");
       invariant(listingId, "No listing id provided");
-      return contract.getListing(listingId || 0);
+      return contract.getListing(listingId);
     },
     {
       enabled: !!contract,
@@ -171,7 +171,7 @@ export function useWinningBid(
     () => {
       invariant(contract, "No Contract instance provided");
       invariant(listingId, "No listing id provided");
-      return contract.auction.getWinningBid(listingId || 0);
+      return contract.auction.getWinningBid(listingId);
     },
     {
       enabled: !!contract && listingId !== undefined,
