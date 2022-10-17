@@ -17,7 +17,7 @@ export const NFTClaimButton: React.FC<NFTClaimButtonProps> = ({
 
   const detectedState = extensionDetectedState({
     contractQuery,
-    feature: ["ERC721Claimable", "ERC1155Claimable"],
+    feature: ["ERC721Claimable"],
   });
 
   if (detectedState !== "enabled" || !contractQuery.contract) {
