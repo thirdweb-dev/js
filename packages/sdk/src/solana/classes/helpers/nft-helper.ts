@@ -225,21 +225,17 @@ export class NFTHelper {
 
   async supplyOf(nftAddress: string): Promise<number> {
     let originalEdition;
-    try {
-      const originalEditionAccount = await this.metaplex
-        .rpc()
-        .getAccount(findMasterEditionV2Pda(new PublicKey(nftAddress)));
 
+    const originalEditionAccount = await this.metaplex
+      .rpc()
+      .getAccount(findMasterEditionV2Pda(new PublicKey(nftAddress)));
+
+    if (originalEditionAccount.exists) {
       originalEdition = toNftOriginalEdition(
         toOriginalEditionAccount(originalEditionAccount),
       );
-    } catch (err: any) {
-      // If the NFT is burned, return 0 supply
-      if (err.key === "metaplex.errors.sdk.account_not_found") {
-        return 0;
-      }
-
-      throw err;
+    } else {
+      return 0;
     }
 
     // Add one to supply to account for the master edition

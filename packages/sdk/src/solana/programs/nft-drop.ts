@@ -5,8 +5,10 @@ import {
   NFTMetadataInput,
 } from "../../core/schema/nft";
 import { ClaimConditions } from "../classes/claim-conditions";
+import { enforceCreator } from "../classes/helpers/creators-helper";
 import { NFTHelper } from "../classes/helpers/nft-helper";
 import { Amount, TransactionResult } from "../types/common";
+import { CreatorInput } from "../types/programs";
 import { getNework } from "../utils/urls";
 import {
   CandyMachineItem,
@@ -451,6 +453,40 @@ export class NFTDrop {
       .delete({
         mintAddress: new PublicKey(nftAddress),
         collection,
+      })
+      .run();
+    return {
+      signature: tx.response.signature,
+    };
+  }
+
+  /**
+   * Update the creators of the collection
+   * @param creators - the creators to update
+   */
+  async updateCreators(creators: CreatorInput[]) {
+    const tx = await this.metaplex
+      .candyMachines()
+      .update({
+        candyMachine: await this.getCandyMachine(),
+        creators: enforceCreator(creators, this.metaplex.identity().publicKey),
+      })
+      .run();
+    return {
+      signature: tx.response.signature,
+    };
+  }
+
+  /**
+   * Update the royalty percentage of the collection
+   * @param sellerFeeBasisPoints - the royalty percentage of the collection
+   */
+  async updateRoyalty(sellerFeeBasisPoints: number) {
+    const tx = await this.metaplex
+      .candyMachines()
+      .update({
+        candyMachine: await this.getCandyMachine(),
+        sellerFeeBasisPoints,
       })
       .run();
     return {
