@@ -1,6 +1,5 @@
 import {
   CommonNFTInput,
-  CreatorOutput,
   NFT,
   NFTMetadata,
   NFTMetadataInput,
@@ -12,7 +11,7 @@ import {
 } from "../classes/helpers/creators-helper";
 import { NFTHelper } from "../classes/helpers/nft-helper";
 import { Amount, TransactionResult } from "../types/common";
-import { CreatorInput } from "../types/programs";
+import { CreatorInput, CreatorOutput } from "../types/programs";
 import { getNework } from "../utils/urls";
 import {
   CandyMachineItem,

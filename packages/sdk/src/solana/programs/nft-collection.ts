@@ -1,14 +1,12 @@
 import { QueryAllParams } from "../../core/schema/QueryParams";
+import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../core/schema/nft";
 import {
-  CreatorOutput,
-  NFT,
-  NFTMetadata,
-  NFTMetadataOrUri,
-} from "../../core/schema/nft";
-import { enforceCreator } from "../classes/helpers/creators-helper";
+  enforceCreator,
+  parseCreators,
+} from "../classes/helpers/creators-helper";
 import { NFTHelper } from "../classes/helpers/nft-helper";
 import { Amount, TransactionResult } from "../types/common";
-import { CreatorInput } from "../types/programs";
+import { CreatorInput, CreatorOutput } from "../types/programs";
 import { getNework } from "../utils/urls";
 import {
   findMasterEditionV2Pda,
@@ -94,7 +92,7 @@ export class NFTCollection {
       .findByMint({ mintAddress: this.publicKey })
       .run();
 
-    return (await this.nft.toNFTMetadata(metadata)).creators;
+    return parseCreators(metadata.creators);
   }
 
   /**

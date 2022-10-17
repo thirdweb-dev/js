@@ -9,7 +9,6 @@ import {
 } from "../../constants/addresses";
 import { TransactionResult } from "../../types/common";
 import { getPublicRpc } from "../../utils/urls";
-import { parseCreators } from "./creators-helper";
 import {
   findMasterEditionV2Pda,
   GmaBuilder,
@@ -287,7 +286,6 @@ export class NFTHelper {
         symbol: fullModel.symbol,
         ...fullModel.json,
       },
-      creators: parseCreators(fullModel.creators),
       owner: owner || PublicKey.default.toBase58(),
       supply: supply,
       type: "metaplex",

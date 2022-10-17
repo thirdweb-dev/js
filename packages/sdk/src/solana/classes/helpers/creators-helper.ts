@@ -1,5 +1,4 @@
-import { CreatorOutput } from "../../../core/schema/nft";
-import { CreatorInput } from "../../types/programs";
+import { CreatorInput, CreatorOutput } from "../../types/programs";
 import type { Creator } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
 
