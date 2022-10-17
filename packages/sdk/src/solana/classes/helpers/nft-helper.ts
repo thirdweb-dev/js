@@ -10,6 +10,7 @@ import {
 import { TransactionResult } from "../../types/common";
 import { getPublicRpc } from "../../utils/urls";
 import {
+  findMasterEditionV2Pda,
   GmaBuilder,
   JsonMetadata,
   Metadata,
@@ -22,6 +23,8 @@ import {
   token,
   toMetadata,
   toMetadataAccount,
+  toNftOriginalEdition,
+  toOriginalEditionAccount,
 } from "@metaplex-foundation/js";
 import { getAccount, getAssociatedTokenAddress } from "@solana/spl-token";
 import {
@@ -220,6 +223,29 @@ export class NFTHelper {
     return nfts;
   }
 
+  async supplyOf(nftAddress: string): Promise<number> {
+    let originalEdition;
+    try {
+      const originalEditionAccount = await this.metaplex
+        .rpc()
+        .getAccount(findMasterEditionV2Pda(new PublicKey(nftAddress)));
+
+      originalEdition = toNftOriginalEdition(
+        toOriginalEditionAccount(originalEditionAccount),
+      );
+    } catch (err: any) {
+      // If the NFT is burned, return 0 supply
+      if (err.key === "metaplex.errors.sdk.account_not_found") {
+        return 0;
+      }
+
+      throw err;
+    }
+
+    // Add one to supply to account for the master edition
+    return originalEdition.supply.toNumber() + 1;
+  }
+
   async toNFTMetadata(
     meta:
       | Nft
@@ -244,7 +270,7 @@ export class NFTHelper {
     return this.toNFTMetadataResolved(mint, owner, fullModel);
   }
 
-  private toNFTMetadataResolved(
+  private async toNFTMetadataResolved(
     mint: Mint,
     owner: string | undefined,
     fullModel:
@@ -253,7 +279,8 @@ export class NFTHelper {
       | NftWithToken
       | SftWithToken
       | Metadata<JsonMetadata<string>>,
-  ): NFT {
+  ): Promise<NFT> {
+    const supply = await this.supplyOf(mint.address.toBase58());
     return {
       metadata: {
         id: mint.address.toBase58(),
@@ -263,7 +290,7 @@ export class NFTHelper {
         ...fullModel.json,
       },
       owner: owner || PublicKey.default.toBase58(),
-      supply: mint.supply.basisPoints.toNumber(),
+      supply: supply,
       type: "metaplex",
     };
   }
