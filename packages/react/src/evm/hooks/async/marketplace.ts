@@ -46,7 +46,8 @@ export function useListing(
     cacheKeys.contract.marketplace.getListing(contractAddress, listingId),
     () => {
       invariant(contract, "No Contract instance provided");
-      return contract.getListing(BigNumber.from(listingId || 0));
+      invariant(listingId, "No listing id provided");
+      return contract.getListing(listingId || 0);
     },
     {
       enabled: !!contract,
@@ -169,7 +170,8 @@ export function useWinningBid(
     ),
     () => {
       invariant(contract, "No Contract instance provided");
-      return contract.auction.getWinningBid(BigNumber.from(listingId || 0));
+      invariant(listingId, "No listing id provided");
+      return contract.auction.getWinningBid(listingId || 0);
     },
     {
       enabled: !!contract && listingId !== undefined,
@@ -202,11 +204,10 @@ export function useAuctionWinner(
     ),
     async () => {
       invariant(contract, "No Contract instance provided");
+      invariant(listingId, "No listing id provided");
       let winner: string | undefined;
       try {
-        winner = await contract.auction.getWinner(
-          BigNumber.from(listingId || 0),
-        );
+        winner = await contract.auction.getWinner(listingId);
       } catch (err) {
         if (!(err as Error)?.message?.includes("Could not find auction")) {
           throw err;
@@ -243,6 +244,40 @@ export function useBidBuffer(contract: RequiredParam<Marketplace>) {
     },
     {
       enabled: !!contract,
+    },
+  );
+}
+
+/**
+ * Use this to get the minimum next bid for the auction listing from your marketplace contract.
+ *
+ * @example
+ * ```javascript
+ * const { data: minimumNextBid, isLoading, error } = useMinimumNextBid(<YourMarketplaceContractInstance>, <listingId>);
+ * ```
+ *
+ * @param contract - an instance of a marketplace contract
+ * @param listingId - the listing id to check
+ * @returns a response object that includes the minimum next bid for the auction listing
+ * @beta
+ */
+export function useMinimumNextBid(
+  contract: RequiredParam<Marketplace>,
+  listingId: RequiredParam<BigNumberish>,
+) {
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.marketplace.auction.getWinner(
+      contractAddress,
+      listingId,
+    ),
+    async () => {
+      invariant(contract, "No Contract instance provided");
+      invariant(listingId, "No listing id provided");
+      return await contract.auction.getMinimumNextBid(listingId);
+    },
+    {
+      enabled: !!contract && listingId !== undefined,
     },
   );
 }
