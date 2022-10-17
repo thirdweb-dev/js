@@ -260,10 +260,8 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                 contractAddress,
               });
               onSuccess();
-              router.push(
+              router.replace(
                 `/${SupportedChainIdToNetworkMap[selectedChain]}/${contractAddress}`,
-                undefined,
-                { shallow: true },
               );
             },
             onError: (err) => {
