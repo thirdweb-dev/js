@@ -11,7 +11,7 @@ import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { DropClaimConditions } from "./drop-claim-conditions";
 import { Erc721 } from "./erc-721";
-import type { DropERC721 } from "@thirdweb-dev/contracts-js";
+import type { DropERC721, SignatureDrop } from "@thirdweb-dev/contracts-js";
 import { TokensClaimedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Drop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers } from "ethers";
@@ -98,7 +98,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
       quantity,
       options?.checkERC20Allowance === undefined
         ? true
-        : options.checkERC20Allowance
+        : options.checkERC20Allowance,
     );
 
     return TransactionTask.make({
