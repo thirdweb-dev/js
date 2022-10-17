@@ -139,6 +139,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       title: "Token",
       description: "ERC20 token",
       erc: "ERC20",
+      audit: "ipfs://QmaMiezCMfmo5zWmwNc2WXLex11BuRZJ9p9ZhWj638Tdws",
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/token/TokenERC20.sol",
       ecosytem: "evm",
@@ -147,6 +148,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       title: "Edition",
       description: "ERC1155 mintable NFTs",
       erc: "ERC1155",
+      audit: "ipfs://QmaMiezCMfmo5zWmwNc2WXLex11BuRZJ9p9ZhWj638Tdws",
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/token/TokenERC1155.sol",
       ecosytem: "evm",
@@ -155,6 +157,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       title: "Token Drop",
       description: "ERC20 token that you can sell for other tokens",
       erc: "ERC20",
+      audit: "ipfs://QmfKqeUfUgNwFn5B1fUAxzikj89mneZEETKrF7JfaJg5St",
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/drop/DropERC20.sol",
       ecosytem: "evm",
@@ -170,6 +173,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       title: "NFT Collection",
       description: "ERC721 mintable NFTs",
       erc: "ERC721",
+      audit: "ipfs://QmaMiezCMfmo5zWmwNc2WXLex11BuRZJ9p9ZhWj638Tdws",
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/token/TokenERC721.sol",
       ecosytem: "evm",
@@ -186,6 +190,7 @@ export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
       description:
         "Bundle ERC721/ERC1155/ERC20 into a single token, with lootbox mechanics",
       erc: "ERC1155",
+      audit: "ipfs://QmfKqeUfUgNwFn5B1fUAxzikj89mneZEETKrF7JfaJg5St",
       sourceUrl:
         "https://raw.githubusercontent.com/thirdweb-dev/contracts/v3.1.3/contracts/pack/Pack.sol",
       ecosytem: "evm",
