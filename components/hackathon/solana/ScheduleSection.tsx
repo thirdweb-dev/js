@@ -29,12 +29,6 @@ export const ScheduleSection: React.FC = () => {
       irl: "NYC",
     },
     {
-      day: 19,
-      title: "Solana-thon SF Kickoff",
-      href: "https://lu.ma/sf-kickoff",
-      irl: "SF",
-    },
-    {
       day: 20,
       title: "Introduction to Solana with Phantom Wallet",
       href: "https://lu.ma/tw-phantom",
