@@ -4,6 +4,7 @@ import {
   FileOrBufferOrStringSchema,
   HexColor,
 } from "./shared";
+import { Creator } from "@metaplex-foundation/js";
 import { z } from "zod";
 
 /**
@@ -53,10 +54,17 @@ export type NFTMetadata = z.output<typeof CommonNFTOutput>;
 /**
  * @public
  */
+export type CreatorOutput = Omit<Creator, "address"> & {
+  readonly address: string;
+};
+/**
+ * @public
+ */
 export type NFT = {
   metadata: NFTMetadata;
   owner: string;
   type: "ERC1155" | "ERC721" | "metaplex";
   supply: number;
+  creators: CreatorOutput[];
   quantityOwned?: number;
 };

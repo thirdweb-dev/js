@@ -1,5 +1,10 @@
 import { QueryAllParams } from "../../core/schema/QueryParams";
-import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../core/schema/nft";
+import {
+  CreatorOutput,
+  NFT,
+  NFTMetadata,
+  NFTMetadataOrUri,
+} from "../../core/schema/nft";
 import { enforceCreator } from "../classes/helpers/creators-helper";
 import { NFTHelper } from "../classes/helpers/nft-helper";
 import { Amount, TransactionResult } from "../types/common";
@@ -71,6 +76,44 @@ export class NFTCollection {
       .run();
 
     return (await this.nft.toNFTMetadata(metadata)).metadata;
+  }
+
+  /**
+   * Get the creators of this program.
+   * @returns program metadata
+   *
+   * @example
+   * ```jsx
+   * const creators = await program.getCreators();
+   * console.log(creators);
+   * ```
+   */
+  async getCreators(): Promise<CreatorOutput[]> {
+    const metadata = await this.metaplex
+      .nfts()
+      .findByMint({ mintAddress: this.publicKey })
+      .run();
+
+    return (await this.nft.toNFTMetadata(metadata)).creators;
+  }
+
+  /**
+   * Get the royalty basis points for this collection
+   * @returns royalty basis points
+   *
+   * @example
+   * ```jsx
+   * const royalty = await program.getRoyalty();
+   * console.log(royalty);
+   * ```
+   */
+  async getRoyalty(): Promise<number> {
+    const metadata = await this.metaplex
+      .nfts()
+      .findByMint({ mintAddress: this.publicKey })
+      .run();
+
+    return metadata.sellerFeeBasisPoints;
   }
 
   /**
@@ -459,8 +502,8 @@ export class NFTCollection {
   }
 
   /**
-   * Update the royalty percentage of the collection
-   * @param sellerFeeBasisPoints - the royalty percentage of the collection
+   * Update the royalty basis points of the collection
+   * @param sellerFeeBasisPoints - the royalty basis points of the collection
    */
   async updateRoyalty(sellerFeeBasisPoints: number) {
     const tx = await this.metaplex

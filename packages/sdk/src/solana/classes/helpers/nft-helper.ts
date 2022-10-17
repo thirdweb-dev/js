@@ -9,6 +9,7 @@ import {
 } from "../../constants/addresses";
 import { TransactionResult } from "../../types/common";
 import { getPublicRpc } from "../../utils/urls";
+import { parseCreators } from "./creators-helper";
 import {
   findMasterEditionV2Pda,
   GmaBuilder,
@@ -263,12 +264,14 @@ export class NFTHelper {
       throw new Error("No mint found for NFT");
     }
     const owner = await this.ownerOf(mint.address.toBase58());
-    return this.toNFTMetadataResolved(mint, owner, fullModel);
+    const supply = await this.supplyOf(mint.address.toBase58());
+    return this.toNFTMetadataResolved(mint, owner, supply, fullModel);
   }
 
   private async toNFTMetadataResolved(
     mint: Mint,
     owner: string | undefined,
+    supply: number,
     fullModel:
       | Nft
       | Sft
@@ -276,7 +279,6 @@ export class NFTHelper {
       | SftWithToken
       | Metadata<JsonMetadata<string>>,
   ): Promise<NFT> {
-    const supply = await this.supplyOf(mint.address.toBase58());
     return {
       metadata: {
         id: mint.address.toBase58(),
@@ -285,6 +287,7 @@ export class NFTHelper {
         symbol: fullModel.symbol,
         ...fullModel.json,
       },
+      creators: parseCreators(fullModel.creators),
       owner: owner || PublicKey.default.toBase58(),
       supply: supply,
       type: "metaplex",
