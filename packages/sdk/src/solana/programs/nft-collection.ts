@@ -173,26 +173,7 @@ export class NFTCollection {
    * ```
    */
   async supplyOf(nftAddress: string): Promise<number> {
-    let originalEdition;
-    try {
-      const originalEditionAccount = await this.metaplex
-        .rpc()
-        .getAccount(findMasterEditionV2Pda(new PublicKey(nftAddress)));
-
-      originalEdition = toNftOriginalEdition(
-        toOriginalEditionAccount(originalEditionAccount),
-      );
-    } catch (err: any) {
-      // If the NFT is burned, return 0 supply
-      if (err.key === "metaplex.errors.sdk.account_not_found") {
-        return 0;
-      }
-
-      throw err;
-    }
-
-    // Add one to supply to account for the master edition
-    return originalEdition.supply.toNumber() + 1;
+    return this.nft.supplyOf(nftAddress);
   }
 
   /**
