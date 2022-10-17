@@ -42,6 +42,18 @@ describe("NFTCollection", async () => {
     expect(balance).to.eq(1);
   });
 
+  it("Should update supply", async () => {
+    const mint = await collection.mint({
+      name: "Test NFT",
+      description: "Test Description",
+    });
+    let nft = await collection.get(mint);
+    expect(nft.supply).to.eq(1);
+    await collection.mintAdditionalSupply(mint, 2);
+    nft = await collection.get(mint);
+    expect(nft.supply).to.eq(3);
+  });
+
   it("should transfer NFTs", async () => {
     const all = await collection.getAll();
     const wallet = Keypair.generate();
