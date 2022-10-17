@@ -298,13 +298,11 @@ async function extractIPFSHashFromBytecode(
   const [cbor] = await Promise.all([import("cbor-x")]);
 
   const cborData = cbor.decode(bytecodeBuffer);
-  console.log("feature detection", { cborData, multihashes });
   if ("ipfs" in cborData && cborData["ipfs"]) {
     try {
-      console.log("feature detection", cborData["ipfs"]);
       return `ipfs://${multihashes.toB58String(cborData["ipfs"])}`;
     } catch (e) {
-      console.warn("feature-detection", e);
+      console.warn("feature-detection ipfs cbor failed", e);
     }
   }
   return undefined;
