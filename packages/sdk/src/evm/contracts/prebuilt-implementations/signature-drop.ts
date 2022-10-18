@@ -328,7 +328,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * @returns the claimed supply
    */
   public async totalClaimedSupply(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.totalMinted();
+    return this.erc721.totalClaimedSupply();
   }
 
   /**
@@ -344,10 +344,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * @returns the unclaimed supply
    */
   public async totalUnclaimedSupply(): Promise<BigNumber> {
-    const maxSupply =
-      await this.contractWrapper.readContract.nextTokenIdToMint();
-
-    return maxSupply.sub(await this.totalClaimedSupply());
+    return this.erc721.totalUnclaimedSupply();
   }
 
   /**

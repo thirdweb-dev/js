@@ -7,7 +7,7 @@ import {
   hasFunction,
   NotFoundError,
 } from "../../common";
-import { fetchTokenMetadata } from "../../common/nft";
+import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
 import {
   FEATURE_EDITION,
   FEATURE_EDITION_BATCH_MINTABLE,
@@ -128,7 +128,11 @@ export class Erc1155<
       this.contractWrapper.readContract
         .totalSupply(tokenId)
         .catch(() => BigNumber.from(0)),
-      this.getTokenMetadata(tokenId),
+      this.getTokenMetadata(tokenId).catch(() => ({
+        id: tokenId.toString(),
+        uri: "",
+        ...FALLBACK_METADATA,
+      })),
     ]);
     return {
       owner: ethers.constants.AddressZero,
