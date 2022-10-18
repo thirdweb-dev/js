@@ -5,8 +5,13 @@ import {
   NFTMetadataInput,
 } from "../../core/schema/nft";
 import { ClaimConditions } from "../classes/claim-conditions";
+import {
+  enforceCreator,
+  parseCreators,
+} from "../classes/helpers/creators-helper";
 import { NFTHelper } from "../classes/helpers/nft-helper";
 import { Amount, TransactionResult } from "../types/common";
+import { CreatorInput, CreatorOutput } from "../types/programs";
 import { sendMultipartTransaction } from "../utils/transactions";
 import { getNework } from "../utils/urls";
 import {
@@ -95,7 +100,38 @@ export class NFTDrop {
       .nfts()
       .findByMint({ mintAddress: info.collectionMintAddress })
       .run();
+
     return (await this.nft.toNFTMetadata(metadata)).metadata;
+  }
+
+  /**
+   * Get the creators of this program.
+   * @returns program metadata
+   *
+   * @example
+   * ```jsx
+   * const creators = await program.getCreators();
+   * console.log(creators);
+   * ```
+   */
+  async getCreators(): Promise<CreatorOutput[]> {
+    const info = await this.getCandyMachine();
+    return parseCreators(info.creators);
+  }
+
+  /**
+   * Get the royalty basis points for this collection
+   * @returns royalty basis points
+   *
+   * @example
+   * ```jsx
+   * const royalty = await program.getRoyalty();
+   * console.log(royalty);
+   * ```
+   */
+  async getRoyalty(): Promise<number> {
+    const info = await this.getCandyMachine();
+    return info.sellerFeeBasisPoints;
   }
 
   /**
@@ -426,6 +462,40 @@ export class NFTDrop {
       .delete({
         mintAddress: new PublicKey(nftAddress),
         collection,
+      })
+      .run();
+    return {
+      signature: tx.response.signature,
+    };
+  }
+
+  /**
+   * Update the creators of the collection
+   * @param creators - the creators to update
+   */
+  async updateCreators(creators: CreatorInput[]) {
+    const tx = await this.metaplex
+      .candyMachines()
+      .update({
+        candyMachine: await this.getCandyMachine(),
+        creators: enforceCreator(creators, this.metaplex.identity().publicKey),
+      })
+      .run();
+    return {
+      signature: tx.response.signature,
+    };
+  }
+
+  /**
+   * Update the royalty basis points of the collection
+   * @param sellerFeeBasisPoints - the royalty basis points of the collection
+   */
+  async updateRoyalty(sellerFeeBasisPoints: number) {
+    const tx = await this.metaplex
+      .candyMachines()
+      .update({
+        candyMachine: await this.getCandyMachine(),
+        sellerFeeBasisPoints,
       })
       .run();
     return {

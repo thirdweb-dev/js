@@ -1,9 +1,12 @@
 import { QueryAllParams } from "../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../core/schema/nft";
-import { enforceCreator } from "../classes/helpers/creators-helper";
+import {
+  enforceCreator,
+  parseCreators,
+} from "../classes/helpers/creators-helper";
 import { NFTHelper } from "../classes/helpers/nft-helper";
 import { Amount, TransactionResult } from "../types/common";
-import { CreatorInput } from "../types/programs";
+import { CreatorInput, CreatorOutput } from "../types/programs";
 import { sendMultipartTransaction } from "../utils/transactions";
 import { getNework } from "../utils/urls";
 import {
@@ -61,16 +64,42 @@ export class NFTCollection {
    * @example
    * ```jsx
    * const metadata = await program.getMetadata();
-   * console.log(metadata.name);
+   * console.log(metadata);
    * ```
    */
   async getMetadata(): Promise<NFTMetadata> {
-    const metadata = await this.metaplex
-      .nfts()
-      .findByMint({ mintAddress: this.publicKey })
-      .run();
-
+    const metadata = await this.getCollection();
     return (await this.nft.toNFTMetadata(metadata)).metadata;
+  }
+
+  /**
+   * Get the creators of this program.
+   * @returns program metadata
+   *
+   * @example
+   * ```jsx
+   * const creators = await program.getCreators();
+   * console.log(creators);
+   * ```
+   */
+  async getCreators(): Promise<CreatorOutput[]> {
+    const metadata = await this.getCollection();
+    return parseCreators(metadata.creators);
+  }
+
+  /**
+   * Get the royalty basis points for this collection
+   * @returns royalty basis points
+   *
+   * @example
+   * ```jsx
+   * const royalty = await program.getRoyalty();
+   * console.log(royalty);
+   * ```
+   */
+  async getRoyalty(): Promise<number> {
+    const metadata = await this.getCollection();
+    return metadata.sellerFeeBasisPoints;
   }
 
   /**
@@ -391,22 +420,41 @@ export class NFTCollection {
   }
 
   /**
-   * Update the settings of the collection
-   * @param settings - the settings to update
+   * SETTINGS
    */
-  async updateSettings(settings: { creators?: CreatorInput[] }) {
-    const updateData = {
-      ...(settings.creators && {
-        creators: enforceCreator(
-          settings.creators,
-          this.metaplex.identity().publicKey,
-        ),
-      }),
+
+  /**
+   * Update the creators of the collection
+   * @param creators - the creators to update
+   */
+  async updateCreators(creators: CreatorInput[]) {
+    const tx = await this.metaplex
+      .nfts()
+      .update({
+        nftOrSft: await this.getCollection(),
+        creators: enforceCreator(creators, this.metaplex.identity().publicKey),
+      })
+      .run();
+    return {
+      signature: tx.response.signature,
     };
-    this.metaplex.nfts().update({
-      nftOrSft: await this.getCollection(),
-      ...updateData,
-    });
+  }
+
+  /**
+   * Update the royalty basis points of the collection
+   * @param sellerFeeBasisPoints - the royalty basis points of the collection
+   */
+  async updateRoyalty(sellerFeeBasisPoints: number) {
+    const tx = await this.metaplex
+      .nfts()
+      .update({
+        nftOrSft: await this.getCollection(),
+        sellerFeeBasisPoints,
+      })
+      .run();
+    return {
+      signature: tx.response.signature,
+    };
   }
 
   private async getCollection() {
