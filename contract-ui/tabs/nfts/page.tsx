@@ -3,6 +3,7 @@ import { NFTClaimButton } from "./components/claim-button";
 import { NFTLazyMintButton } from "./components/lazy-mint-button";
 import { NFTMintButton } from "./components/mint-button";
 import { NFTRevealButton } from "./components/reveal-button";
+import { SupplyCards } from "./components/supply-cards";
 import { NFTGetAllTable } from "./components/table";
 import { Box, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
@@ -23,6 +24,8 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
     "ERC1155Enumerable",
     "ERC721Supply",
   ]);
+
+  const isErc721 = detectFeatures(contractQuery?.contract, ["ERC721"]);
 
   if (contractQuery.isLoading) {
     // TODO build a skeleton for this
@@ -64,7 +67,10 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
           </Box>
         </Card>
       ) : (
-        <NFTGetAllTable contract={contractQuery.contract} />
+        <>
+          {isErc721 && <SupplyCards contract={contractQuery.contract} />}
+          <NFTGetAllTable contract={contractQuery.contract} />
+        </>
       )}
     </Flex>
   );
