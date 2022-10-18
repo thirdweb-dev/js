@@ -1,3 +1,4 @@
+import { ContractUriUpload } from "./contract-uri-upload";
 import {
   ButtonGroup,
   Code,
@@ -134,18 +135,19 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
   contract,
 }) => {
   const formId = useId();
-  const { register, control, getValues, watch, handleSubmit } = useForm({
-    defaultValues: {
-      params:
-        abiFunction?.inputs.map((i) => ({
-          key: i.name || "key",
-          value: "",
-          type: i.type,
-          components: i.components,
-        })) || [],
-      value: "0",
-    },
-  });
+  const { register, control, getValues, setValue, watch, handleSubmit } =
+    useForm({
+      defaultValues: {
+        params:
+          abiFunction?.inputs.map((i) => ({
+            key: i.name || "key",
+            value: "",
+            type: i.type,
+            components: i.components,
+          })) || [],
+        value: "0",
+      },
+    });
   const { fields } = useFieldArray({
     control,
     name: "params",
@@ -220,6 +222,12 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
                   <Textarea
                     defaultValue={getValues(`params.${index}.value`)}
                     {...register(`params.${index}.value`)}
+                  />
+                ) : item.type.includes("string") &&
+                  item.key.toLowerCase().includes("uri") ? (
+                  <ContractUriUpload
+                    value={getValues(`params.${index}.value`)}
+                    setValue={(val) => setValue(`params.${index}.value`, val)}
                   />
                 ) : (
                   <Input
