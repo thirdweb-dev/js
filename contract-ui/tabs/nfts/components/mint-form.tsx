@@ -16,8 +16,8 @@ import {
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { UseMutationResult } from "@tanstack/react-query";
-import { NFTContract, useAddress } from "@thirdweb-dev/react";
-import type { useMintNFT } from "@thirdweb-dev/react/solana";
+import { NFTContract, useAddress, useMintNFT } from "@thirdweb-dev/react";
+import type { useMintNFT as useMintNFTSolana } from "@thirdweb-dev/react/solana";
 import type { NFTMetadataInput } from "@thirdweb-dev/sdk";
 import { OpenSeaPropertyBadge } from "components/badges/opensea";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -43,7 +43,9 @@ const MINT_FORM_ID = "nft-mint-form";
 type NFTMintForm =
   | {
       contract?: NFTContract;
-      mintMutation: ReturnType<typeof useMintNFT>;
+      mintMutation:
+        | ReturnType<typeof useMintNFT>
+        | ReturnType<typeof useMintNFTSolana>;
       lazyMintMutation?: undefined;
       ecosystem: "evm" | "solana";
     }

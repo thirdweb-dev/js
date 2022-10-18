@@ -34,7 +34,7 @@ export function useNFTDrawerTabs(
     // eslint-disable-next-line react-hooks/rules-of-hooks
     return useMemo(() => {
       const isOwner = token?.owner === solAddress;
-      return [
+      let tabs: NFTDrawerTab[] = [
         {
           title: "Transfer",
           isDisabled: !isOwner,
@@ -58,6 +58,30 @@ export function useNFTDrawerTabs(
           ),
         },
       ];
+
+      if (contractOrProgram.accountType === "nft-collection") {
+        tabs = tabs.concat([
+          {
+            title: "Mint",
+            // TODO: Disable if the user is not the authority
+            isDisabled: false,
+            children: dynamic(() =>
+              import("program-ui/nft/drawer-tabs/mint-supply").then(
+                ({ MintSupplyTab }) =>
+                  // eslint-disable-next-line react/display-name
+                  () =>
+                    (
+                      <MintSupplyTab
+                        program={contractOrProgram as NFTCollection}
+                        tokenId={tokenId}
+                      />
+                    ),
+              ),
+            ),
+          },
+        ]);
+      }
+      return tabs;
     }, [contractOrProgram, solAddress, token, tokenId]);
   }
 
