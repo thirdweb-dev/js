@@ -1,4 +1,7 @@
-import { RequiredParam } from "../../../core/types/shared";
+import {
+  RequiredParam,
+  requiredParamInvariant,
+} from "../../../core/query-utils/required-param";
 import { useSDKChainId } from "../../providers/base";
 import {
   ClaimNFTParams,
@@ -51,7 +54,7 @@ export function useUnclaimedNFTs(
   return useQueryWithNetwork(
     cacheKeys.contract.nft.drop.getAllUnclaimed(contractAddress, queryParams),
     () => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
       // TODO make this work for custom contracts (needs ABI change)
       invariant(
         contract.getAllUnclaimed,
@@ -98,8 +101,12 @@ export function useUnclaimedNFTSupply(contract: RequiredParam<DropContract>) {
   return useQueryWithNetwork(
     cacheKeys.contract.nft.drop.totalUnclaimedSupply(contractAddress),
     () => {
-      invariant(erc721, "No ERC721 Contract instance provided");
-      return erc721.totalUnclaimedSupply();
+      requiredParamInvariant(contract, "No Contract instance provided");
+      if (erc721) {
+        invariant(erc721, "No ERC721 Contract instance provided");
+        return erc721.totalUnclaimedSupply();
+      }
+      invariant(false, "Contract is not an instance of ERC721")
     },
     { enabled: !!erc721 },
   );
@@ -118,8 +125,11 @@ export function useClaimedNFTSupply(contract: RequiredParam<DropContract>) {
   return useQueryWithNetwork(
     cacheKeys.contract.nft.drop.totalClaimedSupply(contractAddress),
     () => {
-      invariant(erc721, "No ERC721 Contract instance provided");
-      return erc721.totalClaimedSupply();
+      requiredParamInvariant(contract, "No Contract instance provided");
+      if (erc721) {
+        return erc721.totalClaimedSupply();
+      }
+      invariant(false, "Contract is not an instance of ERC721")
     },
     { enabled: !!erc721 },
   );
@@ -198,10 +208,10 @@ export function useClaimNFT<TContract extends DropContract>(
 
   return useMutation(
     async (data: ClaimNFTParams) => {
-      invariant(contract, "contract is undefined");
+      requiredParamInvariant(contract, "contract is undefined");
 
       if (erc1155) {
-        invariant(!!data.tokenId, "tokenId not provided");
+        requiredParamInvariant(data.tokenId, "tokenId not provided");
         if (!data.to) {
           return (await erc1155.claim(
             data.tokenId,
@@ -262,7 +272,7 @@ export function useLazyMint<TContract extends DropContract>(
 
   return useMutation(
     async (data: { metadatas: NFTMetadataInput[] }) => {
-      invariant(contract, "contract is undefined");
+      requiredParamInvariant(contract, "contract is undefined");
       let options;
       if (onProgress) {
         options = {
@@ -308,7 +318,7 @@ export function useDelayedRevealLazyMint<TContract extends RevealableContract>(
 
   return useMutation(
     async (data: DelayedRevealLazyMintInput) => {
-      invariant(contract, "contract is undefined");
+      requiredParamInvariant(contract, "contract is undefined");
       let options;
       if (onProgress) {
         options = {
@@ -362,7 +372,7 @@ export function useRevealLazyMint<TContract extends RevealableContract>(
 
   return useMutation(
     async (data: RevealLazyMintInput) => {
-      invariant(contract, "contract is undefined");
+      requiredParamInvariant(contract, "contract is undefined");
       const { erc721, erc1155 } = getErcs(contract);
       if (erc721) {
         return await erc721.revealer.reveal(data.batchId, data.password);

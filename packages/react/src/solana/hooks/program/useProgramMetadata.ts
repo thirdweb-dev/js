@@ -1,5 +1,5 @@
 import { createSOLProgramQueryKey } from "../../../core/query-utils/query-key";
-import { RequiredParam } from "../../../core/types/shared";
+import { RequiredParam } from "../../../core/query-utils/required-param";
 import { UseProgramResult } from "./useProgram";
 import { useQuery } from "@tanstack/react-query";
 import invariant from "tiny-invariant";

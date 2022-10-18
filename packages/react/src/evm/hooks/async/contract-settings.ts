@@ -1,4 +1,7 @@
-import { RequiredParam } from "../../../core/types/shared";
+import {
+  RequiredParam,
+  requiredParamInvariant,
+} from "../../../core/query-utils/required-param";
 import { useSDKChainId } from "../../providers/base";
 import { WalletAddress } from "../../types";
 import {
@@ -35,7 +38,7 @@ export function usePrimarySaleRecipient(
   return useQueryWithNetwork(
     cacheKeys.extensions.sales.getRecipient(contractAddress),
     () => {
-      invariant(contract, "No contract provided");
+      requiredParamInvariant(contract, "No contract provided");
       invariant(
         "sales" in contract && contract.sales,
         "Contract does not support primarySale",
@@ -86,7 +89,7 @@ export function useUpdatePrimarySaleRecipient(
   const activeChainId = useSDKChainId();
   return useMutation(
     (newRecipient: WalletAddress) => {
-      invariant(contract, "No contract provided");
+      requiredParamInvariant(contract, "No contract provided");
       invariant(
         "sales" in contract && contract.sales,
         "Contract does not support primarySale",
@@ -128,7 +131,7 @@ export function useRoyaltySettings(
   return useQueryWithNetwork(
     cacheKeys.extensions.royalties.getDefaultRoyaltyInfo(contractAddress),
     () => {
-      invariant(contract, "No contract provided");
+      requiredParamInvariant(contract, "No contract provided");
       invariant(
         "royalties" in contract && contract.royalties,
         "Contract does not support royalties",
@@ -182,7 +185,7 @@ export function useUpdateRoyaltySettings(
       seller_fee_basis_points?: number;
       fee_recipient?: WalletAddress;
     }) => {
-      invariant(contract, "No contract provided");
+      requiredParamInvariant(contract, "No contract provided");
       invariant(
         "royalties" in contract && contract.royalties,
         "Contract does not support royalties",
@@ -224,7 +227,7 @@ export function usePlatformFees(
   return useQueryWithNetwork(
     cacheKeys.extensions.platformFees.get(contractAddress),
     () => {
-      invariant(contract, "No contract provided");
+      requiredParamInvariant(contract, "No contract provided");
       invariant(
         "platformFees" in contract && contract.platformFees,
         "Contract does not support platformFees",
@@ -277,7 +280,7 @@ export function useUpdatePlatformFees(
       platform_fee_basis_points?: number;
       fee_recipient?: WalletAddress;
     }) => {
-      invariant(contract, "No contract provided");
+      requiredParamInvariant(contract, "No contract provided");
       invariant(
         "platformFees" in contract && contract.platformFees,
         "Contract does not support platformFees",
@@ -317,7 +320,7 @@ export function useMetadata(contract: RequiredParam<ValidContractInstance>) {
   return useQueryWithNetwork(
     cacheKeys.extensions.metadata.get(contractAddress),
     () => {
-      invariant(contract, "No contract provided");
+      requiredParamInvariant(contract, "No contract provided");
       invariant(
         "metadata" in contract && contract.metadata,
         "Contract does not support metadata",
@@ -366,7 +369,7 @@ export function useUpdateMetadata(
   const activeChainId = useSDKChainId();
   return useMutation(
     (updatePayload: CustomContractMetadata) => {
-      invariant(contract, "No contract provided");
+      requiredParamInvariant(contract, "No contract provided");
       invariant(
         "metadata" in contract && contract.metadata,
         "Contract does not support metadata",

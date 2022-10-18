@@ -1,9 +1,11 @@
 import { createSOLProgramQueryKey } from "../../../../core/query-utils/query-key";
-import { RequiredParam } from "../../../../core/types/shared";
+import {
+  requiredParamInvariant,
+  RequiredParam,
+} from "../../../../core/query-utils/required-param";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { NFTMetadataInput, UploadProgressEvent } from "@thirdweb-dev/sdk";
 import type { NFTDrop } from "@thirdweb-dev/sdk/solana";
-import invariant from "tiny-invariant";
 
 /**
  * Lazy mint NFTs on an NFT Drop program
@@ -34,7 +36,7 @@ export function useLazyMint(
   const queryClient = useQueryClient();
   return useMutation(
     async (data: { metadatas: NFTMetadataInput[] }) => {
-      invariant(program, "program is required");
+      requiredParamInvariant(program, "program is required");
       let options;
       if (onProgress) {
         options = {

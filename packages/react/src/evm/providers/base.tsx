@@ -2,8 +2,8 @@ import {
   QueryClientProviderProps,
   QueryClientProviderWithDefault,
 } from "../../core/providers/query-client";
+import { RequiredParam } from "../../core/query-utils/required-param";
 import { ComponentWithChildren } from "../../core/types/component";
-import { RequiredParam } from "../../core/types/shared";
 import {
   ThirdwebAuthConfig,
   ThirdwebAuthConfigProvider,
