@@ -9,10 +9,7 @@ import {
   defaultSupportedChains,
 } from "../constants/chain";
 import { ThirdwebAuthConfig } from "../contexts/thirdweb-auth";
-import {
-  ThirdwebConfigProvider,
-  defaultChainRpc,
-} from "../contexts/thirdweb-config";
+import { ThirdwebConfigProvider } from "../contexts/thirdweb-config";
 import { ThirdwebSDKProvider, ThirdwebSDKProviderProps } from "./base";
 import { QueryClient } from "@tanstack/react-query";
 import {
@@ -20,6 +17,7 @@ import {
   getProviderForNetwork,
   SDKOptionsOutput,
 } from "@thirdweb-dev/sdk";
+import { DEFAULT_RPC_URLS } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import React, { useMemo } from "react";
 import {
@@ -223,7 +221,7 @@ export const ThirdwebProvider = <
   TSupportedChain extends SupportedChain = SupportedChain,
 >({
   sdkOptions,
-  chainRpc = defaultChainRpc,
+  chainRpc = DEFAULT_RPC_URLS,
   supportedChains = defaultSupportedChains.map(
     (c) => c.id,
   ) as TSupportedChain[],
