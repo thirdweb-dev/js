@@ -1,4 +1,4 @@
-import { RequiredParam } from "../../../core/types/shared";
+import { RequiredParam } from "../../../core/query-utils/required-param";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 

@@ -2,7 +2,10 @@ import {
   createSOLQueryKeyWithNetwork,
   neverPersist,
 } from "../../../core/query-utils/query-key";
-import { RequiredParam } from "../../../core/types/shared";
+import {
+  requiredParamInvariant,
+  RequiredParam,
+} from "../../../core/query-utils/required-param";
 import { useSDK } from "../../providers/base";
 import { programAccountTypeQuery } from "./useProgramAccountType";
 import {
@@ -17,7 +20,6 @@ import type {
   ThirdwebSDK,
   Token,
 } from "@thirdweb-dev/sdk/solana";
-import invariant from "tiny-invariant";
 
 type ProgramMap = Readonly<{
   "nft-collection": NFTCollection;
@@ -42,8 +44,8 @@ export function programQuery<TProgramType extends ProgramType>(
       ),
     ),
     queryFn: (async () => {
-      invariant(sdk, "sdk is required");
-      invariant(address, "Address is required");
+      requiredParamInvariant(sdk, "sdk is required");
+      requiredParamInvariant(address, "Address is required");
       // if the type is not passed in explicitly then we'll try to resolve it
       if (!type) {
         // why do we call `fetchQuery` here instead of calling the sdk directly?
