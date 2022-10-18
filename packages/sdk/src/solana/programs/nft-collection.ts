@@ -68,11 +68,7 @@ export class NFTCollection {
    * ```
    */
   async getMetadata(): Promise<NFTMetadata> {
-    const metadata = await this.metaplex
-      .nfts()
-      .findByMint({ mintAddress: this.publicKey })
-      .run();
-
+    const metadata = await this.getCollection();
     return (await this.nft.toNFTMetadata(metadata)).metadata;
   }
 
@@ -87,11 +83,7 @@ export class NFTCollection {
    * ```
    */
   async getCreators(): Promise<CreatorOutput[]> {
-    const metadata = await this.metaplex
-      .nfts()
-      .findByMint({ mintAddress: this.publicKey })
-      .run();
-
+    const metadata = await this.getCollection();
     return parseCreators(metadata.creators);
   }
 
@@ -106,11 +98,7 @@ export class NFTCollection {
    * ```
    */
   async getRoyalty(): Promise<number> {
-    const metadata = await this.metaplex
-      .nfts()
-      .findByMint({ mintAddress: this.publicKey })
-      .run();
-
+    const metadata = await this.getCollection();
     return metadata.sellerFeeBasisPoints;
   }
 

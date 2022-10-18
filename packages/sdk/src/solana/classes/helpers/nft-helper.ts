@@ -262,8 +262,10 @@ export class NFTHelper {
     if (!mint) {
       throw new Error("No mint found for NFT");
     }
-    const owner = await this.ownerOf(mint.address.toBase58());
-    const supply = await this.supplyOf(mint.address.toBase58());
+    const [owner, supply] = await Promise.all([
+      this.ownerOf(mint.address.toBase58()),
+      this.supplyOf(mint.address.toBase58()),
+    ]);
     return this.toNFTMetadataResolved(mint, owner, supply, fullModel);
   }
 

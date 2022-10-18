@@ -115,12 +115,8 @@ export class NFTDrop {
    * ```
    */
   async getCreators(): Promise<CreatorOutput[]> {
-    const metadata = await this.metaplex
-      .candyMachines()
-      .findByAddress({ address: this.publicKey })
-      .run();
-
-    return parseCreators(metadata.creators);
+    const info = await this.getCandyMachine();
+    return parseCreators(info.creators);
   }
 
   /**
@@ -134,12 +130,8 @@ export class NFTDrop {
    * ```
    */
   async getRoyalty(): Promise<number> {
-    const metadata = await this.metaplex
-      .candyMachines()
-      .findByAddress({ address: this.publicKey })
-      .run();
-
-    return metadata.sellerFeeBasisPoints;
+    const info = await this.getCandyMachine();
+    return info.sellerFeeBasisPoints;
   }
 
   /**
