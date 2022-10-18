@@ -1,4 +1,4 @@
-import { RequiredParam } from "../../core/types/shared";
+import { RequiredParam } from "../../core/query-utils/required-param";
 import { SupportedChainId } from "../constants/chain";
 import { ContractAddress, WalletAddress } from "../types";
 import { QueryClient, QueryKey } from "@tanstack/react-query";

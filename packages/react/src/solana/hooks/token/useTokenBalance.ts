@@ -1,8 +1,10 @@
 import { createSOLProgramQueryKey } from "../../../core/query-utils/query-key";
-import { RequiredParam } from "../../../core/types/shared";
+import {
+  requiredParamInvariant,
+  RequiredParam,
+} from "../../../core/query-utils/required-param";
 import { useQuery } from "@tanstack/react-query";
 import { Token } from "@thirdweb-dev/sdk/solana";
-import invariant from "tiny-invariant";
 
 export function tokenBalanceQuery(
   program: RequiredParam<Token>,
@@ -14,9 +16,8 @@ export function tokenBalanceQuery(
       { walletAddress },
     ] as const),
     queryFn: async () => {
-      invariant(program, "program is required");
-
-      invariant(walletAddress, "Wallet address is required");
+      requiredParamInvariant(program, "program is required");
+      requiredParamInvariant(walletAddress, "Wallet address is required");
       return await program.balanceOf(walletAddress);
     },
     enabled: !!program && !!walletAddress,

@@ -1,8 +1,10 @@
 import { createSOLProgramQueryKey } from "../../../core/query-utils/query-key";
-import { RequiredParam } from "../../../core/types/shared";
+import {
+  requiredParamInvariant,
+  RequiredParam,
+} from "../../../core/query-utils/required-param";
 import { useQuery } from "@tanstack/react-query";
 import type { NFTCollection, NFTDrop } from "@thirdweb-dev/sdk/solana";
-import invariant from "tiny-invariant";
 
 export function nftGetOneQuery(
   program: RequiredParam<NFTCollection | NFTDrop>,
@@ -15,8 +17,8 @@ export function nftGetOneQuery(
     ] as const),
 
     queryFn: async () => {
-      invariant(program, "program is required");
-      invariant(tokenAddress, "tokenAddress is required");
+      requiredParamInvariant(program, "program is required");
+      requiredParamInvariant(tokenAddress, "tokenAddress is required");
       return await program.get(tokenAddress);
     },
     enabled: !!program && !!tokenAddress,
