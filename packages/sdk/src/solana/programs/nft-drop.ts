@@ -7,11 +7,11 @@ import {
 import { ClaimConditions } from "../classes/claim-conditions";
 import { NFTHelper } from "../classes/helpers/nft-helper";
 import { Amount, TransactionResult } from "../types/common";
+import { sendMultipartTransaction } from "../utils/transactions";
 import { getNework } from "../utils/urls";
 import {
   CandyMachineItem,
   Metaplex,
-  MintCandyMachineOutput,
   toBigNumber,
 } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
@@ -289,6 +289,7 @@ export class NFTDrop {
   /**
    * Lazy mint NFTs to be claimed later
    * @param metadatas - The metadata of the NFTs to lazy mint
+   * @param options
    * @returns the transaction result of the lazy mint
    *
    * @example
@@ -334,9 +335,7 @@ export class NFTDrop {
       batches.push(items.splice(0, LAZY_MINT_BATCH_SIZE));
     }
 
-    const block = await this.metaplex.connection.getLatestBlockhash();
-
-    const txns = batches.map((batch, i) =>
+    const builders = batches.map((batch, i) =>
       this.metaplex
         .candyMachines()
         .builders()
@@ -347,38 +346,9 @@ export class NFTDrop {
           index: toBigNumber(
             i * LAZY_MINT_BATCH_SIZE + candyMachine.itemsLoaded.toNumber(),
           ),
-        })
-        .setTransactionOptions({
-          blockhash: block.blockhash,
-          feePayer: this.metaplex.identity().publicKey,
-          lastValidBlockHeight: block.lastValidBlockHeight,
-        })
-        .setFeePayer(this.metaplex.identity())
-        .toTransaction(),
+        }),
     );
-
-    // make the connected wallet sign both candyMachine + registry transactions
-    const signedTx = await this.metaplex.identity().signAllTransactions(txns);
-
-    // send the signed transactions
-    const signatures = await Promise.all(
-      signedTx.map((tx) =>
-        this.metaplex.connection.sendRawTransaction(tx.serialize()),
-      ),
-    );
-
-    // wait for confirmations in parallel
-    const confirmations = await Promise.all(
-      signatures.map((sig) => {
-        return this.metaplex.rpc().confirmTransaction(sig);
-      }),
-    );
-
-    if (confirmations.length === 0) {
-      throw new Error("Transaction failed");
-    }
-
-    return signatures.map((signature) => ({ signature }));
+    return await sendMultipartTransaction(builders, this.metaplex);
   }
 
   /**
@@ -412,20 +382,25 @@ export class NFTDrop {
    * console.log("Claimed NFT at address", claimedAddresses[0]);
    * ```
    */
-  async claimTo(receiverAddress: string, quantity: Amount): Promise<string[]> {
+  async claimTo(receiverAddress: string, amount: Amount): Promise<string[]> {
     const candyMachine = await this.getCandyMachine();
-    await this.claimConditions.assertCanClaimable(Number(quantity));
-    const results: MintCandyMachineOutput[] = [];
-    // has to claim sequentially
-    for (let i = 0; i < quantity; i++) {
-      results.push(
-        await this.metaplex
+    await this.claimConditions.assertCanClaimable(Number(amount));
+    const builders = await Promise.all(
+      [...Array(amount).keys()].map(async () => {
+        return await this.metaplex
           .candyMachines()
-          .mint({ candyMachine, newOwner: new PublicKey(receiverAddress) })
-          .run(),
-      );
-    }
-    return results.map((result) => result.nft.address.toBase58());
+          .builders()
+          .mint({
+            candyMachine,
+            newOwner: new PublicKey(receiverAddress),
+          });
+      }),
+    );
+    const mintAddresses = builders.map((builder) =>
+      builder.getContext().mintSigner.publicKey.toBase58(),
+    );
+    await sendMultipartTransaction(builders, this.metaplex);
+    return mintAddresses;
   }
 
   /**

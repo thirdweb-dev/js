@@ -2,7 +2,7 @@ import { NFTCollection } from "../../src/solana";
 import { sdk } from "./before-setup";
 import { expect } from "chai";
 
-describe("NFTCollection", async () => {
+describe("NFTCollection get all", async () => {
   let collection: NFTCollection;
   let addr: string;
 
