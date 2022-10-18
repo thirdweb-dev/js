@@ -1,5 +1,27 @@
 # @thirdweb-dev/sdk
 
+## 3.2.6
+
+### Patch Changes
+
+- [#317](https://github.com/thirdweb-dev/js/pull/317) [`4f867e1`](https://github.com/thirdweb-dev/js/commit/4f867e15edbe5757afbf54cab207458711a8986c) Thanks [@adam-maj](https://github.com/adam-maj)! - Add supply to nft.get
+
+- [#312](https://github.com/thirdweb-dev/js/pull/312) [`b6eec61`](https://github.com/thirdweb-dev/js/commit/b6eec6146c23b66a3681bbb48b173b9019254214) Thanks [@adam-maj](https://github.com/adam-maj)! - Add quantity to mint additional supply
+
+- [#310](https://github.com/thirdweb-dev/js/pull/310) [`9727502`](https://github.com/thirdweb-dev/js/commit/9727502eb30ac139382b7c7c8e8fc0967cbfbcf1) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - [SOL] - add useMintNFTSupply hook in react and accomodate inputs for it in SDK
+
+- [#307](https://github.com/thirdweb-dev/js/pull/307) [`782b58d`](https://github.com/thirdweb-dev/js/commit/782b58d3f6a3b49ff9b3d837551db5161f96171a) Thanks [@kumaryash90](https://github.com/kumaryash90)! - fix multicall gasless
+
+- [#320](https://github.com/thirdweb-dev/js/pull/320) [`f41a443`](https://github.com/thirdweb-dev/js/commit/f41a443c5785240197607b5bf93ff18a1c8e8307) Thanks [@adam-maj](https://github.com/adam-maj)! - Add update creators and update royalty
+
+- [#313](https://github.com/thirdweb-dev/js/pull/313) [`f45ef62`](https://github.com/thirdweb-dev/js/commit/f45ef62128cfefe06275a38440c90d45e9f3cef7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Return default metadata when failing to fetch a given tokenId on NFT contracts
+
+- [#319](https://github.com/thirdweb-dev/js/pull/319) [`2f8ec89`](https://github.com/thirdweb-dev/js/commit/2f8ec89c4c83ae577092c840c198e6fcfb114e69) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose total claimed and unclaimed supply for erc721 drop contracts
+
+- [#322](https://github.com/thirdweb-dev/js/pull/322) [`b7cd744`](https://github.com/thirdweb-dev/js/commit/b7cd744cd0482a6c3fe5ae0c858f20cd380d4114) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Allow signing multiple claims at once
+
+- [#306](https://github.com/thirdweb-dev/js/pull/306) [`53c6507`](https://github.com/thirdweb-dev/js/commit/53c65076696a43bd9a7e58a7493d4e65c172900f) Thanks [@adam-maj](https://github.com/adam-maj)! - Add contract deploy listener
+
 ## 3.2.5
 
 ### Patch Changes
