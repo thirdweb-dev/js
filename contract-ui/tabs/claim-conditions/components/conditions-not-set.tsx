@@ -18,7 +18,9 @@ export const ConditionsNotSet: React.FC<ConditionsNotSetProps> = ({
   const isClaimable = detectFeatures(contract, [
     "ERC721ClaimableWithConditions",
   ]);
-  const claimConditions = useClaimConditions(contract);
+  const claimConditions = useClaimConditions(
+    isClaimable ? contract : undefined,
+  );
 
   const noClaimConditions =
     !claimConditions.isLoading &&

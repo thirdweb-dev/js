@@ -12,7 +12,7 @@ export const DropNotReady: React.FC<DropNotReadyProps> = ({ address }) => {
   const [dismissed, setDismissed] = useState(false);
   const isClaimable = program?.accountType === "nft-drop";
 
-  const claimConditions = useClaimConditions(program);
+  const claimConditions = useClaimConditions(isClaimable ? program : undefined);
 
   const dropNotReady =
     claimConditions.data?.lazyMintedSupply !==
