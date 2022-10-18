@@ -10,7 +10,7 @@ import {
 import { SnapshotInput } from "../types";
 import { hashLeafNode } from "./snapshots";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers, utils } from "ethers";
+import { utils } from "ethers";
 import { MerkleTree } from "merkletreejs";
 
 export class ShardedMerkleTree {
