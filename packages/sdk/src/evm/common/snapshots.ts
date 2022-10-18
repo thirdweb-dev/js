@@ -1,12 +1,10 @@
-import {
-  SnapshotInputSchema,
-  SnapshotSchema,
-} from "../schema/contracts/common/snapshots";
+import { SnapshotInputSchema } from "../schema/contracts/common/snapshots";
 import {
   SnapshotInfo,
   SnapshotInput,
 } from "../types/claim-conditions/claim-conditions";
 import { DuplicateLeafsError } from "./error";
+import { ShardedMerkleTree } from "./sharded-merkle-tree";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, utils } from "ethers";
 
@@ -29,33 +27,15 @@ export async function createSnapshot(
   if (hasDuplicates) {
     throw new DuplicateLeafsError();
   }
-
-  const hashedLeafs = input.map((i) =>
-    hashLeafNode(i.address, utils.parseUnits(i.maxClaimable, tokenDecimals)),
+  const tree = await ShardedMerkleTree.buildAndUpload(
+    input,
+    2,
+    tokenDecimals,
+    storage,
   );
-  // import dynamically to avoid bloating bundle size for non-merkle tree users
-  const MerkleTree = (await import("merkletreejs")).MerkleTree;
-  const tree = new MerkleTree(hashedLeafs, utils.keccak256, {
-    sort: true,
-  });
-
-  const snapshot = SnapshotSchema.parse({
-    merkleRoot: tree.getHexRoot(),
-    claims: input.map((i, index) => {
-      const proof = tree.getHexProof(hashedLeafs[index]);
-      return {
-        address: i.address,
-        maxClaimable: i.maxClaimable,
-        proof,
-      };
-    }),
-  });
-
-  const uri = await storage.upload(snapshot);
   return {
-    merkleRoot: tree.getHexRoot(),
-    snapshotUri: uri,
-    snapshot,
+    merkleRoot: tree.shardedMerkleInfo.merkleRoot,
+    snapshotUri: tree.uri,
   };
 }
 

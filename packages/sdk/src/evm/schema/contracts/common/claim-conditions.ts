@@ -23,7 +23,7 @@ export const ClaimConditionInputSchema = z.object({
   quantityLimitPerTransaction: QuantitySchema,
   waitInSeconds: BigNumberishSchema.default(0),
   merkleRootHash: BytesLikeSchema.default(utils.hexZeroPad([0], 32)),
-  snapshot: z.optional(SnapshotInputSchema),
+  snapshot: z.optional(SnapshotInputSchema).nullable(),
 });
 
 /**
@@ -53,4 +53,8 @@ export const ClaimConditionOutputSchema = ClaimConditionInputSchema.extend({
   price: BigNumberSchema,
   waitInSeconds: BigNumberSchema,
   startTime: BigNumberSchema.transform((n) => new Date(n.toNumber() * 1000)),
+  snapshot: z
+    .function()
+    .args()
+    .returns(z.promise(SnapshotInputSchema.nullable())),
 });

@@ -9,6 +9,7 @@ import {
   Token,
   TokenInitializer,
 } from "../../src/evm";
+import { ShardedMerkleTree } from "../../src/evm/common/sharded-merkle-tree";
 import { expectError, sdk, signers, storage } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
@@ -484,7 +485,8 @@ describe("Signature drop tests", async () => {
       const conditions =
         await signatureDropContract.claimConditions.getActive();
       invariant(conditions.snapshot);
-      expect(conditions.snapshot[0].address).to.eq(samWallet.address);
+      const snap = await conditions.snapshot();
+      expect(snap[0].address).to.eq(samWallet.address);
     });
 
     it("should remove merkles from the metadata when claim conditions are removed", async () => {
@@ -749,9 +751,11 @@ describe("Signature drop tests", async () => {
           ethers.utils.solidityKeccak256(["address", "uint256"], [leaf, 0]),
         );
 
-        const actualProof = snapshot.snapshot.claims.find(
-          (c) => c.address === leaf,
+        const smt = await ShardedMerkleTree.fromUri(
+          snapshot.snapshotUri,
+          storage,
         );
+        const actualProof = await smt.getProof(leaf);
         assert.isDefined(actualProof);
         expect(actualProof?.proof).to.include.ordered.members(expectedProof);
 

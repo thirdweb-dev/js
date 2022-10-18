@@ -16,6 +16,24 @@ export const SnapshotAddressInput = z.object({
   maxClaimable: AmountSchema.default(0),
 });
 
+export type SnapshotEntry = z.output<typeof SnapshotAddressInput>;
+export type ShardData = {
+  proofs: string[];
+  entries: SnapshotEntry[];
+};
+export type ShardedMerkleTreeInfo = {
+  merkleRoot: string;
+  baseUri: string;
+  shardNybbles: number;
+  tokenDecimals: number;
+  isShardedMerkleTree: true;
+};
+
+export type ShardedSnapshot = {
+  shardedMerkleInfo: ShardedMerkleTreeInfo;
+  uri: string;
+};
+
 /**
  * @internal
  */
@@ -30,6 +48,13 @@ export const SnapshotInputSchema = z.union([
   z.array(SnapshotAddressInput),
 ]);
 
+const SnapshotEntryOutputSchema = SnapshotAddressInput.extend({
+  proof: z.array(z.string()),
+});
+/**
+ * @internal
+ */
+const SnapshotEntriesOutputSchema = z.array(SnapshotEntryOutputSchema);
 /**
  * @internal
  */
@@ -38,12 +63,18 @@ export const SnapshotSchema = z.object({
    * The merkle root
    */
   merkleRoot: z.string(),
-  claims: z.array(
-    SnapshotAddressInput.extend({
-      proof: z.array(z.string()),
-    }),
-  ),
+  claims: SnapshotEntriesOutputSchema,
 });
+/**
+ * @internal
+ */
+export type SnapshotEntriesOutput = z.output<
+  typeof SnapshotEntriesOutputSchema
+>;
+/**
+ * @internal
+ */
+export type SnapshotEntryOutput = z.output<typeof SnapshotEntryOutputSchema>;
 
 /**
  * @internal
@@ -51,5 +82,5 @@ export const SnapshotSchema = z.object({
 export const SnapshotInfoSchema = z.object({
   merkleRoot: z.string(),
   snapshotUri: z.string(),
-  snapshot: SnapshotSchema,
+  snapshot: SnapshotSchema.optional(), // TODO remove
 });
