@@ -17,7 +17,7 @@ import type {
 } from "@thirdweb-dev/sdk";
 import { ListingType } from "@thirdweb-dev/sdk";
 import { Marketplace } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/marketplace";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumberish } from "ethers";
 import invariant from "tiny-invariant";
 
 /** **********************/
