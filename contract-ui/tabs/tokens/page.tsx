@@ -3,9 +3,9 @@ import { TokenBurnButton } from "./components/burn-button";
 import { TokenMintButton } from "./components/mint-button";
 import { TokenSupply } from "./components/supply";
 import { TokenTransferButton } from "./components/transfer-button";
-import { ButtonGroup, Flex } from "@chakra-ui/react";
+import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
-import { Card, Heading, Text } from "tw-components";
+import { Card, Heading, LinkButton, Text } from "tw-components";
 
 interface ContractTokenPageProps {
   contractAddress?: string;
@@ -30,6 +30,15 @@ export const ContractTokensPage: React.FC<ContractTokenPageProps> = ({
           To enable Token features you will have to extend an ERC20 interface in
           your contract.
         </Text>
+        <Box>
+          <LinkButton
+            isExternal
+            href="https://portal.thirdweb.com/contractkit/interfaces/erc20"
+            colorScheme="purple"
+          >
+            Learn more
+          </LinkButton>
+        </Box>
       </Card>
     );
   }
