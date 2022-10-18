@@ -124,4 +124,32 @@ describe("NFTDrop", async () => {
     const all2 = await burnDrop.getAllClaimed();
     expect(all2.length).to.eq(1);
   });
+
+  it("should update creator settings", async () => {
+    let creators = await drop.getCreators();
+    expect(creators.length).to.equal(1);
+    expect(creators[0].address).to.equal(sdk.wallet.getAddress());
+    expect(creators[0].share).to.equal(100);
+
+    const newCreator = Keypair.generate().publicKey.toBase58();
+    await drop.updateCreators([
+      { address: sdk.wallet.getAddress() as string, sharePercentage: 75 },
+      { address: newCreator, sharePercentage: 25 },
+    ]);
+
+    creators = await drop.getCreators();
+    expect(creators.length).to.equal(2);
+    expect(creators[0].address).to.equal(sdk.wallet.getAddress());
+    expect(creators[0].share).to.equal(75);
+    expect(creators[1].address).to.equal(newCreator);
+    expect(creators[1].share).to.equal(25);
+  });
+
+  it("Should update royalty", async () => {
+    let royalty = await drop.getRoyalty();
+    expect(royalty).to.equal(0);
+    await drop.updateRoyalty(100);
+    royalty = await drop.getRoyalty();
+    expect(royalty).to.equal(100);
+  });
 });
