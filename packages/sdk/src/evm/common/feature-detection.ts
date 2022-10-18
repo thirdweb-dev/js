@@ -22,7 +22,9 @@ import {
 } from "../schema/contracts/custom";
 import { ExtensionNotImplementedError } from "./error";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { decode } from "cbor-x/decode";
 import { BaseContract, BigNumber, ethers } from "ethers";
+import { toB58String } from "multihashes";
 import { z } from "zod";
 
 /**
@@ -293,15 +295,13 @@ async function extractIPFSHashFromBytecode(
     numericBytecode.slice(numericBytecode.length - 2 - cborLength, -2),
   );
 
-  // load these lazily to avoid loading them when they are not needed
-  const [cbor, multiHashes] = await Promise.all([
-    import("cbor-web"),
-    import("multihashes"),
-  ]);
-
-  const cborData = cbor.decodeFirstSync(bytecodeBuffer);
-  if (cborData["ipfs"]) {
-    return `ipfs://${multiHashes.toB58String(cborData["ipfs"])}`;
+  const cborData = decode(bytecodeBuffer);
+  if ("ipfs" in cborData && cborData["ipfs"]) {
+    try {
+      return `ipfs://${toB58String(cborData["ipfs"])}`;
+    } catch (e) {
+      console.warn("feature-detection ipfs cbor failed", e);
+    }
   }
   return undefined;
 }
