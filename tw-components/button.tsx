@@ -172,6 +172,7 @@ interface AddressCopyButtonProps extends Omit<ButtonProps, "onClick" | "size"> {
   address?: string;
   noIcon?: boolean;
   size?: PossibleButtonSize;
+  tokenId?: boolean;
 }
 
 export const AddressCopyButton: React.FC<AddressCopyButtonProps> = ({
@@ -181,6 +182,7 @@ export const AddressCopyButton: React.FC<AddressCopyButtonProps> = ({
   size = "sm",
   borderRadius = "md",
   variant = "outline",
+  tokenId,
   ...restButtonProps
 }) => {
   const { onCopy } = useClipboard(address || "");
@@ -194,7 +196,9 @@ export const AddressCopyButton: React.FC<AddressCopyButtonProps> = ({
       boxShadow="none"
       label={
         <Card py={2} px={4}>
-          <Text size="label.sm">Copy address to clipboard</Text>
+          <Text size="label.sm">
+            Copy {tokenId ? "Token ID" : "address"} to clipboard
+          </Text>
         </Card>
       }
     >
@@ -211,12 +215,20 @@ export const AddressCopyButton: React.FC<AddressCopyButtonProps> = ({
           toast({
             variant: "solid",
             position: "bottom",
-            title: "Address copied.",
+            title: `${tokenId ? "Token ID" : "Address"} copied.`,
             status: "success",
             duration: 5000,
             isClosable: true,
           });
-          trackEvent({ category: "address_button", action: "copy", address });
+          if (tokenId) {
+            trackEvent({
+              category: "tokenid_button",
+              action: "copy",
+              tokenId: address,
+            });
+          } else {
+            trackEvent({ category: "address_button", action: "copy", address });
+          }
         }}
         leftIcon={noIcon ? undefined : <Icon boxSize={3} as={FiCopy} />}
         fontFamily="mono"
