@@ -128,9 +128,38 @@ describe("NFTCollection", async () => {
       name: "Test NFT to burn",
       description: "Test Description",
     });
+
     const all = await collection.getAll();
     await collection.burn(mint);
     const all2 = await collection.getAll();
     expect(all2.length).to.eq(all.length - 1);
+  });
+
+  it("should update creator settings", async () => {
+    let creators = await collection.getCreators();
+    expect(creators.length).to.equal(1);
+    expect(creators[0].address).to.equal(sdk.wallet.getAddress());
+    expect(creators[0].share).to.equal(100);
+
+    const newCreator = Keypair.generate().publicKey.toBase58();
+    await collection.updateCreators([
+      { address: sdk.wallet.getAddress() as string, sharePercentage: 75 },
+      { address: newCreator, sharePercentage: 25 },
+    ]);
+
+    creators = await collection.getCreators();
+    expect(creators.length).to.equal(2);
+    expect(creators[0].address).to.equal(sdk.wallet.getAddress());
+    expect(creators[0].share).to.equal(75);
+    expect(creators[1].address).to.equal(newCreator);
+    expect(creators[1].share).to.equal(25);
+  });
+
+  it("Should update royalty", async () => {
+    let royalty = await collection.getRoyalty();
+    expect(royalty).to.equal(0);
+    await collection.updateRoyalty(100);
+    royalty = await collection.getRoyalty();
+    expect(royalty).to.equal(100);
   });
 });

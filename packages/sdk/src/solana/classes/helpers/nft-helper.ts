@@ -225,21 +225,17 @@ export class NFTHelper {
 
   async supplyOf(nftAddress: string): Promise<number> {
     let originalEdition;
-    try {
-      const originalEditionAccount = await this.metaplex
-        .rpc()
-        .getAccount(findMasterEditionV2Pda(new PublicKey(nftAddress)));
 
+    const originalEditionAccount = await this.metaplex
+      .rpc()
+      .getAccount(findMasterEditionV2Pda(new PublicKey(nftAddress)));
+
+    if (originalEditionAccount.exists) {
       originalEdition = toNftOriginalEdition(
         toOriginalEditionAccount(originalEditionAccount),
       );
-    } catch (err: any) {
-      // If the NFT is burned, return 0 supply
-      if (err.key === "metaplex.errors.sdk.account_not_found") {
-        return 0;
-      }
-
-      throw err;
+    } else {
+      return 0;
     }
 
     // Add one to supply to account for the master edition
@@ -266,13 +262,17 @@ export class NFTHelper {
     if (!mint) {
       throw new Error("No mint found for NFT");
     }
-    const owner = await this.ownerOf(mint.address.toBase58());
-    return this.toNFTMetadataResolved(mint, owner, fullModel);
+    const [owner, supply] = await Promise.all([
+      this.ownerOf(mint.address.toBase58()),
+      this.supplyOf(mint.address.toBase58()),
+    ]);
+    return this.toNFTMetadataResolved(mint, owner, supply, fullModel);
   }
 
   private async toNFTMetadataResolved(
     mint: Mint,
     owner: string | undefined,
+    supply: number,
     fullModel:
       | Nft
       | Sft
@@ -280,7 +280,6 @@ export class NFTHelper {
       | SftWithToken
       | Metadata<JsonMetadata<string>>,
   ): Promise<NFT> {
-    const supply = await this.supplyOf(mint.address.toBase58());
     return {
       metadata: {
         id: mint.address.toBase58(),
