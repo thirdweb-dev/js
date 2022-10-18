@@ -64,7 +64,7 @@ export class NFTCollection {
    * @example
    * ```jsx
    * const metadata = await program.getMetadata();
-   * console.log(metadata.name);
+   * console.log(metadata);
    * ```
    */
   async getMetadata(): Promise<NFTMetadata> {
