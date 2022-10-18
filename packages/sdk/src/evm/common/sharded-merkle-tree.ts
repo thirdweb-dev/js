@@ -65,6 +65,13 @@ export class ShardedMerkleTree {
     );
   }
 
+  static hashEntry(entry: SnapshotEntry, tokenDecimals: number): string {
+    return hashLeafNode(
+      entry.address,
+      utils.parseUnits(entry.maxClaimable, tokenDecimals),
+    );
+  }
+
   static async buildAndUpload(
     snapshotInput: SnapshotInput,
     shardNybbles: number,
@@ -90,11 +97,8 @@ export class ShardedMerkleTree {
       Object.entries(shards).map(([shard, entries]) => [
         shard,
         new MerkleTree(
-          entries.map((i) =>
-            hashLeafNode(
-              i.address,
-              utils.parseUnits(i.maxClaimable, tokenDecimals),
-            ),
+          entries.map((entry) =>
+            ShardedMerkleTree.hashEntry(entry, tokenDecimals),
           ),
           utils.keccak256,
           {
@@ -150,8 +154,8 @@ export class ShardedMerkleTree {
             `${this.baseUri}/${shardId}.json`,
           );
         this.trees[shardId] = new MerkleTree(
-          Object.entries(shard.entries).map(([, entry]) =>
-            hashLeafNode(entry.address, entry.maxClaimable),
+          shard.entries.map((entry) =>
+            ShardedMerkleTree.hashEntry(entry, this.tokenDecimals),
           ),
           utils.keccak256,
           { sort: true },
@@ -167,16 +171,14 @@ export class ShardedMerkleTree {
     if (!entry) {
       return null;
     }
-    const leaf = hashLeafNode(entry.address, entry.maxClaimable);
+    const leaf = ShardedMerkleTree.hashEntry(entry, this.tokenDecimals);
     const proof = this.trees[shardId]
       .getProof(leaf)
       .map((i) => "0x" + i.data.toString("hex"));
     return {
       address,
       proof: proof.concat(shard.proofs),
-      maxClaimable: ethers.utils
-        .parseUnits(entry.maxClaimable, this.tokenDecimals)
-        .toString(),
+      maxClaimable: entry.maxClaimable,
     };
   }
 

@@ -341,13 +341,17 @@ export function useResetClaimConditions(
 
   return useMutation(
     async () => {
-      const cleanConditions = (conditions: ClaimCondition[]) => {
-        return conditions.map((c) => ({
-          ...c,
-          price: c.currencyMetadata.displayValue,
-          maxQuantity: c.maxQuantity.toString(),
-          quantityLimitPerTransaction: c.quantityLimitPerTransaction.toString(),
-        }));
+      const cleanConditions = async (conditions: ClaimCondition[]) => {
+        return await Promise.all(
+          conditions.map(async (c) => ({
+            ...c,
+            price: c.currencyMetadata.displayValue,
+            maxQuantity: c.maxQuantity.toString(),
+            quantityLimitPerTransaction:
+              c.quantityLimitPerTransaction.toString(),
+            snapshot: await c.snapshot(),
+          })),
+        );
       };
 
       if (erc1155) {
@@ -355,21 +359,21 @@ export function useResetClaimConditions(
         const claimConditions = await erc1155.claimConditions.getAll(tokenId);
         return erc1155.claimConditions.set(
           tokenId,
-          cleanConditions(claimConditions || []),
+          await cleanConditions(claimConditions || []),
           true,
         );
       }
       if (erc721) {
         const claimConditions = await erc721.claimConditions.getAll();
         return await erc721.claimConditions.set(
-          cleanConditions(claimConditions || []),
+          await cleanConditions(claimConditions || []),
           true,
         );
       }
       if (erc20) {
         const claimConditions = await erc20.claimConditions.getAll();
         return await erc20.claimConditions.set(
-          cleanConditions(claimConditions || []),
+          await cleanConditions(claimConditions || []),
           true,
         );
       }
