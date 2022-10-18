@@ -1,4 +1,7 @@
-import { RequiredParam } from "../../../core/types/shared";
+import {
+  requiredParamInvariant,
+  RequiredParam,
+} from "../../../core/query-utils/required-param";
 import { useSDKChainId } from "../../providers/base";
 import {
   AirdropNFTParams,
@@ -50,7 +53,7 @@ export function useNFT<TContract extends NFTContract>(
   return useQueryWithNetwork<NFT>(
     cacheKeys.contract.nft.get(contractAddress, tokenId),
     async () => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
 
       if (erc1155) {
         invariant(erc1155.get, "Contract instance does not support get");
@@ -93,7 +96,7 @@ export function useNFTs<TContract extends NFTContract>(
   return useQueryWithNetwork<NFT[]>(
     cacheKeys.contract.nft.query.all(contractAddress, queryParams),
     async () => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
 
       if (erc721) {
         invariant(erc721.getAll, "Contract instance does not support getAll");
@@ -134,7 +137,7 @@ export function useTotalCount<TContract extends NFTContract>(
   return useQueryWithNetwork<BigNumber>(
     cacheKeys.contract.nft.query.totalCount(contractAddress),
     async () => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
 
       if (erc1155) {
         invariant(
@@ -182,14 +185,14 @@ export function useTotalCirculatingSupply(
   return useQueryWithNetwork<BigNumber>(
     cacheKeys.contract.nft.query.totalCirculatingSupply(contractAddress),
     async () => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
 
       if (erc1155) {
         invariant(
           erc1155.totalCirculatingSupply,
           "Contract instance does not support totalCirculatingSupply",
         );
-        invariant(tokenId, "No tokenId provided");
+        requiredParamInvariant(tokenId, "No tokenId provided");
         return await erc1155.totalCirculatingSupply(tokenId);
       }
       if (erc721) {
@@ -232,7 +235,7 @@ export function useOwnedNFTs<TContract extends NFTContract>(
   return useQueryWithNetwork<NFT[]>(
     cacheKeys.contract.nft.query.owned.all(contractAddress, ownerWalletAddress),
     async () => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
       invariant(ownerWalletAddress, "No wallet address provided");
       if (erc721) {
         return await erc721.getOwned(ownerWalletAddress);
@@ -277,11 +280,11 @@ export function useNFTBalance(
       tokenId,
     ),
     () => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
 
       invariant(ownerWalletAddress, "No owner wallet address provided");
       if (erc1155) {
-        invariant(tokenId, "No tokenId provided");
+        requiredParamInvariant(tokenId, "No tokenId provided");
         invariant(
           erc1155.balanceOf,
           "Contract instance does not support balanceOf",
@@ -375,7 +378,7 @@ export function useMintNFT<TContract extends NFTContract>(
   return useMutation(
     async (data: MintNFTParams) => {
       invariant(data.to, 'No "to" address provided');
-      invariant(contract, "contract is undefined");
+      requiredParamInvariant(contract, "contract is undefined");
       if (erc1155) {
         invariant("supply" in data, "supply not provided");
         const { to, metadata, supply } = data;
@@ -444,9 +447,9 @@ export function useMintNFTSupply(contract: Erc1155) {
   return useMutation(
     async (data: MintNFTSupplyParams) => {
       invariant(data.to, 'No "to" address provided');
-      invariant(contract, "contract is undefined");
+      requiredParamInvariant(contract, "contract is undefined");
 
-      invariant("tokenId" in data, "tokenId not provided");
+      requiredParamInvariant(data.tokenId, "tokenId not provided");
       invariant("additionalSupply" in data, "additionalSupply not provided");
       const { to, tokenId, additionalSupply } = data;
       return await contract.mintAdditionalSupplyTo(
@@ -512,7 +515,7 @@ export function useTransferNFT<TContract extends NFTContract>(
       invariant("to" in data, "to not provided");
       if (erc1155) {
         invariant(erc1155.transfer, "contract does not support transfer");
-        invariant("tokenId" in data, "tokenId not provided");
+        requiredParamInvariant(data.tokenId, "tokenId not provided");
         invariant("amount" in data, "amount not provided");
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         return erc1155.transfer(data.to, data.tokenId, data.amount!);
@@ -602,7 +605,8 @@ export function useAirdropNFT(contract: Erc1155) {
 
   return useMutation(
     ({ tokenId, addresses }: AirdropNFTParams) => {
-      invariant(contract?.airdrop, "contract does not support airdrop");
+      requiredParamInvariant(contract, "contract is undefined");
+      invariant(contract.airdrop, "contract does not support airdrop");
 
       return contract.airdrop(tokenId, addresses);
     },
@@ -688,8 +692,8 @@ export function useBurnNFT<TContract extends NFTContract>(
 
   return useMutation(
     async (data: BurnNFTParams) => {
-      invariant(data.tokenId, "No tokenId provided");
-      invariant(contract, "contract is undefined");
+      requiredParamInvariant(data.tokenId, "No tokenId provided");
+      requiredParamInvariant(contract, "contract is undefined");
       if (erc1155) {
         invariant("amount" in data, "amount not provided");
         const { tokenId, amount } = data;

@@ -1,5 +1,8 @@
 import { neverPersist } from "../../../core/query-utils/query-key";
-import { RequiredParam } from "../../../core/types/shared";
+import {
+  RequiredParam,
+  requiredParamInvariant,
+} from "../../../core/query-utils/required-param";
 import { useSDK, useSDKChainId } from "../../providers/base";
 import { ContractAddress } from "../../types";
 import {
@@ -216,7 +219,7 @@ export function useContract(
       { wallet, walletChainId, sdkTimestamp },
     ]),
     async () => {
-      invariant(contractAddress, "contract address is required");
+      requiredParamInvariant(contractAddress, "contract address is required");
       invariant(sdk, "SDK not initialized");
       invariant(activeChainId, "active chain id is required");
 
@@ -290,7 +293,7 @@ export function useContractMetadata<TContract extends ValidContractInstance>(
   >(
     cacheKeys.contract.metadata(contract?.getAddress()),
     async () => {
-      invariant(contract, "contract is required");
+      requiredParamInvariant(contract, "contract is required");
       return await contract.metadata.get();
     },
     {
@@ -311,7 +314,7 @@ export function useContractMetadataUpdate(
 
   return useMutation(
     async (metadata: CommonContractSchemaInput) => {
-      invariant(contract, "contract must be defined");
+      requiredParamInvariant(contract, "contract must be defined");
 
       return contract.metadata.update(metadata);
     },
@@ -406,7 +409,7 @@ export function useContractEvents(
   return useQuery(
     cacheKey,
     () => {
-      invariant(contract, "contract must be defined");
+      requiredParamInvariant(contract, "contract must be defined");
       if (eventName) {
         return contract.events.getEvents(eventName, options.queryFilter);
       }
@@ -447,8 +450,8 @@ export function useContractRead(
   return useQueryWithNetwork(
     cacheKeys.contract.call(contractAddress, functionName, args),
     () => {
-      invariant(contract, "contract must be defined");
-      invariant(functionName, "function name must be provided");
+      requiredParamInvariant(contract, "contract must be defined");
+      requiredParamInvariant(functionName, "function name must be provided");
       return contract.call(functionName, ...args);
     },
     {
@@ -485,8 +488,8 @@ export function useContractWrite(
 
   return useMutation(
     async (callParams?: unknown[] | [...unknown[], CallOverrides]) => {
-      invariant(contract, "contract must be defined");
-      invariant(functionName, "function name must be provided");
+      requiredParamInvariant(contract, "contract must be defined");
+      requiredParamInvariant(functionName, "function name must be provided");
       if (!callParams?.length) {
         return contract.call(functionName);
       }

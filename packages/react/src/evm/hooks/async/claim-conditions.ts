@@ -1,4 +1,7 @@
-import { RequiredParam } from "../../../core/types/shared";
+import {
+  RequiredParam,
+  requiredParamInvariant,
+} from "../../../core/query-utils/required-param";
 import { useSDKChainId } from "../../providers/base";
 import { getErcs, DropContract, WalletAddress } from "../../types";
 import {
@@ -70,8 +73,8 @@ export function useActiveClaimCondition(
     cacheKeys.extensions.claimConditions.getActive(contractAddress, tokenId),
     () => {
       if (erc1155) {
-        invariant(
-          tokenId !== undefined,
+        requiredParamInvariant(
+          tokenId,
           "tokenId is required for ERC1155 claim conditions",
         );
         return erc1155.claimConditions.getActive(tokenId);
@@ -126,7 +129,10 @@ export function useClaimConditions(
     cacheKeys.extensions.claimConditions.getAll(contractAddress, tokenId),
     () => {
       if (erc1155) {
-        invariant(tokenId, "tokenId is required for ERC1155 claim conditions");
+        requiredParamInvariant(
+          tokenId,
+          "tokenId is required for ERC1155 claim conditions",
+        );
         return erc1155.claimConditions.getAll(tokenId);
       }
       if (erc721) {
@@ -184,7 +190,7 @@ export function useClaimIneligibilityReasons(
     ),
     () => {
       if (erc1155) {
-        invariant(
+        requiredParamInvariant(
           tokenId,
           "tokenId is required for ERC1155 claim ineligibility reasons",
         );
@@ -270,11 +276,14 @@ export function useSetClaimConditions(
 
   return useMutation(
     async (data: SetClaimConditionsParams) => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
       const { phases, reset = false } = data;
       invariant(phases, 'No "phases" provided');
       if (erc1155) {
-        invariant(tokenId, "tokenId is required for ERC1155 claim conditions");
+        requiredParamInvariant(
+          tokenId,
+          "tokenId is required for ERC1155 claim conditions",
+        );
         return erc1155.claimConditions.set(tokenId, phases, reset);
       }
       if (erc721) {
@@ -355,7 +364,10 @@ export function useResetClaimConditions(
       };
 
       if (erc1155) {
-        invariant(tokenId, "tokenId is required for ERC1155 claim conditions");
+        requiredParamInvariant(
+          tokenId,
+          "tokenId is required for ERC1155 claim conditions",
+        );
         const claimConditions = await erc1155.claimConditions.getAll(tokenId);
         return erc1155.claimConditions.set(
           tokenId,
