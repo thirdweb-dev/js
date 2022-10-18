@@ -25,7 +25,9 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
     "ERC721Supply",
   ]);
 
-  const isErc721 = detectFeatures(contractQuery?.contract, ["ERC721"]);
+  const isErc721Claimable = detectFeatures(contractQuery?.contract, [
+    "ERC721Claimable",
+  ]);
 
   if (contractQuery.isLoading) {
     // TODO build a skeleton for this
@@ -68,7 +70,9 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
         </Card>
       ) : (
         <>
-          {isErc721 && <SupplyCards contract={contractQuery.contract} />}
+          {isErc721Claimable && (
+            <SupplyCards contract={contractQuery.contract} />
+          )}
           <NFTGetAllTable contract={contractQuery.contract} />
         </>
       )}
