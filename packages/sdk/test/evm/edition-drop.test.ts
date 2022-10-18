@@ -642,7 +642,8 @@ describe("Edition Drop Contract", async () => {
     const conditions = await bdContract.claimConditions.getAll(0);
     assert.lengthOf(conditions, 1);
     invariant(conditions[0].snapshot);
-    expect(conditions[0].snapshot[0].address).to.eq(samWallet.address);
+    const snap = await conditions[0].snapshot();
+    expect(snap[0].address).to.eq(samWallet.address);
   });
 
   it("should be able to use claim as function expected", async () => {
