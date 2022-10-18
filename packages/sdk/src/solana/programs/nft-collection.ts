@@ -4,10 +4,10 @@ import { enforceCreator } from "../classes/helpers/creators-helper";
 import { NFTHelper } from "../classes/helpers/nft-helper";
 import { Amount, TransactionResult } from "../types/common";
 import { CreatorInput } from "../types/programs";
+import { sendMultipartTransaction } from "../utils/transactions";
 import { getNework } from "../utils/urls";
 import {
   findMasterEditionV2Pda,
-  getSignerHistogram,
   Metaplex,
   toBigNumber,
   toNftOriginalEdition,
@@ -335,8 +335,6 @@ export class NFTCollection {
       "amount must be possible to convert to a number",
     );
 
-    const block = await this.metaplex.connection.getLatestBlockhash();
-
     // Better to use metaplex functions directly then our supplyOf function for types/consistency
     const originalEditionAccount = await this.metaplex
       .rpc()
@@ -345,10 +343,9 @@ export class NFTCollection {
       toOriginalEditionAccount(originalEditionAccount),
     );
 
-    const mintAddresses: string[] = [];
-    const txns = await Promise.all(
+    const builders = await Promise.all(
       [...Array(amount).keys()].map(async (_, i) => {
-        const builder = await this.metaplex
+        return await this.metaplex
           .nfts()
           .builders()
           .printNewEdition({
@@ -358,56 +355,12 @@ export class NFTCollection {
             originalMint: new PublicKey(nftAddress),
             newOwner: new PublicKey(to),
           });
-
-        const ctx = builder.getContext();
-        mintAddresses.push(ctx.mintSigner.publicKey.toBase58());
-
-        const builderTx = builder
-          .setTransactionOptions({
-            blockhash: block.blockhash,
-            feePayer: this.metaplex.identity().publicKey,
-            lastValidBlockHeight: block.lastValidBlockHeight,
-          })
-          .setFeePayer(this.metaplex.identity());
-
-        const dropSigners = [
-          this.metaplex.identity(),
-          ...builderTx.getSigners(),
-        ];
-        const { keypairs } = getSignerHistogram(dropSigners);
-        const tx = builderTx.toTransaction();
-
-        if (keypairs.length > 0) {
-          tx.partialSign(...keypairs);
-        }
-
-        return tx;
       }),
     );
-
-    // make the connected wallet sign all transactions
-    const signedTx = await this.metaplex.identity().signAllTransactions(txns);
-
-    // send the signed transactions
-    let signatures = [];
-    for (const tx of signedTx) {
-      const signature = await this.metaplex.connection.sendRawTransaction(
-        tx.serialize(),
-      );
-      signatures.push(signature);
-    }
-
-    // wait for confirmations in parallel
-    const confirmations = await Promise.all(
-      signatures.map((sig) => {
-        return this.metaplex.rpc().confirmTransaction(sig);
-      }),
+    const mintAddresses = builders.map((builder) =>
+      builder.getContext().mintSigner.publicKey.toBase58(),
     );
-
-    if (confirmations.length === 0) {
-      throw new Error("Transaction failed");
-    }
-
+    await sendMultipartTransaction(builders, this.metaplex);
     return mintAddresses;
   }
 
