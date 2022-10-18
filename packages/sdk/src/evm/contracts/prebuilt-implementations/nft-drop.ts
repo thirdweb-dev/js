@@ -319,7 +319,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
    * @returns the unclaimed supply
    */
   public async totalClaimedSupply(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.nextTokenIdToClaim();
+    return this.erc721.totalClaimedSupply();
   }
 
   /**
@@ -335,9 +335,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
    * @returns the unclaimed supply
    */
   public async totalUnclaimedSupply(): Promise<BigNumber> {
-    return (await this.contractWrapper.readContract.nextTokenIdToMint()).sub(
-      await this.totalClaimedSupply(),
-    );
+    return this.erc721.totalUnclaimedSupply();
   }
 
   /**
