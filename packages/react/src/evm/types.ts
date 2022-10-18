@@ -1,4 +1,4 @@
-import { RequiredParam } from "../core/types/shared";
+import { RequiredParam } from "../core/query-utils/required-param";
 import type {
   AirdropInput,
   Amount,

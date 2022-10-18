@@ -1,4 +1,7 @@
-import { RequiredParam } from "../../../core/types/shared";
+import {
+  RequiredParam,
+  requiredParamInvariant,
+} from "../../../core/query-utils/required-param";
 import { useSDKChainId } from "../../providers/base";
 import { BuyNowParams, MakeBidParams } from "../../types";
 import {
@@ -45,8 +48,8 @@ export function useListing(
   return useQueryWithNetwork(
     cacheKeys.contract.marketplace.getListing(contractAddress, listingId),
     () => {
-      invariant(contract, "No Contract instance provided");
-      invariant(listingId, "No listing id provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
+      requiredParamInvariant(listingId, "No listing id provided");
       return contract.getListing(listingId);
     },
     {
@@ -77,7 +80,7 @@ export function useListings(
   return useQueryWithNetwork(
     cacheKeys.contract.marketplace.getAllListings(contractAddress, filter),
     () => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
       return contract.getAllListings(filter);
     },
     {
@@ -104,7 +107,7 @@ export function useListingsCount(contract: RequiredParam<Marketplace>) {
   return useQueryWithNetwork(
     cacheKeys.contract.marketplace.getTotalCount(contractAddress),
     () => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
       return contract.getTotalCount();
     },
     {
@@ -134,7 +137,7 @@ export function useActiveListings(
   return useQueryWithNetwork(
     cacheKeys.contract.marketplace.getActiveListings(contractAddress, filter),
     () => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
 
       return contract.getActiveListings(filter);
     },
@@ -169,8 +172,8 @@ export function useWinningBid(
       listingId,
     ),
     () => {
-      invariant(contract, "No Contract instance provided");
-      invariant(listingId, "No listing id provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
+      requiredParamInvariant(listingId, "No listing id provided");
       return contract.auction.getWinningBid(listingId);
     },
     {
@@ -203,8 +206,8 @@ export function useAuctionWinner(
       listingId,
     ),
     async () => {
-      invariant(contract, "No Contract instance provided");
-      invariant(listingId, "No listing id provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
+      requiredParamInvariant(listingId, "No listing id provided");
       let winner: string | undefined;
       try {
         winner = await contract.auction.getWinner(listingId);
@@ -239,7 +242,7 @@ export function useBidBuffer(contract: RequiredParam<Marketplace>) {
   return useQueryWithNetwork(
     cacheKeys.contract.marketplace.getBidBufferBps(contractAddress),
     () => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
       return contract.getBidBufferBps();
     },
     {
@@ -272,8 +275,8 @@ export function useMinimumNextBid(
       listingId,
     ),
     async () => {
-      invariant(contract, "No Contract instance provided");
-      invariant(listingId, "No listing id provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
+      requiredParamInvariant(listingId, "No listing id provided");
       return await contract.auction.getMinimumNextBid(listingId);
     },
     {
@@ -325,8 +328,9 @@ export function useCreateDirectListing(contract: RequiredParam<Marketplace>) {
   return useMutation(
     async (data: NewDirectListing) => {
       invariant(walletAddress, "no wallet connected, cannot create listing");
+      requiredParamInvariant(contract, "No Contract instance provided");
       invariant(
-        contract?.direct?.createListing,
+        contract.direct.createListing,
         "contract does not support direct.createListing",
       );
       return await contract.direct.createListing(data);
@@ -381,8 +385,9 @@ export function useCreateAuctionListing(contract: RequiredParam<Marketplace>) {
   return useMutation(
     async (data: NewAuctionListing) => {
       invariant(walletAddress, "no wallet connected, cannot create listing");
+      requiredParamInvariant(contract, "No Contract instance provided");
       invariant(
-        contract?.direct?.createListing,
+        contract.direct.createListing,
         "contract does not support auction.createListing",
       );
       return await contract.auction.createListing(data);
@@ -491,8 +496,9 @@ export function useMakeBid(contract: RequiredParam<Marketplace>) {
   return useMutation(
     async (data: MakeBidParams) => {
       invariant(walletAddress, "no wallet connected, cannot make bid");
+      requiredParamInvariant(contract, "No Contract instance provided");
       invariant(
-        contract?.auction?.makeBid,
+        contract.auction.makeBid,
         "contract does not support auction.makeBid",
       );
       return await contract.auction.makeBid(data.listingId, data.bid);
@@ -547,9 +553,10 @@ export function useBuyNow(contract: RequiredParam<Marketplace>) {
   return useMutation(
     async (data: BuyNowParams) => {
       invariant(walletAddress, "no wallet connected, cannot make bid");
+      requiredParamInvariant(contract, "No Contract instance provided");
       if (data.type === ListingType.Direct) {
         invariant(
-          contract?.direct.buyoutListing,
+          contract.direct.buyoutListing,
           "contract does not support direct.buyoutListing",
         );
 
@@ -560,7 +567,7 @@ export function useBuyNow(contract: RequiredParam<Marketplace>) {
         );
       }
       invariant(
-        contract?.auction?.buyoutListing,
+        contract.auction.buyoutListing,
         "contract does not support auction.buyoutListing",
       );
       return await contract.auction.buyoutListing(data.id);
