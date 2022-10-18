@@ -97,18 +97,18 @@ export function useClaimedNFTs(
  */
 export function useUnclaimedNFTSupply(contract: RequiredParam<DropContract>) {
   const contractAddress = contract?.getAddress();
+  const { erc721 } = getErcs(contract);
   return useQueryWithNetwork(
     cacheKeys.contract.nft.drop.totalUnclaimedSupply(contractAddress),
     () => {
       requiredParamInvariant(contract, "No Contract instance provided");
-      // TODO make this work for custom contracts (needs ABI change)
-      invariant(
-        "totalUnclaimedSupply" in contract && contract.totalUnclaimedSupply,
-        "Contract instance does not support fetching unclaimed supply",
-      );
-      return contract.totalUnclaimedSupply();
+      if (erc721) {
+        invariant(erc721, "No ERC721 Contract instance provided");
+        return erc721.totalUnclaimedSupply();
+      }
+      invariant(false, "Contract is not an instance of ERC721")
     },
-    { enabled: !!contract },
+    { enabled: !!erc721 },
   );
 }
 
@@ -121,18 +121,17 @@ export function useUnclaimedNFTSupply(contract: RequiredParam<DropContract>) {
  */
 export function useClaimedNFTSupply(contract: RequiredParam<DropContract>) {
   const contractAddress = contract?.getAddress();
+  const { erc721 } = getErcs(contract);
   return useQueryWithNetwork(
     cacheKeys.contract.nft.drop.totalClaimedSupply(contractAddress),
     () => {
       requiredParamInvariant(contract, "No Contract instance provided");
-      // TODO make this work for custom contracts (needs ABI change)
-      invariant(
-        "totalClaimedSupply" in contract && contract.totalClaimedSupply,
-        "Contract instance does not support fetching unclaimed supply",
-      );
-      return contract.totalClaimedSupply();
+      if (erc721) {
+        return erc721.totalClaimedSupply();
+      }
+      invariant(false, "Contract is not an instance of ERC721")
     },
-    { enabled: !!contract },
+    { enabled: !!erc721 },
   );
 }
 

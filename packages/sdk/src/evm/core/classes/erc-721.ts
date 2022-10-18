@@ -578,6 +578,7 @@ export class Erc721<
    *
    * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
+   * @param options
    * @twfeature ERC721Claimable
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
@@ -602,6 +603,7 @@ export class Erc721<
    * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
    * @param destinationAddress
    * @param quantity
+   * @param options
    */
   public async getClaimTransaction(
     destinationAddress: string,
@@ -621,6 +623,37 @@ export class Erc721<
       return claim.getClaimTransaction(destinationAddress, quantity, options);
     }
     throw new ExtensionNotImplementedError(FEATURE_NFT_CLAIMABLE);
+  }
+
+  public async totalClaimedSupply(): Promise<BigNumber> {
+    const contract = this.contractWrapper;
+    if (hasFunction<DropERC721>("nextTokenIdToClaim", contract)) {
+      return contract.readContract.nextTokenIdToClaim();
+    }
+    if (hasFunction<SignatureDrop>("totalMinted", contract)) {
+      return contract.readContract.totalMinted();
+    }
+    throw new Error(
+      "No function found on contract to get total claimed supply",
+    );
+  }
+
+  /**
+   * Get the unclaimed supply
+   *
+   * @remarks Get the number of unclaimed NFTs in this Drop.
+   *
+   * * @example
+   * ```javascript
+   * const unclaimedNFTCount = await contract.totalUnclaimedSupply();
+   * console.log(`NFTs left to claim: ${unclaimedNFTCount}`);
+   * ```
+   * @returns the unclaimed supply
+   */
+  public async totalUnclaimedSupply(): Promise<BigNumber> {
+    return (await this.nextTokenIdToMint()).sub(
+      await this.totalClaimedSupply(),
+    );
   }
 
   /**
