@@ -13,3 +13,4 @@ public/dist
 .turbo
 ./packages/contracts-js/abis
 .idea/
+e2e/

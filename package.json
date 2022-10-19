@@ -27,12 +27,8 @@
     "release": "node ./scripts/pre-release.mjs && changeset publish",
     "version-packages:nightly": "changeset version --snapshot nightly",
     "release:nightly": "node ./scripts/pre-release.mjs && changeset publish --tag nightly",
-    "push": "turbo run push"
-  },
-  "preconstruct": {
-    "packages": [
-      "packages/*"
-    ]
+    "push": "turbo run push",
+    "rune2e": "./scripts/e2e.sh"
   },
   "packageManager": "yarn@1.22.19",
   "dependencies": {
