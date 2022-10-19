@@ -8,7 +8,7 @@ import Erc721SupplyAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC721Supply.
 import ILazyMintAbi from "@thirdweb-dev/contracts-js/dist/abis/ILazyMint.json";
 import IMintableERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC721.json";
 import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
-import LazyMintWithTierAbi from "@thirdweb-dev/contracts-js/dist/abis/LazyMintWithTier.json";
+import TieredDropAbi from "@thirdweb-dev/contracts-js/dist/abis/LazyMintWithTier.json";
 import SignatureMintERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/SignatureMintERC721.json";
 
 export const FEATURE_NFT_BURNABLE = {
@@ -38,9 +38,9 @@ export const FEATURE_NFT_TIERED_DROP = {
   namespace: "nft.tieredDrop",
   docLinks: {
     sdk: "sdk.erc721tiereddrop",
-    contracts: "LazyMintWithTier",
+    contracts: "TieredDrop",
   },
-  abis: [Erc721Abi, LazyMintWithTierAbi],
+  abis: [Erc721Abi, TieredDropAbi],
   features: {},
 } as const;
 

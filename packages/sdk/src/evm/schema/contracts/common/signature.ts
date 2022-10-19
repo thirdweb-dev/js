@@ -255,3 +255,10 @@ export const MintRequest721withQuantity = [
   { name: "validityEndTimestamp", type: "uint128" },
   { name: "uid", type: "bytes32" },
 ];
+
+export const GenericRequest = [
+  { name: "validityStartTimestamp", type: "uint128" },
+  { name: "validityEndTimestamp", type: "uint128" },
+  { name: "uid", type: "bytes32" },
+  { name: "data", type: "bytes" },
+];

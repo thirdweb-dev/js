@@ -1,25 +1,34 @@
-import { Erc721, TransactionResultWithId } from "..";
 import { NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
+import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { getBaseUriFromBatch, uploadOrExtractURIs } from "../../common/nft";
 import { FEATURE_NFT_TIERED_DROP } from "../../constants/erc721-features";
+import { GenericRequest } from "../../schema";
+import {
+  TieredDropPayload,
+  TieredDropPayloadInput,
+  TieredDropPayloadWithSignature,
+} from "../../schema/contracts/tiered-drop";
 import { UploadProgressEvent } from "../../types/events";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { TransactionResult, TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
-import type { LazyMintWithTier } from "@thirdweb-dev/contracts-js";
+import { Erc721 } from "./erc-721";
+import type { TieredDrop, ISignatureAction } from "@thirdweb-dev/contracts-js";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TieredDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
+import invariant from "tiny-invariant";
 
 export class Erc721TieredDrop implements DetectableFeature {
   featureName = FEATURE_NFT_TIERED_DROP.name;
 
-  private contractWrapper: ContractWrapper<LazyMintWithTier>;
+  private contractWrapper: ContractWrapper<TieredDrop>;
   private erc721: Erc721;
   private storage: ThirdwebStorage;
 
   constructor(
     erc721: Erc721,
-    contractWrapper: ContractWrapper<LazyMintWithTier>,
+    contractWrapper: ContractWrapper<TieredDrop>,
     storage: ThirdwebStorage,
   ) {
     this.erc721 = erc721;
@@ -70,5 +79,122 @@ export class Erc721TieredDrop implements DetectableFeature {
       });
     }
     return results;
+  }
+
+  public async generate(
+    payloadToSign: TieredDropPayload,
+  ): Promise<TieredDropPayloadWithSignature> {
+    const [payload] = await this.generateBatch([payloadToSign]);
+    return payload;
+  }
+
+  public async generateBatch(
+    payloadsToSign: TieredDropPayload[],
+  ): Promise<TieredDropPayloadWithSignature[]> {
+    const parsedPayloads = payloadsToSign.map((payload) =>
+      TieredDropPayloadInput.parse(payload),
+    );
+    const chainId = await this.contractWrapper.getChainID();
+    const signer = this.contractWrapper.getSigner();
+    invariant(signer, "No signer available");
+
+    return await Promise.all(
+      parsedPayloads.map(async (payload) => {
+        const signature = await this.contractWrapper.signTypedData(
+          signer,
+          {
+            name: "SignatureAction",
+            version: "1",
+            chainId,
+            verifyingContract: this.contractWrapper.readContract.address,
+          },
+          { GenericRequest: GenericRequest },
+          await this.mapPayloadToContractStruct(payload),
+        );
+
+        return { payload, signature: signature.toString() };
+      }),
+    );
+  }
+
+  public async verify(
+    signedPayload: TieredDropPayloadWithSignature,
+  ): Promise<boolean> {
+    const message = await this.mapPayloadToContractStruct(
+      signedPayload.payload,
+    );
+    const verification = await this.contractWrapper.readContract.verify(
+      message,
+      signedPayload.signature,
+    );
+    return verification[0];
+  }
+
+  public async claimWithSignature(
+    signedPayload: TieredDropPayloadWithSignature,
+  ): Promise<TransactionResult> {
+    const message = await this.mapPayloadToContractStruct(
+      signedPayload.payload,
+    );
+    const pricePerToken = await normalizePriceValue(
+      this.contractWrapper.getProvider(),
+      signedPayload.payload.price,
+      signedPayload.payload.currencyAddress,
+    );
+    const price = pricePerToken.mul(signedPayload.payload.quantity);
+
+    const overrides = await this.contractWrapper.getCallOverrides();
+    await setErc20Allowance(
+      this.contractWrapper,
+      price,
+      signedPayload.payload.currencyAddress,
+      overrides,
+    );
+
+    const receipt = await this.contractWrapper.sendTransaction(
+      "claimWithSignature",
+      [message, signedPayload.signature],
+      overrides,
+    );
+    return { receipt };
+  }
+
+  private async mapPayloadToContractStruct(
+    payload: TieredDropPayload,
+  ): Promise<ISignatureAction.GenericRequestStruct> {
+    const normalizedPricePerToken = await normalizePriceValue(
+      this.contractWrapper.getProvider(),
+      payload.price,
+      payload.currencyAddress,
+    );
+    const data = ethers.utils.defaultAbiCoder.encode(
+      [
+        "string[]",
+        "address",
+        "address",
+        "uint256",
+        "address",
+        "uint256",
+        "uint256",
+        "address",
+      ],
+      [
+        payload.tierPriority,
+        payload.to,
+        payload.royaltyRecipient,
+        payload.royaltyBps,
+        payload.primarySaleRecipient,
+        payload.quantity,
+        normalizedPricePerToken,
+        payload.currencyAddress,
+      ],
+    );
+
+    return {
+      uid: payload.uid,
+      validityStartTimestamp: payload.mintStartTime,
+      validityEndTimestamp: payload.mintEndTime,
+      data,
+    } as ISignatureAction.GenericRequestStruct;
   }
 }
