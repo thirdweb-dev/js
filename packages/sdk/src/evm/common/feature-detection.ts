@@ -23,7 +23,7 @@ import {
 import { ExtensionNotImplementedError } from "./error";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import bs58 from "bs58";
-import { decode } from "cbor-x/decode";
+import { decode } from "cbor-x";
 import { BaseContract, BigNumber, ethers } from "ethers";
 import { z } from "zod";
 
