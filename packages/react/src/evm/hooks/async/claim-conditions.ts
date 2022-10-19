@@ -75,7 +75,11 @@ export function useActiveClaimCondition(
   const { erc1155, erc721, erc20 } = getErcs(contract);
 
   return useQueryWithNetwork(
-    cacheKeys.extensions.claimConditions.getActive(contractAddress, tokenId),
+    cacheKeys.extensions.claimConditions.getActive(
+      contractAddress,
+      tokenId,
+      options,
+    ),
     () => {
       if (erc1155) {
         requiredParamInvariant(
@@ -132,7 +136,11 @@ export function useClaimConditions(
   const { erc1155, erc721, erc20 } = getErcs(contract);
 
   return useQueryWithNetwork(
-    cacheKeys.extensions.claimConditions.getAll(contractAddress, tokenId),
+    cacheKeys.extensions.claimConditions.getAll(
+      contractAddress,
+      tokenId,
+      options,
+    ),
     () => {
       if (erc1155) {
         requiredParamInvariant(
