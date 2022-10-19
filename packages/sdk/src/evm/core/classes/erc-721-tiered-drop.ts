@@ -27,6 +27,10 @@ export class Erc721TieredDrop implements DetectableFeature {
     this.storage = storage;
   }
 
+  public async getTokensInTier(tier: string): Promise<string[]> {
+    return this.contractWrapper.call("getTokensInTier", [tier]);
+  }
+
   public async lazyMintWithTier(
     metadatas: NFTMetadataOrUri[],
     tier: string,
