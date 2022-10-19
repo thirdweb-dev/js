@@ -140,7 +140,7 @@ export class DropClaimConditions<
         ),
       );
     } else {
-      return [await this.getActive()];
+      return [await this.getActive(options)];
     }
   }
 
