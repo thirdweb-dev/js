@@ -40,18 +40,13 @@ describe("Snapshots", async () => {
   });
 
   it("should shard merkle tree", async () => {
-    const result = await ShardedMerkleTree.buildAndUpload(input, 2, 0, storage);
-    const sm = new ShardedMerkleTree(
-      storage,
-      result.shardedMerkleInfo.baseUri,
-      result.shardedMerkleInfo.shardNybbles,
-      result.shardedMerkleInfo.tokenDecimals,
-    );
-    const proofs = await sm.getProof(
+    const result = await ShardedMerkleTree.buildAndUpload(input, 0, storage);
+    const sm = await ShardedMerkleTree.fromUri(result.uri, storage);
+    const proofs = await sm?.getProof(
       "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
     );
-    expect(proofs.maxClaimable).to.equal("1");
-    expect(proofs.proof).length(2);
+    expect(proofs?.maxClaimable).to.equal("1");
+    expect(proofs?.proof).length(2);
   });
 
   it("should generate a valid merkle root from a list of addresses", async () => {
