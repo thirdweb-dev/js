@@ -2,7 +2,7 @@ import { SmartContract } from "../../src/evm/contracts/smart-contract";
 import { sdk } from "./before-setup";
 import { expect } from "chai";
 
-describe("Tiered Drop Contract", async () => {
+describe.skip("Tiered Drop Contract", async () => {
   let contract: SmartContract;
 
   before(async () => {
