@@ -486,7 +486,7 @@ describe("Signature drop tests", async () => {
         await signatureDropContract.claimConditions.getActive();
       invariant(conditions.snapshot);
       const snap = await conditions.snapshot();
-      expect(snap[0].address).to.eq(samWallet.address);
+      expect(snap?.[0].address).to.eq(samWallet.address);
     });
 
     it("should remove merkles from the metadata when claim conditions are removed", async () => {
@@ -755,7 +755,7 @@ describe("Signature drop tests", async () => {
           snapshot.snapshotUri,
           storage,
         );
-        const actualProof = await smt.getProof(leaf);
+        const actualProof = await smt?.getProof(leaf);
         assert.isDefined(actualProof);
         expect(actualProof?.proof).to.include.ordered.members(expectedProof);
 

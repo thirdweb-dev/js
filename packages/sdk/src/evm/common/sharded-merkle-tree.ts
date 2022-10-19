@@ -2,9 +2,8 @@ import {
   ShardData,
   ShardedMerkleTreeInfo,
   ShardedSnapshot,
-  SnapshotEntriesOutput,
   SnapshotEntry,
-  SnapshotEntryOutput,
+  SnapshotEntryWithProof,
   SnapshotInputSchema,
 } from "../schema";
 import { SnapshotInput } from "../types";
@@ -13,23 +12,31 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { utils } from "ethers";
 import { MerkleTree } from "merkletreejs";
 
+// shard using the first 2 hex character of the address
+// this splits the merkle tree into 256 shards
+// shard files will be 00.json, 01.json, 02.json, ..., ff.json
+const SHARD_NYBBLES = 2;
+
 export class ShardedMerkleTree {
   private shardNybbles: number;
   private shards: Record<string, ShardData>;
   private trees: Record<string, MerkleTree>;
   private storage: ThirdwebStorage;
   private baseUri: string;
+  private originalEntriesUri: string;
   private tokenDecimals: number;
 
   constructor(
     storage: ThirdwebStorage,
     baseUri: string,
+    originalEntriesUri: string,
     shardNybbles: number,
     tokenDecimals: number,
   ) {
     this.storage = storage;
     this.shardNybbles = shardNybbles;
     this.baseUri = baseUri;
+    this.originalEntriesUri = originalEntriesUri;
     this.tokenDecimals = tokenDecimals;
     this.shards = {};
     this.trees = {};
@@ -60,6 +67,7 @@ export class ShardedMerkleTree {
     return new ShardedMerkleTree(
       storage,
       info.baseUri,
+      info.originalEntriesUri,
       info.shardNybbles,
       info.tokenDecimals,
     );
@@ -74,14 +82,13 @@ export class ShardedMerkleTree {
 
   static async buildAndUpload(
     snapshotInput: SnapshotInput,
-    shardNybbles: number,
     tokenDecimals: number,
     storage: ThirdwebStorage,
+    shardNybbles = SHARD_NYBBLES,
   ): Promise<ShardedSnapshot> {
     const inputs = SnapshotInputSchema.parse(snapshotInput);
-    // TODO derive shardNybbles from input size
+    // TODO Could also derive shardNybbles from input size
     const shards: Record<string, SnapshotEntry[]> = {};
-    // let total = ethers.BigNumber.from(0);
     for (const snapshotEntry of inputs) {
       const shard = snapshotEntry.address
         .slice(2, 2 + shardNybbles)
@@ -90,7 +97,6 @@ export class ShardedMerkleTree {
         shards[shard] = [];
       }
       shards[shard].push(snapshotEntry);
-      // total = total.add(entry.balance);
     }
     // create shard => subtree root map
     const roots = Object.fromEntries(
@@ -128,9 +134,12 @@ export class ShardedMerkleTree {
     const uris = await storage.uploadBatch(shardsToUpload);
     const baseUri = uris[0].slice(0, uris[0].lastIndexOf("/"));
 
+    const originalEntriesUri = await storage.upload(inputs);
+
     const shardedMerkleInfo: ShardedMerkleTreeInfo = {
       merkleRoot: tree.getHexRoot(),
       baseUri,
+      originalEntriesUri,
       shardNybbles,
       tokenDecimals,
       isShardedMerkleTree: true,
@@ -144,7 +153,9 @@ export class ShardedMerkleTree {
     };
   }
 
-  public async getProof(address: string): Promise<SnapshotEntryOutput | null> {
+  public async getProof(
+    address: string,
+  ): Promise<SnapshotEntryWithProof | null> {
     const shardId = address.slice(2, 2 + this.shardNybbles).toLowerCase();
     let shard = this.shards[shardId];
     if (shard === undefined) {
@@ -182,22 +193,11 @@ export class ShardedMerkleTree {
     };
   }
 
-  public async getAllEntries(): Promise<SnapshotEntriesOutput> {
-    const allShards = this.computeAllShardIds(this.shardNybbles);
-    const shardsUris = allShards.map(
-      (shardId) => `${this.baseUri}/${shardId}.json`,
+  public async getAllEntries(): Promise<SnapshotEntry[]> {
+    const entries = await this.storage.downloadJSON<SnapshotEntry[]>(
+      this.originalEntriesUri,
     );
-    const shards = await Promise.all(
-      shardsUris.map((uri) =>
-        this.storage.downloadJSON<ShardData>(uri).catch(() => undefined),
-      ),
-    );
-    return shards
-      .flatMap((shard) => (shard ? shard.entries : []))
-      .map((entry) => ({
-        proof: [] as string[],
-        ...entry,
-      }));
+    return entries;
   }
 
   private computeAllShardIds(shardNybbles: number) {

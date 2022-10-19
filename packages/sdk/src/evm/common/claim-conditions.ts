@@ -6,8 +6,8 @@ import {
   ClaimConditionOutputSchema,
 } from "../schema/contracts/common/claim-conditions";
 import {
-  SnapshotEntriesOutput,
-  SnapshotEntryOutput,
+  SnapshotEntry,
+  SnapshotEntryWithProof,
   SnapshotInputSchema,
   SnapshotSchema,
 } from "../schema/contracts/common/snapshots";
@@ -123,7 +123,7 @@ export async function fetchSnapshot(
   merkleRoot: string,
   merkleMetadata: Record<string, string> | undefined,
   storage: ThirdwebStorage,
-): Promise<SnapshotEntriesOutput | null> {
+): Promise<SnapshotEntry[] | null> {
   if (!merkleMetadata) {
     return null;
   }
@@ -136,7 +136,10 @@ export async function fetchSnapshot(
     } else {
       const snapshotData = SnapshotSchema.parse(raw);
       if (merkleRoot === snapshotData.merkleRoot) {
-        return snapshotData.claims;
+        return snapshotData.claims.map((claim) => ({
+          address: claim.address,
+          maxClaimable: claim.maxClaimable,
+        }));
       }
     }
   }
@@ -148,7 +151,7 @@ export async function fetchSnapshotEntryForAddress(
   merkleRoot: string,
   merkleMetadata: Record<string, string> | undefined,
   storage: ThirdwebStorage,
-): Promise<SnapshotEntryOutput | null> {
+): Promise<SnapshotEntryWithProof | null> {
   if (!merkleMetadata) {
     return null;
   }
@@ -165,9 +168,7 @@ export async function fetchSnapshotEntryForAddress(
     // legacy non-sharded, just fetch it all and filter out
     const snapshotData = SnapshotSchema.parse(raw);
     if (merkleRoot === snapshotData.merkleRoot) {
-      return (
-        snapshotData.claims.filter((c) => c.address === address)[0] || null
-      );
+      return snapshotData.claims.find((c) => c.address === address) || null;
     }
   }
   return null;

@@ -29,7 +29,6 @@ export async function createSnapshot(
   }
   const tree = await ShardedMerkleTree.buildAndUpload(
     input,
-    2,
     tokenDecimals,
     storage,
   );

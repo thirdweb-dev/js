@@ -11,12 +11,12 @@ export const MerkleSchema = z.object({
 /**
  * @internal
  */
-export const SnapshotAddressInput = z.object({
+export const SnapshotEntryInput = z.object({
   address: AddressSchema,
   maxClaimable: AmountSchema.default(0),
 });
 
-export type SnapshotEntry = z.output<typeof SnapshotAddressInput>;
+export type SnapshotEntry = z.output<typeof SnapshotEntryInput>;
 export type ShardData = {
   proofs: string[];
   entries: SnapshotEntry[];
@@ -24,6 +24,7 @@ export type ShardData = {
 export type ShardedMerkleTreeInfo = {
   merkleRoot: string;
   baseUri: string;
+  originalEntriesUri: string;
   shardNybbles: number;
   tokenDecimals: number;
   isShardedMerkleTree: true;
@@ -40,21 +41,17 @@ export type ShardedSnapshot = {
 export const SnapshotInputSchema = z.union([
   z.array(z.string()).transform((strings) =>
     strings.map((address) =>
-      SnapshotAddressInput.parse({
+      SnapshotEntryInput.parse({
         address,
       }),
     ),
   ),
-  z.array(SnapshotAddressInput),
+  z.array(SnapshotEntryInput),
 ]);
 
-const SnapshotEntryOutputSchema = SnapshotAddressInput.extend({
+const SnapshotEntryWithProofSchema = SnapshotEntryInput.extend({
   proof: z.array(z.string()),
 });
-/**
- * @internal
- */
-const SnapshotEntriesOutputSchema = z.array(SnapshotEntryOutputSchema);
 /**
  * @internal
  */
@@ -63,18 +60,14 @@ export const SnapshotSchema = z.object({
    * The merkle root
    */
   merkleRoot: z.string(),
-  claims: SnapshotEntriesOutputSchema,
+  claims: z.array(SnapshotEntryWithProofSchema),
 });
 /**
  * @internal
  */
-export type SnapshotEntriesOutput = z.output<
-  typeof SnapshotEntriesOutputSchema
+export type SnapshotEntryWithProof = z.output<
+  typeof SnapshotEntryWithProofSchema
 >;
-/**
- * @internal
- */
-export type SnapshotEntryOutput = z.output<typeof SnapshotEntryOutputSchema>;
 
 /**
  * @internal
@@ -82,5 +75,4 @@ export type SnapshotEntryOutput = z.output<typeof SnapshotEntryOutputSchema>;
 export const SnapshotInfoSchema = z.object({
   merkleRoot: z.string(),
   snapshotUri: z.string(),
-  snapshot: SnapshotSchema.optional(), // TODO remove
 });
