@@ -1,4 +1,5 @@
 import { AmountSchema, FileOrBufferOrStringSchema } from "../common";
+import { Creator } from "@metaplex-foundation/js";
 import { z } from "zod";
 
 /**
@@ -63,6 +64,13 @@ export type TokenMetadataInput = z.input<typeof TokenMetadataInputSchema>;
  * @public
  */
 export type CreatorInput = z.input<typeof CreatorInputSchema>;
+
+/**
+ * @public
+ */
+export type CreatorOutput = Omit<Creator, "address"> & {
+  readonly address: string;
+};
 
 /**
  * @internal

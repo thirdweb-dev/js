@@ -1,4 +1,7 @@
-import { RequiredParam } from "../../../core/types/shared";
+import {
+  requiredParamInvariant,
+  RequiredParam,
+} from "../../../core/query-utils/required-param";
 import { useSDKChainId } from "../../providers/base";
 import {
   ClaimTokenParams,
@@ -39,7 +42,7 @@ export function useTokenSupply(contract: RequiredParam<TokenContract>) {
   return useQueryWithNetwork(
     cacheKeys.contract.token.totalSupply(contractAddress),
     () => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
       const erc20 = getErc20(contract);
       if (erc20) {
         return erc20.totalSupply();
@@ -75,7 +78,7 @@ export function useTokenBalance(
   return useQueryWithNetwork(
     cacheKeys.contract.token.balanceOf(contractAddress, walletAddress),
     async () => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
       invariant(walletAddress, "No address provided");
       if (erc20) {
         return await erc20.balanceOf(walletAddress);
@@ -109,7 +112,7 @@ export function useTokenDecimals(contract: RequiredParam<TokenContract>) {
   return useQueryWithNetwork(
     cacheKeys.contract.token.decimals(contractAddress),
     async () => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
 
       if (erc20) {
         return (await erc20.get()).decimals;
@@ -168,7 +171,7 @@ export function useMintToken(contract: RequiredParam<TokenContract>) {
   return useMutation(
     (data: TokenParams) => {
       const { to, amount } = data;
-      invariant(contract, "contract is undefined");
+      requiredParamInvariant(contract, "contract is undefined");
       if (erc20) {
         return erc20.mintTo(to, amount);
       }
@@ -350,7 +353,7 @@ export function useTransferBatchToken(contract: RequiredParam<TokenContract>) {
     (data: TokenParams[]) => {
       if (erc20) {
         invariant(
-          erc20?.transferBatch,
+          erc20.transferBatch,
           "contract does not support transferBatch",
         );
         const convertedData = data.map((token) => ({
@@ -415,9 +418,9 @@ export function useBurnToken(contract: RequiredParam<TokenContract>) {
   return useMutation(
     (data: TokenBurnParams) => {
       const { amount } = data;
-      invariant(contract, "contract is undefined");
+      requiredParamInvariant(contract, "contract is undefined");
       if (erc20) {
-        invariant(erc20?.burn, "contract does not support burn");
+        invariant(erc20.burn, "contract does not support burn");
         return erc20.burn(amount);
       }
       invariant(false, "Smart contract is not a valid erc20 contract");

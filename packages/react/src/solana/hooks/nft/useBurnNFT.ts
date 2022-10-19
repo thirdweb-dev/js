@@ -1,8 +1,10 @@
 import { createSOLProgramQueryKey } from "../../../core/query-utils/query-key";
-import { RequiredParam } from "../../../core/types/shared";
+import {
+  requiredParamInvariant,
+  RequiredParam,
+} from "../../../core/query-utils/required-param";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { NFTCollection, NFTDrop } from "@thirdweb-dev/sdk/solana";
-import invariant from "tiny-invariant";
 
 /**
  * Burn an NFT owned by the connected wallet
@@ -32,7 +34,7 @@ export function useBurnNFT(program: RequiredParam<NFTCollection | NFTDrop>) {
   const queryClient = useQueryClient();
   return useMutation(
     async (nftAddress: string) => {
-      invariant(program, "program is required");
+      requiredParamInvariant(program, "program is required");
       return await program.burn(nftAddress);
     },
     {

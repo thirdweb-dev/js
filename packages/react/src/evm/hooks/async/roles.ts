@@ -1,4 +1,7 @@
-import { RequiredParam } from "../../../core/types/shared";
+import {
+  requiredParamInvariant,
+  RequiredParam,
+} from "../../../core/query-utils/required-param";
 import { useSDKChainId } from "../../providers/base";
 import { WalletAddress } from "../../types";
 import {
@@ -61,7 +64,7 @@ export function useAllRoleMembers<TContract extends ContractWithRoles>(
   return useQueryWithNetwork<Awaited<GetAllReturnType<TContract>>>(
     cacheKeys.extensions.roles.getAll(contractAddress),
     () => {
-      invariant(contract, "No contract provided");
+      requiredParamInvariant(contract, "No contract provided");
       invariant(contract.roles, "Contract does not support roles");
       // have to cast to any because of role bs, type is defined in the useQueryWithNetwork definition above
       return contract.roles.getAll() as any;
@@ -94,7 +97,7 @@ export function useRoleMembers<TContract extends ContractWithRoles>(
   return useQueryWithNetwork(
     cacheKeys.extensions.roles.get(contractAddress, role),
     () => {
-      invariant(contract, "No contract provided");
+      requiredParamInvariant(contract, "No contract provided");
       invariant(contract.roles, "Contract does not support roles");
       return contract.roles.get(role);
     },
@@ -192,7 +195,7 @@ export function useSetAllRoleMembers<TContract extends ContractWithRoles>(
     async (rolesWithAddresses: {
       [role in RolesForContract<TContract>]: string[];
     }) => {
-      invariant(contract, "No contract provided");
+      requiredParamInvariant(contract, "No contract provided");
       invariant(contract.roles, "Contract does not support roles");
       await contract.roles.setAll(rolesWithAddresses);
     },
@@ -253,7 +256,7 @@ export function useGrantRole<TContract extends ContractWithRoles>(
       role: RolesForContract<TContract>;
       address: WalletAddress;
     }) => {
-      invariant(contract, "No contract provided");
+      requiredParamInvariant(contract, "No contract provided");
       invariant(contract.roles, "Contract does not support roles");
       await contract.roles.grant(params.role as any, params.address);
     },
@@ -311,7 +314,7 @@ export function useRevokeRole<TContract extends ContractWithRoles>(
       role: RolesForContract<TContract>;
       address: WalletAddress;
     }) => {
-      invariant(contract, "No contract provided");
+      requiredParamInvariant(contract, "No contract provided");
       invariant(contract.roles, "Contract does not support roles");
       await contract.roles.revoke(params.role as any, params.address);
     },

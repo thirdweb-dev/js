@@ -1,4 +1,4 @@
-import { CreatorInput } from "../../types/programs";
+import { CreatorInput, CreatorOutput } from "../../types/programs";
 import type { Creator } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
 
@@ -21,5 +21,15 @@ export function enforceCreator(
     verified: creator.verified || false,
     address: new PublicKey(creator.address),
     share: creator.sharePercentage,
+  }));
+}
+
+/**
+ * @internal
+ */
+export function parseCreators(creators: Creator[]): CreatorOutput[] {
+  return creators.map((creator) => ({
+    ...creator,
+    address: creator.address.toBase58(),
   }));
 }
