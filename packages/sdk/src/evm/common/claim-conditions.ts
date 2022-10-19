@@ -6,6 +6,8 @@ import {
   ClaimConditionOutputSchema,
 } from "../schema/contracts/common/claim-conditions";
 import {
+  SnapshotEntry,
+  SnapshotEntryWithProof,
   SnapshotInputSchema,
   SnapshotSchema,
 } from "../schema/contracts/common/snapshots";
@@ -23,17 +25,18 @@ import {
   isNativeToken,
   normalizePriceValue,
 } from "./currency";
+import { ShardedMerkleTree } from "./sharded-merkle-tree";
 import { createSnapshot } from "./snapshots";
 import { IDropClaimCondition } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC20";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
   BigNumberish,
-  ethers,
+  CallOverrides,
   constants,
+  ethers,
   providers,
   utils,
-  CallOverrides,
 } from "ethers";
 
 /**
@@ -59,21 +62,17 @@ export async function prepareClaim(
         .toString()
         .startsWith(constants.AddressZero)
     ) {
-      const claims = await fetchSnapshot(
+      const claim = await fetchSnapshotEntryForAddress(
+        addressToClaim,
         activeClaimCondition.merkleRootHash.toString(),
         await merkleMetadataFetcher(),
         storage,
       );
-      const item =
-        claims &&
-        claims.find(
-          (c) => c.address.toLowerCase() === addressToClaim.toLowerCase(),
-        );
-      if (item === undefined) {
+      if (!claim) {
         throw new Error("No claim found for this address");
       }
-      proofs = item.proof;
-      maxClaimable = ethers.utils.parseUnits(item.maxClaimable, tokenDecimals);
+      proofs = claim.proof;
+      maxClaimable = ethers.utils.parseUnits(claim.maxClaimable, tokenDecimals);
     }
   } catch (e) {
     // have to handle the valid error case that we *do* want to throw on
@@ -114,14 +113,6 @@ export async function prepareClaim(
   };
 }
 
-type Snapshot =
-  | {
-      address: string;
-      proof: string[];
-      maxClaimable: string;
-    }[]
-  | undefined;
-
 /**
  * @internal
  * @param merkleRoot
@@ -132,20 +123,55 @@ export async function fetchSnapshot(
   merkleRoot: string,
   merkleMetadata: Record<string, string> | undefined,
   storage: ThirdwebStorage,
-): Promise<Snapshot> {
+): Promise<SnapshotEntry[] | null> {
   if (!merkleMetadata) {
-    return undefined;
+    return null;
   }
   const snapshotUri = merkleMetadata[merkleRoot];
-  let snapshot: Snapshot = undefined;
   if (snapshotUri) {
     const raw = await storage.downloadJSON(snapshotUri);
-    const snapshotData = SnapshotSchema.parse(raw);
-    if (merkleRoot === snapshotData.merkleRoot) {
-      snapshot = snapshotData.claims;
+    if (raw.isShardedMerkleTree && raw.merkleRoot === merkleRoot) {
+      const smt = await ShardedMerkleTree.fromUri(snapshotUri, storage);
+      return smt?.getAllEntries() || null;
+    } else {
+      const snapshotData = SnapshotSchema.parse(raw);
+      if (merkleRoot === snapshotData.merkleRoot) {
+        return snapshotData.claims.map((claim) => ({
+          address: claim.address,
+          maxClaimable: claim.maxClaimable,
+        }));
+      }
     }
   }
-  return snapshot;
+  return null;
+}
+
+export async function fetchSnapshotEntryForAddress(
+  address: string,
+  merkleRoot: string,
+  merkleMetadata: Record<string, string> | undefined,
+  storage: ThirdwebStorage,
+): Promise<SnapshotEntryWithProof | null> {
+  if (!merkleMetadata) {
+    return null;
+  }
+  const snapshotUri = merkleMetadata[merkleRoot];
+  if (snapshotUri) {
+    const raw = await storage.downloadJSON(snapshotUri);
+    if (raw.isShardedMerkleTree && raw.merkleRoot === merkleRoot) {
+      const merkleTree = await ShardedMerkleTree.fromShardedMerkleTreeInfo(
+        raw,
+        storage,
+      );
+      return await merkleTree.getProof(address);
+    }
+    // legacy non-sharded, just fetch it all and filter out
+    const snapshotData = SnapshotSchema.parse(raw);
+    if (merkleRoot === snapshotData.merkleRoot) {
+      return snapshotData.claims.find((c) => c.address === address) || null;
+    }
+  }
+  return null;
 }
 
 /**
@@ -203,7 +229,11 @@ export async function updateExistingClaimConditions(
 /**
  * Fetches the proof for the current signer for a particular wallet.
  *
+ * @param addressToClaim
  * @param merkleRoot - The merkle root of the condition to check.
+ * @param tokenDecimals
+ * @param merkleMetadata
+ * @param storage
  * @returns - The proof for the current signer for the specified condition.
  */
 export async function getClaimerProofs(
@@ -213,30 +243,21 @@ export async function getClaimerProofs(
   merkleMetadata: Record<string, string>,
   storage: ThirdwebStorage,
 ): Promise<{ maxClaimable: BigNumber; proof: string[] }> {
-  const claims: Snapshot = await fetchSnapshot(
+  const claim = await fetchSnapshotEntryForAddress(
+    addressToClaim,
     merkleRoot,
     merkleMetadata,
     storage,
   );
-  if (claims === undefined) {
-    return {
-      proof: [],
-      maxClaimable: BigNumber.from(0),
-    };
-  }
-  const item = claims.find(
-    (c) => c.address.toLowerCase() === addressToClaim?.toLowerCase(),
-  );
-
-  if (item === undefined) {
+  if (!claim) {
     return {
       proof: [],
       maxClaimable: BigNumber.from(0),
     };
   }
   return {
-    proof: item.proof,
-    maxClaimable: ethers.utils.parseUnits(item.maxClaimable, tokenDecimals),
+    proof: claim.proof,
+    maxClaimable: ethers.utils.parseUnits(claim.maxClaimable, tokenDecimals),
   };
 }
 
@@ -356,10 +377,10 @@ export async function transformResultToClaimCondition(
   provider: providers.Provider,
   merkleMetadata: Record<string, string> | undefined,
   storage: ThirdwebStorage,
+  shouldDownloadSnapshot: boolean,
 ): Promise<ClaimCondition> {
   const cv = await fetchCurrencyValue(provider, pm.currency, pm.pricePerToken);
 
-  const claims = await fetchSnapshot(pm.merkleRoot, merkleMetadata, storage);
   const maxClaimableSupply = convertToReadableQuantity(
     pm.maxClaimableSupply,
     tokenDecimals,
@@ -388,7 +409,9 @@ export async function transformResultToClaimCondition(
     currencyAddress: pm.currency,
     currencyMetadata: cv,
     merkleRootHash: pm.merkleRoot,
-    snapshot: claims,
+    snapshot: shouldDownloadSnapshot
+      ? await fetchSnapshot(pm.merkleRoot, merkleMetadata, storage)
+      : undefined,
   });
 }
 

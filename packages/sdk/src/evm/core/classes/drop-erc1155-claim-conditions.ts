@@ -13,6 +13,7 @@ import { NATIVE_TOKEN_ADDRESS } from "../../constants/index";
 import { ClaimEligibility } from "../../enums";
 import {
   ClaimCondition,
+  ClaimConditionFetchOptions,
   ClaimConditionInput,
   ClaimConditionsForToken,
   ClaimVerification,
@@ -63,7 +64,10 @@ export class DropErc1155ClaimConditions<
    *
    * @returns the claim condition metadata
    */
-  public async getActive(tokenId: BigNumberish): Promise<ClaimCondition> {
+  public async getActive(
+    tokenId: BigNumberish,
+    options?: ClaimConditionFetchOptions,
+  ): Promise<ClaimCondition> {
     const mc = await this.get(tokenId);
     const metadata = await this.metadata.get();
     return await transformResultToClaimCondition(
@@ -72,6 +76,7 @@ export class DropErc1155ClaimConditions<
       this.contractWrapper.getProvider(),
       metadata.merkle,
       this.storage,
+      options?.withAllowList || false,
     );
   }
 
@@ -101,7 +106,10 @@ export class DropErc1155ClaimConditions<
    *
    * @returns the claim conditions metadata
    */
-  public async getAll(tokenId: BigNumberish): Promise<ClaimCondition[]> {
+  public async getAll(
+    tokenId: BigNumberish,
+    options?: ClaimConditionFetchOptions,
+  ): Promise<ClaimCondition[]> {
     if (this.isMultiPhaseDropContract(this.contractWrapper)) {
       const claimCondition =
         (await this.contractWrapper.readContract.claimCondition(tokenId)) as {
@@ -128,6 +136,7 @@ export class DropErc1155ClaimConditions<
             this.contractWrapper.getProvider(),
             metadata.merkle,
             this.storage,
+            options?.withAllowList || false,
           ),
         ),
       );

@@ -1,6 +1,8 @@
+import { ShardedMerkleTree } from "../../src/evm/common/sharded-merkle-tree";
 import { createSnapshot, Snapshot } from "../../src/evm/index";
 import { MockStorage } from "./mock/MockStorage";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { BigNumber } from "ethers";
 
 const chai = require("chai");
 const deepEqualInAnyOrder = require("deep-equal-in-any-order");
@@ -12,8 +14,6 @@ const { expect, assert } = chai;
 global.fetch = require("cross-fetch");
 
 describe("Snapshots", async () => {
-  let snapshot: Snapshot;
-  let uri: string;
   let merkleRoot: string;
 
   const leafs = [
@@ -23,9 +23,9 @@ describe("Snapshots", async () => {
     "0x14fb3a9B317612ddc6d6Cc3c907CD9F2Aa091eE7",
   ];
 
-  const input = leafs.map((address) => ({
+  const input = leafs.map((address, i) => ({
     address,
-    maxClaimable: 0,
+    maxClaimable: BigNumber.from(i + 1).toString(),
   }));
 
   let storage: ThirdwebStorage;
@@ -36,22 +36,30 @@ describe("Snapshots", async () => {
 
   beforeEach(async () => {
     const result = await createSnapshot(input, 0, storage);
-    snapshot = result.snapshot;
-    uri = result.snapshotUri;
     merkleRoot = result.merkleRoot;
+  });
+
+  it("should shard merkle tree", async () => {
+    const result = await ShardedMerkleTree.buildAndUpload(input, 0, storage);
+    const sm = await ShardedMerkleTree.fromUri(result.uri, storage);
+    const proofs = await sm?.getProof(
+      "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
+    );
+    expect(proofs?.maxClaimable).to.equal("1");
+    expect(proofs?.proof).length(2);
   });
 
   it("should generate a valid merkle root from a list of addresses", async () => {
     assert.equal(
       merkleRoot,
-      "0xe0c95ec2a9cc03bb25cdf2f3c9092a00698716373e4e34715498a68167fe4acd",
+      "0x8ef5aa32e8d987fe1e5b93155939ebfbb897746f476f0a97ad5354aa5317c751",
     );
   });
 
   it("should warn about duplicate leafs", async () => {
     const duplicateLeafs = input.concat({
       address: "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
-      maxClaimable: 0,
+      maxClaimable: "0",
     });
 
     try {
@@ -64,31 +72,5 @@ describe("Snapshots", async () => {
     assert.fail(
       "should not reach this point, exception should have been thrown",
     );
-  });
-
-  it("should contain the same number of claims as there are leafs", () => {
-    assert.lengthOf(snapshot.claims, leafs.length);
-  });
-
-  it("should contain a proof for every claim", () => {
-    assert.lengthOf(snapshot.claims, leafs.length);
-
-    snapshot.claims.forEach((claim) => {
-      assert.isNotEmpty(claim.proof);
-    });
-  });
-
-  it("should contain a claim for each leaf", () => {
-    leafs.forEach((leaf) => {
-      assert.notEqual(
-        snapshot.claims.find((c) => c.address === leaf),
-        undefined,
-      );
-    });
-  });
-
-  it("should upload the snapshot to storage", async () => {
-    const rawSnapshotJson = await storage.downloadJSON(uri);
-    expect(rawSnapshotJson).to.deep.equalInAnyOrder(snapshot);
   });
 });
