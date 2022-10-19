@@ -22,9 +22,9 @@ import {
 } from "../schema/contracts/custom";
 import { ExtensionNotImplementedError } from "./error";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { decode } from "cbor-x/decode";
+import bs58 from "bs58";
+import { decode } from "cbor-x";
 import { BaseContract, BigNumber, ethers } from "ethers";
-import { toB58String } from "multihashes";
 import { z } from "zod";
 
 /**
@@ -284,9 +284,9 @@ export async function resolveContractUriFromAddress(
  * @internal
  * @param bytecode
  */
-async function extractIPFSHashFromBytecode(
+export function extractIPFSHashFromBytecode(
   bytecode: string,
-): Promise<string | undefined> {
+): string | undefined {
   const numericBytecode = hexToBytes(bytecode);
   const cborLength: number =
     numericBytecode[numericBytecode.length - 2] * 0x100 +
@@ -298,7 +298,7 @@ async function extractIPFSHashFromBytecode(
   const cborData = decode(bytecodeBuffer);
   if ("ipfs" in cborData && cborData["ipfs"]) {
     try {
-      return `ipfs://${toB58String(cborData["ipfs"])}`;
+      return `ipfs://${bs58.encode(cborData["ipfs"])}`;
     } catch (e) {
       console.warn("feature-detection ipfs cbor failed", e);
     }
