@@ -111,9 +111,6 @@ export function replaceSchemeWithGatewayUrl(
   gatewayUrls: GatewayUrls,
   index = 0,
 ): string | undefined {
-  console.log("URI:", uri);
-  console.log("Attempt:", index);
-
   const scheme = Object.keys(gatewayUrls).find((s) => uri.startsWith(s));
   const schemeGatewayUrls = scheme ? gatewayUrls[scheme] : [];
 
