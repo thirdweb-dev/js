@@ -110,11 +110,12 @@ describe("NFT Drop Contract", async () => {
         snapshot: [samWallet.address],
       },
     ]);
-    const conditions = await dropContract.claimConditions.getAll();
+    const conditions = await dropContract.claimConditions.getAll({
+      withAllowList: true,
+    });
     assert.lengthOf(conditions, 1);
     invariant(conditions[0].snapshot);
-    const snap = await conditions[0].snapshot();
-    expect(snap?.[0].address).to.eq(samWallet.address);
+    expect(conditions[0].snapshot[0].address).to.eq(samWallet.address);
   });
 
   it("should remove merkles from the metadata when claim conditions are removed", async () => {

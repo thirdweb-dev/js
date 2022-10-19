@@ -194,13 +194,11 @@ export async function updateExistingClaimConditions(
   const priceDecimals = existingConditions[index].currencyMetadata.decimals;
   const priceInWei = existingConditions[index].price;
   const priceInTokens = ethers.utils.formatUnits(priceInWei, priceDecimals);
-  const fetchedSnapshot = await existingConditions[index].snapshot();
 
   // merge existing (output format) with incoming (input format)
   const newConditionParsed = ClaimConditionInputSchema.parse({
     ...existingConditions[index],
     price: priceInTokens,
-    snapshot: fetchedSnapshot,
     ...claimConditionInput,
   });
 
@@ -208,7 +206,6 @@ export async function updateExistingClaimConditions(
   const mergedConditionOutput = ClaimConditionOutputSchema.parse({
     ...newConditionParsed,
     price: priceInWei,
-    snapshot: () => newConditionParsed.snapshot,
   });
 
   return existingConditions.map((existingOutput, i) => {
@@ -225,7 +222,6 @@ export async function updateExistingClaimConditions(
     return {
       ...newConditionAtIndex,
       price: formattedPrice, // manually transform back to input price type
-      snapshot: newConditionParsed.snapshot,
     };
   });
 }
@@ -381,6 +377,7 @@ export async function transformResultToClaimCondition(
   provider: providers.Provider,
   merkleMetadata: Record<string, string> | undefined,
   storage: ThirdwebStorage,
+  shouldDownloadSnapshot: boolean,
 ): Promise<ClaimCondition> {
   const cv = await fetchCurrencyValue(provider, pm.currency, pm.pricePerToken);
 
@@ -412,7 +409,9 @@ export async function transformResultToClaimCondition(
     currencyAddress: pm.currency,
     currencyMetadata: cv,
     merkleRootHash: pm.merkleRoot,
-    snapshot: () => fetchSnapshot(pm.merkleRoot, merkleMetadata, storage),
+    snapshot: shouldDownloadSnapshot
+      ? await fetchSnapshot(pm.merkleRoot, merkleMetadata, storage)
+      : undefined,
   });
 }
 

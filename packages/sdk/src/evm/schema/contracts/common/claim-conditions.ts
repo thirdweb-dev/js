@@ -53,8 +53,5 @@ export const ClaimConditionOutputSchema = ClaimConditionInputSchema.extend({
   price: BigNumberSchema,
   waitInSeconds: BigNumberSchema,
   startTime: BigNumberSchema.transform((n) => new Date(n.toNumber() * 1000)),
-  snapshot: z
-    .function()
-    .args()
-    .returns(z.promise(SnapshotInputSchema.nullable())),
+  snapshot: SnapshotInputSchema.optional().nullable(),
 });

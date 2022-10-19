@@ -10,7 +10,11 @@ import {
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ClaimCondition, ClaimConditionInput } from "@thirdweb-dev/sdk";
+import {
+  ClaimCondition,
+  ClaimConditionFetchOptions,
+  ClaimConditionInput,
+} from "@thirdweb-dev/sdk";
 import { BigNumberish } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -65,6 +69,7 @@ export type SetClaimConditionsParams = {
 export function useActiveClaimCondition(
   contract: RequiredParam<DropContract>,
   tokenId?: BigNumberish,
+  options?: ClaimConditionFetchOptions,
 ) {
   const contractAddress = contract?.getAddress();
   const { erc1155, erc721, erc20 } = getErcs(contract);
@@ -77,13 +82,13 @@ export function useActiveClaimCondition(
           tokenId,
           "tokenId is required for ERC1155 claim conditions",
         );
-        return erc1155.claimConditions.getActive(tokenId);
+        return erc1155.claimConditions.getActive(tokenId, options);
       }
       if (erc721) {
-        return erc721.claimConditions.getActive();
+        return erc721.claimConditions.getActive(options);
       }
       if (erc20) {
-        return erc20.claimConditions.getActive();
+        return erc20.claimConditions.getActive(options);
       }
       throw new Error("Contract must be ERC721, ERC1155 or ERC20");
     },
@@ -121,6 +126,7 @@ export function useActiveClaimCondition(
 export function useClaimConditions(
   contract: RequiredParam<DropContract>,
   tokenId?: BigNumberish,
+  options?: ClaimConditionFetchOptions,
 ) {
   const contractAddress = contract?.getAddress();
   const { erc1155, erc721, erc20 } = getErcs(contract);
@@ -133,13 +139,13 @@ export function useClaimConditions(
           tokenId,
           "tokenId is required for ERC1155 claim conditions",
         );
-        return erc1155.claimConditions.getAll(tokenId);
+        return erc1155.claimConditions.getAll(tokenId, options);
       }
       if (erc721) {
-        return erc721.claimConditions.getAll();
+        return erc721.claimConditions.getAll(options);
       }
       if (erc20) {
-        return erc20.claimConditions.getAll();
+        return erc20.claimConditions.getAll(options);
       }
       throw new Error("Contract must be ERC721, ERC1155 or ERC20");
     },
@@ -351,16 +357,12 @@ export function useResetClaimConditions(
   return useMutation(
     async () => {
       const cleanConditions = async (conditions: ClaimCondition[]) => {
-        return await Promise.all(
-          conditions.map(async (c) => ({
-            ...c,
-            price: c.currencyMetadata.displayValue,
-            maxQuantity: c.maxQuantity.toString(),
-            quantityLimitPerTransaction:
-              c.quantityLimitPerTransaction.toString(),
-            snapshot: await c.snapshot(),
-          })),
-        );
+        return conditions.map((c) => ({
+          ...c,
+          price: c.currencyMetadata.displayValue,
+          maxQuantity: c.maxQuantity.toString(),
+          quantityLimitPerTransaction: c.quantityLimitPerTransaction.toString(),
+        }));
       };
 
       if (erc1155) {
@@ -368,7 +370,9 @@ export function useResetClaimConditions(
           tokenId,
           "tokenId is required for ERC1155 claim conditions",
         );
-        const claimConditions = await erc1155.claimConditions.getAll(tokenId);
+        const claimConditions = await erc1155.claimConditions.getAll(tokenId, {
+          withAllowList: true,
+        });
         return erc1155.claimConditions.set(
           tokenId,
           await cleanConditions(claimConditions || []),
@@ -376,14 +380,18 @@ export function useResetClaimConditions(
         );
       }
       if (erc721) {
-        const claimConditions = await erc721.claimConditions.getAll();
+        const claimConditions = await erc721.claimConditions.getAll({
+          withAllowList: true,
+        });
         return await erc721.claimConditions.set(
           await cleanConditions(claimConditions || []),
           true,
         );
       }
       if (erc20) {
-        const claimConditions = await erc20.claimConditions.getAll();
+        const claimConditions = await erc20.claimConditions.getAll({
+          withAllowList: true,
+        });
         return await erc20.claimConditions.set(
           await cleanConditions(claimConditions || []),
           true,

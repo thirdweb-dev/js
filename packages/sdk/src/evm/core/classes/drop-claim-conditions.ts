@@ -18,6 +18,7 @@ import { AmountSchema } from "../../schema";
 import {
   Amount,
   ClaimCondition,
+  ClaimConditionFetchOptions,
   ClaimConditionInput,
   ClaimVerification,
 } from "../../types";
@@ -75,7 +76,9 @@ export class DropClaimConditions<
    *
    * @returns the claim condition metadata
    */
-  public async getActive(): Promise<ClaimCondition> {
+  public async getActive(
+    options?: ClaimConditionFetchOptions,
+  ): Promise<ClaimCondition> {
     const cc = await this.get();
     const metadata = await this.metadata.get();
     return await transformResultToClaimCondition(
@@ -84,6 +87,7 @@ export class DropClaimConditions<
       this.contractWrapper.getProvider(),
       metadata.merkle || {},
       this.storage,
+      options?.withAllowList || false,
     );
   }
 
@@ -104,7 +108,9 @@ export class DropClaimConditions<
    *
    * @returns the claim conditions metadata
    */
-  public async getAll(): Promise<ClaimCondition[]> {
+  public async getAll(
+    options?: ClaimConditionFetchOptions,
+  ): Promise<ClaimCondition[]> {
     if (this.isMultiPhaseDropContract(this.contractWrapper)) {
       const claimCondition =
         (await this.contractWrapper.readContract.claimCondition()) as {
@@ -129,6 +135,7 @@ export class DropClaimConditions<
             this.contractWrapper.getProvider(),
             metadata.merkle,
             this.storage,
+            options?.withAllowList || false,
           ),
         ),
       );

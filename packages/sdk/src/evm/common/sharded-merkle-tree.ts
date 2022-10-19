@@ -194,10 +194,15 @@ export class ShardedMerkleTree {
   }
 
   public async getAllEntries(): Promise<SnapshotEntry[]> {
-    const entries = await this.storage.downloadJSON<SnapshotEntry[]>(
-      this.originalEntriesUri,
-    );
-    return entries;
+    try {
+      const entries = await this.storage.downloadJSON<SnapshotEntry[]>(
+        this.originalEntriesUri,
+      );
+      return entries;
+    } catch (e) {
+      console.warn("Could not fetch original snapshot entries", e);
+      return [];
+    }
   }
 
   private computeAllShardIds(shardNybbles: number) {

@@ -482,11 +482,11 @@ describe("Signature drop tests", async () => {
           snapshot: [samWallet.address],
         },
       ]);
-      const conditions =
-        await signatureDropContract.claimConditions.getActive();
+      const conditions = await signatureDropContract.claimConditions.getActive({
+        withAllowList: true,
+      });
       invariant(conditions.snapshot);
-      const snap = await conditions.snapshot();
-      expect(snap?.[0].address).to.eq(samWallet.address);
+      expect(conditions.snapshot[0].address).to.eq(samWallet.address);
     });
 
     it("should remove merkles from the metadata when claim conditions are removed", async () => {
