@@ -1,5 +1,6 @@
 import { ListingDrawer } from "./listing-drawer";
 import {
+  ButtonGroup,
   Center,
   Flex,
   Icon,
@@ -13,9 +14,13 @@ import {
   Th,
   Thead,
   Tr,
+  usePrevious,
 } from "@chakra-ui/react";
-import { useListings, useListingsCount } from "@thirdweb-dev/react";
-import { ListingType } from "@thirdweb-dev/sdk/evm";
+import {
+  useActiveListings,
+  useListings,
+  useListingsCount,
+} from "@thirdweb-dev/react";
 import type {
   AuctionListing,
   DirectListing,
@@ -23,7 +28,7 @@ import type {
 } from "@thirdweb-dev/sdk/evm";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
 import { BigNumber } from "ethers";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import {
   MdFirstPage,
@@ -32,7 +37,7 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { Cell, Column, usePagination, useTable } from "react-table";
-import { AddressCopyButton, Card, Heading, Text } from "tw-components";
+import { AddressCopyButton, Button, Card, Heading, Text } from "tw-components";
 
 type ListingMetadata = AuctionListing | DirectListing;
 
@@ -70,18 +75,45 @@ const tableColumns: Column<ListingMetadata>[] = [
   },
   {
     Header: "Type",
-    accessor: (row) =>
-      row.type === ListingType.Direct ? "Direct Listing" : "Auction",
+    // 0 = Direct, 1 = Auction
+    accessor: (row) => (row.type === 0 ? "Direct Listing" : "Auction"),
   },
 ];
 
 interface ListingsTableProps {
   contract: Marketplace;
 }
+
+const DEFAULT_QUERY_STATE = { count: 50, start: 0 };
+
 export const ListingsTable: React.FC<ListingsTableProps> = ({ contract }) => {
-  const [queryParams, setQueryParams] = useState({ count: 50, start: 0 });
+  const [queryParams, setQueryParams] = useState(DEFAULT_QUERY_STATE);
   const getAllQueryResult = useListings(contract, queryParams);
+  const getActiveQueryResult = useActiveListings(contract, queryParams);
   const totalCountQuery = useListingsCount(contract);
+
+  const [listingsToShow, setListingsToShow_] = useState<"all" | "active">(
+    "all",
+  );
+
+  const setListingsToShow = (value: "all" | "active") => {
+    setQueryParams(DEFAULT_QUERY_STATE);
+    setListingsToShow_(value);
+  };
+
+  const prevData = usePrevious(
+    listingsToShow === "all"
+      ? getAllQueryResult?.data
+      : getActiveQueryResult?.data,
+  );
+
+  const renderData = useMemo(() => {
+    if (listingsToShow === "all") {
+      return getAllQueryResult?.data || prevData;
+    } else {
+      return getActiveQueryResult?.data || prevData;
+    }
+  }, [getAllQueryResult, getActiveQueryResult, listingsToShow, prevData]);
 
   const {
     getTableProps,
@@ -96,12 +128,11 @@ export const ListingsTable: React.FC<ListingsTableProps> = ({ contract }) => {
     nextPage,
     previousPage,
     setPageSize,
-
     state: { pageIndex, pageSize },
   } = useTable(
     {
       columns: tableColumns,
-      data: getAllQueryResult.data || [],
+      data: renderData || [],
       initialState: {
         pageSize: queryParams.count,
         pageIndex: 0,
@@ -126,8 +157,24 @@ export const ListingsTable: React.FC<ListingsTableProps> = ({ contract }) => {
 
   return (
     <Flex gap={4} direction="column">
+      <ButtonGroup size="sm" variant="outline" isAttached>
+        <Button
+          onClick={() => setListingsToShow("all")}
+          variant={listingsToShow === "all" ? "solid" : "outline"}
+        >
+          All
+        </Button>
+        <Button
+          onClick={() => setListingsToShow("active")}
+          variant={listingsToShow === "active" ? "solid" : "outline"}
+        >
+          Active
+        </Button>
+      </ButtonGroup>
+
       <Card maxW="100%" overflowX="auto" position="relative" px={0} py={0}>
-        {getAllQueryResult.isFetching && (
+        {((listingsToShow === "all" && getAllQueryResult.isFetching) ||
+          (listingsToShow === "active" && getActiveQueryResult.isFetching)) && (
           <Spinner
             color="primary"
             size="xs"
@@ -193,7 +240,9 @@ export const ListingsTable: React.FC<ListingsTableProps> = ({ contract }) => {
                 </Tr>
               );
             })}
-            {getAllQueryResult.isPreviousData && (
+            {((listingsToShow === "all" && getAllQueryResult.isPreviousData) ||
+              (listingsToShow === "active" &&
+                getActiveQueryResult.isPreviousData)) && (
               <Flex
                 zIndex="above"
                 position="absolute"
