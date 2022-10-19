@@ -1,4 +1,4 @@
-import { NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
+import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { getBaseUriFromBatch, uploadOrExtractURIs } from "../../common/nft";
 import { FEATURE_NFT_TIERED_DROP } from "../../constants/erc721-features";
@@ -36,8 +36,28 @@ export class Erc721TieredDrop implements DetectableFeature {
     this.storage = storage;
   }
 
-  public async getTokensInTier(tier: string): Promise<string[]> {
-    return this.contractWrapper.call("getTokensInTier", [tier]);
+  public async getTokensInTier(tier: string): Promise<NFT[]> {
+    const ranges = await this.contractWrapper.readContract.getTokensInTier(
+      tier,
+    );
+
+    const nfts = await Promise.all(
+      ranges
+        .map((range) => {
+          const nftsInRange = [];
+          for (
+            let i = range.startIdInclusive.toNumber();
+            i < range.endIdNonInclusive.toNumber();
+            i++
+          ) {
+            nftsInRange.push(this.erc721.get(i));
+          }
+          return nftsInRange;
+        })
+        .flat(),
+    );
+
+    return nfts;
   }
 
   public async lazyMintWithTier(
