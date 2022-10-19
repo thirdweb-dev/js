@@ -1,7 +1,7 @@
-import { extractIPFSHashFromBytecode } from "../helpers/ipfs";
 import { logger } from "../helpers/logger";
 import { CompileOptions, IBuilder } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
+import { extractIPFSHashFromBytecode } from "@thirdweb-dev/sdk/evm";
 
 export abstract class BaseBuilder implements IBuilder {
   abstract compile(
