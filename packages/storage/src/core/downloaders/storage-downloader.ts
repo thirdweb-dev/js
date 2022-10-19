@@ -27,18 +27,12 @@ export class StorageDownloader implements IStorageDownloader {
     }
 
     // Replace recognized scheme with the highest priority gateway URL that hasn't already been attempted
-    let resolvedUri;
-    try {
-      resolvedUri = replaceSchemeWithGatewayUrl(uri, gatewayUrls, attempts);
-    } catch (err: any) {
-      // If every gateway URL we know about for the designated scheme has been tried (via recursion) and failed, throw an error
-      if (err.message.includes("[GATEWAY_URL_ERROR]")) {
-        throw new Error(
-          "[FAILED_TO_DOWNLOAD_ERROR] Unable to download from URI - all gateway URLs failed to respond.",
-        );
-      }
-
-      throw err;
+    const resolvedUri = replaceSchemeWithGatewayUrl(uri, gatewayUrls, attempts);
+    // If every gateway URL we know about for the designated scheme has been tried (via recursion) and failed, throw an error
+    if (!resolvedUri) {
+      throw new Error(
+        "[FAILED_TO_DOWNLOAD_ERROR] Unable to download from URI - all gateway URLs failed to respond.",
+      );
     }
 
     const res = await fetch(resolvedUri);

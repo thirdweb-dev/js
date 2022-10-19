@@ -110,14 +110,15 @@ export function replaceSchemeWithGatewayUrl(
   uri: string,
   gatewayUrls: GatewayUrls,
   index = 0,
-): string {
+): string | undefined {
+  console.log("URI:", uri);
+  console.log("Attempt:", index);
+
   const scheme = Object.keys(gatewayUrls).find((s) => uri.startsWith(s));
   const schemeGatewayUrls = scheme ? gatewayUrls[scheme] : [];
 
-  if ((!scheme && index > 0) || index >= schemeGatewayUrls.length) {
-    throw new Error(
-      "[GATEWAY_URL_ERROR] Failed to resolve gateway URL - ran out of gateway URLs to try.",
-    );
+  if ((!scheme && index > 0) || (scheme && index >= schemeGatewayUrls.length)) {
+    return undefined;
   }
 
   if (!scheme) {
