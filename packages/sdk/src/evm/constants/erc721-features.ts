@@ -8,6 +8,7 @@ import Erc721SupplyAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC721Supply.
 import ILazyMintAbi from "@thirdweb-dev/contracts-js/dist/abis/ILazyMint.json";
 import IMintableERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC721.json";
 import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
+import LazyMintWithTierAbi from "@thirdweb-dev/contracts-js/dist/abis/LazyMintWithTier.json";
 import SignatureMintERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/SignatureMintERC721.json";
 
 export const FEATURE_NFT_BURNABLE = {
@@ -25,10 +26,21 @@ export const FEATURE_NFT_REVEALABLE = {
   name: "ERC721Revealable",
   namespace: "nft.drop.revealer",
   docLinks: {
-    sdk: "sdk.drop.delayedreveal",
+    sdk: "sdk.delayedreveal",
     contracts: "DelayedReveal",
   },
   abis: [Erc721Abi, ILazyMintAbi, DelayedRevealAbi],
+  features: {},
+} as const;
+
+export const FEATURE_NFT_TIERED_DROP = {
+  name: "ERC721TieredDrop",
+  namespace: "nft.tieredDrop",
+  docLinks: {
+    sdk: "sdk.erc721tiereddrop",
+    contracts: "LazyMintWithTier",
+  },
+  abis: [Erc721Abi, LazyMintWithTierAbi],
   features: {},
 } as const;
 
@@ -143,5 +155,6 @@ export const FEATURE_NFT = {
     [FEATURE_NFT_MINTABLE.name]: FEATURE_NFT_MINTABLE,
     [FEATURE_NFT_LAZY_MINTABLE.name]: FEATURE_NFT_LAZY_MINTABLE,
     [FEATURE_NFT_SIGNATURE_MINTABLE.name]: FEATURE_NFT_SIGNATURE_MINTABLE,
+    [FEATURE_NFT_TIERED_DROP.name]: FEATURE_NFT_TIERED_DROP,
   },
 } as const;
