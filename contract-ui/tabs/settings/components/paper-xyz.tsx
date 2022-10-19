@@ -41,7 +41,7 @@ export const PaperCheckoutSetting: React.FC<{
 
   const [environment, setEnvironment] = useState<Environment>("react");
 
-  const { data } = usePaperContractQuery(jwt.data || "", contract.getAddress());
+  const { data } = usePaperContractQuery(jwt || "", contract.getAddress());
 
   const paperCheckoutId = data?.result?.id;
 
@@ -144,9 +144,9 @@ export const PaperCheckoutSetting: React.FC<{
           </Flex>
         </Flex>
 
-        {paperCheckoutId ? null : jwt.data ? (
+        {paperCheckoutId ? null : jwt ? (
           <PaperRegisterContractButton
-            jwt={jwt.data}
+            jwt={jwt}
             contractAddress={contract.getAddress()}
             borderRadius="xl"
             borderTopLeftRadius="0"

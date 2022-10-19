@@ -105,20 +105,22 @@ export const Wordmark: React.FC<Omit<AspectRatioProps, "ratio">> = ({
 interface ILogoProps {
   hideIcon?: boolean;
   hideWordmark?: boolean;
+  forceShowWordMark?: boolean;
   color?: string;
 }
 
 export const Logo: React.FC<ILogoProps> = ({
   hideIcon,
   hideWordmark,
+  forceShowWordMark,
   color,
 }) => {
   return (
     <Stack as="h2" align="center" direction="row">
       {hideIcon ?? <IconLogo w={[9, 9, 10]} flexShrink={0} />}
-      {hideWordmark ?? (
+      {(hideWordmark && !forceShowWordMark) ?? (
         <Wordmark
-          display={{ base: "none", md: "block" }}
+          display={forceShowWordMark ? "block" : { base: "none", md: "block" }}
           color={color}
           w={[24, 24, 28]}
           flexShrink={0}

@@ -1,10 +1,4 @@
-import {
-  Icon,
-  IconButton,
-  Input,
-  InputGroup,
-  InputRightElement,
-} from "@chakra-ui/react";
+import { Icon, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
 import { useStorageUpload } from "@thirdweb-dev/react";
 import { FileInput } from "components/shared/FileInput";
 import { useErrorHandler } from "contexts/error-handler";

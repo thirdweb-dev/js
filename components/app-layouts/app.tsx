@@ -4,6 +4,7 @@ import { useAddress, useBalance, useChainId } from "@thirdweb-dev/react";
 import { useSDK } from "@thirdweb-dev/react/solana";
 import { AppShell, AppShellProps } from "components/layout/app-shell";
 import { PrivacyNotice } from "components/notices/PrivacyNotice";
+import { WelcomeScreen } from "components/notices/welcome-screen";
 import { ErrorProvider } from "contexts/error-handler";
 import posthog from "posthog-js";
 import React, { useEffect } from "react";
@@ -15,6 +16,7 @@ export const AppLayout: ComponentWithChildren<AppShellProps> = (props) => {
       <DashboardThirdwebProvider>
         <PHIdentifier />
         <PrivacyNotice />
+        <WelcomeScreen />
         <AppShell {...props} />
       </DashboardThirdwebProvider>
     </ErrorProvider>

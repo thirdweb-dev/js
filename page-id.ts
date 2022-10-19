@@ -58,6 +58,9 @@ export enum PageId {
   // thridweb.com/contracts
   Contracts = "contracts",
 
+  // thridweb.com/contracts
+  Programs = "programs",
+
   // ---------------------------------------------------------------------------
   //  partner pages
   // ---------------------------------------------------------------------------

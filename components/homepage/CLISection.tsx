@@ -16,7 +16,7 @@ const sections = [
   {
     title: "Release",
     description:
-      "Publish contracts to the on-chain registry to enable 1-click deployment for everyone.",
+      "Publish contracts to the on-chain registry to enable one-click deployment for everyone.",
     link: "https://portal.thirdweb.com/release",
     img: require("/public/assets/landingpage/cli-release.png"),
     gradient: "linear-gradient(90.12deg, #6941DA 6.29%, #FFE768 47.27%)",

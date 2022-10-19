@@ -261,7 +261,7 @@ const HomePage: ThirdwebNextPage = () => {
                   <Divider borderColor="rgba(255,255,255,0.1)" />
                   <ContractsDescriptorItem
                     title="Convenient"
-                    description="1-click deployment. No need for private keys or scripts."
+                    description="One-click deployment. No need for private keys or scripts."
                     icon={require("public/assets/landingpage/icons/no-code.png")}
                   />
                   <Divider borderColor="rgba(255,255,255,0.1)" />

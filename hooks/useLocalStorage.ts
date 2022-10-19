@@ -1,35 +1,25 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { isBrowser } from "utils/isBrowser";
 
-export function useLocalStorage<TType>(key = "", initialValue: TType) {
-  const queryClient = useQueryClient();
-  const queryKey = useMemo(() => ["local-storage", key], [key]);
+export function useLocalStorage<TType>(
+  key = "",
+  initialValue: TType,
+  serverSideFallback: TType = initialValue,
+) {
+  const [value, _setValue] = useState<TType>(serverSideFallback);
 
-  const { mutate } = useMutation(
-    async (value: TType) => {
-      if (key) {
-        return localStorage.setItem(key, JSON.stringify(value));
-      }
-    },
-    {
-      onSuccess: () => queryClient.invalidateQueries(queryKey),
-    },
-  );
+  useEffect(() => {
+    const item = window.localStorage.getItem(key);
 
-  const query = useQuery<TType>(
-    queryKey,
-    () => {
-      const value = window.localStorage.getItem(key);
-      if (value) {
-        return JSON.parse(value);
-      }
-      return initialValue;
-    },
-    {
-      enabled: isBrowser() && !!key,
-    },
-  );
+    _setValue(item ? JSON.parse(item) : initialValue);
+  }, [key, initialValue]);
 
-  return [query, mutate] as const;
+  const setValue = (value_: TType) => {
+    _setValue(value_);
+    if (isBrowser()) {
+      window.localStorage.setItem(key, JSON.stringify(value_));
+    }
+  };
+
+  return [value, setValue] as const;
 }

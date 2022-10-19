@@ -14,6 +14,7 @@ interface LinkProps
   noIcon?: true;
   href: string;
   noMatch?: true;
+  scroll?: true;
 }
 
 /**
@@ -21,7 +22,7 @@ interface LinkProps
  * Combines the `NextLink` and Chakra `Link` components.
  */
 export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
-  ({ href, isExternal, children, noMatch, ...restLinkProps }, ref) => {
+  ({ href, isExternal, children, noMatch, scroll, ...restLinkProps }, ref) => {
     const match = useMatch();
 
     if (isExternal) {
@@ -41,7 +42,7 @@ export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
       );
     }
     return (
-      <_NextLink href={href} passHref>
+      <_NextLink href={href} passHref scroll={scroll || false}>
         <ChakraLink ref={ref} _focus={{ boxShadow: "none" }} {...restLinkProps}>
           {children}
         </ChakraLink>

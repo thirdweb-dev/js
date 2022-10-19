@@ -33,7 +33,8 @@ const PreBuiltContracts: ThirdwebNextPage = () => {
             icon={require("/public/assets/product-pages/pre-builts/hero-icon-1.png")}
           >
             Whether you need NFTs, Tokens, Marketplaces, or something else,
-            we’ve got you covered with contracts for the most common use-cases.
+            we&apos;ve got you covered with contracts for the most common
+            use-cases.
           </ProductCard>
           <ProductCard
             title="Powerful tooling to build apps"

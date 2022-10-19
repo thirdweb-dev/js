@@ -5,9 +5,9 @@ import { Heading, TrackedLink } from "tw-components";
 
 export const AnnouncementBanner = () => {
   const [hasDismissedAnnouncement, setHasDismissedAnnouncement] =
-    useLocalStorage("dismissed-solana-announcement", false);
+    useLocalStorage("dismissed-solana-announcement", false, true);
 
-  if (hasDismissedAnnouncement.data || hasDismissedAnnouncement.isLoading) {
+  if (hasDismissedAnnouncement) {
     return null;
   }
 
