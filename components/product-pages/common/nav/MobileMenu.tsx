@@ -75,6 +75,32 @@ export const MobileMenu: React.FC<IconButtonProps> = (props) => {
             Careers
           </MenuItem>
         </MenuGroup>
+
+        <Divider mt={2} opacity="0.3" />
+
+        <MenuGroup title={<>Networks</>} ml="12px">
+          <MenuItem
+            as={TrackedLink}
+            href="/network/solana"
+            category="topnav"
+            label="network-solana"
+          >
+            Solana
+          </MenuItem>
+        </MenuGroup>
+
+        <Divider mt={2} opacity="0.3" />
+
+        <MenuGroup title={<>Faucets</>} ml="12px">
+          <MenuItem
+            as={TrackedLink}
+            href="/faucet/solana"
+            category="topnav"
+            label="faucet-solana"
+          >
+            Solana
+          </MenuItem>
+        </MenuGroup>
       </MenuList>
     </Menu>
   );

@@ -234,7 +234,17 @@ export const HomepageFooter: React.FC = () => {
                   <TrackedLink
                     href="/network/solana"
                     category="footer"
-                    label="networks"
+                    label="network-solana"
+                  >
+                    Solana
+                  </TrackedLink>
+                </Stack>
+                <Heading size="label.lg">Faucets</Heading>
+                <Stack spacing="3" shouldWrapChildren>
+                  <TrackedLink
+                    href="/faucet/solana"
+                    category="footer"
+                    label="faucet-solana"
                   >
                     Solana
                   </TrackedLink>
