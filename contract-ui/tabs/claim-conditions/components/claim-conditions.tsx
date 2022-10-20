@@ -210,7 +210,6 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
   const nftsOrToken = isErc20 ? "tokens" : "NFTs";
 
   const transformedQueryData = useMemo(() => {
-    console.log("query.data", query.data);
     return (query.data || [])
       .map((phase) => ({
         ...phase,
