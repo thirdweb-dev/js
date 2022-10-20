@@ -36,7 +36,6 @@
     "@changesets/cli": "^2.24.3",
     "@manypkg/cli": "^0.19.1",
     "@manypkg/get-packages": "^1.1.3",
-    "@thirdweb-dev/contracts": "file:.yalc/@thirdweb-dev/contracts",
     "@trivago/prettier-plugin-sort-imports": "^3.3.0",
     "eslint": "^8.21.0",
     "postinstall-postinstall": "^2.1.0",

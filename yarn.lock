@@ -4467,11 +4467,10 @@
     "@tanstack/query-core" "4.3.4"
     use-sync-external-store "^1.2.0"
 
-"@thirdweb-dev/contracts@file:.yalc/@thirdweb-dev/contracts":
-  version "3.1.9-2"
-
-"@thirdweb-dev/contracts@file:packages/contracts-js/.yalc/@thirdweb-dev/contracts":
-  version "3.1.9-2"
+"@thirdweb-dev/contracts@3.2.0-0":
+  version "3.2.0-0"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.2.0-0.tgz#8423005c36ff46d92e522497a5c7a4f605010319"
+  integrity sha512-Ukw/yQ6Y0c2z9yc/zVBtDWocZgFVVkbjz9VJVPV0rJwK2rSZLC2ea2ncKY8f/dI8X80cu9fc2r4d+rf8FKkyhA==
 
 "@tootallnate/once@1":
   version "1.1.2"
