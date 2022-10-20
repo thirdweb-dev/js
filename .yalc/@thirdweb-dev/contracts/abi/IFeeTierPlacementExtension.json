@@ -1,0 +1,40 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IFeeTierPlacementExtension",
+  "sourceName": "contracts/TWFee.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "deployer",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "proxy",
+          "type": "address"
+        }
+      ],
+      "name": "getFeeTier",
+      "outputs": [
+        {
+          "internalType": "uint128",
+          "name": "tierId",
+          "type": "uint128"
+        },
+        {
+          "internalType": "uint128",
+          "name": "validUntilTimestamp",
+          "type": "uint128"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

@@ -1,0 +1,9 @@
+{
+  "version": "v1",
+  "packages": {
+    "@thirdweb-dev/contracts": {
+      "signature": "d7016f00ac5c82d814d1f785fac3eb4d",
+      "file": true
+    }
+  }
+}

@@ -27,7 +27,7 @@ import {
 } from "./currency";
 import { ShardedMerkleTree } from "./sharded-merkle-tree";
 import { createSnapshot } from "./snapshots";
-import { IDropClaimCondition } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC20";
+import { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/declarations/src/IDropERC20_V2";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
@@ -303,7 +303,7 @@ export async function processClaimConditionInputs(
   const parsedInputs = ClaimConditionInputArray.parse(inputsWithSnapshots);
 
   // Convert processed inputs to the format the contract expects, and sort by timestamp
-  const sortedConditions: IDropClaimCondition.ClaimConditionStruct[] = (
+  const sortedConditions: IDropClaimCondition_V2.ClaimConditionStruct[] = (
     await Promise.all(
       parsedInputs.map((c) =>
         convertToContractModel(c, tokenDecimals, provider),
@@ -334,7 +334,7 @@ async function convertToContractModel(
   c: FilledConditionInput,
   tokenDecimals: number,
   provider: providers.Provider,
-): Promise<IDropClaimCondition.ClaimConditionStruct> {
+): Promise<IDropClaimCondition_V2.ClaimConditionStruct> {
   const currency =
     c.currencyAddress === constants.AddressZero
       ? NATIVE_TOKEN_ADDRESS
@@ -376,7 +376,7 @@ async function convertToContractModel(
  * @internal
  */
 export async function transformResultToClaimCondition(
-  pm: IDropClaimCondition.ClaimConditionStructOutput,
+  pm: IDropClaimCondition_V2.ClaimConditionStructOutput,
   tokenDecimals: number,
   provider: providers.Provider,
   merkleMetadata: Record<string, string> | undefined,

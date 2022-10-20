@@ -1,0 +1,53 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "MockContract",
+  "sourceName": "contracts/mock/Mock.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "_name",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint8",
+          "name": "_version",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [],
+      "name": "contractType",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "contractVersion",
+      "outputs": [
+        {
+          "internalType": "uint8",
+          "name": "",
+          "type": "uint8"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x608060405234801561001057600080fd5b5060405161012838038061012883398101604081905261002f9161004d565b6000919091556001805460ff191660ff909216919091179055610083565b6000806040838503121561006057600080fd5b82519150602083015160ff8116811461007857600080fd5b809150509250929050565b6097806100916000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c8063a0a8e460146037578063cb2ef6f7146051575b600080fd5b60015460405160ff90911681526020015b60405180910390f35b600054604051908152602001604856fea2646970667358221220f5373a41f5c4bab9eb937e9ac2d29709ad6053bb988da5aaa9c767781857618f64736f6c634300080c0033",
+  "deployedBytecode": "0x6080604052348015600f57600080fd5b506004361060325760003560e01c8063a0a8e460146037578063cb2ef6f7146051575b600080fd5b60015460405160ff90911681526020015b60405180910390f35b600054604051908152602001604856fea2646970667358221220f5373a41f5c4bab9eb937e9ac2d29709ad6053bb988da5aaa9c767781857618f64736f6c634300080c0033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

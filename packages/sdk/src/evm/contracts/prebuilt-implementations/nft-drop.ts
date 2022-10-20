@@ -31,7 +31,7 @@ import { PaperCheckout } from "../../integrations/paper-xyz";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import { UploadProgressEvent } from "../../types/events";
-import type { DropERC721 } from "@thirdweb-dev/contracts-js";
+import type { DropERC721_V3 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC721.json";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -57,24 +57,27 @@ import {
  *
  * @public
  */
-export class NFTDrop extends StandardErc721<DropERC721> {
+export class NFTDrop extends StandardErc721<DropERC721_V3> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
   public abi: typeof ABI;
-  public encoder: ContractEncoder<DropERC721>;
-  public estimator: GasCostEstimator<DropERC721>;
+  public encoder: ContractEncoder<DropERC721_V3>;
+  public estimator: GasCostEstimator<DropERC721_V3>;
   public metadata: ContractMetadata<
-    DropERC721,
+    DropERC721_V3,
     typeof DropErc721ContractSchema
   >;
-  public sales: ContractPrimarySale<DropERC721>;
-  public platformFees: ContractPlatformFee<DropERC721>;
-  public events: ContractEvents<DropERC721>;
-  public roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
+  public sales: ContractPrimarySale<DropERC721_V3>;
+  public platformFees: ContractPlatformFee<DropERC721_V3>;
+  public events: ContractEvents<DropERC721_V3>;
+  public roles: ContractRoles<
+    DropERC721_V3,
+    typeof NFTDrop.contractRoles[number]
+  >;
   /**
    * @internal
    */
-  public interceptor: ContractInterceptor<DropERC721>;
+  public interceptor: ContractInterceptor<DropERC721_V3>;
   /**
    * Configure royalties
    * @remarks Set your own royalties for the entire contract or per token
@@ -93,7 +96,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
    * ```
    */
   public royalties: ContractRoyalty<
-    DropERC721,
+    DropERC721_V3,
     typeof DropErc721ContractSchema
   >;
   /**
@@ -118,7 +121,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
    * await contract.claimConditions.set(claimConditions);
    * ```
    */
-  public claimConditions: DropClaimConditions<DropERC721>;
+  public claimConditions: DropClaimConditions<DropERC721_V3>;
   /**
    * Delayed reveal
    * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.
@@ -150,16 +153,16 @@ export class NFTDrop extends StandardErc721<DropERC721> {
    * await contract.revealer.reveal(batchId, "my secret password");
    * ```
    */
-  public revealer: DelayedReveal<DropERC721>;
+  public revealer: DelayedReveal<DropERC721_V3>;
 
   /**
    * Checkout
    * @remarks Create a FIAT currency checkout for your NFT drop.
    */
-  public checkout: PaperCheckout<DropERC721>;
+  public checkout: PaperCheckout<DropERC721_V3>;
 
-  public erc721: Erc721<DropERC721>;
-  public owner: ContractOwner<DropERC721>;
+  public erc721: Erc721<DropERC721_V3>;
+  public owner: ContractOwner<DropERC721_V3>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -168,7 +171,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
     options: SDKOptions = {},
     abi: typeof ABI,
     chainId: number,
-    contractWrapper = new ContractWrapper<DropERC721>(
+    contractWrapper = new ContractWrapper<DropERC721_V3>(
       network,
       address,
       abi,
@@ -195,7 +198,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.erc721 = new Erc721(this.contractWrapper, this.storage, chainId);
-    this.revealer = new DelayedReveal<DropERC721>(
+    this.revealer = new DelayedReveal<DropERC721_V3>(
       this.contractWrapper,
       this.storage,
       FEATURE_NFT_REVEALABLE.name,

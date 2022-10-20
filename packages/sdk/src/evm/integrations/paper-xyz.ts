@@ -1,8 +1,7 @@
 import { ChainId } from "../constants";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { SignedPayload721WithQuantitySignature } from "../schema/contracts/common/signature";
-import { DropERC721 } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
-import { DropERC1155 } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC1155";
+import type { DropERC1155_V2, DropERC721_V3 } from "@thirdweb-dev/contracts-js";
 import { SignatureDrop } from "@thirdweb-dev/contracts-js/dist/declarations/src/SignatureDrop";
 import fetch from "cross-fetch";
 import invariant from "tiny-invariant";
@@ -133,9 +132,9 @@ export type PaperCreateCheckoutLinkShardParams = {
  * @internal
  */
 export type PaperCreateCheckoutLinkIntentParams<
-  TContract extends DropERC721 | DropERC1155 | SignatureDrop,
+  TContract extends DropERC721_V3 | DropERC1155_V2 | SignatureDrop,
 > = PaperCreateCheckoutLinkShardParams &
-  (TContract extends DropERC1155
+  (TContract extends DropERC1155_V2
     ? {
         contractArgs: { tokenId: string };
       }
@@ -143,7 +142,7 @@ export type PaperCreateCheckoutLinkIntentParams<
     ? {
         contractArgs: SignedPayload721WithQuantitySignature;
       }
-    : TContract extends DropERC721
+    : TContract extends DropERC721_V3
     ? {}
     : never);
 
@@ -165,7 +164,7 @@ const DEFAULT_PARAMS: Partial<PaperCreateCheckoutLinkShardParams> = {
  * @internal
  */
 export async function createCheckoutLinkIntent<
-  TContract extends DropERC721 | DropERC1155 | SignatureDrop,
+  TContract extends DropERC721_V3 | DropERC1155_V2 | SignatureDrop,
 >(
   contractId: string,
   params: PaperCreateCheckoutLinkIntentParams<TContract>,
@@ -203,7 +202,7 @@ export async function createCheckoutLinkIntent<
  * @internal
  */
 export class PaperCheckout<
-  TContract extends DropERC721 | DropERC1155 | SignatureDrop,
+  TContract extends DropERC721_V3 | DropERC1155_V2 | SignatureDrop,
 > {
   private contractWrapper;
 

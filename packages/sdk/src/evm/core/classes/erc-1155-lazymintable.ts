@@ -22,8 +22,8 @@ import { Erc1155 } from "./erc-1155";
 import { ERC1155Claimable } from "./erc-1155-claimable";
 import { Erc1155ClaimableWithConditions } from "./erc-1155-claimable-with-conditions";
 import type {
+  DropERC1155_V2,
   IClaimableERC1155,
-  TokenERC721,
 } from "@thirdweb-dev/contracts-js";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -232,7 +232,7 @@ export class Erc1155LazyMintable implements DetectableFeature {
   }
 
   private async isLegacyEditionDropContract() {
-    if (hasFunction<TokenERC721>("contractType", this.contractWrapper)) {
+    if (hasFunction<DropERC1155_V2>("contractType", this.contractWrapper)) {
       try {
         const contractType = ethers.utils.toUtf8String(
           await this.contractWrapper.readContract.contractType(),
