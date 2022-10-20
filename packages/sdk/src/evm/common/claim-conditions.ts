@@ -68,7 +68,6 @@ export async function prepareClaim(
         await merkleMetadataFetcher(),
         storage,
       );
-      console.log("claim", claim);
       if (!claim) {
         throw new Error("No claim found for this address");
       }
