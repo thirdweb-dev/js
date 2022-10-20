@@ -5,6 +5,7 @@ import {
   WrongListingTypeError,
 } from "../../common";
 import {
+  cleanCurrencyAddress,
   fetchCurrencyMetadata,
   fetchCurrencyValue,
   normalizePriceValue,
@@ -233,7 +234,9 @@ export class MarketplaceAuction {
           assetContract: listing.assetContractAddress,
           tokenId: listing.tokenId,
           buyoutPricePerToken: normalizedPricePerToken,
-          currencyToAccept: listing.currencyContractAddress,
+          currencyToAccept: cleanCurrencyAddress(
+            listing.currencyContractAddress,
+          ),
           listingType: ListingType.Auction,
           quantityToList: listing.quantity,
           reservePricePerToken: normalizedReservePrice,

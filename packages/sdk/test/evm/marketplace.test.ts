@@ -203,6 +203,23 @@ describe("Marketplace Contract", async () => {
       await marketplaceContract.auction.makeBid(id, 0.1);
     });
 
+    it("Should list with native currency address", async () => {
+      const { id: listingId } = await marketplaceContract.direct.createListing({
+        assetContractAddress: dummyNftContract.getAddress(),
+        buyoutPricePerToken: 0.1,
+        currencyContractAddress: "0x0000000000000000000000000000000000000000",
+        startTimestamp: new Date(0), // start date can be in the past
+        listingDurationInSeconds: 60 * 60 * 24,
+        tokenId: 0,
+        quantity: 1,
+      });
+
+      const listing = await marketplaceContract.getListing(listingId);
+      expect(listing.currencyContractAddress.toLowerCase()).to.equal(
+        NATIVE_TOKEN_ADDRESS.toLowerCase(),
+      );
+    });
+
     it("should list direct listings with 1155s", async () => {
       const listingId = await createDirectListing(
         dummyBundleContract.getAddress(),
