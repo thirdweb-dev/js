@@ -1,6 +1,8 @@
 import { includesErrorMessage } from "../../common";
 import {
+  abstractContractModelToLegacy,
   getClaimerProofs,
+  legacyContractModelToAbstract,
   prepareClaim,
   processClaimConditionInputs,
   transformResultToClaimCondition,
@@ -14,7 +16,10 @@ import {
 import { isNode } from "../../common/utils";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/index";
 import { ClaimEligibility } from "../../enums";
-import { AmountSchema } from "../../schema";
+import {
+  AbstractClaimConditionContractStruct,
+  AmountSchema,
+} from "../../schema";
 import {
   Amount,
   ClaimCondition,
@@ -91,13 +96,20 @@ export class DropClaimConditions<
     );
   }
 
-  private async get(): Promise<IDropClaimCondition_V2.ClaimConditionStructOutput> {
+  private async get(
+    conditionId?: BigNumberish,
+  ): Promise<AbstractClaimConditionContractStruct> {
     if (this.isLegacySinglePhaseDrop(this.contractWrapper)) {
-      return (await this.contractWrapper.readContract.claimCondition()) as IDropClaimCondition_V2.ClaimConditionStructOutput;
+      const contractModel =
+        (await this.contractWrapper.readContract.claimCondition()) as IDropClaimCondition_V2.ClaimConditionStructOutput;
+      return legacyContractModelToAbstract(contractModel);
     } else if (this.isLegacyMultiPhaseDrop(this.contractWrapper)) {
       const id =
-        await this.contractWrapper.readContract.getActiveClaimConditionId();
-      return await this.contractWrapper.readContract.getClaimConditionById(id);
+        conditionId ||
+        (await this.contractWrapper.readContract.getActiveClaimConditionId());
+      const contractModel =
+        await this.contractWrapper.readContract.getClaimConditionById(id);
+      return legacyContractModelToAbstract(contractModel);
     } else {
       throw new Error("Contract does not support claim conditions");
     }
@@ -119,12 +131,9 @@ export class DropClaimConditions<
         };
       const startId = claimCondition.currentStartId.toNumber();
       const count = claimCondition.count.toNumber();
-      const conditions: IDropClaimCondition_V2.ClaimConditionStructOutput[] =
-        [];
+      const conditions: AbstractClaimConditionContractStruct[] = [];
       for (let i = startId; i < startId + count; i++) {
-        conditions.push(
-          await this.contractWrapper.readContract.getClaimConditionById(i),
-        );
+        conditions.push(await this.get(i));
       }
       const metadata = await this.metadata.get();
       const decimals = await this.getTokenDecimals();
@@ -455,14 +464,14 @@ export class DropClaimConditions<
     if (this.isLegacySinglePhaseDrop(cw)) {
       encoded.push(
         cw.readContract.interface.encodeFunctionData("setClaimConditions", [
-          sortedConditions[0],
+          abstractContractModelToLegacy(sortedConditions[0]),
           resetClaimEligibilityForAll,
         ]),
       );
     } else if (this.isLegacyMultiPhaseDrop(cw)) {
       encoded.push(
         cw.readContract.interface.encodeFunctionData("setClaimConditions", [
-          sortedConditions,
+          sortedConditions.map(abstractContractModelToLegacy),
           resetClaimEligibilityForAll,
         ]),
       );
@@ -529,7 +538,7 @@ export class DropClaimConditions<
   }
 
   // TODO (cc)
-  private isSinglePhase(
+  private isNewSinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase> {
     return (
@@ -539,7 +548,7 @@ export class DropClaimConditions<
   }
 
   // TODO (cc)
-  private isMultiphase(
+  private isNewMultiphaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<Drop> {
     return (

@@ -4,7 +4,6 @@ import {
 } from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
-import { uploadOrExtractURIs } from "../../common/nft";
 import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
 import { TransactionTask } from "../../core/classes/TransactionTask";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
@@ -33,15 +32,8 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { UploadProgressEvent } from "../../types/events";
 import type { DropERC721_V3 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC721.json";
-import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  BigNumber,
-  BigNumberish,
-  CallOverrides,
-  constants,
-  ethers,
-} from "ethers";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -386,44 +378,7 @@ export class NFTDrop extends StandardErc721<DropERC721_V3> {
       onProgress: (event: UploadProgressEvent) => void;
     },
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
-    const startFileNumber =
-      await this.contractWrapper.readContract.nextTokenIdToMint();
-    const batch = await uploadOrExtractURIs(
-      metadatas,
-      this.storage,
-      startFileNumber.toNumber(),
-      options,
-    );
-    // ensure baseUri is the same for the entire batch
-    const baseUri = batch[0].substring(0, batch[0].lastIndexOf("/"));
-    for (let i = 0; i < batch.length; i++) {
-      const uri = batch[i].substring(0, batch[i].lastIndexOf("/"));
-      if (baseUri !== uri) {
-        throw new Error(
-          `Can only create batches with the same base URI for every entry in the batch. Expected '${baseUri}' but got '${uri}'`,
-        );
-      }
-    }
-    const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      batch.length,
-      baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
-      ethers.utils.toUtf8Bytes(""),
-    ]);
-    const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
-      "TokensLazyMinted",
-      receipt?.logs,
-    );
-    const startingIndex = event[0].args.startTokenId;
-    const endingIndex = event[0].args.endTokenId;
-    const results: TransactionResultWithId<NFTMetadata>[] = [];
-    for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
-      results.push({
-        id,
-        receipt,
-        data: () => this.erc721.getTokenMetadata(id),
-      });
-    }
-    return results;
+    return this.erc721.lazyMint(metadatas, options);
   }
 
   /**

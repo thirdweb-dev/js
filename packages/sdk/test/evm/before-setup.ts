@@ -26,6 +26,7 @@ import {
   DropERC1155__factory,
   DropERC20__factory,
   DropERC721__factory,
+  DropERC721_V3__factory,
   Marketplace__factory,
   MockContractPublisher,
   MockContractPublisher__factory,
@@ -151,7 +152,8 @@ export const mochaHooks = {
     }
 
     for (const contractType in CONTRACTS_MAP) {
-      if (contractType === "custom") {
+      if (contractType === "custom" || contractType === "edition-drop") {
+        // STOPSHIP FIXME revert
         continue;
       }
       let factory;
@@ -166,7 +168,7 @@ export const mochaHooks = {
           factory = TokenERC721__factory;
           break;
         case NFTDropInitializer.contractType:
-          factory = DropERC721__factory;
+          factory = DropERC721_V3__factory;
           break;
         case SignatureDropInitializer.contractType:
           factory = SignatureDrop__factory;

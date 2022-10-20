@@ -1,6 +1,8 @@
+import { CommonNFTInput } from "../../core/schema/nft";
 import { NATIVE_TOKEN_ADDRESS } from "../constants";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
+  AbstractClaimConditionContractStruct,
   ClaimConditionInputArray,
   ClaimConditionInputSchema,
   ClaimConditionOutputSchema,
@@ -25,13 +27,15 @@ import {
   isNativeToken,
   normalizePriceValue,
 } from "./currency";
+import { uploadOrExtractURI } from "./nft";
 import { ShardedMerkleTree } from "./sharded-merkle-tree";
 import { createSnapshot } from "./snapshots";
 import { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/declarations/src/IDropERC20_V2";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { IpfsUploadBatchOptions, ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
   BigNumberish,
+  BytesLike,
   CallOverrides,
   constants,
   ethers,
@@ -266,17 +270,15 @@ export async function getClaimerProofs(
 }
 
 /**
- * Create and uploads snapshots + converts claim conditions to contract format
+ * @internal
+ * Decorates claim conditions with merkle roots from snapshots if present
  * @param claimConditionInputs
  * @param tokenDecimals
- * @param provider
  * @param storage
- * @internal
  */
-export async function processClaimConditionInputs(
+async function processSnapshotData(
   claimConditionInputs: ClaimConditionInput[],
   tokenDecimals: number,
-  provider: providers.Provider,
   storage: ThirdwebStorage,
 ) {
   const snapshotInfos: SnapshotInfo[] = [];
@@ -299,26 +301,50 @@ export async function processClaimConditionInputs(
       return conditionInput;
     }),
   );
+  return { inputsWithSnapshots, snapshotInfos };
+}
 
+function compare(a: BigNumberish, b: BigNumberish) {
+  const left = BigNumber.from(a);
+  const right = BigNumber.from(b);
+  if (left.eq(right)) {
+    return 0;
+  } else if (left.gt(right)) {
+    return 1;
+  } else {
+    return -1;
+  }
+}
+
+/**
+ * Create and uploads snapshots + converts claim conditions to contract format
+ * @param claimConditionInputs
+ * @param tokenDecimals
+ * @param provider
+ * @param storage
+ * @internal
+ */
+export async function processClaimConditionInputs(
+  claimConditionInputs: ClaimConditionInput[],
+  tokenDecimals: number,
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+) {
+  const { inputsWithSnapshots, snapshotInfos } = await processSnapshotData(
+    claimConditionInputs,
+    tokenDecimals,
+    storage,
+  );
   const parsedInputs = ClaimConditionInputArray.parse(inputsWithSnapshots);
-
   // Convert processed inputs to the format the contract expects, and sort by timestamp
-  const sortedConditions: IDropClaimCondition_V2.ClaimConditionStruct[] = (
+  const sortedConditions: AbstractClaimConditionContractStruct[] = (
     await Promise.all(
       parsedInputs.map((c) =>
-        convertToContractModel(c, tokenDecimals, provider),
+        convertToContractModel(c, tokenDecimals, provider, storage),
       ),
     )
   ).sort((a, b) => {
-    const left = BigNumber.from(a.startTimestamp);
-    const right = BigNumber.from(b.startTimestamp);
-    if (left.eq(right)) {
-      return 0;
-    } else if (left.gt(right)) {
-      return 1;
-    } else {
-      return -1;
-    }
+    return compare(a.startTimestamp, b.startTimestamp);
   });
   return { snapshotInfos, sortedConditions };
 }
@@ -328,13 +354,15 @@ export async function processClaimConditionInputs(
  * @param c
  * @param tokenDecimals
  * @param provider
+ * @param storage
  * @internal
  */
 async function convertToContractModel(
   c: FilledConditionInput,
   tokenDecimals: number,
   provider: providers.Provider,
-): Promise<IDropClaimCondition_V2.ClaimConditionStruct> {
+  storage: ThirdwebStorage,
+): Promise<AbstractClaimConditionContractStruct> {
   const currency =
     c.currencyAddress === constants.AddressZero
       ? NATIVE_TOKEN_ADDRESS
@@ -354,15 +382,54 @@ async function convertToContractModel(
       tokenDecimals,
     );
   }
+  let metadataOrUri;
+  if (c.metadata) {
+    if (typeof c.metadata === "string") {
+      metadataOrUri = c.metadata;
+    } else {
+      metadataOrUri = await storage.upload(c.metadata);
+    }
+  }
   return {
     startTimestamp: c.startTime,
     maxClaimableSupply,
     supplyClaimed: 0,
-    quantityLimitPerTransaction,
-    waitTimeInSecondsBetweenClaims: c.waitInSeconds,
+    quantityLimit: quantityLimitPerTransaction,
     pricePerToken: await normalizePriceValue(provider, c.price, currency),
     currency,
-    merkleRoot: c.merkleRootHash,
+    merkleRoot: c.merkleRootHash.toString(),
+    waitTimeInSecondsBetweenClaims: c.waitInSeconds || 0,
+    metadata: metadataOrUri,
+  };
+}
+
+export function abstractContractModelToLegacy(
+  model: AbstractClaimConditionContractStruct,
+): IDropClaimCondition_V2.ClaimConditionStruct {
+  return {
+    startTimestamp: model.startTimestamp,
+    maxClaimableSupply: model.maxClaimableSupply,
+    supplyClaimed: model.supplyClaimed,
+    quantityLimitPerTransaction: model.quantityLimit,
+    waitTimeInSecondsBetweenClaims: model.waitTimeInSecondsBetweenClaims || 0,
+    merkleRoot: model.merkleRoot,
+    pricePerToken: model.pricePerToken,
+    currency: model.currency,
+  };
+}
+
+export function legacyContractModelToAbstract(
+  model: IDropClaimCondition_V2.ClaimConditionStruct,
+): AbstractClaimConditionContractStruct {
+  return {
+    startTimestamp: model.startTimestamp,
+    maxClaimableSupply: model.maxClaimableSupply,
+    supplyClaimed: model.supplyClaimed,
+    quantityLimit: model.quantityLimitPerTransaction,
+    waitTimeInSecondsBetweenClaims: model.waitTimeInSecondsBetweenClaims,
+    merkleRoot: model.merkleRoot.toString(),
+    pricePerToken: model.pricePerToken,
+    currency: model.currency,
   };
 }
 
@@ -373,10 +440,11 @@ async function convertToContractModel(
  * @param provider
  * @param merkleMetadata
  * @param storage
+ * @param shouldDownloadSnapshot
  * @internal
  */
 export async function transformResultToClaimCondition(
-  pm: IDropClaimCondition_V2.ClaimConditionStructOutput,
+  pm: AbstractClaimConditionContractStruct,
   tokenDecimals: number,
   provider: providers.Provider,
   merkleMetadata: Record<string, string> | undefined,
@@ -390,7 +458,7 @@ export async function transformResultToClaimCondition(
     tokenDecimals,
   );
   const quantityLimitPerTransaction = convertToReadableQuantity(
-    pm.quantityLimitPerTransaction,
+    pm.quantityLimit,
     tokenDecimals,
   );
   const availableSupply = convertToReadableQuantity(
@@ -407,7 +475,7 @@ export async function transformResultToClaimCondition(
     currentMintSupply,
     availableSupply,
     quantityLimitPerTransaction,
-    waitInSeconds: pm.waitTimeInSecondsBetweenClaims.toString(),
+    waitInSeconds: pm.waitTimeInSecondsBetweenClaims?.toString(),
     price: BigNumber.from(pm.pricePerToken),
     currency: pm.currency,
     currencyAddress: pm.currency,
@@ -416,10 +484,11 @@ export async function transformResultToClaimCondition(
     snapshot: shouldDownloadSnapshot
       ? await fetchSnapshot(pm.merkleRoot, merkleMetadata, storage)
       : undefined,
+    metadata: pm.metadata,
   });
 }
 
-function convertToReadableQuantity(bn: BigNumber, tokenDecimals: number) {
+function convertToReadableQuantity(bn: BigNumberish, tokenDecimals: number) {
   if (bn.toString() === ethers.constants.MaxUint256.toString()) {
     return "unlimited";
   } else {
