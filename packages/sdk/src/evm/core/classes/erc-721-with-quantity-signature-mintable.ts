@@ -177,6 +177,34 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    * Verify that a payload is correctly signed
    * @param signedPayload - the payload to verify
    * @twfeature ERC721SignatureMint
+   *
+   * @example
+   * ```javascript
+   * const nftMetadata = {
+   *   name: "Cool NFT #1",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   * };
+   *
+   * const startTime = new Date();
+   * const endTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
+   * const payload = {
+   *   metadata: nftMetadata, // The NFT to mint
+   *   to: {{wallet_address}}, // Who will receive the NFT (or AddressZero for anyone)
+   *   quantity: 2, // the quantity of NFTs to mint
+   *   price: 0.5, // the price per NFT
+   *   currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with
+   *   mintStartTime: startTime, // can mint anytime from now
+   *   mintEndTime: endTime, // to 24h from now
+   *   royaltyRecipient: "0x...", // custom royalty recipient for this NFT
+   *   royaltyBps: 100, // custom royalty fees for this NFT (in bps)
+   *   primarySaleRecipient: "0x...", // custom sale recipient for this NFT
+   * };
+   *
+   * const signedPayload = await contract.erc721.signature.generate(payload);
+   * // Now you can verify if the signed payload is valid
+   * const isValid = await contract.erc721.signature.verify(signedPayload);
+   * ```
    */
   public async verify(
     signedPayload: SignedPayload721WithQuantitySignature,
@@ -230,7 +258,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    *   primarySaleRecipient: "0x...", // custom sale recipient for this NFT
    * };
    *
-   * const signedPayload = contract.erc721.signature.generate(payload);
+   * const signedPayload = await contract.erc721.signature.generate(payload);
    * // now anyone can use these to mint the NFT using `contract.erc721.signature.mint(signedPayload)`
    * ```
    * @param mintRequest - the payload to sign
