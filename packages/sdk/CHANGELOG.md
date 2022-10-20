@@ -1,5 +1,13 @@
 # @thirdweb-dev/sdk
 
+## 3.3.1
+
+### Patch Changes
+
+- [#332](https://github.com/thirdweb-dev/js/pull/332) [`ad851f7`](https://github.com/thirdweb-dev/js/commit/ad851f7b4d6abb5ab9364ef3dec229f913e18ce5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix for finding addresses in legacy merkle tree format
+
+- [#330](https://github.com/thirdweb-dev/js/pull/330) [`6218c88`](https://github.com/thirdweb-dev/js/commit/6218c885842e6b4e44ec38ec92a9211e56c49bf4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix deploying contracts with non-32 bytes parameters like bytes4
+
 ## 3.3.0
 
 ### Minor Changes
