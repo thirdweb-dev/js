@@ -1,7 +1,15 @@
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { FEATURE_TOKEN_SIGNATURE_MINTABLE } from "../../constants/erc20-features";
 import type { TokenInitializer } from "../../contracts";
-import { FilledSignaturePayload20, MintRequest20, PayloadToSign20, PayloadWithUri20, Signature20PayloadInput, Signature20PayloadOutput, SignedPayload20 } from "../../schema/contracts/common/signature";
+import {
+  FilledSignaturePayload20,
+  MintRequest20,
+  PayloadToSign20,
+  PayloadWithUri20,
+  Signature20PayloadInput,
+  Signature20PayloadOutput,
+  SignedPayload20,
+} from "../../schema/contracts/common/signature";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractRoles } from "./contract-roles";
@@ -9,7 +17,6 @@ import { ContractWrapper } from "./contract-wrapper";
 import type { ITokenERC20, TokenERC20 } from "@thirdweb-dev/contracts-js";
 import { BigNumber, ethers } from "ethers";
 import invariant from "tiny-invariant";
-
 
 /**
  * Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely
@@ -110,6 +117,24 @@ export class Erc20SignatureMintable implements DetectableFeature {
    * Verify that a payload is correctly signed
    * @param signedPayload - the payload to verify
    * @twfeature ERC20SignatureMintable
+   *
+   * ```javascript
+   * const startTime = new Date();
+   * const endTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
+   * const payload = {
+   *   quantity: 4.2, // The quantity of tokens to be minted
+   *   to: {{wallet_address}}, // Who will receive the tokens (or AddressZero for anyone)
+   *   price: 0.5, // the price to pay for minting those tokens
+   *   currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with
+   *   mintStartTime: startTime, // can mint anytime from now
+   *   mintEndTime: endTime, // to 24h from now,
+   *   primarySaleRecipient: "0x...", // custom sale recipient for this token mint
+   * };
+   *
+   * const signedPayload = await contract.erc20.signature.generate(payload);
+   * // Now you can verify if the signed payload is valid
+   * const isValid = await contract.erc20.signature.verify(signedPayload);
+   * ```
    */
   public async verify(signedPayload: SignedPayload20): Promise<boolean> {
     const mintRequest = signedPayload.payload;
@@ -139,7 +164,7 @@ export class Erc20SignatureMintable implements DetectableFeature {
    *   primarySaleRecipient: "0x...", // custom sale recipient for this token mint
    * };
    *
-   * const signedPayload = contract.erc20.signature.generate(payload);
+   * const signedPayload = await contract.erc20.signature.generate(payload);
    * // now anyone can use these to mint the NFT using `contract.erc20.signature.mint(signedPayload)`
    * ```
    * @param mintRequest - the payload to sign
