@@ -1,10 +1,10 @@
 import { useConnect } from "../wagmi-required/useConnect";
+import { Buffer } from "buffer";
 import invariant from "tiny-invariant";
 import { useContext as useWagmiContext } from "wagmi";
 
-if (!globalThis.Buffer) {
-  globalThis.Buffer = require("buffer/").Buffer;
-}
+globalThis.Buffer = Buffer;
+
 /**
  * Hook for connecting to a Coinbase wallet.
  *
