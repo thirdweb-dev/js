@@ -68,6 +68,7 @@ export async function prepareClaim(
         await merkleMetadataFetcher(),
         storage,
       );
+      console.log("claim", claim);
       if (!claim) {
         throw new Error("No claim found for this address");
       }
@@ -168,7 +169,11 @@ export async function fetchSnapshotEntryForAddress(
     // legacy non-sharded, just fetch it all and filter out
     const snapshotData = SnapshotSchema.parse(raw);
     if (merkleRoot === snapshotData.merkleRoot) {
-      return snapshotData.claims.find((c) => c.address === address) || null;
+      return (
+        snapshotData.claims.find(
+          (c) => c.address.toLowerCase() === address.toLowerCase(),
+        ) || null
+      );
     }
   }
   return null;
