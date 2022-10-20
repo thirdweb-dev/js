@@ -6,7 +6,7 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const TieredDropPayloadInput = BaseSignaturePayloadInput.extend({
+export const TieredDropPayloadSchema = BaseSignaturePayloadInput.extend({
   tierPriority: z.array(z.string()),
   royaltyRecipient: z.string().default(constants.AddressZero),
   royaltyBps: BasisPointsSchema.default(0),
@@ -16,13 +16,18 @@ export const TieredDropPayloadInput = BaseSignaturePayloadInput.extend({
 /**
  * @public
  */
-export type TieredDropPayload = z.infer<typeof TieredDropPayloadInput>;
+export type TieredDropPayloadInput = z.input<typeof TieredDropPayloadSchema>;
+
+/**
+ * @internal
+ */
+export type TieredDropPayloadOutput = z.output<typeof TieredDropPayloadSchema>;
 
 /**
  * @internal
  */
 export type TieredDropPayloadWithSignature = {
-  payload: TieredDropPayload;
+  payload: TieredDropPayloadOutput;
   signature: string;
 };
 

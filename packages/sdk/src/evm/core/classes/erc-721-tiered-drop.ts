@@ -4,8 +4,9 @@ import { getBaseUriFromBatch, uploadOrExtractURIs } from "../../common/nft";
 import { FEATURE_NFT_TIERED_DROP } from "../../constants/erc721-features";
 import { GenericRequest } from "../../schema";
 import {
-  TieredDropPayload,
   TieredDropPayloadInput,
+  TieredDropPayloadOutput,
+  TieredDropPayloadSchema,
   TieredDropPayloadWithSignature,
 } from "../../schema/contracts/tiered-drop";
 import { UploadProgressEvent } from "../../types/events";
@@ -102,17 +103,17 @@ export class Erc721TieredDrop implements DetectableFeature {
   }
 
   public async generate(
-    payloadToSign: TieredDropPayload,
+    payloadToSign: TieredDropPayloadInput,
   ): Promise<TieredDropPayloadWithSignature> {
     const [payload] = await this.generateBatch([payloadToSign]);
     return payload;
   }
 
   public async generateBatch(
-    payloadsToSign: TieredDropPayload[],
+    payloadsToSign: TieredDropPayloadInput[],
   ): Promise<TieredDropPayloadWithSignature[]> {
     const parsedPayloads = payloadsToSign.map((payload) =>
-      TieredDropPayloadInput.parse(payload),
+      TieredDropPayloadSchema.parse(payload),
     );
     const chainId = await this.contractWrapper.getChainID();
     const signer = this.contractWrapper.getSigner();
@@ -176,11 +177,13 @@ export class Erc721TieredDrop implements DetectableFeature {
       [message, signedPayload.signature],
       overrides,
     );
+
+    // TODO: Listen for TokensClaimed event once it gets emitted
     return { receipt };
   }
 
   private async mapPayloadToContractStruct(
-    payload: TieredDropPayload,
+    payload: TieredDropPayloadOutput,
   ): Promise<ISignatureAction.GenericRequestStruct> {
     const normalizedPricePerToken = await normalizePriceValue(
       this.contractWrapper.getProvider(),
