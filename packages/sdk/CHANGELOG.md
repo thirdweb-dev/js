@@ -1,5 +1,43 @@
 # @thirdweb-dev/sdk
 
+## 3.3.0
+
+### Minor Changes
+
+- [#315](https://github.com/thirdweb-dev/js/pull/315) [`89ff921`](https://github.com/thirdweb-dev/js/commit/89ff921a7d9f0e42b4e6707c8b56d0aab95c1aa0) Thanks [@furqanrydhan](https://github.com/furqanrydhan)! - fixing vite, multihash moved to non lazy load + cbor-x instead of cbor-web
+
+- [#321](https://github.com/thirdweb-dev/js/pull/321) [`a57b4f0`](https://github.com/thirdweb-dev/js/commit/a57b4f01f3a49590b897101f2730582e4124a554) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SDK] Implement sharded merkle trees for lightweight allowlist checks
+
+  **Behavior change**
+
+  We've made allowlists much more performant using sharded merkle trees. This allows us to process large allowlists (1M+) efficiently.
+
+  To support those large allowlists, fetching claim conditions does not fetch the allowlist data by default anymore. Instead, you can pass an options object to additionally fetch the allowlist data along with the rest of the claim conditions data.
+
+  This affects `ClaimConditions.getActive()` and `ClaimConditions.getAll()`
+
+  Examples:
+
+  ```ts
+  const activeClaimCondition =
+    await contract.erc721.claimConditions.getActive();
+  // `activeClaimCondition.snapshot` is undefined
+  const activeclaimConditionWithtAllowList =
+    await contract.erc721.claimConditions.getActive({
+      withAllowList: true,
+    });
+  // `activeClaimCondition.snapshot` returns the allowlist data
+  ```
+
+### Patch Changes
+
+- [#326](https://github.com/thirdweb-dev/js/pull/326) [`126752d`](https://github.com/thirdweb-dev/js/commit/126752d7d02c9a808a63fb9e67a9df6658b5682b) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - expose fn to get ipfs hash from bytecote publicly
+
+- [#328](https://github.com/thirdweb-dev/js/pull/328) [`df74340`](https://github.com/thirdweb-dev/js/commit/df74340fa51323304c32419761d6f18628b060fa) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update cbor-x import to work with es2018 builds (embeds)
+
+- Updated dependencies [[`87fd6ab`](https://github.com/thirdweb-dev/js/commit/87fd6ab14e1a67a1b12e72bd397fb21769537307)]:
+  - @thirdweb-dev/storage@1.0.5
+
 ## 3.2.6
 
 ### Patch Changes
