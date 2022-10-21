@@ -26,11 +26,11 @@ The `useContractCall` hook to call a smart contract function has been renamed to
 
 ### Prebuilt Contract Hooks
 
-Hooks to connect to prebuilt contracts such as `useNFTDrop` and `useMarketplace` are now deprecated in favour of using the generic `useContract` hook:
+Hooks to connect to prebuilt contracts such as `useNFTDrop` and `useMarketplace` are now deprecated in favour of using the generic `useContract` hook followed by the contract type:
 
 ```diff
 - const contract = useNFTDrop("0x...")
-+ const { contract } = useContract("0x...")
++ const { contract } = useContract("0x...", "nft-drop")
 ```
 
 You can currently still continue to use the prebuilt hooks, however they provide a warning in the console informing you of their deprecation. We will likely remove these hooks in a future version of the SDK.
