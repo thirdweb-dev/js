@@ -61,8 +61,8 @@ export type WalletConnector =
   | InjectedConnectorType
   | WalletConnectConnectorType
   | WalletLinkConnectorType
-  | typeof GnosisSafeConnector
-  | typeof MagicConnector;
+  | GnosisSafeConnector
+  | MagicConnector;
 
 /**
  * @internal
