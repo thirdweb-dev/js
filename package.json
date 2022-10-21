@@ -22,7 +22,7 @@
     "@hookform/resolvers": "^2.8.0",
     "@n8tb1t/use-scroll-position": "^2.0.3",
     "@react-icons/all-files": "^4.1.0",
-    "@sentry/nextjs": "7.14.1",
+    "@sentry/nextjs": "^7.16.0",
     "@solana/wallet-adapter-base": "^0.9.16",
     "@solana/wallet-adapter-react": "^0.15.18",
     "@solana/wallet-adapter-wallets": "^0.19.1",
