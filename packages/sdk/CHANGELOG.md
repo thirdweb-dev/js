@@ -1,5 +1,20 @@
 # @thirdweb-dev/sdk
 
+## 3.4.0
+
+### Patch Changes
+
+- [#337](https://github.com/thirdweb-dev/js/pull/337) [`340605b`](https://github.com/thirdweb-dev/js/commit/340605b507f384fbd2999b9c16542af3c53e84a9) Thanks [@adam-maj](https://github.com/adam-maj)! - Clean native token address in listing
+
+- [#342](https://github.com/thirdweb-dev/js/pull/342) [`26116a6`](https://github.com/thirdweb-dev/js/commit/26116a6f637ee845f7bd17f20ffe17caf184658e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add new univeral RPC urls
+
+- [#335](https://github.com/thirdweb-dev/js/pull/335) [`15f8006`](https://github.com/thirdweb-dev/js/commit/15f8006e1fb22333b7ee239b45e7b1b12d6dccc8) Thanks [@adam-maj](https://github.com/adam-maj)! - Export smart contract
+
+- [#327](https://github.com/thirdweb-dev/js/pull/327) [`ef27aad`](https://github.com/thirdweb-dev/js/commit/ef27aad0aafc4577e85f44dc77dfbe880bd239b5) Thanks [@jnsdls](https://github.com/jnsdls)! - enable e2e testing
+
+- Updated dependencies [[`ef27aad`](https://github.com/thirdweb-dev/js/commit/ef27aad0aafc4577e85f44dc77dfbe880bd239b5)]:
+  - @thirdweb-dev/storage@1.0.6
+
 ## 3.3.1
 
 ### Patch Changes

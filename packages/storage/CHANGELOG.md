@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 1.0.6
+
+### Patch Changes
+
+- [#327](https://github.com/thirdweb-dev/js/pull/327) [`ef27aad`](https://github.com/thirdweb-dev/js/commit/ef27aad0aafc4577e85f44dc77dfbe880bd239b5) Thanks [@jnsdls](https://github.com/jnsdls)! - enable e2e testing
+
 ## 1.0.5
 
 ### Patch Changes
