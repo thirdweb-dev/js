@@ -12,8 +12,8 @@
     "@thirdweb-dev/sdk": "*",
     "ethers": "^5.7.2",
     "next": "^12",
-    "react": "latest",
-    "react-dom": "latest"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.27.1",

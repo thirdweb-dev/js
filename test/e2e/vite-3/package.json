@@ -11,8 +11,8 @@
     "@thirdweb-dev/react": "*",
     "@thirdweb-dev/sdk": "*",
     "ethers": "^5.7.2",
-    "react": "latest",
-    "react-dom": "latest"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^2",
