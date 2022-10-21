@@ -20,6 +20,14 @@
       "module": "./solana/dist/thirdweb-dev-react-solana.esm.js",
       "default": "./solana/dist/thirdweb-dev-react-solana.cjs.js"
     },
+    "./evm/connectors/magic": {
+      "module": "./evm/connectors/magic/dist/thirdweb-dev-react-evm-connectors-magic.esm.js",
+      "default": "./evm/connectors/magic/dist/thirdweb-dev-react-evm-connectors-magic.cjs.js"
+    },
+    "./evm/connectors/gnosis-safe": {
+      "module": "./evm/connectors/gnosis-safe/dist/thirdweb-dev-react-evm-connectors-gnosis-safe.esm.js",
+      "default": "./evm/connectors/gnosis-safe/dist/thirdweb-dev-react-evm-connectors-gnosis-safe.cjs.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -31,7 +39,8 @@
     "entrypoints": [
       "index.ts",
       "solana/index.ts",
-      "evm/index.ts"
+      "evm/index.ts",
+      "evm/connectors/**.ts"
     ],
     "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
       "exports": true
@@ -49,8 +58,6 @@
     "generate-docs:solana": "api-extractor run --local --config ./config/api-extractor-solana.json && api-documenter markdown -i ./temp -o ./docs/solana && rm -rf ./temp-solana && mv ./temp ./temp-solana",
     "generate-snippets": "node ./scripts/generate-snippets-evm.mjs && node ./scripts/generate-snippets-solana.mjs && node ./scripts/generate-feature-snippets-evm.mjs",
     "build": "tsc && preconstruct build",
-    "e2e": "yarn test-ct",
-    "test-ct": "playwright test -c playwright-ct.config.ts",
     "push": "yalc push"
   },
   "sideEffects:": false,
@@ -63,15 +70,11 @@
     "@microsoft/api-documenter": "^7.19.4",
     "@microsoft/api-extractor": "^7.29.2",
     "@microsoft/tsdoc": "^0.14.1",
-    "@playwright/experimental-ct-react": "1.25.1",
-    "@playwright/test": "1.25.1",
     "@preconstruct/cli": "^2.2.1",
     "@solana/wallet-adapter-base": "^0.9.17",
     "@solana/wallet-adapter-react": "^0.15.19",
-    "@solana/wallet-adapter-wallets": "^0.19.0",
-    "@solana/web3.js": "^1.63.0",
+    "@solana/web3.js": "^1.62.0",
     "@thirdweb-dev/sdk": "*",
-    "@thirdweb-dev/solana": "*",
     "@types/color": "^3.0.3",
     "@types/mime": "^3.0.1",
     "@types/react": "^18.0.5",
@@ -93,13 +96,14 @@
   "dependencies": {
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
-    "@gnosis.pm/safe-core-sdk": "2.1.0",
-    "@gnosis.pm/safe-ethers-adapters": "0.1.0-alpha.9",
-    "@gnosis.pm/safe-ethers-lib": "1.1.0",
+    "@gnosis.pm/safe-core-sdk": "^3.1.1",
+    "@gnosis.pm/safe-ethers-adapters": "0.1.0-alpha.11",
+    "@gnosis.pm/safe-ethers-lib": "^1.6.1",
     "@react-icons/all-files": "^4.1.0",
+    "@solana/wallet-adapter-phantom": "^0.9.17",
     "@tanstack/react-query": "^4.0.10",
-    "@zag-js/menu": "0.1.14",
-    "@zag-js/react": "0.1.16",
+    "@zag-js/menu": "^0.1.16",
+    "@zag-js/react": "^0.1.18",
     "buffer": "^6.0.3",
     "color": "^4.2.3",
     "copy-to-clipboard": "^3.3.2",
@@ -114,7 +118,7 @@
     "@solana/wallet-adapter-base": "^0.9.17",
     "@solana/wallet-adapter-react": "^0.15.19",
     "@solana/wallet-adapter-wallets": "^0.19.0",
-    "@solana/web3.js": "^1.63.0",
+    "@solana/web3.js": "^1.62.0",
     "@thirdweb-dev/sdk": "*",
     "ethers": ">=5.5.1",
     "react": ">=18.0.0",
@@ -135,9 +139,6 @@
       "optional": true
     },
     "@solana/web3.js": {
-      "optional": true
-    },
-    "@thirdweb-dev/solana": {
       "optional": true
     }
   }
