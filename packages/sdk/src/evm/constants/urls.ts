@@ -106,35 +106,35 @@ export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
   }
   switch (network) {
     case "mumbai":
-      return `https://polygon-mumbai.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      return `https://rpc-mumbai.maticvigil.com`;
     case "rinkeby":
-      return `https://eth-rinkeby.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      return `https://rpc.ankr.com/eth_rinkeby`;
     case "goerli":
-      return `https://eth-goerli.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      return `https://rpc.ankr.com/eth_goerli`;
     case "polygon":
     case "matic":
-      return `https://polygon-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      return `https://polygon-rpc.com`;
     case "mainnet":
     case "ethereum":
-      return `https://eth-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      return `https://rpc.ankr.com/eth`;
     case "optimism":
       // TODO test this RPC
-      return `https://opt-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      return `https://mainnet.optimism.io`;
     case "optimism-kovan":
       // alchemy optimism kovan rpc doesn't link to the testnet sequencer...
       return "https://kovan.optimism.io";
     case "optimism-goerli":
       // TODO test this RPC
-      return `https://opt-goerli.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      return `https://goerli.optimism.io`;
     case "arbitrum":
       // TODO test this RPC
-      return `https://arb-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      return `https://arb1.arbitrum.io/rpc `;
     case "arbitrum-rinkeby":
       // TODO test this RPC
-      return `https://arb-rinkeby.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      return `https://rinkeby.arbitrum.io/rpc`;
     case "arbitrum-goerli":
       // TODO test this RPC
-      return `https://arb-goerli.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      return `https://goerli-rollup.arbitrum.io/rpc`;
     case "fantom":
       return "https://rpc.ftm.tools";
     case "fantom-testnet":
