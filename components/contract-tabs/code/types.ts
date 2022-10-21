@@ -1,6 +1,7 @@
 export type Environment =
   | "javascript"
   | "typescript"
+  | "web3button"
   | "react"
   | "python"
   | "go";
