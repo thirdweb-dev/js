@@ -11,7 +11,7 @@ import { devices } from "@playwright/test";
  * See https://playwright.dev/docs/test-configuration.
  */
 const config: PlaywrightTestConfig = {
-  testDir: ".",
+  testDir: "./fixtures",
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
   expect: {
@@ -19,7 +19,7 @@ const config: PlaywrightTestConfig = {
      * Maximum time expect() should wait for the condition to be met.
      * For example in `await expect(locator).toHaveText();`
      */
-    timeout: 5000,
+    // timeout: 5000,
   },
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -99,8 +99,8 @@ const config: PlaywrightTestConfig = {
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "yarn start -p 3030",
-    port: 3030,
+    command: "yarn start -p 3050",
+    port: 3050,
     // its static so yeah go for it
     reuseExistingServer: true,
   },

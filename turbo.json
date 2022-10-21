@@ -41,6 +41,21 @@
       "inputs": ["src/**"],
       "dependsOn": ["build"]
     },
+    "e2e:e2e-cra-5": {
+      "outputs": ["build"],
+      "inputs": ["src/**", "fixtures/**"],
+      "dependsOn": ["build"]
+    },
+    "e2e:e2e-next-12": {
+      "outputs": [".next"],
+      "inputs": ["src/**", "fixtures/**"],
+      "dependsOn": ["build"]
+    },
+    "e2e:e2e-vite-3": {
+      "outputs": ["dist"],
+      "inputs": ["src/**", "fixtures/**"],
+      "dependsOn": ["build"]
+    },
     "thirdweb#e2e": {
       "outputs": [],
       "inputs": ["src/**", "e2e/**"],

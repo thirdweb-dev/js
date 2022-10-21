@@ -1,25 +1,18 @@
 {
-  "name": "cra-js",
+  "name": "e2e-cra-5",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@thirdweb-dev/react": "file:../../../../packages/react",
-    "@thirdweb-dev/sdk": "file:../../../../packages/sdk",
+    "@thirdweb-dev/react": "*",
+    "@thirdweb-dev/sdk": "*",
+    "ethers": "^5.7.2",
     "react": "latest",
     "react-dom": "latest",
     "react-scripts": "^5"
   },
   "scripts": {
-    "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
     "e2e": "npx playwright test"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
   },
   "browserslist": {
     "production": [
