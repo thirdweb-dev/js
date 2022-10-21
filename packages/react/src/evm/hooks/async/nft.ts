@@ -542,7 +542,7 @@ export function useTransferNFT<TContract extends NFTContract>(
  * @example
  * ```jsx
  * const Component = () => {
- *   const editionDrop = useEditionDrop(<ContractAddress>);
+ *   const editionDrop = useContract(<ContractAddress>, "edition-drop");
  *   const {
  *     mutate: airdropNFT,
  *     isLoading,
