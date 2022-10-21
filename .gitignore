@@ -16,3 +16,4 @@ public/dist
 .yalc/
 yalc.lock
 build/
+playwright-report/
