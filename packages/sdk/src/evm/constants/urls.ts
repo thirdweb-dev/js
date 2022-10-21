@@ -1,3 +1,4 @@
+import { getRpcUrl } from "../../core/constants/urls";
 import { SignerOrProvider } from "../core/types";
 import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
 import { ChainId, SUPPORTED_CHAIN_ID, SUPPORTED_CHAIN_IDS } from "./chains";
@@ -7,39 +8,16 @@ import { ethers, providers } from "ethers";
  * @internal
  */
 export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
-/**
- * @internal
- */
-export const PUBLIC_GATEWAYS = [
-  "https://gateway.ipfscdn.io/ipfs/",
-  "https://cloudflare-ipfs.com/ipfs/",
-  "https://ipfs.io/ipfs/",
-];
-
-/**
- * @internal
- */
-export const TW_IPFS_SERVER_URL = "https://upload.nftlabs.co";
-/**
- * @internal
- */
-export const PINATA_IPFS_URL = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
-
-/**
- * @internal
- * This is a community API key that is subject to rate limiting. Please use your own key.
- */
-const DEFAULT_API_KEY = "_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC";
 
 type ChainNames =
-  | "mumbai"
-  | "polygon"
-  // common alias for `polygon`
-  | "matic"
-  | "goerli"
   | "mainnet"
   // common alias for `mainnet`
   | "ethereum"
+  | "goerli"
+  | "polygon"
+  // common alias for `polygon`
+  | "matic"
+  | "mumbai"
   | "fantom"
   | "fantom-testnet"
   | "avalanche"
@@ -105,49 +83,37 @@ export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
     return network;
   }
   switch (network) {
-    case "mumbai":
-      return `https://polygon-mumbai.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
-    case "rinkeby":
-      return `https://eth-rinkeby.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
-    case "goerli":
-      return `https://eth-goerli.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
-    case "polygon":
-    case "matic":
-      return `https://polygon-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
     case "mainnet":
     case "ethereum":
-      return `https://eth-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      return getRpcUrl("ethereum");
+    case "goerli":
+      return getRpcUrl("goerli");
+    case "polygon":
+    case "matic":
+      return getRpcUrl("polygon");
+    case "mumbai":
+      return getRpcUrl("mumbai");
     case "optimism":
-      // TODO test this RPC
-      return `https://opt-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
-    case "optimism-kovan":
-      // alchemy optimism kovan rpc doesn't link to the testnet sequencer...
-      return "https://kovan.optimism.io";
+      return getRpcUrl("optimism");
     case "optimism-goerli":
-      // TODO test this RPC
-      return `https://opt-goerli.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      return getRpcUrl("optimism-goerli");
     case "arbitrum":
-      // TODO test this RPC
-      return `https://arb-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
-    case "arbitrum-rinkeby":
-      // TODO test this RPC
-      return `https://arb-rinkeby.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      return getRpcUrl("arbitrum");
     case "arbitrum-goerli":
-      // TODO test this RPC
-      return `https://arb-goerli.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      return getRpcUrl("arbitrum-goerli");
     case "fantom":
-      return "https://rpc.ftm.tools";
+      return getRpcUrl("fantom");
     case "fantom-testnet":
-      return "https://rpc.testnet.fantom.network/";
+      return getRpcUrl("fantom-testnet");
     case "avalanche":
-      return "https://api.avax.network/ext/bc/C/rpc";
+      return getRpcUrl("avalanche");
     case "avalanche-testnet":
     case "avalanche-fuji":
-      return "https://api.avax-test.network/ext/bc/C/rpc";
+      return getRpcUrl("avalanche-fuji");
     case "binance":
-      return "https://bsc-dataseed1.binance.org";
+      return getRpcUrl("binance");
     case "binance-testnet":
-      return "https://data-seed-prebsc-1-s1.binance.org:8545";
+      return getRpcUrl("binance-testnet");
     default:
       if (network.startsWith("http") || network.startsWith("ws")) {
         return network;
