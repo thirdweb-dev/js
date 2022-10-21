@@ -58,8 +58,6 @@
     "generate-docs:solana": "api-extractor run --local --config ./config/api-extractor-solana.json && api-documenter markdown -i ./temp -o ./docs/solana && rm -rf ./temp-solana && mv ./temp ./temp-solana",
     "generate-snippets": "node ./scripts/generate-snippets-evm.mjs && node ./scripts/generate-snippets-solana.mjs && node ./scripts/generate-feature-snippets-evm.mjs",
     "build": "tsc && preconstruct build",
-    "e2e": "yarn test-ct",
-    "test-ct": "playwright test -c playwright-ct.config.ts",
     "push": "yalc push"
   },
   "sideEffects:": false,
@@ -72,8 +70,6 @@
     "@microsoft/api-documenter": "^7.19.4",
     "@microsoft/api-extractor": "^7.29.2",
     "@microsoft/tsdoc": "^0.14.1",
-    "@playwright/experimental-ct-react": "1.25.1",
-    "@playwright/test": "1.25.1",
     "@preconstruct/cli": "^2.2.1",
     "@solana/wallet-adapter-base": "^0.9.17",
     "@solana/wallet-adapter-react": "^0.15.19",

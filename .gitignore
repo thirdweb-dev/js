@@ -16,5 +16,3 @@ public/dist
 .yalc/
 yalc.lock
 build/
-# we do not want to store the yarn lock for e2e tests (should always install fresh)
-test/react/e2e/**/yarn.lock

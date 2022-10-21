@@ -1,0 +1,40 @@
+{
+  "name": "cra-js",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@thirdweb-dev/react": "file:../../../../packages/react",
+    "@thirdweb-dev/sdk": "file:../../../../packages/sdk",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-scripts": "^5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "e2e": "npx playwright test"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.27.1",
+    "serve": "^14.0.1"
+  }
+}

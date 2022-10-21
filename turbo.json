@@ -46,10 +46,6 @@
       "inputs": ["src/**", "e2e/**"],
       "dependsOn": ["build"]
     },
-    "@thirdweb-dev/react#e2e": {
-      "inputs": ["src/**", "playwright/index.ts", "playwright/index.html"],
-      "dependsOn": ["build"]
-    },
     "lint": {
       "outputs": []
     },
