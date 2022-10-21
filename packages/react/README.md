@@ -191,7 +191,7 @@ export default function Home() {
         <div>
           {nfts.map((nft) => (
             <ThirdwebNftMedia
-              key={nft.tokenId}
+              key={nft.metadata.id}
               metadata={nft.metadata}
               height={200}
             />
