@@ -1,49 +1,29 @@
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { hasFunction } from "./feature-detection";
-import type {
-  DropSinglePhase,
-  Drop,
-  DropSinglePhase_V1,
-  DropERC721_V3,
-  DropERC20_V2,
-} from "@thirdweb-dev/contracts-js";
+import { DropERC721 } from "@thirdweb-dev/contracts-js";
+import { ethers } from "ethers";
 
-// TODO (cc)
-export function isSinglePhase(
+// TODO (cc) use this everywhere
+export async function isPrebuilt(
   contractWrapper: ContractWrapper<any>,
-): contractWrapper is ContractWrapper<DropSinglePhase> {
-  return (
-    !hasFunction<DropSinglePhase>("getClaimConditionById", contractWrapper) &&
-    hasFunction<DropSinglePhase>("getSupplyClaimedByWallet", contractWrapper)
-  );
-}
-
-// TODO (cc)
-export function isMultiphase(
-  contractWrapper: ContractWrapper<any>,
-): contractWrapper is ContractWrapper<Drop> {
-  return (
-    hasFunction<Drop>("getClaimConditionById", contractWrapper) &&
-    hasFunction<Drop>("getClaimTimestamp", contractWrapper)
-  );
-}
-
-export function isLegacySinglePhaseDrop(
-  contractWrapper: ContractWrapper<any>,
-): contractWrapper is ContractWrapper<DropSinglePhase_V1> {
-  return (
-    !hasFunction<DropSinglePhase_V1>(
-      "getClaimConditionById",
-      contractWrapper,
-    ) && hasFunction<DropSinglePhase_V1>("getClaimTimestamp", contractWrapper)
-  );
-}
-
-export function isLegacyMultiPhaseDrop(
-  contractWrapper: ContractWrapper<any>,
-): contractWrapper is ContractWrapper<DropERC721_V3 | DropERC20_V2> {
-  return (
-    hasFunction<DropERC721_V3>("getClaimConditionById", contractWrapper) &&
-    hasFunction<DropERC721_V3>("setWalletClaimCount", contractWrapper)
-  );
+  contractType: string,
+  maxVersion: number,
+): Promise<boolean> {
+  if (hasFunction<DropERC721>("contractType", contractWrapper)) {
+    try {
+      const [type, version] = await Promise.all([
+        ethers.utils.toUtf8String(
+          await contractWrapper.readContract.contractType(),
+        ),
+        await contractWrapper.readContract.contractVersion(),
+      ]);
+      const nameMatch = type.includes(contractType);
+      const versionMatch = maxVersion ? maxVersion <= version : true;
+      return nameMatch && versionMatch;
+    } catch (e) {
+      return false;
+    }
+  } else {
+    return false;
+  }
 }

@@ -1,4 +1,3 @@
-import { CommonNFTInput } from "../../core/schema/nft";
 import { NATIVE_TOKEN_ADDRESS } from "../constants";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
@@ -27,15 +26,14 @@ import {
   isNativeToken,
   normalizePriceValue,
 } from "./currency";
-import { uploadOrExtractURI } from "./nft";
 import { ShardedMerkleTree } from "./sharded-merkle-tree";
 import { createSnapshot } from "./snapshots";
 import { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/declarations/src/IDropERC20_V2";
-import { IpfsUploadBatchOptions, ThirdwebStorage } from "@thirdweb-dev/storage";
+import { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
   BigNumberish,
-  BytesLike,
   CallOverrides,
   constants,
   ethers,
@@ -410,11 +408,26 @@ export function abstractContractModelToLegacy(
     startTimestamp: model.startTimestamp,
     maxClaimableSupply: model.maxClaimableSupply,
     supplyClaimed: model.supplyClaimed,
-    quantityLimitPerTransaction: model.quantityLimit,
-    waitTimeInSecondsBetweenClaims: model.waitTimeInSecondsBetweenClaims || 0,
     merkleRoot: model.merkleRoot,
     pricePerToken: model.pricePerToken,
     currency: model.currency,
+    quantityLimitPerTransaction: model.quantityLimit,
+    waitTimeInSecondsBetweenClaims: model.waitTimeInSecondsBetweenClaims || 0,
+  };
+}
+
+export function abstractContractModelToNew(
+  model: AbstractClaimConditionContractStruct,
+): IClaimCondition.ClaimConditionStruct {
+  return {
+    startTimestamp: model.startTimestamp,
+    maxClaimableSupply: model.maxClaimableSupply,
+    supplyClaimed: model.supplyClaimed,
+    merkleRoot: model.merkleRoot,
+    pricePerToken: model.pricePerToken,
+    currency: model.currency,
+    quantityLimitPerWallet: model.quantityLimit,
+    metadata: model.metadata || "",
   };
 }
 
@@ -425,11 +438,27 @@ export function legacyContractModelToAbstract(
     startTimestamp: model.startTimestamp,
     maxClaimableSupply: model.maxClaimableSupply,
     supplyClaimed: model.supplyClaimed,
-    quantityLimit: model.quantityLimitPerTransaction,
-    waitTimeInSecondsBetweenClaims: model.waitTimeInSecondsBetweenClaims,
     merkleRoot: model.merkleRoot.toString(),
     pricePerToken: model.pricePerToken,
     currency: model.currency,
+    quantityLimit: model.quantityLimitPerTransaction,
+    waitTimeInSecondsBetweenClaims: model.waitTimeInSecondsBetweenClaims,
+  };
+}
+
+export function newContractModelToAbstract(
+  model: IClaimCondition.ClaimConditionStruct,
+): AbstractClaimConditionContractStruct {
+  return {
+    startTimestamp: model.startTimestamp,
+    maxClaimableSupply: model.maxClaimableSupply,
+    supplyClaimed: model.supplyClaimed,
+    merkleRoot: model.merkleRoot.toString(),
+    pricePerToken: model.pricePerToken,
+    currency: model.currency,
+    quantityLimit: model.quantityLimitPerWallet,
+    waitTimeInSecondsBetweenClaims: 0,
+    metadata: model.metadata,
   };
 }
 

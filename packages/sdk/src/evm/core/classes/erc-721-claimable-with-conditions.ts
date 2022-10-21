@@ -1,5 +1,6 @@
 import { NFT } from "../../../core/schema/nft";
 import { hasFunction } from "../../common";
+import { isPrebuilt } from "../../common/legacy";
 import { FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS } from "../../constants/erc721-features";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ClaimOptions, ClaimVerification } from "../../types";
@@ -12,7 +13,9 @@ import { ContractWrapper } from "./contract-wrapper";
 import { DropClaimConditions } from "./drop-claim-conditions";
 import { Erc721 } from "./erc-721";
 import type { DropERC721 } from "@thirdweb-dev/contracts-js";
+import { IDropSinglePhase_V1 } from "@thirdweb-dev/contracts-js";
 import { TokensClaimedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Drop";
+import { IDropSinglePhase } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 
@@ -162,8 +165,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
     quantity: BigNumberish,
     claimVerification: ClaimVerification,
   ): Promise<any[]> {
-    const isLegacyNFTContract = await this.isLegacyNFTContract();
-    if (isLegacyNFTContract) {
+    if (this.conditions.isLegacyMultiPhaseDrop(this.contractWrapper)) {
       return [
         destinationAddress,
         quantity,
@@ -171,6 +173,18 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
         claimVerification.price,
         claimVerification.proofs,
         claimVerification.maxQuantityPerTransaction,
+      ];
+    } else if (this.conditions.isLegacySinglePhaseDrop(this.contractWrapper)) {
+      return [
+        destinationAddress,
+        quantity,
+        claimVerification.currencyAddress,
+        claimVerification.price,
+        {
+          proof: claimVerification.proofs,
+          maxQuantityInAllowlist: claimVerification.maxQuantityPerTransaction,
+        } as IDropSinglePhase_V1.AllowlistProofStruct,
+        ethers.utils.toUtf8Bytes(""),
       ];
     }
     return [
@@ -180,24 +194,12 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
       claimVerification.price,
       {
         proof: claimVerification.proofs,
-        maxQuantityInAllowlist: claimVerification.maxQuantityPerTransaction,
-      },
+        quantityLimitPerWallet: claimVerification.maxQuantityPerTransaction,
+        // TODO (cc) add price and currency from proofs with default values
+        currency: claimVerification.currencyAddress,
+        pricePerToken: claimVerification.price,
+      } as IDropSinglePhase.AllowlistProofStruct,
       ethers.utils.toUtf8Bytes(""),
     ];
-  }
-
-  private async isLegacyNFTContract() {
-    if (hasFunction<DropERC721>("contractType", this.contractWrapper)) {
-      try {
-        const contractType = ethers.utils.toUtf8String(
-          await this.contractWrapper.readContract.contractType(),
-        );
-        return contractType.includes("DropERC721");
-      } catch (e) {
-        return false;
-      }
-    } else {
-      return false;
-    }
   }
 }
