@@ -37,11 +37,11 @@ import {
   useChainId,
   useConnect,
   useDisconnect,
-  useGnosis,
-  useMagic,
   useMetamask,
   useNetwork,
-} from "@thirdweb-dev/react";
+} from "@thirdweb-dev/react/evm";
+import { useGnosis } from "@thirdweb-dev/react/evm/connectors/gnosis-safe";
+import { useMagic } from "@thirdweb-dev/react/evm/connectors/magic";
 import { ChakraNextImage } from "components/Image";
 import { MismatchButton } from "components/buttons/MismatchButton";
 import { ens } from "components/contract-components/hooks";
@@ -100,7 +100,7 @@ export const ConnectWallet: React.FC<EcosystemButtonprops> = ({
   const { getNetworkMetadata } = useWeb3();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const disconnect = useDisconnect();
-  const disconnectFully = useDisconnect({ reconnectAfterGnosis: false });
+  const disconnectFully = useDisconnect({ reconnectPrevious: false });
   const [network, switchNetwork] = useNetwork();
   const address = useAddress();
   const chainId = useChainId();
