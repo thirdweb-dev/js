@@ -13,8 +13,7 @@ concurrency:
 jobs:
   integration-tests:
     timeout-minutes: 60
-    # try out buildjet to speed up build and test
-    runs-on: buildjet-32vcpu-ubuntu-2204
+    runs-on: ubuntu-latest-32
     steps:
       - uses: actions/checkout@v3
 
