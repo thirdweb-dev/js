@@ -244,6 +244,7 @@ export class DropErc1155ClaimConditions<
         0,
         metadata.merkle,
         this.storage,
+        this.contractWrapper.getProvider(),
       );
       try {
         let validMerkleProof;

@@ -7,6 +7,7 @@ import {
   SnapshotInputSchema,
 } from "../schema";
 import { SnapshotInput } from "../types";
+import { convertQuantityToBigNumber } from "./claim-conditions";
 import { hashLeafNode } from "./snapshots";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { utils } from "ethers";
@@ -74,9 +75,13 @@ export class ShardedMerkleTree {
   }
 
   static hashEntry(entry: SnapshotEntry, tokenDecimals: number): string {
+    // TODO (cc) hash price and currency
+    // TODO (cc) differentiate between default values for maxClaimable
     return hashLeafNode(
       entry.address,
-      utils.parseUnits(entry.maxClaimable, tokenDecimals),
+      convertQuantityToBigNumber(entry.maxClaimable, tokenDecimals),
+      convertQuantityToBigNumber(entry.price),
+      entry.currencyAddress,
     );
   }
 
@@ -187,9 +192,8 @@ export class ShardedMerkleTree {
       .getProof(leaf)
       .map((i) => "0x" + i.data.toString("hex"));
     return {
-      address,
+      ...entry,
       proof: proof.concat(shard.proofs),
-      maxClaimable: entry.maxClaimable,
     };
   }
 

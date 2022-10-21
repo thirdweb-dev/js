@@ -1,4 +1,6 @@
-import { AddressSchema, AmountSchema } from "../../shared";
+import { QuantitySchema } from "../../../../core/schema/shared";
+import { AddressSchema } from "../../shared";
+import { ethers } from "ethers";
 import { z } from "zod";
 
 /**
@@ -13,7 +15,9 @@ export const MerkleSchema = z.object({
  */
 export const SnapshotEntryInput = z.object({
   address: AddressSchema,
-  maxClaimable: AmountSchema.default(0),
+  maxClaimable: QuantitySchema, // TODO (cc) this can't be 0 by default anymore
+  price: QuantitySchema, // TODO (cc) max uint is default
+  currencyAddress: AddressSchema.default(ethers.constants.AddressZero), // TODO (cc) addr zero is default
 });
 
 export type SnapshotEntry = z.output<typeof SnapshotEntryInput>;

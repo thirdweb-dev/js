@@ -1,3 +1,4 @@
+import { Quantity } from "../../core/schema/shared";
 import { NATIVE_TOKEN_ADDRESS } from "../constants";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
@@ -13,6 +14,7 @@ import {
   SnapshotSchema,
 } from "../schema/contracts/common/snapshots";
 import {
+  Amount,
   ClaimCondition,
   ClaimConditionInput,
   ClaimVerification,
@@ -56,8 +58,10 @@ export async function prepareClaim(
   checkERC20Allowance: boolean,
 ): Promise<ClaimVerification> {
   const addressToClaim = await contractWrapper.getSignerAddress();
-  let maxClaimable = BigNumber.from(0);
+  let maxClaimable = activeClaimCondition.quantityLimitPerTransaction;
   let proofs = [utils.hexZeroPad([0], 32)];
+  let price = activeClaimCondition.price;
+  let currencyAddress = activeClaimCondition.currencyAddress;
   try {
     if (
       !activeClaimCondition.merkleRootHash
@@ -74,7 +78,20 @@ export async function prepareClaim(
         throw new Error("No claim found for this address");
       }
       proofs = claim.proof;
-      maxClaimable = ethers.utils.parseUnits(claim.maxClaimable, tokenDecimals);
+      maxClaimable =
+        claim.maxClaimable === "unlimited"
+          ? maxClaimable
+          : ethers.utils.parseUnits(claim.maxClaimable, tokenDecimals);
+      price = claim.price
+        ? await normalizePriceValue(
+            contractWrapper.getProvider(),
+            claim.price,
+            claim.currencyAddress || NATIVE_TOKEN_ADDRESS,
+          )
+        : price;
+      currencyAddress = claim.currencyAddress
+        ? claim.currencyAddress
+        : currencyAddress;
     }
   } catch (e) {
     // have to handle the valid error case that we *do* want to throw on
@@ -89,8 +106,6 @@ export async function prepareClaim(
   }
 
   const overrides = (await contractWrapper.getCallOverrides()) || {};
-  const price = activeClaimCondition.price;
-  const currencyAddress = activeClaimCondition.currencyAddress;
   if (price.gt(0)) {
     if (isNativeToken(currencyAddress)) {
       overrides["value"] = BigNumber.from(price)
@@ -109,7 +124,7 @@ export async function prepareClaim(
   return {
     overrides,
     proofs,
-    maxQuantityPerTransaction: maxClaimable,
+    maxClaimable,
     price,
     currencyAddress,
   };
@@ -141,6 +156,8 @@ export async function fetchSnapshot(
         return snapshotData.claims.map((claim) => ({
           address: claim.address,
           maxClaimable: claim.maxClaimable,
+          price: claim.price,
+          currencyAddress: claim.currencyAddress,
         }));
       }
     }
@@ -240,6 +257,7 @@ export async function updateExistingClaimConditions(
  * @param tokenDecimals
  * @param merkleMetadata
  * @param storage
+ * @param provider
  * @returns - The proof for the current signer for the specified condition.
  */
 export async function getClaimerProofs(
@@ -248,7 +266,13 @@ export async function getClaimerProofs(
   tokenDecimals: number,
   merkleMetadata: Record<string, string>,
   storage: ThirdwebStorage,
-): Promise<{ maxClaimable: BigNumber; proof: string[] }> {
+  provider: ethers.providers.Provider,
+): Promise<{
+  proof: string[];
+  maxClaimable: BigNumber;
+  price: BigNumber;
+  currencyAddress: string;
+}> {
   const claim = await fetchSnapshotEntryForAddress(
     addressToClaim,
     merkleRoot,
@@ -259,11 +283,23 @@ export async function getClaimerProofs(
     return {
       proof: [],
       maxClaimable: BigNumber.from(0),
+      price: BigNumber.from(0),
+      currencyAddress: "",
     };
   }
+  const price =
+    claim.price === "unlimited"
+      ? ethers.constants.MaxUint256
+      : await normalizePriceValue(provider, claim.price, claim.currencyAddress);
+  const maxClaimable =
+    claim.maxClaimable === "unlimited"
+      ? ethers.constants.MaxUint256
+      : ethers.utils.parseUnits(claim.maxClaimable, tokenDecimals);
   return {
     proof: claim.proof,
-    maxClaimable: ethers.utils.parseUnits(claim.maxClaimable, tokenDecimals),
+    maxClaimable,
+    price,
+    currencyAddress: claim.currencyAddress,
   };
 }
 
@@ -517,11 +553,35 @@ export async function transformResultToClaimCondition(
   });
 }
 
-function convertToReadableQuantity(bn: BigNumberish, tokenDecimals: number) {
+/**
+ * @internal
+ * @param bn
+ * @param tokenDecimals
+ */
+export function convertToReadableQuantity(
+  bn: BigNumberish,
+  tokenDecimals: number,
+) {
   if (bn.toString() === ethers.constants.MaxUint256.toString()) {
     return "unlimited";
   } else {
     return ethers.utils.formatUnits(bn, tokenDecimals);
+  }
+}
+
+/**
+ * @internal
+ * @param quantity
+ * @param tokenDecimals
+ */
+export function convertQuantityToBigNumber(
+  quantity: Quantity,
+  tokenDecimals: number,
+) {
+  if (quantity === "unlimited") {
+    return ethers.constants.MaxUint256.toString();
+  } else {
+    return ethers.utils.parseUnits(quantity, tokenDecimals);
   }
 }
 

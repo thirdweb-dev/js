@@ -172,7 +172,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
         claimVerification.currencyAddress,
         claimVerification.price,
         claimVerification.proofs,
-        claimVerification.maxQuantityPerTransaction,
+        claimVerification.maxClaimable || BigNumber.from(0),
       ];
     } else if (this.conditions.isLegacySinglePhaseDrop(this.contractWrapper)) {
       return [
@@ -182,7 +182,8 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
         claimVerification.price,
         {
           proof: claimVerification.proofs,
-          maxQuantityInAllowlist: claimVerification.maxQuantityPerTransaction,
+          maxQuantityInAllowlist:
+            claimVerification.maxClaimable || BigNumber.from(0),
         } as IDropSinglePhase_V1.AllowlistProofStruct,
         ethers.utils.toUtf8Bytes(""),
       ];
@@ -194,8 +195,8 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
       claimVerification.price,
       {
         proof: claimVerification.proofs,
-        quantityLimitPerWallet: claimVerification.maxQuantityPerTransaction,
-        // TODO (cc) add price and currency from proofs with default values
+        quantityLimitPerWallet:
+          claimVerification.maxClaimable || ethers.constants.MaxUint256,
         currency: claimVerification.currencyAddress,
         pricePerToken: claimVerification.price,
       } as IDropSinglePhase.AllowlistProofStruct,

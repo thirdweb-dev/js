@@ -272,6 +272,7 @@ export class DropClaimConditions<
         await this.getTokenDecimals(),
         metadata.merkle,
         this.storage,
+        this.contractWrapper.getProvider(),
       );
 
       try {
@@ -286,7 +287,7 @@ export class DropClaimConditions<
               addressToCheck,
               quantity,
               proofs.proof,
-              proofs.maxClaimable,
+              proofs.maxClaimable || 0,
             );
           if (!validMerkleProof) {
             reasons.push(ClaimEligibility.AddressNotAllowed);
@@ -299,7 +300,7 @@ export class DropClaimConditions<
               quantity,
               {
                 proof: proofs.proof,
-                maxQuantityInAllowlist: proofs.maxClaimable,
+                maxQuantityInAllowlist: proofs.maxClaimable || 0,
               },
             );
           if (!validMerkleProof) {
@@ -307,8 +308,6 @@ export class DropClaimConditions<
             return reasons;
           }
         } else if (this.isNewSinglePhaseDrop(this.contractWrapper)) {
-          // TODO (cc) in new override format, anyone can claim (no allow list restriction)
-          // TODO (cc) maybe we should check if address has claimed max amount instead?
           await this.contractWrapper.readContract.verifyClaim(
             addressToCheck,
             quantity,
@@ -316,12 +315,19 @@ export class DropClaimConditions<
             claimCondition.price,
             {
               proof: proofs.proof,
-              quantityLimitPerWallet: proofs.maxClaimable,
-              // TODO (cc) add price and currency from proofs with default values
-              currency: claimCondition.currencyAddress,
-              pricePerToken: claimCondition.price,
+              quantityLimitPerWallet:
+                proofs.maxClaimable || ethers.constants.MaxUint256,
+              currency:
+                proofs.currencyAddress || claimCondition.currencyAddress,
+              pricePerToken: proofs.price || claimCondition.price,
             } as IDropSinglePhase.AllowlistProofStruct,
           );
+          // TODO (cc) in new override format, anyone can claim (no allow list restriction)
+          // TODO (cc) maybe we should check if address has claimed max amount instead?
+          if (claimCondition.maxQuantity === "0") {
+            reasons.push(ClaimEligibility.AddressNotAllowed);
+            return reasons;
+          }
         } else if (this.isNewMultiphaseDrop(this.contractWrapper)) {
           activeConditionIndex =
             await this.contractWrapper.readContract.getActiveClaimConditionId();
@@ -333,12 +339,17 @@ export class DropClaimConditions<
             claimCondition.price,
             {
               proof: proofs.proof,
-              quantityLimitPerWallet: proofs.maxClaimable,
-              // TODO (cc) add price and currency from proofs with default values
-              currency: claimCondition.currencyAddress,
-              pricePerToken: claimCondition.price,
+              quantityLimitPerWallet:
+                proofs.maxClaimable || ethers.constants.MaxUint256,
+              currency:
+                proofs.currencyAddress || claimCondition.currencyAddress,
+              pricePerToken: proofs.price || claimCondition.price,
             } as IDropSinglePhase.AllowlistProofStruct,
           );
+          if (claimCondition.maxQuantity === "0") {
+            reasons.push(ClaimEligibility.AddressNotAllowed);
+            return reasons;
+          }
         }
       } catch (e) {
         reasons.push(ClaimEligibility.AddressNotAllowed);
