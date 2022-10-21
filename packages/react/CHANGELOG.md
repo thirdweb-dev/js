@@ -1,5 +1,47 @@
 # @thirdweb-dev/react
 
+## 3.4.0
+
+### Minor Changes
+
+- [#327](https://github.com/thirdweb-dev/js/pull/327) [`ef27aad`](https://github.com/thirdweb-dev/js/commit/ef27aad0aafc4577e85f44dc77dfbe880bd239b5) Thanks [@jnsdls](https://github.com/jnsdls)! - Gnosis Safe and Magic Link connectors are no longer included in the default export. They are now available as named exports instead.
+
+  ## Gnosis Safe
+
+  ### Connector
+
+  ```diff
+  - import { GnosisSafeConnector } from "@thirdweb-dev/react";
+  + import { GnosisSafeConnector } from "@thirdweb-dev/react/evm/connectors/gnosis-safe";
+  ```
+
+  ### Hook
+
+  ```diff
+  - import { useGnosis } from "@thirdweb-dev/react";
+  + import { useGnosis } from "@thirdweb-dev/react/evm/connectors/gnosis-safe";
+  ```
+
+  ## Magic Link
+
+  ### Connector
+
+  ```diff
+  - import { MagicLink } from "@thirdweb-dev/react";
+  + import { MagicConnector } from "@thirdweb-dev/react/evm/connectors/magic";
+  ```
+
+  ### Hook
+
+  ```diff
+  - import { useMagic } from "@thirdweb-dev/react";
+  + import { useMagic } from "@thirdweb-dev/react/evm/connectors/magic";
+  ```
+
+### Patch Changes
+
+- [#339](https://github.com/thirdweb-dev/js/pull/339) [`b03a902`](https://github.com/thirdweb-dev/js/commit/b03a9021451b79f802f682f66e5ae8e9355d7e6f) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Fix docs for some functions
+
 ## 3.3.1
 
 ## 3.3.0
