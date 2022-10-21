@@ -452,10 +452,10 @@ export class DropErc1155ClaimConditions<
             claimConditionsProcessed = [
               {
                 startTime: new Date(0),
-                currencyAddress: NATIVE_TOKEN_ADDRESS,
+                currencyAddress: ethers.constants.AddressZero,
                 price: 0,
-                maxQuantity: 0,
-                quantityLimitPerTransaction: 0,
+                maxClaimableSupply: 0,
+                maxClaimablePerWallet: 0,
                 waitInSeconds: 0,
                 merkleRootHash: utils.hexZeroPad([0], 32),
                 snapshot: [],

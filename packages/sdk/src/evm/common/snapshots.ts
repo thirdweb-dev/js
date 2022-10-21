@@ -39,17 +39,21 @@ export async function createSnapshot(
 }
 
 /**
- * Hash an address and the corresponding claimable amount
+ * Hash an snapshot entry data for storage in a merkle tree
  * @internal
  * @param address - the address
  * @param maxClaimableAmount - the amount
+ * @param price
+ * @param currencyAddress
  */
 export function hashLeafNode(
   address: string,
-  maxClaimableAmount: BigNumberish,
+  maxClaimableAmount: BigNumber,
+  price: BigNumber,
+  currencyAddress: string,
 ): string {
   return utils.solidityKeccak256(
-    ["address", "uint256"],
-    [address, BigNumber.from(maxClaimableAmount)],
+    ["address", "uint256", "uint256", "address"],
+    [address, maxClaimableAmount, price, currencyAddress],
   );
 }

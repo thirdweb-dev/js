@@ -120,7 +120,7 @@ export class Erc20Claimable implements DetectableFeature {
         claimVerification.currencyAddress,
         claimVerification.price,
         claimVerification.proofs,
-        claimVerification.maxQuantityPerTransaction,
+        claimVerification.maxClaimable,
       ],
       claimVerification.overrides,
     );

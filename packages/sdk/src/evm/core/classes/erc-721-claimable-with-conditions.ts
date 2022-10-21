@@ -130,6 +130,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
    *
    * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
+   * @param options
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   public async to(
@@ -172,7 +173,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
         claimVerification.currencyAddress,
         claimVerification.price,
         claimVerification.proofs,
-        claimVerification.maxClaimable || BigNumber.from(0),
+        claimVerification.maxClaimable,
       ];
     } else if (this.conditions.isLegacySinglePhaseDrop(this.contractWrapper)) {
       return [
@@ -182,8 +183,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
         claimVerification.price,
         {
           proof: claimVerification.proofs,
-          maxQuantityInAllowlist:
-            claimVerification.maxClaimable || BigNumber.from(0),
+          maxQuantityInAllowlist: claimVerification.maxClaimable,
         } as IDropSinglePhase_V1.AllowlistProofStruct,
         ethers.utils.toUtf8Bytes(""),
       ];
@@ -195,10 +195,9 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
       claimVerification.price,
       {
         proof: claimVerification.proofs,
-        quantityLimitPerWallet:
-          claimVerification.maxClaimable || ethers.constants.MaxUint256,
-        currency: claimVerification.currencyAddress,
+        quantityLimitPerWallet: claimVerification.maxClaimable,
         pricePerToken: claimVerification.price,
+        currency: claimVerification.currencyAddress,
       } as IDropSinglePhase.AllowlistProofStruct,
       ethers.utils.toUtf8Bytes(""),
     ];

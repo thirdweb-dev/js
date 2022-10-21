@@ -4,6 +4,7 @@ import {
   ShardedSnapshot,
   SnapshotEntry,
   SnapshotEntryWithProof,
+  SnapshotEntryWithProofSchema,
   SnapshotInputSchema,
 } from "../schema";
 import { SnapshotInput } from "../types";
@@ -80,7 +81,7 @@ export class ShardedMerkleTree {
     return hashLeafNode(
       entry.address,
       convertQuantityToBigNumber(entry.maxClaimable, tokenDecimals),
-      convertQuantityToBigNumber(entry.price),
+      convertQuantityToBigNumber(entry.price, 18), // TODO (cc) use currencyDecimals
       entry.currencyAddress,
     );
   }
@@ -191,30 +192,20 @@ export class ShardedMerkleTree {
     const proof = this.trees[shardId]
       .getProof(leaf)
       .map((i) => "0x" + i.data.toString("hex"));
-    return {
+    return SnapshotEntryWithProofSchema.parse({
       ...entry,
       proof: proof.concat(shard.proofs),
-    };
+    });
   }
 
   public async getAllEntries(): Promise<SnapshotEntry[]> {
     try {
-      const entries = await this.storage.downloadJSON<SnapshotEntry[]>(
+      return await this.storage.downloadJSON<SnapshotEntry[]>(
         this.originalEntriesUri,
       );
-      return entries;
     } catch (e) {
       console.warn("Could not fetch original snapshot entries", e);
       return [];
     }
-  }
-
-  private computeAllShardIds(shardNybbles: number) {
-    const max = parseInt(`0x${"f".repeat(shardNybbles)}`, 16);
-    const allShards = [];
-    for (let i = 0; i <= max; i++) {
-      allShards.push(i.toString(16).padStart(shardNybbles, "0"));
-    }
-    return allShards;
   }
 }

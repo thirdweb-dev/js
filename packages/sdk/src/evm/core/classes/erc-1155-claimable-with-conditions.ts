@@ -139,7 +139,7 @@ export class Erc1155ClaimableWithConditions implements DetectableFeature {
         claimVerification.currencyAddress,
         claimVerification.price,
         claimVerification.proofs,
-        claimVerification.maxQuantityPerTransaction,
+        claimVerification.maxClaimable,
       ];
     }
     return [
@@ -150,7 +150,7 @@ export class Erc1155ClaimableWithConditions implements DetectableFeature {
       claimVerification.price,
       {
         proof: claimVerification.proofs,
-        maxQuantityInAllowlist: claimVerification.maxQuantityPerTransaction,
+        maxQuantityInAllowlist: claimVerification.maxClaimable,
       },
       ethers.utils.toUtf8Bytes(""),
     ];

@@ -53,7 +53,7 @@ export const SnapshotInputSchema = z.union([
   z.array(SnapshotEntryInput),
 ]);
 
-const SnapshotEntryWithProofSchema = SnapshotEntryInput.extend({
+export const SnapshotEntryWithProofSchema = SnapshotEntryInput.extend({
   proof: z.array(z.string()),
 });
 /**

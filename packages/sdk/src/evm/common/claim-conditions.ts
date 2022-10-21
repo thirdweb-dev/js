@@ -14,7 +14,6 @@ import {
   SnapshotSchema,
 } from "../schema/contracts/common/snapshots";
 import {
-  Amount,
   ClaimCondition,
   ClaimConditionInput,
   ClaimVerification,
@@ -58,7 +57,10 @@ export async function prepareClaim(
   checkERC20Allowance: boolean,
 ): Promise<ClaimVerification> {
   const addressToClaim = await contractWrapper.getSignerAddress();
-  let maxClaimable = activeClaimCondition.quantityLimitPerTransaction;
+  let maxClaimable = convertQuantityToBigNumber(
+    activeClaimCondition.maxClaimablePerWallet,
+    tokenDecimals,
+  );
   let proofs = [utils.hexZeroPad([0], 32)];
   let price = activeClaimCondition.price;
   let currencyAddress = activeClaimCondition.currencyAddress;
@@ -68,30 +70,33 @@ export async function prepareClaim(
         .toString()
         .startsWith(constants.AddressZero)
     ) {
-      const claim = await fetchSnapshotEntryForAddress(
+      const snapshotEntry = await fetchSnapshotEntryForAddress(
         addressToClaim,
         activeClaimCondition.merkleRootHash.toString(),
         await merkleMetadataFetcher(),
         storage,
       );
-      if (!claim) {
+      if (!snapshotEntry) {
         throw new Error("No claim found for this address");
       }
-      proofs = claim.proof;
+      proofs = snapshotEntry.proof;
+      // override only if not default values (unlimited for quantity, zero addr for currency)
       maxClaimable =
-        claim.maxClaimable === "unlimited"
+        snapshotEntry.maxClaimable === "unlimited"
           ? maxClaimable
-          : ethers.utils.parseUnits(claim.maxClaimable, tokenDecimals);
-      price = claim.price
-        ? await normalizePriceValue(
-            contractWrapper.getProvider(),
-            claim.price,
-            claim.currencyAddress || NATIVE_TOKEN_ADDRESS,
-          )
-        : price;
-      currencyAddress = claim.currencyAddress
-        ? claim.currencyAddress
-        : currencyAddress;
+          : ethers.utils.parseUnits(snapshotEntry.maxClaimable, tokenDecimals);
+      price =
+        snapshotEntry.price === "unlimited"
+          ? price
+          : await normalizePriceValue(
+              contractWrapper.getProvider(),
+              snapshotEntry.price,
+              snapshotEntry.currencyAddress,
+            );
+      currencyAddress =
+        snapshotEntry.currencyAddress === ethers.constants.AddressZero
+          ? currencyAddress
+          : snapshotEntry.currencyAddress;
     }
   } catch (e) {
     // have to handle the valid error case that we *do* want to throw on
@@ -284,7 +289,7 @@ export async function getClaimerProofs(
       proof: [],
       maxClaimable: BigNumber.from(0),
       price: BigNumber.from(0),
-      currencyAddress: "",
+      currencyAddress: ethers.constants.AddressZero,
     };
   }
   const price =
@@ -401,21 +406,14 @@ async function convertToContractModel(
     c.currencyAddress === constants.AddressZero
       ? NATIVE_TOKEN_ADDRESS
       : c.currencyAddress;
-  let maxClaimableSupply;
-  let quantityLimitPerTransaction;
-  if (c.maxQuantity === "unlimited") {
-    maxClaimableSupply = ethers.constants.MaxUint256.toString();
-  } else {
-    maxClaimableSupply = ethers.utils.parseUnits(c.maxQuantity, tokenDecimals);
-  }
-  if (c.quantityLimitPerTransaction === "unlimited") {
-    quantityLimitPerTransaction = ethers.constants.MaxUint256.toString();
-  } else {
-    quantityLimitPerTransaction = ethers.utils.parseUnits(
-      c.quantityLimitPerTransaction,
-      tokenDecimals,
-    );
-  }
+  const maxClaimableSupply = convertQuantityToBigNumber(
+    c.maxClaimableSupply,
+    tokenDecimals,
+  );
+  const maxClaimablePerWallet = convertQuantityToBigNumber(
+    c.maxClaimablePerWallet,
+    tokenDecimals,
+  );
   let metadataOrUri;
   if (c.metadata) {
     if (typeof c.metadata === "string") {
@@ -428,7 +426,7 @@ async function convertToContractModel(
     startTimestamp: c.startTime,
     maxClaimableSupply,
     supplyClaimed: 0,
-    quantityLimit: quantityLimitPerTransaction,
+    maxClaimablePerWallet,
     pricePerToken: await normalizePriceValue(provider, c.price, currency),
     currency,
     merkleRoot: c.merkleRootHash.toString(),
@@ -447,7 +445,7 @@ export function abstractContractModelToLegacy(
     merkleRoot: model.merkleRoot,
     pricePerToken: model.pricePerToken,
     currency: model.currency,
-    quantityLimitPerTransaction: model.quantityLimit,
+    quantityLimitPerTransaction: model.maxClaimablePerWallet,
     waitTimeInSecondsBetweenClaims: model.waitTimeInSecondsBetweenClaims || 0,
   };
 }
@@ -462,7 +460,7 @@ export function abstractContractModelToNew(
     merkleRoot: model.merkleRoot,
     pricePerToken: model.pricePerToken,
     currency: model.currency,
-    quantityLimitPerWallet: model.quantityLimit,
+    quantityLimitPerWallet: model.maxClaimablePerWallet,
     metadata: model.metadata || "",
   };
 }
@@ -477,7 +475,7 @@ export function legacyContractModelToAbstract(
     merkleRoot: model.merkleRoot.toString(),
     pricePerToken: model.pricePerToken,
     currency: model.currency,
-    quantityLimit: model.quantityLimitPerTransaction,
+    maxClaimablePerWallet: model.quantityLimitPerTransaction,
     waitTimeInSecondsBetweenClaims: model.waitTimeInSecondsBetweenClaims,
   };
 }
@@ -492,7 +490,7 @@ export function newContractModelToAbstract(
     merkleRoot: model.merkleRoot.toString(),
     pricePerToken: model.pricePerToken,
     currency: model.currency,
-    quantityLimit: model.quantityLimitPerWallet,
+    maxClaimablePerWallet: model.quantityLimitPerWallet,
     waitTimeInSecondsBetweenClaims: 0,
     metadata: model.metadata,
   };
@@ -522,8 +520,8 @@ export async function transformResultToClaimCondition(
     pm.maxClaimableSupply,
     tokenDecimals,
   );
-  const quantityLimitPerTransaction = convertToReadableQuantity(
-    pm.quantityLimit,
+  const maxClaimablePerWallet = convertToReadableQuantity(
+    pm.maxClaimablePerWallet,
     tokenDecimals,
   );
   const availableSupply = convertToReadableQuantity(
@@ -539,7 +537,7 @@ export async function transformResultToClaimCondition(
     maxQuantity: maxClaimableSupply,
     currentMintSupply,
     availableSupply,
-    quantityLimitPerTransaction,
+    maxClaimablePerWallet,
     waitInSeconds: pm.waitTimeInSecondsBetweenClaims?.toString(),
     price: BigNumber.from(pm.pricePerToken),
     currency: pm.currency,
@@ -579,7 +577,7 @@ export function convertQuantityToBigNumber(
   tokenDecimals: number,
 ) {
   if (quantity === "unlimited") {
-    return ethers.constants.MaxUint256.toString();
+    return ethers.constants.MaxUint256;
   } else {
     return ethers.utils.parseUnits(quantity, tokenDecimals);
   }

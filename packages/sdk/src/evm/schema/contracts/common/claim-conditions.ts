@@ -20,8 +20,8 @@ export const ClaimConditionInputSchema = z.object({
   startTime: StartDateSchema,
   currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
   price: AmountSchema.default(0),
-  maxQuantity: QuantitySchema,
-  quantityLimitPerTransaction: QuantitySchema, // TODO (cc) rename
+  maxClaimableSupply: QuantitySchema,
+  maxClaimablePerWallet: QuantitySchema, // TODO (cc) rename
   waitInSeconds: BigNumberishSchema.default(0),
   merkleRootHash: BytesLikeSchema.default(utils.hexZeroPad([0], 32)),
   snapshot: z.optional(SnapshotInputSchema).nullable(),
@@ -63,7 +63,7 @@ export type AbstractClaimConditionContractStruct = {
   startTimestamp: BigNumberish;
   maxClaimableSupply: BigNumberish;
   supplyClaimed: BigNumberish;
-  quantityLimit: BigNumberish;
+  maxClaimablePerWallet: BigNumberish;
   merkleRoot: string;
   pricePerToken: BigNumberish;
   currency: string;

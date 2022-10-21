@@ -16,7 +16,6 @@ import {
   hasFunction,
 } from "../../common/feature-detection";
 import { isNode } from "../../common/utils";
-import { NATIVE_TOKEN_ADDRESS } from "../../constants/index";
 import { ClaimEligibility } from "../../enums";
 import {
   AbstractClaimConditionContractStruct,
@@ -315,16 +314,19 @@ export class DropClaimConditions<
             claimCondition.price,
             {
               proof: proofs.proof,
-              quantityLimitPerWallet:
-                proofs.maxClaimable || ethers.constants.MaxUint256,
+              quantityLimitPerWallet: proofs.maxClaimable,
               currency:
                 proofs.currencyAddress || claimCondition.currencyAddress,
               pricePerToken: proofs.price || claimCondition.price,
             } as IDropSinglePhase.AllowlistProofStruct,
           );
           // TODO (cc) in new override format, anyone can claim (no allow list restriction)
-          // TODO (cc) maybe we should check if address has claimed max amount instead?
-          if (claimCondition.maxQuantity === "0") {
+          // TODO (cc) instead check if maxClaimablePerWallet is 0 and this address has no overrides
+          // TODO (cc) meaning this address is not allowed to claim
+          if (
+            claimCondition.maxClaimablePerWallet === "0" &&
+            proofs.proof.length === 0
+          ) {
             reasons.push(ClaimEligibility.AddressNotAllowed);
             return reasons;
           }
@@ -346,7 +348,10 @@ export class DropClaimConditions<
               pricePerToken: proofs.price || claimCondition.price,
             } as IDropSinglePhase.AllowlistProofStruct,
           );
-          if (claimCondition.maxQuantity === "0") {
+          if (
+            claimCondition.maxClaimablePerWallet === "0" &&
+            proofs.proof.length === 0
+          ) {
             reasons.push(ClaimEligibility.AddressNotAllowed);
             return reasons;
           }
@@ -473,10 +478,10 @@ export class DropClaimConditions<
         claimConditionsProcessed = [
           {
             startTime: new Date(0),
-            currencyAddress: NATIVE_TOKEN_ADDRESS,
+            currencyAddress: ethers.constants.AddressZero,
             price: 0,
-            maxQuantity: 0,
-            quantityLimitPerTransaction: 0,
+            maxClaimableSupply: 0,
+            maxClaimablePerWallet: 0,
             waitInSeconds: 0,
             merkleRootHash: utils.hexZeroPad([0], 32),
             snapshot: [],
@@ -515,6 +520,8 @@ export class DropClaimConditions<
         mergedMetadata,
       );
 
+      // TODO (cc) we could write the merkle tree info on the claim condition metadata instead
+      // TODO (cc) but we still need to maintain the behavior here for older contracts
       if (
         hasFunction<ContractMetadataContract>(
           "setContractURI",
