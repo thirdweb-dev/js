@@ -188,6 +188,7 @@ describe("Signature drop tests", async () => {
         name: "Test1",
       });
       const toSign = {
+        to: adminWallet.address,
         metadata: uri,
         quantity: 1,
       };
@@ -205,10 +206,12 @@ describe("Signature drop tests", async () => {
         name: "Test2",
       });
       const toSign1 = {
+        to: adminWallet.address,
         metadata: uri1,
         quantity: 1,
       };
       const toSign2 = {
+        to: adminWallet.address,
         metadata: uri2,
         quantity: 1,
       };
@@ -248,6 +251,7 @@ describe("Signature drop tests", async () => {
     it("should mint the right custom token price", async () => {
       const oldBalance = await samWallet.getBalance();
       const payload = await signatureDropContract.signature.generate({
+        to: samWallet.address,
         price: 1,
         currencyAddress: tokenAddress,
         metadata: {
@@ -269,6 +273,7 @@ describe("Signature drop tests", async () => {
     it("should mint the right native price", async () => {
       const oldBalance = await samWallet.getBalance();
       const payload = await signatureDropContract.signature.generate({
+        to: samWallet.address,
         price: 1,
         metadata: {
           name: "native token test",
@@ -289,6 +294,7 @@ describe("Signature drop tests", async () => {
     it("should mint the right native price with multiple tokens", async () => {
       const oldBalance = await samWallet.getBalance();
       const payload = await signatureDropContract.signature.generate({
+        to: samWallet.address,
         price: 1,
         metadata: {
           name: "native token test with quantity",

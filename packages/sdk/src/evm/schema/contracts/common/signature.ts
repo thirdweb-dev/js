@@ -16,7 +16,11 @@ import { z } from "zod";
  * @internal
  */
 export const BaseSignaturePayloadInput = z.object({
-  to: z.string().default(constants.AddressZero),
+  to: z
+    .string()
+    .refine((address) => address.toLowerCase() !== constants.AddressZero, {
+      message: "Cannot create payload to mint to zero address",
+    }),
   price: AmountSchema.default(0),
   currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
   mintStartTime: StartDateSchema,
