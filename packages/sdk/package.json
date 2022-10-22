@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "3.3.1",
+  "version": "3.4.0",
   "description": "The main thirdweb SDK.",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/sdk",
   "license": "Apache-2.0",
@@ -65,8 +65,8 @@
     "push": "yalc push"
   },
   "devDependencies": {
-    "@metaplex-foundation/amman": "^0.10.0",
-    "@metaplex-foundation/amman-client": "^0.2.1",
+    "@metaplex-foundation/amman": "0.10.0",
+    "@metaplex-foundation/amman-client": "0.2.1",
     "@microsoft/api-documenter": "^7.19.4",
     "@microsoft/api-extractor": "^7.29.2",
     "@microsoft/tsdoc": "^0.14.1",
@@ -99,11 +99,11 @@
     "ethers": "^5"
   },
   "dependencies": {
-    "@metaplex-foundation/js": "^0.15.0",
-    "@metaplex-foundation/mpl-token-metadata": "^2.2.2",
-    "@project-serum/anchor": "^0.25.0",
-    "@solana/spl-token": "^0.2.0",
-    "@solana/web3.js": "^1.50.1",
+    "@metaplex-foundation/js": "0.15.0",
+    "@metaplex-foundation/mpl-token-metadata": "2.2.2",
+    "@project-serum/anchor": "0.25.0",
+    "@solana/spl-token": "0.2.0",
+    "@solana/web3.js": "1.62.0",
     "@thirdweb-dev/contracts-js": "*",
     "@thirdweb-dev/storage": "*",
     "bn.js": "^5.2.1",

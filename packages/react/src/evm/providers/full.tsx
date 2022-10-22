@@ -1,8 +1,5 @@
-import {
-  GnosisConnectorArguments,
-  GnosisSafeConnector,
-} from "../connectors/gnosis-safe";
-import { MagicConnector, MagicConnectorArguments } from "../connectors/magic";
+import type { GnosisSafeConnector } from "../connectors/gnosis-safe";
+import type { MagicConnector } from "../connectors/magic";
 import {
   Chain,
   SupportedChain,
@@ -25,6 +22,7 @@ import {
   ProviderProps as WagmiproviderProps,
   useProvider,
   useSigner,
+  Connector,
 } from "wagmi";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { InjectedConnector } from "wagmi/connectors/injected";
@@ -59,32 +57,12 @@ export type WalletLinkConnectorType =
 /**
  * @internal
  */
-export type MagicConnectorType =
-  | "magic"
-  | {
-      name: "magic";
-      options: Omit<MagicConnectorArguments, "network">;
-    };
-
-/**
- * @internal
- */
-export type GnosisConnectorType =
-  | "gnosis"
-  | {
-      name: "gnosis";
-      options: GnosisConnectorArguments;
-    };
-
-/**
- * @internal
- */
 export type WalletConnector =
   | InjectedConnectorType
   | WalletConnectConnectorType
   | WalletLinkConnectorType
-  | MagicConnectorType
-  | GnosisConnectorType;
+  | GnosisSafeConnector
+  | MagicConnector;
 
 /**
  * @internal
@@ -280,6 +258,9 @@ export const ThirdwebProvider = <
       connectors: ({ chainId }: { chainId?: number }) => {
         return walletConnectors
           .map((connector) => {
+            if (connector instanceof Connector) {
+              return connector;
+            }
             // injected connector
             if (
               (typeof connector === "string" &&
@@ -344,25 +325,7 @@ export const ThirdwebProvider = <
                       },
               });
             }
-            if (typeof connector === "object" && connector.name === "magic") {
-              const jsonRpcUrl = _rpcUrlMap[chainId || desiredChainId || 1];
-              return new MagicConnector({
-                chains: _supporrtedChains,
-                options: {
-                  ...connector.options,
-                  network: { rpcUrl: jsonRpcUrl, chainId: desiredChainId || 1 },
-                  rpcUrls: _rpcUrlMap,
-                },
-              });
-            }
-            if (
-              (typeof connector === "string" && connector === "gnosis") ||
-              (typeof connector === "object" && connector.name === "gnosis")
-            ) {
-              return new GnosisSafeConnector({
-                chains: _supporrtedChains,
-              });
-            }
+
             return null;
           })
           .filter((c) => c !== null);

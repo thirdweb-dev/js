@@ -28,8 +28,8 @@ import { useContract } from "../async/contracts";
  * @deprecated
  * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
  * ```diff
- * - const nftCollection = await sdk.useNFTCollection("0x1234...");
- * + const nftCollection = await sdk.useContract("0x1234...", "nft-collection").contract;
+ * - const nftCollection = useNFTCollection("0x1234...");
+ * + const nftCollection = useContract("0x1234...", "nft-collection").contract;
  * ```
  */
 export function useNFTCollection(contractAddress: RequiredParam<string>) {
