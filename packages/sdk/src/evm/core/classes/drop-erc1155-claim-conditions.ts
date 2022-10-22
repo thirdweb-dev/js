@@ -10,6 +10,7 @@ import {
 } from "../../common/claim-conditions";
 import { isNativeToken } from "../../common/currency";
 import { hasFunction } from "../../common/feature-detection";
+import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
 import { isNode } from "../../common/utils";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/index";
 import { ClaimEligibility } from "../../enums";
@@ -245,6 +246,7 @@ export class DropErc1155ClaimConditions<
         metadata.merkle,
         this.storage,
         this.contractWrapper.getProvider(),
+        this.getSnapshotFormatVersion(),
       );
       try {
         let validMerkleProof;
@@ -474,6 +476,7 @@ export class DropErc1155ClaimConditions<
             0,
             this.contractWrapper.getProvider(),
             this.storage,
+            this.getSnapshotFormatVersion(),
           );
 
         snapshotInfos.forEach((s) => {
@@ -595,11 +598,12 @@ export class DropErc1155ClaimConditions<
       this.contractWrapper,
       this.storage,
       checkERC20Allowance,
+      this.getSnapshotFormatVersion(),
     );
   }
 
   // TODO (cc)
-  private isSinglePhase(
+  private isNewSinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase1155> {
     return (
@@ -615,12 +619,12 @@ export class DropErc1155ClaimConditions<
   }
 
   // TODO (cc)
-  private isMultiphase(
+  private isNewMultiphaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<Drop1155> {
     return (
       hasFunction<Drop1155>("getClaimConditionById", contractWrapper) &&
-      hasFunction<Drop1155>("getClaimTimestamp", contractWrapper)
+      hasFunction<Drop1155>("getSupplyClaimedByWallet", contractWrapper)
     );
   }
 
@@ -643,5 +647,12 @@ export class DropErc1155ClaimConditions<
       hasFunction<DropERC1155_V2>("getClaimConditionById", contractWrapper) &&
       hasFunction<DropERC1155_V2>("setWalletClaimCount", contractWrapper)
     );
+  }
+
+  private getSnapshotFormatVersion(): SnapshotFormatVersion {
+    return this.isLegacyMultiPhaseDrop(this.contractWrapper) ||
+      this.isLegacySinglePhaseDrop(this.contractWrapper)
+      ? SnapshotFormatVersion.V1
+      : SnapshotFormatVersion.V2;
   }
 }

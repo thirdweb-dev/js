@@ -27,7 +27,10 @@ import {
   isNativeToken,
   normalizePriceValue,
 } from "./currency";
-import { ShardedMerkleTree } from "./sharded-merkle-tree";
+import {
+  ShardedMerkleTree,
+  SnapshotFormatVersion,
+} from "./sharded-merkle-tree";
 import { createSnapshot } from "./snapshots";
 import { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/declarations/src/IDropERC20_V2";
 import { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
@@ -55,6 +58,7 @@ export async function prepareClaim(
   contractWrapper: ContractWrapper<any>,
   storage: ThirdwebStorage,
   checkERC20Allowance: boolean,
+  snapshotFormatVersion: SnapshotFormatVersion,
 ): Promise<ClaimVerification> {
   const addressToClaim = await contractWrapper.getSignerAddress();
   let maxClaimable = convertQuantityToBigNumber(
@@ -75,10 +79,12 @@ export async function prepareClaim(
         activeClaimCondition.merkleRootHash.toString(),
         await merkleMetadataFetcher(),
         storage,
+        snapshotFormatVersion,
       );
       if (!snapshotEntry) {
         throw new Error("No claim found for this address");
       }
+      console.log("snapshotEntry", snapshotEntry);
       proofs = snapshotEntry.proof;
       // override only if not default values (unlimited for quantity, zero addr for currency)
       maxClaimable =
@@ -175,6 +181,7 @@ export async function fetchSnapshotEntryForAddress(
   merkleRoot: string,
   merkleMetadata: Record<string, string> | undefined,
   storage: ThirdwebStorage,
+  snapshotFormatVersion: SnapshotFormatVersion,
 ): Promise<SnapshotEntryWithProof | null> {
   if (!merkleMetadata) {
     return null;
@@ -187,7 +194,7 @@ export async function fetchSnapshotEntryForAddress(
         raw,
         storage,
       );
-      return await merkleTree.getProof(address);
+      return await merkleTree.getProof(address, snapshotFormatVersion);
     }
     // legacy non-sharded, just fetch it all and filter out
     const snapshotData = SnapshotSchema.parse(raw);
@@ -263,6 +270,7 @@ export async function updateExistingClaimConditions(
  * @param merkleMetadata
  * @param storage
  * @param provider
+ * @param snapshotFormatVersion
  * @returns - The proof for the current signer for the specified condition.
  */
 export async function getClaimerProofs(
@@ -272,6 +280,7 @@ export async function getClaimerProofs(
   merkleMetadata: Record<string, string>,
   storage: ThirdwebStorage,
   provider: ethers.providers.Provider,
+  snapshotFormatVersion: SnapshotFormatVersion,
 ): Promise<{
   proof: string[];
   maxClaimable: BigNumber;
@@ -283,6 +292,7 @@ export async function getClaimerProofs(
     merkleRoot,
     merkleMetadata,
     storage,
+    snapshotFormatVersion,
   );
   if (!claim) {
     return {
@@ -314,11 +324,13 @@ export async function getClaimerProofs(
  * @param claimConditionInputs
  * @param tokenDecimals
  * @param storage
+ * @param snapshotFormatVersion
  */
 async function processSnapshotData(
   claimConditionInputs: ClaimConditionInput[],
   tokenDecimals: number,
   storage: ThirdwebStorage,
+  snapshotFormatVersion: SnapshotFormatVersion,
 ) {
   const snapshotInfos: SnapshotInfo[] = [];
   const inputsWithSnapshots = await Promise.all(
@@ -329,6 +341,7 @@ async function processSnapshotData(
           SnapshotInputSchema.parse(conditionInput.snapshot),
           tokenDecimals,
           storage,
+          snapshotFormatVersion,
         );
         snapshotInfos.push(snapshotInfo);
         conditionInput.merkleRootHash = snapshotInfo.merkleRoot;
@@ -361,6 +374,7 @@ function compare(a: BigNumberish, b: BigNumberish) {
  * @param tokenDecimals
  * @param provider
  * @param storage
+ * @param snapshotFormatVersion
  * @internal
  */
 export async function processClaimConditionInputs(
@@ -368,11 +382,13 @@ export async function processClaimConditionInputs(
   tokenDecimals: number,
   provider: providers.Provider,
   storage: ThirdwebStorage,
+  snapshotFormatVersion: SnapshotFormatVersion,
 ) {
   const { inputsWithSnapshots, snapshotInfos } = await processSnapshotData(
     claimConditionInputs,
     tokenDecimals,
     storage,
+    snapshotFormatVersion,
   );
   const parsedInputs = ClaimConditionInputArray.parse(inputsWithSnapshots);
   // Convert processed inputs to the format the contract expects, and sort by timestamp

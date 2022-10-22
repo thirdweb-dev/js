@@ -4,7 +4,10 @@ import {
   SnapshotInput,
 } from "../types/claim-conditions/claim-conditions";
 import { DuplicateLeafsError } from "./error";
-import { ShardedMerkleTree } from "./sharded-merkle-tree";
+import {
+  ShardedMerkleTree,
+  SnapshotFormatVersion,
+} from "./sharded-merkle-tree";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, utils } from "ethers";
 
@@ -13,6 +16,7 @@ import { BigNumber, BigNumberish, utils } from "ethers";
  * @param snapshotInput - the list of addresses to hash
  * @param tokenDecimals - the token decimals
  * @param storage - the storage to upload to
+ * @param snapshotFormatVersion
  * @returns the generated snapshot and URI
  * @internal
  */
@@ -20,6 +24,7 @@ export async function createSnapshot(
   snapshotInput: SnapshotInput,
   tokenDecimals: number,
   storage: ThirdwebStorage,
+  snapshotFormatVersion: SnapshotFormatVersion,
 ): Promise<SnapshotInfo> {
   const input = SnapshotInputSchema.parse(snapshotInput);
   const addresses = input.map((i) => i.address);
@@ -31,29 +36,10 @@ export async function createSnapshot(
     input,
     tokenDecimals,
     storage,
+    snapshotFormatVersion,
   );
   return {
     merkleRoot: tree.shardedMerkleInfo.merkleRoot,
     snapshotUri: tree.uri,
   };
-}
-
-/**
- * Hash an snapshot entry data for storage in a merkle tree
- * @internal
- * @param address - the address
- * @param maxClaimableAmount - the amount
- * @param price
- * @param currencyAddress
- */
-export function hashLeafNode(
-  address: string,
-  maxClaimableAmount: BigNumber,
-  price: BigNumber,
-  currencyAddress: string,
-): string {
-  return utils.solidityKeccak256(
-    ["address", "uint256", "uint256", "address"],
-    [address, maxClaimableAmount, price, currencyAddress],
-  );
 }

@@ -15,6 +15,7 @@ import {
   detectContractFeature,
   hasFunction,
 } from "../../common/feature-detection";
+import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
 import { isNode } from "../../common/utils";
 import { ClaimEligibility } from "../../enums";
 import {
@@ -272,6 +273,7 @@ export class DropClaimConditions<
         metadata.merkle,
         this.storage,
         this.contractWrapper.getProvider(),
+        this.getSnapshotFormatVersion(),
       );
 
       try {
@@ -500,6 +502,7 @@ export class DropClaimConditions<
         await this.getTokenDecimals(),
         this.contractWrapper.getProvider(),
         this.storage,
+        this.getSnapshotFormatVersion(),
       );
 
     const merkleInfo: { [key: string]: string } = {};
@@ -629,6 +632,7 @@ export class DropClaimConditions<
       this.contractWrapper,
       this.storage,
       checkERC20Allowance,
+      this.getSnapshotFormatVersion(),
     );
   }
 
@@ -670,5 +674,12 @@ export class DropClaimConditions<
       hasFunction<DropERC721_V3>("getClaimConditionById", contractWrapper) &&
       hasFunction<DropERC721_V3>("setWalletClaimCount", contractWrapper)
     );
+  }
+
+  private getSnapshotFormatVersion(): SnapshotFormatVersion {
+    return this.isLegacyMultiPhaseDrop(this.contractWrapper) ||
+      this.isLegacySinglePhaseDrop(this.contractWrapper)
+      ? SnapshotFormatVersion.V1
+      : SnapshotFormatVersion.V2;
   }
 }

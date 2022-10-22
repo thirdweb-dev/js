@@ -19,6 +19,11 @@ import { MerkleTree } from "merkletreejs";
 // shard files will be 00.json, 01.json, 02.json, ..., ff.json
 const SHARD_NYBBLES = 2;
 
+export enum SnapshotFormatVersion {
+  V1 = 1, // address and maxClaimable
+  V2 = 2, // address, maxClaimable, price, currencyAddress
+}
+
 export class ShardedMerkleTree {
   private shardNybbles: number;
   private shards: Record<string, ShardData>;
@@ -75,21 +80,42 @@ export class ShardedMerkleTree {
     );
   }
 
-  static hashEntry(entry: SnapshotEntry, tokenDecimals: number): string {
+  static hashEntry(
+    entry: SnapshotEntry,
+    tokenDecimals: number,
+    snapshotFormatVersion: SnapshotFormatVersion,
+  ): string {
     // TODO (cc) hash price and currency
     // TODO (cc) differentiate between default values for maxClaimable
-    return hashLeafNode(
-      entry.address,
-      convertQuantityToBigNumber(entry.maxClaimable, tokenDecimals),
-      convertQuantityToBigNumber(entry.price, 18), // TODO (cc) use currencyDecimals
-      entry.currencyAddress,
-    );
+
+    // TODO (cc) for legacy contracts, need to only hash addr / maxclaimable!!
+    switch (snapshotFormatVersion) {
+      case SnapshotFormatVersion.V1:
+        return utils.solidityKeccak256(
+          ["address", "uint256"],
+          [
+            entry.address,
+            convertQuantityToBigNumber(entry.maxClaimable, tokenDecimals),
+          ],
+        );
+      case SnapshotFormatVersion.V2:
+        return utils.solidityKeccak256(
+          ["address", "uint256", "uint256", "address"],
+          [
+            entry.address,
+            convertQuantityToBigNumber(entry.maxClaimable, tokenDecimals),
+            convertQuantityToBigNumber(entry.price, 18), // TODO (cc) use currencyDecimals
+            entry.currencyAddress,
+          ],
+        );
+    }
   }
 
   static async buildAndUpload(
     snapshotInput: SnapshotInput,
     tokenDecimals: number,
     storage: ThirdwebStorage,
+    snapshotFormatVersion: SnapshotFormatVersion,
     shardNybbles = SHARD_NYBBLES,
   ): Promise<ShardedSnapshot> {
     const inputs = SnapshotInputSchema.parse(snapshotInput);
@@ -110,7 +136,11 @@ export class ShardedMerkleTree {
         shard,
         new MerkleTree(
           entries.map((entry) =>
-            ShardedMerkleTree.hashEntry(entry, tokenDecimals),
+            ShardedMerkleTree.hashEntry(
+              entry,
+              tokenDecimals,
+              snapshotFormatVersion,
+            ),
           ),
           utils.keccak256,
           {
@@ -161,6 +191,7 @@ export class ShardedMerkleTree {
 
   public async getProof(
     address: string,
+    snapshotFormatVersion: SnapshotFormatVersion,
   ): Promise<SnapshotEntryWithProof | null> {
     const shardId = address.slice(2, 2 + this.shardNybbles).toLowerCase();
     let shard = this.shards[shardId];
@@ -172,7 +203,11 @@ export class ShardedMerkleTree {
           );
         this.trees[shardId] = new MerkleTree(
           shard.entries.map((entry) =>
-            ShardedMerkleTree.hashEntry(entry, this.tokenDecimals),
+            ShardedMerkleTree.hashEntry(
+              entry,
+              this.tokenDecimals,
+              snapshotFormatVersion,
+            ),
           ),
           utils.keccak256,
           { sort: true },
@@ -188,7 +223,11 @@ export class ShardedMerkleTree {
     if (!entry) {
       return null;
     }
-    const leaf = ShardedMerkleTree.hashEntry(entry, this.tokenDecimals);
+    const leaf = ShardedMerkleTree.hashEntry(
+      entry,
+      this.tokenDecimals,
+      snapshotFormatVersion,
+    );
     const proof = this.trees[shardId]
       .getProof(leaf)
       .map((i) => "0x" + i.data.toString("hex"));
