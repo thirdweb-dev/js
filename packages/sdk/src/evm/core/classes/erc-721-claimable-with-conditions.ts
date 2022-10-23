@@ -1,7 +1,5 @@
 import { NFT } from "../../../core/schema/nft";
-import { hasFunction } from "../../common";
-import { isPrebuilt } from "../../common/legacy";
-import { FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS } from "../../constants/erc721-features";
+import { FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V2 } from "../../constants/erc721-features";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ClaimOptions, ClaimVerification } from "../../types";
 import { BaseClaimConditionERC721 } from "../../types/eips";
@@ -12,7 +10,6 @@ import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { DropClaimConditions } from "./drop-claim-conditions";
 import { Erc721 } from "./erc-721";
-import type { DropERC721 } from "@thirdweb-dev/contracts-js";
 import { IDropSinglePhase_V1 } from "@thirdweb-dev/contracts-js";
 import { TokensClaimedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Drop";
 import { IDropSinglePhase } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
@@ -30,7 +27,7 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
  * ```
  */
 export class Erc721ClaimableWithConditions implements DetectableFeature {
-  featureName = FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS.name;
+  featureName = FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V2.name;
 
   /**
    * Configure claim conditions

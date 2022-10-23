@@ -14,6 +14,7 @@ import type {
   LazyMint,
   DropSinglePhase1155,
 } from "@thirdweb-dev/contracts-js";
+import { DropERC721, DropERC721_V3 } from "@thirdweb-dev/contracts-js";
 
 export type BaseERC20 = IERC20 & IERC20Metadata;
 export type BaseERC721 = IERC721 & IERC721Metadata;
@@ -28,3 +29,5 @@ export type BaseSignatureMintERC721 = BaseERC721 & ISignatureMintERC721;
 export type BaseSignatureMintERC20 = BaseERC20 & ISignatureMintERC20;
 export type BaseSignatureMintERC1155 = BaseERC1155 & ISignatureMintERC1155;
 export type BaseDelayedRevealERC1155 = BaseDropERC1155 & DelayedReveal;
+
+export type PrebuiltNFTDrop = DropERC721 | DropERC721_V3;

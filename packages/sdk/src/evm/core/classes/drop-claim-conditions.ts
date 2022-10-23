@@ -29,7 +29,11 @@ import {
   ClaimConditionInput,
   ClaimVerification,
 } from "../../types";
-import { BaseClaimConditionERC721, BaseDropERC20 } from "../../types/eips";
+import {
+  BaseClaimConditionERC721,
+  BaseDropERC20,
+  PrebuiltNFTDrop,
+} from "../../types/eips";
 import { TransactionResult } from "../types";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
@@ -37,6 +41,7 @@ import type {
   ContractMetadata as ContractMetadataContract,
   Drop,
   DropERC20_V2,
+  DropERC721,
   DropERC721_V3,
   DropSinglePhase,
   DropSinglePhase_V1,
@@ -57,7 +62,7 @@ import deepEqual from "fast-deep-equal";
  */
 export class DropClaimConditions<
   TContract extends
-    | DropERC721_V3
+    | PrebuiltNFTDrop
     | DropERC20_V2
     | BaseClaimConditionERC721
     | BaseDropERC20,
@@ -112,7 +117,9 @@ export class DropClaimConditions<
         conditionId ||
         (await this.contractWrapper.readContract.getActiveClaimConditionId());
       const contractModel =
-        await this.contractWrapper.readContract.getClaimConditionById(id);
+        (await this.contractWrapper.readContract.getClaimConditionById(
+          id,
+        )) as IDropClaimCondition_V2.ClaimConditionStructOutput;
       return legacyContractModelToAbstract(contractModel);
     } else if (this.isNewSinglePhaseDrop(this.contractWrapper)) {
       const contractModel =

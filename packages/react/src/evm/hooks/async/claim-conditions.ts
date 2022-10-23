@@ -368,8 +368,6 @@ export function useResetClaimConditions(
         return conditions.map((c) => ({
           ...c,
           price: c.currencyMetadata.displayValue,
-          maxQuantity: c.maxQuantity.toString(),
-          quantityLimitPerTransaction: c.quantityLimitPerTransaction.toString(),
         }));
       };
 

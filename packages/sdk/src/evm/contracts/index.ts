@@ -1,3 +1,4 @@
+import { getPrebuiltInfo } from "../common/legacy";
 import { ALL_ROLES } from "../common/role";
 import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
 import type { ContractType, NetworkOrSignerOrProvider } from "../core/types";
@@ -180,8 +181,14 @@ export const NFTDropInitializer = {
     ...[network, address, storage, options]: InitalizeParams
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
+    const contractInfo = await getPrebuiltInfo(address, provider);
+    if (contractInfo.type !== "DropERC721") {
+      throw new Error("Contract is not a DropERC721");
+    }
     const [abi, contract, _network] = await Promise.all([
-      NFTDropInitializer.getAbi(),
+      contractInfo.version > 3
+        ? NFTDropInitializer.getAbi()
+        : NFTDropInitializer.getV3Abi(),
       import("./prebuilt-implementations/nft-drop"),
       provider.getNetwork(),
     ]);
@@ -197,6 +204,9 @@ export const NFTDropInitializer = {
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC721.json"))
+      .default,
+  getV3Abi: async () =>
+    (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC721_V3.json"))
       .default,
 };
 

@@ -29,8 +29,8 @@ import {
 import { PaperCheckout } from "../../integrations/paper-xyz";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
+import { PrebuiltNFTDrop } from "../../types/eips";
 import { UploadProgressEvent } from "../../types/events";
-import type { DropERC721_V3 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC721.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
@@ -49,27 +49,27 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
  *
  * @public
  */
-export class NFTDrop extends StandardErc721<DropERC721_V3> {
+export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
   public abi: typeof ABI;
-  public encoder: ContractEncoder<DropERC721_V3>;
-  public estimator: GasCostEstimator<DropERC721_V3>;
+  public encoder: ContractEncoder<PrebuiltNFTDrop>;
+  public estimator: GasCostEstimator<PrebuiltNFTDrop>;
   public metadata: ContractMetadata<
-    DropERC721_V3,
+    PrebuiltNFTDrop,
     typeof DropErc721ContractSchema
   >;
-  public sales: ContractPrimarySale<DropERC721_V3>;
-  public platformFees: ContractPlatformFee<DropERC721_V3>;
-  public events: ContractEvents<DropERC721_V3>;
+  public sales: ContractPrimarySale<PrebuiltNFTDrop>;
+  public platformFees: ContractPlatformFee<PrebuiltNFTDrop>;
+  public events: ContractEvents<PrebuiltNFTDrop>;
   public roles: ContractRoles<
-    DropERC721_V3,
+    PrebuiltNFTDrop,
     typeof NFTDrop.contractRoles[number]
   >;
   /**
    * @internal
    */
-  public interceptor: ContractInterceptor<DropERC721_V3>;
+  public interceptor: ContractInterceptor<PrebuiltNFTDrop>;
   /**
    * Configure royalties
    * @remarks Set your own royalties for the entire contract or per token
@@ -88,7 +88,7 @@ export class NFTDrop extends StandardErc721<DropERC721_V3> {
    * ```
    */
   public royalties: ContractRoyalty<
-    DropERC721_V3,
+    PrebuiltNFTDrop,
     typeof DropErc721ContractSchema
   >;
   /**
@@ -113,7 +113,7 @@ export class NFTDrop extends StandardErc721<DropERC721_V3> {
    * await contract.claimConditions.set(claimConditions);
    * ```
    */
-  public claimConditions: DropClaimConditions<DropERC721_V3>;
+  public claimConditions: DropClaimConditions<PrebuiltNFTDrop>;
   /**
    * Delayed reveal
    * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.
@@ -145,16 +145,16 @@ export class NFTDrop extends StandardErc721<DropERC721_V3> {
    * await contract.revealer.reveal(batchId, "my secret password");
    * ```
    */
-  public revealer: DelayedReveal<DropERC721_V3>;
+  public revealer: DelayedReveal<PrebuiltNFTDrop>;
 
   /**
    * Checkout
    * @remarks Create a FIAT currency checkout for your NFT drop.
    */
-  public checkout: PaperCheckout<DropERC721_V3>;
+  public checkout: PaperCheckout<PrebuiltNFTDrop>;
 
-  public erc721: Erc721<DropERC721_V3>;
-  public owner: ContractOwner<DropERC721_V3>;
+  public erc721: Erc721<PrebuiltNFTDrop>;
+  public owner: ContractOwner<PrebuiltNFTDrop>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -163,7 +163,7 @@ export class NFTDrop extends StandardErc721<DropERC721_V3> {
     options: SDKOptions = {},
     abi: typeof ABI,
     chainId: number,
-    contractWrapper = new ContractWrapper<DropERC721_V3>(
+    contractWrapper = new ContractWrapper<PrebuiltNFTDrop>(
       network,
       address,
       abi,
@@ -190,7 +190,7 @@ export class NFTDrop extends StandardErc721<DropERC721_V3> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.erc721 = new Erc721(this.contractWrapper, this.storage, chainId);
-    this.revealer = new DelayedReveal<DropERC721_V3>(
+    this.revealer = new DelayedReveal(
       this.contractWrapper,
       this.storage,
       FEATURE_NFT_REVEALABLE.name,

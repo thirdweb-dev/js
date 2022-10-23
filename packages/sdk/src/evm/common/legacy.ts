@@ -1,6 +1,7 @@
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { hasFunction } from "./feature-detection";
-import { DropERC721 } from "@thirdweb-dev/contracts-js";
+import type { IThirdwebContract } from "@thirdweb-dev/contracts-js";
+import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { ethers } from "ethers";
 
 // TODO (cc) use this everywhere
@@ -9,7 +10,7 @@ export async function isPrebuilt(
   contractType: string,
   maxVersion: number,
 ): Promise<boolean> {
-  if (hasFunction<DropERC721>("contractType", contractWrapper)) {
+  if (hasFunction<IThirdwebContract>("contractType", contractWrapper)) {
     try {
       const [type, version] = await Promise.all([
         ethers.utils.toUtf8String(
@@ -26,4 +27,21 @@ export async function isPrebuilt(
   } else {
     return false;
   }
+}
+
+export async function getPrebuiltInfo(
+  address: string,
+  provider: ethers.providers.Provider,
+) {
+  const contract = new ethers.Contract(address, IThirdwebContractABI, provider);
+  const [type, version] = await Promise.all([
+    ethers.utils
+      .toUtf8String(await contract.contractType()) // eslint-disable-next-line no-control-regex
+      .replace(/\x00/g, ""),
+    await contract.contractVersion(),
+  ]);
+  return {
+    type,
+    version,
+  };
 }
