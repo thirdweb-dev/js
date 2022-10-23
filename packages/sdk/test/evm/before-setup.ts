@@ -168,7 +168,7 @@ export const mochaHooks = {
           factory = TokenERC721__factory;
           break;
         case NFTDropInitializer.contractType:
-          factory = DropERC721_V3__factory; // TODO (cc) deploy new type
+          factory = DropERC721__factory;
           break;
         case SignatureDropInitializer.contractType:
           factory = SignatureDrop__factory;

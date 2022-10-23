@@ -9,7 +9,6 @@ import {
 } from "../schema";
 import { SnapshotInput } from "../types";
 import { convertQuantityToBigNumber } from "./claim-conditions";
-import { hashLeafNode } from "./snapshots";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { utils } from "ethers";
 import { MerkleTree } from "merkletreejs";

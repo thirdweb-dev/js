@@ -196,8 +196,8 @@ export const NFTDropInitializer = {
     );
   },
   getAbi: async () =>
-    (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC721_V3.json"))
-      .default, // TODO (cc) use the latest version
+    (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC721.json"))
+      .default,
 };
 
 export const PackInitializer = {
