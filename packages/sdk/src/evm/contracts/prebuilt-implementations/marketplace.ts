@@ -2,6 +2,11 @@ import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
 import { ListingNotFoundError } from "../../common";
 import { mapOffer } from "../../common/marketplace";
 import { getRoleHash } from "../../common/role";
+import {
+  NATIVE_TOKEN_ADDRESS,
+  NATIVE_TOKENS,
+  SUPPORTED_CHAIN_ID,
+} from "../../constants";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -17,6 +22,7 @@ import { NetworkOrSignerOrProvider, TransactionResult } from "../../core/types";
 import { ListingType } from "../../enums";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
+import { Price } from "../../types/currency";
 import { AuctionListing, DirectListing, Offer } from "../../types/marketplace";
 import { MarketplaceFilter } from "../../types/marketplace/MarketPlaceFilter";
 import { UnmappedOffer } from "../../types/marketplace/UnmappedOffer";
@@ -324,22 +330,22 @@ export class Marketplace implements UpdateableNetwork {
     // get only the events for this listing id
     const listingEvents = events.filter((e) => e.data.listingId.eq(listingId));
     // derive the offers from the events
-    const offers = await Promise.all(
+    return await Promise.all(
       listingEvents.map(async (e): Promise<Offer> => {
-        const offer = await mapOffer(
+        return await mapOffer(
           this.contractWrapper.getProvider(),
           BigNumber.from(listingId),
           {
             quantityWanted: e.data.quantityWanted,
-            pricePerToken: e.data.totalOfferAmount.div(e.data.quantityWanted),
+            pricePerToken: e.data.quantityWanted.gt(0)
+              ? e.data.totalOfferAmount.div(e.data.quantityWanted)
+              : e.data.totalOfferAmount,
             currency: e.data.currency,
             offeror: e.data.offeror,
           } as UnmappedOffer,
         );
-        return offer;
       }),
     );
-    return offers;
   }
 
   /** ******************************
@@ -385,6 +391,60 @@ export class Marketplace implements UpdateableNetwork {
       }
       case ListingType.Auction: {
         return await this.auction.buyoutListing(listingId);
+      }
+      default:
+        throw Error(`Unknown listing type: ${listing.listingType}`);
+    }
+  }
+
+  /**
+   * Make an offer for a Direct or Auction Listing
+   *
+   * @remarks Make an offer on a direct or auction listing
+   *
+   * @example
+   * ```javascript
+   * // The listing ID of the asset you want to offer on
+   * const listingId = 0;
+   * // The price you are willing to offer per token
+   * const pricePerToken = 0.5;
+   * // The quantity of tokens you want to receive for this offer
+   * const quantity = 1;
+   *
+   * await contract.makeOffer(
+   *   listingId,
+   *   pricePerToken,
+   *   quantity,
+   * );
+   * ```
+   */
+  public async makeOffer(
+    listingId: BigNumberish,
+    pricePerToken: Price,
+    quantity?: BigNumberish,
+  ): Promise<TransactionResult> {
+    const listing = await this.contractWrapper.readContract.listings(listingId);
+    if (listing.listingId.toString() !== listingId.toString()) {
+      throw new ListingNotFoundError(this.getAddress(), listingId.toString());
+    }
+    const chainId = await this.contractWrapper.getChainID();
+    switch (listing.listingType) {
+      case ListingType.Direct: {
+        invariant(
+          quantity,
+          "quantity is required when making an offer on a direct listing",
+        );
+        return await this.direct.makeOffer(
+          listingId,
+          quantity,
+          listing.currency === NATIVE_TOKEN_ADDRESS
+            ? NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID].wrapped.address
+            : listing.currency,
+          pricePerToken,
+        );
+      }
+      case ListingType.Auction: {
+        return await this.auction.makeBid(listingId, pricePerToken);
       }
       default:
         throw Error(`Unknown listing type: ${listing.listingType}`);
