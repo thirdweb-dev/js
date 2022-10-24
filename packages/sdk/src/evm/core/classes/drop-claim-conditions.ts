@@ -115,8 +115,9 @@ export class DropClaimConditions<
       return legacyContractModelToAbstract(contractModel);
     } else if (this.isLegacyMultiPhaseDrop(this.contractWrapper)) {
       const id =
-        conditionId ||
-        (await this.contractWrapper.readContract.getActiveClaimConditionId());
+        conditionId !== undefined
+          ? conditionId
+          : await this.contractWrapper.readContract.getActiveClaimConditionId();
       const contractModel =
         (await this.contractWrapper.readContract.getClaimConditionById(
           id,
@@ -128,8 +129,9 @@ export class DropClaimConditions<
       return newContractModelToAbstract(contractModel);
     } else if (this.isNewMultiphaseDrop(this.contractWrapper)) {
       const id =
-        conditionId ||
-        (await this.contractWrapper.readContract.getActiveClaimConditionId());
+        conditionId !== undefined
+          ? conditionId
+          : await this.contractWrapper.readContract.getActiveClaimConditionId();
       const contractModel =
         (await this.contractWrapper.readContract.getClaimConditionById(
           id,
@@ -271,10 +273,12 @@ export class DropClaimConditions<
     const merkleRootArray = ethers.utils.stripZeros(
       claimCondition.merkleRootHash,
     );
-    if (merkleRootArray.length > 0) {
+    const hasAllowList = merkleRootArray.length > 0;
+    let allowListEntry;
+    if (hasAllowList) {
       const merkleLower = claimCondition.merkleRootHash.toString();
       const metadata = await this.metadata.get();
-      const proofs = await getClaimerProofs(
+      allowListEntry = await getClaimerProofs(
         addressToCheck,
         merkleLower,
         await this.getTokenDecimals(),
@@ -284,94 +288,119 @@ export class DropClaimConditions<
         this.getSnapshotFormatVersion(),
       );
 
-      try {
-        let validMerkleProof;
-        if (this.isLegacyMultiPhaseDrop(this.contractWrapper)) {
-          activeConditionIndex =
-            await this.contractWrapper.readContract.getActiveClaimConditionId();
-          // legacy verifyClaimerMerkleProofs function
-          [validMerkleProof] =
-            await this.contractWrapper.readContract.verifyClaimMerkleProof(
+      if (
+        !allowListEntry &&
+        (this.isLegacySinglePhaseDrop(this.contractWrapper) ||
+          this.isLegacyMultiPhaseDrop(this.contractWrapper))
+      ) {
+        // exclusive allowlist behavior
+        reasons.push(ClaimEligibility.AddressNotAllowed);
+        return reasons;
+      }
+
+      if (allowListEntry) {
+        try {
+          let validMerkleProof;
+          if (this.isLegacyMultiPhaseDrop(this.contractWrapper)) {
+            activeConditionIndex =
+              await this.contractWrapper.readContract.getActiveClaimConditionId();
+            // legacy verifyClaimerMerkleProofs function
+            [validMerkleProof] =
+              await this.contractWrapper.readContract.verifyClaimMerkleProof(
+                activeConditionIndex,
+                addressToCheck,
+                quantity,
+                allowListEntry.proof,
+                allowListEntry.maxClaimable,
+              );
+            if (!validMerkleProof) {
+              reasons.push(ClaimEligibility.AddressNotAllowed);
+              return reasons;
+            }
+          } else if (this.isLegacySinglePhaseDrop(this.contractWrapper)) {
+            [validMerkleProof] =
+              await this.contractWrapper.readContract.verifyClaimMerkleProof(
+                addressToCheck,
+                quantity,
+                {
+                  proof: allowListEntry.proof,
+                  maxQuantityInAllowlist: allowListEntry.maxClaimable,
+                },
+              );
+            if (!validMerkleProof) {
+              reasons.push(ClaimEligibility.AddressNotAllowed);
+              return reasons;
+            }
+          } else if (this.isNewSinglePhaseDrop(this.contractWrapper)) {
+            await this.contractWrapper.readContract.verifyClaim(
+              addressToCheck,
+              quantity,
+              claimCondition.currencyAddress,
+              claimCondition.price,
+              {
+                proof: allowListEntry.proof,
+                quantityLimitPerWallet: allowListEntry.maxClaimable,
+                currency: allowListEntry.currencyAddress,
+                pricePerToken: allowListEntry.price,
+              } as IDropSinglePhase.AllowlistProofStruct,
+            );
+            // TODO (cc) in new override format, anyone can claim (no allow list restriction)
+            // TODO (cc) instead check if maxClaimablePerWallet is 0 and this address has no overrides
+            // TODO (cc) meaning this address is not allowed to claim
+            if (
+              (claimCondition.maxClaimablePerWallet === "0" &&
+                allowListEntry.maxClaimable === ethers.constants.MaxUint256) ||
+              allowListEntry.maxClaimable === BigNumber.from(0)
+            ) {
+              reasons.push(ClaimEligibility.AddressNotAllowed);
+              return reasons;
+            }
+          } else if (this.isNewMultiphaseDrop(this.contractWrapper)) {
+            activeConditionIndex =
+              await this.contractWrapper.readContract.getActiveClaimConditionId();
+            await this.contractWrapper.readContract.verifyClaim(
               activeConditionIndex,
               addressToCheck,
               quantity,
-              proofs.proof,
-              proofs.maxClaimable,
-            );
-          if (!validMerkleProof) {
-            reasons.push(ClaimEligibility.AddressNotAllowed);
-            return reasons;
-          }
-        } else if (this.isLegacySinglePhaseDrop(this.contractWrapper)) {
-          [validMerkleProof] =
-            await this.contractWrapper.readContract.verifyClaimMerkleProof(
-              addressToCheck,
-              quantity,
+              claimCondition.currencyAddress,
+              claimCondition.price,
               {
-                proof: proofs.proof,
-                maxQuantityInAllowlist: proofs.maxClaimable,
-              },
+                proof: allowListEntry.proof,
+                quantityLimitPerWallet: allowListEntry.maxClaimable,
+                currency: allowListEntry.currencyAddress,
+                pricePerToken: allowListEntry.price,
+              } as IDropSinglePhase.AllowlistProofStruct,
             );
-          if (!validMerkleProof) {
-            reasons.push(ClaimEligibility.AddressNotAllowed);
-            return reasons;
+            if (
+              (claimCondition.maxClaimablePerWallet === "0" &&
+                allowListEntry.maxClaimable === ethers.constants.MaxUint256) ||
+              allowListEntry.maxClaimable === BigNumber.from(0)
+            ) {
+              reasons.push(ClaimEligibility.AddressNotAllowed);
+              return reasons;
+            }
           }
-        } else if (this.isNewSinglePhaseDrop(this.contractWrapper)) {
-          await this.contractWrapper.readContract.verifyClaim(
-            addressToCheck,
-            quantity,
-            claimCondition.currencyAddress,
-            claimCondition.price,
-            {
-              proof: proofs.proof,
-              quantityLimitPerWallet: proofs.maxClaimable,
-              currency: proofs.currencyAddress,
-              pricePerToken: proofs.price,
-            } as IDropSinglePhase.AllowlistProofStruct,
+        } catch (e: any) {
+          console.warn(
+            "Merkle proof verification failed:",
+            "reason" in e ? e.reason : e,
           );
-          // TODO (cc) in new override format, anyone can claim (no allow list restriction)
-          // TODO (cc) instead check if maxClaimablePerWallet is 0 and this address has no overrides
-          // TODO (cc) meaning this address is not allowed to claim
-          if (
-            (claimCondition.maxClaimablePerWallet === "0" &&
-              proofs.maxClaimable === ethers.constants.MaxUint256) ||
-            proofs.maxClaimable === BigNumber.from(0)
-          ) {
-            reasons.push(ClaimEligibility.AddressNotAllowed);
-            return reasons;
-          }
-        } else if (this.isNewMultiphaseDrop(this.contractWrapper)) {
-          activeConditionIndex =
-            await this.contractWrapper.readContract.getActiveClaimConditionId();
-          await this.contractWrapper.readContract.verifyClaim(
-            activeConditionIndex,
-            addressToCheck,
-            quantity,
-            claimCondition.currencyAddress,
-            claimCondition.price,
-            {
-              proof: proofs.proof,
-              quantityLimitPerWallet: proofs.maxClaimable,
-              currency: proofs.currencyAddress,
-              pricePerToken: proofs.price,
-            } as IDropSinglePhase.AllowlistProofStruct,
-          );
-          if (
-            (claimCondition.maxClaimablePerWallet === "0" &&
-              proofs.maxClaimable === ethers.constants.MaxUint256) ||
-            proofs.maxClaimable === BigNumber.from(0)
-          ) {
-            reasons.push(ClaimEligibility.AddressNotAllowed);
-            return reasons;
-          }
+          reasons.push(ClaimEligibility.AddressNotAllowed);
+          return reasons;
         }
-      } catch (e: any) {
-        console.warn(
-          "Merkle proof verification failed:",
-          "reason" in e ? e.reason : e,
-        );
-        reasons.push(ClaimEligibility.AddressNotAllowed);
-        return reasons;
+      }
+    }
+
+    // TODO (cc) check for max claimable per wallet and how much each wallet has claimed
+    if (
+      this.isNewSinglePhaseDrop(this.contractWrapper) ||
+      this.isNewMultiphaseDrop(this.contractWrapper)
+    ) {
+      if (!hasAllowList || (hasAllowList && !allowListEntry)) {
+        if (claimCondition.maxClaimablePerWallet === "0") {
+          reasons.push(ClaimEligibility.AddressNotAllowed);
+          return reasons;
+        }
       }
     }
 

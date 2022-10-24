@@ -84,7 +84,6 @@ export async function prepareClaim(
       if (!snapshotEntry) {
         throw new Error("No claim found for this address");
       }
-      console.log("snapshotEntry", snapshotEntry);
       proofs = snapshotEntry.proof;
       // override only if not default values (unlimited for quantity, zero addr for currency)
       // TODO (cc) should default values inherit the global limit? probably?
@@ -286,12 +285,15 @@ export async function getClaimerProofs(
   storage: ThirdwebStorage,
   provider: ethers.providers.Provider,
   snapshotFormatVersion: SnapshotFormatVersion,
-): Promise<{
-  proof: string[];
-  maxClaimable: BigNumber;
-  price: BigNumber;
-  currencyAddress: string;
-}> {
+): Promise<
+  | {
+      proof: string[];
+      maxClaimable: BigNumber;
+      price: BigNumber;
+      currencyAddress: string;
+    }
+  | undefined
+> {
   const claim = await fetchSnapshotEntryForAddress(
     addressToClaim,
     merkleRoot,
@@ -300,12 +302,7 @@ export async function getClaimerProofs(
     snapshotFormatVersion,
   );
   if (!claim) {
-    return {
-      proof: [],
-      maxClaimable: BigNumber.from(0),
-      price: BigNumber.from(0),
-      currencyAddress: ethers.constants.AddressZero,
-    };
+    return undefined;
   }
   const price =
     claim.price === "unlimited"
@@ -555,10 +552,10 @@ export async function transformResultToClaimCondition(
   );
   return ClaimConditionOutputSchema.parse({
     startTime: pm.startTimestamp,
-    maxQuantity: maxClaimableSupply,
+    maxClaimableSupply,
+    maxClaimablePerWallet,
     currentMintSupply,
     availableSupply,
-    maxClaimablePerWallet,
     waitInSeconds: pm.waitTimeInSecondsBetweenClaims?.toString(),
     price: BigNumber.from(pm.pricePerToken),
     currency: pm.currency,

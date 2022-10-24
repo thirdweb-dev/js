@@ -9,7 +9,7 @@ import { expectError, sdk, signers, storage } from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import invariant from "tiny-invariant";
 
 global.fetch = require("cross-fetch");
@@ -359,7 +359,7 @@ describe("NFT Drop Contract", async () => {
       await sdk.updateSignerOrProvider(w2);
       await dropContract.claim(2);
     } catch (e) {
-      expectError(e, "invalid quantity proof");
+      expectError(e, "!Qty");
     }
   });
 
@@ -439,11 +439,11 @@ describe("NFT Drop Contract", async () => {
       assert.isFalse(canClaim);
     });
 
-    it("should check if an address has valid merkle proofs", async () => {
+    it("should disallow some addresses from claiming", async () => {
       await dropContract.claimConditions.set([
         {
           maxClaimableSupply: 1,
-          snapshot: [w2.address, adminWallet.address],
+          snapshot: [{ address: w1.address, maxClaimable: 0 }],
         },
       ]);
 
@@ -457,29 +457,6 @@ describe("NFT Drop Contract", async () => {
         1,
         w1.address,
       );
-      assert.isFalse(canClaim);
-    });
-
-    it("should check if its been long enough since the last claim", async () => {
-      await dropContract.claimConditions.set([
-        {
-          maxClaimableSupply: 10,
-          waitInSeconds: 24 * 60 * 60,
-        },
-      ]);
-      await sdk.updateSignerOrProvider(bobWallet);
-      await dropContract.claim(1);
-
-      const reasons =
-        await dropContract.claimConditions.getClaimIneligibilityReasons(
-          "1",
-          bobWallet.address,
-        );
-
-      expect(reasons).to.include(
-        ClaimEligibility.WaitBeforeNextClaimTransaction,
-      );
-      const canClaim = await dropContract.claimConditions.canClaim(1);
       assert.isFalse(canClaim);
     });
 
@@ -587,7 +564,7 @@ describe("NFT Drop Contract", async () => {
     await dropContract.claimConditions.set([
       {
         maxClaimablePerWallet: 0,
-        snapshot: [w1.address],
+        snapshot: [{ address: w1.address, maxClaimable: 1 }],
       },
     ]);
 
@@ -599,7 +576,10 @@ describe("NFT Drop Contract", async () => {
     expect(reasons).to.contain(ClaimEligibility.AddressNotAllowed);
 
     await dropContract.claimConditions.update(0, {
-      snapshot: [w1.address, w2.address],
+      snapshot: [
+        { address: w1.address, maxClaimable: 1 },
+        { address: w2.address, maxClaimable: 1 },
+      ],
     });
     const reasons2 =
       await dropContract.claimConditions.getClaimIneligibilityReasons(
@@ -678,12 +658,16 @@ describe("NFT Drop Contract", async () => {
     await dropContract.createBatch(metadata);
 
     const members = [
-      w1.address.toUpperCase().replace("0X", "0x"),
-      w2.address.toLowerCase(),
-      w3.address,
+      {
+        address: w1.address.toUpperCase().replace("0X", "0x"),
+        maxClaimable: 1,
+      },
+      { address: w2.address.toLowerCase(), maxClaimable: 1 },
+      { address: w3.address.toLowerCase(), maxClaimable: 1 },
     ];
     await dropContract.claimConditions.set([
       {
+        maxClaimablePerWallet: 0,
         snapshot: members,
       },
     ]);
@@ -718,7 +702,12 @@ describe("NFT Drop Contract", async () => {
   });
 
   it("set claim condition with snapshot and remove it afterwards", async () => {
-    await dropContract.claimConditions.set([{ snapshot: [samWallet.address] }]);
+    await dropContract.claimConditions.set([
+      {
+        maxClaimablePerWallet: 0,
+        snapshot: [{ address: samWallet.address, maxClaimable: 1 }],
+      },
+    ]);
     expect(
       await dropContract.claimConditions.canClaim(1, samWallet.address),
     ).to.eq(true);
@@ -741,7 +730,12 @@ describe("NFT Drop Contract", async () => {
   });
 
   it("update claim condition to remove snapshot", async () => {
-    await dropContract.claimConditions.set([{ snapshot: [samWallet.address] }]);
+    await dropContract.claimConditions.set([
+      {
+        maxClaimablePerWallet: 0,
+        snapshot: [{ address: samWallet.address, maxClaimable: 1 }],
+      },
+    ]);
     expect(
       await dropContract.claimConditions.canClaim(1, samWallet.address),
     ).to.eq(true);
@@ -749,6 +743,7 @@ describe("NFT Drop Contract", async () => {
       await dropContract.claimConditions.canClaim(1, bobWallet.address),
     ).to.eq(false);
     await dropContract.claimConditions.update(0, {
+      maxClaimablePerWallet: 1,
       snapshot: [],
     });
     expect(
@@ -766,33 +761,27 @@ describe("NFT Drop Contract", async () => {
         maxClaimableSupply: 1,
         price: 0.15,
       },
-      { startTime: new Date(), waitInSeconds: 60 },
+      { startTime: new Date(), maxClaimablePerWallet: 60 },
     ]);
     expect((await dropContract.claimConditions.getAll()).length).to.be.equal(2);
 
-    await dropContract.claimConditions.update(0, { waitInSeconds: 10 });
+    await dropContract.claimConditions.update(0, { maxClaimablePerWallet: 10 });
     let updatedConditions = await dropContract.claimConditions.getAll();
     expect(updatedConditions[0].maxClaimableSupply).to.be.deep.equal("1");
     expect(updatedConditions[0].price).to.be.deep.equal(
       ethers.utils.parseUnits("0.15"),
     );
-    expect(updatedConditions[0].waitInSeconds).to.be.deep.equal(
-      BigNumber.from(10),
-    );
-    expect(updatedConditions[1].waitInSeconds).to.be.deep.equal(
-      BigNumber.from(60),
-    );
+    expect(updatedConditions[0].maxClaimablePerWallet).to.be.equal("10");
+    expect(updatedConditions[1].maxClaimablePerWallet).to.be.deep.equal("60");
 
     await dropContract.claimConditions.update(1, {
       maxClaimableSupply: 10,
-      waitInSeconds: 10,
+      maxClaimablePerWallet: 10,
     });
     updatedConditions = await dropContract.claimConditions.getAll();
     expect(updatedConditions[0].maxClaimableSupply).to.be.deep.equal("1");
     expect(updatedConditions[1].maxClaimableSupply).to.be.deep.equal("10");
-    expect(updatedConditions[1].waitInSeconds).to.be.deep.equal(
-      BigNumber.from(10),
-    );
+    expect(updatedConditions[1].maxClaimablePerWallet).to.be.deep.equal("10");
   });
 
   it("set claim condition and update claim condition with diff timestamps should reorder", async () => {
