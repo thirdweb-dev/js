@@ -1,5 +1,6 @@
 import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
 import { ListingNotFoundError } from "../../common";
+import { isNativeToken } from "../../common/currency";
 import { mapOffer } from "../../common/marketplace";
 import { getRoleHash } from "../../common/role";
 import {
@@ -437,7 +438,7 @@ export class Marketplace implements UpdateableNetwork {
         return await this.direct.makeOffer(
           listingId,
           quantity,
-          listing.currency === NATIVE_TOKEN_ADDRESS
+          isNativeToken(listing.currency)
             ? NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID].wrapped.address
             : listing.currency,
           pricePerToken,

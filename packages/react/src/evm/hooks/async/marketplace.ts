@@ -589,8 +589,12 @@ export function useOffers(
   listingId: RequiredParam<BigNumberish>,
 ) {
   const result = useContractEvents(contract, "NewOffer");
-  result.data = result.data?.filter((ev) => ev.data.listingId.eq(listingId));
-  return result;
+  return {
+    ...result,
+    data: result.data
+      ?.filter((ev) => ev.data.listingId.eq(listingId))
+      ?.map((ev) => ev.data),
+  };
 }
 
 /**
