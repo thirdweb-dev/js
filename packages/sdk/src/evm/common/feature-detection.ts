@@ -246,7 +246,6 @@ export async function resolveContractUriFromAddress(
   const bytecode = await provider.getCode(address);
   if (bytecode === "0x") {
     const chain = await provider.getNetwork();
-    console.log({address, provider, chain});
     throw new Error(
       `Contract at ${address} does not exist on chain '${chain.name}' (chainId: ${chain.chainId})`,
     );
