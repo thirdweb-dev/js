@@ -42,7 +42,7 @@ export const HackathonFooter: FC = () => {
       </Flex>
 
       <LinkButton
-        href="https://thirdweb.typeform.com/to/zfrq8Jx0"
+        href="https://thirdweb.typeform.com/to/jta0ye4M"
         onClick={() =>
           trackEvent({
             category: "solanathon",
@@ -63,7 +63,7 @@ export const HackathonFooter: FC = () => {
         isExternal
         noIcon
       >
-        Register now
+        Submit Your Project
       </LinkButton>
     </VStack>
   );
