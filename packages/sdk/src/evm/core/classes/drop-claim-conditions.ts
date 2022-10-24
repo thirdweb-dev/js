@@ -15,6 +15,7 @@ import {
   detectContractFeature,
   hasFunction,
 } from "../../common/feature-detection";
+import { getPrebuiltInfo } from "../../common/legacy";
 import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
 import { isNode } from "../../common/utils";
 import { ClaimEligibility } from "../../enums";
@@ -295,7 +296,7 @@ export class DropClaimConditions<
               addressToCheck,
               quantity,
               proofs.proof,
-              proofs.maxClaimable || 0,
+              proofs.maxClaimable,
             );
           if (!validMerkleProof) {
             reasons.push(ClaimEligibility.AddressNotAllowed);
@@ -308,7 +309,7 @@ export class DropClaimConditions<
               quantity,
               {
                 proof: proofs.proof,
-                maxQuantityInAllowlist: proofs.maxClaimable || 0,
+                maxQuantityInAllowlist: proofs.maxClaimable,
               },
             );
           if (!validMerkleProof) {
@@ -324,17 +325,17 @@ export class DropClaimConditions<
             {
               proof: proofs.proof,
               quantityLimitPerWallet: proofs.maxClaimable,
-              currency:
-                proofs.currencyAddress || claimCondition.currencyAddress,
-              pricePerToken: proofs.price || claimCondition.price,
+              currency: proofs.currencyAddress,
+              pricePerToken: proofs.price,
             } as IDropSinglePhase.AllowlistProofStruct,
           );
           // TODO (cc) in new override format, anyone can claim (no allow list restriction)
           // TODO (cc) instead check if maxClaimablePerWallet is 0 and this address has no overrides
           // TODO (cc) meaning this address is not allowed to claim
           if (
-            claimCondition.maxClaimablePerWallet === "0" &&
-            proofs.proof.length === 0
+            (claimCondition.maxClaimablePerWallet === "0" &&
+              proofs.maxClaimable === ethers.constants.MaxUint256) ||
+            proofs.maxClaimable === BigNumber.from(0)
           ) {
             reasons.push(ClaimEligibility.AddressNotAllowed);
             return reasons;
@@ -350,22 +351,25 @@ export class DropClaimConditions<
             claimCondition.price,
             {
               proof: proofs.proof,
-              quantityLimitPerWallet:
-                proofs.maxClaimable || ethers.constants.MaxUint256,
-              currency:
-                proofs.currencyAddress || claimCondition.currencyAddress,
-              pricePerToken: proofs.price || claimCondition.price,
+              quantityLimitPerWallet: proofs.maxClaimable,
+              currency: proofs.currencyAddress,
+              pricePerToken: proofs.price,
             } as IDropSinglePhase.AllowlistProofStruct,
           );
           if (
-            claimCondition.maxClaimablePerWallet === "0" &&
-            proofs.proof.length === 0
+            (claimCondition.maxClaimablePerWallet === "0" &&
+              proofs.maxClaimable === ethers.constants.MaxUint256) ||
+            proofs.maxClaimable === BigNumber.from(0)
           ) {
             reasons.push(ClaimEligibility.AddressNotAllowed);
             return reasons;
           }
         }
-      } catch (e) {
+      } catch (e: any) {
+        console.warn(
+          "Merkle proof verification failed:",
+          "reason" in e ? e.reason : e,
+        );
         reasons.push(ClaimEligibility.AddressNotAllowed);
         return reasons;
       }

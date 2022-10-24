@@ -83,11 +83,11 @@ describe("NFT Drop Contract", async () => {
     const merkles = metadata.merkle;
 
     expect(merkles).have.property(
-      "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+      "0x5398c0f1d4b32f7e4817ddfb7075fada328dfd68ee954ee7d673751ad2025b80",
     );
 
     expect(merkles).have.property(
-      "0xb1a60ad68b77609a455696695fbdd02b850d03ec285e7fe1f4c4093797457b24",
+      "0x4703e6318cb19460f6a961b41cd6161a4cc0ada09456670a81ec3fca9e0d2f4f",
     );
 
     const roots = (await dropContract.claimConditions.getAll()).map(
@@ -132,11 +132,11 @@ describe("NFT Drop Contract", async () => {
     const merkles = metadata.merkle;
 
     expect(merkles).have.property(
-      "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
+      "0x5398c0f1d4b32f7e4817ddfb7075fada328dfd68ee954ee7d673751ad2025b80",
     );
 
     expect(merkles).have.property(
-      "0xb1a60ad68b77609a455696695fbdd02b850d03ec285e7fe1f4c4093797457b24",
+      "0x4703e6318cb19460f6a961b41cd6161a4cc0ada09456670a81ec3fca9e0d2f4f",
     );
 
     const roots = (await dropContract.claimConditions.getAll()).map(
@@ -160,16 +160,22 @@ describe("NFT Drop Contract", async () => {
       w3,
       w4,
     ];
-    const members = testWallets.map((w, i) =>
-      i % 3 === 0
-        ? w.address.toLowerCase()
-        : i % 3 === 1
-        ? w.address.toUpperCase().replace("0X", "0x")
-        : w.address,
-    );
+    const members = testWallets
+      .map((w, i) =>
+        i % 3 === 0
+          ? w.address.toLowerCase()
+          : i % 3 === 1
+          ? w.address.toUpperCase().replace("0X", "0x")
+          : w.address,
+      )
+      .map((a) => ({
+        address: a,
+        maxClaimable: 1,
+      }));
 
     await dropContract.claimConditions.set([
       {
+        maxClaimablePerWallet: 0,
         snapshot: members,
       },
     ]);
@@ -556,6 +562,7 @@ describe("NFT Drop Contract", async () => {
   it("should verify claim correctly after resetting claim conditions", async () => {
     await dropContract.claimConditions.set([
       {
+        maxClaimablePerWallet: 0,
         snapshot: [w1.address],
       },
     ]);
@@ -579,6 +586,7 @@ describe("NFT Drop Contract", async () => {
   it("should verify claim correctly after updating claim conditions", async () => {
     await dropContract.claimConditions.set([
       {
+        maxClaimablePerWallet: 0,
         snapshot: [w1.address],
       },
     ]);
@@ -643,7 +651,12 @@ describe("NFT Drop Contract", async () => {
     }
     await dropContract.createBatch(metadata);
 
-    await dropContract.claimConditions.set([{ snapshot: [w1.address] }]);
+    await dropContract.claimConditions.set([
+      {
+        maxClaimablePerWallet: 0,
+        snapshot: [{ address: w1.address, maxClaimable: 1 }],
+      },
+    ]);
 
     assert.isTrue(
       await dropContract.claimConditions.canClaim(1, w1.address),

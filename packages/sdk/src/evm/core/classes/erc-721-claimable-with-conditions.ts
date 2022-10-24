@@ -1,7 +1,7 @@
 import { NFT } from "../../../core/schema/nft";
 import { FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V2 } from "../../constants/erc721-features";
 import { CustomContractSchema } from "../../schema/contracts/custom";
-import { ClaimOptions, ClaimVerification } from "../../types";
+import { ClaimCondition, ClaimOptions, ClaimVerification } from "../../types";
 import { BaseClaimConditionERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
@@ -94,6 +94,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
         "In ERC721ClaimableWithConditions, price per token is be set via claim conditions by calling `contract.erc721.claimConditions.set()`",
       );
     }
+    const activeClaimCondition = await this.conditions.getActive();
     const claimVerification = await this.conditions.prepareClaim(
       quantity,
       options?.checkERC20Allowance === undefined
@@ -104,7 +105,12 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
     return TransactionTask.make({
       contractWrapper: this.contractWrapper,
       functionName: "claim",
-      args: await this.getArgs(destinationAddress, quantity, claimVerification),
+      args: await this.getArgs(
+        destinationAddress,
+        quantity,
+        activeClaimCondition,
+        claimVerification,
+      ),
       overrides: claimVerification.overrides,
     });
   }
@@ -161,14 +167,15 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
   private async getArgs(
     destinationAddress: string,
     quantity: BigNumberish,
+    activeClaimCondition: ClaimCondition,
     claimVerification: ClaimVerification,
   ): Promise<any[]> {
     if (this.conditions.isLegacyMultiPhaseDrop(this.contractWrapper)) {
       return [
         destinationAddress,
         quantity,
-        claimVerification.currencyAddress,
-        claimVerification.price,
+        activeClaimCondition.currencyAddress,
+        activeClaimCondition.price,
         claimVerification.proofs,
         claimVerification.maxClaimable,
       ];
@@ -176,8 +183,8 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
       return [
         destinationAddress,
         quantity,
-        claimVerification.currencyAddress,
-        claimVerification.price,
+        activeClaimCondition.currencyAddress,
+        activeClaimCondition.price,
         {
           proof: claimVerification.proofs,
           maxQuantityInAllowlist: claimVerification.maxClaimable,
@@ -188,8 +195,8 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
     return [
       destinationAddress,
       quantity,
-      claimVerification.currencyAddress,
-      claimVerification.price,
+      activeClaimCondition.currencyAddress,
+      activeClaimCondition.price,
       {
         proof: claimVerification.proofs,
         quantityLimitPerWallet: claimVerification.maxClaimable,

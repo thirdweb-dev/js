@@ -87,13 +87,15 @@ export async function prepareClaim(
       console.log("snapshotEntry", snapshotEntry);
       proofs = snapshotEntry.proof;
       // override only if not default values (unlimited for quantity, zero addr for currency)
+      // TODO (cc) should default values inherit the global limit? probably?
+      // TODO (cc) but if global maxClaimable is zero, adding an address in the snapshot without maxClaimable should give unlimited claims?
       maxClaimable =
         snapshotEntry.maxClaimable === "unlimited"
-          ? maxClaimable
+          ? ethers.constants.MaxUint256
           : ethers.utils.parseUnits(snapshotEntry.maxClaimable, tokenDecimals);
       price =
         snapshotEntry.price === "unlimited"
-          ? price
+          ? ethers.constants.MaxUint256
           : await normalizePriceValue(
               contractWrapper.getProvider(),
               snapshotEntry.price,
@@ -101,7 +103,7 @@ export async function prepareClaim(
             );
       currencyAddress =
         snapshotEntry.currencyAddress === ethers.constants.AddressZero
-          ? currencyAddress
+          ? ethers.constants.AddressZero
           : snapshotEntry.currencyAddress;
     }
   } catch (e) {
@@ -117,7 +119,10 @@ export async function prepareClaim(
   }
 
   const overrides = (await contractWrapper.getCallOverrides()) || {};
-  if (price.gt(0)) {
+  if (
+    price.gt(0) &&
+    price.toString() !== ethers.constants.MaxUint256.toString()
+  ) {
     if (isNativeToken(currencyAddress)) {
       overrides["value"] = BigNumber.from(price)
         .mul(quantity)

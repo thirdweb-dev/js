@@ -21,7 +21,7 @@ export const ClaimConditionInputSchema = z.object({
   currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
   price: AmountSchema.default(0),
   maxClaimableSupply: QuantitySchema,
-  maxClaimablePerWallet: QuantitySchema, // TODO (cc) rename
+  maxClaimablePerWallet: QuantitySchema,
   waitInSeconds: BigNumberishSchema.default(0),
   merkleRootHash: BytesLikeSchema.default(utils.hexZeroPad([0], 32)),
   snapshot: z.optional(SnapshotInputSchema).nullable(),
