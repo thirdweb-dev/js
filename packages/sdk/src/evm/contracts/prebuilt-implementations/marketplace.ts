@@ -337,7 +337,9 @@ export class Marketplace implements UpdateableNetwork {
           BigNumber.from(listingId),
           {
             quantityWanted: e.data.quantityWanted,
-            pricePerToken: e.data.totalOfferAmount.div(e.data.quantityWanted),
+            pricePerToken: e.data.quantityWanted.gt(0)
+              ? e.data.totalOfferAmount.div(e.data.quantityWanted)
+              : e.data.totalOfferAmount,
             currency: e.data.currency,
             offeror: e.data.offeror,
           } as UnmappedOffer,
