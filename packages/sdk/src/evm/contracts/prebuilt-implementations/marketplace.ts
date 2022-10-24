@@ -4,7 +4,6 @@ import { isNativeToken } from "../../common/currency";
 import { mapOffer } from "../../common/marketplace";
 import { getRoleHash } from "../../common/role";
 import {
-  NATIVE_TOKEN_ADDRESS,
   NATIVE_TOKENS,
   SUPPORTED_CHAIN_ID,
 } from "../../constants";
