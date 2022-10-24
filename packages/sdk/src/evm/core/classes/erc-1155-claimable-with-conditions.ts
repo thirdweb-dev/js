@@ -2,6 +2,7 @@ import { hasFunction } from "../../common";
 import { FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS } from "../../constants/erc1155-features";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import {
+  ClaimCondition,
   ClaimOptions,
   ClaimVerification,
 } from "../../types/claim-conditions/claim-conditions";
@@ -13,6 +14,8 @@ import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { DropErc1155ClaimConditions } from "./drop-erc1155-claim-conditions";
 import type { DropERC1155 } from "@thirdweb-dev/contracts-js";
+import { IDropSinglePhase_V1 } from "@thirdweb-dev/contracts-js";
+import { IDropSinglePhase } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumberish, ethers } from "ethers";
 
@@ -70,6 +73,7 @@ export class Erc1155ClaimableWithConditions implements DetectableFeature {
         "In ERC1155ClaimableWithConditions, price per token is be set via claim conditions by calling `contract.erc1155.claimConditions.set()`",
       );
     }
+    const activeClaimCondition = await this.conditions.getActive(tokenId);
     const claimVerification = await this.conditions.prepareClaim(
       tokenId,
       quantity,
@@ -82,6 +86,7 @@ export class Erc1155ClaimableWithConditions implements DetectableFeature {
         tokenId,
         destinationAddress,
         quantity,
+        activeClaimCondition,
         claimVerification,
       ),
       overrides: claimVerification.overrides,
@@ -128,46 +133,46 @@ export class Erc1155ClaimableWithConditions implements DetectableFeature {
     tokenId: BigNumberish,
     destinationAddress: string,
     quantity: BigNumberish,
+    activeClaimCondition: ClaimCondition,
     claimVerification: ClaimVerification,
   ): Promise<any[]> {
-    const isLegacyNFTContract = await this.isLegacyNFTContract();
-    if (isLegacyNFTContract) {
+    if (this.conditions.isLegacyMultiPhaseDrop(this.contractWrapper)) {
       return [
         destinationAddress,
         tokenId,
         quantity,
-        claimVerification.currencyAddress,
-        claimVerification.price,
+        activeClaimCondition.currencyAddress,
+        activeClaimCondition.price,
         claimVerification.proofs,
         claimVerification.maxClaimable,
+      ];
+    } else if (this.conditions.isLegacySinglePhaseDrop(this.contractWrapper)) {
+      return [
+        destinationAddress,
+        tokenId,
+        quantity,
+        activeClaimCondition.currencyAddress,
+        activeClaimCondition.price,
+        {
+          proof: claimVerification.proofs,
+          maxQuantityInAllowlist: claimVerification.maxClaimable,
+        } as IDropSinglePhase_V1.AllowlistProofStruct,
+        ethers.utils.toUtf8Bytes(""),
       ];
     }
     return [
       destinationAddress,
       tokenId,
       quantity,
-      claimVerification.currencyAddress,
-      claimVerification.price,
+      activeClaimCondition.currencyAddress,
+      activeClaimCondition.price,
       {
         proof: claimVerification.proofs,
-        maxQuantityInAllowlist: claimVerification.maxClaimable,
-      },
+        quantityLimitPerWallet: claimVerification.maxClaimable,
+        pricePerToken: claimVerification.price,
+        currency: claimVerification.currencyAddress,
+      } as IDropSinglePhase.AllowlistProofStruct,
       ethers.utils.toUtf8Bytes(""),
     ];
-  }
-
-  private async isLegacyNFTContract() {
-    if (hasFunction<DropERC1155>("contractType", this.contractWrapper)) {
-      try {
-        const contractType = ethers.utils.toUtf8String(
-          await this.contractWrapper.readContract.contractType(),
-        );
-        return contractType.includes("DropERC1155");
-      } catch (e) {
-        return false;
-      }
-    } else {
-      return false;
-    }
   }
 }

@@ -3,6 +3,7 @@ import {
   detectContractFeature,
   hasFunction,
 } from "../../common/feature-detection";
+import { getPrebuiltInfo } from "../../common/legacy";
 import { uploadOrExtractURIs } from "../../common/nft";
 import {
   FEATURE_EDITION_LAZY_MINTABLE,
@@ -232,17 +233,10 @@ export class Erc1155LazyMintable implements DetectableFeature {
   }
 
   private async isLegacyEditionDropContract() {
-    if (hasFunction<DropERC1155_V2>("contractType", this.contractWrapper)) {
-      try {
-        const contractType = ethers.utils.toUtf8String(
-          await this.contractWrapper.readContract.contractType(),
-        );
-        return contractType.includes("DropERC1155");
-      } catch (e) {
-        return false;
-      }
-    } else {
-      return false;
-    }
+    const info = await getPrebuiltInfo(
+      this.contractWrapper.readContract.address,
+      this.contractWrapper.getProvider(),
+    );
+    return info.type === "DropERC1155" && info.version <= 2;
   }
 }

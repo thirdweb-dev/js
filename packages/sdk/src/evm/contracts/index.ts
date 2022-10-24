@@ -57,7 +57,7 @@ export const EditionDropInitializer = {
     );
   },
   getAbi: async () =>
-    (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC1155.json")) // TODO (cc) use the latest version
+    (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC1155.json"))
       .default,
   getV2Abi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC1155_V2.json"))

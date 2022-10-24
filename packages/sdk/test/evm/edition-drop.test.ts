@@ -52,6 +52,7 @@ describe("Edition Drop Contract", async () => {
     const cost = await bdContract.estimator.gasCostOf("lazyMint", [
       1000,
       "mock://12398172398172389/0",
+      "0x00",
     ]);
     expect(parseFloat(cost)).gt(0);
   });
@@ -215,7 +216,7 @@ describe("Edition Drop Contract", async () => {
       await sdk.updateSignerOrProvider(w2);
       await bdContract.claim(0, 2);
     } catch (e) {
-      expectError(e, "invalid quantity proof");
+      expectError(e, "!Qty");
     }
   });
 

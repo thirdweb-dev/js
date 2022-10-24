@@ -1,8 +1,10 @@
 import { includesErrorMessage } from "../../common";
 import {
   abstractContractModelToLegacy,
+  abstractContractModelToNew,
   getClaimerProofs,
   legacyContractModelToAbstract,
+  newContractModelToAbstract,
   prepareClaim,
   processClaimConditionInputs,
   transformResultToClaimCondition,
@@ -40,6 +42,7 @@ import type {
 import IERC20ABI from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC20_V2";
 import { IDropSinglePhase } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
+import { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";
 import deepEqual from "fast-deep-equal";
@@ -101,16 +104,36 @@ export class DropErc1155ClaimConditions<
       return legacyContractModelToAbstract(contractModel);
     } else if (this.isLegacyMultiPhaseDrop(this.contractWrapper)) {
       const id =
-        conditionId ||
-        (await this.contractWrapper.readContract.getActiveClaimConditionId(
-          tokenId,
-        ));
+        conditionId !== undefined
+          ? conditionId
+          : await this.contractWrapper.readContract.getActiveClaimConditionId(
+              tokenId,
+            );
       const contractModel =
         (await this.contractWrapper.readContract.getClaimConditionById(
           tokenId,
           id,
         )) as IDropClaimCondition_V2.ClaimConditionStructOutput;
       return legacyContractModelToAbstract(contractModel);
+    } else if (this.isNewSinglePhaseDrop(this.contractWrapper)) {
+      const contractModel =
+        (await this.contractWrapper.readContract.claimCondition(
+          tokenId,
+        )) as IClaimCondition.ClaimConditionStructOutput;
+      return newContractModelToAbstract(contractModel);
+    } else if (this.isNewMultiphaseDrop(this.contractWrapper)) {
+      const id =
+        conditionId !== undefined
+          ? conditionId
+          : await this.contractWrapper.readContract.getActiveClaimConditionId(
+              tokenId,
+            );
+      const contractModel =
+        (await this.contractWrapper.readContract.getClaimConditionById(
+          tokenId,
+          id,
+        )) as IClaimCondition.ClaimConditionStruct;
+      return newContractModelToAbstract(contractModel);
     } else {
       throw new Error("Contract does not support claim conditions");
     }
@@ -642,6 +665,28 @@ export class DropErc1155ClaimConditions<
             ],
           ),
         );
+      } else if (this.isNewSinglePhaseDrop(this.contractWrapper)) {
+        encoded.push(
+          this.contractWrapper.readContract.interface.encodeFunctionData(
+            "setClaimConditions",
+            [
+              tokenId,
+              abstractContractModelToNew(sortedConditions[0]),
+              resetClaimEligibilityForAll,
+            ],
+          ),
+        );
+      } else if (this.isNewMultiphaseDrop(this.contractWrapper)) {
+        encoded.push(
+          this.contractWrapper.readContract.interface.encodeFunctionData(
+            "setClaimConditions",
+            [
+              tokenId,
+              sortedConditions.map(abstractContractModelToNew),
+              resetClaimEligibilityForAll,
+            ],
+          ),
+        );
       } else {
         throw new Error("Contract does not support claim conditions");
       }
@@ -694,8 +739,7 @@ export class DropErc1155ClaimConditions<
     );
   }
 
-  // TODO (cc)
-  private isNewSinglePhaseDrop(
+  isNewSinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase1155> {
     return (
@@ -710,8 +754,7 @@ export class DropErc1155ClaimConditions<
     );
   }
 
-  // TODO (cc)
-  private isNewMultiphaseDrop(
+  isNewMultiphaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<Drop1155> {
     return (
@@ -720,7 +763,7 @@ export class DropErc1155ClaimConditions<
     );
   }
 
-  private isLegacySinglePhaseDrop(
+  isLegacySinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase1155_V1> {
     return (
@@ -732,7 +775,7 @@ export class DropErc1155ClaimConditions<
     );
   }
 
-  private isLegacyMultiPhaseDrop(
+  isLegacyMultiPhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropERC1155_V2> {
     return (
