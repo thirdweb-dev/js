@@ -15,7 +15,6 @@ import {
   detectContractFeature,
   hasFunction,
 } from "../../common/feature-detection";
-import { getPrebuiltInfo } from "../../common/legacy";
 import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
 import { isNode } from "../../common/utils";
 import { ClaimEligibility } from "../../enums";
@@ -42,7 +41,6 @@ import type {
   ContractMetadata as ContractMetadataContract,
   Drop,
   DropERC20_V2,
-  DropERC721,
   DropERC721_V3,
   DropSinglePhase,
   DropSinglePhase_V1,

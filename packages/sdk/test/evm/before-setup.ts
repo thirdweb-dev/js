@@ -24,10 +24,8 @@ import {
   ContractPublisher,
   ContractPublisher__factory,
   DropERC1155__factory,
-  DropERC1155_V2__factory,
   DropERC20__factory,
   DropERC721__factory,
-  DropERC721_V3__factory,
   Marketplace__factory,
   MockContractPublisher,
   MockContractPublisher__factory,
@@ -177,7 +175,7 @@ export const mochaHooks = {
           factory = TokenERC1155__factory;
           break;
         case EditionDropInitializer.contractType:
-          factory = DropERC1155_V2__factory; // TODO (cc) deploy new type
+          factory = DropERC1155__factory;
           break;
         case SplitInitializer.contractType:
           factory = Split__factory;

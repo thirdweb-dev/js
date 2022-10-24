@@ -25,7 +25,7 @@ import {
 import { PaperCheckout } from "../../integrations/paper-xyz";
 import { DropErc1155ContractSchema } from "../../schema/contracts/drop-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
-import type { DropERC1155, DropERC1155_V2 } from "@thirdweb-dev/contracts-js";
+import { PrebuiltEditionDrop } from "../../types/eips";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC1155.json";
 import { ThirdwebStorage, UploadProgressEvent } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
@@ -44,21 +44,21 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
  *
  * @public
  */
-export class EditionDrop extends StandardErc1155<DropERC1155_V2> {
+export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
   private static contractRoles = ["admin", "minter", "transfer"] as const;
 
   public abi: typeof ABI;
-  public sales: ContractPrimarySale<DropERC1155_V2>;
-  public platformFees: ContractPlatformFee<DropERC1155_V2>;
-  public encoder: ContractEncoder<DropERC1155_V2>;
-  public estimator: GasCostEstimator<DropERC1155_V2>;
-  public events: ContractEvents<DropERC1155_V2>;
+  public sales: ContractPrimarySale<PrebuiltEditionDrop>;
+  public platformFees: ContractPlatformFee<PrebuiltEditionDrop>;
+  public encoder: ContractEncoder<PrebuiltEditionDrop>;
+  public estimator: GasCostEstimator<PrebuiltEditionDrop>;
+  public events: ContractEvents<PrebuiltEditionDrop>;
   public metadata: ContractMetadata<
-    DropERC1155_V2,
+    PrebuiltEditionDrop,
     typeof DropErc1155ContractSchema
   >;
   public roles: ContractRoles<
-    DropERC1155_V2,
+    PrebuiltEditionDrop,
     typeof EditionDrop.contractRoles[number]
   >;
   /**
@@ -79,7 +79,7 @@ export class EditionDrop extends StandardErc1155<DropERC1155_V2> {
    * ```
    */
   public royalties: ContractRoyalty<
-    DropERC1155_V2,
+    PrebuiltEditionDrop,
     typeof DropErc1155ContractSchema
   >;
   /**
@@ -106,18 +106,18 @@ export class EditionDrop extends StandardErc1155<DropERC1155_V2> {
    * await contract.claimConditions.set(tokenId, claimConditions);
    * ```
    */
-  public claimConditions: DropErc1155ClaimConditions<DropERC1155_V2>;
+  public claimConditions: DropErc1155ClaimConditions<PrebuiltEditionDrop>;
 
   /**
    * Checkout
    * @remarks Create a FIAT currency checkout for your NFT drop.
    */
-  public checkout: PaperCheckout<DropERC1155_V2>;
+  public checkout: PaperCheckout<PrebuiltEditionDrop>;
 
   public history: DropErc1155History;
-  public interceptor: ContractInterceptor<DropERC1155_V2>;
-  public erc1155: Erc1155<DropERC1155_V2>;
-  public owner: ContractOwner<DropERC1155_V2>;
+  public interceptor: ContractInterceptor<PrebuiltEditionDrop>;
+  public erc1155: Erc1155<PrebuiltEditionDrop>;
+  public owner: ContractOwner<PrebuiltEditionDrop>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -126,7 +126,7 @@ export class EditionDrop extends StandardErc1155<DropERC1155_V2> {
     options: SDKOptions = {},
     abi: typeof ABI,
     chainId: number,
-    contractWrapper = new ContractWrapper<DropERC1155_V2>(
+    contractWrapper = new ContractWrapper<PrebuiltEditionDrop>(
       network,
       address,
       abi,

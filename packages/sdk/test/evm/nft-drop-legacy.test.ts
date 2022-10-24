@@ -3,9 +3,9 @@ import {
   ClaimEligibility,
   NATIVE_TOKEN_ADDRESS,
   NFTDrop,
+  NFTDropInitializer,
   TokenInitializer,
 } from "../../src/evm";
-import { DropErc721ContractSchema } from "../../src/evm/schema";
 import { expectError, sdk, signers, storage } from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -37,7 +37,7 @@ describe("NFT Drop Contract (Legacy)", async () => {
       .connect(adminWallet)
       .deploy();
     const implAddress = await impl.deployed();
-    const contractMetadata = DropErc721ContractSchema.deploy.parse({
+    const contractMetadata = NFTDropInitializer.schema.deploy.parse({
       name: `Testing drop from SDK`,
       description: "Test contract from tests",
       image:

@@ -1,14 +1,16 @@
 import {
   ClaimEligibility,
   EditionDrop,
+  EditionDropInitializer,
   NATIVE_TOKEN_ADDRESS,
   TokenInitializer,
 } from "../../src/evm";
-import { expectError, sdk, signers } from "./before-setup";
+import { expectError, sdk, signers, storage } from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { DropERC1155_V2__factory } from "@thirdweb-dev/contracts-js";
 import { assert, expect, use } from "chai";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import invariant from "tiny-invariant";
 
 global.fetch = require("cross-fetch");
@@ -17,7 +19,7 @@ const deepEqualInAnyOrder = require("deep-equal-in-any-order");
 
 use(deepEqualInAnyOrder);
 
-describe("Edition Drop Contract", async () => {
+describe("Edition Drop Contract (Legacy)", async () => {
   let bdContract: EditionDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -34,8 +36,15 @@ describe("Edition Drop Contract", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployer.deployEditionDrop({
-      name: `Testing bundle drop from SDK`,
+    const impl = await new ethers.ContractFactory(
+      DropERC1155_V2__factory.abi,
+      DropERC1155_V2__factory.bytecode,
+    )
+      .connect(adminWallet)
+      .deploy();
+    const implAddress = await impl.deployed();
+    const contractMetadata = EditionDropInitializer.schema.deploy.parse({
+      name: `Testing edition drop from SDK`,
       description: "Test contract from tests",
       image:
         "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
@@ -45,6 +54,24 @@ describe("Edition Drop Contract", async () => {
       platform_fee_basis_points: 10,
       platform_fee_recipient: adminWallet.address,
     });
+    const contractUri = await storage.upload(contractMetadata);
+    const address = await sdk.deployer.deployProxy(
+      implAddress.address,
+      DropERC1155_V2__factory.abi,
+      "initialize",
+      [
+        adminWallet.address,
+        contractMetadata.name,
+        contractMetadata.symbol,
+        contractUri,
+        contractMetadata.trusted_forwarders || [],
+        contractMetadata.primary_sale_recipient,
+        contractMetadata.fee_recipient,
+        contractMetadata.seller_fee_basis_points,
+        contractMetadata.platform_fee_basis_points,
+        contractMetadata.platform_fee_recipient,
+      ],
+    );
     bdContract = await sdk.getEditionDrop(address);
   });
 

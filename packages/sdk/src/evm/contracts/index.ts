@@ -35,8 +35,14 @@ export const EditionDropInitializer = {
     ...[network, address, storage, options]: InitalizeParams
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
+    const contractInfo = await getPrebuiltInfo(address, provider);
+    if (contractInfo.type !== "DropERC1155") {
+      throw new Error("Contract is not a DropERC1155");
+    }
     const [abi, contract, _network] = await Promise.all([
-      EditionDropInitializer.getAbi(),
+      contractInfo.version > 2
+        ? EditionDropInitializer.getAbi()
+        : EditionDropInitializer.getV2Abi(),
       import("./prebuilt-implementations/edition-drop"),
       provider.getNetwork(),
     ]);
@@ -51,7 +57,10 @@ export const EditionDropInitializer = {
     );
   },
   getAbi: async () =>
-    (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC1155_V2.json")) // TODO (cc) use the latest version
+    (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC1155.json")) // TODO (cc) use the latest version
+      .default,
+  getV2Abi: async () =>
+    (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC1155_V2.json"))
       .default,
 };
 
