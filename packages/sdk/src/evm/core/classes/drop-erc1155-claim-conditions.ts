@@ -148,7 +148,10 @@ export class DropErc1155ClaimConditions<
     tokenId: BigNumberish,
     options?: ClaimConditionFetchOptions,
   ): Promise<ClaimCondition[]> {
-    if (this.isLegacyMultiPhaseDrop(this.contractWrapper)) {
+    if (
+      this.isLegacyMultiPhaseDrop(this.contractWrapper) ||
+      this.isNewMultiphaseDrop(this.contractWrapper)
+    ) {
       const claimCondition =
         (await this.contractWrapper.readContract.claimCondition(tokenId)) as {
           currentStartId: BigNumber;
@@ -174,7 +177,7 @@ export class DropErc1155ClaimConditions<
         ),
       );
     } else {
-      return [await this.getActive(tokenId)];
+      return [await this.getActive(tokenId, options)];
     }
   }
 

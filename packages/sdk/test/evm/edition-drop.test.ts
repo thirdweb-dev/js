@@ -275,7 +275,8 @@ describe("Edition Drop Contract", async () => {
   it("should return the correct status if a token can be claimed", async () => {
     await bdContract.claimConditions.set("0", [
       {
-        snapshot: [w1.address],
+        maxClaimablePerWallet: 0,
+        snapshot: [{ address: w1.address, maxClaimable: 1 }],
       },
     ]);
 
@@ -321,7 +322,8 @@ describe("Edition Drop Contract", async () => {
   it("canClaim: 1 address", async () => {
     await bdContract.claimConditions.set("0", [
       {
-        snapshot: [w1.address],
+        maxClaimablePerWallet: 0,
+        snapshot: [{ address: w1.address, maxClaimable: 1 }],
       },
     ]);
 
@@ -336,13 +338,18 @@ describe("Edition Drop Contract", async () => {
   });
 
   it("canClaim: 3 address", async () => {
+    const members = [
+      {
+        address: w1.address.toUpperCase().replace("0X", "0x"),
+        maxClaimable: 1,
+      },
+      { address: w2.address.toLowerCase(), maxClaimable: 1 },
+      { address: w3.address.toLowerCase(), maxClaimable: 1 },
+    ];
     await bdContract.claimConditions.set("0", [
       {
-        snapshot: [
-          w1.address.toUpperCase().replace("0X", "0x"),
-          w2.address.toLowerCase(),
-          w3.address,
-        ],
+        maxClaimablePerWallet: 0,
+        snapshot: members,
       },
     ]);
 
@@ -413,7 +420,7 @@ describe("Edition Drop Contract", async () => {
     try {
       await bdContract.claim("1", 2);
     } catch (e) {
-      expectError(e, "exceed max mint supply");
+      expectError(e, "!MaxSupply");
     }
   });
 
@@ -477,11 +484,11 @@ describe("Edition Drop Contract", async () => {
       assert.isFalse(canClaim);
     });
 
-    it("should check if an address has valid merkle proofs", async () => {
+    it("should disallow some addresses from claiming", async () => {
       await bdContract.claimConditions.set("0", [
         {
           maxClaimableSupply: 1,
-          snapshot: [w2.address, adminWallet.address],
+          snapshot: [{ address: w1.address, maxClaimable: 0 }],
         },
       ]);
 
@@ -496,34 +503,6 @@ describe("Edition Drop Contract", async () => {
         "0",
         "1",
         w1.address,
-      );
-      assert.isFalse(canClaim);
-    });
-
-    it("should check if its been long enough since the last claim", async () => {
-      await bdContract.claimConditions.set("0", [
-        {
-          maxClaimableSupply: 10,
-          waitInSeconds: 24 * 60 * 60,
-        },
-      ]);
-      await sdk.updateSignerOrProvider(bobWallet);
-      await bdContract.claim("0", 1);
-
-      const reasons =
-        await bdContract.claimConditions.getClaimIneligibilityReasons(
-          "0",
-          "1",
-          bobWallet.address,
-        );
-
-      expect(reasons).to.include(
-        ClaimEligibility.WaitBeforeNextClaimTransaction,
-      );
-      const canClaim = await bdContract.claimConditions.canClaim(
-        "0",
-        "1",
-        bobWallet.address,
       );
       assert.isFalse(canClaim);
     });

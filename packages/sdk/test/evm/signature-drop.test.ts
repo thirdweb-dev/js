@@ -500,9 +500,8 @@ describe("Signature drop tests", async () => {
 
       const metadata = await signatureDropContract.metadata.get();
       const merkles = metadata.merkle;
-
       expect(merkles).have.property(
-        "0xb1a60ad68b77609a455696695fbdd02b850d03ec285e7fe1f4c4093797457b24",
+        "0x5398c0f1d4b32f7e4817ddfb7075fada328dfd68ee954ee7d673751ad2025b80",
       );
 
       const roots = await signatureDropContract.claimConditions.getActive();
@@ -718,53 +717,7 @@ describe("Signature drop tests", async () => {
         await sdk.updateSignerOrProvider(w2);
         await signatureDropContract.claim(2);
       } catch (e) {
-        expectError(e, "Invalid qty proof");
-      }
-    });
-
-    it("should generate valid proofs", async () => {
-      const members = [
-        bobWallet.address,
-        samWallet.address,
-        abbyWallet.address,
-        w1.address,
-        w2.address,
-        w3.address,
-        w4.address,
-      ];
-
-      const hashedLeafs = members.map((l) =>
-        ethers.utils.solidityKeccak256(["address", "uint256"], [l, 0]),
-      );
-      const tree = new MerkleTree(hashedLeafs, keccak256, {
-        sort: true,
-        sortLeaves: true,
-        sortPairs: true,
-      });
-      const input = members.map((address) => ({
-        address,
-        maxClaimable: 0,
-      }));
-      const snapshot = await createSnapshot(input, 0, storage);
-      for (const leaf of members) {
-        const expectedProof = tree.getHexProof(
-          ethers.utils.solidityKeccak256(["address", "uint256"], [leaf, 0]),
-        );
-
-        const smt = await ShardedMerkleTree.fromUri(
-          snapshot.snapshotUri,
-          storage,
-        );
-        const actualProof = await smt?.getProof(leaf);
-        assert.isDefined(actualProof);
-        expect(actualProof?.proof).to.include.ordered.members(expectedProof);
-
-        const verified = tree.verify(
-          actualProof?.proof as string[],
-          ethers.utils.solidityKeccak256(["address", "uint256"], [leaf, 0]),
-          tree.getHexRoot(),
-        );
-        expect(verified).to.eq(true);
+        expectError(e, "!Qty");
       }
     });
 
