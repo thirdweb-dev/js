@@ -212,6 +212,11 @@ export type ClaimNFTReturnType =
 // MARKETPLACE //
 
 export type MakeBidParams = { listingId: BigNumberish; bid: Price };
+export type MakeOfferParams = {
+  listingId: BigNumberish;
+  pricePerToken: Price;
+  quantity?: Amount;
+};
 
 export type BuyNowParams<TListingType = ListingType> =
   TListingType extends ListingType.Direct
