@@ -82,10 +82,14 @@ export const WrappedThirdwebSDKProvider: ComponentWithChildren<
   }, [provider, sdkOptions, storageInterface, desiredChainId]);
 
   useEffect(() => {
-    if (signer && sdk && (sdk as any)._chainId === desiredChainId) {
-      sdk.updateSignerOrProvider(signer);
+    if (sdk && (sdk as any)._chainId === desiredChainId) {
+      if (signer) {
+        sdk.updateSignerOrProvider(signer);
+      } else {
+        sdk.updateSignerOrProvider(provider);
+      }
     }
-  }, [signer, sdk, desiredChainId]);
+  }, [signer, sdk, desiredChainId, provider]);
 
   const ctxValue = useMemo(
     () => ({
