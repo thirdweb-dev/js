@@ -32,13 +32,11 @@ export const VerificationStatus = {
 export const apiMap: Record<number, string> = {
   1: "https://api.etherscan.io/api",
   3: "https://api-ropsten.etherscan.io/api",
-  4: "https://api-rinkeby.etherscan.io/api",
   5: "https://api-goerli.etherscan.io/api",
   10: "https://api-optimistic.etherscan.io/api",
   25: "https://api.cronoscan.com/api",
   42: "https://api-kovan.etherscan.io/api",
   56: "https://api.bscscan.com/api",
-  69: "https://api-kovan-optimistic.etherscan.io/api",
   97: "https://api-testnet.bscscan.com/api",
   128: "https://api.hecoinfo.com/api",
   137: "https://api.polygonscan.com/api",
@@ -54,9 +52,7 @@ export const apiMap: Record<number, string> = {
   42161: "https://api.arbiscan.io/api",
   43113: "https://api-testnet.snowtrace.io/api",
   43114: "https://api.snowtrace.io/api",
-  421611: "https://api-testnet.arbiscan.io/api",
-  // eslint-disable-next-line line-comment-position
-  421613: "https://api-testnet.arbiscan.io/api", // TODO - change to correct endpoint
+  421613: "https://api-goerli.arbiscan.io/api",
   80001: "https://api-testnet.polygonscan.com/api",
   1313161554: "https://api.aurorascan.dev/api",
   1313161555: "https://api-testnet.aurorascan.dev/api",
@@ -65,7 +61,6 @@ export const apiMap: Record<number, string> = {
 export const blockExplorerMap: Record<number, { name: string; url: string }> = {
   1: { name: "Etherscan", url: "https://etherscan.io/" },
   3: { name: "Ropsten Etherscan", url: "https://ropsten.etherscan.io/" },
-  4: { name: "Rinkeby Etherscan", url: "https://rinkeby.etherscan.io/" },
   5: { name: "Goerli Etherscan", url: "https://goerli.etherscan.io/" },
   10: {
     name: "Optimism Etherscan",
@@ -73,10 +68,6 @@ export const blockExplorerMap: Record<number, { name: string; url: string }> = {
   },
   42: { name: "Kovan Etherscan", url: "https://kovan.etherscan.io/" },
   56: { name: "Bscscan", url: "https://bscscan.com/" },
-  69: {
-    name: "Optimism Kovan Etherscan",
-    url: "https://kovan-optimistic.etherscan.io/",
-  },
   420: {
     name: "Optimism Goerli Etherscan",
     url: "https://goerli-optimistic.etherscan.io/",
@@ -88,7 +79,6 @@ export const blockExplorerMap: Record<number, { name: string; url: string }> = {
   42161: { name: "Arbiscan", url: "https://arbiscan.io/" },
   43113: { name: "Snowtrace Testnet", url: "https://testnet.snowtrace.io/" },
   43114: { name: "Snowtrace", url: "https://snowtrace.io/" },
-  421611: { name: "Arbiscan Rinkeby", url: "https://testnet.arbiscan.io/" },
   421613: {
     name: "Arbiscan Goerli",
     url: "https://goerli-rollup-explorer.arbitrum.io/",

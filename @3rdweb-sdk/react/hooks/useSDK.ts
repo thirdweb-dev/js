@@ -101,7 +101,6 @@ export function useMainnetsContractList(address: string | undefined) {
 }
 
 export function useTestnetsContractList(address: string | undefined) {
-  // const rinkebyQuery = useContractList(ChainId.Rinkeby, address);
   const goerliQuery = useContractList(ChainId.Goerli, address);
   const mumbaiQuery = useContractList(ChainId.Mumbai, address);
   const fantomTestnetQuery = useContractList(ChainId.FantomTestnet, address);
@@ -109,12 +108,7 @@ export function useTestnetsContractList(address: string | undefined) {
     ChainId.AvalancheFujiTestnet,
     address,
   );
-  // const optimismKovanQuery = useContractList(ChainId.OptimismKovan, address);
   const optimismGoerliQuery = useContractList(ChainId.OptimismGoerli, address);
-  // const arbitrumRinkebyQuery = useContractList(
-  //   ChainId.ArbitrumRinkeby,
-  //   address,
-  // );
   const arbitrumGoerliQuery = useContractList(ChainId.ArbitrumGoerli, address);
   const binanceTestnetQuery = useContractList(
     ChainId.BinanceSmartChainTestnet,

@@ -40,7 +40,7 @@ export const FormComponent: React.FC<IFormComponentProps> = ({
       if (query.status >= 400) {
         throw new Error(
           await query.json().then((r) => {
-            console.log(r.error);
+            console.error(r.error);
             return r.error;
           }),
         );

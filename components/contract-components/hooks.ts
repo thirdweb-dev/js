@@ -321,12 +321,17 @@ export function useReleasesFromDeploy(
     async () => {
       invariant(contractAddress, "contractAddress is not defined");
       invariant(cId, "chain not defined");
+      const sdk = getEVMThirdwebSDK(cId);
 
-      const sdk = getEVMThirdwebSDK(ChainId.Polygon);
-
-      return await sdk
+      const contractUri = await sdk
         .getPublisher()
-        .resolveReleasesFromAddress(contractAddress);
+        .resolveContractUriFromAddress(contractAddress);
+
+      const polygonSdk = getEVMThirdwebSDK(ChainId.Polygon);
+
+      return await polygonSdk
+        .getPublisher()
+        .resolvePublishMetadataFromCompilerMetadata(contractUri);
     },
     {
       enabled: !!contractAddress && !!cId,

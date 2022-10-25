@@ -3419,10 +3419,10 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.1.8-0.tgz#847af3fe9a53368e7be04b7b6e6afe076d3d1676"
   integrity sha512-PiQjdRcAUBlu3poc4g6dN9KvjTgYsA1Vi+B/IgryptCgcJeMY4cldMabKCgPaCg9dPVpUq4O+SOM00P6mBNvGw==
 
-"@thirdweb-dev/react@^3.4.0":
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-3.4.0.tgz#9bbbc5d3dfe70988c4599482a53d48855e8212d6"
-  integrity sha512-xwuHP8OYYD9n36A8ULHXDbNAQLTyrDtcO4MBbaVFDv0tcWC+QTUxCDWDhYcwWqhJhfa66bcZ9vTD81NZc9bhTg==
+"@thirdweb-dev/react@^3.4.2-nightly-21c21c1":
+  version "3.4.2-nightly-21c21c1"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-3.4.2-nightly-21c21c1.tgz#12610527cce83f5d4d8890f9b854afbdd046c0da"
+  integrity sha512-m3NOH+g2p/QVCiUko0GANYNTSr3OivtdM9tBzTg15NTN/MSRx8EovEGYWry1dsB9w9V4q+PN1ZhqYWJNcwjMQg==
   dependencies:
     "@emotion/react" "^11.10.0"
     "@emotion/styled" "^11.10.0"
@@ -3444,10 +3444,10 @@
     tiny-invariant "^1.2.0"
     wagmi "^0.2.28"
 
-"@thirdweb-dev/sdk@^3.4.0":
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-3.4.0.tgz#72bd70b6ad5a04b9801c5be6ebcd7f67d67a5715"
-  integrity sha512-zmVPa4lCU1yD7j73msw0c8IAGJAFNPIaypcSzn6XU/IzvT0Co3tfqhAeXjTRSWdUPV/ntA6yeStuTwjWsI16uA==
+"@thirdweb-dev/sdk@^3.4.2-nightly-21c21c1":
+  version "3.4.2-nightly-21c21c1"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-3.4.2-nightly-21c21c1.tgz#bbcca9ada7b79dcbb22617e10721bfa24ef3799a"
+  integrity sha512-ne0z/mJoI5YwXgG0KNQ+MzgAwnBpdTAro8JYDYItfxsH1aAvyNrzNJQ9sdtNiwbQum7yt75e39lHk4WeoOgqow==
   dependencies:
     "@metaplex-foundation/js" "0.15.0"
     "@metaplex-foundation/mpl-token-metadata" "2.2.2"
