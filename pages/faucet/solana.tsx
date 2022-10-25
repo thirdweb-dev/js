@@ -16,10 +16,10 @@ const SolanaFaucet: ThirdwebNextPage = () => {
     <>
       <NextSeo
         title="Solana (SOL) Faucet | thirdweb"
-        description="Get Solana devnet tokens for free—using our fast and reliable Solana Faucet for blockchain developers. Powered by thirdweb."
+        description="Get Solana devnet tokens for free—using our fast and reliable Solana Faucet for blockchain developers building web3 apps. Powered by thirdweb."
         openGraph={{
           title:
-            "Get Solana devnet tokens for free—using our fast and reliable Solana Faucet for blockchain developers. Powered by thirdweb.",
+            "Get Solana devnet tokens for free—using our fast and reliable Solana Faucet for blockchain developers building web3 apps. Powered by thirdweb.",
           url: `https://thirdweb.com/faucet/solana`,
         }}
       />
@@ -30,9 +30,9 @@ const SolanaFaucet: ThirdwebNextPage = () => {
         mx="auto"
         px={{ base: 0, md: 4 }}
       >
-        <Heading>Solana faucet</Heading>
-        <Heading fontSize="20px" my="4">
-          Get Solana devnet tokens for free
+        <Heading as="h1">Solana Faucet</Heading>
+        <Heading fontSize="20px" my="4" as="h2">
+          Get Solana devnet tokens for free to build your blockchain app.
         </Heading>
         {!transactionLink ? (
           <FormComponent
