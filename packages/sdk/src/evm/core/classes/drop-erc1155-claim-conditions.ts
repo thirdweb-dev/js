@@ -39,6 +39,7 @@ import type {
   DropSinglePhase1155_V1,
   IERC20,
 } from "@thirdweb-dev/contracts-js";
+import { IDropSinglePhase_V1 } from "@thirdweb-dev/contracts-js";
 import IERC20ABI from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC20_V2";
 import { IDropSinglePhase } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
@@ -740,6 +741,53 @@ export class DropErc1155ClaimConditions<
       checkERC20Allowance,
       this.getSnapshotFormatVersion(),
     );
+  }
+
+  public async getClaimArguments(
+    tokenId: BigNumberish,
+    destinationAddress: string,
+    quantity: BigNumberish,
+    claimVerification: ClaimVerification,
+  ): Promise<any[]> {
+    const activeClaimCondition = await this.getActive(tokenId);
+    if (this.isLegacyMultiPhaseDrop(this.contractWrapper)) {
+      return [
+        destinationAddress,
+        tokenId,
+        quantity,
+        activeClaimCondition.currencyAddress,
+        activeClaimCondition.price,
+        claimVerification.proofs,
+        claimVerification.maxClaimable,
+      ];
+    } else if (this.isLegacySinglePhaseDrop(this.contractWrapper)) {
+      return [
+        destinationAddress,
+        tokenId,
+        quantity,
+        activeClaimCondition.currencyAddress,
+        activeClaimCondition.price,
+        {
+          proof: claimVerification.proofs,
+          maxQuantityInAllowlist: claimVerification.maxClaimable,
+        } as IDropSinglePhase_V1.AllowlistProofStruct,
+        ethers.utils.toUtf8Bytes(""),
+      ];
+    }
+    return [
+      destinationAddress,
+      tokenId,
+      quantity,
+      activeClaimCondition.currencyAddress,
+      activeClaimCondition.price,
+      {
+        proof: claimVerification.proofs,
+        quantityLimitPerWallet: claimVerification.maxClaimable,
+        pricePerToken: claimVerification.price,
+        currency: claimVerification.currencyAddress,
+      } as IDropSinglePhase.AllowlistProofStruct,
+      ethers.utils.toUtf8Bytes(""),
+    ];
   }
 
   isNewSinglePhaseDrop(

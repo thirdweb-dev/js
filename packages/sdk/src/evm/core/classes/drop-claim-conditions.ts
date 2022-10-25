@@ -2,6 +2,7 @@ import { includesErrorMessage } from "../../common";
 import {
   abstractContractModelToLegacy,
   abstractContractModelToNew,
+  convertQuantityToBigNumber,
   getClaimerProofs,
   legacyContractModelToAbstract,
   newContractModelToAbstract,
@@ -27,14 +28,17 @@ import {
   ClaimCondition,
   ClaimConditionFetchOptions,
   ClaimConditionInput,
+  ClaimOptions,
   ClaimVerification,
 } from "../../types";
 import {
   BaseClaimConditionERC721,
   BaseDropERC20,
   PrebuiltNFTDrop,
+  PrebuiltTokenDrop,
 } from "../../types/eips";
 import { TransactionResult } from "../types";
+import { TransactionTask } from "./TransactionTask";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
@@ -47,6 +51,7 @@ import type {
   IERC20,
   IERC20Metadata,
 } from "@thirdweb-dev/contracts-js";
+import { IDropSinglePhase_V1 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import type { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/declarations/src/IDropERC20_V2";
 import type { IDropSinglePhase } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
@@ -62,7 +67,7 @@ import deepEqual from "fast-deep-equal";
 export class DropClaimConditions<
   TContract extends
     | PrebuiltNFTDrop
-    | DropERC20_V2
+    | PrebuiltTokenDrop
     | BaseClaimConditionERC721
     | BaseDropERC20,
 > {
@@ -346,7 +351,10 @@ export class DropClaimConditions<
             // TODO (cc) instead check if maxClaimablePerWallet is 0 and this address has no overrides
             // TODO (cc) meaning this address is not allowed to claim
             if (
-              (claimCondition.maxClaimablePerWallet === "0" &&
+              (convertQuantityToBigNumber(
+                claimCondition.maxClaimablePerWallet,
+                decimals,
+              ).eq(0) &&
                 allowListEntry.maxClaimable === ethers.constants.MaxUint256) ||
               allowListEntry.maxClaimable === BigNumber.from(0)
             ) {
@@ -370,7 +378,10 @@ export class DropClaimConditions<
               } as IDropSinglePhase.AllowlistProofStruct,
             );
             if (
-              (claimCondition.maxClaimablePerWallet === "0" &&
+              (convertQuantityToBigNumber(
+                claimCondition.maxClaimablePerWallet,
+                decimals,
+              ).eq(0) &&
                 allowListEntry.maxClaimable === ethers.constants.MaxUint256) ||
               allowListEntry.maxClaimable === BigNumber.from(0)
             ) {
@@ -395,7 +406,12 @@ export class DropClaimConditions<
       this.isNewMultiphaseDrop(this.contractWrapper)
     ) {
       if (!hasAllowList || (hasAllowList && !allowListEntry)) {
-        if (claimCondition.maxClaimablePerWallet === "0") {
+        if (
+          convertQuantityToBigNumber(
+            claimCondition.maxClaimablePerWallet,
+            decimals,
+          ).eq(0)
+        ) {
           reasons.push(ClaimEligibility.AddressNotAllowed);
           return reasons;
         }
@@ -674,7 +690,86 @@ export class DropClaimConditions<
     );
   }
 
-  // TODO (cc)
+  public async getClaimArguments(
+    destinationAddress: string,
+    quantity: BigNumberish,
+    claimVerification: ClaimVerification,
+  ): Promise<any[]> {
+    const activeClaimCondition = await this.getActive();
+    if (this.isLegacyMultiPhaseDrop(this.contractWrapper)) {
+      return [
+        destinationAddress,
+        quantity,
+        activeClaimCondition.currencyAddress,
+        activeClaimCondition.price,
+        claimVerification.proofs,
+        claimVerification.maxClaimable,
+      ];
+    } else if (this.isLegacySinglePhaseDrop(this.contractWrapper)) {
+      return [
+        destinationAddress,
+        quantity,
+        activeClaimCondition.currencyAddress,
+        activeClaimCondition.price,
+        {
+          proof: claimVerification.proofs,
+          maxQuantityInAllowlist: claimVerification.maxClaimable,
+        } as IDropSinglePhase_V1.AllowlistProofStruct,
+        ethers.utils.toUtf8Bytes(""),
+      ];
+    }
+    return [
+      destinationAddress,
+      quantity,
+      activeClaimCondition.currencyAddress,
+      activeClaimCondition.price,
+      {
+        proof: claimVerification.proofs,
+        quantityLimitPerWallet: claimVerification.maxClaimable,
+        pricePerToken: claimVerification.price,
+        currency: claimVerification.currencyAddress,
+      } as IDropSinglePhase.AllowlistProofStruct,
+      ethers.utils.toUtf8Bytes(""),
+    ];
+  }
+
+  /**
+   * Construct a claim transaction without executing it.
+   * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
+   * @param destinationAddress
+   * @param quantity
+   * @param options
+   */
+  public async getClaimTransaction(
+    destinationAddress: string,
+    quantity: BigNumberish,
+    options?: ClaimOptions,
+  ): Promise<TransactionTask> {
+    if (options?.pricePerToken) {
+      throw new Error(
+        "Price per token is be set via claim conditions by calling `contract.erc721.claimConditions.set()`",
+      );
+    }
+    const claimVerification = await this.prepareClaim(
+      quantity,
+      options?.checkERC20Allowance === undefined
+        ? true
+        : options.checkERC20Allowance,
+      await this.getTokenDecimals(),
+    );
+
+    return TransactionTask.make({
+      contractWrapper: this.contractWrapper,
+      functionName: "claim",
+      args: await this.getClaimArguments(
+        destinationAddress,
+        quantity,
+        claimVerification,
+      ),
+      overrides: claimVerification.overrides,
+    });
+  }
+
   isNewSinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase> {
@@ -684,7 +779,6 @@ export class DropClaimConditions<
     );
   }
 
-  // TODO (cc)
   isNewMultiphaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<Drop> {

@@ -78,44 +78,6 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
   }
 
   /**
-   * Construct a claim transaction without executing it.
-   * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
-   * @param destinationAddress
-   * @param quantity
-   * @param options
-   */
-  public async getClaimTransaction(
-    destinationAddress: string,
-    quantity: BigNumberish,
-    options?: ClaimOptions,
-  ): Promise<TransactionTask> {
-    if (options?.pricePerToken) {
-      throw new Error(
-        "In ERC721ClaimableWithConditions, price per token is be set via claim conditions by calling `contract.erc721.claimConditions.set()`",
-      );
-    }
-    const activeClaimCondition = await this.conditions.getActive();
-    const claimVerification = await this.conditions.prepareClaim(
-      quantity,
-      options?.checkERC20Allowance === undefined
-        ? true
-        : options.checkERC20Allowance,
-    );
-
-    return TransactionTask.make({
-      contractWrapper: this.contractWrapper,
-      functionName: "claim",
-      args: await this.getArgs(
-        destinationAddress,
-        quantity,
-        activeClaimCondition,
-        claimVerification,
-      ),
-      overrides: claimVerification.overrides,
-    });
-  }
-
-  /**
    * Claim unique NFTs to a specific Wallet
    *
    * @remarks Let the specified wallet claim NFTs.
@@ -141,7 +103,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
     quantity: BigNumberish,
     options?: ClaimOptions,
   ): Promise<TransactionResultWithId<NFT>[]> {
-    const task = await this.getClaimTransaction(
+    const task = await this.conditions.getClaimTransaction(
       destinationAddress,
       quantity,
       options,
@@ -162,48 +124,5 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
       });
     }
     return results;
-  }
-
-  private async getArgs(
-    destinationAddress: string,
-    quantity: BigNumberish,
-    activeClaimCondition: ClaimCondition,
-    claimVerification: ClaimVerification,
-  ): Promise<any[]> {
-    if (this.conditions.isLegacyMultiPhaseDrop(this.contractWrapper)) {
-      return [
-        destinationAddress,
-        quantity,
-        activeClaimCondition.currencyAddress,
-        activeClaimCondition.price,
-        claimVerification.proofs,
-        claimVerification.maxClaimable,
-      ];
-    } else if (this.conditions.isLegacySinglePhaseDrop(this.contractWrapper)) {
-      return [
-        destinationAddress,
-        quantity,
-        activeClaimCondition.currencyAddress,
-        activeClaimCondition.price,
-        {
-          proof: claimVerification.proofs,
-          maxQuantityInAllowlist: claimVerification.maxClaimable,
-        } as IDropSinglePhase_V1.AllowlistProofStruct,
-        ethers.utils.toUtf8Bytes(""),
-      ];
-    }
-    return [
-      destinationAddress,
-      quantity,
-      activeClaimCondition.currencyAddress,
-      activeClaimCondition.price,
-      {
-        proof: claimVerification.proofs,
-        quantityLimitPerWallet: claimVerification.maxClaimable,
-        pricePerToken: claimVerification.price,
-        currency: claimVerification.currencyAddress,
-      } as IDropSinglePhase.AllowlistProofStruct,
-      ethers.utils.toUtf8Bytes(""),
-    ];
   }
 }

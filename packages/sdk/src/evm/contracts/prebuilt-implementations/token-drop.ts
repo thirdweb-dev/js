@@ -14,7 +14,7 @@ import { NetworkOrSignerOrProvider, TransactionResult } from "../../core/types";
 import { DropErc20ContractSchema } from "../../schema/contracts/drop-erc20";
 import { SDKOptions } from "../../schema/sdk-options";
 import { Amount, CurrencyValue } from "../../types";
-import type { DropERC20_V2 } from "@thirdweb-dev/contracts-js";
+import { PrebuiltTokenDrop } from "../../types/eips";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC20.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { CallOverrides, constants } from "ethers";
@@ -32,23 +32,23 @@ import { CallOverrides, constants } from "ethers";
  * ```
  *
  */
-export class TokenDrop extends StandardErc20<DropERC20_V2> {
+export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
   static contractRoles = ["admin", "transfer"] as const;
 
   public abi: typeof ABI;
   public metadata: ContractMetadata<
-    DropERC20_V2,
+    PrebuiltTokenDrop,
     typeof DropErc20ContractSchema
   >;
   public roles: ContractRoles<
-    DropERC20_V2,
+    PrebuiltTokenDrop,
     typeof TokenDrop.contractRoles[number]
   >;
-  public encoder: ContractEncoder<DropERC20_V2>;
-  public estimator: GasCostEstimator<DropERC20_V2>;
-  public sales: ContractPrimarySale<DropERC20_V2>;
-  public platformFees: ContractPlatformFee<DropERC20_V2>;
-  public events: ContractEvents<DropERC20_V2>;
+  public encoder: ContractEncoder<PrebuiltTokenDrop>;
+  public estimator: GasCostEstimator<PrebuiltTokenDrop>;
+  public sales: ContractPrimarySale<PrebuiltTokenDrop>;
+  public platformFees: ContractPlatformFee<PrebuiltTokenDrop>;
+  public events: ContractEvents<PrebuiltTokenDrop>;
   /**
    * Configure claim conditions
    * @remarks Define who can claim Tokens, when and how many.
@@ -71,11 +71,11 @@ export class TokenDrop extends StandardErc20<DropERC20_V2> {
    * await contract.claimConditions.set(claimConditions);
    * ```
    */
-  public claimConditions: DropClaimConditions<DropERC20_V2>;
+  public claimConditions: DropClaimConditions<PrebuiltTokenDrop>;
   /**
    * @internal
    */
-  public interceptor: ContractInterceptor<DropERC20_V2>;
+  public interceptor: ContractInterceptor<PrebuiltTokenDrop>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -84,7 +84,7 @@ export class TokenDrop extends StandardErc20<DropERC20_V2> {
     options: SDKOptions = {},
     abi: typeof ABI,
     chainId: number,
-    contractWrapper = new ContractWrapper<DropERC20_V2>(
+    contractWrapper = new ContractWrapper<PrebuiltTokenDrop>(
       network,
       address,
       abi,
@@ -108,7 +108,7 @@ export class TokenDrop extends StandardErc20<DropERC20_V2> {
     this.sales = new ContractPrimarySale(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.claimConditions = new DropClaimConditions<DropERC20_V2>(
+    this.claimConditions = new DropClaimConditions<PrebuiltTokenDrop>(
       this.contractWrapper,
       this.metadata,
       this.storage,
@@ -213,7 +213,9 @@ export class TokenDrop extends StandardErc20<DropERC20_V2> {
     amount: Amount,
     checkERC20Allowance = true,
   ): Promise<TransactionResult> {
-    return this.erc20.claimTo(destinationAddress, amount, checkERC20Allowance);
+    return this.erc20.claimTo(destinationAddress, amount, {
+      checkERC20Allowance,
+    });
   }
 
   /**

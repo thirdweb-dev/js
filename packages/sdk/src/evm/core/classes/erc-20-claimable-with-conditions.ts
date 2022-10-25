@@ -1,6 +1,6 @@
 import { FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS } from "../../constants/erc20-features";
 import { CustomContractSchema } from "../../schema/contracts/custom";
-import { ClaimVerification } from "../../types";
+import { ClaimOptions } from "../../types";
 import { Amount } from "../../types/currency";
 import { BaseDropERC20 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
@@ -20,7 +20,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
  * await contract.token.drop.claim.to("0x...", quantity);
  * ```
  */
-export class Erc20Claimable implements DetectableFeature {
+export class Erc20ClaimableWithConditions implements DetectableFeature {
   featureName = FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS.name;
   /**
    * Configure claim conditions
@@ -93,37 +93,14 @@ export class Erc20Claimable implements DetectableFeature {
   public async to(
     destinationAddress: string,
     amount: Amount,
-    checkERC20Allowance = true,
-    claimData?: ClaimVerification,
+    options?: ClaimOptions,
   ): Promise<TransactionResult> {
     const quantity = await this.erc20.normalizeAmount(amount);
-
-    let claimVerification = claimData;
-    if (this.conditions && !claimData) {
-      claimVerification = await this.conditions.prepareClaim(
-        quantity,
-        checkERC20Allowance,
-        await this.contractWrapper.readContract.decimals(),
-      );
-    }
-    if (!claimVerification) {
-      throw new Error(
-        "Claim verification Data is required - either pass it in as 'claimData' or set claim conditions via 'conditions.set()'",
-      );
-    }
-
-    const receipt = await this.contractWrapper.sendTransaction(
-      "claim",
-      [
-        destinationAddress,
-        quantity,
-        claimVerification.currencyAddress,
-        claimVerification.price,
-        claimVerification.proofs,
-        claimVerification.maxClaimable,
-      ],
-      claimVerification.overrides,
+    const task = await this.conditions.getClaimTransaction(
+      destinationAddress,
+      quantity,
+      options,
     );
-    return { receipt };
+    return await task.execute();
   }
 }

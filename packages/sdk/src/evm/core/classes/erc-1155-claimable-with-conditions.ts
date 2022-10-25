@@ -73,7 +73,6 @@ export class Erc1155ClaimableWithConditions implements DetectableFeature {
         "In ERC1155ClaimableWithConditions, price per token is be set via claim conditions by calling `contract.erc1155.claimConditions.set()`",
       );
     }
-    const activeClaimCondition = await this.conditions.getActive(tokenId);
     const claimVerification = await this.conditions.prepareClaim(
       tokenId,
       quantity,
@@ -82,11 +81,10 @@ export class Erc1155ClaimableWithConditions implements DetectableFeature {
     return TransactionTask.make({
       contractWrapper: this.contractWrapper,
       functionName: "claim",
-      args: await this.getArgs(
+      args: await this.conditions.getClaimArguments(
         tokenId,
         destinationAddress,
         quantity,
-        activeClaimCondition,
         claimVerification,
       ),
       overrides: claimVerification.overrides,
@@ -127,52 +125,5 @@ export class Erc1155ClaimableWithConditions implements DetectableFeature {
       options,
     );
     return await tx.execute();
-  }
-
-  private async getArgs(
-    tokenId: BigNumberish,
-    destinationAddress: string,
-    quantity: BigNumberish,
-    activeClaimCondition: ClaimCondition,
-    claimVerification: ClaimVerification,
-  ): Promise<any[]> {
-    if (this.conditions.isLegacyMultiPhaseDrop(this.contractWrapper)) {
-      return [
-        destinationAddress,
-        tokenId,
-        quantity,
-        activeClaimCondition.currencyAddress,
-        activeClaimCondition.price,
-        claimVerification.proofs,
-        claimVerification.maxClaimable,
-      ];
-    } else if (this.conditions.isLegacySinglePhaseDrop(this.contractWrapper)) {
-      return [
-        destinationAddress,
-        tokenId,
-        quantity,
-        activeClaimCondition.currencyAddress,
-        activeClaimCondition.price,
-        {
-          proof: claimVerification.proofs,
-          maxQuantityInAllowlist: claimVerification.maxClaimable,
-        } as IDropSinglePhase_V1.AllowlistProofStruct,
-        ethers.utils.toUtf8Bytes(""),
-      ];
-    }
-    return [
-      destinationAddress,
-      tokenId,
-      quantity,
-      activeClaimCondition.currencyAddress,
-      activeClaimCondition.price,
-      {
-        proof: claimVerification.proofs,
-        quantityLimitPerWallet: claimVerification.maxClaimable,
-        pricePerToken: claimVerification.price,
-        currency: claimVerification.currencyAddress,
-      } as IDropSinglePhase.AllowlistProofStruct,
-      ethers.utils.toUtf8Bytes(""),
-    ];
   }
 }

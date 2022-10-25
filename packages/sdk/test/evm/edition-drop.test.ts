@@ -237,6 +237,20 @@ describe("Edition Drop Contract", async () => {
     await bdContract.claim("0", 1);
   });
 
+  it("should allow claiming with a price", async () => {
+    await bdContract.createBatch([
+      { name: "name", description: "description" },
+    ]);
+    await bdContract.claimConditions.set(0, [
+      {
+        price: 0.1,
+      },
+    ]);
+    await bdContract.claim(0, 2);
+    const balance = await bdContract.balance(0);
+    expect(balance).to.deep.equal(BigNumber.from(2));
+  });
+
   it("should return addresses of all the claimers", async () => {
     await bdContract.createBatch([
       {

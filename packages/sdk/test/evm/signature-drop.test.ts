@@ -1,6 +1,5 @@
 import { NFTMetadataInput } from "../../src/core/schema/nft";
 import {
-  createSnapshot,
   NATIVE_TOKEN_ADDRESS,
   PayloadToSign721withQuantity,
   SignatureDrop,
@@ -9,13 +8,10 @@ import {
   Token,
   TokenInitializer,
 } from "../../src/evm";
-import { ShardedMerkleTree } from "../../src/evm/common/sharded-merkle-tree";
 import { expectError, sdk, signers, storage } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { BigNumber, ethers } from "ethers";
-import { keccak256 } from "ethers/lib/utils";
-import { MerkleTree } from "merkletreejs";
+import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 
 global.fetch = require("cross-fetch");
@@ -606,14 +602,14 @@ describe("Signature drop tests", async () => {
       await signatureDropContract.createBatch(metadatas);
       await signatureDropContract.claimConditions.set([
         {
-          maxQuantity: 10,
+          maxClaimableSupply: 10,
         },
       ]);
       await signatureDropContract.claim(5);
       await signatureDropContract.claimConditions.set(
         [
           {
-            maxQuantity: 10,
+            maxClaimableSupply: 10,
           },
         ],
         true,

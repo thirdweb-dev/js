@@ -9,6 +9,7 @@ import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   DropERC721__factory,
+  DropERC721_V3__factory,
   TokenERC721__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -83,15 +84,26 @@ describe("Publishing", async () => {
     ).to.eq(true);
 
     // Drop
-    expect(isFeatureEnabled(DropERC721__factory.abi, "ERC721Enumerable")).to.eq(
-      true,
-    );
+    expect(
+      isFeatureEnabled(
+        DropERC721__factory.abi,
+        "ERC721ClaimableWithConditionsV2",
+      ),
+    ).to.eq(true);
     expect(isFeatureEnabled(DropERC721__factory.abi, "ERC721Supply")).to.eq(
       true,
     );
     expect(isFeatureEnabled(DropERC721__factory.abi, "ERC721Mintable")).to.eq(
       false,
     );
+
+    // Drop legacy
+    expect(
+      isFeatureEnabled(
+        DropERC721_V3__factory.abi,
+        "ERC721ClaimableWithConditionsV1",
+      ),
+    ).to.eq(true);
   });
 
   it("should update bio", async () => {
@@ -359,7 +371,7 @@ describe("Publishing", async () => {
   });
 
   it("ERC721Dropable multiphase feature detection", async () => {
-    const ipfsUri = "ipfs://QmWaidQMSYHPzYYZCxMc2nSk2vrD28mS43Xc9k7QFyAGja/0";
+    const ipfsUri = "ipfs://Qmbu57WNPmmGuNZEiEAVi9yeXxGK2GkJRBbRMaPxs9KS5b";
     const addr = await sdk.deployer.deployContractFromUri(ipfsUri, []);
     const c = await sdk.getContract(addr);
 
@@ -402,7 +414,7 @@ describe("Publishing", async () => {
     await c.erc721.claimConditions.set([
       {
         price: "0",
-        maxQuantity: 2,
+        maxClaimableSupply: 2,
         startTime: new Date(0),
       },
     ]);
@@ -440,7 +452,7 @@ describe("Publishing", async () => {
     await c.erc1155.claimConditions.set(0, [
       {
         price: "0",
-        maxQuantity: 2,
+        maxClaimableSupply: 2,
         startTime: new Date(0),
       },
     ]);

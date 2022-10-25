@@ -9,7 +9,7 @@ import { expectError, sdk, signers, storage } from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import invariant from "tiny-invariant";
 
 global.fetch = require("cross-fetch");
@@ -335,6 +335,23 @@ describe("NFT Drop Contract", async () => {
     ]);
     await dropContract.claimConditions.set([{}]);
     await dropContract.claim(1);
+  });
+
+  it("should allow claiming with a price", async () => {
+    await dropContract.createBatch([
+      { name: "name", description: "description" },
+      { name: "name2", description: "description" },
+      { name: "name3", description: "description" },
+      { name: "name4", description: "description" },
+    ]);
+    await dropContract.claimConditions.set([
+      {
+        price: 0.1,
+      },
+    ]);
+    await dropContract.claim(2);
+    const balance = await dropContract.balance();
+    expect(balance).to.deep.equal(BigNumber.from(2));
   });
 
   it("should allow setting max claims per wallet", async () => {

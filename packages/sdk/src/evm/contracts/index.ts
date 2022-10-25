@@ -317,8 +317,14 @@ export const TokenDropInitializer = {
     ...[network, address, storage, options]: InitalizeParams
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
+    const contractInfo = await getPrebuiltInfo(address, provider);
+    if (contractInfo.type !== "DropERC20") {
+      throw new Error("Contract is not a DropERC20");
+    }
     const [abi, contract, _network] = await Promise.all([
-      TokenDropInitializer.getAbi(),
+      contractInfo.version > 2
+        ? TokenDropInitializer.getAbi()
+        : TokenDropInitializer.getV2Abi(),
       import("./prebuilt-implementations/token-drop"),
       provider.getNetwork(),
     ]);
@@ -334,6 +340,9 @@ export const TokenDropInitializer = {
   },
   getAbi: async () =>
     (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC20.json"))
+      .default,
+  getV2Abi: async () =>
+    (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC20_V2.json"))
       .default,
 };
 
