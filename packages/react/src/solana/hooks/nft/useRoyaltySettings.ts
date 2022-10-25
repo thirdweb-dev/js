@@ -30,7 +30,7 @@ export function nftRoyaltyQuery(
  *
  * export default function Component() {
  *   const { program } = useProgram("{{program_address}}");
- *   const { data: royalty, isLoading } = useRoyalty(program);
+ *   const { data: royalty, isLoading } = useRoyaltySettings(program);
  *
  *   return (
  *     <p>{royalty}</p>
@@ -40,6 +40,6 @@ export function nftRoyaltyQuery(
  *
  * @public
  */
-export function useRoyalty(program: RequiredParam<NFTCollection | NFTDrop>) {
+export function useRoyaltySettings(program: RequiredParam<NFTCollection | NFTDrop>) {
   return useQuery(nftRoyaltyQuery(program));
 }
