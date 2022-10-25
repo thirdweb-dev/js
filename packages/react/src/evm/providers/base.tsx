@@ -21,7 +21,7 @@ import {
 } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Signer } from "ethers";
-import { createContext, useContext, useEffect, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import invariant from "tiny-invariant";
 
 interface TWSDKContext {
@@ -60,15 +60,23 @@ export const WrappedThirdwebSDKProvider: ComponentWithChildren<
 }) => {
   const { signer } = useThirdwebConnectedWalletContext();
 
-  const sdk = useMemo(() => {
+  const [sdk, setSDK] = useState<ThirdwebSDK>();
+
+  useEffect(() => {
     if (!desiredChainId || typeof window === "undefined") {
       return undefined;
     }
+
     const _sdk = new ThirdwebSDK(provider, sdkOptions, storageInterface);
+    // if we already have a signer from the wallet context, use it immediately
+    if (signer) {
+      _sdk.updateSignerOrProvider(signer);
+    }
+
     (_sdk as any)._constructedAt = Date.now();
     (_sdk as any)._chainId = desiredChainId;
-    return _sdk;
-  }, [provider, sdkOptions, storageInterface, desiredChainId]);
+    setSDK(_sdk);
+  }, [provider, sdkOptions, storageInterface, desiredChainId, signer]);
 
   useEffect(() => {
     if (signer && sdk && (sdk as any)._chainId === desiredChainId) {
