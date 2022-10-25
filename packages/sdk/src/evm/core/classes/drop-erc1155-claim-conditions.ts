@@ -39,10 +39,12 @@ import type {
   DropSinglePhase1155_V1,
   IERC20,
 } from "@thirdweb-dev/contracts-js";
-import type { IDropSinglePhase_V1 } from "@thirdweb-dev/contracts-js";
+import type {
+  IDropSinglePhase_V1,
+  IDropSinglePhase,
+} from "@thirdweb-dev/contracts-js";
 import IERC20ABI from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import type { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC20_V2";
-import type { IDropSinglePhase } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
 import type { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";

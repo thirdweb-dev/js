@@ -1,4 +1,7 @@
-import { ShardedMerkleTree } from "../../src/evm/common/sharded-merkle-tree";
+import {
+  ShardedMerkleTree,
+  SnapshotFormatVersion,
+} from "../../src/evm/common/sharded-merkle-tree";
 import { createSnapshot, SnapshotEntryInput } from "../../src/evm/index";
 import { signers, storage } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -40,72 +43,100 @@ describe("Snapshots", async () => {
     ];
   });
 
-  it("should shard merkle tree", async () => {
-    const input = members.map((address, i) => ({
-      address,
-      maxClaimable: BigNumber.from(i + 1).toString(),
-    }));
-    const result = await ShardedMerkleTree.buildAndUpload(input, 0, storage);
-    const sm = await ShardedMerkleTree.fromUri(result.uri, storage);
-    const proofs = await sm?.getProof(adminWallet.address);
-    expect(proofs?.maxClaimable).to.equal("1");
-    expect(proofs?.proof).length.gt(0);
-  });
+  [SnapshotFormatVersion.V1, SnapshotFormatVersion.V2].forEach(
+    (snapshotVersion) => {
+      it("should shard merkle tree: " + snapshotVersion, async () => {
+        const input = members.map((address, i) => ({
+          address,
+          maxClaimable: BigNumber.from(i + 1).toString(),
+        }));
+        const result = await ShardedMerkleTree.buildAndUpload(
+          input,
+          0,
+          storage,
+          snapshotVersion,
+        );
+        const sm = await ShardedMerkleTree.fromUri(result.uri, storage);
+        const proofs = await sm?.getProof(adminWallet.address, snapshotVersion);
+        expect(proofs?.maxClaimable).to.equal("1");
+        expect(proofs?.proof).length.gt(0);
+      });
+    },
+  );
 
   it("should generate a valid merkle root from a list of addresses", async () => {
     const input = members.map((address) => ({
       address,
     }));
-    const result = await createSnapshot(input, 0, storage);
+    const result = await createSnapshot(
+      input,
+      0,
+      storage,
+      SnapshotFormatVersion.V1,
+    );
     const merkleRoot = result.merkleRoot;
     assert.equal(
       merkleRoot,
-      "0x8f8c4ebe208a3bc99d6b0cec30d92024a613d308c8e0e3b54fd4616f9bc87a8a",
+      "0xd5be7739dddef2539c47da807340e0088786de3ba868b766f37b6cc60d37f18d",
     );
   });
 
-  it("should generate valid proofs", async () => {
-    const hashedLeafs = members.map((l) =>
-      ShardedMerkleTree.hashEntry(
-        SnapshotEntryInput.parse({
-          address: l,
-        }),
-        0,
-      ),
-    );
-    const tree = new MerkleTree(hashedLeafs, ethers.utils.keccak256, {
-      sort: true,
-    });
-    const input = members.map((address) => ({
-      address,
-    }));
-    const snapshot = await createSnapshot(input, 0, storage);
-    for (const leaf of members) {
-      const expectedProof = tree.getHexProof(
-        ShardedMerkleTree.hashEntry(
-          SnapshotEntryInput.parse({
-            address: leaf,
-          }),
+  [SnapshotFormatVersion.V1, SnapshotFormatVersion.V2].forEach(
+    (snapshotVersion) => {
+      it("should generate valid proofs:" + snapshotVersion, async () => {
+        const hashedLeafs = members.map((l) =>
+          ShardedMerkleTree.hashEntry(
+            SnapshotEntryInput.parse({
+              address: l,
+            }),
+            0,
+            snapshotVersion,
+          ),
+        );
+        const tree = new MerkleTree(hashedLeafs, ethers.utils.keccak256, {
+          sort: true,
+        });
+        const input = members.map((address) => ({
+          address,
+        }));
+        const snapshot = await createSnapshot(
+          input,
           0,
-        ),
-      );
+          storage,
+          snapshotVersion,
+        );
+        for (const leaf of members) {
+          const expectedProof = tree.getHexProof(
+            ShardedMerkleTree.hashEntry(
+              SnapshotEntryInput.parse({
+                address: leaf,
+              }),
+              0,
+              snapshotVersion,
+            ),
+          );
 
-      const smt = await ShardedMerkleTree.fromUri(
-        snapshot.snapshotUri,
-        storage,
-      );
-      const actualProof = await smt?.getProof(leaf);
-      assert.isDefined(actualProof);
-      expect(actualProof?.proof).to.include.ordered.members(expectedProof);
+          const smt = await ShardedMerkleTree.fromUri(
+            snapshot.snapshotUri,
+            storage,
+          );
+          const actualProof = await smt?.getProof(
+            leaf,
+            SnapshotFormatVersion.V2,
+          );
+          assert.isDefined(actualProof);
+          expect(actualProof?.proof).to.include.ordered.members(expectedProof);
 
-      const verified = tree.verify(
-        actualProof?.proof,
-        ShardedMerkleTree.hashEntry({ ...actualProof }, 0),
-        tree.getHexRoot(),
-      );
-      expect(verified).to.eq(true);
-    }
-  });
+          const verified = tree.verify(
+            actualProof?.proof,
+            ShardedMerkleTree.hashEntry({ ...actualProof }, 0, snapshotVersion),
+            tree.getHexRoot(),
+          );
+          expect(verified).to.eq(true);
+        }
+      });
+    },
+  );
 
   it("should warn about duplicate leafs", async () => {
     const input = members.map((address, i) => ({
@@ -118,7 +149,12 @@ describe("Snapshots", async () => {
     });
 
     try {
-      await createSnapshot(duplicateLeafs, 0, storage);
+      await createSnapshot(
+        duplicateLeafs,
+        0,
+        storage,
+        SnapshotFormatVersion.V1,
+      );
     } catch (error) {
       expect(error).to.have.property("message", "DUPLICATE_LEAFS", "");
       return;

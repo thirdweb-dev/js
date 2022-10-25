@@ -2,7 +2,6 @@ import { ChainId } from "../constants";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { SignedPayload721WithQuantitySignature } from "../schema/contracts/common/signature";
 import { PrebuiltEditionDrop, PrebuiltNFTDrop } from "../types/eips";
-import type { DropERC1155_V2 } from "@thirdweb-dev/contracts-js";
 import { SignatureDrop } from "@thirdweb-dev/contracts-js/dist/declarations/src/SignatureDrop";
 import fetch from "cross-fetch";
 import invariant from "tiny-invariant";
@@ -135,7 +134,7 @@ export type PaperCreateCheckoutLinkShardParams = {
 export type PaperCreateCheckoutLinkIntentParams<
   TContract extends PrebuiltNFTDrop | PrebuiltEditionDrop | SignatureDrop,
 > = PaperCreateCheckoutLinkShardParams &
-  (TContract extends DropERC1155_V2
+  (TContract extends PrebuiltEditionDrop
     ? {
         contractArgs: { tokenId: string };
       }

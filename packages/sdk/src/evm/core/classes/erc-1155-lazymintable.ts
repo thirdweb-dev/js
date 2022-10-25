@@ -234,6 +234,6 @@ export class Erc1155LazyMintable implements DetectableFeature {
       this.contractWrapper.readContract.address,
       this.contractWrapper.getProvider(),
     );
-    return info.type === "DropERC1155" && info.version <= 2;
+    return info && info.type === "DropERC1155" && info.version <= 2;
   }
 }

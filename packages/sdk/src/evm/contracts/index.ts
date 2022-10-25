@@ -36,7 +36,7 @@ export const EditionDropInitializer = {
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
     const contractInfo = await getPrebuiltInfo(address, provider);
-    if (contractInfo.type !== "DropERC1155") {
+    if (!contractInfo || contractInfo.type !== "DropERC1155") {
       throw new Error("Contract is not a DropERC1155");
     }
     const [abi, contract, _network] = await Promise.all([
@@ -191,7 +191,7 @@ export const NFTDropInitializer = {
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
     const contractInfo = await getPrebuiltInfo(address, provider);
-    if (contractInfo.type !== "DropERC721") {
+    if (!contractInfo || contractInfo.type !== "DropERC721") {
       throw new Error("Contract is not a DropERC721");
     }
     const [abi, contract, _network] = await Promise.all([
@@ -318,7 +318,7 @@ export const TokenDropInitializer = {
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
     const contractInfo = await getPrebuiltInfo(address, provider);
-    if (contractInfo.type !== "DropERC20") {
+    if (!contractInfo || contractInfo.type !== "DropERC20") {
       throw new Error("Contract is not a DropERC20");
     }
     const [abi, contract, _network] = await Promise.all([

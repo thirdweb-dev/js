@@ -22,7 +22,7 @@ import {
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
-import { PaperCheckout } from "../../integrations/paper-xyz";
+import { PaperCheckout } from "../../integrations/checkout";
 import { DropErc1155ContractSchema } from "../../schema/contracts/drop-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
 import { PrebuiltEditionDrop } from "../../types/eips";

@@ -29,7 +29,7 @@ export * from "./constants";
 export * from "./contracts";
 
 // export integration things
-export * from "./integrations/paper-xyz";
+export * from "./integrations/checkout";
 
 // explcitly export the *TYPES* of prebuilt contracts
 export type { Edition } from "./contracts/prebuilt-implementations/edition";
