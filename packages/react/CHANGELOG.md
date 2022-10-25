@@ -1,5 +1,11 @@
 # @thirdweb-dev/react
 
+## 3.4.1
+
+### Patch Changes
+
+- [#343](https://github.com/thirdweb-dev/js/pull/343) [`72227b2`](https://github.com/thirdweb-dev/js/commit/72227b2e166a3a68bbb41cf2b389322f5b7547a2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose new useOffers and useMakeOffer hooks
+
 ## 3.4.0
 
 ### Minor Changes

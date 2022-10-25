@@ -200,7 +200,7 @@ describe("Marketplace Contract", async () => {
       });
       const id = tx.id;
       sdk.updateSignerOrProvider(samWallet);
-      await marketplaceContract.auction.makeBid(id, 0.1);
+      await marketplaceContract.makeOffer(id, 0.1);
     });
 
     it("Should list with native currency address", async () => {
@@ -429,7 +429,7 @@ describe("Marketplace Contract", async () => {
         "The buyer should start with no tokens",
       );
 
-      await marketplaceContract.direct.makeOffer(
+      await marketplaceContract.makeOffer(
         directListingId,
         10,
         tokenAddress,
@@ -482,12 +482,7 @@ describe("Marketplace Contract", async () => {
         "0",
         "The buyer should start with no tokens",
       );
-      await marketplaceContract.direct.makeOffer(
-        directListingId,
-        1,
-        customTokenContract.getAddress(),
-        0.05,
-      );
+      await marketplaceContract.makeOffer(directListingId, 0.05, 1);
       await marketplaceContract.buyoutListing(directListingId, 1);
       const balance = await dummyNftContract.balanceOf(bobWallet.address);
       assert.equal(
@@ -517,12 +512,7 @@ describe("Marketplace Contract", async () => {
 
     it("should allow offers to be made on direct listings", async () => {
       sdk.updateSignerOrProvider(bobWallet);
-      await marketplaceContract.direct.makeOffer(
-        directListingId,
-        1,
-        tokenAddress,
-        "1",
-      );
+      await marketplaceContract.makeOffer(directListingId, 1, "1");
 
       const offer = (await marketplaceContract.direct.getActiveOffer(
         directListingId,
@@ -537,7 +527,7 @@ describe("Marketplace Contract", async () => {
       assert.equal(offer.listingId.toString(), directListingId.toString());
 
       sdk.updateSignerOrProvider(samWallet);
-      await marketplaceContract.direct.makeOffer(
+      await marketplaceContract.makeOffer(
         directListingId,
         1,
         tokenAddress,
@@ -567,8 +557,8 @@ describe("Marketplace Contract", async () => {
 
     it("should allow bids by the same person", async () => {
       await sdk.updateSignerOrProvider(bobWallet);
-      await marketplaceContract.auction.makeBid(auctionListingId, 0.06);
-      await marketplaceContract.auction.makeBid(auctionListingId, 0.08);
+      await marketplaceContract.makeOffer(auctionListingId, 0.06);
+      await marketplaceContract.makeOffer(auctionListingId, 0.08);
 
       const winningBid = (await marketplaceContract.auction.getWinningBid(
         auctionListingId,
@@ -583,7 +573,7 @@ describe("Marketplace Contract", async () => {
 
     it("should allow bids to be made on auction listings", async () => {
       await sdk.updateSignerOrProvider(bobWallet);
-      await marketplaceContract.auction.makeBid(auctionListingId, 0.06);
+      await marketplaceContract.makeOffer(auctionListingId, 0.06);
 
       let winningBid = (await marketplaceContract.auction.getWinningBid(
         auctionListingId,
@@ -601,7 +591,7 @@ describe("Marketplace Contract", async () => {
 
       // Make a higher winning bid
       await sdk.updateSignerOrProvider(samWallet);
-      await marketplaceContract.auction.makeBid(auctionListingId, 0.09);
+      await marketplaceContract.makeOffer(auctionListingId, 0.09);
 
       winningBid = (await marketplaceContract.auction.getWinningBid(
         auctionListingId,
@@ -620,7 +610,7 @@ describe("Marketplace Contract", async () => {
     it("should return all offers for a listing when queried", async () => {
       // make an offer as bob
       sdk.updateSignerOrProvider(bobWallet);
-      await marketplaceContract.direct.makeOffer(
+      await marketplaceContract.makeOffer(
         directListingId,
         1,
         tokenAddress,
@@ -629,7 +619,7 @@ describe("Marketplace Contract", async () => {
 
       // make an offer as sam
       sdk.updateSignerOrProvider(samWallet);
-      await marketplaceContract.direct.makeOffer(
+      await marketplaceContract.makeOffer(
         directListingId,
         1,
         tokenAddress,
@@ -725,7 +715,7 @@ describe("Marketplace Contract", async () => {
         "0",
         "The buyer should start with no tokens",
       );
-      await marketplaceContract.auction.makeBid(auctionListingId, "20");
+      await marketplaceContract.makeOffer(auctionListingId, "20");
 
       const balance = await dummyNftContract.balanceOf(bobWallet.address);
       assert.equal(
@@ -748,7 +738,7 @@ describe("Marketplace Contract", async () => {
         "0",
         "The buyer should start with no tokens",
       );
-      await marketplaceContract.auction.makeBid(auctionListingId, "2");
+      await marketplaceContract.makeOffer(auctionListingId, "2");
 
       const winningBid = (await marketplaceContract.auction.getWinningBid(
         auctionListingId,
@@ -782,9 +772,9 @@ describe("Marketplace Contract", async () => {
         "0",
         "The buyer should start with no tokens",
       );
-      await marketplaceContract.auction.makeBid(auctionListingId, "2");
+      await marketplaceContract.makeOffer(auctionListingId, "2");
       try {
-        await marketplaceContract.auction.makeBid(auctionListingId, "2.01");
+        await marketplaceContract.makeOffer(auctionListingId, "2.01");
         // eslint-disable-next-line no-empty
       } catch (err) {}
     });
@@ -860,7 +850,7 @@ describe("Marketplace Contract", async () => {
     });
 
     it("should throw an error when trying to close an auction that already started (with bids)", async () => {
-      await marketplaceContract.auction.makeBid(auctionListingId, 0.06);
+      await marketplaceContract.makeOffer(auctionListingId, 0.06);
       try {
         await marketplaceContract.auction.cancelListing(auctionListingId);
         assert.fail("should have thrown an error");
@@ -933,7 +923,7 @@ describe("Marketplace Contract", async () => {
 
       await sdk.updateSignerOrProvider(bobWallet);
 
-      await marketplaceContract.auction.makeBid(listingId, 2);
+      await marketplaceContract.makeOffer(listingId, 2);
 
       await fastForwardTime(60 * 60 * 24);
 
@@ -1185,7 +1175,7 @@ describe("Marketplace Contract", async () => {
 
       // place a bid
       sdk.updateSignerOrProvider(samWallet);
-      await marketplaceContract.auction.makeBid(listingId, 0.06);
+      await marketplaceContract.makeOffer(listingId, 0.06);
 
       const minimumNextBid =
         await marketplaceContract.auction.getMinimumNextBid(listingId);
