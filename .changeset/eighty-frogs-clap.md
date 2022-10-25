@@ -2,4 +2,5 @@
 "@thirdweb-dev/react": patch
 ---
 
-Add updateRoyalty hook, change names to be consistent with evm
+[SOL] - add `useUpdateRoyaltySettings()` hook
+[SOL] - change `useRoyalty()` hook -> `useRoyaltySettings()` for consistency
