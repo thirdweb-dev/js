@@ -8,7 +8,13 @@ import {
 } from "@chakra-ui/react";
 import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
 import { TransactionError } from "@thirdweb-dev/sdk/evm";
-import { createContext, useCallback, useContext, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { FiAlertTriangle, FiCheck, FiCopy } from "react-icons/fi";
 import {
   AddressCopyButton,
@@ -57,7 +63,15 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const { onCopy, hasCopied } = useClipboard(currentError?.message || "");
+  const { onCopy, hasCopied, setValue } = useClipboard(
+    currentError?.message || "",
+  );
+
+  useEffect(() => {
+    if (currentError?.message) {
+      setValue(currentError?.message);
+    }
+  }, [currentError?.message, setValue]);
 
   return (
     <>
