@@ -1,5 +1,4 @@
 import { QuantitySchema } from "../../../../core/schema/shared";
-import { Json, JsonLiteral } from "../../../../solana";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
 import {
   BigNumberishSchema,
@@ -10,7 +9,7 @@ import {
 } from "../../shared";
 import { CurrencyValueSchema } from "./currency";
 import { SnapshotInputSchema } from "./snapshots";
-import { BigNumber, BigNumberish, BytesLike, utils } from "ethers";
+import { BigNumber, BigNumberish, utils } from "ethers";
 import { z } from "zod";
 
 /**

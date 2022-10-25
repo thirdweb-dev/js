@@ -14,7 +14,6 @@ import { isNativeToken } from "../../common/currency";
 import { hasFunction } from "../../common/feature-detection";
 import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
 import { isNode } from "../../common/utils";
-import { NATIVE_TOKEN_ADDRESS } from "../../constants/index";
 import { ClaimEligibility } from "../../enums";
 import { AbstractClaimConditionContractStruct } from "../../schema";
 import {
@@ -22,13 +21,14 @@ import {
   ClaimConditionFetchOptions,
   ClaimConditionInput,
   ClaimConditionsForToken,
+  ClaimOptions,
   ClaimVerification,
 } from "../../types";
 import {
   BaseClaimConditionERC1155,
   PrebuiltEditionDrop,
 } from "../../types/eips";
-import { TransactionResult } from "../index";
+import { TransactionResult, TransactionTask } from "../index";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
@@ -39,11 +39,11 @@ import type {
   DropSinglePhase1155_V1,
   IERC20,
 } from "@thirdweb-dev/contracts-js";
-import { IDropSinglePhase_V1 } from "@thirdweb-dev/contracts-js";
+import type { IDropSinglePhase_V1 } from "@thirdweb-dev/contracts-js";
 import IERC20ABI from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
-import { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC20_V2";
-import { IDropSinglePhase } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
-import { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
+import type { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC20_V2";
+import type { IDropSinglePhase } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
+import type { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";
 import deepEqual from "fast-deep-equal";
@@ -788,6 +788,42 @@ export class DropErc1155ClaimConditions<
       } as IDropSinglePhase.AllowlistProofStruct,
       ethers.utils.toUtf8Bytes(""),
     ];
+  }
+
+  /**
+   * Construct a claim transaction without executing it.
+   * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
+   * @param destinationAddress - Address you want to send the token to
+   * @param tokenId - Id of the token you want to claim
+   * @param quantity - Quantity of the tokens you want to claim
+   */
+  public async getClaimTransaction(
+    destinationAddress: string,
+    tokenId: BigNumberish,
+    quantity: BigNumberish,
+    options?: ClaimOptions,
+  ): Promise<TransactionTask> {
+    if (options?.pricePerToken) {
+      throw new Error(
+        "Price per token should be set via claim conditions by calling `contract.erc1155.claimConditions.set()`",
+      );
+    }
+    const claimVerification = await this.prepareClaim(
+      tokenId,
+      quantity,
+      options?.checkERC20Allowance || true,
+    );
+    return TransactionTask.make({
+      contractWrapper: this.contractWrapper,
+      functionName: "claim",
+      args: await this.getClaimArguments(
+        tokenId,
+        destinationAddress,
+        quantity,
+        claimVerification,
+      ),
+      overrides: claimVerification.overrides,
+    });
   }
 
   isNewSinglePhaseDrop(

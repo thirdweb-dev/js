@@ -1,20 +1,17 @@
 import { NFT } from "../../../core/schema/nft";
 import { FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V2 } from "../../constants/erc721-features";
 import { CustomContractSchema } from "../../schema/contracts/custom";
-import { ClaimCondition, ClaimOptions, ClaimVerification } from "../../types";
+import { ClaimOptions } from "../../types";
 import { BaseClaimConditionERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
-import { TransactionTask } from "./TransactionTask";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { DropClaimConditions } from "./drop-claim-conditions";
 import { Erc721 } from "./erc-721";
-import { IDropSinglePhase_V1 } from "@thirdweb-dev/contracts-js";
 import { TokensClaimedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Drop";
-import { IDropSinglePhase } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 
 /**
  * Configure and claim ERC721 NFTs

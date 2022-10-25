@@ -613,7 +613,7 @@ export class Erc721<
     const claimWithConditions = this.lazyMintable?.claimWithConditions;
     const claim = this.lazyMintable?.claim;
     if (claimWithConditions) {
-      return claimWithConditions.getClaimTransaction(
+      return claimWithConditions.conditions.getClaimTransaction(
         destinationAddress,
         quantity,
         options,

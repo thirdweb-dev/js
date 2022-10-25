@@ -22,10 +22,7 @@ import { DelayedReveal } from "./delayed-reveal";
 import { Erc1155 } from "./erc-1155";
 import { ERC1155Claimable } from "./erc-1155-claimable";
 import { Erc1155ClaimableWithConditions } from "./erc-1155-claimable-with-conditions";
-import type {
-  DropERC1155_V2,
-  IClaimableERC1155,
-} from "@thirdweb-dev/contracts-js";
+import type { IClaimableERC1155 } from "@thirdweb-dev/contracts-js";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";

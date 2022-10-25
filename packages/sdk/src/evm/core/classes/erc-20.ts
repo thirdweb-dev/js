@@ -13,13 +13,7 @@ import {
   FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS,
 } from "../../constants/erc20-features";
 import { TokenMintInput, AmountSchema } from "../../schema";
-import {
-  Currency,
-  CurrencyValue,
-  Amount,
-  ClaimVerification,
-  ClaimOptions,
-} from "../../types";
+import { Currency, CurrencyValue, Amount, ClaimOptions } from "../../types";
 import {
   BaseERC20,
   BaseSignatureMintERC20,

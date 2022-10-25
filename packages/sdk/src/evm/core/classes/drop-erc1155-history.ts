@@ -1,6 +1,5 @@
 import { PrebuiltEditionDrop } from "../../types/eips";
 import { ContractEvents } from "./contract-events";
-import type { DropERC1155_V2 } from "@thirdweb-dev/contracts-js";
 import { BigNumber, BigNumberish } from "ethers";
 
 /**

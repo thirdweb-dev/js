@@ -9,7 +9,6 @@ import {
   SnapshotFormatVersion,
 } from "./sharded-merkle-tree";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, utils } from "ethers";
 
 /**
  * Create a snapshot (merkle tree) from a list of addresses and uploads it to IPFS
