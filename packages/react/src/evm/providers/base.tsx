@@ -76,7 +76,10 @@ export const WrappedThirdwebSDKProvider: ComponentWithChildren<
     (_sdk as any)._constructedAt = Date.now();
     (_sdk as any)._chainId = desiredChainId;
     setSDK(_sdk);
-  }, [provider, sdkOptions, storageInterface, desiredChainId, signer]);
+
+    // explicitly *not* passing the signer, if we have it we use it if we don't we don't
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [provider, sdkOptions, storageInterface, desiredChainId]);
 
   useEffect(() => {
     if (signer && sdk && (sdk as any)._chainId === desiredChainId) {
