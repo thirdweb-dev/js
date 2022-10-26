@@ -27,7 +27,7 @@ export const CommonContractOutputSchema = CommonContractSchema.extend({
  */
 export const CreatorInputSchema = z.object({
   address: z.string(),
-  sharePercentage: z.number(),
+  share: z.number(),
   verified: z.boolean().default(false),
 });
 
