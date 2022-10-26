@@ -1,12 +1,7 @@
+import { getRpcUrl } from "../../core/constants/urls";
 import { Network } from "../types/index";
 import { Metaplex } from "@metaplex-foundation/js";
 import { Cluster, clusterApiUrl } from "@solana/web3.js";
-
-/**
- * @internal
- * This is a community API key that is subject to rate limiting. Please use your own key.
- */
-const DEFAULT_API_KEY = "_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC";
 
 /**
  * @internal
@@ -18,9 +13,9 @@ export function getUrlForNetwork(network: Network) {
     case "testnet":
       return clusterApiUrl(network as Cluster);
     case "mainnet-beta":
-      return `https://solana-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      return getRpcUrl("solana");
     case "devnet":
-      return `https://solana-devnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      return getRpcUrl("solana-devnet");
     default:
       return network;
   }

@@ -1,0 +1,23 @@
+{
+  "name": "e2e-next-12",
+  "version": "0.1.2",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "start": "next start",
+    "e2e": "npx playwright test"
+  },
+  "dependencies": {
+    "@thirdweb-dev/react": "*",
+    "@thirdweb-dev/sdk": "*",
+    "ethers": "^5.7.2",
+    "next": "^12",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.27.1",
+    "eslint": "8.25.0",
+    "eslint-config-next": "12.3.1"
+  }
+}

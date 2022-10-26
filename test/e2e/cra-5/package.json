@@ -1,0 +1,33 @@
+{
+  "name": "e2e-cra-5",
+  "version": "0.1.2",
+  "private": true,
+  "dependencies": {
+    "@thirdweb-dev/react": "*",
+    "@thirdweb-dev/sdk": "*",
+    "ethers": "^5.7.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5"
+  },
+  "scripts": {
+    "build": "react-scripts build",
+    "e2e": "npx playwright test"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.27.1",
+    "serve": "^14.0.1"
+  }
+}

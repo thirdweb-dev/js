@@ -6,6 +6,7 @@ import {
   TokenDropInitializer,
   TokenInitializer,
 } from "../../src/evm";
+import { ShardedMerkleTree } from "../../src/evm/common/sharded-merkle-tree";
 import { expectError, sdk, signers, storage } from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -81,7 +82,9 @@ describe("Token Drop Contract", async () => {
         snapshot: [samWallet.address],
       },
     ]);
-    const conditions = await dropContract.claimConditions.getAll();
+    const conditions = await dropContract.claimConditions.getAll({
+      withAllowList: true,
+    });
     assert.lengthOf(conditions, 1);
     invariant(conditions[0].snapshot);
     expect(conditions[0].snapshot[0].address).to.eq(samWallet.address);
@@ -268,9 +271,11 @@ describe("Token Drop Contract", async () => {
         ethers.utils.solidityKeccak256(["address", "uint256"], [leaf, 0]),
       );
 
-      const actualProof = snapshot.snapshot.claims.find(
-        (c) => c.address === leaf,
+      const smt = await ShardedMerkleTree.fromUri(
+        snapshot.snapshotUri,
+        storage,
       );
+      const actualProof = await smt?.getProof(leaf);
       assert.isDefined(actualProof);
       expect(actualProof?.proof).to.include.ordered.members(expectedProof);
 

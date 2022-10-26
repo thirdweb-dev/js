@@ -639,7 +639,9 @@ describe("Edition Drop Contract", async () => {
         snapshot: [samWallet.address],
       },
     ]);
-    const conditions = await bdContract.claimConditions.getAll(0);
+    const conditions = await bdContract.claimConditions.getAll(0, {
+      withAllowList: true,
+    });
     assert.lengthOf(conditions, 1);
     invariant(conditions[0].snapshot);
     expect(conditions[0].snapshot[0].address).to.eq(samWallet.address);

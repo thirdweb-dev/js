@@ -1,13 +1,23 @@
-import { ChainId } from "@thirdweb-dev/sdk";
+import { useConnect } from "../hooks/wagmi-required/useConnect";
 import { Signer, ethers, utils } from "ethers";
 import invariant from "tiny-invariant";
-import { Chain, Connector, ConnectorData, normalizeChainId } from "wagmi";
+import {
+  Chain,
+  Connector,
+  ConnectorData,
+  normalizeChainId,
+  useContext as useWagmiContext,
+} from "wagmi";
 
 const CHAIN_ID_TO_GNOSIS_SERVER_URL = {
-  [ChainId.Mainnet]: "https://safe-transaction.mainnet.gnosis.io",
-  [ChainId.Avalanche]: "https://safe-transaction.avalanche.gnosis.io",
-  [ChainId.Polygon]: "https://safe-transaction.polygon.gnosis.io",
-  [ChainId.Goerli]: "https://safe-transaction.goerli.gnosis.io",
+  // mainnet
+  1: "https://safe-transaction.mainnet.gnosis.io",
+  // avalanche
+  43114: "https://safe-transaction.avalanche.gnosis.io",
+  // polygon
+  137: "https://safe-transaction.polygon.gnosis.io",
+  // goerli
+  5: "https://safe-transaction.goerli.gnosis.io",
 };
 
 export interface GnosisConnectorArguments {
@@ -162,4 +172,68 @@ export class GnosisSafeConnector extends Connector {
     this.previousConnector = connector;
     this.config = config;
   }
+}
+
+/**
+ * Hook for connecting to a Gnosis Safe. This enables multisig wallets to connect to your application and sing transactions.
+ *
+ * ```javascript
+ * import { useGnosis } from "@thirdweb-dev/react"
+ * ```
+ *
+ *
+ * @example
+ * ```javascript
+ * import { useGnosis } from "@thirdweb-dev/react"
+ *
+ * const App = () => {
+ *   const connectWithGnosis = useGnosis()
+ *
+ *   return (
+ *     <button onClick={() => connectWithGnosis({ safeAddress: "0x...", safeChainId: 1 })}>
+ *       Connect Gnosis Safe
+ *     </button>
+ *   )
+ * }
+ * ```
+ *
+ * @public
+ */
+export function useGnosis() {
+  const wagmiContext = useWagmiContext();
+  invariant(
+    wagmiContext,
+    `useGnosis() can only be used inside <ThirdwebProvider />. If you are using <ThirdwebSDKProvider /> you will have to use your own wallet-connection logic.`,
+  );
+  const [connectors, connect] = useConnect();
+  if (connectors.loading) {
+    return () => Promise.reject("Gnosis connector not ready to be used, yet");
+  }
+  const connector = connectors.data.connectors.find((c) => c.id === "gnosis");
+  invariant(
+    connector,
+    "Gnosis connector not found, please make sure it is provided to your <ThirdwebProvider />",
+  );
+
+  return async (config: GnosisConnectorArguments) => {
+    const previousConnector = connectors.data.connector;
+    const previousConnectorChain = await previousConnector?.getChainId();
+    invariant(
+      !!previousConnector,
+      "Cannot connect to Gnosis Safe without first being connected to a personal wallet.",
+    );
+    invariant(
+      previousConnectorChain === config.safeChainId,
+      "Gnosis safe chain id must match personal wallet chain id.",
+    );
+    invariant(
+      utils.isAddress(config.safeAddress),
+      "Gnosis safe address must be a valid address.",
+    );
+    (connector as GnosisSafeConnector).setConfiguration(
+      previousConnector,
+      config,
+    );
+    return connect(connector);
+  };
 }

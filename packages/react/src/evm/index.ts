@@ -31,8 +31,6 @@ export * from "./hooks/wagmi-required/useConnect";
 export * from "./hooks/connectors/useMetamask";
 export * from "./hooks/connectors/useWalletConnect";
 export * from "./hooks/connectors/useWalletLink";
-export * from "./hooks/connectors/useGnosis";
-export * from "./hooks/connectors/useMagic";
 
 // re-exports
 export { ChainId } from "@thirdweb-dev/sdk";

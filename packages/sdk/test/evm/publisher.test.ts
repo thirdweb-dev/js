@@ -477,4 +477,14 @@ describe("Publishing", async () => {
     });
     expect(tx).to.not.eq(undefined);
   });
+
+  it("bytes4 test", async () => {
+    const ipfsUri = "ipfs://QmTTdsRTtxQXHfUwCGK6epXhvuEwjBwLFcCjGUYDRUQc95";
+    const addr = await sdk.deployer.deployContractFromUri(ipfsUri, [
+      "test",
+      "tt",
+      "0x01551220", // bytes4 param
+    ]);
+    expect(addr).to.not.eq(undefined);
+  });
 });

@@ -1,5 +1,72 @@
 # @thirdweb-dev/sdk
 
+## 3.4.1
+
+### Patch Changes
+
+- [#343](https://github.com/thirdweb-dev/js/pull/343) [`72227b2`](https://github.com/thirdweb-dev/js/commit/72227b2e166a3a68bbb41cf2b389322f5b7547a2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose general marketplace.makeOffer() function
+
+## 3.4.0
+
+### Patch Changes
+
+- [#337](https://github.com/thirdweb-dev/js/pull/337) [`340605b`](https://github.com/thirdweb-dev/js/commit/340605b507f384fbd2999b9c16542af3c53e84a9) Thanks [@adam-maj](https://github.com/adam-maj)! - Clean native token address in listing
+
+- [#342](https://github.com/thirdweb-dev/js/pull/342) [`26116a6`](https://github.com/thirdweb-dev/js/commit/26116a6f637ee845f7bd17f20ffe17caf184658e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add new univeral RPC urls
+
+- [#335](https://github.com/thirdweb-dev/js/pull/335) [`15f8006`](https://github.com/thirdweb-dev/js/commit/15f8006e1fb22333b7ee239b45e7b1b12d6dccc8) Thanks [@adam-maj](https://github.com/adam-maj)! - Export smart contract
+
+- [#327](https://github.com/thirdweb-dev/js/pull/327) [`ef27aad`](https://github.com/thirdweb-dev/js/commit/ef27aad0aafc4577e85f44dc77dfbe880bd239b5) Thanks [@jnsdls](https://github.com/jnsdls)! - enable e2e testing
+
+- Updated dependencies [[`ef27aad`](https://github.com/thirdweb-dev/js/commit/ef27aad0aafc4577e85f44dc77dfbe880bd239b5)]:
+  - @thirdweb-dev/storage@1.0.6
+
+## 3.3.1
+
+### Patch Changes
+
+- [#332](https://github.com/thirdweb-dev/js/pull/332) [`ad851f7`](https://github.com/thirdweb-dev/js/commit/ad851f7b4d6abb5ab9364ef3dec229f913e18ce5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix for finding addresses in legacy merkle tree format
+
+- [#330](https://github.com/thirdweb-dev/js/pull/330) [`6218c88`](https://github.com/thirdweb-dev/js/commit/6218c885842e6b4e44ec38ec92a9211e56c49bf4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix deploying contracts with non-32 bytes parameters like bytes4
+
+## 3.3.0
+
+### Minor Changes
+
+- [#315](https://github.com/thirdweb-dev/js/pull/315) [`89ff921`](https://github.com/thirdweb-dev/js/commit/89ff921a7d9f0e42b4e6707c8b56d0aab95c1aa0) Thanks [@furqanrydhan](https://github.com/furqanrydhan)! - fixing vite, multihash moved to non lazy load + cbor-x instead of cbor-web
+
+- [#321](https://github.com/thirdweb-dev/js/pull/321) [`a57b4f0`](https://github.com/thirdweb-dev/js/commit/a57b4f01f3a49590b897101f2730582e4124a554) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SDK] Implement sharded merkle trees for lightweight allowlist checks
+
+  **Behavior change**
+
+  We've made allowlists much more performant using sharded merkle trees. This allows us to process large allowlists (1M+) efficiently.
+
+  To support those large allowlists, fetching claim conditions does not fetch the allowlist data by default anymore. Instead, you can pass an options object to additionally fetch the allowlist data along with the rest of the claim conditions data.
+
+  This affects `ClaimConditions.getActive()` and `ClaimConditions.getAll()`
+
+  Examples:
+
+  ```ts
+  const activeClaimCondition =
+    await contract.erc721.claimConditions.getActive();
+  // `activeClaimCondition.snapshot` is undefined
+  const activeclaimConditionWithtAllowList =
+    await contract.erc721.claimConditions.getActive({
+      withAllowList: true,
+    });
+  // `activeClaimCondition.snapshot` returns the allowlist data
+  ```
+
+### Patch Changes
+
+- [#326](https://github.com/thirdweb-dev/js/pull/326) [`126752d`](https://github.com/thirdweb-dev/js/commit/126752d7d02c9a808a63fb9e67a9df6658b5682b) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - expose fn to get ipfs hash from bytecote publicly
+
+- [#328](https://github.com/thirdweb-dev/js/pull/328) [`df74340`](https://github.com/thirdweb-dev/js/commit/df74340fa51323304c32419761d6f18628b060fa) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update cbor-x import to work with es2018 builds (embeds)
+
+- Updated dependencies [[`87fd6ab`](https://github.com/thirdweb-dev/js/commit/87fd6ab14e1a67a1b12e72bd397fb21769537307)]:
+  - @thirdweb-dev/storage@1.0.5
+
 ## 3.2.6
 
 ### Patch Changes
