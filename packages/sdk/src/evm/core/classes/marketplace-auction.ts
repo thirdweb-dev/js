@@ -26,9 +26,13 @@ import {
   Offer,
 } from "../../types/marketplace";
 import { TransactionResult, TransactionResultWithId } from "../types";
+import { ContractEncoder } from "./contract-encoder";
 import { ContractWrapper } from "./contract-wrapper";
 import type { IMarketplace, Marketplace } from "@thirdweb-dev/contracts-js";
-import { ListingAddedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
+import {
+  ListingAddedEvent,
+  Marketplace as MarketplaceContract,
+} from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers, constants } from "ethers";
 import invariant from "tiny-invariant";
@@ -40,6 +44,7 @@ import invariant from "tiny-invariant";
 export class MarketplaceAuction {
   private contractWrapper: ContractWrapper<Marketplace>;
   private storage: ThirdwebStorage;
+  public encoder: ContractEncoder<MarketplaceContract>;
 
   constructor(
     contractWrapper: ContractWrapper<Marketplace>,
@@ -47,6 +52,7 @@ export class MarketplaceAuction {
   ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
+    this.encoder = new ContractEncoder<Marketplace>(contractWrapper);
   }
 
   getAddress(): string {
@@ -401,9 +407,9 @@ export class MarketplaceAuction {
   }
 
   /**
-   * Close the Auction
+   * Close the Auction for the buyer or the seller
    *
-   * @remarks Closes the Auction and executes the sale.
+   * @remarks Closes the Auction and executes the sale for the buyer or the seller.
    *
    * @example
    * ```javascript
@@ -430,6 +436,49 @@ export class MarketplaceAuction {
           closeFor,
         ]),
       };
+    } catch (err: any) {
+      if (err.message.includes("cannot close auction before it has ended")) {
+        throw new AuctionHasNotEndedError(
+          listingId.toString(),
+          listing.endTimeInEpochSeconds.toString(),
+        );
+      } else {
+        throw err;
+      }
+    }
+  }
+
+  /**
+   * Execute the Auction Sale
+   *
+   * @remarks Closes the Auction and executes the sale for both parties.
+   *
+   * @example
+   * ```javascript
+   * // The listing ID of the auction listing you want to close
+   * const listingId = "0";
+   * await contract.auction.executeSale(listingId);
+   * ```
+   *
+   * @param listingId - the auction  listing ud to close
+   */
+  public async executeSale(listingId: BigNumberish) {
+    const listing = await this.validateListing(BigNumber.from(listingId));
+    try {
+      const winningBid = await this.getWinningBid(listingId);
+      invariant(winningBid, "No winning bid found");
+      const closeForSeller = this.encoder.encode("closeAuction", [
+        listingId,
+        listing.sellerAddress,
+      ]);
+      const closeForBuyer = this.encoder.encode("closeAuction", [
+        listingId,
+        winningBid.buyerAddress,
+      ]);
+      return await this.contractWrapper.multiCall([
+        closeForSeller,
+        closeForBuyer,
+      ]);
     } catch (err: any) {
       if (err.message.includes("cannot close auction before it has ended")) {
         throw new AuctionHasNotEndedError(

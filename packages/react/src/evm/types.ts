@@ -217,6 +217,13 @@ export type MakeOfferParams = {
   pricePerToken: Price;
   quantity?: Amount;
 };
+export type AcceptDirectOffer = {
+  listingId: BigNumberish;
+  addressOfOfferor: string;
+};
+export type ExecuteAuctionSale = {
+  listingId: BigNumberish;
+};
 
 export type BuyNowParams<TListingType = ListingType> =
   TListingType extends ListingType.Direct
