@@ -28,8 +28,8 @@ import { useContract } from "../async/contracts";
  * @deprecated
  * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
  * ```diff
- * - const marketplace = await sdk.useMarketplace("0x1234...");
- * + const marketplace = await sdk.useContract("0x1234...", "marketplace").contract;
+ * - const marketplace = useMarketplace("0x1234...");
+ * + const marketplace = useContract("0x1234...", "marketplace").contract;
  * ```
  */
 export function useMarketplace(contractAddress: RequiredParam<string>) {

@@ -57,12 +57,12 @@ export const BigNumberTransformSchema = z
 
 export const BasisPointsSchema = z
   .number()
-  .max(MAX_BPS, "Cannot exeed 100%")
+  .max(MAX_BPS, "Cannot exceed 100%")
   .min(0, "Cannot be below 0%");
 
 export const PercentSchema = z
   .number()
-  .max(100, "Cannot exeed 100%")
+  .max(100, "Cannot exceed 100%")
   .min(0, "Cannot be below 0%");
 
 export const AddressSchema = z.string().refine(

@@ -1,5 +1,44 @@
 # thirdweb
 
+## 0.8.9
+
+### Patch Changes
+
+- Updated dependencies [[`21c21c1`](https://github.com/thirdweb-dev/js/commit/21c21c1adfd09b60ad563bfd4c308597140de33c), [`3522917`](https://github.com/thirdweb-dev/js/commit/352291791ee900e1500f84f095290497934d2f60)]:
+  - @thirdweb-dev/sdk@3.4.2
+
+## 0.8.8
+
+### Patch Changes
+
+- Updated dependencies [[`72227b2`](https://github.com/thirdweb-dev/js/commit/72227b2e166a3a68bbb41cf2b389322f5b7547a2)]:
+  - @thirdweb-dev/sdk@3.4.1
+
+## 0.8.7
+
+### Patch Changes
+
+- [#327](https://github.com/thirdweb-dev/js/pull/327) [`ef27aad`](https://github.com/thirdweb-dev/js/commit/ef27aad0aafc4577e85f44dc77dfbe880bd239b5) Thanks [@jnsdls](https://github.com/jnsdls)! - enable e2e testing
+
+- Updated dependencies [[`340605b`](https://github.com/thirdweb-dev/js/commit/340605b507f384fbd2999b9c16542af3c53e84a9), [`26116a6`](https://github.com/thirdweb-dev/js/commit/26116a6f637ee845f7bd17f20ffe17caf184658e), [`15f8006`](https://github.com/thirdweb-dev/js/commit/15f8006e1fb22333b7ee239b45e7b1b12d6dccc8), [`ef27aad`](https://github.com/thirdweb-dev/js/commit/ef27aad0aafc4577e85f44dc77dfbe880bd239b5)]:
+  - @thirdweb-dev/sdk@3.4.0
+
+## 0.8.6
+
+### Patch Changes
+
+- Updated dependencies [[`ad851f7`](https://github.com/thirdweb-dev/js/commit/ad851f7b4d6abb5ab9364ef3dec229f913e18ce5), [`6218c88`](https://github.com/thirdweb-dev/js/commit/6218c885842e6b4e44ec38ec92a9211e56c49bf4)]:
+  - @thirdweb-dev/sdk@3.3.1
+
+## 0.8.5
+
+### Patch Changes
+
+- [#326](https://github.com/thirdweb-dev/js/pull/326) [`126752d`](https://github.com/thirdweb-dev/js/commit/126752d7d02c9a808a63fb9e67a9df6658b5682b) Thanks [@jnsdls](https://github.com/jnsdls)! - remove tons of unused dependencies, use SDK function for extracting ipfs has from bytecode
+
+- Updated dependencies [[`126752d`](https://github.com/thirdweb-dev/js/commit/126752d7d02c9a808a63fb9e67a9df6658b5682b), [`df74340`](https://github.com/thirdweb-dev/js/commit/df74340fa51323304c32419761d6f18628b060fa), [`89ff921`](https://github.com/thirdweb-dev/js/commit/89ff921a7d9f0e42b4e6707c8b56d0aab95c1aa0), [`a57b4f0`](https://github.com/thirdweb-dev/js/commit/a57b4f01f3a49590b897101f2730582e4124a554)]:
+  - @thirdweb-dev/sdk@3.3.0
+
 ## 0.8.4
 
 ### Patch Changes

@@ -24,13 +24,12 @@ export const NATIVE_TOKENS: Record<
       symbol: "WETH",
     },
   },
-
   [ChainId.Goerli]: {
     name: "Görli Ether",
     symbol: "GOR",
     decimals: 18,
     wrapped: {
-      address: "0x0bb7509324ce409f7bbc4b701f932eaca9736ab7",
+      address: "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
       name: "Wrapped Ether",
       symbol: "WETH",
     },

@@ -712,7 +712,7 @@ export class ContractDeployer extends RPCConnectionHandler {
           ethers.utils.isHexString(constructorParamValues[index]),
           `Could not parse bytes value. Expected valid hex string but got "${constructorParamValues[index]}".`,
         );
-        return ethers.utils.toUtf8Bytes(constructorParamValues[index]);
+        return constructorParamValues[index];
       }
       if (p.startsWith("uint") || p.startsWith("int")) {
         return BigNumber.from(constructorParamValues[index].toString());
