@@ -9,7 +9,6 @@ export function enforceCreator(
   creators: CreatorInput[] = [],
   owner: PublicKey,
 ): Creator[] {
-  console.log("enforceCreator", creators, owner);
   if (creators.length === 0) {
     // If no creators are specified, we assume the owner is the creator
     creators = creators.concat({
