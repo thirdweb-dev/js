@@ -14,6 +14,10 @@ export * from "./hooks/program/useProgramAccountType";
 export * from "./hooks/nft/useNFTs";
 export * from "./hooks/nft/useTransferNFT";
 export * from "./hooks/nft/useBurnNFT";
+export * from "./hooks/nft/useRoyaltySettings";
+export * from "./hooks/nft/useUpdateRoyaltySettings";
+export * from "./hooks/nft/useCreators";
+export * from "./hooks/nft/useUpdateCreators";
 
 // NFT Collection
 export * from "./hooks/nft/collection/useMintNFT";

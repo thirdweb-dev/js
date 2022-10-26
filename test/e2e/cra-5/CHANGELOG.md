@@ -1,5 +1,13 @@
 # e2e-cra-5
 
+## 0.1.2
+
+### Patch Changes
+
+- Updated dependencies [[`72227b2`](https://github.com/thirdweb-dev/js/commit/72227b2e166a3a68bbb41cf2b389322f5b7547a2), [`72227b2`](https://github.com/thirdweb-dev/js/commit/72227b2e166a3a68bbb41cf2b389322f5b7547a2)]:
+  - @thirdweb-dev/react@3.4.1
+  - @thirdweb-dev/sdk@3.4.1
+
 ## 0.1.1
 
 ### Patch Changes

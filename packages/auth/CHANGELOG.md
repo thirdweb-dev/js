@@ -1,5 +1,9 @@
 # @thirdweb-dev/auth
 
+## 2.0.23
+
+## 2.0.22
+
 ## 2.0.21
 
 ### Patch Changes

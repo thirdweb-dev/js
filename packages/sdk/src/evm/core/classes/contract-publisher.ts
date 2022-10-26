@@ -195,13 +195,13 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @internal
    * TODO clean this up (see method above, too)
    */
-  public async resolveReleasesFromAddress(address: string) {
+  public async resolveContractUriFromAddress(address: string) {
     const contractUri = await resolveContractUriFromAddress(
       address,
       this.getProvider(),
     );
     invariant(contractUri, "Could not resolve contract URI from address");
-    return await this.resolvePublishMetadataFromCompilerMetadata(contractUri);
+    return contractUri;
   }
 
   /**
