@@ -198,27 +198,21 @@ Deploy it in one click`,
       />
       <GridItem colSpan={{ base: 12, md: 9 }}>
         <Flex flexDir="column" gap={6}>
+          {address === release.releaser && (
+            <LinkButton
+              ml="auto"
+              size="sm"
+              variant="outline"
+              leftIcon={<Icon as={BiPencil} />}
+              href={`/contracts/release/${encodeURIComponent(
+                release.metadataUri.replace("ipfs://", ""),
+              )}`}
+            >
+              Edit Release
+            </LinkButton>
+          )}
           {releasedContractInfo.data?.publishedMetadata?.readme && (
             <Card as={Flex} flexDir="column" gap={2} p={6} position="relative">
-              {address === release.releaser && (
-                <TrackedIconButton
-                  icon={<Icon as={BiPencil} />}
-                  aria-label="Edit readme"
-                  position="absolute"
-                  variant="ghost"
-                  top={4}
-                  right={4}
-                  category="released-contract"
-                  label="edit-release"
-                  onClick={() =>
-                    router.push(
-                      `/contracts/release/${encodeURIComponent(
-                        release.metadataUri.replace("ipfs://", ""),
-                      )}`,
-                    )
-                  }
-                />
-              )}
               <MarkdownRenderer
                 markdownText={
                   releasedContractInfo.data?.publishedMetadata?.readme
@@ -226,6 +220,7 @@ Deploy it in one click`,
               />
             </Card>
           )}
+
           {releasedContractInfo.data?.publishedMetadata?.changelog && (
             <Card as={Flex} flexDir="column" gap={2} p={0}>
               <Heading px={6} pt={5} pb={2} size="title.sm">
