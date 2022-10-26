@@ -429,13 +429,7 @@ describe("Marketplace Contract", async () => {
         "The buyer should start with no tokens",
       );
 
-      await marketplaceContract.makeOffer(
-        directListingId,
-        10,
-        tokenAddress,
-        0.034,
-        new Date(Date.now() + 60 * 60 * 24 * 10 * 1000),
-      );
+      await marketplaceContract.makeOffer(directListingId, 0.034, 10);
 
       await sdk.updateSignerOrProvider(adminWallet);
       await marketplaceContract.direct.acceptOffer(
@@ -527,12 +521,7 @@ describe("Marketplace Contract", async () => {
       assert.equal(offer.listingId.toString(), directListingId.toString());
 
       sdk.updateSignerOrProvider(samWallet);
-      await marketplaceContract.makeOffer(
-        directListingId,
-        1,
-        tokenAddress,
-        "1",
-      );
+      await marketplaceContract.makeOffer(directListingId, 1, "1");
 
       const secondOffer = (await marketplaceContract.direct.getActiveOffer(
         directListingId,
@@ -610,21 +599,11 @@ describe("Marketplace Contract", async () => {
     it("should return all offers for a listing when queried", async () => {
       // make an offer as bob
       sdk.updateSignerOrProvider(bobWallet);
-      await marketplaceContract.makeOffer(
-        directListingId,
-        1,
-        tokenAddress,
-        "0.5",
-      );
+      await marketplaceContract.makeOffer(directListingId, "0.5", 1);
 
       // make an offer as sam
       sdk.updateSignerOrProvider(samWallet);
-      await marketplaceContract.makeOffer(
-        directListingId,
-        1,
-        tokenAddress,
-        "1",
-      );
+      await marketplaceContract.makeOffer(directListingId, "1", 1);
 
       // fetch all offers for the listing
       sdk.updateSignerOrProvider(adminWallet);
