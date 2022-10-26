@@ -1,5 +1,13 @@
 # @thirdweb-dev/sdk
 
+## 3.4.2
+
+### Patch Changes
+
+- [#344](https://github.com/thirdweb-dev/js/pull/344) [`21c21c1`](https://github.com/thirdweb-dev/js/commit/21c21c1adfd09b60ad563bfd4c308597140de33c) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Update internal function resolveContractUriFromAddress -> resolveContractUriFromAddress
+
+- [#352](https://github.com/thirdweb-dev/js/pull/352) [`3522917`](https://github.com/thirdweb-dev/js/commit/352291791ee900e1500f84f095290497934d2f60) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose marketplace.auction.executeSale(listingId)
+
 ## 3.4.1
 
 ### Patch Changes
