@@ -15,7 +15,7 @@ describe("Tiered Drop Contract", async () => {
     sdk = new ThirdwebSDK(adminWallet);
 
     // This needs to match the release for the currently used ABI
-    const releaseUri = "ipfs://Qme38stSFhJFjTQARAkYu6Wxj7q7MMRvM19hX2sZmJx3RM";
+    const releaseUri = "ipfs://QmRrVYsQ774mVUzYLh728EzAM9zM6tkmUs7EpDgY6EhkTn";
     const address = await sdk.deployer.deployContractFromUri(releaseUri, [], {
       forceDirectDeploy: true,
     });
@@ -116,5 +116,55 @@ describe("Tiered Drop Contract", async () => {
     expect(nfts.length).to.equal(2);
     expect(nfts[0].metadata.name).to.equal("NFT #1");
     expect(nfts[1].metadata.name).to.equal("NFT #2");
+  });
+
+  it("Should claim from multiple tiers", async () => {
+    let metadata = [
+      {
+        name: "NFT #3",
+        description: "My first NFT",
+      },
+    ];
+    await contract.erc721.tieredDrop.lazyMintWithTier(metadata, "tier1");
+
+    metadata = [
+      {
+        name: "NFT #4",
+        description: "My fourth NFT",
+      },
+    ];
+    await contract.erc721.tieredDrop.lazyMintWithTier(metadata, "tier2");
+
+    metadata = [
+      {
+        name: "NFT #5",
+        description: "My fifth NFT",
+      },
+    ];
+    await contract.erc721.tieredDrop.lazyMintWithTier(metadata, "tier3");
+
+    const payload = {
+      currencyAddress: NATIVE_TOKEN_ADDRESS,
+      price: 0,
+      quantity: 3,
+      tierPriority: ["tier1", "tier2", "tier3"],
+      to: claimerWallet.address,
+      mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
+      mintStartTime: new Date(Date.now() - 1000),
+    };
+    const signedPayload = await contract.erc721.tieredDrop.generate(payload);
+    await contract.erc721.tieredDrop.claimWithSignature(signedPayload);
+
+    let nfts = await contract.erc721.tieredDrop.getTokensInTier("tier1");
+    expect(nfts.length).to.equal(3);
+    expect(nfts[2].metadata.name).to.equal("NFT #3");
+
+    nfts = await contract.erc721.tieredDrop.getTokensInTier("tier2");
+    expect(nfts.length).to.equal(1);
+    expect(nfts[0].metadata.name).to.equal("NFT #4");
+
+    nfts = await contract.erc721.tieredDrop.getTokensInTier("tier3");
+    expect(nfts.length).to.equal(1);
+    expect(nfts[0].metadata.name).to.equal("NFT #5");
   });
 });
