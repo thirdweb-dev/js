@@ -6,7 +6,11 @@
   "license": "Apache-2.0",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/contracts-js",
   "dependencies": {
+<<<<<<< HEAD
     "@thirdweb-dev/contracts": "^3.1.11-3"
+=======
+    "@thirdweb-dev/contracts": "^3.1.10"
+>>>>>>> am/signature
   },
   "devDependencies": {
     "@babel/preset-env": "^7.18.10",

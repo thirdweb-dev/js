@@ -190,7 +190,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    * const endTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
    * const payload = {
    *   metadata: nftMetadata, // The NFT to mint
-   *   to: {{wallet_address}}, // Who will receive the NFT (or AddressZero for anyone)
+   *   to: {{wallet_address}}, // Who will receive the NFT
    *   quantity: 2, // the quantity of NFTs to mint
    *   price: 0.5, // the price per NFT
    *   currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with
@@ -247,7 +247,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    * const endTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
    * const payload = {
    *   metadata: nftMetadata, // The NFT to mint
-   *   to: {{wallet_address}}, // Who will receive the NFT (or AddressZero for anyone)
+   *   to: {{wallet_address}}, // Who will receive the NFT
    *   quantity: 2, // the quantity of NFTs to mint
    *   price: 0.5, // the price per NFT
    *   currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with

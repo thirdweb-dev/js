@@ -55,9 +55,9 @@ describe("Tiered Drop Contract", async () => {
     );
     expect(txs.length).to.equal(2);
 
-    // const nfts = await contract.erc721.tieredDrop.getTokensInTier("tier1");
-    // expect(nfts.length).to.equal(2);
-    // expect(nfts[0].metadata.name).to.equal("NFT #1");
+    const nfts = await contract.erc721.tieredDrop.getMetadataInTier("tier1");
+    expect(nfts.length).to.equal(2);
+    expect(nfts[0].name).to.equal("NFT #1");
   });
 
   it("Should reject invalid payload", async () => {
