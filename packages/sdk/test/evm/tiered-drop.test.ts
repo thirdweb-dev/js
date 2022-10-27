@@ -2,20 +2,18 @@ import { NATIVE_TOKEN_ADDRESS, ThirdwebSDK } from "../../src/evm";
 import { SmartContract } from "../../src/evm/contracts/smart-contract";
 import { signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { expect } from "chai";
+import { expect, assert } from "chai";
 
 describe("Tiered Drop Contract", async () => {
   let contract: SmartContract;
   let sdk: ThirdwebSDK;
   let adminWallet: SignerWithAddress;
   let claimerWallet: SignerWithAddress;
-  let attackerWallet: SignerWithAddress;
 
   before(async () => {
-    [adminWallet, claimerWallet, attackerWallet] = signers;
+    [adminWallet, claimerWallet] = signers;
     sdk = new ThirdwebSDK(adminWallet);
 
-    // "ipfs://QmPhsvsLDWokxBbKfkd3zq1NCJexdmCdUfLbqRhVWq8JPp/0"
     // This needs to match the release for the currently used ABI
     const releaseUri = "ipfs://Qme38stSFhJFjTQARAkYu6Wxj7q7MMRvM19hX2sZmJx3RM";
     const address = await sdk.deployer.deployContractFromUri(releaseUri, [], {
@@ -36,6 +34,10 @@ describe("Tiered Drop Contract", async () => {
       walletAddress, // royaltyRecipient
       0, // royaltyBps
     );
+  });
+
+  beforeEach(() => {
+    sdk.updateSignerOrProvider(adminWallet);
   });
 
   it("Should lazy mint NFTs", async () => {
@@ -61,12 +63,8 @@ describe("Tiered Drop Contract", async () => {
   });
 
   it("Should reject invalid payload", async () => {
-    sdk.updateSignerOrProvider(adminWallet);
     const payload = {
       currencyAddress: NATIVE_TOKEN_ADDRESS,
-      metadata: {
-        name: "OUCH VOUCH",
-      },
       price: 0,
       quantity: 1,
       tierPriority: ["tier1"],
@@ -75,23 +73,16 @@ describe("Tiered Drop Contract", async () => {
       mintStartTime: new Date(),
     };
     const signedPayload = await contract.erc721.tieredDrop.generate(payload);
+    signedPayload.payload.price = "1";
 
-    sdk.updateSignerOrProvider(attackerWallet);
-    try {
-      await contract.erc721.tieredDrop.claimWithSignature(signedPayload);
-      expect.fail();
-    } catch (err) {
-      // TODO: Check error message
-    }
+    sdk.updateSignerOrProvider(claimerWallet);
+    const isValid = await contract.erc721.tieredDrop.verify(signedPayload);
+    assert.isFalse(isValid);
   });
 
   it("Should claim NFTs", async () => {
-    sdk.updateSignerOrProvider(adminWallet);
     const payload = {
       currencyAddress: NATIVE_TOKEN_ADDRESS,
-      metadata: {
-        name: "OUCH VOUCH",
-      },
       price: 0,
       quantity: 1,
       tierPriority: ["tier1"],
@@ -102,10 +93,29 @@ describe("Tiered Drop Contract", async () => {
     const signedPayload = await contract.erc721.tieredDrop.generate(payload);
     const isValid = await contract.erc721.tieredDrop.verify(signedPayload);
 
-    // eslint-disable-next-line no-unused-expressions
-    expect(isValid).to.be.true;
+    assert.isTrue(isValid);
 
     sdk.updateSignerOrProvider(claimerWallet);
     await contract.erc721.tieredDrop.claimWithSignature(signedPayload);
+  });
+
+  it("Should get tokens in tier", async () => {
+    const payload = {
+      currencyAddress: NATIVE_TOKEN_ADDRESS,
+      price: 0,
+      quantity: 1,
+      tierPriority: ["tier1"],
+      to: claimerWallet.address,
+      mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
+      mintStartTime: new Date(Date.now() - 1000),
+    };
+    const signedPayload = await contract.erc721.tieredDrop.generate(payload);
+    await contract.erc721.tieredDrop.claimWithSignature(signedPayload);
+
+    const nfts = await contract.erc721.tieredDrop.getTokensInTier("tier1");
+    console.log(nfts);
+    expect(nfts.length).to.equal(2);
+    expect(nfts[0].metadata.name).to.equal("NFT #1");
+    expect(nfts[1].metadata.name).to.equal("NFT #2");
   });
 });

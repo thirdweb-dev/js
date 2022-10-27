@@ -69,11 +69,17 @@ export class Erc721TieredDrop implements DetectableFeature {
 
   public async getTokensInTier(tier: string): Promise<NFT[]> {
     const endIndex = await this.contractWrapper.readContract.getMintInstances();
+    if (endIndex.eq(0)) {
+      return [];
+    }
+
     const ranges = await this.contractWrapper.readContract.getTokensInTier(
       tier,
       0,
       endIndex,
     );
+
+    console.log(ranges);
 
     const nfts = await Promise.all(
       ranges
