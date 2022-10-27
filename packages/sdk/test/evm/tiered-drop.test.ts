@@ -113,7 +113,6 @@ describe("Tiered Drop Contract", async () => {
     await contract.erc721.tieredDrop.claimWithSignature(signedPayload);
 
     const nfts = await contract.erc721.tieredDrop.getTokensInTier("tier1");
-    console.log(nfts);
     expect(nfts.length).to.equal(2);
     expect(nfts[0].metadata.name).to.equal("NFT #1");
     expect(nfts[1].metadata.name).to.equal("NFT #2");
