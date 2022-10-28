@@ -36,41 +36,20 @@ describe("Edition Drop Contract (Legacy)", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const impl = await new ethers.ContractFactory(
-      DropERC1155_V2__factory.abi,
-      DropERC1155_V2__factory.bytecode,
-    )
-      .connect(adminWallet)
-      .deploy();
-    const implAddress = await impl.deployed();
-    const contractMetadata = EditionDropInitializer.schema.deploy.parse({
-      name: `Testing edition drop from SDK`,
-      description: "Test contract from tests",
-      image:
-        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-      primary_sale_recipient: adminWallet.address,
-      seller_fee_basis_points: 500,
-      fee_recipient: AddressZero,
-      platform_fee_basis_points: 10,
-      platform_fee_recipient: adminWallet.address,
-    });
-    const contractUri = await storage.upload(contractMetadata);
-    const address = await sdk.deployer.deployProxy(
-      implAddress.address,
-      DropERC1155_V2__factory.abi,
-      "initialize",
-      [
-        adminWallet.address,
-        contractMetadata.name,
-        contractMetadata.symbol,
-        contractUri,
-        contractMetadata.trusted_forwarders || [],
-        contractMetadata.primary_sale_recipient,
-        contractMetadata.fee_recipient,
-        contractMetadata.seller_fee_basis_points,
-        contractMetadata.platform_fee_basis_points,
-        contractMetadata.platform_fee_recipient,
-      ],
+    const address = await sdk.deployer.deployBuiltInContract(
+      EditionDropInitializer.contractType,
+      {
+        name: `Testing edition drop from SDK`,
+        description: "Test contract from tests",
+        image:
+          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+        primary_sale_recipient: adminWallet.address,
+        seller_fee_basis_points: 500,
+        fee_recipient: AddressZero,
+        platform_fee_basis_points: 10,
+        platform_fee_recipient: adminWallet.address,
+      },
+      2,
     );
     bdContract = await sdk.getEditionDrop(address);
   });

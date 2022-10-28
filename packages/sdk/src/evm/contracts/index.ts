@@ -302,11 +302,16 @@ export const SignatureDropInitializer = {
     );
   },
   getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    await assertContractType(address, provider, "signature-drop");
-    // TODO (cc) check version
-    return (
-      await import("@thirdweb-dev/contracts-js/dist/abis/SignatureDrop.json")
-    ).default;
+    const contractInfo = await assertContractType(
+      address,
+      provider,
+      "signature-drop",
+    );
+    const abi =
+      contractInfo.version > 4
+        ? "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop.json"
+        : "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop_V4.json";
+    return (await import(abi)).default;
   },
 };
 

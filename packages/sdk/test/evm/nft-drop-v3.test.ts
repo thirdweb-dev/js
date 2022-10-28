@@ -9,14 +9,13 @@ import {
 import { expectError, sdk, signers, storage } from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { DropERC721_V3__factory } from "@thirdweb-dev/contracts-js";
 import { assert, expect } from "chai";
 import { BigNumber, ethers } from "ethers";
 import invariant from "tiny-invariant";
 
 global.fetch = require("cross-fetch");
 
-describe("NFT Drop Contract (Legacy)", async () => {
+describe("NFT Drop Contract (v3)", async () => {
   let dropContract: NFTDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -29,42 +28,20 @@ describe("NFT Drop Contract (Legacy)", async () => {
 
   beforeEach(async () => {
     [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
-    sdk.updateSignerOrProvider(adminWallet);
-    const impl = await new ethers.ContractFactory(
-      DropERC721_V3__factory.abi,
-      DropERC721_V3__factory.bytecode,
-    )
-      .connect(adminWallet)
-      .deploy();
-    const implAddress = await impl.deployed();
-    const contractMetadata = NFTDropInitializer.schema.deploy.parse({
-      name: `Testing drop from SDK`,
-      description: "Test contract from tests",
-      image:
-        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-      primary_sale_recipient: adminWallet.address,
-      seller_fee_basis_points: 500,
-      fee_recipient: AddressZero,
-      platform_fee_basis_points: 10,
-      platform_fee_recipient: AddressZero,
-    });
-    const contractUri = await storage.upload(contractMetadata);
-    const address = await sdk.deployer.deployProxy(
-      implAddress.address,
-      DropERC721_V3__factory.abi,
-      "initialize",
-      [
-        adminWallet.address,
-        contractMetadata.name,
-        contractMetadata.symbol,
-        contractUri,
-        contractMetadata.trusted_forwarders || [],
-        contractMetadata.primary_sale_recipient,
-        contractMetadata.fee_recipient,
-        contractMetadata.seller_fee_basis_points,
-        contractMetadata.platform_fee_basis_points,
-        contractMetadata.platform_fee_recipient,
-      ],
+    const address = await sdk.deployer.deployBuiltInContract(
+      NFTDropInitializer.contractType,
+      {
+        name: `Testing drop from SDK`,
+        description: "Test contract from tests",
+        image:
+          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+        primary_sale_recipient: adminWallet.address,
+        seller_fee_basis_points: 500,
+        fee_recipient: AddressZero,
+        platform_fee_basis_points: 10,
+        platform_fee_recipient: AddressZero,
+      },
+      3,
     );
     dropContract = await sdk.getNFTDrop(address);
   });

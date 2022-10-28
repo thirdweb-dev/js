@@ -81,29 +81,35 @@ export async function prepareClaim(
         storage,
         snapshotFormatVersion,
       );
-      if (!snapshotEntry) {
-        throw new Error("No claim found for this address");
+      if (snapshotEntry) {
+        proofs = snapshotEntry.proof;
+        // override only if not default values (unlimited for quantity, zero addr for currency)
+        maxClaimable =
+          snapshotEntry.maxClaimable === "unlimited"
+            ? ethers.constants.MaxUint256
+            : ethers.utils.parseUnits(
+                snapshotEntry.maxClaimable,
+                tokenDecimals,
+              );
+        price =
+          snapshotEntry.price === "unlimited"
+            ? ethers.constants.MaxUint256
+            : await normalizePriceValue(
+                contractWrapper.getProvider(),
+                snapshotEntry.price,
+                snapshotEntry.currencyAddress,
+              );
+        currencyAddress =
+          snapshotEntry.currencyAddress === ethers.constants.AddressZero
+            ? ethers.constants.AddressZero
+            : snapshotEntry.currencyAddress;
+      } else {
+        // if no snapshot entry, and it's a v1 format (exclusive allowlist) then address can't claim
+        if (snapshotFormatVersion === SnapshotFormatVersion.V1) {
+          throw new Error("No claim found for this address");
+        }
+        // but if its snapshot v2 (override list behavior) then address can still claim with default settings
       }
-      proofs = snapshotEntry.proof;
-      // override only if not default values (unlimited for quantity, zero addr for currency)
-      // TODO (cc) should default values inherit the global limit? probably?
-      // TODO (cc) but if global maxClaimable is zero, adding an address in the snapshot without maxClaimable should give unlimited claims?
-      maxClaimable =
-        snapshotEntry.maxClaimable === "unlimited"
-          ? ethers.constants.MaxUint256
-          : ethers.utils.parseUnits(snapshotEntry.maxClaimable, tokenDecimals);
-      price =
-        snapshotEntry.price === "unlimited"
-          ? ethers.constants.MaxUint256
-          : await normalizePriceValue(
-              contractWrapper.getProvider(),
-              snapshotEntry.price,
-              snapshotEntry.currencyAddress,
-            );
-      currencyAddress =
-        snapshotEntry.currencyAddress === ethers.constants.AddressZero
-          ? ethers.constants.AddressZero
-          : snapshotEntry.currencyAddress;
     }
   } catch (e) {
     // have to handle the valid error case that we *do* want to throw on

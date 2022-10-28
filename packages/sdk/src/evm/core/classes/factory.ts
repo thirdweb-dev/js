@@ -41,7 +41,7 @@ import { z } from "zod";
 export class ContractFactory extends ContractWrapper<TWFactory> {
   private storage: ThirdwebStorage;
 
-  // Map from contract type to version to deploy specific versions
+  // Map from contract type to version to deploy specific versions by default
   private DEFAULT_VERSION_MAP: Record<PrebuiltContractType, number> = {
     [NFTDropInitializer.contractType]: 3,
     [NFTCollectionInitializer.contractType]: 1,

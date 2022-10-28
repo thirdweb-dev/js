@@ -38,7 +38,7 @@ describe("Edition Drop Contract", async () => {
     const address = await sdk.deployer.deployBuiltInContract(
       EditionDropInitializer.contractType,
       {
-        name: `Testing bundle drop from SDK`,
+        name: `Testing edition drop from SDK`,
         description: "Test contract from tests",
         image:
           "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",

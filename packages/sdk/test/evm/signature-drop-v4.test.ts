@@ -48,9 +48,7 @@ describe("Signature drop tests", async () => {
           primary_sale_recipient: adminWallet.address,
           seller_fee_basis_points: 0,
         },
-        await sdk.deployer.getLatestBuiltInContractVersion(
-          SignatureDropInitializer.contractType,
-        ),
+        4,
       ),
     );
 
@@ -506,7 +504,7 @@ describe("Signature drop tests", async () => {
       const metadata = await signatureDropContract.metadata.get();
       const merkles = metadata.merkle;
       expect(merkles).have.property(
-        "0x5398c0f1d4b32f7e4817ddfb7075fada328dfd68ee954ee7d673751ad2025b80",
+        "0x24eb8b9e205d090b39d79c97560092e64de182e118d6128625c332800210560a",
       );
 
       const roots = await signatureDropContract.claimConditions.getActive();
@@ -722,7 +720,7 @@ describe("Signature drop tests", async () => {
         await sdk.updateSignerOrProvider(w2);
         await signatureDropContract.claim(2);
       } catch (e) {
-        expectError(e, "!Qty");
+        expectError(e, "Invalid qty proof");
       }
     });
 
