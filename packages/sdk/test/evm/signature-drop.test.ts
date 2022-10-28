@@ -48,6 +48,9 @@ describe("Signature drop tests", async () => {
           primary_sale_recipient: adminWallet.address,
           seller_fee_basis_points: 0,
         },
+        await sdk.deployer.getLatestBuiltInContractVersion(
+          SignatureDropInitializer.contractType,
+        ),
       ),
     );
 

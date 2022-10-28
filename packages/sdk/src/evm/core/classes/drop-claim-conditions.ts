@@ -628,6 +628,7 @@ export class DropClaimConditions<
 
     const cw = this.contractWrapper;
     if (this.isLegacySinglePhaseDrop(cw)) {
+      console.log("Setting claim conditions for legacy single phase drop");
       encoded.push(
         cw.readContract.interface.encodeFunctionData("setClaimConditions", [
           abstractContractModelToLegacy(sortedConditions[0]),
@@ -642,6 +643,7 @@ export class DropClaimConditions<
         ]),
       );
     } else if (this.isNewSinglePhaseDrop(cw)) {
+      console.log("Setting claim conditions for new single phase drop");
       encoded.push(
         cw.readContract.interface.encodeFunctionData("setClaimConditions", [
           abstractContractModelToNew(sortedConditions[0]),

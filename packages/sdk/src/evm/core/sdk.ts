@@ -401,7 +401,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         // otherwise if it's a prebuilt contract we can just use the contract type
         const contractAbi = await PREBUILT_CONTRACTS_MAP[
           resolvedContractType
-        ].getAbi();
+        ].getAbi(address, this.getProvider());
         newContract = await this.getContractFromAbi(address, contractAbi);
       }
     }

@@ -3,6 +3,7 @@ import {
   ClaimEligibility,
   NATIVE_TOKEN_ADDRESS,
   NFTDrop,
+  NFTDropInitializer,
   TokenInitializer,
 } from "../../src/evm";
 import { expectError, sdk, signers, storage } from "./before-setup";
@@ -28,17 +29,23 @@ describe("NFT Drop Contract", async () => {
   beforeEach(async () => {
     [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployer.deployNFTDrop({
-      name: `Testing drop from SDK`,
-      description: "Test contract from tests",
-      image:
-        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-      primary_sale_recipient: adminWallet.address,
-      seller_fee_basis_points: 500,
-      fee_recipient: AddressZero,
-      platform_fee_basis_points: 10,
-      platform_fee_recipient: AddressZero,
-    });
+    const address = await sdk.deployer.deployBuiltInContract(
+      NFTDropInitializer.contractType,
+      {
+        name: `Testing drop from SDK`,
+        description: "Test contract from tests",
+        image:
+          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+        primary_sale_recipient: adminWallet.address,
+        seller_fee_basis_points: 500,
+        fee_recipient: AddressZero,
+        platform_fee_basis_points: 10,
+        platform_fee_recipient: AddressZero,
+      },
+      await sdk.deployer.getLatestBuiltInContractVersion(
+        NFTDropInitializer.contractType,
+      ),
+    );
     dropContract = await sdk.getNFTDrop(address);
   });
 

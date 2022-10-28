@@ -38,6 +38,9 @@ describe("Token Drop Contract", async () => {
         platform_fee_basis_points: 10,
         platform_fee_recipient: AddressZero,
       },
+      await sdk.deployer.getLatestBuiltInContractVersion(
+        TokenDropInitializer.contractType,
+      ),
     );
     dropContract = await sdk.getTokenDrop(address);
   });

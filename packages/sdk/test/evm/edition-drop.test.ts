@@ -1,6 +1,7 @@
 import {
   ClaimEligibility,
   EditionDrop,
+  EditionDropInitializer,
   NATIVE_TOKEN_ADDRESS,
   TokenInitializer,
 } from "../../src/evm";
@@ -34,17 +35,23 @@ describe("Edition Drop Contract", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployer.deployEditionDrop({
-      name: `Testing bundle drop from SDK`,
-      description: "Test contract from tests",
-      image:
-        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-      primary_sale_recipient: adminWallet.address,
-      seller_fee_basis_points: 500,
-      fee_recipient: AddressZero,
-      platform_fee_basis_points: 10,
-      platform_fee_recipient: adminWallet.address,
-    });
+    const address = await sdk.deployer.deployBuiltInContract(
+      EditionDropInitializer.contractType,
+      {
+        name: `Testing bundle drop from SDK`,
+        description: "Test contract from tests",
+        image:
+          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+        primary_sale_recipient: adminWallet.address,
+        seller_fee_basis_points: 500,
+        fee_recipient: AddressZero,
+        platform_fee_basis_points: 10,
+        platform_fee_recipient: adminWallet.address,
+      },
+      await sdk.deployer.getLatestBuiltInContractVersion(
+        EditionDropInitializer.contractType,
+      ),
+    );
     bdContract = await sdk.getEditionDrop(address);
   });
 
