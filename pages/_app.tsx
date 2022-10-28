@@ -235,9 +235,9 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
           `}
         />
         <DefaultSeo
-          defaultTitle="Web3 SDKs for developers ⸱ No-code for NFT artists | thirdweb"
+          defaultTitle="thirdweb: The complete web3 development framework"
           titleTemplate="%s | thirdweb"
-          description="Build web3 apps easily. Implement web3 features with powerful SDKs for developers. Drop NFTs with no code. — Ethereum, Polygon, Avalanche, & more."
+          description="Build, launch, and manage web3 apps with thirdweb's powerful SDKs, audited smart contracts, and developer tools—for Ethereum, Polygon, Solana, & more."
           additionalLinkTags={[
             {
               rel: "icon",
@@ -245,10 +245,9 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
             },
           ]}
           openGraph={{
-            title:
-              "Web3 SDKs for developers ⸱ No-code for NFT artists | thirdweb",
+            title: "thirdweb: The complete web3 development framework",
             description:
-              "Build web3 apps easily. Implement web3 features with powerful SDKs for developers. Drop NFTs with no code. — Ethereum, Polygon, Avalanche, & more.",
+              "Build, launch, and manage web3 apps with thirdweb's powerful SDKs, audited smart contracts, and developer tools—for Ethereum, Polygon, Solana, & more.",
             type: "website",
             locale: "en_US",
             url: "https://thirdweb.com",
