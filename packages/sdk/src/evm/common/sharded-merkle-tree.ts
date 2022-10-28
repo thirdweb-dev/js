@@ -84,10 +84,6 @@ export class ShardedMerkleTree {
     tokenDecimals: number,
     snapshotFormatVersion: SnapshotFormatVersion,
   ): string {
-    // TODO (cc) hash price and currency
-    // TODO (cc) differentiate between default values for maxClaimable
-
-    // TODO (cc) for legacy contracts, need to only hash addr / maxclaimable!!
     switch (snapshotFormatVersion) {
       case SnapshotFormatVersion.V1:
         return utils.solidityKeccak256(
