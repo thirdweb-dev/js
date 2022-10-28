@@ -3,6 +3,7 @@ import {
   abstractContractModelToLegacy,
   abstractContractModelToNew,
   convertQuantityToBigNumber,
+  fetchSnapshotEntryForAddress,
   getClaimerProofs,
   legacyContractModelToAbstract,
   newContractModelToAbstract,
@@ -22,6 +23,7 @@ import { ClaimEligibility } from "../../enums";
 import {
   AbstractClaimConditionContractStruct,
   AmountSchema,
+  SnapshotEntryWithProof,
 } from "../../schema";
 import {
   Amount,
@@ -48,10 +50,10 @@ import type {
   DropERC721_V3,
   DropSinglePhase,
   DropSinglePhase_V1,
+  IDropSinglePhase_V1,
   IERC20,
   IERC20Metadata,
 } from "@thirdweb-dev/contracts-js";
-import type { IDropSinglePhase_V1 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import type { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/declarations/src/IDropERC20_V2";
 import type { IDropSinglePhase } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
@@ -479,6 +481,32 @@ export class DropClaimConditions<
     }
 
     return reasons;
+  }
+
+  /**
+   * Returns allow list information and merkle proofs for the given address.
+   * @param claimerAddress
+   */
+  public async getClaimerProofs(
+    claimerAddress: string,
+  ): Promise<SnapshotEntryWithProof | null> {
+    const claimCondition = await this.getActive();
+    const merkeRoot = claimCondition.merkleRootHash;
+    const merkleRootArray = ethers.utils.stripZeros(
+      claimCondition.merkleRootHash,
+    );
+    if (merkleRootArray.length > 0) {
+      const metadata = await this.metadata.get();
+      return await fetchSnapshotEntryForAddress(
+        claimerAddress,
+        merkeRoot.toString(),
+        metadata.merkle,
+        this.storage,
+        this.getSnapshotFormatVersion(),
+      );
+    } else {
+      return null;
+    }
   }
 
   /** ***************************************

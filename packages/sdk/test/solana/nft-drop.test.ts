@@ -133,8 +133,8 @@ describe("NFTDrop", async () => {
 
     const newCreator = Keypair.generate().publicKey.toBase58();
     await drop.updateCreators([
-      { address: sdk.wallet.getAddress() as string, sharePercentage: 75 },
-      { address: newCreator, sharePercentage: 25 },
+      { address: sdk.wallet.getAddress() as string, share: 75 },
+      { address: newCreator, share: 25 },
     ]);
 
     creators = await drop.getCreators();

@@ -33,7 +33,17 @@ export const ThirdwebConnectedWalletProvider: React.FC<
   const { rpcUrlMap } = useThirdwebConfigContext();
 
   const [contextValue, setContextValue] =
-    useState<ThirdwebConnectedWalletContext>(INITIAL_CONTEXT_VALUE);
+    useState<ThirdwebConnectedWalletContext>({
+      ...INITIAL_CONTEXT_VALUE,
+      signer: signer ? signer : undefined,
+    });
+
+  useEffect(() => {
+    setContextValue((val) => ({
+      ...val,
+      signer: signer ? signer : undefined,
+    }));
+  }, [signer]);
 
   useEffect(() => {
     let s = signer;

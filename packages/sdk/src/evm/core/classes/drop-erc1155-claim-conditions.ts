@@ -2,6 +2,7 @@ import { includesErrorMessage } from "../../common";
 import {
   abstractContractModelToLegacy,
   abstractContractModelToNew,
+  fetchSnapshotEntryForAddress,
   getClaimerProofs,
   legacyContractModelToAbstract,
   newContractModelToAbstract,
@@ -15,7 +16,10 @@ import { hasFunction } from "../../common/feature-detection";
 import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
 import { isNode } from "../../common/utils";
 import { ClaimEligibility } from "../../enums";
-import { AbstractClaimConditionContractStruct } from "../../schema";
+import {
+  AbstractClaimConditionContractStruct,
+  SnapshotEntryWithProof,
+} from "../../schema";
 import {
   ClaimCondition,
   ClaimConditionFetchOptions,
@@ -37,11 +41,9 @@ import type {
   DropERC1155_V2,
   DropSinglePhase1155,
   DropSinglePhase1155_V1,
-  IERC20,
-} from "@thirdweb-dev/contracts-js";
-import type {
-  IDropSinglePhase_V1,
   IDropSinglePhase,
+  IDropSinglePhase_V1,
+  IERC20,
 } from "@thirdweb-dev/contracts-js";
 import IERC20ABI from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import type { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC20_V2";
@@ -469,6 +471,34 @@ export class DropErc1155ClaimConditions<
     }
 
     return reasons;
+  }
+
+  /**
+   * Returns allow list information and merkle proofs for the given address.
+   * @param tokenId
+   * @param claimerAddress
+   */
+  public async getClaimerProofs(
+    tokenId: BigNumberish,
+    claimerAddress: string,
+  ): Promise<SnapshotEntryWithProof | null> {
+    const claimCondition = await this.getActive(tokenId);
+    const merkeRoot = claimCondition.merkleRootHash;
+    const merkleRootArray = ethers.utils.stripZeros(
+      claimCondition.merkleRootHash,
+    );
+    if (merkleRootArray.length > 0) {
+      const metadata = await this.metadata.get();
+      return await fetchSnapshotEntryForAddress(
+        claimerAddress,
+        merkeRoot.toString(),
+        metadata.merkle,
+        this.storage,
+        this.getSnapshotFormatVersion(),
+      );
+    } else {
+      return null;
+    }
   }
 
   /** ***************************************
