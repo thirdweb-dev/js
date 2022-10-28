@@ -144,7 +144,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
     },
     connect,
   ] = useConnect();
-  const disconnect = useDisconnect({ reconnectAfterGnosis: false });
+  const disconnect = useDisconnect({ reconnectPrevious: false });
 
   const supportedConnectors = connectors.filter((c) =>
     SUPPORTED_CONNECTORS.includes(c.id as typeof SUPPORTED_CONNECTORS[number]),

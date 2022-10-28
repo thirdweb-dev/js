@@ -72,7 +72,7 @@ export class ThirdwebStorage<T extends UploadOptions = IpfsUploadBatchOptions> {
    * ```
    */
   resolveScheme(url: string): string {
-    return replaceSchemeWithGatewayUrl(url, this.gatewayUrls);
+    return replaceSchemeWithGatewayUrl(url, this.gatewayUrls) as string;
   }
 
   /**

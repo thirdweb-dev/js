@@ -1,5 +1,102 @@
 # @thirdweb-dev/sdk
 
+## 3.4.2
+
+### Patch Changes
+
+- [#344](https://github.com/thirdweb-dev/js/pull/344) [`21c21c1`](https://github.com/thirdweb-dev/js/commit/21c21c1adfd09b60ad563bfd4c308597140de33c) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Update internal function resolveContractUriFromAddress -> resolveContractUriFromAddress
+
+- [#352](https://github.com/thirdweb-dev/js/pull/352) [`3522917`](https://github.com/thirdweb-dev/js/commit/352291791ee900e1500f84f095290497934d2f60) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose marketplace.auction.executeSale(listingId)
+
+## 3.4.1
+
+### Patch Changes
+
+- [#343](https://github.com/thirdweb-dev/js/pull/343) [`72227b2`](https://github.com/thirdweb-dev/js/commit/72227b2e166a3a68bbb41cf2b389322f5b7547a2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose general marketplace.makeOffer() function
+
+## 3.4.0
+
+### Patch Changes
+
+- [#337](https://github.com/thirdweb-dev/js/pull/337) [`340605b`](https://github.com/thirdweb-dev/js/commit/340605b507f384fbd2999b9c16542af3c53e84a9) Thanks [@adam-maj](https://github.com/adam-maj)! - Clean native token address in listing
+
+- [#342](https://github.com/thirdweb-dev/js/pull/342) [`26116a6`](https://github.com/thirdweb-dev/js/commit/26116a6f637ee845f7bd17f20ffe17caf184658e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add new univeral RPC urls
+
+- [#335](https://github.com/thirdweb-dev/js/pull/335) [`15f8006`](https://github.com/thirdweb-dev/js/commit/15f8006e1fb22333b7ee239b45e7b1b12d6dccc8) Thanks [@adam-maj](https://github.com/adam-maj)! - Export smart contract
+
+- [#327](https://github.com/thirdweb-dev/js/pull/327) [`ef27aad`](https://github.com/thirdweb-dev/js/commit/ef27aad0aafc4577e85f44dc77dfbe880bd239b5) Thanks [@jnsdls](https://github.com/jnsdls)! - enable e2e testing
+
+- Updated dependencies [[`ef27aad`](https://github.com/thirdweb-dev/js/commit/ef27aad0aafc4577e85f44dc77dfbe880bd239b5)]:
+  - @thirdweb-dev/storage@1.0.6
+
+## 3.3.1
+
+### Patch Changes
+
+- [#332](https://github.com/thirdweb-dev/js/pull/332) [`ad851f7`](https://github.com/thirdweb-dev/js/commit/ad851f7b4d6abb5ab9364ef3dec229f913e18ce5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix for finding addresses in legacy merkle tree format
+
+- [#330](https://github.com/thirdweb-dev/js/pull/330) [`6218c88`](https://github.com/thirdweb-dev/js/commit/6218c885842e6b4e44ec38ec92a9211e56c49bf4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix deploying contracts with non-32 bytes parameters like bytes4
+
+## 3.3.0
+
+### Minor Changes
+
+- [#315](https://github.com/thirdweb-dev/js/pull/315) [`89ff921`](https://github.com/thirdweb-dev/js/commit/89ff921a7d9f0e42b4e6707c8b56d0aab95c1aa0) Thanks [@furqanrydhan](https://github.com/furqanrydhan)! - fixing vite, multihash moved to non lazy load + cbor-x instead of cbor-web
+
+- [#321](https://github.com/thirdweb-dev/js/pull/321) [`a57b4f0`](https://github.com/thirdweb-dev/js/commit/a57b4f01f3a49590b897101f2730582e4124a554) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SDK] Implement sharded merkle trees for lightweight allowlist checks
+
+  **Behavior change**
+
+  We've made allowlists much more performant using sharded merkle trees. This allows us to process large allowlists (1M+) efficiently.
+
+  To support those large allowlists, fetching claim conditions does not fetch the allowlist data by default anymore. Instead, you can pass an options object to additionally fetch the allowlist data along with the rest of the claim conditions data.
+
+  This affects `ClaimConditions.getActive()` and `ClaimConditions.getAll()`
+
+  Examples:
+
+  ```ts
+  const activeClaimCondition =
+    await contract.erc721.claimConditions.getActive();
+  // `activeClaimCondition.snapshot` is undefined
+  const activeclaimConditionWithtAllowList =
+    await contract.erc721.claimConditions.getActive({
+      withAllowList: true,
+    });
+  // `activeClaimCondition.snapshot` returns the allowlist data
+  ```
+
+### Patch Changes
+
+- [#326](https://github.com/thirdweb-dev/js/pull/326) [`126752d`](https://github.com/thirdweb-dev/js/commit/126752d7d02c9a808a63fb9e67a9df6658b5682b) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - expose fn to get ipfs hash from bytecote publicly
+
+- [#328](https://github.com/thirdweb-dev/js/pull/328) [`df74340`](https://github.com/thirdweb-dev/js/commit/df74340fa51323304c32419761d6f18628b060fa) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update cbor-x import to work with es2018 builds (embeds)
+
+- Updated dependencies [[`87fd6ab`](https://github.com/thirdweb-dev/js/commit/87fd6ab14e1a67a1b12e72bd397fb21769537307)]:
+  - @thirdweb-dev/storage@1.0.5
+
+## 3.2.6
+
+### Patch Changes
+
+- [#317](https://github.com/thirdweb-dev/js/pull/317) [`4f867e1`](https://github.com/thirdweb-dev/js/commit/4f867e15edbe5757afbf54cab207458711a8986c) Thanks [@adam-maj](https://github.com/adam-maj)! - Add supply to nft.get
+
+- [#312](https://github.com/thirdweb-dev/js/pull/312) [`b6eec61`](https://github.com/thirdweb-dev/js/commit/b6eec6146c23b66a3681bbb48b173b9019254214) Thanks [@adam-maj](https://github.com/adam-maj)! - Add quantity to mint additional supply
+
+- [#310](https://github.com/thirdweb-dev/js/pull/310) [`9727502`](https://github.com/thirdweb-dev/js/commit/9727502eb30ac139382b7c7c8e8fc0967cbfbcf1) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - [SOL] - add useMintNFTSupply hook in react and accomodate inputs for it in SDK
+
+- [#307](https://github.com/thirdweb-dev/js/pull/307) [`782b58d`](https://github.com/thirdweb-dev/js/commit/782b58d3f6a3b49ff9b3d837551db5161f96171a) Thanks [@kumaryash90](https://github.com/kumaryash90)! - fix multicall gasless
+
+- [#320](https://github.com/thirdweb-dev/js/pull/320) [`f41a443`](https://github.com/thirdweb-dev/js/commit/f41a443c5785240197607b5bf93ff18a1c8e8307) Thanks [@adam-maj](https://github.com/adam-maj)! - Add update creators and update royalty
+
+- [#313](https://github.com/thirdweb-dev/js/pull/313) [`f45ef62`](https://github.com/thirdweb-dev/js/commit/f45ef62128cfefe06275a38440c90d45e9f3cef7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Return default metadata when failing to fetch a given tokenId on NFT contracts
+
+- [#319](https://github.com/thirdweb-dev/js/pull/319) [`2f8ec89`](https://github.com/thirdweb-dev/js/commit/2f8ec89c4c83ae577092c840c198e6fcfb114e69) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose total claimed and unclaimed supply for erc721 drop contracts
+
+- [#322](https://github.com/thirdweb-dev/js/pull/322) [`b7cd744`](https://github.com/thirdweb-dev/js/commit/b7cd744cd0482a6c3fe5ae0c858f20cd380d4114) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Allow signing multiple claims at once
+
+- [#306](https://github.com/thirdweb-dev/js/pull/306) [`53c6507`](https://github.com/thirdweb-dev/js/commit/53c65076696a43bd9a7e58a7493d4e65c172900f) Thanks [@adam-maj](https://github.com/adam-maj)! - Add contract deploy listener
+
 ## 3.2.5
 
 ### Patch Changes

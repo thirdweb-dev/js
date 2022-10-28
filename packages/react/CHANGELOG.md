@@ -1,5 +1,80 @@
 # @thirdweb-dev/react
 
+## 3.4.2
+
+### Patch Changes
+
+- [#348](https://github.com/thirdweb-dev/js/pull/348) [`7d9a4c6`](https://github.com/thirdweb-dev/js/commit/7d9a4c6abcad1b4f43e431ce7b0b38db9016ea9a) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - [SOL] - add `useUpdateRoyaltySettings()` hook
+  [SOL] - change `useRoyalty()` hook -> `useRoyaltySettings()` for consistency
+
+- [#352](https://github.com/thirdweb-dev/js/pull/352) [`3522917`](https://github.com/thirdweb-dev/js/commit/352291791ee900e1500f84f095290497934d2f60) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - expose useExecuteAuctionSale and useAcceptDirectListingOffer
+
+- [#351](https://github.com/thirdweb-dev/js/pull/351) [`aabbb14`](https://github.com/thirdweb-dev/js/commit/aabbb149e81d6824015a4797b2b6c929ca359545) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - fix wallet connection during dev (hot reload)
+
+## 3.4.1
+
+### Patch Changes
+
+- [#343](https://github.com/thirdweb-dev/js/pull/343) [`72227b2`](https://github.com/thirdweb-dev/js/commit/72227b2e166a3a68bbb41cf2b389322f5b7547a2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose new useOffers and useMakeOffer hooks
+
+## 3.4.0
+
+### Minor Changes
+
+- [#327](https://github.com/thirdweb-dev/js/pull/327) [`ef27aad`](https://github.com/thirdweb-dev/js/commit/ef27aad0aafc4577e85f44dc77dfbe880bd239b5) Thanks [@jnsdls](https://github.com/jnsdls)! - Gnosis Safe and Magic Link connectors are no longer included in the default export. They are now available as named exports instead.
+
+  ## Gnosis Safe
+
+  ### Connector
+
+  ```diff
+  - import { GnosisSafeConnector } from "@thirdweb-dev/react";
+  + import { GnosisSafeConnector } from "@thirdweb-dev/react/evm/connectors/gnosis-safe";
+  ```
+
+  ### Hook
+
+  ```diff
+  - import { useGnosis } from "@thirdweb-dev/react";
+  + import { useGnosis } from "@thirdweb-dev/react/evm/connectors/gnosis-safe";
+  ```
+
+  ## Magic Link
+
+  ### Connector
+
+  ```diff
+  - import { MagicLink } from "@thirdweb-dev/react";
+  + import { MagicConnector } from "@thirdweb-dev/react/evm/connectors/magic";
+  ```
+
+  ### Hook
+
+  ```diff
+  - import { useMagic } from "@thirdweb-dev/react";
+  + import { useMagic } from "@thirdweb-dev/react/evm/connectors/magic";
+  ```
+
+### Patch Changes
+
+- [#339](https://github.com/thirdweb-dev/js/pull/339) [`b03a902`](https://github.com/thirdweb-dev/js/commit/b03a9021451b79f802f682f66e5ae8e9355d7e6f) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Fix docs for some functions
+
+## 3.3.1
+
+## 3.3.0
+
+## 3.2.6
+
+### Patch Changes
+
+- [#316](https://github.com/thirdweb-dev/js/pull/316) [`6ae5266`](https://github.com/thirdweb-dev/js/commit/6ae52664e5865564cd4fc2e00e3120675b9e0ca3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix SIWE when using an external signer
+
+- [#310](https://github.com/thirdweb-dev/js/pull/310) [`9727502`](https://github.com/thirdweb-dev/js/commit/9727502eb30ac139382b7c7c8e8fc0967cbfbcf1) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - [SOL] - add useMintNFTSupply hook in react and accomodate inputs for it in SDK
+
+- [#319](https://github.com/thirdweb-dev/js/pull/319) [`2f8ec89`](https://github.com/thirdweb-dev/js/commit/2f8ec89c4c83ae577092c840c198e6fcfb114e69) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose total claimed and unclaimed supply for erc721 drop contracts
+
+- [#318](https://github.com/thirdweb-dev/js/pull/318) [`bb1b4e6`](https://github.com/thirdweb-dev/js/commit/bb1b4e6ac39d98cc68b8e31e659cd68be3a5b967) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add useMinimumNextBid hook and change invariant for other marketplace hooks
+
 ## 3.2.5
 
 ## 3.2.4

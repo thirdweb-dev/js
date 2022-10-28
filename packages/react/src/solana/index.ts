@@ -12,10 +12,14 @@ export * from "./hooks/program/useProgramAccountType";
 
 // NFT Shared
 export * from "./hooks/nft/useNFTs";
-export * from "./hooks/nft/useMintNFT";
-export * from "./hooks/nft/useNFT";
 export * from "./hooks/nft/useTransferNFT";
 export * from "./hooks/nft/useBurnNFT";
+export * from "./hooks/nft/useRoyaltySettings";
+export * from "./hooks/nft/useUpdateRoyaltySettings";
+
+// NFT Collection
+export * from "./hooks/nft/collection/useMintNFT";
+export * from "./hooks/nft/collection/useMintNFTSupply";
 
 // NFT Drop
 export * from "./hooks/nft/drop/useLazyMint";

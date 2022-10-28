@@ -4,7 +4,6 @@ import {
 } from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
-import { prepareClaim } from "../../common/claim-conditions";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
 import { TransactionTask } from "../../core/classes/TransactionTask";
@@ -31,7 +30,6 @@ import {
 import { PaperCheckout } from "../../integrations/paper-xyz";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
-import { ClaimVerification } from "../../types";
 import { UploadProgressEvent } from "../../types/events";
 import type { DropERC721 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC721.json";
@@ -319,7 +317,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
    * @returns the unclaimed supply
    */
   public async totalClaimedSupply(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.nextTokenIdToClaim();
+    return this.erc721.totalClaimedSupply();
   }
 
   /**
@@ -335,9 +333,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
    * @returns the unclaimed supply
    */
   public async totalUnclaimedSupply(): Promise<BigNumber> {
-    return (await this.contractWrapper.readContract.nextTokenIdToMint()).sub(
-      await this.totalClaimedSupply(),
-    );
+    return this.erc721.totalUnclaimedSupply();
   }
 
   /**
@@ -625,27 +621,6 @@ export class NFTDrop extends StandardErc721<DropERC721> {
   /** ******************************
    * PRIVATE FUNCTIONS
    *******************************/
-
-  /**
-   * Returns proofs and the overrides required for the transaction.
-   *
-   * @returns - `overrides` and `proofs` as an object.
-   */
-  private async prepareClaim(
-    quantity: BigNumberish,
-    checkERC20Allowance: boolean,
-  ): Promise<ClaimVerification> {
-    return prepareClaim(
-      quantity,
-      await this.claimConditions.getActive(),
-      async () => (await this.metadata.get()).merkle,
-      0,
-      this.contractWrapper,
-      this.storage,
-      checkERC20Allowance,
-    );
-  }
-
   /**
    * @internal
    */

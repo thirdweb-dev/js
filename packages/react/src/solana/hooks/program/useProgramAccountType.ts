@@ -1,9 +1,11 @@
 import { createSOLQueryKeyWithNetwork } from "../../../core/query-utils/query-key";
-import { RequiredParam } from "../../../core/types/shared";
+import {
+  requiredParamInvariant,
+  RequiredParam,
+} from "../../../core/query-utils/required-param";
 import { useSDK } from "../../providers/base";
 import { useQuery } from "@tanstack/react-query";
 import type { ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
-import invariant from "tiny-invariant";
 
 export function programAccountTypeQuery(
   sdk: RequiredParam<ThirdwebSDK>,
@@ -16,8 +18,8 @@ export function programAccountTypeQuery(
       network || null,
     ),
     queryFn: async () => {
-      invariant(sdk, "sdk is required");
-      invariant(address, "Address is required");
+      requiredParamInvariant(sdk, "sdk is required");
+      requiredParamInvariant(address, "Address is required");
 
       return await sdk.registry.getProgramType(address);
     },

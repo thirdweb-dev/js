@@ -1,5 +1,5 @@
 import { createSOLProgramQueryKey } from "../../../../core/query-utils/query-key";
-import { RequiredParam } from "../../../../core/types/shared";
+import { RequiredParam } from "../../../../core/query-utils/required-param";
 import { ClaimNFTParams } from "../../../types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { NFTDrop } from "@thirdweb-dev/sdk/solana";

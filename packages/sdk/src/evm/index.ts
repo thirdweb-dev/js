@@ -44,3 +44,4 @@ export type { Split } from "./contracts/prebuilt-implementations/split";
 export type { Token } from "./contracts/prebuilt-implementations/token";
 export type { TokenDrop } from "./contracts/prebuilt-implementations/token-drop";
 export type { Vote } from "./contracts/prebuilt-implementations/vote";
+export type { SmartContract } from "./contracts/smart-contract";

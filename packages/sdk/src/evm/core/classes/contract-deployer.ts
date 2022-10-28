@@ -37,6 +37,7 @@ import {
   PrebuiltContractType,
 } from "../types";
 import { ContractFactory } from "./factory";
+import { FactoryEvents } from "./factory-events";
 import { ContractRegistry } from "./registry";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -65,6 +66,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * should never be accessed directly, use {@link ContractDeployer.getRegistry} instead
    */
   private _registry: Promise<ContractRegistry> | undefined;
+  public events: FactoryEvents | undefined;
   private storage: ThirdwebStorage;
 
   constructor(
@@ -74,6 +76,10 @@ export class ContractDeployer extends RPCConnectionHandler {
   ) {
     super(network, options);
     this.storage = storage;
+
+    // Initialize factory and registry (we don't need to make these calls async)
+    this.getFactory();
+    this.getRegistry();
   }
 
   /**
@@ -527,12 +533,15 @@ export class ContractDeployer extends RPCConnectionHandler {
           chainId,
           "twFactory",
         );
-        return new ContractFactory(
+        const factory = new ContractFactory(
           factoryAddress,
           this.getSignerOrProvider(),
           this.storage,
           this.options,
         );
+        this.events = new FactoryEvents(factory);
+
+        return factory;
       }));
   }
 
@@ -703,7 +712,7 @@ export class ContractDeployer extends RPCConnectionHandler {
           ethers.utils.isHexString(constructorParamValues[index]),
           `Could not parse bytes value. Expected valid hex string but got "${constructorParamValues[index]}".`,
         );
-        return ethers.utils.toUtf8Bytes(constructorParamValues[index]);
+        return constructorParamValues[index];
       }
       if (p.startsWith("uint") || p.startsWith("int")) {
         return BigNumber.from(constructorParamValues[index].toString());

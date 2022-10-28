@@ -98,7 +98,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
       quantity,
       options?.checkERC20Allowance === undefined
         ? true
-        : options.checkERC20Allowance
+        : options.checkERC20Allowance,
     );
 
     return TransactionTask.make({

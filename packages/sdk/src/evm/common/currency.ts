@@ -26,6 +26,13 @@ export function isNativeToken(tokenAddress: string): boolean {
   );
 }
 
+export function cleanCurrencyAddress(currencyAddress: string): string {
+  if (isNativeToken(currencyAddress)) {
+    return NATIVE_TOKEN_ADDRESS;
+  }
+  return currencyAddress;
+}
+
 export async function normalizePriceValue(
   provider: providers.Provider,
   inputPrice: Price,

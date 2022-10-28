@@ -1,4 +1,4 @@
-import { RequiredParam } from "../core/types/shared";
+import { RequiredParam } from "../core/query-utils/required-param";
 import type {
   AirdropInput,
   Amount,
@@ -212,6 +212,18 @@ export type ClaimNFTReturnType =
 // MARKETPLACE //
 
 export type MakeBidParams = { listingId: BigNumberish; bid: Price };
+export type MakeOfferParams = {
+  listingId: BigNumberish;
+  pricePerToken: Price;
+  quantity?: Amount;
+};
+export type AcceptDirectOffer = {
+  listingId: BigNumberish;
+  addressOfOfferor: string;
+};
+export type ExecuteAuctionSale = {
+  listingId: BigNumberish;
+};
 
 export type BuyNowParams<TListingType = ListingType> =
   TListingType extends ListingType.Direct

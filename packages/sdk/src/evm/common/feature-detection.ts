@@ -22,6 +22,8 @@ import {
 } from "../schema/contracts/custom";
 import { ExtensionNotImplementedError } from "./error";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import bs58 from "bs58";
+import { decode } from "cbor-x";
 import { BaseContract, BigNumber, ethers } from "ethers";
 import { z } from "zod";
 
@@ -179,7 +181,7 @@ export function extractEventsFromAbi(
   abi: z.input<typeof AbiSchema>,
   metadata?: Record<string, any>,
 ): AbiEvent[] {
-  const events = abi.filter((el) => el.type === "event");
+  const events = (abi || []).filter((el) => el.type === "event");
   const parsed: AbiEvent[] = [];
   for (const e of events) {
     const doc = extractCommentFromMetadata(e.name, metadata, "events");
@@ -282,9 +284,9 @@ export async function resolveContractUriFromAddress(
  * @internal
  * @param bytecode
  */
-async function extractIPFSHashFromBytecode(
+export function extractIPFSHashFromBytecode(
   bytecode: string,
-): Promise<string | undefined> {
+): string | undefined {
   const numericBytecode = hexToBytes(bytecode);
   const cborLength: number =
     numericBytecode[numericBytecode.length - 2] * 0x100 +
@@ -293,15 +295,13 @@ async function extractIPFSHashFromBytecode(
     numericBytecode.slice(numericBytecode.length - 2 - cborLength, -2),
   );
 
-  // load these lazily to avoid loading them when they are not needed
-  const [cbor, multiHashes] = await Promise.all([
-    import("cbor-web"),
-    import("multihashes"),
-  ]);
-
-  const cborData = cbor.decodeFirstSync(bytecodeBuffer);
-  if (cborData["ipfs"]) {
-    return `ipfs://${multiHashes.toB58String(cborData["ipfs"])}`;
+  const cborData = decode(bytecodeBuffer);
+  if ("ipfs" in cborData && cborData["ipfs"]) {
+    try {
+      return `ipfs://${bs58.encode(cborData["ipfs"])}`;
+    } catch (e) {
+      console.warn("feature-detection ipfs cbor failed", e);
+    }
   }
   return undefined;
 }

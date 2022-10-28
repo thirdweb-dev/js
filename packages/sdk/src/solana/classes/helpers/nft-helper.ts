@@ -8,8 +8,9 @@ import {
   METAPLEX_PROGRAM_ID,
 } from "../../constants/addresses";
 import { TransactionResult } from "../../types/common";
-import { getNework, getPublicRpc } from "../../utils/urls";
+import { getPublicRpc } from "../../utils/urls";
 import {
+  findMasterEditionV2Pda,
   GmaBuilder,
   JsonMetadata,
   Metadata,
@@ -22,10 +23,11 @@ import {
   token,
   toMetadata,
   toMetadataAccount,
+  toNftOriginalEdition,
+  toOriginalEditionAccount,
 } from "@metaplex-foundation/js";
 import { getAccount, getAssociatedTokenAddress } from "@solana/spl-token";
 import {
-  clusterApiUrl,
   ConfirmedSignatureInfo,
   Connection,
   ParsedAccountData,
@@ -215,6 +217,25 @@ export class NFTHelper {
     return nfts;
   }
 
+  async supplyOf(nftAddress: string): Promise<number> {
+    let originalEdition;
+
+    const originalEditionAccount = await this.metaplex
+      .rpc()
+      .getAccount(findMasterEditionV2Pda(new PublicKey(nftAddress)));
+
+    if (originalEditionAccount.exists) {
+      originalEdition = toNftOriginalEdition(
+        toOriginalEditionAccount(originalEditionAccount),
+      );
+    } else {
+      return 0;
+    }
+
+    // Add one to supply to account for the master edition
+    return originalEdition.supply.toNumber() + 1;
+  }
+
   async toNFTMetadata(
     meta:
       | Nft
@@ -234,20 +255,24 @@ export class NFTHelper {
     if (!mint) {
       throw new Error("No mint found for NFT");
     }
-    const owner = await this.ownerOf(mint.address.toBase58());
-    return this.toNFTMetadataResolved(mint, owner, fullModel);
+    const [owner, supply] = await Promise.all([
+      this.ownerOf(mint.address.toBase58()),
+      this.supplyOf(mint.address.toBase58()),
+    ]);
+    return this.toNFTMetadataResolved(mint, owner, supply, fullModel);
   }
 
-  private toNFTMetadataResolved(
+  private async toNFTMetadataResolved(
     mint: Mint,
     owner: string | undefined,
+    supply: number,
     fullModel:
       | Nft
       | Sft
       | NftWithToken
       | SftWithToken
       | Metadata<JsonMetadata<string>>,
-  ): NFT {
+  ): Promise<NFT> {
     return {
       metadata: {
         id: mint.address.toBase58(),
@@ -257,7 +282,7 @@ export class NFTHelper {
         ...fullModel.json,
       },
       owner: owner || PublicKey.default.toBase58(),
-      supply: mint.supply.basisPoints.toNumber(),
+      supply: supply,
       type: "metaplex",
     };
   }
