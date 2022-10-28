@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
 import { ContractType, ValidContractInstance } from "@thirdweb-dev/sdk/evm";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { FiCopy } from "react-icons/fi";
@@ -135,6 +136,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   contract,
   contractType,
 }) => {
+  const trackEvent = useTrack();
   const { register, watch } = useForm<{
     ipfsGateway: string;
     rpcUrl: string;
@@ -327,7 +329,16 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
             colorScheme="purple"
             w="auto"
             variant="outline"
-            onClick={onCopy}
+            onClick={() => {
+              onCopy();
+              trackEvent({
+                category: "embed",
+                action: "click",
+                label: "copy-code",
+                address: contract?.getAddress(),
+                chainId,
+              });
+            }}
             leftIcon={hasCopied ? <IoMdCheckmark /> : <FiCopy />}
           >
             {hasCopied ? "Copied!" : "Copy to clipboard"}
