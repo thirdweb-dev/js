@@ -97,6 +97,11 @@ describe("NFT Drop Contract", async () => {
       (c) => c.merkleRootHash,
     );
     expect(roots).length(2);
+
+    const proof = await dropContract.claimConditions.getClaimerProofs(
+      bobWallet.address,
+    );
+    expect(proof.address).to.eq(bobWallet.address);
   });
 
   it("should return snapshot data on claim conditions", async () => {
