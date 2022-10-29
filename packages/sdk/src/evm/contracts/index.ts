@@ -1,4 +1,3 @@
-import { fetchContractMetadataFromAddress } from "../common";
 import { getPrebuiltInfo } from "../common/legacy";
 import { ALL_ROLES } from "../common/role";
 import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
@@ -66,11 +65,14 @@ export const EditionDropInitializer = {
       provider,
       "edition-drop",
     );
-    const abi =
-      contractInfo.version > 2
-        ? "@thirdweb-dev/contracts-js/dist/abis/DropERC1155.json"
-        : "@thirdweb-dev/contracts-js/dist/abis/DropERC1155_V2.json";
-    return (await import(abi)).default;
+    return contractInfo.version > 2
+      ? (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC1155.json"))
+          .default
+      : (
+          await import(
+            "@thirdweb-dev/contracts-js/dist/abis/DropERC1155_V2.json"
+          )
+        ).default;
   },
 };
 
@@ -236,11 +238,14 @@ export const NFTDropInitializer = {
       provider,
       "nft-drop",
     );
-    const abi =
-      contractInfo.version > 3
-        ? "@thirdweb-dev/contracts-js/dist/abis/DropERC721.json"
-        : "@thirdweb-dev/contracts-js/dist/abis/DropERC721_V3.json";
-    return (await import(abi)).default;
+    return contractInfo.version > 3
+      ? (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC721.json"))
+          .default
+      : (
+          await import(
+            "@thirdweb-dev/contracts-js/dist/abis/DropERC721_V3.json"
+          )
+        ).default;
   },
 };
 
@@ -307,11 +312,17 @@ export const SignatureDropInitializer = {
       provider,
       "signature-drop",
     );
-    const abi =
-      contractInfo.version > 4
-        ? "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop.json"
-        : "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop_V4.json";
-    return (await import(abi)).default;
+    return contractInfo.version > 4
+      ? (
+          await import(
+            "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop.json"
+          )
+        ).default
+      : (
+          await import(
+            "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop_V4.json"
+          )
+        ).default;
   },
 };
 
@@ -382,11 +393,11 @@ export const TokenDropInitializer = {
       provider,
       "token-drop",
     );
-    const abi =
-      contractInfo.version > 2
-        ? "@thirdweb-dev/contracts-js/dist/abis/DropERC20.json"
-        : "@thirdweb-dev/contracts-js/dist/abis/DropERC20_V2.json";
-    return (await import(abi)).default;
+    return contractInfo.version > 2
+      ? (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC20.json"))
+          .default
+      : (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC20_V2.json"))
+          .default;
   },
 };
 
