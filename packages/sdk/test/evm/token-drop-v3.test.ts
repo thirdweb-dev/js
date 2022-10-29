@@ -197,7 +197,7 @@ describe("Token Drop Contract", async () => {
     try {
       await dropContract.claim(1);
     } catch (err: any) {
-      expectError(err, "!Qty");
+      expectError(err, "Cannot claim");
     }
   });
 

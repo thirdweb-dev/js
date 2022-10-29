@@ -604,7 +604,7 @@ describe("Signature drop tests (v5)", async () => {
         await signatureDropContract.claim(1);
       } catch (e) {
         // expected
-        expectError(e, "!Qty");
+        expectError(e, "Cannot claim");
       }
     });
 
@@ -700,7 +700,7 @@ describe("Signature drop tests (v5)", async () => {
       try {
         await signatureDropContract.claim(1);
       } catch (err: any) {
-        expectError(err, "!Qty");
+        expectError(err, "Cannot claim");
       }
     });
 

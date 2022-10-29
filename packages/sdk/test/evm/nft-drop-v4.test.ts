@@ -336,7 +336,7 @@ describe("NFT Drop Contract (v4)", async () => {
     try {
       await dropContract.claim(1);
     } catch (err: any) {
-      expectError(err, "!Qty");
+      expectError(err, "Cannot claim");
     }
   });
 
@@ -374,6 +374,7 @@ describe("NFT Drop Contract (v4)", async () => {
     ]);
     await dropContract.claimConditions.set([
       {
+        maxClaimablePerWallet: 0,
         snapshot: [
           { address: w1.address, maxClaimable: 2 },
           { address: w2.address, maxClaimable: 1 },

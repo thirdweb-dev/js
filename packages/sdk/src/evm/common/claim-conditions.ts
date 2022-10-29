@@ -121,7 +121,10 @@ export async function prepareClaim(
     );
   }
 
-  // TODO (cc) should prob throw here if maxClaimable is zero
+  // if max claimable is 0 even after checking allowlist, then address can't claim
+  if (maxClaimable.eq(0)) {
+    throw new Error(`Cannot claim, max claimable is 0 for ${addressToClaim}`);
+  }
 
   const overrides = (await contractWrapper.getCallOverrides()) || {};
   // the actual price to check allowance against
