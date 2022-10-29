@@ -12,7 +12,7 @@ import {
   transformResultToClaimCondition,
   updateExistingClaimConditions,
 } from "../../common/claim-conditions";
-import { approveErc20Allowance, isNativeToken } from "../../common/currency";
+import { isNativeToken } from "../../common/currency";
 import {
   detectContractFeature,
   hasFunction,
