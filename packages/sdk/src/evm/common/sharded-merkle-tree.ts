@@ -9,8 +9,9 @@ import {
 } from "../schema";
 import { SnapshotInput } from "../types";
 import { convertQuantityToBigNumber } from "./claim-conditions";
+import { fetchCurrencyMetadata } from "./currency";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { utils } from "ethers";
+import { ethers, utils } from "ethers";
 import { MerkleTree } from "merkletreejs";
 
 // shard using the first 2 hex character of the address
@@ -82,6 +83,7 @@ export class ShardedMerkleTree {
   static hashEntry(
     entry: SnapshotEntry,
     tokenDecimals: number,
+    currencyDecimals: number,
     snapshotFormatVersion: SnapshotFormatVersion,
   ): string {
     switch (snapshotFormatVersion) {
@@ -99,16 +101,35 @@ export class ShardedMerkleTree {
           [
             entry.address,
             convertQuantityToBigNumber(entry.maxClaimable, tokenDecimals),
-            convertQuantityToBigNumber(entry.price, 18), // TODO (cc) use currencyDecimals
+            convertQuantityToBigNumber(entry.price, currencyDecimals),
             entry.currencyAddress,
           ],
         );
     }
   }
 
+  static async fetchAndCacheDecimals(
+    cache: Record<string, number>,
+    provider: ethers.providers.Provider,
+    currencyAddress: string,
+  ): Promise<number> {
+    // cache decimals for each currency to avoid refetching for every address
+    let currencyDecimals = cache[currencyAddress];
+    if (!currencyDecimals) {
+      const currencyMetadata = await fetchCurrencyMetadata(
+        provider,
+        currencyAddress,
+      );
+      currencyDecimals = currencyMetadata.decimals;
+      cache[currencyAddress] = currencyDecimals;
+    }
+    return currencyDecimals;
+  }
+
   static async buildAndUpload(
     snapshotInput: SnapshotInput,
     tokenDecimals: number,
+    provider: ethers.providers.Provider,
     storage: ThirdwebStorage,
     snapshotFormatVersion: SnapshotFormatVersion,
     shardNybbles = SHARD_NYBBLES,
@@ -125,17 +146,28 @@ export class ShardedMerkleTree {
       }
       shards[shard].push(snapshotEntry);
     }
+    const currencyDecimalMap: Record<string, number> = {};
     // create shard => subtree root map
-    const roots = Object.fromEntries(
-      Object.entries(shards).map(([shard, entries]) => [
+    const subTrees = await Promise.all(
+      Object.entries(shards).map(async ([shard, entries]) => [
         shard,
         new MerkleTree(
-          entries.map((entry) =>
-            ShardedMerkleTree.hashEntry(
-              entry,
-              tokenDecimals,
-              snapshotFormatVersion,
-            ),
+          await Promise.all(
+            entries.map(async (entry) => {
+              // cache decimals for each currency to avoid refetching for every address
+              const currencyDecimals =
+                await ShardedMerkleTree.fetchAndCacheDecimals(
+                  currencyDecimalMap,
+                  provider,
+                  entry.currencyAddress,
+                );
+              return ShardedMerkleTree.hashEntry(
+                entry,
+                tokenDecimals,
+                currencyDecimals,
+                snapshotFormatVersion,
+              );
+            }),
           ),
           utils.keccak256,
           {
@@ -144,6 +176,7 @@ export class ShardedMerkleTree {
         ).getHexRoot(),
       ]),
     );
+    const roots = Object.fromEntries(subTrees);
     // create master tree from shard => subtree root map
     const tree = new MerkleTree(Object.values(roots), utils.keccak256, {
       sort: true,
@@ -186,27 +219,38 @@ export class ShardedMerkleTree {
 
   public async getProof(
     address: string,
+    provider: ethers.providers.Provider,
     snapshotFormatVersion: SnapshotFormatVersion,
   ): Promise<SnapshotEntryWithProof | null> {
     const shardId = address.slice(2, 2 + this.shardNybbles).toLowerCase();
     let shard = this.shards[shardId];
+    const currencyDecimalMap: Record<string, number> = {};
     if (shard === undefined) {
       try {
         shard = this.shards[shardId] =
           await this.storage.downloadJSON<ShardData>(
             `${this.baseUri}/${shardId}.json`,
           );
-        this.trees[shardId] = new MerkleTree(
-          shard.entries.map((entry) =>
-            ShardedMerkleTree.hashEntry(
+        const hashedEntries = await Promise.all(
+          shard.entries.map(async (entry) => {
+            // cache decimals for each currency to avoid refetching for every address
+            const currencyDecimals =
+              await ShardedMerkleTree.fetchAndCacheDecimals(
+                currencyDecimalMap,
+                provider,
+                entry.currencyAddress,
+              );
+            return ShardedMerkleTree.hashEntry(
               entry,
               this.tokenDecimals,
+              currencyDecimals,
               snapshotFormatVersion,
-            ),
-          ),
-          utils.keccak256,
-          { sort: true },
+            );
+          }),
         );
+        this.trees[shardId] = new MerkleTree(hashedEntries, utils.keccak256, {
+          sort: true,
+        });
       } catch (e) {
         console.warn("No merkle entry found for address", address);
         return null;
@@ -218,9 +262,15 @@ export class ShardedMerkleTree {
     if (!entry) {
       return null;
     }
+    const currencyDecimals = await ShardedMerkleTree.fetchAndCacheDecimals(
+      currencyDecimalMap,
+      provider,
+      entry.currencyAddress,
+    );
     const leaf = ShardedMerkleTree.hashEntry(
       entry,
       this.tokenDecimals,
+      currencyDecimals,
       snapshotFormatVersion,
     );
     const proof = this.trees[shardId]

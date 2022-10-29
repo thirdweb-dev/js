@@ -12,7 +12,7 @@ import {
   transformResultToClaimCondition,
   updateExistingClaimConditions,
 } from "../../common/claim-conditions";
-import { isNativeToken } from "../../common/currency";
+import { approveErc20Allowance, isNativeToken } from "../../common/currency";
 import {
   detectContractFeature,
   hasFunction,
@@ -501,6 +501,7 @@ export class DropClaimConditions<
         claimerAddress,
         merkeRoot.toString(),
         metadata.merkle,
+        this.contractWrapper.getProvider(),
         this.storage,
         this.getSnapshotFormatVersion(),
       );

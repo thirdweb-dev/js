@@ -16,7 +16,7 @@ import invariant from "tiny-invariant";
 
 global.fetch = require("cross-fetch");
 
-describe("Signature drop tests", async () => {
+describe("Signature drop tests (v5)", async () => {
   let signatureDropContract: SignatureDrop;
   let customTokenContract: Token;
   let tokenAddress: string;
@@ -76,6 +76,10 @@ describe("Signature drop tests", async () => {
       },
       {
         toAddress: adminWallet.address,
+        amount: 1000,
+      },
+      {
+        toAddress: bobWallet.address,
         amount: 1000,
       },
     ]);
@@ -496,7 +500,6 @@ describe("Signature drop tests", async () => {
       await signatureDropContract.claimConditions.set([
         {
           startTime: new Date(),
-          waitInSeconds: 10,
           snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
         },
       ]);
@@ -573,6 +576,8 @@ describe("Signature drop tests", async () => {
       await signatureDropContract.claimConditions.set([
         {
           maxClaimablePerWallet: 0,
+          currencyAddress: tokenAddress,
+          price: 0.1,
           snapshot: members,
         },
       ]);

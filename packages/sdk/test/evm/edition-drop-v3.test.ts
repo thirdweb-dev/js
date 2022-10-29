@@ -18,7 +18,7 @@ const deepEqualInAnyOrder = require("deep-equal-in-any-order");
 
 use(deepEqualInAnyOrder);
 
-describe("Edition Drop Contract", async () => {
+describe("Edition Drop Contract (V3)", async () => {
   let bdContract: EditionDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -137,9 +137,13 @@ describe("Edition Drop Contract", async () => {
       w2,
       w3,
     ];
-    const members = testWallets.map((w) => w.address);
+    const members = testWallets.map((w) => ({
+      address: w.address,
+      maxClaimable: 1,
+    }));
     await bdContract.claimConditions.set("0", [
       {
+        maxClaimablePerWallet: 0,
         maxClaimableSupply: 1000,
         snapshot: members,
       },

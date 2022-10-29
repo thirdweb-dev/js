@@ -66,8 +66,8 @@ export async function prepareClaim(
     tokenDecimals,
   );
   let proofs = [utils.hexZeroPad([0], 32)];
-  let price = activeClaimCondition.price;
-  let currencyAddress = activeClaimCondition.currencyAddress;
+  let priceInProof = activeClaimCondition.price; // the price to send to the contract in claim proofs
+  let currencyAddressInProof = activeClaimCondition.currencyAddress;
   try {
     if (
       !activeClaimCondition.merkleRootHash
@@ -78,6 +78,7 @@ export async function prepareClaim(
         addressToClaim,
         activeClaimCondition.merkleRootHash.toString(),
         await merkleMetadataFetcher(),
+        contractWrapper.getProvider(),
         storage,
         snapshotFormatVersion,
       );
@@ -91,7 +92,7 @@ export async function prepareClaim(
                 snapshotEntry.maxClaimable,
                 tokenDecimals,
               );
-        price =
+        priceInProof =
           snapshotEntry.price === "unlimited"
             ? ethers.constants.MaxUint256
             : await normalizePriceValue(
@@ -99,10 +100,7 @@ export async function prepareClaim(
                 snapshotEntry.price,
                 snapshotEntry.currencyAddress,
               );
-        currencyAddress =
-          snapshotEntry.currencyAddress === ethers.constants.AddressZero
-            ? ethers.constants.AddressZero
-            : snapshotEntry.currencyAddress;
+        currencyAddressInProof = snapshotEntry.currencyAddress;
       } else {
         // if no snapshot entry, and it's a v1 format (exclusive allowlist) then address can't claim
         if (snapshotFormatVersion === SnapshotFormatVersion.V1) {
@@ -123,20 +121,31 @@ export async function prepareClaim(
     );
   }
 
+  // TODO (cc) should prob throw here if maxClaimable is zero
+
   const overrides = (await contractWrapper.getCallOverrides()) || {};
-  if (
-    price.gt(0) &&
-    price.toString() !== ethers.constants.MaxUint256.toString()
-  ) {
+  // the actual price to check allowance against
+  // if proof price is unlimited, then we use the price from the claim condition
+  // this mimics the contract behavior
+  const pricePerToken =
+    priceInProof.toString() !== ethers.constants.MaxUint256.toString()
+      ? priceInProof
+      : activeClaimCondition.price;
+  // same for currency address
+  const currencyAddress =
+    currencyAddressInProof !== ethers.constants.AddressZero
+      ? currencyAddressInProof
+      : activeClaimCondition.currencyAddress;
+  if (pricePerToken.gt(0)) {
     if (isNativeToken(currencyAddress)) {
-      overrides["value"] = BigNumber.from(price)
+      overrides["value"] = BigNumber.from(pricePerToken)
         .mul(quantity)
         .div(ethers.utils.parseUnits("1", tokenDecimals));
     } else if (checkERC20Allowance) {
       await approveErc20Allowance(
         contractWrapper,
         currencyAddress,
-        price,
+        pricePerToken,
         quantity,
         tokenDecimals,
       );
@@ -146,8 +155,8 @@ export async function prepareClaim(
     overrides,
     proofs,
     maxClaimable,
-    price,
-    currencyAddress,
+    price: priceInProof,
+    currencyAddress: currencyAddressInProof,
   };
 }
 
@@ -190,6 +199,7 @@ export async function fetchSnapshotEntryForAddress(
   address: string,
   merkleRoot: string,
   merkleMetadata: Record<string, string> | undefined,
+  provider: ethers.providers.Provider,
   storage: ThirdwebStorage,
   snapshotFormatVersion: SnapshotFormatVersion,
 ): Promise<SnapshotEntryWithProof | null> {
@@ -204,7 +214,11 @@ export async function fetchSnapshotEntryForAddress(
         raw,
         storage,
       );
-      return await merkleTree.getProof(address, snapshotFormatVersion);
+      return await merkleTree.getProof(
+        address,
+        provider,
+        snapshotFormatVersion,
+      );
     }
     // legacy non-sharded, just fetch it all and filter out
     const snapshotData = SnapshotSchema.parse(raw);
@@ -304,6 +318,7 @@ export async function getClaimerProofs(
     addressToClaim,
     merkleRoot,
     merkleMetadata,
+    provider,
     storage,
     snapshotFormatVersion,
   );
@@ -331,12 +346,14 @@ export async function getClaimerProofs(
  * Decorates claim conditions with merkle roots from snapshots if present
  * @param claimConditionInputs
  * @param tokenDecimals
+ * @param provider
  * @param storage
  * @param snapshotFormatVersion
  */
 async function processSnapshotData(
   claimConditionInputs: ClaimConditionInput[],
   tokenDecimals: number,
+  provider: ethers.providers.Provider,
   storage: ThirdwebStorage,
   snapshotFormatVersion: SnapshotFormatVersion,
 ) {
@@ -348,6 +365,7 @@ async function processSnapshotData(
         const snapshotInfo = await createSnapshot(
           SnapshotInputSchema.parse(conditionInput.snapshot),
           tokenDecimals,
+          provider,
           storage,
           snapshotFormatVersion,
         );
@@ -395,6 +413,7 @@ export async function processClaimConditionInputs(
   const { inputsWithSnapshots, snapshotInfos } = await processSnapshotData(
     claimConditionInputs,
     tokenDecimals,
+    provider,
     storage,
     snapshotFormatVersion,
   );

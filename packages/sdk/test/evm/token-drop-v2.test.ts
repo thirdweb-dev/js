@@ -5,15 +5,16 @@ import {
   TokenDropInitializer,
   TokenInitializer,
 } from "../../src/evm";
-import { expectError, sdk, signers } from "./before-setup";
+import { expectError, sdk, signers, storage } from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
+import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 
 global.fetch = require("cross-fetch");
 
-describe("Token Drop Contract", async () => {
+describe("Token Drop Contract (v2)", async () => {
   let dropContract: TokenDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -38,9 +39,7 @@ describe("Token Drop Contract", async () => {
         platform_fee_basis_points: 10,
         platform_fee_recipient: AddressZero,
       },
-      await sdk.deployer.getLatestBuiltInContractVersion(
-        TokenDropInitializer.contractType,
-      ),
+      2,
     );
     dropContract = await sdk.getTokenDrop(address);
   });
@@ -60,13 +59,14 @@ describe("Token Drop Contract", async () => {
 
     const metadata = await dropContract.metadata.get();
     const merkles = metadata.merkle;
+    console.log(merkles);
 
     expect(merkles).have.property(
-      "0x5398c0f1d4b32f7e4817ddfb7075fada328dfd68ee954ee7d673751ad2025b80",
+      "0x24eb8b9e205d090b39d79c97560092e64de182e118d6128625c332800210560a",
     );
 
     expect(merkles).have.property(
-      "0x4703e6318cb19460f6a961b41cd6161a4cc0ada09456670a81ec3fca9e0d2f4f",
+      "0xa94c41b95cad0535f7d5e400eb3d2a3ed71f35257e00aa6b9115d53f7ce5e202",
     );
 
     const roots = (await dropContract.claimConditions.getAll()).map(
@@ -106,11 +106,11 @@ describe("Token Drop Contract", async () => {
     const merkles = metadata.merkle;
 
     expect(merkles).have.property(
-      "0x5398c0f1d4b32f7e4817ddfb7075fada328dfd68ee954ee7d673751ad2025b80",
+      "0x24eb8b9e205d090b39d79c97560092e64de182e118d6128625c332800210560a",
     );
 
     expect(merkles).have.property(
-      "0x4703e6318cb19460f6a961b41cd6161a4cc0ada09456670a81ec3fca9e0d2f4f",
+      "0xa94c41b95cad0535f7d5e400eb3d2a3ed71f35257e00aa6b9115d53f7ce5e202",
     );
 
     const roots = (await dropContract.claimConditions.getAll()).map(
@@ -237,7 +237,7 @@ describe("Token Drop Contract", async () => {
       await sdk.updateSignerOrProvider(w2);
       await dropContract.claim(2);
     } catch (e) {
-      expectError(e, "!Qty");
+      expectError(e, "invalid quantity proof");
     }
   });
 
@@ -274,11 +274,11 @@ describe("Token Drop Contract", async () => {
       assert.isFalse(canClaim);
     });
 
-    it("should disallow some addresses from claiming", async () => {
+    it("should check if an address has valid merkle proofs", async () => {
       await dropContract.claimConditions.set([
         {
           maxClaimableSupply: 1,
-          snapshot: [{ address: w1.address, maxClaimable: 0 }],
+          snapshot: [w2.address, adminWallet.address],
         },
       ]);
 
@@ -305,6 +305,32 @@ describe("Token Drop Contract", async () => {
       const active = await dropContract.claimConditions.getActive();
       expect(active.maxClaimableSupply).to.be.equal("10.8");
       expect(active.maxClaimablePerWallet).to.be.equal("1.2");
+    });
+
+    it("should check if its been long enough since the last claim", async () => {
+      await dropContract.claimConditions.set([
+        {
+          maxClaimableSupply: "10.8",
+          waitInSeconds: 24 * 60 * 60,
+        },
+      ]);
+      await sdk.updateSignerOrProvider(bobWallet);
+      await dropContract.claim(1);
+
+      const reasons =
+        await dropContract.claimConditions.getClaimIneligibilityReasons(
+          "1",
+          bobWallet.address,
+        );
+
+      expect(reasons).to.include(
+        ClaimEligibility.WaitBeforeNextClaimTransaction,
+      );
+      const canClaim = await dropContract.claimConditions.canClaim(
+        1,
+        bobWallet.address,
+      );
+      assert.isFalse(canClaim);
     });
 
     it("should check if an address has enough native currency", async () => {
@@ -392,8 +418,7 @@ describe("Token Drop Contract", async () => {
   it("should verify claim correctly after resetting claim conditions", async () => {
     await dropContract.claimConditions.set([
       {
-        maxClaimablePerWallet: 0,
-        snapshot: [{ address: w1.address, maxClaimable: 1 }],
+        snapshot: [w1.address],
       },
     ]);
 
@@ -416,8 +441,7 @@ describe("Token Drop Contract", async () => {
   it("should verify claim correctly after updating claim conditions", async () => {
     await dropContract.claimConditions.set([
       {
-        maxClaimablePerWallet: 0,
-        snapshot: [{ address: w1.address, maxClaimable: 1 }],
+        snapshot: [w1.address],
       },
     ]);
 
@@ -429,11 +453,7 @@ describe("Token Drop Contract", async () => {
     expect(reasons).to.contain(ClaimEligibility.AddressNotAllowed);
 
     await dropContract.claimConditions.update(0, {
-      maxClaimablePerWallet: 0,
-      snapshot: [
-        { address: w1.address, maxClaimable: 1 },
-        { address: w2.address, maxClaimable: 1 },
-      ],
+      snapshot: [w1.address, w2.address],
     });
     const reasons2 =
       await dropContract.claimConditions.getClaimIneligibilityReasons(
@@ -460,12 +480,7 @@ describe("Token Drop Contract", async () => {
   });
 
   it("canClaim: 1 address", async () => {
-    await dropContract.claimConditions.set([
-      {
-        maxClaimablePerWallet: 0,
-        snapshot: [{ address: w1.address, maxClaimable: 1 }],
-      },
-    ]);
+    await dropContract.claimConditions.set([{ snapshot: [w1.address] }]);
 
     assert.isTrue(
       await dropContract.claimConditions.canClaim(1, w1.address),
@@ -479,16 +494,12 @@ describe("Token Drop Contract", async () => {
 
   it("canClaim: 3 address", async () => {
     const members = [
-      {
-        address: w1.address.toUpperCase().replace("0X", "0x"),
-        maxClaimable: 1,
-      },
-      { address: w2.address.toLowerCase(), maxClaimable: 1 },
-      { address: w3.address.toLowerCase(), maxClaimable: 1 },
+      w1.address.toUpperCase().replace("0X", "0x"),
+      w2.address.toLowerCase(),
+      w3.address,
     ];
     await dropContract.claimConditions.set([
       {
-        maxClaimablePerWallet: 0,
         snapshot: members,
       },
     ]);
@@ -525,24 +536,30 @@ describe("Token Drop Contract", async () => {
   it("set claim condition and update claim condition", async () => {
     await dropContract.claimConditions.set([
       { startTime: new Date(Date.now() / 2), maxClaimableSupply: 1.2 },
-      { startTime: new Date(), maxClaimablePerWallet: 60 },
+      { startTime: new Date(), waitInSeconds: 60 },
     ]);
     const oldConditions = await dropContract.claimConditions.getAll();
     expect(oldConditions.length).to.be.equal(2);
-    await dropContract.claimConditions.update(0, { maxClaimablePerWallet: 10 });
+    await dropContract.claimConditions.update(0, { waitInSeconds: 10 });
     let updatedConditions = await dropContract.claimConditions.getAll();
     expect(updatedConditions[0].maxClaimableSupply).to.be.deep.equal("1.2");
-    expect(updatedConditions[0].maxClaimablePerWallet).to.be.deep.equal("10.0");
-    expect(updatedConditions[1].maxClaimablePerWallet).to.be.deep.equal("60.0");
+    expect(updatedConditions[0].waitInSeconds).to.be.deep.equal(
+      BigNumber.from(10),
+    );
+    expect(updatedConditions[1].waitInSeconds).to.be.deep.equal(
+      BigNumber.from(60),
+    );
 
     await dropContract.claimConditions.update(1, {
       maxClaimableSupply: 10,
-      maxClaimablePerWallet: 10,
+      waitInSeconds: 10,
     });
     updatedConditions = await dropContract.claimConditions.getAll();
     expect(updatedConditions[0].maxClaimableSupply).to.be.deep.equal("1.2");
     expect(updatedConditions[1].maxClaimableSupply).to.be.deep.equal("10.0");
-    expect(updatedConditions[1].maxClaimablePerWallet).to.be.deep.equal("10.0");
+    expect(updatedConditions[1].waitInSeconds).to.be.deep.equal(
+      BigNumber.from(10),
+    );
   });
 
   it("set claim condition and update claim condition with diff timestamps should reorder", async () => {

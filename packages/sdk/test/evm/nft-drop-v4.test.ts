@@ -15,7 +15,7 @@ import invariant from "tiny-invariant";
 
 global.fetch = require("cross-fetch");
 
-describe("NFT Drop Contract", async () => {
+describe("NFT Drop Contract (v4)", async () => {
   let dropContract: NFTDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -318,7 +318,12 @@ describe("NFT Drop Contract", async () => {
     await dropContract.claimConditions.set(
       [
         {
-          snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
+          maxClaimablePerWallet: 0,
+          snapshot: [
+            bobWallet.address,
+            samWallet.address,
+            abbyWallet.address,
+          ].map((a) => ({ address: a, maxClaimable: 1 })),
         },
       ],
       false,
@@ -331,14 +336,8 @@ describe("NFT Drop Contract", async () => {
     try {
       await dropContract.claim(1);
     } catch (err: any) {
-      expect(err).to.have.property(
-        "message",
-        "No claim found for this address",
-        "",
-      );
-      return;
+      expectError(err, "!Qty");
     }
-    assert.fail("should not reach this point, claim should have failed");
   });
 
   it("should allow claims with default settings", async () => {

@@ -493,6 +493,7 @@ export class DropErc1155ClaimConditions<
         claimerAddress,
         merkeRoot.toString(),
         metadata.merkle,
+        this.contractWrapper.getProvider(),
         this.storage,
         this.getSnapshotFormatVersion(),
       );
