@@ -47,7 +47,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     [NFTCollectionInitializer.contractType]: 1,
     [SignatureDropInitializer.contractType]: 4,
     [MultiwrapInitializer.contractType]: 1,
-    [EditionDropInitializer.contractType]: 3,
+    [EditionDropInitializer.contractType]: 2,
     [EditionInitializer.contractType]: 1,
     [TokenDropInitializer.contractType]: 2,
     [TokenInitializer.contractType]: 1,

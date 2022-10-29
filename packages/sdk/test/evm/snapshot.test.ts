@@ -3,7 +3,7 @@ import {
   SnapshotFormatVersion,
 } from "../../src/evm/common/sharded-merkle-tree";
 import { createSnapshot, SnapshotEntryInput } from "../../src/evm/index";
-import { signers, storage } from "./before-setup";
+import { sdk, signers, storage } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber, ethers } from "ethers";
 import { MerkleTree } from "merkletreejs";
@@ -53,11 +53,16 @@ describe("Snapshots", async () => {
         const result = await ShardedMerkleTree.buildAndUpload(
           input,
           0,
+          sdk.getProvider(),
           storage,
           snapshotVersion,
         );
         const sm = await ShardedMerkleTree.fromUri(result.uri, storage);
-        const proofs = await sm?.getProof(adminWallet.address, snapshotVersion);
+        const proofs = await sm?.getProof(
+          adminWallet.address,
+          sdk.getProvider(),
+          snapshotVersion,
+        );
         expect(proofs?.maxClaimable).to.equal("1");
         expect(proofs?.proof).length.gt(0);
       });
@@ -71,6 +76,7 @@ describe("Snapshots", async () => {
     const result = await createSnapshot(
       input,
       0,
+      sdk.getProvider(),
       storage,
       SnapshotFormatVersion.V1,
     );
@@ -90,6 +96,7 @@ describe("Snapshots", async () => {
               address: l,
             }),
             0,
+            18,
             snapshotVersion,
           ),
         );
@@ -102,6 +109,7 @@ describe("Snapshots", async () => {
         const snapshot = await createSnapshot(
           input,
           0,
+          sdk.getProvider(),
           storage,
           snapshotVersion,
         );
@@ -112,6 +120,7 @@ describe("Snapshots", async () => {
                 address: leaf,
               }),
               0,
+              18,
               snapshotVersion,
             ),
           );
@@ -122,6 +131,7 @@ describe("Snapshots", async () => {
           );
           const actualProof = await smt?.getProof(
             leaf,
+            sdk.getProvider(),
             SnapshotFormatVersion.V2,
           );
           assert.isDefined(actualProof);
@@ -129,7 +139,12 @@ describe("Snapshots", async () => {
 
           const verified = tree.verify(
             actualProof?.proof,
-            ShardedMerkleTree.hashEntry({ ...actualProof }, 0, snapshotVersion),
+            ShardedMerkleTree.hashEntry(
+              { ...actualProof },
+              0,
+              18,
+              snapshotVersion,
+            ),
             tree.getHexRoot(),
           );
           expect(verified).to.eq(true);
@@ -152,6 +167,7 @@ describe("Snapshots", async () => {
       await createSnapshot(
         duplicateLeafs,
         0,
+        sdk.getProvider(),
         storage,
         SnapshotFormatVersion.V1,
       );
