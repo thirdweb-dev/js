@@ -1,5 +1,7 @@
 # @thirdweb-dev/sdk
 
+## 3.4.4
+
 ## 3.4.3
 
 ### Patch Changes
