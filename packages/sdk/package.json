@@ -66,8 +66,8 @@
     "ethers": "^5"
   },
   "dependencies": {
-    "@thirdweb-dev/contracts-js": "*",
-    "@thirdweb-dev/storage": "*",
+    "@thirdweb-dev/contracts-js": "^1.1.7",
+    "@thirdweb-dev/storage": "^0.2.8",
     "cbor-web": "^8.1.0",
     "cross-fetch": "^3.1.5",
     "eventemitter3": "^4.0.7",
