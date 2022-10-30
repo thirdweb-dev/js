@@ -2,8 +2,8 @@ import {
   QueryClientProviderProps,
   QueryClientProviderWithDefault,
 } from "../../core/providers/query-client";
+import { RequiredParam } from "../../core/query-utils/required-param";
 import { ComponentWithChildren } from "../../core/types/component";
-import { RequiredParam } from "../../core/types/shared";
 import {
   ThirdwebAuthConfig,
   ThirdwebAuthConfigProvider,
@@ -21,7 +21,7 @@ import {
 } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Signer } from "ethers";
-import { createContext, useContext, useEffect, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import invariant from "tiny-invariant";
 
 interface TWSDKContext {
@@ -60,21 +60,36 @@ export const WrappedThirdwebSDKProvider: ComponentWithChildren<
 }) => {
   const { signer } = useThirdwebConnectedWalletContext();
 
-  const sdk = useMemo(() => {
+  const [sdk, setSDK] = useState<ThirdwebSDK>();
+
+  useEffect(() => {
     if (!desiredChainId || typeof window === "undefined") {
       return undefined;
     }
+
     const _sdk = new ThirdwebSDK(provider, sdkOptions, storageInterface);
+    // if we already have a signer from the wallet context, use it immediately
+    if (signer) {
+      _sdk.updateSignerOrProvider(signer);
+    }
+
     (_sdk as any)._constructedAt = Date.now();
     (_sdk as any)._chainId = desiredChainId;
-    return _sdk;
+    setSDK(_sdk);
+
+    // explicitly *not* passing the signer, if we have it we use it if we don't we don't
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [provider, sdkOptions, storageInterface, desiredChainId]);
 
   useEffect(() => {
-    if (signer && sdk && (sdk as any)._chainId === desiredChainId) {
-      sdk.updateSignerOrProvider(signer);
+    if (sdk && (sdk as any)._chainId === desiredChainId) {
+      if (signer) {
+        sdk.updateSignerOrProvider(signer);
+      } else {
+        sdk.updateSignerOrProvider(provider);
+      }
     }
-  }, [signer, sdk, desiredChainId]);
+  }, [signer, sdk, desiredChainId, provider]);
 
   const ctxValue = useMemo(
     () => ({

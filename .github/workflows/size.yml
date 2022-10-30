@@ -4,8 +4,7 @@ on: [pull_request]
 
 jobs:
   build:
-    # try out buildjet to speed up build and test
-    runs-on: buildjet-32vcpu-ubuntu-2204
+    runs-on: ubuntu-latest-32
 
     steps:
       - uses: actions/checkout@v3
@@ -16,3 +15,5 @@ jobs:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           strip-hash: "\\-(\\w{8})(?:\\.esm|\\.cjs)"
           minimum-change-threshold: 100
+          # exclude source maps, node modules and any test related files
+          exclude: "{**/*.map,**/node_modules/**,**/test/**}"

@@ -77,3 +77,7 @@ export type ClaimOptions = {
    */
   checkERC20Allowance?: boolean;
 };
+
+export type ClaimConditionFetchOptions = {
+  withAllowList?: boolean;
+};

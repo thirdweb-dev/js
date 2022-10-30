@@ -1,4 +1,7 @@
-import { RequiredParam } from "../../../core/types/shared";
+import {
+  RequiredParam,
+  requiredParamInvariant,
+} from "../../../core/query-utils/required-param";
 import { useSDKChainId } from "../../providers/base";
 import { getErcs, DropContract, WalletAddress } from "../../types";
 import {
@@ -7,7 +10,11 @@ import {
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ClaimCondition, ClaimConditionInput } from "@thirdweb-dev/sdk";
+import {
+  ClaimCondition,
+  ClaimConditionFetchOptions,
+  ClaimConditionInput,
+} from "@thirdweb-dev/sdk";
 import { BigNumberish } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -62,25 +69,30 @@ export type SetClaimConditionsParams = {
 export function useActiveClaimCondition(
   contract: RequiredParam<DropContract>,
   tokenId?: BigNumberish,
+  options?: ClaimConditionFetchOptions,
 ) {
   const contractAddress = contract?.getAddress();
   const { erc1155, erc721, erc20 } = getErcs(contract);
 
   return useQueryWithNetwork(
-    cacheKeys.extensions.claimConditions.getActive(contractAddress, tokenId),
+    cacheKeys.extensions.claimConditions.getActive(
+      contractAddress,
+      tokenId,
+      options,
+    ),
     () => {
       if (erc1155) {
-        invariant(
-          tokenId !== undefined,
+        requiredParamInvariant(
+          tokenId,
           "tokenId is required for ERC1155 claim conditions",
         );
-        return erc1155.claimConditions.getActive(tokenId);
+        return erc1155.claimConditions.getActive(tokenId, options);
       }
       if (erc721) {
-        return erc721.claimConditions.getActive();
+        return erc721.claimConditions.getActive(options);
       }
       if (erc20) {
-        return erc20.claimConditions.getActive();
+        return erc20.claimConditions.getActive(options);
       }
       throw new Error("Contract must be ERC721, ERC1155 or ERC20");
     },
@@ -118,22 +130,30 @@ export function useActiveClaimCondition(
 export function useClaimConditions(
   contract: RequiredParam<DropContract>,
   tokenId?: BigNumberish,
+  options?: ClaimConditionFetchOptions,
 ) {
   const contractAddress = contract?.getAddress();
   const { erc1155, erc721, erc20 } = getErcs(contract);
 
   return useQueryWithNetwork(
-    cacheKeys.extensions.claimConditions.getAll(contractAddress, tokenId),
+    cacheKeys.extensions.claimConditions.getAll(
+      contractAddress,
+      tokenId,
+      options,
+    ),
     () => {
       if (erc1155) {
-        invariant(tokenId, "tokenId is required for ERC1155 claim conditions");
-        return erc1155.claimConditions.getAll(tokenId);
+        requiredParamInvariant(
+          tokenId,
+          "tokenId is required for ERC1155 claim conditions",
+        );
+        return erc1155.claimConditions.getAll(tokenId, options);
       }
       if (erc721) {
-        return erc721.claimConditions.getAll();
+        return erc721.claimConditions.getAll(options);
       }
       if (erc20) {
-        return erc20.claimConditions.getAll();
+        return erc20.claimConditions.getAll(options);
       }
       throw new Error("Contract must be ERC721, ERC1155 or ERC20");
     },
@@ -184,7 +204,7 @@ export function useClaimIneligibilityReasons(
     ),
     () => {
       if (erc1155) {
-        invariant(
+        requiredParamInvariant(
           tokenId,
           "tokenId is required for ERC1155 claim ineligibility reasons",
         );
@@ -270,11 +290,14 @@ export function useSetClaimConditions(
 
   return useMutation(
     async (data: SetClaimConditionsParams) => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
       const { phases, reset = false } = data;
       invariant(phases, 'No "phases" provided');
       if (erc1155) {
-        invariant(tokenId, "tokenId is required for ERC1155 claim conditions");
+        requiredParamInvariant(
+          tokenId,
+          "tokenId is required for ERC1155 claim conditions",
+        );
         return erc1155.claimConditions.set(tokenId, phases, reset);
       }
       if (erc721) {
@@ -341,7 +364,7 @@ export function useResetClaimConditions(
 
   return useMutation(
     async () => {
-      const cleanConditions = (conditions: ClaimCondition[]) => {
+      const cleanConditions = async (conditions: ClaimCondition[]) => {
         return conditions.map((c) => ({
           ...c,
           price: c.currencyMetadata.displayValue,
@@ -351,25 +374,34 @@ export function useResetClaimConditions(
       };
 
       if (erc1155) {
-        invariant(tokenId, "tokenId is required for ERC1155 claim conditions");
-        const claimConditions = await erc1155.claimConditions.getAll(tokenId);
+        requiredParamInvariant(
+          tokenId,
+          "tokenId is required for ERC1155 claim conditions",
+        );
+        const claimConditions = await erc1155.claimConditions.getAll(tokenId, {
+          withAllowList: true,
+        });
         return erc1155.claimConditions.set(
           tokenId,
-          cleanConditions(claimConditions || []),
+          await cleanConditions(claimConditions || []),
           true,
         );
       }
       if (erc721) {
-        const claimConditions = await erc721.claimConditions.getAll();
+        const claimConditions = await erc721.claimConditions.getAll({
+          withAllowList: true,
+        });
         return await erc721.claimConditions.set(
-          cleanConditions(claimConditions || []),
+          await cleanConditions(claimConditions || []),
           true,
         );
       }
       if (erc20) {
-        const claimConditions = await erc20.claimConditions.getAll();
+        const claimConditions = await erc20.claimConditions.getAll({
+          withAllowList: true,
+        });
         return await erc20.claimConditions.set(
-          cleanConditions(claimConditions || []),
+          await cleanConditions(claimConditions || []),
           true,
         );
       }

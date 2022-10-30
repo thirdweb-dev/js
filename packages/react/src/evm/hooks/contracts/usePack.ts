@@ -1,4 +1,4 @@
-import { RequiredParam } from "../../../core/types/shared";
+import { RequiredParam } from "../../../core/query-utils/required-param";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 
@@ -8,16 +8,16 @@ import { useContract } from "../async/contracts";
  *
  * @example
  * ```javascript
- * import { usePack } from '@thirdweb-dev/react'
+ * import { useContract } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const pack = usePack("<YOUR-CONTRACT-ADDRESS>")
+ *   const { contract } = usePack("<YOUR-CONTRACT-ADDRESS>", "pack")
  *
  *   // Now you can use the pack contract in the rest of the component
  *
  *   // For example, this function will get all the packs on this contract
  *   async function getPacks() {
- *     const packs = await pack.getAll()
+ *     const packs = await contract.getAll()
  *     return packs
  *   }
  *
@@ -28,8 +28,8 @@ import { useContract } from "../async/contracts";
  * @deprecated
  * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
  * ```diff
- * - const pack = await sdk.usePack("0x1234...");
- * + const pack = await sdk.useContract("0x1234...", "pack").contract;
+ * - const pack = usePack("0x1234...");
+ * + const pack = useContract("0x1234...", "pack").contract;
  * ```
  */
 export function usePack(contractAddress: RequiredParam<string>) {

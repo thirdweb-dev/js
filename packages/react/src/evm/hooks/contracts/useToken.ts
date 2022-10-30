@@ -1,4 +1,4 @@
-import { RequiredParam } from "../../../core/types/shared";
+import { RequiredParam } from "../../../core/query-utils/required-param";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 
@@ -8,16 +8,16 @@ import { useContract } from "../async/contracts";
  *
  * @example
  * ```javascript
- * import { useToken } from '@thirdweb-dev/react'
+ * import { useContract } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const token = useToken("<YOUR-CONTRACT-ADDRESS>")
+ *   const { contract } = useContract("<YOUR-CONTRACT-ADDRESS>", "token")
  *
  *   // Now you can use the token contract in the rest of the component
  *
  *   // For example, this function will get the connected wallets token balance
  *   async function balance() {
- *     const balance = await token.balance()
+ *     const balance = await contract.balance()
  *     return balance
  *   }
  *
@@ -28,8 +28,8 @@ import { useContract } from "../async/contracts";
  * @deprecated
  * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
  * ```diff
- * - const token = await sdk.useToken("0x1234...");
- * + const token = await sdk.useContract("0x1234...", "token").contract;
+ * - const token = useToken("0x1234...");
+ * + const token = useContract("0x1234...", "token").contract;
  * ```
  */
 export function useToken(contractAddress: RequiredParam<string>) {

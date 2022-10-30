@@ -1,5 +1,135 @@
 # @thirdweb-dev/react
 
+## 3.4.4
+
+### Patch Changes
+
+- [#356](https://github.com/thirdweb-dev/js/pull/356) [`cc4613b`](https://github.com/thirdweb-dev/js/commit/cc4613b5fd69840f4f9cfd0ac1c4e6743e62fe52) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add Pack and Multiwrap as NFTContract types
+
+## 3.4.3
+
+### Patch Changes
+
+- [#353](https://github.com/thirdweb-dev/js/pull/353) [`1c24c3c`](https://github.com/thirdweb-dev/js/commit/1c24c3c3c48476a824f817e09e7bf0fbe67c1db5) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add useUpdateCreators hook, fix CreatorInput schema
+
+## 3.4.2
+
+### Patch Changes
+
+- [#348](https://github.com/thirdweb-dev/js/pull/348) [`7d9a4c6`](https://github.com/thirdweb-dev/js/commit/7d9a4c6abcad1b4f43e431ce7b0b38db9016ea9a) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - [SOL] - add `useUpdateRoyaltySettings()` hook
+  [SOL] - change `useRoyalty()` hook -> `useRoyaltySettings()` for consistency
+
+- [#352](https://github.com/thirdweb-dev/js/pull/352) [`3522917`](https://github.com/thirdweb-dev/js/commit/352291791ee900e1500f84f095290497934d2f60) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - expose useExecuteAuctionSale and useAcceptDirectListingOffer
+
+- [#351](https://github.com/thirdweb-dev/js/pull/351) [`aabbb14`](https://github.com/thirdweb-dev/js/commit/aabbb149e81d6824015a4797b2b6c929ca359545) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - fix wallet connection during dev (hot reload)
+
+## 3.4.1
+
+### Patch Changes
+
+- [#343](https://github.com/thirdweb-dev/js/pull/343) [`72227b2`](https://github.com/thirdweb-dev/js/commit/72227b2e166a3a68bbb41cf2b389322f5b7547a2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose new useOffers and useMakeOffer hooks
+
+## 3.4.0
+
+### Minor Changes
+
+- [#327](https://github.com/thirdweb-dev/js/pull/327) [`ef27aad`](https://github.com/thirdweb-dev/js/commit/ef27aad0aafc4577e85f44dc77dfbe880bd239b5) Thanks [@jnsdls](https://github.com/jnsdls)! - Gnosis Safe and Magic Link connectors are no longer included in the default export. They are now available as named exports instead.
+
+  ## Gnosis Safe
+
+  ### Connector
+
+  ```diff
+  - import { GnosisSafeConnector } from "@thirdweb-dev/react";
+  + import { GnosisSafeConnector } from "@thirdweb-dev/react/evm/connectors/gnosis-safe";
+  ```
+
+  ### Hook
+
+  ```diff
+  - import { useGnosis } from "@thirdweb-dev/react";
+  + import { useGnosis } from "@thirdweb-dev/react/evm/connectors/gnosis-safe";
+  ```
+
+  ## Magic Link
+
+  ### Connector
+
+  ```diff
+  - import { MagicLink } from "@thirdweb-dev/react";
+  + import { MagicConnector } from "@thirdweb-dev/react/evm/connectors/magic";
+  ```
+
+  ### Hook
+
+  ```diff
+  - import { useMagic } from "@thirdweb-dev/react";
+  + import { useMagic } from "@thirdweb-dev/react/evm/connectors/magic";
+  ```
+
+### Patch Changes
+
+- [#339](https://github.com/thirdweb-dev/js/pull/339) [`b03a902`](https://github.com/thirdweb-dev/js/commit/b03a9021451b79f802f682f66e5ae8e9355d7e6f) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Fix docs for some functions
+
+## 3.3.1
+
+## 3.3.0
+
+## 3.2.6
+
+### Patch Changes
+
+- [#316](https://github.com/thirdweb-dev/js/pull/316) [`6ae5266`](https://github.com/thirdweb-dev/js/commit/6ae52664e5865564cd4fc2e00e3120675b9e0ca3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix SIWE when using an external signer
+
+- [#310](https://github.com/thirdweb-dev/js/pull/310) [`9727502`](https://github.com/thirdweb-dev/js/commit/9727502eb30ac139382b7c7c8e8fc0967cbfbcf1) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - [SOL] - add useMintNFTSupply hook in react and accomodate inputs for it in SDK
+
+- [#319](https://github.com/thirdweb-dev/js/pull/319) [`2f8ec89`](https://github.com/thirdweb-dev/js/commit/2f8ec89c4c83ae577092c840c198e6fcfb114e69) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose total claimed and unclaimed supply for erc721 drop contracts
+
+- [#318](https://github.com/thirdweb-dev/js/pull/318) [`bb1b4e6`](https://github.com/thirdweb-dev/js/commit/bb1b4e6ac39d98cc68b8e31e659cd68be3a5b967) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add useMinimumNextBid hook and change invariant for other marketplace hooks
+
+## 3.2.5
+
+## 3.2.4
+
+### Patch Changes
+
+- [#301](https://github.com/thirdweb-dev/js/pull/301) [`86f0cef`](https://github.com/thirdweb-dev/js/commit/86f0ceff46f72df8ebd81f843e3c66a245f23992) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Remove useAddress hook for now
+
+## 3.2.3
+
+### Patch Changes
+
+- [#299](https://github.com/thirdweb-dev/js/pull/299) [`b1218cb`](https://github.com/thirdweb-dev/js/commit/b1218cbd7d97ca7949d94a7e4ab93fef4ffbacd5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Recreate SDK on wallet changes for hook propagation
+
+## 3.2.2
+
+### Patch Changes
+
+- [#289](https://github.com/thirdweb-dev/js/pull/289) [`521a49c`](https://github.com/thirdweb-dev/js/commit/521a49c6ec6a73068adcfbc1d94d2f3f17afae86) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Standarize useClaimNFT to evm
+
+- [#274](https://github.com/thirdweb-dev/js/pull/274) [`ad06c5b`](https://github.com/thirdweb-dev/js/commit/ad06c5b28902422f9b416d65255c64c937a5e046) Thanks [@adam-maj](https://github.com/adam-maj)! - Add solana auth support and plugins for react and auth package
+
+- [#269](https://github.com/thirdweb-dev/js/pull/269) [`b2cadf1`](https://github.com/thirdweb-dev/js/commit/b2cadf164cfe9fb27081df7530356baf70ec2b3a) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - remove deprecated chains from support
+
+- [#272](https://github.com/thirdweb-dev/js/pull/272) [`2bdf198`](https://github.com/thirdweb-dev/js/commit/2bdf1984cb97121c447cffd27aa6a5f4f92679b3) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add claim conditions hook for Solana
+
+- [#291](https://github.com/thirdweb-dev/js/pull/291) [`86f6083`](https://github.com/thirdweb-dev/js/commit/86f608390a7848cda82c0f7e8913ca60f7d3901f) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - expose `.program` on `useProgram()` return type to mirror `.contract` on EVM
+
+- [#292](https://github.com/thirdweb-dev/js/pull/292) [`492a818`](https://github.com/thirdweb-dev/js/commit/492a818079aff67c7f88bc43666c87c3714cc957) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] expose `useAddress()` hook that returns the connected wallet address in base58
+
+- [#290](https://github.com/thirdweb-dev/js/pull/290) [`8096c78`](https://github.com/thirdweb-dev/js/commit/8096c78b466a7f5f9c2aac6e2c56a06f9d3a25d6) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - `useClaimNFT()` allow claiming to connected wallet without passing address explicitly
+  [EVM] - `useClaimNFT()` allow claiming to connected wallet without passing address explicitly
+
+- [#298](https://github.com/thirdweb-dev/js/pull/298) [`e8c25ed`](https://github.com/thirdweb-dev/js/commit/e8c25ed0f28d566203d70bf59a8908e59216334a) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - fix useBalance
+
+- [#263](https://github.com/thirdweb-dev/js/pull/263) [`d6bb61b`](https://github.com/thirdweb-dev/js/commit/d6bb61b7fac759fff7d6293edd46f693f5a7889c) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - add chainId getter on contracts
+
+- [#266](https://github.com/thirdweb-dev/js/pull/266) [`3b7d10e`](https://github.com/thirdweb-dev/js/commit/3b7d10ed93d8e3b698e9f905c93ba79863b35325) Thanks [@adam-maj](https://github.com/adam-maj)! - Add storage hooks to react
+
+- [#282](https://github.com/thirdweb-dev/js/pull/282) [`1f41adb`](https://github.com/thirdweb-dev/js/commit/1f41adbd2ccfbc367757620e0842ef32bc783a08) Thanks [@jarrodwatts](https://github.com/jarrodwatts)! - Fix useActiveClaimCondition invariant failing for token ID 0
+
+- [#296](https://github.com/thirdweb-dev/js/pull/296) [`cf88795`](https://github.com/thirdweb-dev/js/commit/cf88795376d3110f9d3aa839928d22276904b15a) Thanks [@jnsdls](https://github.com/jnsdls)! - [SOL] - add `useBalance` hook
+
 ## 3.2.1
 
 ### Patch Changes

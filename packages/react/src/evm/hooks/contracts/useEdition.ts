@@ -1,4 +1,4 @@
-import { RequiredParam } from "../../../core/types/shared";
+import { RequiredParam } from "../../../core/query-utils/required-param";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 
@@ -8,16 +8,16 @@ import { useContract } from "../async/contracts";
  *
  * @example
  * ```javascript
- * import { useEdition } from '@thirdweb-dev/react'
+ * import { useContract } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const edition = useEdition("<YOUR-CONTRACT-ADDRESS>")
+ *   const { contract } = useContract("<YOUR-CONTRACT-ADDRESS>", "edition")
  *
  *   // Now you can use the edition contract in the rest of the component
  *
  *   // For example, this function will return all the NFTs on this contract
  *   async function getNFTs() {
- *     const nfts = await edition.getAll()
+ *     const nfts = await contract.getAll()
  *     return nfts
  *   }
  *
@@ -28,8 +28,8 @@ import { useContract } from "../async/contracts";
  * @deprecated
  * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
  * ```diff
- * - const edition = await sdk.useEdition("0x1234...");
- * + const edition = await sdk.useContract("0x1234...", "edition").contract;
+ * - const edition = useEdition("0x1234...");
+ * + const edition = useContract("0x1234...", "edition").contract;
  * ```
  */
 export function useEdition(contractAddress: RequiredParam<string>) {

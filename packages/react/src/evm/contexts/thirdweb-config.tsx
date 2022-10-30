@@ -3,7 +3,7 @@ import {
   SupportedChainId,
   defaultSupportedChains,
 } from "../constants/chain";
-import { ChainId } from "@thirdweb-dev/sdk";
+import { DEFAULT_RPC_URLS } from "@thirdweb-dev/sdk";
 import React, { PropsWithChildren, createContext, useContext } from "react";
 
 interface ThirdwebConfigContext {
@@ -11,17 +11,8 @@ interface ThirdwebConfigContext {
   supportedChains: Chain[];
 }
 
-export const defaultChainRpc: Record<SupportedChainId | number, string> = {
-  [ChainId.Mainnet]: "mainnet",
-  [ChainId.Goerli]: "goerli",
-  [ChainId.Polygon]: "polygon",
-  [ChainId.Mumbai]: "mumbai",
-  [ChainId.Fantom]: "fantom",
-  [ChainId.Avalanche]: "avalanche",
-};
-
 const ThirdwebConfigContext = createContext<ThirdwebConfigContext>({
-  rpcUrlMap: defaultChainRpc,
+  rpcUrlMap: DEFAULT_RPC_URLS,
   supportedChains: defaultSupportedChains,
 });
 

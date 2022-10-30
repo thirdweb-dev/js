@@ -17,9 +17,9 @@ let language: string = "";
 let baseContract: string = "";
 /* let createType: string = "app"; */
 
-export async function twCreate(options: any) {
-  if (typeof projectPath === "string") {
-    projectPath = projectPath.trim();
+export async function twCreate(pPath: string = "", options: any) {
+  if (typeof pPath === "string") {
+    projectPath = pPath;
   }
 
   if (options.app) {

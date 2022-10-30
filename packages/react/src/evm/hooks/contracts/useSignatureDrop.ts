@@ -1,4 +1,4 @@
-import { RequiredParam } from "../../../core/types/shared";
+import { RequiredParam } from "../../../core/query-utils/required-param";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 
@@ -8,16 +8,16 @@ import { useContract } from "../async/contracts";
  *
  * @example
  * ```javascript
- * import { useSignatureDrop } from '@thirdweb-dev/react'
+ * import { useContract } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const signatureDrop = useSignatureDrop("<YOUR-CONTRACT-ADDRESS>")
+ *   const { contract } = useContract("<YOUR-CONTRACT-ADDRESS>", "signature-drop")
  *
  *   // Now you can use the Signature drop contract in the rest of the component
  *
  *   // For example, this function will let the connected wallet claim a new NFT
  *   async function claim(quantity) {
- *     await signatureDrop.claim(quantity)
+ *     await contract.claim(quantity)
  *   }
  *
  *   ...
@@ -27,8 +27,8 @@ import { useContract } from "../async/contracts";
  * @deprecated
  * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
  * ```diff
- * - const signatureDrop = await sdk.useSignatureDrop("0x1234...");
- * + const signatureDrop = await sdk.useContract("0x1234...", "signature-drop").contract;
+ * - const signatureDrop = useSignatureDrop("0x1234...");
+ * + const signatureDrop = useContract("0x1234...", "signature-drop").contract;
  * ```
  */
 export function useSignatureDrop(contractAddress?: RequiredParam<string>) {

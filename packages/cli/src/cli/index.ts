@@ -40,7 +40,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .version(cliVersion, "-v, --version");
 
   program
-    .command("create")
+    .command("create [projectPath]")
     .description(
       "Create a web3 app from any of our official templates: https://github.com/thirdweb-example/",
     )
@@ -66,8 +66,8 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       "-t, --template [name]",
       `A template to start your project from. You can use an template repository name from the official thirdweb-example org.`,
     )
-    .action(async (options) => {
-      await twCreate(options);
+    .action(async (path, options) => {
+      await twCreate(path, options);
     });
 
   program

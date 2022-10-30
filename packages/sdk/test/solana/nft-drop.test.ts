@@ -1,5 +1,6 @@
 import { NFTDrop } from "../../src/solana";
 import { sdk } from "./before-setup";
+import { Keypair } from "@solana/web3.js";
 import { expect } from "chai";
 
 describe("NFTDrop", async () => {
@@ -54,15 +55,21 @@ describe("NFTDrop", async () => {
     await drop.claimConditions.set({
       maxClaimable: 1,
     });
-    const address = await drop.claim(1);
+    const receiver = Keypair.generate();
+    const address = await drop.claimTo(receiver.publicKey.toBase58(), 1);
 
     unclaimed = await drop.totalUnclaimedSupply();
     claimed = await drop.totalClaimedSupply();
     expect(unclaimed).to.equal(4);
     expect(claimed).to.equal(1);
 
-    const balance = await drop.balance(address[0]);
+    const balance = await drop.balanceOf(
+      receiver.publicKey.toBase58(),
+      address[0],
+    );
     expect(balance).to.equal(1);
+    const nftClaimed = await drop.get(address[0]);
+    expect(nftClaimed.owner).to.equal(receiver.publicKey.toBase58());
   });
 
   it("should update claim condition", async () => {
@@ -84,7 +91,9 @@ describe("NFTDrop", async () => {
   });
 
   it("should get all nfts", async () => {
-    await drop.claim(2);
+    const claimedAddresses = await drop.claim(2);
+    const nftClaimed = await drop.get(claimedAddresses[0]);
+    expect(nftClaimed.owner).to.equal(sdk.wallet.getAddress());
 
     const all = await drop.getAll();
     const claimed = await drop.getAllClaimed();
@@ -114,5 +123,33 @@ describe("NFTDrop", async () => {
     await burnDrop.burn(all[0].metadata.id);
     const all2 = await burnDrop.getAllClaimed();
     expect(all2.length).to.eq(1);
+  });
+
+  it("should update creator settings", async () => {
+    let creators = await drop.getCreators();
+    expect(creators.length).to.equal(1);
+    expect(creators[0].address).to.equal(sdk.wallet.getAddress());
+    expect(creators[0].share).to.equal(100);
+
+    const newCreator = Keypair.generate().publicKey.toBase58();
+    await drop.updateCreators([
+      { address: sdk.wallet.getAddress() as string, share: 75 },
+      { address: newCreator, share: 25 },
+    ]);
+
+    creators = await drop.getCreators();
+    expect(creators.length).to.equal(2);
+    expect(creators[0].address).to.equal(sdk.wallet.getAddress());
+    expect(creators[0].share).to.equal(75);
+    expect(creators[1].address).to.equal(newCreator);
+    expect(creators[1].share).to.equal(25);
+  });
+
+  it("Should update royalty", async () => {
+    let royalty = await drop.getRoyalty();
+    expect(royalty).to.equal(0);
+    await drop.updateRoyalty(100);
+    royalty = await drop.getRoyalty();
+    expect(royalty).to.equal(100);
   });
 });

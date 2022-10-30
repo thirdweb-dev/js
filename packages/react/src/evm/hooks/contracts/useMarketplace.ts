@@ -1,4 +1,4 @@
-import { RequiredParam } from "../../../core/types/shared";
+import { RequiredParam } from "../../../core/query-utils/required-param";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 
@@ -8,16 +8,16 @@ import { useContract } from "../async/contracts";
  *
  * @example
  * ```javascript
- * import { useMarketplace } from '@thirdweb-dev/react'
+ * import { useContract } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const marketplace = useMarketplace("<YOUR-CONTRACT-ADDRESS>")
+ *   const { contract } = useContract("<YOUR-CONTRACT-ADDRESS>", "marketplace")
  *
  *   // Now you can use the marketplace contract in the rest of the component
  *
  *   // For example, this function will return all the listings on the marketplace
  *   async function getListings() {
- *     const listings = await marketplace.getAll()
+ *     const listings = await contract.getAll()
  *     return listings
  *   }
  *
@@ -28,8 +28,8 @@ import { useContract } from "../async/contracts";
  * @deprecated
  * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
  * ```diff
- * - const marketplace = await sdk.useMarketplace("0x1234...");
- * + const marketplace = await sdk.useContract("0x1234...", "marketplace").contract;
+ * - const marketplace = useMarketplace("0x1234...");
+ * + const marketplace = useContract("0x1234...", "marketplace").contract;
  * ```
  */
 export function useMarketplace(contractAddress: RequiredParam<string>) {

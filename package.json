@@ -8,7 +8,8 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/*",
+      "test/**/*"
     ]
   },
   "scripts": {
@@ -28,11 +29,6 @@
     "version-packages:nightly": "changeset version --snapshot nightly",
     "release:nightly": "node ./scripts/pre-release.mjs && changeset publish --tag nightly",
     "push": "turbo run push"
-  },
-  "preconstruct": {
-    "packages": [
-      "packages/*"
-    ]
   },
   "packageManager": "yarn@1.22.19",
   "dependencies": {

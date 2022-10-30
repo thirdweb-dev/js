@@ -1,5 +1,6 @@
 import { includesErrorMessage } from "../../common";
 import {
+  fetchSnapshotEntryForAddress,
   getClaimerProofs,
   prepareClaim,
   processClaimConditionInputs,
@@ -14,10 +15,11 @@ import {
 import { isNode } from "../../common/utils";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/index";
 import { ClaimEligibility } from "../../enums";
-import { AmountSchema } from "../../schema";
+import { AmountSchema, SnapshotEntryWithProof } from "../../schema";
 import {
   Amount,
   ClaimCondition,
+  ClaimConditionFetchOptions,
   ClaimConditionInput,
   ClaimVerification,
 } from "../../types";
@@ -75,7 +77,9 @@ export class DropClaimConditions<
    *
    * @returns the claim condition metadata
    */
-  public async getActive(): Promise<ClaimCondition> {
+  public async getActive(
+    options?: ClaimConditionFetchOptions,
+  ): Promise<ClaimCondition> {
     const cc = await this.get();
     const metadata = await this.metadata.get();
     return await transformResultToClaimCondition(
@@ -84,6 +88,7 @@ export class DropClaimConditions<
       this.contractWrapper.getProvider(),
       metadata.merkle || {},
       this.storage,
+      options?.withAllowList || false,
     );
   }
 
@@ -104,7 +109,9 @@ export class DropClaimConditions<
    *
    * @returns the claim conditions metadata
    */
-  public async getAll(): Promise<ClaimCondition[]> {
+  public async getAll(
+    options?: ClaimConditionFetchOptions,
+  ): Promise<ClaimCondition[]> {
     if (this.isMultiPhaseDropContract(this.contractWrapper)) {
       const claimCondition =
         (await this.contractWrapper.readContract.claimCondition()) as {
@@ -129,11 +136,12 @@ export class DropClaimConditions<
             this.contractWrapper.getProvider(),
             metadata.merkle,
             this.storage,
+            options?.withAllowList || false,
           ),
         ),
       );
     } else {
-      return [await this.getActive()];
+      return [await this.getActive(options)];
     }
   }
 
@@ -330,6 +338,31 @@ export class DropClaimConditions<
     }
 
     return reasons;
+  }
+
+  /**
+   * Returns allow list information and merkle proofs for the given address.
+   * @param claimerAddress
+   */
+  public async getClaimerProofs(
+    claimerAddress: string,
+  ): Promise<SnapshotEntryWithProof | null> {
+    const claimCondition = await this.getActive();
+    const merkeRoot = claimCondition.merkleRootHash;
+    const merkleRootArray = ethers.utils.stripZeros(
+      claimCondition.merkleRootHash,
+    );
+    if (merkleRootArray.length > 0) {
+      const metadata = await this.metadata.get();
+      return await fetchSnapshotEntryForAddress(
+        claimerAddress,
+        merkeRoot.toString(),
+        metadata.merkle,
+        this.storage,
+      );
+    } else {
+      return null;
+    }
   }
 
   /** ***************************************

@@ -1,4 +1,4 @@
-import { RequiredParam } from "../../../core/types/shared";
+import { RequiredParam } from "../../../core/query-utils/required-param";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 
@@ -8,16 +8,16 @@ import { useContract } from "../async/contracts";
  *
  * @example
  * ```javascript
- * import { useVote } from '@thirdweb-dev/react'
+ * import { useContract } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const vote = useVote("<YOUR-CONTRACT-ADDRESS>")
+ *   const { contract } = useContract("<YOUR-CONTRACT-ADDRESS>", "vote")
  *
  *   // Now you can use the vote contract in the rest of the component
  *
  *   // For example, this function will get all the proposals on this contract
  *   async function getProposals() {
- *     const proposals = await vote.getAll()
+ *     const proposals = await contract.getAll()
  *     return proposals
  *   }
  *
@@ -28,8 +28,8 @@ import { useContract } from "../async/contracts";
  * @deprecated
  * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
  * ```diff
- * - const vote = await sdk.useVote("0x1234...");
- * + const vote = await sdk.useContract("0x1234...", "vote").contract;
+ * - const vote = useVote("0x1234...");
+ * + const vote = useContract("0x1234...", "vote").contract;
  * ```
  */
 export function useVote(contractAddress: RequiredParam<string>) {

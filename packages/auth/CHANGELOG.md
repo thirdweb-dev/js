@@ -1,5 +1,37 @@
 # @thirdweb-dev/auth
 
+## 2.0.25
+
+## 2.0.24
+
+## 2.0.23
+
+## 2.0.22
+
+## 2.0.21
+
+### Patch Changes
+
+- [#327](https://github.com/thirdweb-dev/js/pull/327) [`ef27aad`](https://github.com/thirdweb-dev/js/commit/ef27aad0aafc4577e85f44dc77dfbe880bd239b5) Thanks [@jnsdls](https://github.com/jnsdls)! - enable e2e testing
+
+## 2.0.20
+
+## 2.0.19
+
+## 2.0.18
+
+## 2.0.17
+
+## 2.0.16
+
+## 2.0.15
+
+## 2.0.14
+
+### Patch Changes
+
+- [#274](https://github.com/thirdweb-dev/js/pull/274) [`ad06c5b`](https://github.com/thirdweb-dev/js/commit/ad06c5b28902422f9b416d65255c64c937a5e046) Thanks [@adam-maj](https://github.com/adam-maj)! - Add solana auth support and plugins for react and auth package
+
 ## 2.0.13
 
 ## 2.0.12

@@ -1,4 +1,4 @@
-import { RequiredParam } from "../../../core/types/shared";
+import { RequiredParam } from "../../../core/query-utils/required-param";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 
@@ -8,16 +8,16 @@ import { useContract } from "../async/contracts";
  *
  * @example
  * ```javascript
- * import { useEditionDrop } from '@thirdweb-dev/react'
+ * import { useContract } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const editionDrop = useEditionDrop("<YOUR-CONTRACT-ADDRESS>")
+ *   const { contract } = useContract("<YOUR-CONTRACT-ADDRESS>", "edition-drop")
  *
  *   // Now you can use the edition drop contract in the rest of the component
  *
  *   // For example, this function will let the connected wallet claim a new NFT
  *   async function claim(tokenId, quantity) {
- *     await editionDrop.claim(tokenId, quantity)
+ *     await contract.claim(tokenId, quantity)
  *   }
  *
  *   ...
@@ -27,8 +27,8 @@ import { useContract } from "../async/contracts";
  * @deprecated
  * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
  * ```diff
- * - const editionDrop = await sdk.useEditionDrop("0x1234...");
- * + const editionDrop = await sdk.useContract("0x1234...", "edition-drop").contract;
+ * - const editionDrop = useEditionDrop("0x1234...");
+ * + const editionDrop = useContract("0x1234...", "edition-drop").contract;
  * ```
  */
 export function useEditionDrop(contractAddress: RequiredParam<string>) {

@@ -1,5 +1,5 @@
 import { createSOLQueryKeyWithNetwork } from "../../../core/query-utils/query-key";
-import { RequiredParam } from "../../../core/types/shared";
+import { RequiredParam } from "../../../core/query-utils/required-param";
 import { useSDK } from "../../providers/base";
 import { useQuery } from "@tanstack/react-query";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk/solana";

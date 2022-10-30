@@ -1,4 +1,4 @@
-import { RequiredParam } from "../../../core/types/shared";
+import { RequiredParam } from "../../../core/query-utils/required-param";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 
@@ -8,16 +8,16 @@ import { useContract } from "../async/contracts";
  *
  * @example
  * ```javascript
- * import { useNFTCollection } from '@thirdweb-dev/react'
+ * import { useContract } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const nftCollection = useNFTCollection("<YOUR-CONTRACT-ADDRESS>")
+ *   const { contract } = useNFTCollection("<YOUR-CONTRACT-ADDRESS>", "nft-collection")
  *
  *   // Now you can use the nftCollection contract in the rest of the component
  *
  *   // For example, this function will return all the NFTs on this contract
  *   async function getNFTs() {
- *     const nfts = await nftCollection.getAll()
+ *     const nfts = await contract.getAll()
  *     return nfts
  *   }
  *
@@ -28,8 +28,8 @@ import { useContract } from "../async/contracts";
  * @deprecated
  * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
  * ```diff
- * - const nftCollection = await sdk.useNFTCollection("0x1234...");
- * + const nftCollection = await sdk.useContract("0x1234...", "nft-collection").contract;
+ * - const nftCollection = useNFTCollection("0x1234...");
+ * + const nftCollection = useContract("0x1234...", "nft-collection").contract;
  * ```
  */
 export function useNFTCollection(contractAddress: RequiredParam<string>) {

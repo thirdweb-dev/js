@@ -1,4 +1,4 @@
-import { RequiredParam } from "../../../core/types/shared";
+import { RequiredParam } from "../../../core/query-utils/required-param";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 
@@ -8,16 +8,16 @@ import { useContract } from "../async/contracts";
  *
  * @example
  * ```javascript
- * import { useNFTDrop } from '@thirdweb-dev/react'
+ * import { useContract } from '@thirdweb-dev/react'
  *
  * export default function Component() {
- *   const nftDrop = useNFTDrop("<YOUR-CONTRACT-ADDRESS>")
+ *   const { contract } = useContract("<YOUR-CONTRACT-ADDRESS>", "nft-drop")
  *
  *   // Now you can use the nft drop contract in the rest of the component
  *
  *   // For example, this function will let the connected wallet claim a new NFT
  *   async function claim(quantity) {
- *     await nftDrop.claim(quantity)
+ *     await contract.claim(quantity)
  *   }
  *
  *   ...
@@ -27,8 +27,8 @@ import { useContract } from "../async/contracts";
  * @deprecated
  * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
  * ```diff
- * - const nftDrop = await sdk.useNFTDrop("0x1234...");
- * + const nftDrop = await sdk.useContract("0x1234...", "nft-drop").contract;
+ * - const nftDrop = useNFTDrop("0x1234...");
+ * + const nftDrop = useContract("0x1234...", "nft-drop").contract;
  * ```
  */
 export function useNFTDrop(contractAddress: RequiredParam<string>) {

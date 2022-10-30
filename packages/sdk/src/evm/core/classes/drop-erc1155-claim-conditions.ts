@@ -1,5 +1,6 @@
 import { includesErrorMessage } from "../../common";
 import {
+  fetchSnapshotEntryForAddress,
   getClaimerProofs,
   prepareClaim,
   processClaimConditionInputs,
@@ -11,8 +12,10 @@ import { hasFunction } from "../../common/feature-detection";
 import { isNode } from "../../common/utils";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/index";
 import { ClaimEligibility } from "../../enums";
+import { SnapshotEntryWithProof } from "../../schema";
 import {
   ClaimCondition,
+  ClaimConditionFetchOptions,
   ClaimConditionInput,
   ClaimConditionsForToken,
   ClaimVerification,
@@ -63,7 +66,10 @@ export class DropErc1155ClaimConditions<
    *
    * @returns the claim condition metadata
    */
-  public async getActive(tokenId: BigNumberish): Promise<ClaimCondition> {
+  public async getActive(
+    tokenId: BigNumberish,
+    options?: ClaimConditionFetchOptions,
+  ): Promise<ClaimCondition> {
     const mc = await this.get(tokenId);
     const metadata = await this.metadata.get();
     return await transformResultToClaimCondition(
@@ -72,6 +78,7 @@ export class DropErc1155ClaimConditions<
       this.contractWrapper.getProvider(),
       metadata.merkle,
       this.storage,
+      options?.withAllowList || false,
     );
   }
 
@@ -101,7 +108,10 @@ export class DropErc1155ClaimConditions<
    *
    * @returns the claim conditions metadata
    */
-  public async getAll(tokenId: BigNumberish): Promise<ClaimCondition[]> {
+  public async getAll(
+    tokenId: BigNumberish,
+    options?: ClaimConditionFetchOptions,
+  ): Promise<ClaimCondition[]> {
     if (this.isMultiPhaseDropContract(this.contractWrapper)) {
       const claimCondition =
         (await this.contractWrapper.readContract.claimCondition(tokenId)) as {
@@ -128,6 +138,7 @@ export class DropErc1155ClaimConditions<
             this.contractWrapper.getProvider(),
             metadata.merkle,
             this.storage,
+            options?.withAllowList || false,
           ),
         ),
       );
@@ -331,6 +342,33 @@ export class DropErc1155ClaimConditions<
     }
 
     return reasons;
+  }
+
+  /**
+   * Returns allow list information and merkle proofs for the given address.
+   * @param tokenId
+   * @param claimerAddress
+   */
+  public async getClaimerProofs(
+    tokenId: BigNumberish,
+    claimerAddress: string,
+  ): Promise<SnapshotEntryWithProof | null> {
+    const claimCondition = await this.getActive(tokenId);
+    const merkeRoot = claimCondition.merkleRootHash;
+    const merkleRootArray = ethers.utils.stripZeros(
+      claimCondition.merkleRootHash,
+    );
+    if (merkleRootArray.length > 0) {
+      const metadata = await this.metadata.get();
+      return await fetchSnapshotEntryForAddress(
+        claimerAddress,
+        merkeRoot.toString(),
+        metadata.merkle,
+        this.storage,
+      );
+    } else {
+      return null;
+    }
   }
 
   /** ***************************************

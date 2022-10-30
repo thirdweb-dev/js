@@ -12,10 +12,16 @@ export * from "./hooks/program/useProgramAccountType";
 
 // NFT Shared
 export * from "./hooks/nft/useNFTs";
-export * from "./hooks/nft/useMintNFT";
-export * from "./hooks/nft/useNFT";
 export * from "./hooks/nft/useTransferNFT";
 export * from "./hooks/nft/useBurnNFT";
+export * from "./hooks/nft/useRoyaltySettings";
+export * from "./hooks/nft/useUpdateRoyaltySettings";
+export * from "./hooks/nft/useCreators";
+export * from "./hooks/nft/useUpdateCreators";
+
+// NFT Collection
+export * from "./hooks/nft/collection/useMintNFT";
+export * from "./hooks/nft/collection/useMintNFTSupply";
 
 // NFT Drop
 export * from "./hooks/nft/drop/useLazyMint";
@@ -35,5 +41,4 @@ export * from "./hooks/token/useTransferToken";
 export * from "./hooks/auth";
 
 //Wallet
-export * from "./hooks/wallet/useAddress";
 export * from "./hooks/wallet/useBalance";
