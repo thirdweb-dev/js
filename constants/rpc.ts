@@ -61,10 +61,15 @@ export const EVM_RPC_URL_MAP: Record<SUPPORTED_CHAIN_ID, string> = addAPIKey({
     "https://data-seed-prebsc-1-s1.binance.org:8545",
 });
 
-const SOLANA_RPC_URL_MAP: Record<DashboardSolanaNetwork, string> = addAPIKey({
-  "mainnet-beta": `https://solana-mainnet.g.alchemy.com/v2/`,
-  devnet: `https://solana-devnet.g.alchemy.com/v2/`,
-});
+const SOLANA_RPC_URL_MAP: Record<DashboardSolanaNetwork, string> = {
+  ...addAPIKey({
+    "mainnet-beta": `https://solana-mainnet.g.alchemy.com/v2/`,
+    devnet: `https://solana-devnet.g.alchemy.com/v2/`,
+  }),
+  // override only sol devnet for now, to workaround alchemy issues
+  devnet:
+    "https://solana-devnet.rpc.thirdweb.com/ed043a51ae23b0db3873f5a38b77ab28175fa496f15d3c53cf70401be89b622a",
+};
 
 function addAPIKey<T extends string | number>(
   input: Record<T, string>,
