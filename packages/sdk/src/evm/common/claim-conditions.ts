@@ -121,8 +121,11 @@ export async function prepareClaim(
     );
   }
 
-  // if max claimable is 0 even after checking allowlist, then address can't claim
-  if (maxClaimable.eq(0)) {
+  // if max claimable is 0 even after checking allowlist, then address can't claim (only with override list behavior)
+  if (
+    snapshotFormatVersion === SnapshotFormatVersion.V2 &&
+    maxClaimable.eq(0)
+  ) {
     throw new Error(`Cannot claim, max claimable is 0 for ${addressToClaim}`);
   }
 
