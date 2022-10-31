@@ -98,10 +98,24 @@ describe("NFT Drop Contract", async () => {
     );
     expect(roots).length(2);
 
-    const proof = await dropContract.claimConditions.getClaimerProofs(
+    let proof = await dropContract.claimConditions.getClaimerProofs(
       bobWallet.address,
     );
     expect(proof.address).to.eq(bobWallet.address);
+    proof = await dropContract.claimConditions.getClaimerProofs(
+      bobWallet.address,
+      0,
+    );
+    expect(proof.address).to.eq(bobWallet.address);
+    proof = await dropContract.claimConditions.getClaimerProofs(
+      samWallet.address,
+    );
+    expect(proof).to.eq(null);
+    proof = await dropContract.claimConditions.getClaimerProofs(
+      samWallet.address,
+      0,
+    );
+    expect(proof.address).to.eq(samWallet.address);
   });
 
   it("should return snapshot data on claim conditions", async () => {

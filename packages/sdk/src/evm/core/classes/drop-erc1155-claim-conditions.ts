@@ -84,6 +84,7 @@ export class DropErc1155ClaimConditions<
 
   private async get(
     tokenId: BigNumberish,
+    claimConditionId?: BigNumberish,
   ): Promise<IDropClaimCondition.ClaimConditionStructOutput> {
     if (this.isSinglePhaseDropContract(this.contractWrapper)) {
       return (await this.contractWrapper.readContract.claimCondition(
@@ -91,9 +92,11 @@ export class DropErc1155ClaimConditions<
       )) as IDropClaimCondition.ClaimConditionStructOutput;
     } else if (this.isMultiPhaseDropContract(this.contractWrapper)) {
       const id =
-        await this.contractWrapper.readContract.getActiveClaimConditionId(
-          tokenId,
-        );
+        claimConditionId !== undefined
+          ? claimConditionId
+          : await this.contractWrapper.readContract.getActiveClaimConditionId(
+              tokenId,
+            );
       return await this.contractWrapper.readContract.getClaimConditionById(
         tokenId,
         id,
@@ -346,23 +349,23 @@ export class DropErc1155ClaimConditions<
 
   /**
    * Returns allow list information and merkle proofs for the given address.
-   * @param tokenId
-   * @param claimerAddress
+   * @param tokenId - the token ID to check
+   * @param claimerAddress - the claimer address
+   * @param claimConditionId - optional the claim condition id to get the proofs for
    */
   public async getClaimerProofs(
     tokenId: BigNumberish,
     claimerAddress: string,
+    claimConditionId?: BigNumberish,
   ): Promise<SnapshotEntryWithProof | null> {
-    const claimCondition = await this.getActive(tokenId);
-    const merkeRoot = claimCondition.merkleRootHash;
-    const merkleRootArray = ethers.utils.stripZeros(
-      claimCondition.merkleRootHash,
-    );
+    const claimCondition = await this.get(tokenId, claimConditionId);
+    const merkleRoot = claimCondition.merkleRoot;
+    const merkleRootArray = ethers.utils.stripZeros(merkleRoot);
     if (merkleRootArray.length > 0) {
       const metadata = await this.metadata.get();
       return await fetchSnapshotEntryForAddress(
         claimerAddress,
-        merkeRoot.toString(),
+        merkleRoot.toString(),
         metadata.merkle,
         this.storage,
       );

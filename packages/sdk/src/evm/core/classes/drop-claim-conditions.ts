@@ -92,12 +92,16 @@ export class DropClaimConditions<
     );
   }
 
-  private async get(): Promise<IDropClaimCondition.ClaimConditionStructOutput> {
+  private async get(
+    claimConditionId?: BigNumberish,
+  ): Promise<IDropClaimCondition.ClaimConditionStructOutput> {
     if (this.isSinglePhaseDropContract(this.contractWrapper)) {
       return (await this.contractWrapper.readContract.claimCondition()) as IDropClaimCondition.ClaimConditionStructOutput;
     } else if (this.isMultiPhaseDropContract(this.contractWrapper)) {
       const id =
-        await this.contractWrapper.readContract.getActiveClaimConditionId();
+        claimConditionId !== undefined
+          ? claimConditionId
+          : await this.contractWrapper.readContract.getActiveClaimConditionId();
       return await this.contractWrapper.readContract.getClaimConditionById(id);
     } else {
       throw new Error("Contract does not support claim conditions");
@@ -342,21 +346,21 @@ export class DropClaimConditions<
 
   /**
    * Returns allow list information and merkle proofs for the given address.
-   * @param claimerAddress
+   * @param claimerAddress - the claimer address
+   * @param claimConditionId - optional the claim condition id to get the proofs for
    */
   public async getClaimerProofs(
     claimerAddress: string,
+    claimConditionId?: BigNumberish,
   ): Promise<SnapshotEntryWithProof | null> {
-    const claimCondition = await this.getActive();
-    const merkeRoot = claimCondition.merkleRootHash;
-    const merkleRootArray = ethers.utils.stripZeros(
-      claimCondition.merkleRootHash,
-    );
+    const claimCondition = await this.get(claimConditionId);
+    const merkleRoot = claimCondition.merkleRoot;
+    const merkleRootArray = ethers.utils.stripZeros(merkleRoot);
     if (merkleRootArray.length > 0) {
       const metadata = await this.metadata.get();
       return await fetchSnapshotEntryForAddress(
         claimerAddress,
-        merkeRoot.toString(),
+        merkleRoot.toString(),
         metadata.merkle,
         this.storage,
       );
