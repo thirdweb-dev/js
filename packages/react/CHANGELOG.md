@@ -1,5 +1,28 @@
 # @thirdweb-dev/react
 
+## 3.4.4
+
+### Patch Changes
+
+- [#356](https://github.com/thirdweb-dev/js/pull/356) [`cc4613b`](https://github.com/thirdweb-dev/js/commit/cc4613b5fd69840f4f9cfd0ac1c4e6743e62fe52) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add Pack and Multiwrap as NFTContract types
+
+## 3.4.3
+
+### Patch Changes
+
+- [#353](https://github.com/thirdweb-dev/js/pull/353) [`1c24c3c`](https://github.com/thirdweb-dev/js/commit/1c24c3c3c48476a824f817e09e7bf0fbe67c1db5) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add useUpdateCreators hook, fix CreatorInput schema
+
+## 3.4.2
+
+### Patch Changes
+
+- [#348](https://github.com/thirdweb-dev/js/pull/348) [`7d9a4c6`](https://github.com/thirdweb-dev/js/commit/7d9a4c6abcad1b4f43e431ce7b0b38db9016ea9a) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - [SOL] - add `useUpdateRoyaltySettings()` hook
+  [SOL] - change `useRoyalty()` hook -> `useRoyaltySettings()` for consistency
+
+- [#352](https://github.com/thirdweb-dev/js/pull/352) [`3522917`](https://github.com/thirdweb-dev/js/commit/352291791ee900e1500f84f095290497934d2f60) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - expose useExecuteAuctionSale and useAcceptDirectListingOffer
+
+- [#351](https://github.com/thirdweb-dev/js/pull/351) [`aabbb14`](https://github.com/thirdweb-dev/js/commit/aabbb149e81d6824015a4797b2b6c929ca359545) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - fix wallet connection during dev (hot reload)
+
 ## 3.4.1
 
 ### Patch Changes

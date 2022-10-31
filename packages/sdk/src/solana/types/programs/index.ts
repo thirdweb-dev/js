@@ -1,4 +1,4 @@
-import { AmountSchema, FileOrBufferOrStringSchema } from "../common";
+import { AmountSchema, FileOrBufferOrStringSchema, PercentSchema } from "../common";
 import { Creator } from "@metaplex-foundation/js";
 import { z } from "zod";
 
@@ -27,7 +27,7 @@ export const CommonContractOutputSchema = CommonContractSchema.extend({
  */
 export const CreatorInputSchema = z.object({
   address: z.string(),
-  sharePercentage: z.number(),
+  share: PercentSchema,
   verified: z.boolean().default(false),
 });
 

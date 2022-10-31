@@ -1,5 +1,6 @@
 import { includesErrorMessage } from "../../common";
 import {
+  fetchSnapshotEntryForAddress,
   getClaimerProofs,
   prepareClaim,
   processClaimConditionInputs,
@@ -14,7 +15,7 @@ import {
 import { isNode } from "../../common/utils";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/index";
 import { ClaimEligibility } from "../../enums";
-import { AmountSchema } from "../../schema";
+import { AmountSchema, SnapshotEntryWithProof } from "../../schema";
 import {
   Amount,
   ClaimCondition,
@@ -337,6 +338,31 @@ export class DropClaimConditions<
     }
 
     return reasons;
+  }
+
+  /**
+   * Returns allow list information and merkle proofs for the given address.
+   * @param claimerAddress
+   */
+  public async getClaimerProofs(
+    claimerAddress: string,
+  ): Promise<SnapshotEntryWithProof | null> {
+    const claimCondition = await this.getActive();
+    const merkeRoot = claimCondition.merkleRootHash;
+    const merkleRootArray = ethers.utils.stripZeros(
+      claimCondition.merkleRootHash,
+    );
+    if (merkleRootArray.length > 0) {
+      const metadata = await this.metadata.get();
+      return await fetchSnapshotEntryForAddress(
+        claimerAddress,
+        merkeRoot.toString(),
+        metadata.merkle,
+        this.storage,
+      );
+    } else {
+      return null;
+    }
   }
 
   /** ***************************************

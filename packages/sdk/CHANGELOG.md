@@ -1,5 +1,23 @@
 # @thirdweb-dev/sdk
 
+## 3.4.4
+
+## 3.4.3
+
+### Patch Changes
+
+- [#353](https://github.com/thirdweb-dev/js/pull/353) [`1c24c3c`](https://github.com/thirdweb-dev/js/commit/1c24c3c3c48476a824f817e09e7bf0fbe67c1db5) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add useUpdateCreators hook, fix CreatorInput schema
+
+- [#357](https://github.com/thirdweb-dev/js/pull/357) [`65fc7ba`](https://github.com/thirdweb-dev/js/commit/65fc7ba6fff093a971b53cb0979c39768e090ba1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose claimConditions.getClaimerProofs(address) to get allowlist information for a given address
+
+## 3.4.2
+
+### Patch Changes
+
+- [#344](https://github.com/thirdweb-dev/js/pull/344) [`21c21c1`](https://github.com/thirdweb-dev/js/commit/21c21c1adfd09b60ad563bfd4c308597140de33c) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Update internal function resolveContractUriFromAddress -> resolveContractUriFromAddress
+
+- [#352](https://github.com/thirdweb-dev/js/pull/352) [`3522917`](https://github.com/thirdweb-dev/js/commit/352291791ee900e1500f84f095290497934d2f60) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose marketplace.auction.executeSale(listingId)
+
 ## 3.4.1
 
 ### Patch Changes

@@ -14,6 +14,8 @@ import type {
   ClaimOptions,
   NFTMetadataOrUri,
   Token,
+  Multiwrap,
+  Pack,
 } from "@thirdweb-dev/sdk";
 import type { Edition } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/edition";
 import type { EditionDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/edition-drop";
@@ -68,6 +70,8 @@ export type TokenBurnParams = {
 export type NFTContract =
   | NFTCollection
   | Edition
+  | Pack
+  | Multiwrap
   | Exclude<DropContract, "TokenDrop">;
 
 /**

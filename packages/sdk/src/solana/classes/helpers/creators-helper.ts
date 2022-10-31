@@ -13,14 +13,14 @@ export function enforceCreator(
     // If no creators are specified, we assume the owner is the creator
     creators = creators.concat({
       address: owner.toBase58(),
-      sharePercentage: 100,
+      share: 100,
       verified: true,
     });
   }
   return creators.map((creator) => ({
     verified: creator.verified || false,
     address: new PublicKey(creator.address),
-    share: creator.sharePercentage,
+    share: creator.share,
   }));
 }
 
