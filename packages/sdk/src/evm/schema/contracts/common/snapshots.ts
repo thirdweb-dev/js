@@ -1,5 +1,4 @@
 import { QuantitySchema } from "../../../../core/schema/shared";
-import { SnapshotFormatVersion } from "../../../common/sharded-merkle-tree";
 import { AddressSchema } from "../../shared";
 import { ethers } from "ethers";
 import { z } from "zod";

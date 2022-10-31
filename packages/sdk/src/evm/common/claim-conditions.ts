@@ -8,10 +8,8 @@ import {
   ClaimConditionOutputSchema,
 } from "../schema/contracts/common/claim-conditions";
 import {
-  OverrideListInputSchema,
   SnapshotEntry,
   SnapshotEntryWithProof,
-  SnapshotInputSchema,
   SnapshotSchema,
 } from "../schema/contracts/common/snapshots";
 import {
