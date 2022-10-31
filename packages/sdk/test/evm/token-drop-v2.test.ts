@@ -44,6 +44,106 @@ describe("Token Drop Contract (v2)", async () => {
     dropContract = await sdk.getTokenDrop(address);
   });
 
+  it("comprehensive test", async () => {
+    // claiming with default conditions
+    await dropContract.claimConditions.set([{}]);
+    await dropContract.claim(1);
+    // claiming with max supply
+    await dropContract.claimConditions.set([
+      {
+        maxClaimableSupply: 2,
+      },
+    ]);
+    try {
+      await dropContract.claim(2);
+      expect.fail("should not be able to claim 2 - maxSupply");
+    } catch (e) {
+      expectError(e, "exceed max mint supply");
+    }
+    await dropContract.claim(1);
+    // claiming with max per wallet
+    await dropContract.claimConditions.set([
+      {
+        maxClaimablePerWallet: 1,
+      },
+    ]);
+    try {
+      await dropContract.claim(2);
+      expect.fail("should not be able to claim 2 - maxClaimablePerWallet");
+    } catch (e) {
+      expectError(e, "invalid quantity");
+    }
+    await dropContract.claim(1);
+    expect((await dropContract.totalSupply()).displayValue).eq("3.0");
+  });
+
+  it("comprehensive test with allowlist", async () => {
+    // claiming with default conditions
+    await dropContract.claimConditions.set([
+      {
+        snapshot: [adminWallet.address],
+      },
+    ]);
+    try {
+      sdk.updateSignerOrProvider(bobWallet);
+      await dropContract.claim(1);
+      expect.fail("should not be able to claim - not in allowlist");
+    } catch (e) {
+      expectError(e, "No claim found");
+    }
+    sdk.updateSignerOrProvider(adminWallet);
+    await dropContract.claim(1);
+
+    // claiming with max supply
+    await dropContract.claimConditions.set([
+      {
+        snapshot: [adminWallet.address],
+        maxClaimableSupply: 2,
+      },
+    ]);
+    try {
+      await dropContract.claim(2);
+      expect.fail("should not be able to claim - maxClaimableSupply");
+    } catch (e) {
+      expectError(e, "exceed max mint supply");
+    }
+    await dropContract.claim(1);
+    // claiming with max per wallet
+    await dropContract.claimConditions.set([
+      {
+        snapshot: [adminWallet.address],
+        maxClaimablePerWallet: 1,
+      },
+    ]);
+    try {
+      await dropContract.claim(2);
+      expect.fail("should not be able to claim - maxClaimablePerWallet");
+    } catch (e) {
+      expectError(e, "invalid quantity");
+    }
+    await dropContract.claim(1);
+    // claiming with max per wallet in snapshot
+    await dropContract.claimConditions.set([
+      {
+        snapshot: [{ address: adminWallet.address, maxClaimable: 1 }],
+        maxClaimablePerWallet: 0,
+      },
+    ]);
+    try {
+      await dropContract.claim(2);
+      expect.fail("should not be able to claim - proof maxClaimable");
+    } catch (e) {
+      expectError(e, "invalid quantity proof");
+    }
+    await dropContract.claim(1);
+    try {
+      await dropContract.claim(1);
+      expect.fail("should not be able to claim - proof used");
+    } catch (e) {
+      expectError(e, "proof claimed");
+    }
+  });
+
   it("should allow a snapshot to be set", async () => {
     await dropContract.claimConditions.set([
       {

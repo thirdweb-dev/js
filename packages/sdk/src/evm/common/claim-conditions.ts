@@ -8,6 +8,7 @@ import {
   ClaimConditionOutputSchema,
 } from "../schema/contracts/common/claim-conditions";
 import {
+  OverrideListInputSchema,
   SnapshotEntry,
   SnapshotEntryWithProof,
   SnapshotInputSchema,
@@ -369,7 +370,7 @@ async function processSnapshotData(
       // check snapshots and upload if provided
       if (conditionInput.snapshot && conditionInput.snapshot.length > 0) {
         const snapshotInfo = await createSnapshot(
-          SnapshotInputSchema.parse(conditionInput.snapshot),
+          conditionInput.snapshot,
           tokenDecimals,
           provider,
           storage,

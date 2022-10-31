@@ -56,6 +56,116 @@ describe("NFT Drop Contract (v3)", async () => {
     assert.equal(nft.metadata.name, "Test1");
   });
 
+  it("comprehensive test", async () => {
+    const metadata = [];
+    for (let i = 0; i < 10; i++) {
+      metadata.push({ name: `test${i}`, description: `desc${i}` });
+    }
+    await dropContract.createBatch(metadata);
+    // claiming with default conditions
+    await dropContract.claimConditions.set([{}]);
+    await dropContract.claim(1);
+    // claiming with max supply
+    await dropContract.claimConditions.set([
+      {
+        maxClaimableSupply: 2,
+      },
+    ]);
+    try {
+      await dropContract.claim(2);
+      expect.fail("should not be able to claim 2 - maxSupply");
+    } catch (e) {
+      expectError(e, "exceed max claimable supply");
+    }
+    await dropContract.claim(1);
+    // claiming with max per wallet
+    await dropContract.claimConditions.set([
+      {
+        maxClaimablePerWallet: 1,
+      },
+    ]);
+    try {
+      await dropContract.claim(2);
+      expect.fail("should not be able to claim 2 - maxClaimablePerWallet");
+    } catch (e) {
+      expectError(e, "invalid quantity");
+    }
+    await dropContract.claim(1);
+    expect((await dropContract.totalClaimedSupply()).toString()).eq("3");
+  });
+
+  it("comprehensive test with allowlist", async () => {
+    const metadata = [];
+    for (let i = 0; i < 10; i++) {
+      metadata.push({ name: `test${i}`, description: `desc${i}` });
+    }
+    await dropContract.createBatch(metadata);
+    // claiming with default conditions
+    await dropContract.claimConditions.set([
+      {
+        snapshot: [adminWallet.address],
+      },
+    ]);
+    try {
+      sdk.updateSignerOrProvider(bobWallet);
+      await dropContract.claim(1);
+      expect.fail("should not be able to claim - not in allowlist");
+    } catch (e) {
+      expectError(e, "No claim found");
+    }
+    sdk.updateSignerOrProvider(adminWallet);
+    await dropContract.claim(1);
+
+    // claiming with max supply
+    await dropContract.claimConditions.set([
+      {
+        snapshot: [adminWallet.address],
+        maxClaimableSupply: 2,
+      },
+    ]);
+    try {
+      await dropContract.claim(2);
+      expect.fail("should not be able to claim - maxClaimableSupply");
+    } catch (e) {
+      expectError(e, "exceed max claimable supply");
+    }
+    await dropContract.claim(1);
+    // claiming with max per wallet
+    await dropContract.claimConditions.set([
+      {
+        snapshot: [adminWallet.address],
+        maxClaimablePerWallet: 1,
+      },
+    ]);
+    try {
+      await dropContract.claim(2);
+      expect.fail("should not be able to claim - maxClaimablePerWallet");
+    } catch (e) {
+      expectError(e, "invalid quantity");
+    }
+    await dropContract.claim(1);
+    // claiming with max per wallet in snapshot
+    await dropContract.claimConditions.set([
+      {
+        snapshot: [{ address: adminWallet.address, maxClaimable: 1 }],
+        maxClaimablePerWallet: 0,
+      },
+    ]);
+    try {
+      await dropContract.claim(2);
+      expect.fail("should not be able to claim - proof maxClaimable");
+    } catch (e) {
+      expectError(e, "invalid quantity proof");
+    }
+    await dropContract.claim(1);
+    try {
+      await dropContract.claim(1);
+      expect.fail("should not be able to claim - proof used");
+    } catch (e) {
+      expectError(e, "proof claimed");
+    }
+  });
+
   it("should get and execute transaction task", async () => {
     await dropContract.createBatch([
       {

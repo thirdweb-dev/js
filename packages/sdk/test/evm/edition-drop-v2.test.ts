@@ -62,6 +62,115 @@ describe("Edition Drop Contract (V2)", async () => {
     expect(parseFloat(cost)).gt(0);
   });
 
+  it("comprehensive test", async () => {
+    const metadata = [];
+    for (let i = 0; i < 3; i++) {
+      metadata.push({ name: `test${i}`, description: `desc${i}` });
+    }
+    await bdContract.createBatch(metadata);
+    // claiming with default conditions
+    await bdContract.claimConditions.set(0, [{}]);
+    await bdContract.claim(0, 1);
+    // claiming with max supply
+    await bdContract.claimConditions.set(0, [
+      {
+        maxClaimableSupply: 2,
+      },
+    ]);
+    try {
+      await bdContract.claim(0, 2);
+      expect.fail();
+    } catch (e) {
+      expectError(e, "exceed max mint supply");
+    }
+    await bdContract.claim(0, 1);
+    // claiming with max per wallet
+    await bdContract.claimConditions.set(0, [
+      {
+        maxClaimablePerWallet: 1,
+      },
+    ]);
+    try {
+      await bdContract.claim(0, 2);
+      expect.fail();
+    } catch (e) {
+      expectError(e, "invalid quantity claimed");
+    }
+    await bdContract.claim(0, 1);
+    expect((await bdContract.totalSupply(0)).toString()).eq("3");
+  });
+
+  it("comprehensive test with allowlist", async () => {
+    const metadata = [];
+    for (let i = 0; i < 6; i++) {
+      metadata.push({ name: `test${i}`, description: `desc${i}` });
+    }
+    await bdContract.createBatch(metadata);
+    // claiming with default conditions
+    await bdContract.claimConditions.set(0, [
+      {
+        snapshot: [adminWallet.address],
+      },
+    ]);
+    try {
+      sdk.updateSignerOrProvider(bobWallet);
+      await bdContract.claim(0, 1);
+      expect.fail();
+    } catch (e) {
+      expectError(e, "No claim found");
+    }
+    sdk.updateSignerOrProvider(adminWallet);
+    await bdContract.claim(0, 1);
+    // claiming with max supply
+    await bdContract.claimConditions.set(1, [
+      {
+        snapshot: [adminWallet.address],
+        maxClaimableSupply: 1,
+      },
+    ]);
+    try {
+      await bdContract.claim(1, 2);
+      expect.fail();
+    } catch (e) {
+      expectError(e, "exceed max mint supply");
+    }
+    await bdContract.claim(1, 1);
+    // claiming with max per wallet
+    await bdContract.claimConditions.set(2, [
+      {
+        snapshot: [adminWallet.address],
+        maxClaimablePerWallet: 1,
+      },
+    ]);
+    try {
+      await bdContract.claim(2, 2);
+      expect.fail();
+    } catch (e) {
+      expectError(e, "invalid quantity claimed");
+    }
+    await bdContract.claim(2, 1);
+    // claiming with max per wallet in snapshot
+    await bdContract.claimConditions.set(3, [
+      {
+        snapshot: [{ address: adminWallet.address, maxClaimable: 1 }],
+        maxClaimablePerWallet: 0,
+      },
+    ]);
+    try {
+      await bdContract.claim(3, 2);
+      expect.fail();
+    } catch (e) {
+      expectError(e, "invalid quantity proof");
+    }
+    await bdContract.claim(3, 1);
+    try {
+      await bdContract.claim(3, 1);
+      expect.fail();
+    } catch (e) {
+      expectError(e, "proof claimed");
+    }
+  });
+
   it("should allow you to set claim conditions", async () => {
     await bdContract.createBatch([
       { name: "test", description: "test" },

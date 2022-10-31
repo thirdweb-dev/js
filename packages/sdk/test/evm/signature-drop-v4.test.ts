@@ -180,6 +180,118 @@ describe("Signature drop tests (v4)", async () => {
       ]);
     });
 
+    it("comprehensive test", async () => {
+      const metadata = [];
+      for (let i = 0; i < 10; i++) {
+        metadata.push({ name: `test${i}`, description: `desc${i}` });
+      }
+      await signatureDropContract.createBatch(metadata);
+      // claiming with default conditions
+      await signatureDropContract.claimConditions.set([{}]);
+      await signatureDropContract.claim(1);
+      // claiming with max supply
+      await signatureDropContract.claimConditions.set([
+        {
+          maxClaimableSupply: 1,
+        },
+      ]);
+      try {
+        await signatureDropContract.claim(2);
+        expect.fail("should not be able to claim 2 - maxSupply");
+      } catch (e) {
+        expectError(e, "exceeds max supply");
+      }
+      await signatureDropContract.claim(1);
+      // claiming with max per wallet
+      await signatureDropContract.claimConditions.set([
+        {
+          maxClaimablePerWallet: 1,
+        },
+      ]);
+      try {
+        await signatureDropContract.claim(2);
+        expect.fail("should not be able to claim 2 - maxClaimablePerWallet");
+      } catch (e) {
+        expectError(e, "Invalid quantity");
+      }
+      await signatureDropContract.claim(1);
+      expect((await signatureDropContract.totalClaimedSupply()).toString()).eq(
+        "3",
+      );
+    });
+
+    it("comprehensive test with allowlist", async () => {
+      const metadata = [];
+      for (let i = 0; i < 10; i++) {
+        metadata.push({ name: `test${i}`, description: `desc${i}` });
+      }
+      await signatureDropContract.createBatch(metadata);
+      // claiming with default conditions
+      await signatureDropContract.claimConditions.set([
+        {
+          snapshot: [adminWallet.address],
+        },
+      ]);
+      try {
+        sdk.updateSignerOrProvider(bobWallet);
+        await signatureDropContract.claim(1);
+        expect.fail("should not be able to claim - not in allowlist");
+      } catch (e) {
+        expectError(e, "No claim found");
+      }
+      sdk.updateSignerOrProvider(adminWallet);
+      await signatureDropContract.claim(1);
+
+      // claiming with max supply
+      await signatureDropContract.claimConditions.set([
+        {
+          snapshot: [adminWallet.address],
+          maxClaimableSupply: 1,
+        },
+      ]);
+      try {
+        await signatureDropContract.claim(2);
+        expect.fail("should not be able to claim - maxClaimableSupply");
+      } catch (e) {
+        expectError(e, "exceeds max supply");
+      }
+      await signatureDropContract.claim(1);
+      // claiming with max per wallet
+      await signatureDropContract.claimConditions.set([
+        {
+          snapshot: [adminWallet.address],
+          maxClaimablePerWallet: 1,
+        },
+      ]);
+      try {
+        await signatureDropContract.claim(2);
+        expect.fail("should not be able to claim - maxClaimablePerWallet");
+      } catch (e) {
+        expectError(e, "Invalid quantity");
+      }
+      await signatureDropContract.claim(1);
+      // claiming with max per wallet in snapshot
+      await signatureDropContract.claimConditions.set([
+        {
+          snapshot: [{ address: adminWallet.address, maxClaimable: 1 }],
+          maxClaimablePerWallet: 0,
+        },
+      ]);
+      try {
+        await signatureDropContract.claim(2);
+        expect.fail("should not be able to claim - proof maxClaimable");
+      } catch (e) {
+        expectError(e, "Invalid qty proof");
+      }
+      await signatureDropContract.claim(1);
+      try {
+        await signatureDropContract.claim(1);
+        expect.fail("should not be able to claim - proof used");
+      } catch (e) {
+        expectError(e, "proof claimed");
+      }
+    });
+
     it("should mint with URI", async () => {
       const uri = await storage.upload({
         name: "Test1",

@@ -1,4 +1,8 @@
-import { SnapshotInputSchema } from "../schema/contracts/common/snapshots";
+import {
+  OverrideListInputSchema,
+  SnapshotEntry,
+  SnapshotInputSchema,
+} from "../schema";
 import {
   SnapshotInfo,
   SnapshotInput,
@@ -28,7 +32,7 @@ export async function createSnapshot(
   storage: ThirdwebStorage,
   snapshotFormatVersion: SnapshotFormatVersion,
 ): Promise<SnapshotInfo> {
-  const input = SnapshotInputSchema.parse(snapshotInput);
+  const input = parseSnapshotInput(snapshotInput, snapshotFormatVersion);
   const addresses = input.map((i) => i.address);
   const hasDuplicates = new Set(addresses).size < addresses.length;
   if (hasDuplicates) {
@@ -45,4 +49,13 @@ export async function createSnapshot(
     merkleRoot: tree.shardedMerkleInfo.merkleRoot,
     snapshotUri: tree.uri,
   };
+}
+
+export function parseSnapshotInput(
+  input: unknown,
+  version: SnapshotFormatVersion,
+): SnapshotEntry[] {
+  return version === SnapshotFormatVersion.V1
+    ? SnapshotInputSchema.parse(input)
+    : OverrideListInputSchema.parse(input);
 }
