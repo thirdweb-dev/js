@@ -55,6 +55,48 @@ describe("Edition Drop Contract (V4)", async () => {
     bdContract = await sdk.getEditionDrop(address);
   });
 
+  it("should allow a snapshot to be set", async () => {
+    await bdContract.createBatch([
+      {
+        name: "Test1",
+      },
+    ]);
+    await bdContract.claimConditions.set(0, [
+      {
+        startTime: new Date(Date.now() / 2),
+        snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
+        price: 1,
+      },
+      {
+        startTime: new Date(),
+        snapshot: [bobWallet.address],
+      },
+    ]);
+
+    let proof = await bdContract.claimConditions.getClaimerProofs(
+      0,
+      bobWallet.address,
+    );
+    expect(proof.address).to.eq(bobWallet.address);
+    proof = await bdContract.claimConditions.getClaimerProofs(
+      0,
+      bobWallet.address,
+      0,
+    );
+    expect(proof.address).to.eq(bobWallet.address);
+    proof = await bdContract.claimConditions.getClaimerProofs(
+      0,
+      samWallet.address,
+    );
+    expect(proof).to.eq(null);
+    proof = await bdContract.claimConditions.getClaimerProofs(
+      0,
+      samWallet.address,
+      0,
+    );
+    expect(proof.address).to.eq(samWallet.address);
+  });
+
   it("should estimate gas cost", async () => {
     const cost = await bdContract.estimator.gasCostOf("lazyMint", [
       1000,

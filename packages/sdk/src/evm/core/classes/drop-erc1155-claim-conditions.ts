@@ -475,23 +475,23 @@ export class DropErc1155ClaimConditions<
 
   /**
    * Returns allow list information and merkle proofs for the given address.
-   * @param tokenId
-   * @param claimerAddress
+   * @param tokenId - the token ID to check
+   * @param claimerAddress - the claimer address
+   * @param claimConditionId - optional the claim condition id to get the proofs for
    */
   public async getClaimerProofs(
     tokenId: BigNumberish,
     claimerAddress: string,
+    claimConditionId?: BigNumberish,
   ): Promise<SnapshotEntryWithProof | null> {
-    const claimCondition = await this.getActive(tokenId);
-    const merkeRoot = claimCondition.merkleRootHash;
-    const merkleRootArray = ethers.utils.stripZeros(
-      claimCondition.merkleRootHash,
-    );
+    const claimCondition = await this.get(tokenId, claimConditionId);
+    const merkleRoot = claimCondition.merkleRoot;
+    const merkleRootArray = ethers.utils.stripZeros(merkleRoot);
     if (merkleRootArray.length > 0) {
       const metadata = await this.metadata.get();
       return await fetchSnapshotEntryForAddress(
         claimerAddress,
-        merkeRoot.toString(),
+        merkleRoot.toString(),
         metadata.merkle,
         this.contractWrapper.getProvider(),
         this.storage,
