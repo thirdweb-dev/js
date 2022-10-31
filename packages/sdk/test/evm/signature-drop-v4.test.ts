@@ -616,7 +616,7 @@ describe("Signature drop tests (v4)", async () => {
       const metadata = await signatureDropContract.metadata.get();
       const merkles = metadata.merkle;
       expect(merkles).have.property(
-        "0x24eb8b9e205d090b39d79c97560092e64de182e118d6128625c332800210560a",
+        "0xb1a60ad68b77609a455696695fbdd02b850d03ec285e7fe1f4c4093797457b24",
       );
 
       const roots = await signatureDropContract.claimConditions.getActive();

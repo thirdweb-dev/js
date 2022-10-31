@@ -2,7 +2,11 @@ import {
   ShardedMerkleTree,
   SnapshotFormatVersion,
 } from "../../src/evm/common/sharded-merkle-tree";
-import { createSnapshot, SnapshotEntryInput } from "../../src/evm/index";
+import {
+  createSnapshot,
+  parseSnapshotInput,
+  SnapshotEntryInput,
+} from "../../src/evm/index";
 import { sdk, signers, storage } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber, ethers } from "ethers";
@@ -83,7 +87,7 @@ describe("Snapshots", async () => {
     const merkleRoot = result.merkleRoot;
     assert.equal(
       merkleRoot,
-      "0xd5be7739dddef2539c47da807340e0088786de3ba868b766f37b6cc60d37f18d",
+      "0x7c55d9d851d24cc0a32d49d22cda5e0162ce54cdde1773e9d8fb31e02c8818f4",
     );
   });
 
@@ -92,9 +96,14 @@ describe("Snapshots", async () => {
       it("should generate valid proofs:" + snapshotVersion, async () => {
         const hashedLeafs = members.map((l) =>
           ShardedMerkleTree.hashEntry(
-            SnapshotEntryInput.parse({
-              address: l,
-            }),
+            parseSnapshotInput(
+              [
+                {
+                  address: l,
+                },
+              ],
+              snapshotVersion,
+            )[0],
             0,
             18,
             snapshotVersion,
@@ -116,9 +125,14 @@ describe("Snapshots", async () => {
         for (const leaf of members) {
           const expectedProof = tree.getHexProof(
             ShardedMerkleTree.hashEntry(
-              SnapshotEntryInput.parse({
-                address: leaf,
-              }),
+              parseSnapshotInput(
+                [
+                  {
+                    address: leaf,
+                  },
+                ],
+                snapshotVersion,
+              )[0],
               0,
               18,
               snapshotVersion,
@@ -132,7 +146,7 @@ describe("Snapshots", async () => {
           const actualProof = await smt?.getProof(
             leaf,
             sdk.getProvider(),
-            SnapshotFormatVersion.V2,
+            snapshotVersion,
           );
           assert.isDefined(actualProof);
           expect(actualProof?.proof).to.include.ordered.members(expectedProof);

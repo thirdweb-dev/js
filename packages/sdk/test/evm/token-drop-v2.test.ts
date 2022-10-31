@@ -159,14 +159,12 @@ describe("Token Drop Contract (v2)", async () => {
 
     const metadata = await dropContract.metadata.get();
     const merkles = metadata.merkle;
-    console.log(merkles);
 
     expect(merkles).have.property(
-      "0x24eb8b9e205d090b39d79c97560092e64de182e118d6128625c332800210560a",
+      "0xb1a60ad68b77609a455696695fbdd02b850d03ec285e7fe1f4c4093797457b24",
     );
-
     expect(merkles).have.property(
-      "0xa94c41b95cad0535f7d5e400eb3d2a3ed71f35257e00aa6b9115d53f7ce5e202",
+      "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
     );
 
     const roots = (await dropContract.claimConditions.getAll()).map(
@@ -206,11 +204,10 @@ describe("Token Drop Contract (v2)", async () => {
     const merkles = metadata.merkle;
 
     expect(merkles).have.property(
-      "0x24eb8b9e205d090b39d79c97560092e64de182e118d6128625c332800210560a",
+      "0xb1a60ad68b77609a455696695fbdd02b850d03ec285e7fe1f4c4093797457b24",
     );
-
     expect(merkles).have.property(
-      "0xa94c41b95cad0535f7d5e400eb3d2a3ed71f35257e00aa6b9115d53f7ce5e202",
+      "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
     );
 
     const roots = (await dropContract.claimConditions.getAll()).map(
