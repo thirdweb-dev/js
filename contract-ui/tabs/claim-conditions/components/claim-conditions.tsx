@@ -38,6 +38,7 @@ import { detectFeatures } from "components/contract-components/utils";
 import { BigNumberInput } from "components/shared/BigNumberInput";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { SnapshotUpload } from "contract-ui/tabs/claim-conditions/components/snapshot-upload";
+import { ethers } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React, { useEffect, useMemo, useState } from "react";
@@ -178,8 +179,8 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
 
 const DEFAULT_PHASE = {
   startTime: new Date(),
-  maxQuantity: "unlimited",
-  quantityLimitPerTransaction: "unlimited",
+  maxClaimableSupply: "unlimited",
+  maxClaimablePerWallet: "unlimited",
   waitInSeconds: "0",
   price: 0,
   currencyAddress: NATIVE_TOKEN_ADDRESS,
@@ -214,14 +215,13 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
       .map((phase) => ({
         ...phase,
         price: Number(phase.currencyMetadata.displayValue),
-        maxQuantity: phase.maxQuantity.toString(),
+        maxClaimableSupply: phase.maxClaimableSupply.toString(),
         currencyMetadata: {
           ...phase.currencyMetadata,
           value: phase.currencyMetadata.value.toString(),
         },
         currencyAddress: phase.currencyAddress.toLowerCase(),
-        quantityLimitPerTransaction:
-          phase.quantityLimitPerTransaction.toString(),
+        maxClaimablePerWallet: phase.maxClaimablePerWallet.toString(),
         waitInSeconds: phase.waitInSeconds.toString(),
         startTime: new Date(phase.startTime),
         snapshot: phase.snapshot?.map(({ address, maxClaimable }) => ({
@@ -229,7 +229,7 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
           maxClaimable: maxClaimable || "0",
         })),
       }))
-      .filter((phase) => phase.maxQuantity !== "0");
+      .filter((phase) => phase.maxClaimableSupply !== "0");
   }, [query.data]);
 
   const form = useForm<z.input<typeof ClaimConditionsSchema>>({
@@ -354,10 +354,19 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
                   onClose={() => setOpenIndex(-1)}
                   value={field.snapshot?.map((v) =>
                     typeof v === "string"
-                      ? { address: v, maxClaimable: "0" }
+                      ? {
+                          address: v,
+                          maxClaimable: "unlimited",
+                          currencyAddress: ethers.constants.AddressZero,
+                          price: "unlimited",
+                        }
                       : {
                           ...v,
-                          maxClaimable: v?.maxClaimable?.toString() || "0",
+                          maxClaimable:
+                            v?.maxClaimable?.toString() || "unlimited",
+                          currencyAddress:
+                            v?.currencyAddress || ethers.constants.AddressZero,
+                          price: v?.price?.toString() || "unlimited",
                         },
                   )}
                   setSnapshot={(snapshot) =>
@@ -431,7 +440,7 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
                       <FormControl
                         isInvalid={
                           !!form.getFieldState(
-                            `phases.${index}.maxQuantity`,
+                            `phases.${index}.maxClaimableSupply`,
                             form.formState,
                           ).error
                         }
@@ -443,10 +452,10 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
                         <QuantityInputWithUnlimited
                           isRequired
                           decimals={decimals}
-                          value={field.maxQuantity?.toString() || "0"}
+                          value={field.maxClaimableSupply?.toString() || "0"}
                           onChange={(value) =>
                             form.setValue(
-                              `phases.${index}.maxQuantity`,
+                              `phases.${index}.maxClaimableSupply`,
                               value.toString(),
                             )
                           }
@@ -455,7 +464,7 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
                         <FormErrorMessage>
                           {
                             form.getFieldState(
-                              `phases.${index}.maxQuantity`,
+                              `phases.${index}.maxClaimableSupply`,
                               form.formState,
                             ).error?.message
                           }
@@ -635,7 +644,7 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
                       <FormControl
                         isInvalid={
                           !!form.getFieldState(
-                            `phases.${index}.quantityLimitPerTransaction`,
+                            `phases.${index}.maxClaimablePerWallet`,
                             form.formState,
                           ).error
                         }
@@ -647,12 +656,11 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
                           isRequired
                           decimals={decimals}
                           value={
-                            field?.quantityLimitPerTransaction?.toString() ||
-                            "0"
+                            field?.maxClaimablePerWallet?.toString() || "0"
                           }
                           onChange={(value) =>
                             form.setValue(
-                              `phases.${index}.quantityLimitPerTransaction`,
+                              `phases.${index}.maxClaimablePerWallet`,
                               value.toString(),
                             )
                           }
@@ -660,7 +668,7 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
                         <FormErrorMessage>
                           {
                             form.getFieldState(
-                              `phases.${index}.quantityLimitPerTransaction`,
+                              `phases.${index}.maxClaimablePerWallet`,
                               form.formState,
                             ).error?.message
                           }
