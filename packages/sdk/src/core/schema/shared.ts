@@ -103,6 +103,8 @@ export const QuantitySchema = z
   .union([AmountSchema, z.literal("unlimited")])
   .default("unlimited");
 
+export type Quantity = z.output<typeof QuantitySchema>;
+
 export const RawDateSchema = z.date().transform((i) => {
   return BigNumber.from(Math.floor(i.getTime() / 1000));
 });

@@ -232,11 +232,9 @@ export function useClaimToken(contract: RequiredParam<TokenContract>) {
       invariant(data.to, 'No "to" address provided');
       if (erc20) {
         invariant(erc20?.claimTo, "contract does not support claimTo");
-        return await erc20.claimTo(
-          data.to,
-          data.amount,
-          data.checkERC20Allowance,
-        );
+        return await erc20.claimTo(data.to, data.amount, {
+          checkERC20Allowance: data.checkERC20Allowance,
+        });
       }
       invariant(false, "Smart contract is not a valid erc20 contract");
     },

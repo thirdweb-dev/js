@@ -1,7 +1,12 @@
 import { includesErrorMessage } from "../../common";
 import {
+  abstractContractModelToLegacy,
+  abstractContractModelToNew,
+  convertQuantityToBigNumber,
   fetchSnapshotEntryForAddress,
   getClaimerProofs,
+  legacyContractModelToAbstract,
+  newContractModelToAbstract,
   prepareClaim,
   processClaimConditionInputs,
   transformResultToClaimCondition,
@@ -12,32 +17,47 @@ import {
   detectContractFeature,
   hasFunction,
 } from "../../common/feature-detection";
+import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
 import { isNode } from "../../common/utils";
-import { NATIVE_TOKEN_ADDRESS } from "../../constants/index";
 import { ClaimEligibility } from "../../enums";
-import { AmountSchema, SnapshotEntryWithProof } from "../../schema";
+import {
+  AbstractClaimConditionContractStruct,
+  AmountSchema,
+  SnapshotEntryWithProof,
+} from "../../schema";
 import {
   Amount,
   ClaimCondition,
   ClaimConditionFetchOptions,
   ClaimConditionInput,
+  ClaimOptions,
   ClaimVerification,
 } from "../../types";
-import { BaseClaimConditionERC721, BaseDropERC20 } from "../../types/eips";
+import {
+  BaseClaimConditionERC721,
+  BaseDropERC20,
+  PrebuiltNFTDrop,
+  PrebuiltTokenDrop,
+} from "../../types/eips";
 import { TransactionResult } from "../types";
+import { TransactionTask } from "./TransactionTask";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
   ContractMetadata as ContractMetadataContract,
-  DropERC20,
-  DropERC721,
+  Drop,
+  DropERC20_V2,
+  DropERC721_V3,
   DropSinglePhase,
+  DropSinglePhase_V1,
+  IDropSinglePhase_V1,
   IERC20,
   IERC20Metadata,
-  SignatureDrop,
 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
-import { IDropClaimCondition } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC20";
+import type { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/declarations/src/IDropERC20_V2";
+import type { IDropSinglePhase } from "@thirdweb-dev/contracts-js/src/DropSinglePhase";
+import type { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";
 import deepEqual from "fast-deep-equal";
@@ -48,11 +68,10 @@ import deepEqual from "fast-deep-equal";
  */
 export class DropClaimConditions<
   TContract extends
-    | DropERC721
-    | DropERC20
+    | PrebuiltNFTDrop
+    | PrebuiltTokenDrop
     | BaseClaimConditionERC721
-    | BaseDropERC20
-    | SignatureDrop,
+    | BaseDropERC20,
 > {
   private contractWrapper;
   private metadata;
@@ -93,16 +112,36 @@ export class DropClaimConditions<
   }
 
   private async get(
-    claimConditionId?: BigNumberish,
-  ): Promise<IDropClaimCondition.ClaimConditionStructOutput> {
-    if (this.isSinglePhaseDropContract(this.contractWrapper)) {
-      return (await this.contractWrapper.readContract.claimCondition()) as IDropClaimCondition.ClaimConditionStructOutput;
-    } else if (this.isMultiPhaseDropContract(this.contractWrapper)) {
+    conditionId?: BigNumberish,
+  ): Promise<AbstractClaimConditionContractStruct> {
+    if (this.isLegacySinglePhaseDrop(this.contractWrapper)) {
+      const contractModel =
+        (await this.contractWrapper.readContract.claimCondition()) as IDropClaimCondition_V2.ClaimConditionStructOutput;
+      return legacyContractModelToAbstract(contractModel);
+    } else if (this.isLegacyMultiPhaseDrop(this.contractWrapper)) {
       const id =
-        claimConditionId !== undefined
-          ? claimConditionId
+        conditionId !== undefined
+          ? conditionId
           : await this.contractWrapper.readContract.getActiveClaimConditionId();
-      return await this.contractWrapper.readContract.getClaimConditionById(id);
+      const contractModel =
+        (await this.contractWrapper.readContract.getClaimConditionById(
+          id,
+        )) as IDropClaimCondition_V2.ClaimConditionStructOutput;
+      return legacyContractModelToAbstract(contractModel);
+    } else if (this.isNewSinglePhaseDrop(this.contractWrapper)) {
+      const contractModel =
+        (await this.contractWrapper.readContract.claimCondition()) as IClaimCondition.ClaimConditionStructOutput;
+      return newContractModelToAbstract(contractModel);
+    } else if (this.isNewMultiphaseDrop(this.contractWrapper)) {
+      const id =
+        conditionId !== undefined
+          ? conditionId
+          : await this.contractWrapper.readContract.getActiveClaimConditionId();
+      const contractModel =
+        (await this.contractWrapper.readContract.getClaimConditionById(
+          id,
+        )) as IClaimCondition.ClaimConditionStruct;
+      return newContractModelToAbstract(contractModel);
     } else {
       throw new Error("Contract does not support claim conditions");
     }
@@ -116,7 +155,10 @@ export class DropClaimConditions<
   public async getAll(
     options?: ClaimConditionFetchOptions,
   ): Promise<ClaimCondition[]> {
-    if (this.isMultiPhaseDropContract(this.contractWrapper)) {
+    if (
+      this.isLegacyMultiPhaseDrop(this.contractWrapper) ||
+      this.isNewMultiphaseDrop(this.contractWrapper)
+    ) {
       const claimCondition =
         (await this.contractWrapper.readContract.claimCondition()) as {
           currentStartId: BigNumber;
@@ -124,11 +166,9 @@ export class DropClaimConditions<
         };
       const startId = claimCondition.currentStartId.toNumber();
       const count = claimCondition.count.toNumber();
-      const conditions: IDropClaimCondition.ClaimConditionStructOutput[] = [];
+      const conditions: AbstractClaimConditionContractStruct[] = [];
       for (let i = startId; i < startId + count; i++) {
-        conditions.push(
-          await this.contractWrapper.readContract.getClaimConditionById(i),
-        );
+        conditions.push(await this.get(i));
       }
       const metadata = await this.metadata.get();
       const decimals = await this.getTokenDecimals();
@@ -238,82 +278,181 @@ export class DropClaimConditions<
     const merkleRootArray = ethers.utils.stripZeros(
       claimCondition.merkleRootHash,
     );
-    if (merkleRootArray.length > 0) {
+    const hasAllowList = merkleRootArray.length > 0;
+    let allowListEntry;
+    if (hasAllowList) {
       const merkleLower = claimCondition.merkleRootHash.toString();
       const metadata = await this.metadata.get();
-      const proofs = await getClaimerProofs(
+      allowListEntry = await getClaimerProofs(
         addressToCheck,
         merkleLower,
         await this.getTokenDecimals(),
         metadata.merkle,
         this.storage,
+        this.contractWrapper.getProvider(),
+        this.getSnapshotFormatVersion(),
       );
 
-      try {
-        let validMerkleProof;
-        if (this.isMultiPhaseDropContract(this.contractWrapper)) {
-          activeConditionIndex =
-            await this.contractWrapper.readContract.getActiveClaimConditionId();
-          // legacy verifyClaimerMerkleProofs function
-          [validMerkleProof] =
-            await this.contractWrapper.readContract.verifyClaimMerkleProof(
-              activeConditionIndex,
-              addressToCheck,
-              quantity,
-              proofs.proof,
-              proofs.maxClaimable,
-            );
-        } else if (this.isSinglePhaseDropContract(this.contractWrapper)) {
-          [validMerkleProof] =
-            await this.contractWrapper.readContract.verifyClaimMerkleProof(
-              addressToCheck,
-              quantity,
-              {
-                proof: proofs.proof,
-                maxQuantityInAllowlist: proofs.maxClaimable,
-              },
-            );
-        }
-
-        if (!validMerkleProof) {
-          reasons.push(ClaimEligibility.AddressNotAllowed);
-          return reasons;
-        }
-      } catch (e) {
+      if (
+        !allowListEntry &&
+        (this.isLegacySinglePhaseDrop(this.contractWrapper) ||
+          this.isLegacyMultiPhaseDrop(this.contractWrapper))
+      ) {
+        // exclusive allowlist behavior
         reasons.push(ClaimEligibility.AddressNotAllowed);
         return reasons;
       }
+
+      if (allowListEntry) {
+        try {
+          let validMerkleProof;
+          if (this.isLegacyMultiPhaseDrop(this.contractWrapper)) {
+            activeConditionIndex =
+              await this.contractWrapper.readContract.getActiveClaimConditionId();
+            // legacy verifyClaimerMerkleProofs function
+            [validMerkleProof] =
+              await this.contractWrapper.readContract.verifyClaimMerkleProof(
+                activeConditionIndex,
+                addressToCheck,
+                quantity,
+                allowListEntry.proof,
+                allowListEntry.maxClaimable,
+              );
+            if (!validMerkleProof) {
+              reasons.push(ClaimEligibility.AddressNotAllowed);
+              return reasons;
+            }
+          } else if (this.isLegacySinglePhaseDrop(this.contractWrapper)) {
+            [validMerkleProof] =
+              await this.contractWrapper.readContract.verifyClaimMerkleProof(
+                addressToCheck,
+                quantity,
+                {
+                  proof: allowListEntry.proof,
+                  maxQuantityInAllowlist: allowListEntry.maxClaimable,
+                },
+              );
+            if (!validMerkleProof) {
+              reasons.push(ClaimEligibility.AddressNotAllowed);
+              return reasons;
+            }
+          } else if (this.isNewSinglePhaseDrop(this.contractWrapper)) {
+            await this.contractWrapper.readContract.verifyClaim(
+              addressToCheck,
+              quantity,
+              claimCondition.currencyAddress,
+              claimCondition.price,
+              {
+                proof: allowListEntry.proof,
+                quantityLimitPerWallet: allowListEntry.maxClaimable,
+                currency: allowListEntry.currencyAddress,
+                pricePerToken: allowListEntry.price,
+              } as IDropSinglePhase.AllowlistProofStruct,
+            );
+            // TODO (cc) in new override format, anyone can claim (no allow list restriction)
+            // TODO (cc) instead check if maxClaimablePerWallet is 0 and this address has no overrides
+            // TODO (cc) meaning this address is not allowed to claim
+            if (
+              (convertQuantityToBigNumber(
+                claimCondition.maxClaimablePerWallet,
+                decimals,
+              ).eq(0) &&
+                allowListEntry.maxClaimable === ethers.constants.MaxUint256) ||
+              allowListEntry.maxClaimable === BigNumber.from(0)
+            ) {
+              reasons.push(ClaimEligibility.AddressNotAllowed);
+              return reasons;
+            }
+          } else if (this.isNewMultiphaseDrop(this.contractWrapper)) {
+            activeConditionIndex =
+              await this.contractWrapper.readContract.getActiveClaimConditionId();
+            await this.contractWrapper.readContract.verifyClaim(
+              activeConditionIndex,
+              addressToCheck,
+              quantity,
+              claimCondition.currencyAddress,
+              claimCondition.price,
+              {
+                proof: allowListEntry.proof,
+                quantityLimitPerWallet: allowListEntry.maxClaimable,
+                currency: allowListEntry.currencyAddress,
+                pricePerToken: allowListEntry.price,
+              } as IDropSinglePhase.AllowlistProofStruct,
+            );
+            if (
+              (convertQuantityToBigNumber(
+                claimCondition.maxClaimablePerWallet,
+                decimals,
+              ).eq(0) &&
+                allowListEntry.maxClaimable === ethers.constants.MaxUint256) ||
+              allowListEntry.maxClaimable === BigNumber.from(0)
+            ) {
+              reasons.push(ClaimEligibility.AddressNotAllowed);
+              return reasons;
+            }
+          }
+        } catch (e: any) {
+          console.warn(
+            "Merkle proof verification failed:",
+            "reason" in e ? e.reason : e,
+          );
+          reasons.push(ClaimEligibility.AddressNotAllowed);
+          return reasons;
+        }
+      }
     }
 
-    // check for claim timestamp between claims
-    let [lastClaimedTimestamp, timestampForNextClaim] = [
-      BigNumber.from(0),
-      BigNumber.from(0),
-    ];
-    if (this.isMultiPhaseDropContract(this.contractWrapper)) {
-      activeConditionIndex =
-        await this.contractWrapper.readContract.getActiveClaimConditionId();
-      [lastClaimedTimestamp, timestampForNextClaim] =
-        await this.contractWrapper.readContract.getClaimTimestamp(
-          activeConditionIndex,
-          addressToCheck,
-        );
-    } else if (this.isSinglePhaseDropContract(this.contractWrapper)) {
-      // check for claim timestamp between claims
-      [lastClaimedTimestamp, timestampForNextClaim] =
-        await this.contractWrapper.readContract.getClaimTimestamp(
-          addressToCheck,
-        );
+    // TODO (cc) check for max claimable per wallet and how much each wallet has claimed
+    if (
+      this.isNewSinglePhaseDrop(this.contractWrapper) ||
+      this.isNewMultiphaseDrop(this.contractWrapper)
+    ) {
+      if (!hasAllowList || (hasAllowList && !allowListEntry)) {
+        if (
+          convertQuantityToBigNumber(
+            claimCondition.maxClaimablePerWallet,
+            decimals,
+          ).eq(0)
+        ) {
+          reasons.push(ClaimEligibility.AddressNotAllowed);
+          return reasons;
+        }
+      }
     }
 
-    const now = BigNumber.from(Date.now()).div(1000);
+    // check for claim timestamp between claims (ONLY FOR LEGACY)
+    if (
+      this.isLegacySinglePhaseDrop(this.contractWrapper) ||
+      this.isLegacyMultiPhaseDrop(this.contractWrapper)
+    ) {
+      let [lastClaimedTimestamp, timestampForNextClaim] = [
+        BigNumber.from(0),
+        BigNumber.from(0),
+      ];
+      if (this.isLegacyMultiPhaseDrop(this.contractWrapper)) {
+        activeConditionIndex =
+          await this.contractWrapper.readContract.getActiveClaimConditionId();
+        [lastClaimedTimestamp, timestampForNextClaim] =
+          await this.contractWrapper.readContract.getClaimTimestamp(
+            activeConditionIndex,
+            addressToCheck,
+          );
+      } else if (this.isLegacySinglePhaseDrop(this.contractWrapper)) {
+        // check for claim timestamp between claims
+        [lastClaimedTimestamp, timestampForNextClaim] =
+          await this.contractWrapper.readContract.getClaimTimestamp(
+            addressToCheck,
+          );
+      }
 
-    if (lastClaimedTimestamp.gt(0) && now.lt(timestampForNextClaim)) {
-      // contract will return MaxUint256 if user has already claimed and cannot claim again
-      if (timestampForNextClaim.eq(constants.MaxUint256)) {
-        reasons.push(ClaimEligibility.AlreadyClaimed);
-      } else {
-        reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
+      const now = BigNumber.from(Date.now()).div(1000);
+      if (lastClaimedTimestamp.gt(0) && now.lt(timestampForNextClaim)) {
+        // contract will return MaxUint256 if user has already claimed and cannot claim again
+        if (timestampForNextClaim.eq(constants.MaxUint256)) {
+          reasons.push(ClaimEligibility.AlreadyClaimed);
+        } else {
+          reasons.push(ClaimEligibility.WaitBeforeNextClaimTransaction);
+        }
       }
     }
 
@@ -362,7 +501,9 @@ export class DropClaimConditions<
         claimerAddress,
         merkleRoot.toString(),
         metadata.merkle,
+        this.contractWrapper.getProvider(),
         this.storage,
+        this.getSnapshotFormatVersion(),
       );
     } else {
       return null;
@@ -413,16 +554,19 @@ export class DropClaimConditions<
     resetClaimEligibilityForAll = false,
   ): Promise<TransactionResult> {
     let claimConditionsProcessed = claimConditionInputs;
-    if (this.isSinglePhaseDropContract(this.contractWrapper)) {
+    if (
+      this.isLegacySinglePhaseDrop(this.contractWrapper) ||
+      this.isNewSinglePhaseDrop(this.contractWrapper)
+    ) {
       resetClaimEligibilityForAll = true;
       if (claimConditionInputs.length === 0) {
         claimConditionsProcessed = [
           {
             startTime: new Date(0),
-            currencyAddress: NATIVE_TOKEN_ADDRESS,
+            currencyAddress: ethers.constants.AddressZero,
             price: 0,
-            maxQuantity: 0,
-            quantityLimitPerTransaction: 0,
+            maxClaimableSupply: 0,
+            maxClaimablePerWallet: 0,
             waitInSeconds: 0,
             merkleRootHash: utils.hexZeroPad([0], 32),
             snapshot: [],
@@ -441,6 +585,7 @@ export class DropClaimConditions<
         await this.getTokenDecimals(),
         this.contractWrapper.getProvider(),
         this.storage,
+        this.getSnapshotFormatVersion(),
       );
 
     const merkleInfo: { [key: string]: string } = {};
@@ -461,6 +606,8 @@ export class DropClaimConditions<
         mergedMetadata,
       );
 
+      // TODO (cc) we could write the merkle tree info on the claim condition metadata instead
+      // TODO (cc) but we still need to maintain the behavior here for older contracts
       if (
         hasFunction<ContractMetadataContract>(
           "setContractURI",
@@ -481,17 +628,31 @@ export class DropClaimConditions<
     }
 
     const cw = this.contractWrapper;
-    if (this.isSinglePhaseDropContract(cw)) {
+    if (this.isLegacySinglePhaseDrop(cw)) {
       encoded.push(
         cw.readContract.interface.encodeFunctionData("setClaimConditions", [
-          sortedConditions[0],
+          abstractContractModelToLegacy(sortedConditions[0]),
           resetClaimEligibilityForAll,
         ]),
       );
-    } else if (this.isMultiPhaseDropContract(cw)) {
+    } else if (this.isLegacyMultiPhaseDrop(cw)) {
       encoded.push(
         cw.readContract.interface.encodeFunctionData("setClaimConditions", [
-          sortedConditions,
+          sortedConditions.map(abstractContractModelToLegacy),
+          resetClaimEligibilityForAll,
+        ]),
+      );
+    } else if (this.isNewSinglePhaseDrop(cw)) {
+      encoded.push(
+        cw.readContract.interface.encodeFunctionData("setClaimConditions", [
+          abstractContractModelToNew(sortedConditions[0]),
+          resetClaimEligibilityForAll,
+        ]),
+      );
+    } else if (this.isNewMultiphaseDrop(cw)) {
+      encoded.push(
+        cw.readContract.interface.encodeFunctionData("setClaimConditions", [
+          sortedConditions.map(abstractContractModelToNew),
           resetClaimEligibilityForAll,
         ]),
       );
@@ -554,21 +715,132 @@ export class DropClaimConditions<
       this.contractWrapper,
       this.storage,
       checkERC20Allowance,
+      this.getSnapshotFormatVersion(),
     );
   }
 
-  private isSinglePhaseDropContract(
+  public async getClaimArguments(
+    destinationAddress: string,
+    quantity: BigNumberish,
+    claimVerification: ClaimVerification,
+  ): Promise<any[]> {
+    const activeClaimCondition = await this.getActive();
+    if (this.isLegacyMultiPhaseDrop(this.contractWrapper)) {
+      return [
+        destinationAddress,
+        quantity,
+        activeClaimCondition.currencyAddress,
+        activeClaimCondition.price,
+        claimVerification.proofs,
+        claimVerification.maxClaimable,
+      ];
+    } else if (this.isLegacySinglePhaseDrop(this.contractWrapper)) {
+      return [
+        destinationAddress,
+        quantity,
+        activeClaimCondition.currencyAddress,
+        activeClaimCondition.price,
+        {
+          proof: claimVerification.proofs,
+          maxQuantityInAllowlist: claimVerification.maxClaimable,
+        } as IDropSinglePhase_V1.AllowlistProofStruct,
+        ethers.utils.toUtf8Bytes(""),
+      ];
+    }
+    return [
+      destinationAddress,
+      quantity,
+      activeClaimCondition.currencyAddress,
+      activeClaimCondition.price,
+      {
+        proof: claimVerification.proofs,
+        quantityLimitPerWallet: claimVerification.maxClaimable,
+        pricePerToken: claimVerification.price,
+        currency: claimVerification.currencyAddress,
+      } as IDropSinglePhase.AllowlistProofStruct,
+      ethers.utils.toUtf8Bytes(""),
+    ];
+  }
+
+  /**
+   * Construct a claim transaction without executing it.
+   * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
+   * @param destinationAddress
+   * @param quantity
+   * @param options
+   */
+  public async getClaimTransaction(
+    destinationAddress: string,
+    quantity: BigNumberish,
+    options?: ClaimOptions,
+  ): Promise<TransactionTask> {
+    if (options?.pricePerToken) {
+      throw new Error(
+        "Price per token is be set via claim conditions by calling `contract.erc721.claimConditions.set()`",
+      );
+    }
+    const claimVerification = await this.prepareClaim(
+      quantity,
+      options?.checkERC20Allowance === undefined
+        ? true
+        : options.checkERC20Allowance,
+      await this.getTokenDecimals(),
+    );
+
+    return TransactionTask.make({
+      contractWrapper: this.contractWrapper,
+      functionName: "claim",
+      args: await this.getClaimArguments(
+        destinationAddress,
+        quantity,
+        claimVerification,
+      ),
+      overrides: claimVerification.overrides,
+    });
+  }
+
+  isNewSinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase> {
-    return !hasFunction<DropSinglePhase>(
-      "getClaimConditionById",
-      contractWrapper,
+    return (
+      !hasFunction<DropSinglePhase>("getClaimConditionById", contractWrapper) &&
+      hasFunction<DropSinglePhase>("getSupplyClaimedByWallet", contractWrapper)
     );
   }
 
-  private isMultiPhaseDropContract(
+  isNewMultiphaseDrop(
     contractWrapper: ContractWrapper<any>,
-  ): contractWrapper is ContractWrapper<DropERC721 | DropERC20> {
-    return hasFunction<DropERC721>("getClaimConditionById", contractWrapper);
+  ): contractWrapper is ContractWrapper<Drop> {
+    return (
+      hasFunction<Drop>("getClaimConditionById", contractWrapper) &&
+      hasFunction<Drop>("getSupplyClaimedByWallet", contractWrapper)
+    );
+  }
+
+  isLegacySinglePhaseDrop(
+    contractWrapper: ContractWrapper<any>,
+  ): contractWrapper is ContractWrapper<DropSinglePhase_V1> {
+    return (
+      !hasFunction<DropSinglePhase_V1>(
+        "getClaimConditionById",
+        contractWrapper,
+      ) && hasFunction<DropSinglePhase_V1>("getClaimTimestamp", contractWrapper)
+    );
+  }
+
+  isLegacyMultiPhaseDrop(
+    contractWrapper: ContractWrapper<any>,
+  ): contractWrapper is ContractWrapper<DropERC721_V3 | DropERC20_V2> {
+    return (
+      hasFunction<DropERC721_V3>("getClaimConditionById", contractWrapper) &&
+      hasFunction<DropERC721_V3>("setWalletClaimCount", contractWrapper)
+    );
+  }
+
+  private getSnapshotFormatVersion(): SnapshotFormatVersion {
+    return this.isLegacyMultiPhaseDrop(this.contractWrapper) ||
+      this.isLegacySinglePhaseDrop(this.contractWrapper)
+      ? SnapshotFormatVersion.V1
+      : SnapshotFormatVersion.V2;
   }
 }

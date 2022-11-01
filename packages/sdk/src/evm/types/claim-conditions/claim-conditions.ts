@@ -53,7 +53,7 @@ export type FilledConditionInput = z.output<typeof ClaimConditionInputSchema>;
 export type ClaimVerification = {
   overrides: CallOverrides;
   proofs: BytesLike[];
-  maxQuantityPerTransaction: BigNumber;
+  maxClaimable: BigNumber;
   price: BigNumber;
   currencyAddress: string;
 };

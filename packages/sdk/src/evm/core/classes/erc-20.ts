@@ -13,12 +13,7 @@ import {
   FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS,
 } from "../../constants/erc20-features";
 import { TokenMintInput, AmountSchema } from "../../schema";
-import {
-  Currency,
-  CurrencyValue,
-  Amount,
-  ClaimVerification,
-} from "../../types";
+import { Currency, CurrencyValue, Amount, ClaimOptions } from "../../types";
 import {
   BaseERC20,
   BaseSignatureMintERC20,
@@ -483,14 +478,12 @@ export class Erc20<
    */
   public async claim(
     amount: Amount,
-    checkERC20Allowance = true,
-    claimData?: ClaimVerification,
+    options?: ClaimOptions,
   ): Promise<TransactionResult> {
     return this.claimTo(
       await this.contractWrapper.getSignerAddress(),
       amount,
-      checkERC20Allowance,
-      claimData,
+      options,
     );
   }
 
@@ -518,13 +511,12 @@ export class Erc20<
   public async claimTo(
     destinationAddress: string,
     amount: Amount,
-    checkERC20Allowance = true,
-    claimData?: ClaimVerification,
+    options?: ClaimOptions,
   ): Promise<TransactionResult> {
     return assertEnabled(
       this.droppable?.claim,
       FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS,
-    ).to(destinationAddress, amount, checkERC20Allowance, claimData);
+    ).to(destinationAddress, amount, options);
   }
 
   /**

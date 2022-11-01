@@ -13,7 +13,7 @@ import {
   FEATURE_NFT_BATCH_MINTABLE,
   FEATURE_NFT_BURNABLE,
   FEATURE_NFT_CLAIMABLE,
-  FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS,
+  FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V2,
   FEATURE_NFT_LAZY_MINTABLE,
   FEATURE_NFT_MINTABLE,
   FEATURE_NFT_REVEALABLE,
@@ -618,7 +618,7 @@ export class Erc721<
     const claimWithConditions = this.lazyMintable?.claimWithConditions;
     const claim = this.lazyMintable?.claim;
     if (claimWithConditions) {
-      return claimWithConditions.getClaimTransaction(
+      return claimWithConditions.conditions.getClaimTransaction(
         destinationAddress,
         quantity,
         options,
@@ -687,7 +687,7 @@ export class Erc721<
   get claimConditions() {
     return assertEnabled(
       this.lazyMintable?.claimWithConditions,
-      FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS,
+      FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V2,
     ).conditions;
   }
 

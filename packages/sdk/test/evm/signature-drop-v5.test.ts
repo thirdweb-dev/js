@@ -1,6 +1,5 @@
 import { NFTMetadataInput } from "../../src/core/schema/nft";
 import {
-  createSnapshot,
   NATIVE_TOKEN_ADDRESS,
   PayloadToSign721withQuantity,
   SignatureDrop,
@@ -9,18 +8,15 @@ import {
   Token,
   TokenInitializer,
 } from "../../src/evm";
-import { ShardedMerkleTree } from "../../src/evm/common/sharded-merkle-tree";
 import { expectError, sdk, signers, storage } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { BigNumber, ethers } from "ethers";
-import { keccak256 } from "ethers/lib/utils";
-import { MerkleTree } from "merkletreejs";
+import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 
 global.fetch = require("cross-fetch");
 
-describe("Signature drop tests", async () => {
+describe("Signature drop tests (v5)", async () => {
   let signatureDropContract: SignatureDrop;
   let customTokenContract: Token;
   let tokenAddress: string;
@@ -52,6 +48,7 @@ describe("Signature drop tests", async () => {
           primary_sale_recipient: adminWallet.address,
           seller_fee_basis_points: 0,
         },
+        5,
       ),
     );
 
@@ -79,6 +76,10 @@ describe("Signature drop tests", async () => {
       },
       {
         toAddress: adminWallet.address,
+        amount: 1000,
+      },
+      {
+        toAddress: bobWallet.address,
         amount: 1000,
       },
     ]);
@@ -499,17 +500,9 @@ describe("Signature drop tests", async () => {
       await signatureDropContract.claimConditions.set([
         {
           startTime: new Date(),
-          waitInSeconds: 10,
           snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
         },
       ]);
-
-      const metadata = await signatureDropContract.metadata.get();
-      const merkles = metadata.merkle;
-
-      expect(merkles).have.property(
-        "0xb1a60ad68b77609a455696695fbdd02b850d03ec285e7fe1f4c4093797457b24",
-      );
 
       const roots = await signatureDropContract.claimConditions.getActive();
       expect(roots.merkleRootHash.length > 0);
@@ -530,16 +523,22 @@ describe("Signature drop tests", async () => {
         w3,
         w4,
       ];
-      const members = testWallets.map((w, i) =>
-        i % 3 === 0
-          ? w.address.toLowerCase()
-          : i % 3 === 1
-          ? w.address.toUpperCase().replace("0X", "0x")
-          : w.address,
-      );
+      const members = testWallets
+        .map((w, i) =>
+          i % 3 === 0
+            ? w.address.toLowerCase()
+            : i % 3 === 1
+            ? w.address.toUpperCase().replace("0X", "0x")
+            : w.address,
+        )
+        .map((a) => ({
+          address: a,
+          maxClaimable: 1,
+        }));
 
       await signatureDropContract.claimConditions.set([
         {
+          maxClaimablePerWallet: 0,
           snapshot: members,
         },
       ]);
@@ -563,10 +562,16 @@ describe("Signature drop tests", async () => {
 
     it("allow one address in the merkle tree to claim", async () => {
       const testWallets: SignerWithAddress[] = [bobWallet];
-      const members = testWallets.map((w) => w.address);
+      const members = testWallets.map((w) => ({
+        address: w.address,
+        maxClaimable: 1,
+      }));
 
       await signatureDropContract.claimConditions.set([
         {
+          maxClaimablePerWallet: 0,
+          currencyAddress: tokenAddress,
+          price: 0.1,
           snapshot: members,
         },
       ]);
@@ -591,9 +596,9 @@ describe("Signature drop tests", async () => {
       try {
         await sdk.updateSignerOrProvider(samWallet);
         await signatureDropContract.claim(1);
-        assert.fail("should have thrown");
       } catch (e) {
         // expected
+        expectError(e, "!Qty");
       }
     });
 
@@ -607,14 +612,14 @@ describe("Signature drop tests", async () => {
       await signatureDropContract.createBatch(metadatas);
       await signatureDropContract.claimConditions.set([
         {
-          maxQuantity: 10,
+          maxClaimableSupply: 10,
         },
       ]);
       await signatureDropContract.claim(5);
       await signatureDropContract.claimConditions.set(
         [
           {
-            maxQuantity: 10,
+            maxClaimableSupply: 10,
           },
         ],
         true,
@@ -673,7 +678,12 @@ describe("Signature drop tests", async () => {
     it("should not allow claiming to someone not in the merkle tree", async () => {
       await signatureDropContract.claimConditions.set([
         {
-          snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
+          maxClaimablePerWallet: 0,
+          snapshot: [
+            bobWallet.address,
+            samWallet.address,
+            abbyWallet.address,
+          ].map((a) => ({ address: a, maxClaimable: 1 })),
         },
       ]);
       await signatureDropContract.createBatch([
@@ -684,14 +694,8 @@ describe("Signature drop tests", async () => {
       try {
         await signatureDropContract.claim(1);
       } catch (err: any) {
-        expect(err).to.have.property(
-          "message",
-          "No claim found for this address",
-          "",
-        );
-        return;
+        expectError(err, "!Qty");
       }
-      assert.fail("should not reach this point, claim should have failed");
     });
 
     it("should allow claims with default settings", async () => {
@@ -724,53 +728,7 @@ describe("Signature drop tests", async () => {
         await sdk.updateSignerOrProvider(w2);
         await signatureDropContract.claim(2);
       } catch (e) {
-        expectError(e, "Invalid qty proof");
-      }
-    });
-
-    it("should generate valid proofs", async () => {
-      const members = [
-        bobWallet.address,
-        samWallet.address,
-        abbyWallet.address,
-        w1.address,
-        w2.address,
-        w3.address,
-        w4.address,
-      ];
-
-      const hashedLeafs = members.map((l) =>
-        ethers.utils.solidityKeccak256(["address", "uint256"], [l, 0]),
-      );
-      const tree = new MerkleTree(hashedLeafs, keccak256, {
-        sort: true,
-        sortLeaves: true,
-        sortPairs: true,
-      });
-      const input = members.map((address) => ({
-        address,
-        maxClaimable: 0,
-      }));
-      const snapshot = await createSnapshot(input, 0, storage);
-      for (const leaf of members) {
-        const expectedProof = tree.getHexProof(
-          ethers.utils.solidityKeccak256(["address", "uint256"], [leaf, 0]),
-        );
-
-        const smt = await ShardedMerkleTree.fromUri(
-          snapshot.snapshotUri,
-          storage,
-        );
-        const actualProof = await smt?.getProof(leaf);
-        assert.isDefined(actualProof);
-        expect(actualProof?.proof).to.include.ordered.members(expectedProof);
-
-        const verified = tree.verify(
-          actualProof?.proof as string[],
-          ethers.utils.solidityKeccak256(["address", "uint256"], [leaf, 0]),
-          tree.getHexRoot(),
-        );
-        expect(verified).to.eq(true);
+        expectError(e, "!Qty");
       }
     });
 
