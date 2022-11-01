@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 3.4.5
+
+### Patch Changes
+
+- [#359](https://github.com/thirdweb-dev/js/pull/359) [`e731c1a`](https://github.com/thirdweb-dev/js/commit/e731c1a7c341e6f2b9cc42c88d5c1b036dcf4a7c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SDK] Allow fetching claimerProofs from any claim condition
+
 ## 3.4.4
 
 ## 3.4.3
