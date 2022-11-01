@@ -59,7 +59,7 @@ module.exports = {
     "new-cap": "error",
     "no-alert": "error",
     "no-case-declarations": "off",
-
+    "no-console": ["warn", { allow: ["warn", "error", "info", "debug"] }],
     "no-duplicate-imports": "error",
     "no-eval": "error",
     "no-floating-decimal": "error",
