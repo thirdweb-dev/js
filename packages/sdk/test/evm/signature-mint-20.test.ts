@@ -144,6 +144,7 @@ describe("Token sig minting", async () => {
     it("should mint the right custom token price", async () => {
       const oldBalance = await samWallet.getBalance();
       const payload = await contract.signature.generate({
+        to: samWallet.address,
         price: 1,
         quantity: 10,
         currencyAddress: tokenAddress,
@@ -160,6 +161,7 @@ describe("Token sig minting", async () => {
     it("should mint the right native price", async () => {
       const oldBalance = await samWallet.getBalance();
       const payload = await contract.signature.generate({
+        to: samWallet.address,
         price: 1,
         quantity: 0.23,
       });

@@ -19,6 +19,7 @@ import {
   FEATURE_NFT_REVEALABLE,
   FEATURE_NFT_SIGNATURE_MINTABLE,
   FEATURE_NFT_SUPPLY,
+  FEATURE_NFT_TIERED_DROP,
 } from "../../constants/erc721-features";
 import { BaseDropERC721, BaseERC721 } from "../../types/eips";
 import { ClaimOptions, UploadProgressEvent } from "../../types/index";
@@ -34,6 +35,7 @@ import { Erc721Burnable } from "./erc-721-burnable";
 import { Erc721LazyMintable } from "./erc-721-lazymintable";
 import { Erc721Mintable } from "./erc-721-mintable";
 import { Erc721Supply } from "./erc-721-supply";
+import { Erc721TieredDrop } from "./erc-721-tiered-drop";
 import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
 import type {
   DropERC721,
@@ -43,6 +45,7 @@ import type {
   ISignatureMintERC721,
   Multiwrap,
   SignatureDrop,
+  TieredDrop,
   TokenERC721,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -72,6 +75,7 @@ export class Erc721<
   private mintable: Erc721Mintable | undefined;
   private burnable: Erc721Burnable | undefined;
   private lazyMintable: Erc721LazyMintable | undefined;
+  private tieredDropable: Erc721TieredDrop | undefined;
   private signatureMintable: Erc721WithQuantitySignatureMintable | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: ThirdwebStorage;
@@ -92,6 +96,7 @@ export class Erc721<
     this.mintable = this.detectErc721Mintable();
     this.burnable = this.detectErc721Burnable();
     this.lazyMintable = this.detectErc721LazyMintable();
+    this.tieredDropable = this.detectErc721TieredDrop();
     this.signatureMintable = this.detectErc721SignatureMintable();
     this._chainId = chainId;
   }
@@ -686,6 +691,16 @@ export class Erc721<
     ).conditions;
   }
 
+  ////// ERC721 Tiered Drop Extension //////
+
+  /**
+   * Tiered Drop
+   * @remarks Drop lazy minted NFTs using a tiered drop mechanism.
+   */
+  get tieredDrop() {
+    return assertEnabled(this.tieredDropable, FEATURE_NFT_TIERED_DROP);
+  }
+
   ////// ERC721 SignatureMint Extension //////
 
   /**
@@ -824,6 +839,18 @@ export class Erc721<
       )
     ) {
       return new Erc721LazyMintable(this, this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  private detectErc721TieredDrop(): Erc721TieredDrop | undefined {
+    if (
+      detectContractFeature<TieredDrop>(
+        this.contractWrapper,
+        "ERC721TieredDrop",
+      )
+    ) {
+      return new Erc721TieredDrop(this, this.contractWrapper, this.storage);
     }
     return undefined;
   }
