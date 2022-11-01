@@ -67,9 +67,9 @@ export async function fetchTokenMetadata(
   }
 
   return CommonNFTOutput.parse({
+    ...jsonMetadata,
     id: BigNumber.from(tokenId).toString(),
     uri: tokenUri,
-    ...jsonMetadata,
   });
 }
 
