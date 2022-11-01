@@ -120,14 +120,6 @@ export async function prepareClaim(
     );
   }
 
-  // if max claimable is 0 even after checking allowlist, then address can't claim (only with override list behavior)
-  if (
-    snapshotFormatVersion === SnapshotFormatVersion.V2 &&
-    maxClaimable.eq(0)
-  ) {
-    throw new Error(`Cannot claim, max claimable is 0 for ${addressToClaim}`);
-  }
-
   const overrides = (await contractWrapper.getCallOverrides()) || {};
   // the actual price to check allowance against
   // if proof price is unlimited, then we use the price from the claim condition

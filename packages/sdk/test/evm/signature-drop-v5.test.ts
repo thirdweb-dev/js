@@ -504,12 +504,6 @@ describe("Signature drop tests (v5)", async () => {
         },
       ]);
 
-      const metadata = await signatureDropContract.metadata.get();
-      const merkles = metadata.merkle;
-      expect(merkles).have.property(
-        "0x5398c0f1d4b32f7e4817ddfb7075fada328dfd68ee954ee7d673751ad2025b80",
-      );
-
       const roots = await signatureDropContract.claimConditions.getActive();
       expect(roots.merkleRootHash.length > 0);
 
@@ -604,7 +598,7 @@ describe("Signature drop tests (v5)", async () => {
         await signatureDropContract.claim(1);
       } catch (e) {
         // expected
-        expectError(e, "Cannot claim");
+        expectError(e, "!Qty");
       }
     });
 
@@ -700,7 +694,7 @@ describe("Signature drop tests (v5)", async () => {
       try {
         await signatureDropContract.claim(1);
       } catch (err: any) {
-        expectError(err, "Cannot claim");
+        expectError(err, "!Qty");
       }
     });
 

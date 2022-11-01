@@ -5,11 +5,11 @@ import {
   SnapshotEntry,
   SnapshotEntryWithProof,
   SnapshotEntryWithProofSchema,
+  SnapshotInputSchema,
 } from "../schema/contracts/common/snapshots";
 import { SnapshotInput } from "../types";
 import { convertQuantityToBigNumber } from "./claim-conditions";
 import { fetchCurrencyMetadata } from "./currency";
-import { parseSnapshotInput } from "./snapshots";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers, utils } from "ethers";
 import { MerkleTree } from "merkletreejs";
@@ -134,7 +134,7 @@ export class ShardedMerkleTree {
     snapshotFormatVersion: SnapshotFormatVersion,
     shardNybbles = SHARD_NYBBLES,
   ): Promise<ShardedSnapshot> {
-    const inputs = parseSnapshotInput(snapshotInput, snapshotFormatVersion);
+    const inputs = SnapshotInputSchema.parse(snapshotInput);
     // TODO Could also derive shardNybbles from input size
     const shards: Record<string, SnapshotEntry[]> = {};
     for (const snapshotEntry of inputs) {

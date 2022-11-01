@@ -2,11 +2,7 @@ import {
   ShardedMerkleTree,
   SnapshotFormatVersion,
 } from "../../src/evm/common/sharded-merkle-tree";
-import {
-  createSnapshot,
-  parseSnapshotInput,
-  SnapshotEntryInput,
-} from "../../src/evm/index";
+import { createSnapshot, SnapshotEntryInput } from "../../src/evm/index";
 import { sdk, signers, storage } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber, ethers } from "ethers";
@@ -96,14 +92,9 @@ describe("Snapshots", async () => {
       it("should generate valid proofs:" + snapshotVersion, async () => {
         const hashedLeafs = members.map((l) =>
           ShardedMerkleTree.hashEntry(
-            parseSnapshotInput(
-              [
-                {
-                  address: l,
-                },
-              ],
-              snapshotVersion,
-            )[0],
+            SnapshotEntryInput.parse({
+              address: l,
+            }),
             0,
             18,
             snapshotVersion,
@@ -125,14 +116,9 @@ describe("Snapshots", async () => {
         for (const leaf of members) {
           const expectedProof = tree.getHexProof(
             ShardedMerkleTree.hashEntry(
-              parseSnapshotInput(
-                [
-                  {
-                    address: leaf,
-                  },
-                ],
-                snapshotVersion,
-              )[0],
+              SnapshotEntryInput.parse({
+                address: leaf,
+              }),
               0,
               18,
               snapshotVersion,

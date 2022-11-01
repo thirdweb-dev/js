@@ -551,27 +551,20 @@ describe("Edition Drop Contract (V4)", async () => {
       assert.isFalse(canClaim);
     });
 
-    it("should disallow some addresses from claiming", async () => {
+    it("should get default values with default snapshot", async () => {
       await bdContract.claimConditions.set("0", [
         {
           maxClaimableSupply: 1,
-          snapshot: [{ address: w1.address, maxClaimable: 0 }],
+          snapshot: [w1.address],
         },
       ]);
 
-      const reasons =
-        await bdContract.claimConditions.getClaimIneligibilityReasons(
-          "0",
-          "1",
-          w1.address,
-        );
-      expect(reasons).to.include(ClaimEligibility.AddressNotAllowed);
       const canClaim = await bdContract.claimConditions.canClaim(
         "0",
         "1",
         w1.address,
       );
-      assert.isFalse(canClaim);
+      assert.isTrue(canClaim);
     });
 
     it("should check if an address has enough native currency", async () => {

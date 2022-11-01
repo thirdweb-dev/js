@@ -10,19 +10,11 @@ export const MerkleSchema = z.object({
   merkle: z.record(z.string()).default({}),
 });
 
-export const OverrideListInput = z.object({
+export const SnapshotEntryInput = z.object({
   address: AddressSchema,
-  maxClaimable: QuantitySchema, // defaults to unlimited
+  maxClaimable: QuantitySchema.default(0), // defaults to 0
   price: QuantitySchema, // defaults to unlimited
   currencyAddress: AddressSchema.default(ethers.constants.AddressZero),
-});
-
-/**
- * @internal
- * for v1 snapshots (exclusive list) default maxClaimable needs to be 0
- */
-export const SnapshotEntryInput = OverrideListInput.extend({
-  maxClaimable: QuantitySchema.default(0), // has to be 0 by default if not passed in (contract behavior)
 });
 
 export type SnapshotEntry = z.output<typeof SnapshotEntryInput>;
@@ -56,19 +48,6 @@ export const SnapshotInputSchema = z.union([
     ),
   ),
   z.array(SnapshotEntryInput),
-]);
-/**
- * @internal
- */
-export const OverrideListInputSchema = z.union([
-  z.array(z.string()).transform((strings) =>
-    strings.map((address) =>
-      OverrideListInput.parse({
-        address,
-      }),
-    ),
-  ),
-  z.array(OverrideListInput),
 ]);
 
 export const SnapshotEntryWithProofSchema = SnapshotEntryInput.extend({
