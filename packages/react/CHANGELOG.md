@@ -1,5 +1,17 @@
 # @thirdweb-dev/react
 
+## 3.4.4
+
+### Patch Changes
+
+- [#356](https://github.com/thirdweb-dev/js/pull/356) [`cc4613b`](https://github.com/thirdweb-dev/js/commit/cc4613b5fd69840f4f9cfd0ac1c4e6743e62fe52) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add Pack and Multiwrap as NFTContract types
+
+## 3.4.3
+
+### Patch Changes
+
+- [#353](https://github.com/thirdweb-dev/js/pull/353) [`1c24c3c`](https://github.com/thirdweb-dev/js/commit/1c24c3c3c48476a824f817e09e7bf0fbe67c1db5) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add useUpdateCreators hook, fix CreatorInput schema
+
 ## 3.4.2
 
 ### Patch Changes

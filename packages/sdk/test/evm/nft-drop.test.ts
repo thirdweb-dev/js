@@ -97,6 +97,25 @@ describe("NFT Drop Contract", async () => {
       (c) => c.merkleRootHash,
     );
     expect(roots).length(2);
+
+    let proof = await dropContract.claimConditions.getClaimerProofs(
+      bobWallet.address,
+    );
+    expect(proof.address).to.eq(bobWallet.address);
+    proof = await dropContract.claimConditions.getClaimerProofs(
+      bobWallet.address,
+      0,
+    );
+    expect(proof.address).to.eq(bobWallet.address);
+    proof = await dropContract.claimConditions.getClaimerProofs(
+      samWallet.address,
+    );
+    expect(proof).to.eq(null);
+    proof = await dropContract.claimConditions.getClaimerProofs(
+      samWallet.address,
+      0,
+    );
+    expect(proof.address).to.eq(samWallet.address);
   });
 
   it("should return snapshot data on claim conditions", async () => {

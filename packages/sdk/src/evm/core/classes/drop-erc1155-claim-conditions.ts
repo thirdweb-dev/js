@@ -1,5 +1,6 @@
 import { includesErrorMessage } from "../../common";
 import {
+  fetchSnapshotEntryForAddress,
   getClaimerProofs,
   prepareClaim,
   processClaimConditionInputs,
@@ -11,6 +12,7 @@ import { hasFunction } from "../../common/feature-detection";
 import { isNode } from "../../common/utils";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/index";
 import { ClaimEligibility } from "../../enums";
+import { SnapshotEntryWithProof } from "../../schema";
 import {
   ClaimCondition,
   ClaimConditionFetchOptions,
@@ -82,6 +84,7 @@ export class DropErc1155ClaimConditions<
 
   private async get(
     tokenId: BigNumberish,
+    claimConditionId?: BigNumberish,
   ): Promise<IDropClaimCondition.ClaimConditionStructOutput> {
     if (this.isSinglePhaseDropContract(this.contractWrapper)) {
       return (await this.contractWrapper.readContract.claimCondition(
@@ -89,9 +92,11 @@ export class DropErc1155ClaimConditions<
       )) as IDropClaimCondition.ClaimConditionStructOutput;
     } else if (this.isMultiPhaseDropContract(this.contractWrapper)) {
       const id =
-        await this.contractWrapper.readContract.getActiveClaimConditionId(
-          tokenId,
-        );
+        claimConditionId !== undefined
+          ? claimConditionId
+          : await this.contractWrapper.readContract.getActiveClaimConditionId(
+              tokenId,
+            );
       return await this.contractWrapper.readContract.getClaimConditionById(
         tokenId,
         id,
@@ -340,6 +345,33 @@ export class DropErc1155ClaimConditions<
     }
 
     return reasons;
+  }
+
+  /**
+   * Returns allow list information and merkle proofs for the given address.
+   * @param tokenId - the token ID to check
+   * @param claimerAddress - the claimer address
+   * @param claimConditionId - optional the claim condition id to get the proofs for
+   */
+  public async getClaimerProofs(
+    tokenId: BigNumberish,
+    claimerAddress: string,
+    claimConditionId?: BigNumberish,
+  ): Promise<SnapshotEntryWithProof | null> {
+    const claimCondition = await this.get(tokenId, claimConditionId);
+    const merkleRoot = claimCondition.merkleRoot;
+    const merkleRootArray = ethers.utils.stripZeros(merkleRoot);
+    if (merkleRootArray.length > 0) {
+      const metadata = await this.metadata.get();
+      return await fetchSnapshotEntryForAddress(
+        claimerAddress,
+        merkleRoot.toString(),
+        metadata.merkle,
+        this.storage,
+      );
+    } else {
+      return null;
+    }
   }
 
   /** ***************************************
