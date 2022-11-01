@@ -15,7 +15,8 @@ describe("Tiered Drop Contract", async () => {
     sdk = new ThirdwebSDK(adminWallet);
 
     // This needs to match the release for the currently used ABI
-    const releaseUri = "ipfs://QmRrVYsQ774mVUzYLh728EzAM9zM6tkmUs7EpDgY6EhkTn";
+    const releaseUri =
+      "ipfs://QmTK2dpcDMiePacs6bNh6LhQdPB9RkxXHmx9CtrPLPRBuS/0";
     const address = await sdk.deployer.deployContractFromUri(releaseUri, [], {
       forceDirectDeploy: true,
     });

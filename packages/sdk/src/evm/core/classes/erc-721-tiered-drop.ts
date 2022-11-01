@@ -48,7 +48,7 @@ export class Erc721TieredDrop implements DetectableFeature {
       batches.tokens
         .map((range, i) => {
           const nftsInRange = [];
-          const baseUri = batches._baseURIs[i];
+          const baseUri = batches.baseURIs[i];
           for (
             let j = range.startIdInclusive.toNumber();
             j < range.endIdNonInclusive.toNumber();
@@ -68,7 +68,8 @@ export class Erc721TieredDrop implements DetectableFeature {
   }
 
   public async getTokensInTier(tier: string): Promise<NFT[]> {
-    const endIndex = await this.contractWrapper.readContract.getMintInstances();
+    const endIndex =
+      await this.contractWrapper.readContract.getTokensInTierLen();
     if (endIndex.eq(0)) {
       return [];
     }
@@ -78,8 +79,6 @@ export class Erc721TieredDrop implements DetectableFeature {
       0,
       endIndex,
     );
-
-    console.log(ranges);
 
     const nfts = await Promise.all(
       ranges
