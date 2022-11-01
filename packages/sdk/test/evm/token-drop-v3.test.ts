@@ -13,7 +13,7 @@ import invariant from "tiny-invariant";
 
 global.fetch = require("cross-fetch");
 
-describe("Token Drop Contract", async () => {
+describe("Token Drop Contract (v3)", async () => {
   let dropContract: TokenDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -62,11 +62,10 @@ describe("Token Drop Contract", async () => {
     const merkles = metadata.merkle;
 
     expect(merkles).have.property(
-      "0x5398c0f1d4b32f7e4817ddfb7075fada328dfd68ee954ee7d673751ad2025b80",
+      "0xb2acf11f3694bfc1e9db18a7cd01083bc48db49bd1ae524a90f102914f3f7c2a",
     );
-
     expect(merkles).have.property(
-      "0x4703e6318cb19460f6a961b41cd6161a4cc0ada09456670a81ec3fca9e0d2f4f",
+      "0xeed6db05cfdf0ef8cf5b98791d1e7d436862f346af8b0a7c8a5eb864dbb1c6fb",
     );
 
     const roots = (await dropContract.claimConditions.getAll()).map(
@@ -106,11 +105,10 @@ describe("Token Drop Contract", async () => {
     const merkles = metadata.merkle;
 
     expect(merkles).have.property(
-      "0x5398c0f1d4b32f7e4817ddfb7075fada328dfd68ee954ee7d673751ad2025b80",
+      "0xb2acf11f3694bfc1e9db18a7cd01083bc48db49bd1ae524a90f102914f3f7c2a",
     );
-
     expect(merkles).have.property(
-      "0x4703e6318cb19460f6a961b41cd6161a4cc0ada09456670a81ec3fca9e0d2f4f",
+      "0xeed6db05cfdf0ef8cf5b98791d1e7d436862f346af8b0a7c8a5eb864dbb1c6fb",
     );
 
     const roots = (await dropContract.claimConditions.getAll()).map(
@@ -197,7 +195,7 @@ describe("Token Drop Contract", async () => {
     try {
       await dropContract.claim(1);
     } catch (err: any) {
-      expectError(err, "Cannot claim");
+      expectError(err, "!Qty");
     }
   });
 
@@ -268,27 +266,6 @@ describe("Token Drop Contract", async () => {
       expect(reasons).to.include(ClaimEligibility.NotEnoughSupply);
       const canClaim = await dropContract.claimConditions.canClaim(
         1.8,
-        w1.address,
-      );
-      assert.isFalse(canClaim);
-    });
-
-    it("should disallow some addresses from claiming", async () => {
-      await dropContract.claimConditions.set([
-        {
-          maxClaimableSupply: 1,
-          snapshot: [{ address: w1.address, maxClaimable: 0 }],
-        },
-      ]);
-
-      const reasons =
-        await dropContract.claimConditions.getClaimIneligibilityReasons(
-          "1",
-          w1.address,
-        );
-      expect(reasons).to.include(ClaimEligibility.AddressNotAllowed);
-      const canClaim = await dropContract.claimConditions.canClaim(
-        1,
         w1.address,
       );
       assert.isFalse(canClaim);
