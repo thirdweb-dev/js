@@ -10,10 +10,7 @@ describe("Tiered Drop Contract", async () => {
   let adminWallet: SignerWithAddress;
   let claimerWallet: SignerWithAddress;
 
-  before(async () => {
-    [adminWallet, claimerWallet] = signers;
-    sdk = new ThirdwebSDK(adminWallet);
-
+  async function deployTieredDrop() {
     // This needs to match the release for the currently used ABI
     const releaseUri =
       "ipfs://QmTK2dpcDMiePacs6bNh6LhQdPB9RkxXHmx9CtrPLPRBuS/0";
@@ -21,10 +18,10 @@ describe("Tiered Drop Contract", async () => {
       forceDirectDeploy: true,
     });
 
-    contract = await sdk.getContract(address);
+    const tieredDrop = await sdk.getContract(address);
 
     const walletAddress = await sdk.wallet.getAddress();
-    await contract.call(
+    await tieredDrop.call(
       "initialize",
       walletAddress, // defaultAdmin
       "Tiered Drop #1", // name
@@ -35,6 +32,15 @@ describe("Tiered Drop Contract", async () => {
       walletAddress, // royaltyRecipient
       0, // royaltyBps
     );
+
+    return tieredDrop;
+  }
+
+  before(async () => {
+    [adminWallet, claimerWallet] = signers;
+    sdk = new ThirdwebSDK(adminWallet);
+
+    contract = await deployTieredDrop();
   });
 
   beforeEach(() => {
@@ -52,7 +58,7 @@ describe("Tiered Drop Contract", async () => {
         description: "My second NFT",
       },
     ];
-    const txs = await contract.erc721.tieredDrop.lazyMintWithTier(
+    const txs = await contract.erc721.tieredDrop.createBatchWithTier(
       metadata,
       "tier1",
     );
@@ -126,7 +132,7 @@ describe("Tiered Drop Contract", async () => {
         description: "My first NFT",
       },
     ];
-    await contract.erc721.tieredDrop.lazyMintWithTier(metadata, "tier1");
+    await contract.erc721.tieredDrop.createBatchWithTier(metadata, "tier1");
 
     metadata = [
       {
@@ -134,7 +140,7 @@ describe("Tiered Drop Contract", async () => {
         description: "My fourth NFT",
       },
     ];
-    await contract.erc721.tieredDrop.lazyMintWithTier(metadata, "tier2");
+    await contract.erc721.tieredDrop.createBatchWithTier(metadata, "tier2");
 
     metadata = [
       {
@@ -142,7 +148,7 @@ describe("Tiered Drop Contract", async () => {
         description: "My fifth NFT",
       },
     ];
-    await contract.erc721.tieredDrop.lazyMintWithTier(metadata, "tier3");
+    await contract.erc721.tieredDrop.createBatchWithTier(metadata, "tier3");
 
     const payload = {
       currencyAddress: NATIVE_TOKEN_ADDRESS,
@@ -167,5 +173,40 @@ describe("Tiered Drop Contract", async () => {
     nfts = await contract.erc721.tieredDrop.getTokensInTier("tier3");
     expect(nfts.length).to.equal(1);
     expect(nfts[0].metadata.name).to.equal("NFT #5");
+  });
+
+  it("metadata should reveal correctly", async () => {
+    contract = await deployTieredDrop();
+
+    const placeholder = {
+      name: "Placeholder",
+      description: "This is a placeholder",
+    };
+    const metadata = [
+      {
+        name: "NFT #1",
+        description: "My first NFT",
+      },
+      {
+        name: "NFT #2",
+        description: "My second NFT",
+      },
+    ];
+    await contract.erc721.tieredDrop.createDelayedRevealBatchWithTier(
+      placeholder,
+      metadata,
+      "my secret password",
+      "tier1",
+    );
+
+    let nfts = await contract.erc721.tieredDrop.getMetadataInTier("tier1");
+    expect(nfts.length).to.equal(2);
+    expect(nfts[0].name).to.equal("Placeholder");
+
+    await contract.erc721.tieredDrop.reveal(0, "my secret password");
+
+    nfts = await contract.erc721.tieredDrop.getMetadataInTier("tier1");
+    expect(nfts.length).to.equal(2);
+    expect(nfts[0].name).to.equal("NFT #1");
   });
 });

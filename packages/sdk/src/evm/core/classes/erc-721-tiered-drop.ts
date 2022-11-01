@@ -1,4 +1,10 @@
-import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
+import {
+  CommonNFTInput,
+  NFT,
+  NFTMetadata,
+  NFTMetadataInput,
+  NFTMetadataOrUri,
+} from "../../../core/schema/nft";
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { getBaseUriFromBatch, uploadOrExtractURIs } from "../../common/nft";
 import { FEATURE_NFT_TIERED_DROP } from "../../constants/erc721-features";
@@ -17,7 +23,7 @@ import { Erc721 } from "./erc-721";
 import type { TieredDrop, ISignatureAction } from "@thirdweb-dev/contracts-js";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TieredDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers } from "ethers";
+import { BigNumberish, ethers } from "ethers";
 import invariant from "tiny-invariant";
 
 export class Erc721TieredDrop implements DetectableFeature {
@@ -99,7 +105,7 @@ export class Erc721TieredDrop implements DetectableFeature {
     return nfts;
   }
 
-  public async lazyMintWithTier(
+  public async createBatchWithTier(
     metadatas: NFTMetadataOrUri[],
     tier: string,
     options?: {
@@ -138,6 +144,123 @@ export class Erc721TieredDrop implements DetectableFeature {
       });
     }
     return results;
+  }
+
+  public async createDelayedRevealBatchWithTier(
+    placeholder: NFTMetadataInput,
+    metadatas: NFTMetadataInput[],
+    password: string,
+    tier: string,
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
+  ): Promise<TransactionResultWithId<NFTMetadata>[]> {
+    if (!password) {
+      throw new Error("Password is required");
+    }
+
+    const placeholderUris = await this.storage.uploadBatch(
+      [CommonNFTInput.parse(placeholder)],
+      {
+        rewriteFileNames: {
+          fileStartNumber: 0,
+        },
+      },
+    );
+    const placeholderUri = getBaseUriFromBatch(placeholderUris);
+    const startFileNumber = await this.erc721.nextTokenIdToMint();
+    const uris = await this.storage.uploadBatch(
+      metadatas.map((m) => CommonNFTInput.parse(m)),
+      {
+        onProgress: options?.onProgress,
+        rewriteFileNames: {
+          fileStartNumber: startFileNumber.toNumber(),
+        },
+      },
+    );
+
+    const baseUri = getBaseUriFromBatch(uris);
+    const baseUriId = await this.contractWrapper.readContract.getBaseURICount();
+    const chainId = await this.contractWrapper.getChainID();
+    const hashedPassword = ethers.utils.solidityKeccak256(
+      ["string", "uint256", "uint256", "address"],
+      [password, chainId, baseUriId, this.contractWrapper.readContract.address],
+    );
+
+    const encryptedBaseUri =
+      await this.contractWrapper.readContract.encryptDecrypt(
+        ethers.utils.toUtf8Bytes(baseUri),
+        hashedPassword,
+      );
+
+    let data: string;
+    const provenanceHash = ethers.utils.solidityKeccak256(
+      ["bytes", "bytes", "uint256"],
+      [ethers.utils.toUtf8Bytes(baseUri), hashedPassword, chainId],
+    );
+    data = ethers.utils.defaultAbiCoder.encode(
+      ["bytes", "bytes32"],
+      [encryptedBaseUri, provenanceHash],
+    );
+
+    const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
+      uris.length,
+      placeholderUri.endsWith("/") ? placeholderUri : `${placeholderUri}/`,
+      tier,
+      data,
+    ]);
+
+    const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
+      "TokensLazyMinted",
+      receipt?.logs,
+    );
+    const startingIndex = event[0].args.startTokenId;
+    const endingIndex = event[0].args.endTokenId;
+    const results: TransactionResultWithId<NFTMetadata>[] = [];
+    for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
+      results.push({
+        id,
+        receipt,
+        data: () => this.erc721.getTokenMetadata(id),
+      });
+    }
+
+    return results;
+  }
+
+  public async reveal(
+    batchId: BigNumberish,
+    password: string,
+  ): Promise<TransactionResult> {
+    if (!password) {
+      throw new Error("Password is required");
+    }
+    const chainId = await this.contractWrapper.getChainID();
+    const key = ethers.utils.solidityKeccak256(
+      ["string", "uint256", "uint256", "address"],
+      [password, chainId, batchId, this.contractWrapper.readContract.address],
+    );
+    // performing the reveal locally to make sure it'd succeed before sending the transaction
+    try {
+      const decryptedUri = await this.contractWrapper
+        .callStatic()
+        .reveal(batchId, key);
+      // basic sanity check for making sure decryptedUri is valid
+      // this is optional because invalid decryption key would result in non-utf8 bytes and
+      // ethers would throw when trying to decode it
+      if (!decryptedUri.includes("://") || !decryptedUri.endsWith("/")) {
+        throw new Error("invalid password");
+      }
+    } catch (e) {
+      throw new Error("invalid password");
+    }
+
+    return {
+      receipt: await this.contractWrapper.sendTransaction("reveal", [
+        batchId,
+        key,
+      ]),
+    };
   }
 
   public async generate(
