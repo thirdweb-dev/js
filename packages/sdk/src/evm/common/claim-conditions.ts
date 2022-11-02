@@ -92,14 +92,16 @@ export async function prepareClaim(
                 tokenDecimals,
               );
         priceInProof =
+          snapshotEntry.price === undefined ||
           snapshotEntry.price === "unlimited"
             ? ethers.constants.MaxUint256
             : await normalizePriceValue(
                 contractWrapper.getProvider(),
                 snapshotEntry.price,
-                snapshotEntry.currencyAddress,
+                snapshotEntry.currencyAddress || ethers.constants.AddressZero,
               );
-        currencyAddressInProof = snapshotEntry.currencyAddress;
+        currencyAddressInProof =
+          snapshotEntry.currencyAddress || ethers.constants.AddressZero;
       } else {
         // if no snapshot entry, and it's a v1 format (exclusive allowlist) then address can't claim
         if (snapshotFormatVersion === SnapshotFormatVersion.V1) {
@@ -323,9 +325,13 @@ export async function getClaimerProofs(
     return undefined;
   }
   const price =
-    claim.price === "unlimited"
+    claim.price === "unlimited" || claim.price === undefined
       ? ethers.constants.MaxUint256
-      : await normalizePriceValue(provider, claim.price, claim.currencyAddress);
+      : await normalizePriceValue(
+          provider,
+          claim.price,
+          claim.currencyAddress || ethers.constants.AddressZero,
+        );
   const maxClaimable =
     claim.maxClaimable === "unlimited"
       ? ethers.constants.MaxUint256
@@ -334,7 +340,7 @@ export async function getClaimerProofs(
     proof: claim.proof,
     maxClaimable,
     price,
-    currencyAddress: claim.currencyAddress,
+    currencyAddress: claim.currencyAddress || ethers.constants.AddressZero,
   };
 }
 
