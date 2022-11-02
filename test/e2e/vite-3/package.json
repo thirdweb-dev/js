@@ -15,9 +15,10 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.27.1",
     "@vitejs/plugin-react": "^2",
-    "vite": "^3",
     "serve": "^14.0.1",
-    "@playwright/test": "^1.27.1"
-  }
+    "vite": "^3"
+  },
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/test/e2e/vite-3"
 }

@@ -29,5 +29,6 @@
   "devDependencies": {
     "@playwright/test": "^1.27.1",
     "serve": "^14.0.1"
-  }
+  },
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/test/e2e/cra-5"
 }

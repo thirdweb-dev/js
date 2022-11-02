@@ -1,4 +1,8 @@
 {
   "main": "dist/thirdweb-dev-sdk-solana.cjs.js",
-  "module": "dist/thirdweb-dev-sdk-solana.esm.js"
+  "module": "dist/thirdweb-dev-sdk-solana.esm.js",
+  "umd:main": "dist/thirdweb-dev-sdk-solana.umd.min.js",
+  "preconstruct": {
+    "umdName": "thirdwebSOL"
+  }
 }

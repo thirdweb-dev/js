@@ -1,4 +1,8 @@
 {
   "main": "dist/thirdweb-dev-sdk-evm.cjs.js",
-  "module": "dist/thirdweb-dev-sdk-evm.esm.js"
+  "module": "dist/thirdweb-dev-sdk-evm.esm.js",
+  "umd:main": "dist/thirdweb-dev-sdk-evm.umd.min.js",
+  "preconstruct": {
+    "umdName": "thirdwebEVM"
+  }
 }

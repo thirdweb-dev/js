@@ -6,6 +6,7 @@
   "license": "Apache-2.0",
   "main": "dist/thirdweb-dev-sdk.cjs.js",
   "module": "dist/thirdweb-dev-sdk.esm.js",
+  "umd:main": "dist/thirdweb-dev-sdk.umd.min.js",
   "exports": {
     ".": {
       "module": "./dist/thirdweb-dev-sdk.esm.js",
@@ -41,7 +42,8 @@
     "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
       "exports": true
     },
-    "exports": true
+    "exports": true,
+    "umdName": "thirdwebSDK"
   },
   "sideEffects": false,
   "scripts": {
