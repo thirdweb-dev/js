@@ -1,10 +1,12 @@
-import { QuantitySchema } from "../../../../core/schema/shared";
+import {
+  AmountSchema,
+  BytesLikeSchema,
+  QuantitySchema,
+} from "../../../../core/schema/shared";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
 import {
   BigNumberishSchema,
   BigNumberSchema,
-  BytesLikeSchema,
-  AmountSchema,
   StartDateSchema,
 } from "../../shared";
 import { CurrencyValueSchema } from "./currency";

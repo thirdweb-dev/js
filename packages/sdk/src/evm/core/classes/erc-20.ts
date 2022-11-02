@@ -1,4 +1,5 @@
 import { NetworkOrSignerOrProvider, TransactionResult } from "..";
+import { AmountSchema } from "../../../core/schema/shared";
 import { assertEnabled, detectContractFeature } from "../../common";
 import {
   fetchCurrencyMetadata,
@@ -12,7 +13,7 @@ import {
   FEATURE_TOKEN_SIGNATURE_MINTABLE,
   FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS,
 } from "../../constants/erc20-features";
-import { TokenMintInput, AmountSchema } from "../../schema";
+import { TokenMintInput } from "../../schema";
 import { Currency, CurrencyValue, Amount, ClaimOptions } from "../../types";
 import {
   BaseERC20,
