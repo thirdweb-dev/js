@@ -1,4 +1,5 @@
 import IBurnableERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC20.json";
+import IDrop from "@thirdweb-dev/contracts-js/dist/abis/IDrop.json";
 import IDropSinglePhase from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase.json";
 import IDropSinglePhaseV1 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase_V1.json";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
@@ -6,25 +7,36 @@ import IMintableERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC
 import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
 import ISignatureMintERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC20.json";
 
-export const FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS_V1 = {
-  name: "ERC20ClaimableWithConditionsV1",
+export const FEATURE_TOKEN_CLAIM_CONDITIONS_V1 = {
+  name: "ERC20ClaimConditionsV1",
   namespace: "token.drop.claim",
   docLinks: {
     sdk: "sdk.erc20dclaimable",
-    contracts: "DropSinglePhase",
+    contracts: "DropSinglePhase_V1",
   },
   abis: [ERC20Abi, IDropSinglePhaseV1],
   features: {},
 } as const;
 
-export const FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS_V2 = {
-  name: "ERC20ClaimableWithConditionsV2",
+export const FEATURE_TOKEN_CLAIM_CONDITIONS_V2 = {
+  name: "ERC20ClaimConditionsV2",
   namespace: "token.drop.claim",
   docLinks: {
     sdk: "sdk.erc20dclaimable",
     contracts: "DropSinglePhase",
   },
   abis: [ERC20Abi, IDropSinglePhase],
+  features: {},
+} as const;
+
+export const FEATURE_TOKEN_CLAIM_PHASES_V2 = {
+  name: "ERC20ClaimPhasesV2",
+  namespace: "token.drop.claim",
+  docLinks: {
+    sdk: "sdk.erc20dclaimable",
+    contracts: "Drop",
+  },
+  abis: [ERC20Abi, IDrop],
   features: {},
 } as const;
 
@@ -85,10 +97,9 @@ export const FEATURE_TOKEN = {
   features: {
     [FEATURE_TOKEN_BURNABLE.name]: FEATURE_TOKEN_BURNABLE,
     [FEATURE_TOKEN_MINTABLE.name]: FEATURE_TOKEN_MINTABLE,
-    [FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS_V1.name]:
-      FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS_V1,
-    [FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS_V2.name]:
-      FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS_V2,
+    [FEATURE_TOKEN_CLAIM_CONDITIONS_V1.name]: FEATURE_TOKEN_CLAIM_CONDITIONS_V1,
+    [FEATURE_TOKEN_CLAIM_CONDITIONS_V2.name]: FEATURE_TOKEN_CLAIM_CONDITIONS_V2,
+    [FEATURE_TOKEN_CLAIM_PHASES_V2.name]: FEATURE_TOKEN_CLAIM_PHASES_V2,
     [FEATURE_TOKEN_SIGNATURE_MINTABLE.name]: FEATURE_TOKEN_SIGNATURE_MINTABLE,
   },
 } as const;

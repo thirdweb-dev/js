@@ -5,6 +5,7 @@ import {
   detectContractFeature,
   ExtensionNotImplementedError,
   hasFunction,
+  matchesPrebuiltAbi,
   NotFoundError,
 } from "../../common";
 import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
@@ -18,7 +19,7 @@ import {
   FEATURE_EDITION_REVEALABLE,
   FEATURE_EDITION_SIGNATURE_MINTABLE,
   FEATURE_EDITION_CLAIMABLE,
-  FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS_V2,
+  FEATURE_EDITION_CLAIM_CONDITIONS_V2,
 } from "../../constants/erc1155-features";
 import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 import { EditionMetadataOrUri } from "../../schema/tokens/edition";
@@ -50,6 +51,7 @@ import type {
   IMintableERC1155,
   TokenERC1155,
 } from "@thirdweb-dev/contracts-js";
+import DropERC1155_V2 from "@thirdweb-dev/contracts-js/dist/abis/DropERC1155_V2.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 
@@ -916,7 +918,7 @@ export class Erc1155<
   get claimConditions() {
     return assertEnabled(
       this.lazyMintable?.claimWithConditions,
-      FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS_V2,
+      FEATURE_EDITION_CLAIM_CONDITIONS_V2,
     ).conditions;
   }
 
@@ -1042,7 +1044,8 @@ export class Erc1155<
       detectContractFeature<BaseDropERC1155>(
         this.contractWrapper,
         "ERC1155LazyMintable",
-      )
+      ) ||
+      matchesPrebuiltAbi<BaseDropERC1155>(this.contractWrapper, DropERC1155_V2)
     ) {
       return new Erc1155LazyMintable(this, this.contractWrapper, this.storage);
     }

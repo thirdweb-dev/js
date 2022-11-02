@@ -5,6 +5,7 @@ import {
   detectContractFeature,
   ExtensionNotImplementedError,
   hasFunction,
+  matchesPrebuiltAbi,
   NotFoundError,
 } from "../../common";
 import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
@@ -13,7 +14,7 @@ import {
   FEATURE_NFT_BATCH_MINTABLE,
   FEATURE_NFT_BURNABLE,
   FEATURE_NFT_CLAIMABLE,
-  FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V2,
+  FEATURE_NFT_CLAIM_CONDITIONS_V2,
   FEATURE_NFT_LAZY_MINTABLE,
   FEATURE_NFT_MINTABLE,
   FEATURE_NFT_REVEALABLE,
@@ -48,6 +49,7 @@ import type {
   TieredDrop,
   TokenERC721,
 } from "@thirdweb-dev/contracts-js";
+import DropERC721_V3 from "@thirdweb-dev/contracts-js/dist/abis/DropERC721_V3.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
 
@@ -687,7 +689,7 @@ export class Erc721<
   get claimConditions() {
     return assertEnabled(
       this.lazyMintable?.claimWithConditions,
-      FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V2,
+      FEATURE_NFT_CLAIM_CONDITIONS_V2,
     ).conditions;
   }
 
@@ -836,7 +838,8 @@ export class Erc721<
       detectContractFeature<BaseDropERC721>(
         this.contractWrapper,
         "ERC721LazyMintable",
-      )
+      ) ||
+      matchesPrebuiltAbi<BaseDropERC721>(this.contractWrapper, DropERC721_V3)
     ) {
       return new Erc721LazyMintable(this, this.contractWrapper, this.storage);
     }

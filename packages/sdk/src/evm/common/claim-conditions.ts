@@ -31,8 +31,8 @@ import {
   SnapshotFormatVersion,
 } from "./sharded-merkle-tree";
 import { createSnapshot } from "./snapshots";
+import { IClaimCondition } from "@thirdweb-dev/contracts-js/dist/declarations/src/Drop";
 import { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/declarations/src/IDropERC20_V2";
-import { IClaimCondition } from "@thirdweb-dev/contracts-js/src/IDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,

@@ -2,6 +2,7 @@ import { NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import {
   detectContractFeature,
   hasFunction,
+  matchesPrebuiltAbi,
 } from "../../common/feature-detection";
 import { getPrebuiltInfo } from "../../common/legacy";
 import { uploadOrExtractURIs } from "../../common/nft";
@@ -23,6 +24,7 @@ import { Erc1155 } from "./erc-1155";
 import { ERC1155Claimable } from "./erc-1155-claimable";
 import { Erc1155ClaimableWithConditions } from "./erc-1155-claimable-with-conditions";
 import type { IClaimableERC1155 } from "@thirdweb-dev/contracts-js";
+import DropERC1155_V2 from "@thirdweb-dev/contracts-js/dist/abis/DropERC1155_V2.json";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -199,11 +201,19 @@ export class Erc1155LazyMintable implements DetectableFeature {
     if (
       detectContractFeature<BaseClaimConditionERC1155>(
         this.contractWrapper,
-        "ERC1155ClaimableWithConditionsV1",
+        "ERC1155ClaimConditionsV1",
       ) ||
       detectContractFeature<BaseClaimConditionERC1155>(
         this.contractWrapper,
-        "ERC1155ClaimableWithConditionsV2",
+        "ERC1155ClaimConditionsV2",
+      ) ||
+      detectContractFeature<BaseClaimConditionERC1155>(
+        this.contractWrapper,
+        "ERC1155ClaimPhasesV2",
+      ) ||
+      matchesPrebuiltAbi<BaseClaimConditionERC1155>(
+        this.contractWrapper,
+        DropERC1155_V2,
       )
     ) {
       return new Erc1155ClaimableWithConditions(
@@ -221,6 +231,10 @@ export class Erc1155LazyMintable implements DetectableFeature {
       detectContractFeature<BaseDelayedRevealERC1155>(
         this.contractWrapper,
         "ERC1155Revealable",
+      ) ||
+      matchesPrebuiltAbi<BaseDelayedRevealERC1155>(
+        this.contractWrapper,
+        DropERC1155_V2,
       )
     ) {
       return new DelayedReveal(

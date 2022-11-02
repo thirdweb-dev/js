@@ -1,5 +1,9 @@
 import { NetworkOrSignerOrProvider, TransactionResult } from "..";
-import { assertEnabled, detectContractFeature } from "../../common";
+import {
+  assertEnabled,
+  detectContractFeature,
+  matchesPrebuiltAbi,
+} from "../../common";
 import {
   fetchCurrencyMetadata,
   fetchCurrencyValue,
@@ -10,7 +14,7 @@ import {
   FEATURE_TOKEN_BATCH_MINTABLE,
   FEATURE_TOKEN_BURNABLE,
   FEATURE_TOKEN_SIGNATURE_MINTABLE,
-  FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS_V2,
+  FEATURE_TOKEN_CLAIM_CONDITIONS_V2,
 } from "../../constants/erc20-features";
 import { TokenMintInput, AmountSchema } from "../../schema";
 import { Currency, CurrencyValue, Amount, ClaimOptions } from "../../types";
@@ -32,6 +36,7 @@ import type {
   IMintableERC20,
   IBurnableERC20,
 } from "@thirdweb-dev/contracts-js";
+import DropERC20_V2 from "@thirdweb-dev/contracts-js/dist/abis/DropERC20_V2.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers, BigNumber, BigNumberish } from "ethers";
 
@@ -515,7 +520,7 @@ export class Erc20<
   ): Promise<TransactionResult> {
     return assertEnabled(
       this.droppable?.claim,
-      FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS_V2,
+      FEATURE_TOKEN_CLAIM_CONDITIONS_V2,
     ).to(destinationAddress, amount, options);
   }
 
@@ -545,7 +550,7 @@ export class Erc20<
   get claimConditions() {
     return assertEnabled(
       this.droppable?.claim,
-      FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS_V2,
+      FEATURE_TOKEN_CLAIM_CONDITIONS_V2,
     ).conditions;
   }
 
@@ -619,12 +624,17 @@ export class Erc20<
     if (
       detectContractFeature<BaseDropERC20>(
         this.contractWrapper,
-        "ERC20ClaimableWithConditionsV1",
+        "ERC20ClaimConditionsV1",
       ) ||
       detectContractFeature<BaseDropERC20>(
         this.contractWrapper,
-        "ERC20ClaimableWithConditionsV2",
-      )
+        "ERC20ClaimConditionsV2",
+      ) ||
+      detectContractFeature<BaseDropERC20>(
+        this.contractWrapper,
+        "ERC20ClaimPhasesV2",
+      ) ||
+      matchesPrebuiltAbi<BaseDropERC20>(this.contractWrapper, DropERC20_V2)
     ) {
       return new Erc20Droppable(this, this.contractWrapper, this.storage);
     }

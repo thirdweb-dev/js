@@ -1,6 +1,7 @@
 import DelayedRevealAbi from "@thirdweb-dev/contracts-js/dist/abis/DelayedReveal.json";
 import IBurnableERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC1155.json";
 import IClaimableERC1155 from "@thirdweb-dev/contracts-js/dist/abis/IClaimableERC1155.json";
+import IDropMultiPhase1155 from "@thirdweb-dev/contracts-js/dist/abis/IDrop1155.json";
 import IDropSinglePhase1155 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase1155.json";
 import IDropSinglePhase1155_V1 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase1155_V1.json";
 import Erc1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
@@ -21,8 +22,8 @@ export const FEATURE_EDITION_BURNABLE = {
   features: {},
 } as const;
 
-export const FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS_V1 = {
-  name: "ERC1155ClaimableWithConditionsV1",
+export const FEATURE_EDITION_CLAIM_CONDITIONS_V1 = {
+  name: "ERC1155ClaimConditionsV1",
   namespace: "edition.drop.claim",
   docLinks: {
     sdk: "sdk.erc1155claimable",
@@ -32,14 +33,25 @@ export const FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS_V1 = {
   features: {},
 } as const;
 
-export const FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS_V2 = {
-  name: "ERC1155ClaimableWithConditionsV2",
+export const FEATURE_EDITION_CLAIM_CONDITIONS_V2 = {
+  name: "ERC1155ClaimConditionsV2",
   namespace: "edition.drop.claim",
   docLinks: {
     sdk: "sdk.erc1155claimable",
     contracts: "DropSinglePhase1155",
   },
   abis: [Erc1155Abi, ILazyMintAbi, IDropSinglePhase1155],
+  features: {},
+} as const;
+
+export const FEATURE_EDITION_CLAIM_PHASES_V2 = {
+  name: "ERC1155ClaimPhasesV2",
+  namespace: "edition.drop.claim",
+  docLinks: {
+    sdk: "sdk.erc1155claimable",
+    contracts: "Drop1155",
+  },
+  abis: [Erc1155Abi, ILazyMintAbi, IDropMultiPhase1155],
   features: {},
 } as const;
 
@@ -64,10 +76,11 @@ export const FEATURE_EDITION_LAZY_MINTABLE = {
   abis: [Erc1155Abi, ILazyMintAbi],
   features: {
     [FEATURE_EDITION_CLAIMABLE.name]: FEATURE_EDITION_CLAIMABLE,
-    [FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS_V1.name]:
-      FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS_V1,
-    [FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS_V2.name]:
-      FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS_V2,
+    [FEATURE_EDITION_CLAIM_CONDITIONS_V1.name]:
+      FEATURE_EDITION_CLAIM_CONDITIONS_V1,
+    [FEATURE_EDITION_CLAIM_CONDITIONS_V2.name]:
+      FEATURE_EDITION_CLAIM_CONDITIONS_V2,
+    [FEATURE_EDITION_CLAIM_PHASES_V2.name]: FEATURE_EDITION_CLAIM_PHASES_V2,
   },
 } as const;
 

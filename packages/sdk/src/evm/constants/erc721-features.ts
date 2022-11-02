@@ -1,6 +1,7 @@
 import IBurnableERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC721.json";
 import IClaimableERC721 from "@thirdweb-dev/contracts-js/dist/abis/IClaimableERC721.json";
 import DelayedRevealAbi from "@thirdweb-dev/contracts-js/dist/abis/IDelayedReveal.json";
+import IDrop from "@thirdweb-dev/contracts-js/dist/abis/IDrop.json";
 import IDropSinglePhase from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase.json";
 import IDropSinglePhaseV1 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase_V1.json";
 import Erc721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
@@ -45,8 +46,19 @@ export const FEATURE_NFT_TIERED_DROP = {
   features: {},
 } as const;
 
-export const FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V2 = {
-  name: "ERC721ClaimableWithConditionsV2",
+export const FEATURE_NFT_CLAIM_CONDITIONS_V1 = {
+  name: "ERC721ClaimConditionsV1",
+  namespace: "nft.drop.claim",
+  docLinks: {
+    sdk: "sdk.erc721claimable",
+    contracts: "DropSinglePhase_V1",
+  },
+  abis: [Erc721Abi, ILazyMintAbi, IDropSinglePhaseV1],
+  features: {},
+} as const;
+
+export const FEATURE_NFT_CLAIM_CONDITIONS_V2 = {
+  name: "ERC721ClaimConditionsV2",
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
@@ -56,14 +68,14 @@ export const FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V2 = {
   features: {},
 } as const;
 
-export const FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V1 = {
-  name: "ERC721ClaimableWithConditionsV1",
+export const FEATURE_NFT_CLAIM_PHASES_V2 = {
+  name: "ERC721ClaimPhasesV2",
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
-    contracts: "DropSinglePhase_V1",
+    contracts: "Drop",
   },
-  abis: [Erc721Abi, ILazyMintAbi, IDropSinglePhaseV1],
+  abis: [Erc721Abi, ILazyMintAbi, IDrop],
   features: {},
 } as const;
 
@@ -89,10 +101,9 @@ export const FEATURE_NFT_LAZY_MINTABLE = {
   features: {
     [FEATURE_NFT_REVEALABLE.name]: FEATURE_NFT_REVEALABLE,
     [FEATURE_NFT_CLAIMABLE.name]: FEATURE_NFT_CLAIMABLE,
-    [FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V2.name]:
-      FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V2,
-    [FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V1.name]:
-      FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V1,
+    [FEATURE_NFT_CLAIM_CONDITIONS_V1.name]: FEATURE_NFT_CLAIM_CONDITIONS_V1,
+    [FEATURE_NFT_CLAIM_CONDITIONS_V2.name]: FEATURE_NFT_CLAIM_CONDITIONS_V2,
+    [FEATURE_NFT_CLAIM_PHASES_V2.name]: FEATURE_NFT_CLAIM_PHASES_V2,
   },
 } as const;
 

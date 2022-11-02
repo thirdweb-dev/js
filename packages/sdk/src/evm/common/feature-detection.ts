@@ -7,6 +7,7 @@ import {
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { DetectableFeature } from "../core/interfaces/DetectableFeature";
 import {
+  Abi,
   AbiEvent,
   AbiFunction,
   AbiSchema,
@@ -32,26 +33,46 @@ import { z } from "zod";
  * @param abi
  * @param feature
  */
-function matchesAbiInterface(
-  abi: z.input<typeof AbiSchema>,
-  feature: Feature,
-): boolean {
+function matchesAbiInterface(abi: Abi, feature: Feature): boolean {
   // returns true if all the functions in `interfaceToMatch` are found in `contract` (removing any duplicates)
-  const contractFn = [
-    ...new Set(extractFunctionsFromAbi(abi).map((f) => f.name)),
-  ];
-  const interfaceFn = [
-    ...new Set(
-      feature.abis
-        .flatMap((i: any) => extractFunctionsFromAbi(i))
-        .map((f: AbiFunction) => f.name),
-    ),
-  ];
+  return hasMatchingAbi(abi, feature.abis);
+}
 
-  return (
-    contractFn.filter((k) => interfaceFn.includes(k)).length ===
-    interfaceFn.length
+/**
+ * @internal
+ * @param contractWrapper
+ * @param abi
+ * @returns
+ */
+export function matchesPrebuiltAbi<T extends BaseContract>(
+  contractWrapper: ContractWrapper<BaseContract>,
+  abi: Abi,
+): contractWrapper is ContractWrapper<T> {
+  return hasMatchingAbi(contractWrapper.abi as Abi, [abi]);
+}
+
+/**
+ * @internal
+ * @param contractAbi
+ * @param featureAbis
+ * @returns
+ */
+export function hasMatchingAbi(contractAbi: Abi, featureAbis: readonly Abi[]) {
+  const contractFn = extractFunctionsFromAbi(contractAbi);
+  const interfaceFn = featureAbis.flatMap((i: any) =>
+    extractFunctionsFromAbi(i),
   );
+  // match every function and their arguments
+  const intersection = contractFn.filter((fn) => {
+    const match = interfaceFn.find(
+      (iFn) =>
+        iFn.name === fn.name &&
+        iFn.inputs.length === fn.inputs.length &&
+        iFn.inputs.every((i, index) => i.type === fn.inputs[index].type),
+    );
+    return match !== undefined;
+  });
+  return intersection.length === interfaceFn.length;
 }
 
 /**
@@ -145,7 +166,7 @@ export function extractFunctionParamsFromAbi(
  * @param metadata
  */
 export function extractFunctionsFromAbi(
-  abi: z.input<typeof AbiSchema>,
+  abi: Abi,
   metadata?: Record<string, any>,
 ): AbiFunction[] {
   const functions = (abi || []).filter((el) => el.type === "function");
@@ -178,7 +199,7 @@ export function extractFunctionsFromAbi(
  * @param metadata
  */
 export function extractEventsFromAbi(
-  abi: z.input<typeof AbiSchema>,
+  abi: Abi,
   metadata?: Record<string, any>,
 ): AbiEvent[] {
   const events = (abi || []).filter((el) => el.type === "event");
