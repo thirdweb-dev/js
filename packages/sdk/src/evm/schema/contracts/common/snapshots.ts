@@ -13,8 +13,10 @@ export const MerkleSchema = z.object({
 export const SnapshotEntryInput = z.object({
   address: AddressSchema,
   maxClaimable: QuantitySchema.default(0), // defaults to 0
-  price: QuantitySchema, // defaults to unlimited
-  currencyAddress: AddressSchema.default(ethers.constants.AddressZero),
+  price: QuantitySchema.optional(), // defaults to unlimited, but can be undefined in old snapshots
+  currencyAddress: AddressSchema.default(
+    ethers.constants.AddressZero,
+  ).optional(), // defaults to AddressZero, but can be undefined for old snapshots
 });
 
 export type SnapshotEntry = z.output<typeof SnapshotEntryInput>;

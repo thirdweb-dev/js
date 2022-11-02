@@ -101,8 +101,11 @@ export class ShardedMerkleTree {
           [
             entry.address,
             convertQuantityToBigNumber(entry.maxClaimable, tokenDecimals),
-            convertQuantityToBigNumber(entry.price, currencyDecimals),
-            entry.currencyAddress,
+            convertQuantityToBigNumber(
+              entry.price || "unlimited",
+              currencyDecimals,
+            ),
+            entry.currencyAddress || ethers.constants.AddressZero,
           ],
         );
     }
@@ -111,11 +114,14 @@ export class ShardedMerkleTree {
   static async fetchAndCacheDecimals(
     cache: Record<string, number>,
     provider: ethers.providers.Provider,
-    currencyAddress: string,
+    currencyAddress?: string,
   ): Promise<number> {
+    if (!currencyAddress) {
+      return 18;
+    }
     // cache decimals for each currency to avoid refetching for every address
     let currencyDecimals = cache[currencyAddress];
-    if (!currencyDecimals) {
+    if (currencyDecimals === undefined) {
       const currencyMetadata = await fetchCurrencyMetadata(
         provider,
         currencyAddress,
