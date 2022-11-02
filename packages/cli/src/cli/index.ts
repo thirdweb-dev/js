@@ -133,15 +133,16 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
             err,
           );
         }
-      } else {
-        const url = await processProject(options, "deploy");
-        info(
-          `Open this link to deploy your contracts: ${chalk.blueBright(
-            url.toString(),
-          )}`,
-        );
-        open(url.toString());
+        return;
       }
+
+      const url = await processProject(options, "deploy");
+      info(
+        `Open this link to deploy your contracts: ${chalk.blueBright(
+          url.toString(),
+        )}`,
+      );
+      open(url.toString());
     });
 
   program
