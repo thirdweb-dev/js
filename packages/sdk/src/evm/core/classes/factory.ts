@@ -1,4 +1,8 @@
-import { CONTRACT_ADDRESSES, SUPPORTED_CHAIN_IDS } from "../../constants";
+import {
+  CONTRACT_ADDRESSES,
+  getApprovedImplementation,
+  SUPPORTED_CHAIN_IDS,
+} from "../../constants";
 import {
   EditionDropInitializer,
   EditionInitializer,
@@ -301,6 +305,15 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     version?: number,
   ) {
     const encodedType = ethers.utils.formatBytes32String(contract.name);
+    const chainId = await this.getChainID();
+    const approvedImplementation = getApprovedImplementation(
+      chainId,
+      contract.contractType,
+    );
+    // return approved implementation if it exists and we're not overriding the version
+    if (approvedImplementation && version === undefined) {
+      return approvedImplementation;
+    }
     return this.readContract.getImplementation(
       encodedType,
       version !== undefined

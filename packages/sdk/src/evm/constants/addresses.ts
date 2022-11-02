@@ -1,3 +1,4 @@
+import { PrebuiltContractType } from "../core/types";
 import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
 import { constants } from "ethers";
 
@@ -141,6 +142,40 @@ export const CONTRACT_ADDRESSES: Record<
     twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
   },
 };
+
+type DropContract = Extract<
+  PrebuiltContractType,
+  "nft-drop" | "token-drop" | "edition-drop" | "signature-drop"
+>;
+export const APPROVED_IMPLEMENTATIONS: Record<
+  number, // TODO use SupportedChainId once we deploy to all chains
+  Record<DropContract, string>
+> = {
+  [ChainId.Goerli]: {
+    "nft-drop": "0xD11c97DD5F5546B5bBd630D7D1d7327481B0b92C",
+    "token-drop": "0x5680933221B752EB443654a014f88B101F868d50",
+    "edition-drop": "0x5A8eA4Adad8289746D073947BA06D69A62499aaf",
+    "signature-drop": "0x1b5947e1a2d5a29D0df20931DeAB0B87818209B9",
+  },
+};
+
+/**
+ * @internal
+ * @param chainId
+ * @param contractType
+ */
+export function getApprovedImplementation(
+  chainId: number, // TODO use SupportedChainId once we deploy to all chains
+  contractType: PrebuiltContractType,
+): string | null {
+  if (chainId in APPROVED_IMPLEMENTATIONS) {
+    const approvedImpls = APPROVED_IMPLEMENTATIONS[chainId];
+    if (contractType in approvedImpls) {
+      return approvedImpls[contractType as keyof typeof approvedImpls];
+    }
+  }
+  return null;
+}
 
 /**
  * @internal
