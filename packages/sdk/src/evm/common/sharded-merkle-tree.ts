@@ -111,8 +111,11 @@ export class ShardedMerkleTree {
   static async fetchAndCacheDecimals(
     cache: Record<string, number>,
     provider: ethers.providers.Provider,
-    currencyAddress: string,
+    currencyAddress?: string,
   ): Promise<number> {
+    if (!currencyAddress) {
+      return 18;
+    }
     // cache decimals for each currency to avoid refetching for every address
     let currencyDecimals = cache[currencyAddress];
     if (!currencyDecimals) {
