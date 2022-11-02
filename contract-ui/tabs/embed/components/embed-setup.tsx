@@ -32,7 +32,7 @@ interface EmbedSetupProps {
   contractType?: string | null;
 }
 
-const IPFS_URI = "ipfs://QmamP3sRTew6umVHyEfm7RJJLXSKZ4RMY89U7Vp7zK5m5L";
+const IPFS_URI = "ipfs://QmQM4Njtt2o4cQ98Mi2kBD6rBsfH6LfeaRYBYLpR41nVFs";
 
 interface IframeSrcOptions {
   rpcUrl: string;
