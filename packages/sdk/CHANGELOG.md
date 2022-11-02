@@ -1,5 +1,13 @@
 # @thirdweb-dev/sdk
 
+## 3.5.1
+
+### Patch Changes
+
+- [#368](https://github.com/thirdweb-dev/js/pull/368) [`4e7b293`](https://github.com/thirdweb-dev/js/commit/4e7b293c543244de79c150ca8c37d941221fc9a3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix handling of old allowlist proof format
+
+- [#365](https://github.com/thirdweb-dev/js/pull/365) [`c9c0e4f`](https://github.com/thirdweb-dev/js/commit/c9c0e4ff39b054af746f3aec75fcbd0a3ef7239d) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - now React Native compatible
+
 ## 3.5.0
 
 ### Minor Changes
