@@ -1,7 +1,10 @@
 import { NFTCollectionMetadataInputSchema } from ".";
-import { BasisPointsSchema, QuantitySchema } from "../../../core/schema/shared";
+import {
+  AmountSchema,
+  BasisPointsSchema,
+  QuantitySchema,
+} from "../../../core/schema/shared";
 import { CurrencyValueSchema } from "../../../core/schema/token";
-import { AmountSchema } from "../common";
 import { z } from "zod";
 
 /**

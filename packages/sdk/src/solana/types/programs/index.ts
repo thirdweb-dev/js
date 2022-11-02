@@ -1,4 +1,8 @@
-import { AmountSchema, FileOrBufferOrStringSchema, PercentSchema } from "../common";
+import {
+  AmountSchema,
+  FileOrBufferOrStringSchema,
+  PercentSchema,
+} from "../../../core/schema/shared";
 import { Creator } from "@metaplex-foundation/js";
 import { z } from "zod";
 

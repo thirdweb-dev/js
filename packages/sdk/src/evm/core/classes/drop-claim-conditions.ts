@@ -1,3 +1,4 @@
+import { AmountSchema } from "../../../core/schema/shared";
 import { includesErrorMessage } from "../../common";
 import {
   abstractContractModelToLegacy,
@@ -22,7 +23,6 @@ import { isNode } from "../../common/utils";
 import { ClaimEligibility } from "../../enums";
 import {
   AbstractClaimConditionContractStruct,
-  AmountSchema,
   SnapshotEntryWithProof,
 } from "../../schema";
 import {

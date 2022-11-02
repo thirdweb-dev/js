@@ -1,12 +1,14 @@
 import { NFTInputOrUriSchema } from "../../../../core/schema/nft";
+import {
+  AmountSchema,
+  BasisPointsSchema,
+} from "../../../../core/schema/shared";
 import { resolveOrGenerateId } from "../../../common/signature-minting";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
 import {
-  BasisPointsSchema,
   BigNumberishSchema,
   BigNumberSchema,
   EndDateSchema,
-  AmountSchema,
   StartDateSchema,
 } from "../../shared";
 import { constants } from "ethers";

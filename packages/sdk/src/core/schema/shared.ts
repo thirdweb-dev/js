@@ -2,8 +2,14 @@ import BN from "bn.js";
 import { BigNumber } from "ethers";
 import { z } from "zod";
 
-const isBrowser = () => typeof window !== "undefined";
-const FileOrBufferUnionSchema = isBrowser()
+/**
+ * @internal
+ */
+export const isBrowser = () => typeof window !== "undefined";
+/**
+ * @internal
+ */
+export const FileOrBufferUnionSchema = isBrowser()
   ? (z.instanceof(File) as z.ZodType<InstanceType<typeof File>>)
   : (z.instanceof(Buffer) as z.ZodTypeAny); // @fixme, this is a hack to make browser happy for now
 
@@ -95,6 +101,11 @@ export const AmountSchema = z
     z.number().min(0, "Amount cannot be negative"),
   ])
   .transform((arg) => (typeof arg === "number" ? arg.toString() : arg));
+
+/**
+ * @internal
+ */
+export type Amount = z.input<typeof AmountSchema>;
 
 /**
  * @internal

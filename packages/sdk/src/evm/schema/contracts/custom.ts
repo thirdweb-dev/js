@@ -1,9 +1,9 @@
+import { FileOrBufferOrStringSchema } from "../../../core/schema/shared";
 import { toSemver } from "../../common/index";
 import {
   AddressSchema,
   BigNumberishSchema,
   BigNumberTransformSchema,
-  FileOrBufferOrStringSchema,
 } from "../shared";
 import {
   CommonContractOutputSchema,

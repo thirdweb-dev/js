@@ -26,7 +26,7 @@ import {
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
-import { PaperCheckout } from "../../integrations/checkout";
+import { PaperCheckout } from "../../integrations/thirdweb-checkout";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import { PrebuiltNFTDrop } from "../../types/eips";
