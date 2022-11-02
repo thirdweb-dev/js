@@ -6,6 +6,7 @@ import {
 } from "../constants/contract-features";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { DetectableFeature } from "../core/interfaces/DetectableFeature";
+import { decode } from "../lib/cbor-decode.js";
 import {
   AbiEvent,
   AbiFunction,
@@ -23,7 +24,6 @@ import {
 import { ExtensionNotImplementedError } from "./error";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import bs58 from "bs58";
-import { decode } from "cbor-x";
 import { BaseContract, BigNumber, ethers } from "ethers";
 import { z } from "zod";
 
