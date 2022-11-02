@@ -1,10 +1,10 @@
+import { MAX_BPS } from "../../core/schema/shared";
 import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
 } from "../constants/contract";
 import { SignerOrProvider } from "../core";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { MAX_BPS } from "../schema/shared";
 import {
   NewAuctionListing,
   NewDirectListing,

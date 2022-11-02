@@ -1,8 +1,8 @@
 import {
-  AddressSchema,
   BasisPointsSchema,
   FileOrBufferOrStringSchema,
-} from "../../shared";
+} from "../../../../core/schema/shared";
+import { AddressSchema } from "../../shared";
 import { constants } from "ethers";
 import { z } from "zod";
 

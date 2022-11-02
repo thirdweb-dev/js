@@ -29,7 +29,7 @@ export * from "./constants";
 export * from "./contracts";
 
 // export integration things
-export * from "./integrations/checkout";
+export * from "./integrations/thirdweb-checkout";
 
 // explcitly export the *TYPES* of prebuilt contracts
 export type { Edition } from "./contracts/prebuilt-implementations/edition";
