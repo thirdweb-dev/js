@@ -1,5 +1,9 @@
 # @thirdweb-dev/react
 
+## 3.5.0
+
+## 3.4.5
+
 ## 3.4.4
 
 ### Patch Changes

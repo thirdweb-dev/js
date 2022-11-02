@@ -1,10 +1,9 @@
 import { ChainId } from "../constants";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { SignedPayload721WithQuantitySignature } from "../schema/contracts/common/signature";
-import { DropERC721 } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
-import { DropERC1155 } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC1155";
+import { PrebuiltEditionDrop, PrebuiltNFTDrop } from "../types/eips";
 import { SignatureDrop } from "@thirdweb-dev/contracts-js/dist/declarations/src/SignatureDrop";
-import fetch from "cross-fetch";
+// import fetch from "cross-fetch";
 import invariant from "tiny-invariant";
 
 const PAPER_API_BASE = `https://paper.xyz/api` as const;
@@ -133,9 +132,9 @@ export type PaperCreateCheckoutLinkShardParams = {
  * @internal
  */
 export type PaperCreateCheckoutLinkIntentParams<
-  TContract extends DropERC721 | DropERC1155 | SignatureDrop,
+  TContract extends PrebuiltNFTDrop | PrebuiltEditionDrop | SignatureDrop,
 > = PaperCreateCheckoutLinkShardParams &
-  (TContract extends DropERC1155
+  (TContract extends PrebuiltEditionDrop
     ? {
         contractArgs: { tokenId: string };
       }
@@ -143,7 +142,7 @@ export type PaperCreateCheckoutLinkIntentParams<
     ? {
         contractArgs: SignedPayload721WithQuantitySignature;
       }
-    : TContract extends DropERC721
+    : TContract extends PrebuiltNFTDrop
     ? {}
     : never);
 
@@ -165,7 +164,7 @@ const DEFAULT_PARAMS: Partial<PaperCreateCheckoutLinkShardParams> = {
  * @internal
  */
 export async function createCheckoutLinkIntent<
-  TContract extends DropERC721 | DropERC1155 | SignatureDrop,
+  TContract extends PrebuiltNFTDrop | PrebuiltEditionDrop | SignatureDrop,
 >(
   contractId: string,
   params: PaperCreateCheckoutLinkIntentParams<TContract>,
@@ -203,7 +202,7 @@ export async function createCheckoutLinkIntent<
  * @internal
  */
 export class PaperCheckout<
-  TContract extends DropERC721 | DropERC1155 | SignatureDrop,
+  TContract extends PrebuiltNFTDrop | PrebuiltEditionDrop | SignatureDrop,
 > {
   private contractWrapper;
 

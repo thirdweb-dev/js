@@ -24,14 +24,18 @@ import {
   ContractPublisher,
   ContractPublisher__factory,
   DropERC1155__factory,
+  DropERC1155_V2__factory,
   DropERC20__factory,
+  DropERC20_V2__factory,
   DropERC721__factory,
+  DropERC721_V3__factory,
   Marketplace__factory,
   MockContractPublisher,
   MockContractPublisher__factory,
   Multiwrap__factory,
   Pack__factory,
   SignatureDrop__factory,
+  SignatureDrop_V4__factory,
   Split__factory,
   TokenERC1155__factory,
   TokenERC20__factory,
@@ -154,64 +158,67 @@ export const mochaHooks = {
       if (contractType === "custom") {
         continue;
       }
-      let factory;
+      let factories = [];
       switch (contractType) {
         case TokenInitializer.contractType:
-          factory = TokenERC20__factory;
+          factories.push(TokenERC20__factory);
           break;
         case TokenDropInitializer.contractType:
-          factory = DropERC20__factory;
+          factories.push(DropERC20_V2__factory, DropERC20__factory);
           break;
         case NFTCollectionInitializer.contractType:
-          factory = TokenERC721__factory;
+          factories.push(TokenERC721__factory);
           break;
         case NFTDropInitializer.contractType:
-          factory = DropERC721__factory;
+          factories.push(DropERC721_V3__factory, DropERC721__factory);
           break;
         case SignatureDropInitializer.contractType:
-          factory = SignatureDrop__factory;
+          factories.push(SignatureDrop_V4__factory, SignatureDrop__factory);
           break;
         case EditionInitializer.contractType:
-          factory = TokenERC1155__factory;
+          factories.push(TokenERC1155__factory);
           break;
         case EditionDropInitializer.contractType:
-          factory = DropERC1155__factory;
+          factories.push(DropERC1155_V2__factory, DropERC1155__factory);
           break;
         case SplitInitializer.contractType:
-          factory = Split__factory;
+          factories.push(Split__factory);
           break;
         case VoteInitializer.contractType:
-          factory = VoteERC20__factory;
+          factories.push(VoteERC20__factory);
           break;
         case MarketplaceInitializer.contractType:
-          factory = Marketplace__factory;
+          factories.push(Marketplace__factory);
           break;
         case PackInitializer.contractType:
-          factory = Pack__factory;
+          factories.push(Pack__factory);
           break;
         case MultiwrapInitializer.contractType:
-          factory = Multiwrap__factory;
+          factories.push(Multiwrap__factory);
           break;
         default:
           throw new Error(`No factory for contract: ${contractType}`);
       }
 
-      const contractFactory = new ethers.ContractFactory(
-        factory.abi,
-        factory.bytecode,
-      ).connect(signer);
+      for (const factory of factories) {
+        const contractFactory = new ethers.ContractFactory(
+          factory.abi,
+          factory.bytecode,
+        ).connect(signer);
 
-      const deployedContract: ethers.Contract = await deployContract(
-        contractFactory,
-        contractType as ContractType,
-      );
+        const deployedContract: ethers.Contract = await deployContract(
+          contractFactory,
+          contractType as ContractType,
+        );
 
-      await deployedContract.deployed();
-      const tx = await thirdwebFactoryDeployer.addImplementation(
-        deployedContract.address,
-      );
-      await tx.wait();
-      implementations[contractType as ContractType] = deployedContract.address;
+        await deployedContract.deployed();
+        const tx = await thirdwebFactoryDeployer.addImplementation(
+          deployedContract.address,
+        );
+        await tx.wait();
+        implementations[contractType as ContractType] =
+          deployedContract.address;
+      }
     }
 
     // eslint-disable-next-line turbo/no-undeclared-env-vars

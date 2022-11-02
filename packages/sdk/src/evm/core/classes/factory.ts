@@ -1,8 +1,8 @@
-import { TransactionError } from "../../common";
 import { CONTRACT_ADDRESSES, SUPPORTED_CHAIN_IDS } from "../../constants";
 import {
   EditionDropInitializer,
   EditionInitializer,
+  getContractName,
   MarketplaceInitializer,
   MultiwrapInitializer,
   NFTCollectionInitializer,
@@ -41,6 +41,22 @@ import { z } from "zod";
 export class ContractFactory extends ContractWrapper<TWFactory> {
   private storage: ThirdwebStorage;
 
+  // Map from contract type to version to deploy specific versions by default
+  private DEFAULT_VERSION_MAP: Record<PrebuiltContractType, number> = {
+    [NFTDropInitializer.contractType]: 3,
+    [NFTCollectionInitializer.contractType]: 1,
+    [SignatureDropInitializer.contractType]: 4,
+    [MultiwrapInitializer.contractType]: 1,
+    [EditionDropInitializer.contractType]: 2,
+    [EditionInitializer.contractType]: 1,
+    [TokenDropInitializer.contractType]: 2,
+    [TokenInitializer.contractType]: 1,
+    [VoteInitializer.contractType]: 1,
+    [SplitInitializer.contractType]: 1,
+    [MarketplaceInitializer.contractType]: 2,
+    [PackInitializer.contractType]: 2,
+  };
+
   constructor(
     factoryAddr: string,
     network: NetworkOrSignerOrProvider,
@@ -56,6 +72,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     contractMetadata: z.input<
       DeploySchemaForPrebuiltContractType<TContractType>
     >,
+    version?: number,
   ): Promise<string> {
     const contract = PREBUILT_CONTRACTS_MAP[contractType];
     const metadata = contract.schema.deploy.parse(contractMetadata);
@@ -63,42 +80,35 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     // TODO: is there any special pre-processing we need to do before uploading?
     const contractURI = await this.storage.upload(metadata);
 
-    const ABI = await contract.getAbi();
+    const implementationAddress = await this.getImplementation(
+      contract,
+      version,
+    );
+
+    if (
+      !implementationAddress ||
+      implementationAddress === constants.AddressZero
+    ) {
+      throw new Error(`No implementation found for ${contractType}`);
+    }
+
+    const ABI = await contract.getAbi(
+      implementationAddress,
+      this.getProvider(),
+    );
 
     const encodedFunc = Contract.getInterface(ABI).encodeFunctionData(
       "initialize",
       await this.getDeployArguments(contractType, metadata, contractURI),
     );
 
-    const encodedType = ethers.utils.formatBytes32String(contract.name);
-    let receipt;
-    try {
-      receipt = await this.sendTransaction("deployProxy", [
-        encodedType,
-        encodedFunc,
-      ]);
-    } catch (e) {
-      console.log(e);
-      // if the error is caused by user cancelling the transaction, just re-throw it
-      if (
-        (e as TransactionError).message
-          .toLowerCase()
-          .includes("user rejected transaction") ||
-        (e as TransactionError).reason
-          .toLowerCase()
-          .includes("user rejected transaction")
-      ) {
-        throw e;
-      }
-
-      // deploy might fail due to salt already used, fallback to deterministic deploy
-      const blockNumber = await this.getProvider().getBlockNumber();
-      receipt = await this.sendTransaction("deployProxyDeterministic", [
-        encodedType,
-        encodedFunc,
-        ethers.utils.formatBytes32String(blockNumber.toString()),
-      ]);
-    }
+    const blockNumber = await this.getProvider().getBlockNumber();
+    const salt = ethers.utils.formatBytes32String(blockNumber.toString());
+    const receipt = await this.sendTransaction("deployProxyByImplementation", [
+      implementationAddress,
+      encodedFunc,
+      salt,
+    ]);
 
     const events = this.parseLogs<ProxyDeployedEvent>(
       "ProxyDeployed",
@@ -284,5 +294,27 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     return biconomyForwarder !== constants.AddressZero
       ? [openzeppelinForwarder, biconomyForwarder]
       : [openzeppelinForwarder];
+  }
+
+  private async getImplementation(
+    contract: typeof PREBUILT_CONTRACTS_MAP[PrebuiltContractType],
+    version?: number,
+  ) {
+    const encodedType = ethers.utils.formatBytes32String(contract.name);
+    return this.readContract.getImplementation(
+      encodedType,
+      version !== undefined
+        ? version
+        : this.DEFAULT_VERSION_MAP[contract.contractType],
+    );
+  }
+
+  public async getLatestVersion(contractType: PrebuiltContractType) {
+    const name = getContractName(contractType);
+    if (!name) {
+      throw new Error(`Invalid contract type ${contractType}`);
+    }
+    const encodedType = ethers.utils.formatBytes32String(name);
+    return this.readContract.currentVersion(encodedType);
   }
 }

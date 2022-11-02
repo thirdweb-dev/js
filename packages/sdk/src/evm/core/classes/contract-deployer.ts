@@ -387,6 +387,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @internal
    * @param contractType - the type of contract to deploy
    * @param contractMetadata - the metadata to deploy the contract with
+   * @param version
    * @returns a promise of the address of the newly deployed contract
    */
   public async deployBuiltInContract<
@@ -396,13 +397,25 @@ export class ContractDeployer extends RPCConnectionHandler {
     contractMetadata: z.input<
       DeploySchemaForPrebuiltContractType<TContractType>
     >,
+    version?: number,
   ): Promise<string> {
     const parsed =
       PREBUILT_CONTRACTS_MAP[contractType].schema.deploy.parse(
         contractMetadata,
       );
     const factory = await this.getFactory();
-    return await factory.deploy(contractType, parsed);
+    return await factory.deploy(contractType, parsed, version);
+  }
+
+  /**
+   * @internal
+   * @param contractType
+   */
+  public async getLatestBuiltInContractVersion<
+    TContractType extends PrebuiltContractType,
+  >(contractType: TContractType) {
+    const factory = await this.getFactory();
+    return await factory.getLatestVersion(contractType);
   }
 
   /**

@@ -18,7 +18,7 @@ import { UploadProgressEvent } from "../../types/events";
 import { TransactionResult, TransactionResultWithId } from "../index";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
-  DropERC721,
+  DropERC721_V3,
   IThirdwebContract,
   SignatureDrop,
 } from "@thirdweb-dev/contracts-js";
@@ -33,7 +33,7 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
  */
 export class DelayedReveal<
   T extends
-    | DropERC721
+    | DropERC721_V3
     | BaseDelayedRevealERC721
     | SignatureDrop
     | BaseDelayedRevealERC1155,
@@ -246,7 +246,9 @@ export class DelayedReveal<
           return this.contractWrapper.readContract.getBatchIdAtIndex(i);
         }
 
-        if (hasFunction<DropERC721>("baseURIIndices", this.contractWrapper)) {
+        if (
+          hasFunction<DropERC721_V3>("baseURIIndices", this.contractWrapper)
+        ) {
           return this.contractWrapper.readContract.baseURIIndices(i);
         }
 

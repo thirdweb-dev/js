@@ -1,6 +1,7 @@
 import {
   ClaimEligibility,
   EditionDrop,
+  EditionDropInitializer,
   NATIVE_TOKEN_ADDRESS,
   TokenInitializer,
 } from "../../src/evm";
@@ -17,7 +18,7 @@ const deepEqualInAnyOrder = require("deep-equal-in-any-order");
 
 use(deepEqualInAnyOrder);
 
-describe("Edition Drop Contract", async () => {
+describe("Edition Drop Contract (V4)", async () => {
   let bdContract: EditionDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -34,24 +35,73 @@ describe("Edition Drop Contract", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const address = await sdk.deployer.deployEditionDrop({
-      name: `Testing bundle drop from SDK`,
-      description: "Test contract from tests",
-      image:
-        "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
-      primary_sale_recipient: adminWallet.address,
-      seller_fee_basis_points: 500,
-      fee_recipient: AddressZero,
-      platform_fee_basis_points: 10,
-      platform_fee_recipient: adminWallet.address,
-    });
+    const address = await sdk.deployer.deployBuiltInContract(
+      EditionDropInitializer.contractType,
+      {
+        name: `Testing edition drop from SDK`,
+        description: "Test contract from tests",
+        image:
+          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+        primary_sale_recipient: adminWallet.address,
+        seller_fee_basis_points: 500,
+        fee_recipient: AddressZero,
+        platform_fee_basis_points: 10,
+        platform_fee_recipient: adminWallet.address,
+      },
+      await sdk.deployer.getLatestBuiltInContractVersion(
+        EditionDropInitializer.contractType,
+      ),
+    );
     bdContract = await sdk.getEditionDrop(address);
+  });
+
+  it("should allow a snapshot to be set", async () => {
+    await bdContract.createBatch([
+      {
+        name: "Test1",
+      },
+    ]);
+    await bdContract.claimConditions.set(0, [
+      {
+        startTime: new Date(Date.now() / 2),
+        snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
+        price: 1,
+      },
+      {
+        startTime: new Date(),
+        snapshot: [bobWallet.address],
+      },
+    ]);
+
+    let proof = await bdContract.claimConditions.getClaimerProofs(
+      0,
+      bobWallet.address,
+    );
+    expect(proof.address).to.eq(bobWallet.address);
+    proof = await bdContract.claimConditions.getClaimerProofs(
+      0,
+      bobWallet.address,
+      0,
+    );
+    expect(proof.address).to.eq(bobWallet.address);
+    proof = await bdContract.claimConditions.getClaimerProofs(
+      0,
+      samWallet.address,
+    );
+    expect(proof).to.eq(null);
+    proof = await bdContract.claimConditions.getClaimerProofs(
+      0,
+      samWallet.address,
+      0,
+    );
+    expect(proof.address).to.eq(samWallet.address);
   });
 
   it("should estimate gas cost", async () => {
     const cost = await bdContract.estimator.gasCostOf("lazyMint", [
       1000,
       "mock://12398172398172389/0",
+      "0x00",
     ]);
     expect(parseFloat(cost)).gt(0);
   });
@@ -96,7 +146,7 @@ describe("Edition Drop Contract", async () => {
 
     await bdContract.claimConditions.set("0", [
       {
-        maxQuantity: 1000,
+        maxClaimableSupply: 1000,
         snapshot: members,
       },
     ]);
@@ -129,10 +179,14 @@ describe("Edition Drop Contract", async () => {
       w2,
       w3,
     ];
-    const members = testWallets.map((w) => w.address);
+    const members = testWallets.map((w) => ({
+      address: w.address,
+      maxClaimable: 1,
+    }));
     await bdContract.claimConditions.set("0", [
       {
-        maxQuantity: 1000,
+        maxClaimablePerWallet: 0,
+        maxClaimableSupply: 1000,
         snapshot: members,
       },
     ]);
@@ -215,7 +269,7 @@ describe("Edition Drop Contract", async () => {
       await sdk.updateSignerOrProvider(w2);
       await bdContract.claim(0, 2);
     } catch (e) {
-      expectError(e, "invalid quantity proof");
+      expectError(e, "!Qty");
     }
   });
 
@@ -234,6 +288,20 @@ describe("Edition Drop Contract", async () => {
 
     await bdContract.claimConditions.set("0", [{}]);
     await bdContract.claim("0", 1);
+  });
+
+  it("should allow claiming with a price", async () => {
+    await bdContract.createBatch([
+      { name: "name", description: "description" },
+    ]);
+    await bdContract.claimConditions.set(0, [
+      {
+        price: 0.1,
+      },
+    ]);
+    await bdContract.claim(0, 2);
+    const balance = await bdContract.balance(0);
+    expect(balance).to.deep.equal(BigNumber.from(2));
   });
 
   it("should return addresses of all the claimers", async () => {
@@ -274,7 +342,8 @@ describe("Edition Drop Contract", async () => {
   it("should return the correct status if a token can be claimed", async () => {
     await bdContract.claimConditions.set("0", [
       {
-        snapshot: [w1.address],
+        maxClaimablePerWallet: 0,
+        snapshot: [{ address: w1.address, maxClaimable: 1 }],
       },
     ]);
 
@@ -320,7 +389,8 @@ describe("Edition Drop Contract", async () => {
   it("canClaim: 1 address", async () => {
     await bdContract.claimConditions.set("0", [
       {
-        snapshot: [w1.address],
+        maxClaimablePerWallet: 0,
+        snapshot: [{ address: w1.address, maxClaimable: 1 }],
       },
     ]);
 
@@ -335,13 +405,18 @@ describe("Edition Drop Contract", async () => {
   });
 
   it("canClaim: 3 address", async () => {
+    const members = [
+      {
+        address: w1.address.toUpperCase().replace("0X", "0x"),
+        maxClaimable: 1,
+      },
+      { address: w2.address.toLowerCase(), maxClaimable: 1 },
+      { address: w3.address.toLowerCase(), maxClaimable: 1 },
+    ];
     await bdContract.claimConditions.set("0", [
       {
-        snapshot: [
-          w1.address.toUpperCase().replace("0X", "0x"),
-          w2.address.toLowerCase(),
-          w3.address,
-        ],
+        maxClaimablePerWallet: 0,
+        snapshot: members,
       },
     ]);
 
@@ -403,7 +478,7 @@ describe("Edition Drop Contract", async () => {
         claimConditions: [
           {
             price: 0.1,
-            maxQuantity: 1,
+            maxClaimableSupply: 1,
           },
         ],
       },
@@ -412,7 +487,7 @@ describe("Edition Drop Contract", async () => {
     try {
       await bdContract.claim("1", 2);
     } catch (e) {
-      expectError(e, "exceed max mint supply");
+      expectError(e, "!MaxSupply");
     }
   });
 
@@ -457,7 +532,7 @@ describe("Edition Drop Contract", async () => {
     it("should check for the total supply", async () => {
       await bdContract.claimConditions.set("0", [
         {
-          maxQuantity: 1,
+          maxClaimableSupply: 1,
         },
       ]);
 
@@ -476,61 +551,26 @@ describe("Edition Drop Contract", async () => {
       assert.isFalse(canClaim);
     });
 
-    it("should check if an address has valid merkle proofs", async () => {
+    it("should get default values with default snapshot", async () => {
       await bdContract.claimConditions.set("0", [
         {
-          maxQuantity: 1,
-          snapshot: [w2.address, adminWallet.address],
+          maxClaimableSupply: 1,
+          snapshot: [w1.address],
         },
       ]);
 
-      const reasons =
-        await bdContract.claimConditions.getClaimIneligibilityReasons(
-          "0",
-          "1",
-          w1.address,
-        );
-      expect(reasons).to.include(ClaimEligibility.AddressNotAllowed);
       const canClaim = await bdContract.claimConditions.canClaim(
         "0",
         "1",
         w1.address,
       );
-      assert.isFalse(canClaim);
-    });
-
-    it("should check if its been long enough since the last claim", async () => {
-      await bdContract.claimConditions.set("0", [
-        {
-          maxQuantity: 10,
-          waitInSeconds: 24 * 60 * 60,
-        },
-      ]);
-      await sdk.updateSignerOrProvider(bobWallet);
-      await bdContract.claim("0", 1);
-
-      const reasons =
-        await bdContract.claimConditions.getClaimIneligibilityReasons(
-          "0",
-          "1",
-          bobWallet.address,
-        );
-
-      expect(reasons).to.include(
-        ClaimEligibility.WaitBeforeNextClaimTransaction,
-      );
-      const canClaim = await bdContract.claimConditions.canClaim(
-        "0",
-        "1",
-        bobWallet.address,
-      );
-      assert.isFalse(canClaim);
+      assert.isTrue(canClaim);
     });
 
     it("should check if an address has enough native currency", async () => {
       await bdContract.claimConditions.set("0", [
         {
-          maxQuantity: 10,
+          maxClaimableSupply: 10,
           price: "1000000000000000",
           currencyAddress: NATIVE_TOKEN_ADDRESS,
         },
@@ -567,7 +607,7 @@ describe("Edition Drop Contract", async () => {
 
       await bdContract.claimConditions.set("0", [
         {
-          maxQuantity: 10,
+          maxClaimableSupply: 10,
           price: "1000000000000000",
           currencyAddress: currency.getAddress(),
         },
@@ -593,7 +633,7 @@ describe("Edition Drop Contract", async () => {
     it("should return nothing if the claim is eligible", async () => {
       await bdContract.claimConditions.set("0", [
         {
-          maxQuantity: 10,
+          maxClaimableSupply: 10,
           price: "100",
           currencyAddress: NATIVE_TOKEN_ADDRESS,
           snapshot: [w1.address, w2.address, w3.address],

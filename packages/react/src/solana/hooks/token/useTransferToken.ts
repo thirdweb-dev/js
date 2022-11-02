@@ -4,7 +4,8 @@ import {
   RequiredParam,
 } from "../../../core/query-utils/required-param";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { Amount, Token } from "@thirdweb-dev/sdk/solana";
+import type { Amount } from "@thirdweb-dev/sdk";
+import type { Token } from "@thirdweb-dev/sdk/solana";
 
 export type TransferTokenMutationParams = {
   amount: Amount;
