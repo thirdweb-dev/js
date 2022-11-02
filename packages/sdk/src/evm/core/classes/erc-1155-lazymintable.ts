@@ -199,7 +199,11 @@ export class Erc1155LazyMintable implements DetectableFeature {
     if (
       detectContractFeature<BaseClaimConditionERC1155>(
         this.contractWrapper,
-        "ERC1155ClaimableWithConditions",
+        "ERC1155ClaimableWithConditionsV1",
+      ) ||
+      detectContractFeature<BaseClaimConditionERC1155>(
+        this.contractWrapper,
+        "ERC1155ClaimableWithConditionsV2",
       )
     ) {
       return new Erc1155ClaimableWithConditions(

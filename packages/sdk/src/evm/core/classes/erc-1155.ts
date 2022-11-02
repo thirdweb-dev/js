@@ -17,8 +17,8 @@ import {
   FEATURE_EDITION_MINTABLE,
   FEATURE_EDITION_REVEALABLE,
   FEATURE_EDITION_SIGNATURE_MINTABLE,
-  FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS,
   FEATURE_EDITION_CLAIMABLE,
+  FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS_V2,
 } from "../../constants/erc1155-features";
 import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 import { EditionMetadataOrUri } from "../../schema/tokens/edition";
@@ -916,7 +916,7 @@ export class Erc1155<
   get claimConditions() {
     return assertEnabled(
       this.lazyMintable?.claimWithConditions,
-      FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS,
+      FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS_V2,
     ).conditions;
   }
 

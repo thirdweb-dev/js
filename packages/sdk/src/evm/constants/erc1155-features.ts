@@ -2,6 +2,7 @@ import DelayedRevealAbi from "@thirdweb-dev/contracts-js/dist/abis/DelayedReveal
 import IBurnableERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC1155.json";
 import IClaimableERC1155 from "@thirdweb-dev/contracts-js/dist/abis/IClaimableERC1155.json";
 import IDropSinglePhase1155 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase1155.json";
+import IDropSinglePhase1155_V1 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase1155_V1.json";
 import Erc1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
 import Erc1155EnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155Enumerable.json";
 import ILazyMintAbi from "@thirdweb-dev/contracts-js/dist/abis/ILazyMint.json";
@@ -20,8 +21,19 @@ export const FEATURE_EDITION_BURNABLE = {
   features: {},
 } as const;
 
-export const FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS = {
-  name: "ERC1155ClaimableWithConditions",
+export const FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS_V1 = {
+  name: "ERC1155ClaimableWithConditionsV1",
+  namespace: "edition.drop.claim",
+  docLinks: {
+    sdk: "sdk.erc1155claimable",
+    contracts: "DropSinglePhase1155",
+  },
+  abis: [Erc1155Abi, ILazyMintAbi, IDropSinglePhase1155_V1],
+  features: {},
+} as const;
+
+export const FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS_V2 = {
+  name: "ERC1155ClaimableWithConditionsV2",
   namespace: "edition.drop.claim",
   docLinks: {
     sdk: "sdk.erc1155claimable",
@@ -52,8 +64,10 @@ export const FEATURE_EDITION_LAZY_MINTABLE = {
   abis: [Erc1155Abi, ILazyMintAbi],
   features: {
     [FEATURE_EDITION_CLAIMABLE.name]: FEATURE_EDITION_CLAIMABLE,
-    [FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS.name]:
-      FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS,
+    [FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS_V1.name]:
+      FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS_V1,
+    [FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS_V2.name]:
+      FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS_V2,
   },
 } as const;
 

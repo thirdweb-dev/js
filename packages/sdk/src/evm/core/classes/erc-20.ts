@@ -10,7 +10,7 @@ import {
   FEATURE_TOKEN_BATCH_MINTABLE,
   FEATURE_TOKEN_BURNABLE,
   FEATURE_TOKEN_SIGNATURE_MINTABLE,
-  FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS,
+  FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS_V2,
 } from "../../constants/erc20-features";
 import { TokenMintInput, AmountSchema } from "../../schema";
 import { Currency, CurrencyValue, Amount, ClaimOptions } from "../../types";
@@ -515,7 +515,7 @@ export class Erc20<
   ): Promise<TransactionResult> {
     return assertEnabled(
       this.droppable?.claim,
-      FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS,
+      FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS_V2,
     ).to(destinationAddress, amount, options);
   }
 
@@ -545,7 +545,7 @@ export class Erc20<
   get claimConditions() {
     return assertEnabled(
       this.droppable?.claim,
-      FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS,
+      FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS_V2,
     ).conditions;
   }
 
@@ -619,7 +619,11 @@ export class Erc20<
     if (
       detectContractFeature<BaseDropERC20>(
         this.contractWrapper,
-        "ERC20ClaimableWithConditions",
+        "ERC20ClaimableWithConditionsV1",
+      ) ||
+      detectContractFeature<BaseDropERC20>(
+        this.contractWrapper,
+        "ERC20ClaimableWithConditionsV2",
       )
     ) {
       return new Erc20Droppable(this, this.contractWrapper, this.storage);
