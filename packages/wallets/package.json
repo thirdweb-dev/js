@@ -1,0 +1,55 @@
+{
+  "name": "@thirdweb-dev/wallets",
+  "version": "0.0.1",
+  "description": "Wallet layers to use with the thirdweb sdk.",
+  "exports": {
+    "./evm": {
+      "module": "./evm/dist/thirdweb-dev-wallets-evm.esm.js",
+      "default": "./evm/dist/thirdweb-dev-wallets-evm.cjs.js"
+    },
+    "./evm/metamask": {
+      "module": "./evm/metamask/dist/thirdweb-dev-wallets-evm-metamask.esm.js",
+      "default": "./evm/metamask/dist/thirdweb-dev-wallets-evm-metamask.cjs.js"
+    },
+    "./solana": {
+      "module": "./solana/dist/thirdweb-dev-wallets-solana.esm.js",
+      "default": "./solana/dist/thirdweb-dev-wallets-solana.cjs.js"
+    },
+    "./solana/phantom": {
+      "module": "./solana/phantom/dist/thirdweb-dev-wallets-solana-phantom.esm.js",
+      "default": "./solana/phantom/dist/thirdweb-dev-wallets-solana-phantom.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/wallets",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@preconstruct/cli": "^2.2.1",
+    "@typescript-eslint/eslint-plugin": "^5.33.0",
+    "@typescript-eslint/parser": "^5.33.0",
+    "eslint": "^8.21.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-inclusive-language": "^2.2.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-tsdoc": "^0.2.16",
+    "typescript": "^4.7.4"
+  },
+  "preconstruct": {
+    "entrypoints": [
+      "solana/**.ts",
+      "evm/**.ts"
+    ],
+    "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
+      "exports": true
+    },
+    "exports": true
+  },
+  "scripts": {
+    "format": "prettier --write 'src/**/*'",
+    "lint": "eslint src/",
+    "fix": "eslint src/ --fix",
+    "build": "tsc && preconstruct build",
+    "push": "yalc push"
+  }
+}
