@@ -59,8 +59,25 @@ describe("NFT Drop Contract (v4)", async () => {
     assert.equal(nft.metadata.name, "Test1");
   });
 
+  it("should upload and resolve claim condition metadata", async () => {
+    const uri = await storage.upload({
+      name: "Test1",
+    });
+    await dropContract.createBatch([uri]);
+    await dropContract.claimConditions.set([
+      {
+        metadata: {
+          name: "Test",
+          description: "Description",
+        },
+      },
+    ]);
+    const condition = await dropContract.claimConditions.getActive();
+    expect(condition.metadata?.name).to.equal("Test");
+  });
+
   it("should respect global maxClaimable per wallet with default snapshot", async () => {
-    const metadata = [];
+    const metadata: NFTMetadataInput[] = [];
     for (let i = 0; i < 10; i++) {
       metadata.push({ name: `test${i}`, description: `desc${i}` });
     }
@@ -126,7 +143,7 @@ describe("NFT Drop Contract (v4)", async () => {
     const proof = await dropContract.claimConditions.getClaimerProofs(
       bobWallet.address,
     );
-    expect(proof.address).to.eq(bobWallet.address);
+    expect(proof?.address).to.eq(bobWallet.address);
   });
 
   it("should return snapshot data on claim conditions", async () => {
