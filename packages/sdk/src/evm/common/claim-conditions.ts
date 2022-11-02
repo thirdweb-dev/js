@@ -572,6 +572,10 @@ export async function transformResultToClaimCondition(
     pm.supplyClaimed,
     tokenDecimals,
   );
+  let resolvedMetadata;
+  if (pm.metadata) {
+    resolvedMetadata = await storage.downloadJSON(pm.metadata);
+  }
   return ClaimConditionOutputSchema.parse({
     startTime: pm.startTimestamp,
     maxClaimableSupply,
@@ -587,7 +591,7 @@ export async function transformResultToClaimCondition(
     snapshot: shouldDownloadSnapshot
       ? await fetchSnapshot(pm.merkleRoot, merkleMetadata, storage)
       : undefined,
-    metadata: pm.metadata,
+    metadata: resolvedMetadata,
   });
 }
 

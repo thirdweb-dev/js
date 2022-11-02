@@ -17,3 +17,4 @@ public/dist
 yalc.lock
 build/
 playwright-report/
+.vscode/
