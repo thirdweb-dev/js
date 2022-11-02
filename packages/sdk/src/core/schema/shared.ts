@@ -1,5 +1,4 @@
-import { isBN } from "bn.js";
-import type BN from "bn.js";
+import BN from "bn.js";
 import { BigNumber } from "ethers";
 import { z } from "zod";
 
@@ -46,11 +45,13 @@ export const BigNumberSchema = z
       return BigNumber.isBigNumber(data);
     }),
     z.custom<BN>((data) => {
-      return isBN(data);
+      return BN.isBN(data);
     }),
   ])
   .transform((arg) => {
-    let str = isBN(arg) ? arg.toString() : BigNumber.from(arg).toString();
+    let str = BN.isBN(arg)
+      ? new BN(arg).toString()
+      : BigNumber.from(arg).toString();
     return BigNumber.from(str);
   });
 
@@ -65,12 +66,12 @@ export const BigNumberTransformSchema = z
       return BigNumber.isBigNumber(data);
     }),
     z.custom<BN>((data) => {
-      return isBN(data);
+      return BN.isBN(data);
     }),
   ])
   .transform((arg) => {
-    if (isBN(arg)) {
-      return arg.toString();
+    if (BN.isBN(arg)) {
+      return new BN(arg).toString();
     }
     return BigNumber.from(arg).toString();
   });

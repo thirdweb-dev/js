@@ -7,21 +7,40 @@
   "main": "dist/thirdweb-dev-sdk.cjs.js",
   "module": "dist/thirdweb-dev-sdk.esm.js",
   "umd:main": "dist/thirdweb-dev-sdk.umd.min.js",
+  "browser": {
+    "./dist/thirdweb-dev-sdk.esm.js": "./dist/thirdweb-dev-sdk.browser.esm.js"
+  },
   "exports": {
     ".": {
-      "module": "./dist/thirdweb-dev-sdk.esm.js",
+      "module": {
+        "worker": "./dist/thirdweb-dev-sdk.worker.esm.js",
+        "browser": "./dist/thirdweb-dev-sdk.browser.esm.js",
+        "default": "./dist/thirdweb-dev-sdk.esm.js"
+      },
       "default": "./dist/thirdweb-dev-sdk.cjs.js"
     },
     "./evm": {
-      "module": "./evm/dist/thirdweb-dev-sdk-evm.esm.js",
+      "module": {
+        "worker": "./evm/dist/thirdweb-dev-sdk-evm.worker.esm.js",
+        "browser": "./evm/dist/thirdweb-dev-sdk-evm.browser.esm.js",
+        "default": "./evm/dist/thirdweb-dev-sdk-evm.esm.js"
+      },
       "default": "./evm/dist/thirdweb-dev-sdk-evm.cjs.js"
     },
     "./solana": {
-      "module": "./solana/dist/thirdweb-dev-sdk-solana.esm.js",
+      "module": {
+        "worker": "./solana/dist/thirdweb-dev-sdk-solana.worker.esm.js",
+        "browser": "./solana/dist/thirdweb-dev-sdk-solana.browser.esm.js",
+        "default": "./solana/dist/thirdweb-dev-sdk-solana.esm.js"
+      },
       "default": "./solana/dist/thirdweb-dev-sdk-solana.cjs.js"
     },
     "./solana/server": {
-      "module": "./solana/server/dist/thirdweb-dev-sdk-solana-server.esm.js",
+      "module": {
+        "worker": "./solana/server/dist/thirdweb-dev-sdk-solana-server.worker.esm.js",
+        "browser": "./solana/server/dist/thirdweb-dev-sdk-solana-server.browser.esm.js",
+        "default": "./solana/server/dist/thirdweb-dev-sdk-solana-server.esm.js"
+      },
       "default": "./solana/server/dist/thirdweb-dev-sdk-solana-server.cjs.js"
     },
     "./package.json": "./package.json"
@@ -42,7 +61,12 @@
     "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
       "exports": true
     },
-    "exports": true,
+    "exports": {
+      "envConditions": [
+        "browser",
+        "worker"
+      ]
+    },
     "umdName": "thirdwebSDK"
   },
   "sideEffects": false,
@@ -91,7 +115,7 @@
     "eslint-plugin-inclusive-language": "^2.2.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-tsdoc": "^0.2.16",
-    "ethers": "^5.7.0",
+    "ethers": "^5.7.2",
     "hardhat": "^2.9.3",
     "mocha": "^10.0.0",
     "prettier": "^2.7.1",
@@ -105,11 +129,12 @@
     "@metaplex-foundation/mpl-token-metadata": "2.2.2",
     "@project-serum/anchor": "0.25.0",
     "@solana/spl-token": "0.2.0",
-    "@solana/web3.js": "1.62.0",
+    "@solana/web3.js": "^1.62.0",
     "@thirdweb-dev/contracts-js": "*",
     "@thirdweb-dev/storage": "*",
     "bn.js": "^5.2.1",
     "bs58": "^5.0.0",
+    "buffer": "^6.0.3",
     "cross-fetch": "^3.1.5",
     "eventemitter3": "^4.0.7",
     "fast-deep-equal": "^3.1.3",

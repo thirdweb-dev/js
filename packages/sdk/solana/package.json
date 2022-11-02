@@ -2,6 +2,9 @@
   "main": "dist/thirdweb-dev-sdk-solana.cjs.js",
   "module": "dist/thirdweb-dev-sdk-solana.esm.js",
   "umd:main": "dist/thirdweb-dev-sdk-solana.umd.min.js",
+  "browser": {
+    "./dist/thirdweb-dev-sdk-solana.esm.js": "./dist/thirdweb-dev-sdk-solana.browser.esm.js"
+  },
   "preconstruct": {
     "umdName": "thirdwebSOL"
   }
