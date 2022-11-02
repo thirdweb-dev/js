@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable eqeqeq */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 let decoder;
 try {
   decoder = new TextDecoder();
@@ -8,13 +6,11 @@ try {
 let src;
 let srcEnd;
 let position = 0;
-let alreadySet;
 const EMPTY_ARRAY = [];
 const LEGACY_RECORD_INLINE_ID = 105;
 const RECORD_DEFINITIONS_ID = 0xdffe;
 const RECORD_INLINE_ID = 0xdfff; // temporary first-come first-serve tag // proposed tag: 0x7265 // 're'
 const BUNDLED_STRINGS_ID = 0xdff9;
-const PACKED_TABLE_TAG_ID = 51;
 const PACKED_REFERENCE_TAG_ID = 6;
 const STOP_CODE = {};
 let strings = EMPTY_ARRAY;
@@ -37,7 +33,7 @@ let defaultOptions = {
 };
 let sequentialMode = false;
 
-export class Decoder {
+class Decoder {
   constructor(options) {
     if (options) {
       if ((options.keyMap || options._keyMap) && !options.useRecords) {
@@ -62,64 +58,9 @@ export class Decoder {
     }
     Object.assign(this, options);
   }
-  /*
-	decodeKey(key) {
-		return this.keyMap
-			? Object.keys(this.keyMap)[Object.values(this.keyMap).indexOf(key)] || key
-			: key
-	}
-	*/
+
   decodeKey(key) {
     return this.keyMap ? this.mapKey.get(key) || key : key;
-  }
-
-  encodeKey(key) {
-    return this.keyMap && this.keyMap.hasOwnProperty(key)
-      ? this.keyMap[key]
-      : key;
-  }
-
-  encodeKeys(rec) {
-    if (!this._keyMap) {
-      return rec;
-    }
-    let map = new Map();
-    for (let [k, v] of Object.entries(rec)) {
-      map.set(this._keyMap.hasOwnProperty(k) ? this._keyMap[k] : k, v);
-    }
-    return map;
-  }
-
-  decodeKeys(map) {
-    if (!this._keyMap || map.constructor.name != "Map") {
-      return map;
-    }
-    if (!this._mapKey) {
-      this._mapKey = new Map();
-      for (let [k, v] of Object.entries(this._keyMap)) {
-        this._mapKey.set(v, k);
-      }
-    }
-    let res = {};
-    //map.forEach((v,k) => res[Object.keys(this._keyMap)[Object.values(this._keyMap).indexOf(k)] || k] = v)
-    map.forEach(
-      (v, k) =>
-        (res[safeKey(this._mapKey.has(k) ? this._mapKey.get(k) : k)] = v),
-    );
-    return res;
-  }
-
-  mapDecode(source, end) {
-    let res = this.decode(source);
-    if (this._keyMap) {
-      //Experiemntal support for Optimised KeyMap  decoding
-      switch (res.constructor.name) {
-        case "Array":
-          return res.map((r) => this.decodeKeys(r));
-        //case 'Map': return this.decodeKeys(res)
-      }
-    }
-    return res;
   }
 
   decode(source, end) {
@@ -188,47 +129,9 @@ export class Decoder {
     }
     return checkedRead();
   }
-  decodeMultiple(source, forEach) {
-    let values,
-      lastPosition = 0;
-    try {
-      let size = source.length;
-      sequentialMode = true;
-      let value = this
-        ? this.decode(source, size)
-        : defaultDecoder.decode(source, size);
-      if (forEach) {
-        if (forEach(value) === false) {
-          return;
-        }
-        while (position < size) {
-          lastPosition = position;
-          if (forEach(checkedRead()) === false) {
-            return;
-          }
-        }
-      } else {
-        values = [value];
-        while (position < size) {
-          lastPosition = position;
-          values.push(checkedRead());
-        }
-        return values;
-      }
-    } catch (error) {
-      error.lastPosition = lastPosition;
-      error.values = values;
-      throw error;
-    } finally {
-      sequentialMode = false;
-      clearSource();
-    }
-  }
 }
-export function getPosition() {
-  return position;
-}
-export function checkedRead() {
+
+function checkedRead() {
   try {
     let result = read();
     if (bundledStrings) {
@@ -271,7 +174,7 @@ export function checkedRead() {
   }
 }
 
-export function read() {
+function read() {
   let token = src[position++];
   let majorType = token >> 5;
   token = token & 0x1f;
@@ -622,51 +525,7 @@ function safeKey(key) {
 }
 
 let readFixedString = readStringJS;
-let readString8 = readStringJS;
-let readString16 = readStringJS;
-let readString32 = readStringJS;
 
-export let isNativeAccelerationEnabled = false;
-export function setExtractor(extractStrings) {
-  isNativeAccelerationEnabled = true;
-  readFixedString = readString(1);
-  readString8 = readString(2);
-  readString16 = readString(3);
-  readString32 = readString(5);
-  function readString(headerLength) {
-    return function readString(length) {
-      let string = strings[stringPosition++];
-      if (string == null) {
-        if (bundledStrings) {
-          return readStringJS(length);
-        }
-        let extraction = extractStrings(position, srcEnd, length, src);
-        if (typeof extraction === "string") {
-          string = extraction;
-          strings = EMPTY_ARRAY;
-        } else {
-          strings = extraction;
-          stringPosition = 1;
-          srcStringEnd = 1; // even if a utf-8 string was decoded, must indicate we are in the midst of extracted strings and can't skip strings
-          string = strings[0];
-          if (string === undefined) {
-            throw new Error("Unexpected end of buffer");
-          }
-        }
-      }
-      let srcStringLength = string.length;
-      if (srcStringLength <= length) {
-        position += length;
-        return string;
-      }
-      srcString = string;
-      srcStringStart = position;
-      srcStringEnd = position + srcStringLength;
-      position += length;
-      return string.slice(0, length); // we know we just want the beginning
-    };
-  }
-}
 function readStringJS(length) {
   let result;
   if (length < 16) {
@@ -897,16 +756,7 @@ function readBin(length) {
       Uint8Array.prototype.slice.call(src, position, (position += length))
     : src.subarray(position, (position += length));
 }
-function readExt(length) {
-  let type = src[position++];
-  if (currentExtensions[type]) {
-    return currentExtensions[type](
-      src.subarray(position, (position += length)),
-    );
-  } else {
-    throw new Error("Unknown extension type " + type);
-  }
-}
+
 let f32Array = new Float32Array(1);
 let u8Array = new Uint8Array(f32Array.buffer, 0, 4);
 function getFloat16() {
@@ -938,85 +788,7 @@ function getFloat16() {
   return f32Array[0];
 }
 
-let keyCache = new Array(4096);
-function readKey() {
-  let length = src[position++];
-  if (length >= 0x60 && length < 0x78) {
-    // fixstr, potentially use key cache
-    length = length - 0x60;
-    if (srcStringEnd >= position) {
-      // if it has been extracted, must use it (and faster anyway)
-      return srcString.slice(
-        position - srcStringStart,
-        (position += length) - srcStringStart,
-      );
-    } else if (!(srcStringEnd == 0 && srcEnd < 180)) {
-      return readFixedString(length);
-    }
-  } else {
-    // not cacheable, go back and do a standard read
-    position--;
-    return read();
-  }
-  let key =
-    ((length << 5) ^
-      (length > 1
-        ? dataView.getUint16(position)
-        : length > 0
-        ? src[position]
-        : 0)) &
-    0xfff;
-  let entry = keyCache[key];
-  let checkPosition = position;
-  let end = position + length - 3;
-  let chunk;
-  let i = 0;
-  if (entry && entry.bytes == length) {
-    while (checkPosition < end) {
-      chunk = dataView.getUint32(checkPosition);
-      if (chunk != entry[i++]) {
-        checkPosition = 0x70000000;
-        break;
-      }
-      checkPosition += 4;
-    }
-    end += 3;
-    while (checkPosition < end) {
-      chunk = src[checkPosition++];
-      if (chunk != entry[i++]) {
-        checkPosition = 0x70000000;
-        break;
-      }
-    }
-    if (checkPosition === end) {
-      position = checkPosition;
-      return entry.string;
-    }
-    end -= 3;
-    checkPosition = position;
-  }
-  entry = [];
-  keyCache[key] = entry;
-  entry.bytes = length;
-  while (checkPosition < end) {
-    chunk = dataView.getUint32(checkPosition);
-    entry.push(chunk);
-    checkPosition += 4;
-  }
-  end += 3;
-  while (checkPosition < end) {
-    chunk = src[checkPosition++];
-    entry.push(chunk);
-  }
-  // for small blocks, avoiding the overhead of the extract call is helpful
-  let string = length < 16 ? shortStringInJS(length) : longStringInJS(length);
-  if (string != null) {
-    return (entry.string = string);
-  }
-  return (entry.string = readFixedString(length));
-}
-
-export class Tag {
+class Tag {
   constructor(value, tag) {
     this.value = value;
     this.tag = tag;
@@ -1106,19 +878,19 @@ currentExtensions[27] = (data) => {
   // http://cbor.schmorp.de/generic-object
   return (glbl[data[0]] || Error)(data[1], data[2]);
 };
-const packedTable = (read) => {
+const packedTable = (_read) => {
   if (src[position++] != 0x84) {
     throw new Error(
       "Packed values structure must be followed by a 4 element array",
     );
   }
-  let newPackedValues = read(); // packed values
+  let newPackedValues = _read(); // packed values
   packedValues = packedValues
     ? newPackedValues.concat(packedValues.slice(newPackedValues.length))
     : newPackedValues;
-  packedValues.prefixes = read();
-  packedValues.suffixes = read();
-  return read(); // read the rump
+  packedValues.prefixes = _read();
+  packedValues.suffixes = _read();
+  return _read(); // read the rump
 };
 packedTable.handlesRead = true;
 currentExtensions[51] = packedTable;
@@ -1140,17 +912,17 @@ currentExtensions[PACKED_REFERENCE_TAG_ID] = (data) => {
 currentExtensions[25] = (id) => {
   return stringRefs[id];
 };
-currentExtensions[256] = (read) => {
+currentExtensions[256] = (_read) => {
   stringRefs = [];
   try {
-    return read();
+    return _read();
   } finally {
     stringRefs = null;
   }
 };
 currentExtensions[256].handlesRead = true;
 
-currentExtensions[28] = (read) => {
+currentExtensions[28] = (_read) => {
   // shareable http://cbor.schmorp.de/value-sharing (for structured clones)
   if (!referenceMap) {
     referenceMap = new Map();
@@ -1169,7 +941,7 @@ currentExtensions[28] = (read) => {
 
   let refEntry = { target }; // a placeholder object
   referenceMap.set(id, refEntry);
-  let targetProperties = read(); // read the next value as the target object to id
+  let targetProperties = _read(); // read the next value as the target object to id
   if (refEntry.used) {
     // there is a cycle, so we have to assign properties to original target
     return Object.assign(target, targetProperties);
@@ -1187,14 +959,14 @@ currentExtensions[29] = (id) => {
 };
 
 currentExtensions[258] = (array) => new Set(array); // https://github.com/input-output-hk/cbor-sets-spec/blob/master/CBOR_SETS.md
-(currentExtensions[259] = (read) => {
+(currentExtensions[259] = (_read) => {
   // https://github.com/shanewholloway/js-cbor-codec/blob/master/docs/CBOR-259-spec
   // for decoding as a standard Map
   if (currentDecoder.mapsAsObjects) {
     currentDecoder.mapsAsObjects = false;
     restoreMapsAsObject = true;
   }
-  return read();
+  return _read();
 }).handlesRead = true;
 function combine(a, b) {
   if (typeof a === "string") {
@@ -1251,24 +1023,8 @@ currentExtensionRanges.push((tag, input) => {
 
 const isLittleEndianMachine =
   new Uint8Array(new Uint16Array([1]).buffer)[0] == 1;
-export const typedArrays = [
-  Uint8Array,
-  // Uint8ClampedArray,
-  // Uint16Array,
-  // Uint32Array,
-  // typeof BigUint64Array === "undefined"
-  //   ? { name: "BigUint64Array" }
-  //   : BigUint64Array,
-  // Int8Array,
-  // Int16Array,
-  // Int32Array,
-  // typeof BigInt64Array === "undefined"
-  //   ? { name: "BigInt64Array" }
-  //   : BigInt64Array,
-  // Float32Array,
-  // Float64Array,
-];
-const typedArrayTags = [64, 68, 69, 70, 71, 72, 77, 78, 79, 85, 86];
+const typedArrays = [Uint8Array];
+const typedArrayTags = [64];
 for (let i = 0; i < typedArrays.length; i++) {
   registerTypedArray(typedArrays[i], typedArrayTags[i]);
 }
@@ -1410,19 +1166,16 @@ function saveState(callback) {
   dataView = new DataView(src.buffer, src.byteOffset, src.byteLength);
   return value;
 }
-export function clearSource() {
+function clearSource() {
   src = null;
   referenceMap = null;
   currentStructures = null;
 }
 
-export function addExtension(extension) {
-  currentExtensions[extension.tag] = extension.decode;
-}
-
-export const mult10 = new Array(147); // this is a table matching binary exponents to the multiplier to determine significant digit rounding
+const mult10 = new Array(147); // this is a table matching binary exponents to the multiplier to determine significant digit rounding
 for (let i = 0; i < 256; i++) {
   mult10[i] = Number("1e" + Math.floor(45.15 - i * 0.30103));
 }
-let defaultDecoder = new Decoder({ useRecords: false });
+
+const defaultDecoder = new Decoder({ useRecords: false });
 export const decode = defaultDecoder.decode;
