@@ -12,7 +12,6 @@ export const MultiChainSVG: React.FC = () => {
       <ChakraNextImage
         alt=""
         placeholder="empty"
-        layout="fill"
         src={require(`./multi-chain/${src}.svg`)}
       />
     </AspectRatio>

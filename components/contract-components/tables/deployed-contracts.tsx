@@ -10,7 +10,6 @@ import {
   Icon,
   IconButton,
   Image,
-  Link,
   Menu,
   MenuButton,
   MenuItemOption,
@@ -37,7 +36,6 @@ import {
 import { ChakraNextImage } from "components/Image";
 import { useReleasesFromDeploy } from "components/contract-components/hooks";
 import { CONTRACT_TYPE_NAME_MAP, FeatureIconMap } from "constants/mappings";
-import OriginalNextLink from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import * as React from "react";
@@ -48,6 +46,7 @@ import {
   AddressCopyButton,
   Badge,
   Card,
+  ChakraNextLink,
   Heading,
   LinkButton,
   Text,
@@ -479,18 +478,16 @@ const AsyncContractNameCell: React.FC<AsyncContractNameCellProps> = ({
 
   return (
     <Skeleton isLoaded={!metadataQuery.isLoading}>
-      <OriginalNextLink href={href} passHref>
-        <Link>
-          <Text
-            color="blue.700"
-            _dark={{ color: "blue.300" }}
-            size="label.md"
-            _groupHover={{ textDecor: "underline" }}
-          >
-            {metadataQuery.data?.name || shortenIfAddress(cell.address)}
-          </Text>
-        </Link>
-      </OriginalNextLink>
+      <ChakraNextLink href={href} passHref>
+        <Text
+          color="blue.700"
+          _dark={{ color: "blue.300" }}
+          size="label.md"
+          _groupHover={{ textDecor: "underline" }}
+        >
+          {metadataQuery.data?.name || shortenIfAddress(cell.address)}
+        </Text>
+      </ChakraNextLink>
     </Skeleton>
   );
 };

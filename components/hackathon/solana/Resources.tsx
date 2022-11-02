@@ -1,5 +1,5 @@
 import { Flex, VStack } from "@chakra-ui/react";
-import Image from "next/image";
+import { ChakraNextImage } from "components/Image";
 import { Heading, Link } from "tw-components";
 
 export const Resources: React.FC = () => {
@@ -48,13 +48,7 @@ export const Resources: React.FC = () => {
             m={4}
             p={4}
           >
-            <Image
-              width="175px"
-              objectFit="cover"
-              height="135px"
-              src={image}
-              alt={label}
-            />
+            <ChakraNextImage width={175} height={135} src={image} alt={label} />
             <Link href={link} fontSize="20px" mt={4}>
               {label}
             </Link>

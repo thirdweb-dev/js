@@ -294,7 +294,6 @@ export const WelcomeScreen: React.FC = () => {
                             w={{ base: "45%", md: "90%" }}
                             src={require("public/assets/product-pages/dashboard/hero.png")}
                             alt=""
-                            layout="responsive"
                           />
                         </Center>
                       </motion.div>

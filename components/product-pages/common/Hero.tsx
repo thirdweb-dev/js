@@ -122,13 +122,7 @@ export const Hero: ComponentWithChildren<IHero> = ({
           >
             <Flex justifyContent={{ base: "center", md: "flex-end" }} w="100%">
               <AspectRatio ratio={1} maxW={96} w="100%">
-                <ChakraNextImage
-                  alt=""
-                  src={image}
-                  layout="fill"
-                  objectFit="contain"
-                  priority
-                />
+                <ChakraNextImage alt="" src={image} priority />
               </AspectRatio>
             </Flex>
           </Center>

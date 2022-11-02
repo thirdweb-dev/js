@@ -10,7 +10,7 @@ import {
 import { ethers } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { FiExternalLink } from "react-icons/fi";
-import { Heading, NextLink, Text } from "tw-components";
+import { Heading, Link, Text } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
 interface PriceLineProps {
@@ -87,7 +87,7 @@ export const GasEstimatorBox: React.FC<GasEstimatorBoxProps> = ({
 
   return (
     <Box p={6} border="1px solid" borderColor="borderColor" {...props}>
-      <NextLink
+      <Link
         href={`https://portal.thirdweb.com/pre-built-contracts/${contractType}`}
         onClick={() =>
           trackEvent({
@@ -103,7 +103,7 @@ export const GasEstimatorBox: React.FC<GasEstimatorBoxProps> = ({
           {CONTRACT_TYPE_NAME_MAP[contractType]}
           <Icon as={FiExternalLink} ml={1} boxSize={4} />
         </Heading>
-      </NextLink>
+      </Link>
       <PriceLine
         title="Contract creation"
         label="The price to deploy this Smart Contract"

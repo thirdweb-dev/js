@@ -142,7 +142,6 @@ const Solana: ThirdwebNextPage = () => {
                 <ChakraNextImage
                   alt=""
                   src={require("public/assets/network-pages/solana/hero.png")}
-                  layout="fill"
                   objectFit="contain"
                   priority
                 />
