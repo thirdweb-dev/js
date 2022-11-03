@@ -137,8 +137,9 @@ export class Erc721TieredDrop implements DetectableFeature {
       "TokensLazyMinted",
       receipt?.logs,
     );
-    const startingIndex = event[0].args.startTokenId;
-    const endingIndex = event[0].args.endTokenId;
+
+    const startingIndex = event[0].args[1];
+    const endingIndex = event[0].args[2];
     const results: TransactionResultWithId<NFTMetadata>[] = [];
     for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
       results.push({
@@ -218,8 +219,8 @@ export class Erc721TieredDrop implements DetectableFeature {
       "TokensLazyMinted",
       receipt?.logs,
     );
-    const startingIndex = event[0].args.startTokenId;
-    const endingIndex = event[0].args.endTokenId;
+    const startingIndex = event[0].args[1];
+    const endingIndex = event[0].args[2];
     const results: TransactionResultWithId<NFTMetadata>[] = [];
     for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
       results.push({
