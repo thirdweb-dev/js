@@ -77,7 +77,7 @@ export class Erc721Claimable implements DetectableFeature {
    * const quantity = 1; // how many NFTs you want to claim
    *
    * const tx = await contract.erc721.claimTo(address, tokenId, quantity);
-   * const receipt = tx.receipt; // the transaction receipt
+   * const receipt = tx[0].receipt; // the transaction receipt
    * ```
    *
    * @param destinationAddress - Address you want to send the token to
