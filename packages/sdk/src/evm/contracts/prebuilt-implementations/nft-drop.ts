@@ -409,9 +409,9 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
    * const quantity = 1; // how many unique NFTs you want to claim
    *
    * const tx = await contract.claimTo(address, quantity);
-   * const receipt = tx.receipt; // the transaction receipt
-   * const claimedTokenId = tx.id; // the id of the NFT claimed
-   * const claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata
+   * const receipt = tx[0].receipt; // the transaction receipt
+   * const claimedTokenId = tx[0].id; // the id of the NFT claimed
+   * const claimedNFT = await tx[0].data(); // (optional) get the claimed NFT metadata
    * ```
    *
    * @param destinationAddress - Address you want to send the token to
