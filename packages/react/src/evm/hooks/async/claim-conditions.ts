@@ -17,7 +17,6 @@ import {
 } from "@thirdweb-dev/sdk";
 import { BigNumberish } from "ethers";
 import invariant from "tiny-invariant";
-import { useContract } from "./contracts";
 
 /**
  * The options to be passed as the second parameter to the {@link useClaimIneligibilityReasons}` hook.
