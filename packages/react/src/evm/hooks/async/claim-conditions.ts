@@ -45,7 +45,7 @@ export type SetClaimConditionsParams = {
 /** **********************/
 
 /**
- * Use this to get the active claim conditon for ERC20, ERC721 or ERC1155 based contracts. They need to extend the `claimCondition` extension for this hook to work.
+ * Use this to get the active claim condition for ERC20, ERC721 or ERC1155 based contracts. They need to extend the `claimCondition` extension for this hook to work.
  *
  * @example
  * ```javascript
@@ -60,7 +60,7 @@ export type SetClaimConditionsParams = {
  * const { data: activeClaimCondition, isLoading, error } = useActiveClaimCondition(<YourERC1155ContractInstance>, <tokenId>);
  * ```
  *
- * @param contract - an instance of a contract that extends the ERC721 or ERC1155 spec and implements the `claimConditions` extension.
+ * @param contract - an instance of a contract that extends the ERC721, ERC1155 or ERC20 spec and implements the `claimConditions` extension.
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
  * @returns a response object with the currently active claim condition
  * @twfeature ERC721ClaimableWithConditions | ERC1155ClaimableWithConditions | ERC20ClaimableWithConditions
@@ -106,7 +106,70 @@ export function useActiveClaimCondition(
 }
 
 /**
- * Use this to get all claim conditons for ERC20, ERC721 or ERC1155 based contracts. They need to extend the `claimCondition` extension for this hook to work.
+ * Use this to get the claimer proofs for an adddress for ERC20, ERC721 or ERC1155 based contracts. They need to extend the `claimCondition` extension for this hook to work.
+ *
+ * @example
+ * ```javascript
+ * const { data: claimerProofs, isLoading, error } = useClaimerProofs(<YourERC20ContractInstance>);
+ * ```
+ * @example
+ * ```javascript
+ * const { data: claimerProofs, isLoading, error } = useClaimerProofs(<YourERC721ContractInstance>);
+ * ```
+ * @example
+ * ```javascript
+ * const { data: claimerProofs, isLoading, error } = useClaimerProofs(<YourERC1155ContractInstance>, <tokenId>);
+ * ```
+ *
+ * @param contract - an instance of a contract that extends the ERC721, ERC1155 or ERC20 spec and implements the `claimConditions` extension.
+ * @param claimerAddress - the address of the claimer to fetch the claimer proofs for
+ * @param tokenId - the id of the token to fetch the claimer proofs for (if the contract is an ERC1155 contract)
+ * @param claimConditionId - optional the claim condition id to get the proofs for
+ * @returns a response object with the snapshot for the provided address
+ * @twfeature ERC721ClaimableWithConditions | ERC1155ClaimableWithConditions | ERC20ClaimableWithConditions
+ * @beta
+ */
+ export function useClaimerProofs(
+  contract: RequiredParam<DropContract>,
+  claimerAddress: string,
+  tokenId?: BigNumberish,
+  claimConditionId?: BigNumberish,
+) {
+  const contractAddress = contract?.getAddress();
+  const { erc1155, erc721, erc20 } = getErcs(contract);
+
+  return useQueryWithNetwork(
+    cacheKeys.extensions.claimConditions.getClaimerProofs(
+      contractAddress,
+      tokenId,
+    ),
+    () => {
+      if (erc1155) {
+        requiredParamInvariant(
+          tokenId,
+          "tokenId is required for ERC1155 claim conditions",
+        );
+        return erc1155.claimConditions.getClaimerProofs(tokenId, claimerAddress, claimConditionId);
+      }
+      if (erc721) {
+        return erc721.claimConditions.getClaimerProofs(claimerAddress, claimConditionId);
+      }
+      if (erc20) {
+        return erc20.claimConditions.getClaimerProofs(claimerAddress, claimConditionId);
+      }
+      throw new Error("Contract must be ERC721, ERC1155 or ERC20");
+    },
+    {
+      // Checks that happen here:
+      // 1. if the contract is based on ERC1155 contract => tokenId cannot be `undefined`
+      // 2. if the contract is NOT based on ERC1155 => we have to have either an ERC721 or ERC20 contract
+      enabled: erc1155 ? tokenId !== undefined : !!erc721 || !!erc20,
+    },
+  );
+}
+
+/**
+ * Use this to get all claim conditions for ERC20, ERC721 or ERC1155 based contracts. They need to extend the `claimCondition` extension for this hook to work.
  *
  * @example
  * ```javascript
@@ -121,7 +184,7 @@ export function useActiveClaimCondition(
  * const { data: claimConditions, isLoading, error } = useClaimConditions(<YourERC1155ContractInstance>, <tokenId>);
  * ```
  *
- * @param contract - an instance of a contract that extends the ERC721 or ERC1155 spec and implements the `claimConditions` extension.
+ * @param contract - an instance of a contract that extends the ERC721, ERC1155 or ERC20 spec and implements the `claimConditions` extension.
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
  * @returns a response object with the list of claim conditions
  * @twfeature ERC721ClaimableWithConditions | ERC1155ClaimableWithConditions | ERC20ClaimableWithConditions
