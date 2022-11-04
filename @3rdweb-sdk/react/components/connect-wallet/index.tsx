@@ -106,15 +106,23 @@ export const ConnectWallet: React.FC<EcosystemButtonprops> = ({
   const chainId = useChainId();
 
   const { hasCopied, onCopy, setValue } = useClipboard(address || "");
-  const { hasCopied: hasCopiedSol, onCopy: onCopySol } = useClipboard(
-    solWallet.publicKey?.toBase58() || "",
-  );
+  const {
+    hasCopied: hasCopiedSol,
+    onCopy: onCopySol,
+    setValue: setValueSol,
+  } = useClipboard(solWallet.publicKey?.toBase58() || "");
 
   useEffect(() => {
     if (address) {
       setValue(address);
     }
   }, [address, setValue]);
+
+  useEffect(() => {
+    if (solWallet.publicKey) {
+      setValueSol(solWallet.publicKey?.toBase58());
+    }
+  }, [solWallet.publicKey, setValueSol]);
 
   useEffect(() => {
     if (solWallet.publicKey) {
