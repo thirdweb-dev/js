@@ -46,12 +46,16 @@ export class Erc721TieredDrop implements DetectableFeature {
   public async getMetadataInTier(
     tier: string,
   ): Promise<Omit<NFTMetadata, "id">[]> {
-    const batches = await this.contractWrapper.readContract.getMetadataInTier(
-      tier,
-    );
+    const tiers =
+      await this.contractWrapper.readContract.getMetadataForAllTiers();
+    const batches = tiers.find((t) => t.tier === tier);
+
+    if (!batches) {
+      throw new Error("Tier not found in contract.");
+    }
 
     const nfts = await Promise.all(
-      batches.tokens
+      batches.ranges
         .map((range, i) => {
           const nftsInRange = [];
           const baseUri = batches.baseURIs[i];
@@ -133,8 +137,9 @@ export class Erc721TieredDrop implements DetectableFeature {
       "TokensLazyMinted",
       receipt?.logs,
     );
-    const startingIndex = event[0].args.startTokenId;
-    const endingIndex = event[0].args.endTokenId;
+
+    const startingIndex = event[0].args[1];
+    const endingIndex = event[0].args[2];
     const results: TransactionResultWithId<NFTMetadata>[] = [];
     for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
       results.push({
@@ -214,8 +219,8 @@ export class Erc721TieredDrop implements DetectableFeature {
       "TokensLazyMinted",
       receipt?.logs,
     );
-    const startingIndex = event[0].args.startTokenId;
-    const endingIndex = event[0].args.endTokenId;
+    const startingIndex = event[0].args[1];
+    const endingIndex = event[0].args[2];
     const results: TransactionResultWithId<NFTMetadata>[] = [];
     for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
       results.push({
