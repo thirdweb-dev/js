@@ -94,6 +94,10 @@ export const UploadStep: React.FC<UploadStepProps> = ({
                 It doesn&apos;t matter at what number you begin. (Example:{" "}
                 <Code>131.png</Code>, <Code>132.png</Code>).
               </ListItem>
+              <ListItem>
+                Make sure to drag and drop the CSV/JSON and the images{" "}
+                <strong>at the same time</strong>.
+              </ListItem>
             </UnorderedList>
             <Heading size="subtitle.sm" mt={4}>
               Options

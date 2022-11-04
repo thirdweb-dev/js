@@ -117,7 +117,7 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
               <Flex direction="column">
                 <Heading size="title.md">Claim Eligibility</Heading>
                 <Text size="body.md" fontStyle="italic">
-                  This contracts claim eligibility stores who has already
+                  This contract&apos;s claim eligibility stores who has already
                   claimed {nftsOrToken} from this contract and carries across
                   claim phases. Resetting claim eligibility will reset this
                   state permanently, and people who have already claimed to
