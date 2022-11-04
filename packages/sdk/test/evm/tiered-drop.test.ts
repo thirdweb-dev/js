@@ -13,7 +13,7 @@ describe("Tiered Drop Contract", async () => {
   async function deployTieredDrop() {
     // This needs to match the release for the currently used ABI
     const releaseUri =
-      "ipfs://QmTK2dpcDMiePacs6bNh6LhQdPB9RkxXHmx9CtrPLPRBuS/0";
+      "ipfs://QmZz7bpkHEjBJXePWzNZTdhcecjvNssYvoExfdiZUV4DaF/0";
     const address = await sdk.deployer.deployContractFromUri(releaseUri, [], {
       forceDirectDeploy: true,
     });
