@@ -265,52 +265,6 @@ const Solana: ThirdwebNextPage = () => {
         bg="linear-gradient(93.96deg, rgba(25, 26, 27, 0.8) 17.14%, rgba(24, 67, 78, 0.8) 36.78%, rgba(108, 47, 115, 0.8) 61%, rgba(25, 26, 27, 0.8) 79.98%)"
         opacity="0.8"
       />
-
-      <Box w="100%" as="section" zIndex={2} position="relative" bg="#030A1A">
-        <Flex
-          flexDir="column"
-          pb={{ base: 24, md: 36 }}
-          pt={{ base: 20, md: 32 }}
-          align="center"
-          gap={{ base: 6, md: 8 }}
-        >
-          <Stack align="center" spacing={12}>
-            <Heading
-              as="h2"
-              size="display.sm"
-              maxW="820px"
-              fontWeight={700}
-              textAlign="center"
-            >
-              Join the thirdweb Solanathon on October 19th
-            </Heading>
-            <Stack
-              spacing={5}
-              direction={{ base: "column", md: "row" }}
-              align={{ base: "center", md: "flex-start" }}
-            >
-              <ProductButton
-                maxW="260px"
-                title="Learn More"
-                href="/hackathon/solanathon"
-                color="blackAlpha.900"
-                bg="white"
-              />
-              {/* <LinkButton
-                variant="outline"
-                href="https://portal.thirdweb.com/solana"
-                px={"64px"}
-                py={"28px"}
-                fontSize="20px"
-                fontWeight="bold"
-                isExternal
-              >
-                Explore docs
-              </LinkButton> */}
-            </Stack>
-          </Stack>
-        </Flex>
-      </Box>
     </ProductPage>
   );
 };
