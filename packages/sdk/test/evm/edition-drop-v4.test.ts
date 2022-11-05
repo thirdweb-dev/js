@@ -64,11 +64,13 @@ describe("Edition Drop Contract (V4)", async () => {
     await bdContract.claimConditions.set(0, [
       {
         startTime: new Date(Date.now() / 2),
+        maxClaimablePerWallet: 1,
         snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
         price: 1,
       },
       {
         startTime: new Date(),
+        maxClaimablePerWallet: 1,
         snapshot: [bobWallet.address],
       },
     ]);
@@ -147,6 +149,7 @@ describe("Edition Drop Contract (V4)", async () => {
     await bdContract.claimConditions.set("0", [
       {
         maxClaimableSupply: 1000,
+        maxClaimablePerWallet: 1,
         snapshot: members,
       },
     ]);
@@ -257,6 +260,7 @@ describe("Edition Drop Contract (V4)", async () => {
     ]);
     await bdContract.claimConditions.set(0, [
       {
+        maxClaimablePerWallet: 0,
         snapshot: [
           { address: w1.address, maxClaimable: 2 },
           { address: w2.address, maxClaimable: 1 },
@@ -555,6 +559,7 @@ describe("Edition Drop Contract (V4)", async () => {
       await bdContract.claimConditions.set("0", [
         {
           maxClaimableSupply: 1,
+          maxClaimablePerWallet: 1,
           snapshot: [w1.address],
         },
       ]);
@@ -634,6 +639,7 @@ describe("Edition Drop Contract (V4)", async () => {
       await bdContract.claimConditions.set("0", [
         {
           maxClaimableSupply: 10,
+          maxClaimablePerWallet: 1,
           price: "100",
           currencyAddress: NATIVE_TOKEN_ADDRESS,
           snapshot: [w1.address, w2.address, w3.address],
@@ -676,6 +682,7 @@ describe("Edition Drop Contract (V4)", async () => {
 
     await bdContract.claimConditions.set(0, [
       {
+        maxClaimablePerWallet: 1,
         snapshot: [samWallet.address],
       },
     ]);
@@ -725,12 +732,14 @@ describe("Edition Drop Contract (V4)", async () => {
 
       await bdContract.claimConditions.set("1", [
         {
+          maxClaimablePerWallet: 1,
           snapshot: [w1.address, w2.address, bobWallet.address],
         },
       ]);
 
       await bdContract.claimConditions.set("2", [
         {
+          maxClaimablePerWallet: 1,
           snapshot: [w3.address, w1.address, w2.address, adminWallet.address],
         },
       ]);

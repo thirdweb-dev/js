@@ -621,6 +621,27 @@ export class DropErc1155ClaimConditions<
             );
           }
         }
+        // if using new snapshot format, make sure that maxClaimablePerWallet is set if allowlist is set as well
+        if (
+          this.isNewSinglePhaseDrop(this.contractWrapper) ||
+          this.isNewMultiphaseDrop(this.contractWrapper)
+        ) {
+          claimConditionsProcessed.forEach((cc) => {
+            if (
+              cc.snapshot &&
+              cc.snapshot.length > 0 &&
+              (cc.maxClaimablePerWallet === undefined ||
+                cc.maxClaimablePerWallet === "unlimited")
+            ) {
+              throw new Error(
+                "maxClaimablePerWallet must be set to a specific value when an allowlist is set.\n" +
+                  "Set it to 0 to only allow addresses in the allowlist to claim the amount specified in the allowlist." +
+                  "\n\nex:\n" +
+                  "contract.claimConditions.set(tokenId, [{ snapshot: [{ address: '0x...', maxClaimable: 1 }], maxClaimablePerWallet: 0 }])",
+              );
+            }
+          });
+        }
         // process inputs
         const { snapshotInfos, sortedConditions } =
           await processClaimConditionInputs(
