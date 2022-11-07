@@ -199,9 +199,6 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
       domain="thirdweb.com"
       customDomain="https://pl.thirdweb.com"
       selfHosted
-      scriptProps={{
-        src: "https://pl.thirdweb.com/js/plausible.js",
-      }}
     >
       <PersistQueryClientProvider
         client={queryClient}
