@@ -11,6 +11,7 @@ import { shouldNeverPersistQuery } from "@thirdweb-dev/react";
 import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 import { BigNumber } from "ethers";
 import { NextPage } from "next";
+import PlausibleProvider from "next-plausible";
 import { DefaultSeo } from "next-seo";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
@@ -194,13 +195,21 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
   }
 
   return (
-    <PersistQueryClientProvider
-      client={queryClient}
-      persistOptions={{ persister }}
+    <PlausibleProvider
+      domain="thirdweb.com"
+      customDomain="https://pl.thirdweb.com"
+      selfHosted
+      scriptProps={{
+        src: "https://pl.thirdweb.com/js/plausible.js",
+      }}
     >
-      <Hydrate state={pageProps.dehydratedState}>
-        <Global
-          styles={css`
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={{ persister }}
+      >
+        <Hydrate state={pageProps.dehydratedState}>
+          <Global
+            styles={css`
             #walletconnect-wrapper {
               color: #000;
             }
@@ -248,48 +257,49 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
                   -ms-transform: rotate(3deg) translate(0px, -4px);
                       transform: rotate(3deg) translate(0px, -4px);
           `}
-        />
-        <DefaultSeo
-          defaultTitle="thirdweb: The complete web3 development framework"
-          titleTemplate="%s | thirdweb"
-          description="Build web3 apps easily with thirdweb's powerful SDKs, audited smart contracts, and developer tools—for Ethereum, Polygon, Solana, & more. Try now."
-          additionalLinkTags={[
-            {
-              rel: "icon",
-              href: "/favicon.ico",
-            },
-          ]}
-          openGraph={{
-            title: "thirdweb: The complete web3 development framework",
-            description:
-              "Build web3 apps easily with thirdweb's powerful SDKs, audited smart contracts, and developer tools—for Ethereum, Polygon, Solana, & more. Try now.",
-            type: "website",
-            locale: "en_US",
-            url: "https://thirdweb.com",
-            site_name: "thirdweb",
-            images: [
+          />
+          <DefaultSeo
+            defaultTitle="thirdweb: The complete web3 development framework"
+            titleTemplate="%s | thirdweb"
+            description="Build web3 apps easily with thirdweb's powerful SDKs, audited smart contracts, and developer tools—for Ethereum, Polygon, Solana, & more. Try now."
+            additionalLinkTags={[
               {
-                url: "https://thirdweb.com/thirdweb.png",
-                width: 1200,
-                height: 630,
-                alt: "thirdweb",
+                rel: "icon",
+                href: "/favicon.ico",
               },
-            ],
-          }}
-          twitter={{
-            handle: "@thirdweb",
-            site: "@thirdweb",
-            cardType: "summary_large_image",
-          }}
-          canonical={`https://thirdweb.com${router.asPath}`}
-        />
+            ]}
+            openGraph={{
+              title: "thirdweb: The complete web3 development framework",
+              description:
+                "Build web3 apps easily with thirdweb's powerful SDKs, audited smart contracts, and developer tools—for Ethereum, Polygon, Solana, & more. Try now.",
+              type: "website",
+              locale: "en_US",
+              url: "https://thirdweb.com",
+              site_name: "thirdweb",
+              images: [
+                {
+                  url: "https://thirdweb.com/thirdweb.png",
+                  width: 1200,
+                  height: 630,
+                  alt: "thirdweb",
+                },
+              ],
+            }}
+            twitter={{
+              handle: "@thirdweb",
+              site: "@thirdweb",
+              cardType: "summary_large_image",
+            }}
+            canonical={`https://thirdweb.com${router.asPath}`}
+          />
 
-        <ChakraProvider theme={chakraTheme}>
-          <AnnouncementBanner />
-          {getLayout(<Component {...pageProps} />, pageProps)}
-        </ChakraProvider>
-      </Hydrate>
-    </PersistQueryClientProvider>
+          <ChakraProvider theme={chakraTheme}>
+            <AnnouncementBanner />
+            {getLayout(<Component {...pageProps} />, pageProps)}
+          </ChakraProvider>
+        </Hydrate>
+      </PersistQueryClientProvider>
+    </PlausibleProvider>
   );
 }
 export default ConsoleApp;

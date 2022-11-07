@@ -9476,6 +9476,11 @@ near-seed-phrase@^0.2.0:
     near-hd-key "^1.2.1"
     tweetnacl "^1.0.2"
 
+next-plausible@^3.6.4:
+  version "3.6.4"
+  resolved "https://registry.yarnpkg.com/next-plausible/-/next-plausible-3.6.4.tgz#15684340736e47d3ffa49f9c8fae598e3cfefca6"
+  integrity sha512-aHL4IL+gkkjs5ScB18LZ3LMEWXKR5VTvnMDs/fHNFHadOh23i37fD+VP5oAQLALR8Mde63l9JJljrw9DkvjWjQ==
+
 next-seo@^5.0.0:
   version "5.13.0"
   resolved "https://registry.yarnpkg.com/next-seo/-/next-seo-5.13.0.tgz#69c0773ce7b641e719173d4f32a9758711d62b6b"
