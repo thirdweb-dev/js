@@ -140,7 +140,7 @@ const sentryWebpackPluginOptions = {
 };
 module.exports = withPlausibleProxy({
   customDomain: "https://pl.thirdweb.com",
-  scriptName: "plausible",
+  scriptName: "pl",
 })(
   withBundleAnalyzer(
     withSentryConfig(moduleExports, sentryWebpackPluginOptions),
