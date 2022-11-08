@@ -193,7 +193,7 @@ const ExternalApprovalNotice: React.FC<ExternalApprovalNoticeProps> = ({
           ref={initialFocusRef}
           colorScheme="primary"
           size="sm"
-          href={`https://gnosis-safe.io/app/${
+          href={`https://app.safe.global/app/${
             CHAIN_ID_TO_GNOSIS[chainId as keyof typeof CHAIN_ID_TO_GNOSIS]
           }:${address}/transactions/queue`}
           isExternal

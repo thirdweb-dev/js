@@ -90,10 +90,10 @@ const HomePage: ThirdwebNextPage = () => {
             >
               <Heading
                 as="h2"
-                size="display.md"
+                size="display.sm"
                 textAlign={{ base: "center", md: "left" }}
               >
-                Build web3 apps, easily.
+                The complete web3 development framework.
               </Heading>
               <Heading
                 as="h3"
