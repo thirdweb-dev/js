@@ -215,14 +215,14 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
       .map((phase) => ({
         ...phase,
         price: Number(phase.currencyMetadata.displayValue),
-        maxClaimableSupply: phase.maxClaimableSupply.toString(),
+        maxClaimableSupply: phase.maxClaimableSupply?.toString() || "0",
         currencyMetadata: {
           ...phase.currencyMetadata,
-          value: phase.currencyMetadata.value.toString(),
+          value: phase.currencyMetadata.value?.toString() || "0",
         },
-        currencyAddress: phase.currencyAddress.toLowerCase(),
-        maxClaimablePerWallet: phase.maxClaimablePerWallet.toString(),
-        waitInSeconds: phase.waitInSeconds.toString(),
+        currencyAddress: phase.currencyAddress?.toLowerCase() || "0",
+        maxClaimablePerWallet: phase.maxClaimablePerWallet?.toString() || "0",
+        waitInSeconds: phase.waitInSeconds?.toString() || "0",
         startTime: new Date(phase.startTime),
         snapshot: phase.snapshot?.map(({ address, maxClaimable }) => ({
           address,
