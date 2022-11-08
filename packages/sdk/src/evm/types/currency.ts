@@ -2,11 +2,11 @@
  * Currency metadata.
  * @public
  */
+import { AmountSchema } from "../../core/schema/shared";
 import {
   CurrencySchema,
   CurrencyValueSchema,
 } from "../schema/contracts/common/currency";
-import { AmountSchema } from "../schema/shared";
 import { z } from "zod";
 
 /**

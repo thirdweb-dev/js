@@ -1,20 +1,17 @@
 import { NFT } from "../../../core/schema/nft";
-import { hasFunction } from "../../common";
-import { FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS } from "../../constants/erc721-features";
+import { FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V2 } from "../../constants/erc721-features";
 import { CustomContractSchema } from "../../schema/contracts/custom";
-import { ClaimOptions, ClaimVerification } from "../../types";
+import { ClaimOptions } from "../../types";
 import { BaseClaimConditionERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
-import { TransactionTask } from "./TransactionTask";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { DropClaimConditions } from "./drop-claim-conditions";
 import { Erc721 } from "./erc-721";
-import type { DropERC721 } from "@thirdweb-dev/contracts-js";
 import { TokensClaimedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Drop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 
 /**
  * Configure and claim ERC721 NFTs
@@ -27,7 +24,7 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
  * ```
  */
 export class Erc721ClaimableWithConditions implements DetectableFeature {
-  featureName = FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS.name;
+  featureName = FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V2.name;
 
   /**
    * Configure claim conditions
@@ -78,38 +75,6 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
   }
 
   /**
-   * Construct a claim transaction without executing it.
-   * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
-   * @param destinationAddress
-   * @param quantity
-   * @param options
-   */
-  public async getClaimTransaction(
-    destinationAddress: string,
-    quantity: BigNumberish,
-    options?: ClaimOptions,
-  ): Promise<TransactionTask> {
-    if (options?.pricePerToken) {
-      throw new Error(
-        "In ERC721ClaimableWithConditions, price per token is be set via claim conditions by calling `contract.erc721.claimConditions.set()`",
-      );
-    }
-    const claimVerification = await this.conditions.prepareClaim(
-      quantity,
-      options?.checkERC20Allowance === undefined
-        ? true
-        : options.checkERC20Allowance,
-    );
-
-    return TransactionTask.make({
-      contractWrapper: this.contractWrapper,
-      functionName: "claim",
-      args: await this.getArgs(destinationAddress, quantity, claimVerification),
-      overrides: claimVerification.overrides,
-    });
-  }
-
-  /**
    * Claim unique NFTs to a specific Wallet
    *
    * @remarks Let the specified wallet claim NFTs.
@@ -127,6 +92,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
    *
    * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
+   * @param options
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   public async to(
@@ -134,7 +100,7 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
     quantity: BigNumberish,
     options?: ClaimOptions,
   ): Promise<TransactionResultWithId<NFT>[]> {
-    const task = await this.getClaimTransaction(
+    const task = await this.conditions.getClaimTransaction(
       destinationAddress,
       quantity,
       options,
@@ -155,49 +121,5 @@ export class Erc721ClaimableWithConditions implements DetectableFeature {
       });
     }
     return results;
-  }
-
-  private async getArgs(
-    destinationAddress: string,
-    quantity: BigNumberish,
-    claimVerification: ClaimVerification,
-  ): Promise<any[]> {
-    const isLegacyNFTContract = await this.isLegacyNFTContract();
-    if (isLegacyNFTContract) {
-      return [
-        destinationAddress,
-        quantity,
-        claimVerification.currencyAddress,
-        claimVerification.price,
-        claimVerification.proofs,
-        claimVerification.maxQuantityPerTransaction,
-      ];
-    }
-    return [
-      destinationAddress,
-      quantity,
-      claimVerification.currencyAddress,
-      claimVerification.price,
-      {
-        proof: claimVerification.proofs,
-        maxQuantityInAllowlist: claimVerification.maxQuantityPerTransaction,
-      },
-      ethers.utils.toUtf8Bytes(""),
-    ];
-  }
-
-  private async isLegacyNFTContract() {
-    if (hasFunction<DropERC721>("contractType", this.contractWrapper)) {
-      try {
-        const contractType = ethers.utils.toUtf8String(
-          await this.contractWrapper.readContract.contractType(),
-        );
-        return contractType.includes("DropERC721");
-      } catch (e) {
-        return false;
-      }
-    } else {
-      return false;
-    }
   }
 }

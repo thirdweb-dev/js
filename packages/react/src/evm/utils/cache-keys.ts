@@ -287,6 +287,16 @@ export const cacheKeys = {
             ? ["claimConditions", "getAll", { tokenId }, options]
             : ["claimConditions", "getAll", options],
         ),
+      getClaimerProofs: (
+        contractAddress: RequiredParam<ContractAddress>,
+        tokenId?: BigNumberish,
+      ) =>
+        createContractCacheKey(
+          contractAddress,
+          tokenId
+            ? ["claimConditions", "getClaimerProofs", { tokenId }]
+            : ["claimConditions", "getClaimerProofs"],
+        ),
       getClaimIneligibilityReasons: (
         contractAddress: RequiredParam<ContractAddress>,
         params: { walletAddress?: WalletAddress; quantity: string | number },

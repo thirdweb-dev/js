@@ -1,4 +1,5 @@
-import { AddressSchema, AmountSchema } from "../shared";
+import { AmountSchema } from "../../../core/schema/shared";
+import { AddressSchema } from "../shared";
 import { z } from "zod";
 
 /**

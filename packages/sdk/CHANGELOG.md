@@ -1,5 +1,45 @@
 # @thirdweb-dev/sdk
 
+## 3.5.1
+
+### Patch Changes
+
+- [#368](https://github.com/thirdweb-dev/js/pull/368) [`4e7b293`](https://github.com/thirdweb-dev/js/commit/4e7b293c543244de79c150ca8c37d941221fc9a3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix handling of old allowlist proof format
+
+- [#365](https://github.com/thirdweb-dev/js/pull/365) [`c9c0e4f`](https://github.com/thirdweb-dev/js/commit/c9c0e4ff39b054af746f3aec75fcbd0a3ef7239d) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - now React Native compatible
+
+## 3.5.0
+
+### Minor Changes
+
+- [#329](https://github.com/thirdweb-dev/js/pull/329) [`5200d5d`](https://github.com/thirdweb-dev/js/commit/5200d5d7e730da58bd4d3e7c222e3c661265f913) Thanks [@adam-maj](https://github.com/adam-maj)! - ### Breaking changes:
+
+  1. claim conditions had some changes to support the new drop contracts:
+
+  - `maxClaimablePerTransaction` is now named `maxClaimablePerWallet`
+  - `maxQuantity` is now named `maxClaimable`
+
+  2. signature minting now requires a `to` address to be set for security purposees
+
+  ### Main Changes:
+
+  - Support for new optimized Drop contracts
+  - Support for new claim conditions with overrides
+  - Don't allow zero address recipient on signature minting
+
+### Patch Changes
+
+- [#362](https://github.com/thirdweb-dev/js/pull/362) [`42a6065`](https://github.com/thirdweb-dev/js/commit/42a606588dfed03c67c57357dd0ee1ad19fad6ea) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SDK] Fix fetching NFTs with numbers as ids
+
+- Updated dependencies [[`aa6d9ed`](https://github.com/thirdweb-dev/js/commit/aa6d9ed75d126d7a0cca9fb8fc389ff94e9d1e14)]:
+  - @thirdweb-dev/contracts-js@1.2.0
+
+## 3.4.5
+
+### Patch Changes
+
+- [#359](https://github.com/thirdweb-dev/js/pull/359) [`e731c1a`](https://github.com/thirdweb-dev/js/commit/e731c1a7c341e6f2b9cc42c88d5c1b036dcf4a7c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SDK] Allow fetching claimerProofs from any claim condition
+
 ## 3.4.4
 
 ## 3.4.3

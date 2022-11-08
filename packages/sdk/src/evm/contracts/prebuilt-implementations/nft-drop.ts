@@ -4,7 +4,6 @@ import {
 } from "../../../core/schema/QueryParams";
 import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { getRoleHash } from "../../common";
-import { uploadOrExtractURIs } from "../../common/nft";
 import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
 import { TransactionTask } from "../../core/classes/TransactionTask";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
@@ -27,21 +26,14 @@ import {
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
-import { PaperCheckout } from "../../integrations/paper-xyz";
+import { PaperCheckout } from "../../integrations/thirdweb-checkout";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
+import { PrebuiltNFTDrop } from "../../types/eips";
 import { UploadProgressEvent } from "../../types/events";
-import type { DropERC721 } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC721.json";
-import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC721";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  BigNumber,
-  BigNumberish,
-  CallOverrides,
-  constants,
-  ethers,
-} from "ethers";
+import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -57,24 +49,27 @@ import {
  *
  * @public
  */
-export class NFTDrop extends StandardErc721<DropERC721> {
+export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
   public abi: typeof ABI;
-  public encoder: ContractEncoder<DropERC721>;
-  public estimator: GasCostEstimator<DropERC721>;
+  public encoder: ContractEncoder<PrebuiltNFTDrop>;
+  public estimator: GasCostEstimator<PrebuiltNFTDrop>;
   public metadata: ContractMetadata<
-    DropERC721,
+    PrebuiltNFTDrop,
     typeof DropErc721ContractSchema
   >;
-  public sales: ContractPrimarySale<DropERC721>;
-  public platformFees: ContractPlatformFee<DropERC721>;
-  public events: ContractEvents<DropERC721>;
-  public roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
+  public sales: ContractPrimarySale<PrebuiltNFTDrop>;
+  public platformFees: ContractPlatformFee<PrebuiltNFTDrop>;
+  public events: ContractEvents<PrebuiltNFTDrop>;
+  public roles: ContractRoles<
+    PrebuiltNFTDrop,
+    typeof NFTDrop.contractRoles[number]
+  >;
   /**
    * @internal
    */
-  public interceptor: ContractInterceptor<DropERC721>;
+  public interceptor: ContractInterceptor<PrebuiltNFTDrop>;
   /**
    * Configure royalties
    * @remarks Set your own royalties for the entire contract or per token
@@ -93,7 +88,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
    * ```
    */
   public royalties: ContractRoyalty<
-    DropERC721,
+    PrebuiltNFTDrop,
     typeof DropErc721ContractSchema
   >;
   /**
@@ -118,7 +113,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
    * await contract.claimConditions.set(claimConditions);
    * ```
    */
-  public claimConditions: DropClaimConditions<DropERC721>;
+  public claimConditions: DropClaimConditions<PrebuiltNFTDrop>;
   /**
    * Delayed reveal
    * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.
@@ -150,16 +145,16 @@ export class NFTDrop extends StandardErc721<DropERC721> {
    * await contract.revealer.reveal(batchId, "my secret password");
    * ```
    */
-  public revealer: DelayedReveal<DropERC721>;
+  public revealer: DelayedReveal<PrebuiltNFTDrop>;
 
   /**
    * Checkout
    * @remarks Create a FIAT currency checkout for your NFT drop.
    */
-  public checkout: PaperCheckout<DropERC721>;
+  public checkout: PaperCheckout<PrebuiltNFTDrop>;
 
-  public erc721: Erc721<DropERC721>;
-  public owner: ContractOwner<DropERC721>;
+  public erc721: Erc721<PrebuiltNFTDrop>;
+  public owner: ContractOwner<PrebuiltNFTDrop>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -168,7 +163,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
     options: SDKOptions = {},
     abi: typeof ABI,
     chainId: number,
-    contractWrapper = new ContractWrapper<DropERC721>(
+    contractWrapper = new ContractWrapper<PrebuiltNFTDrop>(
       network,
       address,
       abi,
@@ -195,7 +190,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.erc721 = new Erc721(this.contractWrapper, this.storage, chainId);
-    this.revealer = new DelayedReveal<DropERC721>(
+    this.revealer = new DelayedReveal(
       this.contractWrapper,
       this.storage,
       FEATURE_NFT_REVEALABLE.name,
@@ -383,44 +378,7 @@ export class NFTDrop extends StandardErc721<DropERC721> {
       onProgress: (event: UploadProgressEvent) => void;
     },
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
-    const startFileNumber =
-      await this.contractWrapper.readContract.nextTokenIdToMint();
-    const batch = await uploadOrExtractURIs(
-      metadatas,
-      this.storage,
-      startFileNumber.toNumber(),
-      options,
-    );
-    // ensure baseUri is the same for the entire batch
-    const baseUri = batch[0].substring(0, batch[0].lastIndexOf("/"));
-    for (let i = 0; i < batch.length; i++) {
-      const uri = batch[i].substring(0, batch[i].lastIndexOf("/"));
-      if (baseUri !== uri) {
-        throw new Error(
-          `Can only create batches with the same base URI for every entry in the batch. Expected '${baseUri}' but got '${uri}'`,
-        );
-      }
-    }
-    const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      batch.length,
-      baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
-      ethers.utils.toUtf8Bytes(""),
-    ]);
-    const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
-      "TokensLazyMinted",
-      receipt?.logs,
-    );
-    const startingIndex = event[0].args.startTokenId;
-    const endingIndex = event[0].args.endTokenId;
-    const results: TransactionResultWithId<NFTMetadata>[] = [];
-    for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
-      results.push({
-        id,
-        receipt,
-        data: () => this.erc721.getTokenMetadata(id),
-      });
-    }
-    return results;
+    return this.erc721.lazyMint(metadatas, options);
   }
 
   /**
@@ -451,9 +409,9 @@ export class NFTDrop extends StandardErc721<DropERC721> {
    * const quantity = 1; // how many unique NFTs you want to claim
    *
    * const tx = await contract.claimTo(address, quantity);
-   * const receipt = tx.receipt; // the transaction receipt
-   * const claimedTokenId = tx.id; // the id of the NFT claimed
-   * const claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata
+   * const receipt = tx[0].receipt; // the transaction receipt
+   * const claimedTokenId = tx[0].id; // the id of the NFT claimed
+   * const claimedNFT = await tx[0].data(); // (optional) get the claimed NFT metadata
    * ```
    *
    * @param destinationAddress - Address you want to send the token to
