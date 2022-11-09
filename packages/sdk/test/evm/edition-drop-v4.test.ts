@@ -277,6 +277,24 @@ describe("Edition Drop Contract (V4)", async () => {
     }
   });
 
+  it("should not allow setting a claim condition where no one can claim", async () => {
+    await bdContract.createBatch([{ name: "test", description: "test" }]);
+
+    try {
+      await bdContract.claimConditions.set(0, [
+        {
+          maxClaimablePerWallet: 0,
+          snapshot: [adminWallet.address, bobWallet.address],
+        },
+      ]);
+      assert.fail(
+        "should not allow setting a claim condition where no one can claim",
+      );
+    } catch (e) {
+      expectError(e, "no one can claim");
+    }
+  });
+
   it("should allow a default claim condition to be used to claim", async () => {
     await bdContract.createBatch([
       {

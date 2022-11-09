@@ -3,10 +3,7 @@ import { ListingNotFoundError } from "../../common";
 import { isNativeToken } from "../../common/currency";
 import { mapOffer } from "../../common/marketplace";
 import { getRoleHash } from "../../common/role";
-import {
-  NATIVE_TOKENS,
-  SUPPORTED_CHAIN_ID,
-} from "../../constants";
+import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -326,9 +323,14 @@ export class Marketplace implements UpdateableNetwork {
    */
   public async getOffers(listingId: BigNumberish): Promise<Offer[]> {
     // get all new offer events from this contract
-    const events = await this.events.getEvents<NewOfferEventObject>("NewOffer");
-    // get only the events for this listing id
-    const listingEvents = events.filter((e) => e.data.listingId.eq(listingId));
+    const listingEvents = await this.events.getEvents<NewOfferEventObject>(
+      "NewOffer",
+      {
+        filters: {
+          listingId,
+        },
+      },
+    );
     // derive the offers from the events
     return await Promise.all(
       listingEvents.map(async (e): Promise<Offer> => {

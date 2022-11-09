@@ -597,6 +597,26 @@ export class DropClaimConditions<
               "contract.claimConditions.set([{ snapshot: [{ address: '0x...', maxClaimable: 1 }], maxClaimablePerWallet: 0 }])",
           );
         }
+        if (
+          cc.snapshot &&
+          cc.snapshot.length > 0 &&
+          cc.maxClaimablePerWallet?.toString() === "0" &&
+          cc.snapshot
+            .map((s) => {
+              if (typeof s === "string") {
+                return 0;
+              } else {
+                return Number(s.maxClaimable?.toString() || 0);
+              }
+            })
+            .reduce((acc, current) => {
+              return acc + current;
+            }, 0) === 0
+        ) {
+          throw new Error(
+            "maxClaimablePerWallet is set to 0, and all addresses in the allowlist have max claimable 0. This means that no one can claim.",
+          );
+        }
       });
     }
 

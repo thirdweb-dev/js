@@ -372,6 +372,24 @@ describe("NFT Drop Contract (v4)", async () => {
     }
   });
 
+  it("should not allow setting a claim condition where no one can claim", async () => {
+    await dropContract.createBatch([{ name: "test", description: "test" }]);
+
+    try {
+      await dropContract.claimConditions.set([
+        {
+          maxClaimablePerWallet: 0,
+          snapshot: [adminWallet.address, bobWallet.address],
+        },
+      ]);
+      assert.fail(
+        "should not allow setting a claim condition where no one can claim",
+      );
+    } catch (e) {
+      expectError(e, "no one can claim");
+    }
+  });
+
   it("allow one address in the merkle tree to claim", async () => {
     const testWallets: SignerWithAddress[] = [bobWallet];
     const members = testWallets.map((w) => w.address);
