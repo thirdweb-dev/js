@@ -37,8 +37,11 @@ export type ContractEvent<TEvent = Record<string, any>> = {
 /**
  * Filters for querying past events
  */
-export interface EventQueryFilter {
+export interface EventQueryOptions<
+  TFilter extends Record<string, any> = Record<string, any>,
+> {
   fromBlock?: string | number;
   toBlock?: string | number;
   order?: "asc" | "desc";
+  filters?: TFilter;
 }
