@@ -226,11 +226,19 @@ export class ContractEvents<TContract extends BaseContract> {
    * ```javascript
    * // The name of the event to get logs for
    * const eventName = "Transfer";
+   *
    * // Optionally pass in options to limit the blocks from which events are retrieved
    * const options = {
    *   fromBlock: 0,
-   *   toBlock: 1000000,
-   * }
+   *   toBlock: 1000000, // can also pass "latest"
+   *   order: "desc",
+   *   // Configure event filters (filter on indexed event parameters)
+   *   filters: {
+   *     from: "0x...",
+   *     to: "0x..."
+   *   }
+   * };
+   *
    * const events = await contract.events.getEvents(eventName, options);
    * console.log(events[0].eventName);
    * console.log(events[0].data);
