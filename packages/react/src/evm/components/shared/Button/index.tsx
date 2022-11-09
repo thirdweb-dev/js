@@ -44,12 +44,12 @@ const BaseButton = styled.button<BaseButtonProps>`
   &:focus:after {
     content: "";
     position: absolute;
-    top: -5px; // border: 2px + offset: 1px
-    right: -5px; // border: 2px + offset: 1px
-    bottom: -5px; // border: 2px + offset: 1px
-    left: -5px; // border: 1px + offset: 2px
+    top: -5px;
+    right: -5px;
+    bottom: -5px;
+    left: -5px;
     border: 2px solid ${(props) => (props.theme as TwUiTheme).colors.accent};
-    border-radius: 11px; // border—radius: 8px + offset: 2px
+    border-radius: 11px;
   }
 `;
 
