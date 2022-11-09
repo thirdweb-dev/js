@@ -13,6 +13,9 @@ export const Menu = styled.ul<MenuProps>`
   overflow: hidden;
   position: relative;
   pointer-events: auto;
+  &:focus {
+    outline: 0;
+  }
   &:after {
     content: "";
     position: absolute;
