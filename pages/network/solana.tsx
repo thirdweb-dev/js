@@ -88,7 +88,7 @@ const Solana: ThirdwebNextPage = () => {
             justify={{ base: "start", md: "center" }}
           >
             <Heading
-              as="h2"
+              as="h1"
               size="title.2xl"
               textAlign={{ base: "center", md: "left" }}
             >
