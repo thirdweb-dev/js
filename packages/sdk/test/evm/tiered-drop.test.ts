@@ -13,7 +13,7 @@ describe("Tiered Drop Contract", async () => {
   async function deployTieredDrop() {
     // This needs to match the release for the currently used ABI
     const releaseUri =
-      "ipfs://QmZz7bpkHEjBJXePWzNZTdhcecjvNssYvoExfdiZUV4DaF/0";
+      "ipfs://QmXu9ezFNgXBX1juLZ7kwdf5KpTD1x9GPHnk14QB2NpUvK/0";
     const address = await sdk.deployer.deployContractFromUri(releaseUri, [], {
       forceDirectDeploy: true,
     });
@@ -103,7 +103,10 @@ describe("Tiered Drop Contract", async () => {
     assert.isTrue(isValid);
 
     sdk.updateSignerOrProvider(claimerWallet);
-    await contract.erc721.tieredDrop.claimWithSignature(signedPayload);
+    const txs = await contract.erc721.tieredDrop.claimWithSignature(
+      signedPayload,
+    );
+    expect((await txs[0].data()).metadata.name).to.equal("NFT #1");
   });
 
   it("Should get tokens in tier", async () => {
