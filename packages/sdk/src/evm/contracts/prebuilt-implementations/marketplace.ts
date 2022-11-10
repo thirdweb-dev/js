@@ -326,6 +326,7 @@ export class Marketplace implements UpdateableNetwork {
     const listingEvents = await this.events.getEvents<NewOfferEventObject>(
       "NewOffer",
       {
+        order: "desc",
         filters: {
           listingId,
         },

@@ -68,7 +68,12 @@ export function hasMatchingAbi(contractAbi: Abi, featureAbis: readonly Abi[]) {
       (iFn) =>
         iFn.name === fn.name &&
         iFn.inputs.length === fn.inputs.length &&
-        iFn.inputs.every((i, index) => i.type === fn.inputs[index].type),
+        iFn.inputs.every((i, index) => {
+          if (i.type === "tuple") {
+            return i.internalType === fn.inputs[index].internalType;
+          }
+          return i.type === fn.inputs[index].type;
+        }),
     );
     return match !== undefined;
   });
