@@ -48,7 +48,6 @@ import type {
   TieredDrop,
   TokenERC721,
 } from "@thirdweb-dev/contracts-js";
-import DropERC721_V3 from "@thirdweb-dev/contracts-js/dist/abis/DropERC721_V3.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, constants } from "ethers";
 

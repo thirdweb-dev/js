@@ -845,8 +845,14 @@ export class DropClaimConditions<
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase> {
     return (
-      !hasFunction<DropSinglePhase>("getClaimConditionById", contractWrapper) &&
-      hasFunction<DropSinglePhase>("getSupplyClaimedByWallet", contractWrapper)
+      detectContractFeature<DropSinglePhase>(
+        contractWrapper,
+        "ERC721ClaimConditionsV2",
+      ) ||
+      detectContractFeature<DropSinglePhase>(
+        contractWrapper,
+        "ERC20ClaimConditionsV2",
+      )
     );
   }
 
@@ -854,8 +860,8 @@ export class DropClaimConditions<
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<Drop> {
     return (
-      hasFunction<Drop>("getClaimConditionById", contractWrapper) &&
-      hasFunction<Drop>("getSupplyClaimedByWallet", contractWrapper)
+      detectContractFeature<Drop>(contractWrapper, "ERC721ClaimPhasesV2") ||
+      detectContractFeature<Drop>(contractWrapper, "ERC20ClaimPhasesV2")
     );
   }
 
@@ -863,10 +869,14 @@ export class DropClaimConditions<
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase_V1> {
     return (
-      !hasFunction<DropSinglePhase_V1>(
-        "getClaimConditionById",
+      detectContractFeature<DropSinglePhase_V1>(
         contractWrapper,
-      ) && hasFunction<DropSinglePhase_V1>("getClaimTimestamp", contractWrapper)
+        "ERC721ClaimConditionsV1",
+      ) ||
+      detectContractFeature<DropSinglePhase_V1>(
+        contractWrapper,
+        "ERC20ClaimConditionsV1",
+      )
     );
   }
 
@@ -874,8 +884,14 @@ export class DropClaimConditions<
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropERC721_V3 | DropERC20_V2> {
     return (
-      hasFunction<DropERC721_V3>("getClaimConditionById", contractWrapper) &&
-      hasFunction<DropERC721_V3>("setWalletClaimCount", contractWrapper)
+      detectContractFeature<DropERC721_V3 | DropERC20_V2>(
+        contractWrapper,
+        "ERC721ClaimPhasesV1",
+      ) ||
+      detectContractFeature<DropERC721_V3 | DropERC20_V2>(
+        contractWrapper,
+        "ERC20ClaimPhasesV1",
+      )
     );
   }
 

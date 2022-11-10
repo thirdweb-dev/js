@@ -50,7 +50,6 @@ import type {
   IMintableERC1155,
   TokenERC1155,
 } from "@thirdweb-dev/contracts-js";
-import DropERC1155_V2 from "@thirdweb-dev/contracts-js/dist/abis/DropERC1155_V2.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, BytesLike, ethers } from "ethers";
 

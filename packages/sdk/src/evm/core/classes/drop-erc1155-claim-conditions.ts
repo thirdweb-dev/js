@@ -12,7 +12,10 @@ import {
   updateExistingClaimConditions,
 } from "../../common/claim-conditions";
 import { isNativeToken } from "../../common/currency";
-import { hasFunction } from "../../common/feature-detection";
+import {
+  detectContractFeature,
+  hasFunction,
+} from "../../common/feature-detection";
 import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
 import { isNode } from "../../common/utils";
 import { ClaimEligibility } from "../../enums";
@@ -903,45 +906,36 @@ export class DropErc1155ClaimConditions<
   isNewSinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase1155> {
-    return (
-      !hasFunction<DropSinglePhase1155>(
-        "getClaimConditionById",
-        contractWrapper,
-      ) &&
-      hasFunction<DropSinglePhase1155>(
-        "getSupplyClaimedByWallet",
-        contractWrapper,
-      )
+    return detectContractFeature<DropSinglePhase1155>(
+      contractWrapper,
+      "ERC1155ClaimConditionsV2",
     );
   }
 
   isNewMultiphaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<Drop1155> {
-    return (
-      hasFunction<Drop1155>("getClaimConditionById", contractWrapper) &&
-      hasFunction<Drop1155>("getSupplyClaimedByWallet", contractWrapper)
+    return detectContractFeature<Drop1155>(
+      contractWrapper,
+      "ERC1155ClaimPhasesV2",
     );
   }
 
   isLegacySinglePhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropSinglePhase1155_V1> {
-    return (
-      !hasFunction<DropSinglePhase1155_V1>(
-        "getClaimConditionById",
-        contractWrapper,
-      ) &&
-      hasFunction<DropSinglePhase1155_V1>("getClaimTimestamp", contractWrapper)
+    return detectContractFeature<DropSinglePhase1155_V1>(
+      contractWrapper,
+      "ERC1155ClaimConditionsV1",
     );
   }
 
   isLegacyMultiPhaseDrop(
     contractWrapper: ContractWrapper<any>,
   ): contractWrapper is ContractWrapper<DropERC1155_V2> {
-    return (
-      hasFunction<DropERC1155_V2>("getClaimConditionById", contractWrapper) &&
-      hasFunction<DropERC1155_V2>("setWalletClaimCount", contractWrapper)
+    return detectContractFeature<DropERC1155_V2>(
+      contractWrapper,
+      "ERC1155ClaimPhasesV1",
     );
   }
 

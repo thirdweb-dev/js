@@ -33,7 +33,6 @@ import type {
   IMintableERC20,
   IBurnableERC20,
 } from "@thirdweb-dev/contracts-js";
-import DropERC20_V2 from "@thirdweb-dev/contracts-js/dist/abis/DropERC20_V2.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers, BigNumber, BigNumberish } from "ethers";
 
