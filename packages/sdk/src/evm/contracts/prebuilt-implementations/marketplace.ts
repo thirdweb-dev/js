@@ -3,10 +3,7 @@ import { ListingNotFoundError } from "../../common";
 import { isNativeToken } from "../../common/currency";
 import { mapOffer } from "../../common/marketplace";
 import { getRoleHash } from "../../common/role";
-import {
-  NATIVE_TOKENS,
-  SUPPORTED_CHAIN_ID,
-} from "../../constants";
+import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -42,7 +39,7 @@ import invariant from "tiny-invariant";
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
  * const sdk = new ThirdwebSDK("{{chainName}}");
- * const contract = sdk.getContract("{{contract_address}}", "marketplace");
+ * const contract = await sdk.getContract("{{contract_address}}", "marketplace");
  * ```
  *
  * @public

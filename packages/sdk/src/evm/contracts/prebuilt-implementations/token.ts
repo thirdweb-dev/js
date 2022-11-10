@@ -30,7 +30,7 @@ import { CallOverrides, constants } from "ethers";
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
  * const sdk = new ThirdwebSDK("{{chainName}}");
- * const contract = sdk.getContract("{{contract_address}}", "token");
+ * const contract = await sdk.getContract("{{contract_address}}", "token");
  * ```
  *
  * @public
