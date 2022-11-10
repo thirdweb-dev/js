@@ -155,6 +155,19 @@ export class UserWallet {
   }
 
   /**
+   * Return wheter the wallet is connected to the same chain as specified by the SDK
+   * @example
+   * ```javascript
+   * await sdk.wallet.isConnectedToCorrectChain();
+   * ```
+   */
+  public async isConnectedToCorrectChain(): Promise<boolean> {
+    const signerChain = await this.getConnectedChainId();
+    const sdkChain = (await this.connection.getProvider().getNetwork()).chainId;
+    return signerChain === sdkChain;
+  }
+
+  /**
    * Sign any message with the connected wallet private key
    * @param message - the message to sign
    * @returns the signed message
