@@ -8,10 +8,23 @@ export const Menu = styled.ul<MenuProps>`
   margin: 0;
   background: ${(props) => (props.theme as TwUiTheme).colors.background};
   color: ${(props) => (props.theme as TwUiTheme).colors.text};
-  outline-color: ${(props) => (props.theme as TwUiTheme).colors.accent};
-  outline-style: solid;
-  outline-offset: 0px;
   list-style: none;
   border-radius: 0.5em;
   overflow: hidden;
+  position: relative;
+  pointer-events: auto;
+  &:focus {
+    outline: 0;
+  }
+  &:after {
+    content: "";
+    position: absolute;
+    border: 1px solid ${(props) => (props.theme as TwUiTheme).colors.accent};
+    border-radius: 0.5em;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
 `;
