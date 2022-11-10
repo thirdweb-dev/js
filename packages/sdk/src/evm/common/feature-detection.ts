@@ -69,8 +69,14 @@ export function hasMatchingAbi(contractAbi: Abi, featureAbis: readonly Abi[]) {
         iFn.name === fn.name &&
         iFn.inputs.length === fn.inputs.length &&
         iFn.inputs.every((i, index) => {
-          if (i.type === "tuple") {
-            return i.internalType === fn.inputs[index].internalType;
+          if (i.type === "tuple" || i.type === "tuple[]") {
+            // check that all properties in the tuple are the same type
+            return (
+              i.type === fn.inputs[index].type &&
+              i.components?.every((c, cIndex) => {
+                return c.type === fn.inputs[index].components?.[cIndex]?.type;
+              })
+            );
           }
           return i.type === fn.inputs[index].type;
         }),

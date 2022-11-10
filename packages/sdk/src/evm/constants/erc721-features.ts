@@ -11,8 +11,9 @@ import Erc721SupplyAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC721Supply.
 import ILazyMintAbi from "@thirdweb-dev/contracts-js/dist/abis/ILazyMint.json";
 import IMintableERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC721.json";
 import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
+import SignatureMintERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC721.json";
 import TieredDropAbi from "@thirdweb-dev/contracts-js/dist/abis/LazyMintWithTier.json";
-import SignatureMintERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/SignatureMintERC721.json";
+import TokenERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/TokenERC721.json";
 
 export const FEATURE_NFT_BURNABLE = {
   name: "ERC721Burnable",
@@ -144,14 +145,25 @@ export const FEATURE_NFT_MINTABLE = {
   },
 } as const;
 
-export const FEATURE_NFT_SIGNATURE_MINTABLE = {
-  name: "ERC721SignatureMint",
+export const FEATURE_NFT_SIGNATURE_MINTABLE_V2 = {
+  name: "ERC721SignatureMintV2",
   namespace: "nft.signature",
   docLinks: {
     sdk: "sdk.erc721signaturemint",
     contracts: "ISignatureMintERC721",
   },
   abis: [Erc721Abi, SignatureMintERC721Abi],
+  features: {},
+} as const;
+
+export const FEATURE_NFT_SIGNATURE_MINTABLE_V1 = {
+  name: "ERC721SignatureMintV1",
+  namespace: "nft.signature",
+  docLinks: {
+    sdk: "sdk.erc721signaturemint",
+    contracts: "ISignatureMintERC721",
+  },
+  abis: [TokenERC721Abi],
   features: {},
 } as const;
 
@@ -192,7 +204,8 @@ export const FEATURE_NFT = {
     [FEATURE_NFT_SUPPLY.name]: FEATURE_NFT_SUPPLY,
     [FEATURE_NFT_MINTABLE.name]: FEATURE_NFT_MINTABLE,
     [FEATURE_NFT_LAZY_MINTABLE.name]: FEATURE_NFT_LAZY_MINTABLE,
-    [FEATURE_NFT_SIGNATURE_MINTABLE.name]: FEATURE_NFT_SIGNATURE_MINTABLE,
+    [FEATURE_NFT_SIGNATURE_MINTABLE_V1.name]: FEATURE_NFT_SIGNATURE_MINTABLE_V1,
+    [FEATURE_NFT_SIGNATURE_MINTABLE_V2.name]: FEATURE_NFT_SIGNATURE_MINTABLE_V2,
     [FEATURE_NFT_TIERED_DROP.name]: FEATURE_NFT_TIERED_DROP,
   },
 } as const;

@@ -17,9 +17,9 @@ import {
   FEATURE_NFT_LAZY_MINTABLE,
   FEATURE_NFT_MINTABLE,
   FEATURE_NFT_REVEALABLE,
-  FEATURE_NFT_SIGNATURE_MINTABLE,
   FEATURE_NFT_SUPPLY,
   FEATURE_NFT_TIERED_DROP,
+  FEATURE_NFT_SIGNATURE_MINTABLE_V2,
 } from "../../constants/erc721-features";
 import { BaseDropERC721, BaseERC721 } from "../../types/eips";
 import { ClaimOptions, UploadProgressEvent } from "../../types/index";
@@ -721,7 +721,7 @@ export class Erc721<
   get signature() {
     return assertEnabled(
       this.signatureMintable,
-      FEATURE_NFT_SIGNATURE_MINTABLE,
+      FEATURE_NFT_SIGNATURE_MINTABLE_V2,
     );
   }
 
@@ -861,7 +861,11 @@ export class Erc721<
     if (
       detectContractFeature<ISignatureMintERC721>(
         this.contractWrapper,
-        "ERC721SignatureMint",
+        "ERC721SignatureMintV1",
+      ) ||
+      detectContractFeature<ISignatureMintERC721>(
+        this.contractWrapper,
+        "ERC721SignatureMintV2",
       )
     ) {
       return new Erc721WithQuantitySignatureMintable(
