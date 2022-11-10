@@ -1,10 +1,15 @@
+import { useContractPublishMetadataFromURI } from "../hooks";
 import { ContractId } from "../types";
 import { isContractIdBuiltInContract } from "../utils";
 import { useChainId } from "@thirdweb-dev/react";
 import { SUPPORTED_CHAIN_ID, SUPPORTED_CHAIN_IDS } from "@thirdweb-dev/sdk/evm";
+import {
+  OSRoyaltyDisabledChains,
+  OSRoyaltyToPrebuilt,
+} from "constants/mappings";
 import { CustomSDKContext } from "contexts/custom-sdk-context";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const CustomContractForm = dynamic(() => import("./custom-contract"));
 const BuiltinContractForm = dynamic(() => import("./built-in-contract"));
@@ -20,6 +25,7 @@ export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
   chainId: chainIdProp,
   onSuccessCallback,
 }) => {
+  const publishMetadata = useContractPublishMetadataFromURI(contractId);
   const chainId = useChainId();
   const [selectedChain, setSelectedChain] = useState<
     SUPPORTED_CHAIN_ID | undefined
@@ -37,6 +43,16 @@ export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
     }
   }, [chainId, selectedChain]);
 
+  const OSRoyaltyContract =
+    OSRoyaltyToPrebuilt[
+      publishMetadata.data?.name as keyof typeof OSRoyaltyToPrebuilt
+    ];
+
+  const contractType = useMemo(
+    () => OSRoyaltyContract || contractId,
+    [contractId, OSRoyaltyContract],
+  );
+
   if (!contractId) {
     return null;
   }
@@ -46,11 +62,12 @@ export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
 
   return (
     <CustomSDKContext desiredChainId={selectedChain}>
-      {isContractIdBuiltInContract(contractId) ? (
+      {isContractIdBuiltInContract(contractType) ? (
         <BuiltinContractForm
-          contractType={contractId}
+          contractType={contractType}
           selectedChain={selectedChain}
           onChainSelect={setSelectedChain}
+          disabledChains={OSRoyaltyContract ? OSRoyaltyDisabledChains : []}
         />
       ) : (
         <CustomContractForm

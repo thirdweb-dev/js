@@ -105,12 +105,14 @@ interface BuiltinContractFormProps {
   contractType: ContractType;
   selectedChain: SUPPORTED_CHAIN_ID | undefined;
   onChainSelect: (chainId: SUPPORTED_CHAIN_ID) => void;
+  disabledChains: SUPPORTED_CHAIN_ID[];
 }
 
 const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
   contractType,
   selectedChain,
   onChainSelect,
+  disabledChains,
 }) => {
   const publishMetadata = useContractPublishMetadataFromURI(contractType);
 
@@ -829,7 +831,10 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                   parseInt(e.currentTarget.value) as SUPPORTED_CHAIN_ID,
                 )
               }
-              disabledChainIds={DisabledChainsMap[contractType as ContractType]}
+              disabledChainIds={
+                disabledChains ||
+                DisabledChainsMap[contractType as ContractType]
+              }
               disabledChainIdText="Coming Soon"
             />
           </FormControl>
