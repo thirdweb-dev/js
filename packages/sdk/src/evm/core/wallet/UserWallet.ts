@@ -147,10 +147,10 @@ export class UserWallet {
    * Get the currently connected wallet's chainId
    * @example
    * ```javascript
-   * const address = await sdk.wallet.getSignerChainId();
+   * const address = await sdk.wallet.getConnectedChainId();
    * ```
    */
-  public async getSignerChainId(): Promise<number> {
+  public async getConnectedChainId(): Promise<number> {
     return await this.requireWallet().getChainId();
   }
 
