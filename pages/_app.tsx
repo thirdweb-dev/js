@@ -8,7 +8,7 @@ import {
   Persister,
 } from "@tanstack/react-query-persist-client";
 import { shouldNeverPersistQuery } from "@thirdweb-dev/react";
-import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
+// import { AnnouncementBanner } from "components/notices/AnnouncementBanner";
 import { BigNumber } from "ethers";
 import { NextPage } from "next";
 import PlausibleProvider from "next-plausible";
@@ -18,13 +18,7 @@ import { useRouter } from "next/router";
 import NProgress from "nprogress";
 import { PageId } from "page-id";
 import posthog from "posthog-js";
-import React, {
-  ReactElement,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { ReactElement, ReactNode, useEffect, useRef, useState } from "react";
 import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
 import { isBrowser } from "utils/isBrowser";
 
@@ -291,7 +285,7 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
           />
 
           <ChakraProvider theme={chakraTheme}>
-            <AnnouncementBanner />
+            {/* <AnnouncementBanner /> */}
             {getLayout(<Component {...pageProps} />, pageProps)}
           </ChakraProvider>
         </Hydrate>
