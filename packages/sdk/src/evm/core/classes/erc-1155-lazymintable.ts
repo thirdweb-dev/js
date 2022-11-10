@@ -1,13 +1,9 @@
 import { NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
-import {
-  detectContractFeature,
-  hasFunction,
-  matchesPrebuiltAbi,
-} from "../../common/feature-detection";
+import { detectContractFeature } from "../../common/feature-detection";
 import { getPrebuiltInfo } from "../../common/legacy";
 import { uploadOrExtractURIs } from "../../common/nft";
 import {
-  FEATURE_EDITION_LAZY_MINTABLE,
+  FEATURE_EDITION_LAZY_MINTABLE_V2,
   FEATURE_EDITION_REVEALABLE,
 } from "../../constants/erc1155-features";
 import {
@@ -24,13 +20,12 @@ import { Erc1155 } from "./erc-1155";
 import { ERC1155Claimable } from "./erc-1155-claimable";
 import { Erc1155ClaimableWithConditions } from "./erc-1155-claimable-with-conditions";
 import type { IClaimableERC1155 } from "@thirdweb-dev/contracts-js";
-import DropERC1155_V2 from "@thirdweb-dev/contracts-js/dist/abis/DropERC1155_V2.json";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 
 export class Erc1155LazyMintable implements DetectableFeature {
-  featureName = FEATURE_EDITION_LAZY_MINTABLE.name;
+  featureName = FEATURE_EDITION_LAZY_MINTABLE_V2.name;
 
   /**
    * Delayed reveal
@@ -93,7 +88,7 @@ export class Erc1155LazyMintable implements DetectableFeature {
     this.storage = storage;
     this.claim = this.detectErc1155Claimable();
     this.claimWithConditions = this.detectErc1155ClaimableWithConditions();
-    this.revealer = this.detectErc721Revealable();
+    this.revealer = this.detectErc1155Revealable();
   }
 
   /**
@@ -186,9 +181,8 @@ export class Erc1155LazyMintable implements DetectableFeature {
     if (
       detectContractFeature<IClaimableERC1155>(
         this.contractWrapper,
-        "ERC1155Claimable",
-      ) &&
-      !hasFunction("setClaimConditions", this.contractWrapper)
+        "ERC1155ClaimCustom",
+      )
     ) {
       return new ERC1155Claimable(this.contractWrapper);
     }
@@ -209,11 +203,11 @@ export class Erc1155LazyMintable implements DetectableFeature {
       ) ||
       detectContractFeature<BaseClaimConditionERC1155>(
         this.contractWrapper,
-        "ERC1155ClaimPhasesV2",
+        "ERC1155ClaimPhasesV1",
       ) ||
-      matchesPrebuiltAbi<BaseClaimConditionERC1155>(
+      detectContractFeature<BaseClaimConditionERC1155>(
         this.contractWrapper,
-        DropERC1155_V2,
+        "ERC1155ClaimPhasesV2",
       )
     ) {
       return new Erc1155ClaimableWithConditions(
@@ -224,17 +218,13 @@ export class Erc1155LazyMintable implements DetectableFeature {
     return undefined;
   }
 
-  private detectErc721Revealable():
+  private detectErc1155Revealable():
     | DelayedReveal<BaseDelayedRevealERC1155>
     | undefined {
     if (
       detectContractFeature<BaseDelayedRevealERC1155>(
         this.contractWrapper,
         "ERC1155Revealable",
-      ) ||
-      matchesPrebuiltAbi<BaseDelayedRevealERC1155>(
-        this.contractWrapper,
-        DropERC1155_V2,
       )
     ) {
       return new DelayedReveal(

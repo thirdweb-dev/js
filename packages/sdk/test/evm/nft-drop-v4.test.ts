@@ -732,7 +732,7 @@ describe("NFT Drop Contract (v4)", async () => {
     await dropContract.claimConditions.set([
       {
         maxClaimablePerWallet: 0,
-        snapshot: [w1.address],
+        snapshot: [{ address: w1.address, maxClaimable: 1 }],
       },
     ]);
 

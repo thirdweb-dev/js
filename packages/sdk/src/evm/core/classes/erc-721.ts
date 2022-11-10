@@ -5,7 +5,6 @@ import {
   detectContractFeature,
   ExtensionNotImplementedError,
   hasFunction,
-  matchesPrebuiltAbi,
   NotFoundError,
 } from "../../common";
 import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
@@ -13,7 +12,7 @@ import {
   FEATURE_NFT,
   FEATURE_NFT_BATCH_MINTABLE,
   FEATURE_NFT_BURNABLE,
-  FEATURE_NFT_CLAIMABLE,
+  FEATURE_NFT_CLAIM_CUSTOM,
   FEATURE_NFT_CLAIM_CONDITIONS_V2,
   FEATURE_NFT_LAZY_MINTABLE,
   FEATURE_NFT_MINTABLE,
@@ -602,7 +601,7 @@ export class Erc721<
     if (claim) {
       return claim.to(destinationAddress, quantity, options);
     }
-    throw new ExtensionNotImplementedError(FEATURE_NFT_CLAIMABLE);
+    throw new ExtensionNotImplementedError(FEATURE_NFT_CLAIM_CUSTOM);
   }
 
   /**
@@ -629,7 +628,7 @@ export class Erc721<
     if (claim) {
       return claim.getClaimTransaction(destinationAddress, quantity, options);
     }
-    throw new ExtensionNotImplementedError(FEATURE_NFT_CLAIMABLE);
+    throw new ExtensionNotImplementedError(FEATURE_NFT_CLAIM_CUSTOM);
   }
 
   public async totalClaimedSupply(): Promise<BigNumber> {
@@ -838,8 +837,7 @@ export class Erc721<
       detectContractFeature<BaseDropERC721>(
         this.contractWrapper,
         "ERC721LazyMintable",
-      ) ||
-      matchesPrebuiltAbi<BaseDropERC721>(this.contractWrapper, DropERC721_V3)
+      )
     ) {
       return new Erc721LazyMintable(this, this.contractWrapper, this.storage);
     }

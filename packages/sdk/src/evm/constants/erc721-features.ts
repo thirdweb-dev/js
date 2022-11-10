@@ -1,3 +1,4 @@
+import DropERC721_V3Abi from "@thirdweb-dev/contracts-js/dist/abis/DropERC721_V3.json";
 import IBurnableERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC721.json";
 import IClaimableERC721 from "@thirdweb-dev/contracts-js/dist/abis/IClaimableERC721.json";
 import DelayedRevealAbi from "@thirdweb-dev/contracts-js/dist/abis/IDelayedReveal.json";
@@ -68,6 +69,17 @@ export const FEATURE_NFT_CLAIM_CONDITIONS_V2 = {
   features: {},
 } as const;
 
+export const FEATURE_NFT_CLAIM_PHASES_V1 = {
+  name: "ERC721ClaimPhasesV1",
+  namespace: "nft.drop.claim",
+  docLinks: {
+    sdk: "sdk.erc721claimable",
+    contracts: "Drop",
+  },
+  abis: [DropERC721_V3Abi],
+  features: {},
+} as const;
+
 export const FEATURE_NFT_CLAIM_PHASES_V2 = {
   name: "ERC721ClaimPhasesV2",
   namespace: "nft.drop.claim",
@@ -79,8 +91,8 @@ export const FEATURE_NFT_CLAIM_PHASES_V2 = {
   features: {},
 } as const;
 
-export const FEATURE_NFT_CLAIMABLE = {
-  name: "ERC721Claimable",
+export const FEATURE_NFT_CLAIM_CUSTOM = {
+  name: "ERC721ClaimCustom",
   namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.erc721claimable",
@@ -100,9 +112,10 @@ export const FEATURE_NFT_LAZY_MINTABLE = {
   abis: [Erc721Abi, ILazyMintAbi],
   features: {
     [FEATURE_NFT_REVEALABLE.name]: FEATURE_NFT_REVEALABLE,
-    [FEATURE_NFT_CLAIMABLE.name]: FEATURE_NFT_CLAIMABLE,
+    [FEATURE_NFT_CLAIM_CUSTOM.name]: FEATURE_NFT_CLAIM_CUSTOM,
     [FEATURE_NFT_CLAIM_CONDITIONS_V1.name]: FEATURE_NFT_CLAIM_CONDITIONS_V1,
     [FEATURE_NFT_CLAIM_CONDITIONS_V2.name]: FEATURE_NFT_CLAIM_CONDITIONS_V2,
+    [FEATURE_NFT_CLAIM_PHASES_V1.name]: FEATURE_NFT_CLAIM_PHASES_V1,
     [FEATURE_NFT_CLAIM_PHASES_V2.name]: FEATURE_NFT_CLAIM_PHASES_V2,
   },
 } as const;

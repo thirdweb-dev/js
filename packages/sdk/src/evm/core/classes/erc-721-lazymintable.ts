@@ -1,9 +1,5 @@
 import { NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
-import {
-  detectContractFeature,
-  hasFunction,
-  matchesPrebuiltAbi,
-} from "../../common/feature-detection";
+import { detectContractFeature } from "../../common/feature-detection";
 import { getBaseUriFromBatch, uploadOrExtractURIs } from "../../common/nft";
 import {
   FEATURE_NFT_LAZY_MINTABLE,
@@ -23,7 +19,6 @@ import { Erc721 } from "./erc-721";
 import { Erc721Claimable } from "./erc-721-claimable";
 import { Erc721ClaimableWithConditions } from "./erc-721-claimable-with-conditions";
 import type { IClaimableERC721 } from "@thirdweb-dev/contracts-js";
-import DropERC721_V3 from "@thirdweb-dev/contracts-js/dist/abis/DropERC721_V3.json";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -178,10 +173,6 @@ export class Erc721LazyMintable implements DetectableFeature {
       detectContractFeature<BaseDelayedRevealERC721>(
         this.contractWrapper,
         "ERC721Revealable",
-      ) ||
-      matchesPrebuiltAbi<BaseDelayedRevealERC721>(
-        this.contractWrapper,
-        DropERC721_V3,
       )
     ) {
       return new DelayedReveal(
@@ -208,11 +199,11 @@ export class Erc721LazyMintable implements DetectableFeature {
       ) ||
       detectContractFeature<BaseClaimConditionERC721>(
         this.contractWrapper,
-        "ERC721ClaimPhasesV2",
+        "ERC721ClaimPhasesV1",
       ) ||
-      matchesPrebuiltAbi<BaseClaimConditionERC721>(
+      detectContractFeature<BaseClaimConditionERC721>(
         this.contractWrapper,
-        DropERC721_V3,
+        "ERC721ClaimPhasesV2",
       )
     ) {
       return new Erc721ClaimableWithConditions(
@@ -228,9 +219,8 @@ export class Erc721LazyMintable implements DetectableFeature {
     if (
       detectContractFeature<IClaimableERC721>(
         this.contractWrapper,
-        "ERC721Claimable",
-      ) &&
-      !hasFunction("setClaimConditions", this.contractWrapper)
+        "ERC721ClaimCustom",
+      )
     ) {
       return new Erc721Claimable(this.erc721, this.contractWrapper);
     }

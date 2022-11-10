@@ -1,10 +1,6 @@
 import { NetworkOrSignerOrProvider, TransactionResult } from "..";
 import { AmountSchema } from "../../../core/schema/shared";
-import {
-  assertEnabled,
-  detectContractFeature,
-  matchesPrebuiltAbi,
-} from "../../common";
+import { assertEnabled, detectContractFeature } from "../../common";
 import {
   fetchCurrencyMetadata,
   fetchCurrencyValue,
@@ -633,9 +629,12 @@ export class Erc20<
       ) ||
       detectContractFeature<BaseDropERC20>(
         this.contractWrapper,
-        "ERC20ClaimPhasesV2",
+        "ERC20ClaimPhasesV1",
       ) ||
-      matchesPrebuiltAbi<BaseDropERC20>(this.contractWrapper, DropERC20_V2)
+      detectContractFeature<BaseDropERC20>(
+        this.contractWrapper,
+        "ERC20ClaimPhasesV2",
+      )
     ) {
       return new Erc20Droppable(this, this.contractWrapper, this.storage);
     }
