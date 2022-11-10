@@ -21,7 +21,10 @@ import { TransactionResult, TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc721 } from "./erc-721";
 import type { TieredDrop, ISignatureAction } from "@thirdweb-dev/contracts-js";
-import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TieredDrop";
+import {
+  TokensLazyMintedEvent,
+  TokensClaimedEvent,
+} from "@thirdweb-dev/contracts-js/dist/declarations/src/TieredDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumberish, ethers } from "ethers";
 import invariant from "tiny-invariant";
@@ -319,7 +322,7 @@ export class Erc721TieredDrop implements DetectableFeature {
 
   public async claimWithSignature(
     signedPayload: TieredDropPayloadWithSignature,
-  ): Promise<TransactionResult> {
+  ): Promise<TransactionResultWithId<NFT>[]> {
     const message = await this.mapPayloadToContractStruct(
       signedPayload.payload,
     );
@@ -343,9 +346,22 @@ export class Erc721TieredDrop implements DetectableFeature {
       [message, signedPayload.signature],
       overrides,
     );
+    const event = this.contractWrapper.parseLogs<TokensClaimedEvent>(
+      "TokensClaimed",
+      receipt?.logs,
+    );
+    const startingIndex = event[0].args.startTokenId;
+    const endingIndex = startingIndex.add(event[0].args.quantityClaimed);
+    const results: TransactionResultWithId<NFT>[] = [];
+    for (let id = startingIndex; id.lt(endingIndex); id = id.add(1)) {
+      results.push({
+        id,
+        receipt,
+        data: () => this.erc721.get(id),
+      });
+    }
 
-    // TODO: Listen for TokensClaimed event once it gets emitted
-    return { receipt };
+    return results;
   }
 
   private async mapPayloadToContractStruct(
