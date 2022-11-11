@@ -311,7 +311,11 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       contract.contractType,
     );
     // return approved implementation if it exists and we're not overriding the version
-    if (approvedImplementation && version === undefined) {
+    if (
+      approvedImplementation &&
+      approvedImplementation.length > 0 &&
+      version === undefined
+    ) {
       return approvedImplementation;
     }
     return this.readContract.getImplementation(
