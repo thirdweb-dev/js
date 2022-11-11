@@ -152,6 +152,19 @@ export class UserWallet {
   }
 
   /**
+   * Checks whether there's a signer connected with the SDK
+   * @internal
+   */
+  public async isConnected(): Promise<boolean> {
+    try {
+      this.requireWallet();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /**
    * Return wheter the wallet is connected to the same chain as specified by the SDK
    * @internal
    */
