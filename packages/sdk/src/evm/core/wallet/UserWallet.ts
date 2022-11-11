@@ -145,24 +145,18 @@ export class UserWallet {
 
   /**
    * Get the currently connected wallet's chainId
-   * @example
-   * ```javascript
-   * const address = await sdk.wallet.getConnectedChainId();
-   * ```
+   * @internal
    */
-  public async getConnectedChainId(): Promise<number> {
+  public async getChainId(): Promise<number> {
     return await this.requireWallet().getChainId();
   }
 
   /**
    * Return wheter the wallet is connected to the same chain as specified by the SDK
-   * @example
-   * ```javascript
-   * await sdk.wallet.isConnectedToCorrectChain();
-   * ```
+   * @internal
    */
-  public async isConnectedToCorrectChain(): Promise<boolean> {
-    const signerChain = await this.getConnectedChainId();
+  public async isOnCorrectChain(): Promise<boolean> {
+    const signerChain = await this.getChainId();
     const sdkChain = (await this.connection.getProvider().getNetwork()).chainId;
     return signerChain === sdkChain;
   }
