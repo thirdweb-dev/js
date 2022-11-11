@@ -2,4 +2,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-Expose sdk.wallet.getConnectedChainId()
+Expose sdk.wallet.getChainId()
