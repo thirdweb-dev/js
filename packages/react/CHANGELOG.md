@@ -1,5 +1,15 @@
 # @thirdweb-dev/react
 
+## 3.5.2
+
+### Patch Changes
+
+- [#369](https://github.com/thirdweb-dev/js/pull/369) [`2d3fca5`](https://github.com/thirdweb-dev/js/commit/2d3fca52373046c88392139922e9c9da79f9a2d4) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add useClaimerProofs hook
+
+- [#378](https://github.com/thirdweb-dev/js/pull/378) [`32d91ef`](https://github.com/thirdweb-dev/js/commit/32d91ef709c8fb92a903e52c65b27538a80ea4eb) Thanks [@mykcryptodev](https://github.com/mykcryptodev)! - round borders for buttons and menus on safari
+
+- [#377](https://github.com/thirdweb-dev/js/pull/377) [`b79dc18`](https://github.com/thirdweb-dev/js/commit/b79dc18f7ab5155bbf4af02dc1a953546160bad0) Thanks [@adam-maj](https://github.com/adam-maj)! - Add event filters
+
 ## 3.5.1
 
 ## 3.5.0
