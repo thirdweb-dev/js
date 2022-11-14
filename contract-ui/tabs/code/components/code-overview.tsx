@@ -28,7 +28,8 @@ const contract = await sdk.getContract("{{contract_address}}");`,
     react: `import { useContract } from "@thirdweb-dev/react";
 
 export default function Component() {
-  const { contract } = useContract("{{contract_address}}");
+  // While isLoading is true, contract is undefined.
+  const { contract, isLoading, error } = useContract("{{contract_address}}");
   // Now you can use the contract in the rest of the component
 }`,
     web3button: `import { Web3Button } from "@thirdweb-dev/react";
