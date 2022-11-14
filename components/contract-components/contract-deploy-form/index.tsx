@@ -53,6 +53,8 @@ export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
     [contractId, OSRoyaltyContract],
   );
 
+  const isImplementationDeploy = !!chainIdProp;
+
   if (!contractId) {
     return null;
   }
@@ -62,7 +64,7 @@ export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
 
   return (
     <CustomSDKContext desiredChainId={selectedChain}>
-      {isContractIdBuiltInContract(contractType) ? (
+      {isContractIdBuiltInContract(contractType) && !isImplementationDeploy ? (
         <BuiltinContractForm
           contractType={contractType}
           selectedChain={selectedChain}
@@ -74,7 +76,7 @@ export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
           ipfsHash={contractId}
           selectedChain={selectedChain}
           onChainSelect={setSelectedChain}
-          isImplementationDeploy={!!chainIdProp}
+          isImplementationDeploy={isImplementationDeploy}
           onSuccessCallback={onSuccessCallback}
         />
       )}
