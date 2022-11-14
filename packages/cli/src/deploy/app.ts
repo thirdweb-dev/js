@@ -6,12 +6,16 @@ import { upload } from "../storage/command";
 import { DEFAULT_IPFS_GATEWAY } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
-export async function deployApp() {
-  const distPath = "dist";
-  const projectPath = ".";
+type DeployOptions = {
+  dist?: string;
+  project?: string;
+};
+
+export async function deployApp({ dist, project }: DeployOptions) {
+  let distPath = dist || "dist";
+  let projectPath = project || ".";
 
   const storage = new ThirdwebStorage();
-
   const supportedFrameworks = [new ViteDetector()];
 
   const possibleProjects = supportedFrameworks
