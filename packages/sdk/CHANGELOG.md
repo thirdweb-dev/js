@@ -1,5 +1,20 @@
 # @thirdweb-dev/sdk
 
+## 3.5.2
+
+### Patch Changes
+
+- [#380](https://github.com/thirdweb-dev/js/pull/380) [`3eba69a`](https://github.com/thirdweb-dev/js/commit/3eba69afd78b7aa472a9c00c9d4220bb69ad1d3e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose sdk.wallet.getChainId()
+
+- [#376](https://github.com/thirdweb-dev/js/pull/376) [`4af785c`](https://github.com/thirdweb-dev/js/commit/4af785c37c831ecd7087c1c9eb9095922cac0855) Thanks [@adam-maj](https://github.com/adam-maj)! - Update tiered-drop with tokens claimed
+
+- [#373](https://github.com/thirdweb-dev/js/pull/373) [`6f818f3`](https://github.com/thirdweb-dev/js/commit/6f818f393eb9023b53a3358d62d60ec23a9246bd) Thanks [@adam-maj](https://github.com/adam-maj)! - Update tiered-drop contract version
+
+- [#377](https://github.com/thirdweb-dev/js/pull/377) [`b79dc18`](https://github.com/thirdweb-dev/js/commit/b79dc18f7ab5155bbf4af02dc1a953546160bad0) Thanks [@adam-maj](https://github.com/adam-maj)! - Add event filters
+
+- Updated dependencies [[`4af785c`](https://github.com/thirdweb-dev/js/commit/4af785c37c831ecd7087c1c9eb9095922cac0855), [`6f818f3`](https://github.com/thirdweb-dev/js/commit/6f818f393eb9023b53a3358d62d60ec23a9246bd)]:
+  - @thirdweb-dev/contracts-js@1.2.1
+
 ## 3.5.1
 
 ### Patch Changes

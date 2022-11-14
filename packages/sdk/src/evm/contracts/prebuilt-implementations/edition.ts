@@ -37,7 +37,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
  * const sdk = new ThirdwebSDK("{{chainName}}");
- * const contract = sdk.getContract("{{contract_address}}", "edition");
+ * const contract = await sdk.getContract("{{contract_address}}", "edition");
  * ```
  *
  * @public

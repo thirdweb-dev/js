@@ -139,8 +139,29 @@ export class UserWallet {
    * const address = await sdk.wallet.getAddress();
    * ```
    */
-  async getAddress(): Promise<string> {
+  public async getAddress(): Promise<string> {
     return await this.requireWallet().getAddress();
+  }
+
+  /**
+   * Get the currently connected wallet's chainId
+   * @internal
+   */
+  public async getChainId(): Promise<number> {
+    return await this.requireWallet().getChainId();
+  }
+
+  /**
+   * Checks whether there's a signer connected with the SDK
+   * @internal
+   */
+  public isConnected(): boolean {
+    try {
+      this.requireWallet();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   /**
@@ -157,7 +178,7 @@ export class UserWallet {
    * const signature = await sdk.wallet.sign(message);
    * ```
    */
-  async sign(message: string): Promise<string> {
+  public async sign(message: string): Promise<string> {
     const signer = this.requireWallet();
     return await signer.signMessage(message);
   }
@@ -187,7 +208,7 @@ export class UserWallet {
    * Send a raw transaction to the blockchain from the connected wallet
    * @param transactionRequest - raw transaction data to send to the blockchain
    */
-  async sendRawTransaction(
+  public async sendRawTransaction(
     transactionRequest: providers.TransactionRequest,
   ): Promise<TransactionResult> {
     const signer = this.requireWallet();
