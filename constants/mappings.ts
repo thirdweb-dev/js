@@ -1,6 +1,5 @@
 import {
   CONTRACTS_MAP,
-  ChainId,
   ContractType,
   FullPublishMetadata,
   Role,
@@ -86,32 +85,6 @@ function buildContractForContractMap(
     },
   };
 }
-
-export const OSRoyaltyToPrebuilt: Record<string, Partial<ContractType>> = {
-  DropERC721_OSRoyaltyFilter: "nft-drop",
-  TokenERC721_OSRoyaltyFilter: "nft-collection",
-  DropERC1155_OSRoyaltyFilter: "edition-drop",
-  TokenERC1155_OSRoyaltyFilter: "edition",
-  SignatureDrop_OSRoyaltyFilter: "signature-drop",
-  Multiwrap_OSRoyaltyFilter: "multiwrap",
-  Pack_OSRoyaltyFilter: "pack",
-};
-
-export const OSRoyaltyDisabledChains: SUPPORTED_CHAIN_ID[] = [
-  ...deprecatedChains,
-  ChainId.Arbitrum,
-  ChainId.ArbitrumGoerli,
-  ChainId.Optimism,
-  ChainId.OptimismGoerli,
-  ChainId.Avalanche,
-  ChainId.AvalancheFujiTestnet,
-  ChainId.BinanceSmartChainMainnet,
-  ChainId.BinanceSmartChainTestnet,
-  ChainId.Fantom,
-  ChainId.FantomTestnet,
-  ChainId.Polygon,
-  ChainId.Mumbai,
-];
 
 export const BuiltinContractMap: Record<ContractType, BuiltinContractDetails> =
   {
