@@ -19,7 +19,11 @@ export const NFTLazyMintButton: React.FC<NFTLazyMintButtonProps> = ({
 
   const detectedState = extensionDetectedState({
     contractQuery,
-    feature: ["ERC721LazyMintable", "ERC1155LazyMintable"],
+    feature: [
+      "ERC721LazyMintable",
+      "ERC1155LazyMintableV1",
+      "ERC1155LazyMintableV2",
+    ],
   });
 
   if (detectedState !== "enabled" || !contractQuery.contract) {

@@ -37,7 +37,11 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
 
   const detectedState = extensionDetectedState({
     contractQuery,
-    feature: ["ERC721LazyMintable", "ERC1155LazyMintable"],
+    feature: [
+      "ERC721LazyMintable",
+      "ERC1155LazyMintableV1",
+      "ERC1155LazyMintableV2",
+    ],
   });
 
   const isRevealable = detectFeatures(contractQuery.contract, [

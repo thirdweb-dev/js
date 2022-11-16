@@ -1,10 +1,9 @@
-import { useDisclosure, Icon } from "@chakra-ui/react";
-import { useClaimConditions } from "@thirdweb-dev/react/solana";
-import { useLazyMint } from "@thirdweb-dev/react/solana";
-import { NFTDrop } from "@thirdweb-dev/sdk/solana";
+import { Icon, useDisclosure } from "@chakra-ui/react";
+import { useClaimConditions, useLazyMint } from "@thirdweb-dev/react/solana";
+import type { NFTDrop } from "@thirdweb-dev/sdk/solana";
 import { NFTMintForm } from "contract-ui/tabs/nfts/components/mint-form";
 import { FiPlus } from "react-icons/fi";
-import { Button, Drawer } from "tw-components"
+import { Button, Drawer } from "tw-components";
 
 export const NFTSingleUploadButton: React.FC<{ program: NFTDrop }> = ({
   program,
@@ -14,7 +13,8 @@ export const NFTSingleUploadButton: React.FC<{ program: NFTDrop }> = ({
   const mutation = useLazyMint(program);
 
   const { data: claimConditions } = useClaimConditions(program);
-  const allLazyMinted = claimConditions?.totalAvailableSupply === claimConditions?.lazyMintedSupply;
+  const allLazyMinted =
+    claimConditions?.totalAvailableSupply === claimConditions?.lazyMintedSupply;
 
   return (
     <>

@@ -1,4 +1,3 @@
-import { withSentry } from "@sentry/nextjs";
 import { QueryClient } from "@tanstack/react-query";
 import { ChainId } from "@thirdweb-dev/sdk/evm";
 import {
@@ -69,4 +68,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default withSentry(handler);
+export default handler;

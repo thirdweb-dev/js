@@ -103,12 +103,14 @@ function stripNullishKeys<T extends object>(obj: T) {
 
 interface BuiltinContractFormProps {
   contractType: ContractType;
+  contractVersion: string;
   selectedChain: SUPPORTED_CHAIN_ID | undefined;
   onChainSelect: (chainId: SUPPORTED_CHAIN_ID) => void;
 }
 
 const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
   contractType,
+  contractVersion,
   selectedChain,
   onChainSelect,
 }) => {
@@ -210,7 +212,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
 
   const seconds = selectedChain && NetworkToBlockTimeMap[selectedChain];
 
-  const deploy = useDeploy(contract.contractType);
+  const deploy = useDeploy(contract.contractType, contractVersion);
 
   const { onSuccess, onError } = useTxNotifications(
     "Successfully deployed contract",

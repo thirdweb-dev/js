@@ -1,4 +1,3 @@
-import { withSentry } from "@sentry/nextjs";
 import { PAPER_API_URL } from "@thirdweb-dev/sdk/evm";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -75,4 +74,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default withSentry(handler);
+export default handler;

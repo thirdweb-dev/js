@@ -1,4 +1,3 @@
-// import { withSentry } from "@sentry/nextjs";
 import {
   ChainId,
   SUPPORTED_CHAIN_ID,

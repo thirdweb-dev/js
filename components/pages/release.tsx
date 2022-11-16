@@ -120,7 +120,10 @@ export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
             ))}
           </Select>
           {deployContractId && (
-            <DeployFormDrawer contractId={deployContractId} />
+            <DeployFormDrawer
+              contractId={deployContractId}
+              contractVersion={version}
+            />
           )}
         </Flex>
       </GridItem>

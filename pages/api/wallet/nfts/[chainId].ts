@@ -1,4 +1,3 @@
-import { withSentry } from "@sentry/nextjs";
 import {
   generateAlchemyUrl,
   isAlchemySupported,
@@ -94,4 +93,4 @@ const handler = async (
   return res.status(400).json({ error: "unsuppored chain" });
 };
 
-export default withSentry(handler);
+export default handler;

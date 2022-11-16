@@ -1,4 +1,3 @@
-import { withSentry } from "@sentry/nextjs";
 import { utils } from "ethers";
 import { resolveEns } from "lib/ens";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -36,4 +35,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default withSentry(handler);
+export default handler;

@@ -26,11 +26,11 @@ export function detectFeatures<TContract extends ValidContractInstance | null>(
 
   if (strategy === "any") {
     return features.some((feature) =>
-      isFeatureEnabled(contract?.abi as Abi, feature),
+      isFeatureEnabled(contract.abi as Abi, feature),
     );
   }
 
   return features.every((feature) =>
-    isFeatureEnabled(contract?.abi as Abi, feature),
+    isFeatureEnabled(contract.abi as Abi, feature),
   );
 }

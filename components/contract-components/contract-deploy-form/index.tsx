@@ -12,12 +12,14 @@ const BuiltinContractForm = dynamic(() => import("./built-in-contract"));
 interface ContractDeployFormProps {
   contractId: ContractId;
   chainId?: SUPPORTED_CHAIN_ID;
+  contractVersion?: string;
   onSuccessCallback?: (contractAddress: string) => void;
 }
 
 export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
   contractId,
   chainId: chainIdProp,
+  contractVersion = "latest",
   onSuccessCallback,
 }) => {
   const chainId = useChainId();
@@ -51,6 +53,7 @@ export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
           contractType={contractId}
           selectedChain={selectedChain}
           onChainSelect={setSelectedChain}
+          contractVersion={contractVersion}
         />
       ) : (
         <CustomContractForm

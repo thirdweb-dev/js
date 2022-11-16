@@ -110,6 +110,7 @@ export const CurrencySelector: React.FC<CurrencySelectorProps> = ({
           color="primary.500"
           cursor="pointer"
           onClick={() => setIsAddingCurrency(true)}
+          isDisabled={props.isDisabled}
         >
           Use Custom Currency
         </Button>

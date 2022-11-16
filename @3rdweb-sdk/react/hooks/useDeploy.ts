@@ -12,6 +12,7 @@ import { z } from "zod";
 
 export function useDeploy<TContractType extends PrebuiltContractType>(
   contractType?: TContractType,
+  contractVersion = "latest",
 ) {
   const sdk = useSDK();
   return useMutationWithInvalidate(
@@ -23,9 +24,11 @@ export function useDeploy<TContractType extends PrebuiltContractType>(
         `[Contract:deploy] - attempting to deploy ${contractType} contract without an active sdk`,
       );
       invariant(contractType, "[Contract:deploy] - contractType is required");
+
       const contractAddress = await sdk.deployer.deployBuiltInContract(
         contractType,
         metadata,
+        contractVersion ? contractVersion : "latest",
       );
       return { contractAddress };
     },

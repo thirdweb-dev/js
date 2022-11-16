@@ -16,8 +16,8 @@ export const ConditionsNotSet: React.FC<ConditionsNotSetProps> = ({
   const { contract } = useContract(address);
   const [dismissed, setDismissed] = useState(false);
   const isClaimable = detectFeatures(contract, [
-    "ERC721ClaimableWithConditionsV1",
-    "ERC721ClaimableWithConditionsV2",
+    "ERC721ClaimConditionsV1",
+    "ERC721ClaimConditionsV2",
   ]);
   const claimConditions = useClaimConditions(
     isClaimable ? contract : undefined,
@@ -26,7 +26,8 @@ export const ConditionsNotSet: React.FC<ConditionsNotSetProps> = ({
   const noClaimConditions =
     !claimConditions.isLoading &&
     (!claimConditions?.data?.length ||
-      claimConditions.data.every((cc) => cc.maxClaimableSupply === "0")); // TODO (cc) check this
+      // TODO (cc) check this
+      claimConditions.data.every((cc) => cc.maxClaimableSupply === "0"));
 
   const chainName = useSingleQueryParam("networkOrAddress");
 

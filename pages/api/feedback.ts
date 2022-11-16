@@ -1,4 +1,3 @@
-import { withSentry } from "@sentry/nextjs";
 import { NextApiRequest, NextApiResponse } from "next";
 import invariant from "tiny-invariant";
 import { shortenIfAddress } from "utils/usedapp-external";
@@ -63,4 +62,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(response.status).json({ status: response.statusText });
 };
 
-export default withSentry(handler);
+export default handler;

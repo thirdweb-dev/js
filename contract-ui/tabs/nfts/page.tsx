@@ -26,7 +26,11 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
   ]);
 
   const isErc721Claimable = detectFeatures(contractQuery?.contract, [
-    "ERC721Claimable",
+    "ERC721ClaimPhasesV1",
+    "ERC721ClaimPhasesV2",
+    "ERC721ClaimConditionsV1",
+    "ERC721ClaimConditionsV2",
+    "ERC721ClaimCustom",
   ]);
 
   if (contractQuery.isLoading) {

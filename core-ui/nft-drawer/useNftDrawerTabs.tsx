@@ -106,11 +106,22 @@ export function useNFTDrawerTabs(
       const isERC721 = detectFeatures(contractOrProgram, ["ERC721"]);
       const isMintable = detectFeatures(contractOrProgram, ["ERC1155Mintable"]);
       const isClaimable = detectFeatures<DropContract>(contractOrProgram, [
-        "ERC1155Claimable",
+        // erc1155
+        "ERC1155ClaimPhasesV1",
+        "ERC1155ClaimPhasesV2",
+        "ERC1155ClaimConditionsV1",
+        "ERC1155ClaimConditionsV2",
+        "ERC1155ClaimCustom",
       ]);
-      const isClaimableWithConditions = detectFeatures<DropContract>(
+      const hasClaimConditions = detectFeatures<DropContract>(
         contractOrProgram,
-        ["ERC1155ClaimableWithConditions"],
+        [
+          // erc1155
+          "ERC1155ClaimPhasesV1",
+          "ERC1155ClaimPhasesV2",
+          "ERC1155ClaimConditionsV1",
+          "ERC1155ClaimConditionsV2",
+        ],
       );
       const isBurnable = detectFeatures(contractOrProgram, [
         "ERC721Burnable",
@@ -187,7 +198,7 @@ export function useNFTDrawerTabs(
           },
         ]);
       }
-      if (isClaimableWithConditions && isERC1155) {
+      if (hasClaimConditions && isERC1155) {
         tabs = tabs.concat([
           {
             title: "Claim Conditions",

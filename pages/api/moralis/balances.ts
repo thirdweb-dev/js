@@ -1,4 +1,3 @@
-import { withSentry } from "@sentry/nextjs";
 import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
 import { CURRENCIES } from "constants/currencies";
 import { constants, utils } from "ethers";
@@ -82,4 +81,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(200).json(balances);
 };
 
-export default withSentry(handler);
+export default handler;
