@@ -154,7 +154,15 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     return events[0].args.proxy;
   }
 
-  private async getDeployArguments<TContractType extends PrebuiltContractType>(
+  /**
+   *
+   * @param contractType
+   * @param metadata
+   * @param contractURI
+   * @returns
+   * @internal
+   */
+  public async getDeployArguments<TContractType extends PrebuiltContractType>(
     contractType: TContractType,
     metadata: z.input<DeploySchemaForPrebuiltContractType<TContractType>>,
     contractURI: string,
