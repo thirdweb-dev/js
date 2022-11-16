@@ -67,6 +67,11 @@ export class GnosisSafeConnector extends Connector {
     };
   }
 
+  public isChainSupported(chainId: string | number) {
+    const id = normalizeChainId(chainId);
+    return !this.isChainUnsupported(id);
+  }
+
   private async createSafeSigner() {
     const signer = await this.previousConnector?.getSigner();
     const safeAddress = this.config?.safeAddress;
