@@ -5,7 +5,6 @@ import {
   abstractContractModelToNew,
   convertQuantityToBigNumber,
   fetchSnapshotEntryForAddress,
-  getClaimerProofs,
   legacyContractModelToAbstract,
   newContractModelToAbstract,
   prepareClaim,
@@ -279,20 +278,9 @@ export class DropClaimConditions<
       claimCondition.merkleRootHash,
     );
     const hasAllowList = merkleRootArray.length > 0;
-    let allowListEntry;
+    let allowListEntry: SnapshotEntryWithProof | null = null;
     if (hasAllowList) {
-      const merkleLower = claimCondition.merkleRootHash.toString();
-      const metadata = await this.metadata.get();
-      allowListEntry = await getClaimerProofs(
-        addressToCheck,
-        merkleLower,
-        await this.getTokenDecimals(),
-        metadata.merkle,
-        this.storage,
-        this.contractWrapper.getProvider(),
-        this.getSnapshotFormatVersion(),
-      );
-
+      allowListEntry = await this.getClaimerProofs(addressToCheck);
       if (
         !allowListEntry &&
         (this.isLegacySinglePhaseDrop(this.contractWrapper) ||
@@ -305,6 +293,13 @@ export class DropClaimConditions<
 
       if (allowListEntry) {
         try {
+          const claimVerification = await this.prepareClaim(
+            quantity,
+            false,
+            decimals,
+            addressToCheck,
+          );
+
           let validMerkleProof;
           if (this.isLegacyMultiPhaseDrop(this.contractWrapper)) {
             activeConditionIndex =
@@ -315,8 +310,8 @@ export class DropClaimConditions<
                 activeConditionIndex,
                 addressToCheck,
                 quantity,
-                allowListEntry.proof,
-                allowListEntry.maxClaimable,
+                claimVerification.proofs,
+                claimVerification.maxClaimable,
               );
             if (!validMerkleProof) {
               reasons.push(ClaimEligibility.AddressNotAllowed);
@@ -328,8 +323,8 @@ export class DropClaimConditions<
                 addressToCheck,
                 quantity,
                 {
-                  proof: allowListEntry.proof,
-                  maxQuantityInAllowlist: allowListEntry.maxClaimable,
+                  proof: claimVerification.proofs,
+                  maxQuantityInAllowlist: claimVerification.maxClaimable,
                 },
               );
             if (!validMerkleProof) {
@@ -340,25 +335,23 @@ export class DropClaimConditions<
             await this.contractWrapper.readContract.verifyClaim(
               addressToCheck,
               quantity,
-              claimCondition.currencyAddress,
-              claimCondition.price,
+              claimVerification.currencyAddress,
+              claimVerification.price,
               {
-                proof: allowListEntry.proof,
-                quantityLimitPerWallet: allowListEntry.maxClaimable,
-                currency: allowListEntry.currencyAddress,
-                pricePerToken: allowListEntry.price,
+                proof: claimVerification.proofs,
+                quantityLimitPerWallet: claimVerification.maxClaimable,
+                currency: claimVerification.currencyAddressInProof,
+                pricePerToken: claimVerification.priceInProof,
               } as IDropSinglePhase.AllowlistProofStruct,
             );
-            // TODO (cc) in new override format, anyone can claim (no allow list restriction)
-            // TODO (cc) instead check if maxClaimablePerWallet is 0 and this address has no overrides
-            // TODO (cc) meaning this address is not allowed to claim
             if (
               (convertQuantityToBigNumber(
                 claimCondition.maxClaimablePerWallet,
                 decimals,
               ).eq(0) &&
-                allowListEntry.maxClaimable === ethers.constants.MaxUint256) ||
-              allowListEntry.maxClaimable === BigNumber.from(0)
+                claimVerification.maxClaimable ===
+                  ethers.constants.MaxUint256) ||
+              claimVerification.maxClaimable === BigNumber.from(0)
             ) {
               reasons.push(ClaimEligibility.AddressNotAllowed);
               return reasons;
@@ -370,13 +363,13 @@ export class DropClaimConditions<
               activeConditionIndex,
               addressToCheck,
               quantity,
-              claimCondition.currencyAddress,
-              claimCondition.price,
+              claimVerification.currencyAddress,
+              claimVerification.price,
               {
-                proof: allowListEntry.proof,
-                quantityLimitPerWallet: allowListEntry.maxClaimable,
-                currency: allowListEntry.currencyAddress,
-                pricePerToken: allowListEntry.price,
+                proof: claimVerification.proofs,
+                quantityLimitPerWallet: claimVerification.maxClaimable,
+                currency: claimVerification.currencyAddressInProof,
+                pricePerToken: claimVerification.priceInProof,
               } as IDropSinglePhase.AllowlistProofStruct,
             );
             if (
@@ -384,8 +377,9 @@ export class DropClaimConditions<
                 claimCondition.maxClaimablePerWallet,
                 decimals,
               ).eq(0) &&
-                allowListEntry.maxClaimable === ethers.constants.MaxUint256) ||
-              allowListEntry.maxClaimable === BigNumber.from(0)
+                claimVerification.maxClaimable ===
+                  ethers.constants.MaxUint256) ||
+              claimVerification.maxClaimable === BigNumber.from(0)
             ) {
               reasons.push(ClaimEligibility.AddressNotAllowed);
               return reasons;
@@ -748,8 +742,13 @@ export class DropClaimConditions<
     quantity: BigNumberish,
     checkERC20Allowance: boolean,
     decimals = 0,
+    address?: string,
   ): Promise<ClaimVerification> {
+    const addressToClaim = address
+      ? address
+      : await this.contractWrapper.getSignerAddress();
     return prepareClaim(
+      addressToClaim,
       quantity,
       await this.getActive(),
       async () => (await this.metadata.get()).merkle,
@@ -766,13 +765,12 @@ export class DropClaimConditions<
     quantity: BigNumberish,
     claimVerification: ClaimVerification,
   ): Promise<any[]> {
-    const activeClaimCondition = await this.getActive();
     if (this.isLegacyMultiPhaseDrop(this.contractWrapper)) {
       return [
         destinationAddress,
         quantity,
-        activeClaimCondition.currencyAddress,
-        activeClaimCondition.price,
+        claimVerification.currencyAddress,
+        claimVerification.price,
         claimVerification.proofs,
         claimVerification.maxClaimable,
       ];
@@ -780,8 +778,8 @@ export class DropClaimConditions<
       return [
         destinationAddress,
         quantity,
-        activeClaimCondition.currencyAddress,
-        activeClaimCondition.price,
+        claimVerification.currencyAddress,
+        claimVerification.price,
         {
           proof: claimVerification.proofs,
           maxQuantityInAllowlist: claimVerification.maxClaimable,
@@ -792,13 +790,13 @@ export class DropClaimConditions<
     return [
       destinationAddress,
       quantity,
-      activeClaimCondition.currencyAddress,
-      activeClaimCondition.price,
+      claimVerification.currencyAddress,
+      claimVerification.price,
       {
         proof: claimVerification.proofs,
         quantityLimitPerWallet: claimVerification.maxClaimable,
-        pricePerToken: claimVerification.price,
-        currency: claimVerification.currencyAddress,
+        pricePerToken: claimVerification.priceInProof,
+        currency: claimVerification.currencyAddressInProof,
       } as IDropSinglePhase.AllowlistProofStruct,
       ethers.utils.toUtf8Bytes(""),
     ];

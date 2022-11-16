@@ -90,6 +90,28 @@ describe("NFT Drop Contract (v4)", async () => {
     expect((await dropContract.totalClaimedSupply()).toString()).eq("3");
   });
 
+  it("comprehensive test with allowlist and price override", async () => {
+    const metadata = [];
+    for (let i = 0; i < 10; i++) {
+      metadata.push({ name: `test${i}`, description: `desc${i}` });
+    }
+    await dropContract.createBatch(metadata);
+    // claiming with default conditions
+    await dropContract.claimConditions.set([
+      {
+        maxClaimablePerWallet: 0,
+        price: 0.1,
+        snapshot: [
+          { address: adminWallet.address, maxClaimable: 1, price: 0.1 },
+        ],
+      },
+    ]);
+    console.log(
+      await dropContract.claimConditions.getClaimIneligibilityReasons(1),
+    );
+    await dropContract.claim(1);
+  });
+
   it("comprehensive test with allowlist", async () => {
     const metadata = [];
     for (let i = 0; i < 10; i++) {

@@ -50,6 +50,7 @@ import {
  * @returns - `overrides` and `proofs` as an object.
  */
 export async function prepareClaim(
+  addressToClaim: string,
   quantity: BigNumberish,
   activeClaimCondition: ClaimCondition,
   merkleMetadataFetcher: () => Promise<Record<string, string>>,
@@ -59,7 +60,6 @@ export async function prepareClaim(
   checkERC20Allowance: boolean,
   snapshotFormatVersion: SnapshotFormatVersion,
 ): Promise<ClaimVerification> {
-  const addressToClaim = await contractWrapper.getSignerAddress();
   let maxClaimable = convertQuantityToBigNumber(
     activeClaimCondition.maxClaimablePerWallet,
     tokenDecimals,
@@ -154,8 +154,10 @@ export async function prepareClaim(
     overrides,
     proofs,
     maxClaimable,
-    price: priceInProof,
-    currencyAddress: currencyAddressInProof,
+    price: pricePerToken,
+    currencyAddress: currencyAddress,
+    priceInProof,
+    currencyAddressInProof,
   };
 }
 
@@ -282,66 +284,6 @@ export async function updateExistingClaimConditions(
       price: formattedPrice, // manually transform back to input price type
     };
   });
-}
-
-/**
- * Fetches the proof for the current signer for a particular wallet.
- *
- * @param addressToClaim
- * @param merkleRoot - The merkle root of the condition to check.
- * @param tokenDecimals
- * @param merkleMetadata
- * @param storage
- * @param provider
- * @param snapshotFormatVersion
- * @returns - The proof for the current signer for the specified condition.
- */
-export async function getClaimerProofs(
-  addressToClaim: string,
-  merkleRoot: string,
-  tokenDecimals: number,
-  merkleMetadata: Record<string, string>,
-  storage: ThirdwebStorage,
-  provider: ethers.providers.Provider,
-  snapshotFormatVersion: SnapshotFormatVersion,
-): Promise<
-  | {
-      proof: string[];
-      maxClaimable: BigNumber;
-      price: BigNumber;
-      currencyAddress: string;
-    }
-  | undefined
-> {
-  const claim = await fetchSnapshotEntryForAddress(
-    addressToClaim,
-    merkleRoot,
-    merkleMetadata,
-    provider,
-    storage,
-    snapshotFormatVersion,
-  );
-  if (!claim) {
-    return undefined;
-  }
-  const price =
-    claim.price === "unlimited" || claim.price === undefined
-      ? ethers.constants.MaxUint256
-      : await normalizePriceValue(
-          provider,
-          claim.price,
-          claim.currencyAddress || ethers.constants.AddressZero,
-        );
-  const maxClaimable =
-    claim.maxClaimable === "unlimited"
-      ? ethers.constants.MaxUint256
-      : ethers.utils.parseUnits(claim.maxClaimable, tokenDecimals);
-  return {
-    proof: claim.proof,
-    maxClaimable,
-    price,
-    currencyAddress: claim.currencyAddress || ethers.constants.AddressZero,
-  };
 }
 
 /**

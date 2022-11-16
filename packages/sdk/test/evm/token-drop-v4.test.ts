@@ -13,7 +13,7 @@ import invariant from "tiny-invariant";
 
 global.fetch = require("cross-fetch");
 
-describe("Token Drop Contract (v3)", async () => {
+describe("Token Drop Contract (v4)", async () => {
   let dropContract: TokenDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
