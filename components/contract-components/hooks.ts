@@ -414,7 +414,8 @@ interface PublishMutationData {
 }
 
 export function usePublishMutation() {
-  const sdk = getEVMThirdwebSDK(ChainId.Polygon);
+  // this has to actually have the signer!
+  const sdk = useSDK();
 
   const address = useAddress();
 
