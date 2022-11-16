@@ -323,9 +323,15 @@ export class Marketplace implements UpdateableNetwork {
    */
   public async getOffers(listingId: BigNumberish): Promise<Offer[]> {
     // get all new offer events from this contract
-    const events = await this.events.getEvents<NewOfferEventObject>("NewOffer");
-    // get only the events for this listing id
-    const listingEvents = events.filter((e) => e.data.listingId.eq(listingId));
+    const listingEvents = await this.events.getEvents<NewOfferEventObject>(
+      "NewOffer",
+      {
+        order: "desc",
+        filters: {
+          listingId,
+        },
+      },
+    );
     // derive the offers from the events
     return await Promise.all(
       listingEvents.map(async (e): Promise<Offer> => {

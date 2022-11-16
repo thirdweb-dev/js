@@ -9,7 +9,6 @@ import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   DropERC721__factory,
-  DropERC721_V3__factory,
   TokenERC721__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -85,10 +84,7 @@ describe("Publishing", async () => {
 
     // Drop
     expect(
-      isFeatureEnabled(
-        DropERC721__factory.abi,
-        "ERC721ClaimableWithConditionsV2",
-      ),
+      isFeatureEnabled(DropERC721__factory.abi, "ERC721ClaimPhasesV2"),
     ).to.eq(true);
     expect(isFeatureEnabled(DropERC721__factory.abi, "ERC721Supply")).to.eq(
       true,
@@ -96,14 +92,6 @@ describe("Publishing", async () => {
     expect(isFeatureEnabled(DropERC721__factory.abi, "ERC721Mintable")).to.eq(
       false,
     );
-
-    // Drop legacy
-    expect(
-      isFeatureEnabled(
-        DropERC721_V3__factory.abi,
-        "ERC721ClaimableWithConditionsV1",
-      ),
-    ).to.eq(true);
   });
 
   it("should update bio", async () => {

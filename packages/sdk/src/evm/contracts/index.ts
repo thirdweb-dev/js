@@ -40,10 +40,6 @@ export const EditionDropInitializer = {
     ...[network, address, storage, options]: InitalizeParams
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
-    const contractInfo = await getPrebuiltInfo(address, provider);
-    if (!contractInfo || contractInfo.type !== "DropERC1155") {
-      throw new Error("Contract is not a DropERC1155");
-    }
     const [abi, contract, _network] = await Promise.all([
       await EditionDropInitializer.getAbi(address, provider),
       import("./prebuilt-implementations/edition-drop"),
@@ -213,10 +209,6 @@ export const NFTDropInitializer = {
     ...[network, address, storage, options]: InitalizeParams
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
-    const contractInfo = await getPrebuiltInfo(address, provider);
-    if (!contractInfo || contractInfo.type !== "DropERC721") {
-      throw new Error("Contract is not a DropERC721");
-    }
     const [abi, contract, _network] = await Promise.all([
       NFTDropInitializer.getAbi(address, provider),
       import("./prebuilt-implementations/nft-drop"),
@@ -368,10 +360,6 @@ export const TokenDropInitializer = {
     ...[network, address, storage, options]: InitalizeParams
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
-    const contractInfo = await getPrebuiltInfo(address, provider);
-    if (!contractInfo || contractInfo.type !== "DropERC20") {
-      throw new Error("Contract is not a DropERC20");
-    }
     const [abi, contract, _network] = await Promise.all([
       TokenDropInitializer.getAbi(address, provider),
       import("./prebuilt-implementations/token-drop"),

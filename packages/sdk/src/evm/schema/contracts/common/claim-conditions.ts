@@ -17,6 +17,15 @@ import { z } from "zod";
 /**
  * @internal
  */
+export const ClaimConditionMetadataSchema = z
+  .object({
+    name: z.string().optional(),
+  })
+  .catchall(z.unknown());
+
+/**
+ * @internal
+ */
 export const ClaimConditionInputSchema = z.object({
   startTime: StartDateSchema,
   currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
@@ -26,7 +35,7 @@ export const ClaimConditionInputSchema = z.object({
   waitInSeconds: BigNumberishSchema.default(0),
   merkleRootHash: BytesLikeSchema.default(utils.hexZeroPad([0], 32)),
   snapshot: z.optional(SnapshotInputSchema).nullable(),
-  metadata: z.union([z.string(), z.object({})]).optional(),
+  metadata: ClaimConditionMetadataSchema.optional(),
 });
 
 /**
@@ -57,7 +66,6 @@ export const ClaimConditionOutputSchema = ClaimConditionInputSchema.extend({
   waitInSeconds: BigNumberSchema,
   startTime: BigNumberSchema.transform((n) => new Date(n.toNumber() * 1000)),
   snapshot: SnapshotInputSchema.optional().nullable(),
-  metadata: z.string().optional(),
 });
 
 export type AbstractClaimConditionContractStruct = {

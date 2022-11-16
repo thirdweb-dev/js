@@ -96,6 +96,7 @@ export const AbiObjectSchema = z
  * @internal
  */
 export const AbiSchema = z.array(AbiObjectSchema);
+export type Abi = z.input<typeof AbiSchema>;
 
 /**
  * @internal
