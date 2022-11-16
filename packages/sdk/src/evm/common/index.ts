@@ -4,5 +4,9 @@ export * from "./role";
 export * from "./feature-detection";
 export * from "./version-checker";
 // export helpful util
-export { fetchCurrencyValue } from "./currency";
+export {
+  fetchCurrencyValue,
+  fetchCurrencyMetadata,
+  normalizePriceValue,
+} from "./currency";
 export { convertToReadableQuantity } from "./claim-conditions";

@@ -17,8 +17,9 @@ import {
   SnapshotEntryWithProof,
   fetchCurrencyValue,
   convertToReadableQuantity,
+  fetchCurrencyMetadata,
 } from "@thirdweb-dev/sdk";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumberish, utils } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -339,15 +340,30 @@ export function useActiveClaimConditionForWallet(
   return useQueryWithNetwork<ClaimCondition | null>(
     cacheKeys.extensions.claimConditions.useActiveClaimConditionForWallet(
       contractAddress,
-      walletAddress || "",
+      walletAddress || "_NO_WALLET_",
       tokenId,
     ),
     async () => {
-      invariant(walletAddress, "walletAddress is required");
+      // if we do not have a walletAddress just do the same logic as basic useClaimCondition
+      if (!walletAddress) {
+        if (erc1155) {
+          requiredParamInvariant(
+            tokenId,
+            "tokenId is required for ERC1155 claim conditions",
+          );
+          return erc1155.claimConditions.getActive(tokenId);
+        }
+        if (erc721) {
+          return erc721.claimConditions.getActive();
+        }
+        if (erc20) {
+          return erc20.claimConditions.getActive();
+        }
+        throw new Error("Contract must be ERC721, ERC1155 or ERC20");
+      }
       invariant(sdk, "sdk is required");
       let activeGeneralClaimCondition: ClaimCondition | null = null;
       let claimerProofForWallet: SnapshotEntryWithProof | null = null;
-      let decimals = 0;
 
       if (erc1155) {
         requiredParamInvariant(tokenId, "tokenId is required for ERC1155");
@@ -367,14 +383,12 @@ export function useActiveClaimConditionForWallet(
         claimerProofForWallet = cp;
       }
       if (erc20) {
-        const [cc, cp, erc20Metadata] = await Promise.all([
+        const [cc, cp] = await Promise.all([
           erc20.claimConditions.getActive(),
           erc20.claimConditions.getClaimerProofs(walletAddress),
-          erc20.get(),
         ]);
         activeGeneralClaimCondition = cc;
         claimerProofForWallet = cp;
-        decimals = erc20Metadata.decimals || 18;
       }
       // if there is no active claim condition nothing matters, return null
       if (!activeGeneralClaimCondition) {
@@ -387,16 +401,25 @@ export function useActiveClaimConditionForWallet(
       }
 
       const { maxClaimable, currencyAddress, price } = claimerProofForWallet;
+
       const currencyWithOverride =
         currencyAddress || activeGeneralClaimCondition.currencyAddress;
 
-      const priceWithOverride = BigNumber.from(
-        price || activeGeneralClaimCondition.price,
+      const currencyMetadata = await fetchCurrencyMetadata(
+        sdk.getProvider(),
+        currencyWithOverride,
       );
+
+      const normalizedPrize = price
+        ? utils.parseUnits(price, currencyMetadata.decimals)
+        : null;
+
+      const priceWithOverride =
+        normalizedPrize || activeGeneralClaimCondition.price;
 
       const maxClaimableWithOverride =
         // have to transform this the same way that claim conditions do it in SDK
-        convertToReadableQuantity(maxClaimable, decimals) ||
+        convertToReadableQuantity(maxClaimable, currencyMetadata.decimals) ||
         activeGeneralClaimCondition.maxClaimablePerWallet;
 
       const currencyValueWithOverride = await fetchCurrencyValue(
@@ -419,10 +442,7 @@ export function useActiveClaimConditionForWallet(
       // Checks that happen here:
       // 1. if the contract is based on ERC1155 contract => tokenId cannot be `undefined`
       // 2. if the contract is NOT based on ERC1155 => we have to have either an ERC721 or ERC20 contract
-      // 3. a wallet address has to be passed
-      enabled:
-        (erc1155 ? tokenId !== undefined : !!erc721 || !!erc20) &&
-        !!walletAddress,
+      enabled: erc1155 ? tokenId !== undefined : !!erc721 || !!erc20,
     },
   );
 }
