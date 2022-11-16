@@ -37,7 +37,6 @@ import {
 import { TransactionResult, TransactionTask } from "../index";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
-import add from "@changesets/cli/dist/declarations/src/commands/add";
 import type {
   ContractMetadata as ContractMetadataContract,
   Drop1155,
@@ -829,7 +828,6 @@ export class DropErc1155ClaimConditions<
     quantity: BigNumberish,
     claimVerification: ClaimVerification,
   ): Promise<any[]> {
-    const activeClaimCondition = await this.getActive(tokenId);
     if (this.isLegacyMultiPhaseDrop(this.contractWrapper)) {
       return [
         destinationAddress,
