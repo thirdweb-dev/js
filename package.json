@@ -35,7 +35,7 @@
     "@tanstack/react-table": "^8.5.13",
     "@thirdweb-dev/chain-icons": "^1.0.5",
     "@thirdweb-dev/react": "^3.5.1",
-    "@thirdweb-dev/sdk": "^3.5.1",
+    "@thirdweb-dev/sdk": "^3.5.3-nightly-0ed77d2",
     "@thirdweb-dev/storage": "^1.0.6",
     "ad": "^0.3.2",
     "bn.js": "^5.2.1",

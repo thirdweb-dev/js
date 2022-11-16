@@ -3434,17 +3434,17 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/chain-icons/-/chain-icons-1.0.5.tgz#8a351024337d26a2ceee394f927513d72e1d31a0"
   integrity sha512-NsDboaLji7IOOjgoz/A/qf7A5EDfZN3qgyqt+GOxr5/YXzzyH2Obk8grwv2gDwP2mF5T5RjNex0I8kwA+tyKrw==
 
-"@thirdweb-dev/contracts-js@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts-js/-/contracts-js-1.2.0.tgz#ef025eee23f836c717c6797f702e1a404a5e5f30"
-  integrity sha512-ZOnJ9so1jBrJSLBAmsJz9FuznkW8jvriHjVGsdiNBbXwW5WwKW2W5C/6KvbEVjjsUWVOreGG0vhVtEvaSdlcBw==
+"@thirdweb-dev/contracts-js@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts-js/-/contracts-js-1.2.1.tgz#e99c7fceb5b7bccde3196f654645deae1259b98d"
+  integrity sha512-YrLTdfwnapiMpgH6bT4+p6Xw0/1IVNDVhZAukU1q9REmnSOxQZfsdHuq8+ZdSKfRt85p5tzmxpoE7jpyzFSRuQ==
   dependencies:
-    "@thirdweb-dev/contracts" "3.2.0-4"
+    "@thirdweb-dev/contracts" "^3.2.2"
 
-"@thirdweb-dev/contracts@3.2.0-4":
-  version "3.2.0-4"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.2.0-4.tgz#b696bdaae1dee7cf448549ac10bb78e55c622272"
-  integrity sha512-Mc3VvBB6rqTMKKH04UQbDabAlVPT7PiKBQrJDuhAPjOxBYWwn9pHi7amXJt2tJOkmHAj+w+oT76q7IqWv3QHhw==
+"@thirdweb-dev/contracts@^3.2.2":
+  version "3.2.4"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.2.4.tgz#cff142fbd2d7cad0cab32b2019d4a1c26406abf8"
+  integrity sha512-P1CyGONe3OO2aqsdS4vroTP/VKrdRDEXG75231I3Cy7DmO7BXkKEq58myzTbcA6Xf1F8+ek/XFW6HqFGNsxuVw==
 
 "@thirdweb-dev/react@^3.5.1":
   version "3.5.1"
@@ -3471,17 +3471,17 @@
     tiny-invariant "^1.2.0"
     wagmi "^0.2.28"
 
-"@thirdweb-dev/sdk@^3.5.1":
-  version "3.5.1"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-3.5.1.tgz#817d23e5b94bc7158caecdb5995201c86b478f24"
-  integrity sha512-rs73Gh3Qu6DKBj9gVYUZRCzaIrPFkggKoxvGciaCNmQpZ4dcxqicJmhbSphFrMhflsX5eCM5aKcduMPirIl9pw==
+"@thirdweb-dev/sdk@^3.5.3-nightly-0ed77d2":
+  version "3.5.3-nightly-0ed77d2"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-3.5.3-nightly-0ed77d2.tgz#11964e67674e3d781948ed7eeb441fb018f20908"
+  integrity sha512-trXL5MpaIUOLeltKpz/gHnVe2jVQKJB9SKVNZV9WrzeI2az/ZQ5Kxeat9M4pAlYIUsNgvt5Ev/b/mKbOkqFaCg==
   dependencies:
     "@metaplex-foundation/js" "0.15.0"
     "@metaplex-foundation/mpl-token-metadata" "2.2.2"
     "@project-serum/anchor" "0.25.0"
     "@solana/spl-token" "0.2.0"
     "@solana/web3.js" "1.62.0"
-    "@thirdweb-dev/contracts-js" "^1.2.0"
+    "@thirdweb-dev/contracts-js" "^1.2.1"
     "@thirdweb-dev/storage" "^1.0.6"
     bn.js "^5.2.1"
     bs58 "^5.0.0"

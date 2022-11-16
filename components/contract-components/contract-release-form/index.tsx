@@ -1,8 +1,11 @@
 import { DeployFormDrawer } from "../contract-deploy-form/drawer";
 import {
   ens,
+  useConstructorParamsFromABI,
+  useContractFullPublishMetadata,
   useContractPrePublishMetadata,
   useContractPublishMetadataFromURI,
+  useFunctionParamsFromABI,
   usePublishMutation,
 } from "../hooks";
 import { MarkdownRenderer } from "../released-contract/markdown-renderer";
@@ -143,6 +146,9 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
           ),
           implementationInitializerFunction: "initialize",
         },
+        constructorParams:
+          prePublishMetadata.data?.latestPublishedContractMetadata
+            ?.publishedMetadata?.constructorParams || {},
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -164,6 +170,20 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
   const isDisabled = !successRedirectUrl || !address;
   const isDeployableViaFactory = watch("isDeployableViaFactory");
   const isDeployableViaProxy = watch("isDeployableViaProxy");
+
+  const fullReleaseMetadata = useContractFullPublishMetadata(contractId);
+  const constructorParams = useConstructorParamsFromABI(
+    publishMetadata.data?.abi,
+  );
+  const initializerParams = useFunctionParamsFromABI(
+    publishMetadata.data?.abi,
+    fullReleaseMetadata.data?.factoryDeploymentData
+      ?.implementationInitializerFunction || "initialize",
+  );
+
+  const deployParams = watch("isDeployableViaProxy")
+    ? initializerParams
+    : constructorParams;
 
   // during loading and after success we should stay in loading state
   const isLoading = publishMutation.isLoading || publishMutation.isSuccess;
@@ -432,6 +452,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
             </FormControl>
           )}
           <Divider />
+          <Heading size="subtitle.lg">Advanced Settings</Heading>
           <Flex alignItems="center" gap={4}>
             <Checkbox
               {...register("isDeployableViaProxy")}
@@ -445,8 +466,64 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
               </Text>
             </Flex>
           </Flex>
+          {deployParams?.length > 0 && (
+            <Flex flexDir={"column"} gap={2}>
+              <Heading size="subtitle.md">Contract Parameters</Heading>
+              <Text>
+                These are the parameters that users will need to pass in before
+                they deploy this contract.
+              </Text>
+              <Flex flexDir="column" gap={4}>
+                {deployParams.map((param) => (
+                  <Flex flexDir="column" gap={1} key={`implementation${param}`}>
+                    <Heading size="subtitle.sm">{param.name}</Heading>
+                    <Card as={FormControl}>
+                      <Flex gap={2} flexDir="column">
+                        <Flex gap={4}>
+                          <FormControl>
+                            <FormLabel
+                              flex="1"
+                              as={Text}
+                              size="label.sm"
+                              fontWeight={500}
+                            >
+                              Title
+                            </FormLabel>
+                            <Input
+                              {...register(
+                                `constructorParams.${param.name}.displayName`,
+                              )}
+                              placeholder={param.name}
+                              disabled={isDisabled}
+                            />
+                          </FormControl>
+                          <FormControl>
+                            <FormLabel
+                              flex="1"
+                              as={Text}
+                              size="label.sm"
+                              fontWeight={500}
+                            >
+                              Description
+                            </FormLabel>
+                            <Input
+                              {...register(
+                                `constructorParams.${param.name}.description`,
+                              )}
+                              disabled={isDisabled}
+                            />
+                          </FormControl>
+                        </Flex>
+                      </Flex>
+                    </Card>
+                  </Flex>
+                ))}
+              </Flex>
+            </Flex>
+          )}
           {isDeployableViaProxy && (
             <Flex flexDir={"column"} gap={2}>
+              <Heading size="subtitle.md">Proxy Settings</Heading>
               <Heading size="label.lg">
                 Addresses of your deployed implementations
               </Heading>
