@@ -23,7 +23,7 @@ import {
   ContractEvent,
   ContractForPrebuiltContractType,
   ContractType,
-  EventQueryFilter,
+  EventQueryOptions,
   PrebuiltContractType,
   SUPPORTED_CHAIN_ID,
   ThirdwebSDK,
@@ -346,7 +346,7 @@ export function useContractMetadataUpdate(
 export function useContractEvents(
   contract: RequiredParam<ValidContractInstance>,
   eventName?: string,
-  options: { queryFilter?: EventQueryFilter; subscribe?: boolean } = {
+  options: { queryFilter?: EventQueryOptions; subscribe?: boolean } = {
     subscribe: true,
   },
 ) {

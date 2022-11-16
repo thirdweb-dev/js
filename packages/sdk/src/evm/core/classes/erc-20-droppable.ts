@@ -1,7 +1,7 @@
 import { BaseDropERC20 } from "../../types/eips";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
-import { Erc20Claimable } from "./erc-20-claimable";
+import { Erc20ClaimableWithConditions } from "./erc-20-claimable-with-conditions";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
 /**
@@ -36,7 +36,7 @@ export class Erc20Droppable {
    * await contract.nft.drop.claim.conditions.set(claimConditions);
    * ```
    */
-  public claim: Erc20Claimable;
+  public claim: Erc20ClaimableWithConditions;
   private contractWrapper: ContractWrapper<BaseDropERC20>;
   private erc20: Erc20;
   private storage: ThirdwebStorage;
@@ -50,7 +50,7 @@ export class Erc20Droppable {
     this.contractWrapper = contractWrapper;
 
     this.storage = storage;
-    this.claim = new Erc20Claimable(
+    this.claim = new Erc20ClaimableWithConditions(
       this.erc20,
       this.contractWrapper,
       this.storage,

@@ -3,6 +3,7 @@ import {
   detectContractFeature,
   hasFunction,
 } from "../../common/feature-detection";
+import { getPrebuiltInfo } from "../../common/legacy";
 import { uploadOrExtractURIs } from "../../common/nft";
 import {
   FEATURE_EDITION_LAZY_MINTABLE,
@@ -21,10 +22,7 @@ import { DelayedReveal } from "./delayed-reveal";
 import { Erc1155 } from "./erc-1155";
 import { ERC1155Claimable } from "./erc-1155-claimable";
 import { Erc1155ClaimableWithConditions } from "./erc-1155-claimable-with-conditions";
-import type {
-  IClaimableERC1155,
-  TokenERC721,
-} from "@thirdweb-dev/contracts-js";
+import type { IClaimableERC1155 } from "@thirdweb-dev/contracts-js";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -232,17 +230,10 @@ export class Erc1155LazyMintable implements DetectableFeature {
   }
 
   private async isLegacyEditionDropContract() {
-    if (hasFunction<TokenERC721>("contractType", this.contractWrapper)) {
-      try {
-        const contractType = ethers.utils.toUtf8String(
-          await this.contractWrapper.readContract.contractType(),
-        );
-        return contractType.includes("DropERC1155");
-      } catch (e) {
-        return false;
-      }
-    } else {
-      return false;
-    }
+    const info = await getPrebuiltInfo(
+      this.contractWrapper.readContract.address,
+      this.contractWrapper.getProvider(),
+    );
+    return info && info.type === "DropERC1155" && info.version < 3;
   }
 }

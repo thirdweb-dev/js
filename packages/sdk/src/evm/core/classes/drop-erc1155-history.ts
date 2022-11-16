@@ -1,5 +1,5 @@
+import { PrebuiltEditionDrop } from "../../types/eips";
 import { ContractEvents } from "./contract-events";
-import type { DropERC1155 } from "@thirdweb-dev/contracts-js";
 import { BigNumber, BigNumberish } from "ethers";
 
 /**
@@ -9,7 +9,7 @@ import { BigNumber, BigNumberish } from "ethers";
 export class DropErc1155History {
   private events;
 
-  constructor(events: ContractEvents<DropERC1155>) {
+  constructor(events: ContractEvents<PrebuiltEditionDrop>) {
     this.events = events;
   }
 

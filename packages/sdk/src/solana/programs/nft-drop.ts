@@ -4,13 +4,14 @@ import {
   NFTMetadata,
   NFTMetadataInput,
 } from "../../core/schema/nft";
+import { Amount } from "../../core/schema/shared";
 import { ClaimConditions } from "../classes/claim-conditions";
 import {
   enforceCreator,
   parseCreators,
 } from "../classes/helpers/creators-helper";
 import { NFTHelper } from "../classes/helpers/nft-helper";
-import { Amount, TransactionResult } from "../types/common";
+import { TransactionResult } from "../types/common";
 import { CreatorInput, CreatorOutput } from "../types/programs";
 import { sendMultipartTransaction } from "../utils/transactions";
 import { getNework } from "../utils/urls";

@@ -46,7 +46,7 @@ import {
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
  * const sdk = new ThirdwebSDK("{{chainName}}");
- * const contract = sdk.getContract("{{contract_address}}", "vote");
+ * const contract = await sdk.getContract("{{contract_address}}", "vote");
  * ```
  *
  * @public
@@ -319,7 +319,7 @@ export class Vote implements UpdateableNetwork {
       this.contractWrapper.readContract.votingDelay(),
       this.contractWrapper.readContract.votingPeriod(),
       this.contractWrapper.readContract.token(),
-      this.contractWrapper.readContract.quorumNumerator(),
+      this.contractWrapper.readContract["quorumNumerator()"](),
       this.contractWrapper.readContract.proposalThreshold(),
     ]);
     const votingTokenMetadata = await fetchCurrencyMetadata(

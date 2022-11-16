@@ -27,7 +27,7 @@ import {
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
-import { PaperCheckout } from "../../integrations/paper-xyz";
+import { PaperCheckout } from "../../integrations/thirdweb-checkout";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import { ClaimOptions, UploadProgressEvent } from "../../types";
@@ -47,7 +47,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
  * const sdk = new ThirdwebSDK("{{chainName}}");
- * const contract = sdk.getContract("{{contract_address}}", "signature-drop");
+ * const contract = await sdk.getContract("{{contract_address}}", "signature-drop");
  * ```
  *
  * @public

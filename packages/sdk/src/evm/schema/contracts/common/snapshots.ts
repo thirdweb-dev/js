@@ -1,4 +1,6 @@
-import { AddressSchema, AmountSchema } from "../../shared";
+import { QuantitySchema } from "../../../../core/schema/shared";
+import { AddressSchema } from "../../shared";
+import { ethers } from "ethers";
 import { z } from "zod";
 
 /**
@@ -8,12 +10,13 @@ export const MerkleSchema = z.object({
   merkle: z.record(z.string()).default({}),
 });
 
-/**
- * @internal
- */
 export const SnapshotEntryInput = z.object({
   address: AddressSchema,
-  maxClaimable: AmountSchema.default(0),
+  maxClaimable: QuantitySchema.default(0), // defaults to 0
+  price: QuantitySchema.optional(), // defaults to unlimited, but can be undefined in old snapshots
+  currencyAddress: AddressSchema.default(
+    ethers.constants.AddressZero,
+  ).optional(), // defaults to AddressZero, but can be undefined for old snapshots
 });
 
 export type SnapshotEntry = z.output<typeof SnapshotEntryInput>;
@@ -49,7 +52,7 @@ export const SnapshotInputSchema = z.union([
   z.array(SnapshotEntryInput),
 ]);
 
-const SnapshotEntryWithProofSchema = SnapshotEntryInput.extend({
+export const SnapshotEntryWithProofSchema = SnapshotEntryInput.extend({
   proof: z.array(z.string()),
 });
 /**

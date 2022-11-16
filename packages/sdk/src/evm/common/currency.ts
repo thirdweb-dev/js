@@ -1,9 +1,9 @@
+import { AmountSchema } from "../../core/schema/shared";
 import {
   getNativeTokenByChainId,
   NATIVE_TOKEN_ADDRESS,
 } from "../constants/currency";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { AmountSchema } from "../schema/shared";
 import { Amount, Currency, CurrencyValue, Price } from "../types/currency";
 import { BaseERC20 } from "../types/eips";
 import type { IERC20, IERC20Metadata } from "@thirdweb-dev/contracts-js";

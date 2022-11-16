@@ -1,9 +1,9 @@
+import { FileOrBufferOrStringSchema } from "../../../core/schema/shared";
 import { toSemver } from "../../common/index";
 import {
   AddressSchema,
   BigNumberishSchema,
   BigNumberTransformSchema,
-  FileOrBufferOrStringSchema,
 } from "../shared";
 import {
   CommonContractOutputSchema,
@@ -154,6 +154,17 @@ export const ExtraPublishMetadataSchemaInput = z
     isDeployableViaFactory: z.boolean().optional(),
     isDeployableViaProxy: z.boolean().optional(),
     factoryDeploymentData: FactoryDeploymentSchema.optional(),
+    constructorParams: z
+      .record(
+        z.string(),
+        z
+          .object({
+            displayName: z.string().optional(),
+            description: z.string().optional(),
+          })
+          .catchall(z.any()),
+      )
+      .optional(),
   })
   .catchall(z.any());
 

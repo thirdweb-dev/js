@@ -52,7 +52,7 @@ import { BigNumber, BigNumberish, CallOverrides, ethers } from "ethers";
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
  * const sdk = new ThirdwebSDK("{{chainName}}");
- * const contract = sdk.getContract("{{contract_address}}", "pack");
+ * const contract = await sdk.getContract("{{contract_address}}", "pack");
  * ```
  *
  * @public

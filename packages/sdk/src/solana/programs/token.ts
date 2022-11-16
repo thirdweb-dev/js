@@ -1,5 +1,6 @@
+import { Amount, AmountSchema } from "../../core/schema/shared";
 import { CurrencyValue, TokenMetadata } from "../../core/schema/token";
-import { Amount, AmountSchema, TransactionResult } from "../types/common";
+import { TransactionResult } from "../types/common";
 import { toCurrencyValue } from "../utils/token";
 import { getNework } from "../utils/urls";
 import {

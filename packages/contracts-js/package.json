@@ -1,12 +1,12 @@
 {
   "name": "@thirdweb-dev/contracts-js",
-  "version": "1.1.9",
+  "version": "1.2.1",
   "main": "dist/thirdweb-dev-contracts-js.cjs.js",
   "module": "dist/thirdweb-dev-contracts-js.esm.js",
   "license": "Apache-2.0",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/contracts-js",
   "dependencies": {
-    "@thirdweb-dev/contracts": "3.1.8-0"
+    "@thirdweb-dev/contracts": "^3.2.2"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.18.10",

@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "3.4.2",
+  "version": "3.5.2",
   "description": "The main thirdweb SDK.",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/sdk",
   "license": "Apache-2.0",
@@ -99,7 +99,7 @@
     "ethers": "^5"
   },
   "dependencies": {
-    "@metaplex-foundation/js": "file:.yalc/@metaplex-foundation/js",
+    "@metaplex-foundation/js": "^0.17.6",
     "@metaplex-foundation/mpl-token-metadata": "^2.3.3",
     "@project-serum/anchor": "^0.25.0",
     "@solana/spl-token": "^0.3.5",
@@ -108,7 +108,6 @@
     "@thirdweb-dev/storage": "*",
     "bn.js": "^5.2.1",
     "bs58": "^5.0.0",
-    "cbor-x": "^1.4.1",
     "cross-fetch": "^3.1.5",
     "eventemitter3": "^4.0.7",
     "fast-deep-equal": "^3.1.3",

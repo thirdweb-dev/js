@@ -2,8 +2,14 @@ import BN from "bn.js";
 import { BigNumber } from "ethers";
 import { z } from "zod";
 
-const isBrowser = () => typeof window !== "undefined";
-const FileOrBufferUnionSchema = isBrowser()
+/**
+ * @internal
+ */
+export const isBrowser = () => typeof window !== "undefined";
+/**
+ * @internal
+ */
+export const FileOrBufferUnionSchema = isBrowser()
   ? (z.instanceof(File) as z.ZodType<InstanceType<typeof File>>)
   : (z.instanceof(Buffer) as z.ZodTypeAny); // @fixme, this is a hack to make browser happy for now
 
@@ -72,12 +78,12 @@ export const BigNumberTransformSchema = z
 
 export const BasisPointsSchema = z
   .number()
-  .max(MAX_BPS, "Cannot exeed 100%")
+  .max(MAX_BPS, "Cannot exceed 100%")
   .min(0, "Cannot be below 0%");
 
 export const PercentSchema = z
   .number()
-  .max(100, "Cannot exeed 100%")
+  .max(100, "Cannot exceed 100%")
   .min(0, "Cannot be below 0%");
 
 export const HexColor = z.union([
@@ -99,9 +105,16 @@ export const AmountSchema = z
 /**
  * @internal
  */
+export type Amount = z.input<typeof AmountSchema>;
+
+/**
+ * @internal
+ */
 export const QuantitySchema = z
   .union([AmountSchema, z.literal("unlimited")])
   .default("unlimited");
+
+export type Quantity = z.output<typeof QuantitySchema>;
 
 export const RawDateSchema = z.date().transform((i) => {
   return BigNumber.from(Math.floor(i.getTime() / 1000));

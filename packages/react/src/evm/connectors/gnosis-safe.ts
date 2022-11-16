@@ -9,16 +9,21 @@ import {
   useContext as useWagmiContext,
 } from "wagmi";
 
+// exerpt from https://docs.gnosis-safe.io/backend/available-services
 const CHAIN_ID_TO_GNOSIS_SERVER_URL = {
   // mainnet
-  1: "https://safe-transaction.mainnet.gnosis.io",
+  1: "https://safe-transaction-mainnet.safe.global",
   // avalanche
-  43114: "https://safe-transaction.avalanche.gnosis.io",
+  43114: "https://safe-transaction-avalanche.safe.global",
   // polygon
-  137: "https://safe-transaction.polygon.gnosis.io",
+  137: "https://safe-transaction-polygon.safe.global",
   // goerli
-  5: "https://safe-transaction.goerli.gnosis.io",
-};
+  5: "https://safe-transaction-goerli.safe.global",
+  // bsc
+  56: "https://safe-transaction-bsc.safe.global",
+  // optimism
+  10: "https://safe-transaction-optimism.safe.global",
+} as const;
 
 export interface GnosisConnectorArguments {
   safeAddress: string;
@@ -28,6 +33,8 @@ export interface GnosisConnectorArguments {
 const __IS_SERVER__ = typeof window === "undefined";
 
 export class GnosisSafeConnector extends Connector {
+  static supportedChains = Object.keys(CHAIN_ID_TO_GNOSIS_SERVER_URL);
+  public supportedChains = GnosisSafeConnector.supportedChains;
   id = "gnosis";
   ready = __IS_SERVER__;
   name = "Gnosis Safe";
@@ -58,6 +65,11 @@ export class GnosisSafeConnector extends Connector {
       provider,
       chain: { id, unsupported: this.isChainUnsupported(id) },
     };
+  }
+
+  public isChainSupported(chainId: string | number) {
+    const id = normalizeChainId(chainId);
+    return !this.isChainUnsupported(id);
   }
 
   private async createSafeSigner() {
