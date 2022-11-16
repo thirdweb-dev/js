@@ -437,7 +437,9 @@ export async function fetchSourceFilesFromMetadata(
     Object.entries(publishedMetadata.metadata.sources).map(
       async ([path, info]) => {
         const urls = (info as any).urls as string[];
-        const ipfsLink = urls.find((url) => url.includes("ipfs"));
+        const ipfsLink = urls
+            ? urls.find((url) => url.includes("ipfs"))
+            : undefined;
         if (ipfsLink) {
           const ipfsHash = ipfsLink.split("ipfs/")[1];
           // 5 sec timeout for sources that haven't been uploaded to ipfs
@@ -455,7 +457,9 @@ export async function fetchSourceFilesFromMetadata(
         } else {
           return {
             filename: path,
-            source: "Could not find source for this contract",
+            source:
+                (info as any).content ||
+                "Could not find source for this contract",
           };
         }
       },
