@@ -82,13 +82,7 @@ export class NFTHelper {
   }
 
   async creatorsOf(nftAddress: string): Promise<CreatorOutput[]> {
-    const meta = await this.metaplex
-      .nfts()
-      .findByMint({
-        mintAddress: new PublicKey(nftAddress),
-      })
-      .run();
-
+    const meta = await this.getRaw(nftAddress);
     return parseCreators(meta.creators);
   }
 
@@ -270,10 +264,7 @@ export class NFTHelper {
     let mint = "mint" in meta ? meta.mint : undefined;
     let fullModel = meta;
     if (meta.model === "metadata") {
-      fullModel = await this.metaplex
-        .nfts()
-        .findByMint({ mintAddress: meta.mintAddress })
-        .run();
+      fullModel = await this.getRaw(meta.mintAddress.toBase58());
       mint = fullModel.mint;
     }
     if (!mint) {
