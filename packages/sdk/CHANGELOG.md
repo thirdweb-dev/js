@@ -1,5 +1,17 @@
 # @thirdweb-dev/sdk
 
+## 3.6.0
+
+### Minor Changes
+
+- [#364](https://github.com/thirdweb-dev/js/pull/364) [`7cb8e59`](https://github.com/thirdweb-dev/js/commit/7cb8e59be48dc923316eb36ab43a1bef7364f6b1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enable new Drop contracts
+
+### Patch Changes
+
+- [#382](https://github.com/thirdweb-dev/js/pull/382) [`0ed77d2`](https://github.com/thirdweb-dev/js/commit/0ed77d2c9e7526444ef660aab82a950865234aa6) Thanks [@jnsdls](https://github.com/jnsdls)! - Add `constructorParams` to `ExtraPublishMetadataSchemaInput` schema to support better deploys from releases.
+
+- [#385](https://github.com/thirdweb-dev/js/pull/385) [`04a47e8`](https://github.com/thirdweb-dev/js/commit/04a47e8971d28da2532ebd9db824eeb459c17bd4) Thanks [@adam-maj](https://github.com/adam-maj)! - Add retroactive royalty and creator setting
+
 ## 3.5.2
 
 ### Patch Changes

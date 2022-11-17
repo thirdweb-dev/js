@@ -1,7 +1,7 @@
 import { hasFunction } from "../../common";
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { uploadOrExtractURIs } from "../../common/nft";
-import { FEATURE_NFT_SIGNATURE_MINTABLE } from "../../constants/erc721-features";
+import { FEATURE_NFT_SIGNATURE_MINTABLE_V2 } from "../../constants/erc721-features";
 import {
   MintRequest721,
   MintRequest721withQuantity,
@@ -30,7 +30,7 @@ import invariant from "tiny-invariant";
  * @public
  */
 export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
-  featureName = FEATURE_NFT_SIGNATURE_MINTABLE.name;
+  featureName = FEATURE_NFT_SIGNATURE_MINTABLE_V2.name;
 
   private contractWrapper: ContractWrapper<SignatureMintERC721 | TokenERC721>;
 

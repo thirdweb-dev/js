@@ -1,8 +1,5 @@
 import { NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
-import {
-  detectContractFeature,
-  hasFunction,
-} from "../../common/feature-detection";
+import { detectContractFeature } from "../../common/feature-detection";
 import { getBaseUriFromBatch, uploadOrExtractURIs } from "../../common/nft";
 import {
   FEATURE_NFT_LAZY_MINTABLE,
@@ -194,11 +191,19 @@ export class Erc721LazyMintable implements DetectableFeature {
     if (
       detectContractFeature<BaseClaimConditionERC721>(
         this.contractWrapper,
-        "ERC721ClaimableWithConditionsV1",
+        "ERC721ClaimConditionsV1",
       ) ||
       detectContractFeature<BaseClaimConditionERC721>(
         this.contractWrapper,
-        "ERC721ClaimableWithConditionsV2",
+        "ERC721ClaimConditionsV2",
+      ) ||
+      detectContractFeature<BaseClaimConditionERC721>(
+        this.contractWrapper,
+        "ERC721ClaimPhasesV1",
+      ) ||
+      detectContractFeature<BaseClaimConditionERC721>(
+        this.contractWrapper,
+        "ERC721ClaimPhasesV2",
       )
     ) {
       return new Erc721ClaimableWithConditions(
@@ -214,9 +219,8 @@ export class Erc721LazyMintable implements DetectableFeature {
     if (
       detectContractFeature<IClaimableERC721>(
         this.contractWrapper,
-        "ERC721Claimable",
-      ) &&
-      !hasFunction("setClaimConditions", this.contractWrapper)
+        "ERC721ClaimCustom",
+      )
     ) {
       return new Erc721Claimable(this.erc721, this.contractWrapper);
     }

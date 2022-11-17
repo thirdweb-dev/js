@@ -313,6 +313,23 @@ export const cacheKeys = {
               ]
             : ["claimConditions", "getIneligibilityReasons", params],
         ),
+      // combinations of queries cache keys
+      useActiveClaimConditionForWallet: (
+        contractAddress: RequiredParam<ContractAddress>,
+        walletAddress: WalletAddress,
+        tokenId?: BigNumberish,
+      ) =>
+        createContractCacheKey(
+          contractAddress,
+          tokenId
+            ? [
+                "claimConditions",
+                "useActiveClaimConditionForWallet",
+                { tokenId, walletAddress },
+                ,
+              ]
+            : ["claimConditions", "getIneligibilityReasons", { walletAddress }],
+        ),
     },
 
     // primary sale contracts

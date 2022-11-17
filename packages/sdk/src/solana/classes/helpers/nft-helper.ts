@@ -8,7 +8,9 @@ import {
   METAPLEX_PROGRAM_ID,
 } from "../../constants/addresses";
 import { TransactionResult } from "../../types/common";
+import { CreatorOutput } from "../../types/programs";
 import { getPublicRpc } from "../../utils/urls";
+import { parseCreators } from "./creators-helper";
 import {
   findMasterEditionV2Pda,
   GmaBuilder,
@@ -46,10 +48,14 @@ export class NFTHelper {
     this.connection = metaplex.connection;
   }
 
-  async get(nftAddress: string): Promise<NFT> {
-    const meta = await this.metaplex.nfts().findByMint({
+  async getRaw(nftAddress: string) {
+    return await this.metaplex.nfts().findByMint({
       mintAddress: new PublicKey(nftAddress),
     });
+  }
+
+  async get(nftAddress: string): Promise<NFT> {
+    const meta = await this.getRaw(nftAddress);
     return await this.toNFTMetadata(meta);
   }
 
@@ -67,6 +73,11 @@ export class NFTHelper {
     return {
       signature: result.response.signature,
     };
+  }
+
+  async creatorsOf(nftAddress: string): Promise<CreatorOutput[]> {
+    const meta = await this.getRaw(nftAddress);
+    return parseCreators(meta.creators);
   }
 
   async balanceOf(walletAddress: string, nftAddress: string): Promise<number> {
@@ -247,9 +258,7 @@ export class NFTHelper {
     let mint = "mint" in meta ? meta.mint : undefined;
     let fullModel = meta;
     if (meta.model === "metadata") {
-      fullModel = await this.metaplex
-        .nfts()
-        .findByMint({ mintAddress: meta.mintAddress });
+      fullModel = await this.getRaw(meta.mintAddress.toBase58());
       mint = fullModel.mint;
     }
     if (!mint) {

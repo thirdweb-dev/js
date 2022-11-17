@@ -49,6 +49,149 @@ describe("NFT Drop Contract (v4)", async () => {
     dropContract = await sdk.getNFTDrop(address);
   });
 
+  it("comprehensive test", async () => {
+    const metadata = [];
+    for (let i = 0; i < 10; i++) {
+      metadata.push({ name: `test${i}`, description: `desc${i}` });
+    }
+    await dropContract.createBatch(metadata);
+    // claiming with default conditions
+    await dropContract.claimConditions.set([{}]);
+    await dropContract.claim(1);
+    // claiming with max supply
+    await dropContract.claimConditions.set([
+      {
+        maxClaimableSupply: 2,
+      },
+    ]);
+    try {
+      await dropContract.claim(2);
+      expect.fail("should not be able to claim 2 - maxSupply");
+    } catch (e) {
+      expectError(e, "!MaxSupply");
+    }
+    await dropContract.claim(1);
+    // claiming with max per wallet
+    await dropContract.claimConditions.set(
+      [
+        {
+          maxClaimablePerWallet: 1,
+        },
+      ],
+      true,
+    );
+    try {
+      await dropContract.claim(2);
+      expect.fail("should not be able to claim 2 - maxClaimablePerWallet");
+    } catch (e) {
+      expectError(e, "!Qty");
+    }
+    await dropContract.claim(1);
+    expect((await dropContract.totalClaimedSupply()).toString()).eq("3");
+  });
+
+  it("comprehensive test with allowlist and price override", async () => {
+    const metadata = [];
+    for (let i = 0; i < 10; i++) {
+      metadata.push({ name: `test${i}`, description: `desc${i}` });
+    }
+    await dropContract.createBatch(metadata);
+    // claiming with default conditions
+    await dropContract.claimConditions.set([
+      {
+        maxClaimablePerWallet: 0,
+        price: 0.1,
+        snapshot: [
+          { address: adminWallet.address, maxClaimable: 1, price: 0.1 },
+        ],
+      },
+    ]);
+    console.log(
+      await dropContract.claimConditions.getClaimIneligibilityReasons(1),
+    );
+    await dropContract.claim(1);
+  });
+
+  it("comprehensive test with allowlist", async () => {
+    const metadata = [];
+    for (let i = 0; i < 10; i++) {
+      metadata.push({ name: `test${i}`, description: `desc${i}` });
+    }
+    await dropContract.createBatch(metadata);
+    // claiming with default conditions
+    await dropContract.claimConditions.set([
+      {
+        maxClaimablePerWallet: 0,
+        snapshot: [{ address: adminWallet.address, maxClaimable: 1 }],
+      },
+    ]);
+    try {
+      sdk.updateSignerOrProvider(bobWallet);
+      await dropContract.claim(1);
+      expect.fail("should not be able to claim - not in allowlist");
+    } catch (e) {
+      expectError(e, "!Qty");
+    }
+    sdk.updateSignerOrProvider(adminWallet);
+    await dropContract.claim(1);
+
+    // // claiming with max supply
+    await dropContract.claimConditions.set([
+      {
+        maxClaimablePerWallet: 0,
+        snapshot: [{ address: adminWallet.address, maxClaimable: 10 }],
+        maxClaimableSupply: 2,
+      },
+    ]);
+    try {
+      await dropContract.claim(2);
+      expect.fail("should not be able to claim - maxClaimableSupply");
+    } catch (e) {
+      expectError(e, "!MaxSupply");
+    }
+    await dropContract.claim(1);
+    // claiming with max per wallet
+    await dropContract.claimConditions.set(
+      [
+        {
+          snapshot: [adminWallet.address],
+          maxClaimablePerWallet: 1,
+        },
+      ],
+      true,
+    );
+    try {
+      await dropContract.claim(2);
+      expect.fail("should not be able to claim - maxClaimablePerWallet");
+    } catch (e) {
+      expectError(e, "!Qty");
+    }
+    await dropContract.claim(1);
+    // claiming with max per wallet in snapshot
+    await dropContract.claimConditions.set(
+      [
+        {
+          snapshot: [{ address: adminWallet.address, maxClaimable: 1 }],
+          maxClaimablePerWallet: 0,
+        },
+      ],
+      true,
+    );
+    try {
+      await dropContract.claim(2);
+      expect.fail("should not be able to claim - proof maxClaimable");
+    } catch (e) {
+      expectError(e, "!Qty");
+    }
+    await dropContract.claim(1);
+    try {
+      await dropContract.claim(1);
+      expect.fail("should not be able to claim - proof used");
+    } catch (e) {
+      expectError(e, "!Qty");
+    }
+  });
+
   it("should lazy mint with URI", async () => {
     const uri = await storage.upload({
       name: "Test1",
@@ -59,8 +202,25 @@ describe("NFT Drop Contract (v4)", async () => {
     assert.equal(nft.metadata.name, "Test1");
   });
 
+  it("should upload and resolve claim condition metadata", async () => {
+    const uri = await storage.upload({
+      name: "Test1",
+    });
+    await dropContract.createBatch([uri]);
+    await dropContract.claimConditions.set([
+      {
+        metadata: {
+          name: "Test",
+          description: "Description",
+        },
+      },
+    ]);
+    const condition = await dropContract.claimConditions.getActive();
+    expect(condition.metadata?.name).to.equal("Test");
+  });
+
   it("should respect global maxClaimable per wallet with default snapshot", async () => {
-    const metadata = [];
+    const metadata: NFTMetadataInput[] = [];
     for (let i = 0; i < 10; i++) {
       metadata.push({ name: `test${i}`, description: `desc${i}` });
     }
@@ -101,11 +261,13 @@ describe("NFT Drop Contract (v4)", async () => {
     await dropContract.claimConditions.set([
       {
         startTime: new Date(Date.now() / 2),
+        maxClaimablePerWallet: 1,
         snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
         price: 1,
       },
       {
         startTime: new Date(),
+        maxClaimablePerWallet: 1,
         snapshot: [bobWallet.address],
       },
     ]);
@@ -126,7 +288,7 @@ describe("NFT Drop Contract (v4)", async () => {
     const proof = await dropContract.claimConditions.getClaimerProofs(
       bobWallet.address,
     );
-    expect(proof.address).to.eq(bobWallet.address);
+    expect(proof?.address).to.eq(bobWallet.address);
   });
 
   it("should return snapshot data on claim conditions", async () => {
@@ -137,6 +299,7 @@ describe("NFT Drop Contract (v4)", async () => {
 
     await dropContract.claimConditions.set([
       {
+        maxClaimablePerWallet: 1,
         snapshot: [samWallet.address],
       },
     ]);
@@ -153,10 +316,12 @@ describe("NFT Drop Contract (v4)", async () => {
       {
         startTime: new Date(),
         waitInSeconds: 10,
+        maxClaimablePerWallet: 1,
         snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
       },
       {
         startTime: new Date(Date.now() + 60 * 60 * 1000),
+        maxClaimablePerWallet: 1,
         snapshot: [bobWallet.address],
       },
     ]);
@@ -229,12 +394,31 @@ describe("NFT Drop Contract (v4)", async () => {
     }
   });
 
+  it("should not allow setting a claim condition where no one can claim", async () => {
+    await dropContract.createBatch([{ name: "test", description: "test" }]);
+
+    try {
+      await dropContract.claimConditions.set([
+        {
+          maxClaimablePerWallet: 0,
+          snapshot: [adminWallet.address, bobWallet.address],
+        },
+      ]);
+      assert.fail(
+        "should not allow setting a claim condition where no one can claim",
+      );
+    } catch (e) {
+      expectError(e, "no one can claim");
+    }
+  });
+
   it("allow one address in the merkle tree to claim", async () => {
     const testWallets: SignerWithAddress[] = [bobWallet];
     const members = testWallets.map((w) => w.address);
 
     await dropContract.claimConditions.set([
       {
+        maxClaimablePerWallet: 1,
         snapshot: members,
       },
     ]);
@@ -544,6 +728,7 @@ describe("NFT Drop Contract (v4)", async () => {
       await dropContract.claimConditions.set([
         {
           maxClaimableSupply: 10,
+          maxClaimablePerWallet: 1,
           price: "100",
           currencyAddress: NATIVE_TOKEN_ADDRESS,
           snapshot: [w1.address, w2.address, w3.address],
@@ -569,7 +754,7 @@ describe("NFT Drop Contract (v4)", async () => {
     await dropContract.claimConditions.set([
       {
         maxClaimablePerWallet: 0,
-        snapshot: [w1.address],
+        snapshot: [{ address: w1.address, maxClaimable: 1 }],
       },
     ]);
 
