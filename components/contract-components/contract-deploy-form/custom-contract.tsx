@@ -10,6 +10,7 @@ import {
   ContractType,
   SUPPORTED_CHAIN_ID,
   SUPPORTED_CHAIN_IDS,
+  getContractAddressByChainId,
 } from "@thirdweb-dev/sdk/evm";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelect";
@@ -28,6 +29,19 @@ import {
   TrackedLink,
 } from "tw-components";
 import { SupportedChainIdToNetworkMap } from "utils/network";
+
+function isThirdwebFactory(
+  chainId: SUPPORTED_CHAIN_ID | undefined,
+  factoryAddressMap: Record<string, string> = {},
+) {
+  if (!chainId) {
+    return false;
+  }
+  const factoryAddress =
+    chainId in factoryAddressMap ? factoryAddressMap[chainId] : "";
+  const chainFactoryAddress = getContractAddressByChainId(chainId, "twFactory");
+  return chainFactoryAddress === factoryAddress;
+}
 
 interface CustomContractFormProps {
   ipfsHash: string;
@@ -77,6 +91,11 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
   const form = useForm<{ addToDashboard: true }>();
 
+  const isTwFactory = isThirdwebFactory(
+    selectedChain,
+    fullReleaseMetadata.data?.factoryDeploymentData?.factoryAddresses,
+  );
+
   const { register, watch, handleSubmit } = form;
   const [contractParams, _setContractParams] = useState<any[]>([]);
   const setContractParams = useCallback((idx: number, value: any) => {
@@ -119,6 +138,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           is_proxy: fullReleaseMetadata.data?.isDeployableViaProxy,
           is_factory: fullReleaseMetadata.data?.isDeployableViaProxy,
         };
+        const addToDashboard = isTwFactory ? false : d.addToDashboard;
         trackEvent({
           category: "custom-contract",
           action: "deploy",
@@ -128,7 +148,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
         deploy.mutate(
           {
             constructorParams: contractParams,
-            addToDashboard: d.addToDashboard,
+            addToDashboard,
           },
           {
             onSuccess: (deployedContractAddress) => {
@@ -142,7 +162,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 label: "success",
                 deployData,
                 contractAddress: deployedContractAddress,
-                addToDashboard: d.addToDashboard,
+                addToDashboard,
               });
               trackEvent({
                 category: "custom-contract",
@@ -241,11 +261,9 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
         </Text>
       </Flex>
       <Flex alignItems="center" gap={3}>
-        <Checkbox
-          autoFocus={true}
-          {...register("addToDashboard")}
-          defaultChecked
-        />
+        {!isTwFactory && (
+          <Checkbox {...register("addToDashboard")} defaultChecked />
+        )}
         <Text mt={1}>
           Add to dashboard so I can find it in the list of my contracts at{" "}
           <TrackedLink
@@ -296,7 +314,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
             !!disabledChains?.find((chain) => chain === selectedChain)
           }
           colorScheme="primary"
-          transactionCount={!watch("addToDashboard") ? 1 : 2}
+          transactionCount={isTwFactory ? 1 : !watch("addToDashboard") ? 1 : 2}
         >
           Deploy Now
         </TransactionButton>
