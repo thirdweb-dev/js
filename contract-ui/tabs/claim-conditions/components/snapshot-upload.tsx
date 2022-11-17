@@ -311,7 +311,11 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                           claim) If not specified, the default value is the one
                           you have set on your claim phase.
                           <br />
-                          <Link download color="blue.500" href="/snapshot.csv">
+                          <Link
+                            download
+                            color="blue.500"
+                            href="/snapshot-with-maxclaimable.csv"
+                          >
                             <Icon boxSize="1em" as={FiDownload} /> Example
                             snapshot
                           </Link>
