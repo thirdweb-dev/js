@@ -56,6 +56,8 @@ export type ClaimVerification = {
   maxClaimable: BigNumber;
   price: BigNumber;
   currencyAddress: string;
+  priceInProof: BigNumber;
+  currencyAddressInProof: string;
 };
 
 export type ClaimConditionsForToken = {

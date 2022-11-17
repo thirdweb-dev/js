@@ -16,6 +16,7 @@ import {
   toBigNumber,
   toNftOriginalEdition,
   toOriginalEditionAccount,
+  TransactionBuilder,
 } from "@metaplex-foundation/js";
 import { PublicKey } from "@solana/web3.js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -307,12 +308,14 @@ export class NFTCollection {
         : await this.storage.upload(metadata);
     const name =
       typeof metadata === "string" ? "" : metadata.name?.toString() || "";
+    const collection = await this.getCollection();
     const { nft } = await this.metaplex
       .nfts()
       .create({
         name,
         uri,
-        sellerFeeBasisPoints: 0,
+        creators: collection.creators,
+        sellerFeeBasisPoints: collection.sellerFeeBasisPoints,
         collection: this.publicKey,
         collectionAuthority: this.metaplex.identity(),
         tokenOwner: new PublicKey(to),
@@ -439,35 +442,131 @@ export class NFTCollection {
   /**
    * Update the creators of the collection
    * @param creators - the creators to update
+   * @param updateAll - whether or not to retroactively update the creators of all past NFTs
    */
-  async updateCreators(creators: CreatorInput[]) {
-    const tx = await this.metaplex
-      .nfts()
-      .update({
-        nftOrSft: await this.getCollection(),
-        creators: enforceCreator(creators, this.metaplex.identity().publicKey),
-      })
-      .run();
-    return {
-      signature: tx.response.signature,
-    };
+  async updateCreators(
+    creators: CreatorInput[],
+    updateAll: boolean = false,
+  ): Promise<TransactionResult[]> {
+    if (updateAll) {
+      const txs: TransactionBuilder[] = [];
+
+      txs.push(
+        this.metaplex
+          .nfts()
+          .builders()
+          .update({
+            nftOrSft: await this.getCollection(),
+            creators: enforceCreator(
+              creators,
+              this.metaplex.identity().publicKey,
+            ),
+          }),
+      );
+
+      // TODO: Don't use a get all here, all we need is mint addresses :(
+      const allNfts = await this.nft.getAll(this.publicKey.toBase58());
+      await Promise.all(
+        allNfts.map(async (nft) => {
+          const metaplexNft = await this.metaplex
+            .nfts()
+            .findByMint({ mintAddress: new PublicKey(nft.metadata.id) })
+            .run();
+
+          txs.push(
+            this.metaplex
+              .nfts()
+              .builders()
+              .update({
+                collection: this.publicKey,
+                nftOrSft: metaplexNft,
+                creators: enforceCreator(
+                  creators,
+                  this.metaplex.identity().publicKey,
+                ),
+              }),
+          );
+        }),
+      );
+
+      return await sendMultipartTransaction(txs, this.metaplex);
+    } else {
+      const tx = await this.metaplex
+        .nfts()
+        .update({
+          nftOrSft: await this.getCollection(),
+          creators: enforceCreator(
+            creators,
+            this.metaplex.identity().publicKey,
+          ),
+        })
+        .run();
+
+      return [
+        {
+          signature: tx.response.signature,
+        },
+      ];
+    }
   }
 
   /**
    * Update the royalty basis points of the collection
    * @param sellerFeeBasisPoints - the royalty basis points of the collection
+   * @param updateAll - whether or not to retroactively update the royalty basis points of all past NFTs
    */
-  async updateRoyalty(sellerFeeBasisPoints: number) {
-    const tx = await this.metaplex
-      .nfts()
-      .update({
-        nftOrSft: await this.getCollection(),
-        sellerFeeBasisPoints,
-      })
-      .run();
-    return {
-      signature: tx.response.signature,
-    };
+  async updateRoyalty(
+    sellerFeeBasisPoints: number,
+    updateAll: boolean = false,
+  ) {
+    if (updateAll) {
+      const txs: TransactionBuilder[] = [];
+
+      txs.push(
+        this.metaplex
+          .nfts()
+          .builders()
+          .update({
+            nftOrSft: await this.getCollection(),
+            sellerFeeBasisPoints,
+          }),
+      );
+
+      // TODO: Don't use a get all here, all we need is mint addresses :(
+      const allNfts = await this.nft.getAll(this.publicKey.toBase58());
+      await Promise.all(
+        allNfts.map(async (nft) => {
+          const metaplexNft = await this.metaplex
+            .nfts()
+            .findByMint({ mintAddress: new PublicKey(nft.metadata.id) })
+            .run();
+
+          txs.push(
+            this.metaplex.nfts().builders().update({
+              collection: this.publicKey,
+              nftOrSft: metaplexNft,
+              sellerFeeBasisPoints,
+            }),
+          );
+        }),
+      );
+
+      return await sendMultipartTransaction(txs, this.metaplex);
+    } else {
+      const tx = await this.metaplex
+        .nfts()
+        .update({
+          nftOrSft: await this.getCollection(),
+          sellerFeeBasisPoints,
+        })
+        .run();
+
+      return [
+        {
+          signature: tx.response.signature,
+        },
+      ];
+    }
   }
 
   private async getCollection() {

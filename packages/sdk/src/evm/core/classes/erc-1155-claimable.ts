@@ -1,5 +1,5 @@
 import { calculateClaimCost } from "../../common/claim-conditions";
-import { FEATURE_EDITION_CLAIMABLE } from "../../constants/erc1155-features";
+import { FEATURE_EDITION_CLAIM_CUSTOM } from "../../constants/erc1155-features";
 import { ClaimOptions } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
@@ -18,7 +18,7 @@ import { BigNumberish, CallOverrides } from "ethers";
  * ```
  */
 export class ERC1155Claimable implements DetectableFeature {
-  featureName = FEATURE_EDITION_CLAIMABLE.name;
+  featureName = FEATURE_EDITION_CLAIM_CUSTOM.name;
 
   private contractWrapper: ContractWrapper<IClaimableERC1155>;
 

@@ -13,7 +13,7 @@ import invariant from "tiny-invariant";
 
 global.fetch = require("cross-fetch");
 
-describe("Token Drop Contract (v3)", async () => {
+describe("Token Drop Contract (v4)", async () => {
   let dropContract: TokenDrop;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -49,11 +49,13 @@ describe("Token Drop Contract (v3)", async () => {
     await dropContract.claimConditions.set([
       {
         startTime: new Date(Date.now() / 2),
+        maxClaimablePerWallet: 1,
         snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
         price: 1,
       },
       {
         startTime: new Date(),
+        maxClaimablePerWallet: 1,
         snapshot: [bobWallet.address],
       },
     ]);
@@ -77,6 +79,7 @@ describe("Token Drop Contract (v3)", async () => {
   it("should return snapshot data on claim conditions", async () => {
     await dropContract.claimConditions.set([
       {
+        maxClaimablePerWallet: 1,
         snapshot: [samWallet.address],
       },
     ]);
@@ -93,10 +96,12 @@ describe("Token Drop Contract (v3)", async () => {
       {
         startTime: new Date(),
         waitInSeconds: 10,
+        maxClaimablePerWallet: 1,
         snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
       },
       {
         startTime: new Date(Date.now() + 60 * 60 * 1000),
+        maxClaimablePerWallet: 1,
         snapshot: [bobWallet.address],
       },
     ]);
@@ -141,6 +146,7 @@ describe("Token Drop Contract (v3)", async () => {
     );
     await dropContract.claimConditions.set([
       {
+        maxClaimablePerWallet: 2.1,
         snapshot: members,
       },
     ]);
@@ -159,6 +165,7 @@ describe("Token Drop Contract (v3)", async () => {
 
     await dropContract.claimConditions.set([
       {
+        maxClaimablePerWallet: 1,
         snapshot: members,
       },
     ]);
@@ -220,6 +227,7 @@ describe("Token Drop Contract (v3)", async () => {
   it("should allow setting max claims per wallet", async () => {
     await dropContract.claimConditions.set([
       {
+        maxClaimablePerWallet: 0,
         snapshot: [
           { address: w1.address, maxClaimable: "2.1" },
           { address: w2.address, maxClaimable: 1 },
@@ -344,6 +352,7 @@ describe("Token Drop Contract (v3)", async () => {
       await dropContract.claimConditions.set([
         {
           maxClaimableSupply: 10,
+          maxClaimablePerWallet: 1,
           price: "100",
           currencyAddress: NATIVE_TOKEN_ADDRESS,
           snapshot: [w1.address, w2.address, w3.address],
