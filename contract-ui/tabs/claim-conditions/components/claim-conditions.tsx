@@ -251,7 +251,7 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
           ({ address, maxClaimable, price, currencyAddress }) => ({
             address,
             maxClaimable: maxClaimable || "0",
-            price: price || "unlimited",
+            price: price || undefined,
             currencyAddress: currencyAddress || undefined,
           }),
         ),
