@@ -172,44 +172,51 @@ export class NFTDrop {
    */
   async getAll(queryParams?: QueryAllParams): Promise<NFT[]> {
     const parsedQueryParams = QueryAllParamsSchema.parse(queryParams);
-
-    // TODO: Add pagination to get NFT functions
     const info = await this.getCandyMachine();
-    const claimed = await this.getAllClaimed(parsedQueryParams);
-    return await Promise.all(
-      info.items
-        .slice(
-          parsedQueryParams.start,
-          parsedQueryParams.start + parsedQueryParams.count,
-        )
-        .map(async (item) => {
-          // Check if the NFT has been claimed
 
-          // TODO: This only checks name/uri which is potentially not unique
-          const claimedNFT = claimed.find(
-            (nft) =>
-              nft.metadata.name === item.name && nft.metadata.uri === item.uri,
-          );
-          if (claimedNFT) {
-            return claimedNFT;
-          }
+    // First, get all the claimed NFTs within the query params range
+    const claimedNfts = await this.getAllClaimed(parsedQueryParams);
+    const totalClaimed = await this.totalClaimedSupply();
 
-          // Not claimed yet, return a unclaimed NFT with just the metadata
-          const metadata: NFTMetadata = await this.storage.downloadJSON(
-            item.uri,
-          );
-          return {
-            metadata: {
-              ...metadata,
-              id: PublicKey.default.toBase58(),
-              uri: item.uri,
-            },
-            owner: PublicKey.default.toBase58(),
-            supply: 0,
-            type: "metaplex",
-          } as NFT;
-        }),
+    // Then filter out all claimed NFTs from items to leave only unclaimed remaining
+    const unclaimedItems: CandyMachineItem[] = [];
+    info.items.forEach((item) => {
+      const isClaimed =
+        claimedNfts.filter(
+          (nft) =>
+            nft.metadata.name === item.name && nft.metadata.uri === item.uri,
+        ).length > 0;
+
+      if (!isClaimed) {
+        unclaimedItems.push(item);
+      }
+    });
+
+    // Only fill the remaining count left over after claimed NFTs with unclaimed NFTs
+    const startIndex = Math.max(0, parsedQueryParams.start - totalClaimed);
+    const endIndex = Math.max(
+      0,
+      startIndex + parsedQueryParams.count - claimedNfts.length,
     );
+
+    const unclaimedNfts = await Promise.all(
+      unclaimedItems.slice(startIndex, endIndex).map(async (item) => {
+        const metadata: NFTMetadata = await this.storage.downloadJSON(item.uri);
+        return {
+          metadata: {
+            ...metadata,
+            id: PublicKey.default.toBase58(),
+            uri: item.uri,
+          },
+          owner: PublicKey.default.toBase58(),
+          supply: 0,
+          type: "metaplex",
+        } as NFT;
+      }),
+    );
+
+    // Always return claimed NFTs first, and then fill remaining query count with unclaimed NFTs
+    return [...claimedNfts, ...unclaimedNfts];
   }
 
   /**
