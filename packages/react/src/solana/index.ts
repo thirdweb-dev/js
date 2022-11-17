@@ -18,6 +18,7 @@ export * from "./hooks/nft/useRoyaltySettings";
 export * from "./hooks/nft/useUpdateRoyaltySettings";
 export * from "./hooks/nft/useCreators";
 export * from "./hooks/nft/useUpdateCreators";
+export * from "./hooks/nft/useTotalSupply";
 
 // NFT Collection
 export * from "./hooks/nft/collection/useMintNFT";

@@ -1,6 +1,6 @@
 import {
   QueryAllParams,
-  DEFAULT_QUERY_ALL_COUNT,
+  QueryAllParamsSchema,
 } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
 import {
@@ -110,13 +110,73 @@ export class NFTHelper {
     }
   }
 
+  async supplyOf(nftAddress: string): Promise<number> {
+    let originalEdition;
+
+    const originalEditionAccount = await this.metaplex
+      .rpc()
+      .getAccount(findMasterEditionV2Pda(new PublicKey(nftAddress)));
+
+    if (originalEditionAccount.exists) {
+      originalEdition = toNftOriginalEdition(
+        toOriginalEditionAccount(originalEditionAccount),
+      );
+    } else {
+      return 0;
+    }
+
+    // Add one to supply to account for the master edition
+    return originalEdition.supply.toNumber() + 1;
+  }
+
+  async totalSupply(collectionAddress: string): Promise<number> {
+    const metadataAddresses = await this.getAllMetadataAddresses(
+      collectionAddress,
+    );
+    return metadataAddresses.length;
+  }
+
   async getAll(
     collectionAddress: string,
     queryParams?: QueryAllParams,
   ): Promise<NFT[]> {
+    const { start, count } = QueryAllParamsSchema.parse(queryParams);
+
+    const metadataAddresses = await this.getAllMetadataAddresses(
+      collectionAddress,
+    );
+
+    // Metaplex GmaBuilder has a weird thing where they always start at 1 not 0
+    // so we workaround it by adding an extra address, and shifting the count to get the actual count we want
+    const fixedMetadataAddresses = (
+      start === 0 ? [PublicKey.default] : []
+    ).concat(metadataAddresses);
+    const metadataInfos = await GmaBuilder.make(
+      this.metaplex,
+      fixedMetadataAddresses,
+    ).getBetween(start, start === 0 ? count + 1 : start + count);
+
+    // Parse each account into a metadata account
+    const metadataParsed: Metadata<JsonMetadata<string>>[] = [];
+    for (const metadataInfo of metadataInfos) {
+      if (metadataInfo.exists) {
+        try {
+          metadataParsed.push(toMetadata(toMetadataAccount(metadataInfo)));
+        } catch (error) {
+          // no-op
+        }
+      }
+    }
+
+    // Finally, fetch the metadata + mint for each in parallel
+    const nfts = await Promise.all(
+      metadataParsed.map((m) => this.toNFTMetadata(m)),
+    );
+    return nfts;
+  }
+
+  private async getAllMetadataAddresses(collectionAddress: string) {
     const collectionKey = new PublicKey(collectionAddress);
-    const start = queryParams?.start || 0;
-    const count = queryParams?.count || DEFAULT_QUERY_ALL_COUNT;
 
     // TODO cache signatures <> transactions mapping in memory so pagination doesn't re-request this everytime
     const allSignatures: ConfirmedSignatureInfo[] = [];
@@ -194,52 +254,7 @@ export class NFTHelper {
       }
     }
 
-    // Metaplex GmaBuilder has a weird thing where they always start at 1 not 0
-    // so we workaround it by adding an extra address, and shifting the count to get the actual count we want
-    const fixedMetadataAddresses = (
-      start === 0 ? [PublicKey.default] : []
-    ).concat(metadataAddresses);
-    const metadataInfos = await GmaBuilder.make(
-      this.metaplex,
-      fixedMetadataAddresses,
-    ).getBetween(start, start === 0 ? count + 1 : start + count);
-
-    // parse each account into a metadata account
-    const metadataParsed: Metadata<JsonMetadata<string>>[] = [];
-    for (const metadataInfo of metadataInfos) {
-      if (metadataInfo.exists) {
-        try {
-          metadataParsed.push(toMetadata(toMetadataAccount(metadataInfo)));
-        } catch (error) {
-          // ignore
-        }
-      }
-    }
-
-    // finally fetch the metadta + mint for each in parallel
-    const nfts = await Promise.all(
-      metadataParsed.map((m) => this.toNFTMetadata(m)),
-    );
-    return nfts;
-  }
-
-  async supplyOf(nftAddress: string): Promise<number> {
-    let originalEdition;
-
-    const originalEditionAccount = await this.metaplex
-      .rpc()
-      .getAccount(findMasterEditionV2Pda(new PublicKey(nftAddress)));
-
-    if (originalEditionAccount.exists) {
-      originalEdition = toNftOriginalEdition(
-        toOriginalEditionAccount(originalEditionAccount),
-      );
-    } else {
-      return 0;
-    }
-
-    // Add one to supply to account for the master edition
-    return originalEdition.supply.toNumber() + 1;
+    return metadataAddresses;
   }
 
   async toNFTMetadata(
