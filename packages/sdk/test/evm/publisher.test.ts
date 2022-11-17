@@ -1,6 +1,5 @@
 import {
-  ChainId,
-  isFeatureEnabled,
+  ChainId, getAllDetectedFeatureNames, isFeatureEnabled,
   resolveContractUriFromAddress,
   ThirdwebSDK,
 } from "../../src/evm";
@@ -8,7 +7,7 @@ import { implementations, signers } from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
-  DropERC721__factory,
+  DropERC721__factory, DropERC721_V3__factory,
   TokenERC721__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -92,6 +91,19 @@ describe("Publishing", async () => {
     expect(isFeatureEnabled(DropERC721__factory.abi, "ERC721Mintable")).to.eq(
       false,
     );
+  });
+
+  it("should extract all features", async () => {
+    const tokenFeatures = getAllDetectedFeatureNames(TokenERC721__factory.abi);
+    expect(
+        tokenFeatures
+    ).to.contain("ERC721Enumerable");
+    expect(
+        getAllDetectedFeatureNames(DropERC721__factory.abi)
+    ).to.contain("ERC721ClaimPhasesV2");
+    expect(
+        getAllDetectedFeatureNames(DropERC721_V3__factory.abi)
+    ).to.contain("ERC721ClaimPhasesV1");
   });
 
   it("should update bio", async () => {
