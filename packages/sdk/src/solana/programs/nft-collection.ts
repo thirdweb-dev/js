@@ -141,6 +141,18 @@ export class NFTCollection {
   }
 
   /**
+   * Get the total number of nfts minted on this program
+   * @returns the total number of NFTs minted on this program
+   *
+   * ```jsx
+   * const totalSupply = await program.totalSupply();
+   * ```
+   */
+  async totalSupply(): Promise<number> {
+    return this.nft.totalSupply(this.publicKey.toBase58());
+  }
+
+  /**
    * Get the NFT balance of the connected wallet
    * @returns the NFT balance
    *
