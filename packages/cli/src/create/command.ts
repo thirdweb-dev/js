@@ -128,6 +128,23 @@ export async function twCreate(pPath: string = "", options: any) {
   }
 
   if (!options.template) {
+    if (projectType === "app" && !chain) {
+      const res = await prompts({
+        type: "select",
+        name: "chain",
+        message: CREATE_MESSAGES.chain,
+        choices: [
+          // For EVM, value is nothing because the repo names don't have "evm" in them.
+          { title: "EVM", value: "" },
+          { title: "Solana", value: "solana" },
+        ],
+      });
+
+      if (typeof res.chain === "string") {
+        chain = res.chain.trim();
+      }
+    }
+
     if (projectType === "app" && !framework) {
       const res = await prompts({
         type: "select",
