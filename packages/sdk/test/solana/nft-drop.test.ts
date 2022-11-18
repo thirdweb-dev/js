@@ -188,5 +188,8 @@ describe("NFTDrop", async () => {
     all = await contract.getAll({ start: 2, count: 3 });
     expect(all.length).to.equal(3);
     expect(all.filter((nft) => nft.supply > 0).length).to.equal(0);
+
+    all = await contract.getAll({ start: 0, count: 3 });
+    expect(all.filter((nft) => nft.supply > 0).length).to.equal(2);
   });
 });
