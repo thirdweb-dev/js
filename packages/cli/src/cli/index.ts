@@ -62,6 +62,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       `Explicitly tell the CLI to bootstrap the app using pnpm`,
     )
     .option("--framework [name]", `The preferred framework.`)
+    .option("--solana", `Initialize as a Solana project.`)
     .option(
       "-t, --template [name]",
       `A template to start your project from. You can use an template repository name from the official thirdweb-example org.`,
