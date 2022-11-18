@@ -15,15 +15,7 @@ const main = async () => {
   const program = new Command();
 
   //yes this has to look like this, eliminates whitespace
-  console.info(`
-  $$\\     $$\\       $$\\                 $$\\                         $$\\       
-  $$ |    $$ |      \\__|                $$ |                        $$ |      
-$$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$$$$\\  
-\\_$$  _|  $$  __$$\\ $$ |$$  __$$\\ $$  __$$ |$$ | $$ | $$ |$$  __$$\\ $$  __$$\\ 
-  $$ |    $$ |  $$ |$$ |$$ |  \\__|$$ /  $$ |$$ | $$ | $$ |$$$$$$$$ |$$ |  $$ |
-  $$ |$$\\ $$ |  $$ |$$ |$$ |      $$ |  $$ |$$ | $$ | $$ |$$   ____|$$ |  $$ |
-  \\$$$$  |$$ |  $$ |$$ |$$ |      \\$$$$$$$ |\\$$$$$\\$$$$  |\\$$$$$$$\\ $$$$$$$  |
-   \\____/ \\__|  \\__|\\__|\\__|       \\_______| \\_____\\____/  \\_______|\\_______/ `);
+  console.info(`hi`);
   console.info(`\n 💎 thirdweb-cli v${cliVersion} 💎\n`);
   import("update-notifier").then(({ default: updateNotifier }) => {
     updateNotifier({
@@ -66,7 +58,8 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       "-t, --template [name]",
       `A template to start your project from. You can use an template repository name from the official thirdweb-example org.`,
     )
-    .action(async (path, options) => {
+    .option("-s, --solana", "Initialize as a Solana project.")
+    .action(async (path: string, options) => {
       await twCreate(path, options);
     });
 
@@ -95,7 +88,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       "-cv, --contract-version [version]",
       "Version of the released contract",
     )
-    .action(async (options) => {
+    .action(async (options: { name: string; contractVersion: string }) => {
       if (options.name) {
         const url = generateDashboardUrl(options.name, options.contractVersion);
 
@@ -142,7 +135,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .command("upload")
     .description("Upload any file or directory to decentralized storage (IPFS)")
     .argument("[upload]", "path to file or directory to upload")
-    .action(async (path) => {
+    .action(async (path: string) => {
       const storage = new ThirdwebStorage();
       const uri = await upload(storage, path);
       info(`Files stored at the following IPFS URI:`);

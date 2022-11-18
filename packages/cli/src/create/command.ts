@@ -15,6 +15,7 @@ let projectPath: string = "";
 let framework: string = "";
 let language: string = "";
 let baseContract: string = "";
+let chain: string = "";
 /* let createType: string = "app"; */
 
 export async function twCreate(pPath: string = "", options: any) {
@@ -60,6 +61,10 @@ export async function twCreate(pPath: string = "", options: any) {
 
   if (options.framework) {
     framework = options.framework;
+  }
+
+  if (options.solana) {
+    chain = "solana";
   }
 
   if (!projectType && !options.template) {
@@ -288,6 +293,7 @@ export async function twCreate(pPath: string = "", options: any) {
         framework,
         language,
         template,
+        chain,
       });
     } else {
       await createContract({
