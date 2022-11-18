@@ -55,6 +55,7 @@ interface SnapshotUploadProps {
   value?: ClaimCondition["snapshot"];
   dropType: "specific" | "any" | "overrides";
   isV1ClaimCondition: boolean;
+  isDisabled: boolean;
 }
 
 export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
@@ -64,6 +65,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
   value,
   dropType,
   isV1ClaimCondition,
+  isDisabled,
 }) => {
   const [validSnapshot, setValidSnapshot] = useState<SnapshotAddressInput[]>(
     value || [],
@@ -370,7 +372,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
               >
                 <Button
                   borderRadius="md"
-                  disabled={validSnapshot.length === 0}
+                  disabled={isDisabled || validSnapshot.length === 0}
                   onClick={() => {
                     reset();
                   }}
@@ -383,7 +385,9 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                   colorScheme="primary"
                   onClick={onSave}
                   w={{ base: "100%", md: "auto" }}
-                  disabled={invalidFound || validSnapshot.length === 0}
+                  disabled={
+                    isDisabled || invalidFound || validSnapshot.length === 0
+                  }
                 >
                   Next
                 </Button>

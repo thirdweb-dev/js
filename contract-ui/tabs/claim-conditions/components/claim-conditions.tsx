@@ -422,6 +422,7 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
                   setSnapshot={(snapshot) =>
                     form.setValue(`phases.${index}.snapshot`, snapshot)
                   }
+                  isDisabled={!canEdit}
                 />
                 <Card position="relative">
                   <Flex direction="column" gap={8}>
@@ -704,7 +705,6 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
                             gap={1.5}
                           >
                             <Button
-                              isDisabled={!canEdit}
                               colorScheme="purple"
                               borderRadius="md"
                               onClick={() => setOpenIndex(index)}
