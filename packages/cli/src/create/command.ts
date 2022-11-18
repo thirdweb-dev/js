@@ -15,6 +15,7 @@ let projectPath: string = "";
 let framework: string = "";
 let language: string = "";
 let baseContract: string = "";
+let chain: string = "";
 /* let createType: string = "app"; */
 
 export async function twCreate(pPath: string = "", options: any) {
@@ -62,7 +63,11 @@ export async function twCreate(pPath: string = "", options: any) {
     framework = options.framework;
   }
 
-  if (!projectType && !options.template) {
+  if (options.solana) {
+    chain = "solana";
+  }
+
+  if (!projectType && !options.template && !options.solana) {
     const res = await prompts({
       type: "select",
       name: "projectType",
@@ -76,7 +81,7 @@ export async function twCreate(pPath: string = "", options: any) {
     if (typeof res.projectType === "string") {
       projectType = res.projectType.trim();
     }
-  } else if (!projectType && options.template) {
+  } else if (!projectType && (options.template || options.solana)) {
     // If no project type is specified, but a template is, we assume the user wants to create an app.
     // We do this so old users can still use the --template flag to create an app.
     projectType = "app";
@@ -128,11 +133,19 @@ export async function twCreate(pPath: string = "", options: any) {
         type: "select",
         name: "framework",
         message: CREATE_MESSAGES.framework,
-        choices: [
-          { title: "Next.js", value: "next" },
-          { title: "Create React App", value: "cra" },
-          { title: "Vite", value: "vite" },
-        ],
+        choices:
+          // Solana doesn't support Vite or CRA just yet:
+          chain === "solana"
+            ? [
+                { title: "Next.js", value: "next" },
+                // { title: "Create React App", value: "cra" },
+                // { title: "Vite", value: "vite" },
+              ]
+            : [
+                { title: "Next.js", value: "next" },
+                { title: "Create React App", value: "cra" },
+                { title: "Vite", value: "vite" },
+              ],
       });
 
       if (typeof res.framework === "string") {
@@ -288,6 +301,7 @@ export async function twCreate(pPath: string = "", options: any) {
         framework,
         language,
         template,
+        chain,
       });
     } else {
       await createContract({
