@@ -1,4 +1,4 @@
-import { FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS } from "../../constants/erc20-features";
+import { FEATURE_TOKEN_CLAIM_CONDITIONS_V2 } from "../../constants/erc20-features";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ClaimOptions } from "../../types";
 import { Amount } from "../../types/currency";
@@ -21,7 +21,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
  * ```
  */
 export class Erc20ClaimableWithConditions implements DetectableFeature {
-  featureName = FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS.name;
+  featureName = FEATURE_TOKEN_CLAIM_CONDITIONS_V2.name;
   /**
    * Configure claim conditions
    * @remarks Define who can claim NFTs in the collection, when and how many.

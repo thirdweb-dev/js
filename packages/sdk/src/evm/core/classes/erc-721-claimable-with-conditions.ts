@@ -1,5 +1,5 @@
 import { NFT } from "../../../core/schema/nft";
-import { FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V2 } from "../../constants/erc721-features";
+import { FEATURE_NFT_CLAIM_CONDITIONS_V2 } from "../../constants/erc721-features";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ClaimOptions } from "../../types";
 import { BaseClaimConditionERC721 } from "../../types/eips";
@@ -24,7 +24,7 @@ import { BigNumber, BigNumberish } from "ethers";
  * ```
  */
 export class Erc721ClaimableWithConditions implements DetectableFeature {
-  featureName = FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V2.name;
+  featureName = FEATURE_NFT_CLAIM_CONDITIONS_V2.name;
 
   /**
    * Configure claim conditions

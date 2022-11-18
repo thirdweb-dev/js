@@ -3,4 +3,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-Add event filters
+Add support for total supply and pagination on get all

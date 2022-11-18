@@ -6,7 +6,6 @@ export enum ChainId {
   Goerli = 5,
   Polygon = 137,
   Mumbai = 80001,
-  Harmony = 1666600000,
   Localhost = 1337,
   Hardhat = 31337,
   Fantom = 250,

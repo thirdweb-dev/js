@@ -1,5 +1,32 @@
 # @thirdweb-dev/sdk
 
+## 3.6.0
+
+### Minor Changes
+
+- [#364](https://github.com/thirdweb-dev/js/pull/364) [`7cb8e59`](https://github.com/thirdweb-dev/js/commit/7cb8e59be48dc923316eb36ab43a1bef7364f6b1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enable new Drop contracts
+
+### Patch Changes
+
+- [#382](https://github.com/thirdweb-dev/js/pull/382) [`0ed77d2`](https://github.com/thirdweb-dev/js/commit/0ed77d2c9e7526444ef660aab82a950865234aa6) Thanks [@jnsdls](https://github.com/jnsdls)! - Add `constructorParams` to `ExtraPublishMetadataSchemaInput` schema to support better deploys from releases.
+
+- [#385](https://github.com/thirdweb-dev/js/pull/385) [`04a47e8`](https://github.com/thirdweb-dev/js/commit/04a47e8971d28da2532ebd9db824eeb459c17bd4) Thanks [@adam-maj](https://github.com/adam-maj)! - Add retroactive royalty and creator setting
+
+## 3.5.2
+
+### Patch Changes
+
+- [#380](https://github.com/thirdweb-dev/js/pull/380) [`3eba69a`](https://github.com/thirdweb-dev/js/commit/3eba69afd78b7aa472a9c00c9d4220bb69ad1d3e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose sdk.wallet.getChainId()
+
+- [#376](https://github.com/thirdweb-dev/js/pull/376) [`4af785c`](https://github.com/thirdweb-dev/js/commit/4af785c37c831ecd7087c1c9eb9095922cac0855) Thanks [@adam-maj](https://github.com/adam-maj)! - Update tiered-drop with tokens claimed
+
+- [#373](https://github.com/thirdweb-dev/js/pull/373) [`6f818f3`](https://github.com/thirdweb-dev/js/commit/6f818f393eb9023b53a3358d62d60ec23a9246bd) Thanks [@adam-maj](https://github.com/adam-maj)! - Update tiered-drop contract version
+
+- [#377](https://github.com/thirdweb-dev/js/pull/377) [`b79dc18`](https://github.com/thirdweb-dev/js/commit/b79dc18f7ab5155bbf4af02dc1a953546160bad0) Thanks [@adam-maj](https://github.com/adam-maj)! - Add event filters
+
+- Updated dependencies [[`4af785c`](https://github.com/thirdweb-dev/js/commit/4af785c37c831ecd7087c1c9eb9095922cac0855), [`6f818f3`](https://github.com/thirdweb-dev/js/commit/6f818f393eb9023b53a3358d62d60ec23a9246bd)]:
+  - @thirdweb-dev/contracts-js@1.2.1
+
 ## 3.5.1
 
 ### Patch Changes

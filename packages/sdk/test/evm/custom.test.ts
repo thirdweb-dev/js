@@ -275,7 +275,7 @@ describe("Custom Contracts", async () => {
       {
         startTime: new Date(new Date().getTime() - 1000 * 60 * 60),
         price: 0,
-        maxQuantity: 10,
+        maxClaimableSupply: 10,
       },
     ]);
 

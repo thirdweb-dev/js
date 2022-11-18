@@ -12,14 +12,14 @@ import {
   FEATURE_NFT,
   FEATURE_NFT_BATCH_MINTABLE,
   FEATURE_NFT_BURNABLE,
-  FEATURE_NFT_CLAIMABLE,
-  FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V2,
+  FEATURE_NFT_CLAIM_CUSTOM,
+  FEATURE_NFT_CLAIM_CONDITIONS_V2,
   FEATURE_NFT_LAZY_MINTABLE,
   FEATURE_NFT_MINTABLE,
   FEATURE_NFT_REVEALABLE,
-  FEATURE_NFT_SIGNATURE_MINTABLE,
   FEATURE_NFT_SUPPLY,
   FEATURE_NFT_TIERED_DROP,
+  FEATURE_NFT_SIGNATURE_MINTABLE_V2,
 } from "../../constants/erc721-features";
 import { BaseDropERC721, BaseERC721 } from "../../types/eips";
 import { ClaimOptions, UploadProgressEvent } from "../../types/index";
@@ -600,7 +600,7 @@ export class Erc721<
     if (claim) {
       return claim.to(destinationAddress, quantity, options);
     }
-    throw new ExtensionNotImplementedError(FEATURE_NFT_CLAIMABLE);
+    throw new ExtensionNotImplementedError(FEATURE_NFT_CLAIM_CUSTOM);
   }
 
   /**
@@ -627,7 +627,7 @@ export class Erc721<
     if (claim) {
       return claim.getClaimTransaction(destinationAddress, quantity, options);
     }
-    throw new ExtensionNotImplementedError(FEATURE_NFT_CLAIMABLE);
+    throw new ExtensionNotImplementedError(FEATURE_NFT_CLAIM_CUSTOM);
   }
 
   public async totalClaimedSupply(): Promise<BigNumber> {
@@ -687,7 +687,7 @@ export class Erc721<
   get claimConditions() {
     return assertEnabled(
       this.lazyMintable?.claimWithConditions,
-      FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS_V2,
+      FEATURE_NFT_CLAIM_CONDITIONS_V2,
     ).conditions;
   }
 
@@ -721,7 +721,7 @@ export class Erc721<
   get signature() {
     return assertEnabled(
       this.signatureMintable,
-      FEATURE_NFT_SIGNATURE_MINTABLE,
+      FEATURE_NFT_SIGNATURE_MINTABLE_V2,
     );
   }
 
@@ -861,7 +861,11 @@ export class Erc721<
     if (
       detectContractFeature<ISignatureMintERC721>(
         this.contractWrapper,
-        "ERC721SignatureMint",
+        "ERC721SignatureMintV1",
+      ) ||
+      detectContractFeature<ISignatureMintERC721>(
+        this.contractWrapper,
+        "ERC721SignatureMintV2",
       )
     ) {
       return new Erc721WithQuantitySignatureMintable(

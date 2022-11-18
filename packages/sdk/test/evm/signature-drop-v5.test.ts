@@ -486,6 +486,7 @@ describe("Signature drop tests (v5)", async () => {
 
       await signatureDropContract.claimConditions.set([
         {
+          maxClaimablePerWallet: 1,
           snapshot: [samWallet.address],
         },
       ]);
@@ -500,6 +501,7 @@ describe("Signature drop tests (v5)", async () => {
       await signatureDropContract.claimConditions.set([
         {
           startTime: new Date(),
+          maxClaimablePerWallet: 1,
           snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
         },
       ]);
@@ -715,6 +717,7 @@ describe("Signature drop tests (v5)", async () => {
       ]);
       await signatureDropContract.claimConditions.set([
         {
+          maxClaimablePerWallet: 0,
           snapshot: [
             { address: w1.address, maxClaimable: 2 },
             { address: w2.address, maxClaimable: 1 },

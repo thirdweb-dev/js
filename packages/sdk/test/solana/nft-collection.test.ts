@@ -12,6 +12,12 @@ describe("NFTCollection", async () => {
       name: "Test Collection",
       description: "Test Description",
       symbol: "TC",
+      creators: [
+        {
+          address: sdk.wallet.getAddress() || "",
+          share: 100,
+        },
+      ],
     });
     collection = await sdk.getNFTCollection(addr);
   });
@@ -25,6 +31,7 @@ describe("NFTCollection", async () => {
     expect(nft.metadata.name).to.eq("Test NFT");
     expect(nft.owner).to.eq(sdk.wallet.getAddress());
     expect(nft.supply).to.eq(1);
+    expect(nft.metadata);
   });
 
   it("should fetch NFTs", async () => {
@@ -142,10 +149,16 @@ describe("NFTCollection", async () => {
     expect(creators[0].share).to.equal(100);
 
     const newCreator = Keypair.generate().publicKey.toBase58();
-    await collection.updateCreators([
-      { address: sdk.wallet.getAddress() as string, share: 75 },
-      { address: newCreator, share: 25 },
-    ]);
+    await collection.updateCreators(
+      [
+        {
+          address: sdk.wallet.getAddress() as string,
+          share: 75,
+        },
+        { address: newCreator, share: 25 },
+      ],
+      true,
+    );
 
     creators = await collection.getCreators();
     expect(creators.length).to.equal(2);
@@ -153,13 +166,36 @@ describe("NFTCollection", async () => {
     expect(creators[0].share).to.equal(75);
     expect(creators[1].address).to.equal(newCreator);
     expect(creators[1].share).to.equal(25);
+
+    const all = await collection.getAll();
+    for (const nft of all) {
+      // @ts-ignore
+      const creatorsOfNft = await collection.nft.creatorsOf(nft.metadata.id);
+      expect(creatorsOfNft.length).to.equal(2);
+      expect(creatorsOfNft[0].address).to.equal(sdk.wallet.getAddress());
+      expect(creatorsOfNft[0].share).to.equal(75);
+      expect(creatorsOfNft[1].address).to.equal(newCreator);
+      expect(creatorsOfNft[1].share).to.equal(25);
+    }
   });
 
   it("Should update royalty", async () => {
     let royalty = await collection.getRoyalty();
     expect(royalty).to.equal(0);
-    await collection.updateRoyalty(100);
+
+    const mintAddress = (await collection.getAll())[0].metadata.id;
+    // @ts-ignore
+    let nft = await collection.nft.getRaw(mintAddress);
+    expect(nft.isMutable).to.equal(true);
+    expect(nft.sellerFeeBasisPoints).to.equal(0);
+
+    await collection.updateRoyalty(100, true);
+
     royalty = await collection.getRoyalty();
     expect(royalty).to.equal(100);
+
+    // @ts-ignore
+    nft = await collection.nft.getRaw(mintAddress);
+    expect(nft.sellerFeeBasisPoints).to.equal(100);
   });
 });
