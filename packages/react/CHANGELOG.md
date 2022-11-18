@@ -1,5 +1,13 @@
 # @thirdweb-dev/react
 
+## 3.6.0
+
+### Patch Changes
+
+- [#386](https://github.com/thirdweb-dev/js/pull/386) [`612bcdd`](https://github.com/thirdweb-dev/js/commit/612bcdd16fc242d8b04bc70d609e44b0df47ed3f) Thanks [@jnsdls](https://github.com/jnsdls)! - [Gnosis Connector] - switch to safe.global hostname & add support for bsc and optimism chains
+
+- [#364](https://github.com/thirdweb-dev/js/pull/364) [`7cb8e59`](https://github.com/thirdweb-dev/js/commit/7cb8e59be48dc923316eb36ab43a1bef7364f6b1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add experimental `useActiveClaimConditionForWallet()` hook
+
 ## 3.5.2
 
 ### Patch Changes

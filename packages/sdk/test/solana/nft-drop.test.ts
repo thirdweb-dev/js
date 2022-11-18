@@ -152,4 +152,44 @@ describe("NFTDrop", async () => {
     royalty = await drop.getRoyalty();
     expect(royalty).to.equal(100);
   });
+
+  it("Should get all correctly", async () => {
+    const address = await sdk.deployer.createNftDrop({
+      name: "NFT Drop #1",
+      totalSupply: 5,
+    });
+    const contract = await sdk.getNFTDrop(address);
+
+    await contract.lazyMint([
+      { name: "NFT #1", description: "This is the #1 NFT" },
+      { name: "NFT #2", description: "This is the #2 NFT" },
+      { name: "NFT #3", description: "This is the #3 NFT" },
+      { name: "NFT #4", description: "This is the #4 NFT" },
+      { name: "NFT #5", description: "This is the #5 NFT" },
+    ]);
+
+    let all = await contract.getAll();
+    expect(all.length).to.equal(5);
+    expect(all[0].metadata.name).to.equal("NFT #1");
+    expect(all.filter((nft) => nft.supply > 0).length).to.equal(0);
+
+    await contract.claimConditions.set({
+      price: 0,
+      maxClaimable: 5,
+    });
+
+    await contract.claim(2);
+    all = await contract.getAll();
+    expect(all.length).to.equal(5);
+    expect(all[0].supply).to.equal(1);
+    expect(all[1].supply).to.equal(1);
+    expect(all[2].supply).to.equal(0);
+
+    all = await contract.getAll({ start: 2, count: 3 });
+    expect(all.length).to.equal(3);
+    expect(all.filter((nft) => nft.supply > 0).length).to.equal(0);
+
+    all = await contract.getAll({ start: 0, count: 3 });
+    expect(all.filter((nft) => nft.supply > 0).length).to.equal(2);
+  });
 });

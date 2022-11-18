@@ -33,6 +33,14 @@ export function cleanCurrencyAddress(currencyAddress: string): string {
   return currencyAddress;
 }
 
+/**
+ *
+ * @param provider
+ * @param inputPrice
+ * @param currencyAddress
+ * @returns
+ * @internal
+ */
 export async function normalizePriceValue(
   provider: providers.Provider,
   inputPrice: Price,
@@ -42,6 +50,13 @@ export async function normalizePriceValue(
   return utils.parseUnits(AmountSchema.parse(inputPrice), metadata.decimals);
 }
 
+/**
+ *
+ * @param provider
+ * @param asset
+ * @returns
+ * @internal
+ */
 export async function fetchCurrencyMetadata(
   provider: providers.Provider,
   asset: string,
@@ -73,6 +88,14 @@ export async function fetchCurrencyMetadata(
   }
 }
 
+/**
+ *
+ * @param providerOrSigner
+ * @param asset
+ * @param price
+ * @returns
+ * @internal
+ */
 export async function fetchCurrencyValue(
   providerOrSigner: providers.Provider,
   asset: string,
