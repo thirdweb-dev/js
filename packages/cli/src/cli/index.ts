@@ -5,8 +5,6 @@ import { cliVersion, pkg } from "../constants/urls";
 import { info, logger } from "../core/helpers/logger";
 import { twCreate } from "../create/command";
 import { deploy } from "../deploy";
-import { deployApp } from "../deploy/app";
-import generateDashboardUrl from "../helpers/generate-dashboard-url";
 import { upload } from "../storage/command";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
@@ -145,8 +143,20 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
             url.toString(),
           )}`,
         );
-      } catch (err) {
-        logger.error(chalk.redBright("Failed to upload files"), err);
+      } catch (err: any) {
+        if (
+          err.toString() === "No files detected in specified directory" ||
+          err.toString() === "Invalid path provided" ||
+          err.toString() === "No path provided"
+        ) {
+          logger.error(
+            chalk.redBright(
+              "Please specify a valid file or directory to upload",
+            ),
+          );
+        } else {
+          logger.error(chalk.redBright("Failed to upload files"), err);
+        }
       }
     });
 
