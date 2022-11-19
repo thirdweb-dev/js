@@ -113,9 +113,9 @@ const AIRDROP = {
   description:
     "Efficiently transfer large numbers of on-chain assets to a large number of recipients.",
   contracts: [
-    "deployer.thirdweb.eth/Marketplace",
-    "deployer.thirdweb.eth/TokenERC20",
-    "deployer.thirdweb.eth/Split",
+    "deployer.thirdweb.eth/AirdropERC20",
+    "deployer.thirdweb.eth/AirdropERC721",
+    "deployer.thirdweb.eth/AirdropERC1155",
   ],
 } as const;
 
