@@ -97,8 +97,31 @@ const moduleExports = {
       // prebuilt contract deploys
       {
         source: "/contracts/new/:slug*",
-        destination: "/contracts",
+        destination: "/explore",
         permanent: false,
+      },
+      // deployer to non-deployer url
+      {
+        source: "/deployer.thirdweb.eth",
+        destination: "/thirdweb.eth",
+        permanent: false,
+      },
+      {
+        source: "/deployer.thirdweb.eth/:path*",
+        destination: "/thirdweb.eth/:path*",
+        permanent: false,
+      },
+    ];
+  },
+  async rewrites() {
+    return [
+      {
+        source: "/thirdweb.eth",
+        destination: "/deployer.thirdweb.eth",
+      },
+      {
+        source: "/thirdweb.eth/:path*",
+        destination: "/deployer.thirdweb.eth/:path*",
       },
     ];
   },
@@ -109,6 +132,7 @@ const moduleExports = {
   },
   reactStrictMode: true,
   experimental: {
+    // appDir: true,
     scrollRestoration: true,
   },
 };

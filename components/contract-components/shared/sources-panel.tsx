@@ -20,7 +20,7 @@ export const SourcesPanel: React.FC<SourcesPanelProps> = ({ sources, abi }) => {
             <Link
               href="https://portal.thirdweb.com/deploy"
               isExternal
-              color="blue.500"
+              color="primary.500"
             >
               thirdweb CLI v0.5+
             </Link>

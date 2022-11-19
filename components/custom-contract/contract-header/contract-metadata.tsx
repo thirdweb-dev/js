@@ -5,7 +5,7 @@ import {
   useContract,
   useContractMetadata,
 } from "@thirdweb-dev/react";
-import { ens } from "components/contract-components/hooks";
+import { useEns } from "components/contract-components/hooks";
 import { FeatureIconMap } from "constants/mappings";
 import { useMemo } from "react";
 
@@ -18,7 +18,7 @@ export const ContractMetadata: React.FC<ContractMetadataProps> = ({
 }) => {
   const { contract } = useContract(contractAddress);
 
-  const ensQuery = ens.useQuery(contractAddress);
+  const ensQuery = useEns(contractAddress);
   const metadataQuery = useContractMetadata(contract);
   const { data: cType } = contractType.useQuery(
     ensQuery.data?.address || undefined,

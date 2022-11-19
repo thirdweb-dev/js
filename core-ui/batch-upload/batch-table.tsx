@@ -160,7 +160,7 @@ export const BatchTable: React.FC<BatchTableProps> = ({
     <Flex flexGrow={1} overflow="auto">
       <Card maxW="100%" overflowX="auto" position="relative" px={0} py={0}>
         <Table {...getTableProps()}>
-          <Thead bg="blackAlpha.50" _dark={{ bg: "whiteAlpha.50" }}>
+          <Thead>
             {headerGroups.map((headerGroup) => (
               // eslint-disable-next-line react/jsx-key
               <Tr {...headerGroup.getHeaderGroupProps()}>

@@ -111,7 +111,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
             bg="inputBg"
             _hover={{
               bg: "inputBgHover",
-              borderColor: "blue.500",
+              borderColor: "primary.500",
             }}
             borderColor="inputBorder"
             borderWidth="1px"
@@ -130,7 +130,7 @@ export const FileInput: React.FC<IFileInputProps> = ({
             bg={fileUrl ? "transparent" : "inputBg"}
             _hover={{
               bg: "inputBgHover",
-              borderColor: "blue.500",
+              borderColor: "primary.500",
             }}
             borderColor="inputBorder"
             borderWidth="1px"

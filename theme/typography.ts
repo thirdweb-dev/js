@@ -16,6 +16,7 @@ export const baseFontSizes = {
     "2xl": pxToRem(28),
   },
   subtitle: {
+    xs: pxToRem(12),
     sm: pxToRem(14),
     md: pxToRem(16),
     lg: pxToRem(18),
@@ -56,6 +57,7 @@ export const mdFontSizes: FontSizeRecord = {
     "2xl": pxToRem(48),
   },
   subtitle: {
+    xs: pxToRem(12),
     sm: pxToRem(16),
     md: pxToRem(20),
     lg: pxToRem(24),
@@ -108,7 +110,7 @@ export type TypographyBase =
   | "subtitle"
   | "label"
   | "body";
-export type TypographySize = "sm" | "md" | "lg" | "xl" | "2xl";
+export type TypographySize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
 
 export type TypographyFontSize = `${TypographyBase}.${TypographySize}`;
 

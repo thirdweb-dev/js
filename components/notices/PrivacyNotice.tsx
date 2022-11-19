@@ -15,7 +15,7 @@ import { useLocalStorage } from "hooks/useLocalStorage";
 import { useForm } from "react-hook-form";
 import { Button, Checkbox, Heading, Text, TrackedLink } from "tw-components";
 
-function useShouldShowTOSNotice() {
+export function useShouldShowTOSNotice() {
   const [acceptedTOS, setHasAcceptedTOS] = useLocalStorage(
     "has-accepted-tos",
     false,

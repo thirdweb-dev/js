@@ -30,7 +30,7 @@ export const ProgressBox: React.FC<ProgressBoxProps> = ({ progress }) => {
           borderRadius="md"
           mt="12px"
           hasStripe
-          colorScheme="blue"
+          colorScheme="primary"
           transition="500ms ease"
           value={(progress.progress / progress.total) * 100}
         />

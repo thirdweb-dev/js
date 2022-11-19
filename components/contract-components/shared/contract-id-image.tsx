@@ -1,7 +1,7 @@
 import {
-  ens,
   useContractPrePublishMetadata,
   useContractPublishMetadataFromURI,
+  useEns,
 } from "../hooks";
 import { ContractId } from "../types";
 import { Image, Skeleton } from "@chakra-ui/react";
@@ -26,7 +26,7 @@ export const ContractIdImage: React.FC<ContractIdImageProps> = ({
   const address = useAddress();
   const wallet = useSingleQueryParam("networkOrAddress");
 
-  const ensQuery = ens.useQuery(wallet);
+  const ensQuery = useEns(wallet);
   const fullPublishMetadata = useContractPrePublishMetadata(
     contractId,
     ensQuery.data?.address || wallet || address,

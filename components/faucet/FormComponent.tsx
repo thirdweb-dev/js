@@ -95,7 +95,7 @@ export const FormComponent: React.FC<IFormComponentProps> = ({
         />
 
         <Button
-          colorScheme="blue"
+          colorScheme="primary"
           disabled={isLoading || transactionLink.length > 0 || !address}
           w={{ base: "full", md: "175px" }}
           fontSize={{ base: "sm", md: "md" }}

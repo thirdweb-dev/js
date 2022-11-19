@@ -65,7 +65,7 @@ export const ContractFunction: React.FC<ContractFunctionProps> = ({
             <Heading size="label.lg">Inputs</Heading>
             <Card borderRadius="md" p={0} overflowX="auto" position="relative">
               <Table size="sm">
-                <Thead bg="blackAlpha.50" _dark={{ bg: "whiteAlpha.50" }}>
+                <Thead>
                   <Tr>
                     <Th py={2} borderBottomColor="borderColor">
                       <Heading as="label" size="label.sm">

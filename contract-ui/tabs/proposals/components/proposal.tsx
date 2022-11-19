@@ -32,7 +32,7 @@ const ProposalStateToMetadataMap: Record<ProposalState, IProposalMetadata> = {
   },
   [ProposalState.Active]: {
     // Vote is ongoing
-    color: "blue.500",
+    color: "primary.500",
     title: "Active",
   },
   [ProposalState.Canceled]: {

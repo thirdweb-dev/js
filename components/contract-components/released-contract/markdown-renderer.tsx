@@ -36,6 +36,7 @@ export const MarkdownRenderer: React.FC<
       components={{
         h1: (props) => (
           <Heading
+            as="h2"
             size="title.lg"
             borderBottom="1px solid"
             borderBottomColor="borderColor"
@@ -46,6 +47,7 @@ export const MarkdownRenderer: React.FC<
         ),
         h2: (props) => (
           <Heading
+            as="h3"
             size="title.md"
             borderBottom="1px solid"
             borderBottomColor="borderColor"
@@ -56,10 +58,17 @@ export const MarkdownRenderer: React.FC<
           />
         ),
         h3: (props) => (
-          <Heading size="title.sm" {...commonHeadingProps} {...props} mt={4} />
+          <Heading
+            as="h4"
+            size="title.sm"
+            {...commonHeadingProps}
+            {...props}
+            mt={4}
+          />
         ),
         h4: (props) => (
           <Heading
+            as="h5"
             size="subtitle.md"
             {...commonHeadingProps}
             {...props}
@@ -68,6 +77,7 @@ export const MarkdownRenderer: React.FC<
         ),
         h5: (props) => (
           <Heading
+            as="h6"
             size="subtitle.sm"
             {...commonHeadingProps}
             {...props}
@@ -75,9 +85,33 @@ export const MarkdownRenderer: React.FC<
           />
         ),
         h6: (props) => (
-          <Heading size="label.md" {...commonHeadingProps} {...props} mt={4} />
+          <Heading
+            as="p"
+            size="label.md"
+            {...commonHeadingProps}
+            {...props}
+            mt={4}
+          />
         ),
-        a: (props) => <Link color="primary.500" isExternal {...props} mt={4} />,
+        a: (props) => (
+          <Link
+            _dark={{
+              color: "blue.300",
+              _hover: {
+                color: "blue.500",
+              },
+            }}
+            _light={{
+              color: "blue.500",
+              _hover: {
+                color: "blue.700",
+              },
+            }}
+            isExternal
+            {...props}
+            mt={4}
+          />
+        ),
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         code: ({ inline, ...props }) => {
           if (props?.className) {

@@ -9,9 +9,9 @@ const chakraTheme: Theme = extendTheme({
     useSystemColorMode: false,
   } as Theme["config"],
   fonts: {
-    heading: `"Inter", -apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif`,
-    body: `"Inter", -apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif`,
-    mono: `'IBM Plex Mono', monospace`,
+    heading: "Inter, sans-serif",
+    body: "Inter, sans-serif",
+    mono: "IBM Plex Mono, monospace",
   },
   styles: {
     global: {
@@ -177,16 +177,23 @@ const chakraTheme: Theme = extendTheme({
     Menu: {
       baseStyle: {
         list: {
-          bg: "backgroundHighlight",
+          bg: "backgroundCardHighlight",
           py: 0,
         },
         item: {
+          bg: "backgroundCardHighlight",
+          _hover: {
+            bg: "accent.200",
+          },
           py: 2,
         },
       },
     },
     Table: {
       baseStyle: {
+        thead: {
+          background: "backgroundCardHighlight",
+        },
         cell: {
           borderColor: "borderColor",
         },
@@ -205,11 +212,59 @@ const chakraTheme: Theme = extendTheme({
   },
   semanticTokens: {
     colors: {
+      // accent color
+      "accent.100": {
+        default: "gray.100",
+        _dark: "gray.800",
+      },
+      "accent.200": {
+        default: "gray.200",
+        _dark: "gray.800",
+      },
+      "accent.300": {
+        default: "gray.300",
+        _dark: "gray.700",
+      },
+      "accent.400": {
+        default: "gray.400",
+        _dark: "gray.600",
+      },
+      "accent.500": {
+        default: "gray.500",
+        _dark: "gray.500",
+      },
+      "accent.600": {
+        default: "gray.600",
+        _dark: "gray.400",
+      },
+      "accent.700": {
+        default: "gray.700",
+        _dark: "gray.300",
+      },
+      "accent.800": {
+        default: "gray.800",
+        _dark: "gray.200",
+      },
+      "accent.900": {
+        default: "gray.900",
+        _dark: "gray.100",
+      },
+
       // inputs
       inputBg: { default: "gray.50", _dark: "whiteAlpha.50" },
       inputBgHover: { default: "gray.100", _dark: "whiteAlpha.100" },
       inputBorder: { default: "gray.200", _dark: "transparent" },
       // other
+
+      // backgroundBody: "accent.100",
+      // backgroundHighlight: { default: "white", _dark: "accent.200" },
+      // backgroundCardHighlight: { default: "white", _dark: "accent.100" },
+      // backgroundNavbar: { default: "white", _dark: "accent.200" },
+      // wordmark: { default: "#262A36", _dark: "whiteAlpha.900" },
+      // heading: { default: "black", _dark: "white" },
+      // paragraph: "accent.800",
+
+      // borderColor: { default: "accent.200", _dark: "accent.300" },
       bgBlack: { default: "black", _dark: "white" },
       bgWhite: { default: "white", _dark: "black" },
       backgroundBody: { default: "backgroundLight", _dark: "backgroundDark" },

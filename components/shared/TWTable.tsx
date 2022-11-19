@@ -109,7 +109,7 @@ export function TWTable<TRowData>(tableProps: TWTableProps<TRowData>) {
         borderTopRadius="lg"
         overflow="hidden"
       >
-        <Thead bg="blackAlpha.50" _dark={{ bg: "whiteAlpha.50" }}>
+        <Thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <Tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (

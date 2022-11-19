@@ -4,19 +4,20 @@ import { useAddress, useBalance, useChainId } from "@thirdweb-dev/react";
 import { useSDK } from "@thirdweb-dev/react/solana";
 import { AppShell, AppShellProps } from "components/layout/app-shell";
 import { PrivacyNotice } from "components/notices/PrivacyNotice";
-import { WelcomeScreen } from "components/notices/welcome-screen";
 import { ErrorProvider } from "contexts/error-handler";
+import { useRouter } from "next/router";
 import posthog from "posthog-js";
 import React, { useEffect } from "react";
 import { ComponentWithChildren } from "types/component-with-children";
 
 export const AppLayout: ComponentWithChildren<AppShellProps> = (props) => {
+  const router = useRouter();
   return (
     <ErrorProvider>
       <DashboardThirdwebProvider>
         <PHIdentifier />
-        <PrivacyNotice />
-        <WelcomeScreen />
+        {router.pathname !== "/dashboard" && <PrivacyNotice />}
+
         <AppShell {...props} />
       </DashboardThirdwebProvider>
     </ErrorProvider>

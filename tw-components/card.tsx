@@ -1,5 +1,6 @@
 import { Box, BoxProps } from "@chakra-ui/layout";
 import { createContext, useContext } from "react";
+import { ComponentWithChildren } from "types/component-with-children";
 
 type DefaultedBoxProps = Pick<
   BoxProps,
@@ -26,6 +27,15 @@ const borderRadiusMap = {
 };
 
 const CardStackContext = createContext(0);
+
+export const CardElevationWrapper: ComponentWithChildren = ({ children }) => {
+  const elevation = useContext(CardStackContext);
+  return (
+    <CardStackContext.Provider value={elevation + 1}>
+      {children}
+    </CardStackContext.Provider>
+  );
+};
 
 const cardStackBgMap: Record<number, string> = {
   0: "backgroundHighlight",
@@ -61,7 +71,7 @@ export const Card: React.FC<CardProps> = ({
   const combinedProps = { ...{ ...defaultBoxProps, ...requiredBoxProps } };
 
   return (
-    <CardStackContext.Provider value={cardStackLevel + 1}>
+    <CardElevationWrapper>
       {outlineBorder ? (
         <Box
           p={outlineBorder.width}
@@ -101,6 +111,6 @@ export const Card: React.FC<CardProps> = ({
           {children}
         </Box>
       )}
-    </CardStackContext.Provider>
+    </CardElevationWrapper>
   );
 };

@@ -175,7 +175,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                     bg={noCsv ? "red.200" : "inputBg"}
                     _hover={{
                       bg: "inputBgHover",
-                      borderColor: "blue.500",
+                      borderColor: "primary.500",
                     }}
                     borderColor="inputBorder"
                     borderWidth="1px"
@@ -213,7 +213,7 @@ export const AirdropUpload: React.FC<AirdropUploadProps> = ({
                       Files <em>must</em> contain one .csv file with an address
                       and quantity column, if the quantity column is not
                       provided, it will default to 1 NFT per wallet. -{" "}
-                      <Link download color="blue.500" href="/airdrop.csv">
+                      <Link download color="primary.500" href="/airdrop.csv">
                         Download an example CSV
                       </Link>
                     </ListItem>

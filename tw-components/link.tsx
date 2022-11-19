@@ -36,7 +36,6 @@ interface LinkProps
 export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
   ({ href, isExternal, children, noMatch, scroll, ...restLinkProps }, ref) => {
     const match = useMatch();
-
     if (isExternal) {
       return (
         <ChakraLink isExternal href={href} ref={ref} {...restLinkProps}>

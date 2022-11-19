@@ -56,7 +56,7 @@ export const OnDashboard: React.FC<OnDashboardProps> = ({
                 isExternal
                 category="custom-contract"
                 label="visit-dashboard"
-                color="primary.500"
+                color="blue.500"
               >
                 /dashboard
               </TrackedLink>

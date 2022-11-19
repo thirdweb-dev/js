@@ -33,7 +33,7 @@ export const ContractPermissionsPage: React.FC<
           extension.
           <br />
           As a result, you can only view and manage basic permissions via the{" "}
-          <Link href="/" color="blue.500">
+          <Link href="/" color="primary.500">
             Explorer
           </Link>{" "}
           at the moment.

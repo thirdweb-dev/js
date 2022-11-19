@@ -168,7 +168,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
           tabs={drawerTabs}
         />
         <Table {...getTableProps()}>
-          <Thead bg="blackAlpha.50" _dark={{ bg: "whiteAlpha.50" }}>
+          <Thead>
             {headerGroups.map((headerGroup) => (
               // eslint-disable-next-line react/jsx-key
               <Tr {...headerGroup.getHeaderGroupProps()}>
@@ -193,12 +193,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                 <Tr
                   {...row.getRowProps()}
                   role="group"
-                  _hover={{ bg: "blackAlpha.50" }}
-                  _dark={{
-                    _hover: {
-                      bg: "whiteAlpha.50",
-                    },
-                  }}
+                  _hover={{ bg: "accent.100" }}
                   // this is a hack to get around the fact that safari does not handle position: relative on table rows
                   style={{ cursor: "pointer" }}
                   onClick={() => setTokenRow(row.original)}

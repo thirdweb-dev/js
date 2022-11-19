@@ -276,14 +276,14 @@ const HomePage: ThirdwebNextPage = () => {
                   />
                   <Divider borderColor="rgba(255,255,255,0.1)" />
                   <LinkButton
-                    href="/contracts"
+                    href="/explore"
                     variant="solid"
                     colorScheme="whiteAlpha"
                     bg="white"
                     color="black"
                     py={6}
                   >
-                    Explore prebuilt contracts
+                    Explore contracts
                   </LinkButton>
                 </Card>
                 <Card

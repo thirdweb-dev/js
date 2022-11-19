@@ -1,10 +1,10 @@
 import { DeployFormDrawer } from "../contract-deploy-form/drawer";
 import {
-  ens,
   useConstructorParamsFromABI,
   useContractFullPublishMetadata,
   useContractPrePublishMetadata,
   useContractPublishMetadataFromURI,
+  useEns,
   useFunctionParamsFromABI,
   usePublishMutation,
 } from "../hooks";
@@ -154,7 +154,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prePublishMetadata.data, address, placeholderVersion, isDirty]);
 
-  const ensQuery = ens.useQuery(address);
+  const ensQuery = useEns(address);
 
   const ensNameOrAddress = useMemo(() => {
     return ensQuery?.data?.ensName || ensQuery.data?.address;

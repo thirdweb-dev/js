@@ -38,6 +38,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   borderRadius = "md",
   borderColor = "borderColor",
   borderWidth = "1px",
+  fontFamily = "mono",
   backgroundColor,
   prefix,
   canCopy = true,
@@ -55,7 +56,8 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
         ...theme,
         plain: {
           backgroundColor:
-            (backgroundColor as string) || theme.plain.backgroundColor,
+            (backgroundColor as string) ||
+            "var(--chakra-colors-backgroundHighlight)",
         },
       }}
     >
@@ -70,6 +72,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
           position="relative"
           className={className}
           style={style}
+          fontFamily={fontFamily}
           whiteSpace={wrap ? "pre-wrap" : "pre"}
           {...restCodeProps}
           as={Code}

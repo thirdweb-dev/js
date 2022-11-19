@@ -58,7 +58,7 @@ export const Drawer: ComponentWithChildren<DrawerProps> = ({
             <Divider />
           </>
         )}
-        <DrawerBody {...drawerBodyProps} bg="backgroundHighlight" py={4}>
+        <DrawerBody {...drawerBodyProps} py={4}>
           {children}
         </DrawerBody>
         {footer && (

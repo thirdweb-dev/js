@@ -17,6 +17,7 @@ import { DeployedContracts } from "components/contract-components/tables/deploye
 import { DeployedPrograms } from "components/contract-components/tables/deployed-programs";
 import { ReleasedContracts } from "components/contract-components/tables/released-contracts";
 import { FancyEVMIcon } from "components/icons/Ethereum";
+import { WelcomeScreen } from "components/notices/welcome-screen";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { utils } from "ethers";
 import { useSingleQueryParam } from "hooks/useQueryParam";
@@ -48,49 +49,49 @@ const Dashboard: ThirdwebNextPage = () => {
       : publicKey?.toBase58();
   }, [publicKey, wallet]);
 
-  if (solAddress) {
-    return <SOLDashboard address={solAddress} />;
-  }
-
-  if (evmAddress) {
-    return (
-      <Tabs isLazy lazyBehavior="keepMounted">
-        <TabList
-          px={0}
-          borderBottomColor="borderColor"
-          borderBottomWidth="1px"
-          overflowX={{ base: "auto", md: "inherit" }}
-        >
-          <Tab gap={2} _selected={{ borderBottomColor: "purple.500" }}>
-            <Icon opacity={0.85} boxSize={6} as={FancyEVMIcon} />
-            <Heading size="label.lg">Deployed Contracts</Heading>
-          </Tab>
-          <Tab
-            gap={2}
-            _selected={{
-              borderBottomColor: "#FBFF5C",
-            }}
+  return (
+    <>
+      <WelcomeScreen />
+      {solAddress && <SOLDashboard address={solAddress} />}
+      {evmAddress && (
+        <Tabs isLazy lazyBehavior="keepMounted">
+          <TabList
+            px={0}
+            borderBottomColor="borderColor"
+            borderBottomWidth="1px"
+            overflowX={{ base: "auto", md: "inherit" }}
           >
-            <ChakraNextImage
-              src={require("public/assets/product-icons/release.png")}
-              alt=""
-              boxSize={6}
-            />
-            <Heading size="label.lg">Released Contracts</Heading>
-          </Tab>
-        </TabList>
-        <TabPanels px={0} py={2}>
-          <TabPanel px={0}>
-            <EVMDashboard address={evmAddress} />
-          </TabPanel>
-          <TabPanel px={0}>
-            <ReleaseDashboard address={evmAddress} />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
-    );
-  }
-  return <NoWallet />;
+            <Tab gap={2} _selected={{ borderBottomColor: "purple.500" }}>
+              <Icon opacity={0.85} boxSize={6} as={FancyEVMIcon} />
+              <Heading size="label.lg">Deployed Contracts</Heading>
+            </Tab>
+            <Tab
+              gap={2}
+              _selected={{
+                borderBottomColor: "#FBFF5C",
+              }}
+            >
+              <ChakraNextImage
+                src={require("public/assets/product-icons/release.png")}
+                alt=""
+                boxSize={6}
+              />
+              <Heading size="label.lg">Released Contracts</Heading>
+            </Tab>
+          </TabList>
+          <TabPanels px={0} py={2}>
+            <TabPanel px={0}>
+              <EVMDashboard address={evmAddress} />
+            </TabPanel>
+            <TabPanel px={0}>
+              <ReleaseDashboard address={evmAddress} />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+      )}
+      {!evmAddress && !solAddress && <NoWallet />}
+    </>
+  );
 };
 
 Dashboard.getLayout = (page: ReactElement) => <AppLayout>{page}</AppLayout>;

@@ -139,30 +139,7 @@ const themeColors = {
     800: "#115E59",
     900: "#134E4A",
   },
-  blue: {
-    50: "#F0F9FF",
-    100: "#E0F2FE",
-    200: "#BAE6FD",
-    300: "#7DD3FC",
-    400: "#38BDF8",
-    500: "#0EA5E9",
-    600: "#0284C7",
-    700: "#0369A1",
-    800: "#075985",
-    900: "#0C4A6E",
-  },
-  purple: {
-    50: "#FAF5FF",
-    100: "#F3E8FF",
-    200: "#E9D5FF",
-    300: "#D8B4FE",
-    400: "#C084FC",
-    500: "#A855F7",
-    600: "#9333EA",
-    700: "#7E22CE",
-    800: "#6B21A8",
-    900: "#581C87",
-  },
+
   pink: {
     50: "#FDF2F8",
     100: "#FCE7F3",
@@ -211,6 +188,17 @@ const themeColors = {
     800: "rgba(255,255,255,0.8)",
     900: "rgba(255,255,255,0.9)",
   },
+  // gray: {
+  //   100: "#fafafa",
+  //   200: "#eaeaea",
+  //   300: "#999",
+  //   400: "#888",
+  //   500: "#666",
+  //   600: "#444",
+  //   700: "#333",
+  //   800: "#222",
+  //   900: "#111",
+  // },
   gray: {
     50: "#F2F2F7",
     100: "#E5E5EA",
@@ -223,6 +211,41 @@ const themeColors = {
     800: "#3A3A3C",
     900: "#1C1C1E",
   },
+  blue: {
+    50: "#F0F9FF",
+    100: "#E0F2FE",
+    200: "#BAE6FD",
+    300: "#7DD3FC",
+    400: "#38BDF8",
+    500: "#0EA5E9",
+    600: "#0284C7",
+    700: "#0369A1",
+    800: "#075985",
+    900: "#0C4A6E",
+  },
+  purple: {
+    50: "#FAF5FF",
+    100: "#F3E8FF",
+    200: "#E9D5FF",
+    300: "#D8B4FE",
+    400: "#C084FC",
+    500: "#A855F7",
+    600: "#9333EA",
+    700: "#7E22CE",
+    800: "#6B21A8",
+    900: "#581C87",
+  },
+  // primary
+  // primary: {
+  //   100: "#e4e9ff",
+  //   200: "#cbd4ff",
+  //   300: "#94a3ff",
+  //   400: "#647eff",
+  //   500: "#475fff",
+  //   600: "#334bff",
+  //   700: "#253dca",
+  //   800: "#1d31a8",
+  // },
 };
 
 export const colors = {
@@ -233,8 +256,9 @@ export const colors = {
   // theme colors
   ...themeColors,
 
-  // primary
-  primary: themeColors.blue,
+  // blue: themeColors.primary,
+  // purple: themeColors.primary,
+  primary: themeColors.purple,
 
   // random
   backgroundLight: "#F5F6F8",

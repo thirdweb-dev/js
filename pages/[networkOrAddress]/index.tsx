@@ -4,9 +4,10 @@ import { QueryClient, dehydrate } from "@tanstack/react-query";
 import { ChainId } from "@thirdweb-dev/sdk/evm";
 import { AppLayout } from "components/app-layouts/app";
 import {
-  ens,
+  ensQuery,
   fetchPublishedContracts,
-  fetchReleaserProfile,
+  releaserProfileQuery,
+  useEns,
   usePublishedContractsQuery,
   useReleaserProfile,
 } from "components/contract-components/hooks";
@@ -31,7 +32,7 @@ import { shortenIfAddress } from "utils/usedapp-external";
 const UserPage: ThirdwebNextPage = () => {
   const wallet = useSingleQueryParam("networkOrAddress");
 
-  const ensQuery = ens.useQuery(wallet);
+  const ens = useEns(wallet);
 
   const router = useRouter();
 
@@ -47,20 +48,18 @@ const UserPage: ThirdwebNextPage = () => {
     }
   }, [wallet, router]);
 
-  const releaserProfile = useReleaserProfile(
-    ensQuery.data?.address || undefined,
-  );
+  const releaserProfile = useReleaserProfile(ens.data?.address || undefined);
 
-  const displayName = shortenIfAddress(ensQuery?.data?.ensName || wallet);
+  const displayName = shortenIfAddress(ens?.data?.ensName || wallet);
 
   const currentRoute = `https://thirdweb.com${router.asPath}`;
 
   const publishedContracts = usePublishedContractsQuery(
-    ensQuery.data?.address || undefined,
+    ens.data?.address || undefined,
   );
 
   const mainnetsContractList = useMainnetsContractList(
-    ensQuery.data?.address || undefined,
+    ens.data?.address || undefined,
   );
 
   const ogImage = useMemo(() => {
@@ -107,8 +106,8 @@ const UserPage: ThirdwebNextPage = () => {
               The list of contract instances that this wallet has released
             </Text>
           </Flex>
-          {ensQuery.data?.address && (
-            <ReleasedContracts address={ensQuery.data?.address} noHeader />
+          {ens.data?.address && (
+            <ReleasedContracts address={ens.data?.address} noHeader />
           )}
         </Flex>
         <Flex flexDir="column" gap={4}>
@@ -126,7 +125,7 @@ const UserPage: ThirdwebNextPage = () => {
               </Text>
             </Flex>
           </Flex>
-          {ensQuery.data?.address && (
+          {ens.data?.address && (
             <DeployedContracts
               noHeader
               contractListQuery={mainnetsContractList}
@@ -161,7 +160,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   if (!networkOrAddress) {
     return {
       redirect: {
-        destination: "/contracts",
+        destination: "/explore",
         permanent: false,
       },
       props: {},
@@ -169,36 +168,27 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   }
 
   const { address, ensName } = await queryClient.fetchQuery(
-    ens.queryKey(networkOrAddress),
-    () => ens.fetch(networkOrAddress),
+    ensQuery(networkOrAddress),
   );
 
   if (!address) {
     return {
       redirect: {
-        destination: "/contracts",
+        destination: "/explore",
         permanent: false,
       },
       props: {},
     };
   }
 
-  const ensQueries = [
-    queryClient.prefetchQuery(ens.queryKey(address), () => ens.fetch(address)),
-  ];
+  const ensQueries = [queryClient.prefetchQuery(ensQuery(address))];
   if (ensName) {
-    ensQueries.push(
-      queryClient.prefetchQuery(ens.queryKey(ensName), () =>
-        ens.fetch(ensName),
-      ),
-    );
+    ensQueries.push(queryClient.prefetchQuery(ensQuery(ensName)));
   }
 
   await Promise.all([
     ...ensQueries,
-    queryClient.prefetchQuery(["releaser-profile", address], () =>
-      fetchReleaserProfile(polygonSdk, address),
-    ),
+    queryClient.prefetchQuery(releaserProfileQuery(address)),
     queryClient.prefetchQuery(["published-contracts", address], () =>
       fetchPublishedContracts(polygonSdk, queryClient, address),
     ),

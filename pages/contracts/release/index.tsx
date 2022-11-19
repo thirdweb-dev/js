@@ -23,7 +23,7 @@ const ContractsReleasePage: ThirdwebNextPage = () => {
           Welcome to the new thirdweb contract deployment flow.
           <br />
           <Link
-            color="primary.500"
+            color="blue.500"
             isExternal
             href="https://portal.thirdweb.com/release"
           >

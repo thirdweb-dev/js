@@ -45,7 +45,7 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
 
   return (
     <Card as={Flex} flexDir="column" gap={2} p={0}>
-      <Tabs isLazy lazyBehavior="keepMounted" colorScheme="purple">
+      <Tabs isLazy lazyBehavior="keepMounted">
         <TabList px={0} borderBottomColor="borderColor" borderBottomWidth="1px">
           {functions && functions.length > 0 ? (
             <Tab gap={2}>

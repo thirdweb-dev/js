@@ -1,13 +1,16 @@
-import { ens, useReleaserProfile } from "../hooks";
+import { useEns, useReleaserProfile } from "../hooks";
 import { EditProfile } from "./edit-profile";
 import { ReleaserAvatar } from "./masked-avatar";
 import { ReleaserSocials } from "./releaser-socials";
 import { Flex, Skeleton } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
+import {
+  replaceDeployerAddress,
+  treatAddress,
+} from "components/explore/publisher";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useRouter } from "next/router";
 import { Heading, Link, LinkButton, Text } from "tw-components";
-import { shortenIfAddress } from "utils/usedapp-external";
 
 interface ReleaserHeaderProps {
   wallet: string;
@@ -17,7 +20,7 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
   wallet,
   page,
 }) => {
-  const ensQuery = ens.useQuery(wallet);
+  const ensQuery = useEns(wallet);
   const releaserProfile = useReleaserProfile(
     ensQuery.data?.address || undefined,
   );
@@ -34,7 +37,11 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
       align="center"
     >
       <Flex direction="column" gap={4} w="full">
-        {isProfilePage ? null : <Heading size="title.sm">Released by</Heading>}
+        {isProfilePage ? null : (
+          <Heading as="h4" size="title.sm">
+            Released by
+          </Heading>
+        )}
         <Flex gap={4} alignItems="center">
           <Skeleton isLoaded={releaserProfile.isSuccess}>
             <Link
@@ -49,6 +56,7 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
               pointerEvents={isProfilePage ? "none" : "auto"}
             >
               <ReleaserAvatar
+                alt="Releaser avatar"
                 boxSize={14}
                 address={ensQuery.data?.ensName || wallet}
               />
@@ -57,7 +65,9 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
 
           <Flex flexDir="column">
             <Link
-              href={`/${ensQuery.data?.ensName || wallet}`}
+              href={replaceDeployerAddress(
+                `/${ensQuery.data?.ensName || wallet}`,
+              )}
               onClick={() =>
                 trackEvent({
                   category: "releaser-header",
@@ -68,9 +78,11 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
               pointerEvents={isProfilePage ? "none" : "auto"}
             >
               <Heading size="subtitle.sm" ml={2}>
-                {releaserProfile?.data?.name ||
-                  ensQuery.data?.ensName ||
-                  shortenIfAddress(wallet)}
+                {treatAddress(
+                  releaserProfile?.data?.name ||
+                    ensQuery.data?.ensName ||
+                    wallet,
+                )}
               </Heading>
             </Link>
             {isProfilePage && releaserProfile?.data?.bio && (
@@ -87,7 +99,7 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
           <LinkButton
             variant="outline"
             size="sm"
-            href={`/${wallet}`}
+            href={replaceDeployerAddress(`/${wallet}`)}
             onClick={() =>
               trackEvent({
                 category: "releaser-header",

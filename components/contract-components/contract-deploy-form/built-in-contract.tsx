@@ -840,7 +840,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
             type="submit"
             isLoading={deploy.isLoading}
             isDisabled={!publishMetadata.isSuccess || !selectedChain}
-            colorScheme="primary"
+            colorScheme="blue"
             transactionCount={1}
           >
             Deploy Now

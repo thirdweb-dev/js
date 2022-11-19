@@ -251,7 +251,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           with a testnet.{" "}
           <TrackedLink
             href="https://blog.thirdweb.com/guides/which-network-should-you-use"
-            color="primary.500"
+            color="blue.500"
             category="deploy"
             label="learn-networks"
             isExternal
@@ -271,7 +271,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
             isExternal
             category="custom-contract"
             label="visit-dashboard"
-            color="primary.500"
+            color="blue.500"
           >
             /dashboard
           </TrackedLink>
@@ -313,7 +313,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
             !selectedChain ||
             !!disabledChains?.find((chain) => chain === selectedChain)
           }
-          colorScheme="primary"
+          colorScheme="blue"
           transactionCount={isTwFactory ? 1 : !watch("addToDashboard") ? 1 : 2}
         >
           Deploy Now

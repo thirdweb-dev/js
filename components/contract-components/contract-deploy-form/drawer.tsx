@@ -28,7 +28,7 @@ export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
     <>
       <Button
         flexShrink={0}
-        colorScheme="purple"
+        colorScheme="primary"
         onClick={() => {
           trackEvent({
             category: "specific-release",

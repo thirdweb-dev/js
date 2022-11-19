@@ -1,3 +1,5 @@
+import { useShouldShowTOSNotice } from "./PrivacyNotice";
+import { ConnectWallet } from "@3rdweb-sdk/react";
 import {
   AspectRatio,
   Box,
@@ -11,12 +13,14 @@ import {
   ModalOverlay,
   SimpleGrid,
 } from "@chakra-ui/react";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useAddress } from "@thirdweb-dev/react";
 import { ChakraNextImage } from "components/Image";
 import { Logo } from "components/logo";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useLocalStorage } from "hooks/useLocalStorage";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import { Button, Heading, Text, TrackedLink } from "tw-components";
 
@@ -173,13 +177,15 @@ export const WelcomeScreen: React.FC = () => {
     true,
     false,
   );
+  const [, setHasAcceptedTOS] = useShouldShowTOSNotice();
+
+  const evmAddress = useAddress();
+  const solAddress = useWallet().publicKey?.toBase58();
+
+  const hasAnyWalletConnected = Boolean(evmAddress || solAddress);
 
   const [step, setStep] = useState<number>(0);
-  if (!showWelcomeScreen) {
-    return null;
-  }
-
-  const nextStep = () => {
+  const nextStep = useCallback(() => {
     setStep((curr) => {
       track({
         category: TRACK_CATEGORY,
@@ -187,8 +193,9 @@ export const WelcomeScreen: React.FC = () => {
         label: "next",
         currentStep: curr,
       });
-      if (curr >= 3) {
+      if (curr >= 4) {
         setShowWelcomeScreen(false);
+        setHasAcceptedTOS(true);
         track({
           category: TRACK_CATEGORY,
           action: "click",
@@ -197,7 +204,17 @@ export const WelcomeScreen: React.FC = () => {
       }
       return curr + 1;
     });
-  };
+  }, [setShowWelcomeScreen, setHasAcceptedTOS, track]);
+
+  useEffect(() => {
+    if (hasAnyWalletConnected && step === 4) {
+      nextStep();
+    }
+  }, [hasAnyWalletConnected, nextStep, step]);
+
+  if (!showWelcomeScreen) {
+    return null;
+  }
 
   const prevStep = () => {
     setStep((curr) => {
@@ -257,6 +274,10 @@ export const WelcomeScreen: React.FC = () => {
                         background:
                           "linear-gradient(147.15deg, #410AB6 30.17%, #B4F1FF 100.01%)",
                       },
+                      "step-4": {
+                        background:
+                          "linear-gradient(147.15deg, #410AB6 30.17%, #FF8D5C 100.01%)",
+                      },
                       ...steps.reduce((acc, curr) => {
                         acc[curr.key] = { background: curr.gradient };
                         return acc;
@@ -298,7 +319,7 @@ export const WelcomeScreen: React.FC = () => {
                         </Center>
                       </motion.div>
                     )}
-                    {step > 0 && (
+                    {step > 0 && step < 4 && (
                       <motion.div
                         key="step-2"
                         initial={{ opacity: 0, y: "100%" }}
@@ -330,6 +351,33 @@ export const WelcomeScreen: React.FC = () => {
                             </Heading>
                           ))}
                         </Flex>
+                      </motion.div>
+                    )}
+                    {step === 4 && (
+                      <motion.div
+                        initial={{
+                          opacity: 0,
+                          y: -50,
+                          width: "100%",
+                          height: "100%",
+                        }}
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                          width: "100%",
+                          height: "100%",
+                        }}
+                        exit={{
+                          opacity: 0,
+                          y: -50,
+                          width: "100%",
+                          height: "100%",
+                        }}
+                        key="step-4"
+                      >
+                        <Center h="100%" w="100%">
+                          <span>&apos;ello, pls need graphic for this pls</span>
+                        </Center>
                       </motion.div>
                     )}
                   </Center>
@@ -383,7 +431,7 @@ export const WelcomeScreen: React.FC = () => {
                           </React.Fragment>
                         </Flex>
                       )}
-                      {step > 0 && (
+                      {step > 0 && step < 4 && (
                         <Flex
                           gap={4}
                           as={motion.div}
@@ -414,6 +462,63 @@ export const WelcomeScreen: React.FC = () => {
                           )}
                         </Flex>
                       )}
+                      {step === 4 && (
+                        <Flex
+                          gap={4}
+                          as={motion.div}
+                          direction="column"
+                          key="step-4"
+                          initial={{
+                            opacity: 0,
+                          }}
+                          animate={{
+                            opacity: 1,
+                          }}
+                          exit={{
+                            opacity: 0,
+                          }}
+                        >
+                          <React.Fragment key={"step-4-t"}>
+                            <motion.div {...titleAnimation}>
+                              <Heading size="title.md" w="80%">
+                                Connect a wallet to get started.
+                              </Heading>
+                            </motion.div>
+                            <motion.div {...textAnimation}>
+                              <Text size="body.lg" w="90%">
+                                By connecting your wallet you acklowledge that
+                                you have read and agree to our{" "}
+                                <TrackedLink
+                                  href="/privacy"
+                                  isExternal
+                                  category="notice"
+                                  label="privacy"
+                                  textDecoration="underline"
+                                  _hover={{
+                                    opacity: 0.8,
+                                  }}
+                                >
+                                  Privacy Policy
+                                </TrackedLink>{" "}
+                                and{" "}
+                                <TrackedLink
+                                  href="/tos"
+                                  isExternal
+                                  category="notice"
+                                  label="terms"
+                                  textDecoration="underline"
+                                  _hover={{
+                                    opacity: 0.8,
+                                  }}
+                                >
+                                  Terms of Service
+                                </TrackedLink>
+                                .
+                              </Text>
+                            </motion.div>
+                          </React.Fragment>
+                        </Flex>
+                      )}
                     </Box>
                   </Center>
                   <Box h="30px" />
@@ -441,14 +546,20 @@ export const WelcomeScreen: React.FC = () => {
                   <Button onClick={prevStep} isDisabled={step === 0}>
                     Back
                   </Button>
-                  <Button
-                    autoFocus
-                    onClick={nextStep}
-                    rightIcon={step === 3 ? undefined : <FiArrowRight />}
-                    colorScheme="blue"
-                  >
-                    {step === 3 ? "Start Now" : "Next"}
-                  </Button>
+
+                  {hasAnyWalletConnected || step !== 4 ? (
+                    <Button
+                      autoFocus
+                      onClick={nextStep}
+                      rightIcon={step === 4 ? undefined : <FiArrowRight />}
+                      colorScheme="blue"
+                      isDisabled={step === 4 && !evmAddress && !solAddress}
+                    >
+                      {step === 4 ? "Start Now" : "Next"}
+                    </Button>
+                  ) : (
+                    <ConnectWallet />
+                  )}
                 </ButtonGroup>
               </Flex>
             </ModalFooter>

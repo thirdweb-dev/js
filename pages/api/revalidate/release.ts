@@ -1,7 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 import { ChainId } from "@thirdweb-dev/sdk/evm";
 import {
-  ens,
+  ensQuery,
   fetchPublishedContracts,
 } from "components/contract-components/hooks";
 import { ENSResolveResult } from "lib/ens";
@@ -21,7 +21,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   let ensResult: ENSResolveResult;
   try {
-    ensResult = await ens.fetch(ensNameOrAddress);
+    ensResult = await ensQuery(ensNameOrAddress).queryFn();
   } catch (err) {
     return res.status(500).json({ message: (err as Error).message });
   }

@@ -48,7 +48,7 @@ export const SelectOption: React.FC<SelectOptionProps> = ({
           <Radio
             cursor="pointer"
             size="lg"
-            colorScheme="blue"
+            colorScheme="primary"
             mt={0.5}
             mr={2.5}
             isChecked={isActive}

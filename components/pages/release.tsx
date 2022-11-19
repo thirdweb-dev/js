@@ -1,24 +1,26 @@
 import {
+  Center,
   Divider,
   Flex,
   GridItem,
+  Icon,
   Image,
   Select,
   SimpleGrid,
   Skeleton,
 } from "@chakra-ui/react";
 import { PREBUILT_CONTRACTS_MAP } from "@thirdweb-dev/sdk/evm";
-import { ChakraNextImage } from "components/Image";
 import { DeployFormDrawer } from "components/contract-components/contract-deploy-form/drawer";
-import { ens, useAllVersions } from "components/contract-components/hooks";
+import { useAllVersions, useEns } from "components/contract-components/hooks";
 import { ReleasedContract } from "components/contract-components/released-contract";
 import { THIRDWEB_DEPLOYER_ADDRESS } from "constants/addresses";
-import { FeatureIconMap } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useSingleQueryParam } from "hooks/useQueryParam";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
-import { Heading, Text } from "tw-components";
+import { FiChevronLeft, FiImage } from "react-icons/fi";
+import { Heading, Link, Text, TrackedIconButton } from "tw-components";
 
 export interface ReleaseWithVersionPageProps {
   author: string;
@@ -32,7 +34,7 @@ export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
   version: initialVersion,
 }) => {
   const trackEvent = useTrack();
-  const ensQuery = ens.useQuery(author);
+  const ensQuery = useEns(author);
 
   const [version, setVersion] = useState(initialVersion);
 
@@ -61,32 +63,49 @@ export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
   const deployContractId =
     prebuiltContractName || release?.metadataUri.replace("ipfs://", "");
 
+  const viaParam = useSingleQueryParam("via");
+
   return (
     <SimpleGrid columns={12} gap={{ base: 6, md: 10 }} w="full">
       <GridItem colSpan={{ base: 12, md: 8 }}>
         <Flex gap={4} alignItems="center">
+          {viaParam ? (
+            <TrackedIconButton
+              variant="ghost"
+              as={Link}
+              href={viaParam}
+              icon={<Icon boxSize="66%" as={FiChevronLeft} />}
+              category="release"
+              label="back_button"
+              aria-label="Back"
+            />
+          ) : null}
           {release?.logo ? (
             <Image
+              flexShrink={0}
               alt={release.name}
               borderRadius="full"
               src={replaceIpfsUrl(release.logo)}
               boxSize={14}
             />
           ) : (
-            <ChakraNextImage
+            <Center
               flexShrink={0}
-              src={FeatureIconMap["custom"]}
               boxSize={14}
-              alt=""
-            />
+              borderRadius="full"
+              borderWidth="1px"
+              borderColor="borderColor"
+            >
+              <Icon boxSize="50%" as={FiImage} color="accent.300" />
+            </Center>
           )}
 
           <Skeleton isLoaded={allVersions.isSuccess}>
             <Flex direction="column" gap={2}>
-              <Heading size="title.md">
+              <Heading as="h1" size="title.md">
                 {release?.displayName || release?.name}
               </Heading>
-              <Text>{release?.description}</Text>
+              <Text as="h2">{release?.description}</Text>
             </Flex>
           </Skeleton>
         </Flex>

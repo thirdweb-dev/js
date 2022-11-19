@@ -22,7 +22,7 @@ const ContractsPublishPage: ThirdwebNextPage = () => {
             <br /> Unlocks automatic SDKs in all languages, admin dashboards,
             analytics and auto verification.{" "}
             <Link
-              color="primary.500"
+              color="blue.500"
               isExternal
               href="https://portal.thirdweb.com/release"
             >

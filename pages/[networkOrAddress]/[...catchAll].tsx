@@ -2,11 +2,11 @@ import { QueryClient, dehydrate } from "@tanstack/react-query";
 import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
 import { AppLayout } from "components/app-layouts/app";
 import {
-  ens,
+  ensQuery,
   fetchAllVersions,
   fetchContractPublishMetadataFromURI,
   fetchReleasedContractInfo,
-  fetchReleaserProfile,
+  releaserProfileQuery,
 } from "components/contract-components/hooks";
 import {
   ReleaseWithVersionPage,
@@ -125,7 +125,7 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
   if (networkOrAddress === "contracts") {
     return {
       redirect: {
-        destination: "/contracts",
+        destination: "/explore",
         permanent: false,
       },
     };
@@ -163,9 +163,7 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
     const [contractAddress] = ctx.params?.catchAll as string[];
 
     if (isPossibleEVMAddress(contractAddress)) {
-      await queryClient.prefetchQuery(ens.queryKey(contractAddress), () =>
-        ens.fetch(contractAddress),
-      );
+      await queryClient.prefetchQuery(ensQuery(contractAddress));
 
       return {
         props: {
@@ -220,8 +218,7 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
 
     if (contractName) {
       const { address, ensName } = await queryClient.fetchQuery(
-        ens.queryKey(networkOrAddress),
-        () => ens.fetch(networkOrAddress),
+        ensQuery(networkOrAddress),
       );
 
       if (!address) {
@@ -240,17 +237,9 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
       const release =
         allVersions.find((v) => v.version === version) || allVersions[0];
 
-      const ensQueries = [
-        queryClient.prefetchQuery(ens.queryKey(address), () =>
-          ens.fetch(address),
-        ),
-      ];
+      const ensQueries = [queryClient.prefetchQuery(ensQuery(address))];
       if (ensName) {
-        ensQueries.push(
-          queryClient.prefetchQuery(ens.queryKey(ensName), () =>
-            ens.fetch(ensName),
-          ),
-        );
+        ensQueries.push(queryClient.prefetchQuery(ensQuery(ensName)));
       }
 
       await Promise.all([
@@ -262,9 +251,7 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
           ["publish-metadata", release.metadataUri],
           () => fetchContractPublishMetadataFromURI(release.metadataUri),
         ),
-        queryClient.prefetchQuery(["releaser-profile", address], () =>
-          fetchReleaserProfile(polygonSdk, address),
-        ),
+        queryClient.prefetchQuery(releaserProfileQuery(release.releaser)),
       ]);
 
       return {
@@ -292,12 +279,27 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 function generateBuildTimePaths() {
-  return Object.values(BuiltinContractMap)
-    .filter((c) => c.contractType !== "custom")
-    .map((v) => ({
+  return [
+    ...Object.values(BuiltinContractMap)
+      .filter((c) => c.contractType !== "custom")
+      .map((v) => ({
+        params: {
+          networkOrAddress: "deployer.thirdweb.eth",
+          catchAll: [v.id],
+        },
+      })),
+    ...communityReleases.map((v) => ({
       params: {
-        networkOrAddress: "deployer.thirdweb.eth",
-        catchAll: [v.id],
+        networkOrAddress: v.releaser,
+        catchAll: [v.contractId],
       },
-    }));
+    })),
+  ];
 }
+
+const communityReleases = [
+  {
+    releaser: "unlock-protocol.eth",
+    contractId: "PublicLock",
+  },
+] as const;

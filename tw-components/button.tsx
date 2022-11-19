@@ -78,8 +78,6 @@ export const Button = forwardRef<ButtonProps, "button">(
   },
 );
 
-Button.displayName = "Button";
-
 export interface LinkButtonProps extends ButtonProps {
   href: string;
   isExternal?: boolean;

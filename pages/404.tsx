@@ -49,7 +49,10 @@ const PageNotFound: ThirdwebNextPage = () => {
             </Center>
           </Center>
           <Heading textAlign="center" size="display.md">
-            Uh oh. Looks like web3 <br />
+            Uh oh.
+            <br />
+            Looks like web3
+            <br />
             can&apos;t be found here.
           </Heading>
           <Text size="body.2xl" textAlign="center" mt={3}>

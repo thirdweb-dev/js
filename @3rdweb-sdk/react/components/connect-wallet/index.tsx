@@ -44,7 +44,7 @@ import { useGnosis } from "@thirdweb-dev/react/evm/connectors/gnosis-safe";
 import { useMagic } from "@thirdweb-dev/react/evm/connectors/magic";
 import { ChakraNextImage } from "components/Image";
 import { MismatchButton } from "components/buttons/MismatchButton";
-import { ens } from "components/contract-components/hooks";
+import { useEns } from "components/contract-components/hooks";
 import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelect";
 import { GNOSIS_TO_CHAIN_ID } from "constants/mappings";
 import { CustomSDKContext } from "contexts/custom-sdk-context";
@@ -161,7 +161,7 @@ export const ConnectWallet: React.FC<EcosystemButtonprops> = ({
 
   const gnosisModalState = useDisclosure();
 
-  const ensQuery = ens.useQuery(address);
+  const ensQuery = useEns(address);
 
   // if solana is connected we hit this
   if (solWallet.publicKey && ecosystem !== "evm") {
@@ -226,13 +226,13 @@ export const ConnectWallet: React.FC<EcosystemButtonprops> = ({
             <Flex direction="row" gap={3} align="center">
               <Icon boxSize={6} as={SVG} />
               <Flex gap={0.5} direction="column" textAlign="left">
-                <Text size="label.sm">
+                <Heading as="p" size="label.sm">
                   <Skeleton as="span" isLoaded={!balanceQuery.isLoading}>
                     {balanceQuery.data?.displayValue.slice(0, 6) || "0.000"}
                   </Skeleton>{" "}
                   {getNetworkMetadata(chainId).symbol}
-                </Text>
-                <Text size="label.sm" color="gray.500">
+                </Heading>
+                <Text size="label.sm" color="accent.600">
                   {shortenIfAddress(ensQuery.data?.ensName || address, true)} (
                   {getNetworkMetadata(chainId).chainName})
                 </Text>
@@ -409,7 +409,7 @@ export const ConnectWallet: React.FC<EcosystemButtonprops> = ({
         <MenuButton
           isLoading={connector.loading}
           as={Button}
-          colorScheme="primary"
+          colorScheme="blue"
           rightIcon={<FiChevronDown />}
           {...buttonProps}
         >
@@ -542,7 +542,7 @@ export const ConnectWallet: React.FC<EcosystemButtonprops> = ({
                     </Text>
                   </Card>
                 }
-                shouldWrapChildren
+                // shouldWrapChildren
               >
                 <MenuItem
                   py={3}
@@ -722,7 +722,7 @@ const GnosisSafeModal: React.FC<ConnectorModalProps> = ({
                 isLoading={isSubmitting}
                 type="submit"
                 borderRadius="md"
-                colorScheme="primary"
+                colorScheme="blue"
               >
                 Connect to Gnosis Safe
               </MismatchButton>
@@ -792,7 +792,7 @@ const MagicModal: React.FC<ConnectorModalProps> = ({ isOpen, onClose }) => {
               isLoading={isSubmitting}
               type="submit"
               borderRadius="md"
-              colorScheme="primary"
+              colorScheme="blue"
             >
               Sign In
             </Button>

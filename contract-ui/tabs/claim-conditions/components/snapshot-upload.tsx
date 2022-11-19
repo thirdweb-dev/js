@@ -196,7 +196,7 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                     bg={noCsv ? "red.200" : "inputBg"}
                     _hover={{
                       bg: "inputBgHover",
-                      borderColor: "blue.500",
+                      borderColor: "primary.500",
                     }}
                     borderColor="inputBorder"
                     borderWidth="1px"

@@ -170,11 +170,11 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
               direction="row"
               borderRadius="md"
               borderWidth="1px"
-              bg="blue.50"
-              borderColor="blue.100"
+              bg="primary.50"
+              borderColor="primary.100"
               _dark={{
-                bg: "blue.800",
-                borderColor: "blue.800",
+                bg: "primary.800",
+                borderColor: "primary.800",
               }}
               align="center"
               padding="10px"
@@ -182,11 +182,11 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
             >
               <Icon
                 as={FiInfo}
-                color="blue.800"
-                _dark={{ color: "blue.100" }}
+                color="primary.800"
+                _dark={{ color: "primary.100" }}
                 boxSize={6}
               />
-              <Text color="blue.800" _dark={{ color: "blue.100" }}>
+              <Text color="primary.800" _dark={{ color: "primary.100" }}>
                 {isRestricted ? (
                   <>
                     The tokens in this contract are currently{" "}
@@ -210,11 +210,11 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
               direction="row"
               borderRadius="md"
               borderWidth="1px"
-              bg="blue.50"
-              borderColor="blue.100"
+              bg="primary.50"
+              borderColor="primary.100"
               _dark={{
-                bg: "blue.800",
-                borderColor: "blue.800",
+                bg: "primary.800",
+                borderColor: "primary.800",
               }}
               align="center"
               padding="10px"
@@ -222,11 +222,11 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
             >
               <Icon
                 as={FiInfo}
-                color="blue.800"
-                _dark={{ color: "blue.100" }}
+                color="primary.800"
+                _dark={{ color: "primary.100" }}
                 boxSize={6}
               />
-              <Text color="blue.800" _dark={{ color: "blue.100" }}>
+              <Text color="primary.800" _dark={{ color: "primary.100" }}>
                 {isRestricted ? (
                   <>
                     Currently, only addresses specified below will be able to
@@ -244,11 +244,11 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
               direction="row"
               borderRadius="md"
               borderWidth="1px"
-              bg="blue.50"
-              borderColor="blue.100"
+              bg="primary.50"
+              borderColor="primary.100"
               _dark={{
-                bg: "blue.800",
-                borderColor: "blue.800",
+                bg: "primary.800",
+                borderColor: "primary.800",
               }}
               align="center"
               padding="10px"
@@ -256,11 +256,11 @@ export const ContractPermission: React.FC<ContractPermissionProps> = ({
             >
               <Icon
                 as={FiInfo}
-                color="blue.800"
-                _dark={{ color: "blue.100" }}
+                color="primary.800"
+                _dark={{ color: "primary.100" }}
                 boxSize={6}
               />
-              <Text color="blue.800" _dark={{ color: "blue.100" }}>
+              <Text color="primary.800" _dark={{ color: "primary.100" }}>
                 {isRestricted ? (
                   <>
                     Currently, only assets from the contracts specified below

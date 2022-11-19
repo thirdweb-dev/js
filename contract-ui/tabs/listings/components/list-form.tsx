@@ -374,7 +374,7 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
             </Heading>
             {/* {watch("selected") && (
                   <Text
-                    color="blue.400"
+                    color="primary.400"
                     cursor="pointer"
                     _hover={{ textDecor: "underline" }}
                   >

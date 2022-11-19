@@ -6,7 +6,7 @@ import {
   ExtensionDetectedState,
   extensionDetectedState,
 } from "components/buttons/ExtensionDetectButton";
-import { ens } from "components/contract-components/hooks";
+import { useEns } from "components/contract-components/hooks";
 import { ProgramClaimConditionsTab } from "program-ui/common/program-claim-conditions";
 import { ProgramCodeTab } from "program-ui/common/program-code";
 import { Card, Heading, Text } from "tw-components";
@@ -79,7 +79,7 @@ export function useProgramRouteConfig(programAddress: string): EnhancedRoute[] {
 export function useContractRouteConfig(
   contractAddress: string,
 ): EnhancedRoute[] {
-  const ensQuery = ens.useQuery(contractAddress);
+  const ensQuery = useEns(contractAddress);
   const contractQuery = useContract(ensQuery.data?.address);
 
   const contractTypeQuery = contractType.useQuery(contractAddress);

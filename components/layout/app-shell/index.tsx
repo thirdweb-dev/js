@@ -12,6 +12,8 @@ import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
 import { SiGithub } from "@react-icons/all-files/si/SiGithub";
 import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
 import { SiYoutube } from "@react-icons/all-files/si/SiYoutube";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useAddress } from "@thirdweb-dev/react";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
 import { Logo } from "components/logo";
 import { InsufficientFunds } from "components/notices/InsufficientFunds";
@@ -19,6 +21,7 @@ import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { RiGasStationFill } from "react-icons/ri";
 import {
+  Heading,
   Link,
   LinkButton,
   Text,
@@ -30,14 +33,18 @@ import { ComponentWithChildren } from "types/component-with-children";
 export interface AppShellProps {
   layout?: "custom-contract";
   ecosystem?: "evm" | "solana" | "either";
+  noSEOOverride?: boolean;
 }
 
 export const AppShell: ComponentWithChildren<AppShellProps> = ({
   children,
   layout,
   ecosystem = "either",
+  noSEOOverride,
 }) => {
   const { pathname } = useRouter();
+  const address = useAddress();
+  const publicKey = useWallet().publicKey?.toBase58();
 
   const isCustomContractLayout = layout === "custom-contract";
   return (
@@ -47,13 +54,15 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
       overflow="hidden"
       backgroundColor="backgroundBody"
     >
-      <NextSeo
-        title="Dashboard"
-        openGraph={{
-          title: "Dashboard | thirdweb",
-          url: `https://thirdweb.com/dashboard`,
-        }}
-      />
+      {!noSEOOverride && (
+        <NextSeo
+          title="Dashboard"
+          openGraph={{
+            title: "Dashboard | thirdweb",
+            url: `https://thirdweb.com/dashboard`,
+          }}
+        />
+      )}
       <Flex
         transition="margin 350ms ease"
         zIndex="docked"
@@ -70,6 +79,8 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
           shadow={isCustomContractLayout ? undefined : "sm"}
           position={isCustomContractLayout ? undefined : "sticky"}
           top={isCustomContractLayout ? undefined : 0}
+          borderColor="borderColor"
+          borderBottomWidth={isCustomContractLayout ? 0 : 1}
         >
           <Container
             maxW="container.page"
@@ -78,27 +89,29 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
             as="header"
             alignItems="center"
           >
-            <Link href="/dashboard">
+            <Link href={address || publicKey ? "/dashboard" : "/explore"}>
               <Logo />
             </Link>
             <Stack
               direction="row"
               align="center"
-              spacing={{ base: 3, md: 4 }}
+              spacing={{ base: 1, md: 2 }}
               marginLeft="auto"
             >
               <TrackedLink
-                href="https://portal.thirdweb.com/"
+                href="https://portal.thirdweb.com"
                 isExternal
-                variant="link"
-                color="inherit"
-                fontWeight="inherit"
-                textDecoration={undefined}
-                display={{ base: "none", md: "block" }}
+                display={{ base: "none", md: "flex" }}
                 category="header"
                 label="docs"
+                px={2}
+                flexDir="row"
+                gap={1}
+                alignItems="center"
               >
-                Docs
+                <Heading as="h4" size="label.md">
+                  Docs
+                </Heading>
               </TrackedLink>
               <ButtonGroup
                 variant="ghost"
@@ -109,8 +122,11 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
                   isExternal
                   noIcon
                   href="https://twitter.com/thirdweb"
-                  bg="transparent"
+                  // bg="transparent"
                   aria-label="twitter"
+                  _hover={{
+                    bg: "accent.200",
+                  }}
                   icon={<Icon boxSize="1rem" as={SiTwitter} />}
                   category="header"
                   label="twitter"
@@ -120,7 +136,10 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
                   isExternal
                   noIcon
                   href="https://discord.gg/thirdweb"
-                  bg="transparent"
+                  // bg="transparent"
+                  _hover={{
+                    bg: "accent.200",
+                  }}
                   aria-label="discord"
                   icon={<Icon boxSize="1rem" as={SiDiscord} />}
                   category="header"
@@ -131,7 +150,10 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
                   isExternal
                   noIcon
                   href="https://www.youtube.com/channel/UCdzMx7Zhy5va5End1-XJFbA"
-                  bg="transparent"
+                  // bg="transparent"
+                  _hover={{
+                    bg: "accent.200",
+                  }}
                   aria-label="YouTube"
                   icon={<Icon boxSize="1rem" as={SiYoutube} />}
                   category="header"
@@ -142,26 +164,29 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
                   isExternal
                   noIcon
                   href="https://github.com/thirdweb-dev"
-                  bg="transparent"
+                  // bg="transparent"
+                  _hover={{
+                    bg: "accent.200",
+                  }}
                   aria-label="github"
                   icon={<Icon boxSize="1rem" as={SiGithub} />}
                   category="header"
                   label="github"
                 />
-
-                <TrackedIconButton
-                  as={LinkButton}
-                  noIcon
-                  href="/gas"
-                  bg="transparent"
-                  aria-label="gas-estimator"
-                  icon={<Icon boxSize="1rem" as={RiGasStationFill} />}
-                  category="header"
-                  label="gas-estimator"
-                />
               </ButtonGroup>
+              <TrackedIconButton
+                as={LinkButton}
+                noIcon
+                href="/gas"
+                bg="transparent"
+                aria-label="gas-estimator"
+                icon={<Icon boxSize="1rem" as={RiGasStationFill} />}
+                category="header"
+                display={{ base: "none", md: "flex" }}
+                label="gas-estimator"
+              />
               <ColorModeToggle />
-              <ConnectWallet colorScheme="primary" ecosystem={ecosystem} />
+              <ConnectWallet colorScheme="blue" ecosystem={ecosystem} />
             </Stack>
           </Container>
         </Box>
@@ -184,40 +209,42 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
         >
           <Stack>
             <Divider mb={4} />
-            <Flex
-              direction={{ base: "column", md: "row" }}
-              gap={4}
-              align="center"
-              justify="center"
-            >
-              <Text alignSelf="center" order={{ base: 2, md: 0 }}>
-                thirdweb &copy; {new Date().getFullYear()}
-              </Text>
-              <Flex align="center" justify="center" gap={4}>
-                <TrackedLink
-                  isExternal
-                  href="https://feedback.thirdweb.com"
-                  category="footer"
-                  label="feedback"
-                >
-                  Feedback
-                </TrackedLink>
-                <TrackedLink
-                  isExternal
-                  href="/privacy"
-                  category="footer"
-                  label="privacy"
-                >
-                  Privacy Policy
-                </TrackedLink>
-                <TrackedLink
-                  isExternal
-                  href="/tos"
-                  category="footer"
-                  label="terms"
-                >
-                  Terms of Service
-                </TrackedLink>
+            <Flex direction="column" gap={4}>
+              <Flex
+                direction={{ base: "column", md: "row" }}
+                gap={4}
+                align="center"
+                justify="center"
+              >
+                <Text alignSelf="center" order={{ base: 2, md: 0 }}>
+                  thirdweb &copy; {new Date().getFullYear()}
+                </Text>
+                <Flex align="center" justify="center" gap={4}>
+                  <TrackedLink
+                    isExternal
+                    href="https://feedback.thirdweb.com"
+                    category="footer"
+                    label="feedback"
+                  >
+                    Feedback
+                  </TrackedLink>
+                  <TrackedLink
+                    isExternal
+                    href="/privacy"
+                    category="footer"
+                    label="privacy"
+                  >
+                    Privacy Policy
+                  </TrackedLink>
+                  <TrackedLink
+                    isExternal
+                    href="/tos"
+                    category="footer"
+                    label="terms"
+                  >
+                    Terms of Service
+                  </TrackedLink>
+                </Flex>
               </Flex>
             </Flex>
           </Stack>

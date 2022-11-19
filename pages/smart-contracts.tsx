@@ -18,7 +18,7 @@ const PreBuiltContracts: ThirdwebNextPage = () => {
         title="Prebuilt, audited and ready to go Smart Contracts."
         description="Get started quickly and easily with our prebuilt and audited Smart Contract suite."
         buttonText="Get started"
-        buttonLink="/contracts"
+        buttonLink="/explore"
         image={require("public/assets/product-pages/pre-builts/hero.png")}
         gradient="linear-gradient(147.15deg, #410AB6 30.17%, #AB2E2E 100.01%)"
       >
