@@ -6,14 +6,9 @@ import { upload } from "../storage/command";
 import { DEFAULT_IPFS_GATEWAY } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
-type DeployOptions = {
-  dist?: string;
-  project?: string;
-};
-
-export async function deployApp({ dist, project }: DeployOptions) {
-  let distPath = dist || "dist";
-  let projectPath = project || ".";
+export async function deployApp(dist = "dist", project = ".") {
+  let distPath = dist;
+  let projectPath = project;
 
   const storage = new ThirdwebStorage();
   const supportedFrameworks = [new ViteDetector()];
@@ -31,8 +26,6 @@ export async function deployApp({ dist, project }: DeployOptions) {
 
   try {
     if (hasYarn) {
-      console.log("yarn");
-      //run yarn-buld
       await runCommand("yarn", ["build"]);
     } else if (hasNPM) {
       await runCommand("npm", ["build"]);
@@ -42,7 +35,12 @@ export async function deployApp({ dist, project }: DeployOptions) {
     return Promise.reject("Can't build project");
   }
 
-  let url = await upload(storage, distPath);
-  url = url.replace("ipfs://", DEFAULT_IPFS_GATEWAY);
-  return `${url}/index.html`;
+  try {
+    let url = await upload(storage, distPath);
+    url = url.replace("ipfs://", DEFAULT_IPFS_GATEWAY);
+    return `${url}/index.html`;
+  } catch (err) {
+    console.error("Can't upload project");
+    return Promise.reject("Can't upload project");
+  }
 }
