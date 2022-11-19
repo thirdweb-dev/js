@@ -84,7 +84,6 @@ const ClaimConditionsProgramForm: React.FC<{ address: string }> = ({
     if (!data) {
       return undefined;
     }
-
     return {
       startTime: data.startTime ? new Date(data.startTime) : new Date(),
       price: data.price.displayValue,
@@ -144,9 +143,10 @@ const ClaimConditionsProgramForm: React.FC<{ address: string }> = ({
               startTime: d.startTime,
               maxClaimable: d.maxClaimable,
               price: d.price,
-              ...(d.currencyAddress !== "SOLANA_NATIVE_TOKEN" && {
-                currencyAddress: d.currencyAddress,
-              }),
+              currencyAddress:
+                d.currencyAddress === "SOLANA_NATIVE_TOKEN"
+                  ? null
+                  : d.currencyAddress,
             });
             trackEvent({
               category: "nft",
@@ -261,6 +261,12 @@ const ClaimConditionsProgramForm: React.FC<{ address: string }> = ({
                       value={watch("currencyAddress") || "SOLANA_NATIVE_TOKEN"}
                       onChange={(e) =>
                         setValue(`currencyAddress`, e.target.value)
+                      }
+                      activeCurrency={
+                        transformedQueryData?.currencyAddress !==
+                        "SOLANA_NATIVE_TOKEN"
+                          ? transformedQueryData?.currencyAddress
+                          : undefined
                       }
                     />
                     {/*                     <CurrencySelector

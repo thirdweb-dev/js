@@ -8,16 +8,23 @@ interface ProgramCurrencySelectorProps extends SelectProps {
   value: string;
   small?: boolean;
   hideDefaultCurrencies?: boolean;
+  activeCurrency?: string;
 }
 
 export const ProgramCurrencySelector: React.FC<
   ProgramCurrencySelectorProps
-> = ({ value, onChange, small, hideDefaultCurrencies, ...props }) => {
+> = ({
+  value,
+  onChange,
+  small,
+  hideDefaultCurrencies,
+  activeCurrency,
+  ...props
+}) => {
   const [isAddingCurrency, setIsAddingCurrency] = useState(false);
   const [editCustomCurrency, setEditCustomCurrency] = useState("");
   const [customCurrency, setCustomCurrency] = useState("");
   const [initialValue] = useState(value);
-
   const dashboardNetwork = useDashboardSOLNetworkId();
 
   const currencies =
@@ -73,7 +80,7 @@ export const ProgramCurrencySelector: React.FC<
         <Flex align="center">
           <Input
             isRequired
-            placeholder="Enter contract address..."
+            placeholder="Enter account address..."
             borderRadius="4px 0px 0px 4px"
             value={editCustomCurrency}
             onChange={(e) => setEditCustomCurrency(e.target.value)}
@@ -129,11 +136,15 @@ export const ProgramCurrencySelector: React.FC<
             {initialValue}
           </option>
         )}
-        {customCurrency && (
+        {customCurrency ? (
           <option key={customCurrency} value={customCurrency}>
-            {customCurrency}
+            {customCurrency} (Custom)
           </option>
-        )}
+        ) : activeCurrency ? (
+          <option key={activeCurrency} value={activeCurrency}>
+            {activeCurrency} (Custom)
+          </option>
+        ) : null}
       </Select>
     </Flex>
   );
