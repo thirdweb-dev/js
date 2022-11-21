@@ -14,7 +14,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { PublicKey } from "@solana/web3.js";
-import { useNFTs } from "@thirdweb-dev/react/solana";
+import { useNFTs, useTotalSupply } from "@thirdweb-dev/react/solana";
 import type { NFT } from "@thirdweb-dev/sdk";
 import type { NFTCollection, NFTDrop } from "@thirdweb-dev/sdk/solana";
 import { MediaCell } from "components/contract-pages/table/table-columns/cells/media-cell";
@@ -100,9 +100,9 @@ export const NFTGetAllTable: React.FC<{
   }, []);
 
   const [queryParams, setQueryParams] = useState({ count: 50, start: 0 });
+  const getAllQueryResult = useNFTs(program, queryParams);
+  const { data: totalCount } = useTotalSupply(program);
 
-  const getAllQueryResult = useNFTs(program);
-  const totalCount = getAllQueryResult.data ? getAllQueryResult.data.length : 0;
   const {
     getTableProps,
     getTableBodyProps,
@@ -121,18 +121,16 @@ export const NFTGetAllTable: React.FC<{
   } = useTable(
     {
       columns: tableColumns,
-      data:
-        getAllQueryResult.data?.slice(
-          queryParams.start,
-          queryParams.start + queryParams.count,
-        ) || [],
+      data: getAllQueryResult.data || [],
       initialState: {
         pageSize: queryParams.count,
         pageIndex: 0,
       },
       manualPagination: true,
       pageCount: Math.max(
-        Math.ceil(BigNumber.from(totalCount).toNumber() / queryParams.count),
+        Math.ceil(
+          BigNumber.from(totalCount || 0).toNumber() / queryParams.count,
+        ),
         1,
       ),
     },
