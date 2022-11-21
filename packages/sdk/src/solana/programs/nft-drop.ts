@@ -1,4 +1,8 @@
 import {
+  QueryAllParams,
+  QueryAllParamsSchema,
+} from "../../core/schema/QueryParams";
+import {
   CommonNFTInput,
   NFT,
   NFTMetadata,
@@ -165,22 +169,37 @@ export class NFTDrop {
    * console.log(nfts[0].metadata.name);
    * ```
    */
-  async getAll(): Promise<NFT[]> {
-    // TODO: Add pagination to get NFT functions
+  async getAll(queryParams?: QueryAllParams): Promise<NFT[]> {
+    const parsedQueryParams = QueryAllParamsSchema.parse(queryParams);
     const info = await this.getCandyMachine();
-    const claimed = await this.getAllClaimed();
-    return await Promise.all(
-      info.items.map(async (item) => {
-        // Check if the NFT has been claimed
-        // TODO: This only checks name/uri which is potentially not unique
-        const claimedNFT = claimed.find(
+
+    // First, get all the claimed NFTs within the query params range
+    const claimedNfts = await this.getAllClaimed(parsedQueryParams);
+    const totalClaimed = await this.totalClaimedSupply();
+
+    // Then filter out all claimed NFTs from items to leave only unclaimed remaining
+    const unclaimedItems: CandyMachineItem[] = [];
+    info.items.forEach((item) => {
+      const isClaimed =
+        claimedNfts.filter(
           (nft) =>
             nft.metadata.name === item.name && nft.metadata.uri === item.uri,
-        );
-        if (claimedNFT) {
-          return claimedNFT;
-        }
-        // not claimed yet, return a unclaimed NFT with just the metadata
+        ).length > 0;
+
+      if (!isClaimed) {
+        unclaimedItems.push(item);
+      }
+    });
+
+    // Only fill the remaining count left over after claimed NFTs with unclaimed NFTs
+    const startIndex = Math.max(0, parsedQueryParams.start - totalClaimed);
+    const endIndex = Math.max(
+      0,
+      startIndex + parsedQueryParams.count - claimedNfts.length,
+    );
+
+    const unclaimedNfts = await Promise.all(
+      unclaimedItems.slice(startIndex, endIndex).map(async (item) => {
         const metadata: NFTMetadata = await this.storage.downloadJSON(item.uri);
         return {
           metadata: {
@@ -194,6 +213,9 @@ export class NFTDrop {
         } as NFT;
       }),
     );
+
+    // Always return claimed NFTs first, and then fill remaining query count with unclaimed NFTs
+    return [...claimedNfts, ...unclaimedNfts];
   }
 
   /**
@@ -207,11 +229,14 @@ export class NFTDrop {
    * console.log(nfts[0].name)
    * ```
    */
-  async getAllClaimed(): Promise<NFT[]> {
+  async getAllClaimed(queryParams?: QueryAllParams): Promise<NFT[]> {
     // using getAll from collection here because candy machin findAllMinted doesn't return anything
     const candy = await this.getCandyMachine();
     invariant(candy.collectionMintAddress, "Collection mint address not found");
-    return await this.nft.getAll(candy.collectionMintAddress.toBase58());
+    return await this.nft.getAll(
+      candy.collectionMintAddress.toBase58(),
+      queryParams,
+    );
   }
 
   /**
@@ -265,6 +290,21 @@ export class NFTDrop {
    */
   async ownerOf(nftAddress: string): Promise<string | undefined> {
     return this.nft.ownerOf(nftAddress);
+  }
+
+  /**
+   * Get the total minted supply of this drop
+   * @returns the total supply
+   *
+   * @example
+   * ```jsx
+   * // Get the total number of NFTs that have been minted on this drop
+   * const supply = await program.totalSupply();
+   * ```
+   */
+  async totalSupply(): Promise<number> {
+    const info = await this.getCandyMachine();
+    return info.itemsLoaded.toNumber();
   }
 
   /**

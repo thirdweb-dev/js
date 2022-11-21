@@ -525,7 +525,7 @@ export async function fetchExtendedReleaseMetadata(
  * @returns the nested struct of all features and whether they're detected in the abi
  */
 export function detectFeatures(
-  abi: z.input<typeof AbiSchema>,
+  abi: Abi,
   features: Record<string, Feature> = SUPPORTED_FEATURES,
 ): Record<string, FeatureWithEnabled> {
   const results: Record<string, FeatureWithEnabled> = {};
@@ -540,6 +540,51 @@ export function detectFeatures(
     } as FeatureWithEnabled;
   }
   return results;
+}
+
+function extractFeatures(
+    input: Record<string, FeatureWithEnabled>,
+    enabledExtensions: FeatureWithEnabled[],
+) {
+  if (!input) {
+    return;
+  }
+  for (const extensionKey in input) {
+    const extension = input[extensionKey];
+    // if extension is enabled, then add it to enabledFeatures
+    if (extension.enabled) {
+      enabledExtensions.push(extension);
+    }
+    // recurse
+    extractFeatures(
+        extension.features,
+        enabledExtensions,
+    );
+  }
+}
+
+/**
+ * Return all the detected features in the abi
+ * @param abi - parsed array of abi entries
+ * @returns array of all detected extensions with full information on each feature
+ * @public
+ */
+export function getAllDetectedFeatures(abi: Abi): FeatureWithEnabled[] {
+  const features: FeatureWithEnabled[] = [];
+  extractFeatures(detectFeatures(abi), features);
+  return features;
+}
+
+/**
+ * Return all the detected features names in the abi
+ * @param abi - parsed array of abi entries
+ * @returns array of all detected features names
+ * @public
+ */
+export function getAllDetectedFeatureNames(abi: Abi): string[] {
+  const features: FeatureWithEnabled[] = [];
+  extractFeatures(detectFeatures(abi), features);
+  return features.map((f) => f.name);
 }
 
 /**

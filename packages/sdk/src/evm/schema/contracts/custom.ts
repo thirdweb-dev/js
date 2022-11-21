@@ -162,6 +162,7 @@ export const ExtraPublishMetadataSchemaInput = z
           .object({
             displayName: z.string().optional(),
             description: z.string().optional(),
+            defaultValue: z.string().optional(),
           })
           .catchall(z.any()),
       )

@@ -19,7 +19,7 @@ import {
   convertToReadableQuantity,
   fetchCurrencyMetadata,
 } from "@thirdweb-dev/sdk";
-import { BigNumberish, utils } from "ethers";
+import { BigNumberish, constants, utils } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -344,6 +344,7 @@ export function useActiveClaimConditionForWallet(
       tokenId,
     ),
     async () => {
+      console.log("useActiveClaimConditionForWallet");
       // if we do not have a walletAddress just do the same logic as basic useClaimCondition
       if (!walletAddress) {
         if (erc1155) {
@@ -411,7 +412,9 @@ export function useActiveClaimConditionForWallet(
       );
 
       const normalizedPrize = price
-        ? utils.parseUnits(price, currencyMetadata.decimals)
+        ? price === "unlimited"
+          ? constants.MaxUint256
+          : utils.parseUnits(price, currencyMetadata.decimals)
         : null;
 
       const priceWithOverride =

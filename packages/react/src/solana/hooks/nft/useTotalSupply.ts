@@ -4,50 +4,44 @@ import {
   RequiredParam,
 } from "../../../core/query-utils/required-param";
 import { useQuery } from "@tanstack/react-query";
-import { QueryAllParams } from "@thirdweb-dev/sdk";
 import type { NFTCollection, NFTDrop } from "@thirdweb-dev/sdk/solana";
 
-export function nftGetAllQuery(
+export function nftTotalSupplyQuery(
   program: RequiredParam<NFTCollection | NFTDrop>,
-  queryParams?: QueryAllParams,
 ) {
   return {
-    queryKey: createSOLProgramQueryKey(program, [
-      "getAll",
-      queryParams,
-    ] as const),
+    queryKey: createSOLProgramQueryKey(program, ["supply"] as const),
 
     queryFn: async () => {
       requiredParamInvariant(program, "program is required");
-      return program.getAll(queryParams);
+      return program.totalSupply();
     },
     enabled: !!program,
   };
 }
 
 /**
- * Get the metadata for every NFT on an NFT program
- * @param program - The NFT program to get NFTs metadata from
+ * Get the totaly supply of NFTs on the program
+ * @param program - The NFT program to get the total supply of
  *
  * @example
  * ```jsx
- * import { useProgram, useNFTs } from "@thirdweb-dev/react/solana";
+ * import { useProgram, useTotalSupply } from "@thirdweb-dev/react/solana";
  *
  * export default function Component() {
  *   const { program } = useProgram("{{program_address}}");
- *   const { data: metadata, isLoading } = useNFTs(program);
+ *   const { data: supply, isLoading } = useTotalSupply(program);
  *
  *   return (
- *     <pre>{JSON.stringify(metadata)}</pre>
+ *     <pre>{JSON.stringify(supply)}</pre>
  *   )
  * }
  * ```
  *
  * @public
  */
-export function useNFTs(
+export function useTotalSupply(
   program: RequiredParam<NFTCollection | NFTDrop>,
-  queryParams?: QueryAllParams,
 ) {
-  return useQuery(nftGetAllQuery(program, queryParams));
+  return useQuery(nftTotalSupplyQuery(program));
 }

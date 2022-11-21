@@ -193,7 +193,12 @@ export class ClaimConditions {
 
     const data = {
       ...(wallet && { wallet }),
-      ...(tokenMint && { tokenMint }),
+      ...(tokenMint
+        ? { tokenMint }
+        : // if passing currencyAddress explcitly as null we need to honor that!
+        parsed.currencyAddress === null
+        ? { tokenMint: null }
+        : {}),
       ...(price && { price }),
       ...(goLiveDate && { goLiveDate }),
       ...(sellerFeeBasisPoints && { sellerFeeBasisPoints }),
