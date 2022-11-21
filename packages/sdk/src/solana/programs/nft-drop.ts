@@ -178,7 +178,7 @@ export class NFTDrop {
     const totalClaimed = await this.totalClaimedSupply();
 
     // Then filter out all claimed NFTs from items to leave only unclaimed remaining
-    const unclaimedItems: CandyMachineItem[] = [];
+    const unclaimedItems: CandyMachineV2Item[] = [];
     info.items.forEach((item) => {
       const isClaimed =
         claimedNfts.filter(
