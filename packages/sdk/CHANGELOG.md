@@ -1,5 +1,19 @@
 # @thirdweb-dev/sdk
 
+## 3.6.1
+
+### Patch Changes
+
+- [#398](https://github.com/thirdweb-dev/js/pull/398) [`15514f1`](https://github.com/thirdweb-dev/js/commit/15514f190a844d809ae5b1edb580aab46a682485) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - add `defaultValue` to constructorParams schema for releases
+
+- [#388](https://github.com/thirdweb-dev/js/pull/388) [`7c0744a`](https://github.com/thirdweb-dev/js/commit/7c0744a006e78987ad8b271b2c64f4bac7759510) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for total supply and pagination on get all
+
+- [#395](https://github.com/thirdweb-dev/js/pull/395) [`f8bceec`](https://github.com/thirdweb-dev/js/commit/f8bceec10c60b30dc3d6f45926e2a9e018202578) Thanks [@jnsdls](https://github.com/jnsdls)! - [Solana] - fix claim condition reset to native token from custom
+
+- [#399](https://github.com/thirdweb-dev/js/pull/399) [`887af24`](https://github.com/thirdweb-dev/js/commit/887af24450e316c2ea390cd49c0563cebe793c0f) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - fix custom error handling for null-ish error values
+
+- [#390](https://github.com/thirdweb-dev/js/pull/390) [`96bd92e`](https://github.com/thirdweb-dev/js/commit/96bd92e724ec7d880d23348071b26ab8c21dd868) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SDK] Expose `getAllDetectedFeatures(ABI)` helper function
+
 ## 3.6.0
 
 ### Minor Changes
