@@ -201,6 +201,11 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                   label={contractId}
                   noMatch
                   href={href}
+                  trackingProps={{
+                    publisher,
+                    contractId,
+                    version,
+                  }}
                   _hover={{ textDecor: "none" }}
                 >
                   <Heading as="h3" noOfLines={1} size="label.lg">

@@ -376,7 +376,11 @@ export const WelcomeScreen: React.FC = () => {
                         key="step-4"
                       >
                         <Center h="100%" w="100%">
-                          <span>&apos;ello, pls need graphic for this pls</span>
+                          <ChakraNextImage
+                            alt=""
+                            boxSize="75px"
+                            src={require("/public/logos/wallet.png")}
+                          />
                         </Center>
                       </motion.div>
                     )}
