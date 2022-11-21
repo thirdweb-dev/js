@@ -344,7 +344,6 @@ export function useActiveClaimConditionForWallet(
       tokenId,
     ),
     async () => {
-      console.log("useActiveClaimConditionForWallet");
       // if we do not have a walletAddress just do the same logic as basic useClaimCondition
       if (!walletAddress) {
         if (erc1155) {
