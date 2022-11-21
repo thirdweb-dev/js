@@ -91,10 +91,13 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
 
   const form = useForm<{ addToDashboard: true }>();
 
-  const isTwFactory = isThirdwebFactory(
-    selectedChain,
-    fullReleaseMetadata.data?.factoryDeploymentData?.factoryAddresses,
-  );
+  const isTwFactory =
+    (fullReleaseMetadata.data?.isDeployableViaFactory ||
+      fullReleaseMetadata.data?.isDeployableViaProxy) &&
+    isThirdwebFactory(
+      selectedChain,
+      fullReleaseMetadata.data?.factoryDeploymentData?.factoryAddresses,
+    );
 
   const { register, watch, handleSubmit } = form;
   const [contractParams, _setContractParams] = useState<any[]>([]);
@@ -260,24 +263,25 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           </TrackedLink>
         </Text>
       </Flex>
-      <Flex alignItems="center" gap={3}>
-        {!isTwFactory && (
+      {!isTwFactory && (
+        <Flex alignItems="center" gap={3}>
           <Checkbox {...register("addToDashboard")} defaultChecked />
-        )}
-        <Text mt={1}>
-          Add to dashboard so I can find it in the list of my contracts at{" "}
-          <TrackedLink
-            href="https://thirdweb.com/dashboard"
-            isExternal
-            category="custom-contract"
-            label="visit-dashboard"
-            color="blue.500"
-          >
-            /dashboard
-          </TrackedLink>
-          .
-        </Text>
-      </Flex>
+
+          <Text mt={1}>
+            Add to dashboard so I can find it in the list of my contracts at{" "}
+            <TrackedLink
+              href="https://thirdweb.com/dashboard"
+              isExternal
+              category="custom-contract"
+              label="visit-dashboard"
+              color="blue.500"
+            >
+              /dashboard
+            </TrackedLink>
+            .
+          </Text>
+        </Flex>
+      )}
       <Flex gap={4} direction={{ base: "column", md: "row" }}>
         <FormControl>
           <SupportedNetworkSelect
