@@ -70,7 +70,13 @@ export function ThirdwebAuth(cfg: ThirdwebAuthConfig) {
     if (token) {
       try {
         const address = await sdk.auth.authenticate(domain, token);
-        user = { address };
+
+        let data = {};
+        if (ctx.callbacks?.user) {
+          data = await ctx.callbacks.user(address);
+        }
+
+        user = { ...data, address };
       } catch {
         // No-op
       }
