@@ -46,8 +46,9 @@ export async function createApp({
     }
   } else if (framework) {
     frameworkPath = `${framework}-${language || "javascript"}-${
-      chain && "solana-"
+      chain === "solana" ? "solana-" : ""
     }starter`;
+    console.log(frameworkPath);
     const found = await hasTemplate(frameworkPath);
 
     if (!found) {

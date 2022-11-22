@@ -10,25 +10,29 @@ import chalk from "chalk";
 import path from "path";
 import prompts from "prompts";
 
-let projectType: string = "";
 let projectPath: string = "";
+let projectType: string = "";
 let framework: string = "";
 let language: string = "";
 let baseContract: string = "";
 let chain: string = "";
 /* let createType: string = "app"; */
 
-export async function twCreate(pPath: string = "", options: any) {
-  if (typeof pPath === "string") {
-    projectPath = pPath;
-  }
-
-  if (options.app) {
+export async function twCreate(
+  pType: string,
+  pPath: string = "",
+  options: any,
+) {
+  if (pType === "app") {
     projectType = "app";
   }
 
-  if (options.contract) {
+  if (pType === "contract") {
     projectType = "contract";
+  }
+
+  if (typeof pPath === "string") {
+    projectPath = pPath;
   }
 
   if (options.typescript) {
@@ -67,6 +71,23 @@ export async function twCreate(pPath: string = "", options: any) {
     chain = "solana";
   }
 
+  if (options.evm) {
+    chain = "evm";
+  }
+
+  if (chain === "solana" && projectType === "contract") {
+    console.log("solana contracts are not yet supported");
+    process.exit(1);
+  }
+
+  if (
+    (projectType === "app" && framework === "hardhat") ||
+    framework === "forge"
+  ) {
+    console.log("hardhat and forge are not supported for apps");
+    process.exit(1);
+  }
+
   if (!projectType && !options.template && !options.solana) {
     const res = await prompts({
       type: "select",
@@ -81,7 +102,7 @@ export async function twCreate(pPath: string = "", options: any) {
     if (typeof res.projectType === "string") {
       projectType = res.projectType.trim();
     }
-  } else if (!projectType && (options.template || options.solana)) {
+  } else if (!projectType || options.template || options.solana) {
     // If no project type is specified, but a template is, we assume the user wants to create an app.
     // We do this so old users can still use the --template flag to create an app.
     projectType = "app";
@@ -135,13 +156,13 @@ export async function twCreate(pPath: string = "", options: any) {
         message: CREATE_MESSAGES.chain,
         choices: [
           // For EVM, value is nothing because the repo names don't have "evm" in them.
-          { title: "EVM", value: "" },
+          { title: "EVM", value: "evm" },
           { title: "Solana", value: "solana" },
         ],
       });
 
-      if (typeof res.chain === "string") {
-        chain = res.chain.trim();
+      if (res.chain === "solana") {
+        chain = "solana";
       }
     }
 
@@ -185,6 +206,8 @@ export async function twCreate(pPath: string = "", options: any) {
         language = res.language.trim();
       }
     }
+
+    console.log(projectType, framework);
 
     if (
       projectType === "contract" &&
