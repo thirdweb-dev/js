@@ -1,5 +1,5 @@
 import { PrebuiltContractType } from "../core/types";
-import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
+import { ChainId, SUPPORTED_CHAIN_ID, SUPPORTED_CHAIN_IDS } from "./chains";
 import { constants } from "ethers";
 
 /**
@@ -289,4 +289,25 @@ export function getContractPublisherAddress() {
   } else {
     return ContractPublisher_address;
   }
+}
+
+/**
+ *
+ * @param chainId - chain id
+ * @returns the array of trusted forwarders for the given chain id
+ * @internal
+ */
+export function getDefaultTrustedForwarders(
+  chainId: SUPPORTED_CHAIN_ID,
+): string[] {
+  const chainEnum = SUPPORTED_CHAIN_IDS.find((c) => c === chainId);
+  const biconomyForwarder = chainEnum
+    ? CONTRACT_ADDRESSES[chainEnum].biconomyForwarder
+    : constants.AddressZero;
+  const openzeppelinForwarder = chainEnum
+    ? CONTRACT_ADDRESSES[chainEnum].openzeppelinForwarder
+    : constants.AddressZero;
+  return biconomyForwarder !== constants.AddressZero
+    ? [openzeppelinForwarder, biconomyForwarder]
+    : [openzeppelinForwarder];
 }
