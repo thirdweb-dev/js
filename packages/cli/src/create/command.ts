@@ -35,6 +35,14 @@ export async function twCreate(
     projectPath = pPath;
   }
 
+  if (options.app) {
+    projectType = "app";
+  }
+
+  if (options.contract) {
+    projectType = "contract";
+  }
+
   if (options.typescript) {
     language = "typescript";
   }
