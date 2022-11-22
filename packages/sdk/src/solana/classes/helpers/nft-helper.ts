@@ -49,12 +49,9 @@ export class NFTHelper {
   }
 
   async getRaw(nftAddress: string) {
-    return await this.metaplex
-      .nfts()
-      .findByMint({
-        mintAddress: new PublicKey(nftAddress),
-      })
-      .run();
+    return await this.metaplex.nfts().findByMint({
+      mintAddress: new PublicKey(nftAddress),
+    });
   }
 
   async get(nftAddress: string): Promise<NFT> {
@@ -67,14 +64,11 @@ export class NFTHelper {
     nftAddress: string,
     quantity: number = 1,
   ): Promise<TransactionResult> {
-    const result = await this.metaplex
-      .nfts()
-      .send({
-        mintAddress: new PublicKey(nftAddress),
-        toOwner: new PublicKey(receiverAddress),
-        amount: token(quantity, 0),
-      })
-      .run();
+    const result = await this.metaplex.nfts().send({
+      mintAddress: new PublicKey(nftAddress),
+      toOwner: new PublicKey(receiverAddress),
+      amount: token(quantity, 0),
+    });
 
     return {
       signature: result.response.signature,

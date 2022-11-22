@@ -1,5 +1,13 @@
 # @thirdweb-dev/react
 
+## 3.6.1
+
+### Patch Changes
+
+- [#392](https://github.com/thirdweb-dev/js/pull/392) [`846022e`](https://github.com/thirdweb-dev/js/commit/846022e2cfb12b846aae029b85899fb72fd2c9ad) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Fix unlimited price for useActiveClaimConditionForWallet
+
+- [#388](https://github.com/thirdweb-dev/js/pull/388) [`7c0744a`](https://github.com/thirdweb-dev/js/commit/7c0744a006e78987ad8b271b2c64f4bac7759510) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for total supply and pagination on get all
+
 ## 3.6.0
 
 ### Patch Changes

@@ -459,9 +459,12 @@ function parseMessageParts(regex: RegExp, raw: string): string {
  * @param message
  */
 export function includesErrorMessage(err: any, message: string): boolean {
+  if (!err) {
+    return false;
+  }
   return (
     (err && err.toString().includes(message)) ||
-    (err.message && err.message.toString().includes(message)) ||
-    (err.error && err.error.toString().includes(message))
+    (err && err.message && err.message.toString().includes(message)) ||
+    (err && err.error && err.error.toString().includes(message))
   );
 }
