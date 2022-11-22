@@ -1,5 +1,11 @@
 # @thirdweb-dev/auth
 
+## 2.0.31
+
+### Patch Changes
+
+- [#397](https://github.com/thirdweb-dev/js/pull/397) [`72589ec`](https://github.com/thirdweb-dev/js/commit/72589ec234d86939b67b0ca8b3b789f2e9c54cc2) Thanks [@adam-maj](https://github.com/adam-maj)! - Call user callback in getUser
+
 ## 2.0.30
 
 ## 2.0.29

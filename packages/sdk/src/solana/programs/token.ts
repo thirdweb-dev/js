@@ -131,14 +131,11 @@ export class Token {
   ): Promise<TransactionResult> {
     const amountParsed = AmountSchema.parse(amount);
     const info = await this.getMint();
-    const result = await this.metaplex
-      .tokens()
-      .mint({
-        amount: token(amountParsed, info.decimals),
-        mintAddress: this.publicKey,
-        toOwner: new PublicKey(receiverAddress),
-      })
-      .run();
+    const result = await this.metaplex.tokens().mint({
+      amount: token(amountParsed, info.decimals),
+      mintAddress: this.publicKey,
+      toOwner: new PublicKey(receiverAddress),
+    });
     return {
       signature: result.response.signature,
     };
@@ -165,14 +162,11 @@ export class Token {
     amount: Amount,
   ): Promise<TransactionResult> {
     const info = await this.getMint();
-    const result = await this.metaplex
-      .tokens()
-      .send({
-        mintAddress: this.publicKey,
-        amount: token(amount, info.decimals),
-        toOwner: new PublicKey(receiverAddress),
-      })
-      .run();
+    const result = await this.metaplex.tokens().send({
+      mintAddress: this.publicKey,
+      amount: token(amount, info.decimals),
+      toOwner: new PublicKey(receiverAddress),
+    });
     return {
       signature: result.response.signature,
     };
@@ -228,7 +222,6 @@ export class Token {
   private async getMint() {
     return await this.metaplex
       .tokens()
-      .findMintByAddress({ address: this.publicKey })
-      .run(); // TODO abstract types away
+      .findMintByAddress({ address: this.publicKey });
   }
 }

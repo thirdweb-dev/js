@@ -20,7 +20,7 @@ import { CreatorInput, CreatorOutput } from "../types/programs";
 import { sendMultipartTransaction } from "../utils/transactions";
 import { getNework } from "../utils/urls";
 import {
-  CandyMachineItem,
+  CandyMachineV2Item,
   Metaplex,
   toBigNumber,
 } from "@metaplex-foundation/js";
@@ -103,8 +103,7 @@ export class NFTDrop {
     invariant(info.collectionMintAddress, "Collection mint address not found");
     const metadata = await this.metaplex
       .nfts()
-      .findByMint({ mintAddress: info.collectionMintAddress })
-      .run();
+      .findByMint({ mintAddress: info.collectionMintAddress });
 
     return (await this.nft.toNFTMetadata(metadata)).metadata;
   }
@@ -179,7 +178,7 @@ export class NFTDrop {
     const totalClaimed = await this.totalClaimedSupply();
 
     // Then filter out all claimed NFTs from items to leave only unclaimed remaining
-    const unclaimedItems: CandyMachineItem[] = [];
+    const unclaimedItems: CandyMachineV2Item[] = [];
     info.items.forEach((item) => {
       const isClaimed =
         claimedNfts.filter(
@@ -401,20 +400,20 @@ export class NFTDrop {
       CommonNFTInput.parse(metadata),
     );
     const uris = await this.storage.uploadBatch(parsedMetadatas, options);
-    const items: CandyMachineItem[] = uris.map((uri, i) => ({
+    const items: CandyMachineV2Item[] = uris.map((uri, i) => ({
       name: parsedMetadatas[i].name?.toString() || "",
       uri,
     }));
 
     // turn items into batches of $LAZY_MINT_BATCH_SIZE
-    const batches: CandyMachineItem[][] = [];
+    const batches: CandyMachineV2Item[][] = [];
     while (items.length) {
       batches.push(items.splice(0, LAZY_MINT_BATCH_SIZE));
     }
 
     const builders = batches.map((batch, i) =>
       this.metaplex
-        .candyMachines()
+        .candyMachinesV2()
         .builders()
         .insertItems({
           candyMachine,
@@ -465,7 +464,7 @@ export class NFTDrop {
     const builders = await Promise.all(
       [...Array(amount).keys()].map(async () => {
         return await this.metaplex
-          .candyMachines()
+          .candyMachinesV2()
           .builders()
           .mint({
             candyMachine,
@@ -498,13 +497,10 @@ export class NFTDrop {
     const collection = candyMachine.collectionMintAddress
       ? candyMachine.collectionMintAddress
       : undefined;
-    const tx = await this.metaplex
-      .nfts()
-      .delete({
-        mintAddress: new PublicKey(nftAddress),
-        collection,
-      })
-      .run();
+    const tx = await this.metaplex.nfts().delete({
+      mintAddress: new PublicKey(nftAddress),
+      collection,
+    });
     return {
       signature: tx.response.signature,
     };
@@ -515,13 +511,11 @@ export class NFTDrop {
    * @param creators - the creators to update
    */
   async updateCreators(creators: CreatorInput[]) {
-    const tx = await this.metaplex
-      .candyMachines()
-      .update({
-        candyMachine: await this.getCandyMachine(),
-        creators: enforceCreator(creators, this.metaplex.identity().publicKey),
-      })
-      .run();
+    const tx = await this.metaplex.candyMachinesV2().update({
+      candyMachine: await this.getCandyMachine(),
+      creators: enforceCreator(creators, this.metaplex.identity().publicKey),
+    });
+
     return {
       signature: tx.response.signature,
     };
@@ -532,13 +526,11 @@ export class NFTDrop {
    * @param sellerFeeBasisPoints - the royalty basis points of the collection
    */
   async updateRoyalty(sellerFeeBasisPoints: number) {
-    const tx = await this.metaplex
-      .candyMachines()
-      .update({
-        candyMachine: await this.getCandyMachine(),
-        sellerFeeBasisPoints,
-      })
-      .run();
+    const tx = await this.metaplex.candyMachinesV2().update({
+      candyMachine: await this.getCandyMachine(),
+      sellerFeeBasisPoints,
+    });
+
     return {
       signature: tx.response.signature,
     };
@@ -546,8 +538,7 @@ export class NFTDrop {
 
   private async getCandyMachine() {
     return this.metaplex
-      .candyMachines()
-      .findByAddress({ address: this.publicKey })
-      .run();
+      .candyMachinesV2()
+      .findByAddress({ address: this.publicKey });
   }
 }
