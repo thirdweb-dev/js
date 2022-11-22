@@ -23,24 +23,14 @@ export async function twCreate(
   pPath: string = "",
   options: any,
 ) {
-  if (pType === "app") {
+  if (pType === "app" || options.app) {
     projectType = "app";
-  }
-
-  if (pType === "contract") {
+  } else if (pType === "contract" || options.contract) {
     projectType = "contract";
   }
 
   if (typeof pPath === "string") {
     projectPath = pPath;
-  }
-
-  if (options.app) {
-    projectType = "app";
-  }
-
-  if (options.contract) {
-    projectType = "contract";
   }
 
   if (options.typescript) {
@@ -75,11 +65,11 @@ export async function twCreate(
     framework = options.framework;
   }
 
-  if (options.solana) {
+  if (projectType === "app" && options.solana) {
     chain = "solana";
   }
 
-  if (options.evm) {
+  if (projectType === "app" && options.evm) {
     chain = "evm";
   }
 
@@ -89,8 +79,8 @@ export async function twCreate(
   }
 
   if (
-    (projectType === "app" && framework === "hardhat") ||
-    framework === "forge"
+    projectType === "app" &&
+    (framework === "hardhat" || framework === "forge")
   ) {
     console.log("hardhat and forge are not supported for apps");
     process.exit(1);
@@ -110,7 +100,7 @@ export async function twCreate(
     if (typeof res.projectType === "string") {
       projectType = res.projectType.trim();
     }
-  } else if (!projectType || options.template || options.solana) {
+  } else if (!projectType || options.template) {
     // If no project type is specified, but a template is, we assume the user wants to create an app.
     // We do this so old users can still use the --template flag to create an app.
     projectType = "app";
@@ -171,6 +161,8 @@ export async function twCreate(
 
       if (res.chain === "solana") {
         chain = "solana";
+      } else {
+        chain = "evm";
       }
     }
 
