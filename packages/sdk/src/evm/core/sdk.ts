@@ -46,15 +46,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @example
    * ```javascript
    * import { ThirdwebSDK } from "@thirdweb-dev/sdk"
-   * import { AsyncWallet } from "@thirdweb-dev/sdk/evm/wallets"
    *
-   * const wallet = new AsyncWallet({
-   *   getPrivateKey: async () => {
-   *     // Get the private key of your wallet however you want to
-   *     const privateKey = await getPrivateKeyFromSomewhere();
-   *     return privateKey;
-   *   }
-   * });
+   * const wallet = new AbstractWalletImplementation();
    * const sdk = await ThirdwebSDK.fromWallet(wallet, "mainnet");
    * ```
    *
