@@ -207,8 +207,6 @@ export async function twCreate(
       }
     }
 
-    console.log(projectType, framework);
-
     if (
       projectType === "contract" &&
       framework !== "forge" &&

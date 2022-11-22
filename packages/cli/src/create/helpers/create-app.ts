@@ -48,7 +48,6 @@ export async function createApp({
     frameworkPath = `${framework}-${language || "javascript"}-${
       chain === "solana" ? "solana-" : ""
     }starter`;
-    console.log(frameworkPath);
     const found = await hasTemplate(frameworkPath);
 
     if (!found) {

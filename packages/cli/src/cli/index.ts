@@ -55,17 +55,17 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("--vite", "Initialize as a Vite project.")
     .option(
       "--use-npm",
-      `Explicitly tell the CLI to bootstrap the app using npm`,
+      "Explicitly tell the CLI to bootstrap the app using npm",
     )
     .option(
       "--use-pnpm",
-      `Explicitly tell the CLI to bootstrap the app using pnpm`,
+      "Explicitly tell the CLI to bootstrap the app using pnpm",
     )
-    .option("--framework [name]", `The preferred framework.`)
-    .option("--solana", `Initialize as a Solana project.`)
+    .option("--framework [name]", "The preferred framework.")
+    .option("--solana", "Initialize as a Solana project.")
     .option(
       "-t, --template [name]",
-      `A template to start your project from. You can use an template repository name from the official thirdweb-example org.`,
+      "A template to start your project from. You can use an template repository name from the official thirdweb-example org.",
     )
     .action(async (type, path, options) => {
       await twCreate(type, path, options);
