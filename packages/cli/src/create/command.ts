@@ -23,70 +23,61 @@ export async function twCreate(
   pPath: string = "",
   options: any,
 ) {
+  if (typeof pPath === "string") {
+    projectPath = pPath;
+  }
+
   if (pType === "app" || options.app) {
     projectType = "app";
   } else if (pType === "contract" || options.contract) {
     projectType = "contract";
   }
 
-  if (typeof pPath === "string") {
-    projectPath = pPath;
+  if (projectType === "app") {
+    if (options.typescript) {
+      language = "typescript";
+    }
+
+    if (options.javascript) {
+      language = "javascript";
+    }
+
+    if (options.next) {
+      framework = "next";
+    }
+
+    if (options.cra) {
+      framework = "cra";
+    }
+
+    if (options.vite) {
+      framework = "vite";
+    }
+
+    if (options.solana) {
+      chain = "solana";
+    }
+
+    if (options.evm) {
+      chain = "evm";
+    }
   }
 
-  if (options.typescript) {
-    language = "typescript";
-  }
+  if (projectType === "contract") {
+    if (options.forge) {
+      framework = "forge";
+    }
 
-  if (options.javascript) {
-    language = "javascript";
-  }
-
-  if (options.next) {
-    framework = "next";
-  }
-
-  if (options.cra) {
-    framework = "cra";
-  }
-
-  if (options.vite) {
-    framework = "vite";
-  }
-
-  if (options.forge) {
-    framework = "forge";
-  }
-
-  if (options.hardhat) {
-    framework = "hardhat";
+    if (options.hardhat) {
+      framework = "hardhat";
+    }
   }
 
   if (options.framework) {
     framework = options.framework;
   }
 
-  if (projectType === "app" && options.solana) {
-    chain = "solana";
-  }
-
-  if (projectType === "app" && options.evm) {
-    chain = "evm";
-  }
-
-  if (chain === "solana" && projectType === "contract") {
-    console.log("solana contracts are not yet supported");
-    process.exit(1);
-  }
-
-  if (
-    projectType === "app" &&
-    (framework === "hardhat" || framework === "forge")
-  ) {
-    console.log("hardhat and forge are not supported for apps");
-    process.exit(1);
-  }
-
-  if (!projectType && !options.template && !options.solana) {
+  if (!projectType && !options.template) {
     const res = await prompts({
       type: "select",
       name: "projectType",
