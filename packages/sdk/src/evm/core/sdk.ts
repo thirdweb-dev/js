@@ -12,7 +12,7 @@ import {
 import { SmartContract } from "../contracts/smart-contract";
 import { SDKOptions } from "../schema/sdk-options";
 import { CurrencyValue } from "../types/index";
-import { AbstractWallet } from "../wallets";
+import type { AbstractWallet } from "../wallets";
 import { WalletAuthenticator } from "./auth/wallet-authenticator";
 import type { ContractMetadata } from "./classes";
 import { ContractDeployer } from "./classes/contract-deployer";
@@ -61,8 +61,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param wallet - the implementation of the AbstractWallet class to use for signing
    * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
    * @param options - the SDK options to use
-   * @returns an instance of the SDK
    * @param storage - optional storage implementation to use
+   * @returns an instance of the SDK
+   *
+   * @beta
    */
   static async fromWallet(
     wallet: AbstractWallet,
@@ -97,8 +99,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param signer - a ethers Signer to be used for transactions
    * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
    * @param options - the SDK options to use
-   * @returns an instance of the SDK
    * @param storage - optional storage implementation to use
+   * @returns an instance of the SDK
    *
    * @beta
    */

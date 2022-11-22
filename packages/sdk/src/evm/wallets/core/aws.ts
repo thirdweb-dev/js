@@ -55,31 +55,25 @@ export class AWSSecretsManagerWallet extends AbstractWallet {
       return this.cachedSigner;
     }
 
-    try {
-      const res = await this.client.send(
-        new GetSecretValueCommand({
-          SecretId: this.secretId,
-          VersionStage: "AWSCURRENT", // VersionStage defaults to AWSCURRENT if unspecified
-        }),
-      );
+    const res = await this.client.send(
+      new GetSecretValueCommand({
+        SecretId: this.secretId,
+        VersionStage: "AWSCURRENT", // VersionStage defaults to AWSCURRENT if unspecified
+      }),
+    );
 
-      if (!res || !res.SecretString) {
-        throw new Error(`No secret found at ${this.secretId}`);
-      }
-
-      const privateKey = JSON.parse(res.SecretString)[this.secretKeyName];
-      if (!privateKey) {
-        throw new Error(
-          `Secret ${this.secretId} does not have key ${this.secretKeyName}`,
-        );
-      }
-
-      this.cachedSigner = new ethers.Wallet(privateKey, provider);
-      return this.cachedSigner;
-    } catch (error) {
-      // For a list of exceptions thrown, see
-      // https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-      throw error;
+    if (!res || !res.SecretString) {
+      throw new Error(`No secret found at ${this.secretId}`);
     }
+
+    const privateKey = JSON.parse(res.SecretString)[this.secretKeyName];
+    if (!privateKey) {
+      throw new Error(
+        `Secret ${this.secretId} does not have key ${this.secretKeyName}`,
+      );
+    }
+
+    this.cachedSigner = new ethers.Wallet(privateKey, provider);
+    return this.cachedSigner;
   }
 }
