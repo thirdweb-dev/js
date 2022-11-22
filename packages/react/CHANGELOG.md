@@ -1,5 +1,11 @@
 # @thirdweb-dev/react
 
+## 3.6.2
+
+### Patch Changes
+
+- [#405](https://github.com/thirdweb-dev/js/pull/405) [`ccb7db4`](https://github.com/thirdweb-dev/js/commit/ccb7db48739b8dddcb2c032b3b6e3e5200485715) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add updateAll param to creators and royalty update hooks for Solana
+
 ## 3.6.1
 
 ### Patch Changes
