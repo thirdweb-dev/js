@@ -12,9 +12,11 @@ import { MarkdownRenderer } from "../released-contract/markdown-renderer";
 import { ContractId } from "../types";
 import {
   Box,
+  Code,
   Divider,
   Flex,
   FormControl,
+  GridItem,
   Icon,
   Image,
   Input,
@@ -40,6 +42,7 @@ import { FileInput } from "components/shared/FileInput";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { getTemplateValuesForType } from "lib/deployment/tempalte-values";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -467,20 +470,34 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
             </Flex>
           </Flex>
           {deployParams?.length > 0 && (
-            <Flex flexDir={"column"} gap={2}>
-              <Heading size="subtitle.md">Contract Parameters</Heading>
-              <Text>
-                These are the parameters that users will need to pass in before
-                they deploy this contract.
-              </Text>
-              <Flex flexDir="column" gap={4}>
-                {deployParams.map((param) => (
-                  <Flex flexDir="column" gap={1} key={`implementation${param}`}>
-                    <Heading size="subtitle.sm">{param.name}</Heading>
-                    <Card as={FormControl}>
-                      <Flex gap={2} flexDir="column">
-                        <Flex gap={4}>
-                          <FormControl>
+            <>
+              <Divider />
+              <Flex flexDir="column" gap={2}>
+                <Heading size="subtitle.md">Contract Parameters</Heading>
+                <Text>
+                  These are the parameters users will need to fill inwhen
+                  deploying this contract.
+                </Text>
+                <Flex flexDir="column" gap={4}>
+                  {deployParams.map((param) => {
+                    const paramTemplateValues = getTemplateValuesForType(
+                      param.type,
+                    );
+                    return (
+                      <Flex
+                        flexDir="column"
+                        gap={1}
+                        key={`implementation_${param.name}`}
+                      >
+                        <Flex justify="space-between" align="center">
+                          <Heading size="subtitle.sm">{param.name}</Heading>
+                          <Text size="body.sm">{param.type}</Text>
+                        </Flex>
+                        <SimpleGrid as={Card} gap={4} columns={12}>
+                          <GridItem
+                            as={FormControl}
+                            colSpan={{ base: 12, md: 6 }}
+                          >
                             <FormLabel
                               flex="1"
                               as={Text}
@@ -496,8 +513,67 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
                               placeholder={param.name}
                               disabled={isDisabled}
                             />
-                          </FormControl>
-                          <FormControl>
+                          </GridItem>
+                          <GridItem
+                            as={FormControl}
+                            colSpan={{ base: 12, md: 6 }}
+                          >
+                            <FormLabel
+                              flex="1"
+                              as={Text}
+                              size="label.sm"
+                              fontWeight={500}
+                            >
+                              Default Value
+                            </FormLabel>
+
+                            <Input
+                              {...register(
+                                `constructorParams.${param.name}.defaultValue`,
+                              )}
+                              disabled={isDisabled}
+                            />
+
+                            <FormHelperText>
+                              This value will be pre-filled in the deploy form.
+                              {paramTemplateValues.length > 0 && (
+                                <Flex
+                                  as={Card}
+                                  mt={3}
+                                  borderRadius="md"
+                                  py={3}
+                                  px={3}
+                                  direction="column"
+                                  gap={2}
+                                >
+                                  <Heading as="h5" size="label.sm">
+                                    Supported template variables
+                                  </Heading>
+                                  <Flex direction="column">
+                                    {paramTemplateValues.map((val) => (
+                                      <Text size="body.sm" key={val.value}>
+                                        <Code
+                                          as="button"
+                                          type="button"
+                                          display="inline"
+                                          onClick={() => {
+                                            setValue(
+                                              `constructorParams.${param.name}.defaultValue`,
+                                              val.value,
+                                            );
+                                          }}
+                                        >
+                                          {val.value}
+                                        </Code>{" "}
+                                        - {val.helperText}
+                                      </Text>
+                                    ))}
+                                  </Flex>
+                                </Flex>
+                              )}
+                            </FormHelperText>
+                          </GridItem>
+                          <GridItem as={FormControl} colSpan={12}>
                             <FormLabel
                               flex="1"
                               as={Text}
@@ -506,20 +582,20 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
                             >
                               Description
                             </FormLabel>
-                            <Input
+                            <Textarea
                               {...register(
                                 `constructorParams.${param.name}.description`,
                               )}
                               disabled={isDisabled}
                             />
-                          </FormControl>
-                        </Flex>
+                          </GridItem>
+                        </SimpleGrid>
                       </Flex>
-                    </Card>
-                  </Flex>
-                ))}
+                    );
+                  })}
+                </Flex>
               </Flex>
-            </Flex>
+            </>
           )}
           {isDeployableViaProxy && (
             <Flex flexDir={"column"} gap={2}>
@@ -628,6 +704,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
               )}
             </Flex>
           )}
+          <Divider />
           <Flex justifyContent="space-between" alignItems="center">
             <Text>
               Our contract registry lives on-chain (Polygon), releasing is free

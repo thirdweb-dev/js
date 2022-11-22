@@ -6,6 +6,7 @@ import {
   useFunctionParamsFromABI,
 } from "../hooks";
 import { Divider, Flex, FormControl, Input } from "@chakra-ui/react";
+import { useAddress } from "@thirdweb-dev/react";
 import {
   ContractType,
   SUPPORTED_CHAIN_ID,
@@ -17,8 +18,8 @@ import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelec
 import { DisabledChainsMap } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { replaceTemplateValues } from "lib/deployment/tempalte-values";
 import { useRouter } from "next/router";
-import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Checkbox,
@@ -58,6 +59,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
   isImplementationDeploy,
   onSuccessCallback,
 }) => {
+  const address = useAddress();
   const trackEvent = useTrack();
   const compilerMetadata = useContractPublishMetadataFromURI(ipfsHash);
   const fullReleaseMetadata = useContractFullPublishMetadata(ipfsHash);
@@ -72,6 +74,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
   const isFactoryDeployment =
     fullReleaseMetadata.data?.isDeployableViaFactory ||
     (fullReleaseMetadata.data?.isDeployableViaProxy && !isImplementationDeploy);
+
   const deployParams = isFactoryDeployment
     ? initializerParams
     : constructorParams;
@@ -89,8 +92,6 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
         })
       : undefined;
 
-  const form = useForm<{ addToDashboard: true }>();
-
   const isTwFactory =
     (fullReleaseMetadata.data?.isDeployableViaFactory ||
       fullReleaseMetadata.data?.isDeployableViaProxy) &&
@@ -99,15 +100,44 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       fullReleaseMetadata.data?.factoryDeploymentData?.factoryAddresses,
     );
 
-  const { register, watch, handleSubmit } = form;
-  const [contractParams, _setContractParams] = useState<any[]>([]);
-  const setContractParams = useCallback((idx: number, value: any) => {
-    _setContractParams((prev) => {
-      const newArr = [...prev];
-      newArr.splice(idx, 1, value);
-      return newArr;
-    });
-  }, []);
+  const form = useForm<{
+    addToDashboard: boolean;
+    deployParams: Record<string, string>;
+  }>({
+    defaultValues: {
+      addToDashboard: !isTwFactory,
+      deployParams: deployParams.reduce((acc, param) => {
+        acc[param.name] = replaceTemplateValues(
+          fullReleaseMetadata.data?.constructorParams?.[param.name]
+            .defaultValue || "",
+          param.type,
+          {
+            connectedWallet: address,
+            chainId: selectedChain,
+          },
+        );
+        return acc;
+      }, {} as Record<string, string>),
+    },
+    values: {
+      addToDashboard: !isTwFactory,
+      deployParams: deployParams.reduce((acc, param) => {
+        acc[param.name] = replaceTemplateValues(
+          fullReleaseMetadata.data?.constructorParams?.[param.name]
+            .defaultValue || "",
+          param.type,
+          {
+            connectedWallet: address,
+            chainId: selectedChain,
+          },
+        );
+        return acc;
+      }, {} as Record<string, string>),
+    },
+    resetOptions: {
+      keepDirtyValues: true,
+    },
+  });
 
   const deploy = useCustomContractDeployMutation(
     ipfsHash,
@@ -120,6 +150,8 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
     "Failed to deploy contract",
   );
 
+  const formDeployParams = form.watch("deployParams");
+
   return (
     <Flex
       flexGrow={1}
@@ -128,13 +160,13 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       direction="column"
       id="custom-contract-form"
       as="form"
-      onSubmit={handleSubmit((d) => {
+      onSubmit={form.handleSubmit((d) => {
         if (!selectedChain) {
           return;
         }
         const deployData = {
           ipfsHash,
-          constructorParams: contractParams,
+          constructorParams: d.deployParams,
           contractMetadata: d,
           publishMetadata: compilerMetadata.data,
           chainId: selectedChain,
@@ -150,7 +182,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
         });
         deploy.mutate(
           {
-            constructorParams: contractParams,
+            constructorParams: Object.values(d.deployParams),
             addToDashboard,
           },
           {
@@ -196,7 +228,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
         );
       })}
     >
-      {deployParams?.length ? (
+      {Object.keys(formDeployParams).length > 0 && (
         <>
           <Flex direction="column">
             <Heading size="subtitle.md">Contract Parameters</Heading>
@@ -205,37 +237,29 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
               deployment.
             </Text>
           </Flex>
-          {/* TODO make this part of the actual form */}
-          {deployParams.map((param, idx) => {
+          {Object.keys(formDeployParams).map((paramKey) => {
+            const deployParam = deployParams.find((p) => p.name === paramKey);
             const contructorParams =
               fullReleaseMetadata.data?.constructorParams || {};
-            const extraMetadataParam = contructorParams[param.name];
-
+            const extraMetadataParam = contructorParams[paramKey];
             return (
-              <FormControl isRequired key={param.name}>
+              <FormControl isRequired key={paramKey}>
                 <Flex alignItems="center" my={1}>
                   <FormLabel mb={0} flex="1" display="flex">
                     {extraMetadataParam?.displayName ? (
                       <Flex alignItems="center" gap={1}>
                         {extraMetadataParam?.displayName}
-                        <Text size="label.sm">({param.name})</Text>
+                        <Text size="label.sm">({paramKey})</Text>
                       </Flex>
                     ) : (
-                      param.name
+                      paramKey
                     )}
                   </FormLabel>
-                  <FormHelperText mt={0}>{param.type}</FormHelperText>
+                  {deployParam && (
+                    <FormHelperText mt={0}>{deployParam.type}</FormHelperText>
+                  )}
                 </Flex>
-                <Input
-                  fontFamily={
-                    param.type === "address" ? "monospace" : undefined
-                  }
-                  value={contractParams[idx] || ""}
-                  onChange={(e) =>
-                    setContractParams(idx, e.currentTarget.value)
-                  }
-                  type="text"
-                />
+                <Input {...form.register(`deployParams.${paramKey}`)} />
                 {extraMetadataParam?.description && (
                   <FormHelperText>
                     {extraMetadataParam?.description}
@@ -246,7 +270,8 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
           })}
           <Divider mt="auto" />
         </>
-      ) : null}
+      )}
+
       <Flex direction="column">
         <Heading size="subtitle.md">Network / Chain</Heading>
         <Text size="body.md">
@@ -265,7 +290,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       </Flex>
       {!isTwFactory && (
         <Flex alignItems="center" gap={3}>
-          <Checkbox {...register("addToDashboard")} defaultChecked />
+          <Checkbox {...form.register("addToDashboard")} defaultChecked />
 
           <Text mt={1}>
             Add to dashboard so I can find it in the list of my contracts at{" "}
@@ -318,7 +343,9 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
             !!disabledChains?.find((chain) => chain === selectedChain)
           }
           colorScheme="blue"
-          transactionCount={isTwFactory ? 1 : !watch("addToDashboard") ? 1 : 2}
+          transactionCount={
+            isTwFactory ? 1 : !form.watch("addToDashboard") ? 1 : 2
+          }
         >
           Deploy Now
         </TransactionButton>

@@ -258,7 +258,7 @@ export const colors = {
 
   // blue: themeColors.primary,
   // purple: themeColors.primary,
-  primary: themeColors.purple,
+  primary: themeColors.blue,
 
   // random
   backgroundLight: "#F5F6F8",
