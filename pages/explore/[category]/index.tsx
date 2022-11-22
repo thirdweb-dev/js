@@ -88,13 +88,17 @@ const ExploreCategoryPage: ThirdwebNextPage = (
           </Text>
         </Flex>
         <SimpleGrid columns={{ base: 1, md: 3 }} gap={5}>
-          {props.category.contracts.map((publishedContractId) => {
+          {props.category.contracts.map((publishedContractId, idx) => {
             const [publisher, contractId] = publishedContractId.split("/");
             return (
               <ContractCard
                 key={publishedContractId}
                 publisher={publisher}
                 contractId={contractId}
+                tracking={{
+                  source: props.category.id,
+                  itemIndex: `${idx}`,
+                }}
               />
             );
           })}

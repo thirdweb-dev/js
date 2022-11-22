@@ -30,6 +30,10 @@ interface ContractCardProps {
   contractId: string;
   version?: string;
   slim?: boolean;
+  tracking?: {
+    source: string;
+    itemIndex: `${number}`;
+  };
 }
 
 export const ContractCard: React.FC<ContractCardProps> = ({
@@ -37,6 +41,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
   contractId,
   version = "latest",
   slim,
+  tracking,
 }) => {
   const publishedContractResult = usePublishedContract(
     `${publisher}/${contractId}/${version}`,
@@ -205,6 +210,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                     publisher,
                     contractId,
                     version,
+                    ...(tracking || {}),
                   }}
                   _hover={{ textDecor: "none" }}
                 >

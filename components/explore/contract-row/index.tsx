@@ -63,13 +63,17 @@ export const ContractRow: React.FC<ContractRowProps> = ({ category }) => {
         )}
       </Flex>
       <SimpleGrid columns={{ base: 1, md: 3 }} gap={5}>
-        {category.contracts.slice(0, 6).map((publishedContractId) => {
+        {category.contracts.slice(0, 6).map((publishedContractId, idx) => {
           const [publisher, contractId] = publishedContractId.split("/");
           return (
             <ContractCard
               key={publishedContractId}
               publisher={publisher}
               contractId={contractId}
+              tracking={{
+                source: category.id,
+                itemIndex: `${idx}`,
+              }}
             />
           );
         })}
