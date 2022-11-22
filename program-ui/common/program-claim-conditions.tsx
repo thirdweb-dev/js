@@ -269,14 +269,6 @@ const ClaimConditionsProgramForm: React.FC<{ address: string }> = ({
                           : undefined
                       }
                     />
-                    {/*                     <CurrencySelector
-                      // TODO get native_token_address
-                                                value={currencyAddress || NATIVE_TOKEN_ADDRESS}
-                      value={watch("currencyAddress") || ""}
-                      onChange={(e) =>
-                        setValue(`currencyAddress`, e.target.value)
-                      }
-                    /> */}
                     <FormErrorMessage>
                       {
                         getFieldState(`currencyAddress`, formState).error
@@ -334,8 +326,8 @@ const ClaimConditionsProgramForm: React.FC<{ address: string }> = ({
                       }
                     />
                     <FormHelperText>
-                      Determine the address that should receive the revenue from
-                      royalties earned from secondary sales of the assets.
+                      Determine the percentage you&apos;ll receive from
+                      secondary sales of the assets.
                     </FormHelperText>
                     <FormErrorMessage>
                       {

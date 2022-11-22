@@ -9,6 +9,7 @@ import {
 import { useEns } from "components/contract-components/hooks";
 import { ProgramClaimConditionsTab } from "program-ui/common/program-claim-conditions";
 import { ProgramCodeTab } from "program-ui/common/program-code";
+import { ProgramSettingsTab } from "program-ui/common/program-settings";
 import { Card, Heading, Text } from "tw-components";
 
 export type EnhancedRoute = Route & {
@@ -59,19 +60,22 @@ export function useProgramRouteConfig(programAddress: string): EnhancedRoute[] {
     {
       title: "Settings",
       path: "/settings",
-      element: (
-        <>
-          <Card>
-            <Flex direction="column" gap={4}>
-              <Heading size="label.lg">⚠️ Coming soon</Heading>
-              <Text>
-                Here you will be able to configure Metadata, Creators,
-                Royalties, etc for your program.
-              </Text>
-            </Flex>
-          </Card>
-        </>
-      ),
+      element:
+        program?.accountType === "nft-collection" ? (
+          <ProgramSettingsTab address={programAddress} />
+        ) : (
+          <>
+            <Card>
+              <Flex direction="column" gap={4}>
+                <Heading size="label.lg">⚠️ Coming soon</Heading>
+                <Text>
+                  Here you will be able to configure Metadata, Creators,
+                  Royalties, etc for your program.
+                </Text>
+              </Flex>
+            </Card>
+          </>
+        ),
     },
   ];
 }
