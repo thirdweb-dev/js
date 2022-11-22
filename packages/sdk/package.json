@@ -19,6 +19,10 @@
       "module": "./solana/dist/thirdweb-dev-sdk-solana.esm.js",
       "default": "./solana/dist/thirdweb-dev-sdk-solana.cjs.js"
     },
+    "./evm/wallets": {
+      "module": "./evm/wallets/dist/thirdweb-dev-sdk-evm-wallets.esm.js",
+      "default": "./evm/wallets/dist/thirdweb-dev-sdk-evm-wallets.cjs.js"
+    },
     "./solana/server": {
       "module": "./solana/server/dist/thirdweb-dev-sdk-solana-server.esm.js",
       "default": "./solana/server/dist/thirdweb-dev-sdk-solana-server.cjs.js"
@@ -28,6 +32,7 @@
   "files": [
     "dist/",
     "evm/",
+    "wallets/",
     "solana/",
     "server/"
   ],
@@ -35,6 +40,7 @@
     "entrypoints": [
       "index.ts",
       "evm/index.ts",
+      "evm/wallets/index.ts",
       "solana/index.ts",
       "solana/server/index.ts"
     ],
@@ -96,7 +102,13 @@
     "typescript": "^4.7.4"
   },
   "peerDependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.215.0",
     "ethers": "^5"
+  },
+  "peerDependenciesMeta": {
+    "@aws-sdk/client-secrets-manager": {
+      "optional": true
+    }
   },
   "dependencies": {
     "@metaplex-foundation/js": "0.15.0",

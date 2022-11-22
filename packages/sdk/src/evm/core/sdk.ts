@@ -12,6 +12,7 @@ import {
 import { SmartContract } from "../contracts/smart-contract";
 import { SDKOptions } from "../schema/sdk-options";
 import { CurrencyValue } from "../types/index";
+import { AbstractWallet } from "../wallets";
 import { WalletAuthenticator } from "./auth/wallet-authenticator";
 import type { ContractMetadata } from "./classes";
 import { ContractDeployer } from "./classes/contract-deployer";
@@ -39,6 +40,48 @@ import invariant from "tiny-invariant";
  * @public
  */
 export class ThirdwebSDK extends RPCConnectionHandler {
+  /**
+   * Get an instance of the thirdweb SDK based on an AbstractWallet
+   *
+   * @example
+   * ```javascript
+   * import { ThirdwebSDK } from "@thirdweb-dev/sdk"
+   * import { AsyncWallet } from "@thirdweb-dev/sdk/evm/wallets"
+   *
+   * const wallet = new AsyncWallet({
+   *   getPrivateKey: async () => {
+   *     // Get the private key of your wallet however you want to
+   *     const privateKey = await getPrivateKeyFromSomewhere();
+   *     return privateKey;
+   *   }
+   * });
+   * const sdk = await ThirdwebSDK.fromWallet(wallet, "mainnet");
+   * ```
+   *
+   * @param wallet - the implementation of the AbstractWallet class to use for signing
+   * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
+   * @param options - the SDK options to use
+   * @returns an instance of the SDK
+   * @param storage - optional storage implementation to use
+   */
+  static async fromWallet(
+    wallet: AbstractWallet,
+    network: ChainOrRpc,
+    options: SDKOptions = {},
+    storage: ThirdwebStorage = new ThirdwebStorage(),
+  ) {
+    const signerOrProvider = getProviderForNetwork(network);
+    const provider = Signer.isSigner(signerOrProvider)
+      ? signerOrProvider.provider
+      : typeof signerOrProvider === "string"
+      ? getReadOnlyProvider(signerOrProvider)
+      : signerOrProvider;
+
+    const signer = await wallet.getSigner(provider);
+
+    return ThirdwebSDK.fromSigner(signer, network, options, storage);
+  }
+
   /**
    * Get an instance of the thirdweb SDK based on an existing ethers signer
    *
