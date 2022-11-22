@@ -11,17 +11,14 @@ export async function sendMultipartTransaction(
 ): Promise<TransactionResult[]> {
   const block = await metaplex.connection.getLatestBlockhash();
   const txns = builders.map((builder) => {
-    const builderTx = builder
-      .setTransactionOptions({
-        blockhash: block.blockhash,
-        feePayer: metaplex.identity().publicKey,
-        lastValidBlockHeight: block.lastValidBlockHeight,
-      })
-      .setFeePayer(metaplex.identity());
+    const builderTx = builder.setFeePayer(metaplex.identity());
 
     const dropSigners = [metaplex.identity(), ...builderTx.getSigners()];
     const { keypairs } = getSignerHistogram(dropSigners);
-    const tx = builderTx.toTransaction();
+    const tx = builderTx.toTransaction({
+      blockhash: block.blockhash,
+      lastValidBlockHeight: block.lastValidBlockHeight,
+    });
 
     if (keypairs.length > 0) {
       tx.partialSign(...keypairs);
@@ -44,7 +41,10 @@ export async function sendMultipartTransaction(
   // wait for confirmations in parallel
   const confirmations = await Promise.all(
     signatures.map((sig) => {
-      return metaplex.rpc().confirmTransaction(sig);
+      return metaplex.rpc().confirmTransaction(sig, {
+        blockhash: block.blockhash,
+        lastValidBlockHeight: block.lastValidBlockHeight,
+      });
     }),
   );
 

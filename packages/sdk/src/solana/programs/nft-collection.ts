@@ -309,20 +309,17 @@ export class NFTCollection {
     const name =
       typeof metadata === "string" ? "" : metadata.name?.toString() || "";
     const collection = await this.getCollection();
-    const { nft } = await this.metaplex
-      .nfts()
-      .create({
-        name,
-        uri,
-        creators: collection.creators,
-        sellerFeeBasisPoints: collection.sellerFeeBasisPoints,
-        collection: this.publicKey,
-        collectionAuthority: this.metaplex.identity(),
-        tokenOwner: new PublicKey(to),
-        // Always sets max supply to unlimited so editions can be minted
-        maxSupply: null,
-      })
-      .run();
+    const { nft } = await this.metaplex.nfts().create({
+      name,
+      uri,
+      creators: collection.creators,
+      sellerFeeBasisPoints: collection.sellerFeeBasisPoints,
+      collection: this.publicKey,
+      collectionAuthority: this.metaplex.identity(),
+      tokenOwner: new PublicKey(to),
+      // Always sets max supply to unlimited so editions can be minted
+      maxSupply: null,
+    });
 
     return nft.address.toBase58();
   }
@@ -423,13 +420,11 @@ export class NFTCollection {
    * ```
    */
   async burn(nftAddress: string): Promise<TransactionResult> {
-    const tx = await this.metaplex
-      .nfts()
-      .delete({
-        mintAddress: new PublicKey(nftAddress),
-        collection: this.publicKey,
-      })
-      .run();
+    const tx = await this.metaplex.nfts().delete({
+      mintAddress: new PublicKey(nftAddress),
+      collection: this.publicKey,
+    });
+
     return {
       signature: tx.response.signature,
     };
@@ -470,8 +465,7 @@ export class NFTCollection {
         allNfts.map(async (nft) => {
           const metaplexNft = await this.metaplex
             .nfts()
-            .findByMint({ mintAddress: new PublicKey(nft.metadata.id) })
-            .run();
+            .findByMint({ mintAddress: new PublicKey(nft.metadata.id) });
 
           txs.push(
             this.metaplex
@@ -491,16 +485,10 @@ export class NFTCollection {
 
       return await sendMultipartTransaction(txs, this.metaplex);
     } else {
-      const tx = await this.metaplex
-        .nfts()
-        .update({
-          nftOrSft: await this.getCollection(),
-          creators: enforceCreator(
-            creators,
-            this.metaplex.identity().publicKey,
-          ),
-        })
-        .run();
+      const tx = await this.metaplex.nfts().update({
+        nftOrSft: await this.getCollection(),
+        creators: enforceCreator(creators, this.metaplex.identity().publicKey),
+      });
 
       return [
         {
@@ -538,8 +526,7 @@ export class NFTCollection {
         allNfts.map(async (nft) => {
           const metaplexNft = await this.metaplex
             .nfts()
-            .findByMint({ mintAddress: new PublicKey(nft.metadata.id) })
-            .run();
+            .findByMint({ mintAddress: new PublicKey(nft.metadata.id) });
 
           txs.push(
             this.metaplex.nfts().builders().update({
@@ -553,13 +540,10 @@ export class NFTCollection {
 
       return await sendMultipartTransaction(txs, this.metaplex);
     } else {
-      const tx = await this.metaplex
-        .nfts()
-        .update({
-          nftOrSft: await this.getCollection(),
-          sellerFeeBasisPoints,
-        })
-        .run();
+      const tx = await this.metaplex.nfts().update({
+        nftOrSft: await this.getCollection(),
+        sellerFeeBasisPoints,
+      });
 
       return [
         {
@@ -572,7 +556,6 @@ export class NFTCollection {
   private async getCollection() {
     return await this.metaplex
       .nfts()
-      .findByMint({ mintAddress: this.publicKey })
-      .run();
+      .findByMint({ mintAddress: this.publicKey });
   }
 }
