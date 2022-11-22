@@ -158,7 +158,7 @@ export const mochaHooks = {
       if (contractType === "custom") {
         continue;
       }
-      let factories = [];
+      let factories: any[] = [];
       switch (contractType) {
         case TokenInitializer.contractType:
           factories.push(TokenERC20__factory);
