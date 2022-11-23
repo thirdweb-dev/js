@@ -68,10 +68,10 @@ export enum PageId {
   Programs = "programs",
 
   // ---------------------------------------------------------------------------
-  //  partner pages
+  //  solutions pages
   // ---------------------------------------------------------------------------
 
-  PartnerShopify = "partner-shopify",
+  SolutionsCommerce = "solutions-commerce",
 
   // ---------------------------------------------------------------------------
   //  network pages

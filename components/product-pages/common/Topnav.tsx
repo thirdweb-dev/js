@@ -1,6 +1,7 @@
 import { MobileMenu } from "./nav/MobileMenu";
 import { Products } from "./nav/Products";
 import { Resources } from "./nav/Resources";
+import { Solutions } from "./nav/Solutions";
 import {
   Box,
   Container,
@@ -72,6 +73,7 @@ export const HomepageTopNav: React.FC = () => {
               as="nav"
             >
               <Products />
+              <Solutions />
               <Resources />
               <TrackedLink
                 isExternal

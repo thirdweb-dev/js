@@ -4,12 +4,12 @@ import { StaticImageData } from "next/image";
 import { Heading, Text } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
-interface IProductCard {
+interface ProductCardProps {
   title: string;
   icon: StaticImageData;
 }
 
-export const ProductCard: ComponentWithChildren<IProductCard> = ({
+export const ProductCard: ComponentWithChildren<ProductCardProps> = ({
   title,
   icon,
   children,

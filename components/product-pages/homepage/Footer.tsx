@@ -186,16 +186,16 @@ export const HomepageFooter: React.FC = () => {
                   </TrackedLink>
                 </Stack>
 
-                {/* <Heading size="label.lg">Partners</Heading>
+                <Heading size="label.lg">Solutions</Heading>
                 <Stack spacing="3" shouldWrapChildren>
                   <TrackedLink
-                    href="/partner/shopify"
+                    href="/solutions/commerce"
                     category="footer"
-                    label="partners"
+                    label="commerce"
                   >
-                    Shopify
+                    Commerce
                   </TrackedLink>
-                </Stack> */}
+                </Stack>
               </Stack>
               <Stack spacing="4" minW="36" flex="1">
                 <Heading as="h5" size="label.lg">

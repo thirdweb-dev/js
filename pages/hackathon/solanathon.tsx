@@ -8,7 +8,6 @@ import {
   ListItem,
 } from "@chakra-ui/react";
 import { ImMagicWand } from "@react-icons/all-files/im/ImMagicWand";
-import { ChakraNextImage } from "components/Image";
 import { HackathonFooter } from "components/hackathon/solana/HackathonFooter";
 import { Judges } from "components/hackathon/solana/Judges";
 import { PrizeSection } from "components/hackathon/solana/PrizeSection";

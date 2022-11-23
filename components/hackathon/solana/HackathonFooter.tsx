@@ -1,13 +1,9 @@
 import { Box, Flex, Icon, Image, Link, VStack } from "@chakra-ui/react";
-import { ImMagicWand } from "@react-icons/all-files/im/ImMagicWand";
-import { useTrack } from "hooks/analytics/useTrack";
 import type { FC } from "react";
 import { FiArrowRightCircle } from "react-icons/fi";
-import { Heading, LinkButton } from "tw-components";
+import { Heading } from "tw-components";
 
 export const HackathonFooter: FC = () => {
-  const trackEvent = useTrack();
-
   return (
     <VStack bgColor="#152238" py={0} gap={0} borderTopRadius="50px">
       <Heading

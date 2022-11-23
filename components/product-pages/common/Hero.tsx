@@ -10,11 +10,12 @@ import {
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { StaticImageData } from "next/image";
+import { ReactElement } from "react";
 import { FiChevronRight } from "react-icons/fi";
 import { Heading, Text } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
-export interface IHero {
+export interface HeroProps {
   name: string;
   title: string;
   description: string;
@@ -22,9 +23,12 @@ export interface IHero {
   buttonLink: string;
   gradient: string;
   image?: StaticImageData;
+  type?: "Products" | "Solutions";
+  underGetStarted?: ReactElement;
+  largeImage?: boolean;
 }
 
-export const Hero: ComponentWithChildren<IHero> = ({
+export const Hero: ComponentWithChildren<HeroProps> = ({
   name,
   title,
   description,
@@ -32,6 +36,9 @@ export const Hero: ComponentWithChildren<IHero> = ({
   buttonLink,
   image,
   gradient,
+  type = "Products",
+  underGetStarted,
+  largeImage = false,
   children,
 }) => {
   return (
@@ -77,7 +84,7 @@ export const Hero: ComponentWithChildren<IHero> = ({
               color="whiteAlpha.800"
               size="body.lg"
             >
-              Products
+              {type}
             </Text>
             <Icon as={FiChevronRight} color="whiteAlpha.800" />
             <Text
@@ -90,7 +97,7 @@ export const Hero: ComponentWithChildren<IHero> = ({
             </Text>
           </Stack>
           <Heading
-            as="h2"
+            as="h1"
             fontSize="48px"
             fontWeight="bold"
             size="display.sm"
@@ -107,21 +114,24 @@ export const Hero: ComponentWithChildren<IHero> = ({
           >
             {description}
           </Heading>
-          <ProductButton
-            mt="32px"
-            title={buttonText}
-            href={buttonLink}
-            color="blackAlpha.900"
-            bg="white"
-          />
+          <Flex flexDirection="column">
+            <ProductButton
+              mt="32px"
+              title={buttonText}
+              href={buttonLink}
+              color="blackAlpha.900"
+              bg="white"
+            />
+            <>{underGetStarted}</>
+          </Flex>
         </Flex>
         {image && (
           <Center
-            padding={{ base: "24px", md: "48px" }}
+            padding={{ base: "24px", md: largeImage ? "8px" : "48px" }}
             gridColumnEnd={{ base: undefined, md: "span 3" }}
           >
             <Flex justifyContent={{ base: "center", md: "flex-end" }} w="100%">
-              <AspectRatio ratio={1} maxW={96} w="100%">
+              <AspectRatio ratio={1} w="100%">
                 <ChakraNextImage alt="" src={image} priority />
               </AspectRatio>
             </Flex>

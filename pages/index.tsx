@@ -764,7 +764,7 @@ const ContractsDescriptorItem: React.FC<ContractsDescriptorItemProps> = ({
   );
 };
 
-const NewsLetterSection: React.FC = () => {
+export const NewsLetterSection: React.FC = () => {
   const form = useForm({
     defaultValues: {
       email: "",
