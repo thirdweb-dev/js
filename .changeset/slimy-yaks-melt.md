@@ -1,0 +1,5 @@
+---
+"thirdweb": patch
+---
+
+merge main
