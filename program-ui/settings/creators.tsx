@@ -14,11 +14,14 @@ import { IoMdAdd } from "@react-icons/all-files/io/IoMdAdd";
 import { IoMdRemove } from "@react-icons/all-files/io/IoMdRemove";
 import { PublicKey } from "@solana/web3.js";
 import { useCreators, useUpdateCreators } from "@thirdweb-dev/react/solana";
-import { NFTCollection, NFTDrop } from "@thirdweb-dev/sdk/solana";
+import {
+  NFTCollection,
+  NFTDrop,
+  UpdateCreatorInput,
+} from "@thirdweb-dev/sdk/solana";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import {
   Button,
@@ -42,36 +45,36 @@ export const SettingsCreators: React.FC<SettingsCreatorsProps> = ({
   const mutation = useUpdateCreators(program);
 
   const { register, control, getFieldState, formState, watch, handleSubmit } =
-    useForm<any>();
-  const { fields, append, remove, replace } = useFieldArray({
+    useForm<UpdateCreatorInput>({
+      values: {
+        creators:
+          query.data?.map((creator) => ({
+            ...creator,
+            share: parseInt(creator.share.toString() || "0"),
+          })) || [],
+        updateAll: false,
+      },
+      defaultValues: {
+        creators: [{ address: "", share: 100 }],
+        updateAll: false,
+      },
+      resetOptions: {
+        keepDirtyValues: true,
+      },
+    });
+  const { fields, append, remove } = useFieldArray({
     name: "creators",
     control,
   });
-
-  useEffect(() => {
-    if (fields.length === 0) {
-      append({ address: "", share: 100 }, { shouldFocus: false });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (query.data && !formState.isDirty) {
-      replace(query.data);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query.data, formState.isDirty]);
 
   const { onSuccess, onError } = useTxNotifications(
     "Creators updated",
     "Error updating creators",
   );
 
-  const totalPercentage =
-    watch("creators")?.reduce(
-      (a: any, b: any) => Number(a) + Number(b.share),
-      0,
-    ) || 0;
+  const totalPercentage = watch("creators").reduce((acc, curr) => {
+    return acc + parseInt(curr.share.toString() || "0");
+  }, 0);
 
   return (
     <Card p={0} position="relative">
