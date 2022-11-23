@@ -52,6 +52,7 @@ import {
   FEATURE_PRIMARY_SALE,
   FEATURE_ROYALTY,
   FEATURE_APPURI,
+  FEATURE_GASLESS,
 } from "./thirdweb-features";
 
 /**
@@ -104,7 +105,8 @@ export type Feature =
   | typeof FEATURE_PERMISSIONS_ENUMERABLE
   | typeof FEATURE_METADATA
   | typeof FEATURE_APPURI
-  | typeof FEATURE_OWNER;
+  | typeof FEATURE_OWNER
+  | typeof FEATURE_GASLESS;
 
 /**
  * @internal
@@ -132,4 +134,5 @@ export const SUPPORTED_FEATURES: Record<string, Feature> = {
   [FEATURE_METADATA.name]: FEATURE_METADATA,
   [FEATURE_APPURI.name]: FEATURE_APPURI,
   [FEATURE_OWNER.name]: FEATURE_OWNER,
+  [FEATURE_GASLESS.name]: FEATURE_GASLESS,
 };
