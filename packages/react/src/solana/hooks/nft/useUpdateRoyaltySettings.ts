@@ -4,7 +4,11 @@ import {
   RequiredParam,
 } from "../../../core/query-utils/required-param";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { NFTCollection, NFTDrop, UpdateRoyaltySettingsInput } from "@thirdweb-dev/sdk/solana";
+import type {
+  NFTCollection,
+  NFTDrop,
+  UpdateRoyaltySettingsInput,
+} from "@thirdweb-dev/sdk/solana";
 
 /**
  * Update the royalty for an NFT program
