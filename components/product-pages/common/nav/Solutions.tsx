@@ -26,7 +26,7 @@ export const Solutions: React.FC = () => {
   const { onOpen, isOpen, onClose } = useDisclosure();
 
   return (
-    <Box onMouseEnter={onOpen} onMouseLeave={onClose}>
+    <Box onMouseEnter={onOpen} onMouseLeave={onClose} zIndex={isOpen ? 10 : 1}>
       <Text
         color="white"
         fontWeight="bold"
