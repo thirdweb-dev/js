@@ -7,8 +7,9 @@ export const ColorModeToggle: React.FC = () => {
   return (
     <IconButton
       bg="transparent"
+      size="sm"
       aria-label="toggle-color"
-      icon={<Icon boxSize="1rem" as={colorMode === "light" ? FiMoon : FiSun} />}
+      icon={<Icon as={colorMode === "light" ? FiMoon : FiSun} />}
       onClick={() => toggleColorMode()}
     />
   );

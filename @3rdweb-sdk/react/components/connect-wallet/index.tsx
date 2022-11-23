@@ -88,6 +88,7 @@ const registerConnector = (_connector: string) => {
 
 export interface EcosystemButtonprops extends ButtonProps {
   ecosystem?: "evm" | "solana" | "either";
+  shrinkMobile?: boolean;
 }
 
 export const ConnectWallet: React.FC<EcosystemButtonprops> = ({
