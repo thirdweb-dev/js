@@ -33,7 +33,11 @@ export async function deploy(options: DeployOptions) {
 
   if (options.app) {
     try {
+<<<<<<< HEAD
       let url = await deployApp(options.dist, options.path);
+=======
+      let url = await deployApp();
+>>>>>>> main
       info(`Here is the link to your app: ${chalk.blueBright(url.toString())}`);
       return url.toString();
     } catch (err) {

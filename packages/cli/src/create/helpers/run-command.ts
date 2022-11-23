@@ -3,7 +3,7 @@ import spawn from "cross-spawn";
 export async function runCommand(
   command: string,
   args: string[],
-  logging: boolean = true,
+  logging: boolean = false,
 ) {
   return new Promise<void>((resolve, reject) => {
     /**
