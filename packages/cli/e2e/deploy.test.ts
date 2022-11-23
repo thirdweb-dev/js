@@ -15,8 +15,8 @@ describe("npx thirdweb deploy", () => {
       `${path}/BasicContract.sol`,
     );
 
-    const { waitForText, waitForFinish, getExitCode, writeText, getStdout } =
-      await spawn("node", "./dist/cli/index.js deploy");
+    const { waitForText, waitForFinish, getExitCode, writeText, getStderr } =
+      await spawn("node", "./dist/cli/index.js deploy --contract");
 
     expect(await exists("BasicContract.sol")).toEqual(true);
 
@@ -26,7 +26,7 @@ describe("npx thirdweb deploy", () => {
     // wait for program to finish
     await waitForFinish();
 
-    expect(getStdout().at(-1)).toContain(
+    expect(getStderr().at(-1)).toContain(
       "https://thirdweb.com/contracts/deploy/",
     );
 

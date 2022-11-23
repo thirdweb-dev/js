@@ -4,7 +4,7 @@ import { processProject } from "../common/processor";
 import { cliVersion, pkg } from "../constants/urls";
 import { info, logger } from "../core/helpers/logger";
 import { twCreate } from "../create/command";
-import generateDashboardUrl from "../helpers/generate-dashboard-url";
+import { deploy } from "../deploy";
 import { upload } from "../storage/command";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
@@ -95,31 +95,13 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       "-cv, --contract-version [version]",
       "Version of the released contract",
     )
+    .option("--app", "Deploy a web app to decentralized storage")
+    .option("--contract", "Deploy a smart contract to blockchains")
     .action(async (options) => {
-      if (options.name) {
-        const url = generateDashboardUrl(options.name, options.contractVersion);
-
-        if (!url) {
-          logger.error(
-            chalk.red(
-              `Could not find a contract named ${options.name} ${
-                options.contractVersion || ""
-              }`,
-            ),
-          );
-          return;
-        }
-
-        info(`Open this link to deploy your contract:`);
-        logger.info(chalk.blueBright(url));
-        open(url.toString());
-        return;
+      const url = await deploy(options);
+      if (url) {
+        open(url);
       }
-
-      const url = await processProject(options, "deploy");
-      info(`Open this link to deploy your contracts:`);
-      logger.info(chalk.blueBright(url.toString()));
-      open(url.toString());
     });
 
   program
@@ -133,8 +115,11 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("--ci", "Continuous Integration mode")
     .action(async (options) => {
       const url = await processProject(options, "release");
-      info(`Open this link to release your contracts:`);
-      logger.info(chalk.blueBright(url.toString()));
+      info(
+        `Open this link to release your contracts: ${chalk.blueBright(
+          url.toString(),
+        )}`,
+      );
       open(url.toString());
     });
 
@@ -144,13 +129,35 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .argument("[upload]", "path to file or directory to upload")
     .action(async (path) => {
       const storage = new ThirdwebStorage();
-      const uri = await upload(storage, path);
-      info(`Files stored at the following IPFS URI:`);
-      logger.info(chalk.blueBright(uri.toString()));
+      try {
+        const uri = await upload(storage, path);
+        info(
+          `Files stored at the following IPFS URI: ${chalk.blueBright(
+            uri.toString(),
+          )}`,
+        );
 
-      const url = storage.resolveScheme(uri);
-      info(`Open this link to view your upload:`);
-      logger.info(chalk.blueBright(url.toString()));
+        const url = storage.resolveScheme(uri);
+        info(
+          `Open this link to view your upload: ${chalk.blueBright(
+            url.toString(),
+          )}`,
+        );
+      } catch (err: any) {
+        if (
+          err.toString() === "No files detected in specified directory" ||
+          err.toString() === "Invalid path provided" ||
+          err.toString() === "No path provided"
+        ) {
+          logger.error(
+            chalk.redBright(
+              "Please specify a valid file or directory to upload",
+            ),
+          );
+        } else {
+          logger.error(chalk.redBright("Failed to upload files"), err);
+        }
+      }
     });
 
   program
