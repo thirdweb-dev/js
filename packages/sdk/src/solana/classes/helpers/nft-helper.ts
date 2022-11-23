@@ -180,7 +180,7 @@ export class NFTHelper {
     return nfts;
   }
 
-  private async getAllMetadataAddresses(collectionAddress: string) {
+  async getAllMetadataAddresses(collectionAddress: string) {
     const collectionKey = new PublicKey(collectionAddress);
 
     // TODO cache signatures <> transactions mapping in memory so pagination doesn't re-request this everytime
