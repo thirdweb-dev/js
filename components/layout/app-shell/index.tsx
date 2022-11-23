@@ -322,7 +322,6 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
                   </TrackedLink>
 
                   <TrackedLink
-                    noIcon
                     href="/gas"
                     bg="transparent"
                     category="footer"
