@@ -174,6 +174,7 @@ const Commerce: ThirdwebNextPage = () => {
               <LinkButton
                 href="https://portal.thirdweb.com/contractkit"
                 isExternal
+                color="white"
                 mt={6}
               >
                 Learn more
@@ -203,6 +204,7 @@ const Commerce: ThirdwebNextPage = () => {
               <LinkButton
                 href="https://portal.thirdweb.com/sdk"
                 isExternal
+                color="white"
                 mt={6}
               >
                 Learn more
@@ -232,8 +234,8 @@ const Commerce: ThirdwebNextPage = () => {
               <LinkButton
                 href="https://portal.thirdweb.com/dashboard"
                 isExternal
+                color="white"
                 mt={6}
-                w="auto"
               >
                 Learn more
               </LinkButton>
