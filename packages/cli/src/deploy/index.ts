@@ -8,6 +8,8 @@ type DeployOptions = {
   name: string;
   contractVersion: string;
   app: boolean;
+  dist?: string;
+  path?: string;
 };
 
 export async function deploy(options: DeployOptions) {
@@ -31,7 +33,7 @@ export async function deploy(options: DeployOptions) {
 
   if (options.app) {
     try {
-      let url = await deployApp();
+      let url = await deployApp(options.dist, options.path);
       info(`Here is the link to your app: ${chalk.blueBright(url.toString())}`);
       return url.toString();
     } catch (err) {

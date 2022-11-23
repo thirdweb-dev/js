@@ -87,6 +87,8 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
+    .option("--dist <dist>", "App - Dist location")
+    .option("--path <path>", "App - Path location")
     .option(
       "-n, --name [name]",
       "Name of the pre-built or released contract (such as nft-drop)",

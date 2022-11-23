@@ -37,8 +37,7 @@ export async function deployApp(dist = "dist", project = ".") {
 
   try {
     let url = await upload(storage, distPath);
-    url = url.replace("ipfs://", DEFAULT_IPFS_GATEWAY);
-    return `${url}/index.html`;
+    return url.replace("ipfs://", DEFAULT_IPFS_GATEWAY);
   } catch (err) {
     console.error("Can't upload project");
     return Promise.reject("Can't upload project");
