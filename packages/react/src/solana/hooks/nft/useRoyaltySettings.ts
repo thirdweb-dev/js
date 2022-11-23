@@ -40,6 +40,8 @@ export function nftRoyaltyQuery(
  *
  * @public
  */
-export function useRoyaltySettings(program: RequiredParam<NFTCollection | NFTDrop>) {
+export function useRoyaltySettings(
+  program: RequiredParam<NFTCollection | NFTDrop>,
+) {
   return useQuery(nftRoyaltyQuery(program));
 }

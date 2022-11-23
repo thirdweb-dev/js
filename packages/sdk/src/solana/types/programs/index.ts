@@ -80,7 +80,7 @@ export type UpdateCreatorInput = {
 /**
  * @public
  */
- export type UpdateRoyaltySettingsInput = {
+export type UpdateRoyaltySettingsInput = {
   sellerFeeBasisPoints: number;
   updateAll: boolean;
 };

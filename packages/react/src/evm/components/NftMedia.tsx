@@ -15,7 +15,7 @@ export interface ThirdwebNftMediaProps extends SharedMediaProps {
 /**
  * This component can be used to render NFTs from the thirdweb SDK.
  * Props: {@link ThirdwebNftMediaProps}
- * 
+ *
  * @example
  * ```jsx
  * import { ThirdwebNftMedia, useContract, useNFT } from "@thirdweb-dev/react";

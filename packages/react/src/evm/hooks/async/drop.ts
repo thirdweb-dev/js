@@ -106,7 +106,7 @@ export function useUnclaimedNFTSupply(contract: RequiredParam<DropContract>) {
         invariant(erc721, "No ERC721 Contract instance provided");
         return erc721.totalUnclaimedSupply();
       }
-      invariant(false, "Contract is not an instance of ERC721")
+      invariant(false, "Contract is not an instance of ERC721");
     },
     { enabled: !!erc721 },
   );
@@ -129,7 +129,7 @@ export function useClaimedNFTSupply(contract: RequiredParam<DropContract>) {
       if (erc721) {
         return erc721.totalClaimedSupply();
       }
-      invariant(false, "Contract is not an instance of ERC721")
+      invariant(false, "Contract is not an instance of ERC721");
     },
     { enabled: !!erc721 },
   );
