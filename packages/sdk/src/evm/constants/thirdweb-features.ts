@@ -1,3 +1,4 @@
+import IERC2771ContextAbi from "@thirdweb-dev/contracts-js/dist/abis/ERC2771Context.json";
 import IAppURI from "@thirdweb-dev/contracts-js/dist/abis/IAppURI.json";
 import IContractMetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IContractMetadata.json";
 import IPermissionsAbi from "@thirdweb-dev/contracts-js/dist/abis/IPermissions.json";
@@ -94,5 +95,17 @@ export const FEATURE_OWNER = {
     contracts: "Ownable",
   },
   abis: [IOwnableAbi],
+  features: {},
+} as const;
+
+export const FEATURE_GASLESS = {
+  name: "Gasless",
+  namespace: "gasless",
+  docLinks: {
+    sdk: "sdk.gaslesstransaction",
+    // TODO add the correct name for this once it's added to portal
+    contracts: "",
+  },
+  abis: [IERC2771ContextAbi],
   features: {},
 } as const;
