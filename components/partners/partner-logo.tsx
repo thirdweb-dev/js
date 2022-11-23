@@ -11,8 +11,8 @@ const PARTNER_LOGO_MAP = {
     img: require("./logos/fractal.png"),
     filter: "brightness(0) invert(1)",
   },
-  fnatic: {
-    img: require("./logos/fnatic.png"),
+  buildspace: {
+    img: require("./logos/buildspace.png"),
     filter: undefined,
   },
   shopify: {

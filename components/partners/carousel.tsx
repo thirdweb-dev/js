@@ -18,7 +18,7 @@ export const PartnerCarousel: React.FC = () => {
             <PartnerLogo partner="fractal" />
           </GridItem>
           <GridItem colSpan={1}>
-            <PartnerLogo partner="fnatic" />
+            <PartnerLogo partner="buildspace" />
           </GridItem>
           <GridItem colSpan={1}>
             <PartnerLogo partner="shopify" />
