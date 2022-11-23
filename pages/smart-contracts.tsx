@@ -10,13 +10,13 @@ const PreBuiltContracts: ThirdwebNextPage = () => {
     <ProductPage
       seo={{
         title: "Smart Contracts",
-        description: "Prebuilt, audited, and ready to go smart contracts.",
+        description: "Ready-to-go contracts for your needs.",
       }}
     >
       <Hero
         name="Smart Contracts"
-        title="Prebuilt, audited and ready to go Smart Contracts."
-        description="Get started quickly and easily with our prebuilt and audited Smart Contract suite."
+        title="Ready-to-go contracts for your needs."
+        description="Deploy contracts written by the best web3 developers in a single click."
         buttonText="Get started"
         buttonLink="/explore"
         image={require("public/assets/product-pages/pre-builts/hero.png")}
@@ -40,15 +40,14 @@ const PreBuiltContracts: ThirdwebNextPage = () => {
             title="Powerful tooling to build apps"
             icon={require("/public/assets/product-pages/pre-builts/hero-icon-2.png")}
           >
-            Get custom SDKs and dashboards for your contract to build and manage
-            your apps.
+            When you deploy a contract, you automatically get custom tools that
+            make building and managing your web3 app seamless.
           </ProductCard>
           <ProductCard
-            title="Out-of-the-box security"
+            title="One-click deploy"
             icon={require("/public/assets/product-pages/pre-builts/hero-icon-3.png")}
           >
-            Our contracts are thoroughly audited and secured in advance so you
-            can focus on building.
+            Deploy to any supported chain with a single click.
           </ProductCard>
         </SimpleGrid>
       </Hero>
