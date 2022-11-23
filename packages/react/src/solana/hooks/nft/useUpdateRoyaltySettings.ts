@@ -4,7 +4,11 @@ import {
   RequiredParam,
 } from "../../../core/query-utils/required-param";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { NFTCollection, NFTDrop } from "@thirdweb-dev/sdk/solana";
+import type {
+  NFTCollection,
+  NFTDrop,
+  UpdateRoyaltySettingsInput,
+} from "@thirdweb-dev/sdk/solana";
 
 /**
  * Update the royalty for an NFT program
@@ -35,9 +39,9 @@ export function useUpdateRoyaltySettings(
 ) {
   const queryClient = useQueryClient();
   return useMutation(
-    async (sellerFeeBasisPoints: number) => {
+    async ({ sellerFeeBasisPoints, updateAll }: UpdateRoyaltySettingsInput) => {
       requiredParamInvariant(program, "program is required");
-      return await program.updateRoyalty(sellerFeeBasisPoints);
+      return await program.updateRoyalty(sellerFeeBasisPoints, updateAll);
     },
     {
       onSettled: () =>

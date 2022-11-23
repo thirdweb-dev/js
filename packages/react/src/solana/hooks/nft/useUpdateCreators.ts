@@ -4,7 +4,11 @@ import {
   RequiredParam,
 } from "../../../core/query-utils/required-param";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { CreatorInput, NFTCollection, NFTDrop } from "@thirdweb-dev/sdk/solana";
+import type {
+  NFTCollection,
+  NFTDrop,
+  UpdateCreatorInput,
+} from "@thirdweb-dev/sdk/solana";
 
 /**
  * Update the creators for an NFT program
@@ -35,9 +39,9 @@ export function useUpdateCreators(
 ) {
   const queryClient = useQueryClient();
   return useMutation(
-    async (creators: CreatorInput[]) => {
+    async ({ creators, updateAll }: UpdateCreatorInput) => {
       requiredParamInvariant(program, "program is required");
-      return await program.updateCreators(creators);
+      return await program.updateCreators(creators, updateAll);
     },
     {
       onSettled: () =>

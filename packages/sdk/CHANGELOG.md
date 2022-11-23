@@ -1,5 +1,15 @@
 # @thirdweb-dev/sdk
 
+## 3.6.2
+
+### Patch Changes
+
+- [#405](https://github.com/thirdweb-dev/js/pull/405) [`ccb7db4`](https://github.com/thirdweb-dev/js/commit/ccb7db48739b8dddcb2c032b3b6e3e5200485715) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add updateAll param to creators and royalty update hooks for Solana
+
+- [#404](https://github.com/thirdweb-dev/js/pull/404) [`9151aa7`](https://github.com/thirdweb-dev/js/commit/9151aa7dc80754a7aa4fd3f6ce0207bccbb6451f) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - expose `getDefaultTrustedForwarders` helper function
+
+- [#305](https://github.com/thirdweb-dev/js/pull/305) [`5a01c53`](https://github.com/thirdweb-dev/js/commit/5a01c537e30bd7ef562aad1012413990de6faedf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update to Metaplex 0.17
+
 ## 3.6.1
 
 ### Patch Changes

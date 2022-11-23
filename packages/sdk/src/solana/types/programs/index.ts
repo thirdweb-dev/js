@@ -72,6 +72,22 @@ export type CreatorInput = z.input<typeof CreatorInputSchema>;
 /**
  * @public
  */
+export type UpdateCreatorInput = {
+  creators: CreatorInput[];
+  updateAll: boolean;
+};
+
+/**
+ * @public
+ */
+export type UpdateRoyaltySettingsInput = {
+  sellerFeeBasisPoints: number;
+  updateAll: boolean;
+};
+
+/**
+ * @public
+ */
 export type CreatorOutput = Omit<Creator, "address"> & {
   readonly address: string;
 };

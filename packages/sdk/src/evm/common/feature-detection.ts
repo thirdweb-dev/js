@@ -438,8 +438,8 @@ export async function fetchSourceFilesFromMetadata(
       async ([path, info]) => {
         const urls = (info as any).urls as string[];
         const ipfsLink = urls
-            ? urls.find((url) => url.includes("ipfs"))
-            : undefined;
+          ? urls.find((url) => url.includes("ipfs"))
+          : undefined;
         if (ipfsLink) {
           const ipfsHash = ipfsLink.split("ipfs/")[1];
           // 5 sec timeout for sources that haven't been uploaded to ipfs
@@ -458,8 +458,8 @@ export async function fetchSourceFilesFromMetadata(
           return {
             filename: path,
             source:
-                (info as any).content ||
-                "Could not find source for this contract",
+              (info as any).content ||
+              "Could not find source for this contract",
           };
         }
       },
@@ -543,8 +543,8 @@ export function detectFeatures(
 }
 
 function extractFeatures(
-    input: Record<string, FeatureWithEnabled>,
-    enabledExtensions: FeatureWithEnabled[],
+  input: Record<string, FeatureWithEnabled>,
+  enabledExtensions: FeatureWithEnabled[],
 ) {
   if (!input) {
     return;
@@ -556,10 +556,7 @@ function extractFeatures(
       enabledExtensions.push(extension);
     }
     // recurse
-    extractFeatures(
-        extension.features,
-        enabledExtensions,
-    );
+    extractFeatures(extension.features, enabledExtensions);
   }
 }
 
