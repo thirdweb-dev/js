@@ -1,4 +1,4 @@
-import { PRODUCTS } from "../common/nav/Products";
+import { PRODUCTS } from "../common/nav/DesktopMenu";
 import {
   Box,
   ButtonGroup,
@@ -116,9 +116,9 @@ export const HomepageFooter: React.FC = () => {
                   Products
                 </Heading>
                 <Stack spacing="3" shouldWrapChildren>
-                  {PRODUCTS.map((product, id) => (
+                  {PRODUCTS.map((product) => (
                     <TrackedLink
-                      key={id}
+                      key={product.label}
                       href={product.link}
                       category="footer"
                       label={product.label}
