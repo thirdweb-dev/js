@@ -29,6 +29,14 @@ const ExplorePage: ThirdwebNextPage = (
           title: "thirdweb Explore: Smart Contracts & Protocols",
           description:
             "Discover secure, audited and gas-optimized protocols & smart contracts. Deploy with one click to Ethereum, Polygon, Optimism, and other EVM blockchains with thirdweb.",
+          images: [
+            {
+              url: "https://thirdweb.com/thirdweb-explore.png",
+              width: 1200,
+              height: 630,
+              alt: "thirdweb Explore",
+            },
+          ],
         }}
       />
 
