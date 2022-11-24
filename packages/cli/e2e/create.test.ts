@@ -2,7 +2,7 @@ import { CREATE_MESSAGES } from "../constants/constants";
 import { prepareEnvironment } from "@gmrchk/cli-testing-library";
 
 // this creates an app, can take some time that's fine
-jest.setTimeout(120_000);
+jest.setTimeout(150_000);
 
 describe("npx thirdweb create", () => {
   it("should create app (CRA) successfully", async () => {
@@ -15,6 +15,8 @@ describe("npx thirdweb create", () => {
     await waitForText(CREATE_MESSAGES.typeOfProject);
     await pressKey("enter");
     await waitForText(CREATE_MESSAGES.projectName);
+    await pressKey("enter");
+    await waitForText(CREATE_MESSAGES.chain);
     await pressKey("enter");
     await waitForText(CREATE_MESSAGES.framework);
     // select CRA
