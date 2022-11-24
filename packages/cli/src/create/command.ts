@@ -167,7 +167,7 @@ export async function twCreate(
           chain === "solana"
             ? [
                 { title: "Next.js", value: "next" },
-                // { title: "Create React App", value: "cra" },
+                { title: "Create React App", value: "cra" },
                 // { title: "Vite", value: "vite" },
               ]
             : [
