@@ -144,7 +144,6 @@ export async function twCreate(
         name: "chain",
         message: CREATE_MESSAGES.chain,
         choices: [
-          // For EVM, value is nothing because the repo names don't have "evm" in them.
           { title: "EVM", value: "evm" },
           { title: "Solana", value: "solana" },
         ],
@@ -163,7 +162,7 @@ export async function twCreate(
         name: "framework",
         message: CREATE_MESSAGES.framework,
         choices:
-          // Solana doesn't support Vite or CRA just yet:
+          // Solana doesn't support Vite just yet:
           chain === "solana"
             ? [
                 { title: "Next.js", value: "next" },
