@@ -88,6 +88,10 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
     .option(
+      "--dist-path [distPath]",
+      "Path to the dist folder where the HTML based App is",
+    )
+    .option(
       "-n, --name [name]",
       "Name of the pre-built or released contract (such as nft-drop)",
     )
