@@ -340,7 +340,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
         const signature = await this.contractWrapper.signTypedData(
           signer,
           {
-            name: "TokenERC1155",
+            name: "SignatureMintERC1155",
             version: "1",
             chainId,
             verifyingContract: this.contractWrapper.readContract.address,
