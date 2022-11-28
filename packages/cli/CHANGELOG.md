@@ -1,5 +1,20 @@
 # thirdweb
 
+## 0.9.0
+
+### Minor Changes
+
+- [#403](https://github.com/thirdweb-dev/js/pull/403) [`27996cb`](https://github.com/thirdweb-dev/js/commit/27996cb4bc6f054f45b0a66b0a3aca732e0ef610) Thanks [@avneesh0612](https://github.com/avneesh0612)! - Add CLI Support for solana with --solana flag on create command
+
+- [#283](https://github.com/thirdweb-dev/js/pull/283) [`2eaa67a`](https://github.com/thirdweb-dev/js/commit/2eaa67acbe21464e7715d0b696afdc024460a44d) Thanks [@adam-maj](https://github.com/adam-maj)! - add capability to deploy apps
+
+### Patch Changes
+
+- [#413](https://github.com/thirdweb-dev/js/pull/413) [`1b0bf99`](https://github.com/thirdweb-dev/js/commit/1b0bf99da796df88ff307dd004cdaf239fb2b1ba) Thanks [@furqanrydhan](https://github.com/furqanrydhan)! - small interface tweaks
+
+- Updated dependencies [[`48797c7`](https://github.com/thirdweb-dev/js/commit/48797c7cf0695965e33eb6bf602be4652f7085a8), [`83dcaf7`](https://github.com/thirdweb-dev/js/commit/83dcaf70584af8c5cdf0427f9fc1ba82d89f0887), [`f03be39`](https://github.com/thirdweb-dev/js/commit/f03be398e0d7b75c9c5b4fb643f35903e89a17e7), [`2eaa67a`](https://github.com/thirdweb-dev/js/commit/2eaa67acbe21464e7715d0b696afdc024460a44d), [`47f8945`](https://github.com/thirdweb-dev/js/commit/47f8945325447874b1ace0359919c1d54fd55436)]:
+  - @thirdweb-dev/sdk@3.6.3
+
 ## 0.8.18
 
 ### Patch Changes
