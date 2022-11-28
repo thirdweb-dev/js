@@ -10,52 +10,67 @@ import chalk from "chalk";
 import path from "path";
 import prompts from "prompts";
 
-let projectType: string = "";
 let projectPath: string = "";
+let projectType: string = "";
 let framework: string = "";
 let language: string = "";
 let baseContract: string = "";
+let chain: string = "";
 /* let createType: string = "app"; */
 
-export async function twCreate(pPath: string = "", options: any) {
+export async function twCreate(
+  pType: string,
+  pPath: string = "",
+  options: any,
+) {
   if (typeof pPath === "string") {
     projectPath = pPath;
   }
 
-  if (options.app) {
+  if (pType === "app" || options.app) {
     projectType = "app";
-  }
-
-  if (options.contract) {
+  } else if (pType === "contract" || options.contract) {
     projectType = "contract";
   }
 
-  if (options.typescript) {
-    language = "typescript";
+  if (projectType === "app") {
+    if (options.typescript) {
+      language = "typescript";
+    }
+
+    if (options.javascript) {
+      language = "javascript";
+    }
+
+    if (options.next) {
+      framework = "next";
+    }
+
+    if (options.cra) {
+      framework = "cra";
+    }
+
+    if (options.vite) {
+      framework = "vite";
+    }
+
+    if (options.solana) {
+      chain = "solana";
+    }
+
+    if (options.evm) {
+      chain = "evm";
+    }
   }
 
-  if (options.javascript) {
-    language = "javascript";
-  }
+  if (projectType === "contract") {
+    if (options.forge) {
+      framework = "forge";
+    }
 
-  if (options.next) {
-    framework = "next";
-  }
-
-  if (options.cra) {
-    framework = "cra";
-  }
-
-  if (options.vite) {
-    framework = "vite";
-  }
-
-  if (options.forge) {
-    framework = "forge";
-  }
-
-  if (options.hardhat) {
-    framework = "hardhat";
+    if (options.hardhat) {
+      framework = "hardhat";
+    }
   }
 
   if (options.framework) {
@@ -76,7 +91,7 @@ export async function twCreate(pPath: string = "", options: any) {
     if (typeof res.projectType === "string") {
       projectType = res.projectType.trim();
     }
-  } else if (!projectType && options.template) {
+  } else if (!projectType || options.template) {
     // If no project type is specified, but a template is, we assume the user wants to create an app.
     // We do this so old users can still use the --template flag to create an app.
     projectType = "app";
@@ -123,16 +138,42 @@ export async function twCreate(pPath: string = "", options: any) {
   }
 
   if (!options.template) {
+    if (projectType === "app" && !chain) {
+      const res = await prompts({
+        type: "select",
+        name: "chain",
+        message: CREATE_MESSAGES.chain,
+        choices: [
+          { title: "EVM", value: "evm" },
+          { title: "Solana", value: "solana" },
+        ],
+      });
+
+      if (res.chain === "solana") {
+        chain = "solana";
+      } else {
+        chain = "evm";
+      }
+    }
+
     if (projectType === "app" && !framework) {
       const res = await prompts({
         type: "select",
         name: "framework",
         message: CREATE_MESSAGES.framework,
-        choices: [
-          { title: "Next.js", value: "next" },
-          { title: "Create React App", value: "cra" },
-          { title: "Vite", value: "vite" },
-        ],
+        choices:
+          // Solana doesn't support Vite just yet:
+          chain === "solana"
+            ? [
+                { title: "Next.js", value: "next" },
+                { title: "Create React App", value: "cra" },
+                // { title: "Vite", value: "vite" },
+              ]
+            : [
+                { title: "Next.js", value: "next" },
+                { title: "Create React App", value: "cra" },
+                { title: "Vite", value: "vite" },
+              ],
       });
 
       if (typeof res.framework === "string") {
@@ -288,6 +329,7 @@ export async function twCreate(pPath: string = "", options: any) {
         framework,
         language,
         template,
+        chain,
       });
     } else {
       await createContract({

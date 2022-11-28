@@ -40,34 +40,36 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .version(cliVersion, "-v, --version");
 
   program
-    .command("create [projectPath]")
+    .command("create [projectType] [projectPath]")
     .description(
       "Create a web3 app from any of our official templates: https://github.com/thirdweb-example/",
     )
-    .option("--app", `Create a web3 app.`)
-    .option("--contract", `Create a web3 contract project`)
-    .option("--ts, --typescript", `Initialize as a TypeScript project.`)
-    .option("--js, --javascript", `Initialize as a JavaScript project.`)
-    .option("--forge", `Initialize as a Forge project.`)
-    .option("--hardhat", `Initialize as a Hardhat project.`)
-    .option("--cra", `Initialize as a Create React App project.`)
-    .option("--next", `Initialize as a Next.js project.`)
-    .option("--vite", `Initialize as a Vite project.`)
+    .option("--app", "Create a web3 app.")
+    .option("--contract", "Create a web3 contract project")
+    .option("--ts, --typescript", "Initialize as a TypeScript project.")
+    .option("--js, --javascript", "Initialize as a JavaScript project.")
+    .option("--forge", "Initialize as a Forge project.")
+    .option("--hardhat", "Initialize as a Hardhat project.")
+    .option("--cra", "Initialize as a Create React App project.")
+    .option("--next", "Initialize as a Next.js project.")
+    .option("--vite", "Initialize as a Vite project.")
     .option(
       "--use-npm",
-      `Explicitly tell the CLI to bootstrap the app using npm`,
+      "Explicitly tell the CLI to bootstrap the app using npm",
     )
     .option(
       "--use-pnpm",
-      `Explicitly tell the CLI to bootstrap the app using pnpm`,
+      "Explicitly tell the CLI to bootstrap the app using pnpm",
     )
-    .option("--framework [name]", `The preferred framework.`)
+    .option("--framework [name]", "The preferred framework.")
+    .option("--solana", "Initialize as a Solana project.")
+    .option("--evm", "Initialize as an Ethereum project.")
     .option(
       "-t, --template [name]",
-      `A template to start your project from. You can use an template repository name from the official thirdweb-example org.`,
+      "A template to start your project from. You can use an template repository name from the official thirdweb-example org.",
     )
-    .action(async (path, options) => {
-      await twCreate(path, options);
+    .action(async (type, path, options) => {
+      await twCreate(type, path, options);
     });
 
   program
