@@ -399,12 +399,12 @@ export async function convertToTWError(
     // metamask errors comes as objects, apply parsing on data object
     // TODO test errors from other wallets
     raw = JSON.stringify(error.data);
-  } else if (error instanceof Error) {
-    // regular ethers.js error
+  } else if (error.message) {
+    // regular ethers.js/Metamask error
     raw = error.message;
   } else {
     // not sure what this is, just throw it back
-    raw = error.toString();
+    raw = typeof error === "object" ? JSON.stringify(error) : error.toString();
   }
   console.log("JOEE - raw", raw);
   console.log("JOEE - error.reason", error.reason);
