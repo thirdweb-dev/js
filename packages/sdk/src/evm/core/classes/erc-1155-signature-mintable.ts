@@ -1,4 +1,5 @@
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
+import { getPrebuiltInfo } from "../../common/legacy";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { FEATURE_EDITION_SIGNATURE_MINTABLE } from "../../constants/erc1155-features";
 import type { NFTCollectionInitializer } from "../../contracts";
@@ -330,6 +331,12 @@ export class Erc1155SignatureMintable implements DetectableFeature {
     const signer = this.contractWrapper.getSigner();
     invariant(signer, "No signer available");
 
+    const contractInfo = await getPrebuiltInfo(
+      this.contractWrapper.readContract.address,
+      this.contractWrapper.getProvider(),
+    );
+    const isLegacyContract = contractInfo?.type === "TokenERC1155";
+
     return await Promise.all(
       parsedRequests.map(async (m, i) => {
         const uri = uris[i];
@@ -340,7 +347,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
         const signature = await this.contractWrapper.signTypedData(
           signer,
           {
-            name: "TokenERC1155",
+            name: isLegacyContract ? "TokenERC1155" : "SignatureMintERC1155",
             version: "1",
             chainId,
             verifyingContract: this.contractWrapper.readContract.address,

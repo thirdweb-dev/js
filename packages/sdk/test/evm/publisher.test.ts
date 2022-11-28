@@ -14,7 +14,7 @@ import {
   TokenERC721__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { expect } from "chai";
+import { assert, expect } from "chai";
 import { ethers } from "ethers";
 import { readFileSync } from "fs";
 import invariant from "tiny-invariant";
@@ -465,6 +465,30 @@ describe("Publishing", async () => {
     expect(nftsAfter[0].supply).to.equal(1);
     expect(nftsAfter[1].metadata.name).to.equal("cool nft 2");
     expect(nftsAfter[1].supply).to.equal(0);
+  });
+
+  it("ERC1155Signature mint feature detection", async () => {
+    const ipfsUri = "ipfs://QmNuKYGZoiHyumKjT7gPk3vwy3WKt7gTf1hKGZ2eyGZGRd";
+    const addr = await sdk.deployer.deployContractFromUri(ipfsUri, [
+      "test",
+      "test",
+    ]);
+    const c = await sdk.getContract(addr);
+    const payload = {
+      metadata: {
+        name: "SigMinted Edition",
+      },
+      to: samWallet.address, // Who will receive the NFT (or AddressZero for anyone)
+      price: 0.5, // the price to pay for minting
+      royaltyBps: 100, // custom royalty fees for this NFT (in bps)
+      quantity: "1",
+    };
+
+    const goodPayload = await c.erc1155.signature.generate(payload);
+    const valid = await c.erc1155.signature.verify(goodPayload);
+    expect(valid).to.eq(true);
+    const tx = await c.erc1155.signature.mint(goodPayload);
+    expect(tx.id.toNumber()).to.eq(0);
   });
 
   it("Constructor params with tuples", async () => {
