@@ -2,4 +2,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-Updated signTypedData domain to match contract from TokenERC1155 to SignatureMintERC1155
+Correctly handle contracts using the SignatureMintERC1155 ContractKit extension
