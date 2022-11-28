@@ -395,16 +395,12 @@ export async function convertToTWError(
 ): Promise<TransactionError> {
   let raw: string;
   console.log("JOEE - OGError", error);
-  if (error.data) {
+  if (typeof error === "object") {
     // metamask errors comes as objects, apply parsing on data object
-    // TODO test errors from other wallets
     raw = JSON.stringify(error.data);
-  } else if (error.message) {
-    // regular ethers.js/Metamask error
-    raw = error.message;
   } else {
     // not sure what this is, just throw it back
-    raw = typeof error === "object" ? JSON.stringify(error) : error.toString();
+    raw = error.toString();
   }
   console.log("JOEE - raw", raw);
   console.log("JOEE - error.reason", error.reason);
