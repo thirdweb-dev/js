@@ -397,7 +397,7 @@ export async function convertToTWError(
   console.log("JOEE - OGError", error);
   if (typeof error === "object") {
     // metamask errors comes as objects, apply parsing on data object
-    raw = JSON.stringify(error.data);
+    raw = JSON.stringify(error);
   } else {
     // not sure what this is, just throw it back
     raw = error.toString();
