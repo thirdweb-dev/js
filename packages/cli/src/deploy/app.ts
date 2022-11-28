@@ -6,10 +6,7 @@ import { upload } from "../storage/command";
 import { DEFAULT_IPFS_GATEWAY } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 
-export async function deployApp(dist = "dist", project = ".") {
-  let distPath = dist;
-  let projectPath = project;
-
+export async function deployApp(distPath = "dist", projectPath = ".") {
   const storage = new ThirdwebStorage();
   const supportedFrameworks = [new ViteDetector()];
 
