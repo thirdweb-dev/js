@@ -394,20 +394,14 @@ export async function convertToTWError(
   contractInterface: ethers.utils.Interface,
 ): Promise<TransactionError> {
   let raw: string;
-  if (error.data) {
+  if (typeof error === "object") {
     // metamask errors comes as objects, apply parsing on data object
-    // TODO test errors from other wallets
-    raw = JSON.stringify(error.data);
-  } else if (error instanceof Error) {
-    // regular ethers.js error
-    raw = error.message;
+    raw = JSON.stringify(error);
   } else {
     // not sure what this is, just throw it back
     raw = error.toString();
   }
-  const reason =
-    error.reason ||
-    parseMessageParts(/.*?"message[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
+  const reason = parseMessageParts(/.*?"message[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
   const data = parseMessageParts(/.*?"data[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
   const rpcUrl = parseMessageParts(/.*?"url[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
   let from = parseMessageParts(/.*?"from[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
