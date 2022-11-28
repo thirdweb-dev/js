@@ -408,9 +408,7 @@ export async function convertToTWError(
   }
   console.log("JOEE - raw", raw);
   console.log("JOEE - error.reason", error.reason);
-  const reason =
-    error.reason ||
-    parseMessageParts(/.*?"message[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
+  const reason = parseMessageParts(/.*?"message[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
   console.log("JOEE - reason", reason);
   const data = parseMessageParts(/.*?"data[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
   const rpcUrl = parseMessageParts(/.*?"url[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
