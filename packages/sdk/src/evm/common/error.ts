@@ -394,6 +394,7 @@ export async function convertToTWError(
   contractInterface: ethers.utils.Interface,
 ): Promise<TransactionError> {
   let raw: string;
+  console.log("JOEE - OGError", error);
   if (error.data) {
     // metamask errors comes as objects, apply parsing on data object
     // TODO test errors from other wallets
@@ -405,9 +406,12 @@ export async function convertToTWError(
     // not sure what this is, just throw it back
     raw = error.toString();
   }
+  console.log("JOEE - raw", raw);
+  console.log("JOEE - error.reason", error.reason);
   const reason =
     error.reason ||
     parseMessageParts(/.*?"message[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
+  console.log("JOEE - reason", reason);
   const data = parseMessageParts(/.*?"data[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
   const rpcUrl = parseMessageParts(/.*?"url[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
   let from = parseMessageParts(/.*?"from[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
