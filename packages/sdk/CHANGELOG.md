@@ -1,5 +1,19 @@
 # @thirdweb-dev/sdk
 
+## 3.6.3
+
+### Patch Changes
+
+- [#408](https://github.com/thirdweb-dev/js/pull/408) [`48797c7`](https://github.com/thirdweb-dev/js/commit/48797c7cf0695965e33eb6bf602be4652f7085a8) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - add `Gasless` as a possible extension to feature-detect
+
+- [#402](https://github.com/thirdweb-dev/js/pull/402) [`83dcaf7`](https://github.com/thirdweb-dev/js/commit/83dcaf70584af8c5cdf0427f9fc1ba82d89f0887) Thanks [@adam-maj](https://github.com/adam-maj)! - Expose sdk.fromWallet and wallet classes
+
+- [#412](https://github.com/thirdweb-dev/js/pull/412) [`f03be39`](https://github.com/thirdweb-dev/js/commit/f03be398e0d7b75c9c5b4fb643f35903e89a17e7) Thanks [@easonchai](https://github.com/easonchai)! - Correctly handle contracts using the SignatureMintERC1155 ContractKit extension
+
+- [#283](https://github.com/thirdweb-dev/js/pull/283) [`2eaa67a`](https://github.com/thirdweb-dev/js/commit/2eaa67acbe21464e7715d0b696afdc024460a44d) Thanks [@adam-maj](https://github.com/adam-maj)! - AppURI detection now enabled
+
+- [#414](https://github.com/thirdweb-dev/js/pull/414) [`47f8945`](https://github.com/thirdweb-dev/js/commit/47f8945325447874b1ace0359919c1d54fd55436) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improve error parsing
+
 ## 3.6.2
 
 ### Patch Changes
