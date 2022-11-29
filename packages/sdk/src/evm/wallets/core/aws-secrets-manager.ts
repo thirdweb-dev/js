@@ -18,7 +18,7 @@ export type AwsSecretsManagerWalletOptions = {
  *  @example
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk"
- * import { AWSSecretsManagerWallet } from "@thirdweb-dev/sdk/evm/wallets"
+ * import { AwsSecretsManagerWallet } from "@thirdweb-dev/sdk/evm/wallets"
  *
  * const wallet = new AwsSecretsManagerWallet({
  *   secretName: "my-secret",
@@ -35,7 +35,7 @@ export type AwsSecretsManagerWalletOptions = {
  * const sdk = await ThirdwebSDK.fromWallet(wallet, "mainnet");
  * ```
  */
-export class AWSSecretsManagerWallet extends AbstractWallet {
+export class AwsSecretsManagerWallet extends AbstractWallet {
   private secretId: string;
   private secretKeyName: string;
   private client: SecretsManagerClient;
