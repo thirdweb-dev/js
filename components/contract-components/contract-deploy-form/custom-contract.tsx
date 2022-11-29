@@ -3,6 +3,7 @@ import {
   useContractFullPublishMetadata,
   useContractPublishMetadataFromURI,
   useCustomContractDeployMutation,
+  useEns,
   useFunctionParamsFromABI,
 } from "../hooks";
 import { Divider, Flex, FormControl, Input } from "@chakra-ui/react";
@@ -60,6 +61,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
   onSuccessCallback,
 }) => {
   const address = useAddress();
+  const ensQuery = useEns(address);
   const trackEvent = useTrack();
   const compilerMetadata = useContractPublishMetadataFromURI(ipfsHash);
   const fullReleaseMetadata = useContractFullPublishMetadata(ipfsHash);
@@ -198,6 +200,11 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
                 deployData,
                 contractAddress: deployedContractAddress,
                 addToDashboard,
+                deployer: ensQuery.data?.ensName || address,
+                contractName: compilerMetadata.data?.name,
+                deployerAndContractName: `${
+                  ensQuery.data?.ensName || address
+                }__${compilerMetadata.data?.name}`,
               });
               trackEvent({
                 category: "custom-contract",
