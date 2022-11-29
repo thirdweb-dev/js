@@ -13,18 +13,18 @@ export default function generateDashboardUrl(
   // Pre-built contract
   else {
     const mapping = {
-      "signature-drop": "drop/signature-drop",
-      "nft-drop": "drop/nft-drop",
-      "edition-drop": "drop/edition-drop",
-      "nft-collection": "token/nft-collection",
-      edition: "token/edition",
-      "token-drop": "drop/token-drop",
-      token: "token/token",
-      marketplace: "marketplace/marketplace",
-      split: "governance/split",
-      vote: "governance/vote",
-      pack: "token/pack",
-      multiwrap: "token/multiwrap",
+      "signature-drop": "SignatureDrop",
+      "nft-drop": "DropERC721",
+      "edition-drop": "DropERC1155",
+      "nft-collection": "TokenERC721",
+      edition: "TokenERC1155",
+      "token-drop": "DropERC20",
+      token: "TokenERC20",
+      marketplace: "Marketplace",
+      split: "Split",
+      vote: "VoteERC20",
+      pack: "Pack",
+      multiwrap: "Multiwrap",
     };
 
     const foundMapping = mapping[name as keyof typeof mapping];
@@ -33,6 +33,6 @@ export default function generateDashboardUrl(
       return undefined;
     }
 
-    return `https://thirdweb.com/contracts/new/pre-built/${foundMapping}`;
+    return `https://thirdweb.com/thirdweb.eth/${foundMapping}`;
   }
 }
