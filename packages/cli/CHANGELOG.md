@@ -1,5 +1,11 @@
 # thirdweb
 
+## 0.9.1
+
+### Patch Changes
+
+- [#415](https://github.com/thirdweb-dev/js/pull/415) [`48d91e4`](https://github.com/thirdweb-dev/js/commit/48d91e4431a3740d0f98f730ed5abf5b287f92c1) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Fix mappings for prebuilts redirect on deploy
+
 ## 0.9.0
 
 ### Minor Changes
