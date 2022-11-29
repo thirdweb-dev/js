@@ -170,28 +170,7 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
             {nfts.result.map((nft, id) => {
               if (nft.metadata.image) {
                 return (
-                  <Tooltip
-                    key={id}
-                    label={
-                      <List>
-                        <ListItem>
-                          <strong>Name:</strong> {nft.metadata?.name || "N/A"}
-                        </ListItem>
-                        <ListItem>
-                          <strong>Contract Address:</strong>{" "}
-                          {shortenIfAddress(nft.contractAddress)}
-                        </ListItem>
-                        <ListItem>
-                          <strong>Token ID: </strong> {nft.tokenId}
-                        </ListItem>
-                        <ListItem>
-                          <>
-                            <strong>Token Standard: </strong> {nft.type}
-                          </>
-                        </ListItem>
-                      </List>
-                    }
-                  >
+                  <Tooltip key={id} label={<ListLabel nft={nft} />}>
                     <Image
                       src={nft.metadata.image || undefined}
                       width="140px"
@@ -213,28 +192,7 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
 
               if (nft.metadata && nft.metadata.name) {
                 return (
-                  <Tooltip
-                    key={id}
-                    label={
-                      <List>
-                        <ListItem>
-                          <strong>Name:</strong> {nft.metadata?.name || "N/A"}
-                        </ListItem>
-                        <ListItem>
-                          <strong>Contract Address:</strong>{" "}
-                          {shortenIfAddress(nft.contractAddress)}
-                        </ListItem>
-                        <ListItem>
-                          <strong>Token ID: </strong> {nft.tokenId}
-                        </ListItem>
-                        <ListItem>
-                          <>
-                            <strong>Token Standard: </strong> {nft.type}
-                          </>
-                        </ListItem>
-                      </List>
-                    }
-                  >
+                  <Tooltip key={id} label={<ListLabel nft={nft} />}>
                     <Center
                       flexDirection="column"
                       width="140px"
@@ -257,28 +215,7 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
               }
 
               return (
-                <Tooltip
-                  key={id}
-                  label={
-                    <List>
-                      <ListItem>
-                        <strong>Name:</strong> {nft.metadata?.name || "N/A"}
-                      </ListItem>
-                      <ListItem>
-                        <strong>Contract Address:</strong>{" "}
-                        {shortenIfAddress(nft.contractAddress)}
-                      </ListItem>
-                      <ListItem>
-                        <strong>Token ID: </strong> {nft.tokenId}
-                      </ListItem>
-                      <ListItem>
-                        <>
-                          <strong>Token Standard: </strong> {nft.type}
-                        </>
-                      </ListItem>
-                    </List>
-                  }
-                >
+                <Tooltip key={id} label={<ListLabel nft={nft} />}>
                   <Center
                     flexDirection="column"
                     width="140px"
@@ -411,5 +348,31 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
         </>
       )}
     </Stack>
+  );
+};
+
+interface ListLabelProps {
+  nft: WalletNFT;
+}
+
+const ListLabel: React.FC<ListLabelProps> = ({ nft }) => {
+  return (
+    <List>
+      <ListItem>
+        <strong>Name:</strong> {nft.metadata?.name || "N/A"}
+      </ListItem>
+      <ListItem>
+        <strong>Contract Address:</strong>{" "}
+        {shortenIfAddress(nft.contractAddress)}
+      </ListItem>
+      <ListItem>
+        <strong>Token ID: </strong> {nft.tokenId}
+      </ListItem>
+      <ListItem>
+        <>
+          <strong>Token Standard: </strong> {nft.type}
+        </>
+      </ListItem>
+    </List>
   );
 };

@@ -104,12 +104,19 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
                     <GridItem colSpan={3}>
                       <Heading size="label.md">Owner</Heading>
                     </GridItem>
-                    <GridItem colSpan={9}>
-                      <AddressCopyButton size="xs" address={renderData.owner} />
-                    </GridItem>
-                    <GridItem colSpan={3}>
-                      <Heading size="label.md">Token Standard</Heading>
-                    </GridItem>
+                    {renderData.type === "ERC721" && (
+                      <>
+                        <GridItem colSpan={9}>
+                          <AddressCopyButton
+                            size="xs"
+                            address={renderData.owner}
+                          />
+                        </GridItem>
+                        <GridItem colSpan={3}>
+                          <Heading size="label.md">Token Standard</Heading>
+                        </GridItem>
+                      </>
+                    )}
                     <GridItem colSpan={9}>
                       <Badge size="label.sm" variant="subtle">
                         {renderData.type}
