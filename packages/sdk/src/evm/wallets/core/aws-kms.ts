@@ -1,4 +1,8 @@
 import { AbstractWallet } from "../types/abstract";
+import {
+  TypedDataDomain,
+  TypedDataField,
+} from "@ethersproject/abstract-signer";
 import { ethers } from "ethers";
 import { AwsKmsSigner, AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
 
@@ -26,16 +30,33 @@ export class AwsKmsWallet extends AbstractWallet {
 
   constructor(options: AwsKmsSignerCredentials) {
     super();
-    this.cachedSigner = new AwsKmsSigner(options);
+    this.cachedSigner = this.updateSigner(new AwsKmsSigner(options));
   }
 
   async getSigner(
     provider?: ethers.providers.Provider,
   ): Promise<ethers.Signer> {
     if (provider) {
-      this.cachedSigner = this.cachedSigner.connect(provider);
+      this.cachedSigner = this.updateSigner(
+        this.cachedSigner.connect(provider),
+      );
     }
 
     return this.cachedSigner;
+  }
+
+  // Add _signTypedData method onto the signer for now so we don't need to reimpliment
+  // The entire AWS KMS signer repository and maintain it ourselves.
+  private updateSigner(signer: AwsKmsSigner): AwsKmsSigner {
+    (signer as any)._signTypedData = async function (
+      domain: TypedDataDomain,
+      types: Record<string, Array<TypedDataField>>,
+      value: Record<string, any>,
+    ) {
+      const hash = ethers.utils._TypedDataEncoder.hash(domain, types, value);
+      return signer._signDigest(hash);
+    };
+
+    return signer;
   }
 }
