@@ -78,6 +78,8 @@ export type SolidityUint =
 
 // address
 export type SolidityAddress = "address" | "address payable";
+// address array
+export type SolidityAddressArray = "address[]";
 
 // bytes
 export type SolidityBytes =
@@ -125,6 +127,7 @@ export type SolidityType =
       | SolidityInt
       | SolidityUint
       | SolidityAddress
+      | SolidityAddressArray
       | SolidityBytes
       | SolidityString
     )
