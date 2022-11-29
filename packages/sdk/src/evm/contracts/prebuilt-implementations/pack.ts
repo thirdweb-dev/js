@@ -536,10 +536,14 @@ export class Pack extends StandardErc1155<PackContract> {
     tokenId: BigNumberish,
     amount: BigNumberish = 1,
   ): Promise<PackRewards> {
-    const receipt = await this.contractWrapper.sendTransaction("openPack", [
-      tokenId,
-      amount,
-    ]);
+    const receipt = await this.contractWrapper.sendTransaction(
+      "openPack",
+      [tokenId, amount],
+      {
+        // Higher gas limit for opening packs
+        gasLimit: 500000,
+      },
+    );
     const event = this.contractWrapper.parseLogs<PackOpenedEvent>(
       "PackOpened",
       receipt?.logs,
