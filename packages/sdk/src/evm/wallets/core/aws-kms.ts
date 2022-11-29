@@ -33,7 +33,7 @@ export class AwsKmsWallet extends AbstractWallet {
     provider?: ethers.providers.Provider,
   ): Promise<ethers.Signer> {
     if (provider) {
-      this.cachedSigner.connect(provider);
+      this.cachedSigner = this.cachedSigner.connect(provider);
     }
 
     return this.cachedSigner;
