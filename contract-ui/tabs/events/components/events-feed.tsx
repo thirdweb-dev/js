@@ -28,7 +28,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
 import { bigNumberReplacer } from "pages/_app";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { FiChevronDown, FiCopy } from "react-icons/fi";
 import {
   Button,
@@ -189,7 +189,13 @@ export const EventsFeedItem: React.FC<EventsFeedItemProps> = ({
   contractAddress,
 }) => {
   const toast = useToast();
-  const { onCopy } = useClipboard(transaction.transactionHash);
+  const { onCopy, setValue } = useClipboard(transaction.transactionHash);
+
+  useEffect(() => {
+    if (transaction.transactionHash) {
+      setValue(transaction.transactionHash);
+    }
+  }, [transaction.transactionHash, setValue]);
 
   const router = useRouter();
   const chainName = useSingleQueryParam("networkOrAddress");

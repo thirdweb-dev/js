@@ -15,6 +15,7 @@ import Highlight, { Language, defaultProps } from "prism-react-renderer";
 import Prism from "prism-react-renderer/prism";
 import darkTheme from "prism-react-renderer/themes/oceanicNext";
 import lightTheme from "prism-react-renderer/themes/vsLight";
+import { useEffect } from "react";
 import { FiCopy } from "react-icons/fi";
 
 // add solidity lang support for code
@@ -46,7 +47,14 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   ...restCodeProps
 }) => {
   const theme = useColorModeValue(lightTheme, darkTheme);
-  const { onCopy, hasCopied } = useClipboard(code);
+  const { onCopy, hasCopied, setValue } = useClipboard(code);
+
+  useEffect(() => {
+    if (code) {
+      setValue(code);
+    }
+  }, [code, setValue]);
+
   return (
     <Highlight
       {...defaultProps}
