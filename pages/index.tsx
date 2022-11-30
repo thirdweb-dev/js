@@ -102,8 +102,9 @@ const HomePage: ThirdwebNextPage = () => {
                 size="subtitle.md"
                 textAlign={{ base: "center", md: "left" }}
               >
-                Smart contracts you control. Powerful SDKs and intuitive tools
-                for developers. Ship on-chain faster.
+                Everything you need to connect your apps or games to
+                decentralized networks. Powerful tools that simplify web3
+                development.
               </Heading>
 
               <Flex direction="column">
@@ -113,31 +114,41 @@ const HomePage: ThirdwebNextPage = () => {
                     align="center"
                     gap={6}
                   >
-                    <LinkButton
-                      href="/dashboard"
-                      onClick={() =>
-                        trackEvent({
-                          category: "cta-button",
-                          action: "click",
-                          label: "start",
-                          title: "Start building",
-                        })
-                      }
-                      h="68px"
-                      w={{ base: "100%", md: "290px" }}
-                      fontSize="20px"
-                      leftIcon={
-                        <Icon as={BsLightningCharge} color="yellow.500" />
-                      }
-                      color="black"
-                      flexShrink={0}
-                      background="rgba(255,255,255,1)"
-                      _hover={{
-                        background: "rgba(255,255,255,0.9)!important",
-                      }}
-                    >
-                      Start building
-                    </LinkButton>
+                    <Flex flexDir="column" gap={3}>
+                      <LinkButton
+                        href="/dashboard"
+                        onClick={() =>
+                          trackEvent({
+                            category: "cta-button",
+                            action: "click",
+                            label: "start",
+                            title: "Start building",
+                          })
+                        }
+                        h="68px"
+                        w={{ base: "100%", md: "290px" }}
+                        fontSize="20px"
+                        leftIcon={
+                          <Icon as={BsLightningCharge} color="yellow.500" />
+                        }
+                        color="black"
+                        flexShrink={0}
+                        background="rgba(255,255,255,1)"
+                        _hover={{
+                          background: "rgba(255,255,255,0.9)!important",
+                        }}
+                      >
+                        Start building
+                      </LinkButton>
+                      <Text
+                        color="gray.600"
+                        size="label.sm"
+                        fontStyle="italic"
+                        textAlign="center"
+                      >
+                        Completely free to use. No hidden fees.
+                      </Text>
+                    </Flex>
                     <Flex
                       background="rgba(255, 255, 255, 0.08)"
                       border="1px solid rgba(255, 255, 255, 0.2)"
@@ -148,6 +159,7 @@ const HomePage: ThirdwebNextPage = () => {
                       minW={{ base: "100%", lg: "240px" }}
                       gap={4}
                       align="center"
+                      alignSelf="start"
                     >
                       <Text
                         color="white"
@@ -255,20 +267,20 @@ const HomePage: ThirdwebNextPage = () => {
                 >
                   <Flex direction="column" gap={1.5}>
                     <Heading w="100%" size="title.lg" lineHeight={1.2}>
-                      Prebuilt
+                      Explore
                     </Heading>
                   </Flex>
                   <Divider borderColor="rgba(255,255,255,0.1)" />
 
                   <ContractsDescriptorItem
-                    title="Secure"
-                    description="Contracts are audited and follow the highest security standards."
+                    title="Discover"
+                    description="The front page for contracts. Get inspired by contracts built by other web3 developers. Find contracts for your specific app's use case."
                     icon={require("public/assets/landingpage/icons/secure.png")}
                   />
                   <Divider borderColor="rgba(255,255,255,0.1)" />
                   <ContractsDescriptorItem
-                    title="Optimized"
-                    description="Up to 10x lower gas-fees for contract deployment delivering industry-leading efficiency."
+                    title="Powerful"
+                    description="Deploy contracts to take full advantage of our product suite. Unlock access to powerful SDKs and Dashboard to easily build your app."
                     icon={require("public/assets/landingpage/icons/optimized.png")}
                   />
                   <Divider borderColor="rgba(255,255,255,0.1)" />
@@ -411,18 +423,21 @@ const HomePage: ThirdwebNextPage = () => {
                     icon={require("public/assets/landingpage/icons/sdk-dashboard.png")}
                   />
                   <Divider borderColor="rgba(255,255,255,0.1)" />
-                  <LinkButton
-                    href="https://portal.thirdweb.com/contractkit"
-                    variant="solid"
-                    colorScheme="whiteAlpha"
-                    bg="white"
-                    color="black"
-                    py={6}
-                    isExternal
-                    noIcon
-                  >
-                    Start building contracts
-                  </LinkButton>
+                  <Flex h="full" alignItems="end">
+                    <LinkButton
+                      href="https://portal.thirdweb.com/contractkit"
+                      variant="solid"
+                      colorScheme="whiteAlpha"
+                      bg="white"
+                      color="black"
+                      py={6}
+                      isExternal
+                      noIcon
+                      w="full"
+                    >
+                      Start building contracts
+                    </LinkButton>
+                  </Flex>
                 </Card>
               </SimpleGrid>
             </Flex>
