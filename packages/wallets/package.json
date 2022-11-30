@@ -8,6 +8,26 @@
       "module": "./dist/thirdweb-dev-wallets.esm.js",
       "default": "./dist/thirdweb-dev-wallets.cjs.js"
     },
+    "./wallets/coinbase-wallet": {
+      "module": "./wallets/coinbase-wallet/dist/thirdweb-dev-wallets-wallets-coinbase-wallet.esm.js",
+      "default": "./wallets/coinbase-wallet/dist/thirdweb-dev-wallets-wallets-coinbase-wallet.cjs.js"
+    },
+    "./connectors/injected": {
+      "module": "./connectors/injected/dist/thirdweb-dev-wallets-connectors-injected.esm.js",
+      "default": "./connectors/injected/dist/thirdweb-dev-wallets-connectors-injected.cjs.js"
+    },
+    "./connectors/metamask": {
+      "module": "./connectors/metamask/dist/thirdweb-dev-wallets-connectors-metamask.esm.js",
+      "default": "./connectors/metamask/dist/thirdweb-dev-wallets-connectors-metamask.cjs.js"
+    },
+    "./connectors/wallet-connect": {
+      "module": "./connectors/wallet-connect/dist/thirdweb-dev-wallets-connectors-wallet-connect.esm.js",
+      "default": "./connectors/wallet-connect/dist/thirdweb-dev-wallets-connectors-wallet-connect.cjs.js"
+    },
+    "./connectors/coinbase-wallet": {
+      "module": "./connectors/coinbase-wallet/dist/thirdweb-dev-wallets-connectors-coinbase-wallet.esm.js",
+      "default": "./connectors/coinbase-wallet/dist/thirdweb-dev-wallets-connectors-coinbase-wallet.cjs.js"
+    },
     "./package.json": "./package.json"
   },
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/wallets",
@@ -18,11 +38,14 @@
   "author": "thirdweb eng <eng@thirdweb.com>",
   "files": [
     "dist/",
-    "wallets/"
+    "wallets/",
+    "connectors/"
   ],
   "preconstruct": {
     "entrypoints": [
-      "index.ts"
+      "index.ts",
+      "connectors/**",
+      "wallets/**"
     ],
     "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
       "exports": true
@@ -36,6 +59,7 @@
     "@walletconnect/ethereum-provider": "^1.7.8",
     "abitype": "^0.2.5",
     "ethers": "^5.7.2",
+    "eventemitter3": "^5.0.0",
     "localforage": "^1.10.0"
   },
   "devDependencies": {

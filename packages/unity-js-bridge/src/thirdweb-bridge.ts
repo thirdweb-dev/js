@@ -1,12 +1,7 @@
 /// --- Thirdweb Brige ---
 import { ChainOrRpc, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  CoinbaseWalletConnector,
-  InjectedConnector,
-  MetaMaskConnector,
-  WalletConnectConnector,
-} from "@thirdweb-dev/wallets";
+import { CoinbaseWallet } from "@thirdweb-dev/wallets";
 import { ContractInterface, ethers } from "ethers";
 
 declare global {
@@ -34,10 +29,12 @@ const bigNumberReplacer = (_key: string, value: any) => {
   return value;
 };
 
+const WALLETS = [CoinbaseWallet] as const;
+
 interface TWBridge {
   initialize: (chain: ChainOrRpc, options: string) => void;
   connect: (
-    wallet: keyof typeof WALLET_MAP,
+    wallet: typeof WALLETS[number]["id"],
     chainId?: number,
   ) => Promise<string>;
   disconnect: () => Promise<void>;
@@ -45,41 +42,32 @@ interface TWBridge {
   invoke: (route: string, payload: string) => Promise<string | undefined>;
 }
 
-// add the bridge to the window object type
-
-const WALLET_MAP = {
-  injected: InjectedConnector,
-  metamask: MetaMaskConnector,
-  walletConnect: WalletConnectConnector,
-  coinbase: CoinbaseWalletConnector,
-} as const;
-
-// TODO - fix any;
-let activeWallet: any;
-
-let initializedChain: ChainOrRpc | undefined;
-
 const w = window;
 
-async function updateSDKSigner() {
-  if (w.thirdweb) {
-    let signer: ethers.Signer | undefined = undefined;
-    if (activeWallet) {
-      signer = await activeWallet.getSigner();
-    }
-    if (signer) {
-      // set signer if we got one
-      w.thirdweb.updateSignerOrProvider(signer);
-    } else if (initializedChain) {
-      // reset back to provider only in case signer gets reomved (disconnect case)
-      w.thirdweb.updateSignerOrProvider(initializedChain);
+class ThirdwebBridge implements TWBridge {
+  private walletMap: Map<string, CoinbaseWallet> = new Map();
+  private activeWallet: CoinbaseWallet | undefined;
+  private initializedChain: ChainOrRpc | undefined;
+  private activeSDK: ThirdwebSDK | undefined;
+
+  private async updateSDKSigner() {
+    if (this.activeSDK) {
+      let signer: ethers.Signer | undefined = undefined;
+      if (this.activeWallet) {
+        signer = await this.activeWallet.getSigner();
+      }
+      if (signer) {
+        // set signer if we got one
+        this.activeSDK.updateSignerOrProvider(signer);
+      } else if (this.initializedChain) {
+        // reset back to provider only in case signer gets reomved (disconnect case)
+        this.activeSDK.updateSignerOrProvider(this.initializedChain);
+      }
     }
   }
-}
 
-w.bridge = {
-  initialize: (chain: ChainOrRpc, options: string) => {
-    initializedChain = chain;
+  public initialize(chain: ChainOrRpc, options: string) {
+    this.initializedChain = chain;
     console.debug("thirdwebSDK initialization:", chain, options);
     const sdkOptions = JSON.parse(options);
     const storage =
@@ -91,39 +79,52 @@ w.bridge = {
           })
         : new ThirdwebStorage();
 
-    w.thirdweb = new ThirdwebSDK(chain, sdkOptions, storage);
-  },
-  connect: async (
-    wallet: keyof typeof WALLET_MAP = "injected",
-    chainId?: number,
-  ) => {
-    if (wallet in WALLET_MAP) {
-      const walletInstance = new WALLET_MAP[wallet]({
-        options: { appName: "" },
-      });
-      await walletInstance.connect({ chainId });
-      activeWallet = walletInstance;
-      await updateSDKSigner();
-      return await w.thirdweb.wallet.getAddress();
+    this.activeSDK = new ThirdwebSDK(chain, sdkOptions, storage);
+    w.thirdweb = this.activeSDK;
+    for (let wallet of WALLETS) {
+      const walletInstance = new wallet();
+      walletInstance.on("connect", () => this.updateSDKSigner());
+      walletInstance.on("disconnect", () => this.updateSDKSigner());
+      walletInstance.on("change", () => this.updateSDKSigner());
+      this.walletMap.set(wallet.id, walletInstance);
+    }
+  }
+  public async connect(
+    wallet = "coinbaseWallet",
+    chainId?: number | undefined,
+  ) {
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
+    const walletInstance = this.walletMap.get(wallet);
+    if (walletInstance) {
+      await walletInstance.connect(chainId);
+      this.activeWallet = walletInstance;
+      await this.updateSDKSigner();
+      return await this.activeSDK.wallet.getAddress();
     } else {
       throw new Error("Invalid Wallet");
     }
-  },
-  disconnect: async () => {
-    if (activeWallet) {
-      await activeWallet.disconnect();
-      await updateSDKSigner();
+  }
+  public async disconnect() {
+    if (this.activeWallet) {
+      await this.activeWallet.disconnect();
+      await this.updateSDKSigner();
     }
-  },
-  switchNetwork: async (chainId: number) => {
-    if (chainId && activeWallet && "switchChain" in activeWallet) {
-      await activeWallet.switchChain(chainId);
-      await updateSDKSigner();
+  }
+  public async switchNetwork(chainId: number) {
+    if (chainId && this.activeWallet && "switchChain" in this.activeWallet) {
+      await this.activeWallet.switchChain(chainId);
+      await this.updateSDKSigner();
     } else {
       throw new Error("Error Switching Network");
     }
-  },
-  invoke: async (route: string, payload: string) => {
+  }
+
+  public async invoke(route: string, payload: string) {
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
     const routeArgs = route.split(SEPARATOR);
     const firstArg = routeArgs[0].split(SUB_SEPARATOR);
     const addrOrSDK = firstArg[0];
@@ -149,11 +150,11 @@ w.bridge = {
       }
       if (prop && routeArgs.length === 2) {
         // @ts-expect-error need to type-guard this properly
-        const result = await w.thirdweb[prop][routeArgs[1]](...parsedArgs);
+        const result = await this.activeSDK[prop][routeArgs[1]](...parsedArgs);
         return JSON.stringify({ result: result }, bigNumberReplacer);
       } else if (routeArgs.length === 2) {
         // @ts-expect-error need to type-guard this properly
-        const result = await w.thirdweb[routeArgs[1]](...parsedArgs);
+        const result = await this.activeSDK[routeArgs[1]](...parsedArgs);
         return JSON.stringify({ result: result }, bigNumberReplacer);
       } else {
         throw new Error("Invalid Route");
@@ -171,8 +172,8 @@ w.bridge = {
         }
       }
       const contract = typeOrAbi
-        ? await w.thirdweb.getContract(addrOrSDK, typeOrAbi)
-        : await w.thirdweb.getContract(addrOrSDK);
+        ? await this.activeSDK.getContract(addrOrSDK, typeOrAbi)
+        : await this.activeSDK.getContract(addrOrSDK);
       if (routeArgs.length === 2) {
         // @ts-expect-error need to type-guard this properly
         const result = await contract[routeArgs[1]](...parsedArgs);
@@ -193,7 +194,10 @@ w.bridge = {
         throw new Error("Invalid Route");
       }
     }
-  },
-};
+  }
+}
+
+// add the bridge to the window object type
+w.bridge = new ThirdwebBridge();
 
 /// --- End Thirdweb Brige ---

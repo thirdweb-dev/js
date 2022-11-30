@@ -1,1 +1,1 @@
-export * from "./connectors";
+export * from "./wallets/coinbase-wallet";
