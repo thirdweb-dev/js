@@ -103,7 +103,10 @@ export class GnosisSafeConnector extends Connector {
       import("@gnosis.pm/safe-ethers-lib"),
     ]);
 
-    const ethAdapter = new safeEthersLib.default({ ethers, signer });
+    const ethAdapter = new safeEthersLib.default({
+      ethers,
+      signerOrProvider: signer,
+    });
 
     const safe = await safeCoreSdk.default.create({
       ethAdapter: ethAdapter as any,
