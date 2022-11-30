@@ -8,6 +8,22 @@
       "module": "./dist/thirdweb-dev-wallets.esm.js",
       "default": "./dist/thirdweb-dev-wallets.cjs.js"
     },
+    "./wallets/base": {
+      "module": "./wallets/base/dist/thirdweb-dev-wallets-wallets-base.esm.js",
+      "default": "./wallets/base/dist/thirdweb-dev-wallets-wallets-base.cjs.js"
+    },
+    "./wallets/injected": {
+      "module": "./wallets/injected/dist/thirdweb-dev-wallets-wallets-injected.esm.js",
+      "default": "./wallets/injected/dist/thirdweb-dev-wallets-wallets-injected.cjs.js"
+    },
+    "./wallets/metamask": {
+      "module": "./wallets/metamask/dist/thirdweb-dev-wallets-wallets-metamask.esm.js",
+      "default": "./wallets/metamask/dist/thirdweb-dev-wallets-wallets-metamask.cjs.js"
+    },
+    "./wallets/wallet-connect": {
+      "module": "./wallets/wallet-connect/dist/thirdweb-dev-wallets-wallets-wallet-connect.esm.js",
+      "default": "./wallets/wallet-connect/dist/thirdweb-dev-wallets-wallets-wallet-connect.cjs.js"
+    },
     "./wallets/coinbase-wallet": {
       "module": "./wallets/coinbase-wallet/dist/thirdweb-dev-wallets-wallets-coinbase-wallet.esm.js",
       "default": "./wallets/coinbase-wallet/dist/thirdweb-dev-wallets-wallets-coinbase-wallet.cjs.js"

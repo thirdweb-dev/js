@@ -1,8 +1,15 @@
 /// --- Thirdweb Brige ---
 import { ChainOrRpc, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { CoinbaseWallet } from "@thirdweb-dev/wallets";
-import { ContractInterface, ethers } from "ethers";
+import {
+  CoinbaseWallet,
+  MetaMask,
+  WalletConnect,
+  InjectedWallet,
+} from "@thirdweb-dev/wallets";
+import type { AbstractWallet } from "@thirdweb-dev/wallets/dist/declarations/src/wallets/base";
+import { BigNumber } from "ethers";
+import type { ContractInterface, Signer } from "ethers";
 
 declare global {
   interface Window {
@@ -18,25 +25,29 @@ const SUB_SEPARATOR = "#";
 const bigNumberReplacer = (_key: string, value: any) => {
   // if we find a BigNumber then make it into a string (since that is safe)
   if (
-    ethers.BigNumber.isBigNumber(value) ||
+    BigNumber.isBigNumber(value) ||
     (typeof value === "object" &&
       value !== null &&
       value.type === "BigNumber" &&
       "hex" in value)
   ) {
-    return ethers.BigNumber.from(value).toString();
+    return BigNumber.from(value).toString();
   }
   return value;
 };
 
-const WALLETS = [CoinbaseWallet] as const;
+const WALLETS = [
+  MetaMask,
+  InjectedWallet,
+  WalletConnect,
+  CoinbaseWallet,
+] as const;
+
+type PossibleWallet = typeof WALLETS[number]["id"];
 
 interface TWBridge {
   initialize: (chain: ChainOrRpc, options: string) => void;
-  connect: (
-    wallet: typeof WALLETS[number]["id"],
-    chainId?: number,
-  ) => Promise<string>;
+  connect: (wallet: PossibleWallet, chainId?: number) => Promise<string>;
   disconnect: () => Promise<void>;
   switchNetwork: (chainId: number) => Promise<void>;
   invoke: (route: string, payload: string) => Promise<string | undefined>;
@@ -45,14 +56,14 @@ interface TWBridge {
 const w = window;
 
 class ThirdwebBridge implements TWBridge {
-  private walletMap: Map<string, CoinbaseWallet> = new Map();
-  private activeWallet: CoinbaseWallet | undefined;
+  private walletMap: Map<string, AbstractWallet> = new Map();
+  private activeWallet: AbstractWallet | undefined;
   private initializedChain: ChainOrRpc | undefined;
   private activeSDK: ThirdwebSDK | undefined;
 
   private async updateSDKSigner() {
     if (this.activeSDK) {
-      let signer: ethers.Signer | undefined = undefined;
+      let signer: Signer | undefined = undefined;
       if (this.activeWallet) {
         signer = await this.activeWallet.getSigner();
       }
@@ -82,7 +93,9 @@ class ThirdwebBridge implements TWBridge {
     this.activeSDK = new ThirdwebSDK(chain, sdkOptions, storage);
     w.thirdweb = this.activeSDK;
     for (let wallet of WALLETS) {
-      const walletInstance = new wallet();
+      const walletInstance = new wallet({
+        appName: sdkOptions.appName || "thirdweb powered dApp",
+      });
       walletInstance.on("connect", () => this.updateSDKSigner());
       walletInstance.on("disconnect", () => this.updateSDKSigner());
       walletInstance.on("change", () => this.updateSDKSigner());
@@ -90,7 +103,7 @@ class ThirdwebBridge implements TWBridge {
     }
   }
   public async connect(
-    wallet = "coinbaseWallet",
+    wallet: PossibleWallet = "injected",
     chainId?: number | undefined,
   ) {
     if (!this.activeSDK) {
