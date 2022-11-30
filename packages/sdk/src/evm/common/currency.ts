@@ -192,3 +192,11 @@ export async function normalizeAmount(
   const decimals = await contractWrapper.readContract.decimals();
   return utils.parseUnits(AmountSchema.parse(amount), decimals);
 }
+
+export function toEther(amount: Amount): string {
+  return utils.formatEther(AmountSchema.parse(amount));
+}
+
+export function toWei(amount: BigNumber | string): BigNumber {
+  return utils.parseEther(AmountSchema.parse(amount));
+}
