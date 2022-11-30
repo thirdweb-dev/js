@@ -1,5 +1,5 @@
 /// --- Thirdweb Brige ---
-import { ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
+import { ChainOrRpc, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ContractInterface, ethers } from "ethers";
 
@@ -7,7 +7,7 @@ const separator = "/";
 const subSeparator = "#";
 
 // big number transform
-const bigNumberReplacer = (_key, value: any) => {
+const bigNumberReplacer = (_key: any, value: any) => {
   // if we find a BigNumber then make it into a string (since that is safe)
   if (
     ethers.BigNumber.isBigNumber(value) ||
@@ -34,7 +34,7 @@ declare global {
 
 const w = window;
 w.bridge = {};
-w.bridge.initialize = (chain, options) => {
+w.bridge.initialize = (chain: ChainOrRpc, options: string) => {
   console.debug("thirdwebSDK initialization:", chain, options);
   const sdkOptions = JSON.parse(options);
   let storage = new ThirdwebStorage();
@@ -63,11 +63,11 @@ w.bridge.connect = async () => {
     await provider.send("eth_requestAccounts", []);
     if (w.thirdweb) {
       updateSDKSigner();
-      w.ethereum.on("accountsChanged", async (accounts) => {
+      w.ethereum.on("accountsChanged", async (accounts: any) => {
         console.debug("accountsChanged", accounts);
         updateSDKSigner();
       });
-      w.ethereum.on("chainChanged", async (chain) => {
+      w.ethereum.on("chainChanged", async (chain: any) => {
         console.debug("chainChanged", chain);
         updateSDKSigner();
       });
@@ -80,7 +80,7 @@ w.bridge.connect = async () => {
   }
 };
 
-w.bridge.switchNetwork = async (chainId) => {
+w.bridge.switchNetwork = async (chainId: number) => {
   if (chainId) {
     await window.ethereum.request({
       method: "wallet_switchEthereumChain",
@@ -92,13 +92,13 @@ w.bridge.switchNetwork = async (chainId) => {
   }
 };
 
-w.bridge.invoke = async (route, payload) => {
+w.bridge.invoke = async (route: string, payload: string) => {
   const routeArgs = route.split(separator);
   const firstArg = routeArgs[0].split(subSeparator);
   const addrOrSDK = firstArg[0];
 
   const fnArgs = JSON.parse(payload).arguments;
-  const parsedArgs = fnArgs.map((arg) => {
+  const parsedArgs = fnArgs.map((arg: unknown) => {
     try {
       return typeof arg === "string" &&
         (arg.startsWith("{") || arg.startsWith("["))
@@ -117,12 +117,11 @@ w.bridge.invoke = async (route, payload) => {
       prop = firstArg[1];
     }
     if (prop && routeArgs.length === 2) {
-      // FIXME any
-      const result = await (w.thirdweb as any)[prop][routeArgs[1]](
-        ...parsedArgs,
-      );
+      // @ts-expect-error need to type-guard this properly
+      const result = await w.thirdweb[prop][routeArgs[1]](...parsedArgs);
       return JSON.stringify({ result: result }, bigNumberReplacer);
     } else if (routeArgs.length === 2) {
+      // @ts-expect-error need to type-guard this properly
       const result = await w.thirdweb[routeArgs[1]](...parsedArgs);
       return JSON.stringify({ result: result }, bigNumberReplacer);
     } else {
@@ -144,12 +143,15 @@ w.bridge.invoke = async (route, payload) => {
       ? await w.thirdweb.getContract(addrOrSDK, typeOrAbi)
       : await w.thirdweb.getContract(addrOrSDK);
     if (routeArgs.length === 2) {
+      // @ts-expect-error need to type-guard this properly
       const result = await contract[routeArgs[1]](...parsedArgs);
       return JSON.stringify({ result: result }, bigNumberReplacer);
     } else if (routeArgs.length === 3) {
+      // @ts-expect-error need to type-guard this properly
       const result = await contract[routeArgs[1]][routeArgs[2]](...parsedArgs);
       return JSON.stringify({ result: result }, bigNumberReplacer);
     } else if (routeArgs.length === 4) {
+      // @ts-expect-error need to type-guard this properly
       const result = await contract[routeArgs[1]][routeArgs[2]][routeArgs[3]](
         ...parsedArgs,
       );
