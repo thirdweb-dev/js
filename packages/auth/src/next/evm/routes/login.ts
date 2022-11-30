@@ -47,7 +47,7 @@ export default async function handler(
       path: "/",
       httpOnly: true,
       secure: true,
-      sameSite: "strict",
+      sameSite: "none",
     }),
   );
 
