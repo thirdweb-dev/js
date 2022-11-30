@@ -74,8 +74,28 @@ export abstract class AbstractWallet extends EventEmitter<WalletEvents> {
 
   async connect(
     chainId?: number,
-  ): Promise<{ address: string; chainId: number }> {
+  ): Promise<{ address: string; chainId: number } | undefined> {
     const connector = await this.getConnector();
+    this.setupEventListeners(connector);
+    try {
+      const connectionRes = await connector.connect({ chainId });
+
+      return {
+        address: connectionRes.account,
+        chainId: connectionRes.chain.id,
+      };
+    } catch (err) {
+      // in case we fail here we need to remove the event listeners
+      await this.disconnect();
+      throw err;
+    }
+  }
+
+  protected setupEventListeners(connector: WagmiConnector) {
+    // do not break on coordinator error
+    try {
+      this.coordinatorStorage.setItem("lastConnectedWallet", this.#wallletId);
+    } catch {}
     // setup listeners to re-expose events
     connector.on("connect", (data) => {
       this.coordinatorStorage.setItem("lastConnectedWallet", this.#wallletId);
@@ -94,20 +114,8 @@ export abstract class AbstractWallet extends EventEmitter<WalletEvents> {
     connector.on("disconnect", () => this.emit("disconnect"));
     connector.on("error", (error) => this.emit("error", error));
     // end event listener setups
-    let connectionRes = await connector.connect({ chainId });
-    // do not break on coordinator error
-    try {
-      await this.coordinatorStorage.setItem(
-        "lastConnectedWallet",
-        this.#wallletId,
-      );
-    } catch {}
-
-    return {
-      address: connectionRes.account,
-      chainId: connectionRes.chain?.id,
-    };
   }
+
   async getSigner(chainId?: number) {
     const connector = await this.getConnector();
     if (!connector) {
