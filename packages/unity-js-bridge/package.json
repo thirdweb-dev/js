@@ -14,6 +14,7 @@
   "dependencies": {
     "@thirdweb-dev/sdk": "*",
     "@thirdweb-dev/storage": "*",
+    "@thirdweb-dev/wallets": "*",
     "ethers": "^5.7.2"
   },
   "devDependencies": {
@@ -22,6 +23,11 @@
     "typescript": "^4.7.4"
   },
   "scripts": {
-    "build": "rm -rf dist/ && tsc && node scripts/build.js"
+    "format": "prettier --write 'src/**/*'",
+    "lint": "eslint src/",
+    "fix": "eslint src/ --fix",
+    "clean": "rm -rf dist/",
+    "build": "yarn clean && tsc && node scripts/build.js",
+    "push": "yalc push"
   }
 }

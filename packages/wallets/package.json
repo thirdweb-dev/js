@@ -1,0 +1,52 @@
+{
+  "name": "@thirdweb-dev/wallets",
+  "version": "0.0.0",
+  "main": "dist/thirdweb-dev-wallets.cjs.js",
+  "module": "dist/thirdweb-dev-wallets.esm.js",
+  "exports": {
+    ".": {
+      "module": "./dist/thirdweb-dev-wallets.esm.js",
+      "default": "./dist/thirdweb-dev-wallets.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/wallets",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/thirdweb-dev/js/issues"
+  },
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "files": [
+    "dist/",
+    "wallets/"
+  ],
+  "preconstruct": {
+    "entrypoints": [
+      "index.ts"
+    ],
+    "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
+      "exports": true
+    },
+    "exports": true
+  },
+  "sideEffects": false,
+  "dependencies": {
+    "@coinbase/wallet-sdk": "^3.6.0",
+    "@wagmi/core": "^0.7.6",
+    "@walletconnect/ethereum-provider": "^1.7.8",
+    "abitype": "^0.2.5",
+    "ethers": "^5.7.2",
+    "localforage": "^1.10.0"
+  },
+  "devDependencies": {
+    "@preconstruct/cli": "^2.2.1",
+    "typescript": "^4.7.4"
+  },
+  "scripts": {
+    "format": "prettier --write 'src/**/*'",
+    "lint": "eslint src/",
+    "fix": "eslint src/ --fix",
+    "clean": "rm -rf dist/",
+    "build": "tsc && preconstruct build"
+  }
+}
