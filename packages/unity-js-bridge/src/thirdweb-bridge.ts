@@ -54,26 +54,40 @@ const WALLET_MAP = {
 // TODO - fix any;
 let activeWallet: any;
 
+let initializedChain: ChainOrRpc | undefined;
+
 const w = window;
 
 async function updateSDKSigner() {
-  if (w.thirdweb && activeWallet) {
-    w.thirdweb.updateSignerOrProvider(await activeWallet.getSigner());
+  if (w.thirdweb) {
+    let signer: ethers.Signer | undefined = undefined;
+    if (activeWallet) {
+      signer = await activeWallet.getSigner();
+    }
+    if (signer) {
+      // set signer if we got one
+      w.thirdweb.updateSignerOrProvider(signer);
+    } else if (initializedChain) {
+      // reset back to provider only in case signer gets reomved (disconnect case)
+      w.thirdweb.updateSignerOrProvider(initializedChain);
+    }
   }
 }
 
 w.bridge = {
   initialize: (chain: ChainOrRpc, options: string) => {
+    initializedChain = chain;
     console.debug("thirdwebSDK initialization:", chain, options);
     const sdkOptions = JSON.parse(options);
-    let storage = new ThirdwebStorage();
-    if (sdkOptions && sdkOptions.ipfsGatewayUrl) {
-      storage = new ThirdwebStorage({
-        gatewayUrls: {
-          "ipfs://": [sdkOptions.ipfsGatewayUrl],
-        },
-      });
-    }
+    const storage =
+      sdkOptions && sdkOptions.ipfsGatewayUrl
+        ? new ThirdwebStorage({
+            gatewayUrls: {
+              "ipfs://": [sdkOptions.ipfsGatewayUrl],
+            },
+          })
+        : new ThirdwebStorage();
+
     w.thirdweb = new ThirdwebSDK(chain, sdkOptions, storage);
   },
   connect: async (wallet: keyof typeof WALLET_MAP = "injected") => {
@@ -92,6 +106,7 @@ w.bridge = {
   disconnect: async () => {
     if (activeWallet) {
       await activeWallet.disconnect();
+      await updateSDKSigner();
     }
   },
   switchNetwork: async (chainId: number) => {
