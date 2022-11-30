@@ -14,7 +14,6 @@ import type { ContractInterface, Signer } from "ethers";
 declare global {
   interface Window {
     bridge: TWBridge;
-    thirdweb: ThirdwebSDK;
   }
 }
 
@@ -91,7 +90,6 @@ class ThirdwebBridge implements TWBridge {
         : new ThirdwebStorage();
 
     this.activeSDK = new ThirdwebSDK(chain, sdkOptions, storage);
-    w.thirdweb = this.activeSDK;
     for (let wallet of WALLETS) {
       const walletInstance = new wallet({
         appName: sdkOptions.appName || "thirdweb powered dApp",
@@ -122,6 +120,7 @@ class ThirdwebBridge implements TWBridge {
   public async disconnect() {
     if (this.activeWallet) {
       await this.activeWallet.disconnect();
+      this.activeWallet = undefined;
       await this.updateSDKSigner();
     }
   }
