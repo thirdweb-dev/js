@@ -3,7 +3,7 @@ import { ContractEvent, EventQueryOptions } from "../../types/index";
 import { ContractWrapper } from "./contract-wrapper";
 import { EventFragment } from "@ethersproject/abi";
 import { BaseContract, Event, providers } from "ethers";
-import { ListenerFn } from "eventemitter3";
+import type { EventEmitter } from "eventemitter3";
 
 /**
  * Listen to Contract events in real time
@@ -28,7 +28,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @param listener - the callback function that will be called on every transaction
    * @public
    */
-  public addTransactionListener(listener: ListenerFn) {
+  public addTransactionListener(listener: EventEmitter.ListenerFn) {
     this.contractWrapper.addListener(EventType.Transaction, listener);
   }
 
@@ -44,7 +44,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @param listener - the callback function to remove
    * @public
    */
-  public removeTransactionListener(listener: ListenerFn) {
+  public removeTransactionListener(listener: EventEmitter.ListenerFn) {
     this.contractWrapper.off(EventType.Transaction, listener);
   }
 
