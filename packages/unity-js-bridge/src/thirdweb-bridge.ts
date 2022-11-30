@@ -36,7 +36,10 @@ const bigNumberReplacer = (_key: string, value: any) => {
 
 interface TWBridge {
   initialize: (chain: ChainOrRpc, options: string) => void;
-  connect: (wallet: keyof typeof WALLET_MAP) => Promise<string>;
+  connect: (
+    wallet: keyof typeof WALLET_MAP,
+    chainId?: number,
+  ) => Promise<string>;
   disconnect: () => Promise<void>;
   switchNetwork: (chainId: number) => Promise<void>;
   invoke: (route: string, payload: string) => Promise<string | undefined>;
@@ -90,12 +93,15 @@ w.bridge = {
 
     w.thirdweb = new ThirdwebSDK(chain, sdkOptions, storage);
   },
-  connect: async (wallet: keyof typeof WALLET_MAP = "injected") => {
+  connect: async (
+    wallet: keyof typeof WALLET_MAP = "injected",
+    chainId?: number,
+  ) => {
     if (wallet in WALLET_MAP) {
       const walletInstance = new WALLET_MAP[wallet]({
         options: { appName: "" },
       });
-      await walletInstance.connect();
+      await walletInstance.connect({ chainId });
       activeWallet = walletInstance;
       await updateSDKSigner();
       return await w.thirdweb.wallet.getAddress();
