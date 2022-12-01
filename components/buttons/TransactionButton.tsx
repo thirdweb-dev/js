@@ -2,6 +2,7 @@ import { MismatchButton } from "./MismatchButton";
 import { EcosystemButtonprops } from "@3rdweb-sdk/react";
 import {
   Center,
+  DarkMode,
   Flex,
   Icon,
   Popover,
@@ -10,11 +11,11 @@ import {
   PopoverContent,
   PopoverTrigger,
   Tooltip,
+  useColorMode,
 } from "@chakra-ui/react";
 import { useAccount, useAddress, useChainId } from "@thirdweb-dev/react";
 import { CHAIN_ID_TO_GNOSIS } from "constants/mappings";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import useDimensions from "react-cool-dimensions";
 import { BiTransferAlt } from "react-icons/bi";
 import { FiInfo } from "react-icons/fi";
 import { Card, Heading, LinkButton, Text } from "tw-components";
@@ -35,7 +36,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   ecosystem,
   ...restButtonProps
 }) => {
-  const { observe, width } = useDimensions<HTMLSpanElement | null>();
+  const colorMode = useColorMode();
   const [{ data }] = useAccount();
   const connectorRequiresExternalConfirmation = useMemo(() => {
     return (
@@ -45,6 +46,14 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   }, [data?.connector?.id]);
 
   const initialFocusRef = useRef<HTMLButtonElement>(null);
+
+  const ColorModeComp =
+    colorMode.colorMode === "dark" ? DarkMode : React.Fragment;
+
+  const numberWidth = useMemo(() => {
+    // for each digit of transaction count add 8.3px
+    return Math.floor(transactionCount.toString().length * 8.3);
+  }, [transactionCount]);
 
   return (
     <Popover
@@ -68,7 +77,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
           pl={
             isLoading
               ? undefined
-              : `calc(${(width || 0) * 2}px + var(--chakra-space-${
+              : `calc(${52 + numberWidth}px + var(--chakra-space-${
                   size === "sm" ? 3 : size === "lg" ? 6 : size === "xs" ? 2 : 4
                 }))`
           }
@@ -80,12 +89,14 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
             p={0}
             w="auto"
             label={
-              <Card w="auto" py={2}>
-                <Text>
-                  This action will trigger {transactionCount}{" "}
-                  {transactionCount > 1 ? "transactions" : "transaction"}.
-                </Text>
-              </Card>
+              <ColorModeComp>
+                <Card w="auto" py={2}>
+                  <Text>
+                    This action will trigger {transactionCount}{" "}
+                    {transactionCount > 1 ? "transactions" : "transaction"}.
+                  </Text>
+                </Card>
+              </ColorModeComp>
             }
           >
             <Center
@@ -97,7 +108,6 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
               }}
               transitionProperty="var(--chakra-transition-property-common)"
               transitionDuration="var(--chakra-transition-duration-normal)"
-              ref={observe}
               as="span"
               bg={
                 variant === "solid" || !variant

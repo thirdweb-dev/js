@@ -10197,11 +10197,6 @@ react-cool-dimensions@^2.0.7:
   resolved "https://registry.yarnpkg.com/react-cool-dimensions/-/react-cool-dimensions-2.0.7.tgz#2fe6657608f034cd7c89f149ed14e79cf1cb2d50"
   integrity sha512-z1VwkAAJ5d8QybDRuYIXTE41RxGr5GYsv1bQhbOBE8cMfoZQZpcF0odL64vdgrQVzat2jayedj1GoYi80FWcbA==
 
-react-cool-dimensions@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/react-cool-dimensions/-/react-cool-dimensions-3.0.0.tgz#6738fec7091e6c7a2dc8b3a959e7cfe69bcebc71"
-  integrity sha512-UVQC4vgwvYtHqo3vzG6j840p1QOSHrRbL0mZMRTQqz4XfB4qDmYW1V7OQmSVEQ8VY7kLLj4K2A15bRNM3nf+8A==
-
 react-dom@16.13.1:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.13.1.tgz#c1bd37331a0486c078ee54c4740720993b2e0e7f"

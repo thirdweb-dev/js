@@ -56,7 +56,6 @@
     "prismjs": "^1.28.0",
     "react": "^18.0.0",
     "react-children-utilities": "^2.8.0",
-    "react-cool-dimensions": "^3.0.0",
     "react-dom": "^18.0.0",
     "react-dropzone": "^14.0.1",
     "react-hook-form": "7.40.0-next.1",
