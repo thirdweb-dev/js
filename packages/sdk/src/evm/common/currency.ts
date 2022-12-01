@@ -200,3 +200,14 @@ export function toEther(amount: Amount): string {
 export function toWei(amount: BigNumber | string): BigNumber {
   return utils.parseEther(AmountSchema.parse(amount));
 }
+
+export function toUnits(amount: Amount, decimals: number): BigNumber {
+  return utils.parseUnits(AmountSchema.parse(amount), decimals);
+}
+
+export function formatUnits(
+  amount: BigNumber | string,
+  decimals: number,
+): string {
+  return utils.formatUnits(AmountSchema.parse(amount), decimals);
+}
