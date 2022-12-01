@@ -76,7 +76,7 @@ export async function processProject(
     }
   }
 
-  let compiledResult;
+  let compiledResult: { contracts: ContractPayload[] };
   const compileLoader = spinner("Compiling project...");
   try {
     compiledResult = await build(projectPath, projectType);
@@ -106,10 +106,23 @@ export async function processProject(
     if (options.ci) {
       selectedContracts = compiledResult.contracts;
     } else {
-      const choices = compiledResult.contracts.map((c) => ({
-        name: c.name,
-        value: c,
-      }));
+      const choices = compiledResult.contracts.map((c) => {
+        if (
+          compiledResult.contracts.filter(
+            (other: ContractPayload) => other.name === c.name,
+          ).length > 1
+        ) {
+          return {
+            name: `${c.name} - ${chalk.gray(c.fileName)}`,
+            value: c,
+          };
+        }
+
+        return {
+          name: c.name,
+          value: c,
+        };
+      });
       const prompt = createContractsPrompt(
         choices,
         `Choose which contract(s) to ${command}`,
