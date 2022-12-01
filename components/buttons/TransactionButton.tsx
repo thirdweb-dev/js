@@ -68,7 +68,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
           pl={
             isLoading
               ? undefined
-              : `calc(${width * 2}px + var(--chakra-space-${
+              : `calc(${(width || 0) * 2}px + var(--chakra-space-${
                   size === "sm" ? 3 : size === "lg" ? 6 : size === "xs" ? 2 : 4
                 }))`
           }

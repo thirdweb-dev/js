@@ -19,6 +19,7 @@ import {
   FieldValues,
   Path,
   PathValue,
+  UnPackDefaultValues,
   UseFormRegister,
   UseFormSetValue,
   UseFormWatch,
@@ -95,7 +96,9 @@ export const PropertiesFormControl = <
               <FormControl isInvalid={!!keyError}>
                 <Input
                   {...register(
-                    `attributes.${index}.trait_type` as Path<TFieldValues>,
+                    `attributes.${index}.trait_type` as Path<
+                      UnPackDefaultValues<TFieldValues>
+                    >,
                   )}
                   placeholder="trait_type"
                 ></Input>
@@ -109,8 +112,11 @@ export const PropertiesFormControl = <
                     <Input
                       isDisabled
                       value={
-                        watch(`attributes.${index}.value` as Path<TFieldValues>)
-                          .name
+                        watch(
+                          `attributes.${index}.value` as Path<
+                            UnPackDefaultValues<TFieldValues>
+                          >,
+                        ).name
                       }
                     />
                     <InputRightElement>
@@ -121,8 +127,13 @@ export const PropertiesFormControl = <
                         _hover={{ color: "red.200" }}
                         onClick={() =>
                           setValue(
-                            `attributes.${index}.value` as Path<TFieldValues>,
-                            "" as PathValue<TFieldValues, Path<TFieldValues>>,
+                            `attributes.${index}.value` as Path<
+                              UnPackDefaultValues<TFieldValues>
+                            >,
+                            "" as PathValue<
+                              UnPackDefaultValues<TFieldValues>,
+                              Path<UnPackDefaultValues<TFieldValues>>
+                            >,
                           )
                         }
                       />
@@ -132,7 +143,9 @@ export const PropertiesFormControl = <
                   <InputGroup>
                     <Input
                       {...register(
-                        `attributes.${index}.value` as Path<TFieldValues>,
+                        `attributes.${index}.value` as Path<
+                          UnPackDefaultValues<TFieldValues>
+                        >,
                       )}
                       placeholder="value"
                     />
@@ -141,10 +154,12 @@ export const PropertiesFormControl = <
                         <FileInput
                           setValue={(file) => {
                             setValue(
-                              `attributes.${index}.value` as Path<TFieldValues>,
+                              `attributes.${index}.value` as Path<
+                                UnPackDefaultValues<TFieldValues>
+                              >,
                               file as PathValue<
-                                TFieldValues,
-                                Path<TFieldValues>
+                                UnPackDefaultValues<TFieldValues>,
+                                Path<UnPackDefaultValues<TFieldValues>>
                               >,
                             );
                           }}
