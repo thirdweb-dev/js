@@ -60,12 +60,8 @@ class ThirdwebBridge implements TWBridge {
   private initializedChain: ChainOrRpc | undefined;
   private activeSDK: ThirdwebSDK | undefined;
 
-  private async updateSDKSigner() {
+  private updateSDKSigner(signer?: Signer) {
     if (this.activeSDK) {
-      let signer: Signer | undefined = undefined;
-      if (this.activeWallet) {
-        signer = await this.activeWallet.getSigner();
-      }
       if (signer) {
         // set signer if we got one
         this.activeSDK.updateSignerOrProvider(signer);
@@ -94,9 +90,14 @@ class ThirdwebBridge implements TWBridge {
       const walletInstance = new wallet({
         appName: sdkOptions.appName || "thirdweb powered dApp",
       });
-      walletInstance.on("connect", () => this.updateSDKSigner());
+      walletInstance.on("connect", async () =>
+        this.updateSDKSigner(await walletInstance.getSigner()),
+      );
+      walletInstance.on("change", async () =>
+        this.updateSDKSigner(await walletInstance.getSigner()),
+      );
       walletInstance.on("disconnect", () => this.updateSDKSigner());
-      walletInstance.on("change", () => this.updateSDKSigner());
+
       this.walletMap.set(wallet.id, walletInstance);
     }
   }
@@ -114,7 +115,7 @@ class ThirdwebBridge implements TWBridge {
     if (walletInstance) {
       await walletInstance.connect(chainId);
       this.activeWallet = walletInstance;
-      await this.updateSDKSigner();
+      this.updateSDKSigner(await walletInstance.getSigner());
       return await this.activeSDK.wallet.getAddress();
     } else {
       throw new Error("Invalid Wallet");
@@ -124,13 +125,13 @@ class ThirdwebBridge implements TWBridge {
     if (this.activeWallet) {
       await this.activeWallet.disconnect();
       this.activeWallet = undefined;
-      await this.updateSDKSigner();
+      this.updateSDKSigner();
     }
   }
   public async switchNetwork(chainId: number) {
     if (chainId && this.activeWallet && "switchChain" in this.activeWallet) {
       await this.activeWallet.switchChain(chainId);
-      await this.updateSDKSigner();
+      this.updateSDKSigner(await this.activeWallet.getSigner());
     } else {
       throw new Error("Error Switching Network");
     }
