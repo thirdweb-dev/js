@@ -117,7 +117,7 @@ type PossiblePageProps =
 export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
   ctx,
 ) => {
-  const networkOrAddress = getSingleQueryValue(
+  let networkOrAddress = getSingleQueryValue(
     ctx.params,
     "networkOrAddress",
   ) as string;
@@ -209,6 +209,10 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
       };
     }
   } else if (isPossibleEVMAddress(networkOrAddress)) {
+    // if the address is `thirdweb.eth` we actually want `deployer.thirdweb.eth` here...
+    if (networkOrAddress === "thirdweb.eth") {
+      networkOrAddress = "deployer.thirdweb.eth";
+    }
     const polygonSdk = getEVMThirdwebSDK(ChainId.Polygon);
     // we're in release world
     const [contractName, version = ""] = ctx.params?.catchAll as (
