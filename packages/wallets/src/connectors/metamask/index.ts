@@ -1,9 +1,9 @@
 import { getConnectorStorage } from "../../utils/storage";
+import { InjectedConnector } from "../injected";
 import {
   Chain,
   ConnectorNotFoundError,
   Ethereum,
-  InjectedConnector,
   InjectedConnectorOptions,
   ResourceUnavailableError,
   RpcError,
@@ -128,7 +128,7 @@ export class MetaMaskConnector extends InjectedConnector {
       // https://github.com/MetaMask/detect-provider#synchronous-and-asynchronous-injection=
       this.#provider = this.#findProvider(window.ethereum as Ethereum);
     }
-    return this.#provider;
+    return this.#provider as Ethereum;
   }
 
   #getReady(ethereum?: Ethereum) {
