@@ -164,7 +164,7 @@ export async function processProject(
     const metadataURIs = await Promise.all(
       selectedContracts.map(async (c) => {
         logger.debug(`Uploading ${c.name}...`);
-        return await storage.upload(JSON.parse(c.metadata), {
+        return await storage.upload(JSON.parse(JSON.stringify(c.metadata)), {
           uploadWithoutDirectory: true,
         });
       }),
