@@ -6,7 +6,7 @@
       "dependsOn": ["^build"]
     },
     "@thirdweb-dev/wallets#build": {
-      "outputs": ["dist/**", "wallets/**"],
+      "outputs": ["dist/**", "wallets/**", "connectors/**"],
       "dependsOn": ["^build"]
     },
     "@thirdweb-dev/sdk#build": {
