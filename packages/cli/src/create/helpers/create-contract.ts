@@ -11,22 +11,23 @@ import { submodules } from "./submodules";
 import { downloadAndExtractRepo } from "./templates";
 import retry from "async-retry";
 import chalk from "chalk";
+import fs from "fs";
 import { writeFile } from "fs/promises";
 import path from "path";
 
-interface ICreateContract {
+interface ICreateContractProject {
   contractPath: string;
   packageManager: PackageManager;
   framework?: string;
   baseContract?: string;
 }
 
-export async function createContract({
+export async function createContractProject({
   contractPath,
   packageManager,
   framework,
   baseContract,
-}: ICreateContract) {
+}: ICreateContractProject) {
   if (baseContract) {
     const found = hasBaseContract(baseContract);
 
@@ -165,4 +166,75 @@ export async function createContract({
   console.log();
   console.log(chalk.cyan("  cd"), cdpath);
   console.log();
+}
+
+interface ICreateContract {
+  contractPath: string;
+  contractName: string;
+  baseContract?: string;
+}
+
+export async function createContract({
+  contractPath,
+  contractName,
+  baseContract,
+}: ICreateContract) {
+  if (baseContract) {
+    const found = hasBaseContract(baseContract);
+
+    if (!found) {
+      console.error(
+        `Could not locate the base contract for ${chalk.red(
+          `"${baseContract}"`,
+        )}. Please check that the base contract exists and try again.`,
+      );
+      process.exit(1);
+    }
+  }
+
+  const root = path.resolve(contractPath);
+
+  if (!(await isWriteable(path.dirname(root)))) {
+    console.error(
+      "The application path is not writable, please check folder permissions and try again.",
+    );
+    console.error(
+      "It is likely you do not have write permissions for this folder.",
+    );
+    process.exit(1);
+  }
+
+  if (!/(^[a-z0-9A-Z]+$)|(^[a-z0-9A-Z]+\.sol$)/.test(contractName)) {
+    console.error(
+      `Contract name ${chalk.red(
+        `"${contractName}"`,
+      )} is not valid (only alphanumeric characters are allowed).`,
+    );
+    process.exit(1);
+  }
+
+  contractName = contractName.replace(/\.sol$/, "") + ".sol";
+  if (fs.existsSync(path.join(root, contractName))) {
+    console.error(
+      `A contract with the name ${chalk.red(
+        `"${contractName}"`,
+      )} already exists in specified directory.`,
+    );
+    process.exit(1);
+  }
+
+  if (baseContract && baseContract.length > 0) {
+    const baseContractText = readBaseContract(baseContract);
+
+    // Set the contents of the Contract.sol file to the base contract
+    let contractFile = "";
+    contractFile = path.join(root, contractName);
+
+    // Write the base contract to the MyContract.sol file
+    await writeFile(contractFile, baseContractText);
+
+    console.log(
+      `${chalk.green("Success!")} Created ${contractName} at ${contractPath}`,
+    );
+  }
 }

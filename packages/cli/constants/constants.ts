@@ -1,6 +1,7 @@
 export const CREATE_MESSAGES = {
   typeOfProject: "What type of project do you want to create?",
   projectName: "What is your project named?",
+  contractName: "What will be the name of your new smart contract?",
   chain: "Which blockchain do you want to use?",
   framework: "What framework do you want to use?",
   language: "What language do you want to use?",

@@ -68,6 +68,7 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       "-t, --template [name]",
       "A template to start your project from. You can use an template repository name from the official thirdweb-example org.",
     )
+    .option("-n, --name [name]", "Name of the new smart contract to create")
     .action(async (type, path, options) => {
       await twCreate(type, path, options);
     });
