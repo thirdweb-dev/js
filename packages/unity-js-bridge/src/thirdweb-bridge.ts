@@ -107,6 +107,9 @@ class ThirdwebBridge implements TWBridge {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");
     }
+    if (chainId === 0) {
+      chainId = undefined;
+    }
     const walletInstance = this.walletMap.get(wallet);
     if (walletInstance) {
       await walletInstance.connect(chainId);
