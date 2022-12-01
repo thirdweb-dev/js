@@ -18,167 +18,21 @@ import path from "path";
 interface ICreateContractProject {
   contractPath: string;
   packageManager: PackageManager;
+  contractName: string;
   framework?: string;
   baseContract?: string;
+  onlyContract: boolean;
 }
 
 export async function createContractProject({
   contractPath,
   packageManager,
   framework,
-  baseContract,
-}: ICreateContractProject) {
-  if (baseContract) {
-    const found = hasBaseContract(baseContract);
-
-    if (!found) {
-      console.error(
-        `Could not locate the base contract for ${chalk.red(
-          `"${baseContract}"`,
-        )}. Please check that the base contract exists and try again.`,
-      );
-      process.exit(1);
-    }
-  }
-
-  const root = path.resolve(contractPath);
-
-  if (!(await isWriteable(path.dirname(root)))) {
-    console.error(
-      "The application path is not writable, please check folder permissions and try again.",
-    );
-    console.error(
-      "It is likely you do not have write permissions for this folder.",
-    );
-    process.exit(1);
-  }
-
-  const projectName = path.basename(root);
-
-  await makeDir(root);
-  if (!isFolderEmpty(root, projectName)) {
-    process.exit(1);
-  }
-
-  const useYarn = packageManager === "yarn";
-  const isOnline = !useYarn || (await getOnline());
-  const originalDirectory = process.cwd();
-
-  console.log(
-    `Creating a new thirdweb contracts project in ${chalk.green(root)}.`,
-  );
-  console.log();
-
-  process.chdir(root);
-
-  function isErrorLike(err: unknown): err is { message: string } {
-    return (
-      typeof err === "object" &&
-      err !== null &&
-      typeof (err as { message?: unknown }).message === "string"
-    );
-  }
-
-  try {
-    console.log(`Downloading files. This might take a moment.`);
-
-    let starter = "";
-    if (framework === "hardhat") {
-      starter = "hardhat-javascript-starter";
-    } else if (framework === "forge") {
-      starter = "forge-starter";
-    } else {
-      console.error("Please provide a valid contracts framework.");
-      process.exit(1);
-    }
-
-    await retry(
-      () => downloadAndExtractRepo(root, { name: starter, filePath: "" }),
-      {
-        retries: 3,
-      },
-    );
-
-    // Modify the /contracts/MyContract.sol contents to match the base contract
-    if (baseContract && baseContract.length > 0) {
-      const baseContractText = readBaseContract(baseContract);
-
-      // Set the contents of the Contract.sol file to the base contract
-      let contractFile = "";
-      if (framework === "hardhat") {
-        contractFile = path.join(root, "contracts", "Contract.sol");
-      }
-      if (framework === "forge") {
-        contractFile = path.join(root, "src", "Contract.sol");
-      }
-
-      // Write the base contract to the MyContract.sol file
-      await writeFile(contractFile, baseContractText);
-    }
-  } catch (reason) {
-    throw new DownloadError(
-      isErrorLike(reason) ? reason.message : String(reason),
-    );
-  }
-
-  console.log("Installing packages. This might take a couple of minutes.");
-  console.log();
-
-  await install(root, null, { packageManager, isOnline });
-  console.log();
-
-  if (tryGitInit(root)) {
-    console.log("Initialized a git repository.");
-    console.log();
-  }
-
-  if (framework === "forge") {
-    await submodules();
-  }
-
-  let cdpath: string;
-  if (path.join(originalDirectory, projectName) === contractPath) {
-    cdpath = projectName;
-  } else {
-    cdpath = contractPath;
-  }
-
-  console.log(
-    `${chalk.green("Success!")} Created ${projectName} at ${contractPath}`,
-  );
-  console.log();
-  console.log("Inside that directory, you can run several commands:");
-  console.log();
-  console.log(chalk.cyan(`  ${packageManager}${useYarn ? "" : " run"} build`));
-  console.log(
-    "    Compiles your contracts and detects thirdweb extensions implemented on them.",
-  );
-  console.log();
-  console.log(chalk.cyan(`  ${packageManager}${useYarn ? "" : " run"} deploy`));
-  console.log("    Deploys your contracts with the thirdweb deploy flow.");
-  console.log();
-  console.log(
-    chalk.cyan(`  ${packageManager}${useYarn ? "" : " run"} release`),
-  );
-  console.log("    Releases your contracts with the thirdweb release flow.");
-  console.log();
-  console.log("We suggest that you begin by typing:");
-  console.log();
-  console.log(chalk.cyan("  cd"), cdpath);
-  console.log();
-}
-
-interface ICreateContract {
-  contractPath: string;
-  contractName: string;
-  baseContract?: string;
-}
-
-export async function createContract({
-  contractPath,
   contractName,
   baseContract,
-}: ICreateContract) {
+  onlyContract,
+}: ICreateContractProject) {
+  // Check that the selected base contract is valid
   if (baseContract) {
     const found = hasBaseContract(baseContract);
 
@@ -192,8 +46,8 @@ export async function createContract({
     }
   }
 
+  // Check that we have write permission for the specified directory
   const root = path.resolve(contractPath);
-
   if (!(await isWriteable(path.dirname(root)))) {
     console.error(
       "The application path is not writable, please check folder permissions and try again.",
@@ -204,6 +58,7 @@ export async function createContract({
     process.exit(1);
   }
 
+  // Check that the contract name is valid
   if (!/(^[a-z0-9A-Z]+$)|(^[a-z0-9A-Z]+\.sol$)/.test(contractName)) {
     console.error(
       `Contract name ${chalk.red(
@@ -213,28 +68,155 @@ export async function createContract({
     process.exit(1);
   }
 
+  // Clean the contract name
   contractName = contractName.replace(/\.sol$/, "") + ".sol";
-  if (fs.existsSync(path.join(root, contractName))) {
-    console.error(
-      `A contract with the name ${chalk.red(
-        `"${contractName}"`,
-      )} already exists in specified directory.`,
-    );
-    process.exit(1);
-  }
 
-  if (baseContract && baseContract.length > 0) {
-    const baseContractText = readBaseContract(baseContract);
+  const useYarn = packageManager === "yarn";
 
-    // Set the contents of the Contract.sol file to the base contract
-    let contractFile = "";
-    contractFile = path.join(root, contractName);
+  if (onlyContract) {
+    // If we are already in a contracts project, just create a new contract
+    if (fs.existsSync(path.join(root, contractName))) {
+      console.error(
+        `A contract with the name ${chalk.red(
+          `"${contractName}"`,
+        )} already exists in specified directory.`,
+      );
+      process.exit(1);
+    }
 
-    // Write the base contract to the MyContract.sol file
-    await writeFile(contractFile, baseContractText);
+    if (baseContract && baseContract.length > 0) {
+      const baseContractText = readBaseContract(baseContract);
+
+      // Set the contents of the Contract.sol file to the base contract
+      let contractFile = "";
+      contractFile = path.join(root, contractName);
+
+      // Write the base contract to the MyContract.sol file
+      await writeFile(contractFile, baseContractText);
+
+      console.log(
+        `${chalk.green("Success!")} Created ${contractName} at ${contractPath}`,
+      );
+    }
+  } else {
+    // Otherwise, create a new contracts project
+    const projectName = path.basename(root);
+
+    await makeDir(root);
+    if (!isFolderEmpty(root, projectName)) {
+      process.exit(1);
+    }
+
+    const isOnline = !useYarn || (await getOnline());
+    const originalDirectory = process.cwd();
 
     console.log(
-      `${chalk.green("Success!")} Created ${contractName} at ${contractPath}`,
+      `Creating a new thirdweb contracts project in ${chalk.green(root)}.`,
     );
+    console.log();
+
+    process.chdir(root);
+
+    function isErrorLike(err: unknown): err is { message: string } {
+      return (
+        typeof err === "object" &&
+        err !== null &&
+        typeof (err as { message?: unknown }).message === "string"
+      );
+    }
+
+    try {
+      console.log(`Downloading files. This might take a moment.`);
+
+      let starter = "";
+      if (framework === "hardhat") {
+        starter = "hardhat-javascript-starter";
+      } else if (framework === "forge") {
+        starter = "forge-starter";
+      } else {
+        console.error("Please provide a valid contracts framework.");
+        process.exit(1);
+      }
+
+      await retry(
+        () => downloadAndExtractRepo(root, { name: starter, filePath: "" }),
+        {
+          retries: 3,
+        },
+      );
+
+      // Add in a new contracts file with specific base contract
+      if (baseContract && baseContract.length > 0) {
+        const baseContractText = readBaseContract(baseContract);
+
+        // Set the filename of the new file and delete the dummy Contract.sol file
+        let contractFile = "";
+        if (framework === "hardhat") {
+          fs.unlinkSync(path.join(root, "contracts", "Contract.sol"));
+          contractFile = path.join(root, "contracts", contractName);
+        }
+        if (framework === "forge") {
+          fs.unlinkSync(path.join(root, "src", "Contract.sol"));
+          contractFile = path.join(root, "src", contractName);
+        }
+
+        // Write the base contract to the new file
+        await writeFile(contractFile, baseContractText);
+      }
+    } catch (reason) {
+      throw new DownloadError(
+        isErrorLike(reason) ? reason.message : String(reason),
+      );
+    }
+
+    console.log("Installing packages. This might take a couple of minutes.");
+    console.log();
+
+    await install(root, null, { packageManager, isOnline });
+    console.log();
+
+    if (tryGitInit(root)) {
+      console.log("Initialized a git repository.");
+      console.log();
+    }
+
+    if (framework === "forge") {
+      await submodules();
+    }
+
+    let cdpath: string;
+    if (path.join(originalDirectory, projectName) === contractPath) {
+      cdpath = projectName;
+    } else {
+      cdpath = contractPath;
+    }
+
+    console.log(
+      `${chalk.green("Success!")} Created ${projectName} at ${contractPath}`,
+    );
+    console.log();
+    console.log("Inside that directory, you can run several commands:");
+    console.log();
+    console.log(
+      chalk.cyan(`  ${packageManager}${useYarn ? "" : " run"} build`),
+    );
+    console.log(
+      "    Compiles your contracts and detects thirdweb extensions implemented on them.",
+    );
+    console.log();
+    console.log(
+      chalk.cyan(`  ${packageManager}${useYarn ? "" : " run"} deploy`),
+    );
+    console.log("    Deploys your contracts with the thirdweb deploy flow.");
+    console.log();
+    console.log(
+      chalk.cyan(`  ${packageManager}${useYarn ? "" : " run"} release`),
+    );
+    console.log("    Releases your contracts with the thirdweb release flow.");
+    console.log();
+    console.log("We suggest that you begin by typing:");
+    console.log();
+    console.log(chalk.cyan("  cd"), cdpath);
+    console.log();
   }
 }

@@ -4,10 +4,7 @@
 import { CREATE_MESSAGES } from "../../constants/constants";
 import detect from "../core/detection/detect";
 import { DownloadError, createApp } from "./helpers/create-app";
-import {
-  createContract,
-  createContractProject,
-} from "./helpers/create-contract";
+import { createContractProject } from "./helpers/create-contract";
 import { getPkgManager } from "./helpers/get-pkg-manager";
 import { validateNpmName } from "./helpers/validate-pkg";
 import chalk from "chalk";
@@ -107,61 +104,42 @@ export async function twCreate(
     projectType = "app";
   }
 
-  let onlyContract = false;
   // Whether to only create a new contract without the project
-  const contractProjectType = await detect(projectPath, {});
-  // There's a contracts folder, or we're using foundry and there's a src folder
+  let onlyContract = false;
   if (projectType === "contract") {
+    const resolvedProjectPath = path.resolve(projectPath);
+    const contractProjectType = await detect(resolvedProjectPath, {});
+
     if (
       contractProjectType === "foundry" &&
-      fs.existsSync(path.join(projectPath, "src"))
+      fs.existsSync(path.join(resolvedProjectPath, "src"))
     ) {
       onlyContract = true;
       projectPath = path.join(projectPath, "src");
-    } else if (fs.existsSync(path.join(projectPath, "contracts"))) {
-      onlyContract = true;
-      projectPath = path.join(projectPath, "contracts");
+    } else if (contractProjectType === "hardhat") {
+      if (fs.existsSync(path.join(resolvedProjectPath, "contracts"))) {
+        onlyContract = true;
+        projectPath = path.join(projectPath, "contracts");
+      } else {
+        // If there's no expected contracts folder, check for a directory that has .sol files
+        const directories = fs
+          .readdirSync(resolvedProjectPath)
+          .filter((file) =>
+            fs.lstatSync(path.join(resolvedProjectPath, file)).isDirectory(),
+          );
+        for (const directory of directories) {
+          const files = fs.readdirSync(path.join(projectPath, directory));
+          if (files.some((file) => file.endsWith(".sol"))) {
+            onlyContract = true;
+            projectPath = path.join(projectPath, directory);
+            break;
+          }
+        }
+      }
     }
   }
 
-  if (onlyContract) {
-    if (!contractName) {
-      const defaultName = "MyContract";
-      const res = await prompts({
-        type: "text",
-        name: "path",
-        message: CREATE_MESSAGES.contractName,
-        initial: defaultName,
-        validate: (name: string) => {
-          const isValid = /(^[a-z0-9A-Z]+$)|(^[a-z0-9A-Z]+\.sol$)/.test(name);
-          if (isValid) {
-            return true;
-          }
-
-          return `Invalid contract name 'contractName' (only alphanumeric characters allowed)`;
-        },
-      });
-
-      if (typeof res.path === "string") {
-        contractName = res.path.trim();
-      }
-
-      if (!contractName) {
-        console.log(
-          "\nPlease specify the contract name:\n" +
-            `  ${chalk.cyan(
-              "npx thirdweb create --contract --name",
-            )} ${chalk.green("<contract-name>")}\n` +
-            "For example:\n" +
-            `  ${chalk.cyan(
-              "npx thirdweb create --contract --name",
-            )} ${chalk.green("MyContract")}\n\n` +
-            `Run ${chalk.cyan("npx thirdweb --help")} to see all options.`,
-        );
-        process.exit(1);
-      }
-    }
-  } else {
+  if (!onlyContract) {
     if (!projectPath) {
       const defaultName =
         projectType === "contract" ? "thirdweb-contracts" : "thirdweb-app";
@@ -183,7 +161,7 @@ export async function twCreate(
       });
 
       if (typeof res.path === "string") {
-        projectPath = res.path.trim();
+        projectPath = path.join(projectPath, res.path.trim());
       }
     }
 
@@ -294,71 +272,114 @@ export async function twCreate(
     }
   }
 
-  // Select base contract
-  if (projectType === "contract" && !baseContract) {
-    let standard = "none";
-    const standardPrompt = await prompts({
-      type: "select",
-      name: "standard",
-      message: CREATE_MESSAGES.contract,
-      choices: [
-        ...(!onlyContract ? [{ title: "Empty Contract", value: "none" }] : []),
-        { title: "ERC721", value: "erc721" },
-        { title: "ERC20", value: "erc20" },
-        { title: "ERC1155", value: "erc1155" },
-      ],
-    });
-
-    if (typeof standardPrompt.standard === "string") {
-      standard = standardPrompt.standard.trim();
-    }
-
-    if (standard === "none") {
-      baseContract = "";
-    } else {
-      let choices: prompts.Choice[] = [];
-      if (standard === "erc721") {
-        choices = [
-          { title: "None", value: "ERC721Base" },
-          { title: "Signature Mint", value: "ERC721SignatureMint" },
-          { title: "Lazy Mint", value: "ERC721LazyMint" },
-          { title: "Delayed Reveal", value: "ERC721DelayedReveal" },
-          { title: "Drop", value: "ERC721Drop" },
-        ];
-      } else if (standard === "erc20") {
-        choices = [
-          { title: "None", value: "ERC20Base" },
-          { title: "Vote", value: "ERC20Vote" },
-          { title: "Signature Mint", value: "ERC20SignatureMint" },
-          { title: "Vote + Signature Mint", value: "ERC20SignatureMintVote" },
-          { title: "Drop", value: "ERC20Drop" },
-          { title: "Vote + Drop", value: "ERC20DropVote" },
-        ];
-      } else if (standard === "erc1155") {
-        choices = [
-          { title: "None", value: "ERC1155Base" },
-          { title: "Signature Mint", value: "ERC1155SignatureMint" },
-          { title: "Lazy Mint", value: "ERC1155LazyMint" },
-          { title: "Delayed Reveal", value: "ERC1155DelayedReveal" },
-          { title: "Drop", value: "ERC1155Drop" },
-        ];
-      }
-
+  if (projectType === "contract") {
+    // Select contract name
+    if (!contractName) {
+      const defaultName = "MyContract";
       const res = await prompts({
-        type: "select",
-        name: "baseContract",
-        message: CREATE_MESSAGES.extensions,
-        choices: choices,
+        type: "text",
+        name: "path",
+        message: CREATE_MESSAGES.contractName,
+        initial: defaultName,
+        validate: (name: string) => {
+          const isValid = /(^[a-z0-9A-Z]+$)|(^[a-z0-9A-Z]+\.sol$)/.test(name);
+          if (isValid) {
+            return true;
+          }
+
+          return `Invalid contract name 'contractName' (only alphanumeric characters allowed)`;
+        },
       });
 
-      if (typeof res.baseContract === "string") {
-        baseContract = res.baseContract.trim();
+      if (typeof res.path === "string") {
+        contractName = res.path.trim();
+      }
+
+      if (!contractName) {
+        console.log(
+          "\nPlease specify the contract name:\n" +
+            `  ${chalk.cyan(
+              "npx thirdweb create --contract --name",
+            )} ${chalk.green("<contract-name>")}\n` +
+            "For example:\n" +
+            `  ${chalk.cyan(
+              "npx thirdweb create --contract --name",
+            )} ${chalk.green("MyContract")}\n\n` +
+            `Run ${chalk.cyan("npx thirdweb --help")} to see all options.`,
+        );
+        process.exit(1);
+      }
+    }
+
+    // Select base contract
+    if (projectType === "contract" && !baseContract) {
+      let standard = "none";
+      const standardPrompt = await prompts({
+        type: "select",
+        name: "standard",
+        message: CREATE_MESSAGES.contract,
+        choices: [
+          ...(!onlyContract
+            ? [{ title: "Empty Contract", value: "none" }]
+            : []),
+          { title: "ERC721", value: "erc721" },
+          { title: "ERC20", value: "erc20" },
+          { title: "ERC1155", value: "erc1155" },
+        ],
+      });
+
+      if (typeof standardPrompt.standard === "string") {
+        standard = standardPrompt.standard.trim();
+      }
+
+      if (standard === "none") {
+        baseContract = "";
+      } else {
+        let choices: prompts.Choice[] = [];
+        if (standard === "erc721") {
+          choices = [
+            { title: "None", value: "ERC721Base" },
+            { title: "Signature Mint", value: "ERC721SignatureMint" },
+            { title: "Lazy Mint", value: "ERC721LazyMint" },
+            { title: "Delayed Reveal", value: "ERC721DelayedReveal" },
+            { title: "Drop", value: "ERC721Drop" },
+          ];
+        } else if (standard === "erc20") {
+          choices = [
+            { title: "None", value: "ERC20Base" },
+            { title: "Vote", value: "ERC20Vote" },
+            { title: "Signature Mint", value: "ERC20SignatureMint" },
+            { title: "Vote + Signature Mint", value: "ERC20SignatureMintVote" },
+            { title: "Drop", value: "ERC20Drop" },
+            { title: "Vote + Drop", value: "ERC20DropVote" },
+          ];
+        } else if (standard === "erc1155") {
+          choices = [
+            { title: "None", value: "ERC1155Base" },
+            { title: "Signature Mint", value: "ERC1155SignatureMint" },
+            { title: "Lazy Mint", value: "ERC1155LazyMint" },
+            { title: "Delayed Reveal", value: "ERC1155DelayedReveal" },
+            { title: "Drop", value: "ERC1155Drop" },
+          ];
+        }
+
+        const res = await prompts({
+          type: "select",
+          name: "baseContract",
+          message: CREATE_MESSAGES.extensions,
+          choices: choices,
+        });
+
+        if (typeof res.baseContract === "string") {
+          baseContract = res.baseContract.trim();
+        }
       }
     }
   }
 
-  const resolvedProjectPath = path.resolve(projectPath);
-  const projectName = path.basename(resolvedProjectPath);
+  // Resolve project path
+  projectPath = path.resolve(projectPath);
+  const projectName = path.basename(projectPath);
 
   const { valid, problems } = validateNpmName(projectName);
   if (!valid) {
@@ -390,7 +411,7 @@ export async function twCreate(
   try {
     if (projectType === "app") {
       await createApp({
-        appPath: resolvedProjectPath,
+        appPath: projectPath,
         packageManager,
         framework,
         language,
@@ -398,20 +419,14 @@ export async function twCreate(
         chain,
       });
     } else {
-      if (onlyContract) {
-        await createContract({
-          contractPath: resolvedProjectPath,
-          contractName,
-          baseContract,
-        });
-      } else {
-        await createContractProject({
-          contractPath: resolvedProjectPath,
-          packageManager,
-          framework,
-          baseContract,
-        });
-      }
+      await createContractProject({
+        contractPath: projectPath,
+        packageManager,
+        framework,
+        contractName,
+        baseContract,
+        onlyContract,
+      });
     }
   } catch (reason) {
     if (!(reason instanceof DownloadError)) {
