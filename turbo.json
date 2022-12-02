@@ -9,7 +9,7 @@
       "outputs": ["dist/**", "wallets/**", "connectors/**"],
       "dependsOn": ["^build"]
     },
-    "@thirdweb-dev/wallets#pay": {
+    "@thirdweb-dev/pay#build": {
       "outputs": ["dist/**", "integrations/**"],
       "dependsOn": ["^build"]
     },
