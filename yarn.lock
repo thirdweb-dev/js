@@ -3423,10 +3423,10 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.2.7.tgz#8adf3599a25833dac6e2b31ea022638357cd1d1c"
   integrity sha512-QTIHqQ8h0EquG90pSIDLWoCfVg2saPvzGFzzr+eK7lpKHIYOHEoUbvWuDkKRLcQiOsPRe3yyMNgroL038JqPeg==
 
-"@thirdweb-dev/react@^3.6.3":
-  version "3.6.3"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-3.6.3.tgz#e6f81f6e209ca91696073848cbf80aab9609e2bf"
-  integrity sha512-dIzrXeaE5OfAR5jc2oahvu1TB/Z+rWSLVnzIEn/NW+vaUU0n7NqDPAXSWqKbz4pZlmhM0MstCHVCSRuaDipS0g==
+"@thirdweb-dev/react@^3.6.4-nightly-ee47840":
+  version "3.6.4-nightly-ee47840"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-3.6.4-nightly-ee47840.tgz#cf8660da8b30fd4adf43cada74cc29f34a939bb9"
+  integrity sha512-+WOKwPqu7EMDB/mjODTi1oP09C6hJcdRitBZ6dX4fCHiwNfajeri7/9JDCx9s7MCL2/tYw0t3SZ2DS6tCah+Pw==
   dependencies:
     "@emotion/react" "^11.10.0"
     "@emotion/styled" "^11.10.0"
@@ -3448,10 +3448,10 @@
     tiny-invariant "^1.2.0"
     wagmi "^0.2.28"
 
-"@thirdweb-dev/sdk@^3.6.3":
-  version "3.6.3"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-3.6.3.tgz#f2749dd16a28bb1f6bf460e4542d1a66ac32b34a"
-  integrity sha512-UCbPwVpuUU1jrVQJJFfKje6MS+4Lpi81ordlBSCTL6DEN3jlEEqQwcKpF7Pkrqr3gAOxAnI2qZffulLM1354LQ==
+"@thirdweb-dev/sdk@^3.6.4-nightly-ee47840":
+  version "3.6.4-nightly-ee47840"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-3.6.4-nightly-ee47840.tgz#678623f2e7e5345a6247cc49e7ec93abe5db8a09"
+  integrity sha512-Kqxx7sPXMGb9uDyQk1NBzMvWMOZxd2UmpOegQZlFykse1M6QUaGUGFrHfwUfBhfy9stKJ/7RuroTqMsS6odFnw==
   dependencies:
     "@metaplex-foundation/js" "^0.17.6"
     "@metaplex-foundation/mpl-token-metadata" "^2.3.3"
@@ -3463,7 +3463,7 @@
     bn.js "^5.2.1"
     bs58 "^5.0.0"
     cross-fetch "^3.1.5"
-    eventemitter3 "^4.0.7"
+    eventemitter3 "^5.0.0"
     fast-deep-equal "^3.1.3"
     merkletreejs "^0.2.24"
     tiny-invariant "^1.2.0"
@@ -6989,6 +6989,11 @@ eventemitter3@4.0.7, eventemitter3@^4.0.0, eventemitter3@^4.0.4, eventemitter3@^
   version "4.0.7"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
+
+eventemitter3@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-5.0.0.tgz#084eb7f5b5388df1451e63f4c2aafd71b217ccb3"
+  integrity sha512-riuVbElZZNXLeLEoprfNYoDSwTBRR44X3mnhdI1YcnENpWTCsTTVZ2zFuqQcpoyqPQIUXdiPEU0ECAq0KQRaHg==
 
 events@^3.0.0, events@^3.3.0:
   version "3.3.0"
