@@ -205,7 +205,7 @@ export function toUnits(amount: Amount, decimals: number): BigNumber {
   return utils.parseUnits(AmountSchema.parse(amount), decimals);
 }
 
-export function formatUnits(
+export function toDisplayValue(
   amount: BigNumber | string,
   decimals: number,
 ): string {
