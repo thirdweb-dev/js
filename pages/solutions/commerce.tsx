@@ -8,13 +8,13 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
+import { NewsLetterSection } from "components/homepage/sections/NewsLetterSection";
 import { GuideCard } from "components/product-pages/common/GuideCard";
 import { Hero } from "components/product-pages/common/Hero";
 import { ProductCard } from "components/product-pages/common/ProductCard";
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
 import { PageId } from "page-id";
-import { NewsLetterSection } from "pages";
 import { ThirdwebNextPage } from "pages/_app";
 import { FiArrowRight } from "react-icons/fi";
 import { Heading, LinkButton, Text, TrackedLink } from "tw-components";
