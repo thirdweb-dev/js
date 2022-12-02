@@ -1,5 +1,15 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.1.1
+
+### Patch Changes
+
+- [#433](https://github.com/thirdweb-dev/js/pull/433) [`7269268`](https://github.com/thirdweb-dev/js/commit/72692689e9adb41e92038765fd01a36c2b7457e1) Thanks [@jnsdls](https://github.com/jnsdls)! - add fundWallet method to bridge
+
+- Updated dependencies [[`efc56fa`](https://github.com/thirdweb-dev/js/commit/efc56fa5802490ac8ef50037658d046afd89e9a1), [`7269268`](https://github.com/thirdweb-dev/js/commit/72692689e9adb41e92038765fd01a36c2b7457e1)]:
+  - @thirdweb-dev/sdk@3.6.5
+  - @thirdweb-dev/pay@0.1.0
+
 ## 0.1.0
 
 ### Minor Changes
