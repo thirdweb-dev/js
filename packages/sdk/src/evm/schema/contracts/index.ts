@@ -8,3 +8,4 @@ export * from "./token-erc20";
 export * from "./token-erc721";
 export * from "./token-erc1155";
 export * from "./vote";
+export * from "./custom";

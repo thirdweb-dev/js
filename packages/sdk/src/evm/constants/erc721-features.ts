@@ -12,8 +12,8 @@ import ILazyMintAbi from "@thirdweb-dev/contracts-js/dist/abis/ILazyMint.json";
 import IMintableERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC721.json";
 import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
 import SignatureMintERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC721.json";
+import SignatureMintERC721_V1Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC721_V1.json";
 import TieredDropAbi from "@thirdweb-dev/contracts-js/dist/abis/LazyMintWithTier.json";
-import TokenERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/TokenERC721.json";
 
 export const FEATURE_NFT_BURNABLE = {
   name: "ERC721Burnable",
@@ -163,7 +163,7 @@ export const FEATURE_NFT_SIGNATURE_MINTABLE_V1 = {
     sdk: "sdk.erc721signaturemint",
     contracts: "ISignatureMintERC721",
   },
-  abis: [TokenERC721Abi],
+  abis: [SignatureMintERC721_V1Abi],
   features: {},
 } as const;
 
