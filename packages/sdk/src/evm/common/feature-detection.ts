@@ -319,26 +319,18 @@ export async function resolveContractUriFromAddress(
     );
   }
 
-  if (bytecode.startsWith("0x363d3d373d3d3d363d")) {
-    const implementationAddress = bytecode.slice(22, 62);
-    return await resolveContractUriFromAddress(
-      `0x${implementationAddress}`,
-      provider,
-    );
+  try {
+    const implementationAddress =
+      extractMinimalProxyImplementationAddress(bytecode);
+    if (implementationAddress) {
+      return await resolveContractUriFromAddress(
+        implementationAddress,
+        provider,
+      );
+    }
+  } catch (e) {
+    // ignore
   }
-
-  // try {
-  //   const implementationAddress =
-  //     extractMinimalProxyImplementationAddress(bytecode);
-  //   if (implementationAddress) {
-  //     return await resolveContractUriFromAddress(
-  //       `0x${implementationAddress}`,
-  //       provider,
-  //     );
-  //   }
-  // } catch (e) {
-  //   // ignore
-  // }
 
   // EIP-1967 proxy storage slots - https://eips.ethereum.org/EIPS/eip-1967
   try {

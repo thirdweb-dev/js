@@ -8,7 +8,7 @@ import { expect } from "chai";
 
 global.fetch = require("cross-fetch");
 
-describe.skip("Custom Contracts", async () => {
+describe("Custom Contracts", async () => {
   let adminWallet: SignerWithAddress;
   let realSDK: ThirdwebSDK;
 
