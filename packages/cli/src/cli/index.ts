@@ -2,37 +2,36 @@
 import { detectExtensions } from "../common/feature-detector";
 import { processProject } from "../common/processor";
 import { cliVersion, pkg } from "../constants/urls";
-import { info, logger } from "../core/helpers/logger";
+import { info, logger, spinner } from "../core/helpers/logger";
 import { twCreate } from "../create/command";
 import { deploy } from "../deploy";
 import { upload } from "../storage/command";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { exec, spawn } from "child_process";
 import { Command } from "commander";
 import open from "open";
+// import ora from "ora";
+import prompts from "prompts";
 
 const main = async () => {
   const program = new Command();
 
   //yes this has to look like this, eliminates whitespace
-  console.info(`
-  $$\\     $$\\       $$\\                 $$\\                         $$\\       
-  $$ |    $$ |      \\__|                $$ |                        $$ |      
-$$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$$$$\\  
-\\_$$  _|  $$  __$$\\ $$ |$$  __$$\\ $$  __$$ |$$ | $$ | $$ |$$  __$$\\ $$  __$$\\ 
-  $$ |    $$ |  $$ |$$ |$$ |  \\__|$$ /  $$ |$$ | $$ | $$ |$$$$$$$$ |$$ |  $$ |
-  $$ |$$\\ $$ |  $$ |$$ |$$ |      $$ |  $$ |$$ | $$ | $$ |$$   ____|$$ |  $$ |
-  \\$$$$  |$$ |  $$ |$$ |$$ |      \\$$$$$$$ |\\$$$$$\\$$$$  |\\$$$$$$$\\ $$$$$$$  |
-   \\____/ \\__|  \\__|\\__|\\__|       \\_______| \\_____\\____/  \\_______|\\_______/ `);
-  console.info(`\n 💎 thirdweb-cli v${cliVersion} 💎\n`);
-  import("update-notifier").then(({ default: updateNotifier }) => {
-    updateNotifier({
-      pkg,
-      shouldNotifyInNpmScript: true,
-      // check every time while we're still building the CLI
-      updateCheckInterval: 0,
-    }).notify();
-  });
+  // eslint-disable-next-line turbo/no-undeclared-env-vars
+  if (process.env.THIRDWEB_CLI_SKIP_INTRO !== "true") {
+    console.info(`
+    $$\\     $$\\       $$\\                 $$\\                         $$\\       
+    $$ |    $$ |      \\__|                $$ |                        $$ |      
+  $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$$$$\\  
+  \\_$$  _|  $$  __$$\\ $$ |$$  __$$\\ $$  __$$ |$$ | $$ | $$ |$$  __$$\\ $$  __$$\\ 
+    $$ |    $$ |  $$ |$$ |$$ |  \\__|$$ /  $$ |$$ | $$ | $$ |$$$$$$$$ |$$ |  $$ |
+    $$ |$$\\ $$ |  $$ |$$ |$$ |      $$ |  $$ |$$ | $$ | $$ |$$   ____|$$ |  $$ |
+    \\$$$$  |$$ |  $$ |$$ |$$ |      \\$$$$$$$ |\\$$$$$\\$$$$  |\\$$$$$$$\\ $$$$$$$  |
+     \\____/ \\__|  \\__|\\__|\\__|       \\_______| \\_____\\____/  \\_______|\\_______/ `);
+    console.info(`\n 💎 thirdweb-cli v${cliVersion} 💎\n`);
+  }
 
   program
     .name("thirdweb-cli")
@@ -197,6 +196,108 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .action(async (options) => {
       await detectExtensions(options);
     });
+
+  // eslint-disable-next-line turbo/no-undeclared-env-vars
+  if (process.env.THIRDWEB_CLI_SKIP_INTRO !== "true") {
+    const versionSpinner = spinner("Checking for updates...");
+    await import("update-notifier").then(
+      async ({ default: updateNotifier }) => {
+        const notifier = updateNotifier({
+          pkg,
+          shouldNotifyInNpmScript: true,
+          // check every time while we're still building the CLI
+          updateCheckInterval: 0,
+        });
+
+        const versionInfo = await notifier.fetchInfo();
+        versionSpinner.stop();
+
+        if (versionInfo.type !== "latest") {
+          const res = await prompts({
+            type: "toggle",
+            name: "upgrade",
+            message: `A new version of the CLI is available. Would you like to upgrade?`,
+            initial: true,
+            active: "yes",
+            inactive: "no",
+          });
+
+          if (res.upgrade) {
+            const updateSpinner = spinner(
+              `Upgrading CLI to version ${versionInfo.latest}...`,
+            );
+
+            // Check if thirdweb package is already installed in local package.json
+            const localPackages: string[] = await new Promise((resolve) => {
+              exec("npm ls --depth=0", (err, stdout) => {
+                var packages: string[] = [];
+                packages = stdout.split("\n");
+                packages = packages.filter(function (item) {
+                  if (item.match(/^├──.+/g) !== null) {
+                    return true;
+                  }
+                  if (item.match(/^└──.+/g) !== null) {
+                    return true;
+                  }
+                  return undefined;
+                });
+                packages = packages
+                  .map(function (item) {
+                    if (item.match(/^├──.+/g) !== null) {
+                      return item.replace(/^├──\s/g, "");
+                    }
+                    if (item.match(/^└──.+/g) !== null) {
+                      return item.replace(/^└──\s/g, "");
+                    }
+                  })
+                  .filter((item) => !!item) as string[];
+                resolve(packages);
+              });
+            });
+
+            const isLocal = localPackages.find((packageName) =>
+              packageName.includes("thirdweb@"),
+            );
+            const command = isLocal ? "npm i thirdweb" : "npm i -g thirdweb";
+            await new Promise((done, failed) => {
+              exec(command, (err, stdout, stderr) => {
+                if (err) {
+                  failed(err);
+                  return;
+                }
+
+                done({ stdout, stderr });
+              });
+            });
+
+            updateSpinner.succeed(
+              `Successfully upgraded CLI to version ${versionInfo.latest}. Continuing execution...`,
+            );
+
+            const clonedEnvironment = { ...process.env };
+            clonedEnvironment.THIRDWEB_CLI_SKIP_INTRO = "true";
+
+            await new Promise((done, failed) => {
+              const shell = spawn(
+                `npx thirdweb ${process.argv.slice(2).join(" ")}`,
+                [],
+                { stdio: "inherit", shell: true, env: clonedEnvironment },
+              );
+              shell.on("close", (code) => {
+                if (code === 0) {
+                  done("");
+                } else {
+                  failed();
+                }
+              });
+            });
+
+            process.exit(0);
+          }
+        }
+      },
+    );
+  }
 
   await program.parseAsync();
 };

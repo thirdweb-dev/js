@@ -1,7 +1,7 @@
 {
   "name": "thirdweb",
   "main": "dist/cli/index.js",
-  "version": "0.9.1",
+  "version": "0.9.0",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/cli",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@thirdweb-dev/sdk": "*",
+    "@types/shelljs": "^0.8.11",
     "async-retry": "^1.3.3",
     "commander": "^9.1.0",
     "enquirer": "^2.3.6",
