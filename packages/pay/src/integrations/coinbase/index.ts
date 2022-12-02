@@ -9,9 +9,9 @@ const CHAIN_ID_MAP = {
   137: "polygon",
 } as const;
 
-type FundWalletOptions = {
+export type FundWalletOptions = {
   address: string;
-  chainIds?: (keyof typeof CHAIN_ID_MAP)[];
+  chainId: keyof typeof CHAIN_ID_MAP;
   assets?: string[];
 };
 
@@ -21,8 +21,8 @@ export class CoinbasePayIntegration {
     this.#appId = options.appId;
   }
 
-  async fundWallet(opts: FundWalletOptions) {
-    const { address, chainIds, assets } = opts;
+  async fundWallet(opts: FundWalletOptions): Promise<void> {
+    const { address, chainId, assets } = opts;
 
     return new Promise((res, rej) => {
       initOnRamp(
@@ -33,9 +33,7 @@ export class CoinbasePayIntegration {
               {
                 address,
                 assets,
-                supportedNetworks: chainIds
-                  ? chainIds.map((cId) => CHAIN_ID_MAP[cId])
-                  : undefined,
+                supportedNetworks: [CHAIN_ID_MAP[chainId]],
               },
             ],
           },
@@ -43,13 +41,13 @@ export class CoinbasePayIntegration {
           experienceLoggedOut: "popup",
           closeOnExit: true,
           onSuccess: () => {
-            res(undefined);
+            res();
           },
           onExit(error) {
             if (error) {
               return rej(error);
             }
-            return res(undefined);
+            return res();
           },
         },
         (err, instance) => {

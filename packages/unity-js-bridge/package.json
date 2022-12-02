@@ -15,6 +15,7 @@
     "@thirdweb-dev/sdk": "*",
     "@thirdweb-dev/storage": "*",
     "@thirdweb-dev/wallets": "*",
+    "@thirdweb-dev/pay": "*",
     "ethers": "^5.7.2"
   },
   "devDependencies": {
