@@ -11,5 +11,5 @@ export const CREATE_MESSAGES = {
 
 export const ERROR_MESSAGES = {
   noConfiguration:
-    "Failed to find a supported project configuration file in current directory",
+    "No contract project configuration file found in current directory",
 };
