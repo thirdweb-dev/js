@@ -106,7 +106,31 @@ export async function processProject(
     if (options.ci) {
       selectedContracts = compiledResult.contracts;
     } else {
-      const choices = compiledResult.contracts.map((c) => {
+      const filtered = compiledResult.contracts
+        .filter((c) => {
+          if (typeof options.file === "string" && options.file.length > 0) {
+            return c.fileName.includes(options.file);
+          }
+
+          return true;
+        })
+        .filter((c) => {
+          if (
+            typeof options.contractName === "string" &&
+            options.contractName.length > 0
+          ) {
+            return c.name.includes(options.contractName);
+          }
+
+          return true;
+        });
+
+      if (filtered.length === 0) {
+        logger.error(`No contracts found matching the specified filters.`);
+        process.exit(1);
+      }
+
+      const choices = filtered.map((c) => {
         if (
           compiledResult.contracts.filter(
             (other: ContractPayload) => other.name === c.name,
