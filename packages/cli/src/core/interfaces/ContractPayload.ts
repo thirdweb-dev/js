@@ -18,6 +18,11 @@ export interface ContractPayload {
   metadata: any;
 
   /**
+   * The file name of the original compiled file
+   */
+  fileName: string;
+
+  /**
    * The source file paths
    */
   sources: string[];

@@ -88,6 +88,11 @@ export class FoundryBuilder extends BaseBuilder {
         })
         .filter((path) => path !== undefined) as string[];
 
+      const fileNames = Object.keys(
+        parsedMetadata?.settings?.compilationTarget || {},
+      );
+      const fileName = fileNames.length > 0 ? fileNames[0] : "";
+
       if (
         this.shouldProcessContract(
           contractInfo.abi,
@@ -99,6 +104,7 @@ export class FoundryBuilder extends BaseBuilder {
           name: contractName,
           metadata,
           bytecode,
+          fileName,
           sources,
         });
       }
