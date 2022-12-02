@@ -1,5 +1,28 @@
 # @thirdweb-dev/sdk
 
+## 3.6.4
+
+### Patch Changes
+
+- [#438](https://github.com/thirdweb-dev/js/pull/438) [`f451da6`](https://github.com/thirdweb-dev/js/commit/f451da6395689a5f89800ee63f34b6175b61f703) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix SigMint detection for OSRF NFT Collection contracts
+
+- [#416](https://github.com/thirdweb-dev/js/pull/416) [`af3acc6`](https://github.com/thirdweb-dev/js/commit/af3acc6b10751b840e56aef6400da5eea6040df2) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for AWS KMS
+
+- [#424](https://github.com/thirdweb-dev/js/pull/424) [`1bfb91d`](https://github.com/thirdweb-dev/js/commit/1bfb91dbf3a39160c987a425813ac5dbb84703ad) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improve error parsing for other wallets
+
+- [#436](https://github.com/thirdweb-dev/js/pull/436) [`ee47840`](https://github.com/thirdweb-dev/js/commit/ee478407673b0416e0c1cfe2be11bd6963395348) Thanks [@jnsdls](https://github.com/jnsdls)! - fix #429
+
+- [#434](https://github.com/thirdweb-dev/js/pull/434) [`def4251`](https://github.com/thirdweb-dev/js/commit/def42511ff5a20d83f9094164dafb87e412571b5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Remove workaround to fetch NFT owners
+
+- [#429](https://github.com/thirdweb-dev/js/pull/429) [`034a257`](https://github.com/thirdweb-dev/js/commit/034a257442314c67729f7bafcbe3740cff33fa32) Thanks [@jakeloo](https://github.com/jakeloo)! - Extract more minimal proxy impl address
+
+- [#418](https://github.com/thirdweb-dev/js/pull/418) [`eca4776`](https://github.com/thirdweb-dev/js/commit/eca47763cd89cc3b7aa57b542971837987540b55) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Increase gas limit for opening packs
+
+- [#420](https://github.com/thirdweb-dev/js/pull/420) [`639e535`](https://github.com/thirdweb-dev/js/commit/639e535ed55280ad9d081001aab3f5af72bb3e45) Thanks [@jnsdls](https://github.com/jnsdls)! - update deps
+
+- Updated dependencies [[`f451da6`](https://github.com/thirdweb-dev/js/commit/f451da6395689a5f89800ee63f34b6175b61f703)]:
+  - @thirdweb-dev/contracts-js@1.2.2
+
 ## 3.6.3
 
 ### Patch Changes
