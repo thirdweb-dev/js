@@ -140,11 +140,17 @@ export class SolcBuilder extends BaseBuilder {
         })
         .filter((path) => path !== undefined) as string[];
 
+      const fileNames = Object.keys(
+        parsedMetadata?.settings?.compilationTarget || {},
+      );
+      const fileName = fileNames.length > 0 ? fileNames[0] : "";
+
       if (this.shouldProcessContract(abi, deployedBytecode, contractName)) {
         contracts.push({
           metadata,
           bytecode,
           name: contractName,
+          fileName,
           sources: _sources,
         });
       }

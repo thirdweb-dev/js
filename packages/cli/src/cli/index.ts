@@ -68,6 +68,10 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       "-t, --template [name]",
       "A template to start your project from. You can use an template repository name from the official thirdweb-example org.",
     )
+    .option(
+      "-c, --contract-name [name]",
+      "Name of the new smart contract to create",
+    )
     .action(async (type, path, options) => {
       await twCreate(type, path, options);
     });
@@ -98,6 +102,14 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       "Name of the pre-built or released contract (such as nft-drop)",
     )
     .option(
+      "-f, --file [name]",
+      "Filter for contract files that contain this file name",
+    )
+    .option(
+      "-cn, --contract-name [name]",
+      "Filter for contracts that contain this contract name",
+    )
+    .option(
       "-cv, --contract-version [version]",
       "Version of the released contract",
     )
@@ -116,6 +128,14 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       "Release your protocol so other devs can deploy them and unlock SDKs, Dashboards and Analytics",
     )
     .option("-p, --path <project-path>", "path to project", ".")
+    .option(
+      "-f, --file [name]",
+      "Filter for contract files that contain the file name",
+    )
+    .option(
+      "-cn, --contract-name [name]",
+      "Filter for contracts that contain this contract name",
+    )
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")

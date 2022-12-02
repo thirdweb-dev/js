@@ -55,6 +55,7 @@ export class BrownieBuilder extends BaseBuilder {
             metadata: {},
             bytecode,
             sources: [], // TODO
+            fileName: "", // TODO
             name: contractName,
           });
           break;

@@ -24,7 +24,9 @@ export function useUser() {
         authConfig,
         "Please specify an authConfig in the ThirdwebProvider",
       );
-      const res = await fetch(`${authConfig.authUrl}/user`);
+      const res = await fetch(`${authConfig.authUrl}/user`, {
+        credentials: "include",
+      });
       return (await res.json()) as ThirdwebAuthUser;
     },
     {

@@ -401,7 +401,9 @@ export async function convertToTWError(
     // not sure what this is, just throw it back
     raw = error.toString();
   }
-  const reason = parseMessageParts(/.*?"message[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
+  const reason =
+    parseMessageParts(/.*?"message[^a-zA-Z0-9]*([^"\\]*).*?/, raw) ||
+    parseMessageParts(/.*?"reason[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
   const data = parseMessageParts(/.*?"data[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
   const rpcUrl = parseMessageParts(/.*?"url[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
   let from = parseMessageParts(/.*?"from[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
