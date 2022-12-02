@@ -17,12 +17,12 @@ const POPULAR = {
   name: "Popular",
   description: "A collection of our most deployed contracts.",
   contracts: [
-    "deployer.thirdweb.eth/DropERC721",
-    "deployer.thirdweb.eth/Marketplace",
+    "thirdweb.eth/DropERC721",
+    "thirdweb.eth/Marketplace",
     "unlock-protocol.eth/PublicLock",
-    "deployer.thirdweb.eth/DropERC1155",
-    "deployer.thirdweb.eth/SignatureDrop",
-    "deployer.thirdweb.eth/TokenERC20",
+    "thirdweb.eth/DropERC1155",
+    "thirdweb.eth/SignatureDrop",
+    "thirdweb.eth/TokenERC20",
   ],
 } as const;
 
@@ -33,23 +33,23 @@ const NFTS = {
   description:
     "NFT Collections, Editions, Drops and everything else NFT-related.",
   contracts: [
-    "deployer.thirdweb.eth/Multiwrap",
+    "thirdweb.eth/Multiwrap",
     "doubledev.eth/ERC4907",
-    "deployer.thirdweb.eth/TokenERC721",
-    "deployer.thirdweb.eth/TokenERC1155",
+    "thirdweb.eth/TokenERC721",
+    "thirdweb.eth/TokenERC1155",
     "flairsdk.eth/ERC721CommunityStream",
-    "deployer.thirdweb.eth/Pack",
+    "thirdweb.eth/Pack",
     "unlock-protocol.eth/PublicLock",
-    "deployer.thirdweb.eth/DropERC721",
-    "deployer.thirdweb.eth/DropERC1155",
-    "deployer.thirdweb.eth/SignatureDrop",
-    "deployer.thirdweb.eth/DropERC721_OSRoyaltyFilter",
-    "deployer.thirdweb.eth/DropERC1155_OSRoyaltyFilter",
-    "deployer.thirdweb.eth/Multiwrap_OSRoyaltyFilter",
-    "deployer.thirdweb.eth/Pack_OSRoyaltyFilter",
-    "deployer.thirdweb.eth/SignatureDrop_OSRoyaltyFilter",
-    "deployer.thirdweb.eth/TokenERC1155_OSRoyaltyFilter",
-    "deployer.thirdweb.eth/TokenERC721_OSRoyaltyFilter",
+    "thirdweb.eth/DropERC721",
+    "thirdweb.eth/DropERC1155",
+    "thirdweb.eth/SignatureDrop",
+    "thirdweb.eth/DropERC721_OSRoyaltyFilter",
+    "thirdweb.eth/DropERC1155_OSRoyaltyFilter",
+    "thirdweb.eth/Multiwrap_OSRoyaltyFilter",
+    "thirdweb.eth/Pack_OSRoyaltyFilter",
+    "thirdweb.eth/SignatureDrop_OSRoyaltyFilter",
+    "thirdweb.eth/TokenERC1155_OSRoyaltyFilter",
+    "thirdweb.eth/TokenERC721_OSRoyaltyFilter",
   ],
 } as const;
 
@@ -60,13 +60,13 @@ const OSRoyalty = {
     "Contracts that comply with Opensea's on-chain royalty enforcement mechanisms.",
   learnMore: "https://opensea.io/blog/announcements/on-creator-fees/",
   contracts: [
-    "deployer.thirdweb.eth/DropERC721_OSRoyaltyFilter",
-    "deployer.thirdweb.eth/DropERC1155_OSRoyaltyFilter",
-    "deployer.thirdweb.eth/Multiwrap_OSRoyaltyFilter",
-    "deployer.thirdweb.eth/Pack_OSRoyaltyFilter",
-    "deployer.thirdweb.eth/SignatureDrop_OSRoyaltyFilter",
-    "deployer.thirdweb.eth/TokenERC1155_OSRoyaltyFilter",
-    "deployer.thirdweb.eth/TokenERC721_OSRoyaltyFilter",
+    "thirdweb.eth/DropERC721_OSRoyaltyFilter",
+    "thirdweb.eth/DropERC1155_OSRoyaltyFilter",
+    "thirdweb.eth/Multiwrap_OSRoyaltyFilter",
+    "thirdweb.eth/Pack_OSRoyaltyFilter",
+    "thirdweb.eth/SignatureDrop_OSRoyaltyFilter",
+    "thirdweb.eth/TokenERC1155_OSRoyaltyFilter",
+    "thirdweb.eth/TokenERC721_OSRoyaltyFilter",
   ],
 } as const;
 
@@ -75,9 +75,9 @@ const GOVERNANCE = {
   name: "DAOs & Governance",
   description: "Create your own DAO, vote on proposals, and manage a treasury.",
   contracts: [
-    "deployer.thirdweb.eth/VoteERC20",
-    "deployer.thirdweb.eth/TokenERC20",
-    "deployer.thirdweb.eth/Split",
+    "thirdweb.eth/VoteERC20",
+    "thirdweb.eth/TokenERC20",
+    "thirdweb.eth/Split",
   ],
 } as const;
 
@@ -87,10 +87,10 @@ const DROPS = {
   displayName: "Drops",
   description: "Release NFTs and Tokens based on preset Claim Conditions.",
   contracts: [
-    "deployer.thirdweb.eth/DropERC721",
-    "deployer.thirdweb.eth/DropERC1155",
-    "deployer.thirdweb.eth/SignatureDrop",
-    "deployer.thirdweb.eth/DropERC20",
+    "thirdweb.eth/DropERC721",
+    "thirdweb.eth/DropERC1155",
+    "thirdweb.eth/SignatureDrop",
+    "thirdweb.eth/DropERC20",
   ],
 } as const;
 
@@ -100,9 +100,9 @@ const MARKETS = {
   displayName: "Marketplaces",
   description: "Quickly spin up your own on-chain marketplace for NFTs.",
   contracts: [
-    "deployer.thirdweb.eth/Marketplace",
-    "deployer.thirdweb.eth/TokenERC20",
-    "deployer.thirdweb.eth/Split",
+    "thirdweb.eth/Marketplace",
+    "thirdweb.eth/TokenERC20",
+    "thirdweb.eth/Split",
   ],
 } as const;
 
@@ -113,9 +113,9 @@ const AIRDROP = {
   description:
     "Efficiently transfer large numbers of on-chain assets to a large number of recipients.",
   contracts: [
-    "deployer.thirdweb.eth/AirdropERC20",
-    "deployer.thirdweb.eth/AirdropERC721",
-    "deployer.thirdweb.eth/AirdropERC1155",
+    "thirdweb.eth/AirdropERC20",
+    "thirdweb.eth/AirdropERC721",
+    "thirdweb.eth/AirdropERC1155",
   ],
 } as const;
 
@@ -159,4 +159,17 @@ export function prefetchCategory(
       ),
     ),
   );
+}
+
+export function getAllExploreReleases() {
+  const all = EXPLORE_PAGE_DATA.flatMap((category) => category.contracts);
+  return [...new Set(all)];
+}
+
+export function getAllExplorePublishers() {
+  return [
+    ...new Set(
+      getAllExploreReleases().map((contract) => contract.split("/")[0]),
+    ),
+  ];
 }

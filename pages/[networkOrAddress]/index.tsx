@@ -15,6 +15,7 @@ import { ReleaserHeader } from "components/contract-components/releaser/releaser
 import { DeployedContracts } from "components/contract-components/tables/deployed-contracts";
 import { ReleasedContracts } from "components/contract-components/tables/released-contracts";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
+import { getAllExplorePublishers } from "data/explore";
 import { useOgImagePing } from "hooks/useOgImagePing";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { getEVMThirdwebSDK } from "lib/sdk";
@@ -167,6 +168,16 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
     };
   }
 
+  // handle deployer.thirdweb.eth urls
+  if (networkOrAddress === "deployer.thirdweb.eth") {
+    return {
+      redirect: {
+        destination: "/thirdweb.eth",
+        permanent: true,
+      },
+    };
+  }
+
   const { address, ensName } = await queryClient.fetchQuery(
     ensQuery(networkOrAddress),
   );
@@ -204,6 +215,10 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     fallback: "blocking",
-    paths: [{ params: { networkOrAddress: "deployer.thirdweb.eth" } }],
+    paths: getAllExplorePublishers().map((networkOrAddress) => ({
+      params: {
+        networkOrAddress,
+      },
+    })),
   };
 };

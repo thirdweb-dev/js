@@ -597,6 +597,10 @@ export function useContractEnabledExtensions(abi?: any) {
 }
 
 export function ensQuery(addressOrEnsName?: string) {
+  // if the address is `thirdweb.eth` we actually want `deployer.thirdweb.eth` here...
+  if (addressOrEnsName === "thirdweb.eth") {
+    addressOrEnsName = "deployer.thirdweb.eth";
+  }
   const placeholderData = {
     address: utils.isAddress(addressOrEnsName || "")
       ? addressOrEnsName || null

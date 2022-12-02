@@ -101,15 +101,16 @@ const moduleExports = {
         permanent: false,
       },
       // deployer to non-deployer url
+      // handled directly in SSR as well
       {
         source: "/deployer.thirdweb.eth",
         destination: "/thirdweb.eth",
-        permanent: false,
+        permanent: true,
       },
       {
         source: "/deployer.thirdweb.eth/:path*",
         destination: "/thirdweb.eth/:path*",
-        permanent: false,
+        permanent: true,
       },
     ];
   },

@@ -12,9 +12,9 @@ import {
   ReleaseWithVersionPage,
   ReleaseWithVersionPageProps,
 } from "components/pages/release";
-import { BuiltinContractMap } from "constants/mappings";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { ContractTabRouter } from "contract-ui/layout/tab-router";
+import { getAllExploreReleases } from "data/explore";
 import {
   isPossibleEVMAddress,
   isPossibleSolanaAddress,
@@ -117,7 +117,7 @@ type PossiblePageProps =
 export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
   ctx,
 ) => {
-  let networkOrAddress = getSingleQueryValue(
+  const networkOrAddress = getSingleQueryValue(
     ctx.params,
     "networkOrAddress",
   ) as string;
@@ -152,6 +152,18 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
       redirect: {
         destination: `/${destination}`,
         permanent: false,
+      },
+    };
+  }
+
+  // handle deployer.thirdweb.eth urls
+  if (networkOrAddress === "deployer.thirdweb.eth") {
+    const pathSegments = ctx.params?.catchAll as string[];
+
+    return {
+      redirect: {
+        destination: `/thirdweb.eth/${pathSegments.join("/")}`,
+        permanent: true,
       },
     };
   }
@@ -209,10 +221,6 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
       };
     }
   } else if (isPossibleEVMAddress(networkOrAddress)) {
-    // if the address is `thirdweb.eth` we actually want `deployer.thirdweb.eth` here...
-    if (networkOrAddress === "thirdweb.eth") {
-      networkOrAddress = "deployer.thirdweb.eth";
-    }
     const polygonSdk = getEVMThirdwebSDK(ChainId.Polygon);
     // we're in release world
     const [contractName, version = ""] = ctx.params?.catchAll as (
@@ -283,27 +291,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 function generateBuildTimePaths() {
-  return [
-    ...Object.values(BuiltinContractMap)
-      .filter((c) => c.contractType !== "custom")
-      .map((v) => ({
-        params: {
-          networkOrAddress: "deployer.thirdweb.eth",
-          catchAll: [v.id],
-        },
-      })),
-    ...communityReleases.map((v) => ({
+  const paths = getAllExploreReleases();
+  return paths.map((path) => {
+    const [networkOrAddress, contractId] = path.split("/");
+    return {
       params: {
-        networkOrAddress: v.releaser,
-        catchAll: [v.contractId],
+        networkOrAddress,
+        catchAll: [contractId],
       },
-    })),
-  ];
+    };
+  });
 }
-
-const communityReleases = [
-  {
-    releaser: "unlock-protocol.eth",
-    contractId: "PublicLock",
-  },
-] as const;
