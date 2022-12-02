@@ -144,11 +144,8 @@ export function getReadOnlyProvider(network: string, chainId?: number) {
           const seralizedOpts = `${network}-${chainId || -1}`;
           const existingProvider = READONLY_PROVIDER_MAP.get(seralizedOpts);
           if (existingProvider) {
-            console.log("Reusing existing provider for:", seralizedOpts);
             return existingProvider;
           }
-
-          console.log("Creating new provider for:", seralizedOpts);
 
           const newProvider = chainId
             ? // if we know the chainId we should use the StaticJsonRpcBatchProvider
