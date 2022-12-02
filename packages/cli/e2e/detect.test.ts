@@ -19,6 +19,10 @@ describe("npx thirdweb detect", () => {
     await create.waitForText(CREATE_MESSAGES.framework);
     // select hardhat
     await create.pressKey("enter");
+    await create.waitForText(CREATE_MESSAGES.contractName);
+    // set contract name
+    await create.writeText("Contract");
+    await create.pressKey("enter");
     await create.waitForText(CREATE_MESSAGES.contract);
     // select ERC721
     await create.pressKey("arrowDown");

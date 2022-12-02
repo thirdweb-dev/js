@@ -56,7 +56,16 @@ export type NFTCollectionMetadataInput = z.input<
  */
 export const TokenMetadataInputSchema = CommonContractSchema.extend({
   decimals: z.number().default(9),
-  initialSupply: AmountSchema,
+  initialSupply: AmountSchema.superRefine((val, context) => {
+    // TODO remove this limitation when metaplex fixes https://github.com/metaplex-foundation/js/issues/421
+    if (Number(val) > 9999999) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Initial supply must less than 10M, additional supply can be minted after deployment.`,
+        path: ["initialSupply"],
+      });
+    }
+  }),
 });
 
 /**
