@@ -2,16 +2,13 @@ import {
   extractMinimalProxyImplementationAddress,
   ThirdwebSDK,
 } from "../../src/evm";
-import { expectError, signers, sdk } from "./before-setup";
+import { signers, sdk } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert, expect } from "chai";
-import { ethers } from "ethers";
-import invariant from "tiny-invariant";
+import { expect } from "chai";
 
 global.fetch = require("cross-fetch");
 
 describe("Custom Contracts", async () => {
-  let nftContractAddress: string;
   let adminWallet: SignerWithAddress;
   let realSDK: ThirdwebSDK;
 
@@ -23,17 +20,6 @@ describe("Custom Contracts", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
     realSDK.updateSignerOrProvider(adminWallet);
-
-    nftContractAddress = await sdk.deployer.deployNFTCollection({
-      name: `NFT`,
-      description: "Test contract from tests",
-      image: "image",
-      primary_sale_recipient: adminWallet.address,
-      seller_fee_basis_points: 500,
-      fee_recipient: adminWallet.address,
-      platform_fee_basis_points: 10,
-      platform_fee_recipient: adminWallet.address,
-    });
   });
 
   it("should extract implementation address for eip-1167 minimal proxy", async () => {

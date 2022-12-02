@@ -324,7 +324,7 @@ export async function resolveContractUriFromAddress(
       extractMinimalProxyImplementationAddress(bytecode);
     if (implementationAddress) {
       return await resolveContractUriFromAddress(
-        `0x${implementationAddress}`,
+        implementationAddress,
         provider,
       );
     }
