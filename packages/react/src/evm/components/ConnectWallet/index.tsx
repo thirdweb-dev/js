@@ -63,7 +63,7 @@ interface ConnectWalletProps extends ThemeProviderProps {
     loginOptional?: boolean;
   };
   className?: string;
-  btnTitle?: string;
+  btnTitle?: React.ReactNode;
 }
 
 let connecting = false;
@@ -121,7 +121,7 @@ const chainIdToCurrencyMap: Record<
 export const ConnectWallet: React.FC<ConnectWalletProps> = ({
   auth,
   className,
-  btnTitle = "Connect Wallet",
+  btnTitle,
   ...themeProps
 }) => {
   const id = useId();
@@ -250,7 +250,9 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
               </span>
             )
           ) : (
-            <span style={{ whiteSpace: "nowrap" }}>{btnTitle}</span>
+            <span style={{ whiteSpace: "nowrap" }}>
+              {btnTitle || "Connect Wallet"}
+            </span>
           )}
         </Button>
 
