@@ -25,7 +25,7 @@ export class HardhatBuilder extends BaseBuilder {
     //the hardhat extractor **logs out** the runtime config of hardhat, we take that stdout and parse it
     const stringifiedConfig = (
       await execute(
-        `npx hardhat run ${configExtractorScriptPath} --no-compile`,
+        `npx hardhat run "${configExtractorScriptPath}" --no-compile`,
         options.projectPath,
       )
     ).stdout;
