@@ -34,6 +34,10 @@ export class StaticJsonRpcBatchProvider extends providers.StaticJsonRpcProvider 
   }
 
   private sendCurrentBatch(request: any) {
+    // if we still have a timeout clear that first
+    if (this._pendingBatchAggregator) {
+      clearTimeout(this._pendingBatchAggregator);
+    }
     // Get the current batch and clear it, so new requests
     // go into the next batch
     const batch = this._pendingBatch || [];
