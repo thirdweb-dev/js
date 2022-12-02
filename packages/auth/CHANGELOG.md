@@ -1,5 +1,11 @@
 # @thirdweb-dev/auth
 
+## 2.0.34
+
+### Patch Changes
+
+- [#425](https://github.com/thirdweb-dev/js/pull/425) [`f545a67`](https://github.com/thirdweb-dev/js/commit/f545a67e9fb597d27bb39ca515d24d306fbb121a) Thanks [@adam-maj](https://github.com/adam-maj)! - Add sameSite none and include credentials
+
 ## 2.0.33
 
 ## 2.0.32
