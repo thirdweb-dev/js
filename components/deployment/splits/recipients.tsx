@@ -2,6 +2,8 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
+  Box,
+  Code,
   Divider,
   Flex,
   FormControl,
@@ -12,7 +14,6 @@ import { IoMdAdd } from "@react-icons/all-files/io/IoMdAdd";
 import { IoMdRemove } from "@react-icons/all-files/io/IoMdRemove";
 import type { SplitInitializer } from "@thirdweb-dev/sdk/evm";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
-import { SplitsPieChart } from "components/splits-chart/splits-chart";
 import { constants } from "ethers";
 import { useEffect } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
@@ -40,32 +41,13 @@ export const RecipientForm: React.FC = () => {
   return (
     <>
       <Divider />
-      <Flex px={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
+      <Flex px={0} as="section" direction="column" gap={4}>
         <Flex direction="column">
           <Heading size="title.md">Split Settings</Heading>
           <Text size="body.md" fontStyle="italic">
             Define the recipients and share percentages for this Split contract.
           </Text>
         </Flex>
-
-        <SplitsPieChart recipients={watch("recipients") || []} />
-
-        {totalShares < 10000 ? (
-          <Alert status="warning">
-            <AlertIcon />
-            <AlertDescription>
-              Total shares need to add up to 100%. Total shares currently add up
-              to {totalShares / 100}%.
-            </AlertDescription>
-          </Alert>
-        ) : totalShares > 10000 ? (
-          <Alert status="warning">
-            <AlertIcon />
-            <AlertDescription>
-              Total shares cannot go over 100%.
-            </AlertDescription>
-          </Alert>
-        ) : null}
 
         <Flex direction="column" gap={2}>
           {fields.map((field, index) => {
@@ -131,15 +113,41 @@ export const RecipientForm: React.FC = () => {
         </Flex>
 
         {/* then render high level controls */}
-        <Flex>
-          <Button
-            leftIcon={<IoMdAdd />}
-            onClick={() => append({ address: "", sharesBps: 0 })}
-          >
-            Add Recipient
-          </Button>
+        <Flex align="center" gap={2}>
+          <Box w="50%">
+            <Button
+              size="sm"
+              leftIcon={<IoMdAdd />}
+              onClick={() => append({ address: "", sharesBps: 0 })}
+            >
+              Add Recipient
+            </Button>
+          </Box>
+          <Flex w="50%" direction="column">
+            <Heading as="label" textTransform="uppercase" size="label.sm">
+              Total Shares
+            </Heading>
+            <Code p={0} bg="transparent">
+              {Math.round(totalShares / 100)}%
+            </Code>
+          </Flex>
+          <Box flexShrink={0} boxSize={8} />
         </Flex>
       </Flex>
+      {totalShares < 10000 ? (
+        <Alert status="warning" borderRadius="lg">
+          <AlertIcon />
+          <AlertDescription>
+            Total shares need to add up to 100%. Total shares currently add up
+            to {totalShares / 100}%.
+          </AlertDescription>
+        </Alert>
+      ) : totalShares > 10000 ? (
+        <Alert status="warning">
+          <AlertIcon />
+          <AlertDescription>Total shares cannot go over 100%.</AlertDescription>
+        </Alert>
+      ) : null}
     </>
   );
 };

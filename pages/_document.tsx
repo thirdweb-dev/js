@@ -6,13 +6,7 @@ class ConsoleDocument extends Document {
   render() {
     return (
       <Html lang="en-US">
-        <Head>
-          <link
-            rel="stylesheet"
-            href="https://unpkg.com/react-vis/dist/style.css"
-          ></link>
-          <script>global = globalThis;</script>
-        </Head>
+        <Head />
         <body id="tw-body-root">
           <ColorModeScript
             initialColorMode={chakraTheme.config.initialColorMode}
