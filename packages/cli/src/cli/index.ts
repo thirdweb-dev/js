@@ -5,6 +5,7 @@ import { cliVersion, pkg } from "../constants/urls";
 import { info, logger, spinner } from "../core/helpers/logger";
 import { twCreate } from "../create/command";
 import { deploy } from "../deploy";
+import { detectLocalPackages } from "../helpers/detect-local-packages";
 import { upload } from "../storage/command";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
@@ -227,41 +228,15 @@ const main = async () => {
             );
 
             // Check if thirdweb package is already installed in local package.json
-            const localPackages: string[] = await new Promise((resolve) => {
-              exec("npm ls --depth=0", (err, stdout) => {
-                var packages: string[] = [];
-                packages = stdout.split("\n");
-                packages = packages.filter(function (item) {
-                  if (item.match(/^├──.+/g) !== null) {
-                    return true;
-                  }
-                  if (item.match(/^└──.+/g) !== null) {
-                    return true;
-                  }
-                  return undefined;
-                });
-                packages = packages
-                  .map(function (item) {
-                    if (item.match(/^├──.+/g) !== null) {
-                      return item.replace(/^├──\s/g, "");
-                    }
-                    if (item.match(/^└──.+/g) !== null) {
-                      return item.replace(/^└──\s/g, "");
-                    }
-                  })
-                  .filter((item) => !!item) as string[];
-                resolve(packages);
-              });
-            });
+            const localPackages: string[] = await detectLocalPackages();
+            const isLocal = localPackages.find((packageName) =>
+              packageName.includes("thirdweb@"),
+            );
 
             const packageManager = await import("detect-package-manager").then(
               ({ detect }) => {
                 return detect();
               },
-            );
-
-            const isLocal = localPackages.find((packageName) =>
-              packageName.includes("thirdweb@"),
             );
 
             let command = "npm i -g thirdweb";
