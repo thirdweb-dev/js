@@ -2,4 +2,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-Fix creating listings with a magic link wallet
+Fix signature minting from OpenSea Royalty Filter NFT collection contracts
