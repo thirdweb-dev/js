@@ -68,14 +68,14 @@ export function ContractsSection() {
             >
               <Flex direction="column" gap={1.5}>
                 <Heading w="100%" size="title.lg" lineHeight={1.2}>
-                  Explore
+                  Ready to deploy
                 </Heading>
               </Flex>
               <Divider borderColor="rgba(255,255,255,0.1)" />
 
               <ContractsDescriptorItem
-                title="Discover"
-                description="The front page for contracts. Get inspired by contracts built by other web3 developers. Find contracts for your specific app's use case."
+                title="Explore"
+                description="Browse a large collection of ready-to-deploy contracts that have been built by thirdweb and other contract developers. Find a contract for your specific app's or game's needs."
                 icon={require("public/assets/landingpage/icons/secure.png")}
               />
               <Divider borderColor="rgba(255,255,255,0.1)" />

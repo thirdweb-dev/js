@@ -6,7 +6,7 @@ import { useTrack } from "hooks/analytics/useTrack";
 import Hero from "public/assets/landingpage/hero.png";
 import MobileHero from "public/assets/landingpage/mobile-hero.png";
 import { BsLightningCharge } from "react-icons/bs";
-import { Heading, LinkButton, Text } from "tw-components";
+import { Heading, Link, LinkButton, Text } from "tw-components";
 
 export function HeroSection() {
   const trackEvent = useTrack();
@@ -75,14 +75,16 @@ export function HeroSection() {
                   >
                     Start building
                   </LinkButton>
-                  <Text
-                    color="gray.600"
-                    size="label.sm"
-                    fontStyle="italic"
-                    textAlign="center"
-                  >
-                    Completely free to use. No hidden fees.
-                  </Text>
+                  <Link href="#pricing">
+                    <Text
+                      color="gray.600"
+                      size="label.sm"
+                      fontStyle="italic"
+                      textAlign="center"
+                    >
+                      Completely free to use. No hidden fees.
+                    </Text>
+                  </Link>
                 </Flex>
                 <CLICommand text="npx thirdweb@latest" />
               </Flex>

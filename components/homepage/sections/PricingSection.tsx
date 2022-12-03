@@ -14,7 +14,7 @@ import { Heading, Text } from "tw-components";
 
 export function PricingSection() {
   return (
-    <HomepageSection id="fees">
+    <HomepageSection id="pricing">
       <SimpleGrid
         py={{ base: 12, lg: 24 }}
         columns={{ base: 1, lg: 2 }}
