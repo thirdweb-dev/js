@@ -201,13 +201,10 @@ export function toWei(amount: BigNumberish): BigNumber {
   return utils.parseEther(AmountSchema.parse(amount));
 }
 
-export function toUnits(amount: Amount, decimals: number): BigNumber {
+export function toUnits(amount: Amount, decimals: BigNumberish): BigNumber {
   return utils.parseUnits(AmountSchema.parse(amount), decimals);
 }
 
-export function toDisplayValue(
-  amount: BigNumberish,
-  decimals: number,
-): string {
+export function toDisplayValue(amount: BigNumberish, decimals: BigNumberish): string {
   return utils.formatUnits(AmountSchema.parse(amount), decimals);
 }
