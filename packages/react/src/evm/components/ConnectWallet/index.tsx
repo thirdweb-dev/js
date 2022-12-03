@@ -63,7 +63,7 @@ interface ConnectWalletProps extends ThemeProviderProps {
     loginOptional?: boolean;
   };
   className?: string;
-  btnTitle?: React.ReactNode;
+  btnTitle?: JSX.Element | string;
 }
 
 let connecting = false;
