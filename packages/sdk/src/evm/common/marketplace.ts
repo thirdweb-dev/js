@@ -16,7 +16,7 @@ import type { IERC1155, IERC165, IERC721 } from "@thirdweb-dev/contracts-js";
 import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
 import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
 import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
-import { BigNumber, BigNumberish, Contract, providers } from "ethers";
+import { BigNumber, BigNumberish, Contract, providers, Signer } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -89,13 +89,18 @@ export async function handleTokenApproval(
   tokenId: BigNumberish,
   from: string,
 ): Promise<void> {
-  const erc165 = new Contract(
+  const erc165 = new ContractWrapper<IERC165>(
+    signerOrProvider,
     assetContract,
     ERC165Abi,
-    signerOrProvider,
-  ) as IERC165;
-  const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
-  const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
+    {},
+  );
+  const isERC721 = await erc165.readContract.supportsInterface(
+    InterfaceId_IERC721,
+  );
+  const isERC1155 = await erc165.readContract.supportsInterface(
+    InterfaceId_IERC1155,
+  );
   // check for token approval
   if (isERC721) {
     const asset = new ContractWrapper<IERC721>(
