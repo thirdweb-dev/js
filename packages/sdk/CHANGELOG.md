@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 3.6.6
+
+### Patch Changes
+
+- [#443](https://github.com/thirdweb-dev/js/pull/443) [`8c6cdaa`](https://github.com/thirdweb-dev/js/commit/8c6cdaa2887fb2cc40d3ee6991233d195d103805) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix signature minting from OpenSea Royalty Filter NFT collection contracts
+
 ## 3.6.5
 
 ### Patch Changes
