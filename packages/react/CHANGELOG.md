@@ -1,5 +1,11 @@
 # @thirdweb-dev/react
 
+## 3.6.6
+
+### Patch Changes
+
+- [#443](https://github.com/thirdweb-dev/js/pull/443) [`8c6cdaa`](https://github.com/thirdweb-dev/js/commit/8c6cdaa2887fb2cc40d3ee6991233d195d103805) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix magic link connector not connecting to the right chain
+
 ## 3.6.5
 
 ## 3.6.4
