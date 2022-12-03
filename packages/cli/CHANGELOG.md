@@ -1,5 +1,12 @@
 # thirdweb
 
+## 0.9.3
+
+### Patch Changes
+
+- Updated dependencies [[`efc56fa`](https://github.com/thirdweb-dev/js/commit/efc56fa5802490ac8ef50037658d046afd89e9a1)]:
+  - @thirdweb-dev/sdk@3.6.5
+
 ## 0.9.2
 
 ### Patch Changes

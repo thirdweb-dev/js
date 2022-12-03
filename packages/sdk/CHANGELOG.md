@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 3.6.5
+
+### Patch Changes
+
+- [#440](https://github.com/thirdweb-dev/js/pull/440) [`efc56fa`](https://github.com/thirdweb-dev/js/commit/efc56fa5802490ac8ef50037658d046afd89e9a1) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - providers are now re-used if the constructor options are identical leading to better batching, also introduced an additional max batch size param (250 by default)
+
 ## 3.6.4
 
 ### Patch Changes
