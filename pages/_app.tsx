@@ -3,13 +3,17 @@ import { ChakraProvider, theme } from "@chakra-ui/react";
 import { Global, css } from "@emotion/react";
 import { IBM_Plex_Mono, Inter } from "@next/font/google";
 import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
-import { DehydratedState, Hydrate, QueryClient } from "@tanstack/react-query";
+import {
+  DehydratedState,
+  Hydrate,
+  QueryClient,
+  QueryKey,
+} from "@tanstack/react-query";
 import {
   PersistQueryClientProvider,
   Persister,
 } from "@tanstack/react-query-persist-client";
-import { shouldNeverPersistQuery } from "@thirdweb-dev/react";
-import { BigNumber } from "ethers";
+import type { BigNumber } from "ethers";
 import { NextPage } from "next";
 import PlausibleProvider from "next-plausible";
 import { DefaultSeo } from "next-seo";
@@ -45,16 +49,30 @@ const chakraThemeWithFonts = {
 
 const __CACHE_BUSTER = "v3.5.1";
 
+// extracted from ethers bignumber
+function isBigNumber(value: any): value is BigNumber {
+  return !!(value && value._isBigNumber);
+}
+
+// marker to make sure the query will not get stored in local storage by a query persister
+const NEVER_PERSIST_QUERY_POSTFIX = { persist: false } as const;
+
+export function shouldNeverPersistQuery<TKey extends QueryKey>(
+  key: TKey,
+): boolean {
+  return key[key.length - 1] === NEVER_PERSIST_QUERY_POSTFIX;
+}
+
 export function bigNumberReplacer(_key: string, value: any) {
   // if we find a BigNumber then make it into a string (since that is safe)
   if (
-    BigNumber.isBigNumber(value) ||
+    isBigNumber(value) ||
     (typeof value === "object" &&
       value !== null &&
       value.type === "BigNumber" &&
       "hex" in value)
   ) {
-    return BigNumber.from(value).toString();
+    return value.toString();
   }
 
   return value;
