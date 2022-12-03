@@ -8,19 +8,19 @@ import { deploy } from "../deploy";
 import { upload } from "../storage/command";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { exec, spawn } from "child_process";
 import { Command } from "commander";
 import open from "open";
-// import ora from "ora";
 import prompts from "prompts";
 
 const main = async () => {
+  // eslint-disable-next-line turbo/no-undeclared-env-vars
+  const skipIntro = process.env.THIRDWEB_CLI_SKIP_INTRO === "true";
+
   const program = new Command();
 
   //yes this has to look like this, eliminates whitespace
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
-  if (process.env.THIRDWEB_CLI_SKIP_INTRO !== "true") {
+  if (!skipIntro) {
     console.info(`
     $$\\     $$\\       $$\\                 $$\\                         $$\\       
     $$ |    $$ |      \\__|                $$ |                        $$ |      
@@ -197,8 +197,7 @@ const main = async () => {
       await detectExtensions(options);
     });
 
-  // eslint-disable-next-line turbo/no-undeclared-env-vars
-  if (process.env.THIRDWEB_CLI_SKIP_INTRO !== "true") {
+  if (!skipIntro) {
     const versionSpinner = spinner("Checking for updates...");
     await import("update-notifier").then(
       async ({ default: updateNotifier }) => {
@@ -255,10 +254,27 @@ const main = async () => {
               });
             });
 
+            const packageManager = await import("detect-package-manager").then(
+              ({ detect }) => {
+                return detect();
+              },
+            );
+
             const isLocal = localPackages.find((packageName) =>
               packageName.includes("thirdweb@"),
             );
-            const command = isLocal ? "npm i thirdweb" : "npm i -g thirdweb";
+
+            let command = "npm i -g thirdweb";
+            if (isLocal) {
+              if (packageManager === "pnpm") {
+                command = "pnpm add thirdweb";
+              } else if (packageManager === "yarn") {
+                command = "yarn add thirdweb";
+              } else {
+                command = "npm install thirdweb";
+              }
+            }
+
             await new Promise((done, failed) => {
               exec(command, (err, stdout, stderr) => {
                 if (err) {
