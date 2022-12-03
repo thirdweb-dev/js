@@ -62,6 +62,18 @@ export class MagicConnector extends Connector {
     const { apiKey, ...options } = this.options;
     const configuration = this.getConfiguration();
 
+    const chains = Object.entries(this.options.rpcUrls);
+    if (chains.length > 1) {
+      console.warn(
+        `Magic only supports connecting to one chain at a time. Using the first chain specified in rpcUrls: ${chains[0]}.`,
+      );
+    }
+    const [chainId, rpcUrl] = chains[0];
+    this.options.network = {
+      chainId: parseInt(chainId),
+      rpcUrl,
+    };
+
     try {
       invariant(
         configuration,
