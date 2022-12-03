@@ -123,6 +123,11 @@ export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
   }
 }
 
+const READONLY_PROVIDER_MAP: Map<
+  string,
+  StaticJsonRpcBatchProvider | providers.JsonRpcBatchProvider
+> = new Map();
+
 /**
  *
  * @param network - the chain name or rpc url
@@ -136,11 +141,19 @@ export function getReadOnlyProvider(network: string, chainId?: number) {
     if (match) {
       switch (match[1]) {
         case "http":
-          return chainId
+          const seralizedOpts = `${network}-${chainId || -1}`;
+          const existingProvider = READONLY_PROVIDER_MAP.get(seralizedOpts);
+          if (existingProvider) {
+            return existingProvider;
+          }
+
+          const newProvider = chainId
             ? // if we know the chainId we should use the StaticJsonRpcBatchProvider
               new StaticJsonRpcBatchProvider(network, chainId)
             : // otherwise fall back to the built in json rpc batch provider
               new providers.JsonRpcBatchProvider(network, chainId);
+          READONLY_PROVIDER_MAP.set(seralizedOpts, newProvider);
+          return newProvider;
 
         case "ws":
           return new providers.WebSocketProvider(network, chainId);

@@ -1,5 +1,29 @@
 # thirdweb
 
+## 0.9.3
+
+### Patch Changes
+
+- Updated dependencies [[`efc56fa`](https://github.com/thirdweb-dev/js/commit/efc56fa5802490ac8ef50037658d046afd89e9a1)]:
+  - @thirdweb-dev/sdk@3.6.5
+
+## 0.9.2
+
+### Patch Changes
+
+- [#430](https://github.com/thirdweb-dev/js/pull/430) [`e684d7e`](https://github.com/thirdweb-dev/js/commit/e684d7e1ca16f633bce8698529d16bf60c264aa4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix uploading contracts with special characters in the comments
+
+- [#435](https://github.com/thirdweb-dev/js/pull/435) [`bef97f7`](https://github.com/thirdweb-dev/js/commit/bef97f72f4860596b7b70b05e67fcadf2c9a012e) Thanks [@adam-maj](https://github.com/adam-maj)! - Make solc default backup compilation
+
+- [#432](https://github.com/thirdweb-dev/js/pull/432) [`3e87dd3`](https://github.com/thirdweb-dev/js/commit/3e87dd3ccb04a2b73437357c939a251e83b783b2) Thanks [@adam-maj](https://github.com/adam-maj)! - Display file name on duplicate contract names
+
+- [#431](https://github.com/thirdweb-dev/js/pull/431) [`c42545a`](https://github.com/thirdweb-dev/js/commit/c42545a64725492136025fa1dcdb4d46ba674a30) Thanks [@adam-maj](https://github.com/adam-maj)! - Add changeset
+
+- [#428](https://github.com/thirdweb-dev/js/pull/428) [`6e20d1f`](https://github.com/thirdweb-dev/js/commit/6e20d1f21a622f102e94b956f700d0871c0dc779) Thanks [@adam-maj](https://github.com/adam-maj)! - Update CLI to enable create contract inside contracts project
+
+- Updated dependencies [[`f451da6`](https://github.com/thirdweb-dev/js/commit/f451da6395689a5f89800ee63f34b6175b61f703), [`af3acc6`](https://github.com/thirdweb-dev/js/commit/af3acc6b10751b840e56aef6400da5eea6040df2), [`1bfb91d`](https://github.com/thirdweb-dev/js/commit/1bfb91dbf3a39160c987a425813ac5dbb84703ad), [`ee47840`](https://github.com/thirdweb-dev/js/commit/ee478407673b0416e0c1cfe2be11bd6963395348), [`def4251`](https://github.com/thirdweb-dev/js/commit/def42511ff5a20d83f9094164dafb87e412571b5), [`034a257`](https://github.com/thirdweb-dev/js/commit/034a257442314c67729f7bafcbe3740cff33fa32), [`eca4776`](https://github.com/thirdweb-dev/js/commit/eca47763cd89cc3b7aa57b542971837987540b55), [`639e535`](https://github.com/thirdweb-dev/js/commit/639e535ed55280ad9d081001aab3f5af72bb3e45)]:
+  - @thirdweb-dev/sdk@3.6.4
+
 ## 0.9.1
 
 ### Patch Changes

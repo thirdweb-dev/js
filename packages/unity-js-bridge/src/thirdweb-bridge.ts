@@ -1,4 +1,5 @@
 /// --- Thirdweb Brige ---
+import { CoinbasePayIntegration, FundWalletOptions } from "@thirdweb-dev/pay";
 import { ChainOrRpc, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
@@ -44,12 +45,17 @@ const WALLETS = [
 
 type PossibleWallet = typeof WALLETS[number]["id"];
 
+type FundWalletInput = FundWalletOptions & {
+  appId: string;
+};
+
 interface TWBridge {
   initialize: (chain: ChainOrRpc, options: string) => void;
   connect: (wallet: PossibleWallet, chainId?: number) => Promise<string>;
   disconnect: () => Promise<void>;
   switchNetwork: (chainId: number) => Promise<void>;
   invoke: (route: string, payload: string) => Promise<string | undefined>;
+  fundWallet: (options: string) => Promise<void>;
 }
 
 const w = window;
@@ -210,6 +216,15 @@ class ThirdwebBridge implements TWBridge {
         throw new Error("Invalid Route");
       }
     }
+  }
+  public async fundWallet(options: string) {
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
+    const { appId, ...fundOptions } = JSON.parse(options) as FundWalletInput;
+    const cbPay = new CoinbasePayIntegration({ appId });
+
+    return await cbPay.fundWallet(fundOptions);
   }
 }
 

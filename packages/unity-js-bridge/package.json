@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/unity-js-bridge",
-  "version": "0.0.0",
+  "version": "0.1.1",
   "main": "dist/thirdweb-unity-bridge.js",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/unity-js-bridge",
   "license": "Apache-2.0",
@@ -15,6 +15,7 @@
     "@thirdweb-dev/sdk": "*",
     "@thirdweb-dev/storage": "*",
     "@thirdweb-dev/wallets": "*",
+    "@thirdweb-dev/pay": "*",
     "ethers": "^5.7.2"
   },
   "devDependencies": {
