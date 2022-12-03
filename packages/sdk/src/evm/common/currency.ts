@@ -197,7 +197,7 @@ export function toEther(amount: Amount): string {
   return utils.formatEther(AmountSchema.parse(amount));
 }
 
-export function toWei(amount: BigNumber | string): BigNumber {
+export function toWei(amount: BigNumberish): BigNumber {
   return utils.parseEther(AmountSchema.parse(amount));
 }
 
@@ -206,7 +206,7 @@ export function toUnits(amount: Amount, decimals: number): BigNumber {
 }
 
 export function toDisplayValue(
-  amount: BigNumber | string,
+  amount: BigNumberish,
   decimals: number,
 ): string {
   return utils.formatUnits(AmountSchema.parse(amount), decimals);
