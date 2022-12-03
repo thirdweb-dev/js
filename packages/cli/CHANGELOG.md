@@ -1,5 +1,11 @@
 # thirdweb
 
+## 0.9.4
+
+### Patch Changes
+
+- [#444](https://github.com/thirdweb-dev/js/pull/444) [`94f49b1`](https://github.com/thirdweb-dev/js/commit/94f49b1294bc0208171b16ed413cbb44644af017) Thanks [@adam-maj](https://github.com/adam-maj)! - Add changeset
+
 ## 0.9.3
 
 ### Patch Changes
