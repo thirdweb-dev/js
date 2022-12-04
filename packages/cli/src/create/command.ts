@@ -259,16 +259,16 @@ export async function twCreate(
           framework = res.framework.trim();
         }
       }
-    }
 
-    if (!framework) {
-      console.log("Please specify a framework");
-      process.exit(1);
-    }
+      if (!framework) {
+        console.log("Please specify a framework");
+        process.exit(1);
+      }
 
-    if (!language) {
-      // Default = JavaScript
-      language = "javascript";
+      if (!language) {
+        // Default = JavaScript
+        language = "javascript";
+      }
     }
   }
 

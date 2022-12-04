@@ -89,13 +89,18 @@ export async function handleTokenApproval(
   tokenId: BigNumberish,
   from: string,
 ): Promise<void> {
-  const erc165 = new Contract(
+  const erc165 = new ContractWrapper<IERC165>(
+    signerOrProvider,
     assetContract,
     ERC165Abi,
-    signerOrProvider,
-  ) as IERC165;
-  const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
-  const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
+    {},
+  );
+  const isERC721 = await erc165.readContract.supportsInterface(
+    InterfaceId_IERC721,
+  );
+  const isERC1155 = await erc165.readContract.supportsInterface(
+    InterfaceId_IERC1155,
+  );
   // check for token approval
   if (isERC721) {
     const asset = new ContractWrapper<IERC721>(
