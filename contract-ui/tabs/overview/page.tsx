@@ -12,14 +12,13 @@ interface CustomContractOverviewPageProps {
 export const CustomContractOverviewPage: React.FC<
   CustomContractOverviewPageProps
 > = ({ contractAddress }) => {
-  const { contract, isSuccess } = useContract(contractAddress);
+  const { contract, isSuccess, isError } = useContract(contractAddress);
   const functions = useContractFunctions(contract);
-
   if (!contractAddress) {
     return <div>No contract address provided</div>;
   }
 
-  if (!contract?.abi && isSuccess) {
+  if ((!contract?.abi && isSuccess) || isError) {
     return <ImportContract contractAddress={contractAddress} />;
   }
 
