@@ -442,6 +442,11 @@ export async function fetchContractMetadata(
   storage: ThirdwebStorage,
 ): Promise<PublishedMetadata> {
   const metadata = await storage.downloadJSON(compilerMetadataUri);
+  if (!metadata || !metadata.output) {
+    throw new Error(
+      `Could not resolve metadata for contract at ${compilerMetadataUri}`,
+    );
+  }
   const abi = AbiSchema.parse(metadata.output.abi);
   const compilationTarget = metadata.settings.compilationTarget;
   const targets = Object.keys(compilationTarget);
