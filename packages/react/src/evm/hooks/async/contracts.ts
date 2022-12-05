@@ -238,7 +238,7 @@ export function useContract(
             await queryClient.fetchQuery(
               compilerMetadata.cacheKey(contractAddress, activeChainId),
               () => compilerMetadata.fetchQuery(contractAddress, sdk),
-              { cacheTime: Infinity, staleTime: Infinity },
+              { cacheTime: Infinity, staleTime: Infinity, retry: 0 },
             )
           )?.abi;
         }
@@ -258,6 +258,8 @@ export function useContract(
       cacheTime: Infinity,
       staleTime: Infinity,
       enabled: !!contractAddress && !!sdk && !!activeChainId,
+      // never retry
+      retry: 0,
     },
   );
 
