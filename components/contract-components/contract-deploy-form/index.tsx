@@ -14,6 +14,7 @@ interface ContractDeployFormProps {
   chainId?: SUPPORTED_CHAIN_ID;
   contractVersion?: string;
   onSuccessCallback?: (contractAddress: string) => void;
+  isImplementationDeploy?: true;
 }
 
 export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
@@ -21,6 +22,7 @@ export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
   chainId: chainIdProp,
   contractVersion = "latest",
   onSuccessCallback,
+  isImplementationDeploy,
 }) => {
   const chainId = useChainId();
   const [selectedChain, setSelectedChain] = useState<
@@ -60,7 +62,7 @@ export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
           ipfsHash={contractId}
           selectedChain={selectedChain}
           onChainSelect={setSelectedChain}
-          isImplementationDeploy={!!chainIdProp}
+          isImplementationDeploy={isImplementationDeploy}
           onSuccessCallback={onSuccessCallback}
         />
       )}

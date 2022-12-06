@@ -634,6 +634,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
                         onDrawerVisibilityChanged={(visible) => {
                           setIsDrawerOpen(visible);
                         }}
+                        isImplementationDeploy
                       />
                     </Flex>
                   </FormControl>
