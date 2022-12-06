@@ -19,7 +19,7 @@ export const NewsletterSection = () => {
   });
 
   return (
-    <Box bgColor="rgba(0,0,0,.6)" zIndex="100">
+    <Box bg="rgba(0,0,0,.6)" zIndex="100">
       <Container as="section" maxW="container.page" color="gray.500">
         <Stack
           spacing="8"

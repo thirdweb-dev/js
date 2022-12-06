@@ -1,11 +1,11 @@
-import { ThirdwebNextPage } from "./_app";
 import { DarkMode, Flex, Image, SimpleGrid } from "@chakra-ui/react";
-import { MaskedAvatar } from "components/contract-components/releaser/masked-avatar";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { HomepageFooter } from "components/product-pages/homepage/Footer";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { PageId } from "page-id";
 import { Heading, Text, TrackedLink } from "tw-components";
+import { MaskedAvatar } from "tw-components/masked-avatar";
+import { ThirdwebNextPage } from "utils/types";
 
 const employees = [
   {

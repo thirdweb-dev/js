@@ -1,5 +1,5 @@
 import { SettingDetectedState } from "./detected-state";
-import { AdminOnly } from "@3rdweb-sdk/react";
+import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { Flex, FormControl, Input, Textarea } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMetadata, useUpdateMetadata } from "@thirdweb-dev/react";

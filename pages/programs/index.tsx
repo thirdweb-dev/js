@@ -2,10 +2,10 @@ import { Box, Flex } from "@chakra-ui/react";
 import { AppLayout } from "components/app-layouts/app";
 import { ReleasedContractTable } from "components/contract-components/contract-table-v2";
 import { PREBUILT_SOLANA_CONTRACTS_MAP } from "constants/mappings";
+// import dynamic from "next/dynamic";
 import { PageId } from "page-id";
-import { ThirdwebNextPage } from "pages/_app";
-import { ReactElement } from "react";
 import { Heading, Text } from "tw-components";
+import { ThirdwebNextPage } from "utils/types";
 
 const Programs: ThirdwebNextPage = () => {
   const prebuiltSolContracts = Object.values(PREBUILT_SOLANA_CONTRACTS_MAP);
@@ -25,7 +25,11 @@ const Programs: ThirdwebNextPage = () => {
   );
 };
 
-Programs.getLayout = (page: ReactElement) => <AppLayout>{page}</AppLayout>;
+// const AppLayout = dynamic(
+//   async () => (await import("components/app-layouts/app")).AppLayout,
+// );
+
+Programs.getLayout = (page, props) => <AppLayout {...props}>{page}</AppLayout>;
 
 Programs.pageId = PageId.Programs;
 

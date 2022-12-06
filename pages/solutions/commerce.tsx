@@ -9,8 +9,8 @@ import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
 import { SolutionsTextImage } from "components/product-pages/common/SolutionsTextImage";
 import { PageId } from "page-id";
-import { ThirdwebNextPage } from "pages/_app";
 import { Heading } from "tw-components";
+import { ThirdwebNextPage } from "utils/types";
 
 const SHOPIFY_GUIDES = [
   {

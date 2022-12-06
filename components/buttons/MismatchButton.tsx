@@ -1,9 +1,8 @@
+import { FAUCETS, useWeb3 } from "@3rdweb-sdk/react";
 import {
   ConnectWallet,
   EcosystemButtonprops,
-  FAUCETS,
-  useWeb3,
-} from "@3rdweb-sdk/react";
+} from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   Box,
   Flex,

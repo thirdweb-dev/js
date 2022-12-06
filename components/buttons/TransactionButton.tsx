@@ -1,5 +1,5 @@
 import { MismatchButton } from "./MismatchButton";
-import { EcosystemButtonprops } from "@3rdweb-sdk/react";
+import type { EcosystemButtonprops } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   Center,
   DarkMode,

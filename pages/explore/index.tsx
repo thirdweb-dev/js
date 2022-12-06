@@ -12,10 +12,11 @@ import {
 } from "data/explore";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { NextSeo } from "next-seo";
+// import dynamic from "next/dynamic";
 import { PageId } from "page-id";
-import { ThirdwebNextPage } from "pages/_app";
-import React, { ReactElement } from "react";
+import React from "react";
 import { Heading, Text } from "tw-components";
+import { ThirdwebNextPage } from "utils/types";
 
 const ExplorePage: ThirdwebNextPage = (
   props: InferGetStaticPropsType<typeof getStaticProps>,
@@ -64,8 +65,12 @@ const ExplorePage: ThirdwebNextPage = (
   );
 };
 
-ExplorePage.getLayout = (page: ReactElement) => (
-  <AppLayout noSEOOverride>
+// const AppLayout = dynamic(
+//   async () => (await import("components/app-layouts/app")).AppLayout,
+// );
+
+ExplorePage.getLayout = (page, props) => (
+  <AppLayout {...props} noSEOOverride>
     <PublisherSDKContext>{page}</PublisherSDKContext>
   </AppLayout>
 );

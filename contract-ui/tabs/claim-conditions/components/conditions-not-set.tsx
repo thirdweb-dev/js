@@ -1,4 +1,4 @@
-import { AdminOnly } from "@3rdweb-sdk/react";
+import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { Flex, Stack } from "@chakra-ui/react";
 import { useClaimConditions, useContract } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";

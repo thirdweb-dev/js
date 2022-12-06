@@ -1,4 +1,7 @@
-import { AdminOnly, AdminOrSelfOnly } from "@3rdweb-sdk/react";
+import {
+  AdminOnly,
+  AdminOrSelfOnly,
+} from "@3rdweb-sdk/react/components/roles/admin-only";
 import {
   Flex,
   FormControl,

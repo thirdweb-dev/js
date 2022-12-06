@@ -1,5 +1,5 @@
 import { TokenMintForm } from "./mint-form";
-import { MinterOnly } from "@3rdweb-sdk/react";
+import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import { TokenContract, useContract } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";

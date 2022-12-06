@@ -1,4 +1,4 @@
-import { QueryClient, dehydrate } from "@tanstack/react-query";
+import { DehydratedState, QueryClient, dehydrate } from "@tanstack/react-query";
 import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
 import { AppLayout } from "components/app-layouts/app";
 import {
@@ -21,8 +21,8 @@ import {
 } from "lib/address-utils";
 import { getEVMThirdwebSDK } from "lib/sdk";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+// import dynamic from "next/dynamic";
 import { PageId } from "page-id";
-import { ThirdwebNextPage } from "pages/_app";
 import { ReactElement } from "react";
 import {
   DashboardSolanaNetwork,
@@ -33,6 +33,7 @@ import {
   isSupportedSOLNetwork,
 } from "utils/network";
 import { getSingleQueryValue } from "utils/router";
+import { ThirdwebNextPage } from "utils/types";
 
 const CatchAllPage: ThirdwebNextPage = (
   props: InferGetStaticPropsType<typeof getStaticProps>,
@@ -69,6 +70,10 @@ const CatchAllPage: ThirdwebNextPage = (
   return null;
 };
 
+// const AppLayout = dynamic(
+//   async () => (await import("components/app-layouts/app")).AppLayout,
+// );
+
 CatchAllPage.getLayout = function (
   page: ReactElement,
   props: InferGetStaticPropsType<typeof getStaticProps>,
@@ -76,6 +81,7 @@ CatchAllPage.getLayout = function (
   return (
     <AppLayout
       layout={props.pageType !== "release" ? "custom-contract" : undefined}
+      dehydratedState={props.dehydratedState}
     >
       {page}
     </AppLayout>
@@ -101,17 +107,22 @@ CatchAllPage.pageId = (
 export default CatchAllPage;
 
 type PossiblePageProps =
-  | ({ pageType: "release" } & ReleaseWithVersionPageProps)
+  | ({
+      pageType: "release";
+      dehydratedState: DehydratedState;
+    } & ReleaseWithVersionPageProps)
   | {
       pageType: "contract";
       contractAddress: string;
       network: string;
       chainId: SUPPORTED_CHAIN_ID;
+      dehydratedState: DehydratedState;
     }
   | {
       pageType: "program";
       programAddress: string;
       network: DashboardSolanaNetwork;
+      dehydratedState: DehydratedState;
     };
 
 export const getStaticProps: GetStaticProps<PossiblePageProps> = async (

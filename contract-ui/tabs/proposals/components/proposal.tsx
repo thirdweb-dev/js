@@ -11,9 +11,10 @@ import {
   Proposal as ProposalType,
   VoteType,
 } from "@thirdweb-dev/sdk/evm";
+// eslint-disable-next-line no-duplicate-imports
 import type { Vote } from "@thirdweb-dev/sdk/evm";
 import { TransactionButton } from "components/buttons/TransactionButton";
-import { ethers } from "ethers";
+import { utils } from "ethers";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import React, { useCallback, useMemo } from "react";
 import { FiCheck, FiMinus, FiX } from "react-icons/fi";
@@ -92,21 +93,21 @@ export const Proposal: React.FC<IProposal> = ({ proposal, contract }) => {
   const votes = useMemo(() => {
     return {
       for: parseFloat(
-        ethers.utils.formatUnits(
+        utils.formatUnits(
           proposal.votes.find((voteData) => voteData.type === VoteType.For)
             ?.count || 0,
           18,
         ),
       ),
       against: parseFloat(
-        ethers.utils.formatUnits(
+        utils.formatUnits(
           proposal.votes.find((voteData) => voteData.type === VoteType.Against)
             ?.count || 0,
           18,
         ),
       ),
       abstain: parseFloat(
-        ethers.utils.formatUnits(
+        utils.formatUnits(
           proposal.votes.find((voteData) => voteData.type === VoteType.Abstain)
             ?.count || 0,
           18,

@@ -13,11 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { QueryClient } from "@tanstack/query-core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Abi, getAllDetectedFeatures } from "@thirdweb-dev/sdk/evm";
-import {
-  ensQuery,
-  fetchContractPublishMetadataFromURI,
-} from "components/contract-components/hooks";
+import { ensQuery } from "components/contract-components/hooks";
 import { getEVMThirdwebSDK, replaceIpfsUrl } from "lib/sdk";
 import { useEffect, useMemo, useState } from "react";
 import { BsShieldCheck } from "react-icons/bs";
@@ -334,21 +330,10 @@ async function queryFn(
   const contractInfo = await polygonSdk
     .getPublisher()
     .fetchPublishedContractInfo(latestPublishedVersion);
-
-  const publishMetadata = await fetchContractPublishMetadataFromURI(
-    latestPublishedVersion.metadataUri,
-  );
-
   return {
     ...latestPublishedVersion,
     ...contractInfo.publishedMetadata,
-    extensions: publishMetadata.abi
-      ? getAllDetectedFeatures(publishMetadata.abi as Abi).map((feature) => ({
-          name: feature.name,
-          docLinks: feature.docLinks || [],
-          // namespace: feature.namespace,
-        }))
-      : [],
+
     publishedContractId: `${publisher}/${contractId}/${version}`,
   };
 }

@@ -1,44 +1,5 @@
 import { useEns, useReleaserProfile } from "../hooks";
-import hexagon from "./hexagon.png";
-import { Img, ImgProps, Skeleton } from "@chakra-ui/react";
-import "react";
-
-interface MaskedAvatarProps
-  extends Omit<ImgProps, "as" | "viewBox" | "boxSize"> {
-  src: string;
-  isLoading?: boolean;
-  name?: string;
-  boxSize?: number;
-}
-
-export const MaskedAvatar: React.FC<MaskedAvatarProps> = ({
-  src,
-  name,
-  boxSize = 12,
-  isLoading,
-  ...restBoxProps
-}) => {
-  return (
-    <Skeleton
-      isLoaded={!isLoading}
-      style={{
-        WebkitMaskImage: `url("${hexagon.src}")`,
-        WebkitMaskSize: "cover",
-        mask: `url("${hexagon.src}")`,
-        maskSize: "cover",
-      }}
-      boxSize={boxSize}
-    >
-      <Img
-        boxSize={boxSize}
-        objectFit="cover"
-        {...restBoxProps}
-        src={src}
-        alt={name || ""}
-      />
-    </Skeleton>
-  );
-};
+import { MaskedAvatar, MaskedAvatarProps } from "tw-components/masked-avatar";
 
 export interface ReleaserAvatarProps extends Omit<MaskedAvatarProps, "src"> {
   address: string;

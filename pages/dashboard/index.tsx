@@ -22,11 +22,11 @@ import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { utils } from "ethers";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { isPossibleSolanaAddress } from "lib/address-utils";
+// import dynamic from "next/dynamic";
 import { PageId } from "page-id";
-import { ThirdwebNextPage } from "pages/_app";
-import * as React from "react";
-import { ReactElement, useMemo } from "react";
+import { useMemo } from "react";
 import { Heading } from "tw-components";
+import { ThirdwebNextPage } from "utils/types";
 
 const Dashboard: ThirdwebNextPage = () => {
   const wallet = useSingleQueryParam("address") || "dashboard";
@@ -94,7 +94,11 @@ const Dashboard: ThirdwebNextPage = () => {
   );
 };
 
-Dashboard.getLayout = (page: ReactElement) => <AppLayout>{page}</AppLayout>;
+// const AppLayout = dynamic(
+//   async () => (await import("components/app-layouts/app")).AppLayout,
+// );
+
+Dashboard.getLayout = (page, props) => <AppLayout {...props}>{page}</AppLayout>;
 Dashboard.pageId = PageId.Dashboard;
 
 export default Dashboard;

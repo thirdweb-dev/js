@@ -1,10 +1,10 @@
-import { ThirdwebNextPage } from "./_app";
 import { Box, Center, DarkMode, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { PageId } from "page-id";
 import NotFound from "public/assets/landingpage/not-found.png";
 import { Heading, Text, TrackedLink } from "tw-components";
+import { ThirdwebNextPage } from "utils/types";
 
 const PageNotFound: ThirdwebNextPage = () => {
   return (

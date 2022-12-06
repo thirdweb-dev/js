@@ -12,6 +12,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useAddress } from "@thirdweb-dev/react";
 import { Logo } from "components/logo";
 import { useLocalStorage } from "hooks/useLocalStorage";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button, Checkbox, Heading, Text, TrackedLink } from "tw-components";
 
@@ -22,8 +23,15 @@ export function useShouldShowTOSNotice() {
   );
   const address = useAddress();
   const solAddress = useWallet().publicKey?.toBase58();
+  const [hasTimedOut, setHasTimedOut] = useState(false);
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setHasTimedOut(true);
+    }, 2000);
+    return () => clearTimeout(t);
+  }, []);
   return [
-    !!(address || solAddress) && !acceptedTOS,
+    hasTimedOut && !!(address || solAddress) && !acceptedTOS,
     setHasAcceptedTOS,
   ] as const;
 }

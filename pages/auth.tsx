@@ -1,4 +1,3 @@
-import { ThirdwebNextPage } from "./_app";
 import { Box, Center, Flex, LightMode, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { AuthenticationExamples } from "components/product-pages/authentication/AuthenticationExamples";
@@ -11,6 +10,7 @@ import { GeneralCta } from "components/shared/GeneralCta";
 import { PageId } from "page-id";
 import WhiteLogo from "public/assets/landingpage/white-logo.png";
 import { Heading, TrackedLink } from "tw-components";
+import { ThirdwebNextPage } from "utils/types";
 
 const Authentication: ThirdwebNextPage = () => {
   return (

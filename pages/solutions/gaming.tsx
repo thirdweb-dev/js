@@ -11,8 +11,8 @@ import { SolutionsTextImage } from "components/product-pages/common/SolutionsTex
 import { CodeSelector } from "components/product-pages/homepage/CodeSelector";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
-import { ThirdwebNextPage } from "pages/_app";
 import { Heading } from "tw-components";
+import { ThirdwebNextPage } from "utils/types";
 
 const GAMING_GUIDES = [
   {

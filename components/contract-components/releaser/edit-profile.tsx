@@ -1,5 +1,4 @@
 import { useEditProfileMutation } from "../hooks";
-import { MaskedAvatar } from "./masked-avatar";
 import {
   Box,
   Flex,
@@ -29,6 +28,7 @@ import {
   FormLabel,
   Heading,
 } from "tw-components";
+import { MaskedAvatar } from "tw-components/masked-avatar";
 
 interface EditProfileProps {
   releaserProfile: ProfileMetadata;

@@ -32,7 +32,9 @@ export const ProductPage: React.FC<PropsWithChildren<IProductPage>> = ({
       >
         <HomepageTopNav />
         {/* pull it up by as much as the topnav is tall */}
-        <Box mt={{ base: "-35px", md: "-82px" }}>{children}</Box>
+        <Box mt="-100px" overflowX="hidden">
+          {children}
+        </Box>
         <HomepageFooter />
       </Flex>
     </DarkMode>

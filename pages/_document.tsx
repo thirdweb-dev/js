@@ -6,7 +6,15 @@ class ConsoleDocument extends Document {
   render() {
     return (
       <Html lang="en-US">
-        <Head />
+        <Head>
+          {/* preconnect to domains we know we'll be using */}
+          <link rel="preconnect" href="https://a.thirdweb.com" />
+          <link rel="dns-prefetch" href="https://a.thirdweb.com" />
+          <link rel="preconnect" href="https://pl.thirdweb.com" />
+          <link rel="dns-prefetch" href="https://pl.thirdweb.com" />
+          {/* prefetch domains we are likely to use */}
+          <link rel="dns-prefetch" href="https://gateway.ipfscdn.io" />
+        </Head>
         <body id="tw-body-root">
           <ColorModeScript
             initialColorMode={chakraTheme.config.initialColorMode}

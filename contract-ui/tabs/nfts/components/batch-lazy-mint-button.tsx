@@ -1,5 +1,4 @@
-import { BatchLazyMint } from "../../../../core-ui/batch-upload/batch-lazy-mint";
-import { MinterOnly } from "@3rdweb-sdk/react";
+import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import {
   RevealableContract,
@@ -11,6 +10,7 @@ import {
 import { UploadProgressEvent } from "@thirdweb-dev/sdk/evm";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { detectFeatures } from "components/contract-components/utils";
+import { BatchLazyMint } from "core-ui/batch-upload/batch-lazy-mint";
 import { ProgressBox } from "core-ui/batch-upload/progress-box";
 import { BigNumber } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";

@@ -25,9 +25,9 @@ import {
   CodeBlock,
   Drawer,
   Heading,
-  NFTMedia,
   Text,
 } from "tw-components";
+import { NFTMedia } from "tw-components/nft-media";
 
 interface NFTDrawerProps {
   contract: Marketplace;

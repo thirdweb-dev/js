@@ -1,4 +1,5 @@
-import { AdminOnly, useDashboardNetwork } from "@3rdweb-sdk/react";
+import { useDashboardNetwork } from "@3rdweb-sdk/react";
+import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { Code, Divider, Flex, Icon } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import type { EditionDrop, NFTDrop } from "@thirdweb-dev/sdk/evm";

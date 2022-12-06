@@ -14,8 +14,8 @@ import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
 import { DashboardCard } from "components/product-pages/homepage/DashboardCard";
 import { PageId } from "page-id";
-import { ThirdwebNextPage } from "pages/_app";
 import { Heading, LinkButton } from "tw-components";
+import { ThirdwebNextPage } from "utils/types";
 
 const SOLANA_GUIDES = [
   {
@@ -85,6 +85,7 @@ const Solana: ThirdwebNextPage = () => {
             justify={{ base: "start", md: "center" }}
           >
             <Heading
+              pt={{ base: "100px", md: "0px" }}
               as="h1"
               size="title.2xl"
               textAlign={{ base: "center", md: "left" }}

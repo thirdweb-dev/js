@@ -22,13 +22,14 @@ import { useSingleQueryParam } from "hooks/useQueryParam";
 import { getEVMThirdwebSDK } from "lib/sdk";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
+// import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
-import { ThirdwebNextPage } from "pages/_app";
 import { createProfileOGUrl } from "pages/_og/profile";
-import { ReactElement, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Heading, Text } from "tw-components";
 import { getSingleQueryValue } from "utils/router";
+import { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
 
 const UserPage: ThirdwebNextPage = () => {
@@ -146,9 +147,13 @@ const UserPage: ThirdwebNextPage = () => {
   );
 };
 
-UserPage.getLayout = function getLayout(page: ReactElement) {
+// const AppLayout = dynamic(
+//   async () => (await import("components/app-layouts/app")).AppLayout,
+// );
+
+UserPage.getLayout = function getLayout(page, props) {
   return (
-    <AppLayout>
+    <AppLayout {...props}>
       <PublisherSDKContext>{page}</PublisherSDKContext>
     </AppLayout>
   );

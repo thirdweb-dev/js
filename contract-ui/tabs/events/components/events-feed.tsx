@@ -23,11 +23,10 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { AiOutlineQuestionCircle } from "@react-icons/all-files/ai/AiOutlineQuestionCircle";
-import { ContractEvent } from "@thirdweb-dev/sdk/evm";
+import type { ContractEvent } from "@thirdweb-dev/sdk/evm";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
-import { bigNumberReplacer } from "pages/_app";
 import React, { useEffect, useMemo, useState } from "react";
 import { FiChevronDown, FiCopy } from "react-icons/fi";
 import {
@@ -38,6 +37,7 @@ import {
   Heading,
   Text,
 } from "tw-components";
+import { bigNumberReplacer } from "utils/bignumber";
 
 interface ContractTransaction {
   transactionHash: ContractEvent["transaction"]["transactionHash"];

@@ -1,4 +1,4 @@
-import { ConnectWallet } from "@3rdweb-sdk/react";
+import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Center, Container, Flex, Stack } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import WalletImg from "public/assets/illustrations/wallet.png";

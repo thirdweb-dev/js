@@ -1,4 +1,5 @@
-import { AdminOnly, useIsAdmin } from "@3rdweb-sdk/react";
+import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
+import { useIsAdmin } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import {
   Alert,
   AlertDescription,
@@ -38,7 +39,7 @@ import { BigNumberInput } from "components/shared/BigNumberInput";
 import { CurrencySelector } from "components/shared/CurrencySelector";
 import { SnapshotUpload } from "contract-ui/tabs/claim-conditions/components/snapshot-upload";
 import { UpdateNotice } from "core-ui/update-notice/update-notice";
-import { ethers } from "ethers";
+import { constants } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import {
@@ -407,7 +408,7 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
                       ? {
                           address: v,
                           maxClaimable: "unlimited",
-                          currencyAddress: ethers.constants.AddressZero,
+                          currencyAddress: constants.AddressZero,
                           price: "unlimited",
                         }
                       : {
@@ -415,7 +416,7 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
                           maxClaimable:
                             v?.maxClaimable?.toString() || "unlimited",
                           currencyAddress:
-                            v?.currencyAddress || ethers.constants.AddressZero,
+                            v?.currencyAddress || constants.AddressZero,
                           price: v?.price?.toString() || "unlimited",
                         },
                   )}

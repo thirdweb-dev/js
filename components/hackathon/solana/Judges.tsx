@@ -1,6 +1,6 @@
 import { Flex, SimpleGrid, VStack } from "@chakra-ui/react";
-import { MaskedAvatar } from "components/contract-components/releaser/masked-avatar";
 import { Heading, Text, TrackedLink } from "tw-components";
+import { MaskedAvatar } from "tw-components/masked-avatar";
 
 export const Judges: React.FC = () => {
   const judges = [

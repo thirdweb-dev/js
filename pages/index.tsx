@@ -1,5 +1,4 @@
-import { ThirdwebNextPage } from "./_app";
-import { DarkMode, Flex } from "@chakra-ui/react";
+import { Box, DarkMode, Flex } from "@chakra-ui/react";
 import { CLISection } from "components/homepage/sections/CLISection";
 import { ContractsSection } from "components/homepage/sections/ContractsSection";
 import { DashboardFeaturesSection } from "components/homepage/sections/DashboardFeaturesSection";
@@ -15,6 +14,7 @@ import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { HomepageFooter } from "components/product-pages/homepage/Footer";
 import { PageId } from "page-id";
 import { Suspense } from "react";
+import { ThirdwebNextPage } from "utils/types";
 
 const HomePage: ThirdwebNextPage = () => {
   return (
@@ -32,23 +32,23 @@ const HomePage: ThirdwebNextPage = () => {
         bg="#000"
       >
         <HomepageTopNav />
-
-        {/* sections */}
-        <HeroSection />
-        <PartnerCarousel />
-        <ContractsSection />
-        <Suspense>
-          <NewsletterSection />
-          <SDKSection />
-          <CLISection />
-          <DashboardFeaturesSection />
-          <NetworksSection />
-          <PricingSection />
-          <ExamplesSectionHomepage />
-          <GetStartedSection />
-
-          <HomepageFooter />
-        </Suspense>
+        <Box mt="-80px" pt="100px" overflowX="hidden">
+          {/* sections */}
+          <HeroSection />
+          <PartnerCarousel />
+          <ContractsSection />
+          <Suspense>
+            <SDKSection />
+            <CLISection />
+            <DashboardFeaturesSection />
+            <NetworksSection />
+            <PricingSection />
+            <ExamplesSectionHomepage />
+            <GetStartedSection />
+            <NewsletterSection />
+            <HomepageFooter />
+          </Suspense>
+        </Box>
       </Flex>
     </DarkMode>
   );

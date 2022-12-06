@@ -1,5 +1,5 @@
 import type { NFTMetadata } from "@thirdweb-dev/sdk";
-import { NFTMedia } from "tw-components";
+import { NFTMedia } from "tw-components/nft-media";
 
 interface MediaCellProps {
   cell: {

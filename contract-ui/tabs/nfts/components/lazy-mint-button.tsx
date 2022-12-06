@@ -1,5 +1,5 @@
 import { NFTMintForm } from "./mint-form";
-import { MinterOnly } from "@3rdweb-sdk/react";
+import { MinterOnly } from "@3rdweb-sdk/react/components/roles/minter-only";
 import { Icon, useDisclosure } from "@chakra-ui/react";
 import { useContract, useLazyMint } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";

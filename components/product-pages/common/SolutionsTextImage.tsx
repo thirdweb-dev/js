@@ -24,6 +24,7 @@ export const SolutionsTextImage: React.FC<SolutionsTextImageProps> = ({
           maxW={{ base: "100%", md: "50%" }}
           objectFit="contain"
           src={image}
+          quality={95}
           sizes="(max-width: 768px) 100vw,
               (max-width: 1200px) 50vw,
               33vw"

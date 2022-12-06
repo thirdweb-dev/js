@@ -7,7 +7,7 @@ import {
   GasEstimatorMap,
   GasPrice,
 } from "constants/mappings";
-import { ethers } from "ethers";
+import { utils } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { FiExternalLink } from "react-icons/fi";
 import { Heading, Link, Text } from "tw-components";
@@ -68,7 +68,7 @@ export const GasEstimatorBox: React.FC<GasEstimatorBoxProps> = ({
   const formatPrice = (price: number | undefined) => {
     if (price && ethOrUsd === "eth") {
       return `~${Number(
-        ethers.utils.formatUnits(
+        utils.formatUnits(
           `${((data?.gasPrice as number) || 30) * price}`,
           "gwei",
         ),
@@ -76,7 +76,7 @@ export const GasEstimatorBox: React.FC<GasEstimatorBoxProps> = ({
     } else if (price && ethOrUsd === "usd") {
       return `~$${(
         Number(
-          ethers.utils.formatUnits(
+          utils.formatUnits(
             `${((data?.gasPrice as number) || 30) * price}`,
             "gwei",
           ),

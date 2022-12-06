@@ -3,8 +3,8 @@ const ContentSecurityPolicy = `
   img-src * data: blob:;
   media-src * data: blob:;
   object-src 'none';
-  style-src 'self' 'unsafe-inline' fonts.googleapis.com unpkg.com;
-  font-src 'self' fonts.gstatic.com;
+  style-src 'self' 'unsafe-inline';
+  font-src 'self';
   frame-src *;
   script-src 'self' 'unsafe-eval' 'unsafe-inline' *.thirdweb.com vercel.live;
   connect-src * data:;
@@ -72,6 +72,10 @@ const moduleExports = {
   experimental: {
     // appDir: true,
     scrollRestoration: true,
+    modern: true,
+  },
+  compiler: {
+    emotion: true,
   },
 };
 

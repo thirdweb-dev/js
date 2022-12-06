@@ -10,7 +10,7 @@ export const ChakraNextImage = chakra(NextImage, {
       "fill",
       "loader",
       "quality",
-      "priroty",
+      "priority",
       "loading",
       "placeholder",
       "blurDataURL",

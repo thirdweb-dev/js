@@ -104,6 +104,7 @@ export const Hero: ComponentWithChildren<HeroProps> = ({
             </Text>
           </Stack>
           <Heading
+            pt={{ base: "80px", md: "0px" }}
             as="h1"
             fontSize="48px"
             fontWeight="bold"
@@ -122,7 +123,13 @@ export const Hero: ComponentWithChildren<HeroProps> = ({
             {description}
           </Heading>
 
-          <SimpleGrid mt={8} columns={2} gap={0} rowGap={4} placeItems="center">
+          <SimpleGrid
+            mt={8}
+            columns={{ base: 1, md: 2 }}
+            gap={0}
+            rowGap={4}
+            placeItems="center"
+          >
             <GridItem>
               <ProductButton
                 title={buttonText}

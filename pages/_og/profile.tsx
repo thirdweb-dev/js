@@ -1,5 +1,4 @@
 import { Box, Flex, Icon } from "@chakra-ui/react";
-import { MaskedAvatar } from "components/contract-components/releaser/masked-avatar";
 import { OgBrandIcon } from "components/og/og-brand-icon";
 import {
   BASE_URL,
@@ -11,6 +10,7 @@ import { useRouter } from "next/router";
 import { VscFile } from "react-icons/vsc";
 import Twemoji from "react-twemoji";
 import { Heading } from "tw-components";
+import { MaskedAvatar } from "tw-components/masked-avatar";
 import { z } from "zod";
 
 const OgProfileSchema = z.object({

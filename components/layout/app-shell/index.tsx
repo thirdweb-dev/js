@@ -1,4 +1,4 @@
-import { ConnectWallet } from "@3rdweb-sdk/react";
+import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import {
   Box,
   ButtonGroup,
