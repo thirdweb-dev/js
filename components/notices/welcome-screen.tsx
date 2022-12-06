@@ -45,7 +45,7 @@ const steps = [
         </TrackedLink>
         .
         <br />
-        Discover ready-to-deploy contracts with
+        Discover ready-to-deploy contracts with{" "}
         <TrackedLink
           color="blue.500"
           href="/explore"
@@ -424,8 +424,8 @@ export const WelcomeScreen: React.FC = () => {
                             </motion.div>
                             <motion.div {...textAnimation}>
                               <Text size="body.lg" w="90%">
-                                Everything you need to connect yoru apps or
-                                games to decentralized networks. Powerul tools
+                                Everything you need to connect your apps or
+                                games to decentralized networks. Powerful tools
                                 that simplify web3 development.
                               </Text>
                             </motion.div>
