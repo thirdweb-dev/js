@@ -240,7 +240,9 @@ const main = async () => {
 
               await new Promise((done, failed) => {
                 const shell = spawn(
-                  `npx thirdweb@latest ${process.argv.slice(2).join(" ")}`,
+                  `npx --yes thirdweb@latest ${process.argv
+                    .slice(2)
+                    .join(" ")}`,
                   [],
                   { stdio: "inherit", shell: true, env: clonedEnvironment },
                 );
