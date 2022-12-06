@@ -276,6 +276,11 @@ const main = async () => {
                   ? `pnpm add -g thirdweb@latest`
                   : `pnpm add thirdweb@latest`;
                 break;
+              default:
+                console.error(
+                  `Could not detect package manager in use, aborting automatic upgrade.\nIf you want to upgrade the CLI, please do it manually with your package manager.`,
+                );
+                process.exit(1);
             }
 
             await new Promise((done, failed) => {
