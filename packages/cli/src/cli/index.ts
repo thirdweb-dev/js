@@ -256,7 +256,7 @@ const main = async () => {
               });
 
               if (packageManager === "pnpm") {
-                command = "pnpm add thirdweb";
+                command = "pnpm add thirdweb@latest";
               } else if (packageManager === "yarn") {
                 command = "yarn add thirdweb";
               } else {
