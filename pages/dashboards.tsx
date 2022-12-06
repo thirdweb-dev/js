@@ -14,6 +14,7 @@ const Dashboard: ThirdwebNextPage = () => {
       }}
     >
       <Hero
+        trackingCategory="dashboards"
         name="Dashboards"
         title="Dashboards to manage your web3 apps."
         description="Everything you need to analyze and manage your web3 applications."

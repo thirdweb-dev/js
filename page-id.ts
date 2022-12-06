@@ -72,6 +72,7 @@ export enum PageId {
   // ---------------------------------------------------------------------------
 
   SolutionsCommerce = "solutions-commerce",
+  SolutionsGaming = "solutions-gaming",
 
   // ---------------------------------------------------------------------------
   //  network pages

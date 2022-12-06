@@ -6,7 +6,7 @@ import { Heading } from "tw-components";
 /**
  * Highlights supported chains/networks
  */
-export function NetworksSection() {
+export const NetworksSection = () => {
   return (
     <HomepageSection id="networks" middleGradient>
       <Flex
@@ -31,4 +31,4 @@ export function NetworksSection() {
       </Flex>
     </HomepageSection>
   );
-}
+};

@@ -14,6 +14,7 @@ const Web3SDK: ThirdwebNextPage = () => {
       }}
     >
       <Hero
+        trackingCategory="sdks"
         name="SDKs"
         title="Everything you need to build web3 apps."
         description="Build applications on top of your smart contracts. Seamlessly integrate them into your apps."

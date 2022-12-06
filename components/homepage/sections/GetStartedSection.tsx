@@ -8,7 +8,7 @@ import { Heading } from "tw-components";
 /**
  * Highlights Call To Action for Start Building with ThirdWeb
  */
-export function GetStartedSection() {
+export const GetStartedSection = () => {
   return (
     <HomepageSection id="get-started" bottomPattern>
       <Flex
@@ -56,4 +56,4 @@ export function GetStartedSection() {
       </Flex>
     </HomepageSection>
   );
-}
+};

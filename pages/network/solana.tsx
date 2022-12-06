@@ -4,21 +4,18 @@ import {
   Center,
   Container,
   Flex,
-  HStack,
-  Icon,
   SimpleGrid,
   Stack,
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import { GuideCard } from "components/product-pages/common/GuideCard";
+import { GuidesShowcase } from "components/product-pages/common/GuideShowcase";
 import { ProductButton } from "components/product-pages/common/ProductButton";
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
 import { DashboardCard } from "components/product-pages/homepage/DashboardCard";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "pages/_app";
-import { FiArrowRight } from "react-icons/fi";
-import { Heading, LinkButton, TrackedLink } from "tw-components";
+import { Heading, LinkButton } from "tw-components";
 
 const SOLANA_GUIDES = [
   {
@@ -202,58 +199,13 @@ const Solana: ThirdwebNextPage = () => {
         </Flex>
       </ProductSection>
 
-      <ProductSection>
-        <Flex
-          flexDir="column"
-          py={{ base: 24, lg: 36 }}
-          align="center"
-          gap={{ base: 6, lg: 8 }}
-        >
-          <Heading
-            as="h2"
-            bgGradient="linear(to-r, #28E0B9, #C5D8FF 80%)"
-            bgClip="text"
-            size="display.sm"
-            fontWeight={700}
-            textAlign="center"
-          >
-            Learn how to build on Solana
-          </Heading>
-          <Heading
-            as="h3"
-            maxW="820px"
-            textAlign="center"
-            color="whiteAlpha.600"
-            size="subtitle.md"
-          >
-            Check out our comprehensive guides to get you started building on
-            Solana with thirdweb.
-          </Heading>
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
-            {SOLANA_GUIDES.map(({ title, image, link }) => (
-              <GuideCard key={title} image={image} title={title} link={link} />
-            ))}
-          </SimpleGrid>
-          <TrackedLink
-            href="https://blog.thirdweb.com/tag/solana/"
-            category="solana"
-            label="see-all-guides"
-            isExternal
-          >
-            <HStack>
-              <Heading
-                fontSize="20px"
-                fontWeight="medium"
-                as="p"
-                lineHeight={{ base: 1.5, md: undefined }}
-              >
-                See all of our Solana guides
-              </Heading>
-              <Icon as={FiArrowRight} />
-            </HStack>
-          </TrackedLink>
-        </Flex>
-      </ProductSection>
+      <GuidesShowcase
+        title="Learn how to build on Solana"
+        description="Check out our comprehensive guides to get you started building on
+        Solana with thirdweb."
+        solution="Solana"
+        guides={SOLANA_GUIDES}
+      />
 
       <Box
         h="1px"

@@ -25,6 +25,8 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
     "ERC721Supply",
   ]);
 
+  const isErc721 = detectFeatures(contractQuery?.contract, ["ERC721"]);
+
   const isErc721Claimable = detectFeatures(contractQuery?.contract, [
     "ERC721ClaimPhasesV1",
     "ERC721ClaimPhasesV2",
@@ -57,10 +59,14 @@ export const ContractNFTPage: React.FC<NftOverviewPageProps> = ({
       {!detectedState ? (
         <Card as={Flex} flexDir="column" gap={3}>
           {/* TODO  extract this out into it's own component and make it better */}
-          <Heading size="subtitle.md">No Supply extension enabled</Heading>
+          <Heading size="subtitle.md">
+            No Supply/Enumerable extension enabled
+          </Heading>
           <Text>
             To being able to see the list of the NFTs minted on your contract,
-            you will have to extend the ERC721Supply extension in your contract.
+            you will have to extend the{" "}
+            {isErc721 ? "ERC721Supply" : "ERC1155Enumerable"} extension in your
+            contract.
           </Text>
           <Box>
             <LinkButton

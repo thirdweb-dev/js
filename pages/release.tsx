@@ -15,6 +15,7 @@ const Release: ThirdwebNextPage = () => {
       }}
     >
       <Hero
+        trackingCategory="release"
         name="Release"
         title="Share your contracts with the world."
         description="Releasing contracts is the best way to make them easily discoverable and deployable."

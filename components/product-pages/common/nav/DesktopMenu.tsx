@@ -147,19 +147,18 @@ export const PRODUCTS: NavCardProps[] = [
 
 export const SOLUTIONS: NavCardProps[] = [
   {
-    name: "Commerce",
+    name: "CommerceKit",
     label: "commerce",
     description: "Integrate web3 into commerce apps",
     link: "/solutions/commerce",
     iconType: FiShoppingCart,
   },
   {
-    name: "Gaming",
+    name: "GamingKit",
     label: "gaming",
     description: "Integrate web3 into games",
     link: "/solutions/gaming",
     iconType: IoGameControllerOutline,
-    comingSoon: true,
   },
 ];
 

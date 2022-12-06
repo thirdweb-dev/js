@@ -11,8 +11,8 @@ interface CLICommandProps {
 /**
  * Component to display a CLI command which can be copied to the clipboard
  */
-export function CLICommand(props: CLICommandProps) {
-  const { onCopy, hasCopied } = useClipboard(props.text);
+export const CLICommand: React.FC<CLICommandProps> = ({ text }) => {
+  const { onCopy, hasCopied } = useClipboard(text);
   const trackEvent = useTrack();
 
   return (
@@ -35,7 +35,7 @@ export function CLICommand(props: CLICommandProps) {
         fontWeight="500"
         whiteSpace="nowrap"
       >
-        $ {props.text}
+        $ {text}
       </Text>
       <IconButton
         ml="auto"
@@ -61,4 +61,4 @@ export function CLICommand(props: CLICommandProps) {
       />
     </Flex>
   );
-}
+};

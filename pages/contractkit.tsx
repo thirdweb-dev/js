@@ -14,6 +14,7 @@ const ContractExtensions: ThirdwebNextPage = () => {
       }}
     >
       <Hero
+        trackingCategory="contract_kit"
         name="ContractKit"
         title="Contract development made simple."
         description="Fast-track your contract development pipeline with our plug-and-play base contracts and extensions."

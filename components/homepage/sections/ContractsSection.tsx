@@ -10,8 +10,9 @@ interface ContractsDescriptorItemProps {
   icon: StaticImageData;
 }
 
-export function ContractsDescriptorItem(props: ContractsDescriptorItemProps) {
-  const { title, description, icon } = props;
+export const ContractsDescriptorItem: React.FC<
+  ContractsDescriptorItemProps
+> = ({ title, description, icon }) => {
   return (
     <Flex gap={4} align="center">
       <ChakraNextImage boxSize={12} src={icon} alt="" flexShrink={0} />
@@ -21,12 +22,12 @@ export function ContractsDescriptorItem(props: ContractsDescriptorItemProps) {
       </Flex>
     </Flex>
   );
-}
+};
 
 /**
  * Highlights prebuild contracts and ways to create custom contracts
  */
-export function ContractsSection() {
+export const ContractsSection = () => {
   return (
     <HomepageSection id="contracts" middleGradient>
       <Flex
@@ -245,4 +246,4 @@ export function ContractsSection() {
       </Flex>
     </HomepageSection>
   );
-}
+};

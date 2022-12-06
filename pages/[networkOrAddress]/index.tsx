@@ -1,3 +1,4 @@
+import redirects from "../../redirects";
 import { useMainnetsContractList } from "@3rdweb-sdk/react";
 import { Flex } from "@chakra-ui/react";
 import { QueryClient, dehydrate } from "@tanstack/react-query";
@@ -157,6 +158,10 @@ UserPage.pageId = PageId.Profile;
 
 export default UserPage;
 
+const possibleRedirects = redirects().filter(
+  (r) => r.source.split("/").length === 2,
+);
+
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const queryClient = new QueryClient();
   // TODO make this use alchemy / other RPC
@@ -165,13 +170,24 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 
   const networkOrAddress = getSingleQueryValue(ctx.params, "networkOrAddress");
 
+  const foundRedirect = possibleRedirects.find(
+    (r) => r.source.split("/")[1] === networkOrAddress,
+  );
+  if (foundRedirect) {
+    return {
+      redirect: {
+        destination: foundRedirect.destination,
+        permanent: foundRedirect.permanent,
+      },
+    };
+  }
+
   if (!networkOrAddress) {
     return {
       redirect: {
         destination: "/explore",
         permanent: false,
       },
-      props: {},
     };
   }
 

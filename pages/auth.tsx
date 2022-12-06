@@ -1,12 +1,12 @@
 import { ThirdwebNextPage } from "./_app";
 import { Box, Center, Flex, LightMode, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import { AuthenticationCode } from "components/product-pages/authentication/AuthenticationCode";
 import { AuthenticationExamples } from "components/product-pages/authentication/AuthenticationExamples";
 import { Hero } from "components/product-pages/common/Hero";
 import { ProductCard } from "components/product-pages/common/ProductCard";
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
+import { CodeSelector } from "components/product-pages/homepage/CodeSelector";
 import { GeneralCta } from "components/shared/GeneralCta";
 import { PageId } from "page-id";
 import WhiteLogo from "public/assets/landingpage/white-logo.png";
@@ -22,6 +22,7 @@ const Authentication: ThirdwebNextPage = () => {
       }}
     >
       <Hero
+        trackingCategory="auth"
         name="Auth"
         title="Simple wallet sign-in for your apps"
         description="Authenticate users with just their wallet. Add web3 functionality to any application."
@@ -129,7 +130,10 @@ const Authentication: ThirdwebNextPage = () => {
             languages.
           </Heading>
 
-          <AuthenticationCode />
+          <CodeSelector
+            snippets="auth"
+            docs="https://portal.thirdweb.com/auth"
+          />
         </Flex>
       </ProductSection>
 

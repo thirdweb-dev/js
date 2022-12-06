@@ -14,6 +14,7 @@ const UIComponents: ThirdwebNextPage = () => {
       }}
     >
       <Hero
+        trackingCategory="ui_components"
         name="UI Components"
         title="Plug-and-play frontend components"
         description="A collection of plug-and-play UI components that let you easily add web3 functionality to your apps."

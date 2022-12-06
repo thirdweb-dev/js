@@ -12,7 +12,7 @@ import { GeneralCta } from "components/shared/GeneralCta";
 import { FiCheck } from "react-icons/fi";
 import { Heading, Text } from "tw-components";
 
-export function PricingSection() {
+export const PricingSection = () => {
   return (
     <HomepageSection id="pricing">
       <SimpleGrid
@@ -84,4 +84,4 @@ export function PricingSection() {
       </SimpleGrid>
     </HomepageSection>
   );
-}
+};

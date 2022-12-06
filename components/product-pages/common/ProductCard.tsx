@@ -1,6 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import { ChakraNextImage } from "components/Image";
-import { StaticImageData } from "next/image";
+import NextImage, { StaticImageData } from "next/image";
 import { Heading, Text } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
@@ -22,7 +21,15 @@ export const ProductCard: ComponentWithChildren<ProductCardProps> = ({
       borderRadius="16px"
       padding="24px"
     >
-      <ChakraNextImage src={icon} placeholder="empty" alt="" w={12} />
+      <NextImage
+        src={icon}
+        alt=""
+        priority
+        style={{
+          width: "40px",
+          height: "40px",
+        }}
+      />
       <Heading size="title.sm" mt="32px">
         {title}
       </Heading>

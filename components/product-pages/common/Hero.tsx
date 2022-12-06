@@ -1,9 +1,9 @@
 import { ProductButton } from "./ProductButton";
 import {
-  AspectRatio,
   Center,
   Container,
   Flex,
+  GridItem,
   Icon,
   SimpleGrid,
   Stack,
@@ -12,7 +12,7 @@ import { ChakraNextImage } from "components/Image";
 import { StaticImageData } from "next/image";
 import { ReactElement } from "react";
 import { FiChevronRight } from "react-icons/fi";
-import { Heading, Text } from "tw-components";
+import { Heading, LinkButton, Text, TrackedLink } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
 export interface HeroProps {
@@ -25,7 +25,11 @@ export interface HeroProps {
   image?: StaticImageData;
   type?: "Products" | "Solutions";
   underGetStarted?: ReactElement;
-  largeImage?: boolean;
+  trackingCategory: string;
+  secondaryButton?: {
+    text: string;
+    link: string;
+  };
 }
 
 export const Hero: ComponentWithChildren<HeroProps> = ({
@@ -38,7 +42,8 @@ export const Hero: ComponentWithChildren<HeroProps> = ({
   gradient,
   type = "Products",
   underGetStarted,
-  largeImage = false,
+  secondaryButton,
+  trackingCategory,
   children,
 }) => {
   return (
@@ -58,20 +63,22 @@ export const Hero: ComponentWithChildren<HeroProps> = ({
         padding={0}
         margin={{ base: "0px", md: "40px" }}
         mb={0}
-        minHeight="578px"
+        minHeight={{ base: undefined, md: "578px" }}
+        overflow="hidden"
       >
         <Flex
           gridColumnEnd={{ base: undefined, md: image ? "span 4" : "span 7" }}
           padding={{ base: "24px", md: "48px" }}
           pt={{ base: "36px", md: undefined }}
-          bg="rgba(0, 0, 0, 0.5)"
-          borderLeftRadius={{ base: 0, md: 24 }}
+          bg="linear-gradient(90deg, rgba(3,10,25,.75) 0%, rgba(3,10,25,0) 100%)"
+          position="relative"
           flexDir="column"
           gap={{ base: 6, md: "32px" }}
           align={{ base: "initial", md: "start" }}
           justify={{ base: "start", md: "center" }}
         >
           <Stack
+            display={{ base: "none", md: "flex" }}
             direction="row"
             align="center"
             spacing={1}
@@ -114,27 +121,52 @@ export const Hero: ComponentWithChildren<HeroProps> = ({
           >
             {description}
           </Heading>
-          <Flex flexDirection="column">
-            <ProductButton
-              mt="32px"
-              title={buttonText}
-              href={buttonLink}
-              color="blackAlpha.900"
-              bg="white"
-            />
-            <>{underGetStarted}</>
-          </Flex>
+
+          <SimpleGrid mt={8} columns={2} gap={0} rowGap={4} placeItems="center">
+            <GridItem>
+              <ProductButton
+                title={buttonText}
+                href={buttonLink}
+                color="blackAlpha.900"
+                bg="white"
+              />
+            </GridItem>
+            <GridItem>
+              {secondaryButton && (
+                <LinkButton
+                  as={TrackedLink}
+                  variant="ghost"
+                  {...{ category: trackingCategory }}
+                  href={secondaryButton.link}
+                  isExternal={secondaryButton.link.startsWith("http")}
+                  noIcon
+                >
+                  {secondaryButton.text}
+                </LinkButton>
+              )}
+            </GridItem>
+            <GridItem>
+              <>{underGetStarted}</>
+            </GridItem>
+          </SimpleGrid>
         </Flex>
         {image && (
           <Center
-            padding={{ base: "24px", md: largeImage ? "8px" : "48px" }}
+            display={{ base: "none", md: "flex" }}
+            padding={{ base: "24px", md: "48px" }}
             gridColumnEnd={{ base: undefined, md: "span 3" }}
           >
-            <Flex justifyContent={{ base: "center", md: "flex-end" }} w="100%">
-              <AspectRatio ratio={1} w="100%">
-                <ChakraNextImage alt="" src={image} priority />
-              </AspectRatio>
-            </Flex>
+            <ChakraNextImage
+              maxH={{ base: "480px" }}
+              style={{ objectFit: "contain" }}
+              alt=""
+              loading="eager"
+              src={image}
+              priority
+              sizes="(max-width: 768px) 100vw,
+                  (max-width: 1200px) 50vw,
+                  33vw"
+            />
           </Center>
         )}
       </SimpleGrid>

@@ -6,10 +6,12 @@ import React, { PropsWithChildren } from "react";
 
 interface IProductPage {
   seo: NextSeoProps;
+  accentColor?: string;
 }
 
 export const ProductPage: React.FC<PropsWithChildren<IProductPage>> = ({
   seo,
+  accentColor,
   children,
 }) => {
   return (
@@ -21,6 +23,7 @@ export const ProductPage: React.FC<PropsWithChildren<IProductPage>> = ({
           "--chakra-colors-heading": "#F2F2F7",
           "--chakra-colors-paragraph": "#AEAEB2",
           "--chakra-colors-borderColor": "rgba(255,255,255,0.1)",
+          "--product-accent-color": accentColor || "rgba(24, 67, 78, 0.8)",
         }}
         justify="center"
         flexDir="column"

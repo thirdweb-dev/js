@@ -34,7 +34,7 @@ const sections = [
 /**
  * Highlights 3 Core Feature of the ThirdWeb CLI: Create, Release, Deploy
  */
-export function CLISection() {
+export const CLISection = () => {
   return (
     <HomepageSection
       id="developers"
@@ -125,4 +125,4 @@ export function CLISection() {
       </Flex>
     </HomepageSection>
   );
-}
+};

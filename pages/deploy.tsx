@@ -15,6 +15,7 @@ const Deploy: ThirdwebNextPage = () => {
       }}
     >
       <Hero
+        trackingCategory="deploy"
         name="Deploy"
         title="The next-gen contract deployment flow."
         description="Deploy any smart contract with a single command. Get all the tools you need to get to success."

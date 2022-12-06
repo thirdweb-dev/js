@@ -14,6 +14,7 @@ const PreBuiltContracts: ThirdwebNextPage = () => {
       }}
     >
       <Hero
+        trackingCategory="smart_contracts"
         name="Smart Contracts"
         title="Ready-to-go contracts for your needs."
         description="Deploy contracts written by the best web3 developers in a single click."

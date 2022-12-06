@@ -6,7 +6,7 @@ import { Heading } from "tw-components";
 /**
  * Highlights JavaScript, React, Python and Go SDKs
  */
-export function SDKSection() {
+export const SDKSection = () => {
   return (
     <HomepageSection id="sdks" bottomPattern middleGradient>
       <Flex
@@ -31,4 +31,4 @@ export function SDKSection() {
       </Flex>
     </HomepageSection>
   );
-}
+};

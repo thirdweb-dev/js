@@ -12,7 +12,7 @@ import { Heading } from "tw-components";
 /**
  * Highlights the features of ThirdWeb Dashboards
  */
-export function DashboardFeaturesSection() {
+export const DashboardFeaturesSection = () => {
   return (
     <HomepageSection id="features">
       <Flex
@@ -113,4 +113,4 @@ export function DashboardFeaturesSection() {
       </Flex>
     </HomepageSection>
   );
-}
+};

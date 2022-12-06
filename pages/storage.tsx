@@ -14,6 +14,7 @@ const Storage: ThirdwebNextPage = () => {
       }}
     >
       <Hero
+        trackingCategory="storage"
         name="Storage"
         title="Fast, reliable, decentralized storage"
         description="A blazing fast API for all your decentralized storage needs"

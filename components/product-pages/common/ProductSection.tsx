@@ -1,4 +1,4 @@
-import { AspectRatio, Box, BoxProps, Container } from "@chakra-ui/react";
+import { Box, BoxProps, Container } from "@chakra-ui/react";
 import { ComponentWithChildren } from "types/component-with-children";
 
 interface IProductSection extends BoxProps {
@@ -15,7 +15,7 @@ export const ProductSection: ComponentWithChildren<IProductSection> = ({
     <>
       <Box
         h="1px"
-        bg="linear-gradient(93.96deg, rgba(25, 26, 27, 0.8) 17.14%, rgba(24, 67, 78, 0.8) 36.78%, rgba(108, 47, 115, 0.8) 61%, rgba(25, 26, 27, 0.8) 79.98%)"
+        bg="linear-gradient(93.96deg, rgba(25, 26, 27, 0.8) 17.14%, var(--product-accent-color) 36.78%, rgba(108, 47, 115, 0.8) 61%, rgba(25, 26, 27, 0.8) 79.98%)"
         opacity="0.8"
       />
       <Box
@@ -26,8 +26,6 @@ export const ProductSection: ComponentWithChildren<IProductSection> = ({
         position="relative"
         {...restBoxProps}
       >
-        {showPattern && <BottomGradient />}
-
         <Container maxW="container.page" position="relative" id={id}>
           {children}
 
@@ -37,44 +35,6 @@ export const ProductSection: ComponentWithChildren<IProductSection> = ({
     </>
   );
 };
-
-const BottomGradient: React.FC = () => {
-  return (
-    <AspectRatio
-      w="100vw"
-      maxW="container.lg"
-      ratio={{ base: 1 / 2, md: 1 }}
-      position="absolute"
-      bottom="5%"
-      left="50%"
-      transform="translate(-50%, 50%)"
-      zIndex={-1}
-      overflow="visible"
-    >
-      <Box
-        background="linear-gradient(268.16deg, rgba(45, 142, 255, 0.4) 8.06%, rgba(194, 0, 198, 0.4) 73.26%)"
-        filter={{
-          base: "blur(100px)",
-          md: "blur(360px)",
-        }}
-        borderRadius="50%"
-        overflow="visible"
-      >
-        <Box
-          position="absolute"
-          backdropFilter="blur(0px)"
-          top={0}
-          left={0}
-          bottom={0}
-          right={0}
-          opacity={0.5}
-          background="linear-gradient(268.16deg, rgba(45, 142, 255, 0.4) 8.06%, rgba(194, 0, 198, 0.4) 73.26%)"
-        />
-      </Box>
-    </AspectRatio>
-  );
-};
-
 const BottomPattern: React.FC = () => {
   return (
     <Box

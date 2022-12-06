@@ -120,14 +120,14 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
           <Center>
             <Flex py={4} direction="column" gap={4} align="center">
               {router.pathname === "/dashboard" ? (
-                <GettingStartedBox title="No contracts found.">
+                <GettingStartedBox title="No contracts found, yet!">
                   <GettingStartedCard
                     title="Explore"
                     description={
                       <>
-                        Browse our selection of secure, gas-optimized, and
-                        audited contracts that are ready to be deployed with
-                        one-click.
+                        Browse a large collection of ready-to-deploy contracts
+                        built by thirdweb and other contract developers. Find a
+                        contract for your app&apos; or game&apos;s use case.
                       </>
                     }
                     icon={require("public/assets/product-icons/contracts.png")}
@@ -181,7 +181,7 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
                   </GettingStartedCard>
                 </GettingStartedBox>
               ) : (
-                <Text>No contracts found.</Text>
+                <Text>No contracts found, yet!</Text>
               )}
             </Flex>
           </Center>
