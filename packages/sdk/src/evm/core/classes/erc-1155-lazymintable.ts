@@ -1,11 +1,9 @@
 import { NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
-import {
-  detectContractFeature,
-  hasFunction,
-} from "../../common/feature-detection";
+import { detectContractFeature } from "../../common/feature-detection";
+import { getPrebuiltInfo } from "../../common/legacy";
 import { uploadOrExtractURIs } from "../../common/nft";
 import {
-  FEATURE_EDITION_LAZY_MINTABLE,
+  FEATURE_EDITION_LAZY_MINTABLE_V2,
   FEATURE_EDITION_REVEALABLE,
 } from "../../constants/erc1155-features";
 import {
@@ -21,16 +19,13 @@ import { DelayedReveal } from "./delayed-reveal";
 import { Erc1155 } from "./erc-1155";
 import { ERC1155Claimable } from "./erc-1155-claimable";
 import { Erc1155ClaimableWithConditions } from "./erc-1155-claimable-with-conditions";
-import type {
-  IClaimableERC1155,
-  TokenERC721,
-} from "@thirdweb-dev/contracts-js";
+import type { IClaimableERC1155 } from "@thirdweb-dev/contracts-js";
 import { TokensLazyMintedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/LazyMint";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 
 export class Erc1155LazyMintable implements DetectableFeature {
-  featureName = FEATURE_EDITION_LAZY_MINTABLE.name;
+  featureName = FEATURE_EDITION_LAZY_MINTABLE_V2.name;
 
   /**
    * Delayed reveal
@@ -93,7 +88,7 @@ export class Erc1155LazyMintable implements DetectableFeature {
     this.storage = storage;
     this.claim = this.detectErc1155Claimable();
     this.claimWithConditions = this.detectErc1155ClaimableWithConditions();
-    this.revealer = this.detectErc721Revealable();
+    this.revealer = this.detectErc1155Revealable();
   }
 
   /**
@@ -186,9 +181,8 @@ export class Erc1155LazyMintable implements DetectableFeature {
     if (
       detectContractFeature<IClaimableERC1155>(
         this.contractWrapper,
-        "ERC1155Claimable",
-      ) &&
-      !hasFunction("setClaimConditions", this.contractWrapper)
+        "ERC1155ClaimCustom",
+      )
     ) {
       return new ERC1155Claimable(this.contractWrapper);
     }
@@ -201,7 +195,19 @@ export class Erc1155LazyMintable implements DetectableFeature {
     if (
       detectContractFeature<BaseClaimConditionERC1155>(
         this.contractWrapper,
-        "ERC1155ClaimableWithConditions",
+        "ERC1155ClaimConditionsV1",
+      ) ||
+      detectContractFeature<BaseClaimConditionERC1155>(
+        this.contractWrapper,
+        "ERC1155ClaimConditionsV2",
+      ) ||
+      detectContractFeature<BaseClaimConditionERC1155>(
+        this.contractWrapper,
+        "ERC1155ClaimPhasesV1",
+      ) ||
+      detectContractFeature<BaseClaimConditionERC1155>(
+        this.contractWrapper,
+        "ERC1155ClaimPhasesV2",
       )
     ) {
       return new Erc1155ClaimableWithConditions(
@@ -212,7 +218,7 @@ export class Erc1155LazyMintable implements DetectableFeature {
     return undefined;
   }
 
-  private detectErc721Revealable():
+  private detectErc1155Revealable():
     | DelayedReveal<BaseDelayedRevealERC1155>
     | undefined {
     if (
@@ -232,17 +238,10 @@ export class Erc1155LazyMintable implements DetectableFeature {
   }
 
   private async isLegacyEditionDropContract() {
-    if (hasFunction<TokenERC721>("contractType", this.contractWrapper)) {
-      try {
-        const contractType = ethers.utils.toUtf8String(
-          await this.contractWrapper.readContract.contractType(),
-        );
-        return contractType.includes("DropERC1155");
-      } catch (e) {
-        return false;
-      }
-    } else {
-      return false;
-    }
+    const info = await getPrebuiltInfo(
+      this.contractWrapper.readContract.address,
+      this.contractWrapper.getProvider(),
+    );
+    return info && info.type === "DropERC1155" && info.version < 3;
   }
 }

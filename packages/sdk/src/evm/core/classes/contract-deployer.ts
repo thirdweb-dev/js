@@ -4,10 +4,12 @@ import {
   fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
 } from "../../common/index";
+import { ChainId } from "../../constants";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import {
   EditionDropInitializer,
   EditionInitializer,
+  getContractName,
   MarketplaceInitializer,
   MultiwrapInitializer,
   NFTCollectionInitializer,
@@ -37,6 +39,7 @@ import {
   PrebuiltContractType,
 } from "../types";
 import { ContractFactory } from "./factory";
+import { FactoryEvents } from "./factory-events";
 import { ContractRegistry } from "./registry";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -65,6 +68,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * should never be accessed directly, use {@link ContractDeployer.getRegistry} instead
    */
   private _registry: Promise<ContractRegistry> | undefined;
+  public events: FactoryEvents | undefined;
   private storage: ThirdwebStorage;
 
   constructor(
@@ -74,6 +78,10 @@ export class ContractDeployer extends RPCConnectionHandler {
   ) {
     super(network, options);
     this.storage = storage;
+
+    // Initialize factory and registry (we don't need to make these calls async)
+    this.getFactory();
+    this.getRegistry();
   }
 
   /**
@@ -381,6 +389,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @internal
    * @param contractType - the type of contract to deploy
    * @param contractMetadata - the metadata to deploy the contract with
+   * @param version
    * @returns a promise of the address of the newly deployed contract
    */
   public async deployBuiltInContract<
@@ -390,13 +399,72 @@ export class ContractDeployer extends RPCConnectionHandler {
     contractMetadata: z.input<
       DeploySchemaForPrebuiltContractType<TContractType>
     >,
+    version: string = "latest",
   ): Promise<string> {
-    const parsed =
+    const activeChainId = (await this.getProvider().getNetwork()).chainId;
+
+    const parsedMetadata =
       PREBUILT_CONTRACTS_MAP[contractType].schema.deploy.parse(
         contractMetadata,
       );
     const factory = await this.getFactory();
-    return await factory.deploy(contractType, parsed);
+
+    if (
+      activeChainId === ChainId.Hardhat ||
+      activeChainId === ChainId.Localhost
+    ) {
+      //
+      // old behavior for hardhat and localhost chains
+      //
+
+      // parse version into the first number of the version string (or undefined if unparseable)
+      let parsedVersion: number | undefined = undefined;
+      try {
+        parsedVersion = parseInt(version);
+        if (isNaN(parsedVersion)) {
+          parsedVersion = undefined;
+        }
+      } catch (e) {
+        parsedVersion = undefined;
+      }
+      return await factory.deploy(contractType, parsedMetadata, parsedVersion);
+    }
+
+    //
+    // new behavior for all other chains
+    //
+
+    // resolve contract name from type
+    const contractName = getContractName(contractType);
+    invariant(contractName, "contract name not found");
+    // get deploy arugments for the contractType
+    // first upload the contractmetadata
+    const contractURI = await this.storage.upload(parsedMetadata);
+    // the get the deploy arguments
+    const constructorParams = await factory.getDeployArguments(
+      contractType,
+      parsedMetadata,
+      contractURI,
+    );
+
+    return this.deployReleasedContract(
+      // 0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024 === deployer.thirdweb.eth
+      "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
+      contractName,
+      constructorParams,
+      version,
+    );
+  }
+
+  /**
+   * @internal
+   * @param contractType
+   */
+  public async getLatestBuiltInContractVersion<
+    TContractType extends PrebuiltContractType,
+  >(contractType: TContractType) {
+    const factory = await this.getFactory();
+    return await factory.getLatestVersion(contractType);
   }
 
   /**
@@ -409,13 +477,14 @@ export class ContractDeployer extends RPCConnectionHandler {
     releaserAddress: string,
     contractName: string,
     constructorParams: any[],
+    version = "latest",
   ): Promise<string> {
     const release = await new ThirdwebSDK("polygon")
       .getPublisher()
-      .getLatest(releaserAddress, contractName);
+      .getVersion(releaserAddress, contractName, version);
     if (!release) {
       throw new Error(
-        `No release found for '${contractName}' by ${releaserAddress}`,
+        `No release found for '${contractName}' at version '${version}' by '${releaserAddress}'`,
       );
     }
     return await this.deployContractFromUri(
@@ -527,12 +596,15 @@ export class ContractDeployer extends RPCConnectionHandler {
           chainId,
           "twFactory",
         );
-        return new ContractFactory(
+        const factory = new ContractFactory(
           factoryAddress,
           this.getSignerOrProvider(),
           this.storage,
           this.options,
         );
+        this.events = new FactoryEvents(factory);
+
+        return factory;
       }));
   }
 
@@ -703,7 +775,7 @@ export class ContractDeployer extends RPCConnectionHandler {
           ethers.utils.isHexString(constructorParamValues[index]),
           `Could not parse bytes value. Expected valid hex string but got "${constructorParamValues[index]}".`,
         );
-        return ethers.utils.toUtf8Bytes(constructorParamValues[index]);
+        return constructorParamValues[index];
       }
       if (p.startsWith("uint") || p.startsWith("int")) {
         return BigNumber.from(constructorParamValues[index].toString());

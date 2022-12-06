@@ -1,5 +1,25 @@
 # @thirdweb-dev/contracts-js
 
+## 1.2.2
+
+### Patch Changes
+
+- [#438](https://github.com/thirdweb-dev/js/pull/438) [`f451da6`](https://github.com/thirdweb-dev/js/commit/f451da6395689a5f89800ee63f34b6175b61f703) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix SigMint detection for OSRF NFT Collection contracts
+
+## 1.2.1
+
+### Patch Changes
+
+- [#376](https://github.com/thirdweb-dev/js/pull/376) [`4af785c`](https://github.com/thirdweb-dev/js/commit/4af785c37c831ecd7087c1c9eb9095922cac0855) Thanks [@adam-maj](https://github.com/adam-maj)! - Update tiered-drop with tokens claimed
+
+- [#373](https://github.com/thirdweb-dev/js/pull/373) [`6f818f3`](https://github.com/thirdweb-dev/js/commit/6f818f393eb9023b53a3358d62d60ec23a9246bd) Thanks [@adam-maj](https://github.com/adam-maj)! - Update tiered-drop contract version
+
+## 1.2.0
+
+### Minor Changes
+
+- [#333](https://github.com/thirdweb-dev/js/pull/333) [`aa6d9ed`](https://github.com/thirdweb-dev/js/commit/aa6d9ed75d126d7a0cca9fb8fc389ff94e9d1e14) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update to contracts package v3.2.0
+
 ## 1.1.9
 
 ### Patch Changes

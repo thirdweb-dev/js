@@ -6,7 +6,9 @@ import {
 } from "../constants/contract-features";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { DetectableFeature } from "../core/interfaces/DetectableFeature";
+import { decode } from "../lib/cbor-decode.js";
 import {
+  Abi,
   AbiEvent,
   AbiFunction,
   AbiSchema,
@@ -22,6 +24,7 @@ import {
 } from "../schema/contracts/custom";
 import { ExtensionNotImplementedError } from "./error";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import bs58 from "bs58";
 import { BaseContract, BigNumber, ethers } from "ethers";
 import { z } from "zod";
 
@@ -30,26 +33,57 @@ import { z } from "zod";
  * @param abi
  * @param feature
  */
-function matchesAbiInterface(
-  abi: z.input<typeof AbiSchema>,
-  feature: Feature,
-): boolean {
+function matchesAbiInterface(abi: Abi, feature: Feature): boolean {
   // returns true if all the functions in `interfaceToMatch` are found in `contract` (removing any duplicates)
-  const contractFn = [
-    ...new Set(extractFunctionsFromAbi(abi).map((f) => f.name)),
-  ];
-  const interfaceFn = [
-    ...new Set(
-      feature.abis
-        .flatMap((i: any) => extractFunctionsFromAbi(i))
-        .map((f: AbiFunction) => f.name),
-    ),
-  ];
+  return hasMatchingAbi(abi, feature.abis);
+}
 
-  return (
-    contractFn.filter((k) => interfaceFn.includes(k)).length ===
-    interfaceFn.length
+/**
+ * @internal
+ * @param contractWrapper
+ * @param abi
+ * @returns
+ */
+export function matchesPrebuiltAbi<T extends BaseContract>(
+  contractWrapper: ContractWrapper<BaseContract>,
+  abi: Abi,
+): contractWrapper is ContractWrapper<T> {
+  return hasMatchingAbi(contractWrapper.abi as Abi, [abi]);
+}
+
+/**
+ * @internal
+ * @param contractAbi
+ * @param featureAbis
+ * @returns
+ */
+export function hasMatchingAbi(contractAbi: Abi, featureAbis: readonly Abi[]) {
+  const contractFn = extractFunctionsFromAbi(contractAbi);
+  const interfaceFn = featureAbis.flatMap((i: any) =>
+    extractFunctionsFromAbi(i),
   );
+  // match every function and their arguments
+  const intersection = contractFn.filter((fn) => {
+    const match = interfaceFn.find(
+      (iFn) =>
+        iFn.name === fn.name &&
+        iFn.inputs.length === fn.inputs.length &&
+        iFn.inputs.every((i, index) => {
+          if (i.type === "tuple" || i.type === "tuple[]") {
+            // check that all properties in the tuple are the same type
+            return (
+              i.type === fn.inputs[index].type &&
+              i.components?.every((c, cIndex) => {
+                return c.type === fn.inputs[index].components?.[cIndex]?.type;
+              })
+            );
+          }
+          return i.type === fn.inputs[index].type;
+        }),
+    );
+    return match !== undefined;
+  });
+  return intersection.length === interfaceFn.length;
 }
 
 /**
@@ -143,7 +177,7 @@ export function extractFunctionParamsFromAbi(
  * @param metadata
  */
 export function extractFunctionsFromAbi(
-  abi: z.input<typeof AbiSchema>,
+  abi: Abi,
   metadata?: Record<string, any>,
 ): AbiFunction[] {
   const functions = (abi || []).filter((el) => el.type === "function");
@@ -176,10 +210,10 @@ export function extractFunctionsFromAbi(
  * @param metadata
  */
 export function extractEventsFromAbi(
-  abi: z.input<typeof AbiSchema>,
+  abi: Abi,
   metadata?: Record<string, any>,
 ): AbiEvent[] {
-  const events = abi.filter((el) => el.type === "event");
+  const events = (abi || []).filter((el) => el.type === "event");
   const parsed: AbiEvent[] = [];
   for (const e of events) {
     const doc = extractCommentFromMetadata(e.name, metadata, "events");
@@ -234,6 +268,42 @@ function toJSType(
 
 /**
  * @internal
+ * @param bytecode
+ */
+export function extractMinimalProxyImplementationAddress(
+  bytecode: string,
+): string | undefined {
+  // EIP-1167 clone minimal proxy - https://eips.ethereum.org/EIPS/eip-1167
+  if (bytecode.startsWith("0x363d3d373d3d3d363d73")) {
+    const implementationAddress = bytecode.slice(22, 62);
+    return `0x${implementationAddress}`;
+  }
+
+  // Minimal Proxy with receive() from 0xSplits - https://github.com/0xSplits/splits-contracts/blob/c7b741926ec9746182d0d1e2c4c2046102e5d337/contracts/libraries/Clones.sol
+  if (bytecode.startsWith("0x36603057343d5230")) {
+    // +40 = size of addr
+    const implementationAddress = bytecode.slice(122, 122 + 40);
+    return `0x${implementationAddress}`;
+  }
+
+  // 0age's minimal proxy - https://medium.com/coinmonks/the-more-minimal-proxy-5756ae08ee48
+  if (bytecode.startsWith("0x3d3d3d3d363d3d37363d73")) {
+    // +40 = size of addr
+    const implementationAddress = bytecode.slice(24, 24 + 40);
+    return `0x${implementationAddress}`;
+  }
+
+  // vyper's minimal proxy (uniswap v1) - https://etherscan.io/address/0x09cabec1ead1c0ba254b09efb3ee13841712be14#code
+  if (bytecode.startsWith("0x366000600037611000600036600073")) {
+    const implementationAddress = bytecode.slice(32, 32 + 40);
+    return `0x${implementationAddress}`;
+  }
+
+  return undefined;
+}
+
+/**
+ * @internal
  * @param address
  * @param provider
  */
@@ -248,14 +318,20 @@ export async function resolveContractUriFromAddress(
       `Contract at ${address} does not exist on chain '${chain.name}' (chainId: ${chain.chainId})`,
     );
   }
-  // EIP-1167 clone proxy - https://eips.ethereum.org/EIPS/eip-1167
-  if (bytecode.startsWith("0x363d3d373d3d3d363d")) {
-    const implementationAddress = bytecode.slice(22, 62);
-    return await resolveContractUriFromAddress(
-      `0x${implementationAddress}`,
-      provider,
-    );
+
+  try {
+    const implementationAddress =
+      extractMinimalProxyImplementationAddress(bytecode);
+    if (implementationAddress) {
+      return await resolveContractUriFromAddress(
+        implementationAddress,
+        provider,
+      );
+    }
+  } catch (e) {
+    // ignore
   }
+
   // EIP-1967 proxy storage slots - https://eips.ethereum.org/EIPS/eip-1967
   try {
     const proxyStorage = await provider.getStorageAt(
@@ -282,9 +358,9 @@ export async function resolveContractUriFromAddress(
  * @internal
  * @param bytecode
  */
-async function extractIPFSHashFromBytecode(
+export function extractIPFSHashFromBytecode(
   bytecode: string,
-): Promise<string | undefined> {
+): string | undefined {
   const numericBytecode = hexToBytes(bytecode);
   const cborLength: number =
     numericBytecode[numericBytecode.length - 2] * 0x100 +
@@ -293,15 +369,13 @@ async function extractIPFSHashFromBytecode(
     numericBytecode.slice(numericBytecode.length - 2 - cborLength, -2),
   );
 
-  // load these lazily to avoid loading them when they are not needed
-  const [cbor, multiHashes] = await Promise.all([
-    import("cbor-web"),
-    import("multihashes"),
-  ]);
-
-  const cborData = cbor.decodeFirstSync(bytecodeBuffer);
-  if (cborData["ipfs"]) {
-    return `ipfs://${multiHashes.toB58String(cborData["ipfs"])}`;
+  const cborData = decode(bytecodeBuffer);
+  if ("ipfs" in cborData && cborData["ipfs"]) {
+    try {
+      return `ipfs://${bs58.encode(cborData["ipfs"])}`;
+    } catch (e) {
+      console.warn("feature-detection ipfs cbor failed", e);
+    }
   }
   return undefined;
 }
@@ -368,6 +442,11 @@ export async function fetchContractMetadata(
   storage: ThirdwebStorage,
 ): Promise<PublishedMetadata> {
   const metadata = await storage.downloadJSON(compilerMetadataUri);
+  if (!metadata || !metadata.output) {
+    throw new Error(
+      `Could not resolve metadata for contract at ${compilerMetadataUri}`,
+    );
+  }
   const abi = AbiSchema.parse(metadata.output.abi);
   const compilationTarget = metadata.settings.compilationTarget;
   const targets = Object.keys(compilationTarget);
@@ -405,7 +484,9 @@ export async function fetchSourceFilesFromMetadata(
     Object.entries(publishedMetadata.metadata.sources).map(
       async ([path, info]) => {
         const urls = (info as any).urls as string[];
-        const ipfsLink = urls.find((url) => url.includes("ipfs"));
+        const ipfsLink = urls
+          ? urls.find((url) => url.includes("ipfs"))
+          : undefined;
         if (ipfsLink) {
           const ipfsHash = ipfsLink.split("ipfs/")[1];
           // 5 sec timeout for sources that haven't been uploaded to ipfs
@@ -423,7 +504,9 @@ export async function fetchSourceFilesFromMetadata(
         } else {
           return {
             filename: path,
-            source: "Could not find source for this contract",
+            source:
+              (info as any).content ||
+              "Could not find source for this contract",
           };
         }
       },
@@ -489,7 +572,7 @@ export async function fetchExtendedReleaseMetadata(
  * @returns the nested struct of all features and whether they're detected in the abi
  */
 export function detectFeatures(
-  abi: z.input<typeof AbiSchema>,
+  abi: Abi,
   features: Record<string, Feature> = SUPPORTED_FEATURES,
 ): Record<string, FeatureWithEnabled> {
   const results: Record<string, FeatureWithEnabled> = {};
@@ -504,6 +587,48 @@ export function detectFeatures(
     } as FeatureWithEnabled;
   }
   return results;
+}
+
+function extractFeatures(
+  input: Record<string, FeatureWithEnabled>,
+  enabledExtensions: FeatureWithEnabled[],
+) {
+  if (!input) {
+    return;
+  }
+  for (const extensionKey in input) {
+    const extension = input[extensionKey];
+    // if extension is enabled, then add it to enabledFeatures
+    if (extension.enabled) {
+      enabledExtensions.push(extension);
+    }
+    // recurse
+    extractFeatures(extension.features, enabledExtensions);
+  }
+}
+
+/**
+ * Return all the detected features in the abi
+ * @param abi - parsed array of abi entries
+ * @returns array of all detected extensions with full information on each feature
+ * @public
+ */
+export function getAllDetectedFeatures(abi: Abi): FeatureWithEnabled[] {
+  const features: FeatureWithEnabled[] = [];
+  extractFeatures(detectFeatures(abi), features);
+  return features;
+}
+
+/**
+ * Return all the detected features names in the abi
+ * @param abi - parsed array of abi entries
+ * @returns array of all detected features names
+ * @public
+ */
+export function getAllDetectedFeatureNames(abi: Abi): string[] {
+  const features: FeatureWithEnabled[] = [];
+  extractFeatures(detectFeatures(abi), features);
+  return features.map((f) => f.name);
 }
 
 /**

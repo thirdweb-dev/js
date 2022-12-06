@@ -1,27 +1,32 @@
-import {
-  SnapshotInputSchema,
-  SnapshotSchema,
-} from "../schema/contracts/common/snapshots";
+import { SnapshotInputSchema } from "../schema";
 import {
   SnapshotInfo,
   SnapshotInput,
 } from "../types/claim-conditions/claim-conditions";
 import { DuplicateLeafsError } from "./error";
+import {
+  ShardedMerkleTree,
+  SnapshotFormatVersion,
+} from "./sharded-merkle-tree";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, utils } from "ethers";
+import { ethers } from "ethers";
 
 /**
  * Create a snapshot (merkle tree) from a list of addresses and uploads it to IPFS
  * @param snapshotInput - the list of addresses to hash
  * @param tokenDecimals - the token decimals
+ * @param provider
  * @param storage - the storage to upload to
+ * @param snapshotFormatVersion
  * @returns the generated snapshot and URI
  * @internal
  */
 export async function createSnapshot(
   snapshotInput: SnapshotInput,
   tokenDecimals: number,
+  provider: ethers.providers.Provider,
   storage: ThirdwebStorage,
+  snapshotFormatVersion: SnapshotFormatVersion,
 ): Promise<SnapshotInfo> {
   const input = SnapshotInputSchema.parse(snapshotInput);
   const addresses = input.map((i) => i.address);
@@ -29,48 +34,15 @@ export async function createSnapshot(
   if (hasDuplicates) {
     throw new DuplicateLeafsError();
   }
-
-  const hashedLeafs = input.map((i) =>
-    hashLeafNode(i.address, utils.parseUnits(i.maxClaimable, tokenDecimals)),
+  const tree = await ShardedMerkleTree.buildAndUpload(
+    input,
+    tokenDecimals,
+    provider,
+    storage,
+    snapshotFormatVersion,
   );
-  // import dynamically to avoid bloating bundle size for non-merkle tree users
-  const MerkleTree = (await import("merkletreejs")).MerkleTree;
-  const tree = new MerkleTree(hashedLeafs, utils.keccak256, {
-    sort: true,
-  });
-
-  const snapshot = SnapshotSchema.parse({
-    merkleRoot: tree.getHexRoot(),
-    claims: input.map((i, index) => {
-      const proof = tree.getHexProof(hashedLeafs[index]);
-      return {
-        address: i.address,
-        maxClaimable: i.maxClaimable,
-        proof,
-      };
-    }),
-  });
-
-  const uri = await storage.upload(snapshot);
   return {
-    merkleRoot: tree.getHexRoot(),
-    snapshotUri: uri,
-    snapshot,
+    merkleRoot: tree.shardedMerkleInfo.merkleRoot,
+    snapshotUri: tree.uri,
   };
-}
-
-/**
- * Hash an address and the corresponding claimable amount
- * @internal
- * @param address - the address
- * @param maxClaimableAmount - the amount
- */
-export function hashLeafNode(
-  address: string,
-  maxClaimableAmount: BigNumberish,
-): string {
-  return utils.solidityKeccak256(
-    ["address", "uint256"],
-    [address, BigNumber.from(maxClaimableAmount)],
-  );
 }

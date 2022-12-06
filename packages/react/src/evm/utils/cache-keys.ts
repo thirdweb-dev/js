@@ -1,8 +1,9 @@
-import { RequiredParam } from "../../core/types/shared";
+import { RequiredParam } from "../../core/query-utils/required-param";
 import { SupportedChainId } from "../constants/chain";
 import { ContractAddress, WalletAddress } from "../types";
 import { QueryClient, QueryKey } from "@tanstack/react-query";
 import type {
+  ClaimConditionFetchOptions,
   MarketplaceFilter,
   QueryAllParams,
   SUPPORTED_CHAIN_ID,
@@ -267,22 +268,34 @@ export const cacheKeys = {
       getActive: (
         contractAddress: RequiredParam<ContractAddress>,
         tokenId?: BigNumberish,
+        options?: ClaimConditionFetchOptions,
       ) =>
         createContractCacheKey(
           contractAddress,
           tokenId
-            ? ["claimConditions", "getActive", { tokenId }]
-            : ["claimConditions", "getActive"],
+            ? ["claimConditions", "getActive", { tokenId }, options]
+            : ["claimConditions", "getActive", options],
         ),
       getAll: (
+        contractAddress: RequiredParam<ContractAddress>,
+        tokenId?: BigNumberish,
+        options?: ClaimConditionFetchOptions,
+      ) =>
+        createContractCacheKey(
+          contractAddress,
+          tokenId
+            ? ["claimConditions", "getAll", { tokenId }, options]
+            : ["claimConditions", "getAll", options],
+        ),
+      getClaimerProofs: (
         contractAddress: RequiredParam<ContractAddress>,
         tokenId?: BigNumberish,
       ) =>
         createContractCacheKey(
           contractAddress,
           tokenId
-            ? ["claimConditions", "getAll", { tokenId }]
-            : ["claimConditions", "getAll"],
+            ? ["claimConditions", "getClaimerProofs", { tokenId }]
+            : ["claimConditions", "getClaimerProofs"],
         ),
       getClaimIneligibilityReasons: (
         contractAddress: RequiredParam<ContractAddress>,
@@ -299,6 +312,23 @@ export const cacheKeys = {
                 params,
               ]
             : ["claimConditions", "getIneligibilityReasons", params],
+        ),
+      // combinations of queries cache keys
+      useActiveClaimConditionForWallet: (
+        contractAddress: RequiredParam<ContractAddress>,
+        walletAddress: WalletAddress,
+        tokenId?: BigNumberish,
+      ) =>
+        createContractCacheKey(
+          contractAddress,
+          tokenId
+            ? [
+                "claimConditions",
+                "useActiveClaimConditionForWallet",
+                { tokenId, walletAddress },
+                ,
+              ]
+            : ["claimConditions", "getIneligibilityReasons", { walletAddress }],
         ),
     },
 

@@ -1,5 +1,55 @@
 # @thirdweb-dev/auth
 
+## 2.0.36
+
+## 2.0.35
+
+## 2.0.34
+
+### Patch Changes
+
+- [#425](https://github.com/thirdweb-dev/js/pull/425) [`f545a67`](https://github.com/thirdweb-dev/js/commit/f545a67e9fb597d27bb39ca515d24d306fbb121a) Thanks [@adam-maj](https://github.com/adam-maj)! - Add sameSite none and include credentials
+
+## 2.0.33
+
+## 2.0.32
+
+## 2.0.31
+
+### Patch Changes
+
+- [#397](https://github.com/thirdweb-dev/js/pull/397) [`72589ec`](https://github.com/thirdweb-dev/js/commit/72589ec234d86939b67b0ca8b3b789f2e9c54cc2) Thanks [@adam-maj](https://github.com/adam-maj)! - Call user callback in getUser
+
+## 2.0.30
+
+## 2.0.29
+
+## 2.0.28
+
+## 2.0.27
+
+## 2.0.26
+
+## 2.0.25
+
+## 2.0.24
+
+## 2.0.23
+
+## 2.0.22
+
+## 2.0.21
+
+### Patch Changes
+
+- [#327](https://github.com/thirdweb-dev/js/pull/327) [`ef27aad`](https://github.com/thirdweb-dev/js/commit/ef27aad0aafc4577e85f44dc77dfbe880bd239b5) Thanks [@jnsdls](https://github.com/jnsdls)! - enable e2e testing
+
+## 2.0.20
+
+## 2.0.19
+
+## 2.0.18
+
 ## 2.0.17
 
 ## 2.0.16

@@ -1,7 +1,10 @@
-import DelayedRevealAbi from "@thirdweb-dev/contracts-js/dist/abis/DelayedReveal.json";
-import DropSinglePhase1155 from "@thirdweb-dev/contracts-js/dist/abis/DropSinglePhase1155.json";
+import DropERC1155_V2Abi from "@thirdweb-dev/contracts-js/dist/abis/DropERC1155_V2.json";
 import IBurnableERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC1155.json";
 import IClaimableERC1155 from "@thirdweb-dev/contracts-js/dist/abis/IClaimableERC1155.json";
+import DelayedRevealAbi from "@thirdweb-dev/contracts-js/dist/abis/IDelayedReveal.json";
+import IDropMultiPhase1155 from "@thirdweb-dev/contracts-js/dist/abis/IDrop1155.json";
+import IDropSinglePhase1155 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase1155.json";
+import IDropSinglePhase1155_V1 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase1155_V1.json";
 import Erc1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
 import Erc1155EnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155Enumerable.json";
 import ILazyMintAbi from "@thirdweb-dev/contracts-js/dist/abis/ILazyMint.json";
@@ -20,19 +23,52 @@ export const FEATURE_EDITION_BURNABLE = {
   features: {},
 } as const;
 
-export const FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS = {
-  name: "ERC1155ClaimableWithConditions",
+export const FEATURE_EDITION_CLAIM_CONDITIONS_V1 = {
+  name: "ERC1155ClaimConditionsV1",
   namespace: "edition.drop.claim",
   docLinks: {
     sdk: "sdk.erc1155claimable",
     contracts: "DropSinglePhase1155",
   },
-  abis: [Erc1155Abi, ILazyMintAbi, DropSinglePhase1155],
+  abis: [Erc1155Abi, ILazyMintAbi, IDropSinglePhase1155_V1],
   features: {},
 } as const;
 
-export const FEATURE_EDITION_CLAIMABLE = {
-  name: "ERC1155Claimable",
+export const FEATURE_EDITION_CLAIM_CONDITIONS_V2 = {
+  name: "ERC1155ClaimConditionsV2",
+  namespace: "edition.drop.claim",
+  docLinks: {
+    sdk: "sdk.erc1155claimable",
+    contracts: "DropSinglePhase1155",
+  },
+  abis: [Erc1155Abi, ILazyMintAbi, IDropSinglePhase1155],
+  features: {},
+} as const;
+
+export const FEATURE_EDITION_CLAIM_PHASES_V2 = {
+  name: "ERC1155ClaimPhasesV2",
+  namespace: "edition.drop.claim",
+  docLinks: {
+    sdk: "sdk.erc1155claimable",
+    contracts: "Drop1155",
+  },
+  abis: [Erc1155Abi, ILazyMintAbi, IDropMultiPhase1155],
+  features: {},
+} as const;
+
+export const FEATURE_EDITION_CLAIM_PHASES_V1 = {
+  name: "ERC1155ClaimPhasesV1",
+  namespace: "edition.drop.claim",
+  docLinks: {
+    sdk: "sdk.erc1155claimable",
+    contracts: "Drop1155",
+  },
+  abis: [DropERC1155_V2Abi],
+  features: {},
+} as const;
+
+export const FEATURE_EDITION_CLAIM_CUSTOM = {
+  name: "ERC1155ClaimCustom",
   namespace: "edition.drop.claim",
   docLinks: {
     sdk: "sdk.erc1155claimable",
@@ -40,21 +76,6 @@ export const FEATURE_EDITION_CLAIMABLE = {
   },
   abis: [Erc1155Abi, ILazyMintAbi, IClaimableERC1155],
   features: {},
-} as const;
-
-export const FEATURE_EDITION_LAZY_MINTABLE = {
-  name: "ERC1155LazyMintable",
-  namespace: "edition.drop",
-  docLinks: {
-    sdk: "sdk.erc1155droppable",
-    contracts: "LazyMint",
-  },
-  abis: [Erc1155Abi, ILazyMintAbi],
-  features: {
-    [FEATURE_EDITION_CLAIMABLE.name]: FEATURE_EDITION_CLAIMABLE,
-    [FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS.name]:
-      FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS,
-  },
 } as const;
 
 export const FEATURE_EDITION_REVEALABLE = {
@@ -66,6 +87,38 @@ export const FEATURE_EDITION_REVEALABLE = {
   },
   abis: [Erc1155Abi, ILazyMintAbi, DelayedRevealAbi],
   features: {},
+} as const;
+
+export const FEATURE_EDITION_LAZY_MINTABLE_V2 = {
+  name: "ERC1155LazyMintableV2",
+  namespace: "edition.drop",
+  docLinks: {
+    sdk: "sdk.erc1155droppable",
+    contracts: "LazyMint",
+  },
+  abis: [Erc1155Abi, ILazyMintAbi],
+  features: {
+    [FEATURE_EDITION_REVEALABLE.name]: FEATURE_EDITION_REVEALABLE,
+    [FEATURE_EDITION_CLAIM_CUSTOM.name]: FEATURE_EDITION_CLAIM_CUSTOM,
+    [FEATURE_EDITION_CLAIM_CONDITIONS_V1.name]:
+      FEATURE_EDITION_CLAIM_CONDITIONS_V1,
+    [FEATURE_EDITION_CLAIM_CONDITIONS_V2.name]:
+      FEATURE_EDITION_CLAIM_CONDITIONS_V2,
+    [FEATURE_EDITION_CLAIM_PHASES_V2.name]: FEATURE_EDITION_CLAIM_PHASES_V2,
+  },
+} as const;
+
+export const FEATURE_EDITION_LAZY_MINTABLE_V1 = {
+  name: "ERC1155LazyMintableV1",
+  namespace: "edition.drop",
+  docLinks: {
+    sdk: "sdk.erc1155droppable",
+    contracts: "LazyMint",
+  },
+  abis: [DropERC1155_V2Abi],
+  features: {
+    [FEATURE_EDITION_CLAIM_PHASES_V1.name]: FEATURE_EDITION_CLAIM_PHASES_V1,
+  },
 } as const;
 
 export const FEATURE_EDITION_SIGNATURE_MINTABLE = {
@@ -126,7 +179,8 @@ export const FEATURE_EDITION = {
     [FEATURE_EDITION_BURNABLE.name]: FEATURE_EDITION_BURNABLE,
     [FEATURE_EDITION_ENUMERABLE.name]: FEATURE_EDITION_ENUMERABLE,
     [FEATURE_EDITION_MINTABLE.name]: FEATURE_EDITION_MINTABLE,
-    [FEATURE_EDITION_LAZY_MINTABLE.name]: FEATURE_EDITION_LAZY_MINTABLE,
+    [FEATURE_EDITION_LAZY_MINTABLE_V1.name]: FEATURE_EDITION_LAZY_MINTABLE_V1,
+    [FEATURE_EDITION_LAZY_MINTABLE_V2.name]: FEATURE_EDITION_LAZY_MINTABLE_V2,
     [FEATURE_EDITION_REVEALABLE.name]: FEATURE_EDITION_REVEALABLE,
     [FEATURE_EDITION_SIGNATURE_MINTABLE.name]:
       FEATURE_EDITION_SIGNATURE_MINTABLE,

@@ -1,4 +1,4 @@
-import { RequiredParam } from "../../../core/types/shared";
+import { RequiredParam } from "../../../core/query-utils/required-param";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 
@@ -28,8 +28,8 @@ import { useContract } from "../async/contracts";
  * @deprecated
  * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
  * ```diff
- * - const split = await sdk.useSplit("0x1234...");
- * + const split = await sdk.useContract("0x1234...", "split").contract;
+ * - const split = useSplit("0x1234...");
+ * + const split = useContract("0x1234...", "split").contract;
  * ```
  */
 export function useSplit(contractAddress: RequiredParam<string>) {

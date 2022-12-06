@@ -1,8 +1,11 @@
 import { createSOLProgramQueryKey } from "../../../core/query-utils/query-key";
-import { RequiredParam } from "../../../core/types/shared";
+import {
+  requiredParamInvariant,
+  RequiredParam,
+} from "../../../core/query-utils/required-param";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { Amount, Token } from "@thirdweb-dev/sdk/solana";
-import invariant from "tiny-invariant";
+import type { Amount } from "@thirdweb-dev/sdk";
+import type { Token } from "@thirdweb-dev/sdk/solana";
 
 export type TransferTokenMutationParams = {
   amount: Amount;
@@ -35,7 +38,7 @@ export function useTransferToken(program: RequiredParam<Token>) {
   const queryClient = useQueryClient();
   return useMutation(
     async ({ amount, receiverAddress }: TransferTokenMutationParams) => {
-      invariant(program, "program is required");
+      requiredParamInvariant(program, "program is required");
       return await program.transfer(receiverAddress, amount);
     },
     {

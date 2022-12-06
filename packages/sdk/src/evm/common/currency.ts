@@ -1,9 +1,9 @@
+import { AmountSchema } from "../../core/schema/shared";
 import {
   getNativeTokenByChainId,
   NATIVE_TOKEN_ADDRESS,
 } from "../constants/currency";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { AmountSchema } from "../schema/shared";
 import { Amount, Currency, CurrencyValue, Price } from "../types/currency";
 import { BaseERC20 } from "../types/eips";
 import type { IERC20, IERC20Metadata } from "@thirdweb-dev/contracts-js";
@@ -26,6 +26,21 @@ export function isNativeToken(tokenAddress: string): boolean {
   );
 }
 
+export function cleanCurrencyAddress(currencyAddress: string): string {
+  if (isNativeToken(currencyAddress)) {
+    return NATIVE_TOKEN_ADDRESS;
+  }
+  return currencyAddress;
+}
+
+/**
+ *
+ * @param provider
+ * @param inputPrice
+ * @param currencyAddress
+ * @returns
+ * @internal
+ */
 export async function normalizePriceValue(
   provider: providers.Provider,
   inputPrice: Price,
@@ -35,6 +50,13 @@ export async function normalizePriceValue(
   return utils.parseUnits(AmountSchema.parse(inputPrice), metadata.decimals);
 }
 
+/**
+ *
+ * @param provider
+ * @param asset
+ * @returns
+ * @internal
+ */
 export async function fetchCurrencyMetadata(
   provider: providers.Provider,
   asset: string,
@@ -66,6 +88,14 @@ export async function fetchCurrencyMetadata(
   }
 }
 
+/**
+ *
+ * @param providerOrSigner
+ * @param asset
+ * @param price
+ * @returns
+ * @internal
+ */
 export async function fetchCurrencyValue(
   providerOrSigner: providers.Provider,
   asset: string,
@@ -94,7 +124,7 @@ export async function setErc20Allowance(
       signer || provider,
       currencyAddress,
       ERC20Abi,
-      {},
+      contractToApprove.options,
     );
 
     const owner = await contractToApprove.getSignerAddress();
@@ -121,7 +151,7 @@ export async function approveErc20Allowance(
     signer || provider,
     currencyAddress,
     ERC20Abi,
-    {},
+    contractToApprove.options,
   );
   const owner = await contractToApprove.getSignerAddress();
   const spender = contractToApprove.readContract.address;

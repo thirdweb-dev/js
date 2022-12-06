@@ -124,4 +124,72 @@ describe("NFTDrop", async () => {
     const all2 = await burnDrop.getAllClaimed();
     expect(all2.length).to.eq(1);
   });
+
+  it("should update creator settings", async () => {
+    let creators = await drop.getCreators();
+    expect(creators.length).to.equal(1);
+    expect(creators[0].address).to.equal(sdk.wallet.getAddress());
+    expect(creators[0].share).to.equal(100);
+
+    const newCreator = Keypair.generate().publicKey.toBase58();
+    await drop.updateCreators([
+      { address: sdk.wallet.getAddress() as string, share: 75 },
+      { address: newCreator, share: 25 },
+    ]);
+
+    creators = await drop.getCreators();
+    expect(creators.length).to.equal(2);
+    expect(creators[0].address).to.equal(sdk.wallet.getAddress());
+    expect(creators[0].share).to.equal(75);
+    expect(creators[1].address).to.equal(newCreator);
+    expect(creators[1].share).to.equal(25);
+  });
+
+  it("Should update royalty", async () => {
+    let royalty = await drop.getRoyalty();
+    expect(royalty).to.equal(0);
+    await drop.updateRoyalty(100);
+    royalty = await drop.getRoyalty();
+    expect(royalty).to.equal(100);
+  });
+
+  it("Should get all correctly", async () => {
+    const address = await sdk.deployer.createNftDrop({
+      name: "NFT Drop #1",
+      totalSupply: 5,
+    });
+    const contract = await sdk.getNFTDrop(address);
+
+    await contract.lazyMint([
+      { name: "NFT #1", description: "This is the #1 NFT" },
+      { name: "NFT #2", description: "This is the #2 NFT" },
+      { name: "NFT #3", description: "This is the #3 NFT" },
+      { name: "NFT #4", description: "This is the #4 NFT" },
+      { name: "NFT #5", description: "This is the #5 NFT" },
+    ]);
+
+    let all = await contract.getAll();
+    expect(all.length).to.equal(5);
+    expect(all[0].metadata.name).to.equal("NFT #1");
+    expect(all.filter((nft) => nft.supply > 0).length).to.equal(0);
+
+    await contract.claimConditions.set({
+      price: 0,
+      maxClaimable: 5,
+    });
+
+    await contract.claim(2);
+    all = await contract.getAll();
+    expect(all.length).to.equal(5);
+    expect(all[0].supply).to.equal(1);
+    expect(all[1].supply).to.equal(1);
+    expect(all[2].supply).to.equal(0);
+
+    all = await contract.getAll({ start: 2, count: 3 });
+    expect(all.length).to.equal(3);
+    expect(all.filter((nft) => nft.supply > 0).length).to.equal(0);
+
+    all = await contract.getAll({ start: 0, count: 3 });
+    expect(all.filter((nft) => nft.supply > 0).length).to.equal(2);
+  });
 });

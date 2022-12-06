@@ -201,13 +201,13 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @internal
    * TODO clean this up (see method above, too)
    */
-  public async resolveReleasesFromAddress(address: string) {
+  public async resolveContractUriFromAddress(address: string) {
     const contractUri = await resolveContractUriFromAddress(
       address,
       this.getProvider(),
     );
     invariant(contractUri, "Could not resolve contract URI from address");
-    return await this.resolvePublishMetadataFromCompilerMetadata(contractUri);
+    return contractUri;
   }
 
   /**
@@ -297,6 +297,30 @@ export class ContractPublisher extends RPCConnectionHandler {
       throw Error("Not found");
     }
     return contractStructs.map((d) => this.toPublishedContract(d));
+  }
+
+  public async getVersion(
+    publisherAddress: string,
+    contractId: string,
+    version = "latest",
+  ): Promise<PublishedContract | undefined> {
+    if (version === "latest") {
+      return this.getLatest(publisherAddress, contractId);
+    }
+    const allVersions = await this.getAllVersions(publisherAddress, contractId);
+    // get the metadata for each version
+    const versionMetadata = await Promise.all(
+      allVersions.map((contract) => this.fetchPublishedContractInfo(contract)),
+    );
+    // find the version that matches the version string
+    const versionMatch = versionMetadata.find(
+      (metadata) => metadata.publishedMetadata.version === version,
+    );
+    invariant(versionMatch, "Contract version not found");
+    // match the version back to the contract based on the release timestamp
+    return allVersions.find(
+      (contract) => contract.timestamp === versionMatch.publishedTimestamp,
+    );
   }
 
   public async getLatest(

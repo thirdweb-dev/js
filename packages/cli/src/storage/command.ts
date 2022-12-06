@@ -1,7 +1,5 @@
-import { logger } from "../core/helpers/logger";
 import { spinner } from "../core/helpers/logger";
 import { BufferOrStringWithName, ThirdwebStorage } from "@thirdweb-dev/storage";
-import chalk from "chalk";
 import fs from "fs";
 import path from "path";
 
@@ -33,22 +31,12 @@ export async function upload(
   uploadPath: string,
 ): Promise<string> {
   if (!uploadPath) {
-    logger.error(
-      `Please pass a path to a file or directory to upload with the following format:\n   ${chalk.blueBright(
-        `npx thirdweb@latest upload path/to/file.jpg`,
-      )}\n`,
-    );
-    process.exit(1);
+    return Promise.reject("No path provided");
   }
 
   const pathExists = fs.existsSync(uploadPath);
   if (!pathExists) {
-    logger.error(
-      `Invalid path ${chalk.blueBright(
-        uploadPath,
-      )} provided. Please provide a valid path to a file or directory to upload."`,
-    );
-    process.exit(1);
+    return Promise.reject("Invalid path provided");
   }
 
   let uri = "";
@@ -57,12 +45,7 @@ export async function upload(
     const files = recurseFiles(uploadPath, uploadPath);
 
     if (files.length === 0) {
-      logger.error(
-        `No files detected in specified directory ${chalk.blueBright(
-          uploadPath,
-        )} to upload.`,
-      );
-      process.exit(1);
+      return Promise.reject("No files detected in specified directory");
     }
 
     const spin = spinner(
@@ -82,12 +65,7 @@ export async function upload(
     uri = await storage.upload(file, { uploadWithoutDirectory: true });
     spin.succeed("Succesfully uploaded file to IPFS.");
   } else {
-    logger.error(
-      `Path ${chalk.blueBright(
-        uploadPath,
-      )} does not point to a valid file or directory. Please provide a valid path to a file or directory to upload`,
-    );
-    process.exit(1);
+    return Promise.reject("Invalid path provided");
   }
 
   return uri;

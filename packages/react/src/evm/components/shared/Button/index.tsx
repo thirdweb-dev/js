@@ -37,8 +37,19 @@ const BaseButton = styled.button<BaseButtonProps>`
     cursor: not-allowed;
   }
   &:focus {
-    outline: 2px solid ${(props) => (props.theme as TwUiTheme).colors.accent};
-    outline-offset: 1px;
+    position: relative;
+    border-radius: 0.5em;
+    outline: 0;
+  }
+  &:focus:after {
+    content: "";
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    bottom: -5px;
+    left: -5px;
+    border: 2px solid ${(props) => (props.theme as TwUiTheme).colors.accent};
+    border-radius: 11px;
   }
 `;
 

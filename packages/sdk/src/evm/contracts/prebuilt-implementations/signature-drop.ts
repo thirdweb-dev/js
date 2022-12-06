@@ -27,7 +27,7 @@ import {
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
-import { PaperCheckout } from "../../integrations/paper-xyz";
+import { PaperCheckout } from "../../integrations/thirdweb-checkout";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import { ClaimOptions, UploadProgressEvent } from "../../types";
@@ -47,7 +47,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
  * const sdk = new ThirdwebSDK("{{chainName}}");
- * const contract = sdk.getContract("{{contract_address}}", "signature-drop");
+ * const contract = await sdk.getContract("{{contract_address}}", "signature-drop");
  * ```
  *
  * @public
@@ -328,7 +328,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * @returns the claimed supply
    */
   public async totalClaimedSupply(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.totalMinted();
+    return this.erc721.totalClaimedSupply();
   }
 
   /**
@@ -344,10 +344,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
    * @returns the unclaimed supply
    */
   public async totalUnclaimedSupply(): Promise<BigNumber> {
-    const maxSupply =
-      await this.contractWrapper.readContract.nextTokenIdToMint();
-
-    return maxSupply.sub(await this.totalClaimedSupply());
+    return this.erc721.totalUnclaimedSupply();
   }
 
   /**

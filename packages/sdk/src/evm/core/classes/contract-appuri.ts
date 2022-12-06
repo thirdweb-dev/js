@@ -1,8 +1,11 @@
+import { detectContractFeature } from "../../common";
 import { FEATURE_APPURI } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
+import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import type { AppURI } from "@thirdweb-dev/contracts-js";
+import { BaseContract } from "ethers";
 
 /**
  * Have an official Application URI for this contract.
@@ -17,14 +20,19 @@ import type { AppURI } from "@thirdweb-dev/contracts-js";
  * ```
  * @public
  */
-export class ContractAppURI<TContract extends AppURI>
+export class ContractAppURI<TContract extends BaseContract>
   implements DetectableFeature
 {
   featureName = FEATURE_APPURI.name;
   private contractWrapper;
+  metadata: ContractMetadata<BaseContract, any>;
 
-  constructor(contractWrapper: ContractWrapper<TContract>) {
+  constructor(
+    contractWrapper: ContractWrapper<TContract>,
+    metadata: ContractMetadata<BaseContract, any>,
+  ) {
     this.contractWrapper = contractWrapper;
+    this.metadata = metadata;
   }
 
   /**
@@ -32,7 +40,11 @@ export class ContractAppURI<TContract extends AppURI>
    * @returns the appURI object
    */
   public async get() {
-    return await this.contractWrapper.readContract.appURI();
+    if (detectContractFeature<AppURI>(this.contractWrapper, "AppURI")) {
+      return await this.contractWrapper.readContract.appURI();
+    }
+
+    return (await this.metadata.get()).appURI || "";
   }
 
   /**
@@ -40,10 +52,14 @@ export class ContractAppURI<TContract extends AppURI>
    * @param appURI - the uri to set (typically an IPFS hash)
    */
   public async set(appURI: string): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("setAppURI", [
-        appURI,
-      ]),
-    };
+    if (detectContractFeature<AppURI>(this.contractWrapper, "AppURI")) {
+      return {
+        receipt: await this.contractWrapper.sendTransaction("setAppURI", [
+          appURI,
+        ]),
+      };
+    }
+
+    return await this.metadata.update({ appURI });
   }
 }

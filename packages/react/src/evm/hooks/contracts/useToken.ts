@@ -1,4 +1,4 @@
-import { RequiredParam } from "../../../core/types/shared";
+import { RequiredParam } from "../../../core/query-utils/required-param";
 import { showDeprecationWarning } from "../../utils/deprecation-warning";
 import { useContract } from "../async/contracts";
 
@@ -28,8 +28,8 @@ import { useContract } from "../async/contracts";
  * @deprecated
  * This hook is deprecated and will be removed in a future major version. You should use {@link useContract} instead.
  * ```diff
- * - const token = await sdk.useToken("0x1234...");
- * + const token = await sdk.useContract("0x1234...", "token").contract;
+ * - const token = useToken("0x1234...");
+ * + const token = useContract("0x1234...", "token").contract;
  * ```
  */
 export function useToken(contractAddress: RequiredParam<string>) {

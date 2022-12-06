@@ -1,4 +1,4 @@
-import { RequiredParam } from "../types/shared";
+import { RequiredParam } from "./required-param";
 import type { QueryKey } from "@tanstack/react-query";
 import type { ValidContractInstance } from "@thirdweb-dev/sdk";
 import type {

@@ -1,5 +1,148 @@
 # @thirdweb-dev/react
 
+## 3.6.6
+
+### Patch Changes
+
+- [#443](https://github.com/thirdweb-dev/js/pull/443) [`8c6cdaa`](https://github.com/thirdweb-dev/js/commit/8c6cdaa2887fb2cc40d3ee6991233d195d103805) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix magic link connector not connecting to the right chain
+
+## 3.6.5
+
+## 3.6.4
+
+### Patch Changes
+
+- [#425](https://github.com/thirdweb-dev/js/pull/425) [`f545a67`](https://github.com/thirdweb-dev/js/commit/f545a67e9fb597d27bb39ca515d24d306fbb121a) Thanks [@adam-maj](https://github.com/adam-maj)! - Add sameSite none and include credentials
+
+- [#420](https://github.com/thirdweb-dev/js/pull/420) [`639e535`](https://github.com/thirdweb-dev/js/commit/639e535ed55280ad9d081001aab3f5af72bb3e45) Thanks [@jnsdls](https://github.com/jnsdls)! - update deps
+
+## 3.6.3
+
+## 3.6.2
+
+### Patch Changes
+
+- [#405](https://github.com/thirdweb-dev/js/pull/405) [`ccb7db4`](https://github.com/thirdweb-dev/js/commit/ccb7db48739b8dddcb2c032b3b6e3e5200485715) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add updateAll param to creators and royalty update hooks for Solana
+
+## 3.6.1
+
+### Patch Changes
+
+- [#392](https://github.com/thirdweb-dev/js/pull/392) [`846022e`](https://github.com/thirdweb-dev/js/commit/846022e2cfb12b846aae029b85899fb72fd2c9ad) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Fix unlimited price for useActiveClaimConditionForWallet
+
+- [#388](https://github.com/thirdweb-dev/js/pull/388) [`7c0744a`](https://github.com/thirdweb-dev/js/commit/7c0744a006e78987ad8b271b2c64f4bac7759510) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for total supply and pagination on get all
+
+## 3.6.0
+
+### Patch Changes
+
+- [#386](https://github.com/thirdweb-dev/js/pull/386) [`612bcdd`](https://github.com/thirdweb-dev/js/commit/612bcdd16fc242d8b04bc70d609e44b0df47ed3f) Thanks [@jnsdls](https://github.com/jnsdls)! - [Gnosis Connector] - switch to safe.global hostname & add support for bsc and optimism chains
+
+- [#364](https://github.com/thirdweb-dev/js/pull/364) [`7cb8e59`](https://github.com/thirdweb-dev/js/commit/7cb8e59be48dc923316eb36ab43a1bef7364f6b1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add experimental `useActiveClaimConditionForWallet()` hook
+
+## 3.5.2
+
+### Patch Changes
+
+- [#369](https://github.com/thirdweb-dev/js/pull/369) [`2d3fca5`](https://github.com/thirdweb-dev/js/commit/2d3fca52373046c88392139922e9c9da79f9a2d4) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add useClaimerProofs hook
+
+- [#378](https://github.com/thirdweb-dev/js/pull/378) [`32d91ef`](https://github.com/thirdweb-dev/js/commit/32d91ef709c8fb92a903e52c65b27538a80ea4eb) Thanks [@mykcryptodev](https://github.com/mykcryptodev)! - round borders for buttons and menus on safari
+
+- [#377](https://github.com/thirdweb-dev/js/pull/377) [`b79dc18`](https://github.com/thirdweb-dev/js/commit/b79dc18f7ab5155bbf4af02dc1a953546160bad0) Thanks [@adam-maj](https://github.com/adam-maj)! - Add event filters
+
+## 3.5.1
+
+## 3.5.0
+
+## 3.4.5
+
+## 3.4.4
+
+### Patch Changes
+
+- [#356](https://github.com/thirdweb-dev/js/pull/356) [`cc4613b`](https://github.com/thirdweb-dev/js/commit/cc4613b5fd69840f4f9cfd0ac1c4e6743e62fe52) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add Pack and Multiwrap as NFTContract types
+
+## 3.4.3
+
+### Patch Changes
+
+- [#353](https://github.com/thirdweb-dev/js/pull/353) [`1c24c3c`](https://github.com/thirdweb-dev/js/commit/1c24c3c3c48476a824f817e09e7bf0fbe67c1db5) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add useUpdateCreators hook, fix CreatorInput schema
+
+## 3.4.2
+
+### Patch Changes
+
+- [#348](https://github.com/thirdweb-dev/js/pull/348) [`7d9a4c6`](https://github.com/thirdweb-dev/js/commit/7d9a4c6abcad1b4f43e431ce7b0b38db9016ea9a) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - [SOL] - add `useUpdateRoyaltySettings()` hook
+  [SOL] - change `useRoyalty()` hook -> `useRoyaltySettings()` for consistency
+
+- [#352](https://github.com/thirdweb-dev/js/pull/352) [`3522917`](https://github.com/thirdweb-dev/js/commit/352291791ee900e1500f84f095290497934d2f60) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - expose useExecuteAuctionSale and useAcceptDirectListingOffer
+
+- [#351](https://github.com/thirdweb-dev/js/pull/351) [`aabbb14`](https://github.com/thirdweb-dev/js/commit/aabbb149e81d6824015a4797b2b6c929ca359545) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - fix wallet connection during dev (hot reload)
+
+## 3.4.1
+
+### Patch Changes
+
+- [#343](https://github.com/thirdweb-dev/js/pull/343) [`72227b2`](https://github.com/thirdweb-dev/js/commit/72227b2e166a3a68bbb41cf2b389322f5b7547a2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose new useOffers and useMakeOffer hooks
+
+## 3.4.0
+
+### Minor Changes
+
+- [#327](https://github.com/thirdweb-dev/js/pull/327) [`ef27aad`](https://github.com/thirdweb-dev/js/commit/ef27aad0aafc4577e85f44dc77dfbe880bd239b5) Thanks [@jnsdls](https://github.com/jnsdls)! - Gnosis Safe and Magic Link connectors are no longer included in the default export. They are now available as named exports instead.
+
+  ## Gnosis Safe
+
+  ### Connector
+
+  ```diff
+  - import { GnosisSafeConnector } from "@thirdweb-dev/react";
+  + import { GnosisSafeConnector } from "@thirdweb-dev/react/evm/connectors/gnosis-safe";
+  ```
+
+  ### Hook
+
+  ```diff
+  - import { useGnosis } from "@thirdweb-dev/react";
+  + import { useGnosis } from "@thirdweb-dev/react/evm/connectors/gnosis-safe";
+  ```
+
+  ## Magic Link
+
+  ### Connector
+
+  ```diff
+  - import { MagicLink } from "@thirdweb-dev/react";
+  + import { MagicConnector } from "@thirdweb-dev/react/evm/connectors/magic";
+  ```
+
+  ### Hook
+
+  ```diff
+  - import { useMagic } from "@thirdweb-dev/react";
+  + import { useMagic } from "@thirdweb-dev/react/evm/connectors/magic";
+  ```
+
+### Patch Changes
+
+- [#339](https://github.com/thirdweb-dev/js/pull/339) [`b03a902`](https://github.com/thirdweb-dev/js/commit/b03a9021451b79f802f682f66e5ae8e9355d7e6f) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Fix docs for some functions
+
+## 3.3.1
+
+## 3.3.0
+
+## 3.2.6
+
+### Patch Changes
+
+- [#316](https://github.com/thirdweb-dev/js/pull/316) [`6ae5266`](https://github.com/thirdweb-dev/js/commit/6ae52664e5865564cd4fc2e00e3120675b9e0ca3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix SIWE when using an external signer
+
+- [#310](https://github.com/thirdweb-dev/js/pull/310) [`9727502`](https://github.com/thirdweb-dev/js/commit/9727502eb30ac139382b7c7c8e8fc0967cbfbcf1) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - [SOL] - add useMintNFTSupply hook in react and accomodate inputs for it in SDK
+
+- [#319](https://github.com/thirdweb-dev/js/pull/319) [`2f8ec89`](https://github.com/thirdweb-dev/js/commit/2f8ec89c4c83ae577092c840c198e6fcfb114e69) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose total claimed and unclaimed supply for erc721 drop contracts
+
+- [#318](https://github.com/thirdweb-dev/js/pull/318) [`bb1b4e6`](https://github.com/thirdweb-dev/js/commit/bb1b4e6ac39d98cc68b8e31e659cd68be3a5b967) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add useMinimumNextBid hook and change invariant for other marketplace hooks
+
 ## 3.2.5
 
 ## 3.2.4

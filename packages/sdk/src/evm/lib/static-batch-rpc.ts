@@ -1,99 +1,130 @@
 import { providers, utils } from "ethers";
 
+const DEFAULT_BATCH_TIME_LIMIT_MS = 50;
+const DEFAULT_BATCH_SIZE_LIMIT = 250;
+
+const DEFAULT_BATCH_OPTIONS = {
+  timeLimitMs: DEFAULT_BATCH_TIME_LIMIT_MS,
+  sizeLimit: DEFAULT_BATCH_SIZE_LIMIT,
+};
+
+export type BatchOptions = Partial<typeof DEFAULT_BATCH_OPTIONS>;
 
 // mostly copied from ethers.js directly but make it a StaticJsonRpcProvider
 export class StaticJsonRpcBatchProvider extends providers.StaticJsonRpcProvider {
-    _pendingBatchAggregator: NodeJS.Timer | null;
-    _pendingBatch: Array<{
-        request: { method: string, params: Array<any>, id: number, jsonrpc: "2.0" },
-        resolve: (result: any) => void,
-        reject: (error: Error) => void
-    }> | null;
+  private _timeLimitMs: number;
+  private _sizeLimit: number;
+  _pendingBatchAggregator: NodeJS.Timer | null;
+  _pendingBatch: Array<{
+    request: { method: string; params: Array<any>; id: number; jsonrpc: "2.0" };
+    resolve: (result: any) => void;
+    reject: (error: Error) => void;
+  }> | null;
 
-    constructor(url: string | utils.ConnectionInfo | undefined, network: providers.Networkish | undefined){
-      super(url, network);
-      this._pendingBatchAggregator = null;
-      this._pendingBatch = null;
+  constructor(
+    url: string | utils.ConnectionInfo | undefined,
+    network: providers.Networkish | undefined,
+    batchOptions: BatchOptions = DEFAULT_BATCH_OPTIONS,
+  ) {
+    super(url, network);
+    this._timeLimitMs = batchOptions.timeLimitMs || DEFAULT_BATCH_SIZE_LIMIT;
+    this._sizeLimit = batchOptions.sizeLimit || DEFAULT_BATCH_TIME_LIMIT_MS;
+    this._pendingBatchAggregator = null;
+    this._pendingBatch = null;
+  }
+
+  private sendCurrentBatch(request: any) {
+    // if we still have a timeout clear that first
+    if (this._pendingBatchAggregator) {
+      clearTimeout(this._pendingBatchAggregator);
     }
+    // Get the current batch and clear it, so new requests
+    // go into the next batch
+    const batch = this._pendingBatch || [];
+    this._pendingBatch = null;
+    this._pendingBatchAggregator = null;
 
-    send(method: string, params: Array<any>): Promise<any> {
-        const request = {
-            method: method,
-            params: params,
-            id: (this._nextId++),
-            jsonrpc: "2.0"
-        };
+    // Get the request as an array of requests
+    const request_ = batch.map((inflight) => inflight.request);
 
-        if (this._pendingBatch === null) {
-            this._pendingBatch = [ ];
-        }
+    this.emit("debug", {
+      action: "requestBatch",
+      request: utils.deepCopy(request),
+      provider: this,
+    });
 
-        const inflightRequest: any = { request, resolve: null, reject: null };
-
-        const promise = new Promise((resolve, reject) => {
-            inflightRequest.resolve = resolve;
-            inflightRequest.reject = reject;
+    return utils.fetchJson(this.connection, JSON.stringify(request_)).then(
+      (result) => {
+        this.emit("debug", {
+          action: "response",
+          request: request_,
+          response: result,
+          provider: this,
         });
 
-        this._pendingBatch.push(inflightRequest);
+        // For each result, feed it to the correct Promise, depending
+        // on whether it was a success or error
+        batch.forEach((inflightRequest_, index) => {
+          const payload = result[index];
+          if (payload.error) {
+            const error = new Error(payload.error.message);
+            (error as any).code = payload.error.code;
+            (error as any).data = payload.error.data;
+            inflightRequest_.reject(error);
+          } else {
+            inflightRequest_.resolve(payload.result);
+          }
+        });
+      },
+      (error) => {
+        this.emit("debug", {
+          action: "response",
+          error: error,
+          request: request_,
+          provider: this,
+        });
 
-        if (!this._pendingBatchAggregator) {
-            // Schedule batch for next event loop + short duration
-            this._pendingBatchAggregator = setTimeout(() => {
+        // If there was an error, reject all the requests
+        batch.forEach((inflightRequest_) => {
+          inflightRequest_.reject(error);
+        });
+      },
+    );
+  }
 
-                // Get the current batch and clear it, so new requests
-                // go into the next batch
-                const batch = this._pendingBatch || [];
-                this._pendingBatch = null;
-                this._pendingBatchAggregator = null;
+  send(method: string, params: Array<any>): Promise<any> {
+    const request = {
+      method: method,
+      params: params,
+      id: this._nextId++,
+      jsonrpc: "2.0",
+    };
 
-                // Get the request as an array of requests
-                const request_ = batch.map((inflight) => inflight.request);
-
-                this.emit("debug", {
-                    action: "requestBatch",
-                    request: utils.deepCopy(request),
-                    provider: this
-                });
-
-                return utils.fetchJson(this.connection, JSON.stringify(request_)).then((result) => {
-                    this.emit("debug", {
-                        action: "response",
-                        request: request_,
-                        response: result,
-                        provider: this
-                    });
-
-                    // For each result, feed it to the correct Promise, depending
-                    // on whether it was a success or error
-                    batch.forEach((inflightRequest_, index) => {
-                        const payload = result[index];
-                        if (payload.error) {
-                            const error = new Error(payload.error.message);
-                            (<any>error).code = payload.error.code;
-                            (<any>error).data = payload.error.data;
-                            inflightRequest_.reject(error);
-                        } else {
-                            inflightRequest_.resolve(payload.result);
-                        }
-                    });
-
-                }, (error) => {
-                    this.emit("debug", {
-                        action: "response",
-                        error: error,
-                        request: request,
-                        provider: this
-                    });
-
-                    batch.forEach((inflightRequest_) => {
-                      inflightRequest_.reject(error);
-                    });
-                });
-
-            }, 10);
-        }
-
-        return promise;
+    if (this._pendingBatch === null) {
+      this._pendingBatch = [];
     }
+
+    const inflightRequest: any = { request, resolve: null, reject: null };
+
+    const promise = new Promise((resolve, reject) => {
+      inflightRequest.resolve = resolve;
+      inflightRequest.reject = reject;
+    });
+
+    // if we would go *over* the size limit of the batch with this request, send the batch now
+    if (this._pendingBatch.length === this._sizeLimit) {
+      this.sendCurrentBatch(request);
+    }
+
+    this._pendingBatch.push(inflightRequest);
+
+    if (!this._pendingBatchAggregator) {
+      // Schedule batch for next event loop + short duration
+      this._pendingBatchAggregator = setTimeout(() => {
+        this.sendCurrentBatch(request);
+      }, this._timeLimitMs);
+    }
+
+    return promise;
+  }
 }

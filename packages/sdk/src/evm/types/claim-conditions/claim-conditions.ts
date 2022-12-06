@@ -53,9 +53,11 @@ export type FilledConditionInput = z.output<typeof ClaimConditionInputSchema>;
 export type ClaimVerification = {
   overrides: CallOverrides;
   proofs: BytesLike[];
-  maxQuantityPerTransaction: BigNumber;
+  maxClaimable: BigNumber;
   price: BigNumber;
   currencyAddress: string;
+  priceInProof: BigNumber;
+  currencyAddressInProof: string;
 };
 
 export type ClaimConditionsForToken = {
@@ -76,4 +78,8 @@ export type ClaimOptions = {
    * Whether to check the ERC20 allowance of the sender, defaults to true
    */
   checkERC20Allowance?: boolean;
+};
+
+export type ClaimConditionFetchOptions = {
+  withAllowList?: boolean;
 };

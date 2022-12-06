@@ -1,12 +1,15 @@
+import { Quantity } from "../../core/schema/shared";
 import { NATIVE_TOKEN_ADDRESS } from "../constants";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
+  AbstractClaimConditionContractStruct,
   ClaimConditionInputArray,
   ClaimConditionInputSchema,
   ClaimConditionOutputSchema,
 } from "../schema/contracts/common/claim-conditions";
 import {
-  SnapshotInputSchema,
+  SnapshotEntry,
+  SnapshotEntryWithProof,
   SnapshotSchema,
 } from "../schema/contracts/common/snapshots";
 import {
@@ -23,17 +26,22 @@ import {
   isNativeToken,
   normalizePriceValue,
 } from "./currency";
+import {
+  ShardedMerkleTree,
+  SnapshotFormatVersion,
+} from "./sharded-merkle-tree";
 import { createSnapshot } from "./snapshots";
-import { IDropClaimCondition } from "@thirdweb-dev/contracts-js/dist/declarations/src/DropERC20";
+import { IClaimCondition } from "@thirdweb-dev/contracts-js/dist/declarations/src/Drop";
+import { IDropClaimCondition_V2 } from "@thirdweb-dev/contracts-js/dist/declarations/src/IDropERC20_V2";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
   BigNumberish,
-  ethers,
+  CallOverrides,
   constants,
+  ethers,
   providers,
   utils,
-  CallOverrides,
 } from "ethers";
 
 /**
@@ -42,6 +50,7 @@ import {
  * @returns - `overrides` and `proofs` as an object.
  */
 export async function prepareClaim(
+  addressToClaim: string,
   quantity: BigNumberish,
   activeClaimCondition: ClaimCondition,
   merkleMetadataFetcher: () => Promise<Record<string, string>>,
@@ -49,31 +58,57 @@ export async function prepareClaim(
   contractWrapper: ContractWrapper<any>,
   storage: ThirdwebStorage,
   checkERC20Allowance: boolean,
+  snapshotFormatVersion: SnapshotFormatVersion,
 ): Promise<ClaimVerification> {
-  const addressToClaim = await contractWrapper.getSignerAddress();
-  let maxClaimable = BigNumber.from(0);
+  let maxClaimable = convertQuantityToBigNumber(
+    activeClaimCondition.maxClaimablePerWallet,
+    tokenDecimals,
+  );
   let proofs = [utils.hexZeroPad([0], 32)];
+  let priceInProof = activeClaimCondition.price; // the price to send to the contract in claim proofs
+  let currencyAddressInProof = activeClaimCondition.currencyAddress;
   try {
     if (
       !activeClaimCondition.merkleRootHash
         .toString()
         .startsWith(constants.AddressZero)
     ) {
-      const claims = await fetchSnapshot(
+      const snapshotEntry = await fetchSnapshotEntryForAddress(
+        addressToClaim,
         activeClaimCondition.merkleRootHash.toString(),
         await merkleMetadataFetcher(),
+        contractWrapper.getProvider(),
         storage,
+        snapshotFormatVersion,
       );
-      const item =
-        claims &&
-        claims.find(
-          (c) => c.address.toLowerCase() === addressToClaim.toLowerCase(),
-        );
-      if (item === undefined) {
-        throw new Error("No claim found for this address");
+      if (snapshotEntry) {
+        proofs = snapshotEntry.proof;
+        // override only if not default values (unlimited for quantity, zero addr for currency)
+        maxClaimable =
+          snapshotEntry.maxClaimable === "unlimited"
+            ? ethers.constants.MaxUint256
+            : ethers.utils.parseUnits(
+                snapshotEntry.maxClaimable,
+                tokenDecimals,
+              );
+        priceInProof =
+          snapshotEntry.price === undefined ||
+          snapshotEntry.price === "unlimited"
+            ? ethers.constants.MaxUint256
+            : await normalizePriceValue(
+                contractWrapper.getProvider(),
+                snapshotEntry.price,
+                snapshotEntry.currencyAddress || ethers.constants.AddressZero,
+              );
+        currencyAddressInProof =
+          snapshotEntry.currencyAddress || ethers.constants.AddressZero;
+      } else {
+        // if no snapshot entry, and it's a v1 format (exclusive allowlist) then address can't claim
+        if (snapshotFormatVersion === SnapshotFormatVersion.V1) {
+          throw new Error("No claim found for this address");
+        }
+        // but if its snapshot v2 (override list behavior) then address can still claim with default settings
       }
-      proofs = item.proof;
-      maxClaimable = ethers.utils.parseUnits(item.maxClaimable, tokenDecimals);
     }
   } catch (e) {
     // have to handle the valid error case that we *do* want to throw on
@@ -88,18 +123,28 @@ export async function prepareClaim(
   }
 
   const overrides = (await contractWrapper.getCallOverrides()) || {};
-  const price = activeClaimCondition.price;
-  const currencyAddress = activeClaimCondition.currencyAddress;
-  if (price.gt(0)) {
+  // the actual price to check allowance against
+  // if proof price is unlimited, then we use the price from the claim condition
+  // this mimics the contract behavior
+  const pricePerToken =
+    priceInProof.toString() !== ethers.constants.MaxUint256.toString()
+      ? priceInProof
+      : activeClaimCondition.price;
+  // same for currency address
+  const currencyAddress =
+    currencyAddressInProof !== ethers.constants.AddressZero
+      ? currencyAddressInProof
+      : activeClaimCondition.currencyAddress;
+  if (pricePerToken.gt(0)) {
     if (isNativeToken(currencyAddress)) {
-      overrides["value"] = BigNumber.from(price)
+      overrides["value"] = BigNumber.from(pricePerToken)
         .mul(quantity)
         .div(ethers.utils.parseUnits("1", tokenDecimals));
     } else if (checkERC20Allowance) {
       await approveErc20Allowance(
         contractWrapper,
         currencyAddress,
-        price,
+        pricePerToken,
         quantity,
         tokenDecimals,
       );
@@ -108,19 +153,13 @@ export async function prepareClaim(
   return {
     overrides,
     proofs,
-    maxQuantityPerTransaction: maxClaimable,
-    price,
-    currencyAddress,
+    maxClaimable,
+    price: pricePerToken,
+    currencyAddress: currencyAddress,
+    priceInProof,
+    currencyAddressInProof,
   };
 }
-
-type Snapshot =
-  | {
-      address: string;
-      proof: string[];
-      maxClaimable: string;
-    }[]
-  | undefined;
 
 /**
  * @internal
@@ -132,20 +171,67 @@ export async function fetchSnapshot(
   merkleRoot: string,
   merkleMetadata: Record<string, string> | undefined,
   storage: ThirdwebStorage,
-): Promise<Snapshot> {
+): Promise<SnapshotEntry[] | null> {
   if (!merkleMetadata) {
-    return undefined;
+    return null;
   }
   const snapshotUri = merkleMetadata[merkleRoot];
-  let snapshot: Snapshot = undefined;
   if (snapshotUri) {
     const raw = await storage.downloadJSON(snapshotUri);
-    const snapshotData = SnapshotSchema.parse(raw);
-    if (merkleRoot === snapshotData.merkleRoot) {
-      snapshot = snapshotData.claims;
+    if (raw.isShardedMerkleTree && raw.merkleRoot === merkleRoot) {
+      const smt = await ShardedMerkleTree.fromUri(snapshotUri, storage);
+      return smt?.getAllEntries() || null;
+    } else {
+      const snapshotData = SnapshotSchema.parse(raw);
+      if (merkleRoot === snapshotData.merkleRoot) {
+        return snapshotData.claims.map((claim) => ({
+          address: claim.address,
+          maxClaimable: claim.maxClaimable,
+          price: claim.price,
+          currencyAddress: claim.currencyAddress,
+        }));
+      }
     }
   }
-  return snapshot;
+  return null;
+}
+
+export async function fetchSnapshotEntryForAddress(
+  address: string,
+  merkleRoot: string,
+  merkleMetadata: Record<string, string> | undefined,
+  provider: ethers.providers.Provider,
+  storage: ThirdwebStorage,
+  snapshotFormatVersion: SnapshotFormatVersion,
+): Promise<SnapshotEntryWithProof | null> {
+  if (!merkleMetadata) {
+    return null;
+  }
+  const snapshotUri = merkleMetadata[merkleRoot];
+  if (snapshotUri) {
+    const raw = await storage.downloadJSON(snapshotUri);
+    if (raw.isShardedMerkleTree && raw.merkleRoot === merkleRoot) {
+      const merkleTree = await ShardedMerkleTree.fromShardedMerkleTreeInfo(
+        raw,
+        storage,
+      );
+      return await merkleTree.getProof(
+        address,
+        provider,
+        snapshotFormatVersion,
+      );
+    }
+    // legacy non-sharded, just fetch it all and filter out
+    const snapshotData = SnapshotSchema.parse(raw);
+    if (merkleRoot === snapshotData.merkleRoot) {
+      return (
+        snapshotData.claims.find(
+          (c) => c.address.toLowerCase() === address.toLowerCase(),
+        ) || null
+      );
+    }
+  }
+  return null;
 }
 
 /**
@@ -201,58 +287,20 @@ export async function updateExistingClaimConditions(
 }
 
 /**
- * Fetches the proof for the current signer for a particular wallet.
- *
- * @param merkleRoot - The merkle root of the condition to check.
- * @returns - The proof for the current signer for the specified condition.
- */
-export async function getClaimerProofs(
-  addressToClaim: string,
-  merkleRoot: string,
-  tokenDecimals: number,
-  merkleMetadata: Record<string, string>,
-  storage: ThirdwebStorage,
-): Promise<{ maxClaimable: BigNumber; proof: string[] }> {
-  const claims: Snapshot = await fetchSnapshot(
-    merkleRoot,
-    merkleMetadata,
-    storage,
-  );
-  if (claims === undefined) {
-    return {
-      proof: [],
-      maxClaimable: BigNumber.from(0),
-    };
-  }
-  const item = claims.find(
-    (c) => c.address.toLowerCase() === addressToClaim?.toLowerCase(),
-  );
-
-  if (item === undefined) {
-    return {
-      proof: [],
-      maxClaimable: BigNumber.from(0),
-    };
-  }
-  return {
-    proof: item.proof,
-    maxClaimable: ethers.utils.parseUnits(item.maxClaimable, tokenDecimals),
-  };
-}
-
-/**
- * Create and uploads snapshots + converts claim conditions to contract format
+ * @internal
+ * Decorates claim conditions with merkle roots from snapshots if present
  * @param claimConditionInputs
  * @param tokenDecimals
  * @param provider
  * @param storage
- * @internal
+ * @param snapshotFormatVersion
  */
-export async function processClaimConditionInputs(
+async function processSnapshotData(
   claimConditionInputs: ClaimConditionInput[],
   tokenDecimals: number,
-  provider: providers.Provider,
+  provider: ethers.providers.Provider,
   storage: ThirdwebStorage,
+  snapshotFormatVersion: SnapshotFormatVersion,
 ) {
   const snapshotInfos: SnapshotInfo[] = [];
   const inputsWithSnapshots = await Promise.all(
@@ -260,9 +308,11 @@ export async function processClaimConditionInputs(
       // check snapshots and upload if provided
       if (conditionInput.snapshot && conditionInput.snapshot.length > 0) {
         const snapshotInfo = await createSnapshot(
-          SnapshotInputSchema.parse(conditionInput.snapshot),
+          conditionInput.snapshot,
           tokenDecimals,
+          provider,
           storage,
+          snapshotFormatVersion,
         );
         snapshotInfos.push(snapshotInfo);
         conditionInput.merkleRootHash = snapshotInfo.merkleRoot;
@@ -274,26 +324,54 @@ export async function processClaimConditionInputs(
       return conditionInput;
     }),
   );
+  return { inputsWithSnapshots, snapshotInfos };
+}
 
+function compare(a: BigNumberish, b: BigNumberish) {
+  const left = BigNumber.from(a);
+  const right = BigNumber.from(b);
+  if (left.eq(right)) {
+    return 0;
+  } else if (left.gt(right)) {
+    return 1;
+  } else {
+    return -1;
+  }
+}
+
+/**
+ * Create and uploads snapshots + converts claim conditions to contract format
+ * @param claimConditionInputs
+ * @param tokenDecimals
+ * @param provider
+ * @param storage
+ * @param snapshotFormatVersion
+ * @internal
+ */
+export async function processClaimConditionInputs(
+  claimConditionInputs: ClaimConditionInput[],
+  tokenDecimals: number,
+  provider: providers.Provider,
+  storage: ThirdwebStorage,
+  snapshotFormatVersion: SnapshotFormatVersion,
+) {
+  const { inputsWithSnapshots, snapshotInfos } = await processSnapshotData(
+    claimConditionInputs,
+    tokenDecimals,
+    provider,
+    storage,
+    snapshotFormatVersion,
+  );
   const parsedInputs = ClaimConditionInputArray.parse(inputsWithSnapshots);
-
   // Convert processed inputs to the format the contract expects, and sort by timestamp
-  const sortedConditions: IDropClaimCondition.ClaimConditionStruct[] = (
+  const sortedConditions: AbstractClaimConditionContractStruct[] = (
     await Promise.all(
       parsedInputs.map((c) =>
-        convertToContractModel(c, tokenDecimals, provider),
+        convertToContractModel(c, tokenDecimals, provider, storage),
       ),
     )
   ).sort((a, b) => {
-    const left = BigNumber.from(a.startTimestamp);
-    const right = BigNumber.from(b.startTimestamp);
-    if (left.eq(right)) {
-      return 0;
-    } else if (left.gt(right)) {
-      return 1;
-    } else {
-      return -1;
-    }
+    return compare(a.startTimestamp, b.startTimestamp);
   });
   return { snapshotInfos, sortedConditions };
 }
@@ -303,41 +381,106 @@ export async function processClaimConditionInputs(
  * @param c
  * @param tokenDecimals
  * @param provider
+ * @param storage
  * @internal
  */
 async function convertToContractModel(
   c: FilledConditionInput,
   tokenDecimals: number,
   provider: providers.Provider,
-): Promise<IDropClaimCondition.ClaimConditionStruct> {
+  storage: ThirdwebStorage,
+): Promise<AbstractClaimConditionContractStruct> {
   const currency =
     c.currencyAddress === constants.AddressZero
       ? NATIVE_TOKEN_ADDRESS
       : c.currencyAddress;
-  let maxClaimableSupply;
-  let quantityLimitPerTransaction;
-  if (c.maxQuantity === "unlimited") {
-    maxClaimableSupply = ethers.constants.MaxUint256.toString();
-  } else {
-    maxClaimableSupply = ethers.utils.parseUnits(c.maxQuantity, tokenDecimals);
-  }
-  if (c.quantityLimitPerTransaction === "unlimited") {
-    quantityLimitPerTransaction = ethers.constants.MaxUint256.toString();
-  } else {
-    quantityLimitPerTransaction = ethers.utils.parseUnits(
-      c.quantityLimitPerTransaction,
-      tokenDecimals,
-    );
+  const maxClaimableSupply = convertQuantityToBigNumber(
+    c.maxClaimableSupply,
+    tokenDecimals,
+  );
+  const maxClaimablePerWallet = convertQuantityToBigNumber(
+    c.maxClaimablePerWallet,
+    tokenDecimals,
+  );
+  let metadataOrUri;
+  if (c.metadata) {
+    if (typeof c.metadata === "string") {
+      metadataOrUri = c.metadata;
+    } else {
+      metadataOrUri = await storage.upload(c.metadata);
+    }
   }
   return {
     startTimestamp: c.startTime,
     maxClaimableSupply,
     supplyClaimed: 0,
-    quantityLimitPerTransaction,
-    waitTimeInSecondsBetweenClaims: c.waitInSeconds,
+    maxClaimablePerWallet,
     pricePerToken: await normalizePriceValue(provider, c.price, currency),
     currency,
-    merkleRoot: c.merkleRootHash,
+    merkleRoot: c.merkleRootHash.toString(),
+    waitTimeInSecondsBetweenClaims: c.waitInSeconds || 0,
+    metadata: metadataOrUri,
+  };
+}
+
+export function abstractContractModelToLegacy(
+  model: AbstractClaimConditionContractStruct,
+): IDropClaimCondition_V2.ClaimConditionStruct {
+  return {
+    startTimestamp: model.startTimestamp,
+    maxClaimableSupply: model.maxClaimableSupply,
+    supplyClaimed: model.supplyClaimed,
+    merkleRoot: model.merkleRoot,
+    pricePerToken: model.pricePerToken,
+    currency: model.currency,
+    quantityLimitPerTransaction: model.maxClaimablePerWallet,
+    waitTimeInSecondsBetweenClaims: model.waitTimeInSecondsBetweenClaims || 0,
+  };
+}
+
+export function abstractContractModelToNew(
+  model: AbstractClaimConditionContractStruct,
+): IClaimCondition.ClaimConditionStruct {
+  return {
+    startTimestamp: model.startTimestamp,
+    maxClaimableSupply: model.maxClaimableSupply,
+    supplyClaimed: model.supplyClaimed,
+    merkleRoot: model.merkleRoot,
+    pricePerToken: model.pricePerToken,
+    currency: model.currency,
+    quantityLimitPerWallet: model.maxClaimablePerWallet,
+    metadata: model.metadata || "",
+  };
+}
+
+export function legacyContractModelToAbstract(
+  model: IDropClaimCondition_V2.ClaimConditionStruct,
+): AbstractClaimConditionContractStruct {
+  return {
+    startTimestamp: model.startTimestamp,
+    maxClaimableSupply: model.maxClaimableSupply,
+    supplyClaimed: model.supplyClaimed,
+    merkleRoot: model.merkleRoot.toString(),
+    pricePerToken: model.pricePerToken,
+    currency: model.currency,
+    maxClaimablePerWallet: model.quantityLimitPerTransaction,
+    waitTimeInSecondsBetweenClaims: model.waitTimeInSecondsBetweenClaims,
+  };
+}
+
+export function newContractModelToAbstract(
+  model: IClaimCondition.ClaimConditionStruct,
+): AbstractClaimConditionContractStruct {
+  return {
+    startTimestamp: model.startTimestamp,
+    maxClaimableSupply: model.maxClaimableSupply,
+    supplyClaimed: model.supplyClaimed,
+    merkleRoot: model.merkleRoot.toString(),
+    pricePerToken: model.pricePerToken,
+    currency: model.currency,
+    maxClaimablePerWallet: model.quantityLimitPerWallet,
+    waitTimeInSecondsBetweenClaims: 0,
+    metadata: model.metadata,
   };
 }
 
@@ -348,24 +491,25 @@ async function convertToContractModel(
  * @param provider
  * @param merkleMetadata
  * @param storage
+ * @param shouldDownloadSnapshot
  * @internal
  */
 export async function transformResultToClaimCondition(
-  pm: IDropClaimCondition.ClaimConditionStructOutput,
+  pm: AbstractClaimConditionContractStruct,
   tokenDecimals: number,
   provider: providers.Provider,
   merkleMetadata: Record<string, string> | undefined,
   storage: ThirdwebStorage,
+  shouldDownloadSnapshot: boolean,
 ): Promise<ClaimCondition> {
   const cv = await fetchCurrencyValue(provider, pm.currency, pm.pricePerToken);
 
-  const claims = await fetchSnapshot(pm.merkleRoot, merkleMetadata, storage);
   const maxClaimableSupply = convertToReadableQuantity(
     pm.maxClaimableSupply,
     tokenDecimals,
   );
-  const quantityLimitPerTransaction = convertToReadableQuantity(
-    pm.quantityLimitPerTransaction,
+  const maxClaimablePerWallet = convertToReadableQuantity(
+    pm.maxClaimablePerWallet,
     tokenDecimals,
   );
   const availableSupply = convertToReadableQuantity(
@@ -376,27 +520,58 @@ export async function transformResultToClaimCondition(
     pm.supplyClaimed,
     tokenDecimals,
   );
+  let resolvedMetadata;
+  if (pm.metadata) {
+    resolvedMetadata = await storage.downloadJSON(pm.metadata);
+  }
   return ClaimConditionOutputSchema.parse({
     startTime: pm.startTimestamp,
-    maxQuantity: maxClaimableSupply,
+    maxClaimableSupply,
+    maxClaimablePerWallet,
     currentMintSupply,
     availableSupply,
-    quantityLimitPerTransaction,
-    waitInSeconds: pm.waitTimeInSecondsBetweenClaims.toString(),
+    waitInSeconds: pm.waitTimeInSecondsBetweenClaims?.toString(),
     price: BigNumber.from(pm.pricePerToken),
     currency: pm.currency,
     currencyAddress: pm.currency,
     currencyMetadata: cv,
     merkleRootHash: pm.merkleRoot,
-    snapshot: claims,
+    snapshot: shouldDownloadSnapshot
+      ? await fetchSnapshot(pm.merkleRoot, merkleMetadata, storage)
+      : undefined,
+    metadata: resolvedMetadata,
   });
 }
 
-function convertToReadableQuantity(bn: BigNumber, tokenDecimals: number) {
+/**
+ * @internal
+ * @param bn
+ * @param tokenDecimals
+ */
+export function convertToReadableQuantity(
+  bn: BigNumberish,
+  tokenDecimals: number,
+) {
   if (bn.toString() === ethers.constants.MaxUint256.toString()) {
     return "unlimited";
   } else {
     return ethers.utils.formatUnits(bn, tokenDecimals);
+  }
+}
+
+/**
+ * @internal
+ * @param quantity
+ * @param tokenDecimals
+ */
+export function convertQuantityToBigNumber(
+  quantity: Quantity,
+  tokenDecimals: number,
+) {
+  if (quantity === "unlimited") {
+    return ethers.constants.MaxUint256;
+  } else {
+    return ethers.utils.parseUnits(quantity, tokenDecimals);
   }
 }
 

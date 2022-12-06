@@ -24,7 +24,7 @@ import type {
 } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, Contract, ethers, providers } from "ethers";
 
-const FALLBACK_METADATA = {
+export const FALLBACK_METADATA = {
   name: "Failed to load NFT metadata",
 };
 
@@ -67,9 +67,9 @@ export async function fetchTokenMetadata(
   }
 
   return CommonNFTOutput.parse({
+    ...jsonMetadata,
     id: BigNumber.from(tokenId).toString(),
     uri: tokenUri,
-    ...jsonMetadata,
   });
 }
 

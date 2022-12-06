@@ -36,6 +36,7 @@ export default async function detect(
         name: "continue",
         message:
           "Do you want to continue and compile this project with solc instead?",
+        initial: true,
       });
       const shouldCompile = await prompt.run();
       if (!shouldCompile) {

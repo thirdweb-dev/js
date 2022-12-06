@@ -1,18 +1,25 @@
 import { createSOLProgramQueryKey } from "../../../core/query-utils/query-key";
-import { RequiredParam } from "../../../core/types/shared";
+import {
+  requiredParamInvariant,
+  RequiredParam,
+} from "../../../core/query-utils/required-param";
 import { useQuery } from "@tanstack/react-query";
+import { QueryAllParams } from "@thirdweb-dev/sdk";
 import type { NFTCollection, NFTDrop } from "@thirdweb-dev/sdk/solana";
-import invariant from "tiny-invariant";
 
 export function nftGetAllQuery(
   program: RequiredParam<NFTCollection | NFTDrop>,
+  queryParams?: QueryAllParams,
 ) {
   return {
-    queryKey: createSOLProgramQueryKey(program, ["getAll"] as const),
+    queryKey: createSOLProgramQueryKey(program, [
+      "getAll",
+      queryParams,
+    ] as const),
 
     queryFn: async () => {
-      invariant(program, "program is required");
-      return await program.getAll();
+      requiredParamInvariant(program, "program is required");
+      return program.getAll(queryParams);
     },
     enabled: !!program,
   };
@@ -38,6 +45,9 @@ export function nftGetAllQuery(
  *
  * @public
  */
-export function useNFTs(program: RequiredParam<NFTCollection | NFTDrop>) {
-  return useQuery(nftGetAllQuery(program));
+export function useNFTs(
+  program: RequiredParam<NFTCollection | NFTDrop>,
+  queryParams?: QueryAllParams,
+) {
+  return useQuery(nftGetAllQuery(program, queryParams));
 }

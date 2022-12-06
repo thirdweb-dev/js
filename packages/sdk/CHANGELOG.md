@@ -1,5 +1,252 @@
 # @thirdweb-dev/sdk
 
+## 3.6.6
+
+### Patch Changes
+
+- [#443](https://github.com/thirdweb-dev/js/pull/443) [`8c6cdaa`](https://github.com/thirdweb-dev/js/commit/8c6cdaa2887fb2cc40d3ee6991233d195d103805) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix signature minting from OpenSea Royalty Filter NFT collection contracts
+
+## 3.6.5
+
+### Patch Changes
+
+- [#440](https://github.com/thirdweb-dev/js/pull/440) [`efc56fa`](https://github.com/thirdweb-dev/js/commit/efc56fa5802490ac8ef50037658d046afd89e9a1) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - providers are now re-used if the constructor options are identical leading to better batching, also introduced an additional max batch size param (250 by default)
+
+## 3.6.4
+
+### Patch Changes
+
+- [#438](https://github.com/thirdweb-dev/js/pull/438) [`f451da6`](https://github.com/thirdweb-dev/js/commit/f451da6395689a5f89800ee63f34b6175b61f703) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix SigMint detection for OSRF NFT Collection contracts
+
+- [#416](https://github.com/thirdweb-dev/js/pull/416) [`af3acc6`](https://github.com/thirdweb-dev/js/commit/af3acc6b10751b840e56aef6400da5eea6040df2) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for AWS KMS
+
+- [#424](https://github.com/thirdweb-dev/js/pull/424) [`1bfb91d`](https://github.com/thirdweb-dev/js/commit/1bfb91dbf3a39160c987a425813ac5dbb84703ad) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improve error parsing for other wallets
+
+- [#436](https://github.com/thirdweb-dev/js/pull/436) [`ee47840`](https://github.com/thirdweb-dev/js/commit/ee478407673b0416e0c1cfe2be11bd6963395348) Thanks [@jnsdls](https://github.com/jnsdls)! - fix #429
+
+- [#434](https://github.com/thirdweb-dev/js/pull/434) [`def4251`](https://github.com/thirdweb-dev/js/commit/def42511ff5a20d83f9094164dafb87e412571b5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Remove workaround to fetch NFT owners
+
+- [#429](https://github.com/thirdweb-dev/js/pull/429) [`034a257`](https://github.com/thirdweb-dev/js/commit/034a257442314c67729f7bafcbe3740cff33fa32) Thanks [@jakeloo](https://github.com/jakeloo)! - Extract more minimal proxy impl address
+
+- [#418](https://github.com/thirdweb-dev/js/pull/418) [`eca4776`](https://github.com/thirdweb-dev/js/commit/eca47763cd89cc3b7aa57b542971837987540b55) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Increase gas limit for opening packs
+
+- [#420](https://github.com/thirdweb-dev/js/pull/420) [`639e535`](https://github.com/thirdweb-dev/js/commit/639e535ed55280ad9d081001aab3f5af72bb3e45) Thanks [@jnsdls](https://github.com/jnsdls)! - update deps
+
+- Updated dependencies [[`f451da6`](https://github.com/thirdweb-dev/js/commit/f451da6395689a5f89800ee63f34b6175b61f703)]:
+  - @thirdweb-dev/contracts-js@1.2.2
+
+## 3.6.3
+
+### Patch Changes
+
+- [#408](https://github.com/thirdweb-dev/js/pull/408) [`48797c7`](https://github.com/thirdweb-dev/js/commit/48797c7cf0695965e33eb6bf602be4652f7085a8) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - add `Gasless` as a possible extension to feature-detect
+
+- [#402](https://github.com/thirdweb-dev/js/pull/402) [`83dcaf7`](https://github.com/thirdweb-dev/js/commit/83dcaf70584af8c5cdf0427f9fc1ba82d89f0887) Thanks [@adam-maj](https://github.com/adam-maj)! - Expose sdk.fromWallet and wallet classes
+
+- [#412](https://github.com/thirdweb-dev/js/pull/412) [`f03be39`](https://github.com/thirdweb-dev/js/commit/f03be398e0d7b75c9c5b4fb643f35903e89a17e7) Thanks [@easonchai](https://github.com/easonchai)! - Correctly handle contracts using the SignatureMintERC1155 ContractKit extension
+
+- [#283](https://github.com/thirdweb-dev/js/pull/283) [`2eaa67a`](https://github.com/thirdweb-dev/js/commit/2eaa67acbe21464e7715d0b696afdc024460a44d) Thanks [@adam-maj](https://github.com/adam-maj)! - AppURI detection now enabled
+
+- [#414](https://github.com/thirdweb-dev/js/pull/414) [`47f8945`](https://github.com/thirdweb-dev/js/commit/47f8945325447874b1ace0359919c1d54fd55436) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improve error parsing
+
+## 3.6.2
+
+### Patch Changes
+
+- [#405](https://github.com/thirdweb-dev/js/pull/405) [`ccb7db4`](https://github.com/thirdweb-dev/js/commit/ccb7db48739b8dddcb2c032b3b6e3e5200485715) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add updateAll param to creators and royalty update hooks for Solana
+
+- [#404](https://github.com/thirdweb-dev/js/pull/404) [`9151aa7`](https://github.com/thirdweb-dev/js/commit/9151aa7dc80754a7aa4fd3f6ce0207bccbb6451f) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - expose `getDefaultTrustedForwarders` helper function
+
+- [#305](https://github.com/thirdweb-dev/js/pull/305) [`5a01c53`](https://github.com/thirdweb-dev/js/commit/5a01c537e30bd7ef562aad1012413990de6faedf) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update to Metaplex 0.17
+
+## 3.6.1
+
+### Patch Changes
+
+- [#398](https://github.com/thirdweb-dev/js/pull/398) [`15514f1`](https://github.com/thirdweb-dev/js/commit/15514f190a844d809ae5b1edb580aab46a682485) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - add `defaultValue` to constructorParams schema for releases
+
+- [#388](https://github.com/thirdweb-dev/js/pull/388) [`7c0744a`](https://github.com/thirdweb-dev/js/commit/7c0744a006e78987ad8b271b2c64f4bac7759510) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for total supply and pagination on get all
+
+- [#395](https://github.com/thirdweb-dev/js/pull/395) [`f8bceec`](https://github.com/thirdweb-dev/js/commit/f8bceec10c60b30dc3d6f45926e2a9e018202578) Thanks [@jnsdls](https://github.com/jnsdls)! - [Solana] - fix claim condition reset to native token from custom
+
+- [#399](https://github.com/thirdweb-dev/js/pull/399) [`887af24`](https://github.com/thirdweb-dev/js/commit/887af24450e316c2ea390cd49c0563cebe793c0f) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - fix custom error handling for null-ish error values
+
+- [#390](https://github.com/thirdweb-dev/js/pull/390) [`96bd92e`](https://github.com/thirdweb-dev/js/commit/96bd92e724ec7d880d23348071b26ab8c21dd868) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SDK] Expose `getAllDetectedFeatures(ABI)` helper function
+
+## 3.6.0
+
+### Minor Changes
+
+- [#364](https://github.com/thirdweb-dev/js/pull/364) [`7cb8e59`](https://github.com/thirdweb-dev/js/commit/7cb8e59be48dc923316eb36ab43a1bef7364f6b1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Enable new Drop contracts
+
+### Patch Changes
+
+- [#382](https://github.com/thirdweb-dev/js/pull/382) [`0ed77d2`](https://github.com/thirdweb-dev/js/commit/0ed77d2c9e7526444ef660aab82a950865234aa6) Thanks [@jnsdls](https://github.com/jnsdls)! - Add `constructorParams` to `ExtraPublishMetadataSchemaInput` schema to support better deploys from releases.
+
+- [#385](https://github.com/thirdweb-dev/js/pull/385) [`04a47e8`](https://github.com/thirdweb-dev/js/commit/04a47e8971d28da2532ebd9db824eeb459c17bd4) Thanks [@adam-maj](https://github.com/adam-maj)! - Add retroactive royalty and creator setting
+
+## 3.5.2
+
+### Patch Changes
+
+- [#380](https://github.com/thirdweb-dev/js/pull/380) [`3eba69a`](https://github.com/thirdweb-dev/js/commit/3eba69afd78b7aa472a9c00c9d4220bb69ad1d3e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose sdk.wallet.getChainId()
+
+- [#376](https://github.com/thirdweb-dev/js/pull/376) [`4af785c`](https://github.com/thirdweb-dev/js/commit/4af785c37c831ecd7087c1c9eb9095922cac0855) Thanks [@adam-maj](https://github.com/adam-maj)! - Update tiered-drop with tokens claimed
+
+- [#373](https://github.com/thirdweb-dev/js/pull/373) [`6f818f3`](https://github.com/thirdweb-dev/js/commit/6f818f393eb9023b53a3358d62d60ec23a9246bd) Thanks [@adam-maj](https://github.com/adam-maj)! - Update tiered-drop contract version
+
+- [#377](https://github.com/thirdweb-dev/js/pull/377) [`b79dc18`](https://github.com/thirdweb-dev/js/commit/b79dc18f7ab5155bbf4af02dc1a953546160bad0) Thanks [@adam-maj](https://github.com/adam-maj)! - Add event filters
+
+- Updated dependencies [[`4af785c`](https://github.com/thirdweb-dev/js/commit/4af785c37c831ecd7087c1c9eb9095922cac0855), [`6f818f3`](https://github.com/thirdweb-dev/js/commit/6f818f393eb9023b53a3358d62d60ec23a9246bd)]:
+  - @thirdweb-dev/contracts-js@1.2.1
+
+## 3.5.1
+
+### Patch Changes
+
+- [#368](https://github.com/thirdweb-dev/js/pull/368) [`4e7b293`](https://github.com/thirdweb-dev/js/commit/4e7b293c543244de79c150ca8c37d941221fc9a3) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix handling of old allowlist proof format
+
+- [#365](https://github.com/thirdweb-dev/js/pull/365) [`c9c0e4f`](https://github.com/thirdweb-dev/js/commit/c9c0e4ff39b054af746f3aec75fcbd0a3ef7239d) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - now React Native compatible
+
+## 3.5.0
+
+### Minor Changes
+
+- [#329](https://github.com/thirdweb-dev/js/pull/329) [`5200d5d`](https://github.com/thirdweb-dev/js/commit/5200d5d7e730da58bd4d3e7c222e3c661265f913) Thanks [@adam-maj](https://github.com/adam-maj)! - ### Breaking changes:
+
+  1. claim conditions had some changes to support the new drop contracts:
+
+  - `maxClaimablePerTransaction` is now named `maxClaimablePerWallet`
+  - `maxQuantity` is now named `maxClaimable`
+
+  2. signature minting now requires a `to` address to be set for security purposees
+
+  ### Main Changes:
+
+  - Support for new optimized Drop contracts
+  - Support for new claim conditions with overrides
+  - Don't allow zero address recipient on signature minting
+
+### Patch Changes
+
+- [#362](https://github.com/thirdweb-dev/js/pull/362) [`42a6065`](https://github.com/thirdweb-dev/js/commit/42a606588dfed03c67c57357dd0ee1ad19fad6ea) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SDK] Fix fetching NFTs with numbers as ids
+
+- Updated dependencies [[`aa6d9ed`](https://github.com/thirdweb-dev/js/commit/aa6d9ed75d126d7a0cca9fb8fc389ff94e9d1e14)]:
+  - @thirdweb-dev/contracts-js@1.2.0
+
+## 3.4.5
+
+### Patch Changes
+
+- [#359](https://github.com/thirdweb-dev/js/pull/359) [`e731c1a`](https://github.com/thirdweb-dev/js/commit/e731c1a7c341e6f2b9cc42c88d5c1b036dcf4a7c) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SDK] Allow fetching claimerProofs from any claim condition
+
+## 3.4.4
+
+## 3.4.3
+
+### Patch Changes
+
+- [#353](https://github.com/thirdweb-dev/js/pull/353) [`1c24c3c`](https://github.com/thirdweb-dev/js/commit/1c24c3c3c48476a824f817e09e7bf0fbe67c1db5) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Add useUpdateCreators hook, fix CreatorInput schema
+
+- [#357](https://github.com/thirdweb-dev/js/pull/357) [`65fc7ba`](https://github.com/thirdweb-dev/js/commit/65fc7ba6fff093a971b53cb0979c39768e090ba1) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose claimConditions.getClaimerProofs(address) to get allowlist information for a given address
+
+## 3.4.2
+
+### Patch Changes
+
+- [#344](https://github.com/thirdweb-dev/js/pull/344) [`21c21c1`](https://github.com/thirdweb-dev/js/commit/21c21c1adfd09b60ad563bfd4c308597140de33c) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Update internal function resolveContractUriFromAddress -> resolveContractUriFromAddress
+
+- [#352](https://github.com/thirdweb-dev/js/pull/352) [`3522917`](https://github.com/thirdweb-dev/js/commit/352291791ee900e1500f84f095290497934d2f60) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose marketplace.auction.executeSale(listingId)
+
+## 3.4.1
+
+### Patch Changes
+
+- [#343](https://github.com/thirdweb-dev/js/pull/343) [`72227b2`](https://github.com/thirdweb-dev/js/commit/72227b2e166a3a68bbb41cf2b389322f5b7547a2) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose general marketplace.makeOffer() function
+
+## 3.4.0
+
+### Patch Changes
+
+- [#337](https://github.com/thirdweb-dev/js/pull/337) [`340605b`](https://github.com/thirdweb-dev/js/commit/340605b507f384fbd2999b9c16542af3c53e84a9) Thanks [@adam-maj](https://github.com/adam-maj)! - Clean native token address in listing
+
+- [#342](https://github.com/thirdweb-dev/js/pull/342) [`26116a6`](https://github.com/thirdweb-dev/js/commit/26116a6f637ee845f7bd17f20ffe17caf184658e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add new univeral RPC urls
+
+- [#335](https://github.com/thirdweb-dev/js/pull/335) [`15f8006`](https://github.com/thirdweb-dev/js/commit/15f8006e1fb22333b7ee239b45e7b1b12d6dccc8) Thanks [@adam-maj](https://github.com/adam-maj)! - Export smart contract
+
+- [#327](https://github.com/thirdweb-dev/js/pull/327) [`ef27aad`](https://github.com/thirdweb-dev/js/commit/ef27aad0aafc4577e85f44dc77dfbe880bd239b5) Thanks [@jnsdls](https://github.com/jnsdls)! - enable e2e testing
+
+- Updated dependencies [[`ef27aad`](https://github.com/thirdweb-dev/js/commit/ef27aad0aafc4577e85f44dc77dfbe880bd239b5)]:
+  - @thirdweb-dev/storage@1.0.6
+
+## 3.3.1
+
+### Patch Changes
+
+- [#332](https://github.com/thirdweb-dev/js/pull/332) [`ad851f7`](https://github.com/thirdweb-dev/js/commit/ad851f7b4d6abb5ab9364ef3dec229f913e18ce5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix for finding addresses in legacy merkle tree format
+
+- [#330](https://github.com/thirdweb-dev/js/pull/330) [`6218c88`](https://github.com/thirdweb-dev/js/commit/6218c885842e6b4e44ec38ec92a9211e56c49bf4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix deploying contracts with non-32 bytes parameters like bytes4
+
+## 3.3.0
+
+### Minor Changes
+
+- [#315](https://github.com/thirdweb-dev/js/pull/315) [`89ff921`](https://github.com/thirdweb-dev/js/commit/89ff921a7d9f0e42b4e6707c8b56d0aab95c1aa0) Thanks [@furqanrydhan](https://github.com/furqanrydhan)! - fixing vite, multihash moved to non lazy load + cbor-x instead of cbor-web
+
+- [#321](https://github.com/thirdweb-dev/js/pull/321) [`a57b4f0`](https://github.com/thirdweb-dev/js/commit/a57b4f01f3a49590b897101f2730582e4124a554) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SDK] Implement sharded merkle trees for lightweight allowlist checks
+
+  **Behavior change**
+
+  We've made allowlists much more performant using sharded merkle trees. This allows us to process large allowlists (1M+) efficiently.
+
+  To support those large allowlists, fetching claim conditions does not fetch the allowlist data by default anymore. Instead, you can pass an options object to additionally fetch the allowlist data along with the rest of the claim conditions data.
+
+  This affects `ClaimConditions.getActive()` and `ClaimConditions.getAll()`
+
+  Examples:
+
+  ```ts
+  const activeClaimCondition =
+    await contract.erc721.claimConditions.getActive();
+  // `activeClaimCondition.snapshot` is undefined
+  const activeclaimConditionWithtAllowList =
+    await contract.erc721.claimConditions.getActive({
+      withAllowList: true,
+    });
+  // `activeClaimCondition.snapshot` returns the allowlist data
+  ```
+
+### Patch Changes
+
+- [#326](https://github.com/thirdweb-dev/js/pull/326) [`126752d`](https://github.com/thirdweb-dev/js/commit/126752d7d02c9a808a63fb9e67a9df6658b5682b) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - expose fn to get ipfs hash from bytecote publicly
+
+- [#328](https://github.com/thirdweb-dev/js/pull/328) [`df74340`](https://github.com/thirdweb-dev/js/commit/df74340fa51323304c32419761d6f18628b060fa) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update cbor-x import to work with es2018 builds (embeds)
+
+- Updated dependencies [[`87fd6ab`](https://github.com/thirdweb-dev/js/commit/87fd6ab14e1a67a1b12e72bd397fb21769537307)]:
+  - @thirdweb-dev/storage@1.0.5
+
+## 3.2.6
+
+### Patch Changes
+
+- [#317](https://github.com/thirdweb-dev/js/pull/317) [`4f867e1`](https://github.com/thirdweb-dev/js/commit/4f867e15edbe5757afbf54cab207458711a8986c) Thanks [@adam-maj](https://github.com/adam-maj)! - Add supply to nft.get
+
+- [#312](https://github.com/thirdweb-dev/js/pull/312) [`b6eec61`](https://github.com/thirdweb-dev/js/commit/b6eec6146c23b66a3681bbb48b173b9019254214) Thanks [@adam-maj](https://github.com/adam-maj)! - Add quantity to mint additional supply
+
+- [#310](https://github.com/thirdweb-dev/js/pull/310) [`9727502`](https://github.com/thirdweb-dev/js/commit/9727502eb30ac139382b7c7c8e8fc0967cbfbcf1) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - [SOL] - add useMintNFTSupply hook in react and accomodate inputs for it in SDK
+
+- [#307](https://github.com/thirdweb-dev/js/pull/307) [`782b58d`](https://github.com/thirdweb-dev/js/commit/782b58d3f6a3b49ff9b3d837551db5161f96171a) Thanks [@kumaryash90](https://github.com/kumaryash90)! - fix multicall gasless
+
+- [#320](https://github.com/thirdweb-dev/js/pull/320) [`f41a443`](https://github.com/thirdweb-dev/js/commit/f41a443c5785240197607b5bf93ff18a1c8e8307) Thanks [@adam-maj](https://github.com/adam-maj)! - Add update creators and update royalty
+
+- [#313](https://github.com/thirdweb-dev/js/pull/313) [`f45ef62`](https://github.com/thirdweb-dev/js/commit/f45ef62128cfefe06275a38440c90d45e9f3cef7) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Return default metadata when failing to fetch a given tokenId on NFT contracts
+
+- [#319](https://github.com/thirdweb-dev/js/pull/319) [`2f8ec89`](https://github.com/thirdweb-dev/js/commit/2f8ec89c4c83ae577092c840c198e6fcfb114e69) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose total claimed and unclaimed supply for erc721 drop contracts
+
+- [#322](https://github.com/thirdweb-dev/js/pull/322) [`b7cd744`](https://github.com/thirdweb-dev/js/commit/b7cd744cd0482a6c3fe5ae0c858f20cd380d4114) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Allow signing multiple claims at once
+
+- [#306](https://github.com/thirdweb-dev/js/pull/306) [`53c6507`](https://github.com/thirdweb-dev/js/commit/53c65076696a43bd9a7e58a7493d4e65c172900f) Thanks [@adam-maj](https://github.com/adam-maj)! - Add contract deploy listener
+
 ## 3.2.5
 
 ### Patch Changes

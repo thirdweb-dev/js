@@ -8,14 +8,15 @@
   "private": true,
   "workspaces": {
     "packages": [
-      "packages/*"
+      "packages/*",
+      "test/**/*"
     ]
   },
   "scripts": {
     "test": "turbo run test test:evm test:solana",
     "e2e": "turbo run e2e",
-    "build": "turbo run build",
-    "build:release": "turbo run build --force",
+    "build": "turbo run build --filter=./packages/*",
+    "build:release": "turbo run build --force --filter=./packages/*",
     "dev": "turbo run dev --no-cache --parallel --continue",
     "fix:repo": "manypkg fix",
     "lint": "turbo run lint",
@@ -27,12 +28,7 @@
     "release": "node ./scripts/pre-release.mjs && changeset publish",
     "version-packages:nightly": "changeset version --snapshot nightly",
     "release:nightly": "node ./scripts/pre-release.mjs && changeset publish --tag nightly",
-    "push": "turbo run push"
-  },
-  "preconstruct": {
-    "packages": [
-      "packages/*"
-    ]
+    "push": "turbo run push --filter=./packages/*"
   },
   "packageManager": "yarn@1.22.19",
   "dependencies": {

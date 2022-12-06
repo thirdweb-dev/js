@@ -1,14 +1,29 @@
-import { ChainId } from "@thirdweb-dev/sdk";
+import { useConnect } from "../hooks/wagmi-required/useConnect";
 import { Signer, ethers, utils } from "ethers";
 import invariant from "tiny-invariant";
-import { Chain, Connector, ConnectorData, normalizeChainId } from "wagmi";
+import {
+  Chain,
+  Connector,
+  ConnectorData,
+  normalizeChainId,
+  useContext as useWagmiContext,
+} from "wagmi";
 
+// exerpt from https://docs.gnosis-safe.io/backend/available-services
 const CHAIN_ID_TO_GNOSIS_SERVER_URL = {
-  [ChainId.Mainnet]: "https://safe-transaction.mainnet.gnosis.io",
-  [ChainId.Avalanche]: "https://safe-transaction.avalanche.gnosis.io",
-  [ChainId.Polygon]: "https://safe-transaction.polygon.gnosis.io",
-  [ChainId.Goerli]: "https://safe-transaction.goerli.gnosis.io",
-};
+  // mainnet
+  1: "https://safe-transaction-mainnet.safe.global",
+  // avalanche
+  43114: "https://safe-transaction-avalanche.safe.global",
+  // polygon
+  137: "https://safe-transaction-polygon.safe.global",
+  // goerli
+  5: "https://safe-transaction-goerli.safe.global",
+  // bsc
+  56: "https://safe-transaction-bsc.safe.global",
+  // optimism
+  10: "https://safe-transaction-optimism.safe.global",
+} as const;
 
 export interface GnosisConnectorArguments {
   safeAddress: string;
@@ -18,6 +33,8 @@ export interface GnosisConnectorArguments {
 const __IS_SERVER__ = typeof window === "undefined";
 
 export class GnosisSafeConnector extends Connector {
+  static supportedChains = Object.keys(CHAIN_ID_TO_GNOSIS_SERVER_URL);
+  public supportedChains = GnosisSafeConnector.supportedChains;
   id = "gnosis";
   ready = __IS_SERVER__;
   name = "Gnosis Safe";
@@ -48,6 +65,11 @@ export class GnosisSafeConnector extends Connector {
       provider,
       chain: { id, unsupported: this.isChainUnsupported(id) },
     };
+  }
+
+  public isChainSupported(chainId: string | number) {
+    const id = normalizeChainId(chainId);
+    return !this.isChainUnsupported(id);
   }
 
   private async createSafeSigner() {
@@ -81,7 +103,10 @@ export class GnosisSafeConnector extends Connector {
       import("@gnosis.pm/safe-ethers-lib"),
     ]);
 
-    const ethAdapter = new safeEthersLib.default({ ethers, signer });
+    const ethAdapter = new safeEthersLib.default({
+      ethers,
+      signerOrProvider: signer,
+    });
 
     const safe = await safeCoreSdk.default.create({
       ethAdapter: ethAdapter as any,
@@ -162,4 +187,68 @@ export class GnosisSafeConnector extends Connector {
     this.previousConnector = connector;
     this.config = config;
   }
+}
+
+/**
+ * Hook for connecting to a Gnosis Safe. This enables multisig wallets to connect to your application and sing transactions.
+ *
+ * ```javascript
+ * import { useGnosis } from "@thirdweb-dev/react"
+ * ```
+ *
+ *
+ * @example
+ * ```javascript
+ * import { useGnosis } from "@thirdweb-dev/react"
+ *
+ * const App = () => {
+ *   const connectWithGnosis = useGnosis()
+ *
+ *   return (
+ *     <button onClick={() => connectWithGnosis({ safeAddress: "0x...", safeChainId: 1 })}>
+ *       Connect Gnosis Safe
+ *     </button>
+ *   )
+ * }
+ * ```
+ *
+ * @public
+ */
+export function useGnosis() {
+  const wagmiContext = useWagmiContext();
+  invariant(
+    wagmiContext,
+    `useGnosis() can only be used inside <ThirdwebProvider />. If you are using <ThirdwebSDKProvider /> you will have to use your own wallet-connection logic.`,
+  );
+  const [connectors, connect] = useConnect();
+  if (connectors.loading) {
+    return () => Promise.reject("Gnosis connector not ready to be used, yet");
+  }
+  const connector = connectors.data.connectors.find((c) => c.id === "gnosis");
+  invariant(
+    connector,
+    "Gnosis connector not found, please make sure it is provided to your <ThirdwebProvider />",
+  );
+
+  return async (config: GnosisConnectorArguments) => {
+    const previousConnector = connectors.data.connector;
+    const previousConnectorChain = await previousConnector?.getChainId();
+    invariant(
+      !!previousConnector,
+      "Cannot connect to Gnosis Safe without first being connected to a personal wallet.",
+    );
+    invariant(
+      previousConnectorChain === config.safeChainId,
+      "Gnosis safe chain id must match personal wallet chain id.",
+    );
+    invariant(
+      utils.isAddress(config.safeAddress),
+      "Gnosis safe address must be a valid address.",
+    );
+    (connector as GnosisSafeConnector).setConfiguration(
+      previousConnector,
+      config,
+    );
+    return connect(connector);
+  };
 }

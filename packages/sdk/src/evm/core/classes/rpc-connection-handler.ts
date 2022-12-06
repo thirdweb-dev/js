@@ -14,7 +14,7 @@ import EventEmitter from "eventemitter3";
 export class RPCConnectionHandler extends EventEmitter {
   private provider: providers.Provider;
   private signer: Signer | undefined;
-  protected readonly options: SDKOptionsOutput;
+  public readonly options: SDKOptionsOutput;
 
   constructor(network: NetworkOrSignerOrProvider, options: SDKOptions) {
     super();

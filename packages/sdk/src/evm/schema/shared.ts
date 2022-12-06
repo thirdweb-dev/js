@@ -1,34 +1,6 @@
 import { BigNumber, CallOverrides, utils } from "ethers";
 import { z } from "zod";
 
-const isBrowser = () => typeof window !== "undefined";
-const FileOrBufferUnionSchema = isBrowser()
-  ? (z.instanceof(File) as z.ZodType<InstanceType<typeof File>>)
-  : (z.instanceof(Buffer) as z.ZodTypeAny); // @fixme, this is a hack to make browser happy for now
-
-/**
- * @internal
- */
-export const FileOrBufferSchema = z.union([
-  FileOrBufferUnionSchema,
-  z.object({
-    data: z.union([FileOrBufferUnionSchema, z.string()]),
-    name: z.string(),
-  }),
-]);
-
-/**
- * @internal
- */
-export const FileOrBufferOrStringSchema = z.union([
-  FileOrBufferSchema,
-  z.string(),
-]);
-
-export const MAX_BPS = 10000;
-
-export const BytesLikeSchema = z.union([z.array(z.number()), z.string()]);
-
 export const BigNumberSchema = z
   .union([
     z.string(),
@@ -55,16 +27,6 @@ export const BigNumberTransformSchema = z
     return BigNumber.from(arg).toString();
   });
 
-export const BasisPointsSchema = z
-  .number()
-  .max(MAX_BPS, "Cannot exeed 100%")
-  .min(0, "Cannot be below 0%");
-
-export const PercentSchema = z
-  .number()
-  .max(100, "Cannot exeed 100%")
-  .min(0, "Cannot be below 0%");
-
 export const AddressSchema = z.string().refine(
   (arg) => utils.isAddress(arg),
   (out) => {
@@ -73,13 +35,6 @@ export const AddressSchema = z.string().refine(
     };
   },
 );
-
-export const AmountSchema = z
-  .union([
-    z.string().regex(/^([0-9]+\.?[0-9]*|\.[0-9]+)$/, "Invalid amount"),
-    z.number().min(0, "Amount cannot be negative"),
-  ])
-  .transform((arg) => (typeof arg === "number" ? arg.toString() : arg));
 
 export const RawDateSchema = z.date().transform((i) => {
   return BigNumber.from(Math.floor(i.getTime() / 1000));

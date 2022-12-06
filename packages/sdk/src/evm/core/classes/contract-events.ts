@@ -1,16 +1,16 @@
 import { EventType } from "../../constants";
-import { ContractEvent, EventQueryFilter } from "../../types/index";
+import { ContractEvent, EventQueryOptions } from "../../types/index";
 import { ContractWrapper } from "./contract-wrapper";
 import { EventFragment } from "@ethersproject/abi";
 import { BaseContract, Event, providers } from "ethers";
-import { ListenerFn } from "eventemitter3";
+import type { EventEmitter } from "eventemitter3";
 
 /**
  * Listen to Contract events in real time
  * @public
  */
 export class ContractEvents<TContract extends BaseContract> {
-  private contractWrapper;
+  protected contractWrapper;
 
   constructor(contractWrapper: ContractWrapper<TContract>) {
     this.contractWrapper = contractWrapper;
@@ -28,7 +28,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @param listener - the callback function that will be called on every transaction
    * @public
    */
-  public addTransactionListener(listener: ListenerFn) {
+  public addTransactionListener(listener: EventEmitter.ListenerFn) {
     this.contractWrapper.addListener(EventType.Transaction, listener);
   }
 
@@ -44,7 +44,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @param listener - the callback function to remove
    * @public
    */
-  public removeTransactionListener(listener: ListenerFn) {
+  public removeTransactionListener(listener: EventEmitter.ListenerFn) {
     this.contractWrapper.off(EventType.Transaction, listener);
   }
 
@@ -198,7 +198,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @returns The event objects of the events emitted with event names and data for each event
    */
   public async getAllEvents<TEvent extends Record<string, any>>(
-    filters: EventQueryFilter = {
+    filters: Omit<EventQueryOptions, "filters"> = {
       fromBlock: 0,
       toBlock: "latest",
       order: "desc",
@@ -226,23 +226,34 @@ export class ContractEvents<TContract extends BaseContract> {
    * ```javascript
    * // The name of the event to get logs for
    * const eventName = "Transfer";
-   * // Optionally pass in filters to limit the blocks from which events are retrieved
-   * const filters = {
+   *
+   * // Optionally pass in options to limit the blocks from which events are retrieved
+   * const options = {
    *   fromBlock: 0,
-   *   toBlock: 1000000,
-   * }
-   * const events = await contract.events.getEvents(eventName, filters);
+   *   toBlock: 1000000, // can also pass "latest"
+   *   order: "desc",
+   *   // Configure event filters (filter on indexed event parameters)
+   *   filters: {
+   *     from: "0x...",
+   *     to: "0x..."
+   *   }
+   * };
+   *
+   * const events = await contract.events.getEvents(eventName, options);
    * console.log(events[0].eventName);
    * console.log(events[0].data);
    * ```
    *
    * @param eventName - The name of the event to get logs for
-   * @param filters - Specify the from and to block numbers to get events for, defaults to all blocks. @see EventQueryFilter
+   * @param options - Specify the from and to block numbers to get events for, defaults to all blocks. @see EventQueryOptions
    * @returns The requested event objects with event data
    */
-  public async getEvents<TEvent extends Record<string, any>>(
+  public async getEvents<
+    TEvent extends Record<string, any> = Record<string, any>,
+    TFilter extends Record<string, any> = Record<string, any>,
+  >(
     eventName: string,
-    filters: EventQueryFilter = {
+    options: EventQueryOptions<TFilter> = {
       fromBlock: 0,
       toBlock: "latest",
       order: "desc",
@@ -251,24 +262,32 @@ export class ContractEvents<TContract extends BaseContract> {
     const event = this.contractWrapper.readContract.interface.getEvent(
       eventName as string,
     );
-    const filter = this.contractWrapper.readContract.filters[event.name];
+
+    const eventInterface =
+      this.contractWrapper.readContract.interface.getEvent(eventName);
+    const args = options.filters
+      ? eventInterface.inputs.map((e) => (options.filters as TFilter)[e.name])
+      : [];
+    const filter = this.contractWrapper.readContract.filters[event.name](
+      ...args,
+    );
 
     const events = await this.contractWrapper.readContract.queryFilter(
-      filter(),
-      filters.fromBlock,
-      filters.toBlock,
+      filter,
+      options.fromBlock,
+      options.toBlock,
     );
 
     const orderedEvents = events.sort((a, b) => {
-      return filters.order === "desc"
+      return options.order === "desc"
         ? b.blockNumber - a.blockNumber
         : a.blockNumber - b.blockNumber;
     });
 
-    return this.parseEvents(orderedEvents);
+    return this.parseEvents<TEvent>(orderedEvents);
   }
 
-  private parseEvents<TEvent extends Record<string, any>>(
+  private parseEvents<TEvent = Record<string, any>>(
     events: Event[],
   ): ContractEvent<TEvent>[] {
     return events.map((e) => {

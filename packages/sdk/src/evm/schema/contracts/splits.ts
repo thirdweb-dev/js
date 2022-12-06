@@ -1,4 +1,5 @@
-import { AddressSchema, BasisPointsSchema } from "../shared";
+import { BasisPointsSchema } from "../../../core/schema/shared";
+import { AddressSchema } from "../shared";
 import {
   CommonContractOutputSchema,
   CommonContractSchema,

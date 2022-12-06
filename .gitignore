@@ -13,3 +13,8 @@ public/dist
 .turbo
 ./packages/contracts-js/abis
 .idea/
+.yalc/
+yalc.lock
+build/
+playwright-report/
+.vscode/

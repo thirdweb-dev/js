@@ -29,7 +29,7 @@ export * from "./constants";
 export * from "./contracts";
 
 // export integration things
-export * from "./integrations/paper-xyz";
+export * from "./integrations/thirdweb-checkout";
 
 // explcitly export the *TYPES* of prebuilt contracts
 export type { Edition } from "./contracts/prebuilt-implementations/edition";
@@ -44,3 +44,4 @@ export type { Split } from "./contracts/prebuilt-implementations/split";
 export type { Token } from "./contracts/prebuilt-implementations/token";
 export type { TokenDrop } from "./contracts/prebuilt-implementations/token-drop";
 export type { Vote } from "./contracts/prebuilt-implementations/vote";
+export type { SmartContract } from "./contracts/smart-contract";

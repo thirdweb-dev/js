@@ -1,12 +1,22 @@
-import { RequiredParam } from "../../../core/types/shared";
+import {
+  RequiredParam,
+  requiredParamInvariant,
+} from "../../../core/query-utils/required-param";
 import { useSDKChainId } from "../../providers/base";
-import { BuyNowParams, MakeBidParams } from "../../types";
+import {
+  AcceptDirectOffer,
+  BuyNowParams,
+  ExecuteAuctionSale,
+  MakeBidParams,
+  MakeOfferParams,
+} from "../../types";
 import {
   cacheKeys,
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useAddress } from "../wallet";
+import { useContractEvents } from "./contracts";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type {
   AuctionListing,
@@ -17,7 +27,7 @@ import type {
 } from "@thirdweb-dev/sdk";
 import { ListingType } from "@thirdweb-dev/sdk";
 import { Marketplace } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/marketplace";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumberish } from "ethers";
 import invariant from "tiny-invariant";
 
 /** **********************/
@@ -45,8 +55,9 @@ export function useListing(
   return useQueryWithNetwork(
     cacheKeys.contract.marketplace.getListing(contractAddress, listingId),
     () => {
-      invariant(contract, "No Contract instance provided");
-      return contract.getListing(BigNumber.from(listingId || 0));
+      requiredParamInvariant(contract, "No Contract instance provided");
+      requiredParamInvariant(listingId, "No listing id provided");
+      return contract.getListing(listingId);
     },
     {
       enabled: !!contract,
@@ -76,7 +87,7 @@ export function useListings(
   return useQueryWithNetwork(
     cacheKeys.contract.marketplace.getAllListings(contractAddress, filter),
     () => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
       return contract.getAllListings(filter);
     },
     {
@@ -103,7 +114,7 @@ export function useListingsCount(contract: RequiredParam<Marketplace>) {
   return useQueryWithNetwork(
     cacheKeys.contract.marketplace.getTotalCount(contractAddress),
     () => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
       return contract.getTotalCount();
     },
     {
@@ -133,7 +144,7 @@ export function useActiveListings(
   return useQueryWithNetwork(
     cacheKeys.contract.marketplace.getActiveListings(contractAddress, filter),
     () => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
 
       return contract.getActiveListings(filter);
     },
@@ -168,8 +179,9 @@ export function useWinningBid(
       listingId,
     ),
     () => {
-      invariant(contract, "No Contract instance provided");
-      return contract.auction.getWinningBid(BigNumber.from(listingId || 0));
+      requiredParamInvariant(contract, "No Contract instance provided");
+      requiredParamInvariant(listingId, "No listing id provided");
+      return contract.auction.getWinningBid(listingId);
     },
     {
       enabled: !!contract && listingId !== undefined,
@@ -201,12 +213,11 @@ export function useAuctionWinner(
       listingId,
     ),
     async () => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
+      requiredParamInvariant(listingId, "No listing id provided");
       let winner: string | undefined;
       try {
-        winner = await contract.auction.getWinner(
-          BigNumber.from(listingId || 0),
-        );
+        winner = await contract.auction.getWinner(listingId);
       } catch (err) {
         if (!(err as Error)?.message?.includes("Could not find auction")) {
           throw err;
@@ -238,11 +249,45 @@ export function useBidBuffer(contract: RequiredParam<Marketplace>) {
   return useQueryWithNetwork(
     cacheKeys.contract.marketplace.getBidBufferBps(contractAddress),
     () => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
       return contract.getBidBufferBps();
     },
     {
       enabled: !!contract,
+    },
+  );
+}
+
+/**
+ * Use this to get the minimum next bid for the auction listing from your marketplace contract.
+ *
+ * @example
+ * ```javascript
+ * const { data: minimumNextBid, isLoading, error } = useMinimumNextBid(<YourMarketplaceContractInstance>, <listingId>);
+ * ```
+ *
+ * @param contract - an instance of a marketplace contract
+ * @param listingId - the listing id to check
+ * @returns a response object that includes the minimum next bid for the auction listing
+ * @beta
+ */
+export function useMinimumNextBid(
+  contract: RequiredParam<Marketplace>,
+  listingId: RequiredParam<BigNumberish>,
+) {
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.marketplace.auction.getWinner(
+      contractAddress,
+      listingId,
+    ),
+    async () => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      requiredParamInvariant(listingId, "No listing id provided");
+      return await contract.auction.getMinimumNextBid(listingId);
+    },
+    {
+      enabled: !!contract && listingId !== undefined,
     },
   );
 }
@@ -290,8 +335,9 @@ export function useCreateDirectListing(contract: RequiredParam<Marketplace>) {
   return useMutation(
     async (data: NewDirectListing) => {
       invariant(walletAddress, "no wallet connected, cannot create listing");
+      requiredParamInvariant(contract, "No Contract instance provided");
       invariant(
-        contract?.direct?.createListing,
+        contract.direct.createListing,
         "contract does not support direct.createListing",
       );
       return await contract.direct.createListing(data);
@@ -346,8 +392,9 @@ export function useCreateAuctionListing(contract: RequiredParam<Marketplace>) {
   return useMutation(
     async (data: NewAuctionListing) => {
       invariant(walletAddress, "no wallet connected, cannot create listing");
+      requiredParamInvariant(contract, "No Contract instance provided");
       invariant(
-        contract?.direct?.createListing,
+        contract.direct.createListing,
         "contract does not support auction.createListing",
       );
       return await contract.auction.createListing(data);
@@ -456,8 +503,9 @@ export function useMakeBid(contract: RequiredParam<Marketplace>) {
   return useMutation(
     async (data: MakeBidParams) => {
       invariant(walletAddress, "no wallet connected, cannot make bid");
+      requiredParamInvariant(contract, "No Contract instance provided");
       invariant(
-        contract?.auction?.makeBid,
+        contract.auction.makeBid,
         "contract does not support auction.makeBid",
       );
       return await contract.auction.makeBid(data.listingId, data.bid);
@@ -471,6 +519,203 @@ export function useMakeBid(contract: RequiredParam<Marketplace>) {
         ),
     },
   );
+}
+
+/**
+ * Use this to make an offer on direct or auction listing from your marketplace contract.
+ *
+ * @example
+ * ```jsx
+ * const Component = () => {
+ *   const {
+ *     mutate: makeOffer,
+ *     isLoading,
+ *     error,
+ *   } = useMakeOffer(">>YourMarketplaceContractInstance<<");
+ *
+ *   if (error) {
+ *     console.error("failed to make a bid", error);
+ *   }
+ *
+ *   return (
+ *     <button
+ *       disabled={isLoading}
+ *       onClick={() => makeOffer({ listingId: 1, pricePerToken: 0.5, quantity: 1 })}
+ *     >
+ *       Bid!
+ *     </button>
+ *   );
+ * };
+ * ```
+ *
+ * @param contract - an instance of a Marketplace contract
+ * @returns a mutation object that can be used to make a bid on an auction listing
+ * @beta
+ */
+export function useMakeOffer(contract: RequiredParam<Marketplace>) {
+  const activeChainId = useSDKChainId();
+  const contractAddress = contract?.getAddress();
+  const queryClient = useQueryClient();
+  const walletAddress = useAddress();
+  return useMutation(
+    async (data: MakeOfferParams) => {
+      invariant(walletAddress, "no wallet connected, cannot make bid");
+      requiredParamInvariant(contract, "No Contract instance provided");
+      return await contract.makeOffer(
+        data.listingId,
+        data.pricePerToken,
+        data.quantity,
+      );
+    },
+    {
+      onSettled: () =>
+        invalidateContractAndBalances(
+          queryClient,
+          contractAddress,
+          activeChainId,
+        ),
+    },
+  );
+}
+
+/**
+ * Accept an offer on a direct listing from an offeror, will accept the latest offer by the given offeror.
+ *
+ * @example
+ * ```jsx
+ * const Component = () => {
+ *   const {
+ *     mutate: acceptOffer,
+ *     isLoading,
+ *     error,
+ *   } = useAcceptDirectListingOffer(">>YourMarketplaceContractInstance<<");
+ *
+ *   if (error) {
+ *     console.error("failed to accept offer", error);
+ *   }
+ *
+ *   return (
+ *     <button
+ *       disabled={isLoading}
+ *       onClick={() => acceptOffer({ listingId: 1, addressOfOfferor: "0x..." })}
+ *     >
+ *       Accept offer
+ *     </button>
+ *   );
+ * };
+ * ```
+ *
+ * @param contract - an instance of a Marketplace contract
+ * @returns a mutation object that can be used to accept an offer on a direct listing
+ * @beta
+ */
+export function useAcceptDirectListingOffer(
+  contract: RequiredParam<Marketplace>,
+) {
+  const activeChainId = useSDKChainId();
+  const contractAddress = contract?.getAddress();
+  const queryClient = useQueryClient();
+  const walletAddress = useAddress();
+  return useMutation(
+    async (data: AcceptDirectOffer) => {
+      invariant(walletAddress, "no wallet connected, cannot make bid");
+      requiredParamInvariant(contract?.direct, "No Direct instance provided");
+      return await contract.direct.acceptOffer(
+        data.listingId,
+        data.addressOfOfferor,
+      );
+    },
+    {
+      onSettled: () =>
+        invalidateContractAndBalances(
+          queryClient,
+          contractAddress,
+          activeChainId,
+        ),
+    },
+  );
+}
+
+/**
+ * Execute an auction sale. Can only be executed once the auction has ended and the auction has a winning bid.
+ *
+ * @example
+ * ```jsx
+ * const Component = () => {
+ *   const {
+ *     mutate: executeAuctionSale,
+ *     isLoading,
+ *     error,
+ *   } = useExecuteAuctionSale(">>YourMarketplaceContractInstance<<");
+ *
+ *   if (error) {
+ *     console.error("failed to execute sale", error);
+ *   }
+ *
+ *   return (
+ *     <button
+ *       disabled={isLoading}
+ *       onClick={() => executeAuctionSale({ listingId: 1 })}
+ *     >
+ *       Execute sale
+ *     </button>
+ *   );
+ * };
+ * ```
+ *
+ * @param contract - an instance of a Marketplace contract
+ * @returns a mutation object that can be used to accept an offer on a direct listing
+ * @beta
+ */
+export function useExecuteAuctionSale(contract: RequiredParam<Marketplace>) {
+  const activeChainId = useSDKChainId();
+  const contractAddress = contract?.getAddress();
+  const queryClient = useQueryClient();
+  const walletAddress = useAddress();
+  return useMutation(
+    async (data: ExecuteAuctionSale) => {
+      invariant(walletAddress, "no wallet connected, cannot make bid");
+      requiredParamInvariant(
+        contract?.auction,
+        "No Auction marketplace instance provided",
+      );
+      return await contract.auction.executeSale(data.listingId);
+    },
+    {
+      onSettled: () =>
+        invalidateContractAndBalances(
+          queryClient,
+          contractAddress,
+          activeChainId,
+        ),
+    },
+  );
+}
+
+/**
+ * Get all the offers for a listing
+ *
+ * @remarks Fetch all the offers for a specified direct or auction listing.
+ * @example
+ * ```javascript
+ * const { data: offers, isLoading, error } = useOffers(<YourMarketplaceContractInstance>, <listingId>);
+ * ```
+ *
+ * @param contract - an instance of a Marketplace contract
+ * @param listingId - the id of the listing to fetch offers for
+ * @beta
+ */
+export function useOffers(
+  contract: RequiredParam<Marketplace>,
+  listingId: RequiredParam<BigNumberish>,
+) {
+  const result = useContractEvents(contract, "NewOffer");
+  return {
+    ...result,
+    data: result.data
+      ?.filter((ev) => ev.data.listingId.eq(listingId))
+      ?.map((ev) => ev.data),
+  };
 }
 
 /**
@@ -512,9 +757,10 @@ export function useBuyNow(contract: RequiredParam<Marketplace>) {
   return useMutation(
     async (data: BuyNowParams) => {
       invariant(walletAddress, "no wallet connected, cannot make bid");
+      requiredParamInvariant(contract, "No Contract instance provided");
       if (data.type === ListingType.Direct) {
         invariant(
-          contract?.direct.buyoutListing,
+          contract.direct.buyoutListing,
           "contract does not support direct.buyoutListing",
         );
 
@@ -525,7 +771,7 @@ export function useBuyNow(contract: RequiredParam<Marketplace>) {
         );
       }
       invariant(
-        contract?.auction?.buyoutListing,
+        contract.auction.buyoutListing,
         "contract does not support auction.buyoutListing",
       );
       return await contract.auction.buyoutListing(data.id);

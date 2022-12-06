@@ -1,5 +1,6 @@
 import { ListingNotFoundError, WrongListingTypeError } from "../../common";
 import {
+  cleanCurrencyAddress,
   fetchCurrencyValue,
   isNativeToken,
   normalizePriceValue,
@@ -161,7 +162,7 @@ export class MarketplaceDirect {
     validateNewListingParam(listing);
 
     await handleTokenApproval(
-      this.contractWrapper.getSignerOrProvider(),
+      this.contractWrapper,
       this.getAddress(),
       listing.assetContractAddress,
       listing.tokenId,
@@ -188,7 +189,9 @@ export class MarketplaceDirect {
           assetContract: listing.assetContractAddress,
           tokenId: listing.tokenId,
           buyoutPricePerToken: normalizedPricePerToken,
-          currencyToAccept: listing.currencyContractAddress,
+          currencyToAccept: cleanCurrencyAddress(
+            listing.currencyContractAddress,
+          ),
           listingType: ListingType.Direct,
           quantityToList: listing.quantity,
           reservePricePerToken: normalizedPricePerToken,

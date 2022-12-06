@@ -7,18 +7,19 @@ import {
   hasFunction,
   NotFoundError,
 } from "../../common";
-import { fetchTokenMetadata } from "../../common/nft";
+import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
 import {
   FEATURE_NFT,
   FEATURE_NFT_BATCH_MINTABLE,
   FEATURE_NFT_BURNABLE,
-  FEATURE_NFT_CLAIMABLE,
-  FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS,
+  FEATURE_NFT_CLAIM_CUSTOM,
+  FEATURE_NFT_CLAIM_CONDITIONS_V2,
   FEATURE_NFT_LAZY_MINTABLE,
   FEATURE_NFT_MINTABLE,
   FEATURE_NFT_REVEALABLE,
-  FEATURE_NFT_SIGNATURE_MINTABLE,
   FEATURE_NFT_SUPPLY,
+  FEATURE_NFT_TIERED_DROP,
+  FEATURE_NFT_SIGNATURE_MINTABLE_V2,
 } from "../../constants/erc721-features";
 import { BaseDropERC721, BaseERC721 } from "../../types/eips";
 import { ClaimOptions, UploadProgressEvent } from "../../types/index";
@@ -34,6 +35,7 @@ import { Erc721Burnable } from "./erc-721-burnable";
 import { Erc721LazyMintable } from "./erc-721-lazymintable";
 import { Erc721Mintable } from "./erc-721-mintable";
 import { Erc721Supply } from "./erc-721-supply";
+import { Erc721TieredDrop } from "./erc-721-tiered-drop";
 import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
 import type {
   DropERC721,
@@ -43,6 +45,7 @@ import type {
   ISignatureMintERC721,
   Multiwrap,
   SignatureDrop,
+  TieredDrop,
   TokenERC721,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -72,6 +75,7 @@ export class Erc721<
   private mintable: Erc721Mintable | undefined;
   private burnable: Erc721Burnable | undefined;
   private lazyMintable: Erc721LazyMintable | undefined;
+  private tieredDropable: Erc721TieredDrop | undefined;
   private signatureMintable: Erc721WithQuantitySignatureMintable | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: ThirdwebStorage;
@@ -92,6 +96,7 @@ export class Erc721<
     this.mintable = this.detectErc721Mintable();
     this.burnable = this.detectErc721Burnable();
     this.lazyMintable = this.detectErc721LazyMintable();
+    this.tieredDropable = this.detectErc721TieredDrop();
     this.signatureMintable = this.detectErc721SignatureMintable();
     this._chainId = chainId;
   }
@@ -124,7 +129,11 @@ export class Erc721<
   public async get(tokenId: BigNumberish): Promise<NFT> {
     const [owner, metadata] = await Promise.all([
       this.ownerOf(tokenId).catch(() => constants.AddressZero),
-      this.getTokenMetadata(tokenId),
+      this.getTokenMetadata(tokenId).catch(() => ({
+        id: tokenId.toString(),
+        uri: "",
+        ...FALLBACK_METADATA,
+      })),
     ]);
     return { owner, metadata, type: "ERC721", supply: 1 };
   }
@@ -574,6 +583,7 @@ export class Erc721<
    *
    * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
+   * @param options
    * @twfeature ERC721Claimable
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
@@ -590,7 +600,7 @@ export class Erc721<
     if (claim) {
       return claim.to(destinationAddress, quantity, options);
     }
-    throw new ExtensionNotImplementedError(FEATURE_NFT_CLAIMABLE);
+    throw new ExtensionNotImplementedError(FEATURE_NFT_CLAIM_CUSTOM);
   }
 
   /**
@@ -598,6 +608,7 @@ export class Erc721<
    * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
    * @param destinationAddress
    * @param quantity
+   * @param options
    */
   public async getClaimTransaction(
     destinationAddress: string,
@@ -607,7 +618,7 @@ export class Erc721<
     const claimWithConditions = this.lazyMintable?.claimWithConditions;
     const claim = this.lazyMintable?.claim;
     if (claimWithConditions) {
-      return claimWithConditions.getClaimTransaction(
+      return claimWithConditions.conditions.getClaimTransaction(
         destinationAddress,
         quantity,
         options,
@@ -616,7 +627,38 @@ export class Erc721<
     if (claim) {
       return claim.getClaimTransaction(destinationAddress, quantity, options);
     }
-    throw new ExtensionNotImplementedError(FEATURE_NFT_CLAIMABLE);
+    throw new ExtensionNotImplementedError(FEATURE_NFT_CLAIM_CUSTOM);
+  }
+
+  public async totalClaimedSupply(): Promise<BigNumber> {
+    const contract = this.contractWrapper;
+    if (hasFunction<DropERC721>("nextTokenIdToClaim", contract)) {
+      return contract.readContract.nextTokenIdToClaim();
+    }
+    if (hasFunction<SignatureDrop>("totalMinted", contract)) {
+      return contract.readContract.totalMinted();
+    }
+    throw new Error(
+      "No function found on contract to get total claimed supply",
+    );
+  }
+
+  /**
+   * Get the unclaimed supply
+   *
+   * @remarks Get the number of unclaimed NFTs in this Drop.
+   *
+   * * @example
+   * ```javascript
+   * const unclaimedNFTCount = await contract.totalUnclaimedSupply();
+   * console.log(`NFTs left to claim: ${unclaimedNFTCount}`);
+   * ```
+   * @returns the unclaimed supply
+   */
+  public async totalUnclaimedSupply(): Promise<BigNumber> {
+    return (await this.nextTokenIdToMint()).sub(
+      await this.totalClaimedSupply(),
+    );
   }
 
   /**
@@ -645,8 +687,18 @@ export class Erc721<
   get claimConditions() {
     return assertEnabled(
       this.lazyMintable?.claimWithConditions,
-      FEATURE_NFT_CLAIMABLE_WITH_CONDITIONS,
+      FEATURE_NFT_CLAIM_CONDITIONS_V2,
     ).conditions;
+  }
+
+  ////// ERC721 Tiered Drop Extension //////
+
+  /**
+   * Tiered Drop
+   * @remarks Drop lazy minted NFTs using a tiered drop mechanism.
+   */
+  get tieredDrop() {
+    return assertEnabled(this.tieredDropable, FEATURE_NFT_TIERED_DROP);
   }
 
   ////// ERC721 SignatureMint Extension //////
@@ -669,7 +721,7 @@ export class Erc721<
   get signature() {
     return assertEnabled(
       this.signatureMintable,
-      FEATURE_NFT_SIGNATURE_MINTABLE,
+      FEATURE_NFT_SIGNATURE_MINTABLE_V2,
     );
   }
 
@@ -791,13 +843,29 @@ export class Erc721<
     return undefined;
   }
 
+  private detectErc721TieredDrop(): Erc721TieredDrop | undefined {
+    if (
+      detectContractFeature<TieredDrop>(
+        this.contractWrapper,
+        "ERC721TieredDrop",
+      )
+    ) {
+      return new Erc721TieredDrop(this, this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
   private detectErc721SignatureMintable():
     | Erc721WithQuantitySignatureMintable
     | undefined {
     if (
       detectContractFeature<ISignatureMintERC721>(
         this.contractWrapper,
-        "ERC721SignatureMint",
+        "ERC721SignatureMintV1",
+      ) ||
+      detectContractFeature<ISignatureMintERC721>(
+        this.contractWrapper,
+        "ERC721SignatureMintV2",
       )
     ) {
       return new Erc721WithQuantitySignatureMintable(

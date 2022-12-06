@@ -13,12 +13,14 @@ export interface ThirdwebNftMediaProps extends SharedMediaProps {
 }
 
 /**
+ * This component can be used to render NFTs from the thirdweb SDK.
+ * Props: {@link ThirdwebNftMediaProps}
  *
  * @example
  * ```jsx
- * import { ThirdwebNftMedia, useNFTCollection, useNFT } from "@thirdweb-dev/react";
+ * import { ThirdwebNftMedia, useContract, useNFT } from "@thirdweb-dev/react";
  * export default function NFTCollectionRender() {
- *   const contract = useNFTCollection(<your-contract-address>);
+ *   const { contract } = useContract(<your-contract-address>);
  *   const { data: nft, isLoading } = useNFT(contract, 0);
  *
  *   return (
@@ -32,11 +34,6 @@ export interface ThirdwebNftMediaProps extends SharedMediaProps {
  *   );
  * }
  * ```
- *
- * Use this to get the primary sales recipient of your {@link SmartContract}
- * @param contract - an instance of a {@link SmartContract}
- * @returns the wallet address of the primary sales recipient
- * @beta
  */
 export const ThirdwebNftMedia = React.forwardRef<
   HTMLMediaElement,

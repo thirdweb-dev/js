@@ -1,5 +1,8 @@
-import { RequiredParam } from "../../../core/types/shared";
-import { useSDKChainId } from "../../providers/base";
+import {
+  RequiredParam,
+  requiredParamInvariant,
+} from "../../../core/query-utils/required-param";
+import { useSDK, useSDKChainId } from "../../providers/base";
 import { getErcs, DropContract, WalletAddress } from "../../types";
 import {
   cacheKeys,
@@ -7,8 +10,16 @@ import {
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { ClaimCondition, ClaimConditionInput } from "@thirdweb-dev/sdk";
-import { BigNumberish } from "ethers";
+import {
+  ClaimCondition,
+  ClaimConditionFetchOptions,
+  ClaimConditionInput,
+  SnapshotEntryWithProof,
+  fetchCurrencyValue,
+  convertToReadableQuantity,
+  fetchCurrencyMetadata,
+} from "@thirdweb-dev/sdk";
+import { BigNumberish, constants, utils } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -38,7 +49,7 @@ export type SetClaimConditionsParams = {
 /** **********************/
 
 /**
- * Use this to get the active claim conditon for ERC20, ERC721 or ERC1155 based contracts. They need to extend the `claimCondition` extension for this hook to work.
+ * Use this to get the active claim condition for ERC20, ERC721 or ERC1155 based contracts. They need to extend the `claimCondition` extension for this hook to work.
  *
  * @example
  * ```javascript
@@ -53,7 +64,7 @@ export type SetClaimConditionsParams = {
  * const { data: activeClaimCondition, isLoading, error } = useActiveClaimCondition(<YourERC1155ContractInstance>, <tokenId>);
  * ```
  *
- * @param contract - an instance of a contract that extends the ERC721 or ERC1155 spec and implements the `claimConditions` extension.
+ * @param contract - an instance of a contract that extends the ERC721, ERC1155 or ERC20 spec and implements the `claimConditions` extension.
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
  * @returns a response object with the currently active claim condition
  * @twfeature ERC721ClaimableWithConditions | ERC1155ClaimableWithConditions | ERC20ClaimableWithConditions
@@ -62,25 +73,30 @@ export type SetClaimConditionsParams = {
 export function useActiveClaimCondition(
   contract: RequiredParam<DropContract>,
   tokenId?: BigNumberish,
+  options?: ClaimConditionFetchOptions,
 ) {
   const contractAddress = contract?.getAddress();
   const { erc1155, erc721, erc20 } = getErcs(contract);
 
   return useQueryWithNetwork(
-    cacheKeys.extensions.claimConditions.getActive(contractAddress, tokenId),
+    cacheKeys.extensions.claimConditions.getActive(
+      contractAddress,
+      tokenId,
+      options,
+    ),
     () => {
       if (erc1155) {
-        invariant(
-          tokenId !== undefined,
+        requiredParamInvariant(
+          tokenId,
           "tokenId is required for ERC1155 claim conditions",
         );
-        return erc1155.claimConditions.getActive(tokenId);
+        return erc1155.claimConditions.getActive(tokenId, options);
       }
       if (erc721) {
-        return erc721.claimConditions.getActive();
+        return erc721.claimConditions.getActive(options);
       }
       if (erc20) {
-        return erc20.claimConditions.getActive();
+        return erc20.claimConditions.getActive(options);
       }
       throw new Error("Contract must be ERC721, ERC1155 or ERC20");
     },
@@ -94,7 +110,80 @@ export function useActiveClaimCondition(
 }
 
 /**
- * Use this to get all claim conditons for ERC20, ERC721 or ERC1155 based contracts. They need to extend the `claimCondition` extension for this hook to work.
+ * Use this to get the claimer proofs for an adddress for ERC20, ERC721 or ERC1155 based contracts. They need to extend the `claimCondition` extension for this hook to work.
+ *
+ * @example
+ * ```javascript
+ * const { data: claimerProofs, isLoading, error } = useClaimerProofs(<YourERC20ContractInstance>);
+ * ```
+ * @example
+ * ```javascript
+ * const { data: claimerProofs, isLoading, error } = useClaimerProofs(<YourERC721ContractInstance>);
+ * ```
+ * @example
+ * ```javascript
+ * const { data: claimerProofs, isLoading, error } = useClaimerProofs(<YourERC1155ContractInstance>, <tokenId>);
+ * ```
+ *
+ * @param contract - an instance of a contract that extends the ERC721, ERC1155 or ERC20 spec and implements the `claimConditions` extension.
+ * @param claimerAddress - the address of the claimer to fetch the claimer proofs for
+ * @param tokenId - the id of the token to fetch the claimer proofs for (if the contract is an ERC1155 contract)
+ * @param claimConditionId - optional the claim condition id to get the proofs for
+ * @returns a response object with the snapshot for the provided address
+ * @twfeature ERC721ClaimableWithConditions | ERC1155ClaimableWithConditions | ERC20ClaimableWithConditions
+ * @beta
+ */
+export function useClaimerProofs(
+  contract: RequiredParam<DropContract>,
+  claimerAddress: string,
+  tokenId?: BigNumberish,
+  claimConditionId?: BigNumberish,
+) {
+  const contractAddress = contract?.getAddress();
+  const { erc1155, erc721, erc20 } = getErcs(contract);
+
+  return useQueryWithNetwork(
+    cacheKeys.extensions.claimConditions.getClaimerProofs(
+      contractAddress,
+      tokenId,
+    ),
+    () => {
+      if (erc1155) {
+        requiredParamInvariant(
+          tokenId,
+          "tokenId is required for ERC1155 claim conditions",
+        );
+        return erc1155.claimConditions.getClaimerProofs(
+          tokenId,
+          claimerAddress,
+          claimConditionId,
+        );
+      }
+      if (erc721) {
+        return erc721.claimConditions.getClaimerProofs(
+          claimerAddress,
+          claimConditionId,
+        );
+      }
+      if (erc20) {
+        return erc20.claimConditions.getClaimerProofs(
+          claimerAddress,
+          claimConditionId,
+        );
+      }
+      throw new Error("Contract must be ERC721, ERC1155 or ERC20");
+    },
+    {
+      // Checks that happen here:
+      // 1. if the contract is based on ERC1155 contract => tokenId cannot be `undefined`
+      // 2. if the contract is NOT based on ERC1155 => we have to have either an ERC721 or ERC20 contract
+      enabled: erc1155 ? tokenId !== undefined : !!erc721 || !!erc20,
+    },
+  );
+}
+
+/**
+ * Use this to get all claim conditions for ERC20, ERC721 or ERC1155 based contracts. They need to extend the `claimCondition` extension for this hook to work.
  *
  * @example
  * ```javascript
@@ -109,7 +198,7 @@ export function useActiveClaimCondition(
  * const { data: claimConditions, isLoading, error } = useClaimConditions(<YourERC1155ContractInstance>, <tokenId>);
  * ```
  *
- * @param contract - an instance of a contract that extends the ERC721 or ERC1155 spec and implements the `claimConditions` extension.
+ * @param contract - an instance of a contract that extends the ERC721, ERC1155 or ERC20 spec and implements the `claimConditions` extension.
  * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
  * @returns a response object with the list of claim conditions
  * @twfeature ERC721ClaimableWithConditions | ERC1155ClaimableWithConditions | ERC20ClaimableWithConditions
@@ -118,22 +207,30 @@ export function useActiveClaimCondition(
 export function useClaimConditions(
   contract: RequiredParam<DropContract>,
   tokenId?: BigNumberish,
+  options?: ClaimConditionFetchOptions,
 ) {
   const contractAddress = contract?.getAddress();
   const { erc1155, erc721, erc20 } = getErcs(contract);
 
   return useQueryWithNetwork(
-    cacheKeys.extensions.claimConditions.getAll(contractAddress, tokenId),
+    cacheKeys.extensions.claimConditions.getAll(
+      contractAddress,
+      tokenId,
+      options,
+    ),
     () => {
       if (erc1155) {
-        invariant(tokenId, "tokenId is required for ERC1155 claim conditions");
-        return erc1155.claimConditions.getAll(tokenId);
+        requiredParamInvariant(
+          tokenId,
+          "tokenId is required for ERC1155 claim conditions",
+        );
+        return erc1155.claimConditions.getAll(tokenId, options);
       }
       if (erc721) {
-        return erc721.claimConditions.getAll();
+        return erc721.claimConditions.getAll(options);
       }
       if (erc20) {
-        return erc20.claimConditions.getAll();
+        return erc20.claimConditions.getAll(options);
       }
       throw new Error("Contract must be ERC721, ERC1155 or ERC20");
     },
@@ -184,7 +281,7 @@ export function useClaimIneligibilityReasons(
     ),
     () => {
       if (erc1155) {
-        invariant(
+        requiredParamInvariant(
           tokenId,
           "tokenId is required for ERC1155 claim ineligibility reasons",
         );
@@ -218,6 +315,136 @@ export function useClaimIneligibilityReasons(
         (erc1155 ? tokenId !== undefined : !!erc721 || !!erc20) &&
         !!params &&
         !!params.walletAddress,
+    },
+  );
+}
+
+/**
+ * Use this to check the claim condition for a given wallet address (including checking for overrides that may exist for that given wallet address).
+ *
+ * @param contract - an instance of a contract that extends the  ERC20, ERC721 or ERC1155 spec and implements the `claimConditions` extension.
+ * @param walletAddress - the wallet address to check the active claim condition for
+ * @param tokenId - the id of the token to fetch the claim conditions for (if the contract is an ERC1155 contract)
+ * @returns the active claim conditon for the wallet address or null if there is no active claim condition
+ *
+ * @beta
+ */
+export function useActiveClaimConditionForWallet(
+  contract: RequiredParam<DropContract>,
+  walletAddress: RequiredParam<WalletAddress>,
+  tokenId?: BigNumberish,
+) {
+  const sdk = useSDK();
+  const contractAddress = contract?.getAddress();
+  const { erc1155, erc721, erc20 } = getErcs(contract);
+  return useQueryWithNetwork<ClaimCondition | null>(
+    cacheKeys.extensions.claimConditions.useActiveClaimConditionForWallet(
+      contractAddress,
+      walletAddress || "_NO_WALLET_",
+      tokenId,
+    ),
+    async () => {
+      // if we do not have a walletAddress just do the same logic as basic useClaimCondition
+      if (!walletAddress) {
+        if (erc1155) {
+          requiredParamInvariant(
+            tokenId,
+            "tokenId is required for ERC1155 claim conditions",
+          );
+          return erc1155.claimConditions.getActive(tokenId);
+        }
+        if (erc721) {
+          return erc721.claimConditions.getActive();
+        }
+        if (erc20) {
+          return erc20.claimConditions.getActive();
+        }
+        throw new Error("Contract must be ERC721, ERC1155 or ERC20");
+      }
+      invariant(sdk, "sdk is required");
+      let activeGeneralClaimCondition: ClaimCondition | null = null;
+      let claimerProofForWallet: SnapshotEntryWithProof | null = null;
+
+      if (erc1155) {
+        requiredParamInvariant(tokenId, "tokenId is required for ERC1155");
+        const [cc, cp] = await Promise.all([
+          erc1155.claimConditions.getActive(tokenId),
+          erc1155.claimConditions.getClaimerProofs(tokenId, walletAddress),
+        ]);
+        activeGeneralClaimCondition = cc;
+        claimerProofForWallet = cp;
+      }
+      if (erc721) {
+        const [cc, cp] = await Promise.all([
+          erc721.claimConditions.getActive(),
+          erc721.claimConditions.getClaimerProofs(walletAddress),
+        ]);
+        activeGeneralClaimCondition = cc;
+        claimerProofForWallet = cp;
+      }
+      if (erc20) {
+        const [cc, cp] = await Promise.all([
+          erc20.claimConditions.getActive(),
+          erc20.claimConditions.getClaimerProofs(walletAddress),
+        ]);
+        activeGeneralClaimCondition = cc;
+        claimerProofForWallet = cp;
+      }
+      // if there is no active claim condition nothing matters, return null
+      if (!activeGeneralClaimCondition) {
+        return null;
+      }
+
+      // if there is no claimer proof then just fall back to the active general claim condition
+      if (!claimerProofForWallet) {
+        return activeGeneralClaimCondition;
+      }
+
+      const { maxClaimable, currencyAddress, price } = claimerProofForWallet;
+
+      const currencyWithOverride =
+        currencyAddress || activeGeneralClaimCondition.currencyAddress;
+
+      const currencyMetadata = await fetchCurrencyMetadata(
+        sdk.getProvider(),
+        currencyWithOverride,
+      );
+
+      const normalizedPrize = price
+        ? price === "unlimited"
+          ? constants.MaxUint256
+          : utils.parseUnits(price, currencyMetadata.decimals)
+        : null;
+
+      const priceWithOverride =
+        normalizedPrize || activeGeneralClaimCondition.price;
+
+      const maxClaimableWithOverride =
+        // have to transform this the same way that claim conditions do it in SDK
+        convertToReadableQuantity(maxClaimable, currencyMetadata.decimals) ||
+        activeGeneralClaimCondition.maxClaimablePerWallet;
+
+      const currencyValueWithOverride = await fetchCurrencyValue(
+        sdk.getProvider(),
+        currencyWithOverride,
+        priceWithOverride,
+      );
+      return {
+        // inherit the entire claim condition
+        ...activeGeneralClaimCondition,
+        // overwrite all keys that could be changed based on overwrites
+        maxClaimablePerWallet: maxClaimableWithOverride,
+        price: priceWithOverride,
+        currency: currencyWithOverride,
+        currencyAddress: currencyWithOverride,
+        currencyMetadata: currencyValueWithOverride,
+      };
+    },
+    {
+      // Checks that happen here:
+      // 1. if the contract is based on ERC1155 contract => tokenId cannot be `undefined`
+      // 2. if the contract is NOT based on ERC1155 => we have to have either an ERC721 or ERC20 contract
+      enabled: erc1155 ? tokenId !== undefined : !!erc721 || !!erc20,
     },
   );
 }
@@ -270,11 +497,14 @@ export function useSetClaimConditions(
 
   return useMutation(
     async (data: SetClaimConditionsParams) => {
-      invariant(contract, "No Contract instance provided");
+      requiredParamInvariant(contract, "No Contract instance provided");
       const { phases, reset = false } = data;
       invariant(phases, 'No "phases" provided');
       if (erc1155) {
-        invariant(tokenId, "tokenId is required for ERC1155 claim conditions");
+        requiredParamInvariant(
+          tokenId,
+          "tokenId is required for ERC1155 claim conditions",
+        );
         return erc1155.claimConditions.set(tokenId, phases, reset);
       }
       if (erc721) {
@@ -341,35 +571,42 @@ export function useResetClaimConditions(
 
   return useMutation(
     async () => {
-      const cleanConditions = (conditions: ClaimCondition[]) => {
+      const cleanConditions = async (conditions: ClaimCondition[]) => {
         return conditions.map((c) => ({
           ...c,
           price: c.currencyMetadata.displayValue,
-          maxQuantity: c.maxQuantity.toString(),
-          quantityLimitPerTransaction: c.quantityLimitPerTransaction.toString(),
         }));
       };
 
       if (erc1155) {
-        invariant(tokenId, "tokenId is required for ERC1155 claim conditions");
-        const claimConditions = await erc1155.claimConditions.getAll(tokenId);
+        requiredParamInvariant(
+          tokenId,
+          "tokenId is required for ERC1155 claim conditions",
+        );
+        const claimConditions = await erc1155.claimConditions.getAll(tokenId, {
+          withAllowList: true,
+        });
         return erc1155.claimConditions.set(
           tokenId,
-          cleanConditions(claimConditions || []),
+          await cleanConditions(claimConditions || []),
           true,
         );
       }
       if (erc721) {
-        const claimConditions = await erc721.claimConditions.getAll();
+        const claimConditions = await erc721.claimConditions.getAll({
+          withAllowList: true,
+        });
         return await erc721.claimConditions.set(
-          cleanConditions(claimConditions || []),
+          await cleanConditions(claimConditions || []),
           true,
         );
       }
       if (erc20) {
-        const claimConditions = await erc20.claimConditions.getAll();
+        const claimConditions = await erc20.claimConditions.getAll({
+          withAllowList: true,
+        });
         return await erc20.claimConditions.set(
-          cleanConditions(claimConditions || []),
+          await cleanConditions(claimConditions || []),
           true,
         );
       }

@@ -1,6 +1,12 @@
-import { createSnapshot, Snapshot } from "../../src/evm/index";
-import { MockStorage } from "./mock/MockStorage";
-import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import {
+  ShardedMerkleTree,
+  SnapshotFormatVersion,
+} from "../../src/evm/common/sharded-merkle-tree";
+import { createSnapshot, SnapshotEntryInput } from "../../src/evm/index";
+import { sdk, signers, storage } from "./before-setup";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { BigNumber, ethers } from "ethers";
+import { MerkleTree } from "merkletreejs";
 
 const chai = require("chai");
 const deepEqualInAnyOrder = require("deep-equal-in-any-order");
@@ -12,50 +18,159 @@ const { expect, assert } = chai;
 global.fetch = require("cross-fetch");
 
 describe("Snapshots", async () => {
-  let snapshot: Snapshot;
-  let uri: string;
-  let merkleRoot: string;
+  let adminWallet: SignerWithAddress,
+    samWallet: SignerWithAddress,
+    abbyWallet: SignerWithAddress,
+    bobWallet: SignerWithAddress,
+    w1: SignerWithAddress,
+    w2: SignerWithAddress,
+    w3: SignerWithAddress,
+    w4: SignerWithAddress;
 
-  const leafs = [
-    "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
-    "0x99703159fbE079e1a48B53039a5e52e7b2d9E559",
-    "0x38641f11406E513A187d40600a13C9F921db23c2",
-    "0x14fb3a9B317612ddc6d6Cc3c907CD9F2Aa091eE7",
-  ];
-
-  const input = leafs.map((address) => ({
-    address,
-    maxClaimable: 0,
-  }));
-
-  let storage: ThirdwebStorage;
+  let members;
 
   beforeEach(async () => {
-    storage = MockStorage();
+    [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
+    members = [
+      adminWallet.address,
+      bobWallet.address,
+      samWallet.address,
+      abbyWallet.address,
+      w1.address,
+      w2.address,
+      w3.address,
+      w4.address,
+    ];
   });
 
-  beforeEach(async () => {
-    const result = await createSnapshot(input, 0, storage);
-    snapshot = result.snapshot;
-    uri = result.snapshotUri;
-    merkleRoot = result.merkleRoot;
-  });
+  [SnapshotFormatVersion.V1, SnapshotFormatVersion.V2].forEach(
+    (snapshotVersion) => {
+      it("should shard merkle tree: " + snapshotVersion, async () => {
+        const input = members.map((address, i) => ({
+          address,
+          maxClaimable: BigNumber.from(i + 1).toString(),
+        }));
+        const result = await ShardedMerkleTree.buildAndUpload(
+          input,
+          0,
+          sdk.getProvider(),
+          storage,
+          snapshotVersion,
+        );
+        const sm = await ShardedMerkleTree.fromUri(result.uri, storage);
+        const proofs = await sm?.getProof(
+          adminWallet.address,
+          sdk.getProvider(),
+          snapshotVersion,
+        );
+        expect(proofs?.maxClaimable).to.equal("1");
+        expect(proofs?.proof).length.gt(0);
+      });
+    },
+  );
 
   it("should generate a valid merkle root from a list of addresses", async () => {
+    const input = members.map((address) => ({
+      address,
+    }));
+    const result = await createSnapshot(
+      input,
+      0,
+      sdk.getProvider(),
+      storage,
+      SnapshotFormatVersion.V1,
+    );
+    const merkleRoot = result.merkleRoot;
     assert.equal(
       merkleRoot,
-      "0xe0c95ec2a9cc03bb25cdf2f3c9092a00698716373e4e34715498a68167fe4acd",
+      "0x7c55d9d851d24cc0a32d49d22cda5e0162ce54cdde1773e9d8fb31e02c8818f4",
     );
   });
 
+  [SnapshotFormatVersion.V1, SnapshotFormatVersion.V2].forEach(
+    (snapshotVersion) => {
+      it("should generate valid proofs:" + snapshotVersion, async () => {
+        const hashedLeafs = members.map((l) =>
+          ShardedMerkleTree.hashEntry(
+            SnapshotEntryInput.parse({
+              address: l,
+            }),
+            0,
+            18,
+            snapshotVersion,
+          ),
+        );
+        const tree = new MerkleTree(hashedLeafs, ethers.utils.keccak256, {
+          sort: true,
+        });
+        const input = members.map((address) => ({
+          address,
+        }));
+        const snapshot = await createSnapshot(
+          input,
+          0,
+          sdk.getProvider(),
+          storage,
+          snapshotVersion,
+        );
+        for (const leaf of members) {
+          const expectedProof = tree.getHexProof(
+            ShardedMerkleTree.hashEntry(
+              SnapshotEntryInput.parse({
+                address: leaf,
+              }),
+              0,
+              18,
+              snapshotVersion,
+            ),
+          );
+
+          const smt = await ShardedMerkleTree.fromUri(
+            snapshot.snapshotUri,
+            storage,
+          );
+          const actualProof = await smt?.getProof(
+            leaf,
+            sdk.getProvider(),
+            snapshotVersion,
+          );
+          assert.isDefined(actualProof);
+          expect(actualProof?.proof).to.include.ordered.members(expectedProof);
+
+          const verified = tree.verify(
+            actualProof?.proof,
+            ShardedMerkleTree.hashEntry(
+              { ...actualProof },
+              0,
+              18,
+              snapshotVersion,
+            ),
+            tree.getHexRoot(),
+          );
+          expect(verified).to.eq(true);
+        }
+      });
+    },
+  );
+
   it("should warn about duplicate leafs", async () => {
+    const input = members.map((address, i) => ({
+      address,
+      maxClaimable: BigNumber.from(i + 1).toString(),
+    }));
     const duplicateLeafs = input.concat({
-      address: "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
-      maxClaimable: 0,
+      address: adminWallet.address,
+      maxClaimable: "0",
     });
 
     try {
-      await createSnapshot(duplicateLeafs, 0, storage);
+      await createSnapshot(
+        duplicateLeafs,
+        0,
+        sdk.getProvider(),
+        storage,
+        SnapshotFormatVersion.V1,
+      );
     } catch (error) {
       expect(error).to.have.property("message", "DUPLICATE_LEAFS", "");
       return;
@@ -64,31 +179,5 @@ describe("Snapshots", async () => {
     assert.fail(
       "should not reach this point, exception should have been thrown",
     );
-  });
-
-  it("should contain the same number of claims as there are leafs", () => {
-    assert.lengthOf(snapshot.claims, leafs.length);
-  });
-
-  it("should contain a proof for every claim", () => {
-    assert.lengthOf(snapshot.claims, leafs.length);
-
-    snapshot.claims.forEach((claim) => {
-      assert.isNotEmpty(claim.proof);
-    });
-  });
-
-  it("should contain a claim for each leaf", () => {
-    leafs.forEach((leaf) => {
-      assert.notEqual(
-        snapshot.claims.find((c) => c.address === leaf),
-        undefined,
-      );
-    });
-  });
-
-  it("should upload the snapshot to storage", async () => {
-    const rawSnapshotJson = await storage.downloadJSON(uri);
-    expect(rawSnapshotJson).to.deep.equalInAnyOrder(snapshot);
   });
 });

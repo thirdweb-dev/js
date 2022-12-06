@@ -1,4 +1,9 @@
-import { AmountSchema, FileOrBufferOrStringSchema } from "../common";
+import {
+  AmountSchema,
+  FileOrBufferOrStringSchema,
+  PercentSchema,
+} from "../../../core/schema/shared";
+import { Creator } from "@metaplex-foundation/js";
 import { z } from "zod";
 
 /**
@@ -26,7 +31,7 @@ export const CommonContractOutputSchema = CommonContractSchema.extend({
  */
 export const CreatorInputSchema = z.object({
   address: z.string(),
-  sharePercentage: z.number(),
+  share: PercentSchema,
   verified: z.boolean().default(false),
 });
 
@@ -51,7 +56,16 @@ export type NFTCollectionMetadataInput = z.input<
  */
 export const TokenMetadataInputSchema = CommonContractSchema.extend({
   decimals: z.number().default(9),
-  initialSupply: AmountSchema,
+  initialSupply: AmountSchema.superRefine((val, context) => {
+    // TODO remove this limitation when metaplex fixes https://github.com/metaplex-foundation/js/issues/421
+    if (Number(val) > 9999999) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: `Initial supply must less than 10M, additional supply can be minted after deployment.`,
+        path: ["initialSupply"],
+      });
+    }
+  }),
 });
 
 /**
@@ -63,6 +77,29 @@ export type TokenMetadataInput = z.input<typeof TokenMetadataInputSchema>;
  * @public
  */
 export type CreatorInput = z.input<typeof CreatorInputSchema>;
+
+/**
+ * @public
+ */
+export type UpdateCreatorInput = {
+  creators: CreatorInput[];
+  updateAll: boolean;
+};
+
+/**
+ * @public
+ */
+export type UpdateRoyaltySettingsInput = {
+  sellerFeeBasisPoints: number;
+  updateAll: boolean;
+};
+
+/**
+ * @public
+ */
+export type CreatorOutput = Omit<Creator, "address"> & {
+  readonly address: string;
+};
 
 /**
  * @internal

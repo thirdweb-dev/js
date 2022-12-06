@@ -1,4 +1,5 @@
 import { NetworkOrSignerOrProvider, TransactionResult } from "..";
+import { AmountSchema } from "../../../core/schema/shared";
 import { assertEnabled, detectContractFeature } from "../../common";
 import {
   fetchCurrencyMetadata,
@@ -10,15 +11,10 @@ import {
   FEATURE_TOKEN_BATCH_MINTABLE,
   FEATURE_TOKEN_BURNABLE,
   FEATURE_TOKEN_SIGNATURE_MINTABLE,
-  FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS,
+  FEATURE_TOKEN_CLAIM_CONDITIONS_V2,
 } from "../../constants/erc20-features";
-import { TokenMintInput, AmountSchema } from "../../schema";
-import {
-  Currency,
-  CurrencyValue,
-  Amount,
-  ClaimVerification,
-} from "../../types";
+import { TokenMintInput } from "../../schema";
+import { Currency, CurrencyValue, Amount, ClaimOptions } from "../../types";
 import {
   BaseERC20,
   BaseSignatureMintERC20,
@@ -483,14 +479,12 @@ export class Erc20<
    */
   public async claim(
     amount: Amount,
-    checkERC20Allowance = true,
-    claimData?: ClaimVerification,
+    options?: ClaimOptions,
   ): Promise<TransactionResult> {
     return this.claimTo(
       await this.contractWrapper.getSignerAddress(),
       amount,
-      checkERC20Allowance,
-      claimData,
+      options,
     );
   }
 
@@ -518,13 +512,12 @@ export class Erc20<
   public async claimTo(
     destinationAddress: string,
     amount: Amount,
-    checkERC20Allowance = true,
-    claimData?: ClaimVerification,
+    options?: ClaimOptions,
   ): Promise<TransactionResult> {
     return assertEnabled(
       this.droppable?.claim,
-      FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS,
-    ).to(destinationAddress, amount, checkERC20Allowance, claimData);
+      FEATURE_TOKEN_CLAIM_CONDITIONS_V2,
+    ).to(destinationAddress, amount, options);
   }
 
   /**
@@ -553,7 +546,7 @@ export class Erc20<
   get claimConditions() {
     return assertEnabled(
       this.droppable?.claim,
-      FEATURE_TOKEN_CLAIMABLE_WITH_CONDITIONS,
+      FEATURE_TOKEN_CLAIM_CONDITIONS_V2,
     ).conditions;
   }
 
@@ -627,7 +620,19 @@ export class Erc20<
     if (
       detectContractFeature<BaseDropERC20>(
         this.contractWrapper,
-        "ERC20ClaimableWithConditions",
+        "ERC20ClaimConditionsV1",
+      ) ||
+      detectContractFeature<BaseDropERC20>(
+        this.contractWrapper,
+        "ERC20ClaimConditionsV2",
+      ) ||
+      detectContractFeature<BaseDropERC20>(
+        this.contractWrapper,
+        "ERC20ClaimPhasesV1",
+      ) ||
+      detectContractFeature<BaseDropERC20>(
+        this.contractWrapper,
+        "ERC20ClaimPhasesV2",
       )
     ) {
       return new Erc20Droppable(this, this.contractWrapper, this.storage);

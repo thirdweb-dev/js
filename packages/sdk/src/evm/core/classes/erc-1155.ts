@@ -7,18 +7,18 @@ import {
   hasFunction,
   NotFoundError,
 } from "../../common";
-import { fetchTokenMetadata } from "../../common/nft";
+import { FALLBACK_METADATA, fetchTokenMetadata } from "../../common/nft";
 import {
   FEATURE_EDITION,
   FEATURE_EDITION_BATCH_MINTABLE,
   FEATURE_EDITION_BURNABLE,
-  FEATURE_EDITION_LAZY_MINTABLE,
   FEATURE_EDITION_ENUMERABLE,
   FEATURE_EDITION_MINTABLE,
   FEATURE_EDITION_REVEALABLE,
   FEATURE_EDITION_SIGNATURE_MINTABLE,
-  FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS,
-  FEATURE_EDITION_CLAIMABLE,
+  FEATURE_EDITION_CLAIM_CUSTOM,
+  FEATURE_EDITION_CLAIM_CONDITIONS_V2,
+  FEATURE_EDITION_LAZY_MINTABLE_V2,
 } from "../../constants/erc1155-features";
 import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
 import { EditionMetadataOrUri } from "../../schema/tokens/edition";
@@ -128,7 +128,11 @@ export class Erc1155<
       this.contractWrapper.readContract
         .totalSupply(tokenId)
         .catch(() => BigNumber.from(0)),
-      this.getTokenMetadata(tokenId),
+      this.getTokenMetadata(tokenId).catch(() => ({
+        id: tokenId.toString(),
+        uri: "",
+        ...FALLBACK_METADATA,
+      })),
     ]);
     return {
       owner: ethers.constants.AddressZero,
@@ -766,7 +770,7 @@ export class Erc1155<
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
     return assertEnabled(
       this.lazyMintable,
-      FEATURE_EDITION_LAZY_MINTABLE,
+      FEATURE_EDITION_LAZY_MINTABLE_V2,
     ).lazyMint(metadatas, options);
   }
 
@@ -789,7 +793,7 @@ export class Erc1155<
     const claimWithConditions = this.lazyMintable?.claimWithConditions;
     const claim = this.lazyMintable?.claim;
     if (claimWithConditions) {
-      return claimWithConditions.getClaimTransaction(
+      return claimWithConditions.conditions.getClaimTransaction(
         destinationAddress,
         tokenId,
         quantity,
@@ -804,7 +808,7 @@ export class Erc1155<
         options,
       );
     }
-    throw new ExtensionNotImplementedError(FEATURE_EDITION_CLAIMABLE);
+    throw new ExtensionNotImplementedError(FEATURE_EDITION_CLAIM_CUSTOM);
   }
 
   /**
@@ -883,7 +887,7 @@ export class Erc1155<
     if (claim) {
       return claim.to(destinationAddress, tokenId, quantity, options);
     }
-    throw new ExtensionNotImplementedError(FEATURE_EDITION_CLAIMABLE);
+    throw new ExtensionNotImplementedError(FEATURE_EDITION_CLAIM_CUSTOM);
   }
 
   /**
@@ -912,7 +916,7 @@ export class Erc1155<
   get claimConditions() {
     return assertEnabled(
       this.lazyMintable?.claimWithConditions,
-      FEATURE_EDITION_CLAIMABLE_WITH_CONDITIONS,
+      FEATURE_EDITION_CLAIM_CONDITIONS_V2,
     ).conditions;
   }
 
@@ -1037,7 +1041,11 @@ export class Erc1155<
     if (
       detectContractFeature<BaseDropERC1155>(
         this.contractWrapper,
-        "ERC1155LazyMintable",
+        "ERC1155LazyMintableV1",
+      ) ||
+      detectContractFeature<BaseDropERC1155>(
+        this.contractWrapper,
+        "ERC1155LazyMintableV2",
       )
     ) {
       return new Erc1155LazyMintable(this, this.contractWrapper, this.storage);

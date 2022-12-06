@@ -1,9 +1,11 @@
 import { findFiles } from "../../common/file-helper";
+import { hasForge } from "../../create/helpers/has-forge";
 import { execute } from "../helpers/exec";
 import { logger } from "../helpers/logger";
 import { CompileOptions } from "../interfaces/Builder";
 import { ContractPayload } from "../interfaces/ContractPayload";
 import { BaseBuilder } from "./builder-base";
+import chalk from "chalk";
 import { existsSync, readFileSync } from "fs";
 import { basename, join } from "path";
 
@@ -11,6 +13,18 @@ export class FoundryBuilder extends BaseBuilder {
   public async compile(options: CompileOptions): Promise<{
     contracts: ContractPayload[];
   }> {
+    const isInstalled = await hasForge();
+    if (!isInstalled) {
+      console.error(
+        `\n${chalk.redBright(
+          `error`,
+        )} You don't have forge installed on this machine!\n\nYou can install forge by following these instructions:\n${chalk.blueBright(
+          `https://book.getfoundry.sh/getting-started/installation`,
+        )}\n`,
+      );
+      process.exit(1);
+    }
+
     await execute("forge clean", options.projectPath);
     await execute("forge build --extra-output metadata", options.projectPath);
 
@@ -88,6 +102,11 @@ export class FoundryBuilder extends BaseBuilder {
         })
         .filter((path) => path !== undefined) as string[];
 
+      const fileNames = Object.keys(
+        parsedMetadata?.settings?.compilationTarget || {},
+      );
+      const fileName = fileNames.length > 0 ? fileNames[0] : "";
+
       if (
         this.shouldProcessContract(
           contractInfo.abi,
@@ -99,6 +118,7 @@ export class FoundryBuilder extends BaseBuilder {
           name: contractName,
           metadata,
           bytecode,
+          fileName,
           sources,
         });
       }

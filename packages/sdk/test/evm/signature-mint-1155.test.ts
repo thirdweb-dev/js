@@ -177,6 +177,7 @@ describe("Edition sig minting", async () => {
         name: "Test1",
       });
       const toSign = {
+        to: adminWallet.address,
         metadata: uri,
         quantity: 10,
       };
