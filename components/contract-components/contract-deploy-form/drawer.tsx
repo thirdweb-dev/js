@@ -12,6 +12,7 @@ interface DeployFormDrawerProps {
   contractVersion?: string;
   onSuccessCallback?: (contractAddress: string) => void;
   onDrawerVisibilityChanged?: (isVisible: boolean) => void;
+  isImplementationDeploy?: true;
 }
 
 export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
@@ -20,6 +21,7 @@ export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
   contractVersion = "latest",
   onSuccessCallback,
   onDrawerVisibilityChanged,
+  isImplementationDeploy,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -57,6 +59,7 @@ export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
       >
         <Box py={4} px={2}>
           <ContractDeployForm
+            isImplementationDeploy={isImplementationDeploy}
             contractId={contractId}
             chainId={chainId}
             contractVersion={contractVersion}

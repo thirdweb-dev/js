@@ -49,7 +49,7 @@ interface CustomContractFormProps {
   ipfsHash: string;
   selectedChain: SUPPORTED_CHAIN_ID | undefined;
   onChainSelect: (chainId: SUPPORTED_CHAIN_ID) => void;
-  isImplementationDeploy?: boolean;
+  isImplementationDeploy?: true;
   onSuccessCallback?: (contractAddress: string) => void;
 }
 
@@ -74,8 +74,9 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       ?.implementationInitializerFunction || "initialize",
   );
   const isFactoryDeployment =
-    fullReleaseMetadata.data?.isDeployableViaFactory ||
-    (fullReleaseMetadata.data?.isDeployableViaProxy && !isImplementationDeploy);
+    (fullReleaseMetadata.data?.isDeployableViaFactory ||
+      fullReleaseMetadata.data?.isDeployableViaProxy) &&
+    !isImplementationDeploy;
 
   const deployParams = isFactoryDeployment
     ? initializerParams
