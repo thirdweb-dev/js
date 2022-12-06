@@ -51,9 +51,15 @@ const UserPage: ThirdwebNextPage = () => {
 
   const releaserProfile = useReleaserProfile(ens.data?.address || undefined);
 
-  const displayName = shortenIfAddress(ens?.data?.ensName || wallet);
+  const displayName = shortenIfAddress(ens?.data?.ensName || wallet).replace(
+    "deployer.thirdweb.eth",
+    "thirdweb.eth",
+  );
 
-  const currentRoute = `https://thirdweb.com${router.asPath}`;
+  const currentRoute = `https://thirdweb.com${router.asPath}`.replace(
+    "deployer.thirdweb.eth",
+    "thirdweb.eth",
+  );
 
   const publishedContracts = usePublishedContractsQuery(
     ens.data?.address || undefined,
@@ -96,6 +102,7 @@ const UserPage: ThirdwebNextPage = () => {
             : undefined,
           url: currentRoute,
         }}
+        canonical={currentRoute}
       />
 
       <Flex flexDir="column" gap={12}>

@@ -88,7 +88,10 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
 
   const releaserProfile = useReleaserProfile(release.releaser);
 
-  const currentRoute = `https://thirdweb.com${router.asPath}`;
+  const currentRoute = `https://thirdweb.com${router.asPath}`.replace(
+    "deployer.thirdweb.eth",
+    "thirdweb.eth",
+  );
 
   const contractFunctions = useReleasedContractFunctions(release);
   const contractEvents = useReleasedContractEvents(release);
