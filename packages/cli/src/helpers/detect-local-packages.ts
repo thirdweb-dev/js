@@ -1,28 +1,75 @@
 import { exec } from "child_process";
 
+type PackageManager = "npm" | "yarn" | "pnpm";
+
+interface Installation {
+  packageManager: PackageManager;
+  isGlobal: boolean;
+}
+
+export async function findPackageInstallation(): Promise<
+  Installation | undefined
+> {
+  const isLocal = await isInstalledLocally();
+  if (isLocal) {
+    const packageManager = await import("detect-package-manager").then(
+      ({ detect }) => {
+        return detect();
+      },
+    );
+
+    return { packageManager, isGlobal: false };
+  }
+
+  const isGlobalNpm = await isInstalledGloballyWithNpm();
+  if (isGlobalNpm) {
+    return { packageManager: "npm", isGlobal: true };
+  }
+
+  const isGlobalYarn = await isInstalledGloballyWithYarn();
+  if (isGlobalYarn) {
+    return { packageManager: "yarn", isGlobal: true };
+  }
+
+  const isGlobalPnpm = await isInstalledGloballyWithPnpm();
+  if (isGlobalPnpm) {
+    return { packageManager: "pnpm", isGlobal: true };
+  }
+
+  return undefined;
+}
+
 // For LOCAL packages, npm ls picks up things installed by yarn and pnpm too
-export async function detectLocalPackages(): Promise<string[]> {
-  return detectPackages("npm ls --depth=0");
+async function isInstalledLocally(): Promise<boolean> {
+  const packages = await detectPackages("npm ls --depth=0");
+  return containsThirdweb(packages || []);
 }
 
 // But for GLOBAL packages, we need to use a separate command for each one
-export async function detectGlobalNpmPackages(): Promise<string[]> {
-  return detectPackages("npm ls -g --depth=0");
+async function isInstalledGloballyWithNpm(): Promise<boolean> {
+  const packages = await detectPackages("npm ls -g --depth=0");
+  return containsThirdweb(packages || []);
 }
 
-export async function detectGlobalYarnPackages(): Promise<string[]> {
-  return detectPackages("yarn --cwd `yarn global dir` list");
+async function isInstalledGloballyWithYarn(): Promise<boolean> {
+  const packages = await detectPackages("yarn --cwd `yarn global dir` list");
+  return containsThirdweb(packages || []);
 }
 
-export async function detectGlobalPnpmPackages(): Promise<string[]> {
-  return new Promise((resolve) => {
+async function isInstalledGloballyWithPnpm(): Promise<boolean> {
+  const packages: string[] = await new Promise((resolve) => {
     exec(`pnpm list -g --depth=0`, (err, stdout) => {
-      var packages: string[] = [];
-      packages = stdout.split("dependencies:")[1]?.trim().split("\n") || [];
-      packages = packages.map((pkg) => pkg.replace(" ", "@"));
-      resolve(packages);
+      var pkgs: string[] = [];
+      pkgs = stdout.split("dependencies:")[1]?.trim().split("\n") || [];
+      pkgs = pkgs.map((pkg) => pkg.replace(" ", "@"));
+      resolve(pkgs);
     });
   });
+  return containsThirdweb(packages || []);
+}
+
+function containsThirdweb(packages: string[]) {
+  return packages.some((pkg) => pkg.match(/^thirdweb/));
 }
 
 async function detectPackages(cmd: string): Promise<string[]> {

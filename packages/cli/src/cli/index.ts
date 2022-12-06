@@ -5,10 +5,7 @@ import { cliVersion, pkg } from "../constants/urls";
 import { info, logger, spinner } from "../core/helpers/logger";
 import { twCreate } from "../create/command";
 import { deploy } from "../deploy";
-import {
-  detectGlobalNpmPackages,
-  detectLocalPackages,
-} from "../helpers/detect-local-packages";
+import { findPackageInstallation } from "../helpers/detect-local-packages";
 import { upload } from "../storage/command";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
@@ -233,43 +230,14 @@ const main = async () => {
             const clonedEnvironment = { ...process.env };
             clonedEnvironment.THIRDWEB_CLI_SKIP_INTRO = "true";
 
-            // Check if thirdweb package is already installed in local package.json
-            const localPackages: string[] = await detectLocalPackages();
-            const isLocal =
-              localPackages.find((packageName) =>
-                packageName.match(/^thirdweb/),
-              ) !== undefined;
+            const installation = await findPackageInstallation();
 
-            // Check if thirdweb package is already installed globally
-            const globalPackages: string[] = await detectGlobalNpmPackages();
-            const isGlobal =
-              globalPackages.find((packageName) =>
-                packageName.match(/^thirdweb/),
-              ) !== undefined;
-
-            let command = "";
-            if (isLocal) {
-              const packageManager = await import(
-                "detect-package-manager"
-              ).then(({ detect }) => {
-                return detect();
-              });
-
-              if (packageManager === "pnpm") {
-                command = "pnpm add thirdweb@latest";
-              } else if (packageManager === "yarn") {
-                command = "yarn add thirdweb";
-              } else {
-                command = "npm install thirdweb";
-              }
-            } else if (isGlobal) {
-              command = "npm install -g thirdweb";
-            } else {
+            // If the package isn't installed anywhere, just defer to npx thirdweb@latest
+            if (!installation) {
               updateSpinner.succeed(
                 `Now using CLI version ${versionInfo.latest}. Continuing execution...`,
               );
 
-              // If the package isn't installed in this machine, just call npx thirdweb@latest
               await new Promise((done, failed) => {
                 const shell = spawn(
                   `npx thirdweb@latest ${process.argv.slice(2).join(" ")}`,
@@ -286,6 +254,26 @@ const main = async () => {
               });
 
               return process.exit(0);
+            }
+
+            // Otherwise, get the correct command based on package manager and local vs. global
+            let command = "";
+            switch (installation.packageManager) {
+              case "npm":
+                command = installation.isGlobal
+                  ? `npm install -g thirdweb`
+                  : `npm install thirdweb`;
+                break;
+              case "yarn":
+                command = installation.isGlobal
+                  ? `yarn global add thirdweb`
+                  : `yarn add thirdweb`;
+                break;
+              case "pnpm":
+                command = installation.isGlobal
+                  ? `pnpm add -g thirdweb@latest`
+                  : `pnpm add thirdweb@latest`;
+                break;
             }
 
             await new Promise((done, failed) => {
