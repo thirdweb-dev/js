@@ -150,6 +150,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
       <Flex py={6} px={2} flexDir="column" gap={6}>
         <Flex gap={6}>
           <NFTMedia
+            borderRadius="lg"
             metadata={renderData.asset}
             requireInteraction
             flexShrink={0}

@@ -65,6 +65,7 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
             requireInteraction
             flexShrink={0}
             boxSize={32}
+            borderRadius="lg"
             objectFit="contain"
           />
           <Flex flexDir="column" gap={2} w="70%">

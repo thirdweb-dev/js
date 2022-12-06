@@ -40,7 +40,7 @@ export const ReleasedBy: React.FC<ReleasedByProps> = ({ contractAddress }) => {
   }
 
   return (
-    <Box maxW="330px">
+    <Box maxW={{ base: "100%", md: "330px" }}>
       <CardElevationWrapper>
         <ContractCard
           contractId={releaseToShow.name}

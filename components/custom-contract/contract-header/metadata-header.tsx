@@ -22,18 +22,33 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
   data,
 }) => {
   return (
-    <Flex align="center" gap={4}>
-      <Skeleton isLoaded={isLoaded} flexShrink={0}>
+    <Flex align={{ base: "flex-start", md: "center" }} gap={4}>
+      <Skeleton
+        isLoaded={isLoaded}
+        flexShrink={0}
+        borderRadius="lg"
+        overflow="hidden"
+        boxSize={{ base: 16, md: 32 }}
+        position="relative"
+      >
         {data?.image ? (
           <Image
+            position="absolute"
+            top={0}
+            bottom={0}
+            right={0}
+            left={0}
             objectFit="contain"
-            boxSize="64px"
             src={data.image}
             alt={data?.name?.toString() || ""}
           />
         ) : contractTypeImage ? (
           <ChakraNextImage
-            boxSize="64px"
+            position="absolute"
+            top={0}
+            bottom={0}
+            right={0}
+            left={0}
             src={contractTypeImage}
             alt={data?.name?.toString() || ""}
           />
@@ -46,9 +61,10 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
         </Skeleton>
         <Skeleton isLoaded={isLoaded}>
           <Text
+            maxW="2xl"
             title={data?.description || undefined}
-            size="body.md"
-            noOfLines={2}
+            size="body.sm"
+            noOfLines={3}
           >
             {isLoaded ? data?.description : ""}
           </Text>

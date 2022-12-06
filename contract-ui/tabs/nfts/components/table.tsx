@@ -187,6 +187,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
           </Thead>
           <Tbody {...getTableBodyProps()} position="relative">
             {page.map((row) => {
+              const failedToLoad = !row.original.metadata.uri;
               prepareRow(row);
               return (
                 // eslint-disable-next-line react/jsx-key
@@ -200,6 +201,9 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                   // end hack
                   borderBottomWidth={1}
                   _last={{ borderBottomWidth: 0 }}
+                  pointerEvents={failedToLoad ? "none" : "auto"}
+                  opacity={failedToLoad ? 0.3 : 1}
+                  cursor={failedToLoad ? "not-allowed" : "pointer"}
                 >
                   {row.cells.map((cell) => (
                     // eslint-disable-next-line react/jsx-key
@@ -208,7 +212,7 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
                     </Td>
                   ))}
                   <Td borderBottomWidth="inherit">
-                    <Icon as={FiArrowRight} />
+                    {!failedToLoad && <Icon as={FiArrowRight} />}
                   </Td>
                 </Tr>
               );
