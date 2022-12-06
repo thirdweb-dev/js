@@ -11,6 +11,7 @@ export const GuideCard: React.FC<GuideCardProps> = ({ image, title, link }) => {
   return (
     <Link href={link} isExternal textDecor="none !important">
       <Flex
+        h="full"
         direction="column"
         borderRadius="2xl"
         border="1px solid"

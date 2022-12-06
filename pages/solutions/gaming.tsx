@@ -22,16 +22,38 @@ const GAMING_GUIDES = [
     link: "https://blog.thirdweb.com/guides/get-started-with-thirdwebs-unity-sdk/",
   },
   {
-    title: "Add A Connect Wallet Button In A Unity Game",
+    title: "Add a Connect Wallet Button in a Unity Game",
     image:
-      "https://blog.thirdweb.com/content/images/size/w2000/2022/11/Group-625859--6-.png",
+      "https://blog.thirdweb.com/content/images/size/w2000/2022/12/This-is-the-one--33-.png",
     link: "https://blog.thirdweb.com/guides/add-a-connect-wallet-button-in-a-unity-game/",
   },
   {
-    title: "Airdrop Free-To-Own NFTs For Your Web3 Game",
+    title: "Set up Coinbase Pay in your Unity Project",
     image:
-      "https://blog.thirdweb.com/content/images/size/w2000/2022/11/Group-625859--4-.png",
-    link: "https://blog.thirdweb.com/guides/airdrop-free-to-own-nfts-for-a-web3-game/",
+      "https://blog.thirdweb.com/content/images/size/w2000/2022/12/Coinbase-Pay-guide.png",
+    link: "https://blog.thirdweb.com/guides/set-up-coinbase-pay-in-your-unity-project/",
+  },
+];
+
+const GAMING_CASE_STUDIES = [
+  {
+    title: "Evolved Camels Builds Immersive Web3 Gaming Experiences",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w2000/2022/12/Chicago-Bulls.png",
+    link: "https://blog.thirdweb.com/evolved-camels-builds-immersive-web3-gaming-experiences-for-their-community/",
+  },
+  {
+    title: "Fractal, Web3 Gaming Platform and Marketplace for Blockchain Games",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w2000/2022/11/Fractal.png",
+    link: "https://blog.thirdweb.com/fractal-web3-gaming-platform-and-marketplace-for-blockchain-games-expands-to-evm-chains/",
+  },
+  {
+    title:
+      "Dreamworks Launches NFT Avatars for the Metaverse in Collaboration with Gala's VOX",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w2000/2022/10/DreamWorks-Launches-NFT-Avatars-with-Gala-s-VOX---thirdweb-Case-Study-2.png",
+    link: "https://blog.thirdweb.com/dreamworks-launches-nft-avatars-for-web3-games-with-gala-and-the-sims-creators-voxverse/",
   },
 ];
 
@@ -197,6 +219,7 @@ const Gaming: ThirdwebNextPage = () => {
         description="Check out our guides and templates to start building games with thirdweb"
         solution="Gaming"
         guides={GAMING_GUIDES}
+        caseStudies={GAMING_CASE_STUDIES}
       />
 
       <Box

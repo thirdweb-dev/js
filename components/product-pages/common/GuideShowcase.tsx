@@ -1,18 +1,29 @@
 import { GuideCard } from "./GuideCard";
 import { ProductSection } from "./ProductSection";
-import { Flex, HStack, Icon, SimpleGrid } from "@chakra-ui/react";
+import {
+  Flex,
+  HStack,
+  Icon,
+  LightMode,
+  SimpleGrid,
+  Switch,
+} from "@chakra-ui/react";
+import { useMemo, useState } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import { Heading, TrackedLink } from "tw-components";
+
+type BlogPost = {
+  title: string;
+  image: string;
+  link: string;
+};
 
 interface GuidesShowcaseProps {
   title: string;
   description: string;
   solution: string;
-  guides: {
-    title: string;
-    image: string;
-    link: string;
-  }[];
+  guides: BlogPost[];
+  caseStudies?: BlogPost[];
 }
 
 export const GuidesShowcase: React.FC<GuidesShowcaseProps> = ({
@@ -20,7 +31,17 @@ export const GuidesShowcase: React.FC<GuidesShowcaseProps> = ({
   description,
   solution,
   guides,
+  caseStudies,
 }) => {
+  const [mode, setMode] = useState<"guides" | "case-studies">("guides");
+
+  const renderData = useMemo(() => {
+    if (mode === "case-studies" && caseStudies) {
+      return caseStudies;
+    }
+    return guides;
+  }, [caseStudies, guides, mode]);
+
   return (
     <ProductSection>
       <Flex
@@ -32,6 +53,7 @@ export const GuidesShowcase: React.FC<GuidesShowcaseProps> = ({
         <Heading as="h2" size="display.sm" fontWeight={700} textAlign="center">
           {title}
         </Heading>
+
         <Heading
           as="h3"
           maxW="820px"
@@ -41,16 +63,39 @@ export const GuidesShowcase: React.FC<GuidesShowcaseProps> = ({
         >
           {description}
         </Heading>
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
-          {guides.map(({ title: guideTitle, image, link }) => (
-            <GuideCard
-              key={guideTitle}
-              image={image}
-              title={guideTitle}
-              link={link}
-            />
-          ))}
-        </SimpleGrid>
+        <Flex direction="column" gap={3}>
+          {caseStudies?.length ? (
+            <Flex align="center" ml="auto" gap={2}>
+              <Heading size="label.md" as="label">
+                Guides
+              </Heading>
+              <LightMode>
+                <Switch
+                  isChecked={mode === "case-studies"}
+                  onChange={() => {
+                    setMode((prevMode) =>
+                      prevMode === "case-studies" ? "guides" : "case-studies",
+                    );
+                  }}
+                  colorScheme="purple"
+                />
+              </LightMode>
+              <Heading size="label.md" as="label">
+                Case Studies
+              </Heading>
+            </Flex>
+          ) : null}
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap={6}>
+            {renderData.map(({ title: guideTitle, image, link }) => (
+              <GuideCard
+                key={guideTitle}
+                image={image}
+                title={guideTitle}
+                link={link}
+              />
+            ))}
+          </SimpleGrid>
+        </Flex>
         <TrackedLink
           href={`https://blog.thirdweb.com/tag/${solution.toLowerCase()}/`}
           category={solution.toLowerCase()}
@@ -64,7 +109,8 @@ export const GuidesShowcase: React.FC<GuidesShowcaseProps> = ({
               as="p"
               lineHeight={{ base: 1.5, md: undefined }}
             >
-              See all of our {solution} guides
+              See all of our {solution}{" "}
+              {mode === "case-studies" ? "case studies" : "guides"}
             </Heading>
             <Icon as={FiArrowRight} />
           </HStack>
