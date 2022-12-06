@@ -2,4 +2,4 @@
 "@thirdweb-dev/react": patch
 ---
 
-feat: transfer btnTitle from string to children
+Add `btnTitle` prop to the `ConnectWallet` component. Now you can set customized string or child component to the connect button.
