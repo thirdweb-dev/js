@@ -216,7 +216,7 @@ const Gaming: ThirdwebNextPage = () => {
 
       <GuidesShowcase
         title="Start building web3 games"
-        description="Check out our guides and templates to start building games with thirdweb"
+        description="Check out our guides and case studies to start building games with thirdweb"
         solution="Gaming"
         guides={GAMING_GUIDES}
         caseStudies={GAMING_CASE_STUDIES}
