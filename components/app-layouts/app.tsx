@@ -81,7 +81,7 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
         <ErrorProvider>
           <DashboardThirdwebProvider>
             <PHIdentifier />
-            {/* {router.pathname !== "/dashboard" && <PrivacyNotice />} */}
+            {router.pathname !== "/dashboard" && <PrivacyNotice />}
 
             <AppShell {...props} />
           </DashboardThirdwebProvider>
