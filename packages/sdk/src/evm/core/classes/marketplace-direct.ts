@@ -162,7 +162,7 @@ export class MarketplaceDirect {
     validateNewListingParam(listing);
 
     await handleTokenApproval(
-      this.contractWrapper.getSignerOrProvider(),
+      this.contractWrapper,
       this.getAddress(),
       listing.assetContractAddress,
       listing.tokenId,
