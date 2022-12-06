@@ -2,6 +2,7 @@ import { hasBaseContract, readBaseContract } from "./base-contracts";
 import { DownloadError } from "./create-app";
 import { PackageManager } from "./get-pkg-manager";
 import { tryGitInit } from "./git";
+import { hasForge } from "./has-forge";
 import { install } from "./install";
 import { isFolderEmpty } from "./is-folder-empty";
 import { getOnline } from "./is-online";
@@ -218,5 +219,19 @@ export async function createContractProject({
     console.log();
     console.log(chalk.cyan("  cd"), cdpath);
     console.log();
+
+    if (framework === "forge") {
+      const isInstalled = await hasForge();
+
+      if (!isInstalled) {
+        console.log(
+          `\n${chalk.yellowBright(
+            `warning`,
+          )} You don't have forge installed on this machine, and will need it to run this project! \n\nYou can install forge by following these instructions:\n${chalk.blueBright(
+            `https://book.getfoundry.sh/getting-started/installation`,
+          )}\n`,
+        );
+      }
+    }
   }
 }
