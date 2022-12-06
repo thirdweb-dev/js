@@ -20,7 +20,7 @@ const main = async () => {
 
   const program = new Command();
 
-  //yes this has to look like this, eliminates whitespace
+  // yes this has to look like this, eliminates whitespace
   if (!skipIntro) {
     console.info(`
     $$\\     $$\\       $$\\                 $$\\                         $$\\       
@@ -291,9 +291,15 @@ const main = async () => {
               `Successfully upgraded CLI to version ${versionInfo.latest}. Continuing execution...`,
             );
 
+            // If the package is installed globally with yarn or pnpm, then npx won't recognize it
+            // So we need to make sure to run the command directly
+            const executionCommand =
+              !installation.isGlobal || installation.packageManager === "npm"
+                ? `npx thirdweb`
+                : `thirdweb`;
             await new Promise((done, failed) => {
               const shell = spawn(
-                `npx thirdweb ${process.argv.slice(2).join(" ")}`,
+                `${executionCommand} ${process.argv.slice(2).join(" ")}`,
                 [],
                 { stdio: "inherit", shell: true, env: clonedEnvironment },
               );
