@@ -427,7 +427,33 @@ export class ContractDeployer extends RPCConnectionHandler {
       } catch (e) {
         parsedVersion = undefined;
       }
-      return await factory.deploy(contractType, parsedMetadata, parsedVersion);
+      // return await factory.deploy(contractType, parsedMetadata, parsedVersion);
+
+      const contract = PREBUILT_CONTRACTS_MAP[contractType];
+      const metadata = contract.schema.deploy.parse(contractMetadata);
+      const contractURI = await this.storage.upload(metadata);
+      const implementationAddress =
+        await factory.readContract.getLatestImplementation(
+          ethers.utils.formatBytes32String(contract.name),
+        );
+
+      const ABI = await contract.getAbi(
+        implementationAddress,
+        this.getProvider(),
+      );
+
+      const deployArgs = await factory.getDeployArguments(
+        contractType,
+        metadata,
+        contractURI,
+      );
+
+      return this.deployViaMinimalFactory(
+        implementationAddress,
+        ABI,
+        "initialize",
+        deployArgs,
+      );
     }
 
     //
@@ -569,12 +595,16 @@ export class ContractDeployer extends RPCConnectionHandler {
       implementationAddress.replace(/0x/, "").toLowerCase(),
       "5af43d82803e903d91602b57fd5bf3",
     ].join("");
+    const initCodeHash = ethers.utils.solidityKeccak256(
+      ["bytes"],
+      [cloneBytecode],
+    );
 
     // get Create2 address of deployed proxy
     const create2Address = ethers.utils.getCreate2Address(
       minimalFactoryAddress,
       salthash,
-      cloneBytecode,
+      initCodeHash,
     );
 
     return create2Address;
