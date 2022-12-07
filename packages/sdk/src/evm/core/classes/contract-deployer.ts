@@ -427,38 +427,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       } catch (e) {
         parsedVersion = undefined;
       }
-      // return await factory.deploy(contractType, parsedMetadata, parsedVersion);
-
-      if (parsedVersion === undefined)
-        parsedVersion = parseInt(
-          (await factory.getLatestVersion(contractType)).toString(),
-        );
-      const contract = PREBUILT_CONTRACTS_MAP[contractType];
-      const metadata = contract.schema.deploy.parse(contractMetadata);
-      const contractURI = await this.storage.upload(metadata);
-      const implementationAddress =
-        await factory.readContract.getImplementation(
-          ethers.utils.formatBytes32String(contract.name),
-          parsedVersion,
-        );
-
-      const ABI = await contract.getAbi(
-        implementationAddress,
-        this.getProvider(),
-      );
-
-      const deployArgs = await factory.getDeployArguments(
-        contractType,
-        metadata,
-        contractURI,
-      );
-
-      return this.deployViaMinimalFactory(
-        implementationAddress,
-        ABI,
-        "initialize",
-        deployArgs,
-      );
+      return await factory.deploy(contractType, parsedMetadata, parsedVersion);
     }
 
     //
@@ -808,7 +777,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         );
       } else if (isDeployableViaProxy) {
         // deploy a proxy directly
-        return await this.deployProxy(
+        return await this.deployViaMinimalFactory(
           implementationAddress,
           compilerMetadata.abi,
           factoryDeploymentData.implementationInitializerFunction,
