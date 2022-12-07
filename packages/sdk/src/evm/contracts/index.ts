@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { getPrebuiltInfo } from "../common/legacy";
 import { ALL_ROLES } from "../common/role";
 import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
@@ -56,12 +57,8 @@ export const EditionDropInitializer = {
     );
   },
   getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    const contractInfo = await assertContractType(
-      address,
-      provider,
-      "edition-drop",
-    );
-    return contractInfo.version > 2
+    const contractInfo = await getContractInfo(address, provider);
+    return !contractInfo || contractInfo.version > 2
       ? (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC1155.json"))
           .default
       : (
@@ -97,7 +94,6 @@ export const EditionInitializer = {
     );
   },
   getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    await assertContractType(address, provider, "edition");
     return (
       await import("@thirdweb-dev/contracts-js/dist/abis/TokenERC1155.json")
     ).default;
@@ -129,7 +125,6 @@ export const MarketplaceInitializer = {
     );
   },
   getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    await assertContractType(address, provider, "marketplace");
     return (
       await import("@thirdweb-dev/contracts-js/dist/abis/Marketplace.json")
     ).default;
@@ -161,7 +156,6 @@ export const MultiwrapInitializer = {
     );
   },
   getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    await assertContractType(address, provider, "multiwrap");
     return (await import("@thirdweb-dev/contracts-js/dist/abis/Multiwrap.json"))
       .default;
   },
@@ -193,7 +187,6 @@ export const NFTCollectionInitializer = {
     );
   },
   getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    await assertContractType(address, provider, "nft-collection");
     return (
       await import("@thirdweb-dev/contracts-js/dist/abis/TokenERC721.json")
     ).default;
@@ -225,12 +218,8 @@ export const NFTDropInitializer = {
     );
   },
   getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    const contractInfo = await assertContractType(
-      address,
-      provider,
-      "nft-drop",
-    );
-    return contractInfo.version > 3
+    const contractInfo = await getContractInfo(address, provider);
+    return !contractInfo || contractInfo.version > 3
       ? (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC721.json"))
           .default
       : (
@@ -267,7 +256,6 @@ export const PackInitializer = {
     );
   },
   getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    await assertContractType(address, provider, "pack");
     return (await import("@thirdweb-dev/contracts-js/dist/abis/Pack.json"))
       .default;
   },
@@ -299,12 +287,8 @@ export const SignatureDropInitializer = {
     );
   },
   getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    const contractInfo = await assertContractType(
-      address,
-      provider,
-      "signature-drop",
-    );
-    return contractInfo.version > 4
+    const contractInfo = await getContractInfo(address, provider);
+    return !contractInfo || contractInfo.version > 4
       ? (
           await import(
             "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop.json"
@@ -344,7 +328,6 @@ export const SplitInitializer = {
     );
   },
   getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    await assertContractType(address, provider, "split");
     return (await import("@thirdweb-dev/contracts-js/dist/abis/Split.json"))
       .default;
   },
@@ -376,12 +359,8 @@ export const TokenDropInitializer = {
     );
   },
   getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    const contractInfo = await assertContractType(
-      address,
-      provider,
-      "token-drop",
-    );
-    return contractInfo.version > 2
+    const contractInfo = await getContractInfo(address, provider);
+    return !contractInfo || contractInfo.version > 2
       ? (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC20.json"))
           .default
       : (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC20_V2.json"))
@@ -414,7 +393,6 @@ export const TokenInitializer = {
     );
   },
   getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    await assertContractType(address, provider, "token");
     return (
       await import("@thirdweb-dev/contracts-js/dist/abis/TokenERC20.json")
     ).default;
@@ -447,22 +425,20 @@ export const VoteInitializer = {
     );
   },
   getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    await assertContractType(address, provider, "vote");
     return (await import("@thirdweb-dev/contracts-js/dist/abis/VoteERC20.json"))
       .default;
   },
 };
 
-async function assertContractType(
+async function getContractInfo(
   address: string,
   provider: ethers.providers.Provider,
-  type: PrebuiltContractType,
 ) {
-  const contractInfo = await getPrebuiltInfo(address, provider);
-  if (!contractInfo || contractInfo.type !== getContractName(type)) {
-    throw new Error(`Contract is not a ${type}`);
+  try {
+    return await getPrebuiltInfo(address, provider);
+  } catch (e) {
+    return undefined;
   }
-  return contractInfo;
 }
 
 /**
