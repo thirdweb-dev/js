@@ -1,5 +1,11 @@
 # @thirdweb-dev/react
 
+## 3.6.7
+
+### Patch Changes
+
+- [#448](https://github.com/thirdweb-dev/js/pull/448) [`7a37e56`](https://github.com/thirdweb-dev/js/commit/7a37e564fd5d5a9df84c8da44ecaf6c42f67a0e2) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - allow `useContract` to fail faster to enable the import case
+
 ## 3.6.6
 
 ### Patch Changes
