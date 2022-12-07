@@ -532,6 +532,61 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param initializerFunction
    * @param initializerArgs
    */
+  public async deployViaMinimalFactory(
+    implementationAddress: string,
+    implementationAbi: ContractInterface,
+    initializerFunction: string,
+    initializerArgs: any[],
+  ): Promise<string> {
+    const encodedInitializer = Contract.getInterface(
+      implementationAbi,
+    ).encodeFunctionData(initializerFunction, initializerArgs);
+    const { TWMinimalFactory__factory } = await import(
+      "@thirdweb-dev/contracts-js/factories/TWMinimalFactory__factory"
+    );
+
+    const signer = this.getSigner();
+    invariant(signer, "Signer is required to deploy contracts");
+
+    // compute salt and salt-hash
+    const blockNumber = await this.getProvider().getBlockNumber();
+    const salt = ethers.utils.formatBytes32String(blockNumber.toString());
+    const salthash = ethers.utils.solidityKeccak256(
+      ["address", "string"],
+      [await signer.getAddress(), salt],
+    );
+
+    // deploy TWMinimalFactory -- it deploys the proxy during construction.
+    const minimalFactoryAddress = await this.deployContractWithAbi(
+      TWMinimalFactory__factory.abi,
+      TWMinimalFactory__factory.bytecode,
+      [implementationAddress, encodedInitializer, salthash],
+    );
+
+    // creation bytecode of EIP1167 minimal-proxy -- needed for computation of Create2 address
+    const cloneBytecode = [
+      "0x3d602d80600a3d3981f3363d3d373d3d3d363d73",
+      implementationAddress.replace(/0x/, "").toLowerCase(),
+      "5af43d82803e903d91602b57fd5bf3",
+    ].join("");
+
+    // get Create2 address of deployed proxy
+    const create2Address = ethers.utils.getCreate2Address(
+      minimalFactoryAddress,
+      salthash,
+      cloneBytecode,
+    );
+
+    return create2Address;
+  }
+
+  /**
+   * Deploy a proxy contract of a given implementation directly
+   * @param implementationAddress
+   * @param implementationAbi
+   * @param initializerFunction
+   * @param initializerArgs
+   */
   public async deployProxy(
     implementationAddress: string,
     implementationAbi: ContractInterface,
