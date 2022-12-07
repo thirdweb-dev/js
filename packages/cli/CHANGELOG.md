@@ -1,5 +1,16 @@
 # thirdweb
 
+## 0.9.6
+
+### Patch Changes
+
+- [#441](https://github.com/thirdweb-dev/js/pull/441) [`64f24f1`](https://github.com/thirdweb-dev/js/commit/64f24f1bb167c3d0cb3beca51fd300eaec21cc27) Thanks [@adam-maj](https://github.com/adam-maj)! - CLI autoupdates on run
+
+- [#447](https://github.com/thirdweb-dev/js/pull/447) [`e7740a5`](https://github.com/thirdweb-dev/js/commit/e7740a59db022a3396194ac66cd195d8ae754d57) Thanks [@adam-maj](https://github.com/adam-maj)! - Detect whether forge is installed
+
+- Updated dependencies [[`3731459`](https://github.com/thirdweb-dev/js/commit/3731459d33f1ded7ebb69124809449b901b3ad3d), [`cac6c30`](https://github.com/thirdweb-dev/js/commit/cac6c30bca5e17df81d746ef81316af47d5e252e), [`7a37e56`](https://github.com/thirdweb-dev/js/commit/7a37e564fd5d5a9df84c8da44ecaf6c42f67a0e2)]:
+  - @thirdweb-dev/sdk@3.6.7
+
 ## 0.9.5
 
 ### Patch Changes
