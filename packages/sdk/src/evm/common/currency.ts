@@ -193,11 +193,11 @@ export async function normalizeAmount(
   return utils.parseUnits(AmountSchema.parse(amount), decimals);
 }
 
-export function toEther(amount: Amount): string {
-  return utils.formatEther(AmountSchema.parse(amount));
+export function toEther(amount: BigNumberish): string {
+  return utils.formatEther(amount);
 }
 
-export function toWei(amount: BigNumberish): BigNumber {
+export function toWei(amount: Amount): BigNumber {
   return utils.parseEther(AmountSchema.parse(amount));
 }
 
@@ -206,5 +206,5 @@ export function toUnits(amount: Amount, decimals: BigNumberish): BigNumber {
 }
 
 export function toDisplayValue(amount: BigNumberish, decimals: BigNumberish): string {
-  return utils.formatUnits(AmountSchema.parse(amount), decimals);
+  return utils.formatUnits(amount, decimals);
 }
