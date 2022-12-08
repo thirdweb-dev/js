@@ -1,4 +1,4 @@
-// import { createModal } from "../modal/view";
+import { createModal } from "../modal/view";
 import { ConnectExtension } from "@magic-ext/connect";
 import { OAuthExtension, OAuthProvider } from "@magic-ext/oauth";
 import { InstanceWithExtensions, SDKBase } from "@magic-sdk/provider";
@@ -24,7 +24,9 @@ interface UserDetails {
   oauthProvider: OAuthProvider;
 }
 
-export abstract class MagicConnector extends Connector {
+export abstract class MagicConnector extends Connector<
+  RPCProviderModule & AbstractProvider
+> {
   ready = !IS_SERVER;
 
   readonly id = "magic";
@@ -42,8 +44,10 @@ export abstract class MagicConnector extends Connector {
     this.magicOptions = config.options;
   }
 
-  async getAccount(): Promise<string> {
-    const provider = new providers.Web3Provider(await this.getProvider());
+  async getAccount() {
+    const provider = new providers.Web3Provider(
+      (await this.getProvider()) as unknown as providers.ExternalProvider,
+    );
     const signer = provider.getSigner();
     const account = await signer.getAddress();
     return getAddress(account);
@@ -78,9 +82,10 @@ export abstract class MagicConnector extends Connector {
   }
 
   async getSigner(): Promise<Signer> {
-    const provider = new providers.Web3Provider(await this.getProvider());
-    const signer = await provider.getSigner();
-    return signer;
+    const provider = new providers.Web3Provider(
+      (await this.getProvider()) as unknown as providers.ExternalProvider,
+    );
+    return provider.getSigner();
   }
 
   async isAuthorized() {

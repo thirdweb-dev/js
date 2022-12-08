@@ -7,6 +7,7 @@ import {
   MetaMask,
   WalletConnect,
   InjectedWallet,
+  MagicAuthWallet,
 } from "@thirdweb-dev/wallets";
 import type { AbstractWallet } from "@thirdweb-dev/wallets/dist/declarations/src/wallets/base";
 import { BigNumber } from "ethers";
@@ -41,6 +42,7 @@ const WALLETS = [
   InjectedWallet,
   WalletConnect,
   CoinbaseWallet,
+  MagicAuthWallet,
 ] as const;
 
 type PossibleWallet = typeof WALLETS[number]["id"];
@@ -95,6 +97,7 @@ class ThirdwebBridge implements TWBridge {
     for (let wallet of WALLETS) {
       const walletInstance = new wallet({
         appName: sdkOptions.appName || "thirdweb powered dApp",
+        apiKey: "foo",
       });
       walletInstance.on("connect", async () =>
         this.updateSDKSigner(await walletInstance.getSigner()),

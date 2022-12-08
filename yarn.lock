@@ -14402,7 +14402,7 @@ lru_map@^0.3.3:
   resolved "https://registry.yarnpkg.com/lru_map/-/lru_map-0.3.3.tgz#b5c8351b9464cbd750335a79650a0ec0e56118dd"
   integrity sha512-Pn9cox5CsMYngeDbmChANltQl+5pi6XmTrraMSzhPmMBbmgcxmqWry0U3PGapCU1yB4/LqCcom7qhHZiF/jGfQ==
 
-magic-sdk@^10.0.0:
+magic-sdk@^10.0.0, magic-sdk@^10.1.0:
   version "10.1.0"
   resolved "https://registry.yarnpkg.com/magic-sdk/-/magic-sdk-10.1.0.tgz#b111e41d88d8dc339744c201a07e8d6cb2bb21ca"
   integrity sha512-1Pykolr4WzK8j+FWm4rnjPqSRlG+z6nNd5kTMyDPFaqOxmKpoOpgUs2mVYASomXAZx1B883rSP67MGK+N6hlqw==

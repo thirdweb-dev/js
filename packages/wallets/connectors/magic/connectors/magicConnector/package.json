@@ -1,0 +1,4 @@
+{
+  "main": "dist/thirdweb-dev-wallets-connectors-magic-connectors-magicConnector.cjs.js",
+  "module": "dist/thirdweb-dev-wallets-connectors-magic-connectors-magicConnector.esm.js"
+}
