@@ -3446,6 +3446,18 @@
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.4.tgz#b2ac626d6cb9c8718ab459166d4bb405b8ffa78b"
   integrity sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==
 
+"@magic-ext/connect@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@magic-ext/connect/-/connect-3.1.0.tgz#e847de547daa4076686016a232af291851e10b60"
+  integrity sha512-hptRuAFEAxlfuiOIeradN4Gua8DrEQAMzaa9e5718pxIKEkZdTDgLsNo/o4NmixhgFKwvzNuh0YdbQKC4AJX7A==
+
+"@magic-ext/oauth@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@magic-ext/oauth/-/oauth-4.1.0.tgz#de072bf36807ba582d910fa56db339239fa7ed3e"
+  integrity sha512-xa+t5iYSAUx42KIfGxcM+wlIQMET3IkybD7pe5RIPVtbWSMHAUlHJNkgyk15BRS7vZMHU3oEBO8NXlNi5AnhCA==
+  dependencies:
+    "@magic-sdk/types" "^9.1.0"
+
 "@magic-sdk/commons@^6.1.0":
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/@magic-sdk/commons/-/commons-6.1.0.tgz#6dd6dc585315e2f6af9cf312d1557c481108029a"

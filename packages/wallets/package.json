@@ -71,6 +71,9 @@
   "sideEffects": false,
   "dependencies": {
     "@coinbase/wallet-sdk": "^3.6.0",
+    "@magic-ext/connect": "^3.1.0",
+    "@magic-ext/oauth": "^4.1.0",
+    "@magic-sdk/provider": "^10.1.0",
     "@wagmi/chains": "^0.1.0",
     "@wagmi/core": "^0.8.0",
     "@walletconnect/ethereum-provider": "^1.7.8",
