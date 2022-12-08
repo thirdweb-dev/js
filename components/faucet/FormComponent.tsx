@@ -1,5 +1,6 @@
 import { Flex, FormControl, Input, Spinner, useToast } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { useMutation } from "@tanstack/react-query";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useEffect, useState } from "react";
@@ -27,31 +28,26 @@ export const FormComponent: React.FC<IFormComponentProps> = ({
 
   const { mutate, isLoading, error, isError } = useMutation(
     async () => {
+      if (!publicKey) {
+        throw new Error("No wallet connected");
+      }
       trackEvent({
         category: "solana-faucet",
         action: "request-funds",
         label: "attempt",
       });
-      const query = await fetch("/api/faucet/solana", {
-        method: "POST",
-        body: JSON.stringify({ address }),
-      });
 
-      if (query.status >= 400) {
-        throw new Error(
-          await query.json().then((r) => {
-            console.error(r.error);
-            return r.error;
-          }),
-        );
-      }
-      return query.json();
+      const connection = new Connection("https://api.testnet.solana.com");
+      return await connection.requestAirdrop(
+        publicKey,
+        Number(LAMPORTS_PER_SOL),
+      );
     },
     {
-      onSuccess: (data) => {
-        if (data.txHash) {
+      onSuccess: (txHash) => {
+        if (txHash) {
           setTransactionLink(
-            `https://explorer.solana.com/tx/${data.txHash}?cluster=devnet`,
+            `https://explorer.solana.com/tx/${txHash}?cluster=devnet`,
           );
           trackEvent({
             category: "solana-faucet",
