@@ -111,7 +111,7 @@ export class MetaMaskConnector extends InjectedConnector {
       if (
         this.#UNSTABLE_shimOnConnectSelectAccount &&
         this.options?.shimDisconnect &&
-        !getConnectorStorage().getItem(this.shimDisconnectKey)
+        !(await getConnectorStorage().getItem(this.shimDisconnectKey))
       ) {
         account = await this.getAccount().catch(() => null);
         const isConnected = !!account;
@@ -149,7 +149,7 @@ export class MetaMaskConnector extends InjectedConnector {
       }
 
       if (this.options?.shimDisconnect) {
-        getConnectorStorage().setItem(this.shimDisconnectKey, true);
+        await getConnectorStorage().setItem(this.shimDisconnectKey, true);
       }
 
       return { account, chain: { id, unsupported }, provider };

@@ -128,7 +128,7 @@ export class InjectedConnector extends Connector<
 
       // Add shim to storage signalling wallet is connected
       if (this.options.shimDisconnect) {
-        getConnectorStorage()?.setItem(this.shimDisconnectKey, true);
+        await getConnectorStorage()?.setItem(this.shimDisconnectKey, true);
       }
 
       return { account, chain: { id, unsupported }, provider };
@@ -155,7 +155,7 @@ export class InjectedConnector extends Connector<
 
     // Remove shim signalling wallet is disconnected
     if (this.options.shimDisconnect) {
-      getConnectorStorage()?.removeItem(this.shimDisconnectKey);
+      await getConnectorStorage()?.removeItem(this.shimDisconnectKey);
     }
   }
 
@@ -203,7 +203,7 @@ export class InjectedConnector extends Connector<
       if (
         this.options.shimDisconnect &&
         // If shim does not exist in storage, wallet is disconnected
-        !getConnectorStorage()?.getItem(this.shimDisconnectKey)
+        !(await getConnectorStorage()?.getItem(this.shimDisconnectKey))
       ) {
         return false;
       }
@@ -336,7 +336,7 @@ export class InjectedConnector extends Connector<
     this.emit("change", { chain: { id, unsupported } });
   };
 
-  protected onDisconnect = () => {
+  protected onDisconnect = async () => {
     // We need this as MetaMask can emit the "disconnect" event
     // upon switching chains. This workaround ensures that the
     // user currently isn't in the process of switching chains.
@@ -348,7 +348,7 @@ export class InjectedConnector extends Connector<
     this.emit("disconnect");
     // Remove shim signalling wallet is disconnected
     if (this.options.shimDisconnect) {
-      getConnectorStorage()?.removeItem(this.shimDisconnectKey);
+      await getConnectorStorage().removeItem(this.shimDisconnectKey);
     }
   };
 
