@@ -22,7 +22,7 @@ import {
   Heading,
   Text,
 } from "tw-components";
-import { NFTMedia } from "tw-components/nft-media";
+import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 
 interface NFTDrawerProps {
   isOpen: boolean;
@@ -60,7 +60,7 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
     >
       <Flex py={6} px={2} flexDir="column" gap={6}>
         <Flex gap={6}>
-          <NFTMedia
+          <NFTMediaWithEmptyState
             metadata={renderData.metadata}
             requireInteraction
             flexShrink={0}

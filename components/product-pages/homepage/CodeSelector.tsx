@@ -214,6 +214,13 @@ export const CodeSelector: React.FC<CodeSelector> = ({
                 as={SiReplDotIt}
               />
             }
+            onClick={() =>
+              trackEvent({
+                category: "code-selector",
+                action: "click",
+                label: "try-it",
+              })
+            }
           >
             <Box as="span">Try it on Replit</Box>
           </LinkButton>

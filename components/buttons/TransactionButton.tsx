@@ -75,7 +75,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
           {...restButtonProps}
           overflow="hidden"
           pl={
-            isLoading
+            isLoading || !data?.address
               ? undefined
               : `calc(${52 + numberWidth}px + var(--chakra-space-${
                   size === "sm" ? 3 : size === "lg" ? 6 : size === "xs" ? 2 : 4

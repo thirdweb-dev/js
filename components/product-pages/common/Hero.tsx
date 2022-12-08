@@ -143,7 +143,12 @@ export const Hero: ComponentWithChildren<HeroProps> = ({
                 <LinkButton
                   as={TrackedLink}
                   variant="ghost"
-                  {...{ category: trackingCategory }}
+                  {...{
+                    category: trackingCategory,
+                    label: secondaryButton.text
+                      .replaceAll(" ", "_")
+                      .toLowerCase(),
+                  }}
                   href={secondaryButton.link}
                   isExternal={secondaryButton.link.startsWith("http")}
                   noIcon

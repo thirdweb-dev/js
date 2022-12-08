@@ -265,11 +265,12 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
   }, [query.data]);
 
   const form = useForm<z.input<typeof ClaimConditionsSchema>>({
-    defaultValues: query.data
-      ? {
-          phases: transformedQueryData,
-        }
-      : undefined,
+    defaultValues: { phases: transformedQueryData },
+    values: { phases: transformedQueryData },
+    resetOptions: {
+      keepDirty: true,
+      keepDirtyValues: true,
+    },
   });
 
   const [openIndex, setOpenIndex] = useState<number>(-1);
@@ -278,19 +279,6 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
     control: form.control,
     name: "phases",
   });
-
-  useEffect(() => {
-    if (
-      query.data?.length &&
-      !form.formState.isDirty &&
-      !form.getValues("phases")?.length
-    ) {
-      form.reset({
-        phases: transformedQueryData,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query.data, form.formState.isDirty]);
 
   const addPhase = () => {
     append({
@@ -338,45 +326,38 @@ const ClaimConditionsForm: React.FC<ClaimConditionsProps> = ({
         />
       )}
       <Flex
-        onSubmit={form.handleSubmit((d) => {
+        onSubmit={form.handleSubmit(async (d) => {
           trackEvent({
             category: isErc20 ? "token" : "nft",
             action: "set-claim-conditions",
             label: "attempt",
           });
-          mutation
-            .mutateAsync(
-              { phases: d.phases as ClaimConditionInput[], reset: resetFlag },
-              {
-                onSuccess: (_data, variables) => {
-                  trackEvent({
-                    category: isErc20 ? "token" : "nft",
-                    action: "set-claim-conditions",
-                    label: "success",
-                  });
-                  form.reset({ phases: variables.phases });
-                  onSuccess();
-                },
-                onError: (error) => {
-                  trackEvent({
-                    category: isErc20 ? "token" : "nft",
-                    action: "set-claim-conditions",
-                    label: "error",
-                  });
-                  onError(error);
-                },
-              },
-            )
-            .catch((error) => {
-              if (error instanceof ZodError) {
-                error.errors.forEach((e) => {
-                  const path = `phases.${e.path.join(".")}`;
-                  form.setError(path as any, e);
-                });
-              } else {
-                onError(error);
-              }
+          try {
+            await mutation.mutateAsync({
+              phases: d.phases as ClaimConditionInput[],
+              reset: resetFlag,
             });
+            trackEvent({
+              category: isErc20 ? "token" : "nft",
+              action: "set-claim-conditions",
+              label: "success",
+            });
+            onSuccess();
+          } catch (error) {
+            trackEvent({
+              category: isErc20 ? "token" : "nft",
+              action: "set-claim-conditions",
+              label: "error",
+            });
+            if (error instanceof ZodError) {
+              error.errors.forEach((e) => {
+                const path = `phases.${e.path.join(".")}`;
+                form.setError(path as any, e);
+              });
+            } else {
+              onError(error);
+            }
+          }
         })}
         direction="column"
         as="form"
