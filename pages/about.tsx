@@ -1,6 +1,6 @@
 import { DarkMode, Flex, Image, SimpleGrid } from "@chakra-ui/react";
+import { HomepageFooter } from "components/footer/Footer";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
-import { HomepageFooter } from "components/product-pages/homepage/Footer";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { PageId } from "page-id";
 import { Heading, Text, TrackedLink } from "tw-components";

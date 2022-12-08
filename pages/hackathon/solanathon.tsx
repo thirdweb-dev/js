@@ -8,13 +8,13 @@ import {
   ListItem,
 } from "@chakra-ui/react";
 import { ImMagicWand } from "@react-icons/all-files/im/ImMagicWand";
+import { HomepageFooter } from "components/footer/Footer";
 import { HackathonFooter } from "components/hackathon/solana/HackathonFooter";
 import { Judges } from "components/hackathon/solana/Judges";
 import { PrizeSection } from "components/hackathon/solana/PrizeSection";
 import { ScheduleSection } from "components/hackathon/solana/ScheduleSection";
 import { Sponsors } from "components/hackathon/solana/Sponsors";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
-import { HomepageFooter } from "components/product-pages/homepage/Footer";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { useTrack } from "hooks/analytics/useTrack";
 import { NextSeo } from "next-seo";
