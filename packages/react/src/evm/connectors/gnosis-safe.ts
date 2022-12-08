@@ -98,9 +98,9 @@ export class GnosisSafeConnector extends Connector {
     invariant(serverUrl, "Chain not supported");
 
     const [safeEthersAdapters, safeCoreSdk, safeEthersLib] = await Promise.all([
-      import("@gnosis.pm/safe-ethers-adapters"),
-      import("@gnosis.pm/safe-core-sdk"),
-      import("@gnosis.pm/safe-ethers-lib"),
+      import("@safe-global/safe-ethers-adapters"),
+      import("@safe-global/safe-core-sdk"),
+      import("@safe-global/safe-ethers-lib"),
     ]);
 
     const ethAdapter = new safeEthersLib.default({
