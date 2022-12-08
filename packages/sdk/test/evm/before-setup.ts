@@ -44,7 +44,15 @@ import {
   TWFactory__factory,
   TWRegistry,
   TWRegistry__factory,
+  TWMultichainRegistryEntrypoint,
+  TWMultichainRegistryEntrypoint__factory,
+  TWMultichainRegistryLogic,
+  TWMultichainRegistryLogic__factory,
+  Map,
+  Map__factory,
   VoteERC20__factory,
+  TWProxy__factory,
+  TWProxy,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -134,6 +142,71 @@ export const mochaHooks = {
         mockPublisher.address,
       )) as ContractPublisher; // TODO needs MockPublisher here
     await contractPublisher.deployed();
+
+    // Setup multichain registry for tests
+    async function setupMultichainRegistry(): Promise<string> {
+      const mapDeployer = (await new ethers.ContractFactory(
+        Map__factory.abi,
+        Map__factory.bytecode,
+      )
+        .connect(signer)
+        .deploy()) as Map;
+      const map = await mapDeployer.deployed();
+      const multichainRegistryLogicDeployer = (await new ethers.ContractFactory(
+        TWMultichainRegistryLogic__factory.abi,
+        TWMultichainRegistryLogic__factory.bytecode,
+      )
+        .connect(signer)
+        .deploy()) as TWMultichainRegistryLogic;
+      const multichainRegistryLogic =
+        await multichainRegistryLogicDeployer.deployed();
+      const logicInterface = new ethers.utils.Interface(
+        TWMultichainRegistryLogic__factory.abi,
+      );
+      map.addExtension(
+        logicInterface.getSighash("add"),
+        multichainRegistryLogic.address,
+      );
+      map.addExtension(
+        logicInterface.getSighash("remove"),
+        multichainRegistryLogic.address,
+      );
+      map.addExtension(
+        logicInterface.getSighash("getAll"),
+        multichainRegistryLogic.address,
+      );
+      map.addExtension(
+        logicInterface.getSighash("count"),
+        multichainRegistryLogic.address,
+      );
+      map.addExtension(
+        logicInterface.getSighash("getMetadataUri"),
+        multichainRegistryLogic.address,
+      );
+      const multichainRegistryEntrypointDeployer =
+        (await new ethers.ContractFactory(
+          TWMultichainRegistryEntrypoint__factory.abi,
+          TWMultichainRegistryEntrypoint__factory.bytecode,
+        )
+          .connect(signer)
+          .deploy(map.address, [
+            trustedForwarderAddress,
+          ])) as TWMultichainRegistryEntrypoint;
+      const multichainRegistryEntrypoint =
+        await multichainRegistryEntrypointDeployer.deployed();
+      const multiChainRegistryDeployer = (await new ethers.ContractFactory(
+        TWProxy__factory.abi,
+        TWProxy__factory.bytecode,
+      )
+        .connect(signer)
+        .deploy(
+          multichainRegistryEntrypoint.address,
+          [],
+        )) as TWMultichainRegistryEntrypoint;
+      const multiChainRegistry = await multiChainRegistryDeployer.deployed();
+
+      return multiChainRegistry.address;
+    }
 
     async function deployContract(
       contractFactory: ethers.ContractFactory,
@@ -227,6 +300,8 @@ export const mochaHooks = {
     process.env.factoryAddress = thirdwebFactoryDeployer.address;
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     process.env.contractPublisherAddress = contractPublisher.address;
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
+    process.env.multiChainRegistryAddress = await setupMultichainRegistry();
 
     storage = MockStorage();
     sdk = new ThirdwebSDK(

@@ -537,6 +537,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         await this.deployer.getRegistry()
       )?.getContractAddresses(walletAddress)) || [];
 
+    const multichainAddresses = await this.registry.getContractAddresses(
+      walletAddress,
+    );
+    multichainAddresses.forEach(async (item) => {
+      // if (item.chainId === (await this.getSigner()?.getChainId())) {
+      addresses.push(item.address);
+      // }
+    });
+
     const addressesWithContractTypes = await Promise.all(
       addresses.map(async (address) => {
         let contractType: ContractType = "custom";

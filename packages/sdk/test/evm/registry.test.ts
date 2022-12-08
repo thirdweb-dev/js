@@ -1,17 +1,60 @@
+import { getMultichainRegistryAddress } from "../../src/evm";
+import { MultichainRegistry } from "../../src/evm/core/classes/multichain-registry";
 import { ContractRegistry } from "../../src/evm/core/classes/registry";
 import { sdk, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
+import { addPackages } from "yalc";
 
 describe("Contract Registry", () => {
   let registry: ContractRegistry;
 
+  let multichainRegistry: MultichainRegistry;
+
   let adminWallet: SignerWithAddress;
+
+  let randomWallet: SignerWithAddress;
 
   let address: string;
 
   before(async () => {
-    [adminWallet] = signers;
+    [adminWallet, randomWallet] = signers;
+  });
+
+  it("multichain registry", async () => {
+    sdk.updateSignerOrProvider(adminWallet);
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    multichainRegistry = sdk.registry;
+
+    console.log(
+      "multichain registry address: ",
+      getMultichainRegistryAddress(),
+    );
+
+    address = await sdk.deployer.deployNFTCollection({
+      name: "Test1",
+      primary_sale_recipient: adminWallet.address,
+    });
+    const chainId: number = await adminWallet.getChainId();
+    const metadataURI: string = "ipfs://metadata";
+
+    const tx = await multichainRegistry.addContract({
+      address,
+      chainId,
+      metadataURI,
+    });
+
+    let uri = await multichainRegistry.getContractMetadataURI(chainId, address);
+    expect(uri).to.equal(metadataURI);
+
+    let contracts = await multichainRegistry.getContractAddresses(
+      adminWallet.address,
+    );
+    console.log(contracts);
+    console.log(address);
+    expect(contracts[0].address).to.equal(address);
+
+    console.log(await sdk.getContractList(adminWallet.address));
   });
 
   it("should allow adding and removing contracts", async () => {

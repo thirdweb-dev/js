@@ -78,10 +78,10 @@ export class MultichainRegistry {
     contracts: AddContractInput[],
   ): Promise<TransactionResult> {
     const deployerAddress = await this.registry.getSignerAddress();
-    invariant(
-      (await this.registry.getSigner()?.getChainId()) === ChainId.Polygon,
-      "Signer not connected to Polygon",
-    );
+    // invariant(
+    //   (await this.registry.getSigner()?.getChainId()) === ChainId.Polygon,
+    //   "Signer not connected to Polygon",
+    // );
     const encoded: string[] = [];
     contracts.forEach((contact) => {
       encoded.push(
