@@ -12,8 +12,8 @@ import {
 import type { Address } from "abitype";
 import { getAddress } from "ethers/lib/utils.js";
 
-declare interface Window {
-  ethereum: Ethereum;
+function isWindoWethereum(w: Window): w is Window & { ethereum: Ethereum } {
+  return "ethereum" in window;
 }
 
 export type MetaMaskConnectorOptions = Pick<
@@ -28,11 +28,7 @@ export type MetaMaskConnectorOptions = Pick<
 
 export class MetaMaskConnector extends InjectedConnector {
   readonly id = "metaMask";
-  readonly ready =
-    typeof window !== "undefined" &&
-    !!this.#findProvider(window.ethereum as Ethereum);
 
-  #provider?: Window["ethereum"];
   #UNSTABLE_shimOnConnectSelectAccount: MetaMaskConnectorOptions["UNSTABLE_shimOnConnectSelectAccount"];
 
   constructor({
@@ -46,6 +42,46 @@ export class MetaMaskConnector extends InjectedConnector {
       name: "MetaMask",
       shimDisconnect: true,
       shimChainChangedDisconnect: true,
+      getProvider() {
+        function getReady(ethereum?: Ethereum) {
+          const isMetaMask = !!ethereum?.isMetaMask;
+          if (!isMetaMask) {
+            return;
+          }
+          // Brave tries to make itself look like MetaMask
+          // Could also try RPC `web3_clientVersion` if following is unreliable
+          if (ethereum.isBraveWallet && !ethereum._events && !ethereum._state) {
+            return;
+          }
+          if (ethereum.isAvalanche) {
+            return;
+          }
+          if (ethereum.isKuCoinWallet) {
+            return;
+          }
+          if (ethereum.isPortal) {
+            return;
+          }
+          if (ethereum.isTokenPocket) {
+            return;
+          }
+          if (ethereum.isTokenary) {
+            return;
+          }
+          return ethereum;
+        }
+
+        if (typeof window === "undefined") {
+          return;
+        }
+        if (isWindoWethereum(window)) {
+          if (window.ethereum?.providers) {
+            return window.ethereum.providers.find(getReady);
+          }
+
+          return getReady(window.ethereum);
+        }
+      },
       ...options_,
     };
     super({ chains, options });
@@ -75,18 +111,24 @@ export class MetaMaskConnector extends InjectedConnector {
       if (
         this.#UNSTABLE_shimOnConnectSelectAccount &&
         this.options?.shimDisconnect &&
-        (await getConnectorStorage().getItem(this.shimDisconnectKey))
+        !(await getConnectorStorage().getItem(this.shimDisconnectKey))
       ) {
         account = await this.getAccount().catch(() => null);
         const isConnected = !!account;
         if (isConnected) {
           // Attempt to show another prompt for selecting wallet if already connected
-          await provider
-            .request({
+          try {
+            await provider.request({
               method: "wallet_requestPermissions",
               params: [{ eth_accounts: {} }],
-            })
-            .catch(() => null);
+            });
+          } catch (error) {
+            // Not all MetaMask injected providers support `wallet_requestPermissions` (e.g. MetaMask iOS).
+            // Only bubble up error if user rejects request
+            if (this.isUserRejectedRequestError(error)) {
+              throw new UserRejectedRequestError(error);
+            }
+          }
         }
       }
 
@@ -120,49 +162,5 @@ export class MetaMaskConnector extends InjectedConnector {
       }
       throw error;
     }
-  }
-
-  async getProvider() {
-    if (typeof window !== "undefined") {
-      // TODO: Fallback to `ethereum#initialized` event for async injection
-      // https://github.com/MetaMask/detect-provider#synchronous-and-asynchronous-injection=
-      this.#provider = this.#findProvider(window.ethereum as Ethereum);
-    }
-    return this.#provider as Ethereum;
-  }
-
-  #getReady(ethereum?: Ethereum) {
-    const isMetaMask = !!ethereum?.isMetaMask;
-    if (!isMetaMask) {
-      return;
-    }
-    // Brave tries to make itself look like MetaMask
-    // Could also try RPC `web3_clientVersion` if following is unreliable
-    if (ethereum.isBraveWallet && !ethereum._events && !ethereum._state) {
-      return;
-    }
-    if (ethereum.isAvalanche) {
-      return;
-    }
-    if (ethereum.isKuCoinWallet) {
-      return;
-    }
-    if (ethereum.isPortal) {
-      return;
-    }
-    if (ethereum.isTokenPocket) {
-      return;
-    }
-    if (ethereum.isTokenary) {
-      return;
-    }
-    return ethereum;
-  }
-
-  #findProvider(ethereum?: Ethereum) {
-    if (ethereum?.providers) {
-      return ethereum.providers.find(this.#getReady);
-    }
-    return this.#getReady(ethereum);
   }
 }
