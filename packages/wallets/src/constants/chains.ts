@@ -137,7 +137,7 @@ function enhanceChain<TChain extends Chain>(chain: TChain) {
       },
       public: {
         ...chain.rpcUrls.public,
-        http: [twRPC, ...chain.rpcUrls.public.http],
+        http: [twRPC, ...(chain.rpcUrls.public?.http || [])],
       },
     },
   } as TChain;
