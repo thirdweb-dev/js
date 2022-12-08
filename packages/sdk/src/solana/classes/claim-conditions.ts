@@ -64,9 +64,7 @@ export class ClaimConditions {
     const goLiveDate = candyMachine.goLiveDate
       ? new Date(candyMachine.goLiveDate.toNumber() * 1000)
       : null;
-    const isWithinGoLiveDate = candyMachine.goLiveDate
-      ? candyMachine.goLiveDate.toNumber() * 1000 >= Date.now()
-      : true;
+    const isWithinGoLiveDate = goLiveDate ? goLiveDate <= new Date() : true;
     const maxClaimable =
       candyMachine.endSettings && candyMachine.endSettings.endSettingType === 1
         ? candyMachine.endSettings.number.toNumber()
