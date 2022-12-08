@@ -1,6 +1,6 @@
 import { DashboardThirdwebProvider } from "./providers";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { DehydratedState, Hydrate, QueryClient } from "@tanstack/react-query";
 import {
   PersistQueryClientProvider,
@@ -16,6 +16,7 @@ import { useSDK } from "@thirdweb-dev/react/solana";
 import { AppShell, AppShellProps } from "components/layout/app-shell";
 import { PrivacyNotice } from "components/notices/PrivacyNotice";
 import { ErrorProvider } from "contexts/error-handler";
+import { del, get, set } from "idb-keyval";
 import { useRouter } from "next/router";
 import posthog from "posthog-js";
 import React, { useEffect, useState } from "react";
@@ -25,8 +26,39 @@ import { isBrowser } from "utils/isBrowser";
 
 const __CACHE_BUSTER = "v3.5.2";
 
-const persister: Persister = createSyncStoragePersister({
-  storage: isBrowser() ? window.localStorage : undefined,
+interface AsyncStorage {
+  getItem: (key: string) => Promise<string | null>;
+  setItem: (key: string, value: string) => Promise<void>;
+  removeItem: (key: string) => Promise<void>;
+}
+
+let currStorage: AsyncStorage | undefined;
+
+function getStorage() {
+  if (!isBrowser()) {
+    return undefined;
+  }
+  if (currStorage) {
+    return currStorage;
+  }
+
+  currStorage = {
+    getItem: async (key) => {
+      const i = await get(key);
+      if (!i) {
+        return null;
+      }
+      return i as string | null;
+    },
+    setItem: set,
+    removeItem: del,
+    // eslint-disable-next-line prettier/prettier
+  } as AsyncStorage;
+  return currStorage;
+}
+
+const persister: Persister = createAsyncStoragePersister({
+  storage: getStorage(),
   serialize: (data) => {
     return JSON.stringify(
       {

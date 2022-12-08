@@ -18,6 +18,34 @@ type UseNFTDrawerTabsParams =
   | [ecosystem: "evm", contract: NFTContract, token: NFT | null]
   | [ecosystem: "solana", program: NFTCollection | NFTDrop, token: NFT | null];
 
+const SOLTransferTab = dynamic(
+  () => import("program-ui/nft/drawer-tabs/transfer"),
+);
+const SOLBurnTab = dynamic(() => import("program-ui/nft/drawer-tabs/burn"));
+const SOLMintSupplyTab = dynamic(
+  () => import("program-ui/nft/drawer-tabs/mint-supply"),
+);
+
+const EVMTransferTab = dynamic(
+  () => import("contract-ui/tabs/nfts/components/transfer-tab"),
+);
+const EVMAirdropTab = dynamic(
+  () => import("contract-ui/tabs/nfts/components/airdrop-tab"),
+);
+const EVMBurnTab = dynamic(
+  () => import("contract-ui/tabs/nfts/components/burn-tab"),
+);
+
+const EVMMintSupplyTab = dynamic(
+  () => import("contract-ui/tabs/nfts/components/mint-supply-tab"),
+);
+const EVMClaimConditionTab = dynamic(
+  () => import("contract-ui/tabs/claim-conditions/components/claim-conditions"),
+);
+const EVMClaimTab = dynamic(
+  () => import("contract-ui/tabs/nfts/components/claim-tab"),
+);
+
 export function useNFTDrawerTabs(
   ...args: UseNFTDrawerTabsParams
 ): NFTDrawerTab[] {
@@ -38,23 +66,15 @@ export function useNFTDrawerTabs(
         {
           title: "Transfer",
           isDisabled: !isOwner,
-          children: dynamic(() =>
-            import("program-ui/nft/drawer-tabs/transfer").then(
-              ({ TransferTab }) =>
-                // eslint-disable-next-line react/display-name
-                () =>
-                  <TransferTab program={contractOrProgram} tokenId={tokenId} />,
-            ),
+          children: () => (
+            <SOLTransferTab program={contractOrProgram} tokenId={tokenId} />
           ),
         },
         {
           title: "Burn",
           isDisabled: !isOwner,
-          children: dynamic(() =>
-            import("program-ui/nft/drawer-tabs/burn").then(({ BurnTab }) =>
-              // eslint-disable-next-line react/display-name
-              () => <BurnTab program={contractOrProgram} tokenId={tokenId} />,
-            ),
+          children: () => (
+            <SOLBurnTab program={contractOrProgram} tokenId={tokenId} />
           ),
         },
       ];
@@ -65,18 +85,11 @@ export function useNFTDrawerTabs(
             title: "Mint",
             // TODO: Disable if the user is not the authority
             isDisabled: false,
-            children: dynamic(() =>
-              import("program-ui/nft/drawer-tabs/mint-supply").then(
-                ({ MintSupplyTab }) =>
-                  // eslint-disable-next-line react/display-name
-                  () =>
-                    (
-                      <MintSupplyTab
-                        program={contractOrProgram as NFTCollection}
-                        tokenId={tokenId}
-                      />
-                    ),
-              ),
+            children: () => (
+              <SOLMintSupplyTab
+                program={contractOrProgram as NFTCollection}
+                tokenId={tokenId}
+              />
             ),
           },
         ]);
@@ -135,18 +148,8 @@ export function useNFTDrawerTabs(
         {
           title: "Transfer",
           isDisabled: !isOwner,
-          children: dynamic(() =>
-            import("contract-ui/tabs/nfts/components/transfer-tab").then(
-              ({ TransferTab }) =>
-                // eslint-disable-next-line react/display-name
-                () =>
-                  (
-                    <TransferTab
-                      contract={contractOrProgram}
-                      tokenId={tokenId}
-                    />
-                  ),
-            ),
+          children: () => (
+            <EVMTransferTab contract={contractOrProgram} tokenId={tokenId} />
           ),
         },
       ];
@@ -155,13 +158,8 @@ export function useNFTDrawerTabs(
           {
             title: "Airdrop",
             isDisabled: !isOwner,
-            children: dynamic(() =>
-              import("contract-ui/tabs/nfts/components/airdrop-tab").then(
-                ({ AirdropTab }) =>
-                  // eslint-disable-next-line react/display-name
-                  () =>
-                    <AirdropTab contract={erc1155} tokenId={tokenId} />,
-              ),
+            children: () => (
+              <EVMAirdropTab contract={erc1155} tokenId={tokenId} />
             ),
           },
         ]);
@@ -171,13 +169,8 @@ export function useNFTDrawerTabs(
           {
             title: "Burn",
             isDisabled: !isOwner,
-            children: dynamic(() =>
-              import("contract-ui/tabs/nfts/components/burn-tab").then(
-                ({ BurnTab }) =>
-                  // eslint-disable-next-line react/display-name
-                  () =>
-                    <BurnTab contract={contractOrProgram} tokenId={tokenId} />,
-              ),
+            children: () => (
+              <EVMBurnTab contract={contractOrProgram} tokenId={tokenId} />
             ),
           },
         ]);
@@ -187,13 +180,8 @@ export function useNFTDrawerTabs(
           {
             title: "Mint",
             isDisabled: false,
-            children: dynamic(() =>
-              import("contract-ui/tabs/nfts/components/mint-supply-tab").then(
-                ({ MintSupplyTab }) =>
-                  // eslint-disable-next-line react/display-name
-                  () =>
-                    <MintSupplyTab contract={erc1155} tokenId={tokenId} />,
-              ),
+            children: () => (
+              <EVMMintSupplyTab contract={erc1155} tokenId={tokenId} />
             ),
           },
         ]);
@@ -203,19 +191,12 @@ export function useNFTDrawerTabs(
           {
             title: "Claim Conditions",
             isDisabled: false,
-            children: dynamic(() =>
-              import(
-                "contract-ui/tabs/claim-conditions/components/claim-conditions"
-              ).then(({ ClaimConditions }) =>
-                // eslint-disable-next-line react/display-name
-                () => (
-                  <ClaimConditions
-                    contract={contractOrProgram}
-                    tokenId={tokenId}
-                    isColumn
-                  />
-                ),
-              ),
+            children: () => (
+              <EVMClaimConditionTab
+                contract={contractOrProgram}
+                tokenId={tokenId}
+                isColumn
+              />
             ),
           },
         ]);
@@ -225,13 +206,8 @@ export function useNFTDrawerTabs(
           {
             title: "Claim",
             isDisabled: false,
-            children: dynamic(() =>
-              import("contract-ui/tabs/nfts/components/claim-tab").then(
-                ({ ClaimTab }) =>
-                  // eslint-disable-next-line react/display-name
-                  () =>
-                    <ClaimTab contract={contractOrProgram} tokenId={tokenId} />,
-              ),
+            children: () => (
+              <EVMClaimTab contract={contractOrProgram} tokenId={tokenId} />
             ),
           },
         ]);

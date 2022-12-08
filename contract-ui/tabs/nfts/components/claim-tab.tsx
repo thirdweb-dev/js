@@ -12,7 +12,7 @@ interface ClaimTabProps {
   tokenId: string;
 }
 
-export const ClaimTab: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
+const ClaimTab: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
   const trackEvent = useTrack();
   const address = useAddress();
   const form = useForm<{ to: string; amount: string }>({
@@ -106,3 +106,5 @@ export const ClaimTab: React.FC<ClaimTabProps> = ({ contract, tokenId }) => {
     </Flex>
   );
 };
+
+export default ClaimTab;

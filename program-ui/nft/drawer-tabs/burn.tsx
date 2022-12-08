@@ -11,7 +11,7 @@ interface BurnTabProps {
   tokenId: string;
 }
 
-export const BurnTab: React.FC<BurnTabProps> = ({ program, tokenId }) => {
+const BurnTab: React.FC<BurnTabProps> = ({ program, tokenId }) => {
   const trackEvent = useTrack();
 
   const burn = useBurnNFT(program);
@@ -67,3 +67,5 @@ export const BurnTab: React.FC<BurnTabProps> = ({ program, tokenId }) => {
     </Stack>
   );
 };
+
+export default BurnTab;

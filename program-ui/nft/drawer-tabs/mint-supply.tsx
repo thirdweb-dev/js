@@ -12,10 +12,7 @@ interface MintSupplyTabProps {
   tokenId: string;
 }
 
-export const MintSupplyTab: React.FC<MintSupplyTabProps> = ({
-  program,
-  tokenId,
-}) => {
+const MintSupplyTab: React.FC<MintSupplyTabProps> = ({ program, tokenId }) => {
   const trackEvent = useTrack();
   const {
     register,
@@ -95,3 +92,5 @@ export const MintSupplyTab: React.FC<MintSupplyTabProps> = ({
     </Stack>
   );
 };
+
+export default MintSupplyTab;

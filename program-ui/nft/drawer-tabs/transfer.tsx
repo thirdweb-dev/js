@@ -13,10 +13,7 @@ interface TransferTabProps {
   tokenId: string;
 }
 
-export const TransferTab: React.FC<TransferTabProps> = ({
-  program,
-  tokenId,
-}) => {
+const TransferTab: React.FC<TransferTabProps> = ({ program, tokenId }) => {
   const trackEvent = useTrack();
   const {
     register,
@@ -98,3 +95,5 @@ export const TransferTab: React.FC<TransferTabProps> = ({
     </Stack>
   );
 };
+
+export default TransferTab;

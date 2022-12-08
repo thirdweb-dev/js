@@ -18,10 +18,7 @@ interface AirdropTabProps {
   tokenId: string;
 }
 
-export const AirdropTab: React.FC<AirdropTabProps> = ({
-  contract,
-  tokenId,
-}) => {
+const AirdropTab: React.FC<AirdropTabProps> = ({ contract, tokenId }) => {
   const address = useAddress();
   const { handleSubmit, setValue, watch, reset, formState } = useForm<{
     addresses: AirdropAddressInput[];
@@ -141,3 +138,4 @@ export const AirdropTab: React.FC<AirdropTabProps> = ({
     </Stack>
   );
 };
+export default AirdropTab;

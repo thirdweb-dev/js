@@ -198,6 +198,8 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
   );
 };
 
+export default ClaimConditions;
+
 const DEFAULT_PHASE = {
   startTime: new Date(),
   maxClaimableSupply: "unlimited",

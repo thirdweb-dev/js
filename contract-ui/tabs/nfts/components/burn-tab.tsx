@@ -17,7 +17,7 @@ interface BurnTabProps {
   tokenId: string;
 }
 
-export const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
+const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
   const trackEvent = useTrack();
   const {
     register,
@@ -124,3 +124,5 @@ export const BurnTab: React.FC<BurnTabProps> = ({ contract, tokenId }) => {
     </Stack>
   );
 };
+
+export default BurnTab;
