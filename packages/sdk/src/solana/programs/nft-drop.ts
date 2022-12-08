@@ -440,9 +440,9 @@ export class NFTDrop {
    * console.log("Claimed NFT at address", claimedAddresses[0]);
    * ```
    */
-  async claim(quantity: Amount): Promise<string[]> {
+  async claim(amount: Amount): Promise<string[]> {
     const address = this.metaplex.identity().publicKey.toBase58();
-    return this.claimTo(address, quantity);
+    return this.claimTo(address, amount);
   }
 
   /**
@@ -462,7 +462,7 @@ export class NFTDrop {
     const candyMachine = await this.getCandyMachine();
     await this.claimConditions.assertCanClaimable(Number(amount));
     const builders = await Promise.all(
-      [...Array(amount).keys()].map(async () => {
+      [...Array(Number(amount)).keys()].map(async () => {
         return await this.metaplex
           .candyMachinesV2()
           .builders()
