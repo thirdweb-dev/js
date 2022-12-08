@@ -116,7 +116,10 @@ export class WalletConnectConnector extends Connector<
     if (!this.#provider || chainId || create) {
       const rpc = !this.options?.infuraId
         ? this.chains.reduce(
-            (rpc_, chain) => ({ ...rpc_, [chain.id]: chain.rpcUrls.default }),
+            (rpc_, chain) => ({
+              ...rpc_,
+              [chain.id]: chain.rpcUrls.default.http[0],
+            }),
             {},
           )
         : {};
@@ -181,7 +184,8 @@ export class WalletConnectConnector extends Connector<
           id: chainId,
           name: `Chain ${id}`,
           network: `${id}`,
-          rpcUrls: { default: "" },
+          nativeCurrency: { name: "Ether", decimals: 18, symbol: "ETH" },
+          rpcUrls: { default: { http: [""] } },
         }
       );
     } catch (error) {
