@@ -66,13 +66,16 @@ const moduleExports = {
   images: {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    domains: ["thirdweb.com", "portal.thirdweb.com", "blog.thirdweb.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.thirdweb.com",
+      },
+    ],
   },
   reactStrictMode: true,
   experimental: {
-    // appDir: true,
     scrollRestoration: true,
-    modern: true,
   },
   compiler: {
     emotion: true,
@@ -104,7 +107,8 @@ const sentryWebpackPluginOptions = {
 
   hideSourceMaps: false,
 };
-module.exports = withPlausibleProxy({
+
+const enhancedModuleExports = withPlausibleProxy({
   customDomain: "https://pl.thirdweb.com",
   scriptName: "pl",
 })(
@@ -112,3 +116,5 @@ module.exports = withPlausibleProxy({
     withSentryConfig(moduleExports, sentryWebpackPluginOptions),
   ),
 );
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+module.exports = require("lodash.merge")(moduleExports, enhancedModuleExports);

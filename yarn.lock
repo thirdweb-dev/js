@@ -1630,10 +1630,10 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-1.0.2.tgz#d06a66d3ad8214186eda2432ac8b8d81868a571f"
   integrity sha512-Skfy0YS3NJ5nV9us0uuPN0HDk1Q4edljaOhRBJGDWs9EBa7ZVMYBHRFlhLvvmwEoaIM9BlH6QJFn9/uZg0bACg==
 
-"@floating-ui/dom@1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.0.1.tgz#3321d4e799d6ac2503e729131d07ad0e714aabeb"
-  integrity sha512-wBDiLUKWU8QNPNOTAFHiIAkBv1KlHauG2AhqjSeh2H+wR8PX+AArXfz8NkRexH5PgMJMmSOS70YS89AbWYh5dA==
+"@floating-ui/dom@1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.0.2.tgz#c5184c52c6f50abd11052d71204f4be2d9245237"
+  integrity sha512-5X9WSvZ8/fjy3gDu8yx9HAA4KG1lazUN2P4/VnaXLxTO9Dz53HI1oYoh1OlhqFNlHgGDiwFX5WhFCc2ljbW3yA==
   dependencies:
     "@floating-ui/core" "^1.0.1"
 
@@ -1651,70 +1651,12 @@
     "@solana/wallet-adapter-base" "^0.9.17"
     bs58 "^5.0.0"
 
-"@gnosis.pm/safe-core-sdk-types@^1.6.1", "@gnosis.pm/safe-core-sdk-types@^1.7.0":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-core-sdk-types/-/safe-core-sdk-types-1.7.0.tgz#40b9e922780310bc40783b7cd5ac82b2ffe5a7bc"
-  integrity sha512-4afyjdYxlwT61UtbrJwgFM8cxcu+TIrEcP3xrxtqyXotlvMGOkEwynHoOOSRNwL/npe3dHwDCNzxgrXVIS9Vjw==
-  dependencies:
-    "@ethersproject/bignumber" "^5.7.0"
-    "@ethersproject/contracts" "^5.7.0"
-    "@gnosis.pm/safe-deployments" "1.17.0"
-    web3-core "^1.8.1"
-    web3-utils "^1.8.1"
-
-"@gnosis.pm/safe-core-sdk-utils@^1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-core-sdk-utils/-/safe-core-sdk-utils-1.5.0.tgz#0b63a8ad2cba6a7452e8cd1e81e5daca5e547b7d"
-  integrity sha512-rfcCdqBnxj9QKYzqO1UpR9+a0fhvVoHD8aYb1FBimAoMbYwcKEjY/OpEQs1m5wl6VBrDkMiUmq5a+aSTsi6W6w==
-  dependencies:
-    "@gnosis.pm/safe-core-sdk-types" "^1.7.0"
-    semver "^7.3.8"
-    web3-utils "^1.8.1"
-
-"@gnosis.pm/safe-core-sdk@^3.1.1":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-core-sdk/-/safe-core-sdk-3.2.0.tgz#c78fc1adf21797d03826435317dcf35ca2a9b0c9"
-  integrity sha512-R5EvrI7/ltJcRzYWXFK3Fjn+kiXFYcPv+CS+xWPZwICBJq33BqwuiTQNTvZkZ50H5lrXsOJxIKbTahueAMzCjA==
-  dependencies:
-    "@ethersproject/solidity" "^5.7.0"
-    "@gnosis.pm/safe-core-sdk-types" "^1.7.0"
-    "@gnosis.pm/safe-deployments" "1.17.0"
-    ethereumjs-util "^7.1.5"
-    semver "^7.3.8"
-    web3-utils "^1.8.1"
-
-"@gnosis.pm/safe-deployments@1.16.0":
-  version "1.16.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-deployments/-/safe-deployments-1.16.0.tgz#78b1fb400934ff117f7d9c8e66398503bd772eeb"
-  integrity sha512-5Wakso6SiulstuZfz3gH6yME8Q50BT5dVxIfgWz4vzOmyyqmAVstMd0VIwyw6IDee0gU4mHKZjhD3UXPKEvRCw==
-  dependencies:
-    semver "^7.3.7"
-
 "@gnosis.pm/safe-deployments@1.17.0":
   version "1.17.0"
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-deployments/-/safe-deployments-1.17.0.tgz#52a7b0e75c08b4a829f491b594e2babbdd6606c5"
   integrity sha512-vfl13IuSMqJZxTPraRcKZqJcaSCDWTt/JXH6VURa8LHMYATOqd96IGbqqOKRPAgSzAyXpA2thOD4YUQ0X8XKyQ==
   dependencies:
     semver "^7.3.7"
-
-"@gnosis.pm/safe-ethers-adapters@0.1.0-alpha.11":
-  version "0.1.0-alpha.11"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-ethers-adapters/-/safe-ethers-adapters-0.1.0-alpha.11.tgz#07b4445e5ebbb27917ab2d0c9ecbe0cb5362e1ca"
-  integrity sha512-YR7mD70kWAqU9ebeZWob8NpouE3kl3YqwrKW3hmAJU1RR4VZzCPlMpMFJAMOvf/Dxy48E4MhWW3MtoR4Rw3Vdw==
-  dependencies:
-    "@gnosis.pm/safe-core-sdk" "^3.1.1"
-    "@gnosis.pm/safe-core-sdk-types" "^1.6.1"
-    "@gnosis.pm/safe-deployments" "1.16.0"
-    axios "^0.27.2"
-
-"@gnosis.pm/safe-ethers-lib@^1.6.1":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-ethers-lib/-/safe-ethers-lib-1.7.0.tgz#73a23a060fad98c750aaec1458fbad36061bdc9c"
-  integrity sha512-+1GAGEGNil/y9R54sgvU2y3M0R50vYYIcs4Zh+C6qaw700bPUAUNkkxPoh4Xa0U/OUEPkI6MlTXTm0XKIU1u7A==
-  dependencies:
-    "@gnosis.pm/safe-core-sdk-types" "^1.7.0"
-    "@gnosis.pm/safe-core-sdk-utils" "^1.5.0"
-    ethers "^5.7.2"
 
 "@hapi/bourne@^2.0.0":
   version "2.1.0"
@@ -1930,24 +1872,24 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-6.10.1.tgz#5bd16082261d7364eabb511c788f00937dac588d"
   integrity sha512-z+ILK8Q3y+nfUl43ctCPuR4Y2bIxk/ooCQFwZxhtci1EhAtMDzMAx2W25qx8G1PPL9UUOdnUax19+F0OjXoj4w==
 
-"@magic-sdk/commons@^4.1.1":
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/commons/-/commons-4.1.1.tgz#16dc84a64cc7cafae50c4061acae46bb587c623d"
-  integrity sha512-nHbMRkssAC1z5rHpPwkiYolp3qxmtnkNaynGlreVxgtPTemJ8USRrXjg/cF0WVhRwtPTpegdTvtpJWOMd0Ratg==
+"@magic-sdk/commons@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@magic-sdk/commons/-/commons-6.1.0.tgz#6dd6dc585315e2f6af9cf312d1557c481108029a"
+  integrity sha512-297kNy/JVqe905KRGb0Y1A3kG49P9nZR2WiS8QWoU2nqvtv/4w2WNoCg9ujVUlTwTKwP2SvTY/zd35274fSNFg==
 
-"@magic-sdk/provider@^8.1.1":
-  version "8.2.0"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/provider/-/provider-8.2.0.tgz#50dd08ca79223f41a5f9bad5a26d0e716f20dbcf"
-  integrity sha512-gm8pHvHbXctAp393M0W8eocP7/qifpqBIIrIXiMKpdlGRKzuMvv5x1LQvb8CuOjPIK3eXxY2qdCZnvWE2qiV0A==
+"@magic-sdk/provider@^10.1.0":
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/@magic-sdk/provider/-/provider-10.1.0.tgz#0857c7579faf53bee26d6575321abd6c058db56c"
+  integrity sha512-6hsTFL6Os3nCGDWe3ZT0dx6cxsBJZ1POZ8FJqhx2xYLsxGDXjZ44rlOC7LhlPWrkTdhj0bGt/R2v4rr7/yYhMg==
   dependencies:
-    "@magic-sdk/types" "^7.1.1"
+    "@magic-sdk/types" "^9.1.0"
     eventemitter3 "^4.0.4"
     web3-core "1.5.2"
 
-"@magic-sdk/types@^7.1.1":
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/types/-/types-7.2.0.tgz#86b5a92291a892d0da40808855ef62128ceb4795"
-  integrity sha512-YpfRhY6dBjMEvW+YApoDTSVWBqb5skOyoOcAcKbQvkuV4yCBBvJXAstOPYvFp7Vgw97AQkuie7mLdx7EZahS1Q==
+"@magic-sdk/types@^9.1.0":
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/@magic-sdk/types/-/types-9.1.0.tgz#ad783294025d4772ffdde43402520653aade6b2a"
+  integrity sha512-mCEWoXNPzWYzH6TYCwG1TCBAGVWDZ817tn4VozY9J8ijQbh7CIW8zLIa0UIP4fZ5+fsCfd7YjD8+NmJsLbBwhg==
 
 "@metamask/safe-event-emitter@2.0.0", "@metamask/safe-event-emitter@^2.0.0":
   version "2.0.0"
@@ -2432,6 +2374,57 @@
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.2.0.tgz#8be36a1f66f3265389e90b5f9c9962146758f728"
   integrity sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==
+
+"@safe-global/safe-core-sdk-types@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@safe-global/safe-core-sdk-types/-/safe-core-sdk-types-1.7.0.tgz#64689bcd72ffacdfb2cb3889f57d6030d45a28bf"
+  integrity sha512-lLPsX7JK2RBkC9hsB3aTy7nP8WcytaEQzZvq34l5mgJqjSEHBl1kMEKJQ/MyLm/yVLrJvY9EYYJCq+ykAGgWcg==
+  dependencies:
+    "@ethersproject/bignumber" "^5.7.0"
+    "@ethersproject/contracts" "^5.7.0"
+    "@gnosis.pm/safe-deployments" "1.17.0"
+    web3-core "^1.8.1"
+    web3-utils "^1.8.1"
+
+"@safe-global/safe-core-sdk-utils@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@safe-global/safe-core-sdk-utils/-/safe-core-sdk-utils-1.5.0.tgz#78a7fde170dcb8e98802b27c7ad16d3b74170c4a"
+  integrity sha512-3tEdXaVTSXlz9Ppo9H/qz/PBxSQYZoV7a1w9csq9yYElgHXDNhCK+0qWiZRLEEUYE41W3x5rAvxzbuKYkyIijg==
+  dependencies:
+    "@safe-global/safe-core-sdk-types" "^1.7.0"
+    semver "^7.3.8"
+    web3-utils "^1.8.1"
+
+"@safe-global/safe-core-sdk@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@safe-global/safe-core-sdk/-/safe-core-sdk-3.2.0.tgz#631b5ea068205d359a53685e7a95c7798861043b"
+  integrity sha512-shcyJZGfq0e8KOFiT3SsPCjwu/xfBOHqUEo3W/eZE1+fPBj+yhQS97cbAKlDg4pBJ9e/tYX1ndYxf5Ne3MgoCw==
+  dependencies:
+    "@ethersproject/solidity" "^5.7.0"
+    "@gnosis.pm/safe-deployments" "1.17.0"
+    "@safe-global/safe-core-sdk-types" "^1.7.0"
+    ethereumjs-util "^7.1.5"
+    semver "^7.3.8"
+    web3-utils "^1.8.1"
+
+"@safe-global/safe-ethers-adapters@0.1.0-alpha.13":
+  version "0.1.0-alpha.13"
+  resolved "https://registry.yarnpkg.com/@safe-global/safe-ethers-adapters/-/safe-ethers-adapters-0.1.0-alpha.13.tgz#ff97e3f3d8bd97a151fd968aaeff5e7debd1872a"
+  integrity sha512-sYA/htvTi0khJSKPZn97M1BB+Th+BAMOxeLIC1UKl51NCauJFpafqvsUtpEvqlPGSG58v7gZ+YWltL5tIJHs4g==
+  dependencies:
+    "@gnosis.pm/safe-deployments" "1.17.0"
+    "@safe-global/safe-core-sdk" "^3.2.0"
+    "@safe-global/safe-core-sdk-types" "^1.7.0"
+    axios "^0.27.2"
+
+"@safe-global/safe-ethers-lib@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@safe-global/safe-ethers-lib/-/safe-ethers-lib-1.7.0.tgz#a53253cf33b3bd5d477722ba70a15064bebee18f"
+  integrity sha512-s4OD5C15JvCxuXpye700e+i4diOfdfyObZmnciNmkwNW5NfLdHDwWl5O6EdqSAP2iJd4mhwwAh3FmtYpujfE3A==
+  dependencies:
+    "@safe-global/safe-core-sdk-types" "^1.7.0"
+    "@safe-global/safe-core-sdk-utils" "^1.5.0"
+    ethers "^5.7.2"
 
 "@sentry/browser@7.24.2":
   version "7.24.2"
@@ -3428,35 +3421,35 @@
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.2.8-0.tgz#74a5775deece2f143d1f4d2d96920efc1f8659df"
   integrity sha512-yoFoXx2s/baxZx05WYgTGIb6ze/pUwLQ2CkiK9ms3IoUY51mlmN0T8bbRBAJlQBMqJuHRGk4HzB+BUrpFYAZig==
 
-"@thirdweb-dev/react@^3.6.7":
-  version "3.6.7"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-3.6.7.tgz#104fc527767c19305d47fbcbce905134b5192a1a"
-  integrity sha512-XsFQSlMEyCYHBwdDh7shgX7CCtQxypxnCxjzcimDylzc1Q/9oDZkR1mxR6Go0mwktLpOQYzsAesOmLHi1gIlUA==
+"@thirdweb-dev/react@^3.6.8-nightly-699a2b1":
+  version "3.6.8-nightly-699a2b1"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/react/-/react-3.6.8-nightly-699a2b1.tgz#9ddeaf848d3da91c46ce773b28afab2a884b6469"
+  integrity sha512-kyQNTn3ll7GLs0lpmUFutddP5h6gyZkC8D15J7aIkRh23nfvOxOIba2gZmwjJ2yJZTYnKWmSzz/Eucx5M/xi+g==
   dependencies:
     "@emotion/react" "^11.10.0"
     "@emotion/styled" "^11.10.0"
-    "@gnosis.pm/safe-core-sdk" "^3.1.1"
-    "@gnosis.pm/safe-ethers-adapters" "0.1.0-alpha.11"
-    "@gnosis.pm/safe-ethers-lib" "^1.6.1"
     "@react-icons/all-files" "^4.1.0"
+    "@safe-global/safe-core-sdk" "^3.2.0"
+    "@safe-global/safe-ethers-adapters" "0.1.0-alpha.13"
+    "@safe-global/safe-ethers-lib" "^1.7.0"
     "@solana/wallet-adapter-phantom" "^0.9.17"
     "@tanstack/react-query" "^4.0.10"
-    "@zag-js/menu" "^0.1.16"
-    "@zag-js/react" "^0.1.18"
+    "@zag-js/menu" "^0.3.0"
+    "@zag-js/react" "^0.3.1"
     buffer "^6.0.3"
     color "^4.2.3"
     copy-to-clipboard "^3.3.2"
     detect-browser "^5.3.0"
-    magic-sdk "^8.1.1"
+    magic-sdk "^10.0.0"
     mime "^3.0.0"
     react-cool-dimensions "^2.0.7"
     tiny-invariant "^1.2.0"
     wagmi "^0.2.28"
 
-"@thirdweb-dev/sdk@^3.6.7":
-  version "3.6.7"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-3.6.7.tgz#87a77397265dd1271c61f04ad3c6d4b088b47609"
-  integrity sha512-iUnXt4bYX7HFofEHdqEN6Z8h5qF65+uswqlJW2NKHW1zt+FPYYZENGfvgWe2+xf/7160MDyedyoMOaoK87JG7Q==
+"@thirdweb-dev/sdk@^3.6.8-nightly-699a2b1":
+  version "3.6.8-nightly-699a2b1"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/sdk/-/sdk-3.6.8-nightly-699a2b1.tgz#3712e90ada35caad88c35223694bcb2c1d22a5ef"
+  integrity sha512-5jeQJy5B7jgGQmKvejtn6i1HjJpnfETylPbTiag/3jy/HZ3144lnV74Xg33J0sDOJVLIlO2Z48PwzpiW4nzolw==
   dependencies:
     "@metaplex-foundation/js" "^0.17.6"
     "@metaplex-foundation/mpl-token-metadata" "^2.3.3"
@@ -4392,20 +4385,25 @@
   dependencies:
     "@walletconnect/window-getters" "^1.0.0"
 
-"@zag-js/core@0.1.12":
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/@zag-js/core/-/core-0.1.12.tgz#f0cd7687b26c55845c9bd55822f0b76b1c3ceee7"
-  integrity sha512-92QVG6O0Txr28PCAIk1FhWrB4BoYc4MJOWxpazqB7PoLz93+sNytCI0cMOEJnLdu0Qy/WvATYiqifuH92Qa1AA==
+"@zag-js/anatomy@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@zag-js/anatomy/-/anatomy-0.1.1.tgz#3856cc4b5e186440df2f39c80b5f3821ec967660"
+  integrity sha512-OpeEVfQ8ITDA1hQRtRNCUC+FiQiPwwDjoeyNR161p/Pt212l/YbZdVP8Q72TQG2wQTtjoJ5qKB6da++KFjoNIg==
+
+"@zag-js/core@0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@zag-js/core/-/core-0.2.2.tgz#09da9ff0873cc6ca3db5513cd507a7574fc485b3"
+  integrity sha512-Zqzm8qa8S/LrAIGsjSy7g/XU0G2QUfWvwguGOtuJabunYGtaEE5vl4aX3qJE2QkTWb0rLalowushlPdOe6pUAw==
   dependencies:
-    "@zag-js/store" "0.1.4"
+    "@zag-js/store" "0.2.0"
     klona "2.0.5"
 
-"@zag-js/dismissable@0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@zag-js/dismissable/-/dismissable-0.1.6.tgz#f7aa17a6f0998e27ae4cd2354a91a70dd5e82f07"
-  integrity sha512-dbgjloVkmqGG5asGYmmQgLwX0J7U+tGFWGlFCIJpwtS19D2Qq6b/M0FAKxv0MNKM58ucpj30oZoRVo8Eqpc1JA==
+"@zag-js/dismissable@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@zag-js/dismissable/-/dismissable-0.2.0.tgz#4018147d75c14a401dd531527e0aaa8a72f8aa69"
+  integrity sha512-AP5H9szbSg4T5ntXVB86AEGLwO47Cr/LoJrydDiy2Zlk332fZ54wt8oKAI+aTkgGDF9xKp6GHnwS7JWKxGPfmQ==
   dependencies:
-    "@zag-js/interact-outside" "0.1.6"
+    "@zag-js/interact-outside" "0.2.0"
 
 "@zag-js/element-size@0.1.0":
   version "0.1.0"
@@ -4417,51 +4415,52 @@
   resolved "https://registry.yarnpkg.com/@zag-js/focus-visible/-/focus-visible-0.1.0.tgz#9777bbaff8316d0b3a14a9095631e1494f69dbc7"
   integrity sha512-PeaBcTmdZWcFf7n1aM+oiOdZc+sy14qi0emPIeUuGMTjbP0xLGrZu43kdpHnWSXy7/r4Ubp/vlg50MCV8+9Isg==
 
-"@zag-js/interact-outside@0.1.6":
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/@zag-js/interact-outside/-/interact-outside-0.1.6.tgz#110cf93689dbf59353ddbfed8c97121a9cb4f83b"
-  integrity sha512-WMU7R/iyvY0/12OZI4QG0w72+ZWeMcv02W4Nj47s60oxzcZIkIQZ4VHLH4gkOF+aVA1OrbbYxIke3wH4LRgFBg==
+"@zag-js/interact-outside@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@zag-js/interact-outside/-/interact-outside-0.2.0.tgz#7c389b503845edaf00cee358b1dea38968532f4f"
+  integrity sha512-vj+roRkCI5NogZApuporXoWMI5uq57zWzFGsQUL2Yl91Oq7l448IvWzmmoSi+Tsgd4aGO7hwbJCvp3oqjCa5JA==
 
-"@zag-js/menu@^0.1.16":
-  version "0.1.16"
-  resolved "https://registry.yarnpkg.com/@zag-js/menu/-/menu-0.1.16.tgz#8ee2b061597173130d3269258f68546d0edac04b"
-  integrity sha512-LT6VuUMb+HlizHCuZOMo6Vagc4BDaYts1VcRJ1s3Hb9KQm5aP8hQvrHkDW/y58p9CrqqfqC1UdcB3nZkmHZTKw==
+"@zag-js/menu@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@zag-js/menu/-/menu-0.3.0.tgz#6ddb7101ef48df83b2ed292c85eb953a8385037b"
+  integrity sha512-ZkYE7adue7XQrAvEgUORwQ93ZnX2thf5SYOBdzI+6rwoLLV4fMg+PJMBr1cYcf/qLKG+RjRSzpRIKtEGJj2kIw==
   dependencies:
-    "@zag-js/core" "0.1.12"
-    "@zag-js/dismissable" "0.1.6"
-    "@zag-js/popper" "0.1.13"
-    "@zag-js/types" "0.2.7"
+    "@zag-js/anatomy" "0.1.1"
+    "@zag-js/core" "0.2.2"
+    "@zag-js/dismissable" "0.2.0"
+    "@zag-js/popper" "0.2.0"
+    "@zag-js/types" "0.3.1"
 
-"@zag-js/popper@0.1.13":
-  version "0.1.13"
-  resolved "https://registry.yarnpkg.com/@zag-js/popper/-/popper-0.1.13.tgz#4eaf89226166d73f39699422102f6dcb2d6f50f9"
-  integrity sha512-P6EzpxHvJRaQFVft6Ko9LlgKh5jX+/3yxCVIkrweXpmVRPPukzj+0uZK3u4i4c1SWC/7r7AIRRxrwxf4DEDeOg==
+"@zag-js/popper@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@zag-js/popper/-/popper-0.2.0.tgz#9d529e4705c40286670b7c81cd688131f6e0b0c6"
+  integrity sha512-heKg/L10KQ8XYX7rcL4/44b1mAbc3YjneQtPxEvgYJ3cazpcHUBg5Ge3yzQQbGBOkeE9sBfCroGkoJ+lsqkvig==
   dependencies:
-    "@floating-ui/dom" "1.0.1"
+    "@floating-ui/dom" "1.0.2"
 
-"@zag-js/react@^0.1.18":
-  version "0.1.18"
-  resolved "https://registry.yarnpkg.com/@zag-js/react/-/react-0.1.18.tgz#b723c1fd9beb676cb19323e7e465cfdc68d7cb73"
-  integrity sha512-twH4a0QmbzACXPOj2CUaSB7X8nn3czYwrqMupI5XegeqywoOBBYk+qzQEwbbuaY6sZdRqTtNpeh70POLCZWUCw==
+"@zag-js/react@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@zag-js/react/-/react-0.3.1.tgz#b4787cb50a69db69cd118dd5e5c12361766a6999"
+  integrity sha512-EQ0kS467Y5Xjtlg40zezsFdRYId9wNTslBf18e/mc2B9ADlCJL0wMDmkmd/1FkH/01FN2aJxnRvgTF2oBgQzkg==
   dependencies:
-    "@zag-js/core" "0.1.12"
-    "@zag-js/store" "0.1.4"
-    "@zag-js/types" "0.2.7"
+    "@zag-js/core" "0.2.2"
+    "@zag-js/store" "0.2.0"
+    "@zag-js/types" "0.3.1"
     proxy-compare "2.3.0"
 
-"@zag-js/store@0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@zag-js/store/-/store-0.1.4.tgz#473dc450e8e630f22f3f1d8d573d4845c7fadef8"
-  integrity sha512-Mq3IwpPvoOzbNqWGcH/t0u7M3IpXTHmU+YeyYmZy8aD+kUrMx8s4IY8fZvnrIgOZrL7Rb45GRrRNpEJfGmTGFg==
+"@zag-js/store@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@zag-js/store/-/store-0.2.0.tgz#343cf1cb1260a75540e73f9cbdd765ba7d05e9eb"
+  integrity sha512-B9PxSMTYu9KXEMFoyB2El+mey41eqVMVKU6cqE8GlbzNu71rdlSz2mPzvK3qQVXA0rXBhB4xapj3ScosSMyhTg==
   dependencies:
     proxy-compare "2.3.0"
 
-"@zag-js/types@0.2.7":
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/@zag-js/types/-/types-0.2.7.tgz#8ae259aab593628797cab18a1d4b216952fd1821"
-  integrity sha512-UZn+n6XjPMC9NjZZcXKTDeBJ8ere1xWmKn/JjodIRe5L8xCPw8d288JF3EmXBeZQokmQyQDL5hBXYxpA4tKfRQ==
+"@zag-js/types@0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@zag-js/types/-/types-0.3.1.tgz#8dc0d3de4b60175c3ab56425dd748064e85a2fb0"
+  integrity sha512-mSGkt+mqmvE+E6RAR1py74Pbzb5q2HjhijkpsUojHsDa+DIX9KJ2XTKGt9Dv3qxqwY81/pQdBQFNLDNKMAeYdQ==
   dependencies:
-    csstype "3.1.0"
+    csstype "3.1.1"
 
 JSONStream@^1.3.5:
   version "1.3.5"
@@ -5744,12 +5743,7 @@ css-box-model@1.2.1:
   dependencies:
     tiny-invariant "^1.0.6"
 
-csstype@3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.0.tgz#4ddcac3718d787cf9df0d1b7d15033925c8f29f2"
-  integrity sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA==
-
-csstype@^3.0.11, csstype@^3.0.2:
+csstype@3.1.1, csstype@^3.0.11, csstype@^3.0.2:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.1.1.tgz#841b532c45c758ee546a11d5bd7b7b473c8c30b9"
   integrity sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw==
@@ -8390,14 +8384,14 @@ madge@^4.0.1:
     typescript "^3.9.5"
     walkdir "^0.4.1"
 
-magic-sdk@^8.1.1:
-  version "8.1.1"
-  resolved "https://registry.yarnpkg.com/magic-sdk/-/magic-sdk-8.1.1.tgz#e2b31d492e1f574137953acaeb237558537a57d0"
-  integrity sha512-BLyAufrVM/6F7Q9rKIz1r0UZnYG4SOnr650lVsJGa5V1pc4FOWBfxr7UaxhHoP6zJ7faUvY7K/x1VWDQbmYUzw==
+magic-sdk@^10.0.0:
+  version "10.1.0"
+  resolved "https://registry.yarnpkg.com/magic-sdk/-/magic-sdk-10.1.0.tgz#b111e41d88d8dc339744c201a07e8d6cb2bb21ca"
+  integrity sha512-1Pykolr4WzK8j+FWm4rnjPqSRlG+z6nNd5kTMyDPFaqOxmKpoOpgUs2mVYASomXAZx1B883rSP67MGK+N6hlqw==
   dependencies:
-    "@magic-sdk/commons" "^4.1.1"
-    "@magic-sdk/provider" "^8.1.1"
-    "@magic-sdk/types" "^7.1.1"
+    "@magic-sdk/commons" "^6.1.0"
+    "@magic-sdk/provider" "^10.1.0"
+    "@magic-sdk/types" "^9.1.0"
     localforage "^1.7.4"
 
 make-dir@^3.0.0:
