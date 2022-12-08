@@ -13,6 +13,7 @@ import {
   Tooltip,
   useColorMode,
 } from "@chakra-ui/react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { useAccount, useAddress, useChainId } from "@thirdweb-dev/react";
 import { CHAIN_ID_TO_GNOSIS } from "constants/mappings";
 import React, { useEffect, useMemo, useRef, useState } from "react";
@@ -55,6 +56,19 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
     return Math.floor(transactionCount.toString().length * 8.3);
   }, [transactionCount]);
 
+  const evmAddress = useAddress();
+  const solAddress = useWallet().publicKey;
+
+  const isConnected = useMemo(() => {
+    if (ecosystem === "either") {
+      return !!evmAddress || !!solAddress;
+    } else if (ecosystem === "evm") {
+      return !!evmAddress;
+    } else if (ecosystem === "solana") {
+      return !!solAddress;
+    }
+  }, [ecosystem, evmAddress, solAddress]);
+
   return (
     <Popover
       returnFocusOnClose={false}
@@ -75,7 +89,7 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
           {...restButtonProps}
           overflow="hidden"
           pl={
-            isLoading || !data?.address
+            isLoading || !isConnected
               ? undefined
               : `calc(${52 + numberWidth}px + var(--chakra-space-${
                   size === "sm" ? 3 : size === "lg" ? 6 : size === "xs" ? 2 : 4

@@ -26,7 +26,7 @@ import {
 } from "contract-ui/tabs/claim-conditions/components/claim-conditions";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiPlus } from "react-icons/fi";
 import {
@@ -94,24 +94,15 @@ const ClaimConditionsProgramForm: React.FC<{ address: string }> = ({
     };
   }, [query.data]);
 
-  const {
-    register,
-    setValue,
-    getFieldState,
-    formState,
-    watch,
-    handleSubmit,
-    reset,
-  } = useForm<z.input<typeof NFTDropUpdateableConditionsInputSchema>>({
-    defaultValues: transformedQueryData,
-  });
-
-  useEffect(() => {
-    if (query.data && !formState.isDirty) {
-      reset(transformedQueryData);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query.data, formState.isDirty]);
+  const { register, setValue, getFieldState, formState, watch, handleSubmit } =
+    useForm<z.input<typeof NFTDropUpdateableConditionsInputSchema>>({
+      defaultValues: transformedQueryData,
+      values: transformedQueryData,
+      resetOptions: {
+        keepDirty: true,
+        keepDirtyValues: true,
+      },
+    });
 
   const { onSuccess, onError } = useTxNotifications(
     "Saved claim conditions",
