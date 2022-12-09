@@ -4,7 +4,6 @@ import { ChakraNextImage } from "components/Image";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { useTrack } from "hooks/analytics/useTrack";
 import Hero from "public/assets/landingpage/hero.png";
-import MobileHero from "public/assets/landingpage/mobile-hero.png";
 import { BsLightningCharge } from "react-icons/bs";
 import { Heading, Link, LinkButton, Text } from "tw-components";
 
@@ -18,8 +17,8 @@ export const HeroSection = () => {
           md: 16,
           lg: 24,
         }}
-        columns={{ base: 1, md: 2 }}
-        spacing={{ base: 6, md: 8 }}
+        columns={{ base: 1, lg: 2 }}
+        spacing={{ base: 6, lg: 8 }}
       >
         <Flex
           flexDir="column"
@@ -42,86 +41,75 @@ export const HeroSection = () => {
             networks. Powerful tools that simplify web3 development.
           </Heading>
 
-          <Flex direction="column">
-            <LightMode>
-              <Flex
-                direction={{ base: "column", lg: "row" }}
-                align="center"
-                gap={6}
-              >
-                <Flex flexDir="column" gap={3}>
-                  <LinkButton
-                    href="/dashboard"
-                    onClick={() =>
-                      trackEvent({
-                        category: "cta-button",
-                        action: "click",
-                        label: "start",
-                        title: "Start building",
-                      })
+          <LightMode>
+            <Flex
+              direction={{ base: "column", md: "row" }}
+              align="center"
+              gap={6}
+              w="100%"
+              justify="space-between"
+            >
+              <Flex flexDir="column" gap={3} flexGrow={1} w="100%" minW="320px">
+                <LinkButton
+                  href="/dashboard"
+                  onClick={() =>
+                    trackEvent({
+                      category: "cta-button",
+                      action: "click",
+                      label: "start",
+                      title: "Start building",
+                    })
+                  }
+                  h="68px"
+                  fontSize="20px"
+                  leftIcon={<Icon as={BsLightningCharge} color="yellow.500" />}
+                  color="black"
+                  flexShrink={0}
+                  background="rgba(255,255,255,1)"
+                  _hover={{
+                    background: "rgba(255,255,255,0.9)!important",
+                  }}
+                >
+                  Start building
+                </LinkButton>
+                <Link
+                  href="#pricing"
+                  onClick={(e) => {
+                    const el = document.getElementById("pricing");
+                    if (el) {
+                      e.preventDefault();
+                      el.scrollIntoView();
                     }
-                    h="68px"
-                    w={{ base: "100%", md: "290px" }}
-                    fontSize="20px"
-                    leftIcon={
-                      <Icon as={BsLightningCharge} color="yellow.500" />
-                    }
-                    color="black"
-                    flexShrink={0}
-                    background="rgba(255,255,255,1)"
-                    _hover={{
-                      background: "rgba(255,255,255,0.9)!important",
-                    }}
+                  }}
+                >
+                  <Text
+                    color="gray.600"
+                    size="label.sm"
+                    fontStyle="italic"
+                    textAlign="center"
                   >
-                    Start building
-                  </LinkButton>
-                  <Link
-                    href="#pricing"
-                    onClick={(e) => {
-                      const el = document.getElementById("pricing");
-                      if (el) {
-                        e.preventDefault();
-                        el.scrollIntoView();
-                      }
-                    }}
-                  >
-                    <Text
-                      color="gray.600"
-                      size="label.sm"
-                      fontStyle="italic"
-                      textAlign="center"
-                    >
-                      Completely free to use. No hidden fees.
-                    </Text>
-                  </Link>
-                </Flex>
-                <CLICommand text="npx thirdweb@latest" />
+                    Completely free to use. No hidden fees.
+                  </Text>
+                </Link>
               </Flex>
-            </LightMode>
-          </Flex>
+              <CLICommand text="npx thirdweb@latest" />
+            </Flex>
+          </LightMode>
         </Flex>
-        <Flex display={{ base: "none", md: "flex" }} justifyContent="flex-end">
-          <ChakraNextImage
-            alt=""
-            maxW={96}
-            w={96}
-            mt={8}
-            src={Hero}
-            mr={12}
-            priority
-            quality={95}
-          />
-        </Flex>
-        <Flex display={{ base: "flex", md: "none" }} justifyContent="center">
-          <ChakraNextImage
-            alt=""
-            maxW={96}
-            w={96}
-            mt={8}
-            px={4}
-            src={MobileHero}
-          />
-        </Flex>
+
+        <ChakraNextImage
+          display={{ base: "none", lg: "flex" }}
+          alt=""
+          maxW={96}
+          w={96}
+          mt={8}
+          src={Hero}
+          mr={12}
+          priority
+          quality={95}
+          justifySelf="flex-end"
+          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 30vw"
+        />
       </SimpleGrid>
     </HomepageSection>
   );

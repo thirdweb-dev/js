@@ -47,9 +47,8 @@ export const Drawer: ComponentWithChildren<DrawerProps> = ({
       <DrawerOverlay zIndex="modal" />
       <DrawerContent
         maxH="calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))"
-        // maxW="calc(100vw - env(safe-area-inset-left) - env(safe-area-inset-right))"
         overflow="hidden"
-        borderTopRadius={{ base: "lg", md: "none" }}
+        borderTopRadius={{ base: "2xl", md: "none" }}
       >
         {!hideCloseButton && <DrawerCloseButton {...closeButtonProps} />}
         {header && (
@@ -58,7 +57,11 @@ export const Drawer: ComponentWithChildren<DrawerProps> = ({
             <Divider />
           </>
         )}
-        <DrawerBody {...drawerBodyProps} py={4}>
+        <DrawerBody
+          {...drawerBodyProps}
+          pt="max(var(--chakra-space-4), env(safe-area-inset-top))"
+          pb="max(var(--chakra-space-4), env(safe-area-inset-bottom))"
+        >
           {children}
         </DrawerBody>
         {footer && (

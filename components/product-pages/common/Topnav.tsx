@@ -48,7 +48,7 @@ export const HomepageTopNav: React.FC = () => {
         flexDir="row"
       >
         <TrackedLink href="/" category="topnav" label="home">
-          <Logo color="#fff" />
+          <Logo forceShowWordMark color="#fff" />
         </TrackedLink>
         <DesktopMenu />
         <MobileMenu

@@ -60,13 +60,12 @@ export const TransactionButton: React.FC<TransactionButtonProps> = ({
   const solAddress = useWallet().publicKey;
 
   const isConnected = useMemo(() => {
-    if (ecosystem === "either") {
-      return !!evmAddress || !!solAddress;
-    } else if (ecosystem === "evm") {
+    if (ecosystem === "evm") {
       return !!evmAddress;
     } else if (ecosystem === "solana") {
-      return !!solAddress;
+      return !!solAddress?.toBase58();
     }
+    return !!evmAddress || !!solAddress?.toBase58();
   }, [ecosystem, evmAddress, solAddress]);
 
   return (

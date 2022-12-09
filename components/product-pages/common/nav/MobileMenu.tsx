@@ -1,128 +1,107 @@
-import { PRODUCTS } from "./DesktopMenu";
+import { PRODUCTS, RESOURCES, SOLUTIONS } from "./DesktopMenu";
+import type { NavCardProps } from "./NavCard";
 import {
-  Divider,
+  Flex,
+  Icon,
   IconButton,
   IconButtonProps,
-  Menu,
-  MenuButton,
-  MenuList,
+  ListItem,
+  UnorderedList,
+  useDisclosure,
 } from "@chakra-ui/react";
+import { ChakraNextImage } from "components/Image";
 import { FiMenu } from "react-icons/fi";
-import { MenuGroup, MenuItem, TrackedLink } from "tw-components";
+import { Drawer, Heading, TrackedLink } from "tw-components";
 
 export const MobileMenu: React.FC<IconButtonProps> = (props) => {
+  const disclosure = useDisclosure();
+
   return (
-    <Menu>
-      <MenuButton
+    <>
+      <IconButton
         {...props}
-        as={IconButton}
         aria-label="Menu"
         icon={<FiMenu />}
-        variant="outline"
+        variant="ghost"
+        onClick={disclosure.onOpen}
       />
-      <MenuList bgColor="black" color="white">
-        <MenuGroup title={<>Products</>} ml="12px">
-          {PRODUCTS.map((product) => (
-            <MenuItem
-              key={product.label}
+      <Drawer
+        drawerBodyProps={{ bg: "#111315" }}
+        isOpen={disclosure.isOpen}
+        onClose={disclosure.onClose}
+      >
+        <Flex gap={6} direction="column">
+          <MobileNavSection
+            title="Products"
+            links={PRODUCTS}
+            onItemClick={disclosure.onClose}
+          />
+          <MobileNavSection
+            title="Resources"
+            links={RESOURCES}
+            onItemClick={disclosure.onClose}
+          />
+          <MobileNavSection
+            title="Solutions"
+            links={SOLUTIONS}
+            onItemClick={disclosure.onClose}
+          />
+        </Flex>
+      </Drawer>
+    </>
+  );
+};
+
+type MobileNavSectionProps = {
+  title: string;
+  links: NavCardProps[];
+  onItemClick: () => void;
+};
+
+const MobileNavSection: React.FC<MobileNavSectionProps> = ({
+  title,
+  links,
+  onItemClick,
+}) => {
+  return (
+    <Flex gap={2} direction="column">
+      <Heading size="label.sm" as="label" textTransform="uppercase">
+        {title}
+      </Heading>
+      <UnorderedList listStyleType="none" ml={1.5} spacing={1.5}>
+        {links.map((link) => (
+          <ListItem key={link.label} minH={5}>
+            <Heading
               as={TrackedLink}
-              href={product.link}
-              category="topnav"
-              label={product.label}
+              display="flex"
+              alignItems="center"
+              gap={2}
+              title={link.name}
+              {...{
+                category: "topnav",
+                label: link.label,
+                href: link.link,
+                isExternal: link.link.startsWith("http"),
+              }}
+              size="label.md"
+              onClick={onItemClick}
             >
-              {product.name}
-            </MenuItem>
-          ))}
-        </MenuGroup>
-
-        <Divider mt={2} opacity="0.3" />
-
-        <MenuGroup title={<>Resources</>} ml="12px">
-          <MenuItem
-            as={TrackedLink}
-            href="https://portal.thirdweb.com"
-            category="topnav"
-            label="docs"
-            target="_blank"
-          >
-            Docs
-          </MenuItem>
-          <MenuItem
-            as={TrackedLink}
-            href="https://blog.thirdweb.com/guides"
-            category="topnav"
-            label="guides"
-            target="_blank"
-          >
-            Guides
-          </MenuItem>
-          <MenuItem
-            as={TrackedLink}
-            href="https://blog.thirdweb.com"
-            category="topnav"
-            label="blog"
-            target="_blank"
-          >
-            Blog
-          </MenuItem>
-          <MenuItem
-            as={TrackedLink}
-            href="https://careers.thirdweb.com"
-            category="topnav"
-            label="blog"
-            target="_blank"
-          >
-            Careers
-          </MenuItem>
-        </MenuGroup>
-
-        <Divider mt={2} opacity="0.3" />
-
-        <MenuGroup title={<>Solutions</>} ml="12px">
-          <MenuItem
-            as={TrackedLink}
-            href="/solutions/commerce"
-            category="topnav"
-            label="commerce"
-          >
-            CommerceKit
-          </MenuItem>
-          <MenuItem
-            as={TrackedLink}
-            href="/solutions/gaming"
-            category="topnav"
-            label="gaming"
-          >
-            GamingKit
-          </MenuItem>
-        </MenuGroup>
-
-        <Divider mt={2} opacity="0.3" />
-
-        <MenuGroup title={<>Networks</>} ml="12px">
-          <MenuItem
-            as={TrackedLink}
-            href="/network/solana"
-            category="topnav"
-            label="network-solana"
-          >
-            Solana
-          </MenuItem>
-        </MenuGroup>
-
-        <Divider mt={2} opacity="0.3" />
-
-        <MenuGroup title={<>Faucets</>} ml="12px">
-          <MenuItem
-            as={TrackedLink}
-            href="/faucet/solana"
-            category="topnav"
-            label="faucet-solana"
-          >
-            Solana
-          </MenuItem>
-        </MenuGroup>
-      </MenuList>
-    </Menu>
+              {link.icon ? (
+                <ChakraNextImage
+                  alt=""
+                  boxSize={5}
+                  src={link.icon}
+                  sizes="40px"
+                  w={5}
+                />
+              ) : link.iconType ? (
+                <Icon as={link.iconType} h={4} w={5} />
+              ) : null}
+              {link.name}
+            </Heading>
+          </ListItem>
+        ))}
+      </UnorderedList>
+    </Flex>
   );
 };

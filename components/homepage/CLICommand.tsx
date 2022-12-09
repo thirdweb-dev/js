@@ -22,8 +22,9 @@ export const CLICommand: React.FC<CLICommandProps> = ({ text }) => {
       pl="28px"
       pr="14px"
       borderRadius="md"
+      flexShrink={0}
       h="68px"
-      minW={{ base: "100%", lg: "240px" }}
+      minW={{ base: "100%", md: "240px" }}
       gap={4}
       align="center"
       alignSelf="start"

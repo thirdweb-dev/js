@@ -119,7 +119,7 @@ const AuroraBg: React.FC<AuroraBgProps> = ({ orientation }) => {
       pointerEvents="none"
       position="absolute"
       w="400%"
-      maxW={{ base: "200vw", md: "120vw", xl: "80vw" }}
+      maxW={{ base: "200vw", md: "120vw", "2xl": "80vw" }}
       left="50%"
       top={
         orientation === "top" ? "0" : orientation === "bottom" ? "100%" : "50%"
