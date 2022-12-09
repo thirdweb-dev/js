@@ -25,4 +25,11 @@ export class MagicAuthWallet extends AbstractWallet<MagicAuthOptions> {
     }
     return this.#connector;
   }
+
+  switchChain(chainId: number) {
+    if (!this.#connector?.switchChain) {
+      throw new Error("switchChain is not implemented for this connector");
+    }
+    return this.#connector.switchChain(chainId);
+  }
 }

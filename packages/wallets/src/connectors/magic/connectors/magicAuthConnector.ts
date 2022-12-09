@@ -5,7 +5,12 @@ import {
   MagicSDKAdditionalConfiguration,
   SDKBase,
 } from "@magic-sdk/provider";
-import { Chain, normalizeChainId, UserRejectedRequestError } from "@wagmi/core";
+import {
+  Chain,
+  ChainNotConfiguredError,
+  normalizeChainId,
+  UserRejectedRequestError,
+} from "@wagmi/core";
 import { getAddress } from "ethers/lib/utils.js";
 import { Magic } from "magic-sdk";
 
@@ -47,7 +52,20 @@ export class MagicAuthConnector extends MagicConnector {
     this.enableEmailLogin = config.options.enableEmailLogin || false;
   }
 
-  async connect() {
+  async connect({ chainId }: { chainId?: number }) {
+    // for a specific chainId we will overwrite the magicSDKConfiguration
+    if (chainId) {
+      const chain = this.chains.find((c) => c.id === chainId);
+      if (chain) {
+        this.magicSdkConfiguration = {
+          ...this.magicSdkConfiguration,
+          network: {
+            chainId: chain.id,
+            rpcUrl: chain.rpcUrls.default.http[0],
+          },
+        };
+      }
+    }
     try {
       const provider = await this.getProvider();
 
@@ -61,11 +79,11 @@ export class MagicAuthConnector extends MagicConnector {
       const isAuthenticated = await this.isAuthorized();
 
       // Check if we have a chainId, in case of error just assign 0 for legacy
-      let chainId: number;
+      let chainId_: number;
       try {
-        chainId = await this.getChainId();
+        chainId_ = await this.getChainId();
       } catch (e) {
-        chainId = 0;
+        chainId_ = 0;
       }
 
       // if there is a user logged in, return the user
@@ -73,7 +91,7 @@ export class MagicAuthConnector extends MagicConnector {
         return {
           provider,
           chain: {
-            id: chainId,
+            id: chainId_,
             unsupported: false,
           },
           account: getAddress(await this.getAccount()),
@@ -117,7 +135,7 @@ export class MagicAuthConnector extends MagicConnector {
         return {
           account: getAddress(account),
           chain: {
-            id: chainId,
+            id: chainId_,
             unsupported: false,
           },
           provider,
@@ -149,5 +167,15 @@ export class MagicAuthConnector extends MagicConnector {
       return this.magicSDK;
     }
     return this.magicSDK;
+  }
+
+  async switchChain(chainId: number): Promise<Chain> {
+    // check if the chain is supported
+    const chain = this.chains.find((c) => c.id === chainId);
+    if (!chain) {
+      throw new ChainNotConfiguredError({ chainId, connectorId: this.id });
+    }
+    await this.connect({ chainId });
+    return chain;
   }
 }
