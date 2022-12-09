@@ -87,10 +87,10 @@ class ThirdwebBridge implements TWBridge {
     console.debug("thirdwebSDK initialization:", chain, options);
     const sdkOptions = JSON.parse(options);
     const storage =
-      sdkOptions && sdkOptions.ipfsGatewayUrl
+      sdkOptions?.storage && sdkOptions?.storage?.ipfsGatewayUrl
         ? new ThirdwebStorage({
             gatewayUrls: {
-              "ipfs://": [sdkOptions.ipfsGatewayUrl],
+              "ipfs://": [sdkOptions.storage.ipfsGatewayUrl],
             },
           })
         : new ThirdwebStorage();
@@ -98,8 +98,8 @@ class ThirdwebBridge implements TWBridge {
     this.activeSDK = new ThirdwebSDK(rpcUrl, sdkOptions, storage);
     for (let wallet of WALLETS) {
       const walletInstance = new wallet({
-        appName: sdkOptions.appName || "thirdweb powered dApp",
-        apiKey: "foo",
+        appName: sdkOptions.wallet?.appName || "thirdweb powered dApp",
+        ...sdkOptions.wallet?.extras,
       });
       walletInstance.on("connect", async () =>
         this.updateSDKSigner(await walletInstance.getSigner()),
