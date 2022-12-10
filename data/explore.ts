@@ -125,7 +125,6 @@ const CATEGORIES = {
   [MARKETS.id]: MARKETS,
   [DROPS.id]: DROPS,
   [GOVERNANCE.id]: GOVERNANCE,
-  [OSRoyalty.id]: OSRoyalty,
   [AIRDROP.id]: AIRDROP,
 } as const;
 
