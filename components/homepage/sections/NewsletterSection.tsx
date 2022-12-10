@@ -7,16 +7,35 @@ import {
   Input,
   Stack,
 } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
+import { useState } from "react";
 import { MdMarkEmailRead } from "react-icons/md";
 import { Button, Text } from "tw-components";
 
 export const NewsletterSection = () => {
-  const form = useForm({
-    defaultValues: {
-      email: "",
-    },
-  });
+  const [email, setEmail] = useState("");
+  const [isValidEmail, setIsValidEmail] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  async function handleSubmit() {
+    // ignore invalid email
+    if (!isValidEmail) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await fetch("/api/email-signup", {
+        method: "POST",
+        body: JSON.stringify({ email }),
+      });
+      setEmail("");
+    } catch (err) {
+      console.error(err);
+    }
+
+    setIsSubmitting(false);
+  }
 
   return (
     <Box bg="rgba(0,0,0,.6)" zIndex="100">
@@ -41,19 +60,7 @@ export const NewsletterSection = () => {
             </Stack>
           </Stack>
 
-          <form
-            onSubmit={form.handleSubmit(async (data) => {
-              try {
-                await fetch("/api/email-signup", {
-                  method: "POST",
-                  body: JSON.stringify({ email: data.email }),
-                });
-                form.setValue("email", "");
-              } catch (err) {
-                console.error(err);
-              }
-            })}
-          >
+          <form onSubmit={(e) => e.preventDefault()}>
             <Flex gap={0} minW={{ base: "100%", md: "350px" }}>
               <FormControl isRequired>
                 <Input
@@ -64,16 +71,26 @@ export const NewsletterSection = () => {
                   _hover={{ borderColor: "purple.500" }}
                   _focus={{ borderColor: "purple.500" }}
                   placeholder="Enter your email"
-                  {...form.register("email")}
+                  value={email}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSubmit();
+                    }
+                  }}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setIsValidEmail(e.target.validity.valid);
+                  }}
                   autoComplete="email"
                 />
               </FormControl>
               <Button
                 borderLeftRadius={0}
                 flexShrink={0}
-                isLoading={form.formState.isSubmitting}
+                isLoading={isSubmitting}
                 type="submit"
                 mr={2}
+                onClick={handleSubmit}
                 colorScheme="purple"
               >
                 Sign up
