@@ -87,7 +87,7 @@
     "@aws-sdk/types" "3.226.0"
     tslib "^2.3.1"
 
-"@aws-sdk/client-secrets-manager@^3.216.0":
+"@aws-sdk/client-secrets-manager@^3.226.0":
   version "3.226.0"
   resolved "https://registry.yarnpkg.com/@aws-sdk/client-secrets-manager/-/client-secrets-manager-3.226.0.tgz#5c751c92a0f92193af8ceb37d90caca323f7cbd3"
   integrity sha512-H+uAe5sn6YIyRlcTHblD6mc9HCOwJ+ZdpaWbob5dnAE20z5FNn9MCjbpVuu/Gcn70hYRCkuW7x5LDHds1FR5vQ==

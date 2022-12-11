@@ -12,6 +12,10 @@
       "module": "./wallets/base/dist/thirdweb-dev-wallets-wallets-base.esm.js",
       "default": "./wallets/base/dist/thirdweb-dev-wallets-wallets-base.cjs.js"
     },
+    "./wallets/aws-kms": {
+      "module": "./wallets/aws-kms/dist/thirdweb-dev-wallets-wallets-aws-kms.esm.js",
+      "default": "./wallets/aws-kms/dist/thirdweb-dev-wallets-wallets-aws-kms.cjs.js"
+    },
     "./wallets/injected": {
       "module": "./wallets/injected/dist/thirdweb-dev-wallets-wallets-injected.esm.js",
       "default": "./wallets/injected/dist/thirdweb-dev-wallets-wallets-injected.cjs.js"
@@ -35,6 +39,10 @@
     "./connectors/metamask": {
       "module": "./connectors/metamask/dist/thirdweb-dev-wallets-connectors-metamask.esm.js",
       "default": "./connectors/metamask/dist/thirdweb-dev-wallets-connectors-metamask.cjs.js"
+    },
+    "./wallets/aws-secrets-manager": {
+      "module": "./wallets/aws-secrets-manager/dist/thirdweb-dev-wallets-wallets-aws-secrets-manager.esm.js",
+      "default": "./wallets/aws-secrets-manager/dist/thirdweb-dev-wallets-wallets-aws-secrets-manager.cjs.js"
     },
     "./connectors/wallet-connect": {
       "module": "./connectors/wallet-connect/dist/thirdweb-dev-wallets-connectors-wallet-connect.esm.js",
@@ -70,12 +78,14 @@
   },
   "sideEffects": false,
   "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.226.0",
     "@coinbase/wallet-sdk": "^3.6.0",
     "@wagmi/chains": "^0.1.0",
     "@wagmi/core": "^0.8.0",
     "@walletconnect/ethereum-provider": "^1.7.8",
     "abitype": "^0.2.5",
     "ethers": "^5.7.2",
+    "ethers-aws-kms-signer": "^1.3.2",
     "eventemitter3": "^5.0.0",
     "localforage": "^1.10.0"
   },

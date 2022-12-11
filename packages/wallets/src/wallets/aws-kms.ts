@@ -1,4 +1,4 @@
-import { AbstractWallet } from "../types/abstract";
+import { MinimalWallet } from "../types/minimal";
 import {
   TypedDataDomain,
   TypedDataField,
@@ -25,11 +25,10 @@ import { AwsKmsSigner, AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
  * const sdk = await ThirdwebSDK.fromWallet(wallet, "mainnet");
  * ```
  */
-export class AwsKmsWallet extends AbstractWallet {
+export class AwsKmsWallet implements MinimalWallet {
   private cachedSigner: AwsKmsSigner;
 
   constructor(options: AwsKmsSignerCredentials) {
-    super();
     this.cachedSigner = this.updateSigner(new AwsKmsSigner(options));
   }
 

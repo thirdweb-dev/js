@@ -12,7 +12,6 @@ import {
 import { SmartContract } from "../contracts/smart-contract";
 import { SDKOptions } from "../schema/sdk-options";
 import { CurrencyValue } from "../types/index";
-import type { AbstractWallet } from "../wallets";
 import { WalletAuthenticator } from "./auth/wallet-authenticator";
 import type { ContractMetadata } from "./classes";
 import { ContractDeployer } from "./classes/contract-deployer";
@@ -32,6 +31,7 @@ import type {
 import { UserWallet } from "./wallet/UserWallet";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import type { MinimalWallet } from "@thirdweb-dev/wallets";
 import { Contract, ContractInterface, ethers, Signer } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -60,7 +60,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @beta
    */
   static async fromWallet(
-    wallet: AbstractWallet,
+    wallet: MinimalWallet,
     network: ChainOrRpc,
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
