@@ -27,13 +27,12 @@ export const HomepageSection: ComponentWithChildren<IHomepageSection> = ({
       zIndex={2}
       {...restBoxProps}
     >
-      {topGradient && <AuroraBg orientation="top" />}
-
-      {middleGradient && <AuroraBg orientation="middle" />}
-
-      {bottomGradient && <AuroraBg orientation="bottom" />}
-
       <Container zIndex={1} position="relative" maxW="container.page" id={id}>
+        {/* aurora effect */}
+        {topGradient && <AuroraBg orientation="top" />}
+        {middleGradient && <AuroraBg orientation="middle" />}
+        {bottomGradient && <AuroraBg orientation="bottom" />}
+
         {children}
 
         {bottomPattern && (
@@ -118,8 +117,8 @@ const AuroraBg: React.FC<AuroraBgProps> = ({ orientation }) => {
       willChange="opacity"
       pointerEvents="none"
       position="absolute"
-      w="400%"
-      maxW={{ base: "200vw", md: "120vw", "2xl": "80vw" }}
+      maxW="none"
+      w={{ base: "400%", md: "200%" }}
       left="50%"
       top={
         orientation === "top" ? "0" : orientation === "bottom" ? "100%" : "50%"

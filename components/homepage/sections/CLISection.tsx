@@ -39,6 +39,7 @@ export const CLISection = () => {
     <HomepageSection
       id="developers"
       py={{ base: 24, md: 48 }}
+      topGradient
       middleGradient
       bottomGradient
     >
