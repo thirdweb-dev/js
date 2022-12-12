@@ -4,7 +4,6 @@ import { AppLayout } from "components/app-layouts/app";
 import { GasEstimatorBox } from "components/gas-estimator/GasEstimatorBox";
 import { useTrack } from "hooks/analytics/useTrack";
 import { NextSeo } from "next-seo";
-// import dynamic from "next/dynamic";
 import { PageId } from "page-id";
 import { useState } from "react";
 import { Badge, Card, Heading, Text } from "tw-components";
