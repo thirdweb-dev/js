@@ -13,11 +13,7 @@ const contract = await sdk.getContract("0xe68904F3018fF980b6b64D06d7f7fBCeFF4cB0
 
 const nfts = await contract.erc721.getAll();
 console.log(nfts);`,
-  react: `import {
-  ThirdwebNftMedia,
-  useContract,
-  useNFTs,
-} from "@thirdweb-dev/react";
+  react: `import { ThirdwebNftMedia, useContract, useNFTs } from "@thirdweb-dev/react";
 
 export default function App() {
   const { contract: nftDrop } = useContract(
@@ -26,11 +22,9 @@ export default function App() {
   const { data: nfts } = useNFTs(nftDrop);
 
   return (nfts || []).map((nft) => (
-    <div key={nft.metadata.id.toString()}>
-      <ThirdwebNftMedia metadata={nft.metadata} />
-      <h3>{nft.metadata.name}</h3>
-    </div>
-));`,
+    <ThirdwebNftMedia key={nft.metadata.id.toString()} metadata={nft.metadata} />
+  ));
+}`,
   python: `from thirdweb import ThirdwebSDK
 from pprint import pprint
 
@@ -123,13 +117,13 @@ func main() {
   unity: ``,
 };
 
-interface CodeSelector {
+export interface CodeSelectorProps {
   defaultLanguage?: CodeOptions;
   snippets?: "landing" | "auth";
   docs?: string;
 }
 
-export const CodeSelector: React.FC<CodeSelector> = ({
+export const CodeSelector: React.FC<CodeSelectorProps> = ({
   defaultLanguage = "javascript",
   snippets = "landing",
   docs = "https://portal.thirdweb.com/",

@@ -35,14 +35,15 @@ const Web3SDK: ThirdwebNextPage = () => {
   return (
     <ProductPage
       seo={{
-        title: "SDKs",
-        description: "Everything you need to build web3 apps",
+        title: "Powerful SDKs for every stack",
+        description:
+          "Build web3 applications that can interact with your smart contracts using our powerful SDKs and CLI.",
       }}
     >
       <Hero
         trackingCategory="sdks"
         name="SDKs"
-        title="Everything you need to build web3 apps"
+        title="Powerful SDKs for every stack"
         description="Build web3 applications that can interact with your smart contracts using our powerful SDKs and CLI."
         buttonText="Get started"
         buttonLink="https://portal.thirdweb.com/sdk"
@@ -82,7 +83,7 @@ const Web3SDK: ThirdwebNextPage = () => {
             icon={require("/public/assets/product-pages/sdk/hero-icon-2.png")}
           >
             Utilities for common use cases so that you do not have to reinvent
-            the wheel every time and have shorter development cycles.
+            the wheel every time and have faster development cycles.
           </ProductCard>
           <ProductCard
             title="Simplifying web3 complexity"
@@ -94,8 +95,8 @@ const Web3SDK: ThirdwebNextPage = () => {
           </ProductCard>
         </SimpleGrid>
       </Hero>
-      <ProductSection pb={{ base: 12, lg: 24 }}>
-        <SDKSection />
+      <ProductSection py={{ base: 12, lg: 24 }}>
+        <SDKSection title="Integrate web3 into your apps and games." />
       </ProductSection>
 
       <ProductSection>
@@ -121,7 +122,7 @@ const Web3SDK: ThirdwebNextPage = () => {
 
       <GuidesShowcase
         title="Learn how to build"
-        description="Check out our guides to starty building with our SDKs."
+        description="Check out our SDK guides to start building web3 apps."
         solution="SDK"
         guides={SDK_GUIDES}
       />

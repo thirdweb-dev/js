@@ -1,11 +1,11 @@
 import { Box, Center, Flex, LightMode, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
+import { SDKSection } from "components/homepage/sections/SDKSection";
 import { AuthenticationExamples } from "components/product-pages/authentication/AuthenticationExamples";
 import { Hero } from "components/product-pages/common/Hero";
 import { ProductCard } from "components/product-pages/common/ProductCard";
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
-import { CodeSelector } from "components/product-pages/homepage/CodeSelector";
 import { GeneralCta } from "components/shared/GeneralCta";
 import { PageId } from "page-id";
 import WhiteLogo from "public/assets/landingpage/white-logo.png";
@@ -104,37 +104,20 @@ const Authentication: ThirdwebNextPage = () => {
         </Flex>
       </ProductSection>
 
-      <ProductSection id="developers" overflow="hidden">
-        <Flex
-          flexDir="column"
-          py={{ base: 12, lg: 24 }}
-          align="center"
-          gap={{ base: 6, md: 8 }}
-        >
-          <Heading
-            as="h2"
-            size="display.sm"
-            fontWeight={700}
-            textAlign="center"
-          >
-            Plug-and-play authentication SDKs
-          </Heading>
-          <Heading
-            as="h3"
-            maxW="600px"
-            textAlign="center"
-            color="whiteAlpha.600"
-            size="subtitle.md"
-          >
-            Integrate authentication with a few lines of code in your favorite
-            languages.
-          </Heading>
-
-          <CodeSelector
-            snippets="auth"
-            docs="https://portal.thirdweb.com/auth"
-          />
-        </Flex>
+      <ProductSection
+        id="developers"
+        overflow="hidden"
+        py={{ base: 12, lg: 24 }}
+      >
+        <SDKSection
+          title="Plug-and-play authentication SDKs"
+          description="Integrate authentication with a few lines of code in your favorite
+            languages."
+          codeSelectorProps={{
+            snippets: "auth",
+            docs: "https://portal.thirdweb.com/auth",
+          }}
+        />
       </ProductSection>
 
       <ProductSection showPattern overflow="hidden">
