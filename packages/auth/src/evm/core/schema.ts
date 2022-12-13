@@ -108,6 +108,14 @@ export const GenerateOptionsSchema = z
   .object({
     domain: z.string().optional(),
     /**
+     * The optional chain ID to expect the request to be for
+     */
+    chainId: z.number().optional(),
+    /**
+     * Function to check whether the nonce is valid
+     */
+    validateNonce: z.function().args(z.string()).optional(),
+    /**
      * The date before which the authentication payload is invalid
      */
     invalidBefore: z.date().optional(),

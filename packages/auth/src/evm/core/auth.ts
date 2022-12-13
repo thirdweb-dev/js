@@ -111,7 +111,11 @@ export class ThirdwebAuth extends WalletSigner {
     const parsedOptions = GenerateOptionsSchema.parse(options);
     const domain = parsedOptions?.domain || this.domain;
 
-    const userAddress = this.verify(payload);
+    const userAddress = this.verify(payload, {
+      domain,
+      chainId: parsedOptions?.chainId,
+      validateNonce: parsedOptions?.validateNonce,
+    });
     const adminAddress = await this.getAddress();
     const payloadData = AuthenticationPayloadDataSchema.parse({
       iss: adminAddress,
