@@ -85,6 +85,10 @@ export const ContractBadge: React.FC<ContractBadgeProps> = ({ address }) => {
         <PopoverArrow bg="backgroundCardHighlight" />
         <PopoverBody>
           <Flex flexDir="column" gap={4}>
+            <Text>
+              Customize your contract badge, copy the code and paste it into
+              your website.
+            </Text>
             <Flex alignItems="center" gap={3}>
               <Text>Theme</Text>
               <Select
