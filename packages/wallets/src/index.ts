@@ -5,6 +5,7 @@ export * from "./wallets/injected";
 export * from "./wallets/aws-kms";
 export * from "./wallets/aws-secrets-manager";
 export * from "./wallets/magic-auth";
+export * from "./wallets/private-key";
 // just the types
 export type {
   AbstractWallet,

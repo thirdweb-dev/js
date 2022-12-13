@@ -28,6 +28,10 @@
       "module": "./wallets/magic-auth/dist/thirdweb-dev-wallets-wallets-magic-auth.esm.js",
       "default": "./wallets/magic-auth/dist/thirdweb-dev-wallets-wallets-magic-auth.cjs.js"
     },
+    "./wallets/private-key": {
+      "module": "./wallets/private-key/dist/thirdweb-dev-wallets-wallets-private-key.esm.js",
+      "default": "./wallets/private-key/dist/thirdweb-dev-wallets-wallets-private-key.cjs.js"
+    },
     "./connectors/magic": {
       "module": "./connectors/magic/dist/thirdweb-dev-wallets-connectors-magic.esm.js",
       "default": "./connectors/magic/dist/thirdweb-dev-wallets-connectors-magic.cjs.js"
