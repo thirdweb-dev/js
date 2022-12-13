@@ -13,6 +13,7 @@ import { useContractWrite } from "@thirdweb-dev/react";
 import { AbiFunction, ValidContractInstance } from "@thirdweb-dev/sdk/evm";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BigNumber, utils } from "ethers";
+import { replaceIpfsUrl } from "lib/sdk";
 import { useEffect, useId, useMemo } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FiPlay } from "react-icons/fi";
@@ -24,6 +25,7 @@ import {
   FormLabel,
   Heading,
   Text,
+  TrackedLink,
 } from "tw-components";
 
 export function formatResponseData(data: unknown): string {
@@ -295,6 +297,18 @@ export const InteractiveAbiFunction: React.FC<InteractiveAbiFunctionProps> = ({
               language="json"
               code={formatResponseData(data)}
             />
+            {typeof data === "string" && data?.startsWith("ipfs://") && (
+              <Text size="label.sm">
+                <TrackedLink
+                  href={replaceIpfsUrl(data)}
+                  isExternal
+                  category="contract-explorer"
+                  label="open-in-gateway"
+                >
+                  Open in gateway
+                </TrackedLink>
+              </Text>
+            )}
           </>
         ) : null}
       </Flex>
