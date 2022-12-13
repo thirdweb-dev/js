@@ -25,14 +25,25 @@ export class WalletSigner {
     return ethers.utils.recoverAddress(messageHashBytes, signature);
   }
 
+  public updateWallet(wallet: MinimalWallet): void {
+    this.wallet = wallet;
+    this.signer = undefined;
+  }
+
   // Signer should only be accessed with this function
-  async getSigner(): Promise<ethers.Signer> {
+  private async getSigner(): Promise<ethers.Signer> {
     // First check for the cached signer
-    if (this.signer) {
+    if (!!this.signer) {
       return this.signer;
     }
 
     // Otherwise newly instantiate it and return
-    return (this.signer = await this.wallet.getSigner());
+    this.signer = await this.wallet.getSigner();
+
+    if (!this.signer) {
+      throw new Error("Unable to get a signer!");
+    }
+
+    return this.signer;
   }
 }

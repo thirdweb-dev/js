@@ -1,1 +1,1 @@
-export { WalletAuthenticator } from "./auth";
+export { ThirdwebAuth } from "./auth";
