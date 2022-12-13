@@ -1,7 +1,7 @@
 import {
   LoginOptions,
   LoginPayload,
-  AuthenticationOptions,
+  GenerateOptions,
   LoginPayloadData,
   LoginPayloadDataSchema,
   AuthenticationPayloadDataSchema,
@@ -9,7 +9,11 @@ import {
   LoginOptionsSchema,
   VerifyOptionsSchema,
   VerifyOptions,
-  AuthenticationOptionsSchema,
+  GenerateOptionsSchema,
+  AuthenticateOptionsSchema,
+  AuthenticateOptions,
+  User,
+  Json,
 } from "./schema";
 import { WalletSigner } from "./signer";
 import { isBrowser } from "./utils";
@@ -23,11 +27,9 @@ export class ThirdwebAuth extends WalletSigner {
     this.domain = domain;
   }
 
-  public async login(
-    domain: string,
-    options?: LoginOptions,
-  ): Promise<LoginPayload> {
+  public async login(options?: LoginOptions): Promise<LoginPayload> {
     const parsedOptions = LoginOptionsSchema.parse(options);
+    const domain = parsedOptions?.domain || this.domain;
 
     const signerAddress = await this.getAddress();
     const expirationTime =
@@ -49,18 +51,23 @@ export class ThirdwebAuth extends WalletSigner {
     };
   }
 
-  public verify(
-    domain: string,
-    payload: LoginPayload,
-    options?: VerifyOptions,
-  ): string {
+  public verify(payload: LoginPayload, options?: VerifyOptions): string {
     const parsedOptions = VerifyOptionsSchema.parse(options);
+    const domain = parsedOptions?.domain || this.domain;
 
     // Check that the intended domain matches the domain of the payload
     if (payload.payload.domain !== domain) {
       throw new Error(
         `Expected domain '${domain}' does not match domain on payload '${payload.payload.domain}'`,
       );
+    }
+
+    if (parsedOptions?.validateNonce !== undefined) {
+      try {
+        parsedOptions.validateNonce(payload.payload.nonce);
+      } catch (err) {
+        throw new Error(`Login request nonce is invalid`);
+      }
     }
 
     // Check that the payload hasn't expired
@@ -91,10 +98,9 @@ export class ThirdwebAuth extends WalletSigner {
     return userAddress;
   }
 
-  public async generateAuthToken(
-    domain: string,
+  public async generate(
     payload: LoginPayload,
-    options?: AuthenticationOptions,
+    options?: GenerateOptions,
   ): Promise<string> {
     if (isBrowser()) {
       throw new Error(
@@ -102,9 +108,10 @@ export class ThirdwebAuth extends WalletSigner {
       );
     }
 
-    const parsedOptions = AuthenticationOptionsSchema.parse(options);
+    const parsedOptions = GenerateOptionsSchema.parse(options);
+    const domain = parsedOptions?.domain || this.domain;
 
-    const userAddress = this.verify(domain, payload);
+    const userAddress = this.verify(payload);
     const adminAddress = await this.getAddress();
     const payloadData = AuthenticationPayloadDataSchema.parse({
       iss: adminAddress,
@@ -115,6 +122,7 @@ export class ThirdwebAuth extends WalletSigner {
         parsedOptions?.expirationTime ||
         new Date(Date.now() + 1000 * 60 * 60 * 5),
       iat: new Date(),
+      ctx: parsedOptions?.context,
     });
 
     const message = JSON.stringify(payloadData);
@@ -160,12 +168,18 @@ export class ThirdwebAuth extends WalletSigner {
    * const address = sdk.auth.authenticate(domain, token);
    * ```
    */
-  public async authenticate(domain: string, token: string): Promise<string> {
+  public async authenticate<TContext extends Json = Json>(
+    token: string,
+    options?: AuthenticateOptions,
+  ): Promise<User<TContext>> {
     if (isBrowser()) {
       throw new Error(
         "Should not authenticate tokens in the browser, as they must be verified by the server-side admin wallet.",
       );
     }
+
+    const parsedOptions = AuthenticateOptionsSchema.parse(options);
+    const domain = parsedOptions?.domain || this.domain;
 
     const encodedPayload = token.split(".")[1];
     const encodedSignature = token.split(".")[2];
@@ -215,7 +229,11 @@ export class ThirdwebAuth extends WalletSigner {
       );
     }
 
-    return payload.sub;
+    return {
+      address: payload.sub,
+      context: payload.ctx as TContext | undefined,
+      token: payload,
+    };
   }
 
   /**

@@ -15,11 +15,20 @@ export const RawDateSchema = z.date().transform((i) => {
   return BigNumber.from(Math.floor(i.getTime() / 1000));
 });
 
+const literalSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
+type Literal = z.infer<typeof literalSchema>;
+export type Json = Literal | { [key: string]: Json } | Json[];
+const JsonSchema: z.ZodType<Json> = z.lazy(
+  () => z.union([literalSchema, z.array(JsonSchema), z.record(JsonSchema)]),
+  { invalid_type_error: "Provided value was not valid JSON" },
+);
+
 /**
  * @internal
  */
 export const LoginOptionsSchema = z
   .object({
+    domain: z.string().optional(),
     /**
      * The optional nonce of the login request used to prevent replay attacks
      */
@@ -80,18 +89,24 @@ export const LoginPayloadSchema = z.object({
  */
 export const VerifyOptionsSchema = z
   .object({
+    domain: z.string().optional(),
     /**
      * The optional chain ID to expect the request to be for
      */
     chainId: z.number().optional(),
+    /**
+     * Function to check whether the nonce is valid
+     */
+    validateNonce: z.function().args(z.string()).optional(),
   })
   .optional();
 
 /**
  * @internal
  */
-export const AuthenticationOptionsSchema = z
+export const GenerateOptionsSchema = z
   .object({
+    domain: z.string().optional(),
     /**
      * The date before which the authentication payload is invalid
      */
@@ -100,6 +115,10 @@ export const AuthenticationOptionsSchema = z
      * The date after which the authentication payload is invalid
      */
     expirationTime: z.date().optional(),
+    /**
+     * Optional context to include arbitrary data in the authentication payload
+     */
+    context: JsonSchema.optional(),
   })
   .optional();
 
@@ -135,6 +154,10 @@ export const AuthenticationPayloadDataSchema = z.object({
    * The unique identifier of the payload
    */
   jti: z.string().default(uuidv4()),
+  /**
+   * Optional context to include arbitrary data in the authentication payload
+   */
+  ctx: JsonSchema.optional(),
 });
 
 /**
@@ -150,6 +173,15 @@ export const AuthenticationPayloadSchema = z.object({
    */
   signature: z.string(),
 });
+
+/**
+ * @internal
+ */
+export const AuthenticateOptionsSchema = z
+  .object({
+    domain: z.string().optional(),
+  })
+  .optional();
 
 /**
  * @public
@@ -174,7 +206,7 @@ export type VerifyOptions = z.input<typeof VerifyOptionsSchema>;
 /**
  * @public
  */
-export type AuthenticationOptions = z.input<typeof AuthenticationOptionsSchema>;
+export type GenerateOptions = z.input<typeof GenerateOptionsSchema>;
 
 /**
  * @public
@@ -189,3 +221,17 @@ export type AuthenticationPayloadData = z.output<
 export type AuthenticationPayload = z.output<
   typeof AuthenticationPayloadSchema
 >;
+
+/**
+ * @public
+ */
+export type AuthenticateOptions = z.output<typeof AuthenticateOptionsSchema>;
+
+/**
+ * @public
+ */
+export type User<TContext extends Json = Json> = {
+  address: string;
+  context?: TContext;
+  token: AuthenticationPayloadData;
+};

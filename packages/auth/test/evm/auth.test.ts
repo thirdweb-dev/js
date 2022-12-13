@@ -12,7 +12,6 @@ describe("Wallet Authentication", async () => {
     signerWallet: MinimalWalletWithAddress,
     attackerWallet: MinimalWalletWithAddress;
   let auth: ThirdwebAuth;
-  const domain = "thirdweb.com";
 
   before(async () => {
     const [adminSigner, signerSigner, attackerSigner] = [
@@ -34,7 +33,7 @@ describe("Wallet Authentication", async () => {
       address: attackerSigner.address,
     };
 
-    auth = new ThirdwebAuth(signerWallet, "example.com");
+    auth = new ThirdwebAuth(signerWallet, "thirdweb.com");
   });
 
   beforeEach(async () => {
@@ -42,34 +41,67 @@ describe("Wallet Authentication", async () => {
   });
 
   it("Should verify logged in wallet", async () => {
-    const payload = await auth.login(domain);
+    const payload = await auth.login();
 
     auth.updateWallet(adminWallet);
-    const address = auth.verify(domain, payload);
+    const address = auth.verify(payload);
 
     expect(address).to.equal(signerWallet.address);
   });
 
   it("Should verify logged in wallet with chain ID and expiration", async () => {
-    const payload = await auth.login(domain, {
+    const payload = await auth.login({
       expirationTime: new Date(Date.now() + 1000 * 60 * 5),
       chainId: 137,
     });
 
     auth.updateWallet(adminWallet);
-    const address = auth.verify(domain, payload, {
+    const address = auth.verify(payload, {
       chainId: 137,
+    });
+
+    expect(address).to.equal(signerWallet.address);
+  });
+
+  it("Should reject invalid nonce", async () => {
+    const payload = await auth.login();
+
+    auth.updateWallet(adminWallet);
+    try {
+      auth.verify(payload, {
+        validateNonce: (nonce: string) => {
+          if (nonce === payload.payload.nonce) {
+            throw new Error();
+          }
+        },
+      });
+      expect.fail();
+    } catch (err: any) {
+      expect(err.message).to.equal("Login request nonce is invalid");
+    }
+  });
+
+  it("Should accept valid nonce", async () => {
+    const payload = await auth.login();
+
+    auth.updateWallet(adminWallet);
+    const address = auth.verify(payload, {
+      validateNonce: (nonce: string) => {
+        if (nonce !== payload.payload.nonce) {
+          throw new Error();
+        }
+      },
     });
 
     expect(address).to.equal(signerWallet.address);
   });
 
   it("Should reject payload with incorrect domain", async () => {
-    const payload = await auth.login(domain);
+    const payload = await auth.login();
 
     auth.updateWallet(adminWallet);
     try {
-      auth.verify("test.thirdweb.com", payload);
+      auth.verify(payload, { domain: "test.thirdweb.com" });
       expect.fail();
     } catch (err: any) {
       expect(err.message).to.equal(
@@ -79,13 +111,13 @@ describe("Wallet Authentication", async () => {
   });
 
   it("Should reject expired login payload", async () => {
-    const payload = await auth.login(domain, {
+    const payload = await auth.login({
       expirationTime: new Date(Date.now() - 1000 * 60 * 5),
     });
 
     auth.updateWallet(adminWallet);
     try {
-      auth.verify(domain, payload);
+      auth.verify(payload);
       expect.fail();
     } catch (err: any) {
       expect(err.message).to.equal("Login request has expired");
@@ -93,13 +125,13 @@ describe("Wallet Authentication", async () => {
   });
 
   it("Should reject payload with incorrect chain ID", async () => {
-    const payload = await auth.login(domain, {
+    const payload = await auth.login({
       chainId: 1,
     });
 
     auth.updateWallet(adminWallet);
     try {
-      auth.verify(domain, payload, {
+      auth.verify(payload, {
         chainId: 137,
       });
       expect.fail();
@@ -111,12 +143,12 @@ describe("Wallet Authentication", async () => {
   });
 
   it("Should reject payload with incorrect signer", async () => {
-    const payload = await auth.login(domain);
+    const payload = await auth.login();
     payload.payload.address = attackerWallet.address;
 
     auth.updateWallet(adminWallet);
     try {
-      auth.verify(domain, payload);
+      auth.verify(payload);
       expect.fail();
     } catch (err: any) {
       expect(err.message).to.contain("does not match payload address");
@@ -124,23 +156,23 @@ describe("Wallet Authentication", async () => {
   });
 
   it("Should generate valid authentication token", async () => {
-    const payload = await auth.login(domain);
+    const payload = await auth.login();
 
     auth.updateWallet(adminWallet);
-    const token = await auth.generateAuthToken(domain, payload);
-    const address = await auth.authenticate(domain, token);
+    const token = await auth.generate(payload);
+    const user = await auth.authenticate(token);
 
-    expect(address).to.equal(signerWallet.address);
+    expect(user.address).to.equal(signerWallet.address);
   });
 
   it("Should reject token with incorrect domain", async () => {
-    const payload = await auth.login(domain);
+    const payload = await auth.login();
 
     auth.updateWallet(adminWallet);
-    const token = await auth.generateAuthToken(domain, payload);
+    const token = await auth.generate(payload);
 
     try {
-      await auth.authenticate("test.thirdweb.com", token);
+      await auth.authenticate(token, { domain: "test.thirdweb.com" });
       expect.fail();
     } catch (err: any) {
       expect(err.message).to.contain(
@@ -150,15 +182,15 @@ describe("Wallet Authentication", async () => {
   });
 
   it("Should reject token before invalid before", async () => {
-    const payload = await auth.login(domain);
+    const payload = await auth.login();
 
     auth.updateWallet(adminWallet);
-    const token = await auth.generateAuthToken(domain, payload, {
+    const token = await auth.generate(payload, {
       invalidBefore: new Date(Date.now() + 1000 * 60 * 5),
     });
 
     try {
-      await auth.authenticate(domain, token);
+      await auth.authenticate(token);
       expect.fail();
     } catch (err: any) {
       expect(err.message).to.contain("This token is invalid before");
@@ -166,15 +198,15 @@ describe("Wallet Authentication", async () => {
   });
 
   it("Should reject expired authentication token", async () => {
-    const payload = await auth.login(domain);
+    const payload = await auth.login();
 
     auth.updateWallet(adminWallet);
-    const token = await auth.generateAuthToken(domain, payload, {
+    const token = await auth.generate(payload, {
       expirationTime: new Date(Date.now() - 1000 * 60 * 5),
     });
 
     try {
-      await auth.authenticate(domain, token);
+      await auth.authenticate(token);
       expect.fail();
     } catch (err: any) {
       expect(err.message).to.contain("This token expired");
@@ -182,19 +214,33 @@ describe("Wallet Authentication", async () => {
   });
 
   it("Should reject if admin address is not connected wallet address", async () => {
-    const payload = await auth.login(domain);
+    const payload = await auth.login();
 
     auth.updateWallet(adminWallet);
-    const token = await auth.generateAuthToken(domain, payload);
+    const token = await auth.generate(payload);
 
     auth.updateWallet(signerWallet);
     try {
-      await auth.authenticate(domain, token);
+      await auth.authenticate(token);
       expect.fail();
     } catch (err: any) {
       expect(err.message).to.contain(
         `Expected the connected wallet address '${signerWallet.address}' to match the token issuer address '${adminWallet.address}'`,
       );
     }
+  });
+
+  it("Should propagate context on token", async () => {
+    const payload = await auth.login();
+
+    auth.updateWallet(adminWallet);
+    const token = await auth.generate(payload, {
+      context: { role: "admin" },
+    });
+
+    const user = await auth.authenticate(token);
+
+    expect(user.address).to.equal(signerWallet.address);
+    expect(user.context).to.deep.equal({ role: "admin" });
   });
 });
