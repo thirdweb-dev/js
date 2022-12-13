@@ -43,30 +43,6 @@ const NFTS = {
     "thirdweb.eth/DropERC721",
     "thirdweb.eth/DropERC1155",
     "thirdweb.eth/SignatureDrop",
-    "thirdweb.eth/DropERC721_OSRoyaltyFilter",
-    "thirdweb.eth/DropERC1155_OSRoyaltyFilter",
-    "thirdweb.eth/Multiwrap_OSRoyaltyFilter",
-    "thirdweb.eth/Pack_OSRoyaltyFilter",
-    "thirdweb.eth/SignatureDrop_OSRoyaltyFilter",
-    "thirdweb.eth/TokenERC1155_OSRoyaltyFilter",
-    "thirdweb.eth/TokenERC721_OSRoyaltyFilter",
-  ],
-} as const;
-
-const OSRoyalty = {
-  id: "opensea-royalty-filter",
-  name: "Opensea Royalty Filter",
-  description:
-    "Contracts that comply with Opensea's on-chain royalty enforcement mechanisms.",
-  learnMore: "https://opensea.io/blog/announcements/on-creator-fees/",
-  contracts: [
-    "thirdweb.eth/DropERC721_OSRoyaltyFilter",
-    "thirdweb.eth/DropERC1155_OSRoyaltyFilter",
-    "thirdweb.eth/Multiwrap_OSRoyaltyFilter",
-    "thirdweb.eth/Pack_OSRoyaltyFilter",
-    "thirdweb.eth/SignatureDrop_OSRoyaltyFilter",
-    "thirdweb.eth/TokenERC1155_OSRoyaltyFilter",
-    "thirdweb.eth/TokenERC721_OSRoyaltyFilter",
   ],
 } as const;
 
