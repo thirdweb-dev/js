@@ -74,6 +74,7 @@
     "@preconstruct/cli": "^2.2.1",
     "@swc-node/register": "^1.5.1",
     "@swc/core": "^1.2.177",
+    "@thirdweb-dev/wallets": "*",
     "@types/chai": "^4.3.3",
     "@types/deep-equal-in-any-order": "^1.0.1",
     "@types/mocha": "^10.0.0",
