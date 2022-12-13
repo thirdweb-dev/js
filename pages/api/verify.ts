@@ -1,11 +1,11 @@
 import {
+  Abi,
   ChainId,
   SUPPORTED_CHAIN_ID,
   extractConstructorParamsFromAbi,
   fetchSourceFilesFromMetadata,
   resolveContractUriFromAddress,
 } from "@thirdweb-dev/sdk/evm";
-import { Abi } from "components/contract-components/types";
 import { ethers, utils } from "ethers";
 import { StorageSingleton, getEVMThirdwebSDK } from "lib/sdk";
 import { NextApiRequest, NextApiResponse } from "next";

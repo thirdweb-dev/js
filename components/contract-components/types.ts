@@ -1,5 +1,4 @@
-import type { AbiSchema, ContractType } from "@thirdweb-dev/sdk/evm";
-import { z } from "zod";
+import type { ContractType } from "@thirdweb-dev/sdk/evm";
 
 export type ContractId = ContractType | string;
 export type ContractCellContext = "deploy" | "create_release";
@@ -15,5 +14,3 @@ export type SourceFile = {
   filename: string | undefined;
   source: string;
 };
-
-export type Abi = z.infer<typeof AbiSchema>;

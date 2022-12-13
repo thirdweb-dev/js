@@ -10,6 +10,7 @@ import { Flex, Spinner, Stack } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useQuery } from "@tanstack/react-query";
 import { useAddress } from "@thirdweb-dev/react";
+import { constants } from "ethers";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useCallback, useMemo, useState } from "react";
 import { IoDocumentOutline } from "react-icons/io5";
@@ -42,8 +43,8 @@ function replaceVariablesInCodeSnippet(
   return snippet;
 }
 
-interface IContractCode {
-  contractAddress: string | undefined;
+interface ContractCodeProps {
+  contractAddress?: string | undefined;
   contractType: string;
   ecosystem: "evm" | "solana";
 }
@@ -71,8 +72,8 @@ const CREATE_APP_COMMANDS = {
   solana: "npx thirdweb@latest create app --solana",
 };
 
-export const ContractCode: React.FC<IContractCode> = ({
-  contractAddress,
+export const ContractCode: React.FC<ContractCodeProps> = ({
+  contractAddress = constants.AddressZero,
   contractType,
   ecosystem,
 }) => {

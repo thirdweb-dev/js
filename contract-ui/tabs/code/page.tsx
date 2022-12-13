@@ -1,6 +1,7 @@
 import { CodeOverview } from "./components/code-overview";
 import { Flex } from "@chakra-ui/react";
 import { useContract, useContractType } from "@thirdweb-dev/react";
+import { Abi } from "@thirdweb-dev/sdk";
 import { ContractCode } from "components/contract-tabs/code/ContractCode";
 
 interface ContractCodePageProps {
@@ -26,7 +27,10 @@ export const ContractCodePage: React.FC<ContractCodePageProps> = ({
   return (
     <Flex direction="column" gap={6}>
       {contractQuery?.contract && useCustomCodeTab ? (
-        <CodeOverview contract={contractQuery.contract} />
+        <CodeOverview
+          abi={contractQuery.contract?.abi as Abi}
+          contractAddress={contractQuery.contract?.getAddress()}
+        />
       ) : (
         contractType && (
           <ContractCode

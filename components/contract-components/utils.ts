@@ -1,6 +1,7 @@
-import { Abi, ContractId } from "./types";
+import { ContractId } from "./types";
 import { FeatureName } from "@thirdweb-dev/sdk/dist/declarations/src/evm/constants/contract-features";
 import {
+  Abi,
   PREBUILT_CONTRACTS_MAP,
   ValidContractInstance,
   isFeatureEnabled,

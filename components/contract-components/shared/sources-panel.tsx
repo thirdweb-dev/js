@@ -1,6 +1,7 @@
-import { Abi, SourceFile } from "../types";
+import { SourceFile } from "../types";
 import { SourcesAccordion } from "./sources-accordion";
 import { Flex } from "@chakra-ui/react";
+import { Abi } from "@thirdweb-dev/sdk";
 import { Link, Text } from "tw-components";
 
 interface SourcesPanelProps {

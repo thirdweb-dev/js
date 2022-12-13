@@ -1,4 +1,4 @@
-import { Abi, ContractId } from "./types";
+import { ContractId } from "./types";
 import { isContractIdBuiltInContract } from "./utils";
 import { contractKeys, networkKeys } from "@3rdweb-sdk/react";
 import { useMutationWithInvalidate } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
@@ -16,6 +16,7 @@ import {
 } from "@thirdweb-dev/react";
 import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/declarations/src/evm/constants/contract-features";
 import {
+  Abi,
   ChainId,
   ContractInfoSchema,
   ContractType,
@@ -24,7 +25,6 @@ import {
   PublishedContract,
   SUPPORTED_CHAIN_ID,
   ThirdwebSDK,
-  ValidContractInstance,
   detectFeatures,
   extractConstructorParamsFromAbi,
   extractEventsFromAbi,
@@ -648,10 +648,6 @@ export function useEns(addressOrEnsName?: string) {
   return useQuery(ensQuery(addressOrEnsName));
 }
 
-export function useContractFunctions(
-  contract: ValidContractInstance | null | undefined,
-) {
-  return contract?.abi
-    ? extractFunctionsFromAbi(contract.abi as any)
-    : undefined;
+export function useContractFunctions(abi: Abi) {
+  return abi ? extractFunctionsFromAbi(abi) : undefined;
 }
