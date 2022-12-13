@@ -23,7 +23,7 @@ export default async function handler(
     return redirectWithError(req, res, "INVALID_METHOD");
   }
 
-  const { sdk, domain } = ctx;
+  const { auth } = ctx;
 
   // Get signed login payload from the frontend
   const payload = JSON.parse(atob(req.query.payload as string)) as LoginPayload;
@@ -34,7 +34,7 @@ export default async function handler(
   let token;
   try {
     // Generate an access token with the SDK using the signed payload
-    token = await sdk.auth.generateAuthToken(domain, payload);
+    token = await auth.generate(payload);
   } catch {
     return redirectWithError(req, res, "INVALID_LOGIN_PAYLOAD");
   }
@@ -52,7 +52,7 @@ export default async function handler(
   );
 
   if (ctx.callbacks?.login) {
-    const address = sdk.auth.verify(domain, payload);
+    const address = auth.verify(payload);
     await ctx.callbacks.login(address);
   }
 

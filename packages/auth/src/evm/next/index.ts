@@ -1,3 +1,4 @@
+import { ThirdwebAuth as ThirdwebAuthSDK } from "../core";
 import loginHandler from "./routes/login";
 import logoutHandler from "./routes/logout";
 import userHandler from "./routes/user";
@@ -7,7 +8,6 @@ import {
   ThirdwebAuthRoute,
   ThirdwebAuthUser,
 } from "./types";
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { NextRequest } from "next/server";
 import {
   GetServerSidePropsContext,
@@ -43,7 +43,7 @@ async function ThirdwebAuthRouter(
 export function ThirdwebAuth(cfg: ThirdwebAuthConfig) {
   const ctx = {
     ...cfg,
-    sdk: ThirdwebSDK.fromPrivateKey(cfg.privateKey, "mainnet"),
+    auth: new ThirdwebAuthSDK(cfg.wallet, cfg.domain),
   };
 
   function ThirdwebAuthHandler(
@@ -60,7 +60,7 @@ export function ThirdwebAuth(cfg: ThirdwebAuthConfig) {
   async function getUser(
     req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest,
   ) {
-    const { sdk, domain } = ctx;
+    const { auth, domain } = ctx;
     let user: ThirdwebAuthUser | null = null;
     const token =
       typeof req.cookies.get === "function"
@@ -69,14 +69,14 @@ export function ThirdwebAuth(cfg: ThirdwebAuthConfig) {
 
     if (token) {
       try {
-        const address = await sdk.auth.authenticate(domain, token);
+        const { address } = await auth.authenticate(domain, token);
 
         let data = {};
         if (ctx.callbacks?.user) {
           data = await ctx.callbacks.user(address);
         }
 
-        user = { ...data, address };
+        user = { ...data, address: address };
       } catch {
         // No-op
       }

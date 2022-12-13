@@ -1,9 +1,10 @@
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { ThirdwebAuth } from "../../core";
+import { MinimalWallet } from "@thirdweb-dev/wallets";
 
 export type ThirdwebAuthRoute = "login" | "logout" | "user";
 
 export type ThirdwebAuthConfig = {
-  privateKey: string;
+  wallet: MinimalWallet;
   domain: string;
   callbacks?: {
     login?: (address: string) => Promise<void> | void;
@@ -16,7 +17,7 @@ export type ThirdwebAuthConfig = {
 };
 
 export type ThirdwebAuthContext = {
-  sdk: ThirdwebSDK;
+  auth: ThirdwebAuth;
   domain: string;
   callbacks?: {
     login?: (address: string) => Promise<void> | void;

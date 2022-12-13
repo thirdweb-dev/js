@@ -1,10 +1,11 @@
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
+import { MinimalWallet } from "@thirdweb-dev/wallets";
 import { Request } from "express";
 
 export type ThirdwebAuthRoute = "login" | "user" | "logout";
 
 export type ThirdwebAuthConfig = {
-  privateKey: string;
+  wallet: MinimalWallet;
   domain: string;
   authUrl?: string;
   callbacks?: {

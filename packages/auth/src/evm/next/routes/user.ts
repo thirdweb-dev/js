@@ -12,13 +12,13 @@ export default async function handler(
     });
   }
 
-  const { sdk, domain } = ctx;
+  const { auth } = ctx;
   let user = null;
   const token = req.cookies.thirdweb_auth_token;
 
   if (token) {
     try {
-      const address = await sdk.auth.authenticate(domain, token);
+      const { address } = await auth.authenticate(token);
 
       if (ctx.callbacks?.user) {
         user = await ctx.callbacks.user(address);
