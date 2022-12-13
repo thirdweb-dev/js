@@ -12,6 +12,7 @@ import { PricingSection } from "components/homepage/sections/PricingSection";
 import { SDKSection } from "components/homepage/sections/SDKSection";
 import { PartnerCarousel } from "components/partners/carousel";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
+import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { PageId } from "page-id";
 import { Suspense } from "react";
 import { ThirdwebNextPage } from "utils/types";
@@ -38,7 +39,9 @@ const HomePage: ThirdwebNextPage = () => {
           <PartnerCarousel />
           <ContractsSection />
           <Suspense>
-            <SDKSection />
+            <HomepageSection id="sdks" bottomPattern middleGradient>
+              <SDKSection />
+            </HomepageSection>
             <CLISection />
             <DashboardFeaturesSection />
             <NetworksSection />

@@ -9,7 +9,7 @@ import { Dispatch, SetStateAction } from "react";
 import { flushSync } from "react-dom";
 import { Button, ButtonProps, PossibleButtonSize } from "tw-components";
 
-const LOGO_OPTIONS = {
+export const LOGO_OPTIONS = {
   javascript: {
     icon: SiJavascript,
     fill: "yellow",
