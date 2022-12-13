@@ -1,5 +1,5 @@
+import { ThirdwebAuth } from "../core";
 import { ThirdwebNextAuthConfig } from "./types";
-import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { serialize } from "cookie";
 import {
   GetServerSidePropsContext,
@@ -14,7 +14,7 @@ import NextAuth, {
 import CredentialsProvider from "next-auth/providers/credentials";
 
 export function ThirdwebNextAuth(cfg: ThirdwebNextAuthConfig) {
-  const sdk = ThirdwebSDK.fromPrivateKey(cfg.privateKey, "mainnet");
+  const auth = new ThirdwebAuth(cfg.wallet, cfg.domain);
 
   function ThirdwebProvider(res: GetServerSidePropsContext["res"]) {
     return CredentialsProvider({
@@ -29,8 +29,8 @@ export function ThirdwebNextAuth(cfg: ThirdwebNextAuthConfig) {
       async authorize({ payload }: any) {
         try {
           const parsed = JSON.parse(payload);
-          const token = await sdk.auth.generateAuthToken(cfg.domain, parsed);
-          const address = await sdk.auth.authenticate(cfg.domain, token);
+          const token = await auth.generate(parsed);
+          const user = await auth.authenticate(token);
 
           // Securely set httpOnly cookie on request to prevent XSS on frontend
           // And set path to / to enable thirdweb_auth_token usage on all endpoints
@@ -44,7 +44,7 @@ export function ThirdwebNextAuth(cfg: ThirdwebNextAuthConfig) {
             }),
           );
 
-          return { id: address, address };
+          return { id: user.address, address: user.address };
         } catch (err) {
           return null;
         }
@@ -63,7 +63,7 @@ export function ThirdwebNextAuth(cfg: ThirdwebNextAuthConfig) {
     }): Promise<Session> {
       const token = req.cookies.thirdweb_auth_token || "";
       try {
-        const address = await sdk.auth.authenticate(cfg.domain, token);
+        const address = await auth.authenticate(token);
         _session.user = { ..._session.user, address } as Session["user"];
         return _session;
       } catch {
