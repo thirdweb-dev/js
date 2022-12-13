@@ -14,8 +14,6 @@ yarn install
 
 ### Starting local dev server.
 
-_Make sure to set up a valid .env file, as this is not checked into github!, you can use `.env.example` for the keys you will need._
-
 ```sh
 yarn dev
 ```
@@ -25,3 +23,11 @@ yarn dev
 ```sh
 yarn build
 ```
+
+### Environment Variables
+
+Some env vars can be overridden that are required for some external services to work. You can find them in the `.env.example` file at the root level of the project including some descriptions of what they are used for.
+
+To define env vars please create a `.env` file based on the `.env.example` template at the root level of the project. This file is ignored by git so you can safely add it to your local copy of the project.
+
+**No environment variables are required to build a basic functioning version of the site.**
