@@ -16,21 +16,23 @@ export interface WalletEvents {
   error(error: Error): void;
 }
 
-export type WalletOptions = {
+export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   chains?: Chain[];
   // default: true
   shouldAutoConnect?: boolean;
   appName: string;
-};
+} & TOpts;
 
-export abstract class AbstractWallet extends EventEmitter<WalletEvents> {
+export abstract class AbstractWallet<
+  TAdditionalOpts extends Record<string, any> = {},
+> extends EventEmitter<WalletEvents> {
   #wallletId;
   protected coordinatorStorage;
   protected walletStorage;
   protected chains;
-  protected options: WalletOptions;
+  protected options: WalletOptions<TAdditionalOpts>;
 
-  constructor(walletId: string, options: WalletOptions) {
+  constructor(walletId: string, options: WalletOptions<TAdditionalOpts>) {
     super();
     this.#wallletId = walletId;
     this.options = options;
