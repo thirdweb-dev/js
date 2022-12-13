@@ -5,7 +5,8 @@ import { ContractBadge } from "components/badges/contract-badge";
 import { NextSeo } from "next-seo";
 import { StaticImageData } from "next/image";
 import { useMemo } from "react";
-import { AddressCopyButton, Heading, Text } from "tw-components";
+import { Heading, Text } from "tw-components";
+import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
 interface MetadataHeaderProps {
   isLoaded: boolean;

@@ -37,7 +37,8 @@ import {
   MdNavigateNext,
 } from "react-icons/md";
 import { Cell, Column, usePagination, useTable } from "react-table";
-import { AddressCopyButton, Button, Card, Heading, Text } from "tw-components";
+import { Button, Card, Heading, Text } from "tw-components";
+import { AddressCopyButton } from "tw-components/AddressCopyButton";
 
 type ListingMetadata = AuctionListing | DirectListing;
 

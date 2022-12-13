@@ -18,15 +18,8 @@ import type {
 } from "@thirdweb-dev/sdk/evm";
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
-import {
-  AddressCopyButton,
-  Badge,
-  Card,
-  CodeBlock,
-  Drawer,
-  Heading,
-  Text,
-} from "tw-components";
+import { Badge, Card, CodeBlock, Drawer, Heading, Text } from "tw-components";
+import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMedia } from "tw-components/nft-media";
 
 interface NFTDrawerProps {

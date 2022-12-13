@@ -45,7 +45,6 @@ import { FiArrowRight, FiPlus } from "react-icons/fi";
 import { IoFilterSharp } from "react-icons/io5";
 import { Column, useFilters, useGlobalFilter, useTable } from "react-table";
 import {
-  AddressCopyButton,
   Badge,
   Card,
   ChakraNextLink,
@@ -54,6 +53,7 @@ import {
   LinkButton,
   Text,
 } from "tw-components";
+import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { ComponentWithChildren } from "types/component-with-children";
 import { getNetworkFromChainId } from "utils/network";
 import { shortenIfAddress } from "utils/usedapp-external";

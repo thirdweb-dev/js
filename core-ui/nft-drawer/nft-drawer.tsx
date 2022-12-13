@@ -13,15 +13,8 @@ import {
 import { PublicKey } from "@solana/web3.js";
 import type { NFT } from "@thirdweb-dev/sdk";
 import React from "react";
-import {
-  AddressCopyButton,
-  Badge,
-  Card,
-  CodeBlock,
-  Drawer,
-  Heading,
-  Text,
-} from "tw-components";
+import { Badge, Card, CodeBlock, Drawer, Heading, Text } from "tw-components";
+import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 
 interface NFTDrawerProps {

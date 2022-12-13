@@ -46,7 +46,6 @@ import { FiArrowRight } from "react-icons/fi";
 import { Column, Row, useTable } from "react-table";
 import invariant from "tiny-invariant";
 import {
-  AddressCopyButton,
   Card,
   Drawer,
   Heading,
@@ -55,6 +54,7 @@ import {
   TrackedIconButton,
   TrackedLink,
 } from "tw-components";
+import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { ComponentWithChildren } from "types/component-with-children";
 import {
   DashboardSolanaNetwork,

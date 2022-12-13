@@ -7,13 +7,8 @@ import { FeatureIconMap } from "constants/mappings";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { FiPlus } from "react-icons/fi";
-import {
-  AddressCopyButton,
-  Badge,
-  Heading,
-  LinkButton,
-  Text,
-} from "tw-components";
+import { Badge, Heading, LinkButton, Text } from "tw-components";
+import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { SupportedSolanaNetworkToUrlMap } from "utils/network";
 
 interface DeployedProgramsProps {
