@@ -124,7 +124,13 @@ const UserPage: ThirdwebNextPage = () => {
                 boxSize={28}
               />
               <Flex direction="column" gap={0}>
-                <Heading as="h1" size="title.xl" color="white">
+                <Heading
+                  as="h1"
+                  size="title.xl"
+                  color="white"
+                  _light={{ color: "black" }}
+                  _dark={{ color: "white" }}
+                >
                   {displayName}
                 </Heading>
                 {releaserProfile.data?.bio && (
