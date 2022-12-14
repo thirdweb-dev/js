@@ -30,12 +30,11 @@ import { ContractFunctionsOverview } from "components/contract-functions/contrac
 import { replaceDeployerAddress } from "components/explore/publisher";
 import { ShareButton } from "components/share-buttom";
 import { format } from "date-fns";
-import { useOgImagePing } from "hooks/useOgImagePing";
 import { correctAndUniqueLicenses } from "lib/licenses";
 import { StorageSingleton, replaceIpfsUrl } from "lib/sdk";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
-import { createReleaseOGUrl } from "pages/_og/release";
+import { ReleaseOG } from "og-lib/url-utils";
 import { useMemo } from "react";
 import { BiPencil } from "react-icons/bi";
 import { BsShieldCheck } from "react-icons/bs";
@@ -126,16 +125,16 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
 
   const ogImageUrl = useMemo(
     () =>
-      createReleaseOGUrl({
+      ReleaseOG.toUrl({
         name: releaseName,
         description: release.description,
         version: release.version,
-        releaser: releaserEnsOrAddress,
+        publisher: releaserEnsOrAddress,
         extension: extensionNames,
         license: licenses,
-        releaseDate: releasedDate,
-        releaserAvatar: releaserProfile.data?.avatar || undefined,
-        releaseLogo: release.logo,
+        publishDate: releasedDate,
+        publisherAvatar: releaserProfile.data?.avatar || undefined,
+        logo: release.logo,
       }),
     [
       extensionNames,
@@ -149,8 +148,6 @@ export const ReleasedContract: React.FC<ReleasedContractProps> = ({
       releaserProfile.data?.avatar,
     ],
   );
-
-  useOgImagePing(ogImageUrl);
 
   const twitterIntentUrl = useMemo(() => {
     const url = new URL("https://twitter.com/intent/tweet");
@@ -221,7 +218,7 @@ Deploy it in one click`,
           url: currentRoute,
           images: [
             {
-              url: ogImageUrl,
+              url: ogImageUrl.toString(),
               width: 1200,
               height: 630,
               alt: `${releaseName} contract on thirdweb`,
