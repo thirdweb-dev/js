@@ -15,16 +15,16 @@ type RequestType =
   | NextRequest
   | NextApiRequest;
 
+export type ThirdwebAuthRoute = "login" | "logout" | "user";
+
 export type ThirdwebAuthUser<TData extends Json = Json> = User & {
   data?: TData;
 };
 
-export type ThirdwebAuthRoute = "login" | "logout" | "user";
-
 export type ThirdwebAuthConfig = {
   domain: string;
   wallet: MinimalWallet;
-  verificationOptions?: Omit<Omit<VerifyOptions, "validatenonce">, "domain">;
+  verificationOptions?: Omit<Omit<VerifyOptions, "validateNonce">, "domain">;
   callbacks?: {
     login?: {
       validateNonce: (nonce: string, req?: NextApiRequest) => Promise<void>;

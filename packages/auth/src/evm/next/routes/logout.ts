@@ -8,9 +8,9 @@ export default async function handler(
   res: NextApiResponse,
   ctx: ThirdwebAuthContext,
 ) {
-  if (req.method !== "GET") {
-    return res.status(400).json({
-      error: "Invalid method. Only GET supported.",
+  if (req.method !== "POST") {
+    return res.status(405).json({
+      error: "Invalid method. Only POST supported.",
     });
   }
 
@@ -30,5 +30,5 @@ export default async function handler(
     }),
   );
 
-  return res.status(301).redirect(req.headers.referer as string);
+  return res.status(200).json({ message: "Succesfully logged out" });
 }
