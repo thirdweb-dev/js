@@ -29,6 +29,7 @@ export const SolutionsTextImage: React.FC<SolutionsTextImageProps> = ({
               (max-width: 1200px) 50vw,
               33vw"
           alt=""
+          borderRadius={{ base: "none", md: "lg" }}
         />
 
         <Heading as="h2" size="display.sm" mb={4}>

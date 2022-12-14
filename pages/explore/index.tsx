@@ -47,8 +47,9 @@ const ExplorePage: ThirdwebNextPage = (
             Explore
           </Heading>
           <Text size="body.xl" maxW="container.md">
-            Find the smart contract that suits your needs. Deploy with one click
-            to Ethereum and other EVM compatible blockchains.
+            The best place for web3 developers to explore smart contracts from
+            world-class web3 protocols & engineers — all deployable with one
+            click.
           </Text>
         </Flex>
         {props.categories.map((category, idx) => (

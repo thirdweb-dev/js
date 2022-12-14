@@ -95,9 +95,9 @@ export const PRODUCTS: NavCardProps[] = [
     icon: require("public/assets/product-icons/auth.png"),
   },
   {
-    name: "Smart Contracts",
-    label: "smart-contracts",
-    description: "Prebuilt and audited",
+    name: "Explore",
+    label: "explore",
+    description: "Ready-to-deploy contracts",
     link: "/smart-contracts",
     icon: require("public/assets/product-icons/contracts.png"),
   },

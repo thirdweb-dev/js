@@ -1,23 +1,60 @@
 import { SimpleGrid } from "@chakra-ui/react";
+import { GuidesShowcase } from "components/product-pages/common/GuideShowcase";
 import { Hero } from "components/product-pages/common/Hero";
 import { ProductCard } from "components/product-pages/common/ProductCard";
+import { ProductLearnMoreCard } from "components/product-pages/common/ProductLearnMoreCard";
 import { ProductPage } from "components/product-pages/common/ProductPage";
+import { ProductSection } from "components/product-pages/common/ProductSection";
+import { SolutionsTextImage } from "components/product-pages/common/SolutionsTextImage";
+import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "utils/types";
+
+const CONTRACTS_GUIDES = [
+  {
+    title: "Build an NFT Subscription using Unlock",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w2000/2022/12/subscribe_with_unlock-1.png",
+    link: "https://blog.thirdweb.com/guides/build-a-subscription-with-unlock/",
+  },
+  {
+    title: "Build An ERC721A NFT Collection using Solidity",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w2000/2022/08/thumbnail-19.png",
+    link: "https://blog.thirdweb.com/guides/get-started-with-the-contracts-sdk/",
+  },
+  {
+    title: "Build A Mutant Ape Yacht Club (MAYC) NFT Collection Clone",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w2000/2022/09/This-is-the-one-4.png",
+    link: "https://blog.thirdweb.com/guides/create-an-mayc-collection-clone/",
+  },
+];
 
 const PreBuiltContracts: ThirdwebNextPage = () => {
   return (
     <ProductPage
       seo={{
-        title: "Smart Contracts",
-        description: "Ready-to-go contracts for your needs.",
+        title: "Discover and deploy contracts in 1-click",
+        description:
+          "The best place for web3 developers to explore smart contracts from world-class web3 protocols & engineers — all deployable with one click.",
+        openGraph: {
+          images: [
+            {
+              url: `${getAbsoluteUrl()}/product-pages/pre-builts/solution.png`,
+              width: 1200,
+              height: 630,
+              alt: "thirdweb Explore",
+            },
+          ],
+        },
       }}
     >
       <Hero
         trackingCategory="smart_contracts"
-        name="Smart Contracts"
-        title="Ready-to-go contracts for your needs."
-        description="Deploy contracts written by the best web3 developers in a single click."
+        name="Explore"
+        title="Discover and deploy contracts in 1-click"
+        description="The best place for web3 developers to explore smart contracts from world-class web3 protocols & engineers — all deployable with one click."
         buttonText="Get started"
         buttonLink="/explore"
         image={require("public/assets/product-pages/pre-builts/hero.png")}
@@ -30,28 +67,67 @@ const PreBuiltContracts: ThirdwebNextPage = () => {
           gap={{ base: 12, md: 6 }}
         >
           <ProductCard
-            title="A contract for your use-case"
+            title="1-click deploy"
             icon={require("/public/assets/product-pages/pre-builts/hero-icon-1.png")}
           >
-            Whether you need NFTs, Tokens, Marketplaces, or something else,
-            we&apos;ve got you covered with contracts for the most common
-            use-cases.
+            Deploy to any supported chain with a single click. No need for
+            private keys or scripts.
           </ProductCard>
           <ProductCard
-            title="Powerful tooling to build apps"
+            title="Unlock powerful tooling"
             icon={require("/public/assets/product-pages/pre-builts/hero-icon-2.png")}
           >
-            When you deploy a contract, you automatically get custom tools that
-            make building and managing your web3 app seamless.
+            When you deploy a contract from Explore, you unlock access to our
+            tools that makes building and managing your web3 apps seamless.
           </ProductCard>
           <ProductCard
-            title="One-click deploy"
+            title="Designed to be discovered"
             icon={require("/public/assets/product-pages/pre-builts/hero-icon-3.png")}
           >
-            Deploy to any supported chain with a single click.
+            Get inspired with our curated library of contracts- organized and
+            categorized by the most common builds and use cases.
           </ProductCard>
         </SimpleGrid>
       </Hero>
+
+      <SolutionsTextImage
+        image={require("/public/assets/product-pages/pre-builts/solution-cut.png")}
+        title="Discover contracts that inspire you to build web3 apps and games"
+      />
+
+      <ProductSection>
+        <SimpleGrid
+          columns={{ base: 1, md: 3 }}
+          gap={{ base: 12, md: 6 }}
+          py={{ base: 12, md: 24 }}
+        >
+          <ProductLearnMoreCard
+            title="Gaming"
+            description="Integrate marketplace contracts directly in-game to enforce royalty fees. Staking contracts for play-to-earn blockchain games."
+            icon={require("/public/assets/product-pages/dashboard/hero-icon-1.png")}
+            href="/explore/gaming"
+          />
+          <ProductLearnMoreCard
+            title="Commerce"
+            description="NFTs contracts that enable you to reward loyal customers, sell digital collectibles as a new product category, and create token-gated storefronts."
+            icon={require("/public/assets/product-pages/dashboard/hero-icon-2.png")}
+            href="/explore/commerce"
+          />
+          <ProductLearnMoreCard
+            title="NFTs"
+            description="NFT Collections, Editions, Drops and everything else NFT-related."
+            icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
+            href="/explore/nft"
+          />
+        </SimpleGrid>
+      </ProductSection>
+
+      <GuidesShowcase
+        title="Learn how to build"
+        description="Check out our guides to learn how to build with contracts on Explore."
+        solution="Contracts"
+        guides={CONTRACTS_GUIDES}
+      />
     </ProductPage>
   );
 };
