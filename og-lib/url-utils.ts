@@ -1,6 +1,6 @@
 import { getAbsoluteUrl } from "lib/vercel-utils";
 
-export interface OGImageRelease {
+interface OGImageRelease {
   name: string;
   version: string;
   publishDate: string;
@@ -12,8 +12,16 @@ export interface OGImageRelease {
   license?: string | string[];
 }
 
+interface OgImageProfile {
+  displayName: string;
+  bio?: string;
+  avatar?: string;
+  releaseCnt?: string;
+}
+
 type OgProps = {
   release: OGImageRelease;
+  profile: OgImageProfile;
 };
 
 function toUrl<TOgType extends keyof OgProps>(
@@ -34,10 +42,7 @@ function toUrl<TOgType extends keyof OgProps>(
   return url;
 }
 
-function fromUrl<TOgType extends keyof OgProps>(
-  type: TOgType,
-  url: URL,
-): OgProps[TOgType] {
+function fromUrl(type: keyof OgProps, url: URL): OgProps[typeof type] {
   switch (type) {
     case "release":
       return {
@@ -51,6 +56,13 @@ function fromUrl<TOgType extends keyof OgProps>(
         extension: url.searchParams.getAll("extension"),
         license: url.searchParams.getAll("license"),
       };
+    case "profile":
+      return {
+        displayName: url.searchParams.get("displayName") || "",
+        bio: url.searchParams.get("bio") || undefined,
+        avatar: url.searchParams.get("avatar") || undefined,
+        releaseCnt: url.searchParams.get("releaseCnt") || undefined,
+      } as OgProps["profile"];
     default:
       throw new Error(`Unknown OG type: ${type}`);
   }
@@ -58,5 +70,10 @@ function fromUrl<TOgType extends keyof OgProps>(
 
 export const ReleaseOG = {
   toUrl: (props: OgProps["release"]) => toUrl("release", props),
-  fromUrl: (url: URL) => fromUrl("release", url),
+  fromUrl: (url: URL) => fromUrl("release", url) as OgProps["release"],
+};
+
+export const ProfileOG = {
+  toUrl: (props: OgProps["profile"]) => toUrl("profile", props),
+  fromUrl: (url: URL) => fromUrl("profile", url) as OgProps["profile"],
 };

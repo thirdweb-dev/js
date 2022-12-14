@@ -17,15 +17,14 @@ import { DeployedContracts } from "components/contract-components/tables/deploye
 import { ReleasedContracts } from "components/contract-components/tables/released-contracts";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { getAllExplorePublishers } from "data/explore";
-import { useOgImagePing } from "hooks/useOgImagePing";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { getEVMThirdwebSDK } from "lib/sdk";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
 // import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import { ProfileOG } from "og-lib/url-utils";
 import { PageId } from "page-id";
-import { createProfileOGUrl } from "pages/_og/profile";
 import { useEffect, useMemo } from "react";
 import { Heading, Text } from "tw-components";
 import { getSingleQueryValue } from "utils/router";
@@ -75,15 +74,14 @@ const UserPage: ThirdwebNextPage = () => {
     if (!releaserProfile.data || !publishedContracts.data) {
       return undefined;
     }
-    return createProfileOGUrl({
+
+    return ProfileOG.toUrl({
       displayName,
       bio: releaserProfile.data?.bio,
       avatar: releaserProfile.data?.avatar || undefined,
       releaseCnt: publishedContracts.data?.length.toString(),
     });
   }, [displayName, publishedContracts.data, releaserProfile.data]);
-
-  useOgImagePing(ogImage);
 
   return (
     <>
@@ -95,7 +93,7 @@ const UserPage: ThirdwebNextPage = () => {
           images: ogImage
             ? [
                 {
-                  url: ogImage,
+                  url: ogImage.toString(),
                   alt: `${displayName}'s profile on thirdweb.com`,
                   width: 1200,
                   height: 630,
