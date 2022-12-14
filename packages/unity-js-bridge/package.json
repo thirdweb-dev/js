@@ -12,6 +12,8 @@
     "dist/"
   ],
   "dependencies": {
+    "@solana/wallet-adapter-base": "^0.9.19",
+    "@solana/wallet-adapter-phantom": "^0.9.18",
     "@thirdweb-dev/pay": "*",
     "@thirdweb-dev/sdk": "*",
     "@thirdweb-dev/storage": "*",

@@ -1,68 +1,20 @@
 /// --- Thirdweb Brige ---
-import { CoinbasePayIntegration, FundWalletOptions } from "@thirdweb-dev/pay";
+import {
+  API_KEY,
+  bigNumberReplacer,
+  FundWalletInput,
+  PossibleWallet,
+  SEPARATOR,
+  SUB_SEPARATOR,
+  TWBridge,
+  w,
+  WALLETS,
+} from "./common";
+import { CoinbasePayIntegration } from "@thirdweb-dev/pay";
 import { ChainOrRpc, ThirdwebSDK, getRpcUrl } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  CoinbaseWallet,
-  MetaMask,
-  WalletConnect,
-  InjectedWallet,
-  MagicAuthWallet,
-} from "@thirdweb-dev/wallets";
 import type { AbstractWallet } from "@thirdweb-dev/wallets/dist/declarations/src/wallets/base";
-import { BigNumber } from "ethers";
 import type { ContractInterface, Signer } from "ethers";
-
-declare global {
-  interface Window {
-    bridge: TWBridge;
-  }
-}
-
-const API_KEY =
-  "339d65590ba0fa79e4c8be0af33d64eda709e13652acb02c6be63f5a1fbef9c3";
-const SEPARATOR = "/";
-const SUB_SEPARATOR = "#";
-
-// big number transform
-const bigNumberReplacer = (_key: string, value: any) => {
-  // if we find a BigNumber then make it into a string (since that is safe)
-  if (
-    BigNumber.isBigNumber(value) ||
-    (typeof value === "object" &&
-      value !== null &&
-      value.type === "BigNumber" &&
-      "hex" in value)
-  ) {
-    return BigNumber.from(value).toString();
-  }
-  return value;
-};
-
-const WALLETS = [
-  MetaMask,
-  InjectedWallet,
-  WalletConnect,
-  CoinbaseWallet,
-  MagicAuthWallet,
-] as const;
-
-type PossibleWallet = typeof WALLETS[number]["id"];
-
-type FundWalletInput = FundWalletOptions & {
-  appId: string;
-};
-
-interface TWBridge {
-  initialize: (chain: ChainOrRpc, options: string) => void;
-  connect: (wallet: PossibleWallet, chainId?: number) => Promise<string>;
-  disconnect: () => Promise<void>;
-  switchNetwork: (chainId: number) => Promise<void>;
-  invoke: (route: string, payload: string) => Promise<string | undefined>;
-  fundWallet: (options: string) => Promise<void>;
-}
-
-const w = window;
 
 class ThirdwebBridge implements TWBridge {
   private walletMap: Map<string, AbstractWallet> = new Map();

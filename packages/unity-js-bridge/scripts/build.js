@@ -6,23 +6,25 @@ const stdLibBrowser = require("node-stdlib-browser");
 
 // fs.rmSync(DIST_PATH, { recursive: true, force: true });
 
-esbuild.build({
-  jsx: "automatic",
-  entryPoints: ["src/thirdweb-bridge.ts"],
-  bundle: true,
-  minify: true,
-  platform: "browser",
-  target: "es2020",
-  outfile: "dist/thirdweb-unity-bridge.js",
-  splitting: false,
-  write: true,
-  sourcemap: false,
-  inject: [require.resolve("node-stdlib-browser/helpers/esbuild/shim")],
-  define: {
-    process: JSON.stringify({
-      env: "production",
-    }),
-    Buffer: "Buffer",
-  },
-  plugins: [plugin(stdLibBrowser)],
+["evm", "solana"].forEach((ecosystem) => {
+  esbuild.build({
+    jsx: "automatic",
+    entryPoints: [`src/thirdweb-bridge-${ecosystem}.ts`],
+    bundle: true,
+    minify: true,
+    platform: "browser",
+    target: "es2020",
+    outfile: `dist/thirdweb-unity-bridge-${ecosystem}.js`,
+    splitting: false,
+    write: true,
+    sourcemap: false,
+    inject: [require.resolve("node-stdlib-browser/helpers/esbuild/shim")],
+    define: {
+      process: JSON.stringify({
+        env: "production",
+      }),
+      Buffer: "Buffer",
+    },
+    plugins: [plugin(stdLibBrowser)],
+  });
 });
