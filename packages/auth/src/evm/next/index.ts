@@ -1,4 +1,5 @@
 import { ThirdwebAuth as ThirdwebAuthSDK } from "../core";
+import { getUser } from "./helpers/user";
 import loginHandler from "./routes/login";
 import logoutHandler from "./routes/logout";
 import userHandler from "./routes/user";
@@ -6,7 +7,6 @@ import {
   ThirdwebAuthConfig,
   ThirdwebAuthContext,
   ThirdwebAuthRoute,
-  ThirdwebAuthUser,
 } from "./types";
 import { NextRequest } from "next/server";
 import {
@@ -32,7 +32,7 @@ async function ThirdwebAuthRouter(
     case "user":
       return await userHandler(req, res, ctx);
     case "logout":
-      return await logoutHandler(req, res);
+      return await logoutHandler(req, res, ctx);
     default:
       return res.status(400).json({
         message: "Invalid route for authentication.",
@@ -57,33 +57,12 @@ export function ThirdwebAuth(cfg: ThirdwebAuthConfig) {
     return ThirdwebAuthRouter(args[0], args[1], ctx);
   }
 
-  async function getUser(
-    req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest,
-  ) {
-    const { auth, domain } = ctx;
-    let user: ThirdwebAuthUser | null = null;
-    const token =
-      typeof req.cookies.get === "function"
-        ? (req.cookies as any).get("thirdweb_auth_token")
-        : (req.cookies as any).thirdweb_auth_token;
-
-    if (token) {
-      try {
-        const { address } = await auth.authenticate(domain, token);
-
-        let data = {};
-        if (ctx.callbacks?.user) {
-          data = await ctx.callbacks.user(address);
-        }
-
-        user = { ...data, address: address };
-      } catch {
-        // No-op
-      }
-    }
-
-    return user;
-  }
-
-  return { ThirdwebAuthHandler, getUser };
+  return {
+    ThirdwebAuthHandler,
+    getUser: (
+      req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest,
+    ) => {
+      return getUser(req, ctx);
+    },
+  };
 }

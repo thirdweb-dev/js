@@ -1,4 +1,5 @@
-import { ThirdwebAuthContext, ThirdwebAuthUser } from "../types";
+import { getUser } from "../helpers/user";
+import { ThirdwebAuthContext } from "../types";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
@@ -12,23 +13,6 @@ export default async function handler(
     });
   }
 
-  const { auth } = ctx;
-  let user = null;
-  const token = req.cookies.thirdweb_auth_token;
-
-  if (token) {
-    try {
-      const { address } = await auth.authenticate(token);
-
-      if (ctx.callbacks?.user) {
-        user = await ctx.callbacks.user(address);
-      }
-
-      user = { ...user, address };
-    } catch {
-      // No-op
-    }
-  }
-
-  return res.status(200).json(user as ThirdwebAuthUser | null);
+  const user = getUser(req, ctx);
+  return res.status(200).json(user);
 }
