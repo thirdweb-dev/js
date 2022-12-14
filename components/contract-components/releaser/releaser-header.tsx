@@ -9,8 +9,7 @@ import {
   treatAddress,
 } from "components/explore/publisher";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useRouter } from "next/router";
-import { Heading, Link, LinkButton, Text } from "tw-components";
+import { Heading, Link, LinkButton } from "tw-components";
 
 interface ReleaserHeaderProps {
   wallet: string;
@@ -25,8 +24,6 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
     ensQuery.data?.address || undefined,
   );
   const address = useAddress();
-  const router = useRouter();
-  const isProfilePage = router.pathname === "/[networkOrAddress]";
 
   const trackEvent = useTrack();
 
@@ -37,11 +34,10 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
       align="center"
     >
       <Flex direction="column" gap={4} w="full">
-        {isProfilePage ? null : (
-          <Heading as="h4" size="title.sm">
-            Released by
-          </Heading>
-        )}
+        <Heading as="h4" size="title.sm">
+          Released by
+        </Heading>
+
         <Flex gap={4} alignItems="center">
           <Skeleton isLoaded={releaserProfile.isSuccess}>
             <Link
@@ -53,7 +49,6 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
                   label: "releaser-avatar",
                 })
               }
-              pointerEvents={isProfilePage ? "none" : "auto"}
             >
               <ReleaserAvatar
                 alt="Releaser avatar"
@@ -75,7 +70,6 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
                   label: "releaser-name",
                 })
               }
-              pointerEvents={isProfilePage ? "none" : "auto"}
             >
               <Heading size="subtitle.sm" ml={2}>
                 {treatAddress(
@@ -85,43 +79,31 @@ export const ReleaserHeader: React.FC<ReleaserHeaderProps> = ({
                 )}
               </Heading>
             </Link>
-            {isProfilePage && releaserProfile?.data?.bio && (
-              <Text ml={2} noOfLines={2}>
-                {releaserProfile.data.bio}
-              </Text>
-            )}
             {releaserProfile?.data && (
               <ReleaserSocials releaserProfile={releaserProfile.data} />
             )}
           </Flex>
         </Flex>
-        {!isProfilePage && (
-          <LinkButton
-            variant="outline"
-            size="sm"
-            href={replaceDeployerAddress(`/${wallet}`)}
-            onClick={() =>
-              trackEvent({
-                category: "releaser-header",
-                action: "click",
-                label: "view-all-contracts",
-              })
-            }
-          >
-            View all contracts
-          </LinkButton>
-        )}
-        {ensQuery.data?.address === address &&
-          !isProfilePage &&
-          releaserProfile?.data && (
-            <EditProfile releaserProfile={releaserProfile.data} />
-          )}
-      </Flex>
-      {ensQuery.data?.address === address &&
-        isProfilePage &&
-        releaserProfile?.data && (
+
+        <LinkButton
+          variant="outline"
+          size="sm"
+          href={replaceDeployerAddress(`/${wallet}`)}
+          onClick={() =>
+            trackEvent({
+              category: "releaser-header",
+              action: "click",
+              label: "view-all-contracts",
+            })
+          }
+        >
+          View all contracts
+        </LinkButton>
+
+        {ensQuery.data?.address === address && releaserProfile?.data && (
           <EditProfile releaserProfile={releaserProfile.data} />
         )}
+      </Flex>
     </Flex>
   );
 };
