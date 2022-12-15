@@ -19,6 +19,7 @@ import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { Erc1155 } from "../../core/classes/erc-1155";
 import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
+import { PackVRF } from "../../core/classes/pack-vrf";
 import {
   NetworkOrSignerOrProvider,
   TransactionResultWithId,
@@ -32,7 +33,10 @@ import {
   PackRewardsOutput,
   PackRewardsOutputSchema,
 } from "../../schema/tokens/pack";
-import type { Pack as PackContract } from "@thirdweb-dev/contracts-js";
+import type {
+  IPackVRFDirect,
+  Pack as PackContract,
+} from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Pack.json";
 import { PackUpdatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IPack";
 import {
@@ -91,6 +95,7 @@ export class Pack extends StandardErc1155<PackContract> {
 
   public erc1155: Erc1155<PackContract>;
   public owner: ContractOwner<PackContract>;
+  public vrf: PackVRF;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -131,6 +136,8 @@ export class Pack extends StandardErc1155<PackContract> {
     this.events = new ContractEvents(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.owner = new ContractOwner(this.contractWrapper);
+    // TODO proper feature detection
+    this.vrf = new PackVRF(network, address, options);
   }
 
   /**
