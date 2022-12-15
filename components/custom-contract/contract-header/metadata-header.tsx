@@ -4,6 +4,8 @@ import type { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
 import { ContractBadge } from "components/badges/contract-badge";
 import { NextSeo } from "next-seo";
 import { StaticImageData } from "next/image";
+import { useRouter } from "next/router";
+import { ContractOG } from "og-lib/url-utils";
 import { useMemo } from "react";
 import { Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
@@ -52,7 +54,9 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
 }) => {
   const chainId = useDashboardEVMChainId();
 
-  const title = useMemo(() => {
+  const router = useRouter();
+
+  const displayName = useMemo(() => {
     const chainName = getChainIdToHumanReadable(chainId);
     const t = data?.name || "";
     if (t && chainName) {
@@ -60,9 +64,47 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
     }
     return null;
   }, [data?.name, chainId]);
+
+  const currentRoute = `https://thirdweb.com${router.asPath}`.replace(
+    "deployer.thirdweb.eth",
+    "thirdweb.eth",
+  );
+
+  const ogImage = useMemo(() => {
+    if (!displayName || !address || !data) {
+      return undefined;
+    }
+
+    return ContractOG.toUrl({
+      displayName: displayName.split("|")[0].trim(),
+      contractAddress: address,
+      logo: data.image || "",
+      description: data.description || "",
+    });
+  }, [address, data, displayName]);
+
   return (
     <>
-      {isLoaded && title ? <NextSeo title={title} /> : null}
+      {isLoaded && displayName ? (
+        <NextSeo
+          title={displayName}
+          canonical={currentRoute}
+          openGraph={{
+            title: displayName,
+            images: ogImage
+              ? [
+                  {
+                    url: ogImage.toString(),
+                    alt: ``,
+                    width: 1200,
+                    height: 630,
+                  },
+                ]
+              : undefined,
+            url: currentRoute,
+          }}
+        />
+      ) : null}
       <Flex align={{ base: "flex-start", md: "center" }} gap={4}>
         {data?.image || !isLoaded ? (
           <Skeleton

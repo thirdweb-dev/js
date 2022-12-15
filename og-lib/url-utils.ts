@@ -19,9 +19,24 @@ interface OgImageProfile {
   releaseCnt?: string;
 }
 
+interface OgImageContract {
+  displayName: string;
+  contractAddress: string;
+  description?: string;
+  logo?: string;
+  deployer?: string;
+  erc?: string;
+  // maybe later add release metadata
+  // releaseMeta?: Pick<
+  //   OGImageRelease,
+  //   "name" | "version" | "publishDate" | "logo"
+  // >;
+}
+
 type OgProps = {
   release: OGImageRelease;
   profile: OgImageProfile;
+  contract: OgImageContract;
 };
 
 function toUrl<TOgType extends keyof OgProps>(
@@ -63,6 +78,15 @@ function fromUrl(type: keyof OgProps, url: URL): OgProps[typeof type] {
         avatar: url.searchParams.get("avatar") || undefined,
         releaseCnt: url.searchParams.get("releaseCnt") || undefined,
       } as OgProps["profile"];
+    case "contract":
+      return {
+        displayName: url.searchParams.get("displayName") || "",
+        contractAddress: url.searchParams.get("contractAddress") || "",
+        description: url.searchParams.get("description") || undefined,
+        logo: url.searchParams.get("logo") || undefined,
+        deployer: url.searchParams.get("deployer") || undefined,
+        erc: url.searchParams.get("erc") || undefined,
+      } as OgProps["contract"];
     default:
       throw new Error(`Unknown OG type: ${type}`);
   }
@@ -76,4 +100,9 @@ export const ReleaseOG = {
 export const ProfileOG = {
   toUrl: (props: OgProps["profile"]) => toUrl("profile", props),
   fromUrl: (url: URL) => fromUrl("profile", url) as OgProps["profile"],
+};
+
+export const ContractOG = {
+  toUrl: (props: OgProps["contract"]) => toUrl("contract", props),
+  fromUrl: (url: URL) => fromUrl("contract", url) as OgProps["contract"],
 };
