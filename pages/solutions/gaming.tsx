@@ -180,7 +180,7 @@ const Gaming: ThirdwebNextPage = () => {
             title="Build"
             description="Discover ready-to-go contracts or build your own with ContractKit for gaming use cases, e.g. NFT Marketplace, Multiwrap, Packs, Tokens, and more. Enable fiat-to-crypto capabilities with Coinbase Pay integration. Integrate NFT marketplace to enforce royalty fees."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-1.png")}
-            href="https://portal.thirdweb.com/contractkit"
+            href="/explore/gaming"
           />
           <ProductLearnMoreCard
             title="Launch"

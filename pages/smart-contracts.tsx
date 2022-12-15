@@ -8,6 +8,7 @@ import { ProductSection } from "components/product-pages/common/ProductSection";
 import { SolutionsTextImage } from "components/product-pages/common/SolutionsTextImage";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
+import { Heading } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
 const CONTRACTS_GUIDES = [
@@ -95,12 +96,17 @@ const PreBuiltContracts: ThirdwebNextPage = () => {
         title="Discover contracts that inspire you to build web3 apps and games"
       />
 
-      <ProductSection>
-        <SimpleGrid
-          columns={{ base: 1, md: 3 }}
-          gap={{ base: 12, md: 6 }}
-          py={{ base: 12, md: 24 }}
+      <ProductSection py={{ base: 12, md: 24 }}>
+        <Heading
+          as="h2"
+          size="display.sm"
+          fontWeight={700}
+          textAlign="center"
+          mb={{ base: 16, lg: 24 }}
         >
+          Contracts for every use case
+        </Heading>
+        <SimpleGrid columns={{ base: 1, md: 3 }} gap={{ base: 12, md: 6 }}>
           <ProductLearnMoreCard
             title="Gaming"
             description="Integrate marketplace contracts directly in-game to enforce royalty fees. Staking contracts for play-to-earn blockchain games."
