@@ -33,10 +33,7 @@ import {
   PackRewardsOutput,
   PackRewardsOutputSchema,
 } from "../../schema/tokens/pack";
-import type {
-  IPackVRFDirect,
-  Pack as PackContract,
-} from "@thirdweb-dev/contracts-js";
+import type { Pack as PackContract } from "@thirdweb-dev/contracts-js";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Pack.json";
 import { PackUpdatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IPack";
 import {
