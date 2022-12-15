@@ -3,14 +3,33 @@ import { ThirdwebAuthContext, ThirdwebAuthUser } from "../types";
 import { GetServerSidePropsContext, NextApiRequest } from "next";
 import { NextRequest } from "next/server";
 
+function getToken(
+  req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest,
+) {
+  if (!!(req as NextApiRequest).headers["authorization"]) {
+    const authorizationHeader = (req as NextApiRequest).headers[
+      "authorization"
+    ]?.split(" ");
+    if (authorizationHeader?.length === 2) {
+      return authorizationHeader[1];
+    }
+
+    return null;
+  }
+
+  const cookie =
+    typeof req.cookies.get === "function"
+      ? (req.cookies as any).get("thirdweb_auth_token")
+      : (req.cookies as any).thirdweb_auth_token;
+
+  return cookie;
+}
+
 export async function getUser<TData extends Json = Json>(
   req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest,
   ctx: ThirdwebAuthContext,
 ): Promise<ThirdwebAuthUser<TData> | null> {
-  const token =
-    typeof req.cookies.get === "function"
-      ? (req.cookies as any).get("thirdweb_auth_token")
-      : (req.cookies as any).thirdweb_auth_token;
+  const token = getToken(req);
 
   if (!token) {
     return null;
