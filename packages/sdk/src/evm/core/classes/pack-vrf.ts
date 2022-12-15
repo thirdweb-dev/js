@@ -1,22 +1,32 @@
 import { NetworkOrSignerOrProvider, TransactionResultWithId } from "..";
 import { fetchCurrencyMetadata } from "../../common";
+import { LINK_TOKEN_ADDRESS } from "../../constants";
 import { PackRewards, SDKOptions } from "../../schema";
+import { Amount, CurrencyValue } from "../../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { Erc20 } from "./erc-20";
+import type { ERC20 } from "@thirdweb-dev/contracts-js";
+import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/ERC20.json";
 import IPackAbi from "@thirdweb-dev/contracts-js/dist/abis/IPackVRFDirect.json";
 import type {
   IPackVRFDirect,
   PackOpenedEvent,
   PackOpenRequestedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/IPackVRFDirect";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 
 export class PackVRF {
   private contractWrapper: ContractWrapper<IPackVRFDirect>;
+  private storage: ThirdwebStorage;
+  private chainId: number;
 
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
+    storage: ThirdwebStorage,
     options: SDKOptions,
+    chainId: number,
     contractWrapper: ContractWrapper<IPackVRFDirect> = new ContractWrapper(
       network,
       address,
@@ -25,6 +35,8 @@ export class PackVRF {
     ),
   ) {
     this.contractWrapper = contractWrapper;
+    this.storage = storage;
+    this.chainId = chainId;
   }
 
   /**
@@ -164,5 +176,42 @@ export class PackVRF {
       retries++;
     }
     return await this.claimRewards();
+  }
+
+  /**
+   * Get the balance of LINK in the contract
+   * @returns the balance of LINK in the contract
+   */
+  public async getLinkBalance(): Promise<CurrencyValue> {
+    return this.getLinkContract().balanceOf(
+      this.contractWrapper.readContract.address,
+    );
+  }
+
+  /**
+   * Transfer LINK to this contract
+   * @param amount the amount of LINK to transfer to the contract
+   */
+  public async transferLink(amount: Amount) {
+    await this.getLinkContract().transfer(
+      this.contractWrapper.readContract.address,
+      amount,
+    );
+  }
+
+  private getLinkContract(): Erc20 {
+    const linkAddress = LINK_TOKEN_ADDRESS[this.chainId];
+    if (!linkAddress) {
+      throw new Error(
+        `No LINK token address found for chainId ${this.chainId}`,
+      );
+    }
+    const contract = new ContractWrapper<ERC20>(
+      this.contractWrapper.getSignerOrProvider(),
+      linkAddress,
+      ERC20Abi,
+      this.contractWrapper.options,
+    );
+    return new Erc20(contract, this.storage, this.chainId);
   }
 }

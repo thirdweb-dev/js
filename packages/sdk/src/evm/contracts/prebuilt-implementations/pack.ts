@@ -134,7 +134,7 @@ export class Pack extends StandardErc1155<PackContract> {
     this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.owner = new ContractOwner(this.contractWrapper);
     // TODO proper feature detection
-    this.vrf = new PackVRF(network, address, options);
+    this.vrf = new PackVRF(network, address, storage, options, chainId);
   }
 
   /**
