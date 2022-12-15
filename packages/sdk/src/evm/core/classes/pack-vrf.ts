@@ -12,6 +12,7 @@ import { BigNumber, BigNumberish, ethers } from "ethers";
 
 export class PackVRF {
   private contractWrapper: ContractWrapper<IPackVRFDirect>;
+
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
@@ -137,28 +138,31 @@ export class PackVRF {
    */
   public async canClaimRewards(claimerAddress?: string): Promise<boolean> {
     const address =
-      claimerAddress ?? (await this.contractWrapper.getSignerAddress());
+      claimerAddress || (await this.contractWrapper.getSignerAddress());
     return await this.contractWrapper.readContract.canClaimRewards(address);
   }
 
   /**
    * Open a pack and claim the rewards sequentially. This will prompt 2 transactions to the user.
    * This function will wait till the VRF request has been fulfilled before claiming the rewards
+   * This function will throw an error if the VRF request has not been fulfilled after 2 minutes
    * @param tokenId
    * @param amount
    * @returns
    */
   public async openAndClaim(tokenId: BigNumberish, amount: BigNumberish = 1) {
     await this.open(tokenId, amount);
-    await this.delay(5000); // wait 5 secs
-    // poll until canClaimRewards is true (takes 3 blocks)
-    while (!(await this.canClaimRewards())) {
-      await this.delay(5000); // try every 5 secs
+    // poll until canClaimRewards is true (takes ~3 blocks)
+    let canClaim = false;
+    let retries = 0;
+    while (!canClaim) {
+      if (retries > 60) {
+        throw new Error("VRF request not fulfilled after 2 minutes");
+      }
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      canClaim = await this.canClaimRewards();
+      retries++;
     }
     return await this.claimRewards();
-  }
-
-  private async delay(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
