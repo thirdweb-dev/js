@@ -1,25 +1,33 @@
-import { NetworkOrSignerOrProvider, TransactionResultWithId } from "..";
+import {
+  ContractEvents,
+  NetworkOrSignerOrProvider,
+  TransactionResultWithId,
+} from "..";
 import { fetchCurrencyMetadata } from "../../common";
 import { LINK_TOKEN_ADDRESS } from "../../constants";
 import { PackRewards, SDKOptions } from "../../schema";
 import { Amount, CurrencyValue } from "../../types";
+import { UpdateableNetwork } from "../interfaces/contract";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
 import type { ERC20 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/ERC20.json";
 import IPackAbi from "@thirdweb-dev/contracts-js/dist/abis/IPackVRFDirect.json";
-import type {
+import {
   IPackVRFDirect,
+  ITokenBundle,
   PackOpenedEvent,
+  PackOpenedEventObject,
   PackOpenRequestedEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/IPackVRFDirect";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 
-export class PackVRF {
+export class PackVRF implements UpdateableNetwork {
   private contractWrapper: ContractWrapper<IPackVRFDirect>;
   private storage: ThirdwebStorage;
-  private chainId: number;
+  public chainId: number;
+  private events: ContractEvents<IPackVRFDirect>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -37,6 +45,15 @@ export class PackVRF {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.chainId = chainId;
+    this.events = new ContractEvents(this.contractWrapper);
+  }
+
+  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+    this.contractWrapper.updateSignerOrProvider(network);
+  }
+
+  getAddress(): string {
+    return this.contractWrapper.readContract.address;
   }
 
   /**
@@ -99,6 +116,12 @@ export class PackVRF {
     }
     const rewards = event[0].args.rewardUnitsDistributed;
 
+    return this.parseRewards(rewards);
+  }
+
+  private async parseRewards(
+    rewards: ITokenBundle.TokenStructOutput[],
+  ): Promise<PackRewards> {
     const erc20Rewards: PackRewards["erc20Rewards"] = [];
     const erc721Rewards: PackRewards["erc721Rewards"] = [];
     const erc1155Rewards: PackRewards["erc1155Rewards"] = [];
@@ -143,6 +166,25 @@ export class PackVRF {
     };
   }
 
+  public async addPackOpenEventListener(
+    callback: (
+      packId: string,
+      openerAddress: string,
+      rewards: PackRewards,
+    ) => void,
+  ) {
+    return this.events.addEventListener<PackOpenedEventObject>(
+      "PackOpened",
+      async (event) => {
+        callback(
+          event.data.packId.toString(),
+          event.data.opener,
+          await this.parseRewards(event.data.rewardUnitsDistributed),
+        );
+      },
+    );
+  }
+
   /**
    * Check if the connected address can claim rewards after opening a pack
    * @param claimerAddress Optional: the address to check if they can claim rewards, defaults to the connected address
@@ -155,27 +197,39 @@ export class PackVRF {
   }
 
   /**
-   * Open a pack and claim the rewards sequentially. This will prompt 2 transactions to the user.
-   * This function will wait till the VRF request has been fulfilled before claiming the rewards
-   * This function will throw an error if the VRF request has not been fulfilled after 2 minutes
-   * @param tokenId
-   * @param amount
+   * Open a pack and claim the rewards in one transaction.
+   * This function will only start the flow of opening a pack, the rewards will be granted automatically to the connected address after VRF request is fulfilled
+   * @param packId The id of the pack to open
+   * @param amount Optional: the amount of packs to open, defaults to 1
+   * @param gasLimit Optional: the gas limit to use for the VRF callback transaction, defaults to 500000
    * @returns
    */
-  public async openAndClaim(tokenId: BigNumberish, amount: BigNumberish = 1) {
-    await this.open(tokenId, amount);
-    // poll until canClaimRewards is true (takes ~3 blocks)
-    let canClaim = false;
-    let retries = 0;
-    while (!canClaim) {
-      if (retries > 60) {
-        throw new Error("VRF request not fulfilled after 2 minutes");
-      }
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      canClaim = await this.canClaimRewards();
-      retries++;
-    }
-    return await this.claimRewards();
+  public async openAndClaim(
+    packId: BigNumberish,
+    amount: BigNumberish = 1,
+    gasLimit: BigNumberish = 500000,
+  ): Promise<TransactionResultWithId> {
+    const receipt = await this.contractWrapper.sendTransaction(
+      "openPackAndClaimRewards",
+      [packId, amount, gasLimit],
+      {
+        // Higher gas limit for opening packs
+        gasLimit: BigNumber.from(500000),
+      },
+    );
+    let id = BigNumber.from(0);
+    try {
+      const event = this.contractWrapper.parseLogs<PackOpenRequestedEvent>(
+        "PackOpenRequested",
+        receipt?.logs,
+      );
+      id = event[0].args.requestId;
+    } catch (e) {}
+
+    return {
+      receipt,
+      id,
+    };
   }
 
   /**

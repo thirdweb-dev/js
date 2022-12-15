@@ -142,6 +142,7 @@ export class Pack extends StandardErc1155<PackContract> {
    */
   onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
     this.contractWrapper.updateSignerOrProvider(network);
+    this.vrf.onNetworkUpdated(network);
   }
 
   getAddress(): string {
