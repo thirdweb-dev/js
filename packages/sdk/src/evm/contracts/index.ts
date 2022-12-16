@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { fetchContractMetadataFromAddress } from "../common";
 import { getPrebuiltInfo } from "../common/legacy";
 import { ALL_ROLES } from "../common/role";
 import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
@@ -19,10 +20,10 @@ import {
   TokenErc721ContractSchema,
   VoteContractSchema,
 } from "../schema";
-import { CustomContractSchema } from "../schema/contracts/custom";
+import { Abi, CustomContractSchema } from "../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
-import type { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 
 type InitalizeParams = [
@@ -255,7 +256,20 @@ export const PackInitializer = {
       _network.chainId,
     );
   },
-  getAbi: async (address: string, provider: ethers.providers.Provider) => {
+  getAbi: async (
+    address: string,
+    provider: ethers.providers.Provider,
+  ): Promise<Abi> => {
+    try {
+      const metadata = await fetchContractMetadataFromAddress(
+        address,
+        provider,
+        new ThirdwebStorage(), // TODO: pass in storage
+      );
+      if (metadata && metadata.abi) {
+        return metadata.abi;
+      }
+    } catch (e) {}
     return (await import("@thirdweb-dev/contracts-js/dist/abis/Pack.json"))
       .default;
   },

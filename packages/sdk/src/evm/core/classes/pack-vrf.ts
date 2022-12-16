@@ -5,14 +5,16 @@ import {
 } from "..";
 import { fetchCurrencyMetadata } from "../../common";
 import { LINK_TOKEN_ADDRESS } from "../../constants";
+import { FEATURE_PACK_VRF } from "../../constants/thirdweb-features";
 import { PackRewards, SDKOptions } from "../../schema";
 import { Amount, CurrencyValue } from "../../types";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
 import type { ERC20, PackVRFDirect } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/ERC20.json";
-import IPackAbi from "@thirdweb-dev/contracts-js/dist/abis/PackVRFDirect.json";
+import IPackAbi from "@thirdweb-dev/contracts-js/dist/abis/IPackVRFDirect.json";
 import {
   ITokenBundle,
   PackOpenedEvent,
@@ -22,7 +24,8 @@ import {
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 
-export class PackVRF implements UpdateableNetwork {
+export class PackVRF implements UpdateableNetwork, DetectableFeature {
+  featureName = FEATURE_PACK_VRF.name;
   private contractWrapper: ContractWrapper<PackVRFDirect>;
   private storage: ThirdwebStorage;
   public chainId: number;
