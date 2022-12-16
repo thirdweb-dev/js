@@ -10,11 +10,10 @@ import { Amount, CurrencyValue } from "../../types";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
-import type { ERC20 } from "@thirdweb-dev/contracts-js";
+import type { ERC20, PackVRFDirect } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/ERC20.json";
 import IPackAbi from "@thirdweb-dev/contracts-js/dist/abis/PackVRFDirect.json";
 import {
-  IPackVRFDirect,
   ITokenBundle,
   PackOpenedEvent,
   PackOpenedEventObject,
@@ -24,10 +23,10 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 
 export class PackVRF implements UpdateableNetwork {
-  private contractWrapper: ContractWrapper<IPackVRFDirect>;
+  private contractWrapper: ContractWrapper<PackVRFDirect>;
   private storage: ThirdwebStorage;
   public chainId: number;
-  private events: ContractEvents<IPackVRFDirect>;
+  private events: ContractEvents<PackVRFDirect>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -35,7 +34,7 @@ export class PackVRF implements UpdateableNetwork {
     storage: ThirdwebStorage,
     options: SDKOptions,
     chainId: number,
-    contractWrapper: ContractWrapper<IPackVRFDirect> = new ContractWrapper(
+    contractWrapper: ContractWrapper<PackVRFDirect> = new ContractWrapper(
       network,
       address,
       IPackAbi,
