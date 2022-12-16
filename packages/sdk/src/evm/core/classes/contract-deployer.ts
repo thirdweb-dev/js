@@ -515,7 +515,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       factoryAddress,
       this.getSignerOrProvider(),
       this.storage,
-      {},
+      this.options,
     );
     return await proxyFactory.deployProxyByImplementation(
       implementationAddress,
@@ -596,6 +596,7 @@ export class ContractDeployer extends RPCConnectionHandler {
           chainId,
           "twFactory",
         );
+        console.log(this.options);
         const factory = new ContractFactory(
           factoryAddress,
           this.getSignerOrProvider(),
