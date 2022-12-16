@@ -1,6 +1,7 @@
 // couldn't find this in barbones ethers export, but "type" should mean it does not increase bundle size either way
 import type { TypedDataField } from "@ethersproject/abstract-signer";
 import { ethers, Signer, providers } from "ethers";
+import { _TypedDataEncoder } from "ethers/lib/utils";
 
 /**
  * @internal
@@ -49,6 +50,7 @@ export async function signTypedDataInternal(
   );
 
   let signature = "";
+  const signerAddress = (await signer.getAddress()).toLowerCase();
 
   // an indirect way for accessing walletconnect's underlying provider
   if ((provider as any)?.provider?.isWalletConnect) {
@@ -66,11 +68,21 @@ export async function signTypedDataInternal(
     } catch (err: any) {
       if (err?.message?.includes("Method eth_signTypedData_v4 not supported")) {
         signature = await provider.send("eth_signTypedData", [
-          (await signer.getAddress()).toLowerCase(),
+          signerAddress,
           JSON.stringify(payload),
         ]);
       } else {
-        throw err;
+        // magic.link signer only supports this way
+        try {
+          await provider.send("eth_signTypedData_v4", [
+            signerAddress,
+            JSON.stringify(
+              _TypedDataEncoder.getPayload(domain, types, message),
+            ),
+          ]);
+        } catch (finalErr: any) {
+          throw finalErr;
+        }
       }
     }
   }
