@@ -596,7 +596,6 @@ export class ContractDeployer extends RPCConnectionHandler {
           chainId,
           "twFactory",
         );
-        console.log(this.options);
         const factory = new ContractFactory(
           factoryAddress,
           this.getSignerOrProvider(),
