@@ -168,6 +168,11 @@ export class PackVRF implements UpdateableNetwork, DetectableFeature {
     };
   }
 
+  /**
+   * Setup a listener that will be called everytime a pack is opened in this contract
+   * @param callback the listener to call when a pack is opened
+   * @returns a unsubscribe function to cleanup the listener
+   */
   public async addPackOpenEventListener(
     callback: (
       packId: string,

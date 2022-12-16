@@ -98,8 +98,13 @@ export class Pack extends StandardErc1155<PackContract> {
   public erc1155: Erc1155<PackContract>;
   public owner: ContractOwner<PackContract>;
 
+  private _vrf?: PackVRF;
+
+  /**
+   * If enabled in the contract, use the Chainlink VRF functionality to open packs
+   */
   get vrf(): PackVRF {
-    return assertEnabled(this.detectVrf(), FEATURE_PACK_VRF);
+    return assertEnabled(this._vrf, FEATURE_PACK_VRF);
   }
 
   constructor(
@@ -141,6 +146,7 @@ export class Pack extends StandardErc1155<PackContract> {
     this.events = new ContractEvents(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.owner = new ContractOwner(this.contractWrapper);
+    this._vrf = this.detectVrf();
   }
 
   /**
@@ -148,7 +154,7 @@ export class Pack extends StandardErc1155<PackContract> {
    */
   onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
     this.contractWrapper.updateSignerOrProvider(network);
-    this.vrf.onNetworkUpdated(network);
+    this._vrf?.onNetworkUpdated(network);
   }
 
   getAddress(): string {
@@ -547,6 +553,11 @@ export class Pack extends StandardErc1155<PackContract> {
     tokenId: BigNumberish,
     amount: BigNumberish = 1,
   ): Promise<PackRewards> {
+    if (this._vrf) {
+      throw new Error(
+        "This contract is using Chainlink VRF, use `contract.vrf.open()` or `contract.vrf.openAndClaim()` instead",
+      );
+    }
     const receipt = await this.contractWrapper.sendTransaction(
       "openPack",
       [tokenId, amount],
