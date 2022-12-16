@@ -1,3 +1,5 @@
+import { useSigner } from "../hooks/useSigner";
+import { ThirdwebAuth } from "@thirdweb-dev/auth";
 import React, {
   PropsWithChildren,
   createContext,
@@ -22,38 +24,51 @@ export interface ThirdwebAuthConfig {
    * This domain should match the domain used on your auth backend.
    */
   domain: string;
-
-  /**
-   * The URL to redirect to after a succesful login.
-   */
-  loginRedirect?: string;
 }
 
-const ThirdwebAuthConfigContext = createContext<ThirdwebAuthConfig | undefined>(
+interface ThirdwebAuthContext extends ThirdwebAuthConfig {
+  auth?: ThirdwebAuth;
+}
+
+const ThirdwebAuthContext = createContext<ThirdwebAuthContext | undefined>(
   undefined,
 );
 
-export const ThirdwebAuthConfigProvider: React.FC<
+export const ThirdwebAuthProvider: React.FC<
   PropsWithChildren<{ value?: ThirdwebAuthConfig }>
 > = ({ value, children }) => {
+  const signer = useSigner();
+
   // Remove trailing slash from URL if present
-  const authConfig = useMemo(
-    () =>
-      value
-        ? {
-            ...value,
-            authUrl: value.authUrl.replace(/\/$/, ""),
-          }
-        : undefined,
-    [value],
-  );
+  const authContext = useMemo(() => {
+    if (!value) {
+      return undefined;
+    }
+
+    const context: ThirdwebAuthContext = {
+      ...value,
+      authUrl: value.authUrl.replace(/\/$/, ""),
+      auth: undefined,
+    };
+
+    if (signer) {
+      context.auth = new ThirdwebAuth(
+        {
+          getSigner: async () => signer,
+        },
+        value.domain,
+      );
+    }
+
+    return context;
+  }, [value, signer]);
   return (
-    <ThirdwebAuthConfigContext.Provider value={authConfig}>
+    <ThirdwebAuthContext.Provider value={authContext}>
       {children}
-    </ThirdwebAuthConfigContext.Provider>
+    </ThirdwebAuthContext.Provider>
   );
 };
 
-export function useThirdwebAuthConfig() {
-  return useContext(ThirdwebAuthConfigContext);
+export function useThirdwebAuthContext() {
+  return useContext(ThirdwebAuthContext);
 }
