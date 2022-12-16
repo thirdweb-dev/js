@@ -48,11 +48,11 @@ export async function getUser<TData extends Json = Json>(
     }
   }
 
-  if (!ctx.callbacks?.user?.enhanceUser) {
+  if (!ctx.callbacks?.user?.setUserData) {
     return authenticatedUser;
   }
 
-  const data = await ctx.callbacks.user.enhanceUser<TData>(
+  const data = await ctx.callbacks.user.setUserData<TData>(
     authenticatedUser,
     req,
   );

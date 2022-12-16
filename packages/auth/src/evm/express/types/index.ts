@@ -26,13 +26,19 @@ export type ThirdwebAuthConfig = {
   callbacks?: {
     login?: {
       validateNonce: (nonce: string, req?: Request) => Promise<void>;
-      enhanceToken: (address: string, req?: Request) => Promise<Json>;
-      onLogin: (user: User, req?: Request) => Promise<void>;
+      setUserContext: <TContext extends Json = Json>(
+        address: string,
+        req?: Request,
+      ) => Promise<TContext>;
+      onLogin: <TContext extends Json = Json>(
+        user: User<TContext>,
+        req?: Request,
+      ) => Promise<void>;
     };
     user?: {
       validateSessionId: (sessionId: string, req?: Request) => Promise<void>;
-      enhanceUser: <TData extends Json = Json>(
-        user: User,
+      setUserData: <TData extends Json = Json, TContext extends Json = Json>(
+        user: User<TContext>,
         req?: Request,
       ) => Promise<TData>;
     };

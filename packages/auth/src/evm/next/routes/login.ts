@@ -19,8 +19,8 @@ export default async function handler(
   }
 
   let tokenContext = undefined;
-  if (ctx.callbacks?.login?.enhanceToken) {
-    tokenContext = await ctx.callbacks.login.enhanceToken(
+  if (ctx.callbacks?.login?.setUserContext) {
+    tokenContext = await ctx.callbacks.login.setUserContext(
       payload.payload.address,
       req,
     );
