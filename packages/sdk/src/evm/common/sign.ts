@@ -1,7 +1,6 @@
 // couldn't find this in barbones ethers export, but "type" should mean it does not increase bundle size either way
 import type { TypedDataField } from "@ethersproject/abstract-signer";
 import { ethers, Signer, providers } from "ethers";
-import { _TypedDataEncoder } from "ethers/lib/utils";
 
 /**
  * @internal
