@@ -56,4 +56,25 @@ describe("Wallet", async () => {
     const address = sdk.wallet.recoverAddress(message, signature);
     expect(address).to.eq(adminWallet.address);
   });
+
+  it("should sign typed data and recover address", async () => {
+    sdk.updateSignerOrProvider(adminWallet);
+    const { payload, signature } = await sdk.wallet.signTypedData(
+      {
+        name: "MyEIP721Domain",
+        version: "1",
+        chainId: 1,
+        verifyingContract: adminWallet.address,
+      },
+      {
+        MyStruct: [
+          { name: "to", type: "address" },
+          { name: "quantity", type: "uint256" },
+        ],
+      },
+      { to: adminWallet.address, quantity: 1 },
+    );
+    expect(payload !== undefined).to.eq(true);
+    expect(signature !== undefined).to.eq(true);
+  });
 });

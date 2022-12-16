@@ -3,6 +3,7 @@ import {
   isNativeToken,
   normalizePriceValue,
 } from "../../common/currency";
+import { EIP712Domain, signTypedDataInternal } from "../../common/sign";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants";
 import { SDKOptions } from "../../schema";
 import { Amount, CurrencyValue } from "../../types";
@@ -11,7 +12,7 @@ import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import type { IERC20 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
-import { ethers, BigNumber, providers, Signer } from "ethers";
+import { ethers, BigNumber, providers, Signer, TypedDataField } from "ethers";
 import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
 
@@ -181,6 +182,42 @@ export class UserWallet {
   public async sign(message: string): Promise<string> {
     const signer = this.requireWallet();
     return await signer.signMessage(message);
+  }
+
+  /**
+   * Sign a typed data structure (EIP712) with the connected wallet private key
+   * @param domain - the domain as EIP712 standard
+   * @param types - the strcuture and data types as defined by the EIP712 standard
+   * @param message - the data to sign
+   * @returns the payload and its associated signature
+   *
+   * @example
+   * ```javascript
+   * // This is the message to be signed
+   * // Now we can sign the message with the connected wallet
+   * const { payload, signature } = await sdk.wallet.signTypedData(
+   *   {
+          name: "MyEIP721Domain",
+          version: "1",
+          chainId: 1,
+          verifyingContract: "0x...",
+        },
+        { MyStruct: [ { name: "to", type: "address" }, { name: "quantity", type: "uint256" } ] },
+        { to: "0x...", quantity: 1 },
+   * );
+   * ```
+   */
+  public async signTypedData(
+    domain: EIP712Domain,
+    types: Record<string, Array<TypedDataField>>,
+    message: Record<string, any>,
+  ): Promise<{ payload: any; signature: string }> {
+    return await signTypedDataInternal(
+      this.requireWallet(),
+      domain,
+      types,
+      message,
+    );
   }
 
   /**

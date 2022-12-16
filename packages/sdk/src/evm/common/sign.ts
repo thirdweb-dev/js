@@ -76,9 +76,7 @@ export async function signTypedDataInternal(
         try {
           await provider.send("eth_signTypedData_v4", [
             signerAddress,
-            JSON.stringify(
-              _TypedDataEncoder.getPayload(domain, types, message),
-            ),
+            JSON.stringify(payload),
           ]);
         } catch (finalErr: any) {
           throw finalErr;
