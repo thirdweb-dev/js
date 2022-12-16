@@ -1,7 +1,6 @@
 // couldn't find this in barbones ethers export, but "type" should mean it does not increase bundle size either way
 import type { TypedDataField } from "@ethersproject/abstract-signer";
 import { ethers, Signer, providers } from "ethers";
-import { _TypedDataEncoder } from "ethers/lib/utils";
 
 /**
  * @internal
@@ -76,9 +75,7 @@ export async function signTypedDataInternal(
         try {
           await provider.send("eth_signTypedData_v4", [
             signerAddress,
-            JSON.stringify(
-              _TypedDataEncoder.getPayload(domain, types, message),
-            ),
+            JSON.stringify(payload),
           ]);
         } catch (finalErr: any) {
           throw finalErr;
