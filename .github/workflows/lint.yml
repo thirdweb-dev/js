@@ -13,8 +13,7 @@ concurrency:
 jobs:
   lint:
     name: Lint
-    # timeout-minutes: 15
-    # try out buildjet to speed up build and test
+    timeout-minutes: 15
     runs-on: ubuntu-latest
     # To use Remote Caching, uncomment the next lines and follow the steps below.
     env:
