@@ -1,5 +1,5 @@
-import { useThirdwebAuthConfig } from "../../contexts/thirdweb-auth";
-import { LoginConfig, useAuth } from "../../hooks/auth";
+import { useThirdwebAuthContext } from "../../contexts/thirdweb-auth";
+import { useLogin, useLogout, useUser } from "../../hooks/auth";
 import { useMetamask } from "../../hooks/connectors/useMetamask";
 import { useConnect } from "../../hooks/wagmi-required/useConnect";
 import { useDisconnect } from "../../hooks/wagmi-required/useDisconnect";
@@ -59,7 +59,6 @@ function getIconForConnector(connector: Connector) {
 interface ConnectWalletProps extends ThemeProviderProps {
   auth?: {
     loginOptions?: LoginOptions;
-    loginConfig?: LoginConfig;
     loginOptional?: boolean;
   };
   className?: string;
@@ -161,8 +160,10 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
 
   const { onCopy, hasCopied } = useClipboard(walletAddress || "");
 
-  const authConfig = useThirdwebAuthConfig();
-  const { user, isLoading, login, logout } = useAuth(auth?.loginConfig);
+  const authConfig = useThirdwebAuthContext();
+  const { user, isLoading } = useUser();
+  const { login } = useLogin();
+  const { logout } = useLogout();
 
   const requiresSignIn = auth?.loginOptional
     ? false
