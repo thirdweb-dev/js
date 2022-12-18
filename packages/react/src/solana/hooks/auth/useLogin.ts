@@ -2,7 +2,7 @@ import { ensureTWPrefix } from "../../../core/query-utils/query-key";
 import { useThirdwebAuthConfig } from "../../contexts/thirdweb-auth";
 import { useSDK } from "../../providers/base";
 import { useQueryClient } from "@tanstack/react-query";
-import { LoginOptions } from "@thirdweb-dev/sdk";
+import { LoginOptions } from "@thirdweb-dev/sdk/solana";
 import React from "react";
 import invariant from "tiny-invariant";
 

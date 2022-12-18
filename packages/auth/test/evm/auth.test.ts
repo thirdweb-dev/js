@@ -1,4 +1,4 @@
-import { ThirdwebAuth } from "../../src/evm/core";
+import { ThirdwebAuth } from "../../src/core";
 import { MinimalWallet } from "@thirdweb-dev/wallets";
 import { expect } from "chai";
 import { Wallet } from "ethers";
