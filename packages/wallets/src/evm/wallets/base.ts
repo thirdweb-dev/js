@@ -1,4 +1,4 @@
-import { GenericSigner } from "../../core";
+import { GenericSignerWallet } from "../../core";
 import { thirdwebChains } from "../constants/chains";
 import { MinimalWallet } from "../interfaces/minimal";
 import { getCoordinatorStorage, getWalletStorage } from "../utils/storage";
@@ -28,7 +28,7 @@ export type WalletOptions<TOpts extends Record<string, any> = {}> = {
 
 export abstract class AbstractSigner
   extends EventEmitter<WalletEvents>
-  implements GenericSigner, MinimalWallet
+  implements GenericSignerWallet, MinimalWallet
 {
   protected signer: ethers.Signer | undefined;
 

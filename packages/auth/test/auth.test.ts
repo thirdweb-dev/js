@@ -1,16 +1,12 @@
-import { ThirdwebAuth } from "../../src/core";
-import { MinimalWallet } from "@thirdweb-dev/wallets";
+import { ThirdwebAuth } from "../src/core";
+import { EthersWallet, GenericSignerWallet } from "@thirdweb-dev/wallets";
 import { expect } from "chai";
 import { Wallet } from "ethers";
 
-interface MinimalWalletWithAddress extends MinimalWallet {
-  address: string;
-}
-
 describe("Wallet Authentication", async () => {
-  let adminWallet: MinimalWalletWithAddress,
-    signerWallet: MinimalWalletWithAddress,
-    attackerWallet: MinimalWalletWithAddress;
+  let adminWallet: GenericSignerWallet,
+    signerWallet: GenericSignerWallet,
+    attackerWallet: GenericSignerWallet;
   let auth: ThirdwebAuth;
 
   before(async () => {
@@ -20,18 +16,9 @@ describe("Wallet Authentication", async () => {
       Wallet.createRandom(),
     ];
 
-    adminWallet = {
-      getSigner: async () => adminSigner,
-      address: adminSigner.address,
-    };
-    signerWallet = {
-      getSigner: async () => signerSigner,
-      address: signerSigner.address,
-    };
-    attackerWallet = {
-      getSigner: async () => attackerSigner,
-      address: attackerSigner.address,
-    };
+    adminWallet = new EthersWallet(adminSigner);
+    signerWallet = new EthersWallet(signerSigner);
+    attackerWallet = new EthersWallet(attackerSigner);
 
     auth = new ThirdwebAuth(signerWallet, "thirdweb.com");
   });
@@ -46,7 +33,7 @@ describe("Wallet Authentication", async () => {
     auth.updateWallet(adminWallet);
     const address = auth.verify(payload);
 
-    expect(address).to.equal(signerWallet.address);
+    expect(address).to.equal(await signerWallet.getAddress());
   });
 
   it("Should verify logged in wallet with chain ID and expiration", async () => {
@@ -60,7 +47,7 @@ describe("Wallet Authentication", async () => {
       chainId: 137,
     });
 
-    expect(address).to.equal(signerWallet.address);
+    expect(address).to.equal(await signerWallet.getAddress());
   });
 
   it("Should reject invalid nonce", async () => {
@@ -93,7 +80,7 @@ describe("Wallet Authentication", async () => {
       },
     });
 
-    expect(address).to.equal(signerWallet.address);
+    expect(address).to.equal(await signerWallet.getAddress());
   });
 
   it("Should reject payload with incorrect domain", async () => {
@@ -144,7 +131,7 @@ describe("Wallet Authentication", async () => {
 
   it("Should reject payload with incorrect signer", async () => {
     const payload = await auth.login();
-    payload.payload.address = attackerWallet.address;
+    payload.payload.address = await attackerWallet.getAddress();
 
     auth.updateWallet(adminWallet);
     try {
@@ -162,7 +149,7 @@ describe("Wallet Authentication", async () => {
     const token = await auth.generate(payload);
     const user = await auth.authenticate(token);
 
-    expect(user.address).to.equal(signerWallet.address);
+    expect(user.address).to.equal(await signerWallet.getAddress());
   });
 
   it("Should reject token with incorrect domain", async () => {
@@ -225,7 +212,7 @@ describe("Wallet Authentication", async () => {
       expect.fail();
     } catch (err: any) {
       expect(err.message).to.contain(
-        `Expected the connected wallet address '${signerWallet.address}' to match the token issuer address '${adminWallet.address}'`,
+        `Expected the connected wallet address '${await signerWallet.getAddress()}' to match the token issuer address '${await adminWallet.getAddress()}'`,
       );
     }
   });
@@ -240,7 +227,7 @@ describe("Wallet Authentication", async () => {
 
     const user = await auth.authenticate(token);
 
-    expect(user.address).to.equal(signerWallet.address);
+    expect(user.address).to.equal(await signerWallet.getAddress());
     expect(user.context).to.deep.equal({ role: "admin" });
   });
 });

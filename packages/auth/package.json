@@ -31,7 +31,7 @@
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/ && rm -rf node_modules/",
-    "test": "mocha --config './test/evm/.mocharc.json' --timeout 30000 --parallel './test/evm/**/*.test.ts'"
+    "test": "mocha --config './test/.mocharc.json' --timeout 30000 --parallel './test/**/*.test.ts'"
   },
   "preconstruct": {
     "entrypoints": [
@@ -55,6 +55,7 @@
     "@preconstruct/cli": "^2.2.1",
     "@swc-node/register": "^1.5.4",
     "@thirdweb-dev/sdk": "*",
+    "@thirdweb-dev/wallets": "*",
     "@types/chai": "^4.3.4",
     "@types/cookie": "^0.5.1",
     "@types/cookie-parser": "^1.4.3",

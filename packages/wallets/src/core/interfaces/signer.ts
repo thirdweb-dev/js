@@ -1,4 +1,5 @@
-export interface GenericSigner {
+export interface GenericSignerWallet {
+  getAddress(): Promise<string>;
   signMessage(message: string): Promise<string>;
   verifySignature(
     message: string,

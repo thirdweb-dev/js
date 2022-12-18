@@ -1,8 +1,7 @@
-import { MinimalWallet } from "../interfaces/minimal";
 import { AbstractSigner } from "./base";
 import { ethers } from "ethers";
 
-export class PrivateKeyWallet extends AbstractSigner implements MinimalWallet {
+export class PrivateKeyWallet extends AbstractSigner {
   #privateKey: string;
 
   constructor(privateKey: string) {

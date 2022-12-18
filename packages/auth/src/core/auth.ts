@@ -15,23 +15,27 @@ import {
   User,
   Json,
 } from "./schema";
-import { WalletSigner } from "./signer";
 import { isBrowser } from "./utils";
-import { MinimalWallet } from "@thirdweb-dev/wallets";
+import { GenericSignerWallet } from "@thirdweb-dev/wallets";
 
-export class ThirdwebAuth extends WalletSigner {
+export class ThirdwebAuth {
   private domain: string;
+  private wallet: GenericSignerWallet;
 
-  constructor(wallet: MinimalWallet, domain: string) {
-    super(wallet);
+  constructor(wallet: GenericSignerWallet, domain: string) {
+    this.wallet = wallet;
     this.domain = domain;
+  }
+
+  public updateWallet(wallet: GenericSignerWallet) {
+    this.wallet = wallet;
   }
 
   public async login(options?: LoginOptions): Promise<LoginPayload> {
     const parsedOptions = LoginOptionsSchema.parse(options);
     const domain = parsedOptions?.domain || this.domain;
 
-    const signerAddress = await this.getAddress();
+    const signerAddress = await this.wallet.getAddress();
     const expirationTime =
       parsedOptions?.expirationTime || new Date(Date.now() + 1000 * 60 * 5);
     const payloadData = LoginPayloadDataSchema.parse({
@@ -43,7 +47,7 @@ export class ThirdwebAuth extends WalletSigner {
     });
 
     const message = this.generateMessage(payloadData);
-    const signature = await this.sign(message);
+    const signature = await this.wallet.signMessage(message);
 
     return {
       payload: payloadData,
@@ -88,14 +92,19 @@ export class ThirdwebAuth extends WalletSigner {
 
     // Check that the signing address is the claimed wallet address
     const message = this.generateMessage(payload.payload);
-    const userAddress = this.recoverAddress(message, payload.signature);
-    if (userAddress.toLowerCase() !== payload.payload.address.toLowerCase()) {
+    if (
+      !this.wallet.verifySignature(
+        message,
+        payload.signature,
+        payload.payload.address,
+      )
+    ) {
       throw new Error(
-        `Signer address '${userAddress.toLowerCase()}' does not match payload address '${payload.payload.address.toLowerCase()}'`,
+        `Signer address does not match payload address '${payload.payload.address.toLowerCase()}'`,
       );
     }
 
-    return userAddress;
+    return payload.payload.address;
   }
 
   public async generate(
@@ -116,7 +125,7 @@ export class ThirdwebAuth extends WalletSigner {
       chainId: parsedOptions?.chainId,
       validateNonce: parsedOptions?.validateNonce,
     });
-    const adminAddress = await this.getAddress();
+    const adminAddress = await this.wallet.getAddress();
     const payloadData = AuthenticationPayloadDataSchema.parse({
       iss: adminAddress,
       sub: userAddress,
@@ -130,7 +139,7 @@ export class ThirdwebAuth extends WalletSigner {
     });
 
     const message = JSON.stringify(payloadData);
-    const signature = await this.sign(message);
+    const signature = await this.wallet.signMessage(message);
 
     // Header used for JWT token specifying hash algorithm
     const header = {
@@ -215,19 +224,20 @@ export class ThirdwebAuth extends WalletSigner {
     }
 
     // Check that the connected wallet matches the token issuer
-    const connectedAddress = await this.getAddress();
+    const connectedAddress = await this.wallet.getAddress();
     if (connectedAddress.toLowerCase() !== payload.iss.toLowerCase()) {
       throw new Error(
         `Expected the connected wallet address '${connectedAddress}' to match the token issuer address '${payload.iss}'`,
       );
     }
 
-    // Check that the connected wallet signed the token
-    const adminAddress = this.recoverAddress(
-      JSON.stringify(payload),
-      signature,
-    );
-    if (connectedAddress.toLowerCase() !== adminAddress.toLowerCase()) {
+    if (
+      !this.wallet.verifySignature(
+        JSON.stringify(payload),
+        signature,
+        connectedAddress,
+      )
+    ) {
       throw new Error(
         `The connected wallet address '${connectedAddress}' did not sign the token`,
       );

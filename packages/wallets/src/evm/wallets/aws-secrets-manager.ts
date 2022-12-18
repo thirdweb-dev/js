@@ -1,4 +1,3 @@
-import { MinimalWallet } from "../interfaces/minimal";
 import { AbstractSigner } from "./base";
 import {
   GetSecretValueCommand,
@@ -36,10 +35,7 @@ export type AwsSecretsManagerWalletOptions = {
  * const sdk = await ThirdwebSDK.fromWallet(wallet, "mainnet");
  * ```
  */
-export class AwsSecretsManagerWallet
-  extends AbstractSigner
-  implements MinimalWallet
-{
+export class AwsSecretsManagerWallet extends AbstractSigner {
   private secretId: string;
   private secretKeyName: string;
   private client: SecretsManagerClient;
