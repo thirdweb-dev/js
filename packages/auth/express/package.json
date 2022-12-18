@@ -1,0 +1,4 @@
+{
+  "main": "dist/thirdweb-dev-auth-express.cjs.js",
+  "module": "dist/thirdweb-dev-auth-express.esm.js"
+}

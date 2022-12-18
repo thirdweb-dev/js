@@ -1,4 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-auth-evm-next-auth.cjs.js",
-  "module": "dist/thirdweb-dev-auth-evm-next-auth.esm.js"
-}
