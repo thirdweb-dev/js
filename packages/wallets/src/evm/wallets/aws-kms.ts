@@ -1,4 +1,5 @@
-import { MinimalWallet } from "../types/minimal";
+import { MinimalWallet } from "../interfaces/minimal";
+import { AbstractSigner } from "./base";
 import {
   TypedDataDomain,
   TypedDataField,
@@ -25,23 +26,14 @@ import { AwsKmsSigner, AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
  * const sdk = await ThirdwebSDK.fromWallet(wallet, "mainnet");
  * ```
  */
-export class AwsKmsWallet implements MinimalWallet {
-  private cachedSigner: AwsKmsSigner;
-
+export class AwsKmsWallet extends AbstractSigner implements MinimalWallet {
   constructor(options: AwsKmsSignerCredentials) {
-    this.cachedSigner = this.updateSigner(new AwsKmsSigner(options));
+    super();
+    this.signer = this.updateSigner(new AwsKmsSigner(options));
   }
 
-  async getSigner(
-    provider?: ethers.providers.Provider,
-  ): Promise<ethers.Signer> {
-    if (provider) {
-      this.cachedSigner = this.updateSigner(
-        this.cachedSigner.connect(provider),
-      );
-    }
-
-    return this.cachedSigner;
+  async getSigner(): Promise<ethers.Signer> {
+    return this.signer as ethers.Signer;
   }
 
   // Add _signTypedData method onto the signer for now so we don't need to reimpliment

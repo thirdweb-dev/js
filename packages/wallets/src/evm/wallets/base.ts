@@ -1,6 +1,9 @@
+import { GenericSigner } from "../../core";
 import { thirdwebChains } from "../constants/chains";
+import { MinimalWallet } from "../interfaces/minimal";
 import { getCoordinatorStorage, getWalletStorage } from "../utils/storage";
 import type { Chain, Connector as WagmiConnector } from "@wagmi/core";
+import { ethers } from "ethers";
 import EventEmitter from "eventemitter3";
 
 export type WalletData = {
@@ -23,9 +26,56 @@ export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   appName: string;
 } & TOpts;
 
+export abstract class AbstractSigner
+  extends EventEmitter<WalletEvents>
+  implements GenericSigner, MinimalWallet
+{
+  protected signer: ethers.Signer | undefined;
+
+  public abstract getSigner(): Promise<ethers.Signer>;
+
+  public async getAddress(): Promise<string> {
+    const signer = await this.getCachedSigner();
+    return signer.getAddress();
+  }
+
+  public async signMessage(message: string): Promise<string> {
+    const signer = await this.getCachedSigner();
+    return await signer.signMessage(message);
+  }
+
+  public async verifySignature(
+    message: string,
+    signature: string,
+    address: string,
+  ): Promise<boolean> {
+    const messageHash = ethers.utils.hashMessage(message);
+    const messageHashBytes = ethers.utils.arrayify(messageHash);
+    const recoveredAddress = ethers.utils.recoverAddress(
+      messageHashBytes,
+      signature,
+    );
+    return recoveredAddress === address;
+  }
+
+  public async getCachedSigner(): Promise<ethers.Signer> {
+    if (!!this.signer) {
+      return this.signer;
+    }
+
+    this.signer = await this.getSigner();
+
+    if (!this.signer) {
+      throw new Error("Unable to get a signer!");
+    }
+
+    return this.signer;
+  }
+}
+
 export abstract class AbstractWallet<
   TAdditionalOpts extends Record<string, any> = {},
-> extends EventEmitter<WalletEvents> {
+> extends AbstractSigner {
   #wallletId;
   protected coordinatorStorage;
   protected walletStorage;
@@ -110,6 +160,7 @@ export abstract class AbstractWallet<
       chainId: connectionRes.chain?.id,
     };
   }
+
   async getSigner(chainId?: number) {
     const connector = await this.getConnector();
     if (!connector) {
@@ -132,6 +183,7 @@ export abstract class AbstractWallet<
       }
     }
   }
+
   async switchChain(chainId: number): Promise<Chain> {
     const connector = await this.getConnector();
     if (!connector) {
