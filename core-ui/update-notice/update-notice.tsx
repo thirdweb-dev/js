@@ -1,4 +1,5 @@
 import { Flex, Icon } from "@chakra-ui/react";
+import { css } from "@emotion/react";
 import { SiJavascript } from "@react-icons/all-files/si/SiJavascript";
 // import { SiGo } from "@react-icons/all-files/si/SiGo";
 // import { SiPython } from "@react-icons/all-files/si/SiPython";
@@ -64,7 +65,7 @@ export const UpdateNotice: ComponentWithChildren<UpdatenoticeProps> = ({
       borderRadius="lg"
       align={"center"}
       flexWrap="wrap"
-      css={`
+      css={css`
         container-type: inline-size;
       `}
     >
@@ -73,7 +74,7 @@ export const UpdateNotice: ComponentWithChildren<UpdatenoticeProps> = ({
       </Badge>
       <Text
         order={{ base: 3, md: 2 }}
-        css={`
+        css={css`
           order: 3 !important;
           @container (min-width: 48em) {
             order: 2 !important;
@@ -110,7 +111,7 @@ export const UpdateNotice: ComponentWithChildren<UpdatenoticeProps> = ({
           order={{ base: 2, md: 3 }}
           gap={2}
           align="center"
-          css={`
+          css={css`
             order: 2 !important;
             @container (min-width: 48em) {
               order: 3 !important;
