@@ -21,7 +21,7 @@ import { NFTDropUpdateableConditionsInputSchema } from "@thirdweb-dev/sdk/solana
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { PriceInput } from "contract-ui/tabs/claim-conditions/components/price-input";
-import { QuantityInputWithUnlimited } from "contract-ui/tabs/claim-conditions/components/quality-input-with-unlimited";
+import { QuantityInputWithUnlimited } from "contract-ui/tabs/claim-conditions/components/quantity-input-with-unlimited";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useMemo, useState } from "react";

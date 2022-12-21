@@ -1,6 +1,6 @@
 import { ClaimConditionsProps } from "./claim-conditions";
 import { PriceInput } from "./price-input";
-import { QuantityInputWithUnlimited } from "./quality-input-with-unlimited";
+import { QuantityInputWithUnlimited } from "./quantity-input-with-unlimited";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
 import { useIsAdmin } from "@3rdweb-sdk/react/hooks/useContractRoles";
 import {
