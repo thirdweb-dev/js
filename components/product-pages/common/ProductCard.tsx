@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import NextImage, { StaticImageData } from "next/image";
 import { Heading } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
@@ -33,9 +33,16 @@ export const ProductCard: ComponentWithChildren<ProductCardProps> = ({
       <Heading size="title.sm" mt="32px">
         {title}
       </Heading>
-      <Box fontSize="body.lg" mt="16px" color="paragraph" lineHeight={1.6}>
+      <Flex
+        direction={"column"}
+        fontSize="body.lg"
+        mt="16px"
+        color="paragraph"
+        lineHeight={1.6}
+        h="100%"
+      >
         {children}
-      </Box>
+      </Flex>
     </Flex>
   );
 };

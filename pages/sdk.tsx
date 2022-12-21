@@ -63,7 +63,8 @@ const Web3SDK: ThirdwebNextPage = () => {
             Use SDKs in programming languages that you are most comfortable
             with.
             <Flex
-              h="full"
+              mt={"auto"}
+              pt={8}
               justifyContent="flex-end"
               alignItems="flex-end"
               gap={3}
