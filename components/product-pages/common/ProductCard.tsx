@@ -1,6 +1,6 @@
-import { Flex } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import NextImage, { StaticImageData } from "next/image";
-import { Heading, Text } from "tw-components";
+import { Heading } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
 interface ProductCardProps {
@@ -33,9 +33,9 @@ export const ProductCard: ComponentWithChildren<ProductCardProps> = ({
       <Heading size="title.sm" mt="32px">
         {title}
       </Heading>
-      <Text size="body.lg" mt="16px">
+      <Box fontSize="body.lg" mt="16px" color="paragraph" lineHeight={1.6}>
         {children}
-      </Text>
+      </Box>
     </Flex>
   );
 };
