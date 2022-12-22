@@ -11,6 +11,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import useDimensions from "react-cool-dimensions";
+import ThreeRenderer from "./ThreeRenderer";
 
 export interface SharedMediaProps {
   className?: string;
@@ -445,6 +446,16 @@ export const MediaRenderer = React.forwardRef<
           {...restProps}
         />
       );
+    } else if (videoOrImageSrc.mimeType.startsWith("model")) {
+      return (
+        <ThreeRenderer
+          style={mergedStyle}
+          src= {videoOrImageSrc.url || ''}
+          poster={possiblePosterSrc.url}
+          requireInteraction={requireInteraction}
+          {...restProps}          
+         ></ThreeRenderer>
+      )        
     } else if (shouldRenderVideoTag(videoOrImageSrc.mimeType)) {
       return (
         <VideoPlayer
