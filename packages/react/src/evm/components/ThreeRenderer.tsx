@@ -4,13 +4,25 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { MediaRendererProps } from "./MediaRenderer";
 import { mergeRefs } from "../utils/react";
+import { Color } from "three";
 
-const ThreeRenderer = React.forwardRef<HTMLDivElement, MediaRendererProps> (
-  ({ src, alt, poster, style, ...restProps }, ref) => {
+interface ThreeRendererProps extends MediaRendererProps {
+  fov?: number;
+  aspect?: number;
+  near?: number;
+  far?: number;
+  x?: number;
+  y?: number;
+  z?: number;
+  ambientLight?: Color;  
+}
+
+const ThreeRenderer = React.forwardRef<HTMLDivElement, ThreeRendererProps> (
+  ({ src, alt, poster, style, fov, aspect, near, far, ambientLight, x, y, z, ...restProps }, ref) => {
     const refContainer = useRef<HTMLDivElement>(null);
     const [loading, setLoading] = useState(true);
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45,1, 1, 20);
+    const camera = new THREE.PerspectiveCamera(fov || 45, aspect || 1, near || 1, far || 20);
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true
@@ -19,7 +31,7 @@ const ThreeRenderer = React.forwardRef<HTMLDivElement, MediaRendererProps> (
     controls.update();
 
     const makeScene = (width:number, height:number): void => { 
-      const light = new THREE.AmbientLight( 0x404040 );
+      const light = new THREE.AmbientLight( ambientLight || 0x404040 );
       scene.add(camera);        
       scene.add(light);
       renderer.setSize(width, height);
@@ -41,7 +53,7 @@ const ThreeRenderer = React.forwardRef<HTMLDivElement, MediaRendererProps> (
           src, 
           model => {
               scene.add(model.scene);
-              camera.position.z = 5;
+              camera.position.set( x || 0, y || 0, z || 5) 
               animate();
               setLoading(false);
           },
