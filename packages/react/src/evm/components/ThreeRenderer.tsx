@@ -17,8 +17,8 @@ interface ThreeRendererProps extends MediaRendererProps {
   ambientLight?: Color;  
 }
 
-const ThreeRenderer = React.forwardRef<HTMLDivElement, ThreeRendererProps> (
-  ({ src, alt, poster, style, fov, aspect, near, far, ambientLight, x, y, z, ...restProps }, ref) => {
+export const ThreeRenderer = React.forwardRef<HTMLDivElement, ThreeRendererProps> (
+  ({ src, style, fov, aspect, near, far, ambientLight, x, y, z }, ref) => {
     const refContainer = useRef<HTMLDivElement>(null);
     const [loading, setLoading] = useState(true);
     const scene = new THREE.Scene();
@@ -46,27 +46,26 @@ const ThreeRenderer = React.forwardRef<HTMLDivElement, ThreeRendererProps> (
       renderer.render( scene, camera );
     }
 
-    const loadModel = (src: string) => {
+    const loadModel = (url: string) => {
       const loader = new GLTFLoader();
-
       loader.load(
-          src, 
-          model => {
-              scene.add(model.scene);
-              camera.position.set( x || 0, y || 0, z || 5) 
-              animate();
-              setLoading(false);
-          },
+        url, 
+        model => {
+            scene.add(model.scene);
+            camera.position.set( x || 0, y || 0, z || 5);
+            animate();
+            setLoading(false);
+        },
       )
     }
 
     useEffect(() => {
       let {current} = refContainer;
       if (current) {
-          makeScene(current.clientWidth, current.clientHeight);
-          loadModel(src || '');
+        makeScene(current.clientWidth, current.clientHeight);
+        loadModel(src || '');
       }
-  },[])
+    },[])
 
     return (  
       <div
@@ -74,12 +73,13 @@ const ThreeRenderer = React.forwardRef<HTMLDivElement, ThreeRendererProps> (
       ref={mergeRefs([refContainer, ref])}
       >
       {loading && (
-          <span style={{ position: "absolute", left: "50%", top: "50%" }}>
-          Loading...
-          </span>
+        <span style={{ position: "absolute", left: "50%", top: "50%" }}>
+        Loading...
+        </span>
       )}
       </div>
      );
   })
 
-export default ThreeRenderer
+  ThreeRenderer.displayName = "ThreeRenderer";
+

@@ -451,8 +451,6 @@ export const MediaRenderer = React.forwardRef<
         <ThreeRenderer
           style={mergedStyle}
           src= {videoOrImageSrc.url || ''}
-          poster={possiblePosterSrc.url}
-          requireInteraction={requireInteraction}
           {...restProps}          
          ></ThreeRenderer>
       )        
