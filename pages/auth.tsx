@@ -1,31 +1,51 @@
-import { Box, Center, Flex, LightMode, SimpleGrid } from "@chakra-ui/react";
-import { ChakraNextImage } from "components/Image";
+import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
+import { NewsletterSection } from "components/homepage/sections/NewsletterSection";
 import { SDKSection } from "components/homepage/sections/SDKSection";
 import { AuthenticationExamples } from "components/product-pages/authentication/AuthenticationExamples";
+import { GuidesShowcase } from "components/product-pages/common/GuideShowcase";
 import { Hero } from "components/product-pages/common/Hero";
 import { ProductCard } from "components/product-pages/common/ProductCard";
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
-import { GeneralCta } from "components/shared/GeneralCta";
 import { PageId } from "page-id";
-import WhiteLogo from "public/assets/landingpage/white-logo.png";
 import { Heading, TrackedLink } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
+
+const GUIDES = [
+  {
+    title: "How to Create a Web3 Creator Platform with a Web2 Backend",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w1000/2022/09/web3-creator-platform-bg.png",
+    link: "https://blog.thirdweb.com/guides/how-to-create-a-web3-creator-platform/",
+  },
+  {
+    title: "Create An NFT Gated Website",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w1000/2022/08/thumbnail-31.png",
+    link: "https://blog.thirdweb.com/guides/nft-gated-website/",
+  },
+  {
+    title: "Accept Stripe Subscription Payments For Your Web3 App",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w1000/2022/09/This-is-the-one-3.png",
+    link: "https://blog.thirdweb.com/guides/add-stripe-subscriptions-with-web3-auth/",
+  },
+];
 
 const Authentication: ThirdwebNextPage = () => {
   return (
     <ProductPage
       seo={{
         title: "Auth",
-        description:
-          "Simple wallet based sign-in and authentication for any app.",
+        description: "Authenticate users with their wallets",
       }}
     >
+      {/* Hero */}
       <Hero
         trackingCategory="auth"
         name="Auth"
-        title="Simple wallet sign-in for your apps"
-        description="Authenticate users with just their wallet. Add web3 functionality to any application."
+        title="Authenticate users with their wallets"
+        description="Authenticate users with just their wallet. Build powerful web3 functionality into web2 experiences."
         buttonText="Get started"
         buttonLink="https://portal.thirdweb.com/auth"
         gradient="linear-gradient(147.15deg, #410AB6 30.17%, #FF8D5C 100.01%)"
@@ -38,81 +58,67 @@ const Authentication: ThirdwebNextPage = () => {
           gap={{ base: 12, md: 6 }}
         >
           <ProductCard
-            title="Sign-in with just a wallet"
+            title="Simplify sign-in flow"
             icon={require("/public/assets/product-pages/authentication/sign-in.png")}
           >
-            Let users login to your apps with just their connected wallet and
-            instantly get access to your services.
+            Simplify sign in flow by allowing any user to sign-in to any app
+            using their web3 wallet.
           </ProductCard>
           <ProductCard
             title="Verify on-chain identities"
             icon={require("/public/assets/product-pages/authentication/verify.png")}
           >
-            Securely verify the on-chain identities of your existing users by
-            using a{" "}
-            <TrackedLink
-              color="white"
-              fontWeight="medium"
-              href="https://eips.ethereum.org/EIPS/eip-4361"
-              category="authentication"
-              label="sign-in-with-ethereum"
-              isExternal
-            >
-              Sign-in with Ethereum
-            </TrackedLink>{" "}
-            compliant flow.
+            {/* span required for inline-context */}
+            <span>
+              Built on the SIWE{" ("}
+              <TrackedLink
+                color="white"
+                fontWeight="medium"
+                href="https://eips.ethereum.org/EIPS/eip-4361"
+                category="authentication"
+                label="sign-in-with-ethereum"
+                isExternal
+              >
+                Sign-in with Ethereum
+              </TrackedLink>
+              {") "}
+              standard. Securely verify a user{`'`}s on-chain identity, without
+              relying on a centralized database to verify their identity.
+            </span>
           </ProductCard>
           <ProductCard
             title="Secure token authentication"
             icon={require("/public/assets/product-pages/authentication/authenticate.png")}
           >
-            Secure your backend with a web3-compatible authentication system
-            compliant with the widely used{" "}
-            <TrackedLink
-              color="white"
-              fontWeight="medium"
-              href="https://jwt.io"
-              category="authentication"
-              label="jwt"
-              isExternal
-            >
-              JSON Web Token
-            </TrackedLink>{" "}
-            standard.
+            {/* span required for inline-context */}
+            <span>
+              Secure your backend with a web3-compatible authentication system
+              compliant with the widely used{" "}
+              <TrackedLink
+                color="white"
+                fontWeight="medium"
+                href="https://jwt.io"
+                category="authentication"
+                label="jwt"
+                isExternal
+              >
+                JSON Web Token
+              </TrackedLink>{" "}
+              standard.
+            </span>
           </ProductCard>
         </SimpleGrid>
       </Hero>
 
-      <ProductSection overflow="hidden">
-        <Flex
-          flexDir="column"
-          py={{ base: 24, lg: 48 }}
-          align="center"
-          gap={{ base: 12, lg: 24 }}
-        >
-          <Heading
-            as="h2"
-            bgGradient="linear(to-r, #907EFF, #C5D8FF)"
-            bgClip="text"
-            size="display.sm"
-            fontWeight={700}
-            textAlign="center"
-          >
-            What can you build?
-          </Heading>
-          <AuthenticationExamples />
-        </Flex>
-      </ProductSection>
-
+      {/* SDK */}
       <ProductSection
         id="developers"
         overflow="hidden"
         py={{ base: 12, lg: 24 }}
       >
         <SDKSection
-          title="Plug-and-play authentication SDKs"
-          description="Integrate authentication with a few lines of code in your favorite
-            languages."
+          title="Integrate web3 into your apps and games"
+          description="Powerful SDKs to integrate web3-compatible authentication into your apps and games. Works with any backend, framework, or service."
           codeSelectorProps={{
             snippets: "auth",
             docs: "https://portal.thirdweb.com/auth",
@@ -120,58 +126,51 @@ const Authentication: ThirdwebNextPage = () => {
         />
       </ProductSection>
 
-      <ProductSection showPattern overflow="hidden">
+      {/* Use Cases */}
+      <ProductSection overflow="hidden">
         <Flex
           flexDir="column"
-          pt={{ base: 12, lg: 24 }}
-          pb={{ base: 24, lg: 0 }}
+          py={{ base: 24, lg: 48 }}
           align="center"
-          gap={{ base: 6, md: 8 }}
+          gap={{ base: 12, lg: 24 }}
         >
-          <Center mb={6} pt={{ base: 8, lg: 24 }}>
-            <Center p={2} position="relative" mb={6}>
-              <Box
-                position="absolute"
-                bgGradient="linear(to-r, #F213A4, #040BBF)"
-                top={0}
-                left={0}
-                bottom={0}
-                right={0}
-                borderRadius="3xl"
-                overflow="visible"
-                filter="blur(15px)"
-              />
+          <Box>
+            <Heading
+              as="h2"
+              bgGradient="linear(to-r, #907EFF, #C5D8FF)"
+              bgClip="text"
+              size="display.sm"
+              fontWeight={700}
+              textAlign="center"
+              mb={6}
+            >
+              Auth for every use case
+            </Heading>
 
-              <ChakraNextImage
-                alt=""
-                boxSize={{ base: 24, md: 32 }}
-                placeholder="empty"
-                src={WhiteLogo}
-              />
-            </Center>
-          </Center>
-          <Heading as="h2" size="display.sm" textAlign="center">
-            Get started with auth
-          </Heading>
-          <Heading
-            as="h3"
-            maxW="600px"
-            textAlign="center"
-            color="whiteAlpha.600"
-            size="subtitle.md"
-          >
-            Explore our documentation to learn how you can integrate wallet
-            authentication into your applications today.
-          </Heading>
-          <LightMode>
-            <GeneralCta
-              size="lg"
-              href="https://portal.thirdweb.com/auth"
-              w={{ base: "full", md: "inherit" }}
-            />
-          </LightMode>
+            <Heading
+              as="h3"
+              size="subtitle.lg"
+              textAlign="center"
+              maxW="container.lg"
+            >
+              Explore use cases that require user{`'`}s wallet addresses on the
+              backend.
+            </Heading>
+          </Box>
+
+          <AuthenticationExamples />
         </Flex>
       </ProductSection>
+
+      {/* Guides */}
+      <GuidesShowcase
+        title="Learn how to build"
+        description="Check out our guides to learn how to build with Auth"
+        solution="Auth"
+        guides={GUIDES}
+      />
+
+      <NewsletterSection />
     </ProductPage>
   );
 };

@@ -90,7 +90,7 @@ export const PRODUCTS: NavCardProps[] = [
   {
     name: "Auth",
     label: "auth",
-    description: "Decentralized login for your app",
+    description: "Authenticate users with their wallets",
     link: "/auth",
     icon: require("public/assets/product-icons/auth.png"),
   },
@@ -111,14 +111,14 @@ export const PRODUCTS: NavCardProps[] = [
   {
     name: "ContractKit",
     label: "contractkit",
-    description: "Building blocks for your contracts",
+    description: "Build your own contract easily",
     link: "/contractkit",
     icon: require("public/assets/product-icons/extensions.png"),
   },
   {
     name: "Deploy",
     label: "deploy",
-    description: "Seamless contract deployment",
+    description: "Seamless contract deployment for teams",
     link: "/deploy",
     icon: require("public/assets/product-icons/deploy.png"),
   },

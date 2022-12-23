@@ -1,23 +1,50 @@
-import { SimpleGrid } from "@chakra-ui/react";
+import { Flex, SimpleGrid } from "@chakra-ui/react";
+import { GuidesShowcase } from "components/product-pages/common/GuideShowcase";
 import { Hero } from "components/product-pages/common/Hero";
 import { ProductCard } from "components/product-pages/common/ProductCard";
+import { ProductLearnMoreCard } from "components/product-pages/common/ProductLearnMoreCard";
 import { ProductPage } from "components/product-pages/common/ProductPage";
+import { ProductSection } from "components/product-pages/common/ProductSection";
+import { YoutubeEmbed } from "components/video-embed/YoutubeEmbed";
 import { PageId } from "page-id";
+import { Heading } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
+
+const GUIDES = [
+  {
+    title: "Build An ERC721A NFT Collection using Solidity",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w1000/2022/08/thumbnail-19.png",
+    link: "https://blog.thirdweb.com/guides/get-started-with-the-contracts-sdk/",
+  },
+  {
+    title: "Create A Generative Art NFT Collection Using Solidity & JavaScript",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w1000/2022/08/This-is-the-one--8-.png",
+    link: "https://blog.thirdweb.com/guides/create-a-generative-art-nft-collection-using-solidity-javascript/",
+  },
+  {
+    title: "Build a Blockchain Game using ContractKit",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w2000/2022/10/Group-625858--1-.png",
+    link: "https://blog.thirdweb.com/guides/build-a-blockchain-game-using-contractkit/",
+  },
+];
 
 const ContractExtensions: ThirdwebNextPage = () => {
   return (
     <ProductPage
       seo={{
         title: "ContractKit",
-        description: "Contract development made simple.",
+        description: "Build your own contract easily",
       }}
     >
+      {/* hero section */}
       <Hero
         trackingCategory="contract_kit"
         name="ContractKit"
-        title="Contract development made simple."
-        description="Fast-track your contract development pipeline with our plug-and-play base contracts and extensions."
+        title="Build your own contract easily"
+        description="Build your own contracts easily using ContractKit. Base contracts that can be configured with extensions to meet your specific use case."
         buttonText="Get started"
         buttonLink="https://portal.thirdweb.com/contractkit"
         image={require("public/assets/product-pages/extensions/hero.png")}
@@ -33,16 +60,15 @@ const ContractExtensions: ThirdwebNextPage = () => {
             title="Base contracts for your needs"
             icon={require("/public/assets/product-pages/extensions/hero-icon-1.png")}
           >
-            Start building with one of our base contracts designed with best
-            practices for the most common uses like NFTs, Marketplaces, DAOs,
-            etc..
+            Fully featured base contracts (ERC721, ERC1155, ERC20) that are
+            extendable. Build contracts for all types of web3 apps and games.
           </ProductCard>
           <ProductCard
             title="Extensions to add functionality"
             icon={require("/public/assets/product-pages/extensions/hero-icon-2.png")}
           >
-            Add common features like Royalties and Permissions to you contracts
-            with a single-line of code using our contract extensions.
+            Use extensions to override or add functionality to fine-tune
+            contract behavior, e.g. Royalties, Permissions, Staking, etc.
           </ProductCard>
           <ProductCard
             title="Out-of-the-box tooling"
@@ -53,6 +79,62 @@ const ContractExtensions: ThirdwebNextPage = () => {
           </ProductCard>
         </SimpleGrid>
       </Hero>
+
+      {/* Video Embed section*/}
+      <ProductSection py={{ base: 12, lg: 24 }}>
+        <Flex alignItems="center" flexDirection="column">
+          <Heading
+            as="h2"
+            size="display.sm"
+            textAlign="center"
+            mb={12}
+            maxW={800}
+          >
+            Build contracts for your web3 apps and games
+          </Heading>
+          <YoutubeEmbed
+            maxWidth={680}
+            videoId="G3IHeKhVtpQ"
+            aspectRatio={16 / 9}
+            title="Introducing ContractKit: The Web3 Tool for Base Contracts, Basic Contracts, and Extensions"
+          />
+        </Flex>
+      </ProductSection>
+
+      {/* Learn More section */}
+      <ProductSection py={{ base: 12, lg: 24 }}>
+        <Heading
+          as="h2"
+          size="display.sm"
+          fontWeight={700}
+          textAlign="center"
+          mb={{ base: 16, lg: 24 }}
+        >
+          Contracts for every use case
+        </Heading>
+        <SimpleGrid columns={{ base: 1, md: 2 }} gap={14}>
+          <ProductLearnMoreCard
+            title="Base Contracts"
+            description="Fully featured base contracts, including ERC721, ERC1155 & ERC20. This provides capability to mint NFTs to sell on a marketplace, signature-based minting, batch lazy mint NFTs, delayed reveal and claim conditions to define how your NFTs can be claimed."
+            icon={require("/public/assets/product-pages/dashboard/hero-icon-1.png")}
+            href="https://portal.thirdweb.com/contractkit/base-contracts"
+          />
+          <ProductLearnMoreCard
+            title="Extensions"
+            description="Each extension that you implement in your smart contract unlocks corresponding functionality for you to utilize in the SDK."
+            icon={require("/public/assets/product-pages/deploy/hero-icon-2.png")}
+            href="https://portal.thirdweb.com/contractkit/extensions"
+          />
+        </SimpleGrid>
+      </ProductSection>
+
+      {/* Guides */}
+      <GuidesShowcase
+        title="Learn how to build"
+        description="Check out our guides to learn how to build with ContractKit"
+        solution="ContractKit"
+        guides={GUIDES}
+      />
     </ProductPage>
   );
 };

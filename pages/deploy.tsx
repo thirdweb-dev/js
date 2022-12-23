@@ -1,24 +1,49 @@
-import { SimpleGrid } from "@chakra-ui/react";
+import { Flex, SimpleGrid } from "@chakra-ui/react";
+import { GuidesShowcase } from "components/product-pages/common/GuideShowcase";
 import { Hero } from "components/product-pages/common/Hero";
 import { ProductCard } from "components/product-pages/common/ProductCard";
 import { ProductPage } from "components/product-pages/common/ProductPage";
+import { ProductSection } from "components/product-pages/common/ProductSection";
+import { YoutubeEmbed } from "components/video-embed/YoutubeEmbed";
 import { PageId } from "page-id";
-import { Text } from "tw-components";
+import { Heading, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
+
+const GUIDES = [
+  {
+    title: "Deploy Smart Contracts From A Gnosis Safe",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w1000/2022/11/This-is-the-one--20-.png",
+    link: "https://blog.thirdweb.com/guides/how-to-deploy-smart-contract-using-gnosis-safe/",
+  },
+  {
+    title: "How to Deploy Any Smart Contract Using the thirdweb CLI",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w1000/2022/10/This-is-the-one-10.png",
+    link: "https://blog.thirdweb.com/guides/how-to-deploy-any-smart-contract-using-thirdweb-cli/",
+  },
+  {
+    title: "Introducing thirdweb Deploy",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w1000/2022/09/Blog-thumbnail_tw-deploy.png",
+    link: "https://blog.thirdweb.com/thirdweb-deploy/",
+  },
+];
 
 const Deploy: ThirdwebNextPage = () => {
   return (
     <ProductPage
       seo={{
         title: "Deploy",
-        description: "The next-gen contract deployment flow.",
+        description: "Simple contract deployment workflow for teams",
       }}
     >
+      {/* hero */}
       <Hero
         trackingCategory="deploy"
         name="Deploy"
-        title="The next-gen contract deployment flow."
-        description="Deploy any smart contract with a single command. Get all the tools you need to get to success."
+        title="Simple contract deployment workflow for teams"
+        description="Deploy contracts on-chain with a simple deployment workflow designed for team collaboration."
         buttonText="Get started"
         buttonLink="https://portal.thirdweb.com/deploy"
         image={require("public/assets/product-pages/deploy/hero.png")}
@@ -31,31 +56,65 @@ const Deploy: ThirdwebNextPage = () => {
           gap={{ base: 12, md: 6 }}
         >
           <ProductCard
-            title="One-line contract deployment"
+            title="1-line contract deployment"
             icon={require("/public/assets/product-pages/deploy/hero-icon-1.png")}
           >
-            Compile and deploy any smart contract with the{" "}
-            <Text as="span" size="body.lg" fontWeight="medium" color="white">
-              npx thirdweb deploy
-            </Text>{" "}
-            command. No more copying ABIs or generating bindings.
+            {/* span required for inline-context */}
+            <span>
+              Compile and deploy any smart contract with the CLI{" "}
+              <Text as="span" size="body.lg" fontWeight="medium" color="white">
+                npx thirdweb deploy
+              </Text>{" "}
+              command. No more copying ABIs or generating bindings.
+            </span>
           </ProductCard>
           <ProductCard
-            title="Deploy directly from your wallet"
+            title="Deploy from your wallet"
             icon={require("/public/assets/product-pages/deploy/hero-icon-2.png")}
           >
-            Stop using insecure and unfunded private keys for local deploys.
-            Deploy from your wallet on the browser.
+            Enable non-technical team members to deploy contracts without
+            relying on engineers. Deploy directly from your browser. No need to
+            deal with insecure and unfunded private keys or scripts required
+            with local deploys.
           </ProductCard>
           <ProductCard
-            title="Auto-generated tooling"
+            title="Unlock powerful tooling"
             icon={require("/public/assets/product-pages/deploy/hero-icon-3.png")}
           >
-            Get auto-generated SDKs and Dashboards to interact with and manage
-            your contracts.
+            Unlock access to powerful tooling that allow you to easily build
+            apps on top of your contracts, including SDKs and Dashboard.
           </ProductCard>
         </SimpleGrid>
       </Hero>
+
+      {/* Video Embed section*/}
+      <ProductSection py={{ base: 12, lg: 24 }}>
+        <Flex alignItems="center" flexDirection="column">
+          <Heading
+            as="h2"
+            size="display.sm"
+            textAlign="center"
+            mb={12}
+            maxW={850}
+          >
+            Deploy contracts to unlock powerful SDKs and Dashboard
+          </Heading>
+          <YoutubeEmbed
+            maxWidth={680}
+            title="Deploy contracts to unlock powerful SDKs and Dashboard"
+            aspectRatio={16 / 10}
+            videoId="6EqumMCa-E8"
+          />
+        </Flex>
+      </ProductSection>
+
+      {/* Guides */}
+      <GuidesShowcase
+        title="Learn how to build"
+        description="Check out our guides to learn how to build with Deploy"
+        solution="Deploy"
+        guides={GUIDES}
+      />
     </ProductPage>
   );
 };

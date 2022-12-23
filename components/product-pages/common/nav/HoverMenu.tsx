@@ -49,7 +49,7 @@ export const HoverMenu: React.FC<HoverMenuProps> = ({
             borderWidth="2px"
           >
             <Flex>
-              <Stack width={columns === 2 ? "600px" : "300px"}>
+              <Stack width={columns === 2 ? "660px" : "300px"}>
                 <SimpleGrid columns={columns}>
                   {items.map((item) => (
                     <NavCard key={item.label} {...item} />
