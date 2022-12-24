@@ -1,4 +1,0 @@
-{
-  "main": "dist/thirdweb-dev-wallets-solana-wallets-keypair.cjs.js",
-  "module": "dist/thirdweb-dev-wallets-solana-wallets-keypair.esm.js"
-}
