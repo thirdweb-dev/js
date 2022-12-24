@@ -18,6 +18,7 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../src/evm";
+import { PluginMap } from "../../src/evm/types/Map";
 import { MockStorage } from "./mock/MockStorage";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
@@ -44,12 +45,11 @@ import {
   TWFactory__factory,
   TWRegistry,
   TWRegistry__factory,
-  TWMultichainRegistryEntrypoint,
-  TWMultichainRegistryEntrypoint__factory,
+  TWMultichainRegistryRouter,
+  TWMultichainRegistryRouter__factory,
   TWMultichainRegistryLogic,
   TWMultichainRegistryLogic__factory,
   Map,
-  Map__factory,
   VoteERC20__factory,
   TWProxy__factory,
   TWProxy,
@@ -145,13 +145,6 @@ export const mochaHooks = {
 
     // Setup multichain registry for tests
     async function setupMultichainRegistry(): Promise<string> {
-      const mapDeployer = (await new ethers.ContractFactory(
-        Map__factory.abi,
-        Map__factory.bytecode,
-      )
-        .connect(signer)
-        .deploy()) as Map;
-      const map = await mapDeployer.deployed();
       const multichainRegistryLogicDeployer = (await new ethers.ContractFactory(
         TWMultichainRegistryLogic__factory.abi,
         TWMultichainRegistryLogic__factory.bytecode,
@@ -163,49 +156,59 @@ export const mochaHooks = {
       const logicInterface = new ethers.utils.Interface(
         TWMultichainRegistryLogic__factory.abi,
       );
-      map.addExtension(
-        logicInterface.getSighash("add"),
-        multichainRegistryLogic.address,
-      );
-      map.addExtension(
-        logicInterface.getSighash("remove"),
-        multichainRegistryLogic.address,
-      );
-      map.addExtension(
-        logicInterface.getSighash("getAll"),
-        multichainRegistryLogic.address,
-      );
-      map.addExtension(
-        logicInterface.getSighash("count"),
-        multichainRegistryLogic.address,
-      );
-      map.addExtension(
-        logicInterface.getSighash("getMetadataUri"),
-        multichainRegistryLogic.address,
-      );
-      const multichainRegistryEntrypointDeployer =
+
+      const dummyInterface = new ethers.utils.Interface(TWFactory__factory.abi);
+
+      const pluginMap: PluginMap[] = [];
+      pluginMap.push({
+        selector: logicInterface.getSighash("add"),
+        pluginAddress: multichainRegistryLogic.address,
+        functionString: "add(address,address,uint256,string)",
+      });
+      pluginMap.push({
+        selector: logicInterface.getSighash("remove"),
+        pluginAddress: multichainRegistryLogic.address,
+        functionString: "remove(address,address,uint256)",
+      });
+      pluginMap.push({
+        selector: logicInterface.getSighash("getAll"),
+        pluginAddress: multichainRegistryLogic.address,
+        functionString: "getAll(address)",
+      });
+      pluginMap.push({
+        selector: dummyInterface.getSighash("deployProxy"),
+        pluginAddress: registryAddress,
+        functionString: "deployProxy(bytes32,bytes)",
+      });
+      pluginMap.push({
+        selector: logicInterface.getSighash("count"),
+        pluginAddress: multichainRegistryLogic.address,
+        functionString: "count(address)",
+      });
+      pluginMap.push({
+        selector: logicInterface.getSighash("getMetadataUri"),
+        pluginAddress: multichainRegistryLogic.address,
+        functionString: "getMetadataUri(uint256,address)",
+      });
+      pluginMap.push({
+        selector: dummyInterface.getSighash("addImplementation"),
+        pluginAddress: registryAddress,
+        functionString: "addImplementation(address)",
+      });
+
+      const multichainRegistryRouterDeployer =
         (await new ethers.ContractFactory(
-          TWMultichainRegistryEntrypoint__factory.abi,
-          TWMultichainRegistryEntrypoint__factory.bytecode,
+          TWMultichainRegistryRouter__factory.abi,
+          TWMultichainRegistryRouter__factory.bytecode,
         )
           .connect(signer)
-          .deploy(map.address, [
+          .deploy(pluginMap, [
             trustedForwarderAddress,
-          ])) as TWMultichainRegistryEntrypoint;
-      const multichainRegistryEntrypoint =
-        await multichainRegistryEntrypointDeployer.deployed();
-      const multiChainRegistryDeployer = (await new ethers.ContractFactory(
-        TWProxy__factory.abi,
-        TWProxy__factory.bytecode,
-      )
-        .connect(signer)
-        .deploy(
-          multichainRegistryEntrypoint.address,
-          [],
-        )) as TWMultichainRegistryEntrypoint;
-      const multiChainRegistry = await multiChainRegistryDeployer.deployed();
+          ])) as TWMultichainRegistryRouter;
+      const multichainRegistryRouter =
+        await multichainRegistryRouterDeployer.deployed();
 
-      return multiChainRegistry.address;
+      return multichainRegistryRouter.address;
     }
 
     async function deployContract(

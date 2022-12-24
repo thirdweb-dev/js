@@ -5,8 +5,12 @@ import { PublishedMetadata } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import { AddContractInput, ContractInput, DeployedContract } from "../../types";
 import { ContractWrapper } from "./contract-wrapper";
-import type { TWMultichainRegistry } from "@thirdweb-dev/contracts-js";
-import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistry.json";
+import type {
+  TWMultichainRegistryRouter,
+  TWMultichainRegistryLogic,
+} from "@thirdweb-dev/contracts-js";
+import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryLogic.json";
+import TWRegistryRouterABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryRouter.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, utils } from "ethers";
 import invariant from "tiny-invariant";
@@ -15,29 +19,41 @@ import invariant from "tiny-invariant";
  * @internal
  */
 export class MultichainRegistry {
-  private registry: ContractWrapper<TWMultichainRegistry>;
+  private registryLogic: ContractWrapper<TWMultichainRegistryLogic>;
+  private registryRouter: ContractWrapper<TWMultichainRegistryRouter>;
   private storage: ThirdwebStorage;
 
   constructor(storage: ThirdwebStorage, options: SDKOptions = {}) {
     this.storage = storage;
-    this.registry = new ContractWrapper<TWMultichainRegistry>(
+    this.registryLogic = new ContractWrapper<TWMultichainRegistryLogic>(
       getRpcUrlForChainId(ChainId.Polygon),
       getMultichainRegistryAddress(),
       TWRegistryABI,
+      options,
+    );
+
+    this.registryRouter = new ContractWrapper<TWMultichainRegistryRouter>(
+      getRpcUrlForChainId(ChainId.Polygon),
+      getMultichainRegistryAddress(),
+      TWRegistryRouterABI,
       options,
     );
   }
 
   // FIXME this needs to only assign the signer, not the provider
   public async updateSigner(signer: NetworkOrSignerOrProvider) {
-    this.registry.updateSignerOrProvider(signer);
+    this.registryLogic.updateSignerOrProvider(signer);
+    this.registryRouter.updateSignerOrProvider(signer);
   }
 
   public async getContractMetadataURI(
     chainId: number,
     address: string,
   ): Promise<string> {
-    return await this.registry.readContract.getMetadataUri(chainId, address);
+    return await this.registryLogic.readContract.getMetadataUri(
+      chainId,
+      address,
+    );
   }
 
   public async getContractMetadata(
@@ -56,7 +72,7 @@ export class MultichainRegistry {
   public async getContractAddresses(
     walletAddress: string,
   ): Promise<DeployedContract[]> {
-    return (await this.registry.readContract.getAll(walletAddress))
+    return (await this.registryLogic.readContract.getAll(walletAddress))
       .filter(
         (result) =>
           utils.isAddress(result.deploymentAddress) &&
@@ -77,7 +93,7 @@ export class MultichainRegistry {
   public async addContracts(
     contracts: AddContractInput[],
   ): Promise<TransactionResult> {
-    const deployerAddress = await this.registry.getSignerAddress();
+    const deployerAddress = await this.registryRouter.getSignerAddress();
     // invariant(
     //   (await this.registry.getSigner()?.getChainId()) === ChainId.Polygon,
     //   "Signer not connected to Polygon",
@@ -85,7 +101,7 @@ export class MultichainRegistry {
     const encoded: string[] = [];
     contracts.forEach((contact) => {
       encoded.push(
-        this.registry.readContract.interface.encodeFunctionData("add", [
+        this.registryLogic.readContract.interface.encodeFunctionData("add", [
           deployerAddress,
           contact.address,
           contact.chainId,
@@ -95,7 +111,7 @@ export class MultichainRegistry {
     });
 
     return {
-      receipt: await this.registry.multiCall(encoded),
+      receipt: await this.registryRouter.multiCall(encoded),
     };
   }
 
@@ -108,15 +124,15 @@ export class MultichainRegistry {
   public async removeContracts(
     contracts: ContractInput[],
   ): Promise<TransactionResult> {
-    const deployerAddress = await this.registry.getSignerAddress();
+    const deployerAddress = await this.registryRouter.getSignerAddress();
     invariant(
-      (await this.registry.getSigner()?.getChainId()) === ChainId.Polygon,
+      (await this.registryRouter.getSigner()?.getChainId()) === ChainId.Polygon,
       "Signer not connected to Polygon",
     );
     const encoded: string[] = [];
     contracts.forEach((contract) => {
       encoded.push(
-        this.registry.readContract.interface.encodeFunctionData("remove", [
+        this.registryLogic.readContract.interface.encodeFunctionData("remove", [
           deployerAddress,
           contract.address,
           contract.chainId,
@@ -125,7 +141,7 @@ export class MultichainRegistry {
     });
 
     return {
-      receipt: await this.registry.multiCall(encoded),
+      receipt: await this.registryRouter.multiCall(encoded),
     };
   }
 }

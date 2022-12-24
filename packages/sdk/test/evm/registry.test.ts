@@ -4,7 +4,6 @@ import { ContractRegistry } from "../../src/evm/core/classes/registry";
 import { sdk, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
-import { addPackages } from "yalc";
 
 describe("Contract Registry", () => {
   let registry: ContractRegistry;
@@ -25,35 +24,33 @@ describe("Contract Registry", () => {
     sdk.updateSignerOrProvider(adminWallet);
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     multichainRegistry = sdk.registry;
-
     console.log(
       "multichain registry address: ",
       getMultichainRegistryAddress(),
     );
-
     address = await sdk.deployer.deployNFTCollection({
       name: "Test1",
       primary_sale_recipient: adminWallet.address,
     });
     const chainId: number = await adminWallet.getChainId();
     const metadataURI: string = "ipfs://metadata";
-
+    console.log("here");
     const tx = await multichainRegistry.addContract({
       address,
       chainId,
       metadataURI,
     });
-
+    console.log("here 2");
     let uri = await multichainRegistry.getContractMetadataURI(chainId, address);
+    console.log("here 3");
     expect(uri).to.equal(metadataURI);
-
     let contracts = await multichainRegistry.getContractAddresses(
       adminWallet.address,
     );
+    console.log("here 4");
     console.log(contracts);
     console.log(address);
     expect(contracts[0].address).to.equal(address);
-
     console.log(await sdk.getContractList(adminWallet.address));
   });
 
