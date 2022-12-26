@@ -16,6 +16,7 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 // ===
 import { MarketplaceV3DirectListings } from "../../core/classes/marketplacev3-direct-listings";
 import { MarketplaceV3EnglishAuctions } from "../../core/classes/marketplacev3-english-auction";
+import { MarketplaceV3Offers } from "../../core/classes/marketplacev3-offers";
 // ===
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../../core/types";
@@ -35,11 +36,13 @@ import type {
   MarketplaceEntrypoint,
   DirectListings,
   EnglishAuctions,
+  Offers,
 } from "@thirdweb-dev/contracts-js";
 import DirectListingsABI from "@thirdweb-dev/contracts-js/dist/abis/DirectListings.json";
 import EnglishAuctionsABI from "@thirdweb-dev/contracts-js/dist/abis/EnglishAuctions.json";
 // ===
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Marketplace.json";
+import OffersABI from "@thirdweb-dev/contracts-js/dist/abis/Offers.json";
 // ===
 import { NewOfferEventObject } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
 // ===
@@ -155,6 +158,8 @@ export class MarketplaceV3 implements UpdateableNetwork {
    */
   public englishAuctions: MarketplaceV3EnglishAuctions;
 
+  public offers: MarketplaceV3Offers;
+
   private _chainId;
   get chainId() {
     return this._chainId;
@@ -206,6 +211,11 @@ export class MarketplaceV3 implements UpdateableNetwork {
         EnglishAuctionsABI,
         options,
       ),
+      this.contractWrapper,
+      this.storage,
+    );
+    this.offers = new MarketplaceV3Offers(
+      new ContractWrapper<Offers>(network, address, OffersABI, options),
       this.contractWrapper,
       this.storage,
     );

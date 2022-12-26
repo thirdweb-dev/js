@@ -4,4 +4,5 @@ export * from "./MarketPlaceFilter";
 export * from "./NewEnglishAuction";
 export * from "./EnglishAuction";
 export * from "./Bid";
-export * from "./UnmappedOffer";
+export * from "./Offer";
+export * from "./NewOffer";

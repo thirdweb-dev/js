@@ -7,6 +7,7 @@ import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
   NewDirectListing,
   NewEnglishAuction,
+  NewOffer,
   UnmappedOffer,
 } from "../types/marketplacev3";
 import { fetchCurrencyValue } from "./currency";
@@ -213,5 +214,34 @@ export function validateNewEnglishAuctionParam(param: NewEnglishAuction) {
   invariant(
     param.endTimestamp > param.startTimestamp,
     "End time must be after start time",
+  );
+}
+
+/**
+ * Used to verify fields in new offer.
+ * @internal
+ */
+// TODO this should be done in zod
+export function validateNewOfferParam(param: NewOffer) {
+  invariant(
+    param.assetContractAddress !== undefined &&
+      param.assetContractAddress !== null,
+    "Asset contract address is required",
+  );
+  invariant(
+    param.tokenId !== undefined && param.tokenId !== null,
+    "Token ID is required",
+  );
+  invariant(
+    param.quantity !== undefined && param.quantity !== null,
+    "Quantity is required",
+  );
+  invariant(
+    param.totalPrice !== undefined && param.totalPrice !== null,
+    "Price per token is required",
+  );
+  invariant(
+    param.endTimeInSeconds !== undefined && param.endTimeInSeconds !== null,
+    "End time is required",
   );
 }
