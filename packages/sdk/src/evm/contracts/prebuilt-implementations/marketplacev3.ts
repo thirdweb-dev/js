@@ -227,99 +227,6 @@ export class MarketplaceV3 implements UpdateableNetwork {
    *******************************/
 
   /**
-   * Convenience function to get either a direct or auction listing
-   *
-   * @param listingId - the listing id
-   * @returns either a direct or auction listing
-   *
-   * @remarks Get a listing by its listing id
-   * @example
-   * ```javascript
-   * const listingId = 0;
-   * const listing = await contract.getListing(listingId);
-   * ```
-   */
-  public async getListing(
-    listingId: BigNumberish,
-  ): Promise<AuctionListing | DirectListing> {
-    const listing = await this.contractWrapper.readContract.listings(listingId);
-    if (listing.assetContract === constants.AddressZero) {
-      throw new ListingNotFoundError(this.getAddress(), listingId.toString());
-    }
-    switch (listing.listingType) {
-      case ListingType.Auction: {
-        return await this.auction.mapListing(listing);
-      }
-      case ListingType.Direct: {
-        return await this.direct.mapListing(listing);
-      }
-      default: {
-        throw new Error(`Unknown listing type: ${listing.listingType}`);
-      }
-    }
-  }
-
-  /**
-   * Get all active listings
-   *
-   * @remarks Fetch all the active listings from this marketplace contract. An active listing means it can be bought or bid on.
-   * @example
-   * ```javascript
-   * const listings = await contract.getActiveListings();
-   * const priceOfFirstActiveListing = listings[0].price;
-   * ```
-   * @param filter - optional filter parameters
-   */
-  public async getActiveListings(
-    filter?: MarketplaceFilter,
-  ): Promise<(AuctionListing | DirectListing)[]> {
-    const rawListings = await this.getAllListingsNoFilter(true);
-    const filtered = this.applyFilter(rawListings, filter);
-    const now = BigNumber.from(Math.floor(Date.now() / 1000));
-    return filtered.filter((l) => {
-      return (
-        (l.type === ListingType.Auction &&
-          BigNumber.from(l.endTimeInEpochSeconds).gt(now) &&
-          BigNumber.from(l.startTimeInEpochSeconds).lte(now)) ||
-        (l.type === ListingType.Direct && l.quantity > 0)
-      );
-    });
-  }
-
-  /**
-   * Get all the listings
-   *
-   * @remarks Fetch all the listings from this marketplace contract, including sold ones.
-   * @example
-   * ```javascript
-   * const listings = await contract.getAllListings();
-   * const priceOfFirstListing = listings[0].price;
-   * ```
-   *
-   * @param filter - optional filter parameters
-   */
-  public async getAllListings(
-    filter?: MarketplaceFilter,
-  ): Promise<(AuctionListing | DirectListing)[]> {
-    const rawListings = await this.getAllListingsNoFilter(false);
-    return this.applyFilter(rawListings, filter);
-  }
-
-  /**
-   * @internal
-   */
-  public getAll = this.getAllListings;
-
-  /**
-   * Get the total number of Listings
-   * @returns the total number listings on the marketplace
-   * @public
-   */
-  public async getTotalCount(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.totalListings();
-  }
-
-  /**
    * Get whether listing is restricted only to addresses with the Lister role
    */
   public async isRestrictedToListerRoleOnly(): Promise<boolean> {
@@ -328,20 +235,6 @@ export class MarketplaceV3 implements UpdateableNetwork {
       constants.AddressZero,
     );
     return !anyoneCanList;
-  }
-
-  /**
-   * Get the buffer in basis points between offers
-   */
-  public async getBidBufferBps(): Promise<BigNumber> {
-    return this.contractWrapper.readContract.bidBufferBps();
-  }
-
-  /**
-   * get the buffer time in seconds between offers
-   */
-  public async getTimeBufferInSeconds(): Promise<BigNumber> {
-    return this.contractWrapper.readContract.timeBuffer();
   }
 
   /**
@@ -487,56 +380,6 @@ export class MarketplaceV3 implements UpdateableNetwork {
       default:
         throw Error(`Unknown listing type: ${listing.listingType}`);
     }
-  }
-
-  /**
-   * Set the Auction bid buffer
-   * @remarks A percentage (e.g. 5%) in basis points (5% = 500, 100% = 10000). A new bid is considered to be a winning bid only if its bid amount is at least the bid buffer (e.g. 5%) greater than the previous winning bid. This prevents buyers from making very slightly higher bids to win the auctioned items.
-   * @example
-   * ```javascript
-   * // the bid buffer in basis points
-   * const bufferBps = 5_00; // 5%
-   * await contract.setBidBufferBps(bufferBps);
-   * ```
-   * @param bufferBps - the bps value
-   */
-  public async setBidBufferBps(bufferBps: BigNumberish): Promise<void> {
-    await this.roles.verify(
-      ["admin"],
-      await this.contractWrapper.getSignerAddress(),
-    );
-
-    const timeBuffer = await this.getTimeBufferInSeconds();
-    await this.contractWrapper.sendTransaction("setAuctionBuffers", [
-      timeBuffer,
-      BigNumber.from(bufferBps),
-    ]);
-  }
-
-  /**
-   * Set the Auction Time buffer:
-   * @remarks Measured in seconds (e.g. 15 minutes or 900 seconds). If a winning bid is made within the buffer of the auction closing (e.g. 15 minutes within the auction closing), the auction's closing time is increased by the buffer to prevent buyers from making last minute winning bids, and to give time to other buyers to make a higher bid if they wish to.
-   * @example
-   * ```javascript
-   * // the time buffer in seconds
-   * const bufferInSeconds = 60;
-   * await contract.setTimeBufferInSeconds(bufferInSeconds);
-   * ```
-   * @param bufferInSeconds - the seconds value
-   */
-  public async setTimeBufferInSeconds(
-    bufferInSeconds: BigNumberish,
-  ): Promise<void> {
-    await this.roles.verify(
-      ["admin"],
-      await this.contractWrapper.getSignerAddress(),
-    );
-
-    const bidBuffer = await this.getBidBufferBps();
-    await this.contractWrapper.sendTransaction("setAuctionBuffers", [
-      BigNumber.from(bufferInSeconds),
-      bidBuffer,
-    ]);
   }
 
   /**

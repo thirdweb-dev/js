@@ -183,50 +183,50 @@ export class MarketplaceV3EnglishAuctions {
     );
   }
 
-  /**
-   * Get Auction Winner
-   *
-   * @remarks Get the winner of the auction after an auction ends.
-   *
-   * @example
-   * ```javascript
-   * // The listing ID of the auction that closed
-   * const listingId = 0;
-   *
-   * contract.auction.
-   *   .getWinner(listingId)
-   *   .then((auctionWinner) => console.log(auctionWinner))
-   *   .catch((err) => console.error(err));
-   * ```
-   */
-  public async getWinner(listingId: BigNumberish): Promise<string> {
-    const listing = await this.validateListing(BigNumber.from(listingId));
-    const offers = await this.contractWrapper.readContract.winningBid(
-      listingId,
-    );
-    const now = BigNumber.from(Math.floor(Date.now() / 1000));
-    const endTime = BigNumber.from(listing.endTimeInEpochSeconds);
+  // /**
+  //  * Get Auction Winner
+  //  *
+  //  * @remarks Get the winner of the auction after an auction ends.
+  //  *
+  //  * @example
+  //  * ```javascript
+  //  * // The listing ID of the auction that closed
+  //  * const listingId = 0;
+  //  *
+  //  * contract.auction.
+  //  *   .getWinner(listingId)
+  //  *   .then((auctionWinner) => console.log(auctionWinner))
+  //  *   .catch((err) => console.error(err));
+  //  * ```
+  //  */
+  // public async getWinner(auctionId: BigNumberish): Promise<string> {
+  //   const auction = await this.validateAuction(BigNumber.from(auctionId));
+  //   const offers = await this.contractWrapper.readContract.winningBid(
+  //     listingId,
+  //   );
+  //   const now = BigNumber.from(Math.floor(Date.now() / 1000));
+  //   const endTime = BigNumber.from(listing.endTimeInEpochSeconds);
 
-    // if we have a winner in the map and the current time is past the endtime of the auction return the address of the winner
-    if (now.gt(endTime) && offers.offeror !== constants.AddressZero) {
-      return offers.offeror;
-    }
-    // otherwise fall back to query filter things
+  //   // if we have a winner in the map and the current time is past the endtime of the auction return the address of the winner
+  //   if (now.gt(endTime) && offers.offeror !== constants.AddressZero) {
+  //     return offers.offeror;
+  //   }
+  //   // otherwise fall back to query filter things
 
-    // TODO this should be via indexer or direct contract call
-    const closedAuctions = await this.contractWrapper.readContract.queryFilter(
-      this.contractWrapper.readContract.filters.AuctionClosed(),
-    );
-    const auction = closedAuctions.find((a) =>
-      a.args.listingId.eq(BigNumber.from(listingId)),
-    );
-    if (!auction) {
-      throw new Error(
-        `Could not find auction with listingId ${listingId} in closed auctions`,
-      );
-    }
-    return auction.args.winningBidder;
-  }
+  //   // TODO this should be via indexer or direct contract call
+  //   const closedAuctions = await this.contractWrapper.readContract.queryFilter(
+  //     this.contractWrapper.readContract.filters.AuctionClosed(),
+  //   );
+  //   const auction = closedAuctions.find((a) =>
+  //     a.args.listingId.eq(BigNumber.from(listingId)),
+  //   );
+  //   if (!auction) {
+  //     throw new Error(
+  //       `Could not find auction with listingId ${listingId} in closed auctions`,
+  //     );
+  //   }
+  //   return auction.args.winningBidder;
+  // }
 
   /** ******************************
    * WRITE FUNCTIONS
@@ -343,19 +343,22 @@ export class MarketplaceV3EnglishAuctions {
    * await contract.auction.buyoutListing(listingId);
    * ```
    */
-  public async buyoutListing(
-    listingId: BigNumberish,
+  public async buyoutAuction(
+    auctionId: BigNumberish,
   ): Promise<TransactionResult> {
-    const listing = await this.validateListing(BigNumber.from(listingId));
+    const auction = await this.validateAuction(BigNumber.from(auctionId));
 
     const currencyMetadata = await fetchCurrencyMetadata(
-      this.contractWrapper.getProvider(),
-      listing.currencyContractAddress,
+      this.englishAuctions.getProvider(),
+      auction.currencyContractAddress,
     );
 
     return this.makeBid(
-      listingId,
-      ethers.utils.formatUnits(listing.buyoutPrice, currencyMetadata.decimals),
+      auctionId,
+      ethers.utils.formatUnits(
+        auction.buyoutBidAmount,
+        currencyMetadata.decimals,
+      ),
     );
   }
 
@@ -375,60 +378,48 @@ export class MarketplaceV3EnglishAuctions {
    * ```
    */
   public async makeBid(
-    listingId: BigNumberish,
-    pricePerToken: Price,
+    auctionId: BigNumberish,
+    bidAmount: Price,
   ): Promise<TransactionResult> {
-    const listing = await this.validateListing(BigNumber.from(listingId));
-    const normalizedPrice = await normalizePriceValue(
-      this.contractWrapper.getProvider(),
-      pricePerToken,
-      listing.currencyContractAddress,
+    const auction = await this.validateAuction(BigNumber.from(auctionId));
+
+    const normalizedBidAmount = await normalizePriceValue(
+      this.englishAuctions.getProvider(),
+      bidAmount,
+      auction.currencyContractAddress,
     );
-    if (normalizedPrice.eq(BigNumber.from(0))) {
+    if (normalizedBidAmount.eq(BigNumber.from(0))) {
       throw new Error("Cannot make a bid with 0 value");
     }
-    const bidBuffer = await this.contractWrapper.readContract.bidBufferBps();
-    const winningBid = await this.getWinningBid(listingId);
+
+    const winningBid = await this.getWinningBid(auctionId);
     if (winningBid) {
-      const isWinnner = isWinningBid(
-        winningBid.pricePerToken,
-        normalizedPrice,
-        bidBuffer,
-      );
+      const isWinnner = this.isWinningBid(auctionId, normalizedBidAmount);
 
       invariant(
         isWinnner,
         "Bid price is too low based on the current winning bid and the bid buffer",
       );
     } else {
-      const tokenPrice = normalizedPrice;
-      const reservePrice = BigNumber.from(listing.reservePrice);
+      const tokenPrice = normalizedBidAmount;
+      const minimumBidAmount = BigNumber.from(auction.minimumBidAmount);
       invariant(
-        tokenPrice.gte(reservePrice),
-        "Bid price is too low based on reserve price",
+        tokenPrice.gte(minimumBidAmount),
+        "Bid price is too low based on minimum bid amount",
       );
     }
 
-    const quantity = BigNumber.from(listing.quantity);
-    const value = normalizedPrice.mul(quantity);
-
-    const overrides = (await this.contractWrapper.getCallOverrides()) || {};
+    const overrides = (await this.englishAuctions.getCallOverrides()) || {};
     await setErc20Allowance(
-      this.contractWrapper,
-      value,
-      listing.currencyContractAddress,
+      this.englishAuctions,
+      normalizedBidAmount,
+      auction.currencyContractAddress,
       overrides,
     );
     return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "offer",
-        [
-          listingId,
-          listing.quantity,
-          listing.currencyContractAddress,
-          normalizedPrice,
-          ethers.constants.MaxUint256,
-        ],
+      receipt: await this.englishAuctions.sendTransaction(
+        "bidInAuction",
+        [auctionId, normalizedBidAmount],
         overrides,
       ),
     };
@@ -471,9 +462,9 @@ export class MarketplaceV3EnglishAuctions {
   }
 
   /**
-   * Close the Auction for the buyer or the seller
+   * Close the Auction for the buyer
    *
-   * @remarks Closes the Auction and executes the sale for the buyer or the seller.
+   * @remarks Closes the Auction and executes the sale for the buyer.
    *
    * @example
    * ```javascript
@@ -482,29 +473,66 @@ export class MarketplaceV3EnglishAuctions {
    * await contract.auction.closeListing(listingId);
    * ```
    *
-   * @param listingId - the auction  listing ud to close
-   * @param closeFor - optionally pass the auction creator address or winning bid offeror address to close the auction on their behalf
+   * @param auctionId - the auction id to close
+   * @param closeFor - optionally pass the winning bid offeror address to close the auction on their behalf
    */
-  public async closeListing(
-    listingId: BigNumberish,
+  public async closeAuctionForBidder(
+    auctionId: BigNumberish,
     closeFor?: string,
   ): Promise<TransactionResult> {
     if (!closeFor) {
-      closeFor = await this.contractWrapper.getSignerAddress();
+      closeFor = await this.englishAuctions.getSignerAddress();
     }
-    const listing = await this.validateListing(BigNumber.from(listingId));
+    const auction = await this.validateAuction(BigNumber.from(auctionId));
     try {
       return {
-        receipt: await this.contractWrapper.sendTransaction("closeAuction", [
-          BigNumber.from(listingId),
-          closeFor,
-        ]),
+        receipt: await this.englishAuctions.sendTransaction(
+          "collectAuctionTokens",
+          [BigNumber.from(auctionId)],
+        ),
       };
     } catch (err: any) {
-      if (err.message.includes("cannot close auction before it has ended")) {
+      if (err.message.includes("Marketplace: auction still active.")) {
         throw new AuctionHasNotEndedError(
-          listingId.toString(),
-          listing.endTimeInEpochSeconds.toString(),
+          auctionId.toString(),
+          auction.endTimeInSeconds.toString(),
+        );
+      } else {
+        throw err;
+      }
+    }
+  }
+
+  /**
+   * Close the Auction for the seller, i.e. the auction creator
+   *
+   * @remarks Closes the Auction and executes the sale for the seller.
+   *
+   * @example
+   * ```javascript
+   * // The listing ID of the auction listing you want to close
+   * const listingId = "0";
+   * await contract.auction.closeListing(listingId);
+   * ```
+   *
+   * @param auctionId - the auction id to close
+   */
+  public async closeAuctionForSeller(
+    auctionId: BigNumberish,
+  ): Promise<TransactionResult> {
+    const auction = await this.validateAuction(BigNumber.from(auctionId));
+    try {
+      return {
+        receipt: await this.englishAuctions.sendTransaction(
+          "collectAuctionPayout",
+          [BigNumber.from(auctionId)],
+        ),
+      };
+    } catch (err: any) {
+      if (err.message.includes("Marketplace: auction still active.")) {
+        throw new AuctionHasNotEndedError(
+          auctionId.toString(),
+          auction.endTimeInSeconds.toString(),
         );
       } else {
         throw err;
@@ -524,30 +552,25 @@ export class MarketplaceV3EnglishAuctions {
    * await contract.auction.executeSale(listingId);
    * ```
    *
-   * @param listingId - the auction  listing ud to close
+   * @param auctionId - the auction  listing ud to close
    */
-  public async executeSale(listingId: BigNumberish) {
-    const listing = await this.validateListing(BigNumber.from(listingId));
+  public async executeSale(auctionId: BigNumberish) {
+    const auction = await this.validateAuction(BigNumber.from(auctionId));
     try {
-      const winningBid = await this.getWinningBid(listingId);
+      const winningBid = await this.getWinningBid(auctionId);
       invariant(winningBid, "No winning bid found");
-      const closeForSeller = this.encoder.encode("closeAuction", [
-        listingId,
-        listing.sellerAddress,
+      const closeForSeller = this.encoder.encode("collectAuctionPayout", [
+        auctionId,
       ]);
-      const closeForBuyer = this.encoder.encode("closeAuction", [
-        listingId,
-        winningBid.buyerAddress,
+      const closeForBuyer = this.encoder.encode("collectAuctionTokens", [
+        auctionId,
       ]);
-      return await this.contractWrapper.multiCall([
-        closeForSeller,
-        closeForBuyer,
-      ]);
+      return await this.entrypoint.multiCall([closeForSeller, closeForBuyer]);
     } catch (err: any) {
-      if (err.message.includes("cannot close auction before it has ended")) {
+      if (err.message.includes("Marketplace: auction still active.")) {
         throw new AuctionHasNotEndedError(
-          listingId.toString(),
-          listing.endTimeInEpochSeconds.toString(),
+          auctionId.toString(),
+          auction.endTimeInSeconds.toString(),
         );
       } else {
         throw err;
