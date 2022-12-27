@@ -9,7 +9,7 @@ import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import NProgress from "nprogress";
 import posthog from "posthog-js";
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
 import type { ThirdwebNextPage } from "utils/types";
 
@@ -40,7 +40,10 @@ type AppPropsWithLayout = AppProps<{ dehydratedState?: DehydratedState }> & {
   Component: ThirdwebNextPage;
 };
 
-function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
+const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
+  Component,
+  pageProps,
+}) => {
   const router = useRouter();
 
   useEffect(() => {
@@ -108,10 +111,12 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
       clearTimeout(t);
     };
   }, []);
+
   const pageId =
     typeof Component.pageId === "function"
       ? Component.pageId(pageProps)
       : Component.pageId;
+
   const prevPageId = useRef<string>();
   useEffect(() => {
     // this catches the case where the the hook is called twice on the same page
@@ -124,8 +129,6 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
       prevPageId.current = pageId;
     };
   }, [pageId]);
-
-  const getLayout = Component.getLayout ?? ((page) => page);
 
   // shortcut everything and only set up the necessities for the OG renderer
   if (router.pathname.startsWith("/_og/")) {
@@ -152,6 +155,29 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
   }
 
   return (
+    <ConsoleApp
+      seoCanonical={`https://thirdweb.com${router.asPath}`}
+      Component={Component}
+      pageProps={pageProps}
+    />
+  );
+};
+
+interface ConsoleAppProps {
+  Component: AppPropsWithLayout["Component"];
+  pageProps: AppPropsWithLayout["pageProps"];
+  seoCanonical: string;
+}
+
+const ConsoleApp = memo(function ConsoleApp({
+  Component,
+  pageProps,
+  seoCanonical,
+}: ConsoleAppProps) {
+  const getLayout = Component.getLayout ?? ((page) => page);
+  const children = getLayout(<Component {...pageProps} />, pageProps);
+
+  return (
     <PlausibleProvider
       domain="thirdweb.com"
       customDomain="https://pl.thirdweb.com"
@@ -175,23 +201,23 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
               vertical-align: -0.1em;
               display: inline;
           }
-            
+
             #nprogress {
               pointer-events: none;
             }
-            
+
             #nprogress .bar {
               background: ${theme.colors.purple[500]};
-            
+
               position: fixed;
               z-index: 1031;
               top: 0;
               left: 0;
-            
+
               width: 100%;
               height: 2px;
             }
-            
+
             /* Fancy blur effect */
             #nprogress .peg {
               display: block;
@@ -201,7 +227,7 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
               height: 100%;
               box-shadow: 0 0 10px ${theme.colors.purple[500]}, 0 0 5px ${theme.colors.purple[500]};
               opacity: 1.0;
-            
+
               -webkit-transform: rotate(3deg) translate(0px, -4px);
                   -ms-transform: rotate(3deg) translate(0px, -4px);
                       transform: rotate(3deg) translate(0px, -4px);
@@ -239,14 +265,12 @@ function ConsoleApp({ Component, pageProps }: AppPropsWithLayout) {
           site: "@thirdweb",
           cardType: "summary_large_image",
         }}
-        canonical={`https://thirdweb.com${router.asPath}`}
+        canonical={seoCanonical}
       />
 
-      <ChakraProvider theme={chakraThemeWithFonts}>
-        {/* <AnnouncementBanner /> */}
-        {getLayout(<Component {...pageProps} />, pageProps)}
-      </ChakraProvider>
+      <ChakraProvider theme={chakraThemeWithFonts}>{children}</ChakraProvider>
     </PlausibleProvider>
   );
-}
-export default ConsoleApp;
+});
+
+export default ConsoleAppWrapper;
