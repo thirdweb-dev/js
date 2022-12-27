@@ -165,7 +165,7 @@ export class UserWallet {
    * console.log(balance.displayValue);
    * ```
    */
-  public async getBalance(): Promise<CurrencyValue> {
+  public async balance(): Promise<CurrencyValue> {
     const value = await this.metaplex.connection.getBalance(
       this.metaplex.identity().publicKey,
     );

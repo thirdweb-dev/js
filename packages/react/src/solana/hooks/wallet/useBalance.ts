@@ -18,7 +18,7 @@ export function balanceQuery(sdk: RequiredParam<ThirdwebSDK>) {
     queryFn: () => {
       invariant(sdk, "sdk is required");
 
-      return sdk.wallet.getBalance();
+      return sdk.wallet.balance();
     },
     enabled: !!sdk && !!address && !!network,
   };
