@@ -11,7 +11,6 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import useDimensions from "react-cool-dimensions";
-import ThreeRenderer from "./ThreeRenderer";
 
 export interface SharedMediaProps {
   className?: string;
@@ -51,6 +50,14 @@ export interface MediaRendererProps extends SharedMediaProps {
 interface PlayButtonProps {
   onClick: () => void;
   isPlaying: boolean;
+}
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'model-viewer': any;
+    }
+  }
 }
 
 const PlayButton: React.VFC<PlayButtonProps> = ({ onClick, isPlaying }) => {
@@ -396,6 +403,40 @@ const LinkPlayer = React.forwardRef<HTMLAnchorElement, MediaRendererProps>(
 
 LinkPlayer.displayName = "LinkPlayer";
 
+const ModelViewer = ({ src, alt, style, ...restProps }: any) => {
+  const [loaded, setLoaded] = useState(false);
+  const modelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    loadModelViewer()
+  },[])
+
+  const loadModelViewer = () => {  
+    const existingScript = document.getElementById('modelViewer');  
+    if (!existingScript) {
+      const script = document.createElement('script');
+      script.src = 'https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js';    
+      script.id = 'modelViewer';
+      document.body.appendChild(script);    
+      script.onload = () => { 
+        setLoaded(true);
+      };
+    } 
+  };
+
+  return (
+    loaded ? 
+    <model-viewer
+      style={style}
+      src={src}
+      alt={alt}
+      camera-controls
+      ref={modelRef.current}
+      {...restProps}>            
+    </model-viewer> : null
+  )
+}
+
 /**
  * This component can be used to render any media type, including image, audio, video, and html files.
  * Its convenient for rendering NFT media files, as these can be a variety of different types.
@@ -448,11 +489,11 @@ export const MediaRenderer = React.forwardRef<
       );
     } else if (videoOrImageSrc.mimeType.startsWith("model")) {
       return (
-        <ThreeRenderer
+        <ModelViewer
           style={mergedStyle}
           src= {videoOrImageSrc.url || ''}
-          {...restProps}          
-         ></ThreeRenderer>
+          {...restProps}>            
+        </ModelViewer>
       )        
     } else if (shouldRenderVideoTag(videoOrImageSrc.mimeType)) {
       return (
