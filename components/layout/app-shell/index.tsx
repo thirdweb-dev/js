@@ -50,8 +50,6 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
   noSEOOverride,
 }) => {
   const { pathname } = useRouter();
-  const address = useAddress();
-  const publicKey = useWallet().publicKey?.toBase58();
 
   const isCustomContractLayout = layout === "custom-contract";
   return (
@@ -96,7 +94,7 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
             as="header"
             alignItems="center"
           >
-            <Link href={address || publicKey ? "/dashboard" : "/explore"}>
+            <Link href="/dashboard">
               <Logo />
             </Link>
             <Flex align="center" gap={2} marginLeft="auto">
