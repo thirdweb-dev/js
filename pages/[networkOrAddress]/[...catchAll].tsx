@@ -23,9 +23,11 @@ import { getEVMThirdwebSDK } from "lib/sdk";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 // import dynamic from "next/dynamic";
 import { PageId } from "page-id";
+import type { ParsedUrlQuery } from "querystring";
 import { ReactElement } from "react";
 import {
   DashboardSolanaNetwork,
+  SupportedChainIdToNetworkMap,
   SupportedNetwork,
   SupportedNetworkToChainIdMap,
   getChainIdFromNetworkPath,
@@ -125,13 +127,19 @@ type PossiblePageProps =
       dehydratedState: DehydratedState;
     };
 
-export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
+interface Params extends ParsedUrlQuery {
+  networkOrAddress: string;
+  catchAll: string[];
+}
+
+export const getStaticProps: GetStaticProps<PossiblePageProps, Params> = async (
   ctx,
 ) => {
   const networkOrAddress = getSingleQueryValue(
     ctx.params,
     "networkOrAddress",
   ) as string;
+
   // handle old contract paths
   if (networkOrAddress === "contracts") {
     return {
@@ -201,6 +209,28 @@ export const getStaticProps: GetStaticProps<PossiblePageProps> = async (
       };
     }
   }
+
+  // support using chain-id instead of network name
+  // redirect /<chain-id>/... to /<network>/...
+
+  // if `networkOrAddress` is a supported chain-id
+  if (networkOrAddress in SupportedChainIdToNetworkMap) {
+    // get the network name from the chain-id
+    const chainId = Number(networkOrAddress) as SUPPORTED_CHAIN_ID;
+    const network = SupportedChainIdToNetworkMap[chainId];
+
+    // get the rest of the path
+    const catchAll = ctx.params?.catchAll;
+    const rest = catchAll ? `/${catchAll.join("/")}` : "";
+
+    return {
+      redirect: {
+        destination: `/${network}${rest}`,
+        permanent: false,
+      },
+    };
+  }
+
   // handle the case where the user is trying to access a solana contract
   else if (isSupportedSOLNetwork(networkOrAddress)) {
     const network = getSolNetworkFromNetworkPath(networkOrAddress);
