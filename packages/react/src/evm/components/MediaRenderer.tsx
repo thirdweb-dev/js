@@ -25,8 +25,6 @@ export interface SharedMediaProps {
    * Show the media controls (where applicable) (default false)
    */
   controls?: HTMLVideoElement["controls"];
-
-  children?: any;
 }
 
 /**
@@ -405,41 +403,39 @@ const LinkPlayer = React.forwardRef<HTMLAnchorElement, MediaRendererProps>(
 
 LinkPlayer.displayName = "LinkPlayer";
 
-const ModelViewer = React.forwardRef<HTMLCanvasElement, MediaRendererProps>(
-  ({ src, alt, style, ...restProps }, ref) => {
-    const [loaded, setLoaded] = useState(false);
-    const modelRef = useRef<HTMLCanvasElement>(null);
-  
-    useEffect(() => {
-      loadModelViewer();
-    },[])
-  
-    const loadModelViewer = () => {
-      const existingScript = document.getElementById('modelViewer');
-      if (!existingScript) {
-        const script = document.createElement('script');
-        script.src = 'https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js';
-        script.id = 'modelViewer';
-        document.body.appendChild(script);
-        script.onload = () => { 
-          setLoaded(true);
-        };
-      } 
-    };
-  
-    return (
-      loaded ? 
-      <model-viewer
-        style={style}
-        src={src}
-        alt={alt}
-        camera-controls
-        ref={mergeRefs([modelRef, ref])} 
-        {...restProps}>
-      </model-viewer> : null
-    )
-  }
-) 
+const ModelViewer = ({ src, alt, style, ...restProps }: any) => {
+  const [loaded, setLoaded] = useState(false);
+  const modelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    loadModelViewer()
+  },[])
+
+  const loadModelViewer = () => {  
+    const existingScript = document.getElementById('modelViewer');  
+    if (!existingScript) {
+      const script = document.createElement('script');
+      script.src = 'https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js';    
+      script.id = 'modelViewer';
+      document.body.appendChild(script);    
+      script.onload = () => { 
+        setLoaded(true);
+      };
+    } 
+  };
+
+  return (
+    loaded ? 
+    <model-viewer
+      style={style}
+      src={src}
+      alt={alt}
+      camera-controls
+      ref={modelRef.current}
+      {...restProps}>            
+    </model-viewer> : null
+  )
+}
 
 /**
  * This component can be used to render any media type, including image, audio, video, and html files.
