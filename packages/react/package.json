@@ -103,7 +103,6 @@
     "@safe-global/safe-ethers-lib": "^1.7.0",
     "@solana/wallet-adapter-phantom": "^0.9.17",
     "@tanstack/react-query": "^4.0.10",
-    "@types/three": "^0.146.0",
     "@zag-js/menu": "^0.3.0",
     "@zag-js/react": "^0.3.1",
     "buffer": "^6.0.3",
@@ -113,7 +112,6 @@
     "magic-sdk": "^10.1.0",
     "mime": "^3.0.0",
     "react-cool-dimensions": "^2.0.7",
-    "three": "^0.147.0",
     "tiny-invariant": "^1.2.0",
     "wagmi": "^0.2.28"
   },
