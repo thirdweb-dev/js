@@ -18,7 +18,7 @@ import {
 } from "../../constants/contract";
 import { ListingType } from "../../enums";
 import { Price } from "../../types/currency";
-import { DirectListing, NewDirectListing } from "../../types/marketplacev3";
+import { DirectListingV3, NewDirectListingV3 } from "../../types/marketplacev3";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -102,7 +102,7 @@ export class MarketplaceV3DirectListings {
   public async getAllListings(
     startIndex: BigNumberish,
     endIndex: BigNumberish,
-  ): Promise<DirectListing[]> {
+  ): Promise<DirectListingV3[]> {
     const listings = await this.directListings.readContract.getAllListings(
       startIndex,
       endIndex,
@@ -126,7 +126,7 @@ export class MarketplaceV3DirectListings {
   public async getAllValidListings(
     startIndex: BigNumberish,
     endIndex: BigNumberish,
-  ): Promise<DirectListing[]> {
+  ): Promise<DirectListingV3[]> {
     const listings = await this.directListings.readContract.getAllValidListings(
       startIndex,
       endIndex,
@@ -143,7 +143,7 @@ export class MarketplaceV3DirectListings {
    * @param listingId - the listing id
    * @returns the Direct listing object
    */
-  public async getListing(listingId: BigNumberish): Promise<DirectListing> {
+  public async getListing(listingId: BigNumberish): Promise<DirectListingV3> {
     const listing = await this.directListings.readContract.getListing(
       listingId,
     );
@@ -259,7 +259,7 @@ export class MarketplaceV3DirectListings {
    * ```
    */
   public async createListing(
-    listing: NewDirectListing,
+    listing: NewDirectListingV3,
   ): Promise<TransactionResultWithId> {
     validateNewListingParam(listing);
 
@@ -325,7 +325,7 @@ export class MarketplaceV3DirectListings {
    */
   public async updateListing(
     listingId: BigNumberish,
-    listing: NewDirectListing,
+    listing: NewDirectListingV3,
   ): Promise<TransactionResultWithId> {
     validateNewListingParam(listing);
 
@@ -618,7 +618,9 @@ export class MarketplaceV3DirectListings {
    *
    * @param listingId - Listing to check for
    */
-  private async validateListing(listingId: BigNumber): Promise<DirectListing> {
+  private async validateListing(
+    listingId: BigNumber,
+  ): Promise<DirectListingV3> {
     try {
       return await this.getListing(listingId);
     } catch (err) {
@@ -636,7 +638,7 @@ export class MarketplaceV3DirectListings {
    */
   public async mapListing(
     listing: IDirectListings.ListingStruct,
-  ): Promise<DirectListing> {
+  ): Promise<DirectListingV3> {
     return {
       assetContractAddress: listing.assetContract,
       currencyContractAddress: listing.currency,
@@ -675,7 +677,7 @@ export class MarketplaceV3DirectListings {
    * @returns - True if the listing is valid, false otherwise.
    */
   public async isStillValidListing(
-    listing: DirectListing,
+    listing: DirectListingV3,
     quantity?: BigNumberish,
   ): Promise<{ valid: boolean; error?: string }> {
     const approved = await isTokenApprovedForTransfer(

@@ -19,7 +19,7 @@ import {
 } from "../../constants/contract";
 import { ListingType } from "../../enums";
 import { Price } from "../../types/currency";
-import { Offer, NewOffer } from "../../types/marketplacev3";
+import { OfferV3, NewOffer } from "../../types/marketplacev3";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -105,7 +105,7 @@ export class MarketplaceV3Offers {
   public async getAllOffers(
     startIndex: BigNumberish,
     endIndex: BigNumberish,
-  ): Promise<Offer[]> {
+  ): Promise<OfferV3[]> {
     const offers = await this.offers.readContract.getAllOffers(
       startIndex,
       endIndex,
@@ -124,7 +124,7 @@ export class MarketplaceV3Offers {
   public async getAllValidOffers(
     startIndex: BigNumberish,
     endIndex: BigNumberish,
-  ): Promise<Offer[]> {
+  ): Promise<OfferV3[]> {
     const offers = await this.offers.readContract.getAllValidOffers(
       startIndex,
       endIndex,
@@ -139,7 +139,7 @@ export class MarketplaceV3Offers {
    * @param offerId - the listing id
    * @returns the Direct listing object
    */
-  public async getOffer(offerId: BigNumberish): Promise<Offer> {
+  public async getOffer(offerId: BigNumberish): Promise<OfferV3> {
     const offer = await this.offers.readContract.getOffer(offerId);
 
     return await this.mapOffer(offer);
@@ -296,7 +296,7 @@ export class MarketplaceV3Offers {
    *
    * @param offerId - offer to check for
    */
-  private async validateOffer(offerId: BigNumber): Promise<Offer> {
+  private async validateOffer(offerId: BigNumber): Promise<OfferV3> {
     try {
       return await this.getOffer(offerId);
     } catch (err) {
@@ -312,7 +312,7 @@ export class MarketplaceV3Offers {
    * @param offer - The offer to map, as returned from the contract.
    * @returns - The mapped interface.
    */
-  public async mapOffer(offer: IOffers.OfferStruct): Promise<Offer> {
+  public async mapOffer(offer: IOffers.OfferStruct): Promise<OfferV3> {
     return {
       id: offer.offerId.toString(),
       offerorAddress: offer.offeror,
@@ -349,7 +349,7 @@ export class MarketplaceV3Offers {
    * @returns - True if the offer is valid, false otherwise.
    */
   public async isStillValidOffer(
-    offer: Offer,
+    offer: OfferV3,
   ): Promise<{ valid: boolean; error?: string }> {
     // TODO
 

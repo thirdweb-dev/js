@@ -230,7 +230,7 @@ export const mochaHooks = {
           deployedContract.address;
       }
     }
-    setupMarketplaceV3Registry();
+    await setupMarketplaceV3Registry();
 
     // Setup marketplace-v3 for tests
     async function setupMarketplaceV3Registry() {
@@ -417,11 +417,28 @@ export const mochaHooks = {
         await marketplaceEntrypointDeployer.deployed();
 
       // add to factory
-      const tx = await thirdwebFactoryDeployer.approveImplementation(
+      const tx = await thirdwebFactoryDeployer.addImplementation(
         marketplaceEntrypoint.address,
-        true,
       );
       await tx.wait();
+
+      console.log(
+        await thirdwebFactoryDeployer.getLatestImplementation(
+          ethers.utils.formatBytes32String("Marketplace"),
+        ),
+      );
+      console.log(
+        await thirdwebFactoryDeployer.getImplementation(
+          ethers.utils.formatBytes32String("Marketplace"),
+          2,
+        ),
+      );
+      console.log(
+        await thirdwebFactoryDeployer.getImplementation(
+          ethers.utils.formatBytes32String("Marketplace"),
+          3,
+        ),
+      );
     }
 
     // eslint-disable-next-line turbo/no-undeclared-env-vars

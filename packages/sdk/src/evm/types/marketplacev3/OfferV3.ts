@@ -6,7 +6,7 @@ import { BigNumber, BigNumberish } from "ethers";
 /**
  * Represents a marketplace offer.
  */
-export interface Offer {
+export interface OfferV3 {
   /**
    * The id of the offer.
    */

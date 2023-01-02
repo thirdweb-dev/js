@@ -1,6 +1,7 @@
 export * from "./claim-conditions/claim-conditions";
 export * from "./airdrop/airdrop";
 export * from "./marketplace";
+export * from "./marketplacev3";
 export * from "./currency";
 export * from "./delayed-reveal";
 export * from "./vote";

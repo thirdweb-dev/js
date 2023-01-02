@@ -401,6 +401,7 @@ export class ContractWrapper<
       const network = await this.getProvider().getNetwork();
       const signerAddress = await this.getSignerAddress();
       const contractAddress = await this.readContract.address;
+      console.log("contract-wrapper err: ", e);
       throw await convertToTWError(
         e,
         network,

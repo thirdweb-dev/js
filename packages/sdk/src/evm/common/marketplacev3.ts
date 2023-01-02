@@ -5,10 +5,9 @@ import {
 } from "../constants/contract";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
-  NewDirectListing,
+  NewDirectListingV3,
   NewEnglishAuction,
   NewOffer,
-  UnmappedOffer,
 } from "../types/marketplacev3";
 import { fetchCurrencyValue } from "./currency";
 import type { IERC1155, IERC165, IERC721 } from "@thirdweb-dev/contracts-js";
@@ -152,7 +151,7 @@ export async function handleTokenApproval(
  * @internal
  */
 // TODO this should be done in zod
-export function validateNewListingParam(param: NewDirectListing) {
+export function validateNewListingParam(param: NewDirectListingV3) {
   invariant(
     param.assetContractAddress !== undefined &&
       param.assetContractAddress !== null,

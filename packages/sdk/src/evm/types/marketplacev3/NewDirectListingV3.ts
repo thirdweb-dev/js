@@ -1,21 +1,11 @@
-import { NFTMetadata } from "../../../core/schema/nft";
-import { ListingType } from "../../enums/marketplace";
-import { CurrencyValue } from "../currency";
-import { BigNumber, BigNumberish } from "ethers";
+import { Price } from "../currency";
+import { BigNumberish } from "ethers";
 
 /**
- * Represents a marketplace direct listing.
+ * Represents a new marketplace direct listing.
  */
-export interface DirectListing {
-  /**
-   * The id of the listing.
-   */
-  id: string;
-
-  /**
-   * The address of the creator of listing.
-   */
-  listingCreatorAddress: string;
+export interface NewDirectListingV3 {
+  type?: "NewDirectListingV3";
 
   /**
    * The address of the asset being listed.
@@ -40,29 +30,19 @@ export interface DirectListing {
   currencyContractAddress: string;
 
   /**
-   * The `CurrencyValue` of the listing. Useful for displaying the price information.
-   */
-  currencyValuePerToken: CurrencyValue;
-
-  /**
    * The price to pay per unit of NFTs listed.
    */
-  pricePerToken: BigNumberish;
-
-  /**
-   * The asset being listed.
-   */
-  asset: NFTMetadata;
+  pricePerToken: Price;
 
   /**
    * The start time of the listing.
    */
-  startTimeInSeconds: BigNumberish;
+  startTimestamp: Date;
 
   /**
    * The end time of the listing.
    */
-  endTimeInSeconds: BigNumberish;
+  endTimestamp: Date;
 
   /**
    * Whether the listing is reserved to be bought from a specific set of buyers.
