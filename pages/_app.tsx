@@ -16,12 +16,17 @@ import type { ThirdwebNextPage } from "utils/types";
 // eslint-disable-next-line new-cap
 const inter = Inter({
   subsets: ["latin"],
+  display: "swap",
+  fallback: ["system-ui", "Helvetica Neue", "Arial", "sans-serif"],
+  adjustFontFallback: true,
 });
 
 // eslint-disable-next-line new-cap
 const ibmPlexMono = IBM_Plex_Mono({
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
+  display: "swap",
+  fallback: ["Consolas", "Courier New", "monospace"],
 });
 
 const chakraThemeWithFonts = {
