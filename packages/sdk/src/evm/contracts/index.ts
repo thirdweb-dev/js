@@ -109,25 +109,47 @@ export const MarketplaceInitializer = {
     ...[network, address, storage, options]: InitalizeParams
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
-    const [abi, contract, _network] = await Promise.all([
+    const [abi, _network] = await Promise.all([
       MarketplaceInitializer.getAbi(address, provider),
-      import("./prebuilt-implementations/marketplace"),
       provider.getNetwork(),
     ]);
 
-    return new contract.Marketplace(
-      network,
-      address,
-      storage,
-      options,
-      abi,
-      _network.chainId,
-    );
+    let contract;
+    const contractInfo = await getContractInfo(address, provider);
+    if (!contractInfo || contractInfo.version > 2) {
+      contract = await import("./prebuilt-implementations/marketplacev3");
+
+      return new contract.MarketplaceV3(
+        network,
+        address,
+        storage,
+        options,
+        abi,
+        _network.chainId,
+      );
+    } else {
+      contract = await import("./prebuilt-implementations/marketplace");
+
+      return new contract.Marketplace(
+        network,
+        address,
+        storage,
+        options,
+        abi,
+        _network.chainId,
+      );
+    }
   },
   getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    return (
-      await import("@thirdweb-dev/contracts-js/dist/abis/Marketplace.json")
-    ).default;
+    const contractInfo = await getContractInfo(address, provider);
+    return !contractInfo || contractInfo.version > 2
+      ? (
+          await import(
+            "@thirdweb-dev/contracts-js/dist/abis/MarketplaceEntrypoint.json"
+          )
+        ).default
+      : (await import("@thirdweb-dev/contracts-js/dist/abis/Marketplace.json"))
+          .default;
   },
 };
 

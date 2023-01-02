@@ -241,7 +241,7 @@ export function validateNewOfferParam(param: NewOffer) {
     "Price per token is required",
   );
   invariant(
-    param.endTimeInSeconds !== undefined && param.endTimeInSeconds !== null,
+    param.endTimestamp !== undefined && param.endTimestamp !== null,
     "End time is required",
   );
 }

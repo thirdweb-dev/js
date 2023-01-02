@@ -19,7 +19,11 @@ import {
 import { ListingType } from "../../enums";
 import { Price } from "../../types/currency";
 import { DirectListing, NewDirectListing } from "../../types/marketplacev3";
-import { TransactionResult, TransactionResultWithId } from "../types";
+import {
+  NetworkOrSignerOrProvider,
+  TransactionResult,
+  TransactionResultWithId,
+} from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
   IERC1155,
@@ -65,6 +69,10 @@ export class MarketplaceV3DirectListings {
     this.directListings = directListings;
     this.entrypoint = entrypoint;
     this.storage = storage;
+  }
+
+  onNetworkUpdated(network: NetworkOrSignerOrProvider) {
+    this.directListings.updateSignerOrProvider(network);
   }
 
   getAddress(): string {

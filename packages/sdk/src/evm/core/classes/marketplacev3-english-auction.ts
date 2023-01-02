@@ -23,7 +23,11 @@ import {
   NewEnglishAuction,
   Bid,
 } from "../../types/marketplacev3";
-import { TransactionResult, TransactionResultWithId } from "../types";
+import {
+  NetworkOrSignerOrProvider,
+  TransactionResult,
+  TransactionResultWithId,
+} from "../types";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
@@ -55,6 +59,10 @@ export class MarketplaceV3EnglishAuctions {
     this.entrypoint = entrypoint;
     this.storage = storage;
     this.encoder = new ContractEncoder<EnglishAuctions>(englishAuctions);
+  }
+
+  onNetworkUpdated(network: NetworkOrSignerOrProvider) {
+    this.englishAuctions.updateSignerOrProvider(network);
   }
 
   getAddress(): string {

@@ -6,3 +6,4 @@ export * from "./EnglishAuction";
 export * from "./Bid";
 export * from "./Offer";
 export * from "./NewOffer";
+export * from "./UnmappedOffer";
