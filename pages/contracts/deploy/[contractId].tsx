@@ -23,7 +23,8 @@ import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useRouter } from "next/router";
 import { PageId } from "page-id";
 import { useEffect, useRef } from "react";
-import { FiArrowLeft, FiCheckCircle, FiExternalLink } from "react-icons/fi";
+import { FiArrowLeft, FiExternalLink } from "react-icons/fi";
+import { VscExtensions } from "react-icons/vsc";
 import { Card, Heading, LinkButton, Text, TrackedLink } from "tw-components";
 import { pushToPreviousRoute } from "utils/pushToPreviousRoute";
 import { ThirdwebNextPage } from "utils/types";
@@ -165,7 +166,7 @@ const EnabledFeature: React.FC<EnabledFeatureProps> = ({ feature }) => {
     >
       <Flex gap={2} align="center" justify="space-between">
         <Flex gap={2} align="center">
-          <Icon boxSize={4} color="green.500" as={FiCheckCircle} />
+          <Icon boxSize={4} color="green.500" as={VscExtensions} />
           <LinkOverlay
             href={`https://portal.thirdweb.com/contracts/${feature.docLinks.contracts}`}
             isExternal
