@@ -227,6 +227,8 @@ export const mochaHooks = {
     process.env.factoryAddress = thirdwebFactoryDeployer.address;
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     process.env.contractPublisherAddress = contractPublisher.address;
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
+    process.env.tests_running = "true";
 
     storage = MockStorage();
     sdk = new ThirdwebSDK(

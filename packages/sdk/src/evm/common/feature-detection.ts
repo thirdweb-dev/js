@@ -434,6 +434,37 @@ export async function fetchContractMetadataFromAddress(
 
 /**
  * @internal
+ * @param address
+ * @param provider
+ * @param storage
+ * @returns
+ */
+export async function fetchAbiFromAddress(
+  address: string,
+  provider: ethers.providers.Provider,
+  storage: ThirdwebStorage,
+): Promise<Abi | undefined> {
+  try {
+    const metadata = await fetchContractMetadataFromAddress(
+      address,
+      provider,
+      storage,
+    );
+    if (metadata && metadata.abi) {
+      return metadata.abi;
+    }
+  } catch (e) {
+    // unit tests using mock storage will always fail, so ignore the error
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
+    if (!process.env.tests_running) {
+      console.warn(`Couldn't fetch ABI for address '${address}'`, e);
+    }
+  }
+  return undefined;
+}
+
+/**
+ * @internal
  * @param compilerMetadataUri
  * @param storage
  */

@@ -11,11 +11,11 @@ import { DropClaimConditions } from "../../core/classes/drop-claim-conditions";
 import { StandardErc20 } from "../../core/classes/erc-20-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../../core/types";
+import { Abi } from "../../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../../schema/contracts/drop-erc20";
 import { SDKOptions } from "../../schema/sdk-options";
 import { Amount, CurrencyValue } from "../../types";
 import { PrebuiltTokenDrop } from "../../types/eips";
-import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC20.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { CallOverrides, constants } from "ethers";
 
@@ -35,7 +35,7 @@ import { CallOverrides, constants } from "ethers";
 export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
   static contractRoles = ["admin", "transfer"] as const;
 
-  public abi: typeof ABI;
+  public abi: Abi;
   public metadata: ContractMetadata<
     PrebuiltTokenDrop,
     typeof DropErc20ContractSchema
@@ -82,7 +82,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: typeof ABI,
+    abi: Abi,
     chainId: number,
     contractWrapper = new ContractWrapper<PrebuiltTokenDrop>(
       network,

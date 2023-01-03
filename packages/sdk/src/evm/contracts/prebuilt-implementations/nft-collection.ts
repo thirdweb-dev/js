@@ -19,10 +19,10 @@ import type {
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
+import { Abi } from "../../schema/contracts/custom";
 import { TokenErc721ContractSchema } from "../../schema/contracts/token-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import type { TokenERC721 } from "@thirdweb-dev/contracts-js";
-import type ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC721.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumberish, CallOverrides, constants } from "ethers";
 
@@ -43,7 +43,7 @@ import { BigNumberish, CallOverrides, constants } from "ethers";
 export class NFTCollection extends StandardErc721<TokenERC721> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
-  public abi: typeof ABI;
+  public abi: Abi;
   public metadata: ContractMetadata<
     TokenERC721,
     typeof TokenErc721ContractSchema
@@ -107,7 +107,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: typeof ABI,
+    abi: Abi,
     chainId: number,
     contractWrapper = new ContractWrapper<TokenERC721>(
       network,

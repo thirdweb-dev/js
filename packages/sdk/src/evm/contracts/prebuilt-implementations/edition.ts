@@ -20,11 +20,11 @@ import {
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
+import { Abi } from "../../schema/contracts/custom";
 import { TokenErc1155ContractSchema } from "../../schema/contracts/token-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
 import { EditionMetadataOrUri } from "../../schema/tokens/edition";
 import type { TokenERC1155 } from "@thirdweb-dev/contracts-js";
-import type ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC1155.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
@@ -45,7 +45,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 export class Edition extends StandardErc1155<TokenERC1155> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
-  public abi: typeof ABI;
+  public abi: Abi;
   public metadata: ContractMetadata<
     TokenERC1155,
     typeof TokenErc1155ContractSchema
@@ -104,7 +104,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: typeof ABI,
+    abi: Abi,
     chainId: number,
     contractWrapper = new ContractWrapper<TokenERC1155>(
       network,
