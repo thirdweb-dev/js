@@ -5,4 +5,4 @@ import { z } from "zod";
  * Input model to pass a list of extension-addresses + function-selectors
  * @public
  */
-export type PluginMap = z.input<typeof PluginMapInput>;
+export type Plugin = z.input<typeof PluginMapInput>;

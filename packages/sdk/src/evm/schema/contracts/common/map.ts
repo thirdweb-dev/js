@@ -7,7 +7,7 @@ import { z } from "zod";
  * @internal
  */
 export const PluginMapInput = z.object({
-  selector: BytesLikeSchema.default(utils.hexZeroPad([0], 4)),
+  functionSelector: BytesLikeSchema.default(utils.hexZeroPad([0], 4)),
+  functionSignature: z.string(),
   pluginAddress: AddressSchema,
-  functionString: z.string(),
 });

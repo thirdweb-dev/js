@@ -18,7 +18,7 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../src/evm";
-import { PluginMap } from "../../src/evm/types/Map";
+import { Plugin } from "../../src/evm/types/Map";
 import { MockStorage } from "./mock/MockStorage";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
@@ -49,7 +49,8 @@ import {
   TWMultichainRegistryRouter__factory,
   TWMultichainRegistryLogic,
   TWMultichainRegistryLogic__factory,
-  Map,
+  PluginMap,
+  PluginMap__factory,
   VoteERC20__factory,
   TWProxy__factory,
   TWProxy,
@@ -157,40 +158,47 @@ export const mochaHooks = {
         TWMultichainRegistryLogic__factory.abi,
       );
 
-      const pluginMap: PluginMap[] = [];
-      pluginMap.push({
-        selector: logicInterface.getSighash("add"),
+      const plugins: Plugin[] = [];
+      plugins.push({
+        functionSelector: logicInterface.getSighash("add"),
+        functionSignature: "add(address,address,uint256,string)",
         pluginAddress: multichainRegistryLogic.address,
-        functionString: "add(address,address,uint256,string)",
       });
-      pluginMap.push({
-        selector: logicInterface.getSighash("remove"),
+      plugins.push({
+        functionSelector: logicInterface.getSighash("remove"),
+        functionSignature: "remove(address,address,uint256)",
         pluginAddress: multichainRegistryLogic.address,
-        functionString: "remove(address,address,uint256)",
       });
-      pluginMap.push({
-        selector: logicInterface.getSighash("getAll"),
+      plugins.push({
+        functionSelector: logicInterface.getSighash("getAll"),
+        functionSignature: "getAll(address)",
         pluginAddress: multichainRegistryLogic.address,
-        functionString: "getAll(address)",
       });
-      pluginMap.push({
-        selector: logicInterface.getSighash("count"),
+      plugins.push({
+        functionSelector: logicInterface.getSighash("count"),
+        functionSignature: "count(address)",
         pluginAddress: multichainRegistryLogic.address,
-        functionString: "count(address)",
       });
-      pluginMap.push({
-        selector: logicInterface.getSighash("getMetadataUri"),
+      plugins.push({
+        functionSelector: logicInterface.getSighash("getMetadataUri"),
+        functionSignature: "getMetadataUri(uint256,address)",
         pluginAddress: multichainRegistryLogic.address,
-        functionString: "getMetadataUri(uint256,address)",
       });
 
+      const pluginMapDeployer = (await new ethers.ContractFactory(
+        PluginMap__factory.abi,
+        PluginMap__factory.bytecode,
+      )
+        .connect(signer)
+        .deploy(plugins)) as PluginMap;
+      const pluginMap = await pluginMapDeployer.deployed();
       const multichainRegistryRouterDeployer =
         (await new ethers.ContractFactory(
           TWMultichainRegistryRouter__factory.abi,
           TWMultichainRegistryRouter__factory.bytecode,
         )
           .connect(signer)
-          .deploy(pluginMap, [
+          .deploy(pluginMap.address, [
             trustedForwarderAddress,
           ])) as TWMultichainRegistryRouter;
       const multichainRegistryRouter =
