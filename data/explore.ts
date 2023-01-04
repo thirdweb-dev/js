@@ -22,7 +22,7 @@ const POPULAR = {
     "thirdweb.eth/Marketplace",
     "unlock-protocol.eth/PublicLock",
     "thirdweb.eth/DropERC1155",
-    "thirdweb.eth/SignatureDrop",
+    "thirdweb.eth/Split",
     "thirdweb.eth/TokenERC20",
   ],
 } as const;
