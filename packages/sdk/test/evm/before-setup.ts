@@ -157,8 +157,6 @@ export const mochaHooks = {
         TWMultichainRegistryLogic__factory.abi,
       );
 
-      const dummyInterface = new ethers.utils.Interface(TWFactory__factory.abi);
-
       const pluginMap: PluginMap[] = [];
       pluginMap.push({
         selector: logicInterface.getSighash("add"),
@@ -176,11 +174,6 @@ export const mochaHooks = {
         functionString: "getAll(address)",
       });
       pluginMap.push({
-        selector: dummyInterface.getSighash("deployProxy"),
-        pluginAddress: registryAddress,
-        functionString: "deployProxy(bytes32,bytes)",
-      });
-      pluginMap.push({
         selector: logicInterface.getSighash("count"),
         pluginAddress: multichainRegistryLogic.address,
         functionString: "count(address)",
@@ -189,11 +182,6 @@ export const mochaHooks = {
         selector: logicInterface.getSighash("getMetadataUri"),
         pluginAddress: multichainRegistryLogic.address,
         functionString: "getMetadataUri(uint256,address)",
-      });
-      pluginMap.push({
-        selector: dummyInterface.getSighash("addImplementation"),
-        pluginAddress: registryAddress,
-        functionString: "addImplementation(address)",
       });
 
       const multichainRegistryRouterDeployer =

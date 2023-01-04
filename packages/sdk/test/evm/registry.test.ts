@@ -12,12 +12,10 @@ describe("Contract Registry", () => {
 
   let adminWallet: SignerWithAddress;
 
-  let randomWallet: SignerWithAddress;
-
   let address: string;
 
   before(async () => {
-    [adminWallet, randomWallet] = signers;
+    [adminWallet] = signers;
   });
 
   it("multichain registry", async () => {
@@ -28,28 +26,27 @@ describe("Contract Registry", () => {
       "multichain registry address: ",
       getMultichainRegistryAddress(),
     );
+
     address = await sdk.deployer.deployNFTCollection({
       name: "Test1",
       primary_sale_recipient: adminWallet.address,
     });
+
     const chainId: number = await adminWallet.getChainId();
     const metadataURI: string = "ipfs://metadata";
-    console.log("here");
     const tx = await multichainRegistry.addContract({
       address,
       chainId,
       metadataURI,
     });
-    console.log("here 2");
+
     let uri = await multichainRegistry.getContractMetadataURI(chainId, address);
-    console.log("here 3");
     expect(uri).to.equal(metadataURI);
+
     let contracts = await multichainRegistry.getContractAddresses(
       adminWallet.address,
     );
-    console.log("here 4");
-    console.log(contracts);
-    console.log(address);
+
     expect(contracts[0].address).to.equal(address);
     console.log(await sdk.getContractList(adminWallet.address));
   });
