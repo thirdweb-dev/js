@@ -27,11 +27,11 @@ import {
   TransactionResultWithId,
 } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
+import { Abi } from "../../schema/contracts/custom";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import { PrebuiltNFTDrop } from "../../types/eips";
 import { UploadProgressEvent } from "../../types/events";
-import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC721.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
@@ -52,7 +52,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
-  public abi: typeof ABI;
+  public abi: Abi;
   public encoder: ContractEncoder<PrebuiltNFTDrop>;
   public estimator: GasCostEstimator<PrebuiltNFTDrop>;
   public metadata: ContractMetadata<
@@ -161,7 +161,7 @@ export class NFTDrop extends StandardErc721<PrebuiltNFTDrop> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: typeof ABI,
+    abi: Abi,
     chainId: number,
     contractWrapper = new ContractWrapper<PrebuiltNFTDrop>(
       network,

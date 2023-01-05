@@ -8,6 +8,7 @@ import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../../core/types";
+import { Abi } from "../../schema/contracts/custom";
 import { SplitsContractSchema } from "../../schema/contracts/splits";
 import { SDKOptions } from "../../schema/sdk-options";
 import { SplitRecipient } from "../../types/SplitRecipient";
@@ -17,7 +18,6 @@ import type {
   Split as SplitContract,
 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
-import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Split.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, CallOverrides, Contract } from "ethers";
 
@@ -41,7 +41,7 @@ export class Split implements UpdateableNetwork {
   private contractWrapper: ContractWrapper<SplitContract>;
   private storage: ThirdwebStorage;
 
-  public abi: typeof ABI;
+  public abi: Abi;
   public metadata: ContractMetadata<SplitContract, typeof SplitsContractSchema>;
   public encoder: ContractEncoder<SplitContract>;
   public estimator: GasCostEstimator<SplitContract>;
@@ -65,7 +65,7 @@ export class Split implements UpdateableNetwork {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: typeof ABI,
+    abi: Abi,
     chainId: number,
     contractWrapper = new ContractWrapper<SplitContract>(
       network,

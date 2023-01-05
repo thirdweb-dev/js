@@ -52,7 +52,6 @@ export class ContractPublisher extends RPCConnectionHandler {
     options: SDKOptions,
     storage: ThirdwebStorage,
   ) {
-    // TODO this should always be on Polygon
     super(network, options);
     this.storage = storage;
     this.publisher = new ContractWrapper<OnChainContractPublisher>(

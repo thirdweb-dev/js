@@ -145,80 +145,6 @@ export const mochaHooks = {
       )) as ContractPublisher; // TODO needs MockPublisher here
     await contractPublisher.deployed();
 
-    // Setup multichain registry for tests
-    async function setupMultichainRegistry(): Promise<string> {
-      const multichainRegistryLogicDeployer = (await new ethers.ContractFactory(
-        TWMultichainRegistryLogic__factory.abi,
-        TWMultichainRegistryLogic__factory.bytecode,
-      )
-        .connect(signer)
-        .deploy()) as TWMultichainRegistryLogic;
-      const multichainRegistryLogic =
-        await multichainRegistryLogicDeployer.deployed();
-      const logicInterface = new ethers.utils.Interface(
-        TWMultichainRegistryLogic__factory.abi,
-      );
-
-      // TODO: generatePluginFunctions(pluginAddress)
-      // given the address of the plugin
-      // fetch ABI
-      // for each function in the abi
-      // return an array of Plugin[]
-
-      const fnSig = (functionName: string) => {
-        const fn = logicInterface.getFunction(functionName);
-        return fn.name + "(" + fn.inputs.map((i) => i.type).join(",") + ")";
-      };
-
-      const plugins: Plugin[] = [];
-      plugins.push({
-        functionSelector: logicInterface.getSighash("add"),
-        functionSignature: fnSig("add"),
-        pluginAddress: multichainRegistryLogic.address,
-      });
-      plugins.push({
-        functionSelector: logicInterface.getSighash("remove"),
-        functionSignature: fnSig("remove"),
-        pluginAddress: multichainRegistryLogic.address,
-      });
-      plugins.push({
-        functionSelector: logicInterface.getSighash("getAll"),
-        functionSignature: fnSig("getAll"),
-        pluginAddress: multichainRegistryLogic.address,
-      });
-      plugins.push({
-        functionSelector: logicInterface.getSighash("count"),
-        functionSignature: fnSig("count"),
-        pluginAddress: multichainRegistryLogic.address,
-      });
-      plugins.push({
-        functionSelector: logicInterface.getSighash("getMetadataUri"),
-        functionSignature: fnSig("getMetadataUri"),
-        pluginAddress: multichainRegistryLogic.address,
-      });
-
-      const pluginMapDeployer = (await new ethers.ContractFactory(
-        PluginMap__factory.abi,
-        PluginMap__factory.bytecode,
-      )
-        .connect(signer)
-        .deploy(plugins)) as PluginMap;
-      const pluginMap = await pluginMapDeployer.deployed();
-      const multichainRegistryRouterDeployer =
-        (await new ethers.ContractFactory(
-          TWMultichainRegistryRouter__factory.abi,
-          TWMultichainRegistryRouter__factory.bytecode,
-        )
-          .connect(signer)
-          .deploy(pluginMap.address, [
-            trustedForwarderAddress,
-          ])) as TWMultichainRegistryRouter;
-      const multichainRegistryRouter =
-        await multichainRegistryRouterDeployer.deployed();
-
-      return multichainRegistryRouter.address;
-    }
-
     async function deployContract(
       contractFactory: ethers.ContractFactory,
       contractType: ContractType,
@@ -312,7 +238,9 @@ export const mochaHooks = {
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     process.env.contractPublisherAddress = contractPublisher.address;
     // eslint-disable-next-line turbo/no-undeclared-env-vars
-    process.env.multiChainRegistryAddress = await setupMultichainRegistry();
+    process.env.multiChainRegistryAddress = await setupMultichainRegistry(
+      trustedForwarderAddress,
+    );
 
     storage = MockStorage();
     sdk = new ThirdwebSDK(
@@ -326,6 +254,81 @@ export const mochaHooks = {
     );
   },
 };
+
+// Setup multichain registry for tests
+async function setupMultichainRegistry(
+  trustedForwarderAddress: string,
+): Promise<string> {
+  const multichainRegistryLogicDeployer = (await new ethers.ContractFactory(
+    TWMultichainRegistryLogic__factory.abi,
+    TWMultichainRegistryLogic__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy()) as TWMultichainRegistryLogic;
+  const multichainRegistryLogic =
+    await multichainRegistryLogicDeployer.deployed();
+  const logicInterface = new ethers.utils.Interface(
+    TWMultichainRegistryLogic__factory.abi,
+  );
+
+  // TODO: generatePluginFunctions(pluginAddress)
+  // given the address of the plugin
+  // fetch ABI
+  // for each function in the abi
+  // return an array of Plugin[]
+
+  const fnSig = (functionName: string) => {
+    const fn = logicInterface.getFunction(functionName);
+    return fn.name + "(" + fn.inputs.map((i) => i.type).join(",") + ")";
+  };
+
+  const plugins: Plugin[] = [];
+  plugins.push({
+    functionSelector: logicInterface.getSighash("add"),
+    functionSignature: fnSig("add"),
+    pluginAddress: multichainRegistryLogic.address,
+  });
+  plugins.push({
+    functionSelector: logicInterface.getSighash("remove"),
+    functionSignature: fnSig("remove"),
+    pluginAddress: multichainRegistryLogic.address,
+  });
+  plugins.push({
+    functionSelector: logicInterface.getSighash("getAll"),
+    functionSignature: fnSig("getAll"),
+    pluginAddress: multichainRegistryLogic.address,
+  });
+  plugins.push({
+    functionSelector: logicInterface.getSighash("count"),
+    functionSignature: fnSig("count"),
+    pluginAddress: multichainRegistryLogic.address,
+  });
+  plugins.push({
+    functionSelector: logicInterface.getSighash("getMetadataUri"),
+    functionSignature: fnSig("getMetadataUri"),
+    pluginAddress: multichainRegistryLogic.address,
+  });
+
+  const pluginMapDeployer = (await new ethers.ContractFactory(
+    PluginMap__factory.abi,
+    PluginMap__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(plugins)) as PluginMap;
+  const pluginMap = await pluginMapDeployer.deployed();
+  const multichainRegistryRouterDeployer = (await new ethers.ContractFactory(
+    TWMultichainRegistryRouter__factory.abi,
+    TWMultichainRegistryRouter__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(pluginMap.address, [
+      trustedForwarderAddress,
+    ])) as TWMultichainRegistryRouter;
+  const multichainRegistryRouter =
+    await multichainRegistryRouterDeployer.deployed();
+
+  return multichainRegistryRouter.address;
+}
 
 export {
   ipfsGatewayUrl,
