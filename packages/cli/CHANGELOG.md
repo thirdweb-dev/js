@@ -1,5 +1,34 @@
 # thirdweb
 
+## 0.9.8
+
+### Patch Changes
+
+- Updated dependencies [[`e913e0d`](https://github.com/thirdweb-dev/js/commit/e913e0daa9ece9a6274f7ffa4e66bdcbf32e6ada), [`5862c55`](https://github.com/thirdweb-dev/js/commit/5862c558fb48604b5aca4defd1ccc06fc3536358), [`73883f5`](https://github.com/thirdweb-dev/js/commit/73883f56d0ed0a35ace8b98b96caa782443be22e), [`f7a74a3`](https://github.com/thirdweb-dev/js/commit/f7a74a3b7c489ada5b1ec435632a326334a33c9b)]:
+  - @thirdweb-dev/sdk@3.6.9
+
+## 0.9.7
+
+### Patch Changes
+
+- [#454](https://github.com/thirdweb-dev/js/pull/454) [`c673e39`](https://github.com/thirdweb-dev/js/commit/c673e39f23ef082097d73d62910580e8fad400a0) Thanks [@jnsdls](https://github.com/jnsdls)! - upgraded dependencies
+
+- [#461](https://github.com/thirdweb-dev/js/pull/461) [`af85389`](https://github.com/thirdweb-dev/js/commit/af85389dc07fb163b8f9d70093eb1b691e47561a) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Fix deprecated links
+
+- Updated dependencies [[`c673e39`](https://github.com/thirdweb-dev/js/commit/c673e39f23ef082097d73d62910580e8fad400a0), [`ea95c5f`](https://github.com/thirdweb-dev/js/commit/ea95c5f609e306e333ee0f73f7920503358ca848), [`699a2b1`](https://github.com/thirdweb-dev/js/commit/699a2b16fb991c474ec57db8f178e2601d631f39), [`4cdd0bd`](https://github.com/thirdweb-dev/js/commit/4cdd0bd6348494a256d7c6a2bdf8f7b5c20f6877), [`a8267f9`](https://github.com/thirdweb-dev/js/commit/a8267f912df84c58d3fe3f47b90bd474f73c84ca)]:
+  - @thirdweb-dev/sdk@3.6.8
+
+## 0.9.6
+
+### Patch Changes
+
+- [#441](https://github.com/thirdweb-dev/js/pull/441) [`64f24f1`](https://github.com/thirdweb-dev/js/commit/64f24f1bb167c3d0cb3beca51fd300eaec21cc27) Thanks [@adam-maj](https://github.com/adam-maj)! - CLI autoupdates on run
+
+- [#447](https://github.com/thirdweb-dev/js/pull/447) [`e7740a5`](https://github.com/thirdweb-dev/js/commit/e7740a59db022a3396194ac66cd195d8ae754d57) Thanks [@adam-maj](https://github.com/adam-maj)! - Detect whether forge is installed
+
+- Updated dependencies [[`3731459`](https://github.com/thirdweb-dev/js/commit/3731459d33f1ded7ebb69124809449b901b3ad3d), [`cac6c30`](https://github.com/thirdweb-dev/js/commit/cac6c30bca5e17df81d746ef81316af47d5e252e), [`7a37e56`](https://github.com/thirdweb-dev/js/commit/7a37e564fd5d5a9df84c8da44ecaf6c42f67a0e2)]:
+  - @thirdweb-dev/sdk@3.6.7
+
 ## 0.9.5
 
 ### Patch Changes

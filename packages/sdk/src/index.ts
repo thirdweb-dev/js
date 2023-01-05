@@ -9,6 +9,7 @@ export type {
 } from "./core/schema/nft";
 
 export type { CurrencyValue, TokenMetadata } from "./core/schema/token";
+export { getRpcUrl } from "./core/constants/urls";
 
 export type { QueryAllParams } from "./core/schema/QueryParams";
 

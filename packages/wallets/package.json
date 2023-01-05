@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/wallets",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "dist/thirdweb-dev-wallets.cjs.js",
   "module": "dist/thirdweb-dev-wallets.esm.js",
   "exports": {
@@ -19,6 +19,14 @@
     "./wallets/metamask": {
       "module": "./wallets/metamask/dist/thirdweb-dev-wallets-wallets-metamask.esm.js",
       "default": "./wallets/metamask/dist/thirdweb-dev-wallets-wallets-metamask.cjs.js"
+    },
+    "./wallets/magic-auth": {
+      "module": "./wallets/magic-auth/dist/thirdweb-dev-wallets-wallets-magic-auth.esm.js",
+      "default": "./wallets/magic-auth/dist/thirdweb-dev-wallets-wallets-magic-auth.cjs.js"
+    },
+    "./connectors/magic": {
+      "module": "./connectors/magic/dist/thirdweb-dev-wallets-connectors-magic.esm.js",
+      "default": "./connectors/magic/dist/thirdweb-dev-wallets-connectors-magic.cjs.js"
     },
     "./wallets/wallet-connect": {
       "module": "./wallets/wallet-connect/dist/thirdweb-dev-wallets-wallets-wallet-connect.esm.js",
@@ -60,7 +68,7 @@
   "preconstruct": {
     "entrypoints": [
       "index.ts",
-      "connectors/**",
+      "connectors/*/index.ts",
       "wallets/**"
     ],
     "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
@@ -71,12 +79,17 @@
   "sideEffects": false,
   "dependencies": {
     "@coinbase/wallet-sdk": "^3.6.0",
-    "@wagmi/core": "^0.7.6",
+    "@magic-ext/connect": "^3.1.0",
+    "@magic-ext/oauth": "^4.1.0",
+    "@magic-sdk/provider": "^10.1.0",
+    "@wagmi/chains": "^0.1.0",
+    "@wagmi/core": "^0.8.2",
     "@walletconnect/ethereum-provider": "^1.7.8",
     "abitype": "^0.2.5",
     "ethers": "^5.7.2",
     "eventemitter3": "^5.0.0",
-    "localforage": "^1.10.0"
+    "localforage": "^1.10.0",
+    "magic-sdk": "^10.1.0"
   },
   "devDependencies": {
     "@preconstruct/cli": "^2.2.1",

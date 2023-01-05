@@ -1,12 +1,13 @@
 /// --- Thirdweb Brige ---
 import { CoinbasePayIntegration, FundWalletOptions } from "@thirdweb-dev/pay";
-import { ChainOrRpc, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
+import { ChainOrRpc, ThirdwebSDK, getRpcUrl } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   CoinbaseWallet,
   MetaMask,
   WalletConnect,
   InjectedWallet,
+  MagicAuthWallet,
 } from "@thirdweb-dev/wallets";
 import type { AbstractWallet } from "@thirdweb-dev/wallets/dist/declarations/src/wallets/base";
 import { BigNumber } from "ethers";
@@ -18,6 +19,8 @@ declare global {
   }
 }
 
+const API_KEY =
+  "339d65590ba0fa79e4c8be0af33d64eda709e13652acb02c6be63f5a1fbef9c3";
 const SEPARATOR = "/";
 const SUB_SEPARATOR = "#";
 
@@ -41,6 +44,7 @@ const WALLETS = [
   InjectedWallet,
   WalletConnect,
   CoinbaseWallet,
+  MagicAuthWallet,
 ] as const;
 
 type PossibleWallet = typeof WALLETS[number]["id"];
@@ -83,18 +87,19 @@ class ThirdwebBridge implements TWBridge {
     console.debug("thirdwebSDK initialization:", chain, options);
     const sdkOptions = JSON.parse(options);
     const storage =
-      sdkOptions && sdkOptions.ipfsGatewayUrl
+      sdkOptions?.storage && sdkOptions?.storage?.ipfsGatewayUrl
         ? new ThirdwebStorage({
             gatewayUrls: {
-              "ipfs://": [sdkOptions.ipfsGatewayUrl],
+              "ipfs://": [sdkOptions.storage.ipfsGatewayUrl],
             },
           })
         : new ThirdwebStorage();
-
-    this.activeSDK = new ThirdwebSDK(chain, sdkOptions, storage);
+    const rpcUrl = chain.startsWith("http") ? chain : getRpcUrl(chain, API_KEY);
+    this.activeSDK = new ThirdwebSDK(rpcUrl, sdkOptions, storage);
     for (let wallet of WALLETS) {
       const walletInstance = new wallet({
-        appName: sdkOptions.appName || "thirdweb powered dApp",
+        appName: sdkOptions.wallet?.appName || "thirdweb powered dApp",
+        ...sdkOptions.wallet?.extras,
       });
       walletInstance.on("connect", async () =>
         this.updateSDKSigner(await walletInstance.getSigner()),
