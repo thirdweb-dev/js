@@ -70,11 +70,6 @@ const sponsors = [
     link: "https://www.optimism.io/",
   },
   {
-    name: "Polygon",
-    logo: "/assets/hackathon/sponsors/polygon.png",
-    link: "https://www.polygon.com/",
-  },
-  {
     name: "Fractal",
     logo: "/assets/hackathon/sponsors/fractal.png",
     link: "https://www.fractal.is/",
