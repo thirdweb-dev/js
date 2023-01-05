@@ -192,7 +192,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     this.wallet = new UserWallet(signerOrProvider, options);
     this.deployer = new ContractDeployer(signerOrProvider, options, storage);
     this.auth = new WalletAuthenticator(signerOrProvider, this.wallet, options);
-    this.registry = new MultichainRegistry(this.storageHandler, this.options);
+    this.registry = new MultichainRegistry(
+      signerOrProvider,
+      this.storageHandler,
+      this.options,
+    );
     this._publisher = new ContractPublisher(
       signerOrProvider,
       this.options,
