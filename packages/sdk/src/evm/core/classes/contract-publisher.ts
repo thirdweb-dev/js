@@ -9,11 +9,7 @@ import {
   resolveContractUriFromAddress,
 } from "../../common/feature-detection";
 import { isIncrementalVersion } from "../../common/version-checker";
-import {
-  ChainId,
-  getContractPublisherAddress,
-  getRpcUrlForChainId,
-} from "../../constants";
+import { getContractPublisherAddress } from "../../constants";
 import {
   AbiFunction,
   ContractParam,

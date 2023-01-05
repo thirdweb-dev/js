@@ -5,7 +5,7 @@ import {
   SDKOptionsSchema,
 } from "../../schema/sdk-options";
 import { NetworkOrSignerOrProvider } from "../types";
-import { ethers, Signer, providers, Wallet } from "ethers";
+import { ethers, Signer, providers } from "ethers";
 import EventEmitter from "eventemitter3";
 
 /**
