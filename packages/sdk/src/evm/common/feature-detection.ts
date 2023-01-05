@@ -454,11 +454,8 @@ export async function fetchAbiFromAddress(
       return metadata.abi;
     }
   } catch (e) {
-    // unit tests using mock storage will always fail, so ignore the error
-    // eslint-disable-next-line turbo/no-undeclared-env-vars
-    if (!process.env.tests_running) {
-      console.warn(`Couldn't fetch ABI for address '${address}'`, e);
-    }
+    // ignore and return undefined
+    // will fallback to embedded ABIs for prebuilts
   }
   return undefined;
 }
