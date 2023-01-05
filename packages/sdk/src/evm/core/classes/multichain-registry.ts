@@ -1,5 +1,4 @@
 import { NetworkOrSignerOrProvider, TransactionResult } from "..";
-import { ChainId, getRpcUrlForChainId } from "../../constants";
 import { getMultichainRegistryAddress } from "../../constants/addresses";
 import { PublishedMetadata } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -13,7 +12,6 @@ import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegi
 import TWRegistryRouterABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryRouter.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, utils } from "ethers";
-import invariant from "tiny-invariant";
 
 /**
  * @internal
@@ -23,24 +21,27 @@ export class MultichainRegistry {
   private registryRouter: ContractWrapper<TWMultichainRegistryRouter>;
   private storage: ThirdwebStorage;
 
-  constructor(storage: ThirdwebStorage, options: SDKOptions = {}) {
+  constructor(
+    network: NetworkOrSignerOrProvider,
+    storage: ThirdwebStorage,
+    options: SDKOptions = {},
+  ) {
     this.storage = storage;
     this.registryLogic = new ContractWrapper<TWMultichainRegistryLogic>(
-      getRpcUrlForChainId(ChainId.Polygon),
+      network,
       getMultichainRegistryAddress(),
       TWRegistryABI,
       options,
     );
 
     this.registryRouter = new ContractWrapper<TWMultichainRegistryRouter>(
-      getRpcUrlForChainId(ChainId.Polygon),
+      network,
       getMultichainRegistryAddress(),
       TWRegistryRouterABI,
       options,
     );
   }
 
-  // FIXME this needs to only assign the signer, not the provider
   public async updateSigner(signer: NetworkOrSignerOrProvider) {
     this.registryLogic.updateSignerOrProvider(signer);
     this.registryRouter.updateSignerOrProvider(signer);
@@ -94,10 +95,6 @@ export class MultichainRegistry {
     contracts: AddContractInput[],
   ): Promise<TransactionResult> {
     const deployerAddress = await this.registryRouter.getSignerAddress();
-    // invariant(
-    //   (await this.registry.getSigner()?.getChainId()) === ChainId.Polygon,
-    //   "Signer not connected to Polygon",
-    // );
     const encoded: string[] = [];
     contracts.forEach((contact) => {
       encoded.push(
@@ -125,10 +122,6 @@ export class MultichainRegistry {
     contracts: ContractInput[],
   ): Promise<TransactionResult> {
     const deployerAddress = await this.registryRouter.getSignerAddress();
-    invariant(
-      (await this.registryRouter.getSigner()?.getChainId()) === ChainId.Polygon,
-      "Signer not connected to Polygon",
-    );
     const encoded: string[] = [];
     contracts.forEach((contract) => {
       encoded.push(

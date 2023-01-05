@@ -1,7 +1,6 @@
 import { getRpcUrl } from "../../core/constants/urls";
 import { SignerOrProvider } from "../core/types";
 import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
-import { SDKOptions } from "../schema";
 import { ChainId, SUPPORTED_CHAIN_ID, SUPPORTED_CHAIN_IDS } from "./chains";
 import { ethers, providers } from "ethers";
 
@@ -186,15 +185,3 @@ const ChainIdToName: Record<number, string> = {
   [ChainId.BinanceSmartChainMainnet]: "binance",
   [ChainId.BinanceSmartChainTestnet]: "binance-testnet",
 };
-
-export function getRpcUrlForChainId(chainId: number, options: SDKOptions = {}) {
-  const currentPolygonReadRpc =
-    options.readonlySettings?.chainId === chainId
-      ? options.readonlySettings?.rpcUrl
-      : undefined;
-  return (
-    currentPolygonReadRpc ||
-    options.chainIdToRPCUrlMap?.[chainId] ||
-    getProviderForNetwork(ChainIdToName[chainId])
-  );
-}

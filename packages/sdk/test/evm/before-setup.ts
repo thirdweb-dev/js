@@ -57,6 +57,7 @@ import {
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
+import { FormatTypes } from "ethers/lib/utils";
 import hardhat from "hardhat";
 
 // it's there, trust me bro
@@ -158,30 +159,46 @@ export const mochaHooks = {
         TWMultichainRegistryLogic__factory.abi,
       );
 
+      // TODO: generatePluginFunctions(pluginAddress)
+      // given the address of the plugin
+      // fetch ABI
+      // for each function in the abi
+      // return an array of Plugin[]
+
       const plugins: Plugin[] = [];
       plugins.push({
         functionSelector: logicInterface.getSighash("add"),
-        functionSignature: "add(address,address,uint256,string)",
+        functionSignature: logicInterface
+          .getFunction("add")
+          .format(FormatTypes.json),
         pluginAddress: multichainRegistryLogic.address,
       });
       plugins.push({
         functionSelector: logicInterface.getSighash("remove"),
-        functionSignature: "remove(address,address,uint256)",
+        functionSignature: logicInterface
+          .getFunction("remove")
+          .format(FormatTypes.json),
         pluginAddress: multichainRegistryLogic.address,
       });
       plugins.push({
         functionSelector: logicInterface.getSighash("getAll"),
-        functionSignature: "getAll(address)",
+        functionSignature: logicInterface
+          .getFunction("getAll")
+          .format(FormatTypes.json),
         pluginAddress: multichainRegistryLogic.address,
       });
       plugins.push({
         functionSelector: logicInterface.getSighash("count"),
-        functionSignature: "count(address)",
+        functionSignature: logicInterface
+          .getFunction("count")
+          .format(FormatTypes.json),
         pluginAddress: multichainRegistryLogic.address,
       });
       plugins.push({
         functionSelector: logicInterface.getSighash("getMetadataUri"),
-        functionSignature: "getMetadataUri(uint256,address)",
+        functionSignature: logicInterface
+          .getFunction("getMetadataUri")
+          .format(FormatTypes.json),
         pluginAddress: multichainRegistryLogic.address,
       });
 
