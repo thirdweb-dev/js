@@ -32,7 +32,6 @@ import type {
   ValidContractInstance,
 } from "./types";
 import { UserWallet } from "./wallet/UserWallet";
-import { Router } from "@thirdweb-dev/contracts-js";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import RouterABI from "@thirdweb-dev/contracts-js/dist/abis/Router.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -736,7 +735,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
     let filteredABI = compositeABI
       .map(JSON.stringify)
-      .filter((item: any, index: any, compositeABI: any) => {
+      .filter((item: any, index: any) => {
         return index === compositeABI.indexOf(item);
       })
       .map(JSON.parse);
