@@ -169,15 +169,16 @@ const scheduleItems = [
   {
     day: 23,
     month: "jan",
-    title: "Fireside Chat with Fractal",
-    href: "https://lu.ma/rp3fractal",
+    title: "Workshop with Spindl",
+    href: "https://lu.ma/rp3spindl",
   },
   {
     day: 24,
     month: "jan",
-    title: "Workshop with Spindl",
-    href: "https://lu.ma/rp3spindl",
+    title: "Fireside Chat with Fractal",
+    href: "https://lu.ma/rp3fractal",
   },
+
   {
     day: 25,
     month: "jan",
