@@ -10,6 +10,7 @@ import {
   PREBUILT_CONTRACTS_MAP,
 } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
+import { AbiSchema } from "../schema";
 import { SDKOptions } from "../schema/sdk-options";
 import { CurrencyValue } from "../types/index";
 import type { AbstractWallet } from "../wallets";
@@ -31,7 +32,9 @@ import type {
   ValidContractInstance,
 } from "./types";
 import { UserWallet } from "./wallet/UserWallet";
+import { Router } from "@thirdweb-dev/contracts-js";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
+import RouterABI from "@thirdweb-dev/contracts-js/dist/abis/Router.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Contract, ContractInterface, ethers, Signer } from "ethers";
 import invariant from "tiny-invariant";
@@ -443,7 +446,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
             chainId,
             address,
           );
-          newContract = await this.getContractFromAbi(address, metadata.abi);
+          // merge ABIs of any plug-ins in case of plug-in pattern
+          const abiWithPlugin = await this.getPlugins(address, metadata.abi);
+          newContract = await this.getContractFromAbi(address, abiWithPlugin);
         } catch {
           try {
             // otherwise try to fetch metadata from bytecode
@@ -451,7 +456,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
             const metadata = await publisher.fetchCompilerMetadataFromAddress(
               address,
             );
-            newContract = await this.getContractFromAbi(address, metadata.abi);
+            // merge ABIs of any plug-ins in case of plug-in pattern
+            const abiWithPlugin = await this.getPlugins(address, metadata.abi);
+            newContract = await this.getContractFromAbi(address, abiWithPlugin);
           } catch (e) {
             throw new Error(`Error fetching ABI for this contract\n\n${e}`);
           }
@@ -461,7 +468,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         const contractAbi = await PREBUILT_CONTRACTS_MAP[
           resolvedContractType
         ].getAbi(address, this.getProvider());
-        newContract = await this.getContractFromAbi(address, contractAbi);
+        // merge ABIs of any plug-ins in case of plug-in pattern
+        const abiWithPlugin = await this.getPlugins(address, contractAbi);
+        newContract = await this.getContractFromAbi(address, abiWithPlugin);
       }
     }
     // if it's a builtin contract type we can just use the contract type to initialize the contract instance
@@ -480,7 +489,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     }
     // otherwise it has to be an ABI
     else {
-      newContract = await this.getContractFromAbi(address, contractTypeOrABI);
+      // merge ABIs of any plug-ins in case of plug-in pattern
+      const abiWithPlugin = await this.getPlugins(address, contractTypeOrABI);
+      newContract = await this.getContractFromAbi(address, abiWithPlugin);
     }
 
     // set whatever we have on the cache
@@ -647,6 +658,91 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     );
     this.contractCache.set(address, contract);
     return contract;
+  }
+
+  public async getPlugins(
+    address: string,
+    abi: ContractInterface,
+  ): Promise<ContractInterface> {
+    // Interface id for IPluginMap
+    // const mapInterface = "0x92f1dcaa";
+
+    // Interface id for IRouter
+    const routerInterface = "0xf3374027";
+
+    // console.log("entrypoint interface-id: ", routerInterface);
+    let pluginABIs: ContractInterface[] = [];
+
+    try {
+      // check if contract is plugin-pattern
+      const contract = new Contract(
+        address,
+        RouterABI,
+        // !provider only! - signer can break things here!
+        this.getProvider(),
+      );
+      const isPluginEntrypoint: boolean = await contract.supportsInterface(
+        routerInterface,
+      );
+      // console.log("is plugin entrypoint: ", isPluginEntrypoint);
+
+      if (isPluginEntrypoint) {
+        const pluginMap = await contract.getAllPlugins();
+
+        // get extension addresses
+        const allPlugins = pluginMap.map((item: any) => item.pluginAddress);
+        const plugins = allPlugins.filter((item: any, index: any) => {
+          return index === allPlugins.indexOf(item);
+        });
+
+        // get ABIs of extension contracts
+        pluginABIs = await this.getPluginABI(plugins);
+      }
+    } catch (err) {}
+
+    // join all ABIs -- entrypoint + extension
+    let finalPlugins = await this.joinABIs([abi, ...pluginABIs]);
+
+    return finalPlugins;
+  }
+
+  public async getPluginABI(addresses: string[]): Promise<ContractInterface[]> {
+    let pluginABIs: ContractInterface[] = [];
+
+    for (const address of addresses) {
+      try {
+        const publisher = this.getPublisher();
+        const metadata = await publisher.fetchCompilerMetadataFromAddress(
+          address,
+        );
+        pluginABIs.push(metadata.abi);
+      } catch (e) {
+        throw new Error(`Error fetching ABI for this contract\n\n${e}`);
+      }
+    }
+
+    return pluginABIs;
+  }
+
+  public async joinABIs(abis: ContractInterface[]): Promise<ContractInterface> {
+    let compositeABI: any = [];
+
+    for (const abi of abis) {
+      // console.log("unparsed abi: ", abi);
+      const abc = AbiSchema.parse(abi);
+      compositeABI.push(...abc);
+      // console.log("parsed abi: ", abc);
+    }
+
+    let filteredABI = compositeABI
+      .map(JSON.stringify)
+      .filter((item: any, index: any, compositeABI: any) => {
+        return index === compositeABI.indexOf(item);
+      })
+      .map(JSON.parse);
+
+    // let filteredABI = new Set(compositeABI);
+    return AbiSchema.parse(filteredABI);
   }
 
   /**
