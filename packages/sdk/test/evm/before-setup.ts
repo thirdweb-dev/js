@@ -165,40 +165,35 @@ export const mochaHooks = {
       // for each function in the abi
       // return an array of Plugin[]
 
+      const fnSig = (functionName: string) => {
+        const fn = logicInterface.getFunction(functionName);
+        return fn.name + "(" + fn.inputs.map((i) => i.type).join(",") + ")";
+      };
+
       const plugins: Plugin[] = [];
       plugins.push({
         functionSelector: logicInterface.getSighash("add"),
-        functionSignature: logicInterface
-          .getFunction("add")
-          .format(FormatTypes.json),
+        functionSignature: fnSig("add"),
         pluginAddress: multichainRegistryLogic.address,
       });
       plugins.push({
         functionSelector: logicInterface.getSighash("remove"),
-        functionSignature: logicInterface
-          .getFunction("remove")
-          .format(FormatTypes.json),
+        functionSignature: fnSig("remove"),
         pluginAddress: multichainRegistryLogic.address,
       });
       plugins.push({
         functionSelector: logicInterface.getSighash("getAll"),
-        functionSignature: logicInterface
-          .getFunction("getAll")
-          .format(FormatTypes.json),
+        functionSignature: fnSig("getAll"),
         pluginAddress: multichainRegistryLogic.address,
       });
       plugins.push({
         functionSelector: logicInterface.getSighash("count"),
-        functionSignature: logicInterface
-          .getFunction("count")
-          .format(FormatTypes.json),
+        functionSignature: fnSig("count"),
         pluginAddress: multichainRegistryLogic.address,
       });
       plugins.push({
         functionSelector: logicInterface.getSighash("getMetadataUri"),
-        functionSignature: logicInterface
-          .getFunction("getMetadataUri")
-          .format(FormatTypes.json),
+        functionSignature: fnSig("getMetadataUri"),
         pluginAddress: multichainRegistryLogic.address,
       });
 
