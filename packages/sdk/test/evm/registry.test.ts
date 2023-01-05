@@ -34,7 +34,7 @@ describe("Contract Registry", () => {
 
     const chainId: number = await adminWallet.getChainId();
     const metadataURI: string = "ipfs://metadata";
-    const tx = await multichainRegistry.addContract({
+    await multichainRegistry.addContract({
       address,
       chainId,
       metadataURI,
@@ -48,7 +48,6 @@ describe("Contract Registry", () => {
     );
 
     expect(contracts[0].address).to.equal(address);
-    console.log(await sdk.getContractList(adminWallet.address));
   });
 
   it("should allow adding and removing contracts", async () => {
