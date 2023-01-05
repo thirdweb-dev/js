@@ -706,7 +706,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   }
 
   public async getPluginABI(addresses: string[]): Promise<ContractInterface[]> {
-    let pluginABIs: ContractInterface[] = [];
+    let pluginABIs: any[] = [];
 
     for (const address of addresses) {
       try {
@@ -723,8 +723,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     return pluginABIs;
   }
 
-  public async joinABIs(abis: ContractInterface[]): Promise<ContractInterface> {
-    let compositeABI: any = [];
+  public async joinABIs(abis: any[]): Promise<ContractInterface> {
+    let compositeABI: any[] = [];
 
     for (const abi of abis) {
       // console.log("unparsed abi: ", abi);
@@ -734,11 +734,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     }
 
     let filteredABI = compositeABI
-      .map(JSON.stringify)
-      .filter((item: any, index: any) => {
+      .map((i) => JSON.stringify(i))
+      .filter((item: any, index: any, compositeABI) => {
         return index === compositeABI.indexOf(item);
       })
-      .map(JSON.parse);
+      .map((i) => JSON.parse(i));
 
     // let filteredABI = new Set(compositeABI);
     return AbiSchema.parse(filteredABI);
