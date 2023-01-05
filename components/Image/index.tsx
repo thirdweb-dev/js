@@ -5,6 +5,8 @@ export const ChakraNextImage = chakra(NextImage, {
   baseStyle: { objectFit: "contain!important", maxW: "100%", zIndex: 1 },
   shouldForwardProp: (prop) =>
     [
+      "width",
+      "height",
       "src",
       "alt",
       "fill",
