@@ -11,24 +11,28 @@ import { useTrack } from "hooks/analytics/useTrack";
 import React, { useEffect } from "react";
 import { FiCopy } from "react-icons/fi";
 
-/**
- * 📝 @TODO
- * Write a custom alternative to `shortenIfAddress` function
- * Why? - it imports a lot of other stuff which can not be tree-shaken
- */
-import { shortenIfAddress } from "utils/usedapp-external";
-
-/**
- * ❗️❗️❗️ @DANGER
- * Importing this component will result in a HUGE bundle size because of `shortenIfAddress`
- */
-
 interface AddressCopyButtonProps extends Omit<ButtonProps, "onClick" | "size"> {
   address?: string;
   noIcon?: boolean;
   size?: PossibleButtonSize;
   tokenId?: boolean;
+  shortenAddress?: boolean;
 }
+
+/**
+ * shorten the string to 13 characters with the format of 6 chars + ... + 4 chars
+ * does not shorten if string is less than 13 characters
+ *
+ * @param str string to shorten
+ * @returns shortened string to length 13
+ */
+const shorten = (str: string) => {
+  if (str.length > 13) {
+    return `${str.substring(0, 6)}...${str.substring(str.length - 4)}`;
+  } else {
+    return str;
+  }
+};
 
 export const AddressCopyButton: React.FC<AddressCopyButtonProps> = ({
   address,
@@ -38,6 +42,7 @@ export const AddressCopyButton: React.FC<AddressCopyButtonProps> = ({
   borderRadius = "md",
   variant = "outline",
   tokenId,
+  shortenAddress = true,
   ...restButtonProps
 }) => {
   const { onCopy, setValue } = useClipboard(address || "");
@@ -89,14 +94,18 @@ export const AddressCopyButton: React.FC<AddressCopyButtonProps> = ({
               tokenId: address,
             });
           } else {
-            trackEvent({ category: "address_button", action: "copy", address });
+            trackEvent({
+              category: "address_button",
+              action: "copy",
+              address,
+            });
           }
         }}
         leftIcon={noIcon ? undefined : <Icon boxSize={3} as={FiCopy} />}
         fontFamily="mono"
       >
         <Text size={`label.${buttonSizesMap[size]}`}>
-          {shortenIfAddress(address)}
+          {address && (shortenAddress ? shorten(address) : address)}
         </Text>
       </Button>
     </Tooltip>
