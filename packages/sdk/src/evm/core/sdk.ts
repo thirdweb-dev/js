@@ -735,8 +735,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
     let filteredABI = compositeABI
       .map((i) => JSON.stringify(i))
-      .filter((item: any, index: any, compositeABI) => {
-        return index === compositeABI.indexOf(item);
+      .filter((item: any, index: any, abi) => {
+        return index === abi.indexOf(item);
       })
       .map((i) => JSON.parse(i));
 

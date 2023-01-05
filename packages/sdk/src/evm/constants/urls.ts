@@ -169,6 +169,7 @@ export function getReadOnlyProvider(network: string, chainId?: number) {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ChainIdToName: Record<number, string> = {
   [ChainId.Polygon]: "polygon",
   [ChainId.Mumbai]: "mumbai",
