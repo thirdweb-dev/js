@@ -207,8 +207,8 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
           images: [
             {
               url: "/assets/og-image/readyplayer3.png",
-              width: 1435,
-              height: 871,
+              width: 1440,
+              height: 880,
               alt: "thirdweb gaming hackathon: January 16 - 31",
             },
           ],
