@@ -3,6 +3,7 @@ import { MultichainRegistry } from "../../src/evm/core/classes/multichain-regist
 import { ContractRegistry } from "../../src/evm/core/classes/registry";
 import { sdk, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import RouterABI from "@thirdweb-dev/contracts-js/dist/abis/Router.json";
 import { expect } from "chai";
 
 describe("Contract Registry", () => {
@@ -50,12 +51,18 @@ describe("Contract Registry", () => {
     expect(contracts[0].address).to.equal(address);
   });
 
-  it("multichain registry: check plugin feature", async () => {
+  it("check abi merge", async () => {
+    const abi = sdk.joinABIs([RouterABI, RouterABI]);
+
+    expect(abi.length).to.equal(RouterABI.length);
+  });
+
+  it.skip("multichain registry: check plugin feature", async () => {
     const realSDK = new ThirdwebSDK("polygon");
     const multichainRegistry = await realSDK.getContract(
       "0xcdAD8FA86e18538aC207872E8ff3536501431B73",
     );
-    console.log(multichainRegistry.abi);
+    // console.log(multichainRegistry.abi);
   });
 
   it("should allow adding and removing contracts", async () => {

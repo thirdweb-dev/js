@@ -1,5 +1,6 @@
 import { isFeatureEnabled } from "../common";
 import { fetchCurrencyValue } from "../common/currency";
+import { unique } from "../common/utils";
 import {
   ChainOrRpc,
   getProviderForNetwork,
@@ -11,7 +12,7 @@ import {
   PREBUILT_CONTRACTS_MAP,
 } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
-import { AbiSchema } from "../schema";
+import { Abi, AbiSchema } from "../schema";
 import { SDKOptions } from "../schema/sdk-options";
 import { CurrencyValue } from "../types/index";
 import type { AbstractWallet } from "../wallets";
@@ -19,6 +20,7 @@ import { WalletAuthenticator } from "./auth/wallet-authenticator";
 import type { ContractMetadata } from "./classes";
 import { ContractDeployer } from "./classes/contract-deployer";
 import { ContractPublisher } from "./classes/contract-publisher";
+import { ContractWrapper } from "./classes/contract-wrapper";
 import { MultichainRegistry } from "./classes/multichain-registry";
 import {
   getSignerAndProvider,
@@ -33,6 +35,7 @@ import type {
   ValidContractInstance,
 } from "./types";
 import { UserWallet } from "./wallet/UserWallet";
+import { IRouter } from "@thirdweb-dev/contracts-js";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import RouterABI from "@thirdweb-dev/contracts-js/dist/abis/Router.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -477,7 +480,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // otherwise it has to be an ABI
     else {
       // merge ABIs of any plug-ins in case of plug-in pattern
-      const abiWithPlugin = await this.getPlugins(address, contractTypeOrABI);
+      const abiWithPlugin = await this.getPlugins(
+        address,
+        AbiSchema.parse(contractTypeOrABI),
+      );
       newContract = await this.getContractFromAbi(address, abiWithPlugin);
     }
 
@@ -640,11 +646,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     return contract;
   }
 
-  public async getPlugins(
-    address: string,
-    abi: ContractInterface,
-  ): Promise<ContractInterface> {
-    let pluginABIs: ContractInterface[] = [];
+  public async getPlugins(address: string, abi: Abi): Promise<Abi> {
+    let pluginABIs: Abi[] = [];
 
     try {
       // check if contract is plugin-pattern
@@ -654,20 +657,18 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       );
 
       if (isPluginRouter) {
-        const contract = new Contract(
+        const contract = new ContractWrapper<IRouter>(
+          this.getProvider(),
           address,
           RouterABI,
-          // !provider only! - signer can break things here!
-          this.getProvider(),
+          this.options,
         );
 
-        const pluginMap = await contract.getAllPlugins();
+        const pluginMap = await contract.readContract.getAllPlugins();
 
         // get extension addresses
-        const allPlugins = pluginMap.map((item: any) => item.pluginAddress);
-        const plugins = allPlugins.filter((item: any, index: any) => {
-          return index === allPlugins.indexOf(item);
-        });
+        const allPlugins = pluginMap.map((item) => item.pluginAddress);
+        const plugins = Array.from(new Set(allPlugins));
 
         // get ABIs of extension contracts
         pluginABIs = await this.getPluginABI(plugins);
@@ -680,11 +681,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     return finalPlugins;
   }
 
-  public async getPluginABI(addresses: string[]): Promise<ContractInterface[]> {
-    let pluginABIs: any[] = [];
-
+  public async getPluginABI(addresses: string[]): Promise<Abi[]> {
     const publisher = this.getPublisher();
-    pluginABIs = (
+    return (
       await Promise.all(
         addresses.map((address) =>
           publisher.fetchCompilerMetadataFromAddress(address).catch((err) => {
@@ -694,26 +693,20 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         ),
       )
     ).map((metadata) => metadata.abi);
-
-    return pluginABIs;
   }
 
-  public async joinABIs(abis: any[]): Promise<ContractInterface> {
-    let compositeABI: any[] = [];
+  public joinABIs(abis: Abi[]): Abi {
+    const parsedABIs = abis.map((abi) => AbiSchema.parse(abi)).flat();
 
-    for (const abi of abis) {
-      const abc = AbiSchema.parse(abi);
-      compositeABI.push(...abc);
-    }
+    const filteredABIs = unique(parsedABIs, (a, b): boolean => {
+      return (
+        a.name === b.name &&
+        a.type === b.type &&
+        a.inputs.length === b.inputs.length
+      );
+    });
 
-    let filteredABI = compositeABI
-      .map((i) => JSON.stringify(i))
-      .filter((item: any, index: any, abi) => {
-        return index === abi.indexOf(item);
-      })
-      .map((i) => JSON.parse(i));
-
-    return AbiSchema.parse(filteredABI);
+    return AbiSchema.parse(filteredABIs);
   }
 
   /**
