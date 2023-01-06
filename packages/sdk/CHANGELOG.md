@@ -1,5 +1,41 @@
 # @thirdweb-dev/sdk
 
+## 3.6.9
+
+### Patch Changes
+
+- [#465](https://github.com/thirdweb-dev/js/pull/465) [`e913e0d`](https://github.com/thirdweb-dev/js/commit/e913e0daa9ece9a6274f7ffa4e66bdcbf32e6ada) Thanks [@adam-maj](https://github.com/adam-maj)! - Fix passing options to factory
+
+- [`5862c55`](https://github.com/thirdweb-dev/js/commit/5862c558fb48604b5aca4defd1ccc06fc3536358) Thanks [@kumaryash90](https://github.com/kumaryash90)! - update forwarder address
+
+- [#466](https://github.com/thirdweb-dev/js/pull/466) [`73883f5`](https://github.com/thirdweb-dev/js/commit/73883f56d0ed0a35ace8b98b96caa782443be22e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - workaround for signing typed data with magic.link signers
+
+- [#468](https://github.com/thirdweb-dev/js/pull/468) [`f7a74a3`](https://github.com/thirdweb-dev/js/commit/f7a74a3b7c489ada5b1ec435632a326334a33c9b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose `sdk.wallet.signTypedData()`
+
+## 3.6.8
+
+### Patch Changes
+
+- [#454](https://github.com/thirdweb-dev/js/pull/454) [`c673e39`](https://github.com/thirdweb-dev/js/commit/c673e39f23ef082097d73d62910580e8fad400a0) Thanks [@jnsdls](https://github.com/jnsdls)! - upgraded dependencies
+
+- [#421](https://github.com/thirdweb-dev/js/pull/421) [`ea95c5f`](https://github.com/thirdweb-dev/js/commit/ea95c5f609e306e333ee0f73f7920503358ca848) Thanks [@yehia67](https://github.com/yehia67)! - Add new utilities to parse/format currencies. `toEther` & `toWei` as default 18 decimal and `toUnits` & `toDisplayValue` in case of different numbers of decimals.
+
+- [#456](https://github.com/thirdweb-dev/js/pull/456) [`699a2b1`](https://github.com/thirdweb-dev/js/commit/699a2b16fb991c474ec57db8f178e2601d631f39) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Fix claiming drops with custom currencies
+
+- [#458](https://github.com/thirdweb-dev/js/pull/458) [`4cdd0bd`](https://github.com/thirdweb-dev/js/commit/4cdd0bd6348494a256d7c6a2bdf8f7b5c20f6877) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fixes for latest wallet package integration
+
+- [#453](https://github.com/thirdweb-dev/js/pull/453) [`a8267f9`](https://github.com/thirdweb-dev/js/commit/a8267f912df84c58d3fe3f47b90bd474f73c84ca) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Drop fixes for large batch uploads
+
+## 3.6.7
+
+### Patch Changes
+
+- [#451](https://github.com/thirdweb-dev/js/pull/451) [`3731459`](https://github.com/thirdweb-dev/js/commit/3731459d33f1ded7ebb69124809449b901b3ad3d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Less strict prebuilt checks to support OSRF variants
+
+- [#450](https://github.com/thirdweb-dev/js/pull/450) [`cac6c30`](https://github.com/thirdweb-dev/js/commit/cac6c30bca5e17df81d746ef81316af47d5e252e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix setting allowance or approvals gaslessly
+
+- [#448](https://github.com/thirdweb-dev/js/pull/448) [`7a37e56`](https://github.com/thirdweb-dev/js/commit/7a37e564fd5d5a9df84c8da44ecaf6c42f67a0e2) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - allow `useContract` to fail faster to enable the import case
+
 ## 3.6.6
 
 ### Patch Changes

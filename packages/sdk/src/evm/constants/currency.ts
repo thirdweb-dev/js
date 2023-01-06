@@ -176,3 +176,16 @@ export const NATIVE_TOKENS: Record<
 export function getNativeTokenByChainId(chainId: ChainId): NativeToken {
   return NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID];
 }
+
+export const LINK_TOKEN_ADDRESS: Record<number, string> = {
+  [ChainId.Mainnet]: "0x514910771AF9Ca656af840dff83E8264EcF986CA",
+  [ChainId.Goerli]: "0x326C977E6efc84E512bB9C30f76E30c160eD06FB",
+  [ChainId.BinanceSmartChainMainnet]:
+    "0x404460C6A5EdE2D891e8297795264fDe62ADBB75",
+  [ChainId.Polygon]: "0xb0897686c545045aFc77CF20eC7A532E3120E0F1",
+  [ChainId.Mumbai]: "0x326C977E6efc84E512bB9C30f76E30c160eD06FB",
+  [ChainId.Avalanche]: "0x5947BB275c521040051D82396192181b413227A3",
+  [ChainId.AvalancheFujiTestnet]: "0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846",
+  [ChainId.Fantom]: "0x6F43FF82CCA38001B6699a8AC47A2d0E66939407",
+  [ChainId.FantomTestnet]: "0xfaFedb041c0DD4fA2Dc0d87a6B0979Ee6FA7af5F",
+};

@@ -67,6 +67,7 @@ export class MultichainRegistry {
         `No metadata URI found for contract ${address} on chain ${chainId}`,
       );
     }
+    // TODO define the metadata JSON schema
     return await this.storage.downloadJSON<PublishedMetadata>(uri);
   }
 

@@ -1,5 +1,21 @@
 # @thirdweb-dev/react
 
+## 3.6.9
+
+## 3.6.8
+
+### Patch Changes
+
+- [#454](https://github.com/thirdweb-dev/js/pull/454) [`c673e39`](https://github.com/thirdweb-dev/js/commit/c673e39f23ef082097d73d62910580e8fad400a0) Thanks [@jnsdls](https://github.com/jnsdls)! - upgraded dependencies
+
+- [#422](https://github.com/thirdweb-dev/js/pull/422) [`08d04fe`](https://github.com/thirdweb-dev/js/commit/08d04fe4dc74ba0d12625d7d4004c23f7dc330a2) Thanks [@yehia67](https://github.com/yehia67)! - Add `btnTitle` prop to the `ConnectWallet` component. Now you can set customized string or child component to the connect button.
+
+## 3.6.7
+
+### Patch Changes
+
+- [#448](https://github.com/thirdweb-dev/js/pull/448) [`7a37e56`](https://github.com/thirdweb-dev/js/commit/7a37e564fd5d5a9df84c8da44ecaf6c42f67a0e2) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - allow `useContract` to fail faster to enable the import case
+
 ## 3.6.6
 
 ### Patch Changes

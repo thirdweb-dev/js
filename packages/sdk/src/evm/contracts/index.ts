@@ -1,3 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import {
+  fetchAbiFromAddress,
+  fetchContractMetadataFromAddress,
+} from "../common";
 import { getPrebuiltInfo } from "../common/legacy";
 import { ALL_ROLES } from "../common/role";
 import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
@@ -18,10 +23,10 @@ import {
   TokenErc721ContractSchema,
   VoteContractSchema,
 } from "../schema";
-import { CustomContractSchema } from "../schema/contracts/custom";
+import { Abi, CustomContractSchema } from "../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
-import type { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 
 type InitalizeParams = [
@@ -41,7 +46,7 @@ export const EditionDropInitializer = {
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
     const [abi, contract, _network] = await Promise.all([
-      await EditionDropInitializer.getAbi(address, provider),
+      await EditionDropInitializer.getAbi(address, provider, storage),
       import("./prebuilt-implementations/edition-drop"),
       provider.getNetwork(),
     ]);
@@ -55,13 +60,18 @@ export const EditionDropInitializer = {
       _network.chainId,
     );
   },
-  getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    const contractInfo = await assertContractType(
-      address,
-      provider,
-      "edition-drop",
-    );
-    return contractInfo.version > 2
+  getAbi: async (
+    address: string,
+    provider: ethers.providers.Provider,
+    storage: ThirdwebStorage,
+  ) => {
+    const abi = await fetchAbiFromAddress(address, provider, storage);
+    if (abi) {
+      return abi;
+    }
+    // Deprecated - only needed for backwards compatibility with non-released contracts - should remove in v4
+    const contractInfo = await getContractInfo(address, provider);
+    return !contractInfo || contractInfo.version > 2
       ? (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC1155.json"))
           .default
       : (
@@ -82,7 +92,7 @@ export const EditionInitializer = {
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
     const [abi, contract, _network] = await Promise.all([
-      EditionInitializer.getAbi(address, provider),
+      EditionInitializer.getAbi(address, provider, storage),
       import("./prebuilt-implementations/edition"),
       provider.getNetwork(),
     ]);
@@ -96,8 +106,16 @@ export const EditionInitializer = {
       _network.chainId,
     );
   },
-  getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    await assertContractType(address, provider, "edition");
+  getAbi: async (
+    address: string,
+    provider: ethers.providers.Provider,
+    storage: ThirdwebStorage,
+  ) => {
+    const abi = await fetchAbiFromAddress(address, provider, storage);
+    if (abi) {
+      return abi;
+    }
+    // Deprecated - only needed for backwards compatibility with non-released contracts - should remove in v4
     return (
       await import("@thirdweb-dev/contracts-js/dist/abis/TokenERC1155.json")
     ).default;
@@ -114,7 +132,7 @@ export const MarketplaceInitializer = {
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
     const [abi, contract, _network] = await Promise.all([
-      MarketplaceInitializer.getAbi(address, provider),
+      MarketplaceInitializer.getAbi(address, provider, storage),
       import("./prebuilt-implementations/marketplace"),
       provider.getNetwork(),
     ]);
@@ -128,8 +146,16 @@ export const MarketplaceInitializer = {
       _network.chainId,
     );
   },
-  getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    await assertContractType(address, provider, "marketplace");
+  getAbi: async (
+    address: string,
+    provider: ethers.providers.Provider,
+    storage: ThirdwebStorage,
+  ) => {
+    const abi = await fetchAbiFromAddress(address, provider, storage);
+    if (abi) {
+      return abi;
+    }
+    // Deprecated - only needed for backwards compatibility with non-released contracts - should remove in v4
     return (
       await import("@thirdweb-dev/contracts-js/dist/abis/Marketplace.json")
     ).default;
@@ -146,7 +172,7 @@ export const MultiwrapInitializer = {
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
     const [abi, contract, _network] = await Promise.all([
-      MultiwrapInitializer.getAbi(address, provider),
+      MultiwrapInitializer.getAbi(address, provider, storage),
       import("./prebuilt-implementations/multiwrap"),
       provider.getNetwork(),
     ]);
@@ -160,8 +186,16 @@ export const MultiwrapInitializer = {
       _network.chainId,
     );
   },
-  getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    await assertContractType(address, provider, "multiwrap");
+  getAbi: async (
+    address: string,
+    provider: ethers.providers.Provider,
+    storage: ThirdwebStorage,
+  ) => {
+    const abi = await fetchAbiFromAddress(address, provider, storage);
+    if (abi) {
+      return abi;
+    }
+    // Deprecated - only needed for backwards compatibility with non-released contracts - should remove in v4
     return (await import("@thirdweb-dev/contracts-js/dist/abis/Multiwrap.json"))
       .default;
   },
@@ -178,7 +212,7 @@ export const NFTCollectionInitializer = {
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
     const [abi, contract, _network] = await Promise.all([
-      NFTCollectionInitializer.getAbi(address, provider),
+      NFTCollectionInitializer.getAbi(address, provider, storage),
       import("./prebuilt-implementations/nft-collection"),
       provider.getNetwork(),
     ]);
@@ -192,8 +226,16 @@ export const NFTCollectionInitializer = {
       _network.chainId,
     );
   },
-  getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    await assertContractType(address, provider, "nft-collection");
+  getAbi: async (
+    address: string,
+    provider: ethers.providers.Provider,
+    storage: ThirdwebStorage,
+  ) => {
+    const abi = await fetchAbiFromAddress(address, provider, storage);
+    if (abi) {
+      return abi;
+    }
+    // Deprecated - only needed for backwards compatibility with non-released contracts - should remove in v4
     return (
       await import("@thirdweb-dev/contracts-js/dist/abis/TokenERC721.json")
     ).default;
@@ -210,7 +252,7 @@ export const NFTDropInitializer = {
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
     const [abi, contract, _network] = await Promise.all([
-      NFTDropInitializer.getAbi(address, provider),
+      NFTDropInitializer.getAbi(address, provider, storage),
       import("./prebuilt-implementations/nft-drop"),
       provider.getNetwork(),
     ]);
@@ -224,13 +266,18 @@ export const NFTDropInitializer = {
       _network.chainId,
     );
   },
-  getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    const contractInfo = await assertContractType(
-      address,
-      provider,
-      "nft-drop",
-    );
-    return contractInfo.version > 3
+  getAbi: async (
+    address: string,
+    provider: ethers.providers.Provider,
+    storage: ThirdwebStorage,
+  ) => {
+    const abi = await fetchAbiFromAddress(address, provider, storage);
+    if (abi) {
+      return abi;
+    }
+    // Deprecated - only needed for backwards compatibility with non-released contracts - should remove in v4
+    const contractInfo = await getContractInfo(address, provider);
+    return !contractInfo || contractInfo.version > 3
       ? (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC721.json"))
           .default
       : (
@@ -252,7 +299,7 @@ export const PackInitializer = {
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
     const [abi, contract, _network] = await Promise.all([
-      PackInitializer.getAbi(address, provider),
+      PackInitializer.getAbi(address, provider, storage),
       import("./prebuilt-implementations/pack"),
       provider.getNetwork(),
     ]);
@@ -266,8 +313,16 @@ export const PackInitializer = {
       _network.chainId,
     );
   },
-  getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    await assertContractType(address, provider, "pack");
+  getAbi: async (
+    address: string,
+    provider: ethers.providers.Provider,
+    storage: ThirdwebStorage,
+  ): Promise<Abi> => {
+    const abi = await fetchAbiFromAddress(address, provider, storage);
+    if (abi) {
+      return abi;
+    }
+    // Deprecated - only needed for backwards compatibility with non-released contracts - should remove in v4
     return (await import("@thirdweb-dev/contracts-js/dist/abis/Pack.json"))
       .default;
   },
@@ -284,7 +339,7 @@ export const SignatureDropInitializer = {
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
     const [abi, contract, _network] = await Promise.all([
-      SignatureDropInitializer.getAbi(address, provider),
+      SignatureDropInitializer.getAbi(address, provider, storage),
       import("./prebuilt-implementations/signature-drop"),
       provider.getNetwork(),
     ]);
@@ -298,13 +353,18 @@ export const SignatureDropInitializer = {
       _network.chainId,
     );
   },
-  getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    const contractInfo = await assertContractType(
-      address,
-      provider,
-      "signature-drop",
-    );
-    return contractInfo.version > 4
+  getAbi: async (
+    address: string,
+    provider: ethers.providers.Provider,
+    storage: ThirdwebStorage,
+  ) => {
+    const abi = await fetchAbiFromAddress(address, provider, storage);
+    if (abi) {
+      return abi;
+    }
+    // Deprecated - only needed for backwards compatibility with non-released contracts - should remove in v4
+    const contractInfo = await getContractInfo(address, provider);
+    return !contractInfo || contractInfo.version > 4
       ? (
           await import(
             "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop.json"
@@ -329,7 +389,7 @@ export const SplitInitializer = {
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
     const [abi, contract, _network] = await Promise.all([
-      SplitInitializer.getAbi(address, provider),
+      SplitInitializer.getAbi(address, provider, storage),
       import("./prebuilt-implementations/split"),
       provider.getNetwork(),
     ]);
@@ -343,8 +403,16 @@ export const SplitInitializer = {
       _network.chainId,
     );
   },
-  getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    await assertContractType(address, provider, "split");
+  getAbi: async (
+    address: string,
+    provider: ethers.providers.Provider,
+    storage: ThirdwebStorage,
+  ) => {
+    const abi = await fetchAbiFromAddress(address, provider, storage);
+    if (abi) {
+      return abi;
+    }
+    // Deprecated - only needed for backwards compatibility with non-released contracts - should remove in v4
     return (await import("@thirdweb-dev/contracts-js/dist/abis/Split.json"))
       .default;
   },
@@ -361,7 +429,7 @@ export const TokenDropInitializer = {
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
     const [abi, contract, _network] = await Promise.all([
-      TokenDropInitializer.getAbi(address, provider),
+      TokenDropInitializer.getAbi(address, provider, storage),
       import("./prebuilt-implementations/token-drop"),
       provider.getNetwork(),
     ]);
@@ -375,13 +443,18 @@ export const TokenDropInitializer = {
       _network.chainId,
     );
   },
-  getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    const contractInfo = await assertContractType(
-      address,
-      provider,
-      "token-drop",
-    );
-    return contractInfo.version > 2
+  getAbi: async (
+    address: string,
+    provider: ethers.providers.Provider,
+    storage: ThirdwebStorage,
+  ) => {
+    const abi = await fetchAbiFromAddress(address, provider, storage);
+    if (abi) {
+      return abi;
+    }
+    // Deprecated - only needed for backwards compatibility with non-released contracts - should remove in v4
+    const contractInfo = await getContractInfo(address, provider);
+    return !contractInfo || contractInfo.version > 2
       ? (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC20.json"))
           .default
       : (await import("@thirdweb-dev/contracts-js/dist/abis/DropERC20_V2.json"))
@@ -399,7 +472,7 @@ export const TokenInitializer = {
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
     const [abi, contract, _network] = await Promise.all([
-      TokenInitializer.getAbi(address, provider),
+      TokenInitializer.getAbi(address, provider, storage),
       import("./prebuilt-implementations/token"),
       provider.getNetwork(),
     ]);
@@ -413,8 +486,16 @@ export const TokenInitializer = {
       _network.chainId,
     );
   },
-  getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    await assertContractType(address, provider, "token");
+  getAbi: async (
+    address: string,
+    provider: ethers.providers.Provider,
+    storage: ThirdwebStorage,
+  ) => {
+    const abi = await fetchAbiFromAddress(address, provider, storage);
+    if (abi) {
+      return abi;
+    }
+    // Deprecated - only needed for backwards compatibility with non-released contracts - should remove in v4
     return (
       await import("@thirdweb-dev/contracts-js/dist/abis/TokenERC20.json")
     ).default;
@@ -432,7 +513,7 @@ export const VoteInitializer = {
   ) => {
     const [, provider] = getSignerAndProvider(network, options);
     const [abi, contract, _network] = await Promise.all([
-      VoteInitializer.getAbi(address, provider),
+      VoteInitializer.getAbi(address, provider, storage),
       import("./prebuilt-implementations/vote"),
       provider.getNetwork(),
     ]);
@@ -446,23 +527,30 @@ export const VoteInitializer = {
       _network.chainId,
     );
   },
-  getAbi: async (address: string, provider: ethers.providers.Provider) => {
-    await assertContractType(address, provider, "vote");
+  getAbi: async (
+    address: string,
+    provider: ethers.providers.Provider,
+    storage: ThirdwebStorage,
+  ) => {
+    const abi = await fetchAbiFromAddress(address, provider, storage);
+    if (abi) {
+      return abi;
+    }
+    // Deprecated - only needed for backwards compatibility with non-released contracts - should remove in v4
     return (await import("@thirdweb-dev/contracts-js/dist/abis/VoteERC20.json"))
       .default;
   },
 };
 
-async function assertContractType(
+async function getContractInfo(
   address: string,
   provider: ethers.providers.Provider,
-  type: PrebuiltContractType,
 ) {
-  const contractInfo = await getPrebuiltInfo(address, provider);
-  if (!contractInfo || contractInfo.type !== getContractName(type)) {
-    throw new Error(`Contract is not a ${type}`);
+  try {
+    return await getPrebuiltInfo(address, provider);
+  } catch (e) {
+    return undefined;
   }
-  return contractInfo;
 }
 
 /**

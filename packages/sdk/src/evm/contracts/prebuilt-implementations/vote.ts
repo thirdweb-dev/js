@@ -15,6 +15,7 @@ import {
   TransactionResultWithId,
 } from "../../core/types";
 import { VoteType } from "../../enums";
+import { Abi } from "../../schema";
 import { VoteContractSchema } from "../../schema/contracts/vote";
 import { SDKOptions } from "../../schema/sdk-options";
 import { CurrencyValue } from "../../types/currency";
@@ -26,7 +27,6 @@ import {
 } from "../../types/vote";
 import type { IERC20, VoteERC20 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
-import type ABI from "@thirdweb-dev/contracts-js/dist/abis/VoteERC20.json";
 import { ProposalCreatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/VoteERC20";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
@@ -55,7 +55,7 @@ export class Vote implements UpdateableNetwork {
   private contractWrapper: ContractWrapper<VoteERC20>;
   private storage: ThirdwebStorage;
 
-  public abi: typeof ABI;
+  public abi: Abi;
   public metadata: ContractMetadata<VoteERC20, typeof VoteContractSchema>;
   public encoder: ContractEncoder<VoteERC20>;
   public estimator: GasCostEstimator<VoteERC20>;
@@ -75,7 +75,7 @@ export class Vote implements UpdateableNetwork {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: typeof ABI,
+    abi: Abi,
     chainId: number,
     contractWrapper = new ContractWrapper<VoteERC20>(
       network,

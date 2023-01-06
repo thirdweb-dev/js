@@ -64,9 +64,7 @@ export class ClaimConditions {
     const goLiveDate = candyMachine.goLiveDate
       ? new Date(candyMachine.goLiveDate.toNumber() * 1000)
       : null;
-    const isWithinGoLiveDate = candyMachine.goLiveDate
-      ? candyMachine.goLiveDate.toNumber() * 1000 >= Date.now()
-      : true;
+    const isWithinGoLiveDate = goLiveDate ? goLiveDate <= new Date() : true;
     const maxClaimable =
       candyMachine.endSettings && candyMachine.endSettings.endSettingType === 1
         ? candyMachine.endSettings.number.toNumber()
@@ -155,7 +153,7 @@ export class ClaimConditions {
     const parsed = NFTDropUpdateableConditionsInputSchema.parse(metadata);
 
     // recipients
-    const wallet: PublicKey | undefined = parsed.primarySaleRecipient
+    let wallet: PublicKey | undefined = parsed.primarySaleRecipient
       ? new PublicKey(parsed.primarySaleRecipient)
       : undefined;
     const sellerFeeBasisPoints = parsed.sellerFeeBasisPoints;
@@ -165,12 +163,19 @@ export class ClaimConditions {
       ? sol(Number(parsed.price))
       : undefined;
     let tokenMint: PublicKey | undefined = undefined;
-    if (parsed.currencyAddress && parsed.price) {
+    if (parsed.currencyAddress) {
       const fetchedToken = await this.metaplex
         .tokens()
         .findMintByAddress({ address: new PublicKey(parsed.currencyAddress) });
-      price = token(Number(parsed.price), fetchedToken.decimals);
+      price = token(Number(parsed.price || 0), fetchedToken.decimals);
       tokenMint = fetchedToken.address;
+      wallet = this.metaplex
+        .tokens()
+        .pdas()
+        .associatedTokenAccount({
+          mint: tokenMint,
+          owner: wallet ? wallet : this.metaplex.identity().publicKey,
+        });
     }
 
     // dates

@@ -515,7 +515,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       factoryAddress,
       this.getSignerOrProvider(),
       this.storage,
-      {},
+      this.options,
     );
     return await proxyFactory.deployProxyByImplementation(
       implementationAddress,

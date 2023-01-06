@@ -20,7 +20,7 @@ import {
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
-import { SDKOptions } from "../../schema";
+import { Abi, SDKOptions } from "../../schema";
 import { MultiwrapContractSchema } from "../../schema/contracts/multiwrap";
 import {
   ERC1155Wrappable,
@@ -30,7 +30,6 @@ import {
   WrappedTokens,
 } from "../../types/multiwrap";
 import type { Multiwrap as MultiwrapContract } from "@thirdweb-dev/contracts-js";
-import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Multiwrap.json";
 import {
   ITokenBundle,
   TokensWrappedEvent,
@@ -61,7 +60,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
     "asset",
   ] as const;
 
-  public abi: typeof ABI;
+  public abi: Abi;
   public encoder: ContractEncoder<MultiwrapContract>;
   public estimator: GasCostEstimator<MultiwrapContract>;
   public metadata: ContractMetadata<
@@ -102,7 +101,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: typeof ABI,
+    abi: Abi,
     chainId: number,
     contractWrapper = new ContractWrapper<MultiwrapContract>(
       network,

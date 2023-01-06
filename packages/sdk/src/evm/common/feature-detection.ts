@@ -434,6 +434,34 @@ export async function fetchContractMetadataFromAddress(
 
 /**
  * @internal
+ * @param address
+ * @param provider
+ * @param storage
+ * @returns
+ */
+export async function fetchAbiFromAddress(
+  address: string,
+  provider: ethers.providers.Provider,
+  storage: ThirdwebStorage,
+): Promise<Abi | undefined> {
+  try {
+    const metadata = await fetchContractMetadataFromAddress(
+      address,
+      provider,
+      storage,
+    );
+    if (metadata && metadata.abi) {
+      return metadata.abi;
+    }
+  } catch (e) {
+    // ignore and return undefined
+    // will fallback to embedded ABIs for prebuilts
+  }
+  return undefined;
+}
+
+/**
+ * @internal
  * @param compilerMetadataUri
  * @param storage
  */

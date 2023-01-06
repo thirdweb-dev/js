@@ -166,9 +166,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public deployer: ContractDeployer;
   /**
-   * The registry of contracts
+   * The registry of deployed contracts
    */
-  public registry: MultichainRegistry;
+  public multiChainRegistry: MultichainRegistry;
   /**
    * Interact with the connected wallet
    */
@@ -194,7 +194,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     this.wallet = new UserWallet(signerOrProvider, options);
     this.deployer = new ContractDeployer(signerOrProvider, options, storage);
     this.auth = new WalletAuthenticator(signerOrProvider, this.wallet, options);
-    this.registry = new MultichainRegistry(
+    this.multiChainRegistry = new MultichainRegistry(
       signerOrProvider,
       this.storageHandler,
       this.options,
@@ -441,7 +441,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         try {
           // try the multichain registry first (imported contracts)
           const chainId = (await this.getProvider().getNetwork()).chainId;
-          const metadata = await this.registry.getContractMetadata(
+          const metadata = await this.multiChainRegistry.getContractMetadata(
             chainId,
             address,
           );
@@ -466,8 +466,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         // otherwise if it's a prebuilt contract we can just use the contract type
         const contractAbi = await PREBUILT_CONTRACTS_MAP[
           resolvedContractType
-        ].getAbi(address, this.getProvider());
-        // merge ABIs of any plug-ins in case of plug-in pattern
+        ].getAbi(address, this.getProvider(), this.storage);
         const abiWithPlugin = await this.getPlugins(address, contractAbi);
         newContract = await this.getContractFromAbi(address, abiWithPlugin);
       }
@@ -546,14 +545,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * ```
    */
   public async getContractList(walletAddress: string) {
+    // TODO - this only reads from the current registry chain, not the multichain registry
     const addresses =
       (await (
         await this.deployer.getRegistry()
       )?.getContractAddresses(walletAddress)) || [];
 
-    const multichainAddresses = await this.registry.getContractAddresses(
-      walletAddress,
-    );
+    const multichainAddresses =
+      await this.multiChainRegistry.getContractAddresses(walletAddress);
     multichainAddresses.forEach(async (item) => {
       // if (item.chainId === (await this.getSigner()?.getChainId())) {
       addresses.push(item.address);
@@ -614,7 +613,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     this.auth.updateSignerOrProvider(this.getSignerOrProvider());
     this.deployer.updateSignerOrProvider(this.getSignerOrProvider());
     this._publisher.updateSignerOrProvider(this.getSignerOrProvider());
-    this.registry.updateSigner(this.getSignerOrProvider());
+    this.multiChainRegistry.updateSigner(this.getSignerOrProvider());
     for (const [, contract] of this.contractCache) {
       contract.onNetworkUpdated(this.getSignerOrProvider());
     }
