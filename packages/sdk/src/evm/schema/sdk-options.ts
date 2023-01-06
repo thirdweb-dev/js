@@ -5,7 +5,6 @@ import { z } from "zod";
  */
 export const SDKOptionsSchema = z
   .object({
-    chainIdToRPCUrlMap: z.record(z.number(), z.string()).optional(),
     readonlySettings: z
       .object({
         rpcUrl: z.string().url(),

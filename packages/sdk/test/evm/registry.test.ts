@@ -21,7 +21,7 @@ describe("Contract Registry", () => {
   it("multichain registry", async () => {
     sdk.updateSignerOrProvider(adminWallet);
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    multichainRegistry = sdk.registry;
+    multichainRegistry = sdk.multiChainRegistry;
     console.log(
       "multichain registry address: ",
       getMultichainRegistryAddress(),
