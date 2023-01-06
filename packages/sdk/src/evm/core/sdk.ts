@@ -707,17 +707,22 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public async getPluginABI(addresses: string[]): Promise<ContractInterface[]> {
     let pluginABIs: any[] = [];
 
-    for (const address of addresses) {
-      try {
-        const publisher = this.getPublisher();
-        const metadata = await publisher.fetchCompilerMetadataFromAddress(
-          address,
-        );
-        pluginABIs.push(metadata.abi);
-      } catch (e) {
-        throw new Error(`Error fetching ABI for this contract\n\n${e}`);
-      }
-    }
+    const publisher = this.getPublisher();
+    pluginABIs = (
+      await Promise.all(
+        addresses.map((address) => {
+          let metadata;
+
+          try {
+            metadata = publisher.fetchCompilerMetadataFromAddress(address);
+          } catch (error) {
+            throw new Error(`Error fetching ABI for this contract\n\n${error}`);
+          }
+
+          return metadata;
+        }),
+      )
+    ).map((metadata) => metadata.abi);
 
     return pluginABIs;
   }
