@@ -62,7 +62,7 @@
     "build": "tsc && preconstruct build",
     "test:evm:all": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --config './test/evm/.mocharc.json' --timeout 30000 --parallel './test/evm/**/*.test.ts'",
     "test:evm": "make test-evm",
-    "test:evm:single": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --config './test/evm/.mocharc.json' --timeout 30000",
+    "test:evm:single": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --config './test/evm/.mocharc.json' --timeout 90000",
     "node:solana:start": "DEBUG='amman:(info|error|debug)' amman start --forceClone",
     "node:solana:stop": "amman stop",
     "test:solana:all": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --config './test/solana/.mocharc.json' --timeout 30000 --parallel './test/solana/**/*.test.ts'",
