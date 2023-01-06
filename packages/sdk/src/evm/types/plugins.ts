@@ -1,4 +1,4 @@
-import { PluginMapInput } from "../schema/contracts/common/map";
+import { PluginMapInput } from "../schema/contracts/common/plugins";
 import { z } from "zod";
 
 /**

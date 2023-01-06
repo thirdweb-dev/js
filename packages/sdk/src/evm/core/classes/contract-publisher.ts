@@ -62,7 +62,6 @@ export class ContractPublisher extends RPCConnectionHandler {
     );
   }
 
-  // FIXME this needs to only assign the signer, not the provider
   public override updateSignerOrProvider(
     network: NetworkOrSignerOrProvider,
   ): void {
