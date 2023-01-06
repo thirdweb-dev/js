@@ -1,3 +1,4 @@
+import { isFeatureEnabled } from "../common";
 import { fetchCurrencyValue } from "../common/currency";
 import {
   ChainOrRpc,
@@ -645,6 +646,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       this.getSignerOrProvider(),
       this.options,
     );
+
     // TODO we still might want to lazy-fy this
     const contract = new SmartContract(
       this.getSignerOrProvider(),
@@ -662,29 +664,23 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     address: string,
     abi: ContractInterface,
   ): Promise<ContractInterface> {
-    // Interface id for IPluginMap
-    // const mapInterface = "0x92f1dcaa";
-
-    // Interface id for IRouter
-    const routerInterface = "0xf3374027";
-
-    // console.log("entrypoint interface-id: ", routerInterface);
     let pluginABIs: ContractInterface[] = [];
 
     try {
       // check if contract is plugin-pattern
-      const contract = new Contract(
-        address,
-        RouterABI,
-        // !provider only! - signer can break things here!
-        this.getProvider(),
+      const isPluginRouter: boolean = isFeatureEnabled(
+        AbiSchema.parse(abi),
+        "PluginRouter",
       );
-      const isPluginEntrypoint: boolean = await contract.supportsInterface(
-        routerInterface,
-      );
-      // console.log("is plugin entrypoint: ", isPluginEntrypoint);
 
-      if (isPluginEntrypoint) {
+      if (isPluginRouter) {
+        const contract = new Contract(
+          address,
+          RouterABI,
+          // !provider only! - signer can break things here!
+          this.getProvider(),
+        );
+
         const pluginMap = await contract.getAllPlugins();
 
         // get extension addresses
@@ -710,17 +706,12 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     const publisher = this.getPublisher();
     pluginABIs = (
       await Promise.all(
-        addresses.map((address) => {
-          let metadata;
-
-          try {
-            metadata = publisher.fetchCompilerMetadataFromAddress(address);
-          } catch (error) {
-            throw new Error(`Error fetching ABI for this contract\n\n${error}`);
-          }
-
-          return metadata;
-        }),
+        addresses.map((address) =>
+          publisher.fetchCompilerMetadataFromAddress(address).catch((err) => {
+            console.error(`Failed to fetch plug-in for ${address}`, err);
+            return { abi: [] };
+          }),
+        ),
       )
     ).map((metadata) => metadata.abi);
 
