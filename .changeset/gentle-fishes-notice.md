@@ -2,4 +2,4 @@
 "@thirdweb-dev/sdk": patch
 ---
 
-Plugin ABIs
+Support for Plugin Pattern based contracts

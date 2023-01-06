@@ -443,14 +443,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       if (resolvedContractType === "custom") {
         // if it's a custom contract we gotta fetch the compiler metadata
         try {
-          // otherwise try to fetch metadata from bytecode
           const publisher = this.getPublisher();
           const metadata = await publisher.fetchCompilerMetadataFromAddress(
             address,
           );
-          // merge ABIs of any plug-ins in case of plug-in pattern
-          const abiWithPlugin = await this.getPlugins(address, metadata.abi);
-          newContract = await this.getContractFromAbi(address, abiWithPlugin);
+          newContract = await this.getContractFromAbi(address, metadata.abi);
         } catch (e) {
           throw new Error(`Error fetching ABI for this contract\n\n${e}`);
         }
@@ -459,8 +456,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         const contractAbi = await PREBUILT_CONTRACTS_MAP[
           resolvedContractType
         ].getAbi(address, this.getProvider(), this.storage);
-        const abiWithPlugin = await this.getPlugins(address, contractAbi);
-        newContract = await this.getContractFromAbi(address, abiWithPlugin);
+        newContract = await this.getContractFromAbi(address, contractAbi);
       }
     }
     // if it's a builtin contract type we can just use the contract type to initialize the contract instance
@@ -479,12 +475,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     }
     // otherwise it has to be an ABI
     else {
-      // merge ABIs of any plug-ins in case of plug-in pattern
-      const abiWithPlugin = await this.getPlugins(
-        address,
-        AbiSchema.parse(contractTypeOrABI),
-      );
-      newContract = await this.getContractFromAbi(address, abiWithPlugin);
+      newContract = await this.getContractFromAbi(address, contractTypeOrABI);
     }
 
     // set whatever we have on the cache
@@ -633,11 +624,12 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       this.options,
     );
 
+    const parsedABI = typeof abi === "string" ? JSON.parse(abi) : abi;
     // TODO we still might want to lazy-fy this
     const contract = new SmartContract(
       this.getSignerOrProvider(),
       address,
-      abi,
+      await this.getPlugins(address, AbiSchema.parse(parsedABI)),
       this.storageHandler,
       this.options,
       (await provider.getNetwork()).chainId,
