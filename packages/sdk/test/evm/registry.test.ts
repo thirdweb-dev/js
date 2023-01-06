@@ -1,4 +1,4 @@
-import { getMultichainRegistryAddress } from "../../src/evm";
+import { getMultichainRegistryAddress, ThirdwebSDK } from "../../src/evm";
 import { MultichainRegistry } from "../../src/evm/core/classes/multichain-registry";
 import { ContractRegistry } from "../../src/evm/core/classes/registry";
 import { sdk, signers } from "./before-setup";
@@ -48,6 +48,14 @@ describe("Contract Registry", () => {
     );
 
     expect(contracts[0].address).to.equal(address);
+  });
+
+  it("multichain registry: check plugin feature", async () => {
+    const realSDK = new ThirdwebSDK("polygon");
+    const multichainRegistry = await realSDK.getContract(
+      "0xcdAD8FA86e18538aC207872E8ff3536501431B73",
+    );
+    console.log(multichainRegistry.abi);
   });
 
   it("should allow adding and removing contracts", async () => {

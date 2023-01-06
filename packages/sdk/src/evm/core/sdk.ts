@@ -440,28 +440,16 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       if (resolvedContractType === "custom") {
         // if it's a custom contract we gotta fetch the compiler metadata
         try {
-          // try the multichain registry first (imported contracts)
-          const chainId = (await this.getProvider().getNetwork()).chainId;
-          const metadata = await this.multiChainRegistry.getContractMetadata(
-            chainId,
+          // otherwise try to fetch metadata from bytecode
+          const publisher = this.getPublisher();
+          const metadata = await publisher.fetchCompilerMetadataFromAddress(
             address,
           );
           // merge ABIs of any plug-ins in case of plug-in pattern
           const abiWithPlugin = await this.getPlugins(address, metadata.abi);
           newContract = await this.getContractFromAbi(address, abiWithPlugin);
-        } catch {
-          try {
-            // otherwise try to fetch metadata from bytecode
-            const publisher = this.getPublisher();
-            const metadata = await publisher.fetchCompilerMetadataFromAddress(
-              address,
-            );
-            // merge ABIs of any plug-ins in case of plug-in pattern
-            const abiWithPlugin = await this.getPlugins(address, metadata.abi);
-            newContract = await this.getContractFromAbi(address, abiWithPlugin);
-          } catch (e) {
-            throw new Error(`Error fetching ABI for this contract\n\n${e}`);
-          }
+        } catch (e) {
+          throw new Error(`Error fetching ABI for this contract\n\n${e}`);
         }
       } else {
         // otherwise if it's a prebuilt contract we can just use the contract type
@@ -551,14 +539,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       (await (
         await this.deployer.getRegistry()
       )?.getContractAddresses(walletAddress)) || [];
-
-    const multichainAddresses =
-      await this.multiChainRegistry.getContractAddresses(walletAddress);
-    multichainAddresses.forEach(async (item) => {
-      // if (item.chainId === (await this.getSigner()?.getChainId())) {
-      addresses.push(item.address);
-      // }
-    });
 
     const addressesWithContractTypes = await Promise.all(
       addresses.map(async (address) => {
@@ -722,10 +702,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     let compositeABI: any[] = [];
 
     for (const abi of abis) {
-      // console.log("unparsed abi: ", abi);
       const abc = AbiSchema.parse(abi);
       compositeABI.push(...abc);
-      // console.log("parsed abi: ", abc);
     }
 
     let filteredABI = compositeABI
@@ -735,7 +713,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       })
       .map((i) => JSON.parse(i));
 
-    // let filteredABI = new Set(compositeABI);
     return AbiSchema.parse(filteredABI);
   }
 
