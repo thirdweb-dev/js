@@ -646,6 +646,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     return contract;
   }
 
+  /**
+   * @internal
+   */
   public async getPlugins(address: string, abi: Abi): Promise<Abi> {
     let pluginABIs: Abi[] = [];
 
@@ -681,6 +684,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     return finalPlugins;
   }
 
+  /**
+   * @internal
+   */
   public async getPluginABI(addresses: string[]): Promise<Abi[]> {
     const publisher = this.getPublisher();
     return (
@@ -695,6 +701,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     ).map((metadata) => metadata.abi);
   }
 
+  /**
+   * @internal
+   */
   public joinABIs(abis: Abi[]): Abi {
     const parsedABIs = abis.map((abi) => AbiSchema.parse(abi)).flat();
 
