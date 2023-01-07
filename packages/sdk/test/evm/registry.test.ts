@@ -1,4 +1,5 @@
 import { getMultichainRegistryAddress, ThirdwebSDK } from "../../src/evm";
+import { joinABIs } from "../../src/evm/common/plugin";
 import { MultichainRegistry } from "../../src/evm/core/classes/multichain-registry";
 import { ContractRegistry } from "../../src/evm/core/classes/registry";
 import { sdk, signers } from "./before-setup";
@@ -52,7 +53,7 @@ describe("Contract Registry", () => {
   });
 
   it("check abi merge", async () => {
-    const abi = sdk.joinABIs([RouterABI, RouterABI]);
+    const abi = joinABIs([RouterABI, RouterABI]);
 
     expect(abi.length).to.equal(RouterABI.length);
   });

@@ -1,5 +1,6 @@
 import { isFeatureEnabled } from "../common";
 import { fetchCurrencyValue } from "../common/currency";
+import { getCompositePluginABI } from "../common/plugin";
 import { unique } from "../common/utils";
 import {
   ChainOrRpc,
@@ -35,9 +36,7 @@ import type {
   ValidContractInstance,
 } from "./types";
 import { UserWallet } from "./wallet/UserWallet";
-import { IRouter } from "@thirdweb-dev/contracts-js";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
-import RouterABI from "@thirdweb-dev/contracts-js/dist/abis/Router.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Contract, ContractInterface, ethers, Signer } from "ethers";
 import invariant from "tiny-invariant";
@@ -629,85 +628,19 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     const contract = new SmartContract(
       this.getSignerOrProvider(),
       address,
-      await this.getPlugins(address, AbiSchema.parse(parsedABI)),
+      await getCompositePluginABI(
+        address,
+        AbiSchema.parse(parsedABI),
+        provider,
+        this.options,
+        this.storage,
+      ),
       this.storageHandler,
       this.options,
       (await provider.getNetwork()).chainId,
     );
     this.contractCache.set(address, contract);
     return contract;
-  }
-
-  /**
-   * @internal
-   */
-  public async getPlugins(address: string, abi: Abi): Promise<Abi> {
-    let pluginABIs: Abi[] = [];
-
-    try {
-      // check if contract is plugin-pattern
-      const isPluginRouter: boolean = isFeatureEnabled(
-        AbiSchema.parse(abi),
-        "PluginRouter",
-      );
-
-      if (isPluginRouter) {
-        const contract = new ContractWrapper<IRouter>(
-          this.getProvider(),
-          address,
-          RouterABI,
-          this.options,
-        );
-
-        const pluginMap = await contract.readContract.getAllPlugins();
-
-        // get extension addresses
-        const allPlugins = pluginMap.map((item) => item.pluginAddress);
-        const plugins = Array.from(new Set(allPlugins));
-
-        // get ABIs of extension contracts
-        pluginABIs = await this.getPluginABI(plugins);
-      }
-    } catch (err) {}
-
-    // join all ABIs -- entrypoint + extension
-    let finalPlugins = await this.joinABIs([abi, ...pluginABIs]);
-
-    return finalPlugins;
-  }
-
-  /**
-   * @internal
-   */
-  public async getPluginABI(addresses: string[]): Promise<Abi[]> {
-    const publisher = this.getPublisher();
-    return (
-      await Promise.all(
-        addresses.map((address) =>
-          publisher.fetchCompilerMetadataFromAddress(address).catch((err) => {
-            console.error(`Failed to fetch plug-in for ${address}`, err);
-            return { abi: [] };
-          }),
-        ),
-      )
-    ).map((metadata) => metadata.abi);
-  }
-
-  /**
-   * @internal
-   */
-  public joinABIs(abis: Abi[]): Abi {
-    const parsedABIs = abis.map((abi) => AbiSchema.parse(abi)).flat();
-
-    const filteredABIs = unique(parsedABIs, (a, b): boolean => {
-      return (
-        a.name === b.name &&
-        a.type === b.type &&
-        a.inputs.length === b.inputs.length
-      );
-    });
-
-    return AbiSchema.parse(filteredABIs);
   }
 
   /**
