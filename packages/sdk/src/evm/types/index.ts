@@ -9,3 +9,4 @@ export * from "./SplitRecipient";
 export * from "./deploy";
 export * from "./events";
 export * from "./multiwrap";
+export * from "./registry";

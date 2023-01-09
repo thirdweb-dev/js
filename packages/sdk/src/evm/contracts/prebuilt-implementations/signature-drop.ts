@@ -28,11 +28,11 @@ import {
   TransactionResultWithId,
 } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
+import { Abi } from "../../schema/contracts/custom";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { SDKOptions } from "../../schema/sdk-options";
 import { ClaimOptions, UploadProgressEvent } from "../../types";
 import type { SignatureDrop as SignatureDropContract } from "@thirdweb-dev/contracts-js";
-import type ABI from "@thirdweb-dev/contracts-js/dist/abis/SignatureDrop.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
@@ -55,7 +55,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 export class SignatureDrop extends StandardErc721<SignatureDropContract> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
-  public abi: typeof ABI;
+  public abi: Abi;
   public erc721: Erc721<SignatureDropContract>;
   public owner: ContractOwner<SignatureDropContract>;
   public encoder: ContractEncoder<SignatureDropContract>;
@@ -171,7 +171,7 @@ export class SignatureDrop extends StandardErc721<SignatureDropContract> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: typeof ABI,
+    abi: Abi,
     chainId: number,
     contractWrapper = new ContractWrapper<SignatureDropContract>(
       network,

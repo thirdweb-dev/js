@@ -1,5 +1,17 @@
 # @thirdweb-dev/sdk
 
+## 3.6.9
+
+### Patch Changes
+
+- [#465](https://github.com/thirdweb-dev/js/pull/465) [`e913e0d`](https://github.com/thirdweb-dev/js/commit/e913e0daa9ece9a6274f7ffa4e66bdcbf32e6ada) Thanks [@adam-maj](https://github.com/adam-maj)! - Fix passing options to factory
+
+- [`5862c55`](https://github.com/thirdweb-dev/js/commit/5862c558fb48604b5aca4defd1ccc06fc3536358) Thanks [@kumaryash90](https://github.com/kumaryash90)! - update forwarder address
+
+- [#466](https://github.com/thirdweb-dev/js/pull/466) [`73883f5`](https://github.com/thirdweb-dev/js/commit/73883f56d0ed0a35ace8b98b96caa782443be22e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - workaround for signing typed data with magic.link signers
+
+- [#468](https://github.com/thirdweb-dev/js/pull/468) [`f7a74a3`](https://github.com/thirdweb-dev/js/commit/f7a74a3b7c489ada5b1ec435632a326334a33c9b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose `sdk.wallet.signTypedData()`
+
 ## 3.6.8
 
 ### Patch Changes

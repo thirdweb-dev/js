@@ -98,6 +98,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     const ABI = await contract.getAbi(
       implementationAddress,
       this.getProvider(),
+      this.storage,
     );
 
     const encodedFunc = Contract.getInterface(ABI).encodeFunctionData(
