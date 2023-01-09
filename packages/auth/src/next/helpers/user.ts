@@ -5,7 +5,7 @@ import { NextRequest } from "next/server";
 
 function getToken(
   req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest,
-) {
+): string | undefined {
   if (!!(req as NextApiRequest).headers["authorization"]) {
     const authorizationHeader = (req as NextApiRequest).headers[
       "authorization"
@@ -14,10 +14,10 @@ function getToken(
       return authorizationHeader[1];
     }
 
-    return null;
+    return undefined;
   }
 
-  const cookie =
+  const cookie: string | undefined =
     typeof req.cookies.get === "function"
       ? (req.cookies as any).get("thirdweb_auth_token")
       : (req.cookies as any).thirdweb_auth_token;

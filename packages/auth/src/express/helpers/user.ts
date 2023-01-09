@@ -2,17 +2,17 @@ import { Json } from "../../core/schema";
 import { ThirdwebAuthContext, ThirdwebAuthUser } from "../types";
 import { Request } from "express";
 
-function getToken(req: Request) {
+function getToken(req: Request): string | undefined {
   if (req.headers["authorization"]) {
     const authorizationHeader = req.headers["authorization"].split(" ");
     if (authorizationHeader?.length === 2) {
       return authorizationHeader[1];
     }
 
-    return null;
+    return undefined;
   }
 
-  const cookie =
+  const cookie: string | undefined =
     typeof req.cookies.get === "function"
       ? (req.cookies as any).get("thirdweb_auth_token")
       : (req.cookies as any).thirdweb_auth_token;
