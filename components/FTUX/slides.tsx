@@ -135,7 +135,7 @@ export const slides: Slide[] = [
     graphic: Titles,
     content: (
       <Text size="body.lg">
-        Monitor on-chain acitivity with{" "}
+        Monitor on-chain activity with{" "}
         <TrackedLink
           color="blue.500"
           href="https://portal.thirdweb.com/dashboard/activity-feed"
