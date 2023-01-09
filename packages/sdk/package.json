@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "3.6.8",
+  "version": "3.6.9",
   "description": "The main thirdweb SDK.",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/sdk",
   "license": "Apache-2.0",
@@ -56,7 +56,7 @@
     "build": "tsc && preconstruct build",
     "test:evm:all": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --config './test/evm/.mocharc.json' --timeout 30000 --parallel './test/evm/**/*.test.ts'",
     "test:evm": "make test-evm",
-    "test:evm:single": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --config './test/evm/.mocharc.json' --timeout 30000",
+    "test:evm:single": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --config './test/evm/.mocharc.json' --timeout 90000",
     "node:solana:start": "DEBUG='amman:(info|error|debug)' amman start --forceClone",
     "node:solana:stop": "amman stop",
     "test:solana:all": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --config './test/solana/.mocharc.json' --timeout 30000 --parallel './test/solana/**/*.test.ts'",

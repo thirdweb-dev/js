@@ -168,3 +168,21 @@ export function getReadOnlyProvider(network: string, chainId?: number) {
     return ethers.getDefaultProvider(network);
   }
 }
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const ChainIdToName: Record<number, string> = {
+  [ChainId.Polygon]: "polygon",
+  [ChainId.Mumbai]: "mumbai",
+  [ChainId.Goerli]: "goerli",
+  [ChainId.Mainnet]: "mainnet",
+  [ChainId.Optimism]: "optimism",
+  [ChainId.OptimismGoerli]: "optimism-goerli",
+  [ChainId.Arbitrum]: "arbitrum",
+  [ChainId.ArbitrumGoerli]: "arbitrum-goerli",
+  [ChainId.Fantom]: "fantom",
+  [ChainId.FantomTestnet]: "fantom-testnet",
+  [ChainId.Avalanche]: "avalanche",
+  [ChainId.AvalancheFujiTestnet]: "avalanche-fuji",
+  [ChainId.BinanceSmartChainMainnet]: "binance",
+  [ChainId.BinanceSmartChainTestnet]: "binance-testnet",
+};

@@ -11,6 +11,7 @@ export const OZ_DEFENDER_FORWARDER_ADDRESS =
 const TWRegistry_address = "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd";
 const TWFactory_address = "0x5DBC7B840baa9daBcBe9D2492E45D7244B54A2A0";
 const ContractPublisher_address = "0x664244560eBa21Bf82d7150C791bE1AbcD5B4cd7"; // Polygon only
+const MultichainRegistry_address = "0xcdAD8FA86e18538aC207872E8ff3536501431B73"; // Polygon only
 
 /**
  * @internal
@@ -92,7 +93,7 @@ export const CONTRACT_ADDRESSES: Record<
     twBYOCRegistry: "0x3E6eE864f850F5e5A98bc950B68E181Cf4010F23",
   },
   [ChainId.Arbitrum]: {
-    openzeppelinForwarder: OZ_DEFENDER_FORWARDER_ADDRESS,
+    openzeppelinForwarder: "0x8cbc8B5d71702032904750A66AEfE8B603eBC538",
     openzeppelinForwarderEOA: "0x4f247c69184ad61036EC2Bb3213b69F10FbEDe1F",
     biconomyForwarder: "0xfe0fa3C06d03bDC7fb49c892BbB39113B534fB57",
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
@@ -109,7 +110,7 @@ export const CONTRACT_ADDRESSES: Record<
     twBYOCRegistry: constants.AddressZero,
   },
   [ChainId.Optimism]: {
-    openzeppelinForwarder: OZ_DEFENDER_FORWARDER_ADDRESS,
+    openzeppelinForwarder: "0x8cbc8B5d71702032904750A66AEfE8B603eBC538",
     openzeppelinForwarderEOA: "0x7e80648EB2071E26937F9D42A513ccf4815fc702",
     biconomyForwarder: "0xefba8a2a82ec1fb1273806174f5e28fbb917cf95",
     twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
@@ -288,6 +289,19 @@ export function getContractPublisherAddress() {
     return process.env.contractPublisherAddress as string;
   } else {
     return ContractPublisher_address;
+  }
+}
+
+/**
+ * @internal
+ */
+export function getMultichainRegistryAddress() {
+  // eslint-disable-next-line turbo/no-undeclared-env-vars
+  if (process.env.multiChainRegistryAddress) {
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
+    return process.env.multiChainRegistryAddress as string;
+  } else {
+    return MultichainRegistry_address;
   }
 }
 

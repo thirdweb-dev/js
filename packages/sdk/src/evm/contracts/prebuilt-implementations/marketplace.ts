@@ -17,6 +17,7 @@ import { MarketplaceDirect } from "../../core/classes/marketplace-direct";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../../core/types";
 import { ListingType } from "../../enums";
+import { Abi } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
 import { Price } from "../../types/currency";
@@ -24,7 +25,6 @@ import { AuctionListing, DirectListing, Offer } from "../../types/marketplace";
 import { MarketplaceFilter } from "../../types/marketplace/MarketPlaceFilter";
 import { UnmappedOffer } from "../../types/marketplace/UnmappedOffer";
 import type { Marketplace as MarketplaceContract } from "@thirdweb-dev/contracts-js";
-import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Marketplace.json";
 import { NewOfferEventObject } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
@@ -47,7 +47,7 @@ import invariant from "tiny-invariant";
 export class Marketplace implements UpdateableNetwork {
   static contractRoles = ["admin", "lister", "asset"] as const;
 
-  public abi: typeof ABI;
+  public abi: Abi;
   private contractWrapper: ContractWrapper<MarketplaceContract>;
   private storage: ThirdwebStorage;
 
@@ -148,7 +148,7 @@ export class Marketplace implements UpdateableNetwork {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: typeof ABI,
+    abi: Abi,
     chainId: number,
     contractWrapper = new ContractWrapper<MarketplaceContract>(
       network,
