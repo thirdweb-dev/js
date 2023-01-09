@@ -1,4 +1,4 @@
-import { Avatar, Flex, SimpleGrid, VStack } from "@chakra-ui/react";
+import { Avatar, Flex, VStack } from "@chakra-ui/react";
 import { Heading, Text, TrackedLink } from "tw-components";
 
 interface AvatarShowcaseProps {
@@ -20,13 +20,12 @@ export const AvatarShowcase: React.FC<AvatarShowcaseProps> = ({
   return (
     <VStack mb={20} spacing={12}>
       <Heading size="title.2xl">{title}</Heading>
-      <SimpleGrid
-        columns={{
-          base: 2,
-          md: avatars.length === 3 || avatars.length === 5 ? 3 : 4,
-        }}
+      <Flex
+        maxW="container.md"
+        wrap="wrap"
         gap={{ base: 8, md: 16 }}
         justifyContent="space-evenly"
+        placeContent="center"
       >
         {avatars.map((avatar) => (
           <Flex
@@ -35,6 +34,10 @@ export const AvatarShowcase: React.FC<AvatarShowcaseProps> = ({
             gap={5}
             alignItems="center"
             zIndex={2}
+            w={{
+              base: "45vw",
+              md: "auto",
+            }}
           >
             <Avatar
               src={avatar.image}
@@ -62,7 +65,7 @@ export const AvatarShowcase: React.FC<AvatarShowcaseProps> = ({
             </Flex>
           </Flex>
         ))}
-      </SimpleGrid>
+      </Flex>
     </VStack>
   );
 };
