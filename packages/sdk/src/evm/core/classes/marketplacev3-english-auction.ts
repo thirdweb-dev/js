@@ -33,10 +33,10 @@ import { ContractEncoder } from "./contract-encoder";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
   IEnglishAuctions,
-  MarketplaceEntrypoint,
-  EnglishAuctions,
+  MarketplaceRouter,
+  EnglishAuctionsLogic,
 } from "@thirdweb-dev/contracts-js";
-import { NewAuctionEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/EnglishAuctions";
+import { NewAuctionEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/EnglishAuctionsLogic";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers, constants } from "ethers";
 import invariant from "tiny-invariant";
@@ -46,20 +46,20 @@ import invariant from "tiny-invariant";
  * @public
  */
 export class MarketplaceV3EnglishAuctions {
-  private englishAuctions: ContractWrapper<EnglishAuctions>;
-  private entrypoint: ContractWrapper<MarketplaceEntrypoint>;
+  private englishAuctions: ContractWrapper<EnglishAuctionsLogic>;
+  private entrypoint: ContractWrapper<MarketplaceRouter>;
   private storage: ThirdwebStorage;
-  public encoder: ContractEncoder<EnglishAuctions>;
+  public encoder: ContractEncoder<EnglishAuctionsLogic>;
 
   constructor(
-    englishAuctions: ContractWrapper<EnglishAuctions>,
-    entrypoint: ContractWrapper<MarketplaceEntrypoint>,
+    englishAuctions: ContractWrapper<EnglishAuctionsLogic>,
+    entrypoint: ContractWrapper<MarketplaceRouter>,
     storage: ThirdwebStorage,
   ) {
     this.englishAuctions = englishAuctions;
     this.entrypoint = entrypoint;
     this.storage = storage;
-    this.encoder = new ContractEncoder<EnglishAuctions>(englishAuctions);
+    this.encoder = new ContractEncoder<EnglishAuctionsLogic>(englishAuctions);
   }
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider) {

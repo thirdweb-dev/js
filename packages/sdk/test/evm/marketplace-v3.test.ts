@@ -831,4 +831,573 @@ describe("Marketplace Contract", async () => {
       // );
     });
   });
+
+  // describe("Validators", () => {
+  //   let directListingId: BigNumber;
+  //   let auctionListingId: BigNumber;
+
+  //   beforeEach(async () => {
+  //     await sdk.updateSignerOrProvider(adminWallet);
+  //     directListingId = await createDirectListing(
+  //       dummyNftContract.getAddress(),
+  //       0,
+  //     );
+  //     auctionListingId = await createAuctionListing(
+  //       dummyNftContract.getAddress(),
+  //       1,
+  //     );
+  //   });
+
+  //   it("should throw an error trying to fetch a listing of the wrong type", async () => {
+  //     try {
+  //       await marketplaceContract.direct.getListing(auctionListingId);
+  //       assert.fail("Should have thrown an error");
+  //     } catch (err) {
+  //       if (!(err instanceof WrongListingTypeError)) {
+  //         throw err;
+  //       }
+  //     }
+
+  //     try {
+  //       await marketplaceContract.auction.getListing(directListingId);
+  //       assert.fail("Should have thrown an error");
+  //     } catch (err) {
+  //       if (!(err instanceof WrongListingTypeError)) {
+  //         throw err;
+  //       }
+  //     }
+  //   });
+  // });
+
+  // describe("Bidding", () => {
+  //   let auctionListingId: BigNumber;
+
+  //   beforeEach(async () => {
+  //     await sdk.updateSignerOrProvider(adminWallet);
+  //     auctionListingId = await createAuctionListing(
+  //       dummyNftContract.getAddress(),
+  //       1,
+  //     );
+  //   });
+
+  //   it("should automatically award a buyout", async () => {
+  //     await sdk.updateSignerOrProvider(bobWallet);
+  //     const currentBalance = await dummyNftContract.balanceOf(
+  //       bobWallet.address,
+  //     );
+  //     assert.equal(
+  //       currentBalance.toString(),
+  //       "0",
+  //       "The buyer should start with no tokens",
+  //     );
+  //     await marketplaceContract.makeOffer(auctionListingId, "20");
+
+  //     const balance = await dummyNftContract.balanceOf(bobWallet.address);
+  //     assert.equal(
+  //       balance.toString(),
+  //       "1",
+  //       "The buyer should have been awarded token",
+  //     );
+  //   });
+
+  //   // TODO: idk if a seller can close out an auction before the auction
+  //   // has ended and so the call to `acceptWinningBid` is failing on this
+  //   // test because the listing is still active.
+  //   it.skip("should allow the seller to accept the winning bid", async () => {
+  //     await sdk.updateSignerOrProvider(bobWallet);
+  //     const currentBalance = await dummyNftContract.balanceOf(
+  //       bobWallet.address,
+  //     );
+  //     assert.equal(
+  //       currentBalance.toString(),
+  //       "0",
+  //       "The buyer should start with no tokens",
+  //     );
+  //     await marketplaceContract.makeOffer(auctionListingId, "2");
+
+  //     const winningBid = (await marketplaceContract.auction.getWinningBid(
+  //       auctionListingId,
+  //     )) as Offer;
+
+  //     assert.equal(
+  //       winningBid.buyerAddress,
+  //       bobWallet.address,
+  //       "Bob should be the winning bidder",
+  //     );
+
+  //     await sdk.updateSignerOrProvider(bobWallet);
+  //     await marketplaceContract.auction.closeListing(auctionListingId);
+  //     const balance = await dummyNftContract.balanceOf(bobWallet.address);
+  //     assert.equal(
+  //       balance.toString(),
+  //       "1",
+  //       "The buyer should have been awarded token",
+  //     );
+
+  //     // TODO: write test for calling closeAuctionListing with sellers wallet
+  //   });
+
+  //   it("should throw an error if a bid being placed is not a winning bid", async () => {
+  //     await sdk.updateSignerOrProvider(bobWallet);
+  //     const currentBalance = await dummyNftContract.balanceOf(
+  //       bobWallet.address,
+  //     );
+  //     assert.equal(
+  //       currentBalance.toString(),
+  //       "0",
+  //       "The buyer should start with no tokens",
+  //     );
+  //     await marketplaceContract.makeOffer(auctionListingId, "2");
+  //     try {
+  //       await marketplaceContract.makeOffer(auctionListingId, "2.01");
+  //       // eslint-disable-next-line no-empty
+  //     } catch (err) {}
+  //   });
+
+  //   it("should allow an auction buyout", async () => {
+  //     const id = (
+  //       await marketplaceContract.auction.createListing({
+  //         assetContractAddress: dummyBundleContract.getAddress(),
+  //         buyoutPricePerToken: 0.8,
+  //         currencyContractAddress: tokenAddress,
+  //         // to start tomorrow so we can update it
+  //         startTimestamp: new Date(),
+  //         listingDurationInSeconds: 60 * 60 * 24,
+  //         tokenId: "1",
+  //         quantity: 2,
+  //         reservePricePerToken: 0.2,
+  //       })
+  //     ).id;
+  //     await sdk.updateSignerOrProvider(bobWallet);
+  //     await marketplaceContract.buyoutListing(id);
+
+  //     const balance = await dummyBundleContract.balanceOf(
+  //       bobWallet.address,
+  //       "1",
+  //     );
+  //     assert.equal(balance.toString(), "2", "The buyer should have 2 tokens");
+  //   });
+  // });
+
+  // describe("Closing listings", () => {
+  //   let directListingId: BigNumber;
+  //   let auctionListingId: BigNumber;
+
+  //   beforeEach(async () => {
+  //     await sdk.updateSignerOrProvider(adminWallet);
+  //     directListingId = await createDirectListing(
+  //       dummyNftContract.getAddress(),
+  //       0,
+  //     );
+  //     auctionListingId = await createAuctionListing(
+  //       dummyNftContract.getAddress(),
+  //       1,
+  //     );
+  //   });
+
+  //   it("should allow a seller to close an auction that hasn't started yet", async () => {
+  //     const id = (
+  //       await marketplaceContract.auction.createListing({
+  //         assetContractAddress: dummyNftContract.getAddress(),
+  //         buyoutPricePerToken: 0.1,
+  //         currencyContractAddress: tokenAddress,
+  //         // to start tomorrow so we can update it
+  //         startTimestamp: new Date(),
+  //         listingDurationInSeconds: 60 * 60 * 24,
+  //         tokenId: "0",
+  //         quantity: 1,
+  //         reservePricePerToken: 0.05,
+  //       })
+  //     ).id;
+  //     await marketplaceContract.auction.cancelListing(id);
+
+  //     try {
+  //       await marketplaceContract.auction.getListing(id);
+  //     } catch (err) {
+  //       if (!(err instanceof ListingNotFoundError)) {
+  //         throw err;
+  //       }
+  //     }
+  //   });
+
+  //   it("should not throw an error when trying to close an auction that already started (no bids)", async () => {
+  //     await marketplaceContract.auction.cancelListing(auctionListingId);
+  //   });
+
+  //   it("should throw an error when trying to close an auction that already started (with bids)", async () => {
+  //     await marketplaceContract.makeOffer(auctionListingId, 0.06);
+  //     try {
+  //       await marketplaceContract.auction.cancelListing(auctionListingId);
+  //       assert.fail("should have thrown an error");
+  //     } catch (err: any) {
+  //       if (
+  //         !(err instanceof AuctionAlreadyStartedError) &&
+  //         !(err.message as string).includes(
+  //           "cannot close auction before it has ended",
+  //         )
+  //       ) {
+  //         throw err;
+  //       }
+  //     }
+  //   });
+
+  //   it("should correctly close a direct listing", async () => {
+  //     const listing = await marketplaceContract.direct.getListing(
+  //       directListingId,
+  //     );
+  //     assert.equal(listing.quantity.toString(), "1");
+  //     await marketplaceContract.direct.cancelListing(directListingId);
+  //     try {
+  //       await marketplaceContract.direct.getListing(directListingId);
+  //     } catch (e) {
+  //       if (!(e instanceof ListingNotFoundError)) {
+  //         throw e;
+  //       }
+  //     }
+  //   });
+
+  //   // Skipping until decision is made on this:
+  //   // https://github.com/nftlabs/nftlabs-sdk-ts/issues/119#issuecomment-1003199128
+  //   it.skip("should allow the seller to cancel an auction that has started as long as there are no active bids", async () => {
+  //     const startTime = new Date();
+  //     const listingId = await createAuctionListing(
+  //       dummyNftContract.getAddress(),
+  //       2,
+  //       1,
+  //       startTime,
+  //     );
+
+  //     await marketplaceContract.auction.getListing(listingId);
+  //     await marketplaceContract.auction.getWinningBid(listingId);
+
+  //     try {
+  //       await marketplaceContract.auction.cancelListing(auctionListingId);
+  //       // eslint-disable-next-line no-empty
+  //     } catch (err) {
+  //       console.error("failed to cancel listing", err);
+  //       assert.fail(
+  //         "The seller should be able to cancel the auction if there are no active bids",
+  //       );
+  //     }
+  //   });
+
+  //   it("should distribute the tokens when a listing closes", async () => {
+  //     await sdk.updateSignerOrProvider(adminWallet);
+  //     const listingId = (
+  //       await marketplaceContract.auction.createListing({
+  //         assetContractAddress: dummyNftContract.getAddress(),
+  //         buyoutPricePerToken: 10,
+  //         currencyContractAddress: tokenAddress,
+  //         startTimestamp: new Date(),
+  //         listingDurationInSeconds: 60 * 60,
+  //         tokenId: "2",
+  //         quantity: "1",
+  //         reservePricePerToken: 1,
+  //       })
+  //     ).id;
+
+  //     await sdk.updateSignerOrProvider(bobWallet);
+
+  //     await marketplaceContract.makeOffer(listingId, 2);
+
+  //     await fastForwardTime(60 * 60 * 24);
+
+  //     /**
+  //      * Buyer
+  //      */
+  //     const oldBalance = await dummyNftContract.balanceOf(bobWallet.address);
+  //     assert.equal(
+  //       oldBalance.toString(),
+  //       "0",
+  //       "The buyer should have no tokens to start",
+  //     );
+  //     await marketplaceContract.auction.closeListing(listingId);
+
+  //     const balance = await dummyNftContract.balanceOf(bobWallet.address);
+  //     assert.equal(
+  //       balance.toString(),
+  //       "1",
+  //       "The buyer should have been awarded token",
+  //     );
+
+  //     /**
+  //      * Seller
+  //      */
+  //     await sdk.updateSignerOrProvider(adminWallet);
+  //     const oldTokenBalance = await customTokenContract.balanceOf(
+  //       adminWallet.address,
+  //     );
+  //     assert.deepEqual(
+  //       oldTokenBalance.value,
+  //       ethers.utils.parseUnits("1000"),
+  //       "The buyer should have 1000 tokens to start",
+  //     );
+
+  //     await marketplaceContract.auction.closeListing(listingId);
+
+  //     const newTokenBalance = await customTokenContract.balanceOf(
+  //       adminWallet.address,
+  //     );
+  //     assert.deepEqual(
+  //       newTokenBalance.value,
+  //       ethers.utils
+  //         .parseUnits("1000")
+  //         // eslint-disable-next-line line-comment-position
+  //         .add(ethers.utils.parseUnits("2.00")), // 2% taken out for royalties
+  //       // TODO read the fee from the TWFee contract
+  //       "The buyer should have two additional tokens after the listing closes",
+  //     );
+  //   });
+  // });
+
+  // describe("Updating listings", () => {
+  //   let directListingId: BigNumber;
+
+  //   beforeEach(async () => {
+  //     await sdk.updateSignerOrProvider(adminWallet);
+  //     directListingId = await createDirectListing(
+  //       dummyNftContract.getAddress(),
+  //       0,
+  //     );
+  //   });
+
+  //   it("should allow you to update a direct listing", async () => {
+  //     const buyoutPrice = ethers.utils.parseUnits("0.1");
+
+  //     const directListing = await marketplaceContract.direct.getListing(
+  //       directListingId,
+  //     );
+  //     assert.equal(
+  //       directListing.buyoutPrice.toString(),
+  //       buyoutPrice.toString(),
+  //     );
+
+  //     directListing.buyoutPrice = ethers.utils.parseUnits("20");
+  //     const block = await hardhatEthers.provider.getBlock("latest");
+  //     directListing.startTimeInSeconds = block.timestamp;
+
+  //     await marketplaceContract.direct.updateListing(directListing);
+
+  //     const updatedListing = await marketplaceContract.direct.getListing(
+  //       directListingId,
+  //     );
+  //     assert.equal(
+  //       updatedListing.buyoutPrice.toString(),
+  //       ethers.utils.parseUnits("20").toString(),
+  //     );
+  //   });
+
+  //   it("should allow you to update an auction listing", async () => {
+  //     const buyoutPrice = ethers.utils.parseUnits("10");
+
+  //     const id = (
+  //       await marketplaceContract.auction.createListing({
+  //         assetContractAddress: dummyNftContract.getAddress(),
+  //         buyoutPricePerToken: 10,
+  //         currencyContractAddress: tokenAddress,
+  //         // to start tomorrow so we can update it
+  //         startTimestamp: new Date(Date.now() + 24 * 60 * 60 * 100000),
+  //         listingDurationInSeconds: 60 * 60 * 24,
+  //         tokenId: "0",
+  //         quantity: 1,
+  //         reservePricePerToken: 1,
+  //       })
+  //     ).id;
+
+  //     const auctionListing = await marketplaceContract.auction.getListing(id);
+  //     assert.equal(
+  //       auctionListing.buyoutPrice.toString(),
+  //       buyoutPrice.toString(),
+  //     );
+
+  //     auctionListing.buyoutPrice = ethers.utils.parseUnits("9");
+
+  //     await marketplaceContract.auction.updateListing(auctionListing);
+
+  //     const updatedListing = await marketplaceContract.auction.getListing(id);
+  //     assert.equal(
+  //       updatedListing.buyoutPrice.toString(),
+  //       ethers.utils.parseUnits("9").toString(),
+  //     );
+  //   });
+  // });
+
+  // describe("Utils", async () => {
+  //   // TODO rewrite this test to actually try to place bids
+  //   it("should return the correct bid buffer rules", async () => {
+  //     const testCases: {
+  //       winningBid: BigNumberish;
+  //       newBid: BigNumberish;
+  //       buffer: BigNumberish;
+  //       valid: boolean;
+  //     }[] = [
+  //       {
+  //         winningBid: 10,
+  //         newBid: 12,
+  //         buffer: 500,
+  //         valid: true,
+  //       },
+  //       {
+  //         winningBid: 100,
+  //         newBid: 101,
+  //         buffer: 500,
+  //         valid: false,
+  //       },
+  //       {
+  //         winningBid: 10,
+  //         newBid: 12,
+  //         buffer: 1000,
+  //         valid: true,
+  //       },
+  //       {
+  //         winningBid: 10,
+  //         newBid: 15,
+  //         buffer: 5001,
+  //         valid: false,
+  //       },
+  //       {
+  //         winningBid: 10,
+  //         newBid: 15,
+  //         buffer: 4999,
+  //         valid: true,
+  //       },
+  //       {
+  //         winningBid: 10,
+  //         newBid: 9,
+  //         buffer: 1000,
+  //         valid: false,
+  //       },
+  //     ];
+
+  //     for (const testCase of testCases) {
+  //       const result = isWinningBid(
+  //         testCase.winningBid,
+  //         testCase.newBid,
+  //         testCase.buffer,
+  //       );
+  //       assert.equal(
+  //         result,
+  //         testCase.valid,
+  //         `should be valid: ${JSON.stringify(testCase)}`,
+  //       );
+  //     }
+  //   });
+  // });
+
+  // describe("Buffers", () => {
+  //   beforeEach(async () => {
+  //     await sdk.updateSignerOrProvider(adminWallet);
+  //   });
+
+  //   it("should set the correct bid buffer default of 15 minutes", async () => {
+  //     const buffer = await marketplaceContract.getTimeBufferInSeconds();
+  //     assert.equal(buffer.toNumber(), 15 * 60);
+  //   });
+
+  //   it("should set the correct time buffer default of 500 bps", async () => {
+  //     const buffer = await marketplaceContract.getBidBufferBps();
+  //     assert.equal(buffer.toNumber(), 500);
+  //   });
+
+  //   it("should allow you to set the bid buffer", async () => {
+  //     await marketplaceContract.setBidBufferBps(1000);
+  //     const buffer = await marketplaceContract.getBidBufferBps();
+  //     assert.equal(buffer.toNumber(), 1000);
+  //   });
+
+  //   it("should allow you to set the time buffer", async () => {
+  //     await marketplaceContract.setTimeBufferInSeconds(1000);
+  //     const buffer = await marketplaceContract.getTimeBufferInSeconds();
+  //     assert.equal(buffer.toNumber(), 1000);
+  //   });
+
+  //   it("should calculate the correct bid buffer for a listing without an offer", async () => {
+  //     // 10% bid buffer
+  //     await marketplaceContract.setBidBufferBps(1000);
+  //     // create a listing so we know the listing id
+  //     const startTime = new Date();
+  //     const reservePricePerToken = 0.05;
+  //     const listingId = await createAuctionListing(
+  //       dummyNftContract.getAddress(),
+  //       2,
+  //       1,
+  //       startTime,
+  //       reservePricePerToken,
+  //     );
+  //     const minimumNextBid =
+  //       await marketplaceContract.auction.getMinimumNextBid(listingId);
+
+  //     assert.equal(
+  //       minimumNextBid.displayValue,
+  //       // 0.05 + 0.05 * 0.1 = 0.055
+  //       "0.055",
+  //     );
+  //   });
+
+  //   it("should calculate the correct bid buffer for a listing with an offer", async () => {
+  //     // 10% bid buffer
+  //     await marketplaceContract.setBidBufferBps(1000);
+  //     // create a listing so we know the listing id
+  //     const startTime = new Date();
+  //     const reservePricePerToken = 0.05;
+  //     const listingId = await createAuctionListing(
+  //       dummyNftContract.getAddress(),
+  //       2,
+  //       1,
+  //       startTime,
+  //       reservePricePerToken,
+  //     );
+
+  //     // place a bid
+  //     sdk.updateSignerOrProvider(samWallet);
+  //     await marketplaceContract.makeOffer(listingId, 0.06);
+
+  //     const minimumNextBid =
+  //       await marketplaceContract.auction.getMinimumNextBid(listingId);
+
+  //     assert.equal(
+  //       minimumNextBid.displayValue,
+  //       // 0.06 + 0.06 * 0.1 = 0.066
+  //       "0.066",
+  //     );
+  //   });
+  // });
+
+  // describe("Invalid Listings", () => {
+  //   let directListingId: BigNumber;
+
+  //   beforeEach(async () => {
+  //     await sdk.updateSignerOrProvider(adminWallet);
+  //     directListingId = await createDirectListing(
+  //       dummyNftContract.getAddress(),
+  //       0,
+  //     );
+  //   });
+
+  //   it("should throw an error when trying to buyout an invalid direct listing", async () => {
+  //     await sdk.updateSignerOrProvider(adminWallet);
+  //     await dummyNftContract.transfer(samWallet.address, "0");
+
+  //     await sdk.updateSignerOrProvider(bobWallet);
+
+  //     try {
+  //       await marketplaceContract.direct.buyoutListing(directListingId, 1);
+  //       assert.fail("should have thrown");
+  //     } catch (err: any) {}
+  //   });
+
+  //   it("should not return invalid direct listings", async () => {
+  //     await sdk.updateSignerOrProvider(adminWallet);
+  //     await dummyNftContract.transfer(samWallet.address, "0");
+
+  //     const allListings = await marketplaceContract.getActiveListings();
+  //     const found = allListings.find(
+  //       (l) => l.id.toString() === directListingId.toString(),
+  //     );
+  //     assert.isUndefined(
+  //       found,
+  //       "should not have found the listing because it is invalid",
+  //     );
+  //   });
+  // });
 });

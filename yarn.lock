@@ -5575,7 +5575,7 @@
     use-sync-external-store "^1.2.0"
 
 "@thirdweb-dev/contracts@file:packages/contracts-js/.yalc/@thirdweb-dev/contracts":
-  version "3.3.0-2"
+  version "3.3.0"
 
 "@tootallnate/once@1":
   version "1.1.2"

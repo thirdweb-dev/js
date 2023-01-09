@@ -33,15 +33,15 @@ import { MarketplaceFilter } from "../../types/marketplace/MarketPlaceFilter";
 import { UnmappedOffer } from "../../types/marketplace/UnmappedOffer";
 // ===
 import type {
-  MarketplaceEntrypoint,
-  DirectListings,
-  EnglishAuctions,
-  Offers,
+  MarketplaceRouter,
+  DirectListingsLogic,
+  EnglishAuctionsLogic,
+  OffersLogic,
 } from "@thirdweb-dev/contracts-js";
-import DirectListingsABI from "@thirdweb-dev/contracts-js/dist/abis/DirectListings.json";
-import EnglishAuctionsABI from "@thirdweb-dev/contracts-js/dist/abis/EnglishAuctions.json";
-import type ABI from "@thirdweb-dev/contracts-js/dist/abis/MarketplaceEntrypoint.json";
-import OffersABI from "@thirdweb-dev/contracts-js/dist/abis/Offers.json";
+import DirectListingsABI from "@thirdweb-dev/contracts-js/dist/abis/DirectListingsLogic.json";
+import EnglishAuctionsABI from "@thirdweb-dev/contracts-js/dist/abis/EnglishAuctionsLogic.json";
+import type ABI from "@thirdweb-dev/contracts-js/dist/abis/MarketplaceRouter.json";
+import OffersABI from "@thirdweb-dev/contracts-js/dist/abis/OffersLogic.json";
 // ===
 // ===
 import { NewOfferEventObject } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
@@ -68,25 +68,25 @@ export class MarketplaceV3 implements UpdateableNetwork {
   static contractRoles = ["admin", "lister", "asset"] as const;
 
   public abi: typeof ABI;
-  private contractWrapper: ContractWrapper<MarketplaceEntrypoint>;
+  private contractWrapper: ContractWrapper<MarketplaceRouter>;
   private storage: ThirdwebStorage;
 
-  public encoder: ContractEncoder<MarketplaceEntrypoint>;
-  public events: ContractEvents<MarketplaceEntrypoint>;
-  public estimator: GasCostEstimator<MarketplaceEntrypoint>;
-  public platformFees: ContractPlatformFee<MarketplaceEntrypoint>;
+  public encoder: ContractEncoder<MarketplaceRouter>;
+  public events: ContractEvents<MarketplaceRouter>;
+  public estimator: GasCostEstimator<MarketplaceRouter>;
+  public platformFees: ContractPlatformFee<MarketplaceRouter>;
   public metadata: ContractMetadata<
-    MarketplaceEntrypoint,
+    MarketplaceRouter,
     typeof MarketplaceContractSchema
   >;
   public roles: ContractRoles<
-    MarketplaceEntrypoint,
+    MarketplaceRouter,
     typeof MarketplaceV3.contractRoles[number]
   >;
   /**
    * @internal
    */
-  public interceptor: ContractInterceptor<MarketplaceEntrypoint>;
+  public interceptor: ContractInterceptor<MarketplaceRouter>;
   /**
    * Direct listings
    * @remarks Create and manage direct listings in your marketplace.
@@ -172,7 +172,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
     options: SDKOptions = {},
     abi: typeof ABI,
     chainId: number,
-    contractWrapper = new ContractWrapper<MarketplaceEntrypoint>(
+    contractWrapper = new ContractWrapper<MarketplaceRouter>(
       network,
       address,
       abi,
@@ -195,7 +195,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.directListings = new MarketplaceV3DirectListings(
-      new ContractWrapper<DirectListings>(
+      new ContractWrapper<DirectListingsLogic>(
         network,
         address,
         DirectListingsABI,
@@ -205,7 +205,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
       this.storage,
     );
     this.englishAuctions = new MarketplaceV3EnglishAuctions(
-      new ContractWrapper<EnglishAuctions>(
+      new ContractWrapper<EnglishAuctionsLogic>(
         network,
         address,
         EnglishAuctionsABI,
@@ -215,7 +215,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
       this.storage,
     );
     this.offers = new MarketplaceV3Offers(
-      new ContractWrapper<Offers>(network, address, OffersABI, options),
+      new ContractWrapper<OffersLogic>(network, address, OffersABI, options),
       this.contractWrapper,
       this.storage,
     );

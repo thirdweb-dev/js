@@ -32,17 +32,17 @@ import type {
   IERC165,
   IERC721,
   IDirectListings,
-  MarketplaceEntrypoint,
-  DirectListings,
+  MarketplaceRouter,
+  DirectListingsLogic,
 } from "@thirdweb-dev/contracts-js";
-import DirectListingsABI from "@thirdweb-dev/contracts-js/dist/abis/DirectListings.json";
+import DirectListingsABI from "@thirdweb-dev/contracts-js/dist/abis/DirectListingsLogic.json";
 import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
 import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
 import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
 import {
   NewListingEvent,
   UpdatedListingEvent,
-} from "@thirdweb-dev/contracts-js/dist/declarations/src/DirectListings";
+} from "@thirdweb-dev/contracts-js/dist/declarations/src/DirectListingsLogic";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
@@ -59,13 +59,13 @@ import invariant from "tiny-invariant";
  * @public
  */
 export class MarketplaceV3DirectListings {
-  private directListings: ContractWrapper<DirectListings>;
-  private entrypoint: ContractWrapper<MarketplaceEntrypoint>;
+  private directListings: ContractWrapper<DirectListingsLogic>;
+  private entrypoint: ContractWrapper<MarketplaceRouter>;
   private storage: ThirdwebStorage;
 
   constructor(
-    directListings: ContractWrapper<DirectListings>,
-    entrypoint: ContractWrapper<MarketplaceEntrypoint>,
+    directListings: ContractWrapper<DirectListingsLogic>,
+    entrypoint: ContractWrapper<MarketplaceRouter>,
     storage: ThirdwebStorage,
   ) {
     this.directListings = directListings;

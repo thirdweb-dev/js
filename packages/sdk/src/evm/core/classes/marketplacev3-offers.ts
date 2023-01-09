@@ -33,18 +33,18 @@ import type {
   IERC165,
   IERC721,
   IOffers,
-  MarketplaceEntrypoint,
-  Offers,
+  MarketplaceRouter,
+  OffersLogic,
 } from "@thirdweb-dev/contracts-js";
 import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
 import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
 import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
-import OffersABI from "@thirdweb-dev/contracts-js/dist/abis/Offers.json";
+import OffersABI from "@thirdweb-dev/contracts-js/dist/abis/OffersLogic.json";
 import {
   NewListingEvent,
   UpdatedListingEvent,
-} from "@thirdweb-dev/contracts-js/dist/declarations/src/DirectListings";
-import { NewOfferEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/Offers";
+} from "@thirdweb-dev/contracts-js/dist/declarations/src/DirectListingsLogic";
+import { NewOfferEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/OffersLogic";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
   BigNumber,
@@ -62,13 +62,13 @@ import invariant from "tiny-invariant";
  * @public
  */
 export class MarketplaceV3Offers {
-  private offers: ContractWrapper<Offers>;
-  private entrypoint: ContractWrapper<MarketplaceEntrypoint>;
+  private offers: ContractWrapper<OffersLogic>;
+  private entrypoint: ContractWrapper<MarketplaceRouter>;
   private storage: ThirdwebStorage;
 
   constructor(
-    offers: ContractWrapper<Offers>,
-    entrypoint: ContractWrapper<MarketplaceEntrypoint>,
+    offers: ContractWrapper<OffersLogic>,
+    entrypoint: ContractWrapper<MarketplaceRouter>,
     storage: ThirdwebStorage,
   ) {
     this.offers = offers;
