@@ -2,6 +2,7 @@ import { ListingNotFoundError, WrongListingTypeError } from "../../common";
 import {
   cleanCurrencyAddress,
   fetchCurrencyValue,
+  hasERC20Allowance,
   isNativeToken,
   normalizePriceValue,
   setErc20Allowance,
@@ -18,6 +19,7 @@ import {
   InterfaceId_IERC721,
 } from "../../constants/contract";
 import { ListingType } from "../../enums";
+import { MarketplaceFilter } from "../../types";
 import { Price } from "../../types/currency";
 import { OfferV3, NewOffer } from "../../types/marketplacev3";
 import {
@@ -102,16 +104,26 @@ export class MarketplaceV3Offers {
    * @param endIndex - end offer-Id
    * @returns the Offer object array
    */
-  public async getAllOffers(
-    startIndex: BigNumberish,
-    endIndex: BigNumberish,
-  ): Promise<OfferV3[]> {
-    const offers = await this.offers.readContract.getAllOffers(
+  public async getAllOffers(filter?: MarketplaceFilter): Promise<OfferV3[]> {
+    const startIndex = BigNumber.from(filter?.start || 0).toNumber();
+    const count = BigNumber.from(
+      filter?.count || (await this.getTotalOffers()),
+    ).toNumber();
+
+    if (count === 0) {
+      throw new Error(`No offers exist on the contract.`);
+    }
+
+    const rawOffers = await this.offers.readContract.getAllOffers(
       startIndex,
-      endIndex,
+      count - 1,
     );
 
-    return await Promise.all(offers.map((offer) => this.mapOffer(offer)));
+    const filteredOffers = this.applyFilter(rawOffers, filter);
+
+    return await Promise.all(
+      filteredOffers.map((offer) => this.mapOffer(offer)),
+    );
   }
 
   /**
@@ -188,13 +200,20 @@ export class MarketplaceV3Offers {
       offer.currencyContractAddress,
     );
 
-    await handleTokenApproval(
-      this.offers,
-      this.getAddress(),
+    const hasAllowance = await hasERC20Allowance(
+      this.entrypoint,
       offer.currencyContractAddress,
       normalizedTotalPrice,
-      await this.offers.getSignerAddress(),
     );
+    if (!hasAllowance) {
+      const overrides = await this.entrypoint.getCallOverrides();
+      await setErc20Allowance(
+        this.entrypoint,
+        normalizedTotalPrice,
+        offer.currencyContractAddress,
+        overrides,
+      );
+    }
 
     let offerEndTime = Math.floor(offer.endTimestamp.getTime() / 1000);
 
@@ -357,5 +376,38 @@ export class MarketplaceV3Offers {
       valid: true,
       error: "error",
     };
+  }
+
+  private applyFilter(
+    offers: IOffers.OfferStructOutput[],
+    filter?: MarketplaceFilter,
+  ) {
+    let rawOffers = [...offers];
+
+    if (filter) {
+      if (filter.offeror) {
+        rawOffers = rawOffers.filter(
+          (offeror) =>
+            offeror.offeror.toString().toLowerCase() ===
+            filter?.offeror?.toString().toLowerCase(),
+        );
+      }
+      if (filter.tokenContract) {
+        rawOffers = rawOffers.filter(
+          (tokenContract) =>
+            tokenContract.assetContract.toString().toLowerCase() ===
+            filter?.tokenContract?.toString().toLowerCase(),
+        );
+      }
+
+      if (filter.tokenId !== undefined) {
+        rawOffers = rawOffers.filter(
+          (tokenContract) =>
+            tokenContract.tokenId.toString() === filter?.tokenId?.toString(),
+        );
+      }
+    }
+
+    return rawOffers;
   }
 }

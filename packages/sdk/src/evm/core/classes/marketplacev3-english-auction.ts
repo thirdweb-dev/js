@@ -17,6 +17,7 @@ import {
 } from "../../common/marketplacev3";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { ListingType } from "../../enums";
+import { MarketplaceFilter } from "../../types";
 import { CurrencyValue, Price } from "../../types/currency";
 import {
   EnglishAuction,
@@ -85,21 +86,30 @@ export class MarketplaceV3EnglishAuctions {
   /**
    * Get all auctions between start and end Id (both inclusive).
    *
-   * @param startIndex - start auction-Id
-   * @param endIndex - end auction-Id
+   * @param filter - optional filter parameters
    * @returns the Auction object array
    */
   public async getAllAuctions(
-    startIndex: BigNumberish,
-    endIndex: BigNumberish,
+    filter?: MarketplaceFilter,
   ): Promise<EnglishAuction[]> {
-    const auctions = await this.englishAuctions.readContract.getAllAuctions(
+    const startIndex = BigNumber.from(filter?.start || 0).toNumber();
+    const count = BigNumber.from(
+      filter?.count || (await this.getTotalAuctions()),
+    ).toNumber();
+
+    if (count === 0) {
+      throw new Error(`No auctions exist on the contract.`);
+    }
+
+    let rawAuctions = await this.englishAuctions.readContract.getAllAuctions(
       startIndex,
-      endIndex,
+      count - 1,
     );
 
+    const filteredAuctions = this.applyFilter(rawAuctions, filter);
+
     return await Promise.all(
-      auctions.map((auction) => this.mapAuction(auction)),
+      filteredAuctions.map((auction) => this.mapAuction(auction)),
     );
   }
 
@@ -107,22 +117,31 @@ export class MarketplaceV3EnglishAuctions {
    * Get all valid auctions between start and end Id (both inclusive).
    *
    *
-   * @param startIndex - start auction-Id
-   * @param endIndex - end auction-Id
+   * @param filter - optional filter parameters
    * @returns the Auction object array
    */
   public async getAllValidAuctions(
-    startIndex: BigNumberish,
-    endIndex: BigNumberish,
+    filter?: MarketplaceFilter,
   ): Promise<EnglishAuction[]> {
-    const auctions =
+    const startIndex = BigNumber.from(filter?.start || 0).toNumber();
+    const count = BigNumber.from(
+      filter?.count || (await this.getTotalAuctions()),
+    ).toNumber();
+
+    if (count === 0) {
+      throw new Error(`No auctions exist on the contract.`);
+    }
+
+    let rawAuctions =
       await this.englishAuctions.readContract.getAllValidAuctions(
         startIndex,
-        endIndex,
+        count - 1,
       );
 
+    const filteredAuctions = this.applyFilter(rawAuctions, filter);
+
     return await Promise.all(
-      auctions.map((auction) => this.mapAuction(auction)),
+      filteredAuctions.map((auction) => this.mapAuction(auction)),
     );
   }
 
@@ -713,5 +732,38 @@ export class MarketplaceV3EnglishAuctions {
         bidAmount,
       ),
     } as Bid;
+  }
+
+  private applyFilter(
+    auctions: IEnglishAuctions.AuctionStructOutput[],
+    filter?: MarketplaceFilter,
+  ) {
+    let rawAuctions = [...auctions];
+
+    if (filter) {
+      if (filter.seller) {
+        rawAuctions = rawAuctions.filter(
+          (seller) =>
+            seller.auctionCreator.toString().toLowerCase() ===
+            filter?.seller?.toString().toLowerCase(),
+        );
+      }
+      if (filter.tokenContract) {
+        rawAuctions = rawAuctions.filter(
+          (tokenContract) =>
+            tokenContract.assetContract.toString().toLowerCase() ===
+            filter?.tokenContract?.toString().toLowerCase(),
+        );
+      }
+
+      if (filter.tokenId !== undefined) {
+        rawAuctions = rawAuctions.filter(
+          (tokenContract) =>
+            tokenContract.tokenId.toString() === filter?.tokenId?.toString(),
+        );
+      }
+    }
+
+    return rawAuctions;
   }
 }

@@ -30,11 +30,6 @@ export interface NewOffer {
   currencyContractAddress: string;
 
   /**
-   * The `CurrencyValue` of the listing. Useful for displaying the price information.
-   */
-  currencyValue: CurrencyValue;
-
-  /**
    * The total offer amount for the NFTs.
    */
   totalPrice: Price;

@@ -1,3 +1,4 @@
+import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
 import { ListingNotFoundError, WrongListingTypeError } from "../../common";
 import {
   cleanCurrencyAddress,
@@ -17,6 +18,7 @@ import {
   InterfaceId_IERC721,
 } from "../../constants/contract";
 import { ListingType } from "../../enums";
+import { MarketplaceFilter } from "../../types";
 import { Price } from "../../types/currency";
 import { DirectListingV3, NewDirectListingV3 } from "../../types/marketplacev3";
 import {
@@ -95,21 +97,30 @@ export class MarketplaceV3DirectListings {
   /**
    * Get all direct listings between start and end Id (both inclusive).
    *
-   * @param startIndex - start listing-Id
-   * @param endIndex - end listing-Id
+   * @param filter - optional filter parameters
    * @returns the Direct listing object array
    */
   public async getAllListings(
-    startIndex: BigNumberish,
-    endIndex: BigNumberish,
+    filter?: MarketplaceFilter,
   ): Promise<DirectListingV3[]> {
-    const listings = await this.directListings.readContract.getAllListings(
+    const startIndex = BigNumber.from(filter?.start || 0).toNumber();
+    const count = BigNumber.from(
+      filter?.count || (await this.getTotalListings()),
+    ).toNumber();
+
+    if (count === 0) {
+      throw new Error(`No listings exist on the contract.`);
+    }
+
+    let rawListings = await this.directListings.readContract.getAllListings(
       startIndex,
-      endIndex,
+      count - 1,
     );
 
+    const filteredListings = this.applyFilter(rawListings, filter);
+
     return await Promise.all(
-      listings.map((listing) => this.mapListing(listing)),
+      filteredListings.map((listing) => this.mapListing(listing)),
     );
   }
 
@@ -119,21 +130,31 @@ export class MarketplaceV3DirectListings {
    * A valid listing is where the listing creator still owns and has approved Marketplace
    * to transfer the listed NFTs.
    *
-   * @param startIndex - start listing-Id
-   * @param endIndex - end listing-Id
+   * @param filter - optional filter parameters
    * @returns the Direct listing object array
    */
   public async getAllValidListings(
-    startIndex: BigNumberish,
-    endIndex: BigNumberish,
+    filter?: MarketplaceFilter,
   ): Promise<DirectListingV3[]> {
-    const listings = await this.directListings.readContract.getAllValidListings(
-      startIndex,
-      endIndex,
-    );
+    const startIndex = BigNumber.from(filter?.start || 0).toNumber();
+    const count = BigNumber.from(
+      filter?.count || (await this.getTotalListings()),
+    ).toNumber();
+
+    if (count === 0) {
+      throw new Error(`No listings exist on the contract.`);
+    }
+
+    let rawListings =
+      await this.directListings.readContract.getAllValidListings(
+        startIndex,
+        count - 1,
+      );
+
+    const filteredListings = this.applyFilter(rawListings, filter);
 
     return await Promise.all(
-      listings.map((listing) => this.mapListing(listing)),
+      filteredListings.map((listing) => this.mapListing(listing)),
     );
   }
 
@@ -741,5 +762,38 @@ export class MarketplaceV3DirectListings {
         error: "Contract does not implement ERC 1155 or ERC 721.",
       };
     }
+  }
+
+  private applyFilter(
+    listings: IDirectListings.ListingStructOutput[],
+    filter?: MarketplaceFilter,
+  ) {
+    let rawListings = [...listings];
+
+    if (filter) {
+      if (filter.seller) {
+        rawListings = rawListings.filter(
+          (seller) =>
+            seller.listingCreator.toString().toLowerCase() ===
+            filter?.seller?.toString().toLowerCase(),
+        );
+      }
+      if (filter.tokenContract) {
+        rawListings = rawListings.filter(
+          (tokenContract) =>
+            tokenContract.assetContract.toString().toLowerCase() ===
+            filter?.tokenContract?.toString().toLowerCase(),
+        );
+      }
+
+      if (filter.tokenId !== undefined) {
+        rawListings = rawListings.filter(
+          (tokenContract) =>
+            tokenContract.tokenId.toString() === filter?.tokenId?.toString(),
+        );
+      }
+    }
+
+    return rawListings;
   }
 }
