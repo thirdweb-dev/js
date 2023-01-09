@@ -331,7 +331,7 @@ const ERC_CATEGORIES = ["ERC721", "ERC1155", "ERC20"] as const;
 
 function categorizeExtensions(extensions: string[]) {
   const categoriesWithCount: Record<
-    typeof ERC_CATEGORIES[number] | "Other",
+    (typeof ERC_CATEGORIES)[number] | "Other",
     number
   > = {
     ERC721: 0,

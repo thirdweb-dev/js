@@ -314,7 +314,7 @@ export const ContractTable: ComponentWithChildren<ContractTableProps> = ({
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
-  ) as Column<typeof combinedList[number]>[];
+  ) as Column<(typeof combinedList)[number]>[];
 
   const defaultColumn = useMemo(
     () => ({

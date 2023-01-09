@@ -12,7 +12,7 @@ export const PAPER_CHAIN_ID_MAP = {
 
 const queryKey = (
   contractAddress: string,
-  paperChain: typeof PAPER_CHAIN_ID_MAP[keyof typeof PAPER_CHAIN_ID_MAP],
+  paperChain: (typeof PAPER_CHAIN_ID_MAP)[keyof typeof PAPER_CHAIN_ID_MAP],
 ) => ["paperxyz", paperChain, contractAddress, "register"];
 
 export function usePaperContractQuery(jwt: string, contractAddress?: string) {

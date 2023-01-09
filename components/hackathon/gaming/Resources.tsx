@@ -1,4 +1,4 @@
-import { Flex, Grid, Image } from "@chakra-ui/react";
+import { Flex, Image } from "@chakra-ui/react";
 import type { FC } from "react";
 import { Heading, Text, TrackedLink } from "tw-components";
 

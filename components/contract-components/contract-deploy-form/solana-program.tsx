@@ -31,7 +31,7 @@ const SOL_DEPLOY_SCHEMAS = {
 } as const;
 
 function useDeployForm(
-  deploySchema: typeof SOL_DEPLOY_SCHEMAS[SolContractType],
+  deploySchema: (typeof SOL_DEPLOY_SCHEMAS)[SolContractType],
 ) {
   const { handleSubmit: _handleSubmit, ...restForm } = useForm<
     z.infer<typeof deploySchema>
@@ -67,7 +67,7 @@ type BuiltinSolanaDeployFormProps<TContractType extends SolContractType> = {
   formId: string;
   contractType: TContractType;
   onSubmitForm: (
-    data: z.output<typeof SOL_DEPLOY_SCHEMAS[TContractType]>,
+    data: z.output<(typeof SOL_DEPLOY_SCHEMAS)[TContractType]>,
   ) => Promise<void> | void;
 };
 const BuiltinSolanaDeployForm = <TContractType extends SolContractType>({

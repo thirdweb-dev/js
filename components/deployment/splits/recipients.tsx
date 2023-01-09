@@ -22,7 +22,7 @@ import { z } from "zod";
 
 export const RecipientForm: React.FC = () => {
   const { register, control, getFieldState, formState, watch, setValue } =
-    useFormContext<z.infer<typeof SplitInitializer["schema"]["deploy"]>>();
+    useFormContext<z.infer<(typeof SplitInitializer)["schema"]["deploy"]>>();
   const { fields, append, remove } = useFieldArray({
     name: "recipients",
     control,
