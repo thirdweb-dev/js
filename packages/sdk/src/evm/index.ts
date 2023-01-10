@@ -14,6 +14,7 @@ export * from "./schema/tokens/edition";
 export * from "./schema/contracts/common";
 export * from "./schema/contracts/custom";
 export * from "./schema/auth";
+export * from "./schema/shared";
 export type {
   SDKOptions,
   SDKOptionsSchema,

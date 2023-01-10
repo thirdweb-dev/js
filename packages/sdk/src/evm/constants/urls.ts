@@ -1,6 +1,6 @@
 import { getRpcUrl } from "../../core/constants/urls";
-import { SignerOrProvider } from "../core/types";
 import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
+import { ChainInfo, SDKOptions, SDKOptionsSchema } from "../schema";
 import { ChainId, SUPPORTED_CHAIN_ID, SUPPORTED_CHAIN_IDS } from "./chains";
 import { ethers, providers } from "ethers";
 
@@ -37,6 +37,8 @@ export type ChainOrRpc =
   // ideally we could use `https://${string}` notation here, but doing that causes anything that is a generic string to throw a type error => not worth the hassle for now
   ChainNames | (string & {});
 
+export type ChainIdOrName = number | ChainNames;
+
 export const CHAIN_NAME_TO_ID: Record<ChainNames, SUPPORTED_CHAIN_ID> = {
   "avalanche-fuji": ChainId.AvalancheFujiTestnet,
   "avalanche-testnet": ChainId.AvalancheFujiTestnet,
@@ -61,66 +63,98 @@ export const CHAIN_ID_TO_NAME = Object.fromEntries(
   Object.entries(CHAIN_NAME_TO_ID).map(([name, id]) => [id, name]),
 ) as Record<ChainId, ChainNames>;
 
-function buildDefaultMap() {
+export function buildDefaultMap(sdkOptions: SDKOptions = {}) {
   return SUPPORTED_CHAIN_IDS.reduce((previousValue, currentValue) => {
-    previousValue[currentValue] = getProviderForNetwork(
-      CHAIN_ID_TO_NAME[currentValue],
-    ) as string;
+    previousValue[currentValue] = {
+      rpc: getDefaultRPCUrl(CHAIN_ID_TO_NAME[currentValue], sdkOptions),
+    } as ChainInfo;
     return previousValue;
-  }, {} as Record<SUPPORTED_CHAIN_ID, string>);
+  }, {} as Record<SUPPORTED_CHAIN_ID, ChainInfo>);
 }
 
+/**
+ * @deprecated use `buildDefaultMap(sdkOptions)` instead
+ */
 export const DEFAULT_RPC_URLS: Record<SUPPORTED_CHAIN_ID, string> =
-  buildDefaultMap();
+  Object.fromEntries(
+    Object.entries(buildDefaultMap()).map(([chainId, chainInfo]) => [
+      parseInt(chainId),
+      chainInfo.rpc,
+    ]),
+  ) as Record<SUPPORTED_CHAIN_ID, string>;
+
+export function getChainProvider(
+  network: ChainIdOrName,
+  sdkOptions: SDKOptions,
+): ethers.providers.Provider {
+  const chainId = toChainId(network);
+  console.log("options", sdkOptions);
+  const options = SDKOptionsSchema.parse(sdkOptions);
+  const rpcMap: Record<number, ChainInfo> = {
+    ...buildDefaultMap(options),
+    ...options.chainInfos,
+  };
+  const rpcUrl = rpcMap[chainId]?.rpc;
+  if (!rpcUrl) {
+    throw new Error(
+      `No rpc url found for chain ${network}. Please provide a valid rpc url in the sdk options.`,
+    );
+  }
+  return getReadOnlyProvider(rpcUrl, chainId);
+}
 
 /**
  * @internal
  * @param network - the chain name or rpc url
  * @returns the rpc url for that chain
  */
-export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
-  if (typeof network !== "string") {
-    return network;
-  }
-  switch (network) {
+export function getDefaultRPCUrl(
+  chainName: ChainNames,
+  sdkOptions: SDKOptions,
+): string {
+  const options = SDKOptionsSchema.parse(sdkOptions);
+  switch (chainName) {
     case "mainnet":
     case "ethereum":
-      return getRpcUrl("ethereum");
+      return getRpcUrl("ethereum", options.apiKey);
     case "goerli":
-      return getRpcUrl("goerli");
+      return getRpcUrl("goerli", options.apiKey);
     case "polygon":
     case "matic":
-      return getRpcUrl("polygon");
+      return getRpcUrl("polygon", options.apiKey);
     case "mumbai":
-      return getRpcUrl("mumbai");
+      return getRpcUrl("mumbai", options.apiKey);
     case "optimism":
-      return getRpcUrl("optimism");
+      return getRpcUrl("optimism", options.apiKey);
     case "optimism-goerli":
-      return getRpcUrl("optimism-goerli");
+      return getRpcUrl("optimism-goerli", options.apiKey);
     case "arbitrum":
-      return getRpcUrl("arbitrum");
+      return getRpcUrl("arbitrum", options.apiKey);
     case "arbitrum-goerli":
-      return getRpcUrl("arbitrum-goerli");
+      return getRpcUrl("arbitrum-goerli", options.apiKey);
     case "fantom":
-      return getRpcUrl("fantom");
+      return getRpcUrl("fantom", options.apiKey);
     case "fantom-testnet":
-      return getRpcUrl("fantom-testnet");
+      return getRpcUrl("fantom-testnet", options.apiKey);
     case "avalanche":
-      return getRpcUrl("avalanche");
+      return getRpcUrl("avalanche", options.apiKey);
     case "avalanche-testnet":
     case "avalanche-fuji":
-      return getRpcUrl("avalanche-fuji");
+      return getRpcUrl("avalanche-fuji", options.apiKey);
     case "binance":
-      return getRpcUrl("binance");
+      return getRpcUrl("binance", options.apiKey);
     case "binance-testnet":
-      return getRpcUrl("binance-testnet");
+      return getRpcUrl("binance-testnet", options.apiKey);
     default:
-      if (network.startsWith("http") || network.startsWith("ws")) {
-        return network;
-      } else {
-        throw new Error(`Unrecognized chain name or RPC url: ${network}`);
-      }
+      throw new Error(`Unrecognized chain name or RPC url: ${chainName}`);
   }
+}
+
+export function toChainId(network: ChainIdOrName): number {
+  if (typeof network === "number") {
+    return network;
+  }
+  return CHAIN_NAME_TO_ID[network];
 }
 
 const READONLY_PROVIDER_MAP: Map<

@@ -10,8 +10,8 @@ import { ThirdwebConfigProvider } from "../contexts/thirdweb-config";
 import { ThirdwebSDKProvider, ThirdwebSDKProviderProps } from "./base";
 import { QueryClient } from "@tanstack/react-query";
 import {
+  getDefaultRPCUrl,
   SDKOptions,
-  getProviderForNetwork,
   SDKOptionsOutput,
 } from "@thirdweb-dev/sdk";
 import { DEFAULT_RPC_URLS } from "@thirdweb-dev/sdk";
@@ -225,18 +225,8 @@ export const ThirdwebProvider = <
       .filter((c) => c !== undefined) as Chain[];
   }, [supportedChains]);
 
-  const _rpcUrlMap = useMemo(() => {
-    return _supporrtedChains.reduce((prev, curr) => {
-      prev[curr.id] =
-        curr.id in chainRpc
-          ? (getProviderForNetwork(
-              chainRpc[curr.id as keyof ChainRpc<TSupportedChain>] ||
-                curr.rpcUrls[0],
-            ) as string)
-          : curr.rpcUrls[0];
-      return prev;
-    }, {} as Record<number, string>);
-  }, [chainRpc, _supporrtedChains]);
+  // TODO (anyEVM) - merge default map with sdk options
+  const _rpcUrlMap: Record<number, string> = chainRpc;
 
   const wagmiProps: WagmiproviderProps = useMemo(() => {
     const walletConnectClientMeta = {
@@ -355,9 +345,7 @@ export const ThirdwebProvider = <
       return undefined;
     }
     let rpcUrl = _rpcUrlMap[desiredChainId as keyof typeof _rpcUrlMap];
-    try {
-      rpcUrl = getProviderForNetwork(rpcUrl) as string;
-    } catch (e) {
+    if (!rpcUrl) {
       console.error(
         `failed to configure rpc url for chain: "${desiredChainId}". Did you forget to pass "desiredChainId" to the <ThirdwebProvider /> component?`,
       );

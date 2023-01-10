@@ -62,12 +62,12 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @internal
    * should never be accessed directly, use {@link ContractDeployer.getFactory} instead
    */
-  private _factory: Promise<ContractFactory> | undefined;
+  private _factory: Promise<ContractFactory | undefined> | undefined;
   /**
    * @internal
    * should never be accessed directly, use {@link ContractDeployer.getRegistry} instead
    */
-  private _registry: Promise<ContractRegistry> | undefined;
+  private _registry: Promise<ContractRegistry | undefined> | undefined;
   public events: FactoryEvents | undefined;
   private storage: ThirdwebStorage;
 
@@ -427,6 +427,9 @@ export class ContractDeployer extends RPCConnectionHandler {
       } catch (e) {
         parsedVersion = undefined;
       }
+      if (!factory) {
+        throw new Error("Factory not found");
+      }
       return await factory.deploy(contractType, parsedMetadata, parsedVersion);
     }
 
@@ -441,6 +444,9 @@ export class ContractDeployer extends RPCConnectionHandler {
     // first upload the contractmetadata
     const contractURI = await this.storage.upload(parsedMetadata);
     // the get the deploy arguments
+    if (!factory) {
+      throw new Error("Factory not found");
+    }
     const constructorParams = await factory.getDeployArguments(
       contractType,
       parsedMetadata,
@@ -464,6 +470,9 @@ export class ContractDeployer extends RPCConnectionHandler {
     TContractType extends PrebuiltContractType,
   >(contractType: TContractType) {
     const factory = await this.getFactory();
+    if (!factory) {
+      throw new Error("Factory not found");
+    }
     return await factory.getLatestVersion(contractType);
   }
 
@@ -554,7 +563,7 @@ export class ContractDeployer extends RPCConnectionHandler {
   /**
    * @internal
    */
-  public async getRegistry(): Promise<ContractRegistry> {
+  public async getRegistry(): Promise<ContractRegistry | undefined> {
     // if we already have a registry just return it back
     if (this._registry) {
       return this._registry;
@@ -571,6 +580,9 @@ export class ContractDeployer extends RPCConnectionHandler {
           chainId,
           "twRegistry",
         );
+        if (!registryAddress) {
+          return undefined;
+        }
         return new ContractRegistry(
           registryAddress,
           this.getSignerOrProvider(),
@@ -579,7 +591,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       }));
   }
 
-  private async getFactory(): Promise<ContractFactory> {
+  private async getFactory(): Promise<ContractFactory | undefined> {
     // if we already have a factory just return it back
     if (this._factory) {
       return this._factory;
@@ -596,6 +608,9 @@ export class ContractDeployer extends RPCConnectionHandler {
           chainId,
           "twFactory",
         );
+        if (!factoryAddress) {
+          return undefined;
+        }
         const factory = new ContractFactory(
           factoryAddress,
           this.getSignerOrProvider(),
@@ -617,7 +632,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     // has to be promises now
     this._factory
       ?.then((factory) => {
-        factory.updateSignerOrProvider(this.getSignerOrProvider());
+        factory?.updateSignerOrProvider(this.getSignerOrProvider());
       })
       .catch(() => {
         // ignore
@@ -625,7 +640,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     // has to be promises now
     this._registry
       ?.then((registry) => {
-        registry.updateSignerOrProvider(this.getSignerOrProvider());
+        registry?.updateSignerOrProvider(this.getSignerOrProvider());
       })
       .catch(() => {
         // ignore

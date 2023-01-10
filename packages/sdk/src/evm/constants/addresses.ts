@@ -262,7 +262,7 @@ export function getApprovedImplementation(
 export function getContractAddressByChainId(
   chainId: SUPPORTED_CHAIN_ID | ChainId.Hardhat,
   contractName: keyof typeof CONTRACT_ADDRESSES[SUPPORTED_CHAIN_ID],
-): string {
+): string | undefined {
   // for testing only
   if (chainId === ChainId.Hardhat) {
     if (contractName === "twFactory") {
@@ -276,7 +276,7 @@ export function getContractAddressByChainId(
     }
   }
   // real output here
-  return CONTRACT_ADDRESSES[chainId][contractName];
+  return CONTRACT_ADDRESSES[chainId]?.[contractName];
 }
 
 /**
