@@ -53,6 +53,14 @@ import {
   PluginMap,
   PluginMap__factory,
   VoteERC20__factory,
+  MarketplaceRouter__factory,
+  DirectListingsLogic__factory,
+  DirectListingsLogic,
+  MarketplaceRouter,
+  EnglishAuctionsLogic__factory,
+  EnglishAuctionsLogic,
+  OffersLogic__factory,
+  OffersLogic,
   TWProxy__factory,
   TWProxy,
 } from "@thirdweb-dev/contracts-js";
@@ -232,6 +240,31 @@ export const mochaHooks = {
       }
     }
 
+    // setup marketplace-v3 and add implementation to factory
+    const marketplaceEntrypointAddress = await setupMarketplaceV3();
+    const tx = await thirdwebFactoryDeployer.addImplementation(
+      marketplaceEntrypointAddress,
+    );
+    await tx.wait();
+
+    // console.log(
+    //   await thirdwebFactoryDeployer.getLatestImplementation(
+    //     ethers.utils.formatBytes32String("Marketplace"),
+    //   ),
+    // );
+    // console.log(
+    //   await thirdwebFactoryDeployer.getImplementation(
+    //     ethers.utils.formatBytes32String("Marketplace"),
+    //     2,
+    //   ),
+    // );
+    // console.log(
+    //   await thirdwebFactoryDeployer.getImplementation(
+    //     ethers.utils.formatBytes32String("Marketplace"),
+    //     3,
+    //   ),
+    // );
+
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     process.env.registryAddress = thirdwebRegistryAddress;
     // eslint-disable-next-line turbo/no-undeclared-env-vars
@@ -256,6 +289,18 @@ export const mochaHooks = {
   },
 };
 
+const getFunctionSignature = (fnInputs: any): string => {
+  return (
+    "(" +
+    fnInputs
+      .map((i) => {
+        return i.type === "tuple" ? getFunctionSignature(i.components) : i.type;
+      })
+      .join(",") +
+    ")"
+  );
+};
+
 const generatePluginFunctions = (
   pluginAddress: string,
   pluginAbi: Abi,
@@ -265,10 +310,12 @@ const generatePluginFunctions = (
   // TODO - filter out common functions like _msgSender(), contractType(), etc.
   for (const fnFragment of Object.values(pluginInterface.functions)) {
     const fn = pluginInterface.getFunction(fnFragment.name);
+    if (fn.name.includes("_")) {
+      continue;
+    }
     pluginFunctions.push({
       functionSelector: pluginInterface.getSighash(fn),
-      functionSignature:
-        fn.name + "(" + fn.inputs.map((i) => i.type).join(",") + ")",
+      functionSignature: fn.name + getFunctionSignature(fn.inputs),
       pluginAddress,
     });
   }
@@ -312,6 +359,75 @@ async function setupMultichainRegistry(
     await multichainRegistryRouterDeployer.deployed();
 
   return multichainRegistryRouter.address;
+}
+
+// Setup marketplace-v3 for tests
+async function setupMarketplaceV3(): Promise<string> {
+  const nativeTokenWrapperAddress = getNativeTokenByChainId(ChainId.Hardhat)
+    .wrapped.address;
+  // Direct Listings
+  const directListingsLogicDeployer = (await new ethers.ContractFactory(
+    DirectListingsLogic__factory.abi,
+    DirectListingsLogic__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(nativeTokenWrapperAddress)) as DirectListingsLogic;
+  const directListingsLogic = await directListingsLogicDeployer.deployed();
+
+  const pluginsDirectListings: Plugin[] = generatePluginFunctions(
+    directListingsLogic.address,
+    DirectListingsLogic__factory.abi,
+  );
+
+  // English Auctions
+  const englishAuctionsLogicDeployer = (await new ethers.ContractFactory(
+    EnglishAuctionsLogic__factory.abi,
+    EnglishAuctionsLogic__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(nativeTokenWrapperAddress)) as EnglishAuctionsLogic;
+  const englishAuctionsLogic = await englishAuctionsLogicDeployer.deployed();
+
+  const pluginsEnglishAuctions: Plugin[] = generatePluginFunctions(
+    englishAuctionsLogic.address,
+    EnglishAuctionsLogic__factory.abi,
+  );
+
+  // Offers
+  const offersLogicDeployer = (await new ethers.ContractFactory(
+    OffersLogic__factory.abi,
+    OffersLogic__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy()) as OffersLogic;
+  const offersLogic = await offersLogicDeployer.deployed();
+
+  const pluginsOffers: Plugin[] = generatePluginFunctions(
+    offersLogic.address,
+    OffersLogic__factory.abi,
+  );
+
+  const pluginMapDeployer = (await new ethers.ContractFactory(
+    PluginMap__factory.abi,
+    PluginMap__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy([
+      ...pluginsDirectListings,
+      ...pluginsEnglishAuctions,
+      ...pluginsOffers,
+    ])) as PluginMap;
+  const pluginMap = await pluginMapDeployer.deployed();
+
+  const marketplaceRouterDeployer = (await new ethers.ContractFactory(
+    MarketplaceRouter__factory.abi,
+    MarketplaceRouter__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(pluginMap.address)) as MarketplaceRouter;
+  const marketplaceRouter = await marketplaceRouterDeployer.deployed();
+
+  return marketplaceRouter.address;
 }
 
 export {

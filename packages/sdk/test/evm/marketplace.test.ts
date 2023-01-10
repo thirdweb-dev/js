@@ -62,6 +62,7 @@ describe("Marketplace Contract", async () => {
         {
           name: "Test Marketplace",
         },
+        "2",
       ),
     );
     dummyNftContract = await sdk.getNFTCollection(
