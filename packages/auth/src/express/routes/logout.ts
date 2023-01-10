@@ -1,0 +1,34 @@
+import { getUser } from "../helpers/user";
+import { ThirdwebAuthContext } from "../types";
+import { serialize } from "cookie";
+import { Request, Response } from "express";
+
+export default async function handler(
+  req: Request,
+  res: Response,
+  ctx: ThirdwebAuthContext,
+) {
+  if (req.method !== "GET") {
+    return res.status(405).json({
+      error: "Invalid method. Only POST supported.",
+    });
+  }
+
+  if (ctx.callbacks?.logout?.onLogout) {
+    const user = await getUser(req, ctx);
+    if (user) {
+      await ctx.callbacks.logout.onLogout(user, req);
+    }
+  }
+
+  // Set the access token to 'none' and expire in 5 seconds
+  res.setHeader(
+    "Set-Cookie",
+    serialize("thirdweb_auth_token", "", {
+      path: "/",
+      expires: new Date(Date.now() + 5 * 1000),
+    }),
+  );
+
+  return res.status(200).json({ message: "Succesfully logged out" });
+}

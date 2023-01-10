@@ -1,0 +1,4 @@
+{
+  "main": "dist/thirdweb-dev-wallets-evm-connectors-injected.cjs.js",
+  "module": "dist/thirdweb-dev-wallets-evm-connectors-injected.esm.js"
+}

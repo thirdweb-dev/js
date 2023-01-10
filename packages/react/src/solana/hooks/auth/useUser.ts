@@ -1,10 +1,14 @@
 import { ensureTWPrefix } from "../../../core/query-utils/query-key";
-import { useThirdwebAuthConfig } from "../../contexts/thirdweb-auth";
+import { useThirdwebAuthContext } from "../../contexts/thirdweb-auth";
 import { useQuery } from "@tanstack/react-query";
+import { Json, User } from "@thirdweb-dev/auth";
 import invariant from "tiny-invariant";
 
-export interface ThirdwebAuthUser {
-  address: string;
+export interface UserWithData<
+  TData extends Json = Json,
+  TContext extends Json = Json,
+> extends User<TContext> {
+  data?: TData;
 }
 
 /**
@@ -14,8 +18,11 @@ export interface ThirdwebAuthUser {
  *
  * @beta
  */
-export function useUser() {
-  const authConfig = useThirdwebAuthConfig();
+export function useUser<
+  TData extends Json = Json,
+  TContext extends Json = Json,
+>() {
+  const authConfig = useThirdwebAuthContext();
 
   const { data: user, isLoading } = useQuery(
     ensureTWPrefix(["user"]),
@@ -24,15 +31,18 @@ export function useUser() {
         authConfig,
         "Please specify an authConfig in the ThirdwebProvider",
       );
+
+      // We include credentials so we can getUser even if API is on different URL
       const res = await fetch(`${authConfig.authUrl}/user`, {
         credentials: "include",
       });
-      return (await res.json()) as ThirdwebAuthUser;
+
+      return (await res.json()) as UserWithData<TData, TContext>;
     },
     {
       enabled: !!authConfig,
     },
   );
 
-  return { user, isLoading };
+  return { user, isLoggedIn: !!user, isLoading };
 }

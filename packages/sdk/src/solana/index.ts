@@ -1,5 +1,4 @@
 // classes
-export * from "./classes/wallet-authenticator";
 export * from "./classes/user-wallet";
 export * from "./classes/deployer";
 // contracts

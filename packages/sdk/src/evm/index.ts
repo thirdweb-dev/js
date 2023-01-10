@@ -13,7 +13,6 @@ export * from "./schema/tokens/token";
 export * from "./schema/tokens/edition";
 export * from "./schema/contracts/common";
 export * from "./schema/contracts/custom";
-export * from "./schema/auth";
 export type {
   SDKOptions,
   SDKOptionsSchema,

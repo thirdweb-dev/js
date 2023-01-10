@@ -1,0 +1,4 @@
+{
+  "main": "dist/thirdweb-dev-wallets-solana-wallets-base.cjs.js",
+  "module": "dist/thirdweb-dev-wallets-solana-wallets-base.esm.js"
+}

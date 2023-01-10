@@ -6,7 +6,7 @@ import { RequiredParam } from "../../core/query-utils/required-param";
 import { ComponentWithChildren } from "../../core/types/component";
 import {
   ThirdwebAuthConfig,
-  ThirdwebAuthConfigProvider,
+  ThirdwebAuthProvider,
 } from "../contexts/thirdweb-auth";
 import type { WalletContextState } from "@solana/wallet-adapter-react";
 import { Network, ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
@@ -78,13 +78,21 @@ export const ThirdwebSDKProvider: ComponentWithChildren<
     [sdk, network],
   );
 
+  const authConfigValue = useMemo(() => {
+    if (!authConfig) {
+      return undefined;
+    }
+
+    return { ...authConfig, sdk: sdk || undefined };
+  }, [authConfig, sdk]);
+
   return (
     <QueryClientProviderWithDefault queryClient={queryClient}>
-      <ThirdwebAuthConfigProvider value={authConfig}>
+      <ThirdwebAuthProvider value={authConfigValue}>
         <ThirdwebSDKContext.Provider value={ctxValue}>
           {children}
         </ThirdwebSDKContext.Provider>
-      </ThirdwebAuthConfigProvider>
+      </ThirdwebAuthProvider>
     </QueryClientProviderWithDefault>
   );
 };

@@ -8,8 +8,8 @@ import {
   WalletConnect,
   InjectedWallet,
   MagicAuthWallet,
+  AbstractWallet,
 } from "@thirdweb-dev/wallets";
-import type { AbstractWallet } from "@thirdweb-dev/wallets/dist/declarations/src/wallets/base";
 import { BigNumber } from "ethers";
 import type { ContractInterface, Signer } from "ethers";
 

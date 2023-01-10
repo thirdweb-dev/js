@@ -1,3 +1,6 @@
+import { ThirdwebAuth } from "@thirdweb-dev/auth";
+import { ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
+import { SignerWallet } from "@thirdweb-dev/wallets/solana/wallets/signer";
 import React, {
   PropsWithChildren,
   createContext,
@@ -24,36 +27,48 @@ export interface ThirdwebAuthConfig {
   domain: string;
 
   /**
-   * The URL to redirect to after a succesful login.
+   * Solana SDK
    */
-  loginRedirect?: string;
+  sdk?: ThirdwebSDK;
 }
 
-const ThirdwebAuthConfigContext = createContext<ThirdwebAuthConfig | undefined>(
+interface ThirdwebAuthContext extends ThirdwebAuthConfig {
+  auth?: ThirdwebAuth;
+}
+
+const ThirdwebAuthContext = createContext<ThirdwebAuthContext | undefined>(
   undefined,
 );
 
-export const ThirdwebAuthConfigProvider: React.FC<
+export const ThirdwebAuthProvider: React.FC<
   PropsWithChildren<{ value?: ThirdwebAuthConfig }>
 > = ({ value, children }) => {
   // Remove trailing slash from URL if present
-  const authConfig = useMemo(
-    () =>
-      value
-        ? {
-            ...value,
-            authUrl: value.authUrl.replace(/\/$/, ""),
-          }
-        : undefined,
-    [value],
-  );
+  const authContext = useMemo(() => {
+    if (!value) {
+      return undefined;
+    }
+
+    const context: ThirdwebAuthContext = {
+      ...value,
+      authUrl: value.authUrl.replace(/\/$/, ""),
+      auth: undefined,
+    };
+
+    const identity = value.sdk?.wallet.getSigner().driver();
+    if (identity) {
+      context.auth = new ThirdwebAuth(new SignerWallet(identity), value.domain);
+    }
+
+    return context;
+  }, [value]);
   return (
-    <ThirdwebAuthConfigContext.Provider value={authConfig}>
+    <ThirdwebAuthContext.Provider value={authContext}>
       {children}
-    </ThirdwebAuthConfigContext.Provider>
+    </ThirdwebAuthContext.Provider>
   );
 };
 
-export function useThirdwebAuthConfig() {
-  return useContext(ThirdwebAuthConfigContext);
+export function useThirdwebAuthContext() {
+  return useContext(ThirdwebAuthContext);
 }

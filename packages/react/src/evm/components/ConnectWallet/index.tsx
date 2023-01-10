@@ -1,5 +1,5 @@
-import { useThirdwebAuthConfig } from "../../contexts/thirdweb-auth";
-import { LoginConfig, useAuth } from "../../hooks/auth";
+import { useThirdwebAuthContext } from "../../contexts/thirdweb-auth";
+import { useLogin, useLogout, useUser } from "../../hooks/auth";
 import { useMetamask } from "../../hooks/connectors/useMetamask";
 import { useConnect } from "../../hooks/wagmi-required/useConnect";
 import { useDisconnect } from "../../hooks/wagmi-required/useDisconnect";
@@ -24,7 +24,8 @@ import { FiLock } from "@react-icons/all-files/fi/FiLock";
 import { FiShuffle } from "@react-icons/all-files/fi/FiShuffle";
 import { FiWifi } from "@react-icons/all-files/fi/FiWifi";
 import { FiXCircle } from "@react-icons/all-files/fi/FiXCircle";
-import { ChainId, LoginOptions, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
+import { LoginOptions } from "@thirdweb-dev/auth";
+import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import * as menu from "@zag-js/menu";
 import { normalizeProps, useMachine } from "@zag-js/react";
 import React, { useId } from "react";
@@ -59,7 +60,6 @@ function getIconForConnector(connector: Connector) {
 interface ConnectWalletProps extends ThemeProviderProps {
   auth?: {
     loginOptions?: LoginOptions;
-    loginConfig?: LoginConfig;
     loginOptional?: boolean;
   };
   className?: string;
@@ -161,8 +161,10 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
 
   const { onCopy, hasCopied } = useClipboard(walletAddress || "");
 
-  const authConfig = useThirdwebAuthConfig();
-  const { user, isLoading, login, logout } = useAuth(auth?.loginConfig);
+  const authConfig = useThirdwebAuthContext();
+  const { user, isLoading } = useUser();
+  const { login } = useLogin();
+  const { logout } = useLogout();
 
   const requiresSignIn = auth?.loginOptional
     ? false
