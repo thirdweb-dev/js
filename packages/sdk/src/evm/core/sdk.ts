@@ -1,8 +1,7 @@
 import { fetchCurrencyValue } from "../common/currency";
 import {
-  ChainOrRpc,
-  getProviderForNetwork,
-  getReadOnlyProvider,
+  ChainIdOrName,
+  getChainProvider,
   NATIVE_TOKEN_ADDRESS,
 } from "../constants";
 import {
@@ -62,19 +61,12 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   static async fromWallet(
     wallet: AbstractWallet,
-    network: ChainOrRpc,
+    network: ChainIdOrName,
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
   ) {
-    const signerOrProvider = getProviderForNetwork(network);
-    const provider = Signer.isSigner(signerOrProvider)
-      ? signerOrProvider.provider
-      : typeof signerOrProvider === "string"
-      ? getReadOnlyProvider(signerOrProvider)
-      : signerOrProvider;
-
+    const provider = getChainProvider(network, options);
     const signer = await wallet.getSigner(provider);
-
     return ThirdwebSDK.fromSigner(signer, network, options, storage);
   }
 
@@ -100,7 +92,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   static fromSigner(
     signer: Signer,
-    network?: ChainOrRpc,
+    network?: ChainIdOrName,
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
   ): ThirdwebSDK {
@@ -131,16 +123,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   static fromPrivateKey(
     privateKey: string,
-    network: ChainOrRpc,
+    network: ChainIdOrName,
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
   ): ThirdwebSDK {
-    const signerOrProvider = getProviderForNetwork(network);
-    const provider = Signer.isSigner(signerOrProvider)
-      ? signerOrProvider.provider
-      : typeof signerOrProvider === "string"
-      ? getReadOnlyProvider(signerOrProvider)
-      : signerOrProvider;
+    const provider = getChainProvider(network, options);
     const signer = new ethers.Wallet(privateKey, provider);
     return ThirdwebSDK.fromSigner(signer, network, options, storage);
   }
@@ -181,11 +168,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public auth: WalletAuthenticator;
 
   constructor(
-    network: ChainOrRpc | SignerOrProvider,
+    network: ChainIdOrName | SignerOrProvider,
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
   ) {
-    const signerOrProvider = getProviderForNetwork(network);
+    const signerOrProvider = ethers.Signer.isSigner(network)
+      ? network
+      : ethers.providers.Provider.isProvider(network)
+      ? network
+      : getChainProvider(network, options);
     super(signerOrProvider, options);
     this.storageHandler = storage;
     this.storage = storage;

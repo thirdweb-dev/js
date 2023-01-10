@@ -65,3 +65,10 @@ export const CallOverrideSchema: z.ZodType<CallOverrides> = z
     type: z.number().optional(),
   })
   .strict();
+
+// TODO (anyEVM) - allow passing extra information like name, currency, symbol, decimals, etc
+export const ChainInfoInputSchema = z.object({
+  rpc: z.string().url(),
+});
+
+export type ChainInfo = z.infer<typeof ChainInfoInputSchema>;

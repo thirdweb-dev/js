@@ -1,3 +1,5 @@
+import { DEFAULT_API_KEY } from "../../core/constants/urls";
+import { ChainInfoInputSchema } from "./shared";
 import { z } from "zod";
 
 /**
@@ -5,6 +7,10 @@ import { z } from "zod";
  */
 export const SDKOptionsSchema = z
   .object({
+    chainInfos: z
+      .record(z.union([z.number(), z.string()]), ChainInfoInputSchema)
+      .default({}),
+    apiKey: z.string().optional().default(DEFAULT_API_KEY),
     readonlySettings: z
       .object({
         rpcUrl: z.string().url(),

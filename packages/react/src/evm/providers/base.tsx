@@ -13,14 +13,13 @@ import {
   useThirdwebConnectedWalletContext,
 } from "../contexts/thirdweb-wallet";
 import {
-  ChainOrRpc,
+  ChainIdOrName,
   SDKOptions,
-  SignerOrProvider,
   SUPPORTED_CHAIN_ID,
   ThirdwebSDK,
 } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { Signer } from "ethers";
+import { ethers, Signer } from "ethers";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import invariant from "tiny-invariant";
 
@@ -34,7 +33,7 @@ const ThirdwebSDKContext = createContext<TWSDKContext>({ desiredChainId: -1 });
 
 export interface ThirdwebSDKProviderProps extends QueryClientProviderProps {
   desiredChainId: RequiredParam<SUPPORTED_CHAIN_ID>;
-  provider: ChainOrRpc | SignerOrProvider;
+  provider: ChainIdOrName | ethers.providers.Provider;
 
   signer?: Signer;
 
