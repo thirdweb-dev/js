@@ -1,5 +1,16 @@
 # @thirdweb-dev/sdk
 
+## 3.6.10
+
+### Patch Changes
+
+- [#463](https://github.com/thirdweb-dev/js/pull/463) [`557429b`](https://github.com/thirdweb-dev/js/commit/557429b5cfb3af2983ee01cf7d12d41ee0557593) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - PackVRF integration
+
+- [#311](https://github.com/thirdweb-dev/js/pull/311) [`9eaa21d`](https://github.com/thirdweb-dev/js/commit/9eaa21d09ab9c700aea61a2a25f8ca9859d20857) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add support for multi chain registry
+
+- Updated dependencies [[`557429b`](https://github.com/thirdweb-dev/js/commit/557429b5cfb3af2983ee01cf7d12d41ee0557593), [`9eaa21d`](https://github.com/thirdweb-dev/js/commit/9eaa21d09ab9c700aea61a2a25f8ca9859d20857), [`9eaa21d`](https://github.com/thirdweb-dev/js/commit/9eaa21d09ab9c700aea61a2a25f8ca9859d20857)]:
+  - @thirdweb-dev/contracts-js@1.2.3
+
 ## 3.6.9
 
 ### Patch Changes
