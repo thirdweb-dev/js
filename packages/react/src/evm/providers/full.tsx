@@ -9,11 +9,7 @@ import { ThirdwebAuthConfig } from "../contexts/thirdweb-auth";
 import { ThirdwebConfigProvider } from "../contexts/thirdweb-config";
 import { ThirdwebSDKProvider, ThirdwebSDKProviderProps } from "./base";
 import { QueryClient } from "@tanstack/react-query";
-import {
-  getDefaultRPCUrl,
-  SDKOptions,
-  SDKOptionsOutput,
-} from "@thirdweb-dev/sdk";
+import { SDKOptions, SDKOptionsOutput } from "@thirdweb-dev/sdk";
 import { DEFAULT_RPC_URLS } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import React, { useMemo } from "react";

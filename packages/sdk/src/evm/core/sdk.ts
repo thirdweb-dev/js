@@ -1,7 +1,6 @@
 import { fetchCurrencyValue } from "../common/currency";
 import {
   ChainIdOrName,
-  toChainId,
   getChainProvider,
   NATIVE_TOKEN_ADDRESS,
 } from "../constants";
