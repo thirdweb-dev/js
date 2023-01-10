@@ -1,9 +1,7 @@
 import { ensureTWPrefix } from "../../../core/query-utils/query-key";
-import { useThirdwebAuthConfig } from "../../contexts/thirdweb-auth";
-import { useSDK } from "../../providers/base";
-import { useQueryClient } from "@tanstack/react-query";
-import { LoginOptions } from "@thirdweb-dev/sdk/solana";
-import React from "react";
+import { useThirdwebAuthContext } from "../../contexts/thirdweb-auth";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { LoginOptions } from "@thirdweb-dev/auth";
 import invariant from "tiny-invariant";
 
 export interface LoginConfig {
@@ -26,40 +24,30 @@ export interface LoginConfig {
  *
  * @beta
  */
-export function useLogin(config?: LoginConfig) {
-  const sdk = useSDK();
+export function useLogin() {
   const queryClient = useQueryClient();
-  const authConfig = useThirdwebAuthConfig();
+  const authConfig = useThirdwebAuthContext();
 
-  React.useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search);
-    const error = queryParams.get("error");
+  const login = useMutation({
+    mutationFn: async (options?: LoginOptions) => {
+      invariant(
+        authConfig,
+        "Please specify an authConfig in the ThirdwebProvider",
+      );
+      invariant(authConfig.auth, "You need a connected wallet to login.");
 
-    if (error && config?.onError) {
-      // If there is an error, parse it and trigger the onError callback
-      config.onError(decodeURI(error));
-    }
-  }, [config]);
+      const payload = await authConfig.auth.login(options);
+      await fetch(`${authConfig.authUrl}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ payload }),
+      });
 
-  async function login(cfg?: LoginOptions) {
-    invariant(
-      authConfig,
-      "Please specify an authConfig in the ThirdwebProvider",
-    );
-    const payload = await sdk?.auth.login(authConfig.domain, cfg);
-
-    const encodedPayload = encodeURIComponent(btoa(JSON.stringify(payload)));
-    const encodedRedirectTo = encodeURIComponent(
-      config?.redirectTo ||
-        authConfig.loginRedirect ||
-        window.location.toString(),
-    );
-
-    queryClient.invalidateQueries(ensureTWPrefix(["user"]));
-
-    // Redirect to the login URL with the encoded payload
-    window.location.href = `${authConfig.authUrl}/login?payload=${encodedPayload}&redirect=${encodedRedirectTo}`;
-  }
+      queryClient.invalidateQueries(ensureTWPrefix(["user"]));
+    },
+  });
 
   return login;
 }

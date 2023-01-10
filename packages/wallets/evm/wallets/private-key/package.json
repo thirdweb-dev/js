@@ -1,0 +1,4 @@
+{
+  "main": "dist/thirdweb-dev-wallets-evm-wallets-private-key.cjs.js",
+  "module": "dist/thirdweb-dev-wallets-evm-wallets-private-key.esm.js"
+}

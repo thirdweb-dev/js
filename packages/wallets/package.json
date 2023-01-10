@@ -12,6 +12,86 @@
       "module": "./evm/dist/thirdweb-dev-wallets-evm.esm.js",
       "default": "./evm/dist/thirdweb-dev-wallets-evm.cjs.js"
     },
+    "./solana": {
+      "module": "./solana/dist/thirdweb-dev-wallets-solana.esm.js",
+      "default": "./solana/dist/thirdweb-dev-wallets-solana.cjs.js"
+    },
+    "./evm/wallets/base": {
+      "module": "./evm/wallets/base/dist/thirdweb-dev-wallets-evm-wallets-base.esm.js",
+      "default": "./evm/wallets/base/dist/thirdweb-dev-wallets-evm-wallets-base.cjs.js"
+    },
+    "./evm/wallets/ethers": {
+      "module": "./evm/wallets/ethers/dist/thirdweb-dev-wallets-evm-wallets-ethers.esm.js",
+      "default": "./evm/wallets/ethers/dist/thirdweb-dev-wallets-evm-wallets-ethers.cjs.js"
+    },
+    "./evm/wallets/aws-kms": {
+      "module": "./evm/wallets/aws-kms/dist/thirdweb-dev-wallets-evm-wallets-aws-kms.esm.js",
+      "default": "./evm/wallets/aws-kms/dist/thirdweb-dev-wallets-evm-wallets-aws-kms.cjs.js"
+    },
+    "./solana/wallets/base": {
+      "module": "./solana/wallets/base/dist/thirdweb-dev-wallets-solana-wallets-base.esm.js",
+      "default": "./solana/wallets/base/dist/thirdweb-dev-wallets-solana-wallets-base.cjs.js"
+    },
+    "./evm/wallets/injected": {
+      "module": "./evm/wallets/injected/dist/thirdweb-dev-wallets-evm-wallets-injected.esm.js",
+      "default": "./evm/wallets/injected/dist/thirdweb-dev-wallets-evm-wallets-injected.cjs.js"
+    },
+    "./evm/wallets/metamask": {
+      "module": "./evm/wallets/metamask/dist/thirdweb-dev-wallets-evm-wallets-metamask.esm.js",
+      "default": "./evm/wallets/metamask/dist/thirdweb-dev-wallets-evm-wallets-metamask.cjs.js"
+    },
+    "./solana/wallets/signer": {
+      "module": "./solana/wallets/signer/dist/thirdweb-dev-wallets-solana-wallets-signer.esm.js",
+      "default": "./solana/wallets/signer/dist/thirdweb-dev-wallets-solana-wallets-signer.cjs.js"
+    },
+    "./evm/wallets/magic-auth": {
+      "module": "./evm/wallets/magic-auth/dist/thirdweb-dev-wallets-evm-wallets-magic-auth.esm.js",
+      "default": "./evm/wallets/magic-auth/dist/thirdweb-dev-wallets-evm-wallets-magic-auth.cjs.js"
+    },
+    "./solana/wallets/keypair": {
+      "module": "./solana/wallets/keypair/dist/thirdweb-dev-wallets-solana-wallets-keypair.esm.js",
+      "default": "./solana/wallets/keypair/dist/thirdweb-dev-wallets-solana-wallets-keypair.cjs.js"
+    },
+    "./evm/wallets/private-key": {
+      "module": "./evm/wallets/private-key/dist/thirdweb-dev-wallets-evm-wallets-private-key.esm.js",
+      "default": "./evm/wallets/private-key/dist/thirdweb-dev-wallets-evm-wallets-private-key.cjs.js"
+    },
+    "./evm/connectors/magic": {
+      "module": "./evm/connectors/magic/dist/thirdweb-dev-wallets-evm-connectors-magic.esm.js",
+      "default": "./evm/connectors/magic/dist/thirdweb-dev-wallets-evm-connectors-magic.cjs.js"
+    },
+    "./evm/wallets/wallet-connect": {
+      "module": "./evm/wallets/wallet-connect/dist/thirdweb-dev-wallets-evm-wallets-wallet-connect.esm.js",
+      "default": "./evm/wallets/wallet-connect/dist/thirdweb-dev-wallets-evm-wallets-wallet-connect.cjs.js"
+    },
+    "./solana/wallets/private-key": {
+      "module": "./solana/wallets/private-key/dist/thirdweb-dev-wallets-solana-wallets-private-key.esm.js",
+      "default": "./solana/wallets/private-key/dist/thirdweb-dev-wallets-solana-wallets-private-key.cjs.js"
+    },
+    "./evm/wallets/coinbase-wallet": {
+      "module": "./evm/wallets/coinbase-wallet/dist/thirdweb-dev-wallets-evm-wallets-coinbase-wallet.esm.js",
+      "default": "./evm/wallets/coinbase-wallet/dist/thirdweb-dev-wallets-evm-wallets-coinbase-wallet.cjs.js"
+    },
+    "./evm/connectors/injected": {
+      "module": "./evm/connectors/injected/dist/thirdweb-dev-wallets-evm-connectors-injected.esm.js",
+      "default": "./evm/connectors/injected/dist/thirdweb-dev-wallets-evm-connectors-injected.cjs.js"
+    },
+    "./evm/connectors/metamask": {
+      "module": "./evm/connectors/metamask/dist/thirdweb-dev-wallets-evm-connectors-metamask.esm.js",
+      "default": "./evm/connectors/metamask/dist/thirdweb-dev-wallets-evm-connectors-metamask.cjs.js"
+    },
+    "./evm/wallets/aws-secrets-manager": {
+      "module": "./evm/wallets/aws-secrets-manager/dist/thirdweb-dev-wallets-evm-wallets-aws-secrets-manager.esm.js",
+      "default": "./evm/wallets/aws-secrets-manager/dist/thirdweb-dev-wallets-evm-wallets-aws-secrets-manager.cjs.js"
+    },
+    "./evm/connectors/wallet-connect": {
+      "module": "./evm/connectors/wallet-connect/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect.esm.js",
+      "default": "./evm/connectors/wallet-connect/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect.cjs.js"
+    },
+    "./evm/connectors/coinbase-wallet": {
+      "module": "./evm/connectors/coinbase-wallet/dist/thirdweb-dev-wallets-evm-connectors-coinbase-wallet.esm.js",
+      "default": "./evm/connectors/coinbase-wallet/dist/thirdweb-dev-wallets-evm-connectors-coinbase-wallet.cjs.js"
+    },
     "./package.json": "./package.json"
   },
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/wallets",
@@ -22,12 +102,17 @@
   "author": "thirdweb eng <eng@thirdweb.com>",
   "files": [
     "dist/",
-    "evm/"
+    "evm/",
+    "solana/"
   ],
   "preconstruct": {
     "entrypoints": [
       "index.ts",
-      "evm/index.ts"
+      "evm/index.ts",
+      "evm/connectors/*/index.ts",
+      "evm/wallets/**",
+      "solana/index.ts",
+      "solana/wallets/**"
     ],
     "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
       "exports": true
