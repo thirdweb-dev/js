@@ -26,6 +26,7 @@ import type {
   ContractType,
   NetworkOrSignerOrProvider,
   PrebuiltContractType,
+  SignerOrProvider,
   ValidContractInstance,
 } from "./types";
 import { UserWallet } from "./wallet/UserWallet";
@@ -169,26 +170,28 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public auth: WalletAuthenticator;
 
   constructor(
-    network: ChainIdOrName | ethers.providers.Provider,
+    network: ChainIdOrName | SignerOrProvider,
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
   ) {
-    const provider = ethers.providers.Provider.isProvider(network)
+    const signerOrProvider = ethers.Signer.isSigner(network)
+      ? network
+      : ethers.providers.Provider.isProvider(network)
       ? network
       : getChainProvider(network, options);
-    super(provider, options);
+    super(signerOrProvider, options);
     this.storageHandler = storage;
     this.storage = storage;
-    this.wallet = new UserWallet(provider, options);
-    this.deployer = new ContractDeployer(provider, options, storage);
-    this.auth = new WalletAuthenticator(provider, this.wallet, options);
+    this.wallet = new UserWallet(signerOrProvider, options);
+    this.deployer = new ContractDeployer(signerOrProvider, options, storage);
+    this.auth = new WalletAuthenticator(signerOrProvider, this.wallet, options);
     this.multiChainRegistry = new MultichainRegistry(
-      provider,
+      signerOrProvider,
       this.storageHandler,
       this.options,
     );
     this._publisher = new ContractPublisher(
-      provider,
+      signerOrProvider,
       this.options,
       this.storageHandler,
     );

@@ -88,7 +88,6 @@ export function getChainProvider(
   sdkOptions: SDKOptions,
 ): ethers.providers.Provider {
   const chainId = toChainId(network);
-  console.log("options", sdkOptions);
   const options = SDKOptionsSchema.parse(sdkOptions);
   const rpcMap: Record<number, ChainInfo> = {
     ...buildDefaultMap(options),
