@@ -92,11 +92,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   static fromSigner(
     signer: Signer,
-    network: ChainIdOrName,
+    network?: ChainIdOrName,
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
   ): ThirdwebSDK {
-    const sdk = new ThirdwebSDK(network, options, storage);
+    const sdk = new ThirdwebSDK(network || signer, options, storage);
     sdk.updateSignerOrProvider(signer);
     return sdk;
   }
@@ -129,9 +129,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   ): ThirdwebSDK {
     const provider = getChainProvider(network, options);
     const signer = new ethers.Wallet(privateKey, provider);
-    const sdk = new ThirdwebSDK(provider, options, storage);
-    sdk.updateSignerOrProvider(signer);
-    return sdk;
+    return ThirdwebSDK.fromSigner(signer, network, options, storage);
   }
 
   /**
