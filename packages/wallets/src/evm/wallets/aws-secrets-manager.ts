@@ -1,4 +1,4 @@
-import { AbstractSigner } from "./base";
+import { AbstractSigner } from "./abstract";
 import {
   GetSecretValueCommand,
   SecretsManagerClient,

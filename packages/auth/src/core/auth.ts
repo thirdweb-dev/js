@@ -55,7 +55,10 @@ export class ThirdwebAuth {
     };
   }
 
-  public verify(payload: LoginPayload, options?: VerifyOptions): string {
+  public async verify(
+    payload: LoginPayload,
+    options?: VerifyOptions,
+  ): Promise<string> {
     const parsedOptions = VerifyOptionsSchema.parse(options);
     const domain = parsedOptions?.domain || this.domain;
 
@@ -92,13 +95,12 @@ export class ThirdwebAuth {
 
     // Check that the signing address is the claimed wallet address
     const message = this.generateMessage(payload.payload);
-    if (
-      !this.wallet.verifySignature(
-        message,
-        payload.signature,
-        payload.payload.address,
-      )
-    ) {
+    const verified = await this.wallet.verifySignature(
+      message,
+      payload.signature,
+      payload.payload.address,
+    );
+    if (!verified) {
       throw new Error(
         `Signer address does not match payload address '${payload.payload.address.toLowerCase()}'`,
       );
@@ -120,7 +122,7 @@ export class ThirdwebAuth {
     const parsedOptions = GenerateOptionsSchema.parse(options);
     const domain = parsedOptions?.domain || this.domain;
 
-    const userAddress = this.verify(payload, {
+    const userAddress = await this.verify(payload, {
       domain,
       chainId: parsedOptions?.chainId,
       validateNonce: parsedOptions?.validateNonce,
@@ -231,13 +233,12 @@ export class ThirdwebAuth {
       );
     }
 
-    if (
-      !this.wallet.verifySignature(
-        JSON.stringify(payload),
-        signature,
-        connectedAddress,
-      )
-    ) {
+    const verified = await this.wallet.verifySignature(
+      JSON.stringify(payload),
+      signature,
+      connectedAddress,
+    );
+    if (!verified) {
       throw new Error(
         `The connected wallet address '${connectedAddress}' did not sign the token`,
       );

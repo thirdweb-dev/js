@@ -1,12 +1,10 @@
 import { ThirdwebAuth } from "../src/core";
-import { EthersWallet, GenericSignerWallet } from "@thirdweb-dev/wallets";
+import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { expect } from "chai";
 import { Wallet } from "ethers";
 
 describe("Wallet Authentication", async () => {
-  let adminWallet: GenericSignerWallet,
-    signerWallet: GenericSignerWallet,
-    attackerWallet: GenericSignerWallet;
+  let adminWallet: any, signerWallet: any, attackerWallet: any;
   let auth: ThirdwebAuth;
 
   before(async () => {
@@ -31,7 +29,7 @@ describe("Wallet Authentication", async () => {
     const payload = await auth.login();
 
     auth.updateWallet(adminWallet);
-    const address = auth.verify(payload);
+    const address = await auth.verify(payload);
 
     expect(address).to.equal(await signerWallet.getAddress());
   });
@@ -43,7 +41,7 @@ describe("Wallet Authentication", async () => {
     });
 
     auth.updateWallet(adminWallet);
-    const address = auth.verify(payload, {
+    const address = await auth.verify(payload, {
       chainId: 137,
     });
 
@@ -55,7 +53,7 @@ describe("Wallet Authentication", async () => {
 
     auth.updateWallet(adminWallet);
     try {
-      auth.verify(payload, {
+      await auth.verify(payload, {
         validateNonce: (nonce: string) => {
           if (nonce === payload.payload.nonce) {
             throw new Error();
@@ -72,7 +70,7 @@ describe("Wallet Authentication", async () => {
     const payload = await auth.login();
 
     auth.updateWallet(adminWallet);
-    const address = auth.verify(payload, {
+    const address = await auth.verify(payload, {
       validateNonce: (nonce: string) => {
         if (nonce !== payload.payload.nonce) {
           throw new Error();
@@ -88,7 +86,7 @@ describe("Wallet Authentication", async () => {
 
     auth.updateWallet(adminWallet);
     try {
-      auth.verify(payload, { domain: "test.thirdweb.com" });
+      await auth.verify(payload, { domain: "test.thirdweb.com" });
       expect.fail();
     } catch (err: any) {
       expect(err.message).to.equal(
@@ -104,7 +102,7 @@ describe("Wallet Authentication", async () => {
 
     auth.updateWallet(adminWallet);
     try {
-      auth.verify(payload);
+      await auth.verify(payload);
       expect.fail();
     } catch (err: any) {
       expect(err.message).to.equal("Login request has expired");
@@ -118,7 +116,7 @@ describe("Wallet Authentication", async () => {
 
     auth.updateWallet(adminWallet);
     try {
-      auth.verify(payload, {
+      await auth.verify(payload, {
         chainId: 137,
       });
       expect.fail();
@@ -135,7 +133,7 @@ describe("Wallet Authentication", async () => {
 
     auth.updateWallet(adminWallet);
     try {
-      auth.verify(payload);
+      await auth.verify(payload);
       expect.fail();
     } catch (err: any) {
       expect(err.message).to.contain("does not match payload address");

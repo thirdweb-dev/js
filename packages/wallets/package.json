@@ -32,6 +32,10 @@
       "module": "./solana/wallets/base/dist/thirdweb-dev-wallets-solana-wallets-base.esm.js",
       "default": "./solana/wallets/base/dist/thirdweb-dev-wallets-solana-wallets-base.cjs.js"
     },
+    "./evm/wallets/abstract": {
+      "module": "./evm/wallets/abstract/dist/thirdweb-dev-wallets-evm-wallets-abstract.esm.js",
+      "default": "./evm/wallets/abstract/dist/thirdweb-dev-wallets-evm-wallets-abstract.cjs.js"
+    },
     "./evm/wallets/injected": {
       "module": "./evm/wallets/injected/dist/thirdweb-dev-wallets-evm-wallets-injected.esm.js",
       "default": "./evm/wallets/injected/dist/thirdweb-dev-wallets-evm-wallets-injected.cjs.js"

@@ -8,10 +8,6 @@ export * from "./wallets/magic-auth";
 export * from "./wallets/private-key";
 export * from "./wallets/ethers";
 // just the types
-export type {
-  AbstractWallet,
-  WalletData,
-  WalletEvents,
-  WalletOptions,
-} from "./wallets/base";
+export type { AbstractWallet, WalletOptions } from "./wallets/base";
+export type { WalletData, WalletEvents } from "./wallets/abstract";
 export type { MinimalWallet } from "./interfaces/minimal";
