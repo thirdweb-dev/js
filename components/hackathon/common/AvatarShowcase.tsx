@@ -18,7 +18,7 @@ export const AvatarShowcase: React.FC<AvatarShowcaseProps> = ({
   trackingCategory,
 }) => {
   return (
-    <VStack mb={20} spacing={12}>
+    <VStack spacing={12}>
       <Heading size="title.2xl">{title}</Heading>
       <Flex
         maxW="container.md"
@@ -31,13 +31,15 @@ export const AvatarShowcase: React.FC<AvatarShowcaseProps> = ({
           <Flex
             key={avatar.name}
             flexDir="column"
-            gap={5}
+            gap={{ base: 4, md: 8 }}
             alignItems="center"
             zIndex={2}
+            flexShrink={0}
             w={{
-              base: "45vw",
+              base: "40vw",
               md: "auto",
             }}
+            mb={6}
           >
             <Avatar
               src={avatar.image}

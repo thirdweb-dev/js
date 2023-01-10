@@ -1,5 +1,4 @@
 import { Flex, Icon, LinkBox, LinkOverlay } from "@chakra-ui/react";
-import { AiOutlineBuild } from "@react-icons/all-files/ai/AiOutlineBuild";
 import { BiRightArrowAlt } from "@react-icons/all-files/bi/BiRightArrowAlt";
 import { useTrack } from "hooks/analytics/useTrack";
 import { Badge, Heading, LinkButton, Text } from "tw-components";
@@ -27,10 +26,16 @@ export const ScheduleSection: React.FC<ScheduleSectionProps> = ({
     <Flex
       flexDir="column"
       mt={{ base: 4, md: 12 }}
-      px={{ base: 0, md: 20 }}
       alignItems="center"
+      maxW="800px"
+      ml="auto"
+      mr="auto"
     >
-      <Flex justifyContent="center" alignItems="center">
+      <Flex
+        justifyContent="center"
+        alignItems="center"
+        mb={{ base: 8, md: 12 }}
+      >
         <Heading size="title.2xl">Schedule & Workshops</Heading>
         {addToCalendar ? (
           <LinkButton href={addToCalendar} ml={4} isExternal>
@@ -43,9 +48,9 @@ export const ScheduleSection: React.FC<ScheduleSectionProps> = ({
         justify={{ base: "center", md: "space-between" }}
         flexDir="column"
         align="center"
-        mt={8}
         borderRadius="lg"
         overflow="hidden"
+        boxShadow="0 0 0 1px rgba(255, 255, 255, 0.1)"
       >
         {scheduleItems.map(({ day, month, title, href, irl }) => (
           <Flex
@@ -53,15 +58,21 @@ export const ScheduleSection: React.FC<ScheduleSectionProps> = ({
             as={LinkBox}
             key={title}
             align="center"
-            justify="space-between"
+            justify="flex-start"
             w="full"
             px={{ base: 4, md: 8 }}
-            bg="whiteAlpha.100"
-            _hover={{ bg: "whiteAlpha.200" }}
-            py={2}
-            gap={4}
+            bg="transparent"
+            boxShadow="0 0 0 1px rgba(255, 255, 255, 0.1)"
+            _hover={{ bg: "whiteAlpha.50" }}
+            py={3}
+            gap={{ base: 4, md: 12 }}
           >
-            <Flex flexDir="column">
+            <Flex
+              flexDir="column"
+              alignItems="center"
+              w={"60px"}
+              flexShrink={0}
+            >
               <Text color="gray.300" textTransform="uppercase">
                 {month}
               </Text>
@@ -69,13 +80,7 @@ export const ScheduleSection: React.FC<ScheduleSectionProps> = ({
                 {day}
               </Heading>
             </Flex>
-            <Flex gap={4} width={96} alignItems="center">
-              <Icon
-                as={AiOutlineBuild}
-                boxSize={6}
-                color="gray.300"
-                display={{ base: "none", md: "block" }}
-              />
+            <Flex gap={4} alignItems="center">
               <LinkOverlay
                 href={href}
                 isExternal
@@ -92,7 +97,7 @@ export const ScheduleSection: React.FC<ScheduleSectionProps> = ({
                   width={{ base: "full", md: "500px" }}
                   gap={2}
                 >
-                  <Heading size="subtitle.sm" fontWeight={500}>
+                  <Heading size="subtitle.sm" fontWeight={500} color="white">
                     {title}
                   </Heading>
                   {irl && (
@@ -110,8 +115,9 @@ export const ScheduleSection: React.FC<ScheduleSectionProps> = ({
               as={BiRightArrowAlt}
               boxSize={6}
               color="gray.300"
-              _groupHover={{ color: "purple.500" }}
+              _groupHover={{ color: "#e984f3" }}
               display={{ base: "none", md: "block" }}
+              marginLeft="auto"
             />
           </Flex>
         ))}

@@ -46,12 +46,7 @@ export const GameShowcase = () => {
   const [selectedGame, setSelectedGame] = useState("");
 
   return (
-    <Flex
-      flexDir="column"
-      py={{ base: 24, lg: 36 }}
-      align="center"
-      gap={{ base: 6, lg: 8 }}
-    >
+    <Flex flexDir="column" align="center" gap={{ base: 6, lg: 4 }}>
       <Heading size="title.2xl" textAlign="center">
         What can you build?
       </Heading>
@@ -59,8 +54,9 @@ export const GameShowcase = () => {
         as="h3"
         maxW="820px"
         textAlign="center"
-        color="whiteAlpha.600"
+        color="whiteAlpha.800"
         size="subtitle.md"
+        mb={{ base: 4, md: 8 }}
       >
         Try our demo games and get inspired on how to integrate web3 into your
         game.

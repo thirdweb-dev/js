@@ -1,5 +1,4 @@
-import { Box, Flex, Icon } from "@chakra-ui/react";
-import { ImMagicWand } from "@react-icons/all-files/im/ImMagicWand";
+import { Box, Flex } from "@chakra-ui/react";
 import { Logo } from "components/logo";
 import { useTrack } from "hooks/analytics/useTrack";
 import type { FC } from "react";
@@ -10,31 +9,42 @@ export const CTAFooter: FC = () => {
 
   return (
     <Flex
-      py={20}
+      py={{ base: 20, md: 40 }}
       align="center"
       justify="center"
       flexDir="column"
       pos="relative"
       mt={20}
+      px={4}
       gap={4}
+      zIndex={1}
     >
       <Box
-        w="full"
-        h={{ base: "200px", md: "400px" }}
-        background="linear-gradient(90deg, rgba(137, 253, 20, 0.4) 0%, rgba(47, 53, 201, 0.4) 36.52%, rgba(189, 17, 190, 0.4) 72.51%, rgba(65, 0, 172, 0.4) 100%)"
-        filter="blur(150px)"
-        transform="matrix(-1, 0, 0, 1, 0, 0)"
-        zIndex={0}
-        pos="absolute"
-      />
+        pointerEvents={"none"}
+        width="2400px"
+        height="1400px"
+        position="absolute"
+        top="50%"
+        left="50%"
+        transform="translate(-50%, -50%)"
+        backgroundImage={`radial-gradient(ellipse at center, hsl(300deg 100% 50% / 10%), transparent 60%)`}
+      ></Box>
 
       <Logo forceShowWordMark color="#fff" />
-      <Heading size="display.lg" textAlign="center" color="white" zIndex={2}>
-        $100,000 in prizes
+
+      <Heading
+        fontSize={{ base: "32px", md: "72px" }}
+        textAlign="center"
+        color="white"
+        zIndex={2}
+        fontWeight={800}
+        letterSpacing="-0.04em"
+      >
+        Build the Future of Gaming.
       </Heading>
 
-      <Heading size="title.md" textAlign="center" color="#B7FD18" zIndex={2}>
-        BUILD THE FUTURE OF GAMING
+      <Heading size="title.xl" textAlign="center" color="#e984f3" zIndex={2}>
+        $100,000 in Prizes & Perks.
       </Heading>
 
       <LinkButton
@@ -46,10 +56,9 @@ export const CTAFooter: FC = () => {
             label: "register-now",
           })
         }
-        h="68px"
-        w={{ base: "100%", md: 96 }}
+        py={7}
+        px={14}
         fontSize="20px"
-        leftIcon={<Icon as={ImMagicWand} />}
         color="black"
         flexShrink={0}
         background="rgba(255,255,255,1)"
@@ -59,7 +68,7 @@ export const CTAFooter: FC = () => {
         isExternal
         noIcon
         mx="auto"
-        mt={4}
+        mt={8}
       >
         Register Now
       </LinkButton>

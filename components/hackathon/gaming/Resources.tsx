@@ -1,6 +1,6 @@
-import { Flex, Image } from "@chakra-ui/react";
+import { Flex, SimpleGrid } from "@chakra-ui/react";
 import type { FC } from "react";
-import { Heading, Text, TrackedLink } from "tw-components";
+import { Heading, TrackedLink } from "tw-components";
 
 export const Resources: FC = () => {
   const resources = [
@@ -23,10 +23,13 @@ export const Resources: FC = () => {
 
   return (
     <Flex flexDir="column">
-      <Heading textAlign="center">Resources</Heading>
-      <Flex gap={6} mt={4} align="center" justify="center" wrap="wrap">
+      <Heading textAlign="center" size="title.2xl" mb={12}>
+        Resources
+      </Heading>
+      <SimpleGrid columns={{ base: 1, lg: 3 }} gap={8}>
         {resources.map(({ name, link, image }, i) => (
           <TrackedLink
+            overflow={"hidden"}
             href={link}
             isExternal
             category="readyplayer3"
@@ -34,49 +37,30 @@ export const Resources: FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             key={i}
+            position="relative"
+            backgroundImage={`linear-gradient(to bottom, hsl(319deg 98% 10%), hsl(300deg 100% 8% / 52%)), url(${image})`}
+            backgroundPosition="center"
+            backgroundSize={"100%"}
+            height={{ base: "150px", md: "220px" }}
+            borderRadius={"12px"}
+            transition="background-size 200ms ease"
+            _hover={{
+              backgroundSize: "110%",
+            }}
+            color="white"
+            fontSize={{ base: "24px", md: "32px" }}
+            lineHeight={1.3}
+            textAlign="center"
+            p={6}
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            fontWeight={700}
           >
-            <Flex
-              flexDir={{
-                base: "row",
-                md: "column",
-              }}
-              w={{
-                base: "90vw",
-                md: "auto",
-              }}
-              rounded="lg"
-              bg="whiteAlpha.100"
-              p={{
-                base: 2,
-                md: 4,
-              }}
-              align="center"
-            >
-              <Image
-                src={image}
-                alt={name}
-                w={{
-                  base: "45%",
-                  md: "auto",
-                }}
-                objectFit="contain"
-                rounded="lg"
-              />
-              <Text
-                mt={2}
-                color="white"
-                ml={{
-                  base: 4,
-                  md: 2,
-                }}
-                fontSize="2xl"
-              >
-                {name}
-              </Text>
-            </Flex>
+            {name}
           </TrackedLink>
         ))}
-      </Flex>
+      </SimpleGrid>
     </Flex>
   );
 };

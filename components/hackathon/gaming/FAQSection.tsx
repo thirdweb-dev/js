@@ -68,18 +68,22 @@ export const FaqSection: React.FC = () => {
     <Flex
       flexDir="column"
       mt={{ base: 4, md: 12 }}
-      px={{ base: 0, md: 20 }}
+      maxW="800px"
+      ml="auto"
+      mr="auto"
       alignItems="center"
     >
-      <Heading size="title.2xl">FAQs</Heading>
+      <Heading size="title.2xl" mb={8}>
+        FAQs
+      </Heading>
       <Flex
         w={{ base: "full", md: "3xl" }}
         justify={{ base: "center", md: "space-between" }}
         flexDir="column"
         align="center"
-        mt={8}
         borderRadius="lg"
         overflow="hidden"
+        boxShadow="0 0 0 1px rgba(255, 255, 255, 0.15)"
       >
         <Accordion borderColor="borderColor" allowMultiple overflow="hidden">
           {FAQs.map(({ question, answer }) => (
@@ -89,14 +93,19 @@ export const FaqSection: React.FC = () => {
               _last={{ borderBottom: "none" }}
               role="group"
               w="full"
-              px={{ base: 4, md: 8 }}
-              bg="whiteAlpha.100"
-              _hover={{ bg: "whiteAlpha.200" }}
+              px={{ base: 4, md: 4 }}
+              _hover={{ bg: "whiteAlpha.100" }}
               py={2}
               gap={4}
             >
               <AccordionButton py={4} _hover={{ bg: "transparent" }}>
-                <Heading mr="auto" size="label.lg" textAlign="left">
+                <Heading
+                  mr="auto"
+                  pr={4}
+                  size="label.lg"
+                  textAlign="left"
+                  lineHeight={1.3}
+                >
                   {question}
                 </Heading>
                 <AccordionIcon />
