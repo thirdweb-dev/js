@@ -37,7 +37,7 @@ export type ChainOrRpc =
   // ideally we could use `https://${string}` notation here, but doing that causes anything that is a generic string to throw a type error => not worth the hassle for now
   ChainNames | (string & {});
 
-export type ChainIdOrName = number | ChainNames;
+export type ChainIdOrName = number | ChainNames | (string & {});
 
 export const CHAIN_NAME_TO_ID: Record<ChainNames, SUPPORTED_CHAIN_ID> = {
   "avalanche-fuji": ChainId.AvalancheFujiTestnet,
@@ -160,7 +160,12 @@ export function toChainId(network: ChainIdOrName): number {
   if (typeof network === "number") {
     return network;
   }
-  return CHAIN_NAME_TO_ID[network];
+  if (!(network in CHAIN_ID_TO_NAME)) {
+    throw new Error(
+      `Cannot resolve chainId from: ${network} - please pass the chainId instead and specify it in the 'chainInfos' property of the SDK options.`,
+    );
+  }
+  return CHAIN_NAME_TO_ID[network as ChainNames];
 }
 
 const READONLY_PROVIDER_MAP: Map<
