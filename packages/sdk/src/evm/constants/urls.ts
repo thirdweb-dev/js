@@ -87,6 +87,13 @@ export function getChainProvider(
   network: ChainIdOrName,
   sdkOptions: SDKOptions,
 ): ethers.providers.Provider {
+  // handle legacy input of passing a RPC url directly
+  if (typeof network === "string" && network.startsWith("http")) {
+    console.warn(
+      "Passing a RPC url directly to the SDK is deprecated, please pass it via the `chainInfos` property of the SDK options instead.",
+    );
+    return getReadOnlyProvider(network);
+  }
   const chainId = toChainId(network);
   const options = SDKOptionsSchema.parse(sdkOptions);
   const rpcMap: Record<number, ChainInfo> = {
@@ -96,7 +103,7 @@ export function getChainProvider(
   const rpcUrl = rpcMap[chainId]?.rpc;
   if (!rpcUrl) {
     throw new Error(
-      `No rpc url found for chain ${network}. Please provide a valid rpc url in the sdk options.`,
+      `No rpc url found for chain ${network}. Please provide a valid rpc url via the 'chainInfos' property of the sdk options.`,
     );
   }
   return getReadOnlyProvider(rpcUrl, chainId);
