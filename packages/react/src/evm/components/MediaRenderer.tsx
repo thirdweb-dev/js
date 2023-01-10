@@ -424,7 +424,9 @@ const ModelViewer = React.forwardRef<HTMLCanvasElement, MediaRendererProps>(
         script.onload = () => { 
           setLoaded(true);
         };
-      } 
+      } else {
+        setLoaded(true)
+      }
     };
   
     return (
