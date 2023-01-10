@@ -23,10 +23,10 @@ import {
   TransactionResultWithId,
 } from "../../core/types";
 import { PaperCheckout } from "../../integrations/thirdweb-checkout";
+import { Abi } from "../../schema/contracts/custom";
 import { DropErc1155ContractSchema } from "../../schema/contracts/drop-erc1155";
 import { SDKOptions } from "../../schema/sdk-options";
 import { PrebuiltEditionDrop } from "../../types/eips";
-import type ABI from "@thirdweb-dev/contracts-js/dist/abis/DropERC1155.json";
 import { ThirdwebStorage, UploadProgressEvent } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 
@@ -47,7 +47,7 @@ import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
 export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
   private static contractRoles = ["admin", "minter", "transfer"] as const;
 
-  public abi: typeof ABI;
+  public abi: Abi;
   public sales: ContractPrimarySale<PrebuiltEditionDrop>;
   public platformFees: ContractPlatformFee<PrebuiltEditionDrop>;
   public encoder: ContractEncoder<PrebuiltEditionDrop>;
@@ -124,7 +124,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: typeof ABI,
+    abi: Abi,
     chainId: number,
     contractWrapper = new ContractWrapper<PrebuiltEditionDrop>(
       network,

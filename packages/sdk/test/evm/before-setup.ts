@@ -1,4 +1,5 @@
 import {
+  Abi,
   ChainId,
   CONTRACTS_MAP,
   ContractType,
@@ -18,6 +19,7 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../src/evm";
+import { Plugin } from "../../src/evm/types/plugins";
 import { MockStorage } from "./mock/MockStorage";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
@@ -44,10 +46,19 @@ import {
   TWFactory__factory,
   TWRegistry,
   TWRegistry__factory,
+  TWMultichainRegistryRouter,
+  TWMultichainRegistryRouter__factory,
+  TWMultichainRegistryLogic,
+  TWMultichainRegistryLogic__factory,
+  PluginMap,
+  PluginMap__factory,
   VoteERC20__factory,
+  TWProxy__factory,
+  TWProxy,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
+import { FormatTypes, FunctionFragment, Interface } from "ethers/lib/utils";
 import hardhat from "hardhat";
 
 // it's there, trust me bro
@@ -227,6 +238,10 @@ export const mochaHooks = {
     process.env.factoryAddress = thirdwebFactoryDeployer.address;
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     process.env.contractPublisherAddress = contractPublisher.address;
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
+    process.env.multiChainRegistryAddress = await setupMultichainRegistry(
+      trustedForwarderAddress,
+    );
 
     storage = MockStorage();
     sdk = new ThirdwebSDK(
@@ -240,6 +255,64 @@ export const mochaHooks = {
     );
   },
 };
+
+const generatePluginFunctions = (
+  pluginAddress: string,
+  pluginAbi: Abi,
+): Plugin[] => {
+  const pluginInterface = new ethers.utils.Interface(pluginAbi);
+  const pluginFunctions: Plugin[] = [];
+  // TODO - filter out common functions like _msgSender(), contractType(), etc.
+  for (const fnFragment of Object.values(pluginInterface.functions)) {
+    const fn = pluginInterface.getFunction(fnFragment.name);
+    pluginFunctions.push({
+      functionSelector: pluginInterface.getSighash(fn),
+      functionSignature:
+        fn.name + "(" + fn.inputs.map((i) => i.type).join(",") + ")",
+      pluginAddress,
+    });
+  }
+  return pluginFunctions;
+};
+
+// Setup multichain registry for tests
+async function setupMultichainRegistry(
+  trustedForwarderAddress: string,
+): Promise<string> {
+  const multichainRegistryLogicDeployer = (await new ethers.ContractFactory(
+    TWMultichainRegistryLogic__factory.abi,
+    TWMultichainRegistryLogic__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy()) as TWMultichainRegistryLogic;
+  const multichainRegistryLogic =
+    await multichainRegistryLogicDeployer.deployed();
+
+  const plugins: Plugin[] = generatePluginFunctions(
+    multichainRegistryLogic.address,
+    TWMultichainRegistryLogic__factory.abi,
+  );
+
+  const pluginMapDeployer = (await new ethers.ContractFactory(
+    PluginMap__factory.abi,
+    PluginMap__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(plugins)) as PluginMap;
+  const pluginMap = await pluginMapDeployer.deployed();
+  const multichainRegistryRouterDeployer = (await new ethers.ContractFactory(
+    TWMultichainRegistryRouter__factory.abi,
+    TWMultichainRegistryRouter__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(pluginMap.address, [
+      trustedForwarderAddress,
+    ])) as TWMultichainRegistryRouter;
+  const multichainRegistryRouter =
+    await multichainRegistryRouterDeployer.deployed();
+
+  return multichainRegistryRouter.address;
+}
 
 export {
   ipfsGatewayUrl,
