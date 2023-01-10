@@ -100,9 +100,7 @@ export class MarketplaceV3DirectListings {
    * @param filter - optional filter parameters
    * @returns the Direct listing object array
    */
-  public async getAllListings(
-    filter?: MarketplaceFilter,
-  ): Promise<DirectListingV3[]> {
+  public async getAll(filter?: MarketplaceFilter): Promise<DirectListingV3[]> {
     const startIndex = BigNumber.from(filter?.start || 0).toNumber();
     const count = BigNumber.from(
       filter?.count || (await this.getTotalListings()),
@@ -133,7 +131,7 @@ export class MarketplaceV3DirectListings {
    * @param filter - optional filter parameters
    * @returns the Direct listing object array
    */
-  public async getAllValidListings(
+  public async getAllValid(
     filter?: MarketplaceFilter,
   ): Promise<DirectListingV3[]> {
     const startIndex = BigNumber.from(filter?.start || 0).toNumber();

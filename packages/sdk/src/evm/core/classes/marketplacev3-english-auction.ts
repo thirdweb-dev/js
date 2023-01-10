@@ -89,9 +89,7 @@ export class MarketplaceV3EnglishAuctions {
    * @param filter - optional filter parameters
    * @returns the Auction object array
    */
-  public async getAllAuctions(
-    filter?: MarketplaceFilter,
-  ): Promise<EnglishAuction[]> {
+  public async getAll(filter?: MarketplaceFilter): Promise<EnglishAuction[]> {
     const startIndex = BigNumber.from(filter?.start || 0).toNumber();
     const count = BigNumber.from(
       filter?.count || (await this.getTotalAuctions()),
@@ -120,7 +118,7 @@ export class MarketplaceV3EnglishAuctions {
    * @param filter - optional filter parameters
    * @returns the Auction object array
    */
-  public async getAllValidAuctions(
+  public async getAllValid(
     filter?: MarketplaceFilter,
   ): Promise<EnglishAuction[]> {
     const startIndex = BigNumber.from(filter?.start || 0).toNumber();
@@ -421,7 +419,7 @@ export class MarketplaceV3EnglishAuctions {
 
     const winningBid = await this.getWinningBid(auctionId);
     if (winningBid) {
-      const isWinnner = this.isWinningBid(auctionId, normalizedBidAmount);
+      const isWinnner = await this.isWinningBid(auctionId, normalizedBidAmount);
 
       invariant(
         isWinnner,

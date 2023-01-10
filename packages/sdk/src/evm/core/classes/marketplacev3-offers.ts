@@ -104,7 +104,7 @@ export class MarketplaceV3Offers {
    * @param endIndex - end offer-Id
    * @returns the Offer object array
    */
-  public async getAllOffers(filter?: MarketplaceFilter): Promise<OfferV3[]> {
+  public async getAll(filter?: MarketplaceFilter): Promise<OfferV3[]> {
     const startIndex = BigNumber.from(filter?.start || 0).toNumber();
     const count = BigNumber.from(
       filter?.count || (await this.getTotalOffers()),
@@ -133,7 +133,7 @@ export class MarketplaceV3Offers {
    * @param endIndex - end listing-Id
    * @returns the Offer object array
    */
-  public async getAllValidOffers(
+  public async getAllValid(
     startIndex: BigNumberish,
     endIndex: BigNumberish,
   ): Promise<OfferV3[]> {

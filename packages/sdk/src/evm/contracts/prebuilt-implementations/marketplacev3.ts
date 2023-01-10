@@ -21,6 +21,7 @@ import { MarketplaceV3Offers } from "../../core/classes/marketplacev3-offers";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../../core/types";
 import { ListingType } from "../../enums";
+import { Abi } from "../../schema/contracts/custom";
 // ===
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 // ===
@@ -67,7 +68,7 @@ import invariant from "tiny-invariant";
 export class MarketplaceV3 implements UpdateableNetwork {
   static contractRoles = ["admin", "lister", "asset"] as const;
 
-  public abi: typeof ABI;
+  public abi: Abi;
   private contractWrapper: ContractWrapper<MarketplaceRouter>;
   private storage: ThirdwebStorage;
 
@@ -170,7 +171,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: typeof ABI,
+    abi: Abi,
     chainId: number,
     contractWrapper = new ContractWrapper<MarketplaceRouter>(
       network,
