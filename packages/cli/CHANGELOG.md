@@ -1,5 +1,14 @@
 # thirdweb
 
+## 0.9.9
+
+### Patch Changes
+
+- [#483](https://github.com/thirdweb-dev/js/pull/483) [`4e8ff58`](https://github.com/thirdweb-dev/js/commit/4e8ff582084c3d201314e6c5dff5b79f15eb6292) Thanks [@jnsdls](https://github.com/jnsdls)! - `thirdweb create` with usage of `forge` should now function correctly in windows CMD shell
+
+- Updated dependencies [[`557429b`](https://github.com/thirdweb-dev/js/commit/557429b5cfb3af2983ee01cf7d12d41ee0557593), [`9eaa21d`](https://github.com/thirdweb-dev/js/commit/9eaa21d09ab9c700aea61a2a25f8ca9859d20857)]:
+  - @thirdweb-dev/sdk@3.6.10
+
 ## 0.9.8
 
 ### Patch Changes
