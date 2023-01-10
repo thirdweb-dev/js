@@ -174,7 +174,13 @@ export const NATIVE_TOKENS: Record<
  * @public
  */
 export function getNativeTokenByChainId(chainId: ChainId): NativeToken {
-  return NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID];
+  return (
+    NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID] || {
+      name: "",
+      symbol: "",
+      decimals: 18,
+    }
+  );
 }
 
 export const LINK_TOKEN_ADDRESS: Record<number, string> = {
