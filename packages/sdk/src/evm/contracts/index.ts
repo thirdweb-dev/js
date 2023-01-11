@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { fetchAbiFromAddress } from "../common";
 import { getPrebuiltInfo } from "../common/legacy";
+import { fetchAbiFromAddress } from "../common/metadata-resolver";
 import { ALL_ROLES } from "../common/role";
 import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
 import type {
