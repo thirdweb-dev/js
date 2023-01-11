@@ -9,7 +9,7 @@ import {
   CarbonPlayFilledAlt,
 } from "./Icons";
 import { useQuery } from "@tanstack/react-query";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import useDimensions from "react-cool-dimensions";
 
 export interface SharedMediaProps {
@@ -26,7 +26,7 @@ export interface SharedMediaProps {
    */
   controls?: HTMLVideoElement["controls"];
 
-  children?: any;
+  children?: ReactNode;
 }
 
 /**
