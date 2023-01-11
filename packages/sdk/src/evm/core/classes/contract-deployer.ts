@@ -511,12 +511,24 @@ export class ContractDeployer extends RPCConnectionHandler {
     const signer = this.getSigner();
     invariant(signer, "signer is required");
     // TODO only require factory interface here - IProxyFactory
-    const proxyFactory = new ContractFactory(
-      factoryAddress,
-      this.getSignerOrProvider(),
-      this.storage,
-      this.options,
+
+    
+    const chainId = await this.getProvider().getNetwork().chainId
+    const twFactoryAddress = getContractAddressByChainId(
+      chainId,
+      "twFactory",
     );
+    let proxyFactory:ContractFactory
+    if(factoryAddress === twFactoryAddress){
+      proxyFactory = await this.getFactory()
+    }else{
+      proxyFactory=new ContractFactory(
+        factoryAddress,
+        this.getSignerOrProvider(),
+        this.storage,
+        this.options,
+      );
+    }
     return await proxyFactory.deployProxyByImplementation(
       implementationAddress,
       implementationAbi,
