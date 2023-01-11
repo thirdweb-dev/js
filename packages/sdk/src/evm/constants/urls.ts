@@ -29,7 +29,10 @@ type ChainNames =
   | "arbitrum"
   | "arbitrum-goerli"
   | "binance"
-  | "binance-testnet";
+  | "binance-testnet"
+  // local nodes
+  | "hardhat"
+  | "localhost";
 /**
  * @internal
  */
@@ -57,6 +60,8 @@ export const CHAIN_NAME_TO_ID: Record<ChainNames, SUPPORTED_CHAIN_ID> = {
   avalanche: ChainId.Avalanche,
   binance: ChainId.BinanceSmartChainMainnet,
   "binance-testnet": ChainId.BinanceSmartChainTestnet,
+  hardhat: ChainId.Hardhat,
+  localhost: ChainId.Localhost,
 };
 
 export const CHAIN_ID_TO_NAME = Object.fromEntries(
@@ -151,6 +156,9 @@ export function getDefaultRPCUrl(
       return getRpcUrl("binance", options.apiKey);
     case "binance-testnet":
       return getRpcUrl("binance-testnet", options.apiKey);
+    case "hardhat":
+    case "localhost":
+      return "http://localhost:8545";
     default:
       throw new Error(`Unrecognized chain name or RPC url: ${chainName}`);
   }
@@ -160,7 +168,7 @@ export function toChainId(network: ChainIdOrName): number {
   if (typeof network === "number") {
     return network;
   }
-  if (!(network in CHAIN_ID_TO_NAME)) {
+  if (!(network in CHAIN_NAME_TO_ID)) {
     throw new Error(
       `Cannot resolve chainId from: ${network} - please pass the chainId instead and specify it in the 'chainInfos' property of the SDK options.`,
     );
@@ -213,21 +221,3 @@ export function getReadOnlyProvider(network: string, chainId?: number) {
     return ethers.getDefaultProvider(network);
   }
 }
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ChainIdToName: Record<number, string> = {
-  [ChainId.Polygon]: "polygon",
-  [ChainId.Mumbai]: "mumbai",
-  [ChainId.Goerli]: "goerli",
-  [ChainId.Mainnet]: "mainnet",
-  [ChainId.Optimism]: "optimism",
-  [ChainId.OptimismGoerli]: "optimism-goerli",
-  [ChainId.Arbitrum]: "arbitrum",
-  [ChainId.ArbitrumGoerli]: "arbitrum-goerli",
-  [ChainId.Fantom]: "fantom",
-  [ChainId.FantomTestnet]: "fantom-testnet",
-  [ChainId.Avalanche]: "avalanche",
-  [ChainId.AvalancheFujiTestnet]: "avalanche-fuji",
-  [ChainId.BinanceSmartChainMainnet]: "binance",
-  [ChainId.BinanceSmartChainTestnet]: "binance-testnet",
-};

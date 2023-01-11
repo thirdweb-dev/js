@@ -95,6 +95,9 @@ const chainIdToCurrencyMap: Record<
 
   [ChainId.BinanceSmartChainMainnet]: "binance",
   [ChainId.BinanceSmartChainTestnet]: "binance",
+
+  [ChainId.Hardhat]: "ethereum",
+  [ChainId.Localhost]: "ethereum",
 };
 
 /**

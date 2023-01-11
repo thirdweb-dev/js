@@ -136,16 +136,6 @@ export const NATIVE_TOKENS: Record<
       symbol: "WETH",
     },
   },
-  [ChainId.Hardhat]: {
-    name: "Ether",
-    symbol: "ETH",
-    decimals: 18,
-    wrapped: {
-      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-      name: "Wrapped Ether",
-      symbol: "WETH",
-    },
-  },
   [ChainId.BinanceSmartChainMainnet]: {
     name: "Binance Chain Native Token",
     symbol: "BNB",
@@ -164,6 +154,26 @@ export const NATIVE_TOKENS: Record<
       address: "0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd",
       name: "Wrapped Binance Chain Testnet Token",
       symbol: "WBNB",
+    },
+  },
+  [ChainId.Hardhat]: {
+    name: "Ether",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
+  [ChainId.Localhost]: {
+    name: "Ether",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      name: "Wrapped Ether",
+      symbol: "WETH",
     },
   },
 };

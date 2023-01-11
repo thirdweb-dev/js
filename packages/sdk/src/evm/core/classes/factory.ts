@@ -1,7 +1,5 @@
-import {
-  getApprovedImplementation,
-  getDefaultTrustedForwarders,
-} from "../../constants";
+import { getDeployArguments } from "../../common/deploy";
+import { getApprovedImplementation } from "../../constants";
 import {
   EditionDropInitializer,
   EditionInitializer,
@@ -29,13 +27,8 @@ import type { TWFactory } from "@thirdweb-dev/contracts-js";
 import TWFactoryAbi from "@thirdweb-dev/contracts-js/dist/abis/TWFactory.json";
 import { ProxyDeployedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TWFactory";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  BigNumber,
-  constants,
-  Contract,
-  ContractInterface,
-  ethers,
-} from "ethers";
+import { constants, Contract, ContractInterface, ethers } from "ethers";
+import invariant from "tiny-invariant";
 import { z } from "zod";
 
 /**
@@ -101,9 +94,12 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       this.storage,
     );
 
+    const signer = this.getSigner();
+    invariant(signer, "A signer is required to deploy contracts");
+
     const encodedFunc = Contract.getInterface(ABI).encodeFunctionData(
       "initialize",
-      await this.getDeployArguments(contractType, metadata, contractURI),
+      await getDeployArguments(contractType, metadata, contractURI, signer),
     );
 
     const blockNumber = await this.getProvider().getBlockNumber();
@@ -152,151 +148,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     }
 
     return events[0].args.proxy;
-  }
-
-  /**
-   *
-   * @param contractType
-   * @param metadata
-   * @param contractURI
-   * @returns
-   * @internal
-   */
-  public async getDeployArguments<TContractType extends PrebuiltContractType>(
-    contractType: TContractType,
-    metadata: z.input<DeploySchemaForPrebuiltContractType<TContractType>>,
-    contractURI: string,
-  ): Promise<any[]> {
-    let trustedForwarders =
-      contractType === PackInitializer.contractType
-        ? []
-        : await this.getDefaultTrustedForwarders();
-    // override default forwarders if custom ones are passed in
-    if (metadata.trusted_forwarders && metadata.trusted_forwarders.length > 0) {
-      trustedForwarders = metadata.trusted_forwarders;
-    }
-    switch (contractType) {
-      case NFTDropInitializer.contractType:
-      case NFTCollectionInitializer.contractType:
-        const erc721metadata = NFTDropInitializer.schema.deploy.parse(metadata);
-        return [
-          await this.getSignerAddress(),
-          erc721metadata.name,
-          erc721metadata.symbol,
-          contractURI,
-          trustedForwarders,
-          erc721metadata.primary_sale_recipient,
-          erc721metadata.fee_recipient,
-          erc721metadata.seller_fee_basis_points,
-          erc721metadata.platform_fee_basis_points,
-          erc721metadata.platform_fee_recipient,
-        ];
-      case SignatureDropInitializer.contractType:
-        const signatureDropmetadata =
-          SignatureDropInitializer.schema.deploy.parse(metadata);
-        return [
-          await this.getSignerAddress(),
-          signatureDropmetadata.name,
-          signatureDropmetadata.symbol,
-          contractURI,
-          trustedForwarders,
-          signatureDropmetadata.primary_sale_recipient,
-          signatureDropmetadata.fee_recipient,
-          signatureDropmetadata.seller_fee_basis_points,
-          signatureDropmetadata.platform_fee_basis_points,
-          signatureDropmetadata.platform_fee_recipient,
-        ];
-      case MultiwrapInitializer.contractType:
-        const multiwrapMetadata =
-          MultiwrapInitializer.schema.deploy.parse(metadata);
-        return [
-          await this.getSignerAddress(),
-          multiwrapMetadata.name,
-          multiwrapMetadata.symbol,
-          contractURI,
-          trustedForwarders,
-          multiwrapMetadata.fee_recipient,
-          multiwrapMetadata.seller_fee_basis_points,
-        ];
-      case EditionDropInitializer.contractType:
-      case EditionInitializer.contractType:
-        const erc1155metadata =
-          EditionDropInitializer.schema.deploy.parse(metadata);
-        return [
-          await this.getSignerAddress(),
-          erc1155metadata.name,
-          erc1155metadata.symbol,
-          contractURI,
-          trustedForwarders,
-          erc1155metadata.primary_sale_recipient,
-          erc1155metadata.fee_recipient,
-          erc1155metadata.seller_fee_basis_points,
-          erc1155metadata.platform_fee_basis_points,
-          erc1155metadata.platform_fee_recipient,
-        ];
-      case TokenDropInitializer.contractType:
-      case TokenInitializer.contractType:
-        const erc20metadata = TokenInitializer.schema.deploy.parse(metadata);
-        return [
-          await this.getSignerAddress(),
-          erc20metadata.name,
-          erc20metadata.symbol,
-          contractURI,
-          trustedForwarders,
-          erc20metadata.primary_sale_recipient,
-          erc20metadata.platform_fee_recipient,
-          erc20metadata.platform_fee_basis_points,
-        ];
-      case VoteInitializer.contractType:
-        const voteMetadata = VoteInitializer.schema.deploy.parse(metadata);
-        return [
-          voteMetadata.name,
-          contractURI,
-          trustedForwarders,
-          voteMetadata.voting_token_address,
-          voteMetadata.voting_delay_in_blocks,
-          voteMetadata.voting_period_in_blocks,
-          BigNumber.from(voteMetadata.proposal_token_threshold),
-          voteMetadata.voting_quorum_fraction,
-        ];
-      case SplitInitializer.contractType:
-        const splitsMetadata = SplitInitializer.schema.deploy.parse(metadata);
-        return [
-          await this.getSignerAddress(),
-          contractURI,
-          trustedForwarders,
-          splitsMetadata.recipients.map((s) => s.address),
-          splitsMetadata.recipients.map((s) => BigNumber.from(s.sharesBps)),
-        ];
-      case MarketplaceInitializer.contractType:
-        const marketplaceMetadata =
-          MarketplaceInitializer.schema.deploy.parse(metadata);
-        return [
-          await this.getSignerAddress(),
-          contractURI,
-          trustedForwarders,
-          marketplaceMetadata.platform_fee_recipient,
-          marketplaceMetadata.platform_fee_basis_points,
-        ];
-      case PackInitializer.contractType:
-        const packsMetadata = PackInitializer.schema.deploy.parse(metadata);
-        return [
-          await this.getSignerAddress(),
-          packsMetadata.name,
-          packsMetadata.symbol,
-          contractURI,
-          trustedForwarders,
-          packsMetadata.fee_recipient,
-          packsMetadata.seller_fee_basis_points,
-        ];
-      default:
-        return [];
-    }
-  }
-
-  private async getDefaultTrustedForwarders(): Promise<string[]> {
-    const chainId = await this.getChainID();
-    return getDefaultTrustedForwarders(chainId);
   }
 
   private async getImplementation(
