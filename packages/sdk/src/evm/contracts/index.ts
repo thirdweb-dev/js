@@ -194,8 +194,6 @@ export const MarketplaceV3Initializer = {
       storage,
     );
 
-    console.log("composite abi: ", compositeABI);
-
     return new contract.MarketplaceV3(
       network,
       address,

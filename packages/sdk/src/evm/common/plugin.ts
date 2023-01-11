@@ -44,7 +44,6 @@ export async function getCompositePluginABI(
 
       // get ABIs of extension contracts
       pluginABIs = await getPluginABI(plugins, provider, storage);
-      console.log("plugin abis: ", pluginABIs);
     }
   } catch (err) {}
 
@@ -90,5 +89,7 @@ export function joinABIs(abis: Abi[]): Abi {
     );
   });
 
-  return AbiSchema.parse(filteredABIs);
+  const finalABIs = filteredABIs.filter((item) => item.type !== "constructor");
+
+  return AbiSchema.parse(finalABIs);
 }
