@@ -59,7 +59,6 @@ export const PartnerLogo: React.FC<PartnerLogoProps> = ({ partner }) => {
         alt={partner}
         sizes="(max-width: 768px) 25vw,
               10vw"
-        priority
       />
     </AspectRatio>
   );

@@ -1,5 +1,6 @@
 import { Box, Center, DarkMode, Flex } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
+import { Aurora } from "components/homepage/Aurora";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { PageId } from "page-id";
 import NotFound from "public/assets/landingpage/not-found.png";
@@ -25,7 +26,13 @@ const PageNotFound: ThirdwebNextPage = () => {
         h="100vh"
         overflow="hidden"
       >
-        <HomepageSection topGradient>
+        <HomepageSection>
+          <Aurora
+            pos={{ left: "50%", top: "50%" }}
+            size={{ width: "2400px", height: "2400px" }}
+            color="hsl(289deg 78% 30% / 35%)"
+          />
+
           <Center mb={6}>
             <Center p={2} position="relative" mb={6}>
               <Box

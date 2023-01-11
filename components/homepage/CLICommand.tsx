@@ -19,11 +19,10 @@ export const CLICommand: React.FC<CLICommandProps> = ({ text }) => {
     <Flex
       background="rgba(255, 255, 255, 0.08)"
       border="1px solid rgba(255, 255, 255, 0.2)"
-      pl="28px"
-      pr="14px"
       borderRadius="md"
       flexShrink={0}
-      h="68px"
+      py={3}
+      px={4}
       minW={{ base: "100%", md: "240px" }}
       gap={4}
       align="center"
@@ -32,7 +31,7 @@ export const CLICommand: React.FC<CLICommandProps> = ({ text }) => {
       <Text
         color="white"
         fontFamily="mono"
-        fontSize="18px"
+        fontSize="16px"
         fontWeight="500"
         whiteSpace="nowrap"
       >

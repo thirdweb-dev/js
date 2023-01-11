@@ -43,8 +43,7 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
     <LinkBox>
       <Stack
         borderRadius="2xl"
-        border="1px solid"
-        borderColor="#ffffff26"
+        boxShadow="0 0 1px 1px hsl(0deg 0% 100% / 15%)"
         overflow="hidden"
       >
         <Flex

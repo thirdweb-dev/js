@@ -1,4 +1,5 @@
 import { Flex, Icon, SimpleGrid } from "@chakra-ui/react";
+import { Aurora } from "components/homepage/Aurora";
 import { SDKSection } from "components/homepage/sections/SDKSection";
 import { LOGO_OPTIONS } from "components/product-pages/common/CodeOptionButton";
 import { GuidesShowcase } from "components/product-pages/common/GuideShowcase";
@@ -98,6 +99,12 @@ const Web3SDK: ThirdwebNextPage = () => {
       </Hero>
       <ProductSection py={{ base: 12, lg: 24 }}>
         <SDKSection title="Integrate web3 into your apps and games." />
+
+        <Aurora
+          pos={{ left: "50%", top: "40%" }}
+          size={{ width: "2000px", height: "1300px" }}
+          color={"hsl(223deg 40% 15%)"}
+        />
       </ProductSection>
 
       <ProductSection>

@@ -9,7 +9,6 @@ import {
 } from "@chakra-ui/react";
 import { ImMagicWand } from "@react-icons/all-files/im/ImMagicWand";
 import { HomepageFooter } from "components/footer/Footer";
-import { AvatarShowcase } from "components/hackathon/common/AvatarShowcase";
 import { HackathonFooter } from "components/hackathon/common/HackathonFooter";
 import { PrizeSection } from "components/hackathon/common/PrizeSection";
 import { ScheduleSection } from "components/hackathon/common/ScheduleSection";
@@ -176,7 +175,7 @@ const SolanaHackathon: ThirdwebNextPage = () => {
         <HomepageTopNav />
 
         <Box maxW="100vw" mt="-100px" pt="100px" overflowX="hidden">
-          <HomepageSection id="header" topGradient>
+          <HomepageSection id="header">
             <Flex
               flexDir="column"
               align="center"
@@ -311,11 +310,7 @@ const SolanaHackathon: ThirdwebNextPage = () => {
             transform="matrix(-1, 0, 0, 1, 0, 0)"
             mt="-150px"
           />
-          <AvatarShowcase
-            title="Judges"
-            trackingCategory="solanathon"
-            avatars={judges}
-          />
+
           <HackathonFooter />
           <HomepageFooter />
         </Box>

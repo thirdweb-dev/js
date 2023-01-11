@@ -1,18 +1,21 @@
 import { Box, DarkMode, Flex } from "@chakra-ui/react";
 import { HomepageFooter } from "components/footer/Footer";
+import { Aurora } from "components/homepage/Aurora";
 import { CLISection } from "components/homepage/sections/CLISection";
 import { ContractsSection } from "components/homepage/sections/ContractsSection";
 import { DashboardFeaturesSection } from "components/homepage/sections/DashboardFeaturesSection";
-import { ExamplesSectionHomepage } from "components/homepage/sections/ExamplesSectionHomePage";
 import { GetStartedSection } from "components/homepage/sections/GetStartedSection";
 import { HeroSection } from "components/homepage/sections/HeroSection";
+import { KeyFeatures } from "components/homepage/sections/KeyFeatures";
 import { NewsletterSection } from "components/homepage/sections/NewsletterSection";
 import { NetworksSection } from "components/homepage/sections/NextworksSection";
 import { PricingSection } from "components/homepage/sections/PricingSection";
 import { SDKSection } from "components/homepage/sections/SDKSection";
+import { SolutionsSection } from "components/homepage/sections/Solutions";
+import { StatsSection } from "components/homepage/sections/StatsSection";
+import { ValuesSection } from "components/homepage/sections/ValuesSection";
 import { PartnerCarousel } from "components/partners/carousel";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
-import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { PageId } from "page-id";
 import { Suspense } from "react";
 import { ThirdwebNextPage } from "utils/types";
@@ -34,19 +37,26 @@ const HomePage: ThirdwebNextPage = () => {
       >
         <HomepageTopNav />
         <Box mt="-80px" pt="100px" overflowX="hidden">
-          {/* sections */}
           <HeroSection />
           <PartnerCarousel />
+          <StatsSection />
+          <KeyFeatures />
           <ContractsSection />
           <Suspense>
-            <HomepageSection id="sdks" bottomPattern middleGradient>
+            <Box position="relative" zIndex={10}>
               <SDKSection />
-            </HomepageSection>
+              <Aurora
+                pos={{ left: "50%", top: "50%" }}
+                size={{ width: "2000px", height: "2000px" }}
+                color={"hsl(280deg 78% 30% / 30%)"}
+              />
+            </Box>
             <CLISection />
             <DashboardFeaturesSection />
             <NetworksSection />
             <PricingSection />
-            <ExamplesSectionHomepage />
+            <SolutionsSection />
+            <ValuesSection />
             <GetStartedSection />
             <NewsletterSection />
             <HomepageFooter />

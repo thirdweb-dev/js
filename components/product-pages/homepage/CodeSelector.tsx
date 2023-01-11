@@ -1,27 +1,36 @@
 import { CodeOptionButton, CodeOptions } from "../common/CodeOptionButton";
-import { Box, Flex, Icon, SimpleGrid } from "@chakra-ui/react";
-import { SiReplDotIt } from "@react-icons/all-files/si/SiReplDotIt";
+import { Flex, Icon } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
+import darkTheme from "prism-react-renderer/themes/dracula";
 import { useState } from "react";
+import { AiOutlineCode } from "react-icons/ai";
+import { CgFileDocument } from "react-icons/cg";
 import { Card, CodeBlock, LinkButton } from "tw-components";
 
 const landingSnippets = {
   javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
+// initialize the SDK
 const sdk = new ThirdwebSDK("mumbai");
+
+// connect to your smart contract
 const contract = await sdk.getContract("0xe68904F3018fF980b6b64D06d7f7fBCeFF4cB06c");
 
+// get all NFTs
 const nfts = await contract.erc721.getAll();
+
 console.log(nfts);`,
   react: `import { ThirdwebNftMedia, useContract, useNFTs } from "@thirdweb-dev/react";
 
 export default function App() {
-  const { contract: nftDrop } = useContract(
-    "0xe68904F3018fF980b6b64D06d7f7fBCeFF4cB06c",
-  );
-  const { data: nfts } = useNFTs(nftDrop);
+  // Connect to your smart contract
+  const { contract } = useContract("0xe68904F3018fF980b6b64D06d7f7fBCeFF4cB06c");
 
-  return (nfts || []).map((nft) => (
+  // Get all NFTs
+  const nfts = useNFTs(contract);
+
+  // Render NFTs
+  return (nfts.data || []).map((nft) => (
     <ThirdwebNftMedia key={nft.metadata.id.toString()} metadata={nft.metadata} />
   ));
 }`,
@@ -137,10 +146,19 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
 
   return (
     <>
-      <SimpleGrid
-        gap={{ base: 2, md: 3 }}
-        columns={{ base: 2, md: snippets === "landing" ? 5 : 4 }}
-        justifyContent={{ base: "space-between", md: "center" }}
+      <Flex
+        background="rgba(0,0,0,0.4)"
+        boxShadow="0 0 1px 1px hsl(0deg 0% 100% / 15%)"
+        justify={"center"}
+        margin="0 auto"
+        transform={{ base: "translateY(20px)", md: "translateY(50%)" }}
+        zIndex={100}
+        backdropFilter={"blur(10px)"}
+        borderRadius={"8px"}
+        padding="2px"
+        gap={"2px"}
+        maxW="calc(100% - 60px)"
+        flexWrap="wrap"
       >
         {Object.keys(actualSnippets).map((key) =>
           key === "unity" && snippets === "auth" ? null : (
@@ -155,21 +173,24 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
             </CodeOptionButton>
           ),
         )}
-      </SimpleGrid>
+      </Flex>
 
       <Card
         w={{ base: "full", md: "69%" }}
-        borderWidth={0}
         p={0}
-        outlineBorder={{
-          gradient: "linear(147.15deg, #1D64EF 30.17%, #E0507A 100%)",
-          width: "5px",
-        }}
+        background="rgba(0,0,0,0.4)"
+        boxShadow="0 0 1px 1px hsl(0deg 0% 100% / 15%)"
+        position="relative"
+        border="none"
       >
         <CodeBlock
+          darkTheme={darkTheme}
+          color="white"
+          fontSize={{ base: "12px", md: "14px" }}
           borderWidth={0}
           w="full"
-          py={4}
+          py={6}
+          pb={{ base: 12, md: 6 }}
           code={actualSnippets[activeLanguage]}
           language={
             activeLanguage === "react"
@@ -178,36 +199,16 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
               ? "cpp"
               : activeLanguage
           }
-          backgroundColor="#0d0e10"
+          backgroundColor={"transparent"}
+          mt={4}
         />
-      </Card>
 
-      <Flex
-        gap={{ base: 4, md: 6 }}
-        align="center"
-        direction={{ base: "column", md: "row" }}
-        w="100%"
-        maxW="container.sm"
-      >
-        {snippets === "landing" && (
-          <LinkButton
-            role="group"
-            borderRadius="md"
-            p={6}
-            variant="gradient"
-            fromcolor="#1D64EF"
-            tocolor="#E0507A"
-            isExternal
-            colorScheme="primary"
-            w="full"
-            href={`https://replit.com/@thirdweb/${activeLanguage}-sdk`}
-            rightIcon={
-              <Icon
-                color="#E0507A"
-                _groupHover={{ color: "#1D64EF" }}
-                as={SiReplDotIt}
-              />
-            }
+        {/* Links for Replit and Docs  */}
+        <Flex justify="end" gap={6} position="absolute" bottom={0} right="16px">
+          <CustomLinkButton
+            text="Docs"
+            href={docs}
+            icon={<Icon color={"white"} as={CgFileDocument} />}
             onClick={() =>
               trackEvent({
                 category: "code-selector",
@@ -215,34 +216,60 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
                 label: "try-it",
               })
             }
-          >
-            <Box as="span">Try it on Replit</Box>
-          </LinkButton>
-        )}
-        <LinkButton
-          variant="outline"
-          borderRadius="md"
-          bg="#fff"
-          color="#000"
-          w="full"
-          maxW="container.sm"
-          _hover={{
-            bg: "whiteAlpha.800",
-          }}
-          href={docs}
-          isExternal
-          p={6}
-          onClick={() =>
-            trackEvent({
-              category: "code-selector",
-              action: "click",
-              label: "documentation",
-            })
-          }
-        >
-          Explore documentation
-        </LinkButton>
-      </Flex>
+          />
+
+          {snippets === "landing" && (
+            <CustomLinkButton
+              text="Run"
+              href={`https://replit.com/@thirdweb/${activeLanguage}-sdk`}
+              icon={<Icon color={"white"} as={AiOutlineCode} />}
+              onClick={() =>
+                trackEvent({
+                  category: "code-selector",
+                  action: "click",
+                  label: "documentation",
+                })
+              }
+            />
+          )}
+        </Flex>
+      </Card>
     </>
+  );
+};
+
+interface CustomLinkButtonProps {
+  onClick: () => void;
+  text: string;
+  href: string;
+  icon: React.ReactElement;
+}
+
+const CustomLinkButton: React.FC<CustomLinkButtonProps> = ({
+  onClick,
+  href,
+  icon,
+  text,
+}) => {
+  return (
+    <LinkButton
+      href={href}
+      isExternal
+      leftIcon={icon}
+      bg="transparent"
+      noIcon
+      padding={0}
+      fontWeight={400}
+      fontSize="14px"
+      borderRadius={"10px"}
+      fontFamily={"mono"}
+      color={"white"}
+      _hover={{
+        bg: "trnasparent",
+      }}
+      onClick={onClick}
+    >
+      {text}
+    </LinkButton>
   );
 };

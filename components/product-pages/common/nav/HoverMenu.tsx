@@ -26,7 +26,6 @@ export const HoverMenu: React.FC<HoverMenuProps> = ({
     <Box onMouseLeave={onClose}>
       <Text
         color="white"
-        fontWeight="bold"
         fontSize="16px"
         cursor="pointer"
         py={3}

@@ -1,4 +1,5 @@
 import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
+import { Aurora } from "components/homepage/Aurora";
 import { NewsletterSection } from "components/homepage/sections/NewsletterSection";
 import { SDKSection } from "components/homepage/sections/SDKSection";
 import { AuthenticationExamples } from "components/product-pages/authentication/AuthenticationExamples";
@@ -123,6 +124,12 @@ const Authentication: ThirdwebNextPage = () => {
             snippets: "auth",
             docs: "https://portal.thirdweb.com/auth",
           }}
+        />
+
+        <Aurora
+          pos={{ left: "50%", top: "40%" }}
+          size={{ width: "2000px", height: "1300px" }}
+          color={"hsl(223deg 40% 15%)"}
         />
       </ProductSection>
 

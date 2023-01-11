@@ -63,7 +63,7 @@ export const DeployUpsellCard: React.FC = () => {
           </Flex>
 
           <CodeBlock
-            code="npx thirdweb@latest create --contract"
+            code="npx thirdweb create --contract"
             language="bash"
             prefix="$"
           />
@@ -96,11 +96,7 @@ export const DeployUpsellCard: React.FC = () => {
             </LinkButton>
           </Flex>
 
-          <CodeBlock
-            code="npx thirdweb@latest deploy"
-            language="bash"
-            prefix="$"
-          />
+          <CodeBlock code="npx thirdweb deploy" language="bash" prefix="$" />
         </Flex>
       </Card>
     </Box>

@@ -1,5 +1,6 @@
 import { Box, DarkMode, Flex, Image, SimpleGrid } from "@chakra-ui/react";
 import { HomepageFooter } from "components/footer/Footer";
+import { Aurora } from "components/homepage/Aurora";
 import { HomepageTopNav } from "components/product-pages/common/Topnav";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { PageId } from "page-id";
@@ -137,7 +138,13 @@ const About: ThirdwebNextPage = () => {
       >
         <HomepageTopNav />
         <Box mt="-80px" pt="100px" overflowX="hidden">
-          <HomepageSection topGradient bottomPattern>
+          <HomepageSection bottomPattern>
+            <Aurora
+              pos={{ left: "50%", top: "0%" }}
+              size={{ width: "2400px", height: "2400px" }}
+              color="hsl(289deg 78% 30% / 45%)"
+            />
+
             <Flex
               pt={24}
               mb={{ base: 24, md: -24 }}

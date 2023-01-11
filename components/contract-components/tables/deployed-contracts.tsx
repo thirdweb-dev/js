@@ -176,7 +176,7 @@ export const DeployedContracts: React.FC<DeployedContractsProps> = ({
                     <CodeBlock
                       mt="auto"
                       language="bash"
-                      code="npx thirdweb@latest deploy"
+                      code="npx thirdweb deploy"
                     />
                   </GettingStartedCard>
                 </GettingStartedBox>

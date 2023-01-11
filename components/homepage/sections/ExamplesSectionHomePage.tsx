@@ -8,7 +8,7 @@ import { Heading } from "tw-components";
  */
 export const ExamplesSectionHomepage = () => {
   return (
-    <HomepageSection id="examples" middleGradient>
+    <HomepageSection id="examples">
       <Flex
         flexDir="column"
         py={{ base: 12, lg: 24 }}

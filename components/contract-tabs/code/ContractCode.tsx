@@ -68,8 +68,8 @@ const INSTALL_COMMANDS = {
 };
 
 const CREATE_APP_COMMANDS = {
-  evm: "npx thirdweb@latest create app --evm",
-  solana: "npx thirdweb@latest create app --solana",
+  evm: "npx thirdweb create app --evm",
+  solana: "npx thirdweb create app --solana",
 };
 
 export const ContractCode: React.FC<ContractCodeProps> = ({

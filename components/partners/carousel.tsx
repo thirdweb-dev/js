@@ -3,7 +3,7 @@ import { Box, Container, GridItem, SimpleGrid } from "@chakra-ui/react";
 
 export const PartnerCarousel: React.FC = () => {
   return (
-    <Box zIndex={1} pointerEvents="none" userSelect="none">
+    <Box zIndex={10} position="relative" pointerEvents="none" userSelect="none">
       <Container position="relative" maxW="container.page">
         <SimpleGrid
           columns={{ base: 3, md: 9 }}

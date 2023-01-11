@@ -9,12 +9,16 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { IoMdCheckmark } from "@react-icons/all-files/io/IoMdCheckmark";
-import Highlight, { Language, defaultProps } from "prism-react-renderer";
+import Highlight, {
+  Language,
+  PrismTheme,
+  defaultProps,
+} from "prism-react-renderer";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 import Prism from "prism-react-renderer/prism";
-import darkTheme from "prism-react-renderer/themes/oceanicNext";
-import lightTheme from "prism-react-renderer/themes/vsLight";
+import darkThemeDefault from "prism-react-renderer/themes/oceanicNext";
+import lightThemeDefault from "prism-react-renderer/themes/vsLight";
 import { useEffect } from "react";
 import { FiCopy } from "react-icons/fi";
 
@@ -29,6 +33,8 @@ interface CodeBlockProps extends Omit<CodeProps, "size"> {
   canCopy?: boolean;
   wrap?: boolean;
   prefix?: string;
+  darkTheme?: PrismTheme;
+  lightTheme?: PrismTheme;
 }
 export const CodeBlock: React.FC<CodeBlockProps> = ({
   code,
@@ -44,9 +50,14 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
   prefix,
   canCopy = true,
   wrap = true,
+  darkTheme,
+  lightTheme,
   ...restCodeProps
 }) => {
-  const theme = useColorModeValue(lightTheme, darkTheme);
+  const theme = useColorModeValue(
+    lightTheme || lightThemeDefault,
+    darkTheme || darkThemeDefault,
+  );
   const { onCopy, hasCopied, setValue } = useClipboard(code);
 
   useEffect(() => {
@@ -104,7 +115,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({
               }
             />
           )}
-          <Box as="span" display="block" my={1}>
+          <Box as="span" display="block" my={1} color="white">
             {tokens.map((line, i) => (
               // eslint-disable-next-line react/jsx-key
               <Box {...getLineProps({ line, key: i })}>

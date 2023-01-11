@@ -1,3 +1,4 @@
+import { Aurora } from "../Aurora";
 import {
   Box,
   Flex,
@@ -15,6 +16,12 @@ import { Heading, Text } from "tw-components";
 export const PricingSection = () => {
   return (
     <HomepageSection id="pricing">
+      <Aurora
+        pos={{ left: "80%", top: "40%" }}
+        size={{ width: "1400px", height: "1400px" }}
+        color="hsl(289deg 78% 30% / 35%)"
+      />
+
       <SimpleGrid
         py={{ base: 12, lg: 24 }}
         columns={{ base: 1, lg: 2 }}
@@ -30,6 +37,7 @@ export const PricingSection = () => {
             size="body.xl"
             fontStyle="italic"
             textAlign={{ base: "center", md: "left" }}
+            color="whiteAlpha.700"
           >
             We may introduce optional advanced features which you can decide to
             pay for in the future. We will always be transparent and clear about
@@ -37,11 +45,10 @@ export const PricingSection = () => {
           </Text>
         </Flex>
         <Box
-          border=".5px solid"
-          borderColor="#4953AF"
           p={12}
           borderRadius="lg"
           backgroundColor="#0000004d"
+          boxShadow="0 0 0 1px hsl(0deg 0% 100% / 15%)"
         >
           <Heading
             bgGradient="linear(to-r, #FFB8E6, #8689E3)"
@@ -57,7 +64,7 @@ export const PricingSection = () => {
             flexDirection="column"
             alignItems="start"
             textAlign="left"
-            color="gray.400"
+            color="whiteAlpha.700"
             mb={16}
           >
             <ListItem>
