@@ -33,7 +33,7 @@ export const SolutionsTextImage: ComponentWithChildren<
         />
 
         <Flex flexDir="column" gap={4}>
-          <Heading as="h2" size="display.sm" mb={4}>
+          <Heading as="h2" size="title.xl" mb={4}>
             {title}
           </Heading>
           {children}

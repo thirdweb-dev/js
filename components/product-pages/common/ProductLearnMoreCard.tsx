@@ -1,13 +1,14 @@
 import { Flex, Icon } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { StaticImageData } from "next/image";
+import { ReactNode } from "react";
 import { FiArrowRight } from "react-icons/fi";
 import { Heading, Link, Text } from "tw-components";
 
 interface ProductLearnMoreCardProps {
   icon: StaticImageData;
   title: string;
-  description: string;
+  description: ReactNode;
   href: string;
 }
 

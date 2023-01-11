@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { StaticImageData } from "next/image";
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 import { FiChevronRight } from "react-icons/fi";
 import { Heading, LinkButton, Text, TrackedLink } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
@@ -18,7 +18,7 @@ import { ComponentWithChildren } from "types/component-with-children";
 export interface HeroProps {
   name: string;
   title: string;
-  description: string;
+  description: ReactNode;
   buttonText: string;
   buttonLink: string;
   gradient: string;
