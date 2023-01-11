@@ -28,7 +28,6 @@ export async function getCompositePluginABI(
       AbiSchema.parse(abi),
       "PluginRouter",
     );
-
     if (isPluginRouter) {
       const contract = new ContractWrapper<IRouter>(
         provider,
@@ -45,6 +44,7 @@ export async function getCompositePluginABI(
 
       // get ABIs of extension contracts
       pluginABIs = await getPluginABI(plugins, provider, storage);
+      console.log("plugin abis: ", pluginABIs);
     }
   } catch (err) {}
 
@@ -67,7 +67,7 @@ async function getPluginABI(
       addresses.map((address) =>
         fetchContractMetadataFromAddress(address, provider, storage).catch(
           (err) => {
-            console.error(`Failed to fetch plug-in for ${address}`, err);
+            // console.error(`Failed to fetch plug-in for ${address}`, err);
             return { abi: [] };
           },
         ),

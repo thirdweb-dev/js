@@ -407,6 +407,12 @@ async function setupMarketplaceV3(): Promise<string> {
     OffersLogic__factory.abi,
   );
 
+  // console.log([
+  //   ...pluginsDirectListings,
+  //   ...pluginsEnglishAuctions,
+  //   ...pluginsOffers,
+  // ]);
+
   const pluginMapDeployer = (await new ethers.ContractFactory(
     PluginMap__factory.abi,
     PluginMap__factory.bytecode,
