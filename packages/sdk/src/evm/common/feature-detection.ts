@@ -4,6 +4,7 @@ import {
   FeatureWithEnabled,
   SUPPORTED_FEATURES,
 } from "../constants/contract-features";
+import { ThirdwebSDK } from "../core";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { DetectableFeature } from "../core/interfaces/DetectableFeature";
 import { decode } from "../lib/cbor-decode.js";
@@ -422,14 +423,30 @@ export async function fetchContractMetadataFromAddress(
   provider: ethers.providers.Provider,
   storage: ThirdwebStorage,
 ) {
-  const compilerMetadataUri = await resolveContractUriFromAddress(
-    address,
-    provider,
-  );
-  if (!compilerMetadataUri) {
-    throw new Error(`Could not resolve metadata for contract at ${address}`);
+  try {
+    const compilerMetadataUri = await resolveContractUriFromAddress(
+      address,
+      provider,
+    );
+    if (!compilerMetadataUri) {
+      throw new Error(`Could not resolve metadata for contract at ${address}`);
+    }
+    return await fetchContractMetadata(compilerMetadataUri, storage);
+  } catch (e) {
+    try {
+      // try from multichain registry
+      const polygonSDK = new ThirdwebSDK("polygon");
+      const chainId = (await provider.getNetwork()).chainId;
+      const importedUri =
+        await polygonSDK.multiChainRegistry.getContractMetadataURI(
+          chainId,
+          address,
+        );
+      return await fetchContractMetadata(importedUri, storage);
+    } catch (err) {
+      throw new Error(`Could not resolve metadata for contract at ${address}`);
+    }
   }
-  return await fetchContractMetadata(compilerMetadataUri, storage);
 }
 
 /**
