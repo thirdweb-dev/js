@@ -1,4 +1,7 @@
+import { isFeatureEnabled } from "../common";
 import { fetchCurrencyValue } from "../common/currency";
+import { getCompositePluginABI } from "../common/plugin";
+import { unique } from "../common/utils";
 import {
   ChainOrRpc,
   getProviderForNetwork,
@@ -10,6 +13,7 @@ import {
   PREBUILT_CONTRACTS_MAP,
 } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
+import { Abi, AbiSchema } from "../schema";
 import { SDKOptions } from "../schema/sdk-options";
 import { CurrencyValue } from "../types/index";
 import type { AbstractWallet } from "../wallets";
@@ -17,6 +21,7 @@ import { WalletAuthenticator } from "./auth/wallet-authenticator";
 import type { ContractMetadata } from "./classes";
 import { ContractDeployer } from "./classes/contract-deployer";
 import { ContractPublisher } from "./classes/contract-publisher";
+import { ContractWrapper } from "./classes/contract-wrapper";
 import { MultichainRegistry } from "./classes/multichain-registry";
 import {
   getSignerAndProvider,
@@ -631,11 +636,19 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       this.getSignerOrProvider(),
       this.options,
     );
+
+    const parsedABI = typeof abi === "string" ? JSON.parse(abi) : abi;
     // TODO we still might want to lazy-fy this
     const contract = new SmartContract(
       this.getSignerOrProvider(),
       address,
-      abi,
+      await getCompositePluginABI(
+        address,
+        AbiSchema.parse(parsedABI),
+        provider,
+        this.options,
+        this.storage,
+      ),
       this.storageHandler,
       this.options,
       (await provider.getNetwork()).chainId,
