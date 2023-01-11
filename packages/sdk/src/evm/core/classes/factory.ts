@@ -7,6 +7,7 @@ import {
   EditionInitializer,
   getContractName,
   MarketplaceInitializer,
+  MarketplaceV3Initializer,
   MultiwrapInitializer,
   NFTCollectionInitializer,
   NFTDropInitializer,
@@ -56,7 +57,8 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     [TokenInitializer.contractType]: 1,
     [VoteInitializer.contractType]: 1,
     [SplitInitializer.contractType]: 1,
-    [MarketplaceInitializer.contractType]: 3,
+    [MarketplaceInitializer.contractType]: 2,
+    [MarketplaceV3Initializer.contractType]: 3,
     [PackInitializer.contractType]: 2,
   };
 
@@ -277,6 +279,16 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           trustedForwarders,
           marketplaceMetadata.platform_fee_recipient,
           marketplaceMetadata.platform_fee_basis_points,
+        ];
+      case MarketplaceV3Initializer.contractType:
+        const marketplaceV3Metadata =
+          MarketplaceV3Initializer.schema.deploy.parse(metadata);
+        return [
+          await this.getSignerAddress(),
+          contractURI,
+          trustedForwarders,
+          marketplaceV3Metadata.platform_fee_recipient,
+          marketplaceV3Metadata.platform_fee_basis_points,
         ];
       case PackInitializer.contractType:
         const packsMetadata = PackInitializer.schema.deploy.parse(metadata);

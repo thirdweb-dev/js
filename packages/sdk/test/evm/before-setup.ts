@@ -174,7 +174,7 @@ export const mochaHooks = {
     }
 
     for (const contractType in CONTRACTS_MAP) {
-      if (contractType === "custom") {
+      if (contractType === "custom" || contractType === "marketplace-v3") {
         continue;
       }
       let factories: any[] = [];

@@ -14,6 +14,7 @@ import {
   Token,
   TokenInitializer,
   WrongListingTypeError,
+  MarketplaceV3Initializer,
 } from "../../src/evm";
 import {
   expectError,
@@ -54,15 +55,17 @@ describe("Marketplace V3", async () => {
 
     sdk.updateSignerOrProvider(adminWallet);
 
-    marketplaceContract = await sdk.getMarketplace(
+    marketplaceContract = await sdk.getContract(
       await sdk.deployer.deployBuiltInContract(
-        MarketplaceInitializer.contractType,
+        MarketplaceV3Initializer.contractType,
         {
           name: "Test Marketplace",
         },
       ),
+      "marketplace-v3",
     );
-    // console.log(marketplaceContract.getAddress());
+
+    // console.log(marketplaceContract.englishAuctions.getAddress());
     // console.log(await marketplaceContract.call("contractVersion"));
 
     dummyNftContract = await sdk.getNFTCollection(
