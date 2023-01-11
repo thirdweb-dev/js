@@ -19,20 +19,32 @@ export class FactoryEvents extends ContractEvents<TWFactory> {
         return;
       }
 
-      const receipt = await this.contractWrapper
-        .getProvider()
-        .getTransactionReceipt(event.transactionHash);
-      const events = this.contractWrapper.parseLogs<ProxyDeployedEvent>(
-        "ProxyDeployed",
-        receipt.logs,
-      );
+			const receipt = await this.contractWrapper
+				.getProvider()
+				.getTransactionReceipt(event.transactionHash);
 
-      if (events.length > 0) {
-        listener({
-          ...event,
-          contractAddress: events[0].args.proxy,
-        });
-      }
+			if (receipt && receipt.logs){
+				const events = this.contractWrapper.parseLogs<ProxyDeployedEvent>(
+					"ProxyDeployed",
+					receipt.logs,
+				);
+
+				if (events.length > 0) {
+					listener({
+					...event,
+					contractAddress: events[0].args.proxy,
+					});
+				}
+			}else{
+				listener({
+					...event,
+					transactionHash: event.transactionHash,
+				});
+			}
     });
   }
+
+  public getContractWrapper(): ContractWrapper<TWFactory> {
+		return this.contractWrapper;	
+  }  
 }

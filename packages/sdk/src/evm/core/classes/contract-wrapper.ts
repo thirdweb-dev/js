@@ -234,6 +234,16 @@ export class ContractWrapper<
   }
 
   /**
+   * @external
+   */  
+  public callEmitTransactionEvent(
+		status: "submitted" | "completed",
+  	transactionHash: string,
+	) {
+		this.emitTransactionEvent(status, transactionHash);
+  }
+
+  /**
    * @internal
    */
   public async multiCall(

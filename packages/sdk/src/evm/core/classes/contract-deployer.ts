@@ -517,6 +517,12 @@ export class ContractDeployer extends RPCConnectionHandler {
       this.storage,
       this.options,
     );
+	console.log("TEEEEESTING PR");
+	const contractWrapper = this.events?.getContractWrapper();		
+	this.events = new FactoryEvents(proxyFactory);
+	this.events.addDeployListener((event:any) => {		
+		contractWrapper?.callEmitTransactionEvent(event.status, event.transactionHash);		
+	});		
     return await proxyFactory.deployProxyByImplementation(
       implementationAddress,
       implementationAbi,
