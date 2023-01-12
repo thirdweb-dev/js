@@ -97,6 +97,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
+    "@google/model-viewer": "^2.1.1",
     "@react-icons/all-files": "^4.1.0",
     "@safe-global/safe-core-sdk": "^3.2.0",
     "@safe-global/safe-ethers-adapters": "0.1.0-alpha.13",
