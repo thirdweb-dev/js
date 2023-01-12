@@ -1,8 +1,10 @@
 import { fetchCurrencyValue } from "../common/currency";
 import {
+  ChainId,
   ChainIdOrName,
   getChainProvider,
   NATIVE_TOKEN_ADDRESS,
+  toChainId,
 } from "../constants";
 import {
   getContractTypeForRemoteName,
@@ -130,6 +132,42 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     const provider = getChainProvider(network, options);
     const signer = new ethers.Wallet(privateKey, provider);
     return ThirdwebSDK.fromSigner(signer, network, options, storage);
+  }
+
+  /**
+   * Get an instance of the thirdweb SDK using a local node and a local signer.
+   * Useful for testing and development.
+   *
+   * @example
+   * ```javascript
+   * const sdk = ThirdwebSDK.fromLocalNode();
+   * ```
+   *
+   * @param forkedChain - optional forked chain id or name. Defaults to localhost
+   * @param privateKey - optional private key to use. Defaults to hardhat default
+   * @param port - optional port to use. Defaults to 8545
+   * @param storage -  optional storage implementation to use
+   * @returns
+   */
+  static fromLocalNode(
+    forkedChain: ChainIdOrName = ChainId.Localhost,
+    privateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
+    port: number = 8545,
+    storage: ThirdwebStorage = new ThirdwebStorage(),
+  ) {
+    const chainId = toChainId(forkedChain);
+    return ThirdwebSDK.fromPrivateKey(
+      privateKey,
+      chainId,
+      {
+        chainInfos: {
+          [chainId]: {
+            rpc: `http://localhost:${port}`,
+          },
+        },
+      },
+      storage,
+    );
   }
 
   /**

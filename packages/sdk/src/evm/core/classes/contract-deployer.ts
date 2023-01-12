@@ -1,3 +1,4 @@
+import { getDeployArguments } from "../../common/deploy";
 import {
   extractConstructorParamsFromAbi,
   extractFunctionParamsFromAbi,
@@ -401,14 +402,11 @@ export class ContractDeployer extends RPCConnectionHandler {
     >,
     version: string = "latest",
   ): Promise<string> {
-    const activeChainId = (await this.getProvider().getNetwork()).chainId;
-
     const parsedMetadata =
       PREBUILT_CONTRACTS_MAP[contractType].schema.deploy.parse(
         contractMetadata,
       );
-    const factory = await this.getFactory();
-
+    const activeChainId = (await this.getProvider().getNetwork()).chainId;
     if (
       activeChainId === ChainId.Hardhat ||
       activeChainId === ChainId.Localhost
@@ -427,6 +425,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       } catch (e) {
         parsedVersion = undefined;
       }
+      const factory = await this.getFactory();
       if (!factory) {
         throw new Error("Factory not found");
       }
@@ -437,20 +436,21 @@ export class ContractDeployer extends RPCConnectionHandler {
     // new behavior for all other chains
     //
 
+    const signer = this.getSigner();
+    invariant(signer, "A signer is required to deploy contracts");
+
     // resolve contract name from type
     const contractName = getContractName(contractType);
-    invariant(contractName, "contract name not found");
+    invariant(contractName, "Contract name not found");
     // get deploy arugments for the contractType
     // first upload the contractmetadata
     const contractURI = await this.storage.upload(parsedMetadata);
     // the get the deploy arguments
-    if (!factory) {
-      throw new Error("Factory not found");
-    }
-    const constructorParams = await factory.getDeployArguments(
+    const constructorParams = await getDeployArguments(
       contractType,
       parsedMetadata,
       contractURI,
+      signer,
     );
 
     return this.deployReleasedContract(
