@@ -1,5 +1,5 @@
+import { AnimatedCLICommand } from "../AnimatedCLICommand/AnimatedCLICommand";
 import { Aurora } from "../Aurora";
-import { CLICommand } from "../CLICommand";
 import { Flex, Grid, Icon, LightMode, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
@@ -113,7 +113,7 @@ export const HeroSection = () => {
                   </Text>
                 </Link>
               </Flex>
-              <CLICommand text="npx thirdweb" />
+              <AnimatedCLICommand />
             </SimpleGrid>
           </LightMode>
         </Flex>
