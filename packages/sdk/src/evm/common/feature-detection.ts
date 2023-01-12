@@ -13,16 +13,14 @@ import {
   AbiFunction,
   AbiSchema,
   AbiTypeSchema,
-  ContractInfoSchema,
-  ContractSource,
   FullPublishMetadata,
   FullPublishMetadataSchemaOutput,
   PreDeployMetadata,
   PreDeployMetadataFetched,
   PreDeployMetadataFetchedSchema,
-  PublishedMetadata,
 } from "../schema/contracts/custom";
 import { ExtensionNotImplementedError } from "./error";
+import { fetchContractMetadata } from "./metadata-resolver";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import bs58 from "bs58";
 import { BaseContract, BigNumber, ethers } from "ethers";
@@ -408,137 +406,6 @@ function isHexStrict(hex: string | number) {
   return (
     (typeof hex === "string" || typeof hex === "number") &&
     /^(-)?0x[0-9a-f]*$/i.test(hex.toString())
-  );
-}
-
-/**
- * @internal
- * @param address
- * @param provider
- * @param storage
- */
-export async function fetchContractMetadataFromAddress(
-  address: string,
-  provider: ethers.providers.Provider,
-  storage: ThirdwebStorage,
-) {
-  const compilerMetadataUri = await resolveContractUriFromAddress(
-    address,
-    provider,
-  );
-  if (!compilerMetadataUri) {
-    throw new Error(`Could not resolve metadata for contract at ${address}`);
-  }
-  return await fetchContractMetadata(compilerMetadataUri, storage);
-}
-
-/**
- * @internal
- * @param address
- * @param provider
- * @param storage
- * @returns
- */
-export async function fetchAbiFromAddress(
-  address: string,
-  provider: ethers.providers.Provider,
-  storage: ThirdwebStorage,
-): Promise<Abi | undefined> {
-  try {
-    const metadata = await fetchContractMetadataFromAddress(
-      address,
-      provider,
-      storage,
-    );
-    if (metadata && metadata.abi) {
-      return metadata.abi;
-    }
-  } catch (e) {
-    // ignore and return undefined
-    // will fallback to embedded ABIs for prebuilts
-  }
-  return undefined;
-}
-
-/**
- * @internal
- * @param compilerMetadataUri
- * @param storage
- */
-export async function fetchContractMetadata(
-  compilerMetadataUri: string,
-  storage: ThirdwebStorage,
-): Promise<PublishedMetadata> {
-  const metadata = await storage.downloadJSON(compilerMetadataUri);
-  if (!metadata || !metadata.output) {
-    throw new Error(
-      `Could not resolve metadata for contract at ${compilerMetadataUri}`,
-    );
-  }
-  const abi = AbiSchema.parse(metadata.output.abi);
-  const compilationTarget = metadata.settings.compilationTarget;
-  const targets = Object.keys(compilationTarget);
-  const name = compilationTarget[targets[0]];
-  const info = ContractInfoSchema.parse({
-    title: metadata.output.devdoc.title,
-    author: metadata.output.devdoc.author,
-    details: metadata.output.devdoc.detail,
-    notice: metadata.output.userdoc.notice,
-  });
-  const licenses: string[] = [
-    ...new Set(
-      Object.entries(metadata.sources).map(([, src]) => (src as any).license),
-    ),
-  ];
-  return {
-    name,
-    abi,
-    metadata,
-    info,
-    licenses,
-  };
-}
-
-/**
- * @internal
- * @param publishedMetadata
- * @param storage
- */
-export async function fetchSourceFilesFromMetadata(
-  publishedMetadata: PublishedMetadata,
-  storage: ThirdwebStorage,
-): Promise<ContractSource[]> {
-  return await Promise.all(
-    Object.entries(publishedMetadata.metadata.sources).map(
-      async ([path, info]) => {
-        const urls = (info as any).urls as string[];
-        const ipfsLink = urls
-          ? urls.find((url) => url.includes("ipfs"))
-          : undefined;
-        if (ipfsLink) {
-          const ipfsHash = ipfsLink.split("ipfs/")[1];
-          // 5 sec timeout for sources that haven't been uploaded to ipfs
-          const timeout = new Promise<string>((_r, rej) =>
-            setTimeout(() => rej("timeout"), 5000),
-          );
-          const source = await Promise.race([
-            (await storage.download(`ipfs://${ipfsHash}`)).text(),
-            timeout,
-          ]);
-          return {
-            filename: path,
-            source,
-          };
-        } else {
-          return {
-            filename: path,
-            source:
-              (info as any).content ||
-              "Could not find source for this contract",
-          };
-        }
-      },
-    ),
   );
 }
 
