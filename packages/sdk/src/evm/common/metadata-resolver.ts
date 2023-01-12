@@ -42,10 +42,10 @@ export async function fetchContractMetadataFromAddress(
 ) {
   const chainId = (await provider.getNetwork()).chainId;
   const cached = getFromCache(address, chainId);
-  let metadata: PublishedMetadata | undefined;
   if (cached) {
     return cached;
   }
+  let metadata: PublishedMetadata | undefined;
   try {
     const compilerMetadataUri = await resolveContractUriFromAddress(
       address,
@@ -64,11 +64,13 @@ export async function fetchContractMetadataFromAddress(
           chainId,
           address,
         );
-      console.log("importedUri", importedUri);
       metadata = await fetchContractMetadata(importedUri, storage);
     } catch (err) {
       throw new Error(`Could not resolve metadata for contract at ${address}`);
     }
+  }
+  if (!metadata) {
+    throw new Error(`Could not resolve metadata for contract at ${address}`);
   }
   putInCache(address, chainId, metadata);
   return metadata;
@@ -161,9 +163,9 @@ export async function fetchSourceFilesFromMetadata(
         console.log("ipfsLink", ipfsLink);
         if (ipfsLink) {
           const ipfsHash = ipfsLink.split("ipfs/")[1];
-          // 5 sec timeout for sources that haven't been uploaded to ipfs
+          // 3 sec timeout for sources that haven't been uploaded to ipfs
           const timeout = new Promise<string>((_r, rej) =>
-            setTimeout(() => rej("timeout"), 5000),
+            setTimeout(() => rej("timeout"), 3000),
           );
           const source = await Promise.race([
             (await storage.download(`ipfs://${ipfsHash}`)).text(),
