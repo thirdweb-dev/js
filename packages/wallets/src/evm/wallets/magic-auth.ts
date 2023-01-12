@@ -1,5 +1,6 @@
 import type { MagicAuthConnector, MagicAuthOptions } from "../connectors/magic";
 import { AbstractWallet, WalletOptions } from "./base";
+import type { Chain } from "@wagmi/core";
 
 export class MagicAuthWallet extends AbstractWallet<MagicAuthOptions> {
   #connector?: MagicAuthConnector;
@@ -26,7 +27,7 @@ export class MagicAuthWallet extends AbstractWallet<MagicAuthOptions> {
     return this.#connector;
   }
 
-  switchChain(chainId: number) {
+  switchChain(chainId: number): Promise<Chain> {
     if (!this.#connector?.switchChain) {
       throw new Error("switchChain is not implemented for this connector");
     }
