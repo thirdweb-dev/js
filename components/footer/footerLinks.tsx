@@ -15,6 +15,11 @@ export const SOLUTIONS: FooterLinkInfo[] = [
     name: "GamingKit",
     label: "gaming",
   },
+  {
+    link: "/solutions/minting",
+    name: "Minting",
+    label: "minting",
+  },
 ];
 
 export const RESOURCES: FooterLinkInfo[] = [
