@@ -12,6 +12,8 @@ import { providers } from "ethers";
 
 // Internal static cache
 const metadataCache: Record<string, PublishedMetadata> = {};
+// polygonSDK to fetch metadata from the multichain registry
+const polygonSDK = new ThirdwebSDK("polygon");
 
 function getCacheKey(address: string, chainId: number) {
   return `${address}-${chainId}`;
@@ -58,7 +60,6 @@ export async function fetchContractMetadataFromAddress(
   } catch (e) {
     try {
       // try from multichain registry
-      const polygonSDK = new ThirdwebSDK("polygon");
       const importedUri =
         await polygonSDK.multiChainRegistry.getContractMetadataURI(
           chainId,
