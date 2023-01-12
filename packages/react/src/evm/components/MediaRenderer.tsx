@@ -407,7 +407,6 @@ LinkPlayer.displayName = "LinkPlayer";
 
 const ModelViewer = React.forwardRef<HTMLCanvasElement, MediaRendererProps>(
   ({ src, alt, style, ...restProps }, ref) => {
-    const [loaded, setLoaded] = useState(false);
     const modelRef = useRef<HTMLCanvasElement>(null);
     import('@google/model-viewer')
   
