@@ -196,28 +196,15 @@ export class MarketplaceV3 implements UpdateableNetwork {
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.directListings = new MarketplaceV3DirectListings(
-      new ContractWrapper<DirectListingsLogic>(
-        network,
-        address,
-        DirectListingsABI,
-        options,
-      ),
-      this.contractWrapper,
+      this.contractWrapper as unknown as ContractWrapper<DirectListingsLogic>,
       this.storage,
     );
     this.englishAuctions = new MarketplaceV3EnglishAuctions(
-      new ContractWrapper<EnglishAuctionsLogic>(
-        network,
-        address,
-        EnglishAuctionsABI,
-        options,
-      ),
-      this.contractWrapper,
+      this.contractWrapper as unknown as ContractWrapper<EnglishAuctionsLogic>,
       this.storage,
     );
     this.offers = new MarketplaceV3Offers(
-      new ContractWrapper<OffersLogic>(network, address, OffersABI, options),
-      this.contractWrapper,
+      this.contractWrapper as unknown as ContractWrapper<OffersLogic>,
       this.storage,
     );
     this.events = new ContractEvents(this.contractWrapper);

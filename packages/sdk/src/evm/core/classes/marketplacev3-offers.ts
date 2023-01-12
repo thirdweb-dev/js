@@ -62,26 +62,23 @@ import invariant from "tiny-invariant";
  * @public
  */
 export class MarketplaceV3Offers {
-  private offers: ContractWrapper<OffersLogic>;
-  private entrypoint: ContractWrapper<MarketplaceRouter>;
+  private contractWrapper: ContractWrapper<OffersLogic>;
   private storage: ThirdwebStorage;
 
   constructor(
-    offers: ContractWrapper<OffersLogic>,
-    entrypoint: ContractWrapper<MarketplaceRouter>,
+    contractWrapper: ContractWrapper<OffersLogic>,
     storage: ThirdwebStorage,
   ) {
-    this.offers = offers;
-    this.entrypoint = entrypoint;
+    this.contractWrapper = contractWrapper;
     this.storage = storage;
   }
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider) {
-    this.offers.updateSignerOrProvider(network);
+    this.contractWrapper.updateSignerOrProvider(network);
   }
 
   getAddress(): string {
-    return this.entrypoint.readContract.address;
+    return this.contractWrapper.readContract.address;
   }
 
   /** ******************************
@@ -94,7 +91,7 @@ export class MarketplaceV3Offers {
    * @public
    */
   public async getTotalOffers(): Promise<BigNumber> {
-    return await this.offers.readContract.totalOffers();
+    return await this.contractWrapper.readContract.totalOffers();
   }
 
   /**
@@ -114,7 +111,7 @@ export class MarketplaceV3Offers {
       throw new Error(`No offers exist on the contract.`);
     }
 
-    const rawOffers = await this.offers.readContract.getAllOffers(
+    const rawOffers = await this.contractWrapper.readContract.getAllOffers(
       startIndex,
       count - 1,
     );
@@ -137,7 +134,7 @@ export class MarketplaceV3Offers {
     startIndex: BigNumberish,
     endIndex: BigNumberish,
   ): Promise<OfferV3[]> {
-    const offers = await this.offers.readContract.getAllValidOffers(
+    const offers = await this.contractWrapper.readContract.getAllValidOffers(
       startIndex,
       endIndex,
     );
@@ -152,7 +149,7 @@ export class MarketplaceV3Offers {
    * @returns the Direct listing object
    */
   public async getOffer(offerId: BigNumberish): Promise<OfferV3> {
-    const offer = await this.offers.readContract.getOffer(offerId);
+    const offer = await this.contractWrapper.readContract.getOffer(offerId);
 
     return await this.mapOffer(offer);
   }
@@ -195,20 +192,20 @@ export class MarketplaceV3Offers {
     validateNewOfferParam(offer);
 
     const normalizedTotalPrice = await normalizePriceValue(
-      this.offers.getProvider(),
+      this.contractWrapper.getProvider(),
       offer.totalPrice,
       offer.currencyContractAddress,
     );
 
     const hasAllowance = await hasERC20Allowance(
-      this.entrypoint,
+      this.contractWrapper,
       offer.currencyContractAddress,
       normalizedTotalPrice,
     );
     if (!hasAllowance) {
-      const overrides = await this.entrypoint.getCallOverrides();
+      const overrides = await this.contractWrapper.getCallOverrides();
       await setErc20Allowance(
-        this.entrypoint,
+        this.contractWrapper,
         normalizedTotalPrice,
         offer.currencyContractAddress,
         overrides,
@@ -217,7 +214,7 @@ export class MarketplaceV3Offers {
 
     let offerEndTime = Math.floor(offer.endTimestamp.getTime() / 1000);
 
-    const receipt = await this.offers.sendTransaction(
+    const receipt = await this.contractWrapper.sendTransaction(
       "makeOffer",
       [
         {
@@ -235,7 +232,7 @@ export class MarketplaceV3Offers {
       },
     );
 
-    const event = this.offers.parseLogs<NewOfferEvent>(
+    const event = this.contractWrapper.parseLogs<NewOfferEvent>(
       "NewOffer",
       receipt?.logs,
     );
@@ -262,7 +259,9 @@ export class MarketplaceV3Offers {
     offerId: BigNumberish,
   ): Promise<TransactionResult> {
     return {
-      receipt: await this.offers.sendTransaction("cancelOffer", [offerId]),
+      receipt: await this.contractWrapper.sendTransaction("cancelOffer", [
+        offerId,
+      ]),
     };
   }
 
@@ -289,7 +288,7 @@ export class MarketplaceV3Offers {
     if (!valid) {
       throw new Error(`Offer ${offerId} is no longer valid. ${error}`);
     }
-    const overrides = (await this.offers.getCallOverrides()) || {};
+    const overrides = (await this.contractWrapper.getCallOverrides()) || {};
 
     // await setErc721Allowance(
     //   this.directListings,
@@ -298,7 +297,7 @@ export class MarketplaceV3Offers {
     //   overrides,
     // );
     return {
-      receipt: await this.offers.sendTransaction(
+      receipt: await this.contractWrapper.sendTransaction(
         "acceptOffer",
         [offerId],
         overrides,
@@ -341,13 +340,13 @@ export class MarketplaceV3Offers {
       quantity: offer.quantity,
       totalPrice: offer.totalPrice,
       currencyValue: await fetchCurrencyValue(
-        this.offers.getProvider(),
+        this.contractWrapper.getProvider(),
         offer.currency,
         offer.totalPrice,
       ),
       asset: await fetchTokenMetadataForContract(
         offer.assetContract,
-        this.offers.getProvider(),
+        this.contractWrapper.getProvider(),
         offer.tokenId,
         this.storage,
       ),
