@@ -1,4 +1,4 @@
-import { MediaRenderer, SharedMediaProps } from "./MediaRenderer";
+import { MediaRenderer, SharedMediaProps, useResolvedMediaType } from "./MediaRenderer";
 import { NFTMetadata } from "@thirdweb-dev/sdk";
 import React from "react";
 
@@ -39,9 +39,14 @@ export const ThirdwebNftMedia = React.forwardRef<
   HTMLMediaElement,
   ThirdwebNftMediaProps
 >(({ metadata, ...props }, ref) => {
+
+  // Temporary workaround until we get 3D image rendering working
+  const animationUrlType = useResolvedMediaType(metadata.animation_url ?? undefined);
+  const is3dFile = animationUrlType.mimeType?.includes("model")
+
   return (
     <MediaRenderer
-      src={metadata.animation_url || metadata.image}
+      src={is3dFile ? metadata.image : metadata.animation_url || metadata.image}
       poster={metadata.image}
       alt={metadata.name?.toString() || ""}
       ref={ref}
