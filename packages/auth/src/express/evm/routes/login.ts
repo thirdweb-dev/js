@@ -5,9 +5,14 @@ import { Request, Response } from "express";
 
 function redirectWithError(req: Request, res: Response, error: string) {
   const encodedError = encodeURIComponent(error);
-  const url = new URL(req.headers.referer as string);
-  url.searchParams.set("error", encodedError);
-  return res.redirect(url.toString());
+
+  try {
+    const url = new URL(req.headers.referer as string);
+    url.searchParams.set("error", encodedError);
+    return res.redirect(url.toString());
+  } catch {
+    return res.status(400).end();
+  }
 }
 
 export default async function handler(
@@ -27,7 +32,7 @@ export default async function handler(
   try {
     payload = JSON.parse(atob(req.query.payload as string)) as LoginPayload;
     if (!payload) {
-      redirectWithError(req, res, "MISSING_LOGIN_PAYLOAD");
+      return redirectWithError(req, res, "MISSING_LOGIN_PAYLOAD");
     }
 
     // Generate an access token with the SDK using the signed payload
