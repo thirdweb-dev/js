@@ -65,6 +65,7 @@ describe("Marketplace Contract", async () => {
         "2",
       ),
     );
+
     dummyNftContract = await sdk.getNFTCollection(
       await sdk.deployer.deployBuiltInContract(
         NFTCollectionInitializer.contractType,

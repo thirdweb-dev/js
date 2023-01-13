@@ -163,9 +163,7 @@ export const MarketplaceInitializer = {
 
     // Deprecated - only needed for backwards compatibility with non-released contracts - should remove in v4
     return (
-      await import(
-        "@thirdweb-dev/contracts-js/dist/abis/MarketplaceRouter.json"
-      )
+      await import("@thirdweb-dev/contracts-js/dist/abis/Marketplace.json")
     ).default;
   },
 };

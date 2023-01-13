@@ -12,6 +12,7 @@ import {
   NFTCollectionInitializer,
   NFTDropInitializer,
   PackInitializer,
+  resolveContractUriFromAddress,
   SignatureDropInitializer,
   SplitInitializer,
   ThirdwebSDK,
@@ -20,7 +21,7 @@ import {
   VoteInitializer,
 } from "../../src/evm";
 import { Plugin } from "../../src/evm/types/plugins";
-import { MockStorage } from "./mock/MockStorage";
+import { MockStorage, mockUploadWithCID } from "./mock/MockStorage";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   ContractPublisher,
@@ -247,24 +248,6 @@ export const mochaHooks = {
     );
     await tx.wait();
 
-    // console.log(
-    //   await thirdwebFactoryDeployer.getLatestImplementation(
-    //     ethers.utils.formatBytes32String("Marketplace"),
-    //   ),
-    // );
-    // console.log(
-    //   await thirdwebFactoryDeployer.getImplementation(
-    //     ethers.utils.formatBytes32String("Marketplace"),
-    //     2,
-    //   ),
-    // );
-    // console.log(
-    //   await thirdwebFactoryDeployer.getImplementation(
-    //     ethers.utils.formatBytes32String("Marketplace"),
-    //     3,
-    //   ),
-    // );
-
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     process.env.registryAddress = thirdwebRegistryAddress;
     // eslint-disable-next-line turbo/no-undeclared-env-vars
@@ -322,6 +305,34 @@ const generatePluginFunctions = (
   return pluginFunctions;
 };
 
+const mockUploadContractMetadata = async (address: string, abi: any) => {
+  const ipfsHash = (await resolveContractUriFromAddress(
+    address,
+    defaultProvider,
+  )) as string;
+
+  const metadata = {
+    compiler: {},
+    output: {
+      abi,
+      devdoc: {},
+      userdoc: {},
+    },
+    settings: {
+      compilationTarget: {},
+      evmVersion: {},
+      metadata: {},
+      optimizer: {},
+      remappings: [],
+    },
+    sources: {},
+    version: 1,
+  };
+  const cid = ipfsHash.replace("ipfs://", "");
+
+  await mockUploadWithCID(cid, JSON.stringify(metadata));
+};
+
 // Setup multichain registry for tests
 async function setupMultichainRegistry(
   trustedForwarderAddress: string,
@@ -373,6 +384,10 @@ async function setupMarketplaceV3(): Promise<string> {
     .connect(signer)
     .deploy(nativeTokenWrapperAddress)) as DirectListingsLogic;
   const directListingsLogic = await directListingsLogicDeployer.deployed();
+  await mockUploadContractMetadata(
+    directListingsLogic.address,
+    DirectListingsLogic__factory.abi,
+  );
 
   const pluginsDirectListings: Plugin[] = generatePluginFunctions(
     directListingsLogic.address,
@@ -387,6 +402,10 @@ async function setupMarketplaceV3(): Promise<string> {
     .connect(signer)
     .deploy(nativeTokenWrapperAddress)) as EnglishAuctionsLogic;
   const englishAuctionsLogic = await englishAuctionsLogicDeployer.deployed();
+  await mockUploadContractMetadata(
+    englishAuctionsLogic.address,
+    EnglishAuctionsLogic__factory.abi,
+  );
 
   const pluginsEnglishAuctions: Plugin[] = generatePluginFunctions(
     englishAuctionsLogic.address,
@@ -401,6 +420,10 @@ async function setupMarketplaceV3(): Promise<string> {
     .connect(signer)
     .deploy()) as OffersLogic;
   const offersLogic = await offersLogicDeployer.deployed();
+  await mockUploadContractMetadata(
+    offersLogic.address,
+    OffersLogic__factory.abi,
+  );
 
   const pluginsOffers: Plugin[] = generatePluginFunctions(
     offersLogic.address,
