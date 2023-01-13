@@ -5,7 +5,7 @@ import { Heading, TrackedLink } from "tw-components";
 
 export const AnnouncementBanner = () => {
   const [hasDismissedAnnouncement, setHasDismissedAnnouncement] =
-    useLocalStorage("dismissed-solana-announcement", false, true);
+    useLocalStorage("dismissed-readyplayer3-announcement", false, true);
 
   if (hasDismissedAnnouncement) {
     return null;
@@ -27,9 +27,9 @@ export const AnnouncementBanner = () => {
       >
         <Box display={{ base: "none", md: "block" }} />
         <TrackedLink
-          href="/network/solana"
+          href="/hackathon/readyplayer3"
           category="announcement"
-          label="solana"
+          label="readyplayer3"
         >
           <Container maxW="container.page" display="flex" px={0}>
             <Flex
@@ -46,8 +46,9 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                We are excited to announce that thirdweb&apos;s developer
-                toolkit is now available on <strong>Solana!</strong>
+                Build the future of gaming at our next hackathon, starting 1/16
+                + supported by more than $100,000 in perks & prizes. Register
+                Now.
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
