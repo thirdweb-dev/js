@@ -125,6 +125,7 @@ export const SettingsPlatformFees = <
                 value={watch("platform_fee_basis_points")}
                 onChange={(value) =>
                   setValue("platform_fee_basis_points", value, {
+                    shouldDirty: true,
                     shouldTouch: true,
                   })
                 }

@@ -123,6 +123,7 @@ export const SettingsRoyalties = <
                 value={watch("seller_fee_basis_points")}
                 onChange={(value) =>
                   setValue("seller_fee_basis_points", value, {
+                    shouldDirty: true,
                     shouldTouch: true,
                   })
                 }
