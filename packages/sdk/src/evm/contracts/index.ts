@@ -1,9 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  fetchAbiFromAddress,
-  fetchContractMetadataFromAddress,
-} from "../common";
 import { getPrebuiltInfo } from "../common/legacy";
+import { fetchAbiFromAddress } from "../common/metadata-resolver";
 import { getCompositePluginABI } from "../common/plugin";
 import { ALL_ROLES } from "../common/role";
 import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
@@ -634,7 +631,7 @@ export const PREBUILT_CONTRACTS_MAP = {
 const SmartContract = {
   name: "SmartContract" as const,
   contractType: "custom" as const,
-  schema: CustomContractSchema,
+  schema: {},
   roles: ALL_ROLES,
 };
 
