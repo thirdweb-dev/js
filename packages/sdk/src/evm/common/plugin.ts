@@ -1,9 +1,7 @@
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { Abi, AbiSchema, SDKOptions } from "../schema";
-import {
-  fetchContractMetadataFromAddress,
-  isFeatureEnabled,
-} from "./feature-detection";
+import { isFeatureEnabled } from "./feature-detection";
+import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import { unique } from "./utils";
 import { IRouter } from "@thirdweb-dev/contracts-js";
 import RouterABI from "@thirdweb-dev/contracts-js/dist/abis/Router.json";
