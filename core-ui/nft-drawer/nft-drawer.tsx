@@ -155,8 +155,7 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
             {tabs.map((tab) => {
               return (
                 <TabPanel key={tab.title} px={0}>
-                  {/* lol this is weird */}
-                  <tab.children />
+                  {tab.children}
                 </TabPanel>
               );
             })}

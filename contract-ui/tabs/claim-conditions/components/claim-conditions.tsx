@@ -1,19 +1,13 @@
-import { ClaimConditionsForm } from "./claim-conditions-form";
+import { ClaimConditionsForm } from "./claim-conditions-form/index";
+import { ResetClaimEligibility } from "./reset-claim-eligibility";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
-import { Box, Divider, Flex, Stack } from "@chakra-ui/react";
-import {
-  DropContract,
-  TokenContract,
-  useResetClaimConditions,
-} from "@thirdweb-dev/react";
+import { Divider, Flex, Stack } from "@chakra-ui/react";
+import { DropContract, TokenContract } from "@thirdweb-dev/react";
 import { ValidContractInstance } from "@thirdweb-dev/sdk/evm";
-import { TransactionButton } from "components/buttons/TransactionButton";
 import { detectFeatures } from "components/contract-components/utils";
 import { UpdateNotice } from "core-ui/update-notice/update-notice";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
 import { hasNewClaimConditions } from "lib/claimcondition-utils";
-import React from "react";
+import React, { useMemo } from "react";
 import { Card, Heading, Text } from "tw-components";
 
 export interface ClaimConditionsProps {
@@ -26,23 +20,18 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
   tokenId,
   isColumn,
 }) => {
-  const trackEvent = useTrack();
-  const resetClaimConditions = useResetClaimConditions(contract, tokenId);
-  const { onSuccess, onError } = useTxNotifications(
-    "Successfully reset claim eligibility",
-    "Failed to reset claim eligibility",
-  );
-
-  const isErc20 = detectFeatures<TokenContract>(contract, ["ERC20"]);
-
-  const newClaimConditions = hasNewClaimConditions(contract);
-
-  const nftsOrToken = isErc20 ? "tokens" : "NFTs";
+  const contractInfo = useMemo(() => {
+    return {
+      hasNewClaimConditions: hasNewClaimConditions(contract),
+      isErc20: detectFeatures<TokenContract>(contract, ["ERC20"]),
+    };
+  }, [contract]);
 
   return (
     <Stack spacing={8}>
       <Card p={0} position="relative">
         <Flex pt={{ base: 6, md: 10 }} direction="column" gap={8}>
+          {/* Info */}
           <Flex
             px={isColumn ? 6 : { base: 6, md: 10 }}
             as="section"
@@ -51,12 +40,12 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
           >
             <Flex direction="column">
               <Heading size="title.md">Set Claim Conditions</Heading>
-              <Text size="body.md" fontStyle="italic">
-                Control when the {nftsOrToken} get dropped, how much they cost,
-                and more.
+              <Text size="body.md" fontStyle="italic" mt={2}>
+                Control when the {contractInfo.isErc20 ? "tokens" : "NFTs"} get
+                dropped, how much they cost, and more.
               </Text>
             </Flex>
-            {newClaimConditions && (
+            {contractInfo.hasNewClaimConditions && (
               <UpdateNotice
                 learnMoreHref="https://blog.thirdweb.com/announcing-improved-claim-conditions"
                 trackingLabel="claim_conditions"
@@ -70,81 +59,30 @@ export const ClaimConditions: React.FC<ClaimConditionsProps> = ({
               </UpdateNotice>
             )}
           </Flex>
+
           <Divider />
-          <ClaimConditionsForm
-            contract={contract}
-            tokenId={tokenId}
-            isColumn={isColumn}
-          />
+
+          {/* Set Claim Conditions */}
+          {contract && (
+            <ClaimConditionsForm
+              contract={contract}
+              tokenId={tokenId}
+              isColumn={isColumn}
+            />
+          )}
         </Flex>
       </Card>
-      <AdminOnly contract={contract as ValidContractInstance}>
-        <Card p={0} position="relative">
-          <Flex pt={{ base: 6, md: 10 }} direction="column" gap={8}>
-            <Flex
-              px={isColumn ? 6 : { base: 6, md: 10 }}
-              as="section"
-              direction="column"
-              gap={4}
-            >
-              <Flex direction="column">
-                <Heading size="title.md">Claim Eligibility</Heading>
-                <Text size="body.md" fontStyle="italic">
-                  This contract&apos;s claim eligibility stores who has already
-                  claimed {nftsOrToken} from this contract and carries across
-                  claim phases. Resetting claim eligibility will reset this
-                  state permanently, and people who have already claimed to
-                  their limit will be able to claim again.
-                </Text>
-              </Flex>
-            </Flex>
 
-            <AdminOnly
-              contract={contract as ValidContractInstance}
-              fallback={<Box pb={5} />}
-            >
-              <TransactionButton
-                colorScheme="primary"
-                transactionCount={1}
-                type="submit"
-                isLoading={resetClaimConditions.isLoading}
-                onClick={() => {
-                  trackEvent({
-                    category: isErc20 ? "token" : "nft",
-                    action: "reset-claim-conditions",
-                    label: "attempt",
-                  });
-                  resetClaimConditions.mutate(undefined, {
-                    onSuccess: () => {
-                      trackEvent({
-                        category: isErc20 ? "token" : "nft",
-                        action: "reset-claim-conditions",
-                        label: "success",
-                      });
-                      onSuccess();
-                    },
-                    onError: (error) => {
-                      trackEvent({
-                        category: isErc20 ? "token" : "nft",
-                        action: "reset-claim-conditions",
-                        label: "error",
-                        error,
-                      });
-                      onError(error);
-                    },
-                  });
-                }}
-                loadingText="Resetting..."
-                size="md"
-                borderRadius="xl"
-                borderTopLeftRadius="0"
-                borderTopRightRadius="0"
-              >
-                Reset Claim Eligibility
-              </TransactionButton>
-            </AdminOnly>
-          </Flex>
-        </Card>
+      {/* Reset Claim Eligibility */}
+      <AdminOnly contract={contract as ValidContractInstance}>
+        {contract && (
+          <ResetClaimEligibility
+            isErc20={contractInfo.isErc20}
+            contract={contract}
+            isColumn={isColumn}
+            tokenId={tokenId}
+          />
+        )}
       </AdminOnly>
     </Stack>
   );

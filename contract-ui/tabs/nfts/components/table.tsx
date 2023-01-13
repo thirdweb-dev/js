@@ -145,7 +145,6 @@ export const NFTGetAllTable: React.FC<ContractOverviewNFTGetAllProps> = ({
   useEffect(() => {
     setQueryParams({ start: pageIndex * pageSize, count: pageSize });
   }, [pageIndex, pageSize]);
-
   const [tokenRow, setTokenRow] = useState<NFT | null>(null);
 
   const drawerTabs = useNFTDrawerTabs("evm", contract, tokenRow);

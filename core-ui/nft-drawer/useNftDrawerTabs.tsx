@@ -66,14 +66,14 @@ export function useNFTDrawerTabs(
         {
           title: "Transfer",
           isDisabled: !isOwner,
-          children: () => (
+          children: (
             <SOLTransferTab program={contractOrProgram} tokenId={tokenId} />
           ),
         },
         {
           title: "Burn",
           isDisabled: !isOwner,
-          children: () => (
+          children: (
             <SOLBurnTab program={contractOrProgram} tokenId={tokenId} />
           ),
         },
@@ -85,7 +85,7 @@ export function useNFTDrawerTabs(
             title: "Mint",
             // TODO: Disable if the user is not the authority
             isDisabled: false,
-            children: () => (
+            children: (
               <SOLMintSupplyTab
                 program={contractOrProgram as NFTCollection}
                 tokenId={tokenId}
@@ -148,7 +148,7 @@ export function useNFTDrawerTabs(
         {
           title: "Transfer",
           isDisabled: !isOwner,
-          children: () => (
+          children: (
             <EVMTransferTab contract={contractOrProgram} tokenId={tokenId} />
           ),
         },
@@ -158,9 +158,7 @@ export function useNFTDrawerTabs(
           {
             title: "Airdrop",
             isDisabled: !isOwner,
-            children: () => (
-              <EVMAirdropTab contract={erc1155} tokenId={tokenId} />
-            ),
+            children: <EVMAirdropTab contract={erc1155} tokenId={tokenId} />,
           },
         ]);
       }
@@ -169,7 +167,7 @@ export function useNFTDrawerTabs(
           {
             title: "Burn",
             isDisabled: !isOwner,
-            children: () => (
+            children: (
               <EVMBurnTab contract={contractOrProgram} tokenId={tokenId} />
             ),
           },
@@ -180,9 +178,7 @@ export function useNFTDrawerTabs(
           {
             title: "Mint",
             isDisabled: false,
-            children: () => (
-              <EVMMintSupplyTab contract={erc1155} tokenId={tokenId} />
-            ),
+            children: <EVMMintSupplyTab contract={erc1155} tokenId={tokenId} />,
           },
         ]);
       }
@@ -191,7 +187,7 @@ export function useNFTDrawerTabs(
           {
             title: "Claim Conditions",
             isDisabled: false,
-            children: () => (
+            children: (
               <EVMClaimConditionTab
                 contract={contractOrProgram}
                 tokenId={tokenId}
@@ -206,7 +202,7 @@ export function useNFTDrawerTabs(
           {
             title: "Claim",
             isDisabled: false,
-            children: () => (
+            children: (
               <EVMClaimTab contract={contractOrProgram} tokenId={tokenId} />
             ),
           },
