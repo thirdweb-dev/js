@@ -46,9 +46,8 @@ export const AnnouncementBanner = () => {
                 color="white"
                 fontWeight={500}
               >
-                Build the future of gaming at our next hackathon, starting 1/16
-                + supported by more than $100,000 in perks & prizes. Register
-                Now.
+                Build the future of gaming at our next hackathon, starting
+                January 16th. Over $100,000 in perks & prizes. Register Now.
               </Heading>
               <Icon display={{ base: "none", md: "block" }} as={FiArrowRight} />
             </Flex>
