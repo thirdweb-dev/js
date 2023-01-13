@@ -22,13 +22,14 @@ export default async function handler(
   const { sdk, domain } = ctx;
 
   // Get signed login payload from the frontend
-  const payload = JSON.parse(atob(req.query.payload as string)) as LoginPayload;
-  if (!payload) {
-    redirectWithError(req, res, "MISSING_LOGIN_PAYLOAD");
-  }
-
+  let payload;
   let token;
   try {
+    payload = JSON.parse(atob(req.query.payload as string)) as LoginPayload;
+    if (!payload) {
+      redirectWithError(req, res, "MISSING_LOGIN_PAYLOAD");
+    }
+
     // Generate an access token with the SDK using the signed payload
     token = await sdk.auth.generateAuthToken(domain, payload);
   } catch {
