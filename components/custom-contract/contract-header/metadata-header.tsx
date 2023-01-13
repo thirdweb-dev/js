@@ -1,6 +1,5 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { Flex, Image, Skeleton } from "@chakra-ui/react";
-import type { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
 import { ContractBadge } from "components/badges/contract-badge";
 import { NextSeo } from "next-seo";
 import { StaticImageData } from "next/image";
@@ -9,6 +8,7 @@ import { ContractOG } from "og-lib/url-utils";
 import { useMemo } from "react";
 import { Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
+import { chainIdToHumanReadable } from "utils/network";
 
 interface MetadataHeaderProps {
   isLoaded: boolean;
@@ -20,27 +20,6 @@ interface MetadataHeaderProps {
     image?: string | null;
   };
 }
-
-const chainIdToHumanReadable: Record<
-  Exclude<SUPPORTED_CHAIN_ID, 1337 | 31337>,
-  string
-> = {
-  1: "Ethereum",
-  5: "Goerli",
-  137: "Polygon",
-  80001: "Mumbai",
-  250: "Fantom",
-  4002: "Fantom Testnet",
-  43114: "Avalanche",
-  43113: "Avalanche Fuji",
-  10: "Optimism",
-  420: "Optimism Goerli",
-  42161: "Arbitrum",
-  421613: "Arbitrum Goerli",
-  56: "Binance Smart Chain",
-  97: "Binance Smart Chain Testnet",
-};
-
 function getChainIdToHumanReadable(chainId?: number) {
   return chainId && chainId in chainIdToHumanReadable
     ? chainIdToHumanReadable[chainId as keyof typeof chainIdToHumanReadable]

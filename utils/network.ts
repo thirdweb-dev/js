@@ -27,6 +27,26 @@ export const SupportedChainIdToNetworkMap: Record<SUPPORTED_CHAIN_ID, string> =
     [ChainId.BinanceSmartChainTestnet]: "binance-testnet",
   } as const;
 
+export const chainIdToHumanReadable: Record<
+  Exclude<SUPPORTED_CHAIN_ID, 1337 | 31337>,
+  string
+> = {
+  1: "Ethereum",
+  5: "Goerli",
+  137: "Polygon",
+  80001: "Mumbai",
+  250: "Fantom",
+  4002: "Fantom Testnet",
+  43114: "Avalanche",
+  43113: "Avalanche Fuji",
+  10: "Optimism",
+  420: "Optimism Goerli",
+  42161: "Arbitrum",
+  421613: "Arbitrum Goerli",
+  56: "Binance Smart Chain",
+  97: "Binance Smart Chain Testnet",
+};
+
 export const SupportedNetworkToChainIdMap = {
   ethereum: ChainId.Mainnet, // 1
 

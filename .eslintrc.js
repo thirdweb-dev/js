@@ -108,6 +108,7 @@ module.exports = {
             name: "@chakra-ui/react",
             // these are provided by tw-components, so we don't want to import them from chakra directly
             importNames: [
+              "Card",
               "Button",
               "Checkbox",
               "Badge",

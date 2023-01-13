@@ -21,7 +21,7 @@ export interface TemplateValue {
 const ADDRESS_TEMPLATE_VALUES: TemplateValue[] = [
   {
     value: "{{connected_wallet}}",
-    helperText: "replaced with the address of the connected wallet",
+    helperText: "Replaced with the address of the connected wallet.",
     replacerFunction: (searchValue, replacers) => {
       return searchValue.replaceAll(
         "{{connected_wallet}}",
@@ -35,7 +35,7 @@ const ADDRESS_ARRAY_TEMPLATE_VALUES: TemplateValue[] = [
   {
     value: "{{trusted_forwarders}}",
     helperText:
-      "replaced with the addresses of the trusted (gasless) forwarders for the selected network",
+      "Replaced with the addresses of the trusted (gasless) forwarders for the selected network.",
     replacerFunction: (searchValue, replacers) => {
       const trustedForwardersForChain = replacers.chainId
         ? getDefaultTrustedForwarders(replacers.chainId)

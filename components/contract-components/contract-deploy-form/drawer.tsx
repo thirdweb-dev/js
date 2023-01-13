@@ -1,8 +1,9 @@
 import { ContractDeployForm } from ".";
 import { ContractId } from "../types";
-import { Box, Icon, useDisclosure } from "@chakra-ui/react";
+import { Box, Flex, Icon, Tooltip, useDisclosure } from "@chakra-ui/react";
 import { SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
 import { useTrack } from "hooks/analytics/useTrack";
+import { BiRocket } from "react-icons/bi";
 import { FiChevronsRight } from "react-icons/fi";
 import { Button, Drawer } from "tw-components";
 
@@ -13,6 +14,7 @@ interface DeployFormDrawerProps {
   onSuccessCallback?: (contractAddress: string) => void;
   onDrawerVisibilityChanged?: (isVisible: boolean) => void;
   isImplementationDeploy?: true;
+  onlyIcon?: boolean;
 }
 
 export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
@@ -22,6 +24,7 @@ export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
   onSuccessCallback,
   onDrawerVisibilityChanged,
   isImplementationDeploy,
+  onlyIcon = false,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -40,9 +43,23 @@ export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
           onOpen();
           onDrawerVisibilityChanged?.(true);
         }}
-        rightIcon={<Icon as={FiChevronsRight} />}
+        rightIcon={onlyIcon ? undefined : <Icon as={FiChevronsRight} />}
       >
-        Deploy Now
+        {onlyIcon ? (
+          <Tooltip
+            p={0}
+            ml={3}
+            label={<Flex p={2}>Deploy</Flex>}
+            bgColor="black"
+            borderRadius="lg"
+            placement="right"
+            shouldWrapChildren
+          >
+            <Icon as={BiRocket} />
+          </Tooltip>
+        ) : (
+          "Deploy now"
+        )}
       </Button>
       <Drawer
         allowPinchZoom

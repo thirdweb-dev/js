@@ -19,7 +19,7 @@ import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelec
 import { DisabledChainsMap } from "constants/mappings";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
-import { replaceTemplateValues } from "lib/deployment/tempalte-values";
+import { replaceTemplateValues } from "lib/deployment/template-values";
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import {
