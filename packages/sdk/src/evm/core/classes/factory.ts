@@ -58,7 +58,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     [VoteInitializer.contractType]: 1,
     [SplitInitializer.contractType]: 1,
     [MarketplaceInitializer.contractType]: 2,
-    [MarketplaceV3Initializer.contractType]: 3,
+    [MarketplaceV3Initializer.contractType]: 1,
     [PackInitializer.contractType]: 2,
   };
 

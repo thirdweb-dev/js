@@ -529,12 +529,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         .toUtf8String(await contract.contractType())
         // eslint-disable-next-line no-control-regex
         .replace(/\x00/g, "");
-      const contractType = getContractTypeForRemoteName(remoteContractType);
-      if (contractType === "marketplace") {
-        const version = await contract.contractVersion();
-        return version < 3 ? "marketplace" : "marketplace-v3";
-      }
-      return contractType;
+      return getContractTypeForRemoteName(remoteContractType);
     } catch (err) {
       return "custom";
     }

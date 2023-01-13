@@ -169,7 +169,7 @@ export const MarketplaceInitializer = {
 };
 
 export const MarketplaceV3Initializer = {
-  name: "Marketplace" as const,
+  name: "MarketplaceRouter" as const,
   contractType: "marketplace-v3" as const,
   schema: MarketplaceContractSchema,
   roles: ["admin", "lister", "asset"] as const,
