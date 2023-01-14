@@ -19,7 +19,7 @@ import {
 import { SDKOptions } from "../../schema/sdk-options";
 import {
   DeploySchemaForPrebuiltContractType,
-  NetworkOrSignerOrProvider,
+  NetworkInput,
   PrebuiltContractType,
 } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
@@ -55,7 +55,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
 
   constructor(
     factoryAddr: string,
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     storage: ThirdwebStorage,
     options?: SDKOptions,
   ) {

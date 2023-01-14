@@ -15,7 +15,7 @@ import { StandardErc721 } from "../../core/classes/erc-721-standard";
 import { Erc721WithQuantitySignatureMintable } from "../../core/classes/erc-721-with-quantity-signature-mintable";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import type {
-  NetworkOrSignerOrProvider,
+  NetworkInput,
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
@@ -103,7 +103,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
   public erc721: Erc721<TokenERC721>;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
@@ -146,7 +146,7 @@ export class NFTCollection extends StandardErc721<TokenERC721> {
   /**
    * @internal
    */
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+  onNetworkUpdated(network: NetworkInput): void {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 

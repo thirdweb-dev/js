@@ -18,7 +18,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import {
   ForwardRequestMessage,
   GaslessTransaction,
-  NetworkOrSignerOrProvider,
+  NetworkInput,
   PermitRequestMessage,
 } from "../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
@@ -53,7 +53,7 @@ export class ContractWrapper<
   public abi;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     contractAddress: string,
     contractAbi: ContractInterface,
     options: SDKOptions,
@@ -72,9 +72,7 @@ export class ContractWrapper<
     ) as TContract;
   }
 
-  public override updateSignerOrProvider(
-    network: NetworkOrSignerOrProvider,
-  ): void {
+  public override updateSignerOrProvider(network: NetworkInput): void {
     // update the underlying base class
     super.updateSignerOrProvider(network);
     // re-connect the contract with the new signer / provider

@@ -10,7 +10,7 @@ import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import {
-  NetworkOrSignerOrProvider,
+  NetworkInput,
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
@@ -71,7 +71,7 @@ export class Vote implements UpdateableNetwork {
   }
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
@@ -99,7 +99,7 @@ export class Vote implements UpdateableNetwork {
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
-  onNetworkUpdated(network: NetworkOrSignerOrProvider) {
+  onNetworkUpdated(network: NetworkInput) {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 

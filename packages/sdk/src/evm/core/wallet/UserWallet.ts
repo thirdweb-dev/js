@@ -9,7 +9,7 @@ import { SDKOptions } from "../../schema";
 import { Amount, CurrencyValue } from "../../types";
 import { ContractWrapper } from "../classes/contract-wrapper";
 import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
+import { NetworkInput, TransactionResult } from "../types";
 import type { IERC20 } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { ethers, BigNumber, providers, Signer, TypedDataField } from "ethers";
@@ -42,7 +42,7 @@ export class UserWallet {
   private options: SDKOptions;
   public events = new EventEmitter<UserWalletEvents>();
 
-  constructor(network: NetworkOrSignerOrProvider, options: SDKOptions) {
+  constructor(network: NetworkInput, options: SDKOptions) {
     this.connection = new RPCConnectionHandler(network, options);
     this.options = options;
     this.events = new EventEmitter();
@@ -55,7 +55,7 @@ export class UserWallet {
 
   // TODO this will become the source of truth of the signer and have every contract read from it
   // TODO separate signer and provider logics
-  public connect(network: NetworkOrSignerOrProvider) {
+  public connect(network: NetworkInput) {
     this.connection.updateSignerOrProvider(network);
     this.events.emit("signerChanged", this.connection.getSigner());
   }

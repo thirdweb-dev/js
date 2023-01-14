@@ -1,7 +1,6 @@
 import { fetchCurrencyValue } from "../common/currency";
 import {
   ChainId,
-  ChainIdOrName,
   getChainProvider,
   NATIVE_TOKEN_ADDRESS,
   toChainId,
@@ -24,11 +23,11 @@ import {
   RPCConnectionHandler,
 } from "./classes/rpc-connection-handler";
 import type {
+  ChainIdOrName,
   ContractForPrebuiltContractType,
   ContractType,
-  NetworkOrSignerOrProvider,
+  NetworkInput,
   PrebuiltContractType,
-  SignerOrProvider,
   ValidContractInstance,
 } from "./types";
 import { UserWallet } from "./wallet/UserWallet";
@@ -141,6 +140,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @example
    * ```javascript
    * const sdk = ThirdwebSDK.fromLocalNode();
+   *
+   * // if your local node is running based off a forked chain, you can specify the chain id or name
+   * const sdk = ThirdwebSDK.fromLocalNode("mainnet");
    * ```
    *
    * @param forkedChain - optional forked chain id or name. Defaults to localhost
@@ -206,28 +208,23 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public auth: WalletAuthenticator;
 
   constructor(
-    network: ChainIdOrName | SignerOrProvider,
+    network: NetworkInput,
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
   ) {
-    const signerOrProvider = ethers.Signer.isSigner(network)
-      ? network
-      : ethers.providers.Provider.isProvider(network)
-      ? network
-      : getChainProvider(network, options);
-    super(signerOrProvider, options);
+    super(network, options);
     this.storageHandler = storage;
     this.storage = storage;
-    this.wallet = new UserWallet(signerOrProvider, options);
-    this.deployer = new ContractDeployer(signerOrProvider, options, storage);
-    this.auth = new WalletAuthenticator(signerOrProvider, this.wallet, options);
+    this.wallet = new UserWallet(network, options);
+    this.deployer = new ContractDeployer(network, options, storage);
+    this.auth = new WalletAuthenticator(network, this.wallet, options);
     this.multiChainRegistry = new MultichainRegistry(
-      signerOrProvider,
+      network,
       this.storageHandler,
       this.options,
     );
     this._publisher = new ContractPublisher(
-      signerOrProvider,
+      network,
       this.options,
       this.storageHandler,
     );
@@ -604,7 +601,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * Update the active signer or provider for all contracts
    * @param network - the new signer or provider
    */
-  public override updateSignerOrProvider(network: NetworkOrSignerOrProvider) {
+  public override updateSignerOrProvider(network: NetworkInput) {
     super.updateSignerOrProvider(network);
     this.updateContractSignerOrProvider();
   }

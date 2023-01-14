@@ -1,10 +1,10 @@
-import { NetworkOrSignerOrProvider } from "../types";
+import { NetworkInput } from "../types";
 
 /**
  * @public
  */
 export interface UpdateableNetwork {
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+  onNetworkUpdated(network: NetworkInput): void;
   getAddress(): string;
   chainId: number;
 }

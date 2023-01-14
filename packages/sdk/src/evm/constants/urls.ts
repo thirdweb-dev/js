@@ -1,4 +1,5 @@
 import { getRpcUrl } from "../../core/constants/urls";
+import { ChainIdOrName } from "../core";
 import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
 import { ChainInfo, SDKOptions, SDKOptionsSchema } from "../schema";
 import { ChainId, SUPPORTED_CHAIN_ID, SUPPORTED_CHAIN_IDS } from "./chains";
@@ -9,7 +10,7 @@ import { ethers, providers } from "ethers";
  */
 export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
 
-type ChainNames =
+export type ChainNames =
   | "mainnet"
   // common alias for `mainnet`
   | "ethereum"
@@ -36,11 +37,6 @@ type ChainNames =
 /**
  * @internal
  */
-export type ChainOrRpc =
-  // ideally we could use `https://${string}` notation here, but doing that causes anything that is a generic string to throw a type error => not worth the hassle for now
-  ChainNames | (string & {});
-
-export type ChainIdOrName = number | ChainNames | (string & {});
 
 export const CHAIN_NAME_TO_ID: Record<ChainNames, SUPPORTED_CHAIN_ID> = {
   "avalanche-fuji": ChainId.AvalancheFujiTestnet,
@@ -92,11 +88,8 @@ export function getChainProvider(
   network: ChainIdOrName,
   sdkOptions: SDKOptions,
 ): ethers.providers.Provider {
-  // handle legacy input of passing a RPC url directly
+  // handle passing a RPC url directly
   if (typeof network === "string" && network.startsWith("http")) {
-    console.warn(
-      "Passing a RPC url directly to the SDK is deprecated, please pass it via the `chainInfos` property of the SDK options instead.",
-    );
     return getReadOnlyProvider(network);
   }
   const chainId = toChainId(network);

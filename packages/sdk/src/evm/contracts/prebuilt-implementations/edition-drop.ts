@@ -18,7 +18,7 @@ import { Erc1155 } from "../../core/classes/erc-1155";
 import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import {
-  NetworkOrSignerOrProvider,
+  NetworkInput,
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
@@ -120,7 +120,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
   public owner: ContractOwner<PrebuiltEditionDrop>;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
@@ -165,7 +165,7 @@ export class EditionDrop extends StandardErc1155<PrebuiltEditionDrop> {
   /**
    * @internal
    */
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+  onNetworkUpdated(network: NetworkInput): void {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 

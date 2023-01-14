@@ -14,7 +14,7 @@ import {
   AuthenticationOptionsSchema,
 } from "../../schema/auth";
 import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
-import { NetworkOrSignerOrProvider } from "../types";
+import { NetworkInput } from "../types";
 import { UserWallet } from "../wallet";
 
 /**
@@ -47,11 +47,7 @@ import { UserWallet } from "../wallet";
 export class WalletAuthenticator extends RPCConnectionHandler {
   private wallet: UserWallet;
 
-  constructor(
-    network: NetworkOrSignerOrProvider,
-    wallet: UserWallet,
-    options: SDKOptions,
-  ) {
+  constructor(network: NetworkInput, wallet: UserWallet, options: SDKOptions) {
     super(network, options);
     this.wallet = wallet;
   }

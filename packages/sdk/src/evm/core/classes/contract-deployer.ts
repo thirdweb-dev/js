@@ -36,7 +36,7 @@ import {
 import { ThirdwebSDK } from "../sdk";
 import {
   DeploySchemaForPrebuiltContractType,
-  NetworkOrSignerOrProvider,
+  NetworkInput,
   PrebuiltContractType,
 } from "../types";
 import { ContractFactory } from "./factory";
@@ -73,7 +73,7 @@ export class ContractDeployer extends RPCConnectionHandler {
   private storage: ThirdwebStorage;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     options: SDKOptions,
     storage: ThirdwebStorage,
   ) {
@@ -623,7 +623,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       }));
   }
 
-  public override updateSignerOrProvider(network: NetworkOrSignerOrProvider) {
+  public override updateSignerOrProvider(network: NetworkInput) {
     super.updateSignerOrProvider(network);
     this.updateContractSignerOrProvider();
   }

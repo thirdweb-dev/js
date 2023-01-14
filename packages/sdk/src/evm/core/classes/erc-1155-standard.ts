@@ -2,7 +2,7 @@ import { NFT } from "../../../core/schema/nft";
 import { AirdropInput } from "../../types/airdrop/airdrop";
 import { BaseERC1155, BaseSignatureMintERC1155 } from "../../types/eips";
 import { UpdateableNetwork } from "../interfaces/contract";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
+import { NetworkInput, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc1155 } from "./erc-1155";
 import type { DropERC1155, TokenERC1155 } from "@thirdweb-dev/contracts-js";
@@ -48,7 +48,7 @@ export class StandardErc1155<
   /**
    * @internal
    */
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+  onNetworkUpdated(network: NetworkInput): void {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 

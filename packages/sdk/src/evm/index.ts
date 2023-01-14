@@ -1,7 +1,7 @@
 // handle browser vs node global
 globalThis.global = globalThis;
 
-export type { ContractType, NetworkOrSignerOrProvider } from "./core/types";
+export type { ContractType, NetworkInput } from "./core/types";
 
 export type { Role } from "./common/role";
 
