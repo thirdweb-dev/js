@@ -1,37 +1,52 @@
-import { Box, ButtonGroup, Flex } from "@chakra-ui/react";
+import { Box, ButtonGroup, Flex, useColorMode } from "@chakra-ui/react";
+import { ChakraNextImage } from "components/Image";
 import { Card, Heading, LinkButton, Text, TrackedLink } from "tw-components";
 
 export const ReleaseUpsellCard: React.FC = () => {
-  return (
-    <Box
-      bg="linear-gradient(147.15deg, #410AB6 30.17%, #D45CFF 100.01%)"
-      borderRadius="lg"
-      p="16px"
-      mx="-16px"
-      boxShadow="inset 0 0 12px 12px var(--chakra-colors-backgroundBody), inset 0 0 3px 2px var(--chakra-colors-backgroundBody)"
-      my={3}
-    >
-      <Card
-        bg="black"
-        borderColor="transparent"
-        _light={{
-          bg: "white",
-          borderColor: "borderColor",
-        }}
-        p={8}
-        borderRadius="lg"
-        as={Flex}
-        gap={4}
-        flexDirection="column"
-      >
-        <Heading as="h3" size="title.xl">
-          Get your protocol featured here.
-        </Heading>
-        <Text size="body.lg">
-          Releasing your contract on thirdweb is the best way to get your
-          protocol in front of 60k+ web3 developers.
-        </Text>
+  const { colorMode } = useColorMode();
 
+  return (
+    <Flex
+      borderRadius="3xl"
+      border="1px solid rgba(255, 255, 255, 0.1);"
+      p={{ base: 8, md: 10 }}
+      gap={12}
+      bg="linear-gradient(158.84deg, rgba(255, 255, 255, 0.05) 13.95%, rgba(255, 255, 255, 0) 38.68%)"
+      bgColor={colorMode === "dark" ? "transparent" : "backgroundHighlight"}
+    >
+      <Flex flexDir="column" gap={6}>
+        <Heading>Want your contract featured here?</Heading>
+        <Text>
+          Publishing your contract is the best way to share it with the world.
+        </Text>
+        <Flex gap={2}>
+          <ChakraNextImage
+            boxSize={6}
+            src={require("/public/assets/product-pages/release/hero-icon-3.png")}
+            alt=""
+          />
+          <Text>
+            <Text fontWeight="bold">
+              Get your protocol in front of our community of builders.
+            </Text>
+            Over 50,000 web3 devs visit this page every month. Your contract
+            will get deploys.
+          </Text>
+        </Flex>
+        <Flex gap={2}>
+          <ChakraNextImage
+            boxSize={6}
+            src={require("/public/assets/product-pages/release/hero-icon-1.png")}
+            alt=""
+          />
+
+          <Text>
+            <Text fontWeight="bold">Save development time.</Text>
+            Eliminate the need for building tedious middleware and focus on your
+            protocol. Our published contracts provide access to thirdweb tools
+            that makes it easy for developers to create applications on top of.
+          </Text>
+        </Flex>
         <ButtonGroup size="size" spacing={4}>
           <LinkButton
             as={TrackedLink}
@@ -51,7 +66,7 @@ export const ReleaseUpsellCard: React.FC = () => {
               color: "accent.900",
             }}
           >
-            Contact us
+            Submit Contract
           </LinkButton>
           <LinkButton
             as={TrackedLink}
@@ -63,11 +78,19 @@ export const ReleaseUpsellCard: React.FC = () => {
             href="https://portal.thirdweb.com/release"
             isExternal
             noIcon
+            borderColor="borderColor"
+            borderWidth="1px"
           >
             Learn More
           </LinkButton>
         </ButtonGroup>
-      </Card>
-    </Box>
+      </Flex>
+      <ChakraNextImage
+        display={{ base: "none", md: colorMode === "dark" ? "block" : "none" }}
+        w="40%"
+        src={require("public/assets/landingpage/explore-featured.png")}
+        alt=""
+      />
+    </Flex>
   );
 };
