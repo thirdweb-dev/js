@@ -40,6 +40,7 @@ export const ProxyFieldset: React.FC<ProxyFieldsetProps> = ({
           <Link
             isExternal
             href="https://portal.thirdweb.com/release#eip-1967-proxy-contracts"
+            color="blue.600"
           >
             Learn more
           </Link>

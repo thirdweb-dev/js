@@ -3,7 +3,7 @@ import { useWeb3 } from "@3rdweb-sdk/react";
 import { Flex, FormControl } from "@chakra-ui/react";
 import { SUPPORTED_CHAIN_IDS } from "@thirdweb-dev/sdk";
 import { useMemo } from "react";
-import { FormLabel, Heading, Text } from "tw-components";
+import { FormLabel, Heading, Link, Text } from "tw-components";
 
 export const FactoryFieldset = () => {
   const { getNetworkMetadata } = useWeb3();
@@ -27,7 +27,15 @@ export const FactoryFieldset = () => {
           Factory deployment requires having deployed implementations of your
           contract already available on each chain you want to support. If you
           already have a contract address, paste it into the corresponding
-          network.
+          network. Your contracts will need to implement the IContract
+          interface.{" "}
+          <Link
+            href="https://portal.thirdweb.com/release#factory-deploys"
+            color="blue.600"
+          >
+            Learn more
+          </Link>
+          .
         </Text>
       </Flex>
       <Flex flexDir="column" gap={4}>

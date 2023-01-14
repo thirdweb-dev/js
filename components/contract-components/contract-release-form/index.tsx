@@ -62,17 +62,29 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
 
   const form = useForm<ExtraPublishMetadata>();
 
+  const placeholderVersion = useMemo(() => {
+    if (latestVersion) {
+      const versplit = latestVersion.split(".");
+      return `${versplit[0]}.${versplit[1]}.${Number(versplit[2]) + 1 || 0}`;
+    }
+    return "1.0.0";
+  }, [latestVersion]);
+
   const isValidSemver = validate(form.watch("version"));
 
   const isValidVersion = useMemo(() => {
     if (latestVersion) {
       return (
         isValidSemver &&
-        compare(latestVersion || "0.0.0", form.watch("version") || "0.0.0", "<")
+        compare(
+          latestVersion || "0.0.0",
+          form.watch("version") || placeholderVersion || "0.0.0",
+          "<",
+        )
       );
     }
     return isValidSemver;
-  }, [latestVersion, isValidSemver, form]);
+  }, [latestVersion, isValidSemver, form, placeholderVersion]);
 
   const hasTrackedImpression = useRef<boolean>(false);
   useEffect(() => {
@@ -85,14 +97,6 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
       });
     }
   }, [publishMetadata.data, trackEvent]);
-
-  const placeholderVersion = useMemo(() => {
-    if (latestVersion) {
-      const versplit = latestVersion.split(".");
-      return `${versplit[0]}.${versplit[1]}.${Number(versplit[2]) + 1 || 0}`;
-    }
-    return "1.0.0";
-  }, [latestVersion]);
 
   const disableNext =
     !form.watch("version") || !form.watch("displayName") || !isValidVersion;
@@ -139,14 +143,14 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
 
       if (
         prePublishMetadata.data?.latestPublishedContractMetadata
-          ?.publishedMetadata.factoryDeploymentData?.implementationAddresses
-      ) {
-        setContractSelection("proxy");
-      } else if (
-        prePublishMetadata.data?.latestPublishedContractMetadata
-          ?.publishedMetadata?.factoryDeploymentData?.factoryAddresses
+          ?.publishedMetadata.isDeployableViaFactory
       ) {
         setContractSelection("factory");
+      } else if (
+        prePublishMetadata.data?.latestPublishedContractMetadata
+          ?.publishedMetadata.isDeployableViaProxy
+      ) {
+        setContractSelection("proxy");
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -183,7 +187,9 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
   );
 
   const deployParams =
-    contractSelection === "proxy" ? initializerParams : constructorParams;
+    contractSelection === "proxy" || contractSelection === "factory"
+      ? initializerParams
+      : constructorParams;
 
   // during loading and after success we should stay in loading state
   const isLoading = publishMutation.isLoading || publishMutation.isSuccess;
@@ -217,7 +223,11 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
             publishMutation.mutate(
               {
                 predeployUri: contractId,
-                extraMetadata: data,
+                extraMetadata: {
+                  ...data,
+                  isDeployableViaFactory: contractSelection === "factory",
+                  isDeployableViaProxy: contractSelection === "proxy",
+                },
                 contractName: publishMetadata.data?.name,
               },
               {
@@ -301,7 +311,15 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
               contractId={contractId}
             />
           )}
-          {fieldsetToShow === "factory" && <FactoryFieldset />}
+          {fieldsetToShow === "factory" && (
+            <Flex flexDir="column" gap={24}>
+              <ProxyFieldset
+                setIsDrawerOpen={setIsDrawerOpen}
+                contractId={contractId}
+              />
+              <FactoryFieldset />
+            </Flex>
+          )}
           <Flex flexDir="column" gap={6}>
             <Divider />
             <Flex
