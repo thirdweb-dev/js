@@ -423,6 +423,8 @@ const ModelViewer = React.forwardRef<HTMLCanvasElement, MediaRendererProps>(
   }
 ) 
 
+ModelViewer.displayName = "ModelViewer";
+
 /**
  * This component can be used to render any media type, including image, audio, video, and html files.
  * Its convenient for rendering NFT media files, as these can be a variety of different types.
