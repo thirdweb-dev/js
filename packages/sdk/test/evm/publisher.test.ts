@@ -14,7 +14,7 @@ import {
   TokenERC721__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { assert, expect } from "chai";
+import { expect } from "chai";
 import { ethers } from "ethers";
 import { readFileSync } from "fs";
 import invariant from "tiny-invariant";
