@@ -112,7 +112,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       deployParams: deployParams.reduce((acc, param) => {
         acc[param.name] = replaceTemplateValues(
           fullReleaseMetadata.data?.constructorParams?.[param.name]
-            .defaultValue || "",
+            ?.defaultValue || "",
           param.type,
           {
             connectedWallet: address,
@@ -127,7 +127,7 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
       deployParams: deployParams.reduce((acc, param) => {
         acc[param.name] = replaceTemplateValues(
           fullReleaseMetadata.data?.constructorParams?.[param.name]
-            .defaultValue || "",
+            ?.defaultValue || "",
           param.type,
           {
             connectedWallet: address,
