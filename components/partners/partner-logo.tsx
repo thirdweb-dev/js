@@ -38,6 +38,18 @@ const PARTNER_LOGO_MAP = {
     img: require("./logos/gala_games.png"),
     filter: undefined,
   },
+  mirror: {
+    img: require("./logos/mirror.png"),
+    filter: undefined,
+  },
+  heroic_story: {
+    img: require("./logos/heroic_story.png"),
+    filter: undefined,
+  },
+  layer3: {
+    img: require("./logos/layer3.png"),
+    filter: undefined,
+  },
 } as const;
 
 type Partner = keyof typeof PARTNER_LOGO_MAP;

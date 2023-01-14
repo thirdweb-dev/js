@@ -6,7 +6,7 @@ export const PartnerCarousel: React.FC = () => {
     <Box zIndex={10} position="relative" pointerEvents="none" userSelect="none">
       <Container position="relative" maxW="container.page">
         <SimpleGrid
-          columns={{ base: 3, md: 9 }}
+          columns={{ base: 3, md: 6 }}
           py={12}
           px={{ base: 4, md: 0 }}
           gap={{ base: 8, md: 12 }}
@@ -37,6 +37,15 @@ export const PartnerCarousel: React.FC = () => {
           </GridItem>
           <GridItem colSpan={1}>
             <PartnerLogo partner="gala_games" />
+          </GridItem>
+          <GridItem colSpan={1}>
+            <PartnerLogo partner="mirror" />
+          </GridItem>
+          <GridItem colSpan={1}>
+            <PartnerLogo partner="heroic_story" />
+          </GridItem>
+          <GridItem colSpan={1}>
+            <PartnerLogo partner="layer3" />
           </GridItem>
         </SimpleGrid>
       </Container>
