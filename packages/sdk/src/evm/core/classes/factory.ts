@@ -115,8 +115,8 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       implementationAddress,
       encodedFunc,
       salt,
-	  undefined, 
-	  eventEmitter	  
+      undefined,
+      eventEmitter,
     ]);
 
     const events = this.parseLogs<ProxyDeployedEvent>(
@@ -149,11 +149,16 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     ).encodeFunctionData(initializerFunction, initializerArgs);
 
     const blockNumber = await this.getProvider().getBlockNumber();
-    const receipt = await this.sendTransaction("deployProxyByImplementation", [
-      implementationAddress,
-      encodedFunc,
-      ethers.utils.formatBytes32String(blockNumber.toString()),
-	], undefined, eventEmitter);
+    const receipt = await this.sendTransaction(
+      "deployProxyByImplementation",
+      [
+        implementationAddress,
+        encodedFunc,
+        ethers.utils.formatBytes32String(blockNumber.toString()),
+      ],
+      undefined,
+      eventEmitter,
+    );
 
     const events = this.parseLogs<ProxyDeployedEvent>(
       "ProxyDeployed",

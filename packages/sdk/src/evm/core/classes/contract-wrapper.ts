@@ -15,6 +15,7 @@ import { EventType } from "../../constants/events";
 import { CallOverrideSchema } from "../../schema";
 import { AbiSchema } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
+import { DeployEvents } from "../../types";
 import {
   ForwardRequestMessage,
   GaslessTransaction,
@@ -35,9 +36,8 @@ import {
   ethers,
   providers,
 } from "ethers";
-import invariant from "tiny-invariant";
 import { EventEmitter } from "eventemitter3";
-import { DeployEvents } from "../../types";
+import invariant from "tiny-invariant";
 
 /**
  * @internal
@@ -329,7 +329,7 @@ export class ContractWrapper<
     fn: keyof TContract["functions"] | (string & {}),
     args: any[],
     callOverrides?: CallOverrides,
-	eventEmitter?: EventEmitter<DeployEvents>,
+    eventEmitter?: EventEmitter<DeployEvents>,
   ): Promise<providers.TransactionReceipt> {
     if (!callOverrides) {
       callOverrides = await this.getCallOverrides();
@@ -356,7 +356,10 @@ export class ContractWrapper<
       const provider = this.getProvider();
       const txHash = await this.sendGaslessTransaction(fn, args, callOverrides);
       this.emitTransactionEvent("submitted", txHash);
-	  if (eventEmitter) eventEmitter.emit("contractDeploySubmitted", { transactionHash: txHash });
+      if (eventEmitter)
+        eventEmitter.emit("contractDeploySubmitted", {
+          transactionHash: txHash,
+        });
       const receipt = await provider.waitForTransaction(txHash);
       this.emitTransactionEvent("completed", txHash);
       return receipt;
@@ -379,7 +382,10 @@ export class ContractWrapper<
         callOverrides,
       );
       this.emitTransactionEvent("submitted", tx.hash);
-	  if (eventEmitter) eventEmitter.emit("contractDeploySubmitted", { transactionHash: tx.hash });
+      if (eventEmitter)
+        eventEmitter.emit("contractDeploySubmitted", {
+          transactionHash: tx.hash,
+        });
       const receipt = tx.wait();
       this.emitTransactionEvent("completed", tx.hash);
       return receipt;
