@@ -5,8 +5,6 @@ import { BigNumberish } from "ethers";
  * Represents a new marketplace direct listing.
  */
 export interface NewDirectListingV3 {
-  type?: "NewDirectListingV3";
-
   /**
    * The address of the asset being listed.
    */

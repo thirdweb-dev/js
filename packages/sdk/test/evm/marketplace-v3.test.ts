@@ -1,29 +1,16 @@
 import {
-  AuctionAlreadyStartedError,
-  DirectListingV3,
-  EnglishAuction,
   Edition,
   EditionInitializer,
-  ListingNotFoundError,
   MarketplaceV3,
-  MarketplaceInitializer,
   NATIVE_TOKEN_ADDRESS,
   NFTCollection,
   NFTCollectionInitializer,
   OfferV3,
   Token,
   TokenInitializer,
-  WrongListingTypeError,
   MarketplaceV3Initializer,
 } from "../../src/evm";
-import {
-  expectError,
-  fastForwardTime,
-  jsonProvider,
-  sdk,
-  signers,
-  hardhatEthers,
-} from "./before-setup";
+import { fastForwardTime, jsonProvider, sdk, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
 import { BigNumber, BigNumberish, ethers } from "ethers";
@@ -229,7 +216,7 @@ describe("Marketplace V3", async () => {
   /**
    * =========== Direct Listings Tests ============
    */
-  describe("Create Direct Listing", () => {
+  describe("Direct Listing: Create", () => {
     it("should list direct listings with 721s", async () => {
       const listingId = await createDirectListing(
         dummyNftContract.getAddress(),
@@ -357,7 +344,7 @@ describe("Marketplace V3", async () => {
     });
   });
 
-  describe("Get Listing", () => {
+  describe("Direct Listing: Get Listings", () => {
     let directListingOneId: BigNumber;
     let directListingTwoId: BigNumber;
 
@@ -403,11 +390,100 @@ describe("Marketplace V3", async () => {
     });
   });
 
-  // /**
-  //  * =========== English Auction Tests ============
-  //  */
+  describe("Direct Listing: Buy", () => {
+    let directListingId: BigNumber;
 
-  describe("Create English Auction", () => {
+    beforeEach(async () => {
+      await sdk.updateSignerOrProvider(adminWallet);
+      directListingId = await createDirectListing(
+        dummyNftContract.getAddress(),
+        0,
+        1,
+      );
+    });
+
+    it("should allow a buyer to buy from a direct listing", async () => {
+      await sdk.updateSignerOrProvider(bobWallet);
+
+      const currentBalance = await dummyNftContract.balanceOf(
+        bobWallet.address,
+      );
+      assert.equal(
+        currentBalance.toString(),
+        "0",
+        "The buyer should start with no tokens",
+      );
+      await marketplaceContract.directListings.buyFromListing(
+        directListingId,
+        1,
+      );
+      const balance = await dummyNftContract.balanceOf(bobWallet.address);
+      assert.equal(
+        balance.toString(),
+        "1",
+        "The buyer should have been awarded token",
+      );
+    });
+
+    it("should allow a buyer to buy from a direct listing for someone else", async () => {
+      await sdk.updateSignerOrProvider(bobWallet);
+
+      const currentBalance = await dummyNftContract.balanceOf(w4.address);
+      assert.equal(
+        currentBalance.toString(),
+        "0",
+        "The buyer should start with no tokens",
+      );
+      await marketplaceContract.directListings.buyFromListing(
+        directListingId,
+        1,
+        w4.address,
+      );
+      const balance = await dummyNftContract.balanceOf(w4.address);
+      assert.equal(
+        balance.toString(),
+        "1",
+        "The buyer should have been awarded token",
+      );
+    });
+  });
+
+  describe("Direct Listing: Cancel", () => {
+    let directListingId: BigNumber;
+
+    beforeEach(async () => {
+      await sdk.updateSignerOrProvider(adminWallet);
+      directListingId = await createDirectListing(
+        dummyNftContract.getAddress(),
+        0,
+      );
+    });
+
+    it("should correctly cancel a direct listing", async () => {
+      const listing = await marketplaceContract.directListings.getListing(
+        directListingId,
+      );
+      assert.equal(listing.quantity.toString(), "1");
+      await marketplaceContract.directListings.cancelListing(directListingId);
+      try {
+        await marketplaceContract.directListings.getListing(directListingId);
+      } catch (err) {
+        if (
+          !(err.message as string).includes(
+            "Marketplace: listing does not exist.",
+          )
+        ) {
+          throw err;
+        }
+      }
+    });
+  });
+
+  /**
+   * =========== English Auction Tests ============
+   */
+
+  describe("English Auctions: Create", () => {
     // TODO deploy WETH on hardhat
     // it.skip("should create auction with native token", async () => {
     //   const tx = await marketplaceContract.auction.createListing({
@@ -531,7 +607,7 @@ describe("Marketplace V3", async () => {
     });
   });
 
-  describe("Get Auction", () => {
+  describe("English Auctions: Get Auctions", () => {
     let auctionOneId: BigNumber;
     let auctionTwoId: BigNumber;
 
@@ -576,152 +652,15 @@ describe("Marketplace V3", async () => {
     });
   });
 
-  describe("Offers", () => {
-    let directListingId: BigNumber;
+  describe("English Auctions: Bid", () => {
     let auctionId: BigNumber;
 
     beforeEach(async () => {
       await sdk.updateSignerOrProvider(adminWallet);
-      directListingId = await createDirectListing(
-        dummyNftContract.getAddress(),
-        0,
-        1,
-      );
       auctionId = await createAuctionListing(dummyNftContract.getAddress(), 1);
     });
 
-    it("should allow the seller to accept an offer", async () => {
-      await sdk.updateSignerOrProvider(bobWallet);
-
-      const currentBalance = await dummyNftContract.balanceOf(
-        bobWallet.address,
-      );
-      assert.equal(
-        currentBalance.toString(),
-        "0",
-        "The buyer should start with no tokens",
-      );
-
-      // await marketplaceContract.offers.makeOffer(directListingId, 0.034, 10);
-      const offerId = await makeOffer(dummyNftContract.getAddress(), 0, 1);
-
-      await sdk.updateSignerOrProvider(adminWallet);
-      await marketplaceContract.offers.acceptOffer(offerId);
-
-      const balance = await dummyNftContract.balanceOf(bobWallet.address);
-      assert.equal(
-        balance.toString(),
-        "1",
-        "The buyer should have been awarded token",
-      );
-    });
-
-    it("should allow a buyer to buy from a direct listing", async () => {
-      await sdk.updateSignerOrProvider(bobWallet);
-
-      const currentBalance = await dummyNftContract.balanceOf(
-        bobWallet.address,
-      );
-      assert.equal(
-        currentBalance.toString(),
-        "0",
-        "The buyer should start with no tokens",
-      );
-      await marketplaceContract.directListings.buyFromListing(
-        directListingId,
-        1,
-      );
-      const balance = await dummyNftContract.balanceOf(bobWallet.address);
-      assert.equal(
-        balance.toString(),
-        "1",
-        "The buyer should have been awarded token",
-      );
-    });
-
-    it("should allow a buyer to buy from a direct listing after making an offer", async () => {
-      await sdk.updateSignerOrProvider(bobWallet);
-
-      const currentBalance = await dummyNftContract.balanceOf(
-        bobWallet.address,
-      );
-      assert.equal(
-        currentBalance.toString(),
-        "0",
-        "The buyer should start with no tokens",
-      );
-      // await marketplaceContract.makeOffer(directListingId, 0.05, 1);
-      const offerId = await makeOffer(dummyNftContract.getAddress(), 0, 1);
-
-      await marketplaceContract.directListings.buyFromListing(
-        directListingId,
-        1,
-      );
-      const balance = await dummyNftContract.balanceOf(bobWallet.address);
-      assert.equal(
-        balance.toString(),
-        "1",
-        "The buyer should have been awarded token",
-      );
-    });
-
-    it("should allow a buyer to buy from a direct listing for someone else", async () => {
-      await sdk.updateSignerOrProvider(bobWallet);
-
-      const currentBalance = await dummyNftContract.balanceOf(w4.address);
-      assert.equal(
-        currentBalance.toString(),
-        "0",
-        "The buyer should start with no tokens",
-      );
-      await marketplaceContract.directListings.buyFromListing(
-        directListingId,
-        1,
-        w4.address,
-      );
-      const balance = await dummyNftContract.balanceOf(w4.address);
-      assert.equal(
-        balance.toString(),
-        "1",
-        "The buyer should have been awarded token",
-      );
-    });
-
-    it("should allow offers to be made for listed tokens", async () => {
-      sdk.updateSignerOrProvider(bobWallet);
-      const bobOfferId = await makeOffer(dummyNftContract.getAddress(), 0, 1);
-
-      sdk.updateSignerOrProvider(samWallet);
-      const samOfferId = await makeOffer(dummyNftContract.getAddress(), 0, 1);
-
-      let offers = await marketplaceContract.offers.getAll({
-        start: 0,
-        offeror: bobWallet.address,
-      });
-
-      assert.equal(offers.length, 1);
-      assert.equal(offers[0].offerorAddress, bobWallet.address);
-      assert.equal(
-        offers[0].totalPrice.toString(),
-        ethers.utils.parseUnits("0.1").toString(),
-      );
-      assert.equal(offers[0].tokenId, 0);
-
-      offers = await marketplaceContract.offers.getAll({
-        start: 0,
-        offeror: samWallet.address,
-      });
-
-      assert.equal(offers.length, 1);
-      assert.equal(offers[0].offerorAddress, samWallet.address);
-      assert.equal(
-        offers[0].totalPrice.toString(),
-        ethers.utils.parseUnits("0.1").toString(),
-      );
-      assert.equal(offers[0].tokenId, 0);
-    });
-
-    it("should allow bids by the same person", async () => {
+    it("should allow multiple bids by the same person", async () => {
       await sdk.updateSignerOrProvider(bobWallet);
       await marketplaceContract.englishAuctions.makeBid(auctionId, 0.3);
       await marketplaceContract.englishAuctions.makeBid(auctionId, 0.5);
@@ -764,56 +703,6 @@ describe("Marketplace V3", async () => {
         ethers.utils.parseUnits("0.6").toString(),
       );
       assert.equal(winningBid?.auctionId.toString(), auctionId.toString());
-    });
-
-    it("should return all offers for a token when queried", async () => {
-      // make an offer as bob
-      sdk.updateSignerOrProvider(bobWallet);
-      const bobOfferId = await makeOffer(dummyNftContract.getAddress(), 0, 1);
-
-      // make an offer as sam
-      sdk.updateSignerOrProvider(samWallet);
-      const samOfferId = await makeOffer(dummyNftContract.getAddress(), 0, 1);
-
-      // fetch all offers for the token
-      sdk.updateSignerOrProvider(adminWallet);
-      const offers: OfferV3[] = await marketplaceContract.offers.getAll({
-        start: 0,
-        tokenContract: dummyNftContract.getAddress(),
-        tokenId: 0,
-      });
-
-      // check that the offers are returned
-      assert.equal(offers.length, 2);
-
-      // check the value of the price per token is correct
-      assert.equal(
-        offers[0].totalPrice.toString(),
-        ethers.utils.parseUnits("0.1").toString(),
-      );
-
-      // check the value of the buyer address is correct
-      assert.equal(offers[0].offerorAddress, bobWallet.address);
-
-      // check the value of the quantity is correct
-      assert.equal(offers[0].quantity, 1);
-
-      // check the value of the currency contract address is correct
-      assert.equal(offers[0].currencyContractAddress, tokenAddress);
-
-      // check that the currency value is correct
-      // assert.isTrue(
-      //   offers[0].currencyValue.value.eq(ethers.utils.parseEther("1")),
-      // );
-    });
-  });
-
-  describe("Bidding", () => {
-    let auctionId: BigNumber;
-
-    beforeEach(async () => {
-      await sdk.updateSignerOrProvider(adminWallet);
-      auctionId = await createAuctionListing(dummyNftContract.getAddress(), 1);
     });
 
     it("should automatically award a buyout", async () => {
@@ -879,16 +768,11 @@ describe("Marketplace V3", async () => {
     });
   });
 
-  describe("Closing listings", () => {
-    let directListingId: BigNumber;
+  describe("English Auctions: Close", () => {
     let auctionId: BigNumber;
 
     beforeEach(async () => {
       await sdk.updateSignerOrProvider(adminWallet);
-      directListingId = await createDirectListing(
-        dummyNftContract.getAddress(),
-        0,
-      );
       auctionId = await createAuctionListing(dummyNftContract.getAddress(), 1);
     });
 
@@ -940,26 +824,7 @@ describe("Marketplace V3", async () => {
       }
     });
 
-    it("should correctly cancel a direct listing", async () => {
-      const listing = await marketplaceContract.directListings.getListing(
-        directListingId,
-      );
-      assert.equal(listing.quantity.toString(), "1");
-      await marketplaceContract.directListings.cancelListing(directListingId);
-      try {
-        await marketplaceContract.directListings.getListing(directListingId);
-      } catch (err) {
-        if (
-          !(err.message as string).includes(
-            "Marketplace: listing does not exist.",
-          )
-        ) {
-          throw err;
-        }
-      }
-    });
-
-    it("should distribute the tokens when a listing closes", async () => {
+    it("should distribute the tokens when an auction closes", async () => {
       await sdk.updateSignerOrProvider(adminWallet);
       const auctionId = (
         await marketplaceContract.englishAuctions.createAuction({
@@ -1031,6 +896,150 @@ describe("Marketplace V3", async () => {
         // TODO read the fee from the TWFee contract
         "The buyer should have two additional tokens after the listing closes",
       );
+    });
+  });
+
+  /**
+   * =========== Offers Tests ============
+   */
+
+  describe("Offers", () => {
+    let directListingId: BigNumber;
+
+    beforeEach(async () => {
+      await sdk.updateSignerOrProvider(adminWallet);
+      directListingId = await createDirectListing(
+        dummyNftContract.getAddress(),
+        0,
+        1,
+      );
+    });
+
+    it("should allow the seller to accept an offer", async () => {
+      await sdk.updateSignerOrProvider(bobWallet);
+
+      const currentBalance = await dummyNftContract.balanceOf(
+        bobWallet.address,
+      );
+      assert.equal(
+        currentBalance.toString(),
+        "0",
+        "The buyer should start with no tokens",
+      );
+
+      // await marketplaceContract.offers.makeOffer(directListingId, 0.034, 10);
+      const offerId = await makeOffer(dummyNftContract.getAddress(), 0, 1);
+
+      await sdk.updateSignerOrProvider(adminWallet);
+      await marketplaceContract.offers.acceptOffer(offerId);
+
+      const balance = await dummyNftContract.balanceOf(bobWallet.address);
+      assert.equal(
+        balance.toString(),
+        "1",
+        "The buyer should have been awarded token",
+      );
+    });
+
+    it("should allow a buyer to buy from a direct listing after making an offer", async () => {
+      await sdk.updateSignerOrProvider(bobWallet);
+
+      const currentBalance = await dummyNftContract.balanceOf(
+        bobWallet.address,
+      );
+      assert.equal(
+        currentBalance.toString(),
+        "0",
+        "The buyer should start with no tokens",
+      );
+      // await marketplaceContract.makeOffer(directListingId, 0.05, 1);
+      const offerId = await makeOffer(dummyNftContract.getAddress(), 0, 1);
+
+      await marketplaceContract.directListings.buyFromListing(
+        directListingId,
+        1,
+      );
+      const balance = await dummyNftContract.balanceOf(bobWallet.address);
+      assert.equal(
+        balance.toString(),
+        "1",
+        "The buyer should have been awarded token",
+      );
+    });
+
+    it("should allow offers to be made for listed tokens", async () => {
+      sdk.updateSignerOrProvider(bobWallet);
+      const bobOfferId = await makeOffer(dummyNftContract.getAddress(), 0, 1);
+
+      sdk.updateSignerOrProvider(samWallet);
+      const samOfferId = await makeOffer(dummyNftContract.getAddress(), 0, 1);
+
+      let offers = await marketplaceContract.offers.getAll({
+        start: 0,
+        offeror: bobWallet.address,
+      });
+
+      assert.equal(offers.length, 1);
+      assert.equal(offers[0].offerorAddress, bobWallet.address);
+      assert.equal(
+        offers[0].totalPrice.toString(),
+        ethers.utils.parseUnits("0.1").toString(),
+      );
+      assert.equal(offers[0].tokenId, 0);
+
+      offers = await marketplaceContract.offers.getAll({
+        start: 0,
+        offeror: samWallet.address,
+      });
+
+      assert.equal(offers.length, 1);
+      assert.equal(offers[0].offerorAddress, samWallet.address);
+      assert.equal(
+        offers[0].totalPrice.toString(),
+        ethers.utils.parseUnits("0.1").toString(),
+      );
+      assert.equal(offers[0].tokenId, 0);
+    });
+
+    it("should return all offers for a token when queried", async () => {
+      // make an offer as bob
+      sdk.updateSignerOrProvider(bobWallet);
+      const bobOfferId = await makeOffer(dummyNftContract.getAddress(), 0, 1);
+
+      // make an offer as sam
+      sdk.updateSignerOrProvider(samWallet);
+      const samOfferId = await makeOffer(dummyNftContract.getAddress(), 0, 1);
+
+      // fetch all offers for the token
+      sdk.updateSignerOrProvider(adminWallet);
+      const offers: OfferV3[] = await marketplaceContract.offers.getAll({
+        start: 0,
+        tokenContract: dummyNftContract.getAddress(),
+        tokenId: 0,
+      });
+
+      // check that the offers are returned
+      assert.equal(offers.length, 2);
+
+      // check the value of the price per token is correct
+      assert.equal(
+        offers[0].totalPrice.toString(),
+        ethers.utils.parseUnits("0.1").toString(),
+      );
+
+      // check the value of the buyer address is correct
+      assert.equal(offers[0].offerorAddress, bobWallet.address);
+
+      // check the value of the quantity is correct
+      assert.equal(offers[0].quantity, 1);
+
+      // check the value of the currency contract address is correct
+      assert.equal(offers[0].currencyContractAddress, tokenAddress);
+
+      // check that the currency value is correct
+      // assert.isTrue(
+      //   offers[0].currencyValue.value.eq(ethers.utils.parseEther("1")),
+      // );
     });
   });
 

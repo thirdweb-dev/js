@@ -1,9 +1,6 @@
-import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
-import { ListingNotFoundError, WrongListingTypeError } from "../../common";
 import {
   cleanCurrencyAddress,
   fetchCurrencyValue,
-  isNativeToken,
   normalizePriceValue,
   setErc20Allowance,
 } from "../../common/currency";
@@ -17,9 +14,7 @@ import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
 } from "../../constants/contract";
-import { ListingType } from "../../enums";
 import { MarketplaceFilter } from "../../types";
-import { Price } from "../../types/currency";
 import { DirectListingV3, NewDirectListingV3 } from "../../types/marketplacev3";
 import {
   NetworkOrSignerOrProvider,
@@ -32,10 +27,8 @@ import type {
   IERC165,
   IERC721,
   IDirectListings,
-  MarketplaceRouter,
   DirectListingsLogic,
 } from "@thirdweb-dev/contracts-js";
-import DirectListingsABI from "@thirdweb-dev/contracts-js/dist/abis/DirectListingsLogic.json";
 import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
 import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
 import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
@@ -44,14 +37,7 @@ import {
   UpdatedListingEvent,
 } from "@thirdweb-dev/contracts-js/dist/declarations/src/DirectListingsLogic";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  BigNumber,
-  BigNumberish,
-  Contract,
-  ethers,
-  constants,
-  utils,
-} from "ethers";
+import { BigNumber, BigNumberish, Contract } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -70,10 +56,6 @@ export class MarketplaceV3DirectListings {
     this.storage = storage;
   }
 
-  onNetworkUpdated(network: NetworkOrSignerOrProvider) {
-    this.contractWrapper.updateSignerOrProvider(network);
-  }
-
   getAddress(): string {
     return this.contractWrapper.readContract.address;
   }
@@ -83,27 +65,37 @@ export class MarketplaceV3DirectListings {
    *******************************/
 
   /**
-   * Get the total number of direct listings
+   * Get the total number of direct listings.
    * @returns Returns the total number of direct listings created.
    * @public
+   *
+   * @example
+   * ```javascript
+   * const totalListings = await contract.directListings.getTotalCount();
+   * ```
    */
-  public async getTotalListings(): Promise<BigNumber> {
+  public async getTotalCount(): Promise<BigNumber> {
     return await this.contractWrapper.readContract.totalListings();
   }
 
   /**
-   * Get all direct listings between start and end Id (both inclusive).
+   * Get all direct listings.
+   *
+   * @example
+   * ```javascript
+   * const listings = await contract.directListings.getAll();
+   * const priceOfFirstListing = listings[0].price;
+   * ```
    *
    * @param filter - optional filter parameters
    * @returns the Direct listing object array
    */
   public async getAll(filter?: MarketplaceFilter): Promise<DirectListingV3[]> {
     const startIndex = BigNumber.from(filter?.start || 0).toNumber();
-    const count = BigNumber.from(
-      filter?.count || (await this.getTotalListings()),
-    ).toNumber();
+    const totalListings = await this.getTotalCount();
+    const count = BigNumber.from(filter?.count || totalListings).toNumber();
 
-    if (count === 0) {
+    if (totalListings.toNumber() === 0) {
       throw new Error(`No listings exist on the contract.`);
     }
 
@@ -120,10 +112,16 @@ export class MarketplaceV3DirectListings {
   }
 
   /**
-   * Get all valid direct listings between start and end Id (both inclusive).
+   * Get all valid direct listings.
    *
-   * A valid listing is where the listing creator still owns and has approved Marketplace
-   * to transfer the listed NFTs.
+   * A valid listing is where the listing is active,
+   * and the creator still owns & has approved Marketplace to transfer the listed NFTs.
+   *
+   * @example
+   * ```javascript
+   * const listings = await contract.directListings.getAllValid();
+   * const priceOfFirstListing = listings[0].price;
+   * ```
    *
    * @param filter - optional filter parameters
    * @returns the Direct listing object array
@@ -132,11 +130,10 @@ export class MarketplaceV3DirectListings {
     filter?: MarketplaceFilter,
   ): Promise<DirectListingV3[]> {
     const startIndex = BigNumber.from(filter?.start || 0).toNumber();
-    const count = BigNumber.from(
-      filter?.count || (await this.getTotalListings()),
-    ).toNumber();
+    const totalListings = await this.getTotalCount();
+    const count = BigNumber.from(filter?.count || totalListings).toNumber();
 
-    if (count === 0) {
+    if (totalListings.toNumber() === 0) {
       throw new Error(`No listings exist on the contract.`);
     }
 
@@ -154,10 +151,16 @@ export class MarketplaceV3DirectListings {
   }
 
   /**
-   * Get a direct listing by id
+   * Get a direct listing by id.
    *
    * @param listingId - the listing id
    * @returns the Direct listing object
+   *
+   * @example
+   * ```javascript
+   * const listingId = 0;
+   * const listing = await contract.directListings.getListing(listingId);
+   * ```
    */
   public async getListing(listingId: BigNumberish): Promise<DirectListingV3> {
     const listing = await this.contractWrapper.readContract.getListing(
@@ -193,17 +196,17 @@ export class MarketplaceV3DirectListings {
    * Check whether a currency is approved for a listing.
    *
    * @param listingId - the listing id
-   * @param buyer - buyer address
+   * @param currency - currency address
    */
   public async isCurrencyApprovedForListing(
     listingId: BigNumberish,
-    buyer: string,
+    currency: string,
   ): Promise<boolean> {
     const listing = await this.validateListing(BigNumber.from(listingId));
 
-    return await this.contractWrapper.readContract.isBuyerApprovedForListing(
+    return await this.contractWrapper.readContract.isCurrencyApprovedForListing(
       listingId,
-      buyer,
+      currency,
     );
   }
 
@@ -257,19 +260,21 @@ export class MarketplaceV3DirectListings {
    *   assetContractAddress: "0x...",
    *   // token ID of the asset you want to list
    *   tokenId: "0",
-   *   // when should the listing open up for offers
-   *   startTimestamp: new Date(),
-   *   // how long the listing will be open for
-   *   listingDurationInSeconds: 86400,
    *   // how many of the asset you want to list
    *   quantity: 1,
    *   // address of the currency contract that will be used to pay for the listing
    *   currencyContractAddress: NATIVE_TOKEN_ADDRESS,
-   *   // how much the asset will be sold for
-   *   buyoutPricePerToken: "1.5",
+   *   // The price to pay per unit of NFTs listed.
+   *   pricePerToken: 1.5,
+   *   // when should the listing open up for offers
+   *   startTimestamp: new Date(Date.now()),
+   *   // how long the listing will be open for
+   *   endTimestamp: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+   *   // Whether the listing is reserved for a specific set of buyers.
+   *   isReservedListing: false
    * }
    *
-   * const tx = await contract.direct.createListing(listing);
+   * const tx = await contract.directListings.createListing(listing);
    * const receipt = tx.receipt; // the transaction receipt
    * const id = tx.id; // the id of the newly created listing
    * ```
@@ -338,6 +343,36 @@ export class MarketplaceV3DirectListings {
    * Note: cannot update a listing with a new quantity of 0. Use `cancelDirectListing` to remove a listing instead.
    *
    * @param listing - the new listing information
+   *
+   * @example
+   * ```javascript
+   * // Data of the listing you want to update
+   *
+   * const listingId = 0; // ID of the listing you want to update
+   *
+   * const listing = {
+   *   // address of the contract the asset you want to list is on
+   *   assetContractAddress: "0x...", // should be same as original listing
+   *   // token ID of the asset you want to list
+   *   tokenId: "0", // should be same as original listing
+   *   // how many of the asset you want to list
+   *   quantity: 1,
+   *   // address of the currency contract that will be used to pay for the listing
+   *   currencyContractAddress: NATIVE_TOKEN_ADDRESS,
+   *   // The price to pay per unit of NFTs listed.
+   *   pricePerToken: 1.5,
+   *   // when should the listing open up for offers
+   *   startTimestamp: new Date(Date.now()), // can't change this if listing already active
+   *   // how long the listing will be open for
+   *   endTimestamp: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+   *   // Whether the listing is reserved for a specific set of buyers.
+   *   isReservedListing: false
+   * }
+   *
+   * const tx = await contract.directListings.updateListing(listingId, listing);
+   * const receipt = tx.receipt; // the transaction receipt
+   * const id = tx.id; // the id of the newly created listing
+   * ```
    */
   public async updateListing(
     listingId: BigNumberish,
@@ -401,9 +436,9 @@ export class MarketplaceV3DirectListings {
    * @example
    * ```javascript
    * // The listing ID of the direct listing you want to cancel
-   * const listingId = "0";
+   * const listingId = 0;
    *
-   * await contract.direct.cancelListing(listingId);
+   * await contract.directListings.cancelListing(listingId);
    * ```
    */
   public async cancelListing(
@@ -419,16 +454,16 @@ export class MarketplaceV3DirectListings {
   /**
    * Buy from a Listing
    *
-   * @remarks Buy a specific direct listing from the marketplace.
+   * @remarks Buy from a specific direct listing from the marketplace.
    *
    * @example
    * ```javascript
-   * // The listing ID of the asset you want to buy
+   * // The ID of the listing you want to buy from
    * const listingId = 0;
    * // Quantity of the asset you want to buy
    * const quantityDesired = 1;
    *
-   * await contract.direct.buyoutListing(listingId, quantityDesired);
+   * await contract.directListings.buyFromListing(listingId, quantityDesired);
    * ```
    *
    * @param listingId - The listing id to buy
@@ -479,7 +514,7 @@ export class MarketplaceV3DirectListings {
    * // The listing ID of the direct listing you want approve buyer for
    * const listingId = "0";
    *
-   * await contract.direct.approveBuyerForReservedListing(listingId, buyer);
+   * await contract.directListings.approveBuyerForReservedListing(listingId, buyer);
    * ```
    *
    * @param listingId - The listing id to buy
@@ -513,7 +548,7 @@ export class MarketplaceV3DirectListings {
    * // The listing ID of the direct listing you want approve buyer for
    * const listingId = "0";
    *
-   * await contract.direct.revokeBuyerApprovalForReservedListing(listingId, buyer);
+   * await contract.directListings.revokeBuyerApprovalForReservedListing(listingId, buyer);
    * ```
    *
    * @param listingId - The listing id to buy
@@ -546,7 +581,7 @@ export class MarketplaceV3DirectListings {
    * // The listing ID of the direct listing you want approve currency for
    * const listingId = "0";
    *
-   * await contract.direct.approveCurrencyForListing(listingId, currencyContractAddress, pricePerTokenInCurrency);
+   * await contract.directListings.approveCurrencyForListing(listingId, currencyContractAddress, pricePerTokenInCurrency);
    * ```
    *
    * @param listingId - The listing id to buy
@@ -586,7 +621,7 @@ export class MarketplaceV3DirectListings {
   }
 
   /**
-   * Revoke approval of a currency for a listing.
+   * Revoke approval of a currency from a listing.
    *
    *
    * @example
@@ -594,7 +629,7 @@ export class MarketplaceV3DirectListings {
    * // The listing ID of the direct listing you want to revoke currency for
    * const listingId = "0";
    *
-   * await contract.direct.revokeCurrencyApprovalForListing(listingId, currencyContractAddress);
+   * await contract.directListings.revokeCurrencyApprovalForListing(listingId, currencyContractAddress);
    * ```
    *
    * @param listingId - The listing id to buy

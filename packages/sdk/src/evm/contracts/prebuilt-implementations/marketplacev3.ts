@@ -1,10 +1,3 @@
-import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
-import { ListingNotFoundError } from "../../common";
-// ===
-import { isNativeToken } from "../../common/currency";
-import { mapOffer } from "../../common/marketplace";
-import { getRoleHash } from "../../common/role";
-import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -13,43 +6,23 @@ import { ContractPlatformFee } from "../../core/classes/contract-platform-fee";
 import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
-// ===
 import { MarketplaceV3DirectListings } from "../../core/classes/marketplacev3-direct-listings";
 import { MarketplaceV3EnglishAuctions } from "../../core/classes/marketplacev3-english-auction";
 import { MarketplaceV3Offers } from "../../core/classes/marketplacev3-offers";
-// ===
 import { UpdateableNetwork } from "../../core/interfaces/contract";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../../core/types";
-import { ListingType } from "../../enums";
+import { NetworkOrSignerOrProvider } from "../../core/types";
 import { Abi } from "../../schema/contracts/custom";
-// ===
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
-// ===
 import { SDKOptions } from "../../schema/sdk-options";
-import { Price } from "../../types/currency";
-import { AuctionListing, DirectListing, Offer } from "../../types/marketplace";
-// ===
-import { MarketplaceFilter } from "../../types/marketplace/MarketPlaceFilter";
-// ===
-import { UnmappedOffer } from "../../types/marketplace/UnmappedOffer";
-// ===
 import type {
   MarketplaceRouter,
   DirectListingsLogic,
   EnglishAuctionsLogic,
   OffersLogic,
 } from "@thirdweb-dev/contracts-js";
-import DirectListingsABI from "@thirdweb-dev/contracts-js/dist/abis/DirectListingsLogic.json";
-import EnglishAuctionsABI from "@thirdweb-dev/contracts-js/dist/abis/EnglishAuctionsLogic.json";
 import type ABI from "@thirdweb-dev/contracts-js/dist/abis/MarketplaceRouter.json";
-import OffersABI from "@thirdweb-dev/contracts-js/dist/abis/OffersLogic.json";
-// ===
-// ===
-import { NewOfferEventObject } from "@thirdweb-dev/contracts-js/dist/declarations/src/Marketplace";
-// ===
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, BigNumberish, CallOverrides, constants } from "ethers";
-import invariant from "tiny-invariant";
+import { CallOverrides } from "ethers";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -91,34 +64,38 @@ export class MarketplaceV3 implements UpdateableNetwork {
   /**
    * Direct listings
    * @remarks Create and manage direct listings in your marketplace.
-   * @example
    * ```javascript
    * // Data of the listing you want to create
    * const listing = {
-   *   // address of the NFT contract the asset you want to list is on
+   *   // address of the contract the asset you want to list is on
    *   assetContractAddress: "0x...",
    *   // token ID of the asset you want to list
    *   tokenId: "0",
-   *  // when should the listing open up for offers
-   *   startTimestamp: new Date(),
-   *   // how long the listing will be open for
-   *   listingDurationInSeconds: 86400,
    *   // how many of the asset you want to list
    *   quantity: 1,
    *   // address of the currency contract that will be used to pay for the listing
    *   currencyContractAddress: NATIVE_TOKEN_ADDRESS,
-   *   // how much the asset will be sold for
-   *   buyoutPricePerToken: "1.5",
+   *   // The price to pay per unit of NFTs listed.
+   *   pricePerToken: 1.5,
+   *   // when should the listing open up for offers
+   *   startTimestamp: new Date(Date.now()),
+   *   // how long the listing will be open for
+   *   endTimestamp: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+   *   // Whether the listing is reserved for a specific set of buyers.
+   *   isReservedListing: false
    * }
    *
-   * const tx = await contract.direct.createListing(listing);
+   * const tx = await contract.directListings.createListing(listing);
    * const receipt = tx.receipt; // the transaction receipt
-   * const listingId = tx.id; // the id of the newly created listing
+   * const id = tx.id; // the id of the newly created listing
    *
    * // And on the buyers side:
+   * // The ID of the listing you want to buy from
+   * const listingId = 0;
    * // Quantity of the asset you want to buy
    * const quantityDesired = 1;
-   * await contract.direct.buyoutListing(listingId, quantityDesired);
+   *
+   * await contract.directListings.buyFromListing(listingId, quantityDesired);
    * ```
    */
   public directListings: MarketplaceV3DirectListings;
@@ -129,36 +106,74 @@ export class MarketplaceV3 implements UpdateableNetwork {
    * ```javascript
    * // Data of the auction you want to create
    * const auction = {
-   *   // address of the contract the asset you want to list is on
+   *   // address of the contract of the asset you want to auction
    *   assetContractAddress: "0x...",
-   *   // token ID of the asset you want to list
+   *   // token ID of the asset you want to auction
    *   tokenId: "0",
-   *  // when should the listing open up for offers
-   *   startTimestamp: new Date(),
-   *   // how long the listing will be open for
-   *   listingDurationInSeconds: 86400,
-   *   // how many of the asset you want to list
+   *   // how many of the asset you want to auction
    *   quantity: 1,
-   *   // address of the currency contract that will be used to pay for the listing
+   *   // address of the currency contract that will be used to pay for the auctioned tokens
    *   currencyContractAddress: NATIVE_TOKEN_ADDRESS,
-   *   // how much people would have to bid to instantly buy the asset
-   *   buyoutPricePerToken: "10",
    *   // the minimum bid that will be accepted for the token
-   *   reservePricePerToken: "1.5",
+   *   minimumBidAmount: "1.5",
+   *   // how much people would have to bid to instantly buy the asset
+   *   buyoutBidAmount: "10",
+   *   // If a bid is made less than these many seconds before expiration, the expiration time is increased by this.
+   *   timeBufferInSeconds: "1000",
+   *   // A bid must be at least this much bps greater than the current winning bid
+   *   bidBufferBps: "100", // 100 bps stands for 1%
+   *   // when should the auction open up for bidding
+   *   startTimestamp: new Date(Date.now()),
+   *   // end time of auction
+   *   endTimestamp: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
    * }
    *
-   * const tx = await contract.auction.createListing(auction);
+   * const tx = await contract.englishAuctions.createAuction(auction);
    * const receipt = tx.receipt; // the transaction receipt
-   * const listingId = tx.id; // the id of the newly created listing
+   * const id = tx.id; // the id of the newly created auction
    *
    * // And on the buyers side:
-   * // The price you are willing to bid for a single token of the listing
-   * const pricePerToken = 2.6;
-   * await contract.auction.makeBid(listingId, pricePerToken);
+   * // The auction ID of the asset you want to bid on
+   * const auctionId = 0;
+   * // The total amount you are willing to bid for auctioned tokens
+   * const bidAmount = 1;
+   *
+   * await contract.englishAuctions.makeBid(auctionId, bidAmount);
    * ```
    */
   public englishAuctions: MarketplaceV3EnglishAuctions;
 
+  /**
+   * Offers
+   * @remarks Make and manage offers.
+   * @example
+   * ```javascript
+   * // Data of the offer you want to make
+   * const offer = {
+   *   // address of the contract the asset you want to make an offer for
+   *   assetContractAddress: "0x...",
+   *   // token ID of the asset you want to buy
+   *   tokenId: "0",
+   *   // how many of the asset you want to buy
+   *   quantity: 1,
+   *   // address of the currency contract that you offer to pay in
+   *   currencyContractAddress: NATIVE_TOKEN_ADDRESS,
+   *   // Total price you offer to pay for the mentioned token(s)
+   *   totalPrice: "1.5",
+   *   // Offer valid until
+   *   endTimestamp: new Date(),
+   * }
+   *
+   * const tx = await contract.offers.makeOffer(offer);
+   * const receipt = tx.receipt; // the transaction receipt
+   * const id = tx.id; // the id of the newly created offer
+   *
+   * // And on the seller's side:
+   * // The ID of the offer you want to accept
+   * const offerId = 0;
+   * await contract.offers.acceptOffer(offerId);
+   * ```
+   */
   public offers: MarketplaceV3Offers;
 
   private _chainId;
@@ -214,10 +229,6 @@ export class MarketplaceV3 implements UpdateableNetwork {
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider) {
     this.contractWrapper.updateSignerOrProvider(network);
-
-    this.directListings.onNetworkUpdated(network);
-    this.englishAuctions.onNetworkUpdated(network);
-    this.offers.onNetworkUpdated(network);
   }
 
   getAddress(): string {

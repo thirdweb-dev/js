@@ -5,8 +5,6 @@ import { BigNumberish } from "ethers";
  * Represents a new marketplace auction.
  */
 export interface NewEnglishAuction {
-  type?: "NewAuctionListing";
-
   /**
    * The address of the asset being auctioned.
    */
