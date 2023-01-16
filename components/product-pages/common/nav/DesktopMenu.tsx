@@ -130,14 +130,14 @@ export const PRODUCTS: NavCardProps[] = [
   {
     name: "Dashboards",
     label: "dashboards",
-    description: "On-chain analytics and management",
+    description: "Manage and analyze contract activity",
     link: "/dashboards",
     icon: require("public/assets/product-icons/dashboards.png"),
   },
   {
     name: "Storage",
     label: "storage",
-    description: "Fast, reliable, decentralized storage",
+    description: "Secure, fast, decentralized storage",
     link: "/storage",
     icon: require("public/assets/product-icons/storage.png"),
   },

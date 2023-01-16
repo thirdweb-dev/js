@@ -1,6 +1,6 @@
-import { Box, ButtonGroup, Flex, useColorMode } from "@chakra-ui/react";
+import { ButtonGroup, Flex, useColorMode } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
-import { Card, Heading, LinkButton, Text, TrackedLink } from "tw-components";
+import { Heading, LinkButton, Text, TrackedLink } from "tw-components";
 
 export const ReleaseUpsellCard: React.FC = () => {
   const { colorMode } = useColorMode();

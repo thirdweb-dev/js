@@ -8,7 +8,6 @@ import { ProductCard } from "components/product-pages/common/ProductCard";
 import { ProductLearnMoreCard } from "components/product-pages/common/ProductLearnMoreCard";
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
-import { SolutionsTextImage } from "components/product-pages/common/SolutionsTextImage";
 import { YoutubeEmbed } from "components/video-embed/YoutubeEmbed";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";

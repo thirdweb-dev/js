@@ -15,7 +15,7 @@ type BlogPost = {
 interface GuidesShowcaseProps {
   title: string;
   description: string;
-  solution: string;
+  solution?: string;
   guides: BlogPost[];
   caseStudies?: BlogPost[];
 }
@@ -93,28 +93,30 @@ export const GuidesShowcase: React.FC<GuidesShowcaseProps> = ({
             </SimpleGrid>
           </AnimatePresence>
         </Flex>
-        <TrackedLink
-          href={`https://blog.thirdweb.com/tag/${
-            mode === "case-studies" ? "case-study" : solution.toLowerCase()
-          }/`}
-          category={solution.toLowerCase()}
-          label="see-all-guides"
-          isExternal
-        >
-          <Flex align="center" gap={2}>
-            <Heading
-              fontSize="20px"
-              fontWeight="medium"
-              as="p"
-              lineHeight={{ base: 1.5, md: undefined }}
-              position="relative"
-            >
-              See all of our {solution}{" "}
-              {mode === "case-studies" ? "case studies" : "guides"}
-            </Heading>
-            <Icon as={FiArrowRight} />
-          </Flex>
-        </TrackedLink>
+        {solution && (
+          <TrackedLink
+            href={`https://blog.thirdweb.com/tag/${
+              mode === "case-studies" ? "case-study" : solution.toLowerCase()
+            }/`}
+            category={solution.toLowerCase()}
+            label="see-all-guides"
+            isExternal
+          >
+            <Flex align="center" gap={2}>
+              <Heading
+                fontSize="20px"
+                fontWeight="medium"
+                as="p"
+                lineHeight={{ base: 1.5, md: undefined }}
+                position="relative"
+              >
+                See all of our {solution.replace("-", " ")}{" "}
+                {mode === "case-studies" ? "case studies" : "guides"}
+              </Heading>
+              <Icon as={FiArrowRight} />
+            </Flex>
+          </TrackedLink>
+        )}
       </Flex>
     </ProductSection>
   );
