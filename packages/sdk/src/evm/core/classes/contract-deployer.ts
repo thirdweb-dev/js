@@ -805,6 +805,9 @@ export class ContractDeployer extends RPCConnectionHandler {
     const deployer = await new ethers.ContractFactory(abi, bytecode)
       .connect(signer)
       .deploy(...constructorParams);
+	this.events.emit("contractDeploySubmitted", {		
+		transactionHash: deployer.deployTransaction.hash,
+	});	  
     const deployedContract = await deployer.deployed();
     this.events.emit("contractDeployed", {
       contractAddress: deployedContract.address,
@@ -818,6 +821,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param listener the listener to add
    */
   public addDeployListener(listener: (event: DeployEvent) => void) {
+	this.events.on("contractDeploySubmitted", listener);		
     this.events.on("contractDeployed", listener);
   }
 
@@ -826,6 +830,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @param listener the listener to remove
    */
   public removeDeployListener(listener: (event: DeployEvent) => void) {
+	this.events.off("contractDeploySubmitted", listener);		
     this.events.off("contractDeployed", listener);
   }
 
@@ -833,6 +838,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * Remove all deploy listeners
    */
   public removeAllDeployListeners() {
+	this.events.removeAllListeners("contractDeploySubmitted");		
     this.events.removeAllListeners("contractDeployed");
   }
 }

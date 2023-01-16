@@ -115,6 +115,8 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       implementationAddress,
       encodedFunc,
       salt,
+	  undefined, 
+	  eventEmitter	  
     ]);
 
     const events = this.parseLogs<ProxyDeployedEvent>(
@@ -151,7 +153,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       implementationAddress,
       encodedFunc,
       ethers.utils.formatBytes32String(blockNumber.toString()),
-    ]);
+	], undefined, eventEmitter);
 
     const events = this.parseLogs<ProxyDeployedEvent>(
       "ProxyDeployed",
