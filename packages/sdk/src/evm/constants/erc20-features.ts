@@ -1,6 +1,6 @@
-import DropERC20_V2Abi from "@thirdweb-dev/contracts-js/dist/abis/DropERC20_V2.json";
 import IBurnableERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC20.json";
 import IDrop from "@thirdweb-dev/contracts-js/dist/abis/IDrop.json";
+import DropERC20_V2Abi from "@thirdweb-dev/contracts-js/dist/abis/IDropERC20_V2.json";
 import IDropSinglePhase from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase.json";
 import IDropSinglePhaseV1 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase_V1.json";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";

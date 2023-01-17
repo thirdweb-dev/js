@@ -92,9 +92,9 @@ describe("Events", async () => {
 
   it("Should emit deploy events", async () => {
     // eslint-disable-next-line no-unused-expressions
-    expect(sdk.deployer.events).to.not.be.undefined;
     let txAddress = "";
-    sdk.deployer.events?.addDeployListener((event) => {
+    sdk.deployer.addDeployListener((event) => {
+      console.log(event);
       txAddress = event.contractAddress;
     });
     const address = await sdk.deployer.deployMarketplace({
@@ -103,6 +103,7 @@ describe("Events", async () => {
     // Wait for the async listener to get called
     await new Promise((res) => setTimeout(res, 2000));
     expect(txAddress).to.equal(address);
+    sdk.deployer.removeAllDeployListeners();
   });
 
   it("should emit Contract events", async () => {
