@@ -1,6 +1,6 @@
 import { AnimatedCLICommand } from "../AnimatedCLICommand/AnimatedCLICommand";
 import { Aurora } from "../Aurora";
-import { Flex, Grid, Icon, LightMode, SimpleGrid } from "@chakra-ui/react";
+import { Flex, Grid, Icon, LightMode } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { useTrack } from "hooks/analytics/useTrack";
@@ -32,29 +32,29 @@ export const HeroSection = () => {
           md: 16,
           lg: 24,
         }}
-        templateColumns={{ base: "1fr", md: "1fr auto" }}
+        templateColumns={{ base: "1fr", lg: "1fr auto" }}
         gap={{ base: 6, lg: 8 }}
         mb={{ base: 8, md: 0 }}
       >
         <Flex
           flexDir="column"
           gap={{ base: 6, md: 8 }}
-          align={{ base: "center", md: "start" }}
+          align={{ base: "center", lg: "start" }}
         >
           <Heading
             as="h2"
             letterSpacing="-0.04em"
             lineHeight={1.1}
             fontWeight={700}
-            fontSize={{ base: "36px", md: "64px" }}
-            textAlign={{ base: "center", md: "left" }}
+            fontSize={{ base: "36px", md: "52px", lg: "64px" }}
+            textAlign={{ base: "center", lg: "left" }}
           >
             The complete <br /> web3 development framework.
           </Heading>
           <Heading
             as="h3"
             size="subtitle.md"
-            textAlign={{ base: "center", md: "left" }}
+            textAlign={{ base: "center", lg: "left" }}
             maxW="500px"
           >
             Everything you need to connect your apps or games to decentralized
@@ -62,8 +62,8 @@ export const HeroSection = () => {
           </Heading>
 
           <LightMode>
-            <SimpleGrid
-              columns={{ base: 1, md: 2 }}
+            <Flex
+              flexDirection={{ base: "column", md: "row" }}
               gap={4}
               mt={{ base: 8, md: 0 }}
             >
@@ -114,18 +114,17 @@ export const HeroSection = () => {
                 </Link>
               </Flex>
               <AnimatedCLICommand />
-            </SimpleGrid>
+            </Flex>
           </LightMode>
         </Flex>
 
         <ChakraNextImage
           display={{ base: "none", lg: "flex" }}
           alt=""
-          maxW={96}
+          maxW="100%"
           w={96}
           mt={8}
           src={Hero}
-          mr={12}
           priority
           quality={95}
           justifySelf="flex-end"

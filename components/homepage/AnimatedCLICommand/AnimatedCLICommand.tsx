@@ -109,7 +109,7 @@ export const AnimatedCLICommand: React.FC = () => {
       flexShrink={0}
       py={3}
       px={4}
-      minW={{ base: "100%", md: "240px" }}
+      minW={"300px"}
       gap={1}
       align="center"
       alignSelf="start"
