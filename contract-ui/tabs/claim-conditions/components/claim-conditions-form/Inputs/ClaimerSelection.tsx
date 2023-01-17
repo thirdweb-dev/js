@@ -13,7 +13,7 @@ import { Button, Text } from "tw-components";
  */
 export const ClaimerSelection = () => {
   const {
-    formDisabled: disabled,
+    formDisabled,
     form,
     phaseIndex,
     field,
@@ -47,6 +47,8 @@ export const ClaimerSelection = () => {
   };
 
   let helperText: React.ReactNode;
+
+  const disabledSnapshotButton = isAdmin && formDisabled;
 
   if (isClaimPhaseV1) {
     helperText = (
@@ -84,7 +86,7 @@ export const ClaimerSelection = () => {
 
   return (
     <CustomFormControl
-      disabled={disabled}
+      disabled={formDisabled}
       label={`Who can claim ${isErc20 ? "tokens" : "NFTs"} during this phase?`}
       error={
         form.getFieldState(`phases.${phaseIndex}.snapshot`, form.formState)
@@ -95,7 +97,7 @@ export const ClaimerSelection = () => {
       <Flex direction={{ base: "column", md: "row" }} gap={4}>
         {/* Select Wallet Eligibility */}
         <Select
-          isDisabled={disabled}
+          isDisabled={formDisabled}
           w={{ base: "100%", md: "50%" }}
           value={dropType}
           onChange={handleClaimerChange}
@@ -118,8 +120,10 @@ export const ClaimerSelection = () => {
             align="center"
             gap={1.5}
           >
+            {/* disable the "Edit" button when form is disabled, but not when it's a "See" button */}
             <Button
               colorScheme="purple"
+              isDisabled={disabledSnapshotButton}
               borderRadius="md"
               onClick={() => setOpenIndex(phaseIndex)}
               rightIcon={<Icon as={FiUpload} />}
@@ -132,6 +136,7 @@ export const ClaimerSelection = () => {
               direction="row"
               align="center"
               justify="center"
+              opacity={disabledSnapshotButton ? 0.5 : 1}
               color={field.snapshot?.length === 0 ? "red.400" : "green.400"}
               _light={{
                 color: field.snapshot?.length === 0 ? "red.500" : "green.500",
