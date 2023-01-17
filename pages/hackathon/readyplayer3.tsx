@@ -132,6 +132,12 @@ const mentors = [
     image: "/assets/landingpage/shai-perednik.jpeg",
     company: "AWS",
   },
+  {
+    name: "Leanne Bats",
+    twitter: "leannebats",
+    image: "/assets/landingpage/leannebats.jpg",
+    company: "Tres Cool",
+  },
 ];
 
 const scheduleItems = [
