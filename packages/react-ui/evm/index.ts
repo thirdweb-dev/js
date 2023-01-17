@@ -38,3 +38,9 @@ export { ChainId } from "@thirdweb-dev/sdk";
 // types
 export * from "./types";
 export type { ThirdwebAuthConfig } from "./contexts/thirdweb-auth";
+
+// ui components
+export * from "./components/MediaRenderer";
+export * from "./components/NftMedia";
+export * from "./components/ConnectWallet";
+export * from "./components/Web3Button";
