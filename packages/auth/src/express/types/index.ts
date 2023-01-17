@@ -5,7 +5,7 @@ import {
   User,
   VerifyOptions,
 } from "../../core/schema";
-import { MinimalWallet } from "@thirdweb-dev/wallets";
+import { GenericSignerWallet } from "@thirdweb-dev/wallets";
 import { Request } from "express";
 import { z } from "zod";
 
@@ -21,7 +21,7 @@ export type ThirdwebAuthUser<TData extends Json = Json> = User & {
 
 export type ThirdwebAuthConfig = {
   domain: string;
-  wallet: MinimalWallet;
+  wallet: GenericSignerWallet;
   verificationOptions?: Omit<Omit<VerifyOptions, "validateNonce">, "domain">;
   callbacks?: {
     login?: {
