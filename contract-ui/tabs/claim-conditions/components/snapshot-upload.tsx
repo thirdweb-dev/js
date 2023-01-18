@@ -255,10 +255,6 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                             <Icon as={FiDownload} /> Example snapshot
                           </Link>
                         </Text>
-                        <Text as={ListItem}>
-                          Repeated addresses will be removed and only the first
-                          found will be kept.
-                        </Text>
                       </>
                     ) : dropType === "specific" ? (
                       <>
@@ -290,10 +286,6 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                             <Icon boxSize="1em" as={FiDownload} /> Example
                             snapshot
                           </Link>
-                        </Text>
-                        <Text as={ListItem}>
-                          Repeated addresses will be removed and only the first
-                          found will be kept.
                         </Text>
                       </>
                     ) : (
@@ -341,11 +333,18 @@ export const SnapshotUpload: React.FC<SnapshotUploadProps> = ({
                             snapshot
                           </Link>
                         </Text>
-                        <Text as={ListItem}>
-                          Repeated addresses will be removed and only the first
-                          found will be kept.
-                        </Text>
                       </>
+                    )}
+                    <Text as={ListItem}>
+                      Repeated addresses will be removed and only the first
+                      found will be kept.
+                    </Text>
+                    {!isV1ClaimCondition && (
+                      <Text as={ListItem}>
+                        The limit you set is for the maximum amount of NFTs a
+                        wallet can claim, not how many they can receive in
+                        total.
+                      </Text>
                     )}
                   </UnorderedList>
                 </Flex>
