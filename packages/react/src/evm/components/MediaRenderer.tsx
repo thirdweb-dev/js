@@ -9,7 +9,7 @@ import {
   CarbonPlayFilledAlt,
 } from "./Icons";
 import { useQuery } from "@tanstack/react-query";
-import React, { ReactNode, useEffect, useMemo, useRef, useState, lazy } from "react";
+import React, { ReactNode, useEffect, useMemo, useRef, useState, lazy, Suspense } from "react";
 import useDimensions from "react-cool-dimensions";
 
 export interface SharedMediaProps {
@@ -450,11 +450,13 @@ export const MediaRenderer = React.forwardRef<
     } else if (videoOrImageSrc.mimeType.startsWith("model")) {
       const ModelViewer = lazy(() => import('./ModelViewer'))
       return (
-        <ModelViewer
-          style={mergedStyle}
-          src= {videoOrImageSrc.url || ''}
-          {...restProps}>            
-        </ModelViewer>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ModelViewer
+            style={mergedStyle}
+            src= {videoOrImageSrc.url || ''}
+            {...restProps}>            
+          </ModelViewer>
+        </Suspense>
       );
     } else if (shouldRenderVideoTag(videoOrImageSrc.mimeType)) {
       return (
