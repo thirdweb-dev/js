@@ -132,7 +132,6 @@
     "@magic-sdk/provider": "^10.1.0",
     "@noble/ed25519": "^1.7.1",
     "@solana/web3.js": "^1.70.1",
-    "@wagmi/chains": "^0.1.0",
     "@wagmi/core": "^0.8.2",
     "@walletconnect/ethereum-provider": "^1.7.8",
     "abitype": "^0.2.5",

@@ -1,5 +1,5 @@
 import { ThirdwebAuth } from "../src/core";
-import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
+import { EthersWallet } from "@thirdweb-dev/wallets";
 import { expect } from "chai";
 import { Wallet } from "ethers";
 
