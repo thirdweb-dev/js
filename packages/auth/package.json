@@ -83,6 +83,7 @@
   },
   "peerDependencies": {
     "@thirdweb-dev/sdk": "*",
+    "@thirdweb-dev/wallets": "*",
     "ethers": ">=5.5.1",
     "express": "^4.18.1",
     "next": "^12.2.0",
