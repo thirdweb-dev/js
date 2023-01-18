@@ -21,6 +21,10 @@ export function usePascalCaseContractName(contractName: string) {
     return "TokenDrop";
   } else if (contractName === "signature-drop") {
     return "SignatureDrop";
+  } else if (contractName === "pack") {
+    return "Pack";
+  } else if (contractName === "multiwrap") {
+    return "Multiwrap";
   } else {
     return contractName;
   }

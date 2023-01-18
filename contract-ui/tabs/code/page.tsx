@@ -14,10 +14,7 @@ export const ContractCodePage: React.FC<ContractCodePageProps> = ({
   const contractQuery = useContract(contractAddress);
   const { data: contractType, isLoading } = useContractType(contractAddress);
 
-  const useCustomCodeTab =
-    contractType === "custom" ||
-    contractType === "multiwrap" ||
-    contractType === "pack";
+  const useCustomCodeTab = contractType === "custom";
 
   if (contractQuery.isLoading || isLoading) {
     // TODO build a skeleton for this
