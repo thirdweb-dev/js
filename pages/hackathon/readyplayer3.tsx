@@ -160,12 +160,6 @@ const scheduleItems = [
     href: "https://lu.ma/rp3scenario",
   },
   {
-    day: 19,
-    month: "jan",
-    title: "thirdweb & Coinbase Cloud Code-Along: Build With GamingKit",
-    href: "https://lu.ma/rp3gamecodealong",
-  },
-  {
     day: 23,
     month: "jan",
     title: "Workshop with Spindl",
@@ -179,6 +173,12 @@ const scheduleItems = [
   },
   {
     day: 25,
+    month: "jan",
+    title: "thirdweb & Coinbase Cloud Code-Along: Build With GamingKit",
+    href: "https://lu.ma/rp3gamecodealong",
+  },
+  {
+    day: 31,
     month: "jan",
     title: "How To Create Your Hackathon Submission on DevPost + Q&A",
     href: "https://lu.ma/rp3submissions",
