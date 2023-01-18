@@ -9,7 +9,7 @@ import {
   CarbonPlayFilledAlt,
 } from "./Icons";
 import { useQuery } from "@tanstack/react-query";
-import React, { ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import React, { ReactNode, useEffect, useMemo, useRef, useState, lazy } from "react";
 import useDimensions from "react-cool-dimensions";
 
 export interface SharedMediaProps {
@@ -52,14 +52,6 @@ export interface MediaRendererProps extends SharedMediaProps {
 interface PlayButtonProps {
   onClick: () => void;
   isPlaying: boolean;
-}
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'model-viewer': any;
-    }
-  }
 }
 
 const PlayButton: React.VFC<PlayButtonProps> = ({ onClick, isPlaying }) => {
@@ -405,26 +397,6 @@ const LinkPlayer = React.forwardRef<HTMLAnchorElement, MediaRendererProps>(
 
 LinkPlayer.displayName = "LinkPlayer";
 
-const ModelViewer = React.forwardRef<HTMLCanvasElement, MediaRendererProps>(
-  ({ src, alt, style, ...restProps }, ref) => {
-    const modelRef = useRef<HTMLCanvasElement>(null);
-    import('@google/model-viewer')
-  
-    return (
-      <model-viewer
-        style={style}
-        src={src}
-        alt={alt}
-        camera-controls
-        ref={mergeRefs([modelRef, ref])} 
-        {...restProps}>
-      </model-viewer>
-    )
-  }
-) 
-
-ModelViewer.displayName = "ModelViewer";
-
 /**
  * This component can be used to render any media type, including image, audio, video, and html files.
  * Its convenient for rendering NFT media files, as these can be a variety of different types.
@@ -476,13 +448,14 @@ export const MediaRenderer = React.forwardRef<
         />
       );
     } else if (videoOrImageSrc.mimeType.startsWith("model")) {
+      const ModelViewer = lazy(() => import('./ModelViewer'))
       return (
         <ModelViewer
           style={mergedStyle}
           src= {videoOrImageSrc.url || ''}
           {...restProps}>            
         </ModelViewer>
-      )        
+      );
     } else if (shouldRenderVideoTag(videoOrImageSrc.mimeType)) {
       return (
         <VideoPlayer
