@@ -156,12 +156,10 @@ export async function fetchSourceFilesFromMetadata(
   return await Promise.all(
     Object.entries(publishedMetadata.metadata.sources).map(
       async ([path, info]) => {
-        console.log("processing", path);
         const urls = (info as any).urls as string[];
         const ipfsLink = urls
           ? urls.find((url) => url.includes("ipfs"))
           : undefined;
-        console.log("ipfsLink", ipfsLink);
         if (ipfsLink) {
           const ipfsHash = ipfsLink.split("ipfs/")[1];
           // 3 sec timeout for sources that haven't been uploaded to ipfs
@@ -177,7 +175,6 @@ export async function fetchSourceFilesFromMetadata(
             source,
           };
         } else {
-          console.log("content", (info as any).content);
           return {
             filename: path,
             source:
