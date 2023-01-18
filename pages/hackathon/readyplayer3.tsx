@@ -313,7 +313,7 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
                 <Flex alignItems={"center"} flexDirection="column">
                   {isAfter(new Date(), new Date("2021-01-16T00:00:00.000Z")) ? (
                     <>
-                      <Timer date="2023-01-16T22:00:00" />
+                      <Timer date="2023-02-13T23:59:59-05:00" />
                       <LinkButton
                         href="https://readyplayer3.devpost.com/"
                         onClick={() =>
@@ -389,7 +389,7 @@ const ReadyPlayer3Landing: ThirdwebNextPage = () => {
             <Sponsors sponsors={sponsors} hackathonName="ready-player-3" />
           </HomepageSection>
 
-          {/* Prices  */}
+          {/* Prizes  */}
           <HomepageSection mt={40}>
             <Flex flexDir="column">
               <Heading size="title.2xl" textAlign="center">
