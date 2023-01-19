@@ -30,5 +30,5 @@ export function useLogout() {
     },
   });
 
-  return logout;
+  return { logout: logout.mutateAsync, isLoading: logout.isLoading };
 }

@@ -49,5 +49,8 @@ export function useLogin() {
     },
   });
 
-  return login;
+  return {
+    login: (options?: LoginOptions) => login.mutateAsync(options),
+    isLoading: login.isLoading,
+  };
 }
