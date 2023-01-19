@@ -2,14 +2,12 @@
 import { CoinbasePayIntegration, FundWalletOptions } from "@thirdweb-dev/pay";
 import { ChainOrRpc, ThirdwebSDK, getRpcUrl } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  CoinbaseWallet,
-  MetaMask,
-  WalletConnect,
-  InjectedWallet,
-  MagicAuthWallet,
-  AbstractWallet,
-} from "@thirdweb-dev/wallets";
+import type { AbstractWallet } from "@thirdweb-dev/wallets/evm/wallets/base";
+import { CoinbaseWallet } from "@thirdweb-dev/wallets/evm/wallets/coinbase-wallet";
+import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
+import { MagicAuthWallet } from "@thirdweb-dev/wallets/evm/wallets/magic-auth";
+import { MetaMask } from "@thirdweb-dev/wallets/evm/wallets/metamask";
+import { WalletConnect } from "@thirdweb-dev/wallets/evm/wallets/wallet-connect";
 import { BigNumber } from "ethers";
 import type { ContractInterface, Signer } from "ethers";
 
