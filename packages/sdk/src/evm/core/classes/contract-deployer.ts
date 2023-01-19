@@ -4,7 +4,7 @@ import {
   fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
 } from "../../common/index";
-import { ChainId } from "../../constants";
+import { ChainId, EventType } from "../../constants";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import {
   EditionDropInitializer,
@@ -71,6 +71,14 @@ export class ContractDeployer extends RPCConnectionHandler {
   private _registry: Promise<ContractRegistry> | undefined;
   private storage: ThirdwebStorage;
   private events: EventEmitter<DeployEvents>;
+  private transactionListener = (event: any) => {
+    if (event.status === "submitted") {
+      this.events.emit("contractDeployed", {
+        status: "submitted",
+        transactionHash: event.transactionHash,
+      });
+    }
+  };
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -428,12 +436,15 @@ export class ContractDeployer extends RPCConnectionHandler {
       } catch (e) {
         parsedVersion = undefined;
       }
-      return await factory.deploy(
+      factory.on(EventType.Transaction, this.transactionListener);
+      const deployedAddress = await factory.deploy(
         contractType,
         parsedMetadata,
         this.events,
         parsedVersion,
       );
+      factory.off(EventType.Transaction, this.transactionListener);
+      return deployedAddress;
     }
 
     //
@@ -523,13 +534,16 @@ export class ContractDeployer extends RPCConnectionHandler {
       this.storage,
       this.options,
     );
-    return await proxyFactory.deployProxyByImplementation(
+    proxyFactory.on(EventType.Transaction, this.transactionListener);
+    const deployedAddress = await proxyFactory.deployProxyByImplementation(
       implementationAddress,
       implementationAbi,
       initializerFunction,
       initializerArgs,
       this.events,
     );
+    proxyFactory.off(EventType.Transaction, this.transactionListener);
+    return deployedAddress;
   }
 
   /**
@@ -805,8 +819,13 @@ export class ContractDeployer extends RPCConnectionHandler {
     const deployer = await new ethers.ContractFactory(abi, bytecode)
       .connect(signer)
       .deploy(...constructorParams);
+    this.events.emit("contractDeployed", {
+      status: "submitted",
+      transactionHash: deployer.deployTransaction.hash,
+    });
     const deployedContract = await deployer.deployed();
     this.events.emit("contractDeployed", {
+      status: "completed",
       contractAddress: deployedContract.address,
       transactionHash: deployedContract.deployTransaction.hash,
     });
