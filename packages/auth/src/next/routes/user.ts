@@ -13,6 +13,6 @@ export default async function handler(
     });
   }
 
-  const user = getUser(req, ctx);
+  const user = await getUser(req, ctx);
   return res.status(200).json(user);
 }
