@@ -226,7 +226,7 @@ const ClaimConditionsProgramForm: React.FC<{ address: string }> = ({
                       How much do you want to charge to claim each NFT?
                     </Heading>
                     <PriceInput
-                      value={parseFloat(watch("price")?.toString() || "0")}
+                      value={watch("price")?.toString() || ""}
                       onChange={(val) => setValue(`price`, val)}
                     />
                     <FormErrorMessage>

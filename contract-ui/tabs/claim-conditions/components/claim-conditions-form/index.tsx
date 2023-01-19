@@ -62,7 +62,7 @@ const DEFAULT_PHASE = {
   maxClaimableSupply: "unlimited",
   maxClaimablePerWallet: "unlimited",
   waitInSeconds: "0",
-  price: 0,
+  price: "0",
   currencyAddress: NATIVE_TOKEN_ADDRESS,
   snapshot: undefined,
   merkleRootHash: undefined,
@@ -152,7 +152,7 @@ export const ClaimConditionsForm: React.FC<ClaimConditionsFormProps> = ({
     return (claimsConditionQuery.data || [])
       .map((phase, idx) => ({
         ...phase,
-        price: Number(phase.currencyMetadata.displayValue),
+        price: phase.currencyMetadata.displayValue,
         maxClaimableSupply: phase.maxClaimableSupply?.toString() || "0",
         currencyMetadata: {
           ...phase.currencyMetadata,

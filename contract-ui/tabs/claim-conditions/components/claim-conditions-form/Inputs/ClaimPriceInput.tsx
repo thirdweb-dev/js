@@ -20,7 +20,7 @@ export const ClaimPriceInput = () => {
       }
     >
       <PriceInput
-        value={parseFloat(field.price?.toString() || "0")}
+        value={field.price?.toString() || ""}
         onChange={(val) => form.setValue(`phases.${phaseIndex}.price`, val)}
       />
     </CustomFormControl>
