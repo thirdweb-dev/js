@@ -1,5 +1,15 @@
 # @thirdweb-dev/contracts-js
 
+## 1.2.3
+
+### Patch Changes
+
+- [#463](https://github.com/thirdweb-dev/js/pull/463) [`557429b`](https://github.com/thirdweb-dev/js/commit/557429b5cfb3af2983ee01cf7d12d41ee0557593) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - PackVRF contract
+
+- [#311](https://github.com/thirdweb-dev/js/pull/311) [`9eaa21d`](https://github.com/thirdweb-dev/js/commit/9eaa21d09ab9c700aea61a2a25f8ca9859d20857) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update to v3.3.0 of contracts package
+
+- [#311](https://github.com/thirdweb-dev/js/pull/311) [`9eaa21d`](https://github.com/thirdweb-dev/js/commit/9eaa21d09ab9c700aea61a2a25f8ca9859d20857) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Update to 3.1.10 of contracts package
+
 ## 1.2.2
 
 ### Patch Changes

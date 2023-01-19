@@ -71,7 +71,14 @@ async function getDomainSeperator(signer: Signer, contractAddress: string) {
   try {
     return await contract.DOMAIN_SEPARATOR();
   } catch (err) {
-    return await contract.getDomainSeperator();
+    try {
+      return await contract.getDomainSeperator();
+    } catch (err2) {
+      console.error(
+        'Error getting domain separator',
+        err2
+      )
+    }
   }
 }
 
