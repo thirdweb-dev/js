@@ -1,3 +1,4 @@
+import { Json } from "../../core";
 import { LoginPayloadBodySchema, ThirdwebAuthContext } from "../types";
 import { serialize } from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -11,14 +12,16 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { payload } = LoginPayloadBodySchema.parse(req.body);
+  const parsedPayload = LoginPayloadBodySchema.safeParse(req.body);
 
   // Get signed login payload from the frontend
-  if (!payload) {
-    return res.status(400).json({ error: "Missing login payload" });
+  if (!parsedPayload.success) {
+    return res.status(400).json({ error: "Invalid login payload" });
   }
 
-  let tokenContext = undefined;
+  const payload = parsedPayload.data.payload;
+
+  let tokenContext: Json | undefined = undefined;
   if (ctx.callbacks?.login?.enhanceToken) {
     tokenContext = await ctx.callbacks.login.enhanceToken(
       payload.payload.address,
@@ -32,7 +35,7 @@ export default async function handler(
     }
   };
 
-  let token;
+  let token: string;
   try {
     // Generate an access token with the SDK using the signed payload
     token = await ctx.auth.generate(payload, {

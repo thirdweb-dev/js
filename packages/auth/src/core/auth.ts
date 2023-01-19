@@ -16,24 +16,11 @@ import {
   Json,
 } from "./schema";
 import { isBrowser } from "./utils";
-import {
-  EthersWallet,
-  GenericSignerWallet,
-  PrivateKeyWallet,
-} from "@thirdweb-dev/wallets";
-import { ethers } from "ethers";
+import type { GenericSignerWallet } from "@thirdweb-dev/wallets";
 
 export class ThirdwebAuth {
   private domain: string;
   private wallet: GenericSignerWallet;
-
-  static fromSigner(signer: ethers.Signer, domain: string): ThirdwebAuth {
-    return new ThirdwebAuth(new EthersWallet(signer), domain);
-  }
-
-  static fromPrivateKey(privateKey: string, domain: string): ThirdwebAuth {
-    return new ThirdwebAuth(new PrivateKeyWallet(privateKey), domain);
-  }
 
   constructor(wallet: GenericSignerWallet, domain: string) {
     this.wallet = wallet;

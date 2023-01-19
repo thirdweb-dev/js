@@ -243,3 +243,9 @@ export type User<TContext extends Json = Json> = {
   context?: TContext;
   token: AuthenticationPayloadData;
 };
+
+export const LoginPayloadOutputSchema = LoginPayloadSchema.extend({
+  payload: LoginPayloadDataSchema.extend({
+    expiration_time: z.string(),
+  }),
+});

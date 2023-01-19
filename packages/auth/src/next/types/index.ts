@@ -1,13 +1,17 @@
 import { ThirdwebAuth } from "../../core";
-import { Json, User, VerifyOptions } from "../../core/schema";
-import { LoginPayloadSchema } from "../../core/schema";
+import {
+  Json,
+  LoginPayloadOutputSchema,
+  User,
+  VerifyOptions,
+} from "../../core/schema";
 import { GenericSignerWallet } from "@thirdweb-dev/wallets";
 import { GetServerSidePropsContext, NextApiRequest } from "next";
 import { NextRequest } from "next/server";
 import { z } from "zod";
 
 export const LoginPayloadBodySchema = z.object({
-  payload: LoginPayloadSchema,
+  payload: LoginPayloadOutputSchema,
 });
 
 type RequestType =

@@ -1,7 +1,7 @@
 import { ThirdwebAuth } from "../../core";
 import {
   Json,
-  LoginPayloadSchema,
+  LoginPayloadOutputSchema,
   User,
   VerifyOptions,
 } from "../../core/schema";
@@ -10,7 +10,7 @@ import { Request } from "express";
 import { z } from "zod";
 
 export const LoginPayloadBodySchema = z.object({
-  payload: LoginPayloadSchema,
+  payload: LoginPayloadOutputSchema,
 });
 
 export type ThirdwebAuthRoute = "login" | "user" | "logout";

@@ -1,3 +1,4 @@
+import { Json } from "../../core";
 import { LoginPayloadBodySchema, ThirdwebAuthContext } from "../types";
 import { serialize } from "cookie";
 import { Request, Response } from "express";
@@ -18,7 +19,7 @@ export default async function handler(
     return res.status(400).json({ error: "Missing login payload" });
   }
 
-  let tokenContext = undefined;
+  let tokenContext: Json | undefined = undefined;
   if (ctx.callbacks?.login?.enhanceToken) {
     tokenContext = await ctx.callbacks.login.enhanceToken(
       payload.payload.address,
@@ -32,7 +33,7 @@ export default async function handler(
     }
   };
 
-  let token;
+  let token: string;
   try {
     // Generate an access token with the SDK using the signed payload
     token = await ctx.auth.generate(payload, {
