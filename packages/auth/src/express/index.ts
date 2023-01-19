@@ -19,7 +19,7 @@ export function ThirdwebAuth(cfg: ThirdwebAuthConfig) {
 
   router.use(cookieParser());
 
-  router.post(`/login`, (req: Request, res: Response) =>
+  router.post("/login", (req: Request, res: Response) =>
     loginHandler(req, res, ctx),
   );
 
