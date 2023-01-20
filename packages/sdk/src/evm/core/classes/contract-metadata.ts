@@ -1,8 +1,8 @@
 import {
   detectContractFeature,
   ExtensionNotImplementedError,
-  fetchContractMetadataFromAddress,
   hasFunction,
+  fetchContractMetadataFromAddress,
 } from "../../common";
 import { FEATURE_METADATA } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";

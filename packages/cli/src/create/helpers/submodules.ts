@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { runCommand } from "./run-command";
+import { rm, writeFile } from "node:fs/promises";
 
 /**
  * Spawn a package manager installation with either Yarn or NPM.
@@ -8,12 +9,12 @@ import { runCommand } from "./run-command";
  */
 export async function submodules(): Promise<void> {
   // Remove script folder because it clashes with contract templates (and not needed with deploy)
-  await runCommand("rm", ["-rf", "script"]);
+  await rm("script", { recursive: true, force: true });
 
   // Reset and recursively add forge submodules
-  await runCommand("rm", ["-rf", ".gitmodules"]);
-  await runCommand("rm", ["-rf", "lib"]);
-  await runCommand("touch", [".gitmodules"]);
+  await rm(".gitmodules", { recursive: true, force: true });
+  await rm("lib", { recursive: true, force: true });
+  await writeFile(".gitmodules", "");
   await runCommand("git", [
     "submodule",
     "add",

@@ -8,6 +8,10 @@ import {
 import { sdk, signers } from "./before-setup";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import {
+  MockContractPublisher__factory,
+  TWFactory__factory,
+} from "@thirdweb-dev/contracts-js";
 import { expect } from "chai";
 import { ethers } from "ethers";
 
@@ -92,17 +96,25 @@ describe("Events", async () => {
 
   it("Should emit deploy events", async () => {
     // eslint-disable-next-line no-unused-expressions
-    expect(sdk.deployer.events).to.not.be.undefined;
-    let txAddress = "";
-    sdk.deployer.events?.addDeployListener((event) => {
-      txAddress = event.contractAddress;
+    const txAddress: string[] = [];
+    sdk.deployer.addDeployListener((event) => {
+      if (event.status === "completed") {
+        txAddress.push(event.contractAddress || "");
+      }
     });
     const address = await sdk.deployer.deployMarketplace({
       name: "Marketplace",
     });
+    const secondAddress = await sdk.deployer.deployContractWithAbi(
+      MockContractPublisher__factory.abi,
+      MockContractPublisher__factory.bytecode,
+      [],
+    );
     // Wait for the async listener to get called
     await new Promise((res) => setTimeout(res, 2000));
-    expect(txAddress).to.equal(address);
+    sdk.deployer.removeAllDeployListeners();
+    expect(txAddress[0]).to.equal(address);
+    expect(txAddress[1]).to.equal(secondAddress);
   });
 
   it("should emit Contract events", async () => {
