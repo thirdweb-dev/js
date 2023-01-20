@@ -5,7 +5,7 @@ import {
   isFeatureEnabled,
 } from "./feature-detection";
 import { unique } from "./utils";
-import { IRouter } from "@thirdweb-dev/contracts-js";
+import type { IRouter } from "@thirdweb-dev/contracts-js";
 import RouterABI from "@thirdweb-dev/contracts-js/dist/abis/Router.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
