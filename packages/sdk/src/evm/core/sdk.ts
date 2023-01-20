@@ -11,10 +11,9 @@ import {
 } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
 import { SDKOptions } from "../schema/sdk-options";
-import { CurrencyValue } from "../types/index";
+import { ContractWithMetadata, CurrencyValue } from "../types/index";
 import type { AbstractWallet } from "../wallets";
 import { WalletAuthenticator } from "./auth/wallet-authenticator";
-import type { ContractMetadata } from "./classes";
 import { ContractDeployer } from "./classes/contract-deployer";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { MultichainRegistry } from "./classes/multichain-registry";
@@ -34,7 +33,6 @@ import { UserWallet } from "./wallet/UserWallet";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Contract, ContractInterface, ethers, Signer } from "ethers";
-import invariant from "tiny-invariant";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -553,51 +551,55 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * const contracts = sdk.getContractList("{{wallet_address}}");
    * ```
    */
-  public async getContractList(walletAddress: string) {
+  public async getContractList(
+    walletAddress: string,
+  ): Promise<ContractWithMetadata[]> {
     // TODO - this only reads from the current registry chain, not the multichain registry
     const addresses =
       (await (
         await this.deployer.getRegistry()
       )?.getContractAddresses(walletAddress)) || [];
 
-    const addressesWithContractTypes = await Promise.all(
+    const chainId = (await this.getProvider().getNetwork()).chainId;
+
+    return await Promise.all(
       addresses.map(async (address) => {
-        let contractType: ContractType = "custom";
-        try {
-          contractType = await this.resolveContractType(address);
-        } catch (e) {
-          // this going to happen frequently and be OK, we'll just catch it and ignore it
-        }
-        let metadata: ContractMetadata<any, any> | undefined;
-        if (contractType === "custom") {
-          try {
-            metadata = (await this.getContract(address)).metadata;
-          } catch (e) {
-            console.warn(
-              `Couldn't get contract metadata for custom contract: ${address} - ${e}`,
-            );
-          }
-        } else {
-          metadata = (await this.getContract(address, contractType)).metadata;
-        }
         return {
           address,
-          contractType,
-          metadata,
+          chainId,
+          contractType: () => this.resolveContractType(address),
+          metadata: async () =>
+            (await this.getContract(address)).metadata.get(),
         };
       }),
     );
+  }
 
-    return addressesWithContractTypes
-      .filter((e) => e.metadata)
-      .map(({ address, contractType, metadata }) => {
-        invariant(metadata, "All ThirdwebContracts require metadata");
+  public async getMultichainContractList(
+    walletAddress: string,
+  ): Promise<ContractWithMetadata[]> {
+    const contracts = await this.multiChainRegistry.getContractAddresses(
+      walletAddress,
+    );
+
+    const sdkMap: Record<number, ThirdwebSDK> = {};
+
+    return await Promise.all(
+      contracts.map(async ({ address, chainId }) => {
+        let chainSDK = sdkMap[chainId];
+        if (!chainSDK) {
+          chainSDK = new ThirdwebSDK(chainId, this.options);
+          sdkMap[chainId] = chainSDK;
+        }
         return {
           address,
-          contractType,
-          metadata: () => metadata.get(),
+          chainId,
+          contractType: () => chainSDK.resolveContractType(address),
+          metadata: async () =>
+            (await chainSDK.getContract(address)).metadata.get(),
         };
-      });
+      }),
+    );
   }
 
   /**
