@@ -155,6 +155,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     forkedChain: ChainIdOrName = ChainId.Localhost,
     privateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
     port: number = 8545,
+    sdkOptions: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
   ) {
     const chainId = toChainId(forkedChain);
@@ -166,7 +167,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           [chainId]: {
             rpc: `http://localhost:${port}`,
           },
+          ...sdkOptions.chainInfos,
         },
+        ...sdkOptions,
       },
       storage,
     );

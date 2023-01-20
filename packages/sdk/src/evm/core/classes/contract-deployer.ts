@@ -5,7 +5,7 @@ import {
   fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
 } from "../../common/index";
-import { ChainId, EventType } from "../../constants";
+import { ChainId, EventType, getNativeTokenByChainId } from "../../constants";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import {
   EditionDropInitializer,
@@ -23,7 +23,6 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../contracts";
-import { FactoryDeploymentSchema } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import { DeployEvent, DeployEvents } from "../../types";
 import {
@@ -34,8 +33,13 @@ import {
   TokenContractDeployMetadata,
   VoteContractDeployMetadata,
 } from "../../types/deploy/deploy-metadata";
+import {
+  DeployMetadata,
+  DeployOptions,
+} from "../../types/deploy/deploy-options";
 import { ThirdwebSDK } from "../sdk";
 import {
+  ContractType,
   DeploySchemaForPrebuiltContractType,
   NetworkInput,
   PrebuiltContractType,
@@ -55,6 +59,8 @@ import { EventEmitter } from "eventemitter3";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 
+const THIRDWEB_DEPLOYER = "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024";
+
 /**
  * Handles deploying new contracts
  * @public
@@ -72,6 +78,7 @@ export class ContractDeployer extends RPCConnectionHandler {
   private _registry: Promise<ContractRegistry | undefined> | undefined;
   private storage: ThirdwebStorage;
   private events: EventEmitter<DeployEvents>;
+  private deployMetadataCache: Record<string, any> = {};
   private transactionListener = (event: any) => {
     if (event.status === "submitted") {
       this.events.emit("contractDeployed", {
@@ -411,19 +418,14 @@ export class ContractDeployer extends RPCConnectionHandler {
     >,
     version: string = "latest",
   ): Promise<string> {
+    const signer = this.getSigner();
+    invariant(signer, "A signer is required to deploy contracts");
     const parsedMetadata =
       PREBUILT_CONTRACTS_MAP[contractType].schema.deploy.parse(
         contractMetadata,
       );
-    const activeChainId = (await this.getProvider().getNetwork()).chainId;
-    if (
-      activeChainId === ChainId.Hardhat ||
-      activeChainId === ChainId.Localhost
-    ) {
-      //
-      // old behavior for hardhat and localhost chains
-      //
-
+    if (this.hasLocalFactory()) {
+      // old behavior for unit tests, deploy from local factory
       // parse version into the first number of the version string (or undefined if unparseable)
       let parsedVersion: number | undefined = undefined;
       try {
@@ -449,20 +451,13 @@ export class ContractDeployer extends RPCConnectionHandler {
       return deployedAddress;
     }
 
-    //
-    // new behavior for all other chains
-    //
-
-    const signer = this.getSigner();
-    invariant(signer, "A signer is required to deploy contracts");
-
+    // For all other chains, fetch from released contracts
     // resolve contract name from type
     const contractName = getContractName(contractType);
     invariant(contractName, "Contract name not found");
-    // get deploy arugments for the contractType
-    // first upload the contractmetadata
+    // first upload the contract metadata
     const contractURI = await this.storage.upload(parsedMetadata);
-    // the get the deploy arguments
+    // then get the deploy arguments
     const constructorParams = await getDeployArguments(
       contractType,
       parsedMetadata,
@@ -470,13 +465,40 @@ export class ContractDeployer extends RPCConnectionHandler {
       signer,
     );
 
-    return this.deployReleasedContract(
-      // 0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024 === deployer.thirdweb.eth
-      "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
+    const activeChainId = (await this.getProvider().getNetwork()).chainId;
+    // fetch the release URI from the ContractPublisher contract
+    const release = await this.fetchReleaseFromPolygon(
+      THIRDWEB_DEPLOYER,
       contractName,
-      constructorParams,
       version,
     );
+    // fetch the deploy metadata from the release URI
+    const deployMeta = await this.fetchAndCacheDeployMetadata(
+      release.metadataUri,
+    );
+    let implementationAddress =
+      deployMeta.extendedMetadata?.factoryDeploymentData
+        ?.implementationAddresses?.[activeChainId];
+
+    if (implementationAddress) {
+      // implementation exists on the current chain, continue with normal flow
+      return this.deployContractFromUri(release.metadataUri, constructorParams);
+    } else {
+      // implementation does NOT exist on chain, deploy the implementation first, then deploy a proxy
+      implementationAddress = await this.deployContractFromUri(
+        release.metadataUri,
+        this.getConstructorParamsForImplementation(contractType, activeChainId),
+        {
+          forceDirectDeploy: true,
+        },
+      );
+      return this.deployProxy(
+        implementationAddress,
+        deployMeta.compilerMetadata.abi,
+        "initialize",
+        constructorParams,
+      );
+    }
   }
 
   /**
@@ -504,18 +526,17 @@ export class ContractDeployer extends RPCConnectionHandler {
     contractName: string,
     constructorParams: any[],
     version = "latest",
+    options?: DeployOptions,
   ): Promise<string> {
-    const release = await new ThirdwebSDK("polygon")
-      .getPublisher()
-      .getVersion(releaserAddress, contractName, version);
-    if (!release) {
-      throw new Error(
-        `No release found for '${contractName}' at version '${version}' by '${releaserAddress}'`,
-      );
-    }
+    const release = await this.fetchReleaseFromPolygon(
+      releaserAddress,
+      contractName,
+      version,
+    );
     return await this.deployContractFromUri(
       release.metadataUri,
       constructorParams,
+      options,
     );
   }
 
@@ -675,70 +696,55 @@ export class ContractDeployer extends RPCConnectionHandler {
   public async deployContractFromUri(
     publishMetadataUri: string,
     constructorParamValues: any[],
-    options?: {
-      forceDirectDeploy?: boolean;
-    },
+    options?: DeployOptions,
   ) {
     const signer = this.getSigner();
     invariant(signer, "A signer is required");
-    const compilerMetadata = await fetchPreDeployMetadata(
-      publishMetadataUri,
-      this.storage,
-    );
-    let isDeployableViaFactory;
-    let isDeployableViaProxy;
-    let factoryDeploymentData;
-    try {
-      const extendedMetadata = await fetchExtendedReleaseMetadata(
-        publishMetadataUri,
-        this.storage,
-      );
-      isDeployableViaFactory = extendedMetadata.isDeployableViaFactory;
-      isDeployableViaProxy = extendedMetadata.isDeployableViaProxy;
-      factoryDeploymentData = FactoryDeploymentSchema.parse(
-        extendedMetadata.factoryDeploymentData,
-      );
-    } catch (e) {
-      // not a factory deployment, ignore
-    }
+    const { compilerMetadata, extendedMetadata } =
+      await this.fetchAndCacheDeployMetadata(publishMetadataUri);
     const forceDirectDeploy = options?.forceDirectDeploy || false;
     if (
-      factoryDeploymentData &&
-      (isDeployableViaProxy || isDeployableViaFactory) &&
+      extendedMetadata &&
+      extendedMetadata.factoryDeploymentData &&
+      (extendedMetadata.isDeployableViaProxy ||
+        extendedMetadata.isDeployableViaFactory) &&
       !forceDirectDeploy
     ) {
       const chainId = (await this.getProvider().getNetwork()).chainId;
       invariant(
-        factoryDeploymentData.implementationAddresses,
+        extendedMetadata.factoryDeploymentData.implementationAddresses,
         "implementationAddresses is required",
       );
       const implementationAddress =
-        factoryDeploymentData.implementationAddresses[chainId];
+        extendedMetadata.factoryDeploymentData.implementationAddresses[chainId];
 
       invariant(
         implementationAddress,
         `implementationAddress not found for chainId '${chainId}'`,
       );
       invariant(
-        factoryDeploymentData.implementationInitializerFunction,
+        extendedMetadata.factoryDeploymentData
+          .implementationInitializerFunction,
         `implementationInitializerFunction not set'`,
       );
       const initializerParamTypes = extractFunctionParamsFromAbi(
         compilerMetadata.abi,
-        factoryDeploymentData.implementationInitializerFunction,
+        extendedMetadata.factoryDeploymentData
+          .implementationInitializerFunction,
       ).map((p) => p.type);
       const paramValues = this.convertParamValues(
         initializerParamTypes,
         constructorParamValues,
       );
 
-      if (isDeployableViaFactory) {
+      if (extendedMetadata.isDeployableViaFactory) {
         // deploy via a factory (prioritise factory)
         invariant(
-          factoryDeploymentData.factoryAddresses,
+          extendedMetadata.factoryDeploymentData.factoryAddresses,
           "isDeployableViaFactory is true so factoryAddresses is required",
         );
-        const factoryAddress = factoryDeploymentData.factoryAddresses[chainId];
+        const factoryAddress =
+          extendedMetadata.factoryDeploymentData.factoryAddresses[chainId];
         invariant(
           factoryAddress,
           `isDeployableViaFactory is true and factoryAddress not found for chainId '${chainId}'`,
@@ -747,15 +753,17 @@ export class ContractDeployer extends RPCConnectionHandler {
           factoryAddress,
           implementationAddress,
           compilerMetadata.abi,
-          factoryDeploymentData.implementationInitializerFunction,
+          extendedMetadata.factoryDeploymentData
+            .implementationInitializerFunction,
           paramValues,
         );
-      } else if (isDeployableViaProxy) {
+      } else if (extendedMetadata.isDeployableViaProxy) {
         // deploy a proxy directly
         return await this.deployProxy(
           implementationAddress,
           compilerMetadata.abi,
-          factoryDeploymentData.implementationInitializerFunction,
+          extendedMetadata.factoryDeploymentData
+            .implementationInitializerFunction,
           paramValues,
         );
       }
@@ -779,43 +787,6 @@ export class ContractDeployer extends RPCConnectionHandler {
       bytecode,
       paramValues,
     );
-  }
-
-  private convertParamValues(
-    constructorParamTypes: string[],
-    constructorParamValues: any[],
-  ) {
-    // check that both arrays are same length
-    if (constructorParamTypes.length !== constructorParamValues.length) {
-      throw Error("Passed the wrong number of constructor arguments");
-    }
-    return constructorParamTypes.map((p, index) => {
-      if (p === "tuple" || p.endsWith("[]")) {
-        if (typeof constructorParamValues[index] === "string") {
-          return JSON.parse(constructorParamValues[index]);
-        } else {
-          return constructorParamValues[index];
-        }
-      }
-      if (p === "bytes32") {
-        invariant(
-          ethers.utils.isHexString(constructorParamValues[index]),
-          `Could not parse bytes32 value. Expected valid hex string but got "${constructorParamValues[index]}".`,
-        );
-        return ethers.utils.hexZeroPad(constructorParamValues[index], 32);
-      }
-      if (p.startsWith("bytes")) {
-        invariant(
-          ethers.utils.isHexString(constructorParamValues[index]),
-          `Could not parse bytes value. Expected valid hex string but got "${constructorParamValues[index]}".`,
-        );
-        return constructorParamValues[index];
-      }
-      if (p.startsWith("uint") || p.startsWith("int")) {
-        return BigNumber.from(constructorParamValues[index].toString());
-      }
-      return constructorParamValues[index];
-    });
   }
 
   /**
@@ -868,5 +839,113 @@ export class ContractDeployer extends RPCConnectionHandler {
    */
   public removeAllDeployListeners() {
     this.events.removeAllListeners("contractDeployed");
+  }
+
+  // PRIVATE METHODS
+
+  private async fetchAndCacheDeployMetadata(
+    publishMetadataUri: string,
+  ): Promise<DeployMetadata> {
+    if (this.deployMetadataCache[publishMetadataUri]) {
+      return this.deployMetadataCache[publishMetadataUri];
+    }
+    const compilerMetadata = await fetchPreDeployMetadata(
+      publishMetadataUri,
+      this.storage,
+    );
+    let extendedMetadata;
+    try {
+      extendedMetadata = await fetchExtendedReleaseMetadata(
+        publishMetadataUri,
+        this.storage,
+      );
+    } catch (e) {
+      // not a factory deployment, ignore
+    }
+    const data = {
+      compilerMetadata,
+      extendedMetadata,
+    };
+    this.deployMetadataCache[publishMetadataUri] = data;
+    return data;
+  }
+
+  private async fetchReleaseFromPolygon(
+    releaserAddress: string,
+    contractName: string,
+    version: string,
+  ) {
+    const release = await new ThirdwebSDK("polygon")
+      .getPublisher()
+      .getVersion(releaserAddress, contractName, version);
+    if (!release) {
+      throw new Error(
+        `No release found for '${contractName}' at version '${version}' by '${releaserAddress}'`,
+      );
+    }
+    return release;
+  }
+
+  private getConstructorParamsForImplementation(
+    contractType: ContractType,
+    chainId: number,
+  ) {
+    switch (contractType) {
+      case MarketplaceInitializer.contractType:
+      case MultiwrapInitializer.contractType:
+        const nativeTokenWrapperAddress = getNativeTokenByChainId(
+          ChainId.Hardhat,
+        ).wrapped.address;
+        return [nativeTokenWrapperAddress];
+      case PackInitializer.contractType:
+        const addr = getNativeTokenByChainId(chainId).wrapped.address;
+        return [addr, ethers.constants.AddressZero];
+      default:
+        return [];
+    }
+  }
+
+  private hasLocalFactory() {
+    // eslint-disable-next-line turbo/no-undeclared-env-vars
+    return process.env.factoryAddress !== undefined;
+  }
+
+  private convertParamValues(
+    constructorParamTypes: string[],
+    constructorParamValues: any[],
+  ) {
+    // check that both arrays are same length
+    if (constructorParamTypes.length !== constructorParamValues.length) {
+      throw Error(
+        `Passed the wrong number of constructor arguments: ${constructorParamValues.length}, expected ${constructorParamTypes.length}`,
+      );
+    }
+    return constructorParamTypes.map((p, index) => {
+      if (p === "tuple" || p.endsWith("[]")) {
+        if (typeof constructorParamValues[index] === "string") {
+          return JSON.parse(constructorParamValues[index]);
+        } else {
+          return constructorParamValues[index];
+        }
+      }
+      if (p === "bytes32") {
+        invariant(
+          ethers.utils.isHexString(constructorParamValues[index]),
+          `Could not parse bytes32 value. Expected valid hex string but got "${constructorParamValues[index]}".`,
+        );
+        return ethers.utils.hexZeroPad(constructorParamValues[index], 32);
+      }
+      if (p.startsWith("bytes")) {
+        invariant(
+          ethers.utils.isHexString(constructorParamValues[index]),
+          `Could not parse bytes value. Expected valid hex string but got "${constructorParamValues[index]}".`,
+        );
+        return constructorParamValues[index];
+      }
+      if (p.startsWith("uint") || p.startsWith("int")) {
+        return BigNumber.from(constructorParamValues[index].toString());
+      }
+      return constructorParamValues[index];
+    });
   }
 }
