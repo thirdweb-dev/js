@@ -38,12 +38,9 @@ export async function getUser<TData extends Json = Json>(
     return null;
   }
 
-  if (ctx.callbacks?.user?.validateSessionId) {
+  if (ctx.authOptions?.validateTokenId) {
     try {
-      await ctx.callbacks.user.validateSessionId(
-        authenticatedUser.token.jti,
-        req,
-      );
+      await ctx.authOptions?.validateTokenId(authenticatedUser.token.jti, req);
     } catch {
       return null;
     }

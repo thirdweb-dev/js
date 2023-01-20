@@ -26,7 +26,8 @@ export default async function handler(
   res.setHeader(
     "Set-Cookie",
     serialize("thirdweb_auth_token", "", {
-      path: "/",
+      domain: ctx.cookieOptions?.domain,
+      path: ctx.cookieOptions?.path || "/",
       expires: new Date(Date.now() + 5 * 1000),
     }),
   );

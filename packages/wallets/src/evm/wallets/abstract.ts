@@ -1,4 +1,4 @@
-import { GenericSignerWallet } from "../../core";
+import { Ecosystem, GenericSignerWallet } from "../../core";
 import { MinimalWallet } from "../interfaces/minimal";
 import { ethers } from "ethers";
 import EventEmitter from "eventemitter3";
@@ -20,6 +20,7 @@ export abstract class AbstractSigner
   extends EventEmitter<WalletEvents>
   implements GenericSignerWallet, MinimalWallet
 {
+  public type: Ecosystem = "evm";
   protected signer: ethers.Signer | undefined;
 
   public abstract getSigner(): Promise<ethers.Signer>;
@@ -27,6 +28,11 @@ export abstract class AbstractSigner
   public async getAddress(): Promise<string> {
     const signer = await this.getCachedSigner();
     return signer.getAddress();
+  }
+
+  public async getChainId(): Promise<number> {
+    const signer = await this.getCachedSigner();
+    return signer.getChainId();
   }
 
   public async signMessage(message: string): Promise<string> {

@@ -1,5 +1,6 @@
 import { ThirdwebAuth } from "../../core";
 import {
+  AuthenticateOptions,
   Json,
   LoginPayloadOutputSchema,
   User,
@@ -28,10 +29,17 @@ export type ThirdwebAuthUser<TData extends Json = Json> = User & {
 export type ThirdwebAuthConfig = {
   domain: string;
   wallet: GenericSignerWallet;
-  verificationOptions?: Omit<Omit<VerifyOptions, "validateNonce">, "domain">;
+  authOptions?: Omit<Exclude<VerifyOptions, undefined>, "domain"> &
+    Omit<Exclude<AuthenticateOptions, undefined>, "domain"> & {
+      tokenDurationInSeconds?: number;
+    };
+  cookieOptions?: {
+    domain?: string;
+    path?: string;
+    sameSite?: "lax" | "strict" | "none";
+  };
   callbacks?: {
     login?: {
-      validateNonce: (nonce: string, req?: NextApiRequest) => Promise<void>;
       enhanceToken: <TContext extends Json = Json>(
         address: string,
         req?: NextApiRequest,
@@ -42,10 +50,6 @@ export type ThirdwebAuthConfig = {
       ) => Promise<void>;
     };
     user?: {
-      validateSessionId: <TRequestType extends RequestType = RequestType>(
-        sessionId: string,
-        req?: TRequestType,
-      ) => Promise<void>;
       enhanceUser: <
         TData extends Json = Json,
         TContext extends Json = Json,

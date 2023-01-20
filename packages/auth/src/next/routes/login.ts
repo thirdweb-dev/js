@@ -1,4 +1,4 @@
-import { Json } from "../../core";
+import { GenerateOptions, Json } from "../../core";
 import { LoginPayloadBodySchema, ThirdwebAuthContext } from "../types";
 import { serialize } from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -30,19 +30,32 @@ export default async function handler(
   }
 
   const validateNonce = async (nonce: string) => {
-    if (ctx.callbacks?.login?.validateNonce) {
-      await ctx.callbacks.login.validateNonce(nonce, req);
+    if (ctx.authOptions?.validateNonce) {
+      await ctx.authOptions?.validateNonce(nonce, req);
     }
+  };
+
+  const expirationTime = ctx.authOptions?.tokenDurationInSeconds
+    ? new Date(Date.now() + 1000 * ctx.authOptions.tokenDurationInSeconds)
+    : undefined;
+
+  const generateOptions: GenerateOptions = {
+    verifyOptions: {
+      statement: ctx.authOptions?.statement,
+      uri: ctx.authOptions?.uri,
+      version: ctx.authOptions?.version,
+      chainId: ctx.authOptions?.chainId,
+      validateNonce,
+      resources: ctx.authOptions?.resources,
+    },
+    expirationTime,
+    tokenContext,
   };
 
   let token: string;
   try {
     // Generate an access token with the SDK using the signed payload
-    token = await ctx.auth.generate(payload, {
-      ...(ctx.verificationOptions || {}),
-      context: tokenContext,
-      validateNonce,
-    });
+    token = await ctx.auth.generate(payload, generateOptions);
   } catch {
     return res.status(403).json({ error: "Invalid login payload" });
   }
@@ -52,10 +65,11 @@ export default async function handler(
   res.setHeader(
     "Set-Cookie",
     serialize("thirdweb_auth_token", token, {
-      path: "/",
+      domain: ctx.cookieOptions?.domain,
+      path: ctx.cookieOptions?.path || "/",
+      sameSite: ctx.cookieOptions?.sameSite || "none",
       httpOnly: true,
       secure: true,
-      sameSite: "none",
     }),
   );
 
