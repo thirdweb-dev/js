@@ -59,7 +59,15 @@ export class AwsSecretsManagerWallet extends AbstractSigner {
       throw new Error(`No secret found at ${this.secretId}`);
     }
 
-    const privateKey = JSON.parse(res.SecretString)[this.secretKeyName];
+    let privateKey;
+    try {
+      privateKey = JSON.parse(res.SecretString)[this.secretKeyName];
+    } catch {
+      throw new Error(
+        `Secret ${this.secretId} is not a valid JSON object! Please convert secret to a JSON object with key ${this.secretKeyName}.`,
+      );
+    }
+
     if (!privateKey) {
       throw new Error(
         `Secret ${this.secretId} does not have key ${this.secretKeyName}`,
