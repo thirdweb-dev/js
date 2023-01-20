@@ -33,17 +33,28 @@ export class ThirdwebAuth {
 
   public async login(options?: LoginOptions): Promise<LoginPayload> {
     const parsedOptions = LoginOptionsSchema.parse(options);
-    const domain = parsedOptions?.domain || this.domain;
 
-    const signerAddress = await this.wallet.getAddress();
-    const expirationTime =
-      parsedOptions?.expirationTime || new Date(Date.now() + 1000 * 60 * 5);
+    let chainId: string | undefined = parsedOptions?.chainId;
+    if (this.wallet.getChainId) {
+      try {
+        chainId = (await this.wallet.getChainId()).toString();
+      } catch {
+        // ignore error
+      }
+    }
+
     const payloadData = LoginPayloadDataSchema.parse({
-      domain,
-      address: signerAddress,
+      type: this.wallet.type,
+      domain: parsedOptions?.domain || this.domain,
+      address: await this.wallet.getAddress(),
+      statement: parsedOptions?.statement,
+      uri: parsedOptions?.uri || isBrowser() ? window.location.href : undefined,
+      chain_id: chainId,
       nonce: parsedOptions?.nonce,
-      expiration_time: expirationTime,
-      chain_id: parsedOptions?.chainId,
+      expiration_time:
+        parsedOptions?.expirationTime || new Date(Date.now() + 1000 * 60 * 5),
+      invalid_before: parsedOptions?.invalidBefore,
+      resources: parsedOptions?.resources,
     });
 
     const message = this.generateMessage(payloadData);
@@ -60,15 +71,58 @@ export class ThirdwebAuth {
     options?: VerifyOptions,
   ): Promise<string> {
     const parsedOptions = VerifyOptionsSchema.parse(options);
-    const domain = parsedOptions?.domain || this.domain;
+
+    if (payload.payload.type !== this.wallet.type) {
+      throw new Error(
+        `Expected chain type '${this.wallet.type}' does not match chain type on payload '${payload.payload.type}'`,
+      );
+    }
 
     // Check that the intended domain matches the domain of the payload
+    const domain = parsedOptions?.domain || this.domain;
     if (payload.payload.domain !== domain) {
       throw new Error(
         `Expected domain '${domain}' does not match domain on payload '${payload.payload.domain}'`,
       );
     }
 
+    // Check that the payload statement matches the expected statement
+    if (parsedOptions?.statement) {
+      if (payload.payload.statement !== parsedOptions.statement) {
+        throw new Error(
+          `Expected statement '${parsedOptions.statement}' does not match statement on payload '${payload.payload.statement}'`,
+        );
+      }
+    }
+
+    // Check that the intended URI matches the URI of the payload
+    if (parsedOptions?.uri) {
+      if (payload.payload.uri !== parsedOptions.uri) {
+        throw new Error(
+          `Expected URI '${parsedOptions.uri}' does not match URI on payload '${payload.payload.uri}'`,
+        );
+      }
+    }
+
+    // Check that the intended version matches the version of the payload
+    if (parsedOptions?.version) {
+      if (payload.payload.version !== parsedOptions.version) {
+        throw new Error(
+          `Expected version '${parsedOptions.version}' does not match version on payload '${payload.payload.version}'`,
+        );
+      }
+    }
+
+    // Check that the intended chain ID matches the chain ID of the payload
+    if (parsedOptions?.chainId) {
+      if (payload.payload.chain_id !== parsedOptions.chainId) {
+        throw new Error(
+          `Expected chain ID '${parsedOptions.chainId}' does not match chain ID on payload '${payload.payload.chain_id}'`,
+        );
+      }
+    }
+
+    // Check that the payload nonce is valid
     if (parsedOptions?.validateNonce !== undefined) {
       try {
         parsedOptions.validateNonce(payload.payload.nonce);
@@ -77,20 +131,29 @@ export class ThirdwebAuth {
       }
     }
 
-    // Check that the payload hasn't expired
+    // Check that it isn't before the invalid before time
     const currentTime = new Date();
+    if (currentTime < new Date(payload.payload.invalid_before)) {
+      throw new Error(`Login request is not yet valid`);
+    }
+
+    // Check that the payload hasn't expired
     if (currentTime > new Date(payload.payload.expiration_time)) {
       throw new Error(`Login request has expired`);
     }
 
-    // If chain ID is specified, check that it matches the chain ID of the signature
-    if (
-      parsedOptions?.chainId !== undefined &&
-      parsedOptions.chainId !== payload.payload.chain_id
-    ) {
-      throw new Error(
-        `Chain ID '${parsedOptions.chainId}' does not match payload chain ID '${payload.payload.chain_id}'`,
+    // Check that the specified resources are present on the payload
+    if (parsedOptions?.resources) {
+      const missingResources = parsedOptions.resources.filter(
+        (resource) => !payload.payload.resources?.includes(resource),
       );
+      if (missingResources.length > 0) {
+        throw new Error(
+          `Login request is missing required resources: ${missingResources.join(
+            ", ",
+          )}`,
+        );
+      }
     }
 
     // Check that the signing address is the claimed wallet address
@@ -120,13 +183,13 @@ export class ThirdwebAuth {
     }
 
     const parsedOptions = GenerateOptionsSchema.parse(options);
-    const domain = parsedOptions?.domain || this.domain;
 
+    const domain = parsedOptions?.domain || this.domain;
     const userAddress = await this.verify(payload, {
       domain,
-      chainId: parsedOptions?.chainId,
-      validateNonce: parsedOptions?.validateNonce,
+      ...parsedOptions?.verifyOptions,
     });
+
     const adminAddress = await this.wallet.getAddress();
     const payloadData = AuthenticationPayloadDataSchema.parse({
       iss: adminAddress,
@@ -137,7 +200,8 @@ export class ThirdwebAuth {
         parsedOptions?.expirationTime ||
         new Date(Date.now() + 1000 * 60 * 60 * 5),
       iat: new Date(),
-      ctx: parsedOptions?.context,
+      jti: parsedOptions?.tokenId,
+      ctx: parsedOptions?.tokenContext,
     });
 
     const message = JSON.stringify(payloadData);
@@ -203,6 +267,15 @@ export class ThirdwebAuth {
     );
     const signature = Buffer.from(encodedSignature, "base64").toString();
 
+    // Check that the payload unique ID is valid
+    if (parsedOptions?.validateTokenId !== undefined) {
+      try {
+        parsedOptions.validateTokenId(payload.jti);
+      } catch (err) {
+        throw new Error(`Token ID is invalid`);
+      }
+    }
+
     // Check that the token audience matches the domain
     if (payload.aud !== domain) {
       throw new Error(
@@ -252,25 +325,52 @@ export class ThirdwebAuth {
   }
 
   /**
-   * Generates a EIP-4361 compliant message to sign based on the login payload
+   * Generates a EIP-4361 & CAIP-122 compliant message to sign based on the login payload
    */
   private generateMessage(payload: LoginPayloadData): string {
-    let message = ``;
-
-    // Add the domain and login address for transparency
-    message += `${payload.domain} wants you to sign in with your account:\n${payload.address}\n\n`;
-
-    // Prompt user to make sure domain is correct to prevent phishing attacks
-    message += `Make sure that the requesting domain above matches the URL of the current website.\n\n`;
-
-    // Add data fields in compliance with the EIP-4361 standard
-    if (payload.chain_id) {
-      message += `Chain ID: ${payload.chain_id}\n`;
+    const typeField = payload.type === "evm" ? "Ethereum" : "Solana";
+    const header = `${payload.domain} wants you to sign in with your ${typeField} account:`;
+    let prefix = [header, payload.address].join("\n");
+    prefix = [prefix, payload.statement].join("\n\n");
+    if (payload.statement) {
+      prefix += "\n";
     }
 
-    message += `Nonce: ${payload.nonce}\n`;
-    message += `Expiration Time: ${payload.expiration_time}\n`;
+    const suffixArray = [];
+    if (payload.uri) {
+      const uriField = `URI: ${payload.uri}`;
+      suffixArray.push(uriField);
+    }
 
-    return message;
+    const versionField = `Version: ${payload.version}`;
+    suffixArray.push(versionField);
+
+    if (payload.chain_id) {
+      const chainField = `Chain ID: ` + payload.chain_id || "1";
+      suffixArray.push(chainField);
+    }
+
+    const nonceField = `Nonce: ${payload.nonce}`;
+    suffixArray.push(nonceField);
+
+    const issuedAtField = `Issued At: ${payload.issued_at}`;
+    suffixArray.push(issuedAtField);
+
+    const expiryField = `Expiration Time: ${payload.expiration_time}`;
+    suffixArray.push(expiryField);
+
+    if (payload.invalid_before) {
+      const invalidBeforeField = `Not Before: ${payload.invalid_before}`;
+      suffixArray.push(invalidBeforeField);
+    }
+
+    if (payload.resources) {
+      suffixArray.push(
+        [`Resources:`, ...payload.resources.map((x) => `- ${x}`)].join("\n"),
+      );
+    }
+
+    const suffix = suffixArray.join("\n");
+    return [prefix, suffix].join("\n");
   }
 }

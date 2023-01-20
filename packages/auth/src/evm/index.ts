@@ -1,7 +1,8 @@
-import type { GenericSignerWallet } from "@thirdweb-dev/wallets";
+import type { Ecosystem, GenericSignerWallet } from "@thirdweb-dev/wallets";
 import { ethers } from "ethers";
 
 export class SignerWallet implements GenericSignerWallet {
+  type: Ecosystem = "evm";
   #signer: ethers.Signer;
 
   constructor(signer: ethers.Signer) {

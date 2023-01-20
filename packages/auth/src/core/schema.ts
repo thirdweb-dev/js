@@ -15,6 +15,11 @@ export const RawDateSchema = z.date().transform((i) => {
   return BigNumber.from(Math.floor(i.getTime() / 1000));
 });
 
+export const AccountTypeSchema = z.union([
+  z.literal("evm"),
+  z.literal("solana"),
+]);
+
 const literalSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
 type Literal = z.infer<typeof literalSchema>;
 export type Json = Literal | { [key: string]: Json } | Json[];
@@ -29,18 +34,14 @@ const JsonSchema: z.ZodType<Json> = z.lazy(
 export const LoginOptionsSchema = z
   .object({
     domain: z.string().optional(),
-    /**
-     * The optional nonce of the login request used to prevent replay attacks
-     */
+    statement: z.string().optional(),
+    uri: z.string().optional(),
+    version: z.string().optional(),
+    chainId: z.string().optional(),
     nonce: z.string().optional(),
-    /**
-     * The optional time after which the login payload will be invalid
-     */
     expirationTime: z.date().optional(),
-    /**
-     * The optional chain ID that the login request was intended for
-     */
-    chainId: z.number().optional(),
+    invalidBefore: z.date().optional(),
+    resources: z.array(z.string()).optional(),
   })
   .optional();
 
@@ -48,58 +49,55 @@ export const LoginOptionsSchema = z
  * @internal
  */
 export const LoginPayloadDataSchema = z.object({
-  /**
-   * The domain that the user is attempting to login to
-   */
+  type: AccountTypeSchema,
   domain: z.string(),
-  /**
-   * The address of the account that is logging in
-   */
-  address: AddressSchema,
-  /**
-   * The nonce of the login request used to prevent replay attacks, defaults to a random UUID
-   */
+  address: z.string(),
+  statement: z
+    .string()
+    .default(
+      "Please ensure that the domain above matches the URL of the current website.",
+    ),
+  uri: z.string().optional(),
+  version: z.string().default("1"),
+  chain_id: z.string().optional(),
   nonce: z.string().default(uuidv4()),
-  /**
-   * The time after which the login payload will be invalid, defaults to 5 minutes from now
-   */
+  issued_at: z
+    .date()
+    .default(new Date())
+    .transform((d) => d.toISOString()),
   expiration_time: z.date().transform((d) => d.toISOString()),
-  /**
-   * The chain ID that the login request was intended for, defaults to none
-   */
-  chain_id: z.number().optional(),
+  invalid_before: z
+    .date()
+    .default(new Date())
+    .transform((d) => d.toISOString()),
+  resources: z.array(z.string()).optional(),
 });
 
 /**
  * @internal
  */
 export const LoginPayloadSchema = z.object({
-  /**
-   * The payload data used for login
-   */
   payload: LoginPayloadDataSchema,
-  /**
-   * The signature of the login request used for verification
-   */
   signature: z.string(),
 });
 
 /**
  * @internal
  */
-export const VerifyOptionsSchema = z
-  .object({
-    domain: z.string().optional(),
-    /**
-     * The optional chain ID to expect the request to be for
-     */
-    chainId: z.number().optional(),
-    /**
-     * Function to check whether the nonce is valid
-     */
-    validateNonce: z.function().args(z.string()).optional(),
-  })
-  .optional();
+const VerifyOptionsSchemaRequired = z.object({
+  domain: z.string().optional(),
+  statement: z.string().optional(),
+  uri: z.string().optional(),
+  version: z.string().optional(),
+  chainId: z.string().optional(),
+  validateNonce: z.function().args(z.string()).optional(),
+  resources: z.array(z.string()).optional(),
+});
+
+/**
+ * @internal
+ */
+export const VerifyOptionsSchema = VerifyOptionsSchemaRequired.optional();
 
 /**
  * @internal
@@ -107,26 +105,13 @@ export const VerifyOptionsSchema = z
 export const GenerateOptionsSchema = z
   .object({
     domain: z.string().optional(),
-    /**
-     * The optional chain ID to expect the request to be for
-     */
-    chainId: z.number().optional(),
-    /**
-     * Function to check whether the nonce is valid
-     */
-    validateNonce: z.function().args(z.string()).optional(),
-    /**
-     * The date before which the authentication payload is invalid
-     */
-    invalidBefore: z.date().optional(),
-    /**
-     * The date after which the authentication payload is invalid
-     */
+    tokenId: z.string().optional(),
     expirationTime: z.date().optional(),
-    /**
-     * Optional context to include arbitrary data in the authentication payload
-     */
-    context: JsonSchema.optional(),
+    invalidBefore: z.date().optional(),
+    tokenContext: JsonSchema.optional(),
+    verifyOptions: VerifyOptionsSchemaRequired.omit({
+      domain: true,
+    }).optional(),
   })
   .optional();
 
@@ -134,37 +119,13 @@ export const GenerateOptionsSchema = z
  * @internal
  */
 export const AuthenticationPayloadDataSchema = z.object({
-  /**
-   * The address of the wallet issuing the payload
-   */
   iss: z.string(),
-  /**
-   * The address of the wallet requesting to authenticate
-   */
   sub: z.string(),
-  /**
-   * The domain intended to receive the authentication payload
-   */
   aud: z.string(),
-  /**
-   * The date before which the authentication payload is invalid
-   */
   exp: RawDateSchema.transform((b) => b.toNumber()),
-  /**
-   * The date after which the authentication payload is invalid
-   */
   nbf: RawDateSchema.transform((b) => b.toNumber()),
-  /**
-   * The date on which the payload was issued
-   */
   iat: RawDateSchema.transform((b) => b.toNumber()),
-  /**
-   * The unique identifier of the payload
-   */
   jti: z.string().default(uuidv4()),
-  /**
-   * Optional context to include arbitrary data in the authentication payload
-   */
   ctx: JsonSchema.optional(),
 });
 
@@ -172,13 +133,7 @@ export const AuthenticationPayloadDataSchema = z.object({
  * @internal
  */
 export const AuthenticationPayloadSchema = z.object({
-  /**
-   * The payload data used for authentication
-   */
   payload: AuthenticationPayloadDataSchema,
-  /**
-   * The signature of the authentication payload used for authentication
-   */
   signature: z.string(),
 });
 
@@ -188,6 +143,7 @@ export const AuthenticationPayloadSchema = z.object({
 export const AuthenticateOptionsSchema = z
   .object({
     domain: z.string().optional(),
+    validateTokenId: z.function().args(z.string()).optional(),
   })
   .optional();
 
@@ -246,6 +202,8 @@ export type User<TContext extends Json = Json> = {
 
 export const LoginPayloadOutputSchema = LoginPayloadSchema.extend({
   payload: LoginPayloadDataSchema.extend({
+    issued_at: z.string(),
     expiration_time: z.string(),
+    invalid_before: z.string(),
   }),
 });

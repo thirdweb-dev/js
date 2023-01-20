@@ -1,7 +1,7 @@
 import { ThirdwebAuth } from "../src/core";
-import { EthersWallet } from "@thirdweb-dev/wallets";
+import { SignerWallet } from "../src/solana";
+import { Keypair } from "@solana/web3.js";
 import { expect } from "chai";
-import { Wallet } from "ethers";
 
 describe("Wallet Authentication", async () => {
   let adminWallet: any, signerWallet: any, attackerWallet: any;
@@ -9,14 +9,14 @@ describe("Wallet Authentication", async () => {
 
   before(async () => {
     const [adminSigner, signerSigner, attackerSigner] = [
-      Wallet.createRandom(),
-      Wallet.createRandom(),
-      Wallet.createRandom(),
+      Keypair.generate(),
+      Keypair.generate(),
+      Keypair.generate(),
     ];
 
-    adminWallet = new EthersWallet(adminSigner);
-    signerWallet = new EthersWallet(signerSigner);
-    attackerWallet = new EthersWallet(attackerSigner);
+    adminWallet = new SignerWallet(adminSigner);
+    signerWallet = new SignerWallet(signerSigner);
+    attackerWallet = new SignerWallet(attackerSigner);
 
     auth = new ThirdwebAuth(signerWallet, "thirdweb.com");
   });
@@ -37,15 +37,77 @@ describe("Wallet Authentication", async () => {
   it("Should verify logged in wallet with chain ID and expiration", async () => {
     const payload = await auth.login({
       expirationTime: new Date(Date.now() + 1000 * 60 * 5),
-      chainId: 137,
+      chainId: "137",
     });
 
     auth.updateWallet(adminWallet);
     const address = await auth.verify(payload, {
-      chainId: 137,
+      chainId: "137",
     });
 
     expect(address).to.equal(await signerWallet.getAddress());
+  });
+
+  it("Should verify payload with resources", async () => {
+    const payload = await auth.login({
+      resources: ["https://example.com", "https://test.com"],
+    });
+
+    auth.updateWallet(adminWallet);
+    const address = await auth.verify(payload, {
+      resources: ["https://example.com", "https://test.com"],
+    });
+
+    expect(address).to.equal(await signerWallet.getAddress());
+  });
+
+  it("Should reject payload without necessary resources", async () => {
+    const payload = await auth.login({
+      resources: ["https://example.com"],
+    });
+
+    auth.updateWallet(adminWallet);
+    try {
+      await auth.verify(payload, {
+        resources: ["https://example.com", "https://test.com"],
+      });
+      expect.fail();
+    } catch (err: any) {
+      expect(err.message).to.equal(
+        "Login request is missing required resources: https://test.com",
+      );
+    }
+  });
+
+  it("Should verify payload with customized statement", async () => {
+    const payload = await auth.login({
+      statement: "Please sign!",
+    });
+
+    auth.updateWallet(adminWallet);
+    const address = await auth.verify(payload, {
+      statement: "Please sign!",
+    });
+
+    expect(address).to.equal(await signerWallet.getAddress());
+  });
+
+  it("Should reject payload with incorrect statement", async () => {
+    const payload = await auth.login({
+      statement: "Please sign!",
+    });
+
+    auth.updateWallet(adminWallet);
+    try {
+      await auth.verify(payload, {
+        statement: "Please sign again!",
+      });
+      expect.fail();
+    } catch (err: any) {
+      expect(err.message).to.include(
+        "Expected statement 'Please sign again!' does not match statement on payload",
+      );
+    }
   });
 
   it("Should reject invalid nonce", async () => {
@@ -111,18 +173,18 @@ describe("Wallet Authentication", async () => {
 
   it("Should reject payload with incorrect chain ID", async () => {
     const payload = await auth.login({
-      chainId: 1,
+      chainId: "1",
     });
 
     auth.updateWallet(adminWallet);
     try {
       await auth.verify(payload, {
-        chainId: 137,
+        chainId: "137",
       });
       expect.fail();
     } catch (err: any) {
       expect(err.message).to.equal(
-        "Chain ID '137' does not match payload chain ID '1'",
+        "Expected chain ID '137' does not match chain ID on payload '1'",
       );
     }
   });
@@ -215,12 +277,53 @@ describe("Wallet Authentication", async () => {
     }
   });
 
+  it("Should accept token with valid token ID", async () => {
+    const payload = await auth.login();
+
+    auth.updateWallet(adminWallet);
+    const token = await auth.generate(payload, {
+      tokenId: "test",
+    });
+
+    const user = await auth.authenticate(token, {
+      validateTokenId: (tokenId: string) => {
+        if (tokenId !== "test") {
+          throw new Error();
+        }
+      },
+    });
+
+    expect(user.address).to.equal(await signerWallet.getAddress());
+  });
+
+  it("Should reject token with invalid token ID", async () => {
+    const payload = await auth.login();
+
+    auth.updateWallet(adminWallet);
+    const token = await auth.generate(payload, {
+      tokenId: "test",
+    });
+
+    try {
+      await auth.authenticate(token, {
+        validateTokenId: (tokenId: string) => {
+          if (tokenId !== "invalid") {
+            throw new Error();
+          }
+        },
+      });
+      expect.fail();
+    } catch (err: any) {
+      expect(err.message).to.contain("Token ID is invalid");
+    }
+  });
+
   it("Should propagate context on token", async () => {
     const payload = await auth.login();
 
     auth.updateWallet(adminWallet);
     const token = await auth.generate(payload, {
-      context: { role: "admin" },
+      tokenContext: { role: "admin" },
     });
 
     const user = await auth.authenticate(token);
