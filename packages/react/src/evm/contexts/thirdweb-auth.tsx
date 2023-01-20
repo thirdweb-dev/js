@@ -1,6 +1,6 @@
 import { useSigner } from "../hooks/useSigner";
 import { ThirdwebAuth } from "@thirdweb-dev/auth";
-import { EthersWallet } from "@thirdweb-dev/wallets";
+import { SignerWallet } from "@thirdweb-dev/auth/evm";
 import React, {
   PropsWithChildren,
   createContext,
@@ -53,7 +53,7 @@ export const ThirdwebAuthProvider: React.FC<
     };
 
     if (signer) {
-      context.auth = new ThirdwebAuth(new EthersWallet(signer), value.domain);
+      context.auth = new ThirdwebAuth(new SignerWallet(signer), value.domain);
     }
 
     return context;
