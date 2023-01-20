@@ -48,10 +48,7 @@ export async function getCompositePluginABI(
     }
   } catch (err) {}
 
-  // join all ABIs -- entrypoint + extension
-  let finalPlugins = await joinABIs([abi, ...pluginABIs]);
-
-  return finalPlugins;
+  return pluginABIs.length > 0 ? joinABIs([abi, ...pluginABIs]) : abi;
 }
 
 /**

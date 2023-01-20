@@ -58,14 +58,6 @@ describe("Contract Registry", () => {
     expect(abi.length).to.equal(RouterABI.length);
   });
 
-  it.skip("multichain registry: check plugin feature", async () => {
-    const realSDK = new ThirdwebSDK("polygon");
-    const multichainRegistry = await realSDK.getContract(
-      "0xcdAD8FA86e18538aC207872E8ff3536501431B73",
-    );
-    // console.log(multichainRegistry.abi);
-  });
-
   it("should allow adding and removing contracts", async () => {
     sdk.updateSignerOrProvider(adminWallet);
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
