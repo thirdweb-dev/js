@@ -127,6 +127,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
 
     const contractAddress = events[0].args.proxy;
     eventEmitter.emit("contractDeployed", {
+      status: "completed",
       contractAddress,
       transactionHash: receipt.transactionHash,
     });
@@ -163,6 +164,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
 
     const contractAddress = events[0].args.proxy;
     eventEmitter.emit("contractDeployed", {
+      status: "completed",
       contractAddress,
       transactionHash: receipt.transactionHash,
     });
