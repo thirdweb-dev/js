@@ -4,6 +4,7 @@ import loginHandler from "./routes/login";
 import logoutHandler from "./routes/logout";
 import userHandler from "./routes/user";
 import { ThirdwebAuthConfig } from "./types";
+import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import express, { Request, Response } from "express";
 
@@ -16,8 +17,10 @@ export function ThirdwebAuth(cfg: ThirdwebAuthConfig) {
   };
 
   const router = express.Router();
+  const cookieMiddleware = cookieParser();
 
-  router.use(cookieParser());
+  router.use(bodyParser.json());
+  router.use(cookieMiddleware);
 
   router.post("/login", (req: Request, res: Response) =>
     loginHandler(req, res, ctx),
@@ -32,7 +35,8 @@ export function ThirdwebAuth(cfg: ThirdwebAuthConfig) {
   );
 
   return {
-    thirdwebAuth: router,
+    thirdwebAuthRouter: router,
+    thirdwebAuthMiddleware: cookieMiddleware,
     getUser: (req: Request) => {
       return getUser(req, ctx);
     },

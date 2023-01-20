@@ -12,10 +12,11 @@ function getToken(req: Request): string | undefined {
     return undefined;
   }
 
-  const cookie: string | undefined =
-    typeof req.cookies.get === "function"
-      ? (req.cookies as any).get("thirdweb_auth_token")
-      : (req.cookies as any).thirdweb_auth_token;
+  const cookie: string | undefined = !req.cookies
+    ? undefined
+    : typeof req.cookies.get === "function"
+    ? (req.cookies as any).get("thirdweb_auth_token")
+    : (req.cookies as any).thirdweb_auth_token;
 
   return cookie;
 }

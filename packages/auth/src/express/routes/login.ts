@@ -12,7 +12,14 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { payload } = LoginPayloadBodySchema.parse(req.body);
+  const parsedPayload = LoginPayloadBodySchema.safeParse(req.body);
+
+  // Get signed login payload from the frontend
+  if (!parsedPayload.success) {
+    return res.status(400).json({ error: "Invalid login payload" });
+  }
+
+  const payload = parsedPayload.data.payload;
 
   // Get signed login payload from the frontend
   if (!payload) {
