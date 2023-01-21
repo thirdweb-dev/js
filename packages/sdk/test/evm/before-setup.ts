@@ -53,8 +53,6 @@ import {
   PluginMap,
   PluginMap__factory,
   VoteERC20__factory,
-  TWProxy__factory,
-  TWProxy,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
