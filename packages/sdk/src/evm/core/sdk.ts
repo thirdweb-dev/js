@@ -466,13 +466,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       if (resolvedContractType === "custom") {
         // if it's a custom contract we gotta fetch the compiler metadata
         try {
-          const publisher = this.getPublisher();
-          const metadata = await publisher.fetchCompilerMetadataFromAddress(
-            address,
-          );
+          const metadata =
+            await this.getPublisher().fetchCompilerMetadataFromAddress(address);
           newContract = await this.getContractFromAbi(address, metadata.abi);
         } catch (e) {
-          throw new Error(`Error fetching ABI for this contract\n\n${e}`);
+          const chainId = (await this.getProvider().getNetwork()).chainId;
+          throw new Error(
+            `No ABI found for this contract. Try importing it by visiting: https://thirdweb.com/${chainId}/${address}`,
+          );
         }
       } else {
         // otherwise if it's a prebuilt contract we can just use the contract type
