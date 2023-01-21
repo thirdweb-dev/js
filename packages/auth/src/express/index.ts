@@ -10,6 +10,14 @@ import express, { Request, Response } from "express";
 
 export * from "./types";
 
+const asyncHandler =
+  (fn: CallableFunction) =>
+  (...args: any[]) => {
+    const fnReturn = fn(...args);
+    const next = args[args.length - 1];
+    return Promise.resolve(fnReturn).catch(next);
+  };
+
 export function ThirdwebAuth(cfg: ThirdwebAuthConfig) {
   const ctx = {
     ...cfg,
@@ -22,21 +30,24 @@ export function ThirdwebAuth(cfg: ThirdwebAuthConfig) {
   router.use(bodyParser.json());
   router.use(cookieMiddleware);
 
-  router.post("/login", (req: Request, res: Response) =>
-    loginHandler(req, res, ctx),
+  router.post(
+    "/login",
+    asyncHandler((req: Request, res: Response) => loginHandler(req, res, ctx)),
   );
 
-  router.get("/user", (req: Request, res: Response) =>
-    userHandler(req, res, ctx),
+  router.get(
+    "/user",
+    asyncHandler((req: Request, res: Response) => userHandler(req, res, ctx)),
   );
 
-  router.post("/logout", (req: Request, res: Response) =>
-    logoutHandler(req, res, ctx),
+  router.post(
+    "/logout",
+    asyncHandler((req: Request, res: Response) => logoutHandler(req, res, ctx)),
   );
 
   return {
-    thirdwebAuthRouter: router,
-    thirdwebAuthMiddleware: cookieMiddleware,
+    authRouter: router,
+    authMiddleware: cookieMiddleware,
     getUser: (req: Request) => {
       return getUser(req, ctx);
     },
