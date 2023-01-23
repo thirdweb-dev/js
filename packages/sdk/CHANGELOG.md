@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 3.6.11
+
+### Patch Changes
+
+- [#475](https://github.com/thirdweb-dev/js/pull/475) [`7cab8d1`](https://github.com/thirdweb-dev/js/commit/7cab8d1679f8d007091aa03adb83add3822a504a) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Support for Plugin Pattern based contracts
+
 ## 3.6.10
 
 ### Patch Changes
