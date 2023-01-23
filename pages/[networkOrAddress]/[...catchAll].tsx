@@ -1,3 +1,4 @@
+import { Flex, Spinner } from "@chakra-ui/react";
 import { DehydratedState, QueryClient, dehydrate } from "@tanstack/react-query";
 import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
 import { AppLayout } from "components/app-layouts/app";
@@ -21,6 +22,7 @@ import {
 } from "lib/address-utils";
 import { getEVMThirdwebSDK } from "lib/sdk";
 import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
+import { useRouter } from "next/router";
 // import dynamic from "next/dynamic";
 import { PageId } from "page-id";
 import type { ParsedUrlQuery } from "querystring";
@@ -40,6 +42,16 @@ import { ThirdwebNextPage } from "utils/types";
 const CatchAllPage: ThirdwebNextPage = (
   props: InferGetStaticPropsType<typeof getStaticProps>,
 ) => {
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return (
+      <Flex h="100%" justifyContent="center" alignItems="center">
+        <Spinner size="xl" />
+      </Flex>
+    );
+  }
+
   if (props.pageType === "contract") {
     return (
       <ContractTabRouter
@@ -49,6 +61,7 @@ const CatchAllPage: ThirdwebNextPage = (
       />
     );
   }
+
   if (props.pageType === "program") {
     return (
       <ContractTabRouter
@@ -280,12 +293,27 @@ export const getStaticProps: GetStaticProps<PossiblePageProps, Params> = async (
         };
       }
 
+      type AllVersions = ReturnType<typeof fetchAllVersions> extends Promise<
+        infer X
+      >
+        ? X
+        : never;
+
       // TODO get the latest version instead of all versions
       // OR wait till contract upgrade to have a faster call for this
-      const allVersions = await queryClient.fetchQuery(
-        ["all-releases", address, contractName],
-        () => fetchAllVersions(polygonSdk, address, contractName),
-      );
+      let allVersions: AllVersions = [];
+      try {
+        allVersions = await queryClient.fetchQuery(
+          ["all-releases", address, contractName],
+          () => fetchAllVersions(polygonSdk, address, contractName),
+        );
+      } catch (error) {
+        // if not valid contract URL, above code throws an error
+        // in that case, show 404
+        return {
+          notFound: true,
+        };
+      }
 
       const release =
         allVersions.find((v) => v.version === version) || allVersions[0];
