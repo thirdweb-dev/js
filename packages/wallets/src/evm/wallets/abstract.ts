@@ -1,4 +1,5 @@
 import { Ecosystem, GenericSignerWallet } from "../../core";
+import { thirdwebChains } from "../constants/chains";
 import { MinimalWallet } from "../interfaces/minimal";
 import { ethers } from "ethers";
 import EventEmitter from "eventemitter3";
@@ -15,6 +16,25 @@ export interface WalletEvents {
   disconnect(): void;
   error(error: Error): void;
 }
+
+const EIP1271_ABI = [
+  "function isValidSignature(bytes32 _message, bytes _signature) public view returns (bytes4)",
+];
+const EIP1271_MAGICVALUE = "0x1626ba7e";
+
+export const checkContractWalletSignature = async (
+  message: string,
+  signature: string,
+  address: string,
+  chainId: number,
+): Promise<boolean> => {
+  const rpcUrl = thirdwebChains[chainId].rpcUrls.default.http[0];
+  const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+  const walletContract = new ethers.Contract(address, EIP1271_ABI, provider);
+  const hashMessage = ethers.utils.hashMessage(message);
+  const res = await walletContract.isValidSignature(hashMessage, signature);
+  return res === EIP1271_MAGICVALUE;
+};
 
 export abstract class AbstractSigner
   extends EventEmitter<WalletEvents>
@@ -44,6 +64,7 @@ export abstract class AbstractSigner
     message: string,
     signature: string,
     address: string,
+    chainId?: number,
   ): Promise<boolean> {
     const messageHash = ethers.utils.hashMessage(message);
     const messageHashBytes = ethers.utils.arrayify(messageHash);
@@ -51,7 +72,27 @@ export abstract class AbstractSigner
       messageHashBytes,
       signature,
     );
-    return recoveredAddress === address;
+
+    if (recoveredAddress === address) {
+      return true;
+    }
+
+    // Check if the address is a smart contract wallet
+    if (chainId !== undefined) {
+      try {
+        const isValid = await checkContractWalletSignature(
+          message,
+          signature,
+          address,
+          chainId || 1,
+        );
+        return isValid;
+      } catch {
+        // no-op
+      }
+    }
+
+    return false;
   }
 
   public async getCachedSigner(): Promise<ethers.Signer> {

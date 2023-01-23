@@ -1,5 +1,25 @@
+import { thirdwebChains } from "./evm";
 import type { Ecosystem, GenericSignerWallet } from "@thirdweb-dev/wallets";
 import { ethers } from "ethers";
+
+const EIP1271_ABI = [
+  "function isValidSignature(bytes32 _message, bytes _signature) public view returns (bytes4)",
+];
+const EIP1271_MAGICVALUE = "0x1626ba7e";
+
+export const checkContractWalletSignature = async (
+  message: string,
+  signature: string,
+  address: string,
+  chainId: number,
+): Promise<boolean> => {
+  const rpcUrl = thirdwebChains[chainId].rpcUrls.default.http[0];
+  const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+  const walletContract = new ethers.Contract(address, EIP1271_ABI, provider);
+  const hashMessage = ethers.utils.hashMessage(message);
+  const res = await walletContract.isValidSignature(hashMessage, signature);
+  return res === EIP1271_MAGICVALUE;
+};
 
 export class SignerWallet implements GenericSignerWallet {
   type: Ecosystem = "evm";
@@ -21,6 +41,7 @@ export class SignerWallet implements GenericSignerWallet {
     message: string,
     signature: string,
     address: string,
+    chainId?: number,
   ): Promise<boolean> {
     const messageHash = ethers.utils.hashMessage(message);
     const messageHashBytes = ethers.utils.arrayify(messageHash);
@@ -28,7 +49,27 @@ export class SignerWallet implements GenericSignerWallet {
       messageHashBytes,
       signature,
     );
-    return recoveredAddress === address;
+
+    if (recoveredAddress === address) {
+      return true;
+    }
+
+    // Check if the address is a smart contract wallet
+    if (chainId !== undefined) {
+      try {
+        const isValid = await checkContractWalletSignature(
+          message,
+          signature,
+          address,
+          chainId || 1,
+        );
+        return isValid;
+      } catch {
+        // no-op
+      }
+    }
+
+    return false;
   }
 }
 

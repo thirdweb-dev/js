@@ -8,5 +8,6 @@ export interface GenericSignerWallet {
     message: string,
     signature: string,
     address: string,
+    chainId?: number,
   ): Promise<boolean>;
 }

@@ -324,6 +324,23 @@ export class ThirdwebAuth {
     };
   }
 
+  private async verifySignature(
+    message: string,
+    signature: string,
+    address: string,
+  ) {
+    let chainId: number | undefined = undefined;
+    if (this.wallet.getChainId) {
+      try {
+        chainId = await this.wallet.getChainId();
+      } catch {
+        // ignore error
+      }
+    }
+
+    return this.wallet.verifySignature(message, signature, address, chainId);
+  }
+
   /**
    * Generates a EIP-4361 & CAIP-122 compliant message to sign based on the login payload
    */
