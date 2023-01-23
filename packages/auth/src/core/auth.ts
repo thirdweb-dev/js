@@ -158,7 +158,7 @@ export class ThirdwebAuth {
 
     // Check that the signing address is the claimed wallet address
     const message = this.generateMessage(payload.payload);
-    const verified = await this.wallet.verifySignature(
+    const verified = await this.verifySignature(
       message,
       payload.signature,
       payload.payload.address,
@@ -306,7 +306,7 @@ export class ThirdwebAuth {
       );
     }
 
-    const verified = await this.wallet.verifySignature(
+    const verified = await this.verifySignature(
       JSON.stringify(payload),
       signature,
       connectedAddress,
