@@ -1,32 +1,32 @@
 {
-  "name": "@thirdweb-dev/react",
+  "name": "@thirdweb-dev/react-ui",
   "version": "3.6.10",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
-  "main": "dist/thirdweb-dev-react.cjs.js",
-  "types": "dist/thirdweb-dev-react.cjs.d.ts",
-  "module": "dist/thirdweb-dev-react.esm.js",
+  "main": "dist/thirdweb-dev-react-ui.cjs.js",
+  "types": "dist/thirdweb-dev-react-ui.cjs.d.ts",
+  "module": "dist/thirdweb-dev-react-ui.esm.js",
   "exports": {
     ".": {
-      "module": "./dist/thirdweb-dev-react.esm.js",
-      "default": "./dist/thirdweb-dev-react.cjs.js"
+      "module": "./dist/thirdweb-dev-react-ui.esm.js",
+      "default": "./dist/thirdweb-dev-react-ui.cjs.js"
     },
     "./evm": {
-      "module": "./evm/dist/thirdweb-dev-react-evm.esm.js",
-      "default": "./evm/dist/thirdweb-dev-react-evm.cjs.js"
+      "module": "./evm/dist/thirdweb-dev-react-ui-evm.esm.js",
+      "default": "./evm/dist/thirdweb-dev-react-ui-evm.cjs.js"
     },
     "./solana": {
-      "module": "./solana/dist/thirdweb-dev-react-solana.esm.js",
-      "default": "./solana/dist/thirdweb-dev-react-solana.cjs.js"
+      "module": "./solana/dist/thirdweb-dev-react-ui-solana.esm.js",
+      "default": "./solana/dist/thirdweb-dev-react-ui-solana.cjs.js"
     },
     "./evm/connectors/magic": {
-      "module": "./evm/connectors/magic/dist/thirdweb-dev-react-evm-connectors-magic.esm.js",
-      "default": "./evm/connectors/magic/dist/thirdweb-dev-react-evm-connectors-magic.cjs.js"
+      "module": "./evm/connectors/magic/dist/thirdweb-dev-react-ui-evm-connectors-magic.esm.js",
+      "default": "./evm/connectors/magic/dist/thirdweb-dev-react-ui-evm-connectors-magic.cjs.js"
     },
     "./evm/connectors/gnosis-safe": {
-      "module": "./evm/connectors/gnosis-safe/dist/thirdweb-dev-react-evm-connectors-gnosis-safe.esm.js",
-      "default": "./evm/connectors/gnosis-safe/dist/thirdweb-dev-react-evm-connectors-gnosis-safe.cjs.js"
+      "module": "./evm/connectors/gnosis-safe/dist/thirdweb-dev-react-ui-evm-connectors-gnosis-safe.esm.js",
+      "default": "./evm/connectors/gnosis-safe/dist/thirdweb-dev-react-ui-evm-connectors-gnosis-safe.cjs.js"
     },
     "./package.json": "./package.json"
   },
@@ -79,6 +79,7 @@
     "@types/color": "^3.0.3",
     "@types/mime": "^3.0.1",
     "@types/react": "^18.0.5",
+    "@types/react-dom": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
     "eslint": "^8.21.0",
@@ -90,6 +91,7 @@
     "ethers": "^5.7.2",
     "prettier": "^2.7.1",
     "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "typescript": "^4.7.4"
   },
   "dependencies": {
@@ -120,7 +122,8 @@
     "@solana/web3.js": "^1.62.0",
     "@thirdweb-dev/sdk": "*",
     "ethers": ">=5.5.1",
-    "react": ">=18.0.0"
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
   },
   "resolutions": {
     "ansi-regex": "^6.0.1",

@@ -1,0 +1,4 @@
+{
+  "main": "dist/thirdweb-dev-react-ui-solana.cjs.js",
+  "module": "dist/thirdweb-dev-react-ui-solana.esm.js"
+}
