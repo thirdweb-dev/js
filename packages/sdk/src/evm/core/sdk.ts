@@ -74,10 +74,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       ? getReadOnlyProvider(signerOrProvider)
       : signerOrProvider;
 
-    const signer = await wallet.getSigner();
+    let signer = await wallet.getSigner();
 
     if (!!provider) {
-      signer.connect(provider);
+      signer = signer.connect(provider);
     }
 
     return ThirdwebSDK.fromSigner(signer, network, options, storage);
