@@ -1,3 +1,4 @@
+import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
 import {
   fetchCurrencyValue,
   isNativeToken,
@@ -74,18 +75,30 @@ export class MarketplaceV3Offers {
    * @returns the Offer object array
    */
   public async getAll(filter?: MarketplaceFilter): Promise<OfferV3[]> {
-    const startIndex = BigNumber.from(filter?.start || 0).toNumber();
     const totalOffers = await this.getTotalCount();
-    const count = BigNumber.from(filter?.count || totalOffers).toNumber();
 
-    if (totalOffers.toNumber() === 0) {
+    let start = BigNumber.from(filter?.start || 0).toNumber();
+    let end = totalOffers.toNumber();
+
+    if (end === 0) {
       throw new Error(`No offers exist on the contract.`);
     }
 
-    const rawOffers = await this.contractWrapper.readContract.getAllOffers(
-      startIndex,
-      count - 1,
+    let rawOffers: IOffers.OfferStructOutput[] = [];
+    let partialOffers: any[] = [];
+    while (end - start > DEFAULT_QUERY_ALL_COUNT) {
+      partialOffers.push(
+        this.contractWrapper.readContract.getAllOffers(
+          start,
+          start + DEFAULT_QUERY_ALL_COUNT - 1,
+        ),
+      );
+      start += DEFAULT_QUERY_ALL_COUNT;
+    }
+    partialOffers.push(
+      await this.contractWrapper.readContract.getAllOffers(start, end - 1),
     );
+    rawOffers = (await Promise.all(partialOffers)).flat();
 
     const filteredOffers = this.applyFilter(rawOffers, filter);
 
@@ -106,18 +119,30 @@ export class MarketplaceV3Offers {
    * @returns the Offer object array
    */
   public async getAllValid(filter?: MarketplaceFilter): Promise<OfferV3[]> {
-    const startIndex = BigNumber.from(filter?.start || 0).toNumber();
     const totalOffers = await this.getTotalCount();
-    const count = BigNumber.from(filter?.count || totalOffers).toNumber();
 
-    if (totalOffers.toNumber() === 0) {
+    let start = BigNumber.from(filter?.start || 0).toNumber();
+    let end = totalOffers.toNumber();
+
+    if (end === 0) {
       throw new Error(`No offers exist on the contract.`);
     }
 
-    const rawOffers = await this.contractWrapper.readContract.getAllValidOffers(
-      startIndex,
-      count - 1,
+    let rawOffers: IOffers.OfferStructOutput[] = [];
+    let partialOffers: any[] = [];
+    while (end - start > DEFAULT_QUERY_ALL_COUNT) {
+      partialOffers.push(
+        this.contractWrapper.readContract.getAllOffers(
+          start,
+          start + DEFAULT_QUERY_ALL_COUNT - 1,
+        ),
+      );
+      start += DEFAULT_QUERY_ALL_COUNT;
+    }
+    partialOffers.push(
+      await this.contractWrapper.readContract.getAllOffers(start, end - 1),
     );
+    rawOffers = (await Promise.all(partialOffers)).flat();
 
     const filteredOffers = this.applyFilter(rawOffers, filter);
 
@@ -423,6 +448,8 @@ export class MarketplaceV3Offers {
       }
     }
 
-    return rawOffers;
+    return filter?.count && filter.count < rawOffers.length
+      ? rawOffers.slice(0, filter.count)
+      : rawOffers;
   }
 }

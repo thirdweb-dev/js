@@ -1,3 +1,4 @@
+import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
 import {
   AuctionAlreadyStartedError,
   AuctionHasNotEndedError,
@@ -89,18 +90,30 @@ export class MarketplaceV3EnglishAuctions {
    * @returns the Auction object array
    */
   public async getAll(filter?: MarketplaceFilter): Promise<EnglishAuction[]> {
-    const startIndex = BigNumber.from(filter?.start || 0).toNumber();
     const totalAuctions = await this.getTotalCount();
-    const count = BigNumber.from(filter?.count || totalAuctions).toNumber();
 
-    if (totalAuctions.toNumber() === 0) {
+    let start = BigNumber.from(filter?.start || 0).toNumber();
+    let end = totalAuctions.toNumber();
+
+    if (end === 0) {
       throw new Error(`No auctions exist on the contract.`);
     }
 
-    let rawAuctions = await this.contractWrapper.readContract.getAllAuctions(
-      startIndex,
-      count - 1,
+    let rawAuctions: IEnglishAuctions.AuctionStructOutput[] = [];
+    let partialAuctions: any[] = [];
+    while (end - start > DEFAULT_QUERY_ALL_COUNT) {
+      partialAuctions.push(
+        this.contractWrapper.readContract.getAllAuctions(
+          start,
+          start + DEFAULT_QUERY_ALL_COUNT - 1,
+        ),
+      );
+      start += DEFAULT_QUERY_ALL_COUNT;
+    }
+    partialAuctions.push(
+      await this.contractWrapper.readContract.getAllAuctions(start, end - 1),
     );
+    rawAuctions = (await Promise.all(partialAuctions)).flat();
 
     const filteredAuctions = this.applyFilter(rawAuctions, filter);
 
@@ -123,19 +136,33 @@ export class MarketplaceV3EnglishAuctions {
   public async getAllValid(
     filter?: MarketplaceFilter,
   ): Promise<EnglishAuction[]> {
-    const startIndex = BigNumber.from(filter?.start || 0).toNumber();
     const totalAuctions = await this.getTotalCount();
-    const count = BigNumber.from(filter?.count || totalAuctions).toNumber();
 
-    if (totalAuctions.toNumber() === 0) {
+    let start = BigNumber.from(filter?.start || 0).toNumber();
+    let end = totalAuctions.toNumber();
+
+    if (end === 0) {
       throw new Error(`No auctions exist on the contract.`);
     }
 
-    let rawAuctions =
-      await this.contractWrapper.readContract.getAllValidAuctions(
-        startIndex,
-        count - 1,
+    let rawAuctions: IEnglishAuctions.AuctionStructOutput[] = [];
+    let partialAuctions: any[] = [];
+    while (end - start > DEFAULT_QUERY_ALL_COUNT) {
+      partialAuctions.push(
+        this.contractWrapper.readContract.getAllValidAuctions(
+          start,
+          start + DEFAULT_QUERY_ALL_COUNT - 1,
+        ),
       );
+      start += DEFAULT_QUERY_ALL_COUNT;
+    }
+    partialAuctions.push(
+      await this.contractWrapper.readContract.getAllValidAuctions(
+        start,
+        end - 1,
+      ),
+    );
+    rawAuctions = (await Promise.all(partialAuctions)).flat();
 
     const filteredAuctions = this.applyFilter(rawAuctions, filter);
 
@@ -776,6 +803,8 @@ export class MarketplaceV3EnglishAuctions {
       }
     }
 
-    return rawAuctions;
+    return filter?.count && filter.count < rawAuctions.length
+      ? rawAuctions.slice(0, filter.count)
+      : rawAuctions;
   }
 }

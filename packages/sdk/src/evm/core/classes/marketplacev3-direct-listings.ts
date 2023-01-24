@@ -1,3 +1,4 @@
+import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
 import {
   cleanCurrencyAddress,
   fetchCurrencyValue,
@@ -91,18 +92,30 @@ export class MarketplaceV3DirectListings {
    * @returns the Direct listing object array
    */
   public async getAll(filter?: MarketplaceFilter): Promise<DirectListingV3[]> {
-    const startIndex = BigNumber.from(filter?.start || 0).toNumber();
     const totalListings = await this.getTotalCount();
-    const count = BigNumber.from(filter?.count || totalListings).toNumber();
 
-    if (totalListings.toNumber() === 0) {
+    let start = BigNumber.from(filter?.start || 0).toNumber();
+    let end = totalListings.toNumber();
+
+    if (end === 0) {
       throw new Error(`No listings exist on the contract.`);
     }
 
-    let rawListings = await this.contractWrapper.readContract.getAllListings(
-      startIndex,
-      count - 1,
+    let rawListings: IDirectListings.ListingStructOutput[] = [];
+    let partialListings: any[] = [];
+    while (end - start > DEFAULT_QUERY_ALL_COUNT) {
+      partialListings.push(
+        this.contractWrapper.readContract.getAllListings(
+          start,
+          start + DEFAULT_QUERY_ALL_COUNT - 1,
+        ),
+      );
+      start += DEFAULT_QUERY_ALL_COUNT;
+    }
+    partialListings.push(
+      await this.contractWrapper.readContract.getAllListings(start, end - 1),
     );
+    rawListings = (await Promise.all(partialListings)).flat();
 
     const filteredListings = this.applyFilter(rawListings, filter);
 
@@ -129,19 +142,33 @@ export class MarketplaceV3DirectListings {
   public async getAllValid(
     filter?: MarketplaceFilter,
   ): Promise<DirectListingV3[]> {
-    const startIndex = BigNumber.from(filter?.start || 0).toNumber();
     const totalListings = await this.getTotalCount();
-    const count = BigNumber.from(filter?.count || totalListings).toNumber();
 
-    if (totalListings.toNumber() === 0) {
+    let start = BigNumber.from(filter?.start || 0).toNumber();
+    let end = totalListings.toNumber();
+
+    if (end === 0) {
       throw new Error(`No listings exist on the contract.`);
     }
 
-    let rawListings =
-      await this.contractWrapper.readContract.getAllValidListings(
-        startIndex,
-        count - 1,
+    let rawListings: IDirectListings.ListingStructOutput[] = [];
+    let partialListings: any[] = [];
+    while (end - start > DEFAULT_QUERY_ALL_COUNT) {
+      partialListings.push(
+        this.contractWrapper.readContract.getAllValidListings(
+          start,
+          start + DEFAULT_QUERY_ALL_COUNT - 1,
+        ),
       );
+      start += DEFAULT_QUERY_ALL_COUNT;
+    }
+    partialListings.push(
+      await this.contractWrapper.readContract.getAllValidListings(
+        start,
+        end - 1,
+      ),
+    );
+    rawListings = (await Promise.all(partialListings)).flat();
 
     const filteredListings = this.applyFilter(rawListings, filter);
 
@@ -824,6 +851,8 @@ export class MarketplaceV3DirectListings {
       }
     }
 
-    return rawListings;
+    return filter?.count && filter.count < rawListings.length
+      ? rawListings.slice(0, filter.count)
+      : rawListings;
   }
 }
