@@ -1,7 +1,6 @@
 import { NFTMetadata } from "../../../core/schema/nft";
-import { ListingType } from "../../enums/marketplace";
 import { CurrencyValue } from "../currency";
-import { BigNumber, BigNumberish } from "ethers";
+import { BigNumberish } from "ethers";
 
 /**
  * Represents a marketplace direct listing.

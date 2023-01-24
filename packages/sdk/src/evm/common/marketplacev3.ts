@@ -1,4 +1,3 @@
-import { MAX_BPS } from "../../core/schema/shared";
 import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
@@ -9,12 +8,11 @@ import {
   NewEnglishAuction,
   NewOffer,
 } from "../types/marketplacev3";
-import { fetchCurrencyValue } from "./currency";
 import type { IERC1155, IERC165, IERC721 } from "@thirdweb-dev/contracts-js";
 import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
 import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
 import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
-import { BigNumber, BigNumberish, Contract, providers } from "ethers";
+import { BigNumberish, Contract, providers } from "ethers";
 import invariant from "tiny-invariant";
 
 /**

@@ -13,11 +13,7 @@ import { fetchTokenMetadataForContract } from "../../common/nft";
 import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
 import { MarketplaceFilter } from "../../types";
 import { OfferV3, NewOffer } from "../../types/marketplacev3";
-import {
-  NetworkOrSignerOrProvider,
-  TransactionResult,
-  TransactionResultWithId,
-} from "../types";
+import { TransactionResult, TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import type { IERC20, IOffers, OffersLogic } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";

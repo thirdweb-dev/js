@@ -20,7 +20,6 @@ import type {
   EnglishAuctionsLogic,
   OffersLogic,
 } from "@thirdweb-dev/contracts-js";
-import type ABI from "@thirdweb-dev/contracts-js/dist/abis/MarketplaceRouter.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { CallOverrides } from "ethers";
 

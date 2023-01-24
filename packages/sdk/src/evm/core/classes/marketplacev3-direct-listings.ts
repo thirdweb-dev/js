@@ -17,11 +17,7 @@ import {
 } from "../../constants/contract";
 import { MarketplaceFilter } from "../../types";
 import { DirectListingV3, NewDirectListingV3 } from "../../types/marketplacev3";
-import {
-  NetworkOrSignerOrProvider,
-  TransactionResult,
-  TransactionResultWithId,
-} from "../types";
+import { TransactionResult, TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
   IERC1155,

@@ -22,11 +22,7 @@ import {
   NewEnglishAuction,
   Bid,
 } from "../../types/marketplacev3";
-import {
-  NetworkOrSignerOrProvider,
-  TransactionResult,
-  TransactionResultWithId,
-} from "../types";
+import { TransactionResult, TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
