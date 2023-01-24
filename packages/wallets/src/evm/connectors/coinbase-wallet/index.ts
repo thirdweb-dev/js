@@ -186,7 +186,7 @@ export class CoinbaseWalletConnector extends Connector<
     }
   }
 
-  async switchChain(chainId: number) {
+  async switchChain(chainId: number): Promise<Chain> {
     const provider = await this.getProvider();
     const id = hexValue(chainId);
 
@@ -201,7 +201,7 @@ export class CoinbaseWalletConnector extends Connector<
           name: `Chain ${id}`,
           network: `${id}`,
           nativeCurrency: { name: "Ether", decimals: 18, symbol: "ETH" },
-          rpcUrls: { default: { http: [""] } },
+          rpcUrls: { default: { http: [""] }, public: { http: [""] } },
         }
       );
     } catch (error) {

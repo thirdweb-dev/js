@@ -9,7 +9,7 @@ import { ethers } from "ethers";
 export type AwsSecretsManagerWalletOptions = {
   secretId: string;
   secretKeyName: string;
-  awsConfig: SecretsManagerClientConfig;
+  awsConfig?: SecretsManagerClientConfig;
 };
 
 /**
@@ -44,7 +44,7 @@ export class AwsSecretsManagerWallet extends AbstractSigner {
     super();
     this.secretId = options.secretId;
     this.secretKeyName = options.secretKeyName;
-    this.client = new SecretsManagerClient(options.awsConfig);
+    this.client = new SecretsManagerClient(options.awsConfig || {});
   }
 
   async getSigner(): Promise<ethers.Signer> {
