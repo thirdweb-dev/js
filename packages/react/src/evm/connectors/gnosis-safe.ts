@@ -113,11 +113,22 @@ export class GnosisSafeConnector extends Connector {
       safeAddress,
     });
     const service = new safeEthersAdapters.SafeService(serverUrl);
-    return new safeEthersAdapters.SafeEthersSigner(
+    const safeSigner = new safeEthersAdapters.SafeEthersSigner(
       safe as any,
       service,
       signer.provider,
     );
+
+    safeSigner.signMessage = async (message: string | ethers.utils.Bytes) => {
+      if (typeof message === "string") {
+        return ethAdapter.signMessage(message);
+      }
+
+      const messageHex = utils.hexlify(message);
+      return ethAdapter.signMessage(messageHex);
+    };
+
+    return safeSigner;
   }
 
   async disconnect(): Promise<void> {
