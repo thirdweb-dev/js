@@ -3501,27 +3501,22 @@
   dependencies:
     "@lit-labs/ssr-dom-shim" "^1.0.0"
 
-"@magic-ext/connect@^6.1.0":
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/@magic-ext/connect/-/connect-6.1.0.tgz#21f21b41c886c21dddaa687276f5536c9df119c4"
-  integrity sha512-ovlSszobWYiyKcO41GXcsMbmLMXOqSGuHGtk1pIKmX6h08P385Wt6lFF9p1a8sLRp8ZHBbGXVBHvVoj/Um7yYQ==
+"@magic-ext/connect@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@magic-ext/connect/-/connect-3.1.0.tgz#e847de547daa4076686016a232af291851e10b60"
+  integrity sha512-hptRuAFEAxlfuiOIeradN4Gua8DrEQAMzaa9e5718pxIKEkZdTDgLsNo/o4NmixhgFKwvzNuh0YdbQKC4AJX7A==
 
-"@magic-ext/oauth@^7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@magic-ext/oauth/-/oauth-7.1.0.tgz#45c01485e5088c8e13583c6f5c674271e49ac95c"
-  integrity sha512-0flDWw4mLzjntMq25Z5Boqh+LmXr1TDFvM6uge37o/kXnvd1nzK7MX20kr6vbo1D8XfX2yi6ewFCo2FtSlKVbA==
+"@magic-ext/oauth@^4.1.0":
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/@magic-ext/oauth/-/oauth-4.1.0.tgz#de072bf36807ba582d910fa56db339239fa7ed3e"
+  integrity sha512-xa+t5iYSAUx42KIfGxcM+wlIQMET3IkybD7pe5RIPVtbWSMHAUlHJNkgyk15BRS7vZMHU3oEBO8NXlNi5AnhCA==
   dependencies:
-    "@magic-sdk/types" "^11.1.0"
+    "@magic-sdk/types" "^9.1.0"
 
 "@magic-sdk/commons@^6.1.0":
   version "6.1.0"
   resolved "https://registry.yarnpkg.com/@magic-sdk/commons/-/commons-6.1.0.tgz#6dd6dc585315e2f6af9cf312d1557c481108029a"
   integrity sha512-297kNy/JVqe905KRGb0Y1A3kG49P9nZR2WiS8QWoU2nqvtv/4w2WNoCg9ujVUlTwTKwP2SvTY/zd35274fSNFg==
-
-"@magic-sdk/commons@^9.1.0":
-  version "9.1.0"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/commons/-/commons-9.1.0.tgz#06602d618457cf7573d58aceb02809d56172083d"
-  integrity sha512-hKos9Q1NaAWT8Sm0vKjsrOuKtAXNnLHx7RtLfgGE7MiNxrhw/em+zvnerbWuekUVe1MDcNAIeJU6aGMxOunknw==
 
 "@magic-sdk/provider@^10.1.0":
   version "10.1.0"
@@ -3531,20 +3526,6 @@
     "@magic-sdk/types" "^9.1.0"
     eventemitter3 "^4.0.4"
     web3-core "1.5.2"
-
-"@magic-sdk/provider@^13.1.0":
-  version "13.1.0"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/provider/-/provider-13.1.0.tgz#e9e1c64498ad634aa92f24d2900746ca942c7a88"
-  integrity sha512-WTTY1ygrLlNvxMN0UyhDS4ldyMYbpEXwKEYJRuqcp0FTBNKXFf26D9M2744HiY6cT98nnvhXe4pUafIn7wUBeg==
-  dependencies:
-    "@magic-sdk/types" "^11.1.0"
-    eventemitter3 "^4.0.4"
-    web3-core "1.5.2"
-
-"@magic-sdk/types@^11.1.0":
-  version "11.1.0"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/types/-/types-11.1.0.tgz#43bcd666088b5d2294b0ce3663c7798e417e9277"
-  integrity sha512-Cj3tpOO50yuBMqg39DumYF7qIKakQWIE4aGL3y8XeFeV7+fqrWmD8jlNZi5Kib4bsLvWCjxPJqtnhCyYpHnC5w==
 
 "@magic-sdk/types@^9.1.0":
   version "9.1.0"
@@ -14892,7 +14873,7 @@ lru_map@^0.3.3:
   resolved "https://registry.yarnpkg.com/lru_map/-/lru_map-0.3.3.tgz#b5c8351b9464cbd750335a79650a0ec0e56118dd"
   integrity sha512-Pn9cox5CsMYngeDbmChANltQl+5pi6XmTrraMSzhPmMBbmgcxmqWry0U3PGapCU1yB4/LqCcom7qhHZiF/jGfQ==
 
-magic-sdk@^10.1.0:
+magic-sdk@10.1.0, magic-sdk@^10.1.0:
   version "10.1.0"
   resolved "https://registry.yarnpkg.com/magic-sdk/-/magic-sdk-10.1.0.tgz#b111e41d88d8dc339744c201a07e8d6cb2bb21ca"
   integrity sha512-1Pykolr4WzK8j+FWm4rnjPqSRlG+z6nNd5kTMyDPFaqOxmKpoOpgUs2mVYASomXAZx1B883rSP67MGK+N6hlqw==
@@ -14900,16 +14881,6 @@ magic-sdk@^10.1.0:
     "@magic-sdk/commons" "^6.1.0"
     "@magic-sdk/provider" "^10.1.0"
     "@magic-sdk/types" "^9.1.0"
-    localforage "^1.7.4"
-
-magic-sdk@^13.1.0:
-  version "13.1.0"
-  resolved "https://registry.yarnpkg.com/magic-sdk/-/magic-sdk-13.1.0.tgz#7f8e62b6be2e4fc7166a275f0ae7d13d970d5d1d"
-  integrity sha512-m07+ybFJmdaT4HHoqVErXw2y/e5/4lu4EGo6F7vJMGIVX8L1zIIk49at+wxtmrGnDIT52yiNftadc1WgAgFWpg==
-  dependencies:
-    "@magic-sdk/commons" "^9.1.0"
-    "@magic-sdk/provider" "^13.1.0"
-    "@magic-sdk/types" "^11.1.0"
     localforage "^1.7.4"
 
 magic-string@^0.25.0, magic-string@^0.25.7:
