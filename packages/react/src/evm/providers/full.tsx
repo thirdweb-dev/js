@@ -5,7 +5,7 @@ import { ThirdwebConfigProvider } from "../contexts/thirdweb-config";
 import { ThirdwebSDKProvider, ThirdwebSDKProviderProps } from "./base";
 import { QueryClient } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
-import { SDKOptions, SDKOptionsOutput } from "@thirdweb-dev/sdk";
+import { ChainInfo, SDKOptions, SDKOptionsOutput } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import React, { useMemo } from "react";
 import {
@@ -230,8 +230,6 @@ export const ThirdwebProvider = ({
     return chains.map(transformChainToMinimalWagmiChain);
   }, [chains]);
 
-  console.log("*** wagmiChains", wagmiChains);
-
   const wagmiProps: WagmiproviderProps = useMemo(() => {
     const walletConnectClientMeta = {
       name: dAppMeta.name,
@@ -365,10 +363,16 @@ export const ThirdwebProvider = ({
   const sdkOptionsWithDefaults = useMemo(() => {
     const opts: SDKOptions = sdkOptions;
     return {
-      ...opts,
       readonlySettings,
+      chainInfos: chains.reduce((acc, c) => {
+        acc[c.chainId] = {
+          rpc: c.rpc[0],
+        };
+        return acc;
+      }, {} as Record<number, ChainInfo>),
+      ...opts,
     };
-  }, [sdkOptions, readonlySettings]);
+  }, [sdkOptions, readonlySettings, chains]);
 
   return (
     <ThirdwebConfigProvider

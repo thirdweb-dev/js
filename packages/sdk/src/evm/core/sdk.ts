@@ -591,7 +591,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       contracts.map(async ({ address, chainId }) => {
         let chainSDK = sdkMap[chainId];
         if (!chainSDK) {
-          chainSDK = new ThirdwebSDK(chainId, this.options);
+          chainSDK = new ThirdwebSDK(chainId, {
+            ...this.options,
+            // need to disable readonly settings for this to work
+            readonlySettings: undefined,
+          });
           sdkMap[chainId] = chainSDK;
         }
         return {
