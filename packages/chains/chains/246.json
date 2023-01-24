@@ -26,5 +26,6 @@
       "standard": "none"
     }
   ],
+  "testnet": false,
   "slug": "energy-web-chain"
 }

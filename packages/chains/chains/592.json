@@ -28,5 +28,6 @@
       "icon": "subscan"
     }
   ],
+  "testnet": false,
   "slug": "astar"
 }

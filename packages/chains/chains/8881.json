@@ -31,5 +31,6 @@
       "standard": "none"
     }
   ],
+  "testnet": false,
   "slug": "quartz-by-unique"
 }

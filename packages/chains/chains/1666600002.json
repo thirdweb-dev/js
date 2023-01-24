@@ -14,5 +14,6 @@
   "shortName": "hmy-s2",
   "chainId": 1666600002,
   "networkId": 1666600002,
+  "testnet": false,
   "slug": "harmony-shard-2"
 }

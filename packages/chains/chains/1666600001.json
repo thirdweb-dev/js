@@ -14,5 +14,6 @@
   "shortName": "hmy-s1",
   "chainId": 1666600001,
   "networkId": 1666600001,
+  "testnet": false,
   "slug": "harmony-shard-1"
 }

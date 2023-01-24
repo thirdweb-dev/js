@@ -27,5 +27,6 @@
       "standard": "EIP3091"
     }
   ],
+  "testnet": false,
   "slug": "f-x-core-network"
 }

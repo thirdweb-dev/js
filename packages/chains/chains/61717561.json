@@ -18,5 +18,6 @@
   "chainId": 61717561,
   "networkId": 61717561,
   "slip44": 61717561,
+  "testnet": false,
   "slug": "aquachain"
 }

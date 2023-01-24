@@ -33,5 +33,6 @@
       "standard": "none"
     }
   ],
+  "testnet": false,
   "slug": "qitmeer"
 }

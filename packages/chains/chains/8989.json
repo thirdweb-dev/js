@@ -29,5 +29,6 @@
       "icon": "gmmt"
     }
   ],
+  "testnet": false,
   "slug": "giant-mammoth"
 }

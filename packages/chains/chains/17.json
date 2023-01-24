@@ -14,5 +14,6 @@
   "shortName": "tfi",
   "chainId": 17,
   "networkId": 17,
+  "testnet": false,
   "slug": "thaichain-2-0-thaifi"
 }

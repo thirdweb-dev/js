@@ -15,5 +15,6 @@
   "shortName": "otp",
   "chainId": 2043,
   "networkId": 2043,
+  "testnet": false,
   "slug": "origintrail-parachain"
 }

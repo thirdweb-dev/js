@@ -14,5 +14,6 @@
   "shortName": "mintme",
   "chainId": 24734,
   "networkId": 37480,
+  "testnet": false,
   "slug": "mintme-com-coin"
 }

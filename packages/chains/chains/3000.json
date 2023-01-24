@@ -20,5 +20,6 @@
     "height": 112,
     "format": "svg"
   },
+  "testnet": false,
   "slug": "cennznet-rata"
 }

@@ -13,5 +13,6 @@
   "chainId": 24484,
   "networkId": 37129,
   "slip44": 227,
+  "testnet": false,
   "slug": "webchain"
 }

@@ -34,5 +34,6 @@
       "standard": "none"
     }
   ],
+  "testnet": false,
   "slug": "lucky-network"
 }

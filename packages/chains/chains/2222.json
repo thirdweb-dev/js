@@ -31,5 +31,6 @@
       "icon": "kava"
     }
   ],
+  "testnet": false,
   "slug": "kava-evm"
 }

@@ -14,5 +14,6 @@
   "shortName": "dax",
   "chainId": 142,
   "networkId": 142,
+  "testnet": false,
   "slug": "dax-chain"
 }

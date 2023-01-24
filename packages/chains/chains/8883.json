@@ -30,5 +30,6 @@
       "standard": "none"
     }
   ],
+  "testnet": false,
   "slug": "sapphire-by-unique"
 }

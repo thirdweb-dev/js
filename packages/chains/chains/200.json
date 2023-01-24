@@ -25,5 +25,6 @@
     "chain": "eip155-100",
     "type": "L2"
   },
+  "testnet": false,
   "slug": "arbitrum-on-xdai"
 }

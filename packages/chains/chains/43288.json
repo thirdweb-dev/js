@@ -24,5 +24,6 @@
       "standard": "none"
     }
   ],
+  "testnet": false,
   "slug": "boba-avax"
 }

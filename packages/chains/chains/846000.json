@@ -14,5 +14,6 @@
   "shortName": "bloqs4good",
   "chainId": 846000,
   "networkId": 846000,
+  "testnet": false,
   "slug": "4goodnetwork"
 }

@@ -20,5 +20,6 @@
   },
   "chainId": 1688,
   "networkId": 1688,
+  "testnet": false,
   "slug": "ludan"
 }

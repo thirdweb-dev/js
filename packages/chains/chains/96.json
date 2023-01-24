@@ -23,5 +23,6 @@
       "standard": "none"
     }
   ],
+  "testnet": false,
   "slug": "next-smart-chain"
 }

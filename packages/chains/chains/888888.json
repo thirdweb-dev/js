@@ -22,5 +22,6 @@
   "chainId": 888888,
   "networkId": 888888,
   "slip44": 60,
+  "testnet": false,
   "slug": "vision"
 }

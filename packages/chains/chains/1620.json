@@ -15,5 +15,6 @@
   "chainId": 1620,
   "networkId": 11235813,
   "slip44": 1620,
+  "testnet": false,
   "slug": "atheios"
 }

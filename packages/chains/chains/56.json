@@ -37,5 +37,6 @@
       "standard": "EIP3091"
     }
   ],
+  "testnet": false,
   "slug": "binance-smart-chain"
 }

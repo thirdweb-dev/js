@@ -14,5 +14,6 @@
   "shortName": "SO1",
   "chainId": 68,
   "networkId": 68,
+  "testnet": false,
   "slug": "soterone"
 }

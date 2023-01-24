@@ -14,5 +14,6 @@
   "shortName": "edg",
   "chainId": 2021,
   "networkId": 2021,
+  "testnet": false,
   "slug": "edgeware"
 }

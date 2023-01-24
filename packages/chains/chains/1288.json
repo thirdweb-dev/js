@@ -15,5 +15,6 @@
   "shortName": "mrock",
   "chainId": 1288,
   "networkId": 1288,
+  "testnet": false,
   "slug": "moonrock"
 }

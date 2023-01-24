@@ -19,5 +19,6 @@
     "height": 1079,
     "format": "png"
   },
+  "testnet": false,
   "slug": "oort-dev"
 }

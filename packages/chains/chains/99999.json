@@ -14,5 +14,6 @@
   "shortName": "usc",
   "chainId": 99999,
   "networkId": 99999,
+  "testnet": false,
   "slug": "ub-smart-chain"
 }

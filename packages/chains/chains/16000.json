@@ -14,5 +14,6 @@
   "shortName": "mtt",
   "chainId": 16000,
   "networkId": 16000,
+  "testnet": false,
   "slug": "metadot"
 }

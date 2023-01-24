@@ -30,5 +30,6 @@
       }
     ]
   },
+  "testnet": false,
   "slug": "tomb-chain"
 }

@@ -31,5 +31,6 @@
     "type": "L2",
     "chain": "eip155-248"
   },
+  "testnet": false,
   "slug": "home-verse"
 }

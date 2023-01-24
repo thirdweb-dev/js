@@ -14,5 +14,6 @@
   "shortName": "vsc",
   "chainId": 8889,
   "networkId": 8889,
+  "testnet": false,
   "slug": "vyvo-smart-chain"
 }

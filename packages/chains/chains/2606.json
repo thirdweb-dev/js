@@ -15,5 +15,6 @@
   "chainId": 2606,
   "networkId": 2606,
   "explorers": [],
+  "testnet": false,
   "slug": "pocrnet"
 }

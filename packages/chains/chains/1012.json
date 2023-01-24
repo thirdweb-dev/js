@@ -14,5 +14,6 @@
   "shortName": "new",
   "chainId": 1012,
   "networkId": 1012,
+  "testnet": false,
   "slug": "newton"
 }

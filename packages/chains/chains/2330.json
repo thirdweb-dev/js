@@ -29,5 +29,6 @@
       "standard": "none"
     }
   ],
+  "testnet": false,
   "slug": "altcoinchain"
 }

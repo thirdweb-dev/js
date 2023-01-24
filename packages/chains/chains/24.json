@@ -23,5 +23,6 @@
   "redFlags": [
     "reusedChainId"
   ],
+  "testnet": false,
   "slug": "kardiachain"
 }

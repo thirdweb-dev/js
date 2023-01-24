@@ -15,5 +15,6 @@
   "shortName": "diode",
   "chainId": 15,
   "networkId": 15,
+  "testnet": false,
   "slug": "diode-prenet"
 }

@@ -16,5 +16,6 @@
   "shortName": "berg",
   "chainId": 8995,
   "networkId": 8995,
+  "testnet": false,
   "slug": "bloxberg"
 }

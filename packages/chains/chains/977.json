@@ -17,5 +17,6 @@
   "shortName": "yeti",
   "chainId": 977,
   "networkId": 977,
+  "testnet": false,
   "slug": "nepal-blockchain-network"
 }

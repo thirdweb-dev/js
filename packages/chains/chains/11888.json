@@ -36,5 +36,6 @@
       "standard": "none"
     }
   ],
+  "testnet": false,
   "slug": "sanr-chain"
 }

@@ -22,5 +22,6 @@
       "standard": "EIP3091"
     }
   ],
+  "testnet": false,
   "slug": "wemix3-0"
 }

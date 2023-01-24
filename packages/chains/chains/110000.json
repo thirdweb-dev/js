@@ -14,5 +14,6 @@
   "shortName": "qkc-d-r",
   "chainId": 110000,
   "networkId": 110000,
+  "testnet": false,
   "slug": "quarkchain-devnet-root"
 }

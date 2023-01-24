@@ -35,5 +35,6 @@
       "standard": "none"
     }
   ],
+  "testnet": false,
   "slug": "imversed"
 }

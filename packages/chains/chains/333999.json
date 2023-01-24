@@ -22,5 +22,6 @@
   "shortName": "olympus",
   "chainId": 333999,
   "networkId": 333999,
+  "testnet": false,
   "slug": "polis"
 }

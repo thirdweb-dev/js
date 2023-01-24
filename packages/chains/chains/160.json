@@ -15,5 +15,6 @@
   "chainId": 160,
   "networkId": 160,
   "status": "incubating",
+  "testnet": false,
   "slug": "armonia-eva-chain"
 }

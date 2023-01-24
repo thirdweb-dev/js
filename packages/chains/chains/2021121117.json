@@ -14,5 +14,6 @@
   "shortName": "hop",
   "chainId": 2021121117,
   "networkId": 2021121117,
+  "testnet": false,
   "slug": "datahopper"
 }

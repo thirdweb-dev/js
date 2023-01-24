@@ -26,5 +26,6 @@
   "redFlags": [
     "reusedChainId"
   ],
+  "testnet": false,
   "slug": "shardeum-liberty-2-x"
 }

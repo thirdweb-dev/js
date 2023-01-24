@@ -13,5 +13,6 @@
   "chainId": 686,
   "networkId": 686,
   "slip44": 686,
+  "testnet": false,
   "slug": "karura-network"
 }

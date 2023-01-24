@@ -15,5 +15,6 @@
   "shortName": "MATH",
   "chainId": 1139,
   "networkId": 1139,
+  "testnet": false,
   "slug": "mathchain"
 }

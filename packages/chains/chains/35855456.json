@@ -14,5 +14,6 @@
   "shortName": "JOYS",
   "chainId": 35855456,
   "networkId": 35855456,
+  "testnet": false,
   "slug": "joys-digital"
 }

@@ -12,5 +12,6 @@
   "shortName": "PC",
   "chainId": 42069,
   "networkId": 42069,
+  "testnet": false,
   "slug": "pegglecoin"
 }

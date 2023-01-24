@@ -15,5 +15,6 @@
   "chainId": 11,
   "networkId": 11,
   "slip44": 916,
+  "testnet": false,
   "slug": "metadium"
 }

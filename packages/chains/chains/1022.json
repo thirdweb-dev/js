@@ -12,5 +12,6 @@
   "shortName": "sku",
   "chainId": 1022,
   "networkId": 1022,
+  "testnet": false,
   "slug": "sakura"
 }

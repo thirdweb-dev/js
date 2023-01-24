@@ -14,5 +14,6 @@
   "shortName": "ktoc",
   "chainId": 2559,
   "networkId": 2559,
+  "testnet": false,
   "slug": "kortho"
 }

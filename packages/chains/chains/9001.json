@@ -35,5 +35,6 @@
       "icon": "evmos"
     }
   ],
+  "testnet": false,
   "slug": "evmos"
 }

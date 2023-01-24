@@ -27,5 +27,6 @@
     "height": 2481,
     "format": "png"
   },
+  "testnet": false,
   "slug": "alyx"
 }

@@ -15,5 +15,6 @@
   "shortName": "ipos",
   "chainId": 1122334455,
   "networkId": 1122334455,
+  "testnet": false,
   "slug": "ipos-network"
 }

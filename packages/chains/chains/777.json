@@ -14,5 +14,6 @@
   "shortName": "cth",
   "chainId": 777,
   "networkId": 777,
+  "testnet": false,
   "slug": "cheapeth"
 }

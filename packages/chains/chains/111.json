@@ -22,5 +22,6 @@
     "height": 88,
     "format": "png"
   },
+  "testnet": false,
   "slug": "etherlite-chain"
 }

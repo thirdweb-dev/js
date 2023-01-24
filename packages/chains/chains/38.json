@@ -15,5 +15,6 @@
   "chainId": 38,
   "networkId": 38,
   "slip44": 538,
+  "testnet": false,
   "slug": "valorbit"
 }

@@ -15,5 +15,6 @@
   "chainId": 3125659152,
   "networkId": 3125659152,
   "slip44": 164,
+  "testnet": false,
   "slug": "pirl"
 }

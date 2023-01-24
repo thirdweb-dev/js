@@ -17,5 +17,6 @@
   "chainId": 666666,
   "networkId": 666666,
   "slip44": 60,
+  "testnet": true,
   "slug": "vision-vpioneer-test-chain"
 }

@@ -14,5 +14,6 @@
   "shortName": "tbwg",
   "chainId": 35,
   "networkId": 35,
+  "testnet": false,
   "slug": "tbwg-chain"
 }

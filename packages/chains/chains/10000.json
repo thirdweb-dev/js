@@ -17,5 +17,6 @@
   "shortName": "smartbch",
   "chainId": 10000,
   "networkId": 10000,
+  "testnet": false,
   "slug": "smart-bitcoin-cash"
 }

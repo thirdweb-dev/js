@@ -21,5 +21,6 @@
     "format": "svg"
   },
   "explorers": [],
+  "testnet": false,
   "slug": "defichain-evm-network"
 }

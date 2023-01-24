@@ -15,5 +15,6 @@
   "chainId": 50001,
   "networkId": 50001,
   "explorers": [],
+  "testnet": false,
   "slug": "liveplex-oracleevm"
 }

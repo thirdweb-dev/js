@@ -13,5 +13,6 @@
   "chainId": 787,
   "networkId": 787,
   "slip44": 787,
+  "testnet": false,
   "slug": "acala-network"
 }

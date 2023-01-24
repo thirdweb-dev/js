@@ -25,5 +25,6 @@
       "standard": "none"
     }
   ],
+  "testnet": true,
   "slug": "columbus-test-network"
 }

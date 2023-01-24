@@ -20,5 +20,6 @@
       "standard": "none"
     }
   ],
+  "testnet": false,
   "slug": "moac"
 }

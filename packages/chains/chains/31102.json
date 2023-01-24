@@ -15,6 +15,7 @@
   "chainId": 31102,
   "networkId": 1,
   "slip44": 31102,
+  "testnet": false,
   "icon": {
     "url": "ipfs://QmV1wZ1RVXeD7216aiVBpLkbBBHWNuoTvcSzpVQsqi2uaH",
     "width": 200,

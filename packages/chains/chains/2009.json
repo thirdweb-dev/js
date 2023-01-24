@@ -19,5 +19,6 @@
       "standard": "none"
     }
   ],
+  "testnet": false,
   "slug": "cloudwalk"
 }

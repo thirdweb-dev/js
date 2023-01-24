@@ -35,5 +35,6 @@
       "icon": "astra"
     }
   ],
+  "testnet": false,
   "slug": "astra"
 }

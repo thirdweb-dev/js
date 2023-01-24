@@ -14,5 +14,6 @@
   "shortName": "clv",
   "chainId": 1024,
   "networkId": 1024,
+  "testnet": false,
   "slug": "clv-parachain"
 }

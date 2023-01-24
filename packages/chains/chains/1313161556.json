@@ -12,5 +12,6 @@
   "shortName": "aurora-betanet",
   "chainId": 1313161556,
   "networkId": 1313161556,
+  "testnet": false,
   "slug": "aurora-betanet"
 }

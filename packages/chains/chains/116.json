@@ -19,5 +19,6 @@
   "chainId": 116,
   "networkId": 116,
   "explorers": [],
+  "testnet": false,
   "slug": "debank"
 }

@@ -25,5 +25,6 @@
     "type": "L2",
     "chain": "eip155-1"
   },
+  "testnet": false,
   "slug": "gton"
 }

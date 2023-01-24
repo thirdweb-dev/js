@@ -15,5 +15,6 @@
   "chainId": 281121,
   "networkId": 281121,
   "explorers": [],
+  "testnet": false,
   "slug": "social-smart-chain"
 }

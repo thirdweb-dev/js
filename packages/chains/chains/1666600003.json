@@ -14,5 +14,6 @@
   "shortName": "hmy-s3",
   "chainId": 1666600003,
   "networkId": 1666600003,
+  "testnet": false,
   "slug": "harmony-shard-3"
 }

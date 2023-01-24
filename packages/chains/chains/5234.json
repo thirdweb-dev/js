@@ -15,5 +15,6 @@
   "chainId": 5234,
   "networkId": 5234,
   "explorers": [],
+  "testnet": false,
   "slug": "humanode"
 }

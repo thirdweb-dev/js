@@ -16,5 +16,6 @@
   "shortName": "lisinski",
   "chainId": 385,
   "networkId": 385,
+  "testnet": false,
   "slug": "lisinski"
 }

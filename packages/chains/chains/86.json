@@ -23,5 +23,6 @@
     }
   ],
   "infoURL": "https://www.gatechain.io",
+  "testnet": false,
   "slug": "gatechain"
 }

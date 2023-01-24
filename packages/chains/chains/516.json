@@ -16,5 +16,6 @@
   "networkId": 516,
   "slip44": 516,
   "explorers": [],
+  "testnet": false,
   "slug": "gear-zero-network"
 }

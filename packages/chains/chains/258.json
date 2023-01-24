@@ -12,5 +12,6 @@
   "shortName": "setm",
   "chainId": 258,
   "networkId": 258,
+  "testnet": false,
   "slug": "setheum"
 }

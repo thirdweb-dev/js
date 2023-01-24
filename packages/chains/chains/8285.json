@@ -14,5 +14,6 @@
   "shortName": "Kortho",
   "chainId": 8285,
   "networkId": 8285,
+  "testnet": true,
   "slug": "korthotest"
 }

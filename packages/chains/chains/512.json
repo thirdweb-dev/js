@@ -28,5 +28,6 @@
     "height": 512,
     "format": "png"
   },
+  "testnet": false,
   "slug": "double-a-chain"
 }

@@ -15,5 +15,6 @@
   "chainId": 7762959,
   "networkId": 7762959,
   "slip44": 184,
+  "testnet": false,
   "slug": "musicoin"
 }

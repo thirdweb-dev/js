@@ -33,5 +33,6 @@
       "standard": "EIP3091"
     }
   ],
+  "testnet": false,
   "slug": "cube-chain"
 }

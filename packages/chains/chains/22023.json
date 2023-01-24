@@ -34,5 +34,6 @@
       "icon": "shuffle"
     }
   ],
+  "testnet": false,
   "slug": "taycan"
 }

@@ -31,5 +31,6 @@
     "bridges": []
   },
   "status": "incubating",
+  "testnet": false,
   "slug": "zksync-v2"
 }

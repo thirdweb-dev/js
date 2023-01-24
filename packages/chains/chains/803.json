@@ -14,5 +14,6 @@
   "shortName": "haic",
   "chainId": 803,
   "networkId": 803,
+  "testnet": false,
   "slug": "haic"
 }

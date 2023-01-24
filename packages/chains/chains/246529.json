@@ -15,5 +15,6 @@
   "chainId": 246529,
   "networkId": 246529,
   "slip44": 246529,
+  "testnet": false,
   "slug": "artis-sigma1"
 }

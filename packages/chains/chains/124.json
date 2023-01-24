@@ -14,5 +14,6 @@
     "symbol": "DWU",
     "decimals": 18
   },
+  "testnet": false,
   "slug": "decentralized-web"
 }

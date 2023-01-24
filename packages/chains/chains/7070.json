@@ -32,5 +32,6 @@
       "standard": "none"
     }
   ],
+  "testnet": false,
   "slug": "planq"
 }

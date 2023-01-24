@@ -14,5 +14,6 @@
   "shortName": "primuschain",
   "chainId": 78,
   "networkId": 78,
+  "testnet": false,
   "slug": "primuschain"
 }

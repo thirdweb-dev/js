@@ -13,5 +13,6 @@
   "chainId": 499,
   "networkId": 499,
   "slip44": 499,
+  "testnet": false,
   "slug": "rupaya"
 }

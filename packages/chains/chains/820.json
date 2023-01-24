@@ -15,5 +15,6 @@
   "chainId": 820,
   "networkId": 1,
   "slip44": 820,
+  "testnet": false,
   "slug": "callisto"
 }

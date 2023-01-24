@@ -17,5 +17,6 @@
   "shortName": "EDI",
   "chainId": 211,
   "networkId": 0,
+  "testnet": false,
   "slug": "freight-trust-network"
 }

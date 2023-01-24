@@ -15,5 +15,6 @@
   "chainId": 888,
   "networkId": 888,
   "slip44": 5718350,
+  "testnet": false,
   "slug": "wanchain"
 }

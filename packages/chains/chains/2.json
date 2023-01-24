@@ -15,5 +15,6 @@
   "chainId": 2,
   "networkId": 1,
   "slip44": 40,
+  "testnet": false,
   "slug": "expanse-network"
 }

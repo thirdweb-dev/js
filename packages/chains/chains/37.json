@@ -20,5 +20,6 @@
   },
   "chainId": 37,
   "networkId": 37,
+  "testnet": false,
   "slug": "seedcoin-network"
 }

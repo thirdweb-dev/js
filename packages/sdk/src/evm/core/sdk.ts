@@ -587,8 +587,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
     const sdkMap: Record<number, ThirdwebSDK> = {};
 
-    return await Promise.all(
-      contracts.map(async ({ address, chainId }) => {
+    return contracts.map(({ address, chainId }) => {
+      try {
         let chainSDK = sdkMap[chainId];
         if (!chainSDK) {
           chainSDK = new ThirdwebSDK(chainId, {
@@ -605,8 +605,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           metadata: async () =>
             (await chainSDK.getContract(address)).metadata.get(),
         };
-      }),
-    );
+      } catch (e) {
+        return {
+          address,
+          chainId,
+          contractType: async () => "custom" as const,
+          metadata: async () => ({}),
+        };
+      }
+    });
   }
 
   /**

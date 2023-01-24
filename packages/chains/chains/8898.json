@@ -33,5 +33,6 @@
       "icon": "mmt"
     }
   ],
+  "testnet": false,
   "slug": "mammoth"
 }

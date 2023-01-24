@@ -20,5 +20,6 @@
   "networkId": 909,
   "explorers": [],
   "status": "incubating",
+  "testnet": false,
   "slug": "portal-fantasy-chain"
 }

@@ -26,5 +26,6 @@
       "icon": "bronos"
     }
   ],
+  "testnet": false,
   "slug": "bronos"
 }

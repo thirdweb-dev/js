@@ -33,5 +33,6 @@
       "icon": "subscan"
     }
   ],
+  "testnet": false,
   "slug": "shiden"
 }

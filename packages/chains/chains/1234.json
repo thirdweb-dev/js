@@ -38,5 +38,6 @@
       }
     ]
   },
+  "testnet": false,
   "slug": "step-network"
 }

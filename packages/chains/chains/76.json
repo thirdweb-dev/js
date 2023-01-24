@@ -15,5 +15,6 @@
   "chainId": 76,
   "networkId": 76,
   "slip44": 76,
+  "testnet": false,
   "slug": "mix"
 }

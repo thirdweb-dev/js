@@ -16,5 +16,6 @@
   "shortName": "psc",
   "chainId": 6999,
   "networkId": 6999,
+  "testnet": false,
   "slug": "polysmartchain"
 }

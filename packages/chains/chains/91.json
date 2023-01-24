@@ -32,5 +32,6 @@
     "chain": "eip155-90",
     "type": "shard"
   },
+  "testnet": false,
   "slug": "garizon-stage1"
 }

@@ -15,5 +15,6 @@
   "shortName": "TBSI",
   "chainId": 1707,
   "networkId": 1707,
+  "testnet": false,
   "slug": "tbsi"
 }

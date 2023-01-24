@@ -22,5 +22,6 @@
   "networkId": 529,
   "explorers": [],
   "status": "incubating",
+  "testnet": false,
   "slug": "firechain"
 }

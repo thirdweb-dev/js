@@ -30,5 +30,6 @@
   "redFlags": [
     "reusedChainId"
   ],
+  "testnet": false,
   "slug": "xanachain"
 }

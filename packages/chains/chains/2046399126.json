@@ -40,5 +40,6 @@
       }
     ]
   },
+  "testnet": false,
   "slug": "europa-skale-chain"
 }

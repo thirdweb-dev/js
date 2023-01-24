@@ -14,5 +14,6 @@
   "shortName": "tsf",
   "chainId": 1856,
   "networkId": 1,
+  "testnet": false,
   "slug": "teslafunds"
 }

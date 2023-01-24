@@ -34,5 +34,6 @@
       "icon": "teleport"
     }
   ],
+  "testnet": false,
   "slug": "teleport"
 }

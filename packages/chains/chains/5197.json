@@ -21,5 +21,6 @@
   "shortName": "es",
   "chainId": 5197,
   "networkId": 5197,
+  "testnet": false,
   "slug": "eraswap"
 }

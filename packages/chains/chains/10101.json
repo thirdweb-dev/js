@@ -16,5 +16,6 @@
   "shortName": "GEN",
   "chainId": 10101,
   "networkId": 10101,
+  "testnet": false,
   "slug": "blockchain-genesis"
 }

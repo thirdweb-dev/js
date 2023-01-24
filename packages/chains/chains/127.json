@@ -13,5 +13,6 @@
   "chainId": 127,
   "networkId": 127,
   "slip44": 127,
+  "testnet": false,
   "slug": "factory-127"
 }

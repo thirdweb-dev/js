@@ -37,5 +37,6 @@
       }
     ]
   },
+  "testnet": false,
   "slug": "nahmii"
 }

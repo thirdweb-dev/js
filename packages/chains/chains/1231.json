@@ -28,5 +28,6 @@
       "standard": "none"
     }
   ],
+  "testnet": false,
   "slug": "ultron"
 }

@@ -27,5 +27,6 @@
       "standard": "none"
     }
   ],
+  "testnet": false,
   "slug": "web3games-devnet"
 }

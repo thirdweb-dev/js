@@ -20,5 +20,6 @@
   },
   "faucets": [],
   "infoURL": "",
+  "testnet": false,
   "slug": "d-chain"
 }

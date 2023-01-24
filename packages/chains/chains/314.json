@@ -39,5 +39,6 @@
       "standard": "none"
     }
   ],
+  "testnet": false,
   "slug": "filecoin"
 }

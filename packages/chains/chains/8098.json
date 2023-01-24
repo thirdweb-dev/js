@@ -14,5 +14,6 @@
   "shortName": "StreamuX",
   "chainId": 8098,
   "networkId": 8098,
+  "testnet": false,
   "slug": "streamux-blockchain"
 }

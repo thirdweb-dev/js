@@ -21,5 +21,6 @@
   "shortName": "BRNKC",
   "chainId": 641230,
   "networkId": 641230,
+  "testnet": false,
   "slug": "bear-network-chain"
 }
