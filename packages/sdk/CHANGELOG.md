@@ -1,5 +1,32 @@
 # @thirdweb-dev/sdk
 
+## 3.6.11
+
+### Patch Changes
+
+- [#475](https://github.com/thirdweb-dev/js/pull/475) [`7cab8d1`](https://github.com/thirdweb-dev/js/commit/7cab8d1679f8d007091aa03adb83add3822a504a) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Support for Plugin Pattern based contracts
+
+## 3.6.10
+
+### Patch Changes
+
+- [#498](https://github.com/thirdweb-dev/js/pull/498) [`5fba324`](https://github.com/thirdweb-dev/js/commit/5fba324ac17ab02bc8f13d82a232bc5c6970c8e5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix claim condition detection on legacy contracts
+
+- [#502](https://github.com/thirdweb-dev/js/pull/502) [`894cbef`](https://github.com/thirdweb-dev/js/commit/894cbefc6361f23fc528a6c6819f5c71793d46e4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add intermediate event for contract deploy transactions before confirmation
+
+- [#463](https://github.com/thirdweb-dev/js/pull/463) [`557429b`](https://github.com/thirdweb-dev/js/commit/557429b5cfb3af2983ee01cf7d12d41ee0557593) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - PackVRF integration
+
+- [#500](https://github.com/thirdweb-dev/js/pull/500) [`73dc026`](https://github.com/thirdweb-dev/js/commit/73dc026ff9d0ac9099bd5a9a9cab8fdbfc0ae723) Thanks [@retocrooman](https://github.com/retocrooman)! - Getting the domain separator is not a required function. If an error occurs there, the permit it self will not be possible. Therefore, error handling should be performed appropriately.
+
+- [#311](https://github.com/thirdweb-dev/js/pull/311) [`9eaa21d`](https://github.com/thirdweb-dev/js/commit/9eaa21d09ab9c700aea61a2a25f8ca9859d20857) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add support for multi chain registry
+
+- [#491](https://github.com/thirdweb-dev/js/pull/491) [`68c8e3c`](https://github.com/thirdweb-dev/js/commit/68c8e3c4d79f5d56dc4414241bcca0d88285fcca) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Use multichain registry to resolve contracts that cannot be resolved via IPFS
+
+- [#494](https://github.com/thirdweb-dev/js/pull/494) [`bff433e`](https://github.com/thirdweb-dev/js/commit/bff433e12150dc029e33a578219c8437a510da99) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix deploy transaction listener for all deploy types `sdk.deployer.addDeployListener()`
+
+- Updated dependencies [[`557429b`](https://github.com/thirdweb-dev/js/commit/557429b5cfb3af2983ee01cf7d12d41ee0557593), [`9eaa21d`](https://github.com/thirdweb-dev/js/commit/9eaa21d09ab9c700aea61a2a25f8ca9859d20857), [`9eaa21d`](https://github.com/thirdweb-dev/js/commit/9eaa21d09ab9c700aea61a2a25f8ca9859d20857)]:
+  - @thirdweb-dev/contracts-js@1.2.3
+
 ## 3.6.9
 
 ### Patch Changes

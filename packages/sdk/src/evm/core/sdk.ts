@@ -1,7 +1,5 @@
-import { isFeatureEnabled } from "../common";
 import { fetchCurrencyValue } from "../common/currency";
 import { getCompositePluginABI } from "../common/plugin";
-import { unique } from "../common/utils";
 import {
   ChainOrRpc,
   getProviderForNetwork,
@@ -13,7 +11,7 @@ import {
   PREBUILT_CONTRACTS_MAP,
 } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
-import { Abi, AbiSchema } from "../schema";
+import { AbiSchema } from "../schema";
 import { SDKOptions } from "../schema/sdk-options";
 import { CurrencyValue } from "../types/index";
 import type { AbstractWallet } from "../wallets";
@@ -21,7 +19,6 @@ import { WalletAuthenticator } from "./auth/wallet-authenticator";
 import type { ContractMetadata } from "./classes";
 import { ContractDeployer } from "./classes/contract-deployer";
 import { ContractPublisher } from "./classes/contract-publisher";
-import { ContractWrapper } from "./classes/contract-wrapper";
 import { MultichainRegistry } from "./classes/multichain-registry";
 import {
   getSignerAndProvider,

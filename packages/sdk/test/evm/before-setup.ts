@@ -62,12 +62,9 @@ import {
   EnglishAuctionsLogic,
   OffersLogic__factory,
   OffersLogic,
-  TWProxy__factory,
-  TWProxy,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
-import { FormatTypes, FunctionFragment, Interface } from "ethers/lib/utils";
 import hardhat from "hardhat";
 
 // it's there, trust me bro

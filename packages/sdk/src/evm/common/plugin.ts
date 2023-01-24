@@ -3,7 +3,7 @@ import { Abi, AbiSchema, SDKOptions } from "../schema";
 import { isFeatureEnabled } from "./feature-detection";
 import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import { unique } from "./utils";
-import { IRouter } from "@thirdweb-dev/contracts-js";
+import type { IRouter } from "@thirdweb-dev/contracts-js";
 import RouterABI from "@thirdweb-dev/contracts-js/dist/abis/Router.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -45,10 +45,7 @@ export async function getCompositePluginABI(
     }
   } catch (err) {}
 
-  // join all ABIs -- entrypoint + extension
-  let finalPlugins = await joinABIs([abi, ...pluginABIs]);
-
-  return finalPlugins;
+  return pluginABIs.length > 0 ? joinABIs([abi, ...pluginABIs]) : abi;
 }
 
 /**
@@ -64,7 +61,7 @@ async function getPluginABI(
       addresses.map((address) =>
         fetchContractMetadataFromAddress(address, provider, storage).catch(
           (err) => {
-            // console.error(`Failed to fetch plug-in for ${address}`, err);
+            console.error(`Failed to fetch plug-in for ${address}`, err);
             return { abi: [] };
           },
         ),
