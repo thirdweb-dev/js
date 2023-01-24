@@ -4,7 +4,6 @@ import loginHandler from "./routes/login";
 import logoutHandler from "./routes/logout";
 import userHandler from "./routes/user";
 import { ThirdwebAuthConfig } from "./types";
-import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import express, { Request, Response } from "express";
 
@@ -27,7 +26,7 @@ export function ThirdwebAuth(cfg: ThirdwebAuthConfig) {
   const router = express.Router();
   const cookieMiddleware = cookieParser();
 
-  router.use(bodyParser.json());
+  router.use(express.json());
   router.use(cookieMiddleware);
 
   router.post(
