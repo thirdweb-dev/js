@@ -1,16 +1,11 @@
 import type { GnosisSafeConnector } from "../connectors/gnosis-safe";
 import type { MagicConnector } from "../connectors/magic";
-import {
-  Chain,
-  SupportedChain,
-  defaultSupportedChains,
-} from "../constants/chain";
 import { ThirdwebAuthConfig } from "../contexts/thirdweb-auth";
 import { ThirdwebConfigProvider } from "../contexts/thirdweb-config";
 import { ThirdwebSDKProvider, ThirdwebSDKProviderProps } from "./base";
 import { QueryClient } from "@tanstack/react-query";
+import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { SDKOptions, SDKOptionsOutput } from "@thirdweb-dev/sdk";
-import { DEFAULT_RPC_URLS } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import React, { useMemo } from "react";
 import {
@@ -19,10 +14,26 @@ import {
   useProvider,
   useSigner,
   Connector,
+  Chain as WagmiChain,
 } from "wagmi";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
+
+function transformChainToMinimalWagmiChain(chain: Chain): WagmiChain {
+  return {
+    id: chain.chainId,
+    name: chain.name,
+    rpcUrls: chain.rpc,
+    nativeCurrency: {
+      name: chain.nativeCurrency.name,
+      symbol: chain.nativeCurrency.symbol,
+      decimals: chain.nativeCurrency.decimals as 18,
+    },
+    testnet: chain.testnet,
+    blockExplorers: chain.explorers,
+  };
+}
 
 /**
  * @internal
@@ -63,8 +74,8 @@ export type WalletConnector =
 /**
  * @internal
  */
-export type ChainRpc<TSupportedChain extends SupportedChain> = Record<
-  TSupportedChain extends Chain ? TSupportedChain["id"] : TSupportedChain,
+export type ChainRpc<TSupportedChain extends Chain> = Record<
+  TSupportedChain extends Chain ? TSupportedChain["chainId"] : TSupportedChain,
   string
 >;
 /**
@@ -98,19 +109,12 @@ export interface DAppMetaData {
 /**
  * The possible props for the ThirdwebProvider.
  */
-export interface ThirdwebProviderProps<
-  TSupportedChain extends SupportedChain = SupportedChain,
-> {
+export interface ThirdwebProviderProps {
   /**
    * The {@link SDKOptions | Thirdweb SDK Options} to pass to the thirdweb SDK
    * comes with sensible defaults
    */
   sdkOptions?: SDKOptions;
-  /**
-   * An array of chainIds or {@link Chain} objects that the dApp supports
-   * If not provided, all chains supported by the SDK will be supported by default
-   */
-  supportedChains?: TSupportedChain[];
   /**
    * An array of connector types (strings) or wallet connector objects that the dApp supports
    * If not provided, will default to metamask (injected), wallet connect and walletlink (coinbase wallet) with sensible defaults
@@ -119,8 +123,9 @@ export interface ThirdwebProviderProps<
   /**
    * A partial map of chainIds to rpc urls to use for certain chains
    * If not provided, will default to the rpcUrls of the chain objects for the supported chains
+   * @deprecated - use `chains` instead
    */
-  chainRpc?: Partial<ChainRpc<TSupportedChain>>;
+  chainRpc?: Record<number, string>;
   /**
    * Metadata to pass to wallet connect and walletlink wallet connect. (Used to show *which* dApp is being connected to in mobile wallets that support it)
    * Defaults to just the name being passed as `thirdweb powered dApp`.
@@ -128,12 +133,9 @@ export interface ThirdwebProviderProps<
   dAppMeta?: DAppMetaData;
   /**
    * The chainId that your dApp is running on.
-   * While this *can* be `undefined` it is required to be passed. Passing `undefined` will cause no SDK to be instantiated.
-   * When passing a chainId, it **must** be part of the `supportedChains` array.
+   * While this *can* be `undefined` it is required to be passed. Passing `undefined` will cause no SDK to be instantiated
    */
-  desiredChainId: TSupportedChain extends Chain
-    ? TSupportedChain["id"]
-    : TSupportedChain | undefined;
+  desiredChainId: number | undefined;
 
   /**
    * The configuration used for thirdweb auth usage. Enables users to login
@@ -157,6 +159,11 @@ export interface ThirdwebProviderProps<
    * Whether or not to attempt auto-connect to a wallet.
    */
   autoConnect?: boolean;
+
+  /**
+   * Chains to support. If not provided, will default to the chains supported by the SDK.
+   */
+  chains?: Chain[];
 }
 
 // SDK handles this under the hood for us
@@ -191,14 +198,13 @@ const defaultWalletConnectors: Required<
  * @public
  *
  */
-export const ThirdwebProvider = <
-  TSupportedChain extends SupportedChain = SupportedChain,
->({
+export const ThirdwebProvider = ({
   sdkOptions,
-  chainRpc = DEFAULT_RPC_URLS,
-  supportedChains = defaultSupportedChains.map(
-    (c) => c.id,
-  ) as TSupportedChain[],
+  chains = defaultChains,
+  chainRpc = chains.reduce((acc, c) => {
+    acc[c.chainId] = c.rpc[0];
+    return acc;
+  }, {} as Record<number, string>),
   walletConnectors = defaultWalletConnectors,
   dAppMeta = defaultdAppMeta,
   desiredChainId,
@@ -207,22 +213,24 @@ export const ThirdwebProvider = <
   queryClient,
   autoConnect = true,
   children,
-}: React.PropsWithChildren<ThirdwebProviderProps<TSupportedChain>>) => {
+}: React.PropsWithChildren<ThirdwebProviderProps>) => {
   // construct the wagmi options
 
-  const _supporrtedChains = useMemo(() => {
-    return supportedChains
-      .map((c) => {
-        if (typeof c === "number") {
-          return defaultSupportedChains.find((sc) => sc.id === c);
-        }
-        return c as Chain;
-      })
-      .filter((c) => c !== undefined) as Chain[];
-  }, [supportedChains]);
+  const _rpcUrlMap: Record<number, string> = useMemo(() => {
+    return {
+      ...chains.reduce((acc, c) => {
+        acc[c.chainId] = c.rpc[0];
+        return acc;
+      }, {} as Record<number, string>),
+      ...chainRpc,
+    };
+  }, [chainRpc, chains]);
 
-  // TODO (anyEVM) - merge default map with sdk options
-  const _rpcUrlMap: Record<number, string> = chainRpc;
+  const wagmiChains = useMemo(() => {
+    return chains.map(transformChainToMinimalWagmiChain);
+  }, [chains]);
+
+  console.log("*** wagmiChains", wagmiChains);
 
   const wagmiProps: WagmiproviderProps = useMemo(() => {
     const walletConnectClientMeta = {
@@ -260,7 +268,7 @@ export const ThirdwebProvider = <
                   typeof connector === "string"
                     ? { shimDisconnect: true, shimChainChangedDisconnect: true }
                     : connector.options,
-                chains: _supporrtedChains,
+                chains: wagmiChains,
               });
             }
             if (
@@ -285,7 +293,7 @@ export const ThirdwebProvider = <
                         qrcode: true,
                         ...connector.options,
                       },
-                chains: _supporrtedChains,
+                chains: wagmiChains,
               });
             }
             if (
@@ -297,7 +305,7 @@ export const ThirdwebProvider = <
             ) {
               const jsonRpcUrl = _rpcUrlMap[chainId || desiredChainId || 1];
               return new CoinbaseWalletConnector({
-                chains: _supporrtedChains,
+                chains: wagmiChains,
                 options:
                   typeof connector === "string"
                     ? {
@@ -325,7 +333,7 @@ export const ThirdwebProvider = <
     dAppMeta.isDarkMode,
     autoConnect,
     walletConnectors,
-    _supporrtedChains,
+    wagmiChains,
     _rpcUrlMap,
     desiredChainId,
   ]);
@@ -366,7 +374,7 @@ export const ThirdwebProvider = <
     <ThirdwebConfigProvider
       value={{
         rpcUrlMap: _rpcUrlMap,
-        supportedChains: _supporrtedChains,
+        chains,
       }}
     >
       <WagmiProvider {...wagmiProps}>
