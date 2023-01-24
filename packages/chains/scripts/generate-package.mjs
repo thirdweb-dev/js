@@ -27,10 +27,8 @@ chains = chains
     }
 
     // apparently this is the best way to do this off of raw data
-    const testnet = JSON.stringify(chain).toLowerCase().includes("testnet");
-    if (!testnet) {
-      return chain;
-    }
+    const testnet = JSON.stringify(chain).toLowerCase().includes("test");
+
     return {
       ...chain,
       testnet,
