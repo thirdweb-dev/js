@@ -225,7 +225,7 @@ export class MarketplaceV3DirectListings {
     listingId: BigNumberish,
     currency: string,
   ): Promise<boolean> {
-    const listing = await this.validateListing(BigNumber.from(listingId));
+    await this.validateListing(BigNumber.from(listingId));
 
     return await this.contractWrapper.readContract.isCurrencyApprovedForListing(
       listingId,
