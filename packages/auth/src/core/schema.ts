@@ -108,7 +108,13 @@ export const GenerateOptionsSchema = z
     tokenId: z.string().optional(),
     expirationTime: z.date().optional(),
     invalidBefore: z.date().optional(),
-    tokenContext: JsonSchema.optional(),
+    tokenContext: z
+      .union([
+        JsonSchema,
+        z.function().args(z.string()).returns(JsonSchema),
+        z.function().args(z.string()).returns(z.promise(JsonSchema)),
+      ])
+      .optional(),
     verifyOptions: VerifyOptionsSchemaRequired.omit({
       domain: true,
     }).optional(),

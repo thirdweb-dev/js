@@ -1,5 +1,5 @@
 import { ThirdwebAuth } from "../src/core";
-import { SignerWallet } from "../src/solana";
+import { KeypairWallet } from "../src/solana";
 import { Keypair } from "@solana/web3.js";
 import { expect } from "chai";
 
@@ -14,9 +14,9 @@ describe("Wallet Authentication", async () => {
       Keypair.generate(),
     ];
 
-    adminWallet = new SignerWallet(adminSigner);
-    signerWallet = new SignerWallet(signerSigner);
-    attackerWallet = new SignerWallet(attackerSigner);
+    adminWallet = new KeypairWallet(adminSigner);
+    signerWallet = new KeypairWallet(signerSigner);
+    attackerWallet = new KeypairWallet(attackerSigner);
 
     auth = new ThirdwebAuth(signerWallet, "thirdweb.com");
   });
@@ -330,5 +330,24 @@ describe("Wallet Authentication", async () => {
 
     expect(user.address).to.equal(await signerWallet.getAddress());
     expect(user.context).to.deep.equal({ role: "admin" });
+  });
+
+  it("Should call context callback function", async () => {
+    const payload = await auth.login();
+
+    auth.updateWallet(adminWallet);
+    const token = await auth.generate(payload, {
+      tokenContext: (address: string) => {
+        return { address, role: "admin" };
+      },
+    });
+
+    const user = await auth.authenticate(token);
+
+    expect(user.address).to.equal(await signerWallet.getAddress());
+    expect(user.context).to.deep.equal({
+      address: await signerWallet.getAddress(),
+      role: "admin",
+    });
   });
 });

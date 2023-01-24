@@ -331,4 +331,23 @@ describe("Wallet Authentication", async () => {
     expect(user.address).to.equal(await signerWallet.getAddress());
     expect(user.context).to.deep.equal({ role: "admin" });
   });
+
+  it("Should call context callback function", async () => {
+    const payload = await auth.login();
+
+    auth.updateWallet(adminWallet);
+    const token = await auth.generate(payload, {
+      tokenContext: (address: string) => {
+        return { address, role: "admin" };
+      },
+    });
+
+    const user = await auth.authenticate(token);
+
+    expect(user.address).to.equal(await signerWallet.getAddress());
+    expect(user.context).to.deep.equal({
+      address: await signerWallet.getAddress(),
+      role: "admin",
+    });
+  });
 });

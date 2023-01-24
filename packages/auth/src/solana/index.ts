@@ -1,27 +1,29 @@
 import * as ed25519 from "@noble/ed25519";
-import { Signer, Keypair } from "@solana/web3.js";
+import { Signer, Keypair, PublicKey } from "@solana/web3.js";
 import type { Ecosystem, GenericSignerWallet } from "@thirdweb-dev/wallets";
 import bs58 from "bs58";
 import nacl from "tweetnacl";
 
+export interface SolanaSigner {
+  publicKey: PublicKey;
+  signMessage(message: Uint8Array): Promise<Uint8Array>;
+}
+
 export class SignerWallet implements GenericSignerWallet {
   type: Ecosystem = "solana";
-  #signer: Signer;
+  private signer: SolanaSigner;
 
-  constructor(signer: Signer) {
-    this.#signer = signer;
+  constructor(signer: SolanaSigner) {
+    this.signer = signer;
   }
 
   public async getAddress(): Promise<string> {
-    return this.#signer.publicKey.toBase58();
+    return this.signer.publicKey.toBase58();
   }
 
   public async signMessage(message: string): Promise<string> {
     const encodedMessage = new TextEncoder().encode(message);
-    const signedMessage = await ed25519.sync.sign(
-      encodedMessage,
-      this.#signer.secretKey.slice(0, 32),
-    );
+    const signedMessage = await this.signer.signMessage(encodedMessage);
     const signature = bs58.encode(signedMessage);
 
     return signature;
@@ -40,7 +42,27 @@ export class SignerWallet implements GenericSignerWallet {
   }
 }
 
-export class PrivateKeyWallet extends SignerWallet {
+class KeypairSigner implements SolanaSigner {
+  private keypair: Signer;
+  public publicKey: PublicKey;
+
+  constructor(keypair: Signer) {
+    this.keypair = keypair;
+    this.publicKey = keypair.publicKey;
+  }
+
+  public async signMessage(message: Uint8Array): Promise<Uint8Array> {
+    return ed25519.sync.sign(message, this.keypair.secretKey.slice(0, 32));
+  }
+}
+
+export class KeypairWallet extends SignerWallet {
+  constructor(keypair: Keypair) {
+    super(new KeypairSigner(keypair));
+  }
+}
+
+export class PrivateKeyWallet extends KeypairWallet {
   constructor(privateKey: string) {
     super(Keypair.fromSecretKey(bs58.decode(privateKey)));
   }

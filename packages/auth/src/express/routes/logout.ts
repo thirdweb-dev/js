@@ -21,7 +21,6 @@ export default async function handler(
     }
   }
 
-  console.log("logout handler");
   // Set the access token to 'none' and expire in 5 seconds
   res.setHeader(
     "Set-Cookie",

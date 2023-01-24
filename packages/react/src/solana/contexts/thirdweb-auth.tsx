@@ -1,4 +1,3 @@
-import type { PublicKey, Signer } from "@solana/web3.js";
 import { ThirdwebAuth } from "@thirdweb-dev/auth";
 import { SignerWallet } from "@thirdweb-dev/auth/solana";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
@@ -41,15 +40,6 @@ const ThirdwebAuthContext = createContext<ThirdwebAuthContext | undefined>(
   undefined,
 );
 
-interface MaybeSigner {
-  publicKey: PublicKey;
-  secretKey?: Uint8Array;
-}
-
-function isSigner(signer: MaybeSigner): signer is Signer {
-  return !!signer.secretKey;
-}
-
 export const ThirdwebAuthProvider: React.FC<
   PropsWithChildren<{ value?: ThirdwebAuthConfig }>
 > = ({ value, children }) => {
@@ -65,8 +55,8 @@ export const ThirdwebAuthProvider: React.FC<
       auth: undefined,
     };
 
-    const identity = value.sdk?.wallet.getSigner().driver();
-    if (identity && isSigner(identity)) {
+    const identity = value.sdk?.wallet.getSigner();
+    if (identity) {
       context.auth = new ThirdwebAuth(new SignerWallet(identity), value.domain);
     }
 

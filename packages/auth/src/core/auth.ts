@@ -190,6 +190,13 @@ export class ThirdwebAuth {
       ...parsedOptions?.verifyOptions,
     });
 
+    let context: Json | undefined = undefined;
+    if (typeof parsedOptions?.tokenContext === "function") {
+      context = await parsedOptions.tokenContext(userAddress);
+    } else {
+      context = parsedOptions?.tokenContext;
+    }
+
     const adminAddress = await this.wallet.getAddress();
     const payloadData = AuthenticationPayloadDataSchema.parse({
       iss: adminAddress,
@@ -201,7 +208,7 @@ export class ThirdwebAuth {
         new Date(Date.now() + 1000 * 60 * 60 * 5),
       iat: new Date(),
       jti: parsedOptions?.tokenId,
-      ctx: parsedOptions?.tokenContext,
+      ctx: context,
     });
 
     const message = JSON.stringify(payloadData);

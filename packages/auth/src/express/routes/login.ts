@@ -1,4 +1,4 @@
-import { GenerateOptions, Json } from "../../core";
+import { GenerateOptions } from "../../core";
 import { LoginPayloadBodySchema, ThirdwebAuthContext } from "../types";
 import { serialize } from "cookie";
 import { Request, Response } from "express";
@@ -26,19 +26,18 @@ export default async function handler(
     return res.status(400).json({ error: "Missing login payload" });
   }
 
-  let tokenContext: Json | undefined = undefined;
-  if (ctx.callbacks?.login?.enhanceToken) {
-    tokenContext = await ctx.callbacks.login.enhanceToken(
-      payload.payload.address,
-      req,
-    );
-  }
-
   const validateNonce = async (nonce: string) => {
     if (ctx.authOptions?.validateNonce) {
       await ctx.authOptions?.validateNonce(nonce, req);
     }
   };
+
+  const getTokenContext = ctx.callbacks?.login?.enhanceToken
+    ? async (address: string) => {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        return await ctx.callbacks!.login!.enhanceToken(address, req);
+      }
+    : undefined;
 
   const expirationTime = ctx.authOptions?.tokenDurationInSeconds
     ? new Date(Date.now() + 1000 * ctx.authOptions.tokenDurationInSeconds)
@@ -54,7 +53,7 @@ export default async function handler(
       resources: ctx.authOptions?.resources,
     },
     expirationTime,
-    tokenContext,
+    tokenContext: getTokenContext,
   };
 
   let token: string;
