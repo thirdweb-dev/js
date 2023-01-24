@@ -5,6 +5,10 @@
       "outputs": ["dist/**"],
       "dependsOn": ["^build"]
     },
+    "@thirdweb-dev/chains#build": {
+      "outputs": ["dist/**", "chains/**"],
+      "dependsOn": ["^build"]
+    },
     "@thirdweb-dev/wallets#build": {
       "outputs": ["dist/**", "wallets/**", "connectors/**"],
       "dependsOn": ["^build"]

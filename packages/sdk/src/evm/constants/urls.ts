@@ -1,4 +1,4 @@
-import { getRpcUrl } from "../../core/constants/urls";
+import { DEFAULT_API_KEY, getRpcUrl } from "../../core/constants/urls";
 import { ChainIdOrName } from "../core";
 import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
 import { ChainInfo, SDKOptions, SDKOptionsSchema } from "../schema";
@@ -98,12 +98,24 @@ export function getChainProvider(
     ...buildDefaultMap(options),
     ...options.chainInfos,
   };
-  const rpcUrl = rpcMap[chainId]?.rpc;
+  let rpcUrl = rpcMap[chainId]?.rpc;
+
   if (!rpcUrl) {
     throw new Error(
       `No rpc url found for chain ${network}. Please provide a valid rpc url via the 'chainInfos' property of the sdk options.`,
     );
   }
+  // apply API keys
+  // thirdweb
+  rpcUrl = rpcUrl.replace(
+    "${THIRDWEB_API_KEY}",
+    options.apiKey || DEFAULT_API_KEY,
+  );
+  // TODO infura
+  // rpcUrl = rpcUrl.replace("${INFURA_API_KEY}", "");
+  // TODO alchemy
+  // rpcUrl = rpcUrl.replace("${ALCHEMY_API_KEY}", "");
+
   return getReadOnlyProvider(rpcUrl, chainId);
 }
 

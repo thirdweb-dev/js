@@ -1,5 +1,4 @@
 import { RequiredParam } from "../../core/query-utils/required-param";
-import { SupportedChainId } from "../constants/chain";
 import { ContractAddress, WalletAddress } from "../types";
 import { QueryClient, QueryKey } from "@tanstack/react-query";
 import type {
@@ -78,7 +77,7 @@ export const cacheKeys = {
   },
   wallet: {
     balance: (
-      chainId: SupportedChainId,
+      chainId: number,
       walletAddress: RequiredParam<WalletAddress>,
       tokenAddress?: ContractAddress,
     ) =>
