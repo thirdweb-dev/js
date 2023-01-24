@@ -54,6 +54,7 @@ import {
   FEATURE_APPURI,
   FEATURE_GASLESS,
   FEATURE_PACK_VRF,
+  FEATURE_PLUGIN_ROUTER,
 } from "./thirdweb-features";
 
 /**
@@ -108,7 +109,8 @@ export type Feature =
   | typeof FEATURE_APPURI
   | typeof FEATURE_OWNER
   | typeof FEATURE_GASLESS
-  | typeof FEATURE_PACK_VRF;
+  | typeof FEATURE_PACK_VRF
+  | typeof FEATURE_PLUGIN_ROUTER;
 
 /**
  * @internal
@@ -138,4 +140,5 @@ export const SUPPORTED_FEATURES: Record<string, Feature> = {
   [FEATURE_OWNER.name]: FEATURE_OWNER,
   [FEATURE_GASLESS.name]: FEATURE_GASLESS,
   [FEATURE_PACK_VRF.name]: FEATURE_PACK_VRF,
+  [FEATURE_PLUGIN_ROUTER.name]: FEATURE_PLUGIN_ROUTER,
 };
