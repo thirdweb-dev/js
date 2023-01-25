@@ -1,11 +1,6 @@
 import { fetchCurrencyValue } from "../common/currency";
 import { getCompositePluginABI } from "../common/plugin";
-import {
-  ChainId,
-  getChainProvider,
-  NATIVE_TOKEN_ADDRESS,
-  toChainId,
-} from "../constants";
+import { getChainProvider, NATIVE_TOKEN_ADDRESS } from "../constants";
 import {
   getContractTypeForRemoteName,
   PREBUILT_CONTRACTS_MAP,
@@ -31,7 +26,7 @@ import type {
   PrebuiltContractType,
   ValidContractInstance,
 } from "./types";
-import { UserWallet } from "./wallet/UserWallet";
+import { UserWallet } from "./wallet/user-wallet";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { Contract, ContractInterface, ethers, Signer } from "ethers";
@@ -131,48 +126,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     const provider = getChainProvider(network, options);
     const signer = new ethers.Wallet(privateKey, provider);
     return ThirdwebSDK.fromSigner(signer, network, options, storage);
-  }
-
-  /**
-   * Get an instance of the thirdweb SDK using a local node and a local signer.
-   * Useful for testing and development.
-   *
-   * @example
-   * ```javascript
-   * const sdk = ThirdwebSDK.fromLocalNode();
-   *
-   * // if your local node is running based off a forked chain, you can specify the chain id or name
-   * const sdk = ThirdwebSDK.fromLocalNode("mainnet");
-   * ```
-   *
-   * @param forkedChain - optional forked chain id or name. Defaults to localhost
-   * @param privateKey - optional private key to use. Defaults to hardhat default
-   * @param port - optional port to use. Defaults to 8545
-   * @param storage -  optional storage implementation to use
-   * @returns
-   */
-  static fromLocalNode(
-    forkedChain: ChainIdOrName = ChainId.Localhost,
-    privateKey = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
-    port: number = 8545,
-    sdkOptions: SDKOptions = {},
-    storage: ThirdwebStorage = new ThirdwebStorage(),
-  ) {
-    const chainId = toChainId(forkedChain);
-    return ThirdwebSDK.fromPrivateKey(
-      privateKey,
-      chainId,
-      {
-        chainInfos: {
-          [chainId]: {
-            rpc: `http://localhost:${port}`,
-          },
-          ...sdkOptions.chainInfos,
-        },
-        ...sdkOptions,
-      },
-      storage,
-    );
   }
 
   /**

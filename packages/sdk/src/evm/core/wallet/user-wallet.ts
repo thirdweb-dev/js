@@ -4,7 +4,12 @@ import {
   normalizePriceValue,
 } from "../../common/currency";
 import { EIP712Domain, signTypedDataInternal } from "../../common/sign";
-import { NATIVE_TOKEN_ADDRESS } from "../../constants";
+import {
+  ChainId,
+  getChainProvider,
+  LOCAL_NODE_PKEY,
+  NATIVE_TOKEN_ADDRESS,
+} from "../../constants";
 import { SDKOptions } from "../../schema";
 import { Amount, CurrencyValue } from "../../types";
 import { ContractWrapper } from "../classes/contract-wrapper";
@@ -253,6 +258,28 @@ export class UserWallet {
     return {
       receipt: await tx.wait(),
     };
+  }
+
+  /**
+   * Request funds from a running local node to the currently connected wallet
+   * @param amount the amount in native currency (in ETH) to request
+   */
+  public async requestFunds(amount: Amount): Promise<TransactionResult> {
+    const chainId = await this.getChainId();
+    if (chainId === ChainId.Localhost || chainId === ChainId.Hardhat) {
+      const localWallet = new UserWallet(
+        new ethers.Wallet(
+          LOCAL_NODE_PKEY,
+          getChainProvider(chainId, this.options),
+        ),
+        this.options,
+      );
+      return localWallet.transfer(await this.getAddress(), amount);
+    } else {
+      throw new Error(
+        `Requesting funds is not supported on chain: '${chainId}'.`,
+      );
+    }
   }
 
   /** ***********************
