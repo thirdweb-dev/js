@@ -15,8 +15,11 @@ import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
 } from "../../constants/contract";
-import { MarketplaceFilter } from "../../types";
-import { DirectListingV3, NewDirectListingV3 } from "../../types/marketplacev3";
+import {
+  DirectListingInputParams,
+  DirectListingInputParamsSchema,
+} from "../../schema/marketplacev3/direct-listings";
+import { DirectListingV3, MarketplaceFilter } from "../../types";
 import { TransactionResult, TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
@@ -303,45 +306,47 @@ export class MarketplaceV3DirectListings {
    * ```
    */
   public async createListing(
-    listing: NewDirectListingV3,
+    listing: DirectListingInputParams,
   ): Promise<TransactionResultWithId> {
-    validateNewListingParam(listing);
+    // validateNewListingParam(listing);
+
+    const parsedListing = DirectListingInputParamsSchema.parse(listing);
 
     await handleTokenApproval(
       this.contractWrapper,
       this.getAddress(),
-      listing.assetContractAddress,
-      listing.tokenId,
+      parsedListing.assetContractAddress,
+      parsedListing.tokenId,
       await this.contractWrapper.getSignerAddress(),
     );
 
     const normalizedPricePerToken = await normalizePriceValue(
       this.contractWrapper.getProvider(),
-      listing.pricePerToken,
-      listing.currencyContractAddress,
+      parsedListing.pricePerToken,
+      parsedListing.currencyContractAddress,
     );
 
-    let listingStartTime = Math.floor(listing.startTimestamp.getTime() / 1000);
+    // let listingStartTime = Math.floor(listing.startTimestamp.getTime() / 1000);
     const block = await this.contractWrapper.getProvider().getBlock("latest");
     const blockTime = block.timestamp;
-    if (listingStartTime < blockTime) {
-      listingStartTime = blockTime;
+    if (parsedListing.startTimestamp.lt(blockTime)) {
+      parsedListing.startTimestamp = BigNumber.from(blockTime);
     }
 
-    let listingEndTime = Math.floor(listing.endTimestamp.getTime() / 1000);
+    // let listingEndTime = Math.floor(listing.endTimestamp.getTime() / 1000);
 
     const receipt = await this.contractWrapper.sendTransaction(
       "createListing",
       [
         {
-          assetContract: listing.assetContractAddress,
-          tokenId: listing.tokenId,
-          quantity: listing.quantity,
-          currency: cleanCurrencyAddress(listing.currencyContractAddress),
+          assetContract: parsedListing.assetContractAddress,
+          tokenId: parsedListing.tokenId,
+          quantity: parsedListing.quantity,
+          currency: cleanCurrencyAddress(parsedListing.currencyContractAddress),
           pricePerToken: normalizedPricePerToken,
-          startTimestamp: BigNumber.from(listingStartTime),
-          endTimestamp: BigNumber.from(listingEndTime),
-          reserved: listing.isReservedListing,
+          startTimestamp: parsedListing.startTimestamp,
+          endTimestamp: parsedListing.endTimestamp,
+          reserved: parsedListing.isReservedListing,
         } as IDirectListings.ListingParametersStruct,
       ],
       {
@@ -399,40 +404,42 @@ export class MarketplaceV3DirectListings {
    */
   public async updateListing(
     listingId: BigNumberish,
-    listing: NewDirectListingV3,
+    listing: DirectListingInputParams,
   ): Promise<TransactionResultWithId> {
-    validateNewListingParam(listing);
+    // validateNewListingParam(listing);
+
+    const parsedListing = DirectListingInputParamsSchema.parse(listing);
 
     await handleTokenApproval(
       this.contractWrapper,
       this.getAddress(),
-      listing.assetContractAddress,
-      listing.tokenId,
+      parsedListing.assetContractAddress,
+      parsedListing.tokenId,
       await this.contractWrapper.getSignerAddress(),
     );
 
     const normalizedPricePerToken = await normalizePriceValue(
       this.contractWrapper.getProvider(),
-      listing.pricePerToken,
-      listing.currencyContractAddress,
+      parsedListing.pricePerToken,
+      parsedListing.currencyContractAddress,
     );
 
-    let listingStartTime = Math.floor(listing.startTimestamp.getTime() / 1000);
-    let listingEndTime = Math.floor(listing.endTimestamp.getTime() / 1000);
+    // let listingStartTime = Math.floor(validatedListing.startTimestamp.getTime() / 1000);
+    // let listingEndTime = Math.floor(listing.endTimestamp.getTime() / 1000);
 
     const receipt = await this.contractWrapper.sendTransaction(
       "updateListing",
       [
         listingId,
         {
-          assetContract: listing.assetContractAddress,
-          tokenId: listing.tokenId,
-          quantity: listing.quantity,
-          currency: cleanCurrencyAddress(listing.currencyContractAddress),
+          assetContract: parsedListing.assetContractAddress,
+          tokenId: parsedListing.tokenId,
+          quantity: parsedListing.quantity,
+          currency: cleanCurrencyAddress(parsedListing.currencyContractAddress),
           pricePerToken: normalizedPricePerToken,
-          startTimestamp: BigNumber.from(listingStartTime),
-          endTimestamp: BigNumber.from(listingEndTime),
-          reserved: listing.isReservedListing,
+          startTimestamp: parsedListing.startTimestamp,
+          endTimestamp: parsedListing.endTimestamp,
+          reserved: parsedListing.isReservedListing,
         } as IDirectListings.ListingParametersStruct,
       ],
       {
@@ -716,23 +723,23 @@ export class MarketplaceV3DirectListings {
     return {
       assetContractAddress: listing.assetContract,
       currencyContractAddress: listing.currency,
-      pricePerToken: listing.pricePerToken,
+      pricePerToken: listing.pricePerToken.toString(),
       currencyValuePerToken: await fetchCurrencyValue(
         this.contractWrapper.getProvider(),
         listing.currency,
         listing.pricePerToken,
       ),
       id: listing.listingId.toString(),
-      tokenId: listing.tokenId,
-      quantity: listing.quantity,
-      startTimeInSeconds: listing.startTimestamp,
+      tokenId: listing.tokenId.toString(),
+      quantity: listing.quantity.toString(),
+      startTimeInSeconds: listing.startTimestamp.toString(),
       asset: await fetchTokenMetadataForContract(
         listing.assetContract,
         this.contractWrapper.getProvider(),
         listing.tokenId,
         this.storage,
       ),
-      endTimeInSeconds: listing.endTimestamp,
+      endTimeInSeconds: listing.endTimestamp.toString(),
       listingCreatorAddress: listing.listingCreator,
       isReservedListing: listing.reserved,
     };

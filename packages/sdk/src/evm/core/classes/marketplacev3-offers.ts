@@ -11,6 +11,10 @@ import {
 } from "../../common/marketplacev3";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
+import {
+  OfferInputParams,
+  OfferInputParamsSchema,
+} from "../../schema/marketplacev3/offer";
 import { MarketplaceFilter } from "../../types";
 import { OfferV3, NewOffer } from "../../types/marketplacev3";
 import { TransactionResult, TransactionResultWithId } from "../types";
@@ -197,17 +201,21 @@ export class MarketplaceV3Offers {
    * const id = tx.id; // the id of the newly created offer
    * ```
    */
-  public async makeOffer(offer: NewOffer): Promise<TransactionResultWithId> {
-    validateNewOfferParam(offer);
+  public async makeOffer(
+    offer: OfferInputParams,
+  ): Promise<TransactionResultWithId> {
+    // validateNewOfferParam(offer);
+
+    const parsedOffer = OfferInputParamsSchema.parse(offer);
 
     const chainId = await this.contractWrapper.getChainID();
-    const currency = isNativeToken(offer.currencyContractAddress)
+    const currency = isNativeToken(parsedOffer.currencyContractAddress)
       ? NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID].wrapped.address
-      : offer.currencyContractAddress;
+      : parsedOffer.currencyContractAddress;
 
     const normalizedTotalPrice = await normalizePriceValue(
       this.contractWrapper.getProvider(),
-      offer.totalPrice,
+      parsedOffer.totalPrice,
       currency,
     );
 
@@ -219,18 +227,18 @@ export class MarketplaceV3Offers {
       overrides,
     );
 
-    let offerEndTime = Math.floor(offer.endTimestamp.getTime() / 1000);
+    // let offerEndTime = Math.floor(offer.endTimestamp.getTime() / 1000);
 
     const receipt = await this.contractWrapper.sendTransaction(
       "makeOffer",
       [
         {
-          assetContract: offer.assetContractAddress,
-          tokenId: offer.tokenId,
-          quantity: offer.quantity,
+          assetContract: parsedOffer.assetContractAddress,
+          tokenId: parsedOffer.tokenId,
+          quantity: parsedOffer.quantity,
           currency: currency,
           totalPrice: normalizedTotalPrice,
-          expirationTimestamp: BigNumber.from(offerEndTime),
+          expirationTimestamp: parsedOffer.endTimestamp,
         } as IOffers.OfferParamsStruct,
       ],
       {
@@ -373,7 +381,7 @@ export class MarketplaceV3Offers {
     offer: OfferV3,
   ): Promise<{ valid: boolean; error?: string }> {
     const now = BigNumber.from(Math.floor(Date.now() / 1000));
-    if (now.lt(offer.endTimeInSeconds)) {
+    if (now.gt(offer.endTimeInSeconds)) {
       return {
         valid: false,
         error: `Offer with ID ${offer.id} has expired`,

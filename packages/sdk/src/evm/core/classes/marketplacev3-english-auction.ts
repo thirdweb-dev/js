@@ -15,6 +15,10 @@ import {
   validateNewEnglishAuctionParam,
 } from "../../common/marketplacev3";
 import { fetchTokenMetadataForContract } from "../../common/nft";
+import {
+  EnglishAuctionInputParams,
+  EnglishAuctionInputParamsSchema,
+} from "../../schema/marketplacev3/english-auctions";
 import { MarketplaceFilter } from "../../types";
 import { CurrencyValue, Price } from "../../types/currency";
 import {
@@ -324,53 +328,55 @@ export class MarketplaceV3EnglishAuctions {
    * ```
    */
   public async createAuction(
-    auction: NewEnglishAuction,
+    auction: EnglishAuctionInputParams,
   ): Promise<TransactionResultWithId> {
-    validateNewEnglishAuctionParam(auction);
+    // validateNewEnglishAuctionParam(auction);
+
+    const parsedAuction = EnglishAuctionInputParamsSchema.parse(auction);
 
     await handleTokenApproval(
       this.contractWrapper,
       this.getAddress(),
-      auction.assetContractAddress,
-      auction.tokenId,
+      parsedAuction.assetContractAddress,
+      parsedAuction.tokenId,
       await this.contractWrapper.getSignerAddress(),
     );
 
     const normalizedBuyoutAmount = await normalizePriceValue(
       this.contractWrapper.getProvider(),
-      auction.buyoutBidAmount,
-      auction.currencyContractAddress,
+      parsedAuction.buyoutBidAmount,
+      parsedAuction.currencyContractAddress,
     );
 
     const normalizedMinBidAmount = await normalizePriceValue(
       this.contractWrapper.getProvider(),
-      auction.minimumBidAmount,
-      auction.currencyContractAddress,
+      parsedAuction.minimumBidAmount,
+      parsedAuction.currencyContractAddress,
     );
 
-    let auctionStartTime = Math.floor(auction.startTimestamp.getTime() / 1000);
+    // let auctionStartTime = Math.floor(auction.startTimestamp.getTime() / 1000);
     const block = await this.contractWrapper.getProvider().getBlock("latest");
     const blockTime = block.timestamp;
-    if (auctionStartTime < blockTime) {
-      auctionStartTime = blockTime;
+    if (parsedAuction.startTimestamp.lt(blockTime)) {
+      parsedAuction.startTimestamp = BigNumber.from(blockTime);
     }
 
-    let auctionEndTime = Math.floor(auction.endTimestamp.getTime() / 1000);
+    // let auctionEndTime = Math.floor(auction.endTimestamp.getTime() / 1000);
 
     const receipt = await this.contractWrapper.sendTransaction(
       "createAuction",
       [
         {
-          assetContract: auction.assetContractAddress,
-          tokenId: auction.tokenId,
-          quantity: auction.quantity,
-          currency: cleanCurrencyAddress(auction.currencyContractAddress),
+          assetContract: parsedAuction.assetContractAddress,
+          tokenId: parsedAuction.tokenId,
+          quantity: parsedAuction.quantity,
+          currency: cleanCurrencyAddress(parsedAuction.currencyContractAddress),
           minimumBidAmount: normalizedMinBidAmount,
           buyoutBidAmount: normalizedBuyoutAmount,
-          timeBufferInSeconds: auction.timeBufferInSeconds,
-          bidBufferBps: auction.bidBufferBps,
-          startTimestamp: BigNumber.from(auctionStartTime),
-          endTimestamp: BigNumber.from(auctionEndTime),
+          timeBufferInSeconds: parsedAuction.timeBufferInSeconds,
+          bidBufferBps: parsedAuction.bidBufferBps,
+          startTimestamp: parsedAuction.startTimestamp,
+          endTimestamp: parsedAuction.endTimestamp,
         } as IEnglishAuctions.AuctionParametersStruct,
       ],
       {
