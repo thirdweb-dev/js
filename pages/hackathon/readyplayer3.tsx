@@ -178,8 +178,8 @@ const scheduleItems = [
     href: "https://lu.ma/rp3gamecodealong",
   },
   {
-    day: 31,
-    month: "jan",
+    day: 6,
+    month: "feb",
     title: "How To Create Your Hackathon Submission on DevPost + Q&A",
     href: "https://lu.ma/rp3submissions",
   },
