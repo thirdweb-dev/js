@@ -57,7 +57,7 @@ export const validateInt = (value = "", solidityType: string) => {
     };
   } else {
     try {
-      const bigNumber = BigNumber.from(parseInt(value) || 0);
+      const bigNumber = BigNumber.from(value || 0);
       if (bigNumber.lt(min)) {
         return {
           type: "minValue",
