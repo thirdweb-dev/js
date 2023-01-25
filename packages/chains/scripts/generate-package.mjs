@@ -117,9 +117,7 @@ for (const chain of chains) {
     `import c${chain.chainId} from "../chains/${chain.chainId}.json";`,
   );
 
-  exports.push(
-    `export const ${exportName} = c${chain.chainId} satisfies Chain;`,
-  );
+  exports.push(`export const ${exportName} = c${chain.chainId} as Chain;`);
 
   exportNames.push(exportName);
 }

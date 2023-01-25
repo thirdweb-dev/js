@@ -13,7 +13,7 @@ export type Chain = {
   nativeCurrency: {
     name: string;
     symbol: string;
-    decimals: number;
+    decimals: 18;
   };
   infoURL?: string;
   shortName: string;
@@ -27,5 +27,6 @@ export type Chain = {
     url: string;
     standard: string;
   }>;
-  testnet?: boolean;
+  testnet: boolean;
+  slug: string;
 };
