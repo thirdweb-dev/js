@@ -7,6 +7,7 @@ import {
   EditionDropInitializer,
   EditionInitializer,
   getNativeTokenByChainId,
+  LOCAL_NODE_PKEY,
   MarketplaceInitializer,
   MultiwrapInitializer,
   NFTCollectionInitializer,
@@ -56,7 +57,6 @@ import {
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
-import { FormatTypes, FunctionFragment, Interface } from "ethers/lib/utils";
 import hardhat from "hardhat";
 
 // it's there, trust me bro
@@ -242,8 +242,9 @@ export const mochaHooks = {
     );
 
     storage = MockStorage();
-    sdk = new ThirdwebSDK(
-      signer,
+    sdk = ThirdwebSDK.fromPrivateKey(
+      LOCAL_NODE_PKEY, // matches the first signer in the default hardhat config
+      ChainId.Hardhat,
       {
         gasSettings: {
           maxPriceInGwei: 10000,
