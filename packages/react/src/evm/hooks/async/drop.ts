@@ -83,10 +83,23 @@ export function useUnclaimedNFTs(
  * @beta
  */
 export function useClaimedNFTs(
-  contract: RequiredParam<NFTContract>,
+  contract: RequiredParam<NFTDrop>,
   queryParams?: QueryAllParams,
 ) {
-  return useNFTs(contract, queryParams);
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.nft.drop.getAllClaimed(contractAddress, queryParams),
+    () => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      // TODO make this work for custom contracts (needs ABI change)
+      invariant(
+        contract.getAllClaimed,
+        "Contract instance does not support getAllClaimed",
+      );
+      return contract.getAllClaimed(queryParams);
+    },
+    { enabled: !!contract },
+  );
 }
 
 /**
