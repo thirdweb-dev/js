@@ -1,5 +1,5 @@
 export type Ecosystem = "solana" | "evm";
-export interface GenericSignerWallet {
+export interface GenericAuthWallet {
   type: Ecosystem;
   getAddress(): Promise<string>;
   getChainId?(): Promise<number>;

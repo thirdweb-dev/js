@@ -2,7 +2,7 @@
 import { CoinbasePayIntegration, FundWalletOptions } from "@thirdweb-dev/pay";
 import { ChainOrRpc, ThirdwebSDK, getRpcUrl } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import type { AbstractWallet } from "@thirdweb-dev/wallets/evm/wallets/base";
+import type { AbstractBrowserWallet } from "@thirdweb-dev/wallets/evm/wallets/base";
 import { CoinbaseWallet } from "@thirdweb-dev/wallets/evm/wallets/coinbase-wallet";
 import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
 import { MagicAuthWallet } from "@thirdweb-dev/wallets/evm/wallets/magic-auth";
@@ -63,8 +63,8 @@ interface TWBridge {
 const w = window;
 
 class ThirdwebBridge implements TWBridge {
-  private walletMap: Map<string, AbstractWallet> = new Map();
-  private activeWallet: AbstractWallet | undefined;
+  private walletMap: Map<string, AbstractBrowserWallet> = new Map();
+  private activeWallet: AbstractBrowserWallet | undefined;
   private initializedChain: ChainOrRpc | undefined;
   private activeSDK: ThirdwebSDK | undefined;
 

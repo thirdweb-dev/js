@@ -6,7 +6,7 @@ import {
   User,
   VerifyOptions,
 } from "../../core/schema";
-import { GenericSignerWallet } from "@thirdweb-dev/wallets";
+import { GenericAuthWallet } from "@thirdweb-dev/wallets";
 import { GetServerSidePropsContext, NextApiRequest } from "next";
 import { NextRequest } from "next/server";
 import { z } from "zod";
@@ -28,7 +28,7 @@ export type ThirdwebAuthUser<TData extends Json = Json> = User & {
 
 export type ThirdwebAuthConfig = {
   domain: string;
-  wallet: GenericSignerWallet;
+  wallet: GenericAuthWallet;
   authOptions?: Omit<Exclude<VerifyOptions, undefined>, "domain"> &
     Omit<Exclude<AuthenticateOptions, undefined>, "domain"> & {
       tokenDurationInSeconds?: number;

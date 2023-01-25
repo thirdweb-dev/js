@@ -16,18 +16,18 @@ import {
   Json,
 } from "./schema";
 import { isBrowser } from "./utils";
-import type { GenericSignerWallet } from "@thirdweb-dev/wallets";
+import type { GenericAuthWallet } from "@thirdweb-dev/wallets";
 
 export class ThirdwebAuth {
   private domain: string;
-  private wallet: GenericSignerWallet;
+  private wallet: GenericAuthWallet;
 
-  constructor(wallet: GenericSignerWallet, domain: string) {
+  constructor(wallet: GenericAuthWallet, domain: string) {
     this.wallet = wallet;
     this.domain = domain;
   }
 
-  public updateWallet(wallet: GenericSignerWallet) {
+  public updateWallet(wallet: GenericAuthWallet) {
     this.wallet = wallet;
   }
 

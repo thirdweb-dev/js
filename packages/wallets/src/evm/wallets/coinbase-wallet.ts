@@ -1,7 +1,7 @@
 import type { CoinbaseWalletConnector } from "../connectors/coinbase-wallet";
-import { AbstractWallet, WalletOptions } from "./base";
+import { AbstractBrowserWallet, WalletOptions } from "./base";
 
-export class CoinbaseWallet extends AbstractWallet {
+export class CoinbaseWallet extends AbstractBrowserWallet {
   #connector?: CoinbaseWalletConnector;
 
   static id = "coinbaseWallet" as const;

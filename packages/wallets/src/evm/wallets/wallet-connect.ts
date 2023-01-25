@@ -1,7 +1,7 @@
 import type { WalletConnectConnector } from "../connectors/wallet-connect";
-import { AbstractWallet, WalletOptions } from "./base";
+import { AbstractBrowserWallet, WalletOptions } from "./base";
 
-export class WalletConnect extends AbstractWallet {
+export class WalletConnect extends AbstractBrowserWallet {
   #connector?: WalletConnectConnector;
 
   static id = "walletConnect" as const;

@@ -1,4 +1,4 @@
-import { AbstractSigner } from "./abstract";
+import { AbstractWallet } from "./abstract";
 import {
   GetSecretValueCommand,
   SecretsManagerClient,
@@ -35,7 +35,7 @@ export type AwsSecretsManagerWalletOptions = {
  * const sdk = await ThirdwebSDK.fromWallet(wallet, "mainnet");
  * ```
  */
-export class AwsSecretsManagerWallet extends AbstractSigner {
+export class AwsSecretsManagerWallet extends AbstractWallet {
   private secretId: string;
   private secretKeyName: string;
   private client: SecretsManagerClient;

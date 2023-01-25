@@ -1,7 +1,7 @@
 import type { InjectedConnector } from "../connectors/injected";
-import { AbstractWallet, WalletOptions } from "./base";
+import { AbstractBrowserWallet, WalletOptions } from "./base";
 
-export class InjectedWallet extends AbstractWallet {
+export class InjectedWallet extends AbstractBrowserWallet {
   #connector?: InjectedConnector;
 
   static id = "injected" as const;

@@ -1,4 +1,4 @@
-import { AbstractSigner } from "./abstract";
+import { AbstractWallet } from "./abstract";
 import {
   TypedDataDomain,
   TypedDataField,
@@ -25,7 +25,7 @@ import { AwsKmsSigner, AwsKmsSignerCredentials } from "ethers-aws-kms-signer";
  * const sdk = await ThirdwebSDK.fromWallet(wallet, "mainnet");
  * ```
  */
-export class AwsKmsWallet extends AbstractSigner {
+export class AwsKmsWallet extends AbstractWallet {
   constructor(options: AwsKmsSignerCredentials) {
     super();
     this.signer = this.updateSigner(new AwsKmsSigner(options));

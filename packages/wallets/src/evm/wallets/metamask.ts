@@ -1,7 +1,7 @@
 import type { MetaMaskConnector } from "../connectors/metamask";
-import { AbstractWallet, WalletOptions } from "./base";
+import { AbstractBrowserWallet, WalletOptions } from "./base";
 
-export class MetaMask extends AbstractWallet {
+export class MetaMask extends AbstractBrowserWallet {
   #connector?: MetaMaskConnector;
 
   static id = "metamask" as const;

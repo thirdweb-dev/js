@@ -1,6 +1,6 @@
 import * as ed25519 from "@noble/ed25519";
 import { Signer, Keypair, PublicKey } from "@solana/web3.js";
-import type { Ecosystem, GenericSignerWallet } from "@thirdweb-dev/wallets";
+import type { Ecosystem, GenericAuthWallet } from "@thirdweb-dev/wallets";
 import bs58 from "bs58";
 import nacl from "tweetnacl";
 
@@ -9,7 +9,7 @@ export interface SolanaSigner {
   signMessage(message: Uint8Array): Promise<Uint8Array>;
 }
 
-export class SignerWallet implements GenericSignerWallet {
+export class SignerWallet implements GenericAuthWallet {
   type: Ecosystem = "solana";
   private signer: SolanaSigner;
 

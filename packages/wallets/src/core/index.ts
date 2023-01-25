@@ -1,1 +1,1 @@
-export * from "./interfaces/signer";
+export * from "./interfaces/auth";

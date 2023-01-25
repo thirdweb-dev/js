@@ -1,8 +1,8 @@
 import type { MagicAuthConnector, MagicAuthOptions } from "../connectors/magic";
-import { AbstractWallet, WalletOptions } from "./base";
+import { AbstractBrowserWallet, WalletOptions } from "./base";
 import type { Chain } from "@wagmi/core";
 
-export class MagicAuthWallet extends AbstractWallet<MagicAuthOptions> {
+export class MagicAuthWallet extends AbstractBrowserWallet<MagicAuthOptions> {
   #connector?: MagicAuthConnector;
 
   static id = "magicAuth" as const;

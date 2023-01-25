@@ -1,6 +1,6 @@
 import { thirdwebChains } from "../constants/chains";
 import { getCoordinatorStorage, getWalletStorage } from "../utils/storage";
-import { AbstractSigner } from "./abstract";
+import { AbstractWallet } from "./abstract";
 import type { Chain, Connector as WagmiConnector } from "@wagmi/core";
 
 export type WalletOptions<TOpts extends Record<string, any> = {}> = {
@@ -10,9 +10,9 @@ export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   appName: string;
 } & TOpts;
 
-export abstract class AbstractWallet<
+export abstract class AbstractBrowserWallet<
   TAdditionalOpts extends Record<string, any> = {},
-> extends AbstractSigner {
+> extends AbstractWallet {
   #wallletId;
   protected coordinatorStorage;
   protected walletStorage;

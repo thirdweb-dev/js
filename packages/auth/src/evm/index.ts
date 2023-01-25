@@ -1,5 +1,5 @@
 import { SUPPORTED_CHAIN_ID, supportedChains } from "./evm";
-import type { Ecosystem, GenericSignerWallet } from "@thirdweb-dev/wallets";
+import type { Ecosystem, GenericAuthWallet } from "@thirdweb-dev/wallets";
 import { ethers } from "ethers";
 
 const EIP1271_ABI = [
@@ -30,7 +30,7 @@ export const checkContractWalletSignature = async (
   }
 };
 
-export class SignerWallet implements GenericSignerWallet {
+export class SignerWallet implements GenericAuthWallet {
   type: Ecosystem = "evm";
   #signer: ethers.Signer;
 

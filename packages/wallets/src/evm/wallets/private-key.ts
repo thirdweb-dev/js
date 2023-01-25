@@ -1,7 +1,7 @@
-import { AbstractSigner } from "./abstract";
+import { AbstractWallet } from "./abstract";
 import { ethers } from "ethers";
 
-export class PrivateKeyWallet extends AbstractSigner {
+export class PrivateKeyWallet extends AbstractWallet {
   #privateKey: string;
 
   constructor(privateKey: string) {
