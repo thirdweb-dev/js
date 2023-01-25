@@ -94,7 +94,7 @@ export const NFTRevealForm: React.FC<NFTRevealFormProps> = ({ contract }) => {
                   key={batch.batchId.toString()}
                   value={batch.batchId.toString()}
                 >
-                  {batch.placeholderMetadata?.name}
+                  {batch.placeholderMetadata?.name || batch.batchId.toString()}
                 </option>
               ))}
             </Select>
