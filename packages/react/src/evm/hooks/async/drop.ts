@@ -10,7 +10,6 @@ import {
   DropContract,
   RevealLazyMintInput,
   getErcs,
-  NFTContract,
   RevealableContract,
 } from "../../types";
 import {
@@ -18,7 +17,6 @@ import {
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
-import { useNFTs } from "./nft";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   NFTMetadataInput,

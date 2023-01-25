@@ -1,5 +1,5 @@
 ---
-"@thirdweb-dev/react": minor
+"@thirdweb-dev/react": patch
 ---
 
-[ReactSDK] update useClaimedNFTs to only fetch claimed NFTs
+Updates useClaimedNFTs to only fetch claimed NFTs
