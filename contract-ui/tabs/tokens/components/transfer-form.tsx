@@ -13,6 +13,7 @@ import {
   useTransferToken,
 } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { constants } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -34,11 +35,7 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
 }) => {
   const trackEvent = useTrack();
   const transfer = useTransferToken(contract);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isDirty },
-  } = useForm({ defaultValues: { amount: "0", to: "" } });
+  const form = useForm({ defaultValues: { amount: "0", to: "" } });
   const modalContext = useModalContext();
 
   const { onSuccess, onError } = useTxNotifications(
@@ -56,23 +53,32 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
       <DrawerBody>
         <Stack gap={3} as="form">
           <Stack spacing={6} w="100%" direction={{ base: "column", md: "row" }}>
-            <FormControl isRequired isInvalid={!!errors.to}>
+            <FormControl isRequired isInvalid={!!form.formState.errors.to}>
               <FormLabel>To Address</FormLabel>
-              <Input placeholder={constants.AddressZero} {...register("to")} />
+              <SolidityInput
+                formContext={form}
+                solidityType="address"
+                placeholder={constants.AddressZero}
+                {...form.register("to")}
+              />
               <FormHelperText>Enter the address to transfer to.</FormHelperText>
-              <FormErrorMessage>{errors.to?.message}</FormErrorMessage>
+              <FormErrorMessage>
+                {form.formState.errors.to?.message}
+              </FormErrorMessage>
             </FormControl>
-            <FormControl isRequired isInvalid={!!errors.amount}>
+            <FormControl isRequired isInvalid={!!form.formState.errors.amount}>
               <FormLabel>Amount</FormLabel>
               <Input
                 type="text"
                 pattern={`^\\d+(\\.\\d{1,${decimals?.data || 18}})?$`}
-                {...register("amount")}
+                {...form.register("amount")}
               />
               <FormHelperText>
                 How many would you like to transfer?
               </FormHelperText>
-              <FormErrorMessage>{errors.amount?.message}</FormErrorMessage>
+              <FormErrorMessage>
+                {form.formState.errors.amount?.message}
+              </FormErrorMessage>
             </FormControl>
           </Stack>
         </Stack>
@@ -84,8 +90,8 @@ export const TokenTransferForm: React.FC<TokenTransferFormProps> = ({
           isLoading={transfer.isLoading}
           type="submit"
           colorScheme="primary"
-          isDisabled={!isDirty}
-          onClick={handleSubmit((d) => {
+          isDisabled={!form.formState.isDirty}
+          onClick={form.handleSubmit((d) => {
             trackEvent({
               category: "token",
               action: "transfer",

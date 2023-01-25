@@ -38,6 +38,7 @@ import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelect";
 import { FileInput } from "components/shared/FileInput";
 import { BuiltinContractMap, DisabledChainsMap } from "constants/mappings";
+import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { constants, utils } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
@@ -121,16 +122,6 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
 
   const form = useDeployForm(contract.schema.deploy);
 
-  const {
-    handleSubmit,
-    getFieldState,
-    formState,
-    watch,
-    register,
-    setValue,
-    resetField,
-  } = form;
-
   const address = useAddress();
 
   const hasPrimarySaleMechanic = useMemo(
@@ -169,33 +160,34 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
   useEffect(() => {
     if (
       hasPrimarySaleMechanic &&
-      !getFieldState("primary_sale_recipient").isTouched &&
+      !form.getFieldState("primary_sale_recipient").isTouched &&
       address
     ) {
-      resetField("primary_sale_recipient", { defaultValue: address });
+      form.resetField("primary_sale_recipient", { defaultValue: address });
     }
 
     if (
       hasPlatformFeeMechanic &&
-      !getFieldState("platform_fee_recipient").isTouched
+      !form.getFieldState("platform_fee_recipient").isTouched
     ) {
-      resetField("platform_fee_recipient", { defaultValue: address });
+      form.resetField("platform_fee_recipient", { defaultValue: address });
     }
 
     if (
       hasRoyaltyMechanic &&
-      !getFieldState("fee_recipient").isTouched &&
+      !form.getFieldState("fee_recipient").isTouched &&
       address
     ) {
-      resetField("fee_recipient", { defaultValue: address });
+      form.resetField("fee_recipient", { defaultValue: address });
     }
   }, [
     address,
-    getFieldState,
+    form.getFieldState,
     hasPlatformFeeMechanic,
     hasPrimarySaleMechanic,
     hasRoyaltyMechanic,
-    resetField,
+    form.resetField,
+    form,
   ]);
 
   function isRequired<
@@ -232,7 +224,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
         gap={4}
         direction="column"
         as="form"
-        onSubmit={handleSubmit((d) => {
+        onSubmit={form.handleSubmit((d) => {
           if (!selectedChain) {
             return;
           }
@@ -359,14 +351,14 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
               isDisabled={!publishMetadata.isSuccess}
               display="flex"
               flexDirection="column"
-              isInvalid={!!getFieldState("image", formState).error}
+              isInvalid={!!form.getFieldState("image", form.formState).error}
             >
               <FormLabel>Image</FormLabel>
               <FileInput
                 accept={{ "image/*": [] }}
-                value={useImageFileOrUrl(watch("image"))}
+                value={useImageFileOrUrl(form.watch("image"))}
                 setValue={(file) =>
-                  setValue("image", file, { shouldTouch: true })
+                  form.setValue("image", file, { shouldTouch: true })
                 }
                 border="1px solid"
                 borderColor="gray.200"
@@ -374,7 +366,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                 transition="all 200ms ease"
               />
               <FormErrorMessage>
-                {getFieldState("image", formState).error?.message}
+                {form.getFieldState("image", form.formState).error?.message}
               </FormErrorMessage>
             </FormControl>
           </Flex>
@@ -384,24 +376,29 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
               <FormControl
                 isDisabled={!publishMetadata.isSuccess}
                 isRequired={isRequired("name")}
-                isInvalid={!!getFieldState("name", formState).error}
+                isInvalid={!!form.getFieldState("name", form.formState).error}
               >
                 <FormLabel>Name</FormLabel>
-                <Input autoFocus variant="filled" {...register("name")} />
+                <Input autoFocus variant="filled" {...form.register("name")} />
                 <FormErrorMessage>
-                  {getFieldState("name", formState).error?.message}
+                  {form.getFieldState("name", form.formState).error?.message}
                 </FormErrorMessage>
               </FormControl>
               {hasSymbol && (
                 <FormControl
                   maxW={{ base: "100%", md: "200px" }}
                   isRequired={isRequired("symbol")}
-                  isInvalid={!!getFieldState("symbol", formState).error}
+                  isInvalid={
+                    !!form.getFieldState("symbol", form.formState).error
+                  }
                 >
                   <FormLabel>Symbol</FormLabel>
-                  <Input variant="filled" {...register("symbol")} />
+                  <Input variant="filled" {...form.register("symbol")} />
                   <FormErrorMessage>
-                    {getFieldState("symbol", formState).error?.message}
+                    {
+                      form.getFieldState("symbol", form.formState).error
+                        ?.message
+                    }
                   </FormErrorMessage>
                 </FormControl>
               )}
@@ -410,12 +407,17 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
             <FormControl
               isRequired={isRequired("description")}
               isDisabled={!publishMetadata.isSuccess}
-              isInvalid={!!getFieldState("description", formState).error}
+              isInvalid={
+                !!form.getFieldState("description", form.formState).error
+              }
             >
               <FormLabel>Description</FormLabel>
-              <Textarea variant="filled" {...register("description")} />
+              <Textarea variant="filled" {...form.register("description")} />
               <FormErrorMessage>
-                {getFieldState("description", formState).error?.message}
+                {
+                  form.getFieldState("description", form.formState).error
+                    ?.message
+                }
               </FormErrorMessage>
             </FormControl>
           </Flex>
@@ -444,19 +446,24 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                     <FormControl
                       isRequired={isRequired("primary_sale_recipient")}
                       isInvalid={
-                        !!getFieldState("primary_sale_recipient", formState)
-                          .error
+                        !!form.getFieldState(
+                          "primary_sale_recipient",
+                          form.formState,
+                        ).error
                       }
                     >
                       <FormLabel>Recipient Address</FormLabel>
-                      <Input
+                      <SolidityInput
+                        solidityType="address"
                         variant="filled"
-                        {...register("primary_sale_recipient")}
+                        {...form.register("primary_sale_recipient")}
                       />
                       <FormErrorMessage>
                         {
-                          getFieldState("primary_sale_recipient", formState)
-                            .error?.message
+                          form.getFieldState(
+                            "primary_sale_recipient",
+                            form.formState,
+                          ).error?.message
                         }
                       </FormErrorMessage>
                     </FormControl>
@@ -475,40 +482,49 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                     <FormControl
                       isRequired={isRequired("fee_recipient")}
                       isInvalid={
-                        !!getFieldState("fee_recipient", formState).error
+                        !!form.getFieldState("fee_recipient", form.formState)
+                          .error
                       }
                     >
                       <FormLabel>Recipient Address</FormLabel>
-                      <Input variant="filled" {...register("fee_recipient")} />
+                      <SolidityInput
+                        solidityType="address"
+                        variant="filled"
+                        {...form.register("fee_recipient")}
+                      />
                       <FormErrorMessage>
                         {
-                          getFieldState("fee_recipient", formState).error
-                            ?.message
+                          form.getFieldState("fee_recipient", form.formState)
+                            .error?.message
                         }
                       </FormErrorMessage>
                     </FormControl>
                     <FormControl
-                      maxW={{ base: "100%", md: "200px" }}
+                      maxW={{ base: "100%", md: "150px" }}
                       isRequired={isRequired("seller_fee_basis_points")}
                       isInvalid={
-                        !!getFieldState("seller_fee_basis_points", formState)
-                          .error
+                        !!form.getFieldState(
+                          "seller_fee_basis_points",
+                          form.formState,
+                        ).error
                       }
                     >
                       <FormLabel>Percentage</FormLabel>
                       <BasisPointsInput
                         variant="filled"
-                        value={watch("seller_fee_basis_points")}
+                        value={form.watch("seller_fee_basis_points")}
                         onChange={(value) =>
-                          setValue("seller_fee_basis_points", value, {
+                          form.setValue("seller_fee_basis_points", value, {
                             shouldTouch: true,
                           })
                         }
                       />
                       <FormErrorMessage>
                         {
-                          getFieldState("seller_fee_basis_points", formState)
-                            .error?.message
+                          form.getFieldState(
+                            "seller_fee_basis_points",
+                            form.formState,
+                          ).error?.message
                         }
                       </FormErrorMessage>
                     </FormControl>
@@ -539,51 +555,56 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                           <FormControl
                             isRequired={isRequired("platform_fee_recipient")}
                             isInvalid={
-                              !!getFieldState(
+                              !!form.getFieldState(
                                 "platform_fee_recipient",
-                                formState,
+                                form.formState,
                               ).error
                             }
                           >
                             <FormLabel>Recipient Address</FormLabel>
-                            <Input
+                            <SolidityInput
+                              solidityType="address"
                               variant="filled"
-                              {...register("platform_fee_recipient")}
+                              {...form.register("platform_fee_recipient")}
                             />
                             <FormErrorMessage>
                               {
-                                getFieldState(
+                                form.getFieldState(
                                   "platform_fee_recipient",
-                                  formState,
+                                  form.formState,
                                 ).error?.message
                               }
                             </FormErrorMessage>
                           </FormControl>
                           <FormControl
-                            maxW={{ base: "100%", md: "200px" }}
+                            maxW={{ base: "100%", md: "150px" }}
                             isRequired={isRequired("platform_fee_basis_points")}
                             isInvalid={
-                              !!getFieldState(
+                              !!form.getFieldState(
                                 "platform_fee_basis_points",
-                                formState,
+                                form.formState,
                               ).error
                             }
                           >
                             <FormLabel>Percentage</FormLabel>
                             <BasisPointsInput
                               variant="filled"
-                              value={watch("platform_fee_basis_points")}
+                              value={form.watch("platform_fee_basis_points")}
                               onChange={(value) =>
-                                setValue("platform_fee_basis_points", value, {
-                                  shouldTouch: true,
-                                })
+                                form.setValue(
+                                  "platform_fee_basis_points",
+                                  value,
+                                  {
+                                    shouldTouch: true,
+                                  },
+                                )
                               }
                             />
                             <FormErrorMessage>
                               {
-                                getFieldState(
+                                form.getFieldState(
                                   "platform_fee_basis_points",
-                                  formState,
+                                  form.formState,
                                 ).error?.message
                               }
                             </FormErrorMessage>
@@ -616,42 +637,47 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                 <FormControl
                   isRequired={isRequired("voting_token_address")}
                   isInvalid={
-                    !!getFieldState("voting_token_address", formState).error ||
-                    (watch("voting_token_address")
-                      ? !utils.isAddress(watch("voting_token_address"))
+                    !!form.getFieldState("voting_token_address", form.formState)
+                      .error ||
+                    (form.watch("voting_token_address")
+                      ? !utils.isAddress(form.watch("voting_token_address"))
                       : false)
                   }
                 >
                   <FormLabel>Governance Token Address</FormLabel>
-                  <Input
+                  <SolidityInput
+                    solidityType="address"
                     placeholder={constants.AddressZero}
                     variant="filled"
-                    {...register("voting_token_address")}
+                    {...form.register("voting_token_address")}
                   />
                   <FormHelperText>
                     The address of the token that will be used to vote on this
                     contract.
                   </FormHelperText>
                   <FormErrorMessage>
-                    {getFieldState("voting_token_address", formState).error
-                      ?.message ||
-                      (watch("voting_token_address") &&
-                        !utils.isAddress(watch("voting_token_address")) &&
+                    {form.getFieldState("voting_token_address", form.formState)
+                      .error?.message ||
+                      (form.watch("voting_token_address") &&
+                        !utils.isAddress(form.watch("voting_token_address")) &&
                         "Please enter a valid address.")}
                   </FormErrorMessage>
                 </FormControl>
                 <FormControl
                   isRequired={isRequired("proposal_token_threshold")}
                   isInvalid={
-                    !!getFieldState("proposal_token_threshold", formState).error
+                    !!form.getFieldState(
+                      "proposal_token_threshold",
+                      form.formState,
+                    ).error
                   }
                 >
                   <FormLabel>Proposal Token Threshold</FormLabel>
                   <NumberInput
                     variant="filled"
-                    value={watch("proposal_token_threshold")}
+                    value={form.watch("proposal_token_threshold")}
                     onChange={(stringValue) =>
-                      setValue("proposal_token_threshold", stringValue, {
+                      form.setValue("proposal_token_threshold", stringValue, {
                         shouldTouch: true,
                       })
                     }
@@ -671,23 +697,28 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                   </FormHelperText>
                   <FormErrorMessage>
                     {
-                      getFieldState("proposal_token_threshold", formState).error
-                        ?.message
+                      form.getFieldState(
+                        "proposal_token_threshold",
+                        form.formState,
+                      ).error?.message
                     }
                   </FormErrorMessage>
                 </FormControl>
                 <FormControl
                   isRequired={isRequired("voting_delay_in_blocks")}
                   isInvalid={
-                    !!getFieldState("voting_delay_in_blocks", formState).error
+                    !!form.getFieldState(
+                      "voting_delay_in_blocks",
+                      form.formState,
+                    ).error
                   }
                 >
                   <FormLabel>Voting Delay</FormLabel>
                   <NumberInput
                     variant="filled"
-                    value={watch("voting_delay_in_blocks")}
+                    value={form.watch("voting_delay_in_blocks")}
                     onChange={(_stringValue, numberValue) =>
-                      setValue("voting_delay_in_blocks", numberValue, {
+                      form.setValue("voting_delay_in_blocks", numberValue, {
                         shouldTouch: true,
                       })
                     }
@@ -708,23 +739,28 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                   </FormHelperText>
                   <FormErrorMessage>
                     {
-                      getFieldState("voting_delay_in_blocks", formState).error
-                        ?.message
+                      form.getFieldState(
+                        "voting_delay_in_blocks",
+                        form.formState,
+                      ).error?.message
                     }
                   </FormErrorMessage>
                 </FormControl>
                 <FormControl
                   isRequired={isRequired("voting_period_in_blocks")}
                   isInvalid={
-                    !!getFieldState("voting_period_in_blocks", formState).error
+                    !!form.getFieldState(
+                      "voting_period_in_blocks",
+                      form.formState,
+                    ).error
                   }
                 >
                   <FormLabel>Voting Period</FormLabel>
                   <NumberInput
                     variant="filled"
-                    value={watch("voting_period_in_blocks")}
+                    value={form.watch("voting_period_in_blocks")}
                     onChange={(_stringValue, numberValue) =>
-                      setValue("voting_period_in_blocks", numberValue, {
+                      form.setValue("voting_period_in_blocks", numberValue, {
                         shouldTouch: true,
                       })
                     }
@@ -745,23 +781,28 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                   </FormHelperText>
                   <FormErrorMessage>
                     {
-                      getFieldState("voting_period_in_blocks", formState).error
-                        ?.message
+                      form.getFieldState(
+                        "voting_period_in_blocks",
+                        form.formState,
+                      ).error?.message
                     }
                   </FormErrorMessage>
                 </FormControl>
                 <FormControl
                   isRequired={isRequired("voting_quorum_fraction")}
                   isInvalid={
-                    !!getFieldState("voting_quorum_fraction", formState).error
+                    !!form.getFieldState(
+                      "voting_quorum_fraction",
+                      form.formState,
+                    ).error
                   }
                 >
                   <FormLabel>Voting Quorum</FormLabel>
                   <NumberInput
                     variant="filled"
-                    value={watch("voting_quorum_fraction")}
+                    value={form.watch("voting_quorum_fraction")}
                     onChange={(_stringValue, numberValue) =>
-                      setValue("voting_quorum_fraction", numberValue, {
+                      form.setValue("voting_quorum_fraction", numberValue, {
                         shouldTouch: true,
                       })
                     }
@@ -785,8 +826,10 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                   </FormHelperText>
                   <FormErrorMessage>
                     {
-                      getFieldState("voting_quorum_fraction", formState).error
-                        ?.message
+                      form.getFieldState(
+                        "voting_quorum_fraction",
+                        form.formState,
+                      ).error?.message
                     }
                   </FormErrorMessage>
                 </FormControl>

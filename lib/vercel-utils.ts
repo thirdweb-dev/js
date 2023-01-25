@@ -11,6 +11,9 @@ export function getVercelEnv() {
 }
 
 export function getAbsoluteUrl(): string {
+  if (process.env.CI) {
+    return "https://thirdweb.com";
+  }
   const env = getVercelEnv();
 
   if (env === "production") {

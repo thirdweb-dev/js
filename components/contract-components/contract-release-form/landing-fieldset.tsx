@@ -17,6 +17,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { ExtraPublishMetadata } from "@thirdweb-dev/sdk";
+import { compare, validate } from "compare-versions";
 import { FileInput } from "components/shared/FileInput";
 import { SelectOption } from "core-ui/batch-upload/lazy-mint-form/select-option";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
@@ -42,8 +43,6 @@ interface LandingFieldsetProps {
   >;
   latestVersion: string | undefined;
   placeholderVersion: string;
-  isValidVersion: boolean;
-  isValidSemver: boolean;
 }
 
 export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
@@ -51,11 +50,36 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
   setContractSelection,
   latestVersion,
   placeholderVersion,
-  isValidSemver,
-  isValidVersion,
 }) => {
   const form = useFormContext<ExtraPublishMetadata>();
   const logoUrl = useImageFileOrUrl(form.watch("logo"));
+
+  const handleVersionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+
+    form.setValue("version", value);
+
+    const isValidSemver = validate(value);
+
+    const isValidVersion =
+      latestVersion && isValidSemver
+        ? compare(latestVersion || "0.0.0", value || "0.0.0", "<")
+        : isValidSemver;
+
+    if (!isValidSemver) {
+      form.setError("version", {
+        type: "pattern",
+        message: "Version must be valid semver.",
+      });
+    } else if (!isValidVersion) {
+      form.setError("version", {
+        type: "manual",
+        message: "Version must be greater than latest version.",
+      });
+    } else {
+      form.clearErrors("version");
+    }
+  };
 
   return (
     <Flex gap={16} direction="column" as="fieldset" mt={{ base: 4, md: 12 }}>
@@ -198,16 +222,8 @@ export const LandingFieldset: React.FC<LandingFieldsetProps> = ({
             <Input
               {...form.register("version", { required: true })}
               placeholder={placeholderVersion}
+              onChange={handleVersionChange}
             />
-            {form.watch("version") && (
-              <Text color="red.300" mt={1}>
-                {!isValidSemver
-                  ? "Not a valid semver version."
-                  : !isValidVersion
-                  ? "Version must be greater than previous version."
-                  : ""}
-              </Text>
-            )}
             <FormErrorMessage>
               {form.formState.errors?.version?.message}
             </FormErrorMessage>

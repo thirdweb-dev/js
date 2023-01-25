@@ -1,8 +1,9 @@
 import { SettingDetectedState } from "./detected-state";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
-import { Flex, FormControl, Input } from "@chakra-ui/react";
+import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  useAddress,
   usePrimarySaleRecipient,
   useUpdatePrimarySaleRecipient,
 } from "@thirdweb-dev/react";
@@ -12,6 +13,7 @@ import {
 } from "@thirdweb-dev/sdk/evm";
 import { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect } from "react";
@@ -34,18 +36,17 @@ export const SettingsPrimarySale = <
   contract: TContract;
   detectedState: ExtensionDetectedState;
 }) => {
+  const address = useAddress();
   const trackEvent = useTrack();
   const query = usePrimarySaleRecipient(contract);
   const mutation = useUpdatePrimarySaleRecipient(contract);
-  const { handleSubmit, getFieldState, formState, register, reset } = useForm<
-    z.input<typeof CommonPrimarySaleSchema>
-  >({
+  const form = useForm<z.input<typeof CommonPrimarySaleSchema>>({
     resolver: zodResolver(CommonPrimarySaleSchema),
   });
 
   useEffect(() => {
-    if (query.data && !formState.isDirty) {
-      reset({ primary_sale_recipient: query.data });
+    if (query.data && !form.formState.isDirty) {
+      form.reset({ primary_sale_recipient: query.data });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query.data]);
@@ -60,7 +61,7 @@ export const SettingsPrimarySale = <
       <SettingDetectedState type="primarySale" detectedState={detectedState} />
       <Flex
         as="form"
-        onSubmit={handleSubmit((d) => {
+        onSubmit={form.handleSubmit((d) => {
           trackEvent({
             category: "settings",
             action: "set-primary-sale",
@@ -73,7 +74,7 @@ export const SettingsPrimarySale = <
                 action: "set-primary-sale",
                 label: "success",
               });
-              reset({ primary_sale_recipient: variables });
+              form.reset({ primary_sale_recipient: variables });
               onSuccess();
             },
             onError: (error) => {
@@ -97,17 +98,24 @@ export const SettingsPrimarySale = <
           </Text>
           <Flex gap={4} direction={{ base: "column", md: "row" }}>
             <FormControl
-              isDisabled={mutation.isLoading}
+              isDisabled={mutation.isLoading || !address}
               isInvalid={
-                !!getFieldState("primary_sale_recipient", formState).error
+                !!form.getFieldState("primary_sale_recipient", form.formState)
+                  .error
               }
             >
               <FormLabel>Recipient Address</FormLabel>
-              <Input variant="filled" {...register("primary_sale_recipient")} />
+              <SolidityInput
+                isDisabled={mutation.isLoading || !address}
+                solidityType="address"
+                formContext={form}
+                variant="filled"
+                {...form.register("primary_sale_recipient")}
+              />
               <FormErrorMessage>
                 {
-                  getFieldState("primary_sale_recipient", formState).error
-                    ?.message
+                  form.getFieldState("primary_sale_recipient", form.formState)
+                    .error?.message
                 }
               </FormErrorMessage>
             </FormControl>
@@ -117,7 +125,7 @@ export const SettingsPrimarySale = <
           <TransactionButton
             colorScheme="primary"
             transactionCount={1}
-            isDisabled={query.isLoading || !formState.isDirty}
+            isDisabled={query.isLoading || !form.formState.isDirty}
             type="submit"
             isLoading={mutation.isLoading}
             loadingText="Saving..."

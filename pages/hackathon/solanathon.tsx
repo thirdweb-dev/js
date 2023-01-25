@@ -1,12 +1,4 @@
-import {
-  Box,
-  DarkMode,
-  Divider,
-  Flex,
-  Icon,
-  List,
-  ListItem,
-} from "@chakra-ui/react";
+import { Box, DarkMode, Flex, Icon, List, ListItem } from "@chakra-ui/react";
 import { ImMagicWand } from "@react-icons/all-files/im/ImMagicWand";
 import { HomepageFooter } from "components/footer/Footer";
 import { AvatarShowcase } from "components/hackathon/common/AvatarShowcase";

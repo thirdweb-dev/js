@@ -2,6 +2,7 @@ import { FormControl, Input, Stack } from "@chakra-ui/react";
 import { NFTContract, useTransferNFT } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { detectFeatures } from "components/contract-components/utils";
+import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { constants } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
@@ -15,12 +16,7 @@ interface TransferTabProps {
 
 const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
   const trackEvent = useTrack();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isDirty },
-    reset,
-  } = useForm<{ to: string; amount: string }>({
+  const form = useForm<{ to: string; amount: string }>({
     defaultValues: { to: "", amount: "1" },
   });
 
@@ -36,7 +32,7 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
   return (
     <Stack pt={3}>
       <form
-        onSubmit={handleSubmit((data) => {
+        onSubmit={form.handleSubmit((data) => {
           trackEvent({
             category: "nft",
             action: "transfer",
@@ -56,7 +52,7 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
                   label: "success",
                 });
                 onSuccess();
-                reset();
+                form.reset();
               },
               onError: (error) => {
                 trackEvent({
@@ -73,20 +69,32 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
       >
         <Stack gap={3}>
           <Stack spacing={6} w="100%" direction={{ base: "column", md: "row" }}>
-            <FormControl isRequired isInvalid={!!errors.to}>
+            <FormControl isRequired isInvalid={!!form.formState.errors.to}>
               <FormLabel>To Address</FormLabel>
-              <Input placeholder={constants.AddressZero} {...register("to")} />
+              <SolidityInput
+                solidityType="address"
+                formContext={form}
+                placeholder={constants.AddressZero}
+                {...form.register("to")}
+              />
               <FormHelperText>Enter the address to transfer to.</FormHelperText>
-              <FormErrorMessage>{errors.to?.message}</FormErrorMessage>
+              <FormErrorMessage>
+                {form.formState.errors.to?.message}
+              </FormErrorMessage>
             </FormControl>
             {isErc1155 && (
-              <FormControl isRequired={isErc1155} isInvalid={!!errors.to}>
+              <FormControl
+                isRequired={isErc1155}
+                isInvalid={!!form.formState.errors.to}
+              >
                 <FormLabel>Amount</FormLabel>
-                <Input placeholder={"1"} {...register("amount")} />
+                <Input placeholder={"1"} {...form.register("amount")} />
                 <FormHelperText>
                   How many would you like to transfer?
                 </FormHelperText>
-                <FormErrorMessage>{errors.to?.message}</FormErrorMessage>
+                <FormErrorMessage>
+                  {form.formState.errors.to?.message}
+                </FormErrorMessage>
               </FormControl>
             )}
           </Stack>
@@ -96,7 +104,7 @@ const TransferTab: React.FC<TransferTabProps> = ({ contract, tokenId }) => {
             type="submit"
             colorScheme="primary"
             alignSelf="flex-end"
-            isDisabled={!isDirty}
+            isDisabled={!form.formState.isDirty}
           >
             Transfer
           </TransactionButton>

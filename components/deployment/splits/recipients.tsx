@@ -8,12 +8,12 @@ import {
   Flex,
   FormControl,
   IconButton,
-  Input,
 } from "@chakra-ui/react";
 import { IoMdAdd } from "@react-icons/all-files/io/IoMdAdd";
 import { IoMdRemove } from "@react-icons/all-files/io/IoMdRemove";
 import type { SplitInitializer } from "@thirdweb-dev/sdk/evm";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
+import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { constants } from "ethers";
 import { useEffect } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
@@ -21,11 +21,11 @@ import { Button, FormErrorMessage, Heading, Text } from "tw-components";
 import { z } from "zod";
 
 export const RecipientForm: React.FC = () => {
-  const { register, control, getFieldState, formState, watch, setValue } =
+  const form =
     useFormContext<z.infer<(typeof SplitInitializer)["schema"]["deploy"]>>();
   const { fields, append, remove } = useFieldArray({
     name: "recipients",
-    control,
+    control: form.control,
   });
   useEffect(() => {
     if (fields.length === 0) {
@@ -36,7 +36,7 @@ export const RecipientForm: React.FC = () => {
   }, []);
 
   const totalShares =
-    watch("recipients")?.reduce((a, b) => a + b.sharesBps, 0) || 0;
+    form.watch("recipients")?.reduce((a, b) => a + b.sharesBps, 0) || 0;
 
   return (
     <>
@@ -59,33 +59,42 @@ export const RecipientForm: React.FC = () => {
               >
                 <FormControl
                   isInvalid={
-                    !!getFieldState(`recipients.${index}.address`, formState)
-                      .error
+                    !!form.getFieldState(
+                      `recipients.${index}.address`,
+                      form.formState,
+                    ).error
                   }
                 >
-                  <Input
+                  <SolidityInput
+                    solidityType="address"
+                    formContext={form}
                     variant="filled"
                     placeholder={constants.AddressZero}
-                    {...register(`recipients.${index}.address`)}
+                    {...form.register(`recipients.${index}.address`)}
                   />
                   <FormErrorMessage>
                     {
-                      getFieldState(`recipients.${index}.address`, formState)
-                        .error?.message
+                      form.getFieldState(
+                        `recipients.${index}.address`,
+                        form.formState,
+                      ).error?.message
                     }
                   </FormErrorMessage>
                 </FormControl>
                 <FormControl
+                  w="35%"
                   isInvalid={
-                    !!getFieldState(`recipients.${index}.sharesBps`, formState)
-                      .error
+                    !!form.getFieldState(
+                      `recipients.${index}.sharesBps`,
+                      form.formState,
+                    ).error
                   }
                 >
                   <BasisPointsInput
                     variant="filled"
-                    value={watch(`recipients.${index}.sharesBps`)}
+                    value={form.watch(`recipients.${index}.sharesBps`)}
                     onChange={(value) =>
-                      setValue(`recipients.${index}.sharesBps`, value, {
+                      form.setValue(`recipients.${index}.sharesBps`, value, {
                         shouldTouch: true,
                         shouldValidate: true,
                         shouldDirty: true,
@@ -94,14 +103,16 @@ export const RecipientForm: React.FC = () => {
                   />
                   <FormErrorMessage>
                     {
-                      getFieldState(`recipients.${index}.sharesBps`, formState)
-                        .error?.message
+                      form.getFieldState(
+                        `recipients.${index}.sharesBps`,
+                        form.formState,
+                      ).error?.message
                     }
                   </FormErrorMessage>
                 </FormControl>
                 <IconButton
                   borderRadius="md"
-                  isDisabled={index === 0 || formState.isSubmitting}
+                  isDisabled={index === 0 || form.formState.isSubmitting}
                   colorScheme="red"
                   icon={<IoMdRemove />}
                   aria-label="remove row"

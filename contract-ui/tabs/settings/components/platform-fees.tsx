@@ -1,8 +1,12 @@
 import { SettingDetectedState } from "./detected-state";
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
-import { Flex, FormControl, Input } from "@chakra-ui/react";
+import { Flex, FormControl } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePlatformFees, useUpdatePlatformFees } from "@thirdweb-dev/react";
+import {
+  useAddress,
+  usePlatformFees,
+  useUpdatePlatformFees,
+} from "@thirdweb-dev/react";
 import {
   CommonPlatformFeeSchema,
   ValidContractInstance,
@@ -10,6 +14,7 @@ import {
 import { ExtensionDetectedState } from "components/buttons/ExtensionDetectButton";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
+import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useEffect } from "react";
@@ -34,24 +39,17 @@ export const SettingsPlatformFees = <
 }) => {
   const trackEvent = useTrack();
   const query = usePlatformFees(contract);
+  const address = useAddress();
   const mutation = useUpdatePlatformFees(contract);
-  const {
-    handleSubmit,
-    getFieldState,
-    formState,
-    register,
-    reset,
-    watch,
-    setValue,
-  } = useForm<z.input<typeof CommonPlatformFeeSchema>>({
+  const form = useForm<z.input<typeof CommonPlatformFeeSchema>>({
     resolver: zodResolver(CommonPlatformFeeSchema),
   });
   useEffect(() => {
-    if (query.data && !formState.isDirty) {
-      reset(query.data);
+    if (query.data && !form.formState.isDirty) {
+      form.reset(query.data);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query.data, formState.isDirty]);
+  }, [query.data, form.formState.isDirty]);
 
   const { onSuccess, onError } = useTxNotifications(
     "Platform fee settings updated",
@@ -63,7 +61,7 @@ export const SettingsPlatformFees = <
       <SettingDetectedState type="platformFee" detectedState={detectedState} />
       <Flex
         as="form"
-        onSubmit={handleSubmit((d) => {
+        onSubmit={form.handleSubmit((d) => {
           trackEvent({
             category: "settings",
             action: "set-platform-fees",
@@ -76,7 +74,7 @@ export const SettingsPlatformFees = <
                 action: "set-platform-fees",
                 label: "success",
               });
-              reset(variables);
+              form.reset(variables);
               onSuccess();
             },
             onError: (error) => {
@@ -101,30 +99,42 @@ export const SettingsPlatformFees = <
           <Flex gap={4} direction={{ base: "column", md: "row" }}>
             <FormControl
               isInvalid={
-                !!getFieldState("platform_fee_recipient", formState).error
+                !!form.getFieldState("platform_fee_recipient", form.formState)
+                  .error
               }
+              isDisabled={!address}
             >
               <FormLabel>Recipient Address</FormLabel>
-              <Input variant="filled" {...register("platform_fee_recipient")} />
+              <SolidityInput
+                solidityType="address"
+                formContext={form}
+                variant="filled"
+                {...form.register("platform_fee_recipient")}
+                isDisabled={!address}
+              />
               <FormErrorMessage>
                 {
-                  getFieldState("platform_fee_recipient", formState).error
-                    ?.message
+                  form.getFieldState("platform_fee_recipient", form.formState)
+                    .error?.message
                 }
               </FormErrorMessage>
             </FormControl>
             <FormControl
+              isDisabled={!address}
               maxW={{ base: "100%", md: "200px" }}
               isInvalid={
-                !!getFieldState("platform_fee_basis_points", formState).error
+                !!form.getFieldState(
+                  "platform_fee_basis_points",
+                  form.formState,
+                ).error
               }
             >
               <FormLabel>Percentage</FormLabel>
               <BasisPointsInput
                 variant="filled"
-                value={watch("platform_fee_basis_points")}
+                value={form.watch("platform_fee_basis_points")}
                 onChange={(value) =>
-                  setValue("platform_fee_basis_points", value, {
+                  form.setValue("platform_fee_basis_points", value, {
                     shouldDirty: true,
                     shouldTouch: true,
                   })
@@ -132,8 +142,10 @@ export const SettingsPlatformFees = <
               />
               <FormErrorMessage>
                 {
-                  getFieldState("platform_fee_basis_points", formState).error
-                    ?.message
+                  form.getFieldState(
+                    "platform_fee_basis_points",
+                    form.formState,
+                  ).error?.message
                 }
               </FormErrorMessage>
             </FormControl>
@@ -143,7 +155,7 @@ export const SettingsPlatformFees = <
           <TransactionButton
             colorScheme="primary"
             transactionCount={1}
-            isDisabled={query.isLoading || !formState.isDirty}
+            isDisabled={query.isLoading || !form.formState.isDirty}
             type="submit"
             isLoading={mutation.isLoading}
             loadingText="Saving..."

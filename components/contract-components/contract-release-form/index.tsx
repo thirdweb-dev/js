@@ -20,7 +20,6 @@ import {
   ExtraPublishMetadata,
   SUPPORTED_CHAIN_IDS,
 } from "@thirdweb-dev/sdk/evm";
-import { compare, validate } from "compare-versions";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { useRouter } from "next/router";
@@ -70,22 +69,6 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
     return "1.0.0";
   }, [latestVersion]);
 
-  const isValidSemver = validate(form.watch("version"));
-
-  const isValidVersion = useMemo(() => {
-    if (latestVersion) {
-      return (
-        isValidSemver &&
-        compare(
-          latestVersion || "0.0.0",
-          form.watch("version") || placeholderVersion || "0.0.0",
-          "<",
-        )
-      );
-    }
-    return isValidSemver;
-  }, [latestVersion, isValidSemver, form, placeholderVersion]);
-
   const hasTrackedImpression = useRef<boolean>(false);
   useEffect(() => {
     if (publishMetadata.data && !hasTrackedImpression.current) {
@@ -99,7 +82,9 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
   }, [publishMetadata.data, trackEvent]);
 
   const disableNext =
-    !form.watch("version") || !form.watch("displayName") || !isValidVersion;
+    !form.watch("version") ||
+    !form.watch("displayName") ||
+    !!form.getFieldState("version", form.formState).error;
 
   useEffect(() => {
     if (address) {
@@ -298,8 +283,6 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
               setContractSelection={setContractSelection}
               latestVersion={latestVersion}
               placeholderVersion={placeholderVersion}
-              isValidSemver={isValidSemver}
-              isValidVersion={isValidVersion}
             />
           )}
           {fieldsetToShow === "contractParams" && (

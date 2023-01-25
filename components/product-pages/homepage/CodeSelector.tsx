@@ -19,7 +19,7 @@ const contract = await sdk.getContract("0xe68904F3018fF980b6b64D06d7f7fBCeFF4cB0
 // get all NFTs
 const nfts = await contract.erc721.getAll();
 
-console.log(nfts);`,
+console.info(nfts);`,
   react: `import { ThirdwebNftMedia, useContract, useNFTs } from "@thirdweb-dev/react";
 
 export default function App() {
