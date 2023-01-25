@@ -1,4 +1,4 @@
-import { thirdwebChains } from "./evm";
+import { SUPPORTED_CHAIN_ID, supportedChains } from "./evm";
 import type { Ecosystem, GenericSignerWallet } from "@thirdweb-dev/wallets";
 import { ethers } from "ethers";
 
@@ -13,12 +13,21 @@ export const checkContractWalletSignature = async (
   address: string,
   chainId: number,
 ): Promise<boolean> => {
-  const rpcUrl = thirdwebChains[chainId].rpcUrls.default.http[0];
+  const rpcUrl =
+    supportedChains[chainId as SUPPORTED_CHAIN_ID]?.rpcUrls.default.http[0];
+  if (!rpcUrl) {
+    return false;
+  }
+
   const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
   const walletContract = new ethers.Contract(address, EIP1271_ABI, provider);
   const hashMessage = ethers.utils.hashMessage(message);
-  const res = await walletContract.isValidSignature(hashMessage, signature);
-  return res === EIP1271_MAGICVALUE;
+  try {
+    const res = await walletContract.isValidSignature(hashMessage, signature);
+    return res === EIP1271_MAGICVALUE;
+  } catch (err) {
+    return false;
+  }
 };
 
 export class SignerWallet implements GenericSignerWallet {
@@ -31,6 +40,10 @@ export class SignerWallet implements GenericSignerWallet {
 
   public async getAddress(): Promise<string> {
     return this.#signer.getAddress();
+  }
+
+  public async getChainId(): Promise<number> {
+    return this.#signer.getChainId();
   }
 
   public async signMessage(message: string): Promise<string> {
