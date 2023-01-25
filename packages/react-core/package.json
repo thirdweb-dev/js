@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-core",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-core",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -31,8 +31,7 @@
     "entrypoints": [
       "index.ts",
       "solana/index.ts",
-      "evm/index.ts",
-      "evm/connectors/**.ts"
+      "evm/index.ts"
     ],
     "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
       "exports": true
@@ -90,7 +89,6 @@
     "@solana/wallet-adapter-phantom": "^0.9.17",
     "@tanstack/react-query": "^4.0.10",
     "buffer": "^6.0.3",
-    "mime": "^3.0.0",
     "tiny-invariant": "^1.2.0"
   },
   "peerDependencies": {
