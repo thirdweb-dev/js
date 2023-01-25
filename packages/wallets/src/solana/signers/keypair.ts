@@ -1,4 +1,4 @@
-import { SolanaSigner } from "../interfaces/signer";
+import { SolanaSigner } from "../interfaces";
 import * as ed25519 from "@noble/ed25519";
 import { Keypair, PublicKey } from "@solana/web3.js";
 

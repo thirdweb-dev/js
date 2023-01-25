@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
 
-export interface MinimalWallet {
+export interface EVMWallet {
   getSigner(): Promise<ethers.Signer>;
 }

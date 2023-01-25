@@ -33,7 +33,7 @@ import type {
 import { UserWallet } from "./wallet/UserWallet";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import type { MinimalWallet } from "@thirdweb-dev/wallets";
+import type { EVMWallet } from "@thirdweb-dev/wallets";
 import { Contract, ContractInterface, ethers, Signer } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -62,7 +62,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @beta
    */
   static async fromWallet(
-    wallet: MinimalWallet,
+    wallet: EVMWallet,
     network: ChainOrRpc,
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),

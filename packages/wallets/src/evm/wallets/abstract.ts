@@ -1,6 +1,6 @@
 import { Ecosystem, GenericSignerWallet } from "../../core";
 import { thirdwebChains } from "../constants/chains";
-import { MinimalWallet } from "../interfaces/minimal";
+import { EVMWallet } from "../interfaces";
 import { ethers } from "ethers";
 import EventEmitter from "eventemitter3";
 
@@ -38,7 +38,7 @@ export const checkContractWalletSignature = async (
 
 export abstract class AbstractSigner
   extends EventEmitter<WalletEvents>
-  implements GenericSignerWallet, MinimalWallet
+  implements GenericSignerWallet, EVMWallet
 {
   public type: Ecosystem = "evm";
   protected signer: ethers.Signer | undefined;

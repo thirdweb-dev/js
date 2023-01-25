@@ -10,4 +10,4 @@ export * from "./wallets/ethers";
 // just the types
 export type { AbstractWallet, WalletOptions } from "./wallets/base";
 export type { WalletData, WalletEvents } from "./wallets/abstract";
-export type { MinimalWallet } from "./interfaces/minimal";
+export type { EVMWallet } from "./interfaces";

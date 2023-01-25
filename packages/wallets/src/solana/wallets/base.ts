@@ -1,5 +1,5 @@
 import { Ecosystem, GenericSignerWallet } from "../../core";
-import { SolanaSigner } from "../interfaces/signer";
+import { SolanaSigner } from "../interfaces";
 import bs58 from "bs58";
 import nacl from "tweetnacl";
 

@@ -158,10 +158,15 @@ export class ThirdwebAuth {
 
     // Check that the signing address is the claimed wallet address
     const message = this.generateMessage(payload.payload);
+    const chainId =
+      this.wallet.type === "evm" && payload.payload.chain_id
+        ? parseInt(payload.payload.chain_id)
+        : undefined;
     const verified = await this.verifySignature(
       message,
       payload.signature,
       payload.payload.address,
+      chainId,
     );
     if (!verified) {
       throw new Error(
@@ -313,10 +318,20 @@ export class ThirdwebAuth {
       );
     }
 
+    let chainId: number | undefined = undefined;
+    if (this.wallet.getChainId) {
+      try {
+        chainId = await this.wallet.getChainId();
+      } catch {
+        // ignore error
+      }
+    }
+
     const verified = await this.verifySignature(
       JSON.stringify(payload),
       signature,
       connectedAddress,
+      chainId,
     );
     if (!verified) {
       throw new Error(
@@ -335,16 +350,8 @@ export class ThirdwebAuth {
     message: string,
     signature: string,
     address: string,
+    chainId?: number,
   ) {
-    let chainId: number | undefined = undefined;
-    if (this.wallet.getChainId) {
-      try {
-        chainId = await this.wallet.getChainId();
-      } catch {
-        // ignore error
-      }
-    }
-
     return this.wallet.verifySignature(message, signature, address, chainId);
   }
 

@@ -1,11 +1,11 @@
-import { MinimalWallet } from "@thirdweb-dev/wallets";
+import { EVMWallet } from "@thirdweb-dev/wallets";
 import { ethers } from "ethers";
 
 export class WalletSigner {
-  private wallet: MinimalWallet;
+  private wallet: EVMWallet;
   private signer: ethers.Signer | undefined;
 
-  constructor(wallet: MinimalWallet) {
+  constructor(wallet: EVMWallet) {
     this.wallet = wallet;
   }
 
@@ -25,7 +25,7 @@ export class WalletSigner {
     return ethers.utils.recoverAddress(messageHashBytes, signature);
   }
 
-  public updateWallet(wallet: MinimalWallet): void {
+  public updateWallet(wallet: EVMWallet): void {
     this.wallet = wallet;
     this.signer = undefined;
   }
