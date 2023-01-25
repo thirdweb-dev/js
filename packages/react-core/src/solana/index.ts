@@ -1,6 +1,5 @@
 // Providers
 export * from "./providers/base";
-export * from "./providers/full";
 
 /**
  * Hooks

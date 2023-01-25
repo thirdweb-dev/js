@@ -62,12 +62,8 @@
     "@microsoft/api-extractor": "^7.29.2",
     "@microsoft/tsdoc": "^0.14.1",
     "@preconstruct/cli": "^2.2.1",
-    "@solana/wallet-adapter-base": "^0.9.17",
-    "@solana/wallet-adapter-react": "^0.15.19",
-    "@solana/wallet-adapter-wallets": "^0.19.0",
     "@solana/web3.js": "^1.62.0",
     "@thirdweb-dev/sdk": "*",
-    "@types/mime": "^3.0.1",
     "@types/react": "^18.0.5",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
@@ -86,15 +82,11 @@
     "@safe-global/safe-core-sdk": "^3.2.0",
     "@safe-global/safe-ethers-adapters": "0.1.0-alpha.13",
     "@safe-global/safe-ethers-lib": "^1.7.0",
-    "@solana/wallet-adapter-phantom": "^0.9.17",
     "@tanstack/react-query": "^4.0.10",
     "buffer": "^6.0.3",
     "tiny-invariant": "^1.2.0"
   },
   "peerDependencies": {
-    "@solana/wallet-adapter-base": "^0.9.17",
-    "@solana/wallet-adapter-react": "^0.15.19",
-    "@solana/wallet-adapter-wallets": "^0.19.0",
     "@solana/web3.js": "^1.62.0",
     "@thirdweb-dev/sdk": "*",
     "ethers": ">=5.5.1",
@@ -105,15 +97,6 @@
     "typescript": "^4.6.2"
   },
   "peerDependenciesMeta": {
-    "@solana/wallet-adapter-base": {
-      "optional": true
-    },
-    "@solana/wallet-adapter-react": {
-      "optional": true
-    },
-    "@solana/wallet-adapter-wallets": {
-      "optional": true
-    },
     "@solana/web3.js": {
       "optional": true
     }
