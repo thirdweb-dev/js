@@ -1,6 +1,6 @@
 import { SolidityInputProps } from ".";
 import { validateAddress } from "./helpers";
-import { Box, Flex, FormControl, Icon, Input, Spinner } from "@chakra-ui/react";
+import { Box, Flex, Icon, Input, Spinner } from "@chakra-ui/react";
 import { useEns } from "components/contract-components/hooks";
 import { utils } from "ethers";
 import { useEffect, useMemo, useState } from "react";
@@ -84,7 +84,7 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
   );
 
   return (
-    <FormControl isInvalid={hasError}>
+    <>
       <Input
         placeholder="address"
         // probably OK but obviously can be longer if ens name is passed?
@@ -117,6 +117,6 @@ export const SolidityAddressInput: React.FC<SolidityInputProps> = ({
           </Flex>
         </FormHelperText>
       )}
-    </FormControl>
+    </>
   );
 };
