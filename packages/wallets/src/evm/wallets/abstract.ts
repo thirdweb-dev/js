@@ -32,8 +32,12 @@ export const checkContractWalletSignature = async (
   const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
   const walletContract = new ethers.Contract(address, EIP1271_ABI, provider);
   const hashMessage = ethers.utils.hashMessage(message);
-  const res = await walletContract.isValidSignature(hashMessage, signature);
-  return res === EIP1271_MAGICVALUE;
+  try {
+    const res = await walletContract.isValidSignature(hashMessage, signature);
+    return res === EIP1271_MAGICVALUE;
+  } catch {
+    return false;
+  }
 };
 
 export abstract class AbstractWallet

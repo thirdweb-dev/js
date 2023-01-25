@@ -25,7 +25,7 @@ export const checkContractWalletSignature = async (
   try {
     const res = await walletContract.isValidSignature(hashMessage, signature);
     return res === EIP1271_MAGICVALUE;
-  } catch (err) {
+  } catch {
     return false;
   }
 };
