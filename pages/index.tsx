@@ -1,12 +1,8 @@
 import { Box, DarkMode, Flex } from "@chakra-ui/react";
 import { HomepageFooter } from "components/footer/Footer";
-import { Aurora } from "components/homepage/Aurora";
-import { CLISection } from "components/homepage/sections/CLISection";
-import { ContractsSection } from "components/homepage/sections/ContractsSection";
-import { DashboardFeaturesSection } from "components/homepage/sections/DashboardFeaturesSection";
 import { GetStartedSection } from "components/homepage/sections/GetStartedSection";
 import { HeroSection } from "components/homepage/sections/HeroSection";
-import { KeyFeatures } from "components/homepage/sections/KeyFeatures";
+import { KeyFeaturesSection } from "components/homepage/sections/KeyFeaturesSection";
 import { NewsletterSection } from "components/homepage/sections/NewsletterSection";
 import { NetworksSection } from "components/homepage/sections/NextworksSection";
 import { PricingSection } from "components/homepage/sections/PricingSection";
@@ -40,19 +36,9 @@ const HomePage: ThirdwebNextPage = () => {
           <HeroSection />
           <PartnerCarousel />
           <StatsSection />
-          <KeyFeatures />
-          <ContractsSection />
+          <KeyFeaturesSection />
           <Suspense>
-            <Box position="relative" zIndex={10}>
-              <SDKSection />
-              <Aurora
-                pos={{ left: "50%", top: "50%" }}
-                size={{ width: "2000px", height: "2000px" }}
-                color={"hsl(280deg 78% 30% / 30%)"}
-              />
-            </Box>
-            <CLISection />
-            <DashboardFeaturesSection />
+            <SDKSection />
             <NetworksSection />
             <PricingSection />
             <SolutionsSection />

@@ -10,76 +10,131 @@ import { ThirdwebNextPage } from "utils/types";
 
 const employees = [
   {
-    name: "Jake Loo",
-    twitter: "jake_loo",
-  },
-  {
-    name: "Krishang Nadgauda",
-    twitter: "monkeymeaning",
+    name: "Adam Lee",
+    twitter: "AdamLeeBG",
   },
   {
     name: "Adam Majmudar",
     twitter: "MajmudarAdam",
+  },
+  // {
+  //   name: "Andrew Begafria",
+  //   twitter: ""
+  // },
+  {
+    name: "Anshu Tukol",
+    twitter: "AnshuTukol",
+  },
+  {
+    name: "Beverly Rivas",
+    twitter: "BevRivas",
+  },
+  {
+    name: "Bobby Wang",
   },
   {
     name: "Catty Berragan",
     twitter: "CathalUK",
   },
   {
-    name: "Jonas Daniels",
-    twitter: "jnsdls",
+    name: "Ciara Nightingale",
+    twitter: "ciaranightingal",
   },
-  {
-    name: "Nacho Iacovino",
-    twitter: "nachoiacovino",
-  },
+  // {
+  //   name: "Devin Rattray",
+  //   twitter: "",
+  // }
   {
     name: "Eiman Abdelmoneim",
     twitter: "EimanAbdel",
   },
   {
-    name: "Patrick Kearney",
-    twitter: "theyoungpatrice",
+    name: "Erika Khanna",
+    twitter: "heyerikakhanna",
   },
   {
-    name: "Joaquim Verges",
-    twitter: "joenrv",
-  },
-  {
-    name: "Devin Scott",
-    twitter: "dvnsctt",
-  },
-  {
-    name: "Adam Lee",
-    twitter: "AdamLeeBG",
-  },
-  {
-    name: "Samina Kabir",
-    twitter: "saminacodes",
-  },
-  {
-    name: "Anshu Tukol",
-    twitter: "AnshuTukol",
+    name: "Jake Loo",
+    twitter: "jake_loo",
   },
   {
     name: "Jarrod Watts",
     twitter: "jarrodwattsdev",
   },
   {
-    name: "Yash Kumar",
-    twitter: "yash09061",
+    name: "Jason Hitchcock",
+    twitter: "jasonhitchcock",
+  },
+  {
+    name: "Joaquim Verges",
+    twitter: "joenrv",
+  },
+  {
+    name: "Jonas Daniels",
+    twitter: "jnsdls",
+  },
+  {
+    name: "Jorge Dalmendray",
+    twitter: "dalmendray",
+  },
+  // {
+  //   name: "Juan Leal",
+  //   twitter: "",
+  // },
+  {
+    name: "Krishang Nadgauda",
+    twitter: "monkeymeaning",
+  },
+  {
+    name: "Manan Tank",
+    twitter: "MananTank_",
+  },
+  // {
+  //   name: "Mariano Fuentes",
+  //   twitter: "",
+  // },
+  // {
+  //   name: "Muhammad Meigooni",
+  //   twitter: ""
+  // },
+  {
+    name: "Nacho Iacovino",
+    twitter: "nachoiacovino",
+  },
+  {
+    name: "Patrick Kearney",
+    twitter: "theyoungpatrice",
+  },
+  {
+    name: "Pengcheng Chen",
+    twitter: "blockchainian",
   },
   {
     name: "Rahul Menon",
     twitter: "rahulphenomenon",
   },
   {
+    name: "Rohit Ramesh",
+    twitter: "@Rohit7101",
+  },
+  {
+    name: "Samina Kabir",
+    twitter: "saminacodes",
+  },
+  {
     name: "Sian Morton",
     twitter: "Sian_Morton",
   },
   {
-    name: "Beverly Rivas",
-    twitter: "BevRivas",
+    name: "Siddharth Adusumelli",
+    twitter: "shift4id",
+  },
+  // {
+  //   name: "Yan Giet",
+  //   twitter: ""
+  // },
+  {
+    name: "Yash Kumar",
+    twitter: "yash09061",
   },
 ].sort((a, b) => a.name.localeCompare(b.name));
 

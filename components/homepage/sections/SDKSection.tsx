@@ -1,3 +1,4 @@
+import { Aurora } from "../Aurora";
 import { Flex } from "@chakra-ui/react";
 import {
   CodeSelector,
@@ -19,6 +20,11 @@ export const SDKSection: React.FC<SDKSectionProps> = ({
 }) => {
   return (
     <HomepageSection id="sdks" bottomPattern mt={20}>
+      <Aurora
+        pos={{ left: "50%", top: "50%" }}
+        size={{ width: "1500px", height: "1500px" }}
+        color={"hsl(280deg 78% 30% / 30%)"}
+      />
       <Flex flexDir="column" align="center" as="section">
         <Heading
           as="h2"

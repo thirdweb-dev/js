@@ -58,7 +58,7 @@ export const HeroSection = () => {
             maxW="500px"
           >
             Everything you need to connect your apps or games to decentralized
-            networks. Powerful tools that simplify web3 development.
+            networks.
           </Heading>
 
           <LightMode>
