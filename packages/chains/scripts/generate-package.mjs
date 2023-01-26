@@ -35,6 +35,25 @@ chains = chains
     };
   });
 
+chains = chains.filter((c) => c.chainId !== 1337);
+// inject in localhost
+chains.push({
+  name: "Localhost",
+  chain: "ETH",
+  rpc: ["http://localhost:8545"],
+  faucets: [],
+  nativeCurrency: {
+    name: "Ether",
+    symbol: "ETH",
+    decimals: 18,
+  },
+  // has to be unique!
+  shortName: "local",
+  chainId: 1337,
+  networkId: 1337,
+  testnet: true,
+});
+
 const imports = [];
 const exports = [];
 const exportNames = [];
