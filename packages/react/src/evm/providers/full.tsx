@@ -364,12 +364,7 @@ export const ThirdwebProvider = ({
     const opts: SDKOptions = sdkOptions;
     return {
       readonlySettings,
-      chainInfos: chains.reduce((acc, c) => {
-        acc[c.chainId] = {
-          rpc: c.rpc[0],
-        };
-        return acc;
-      }, {} as Record<number, ChainInfo>),
+      chainInfos: chains,
       ...opts,
     };
   }, [sdkOptions, readonlySettings, chains]);

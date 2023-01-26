@@ -94,7 +94,7 @@ class ThirdwebBridge implements TWBridge {
             },
           })
         : new ThirdwebStorage();
-    sdkOptions.apiKey = sdkOptions.apiKey || API_KEY;
+    sdkOptions.thirdwebApiKey = sdkOptions.thirdwebApiKey || API_KEY;
     this.activeSDK = new ThirdwebSDK(chain, sdkOptions, storage);
     for (let wallet of WALLETS) {
       const walletInstance = new wallet({

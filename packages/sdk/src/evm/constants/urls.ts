@@ -65,24 +65,12 @@ export const CHAIN_ID_TO_NAME = Object.fromEntries(
 ) as Record<ChainId, ChainNames>;
 
 export function buildDefaultMap(sdkOptions: SDKOptions = {}) {
-  return SUPPORTED_CHAIN_IDS.reduce((previousValue, currentValue) => {
-    previousValue[currentValue] = {
-      rpc: getDefaultRPCUrl(CHAIN_ID_TO_NAME[currentValue], sdkOptions),
-    } as ChainInfo;
+  const options = SDKOptionsSchema.parse(sdkOptions);
+  return options.chainInfos.reduce((previousValue, currentValue) => {
+    previousValue[currentValue.chainId] = currentValue;
     return previousValue;
-  }, {} as Record<SUPPORTED_CHAIN_ID, ChainInfo>);
+  }, {} as Record<number, ChainInfo>);
 }
-
-/**
- * @deprecated use `buildDefaultMap(sdkOptions)` instead
- */
-export const DEFAULT_RPC_URLS: Record<SUPPORTED_CHAIN_ID, string> =
-  Object.fromEntries(
-    Object.entries(buildDefaultMap()).map(([chainId, chainInfo]) => [
-      parseInt(chainId),
-      chainInfo.rpc,
-    ]),
-  ) as Record<SUPPORTED_CHAIN_ID, string>;
 
 export function getChainProvider(
   network: ChainIdOrName,
@@ -94,11 +82,8 @@ export function getChainProvider(
   }
   const chainId = toChainId(network);
   const options = SDKOptionsSchema.parse(sdkOptions);
-  const rpcMap: Record<number, ChainInfo> = {
-    ...buildDefaultMap(options),
-    ...options.chainInfos,
-  };
-  let rpcUrl = rpcMap[chainId]?.rpc;
+  const rpcMap: Record<number, ChainInfo> = buildDefaultMap(options);
+  let rpcUrl = rpcMap[chainId]?.rpc[0];
 
   if (!rpcUrl) {
     throw new Error(
@@ -106,67 +91,14 @@ export function getChainProvider(
     );
   }
   // apply API keys
-  // thirdweb
   rpcUrl = rpcUrl.replace(
     "${THIRDWEB_API_KEY}",
-    options.apiKey || DEFAULT_API_KEY,
+    options.thirdwebApiKey || DEFAULT_API_KEY,
   );
-  // TODO infura
-  // rpcUrl = rpcUrl.replace("${INFURA_API_KEY}", "");
-  // TODO alchemy
-  // rpcUrl = rpcUrl.replace("${ALCHEMY_API_KEY}", "");
+  rpcUrl = rpcUrl.replace("${INFURA_API_KEY}", options.infuraApiKey || "");
+  rpcUrl = rpcUrl.replace("${ALCHEMY_API_KEY}", options.alchemyApiKey || "");
 
   return getReadOnlyProvider(rpcUrl, chainId);
-}
-
-/**
- * @internal
- * @param network - the chain name or rpc url
- * @returns the rpc url for that chain
- */
-export function getDefaultRPCUrl(
-  chainName: ChainNames,
-  sdkOptions: SDKOptions,
-): string {
-  const options = SDKOptionsSchema.parse(sdkOptions);
-  switch (chainName) {
-    case "mainnet":
-    case "ethereum":
-      return getRpcUrl("ethereum", options.apiKey);
-    case "goerli":
-      return getRpcUrl("goerli", options.apiKey);
-    case "polygon":
-    case "matic":
-      return getRpcUrl("polygon", options.apiKey);
-    case "mumbai":
-      return getRpcUrl("mumbai", options.apiKey);
-    case "optimism":
-      return getRpcUrl("optimism", options.apiKey);
-    case "optimism-goerli":
-      return getRpcUrl("optimism-goerli", options.apiKey);
-    case "arbitrum":
-      return getRpcUrl("arbitrum", options.apiKey);
-    case "arbitrum-goerli":
-      return getRpcUrl("arbitrum-goerli", options.apiKey);
-    case "fantom":
-      return getRpcUrl("fantom", options.apiKey);
-    case "fantom-testnet":
-      return getRpcUrl("fantom-testnet", options.apiKey);
-    case "avalanche":
-      return getRpcUrl("avalanche", options.apiKey);
-    case "avalanche-testnet":
-    case "avalanche-fuji":
-      return getRpcUrl("avalanche-fuji", options.apiKey);
-    case "binance":
-      return getRpcUrl("binance", options.apiKey);
-    case "binance-testnet":
-      return getRpcUrl("binance-testnet", options.apiKey);
-    case "hardhat":
-    case "localhost":
-      return "http://localhost:8545";
-    default:
-      throw new Error(`Unrecognized chain name or RPC url: ${chainName}`);
-  }
 }
 
 export function toChainId(network: ChainIdOrName): number {
