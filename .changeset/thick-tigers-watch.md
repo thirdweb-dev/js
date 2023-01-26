@@ -1,5 +1,5 @@
 ---
-"@thirdweb-dev/react-core": patch
+"@thirdweb-dev/react-core": minor
 ---
 
 react-core init
