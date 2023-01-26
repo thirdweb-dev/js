@@ -1,4 +1,6 @@
 import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
+import { FaQuoteLeft } from "@react-icons/all-files/fa/FaQuoteLeft";
+import { FaQuoteRight } from "@react-icons/all-files/fa/FaQuoteRight";
 import { ChakraNextImage } from "components/Image";
 import { NewsletterSection } from "components/homepage/sections/NewsletterSection";
 import { GuidesShowcase } from "components/product-pages/common/GuideShowcase";
@@ -9,7 +11,7 @@ import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
 import { SolutionsTextImage } from "components/product-pages/common/SolutionsTextImage";
 import { PageId } from "page-id";
-import { Heading } from "tw-components";
+import { Heading, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
 const SHOPIFY_GUIDES = [
@@ -155,12 +157,20 @@ const Commerce: ThirdwebNextPage = () => {
         solution="Shopify"
         guides={SHOPIFY_GUIDES}
       />
-
-      <Box
-        h="1px"
-        bg="linear-gradient(93.96deg, rgba(25, 26, 27, 0.8) 17.14%, rgba(24, 67, 78, 0.8) 36.78%, rgba(108, 47, 115, 0.8) 61%, rgba(25, 26, 27, 0.8) 79.98%)"
-        opacity="0.8"
-      />
+      <ProductSection>
+        <Flex gap={8} py={12} px={{ md: 12 }}>
+          <Text size="body.xl" as="blockquote" align="center">
+            <i>
+              &quot;On platforms like Shopify, thirdweb has made building web3
+              e-commerce features and apps extremely simple and quick. We can
+              now worry less about the development nuances of web3 and focus
+              more on what merchants/users want and find valuable.&quot;
+            </i>
+            <br />
+            <br />- <b>Zain</b>, Lazer Technologies.
+          </Text>
+        </Flex>
+      </ProductSection>
       <Box
         h="1px"
         bg="linear-gradient(93.96deg, rgba(25, 26, 27, 0.8) 17.14%, rgba(24, 67, 78, 0.8) 36.78%, rgba(108, 47, 115, 0.8) 61%, rgba(25, 26, 27, 0.8) 79.98%)"

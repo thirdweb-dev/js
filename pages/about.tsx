@@ -19,7 +19,7 @@ const employees = [
   },
   // {
   //   name: "Andrew Begafria",
-  //   twitter: ""
+  //   twitter: "",
   // },
   {
     name: "Anshu Tukol",
@@ -31,6 +31,7 @@ const employees = [
   },
   {
     name: "Bobby Wang",
+    twitter: "PartTimePlug",
   },
   {
     name: "Catty Berragan",
@@ -40,10 +41,10 @@ const employees = [
     name: "Ciara Nightingale",
     twitter: "ciaranightingal",
   },
-  // {
-  //   name: "Devin Rattray",
-  //   twitter: "",
-  // }
+  {
+    name: "Devin Rattray",
+    twitter: "dvnsctt",
+  },
   {
     name: "Eiman Abdelmoneim",
     twitter: "EimanAbdel",
@@ -76,10 +77,10 @@ const employees = [
     name: "Jorge Dalmendray",
     twitter: "dalmendray",
   },
-  // {
-  //   name: "Juan Leal",
-  //   twitter: "",
-  // },
+  {
+    name: "Juan Leal",
+    twitter: "juandoleal",
+  },
   {
     name: "Krishang Nadgauda",
     twitter: "monkeymeaning",
@@ -88,14 +89,14 @@ const employees = [
     name: "Manan Tank",
     twitter: "MananTank_",
   },
-  // {
-  //   name: "Mariano Fuentes",
-  //   twitter: "",
-  // },
-  // {
-  //   name: "Muhammad Meigooni",
-  //   twitter: ""
-  // },
+  {
+    name: "Mariano Fuentes",
+    twitter: "Marfuenn",
+  },
+  {
+    name: "Muhammad Meigooni",
+    twitter: "mmeigooni",
+  },
   {
     name: "Nacho Iacovino",
     twitter: "nachoiacovino",
@@ -114,7 +115,7 @@ const employees = [
   },
   {
     name: "Rohit Ramesh",
-    twitter: "@Rohit7101",
+    twitter: "Rohit7101",
   },
   {
     name: "Samina Kabir",
@@ -124,13 +125,9 @@ const employees = [
     name: "Sian Morton",
     twitter: "Sian_Morton",
   },
-  {
-    name: "Siddharth Adusumelli",
-    twitter: "shift4id",
-  },
   // {
   //   name: "Yan Giet",
-  //   twitter: ""
+  //   twitter: "",
   // },
   {
     name: "Yash Kumar",

@@ -38,12 +38,7 @@ export const GuidesShowcase: React.FC<GuidesShowcaseProps> = ({
 
   return (
     <ProductSection>
-      <Flex
-        flexDir="column"
-        py={{ base: 24, lg: 36 }}
-        align="center"
-        gap={{ base: 6, lg: 8 }}
-      >
+      <Flex flexDir="column" py={16} align="center" gap={{ base: 6, lg: 8 }}>
         <Heading as="h2" size="display.sm" fontWeight={700} textAlign="center">
           {title}
         </Heading>
