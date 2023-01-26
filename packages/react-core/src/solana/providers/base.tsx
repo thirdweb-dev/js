@@ -8,12 +8,14 @@ import {
   ThirdwebAuthConfig,
   ThirdwebAuthConfigProvider,
 } from "../contexts/thirdweb-auth";
+import type { WalletContextState } from "@solana/wallet-adapter-react";
 import { Network, ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import invariant from "tiny-invariant";
 
 interface ThirdwebSDKProviderProps extends QueryClientProviderProps {
   network: RequiredParam<Network>;
+  wallet?: WalletContextState;
   authConfig?: ThirdwebAuthConfig;
 }
 

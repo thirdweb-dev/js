@@ -95,6 +95,7 @@
     "typescript": "^4.7.4"
   },
   "dependencies": {
+    "@thirdweb-dev/react-core": "*",
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
     "@react-icons/all-files": "^4.1.0",
