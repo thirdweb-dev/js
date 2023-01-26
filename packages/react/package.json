@@ -74,6 +74,7 @@
     "@solana/wallet-adapter-base": "^0.9.17",
     "@solana/wallet-adapter-react": "^0.15.19",
     "@solana/wallet-adapter-wallets": "^0.19.0",
+    "@solana/wallet-adapter-phantom": "^0.9.17",
     "@solana/web3.js": "^1.62.0",
     "@thirdweb-dev/sdk": "*",
     "@types/color": "^3.0.3",
@@ -101,7 +102,6 @@
     "@safe-global/safe-core-sdk": "^3.2.0",
     "@safe-global/safe-ethers-adapters": "0.1.0-alpha.13",
     "@safe-global/safe-ethers-lib": "^1.7.0",
-    "@solana/wallet-adapter-phantom": "^0.9.17",
     "@tanstack/react-query": "^4.0.10",
     "@thirdweb-dev/chains": "*",
     "@zag-js/menu": "^0.3.0",
@@ -120,6 +120,7 @@
     "@solana/wallet-adapter-base": "^0.9.17",
     "@solana/wallet-adapter-react": "^0.15.19",
     "@solana/wallet-adapter-wallets": "^0.19.0",
+    "@solana/wallet-adapter-phantom": "^0.9.17",
     "@solana/web3.js": "^1.62.0",
     "@thirdweb-dev/sdk": "*",
     "ethers": ">=5.5.1",
@@ -138,6 +139,9 @@
       "optional": true
     },
     "@solana/wallet-adapter-wallets": {
+      "optional": true
+    },
+    "@solana/wallet-adapter-phantom": {
       "optional": true
     },
     "@solana/web3.js": {
