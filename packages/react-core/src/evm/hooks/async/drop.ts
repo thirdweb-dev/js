@@ -10,6 +10,7 @@ import {
   DropContract,
   RevealLazyMintInput,
   getErcs,
+  NFTContract,
   RevealableContract,
 } from "../../types";
 import {
@@ -17,6 +18,7 @@ import {
   invalidateContractAndBalances,
 } from "../../utils/cache-keys";
 import { useQueryWithNetwork } from "../query-utils/useQueryWithNetwork";
+import { useNFTs } from "./nft";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   NFTMetadataInput,
@@ -81,23 +83,10 @@ export function useUnclaimedNFTs(
  * @beta
  */
 export function useClaimedNFTs(
-  contract: RequiredParam<NFTDrop>,
+  contract: RequiredParam<NFTContract>,
   queryParams?: QueryAllParams,
 ) {
-  const contractAddress = contract?.getAddress();
-  return useQueryWithNetwork(
-    cacheKeys.contract.nft.drop.getAllClaimed(contractAddress, queryParams),
-    () => {
-      requiredParamInvariant(contract, "No Contract instance provided");
-      // TODO make this work for custom contracts (needs ABI change)
-      invariant(
-        contract.getAllClaimed,
-        "Contract instance does not support getAllClaimed",
-      );
-      return contract.getAllClaimed(queryParams);
-    },
-    { enabled: !!contract },
-  );
+  return useNFTs(contract, queryParams);
 }
 
 /**

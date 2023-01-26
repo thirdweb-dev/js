@@ -181,14 +181,6 @@ export const cacheKeys = {
             contractAddress,
             params ? ["getAllUnclaimed", params] : ["getAllUnclaimed"],
           ),
-        getAllClaimed: (
-          contractAddress: RequiredParam<ContractAddress>,
-          params?: QueryAllParams,
-        ) =>
-          createContractCacheKey(
-            contractAddress,
-            params ? ["getAllClaimed", params] : ["getAllClaimed"],
-          ),
         totalUnclaimedSupply: (
           contractAddress: RequiredParam<ContractAddress>,
         ) => createContractCacheKey(contractAddress, ["totalUnclaimedSupply"]),
@@ -314,11 +306,11 @@ export const cacheKeys = {
           contractAddress,
           tokenId
             ? [
-              "claimConditions",
-              "getIneligibilityReasons",
-              { tokenId },
-              params,
-            ]
+                "claimConditions",
+                "getIneligibilityReasons",
+                { tokenId },
+                params,
+              ]
             : ["claimConditions", "getIneligibilityReasons", params],
         ),
       // combinations of queries cache keys
@@ -331,11 +323,11 @@ export const cacheKeys = {
           contractAddress,
           tokenId
             ? [
-              "claimConditions",
-              "useActiveClaimConditionForWallet",
-              { tokenId, walletAddress },
-              ,
-            ]
+                "claimConditions",
+                "useActiveClaimConditionForWallet",
+                { tokenId, walletAddress },
+                ,
+              ]
             : ["claimConditions", "getIneligibilityReasons", { walletAddress }],
         ),
     },
