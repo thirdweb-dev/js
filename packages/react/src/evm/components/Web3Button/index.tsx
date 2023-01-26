@@ -1,13 +1,9 @@
 import { useNetwork } from "../../hooks/wagmi-required/useNetwork";
-import {
-  createCacheKeyWithNetwork,
-  createContractCacheKey,
-} from "../../utils/cache-keys";
 import { ConnectWallet } from "../ConnectWallet";
 import { Button } from "../shared/Button";
 import { ThemeProvider, ThemeProviderProps } from "../shared/ThemeProvider";
 import { FiWifi } from "@react-icons/all-files/fi/FiWifi";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import {
   useSDKChainId,
   useContract,
@@ -79,8 +75,6 @@ export const Web3Button = <TAction extends ActionFn>({
   const sdkChainId = useSDKChainId();
   const [, switchNetwork] = useNetwork();
 
-  const queryClient = useQueryClient();
-
   const hasMismatch = useNetworkMismatch();
 
   const switchToChainId = useMemo(() => {
@@ -92,6 +86,7 @@ export const Web3Button = <TAction extends ActionFn>({
 
   const { contract } = useContract(contractAddress, contractAbi || "custom");
 
+  // TODO move all of this logic to react-core, it's pure logic
   const mutation = useMutation(
     async () => {
       if (switchToChainId) {
@@ -126,13 +121,14 @@ export const Web3Button = <TAction extends ActionFn>({
           onError(err as Error);
         }
       },
-      onSettled: () =>
-        queryClient.invalidateQueries(
-          createCacheKeyWithNetwork(
-            createContractCacheKey(contractAddress),
-            sdkChainId,
-          ),
-        ),
+      // TODO bring back invalidation
+      // onSettled: () =>
+      //   queryClient.invalidateQueries(
+      //     createCacheKeyWithNetwork(
+      //       createContractCacheKey(contractAddress),
+      //       sdkChainId,
+      //     ),
+      //   ),
     },
   );
   if (!address) {

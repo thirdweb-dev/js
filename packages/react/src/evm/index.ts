@@ -10,9 +10,6 @@ export * from "./hooks/connectors/useMetamask";
 export * from "./hooks/connectors/useWalletConnect";
 export * from "./hooks/connectors/useWalletLink";
 
-// re-exports
-export { ChainId } from "@thirdweb-dev/sdk";
-
 // ui components
 export * from "./components/MediaRenderer";
 export * from "./components/NftMedia";
