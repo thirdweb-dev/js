@@ -5,10 +5,13 @@ import {
   SupportedChain,
   defaultSupportedChains,
 } from "../constants/chain";
-import { ThirdwebAuthConfig } from "../contexts/thirdweb-auth";
-import { ThirdwebConfigProvider } from "../contexts/thirdweb-config";
-import { ThirdwebSDKProvider, ThirdwebSDKProviderProps } from "./base";
 import { QueryClient } from "@tanstack/react-query";
+import {
+  ThirdwebSDKProvider,
+  ThirdwebSDKProviderProps,
+  ThirdwebConfigProvider,
+  ThirdwebAuthConfig,
+} from "@thirdweb-dev/react-core";
 import {
   SDKOptions,
   getProviderForNetwork,
