@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/auth",
-  "version": "2.0.38",
+  "version": "2.0.41",
   "exports": {
     "./next": {
       "module": "./next/dist/thirdweb-dev-auth-next.esm.js",

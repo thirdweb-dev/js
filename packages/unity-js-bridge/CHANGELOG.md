@@ -1,5 +1,26 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.1.7
+
+### Patch Changes
+
+- Updated dependencies [[`7cab8d1`](https://github.com/thirdweb-dev/js/commit/7cab8d1679f8d007091aa03adb83add3822a504a)]:
+  - @thirdweb-dev/sdk@3.6.11
+
+## 0.1.6
+
+### Patch Changes
+
+- Updated dependencies [[`5fba324`](https://github.com/thirdweb-dev/js/commit/5fba324ac17ab02bc8f13d82a232bc5c6970c8e5), [`894cbef`](https://github.com/thirdweb-dev/js/commit/894cbefc6361f23fc528a6c6819f5c71793d46e4), [`557429b`](https://github.com/thirdweb-dev/js/commit/557429b5cfb3af2983ee01cf7d12d41ee0557593), [`73dc026`](https://github.com/thirdweb-dev/js/commit/73dc026ff9d0ac9099bd5a9a9cab8fdbfc0ae723), [`9eaa21d`](https://github.com/thirdweb-dev/js/commit/9eaa21d09ab9c700aea61a2a25f8ca9859d20857), [`68c8e3c`](https://github.com/thirdweb-dev/js/commit/68c8e3c4d79f5d56dc4414241bcca0d88285fcca), [`bff433e`](https://github.com/thirdweb-dev/js/commit/bff433e12150dc029e33a578219c8437a510da99)]:
+  - @thirdweb-dev/sdk@3.6.10
+
+## 0.1.5
+
+### Patch Changes
+
+- Updated dependencies [[`e913e0d`](https://github.com/thirdweb-dev/js/commit/e913e0daa9ece9a6274f7ffa4e66bdcbf32e6ada), [`5862c55`](https://github.com/thirdweb-dev/js/commit/5862c558fb48604b5aca4defd1ccc06fc3536358), [`73883f5`](https://github.com/thirdweb-dev/js/commit/73883f56d0ed0a35ace8b98b96caa782443be22e), [`f7a74a3`](https://github.com/thirdweb-dev/js/commit/f7a74a3b7c489ada5b1ec435632a326334a33c9b)]:
+  - @thirdweb-dev/sdk@3.6.9
+
 ## 0.1.4
 
 ### Patch Changes

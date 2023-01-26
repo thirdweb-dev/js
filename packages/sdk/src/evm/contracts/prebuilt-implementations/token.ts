@@ -12,12 +12,12 @@ import { Erc20SignatureMintable } from "../../core/classes/erc-20-signature-mint
 import { StandardErc20 } from "../../core/classes/erc-20-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../../core/types";
+import { Abi } from "../../schema/contracts/custom";
 import { TokenErc20ContractSchema } from "../../schema/contracts/token-erc20";
 import { SDKOptions } from "../../schema/sdk-options";
 import { TokenMintInput } from "../../schema/tokens/token";
 import { Amount, CurrencyValue } from "../../types";
 import type { TokenERC20 } from "@thirdweb-dev/contracts-js";
-import type ABI from "@thirdweb-dev/contracts-js/dist/abis/TokenERC20.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { CallOverrides, constants } from "ethers";
 
@@ -38,7 +38,7 @@ import { CallOverrides, constants } from "ethers";
 export class Token extends StandardErc20<TokenERC20> {
   static contractRoles = ["admin", "minter", "transfer"] as const;
 
-  public abi: typeof ABI;
+  public abi: Abi;
   public metadata: ContractMetadata<
     TokenERC20,
     typeof TokenErc20ContractSchema
@@ -74,7 +74,7 @@ export class Token extends StandardErc20<TokenERC20> {
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: typeof ABI,
+    abi: Abi,
     chainId: number,
     contractWrapper = new ContractWrapper<TokenERC20>(
       network,

@@ -1,5 +1,15 @@
 # @thirdweb-dev/react
 
+## 3.6.11
+
+### Patch Changes
+
+- [#507](https://github.com/thirdweb-dev/js/pull/507) [`5047686`](https://github.com/thirdweb-dev/js/commit/5047686f2afbca4fa32b1bbb6bcf4419bd17cf8d) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Fix ConnectWallet network selector showing all options three times
+
+## 3.6.10
+
+## 3.6.9
+
 ## 3.6.8
 
 ### Patch Changes

@@ -19,6 +19,7 @@ import {
   VoteInitializer,
 } from "../../contracts";
 import { SDKOptions } from "../../schema/sdk-options";
+import { DeployEvents } from "../../types";
 import {
   DeploySchemaForPrebuiltContractType,
   NetworkOrSignerOrProvider,
@@ -36,6 +37,7 @@ import {
   ContractInterface,
   ethers,
 } from "ethers";
+import { EventEmitter } from "eventemitter3";
 import { z } from "zod";
 
 /**
@@ -75,6 +77,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     contractMetadata: z.input<
       DeploySchemaForPrebuiltContractType<TContractType>
     >,
+    eventEmitter: EventEmitter<DeployEvents>,
     version?: number,
   ): Promise<string> {
     const contract = PREBUILT_CONTRACTS_MAP[contractType];
@@ -98,6 +101,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     const ABI = await contract.getAbi(
       implementationAddress,
       this.getProvider(),
+      this.storage,
     );
 
     const encodedFunc = Contract.getInterface(ABI).encodeFunctionData(
@@ -121,7 +125,14 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       throw new Error("No ProxyDeployed event found");
     }
 
-    return events[0].args.proxy;
+    const contractAddress = events[0].args.proxy;
+    eventEmitter.emit("contractDeployed", {
+      status: "completed",
+      contractAddress,
+      transactionHash: receipt.transactionHash,
+    });
+
+    return contractAddress;
   }
 
   // TODO once IContractFactory is implemented, this can be probably be moved to its own class
@@ -130,6 +141,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     implementationAbi: ContractInterface,
     initializerFunction: string,
     initializerArgs: any[],
+    eventEmitter: EventEmitter<DeployEvents>,
   ): Promise<string> {
     const encodedFunc = Contract.getInterface(
       implementationAbi,
@@ -150,7 +162,14 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       throw new Error("No ProxyDeployed event found");
     }
 
-    return events[0].args.proxy;
+    const contractAddress = events[0].args.proxy;
+    eventEmitter.emit("contractDeployed", {
+      status: "completed",
+      contractAddress,
+      transactionHash: receipt.transactionHash,
+    });
+
+    return contractAddress;
   }
 
   /**

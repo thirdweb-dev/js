@@ -1,10 +1,12 @@
 import IERC2771ContextAbi from "@thirdweb-dev/contracts-js/dist/abis/ERC2771Context.json";
 import IAppURI from "@thirdweb-dev/contracts-js/dist/abis/IAppURI.json";
 import IContractMetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IContractMetadata.json";
+import IPackVRFAbi from "@thirdweb-dev/contracts-js/dist/abis/IPackVRFDirect.json";
 import IPermissionsAbi from "@thirdweb-dev/contracts-js/dist/abis/IPermissions.json";
 import IPermissionsEnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IPermissionsEnumerable.json";
 import IThirdwebPlatformFeeAbi from "@thirdweb-dev/contracts-js/dist/abis/IPlatformFee.json";
 import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/dist/abis/IPrimarySale.json";
+import IRouterAbi from "@thirdweb-dev/contracts-js/dist/abis/IRouter.json";
 import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty.json";
 import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable.json";
 
@@ -107,5 +109,27 @@ export const FEATURE_GASLESS = {
     contracts: "",
   },
   abis: [IERC2771ContextAbi],
+  features: {},
+} as const;
+
+export const FEATURE_PACK_VRF = {
+  name: "PackVRF",
+  namespace: "pack.vrf",
+  docLinks: {
+    sdk: "sdk.packvrf",
+    contracts: "IPackVRFDirect",
+  },
+  abis: [IPackVRFAbi],
+  features: {},
+} as const;
+
+export const FEATURE_PLUGIN_ROUTER = {
+  name: "PluginRouter",
+  namespace: "plugin.router",
+  docLinks: {
+    sdk: "sdk.pluginrouter",
+    contracts: "IRouter",
+  },
+  abis: [IRouterAbi],
   features: {},
 } as const;

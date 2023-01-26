@@ -195,12 +195,12 @@ describe("Edition sig minting", async () => {
         name: "Test2",
       });
       const toSign1 = {
-        to: adminWallet.address,
+        to: samWallet.address,
         metadata: uri1,
         quantity: 10,
       };
       const toSign2 = {
-        to: adminWallet.address,
+        to: samWallet.address,
         metadata: uri2,
         quantity: 10,
       };
@@ -236,7 +236,7 @@ describe("Edition sig minting", async () => {
     it("should mint additional supply", async () => {
       const tx = await editionContract.signature.mint(v1);
       const additional = await editionContract.signature.generateFromTokenId({
-        to: adminWallet.address,
+        to: samWallet.address,
         tokenId: tx.id,
         quantity: 100,
       });
