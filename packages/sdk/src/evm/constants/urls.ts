@@ -1,8 +1,8 @@
-import { DEFAULT_API_KEY, getRpcUrl } from "../../core/constants/urls";
+import { DEFAULT_API_KEY } from "../../core/constants/urls";
 import { ChainIdOrName } from "../core";
 import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
 import { ChainInfo, SDKOptions, SDKOptionsSchema } from "../schema";
-import { ChainId, SUPPORTED_CHAIN_ID, SUPPORTED_CHAIN_IDS } from "./chains";
+import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
 import { ethers, providers } from "ethers";
 
 /**
