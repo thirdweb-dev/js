@@ -8,7 +8,7 @@ import { z } from "zod";
  */
 export const SDKOptionsSchema = z
   .object({
-    chainInfos: z.array(ChainInfoInputSchema).default(defaultChains),
+    chains: z.array(ChainInfoInputSchema).default(defaultChains),
     thirdwebApiKey: z.string().optional().default(DEFAULT_API_KEY),
     alchemyApiKey: z.string().optional().optional(),
     infuraApiKey: z.string().optional().optional(),
