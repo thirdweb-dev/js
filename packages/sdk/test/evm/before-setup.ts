@@ -242,9 +242,8 @@ export const mochaHooks = {
     );
 
     storage = MockStorage();
-    sdk = ThirdwebSDK.fromSigner(
+    sdk = new ThirdwebSDK(
       signer,
-      ChainId.Hardhat,
       {
         gasSettings: {
           maxPriceInGwei: 10000,
