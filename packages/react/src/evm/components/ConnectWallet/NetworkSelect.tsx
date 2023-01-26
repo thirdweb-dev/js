@@ -1,5 +1,5 @@
-import { useThirdwebConfigContext } from "../../contexts/thirdweb-config";
 import { Select, SelectProps } from "../shared/Select";
+import { useThirdwebConfigContext } from "@thirdweb-dev/react-core/evm";
 import { useMemo } from "react";
 
 export interface SupportedNetworkSelectProps extends SelectProps {

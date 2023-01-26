@@ -1,10 +1,7 @@
-import { useThirdwebAuthConfig } from "../../contexts/thirdweb-auth";
-import { LoginConfig, useAuth } from "../../hooks/auth";
 import { useMetamask } from "../../hooks/connectors/useMetamask";
 import { useConnect } from "../../hooks/wagmi-required/useConnect";
 import { useDisconnect } from "../../hooks/wagmi-required/useDisconnect";
 import { useNetwork } from "../../hooks/wagmi-required/useNetwork";
-import { useAddress, useBalance, useChainId } from "../../hooks/wallet";
 import { Portal } from "../../lib/portal";
 import { shortenIfAddress } from "../../utils/addresses";
 import { useClipboard } from "../hooks/useCopyClipboard";
@@ -24,6 +21,14 @@ import { FiLock } from "@react-icons/all-files/fi/FiLock";
 import { FiShuffle } from "@react-icons/all-files/fi/FiShuffle";
 import { FiWifi } from "@react-icons/all-files/fi/FiWifi";
 import { FiXCircle } from "@react-icons/all-files/fi/FiXCircle";
+import {
+  useThirdwebAuthConfig,
+  LoginConfig,
+  useAuth,
+  useAddress,
+  useBalance,
+  useChainId,
+} from "@thirdweb-dev/react-core/evm";
 import { ChainId, LoginOptions, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import * as menu from "@zag-js/menu";
 import { normalizeProps, useMachine } from "@zag-js/react";

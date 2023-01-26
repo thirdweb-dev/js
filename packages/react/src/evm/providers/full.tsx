@@ -1,10 +1,13 @@
 import type { GnosisSafeConnector } from "../connectors/gnosis-safe";
 import type { MagicConnector } from "../connectors/magic";
-import { ThirdwebAuthConfig } from "../contexts/thirdweb-auth";
-import { ThirdwebConfigProvider } from "../contexts/thirdweb-config";
-import { ThirdwebSDKProvider, ThirdwebSDKProviderProps } from "./base";
 import { QueryClient } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
+import {
+  ThirdwebAuthConfig,
+  ThirdwebConfigProvider,
+  ThirdwebSDKProvider,
+  ThirdwebSDKProviderProps,
+} from "@thirdweb-dev/react-core/evm";
 import { SDKOptions, SDKOptionsOutput } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import React, { useMemo } from "react";

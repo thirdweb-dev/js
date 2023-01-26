@@ -1,5 +1,3 @@
-import { ThirdwebAuthConfig } from "../contexts/thirdweb-auth";
-import { ThirdwebSDKProvider } from "./base";
 import type { WalletAdapter } from "@solana/wallet-adapter-base";
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import {
@@ -7,6 +5,10 @@ import {
   useWallet,
   WalletProvider,
 } from "@solana/wallet-adapter-react";
+import {
+  ThirdwebSDKProvider,
+  ThirdwebAuthConfig,
+} from "@thirdweb-dev/react-core/solana";
 import { getUrlForNetwork, Network } from "@thirdweb-dev/sdk/solana";
 import { PropsWithChildren } from "react";
 

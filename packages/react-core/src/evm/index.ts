@@ -3,7 +3,6 @@ export * from "./providers/base";
 
 // constants
 export * from "./constants/chain";
-export * from "./constants/ipfs";
 export * from "./constants/runtime";
 
 // contract hooks
@@ -28,9 +27,9 @@ export * from "./hooks/useNetworkMismatch";
 export * from "./hooks/wallet";
 
 // contexts
-export * from "./contexts/thirdweb-auth"
-export * from "./contexts/thirdweb-config"
-export * from "./contexts/thirdweb-wallet"
+export * from "./contexts/thirdweb-auth";
+export * from "./contexts/thirdweb-config";
+export * from "./contexts/thirdweb-wallet";
 
 // re-exports
 export { ChainId } from "@thirdweb-dev/sdk";
@@ -38,3 +37,7 @@ export { ChainId } from "@thirdweb-dev/sdk";
 // types
 export * from "./types";
 export type { ThirdwebAuthConfig } from "./contexts/thirdweb-auth";
+
+// Utilities and Others
+export { shouldNeverPersistQuery } from "../core/query-utils/query-key";
+export type { RequiredParam } from "../core/query-utils/required-param";
