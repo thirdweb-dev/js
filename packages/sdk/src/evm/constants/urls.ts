@@ -66,6 +66,7 @@ export const CHAIN_ID_TO_NAME = Object.fromEntries(
 
 export function buildDefaultMap(sdkOptions: SDKOptions = {}) {
   const options = SDKOptionsSchema.parse(sdkOptions);
+  console.log("options", options.chains);
   return options.chains.reduce((previousValue, currentValue) => {
     previousValue[currentValue.chainId] = currentValue;
     return previousValue;
@@ -87,7 +88,7 @@ export function getChainProvider(
 
   if (!rpcUrl) {
     throw new Error(
-      `No rpc url found for chain ${network}. Please provide a valid rpc url via the 'chainInfos' property of the sdk options.`,
+      `No rpc url found for chain ${network}. Please provide a valid rpc url via the 'chains' property of the sdk options.`,
     );
   }
   // apply API keys
@@ -107,7 +108,7 @@ export function toChainId(network: ChainIdOrName): number {
   }
   if (!(network in CHAIN_NAME_TO_ID)) {
     throw new Error(
-      `Cannot resolve chainId from: ${network} - please pass the chainId instead and specify it in the 'chainInfos' property of the SDK options.`,
+      `Cannot resolve chainId from: ${network} - please pass the chainId instead and specify it in the 'chains' property of the SDK options.`,
     );
   }
   return CHAIN_NAME_TO_ID[network as ChainNames];

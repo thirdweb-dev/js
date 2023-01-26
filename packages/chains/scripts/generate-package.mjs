@@ -148,7 +148,7 @@ import type { Chain } from "./types";
 
 ${exports.join("\n")}
 export * from "./types";
-export const defaultChains = [Ethereum, Goerli, Polygon, Mumbai, ArbitrumOne, ArbitrumGoerli, Optimism, OptimismGoerliTestnet, BinanceSmartChain, BinanceSmartChainTestnet, FantomOpera, FantomTestnet, AvalancheCChain, AvalancheFujiTestnet];
+export const defaultChains = [Ethereum, Goerli, Polygon, Mumbai, ArbitrumOne, ArbitrumGoerli, Optimism, OptimismGoerliTestnet, BinanceSmartChain, BinanceSmartChainTestnet, FantomOpera, FantomTestnet, AvalancheCChain, AvalancheFujiTestnet, Localhost];
 export const allChains = [${exportNames.join(", ")}];
 `,
 );
