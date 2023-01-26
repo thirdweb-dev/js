@@ -242,8 +242,8 @@ export const mochaHooks = {
     );
 
     storage = MockStorage();
-    sdk = ThirdwebSDK.fromPrivateKey(
-      LOCAL_NODE_PKEY, // matches the first signer in the default hardhat config
+    sdk = ThirdwebSDK.fromSigner(
+      signer,
       ChainId.Hardhat,
       {
         gasSettings: {
