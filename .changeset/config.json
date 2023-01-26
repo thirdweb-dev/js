@@ -3,8 +3,7 @@
   "changelog": ["@changesets/changelog-github", { "repo": "thirdweb-dev/js" }],
   "commit": false,
   "fixed": [
-    ["@thirdweb-dev/sdk", "@thirdweb-dev/react-core"],
-    ["@thirdweb-dev/react-core", "@thirdweb-dev/react"]
+    ["@thirdweb-dev/sdk", "@thirdweb-dev/react-core", "@thirdweb-dev/react"]
   ],
   "linked": [],
   "access": "public",
