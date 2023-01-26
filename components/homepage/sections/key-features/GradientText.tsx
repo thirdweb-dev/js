@@ -1,18 +1,19 @@
-import { Box } from "@chakra-ui/react";
+import { Box, LinkProps } from "@chakra-ui/react";
 import { Link } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
-type GradientTextProps = {
+interface GradientTextProps extends LinkProps {
   stopOne: string;
   stopTwo: string;
   href?: string;
-};
+}
 
 export const GradientText: ComponentWithChildren<GradientTextProps> = ({
   children,
   stopOne,
   stopTwo,
   href,
+  ...restProps
 }) => {
   const props = {
     bgGradient: `linear-gradient(70deg, ${stopOne}, ${stopTwo} , ${stopOne})`,
@@ -22,6 +23,7 @@ export const GradientText: ComponentWithChildren<GradientTextProps> = ({
 
   return href ? (
     <Link
+      {...restProps}
       href={href}
       transition="background 0.5s ease"
       _hover={{ bgPos: "100%" }}

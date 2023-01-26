@@ -1,12 +1,17 @@
 import { Aurora } from "../../Aurora";
 import { GradientText } from "./GradientText";
 import { KeyFeatureLayout } from "./KeyFeatureLayout";
-import { Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
+import {
+  Flex,
+  GridItem,
+  LinkBox,
+  LinkOverlay,
+  SimpleGrid,
+} from "@chakra-ui/react";
 import { ChakraNextImage as Image } from "components/Image";
-import React from "react";
-import { Heading, Link, Text } from "tw-components";
+import { Heading, Text } from "tw-components";
 
-export const LaunchSection = () => {
+export const LaunchSection: React.FC = () => {
   return (
     <KeyFeatureLayout
       title="Launch"
@@ -15,7 +20,8 @@ export const LaunchSection = () => {
       description="Deploy your contracts on-chain easily with a single command or through our Dashboard without requiring private keys."
     >
       <SimpleGrid columns={{ md: 2 }} gap={6}>
-        <GridItem
+        <LinkBox
+          as={GridItem}
           bg="#070707"
           rounded="lg"
           position="relative"
@@ -34,9 +40,6 @@ export const LaunchSection = () => {
             color="#E8A7D960"
           />
           <Flex
-            as={Link}
-            href="/deploy"
-            h="full"
             position="relative"
             flexDir="column"
             justify="space-between"
@@ -45,9 +48,14 @@ export const LaunchSection = () => {
             gap={6}
             _hover={{ textDecoration: "none" }}
           >
-            <Heading size="label.xl" lineHeight="1.2">
+            <Heading size="label.xl" lineHeight="1.2" as="h4">
               Ship your contracts on-chain effortlessly with{" "}
-              <GradientText href="/deploy" stopOne="#C77FBE" stopTwo="#D19FD4">
+              <GradientText
+                as={LinkOverlay}
+                href="/deploy"
+                stopOne="#C77FBE"
+                stopTwo="#D19FD4"
+              >
                 Deploy
               </GradientText>
             </Heading>
@@ -59,13 +67,15 @@ export const LaunchSection = () => {
               your dev team.
             </Text>
             <Image
+              pointerEvents="none"
               w="full"
               src={require("/public/assets/landingpage/launch-deploy.png")}
               alt=""
             />
           </Flex>
-        </GridItem>
-        <GridItem
+        </LinkBox>
+        <LinkBox
+          as={GridItem}
           bg="#070707"
           rounded="lg"
           position="relative"
@@ -84,9 +94,6 @@ export const LaunchSection = () => {
             color="#E8A7D960"
           />
           <Flex
-            as={Link}
-            href="/release"
-            h="full"
             position="relative"
             flexDir="column"
             justify="space-between"
@@ -95,9 +102,14 @@ export const LaunchSection = () => {
             gap={6}
             _hover={{ textDecoration: "none" }}
           >
-            <Heading size="label.xl" lineHeight="1.2">
+            <Heading size="label.xl" lineHeight="1.2" as="h4">
               Publish your contracts with{" "}
-              <GradientText href="/release" stopOne="#C77FBE" stopTwo="#D19FD4">
+              <GradientText
+                as={LinkOverlay}
+                href="/release"
+                stopOne="#C77FBE"
+                stopTwo="#D19FD4"
+              >
                 Release
               </GradientText>
             </Heading>
@@ -109,12 +121,13 @@ export const LaunchSection = () => {
               developers.
             </Text>
             <Image
+              pointerEvents="none"
               w="full"
               src={require("/public/assets/landingpage/launch-release.png")}
               alt=""
             />
           </Flex>
-        </GridItem>
+        </LinkBox>
       </SimpleGrid>
     </KeyFeatureLayout>
   );

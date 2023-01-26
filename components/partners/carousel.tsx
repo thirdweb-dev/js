@@ -55,7 +55,7 @@ export const PartnerCarousel: React.FC = () => {
       maxW="1200px"
       mx="auto"
       sx={{
-        "mask-image": `linear-gradient(to right, hsl(0 0% 0% / 0), hsl(0 0% 0% / 1) 10%, hsl(0 0% 0% / 1) 90%, hsl(0 0% 0% / 0));`,
+        maskImage: `linear-gradient(to right, hsl(0 0% 0% / 0), hsl(0 0% 0% / 1) 10%, hsl(0 0% 0% / 1) 90%, hsl(0 0% 0% / 0));`,
       }}
       pt={10}
       mb={{ base: 20, md: 24 }}

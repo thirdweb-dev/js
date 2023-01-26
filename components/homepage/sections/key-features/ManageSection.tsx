@@ -1,12 +1,19 @@
 import { Aurora } from "../../Aurora";
 import { GradientText } from "./GradientText";
 import { KeyFeatureLayout } from "./KeyFeatureLayout";
-import { Box, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  GridItem,
+  LinkBox,
+  LinkOverlay,
+  SimpleGrid,
+} from "@chakra-ui/react";
 import { ChakraNextImage as Image } from "components/Image";
 import React from "react";
-import { Heading, Link } from "tw-components";
+import { Heading } from "tw-components";
 
-export const ManageSection = () => {
+export const ManageSection: React.FC = () => {
   return (
     <KeyFeatureLayout
       title="Manage"
@@ -15,7 +22,8 @@ export const ManageSection = () => {
       description="Get insights and interact with all your contracts that are deployed on thirdweb from a single place."
     >
       <SimpleGrid columns={{ md: 11 }} gap={6}>
-        <GridItem
+        <LinkBox
+          as={GridItem}
           colSpan={{ md: 6 }}
           bg="#070707"
           rounded="lg"
@@ -35,18 +43,16 @@ export const ManageSection = () => {
             color="#9786DF60"
           />
           <Flex
-            as={Link}
-            href="/dashboards"
-            h="full"
             position="relative"
             flexDir="column"
             justify="space-between"
             px={14}
             _hover={{ textDecoration: "none" }}
           >
-            <Heading size="label.xl" lineHeight="1.2" py={12}>
+            <Heading size="label.xl" lineHeight="1.2" py={12} as="h4">
               Monitor and configure your contracts from your{" "}
               <GradientText
+                as={LinkOverlay}
                 href="/dashboards"
                 stopOne="#4F3DA5"
                 stopTwo="#8E81D0"
@@ -55,12 +61,13 @@ export const ManageSection = () => {
               </GradientText>
             </Heading>
             <Image
+              pointerEvents="none"
               w="full"
               src={require("/public/assets/landingpage/manage-dashboard.png")}
               alt=""
             />
           </Flex>
-        </GridItem>
+        </LinkBox>
         <GridItem
           colSpan={{ md: 5 }}
           bg="#070707"
@@ -81,7 +88,7 @@ export const ManageSection = () => {
             color="#9786DF60"
           />
           <Flex h="full" position="relative" flexDir="column" px={14}>
-            <Heading size="label.xl" lineHeight="1.2" py={12}>
+            <Heading size="label.xl" lineHeight="1.2" py={12} as="h4">
               Collaborate with your team and{" "}
               <GradientText stopOne="#4F3DA5" stopTwo="#8E81D0">
                 manage permissions
@@ -130,6 +137,7 @@ export const ManageSection = () => {
                 size="label.xl"
                 maxW={320}
                 textAlign={{ base: "center", md: "left" }}
+                as="h4"
               >
                 <GradientText stopOne="#4F3DA5" stopTwo="#8E81D0">
                   Automatic pre-built reports

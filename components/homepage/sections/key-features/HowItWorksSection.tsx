@@ -93,6 +93,7 @@ const Item: React.FC<{ item: Item }> = ({ item }) => {
         color="#A0A0A0"
         fontSize="0.7rem"
         textAlign="center"
+        as="h5"
       >
         {item.title}
       </Heading>
@@ -105,6 +106,7 @@ const Item: React.FC<{ item: Item }> = ({ item }) => {
         color="#A0A0A0"
         fontSize="0.7rem"
         textAlign="center"
+        as="h5"
       >
         {item.title}
       </Heading>
@@ -112,7 +114,7 @@ const Item: React.FC<{ item: Item }> = ({ item }) => {
   );
 };
 
-export const HowItWorksSection = () => {
+export const HowItWorksSection: React.FC = () => {
   return (
     <KeyFeatureLayout
       title="How it works"
@@ -163,6 +165,7 @@ export const HowItWorksSection = () => {
             fontSize="0.7rem"
             textAlign="center"
             mt="auto"
+            as="span"
           >
             APPS & GAMES
           </Heading>
@@ -195,6 +198,7 @@ export const HowItWorksSection = () => {
             color="#A0A0A0"
             fontSize="0.7rem"
             textAlign="center"
+            as="span"
           >
             DECENTRALIZED NETWORKS
           </Heading>
@@ -214,6 +218,7 @@ export const HowItWorksSection = () => {
             lineHeight="1"
             mt="-0.95rem"
             pb={2}
+            as="h4"
           >
             DEV TOOLS
           </Heading>
@@ -248,6 +253,7 @@ export const HowItWorksSection = () => {
             lineHeight="1"
             mt={{ base: 4, md: 8 }}
             pb={2}
+            as="h4"
           >
             INFRASTRUCTURE
           </Heading>

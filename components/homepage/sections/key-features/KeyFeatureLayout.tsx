@@ -24,6 +24,7 @@ export const KeyFeatureLayout: ComponentWithChildren<LayoutProps> = ({
       direction="column"
       align="center"
       w="full"
+      as="section"
     >
       <Flex
         maxW={700}
@@ -33,7 +34,7 @@ export const KeyFeatureLayout: ComponentWithChildren<LayoutProps> = ({
         textAlign="center"
       >
         <Heading
-          as="h1"
+          as="h2"
           size="label.xl"
           lineHeight="1.15"
           bgGradient={titleGradient}
@@ -41,13 +42,13 @@ export const KeyFeatureLayout: ComponentWithChildren<LayoutProps> = ({
         >
           {title}
         </Heading>
-        <Heading as="h2" size="title.2xl" color="white">
+        <Heading as="h3" size="title.2xl" color="white">
           {headline}
         </Heading>
         <Text
           py={8}
           mb={4}
-          as="h3"
+          as="h4"
           maxW={480}
           size="body.lg"
           color="whiteAlpha.700"

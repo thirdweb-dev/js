@@ -125,10 +125,14 @@ const employees = [
     name: "Sian Morton",
     twitter: "Sian_Morton",
   },
-  // {
-  //   name: "Yan Giet",
-  //   twitter: "",
-  // },
+  {
+    name: "Siddharth Adusumelli",
+    twitter: "shift4id",
+  },
+  {
+    name: "Yan Giet",
+    twitter: "",
+  },
   {
     name: "Yash Kumar",
     twitter: "yash09061",
@@ -296,16 +300,27 @@ const About: ThirdwebNextPage = () => {
               {employees.map((employee) => (
                 <Flex key={employee.name} flexDir="column" gap={1}>
                   <Heading size="title.sm">{employee.name}</Heading>
-                  <TrackedLink
-                    href={`https://twitter.com/${employee.twitter}`}
-                    isExternal
-                    category="team"
-                    label={employee.name}
-                  >
-                    <Text size="label.md" color="gray.500">
-                      @{employee.twitter}
+                  {employee.twitter ? (
+                    <TrackedLink
+                      href={`https://twitter.com/${employee.twitter}`}
+                      isExternal
+                      category="team"
+                      label={employee.name}
+                    >
+                      <Text size="label.md" color="gray.500">
+                        @{employee.twitter}
+                      </Text>
+                    </TrackedLink>
+                  ) : (
+                    <Text
+                      size="label.md"
+                      color="gray.700"
+                      fontWeight={400}
+                      fontStyle="italic"
+                    >
+                      no twitter
                     </Text>
-                  </TrackedLink>
+                  )}
                 </Flex>
               ))}
             </SimpleGrid>

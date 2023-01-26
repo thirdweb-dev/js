@@ -1,12 +1,18 @@
 import { Aurora } from "../../Aurora";
 import { GradientText } from "./GradientText";
 import { KeyFeatureLayout } from "./KeyFeatureLayout";
-import { Box, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  GridItem,
+  LinkBox,
+  LinkOverlay,
+  SimpleGrid,
+} from "@chakra-ui/react";
 import { ChakraNextImage as Image } from "components/Image";
-import React from "react";
-import { Heading, Link, Text } from "tw-components";
+import { Heading, Text } from "tw-components";
 
-export const BuildSection = () => {
+export const BuildSection: React.FC = () => {
   return (
     <KeyFeatureLayout
       title="Build"
@@ -15,7 +21,8 @@ export const BuildSection = () => {
       description="Leverage our easy-to-use SDKs, developer tools, and integrations with best-in-class partner providers."
     >
       <SimpleGrid columns={{ md: 5 }} gap={6}>
-        <GridItem
+        <LinkBox
+          as={GridItem}
           colSpan={{ md: 2 }}
           bg="#070707"
           rounded="lg"
@@ -34,34 +41,28 @@ export const BuildSection = () => {
             pos={{ top: "0%", left: "10%" }}
             color="#380D3F60"
           />
-          <Flex
-            as={Link}
-            href="/contractkit"
-            h="full"
-            position="relative"
-            flexDir="column"
-            justify="space-between"
-            _hover={{ textDecoration: "none" }}
-          >
-            <Heading size="label.xl" lineHeight="1.2" py={12} px={14}>
-              Create your own contracts with our{" "}
-              <GradientText
-                href="/contractkit"
-                stopOne="#805AA8"
-                stopTwo="#BAA2D4"
-              >
-                ContractKit
-              </GradientText>
-            </Heading>
-            <Image
-              pl="14"
-              w="full"
-              src={require("/public/assets/landingpage/build-contractkit.png")}
-              alt=""
-            />
-          </Flex>
-        </GridItem>
-        <GridItem
+
+          <Heading as="h4" size="label.xl" lineHeight="1.2" py={12} px={14}>
+            Create your own contracts with our{" "}
+            <GradientText
+              as={LinkOverlay}
+              href="/contractkit"
+              stopOne="#805AA8"
+              stopTwo="#BAA2D4"
+            >
+              ContractKit
+            </GradientText>
+          </Heading>
+          <Image
+            pointerEvents="none"
+            pl={14}
+            w="full"
+            src={require("/public/assets/landingpage/build-contractkit.png")}
+            alt=""
+          />
+        </LinkBox>
+        <LinkBox
+          as={GridItem}
           colSpan={{ md: 3 }}
           bg="#070707"
           rounded="lg"
@@ -86,37 +87,35 @@ export const BuildSection = () => {
             pos={{ top: "100%", left: "0%" }}
             color="#380D3F60"
           />
-          <Flex
-            as={Link}
-            href="/explore"
-            h="full"
-            position="relative"
-            flexDir="column"
-            align="center"
-            justify="space-between"
-            _hover={{ textDecoration: "none" }}
+
+          <Heading
+            as="h4"
+            lineHeight="1.2"
+            textAlign="center"
+            size="label.xl"
+            px={14}
+            py={12}
           >
-            <Heading
-              lineHeight="1.2"
-              textAlign="center"
-              size="label.xl"
-              px={14}
-              py={12}
+            Discover ready-to-deploy <br />
+            contracts in{" "}
+            <GradientText
+              as={LinkOverlay}
+              href="/explore"
+              stopOne="#805AA8"
+              stopTwo="#BAA2D4"
             >
-              Discover ready-to-deploy <br />
-              contracts in{" "}
-              <GradientText href="/explore" stopOne="#805AA8" stopTwo="#BAA2D4">
-                Explore
-              </GradientText>
-            </Heading>
-            <Image
-              w="full"
-              src={require("/public/assets/landingpage/build-explore.png")}
-              alt=""
-            />
-          </Flex>
-        </GridItem>
-        <GridItem
+              Explore
+            </GradientText>
+          </Heading>
+          <Image
+            pointerEvents="none"
+            w="full"
+            src={require("/public/assets/landingpage/build-explore.png")}
+            alt=""
+          />
+        </LinkBox>
+        <LinkBox
+          as={GridItem}
           colSpan={{ md: 5 }}
           bg="#070707"
           rounded="lg"
@@ -137,9 +136,6 @@ export const BuildSection = () => {
           />
           <SimpleGrid columns={{ md: 2 }} h="full" position="relative">
             <Flex
-              as={Link}
-              href="/sdk"
-              h="full"
               flexDir="column"
               justify="center"
               px={14}
@@ -152,9 +148,15 @@ export const BuildSection = () => {
                 lineHeight="1.2"
                 size="label.xl"
                 textAlign={{ base: "center", md: "left" }}
+                as="h4"
               >
                 Integrate web3 technologies into your apps and games with our{" "}
-                <GradientText href="/sdk" stopOne="#805AA8" stopTwo="#BAA2D4">
+                <GradientText
+                  as={LinkOverlay}
+                  href="/sdk"
+                  stopOne="#805AA8"
+                  stopTwo="#BAA2D4"
+                >
                   easy-to-use SDKs
                 </GradientText>
               </Heading>
@@ -167,6 +169,7 @@ export const BuildSection = () => {
             </Flex>
             <Box px={14} py={6}>
               <Image
+                pointerEvents="none"
                 maxH={200}
                 h="full"
                 src={require("/public/assets/landingpage/build-sdk.png")}
@@ -174,7 +177,7 @@ export const BuildSection = () => {
               />
             </Box>
           </SimpleGrid>
-        </GridItem>
+        </LinkBox>
         <GridItem
           colSpan={{ md: 5 }}
           bg="#070707"
@@ -208,6 +211,7 @@ export const BuildSection = () => {
                 lineHeight="1.2"
                 size="label.xl"
                 textAlign={{ base: "center", md: "left" }}
+                as="h4"
               >
                 <GradientText stopOne="#805AA8" stopTwo="#BAA2D4">
                   Fully managed infrastructure services
