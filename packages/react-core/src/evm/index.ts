@@ -3,7 +3,6 @@ export * from "./providers/base";
 
 // constants
 export * from "./constants/chain";
-export * from "./constants/ipfs";
 export * from "./constants/runtime";
 
 // contract hooks
