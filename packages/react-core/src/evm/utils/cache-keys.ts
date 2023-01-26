@@ -1,4 +1,5 @@
 import { RequiredParam } from "../../core/query-utils/required-param";
+import { SupportedChainId } from "../constants/chain";
 import { ContractAddress, WalletAddress } from "../types";
 import { QueryClient, QueryKey } from "@tanstack/react-query";
 import type {
@@ -77,7 +78,7 @@ export const cacheKeys = {
   },
   wallet: {
     balance: (
-      chainId: number,
+      chainId: SupportedChainId,
       walletAddress: RequiredParam<WalletAddress>,
       tokenAddress?: ContractAddress,
     ) =>
@@ -179,14 +180,6 @@ export const cacheKeys = {
           createContractCacheKey(
             contractAddress,
             params ? ["getAllUnclaimed", params] : ["getAllUnclaimed"],
-          ),
-        getAllClaimed: (
-          contractAddress: RequiredParam<ContractAddress>,
-          params?: QueryAllParams,
-        ) =>
-          createContractCacheKey(
-            contractAddress,
-            params ? ["getAllClaimed", params] : ["getAllClaimed"],
           ),
         totalUnclaimedSupply: (
           contractAddress: RequiredParam<ContractAddress>,
@@ -313,11 +306,11 @@ export const cacheKeys = {
           contractAddress,
           tokenId
             ? [
-              "claimConditions",
-              "getIneligibilityReasons",
-              { tokenId },
-              params,
-            ]
+                "claimConditions",
+                "getIneligibilityReasons",
+                { tokenId },
+                params,
+              ]
             : ["claimConditions", "getIneligibilityReasons", params],
         ),
       // combinations of queries cache keys
@@ -330,11 +323,11 @@ export const cacheKeys = {
           contractAddress,
           tokenId
             ? [
-              "claimConditions",
-              "useActiveClaimConditionForWallet",
-              { tokenId, walletAddress },
-              ,
-            ]
+                "claimConditions",
+                "useActiveClaimConditionForWallet",
+                { tokenId, walletAddress },
+                ,
+              ]
             : ["claimConditions", "getIneligibilityReasons", { walletAddress }],
         ),
     },
