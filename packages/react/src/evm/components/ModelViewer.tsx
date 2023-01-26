@@ -12,18 +12,21 @@ declare global {
 }
 
 export const ModelViewer = React.forwardRef<HTMLCanvasElement, MediaRendererProps>(
-  ({ src, alt, style, ...restProps }, ref) => {
+  ({ src, alt, style, poster, ...restProps }, ref) => {
     const modelRef = useRef<HTMLCanvasElement>(null);
 
     return (
-      <model-viewer
-        style={style}
-        src={src}
-        alt={alt}
-        camera-controls
-        ref={mergeRefs([modelRef, ref])}        
-        {...restProps}>
-      </model-viewer>
+      <div style={{...style}}>
+        <model-viewer
+          style={{ objectFit: 'contain', width:'100%' }}
+          src={src}
+          alt={alt}
+          camera-controls
+          ref={mergeRefs([modelRef, ref])}   
+          poster={poster}     
+          {...restProps}>
+        </model-viewer>
+      </div>
     );
   }
 );
