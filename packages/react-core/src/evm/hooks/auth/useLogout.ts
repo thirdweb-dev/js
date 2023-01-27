@@ -1,6 +1,6 @@
-import { useThirdwebAuthConfig } from "../../contexts/thirdweb-auth";
+import { useThirdwebAuthContext } from "../../contexts/thirdweb-auth";
 import { cacheKeys } from "../../utils/cache-keys";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import invariant from "tiny-invariant";
 
 /**
@@ -13,16 +13,22 @@ import invariant from "tiny-invariant";
  */
 export function useLogout() {
   const queryClient = useQueryClient();
-  const authConfig = useThirdwebAuthConfig();
+  const authConfig = useThirdwebAuthContext();
 
-  function logout() {
-    invariant(
-      authConfig,
-      "Please specify an authConfig in the ThirdwebProvider",
-    );
-    queryClient.invalidateQueries(cacheKeys.auth.user());
-    window.location.href = `${authConfig.authUrl}/logout`;
-  }
+  const logout = useMutation({
+    mutationFn: async () => {
+      invariant(
+        authConfig,
+        "Please specify an authConfig in the ThirdwebProvider",
+      );
 
-  return logout;
+      await fetch(`${authConfig.authUrl}/logout`, {
+        method: "POST",
+      });
+
+      queryClient.invalidateQueries(cacheKeys.auth.user());
+    },
+  });
+
+  return { logout: logout.mutateAsync, isLoading: logout.isLoading };
 }

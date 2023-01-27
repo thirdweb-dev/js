@@ -1,5 +1,14 @@
 # thirdweb
 
+## 0.9.11
+
+### Patch Changes
+
+- [#517](https://github.com/thirdweb-dev/js/pull/517) [`9e591b3`](https://github.com/thirdweb-dev/js/commit/9e591b32b78f1300b2014d44d591d297249a1f84) Thanks [@avneesh0612](https://github.com/avneesh0612)! - add express, node.js, and react native templates
+
+- Updated dependencies [[`f37e86b`](https://github.com/thirdweb-dev/js/commit/f37e86b7d21f7da0df6ab549cb903dc99db10a79), [`f15733f`](https://github.com/thirdweb-dev/js/commit/f15733f34c5985eec5593b3d9196e5528ba96443)]:
+  - @thirdweb-dev/sdk@3.7.0
+
 ## 0.9.10
 
 ### Patch Changes

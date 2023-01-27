@@ -1,0 +1,4 @@
+{
+  "main": "dist/thirdweb-dev-wallets-evm-connectors-coinbase-wallet.cjs.js",
+  "module": "dist/thirdweb-dev-wallets-evm-connectors-coinbase-wallet.esm.js"
+}
