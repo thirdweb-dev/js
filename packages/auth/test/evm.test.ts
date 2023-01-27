@@ -318,26 +318,26 @@ describe("Wallet Authentication", async () => {
     }
   });
 
-  it("Should propagate context on token", async () => {
+  it("Should propagate session on token", async () => {
     const payload = await auth.login();
 
     auth.updateWallet(adminWallet);
     const token = await auth.generate(payload, {
-      tokenContext: { role: "admin" },
+      session: { role: "admin" },
     });
 
     const user = await auth.authenticate(token);
 
     expect(user.address).to.equal(await signerWallet.getAddress());
-    expect(user.context).to.deep.equal({ role: "admin" });
+    expect(user.session).to.deep.equal({ role: "admin" });
   });
 
-  it("Should call context callback function", async () => {
+  it("Should call session callback function", async () => {
     const payload = await auth.login();
 
     auth.updateWallet(adminWallet);
     const token = await auth.generate(payload, {
-      tokenContext: (address: string) => {
+      session: (address: string) => {
         return { address, role: "admin" };
       },
     });
@@ -345,7 +345,7 @@ describe("Wallet Authentication", async () => {
     const user = await auth.authenticate(token);
 
     expect(user.address).to.equal(await signerWallet.getAddress());
-    expect(user.context).to.deep.equal({
+    expect(user.session).to.deep.equal({
       address: await signerWallet.getAddress(),
       role: "admin",
     });
