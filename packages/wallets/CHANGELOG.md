@@ -1,5 +1,13 @@
 # @thirdweb-dev/wallets
 
+## 0.2.0
+
+### Minor Changes
+
+- [#460](https://github.com/thirdweb-dev/js/pull/460) [`a6c074c`](https://github.com/thirdweb-dev/js/commit/a6c074c3f33148cd17f5a66a58df9272a4381bab) Thanks [@adam-maj](https://github.com/adam-maj)! - Wallets abstraction along with major Auth upgrade. Wallets split into EVM and Solana entrypoints along with `GenericAuthWallet` implementation.
+
+  Additionally, `AWSKmsWallet` and `AWSSecretsManager` wallets have been moved into the `@thirdweb-dev/wallets/evm` entrypoint from the SDK.
+
 ## 0.1.1
 
 ### Patch Changes
