@@ -9,6 +9,8 @@ import { PageId } from "page-id";
 import { Heading, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
+const TRACKING_CATEGORY = "deploy";
+
 const GUIDES = [
   {
     title: "Deploy Smart Contracts From A Gnosis Safe",
@@ -40,7 +42,7 @@ const Deploy: ThirdwebNextPage = () => {
     >
       {/* hero */}
       <Hero
-        trackingCategory="deploy"
+        trackingCategory={TRACKING_CATEGORY}
         name="Deploy"
         title="Simple contract deployment workflow for teams"
         description="Deploy contracts on-chain with a simple deployment workflow designed for team collaboration."
@@ -111,6 +113,7 @@ const Deploy: ThirdwebNextPage = () => {
       {/* Guides */}
       <GuidesShowcase
         title="Learn how to build"
+        category={TRACKING_CATEGORY}
         description="Check out our guides to learn how to build with Deploy"
         solution="Deploy"
         guides={GUIDES}

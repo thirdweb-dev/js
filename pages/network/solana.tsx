@@ -17,6 +17,8 @@ import { PageId } from "page-id";
 import { Heading, LinkButton } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
+const TRACKING_CATEGORY = "solana";
+
 const SOLANA_GUIDES = [
   {
     title: "How to Create an NFT Drop on Solana",
@@ -202,6 +204,7 @@ const Solana: ThirdwebNextPage = () => {
 
       <GuidesShowcase
         title="Learn how to build on Solana"
+        category={TRACKING_CATEGORY}
         description="Check out our comprehensive guides to get you started building on
         Solana with thirdweb."
         solution="Solana"

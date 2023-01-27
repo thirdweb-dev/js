@@ -14,6 +14,8 @@ import { PageId } from "page-id";
 import { Heading } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
+const TRACKING_CATEGORY = "gaming_kit";
+
 const GAMING_GUIDES = [
   {
     title: "Get Started with the Unity SDK",
@@ -87,7 +89,7 @@ const Gaming: ThirdwebNextPage = () => {
         gradient="linear-gradient(145.96deg, rgba(205, 0, 238, 1) 5.07%, #1652F0 100%);"
         image={require("public/assets/solutions-pages/gaming/hero.png")}
         type="Solutions"
-        trackingCategory="gaming_kit"
+        trackingCategory={TRACKING_CATEGORY}
         underGetStarted={
           <Flex gap={2} justify="center" align="center">
             <Heading size="subtitle.xs" as="span" mt={1}>
@@ -194,18 +196,21 @@ const Gaming: ThirdwebNextPage = () => {
         >
           <ProductLearnMoreCard
             title="Build"
+            category={TRACKING_CATEGORY}
             description="Discover ready-to-go contracts or build your own with ContractKit for gaming use cases, e.g. NFT Marketplace, Multiwrap, Packs, Tokens, and more. Enable fiat-to-crypto capabilities with Coinbase Pay integration. Integrate NFT marketplace to enforce royalty fees."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-1.png")}
             href="/explore/gaming"
           />
           <ProductLearnMoreCard
             title="Launch"
+            category={TRACKING_CATEGORY}
             description="Powerful Game Engine SDKs enable you to integrate web3 features into browser-based games built on Unity. SDKs allow you to easily integrate popular wallets and marketplaces into your game. Unreal Engine SDK coming soon."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-2.png")}
             href="https://portal.thirdweb.com/gamingkit"
           />
           <ProductLearnMoreCard
             title="Manage"
+            category={TRACKING_CATEGORY}
             description="View and interact with your web3 game smart contracts directly from a user interface, e.g. view all NFTs owned by a player."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
             href="https://portal.thirdweb.com/dashboard"
@@ -217,6 +222,7 @@ const Gaming: ThirdwebNextPage = () => {
 
       <GuidesShowcase
         title="Start building web3 games"
+        category={TRACKING_CATEGORY}
         description="Check out our guides and case studies to start building games with thirdweb"
         solution="Gaming"
         guides={GAMING_GUIDES}

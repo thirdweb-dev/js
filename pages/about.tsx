@@ -131,7 +131,7 @@ const employees = [
   },
   {
     name: "Yan Giet",
-    twitter: "",
+    twitter: "ygiet",
   },
   {
     name: "Yash Kumar",
@@ -142,38 +142,28 @@ const employees = [
 const vcs = [
   {
     name: "Haun Ventures",
-    logo: "/assets/investors/haun.svg",
+    logo: "/assets/about/haun.svg",
     link: "https://haun.co",
   },
   {
     name: "Coinbase Ventures",
-    logo: "/assets/investors/coin-ventures.png",
+    logo: "/assets/about/coin-ventures.svg",
     link: "https://coinbase.com",
   },
   {
     name: "Shopify",
-    logo: "/assets/investors/shopify.svg",
+    logo: "/assets/about/shopify.svg",
     link: "https://shopify.com",
   },
   {
-    name: "Polygon",
-    logo: "/assets/investors/polygon.svg",
-    link: "https://polygon.technology/",
+    name: "Mark Cuban",
+    logo: "/assets/about/mark-cuban.svg",
+    link: "https://markcuban.com/",
   },
   {
     name: "Founders, Inc.",
-    logo: "/assets/investors/f-inc.png",
+    logo: "/assets/about/f-inc.svg",
     link: "https://f.inc",
-  },
-  {
-    name: "Protocol Labs",
-    logo: "/assets/investors/protocol-labs.svg",
-    link: "https://protocol.ai/",
-  },
-  {
-    name: "Shrug",
-    logo: "/assets/investors/shrug-vc.png",
-    link: "https://shrug.vc",
   },
 ] as const;
 
@@ -331,12 +321,11 @@ const About: ThirdwebNextPage = () => {
             </Heading>
             <Flex gap={{ base: 8, md: 16 }} direction="column">
               <SimpleGrid
-                placeItems="center"
-                columns={{ base: 1, md: 3 }}
+                columns={{ base: 2, md: 5 }}
                 gap={8}
                 justifyContent="space-evenly"
               >
-                {vcs.slice(0, 3).map((backer) => (
+                {vcs.map((backer) => (
                   <TrackedLink
                     key={backer.name}
                     href={backer.link}
@@ -345,41 +334,6 @@ const About: ThirdwebNextPage = () => {
                     label={backer.name}
                   >
                     <Image
-                      filter={
-                        backer.name === "Shrug" ||
-                        backer.name === "Protocol Labs"
-                          ? "invert(1)"
-                          : undefined
-                      }
-                      w="164px"
-                      h="50px"
-                      objectFit="contain"
-                      src={backer.logo}
-                      alt={backer.name}
-                    />
-                  </TrackedLink>
-                ))}
-              </SimpleGrid>
-              <SimpleGrid
-                columns={{ base: 2, md: 4 }}
-                gap={8}
-                justifyContent="space-evenly"
-              >
-                {vcs.slice(3, vcs.length).map((backer) => (
-                  <TrackedLink
-                    key={backer.name}
-                    href={backer.link}
-                    isExternal
-                    category="backer"
-                    label={backer.name}
-                  >
-                    <Image
-                      filter={
-                        backer.name === "Shrug" ||
-                        backer.name === "Protocol Labs"
-                          ? "invert(1)"
-                          : undefined
-                      }
                       w="164px"
                       h="50px"
                       objectFit="contain"

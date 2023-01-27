@@ -11,6 +11,8 @@ import {
 import { ChakraNextImage as Image } from "components/Image";
 import { Heading, Text } from "tw-components";
 
+const TRACKING_CATEGORY = "launch_section";
+
 export const LaunchSection: React.FC = () => {
   return (
     <KeyFeatureLayout
@@ -53,6 +55,8 @@ export const LaunchSection: React.FC = () => {
               <GradientText
                 as={LinkOverlay}
                 href="/deploy"
+                category={TRACKING_CATEGORY}
+                label="deploy"
                 stopOne="#C77FBE"
                 stopTwo="#D19FD4"
               >
@@ -107,6 +111,8 @@ export const LaunchSection: React.FC = () => {
               <GradientText
                 as={LinkOverlay}
                 href="/release"
+                category={TRACKING_CATEGORY}
+                label="release"
                 stopOne="#C77FBE"
                 stopTwo="#D19FD4"
               >

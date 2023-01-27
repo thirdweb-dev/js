@@ -1,8 +1,8 @@
-import { Box, LinkProps } from "@chakra-ui/react";
-import { Link } from "tw-components";
+import { Box } from "@chakra-ui/react";
+import { TrackedLink, TrackedLinkProps } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
-interface GradientTextProps extends LinkProps {
+interface GradientTextProps extends Omit<TrackedLinkProps, "href"> {
   stopOne: string;
   stopTwo: string;
   href?: string;
@@ -22,7 +22,7 @@ export const GradientText: ComponentWithChildren<GradientTextProps> = ({
   };
 
   return href ? (
-    <Link
+    <TrackedLink
       {...restProps}
       href={href}
       transition="background 0.5s ease"
@@ -30,7 +30,7 @@ export const GradientText: ComponentWithChildren<GradientTextProps> = ({
       {...props}
     >
       {children}
-    </Link>
+    </TrackedLink>
   ) : (
     <Box as="span" {...props}>
       {children}

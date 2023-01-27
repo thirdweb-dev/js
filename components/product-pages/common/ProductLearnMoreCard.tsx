@@ -3,13 +3,14 @@ import { ChakraNextImage } from "components/Image";
 import { StaticImageData } from "next/image";
 import { ReactNode } from "react";
 import { FiArrowRight } from "react-icons/fi";
-import { Heading, Link, Text } from "tw-components";
+import { Heading, Text, TrackedLink, TrackedLinkProps } from "tw-components";
 
 interface ProductLearnMoreCardProps {
   icon: StaticImageData;
   title: string;
   description: ReactNode;
   href: string;
+  category: TrackedLinkProps["category"];
 }
 
 export const ProductLearnMoreCard: React.FC<ProductLearnMoreCardProps> = ({
@@ -17,6 +18,7 @@ export const ProductLearnMoreCard: React.FC<ProductLearnMoreCardProps> = ({
   icon,
   description,
   href,
+  category,
 }) => {
   return (
     <Flex direction="column" justify="space-between" align="flex-start" gap={4}>
@@ -31,9 +33,11 @@ export const ProductLearnMoreCard: React.FC<ProductLearnMoreCardProps> = ({
           {description}
         </Text>
       </Flex>
-      <Link
+      <TrackedLink
         width="auto"
         href={href}
+        category={category}
+        label={title.replace(" ", "_").toLowerCase()}
         isExternal
         color="white"
         display="flex"
@@ -48,7 +52,7 @@ export const ProductLearnMoreCard: React.FC<ProductLearnMoreCardProps> = ({
           transition="transform 0.2s"
           _groupHover={{ transform: "rotate(-45deg) translateX(2px)" }}
         />
-      </Link>
+      </TrackedLink>
     </Flex>
   );
 };

@@ -18,6 +18,8 @@ interface NFTContractInfo {
   link: string;
 }
 
+const TRACKING_CATEGORY = "minting_kit";
+
 const exploreNFTContracts: NFTContractInfo[] = [
   {
     name: "Multiwrap",
@@ -108,7 +110,7 @@ const Minting: ThirdwebNextPage = () => {
             Create powerful NFT experiences.
           </>
         }
-        trackingCategory="minting_kit"
+        trackingCategory={TRACKING_CATEGORY}
         buttonText="Get started"
         type="Solutions"
         buttonLink="https://portal.thirdweb.com/pre-built-contracts/choosing-the-right-pre-built-contract"
@@ -233,6 +235,7 @@ const Minting: ThirdwebNextPage = () => {
         >
           <ProductLearnMoreCard
             title="Build"
+            category={TRACKING_CATEGORY}
             description={
               <>
                 Build your own NFT and Marketplace contracts with{" "}
@@ -261,12 +264,14 @@ const Minting: ThirdwebNextPage = () => {
           />
           <ProductLearnMoreCard
             title="Launch"
+            category={TRACKING_CATEGORY}
             description="Deploy your NFT & Marketplace contracts on-chain with a simple contract deployment workflow designed for team collaboration"
             icon={require("/public/assets/product-pages/dashboard/hero-icon-2.png")}
             href="https://portal.thirdweb.com/deploy"
           />
           <ProductLearnMoreCard
             title="Manage"
+            category={TRACKING_CATEGORY}
             description="All your on-chain analytics in one place. Monitor, configure, and interact with your NFT contracts directly from a user interface."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
             href="https://portal.thirdweb.com/dashboard"
@@ -343,6 +348,7 @@ const Minting: ThirdwebNextPage = () => {
       {/* Guides */}
       <GuidesShowcase
         title="Start building NFT experiences"
+        category={TRACKING_CATEGORY}
         description="Check out our guides to start building NFT experiences with thirdweb."
         solution="NFT-Drop"
         guides={GUIDES}

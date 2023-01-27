@@ -9,6 +9,8 @@ import { Hero } from "components/product-pages/common/Hero";
 import { ProductCard } from "components/product-pages/common/ProductCard";
 import { Heading } from "tw-components";
 
+const TRACKING_CATEGORY = "storage";
+
 const GUIDES = [
   {
     title: "Host Your Web Application On IPFS",
@@ -39,7 +41,7 @@ const Storage: ThirdwebNextPage = () => {
       }}
     >
       <Hero
-        trackingCategory="storage"
+        trackingCategory={TRACKING_CATEGORY}
         name="Storage"
         title="Secure, fast, decentralized storage"
         description="Get fast access to data stored on blockchain with a unified API that works with storage provider of your choice"
@@ -102,6 +104,7 @@ const Storage: ThirdwebNextPage = () => {
 
         <GuidesShowcase
           title="Learn how to build"
+          category={TRACKING_CATEGORY}
           description="Check out our guides to learn how to build with Storage"
           solution="Storage"
           guides={GUIDES}

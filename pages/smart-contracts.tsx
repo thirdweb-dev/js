@@ -32,6 +32,8 @@ const CONTRACTS_GUIDES = [
   },
 ];
 
+const TRACKING_CATEGORY = "smart_contracts";
+
 const PreBuiltContracts: ThirdwebNextPage = () => {
   return (
     <ProductPage
@@ -52,7 +54,7 @@ const PreBuiltContracts: ThirdwebNextPage = () => {
       }}
     >
       <Hero
-        trackingCategory="smart_contracts"
+        trackingCategory={TRACKING_CATEGORY}
         name="Explore"
         title="Discover and deploy contracts in 1-click"
         description="The best place for web3 developers to explore smart contracts from world-class web3 protocols & engineers — all deployable with one click."
@@ -109,18 +111,21 @@ const PreBuiltContracts: ThirdwebNextPage = () => {
         <SimpleGrid columns={{ base: 1, md: 3 }} gap={{ base: 12, md: 6 }}>
           <ProductLearnMoreCard
             title="Gaming"
+            category={TRACKING_CATEGORY}
             description="Integrate marketplace contracts directly in-game to enforce royalty fees. Staking contracts for play-to-earn blockchain games."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-1.png")}
             href="/explore/gaming"
           />
           <ProductLearnMoreCard
             title="Commerce"
+            category={TRACKING_CATEGORY}
             description="NFTs contracts that enable you to reward loyal customers, sell digital collectibles as a new product category, and create token-gated storefronts."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-2.png")}
             href="/explore/commerce"
           />
           <ProductLearnMoreCard
             title="NFTs"
+            category={TRACKING_CATEGORY}
             description="NFT Collections, Editions, Drops and everything else NFT-related."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
             href="/explore/nft"
@@ -130,6 +135,7 @@ const PreBuiltContracts: ThirdwebNextPage = () => {
 
       <GuidesShowcase
         title="Learn how to build"
+        category={TRACKING_CATEGORY}
         description="Check out our guides to learn how to build with contracts on Explore."
         solution="Contracts"
         guides={CONTRACTS_GUIDES}

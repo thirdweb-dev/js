@@ -12,6 +12,8 @@ import {
 import { ChakraNextImage as Image } from "components/Image";
 import { Heading, Text } from "tw-components";
 
+const TRACKING_CATEGORY = "build_section";
+
 export const BuildSection: React.FC = () => {
   return (
     <KeyFeatureLayout
@@ -47,6 +49,8 @@ export const BuildSection: React.FC = () => {
             <GradientText
               as={LinkOverlay}
               href="/contractkit"
+              category={TRACKING_CATEGORY}
+              label="contractkit"
               stopOne="#805AA8"
               stopTwo="#BAA2D4"
             >
@@ -101,6 +105,8 @@ export const BuildSection: React.FC = () => {
             <GradientText
               as={LinkOverlay}
               href="/explore"
+              category={TRACKING_CATEGORY}
+              label="explore"
               stopOne="#805AA8"
               stopTwo="#BAA2D4"
             >
@@ -154,6 +160,8 @@ export const BuildSection: React.FC = () => {
                 <GradientText
                   as={LinkOverlay}
                   href="/sdk"
+                  category={TRACKING_CATEGORY}
+                  label="sdk"
                   stopOne="#805AA8"
                   stopTwo="#BAA2D4"
                 >
@@ -213,7 +221,12 @@ export const BuildSection: React.FC = () => {
                 textAlign={{ base: "center", md: "left" }}
                 as="h4"
               >
-                <GradientText stopOne="#805AA8" stopTwo="#BAA2D4">
+                <GradientText
+                  category={TRACKING_CATEGORY}
+                  label="infrastructure"
+                  stopOne="#805AA8"
+                  stopTwo="#BAA2D4"
+                >
                   Fully managed infrastructure services
                 </GradientText>{" "}
                 in a single toolkit to enable developers to build for scale

@@ -12,6 +12,8 @@ import { PageId } from "page-id";
 import { Heading, TrackedLink } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
+const TRACKING_CATEGORY = "auth";
+
 const GUIDES = [
   {
     title: "How to Create a Web3 Creator Platform with a Web2 Backend",
@@ -43,7 +45,7 @@ const Authentication: ThirdwebNextPage = () => {
     >
       {/* Hero */}
       <Hero
-        trackingCategory="auth"
+        trackingCategory={TRACKING_CATEGORY}
         name="Auth"
         title="Authenticate users with their wallets"
         description="Authenticate users with just their wallet. Build powerful web3 functionality into web2 experiences."
@@ -76,7 +78,7 @@ const Authentication: ThirdwebNextPage = () => {
                 color="white"
                 fontWeight="medium"
                 href="https://eips.ethereum.org/EIPS/eip-4361"
-                category="authentication"
+                category={TRACKING_CATEGORY}
                 label="sign-in-with-ethereum"
                 isExternal
               >
@@ -99,7 +101,7 @@ const Authentication: ThirdwebNextPage = () => {
                 color="white"
                 fontWeight="medium"
                 href="https://jwt.io"
-                category="authentication"
+                category={TRACKING_CATEGORY}
                 label="jwt"
                 isExternal
               >
@@ -172,6 +174,7 @@ const Authentication: ThirdwebNextPage = () => {
       {/* Guides */}
       <GuidesShowcase
         title="Learn how to build"
+        category={TRACKING_CATEGORY}
         description="Check out our guides to learn how to build with Auth"
         solution="Auth"
         guides={GUIDES}

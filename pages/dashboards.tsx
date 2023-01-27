@@ -30,6 +30,8 @@ const GUIDES = [
   },
 ];
 
+const TRACKING_CATEGORY = "dashboards";
+
 const Dashboard: ThirdwebNextPage = () => {
   return (
     <ProductPage
@@ -39,7 +41,7 @@ const Dashboard: ThirdwebNextPage = () => {
       }}
     >
       <Hero
-        trackingCategory="dashboards"
+        trackingCategory={TRACKING_CATEGORY}
         name="Dashboards"
         title="Dashboards to manage your web3 apps."
         description="Manage, analyze, and interact with all of your deployed contracts conveniently from a single place."
@@ -101,6 +103,7 @@ const Dashboard: ThirdwebNextPage = () => {
         {/* Guides */}
         <GuidesShowcase
           title="Learn how to build"
+          category={TRACKING_CATEGORY}
           description="Check out our guides to learn how to use Dashboard"
           guides={GUIDES}
         />

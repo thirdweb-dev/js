@@ -2,7 +2,9 @@ import { KeyFeatureLayout } from "./KeyFeatureLayout";
 import { Box, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage as Image } from "components/Image";
 import React from "react";
-import { Heading, Link } from "tw-components";
+import { Heading, TrackedLink } from "tw-components";
+
+const TRACKING_CATEGORY = "how_it_works_section";
 
 const devTools = [
   {
@@ -82,8 +84,10 @@ const Item: React.FC<{ item: Item }> = ({ item }) => {
       flexDir="column"
       align="center"
       gap="2.5"
-      as={Link}
+      as={TrackedLink}
       href={item.href}
+      category={TRACKING_CATEGORY}
+      label={item.title.replace(" ", "_").toLowerCase()}
       transition="opacity 0.2s"
       _hover={{ opacity: 0.8, textDecoration: "none" }}
     >

@@ -9,6 +9,8 @@ import { PageId } from "page-id";
 import { LinkButton, Text, TrackedLink } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
+const TRACKING_CATEGORY = "release";
+
 const RELEASE_GUIDES = [
   {
     title: "Introducing thirdweb Release",
@@ -44,7 +46,7 @@ const Release: ThirdwebNextPage = () => {
       }}
     >
       <Hero
-        trackingCategory="release"
+        trackingCategory={TRACKING_CATEGORY}
         name="Release"
         title="Share your contracts with the world."
         description="Accelerate your protocol's growth. Publishing your contract is the best way to get your contracts in front of 60k+ web3 developers."
@@ -82,7 +84,7 @@ const Release: ThirdwebNextPage = () => {
               By creating a release, your contracts become shareable with an
               elegant landing page for your contract. E.g.{" "}
               <TrackedLink
-                category="release-page"
+                category={TRACKING_CATEGORY}
                 label="unlock-protocol"
                 href="/unlock-protocol.eth/PublicLock"
                 textDecoration="underline"
@@ -139,6 +141,7 @@ const Release: ThirdwebNextPage = () => {
 
           <GuidesShowcase
             title="Learn how to release contracts"
+            category={TRACKING_CATEGORY}
             description="Check out our guides on how to release contracts"
             solution="Release"
             guides={RELEASE_GUIDES}

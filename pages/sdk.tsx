@@ -32,6 +32,8 @@ const SDK_GUIDES = [
   },
 ];
 
+const TRACKING_CATEGORY = "sdks";
+
 const Web3SDK: ThirdwebNextPage = () => {
   return (
     <ProductPage
@@ -42,7 +44,7 @@ const Web3SDK: ThirdwebNextPage = () => {
       }}
     >
       <Hero
-        trackingCategory="sdks"
+        trackingCategory={TRACKING_CATEGORY}
         name="SDKs"
         title="Powerful SDKs for every stack"
         description="Build web3 applications that can interact with your smart contracts using our powerful SDKs and CLI."
@@ -115,12 +117,14 @@ const Web3SDK: ThirdwebNextPage = () => {
         >
           <ProductLearnMoreCard
             title="Frontend applications"
+            category={TRACKING_CATEGORY}
             description="Build the frontend of your apps and games using our SDKs. This is best suited for when you need users to connect their wallets to interact with contracts."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-3.png")}
             href="https://portal.thirdweb.com/sdk/set-up-the-sdk/frontend"
           />
           <ProductLearnMoreCard
             title="Backend applications"
+            category={TRACKING_CATEGORY}
             description="Build the backend of your apps and games using our SDKs. Backend apps are best suited for when you need to perform actions from your wallet or simply need to read data."
             icon={require("/public/assets/product-pages/dashboard/hero-icon-1.png")}
             href="https://portal.thirdweb.com/sdk/set-up-the-sdk/backend"
@@ -130,6 +134,7 @@ const Web3SDK: ThirdwebNextPage = () => {
 
       <GuidesShowcase
         title="Learn how to build"
+        category={TRACKING_CATEGORY}
         description="Check out our SDK guides to start building web3 apps."
         solution="SDK"
         guides={SDK_GUIDES}

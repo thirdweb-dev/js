@@ -13,6 +13,8 @@ import { ChakraNextImage as Image } from "components/Image";
 import React from "react";
 import { Heading } from "tw-components";
 
+const TRACKING_CATEGORY = "manage_section";
+
 export const ManageSection: React.FC = () => {
   return (
     <KeyFeatureLayout
@@ -54,6 +56,8 @@ export const ManageSection: React.FC = () => {
               <GradientText
                 as={LinkOverlay}
                 href="/dashboards"
+                category={TRACKING_CATEGORY}
+                label="dashboard"
                 stopOne="#4F3DA5"
                 stopTwo="#8E81D0"
               >
@@ -90,7 +94,12 @@ export const ManageSection: React.FC = () => {
           <Flex h="full" position="relative" flexDir="column" px={14}>
             <Heading size="label.xl" lineHeight="1.2" py={12} as="h4">
               Collaborate with your team and{" "}
-              <GradientText stopOne="#4F3DA5" stopTwo="#8E81D0">
+              <GradientText
+                category={TRACKING_CATEGORY}
+                label="manage_permissions"
+                stopOne="#4F3DA5"
+                stopTwo="#8E81D0"
+              >
                 manage permissions
               </GradientText>
             </Heading>
@@ -139,7 +148,12 @@ export const ManageSection: React.FC = () => {
                 textAlign={{ base: "center", md: "left" }}
                 as="h4"
               >
-                <GradientText stopOne="#4F3DA5" stopTwo="#8E81D0">
+                <GradientText
+                  category={TRACKING_CATEGORY}
+                  label="reports"
+                  stopOne="#4F3DA5"
+                  stopTwo="#8E81D0"
+                >
                   Automatic pre-built reports
                 </GradientText>{" "}
                 with on-chain analytics.
