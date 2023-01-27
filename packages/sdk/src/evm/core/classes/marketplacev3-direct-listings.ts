@@ -689,7 +689,7 @@ export class MarketplaceV3DirectListings {
    * @param listing - The listing to map, as returned from the contract.
    * @returns - The mapped interface.
    */
-  public async mapListing(
+  private async mapListing(
     listing: IDirectListings.ListingStruct,
   ): Promise<DirectListingV3> {
     return {
@@ -729,7 +729,7 @@ export class MarketplaceV3DirectListings {
    * @param listing - The listing to check.
    * @returns - True if the listing is valid, false otherwise.
    */
-  public async isStillValidListing(
+  private async isStillValidListing(
     listing: DirectListingV3,
     quantity?: BigNumberish,
   ): Promise<{ valid: boolean; error?: string }> {

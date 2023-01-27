@@ -289,9 +289,9 @@ export class MarketplaceV3EnglishAuctions {
    *   // how much people would have to bid to instantly buy the asset
    *   buyoutBidAmount: "10",
    *   // If a bid is made less than these many seconds before expiration, the expiration time is increased by this.
-   *   timeBufferInSeconds: "1000",
+   *   timeBufferInSeconds: "900", // 15 minutes by default
    *   // A bid must be at least this much bps greater than the current winning bid
-   *   bidBufferBps: "100", // 100 bps stands for 1%
+   *   bidBufferBps: "500", // 5% by default
    *   // when should the auction open up for bidding
    *   startTimestamp: new Date(Date.now()),
    *   // end time of auction
@@ -685,7 +685,7 @@ export class MarketplaceV3EnglishAuctions {
    * @param auction - The auction to map, as returned from the contract.
    * @returns - The mapped interface.
    */
-  public async mapAuction(
+  private async mapAuction(
     auction: IEnglishAuctions.AuctionStruct,
   ): Promise<EnglishAuction> {
     return {
@@ -727,7 +727,7 @@ export class MarketplaceV3EnglishAuctions {
    * @param bid
    * @returns - A `Bid` object
    */
-  public async mapBid(
+  private async mapBid(
     auctionId: BigNumber,
     bidderAddress: string,
     currencyContractAddress: string,
