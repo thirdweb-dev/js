@@ -1,5 +1,5 @@
 import { Ecosystem, GenericAuthWallet } from "../../core";
-import { thirdwebChains } from "../constants/chains";
+import { SUPPORTED_CHAIN_ID, supportedChains } from "../constants/chains";
 import { EVMWallet } from "../interfaces";
 import { ethers } from "ethers";
 import EventEmitter from "eventemitter3";
@@ -28,7 +28,12 @@ export const checkContractWalletSignature = async (
   address: string,
   chainId: number,
 ): Promise<boolean> => {
-  const rpcUrl = thirdwebChains[chainId].rpcUrls.default.http[0];
+  const rpcUrl =
+    supportedChains[chainId as SUPPORTED_CHAIN_ID]?.rpcUrls.default.http[0];
+  if (!rpcUrl) {
+    return false;
+  }
+
   const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
   const walletContract = new ethers.Contract(address, EIP1271_ABI, provider);
   const hashMessage = ethers.utils.hashMessage(message);

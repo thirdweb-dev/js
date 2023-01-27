@@ -593,7 +593,7 @@ function enhanceChain<TChain extends Chain>(chain: TChain) {
   } as TChain;
 }
 
-const supportedChains: Record<SUPPORTED_CHAIN_ID, Chain> = {
+export const supportedChains: Record<SUPPORTED_CHAIN_ID, Chain> = {
   [ChainId.Mainnet]: enhanceChain(mainnet),
   [ChainId.Goerli]: enhanceChain(goerli),
   [ChainId.Polygon]: enhanceChain(polygon),
