@@ -30,6 +30,8 @@ import type {
 import { ListingType } from "@thirdweb-dev/sdk";
 import { BigNumberish } from "ethers";
 import invariant from "tiny-invariant";
+import { DirectListingInputParams } from "@thirdweb-dev/sdk/dist/declarations/src/evm/schema/marketplacev3/direct-listings";
+import { EnglishAuctionInputParams } from "@thirdweb-dev/sdk/dist/declarations/src/evm/schema/marketplacev3/english-auctions";
 
 /** **********************/
 /**     READ  HOOKS     **/
@@ -524,20 +526,32 @@ export function useMinimumNextBid(
  * @returns a mutation object that can be used to create a new direct listing
  * @beta
  */
-export function useCreateDirectListing(contract: RequiredParam<Marketplace>) {
+export function useCreateDirectListing<TMarketplace extends Marketplace | MarketplaceV3>(contract: RequiredParam<TMarketplace>) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   const walletAddress = useAddress();
   return useMutation(
-    async (data: NewDirectListing) => {
-      invariant(walletAddress, "no wallet connected, cannot create listing");
+    async (data: TMarketplace extends Marketplace ? NewDirectListing : DirectListingInputParams) => {
+      invariant(walletAddress, "No wallet connected, cannot create listing");
       requiredParamInvariant(contract, "No Contract instance provided");
-      invariant(
-        contract.direct.createListing,
-        "contract does not support direct.createListing",
-      );
-      return await contract.direct.createListing(data);
+
+      const isV1 = isMarketplaceV1(contract);
+    
+      if (isV1) {
+        invariant(
+          contract.direct.createListing,
+          "contract does not support direct.createListing",
+        );
+        return await contract.direct.createListing(data as NewDirectListing);
+      } else if (!isV1) {
+        invariant(
+          contract.directListings.createListing,
+          "contract does not support directListings.createListing",
+        );
+        return await contract.directListings.createListing(data as DirectListingInputParams);
+      }
+      invariant(false, "Contract is not a valid marketplace contract");
     },
     {
       onSettled: () =>
@@ -581,20 +595,32 @@ export function useCreateDirectListing(contract: RequiredParam<Marketplace>) {
  * @returns a mutation object that can be used to create a new auction listing
  * @beta
  */
-export function useCreateAuctionListing(contract: RequiredParam<Marketplace>) {
+export function useCreateAuctionListing<TMarketplace extends Marketplace | MarketplaceV3>(contract: RequiredParam<TMarketplace>) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   const walletAddress = useAddress();
   return useMutation(
-    async (data: NewAuctionListing) => {
+    async (data: TMarketplace extends Marketplace ? NewAuctionListing : EnglishAuctionInputParams) => {
       invariant(walletAddress, "no wallet connected, cannot create listing");
       requiredParamInvariant(contract, "No Contract instance provided");
-      invariant(
-        contract.direct.createListing,
-        "contract does not support auction.createListing",
-      );
-      return await contract.auction.createListing(data);
+
+      const isV1 = isMarketplaceV1(contract);
+    
+      if (isV1) {
+        invariant(
+          contract.auction.createListing,
+          "contract does not support auction.createListing",
+        );
+        return await contract.auction.createListing(data as NewAuctionListing);
+      } else if (!isV1) {
+        invariant(
+          contract.englishAuctions.createAuction,
+          "contract does not support englishAuctions.createAuction",
+        );
+        return await contract.englishAuctions.createAuction(data as EnglishAuctionInputParams);
+      }
+      invariant(false, "Contract is not a valid marketplace contract");
     },
     {
       onSettled: () =>
@@ -628,26 +654,38 @@ export function useCreateAuctionListing(contract: RequiredParam<Marketplace>) {
  *       disabled={isLoading}
  *       onClick={() => cancelListing()}
  *     >
- *       Create Auction Listing!
+ *       Cancel Auction Listing!
  *     </button>
  *   );
  * };
  * ```
  *
  * @param contract - an instance of a Marketplace contract
- * @returns a mutation object that can be used to create a new auction listing
+ * @returns a mutation object that can be used to cancel a listing
  * @beta
  */
 export function useCancelListing(contract: RequiredParam<Marketplace>) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
+  const walletAddress = useAddress();
   return useMutation(
     async (data: Pick<AuctionListing | DirectListing, "type" | "id">) => {
+      invariant(walletAddress, "no wallet connected, cannot create listing");
+      requiredParamInvariant(contract, "No Contract instance provided");
+
       if (data.type === ListingType.Auction) {
-        return await contract?.auction.cancelListing(data.id);
+        invariant(
+          contract.auction.cancelListing,
+          "contract does not support auction.cancelListing",
+        );
+        return await contract.auction.cancelListing(data.id);
       } else {
-        return await contract?.direct.cancelListing(data.id);
+        invariant(
+          contract.direct.cancelListing,
+          "contract does not support direct.cancelListing",
+        );
+        return await contract.direct.cancelListing(data.id);
       }
     },
     {
@@ -660,6 +698,125 @@ export function useCancelListing(contract: RequiredParam<Marketplace>) {
     },
   );
 }
+
+/**
+ * Use this to cancel a direct listing on your marketplace v3 contract.
+ *
+ * @example
+ * ```jsx
+ * const Component = () => {
+ *   const {
+ *     mutate: cancelDirectListing,
+ *     isLoading,
+ *     error,
+ *   } = useCancelDirectListing(">>YourMarketplaceV3ContractInstance<<");
+ *
+ *   if (error) {
+ *     console.error("failed to cancel direct listing", error);
+ *   }
+ *
+ *   return (
+ *     <button
+ *       disabled={isLoading}
+ *       onClick={() => cancelListing()}
+ *     >
+ *       Cancel Direct Listing
+ *     </button>
+ *   );
+ * };
+ * ```
+ *
+ * @param contract - an instance of a Marketplace v3 contract
+ * @returns a mutation object that can be used to cancel a direct listing
+ * @beta
+ */
+export function useCancelDirectListing(contract: RequiredParam<MarketplaceV3>) {
+  const activeChainId = useSDKChainId();
+  const contractAddress = contract?.getAddress();
+  const queryClient = useQueryClient();
+  const walletAddress = useAddress();
+  return useMutation(
+    async (listingId: BigNumberish) => {
+      invariant(walletAddress, "no wallet connected, cannot create listing");
+      requiredParamInvariant(contract, "No Contract instance provided");
+      requiredParamInvariant(listingId, "No listing id provided");
+
+      invariant(
+        contract.directListings.cancelListing,
+        "contract does not support directListings.cancelListing",
+      );
+      return await contract.directListings.cancelListing(listingId);
+    },
+    {
+      onSettled: () =>
+        invalidateContractAndBalances(
+          queryClient,
+          contractAddress,
+          activeChainId,
+        ),
+    },
+  );
+}
+
+/**
+ * Use this to cancel a direct listing on your marketplace v3 contract.
+ *
+ * @example
+ * ```jsx
+ * const Component = () => {
+ *   const {
+ *     mutate: cancelEnglishAuction,
+ *     isLoading,
+ *     error,
+ *   } = useCancelEnglishAuction(">>YourMarketplaceV3ContractInstance<<");
+ *
+ *   if (error) {
+ *     console.error("failed to cancel english auction", error);
+ *   }
+ *
+ *   return (
+ *     <button
+ *       disabled={isLoading}
+ *       onClick={() => cancelEnglishAuction()}
+ *     >
+ *       Cancel English Auction
+ *     </button>
+ *   );
+ * };
+ * ```
+ *
+ * @param contract - an instance of a Marketplace v3 contract
+ * @returns a mutation object that can be used to cancel an english auction
+ * @beta
+ */
+export function useCancelEnglishAuction(contract: RequiredParam<MarketplaceV3>) {
+  const activeChainId = useSDKChainId();
+  const contractAddress = contract?.getAddress();
+  const queryClient = useQueryClient();
+  const walletAddress = useAddress();
+  return useMutation(
+    async (auctionId: BigNumberish) => {
+      invariant(walletAddress, "no wallet connected, cannot create listing");
+      requiredParamInvariant(contract, "No Contract instance provided");
+      requiredParamInvariant(auctionId, "No auction id provided");
+
+      invariant(
+        contract.englishAuctions.cancelAuction,
+        "contract does not support englishAuctions.cancelAuction",
+      );
+      return await contract.englishAuctions.cancelAuction(auctionId);
+    },
+    {
+      onSettled: () =>
+        invalidateContractAndBalances(
+          queryClient,
+          contractAddress,
+          activeChainId,
+        ),
+    },
+  );
+}
+
 
 /**
  * Use this to place a bid on an auction listing from your marketplace contract.
@@ -982,4 +1139,8 @@ export function useBuyNow(contract: RequiredParam<Marketplace>) {
         ),
     },
   );
+}
+
+function isMarketplaceV1(contract: RequiredParam<Marketplace | MarketplaceV3>): contract is Marketplace {
+  return (contract as Marketplace).getAllListings !== undefined;
 }
