@@ -61,6 +61,9 @@ describe("npx thirdweb detect", () => {
 
     const lines = detect.getStdout();
 
+    // check that detect excited successfully
+    expect(detect.getExitCode()).toEqual(0);
+
     // Detected extensions
     expect(lines.findIndex((line) => line.includes("ERC721"))).toBeGreaterThan(
       -1,
