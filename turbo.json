@@ -48,6 +48,10 @@
         "^build"
       ]
     },
+    "@thirdweb-dev/react-core#build": {
+      "outputs": ["dist/**", "evm/**", "solana/**"],
+      "dependsOn": ["^build"]
+    },
     "@thirdweb-dev/auth#build": {
       "outputs": [
         "dist/**",
