@@ -8,7 +8,6 @@ import {
 import {
   handleTokenApproval,
   isTokenApprovedForTransfer,
-  validateNewListingParam,
 } from "../../common/marketplacev3";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import {
@@ -308,8 +307,6 @@ export class MarketplaceV3DirectListings {
   public async createListing(
     listing: DirectListingInputParams,
   ): Promise<TransactionResultWithId> {
-    // validateNewListingParam(listing);
-
     const parsedListing = DirectListingInputParamsSchema.parse(listing);
 
     await handleTokenApproval(
@@ -326,14 +323,11 @@ export class MarketplaceV3DirectListings {
       parsedListing.currencyContractAddress,
     );
 
-    // let listingStartTime = Math.floor(listing.startTimestamp.getTime() / 1000);
     const block = await this.contractWrapper.getProvider().getBlock("latest");
     const blockTime = block.timestamp;
     if (parsedListing.startTimestamp.lt(blockTime)) {
       parsedListing.startTimestamp = BigNumber.from(blockTime);
     }
-
-    // let listingEndTime = Math.floor(listing.endTimestamp.getTime() / 1000);
 
     const receipt = await this.contractWrapper.sendTransaction(
       "createListing",
@@ -423,9 +417,6 @@ export class MarketplaceV3DirectListings {
       parsedListing.pricePerToken,
       parsedListing.currencyContractAddress,
     );
-
-    // let listingStartTime = Math.floor(validatedListing.startTimestamp.getTime() / 1000);
-    // let listingEndTime = Math.floor(listing.endTimestamp.getTime() / 1000);
 
     const receipt = await this.contractWrapper.sendTransaction(
       "updateListing",

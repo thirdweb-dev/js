@@ -10,10 +10,7 @@ import {
   normalizePriceValue,
   setErc20Allowance,
 } from "../../common/currency";
-import {
-  handleTokenApproval,
-  validateNewEnglishAuctionParam,
-} from "../../common/marketplacev3";
+import { handleTokenApproval } from "../../common/marketplacev3";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import {
   EnglishAuctionInputParams,
@@ -21,11 +18,7 @@ import {
 } from "../../schema/marketplacev3/english-auctions";
 import { MarketplaceFilter } from "../../types";
 import { CurrencyValue, Price } from "../../types/currency";
-import {
-  EnglishAuction,
-  NewEnglishAuction,
-  Bid,
-} from "../../types/marketplacev3";
+import { EnglishAuction, Bid } from "../../types/marketplacev3";
 import { TransactionResult, TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractWrapper } from "./contract-wrapper";
@@ -330,8 +323,6 @@ export class MarketplaceV3EnglishAuctions {
   public async createAuction(
     auction: EnglishAuctionInputParams,
   ): Promise<TransactionResultWithId> {
-    // validateNewEnglishAuctionParam(auction);
-
     const parsedAuction = EnglishAuctionInputParamsSchema.parse(auction);
 
     await handleTokenApproval(
@@ -354,14 +345,11 @@ export class MarketplaceV3EnglishAuctions {
       parsedAuction.currencyContractAddress,
     );
 
-    // let auctionStartTime = Math.floor(auction.startTimestamp.getTime() / 1000);
     const block = await this.contractWrapper.getProvider().getBlock("latest");
     const blockTime = block.timestamp;
     if (parsedAuction.startTimestamp.lt(blockTime)) {
       parsedAuction.startTimestamp = BigNumber.from(blockTime);
     }
-
-    // let auctionEndTime = Math.floor(auction.endTimestamp.getTime() / 1000);
 
     const receipt = await this.contractWrapper.sendTransaction(
       "createAuction",

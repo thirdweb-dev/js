@@ -5,10 +5,7 @@ import {
   normalizePriceValue,
   setErc20Allowance,
 } from "../../common/currency";
-import {
-  handleTokenApproval,
-  validateNewOfferParam,
-} from "../../common/marketplacev3";
+import { handleTokenApproval } from "../../common/marketplacev3";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
 import {
@@ -16,7 +13,7 @@ import {
   OfferInputParamsSchema,
 } from "../../schema/marketplacev3/offer";
 import { MarketplaceFilter } from "../../types";
-import { OfferV3, NewOffer } from "../../types/marketplacev3";
+import { OfferV3 } from "../../types/marketplacev3";
 import { TransactionResult, TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import type { IERC20, IOffers, OffersLogic } from "@thirdweb-dev/contracts-js";
@@ -204,8 +201,6 @@ export class MarketplaceV3Offers {
   public async makeOffer(
     offer: OfferInputParams,
   ): Promise<TransactionResultWithId> {
-    // validateNewOfferParam(offer);
-
     const parsedOffer = OfferInputParamsSchema.parse(offer);
 
     const chainId = await this.contractWrapper.getChainID();
@@ -226,8 +221,6 @@ export class MarketplaceV3Offers {
       currency,
       overrides,
     );
-
-    // let offerEndTime = Math.floor(offer.endTimestamp.getTime() / 1000);
 
     const receipt = await this.contractWrapper.sendTransaction(
       "makeOffer",
