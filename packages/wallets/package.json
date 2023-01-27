@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/wallets",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "main": "dist/thirdweb-dev-wallets.cjs.js",
   "module": "dist/thirdweb-dev-wallets.esm.js",
   "exports": {
