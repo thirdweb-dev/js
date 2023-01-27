@@ -4,7 +4,7 @@
 
 All Auth hooks and configuration have been upgraded along with the major upgrade to Auth. This includes changes in necessary `authConfig` to the `ThirdwebProvider`, as well as usage of the `useLogin`, `useLogout`, and `useUser` hooks.
 
-## How to Upgrade
+## How to upgrade
 
 In order to upgrade your frontend setup to account for these changes, you'll need to make the following changes to your app:
 

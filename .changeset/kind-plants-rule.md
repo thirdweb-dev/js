@@ -13,3 +13,18 @@ Complete Auth redesign and update to add a number of major and quality of life i
 - and more...
 
 See the new documentation to view the new changes and usage: [Auth Documentation](https://portal.thirdweb.com/auth).
+
+## How to upgrade
+
+The `ThirdwebAuth` constructor now takes the `domain` in the constructor, and takes a more generic `wallet` interface as input. The `wallet` can be imported from the `@thirdweb-dev/wallets` package, or for more simpler use cases, from the `@thirdweb-dev/auth/evm` and `@thirdweb-dev/auth/solana` entrypoints.
+
+```js
+import { PrivateKeyWallet } from "@thirdweb-dev/auth/evm";
+
+// Pass in domain and wallet to the constructor
+const wallet = new PrivateKeyWallet("0x...");
+const auth = new ThirdwebAuth(wallet, "example.com");
+
+// Auth functions no longer require domain to be passed in
+const payload = await auth.login();
+```
