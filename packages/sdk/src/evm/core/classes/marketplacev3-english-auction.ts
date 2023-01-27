@@ -690,7 +690,7 @@ export class MarketplaceV3EnglishAuctions {
   ): Promise<EnglishAuction> {
     return {
       id: auction.auctionId.toString(),
-      auctionCreatorAddress: auction.auctionCreator,
+      creatorAddress: auction.auctionCreator,
       assetContractAddress: auction.assetContract,
       tokenId: auction.tokenId,
       quantity: auction.quantity,

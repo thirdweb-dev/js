@@ -712,7 +712,7 @@ export class MarketplaceV3DirectListings {
         this.storage,
       ),
       endTimeInSeconds: listing.endTimestamp.toString(),
-      listingCreatorAddress: listing.listingCreator,
+      creatorAddress: listing.listingCreator,
       isReservedListing: listing.reserved,
     };
   }

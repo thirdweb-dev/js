@@ -14,7 +14,7 @@ export interface EnglishAuction {
   /**
    * The address of the creator of auction.
    */
-  auctionCreatorAddress: string;
+  creatorAddress: string;
 
   /**
    * The address of the asset being auctioned.

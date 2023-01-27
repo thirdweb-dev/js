@@ -14,7 +14,7 @@ export interface DirectListingV3 {
   /**
    * The address of the creator of listing.
    */
-  listingCreatorAddress: string;
+  creatorAddress: string;
 
   /**
    * The address of the asset being listed.
