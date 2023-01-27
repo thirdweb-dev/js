@@ -61,6 +61,18 @@ export async function twCreate(
       framework = "vite";
     }
 
+    if (options.node) {
+      framework = "node";
+    }
+
+    if (options.express) {
+      framework = "express";
+    }
+
+    if (options.reactNative) {
+      framework = "react-native";
+    }
+
     if (options.solana) {
       chain = "solana";
     }
@@ -205,17 +217,22 @@ export async function twCreate(
           name: "framework",
           message: CREATE_MESSAGES.framework,
           choices:
-            // Solana doesn't support Vite just yet:
             chain === "solana"
               ? [
                   { title: "Next.js", value: "next" },
                   { title: "Create React App", value: "cra" },
+                  { title: "Node.js", value: "node" },
+                  { title: "Express", value: "express" },
+                  // Solana doesn't support Vite just yet:
                   // { title: "Vite", value: "vite" },
                 ]
               : [
                   { title: "Next.js", value: "next" },
                   { title: "Create React App", value: "cra" },
                   { title: "Vite", value: "vite" },
+                  { title: "React Native", value: "react-native" },
+                  { title: "Node.js", value: "node" },
+                  { title: "Express", value: "express" },
                 ],
         });
 
