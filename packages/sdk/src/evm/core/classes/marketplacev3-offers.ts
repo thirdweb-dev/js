@@ -1,11 +1,13 @@
-import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
 import {
   fetchCurrencyValue,
   isNativeToken,
   normalizePriceValue,
   setErc20Allowance,
 } from "../../common/currency";
-import { handleTokenApproval } from "../../common/marketplacev3";
+import {
+  getAllInBatches,
+  handleTokenApproval,
+} from "../../common/marketplacev3";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
 import {
@@ -82,20 +84,12 @@ export class MarketplaceV3Offers {
     }
 
     let rawOffers: IOffers.OfferStructOutput[] = [];
-    let partialOffers: any[] = [];
-    while (end - start > DEFAULT_QUERY_ALL_COUNT) {
-      partialOffers.push(
-        this.contractWrapper.readContract.getAllOffers(
-          start,
-          start + DEFAULT_QUERY_ALL_COUNT - 1,
-        ),
-      );
-      start += DEFAULT_QUERY_ALL_COUNT;
-    }
-    partialOffers.push(
-      await this.contractWrapper.readContract.getAllOffers(start, end - 1),
+    let batches = await getAllInBatches(
+      start,
+      end,
+      this.contractWrapper.readContract.getAllOffers,
     );
-    rawOffers = (await Promise.all(partialOffers)).flat();
+    rawOffers = batches.flat();
 
     const filteredOffers = this.applyFilter(rawOffers, filter);
 
@@ -126,20 +120,12 @@ export class MarketplaceV3Offers {
     }
 
     let rawOffers: IOffers.OfferStructOutput[] = [];
-    let partialOffers: any[] = [];
-    while (end - start > DEFAULT_QUERY_ALL_COUNT) {
-      partialOffers.push(
-        this.contractWrapper.readContract.getAllOffers(
-          start,
-          start + DEFAULT_QUERY_ALL_COUNT - 1,
-        ),
-      );
-      start += DEFAULT_QUERY_ALL_COUNT;
-    }
-    partialOffers.push(
-      await this.contractWrapper.readContract.getAllOffers(start, end - 1),
+    let batches = await getAllInBatches(
+      start,
+      end,
+      this.contractWrapper.readContract.getAllValidOffers,
     );
-    rawOffers = (await Promise.all(partialOffers)).flat();
+    rawOffers = batches.flat();
 
     const filteredOffers = this.applyFilter(rawOffers, filter);
 

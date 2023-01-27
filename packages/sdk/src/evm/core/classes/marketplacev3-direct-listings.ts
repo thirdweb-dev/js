@@ -1,4 +1,3 @@
-import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
 import {
   cleanCurrencyAddress,
   fetchCurrencyValue,
@@ -6,6 +5,7 @@ import {
   setErc20Allowance,
 } from "../../common/currency";
 import {
+  getAllInBatches,
   handleTokenApproval,
   isTokenApprovedForTransfer,
 } from "../../common/marketplacev3";
@@ -100,20 +100,12 @@ export class MarketplaceV3DirectListings {
     }
 
     let rawListings: IDirectListings.ListingStructOutput[] = [];
-    let partialListings: any[] = [];
-    while (end - start > DEFAULT_QUERY_ALL_COUNT) {
-      partialListings.push(
-        this.contractWrapper.readContract.getAllListings(
-          start,
-          start + DEFAULT_QUERY_ALL_COUNT - 1,
-        ),
-      );
-      start += DEFAULT_QUERY_ALL_COUNT;
-    }
-    partialListings.push(
-      await this.contractWrapper.readContract.getAllListings(start, end - 1),
+    let batches = await getAllInBatches(
+      start,
+      end,
+      this.contractWrapper.readContract.getAllListings,
     );
-    rawListings = (await Promise.all(partialListings)).flat();
+    rawListings = batches.flat();
 
     const filteredListings = this.applyFilter(rawListings, filter);
 
@@ -150,23 +142,12 @@ export class MarketplaceV3DirectListings {
     }
 
     let rawListings: IDirectListings.ListingStructOutput[] = [];
-    let partialListings: any[] = [];
-    while (end - start > DEFAULT_QUERY_ALL_COUNT) {
-      partialListings.push(
-        this.contractWrapper.readContract.getAllValidListings(
-          start,
-          start + DEFAULT_QUERY_ALL_COUNT - 1,
-        ),
-      );
-      start += DEFAULT_QUERY_ALL_COUNT;
-    }
-    partialListings.push(
-      await this.contractWrapper.readContract.getAllValidListings(
-        start,
-        end - 1,
-      ),
+    let batches = await getAllInBatches(
+      start,
+      end,
+      this.contractWrapper.readContract.getAllValidListings,
     );
-    rawListings = (await Promise.all(partialListings)).flat();
+    rawListings = batches.flat();
 
     const filteredListings = this.applyFilter(rawListings, filter);
 

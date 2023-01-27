@@ -1,4 +1,3 @@
-import { DEFAULT_QUERY_ALL_COUNT } from "../../../core/schema/QueryParams";
 import {
   AuctionAlreadyStartedError,
   AuctionHasNotEndedError,
@@ -10,7 +9,10 @@ import {
   normalizePriceValue,
   setErc20Allowance,
 } from "../../common/currency";
-import { handleTokenApproval } from "../../common/marketplacev3";
+import {
+  getAllInBatches,
+  handleTokenApproval,
+} from "../../common/marketplacev3";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import {
   EnglishAuctionInputParams,
@@ -93,20 +95,12 @@ export class MarketplaceV3EnglishAuctions {
     }
 
     let rawAuctions: IEnglishAuctions.AuctionStructOutput[] = [];
-    let partialAuctions: any[] = [];
-    while (end - start > DEFAULT_QUERY_ALL_COUNT) {
-      partialAuctions.push(
-        this.contractWrapper.readContract.getAllAuctions(
-          start,
-          start + DEFAULT_QUERY_ALL_COUNT - 1,
-        ),
-      );
-      start += DEFAULT_QUERY_ALL_COUNT;
-    }
-    partialAuctions.push(
-      await this.contractWrapper.readContract.getAllAuctions(start, end - 1),
+    let batches = await getAllInBatches(
+      start,
+      end,
+      this.contractWrapper.readContract.getAllAuctions,
     );
-    rawAuctions = (await Promise.all(partialAuctions)).flat();
+    rawAuctions = batches.flat();
 
     const filteredAuctions = this.applyFilter(rawAuctions, filter);
 
@@ -139,23 +133,12 @@ export class MarketplaceV3EnglishAuctions {
     }
 
     let rawAuctions: IEnglishAuctions.AuctionStructOutput[] = [];
-    let partialAuctions: any[] = [];
-    while (end - start > DEFAULT_QUERY_ALL_COUNT) {
-      partialAuctions.push(
-        this.contractWrapper.readContract.getAllValidAuctions(
-          start,
-          start + DEFAULT_QUERY_ALL_COUNT - 1,
-        ),
-      );
-      start += DEFAULT_QUERY_ALL_COUNT;
-    }
-    partialAuctions.push(
-      await this.contractWrapper.readContract.getAllValidAuctions(
-        start,
-        end - 1,
-      ),
+    let batches = await getAllInBatches(
+      start,
+      end,
+      this.contractWrapper.readContract.getAllValidAuctions,
     );
-    rawAuctions = (await Promise.all(partialAuctions)).flat();
+    rawAuctions = batches.flat();
 
     const filteredAuctions = this.applyFilter(rawAuctions, filter);
 
