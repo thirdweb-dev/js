@@ -50,7 +50,7 @@ export const EnglishAuctionInputParamsSchema = z.object({
    * If a new winning bid is made less than x seconds before expirationTimestamp, the
    * expirationTimestamp is increased by x seconds.
    */
-  timeBufferInSeconds: BigNumberishSchema,
+  timeBufferInSeconds: BigNumberishSchema.default(900), // 15 minutes by default
 
   /**
    * This is a buffer in basis points e.g. x%.
@@ -58,7 +58,7 @@ export const EnglishAuctionInputParamsSchema = z.object({
    * To be considered as a new winning bid, a bid must be at least x% greater than
    * the current winning bid.
    */
-  bidBufferBps: BigNumberishSchema,
+  bidBufferBps: BigNumberishSchema.default(500), // 5% by default
 
   /**
    * The start time of the auction.
