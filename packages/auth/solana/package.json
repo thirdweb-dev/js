@@ -1,0 +1,4 @@
+{
+  "main": "dist/thirdweb-dev-auth-solana.cjs.js",
+  "module": "dist/thirdweb-dev-auth-solana.esm.js"
+}

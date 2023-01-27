@@ -76,6 +76,7 @@
     "@solana/wallet-adapter-wallets": "^0.19.0",
     "@solana/wallet-adapter-phantom": "^0.9.17",
     "@solana/web3.js": "^1.62.0",
+    "@thirdweb-dev/auth": "*",
     "@thirdweb-dev/sdk": "*",
     "@types/color": "^3.0.3",
     "@types/mime": "^3.0.1",
