@@ -685,7 +685,7 @@ export class MarketplaceV3EnglishAuctions {
    * @param auction - The auction to map, as returned from the contract.
    * @returns - The mapped interface.
    */
-  public async mapAuction(
+  private async mapAuction(
     auction: IEnglishAuctions.AuctionStruct,
   ): Promise<EnglishAuction> {
     return {
@@ -727,7 +727,7 @@ export class MarketplaceV3EnglishAuctions {
    * @param bid
    * @returns - A `Bid` object
    */
-  public async mapBid(
+  private async mapBid(
     auctionId: BigNumber,
     bidderAddress: string,
     currencyContractAddress: string,

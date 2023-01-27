@@ -320,7 +320,7 @@ export class MarketplaceV3Offers {
    * @param offer - The offer to map, as returned from the contract.
    * @returns - The mapped interface.
    */
-  public async mapOffer(offer: IOffers.OfferStruct): Promise<OfferV3> {
+  private async mapOffer(offer: IOffers.OfferStruct): Promise<OfferV3> {
     return {
       id: offer.offerId.toString(),
       offerorAddress: offer.offeror,
@@ -356,7 +356,7 @@ export class MarketplaceV3Offers {
    * @param offer - The offer to check.
    * @returns - True if the offer is valid, false otherwise.
    */
-  public async isStillValidOffer(
+  private async isStillValidOffer(
     offer: OfferV3,
   ): Promise<{ valid: boolean; error?: string }> {
     const now = BigNumber.from(Math.floor(Date.now() / 1000));
