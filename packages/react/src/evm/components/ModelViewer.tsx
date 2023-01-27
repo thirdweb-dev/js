@@ -1,36 +1,34 @@
-import React, { useRef } from 'react';
-import { MediaRendererProps } from './MediaRenderer';
-import { mergeRefs } from "../utils/react";
-import '@google/model-viewer'
+import type { MediaRendererProps } from "./MediaRenderer";
+import "@google/model-viewer";
+import type { ModelViewerElement } from "@google/model-viewer";
+import React from "react";
 
 declare global {
-    namespace JSX {
-        interface IntrinsicElements {
-        'model-viewer': any;
-        }
+  namespace JSX {
+    interface IntrinsicElements {
+      "model-viewer": Partial<ModelViewerElement>;
     }
+  }
 }
 
-export const ModelViewer = React.forwardRef<HTMLCanvasElement, MediaRendererProps>(
-  ({ src, alt, style, poster, ...restProps }, ref) => {
-    const modelRef = useRef<HTMLCanvasElement>(null);
-
+export const ModelViewer = React.forwardRef<HTMLDivElement, MediaRendererProps>(
+  ({ src, alt, style, poster }, ref) => {
     return (
-      <div style={{...style}}>
-        <model-viewer
-          style={{ objectFit: 'contain', width:'100%' }}
-          src={src}
-          alt={alt}
-          camera-controls
-          ref={mergeRefs([modelRef, ref])}   
-          poster={poster}     
-          {...restProps}>
-        </model-viewer>
+      <div style={{ ...style }} ref={ref}>
+        {src ? (
+          <model-viewer
+            src={src}
+            alt={alt || "3D Model"}
+            camera-controls
+            poster={poster ? poster : null}
+            style={{ height: "100%", width: "100%" } as CSSStyleDeclaration}
+          />
+        ) : null}
       </div>
     );
-  }
+  },
 );
 
 ModelViewer.displayName = "ModelViewer";
 
-export default ModelViewer
+export default ModelViewer;

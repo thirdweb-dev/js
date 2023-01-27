@@ -9,8 +9,18 @@ import {
   CarbonPlayFilledAlt,
 } from "./Icons";
 import { useQuery } from "@tanstack/react-query";
-import React, { ReactNode, useEffect, useMemo, useRef, useState, lazy, Suspense } from "react";
+import React, {
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  lazy,
+  Suspense,
+} from "react";
 import useDimensions from "react-cool-dimensions";
+
+const ModelViewer = lazy(() => import("./ModelViewer"));
 
 export interface SharedMediaProps {
   className?: string;
@@ -448,14 +458,27 @@ export const MediaRenderer = React.forwardRef<
         />
       );
     } else if (videoOrImageSrc.mimeType.startsWith("model")) {
-      const ModelViewer = lazy(() => import('./ModelViewer'))
       return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense
+          fallback={
+            poster ? (
+              <img
+                style={mergedStyle}
+                src={poster}
+                alt={alt}
+                ref={ref as unknown as React.LegacyRef<HTMLImageElement>}
+                {...restProps}
+              />
+            ) : null
+          }
+        >
           <ModelViewer
             style={mergedStyle}
-            src= {videoOrImageSrc.url || ''}
-            {...restProps}>            
-          </ModelViewer>
+            src={videoOrImageSrc.url || ""}
+            poster={poster}
+            alt={alt}
+            {...restProps}
+          ></ModelViewer>
         </Suspense>
       );
     } else if (shouldRenderVideoTag(videoOrImageSrc.mimeType)) {
