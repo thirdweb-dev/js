@@ -26,6 +26,31 @@ import type { TokenDrop } from "@thirdweb-dev/sdk/dist/declarations/src/evm/cont
 import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/smart-contract";
 import type { BigNumberish } from "ethers";
 
+type AddEthereumChainParameter = {
+  chainId: string;
+  chainName: string;
+  nativeCurrency?: {
+    name: string;
+    symbol: string;
+    decimals: 18;
+  };
+  rpcUrls: string[];
+  blockExplorerUrls?: string[];
+  iconUrls?: string[];
+};
+
+export type Chain = {
+  id: number;
+  name: AddEthereumChainParameter['chainName'];
+  nativeCurrency?: AddEthereumChainParameter['nativeCurrency'];
+  rpcUrls: AddEthereumChainParameter['rpcUrls'];
+  blockExplorers?: {
+    name: string;
+    url: string;
+  }[];
+  testnet?: boolean;
+};
+
 /**
  * A wallet address.
  * @beta
@@ -231,16 +256,16 @@ export type ExecuteAuctionSale = {
 
 export type BuyNowParams<TListingType = ListingType> =
   TListingType extends ListingType.Direct
-    ? {
-        id: BigNumberish;
-        type: ListingType.Direct;
-        buyAmount: BigNumberish;
-        buyForWallet?: WalletAddress;
-      }
-    : {
-        id: BigNumberish;
-        type: ListingType.Auction;
-      };
+  ? {
+    id: BigNumberish;
+    type: ListingType.Direct;
+    buyAmount: BigNumberish;
+    buyForWallet?: WalletAddress;
+  }
+  : {
+    id: BigNumberish;
+    type: ListingType.Auction;
+  };
 
 // TOKEN DROP //
 

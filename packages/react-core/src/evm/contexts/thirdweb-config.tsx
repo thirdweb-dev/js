@@ -1,10 +1,10 @@
 import {
-  Chain,
   SupportedChainId,
   defaultSupportedChains,
 } from "../constants/chain";
 import { DEFAULT_RPC_URLS } from "@thirdweb-dev/sdk";
 import React, { PropsWithChildren, createContext, useContext } from "react";
+import { Chain } from "../types";
 
 interface ThirdwebConfigContext {
   rpcUrlMap: Record<SupportedChainId | number, string>;

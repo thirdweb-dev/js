@@ -1,32 +1,24 @@
 {
-  "name": "@thirdweb-dev/react",
-  "version": "3.6.11",
-  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react",
+  "name": "@thirdweb-dev/react-core",
+  "version": "0.0.0",
+  "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-core",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
-  "main": "dist/thirdweb-dev-react.cjs.js",
-  "types": "dist/thirdweb-dev-react.cjs.d.ts",
-  "module": "dist/thirdweb-dev-react.esm.js",
+  "main": "dist/thirdweb-dev-react-core.cjs.js",
+  "types": "dist/thirdweb-dev-react-core.cjs.d.ts",
+  "module": "dist/thirdweb-dev-react-core.esm.js",
   "exports": {
     ".": {
-      "module": "./dist/thirdweb-dev-react.esm.js",
-      "default": "./dist/thirdweb-dev-react.cjs.js"
+      "module": "./dist/thirdweb-dev-react-core.esm.js",
+      "default": "./dist/thirdweb-dev-react-core.cjs.js"
     },
     "./evm": {
-      "module": "./evm/dist/thirdweb-dev-react-evm.esm.js",
-      "default": "./evm/dist/thirdweb-dev-react-evm.cjs.js"
+      "module": "./evm/dist/thirdweb-dev-react-core-evm.esm.js",
+      "default": "./evm/dist/thirdweb-dev-react-core-evm.cjs.js"
     },
     "./solana": {
-      "module": "./solana/dist/thirdweb-dev-react-solana.esm.js",
-      "default": "./solana/dist/thirdweb-dev-react-solana.cjs.js"
-    },
-    "./evm/connectors/magic": {
-      "module": "./evm/connectors/magic/dist/thirdweb-dev-react-evm-connectors-magic.esm.js",
-      "default": "./evm/connectors/magic/dist/thirdweb-dev-react-evm-connectors-magic.cjs.js"
-    },
-    "./evm/connectors/gnosis-safe": {
-      "module": "./evm/connectors/gnosis-safe/dist/thirdweb-dev-react-evm-connectors-gnosis-safe.esm.js",
-      "default": "./evm/connectors/gnosis-safe/dist/thirdweb-dev-react-evm-connectors-gnosis-safe.cjs.js"
+      "module": "./solana/dist/thirdweb-dev-react-core-solana.esm.js",
+      "default": "./solana/dist/thirdweb-dev-react-core-solana.cjs.js"
     },
     "./package.json": "./package.json"
   },
@@ -39,8 +31,7 @@
     "entrypoints": [
       "index.ts",
       "solana/index.ts",
-      "evm/index.ts",
-      "evm/connectors/**.ts"
+      "evm/index.ts"
     ],
     "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
       "exports": true
@@ -71,16 +62,9 @@
     "@microsoft/api-extractor": "^7.29.2",
     "@microsoft/tsdoc": "^0.14.1",
     "@preconstruct/cli": "^2.2.1",
-    "@solana/wallet-adapter-base": "^0.9.17",
-    "@solana/wallet-adapter-react": "^0.15.19",
-    "@solana/wallet-adapter-wallets": "^0.19.0",
-    "@solana/wallet-adapter-phantom": "^0.9.17",
     "@solana/web3.js": "^1.62.0",
     "@thirdweb-dev/sdk": "*",
-    "@types/color": "^3.0.3",
-    "@types/mime": "^3.0.1",
     "@types/react": "^18.0.5",
-    "@types/react-dom": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
     "eslint": "^8.21.0",
@@ -92,59 +76,28 @@
     "ethers": "^5.7.2",
     "prettier": "^2.7.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "@thirdweb-dev/react-core": "*",
-    "@emotion/react": "^11.10.0",
-    "@emotion/styled": "^11.10.0",
-    "@react-icons/all-files": "^4.1.0",
-    "@safe-global/safe-core-sdk": "^3.2.0",
-    "@safe-global/safe-ethers-adapters": "0.1.0-alpha.13",
-    "@safe-global/safe-ethers-lib": "^1.7.0",
     "@tanstack/react-query": "^4.0.10",
-    "@zag-js/menu": "^0.3.0",
-    "@zag-js/react": "^0.3.1",
-    "buffer": "^6.0.3",
-    "color": "^4.2.3",
-    "copy-to-clipboard": "^3.3.2",
-    "detect-browser": "^5.3.0",
-    "magic-sdk": "^10.1.0",
-    "mime": "^3.0.0",
-    "react-cool-dimensions": "^2.0.7",
-    "tiny-invariant": "^1.2.0",
-    "wagmi": "^0.2.28"
+    "tiny-invariant": "^1.2.0"
   },
   "peerDependencies": {
-    "@solana/wallet-adapter-base": "^0.9.17",
     "@solana/wallet-adapter-react": "^0.15.19",
-    "@solana/wallet-adapter-wallets": "^0.19.0",
-    "@solana/wallet-adapter-phantom": "^0.9.17",
     "@solana/web3.js": "^1.62.0",
     "@thirdweb-dev/sdk": "*",
     "ethers": ">=5.5.1",
-    "react": ">=18.0.0",
-    "react-dom": ">=18.0.0"
+    "react": ">=18.0.0"
   },
   "resolutions": {
     "ansi-regex": "^6.0.1",
     "typescript": "^4.6.2"
   },
   "peerDependenciesMeta": {
-    "@solana/wallet-adapter-base": {
+    "@solana/web3.js": {
       "optional": true
     },
     "@solana/wallet-adapter-react": {
-      "optional": true
-    },
-    "@solana/wallet-adapter-wallets": {
-      "optional": true
-    },
-    "@solana/wallet-adapter-phantom": {
-      "optional": true
-    },
-    "@solana/web3.js": {
       "optional": true
     }
   }
