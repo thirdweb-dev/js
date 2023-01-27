@@ -35,7 +35,7 @@ export class ThirdwebAuth {
     const parsedOptions = LoginOptionsSchema.parse(options);
 
     let chainId: string | undefined = parsedOptions?.chainId;
-    if (this.wallet.getChainId) {
+    if (!chainId && this.wallet.getChainId) {
       try {
         chainId = (await this.wallet.getChainId()).toString();
       } catch {
@@ -48,7 +48,9 @@ export class ThirdwebAuth {
       domain: parsedOptions?.domain || this.domain,
       address: await this.wallet.getAddress(),
       statement: parsedOptions?.statement,
-      uri: parsedOptions?.uri || isBrowser() ? window.location.href : undefined,
+      version: parsedOptions?.version,
+      uri:
+        parsedOptions?.uri || (isBrowser() ? window.location.href : undefined),
       chain_id: chainId,
       nonce: parsedOptions?.nonce,
       expiration_time:
@@ -125,8 +127,9 @@ export class ThirdwebAuth {
     // Check that the payload nonce is valid
     if (parsedOptions?.validateNonce !== undefined) {
       try {
-        parsedOptions.validateNonce(payload.payload.nonce);
+        await parsedOptions.validateNonce(payload.payload.nonce);
       } catch (err) {
+        console.log(err);
         throw new Error(`Login request nonce is invalid`);
       }
     }
@@ -195,11 +198,14 @@ export class ThirdwebAuth {
       ...parsedOptions?.verifyOptions,
     });
 
-    let context: Json | undefined = undefined;
-    if (typeof parsedOptions?.tokenContext === "function") {
-      context = await parsedOptions.tokenContext(userAddress);
+    let session: Json | undefined = undefined;
+    if (typeof parsedOptions?.session === "function") {
+      const sessionTrigger = (await parsedOptions.session(userAddress)) as Json;
+      if (sessionTrigger) {
+        session = sessionTrigger;
+      }
     } else {
-      context = parsedOptions?.tokenContext;
+      session = parsedOptions?.session;
     }
 
     const adminAddress = await this.wallet.getAddress();
@@ -213,7 +219,7 @@ export class ThirdwebAuth {
         new Date(Date.now() + 1000 * 60 * 60 * 5),
       iat: new Date(),
       jti: parsedOptions?.tokenId,
-      ctx: context,
+      ctx: session,
     });
 
     const message = JSON.stringify(payloadData);
@@ -259,10 +265,10 @@ export class ThirdwebAuth {
    * const address = sdk.auth.authenticate(domain, token);
    * ```
    */
-  public async authenticate<TContext extends Json = Json>(
+  public async authenticate<TSession extends Json = Json>(
     token: string,
     options?: AuthenticateOptions,
-  ): Promise<User<TContext>> {
+  ): Promise<User<TSession>> {
     if (isBrowser()) {
       throw new Error(
         "Should not authenticate tokens in the browser, as they must be verified by the server-side admin wallet.",
@@ -282,7 +288,7 @@ export class ThirdwebAuth {
     // Check that the payload unique ID is valid
     if (parsedOptions?.validateTokenId !== undefined) {
       try {
-        parsedOptions.validateTokenId(payload.jti);
+        await parsedOptions.validateTokenId(payload.jti);
       } catch (err) {
         throw new Error(`Token ID is invalid`);
       }
@@ -341,8 +347,7 @@ export class ThirdwebAuth {
 
     return {
       address: payload.sub,
-      context: payload.ctx as TContext | undefined,
-      token: payload,
+      session: payload.ctx as TSession | undefined,
     };
   }
 

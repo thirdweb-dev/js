@@ -1,4 +1,4 @@
-import { ThirdwebAuth as ThirdwebAuthSDK } from "../core";
+import { Json, ThirdwebAuth as ThirdwebAuthSDK } from "../core";
 import { getUser } from "./helpers/user";
 import loginHandler from "./routes/login";
 import logoutHandler from "./routes/logout";
@@ -40,7 +40,10 @@ async function ThirdwebAuthRouter(
   }
 }
 
-export function ThirdwebAuth(cfg: ThirdwebAuthConfig) {
+export function ThirdwebAuth<
+  TData extends Json = Json,
+  TSession extends Json = Json,
+>(cfg: ThirdwebAuthConfig<TData, TSession>) {
   const ctx = {
     ...cfg,
     auth: new ThirdwebAuthSDK(cfg.wallet, cfg.domain),
@@ -51,10 +54,10 @@ export function ThirdwebAuth(cfg: ThirdwebAuthConfig) {
   ) {
     if (args.length === 0) {
       return async (req: NextApiRequest, res: NextApiResponse) =>
-        await ThirdwebAuthRouter(req, res, ctx);
+        await ThirdwebAuthRouter(req, res, ctx as ThirdwebAuthContext);
     }
 
-    return ThirdwebAuthRouter(args[0], args[1], ctx);
+    return ThirdwebAuthRouter(args[0], args[1], ctx as ThirdwebAuthContext);
   }
 
   return {
@@ -62,7 +65,7 @@ export function ThirdwebAuth(cfg: ThirdwebAuthConfig) {
     getUser: (
       req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest,
     ) => {
-      return getUser(req, ctx);
+      return getUser<TData, TSession>(req, ctx);
     },
   };
 }

@@ -1,11 +1,5 @@
 import { ThirdwebAuth } from "../../core";
-import {
-  AuthenticateOptions,
-  Json,
-  LoginPayloadOutputSchema,
-  User,
-  VerifyOptions,
-} from "../../core/schema";
+import { Json, LoginPayloadOutputSchema, User } from "../../core/schema";
 import { GenericAuthWallet } from "@thirdweb-dev/wallets";
 import { Request } from "express";
 import { z } from "zod";
@@ -16,48 +10,54 @@ export const LoginPayloadBodySchema = z.object({
 
 export type ThirdwebAuthRoute = "login" | "user" | "logout";
 
-export type ThirdwebAuthUser<TData extends Json = Json> = User & {
+export type ThirdwebAuthUser<
+  TData extends Json = Json,
+  TSession extends Json = Json,
+> = User<TSession> & {
   data?: TData;
 };
 
-export type ThirdwebAuthConfig = {
+export type ThirdwebAuthConfig<
+  TData extends Json = Json,
+  TSession extends Json = Json,
+> = {
   domain: string;
   wallet: GenericAuthWallet;
-  authOptions?: Omit<Exclude<VerifyOptions, undefined>, "domain"> &
-    Omit<Exclude<AuthenticateOptions, undefined>, "domain"> & {
-      tokenDurationInSeconds?: number;
-    };
+  authOptions?: {
+    statement?: string;
+    uri?: string;
+    version?: string;
+    chainId?: string;
+    resources?: string[];
+    validateNonce?:
+      | ((nonce: string) => void)
+      | ((nonce: string) => Promise<void>);
+    validateTokenId?:
+      | ((tokenId: string) => void)
+      | ((tokenId: string) => Promise<void>);
+    tokenDurationInSeconds?: number;
+  };
   cookieOptions?: {
     domain?: string;
     path?: string;
     sameSite?: "lax" | "strict" | "none";
   };
   callbacks?: {
-    login?: {
-      enhanceToken: <TContext extends Json = Json>(
-        address: string,
-        req?: Request,
-      ) => Promise<TContext>;
-      onLogin: <TContext extends Json = Json>(
-        user: User<TContext>,
-        req?: Request,
-      ) => Promise<void>;
-    };
-    user?: {
-      enhanceUser: <TData extends Json = Json, TContext extends Json = Json>(
-        user: User<TContext>,
-        req?: Request,
-      ) => Promise<TData>;
-    };
-    logout?: {
-      onLogout: (user: User, req?: Request) => Promise<void>;
-    };
+    onLogin?:
+      | ((address: string, req?: Request) => void | TSession)
+      | ((address: string, req?: Request) => Promise<void | TSession>);
+    onUser?:
+      | ((user: User<TSession>, req?: Request) => void | TData)
+      | ((user: User<TSession>, req?: Request) => Promise<void | TData>);
+    onLogout?:
+      | ((user: User, req?: Request) => void)
+      | ((user: User, req?: Request) => Promise<void>);
   };
 };
 
-export type ThirdwebAuthContext = Omit<
-  Omit<ThirdwebAuthConfig, "wallet">,
-  "domain"
-> & {
+export type ThirdwebAuthContext<
+  TData extends Json = Json,
+  TSession extends Json = Json,
+> = Omit<Omit<ThirdwebAuthConfig<TData, TSession>, "wallet">, "domain"> & {
   auth: ThirdwebAuth;
 };

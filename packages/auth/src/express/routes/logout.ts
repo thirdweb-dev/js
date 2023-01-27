@@ -14,10 +14,10 @@ export default async function handler(
     });
   }
 
-  if (ctx.callbacks?.logout?.onLogout) {
+  if (ctx.callbacks?.onLogout) {
     const user = await getUser(req, ctx);
     if (user) {
-      await ctx.callbacks.logout.onLogout(user, req);
+      await ctx.callbacks.onLogout(user, req);
     }
   }
 

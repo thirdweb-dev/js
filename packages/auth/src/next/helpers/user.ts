@@ -26,39 +26,40 @@ function getToken(
   return cookie;
 }
 
-export async function getUser<TData extends Json = Json>(
+export async function getUser<
+  TData extends Json = Json,
+  TSession extends Json = Json,
+>(
   req: GetServerSidePropsContext["req"] | NextRequest | NextApiRequest,
-  ctx: ThirdwebAuthContext,
-): Promise<ThirdwebAuthUser<TData> | null> {
+  ctx: ThirdwebAuthContext<TData, TSession>,
+): Promise<ThirdwebAuthUser<TData, TSession> | null> {
   const token = getToken(req);
 
   if (!token) {
     return null;
   }
 
-  let authenticatedUser;
+  let authenticatedUser: ThirdwebAuthUser<TData, TSession>;
   try {
-    authenticatedUser = await ctx.auth.authenticate(token);
-  } catch {
+    authenticatedUser = await ctx.auth.authenticate<TSession>(token, {
+      validateTokenId: async (tokenId: string) => {
+        if (ctx.authOptions?.validateTokenId) {
+          await ctx.authOptions?.validateTokenId(tokenId);
+        }
+      },
+    });
+  } catch (err) {
     return null;
   }
 
-  if (ctx.authOptions?.validateTokenId) {
-    try {
-      await ctx.authOptions?.validateTokenId(authenticatedUser.token.jti, req);
-    } catch {
-      return null;
-    }
-  }
-
-  if (!ctx.callbacks?.user?.enhanceUser) {
+  if (!ctx.callbacks?.onUser) {
     return authenticatedUser;
   }
 
-  const data = await ctx.callbacks.user.enhanceUser<TData>(
-    authenticatedUser,
-    req,
-  );
+  const data = await ctx.callbacks.onUser(authenticatedUser);
+  if (!data) {
+    return authenticatedUser;
+  }
 
-  return { ...authenticatedUser, data };
+  return { ...authenticatedUser, data: data };
 }

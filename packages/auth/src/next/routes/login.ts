@@ -23,16 +23,15 @@ export default async function handler(
 
   const validateNonce = async (nonce: string) => {
     if (ctx.authOptions?.validateNonce) {
-      await ctx.authOptions?.validateNonce(nonce, req);
+      await ctx.authOptions?.validateNonce(nonce);
     }
   };
 
-  const getTokenContext = ctx.callbacks?.login?.enhanceToken
-    ? async (address: string) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        return await ctx.callbacks!.login!.enhanceToken(address, req);
-      }
-    : undefined;
+  const getSession = async (address: string) => {
+    if (ctx.callbacks?.onLogin) {
+      return ctx.callbacks.onLogin(address, req);
+    }
+  };
 
   const expirationTime = ctx.authOptions?.tokenDurationInSeconds
     ? new Date(Date.now() + 1000 * ctx.authOptions.tokenDurationInSeconds)
@@ -48,15 +47,21 @@ export default async function handler(
       resources: ctx.authOptions?.resources,
     },
     expirationTime,
-    tokenContext: getTokenContext,
+    session: getSession,
   };
 
   let token: string;
   try {
     // Generate an access token with the SDK using the signed payload
     token = await ctx.auth.generate(payload, generateOptions);
-  } catch {
-    return res.status(403).json({ error: "Invalid login payload" });
+  } catch (err: any) {
+    if (err.message) {
+      return res.status(403).json({ error: err.message });
+    } else if (typeof err === "string") {
+      return res.status(403).json({ error: err });
+    } else {
+      return res.status(403).json({ error: "Invalid login payload" });
+    }
   }
 
   // Securely set httpOnly cookie on request to prevent XSS on frontend
@@ -71,14 +76,6 @@ export default async function handler(
       secure: true,
     }),
   );
-
-  if (ctx.callbacks?.login?.onLogin) {
-    const user = await ctx.auth.authenticate(token);
-
-    if (user) {
-      await ctx.callbacks.login.onLogin(user, req);
-    }
-  }
 
   // Send token in body and as cookie for frontend and backend use cases
   return res.status(200).json({ token });

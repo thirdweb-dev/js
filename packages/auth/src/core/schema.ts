@@ -108,13 +108,7 @@ export const GenerateOptionsSchema = z
     tokenId: z.string().optional(),
     expirationTime: z.date().optional(),
     invalidBefore: z.date().optional(),
-    tokenContext: z
-      .union([
-        JsonSchema,
-        z.function().args(z.string()).returns(JsonSchema),
-        z.function().args(z.string()).returns(z.promise(JsonSchema)),
-      ])
-      .optional(),
+    session: z.union([JsonSchema, z.function().args(z.string())]).optional(),
     verifyOptions: VerifyOptionsSchemaRequired.omit({
       domain: true,
     }).optional(),
@@ -202,8 +196,7 @@ export type AuthenticateOptions = z.output<typeof AuthenticateOptionsSchema>;
  */
 export type User<TContext extends Json = Json> = {
   address: string;
-  context?: TContext;
-  token: AuthenticationPayloadData;
+  session?: TContext;
 };
 
 export const LoginPayloadOutputSchema = LoginPayloadSchema.extend({
