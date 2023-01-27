@@ -268,6 +268,48 @@ export const cacheKeys = {
             { listingId },
           ]),
       },
+
+      directListings: {
+        getAll: (
+          contractAddress: RequiredParam<ContractAddress>,
+          params?: MarketplaceFilter,
+        ) =>
+          createContractCacheKey(
+            contractAddress,
+            params ? ["getAll", params] : ["getAll"],
+          ),
+        getListing: (
+          contractAddress: RequiredParam<ContractAddress>,
+          listingId: RequiredParam<BigNumberish>,
+        ) =>
+          createContractCacheKey(contractAddress, [
+            "getListing",
+            { listingId },
+          ]),
+        getTotalCount: (contractAddress: RequiredParam<ContractAddress>) =>
+          createContractCacheKey(contractAddress, ["getTotalCount"]),
+      },
+
+      englishAuctions: {
+        getAll: (
+          contractAddress: RequiredParam<ContractAddress>,
+          params?: MarketplaceFilter,
+        ) =>
+          createContractCacheKey(
+            contractAddress,
+            params ? ["getAll", params] : ["getAll"],
+          ),
+        getAuction: (
+          contractAddress: RequiredParam<ContractAddress>,
+          auctionId: RequiredParam<BigNumberish>,
+        ) =>
+          createContractCacheKey(contractAddress, [
+            "getAuction",
+            { auctionId },
+          ]),
+        getTotalCount: (contractAddress: RequiredParam<ContractAddress>) =>
+          createContractCacheKey(contractAddress, ["getTotalCount"]),
+      },
     },
   },
   // extensions

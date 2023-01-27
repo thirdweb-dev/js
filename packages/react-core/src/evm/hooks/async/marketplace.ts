@@ -21,12 +21,13 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type {
   AuctionListing,
   DirectListing,
+  Marketplace,
   MarketplaceFilter,
+  MarketplaceV3,
   NewAuctionListing,
   NewDirectListing,
 } from "@thirdweb-dev/sdk";
 import { ListingType } from "@thirdweb-dev/sdk";
-import { Marketplace } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/prebuilt-implementations/marketplace";
 import { BigNumberish } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -44,7 +45,7 @@ import invariant from "tiny-invariant";
  *
  * @param contract - an instance of a marketplace contract
  * @param listingId - the listing id to check
- * @returns a response object that includes an array of listings
+ * @returns a response object that includes the desired listing
  * @beta
  */
 export function useListing(
@@ -58,6 +59,76 @@ export function useListing(
       requiredParamInvariant(contract, "No Contract instance provided");
       requiredParamInvariant(listingId, "No listing id provided");
       return contract.getListing(listingId);
+    },
+    {
+      enabled: !!contract,
+      keepPreviousData: true,
+    },
+  );
+}
+
+/**
+ * Use this to get a specific direct listing from the marketplace v3.
+ *
+ * @example
+ * ```javascript
+ * const { data: directListing, isLoading, error } = useListing(<YourMarketplaceV3ContractInstance>, <listingId>);
+ * ```
+ *
+ * @param contract - an instance of a marketplace v3 contract
+ * @param listingId - the listing id to check
+ * @returns a response object that includes the desired direct listing
+ * @internal
+ */
+export function useDirectListing(
+  contract: RequiredParam<MarketplaceV3>,
+  listingId: RequiredParam<BigNumberish>,
+) {
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.marketplace.directListings.getListing(
+      contractAddress,
+      listingId,
+    ),
+    () => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      requiredParamInvariant(listingId, "No listing id provided");
+      return contract.directListings.getListing(listingId);
+    },
+    {
+      enabled: !!contract,
+      keepPreviousData: true,
+    },
+  );
+}
+
+/**
+ * Use this to get a specific english auction from the marketplace v3.
+ *
+ * @example
+ * ```javascript
+ * const { data: englishAuction, isLoading, error } = useEnglishAuction(<YourMarketplaceV3ContractInstance>, <auctionId>);
+ * ```
+ *
+ * @param contract - an instance of a marketplace v3 contract
+ * @param auctionId - the auction id to check
+ * @returns a response object that includes the desired english auction
+ * @internal
+ */
+export function useEnglishAuction(
+  contract: RequiredParam<MarketplaceV3>,
+  auctionId: RequiredParam<BigNumberish>,
+) {
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.marketplace.englishAuctions.getAuction(
+      contractAddress,
+      auctionId,
+    ),
+    () => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      requiredParamInvariant(auctionId, "No auction id provided");
+      return contract.englishAuctions.getAuction(auctionId);
     },
     {
       enabled: !!contract,
@@ -98,15 +169,83 @@ export function useListings(
 }
 
 /**
+ * Use this to get a list all direct listings from your marketplace v3 contract.
+ *
+ * @example
+ * ```javascript
+ * const { data: directListings, isLoading, error } = useDirectListings(<YourMarketplaceV3ContractInstance>, { start: 0, count: 100 });
+ * ```
+ *
+ * @param contract - an instance of a marketplace v3 contract
+ * @param filter - filter to pass to the query for the sake of pagination & filtering
+ * @returns a response object that includes an array of direct listings
+ * @internal
+ */
+export function useDirectListings(
+  contract: RequiredParam<MarketplaceV3>,
+  filter?: MarketplaceFilter,
+) {
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.marketplace.directListings.getAll(
+      contractAddress,
+      filter,
+    ),
+    () => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      return contract.directListings.getAll(filter);
+    },
+    {
+      enabled: !!contract,
+      keepPreviousData: true,
+    },
+  );
+}
+
+/**
+ * Use this to get a list all english auctions from your marketplace v3 contract.
+ *
+ * @example
+ * ```javascript
+ * const { data: englishAuctions, isLoading, error } = useEnglishAuctions(<YourMarketplaceV3ContractInstance>, { start: 0, count: 100 });
+ * ```
+ *
+ * @param contract - an instance of a marketplace v3 contract
+ * @param filter - filter to pass to the query for the sake of pagination & filtering
+ * @returns a response object that includes an array of english auctions
+ * @internal
+ */
+export function useEnglishAuctions(
+  contract: RequiredParam<MarketplaceV3>,
+  filter?: MarketplaceFilter,
+) {
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.marketplace.englishAuctions.getAll(
+      contractAddress,
+      filter,
+    ),
+    () => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      return contract.englishAuctions.getAll(filter);
+    },
+    {
+      enabled: !!contract,
+      keepPreviousData: true,
+    },
+  );
+}
+
+/**
  * Use this to get a count of all listings on your marketplace contract.
  *
  * @example
  * ```javascript
- * const { data: listings, isLoading, error } = useListings(<YourMarketplaceContractInstance>);
+ * const { data: listingsCount, isLoading, error } = useListingsCount(<YourMarketplaceContractInstance>);
  * ```
  *
  * @param contract - an instance of a marketplace contract
- * @returns a response object that includes an array of listings
+ * @returns a response object that includes the listing count
  * @beta
  */
 export function useListingsCount(contract: RequiredParam<Marketplace>) {
@@ -116,6 +255,64 @@ export function useListingsCount(contract: RequiredParam<Marketplace>) {
     () => {
       requiredParamInvariant(contract, "No Contract instance provided");
       return contract.getTotalCount();
+    },
+    {
+      enabled: !!contract,
+    },
+  );
+}
+
+/**
+ * Use this to get a count of all direct listings on your marketplace v3 contract.
+ *
+ * @example
+ * ```javascript
+ * const { data: listingsCount, isLoading, error } = useListingsCount(<YourMarketplaceV3ContractInstance>);
+ * ```
+ *
+ * @param contract - an instance of a marketplace v3 contract
+ * @returns a response object that includes the direct listings count
+ * @internal
+ */
+export function useDirectListingsCount(contract: RequiredParam<MarketplaceV3>) {
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.marketplace.directListings.getTotalCount(
+      contractAddress,
+    ),
+    () => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      return contract.directListings.getTotalCount();
+    },
+    {
+      enabled: !!contract,
+    },
+  );
+}
+
+/**
+ * Use this to get a count of all direct listings on your marketplace v3 contract.
+ *
+ * @example
+ * ```javascript
+ * const { data: englishAuctionsCount, isLoading, error } = useEnglishAuctionsCount(<YourMarketplaceV3ContractInstance>);
+ * ```
+ *
+ * @param contract - an instance of a marketplace v3 contract
+ * @returns a response object that includes the direct english actions count
+ * @internal
+ */
+export function useEnglishAuctionsCount(
+  contract: RequiredParam<MarketplaceV3>,
+) {
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.marketplace.englishAuctions.getTotalCount(
+      contractAddress,
+    ),
+    () => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      return contract.englishAuctions.getTotalCount();
     },
     {
       enabled: !!contract,
