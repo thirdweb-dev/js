@@ -1,9 +1,11 @@
 import { Ecosystem, GenericAuthWallet } from "../../core";
-import { SolanaSigner } from "../interfaces";
+import { SolanaSigner, SolanaWallet } from "../interfaces";
 import bs58 from "bs58";
 import nacl from "tweetnacl";
 
-export abstract class AbstractWallet implements GenericAuthWallet {
+export abstract class AbstractWallet
+  implements GenericAuthWallet, SolanaWallet
+{
   type: Ecosystem = "solana";
   protected signer: SolanaSigner | undefined;
 

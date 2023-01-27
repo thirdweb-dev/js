@@ -1,7 +1,7 @@
-import { SolanaSigner, SolanaWallet } from "../interfaces";
+import { SolanaSigner } from "../interfaces";
 import { AbstractWallet } from "./base";
 
-export class SignerWallet extends AbstractWallet implements SolanaWallet {
+export class SignerWallet extends AbstractWallet {
   constructor(signer: SolanaSigner) {
     super();
     this.signer = signer;
