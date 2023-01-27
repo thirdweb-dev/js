@@ -3,17 +3,11 @@ import {
   InterfaceId_IERC721,
 } from "../constants/contract";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import {
-  NewDirectListingV3,
-  NewEnglishAuction,
-  NewOffer,
-} from "../types/marketplacev3";
 import type { IERC1155, IERC165, IERC721 } from "@thirdweb-dev/contracts-js";
 import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
 import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
 import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
 import { BigNumberish, Contract, providers } from "ethers";
-import invariant from "tiny-invariant";
 
 /**
  * This method checks if the given token is approved for the transferrerContractAddress contract.
@@ -142,103 +136,4 @@ export async function handleTokenApproval(
   } else {
     throw Error("Contract must implement ERC 1155 or ERC 721.");
   }
-}
-
-/**
- * Used to verify fields in new listing.
- * @internal
- */
-// TODO this should be done in zod
-export function validateNewListingParam(param: NewDirectListingV3) {
-  invariant(
-    param.assetContractAddress !== undefined &&
-      param.assetContractAddress !== null,
-    "Asset contract address is required",
-  );
-  invariant(
-    param.tokenId !== undefined && param.tokenId !== null,
-    "Token ID is required",
-  );
-  invariant(
-    param.quantity !== undefined && param.quantity !== null,
-    "Quantity is required",
-  );
-  invariant(
-    param.pricePerToken !== undefined && param.pricePerToken !== null,
-    "Price per token is required",
-  );
-  invariant(
-    param.startTimestamp !== undefined && param.startTimestamp !== null,
-    "Start time is required",
-  );
-  invariant(
-    param.endTimestamp !== undefined && param.endTimestamp !== null,
-    "End time is required",
-  );
-  invariant(
-    param.endTimestamp > param.startTimestamp,
-    "End time must be after start time",
-  );
-}
-
-/**
- * Used to verify fields in new english auction.
- * @internal
- */
-// TODO this should be done in zod
-export function validateNewEnglishAuctionParam(param: NewEnglishAuction) {
-  invariant(
-    param.assetContractAddress !== undefined &&
-      param.assetContractAddress !== null,
-    "Asset contract address is required",
-  );
-  invariant(
-    param.tokenId !== undefined && param.tokenId !== null,
-    "Token ID is required",
-  );
-  invariant(
-    param.quantity !== undefined && param.quantity !== null,
-    "Quantity is required",
-  );
-  invariant(
-    param.startTimestamp !== undefined && param.startTimestamp !== null,
-    "Start time is required",
-  );
-  invariant(
-    param.endTimestamp !== undefined && param.endTimestamp !== null,
-    "End time is required",
-  );
-  invariant(
-    param.endTimestamp > param.startTimestamp,
-    "End time must be after start time",
-  );
-}
-
-/**
- * Used to verify fields in new offer.
- * @internal
- */
-// TODO this should be done in zod
-export function validateNewOfferParam(param: NewOffer) {
-  invariant(
-    param.assetContractAddress !== undefined &&
-      param.assetContractAddress !== null,
-    "Asset contract address is required",
-  );
-  invariant(
-    param.tokenId !== undefined && param.tokenId !== null,
-    "Token ID is required",
-  );
-  invariant(
-    param.quantity !== undefined && param.quantity !== null,
-    "Quantity is required",
-  );
-  invariant(
-    param.totalPrice !== undefined && param.totalPrice !== null,
-    "Price per token is required",
-  );
-  invariant(
-    param.endTimestamp !== undefined && param.endTimestamp !== null,
-    "End time is required",
-  );
 }
