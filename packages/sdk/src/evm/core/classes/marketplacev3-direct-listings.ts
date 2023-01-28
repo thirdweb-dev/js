@@ -738,7 +738,7 @@ export class MarketplaceV3DirectListings {
       this.getAddress(),
       listing.assetContractAddress,
       listing.tokenId,
-      listing.listingCreatorAddress,
+      listing.creatorAddress,
     );
 
     if (!approved) {
@@ -764,7 +764,7 @@ export class MarketplaceV3DirectListings {
       ) as IERC721;
       const valid =
         (await asset.ownerOf(listing.tokenId)).toLowerCase() ===
-        listing.listingCreatorAddress.toLowerCase();
+        listing.creatorAddress.toLowerCase();
       return {
         valid,
         error: valid
@@ -778,7 +778,7 @@ export class MarketplaceV3DirectListings {
         provider,
       ) as IERC1155;
       const balance = await asset.balanceOf(
-        listing.listingCreatorAddress,
+        listing.creatorAddress,
         listing.tokenId,
       );
       const valid = balance.gte(quantity || listing.quantity);
