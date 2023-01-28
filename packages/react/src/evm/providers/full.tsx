@@ -8,13 +8,12 @@ import {
   ThirdwebSDKProvider,
   ThirdwebSDKProviderProps,
 } from "@thirdweb-dev/react-core/evm";
-import { SDKOptions, SDKOptionsOutput } from "@thirdweb-dev/sdk";
+import type { ChainIdOrName, SDKOptions } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import React, { useMemo } from "react";
 import {
   WagmiProvider,
   ProviderProps as WagmiproviderProps,
-  useProvider,
   useSigner,
   Connector,
   Chain as WagmiChain,
@@ -114,6 +113,11 @@ export interface DAppMetaData {
  */
 export interface ThirdwebProviderProps {
   /**
+   * The network to use for the SDK.
+   */
+  network: ChainIdOrName;
+
+  /**
    * The {@link SDKOptions | Thirdweb SDK Options} to pass to the thirdweb SDK
    * comes with sensible defaults
    */
@@ -123,27 +127,16 @@ export interface ThirdwebProviderProps {
    * If not provided, will default to metamask (injected), wallet connect and walletlink (coinbase wallet) with sensible defaults
    */
   walletConnectors?: WalletConnector[];
-  /**
-   * A partial map of chainIds to rpc urls to use for certain chains
-   * If not provided, will default to the rpcUrls of the chain objects for the supported chains
-   * @deprecated - use `chains` instead
-   */
-  chainRpc?: Record<number, string>;
+
   /**
    * Metadata to pass to wallet connect and walletlink wallet connect. (Used to show *which* dApp is being connected to in mobile wallets that support it)
    * Defaults to just the name being passed as `thirdweb powered dApp`.
    */
   dAppMeta?: DAppMetaData;
-  /**
-   * The chainId that your dApp is running on.
-   * While this *can* be `undefined` it is required to be passed. Passing `undefined` will cause no SDK to be instantiated
-   */
-  desiredChainId: number | undefined;
 
   /**
    * The configuration used for thirdweb auth usage. Enables users to login
    * to backends with their wallet.
-   * @beta
    */
   authConfig?: ThirdwebAuthConfig;
 
@@ -154,7 +147,6 @@ export interface ThirdwebProviderProps {
 
   /**
    * The react-query client to use. (Defaults to a default client.)
-   * @beta
    */
   queryClient?: QueryClient;
 
@@ -167,6 +159,19 @@ export interface ThirdwebProviderProps {
    * Chains to support. If not provided, will default to the chains supported by the SDK.
    */
   chains?: Chain[];
+
+  /**
+   * The chainId that your dApp is running on.
+   * While this *can* be `undefined` it is required to be passed. Passing `undefined` will cause no SDK to be instantiated
+   * @deprecated - use `network` instead
+   */
+  desiredChainId: number | undefined;
+  /**
+   * A partial map of chainIds to rpc urls to use for certain chains
+   * If not provided, will default to the rpcUrls of the chain objects for the supported chains
+   * @deprecated - use `chains` instead
+   */
+  chainRpc?: Record<number, string>;
 }
 
 // SDK handles this under the hood for us
@@ -204,6 +209,7 @@ const defaultWalletConnectors: Required<
 export const ThirdwebProvider = ({
   sdkOptions,
   chains = defaultChains,
+  network,
   chainRpc = chains.reduce((acc, c) => {
     acc[c.chainId] = c.rpc[0];
     return acc;
@@ -304,7 +310,10 @@ export const ThirdwebProvider = ({
                 (connector.name === "coinbase" ||
                   connector.name === "walletLink"))
             ) {
-              const jsonRpcUrl = _rpcUrlMap[chainId || desiredChainId || 1];
+              const jsonRpcUrl =
+                typeof network === "number"
+                  ? _rpcUrlMap[network]
+                  : _rpcUrlMap[chainId || desiredChainId || 1];
               return new CoinbaseWalletConnector({
                 chains: wagmiChains,
                 options:
@@ -336,41 +345,9 @@ export const ThirdwebProvider = ({
     walletConnectors,
     wagmiChains,
     _rpcUrlMap,
+    network,
     desiredChainId,
   ]);
-
-  const readonlySettings: SDKOptionsOutput["readonlySettings"] = useMemo(() => {
-    if (
-      sdkOptions?.readonlySettings?.rpcUrl &&
-      sdkOptions?.readonlySettings?.chainId
-    ) {
-      return sdkOptions.readonlySettings;
-    }
-    if (!desiredChainId) {
-      return undefined;
-    }
-    let rpcUrl = _rpcUrlMap[desiredChainId as keyof typeof _rpcUrlMap];
-    if (!rpcUrl) {
-      console.error(
-        `failed to configure rpc url for chain: "${desiredChainId}". Did you forget to pass "desiredChainId" to the <ThirdwebProvider /> component?`,
-      );
-      // cannot set readonly without a valid rpc url
-      return undefined;
-    }
-    return {
-      chainId: desiredChainId,
-      rpcUrl,
-    };
-  }, [_rpcUrlMap, desiredChainId, sdkOptions?.readonlySettings]);
-
-  const sdkOptionsWithDefaults = useMemo(() => {
-    const opts: SDKOptions = sdkOptions;
-    return {
-      readonlySettings,
-      chainInfos: chains,
-      ...opts,
-    };
-  }, [sdkOptions, readonlySettings, chains]);
 
   return (
     <ThirdwebConfigProvider
@@ -383,7 +360,9 @@ export const ThirdwebProvider = ({
         <ThirdwebSDKProviderWagmiWrapper
           queryClient={queryClient}
           desiredChainId={desiredChainId}
-          sdkOptions={sdkOptionsWithDefaults}
+          sdkOptions={sdkOptions}
+          chains={chains}
+          network={network}
           storageInterface={storageInterface}
           authConfig={authConfig}
         >
@@ -397,10 +376,9 @@ export const ThirdwebProvider = ({
 const ThirdwebSDKProviderWagmiWrapper: React.FC<
   React.PropsWithChildren<Omit<ThirdwebSDKProviderProps, "signer" | "provider">>
 > = ({ children, ...props }) => {
-  const provider = useProvider();
   const [signer] = useSigner();
   return (
-    <ThirdwebSDKProvider signer={signer.data} provider={provider} {...props}>
+    <ThirdwebSDKProvider signer={signer.data} {...props}>
       {children}
     </ThirdwebSDKProvider>
   );

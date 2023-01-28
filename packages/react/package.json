@@ -98,6 +98,8 @@
   },
   "dependencies": {
     "@thirdweb-dev/react-core": "*",
+    "@thirdweb-dev/wallets": "*",
+    "@thirdweb-dev/chains": "*",
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
     "@react-icons/all-files": "^4.1.0",
@@ -105,7 +107,6 @@
     "@safe-global/safe-ethers-adapters": "0.1.0-alpha.13",
     "@safe-global/safe-ethers-lib": "^1.7.0",
     "@tanstack/react-query": "^4.0.10",
-    "@thirdweb-dev/chains": "*",
     "@zag-js/menu": "^0.3.0",
     "@zag-js/react": "^0.3.1",
     "buffer": "^6.0.3",
