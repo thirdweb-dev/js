@@ -728,7 +728,7 @@ export function useCancelListing(contract: RequiredParam<Marketplace>) {
  *
  * @param contract - an instance of a Marketplace v3 contract
  * @returns a mutation object that can be used to cancel a direct listing
- * @beta
+ * @internal
  */
 export function useCancelDirectListing(contract: RequiredParam<MarketplaceV3>) {
   const activeChainId = useSDKChainId();
@@ -787,7 +787,7 @@ export function useCancelDirectListing(contract: RequiredParam<MarketplaceV3>) {
  *
  * @param contract - an instance of a Marketplace v3 contract
  * @returns a mutation object that can be used to cancel an english auction
- * @beta
+ * @internal
  */
 export function useCancelEnglishAuction(contract: RequiredParam<MarketplaceV3>) {
   const activeChainId = useSDKChainId();
