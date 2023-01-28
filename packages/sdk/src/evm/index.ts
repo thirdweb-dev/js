@@ -12,7 +12,6 @@ export * from "./constants/chains";
 export * from "./schema/tokens/token";
 export * from "./schema/tokens/edition";
 export * from "./schema/contracts/common";
-export * from "./schema/auth";
 export * from "./schema/shared";
 export type {
   SDKOptions,

@@ -9,8 +9,6 @@ import { SmartContract } from "../contracts/smart-contract";
 import { AbiSchema } from "../schema";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWithMetadata, CurrencyValue } from "../types/index";
-import type { AbstractWallet } from "../wallets";
-import { WalletAuthenticator } from "./auth/wallet-authenticator";
 import { ContractDeployer } from "./classes/contract-deployer";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { MultichainRegistry } from "./classes/multichain-registry";
@@ -29,6 +27,7 @@ import type {
 import { UserWallet } from "./wallet/user-wallet";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import type { EVMWallet } from "@thirdweb-dev/wallets";
 import { Contract, ContractInterface, ethers, Signer } from "ethers";
 
 /**
@@ -56,13 +55,12 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @beta
    */
   static async fromWallet(
-    wallet: AbstractWallet,
+    wallet: EVMWallet,
     network: ChainIdOrName,
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
   ) {
-    const provider = getChainProvider(network, options);
-    const signer = await wallet.getSigner(provider);
+    const signer = await wallet.getSigner();
     return ThirdwebSDK.fromSigner(signer, network, options, storage);
   }
 
@@ -158,10 +156,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * Upload and download files from IPFS or from your own storage service
    */
   public storage: ThirdwebStorage;
-  /**
-   * Enable authentication with the connected wallet
-   */
-  public auth: WalletAuthenticator;
 
   constructor(
     network: NetworkInput,
@@ -173,7 +167,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     this.storage = storage;
     this.wallet = new UserWallet(network, options);
     this.deployer = new ContractDeployer(network, options, storage);
-    this.auth = new WalletAuthenticator(network, this.wallet, options);
     this.multiChainRegistry = new MultichainRegistry(
       network,
       this.storageHandler,
@@ -183,6 +176,15 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       network,
       this.options,
       this.storageHandler,
+    );
+  }
+
+  get auth() {
+    throw new Error(
+      `The sdk.auth namespace has been moved to the @thirdweb-dev/auth package and is no longer available after @thirdweb-dev/sdk >= 3.7.0. 
+      Please visit https://portal.thirdweb.com/auth for instructions on how to switch to using the new auth package (@thirdweb-dev/auth@3.0.0).
+      
+      If you still want to use the old @thirdweb-dev/auth@2.0.0 package, you can downgrade the SDK to version 3.6.0.`,
     );
   }
 
@@ -580,7 +582,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
   private updateContractSignerOrProvider() {
     this.wallet.connect(this.getSignerOrProvider());
-    this.auth.updateSignerOrProvider(this.getSignerOrProvider());
     this.deployer.updateSignerOrProvider(this.getSignerOrProvider());
     this._publisher.updateSignerOrProvider(this.getSignerOrProvider());
     this.multiChainRegistry.updateSigner(this.getSignerOrProvider());
