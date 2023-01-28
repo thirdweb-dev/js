@@ -12,7 +12,7 @@ declare global {
 }
 
 export const ModelViewer = React.forwardRef<HTMLDivElement, MediaRendererProps>(
-  ({ src, alt, style, poster, height, width, ...restProps }, ref) => {
+  ({ src, alt, style, poster, ...restProps }, ref) => {
     return (
         <div style={{objectFit: 'contain', width: '100%'}} ref={ref}>
         {src ? (
