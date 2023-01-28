@@ -1,6 +1,6 @@
 import { ensureTWPrefix } from "../../../core/query-utils/query-key";
-import { useThirdwebAuthConfig } from "../../contexts/thirdweb-auth";
-import { useQueryClient } from "@tanstack/react-query";
+import { useThirdwebAuthContext } from "../../contexts/thirdweb-auth";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import invariant from "tiny-invariant";
 
 /**
@@ -13,16 +13,22 @@ import invariant from "tiny-invariant";
  */
 export function useLogout() {
   const queryClient = useQueryClient();
-  const authConfig = useThirdwebAuthConfig();
+  const authConfig = useThirdwebAuthContext();
 
-  function logout() {
-    invariant(
-      authConfig,
-      "Please specify an authConfig in the ThirdwebProvider",
-    );
-    queryClient.invalidateQueries(ensureTWPrefix(["user"]));
-    window.location.href = `${authConfig.authUrl}/logout`;
-  }
+  const logout = useMutation({
+    mutationFn: async () => {
+      invariant(
+        authConfig,
+        "Please specify an authConfig in the ThirdwebProvider",
+      );
 
-  return logout;
+      await fetch(`${authConfig.authUrl}/logout`, {
+        method: "POST",
+      });
+
+      queryClient.invalidateQueries(ensureTWPrefix(["user"]));
+    },
+  });
+
+  return { logout: logout.mutateAsync, isLoading: logout.isLoading };
 }
