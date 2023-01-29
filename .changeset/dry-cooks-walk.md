@@ -1,5 +1,6 @@
 ---
 "@thirdweb-dev/auth": patch
+"@thirdweb-dev/react": patch
 "@thirdweb-dev/react-core": patch
 ---
 
