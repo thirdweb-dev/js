@@ -1,5 +1,12 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.7.1
+
 ## 0.2.0
 
 ### Minor Changes
