@@ -34,13 +34,9 @@ export function useLogin() {
       });
 
       if (!res.ok) {
-        try {
-          const data = await res.json();
-          if (data.error) {
-            throw new Error(data.error);
-          }
-        } catch (err) {
-          // no-op
+        const data = await res.json();
+        if (data.error) {
+          throw new Error(data.error);
         }
 
         throw new Error(`Login request failed with status code ${res.status}`);
