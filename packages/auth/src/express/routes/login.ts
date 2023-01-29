@@ -56,11 +56,11 @@ export default async function handler(
     token = await ctx.auth.generate(payload, generateOptions);
   } catch (err: any) {
     if (err.message) {
-      return res.status(403).json({ error: err.message });
+      return res.status(400).json({ error: err.message });
     } else if (typeof err === "string") {
-      return res.status(403).json({ error: err });
+      return res.status(400).json({ error: err });
     } else {
-      return res.status(403).json({ error: "Invalid login payload" });
+      return res.status(400).json({ error: "Invalid login payload" });
     }
   }
 
