@@ -1,8 +1,16 @@
-import { Box, DarkMode, Flex, Icon, List, ListItem } from "@chakra-ui/react";
+import {
+  Box,
+  DarkMode,
+  Flex,
+  Icon,
+  List,
+  ListItem,
+  Spacer,
+} from "@chakra-ui/react";
 import { ImMagicWand } from "@react-icons/all-files/im/ImMagicWand";
 import { HomepageFooter } from "components/footer/Footer";
 import { AvatarShowcase } from "components/hackathon/common/AvatarShowcase";
-import { HackathonFooter } from "components/hackathon/common/HackathonFooter";
+import { HackathonWinners } from "components/hackathon/common/HackathonWinners";
 import { PrizeSection } from "components/hackathon/common/PrizeSection";
 import { ScheduleSection } from "components/hackathon/common/ScheduleSection";
 import { Sponsors } from "components/hackathon/common/Sponsors";
@@ -128,6 +136,27 @@ const judges = [
     twitter: "ahnchrisj",
     image: "/assets/landingpage/chris.jpg",
     company: "Haun Ventures",
+  },
+];
+
+const winners = [
+  {
+    name: "Dungeon3",
+    position: "1st Place",
+    image: "/assets/hackathon/firstplace.jpeg",
+    link: "https://metamake.hashnode.dev/build-an-rpg-game-on-solana",
+  },
+  {
+    name: "RareLabs",
+    position: "2nd Place",
+    image: "/assets/hackathon/secondplace.jpeg",
+    link: "https://fredoist.hashnode.dev/solanathon",
+  },
+  {
+    name: "Rukugaki",
+    position: "3rd Place",
+    image: "/assets/hackathon/thirdplace.jpeg",
+    link: "https://2022-solanathon-submission.vercel.app/",
   },
 ];
 
@@ -316,7 +345,19 @@ const SolanaHackathon: ThirdwebNextPage = () => {
             trackingCategory="solanathon"
             avatars={judges}
           />
-          <HackathonFooter />
+          <HackathonWinners winners={winners} />
+          <Box
+            w="full"
+            h={{ base: 0, md: "150px" }}
+            background="linear-gradient(90deg, rgba(20, 253, 169, 0.4) 0%, rgba(47, 53, 201, 0.4) 36.52%, rgba(189, 17, 190, 0.4) 72.51%, rgba(65, 0, 172, 0.4) 100%)"
+            filter="blur(100px)"
+            transform="matrix(-1, 0, 0, 1, 0, 0)"
+            mt="-150px"
+            zIndex={-1}
+          />
+
+          <Spacer h={{ base: 0, md: 24 }} />
+
           <HomepageFooter />
         </Box>
       </Flex>
