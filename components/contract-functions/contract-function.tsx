@@ -86,17 +86,23 @@ export const ContractFunction: React.FC<ContractFunctionProps> = ({
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {fn.inputs.map((input) => (
+                  {fn.inputs.map((input, idx) => (
                     <Tr
                       borderBottomWidth={1}
                       _last={{ borderBottomWidth: 0 }}
-                      key={input.name}
+                      key={`${input.name}+${idx}}`}
                     >
                       <Td
                         borderBottomWidth="inherit"
                         borderBottomColor="borderColor"
                       >
-                        <Text fontFamily="mono">{input.name}</Text>
+                        {input?.name ? (
+                          <Text fontFamily="mono">{input.name}</Text>
+                        ) : (
+                          <Text fontStyle="italic" color="gray.500">
+                            No name defined
+                          </Text>
+                        )}
                       </Td>
                       <Td
                         borderBottomWidth="inherit"
