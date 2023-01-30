@@ -14,6 +14,7 @@ import {
   handleTokenApproval,
 } from "../../common/marketplacev3";
 import { fetchTokenMetadataForContract } from "../../common/nft";
+import { FEATURE_ENGLISH_AUCTIONS } from "../../constants/thirdweb-features";
 import {
   EnglishAuctionInputParams,
   EnglishAuctionInputParamsSchema,
@@ -21,6 +22,7 @@ import {
 import { MarketplaceFilter } from "../../types";
 import { CurrencyValue, Price } from "../../types/currency";
 import { EnglishAuction, Bid } from "../../types/marketplacev3";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult, TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
 import { ContractWrapper } from "./contract-wrapper";
@@ -37,13 +39,17 @@ import invariant from "tiny-invariant";
  * Handles auctions
  * @public
  */
-export class MarketplaceV3EnglishAuctions {
+export class MarketplaceV3EnglishAuctions<
+  TContract extends EnglishAuctionsLogic,
+> implements DetectableFeature
+{
+  featureName = FEATURE_ENGLISH_AUCTIONS.name;
   private contractWrapper: ContractWrapper<EnglishAuctionsLogic>;
   private storage: ThirdwebStorage;
   public encoder: ContractEncoder<EnglishAuctionsLogic>;
 
   constructor(
-    contractWrapper: ContractWrapper<EnglishAuctionsLogic>,
+    contractWrapper: ContractWrapper<TContract>,
     storage: ThirdwebStorage,
   ) {
     this.contractWrapper = contractWrapper;

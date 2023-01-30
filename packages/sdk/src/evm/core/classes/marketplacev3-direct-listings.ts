@@ -14,11 +14,13 @@ import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
 } from "../../constants/contract";
+import { FEATURE_DIRECT_LISTINGS } from "../../constants/thirdweb-features";
 import {
   DirectListingInputParams,
   DirectListingInputParamsSchema,
 } from "../../schema/marketplacev3/direct-listings";
 import { DirectListingV3, MarketplaceFilter } from "../../types";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult, TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
@@ -43,12 +45,15 @@ import invariant from "tiny-invariant";
  * Handles direct listings
  * @public
  */
-export class MarketplaceV3DirectListings {
+export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
+  implements DetectableFeature
+{
+  featureName = FEATURE_DIRECT_LISTINGS.name;
   private contractWrapper: ContractWrapper<DirectListingsLogic>;
   private storage: ThirdwebStorage;
 
   constructor(
-    contractWrapper: ContractWrapper<DirectListingsLogic>,
+    contractWrapper: ContractWrapper<TContract>,
     storage: ThirdwebStorage,
   ) {
     this.contractWrapper = contractWrapper;

@@ -10,12 +10,14 @@ import {
 } from "../../common/marketplacev3";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
+import { FEATURE_OFFERS } from "../../constants/thirdweb-features";
 import {
   OfferInputParams,
   OfferInputParamsSchema,
 } from "../../schema/marketplacev3/offer";
 import { MarketplaceFilter } from "../../types";
 import { OfferV3 } from "../../types/marketplacev3";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult, TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import type { IERC20, IOffers, OffersLogic } from "@thirdweb-dev/contracts-js";
@@ -28,12 +30,15 @@ import { BigNumber, BigNumberish } from "ethers";
  * Handles marketplace offers
  * @public
  */
-export class MarketplaceV3Offers {
+export class MarketplaceV3Offers<TContract extends OffersLogic>
+  implements DetectableFeature
+{
+  featureName = FEATURE_OFFERS.name;
   private contractWrapper: ContractWrapper<OffersLogic>;
   private storage: ThirdwebStorage;
 
   constructor(
-    contractWrapper: ContractWrapper<OffersLogic>,
+    contractWrapper: ContractWrapper<TContract>,
     storage: ThirdwebStorage,
   ) {
     this.contractWrapper = contractWrapper;

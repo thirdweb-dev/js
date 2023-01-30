@@ -1,3 +1,9 @@
+import { assertEnabled, detectContractFeature } from "../../common";
+import {
+  FEATURE_DIRECT_LISTINGS,
+  FEATURE_ENGLISH_AUCTIONS,
+  FEATURE_OFFERS,
+} from "../../constants/thirdweb-features";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -19,6 +25,7 @@ import type {
   DirectListingsLogic,
   EnglishAuctionsLogic,
   OffersLogic,
+  IDirectListings,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { CallOverrides } from "ethers";
@@ -97,7 +104,9 @@ export class MarketplaceV3 implements UpdateableNetwork {
    * await contract.directListings.buyFromListing(listingId, quantityDesired);
    * ```
    */
-  public directListings: MarketplaceV3DirectListings;
+  get directListings(): MarketplaceV3DirectListings<DirectListingsLogic> {
+    return assertEnabled(this.detectDirectListings(), FEATURE_DIRECT_LISTINGS);
+  }
   /**
    * Auctions
    * @remarks Create and manage auctions in your marketplace.
@@ -140,7 +149,12 @@ export class MarketplaceV3 implements UpdateableNetwork {
    * await contract.englishAuctions.makeBid(auctionId, bidAmount);
    * ```
    */
-  public englishAuctions: MarketplaceV3EnglishAuctions;
+  get englishAuctions(): MarketplaceV3EnglishAuctions<EnglishAuctionsLogic> {
+    return assertEnabled(
+      this.detectEnglishAuctions(),
+      FEATURE_ENGLISH_AUCTIONS,
+    );
+  }
 
   /**
    * Offers
@@ -173,7 +187,9 @@ export class MarketplaceV3 implements UpdateableNetwork {
    * await contract.offers.acceptOffer(offerId);
    * ```
    */
-  public offers: MarketplaceV3Offers;
+  get offers(): MarketplaceV3Offers<OffersLogic> {
+    return assertEnabled(this.detectOffers(), FEATURE_OFFERS);
+  }
 
   private _chainId;
   get chainId() {
@@ -209,18 +225,6 @@ export class MarketplaceV3 implements UpdateableNetwork {
     );
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
-    this.directListings = new MarketplaceV3DirectListings(
-      this.contractWrapper as unknown as ContractWrapper<DirectListingsLogic>,
-      this.storage,
-    );
-    this.englishAuctions = new MarketplaceV3EnglishAuctions(
-      this.contractWrapper as unknown as ContractWrapper<EnglishAuctionsLogic>,
-      this.storage,
-    );
-    this.offers = new MarketplaceV3Offers(
-      this.contractWrapper as unknown as ContractWrapper<OffersLogic>,
-      this.storage,
-    );
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
@@ -242,5 +246,50 @@ export class MarketplaceV3 implements UpdateableNetwork {
     ...args: unknown[] | [...unknown[], CallOverrides]
   ): Promise<any> {
     return this.contractWrapper.call(functionName, ...args);
+  }
+
+  /** ********************
+   * FEATURE DETECTION
+   * ********************/
+
+  private detectDirectListings() {
+    if (
+      detectContractFeature<DirectListingsLogic>(
+        this.contractWrapper,
+        "DirectListings",
+      )
+    ) {
+      return new MarketplaceV3DirectListings(
+        this.contractWrapper as unknown as ContractWrapper<DirectListingsLogic>,
+        this.storage,
+      );
+    }
+    return undefined;
+  }
+
+  private detectEnglishAuctions() {
+    if (
+      detectContractFeature<EnglishAuctionsLogic>(
+        this.contractWrapper,
+        "EnglishAuctions",
+      )
+    ) {
+      return new MarketplaceV3EnglishAuctions(
+        this
+          .contractWrapper as unknown as ContractWrapper<EnglishAuctionsLogic>,
+        this.storage,
+      );
+    }
+    return undefined;
+  }
+
+  private detectOffers() {
+    if (detectContractFeature<OffersLogic>(this.contractWrapper, "Offers")) {
+      return new MarketplaceV3Offers(
+        this.contractWrapper as unknown as ContractWrapper<OffersLogic>,
+        this.storage,
+      );
+    }
+    return undefined;
   }
 }
