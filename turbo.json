@@ -52,6 +52,10 @@
       "outputs": ["dist/**", "evm/**", "solana/**"],
       "dependsOn": ["^build"]
     },
+    "@thirdweb-dev/react-native#build": {
+      "outputs": ["dist/**"],
+      "dependsOn": ["^build"]
+    },
     "@thirdweb-dev/auth#build": {
       "outputs": [
         "dist/**",
