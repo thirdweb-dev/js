@@ -15,7 +15,7 @@ import {
   SDKOptionsOutput,
 } from '@thirdweb-dev/sdk';
 import type { ThirdwebStorage } from '@thirdweb-dev/storage';
-import React, { ReactNode, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import {
   Chain as WagmiChain,
   WagmiConfig,
@@ -350,7 +350,7 @@ const ThirdwebSDKProviderWagmiWrapper: React.FC<
   const provider = useProvider();
   return (
     <ThirdwebSDKProvider provider={provider} {...props}>
-      {children as ReactNode}
+      {children}
     </ThirdwebSDKProvider>
   );
 };
