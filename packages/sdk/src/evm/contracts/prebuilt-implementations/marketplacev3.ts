@@ -25,7 +25,6 @@ import type {
   DirectListingsLogic,
   EnglishAuctionsLogic,
   OffersLogic,
-  IDirectListings,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { CallOverrides } from "ethers";

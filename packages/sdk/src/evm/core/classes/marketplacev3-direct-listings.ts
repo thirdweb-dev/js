@@ -22,6 +22,9 @@ import {
 import { DirectListingV3, MarketplaceFilter } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult, TransactionResultWithId } from "../types";
+import { ContractEncoder } from "./contract-encoder";
+import { ContractEvents } from "./contract-events";
+import { ContractInterceptor } from "./contract-interceptor";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
   IERC1155,
@@ -52,12 +55,25 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   private contractWrapper: ContractWrapper<DirectListingsLogic>;
   private storage: ThirdwebStorage;
 
+  // utilities
+  public events: ContractEvents<DirectListingsLogic>;
+  public interceptor: ContractInterceptor<DirectListingsLogic>;
+  public encoder: ContractEncoder<DirectListingsLogic>;
+
   constructor(
     contractWrapper: ContractWrapper<TContract>,
     storage: ThirdwebStorage,
   ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
+
+    this.events = new ContractEvents<DirectListingsLogic>(this.contractWrapper);
+    this.encoder = new ContractEncoder<DirectListingsLogic>(
+      this.contractWrapper,
+    );
+    this.interceptor = new ContractInterceptor<DirectListingsLogic>(
+      this.contractWrapper,
+    );
   }
 
   getAddress(): string {

@@ -25,6 +25,8 @@ import { EnglishAuction, Bid } from "../../types/marketplacev3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult, TransactionResultWithId } from "../types";
 import { ContractEncoder } from "./contract-encoder";
+import { ContractEvents } from "./contract-events";
+import { ContractInterceptor } from "./contract-interceptor";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
   IEnglishAuctions,
@@ -46,6 +48,10 @@ export class MarketplaceV3EnglishAuctions<
   featureName = FEATURE_ENGLISH_AUCTIONS.name;
   private contractWrapper: ContractWrapper<EnglishAuctionsLogic>;
   private storage: ThirdwebStorage;
+
+  // utilities
+  public events: ContractEvents<EnglishAuctionsLogic>;
+  public interceptor: ContractInterceptor<EnglishAuctionsLogic>;
   public encoder: ContractEncoder<EnglishAuctionsLogic>;
 
   constructor(
@@ -54,7 +60,13 @@ export class MarketplaceV3EnglishAuctions<
   ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
+    this.events = new ContractEvents<EnglishAuctionsLogic>(
+      this.contractWrapper,
+    );
     this.encoder = new ContractEncoder<EnglishAuctionsLogic>(contractWrapper);
+    this.interceptor = new ContractInterceptor<EnglishAuctionsLogic>(
+      this.contractWrapper,
+    );
   }
 
   getAddress(): string {

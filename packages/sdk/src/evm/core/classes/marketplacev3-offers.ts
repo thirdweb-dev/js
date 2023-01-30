@@ -19,6 +19,9 @@ import { MarketplaceFilter } from "../../types";
 import { OfferV3 } from "../../types/marketplacev3";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult, TransactionResultWithId } from "../types";
+import { ContractEncoder } from "./contract-encoder";
+import { ContractEvents } from "./contract-events";
+import { ContractInterceptor } from "./contract-interceptor";
 import { ContractWrapper } from "./contract-wrapper";
 import type { IERC20, IOffers, OffersLogic } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
@@ -37,12 +40,23 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
   private contractWrapper: ContractWrapper<OffersLogic>;
   private storage: ThirdwebStorage;
 
+  // utilities
+  public events: ContractEvents<OffersLogic>;
+  public interceptor: ContractInterceptor<OffersLogic>;
+  public encoder: ContractEncoder<OffersLogic>;
+
   constructor(
     contractWrapper: ContractWrapper<TContract>,
     storage: ThirdwebStorage,
   ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
+
+    this.events = new ContractEvents<OffersLogic>(this.contractWrapper);
+    this.encoder = new ContractEncoder<OffersLogic>(contractWrapper);
+    this.interceptor = new ContractInterceptor<OffersLogic>(
+      this.contractWrapper,
+    );
   }
 
   getAddress(): string {
