@@ -72,25 +72,12 @@ import { z } from "zod";
 function useDeployForm<TContractType extends PrebuiltContractType>(
   deploySchema: DeploySchemaForPrebuiltContractType<TContractType>,
 ) {
-  const { handleSubmit: _handleSubmit, ...restForm } = useForm<
-    z.infer<typeof deploySchema>
-  >({
+  return useForm<z.infer<typeof deploySchema>>({
     resolver: zodResolver(deploySchema),
     mode: "onBlur",
     reValidateMode: "onChange",
     criteriaMode: "all",
   });
-
-  function handleSubmit(
-    onValid: SubmitHandler<z.infer<typeof deploySchema>>,
-    onInvalid?: SubmitErrorHandler<z.infer<typeof deploySchema>>,
-  ) {
-    return _handleSubmit((d) => {
-      onValid(stripNullishKeys(d));
-    }, onInvalid);
-  }
-
-  return { ...restForm, handleSubmit };
 }
 
 function stripNullishKeys<T extends object>(obj: T) {
@@ -224,7 +211,9 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
         gap={4}
         direction="column"
         as="form"
-        onSubmit={form.handleSubmit((d) => {
+        onSubmit={form.handleSubmit((_d) => {
+          const d = stripNullishKeys(_d);
+
           if (!selectedChain) {
             return;
           }
