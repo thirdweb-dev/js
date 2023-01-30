@@ -300,7 +300,7 @@ export const ThirdwebProvider = <
     }
     let rpcUrl = _rpcUrlMap[desiredChainId as keyof typeof _rpcUrlMap];
     try {
-      rpcUrl = getProviderForNetwork(rpcUrl!) as string;
+      rpcUrl = getProviderForNetwork(rpcUrl) as string;
     } catch (e) {
       console.error(
         `failed to configure rpc url for chain: "${desiredChainId}". Did you forget to pass "desiredChainId" to the <ThirdwebProvider /> component?`
