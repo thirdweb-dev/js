@@ -478,7 +478,7 @@ export const MediaRenderer = React.forwardRef<
             poster={poster}
             alt={alt}
             {...restProps}
-          ></ModelViewer>
+          />
         </Suspense>
       );
     } else if (shouldRenderVideoTag(videoOrImageSrc.mimeType)) {
