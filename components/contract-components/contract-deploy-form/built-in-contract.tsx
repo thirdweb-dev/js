@@ -47,13 +47,7 @@ import { replaceIpfsUrl } from "lib/sdk";
 import { useRouter } from "next/router";
 import twAudited from "public/brand/thirdweb-audited-2.png";
 import { useEffect, useMemo } from "react";
-import {
-  FieldPath,
-  FormProvider,
-  SubmitErrorHandler,
-  SubmitHandler,
-  useForm,
-} from "react-hook-form";
+import { FieldPath, FormProvider, useForm } from "react-hook-form";
 import {
   FormErrorMessage,
   FormHelperText,
