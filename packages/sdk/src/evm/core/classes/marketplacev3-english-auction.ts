@@ -496,17 +496,9 @@ export class MarketplaceV3EnglishAuctions<
   public async cancelAuction(
     auctionId: BigNumberish,
   ): Promise<TransactionResult> {
-    const auction = await this.validateAuction(BigNumber.from(auctionId));
-
-    const now = BigNumber.from(Math.floor(Date.now() / 1000));
-    const startTime = BigNumber.from(auction.startTimeInSeconds);
-
     const winningBid = await this.getWinningBid(auctionId);
-    if (
-      now.gt(startTime) &&
-      winningBid?.bidderAddress !== constants.AddressZero
-    ) {
-      throw new AuctionAlreadyStartedError(auctionId.toString());
+    if (winningBid) {
+      throw new Error(`Bids already made.`);
     }
 
     return {

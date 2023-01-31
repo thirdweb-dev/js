@@ -817,9 +817,7 @@ describe("Marketplace V3", async () => {
         await marketplaceContract.englishAuctions.cancelAuction(auctionId);
         assert.fail("should have thrown an error");
       } catch (err: any) {
-        if (
-          !(err.message as string).includes("Marketplace: bids already made.")
-        ) {
+        if (!(err.message as string).includes("Bids already made.")) {
           throw err;
         }
       }
