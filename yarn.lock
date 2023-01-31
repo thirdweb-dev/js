@@ -7549,10 +7549,10 @@
   resolved "https://registry.yarnpkg.com/@wagmi/chains/-/chains-0.1.13.tgz#438af51e860a6a3516ae7133daf0d526d0ceec59"
   integrity sha512-TnN6pJp5KIwi9kiSv6J5jB0Le484EuFfWkWQ5+/E+vv6yHI2qOcGuewiC4itgcMkVOxMfjGpSvqWNn8kq/+fkg==
 
-"@wagmi/chains@0.2.3":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@wagmi/chains/-/chains-0.2.3.tgz#bbec746695961ea3969ab626ca04402e136463cc"
-  integrity sha512-U3s5pWIyRtjK5XW/TjfWM7nGlNA+uWOFhhI2Xyqu8ShvAw/RMuEk1FGUvASvrM0Y05SVCakSLDONnV5AkF6tow==
+"@wagmi/chains@0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@wagmi/chains/-/chains-0.2.4.tgz#7f90e64f42e614d9d324b5be2a6a49dfb0d39264"
+  integrity sha512-c2mJED5H9zHzpam2JSD76ln1UmrQShas5BAHA98FjSAHlqU41zWvUhOfm9mHMh8j2NCFJ+pGdQIlXFGs8Qe8cg==
 
 "@wagmi/connectors@0.1.9":
   version "0.1.9"
@@ -7567,10 +7567,10 @@
     abitype "^0.1.8"
     eventemitter3 "^4.0.7"
 
-"@wagmi/connectors@0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@wagmi/connectors/-/connectors-0.2.1.tgz#4a76052fe04f0422584b5a69549821e65ec571d9"
-  integrity sha512-zbkCDD9UFluNzFru5LkyFz4wAfH5JUbi6TzBGTEHpjV1/C/C3YrlSverS5ffSSHLUhiJ9sXkekhJHgf50rf4ZQ==
+"@wagmi/connectors@0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@wagmi/connectors/-/connectors-0.2.2.tgz#13ffa65e2f93b5c83fe2ea5eb7e0480114979edc"
+  integrity sha512-Mbk0WVRpA5mLP5K2dSTzsCmBCRwTKg9I4TCRKQpXnUtw5+3waw+BVUPTm0aiWV/lEzzW+1F8gtUhlvK7I2Gj3Q==
   dependencies:
     "@coinbase/wallet-sdk" "^3.5.4"
     "@ledgerhq/connect-kit-loader" "^1.0.1"
@@ -7580,13 +7580,13 @@
     abitype "^0.3.0"
     eventemitter3 "^4.0.7"
 
-"@wagmi/core@0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-0.9.1.tgz#a17b8f9745c1bc80986f9b433a9255f52bd797e0"
-  integrity sha512-h+Oogcu0Ss7kj1EAhNZ2HCT628t2p4ZvecIbH62QuQgrhxTaislTiYAcojSP+iAbBtq5TpjrnOTDj3QxDfixRA==
+"@wagmi/core@0.9.2":
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-0.9.2.tgz#36b699ac974c3a216124c8544b313df18bffbae1"
+  integrity sha512-2WMuLtvtj484PlRlqKIiXOYneBLBn2pFES/7ku/9OboH1a3WkaISo03vPmNlh1bHIxJBtCLF5oJRRVbXeg90DA==
   dependencies:
-    "@wagmi/chains" "0.2.3"
-    "@wagmi/connectors" "0.2.1"
+    "@wagmi/chains" "0.2.4"
+    "@wagmi/connectors" "0.2.2"
     abitype "^0.3.0"
     eventemitter3 "^4.0.7"
     zustand "^4.3.1"
@@ -18127,9 +18127,9 @@ node-fetch@2.6.1:
   integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
 
 node-fetch@^2.2.0, node-fetch@^2.6.0:
-  version "2.6.8"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.8.tgz#a68d30b162bc1d8fd71a367e81b997e1f4d4937e"
-  integrity sha512-RZ6dBYuj8dRSfxpUSu+NsdF1dpPpluJxwOp+6IoDp/sH2QNDSvurYsAa+F1WxY2RjA1iP93xhcsUoYbF2XBqVg==
+  version "2.6.9"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.9.tgz#7c7f744b5cc6eb5fd404e0c7a9fec630a55657e6"
+  integrity sha512-DJm/CJkZkRjKKj4Zi4BsKVZh3ValV5IR5s7LVZnW+6YMh0W1BfNA8XSs6DLMGYlId5F3KnA70uu2qepcR08Qqg==
   dependencies:
     whatwg-url "^5.0.0"
 
@@ -21231,7 +21231,12 @@ shebang-regex@^3.0.0:
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-3.0.0.tgz#ae16f1644d873ecad843b0307b143362d4c42172"
   integrity sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
 
-shell-quote@^1.6.1, shell-quote@^1.7.3:
+shell-quote@^1.6.1:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.8.0.tgz#20d078d0eaf71d54f43bd2ba14a1b5b9bfa5c8ba"
+  integrity sha512-QHsz8GgQIGKlRi24yFc6a6lN69Idnx634w49ay6+jA5yFh7a1UY+4Rp6HPx/L/1zcEDPEij8cIsiqR6bQsE5VQ==
+
+shell-quote@^1.7.3:
   version "1.7.4"
   resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.7.4.tgz#33fe15dee71ab2a81fcbd3a52106c5cfb9fb75d8"
   integrity sha512-8o/QEhSSRb1a5i7TFR0iM4G16Z0vYB2OQVs4G3aAFXjn3T6yEx8AZxy1PgDF7I00LZHYA3WxaSYIf5e5sAX8Rw==
@@ -22696,10 +22701,15 @@ typedarray-to-buffer@3.1.5, typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typescript@^4.6.2, typescript@^4.7.4, typescript@^4.8.4:
+typescript@^4.6.2, typescript@^4.7.4:
   version "4.9.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.4.tgz#a2a3d2756c079abda241d75f149df9d561091e78"
   integrity sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==
+
+typescript@^4.8.4:
+  version "4.9.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.5.tgz#095979f9bcc0d09da324d58d03ce8f8374cbe65a"
+  integrity sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==
 
 typescript@~4.8.4:
   version "4.8.4"
@@ -23128,14 +23138,14 @@ wagmi-core@0.1.22:
     eventemitter3 "^4.0.7"
 
 wagmi@^0.11.0:
-  version "0.11.1"
-  resolved "https://registry.yarnpkg.com/wagmi/-/wagmi-0.11.1.tgz#4a3be88cdff037264ddbec0de87c4df90d7f095b"
-  integrity sha512-TLyRxitIK0W5rzfAdOjc2e8HD+qSIjdpItvb4XjKD0MazjkRzPdxgqztEevntY16bwHgOfAX4JooEkY2/eti1w==
+  version "0.11.2"
+  resolved "https://registry.yarnpkg.com/wagmi/-/wagmi-0.11.2.tgz#fee24b0861bd06fd62cf1c43414d149e4f1cfa97"
+  integrity sha512-Chjhk3Q38ex01Caz91rI43gG4sMKs6G6kN5uEyxkupwXw9pzKxCoDAm53ZDtuo1CxqiD4Df39Gv8Qx+APvKNDg==
   dependencies:
     "@tanstack/query-sync-storage-persister" "^4.14.5"
     "@tanstack/react-query" "^4.14.5"
     "@tanstack/react-query-persist-client" "^4.14.5"
-    "@wagmi/core" "0.9.1"
+    "@wagmi/core" "0.9.2"
     abitype "^0.3.0"
     use-sync-external-store "^1.2.0"
 
