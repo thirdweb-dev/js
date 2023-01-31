@@ -1,7 +1,4 @@
-import {
-  AuctionAlreadyStartedError,
-  AuctionHasNotEndedError,
-} from "../../common";
+import { AuctionHasNotEndedError } from "../../common";
 import {
   cleanCurrencyAddress,
   fetchCurrencyMetadata,
