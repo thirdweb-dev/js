@@ -56,16 +56,19 @@ export enum PageId {
   // thirdweb.com/dashboard
   Dashboard = "dashboard",
 
-  // thridweb.com/contracts
+  // thirdweb.com/contracts
   Contracts = "contracts",
 
-  // thridweb.com/explore
+  // thirdweb.com/explore
   Explore = "explore",
 
-  // thridweb.com/explore/[category]
+  // thirdweb.com/events
+  Events = "events",
+
+  // thirdweb.com/explore/[category]
   ExploreCategory = "explore-category",
 
-  // thridweb.com/contracts
+  // thirdweb.com/contracts
   Programs = "programs",
 
   // ---------------------------------------------------------------------------

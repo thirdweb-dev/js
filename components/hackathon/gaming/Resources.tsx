@@ -1,8 +1,7 @@
 import { Flex, SimpleGrid } from "@chakra-ui/react";
-import type { FC } from "react";
 import { Heading, TrackedLink } from "tw-components";
 
-export const Resources: FC = () => {
+export const Resources: React.FC = () => {
   const resources = [
     {
       name: "GamingKit",

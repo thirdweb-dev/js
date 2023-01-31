@@ -1,10 +1,9 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { Logo } from "components/logo";
 import { useTrack } from "hooks/analytics/useTrack";
-import type { FC } from "react";
 import { Heading, LinkButton } from "tw-components";
 
-export const CTAFooter: FC = () => {
+export const CTAFooter: React.FC = () => {
   const trackEvent = useTrack();
 
   return (
