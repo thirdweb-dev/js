@@ -104,7 +104,10 @@ export class TransactionTask {
    * @returns the gas limit in gas units
    */
   public async estimateGasLimit(): Promise<BigNumber> {
-    return await this.estimator.gasLimitOf(this.functionName, this.args);
+    return await this.estimator.gasLimitOf(this.functionName, [
+      ...this.args,
+      this.overrides || {},
+    ]);
   }
 
   /**
@@ -112,7 +115,10 @@ export class TransactionTask {
    * @returns the gas cost in ether
    */
   public async estimateGasCostInEther(): Promise<string> {
-    return await this.estimator.gasCostOf(this.functionName, this.args);
+    return await this.estimator.gasCostOf(this.functionName, [
+      ...this.args,
+      this.overrides || {},
+    ]);
   }
 
   // ////////////// Actions ////////////////
