@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 3.7.2
+
+### Patch Changes
+
+- [#525](https://github.com/thirdweb-dev/js/pull/525) [`19b8e18`](https://github.com/thirdweb-dev/js/commit/19b8e18b6bf68e374c817fefbf2fd29ac5573052) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix `getClaimTransaction().estimateGasCostInEther()` for claims costing native currency
+
 ## 3.7.1
 
 ## 3.7.0
