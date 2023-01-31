@@ -11,7 +11,6 @@
     "dist/*"
   ],
   "scripts": {
-    "test": "jest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "fix": "eslint src/ --fix",
@@ -25,7 +24,6 @@
     "android"
   ],
   "dependencies": {
-    "@react-native-async-storage/async-storage": "^1.17.11",
     "@thirdweb-dev/react-core": "*",
     "@thirdweb-dev/sdk": "*",
     "@thirdweb-dev/storage": "*",
