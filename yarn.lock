@@ -7406,13 +7406,13 @@
   resolved "https://registry.yarnpkg.com/@zag-js/anatomy/-/anatomy-0.1.3.tgz#67edf232817b031a3d7dd6a49d6f64e1111e86fd"
   integrity sha512-jiXEJ9aMmLs/0lGTOjrji7ug8QKwM0EpLfzStzTJ7TOSCLaASyKqGsL6J9pRDl6Zo2n/DgjdQY5gjGMNNhtHow==
 
-"@zag-js/core@0.2.6":
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/@zag-js/core/-/core-0.2.6.tgz#4c1d94eaa7c8741c243fea15a9e306ee8cdaff38"
-  integrity sha512-RzJnC3EJCxgK0hmPUuHX2j+lcUMIfBWQmTeHDbBvR7OO74iVUdO+sbNr7ZMjqSooR6voDs6qO38BQ/w1ket7TA==
+"@zag-js/core@0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@zag-js/core/-/core-0.2.5.tgz#e2cad585b3d0acd4a18a9f977ea42a4d9a6f3915"
+  integrity sha512-fPcC4B/fHg4Fj3MA65Hzu6r5iPUtxzcUJ3V59pDZjdfeomCMKdxhMGRkwDrkmesCP+tfJ6xqJiIGEPgPCLmfyA==
   dependencies:
-    "@zag-js/store" "0.2.4"
-    klona "2.0.6"
+    "@zag-js/store" "0.2.3"
+    klona "2.0.5"
 
 "@zag-js/dismissable@0.2.1":
   version "0.2.1"
@@ -7426,13 +7426,13 @@
   resolved "https://registry.yarnpkg.com/@zag-js/interact-outside/-/interact-outside-0.2.1.tgz#2f8b662cae0ec800f97e153b76ede7fad9c445aa"
   integrity sha512-ZR8sm0yuqbJ9yU5+y0fJTuH412cWZ3gBkqZl0mpolRIKwqUKttUIXDy5Xinb5JpDn/Dj7VES1aexhxRMPJzOdA==
 
-"@zag-js/menu@0.3.5":
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/@zag-js/menu/-/menu-0.3.5.tgz#a3470bbd0804a6d9bc966b36ef2efb9573ae9145"
-  integrity sha512-7VLvV1oOSc6R0oEdrv0oQAROsis/RwhrV8o5nz60Fyv44ABdeFLw/bexctVQuxNtDunX2f1H/vlnCuZjfKF3gA==
+"@zag-js/menu@0.3.4":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@zag-js/menu/-/menu-0.3.4.tgz#428fabd36f4913b033a9dcc6e68414f4ae79e67c"
+  integrity sha512-smieqlmCpN1eAxoO39tzgbS3nQN6AbyfvkFvKCSki/sUostPUbIXFx1Z7ZA/tvJp3VnuTpn2p8KTF9okpdFmiQ==
   dependencies:
     "@zag-js/anatomy" "0.1.3"
-    "@zag-js/core" "0.2.6"
+    "@zag-js/core" "0.2.5"
     "@zag-js/dismissable" "0.2.1"
     "@zag-js/popper" "0.2.2"
     "@zag-js/types" "0.3.3"
@@ -7444,20 +7444,20 @@
   dependencies:
     "@floating-ui/dom" "1.1.0"
 
-"@zag-js/react@0.3.6":
-  version "0.3.6"
-  resolved "https://registry.yarnpkg.com/@zag-js/react/-/react-0.3.6.tgz#a215b94109fe2131030d7df22ba70b628d5a0dc6"
-  integrity sha512-qxXMjls4+L0/ko67wVSQnrGx/040EJjzajL/MXJBnroERO+dUzPlUayrgUFbs/RGFfaGiY1+zS4p4tzxOacFdA==
+"@zag-js/react@0.3.4":
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/@zag-js/react/-/react-0.3.4.tgz#24beb371558a6b312562bc439e61eca188bf4c3a"
+  integrity sha512-HepIuIqtQZJdu4FovwFinynlVKy3VFUfUo7JxEgr2C8Sul8PfbXT+OrTlO19jrl6/GOTWwoFwgw2zNHYiQMiSQ==
   dependencies:
-    "@zag-js/core" "0.2.6"
-    "@zag-js/store" "0.2.4"
+    "@zag-js/core" "0.2.5"
+    "@zag-js/store" "0.2.3"
     "@zag-js/types" "0.3.3"
     proxy-compare "2.4.0"
 
-"@zag-js/store@0.2.4":
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/@zag-js/store/-/store-0.2.4.tgz#3f9b896540bb55dc48212f996b4e475f5ba763cd"
-  integrity sha512-UxF6NJh/5VGFeql7R+fTVxWeKY1yg5t4rAQ6xIonQOeyV91FSnLmxvhM/ah21JecbW3ZQKasYJMITIhr/M6HCA==
+"@zag-js/store@0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@zag-js/store/-/store-0.2.3.tgz#3c2ee8d7335a9a4f457e2b97a24bc30f45a9e74d"
+  integrity sha512-Qcb2mCdB0YxKl5FVWBNU5FLRFNpnTVe4v5rAG/ftXXPCiuSAzm3l62FPqzWb+Dbun7BuhKgVUZqbOVsHEV0Scg==
   dependencies:
     proxy-compare "2.4.0"
 
@@ -14539,12 +14539,7 @@ kleur@^4.1.4:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-4.1.5.tgz#95106101795f7050c6c650f350c683febddb1780"
   integrity sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==
 
-klona@2.0.6:
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/klona/-/klona-2.0.6.tgz#85bffbf819c03b2f53270412420a4555ef882e22"
-  integrity sha512-dhG34DXATL5hSxJbIexCft8FChFXtmskoZYnoPWjXQuebWYCNkVeV3KkGegCK9CP1oswI/vQibS2GY7Em/sJJA==
-
-klona@^2.0.4, klona@^2.0.5:
+klona@2.0.5, klona@^2.0.4, klona@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/klona/-/klona-2.0.5.tgz#d166574d90076395d9963aa7a928fabb8d76afbc"
   integrity sha512-pJiBpiXMbt7dkzXe8Ghj/u4FfXOOa98fPW+bihOJ4SjnoijweJrNThJfd3ifXpXhREjpoF2mZVH1GfS9LV3kHQ==
