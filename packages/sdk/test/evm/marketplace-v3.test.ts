@@ -9,6 +9,7 @@ import {
   Token,
   TokenInitializer,
   MarketplaceV3Initializer,
+  Status,
 } from "../../src/evm";
 import { fastForwardTime, jsonProvider, sdk, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -471,17 +472,10 @@ describe("Marketplace V3", async () => {
       );
       assert.equal(listing.quantity.toString(), "1");
       await marketplaceContract.directListings.cancelListing(directListingId);
-      try {
+
+      const cancelledListing =
         await marketplaceContract.directListings.getListing(directListingId);
-      } catch (err) {
-        if (
-          !(err.message as string).includes(
-            "Marketplace: listing does not exist.",
-          )
-        ) {
-          throw err;
-        }
-      }
+      assert.equal(cancelledListing.status, Status.Cancelled);
     });
   });
 
@@ -808,17 +802,9 @@ describe("Marketplace V3", async () => {
       ).id;
       await marketplaceContract.englishAuctions.cancelAuction(id);
 
-      try {
+      const cancelledAuction =
         await marketplaceContract.englishAuctions.getAuction(id);
-      } catch (err) {
-        if (
-          !(err.message as string).includes(
-            "Marketplace: auction does not exist.",
-          )
-        ) {
-          throw err;
-        }
-      }
+      assert.equal(cancelledAuction.status, Status.Cancelled);
     });
 
     it("should not throw an error when trying to cancel an auction that already started (no bids)", async () => {

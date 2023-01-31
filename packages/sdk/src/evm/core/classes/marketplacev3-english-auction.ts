@@ -15,6 +15,7 @@ import {
 } from "../../common/marketplacev3";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { FEATURE_ENGLISH_AUCTIONS } from "../../constants/thirdweb-features";
+import { Status } from "../../enums";
 import {
   EnglishAuctionInputParams,
   EnglishAuctionInputParamsSchema,
@@ -706,6 +707,25 @@ export class MarketplaceV3EnglishAuctions<
   private async mapAuction(
     auction: IEnglishAuctions.AuctionStruct,
   ): Promise<EnglishAuction> {
+    let status: Status = Status.DNE;
+    const block = await this.contractWrapper.getProvider().getBlock("latest");
+    const blockTime = block.timestamp;
+    switch (auction.status) {
+      case 1:
+        status = BigNumber.from(auction.startTimestamp).gt(blockTime)
+          ? Status.Created
+          : BigNumber.from(auction.endTimestamp).lt(blockTime)
+          ? Status.Expired
+          : Status.Active;
+        break;
+      case 2:
+        status = Status.Completed;
+        break;
+      case 3:
+        status = Status.Cancelled;
+        break;
+    }
+
     return {
       id: auction.auctionId.toString(),
       creatorAddress: auction.auctionCreator,
@@ -735,7 +755,7 @@ export class MarketplaceV3EnglishAuctions<
         auction.tokenId,
         this.storage,
       ),
-      status: auction.status,
+      status: status,
     };
   }
 

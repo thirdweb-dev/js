@@ -11,6 +11,7 @@ import {
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
 import { FEATURE_OFFERS } from "../../constants/thirdweb-features";
+import { Status } from "../../enums";
 import {
   OfferInputParams,
   OfferInputParamsSchema,
@@ -340,6 +341,23 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns - The mapped interface.
    */
   private async mapOffer(offer: IOffers.OfferStruct): Promise<OfferV3> {
+    let status: Status = Status.DNE;
+    const block = await this.contractWrapper.getProvider().getBlock("latest");
+    const blockTime = block.timestamp;
+    switch (offer.status) {
+      case 1:
+        status = BigNumber.from(offer.expirationTimestamp).lt(blockTime)
+          ? Status.Expired
+          : Status.Active;
+        break;
+      case 2:
+        status = Status.Completed;
+        break;
+      case 3:
+        status = Status.Cancelled;
+        break;
+    }
+
     return {
       id: offer.offerId.toString(),
       offerorAddress: offer.offeror,
@@ -360,7 +378,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
         this.storage,
       ),
       endTimeInSeconds: offer.expirationTimestamp,
-      status: offer.status,
+      status: status,
     };
   }
 

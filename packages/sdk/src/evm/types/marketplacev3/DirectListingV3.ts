@@ -1,4 +1,5 @@
 import { NFTMetadata } from "../../../core/schema/nft";
+import { Status } from "../../enums";
 import { CurrencyValue } from "../currency";
 import { BigNumberish } from "ethers";
 
@@ -71,5 +72,5 @@ export interface DirectListingV3 {
   /**
    * Whether the listing is CREATED, COMPLETED, or CANCELLED.
    */
-  status: BigNumberish;
+  status: Status;
 }

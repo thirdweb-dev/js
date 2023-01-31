@@ -15,6 +15,7 @@ import {
   InterfaceId_IERC721,
 } from "../../constants/contract";
 import { FEATURE_DIRECT_LISTINGS } from "../../constants/thirdweb-features";
+import { Status } from "../../enums";
 import {
   DirectListingInputParams,
   DirectListingInputParamsSchema,
@@ -713,6 +714,25 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   private async mapListing(
     listing: IDirectListings.ListingStruct,
   ): Promise<DirectListingV3> {
+    let status: Status = Status.DNE;
+    const block = await this.contractWrapper.getProvider().getBlock("latest");
+    const blockTime = block.timestamp;
+    switch (listing.status) {
+      case 1:
+        status = BigNumber.from(listing.startTimestamp).gt(blockTime)
+          ? Status.Created
+          : BigNumber.from(listing.endTimestamp).lt(blockTime)
+          ? Status.Expired
+          : Status.Active;
+        break;
+      case 2:
+        status = Status.Completed;
+        break;
+      case 3:
+        status = Status.Cancelled;
+        break;
+    }
+
     return {
       assetContractAddress: listing.assetContract,
       currencyContractAddress: listing.currency,
@@ -735,7 +755,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
       endTimeInSeconds: listing.endTimestamp.toString(),
       creatorAddress: listing.listingCreator,
       isReservedListing: listing.reserved,
-      status: listing.status,
+      status: status,
     };
   }
 
