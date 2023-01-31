@@ -278,6 +278,14 @@ export const cacheKeys = {
             contractAddress,
             params ? ["getAll", params] : ["getAll"],
           ),
+        getAllValid: (
+          contractAddress: RequiredParam<ContractAddress>,
+          params?: MarketplaceFilter,
+        ) =>
+          createContractCacheKey(
+            contractAddress,
+            params ? ["getAllValid", params] : ["getAllValid"],
+          ),
         getListing: (
           contractAddress: RequiredParam<ContractAddress>,
           listingId: RequiredParam<BigNumberish>,
@@ -298,6 +306,14 @@ export const cacheKeys = {
           createContractCacheKey(
             contractAddress,
             params ? ["getAll", params] : ["getAll"],
+          ),
+        getAllValid: (
+          contractAddress: RequiredParam<ContractAddress>,
+          params?: MarketplaceFilter,
+        ) =>
+          createContractCacheKey(
+            contractAddress,
+            params ? ["getAllValid", params] : ["getAllValid"],
           ),
         getAuction: (
           contractAddress: RequiredParam<ContractAddress>,

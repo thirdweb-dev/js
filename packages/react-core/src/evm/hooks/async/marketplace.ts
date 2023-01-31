@@ -205,6 +205,40 @@ export function useDirectListings(
 }
 
 /**
+ * Use this to get a list all valid direct listings from your marketplace v3 contract.
+ *
+ * @example
+ * ```javascript
+ * const { data: directListings, isLoading, error } = useValidDirectListings(<YourMarketplaceV3ContractInstance>, { start: 0, count: 100 });
+ * ```
+ *
+ * @param contract - an instance of a marketplace v3 contract
+ * @param filter - filter to pass to the query for the sake of pagination & filtering
+ * @returns a response object that includes an array of direct listings
+ * @internal
+ */
+export function useValidDirectListings(
+  contract: RequiredParam<MarketplaceV3>,
+  filter?: MarketplaceFilter,
+) {
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.marketplace.directListings.getAllValid(
+      contractAddress,
+      filter,
+    ),
+    () => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      return contract.directListings.getAllValid(filter);
+    },
+    {
+      enabled: !!contract,
+      keepPreviousData: true,
+    },
+  );
+}
+
+/**
  * Use this to get a list all english auctions from your marketplace v3 contract.
  *
  * @example
@@ -230,6 +264,40 @@ export function useEnglishAuctions(
     () => {
       requiredParamInvariant(contract, "No Contract instance provided");
       return contract.englishAuctions.getAll(filter);
+    },
+    {
+      enabled: !!contract,
+      keepPreviousData: true,
+    },
+  );
+}
+
+/**
+ * Use this to get a list all valid english auctions from your marketplace v3 contract.
+ *
+ * @example
+ * ```javascript
+ * const { data: englishAuctions, isLoading, error } = useValidEnglishAuctions(<YourMarketplaceV3ContractInstance>, { start: 0, count: 100 });
+ * ```
+ *
+ * @param contract - an instance of a marketplace v3 contract
+ * @param filter - filter to pass to the query for the sake of pagination & filtering
+ * @returns a response object that includes an array of english auctions
+ * @internal
+ */
+export function useValidEnglishAuctions(
+  contract: RequiredParam<MarketplaceV3>,
+  filter?: MarketplaceFilter,
+) {
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.marketplace.englishAuctions.getAllValid(
+      contractAddress,
+      filter,
+    ),
+    () => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      return contract.englishAuctions.getAllValid(filter);
     },
     {
       enabled: !!contract,
