@@ -15,7 +15,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "fix": "eslint src/ --fix",
-    "clean": "rm -R android/build && rm -R example/android/build && rm -R example/android/app/build && rm -R example/ios/build",
+    "clean": "rm -rf dist/",
     "build": "tsc",
     "push": "yalc push"
   },
