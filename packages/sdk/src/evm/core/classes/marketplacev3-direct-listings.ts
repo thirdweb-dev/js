@@ -735,6 +735,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
       endTimeInSeconds: listing.endTimestamp.toString(),
       creatorAddress: listing.listingCreator,
       isReservedListing: listing.reserved,
+      status: listing.status,
     };
   }
 

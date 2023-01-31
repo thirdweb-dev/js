@@ -360,6 +360,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
         this.storage,
       ),
       endTimeInSeconds: offer.expirationTimestamp,
+      status: offer.status,
     };
   }
 

@@ -735,6 +735,7 @@ export class MarketplaceV3EnglishAuctions<
         auction.tokenId,
         this.storage,
       ),
+      status: auction.status,
     };
   }
 

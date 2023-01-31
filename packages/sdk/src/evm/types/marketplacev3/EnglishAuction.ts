@@ -90,4 +90,9 @@ export interface EnglishAuction {
    * The asset being auctioned.
    */
   asset: NFTMetadata;
+
+  /**
+   * Whether the listing is CREATED, COMPLETED, or CANCELLED.
+   */
+  status: BigNumberish;
 }

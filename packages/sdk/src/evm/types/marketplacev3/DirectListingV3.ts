@@ -67,4 +67,9 @@ export interface DirectListingV3 {
    * Whether the listing is reserved to be bought from a specific set of buyers.
    */
   isReservedListing: boolean;
+
+  /**
+   * Whether the listing is CREATED, COMPLETED, or CANCELLED.
+   */
+  status: BigNumberish;
 }

@@ -57,4 +57,9 @@ export interface OfferV3 {
    * The end time of the offer.
    */
   endTimeInSeconds: BigNumberish;
+
+  /**
+   * Whether the listing is CREATED, COMPLETED, or CANCELLED.
+   */
+  status: BigNumberish;
 }
