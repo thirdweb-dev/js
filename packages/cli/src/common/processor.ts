@@ -39,9 +39,9 @@ export async function processProject(
   if (projectType === "none") {
     if (command === "deploy") {
       info(
-        "No contracts detected in this directory. Redirecting to the thirdweb contract deployment page.",
+        "No contracts detected in this directory. Redirecting to the thirdweb contract explore page.",
       );
-      return "https://thirdweb.com/contracts";
+      return "https://thirdweb.com/explore";
     }
 
     error("No detected contracts in this directory.");
