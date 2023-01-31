@@ -1,5 +1,14 @@
 # @thirdweb-dev/react
 
+## 3.7.2
+
+### Patch Changes
+
+- [#527](https://github.com/thirdweb-dev/js/pull/527) [`bdd9ed2`](https://github.com/thirdweb-dev/js/commit/bdd9ed22989f5baa511bec70ef1ae9d88bfb957e) Thanks [@jnsdls](https://github.com/jnsdls)! - fix dependency issues with @zag-js/react
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@3.7.2
+
 ## 3.7.1
 
 ### Patch Changes
