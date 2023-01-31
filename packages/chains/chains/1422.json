@@ -11,8 +11,8 @@
   },
   "infoURL": "https://polygon.technology/solutions/polygon-zkevm/",
   "shortName": "zkevmtest",
-  "chainId": 1402,
-  "networkId": 1402,
+  "chainId": 1422,
+  "networkId": 1422,
   "explorers": [
     {
       "name": "blockscout",
