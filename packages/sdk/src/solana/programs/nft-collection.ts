@@ -18,7 +18,7 @@ import {
   toOriginalEditionAccount,
   TransactionBuilder,
 } from "@metaplex-foundation/js";
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey, TransactionResponse } from "@solana/web3.js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
 
@@ -138,6 +138,14 @@ export class NFTCollection {
    */
   async getAll(queryParams?: QueryAllParams): Promise<NFT[]> {
     return this.nft.getAll(this.publicKey.toBase58(), queryParams);
+  }
+
+  /**
+   * Get the all transactions for this program
+   * @beta
+   */
+  async getTransactions(): Promise<TransactionResponse[]> {
+    return this.nft.getTransactions(this.publicKey.toBase58());
   }
 
   /**
@@ -420,14 +428,39 @@ export class NFTCollection {
    * ```
    */
   async burn(nftAddress: string): Promise<TransactionResult> {
-    const tx = await this.metaplex.nfts().delete({
-      mintAddress: new PublicKey(nftAddress),
-      collection: this.publicKey,
-    });
+    return this.burnBatch([nftAddress]).then((txs) => txs[0]);
+  }
 
-    return {
-      signature: tx.response.signature,
-    };
+  /**
+   * Burn multiple NFTs
+   * @param nftAddresses - the mint addresses of the NFT to burn
+   * @returns the transaction signature
+   *
+   * @example
+   * ```jsx
+   * // Specify the address of the NFT to burn
+   * const nftAddress1 = "..."
+   * const nftAddress2 = "..."
+   * // And send the actual burn transaction
+   * const tx = await program.burnBatch([nftAddress1, nftAddress2]);
+   * ```
+   */
+  async burnBatch(nftAddresses: string[]): Promise<TransactionResult[]> {
+    const txs: TransactionBuilder[] = [];
+
+    for (let nftAddress of nftAddresses) {
+      txs.push(
+        this.metaplex
+          .nfts()
+          .builders()
+          .delete({
+            mintAddress: new PublicKey(nftAddress),
+            collection: this.publicKey,
+          }),
+      );
+    }
+
+    return await sendMultipartTransaction(txs, this.metaplex);
   }
 
   /**
