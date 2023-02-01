@@ -16,9 +16,13 @@
 Install the latest version of the SDK with either `npm` or `yarn`:
 
 ```shell
-npm install @thirdweb-dev/auth @thirdweb-dev/sdk ethers
+npm install @thirdweb-dev/auth
 ```
 
 ```shell
-yarn add @thirdweb-dev/auth @thirdweb-dev/sdk ethers
+yarn add @thirdweb-dev/auth
 ```
+
+## Documentation
+
+- [Auth Docs](https://portal.thirdweb.com/auth)
