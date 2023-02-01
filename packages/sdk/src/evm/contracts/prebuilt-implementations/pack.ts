@@ -1,5 +1,6 @@
 import { QueryAllParams } from "../../../core/schema/QueryParams";
 import { NFT } from "../../../core/schema/nft";
+import { assertEnabled, detectContractFeature } from "../../common";
 import {
   fetchCurrencyMetadata,
   hasERC20Allowance,
@@ -8,6 +9,7 @@ import {
 import { isTokenApprovedForTransfer } from "../../common/marketplace";
 import { uploadOrExtractURI } from "../../common/nft";
 import { getRoleHash } from "../../common/role";
+import { FEATURE_PACK_VRF } from "../../constants/thirdweb-features";
 import { ContractEncoder } from "../../core/classes/contract-encoder";
 import { ContractEvents } from "../../core/classes/contract-events";
 import { ContractInterceptor } from "../../core/classes/contract-interceptor";
@@ -19,10 +21,12 @@ import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { Erc1155 } from "../../core/classes/erc-1155";
 import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
+import { PackVRF } from "../../core/classes/pack-vrf";
 import {
   NetworkOrSignerOrProvider,
   TransactionResultWithId,
 } from "../../core/types";
+import { Abi } from "../../schema";
 import { PackContractSchema } from "../../schema/contracts/packs";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
@@ -32,8 +36,10 @@ import {
   PackRewardsOutput,
   PackRewardsOutputSchema,
 } from "../../schema/tokens/pack";
-import type { Pack as PackContract } from "@thirdweb-dev/contracts-js";
-import type ABI from "@thirdweb-dev/contracts-js/dist/abis/Pack.json";
+import type {
+  IPackVRFDirect,
+  Pack as PackContract,
+} from "@thirdweb-dev/contracts-js";
 import { PackUpdatedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IPack";
 import {
   ITokenBundle,
@@ -60,7 +66,7 @@ import { BigNumber, BigNumberish, CallOverrides, ethers } from "ethers";
 export class Pack extends StandardErc1155<PackContract> {
   static contractRoles = ["admin", "minter", "asset", "transfer"] as const;
 
-  public abi: typeof ABI;
+  public abi: Abi;
   public metadata: ContractMetadata<PackContract, typeof PackContractSchema>;
   public roles: ContractRoles<PackContract, typeof Pack.contractRoles[number]>;
   public encoder: ContractEncoder<PackContract>;
@@ -92,12 +98,21 @@ export class Pack extends StandardErc1155<PackContract> {
   public erc1155: Erc1155<PackContract>;
   public owner: ContractOwner<PackContract>;
 
+  private _vrf?: PackVRF;
+
+  /**
+   * If enabled in the contract, use the Chainlink VRF functionality to open packs
+   */
+  get vrf(): PackVRF {
+    return assertEnabled(this._vrf, FEATURE_PACK_VRF);
+  }
+
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
-    abi: typeof ABI,
+    abi: Abi,
     chainId: number,
     contractWrapper = new ContractWrapper<PackContract>(
       network,
@@ -131,6 +146,7 @@ export class Pack extends StandardErc1155<PackContract> {
     this.events = new ContractEvents(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.owner = new ContractOwner(this.contractWrapper);
+    this._vrf = this.detectVrf();
   }
 
   /**
@@ -138,6 +154,7 @@ export class Pack extends StandardErc1155<PackContract> {
    */
   onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
     this.contractWrapper.updateSignerOrProvider(network);
+    this._vrf?.onNetworkUpdated(network);
   }
 
   getAddress(): string {
@@ -536,10 +553,19 @@ export class Pack extends StandardErc1155<PackContract> {
     tokenId: BigNumberish,
     amount: BigNumberish = 1,
   ): Promise<PackRewards> {
-    const receipt = await this.contractWrapper.sendTransaction("openPack", [
-      tokenId,
-      amount,
-    ]);
+    if (this._vrf) {
+      throw new Error(
+        "This contract is using Chainlink VRF, use `contract.vrf.open()` or `contract.vrf.openAndClaim()` instead",
+      );
+    }
+    const receipt = await this.contractWrapper.sendTransaction(
+      "openPack",
+      [tokenId, amount],
+      {
+        // Higher gas limit for opening packs
+        gasLimit: 500000,
+      },
+    );
     const event = this.contractWrapper.parseLogs<PackOpenedEvent>(
       "PackOpened",
       receipt?.logs,
@@ -711,5 +737,20 @@ export class Pack extends StandardErc1155<PackContract> {
     ...args: unknown[] | [...unknown[], CallOverrides]
   ): Promise<any> {
     return this.contractWrapper.call(functionName, ...args);
+  }
+
+  private detectVrf() {
+    if (
+      detectContractFeature<IPackVRFDirect>(this.contractWrapper, "PackVRF")
+    ) {
+      return new PackVRF(
+        this.contractWrapper.getSignerOrProvider(),
+        this.contractWrapper.readContract.address,
+        this.storage,
+        this.contractWrapper.options,
+        this.chainId,
+      );
+    }
+    return undefined;
   }
 }

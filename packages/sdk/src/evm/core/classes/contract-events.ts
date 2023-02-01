@@ -3,7 +3,7 @@ import { ContractEvent, EventQueryOptions } from "../../types/index";
 import { ContractWrapper } from "./contract-wrapper";
 import { EventFragment } from "@ethersproject/abi";
 import { BaseContract, Event, providers } from "ethers";
-import { ListenerFn } from "eventemitter3";
+import type { EventEmitter } from "eventemitter3";
 
 /**
  * Listen to Contract events in real time
@@ -28,7 +28,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @param listener - the callback function that will be called on every transaction
    * @public
    */
-  public addTransactionListener(listener: ListenerFn) {
+  public addTransactionListener(listener: EventEmitter.ListenerFn) {
     this.contractWrapper.addListener(EventType.Transaction, listener);
   }
 
@@ -44,7 +44,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @param listener - the callback function to remove
    * @public
    */
-  public removeTransactionListener(listener: ListenerFn) {
+  public removeTransactionListener(listener: EventEmitter.ListenerFn) {
     this.contractWrapper.off(EventType.Transaction, listener);
   }
 
@@ -85,7 +85,11 @@ export class ContractEvents<TContract extends BaseContract> {
       const parsedLog =
         this.contractWrapper.readContract.interface.parseLog(log);
       listener(
-        this.toContractEvent(parsedLog.eventFragment, parsedLog.args, log),
+        this.toContractEvent<TEvent>(
+          parsedLog.eventFragment,
+          parsedLog.args,
+          log,
+        ),
       );
     };
 
@@ -333,15 +337,31 @@ export class ContractEvents<TContract extends BaseContract> {
     const results: Record<string, any> = {};
     event.inputs.forEach((param, index) => {
       if (Array.isArray(args[index])) {
-        const obj: Record<string, unknown> = {};
         const components = param.components;
         if (components) {
           const arr = args[index];
-          for (let i = 0; i < components.length; i++) {
-            const name = components[i].name;
-            obj[name] = arr[i];
+          if (param.type === "tuple[]") {
+            // tuple[]
+            const objArray: Record<string, unknown>[] = [];
+            for (let i = 0; i < arr.length; i++) {
+              const tuple = arr[i];
+              const obj: Record<string, unknown> = {};
+              for (let j = 0; j < components.length; j++) {
+                const name = components[j].name;
+                obj[name] = tuple[j];
+              }
+              objArray.push(obj);
+            }
+            results[param.name] = objArray;
+          } else {
+            // simple tuple
+            const obj: Record<string, unknown> = {};
+            for (let i = 0; i < components.length; i++) {
+              const name = components[i].name;
+              obj[name] = arr[i];
+            }
+            results[param.name] = obj;
           }
-          results[param.name] = obj;
         }
       } else {
         results[param.name] = args[index];

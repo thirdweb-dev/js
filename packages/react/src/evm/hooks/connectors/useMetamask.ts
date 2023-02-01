@@ -40,7 +40,7 @@ export function useMetamask() {
   const [connectors, connect] = useConnect();
 
   const isMetaMaskInjected =
-    typeof window !== "undefined" && window.ethereum?.isMetaMask;
+    typeof window !== "undefined" && (window.ethereum as any)?.isMetaMask;
 
   const shouldUseWalletConnect = isMobile() && !isMetaMaskInjected;
 

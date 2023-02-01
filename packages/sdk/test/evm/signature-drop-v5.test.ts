@@ -189,7 +189,7 @@ describe("Signature drop tests (v5)", async () => {
         name: "Test1",
       });
       const toSign = {
-        to: adminWallet.address,
+        to: samWallet.address,
         metadata: uri,
         quantity: 1,
       };
@@ -207,12 +207,12 @@ describe("Signature drop tests (v5)", async () => {
         name: "Test2",
       });
       const toSign1 = {
-        to: adminWallet.address,
+        to: samWallet.address,
         metadata: uri1,
         quantity: 1,
       };
       const toSign2 = {
-        to: adminWallet.address,
+        to: samWallet.address,
         metadata: uri2,
         quantity: 1,
       };

@@ -1,5 +1,157 @@
 # @thirdweb-dev/sdk
 
+## 3.7.2
+
+### Patch Changes
+
+- [#525](https://github.com/thirdweb-dev/js/pull/525) [`19b8e18`](https://github.com/thirdweb-dev/js/commit/19b8e18b6bf68e374c817fefbf2fd29ac5573052) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix `getClaimTransaction().estimateGasCostInEther()` for claims costing native currency
+
+## 3.7.1
+
+## 3.7.0
+
+### Minor Changes
+
+- [#519](https://github.com/thirdweb-dev/js/pull/519) [`f15733f`](https://github.com/thirdweb-dev/js/commit/f15733f34c5985eec5593b3d9196e5528ba96443) Thanks [@adam-maj](https://github.com/adam-maj)! - The `sdk.auth` namespace has been removed with Auth major upgrade. Instead, use the `ThirdwebAuth` import from the `@thirdweb-dev/auth` package.
+
+  ```js
+  import { PrivateKeyWallet } from "@thirdweb-dev/auth/evm";
+
+  // Pass in domain and wallet to the constructor
+  const wallet = new PrivateKeyWallet("0x...");
+  const auth = new ThirdwebAuth(wallet, "example.com");
+
+  // Auth functions no longer require domain to be passed in
+  const payload = await auth.login();
+  ```
+
+  Additionally, `AwsKmsWallet` and `AwsSecretsManager` wallets have been moved into the `@thirdweb-dev/wallets/evm` entrypoint from the SDK.
+
+  ```js
+  import {
+    AwsKmsWallet,
+    AwsSecretsManagerWallet,
+  } from "@thirdweb-dev/wallets/evm";
+  ```
+
+### Patch Changes
+
+- [#493](https://github.com/thirdweb-dev/js/pull/493) [`f37e86b`](https://github.com/thirdweb-dev/js/commit/f37e86b7d21f7da0df6ab549cb903dc99db10a79) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Move Solana dependencies to peer dependencies - please install them separately:
+
+  `npm install @thirdweb-dev/sdk @metaplex-foundation/js @project-serum/anchor`
+
+## 3.6.11
+
+### Patch Changes
+
+- [#475](https://github.com/thirdweb-dev/js/pull/475) [`7cab8d1`](https://github.com/thirdweb-dev/js/commit/7cab8d1679f8d007091aa03adb83add3822a504a) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Support for Plugin Pattern based contracts
+
+## 3.6.10
+
+### Patch Changes
+
+- [#498](https://github.com/thirdweb-dev/js/pull/498) [`5fba324`](https://github.com/thirdweb-dev/js/commit/5fba324ac17ab02bc8f13d82a232bc5c6970c8e5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix claim condition detection on legacy contracts
+
+- [#502](https://github.com/thirdweb-dev/js/pull/502) [`894cbef`](https://github.com/thirdweb-dev/js/commit/894cbefc6361f23fc528a6c6819f5c71793d46e4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add intermediate event for contract deploy transactions before confirmation
+
+- [#463](https://github.com/thirdweb-dev/js/pull/463) [`557429b`](https://github.com/thirdweb-dev/js/commit/557429b5cfb3af2983ee01cf7d12d41ee0557593) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - PackVRF integration
+
+- [#500](https://github.com/thirdweb-dev/js/pull/500) [`73dc026`](https://github.com/thirdweb-dev/js/commit/73dc026ff9d0ac9099bd5a9a9cab8fdbfc0ae723) Thanks [@retocrooman](https://github.com/retocrooman)! - Getting the domain separator is not a required function. If an error occurs there, the permit it self will not be possible. Therefore, error handling should be performed appropriately.
+
+- [#311](https://github.com/thirdweb-dev/js/pull/311) [`9eaa21d`](https://github.com/thirdweb-dev/js/commit/9eaa21d09ab9c700aea61a2a25f8ca9859d20857) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add support for multi chain registry
+
+- [#491](https://github.com/thirdweb-dev/js/pull/491) [`68c8e3c`](https://github.com/thirdweb-dev/js/commit/68c8e3c4d79f5d56dc4414241bcca0d88285fcca) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Use multichain registry to resolve contracts that cannot be resolved via IPFS
+
+- [#494](https://github.com/thirdweb-dev/js/pull/494) [`bff433e`](https://github.com/thirdweb-dev/js/commit/bff433e12150dc029e33a578219c8437a510da99) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix deploy transaction listener for all deploy types `sdk.deployer.addDeployListener()`
+
+- Updated dependencies [[`557429b`](https://github.com/thirdweb-dev/js/commit/557429b5cfb3af2983ee01cf7d12d41ee0557593), [`9eaa21d`](https://github.com/thirdweb-dev/js/commit/9eaa21d09ab9c700aea61a2a25f8ca9859d20857), [`9eaa21d`](https://github.com/thirdweb-dev/js/commit/9eaa21d09ab9c700aea61a2a25f8ca9859d20857)]:
+  - @thirdweb-dev/contracts-js@1.2.3
+
+## 3.6.9
+
+### Patch Changes
+
+- [#465](https://github.com/thirdweb-dev/js/pull/465) [`e913e0d`](https://github.com/thirdweb-dev/js/commit/e913e0daa9ece9a6274f7ffa4e66bdcbf32e6ada) Thanks [@adam-maj](https://github.com/adam-maj)! - Fix passing options to factory
+
+- [`5862c55`](https://github.com/thirdweb-dev/js/commit/5862c558fb48604b5aca4defd1ccc06fc3536358) Thanks [@kumaryash90](https://github.com/kumaryash90)! - update forwarder address
+
+- [#466](https://github.com/thirdweb-dev/js/pull/466) [`73883f5`](https://github.com/thirdweb-dev/js/commit/73883f56d0ed0a35ace8b98b96caa782443be22e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - workaround for signing typed data with magic.link signers
+
+- [#468](https://github.com/thirdweb-dev/js/pull/468) [`f7a74a3`](https://github.com/thirdweb-dev/js/commit/f7a74a3b7c489ada5b1ec435632a326334a33c9b) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Expose `sdk.wallet.signTypedData()`
+
+## 3.6.8
+
+### Patch Changes
+
+- [#454](https://github.com/thirdweb-dev/js/pull/454) [`c673e39`](https://github.com/thirdweb-dev/js/commit/c673e39f23ef082097d73d62910580e8fad400a0) Thanks [@jnsdls](https://github.com/jnsdls)! - upgraded dependencies
+
+- [#421](https://github.com/thirdweb-dev/js/pull/421) [`ea95c5f`](https://github.com/thirdweb-dev/js/commit/ea95c5f609e306e333ee0f73f7920503358ca848) Thanks [@yehia67](https://github.com/yehia67)! - Add new utilities to parse/format currencies. `toEther` & `toWei` as default 18 decimal and `toUnits` & `toDisplayValue` in case of different numbers of decimals.
+
+- [#456](https://github.com/thirdweb-dev/js/pull/456) [`699a2b1`](https://github.com/thirdweb-dev/js/commit/699a2b16fb991c474ec57db8f178e2601d631f39) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Fix claiming drops with custom currencies
+
+- [#458](https://github.com/thirdweb-dev/js/pull/458) [`4cdd0bd`](https://github.com/thirdweb-dev/js/commit/4cdd0bd6348494a256d7c6a2bdf8f7b5c20f6877) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fixes for latest wallet package integration
+
+- [#453](https://github.com/thirdweb-dev/js/pull/453) [`a8267f9`](https://github.com/thirdweb-dev/js/commit/a8267f912df84c58d3fe3f47b90bd474f73c84ca) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Drop fixes for large batch uploads
+
+## 3.6.7
+
+### Patch Changes
+
+- [#451](https://github.com/thirdweb-dev/js/pull/451) [`3731459`](https://github.com/thirdweb-dev/js/commit/3731459d33f1ded7ebb69124809449b901b3ad3d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Less strict prebuilt checks to support OSRF variants
+
+- [#450](https://github.com/thirdweb-dev/js/pull/450) [`cac6c30`](https://github.com/thirdweb-dev/js/commit/cac6c30bca5e17df81d746ef81316af47d5e252e) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix setting allowance or approvals gaslessly
+
+- [#448](https://github.com/thirdweb-dev/js/pull/448) [`7a37e56`](https://github.com/thirdweb-dev/js/commit/7a37e564fd5d5a9df84c8da44ecaf6c42f67a0e2) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - allow `useContract` to fail faster to enable the import case
+
+## 3.6.6
+
+### Patch Changes
+
+- [#443](https://github.com/thirdweb-dev/js/pull/443) [`8c6cdaa`](https://github.com/thirdweb-dev/js/commit/8c6cdaa2887fb2cc40d3ee6991233d195d103805) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix signature minting from OpenSea Royalty Filter NFT collection contracts
+
+## 3.6.5
+
+### Patch Changes
+
+- [#440](https://github.com/thirdweb-dev/js/pull/440) [`efc56fa`](https://github.com/thirdweb-dev/js/commit/efc56fa5802490ac8ef50037658d046afd89e9a1) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - providers are now re-used if the constructor options are identical leading to better batching, also introduced an additional max batch size param (250 by default)
+
+## 3.6.4
+
+### Patch Changes
+
+- [#438](https://github.com/thirdweb-dev/js/pull/438) [`f451da6`](https://github.com/thirdweb-dev/js/commit/f451da6395689a5f89800ee63f34b6175b61f703) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix SigMint detection for OSRF NFT Collection contracts
+
+- [#416](https://github.com/thirdweb-dev/js/pull/416) [`af3acc6`](https://github.com/thirdweb-dev/js/commit/af3acc6b10751b840e56aef6400da5eea6040df2) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for AWS KMS
+
+- [#424](https://github.com/thirdweb-dev/js/pull/424) [`1bfb91d`](https://github.com/thirdweb-dev/js/commit/1bfb91dbf3a39160c987a425813ac5dbb84703ad) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improve error parsing for other wallets
+
+- [#436](https://github.com/thirdweb-dev/js/pull/436) [`ee47840`](https://github.com/thirdweb-dev/js/commit/ee478407673b0416e0c1cfe2be11bd6963395348) Thanks [@jnsdls](https://github.com/jnsdls)! - fix #429
+
+- [#434](https://github.com/thirdweb-dev/js/pull/434) [`def4251`](https://github.com/thirdweb-dev/js/commit/def42511ff5a20d83f9094164dafb87e412571b5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - [SOL] Remove workaround to fetch NFT owners
+
+- [#429](https://github.com/thirdweb-dev/js/pull/429) [`034a257`](https://github.com/thirdweb-dev/js/commit/034a257442314c67729f7bafcbe3740cff33fa32) Thanks [@jakeloo](https://github.com/jakeloo)! - Extract more minimal proxy impl address
+
+- [#418](https://github.com/thirdweb-dev/js/pull/418) [`eca4776`](https://github.com/thirdweb-dev/js/commit/eca47763cd89cc3b7aa57b542971837987540b55) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Increase gas limit for opening packs
+
+- [#420](https://github.com/thirdweb-dev/js/pull/420) [`639e535`](https://github.com/thirdweb-dev/js/commit/639e535ed55280ad9d081001aab3f5af72bb3e45) Thanks [@jnsdls](https://github.com/jnsdls)! - update deps
+
+- Updated dependencies [[`f451da6`](https://github.com/thirdweb-dev/js/commit/f451da6395689a5f89800ee63f34b6175b61f703)]:
+  - @thirdweb-dev/contracts-js@1.2.2
+
+## 3.6.3
+
+### Patch Changes
+
+- [#408](https://github.com/thirdweb-dev/js/pull/408) [`48797c7`](https://github.com/thirdweb-dev/js/commit/48797c7cf0695965e33eb6bf602be4652f7085a8) Thanks [@jnsdls](https://github.com/jnsdls)! - [EVM] - add `Gasless` as a possible extension to feature-detect
+
+- [#402](https://github.com/thirdweb-dev/js/pull/402) [`83dcaf7`](https://github.com/thirdweb-dev/js/commit/83dcaf70584af8c5cdf0427f9fc1ba82d89f0887) Thanks [@adam-maj](https://github.com/adam-maj)! - Expose sdk.fromWallet and wallet classes
+
+- [#412](https://github.com/thirdweb-dev/js/pull/412) [`f03be39`](https://github.com/thirdweb-dev/js/commit/f03be398e0d7b75c9c5b4fb643f35903e89a17e7) Thanks [@easonchai](https://github.com/easonchai)! - Correctly handle contracts using the SignatureMintERC1155 ContractKit extension
+
+- [#283](https://github.com/thirdweb-dev/js/pull/283) [`2eaa67a`](https://github.com/thirdweb-dev/js/commit/2eaa67acbe21464e7715d0b696afdc024460a44d) Thanks [@adam-maj](https://github.com/adam-maj)! - AppURI detection now enabled
+
+- [#414](https://github.com/thirdweb-dev/js/pull/414) [`47f8945`](https://github.com/thirdweb-dev/js/commit/47f8945325447874b1ace0359919c1d54fd55436) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Improve error parsing
+
 ## 3.6.2
 
 ### Patch Changes

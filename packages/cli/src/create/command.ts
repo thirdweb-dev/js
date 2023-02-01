@@ -2,14 +2,17 @@
 
 /* eslint-disable import/no-extraneous-dependencies */
 import { CREATE_MESSAGES } from "../../constants/constants";
+import detect from "../core/detection/detect";
 import { DownloadError, createApp } from "./helpers/create-app";
-import { createContract } from "./helpers/create-contract";
+import { createContractProject } from "./helpers/create-contract";
 import { getPkgManager } from "./helpers/get-pkg-manager";
 import { validateNpmName } from "./helpers/validate-pkg";
 import chalk from "chalk";
+import fs from "fs";
 import path from "path";
 import prompts from "prompts";
 
+let contractName: string = "";
 let projectPath: string = "";
 let projectType: string = "";
 let framework: string = "";
@@ -25,6 +28,10 @@ export async function twCreate(
 ) {
   if (typeof pPath === "string") {
     projectPath = pPath;
+  }
+
+  if (typeof options.contractName === "string") {
+    contractName = options.contractName;
   }
 
   if (pType === "app" || options.app) {
@@ -52,6 +59,18 @@ export async function twCreate(
 
     if (options.vite) {
       framework = "vite";
+    }
+
+    if (options.node) {
+      framework = "node";
+    }
+
+    if (options.express) {
+      framework = "express";
+    }
+
+    if (options.reactNative) {
+      framework = "react-native";
     }
 
     if (options.solana) {
@@ -97,123 +116,215 @@ export async function twCreate(
     projectType = "app";
   }
 
-  if (!projectPath) {
-    const defaultName =
-      projectType === "contract" ? "thirdweb-contracts" : "thirdweb-app";
-    const res = await prompts({
-      type: "text",
-      name: "path",
-      message: CREATE_MESSAGES.projectName,
-      initial: options.template || defaultName,
-      format: (name: string) => name.toLowerCase(),
-      validate: (name: string) => {
-        const validation = validateNpmName(
-          path.basename(path.resolve(name.toLowerCase())),
-        );
-        if (validation.valid) {
-          return true;
-        }
-        return "Invalid project name: " + validation.problems?.[0];
-      },
-    });
-
-    if (typeof res.path === "string") {
-      projectPath = res.path.trim();
-    }
-  }
-
-  if (!projectPath) {
-    console.log(
-      "\nPlease specify the project directory:\n" +
-        `  ${chalk.cyan("npx thirdweb create")} ${chalk.green(
-          "<project-directory>",
-        )}\n` +
-        "For example:\n" +
-        `  ${chalk.cyan("npx thirdweb create")} ${chalk.green(
-          "my-thirdweb-app",
-        )}\n\n` +
-        `Run ${chalk.cyan("npx thirdweb --help")} to see all options.`,
-    );
-    process.exit(1);
-  }
-
-  if (!options.template) {
-    if (projectType === "app" && !chain) {
-      const res = await prompts({
-        type: "select",
-        name: "chain",
-        message: CREATE_MESSAGES.chain,
-        choices: [
-          { title: "EVM", value: "evm" },
-          { title: "Solana", value: "solana" },
-        ],
-      });
-
-      if (res.chain === "solana") {
-        chain = "solana";
-      } else {
-        chain = "evm";
-      }
-    }
-
-    if (projectType === "app" && !framework) {
-      const res = await prompts({
-        type: "select",
-        name: "framework",
-        message: CREATE_MESSAGES.framework,
-        choices:
-          // Solana doesn't support Vite just yet:
-          chain === "solana"
-            ? [
-                { title: "Next.js", value: "next" },
-                { title: "Create React App", value: "cra" },
-                // { title: "Vite", value: "vite" },
-              ]
-            : [
-                { title: "Next.js", value: "next" },
-                { title: "Create React App", value: "cra" },
-                { title: "Vite", value: "vite" },
-              ],
-      });
-
-      if (typeof res.framework === "string") {
-        framework = res.framework.trim();
-      }
-    }
-
-    if (projectType === "app" && !language) {
-      const res = await prompts({
-        type: "select",
-        name: "language",
-        message: CREATE_MESSAGES.language,
-        choices: [
-          { title: "JavaScript", value: "javascript" },
-          { title: "TypeScript", value: "typescript" },
-        ],
-      });
-
-      if (typeof res.language === "string") {
-        language = res.language.trim();
-      }
-    }
+  // Whether to only create a new contract without the project
+  let onlyContract = false;
+  if (projectType === "contract") {
+    const resolvedProjectPath = path.resolve(projectPath);
+    const contractProjectType = await detect(resolvedProjectPath, {});
 
     if (
-      projectType === "contract" &&
-      framework !== "forge" &&
-      framework !== "hardhat"
+      contractProjectType === "foundry" &&
+      fs.existsSync(path.join(resolvedProjectPath, "src"))
     ) {
+      onlyContract = true;
+      projectPath = path.join(projectPath, "src");
+    } else if (contractProjectType === "hardhat") {
+      if (fs.existsSync(path.join(resolvedProjectPath, "contracts"))) {
+        onlyContract = true;
+        projectPath = path.join(projectPath, "contracts");
+      } else {
+        // If there's no expected contracts folder, check for a directory that has .sol files
+        const directories = fs
+          .readdirSync(resolvedProjectPath)
+          .filter((file) =>
+            fs.lstatSync(path.join(resolvedProjectPath, file)).isDirectory(),
+          );
+        for (const directory of directories) {
+          const files = fs.readdirSync(path.join(projectPath, directory));
+          if (files.some((file) => file.endsWith(".sol"))) {
+            onlyContract = true;
+            projectPath = path.join(projectPath, directory);
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  if (!onlyContract) {
+    if (!projectPath) {
+      const defaultName =
+        projectType === "contract" ? "thirdweb-contracts" : "thirdweb-app";
       const res = await prompts({
-        type: "select",
-        name: "framework",
-        message: CREATE_MESSAGES.framework,
-        choices: [
-          { title: "Hardhat", value: "hardhat" },
-          { title: "Forge", value: "forge" },
-        ],
+        type: "text",
+        name: "path",
+        message: CREATE_MESSAGES.projectName,
+        initial: options.template || defaultName,
+        format: (name: string) => name.toLowerCase(),
+        validate: (name: string) => {
+          const validation = validateNpmName(
+            path.basename(path.resolve(name.toLowerCase())),
+          );
+          if (validation.valid) {
+            return true;
+          }
+          return "Invalid project name: " + validation.problems?.[0];
+        },
       });
 
-      if (typeof res.framework === "string") {
-        framework = res.framework.trim();
+      if (typeof res.path === "string") {
+        projectPath = path.join(projectPath, res.path.trim());
+      }
+    }
+
+    if (!projectPath) {
+      console.log(
+        "\nPlease specify the project directory:\n" +
+          `  ${chalk.cyan("npx thirdweb create")} ${chalk.green(
+            "<project-directory>",
+          )}\n` +
+          "For example:\n" +
+          `  ${chalk.cyan("npx thirdweb create")} ${chalk.green(
+            "my-thirdweb-app",
+          )}\n\n` +
+          `Run ${chalk.cyan("npx thirdweb --help")} to see all options.`,
+      );
+      process.exit(1);
+    }
+
+    if (!options.template) {
+      if (projectType === "app" && !chain) {
+        const res = await prompts({
+          type: "select",
+          name: "chain",
+          message: CREATE_MESSAGES.chain,
+          choices: [
+            { title: "EVM", value: "evm" },
+            { title: "Solana", value: "solana" },
+          ],
+        });
+
+        if (res.chain === "solana") {
+          chain = "solana";
+        } else {
+          chain = "evm";
+        }
+      }
+
+      if (projectType === "app" && !framework) {
+        const res = await prompts({
+          type: "select",
+          name: "framework",
+          message: CREATE_MESSAGES.framework,
+          choices:
+            chain === "solana"
+              ? [
+                  { title: "Next.js", value: "next" },
+                  { title: "Create React App", value: "cra" },
+                  { title: "Node.js", value: "node" },
+                  { title: "Express", value: "express" },
+                  // Solana doesn't support Vite just yet:
+                  // { title: "Vite", value: "vite" },
+                ]
+              : [
+                  { title: "Next.js", value: "next" },
+                  { title: "Create React App", value: "cra" },
+                  { title: "Vite", value: "vite" },
+                  { title: "React Native", value: "react-native" },
+                  { title: "Node.js", value: "node" },
+                  { title: "Express", value: "express" },
+                ],
+        });
+
+        if (typeof res.framework === "string") {
+          framework = res.framework.trim();
+        }
+      }
+
+      if (projectType === "app" && !language) {
+        const res = await prompts({
+          type: "select",
+          name: "language",
+          message: CREATE_MESSAGES.language,
+          choices: [
+            { title: "JavaScript", value: "javascript" },
+            { title: "TypeScript", value: "typescript" },
+          ],
+        });
+
+        if (typeof res.language === "string") {
+          language = res.language.trim();
+        }
+      }
+
+      if (
+        projectType === "contract" &&
+        framework !== "forge" &&
+        framework !== "hardhat"
+      ) {
+        const res = await prompts({
+          type: "select",
+          name: "framework",
+          message: CREATE_MESSAGES.framework,
+          choices: [
+            { title: "Hardhat", value: "hardhat" },
+            { title: "Forge", value: "forge" },
+          ],
+        });
+
+        if (typeof res.framework === "string") {
+          framework = res.framework.trim();
+        }
+      }
+
+      if (!framework) {
+        console.log("Please specify a framework");
+        process.exit(1);
+      }
+
+      if (!language) {
+        // Default = JavaScript
+        language = "javascript";
+      }
+    }
+  }
+
+  if (projectType === "contract") {
+    // Select contract name
+    if (!contractName) {
+      const defaultName = "MyContract";
+      const res = await prompts({
+        type: "text",
+        name: "path",
+        message: CREATE_MESSAGES.contractName,
+        initial: defaultName,
+        validate: (name: string) => {
+          const isValid = /(^[a-z0-9A-Z]+$)|(^[a-z0-9A-Z]+\.sol$)/.test(name);
+          if (isValid) {
+            return true;
+          }
+
+          return `Invalid contract name 'contractName' (only alphanumeric characters allowed)`;
+        },
+      });
+
+      if (typeof res.path === "string") {
+        contractName = res.path.trim();
+      }
+
+      if (!contractName) {
+        console.log(
+          "\nPlease specify the contract name:\n" +
+            `  ${chalk.cyan(
+              "npx thirdweb create --contract --name",
+            )} ${chalk.green("<contract-name>")}\n` +
+            "For example:\n" +
+            `  ${chalk.cyan(
+              "npx thirdweb create --contract --name",
+            )} ${chalk.green("MyContract")}\n\n` +
+            `Run ${chalk.cyan("npx thirdweb --help")} to see all options.`,
+        );
+        process.exit(1);
       }
     }
 
@@ -225,7 +336,9 @@ export async function twCreate(
         name: "standard",
         message: CREATE_MESSAGES.contract,
         choices: [
-          { title: "Empty Contract", value: "none" },
+          ...(!onlyContract
+            ? [{ title: "Empty Contract", value: "none" }]
+            : []),
           { title: "ERC721", value: "erc721" },
           { title: "ERC20", value: "erc20" },
           { title: "ERC1155", value: "erc1155" },
@@ -279,20 +392,11 @@ export async function twCreate(
         }
       }
     }
-
-    if (!framework) {
-      console.log("Please specify a framework");
-      process.exit(1);
-    }
-
-    if (!language) {
-      // Default = JavaScript
-      language = "javascript";
-    }
   }
 
-  const resolvedProjectPath = path.resolve(projectPath);
-  const projectName = path.basename(resolvedProjectPath);
+  // Resolve project path
+  projectPath = path.resolve(projectPath);
+  const projectName = path.basename(projectPath);
 
   const { valid, problems } = validateNpmName(projectName);
   if (!valid) {
@@ -324,7 +428,7 @@ export async function twCreate(
   try {
     if (projectType === "app") {
       await createApp({
-        appPath: resolvedProjectPath,
+        appPath: projectPath,
         packageManager,
         framework,
         language,
@@ -332,11 +436,13 @@ export async function twCreate(
         chain,
       });
     } else {
-      await createContract({
-        contractPath: resolvedProjectPath,
+      await createContractProject({
+        contractPath: projectPath,
         packageManager,
         framework,
+        contractName,
         baseContract,
+        onlyContract,
       });
     }
   } catch (reason) {

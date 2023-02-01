@@ -7,7 +7,7 @@ import {
   fetchRawPredeployMetadata,
   fetchSourceFilesFromMetadata,
   resolveContractUriFromAddress,
-} from "../../common/feature-detection";
+} from "../../common";
 import { isIncrementalVersion } from "../../common/version-checker";
 import { getContractPublisherAddress } from "../../constants";
 import {

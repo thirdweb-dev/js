@@ -1,5 +1,131 @@
 # thirdweb
 
+## 0.9.13
+
+### Patch Changes
+
+- Updated dependencies [[`19b8e18`](https://github.com/thirdweb-dev/js/commit/19b8e18b6bf68e374c817fefbf2fd29ac5573052)]:
+  - @thirdweb-dev/sdk@3.7.2
+
+## 0.9.12
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.7.1
+
+## 0.9.11
+
+### Patch Changes
+
+- [#517](https://github.com/thirdweb-dev/js/pull/517) [`9e591b3`](https://github.com/thirdweb-dev/js/commit/9e591b32b78f1300b2014d44d591d297249a1f84) Thanks [@avneesh0612](https://github.com/avneesh0612)! - add express, node.js, and react native templates
+
+- Updated dependencies [[`f37e86b`](https://github.com/thirdweb-dev/js/commit/f37e86b7d21f7da0df6ab549cb903dc99db10a79), [`f15733f`](https://github.com/thirdweb-dev/js/commit/f15733f34c5985eec5593b3d9196e5528ba96443)]:
+  - @thirdweb-dev/sdk@3.7.0
+
+## 0.9.10
+
+### Patch Changes
+
+- Updated dependencies [[`7cab8d1`](https://github.com/thirdweb-dev/js/commit/7cab8d1679f8d007091aa03adb83add3822a504a)]:
+  - @thirdweb-dev/sdk@3.6.11
+
+## 0.9.9
+
+### Patch Changes
+
+- [#483](https://github.com/thirdweb-dev/js/pull/483) [`4e8ff58`](https://github.com/thirdweb-dev/js/commit/4e8ff582084c3d201314e6c5dff5b79f15eb6292) Thanks [@jnsdls](https://github.com/jnsdls)! - `thirdweb create` with usage of `forge` should now function correctly in windows CMD shell
+
+- Updated dependencies [[`5fba324`](https://github.com/thirdweb-dev/js/commit/5fba324ac17ab02bc8f13d82a232bc5c6970c8e5), [`894cbef`](https://github.com/thirdweb-dev/js/commit/894cbefc6361f23fc528a6c6819f5c71793d46e4), [`557429b`](https://github.com/thirdweb-dev/js/commit/557429b5cfb3af2983ee01cf7d12d41ee0557593), [`73dc026`](https://github.com/thirdweb-dev/js/commit/73dc026ff9d0ac9099bd5a9a9cab8fdbfc0ae723), [`9eaa21d`](https://github.com/thirdweb-dev/js/commit/9eaa21d09ab9c700aea61a2a25f8ca9859d20857), [`68c8e3c`](https://github.com/thirdweb-dev/js/commit/68c8e3c4d79f5d56dc4414241bcca0d88285fcca), [`bff433e`](https://github.com/thirdweb-dev/js/commit/bff433e12150dc029e33a578219c8437a510da99)]:
+  - @thirdweb-dev/sdk@3.6.10
+
+## 0.9.8
+
+### Patch Changes
+
+- Updated dependencies [[`e913e0d`](https://github.com/thirdweb-dev/js/commit/e913e0daa9ece9a6274f7ffa4e66bdcbf32e6ada), [`5862c55`](https://github.com/thirdweb-dev/js/commit/5862c558fb48604b5aca4defd1ccc06fc3536358), [`73883f5`](https://github.com/thirdweb-dev/js/commit/73883f56d0ed0a35ace8b98b96caa782443be22e), [`f7a74a3`](https://github.com/thirdweb-dev/js/commit/f7a74a3b7c489ada5b1ec435632a326334a33c9b)]:
+  - @thirdweb-dev/sdk@3.6.9
+
+## 0.9.7
+
+### Patch Changes
+
+- [#454](https://github.com/thirdweb-dev/js/pull/454) [`c673e39`](https://github.com/thirdweb-dev/js/commit/c673e39f23ef082097d73d62910580e8fad400a0) Thanks [@jnsdls](https://github.com/jnsdls)! - upgraded dependencies
+
+- [#461](https://github.com/thirdweb-dev/js/pull/461) [`af85389`](https://github.com/thirdweb-dev/js/commit/af85389dc07fb163b8f9d70093eb1b691e47561a) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Fix deprecated links
+
+- Updated dependencies [[`c673e39`](https://github.com/thirdweb-dev/js/commit/c673e39f23ef082097d73d62910580e8fad400a0), [`ea95c5f`](https://github.com/thirdweb-dev/js/commit/ea95c5f609e306e333ee0f73f7920503358ca848), [`699a2b1`](https://github.com/thirdweb-dev/js/commit/699a2b16fb991c474ec57db8f178e2601d631f39), [`4cdd0bd`](https://github.com/thirdweb-dev/js/commit/4cdd0bd6348494a256d7c6a2bdf8f7b5c20f6877), [`a8267f9`](https://github.com/thirdweb-dev/js/commit/a8267f912df84c58d3fe3f47b90bd474f73c84ca)]:
+  - @thirdweb-dev/sdk@3.6.8
+
+## 0.9.6
+
+### Patch Changes
+
+- [#441](https://github.com/thirdweb-dev/js/pull/441) [`64f24f1`](https://github.com/thirdweb-dev/js/commit/64f24f1bb167c3d0cb3beca51fd300eaec21cc27) Thanks [@adam-maj](https://github.com/adam-maj)! - CLI autoupdates on run
+
+- [#447](https://github.com/thirdweb-dev/js/pull/447) [`e7740a5`](https://github.com/thirdweb-dev/js/commit/e7740a59db022a3396194ac66cd195d8ae754d57) Thanks [@adam-maj](https://github.com/adam-maj)! - Detect whether forge is installed
+
+- Updated dependencies [[`3731459`](https://github.com/thirdweb-dev/js/commit/3731459d33f1ded7ebb69124809449b901b3ad3d), [`cac6c30`](https://github.com/thirdweb-dev/js/commit/cac6c30bca5e17df81d746ef81316af47d5e252e), [`7a37e56`](https://github.com/thirdweb-dev/js/commit/7a37e564fd5d5a9df84c8da44ecaf6c42f67a0e2)]:
+  - @thirdweb-dev/sdk@3.6.7
+
+## 0.9.5
+
+### Patch Changes
+
+- Updated dependencies [[`8c6cdaa`](https://github.com/thirdweb-dev/js/commit/8c6cdaa2887fb2cc40d3ee6991233d195d103805)]:
+  - @thirdweb-dev/sdk@3.6.6
+
+## 0.9.4
+
+### Patch Changes
+
+- [#444](https://github.com/thirdweb-dev/js/pull/444) [`94f49b1`](https://github.com/thirdweb-dev/js/commit/94f49b1294bc0208171b16ed413cbb44644af017) Thanks [@adam-maj](https://github.com/adam-maj)! - Add changeset
+
+## 0.9.3
+
+### Patch Changes
+
+- Updated dependencies [[`efc56fa`](https://github.com/thirdweb-dev/js/commit/efc56fa5802490ac8ef50037658d046afd89e9a1)]:
+  - @thirdweb-dev/sdk@3.6.5
+
+## 0.9.2
+
+### Patch Changes
+
+- [#430](https://github.com/thirdweb-dev/js/pull/430) [`e684d7e`](https://github.com/thirdweb-dev/js/commit/e684d7e1ca16f633bce8698529d16bf60c264aa4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix uploading contracts with special characters in the comments
+
+- [#435](https://github.com/thirdweb-dev/js/pull/435) [`bef97f7`](https://github.com/thirdweb-dev/js/commit/bef97f72f4860596b7b70b05e67fcadf2c9a012e) Thanks [@adam-maj](https://github.com/adam-maj)! - Make solc default backup compilation
+
+- [#432](https://github.com/thirdweb-dev/js/pull/432) [`3e87dd3`](https://github.com/thirdweb-dev/js/commit/3e87dd3ccb04a2b73437357c939a251e83b783b2) Thanks [@adam-maj](https://github.com/adam-maj)! - Display file name on duplicate contract names
+
+- [#431](https://github.com/thirdweb-dev/js/pull/431) [`c42545a`](https://github.com/thirdweb-dev/js/commit/c42545a64725492136025fa1dcdb4d46ba674a30) Thanks [@adam-maj](https://github.com/adam-maj)! - Add changeset
+
+- [#428](https://github.com/thirdweb-dev/js/pull/428) [`6e20d1f`](https://github.com/thirdweb-dev/js/commit/6e20d1f21a622f102e94b956f700d0871c0dc779) Thanks [@adam-maj](https://github.com/adam-maj)! - Update CLI to enable create contract inside contracts project
+
+- Updated dependencies [[`f451da6`](https://github.com/thirdweb-dev/js/commit/f451da6395689a5f89800ee63f34b6175b61f703), [`af3acc6`](https://github.com/thirdweb-dev/js/commit/af3acc6b10751b840e56aef6400da5eea6040df2), [`1bfb91d`](https://github.com/thirdweb-dev/js/commit/1bfb91dbf3a39160c987a425813ac5dbb84703ad), [`ee47840`](https://github.com/thirdweb-dev/js/commit/ee478407673b0416e0c1cfe2be11bd6963395348), [`def4251`](https://github.com/thirdweb-dev/js/commit/def42511ff5a20d83f9094164dafb87e412571b5), [`034a257`](https://github.com/thirdweb-dev/js/commit/034a257442314c67729f7bafcbe3740cff33fa32), [`eca4776`](https://github.com/thirdweb-dev/js/commit/eca47763cd89cc3b7aa57b542971837987540b55), [`639e535`](https://github.com/thirdweb-dev/js/commit/639e535ed55280ad9d081001aab3f5af72bb3e45)]:
+  - @thirdweb-dev/sdk@3.6.4
+
+## 0.9.1
+
+### Patch Changes
+
+- [#415](https://github.com/thirdweb-dev/js/pull/415) [`48d91e4`](https://github.com/thirdweb-dev/js/commit/48d91e4431a3740d0f98f730ed5abf5b287f92c1) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Fix mappings for prebuilts redirect on deploy
+
+## 0.9.0
+
+### Minor Changes
+
+- [#403](https://github.com/thirdweb-dev/js/pull/403) [`27996cb`](https://github.com/thirdweb-dev/js/commit/27996cb4bc6f054f45b0a66b0a3aca732e0ef610) Thanks [@avneesh0612](https://github.com/avneesh0612)! - Add CLI Support for solana with --solana flag on create command
+
+- [#283](https://github.com/thirdweb-dev/js/pull/283) [`2eaa67a`](https://github.com/thirdweb-dev/js/commit/2eaa67acbe21464e7715d0b696afdc024460a44d) Thanks [@adam-maj](https://github.com/adam-maj)! - add capability to deploy apps
+
+### Patch Changes
+
+- [#413](https://github.com/thirdweb-dev/js/pull/413) [`1b0bf99`](https://github.com/thirdweb-dev/js/commit/1b0bf99da796df88ff307dd004cdaf239fb2b1ba) Thanks [@furqanrydhan](https://github.com/furqanrydhan)! - small interface tweaks
+
+- Updated dependencies [[`48797c7`](https://github.com/thirdweb-dev/js/commit/48797c7cf0695965e33eb6bf602be4652f7085a8), [`83dcaf7`](https://github.com/thirdweb-dev/js/commit/83dcaf70584af8c5cdf0427f9fc1ba82d89f0887), [`f03be39`](https://github.com/thirdweb-dev/js/commit/f03be398e0d7b75c9c5b4fb643f35903e89a17e7), [`2eaa67a`](https://github.com/thirdweb-dev/js/commit/2eaa67acbe21464e7715d0b696afdc024460a44d), [`47f8945`](https://github.com/thirdweb-dev/js/commit/47f8945325447874b1ace0359919c1d54fd55436)]:
+  - @thirdweb-dev/sdk@3.6.3
+
 ## 0.8.18
 
 ### Patch Changes

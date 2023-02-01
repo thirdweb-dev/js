@@ -2,37 +2,37 @@
 import { detectExtensions } from "../common/feature-detector";
 import { processProject } from "../common/processor";
 import { cliVersion, pkg } from "../constants/urls";
-import { info, logger } from "../core/helpers/logger";
+import { info, logger, spinner } from "../core/helpers/logger";
 import { twCreate } from "../create/command";
 import { deploy } from "../deploy";
+import { findPackageInstallation } from "../helpers/detect-local-packages";
 import { upload } from "../storage/command";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import chalk from "chalk";
+import { exec, spawn } from "child_process";
 import { Command } from "commander";
 import open from "open";
+import prompts from "prompts";
 
 const main = async () => {
+  // eslint-disable-next-line turbo/no-undeclared-env-vars
+  const skipIntro = process.env.THIRDWEB_CLI_SKIP_INTRO === "true";
+
   const program = new Command();
 
-  //yes this has to look like this, eliminates whitespace
-  console.info(`
-  $$\\     $$\\       $$\\                 $$\\                         $$\\       
-  $$ |    $$ |      \\__|                $$ |                        $$ |      
-$$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$$$$\\  
-\\_$$  _|  $$  __$$\\ $$ |$$  __$$\\ $$  __$$ |$$ | $$ | $$ |$$  __$$\\ $$  __$$\\ 
-  $$ |    $$ |  $$ |$$ |$$ |  \\__|$$ /  $$ |$$ | $$ | $$ |$$$$$$$$ |$$ |  $$ |
-  $$ |$$\\ $$ |  $$ |$$ |$$ |      $$ |  $$ |$$ | $$ | $$ |$$   ____|$$ |  $$ |
-  \\$$$$  |$$ |  $$ |$$ |$$ |      \\$$$$$$$ |\\$$$$$\\$$$$  |\\$$$$$$$\\ $$$$$$$  |
-   \\____/ \\__|  \\__|\\__|\\__|       \\_______| \\_____\\____/  \\_______|\\_______/ `);
-  console.info(`\n 💎 thirdweb-cli v${cliVersion} 💎\n`);
-  import("update-notifier").then(({ default: updateNotifier }) => {
-    updateNotifier({
-      pkg,
-      shouldNotifyInNpmScript: true,
-      // check every time while we're still building the CLI
-      updateCheckInterval: 0,
-    }).notify();
-  });
+  // yes this has to look like this, eliminates whitespace
+  if (!skipIntro) {
+    console.info(`
+    $$\\     $$\\       $$\\                 $$\\                         $$\\       
+    $$ |    $$ |      \\__|                $$ |                        $$ |      
+  $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$$$$\\  
+  \\_$$  _|  $$  __$$\\ $$ |$$  __$$\\ $$  __$$ |$$ | $$ | $$ |$$  __$$\\ $$  __$$\\ 
+    $$ |    $$ |  $$ |$$ |$$ |  \\__|$$ /  $$ |$$ | $$ | $$ |$$$$$$$$ |$$ |  $$ |
+    $$ |$$\\ $$ |  $$ |$$ |$$ |      $$ |  $$ |$$ | $$ | $$ |$$   ____|$$ |  $$ |
+    \\$$$$  |$$ |  $$ |$$ |$$ |      \\$$$$$$$ |\\$$$$$\\$$$$  |\\$$$$$$$\\ $$$$$$$  |
+     \\____/ \\__|  \\__|\\__|\\__|       \\_______| \\_____\\____/  \\_______|\\_______/ `);
+    console.info(`\n 💎 thirdweb-cli v${cliVersion} 💎\n`);
+  }
 
   program
     .name("thirdweb-cli")
@@ -53,6 +53,9 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("--cra", "Initialize as a Create React App project.")
     .option("--next", "Initialize as a Next.js project.")
     .option("--vite", "Initialize as a Vite project.")
+    .option("--reactNative", "Initialize as a React Native project.")
+    .option("--express", "Initialize as a Express project.")
+    .option("--node", "Initialize as a Node project.")
     .option(
       "--use-npm",
       "Explicitly tell the CLI to bootstrap the app using npm",
@@ -67,6 +70,10 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option(
       "-t, --template [name]",
       "A template to start your project from. You can use an template repository name from the official thirdweb-example org.",
+    )
+    .option(
+      "-c, --contract-name [name]",
+      "Name of the new smart contract to create",
     )
     .action(async (type, path, options) => {
       await twCreate(type, path, options);
@@ -90,8 +97,20 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
     .option(
+      "--dist-path [distPath]",
+      "Path to the dist folder where the HTML based App is",
+    )
+    .option(
       "-n, --name [name]",
       "Name of the pre-built or released contract (such as nft-drop)",
+    )
+    .option(
+      "-f, --file [name]",
+      "Filter for contract files that contain this file name",
+    )
+    .option(
+      "-cn, --contract-name [name]",
+      "Filter for contracts that contain this contract name",
     )
     .option(
       "-cv, --contract-version [version]",
@@ -112,6 +131,14 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
       "Release your protocol so other devs can deploy them and unlock SDKs, Dashboards and Analytics",
     )
     .option("-p, --path <project-path>", "path to project", ".")
+    .option(
+      "-f, --file [name]",
+      "Filter for contract files that contain the file name",
+    )
+    .option(
+      "-cn, --contract-name [name]",
+      "Filter for contracts that contain this contract name",
+    )
     .option("--dry-run", "dry run (skip actually publishing)")
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
@@ -173,6 +200,134 @@ $$$$$$\\   $$$$$$$\\  $$\\  $$$$$$\\   $$$$$$$ |$$\\  $$\\  $$\\  $$$$$$\\  $$$$
     .action(async (options) => {
       await detectExtensions(options);
     });
+
+  if (!skipIntro) {
+    const versionSpinner = spinner("Checking for updates...");
+    await import("update-notifier").then(
+      async ({ default: updateNotifier }) => {
+        const notifier = updateNotifier({
+          pkg,
+          shouldNotifyInNpmScript: true,
+          // check every time while we're still building the CLI
+          updateCheckInterval: 0,
+        });
+
+        const versionInfo = await notifier.fetchInfo();
+        versionSpinner.stop();
+
+        if (versionInfo.type !== "latest") {
+          const res = await prompts({
+            type: "toggle",
+            name: "upgrade",
+            message: `A new version of the CLI is available. Would you like to upgrade?`,
+            initial: true,
+            active: "yes",
+            inactive: "no",
+          });
+
+          if (res.upgrade) {
+            const updateSpinner = spinner(
+              `Upgrading CLI to version ${versionInfo.latest}...`,
+            );
+
+            const clonedEnvironment = { ...process.env };
+            clonedEnvironment.THIRDWEB_CLI_SKIP_INTRO = "true";
+
+            const installation = await findPackageInstallation();
+
+            // If the package isn't installed anywhere, just defer to npx thirdweb@latest
+            if (!installation) {
+              updateSpinner.succeed(
+                `Now using CLI version ${versionInfo.latest}. Continuing execution...`,
+              );
+
+              await new Promise((done, failed) => {
+                const shell = spawn(
+                  `npx --yes thirdweb@latest ${process.argv
+                    .slice(2)
+                    .join(" ")}`,
+                  [],
+                  { stdio: "inherit", shell: true, env: clonedEnvironment },
+                );
+                shell.on("close", (code) => {
+                  if (code === 0) {
+                    done("");
+                  } else {
+                    failed();
+                  }
+                });
+              });
+
+              return process.exit(0);
+            }
+
+            // Otherwise, get the correct command based on package manager and local vs. global
+            let command = "";
+            switch (installation.packageManager) {
+              case "npm":
+                command = installation.isGlobal
+                  ? `npm install -g thirdweb`
+                  : `npm install thirdweb`;
+                break;
+              case "yarn":
+                command = installation.isGlobal
+                  ? `yarn global add thirdweb`
+                  : `yarn add thirdweb`;
+                break;
+              case "pnpm":
+                command = installation.isGlobal
+                  ? `pnpm add -g thirdweb@latest`
+                  : `pnpm add thirdweb@latest`;
+                break;
+              default:
+                console.error(
+                  `Could not detect package manager in use, aborting automatic upgrade.\nIf you want to upgrade the CLI, please do it manually with your package manager.`,
+                );
+                process.exit(1);
+            }
+
+            await new Promise((done, failed) => {
+              exec(command, (err, stdout, stderr) => {
+                if (err) {
+                  failed(err);
+                  return;
+                }
+
+                done({ stdout, stderr });
+              });
+            });
+
+            updateSpinner.succeed(
+              `Successfully upgraded CLI to version ${versionInfo.latest}. Continuing execution...`,
+            );
+
+            // If the package is installed globally with yarn or pnpm, then npx won't recognize it
+            // So we need to make sure to run the command directly
+            const executionCommand =
+              !installation.isGlobal || installation.packageManager === "npm"
+                ? `npx thirdweb`
+                : `thirdweb`;
+            await new Promise((done, failed) => {
+              const shell = spawn(
+                `${executionCommand} ${process.argv.slice(2).join(" ")}`,
+                [],
+                { stdio: "inherit", shell: true, env: clonedEnvironment },
+              );
+              shell.on("close", (code) => {
+                if (code === 0) {
+                  done("");
+                } else {
+                  failed();
+                }
+              });
+            });
+
+            process.exit(0);
+          }
+        }
+      },
+    );
+  }
 
   await program.parseAsync();
 };

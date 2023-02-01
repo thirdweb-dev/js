@@ -62,7 +62,7 @@ Deploying released contracts give deployers access to automatic SDKs to integrat
 npx thirdweb@latest detect
 ```
 
-As you're developing your contracts, you may want to implement [Extensions](https://portal.thirdweb.com/extensions) to unlock functionality on the SDKs (ie. nft minting with automatic upload to IPFS) and the dashboard (ie. generated UI to manage permissions). This command will show what extensions were detected on your contract, unlocking the corresponding functionality on the SDKs and dashboard.
+As you're developing your contracts, you may want to implement [Extensions](https://portal.thirdweb.com/contractkit) to unlock functionality on the SDKs (ie. nft minting with automatic upload to IPFS) and the dashboard (ie. generated UI to manage permissions). This command will show what extensions were detected on your contract, unlocking the corresponding functionality on the SDKs and dashboard.
 
 ---
 
@@ -101,8 +101,17 @@ $ npx thirdweb@latest release
 
 The simplest way to work on the CLI locally is to:
 
-1. Install the package locally
-2. Run the `build:watch` command to compile any changes in realtime
+1. Install the package locally by running
+
+```bash
+git clone https://github.com/thirdweb-dev/js.git
+```
+2. From the project root run
+
+```bash
+yarn && yarn build
+```
+3. From inside `js/packages/cli` Run the `build:watch` command to compile any changes in real time
 
 ```bash
 $ npm install -g ./

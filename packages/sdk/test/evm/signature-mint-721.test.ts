@@ -46,6 +46,7 @@ describe("NFT sig minting", async () => {
       currencyAddress: NATIVE_TOKEN_ADDRESS,
       metadata: {
         name: "OUCH VOUCH",
+        background_color: "ff0000",
       },
       price: "1",
       to: samWallet.address,
@@ -195,7 +196,7 @@ describe("NFT sig minting", async () => {
         name: "Test1",
       });
       const toSign = {
-        to: adminWallet.address,
+        to: samWallet.address,
         metadata: uri,
       };
       const payload = await nftContract.signature.generate(toSign);
@@ -212,11 +213,11 @@ describe("NFT sig minting", async () => {
         name: "Test2",
       });
       const toSign1 = {
-        to: adminWallet.address,
+        to: samWallet.address,
         metadata: uri1,
       };
       const toSign2 = {
-        to: adminWallet.address,
+        to: samWallet.address,
         metadata: uri2,
       };
       const payloads = await nftContract.signature.generateBatch([

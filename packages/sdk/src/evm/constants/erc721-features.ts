@@ -1,8 +1,8 @@
-import DropERC721_V3Abi from "@thirdweb-dev/contracts-js/dist/abis/DropERC721_V3.json";
 import IBurnableERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IBurnableERC721.json";
 import IClaimableERC721 from "@thirdweb-dev/contracts-js/dist/abis/IClaimableERC721.json";
 import DelayedRevealAbi from "@thirdweb-dev/contracts-js/dist/abis/IDelayedReveal.json";
 import IDrop from "@thirdweb-dev/contracts-js/dist/abis/IDrop.json";
+import DropERC721_V3Abi from "@thirdweb-dev/contracts-js/dist/abis/IDropERC721_V3.json";
 import IDropSinglePhase from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase.json";
 import IDropSinglePhaseV1 from "@thirdweb-dev/contracts-js/dist/abis/IDropSinglePhase_V1.json";
 import Erc721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
@@ -12,8 +12,8 @@ import ILazyMintAbi from "@thirdweb-dev/contracts-js/dist/abis/ILazyMint.json";
 import IMintableERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IMintableERC721.json";
 import MulticallAbi from "@thirdweb-dev/contracts-js/dist/abis/IMulticall.json";
 import SignatureMintERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC721.json";
+import SignatureMintERC721_V1Abi from "@thirdweb-dev/contracts-js/dist/abis/ISignatureMintERC721_V1.json";
 import TieredDropAbi from "@thirdweb-dev/contracts-js/dist/abis/LazyMintWithTier.json";
-import TokenERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/TokenERC721.json";
 
 export const FEATURE_NFT_BURNABLE = {
   name: "ERC721Burnable",
@@ -163,7 +163,7 @@ export const FEATURE_NFT_SIGNATURE_MINTABLE_V1 = {
     sdk: "sdk.erc721signaturemint",
     contracts: "ISignatureMintERC721",
   },
-  abis: [TokenERC721Abi],
+  abis: [SignatureMintERC721_V1Abi],
   features: {},
 } as const;
 

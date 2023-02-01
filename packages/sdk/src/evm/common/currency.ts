@@ -124,7 +124,7 @@ export async function setErc20Allowance(
       signer || provider,
       currencyAddress,
       ERC20Abi,
-      {},
+      contractToApprove.options,
     );
 
     const owner = await contractToApprove.getSignerAddress();
@@ -151,7 +151,7 @@ export async function approveErc20Allowance(
     signer || provider,
     currencyAddress,
     ERC20Abi,
-    {},
+    contractToApprove.options,
   );
   const owner = await contractToApprove.getSignerAddress();
   const spender = contractToApprove.readContract.address;
@@ -191,4 +191,20 @@ export async function normalizeAmount(
 ): Promise<BigNumber> {
   const decimals = await contractWrapper.readContract.decimals();
   return utils.parseUnits(AmountSchema.parse(amount), decimals);
+}
+
+export function toEther(amount: BigNumberish): string {
+  return utils.formatEther(amount);
+}
+
+export function toWei(amount: Amount): BigNumber {
+  return utils.parseEther(AmountSchema.parse(amount));
+}
+
+export function toUnits(amount: Amount, decimals: BigNumberish): BigNumber {
+  return utils.parseUnits(AmountSchema.parse(amount), decimals);
+}
+
+export function toDisplayValue(amount: BigNumberish, decimals: BigNumberish): string {
+  return utils.formatUnits(amount, decimals);
 }

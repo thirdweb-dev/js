@@ -1,4 +1,4 @@
-import { hasFunction } from "../../common";
+import { detectContractFeature } from "../../common";
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { FEATURE_NFT_SIGNATURE_MINTABLE_V2 } from "../../constants/erc721-features";
@@ -22,7 +22,7 @@ import type {
 } from "@thirdweb-dev/contracts-js";
 import { TokensMintedWithSignatureEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/SignatureDrop";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -397,17 +397,9 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   }
 
   private async isLegacyNFTContract() {
-    if (hasFunction<TokenERC721>("contractType", this.contractWrapper)) {
-      try {
-        const contractType = ethers.utils.toUtf8String(
-          await this.contractWrapper.readContract.contractType(),
-        );
-        return contractType.includes("TokenERC721");
-      } catch (e) {
-        return false;
-      }
-    } else {
-      return false;
-    }
+    return detectContractFeature<ISignatureMintERC721>(
+      this.contractWrapper,
+      "ERC721SignatureMintV1",
+    );
   }
 }

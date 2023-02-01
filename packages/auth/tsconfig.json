@@ -1,5 +1,5 @@
 {
-  "extends": "@thirdweb-dev/tsconfig/base.json",
+  "extends": "@thirdweb-dev/tsconfig/sdk.json",
   "include": ["."],
   "exclude": ["dist", "build", "node_modules"]
 }

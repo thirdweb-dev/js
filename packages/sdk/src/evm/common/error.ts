@@ -286,7 +286,7 @@ export class TransactionError extends Error {
     raw: string,
     functionInfo: FunctionInfo | undefined,
   ) {
-    let builtErrorMsg = "Contract transaction failed\n\n";
+    let builtErrorMsg = "\n| Contract transaction failed |\n\n";
     builtErrorMsg += `Message: ${reason}`;
     builtErrorMsg += "\n\n| Transaction info |\n";
     builtErrorMsg += withSpaces("from", from);
@@ -320,9 +320,6 @@ export class TransactionError extends Error {
       // ignore if can't parse URL
     }
     builtErrorMsg += "\n\n";
-    builtErrorMsg +=
-      "Need help with this error? Join our community: https://discord.gg/thirdweb";
-    builtErrorMsg += "\n\n\n\n";
     builtErrorMsg += "| Raw error |";
     builtErrorMsg += "\n\n";
     builtErrorMsg += raw;
@@ -394,20 +391,26 @@ export async function convertToTWError(
   contractInterface: ethers.utils.Interface,
 ): Promise<TransactionError> {
   let raw: string;
-  if (error.data) {
+  if (typeof error === "object") {
     // metamask errors comes as objects, apply parsing on data object
-    // TODO test errors from other wallets
-    raw = JSON.stringify(error.data);
-  } else if (error instanceof Error) {
-    // regular ethers.js error
-    raw = error.message;
+    raw = JSON.stringify(error);
   } else {
     // not sure what this is, just throw it back
     raw = error.toString();
   }
-  const reason =
-    error.reason ||
-    parseMessageParts(/.*?"message[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
+  let reason =
+    parseMessageParts(/.*?"message[^a-zA-Z0-9]*([^"\\]*).*?/, raw) ||
+    parseMessageParts(/.*?"reason[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
+  if (reason && reason.toLowerCase().includes("cannot estimate gas")) {
+    // the error might be in the next reason block
+    const nextReason = parseMessageParts(
+      /.*?"reason[^a-zA-Z0-9]*([^"\\]*).*?/,
+      raw.slice(raw.indexOf(reason) + reason.length),
+    );
+    if (nextReason) {
+      reason = nextReason;
+    }
+  }
   const data = parseMessageParts(/.*?"data[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
   const rpcUrl = parseMessageParts(/.*?"url[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
   let from = parseMessageParts(/.*?"from[^a-zA-Z0-9]*([^"\\]*).*?/, raw);

@@ -3,7 +3,6 @@ import {
   InterfaceId_IERC1155,
   InterfaceId_IERC721,
 } from "../constants/contract";
-import { SignerOrProvider } from "../core";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
   NewAuctionListing,
@@ -76,33 +75,38 @@ export async function isTokenApprovedForTransfer(
 /**
  * Checks if the marketplace is approved to make transfers on the assetContract
  * If not, it tries to set the approval.
- * @param signerOrProvider
+ * @param contractWrapper
  * @param marketplaceAddress
  * @param assetContract
  * @param tokenId
  * @param from
  */
 export async function handleTokenApproval(
-  signerOrProvider: SignerOrProvider,
+  contractWrapper: ContractWrapper<any>,
   marketplaceAddress: string,
   assetContract: string,
   tokenId: BigNumberish,
   from: string,
 ): Promise<void> {
-  const erc165 = new Contract(
+  const erc165 = new ContractWrapper<IERC165>(
+    contractWrapper.getSignerOrProvider(),
     assetContract,
     ERC165Abi,
-    signerOrProvider,
-  ) as IERC165;
-  const isERC721 = await erc165.supportsInterface(InterfaceId_IERC721);
-  const isERC1155 = await erc165.supportsInterface(InterfaceId_IERC1155);
+    contractWrapper.options,
+  );
+  const isERC721 = await erc165.readContract.supportsInterface(
+    InterfaceId_IERC721,
+  );
+  const isERC1155 = await erc165.readContract.supportsInterface(
+    InterfaceId_IERC1155,
+  );
   // check for token approval
   if (isERC721) {
     const asset = new ContractWrapper<IERC721>(
-      signerOrProvider,
+      contractWrapper.getSignerOrProvider(),
       assetContract,
       ERC721Abi,
-      {},
+      contractWrapper.options,
     );
     const approved = await asset.readContract.isApprovedForAll(
       from,
@@ -122,10 +126,10 @@ export async function handleTokenApproval(
     }
   } else if (isERC1155) {
     const asset = new ContractWrapper<IERC1155>(
-      signerOrProvider,
+      contractWrapper.getSignerOrProvider(),
       assetContract,
       ERC1155Abi,
-      {},
+      contractWrapper.options,
     );
 
     const approved = await asset.readContract.isApprovedForAll(

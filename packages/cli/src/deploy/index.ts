@@ -8,6 +8,8 @@ type DeployOptions = {
   name: string;
   contractVersion: string;
   app: boolean;
+  path?: string;
+  distPath?: string;
 };
 
 export async function deploy(options: DeployOptions) {
@@ -31,13 +33,15 @@ export async function deploy(options: DeployOptions) {
 
   if (options.app) {
     try {
-      let url = await deployApp();
+      let url = await deployApp(options.distPath, options.path);
       info(`Here is the link to your app: ${chalk.blueBright(url.toString())}`);
       return url.toString();
     } catch (err) {
       logger.error("Failed to deploy app, No compatible project found", err);
+      return Promise.reject(
+        "failed to deploy app, no compatible project found",
+      );
     }
-    return;
   }
 
   const url = await processProject(options, "deploy");

@@ -19,6 +19,10 @@ describe("npx thirdweb detect", () => {
     await create.waitForText(CREATE_MESSAGES.framework);
     // select hardhat
     await create.pressKey("enter");
+    await create.waitForText(CREATE_MESSAGES.contractName);
+    // set contract name
+    await create.writeText("Contract");
+    await create.pressKey("enter");
     await create.waitForText(CREATE_MESSAGES.contract);
     // select ERC721
     await create.pressKey("arrowDown");
@@ -56,6 +60,9 @@ describe("npx thirdweb detect", () => {
     await detect.waitForFinish();
 
     const lines = detect.getStdout();
+
+    // check that detect excited successfully
+    expect(detect.getExitCode()).toEqual(0);
 
     // Detected extensions
     expect(lines.findIndex((line) => line.includes("ERC721"))).toBeGreaterThan(

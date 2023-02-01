@@ -1,4 +1,5 @@
 import { fetchCurrencyValue } from "../common/currency";
+import { getCompositePluginABI } from "../common/plugin";
 import {
   ChainOrRpc,
   getProviderForNetwork,
@@ -10,13 +11,13 @@ import {
   PREBUILT_CONTRACTS_MAP,
 } from "../contracts";
 import { SmartContract } from "../contracts/smart-contract";
+import { AbiSchema } from "../schema";
 import { SDKOptions } from "../schema/sdk-options";
 import { CurrencyValue } from "../types/index";
-import type { AbstractWallet } from "../wallets";
-import { WalletAuthenticator } from "./auth/wallet-authenticator";
 import type { ContractMetadata } from "./classes";
 import { ContractDeployer } from "./classes/contract-deployer";
 import { ContractPublisher } from "./classes/contract-publisher";
+import { MultichainRegistry } from "./classes/multichain-registry";
 import {
   getSignerAndProvider,
   RPCConnectionHandler,
@@ -32,6 +33,7 @@ import type {
 import { UserWallet } from "./wallet/UserWallet";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import type { EVMWallet } from "@thirdweb-dev/wallets";
 import { Contract, ContractInterface, ethers, Signer } from "ethers";
 import invariant from "tiny-invariant";
 
@@ -60,7 +62,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @beta
    */
   static async fromWallet(
-    wallet: AbstractWallet,
+    wallet: EVMWallet,
     network: ChainOrRpc,
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
@@ -72,7 +74,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       ? getReadOnlyProvider(signerOrProvider)
       : signerOrProvider;
 
-    const signer = await wallet.getSigner(provider);
+    let signer = await wallet.getSigner();
+
+    if (!!provider) {
+      signer = signer.connect(provider);
+    }
 
     return ThirdwebSDK.fromSigner(signer, network, options, storage);
   }
@@ -163,6 +169,10 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public deployer: ContractDeployer;
   /**
+   * The registry of deployed contracts
+   */
+  public multiChainRegistry: MultichainRegistry;
+  /**
    * Interact with the connected wallet
    */
   public wallet: UserWallet;
@@ -170,10 +180,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * Upload and download files from IPFS or from your own storage service
    */
   public storage: ThirdwebStorage;
-  /**
-   * Enable authentication with the connected wallet
-   */
-  public auth: WalletAuthenticator;
 
   constructor(
     network: ChainOrRpc | SignerOrProvider,
@@ -186,11 +192,24 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     this.storage = storage;
     this.wallet = new UserWallet(signerOrProvider, options);
     this.deployer = new ContractDeployer(signerOrProvider, options, storage);
-    this.auth = new WalletAuthenticator(signerOrProvider, this.wallet, options);
+    this.multiChainRegistry = new MultichainRegistry(
+      signerOrProvider,
+      this.storageHandler,
+      this.options,
+    );
     this._publisher = new ContractPublisher(
       signerOrProvider,
       this.options,
       this.storageHandler,
+    );
+  }
+
+  get auth() {
+    throw new Error(
+      `The sdk.auth namespace has been moved to the @thirdweb-dev/auth package and is no longer available after @thirdweb-dev/sdk >= 3.7.0. 
+      Please visit https://portal.thirdweb.com/auth for instructions on how to switch to using the new auth package (@thirdweb-dev/auth@3.0.0).
+      
+      If you still want to use the old @thirdweb-dev/auth@2.0.0 package, you can downgrade the SDK to version 3.6.0.`,
     );
   }
 
@@ -425,7 +444,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     if (!contractTypeOrABI || contractTypeOrABI === "custom") {
       const resolvedContractType = await this.resolveContractType(address);
       if (resolvedContractType === "custom") {
-        // if it's a custom contract we gotta fetch the compilet metadata
+        // if it's a custom contract we gotta fetch the compiler metadata
         try {
           const publisher = this.getPublisher();
           const metadata = await publisher.fetchCompilerMetadataFromAddress(
@@ -439,7 +458,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         // otherwise if it's a prebuilt contract we can just use the contract type
         const contractAbi = await PREBUILT_CONTRACTS_MAP[
           resolvedContractType
-        ].getAbi(address, this.getProvider());
+        ].getAbi(address, this.getProvider(), this.storage);
         newContract = await this.getContractFromAbi(address, contractAbi);
       }
     }
@@ -515,6 +534,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * ```
    */
   public async getContractList(walletAddress: string) {
+    // TODO - this only reads from the current registry chain, not the multichain registry
     const addresses =
       (await (
         await this.deployer.getRegistry()
@@ -571,9 +591,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
   private updateContractSignerOrProvider() {
     this.wallet.connect(this.getSignerOrProvider());
-    this.auth.updateSignerOrProvider(this.getSignerOrProvider());
     this.deployer.updateSignerOrProvider(this.getSignerOrProvider());
     this._publisher.updateSignerOrProvider(this.getSignerOrProvider());
+    this.multiChainRegistry.updateSigner(this.getSignerOrProvider());
     for (const [, contract] of this.contractCache) {
       contract.onNetworkUpdated(this.getSignerOrProvider());
     }
@@ -605,11 +625,19 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       this.getSignerOrProvider(),
       this.options,
     );
+
+    const parsedABI = typeof abi === "string" ? JSON.parse(abi) : abi;
     // TODO we still might want to lazy-fy this
     const contract = new SmartContract(
       this.getSignerOrProvider(),
       address,
-      abi,
+      await getCompositePluginABI(
+        address,
+        AbiSchema.parse(parsedABI),
+        provider,
+        this.options,
+        this.storage,
+      ),
       this.storageHandler,
       this.options,
       (await provider.getNetwork()).chainId,

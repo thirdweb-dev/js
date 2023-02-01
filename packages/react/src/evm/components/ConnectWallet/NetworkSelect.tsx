@@ -11,23 +11,17 @@ export const SupportedNetworkSelect: React.FC<SupportedNetworkSelectProps> = ({
   disabledChainIds,
   ...selectProps
 }) => {
-  const deprecatedNetworks = useMemo(() => {
-    return SUPPORTED_CHAIN_IDS.map((supportedChain) => {
+  const { mainnets, testnets } = useMemo(() => {
+    const networks = SUPPORTED_CHAIN_IDS.map((supportedChain) => {
       return getChainFromChainId(supportedChain);
-    }).filter((n) => !!n.deprecated);
+    });
+
+    return {
+      mainnets: networks.filter((n) => !n.testnet),
+      testnets: networks.filter((n) => n.testnet),
+    };
   }, []);
 
-  const testnets = useMemo(() => {
-    return SUPPORTED_CHAIN_IDS.map((supportedChain) => {
-      return getChainFromChainId(supportedChain);
-    }).filter((n) => n.testnet && !n.deprecated);
-  }, []);
-
-  const mainnets = useMemo(() => {
-    return SUPPORTED_CHAIN_IDS.map((supportedChain) => {
-      return getChainFromChainId(supportedChain);
-    }).filter((n) => !n.testnet && !n.deprecated);
-  }, []);
   return (
     <Select {...selectProps}>
       <option disabled value={-1}>
@@ -46,17 +40,6 @@ export const SupportedNetworkSelect: React.FC<SupportedNetworkSelectProps> = ({
       </optgroup>
       <optgroup label="Testnets">
         {testnets.map((tn) => (
-          <option
-            key={tn.id}
-            value={tn.id}
-            disabled={disabledChainIds?.includes(tn.id)}
-          >
-            {tn.name} ({tn.nativeCurrency?.symbol})
-          </option>
-        ))}
-      </optgroup>
-      <optgroup label="Deprecated">
-        {deprecatedNetworks.map((tn) => (
           <option
             key={tn.id}
             value={tn.id}

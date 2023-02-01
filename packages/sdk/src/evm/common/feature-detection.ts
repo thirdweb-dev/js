@@ -13,16 +13,14 @@ import {
   AbiFunction,
   AbiSchema,
   AbiTypeSchema,
-  ContractInfoSchema,
-  ContractSource,
   FullPublishMetadata,
   FullPublishMetadataSchemaOutput,
   PreDeployMetadata,
   PreDeployMetadataFetched,
   PreDeployMetadataFetchedSchema,
-  PublishedMetadata,
 } from "../schema/contracts/custom";
 import { ExtensionNotImplementedError } from "./error";
+import { fetchContractMetadata } from "./metadata-resolver";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import bs58 from "bs58";
 import { BaseContract, BigNumber, ethers } from "ethers";
@@ -268,6 +266,42 @@ function toJSType(
 
 /**
  * @internal
+ * @param bytecode
+ */
+export function extractMinimalProxyImplementationAddress(
+  bytecode: string,
+): string | undefined {
+  // EIP-1167 clone minimal proxy - https://eips.ethereum.org/EIPS/eip-1167
+  if (bytecode.startsWith("0x363d3d373d3d3d363d73")) {
+    const implementationAddress = bytecode.slice(22, 62);
+    return `0x${implementationAddress}`;
+  }
+
+  // Minimal Proxy with receive() from 0xSplits - https://github.com/0xSplits/splits-contracts/blob/c7b741926ec9746182d0d1e2c4c2046102e5d337/contracts/libraries/Clones.sol
+  if (bytecode.startsWith("0x36603057343d5230")) {
+    // +40 = size of addr
+    const implementationAddress = bytecode.slice(122, 122 + 40);
+    return `0x${implementationAddress}`;
+  }
+
+  // 0age's minimal proxy - https://medium.com/coinmonks/the-more-minimal-proxy-5756ae08ee48
+  if (bytecode.startsWith("0x3d3d3d3d363d3d37363d73")) {
+    // +40 = size of addr
+    const implementationAddress = bytecode.slice(24, 24 + 40);
+    return `0x${implementationAddress}`;
+  }
+
+  // vyper's minimal proxy (uniswap v1) - https://etherscan.io/address/0x09cabec1ead1c0ba254b09efb3ee13841712be14#code
+  if (bytecode.startsWith("0x366000600037611000600036600073")) {
+    const implementationAddress = bytecode.slice(32, 32 + 40);
+    return `0x${implementationAddress}`;
+  }
+
+  return undefined;
+}
+
+/**
+ * @internal
  * @param address
  * @param provider
  */
@@ -282,14 +316,20 @@ export async function resolveContractUriFromAddress(
       `Contract at ${address} does not exist on chain '${chain.name}' (chainId: ${chain.chainId})`,
     );
   }
-  // EIP-1167 clone proxy - https://eips.ethereum.org/EIPS/eip-1167
-  if (bytecode.startsWith("0x363d3d373d3d3d363d")) {
-    const implementationAddress = bytecode.slice(22, 62);
-    return await resolveContractUriFromAddress(
-      `0x${implementationAddress}`,
-      provider,
-    );
+
+  try {
+    const implementationAddress =
+      extractMinimalProxyImplementationAddress(bytecode);
+    if (implementationAddress) {
+      return await resolveContractUriFromAddress(
+        implementationAddress,
+        provider,
+      );
+    }
+  } catch (e) {
+    // ignore
   }
+
   // EIP-1967 proxy storage slots - https://eips.ethereum.org/EIPS/eip-1967
   try {
     const proxyStorage = await provider.getStorageAt(
@@ -366,104 +406,6 @@ function isHexStrict(hex: string | number) {
   return (
     (typeof hex === "string" || typeof hex === "number") &&
     /^(-)?0x[0-9a-f]*$/i.test(hex.toString())
-  );
-}
-
-/**
- * @internal
- * @param address
- * @param provider
- * @param storage
- */
-export async function fetchContractMetadataFromAddress(
-  address: string,
-  provider: ethers.providers.Provider,
-  storage: ThirdwebStorage,
-) {
-  const compilerMetadataUri = await resolveContractUriFromAddress(
-    address,
-    provider,
-  );
-  if (!compilerMetadataUri) {
-    throw new Error(`Could not resolve metadata for contract at ${address}`);
-  }
-  return await fetchContractMetadata(compilerMetadataUri, storage);
-}
-
-/**
- * @internal
- * @param compilerMetadataUri
- * @param storage
- */
-export async function fetchContractMetadata(
-  compilerMetadataUri: string,
-  storage: ThirdwebStorage,
-): Promise<PublishedMetadata> {
-  const metadata = await storage.downloadJSON(compilerMetadataUri);
-  const abi = AbiSchema.parse(metadata.output.abi);
-  const compilationTarget = metadata.settings.compilationTarget;
-  const targets = Object.keys(compilationTarget);
-  const name = compilationTarget[targets[0]];
-  const info = ContractInfoSchema.parse({
-    title: metadata.output.devdoc.title,
-    author: metadata.output.devdoc.author,
-    details: metadata.output.devdoc.detail,
-    notice: metadata.output.userdoc.notice,
-  });
-  const licenses: string[] = [
-    ...new Set(
-      Object.entries(metadata.sources).map(([, src]) => (src as any).license),
-    ),
-  ];
-  return {
-    name,
-    abi,
-    metadata,
-    info,
-    licenses,
-  };
-}
-
-/**
- * @internal
- * @param publishedMetadata
- * @param storage
- */
-export async function fetchSourceFilesFromMetadata(
-  publishedMetadata: PublishedMetadata,
-  storage: ThirdwebStorage,
-): Promise<ContractSource[]> {
-  return await Promise.all(
-    Object.entries(publishedMetadata.metadata.sources).map(
-      async ([path, info]) => {
-        const urls = (info as any).urls as string[];
-        const ipfsLink = urls
-          ? urls.find((url) => url.includes("ipfs"))
-          : undefined;
-        if (ipfsLink) {
-          const ipfsHash = ipfsLink.split("ipfs/")[1];
-          // 5 sec timeout for sources that haven't been uploaded to ipfs
-          const timeout = new Promise<string>((_r, rej) =>
-            setTimeout(() => rej("timeout"), 5000),
-          );
-          const source = await Promise.race([
-            (await storage.download(`ipfs://${ipfsHash}`)).text(),
-            timeout,
-          ]);
-          return {
-            filename: path,
-            source,
-          };
-        } else {
-          return {
-            filename: path,
-            source:
-              (info as any).content ||
-              "Could not find source for this contract",
-          };
-        }
-      },
-    ),
   );
 }
 
