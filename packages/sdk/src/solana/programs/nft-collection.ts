@@ -472,7 +472,6 @@ export class NFTCollection {
               .nfts()
               .builders()
               .update({
-                collection: this.publicKey,
                 nftOrSft: metaplexNft,
                 creators: enforceCreator(
                   creators,
@@ -530,7 +529,6 @@ export class NFTCollection {
 
           txs.push(
             this.metaplex.nfts().builders().update({
-              collection: this.publicKey,
               nftOrSft: metaplexNft,
               sellerFeeBasisPoints,
             }),
