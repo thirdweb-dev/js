@@ -3,6 +3,7 @@ import { detectExtensions } from "../common/feature-detector";
 import { processProject } from "../common/processor";
 import { cliVersion, pkg } from "../constants/urls";
 import { info, logger, spinner } from "../core/helpers/logger";
+import { CacheEntry } from "../core/types/cache";
 import { twCreate } from "../create/command";
 import { deploy } from "../deploy";
 import { findPackageInstallation } from "../helpers/detect-local-packages";
@@ -13,12 +14,14 @@ import { exec, spawn } from "child_process";
 import { Command } from "commander";
 import open from "open";
 import prompts from "prompts";
+import Cache from "sync-disk-cache";
 
 const main = async () => {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
   const skipIntro = process.env.THIRDWEB_CLI_SKIP_INTRO === "true";
 
   const program = new Command();
+  const cache = new Cache("thirdweb:cli");
 
   // yes this has to look like this, eliminates whitespace
   if (!skipIntro) {
@@ -40,116 +43,79 @@ const main = async () => {
     .version(cliVersion, "-v, --version")
     .option("--skip-update-check", "Skip check for auto updates")
     .hook("preAction", async () => {
-      if (!skipIntro && !program.opts().skipUpdateCheck) {
-        const versionSpinner = spinner("Checking for updates...");
-        await import("update-notifier").then(
-          async ({ default: updateNotifier }) => {
-            const notifier = updateNotifier({
-              pkg,
-              shouldNotifyInNpmScript: true,
-              // check every time while we're still building the CLI
-              updateCheckInterval: 0,
+      if (skipIntro || program.opts().skipUpdateCheck) {
+        return;
+      }
+
+      let shouldCheckVersion = true;
+      try {
+        const lastCheckCache: CacheEntry = cache.get("last-version-check");
+
+        if (lastCheckCache.isCached) {
+          const lastVersionCheck = new Date(lastCheckCache.value);
+          // Don't check for updates if already checked within past 24 hours
+          if (
+            new Date().getTime() - lastVersionCheck.getTime() <
+            1000 * 60 * 60 * 24
+          ) {
+            shouldCheckVersion = false;
+          }
+        }
+      } catch {
+        // no-op
+      }
+
+      if (!shouldCheckVersion) {
+        return;
+      }
+
+      const versionSpinner = spinner("Checking for updates...");
+      await import("update-notifier").then(
+        async ({ default: updateNotifier }) => {
+          const notifier = updateNotifier({
+            pkg,
+            shouldNotifyInNpmScript: true,
+            // check every time while we're still building the CLI
+            updateCheckInterval: 0,
+          });
+
+          const versionInfo = await notifier.fetchInfo();
+          versionSpinner.stop();
+
+          // Set cache to prevent checking for updates again for 24 hours
+          cache.set("last-version-check", new Date().toISOString());
+
+          if (versionInfo.type !== "latest") {
+            const res = await prompts({
+              type: "toggle",
+              name: "upgrade",
+              message: `A new version of the CLI is available. Would you like to upgrade?`,
+              initial: true,
+              active: "yes",
+              inactive: "no",
             });
 
-            const versionInfo = await notifier.fetchInfo();
-            versionSpinner.stop();
+            if (res.upgrade) {
+              const updateSpinner = spinner(
+                `Upgrading CLI to version ${versionInfo.latest}...`,
+              );
 
-            if (versionInfo.type !== "latest") {
-              const res = await prompts({
-                type: "toggle",
-                name: "upgrade",
-                message: `A new version of the CLI is available. Would you like to upgrade?`,
-                initial: true,
-                active: "yes",
-                inactive: "no",
-              });
+              const clonedEnvironment = { ...process.env };
+              clonedEnvironment.THIRDWEB_CLI_SKIP_INTRO = "true";
 
-              if (res.upgrade) {
-                const updateSpinner = spinner(
-                  `Upgrading CLI to version ${versionInfo.latest}...`,
-                );
+              const installation = await findPackageInstallation();
 
-                const clonedEnvironment = { ...process.env };
-                clonedEnvironment.THIRDWEB_CLI_SKIP_INTRO = "true";
-
-                const installation = await findPackageInstallation();
-
-                // If the package isn't installed anywhere, just defer to npx thirdweb@latest
-                if (!installation) {
-                  updateSpinner.succeed(
-                    `Now using CLI version ${versionInfo.latest}. Continuing execution...`,
-                  );
-
-                  await new Promise((done, failed) => {
-                    const shell = spawn(
-                      `npx --yes thirdweb@latest ${process.argv
-                        .slice(2)
-                        .join(" ")}`,
-                      [],
-                      { stdio: "inherit", shell: true, env: clonedEnvironment },
-                    );
-                    shell.on("close", (code) => {
-                      if (code === 0) {
-                        done("");
-                      } else {
-                        failed();
-                      }
-                    });
-                  });
-
-                  return process.exit(0);
-                }
-
-                // Otherwise, get the correct command based on package manager and local vs. global
-                let command = "";
-                switch (installation.packageManager) {
-                  case "npm":
-                    command = installation.isGlobal
-                      ? `npm install -g thirdweb`
-                      : `npm install thirdweb`;
-                    break;
-                  case "yarn":
-                    command = installation.isGlobal
-                      ? `yarn global add thirdweb`
-                      : `yarn add thirdweb`;
-                    break;
-                  case "pnpm":
-                    command = installation.isGlobal
-                      ? `pnpm add -g thirdweb@latest`
-                      : `pnpm add thirdweb@latest`;
-                    break;
-                  default:
-                    console.error(
-                      `Could not detect package manager in use, aborting automatic upgrade.\nIf you want to upgrade the CLI, please do it manually with your package manager.`,
-                    );
-                    process.exit(1);
-                }
-
-                await new Promise((done, failed) => {
-                  exec(command, (err, stdout, stderr) => {
-                    if (err) {
-                      failed(err);
-                      return;
-                    }
-
-                    done({ stdout, stderr });
-                  });
-                });
-
+              // If the package isn't installed anywhere, just defer to npx thirdweb@latest
+              if (!installation) {
                 updateSpinner.succeed(
-                  `Successfully upgraded CLI to version ${versionInfo.latest}. Continuing execution...`,
+                  `Now using CLI version ${versionInfo.latest}. Continuing execution...`,
                 );
 
-                // If the package is installed globally with yarn or pnpm, then npx won't recognize it
-                // So we need to make sure to run the command directly
-                const executionCommand =
-                  !installation.isGlobal ||
-                  installation.packageManager === "npm"
-                    ? `npx thirdweb`
-                    : `thirdweb`;
                 await new Promise((done, failed) => {
                   const shell = spawn(
-                    `${executionCommand} ${process.argv.slice(2).join(" ")}`,
+                    `npx --yes thirdweb@latest ${process.argv
+                      .slice(2)
+                      .join(" ")}`,
                     [],
                     { stdio: "inherit", shell: true, env: clonedEnvironment },
                   );
@@ -162,12 +128,75 @@ const main = async () => {
                   });
                 });
 
-                process.exit(0);
+                return process.exit(0);
               }
+
+              // Otherwise, get the correct command based on package manager and local vs. global
+              let command = "";
+              switch (installation.packageManager) {
+                case "npm":
+                  command = installation.isGlobal
+                    ? `npm install -g thirdweb`
+                    : `npm install thirdweb`;
+                  break;
+                case "yarn":
+                  command = installation.isGlobal
+                    ? `yarn global add thirdweb`
+                    : `yarn add thirdweb`;
+                  break;
+                case "pnpm":
+                  command = installation.isGlobal
+                    ? `pnpm add -g thirdweb@latest`
+                    : `pnpm add thirdweb@latest`;
+                  break;
+                default:
+                  console.error(
+                    `Could not detect package manager in use, aborting automatic upgrade.\nIf you want to upgrade the CLI, please do it manually with your package manager.`,
+                  );
+                  process.exit(1);
+              }
+
+              await new Promise((done, failed) => {
+                exec(command, (err, stdout, stderr) => {
+                  if (err) {
+                    failed(err);
+                    return;
+                  }
+
+                  done({ stdout, stderr });
+                });
+              });
+
+              updateSpinner.succeed(
+                `Successfully upgraded CLI to version ${versionInfo.latest}. Continuing execution...`,
+              );
+
+              // If the package is installed globally with yarn or pnpm, then npx won't recognize it
+              // So we need to make sure to run the command directly
+              const executionCommand =
+                !installation.isGlobal || installation.packageManager === "npm"
+                  ? `npx thirdweb`
+                  : `thirdweb`;
+              await new Promise((done, failed) => {
+                const shell = spawn(
+                  `${executionCommand} ${process.argv.slice(2).join(" ")}`,
+                  [],
+                  { stdio: "inherit", shell: true, env: clonedEnvironment },
+                );
+                shell.on("close", (code) => {
+                  if (code === 0) {
+                    done("");
+                  } else {
+                    failed();
+                  }
+                });
+              });
+
+              process.exit(0);
             }
-          },
-        );
-      }
+          }
+        },
+      );
     });
 
   program
