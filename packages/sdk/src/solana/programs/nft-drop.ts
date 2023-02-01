@@ -21,6 +21,7 @@ import { sendMultipartTransaction } from "../utils/transactions";
 import { getNework } from "../utils/urls";
 import {
   CandyMachineV2Item,
+  findCandyMachineV2CreatorPda,
   Metaplex,
   toBigNumber,
   TransactionBuilder,
@@ -523,6 +524,19 @@ export class NFTDrop {
       const collectionAddress = candyMachine.collectionMintAddress;
       invariant(collectionAddress, "Collection mint address not found");
 
+      // We need to find the candy machine creator PDA which is auto populated onto NFTs
+      // minted with the candy machine, and add it to the list of creators for each NFT
+      const candyMachineCreatorPda = findCandyMachineV2CreatorPda(
+        candyMachine.address,
+      );
+      const nftCreators = [
+        {
+          address: candyMachineCreatorPda.toBase58(),
+          share: 0,
+        },
+        ...creators,
+      ];
+
       const allNfts = await this.nft.getAll(collectionAddress.toBase58());
       await Promise.all(
         allNfts.map(async (nft) => {
@@ -535,10 +549,9 @@ export class NFTDrop {
               .nfts()
               .builders()
               .update({
-                collection: collectionAddress,
                 nftOrSft: metaplexNft,
                 creators: enforceCreator(
-                  creators,
+                  nftCreators,
                   this.metaplex.identity().publicKey,
                 ),
               }),
@@ -597,7 +610,6 @@ export class NFTDrop {
 
           txs.push(
             this.metaplex.nfts().builders().update({
-              collection: collectionAddress,
               nftOrSft: metaplexNft,
               sellerFeeBasisPoints,
             }),

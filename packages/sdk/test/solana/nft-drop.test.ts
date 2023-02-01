@@ -131,14 +131,17 @@ describe("NFTDrop", async () => {
     expect(creators[0].address).to.equal(sdk.wallet.getAddress());
     expect(creators[0].share).to.equal(100);
 
+    const numNfts = (await drop.getAllClaimed()).length;
     const newCreator = Keypair.generate().publicKey.toBase58();
+
     await drop.updateCreators(
       [
         {
           address: sdk.wallet.getAddress() as string,
           share: 75,
+          verified: true,
         },
-        { address: newCreator, share: 25 },
+        { address: newCreator, share: 25, verified: true },
       ],
       true,
     );
@@ -150,15 +153,17 @@ describe("NFTDrop", async () => {
     expect(creators[1].address).to.equal(newCreator);
     expect(creators[1].share).to.equal(25);
 
-    const all = await drop.getAll();
+    const all = await drop.getAllClaimed();
+    expect(all.length).to.equal(numNfts);
     for (const nft of all) {
       // @ts-ignore
       const creatorsOfNft = await drop.nft.creatorsOf(nft.metadata.id);
-      expect(creatorsOfNft.length).to.equal(2);
-      expect(creatorsOfNft[0].address).to.equal(sdk.wallet.getAddress());
-      expect(creatorsOfNft[0].share).to.equal(75);
-      expect(creatorsOfNft[1].address).to.equal(newCreator);
-      expect(creatorsOfNft[1].share).to.equal(25);
+      expect(creatorsOfNft.length).to.equal(3);
+      // Skip checking the first creator which is the candy machine creator pda
+      expect(creatorsOfNft[1].address).to.equal(sdk.wallet.getAddress());
+      expect(creatorsOfNft[1].share).to.equal(75);
+      expect(creatorsOfNft[2].address).to.equal(newCreator);
+      expect(creatorsOfNft[2].share).to.equal(25);
     }
   });
 
