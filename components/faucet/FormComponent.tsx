@@ -1,6 +1,6 @@
 import { Flex, FormControl, Input, Spinner, useToast } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { Connection, LAMPORTS_PER_SOL, PublicKey } from "@solana/web3.js";
 import { useMutation } from "@tanstack/react-query";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useEffect, useState } from "react";
@@ -28,8 +28,8 @@ export const FormComponent: React.FC<IFormComponentProps> = ({
 
   const { mutate, isLoading, error, isError } = useMutation(
     async () => {
-      if (!publicKey) {
-        throw new Error("No wallet connected");
+      if (!address) {
+        throw new Error("No address provided");
       }
       trackEvent({
         category: "solana-faucet",
@@ -39,7 +39,7 @@ export const FormComponent: React.FC<IFormComponentProps> = ({
 
       const connection = new Connection("https://api.devnet.solana.com");
       return await connection.requestAirdrop(
-        publicKey,
+        new PublicKey(address),
         Number(LAMPORTS_PER_SOL),
       );
     },
