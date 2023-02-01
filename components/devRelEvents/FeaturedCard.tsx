@@ -29,7 +29,12 @@ export const FeaturedCard: React.FC<FeaturedCardProps> = ({
       rounded="lg"
       pb={2}
     >
-      <ChakraNextImage maxW="500px" src={banner} alt={title} roundedTop="lg" />
+      <ChakraNextImage
+        maxW={{ base: "auto", md: "500px" }}
+        src={banner}
+        alt={title}
+        roundedTop="lg"
+      />
       <Badge
         zIndex={1}
         pos="absolute"

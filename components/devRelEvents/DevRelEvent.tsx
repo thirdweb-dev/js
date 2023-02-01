@@ -50,7 +50,7 @@ export const DevRelEvent: React.FC<EventProps> = ({
           bg: "transparent",
         }}
         px={{
-          base: 2,
+          base: 6,
           md: 10,
         }}
         pt={10}
@@ -122,7 +122,7 @@ export const DevRelEvent: React.FC<EventProps> = ({
         alignItems="flex-start"
         gap={4}
         ml={{
-          base: 0,
+          base: 2,
           md: "10rem",
         }}
         justifyContent="left"

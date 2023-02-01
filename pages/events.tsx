@@ -161,6 +161,7 @@ const EventsPage: ThirdwebNextPage = () => {
               gap={12}
               mt={12}
               placeContent="center"
+              w="100%"
             >
               {featuredEvents.map(({ type, title, date, banner, link }) => (
                 <FeaturedCard
