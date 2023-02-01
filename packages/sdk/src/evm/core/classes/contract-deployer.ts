@@ -4,7 +4,7 @@ import {
   fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
 } from "../../common/index";
-import { ChainId } from "../../constants";
+import { ChainId, EventType } from "../../constants";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import {
   EditionDropInitializer,
@@ -24,6 +24,7 @@ import {
 } from "../../contracts";
 import { FactoryDeploymentSchema } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
+import { DeployEvent, DeployEvents } from "../../types";
 import {
   MarketplaceContractDeployMetadata,
   MultiwrapContractDeployMetadata,
@@ -39,7 +40,6 @@ import {
   PrebuiltContractType,
 } from "../types";
 import { ContractFactory } from "./factory";
-import { FactoryEvents } from "./factory-events";
 import { ContractRegistry } from "./registry";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
@@ -50,6 +50,7 @@ import {
   ContractInterface,
   ethers,
 } from "ethers";
+import { EventEmitter } from "eventemitter3";
 import invariant from "tiny-invariant";
 import { z } from "zod";
 
@@ -68,8 +69,16 @@ export class ContractDeployer extends RPCConnectionHandler {
    * should never be accessed directly, use {@link ContractDeployer.getRegistry} instead
    */
   private _registry: Promise<ContractRegistry> | undefined;
-  public events: FactoryEvents | undefined;
   private storage: ThirdwebStorage;
+  private events: EventEmitter<DeployEvents>;
+  private transactionListener = (event: any) => {
+    if (event.status === "submitted") {
+      this.events.emit("contractDeployed", {
+        status: "submitted",
+        transactionHash: event.transactionHash,
+      });
+    }
+  };
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -78,7 +87,7 @@ export class ContractDeployer extends RPCConnectionHandler {
   ) {
     super(network, options);
     this.storage = storage;
-
+    this.events = new EventEmitter();
     // Initialize factory and registry (we don't need to make these calls async)
     this.getFactory();
     this.getRegistry();
@@ -427,7 +436,15 @@ export class ContractDeployer extends RPCConnectionHandler {
       } catch (e) {
         parsedVersion = undefined;
       }
-      return await factory.deploy(contractType, parsedMetadata, parsedVersion);
+      factory.on(EventType.Transaction, this.transactionListener);
+      const deployedAddress = await factory.deploy(
+        contractType,
+        parsedMetadata,
+        this.events,
+        parsedVersion,
+      );
+      factory.off(EventType.Transaction, this.transactionListener);
+      return deployedAddress;
     }
 
     //
@@ -517,12 +534,16 @@ export class ContractDeployer extends RPCConnectionHandler {
       this.storage,
       this.options,
     );
-    return await proxyFactory.deployProxyByImplementation(
+    proxyFactory.on(EventType.Transaction, this.transactionListener);
+    const deployedAddress = await proxyFactory.deployProxyByImplementation(
       implementationAddress,
       implementationAbi,
       initializerFunction,
       initializerArgs,
+      this.events,
     );
+    proxyFactory.off(EventType.Transaction, this.transactionListener);
+    return deployedAddress;
   }
 
   /**
@@ -602,8 +623,6 @@ export class ContractDeployer extends RPCConnectionHandler {
           this.storage,
           this.options,
         );
-        this.events = new FactoryEvents(factory);
-
         return factory;
       }));
   }
@@ -800,8 +819,39 @@ export class ContractDeployer extends RPCConnectionHandler {
     const deployer = await new ethers.ContractFactory(abi, bytecode)
       .connect(signer)
       .deploy(...constructorParams);
+    this.events.emit("contractDeployed", {
+      status: "submitted",
+      transactionHash: deployer.deployTransaction.hash,
+    });
     const deployedContract = await deployer.deployed();
-    // TODO parse transaction receipt
+    this.events.emit("contractDeployed", {
+      status: "completed",
+      contractAddress: deployedContract.address,
+      transactionHash: deployedContract.deployTransaction.hash,
+    });
     return deployedContract.address;
+  }
+
+  /**
+   * Listen to all deploy transactions from this deployer
+   * @param listener the listener to add
+   */
+  public addDeployListener(listener: (event: DeployEvent) => void) {
+    this.events.on("contractDeployed", listener);
+  }
+
+  /**
+   * Remove a deploy listener
+   * @param listener the listener to remove
+   */
+  public removeDeployListener(listener: (event: DeployEvent) => void) {
+    this.events.off("contractDeployed", listener);
+  }
+
+  /**
+   * Remove all deploy listeners
+   */
+  public removeAllDeployListeners() {
+    this.events.removeAllListeners("contractDeployed");
   }
 }

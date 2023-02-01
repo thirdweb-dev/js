@@ -1,5 +1,44 @@
 # thirdweb
 
+## 0.9.13
+
+### Patch Changes
+
+- Updated dependencies [[`19b8e18`](https://github.com/thirdweb-dev/js/commit/19b8e18b6bf68e374c817fefbf2fd29ac5573052)]:
+  - @thirdweb-dev/sdk@3.7.2
+
+## 0.9.12
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.7.1
+
+## 0.9.11
+
+### Patch Changes
+
+- [#517](https://github.com/thirdweb-dev/js/pull/517) [`9e591b3`](https://github.com/thirdweb-dev/js/commit/9e591b32b78f1300b2014d44d591d297249a1f84) Thanks [@avneesh0612](https://github.com/avneesh0612)! - add express, node.js, and react native templates
+
+- Updated dependencies [[`f37e86b`](https://github.com/thirdweb-dev/js/commit/f37e86b7d21f7da0df6ab549cb903dc99db10a79), [`f15733f`](https://github.com/thirdweb-dev/js/commit/f15733f34c5985eec5593b3d9196e5528ba96443)]:
+  - @thirdweb-dev/sdk@3.7.0
+
+## 0.9.10
+
+### Patch Changes
+
+- Updated dependencies [[`7cab8d1`](https://github.com/thirdweb-dev/js/commit/7cab8d1679f8d007091aa03adb83add3822a504a)]:
+  - @thirdweb-dev/sdk@3.6.11
+
+## 0.9.9
+
+### Patch Changes
+
+- [#483](https://github.com/thirdweb-dev/js/pull/483) [`4e8ff58`](https://github.com/thirdweb-dev/js/commit/4e8ff582084c3d201314e6c5dff5b79f15eb6292) Thanks [@jnsdls](https://github.com/jnsdls)! - `thirdweb create` with usage of `forge` should now function correctly in windows CMD shell
+
+- Updated dependencies [[`5fba324`](https://github.com/thirdweb-dev/js/commit/5fba324ac17ab02bc8f13d82a232bc5c6970c8e5), [`894cbef`](https://github.com/thirdweb-dev/js/commit/894cbefc6361f23fc528a6c6819f5c71793d46e4), [`557429b`](https://github.com/thirdweb-dev/js/commit/557429b5cfb3af2983ee01cf7d12d41ee0557593), [`73dc026`](https://github.com/thirdweb-dev/js/commit/73dc026ff9d0ac9099bd5a9a9cab8fdbfc0ae723), [`9eaa21d`](https://github.com/thirdweb-dev/js/commit/9eaa21d09ab9c700aea61a2a25f8ca9859d20857), [`68c8e3c`](https://github.com/thirdweb-dev/js/commit/68c8e3c4d79f5d56dc4414241bcca0d88285fcca), [`bff433e`](https://github.com/thirdweb-dev/js/commit/bff433e12150dc029e33a578219c8437a510da99)]:
+  - @thirdweb-dev/sdk@3.6.10
+
 ## 0.9.8
 
 ### Patch Changes

@@ -1,5 +1,94 @@
 # @thirdweb-dev/react
 
+## 3.7.2
+
+### Patch Changes
+
+- [#527](https://github.com/thirdweb-dev/js/pull/527) [`bdd9ed2`](https://github.com/thirdweb-dev/js/commit/bdd9ed22989f5baa511bec70ef1ae9d88bfb957e) Thanks [@jnsdls](https://github.com/jnsdls)! - fix dependency issues with @zag-js/react
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@3.7.2
+
+## 3.7.1
+
+### Patch Changes
+
+- [#520](https://github.com/thirdweb-dev/js/pull/520) [`8c81ca5`](https://github.com/thirdweb-dev/js/commit/8c81ca5c3033b04b1f64e3a1134a72e7e3ec03b1) Thanks [@adam-maj](https://github.com/adam-maj)! - Update auth and react-core dependencies
+
+- Updated dependencies [[`8c81ca5`](https://github.com/thirdweb-dev/js/commit/8c81ca5c3033b04b1f64e3a1134a72e7e3ec03b1)]:
+  - @thirdweb-dev/react-core@3.7.1
+
+## 3.7.0
+
+### Minor Changes
+
+- [#460](https://github.com/thirdweb-dev/js/pull/460) [`a6c074c`](https://github.com/thirdweb-dev/js/commit/a6c074c3f33148cd17f5a66a58df9272a4381bab) Thanks [@adam-maj](https://github.com/adam-maj)! - All Auth hooks and configuration have been upgraded along with the major upgrade to Auth. This includes changes in necessary `authConfig` to the `ThirdwebProvider`, as well as usage of the `useLogin`, `useLogout`, and `useUser` hooks.
+
+  ## How to upgrade
+
+  In order to upgrade your frontend setup to account for these changes, you'll need to make the following changes to your app:
+
+  **1. Remove `loginRedirect` from `authConfig`**
+
+  In your `ThirdwebProvider`, you can remove the `loginRedirect` option from the `authConfig` object, as the `login` endpoint no longer uses redirects.
+
+  ```jsx
+  export default function MyApp({ Component, pageProps }) {
+    return (
+      <ThirdwebProvider
+        authConfig={{
+          domain: "example.com",
+          authUrl: "/api/auth",
+          // No more loginRedirect
+        }}
+      >
+        <Component {...pageProps} />
+      </ThirdwebProvider>
+    );
+  }
+  ```
+
+  **2. Update `useLogin` and `useLogout` to use object destructuring**
+
+  The `useLogin` and `useLogout` hooks now return an object with a `login` and `logout` function (as well as `isLoading` states), respectively. You'll need to update your usage of these hooks to use object destructuring.
+
+  ```jsx
+  import { useLogin, useLogout } from "@thirdweb-dev/react";
+
+  export default function Component() {
+    const { login } = useLogin();
+    const { logout } = useLogout();
+
+    return (
+      <div>
+        <button onClick={login}>Login</button>
+        <button onClick={logout}>Logout</button>
+      </div>
+    );
+  }
+  ```
+
+### Patch Changes
+
+- [#514](https://github.com/thirdweb-dev/js/pull/514) [`48893c7`](https://github.com/thirdweb-dev/js/commit/48893c730e565c962d117b1eca579e240dc6a5ec) Thanks [@jnsdls](https://github.com/jnsdls)! - switch to using the new `@thirdweb-dev/react-core` package to power `@thirdweb-dev/react`
+
+- [#493](https://github.com/thirdweb-dev/js/pull/493) [`f37e86b`](https://github.com/thirdweb-dev/js/commit/f37e86b7d21f7da0df6ab549cb903dc99db10a79) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Move solana dependencies to peer dependencies, please install them separately:
+
+  `npm install @thirdweb-dev/sdk @thirdweb-dev/react @metaplex-foundation/js @project-serum/anchor @solana/wallet-adapter-wallets`
+
+- [#512](https://github.com/thirdweb-dev/js/pull/512) [`065c4db`](https://github.com/thirdweb-dev/js/commit/065c4db41b08028d4ac6713cda57eed008e18e20) Thanks [@ikethirdweb](https://github.com/ikethirdweb)! - Updates useClaimedNFTs to only fetch claimed NFTs
+
+- Updated dependencies [[`48893c7`](https://github.com/thirdweb-dev/js/commit/48893c730e565c962d117b1eca579e240dc6a5ec), [`a6c074c`](https://github.com/thirdweb-dev/js/commit/a6c074c3f33148cd17f5a66a58df9272a4381bab), [`62b7388`](https://github.com/thirdweb-dev/js/commit/62b7388bb2f2564fff0c5e86f0a468db65992b4e)]:
+  - @thirdweb-dev/react-core@3.7.0
+
+## 3.6.11
+
+### Patch Changes
+
+- [#507](https://github.com/thirdweb-dev/js/pull/507) [`5047686`](https://github.com/thirdweb-dev/js/commit/5047686f2afbca4fa32b1bbb6bcf4419bd17cf8d) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Fix ConnectWallet network selector showing all options three times
+
+## 3.6.10
+
 ## 3.6.9
 
 ## 3.6.8

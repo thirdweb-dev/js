@@ -1,52 +1,54 @@
 {
   "name": "@thirdweb-dev/auth",
-  "version": "2.0.39",
+  "version": "3.0.2",
+  "main": "dist/thirdweb-dev-auth.cjs.js",
+  "module": "dist/thirdweb-dev-auth.esm.js",
   "exports": {
+    ".": {
+      "module": "./dist/thirdweb-dev-auth.esm.js",
+      "default": "./dist/thirdweb-dev-auth.cjs.js"
+    },
+    "./evm": {
+      "module": "./evm/dist/thirdweb-dev-auth-evm.esm.js",
+      "default": "./evm/dist/thirdweb-dev-auth-evm.cjs.js"
+    },
     "./next": {
       "module": "./next/dist/thirdweb-dev-auth-next.esm.js",
       "default": "./next/dist/thirdweb-dev-auth-next.cjs.js"
+    },
+    "./solana": {
+      "module": "./solana/dist/thirdweb-dev-auth-solana.esm.js",
+      "default": "./solana/dist/thirdweb-dev-auth-solana.cjs.js"
     },
     "./express": {
       "module": "./express/dist/thirdweb-dev-auth-express.esm.js",
       "default": "./express/dist/thirdweb-dev-auth-express.cjs.js"
     },
-    "./next/evm": {
-      "module": "./next/evm/dist/thirdweb-dev-auth-next-evm.esm.js",
-      "default": "./next/evm/dist/thirdweb-dev-auth-next-evm.cjs.js"
-    },
     "./next-auth": {
       "module": "./next-auth/dist/thirdweb-dev-auth-next-auth.esm.js",
       "default": "./next-auth/dist/thirdweb-dev-auth-next-auth.cjs.js"
-    },
-    "./next/solana": {
-      "module": "./next/solana/dist/thirdweb-dev-auth-next-solana.esm.js",
-      "default": "./next/solana/dist/thirdweb-dev-auth-next-solana.cjs.js"
     },
     "./package.json": "./package.json"
   },
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/auth",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
-  "files": [
-    "dist/**/*",
-    "next/**/*",
-    "express/**/*",
-    "next-auth/**/*"
-  ],
   "scripts": {
     "build": "preconstruct build",
     "format": "prettier --write 'src/**/*'",
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
-    "clean": "rm -rf dist/ && rm -rf node_modules/"
+    "clean": "rm -rf dist/ && rm -rf node_modules/",
+    "test": "mocha --config './test/.mocharc.json' --timeout 30000 --parallel './test/**/*.test.ts'"
   },
   "preconstruct": {
     "entrypoints": [
-      "next/index.ts",
-      "next/evm/index.ts",
-      "next/solana/index.ts",
+      "index.ts",
       "express/index.ts",
-      "next-auth/index.ts"
+      "next/index.ts",
+      "next-auth/index.ts",
+      "evm/index.ts",
+      "solana/index.ts"
     ],
     "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
       "exports": true
@@ -61,12 +63,21 @@
     "@microsoft/api-extractor": "^7.29.2",
     "@microsoft/tsdoc": "^0.14.1",
     "@preconstruct/cli": "^2.2.1",
+    "@solana/web3.js": "^1.73.0",
+    "@swc-node/register": "^1.5.4",
+    "@swc/core": "^1.3.23",
     "@thirdweb-dev/sdk": "*",
+    "@thirdweb-dev/wallets": "*",
+    "@types/bs58": "^4.0.1",
+    "@types/chai": "^4.3.4",
     "@types/cookie": "^0.5.1",
     "@types/cookie-parser": "^1.4.3",
     "@types/express": "^4.17.13",
+    "@types/mocha": "^10.0.1",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
+    "@wagmi/core": "^0.8.18",
+    "chai": "^4.3.7",
     "eslint": "^8.21.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.26.0",
@@ -75,6 +86,7 @@
     "eslint-plugin-tsdoc": "^0.2.16",
     "ethers": "^5.7.2",
     "express": "^4.18.1",
+    "mocha": "^10.2.0",
     "next": "^12.2.0",
     "next-auth": "^4.10.3",
     "prettier": "^2.7.1",
@@ -83,13 +95,36 @@
     "typescript": "^4.7.4"
   },
   "peerDependencies": {
+    "@noble/ed25519": "^1.7.1",
+    "@solana/web3.js": "^1.73.0",
     "@thirdweb-dev/sdk": "*",
+    "bs58": "^5.0.0",
+    "cookie-parser": "^1.4.6",
     "ethers": ">=5.5.1",
     "express": "^4.18.1",
     "next": "^12.2.0",
-    "next-auth": "^4.10.3"
+    "next-auth": "^4.10.3",
+    "tweetnacl": "^1.0.3"
   },
   "peerDependenciesMeta": {
+    "@noble/ed25519": {
+      "optional": true
+    },
+    "@solana/web3.js": {
+      "optional": true
+    },
+    "bs58": {
+      "optional": true
+    },
+    "cookie-parser": {
+      "optional": true
+    },
+    "tweetnacl": {
+      "optional": true
+    },
+    "ethers": {
+      "optional": true
+    },
     "express": {
       "optional": true
     },
@@ -102,6 +137,7 @@
   },
   "dependencies": {
     "cookie": "^0.5.0",
-    "cookie-parser": "^1.4.6"
+    "uuid": "^9.0.0",
+    "zod": "^3.20.2"
   }
 }

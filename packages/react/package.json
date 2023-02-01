@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react",
-  "version": "3.6.9",
+  "version": "3.7.2",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -54,7 +54,10 @@
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
     "generate-docs": "yarn generate-docs:evm && yarn generate-docs:solana && yarn generate-snippets",
-    "generate-docs:evm": "api-extractor run --local --config ./config/api-extractor-evm.json && api-documenter markdown -i ./temp -o ./docs/evm && rm -rf ./temp-evm && mv ./temp ./temp-evm",
+    "generate-docs:evm": "yarn generate-docs:evm:base && yarn generate-docs:evm:magic && yarn generate-docs:evm:gnosis-safe",
+    "generate-docs:evm:base": "api-extractor run --local --config ./config/api-extractor-evm.json && api-documenter markdown -i ./temp -o ./docs/evm && rm -rf ./temp-evm && mv ./temp ./temp-evm",
+    "generate-docs:evm:magic": "api-extractor run --local --config ./config/api-extractor-magic.json && api-documenter markdown -i ./temp -o ./docs/evm/magic && rm -rf ./temp-evm-magic && mv ./temp ./temp-evm-magic && mv ./docs/evm/magic/react.usemagic.md ./docs/evm/react.usemagic.md && rm -rf ./docs/evm/magic",
+    "generate-docs:evm:gnosis-safe": "api-extractor run --local --config ./config/api-extractor-gnosis.json && api-documenter markdown -i ./temp -o ./docs/evm/gnosis-safe && rm -rf ./temp-evm-gnosis-safe && mv ./temp ./temp-evm-gnosis-safe && mv ./docs/evm/gnosis-safe/react.usegnosis.md ./docs/evm/react.usegnosis.md && rm -rf ./docs/evm/gnosis-safe",
     "generate-docs:solana": "api-extractor run --local --config ./config/api-extractor-solana.json && api-documenter markdown -i ./temp -o ./docs/solana && rm -rf ./temp-solana && mv ./temp ./temp-solana",
     "generate-snippets": "node ./scripts/generate-snippets-evm.mjs && node ./scripts/generate-snippets-solana.mjs && node ./scripts/generate-feature-snippets-evm.mjs",
     "build": "tsc && preconstruct build",
@@ -72,9 +75,11 @@
     "@microsoft/tsdoc": "^0.14.1",
     "@preconstruct/cli": "^2.2.1",
     "@solana/wallet-adapter-base": "^0.9.17",
+    "@solana/wallet-adapter-phantom": "^0.9.17",
     "@solana/wallet-adapter-react": "^0.15.19",
     "@solana/wallet-adapter-wallets": "^0.19.0",
     "@solana/web3.js": "^1.62.0",
+    "@thirdweb-dev/auth": "*",
     "@thirdweb-dev/sdk": "*",
     "@types/color": "^3.0.3",
     "@types/mime": "^3.0.1",
@@ -99,10 +104,10 @@
     "@safe-global/safe-core-sdk": "^3.2.0",
     "@safe-global/safe-ethers-adapters": "0.1.0-alpha.13",
     "@safe-global/safe-ethers-lib": "^1.7.0",
-    "@solana/wallet-adapter-phantom": "^0.9.17",
     "@tanstack/react-query": "^4.0.10",
-    "@zag-js/menu": "^0.3.0",
-    "@zag-js/react": "^0.3.1",
+    "@thirdweb-dev/react-core": "*",
+    "@zag-js/menu": "0.3.4",
+    "@zag-js/react": "0.3.4",
     "buffer": "^6.0.3",
     "color": "^4.2.3",
     "copy-to-clipboard": "^3.3.2",
@@ -115,6 +120,7 @@
   },
   "peerDependencies": {
     "@solana/wallet-adapter-base": "^0.9.17",
+    "@solana/wallet-adapter-phantom": "^0.9.17",
     "@solana/wallet-adapter-react": "^0.15.19",
     "@solana/wallet-adapter-wallets": "^0.19.0",
     "@solana/web3.js": "^1.62.0",
@@ -134,6 +140,9 @@
       "optional": true
     },
     "@solana/wallet-adapter-wallets": {
+      "optional": true
+    },
+    "@solana/wallet-adapter-phantom": {
       "optional": true
     },
     "@solana/web3.js": {

@@ -1,3 +1,4 @@
+import { NFTMetadata, NFTMetadataInput } from "../../src/core/schema/nft";
 import {
   ClaimEligibility,
   EditionDrop,
@@ -49,7 +50,7 @@ describe("Edition Drop Contract (V2)", async () => {
         platform_fee_basis_points: 10,
         platform_fee_recipient: adminWallet.address,
       },
-      2,
+      "2",
     );
     bdContract = await sdk.getEditionDrop(address);
   });
@@ -60,10 +61,25 @@ describe("Edition Drop Contract (V2)", async () => {
       "mock://12398172398172389/0",
     ]);
     expect(parseFloat(cost)).gt(0);
+
+    await bdContract.createBatch([{ name: `test$`, description: `desc` }]);
+    await bdContract.claimConditions.set(0, [
+      {
+        price: 0.1,
+      },
+    ]);
+    const claimTx = await bdContract.getClaimTransaction(
+      adminWallet.address,
+      0,
+      1,
+    );
+    const cost2 = await claimTx.estimateGasCostInEther();
+    console.log("cost2", cost2);
+    expect(parseFloat(cost2)).gt(0);
   });
 
   it("comprehensive test", async () => {
-    const metadata = [];
+    const metadata: NFTMetadataInput[] = [];
     for (let i = 0; i < 3; i++) {
       metadata.push({ name: `test${i}`, description: `desc${i}` });
     }

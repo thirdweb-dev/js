@@ -1,5 +1,72 @@
 # @thirdweb-dev/sdk
 
+## 3.7.2
+
+### Patch Changes
+
+- [#525](https://github.com/thirdweb-dev/js/pull/525) [`19b8e18`](https://github.com/thirdweb-dev/js/commit/19b8e18b6bf68e374c817fefbf2fd29ac5573052) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix `getClaimTransaction().estimateGasCostInEther()` for claims costing native currency
+
+## 3.7.1
+
+## 3.7.0
+
+### Minor Changes
+
+- [#519](https://github.com/thirdweb-dev/js/pull/519) [`f15733f`](https://github.com/thirdweb-dev/js/commit/f15733f34c5985eec5593b3d9196e5528ba96443) Thanks [@adam-maj](https://github.com/adam-maj)! - The `sdk.auth` namespace has been removed with Auth major upgrade. Instead, use the `ThirdwebAuth` import from the `@thirdweb-dev/auth` package.
+
+  ```js
+  import { PrivateKeyWallet } from "@thirdweb-dev/auth/evm";
+
+  // Pass in domain and wallet to the constructor
+  const wallet = new PrivateKeyWallet("0x...");
+  const auth = new ThirdwebAuth(wallet, "example.com");
+
+  // Auth functions no longer require domain to be passed in
+  const payload = await auth.login();
+  ```
+
+  Additionally, `AwsKmsWallet` and `AwsSecretsManager` wallets have been moved into the `@thirdweb-dev/wallets/evm` entrypoint from the SDK.
+
+  ```js
+  import {
+    AwsKmsWallet,
+    AwsSecretsManagerWallet,
+  } from "@thirdweb-dev/wallets/evm";
+  ```
+
+### Patch Changes
+
+- [#493](https://github.com/thirdweb-dev/js/pull/493) [`f37e86b`](https://github.com/thirdweb-dev/js/commit/f37e86b7d21f7da0df6ab549cb903dc99db10a79) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Move Solana dependencies to peer dependencies - please install them separately:
+
+  `npm install @thirdweb-dev/sdk @metaplex-foundation/js @project-serum/anchor`
+
+## 3.6.11
+
+### Patch Changes
+
+- [#475](https://github.com/thirdweb-dev/js/pull/475) [`7cab8d1`](https://github.com/thirdweb-dev/js/commit/7cab8d1679f8d007091aa03adb83add3822a504a) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Support for Plugin Pattern based contracts
+
+## 3.6.10
+
+### Patch Changes
+
+- [#498](https://github.com/thirdweb-dev/js/pull/498) [`5fba324`](https://github.com/thirdweb-dev/js/commit/5fba324ac17ab02bc8f13d82a232bc5c6970c8e5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix claim condition detection on legacy contracts
+
+- [#502](https://github.com/thirdweb-dev/js/pull/502) [`894cbef`](https://github.com/thirdweb-dev/js/commit/894cbefc6361f23fc528a6c6819f5c71793d46e4) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add intermediate event for contract deploy transactions before confirmation
+
+- [#463](https://github.com/thirdweb-dev/js/pull/463) [`557429b`](https://github.com/thirdweb-dev/js/commit/557429b5cfb3af2983ee01cf7d12d41ee0557593) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - PackVRF integration
+
+- [#500](https://github.com/thirdweb-dev/js/pull/500) [`73dc026`](https://github.com/thirdweb-dev/js/commit/73dc026ff9d0ac9099bd5a9a9cab8fdbfc0ae723) Thanks [@retocrooman](https://github.com/retocrooman)! - Getting the domain separator is not a required function. If an error occurs there, the permit it self will not be possible. Therefore, error handling should be performed appropriately.
+
+- [#311](https://github.com/thirdweb-dev/js/pull/311) [`9eaa21d`](https://github.com/thirdweb-dev/js/commit/9eaa21d09ab9c700aea61a2a25f8ca9859d20857) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add support for multi chain registry
+
+- [#491](https://github.com/thirdweb-dev/js/pull/491) [`68c8e3c`](https://github.com/thirdweb-dev/js/commit/68c8e3c4d79f5d56dc4414241bcca0d88285fcca) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Use multichain registry to resolve contracts that cannot be resolved via IPFS
+
+- [#494](https://github.com/thirdweb-dev/js/pull/494) [`bff433e`](https://github.com/thirdweb-dev/js/commit/bff433e12150dc029e33a578219c8437a510da99) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix deploy transaction listener for all deploy types `sdk.deployer.addDeployListener()`
+
+- Updated dependencies [[`557429b`](https://github.com/thirdweb-dev/js/commit/557429b5cfb3af2983ee01cf7d12d41ee0557593), [`9eaa21d`](https://github.com/thirdweb-dev/js/commit/9eaa21d09ab9c700aea61a2a25f8ca9859d20857), [`9eaa21d`](https://github.com/thirdweb-dev/js/commit/9eaa21d09ab9c700aea61a2a25f8ca9859d20857)]:
+  - @thirdweb-dev/contracts-js@1.2.3
+
 ## 3.6.9
 
 ### Patch Changes
