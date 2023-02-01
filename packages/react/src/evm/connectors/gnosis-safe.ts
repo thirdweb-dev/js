@@ -113,11 +113,31 @@ export class GnosisSafeConnector extends Connector {
       safeAddress,
     });
     const service = new safeEthersAdapters.SafeService(serverUrl);
-    return new safeEthersAdapters.SafeEthersSigner(
+    const safeSigner = new safeEthersAdapters.SafeEthersSigner(
       safe as any,
       service,
       signer.provider,
     );
+
+    // See this test for more details:
+    // https://github.com/safe-global/safe-contracts/blob/9d188d3ef514fb7391466a6b5f010db4cc0f3c8b/test/handlers/CompatibilityFallbackHandler.spec.ts#L86-L94
+    safeSigner.signMessage = async (message: string | ethers.utils.Bytes) => {
+      const EIP712_SAFE_MESSAGE_TYPE = {
+        SafeMessage: [{ type: "bytes", name: "message" }],
+      };
+
+      const encodedMessage = ethers.utils._TypedDataEncoder.hash(
+        { verifyingContract: safeAddress, chainId: await this.getChainId() },
+        EIP712_SAFE_MESSAGE_TYPE,
+        { message: ethers.utils.hashMessage(message) },
+      );
+
+      const safeMessage = ethers.utils.arrayify(encodedMessage);
+      const signature = await signer.signMessage(safeMessage);
+      return signature.replace(/1b$/, "1f").replace(/1c$/, "20");
+    };
+
+    return safeSigner;
   }
 
   async disconnect(): Promise<void> {

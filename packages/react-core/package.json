@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-core",
-  "version": "0.0.0",
+  "version": "3.7.2",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-core",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -80,10 +80,11 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^4.0.10",
-    "buffer": "^6.0.3",
-    "tiny-invariant": "^1.2.0"
+    "tiny-invariant": "^1.2.0",
+    "@thirdweb-dev/auth": "*"
   },
   "peerDependencies": {
+    "@solana/wallet-adapter-react": "^0.15.19",
     "@solana/web3.js": "^1.62.0",
     "@thirdweb-dev/sdk": "*",
     "ethers": ">=5.5.1",
@@ -95,6 +96,9 @@
   },
   "peerDependenciesMeta": {
     "@solana/web3.js": {
+      "optional": true
+    },
+    "@solana/wallet-adapter-react": {
       "optional": true
     }
   }

@@ -1,5 +1,45 @@
 # @thirdweb-dev/sdk
 
+## 3.7.2
+
+### Patch Changes
+
+- [#525](https://github.com/thirdweb-dev/js/pull/525) [`19b8e18`](https://github.com/thirdweb-dev/js/commit/19b8e18b6bf68e374c817fefbf2fd29ac5573052) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix `getClaimTransaction().estimateGasCostInEther()` for claims costing native currency
+
+## 3.7.1
+
+## 3.7.0
+
+### Minor Changes
+
+- [#519](https://github.com/thirdweb-dev/js/pull/519) [`f15733f`](https://github.com/thirdweb-dev/js/commit/f15733f34c5985eec5593b3d9196e5528ba96443) Thanks [@adam-maj](https://github.com/adam-maj)! - The `sdk.auth` namespace has been removed with Auth major upgrade. Instead, use the `ThirdwebAuth` import from the `@thirdweb-dev/auth` package.
+
+  ```js
+  import { PrivateKeyWallet } from "@thirdweb-dev/auth/evm";
+
+  // Pass in domain and wallet to the constructor
+  const wallet = new PrivateKeyWallet("0x...");
+  const auth = new ThirdwebAuth(wallet, "example.com");
+
+  // Auth functions no longer require domain to be passed in
+  const payload = await auth.login();
+  ```
+
+  Additionally, `AwsKmsWallet` and `AwsSecretsManager` wallets have been moved into the `@thirdweb-dev/wallets/evm` entrypoint from the SDK.
+
+  ```js
+  import {
+    AwsKmsWallet,
+    AwsSecretsManagerWallet,
+  } from "@thirdweb-dev/wallets/evm";
+  ```
+
+### Patch Changes
+
+- [#493](https://github.com/thirdweb-dev/js/pull/493) [`f37e86b`](https://github.com/thirdweb-dev/js/commit/f37e86b7d21f7da0df6ab549cb903dc99db10a79) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Move Solana dependencies to peer dependencies - please install them separately:
+
+  `npm install @thirdweb-dev/sdk @metaplex-foundation/js @project-serum/anchor`
+
 ## 3.6.11
 
 ### Patch Changes

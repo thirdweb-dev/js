@@ -53,6 +53,9 @@ const main = async () => {
     .option("--cra", "Initialize as a Create React App project.")
     .option("--next", "Initialize as a Next.js project.")
     .option("--vite", "Initialize as a Vite project.")
+    .option("--reactNative", "Initialize as a React Native project.")
+    .option("--express", "Initialize as a Express project.")
+    .option("--node", "Initialize as a Node project.")
     .option(
       "--use-npm",
       "Explicitly tell the CLI to bootstrap the app using npm",

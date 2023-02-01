@@ -6,14 +6,16 @@ import { RequiredParam } from "../../core/query-utils/required-param";
 import { ComponentWithChildren } from "../../core/types/component";
 import {
   ThirdwebAuthConfig,
-  ThirdwebAuthConfigProvider,
+  ThirdwebAuthProvider,
 } from "../contexts/thirdweb-auth";
+import type { WalletContextState } from "@solana/wallet-adapter-react";
 import { Network, ThirdwebSDK } from "@thirdweb-dev/sdk/solana";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import invariant from "tiny-invariant";
 
 interface ThirdwebSDKProviderProps extends QueryClientProviderProps {
   network: RequiredParam<Network>;
+  wallet?: WalletContextState;
   authConfig?: ThirdwebAuthConfig;
 }
 
@@ -36,12 +38,15 @@ interface ThirdwebSDKProviderProps extends QueryClientProviderProps {
  */
 export const ThirdwebSDKProvider: ComponentWithChildren<
   ThirdwebSDKProviderProps
-> = ({ children, network, queryClient, authConfig }) => {
+> = ({ children, network, queryClient, wallet, authConfig }) => {
   const [sdk, setSDK] = useState<ThirdwebSDK | null>(null);
 
   useEffect(() => {
     if (network) {
       const _sdk = ThirdwebSDK.fromNetwork(network);
+      if (wallet && wallet.publicKey) {
+        _sdk.wallet.connect(wallet);
+      }
       (_sdk as any)._network = network;
       setSDK(_sdk);
     } else {
@@ -50,6 +55,18 @@ export const ThirdwebSDKProvider: ComponentWithChildren<
     // disabled wallet on purpose because we handle that below
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [network]);
+
+  useEffect(() => {
+    if (
+      wallet &&
+      wallet.publicKey &&
+      sdk &&
+      (sdk as any)._network === network
+    ) {
+      sdk.wallet.connect(wallet);
+      return;
+    }
+  }, [network, sdk, wallet]);
 
   const ctxValue = useMemo(
     () =>
@@ -61,13 +78,21 @@ export const ThirdwebSDKProvider: ComponentWithChildren<
     [sdk, network],
   );
 
+  const authConfigValue = useMemo(() => {
+    if (!authConfig) {
+      return undefined;
+    }
+
+    return { ...authConfig, sdk: sdk || undefined };
+  }, [authConfig, sdk]);
+
   return (
     <QueryClientProviderWithDefault queryClient={queryClient}>
-      <ThirdwebAuthConfigProvider value={authConfig}>
+      <ThirdwebAuthProvider value={authConfigValue}>
         <ThirdwebSDKContext.Provider value={ctxValue}>
           {children}
         </ThirdwebSDKContext.Provider>
-      </ThirdwebAuthConfigProvider>
+      </ThirdwebAuthProvider>
     </QueryClientProviderWithDefault>
   );
 };

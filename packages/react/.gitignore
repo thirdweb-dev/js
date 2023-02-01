@@ -9,4 +9,6 @@ etc/
 temp/
 temp-evm/
 temp-solana/
+temp-evm-gnosis-safe/
+temp-evm-magic/
 docs/

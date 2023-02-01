@@ -1,18 +1,17 @@
-import { useContract } from "../../hooks/async/contracts";
-import { useNetworkMismatch } from "../../hooks/useNetworkMismatch";
 import { useNetwork } from "../../hooks/wagmi-required/useNetwork";
-import { useAddress, useChainId } from "../../hooks/wallet";
-import { useSDKChainId } from "../../providers/base";
-import {
-  createCacheKeyWithNetwork,
-  createContractCacheKey,
-} from "../../utils/cache-keys";
 import { ConnectWallet } from "../ConnectWallet";
 import { Button } from "../shared/Button";
 import { ThemeProvider, ThemeProviderProps } from "../shared/ThemeProvider";
 import { FiWifi } from "@react-icons/all-files/fi/FiWifi";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { SmartContract } from "@thirdweb-dev/sdk/dist/declarations/src/evm/contracts/smart-contract";
+import { useMutation } from "@tanstack/react-query";
+import {
+  useSDKChainId,
+  useContract,
+  useNetworkMismatch,
+  useAddress,
+  useChainId,
+} from "@thirdweb-dev/react-core/evm";
+import type { SmartContract } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface } from "ethers";
 import { PropsWithChildren, useMemo } from "react";
 import invariant from "tiny-invariant";
@@ -76,8 +75,6 @@ export const Web3Button = <TAction extends ActionFn>({
   const sdkChainId = useSDKChainId();
   const [, switchNetwork] = useNetwork();
 
-  const queryClient = useQueryClient();
-
   const hasMismatch = useNetworkMismatch();
 
   const switchToChainId = useMemo(() => {
@@ -89,6 +86,7 @@ export const Web3Button = <TAction extends ActionFn>({
 
   const { contract } = useContract(contractAddress, contractAbi || "custom");
 
+  // TODO move all of this logic to react-core, it's pure logic
   const mutation = useMutation(
     async () => {
       if (switchToChainId) {
@@ -123,13 +121,14 @@ export const Web3Button = <TAction extends ActionFn>({
           onError(err as Error);
         }
       },
-      onSettled: () =>
-        queryClient.invalidateQueries(
-          createCacheKeyWithNetwork(
-            createContractCacheKey(contractAddress),
-            sdkChainId,
-          ),
-        ),
+      // TODO bring back invalidation
+      // onSettled: () =>
+      //   queryClient.invalidateQueries(
+      //     createCacheKeyWithNetwork(
+      //       createContractCacheKey(contractAddress),
+      //       sdkChainId,
+      //     ),
+      //   ),
     },
   );
   if (!address) {

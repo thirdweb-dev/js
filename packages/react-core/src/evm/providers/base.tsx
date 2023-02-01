@@ -6,7 +6,7 @@ import { RequiredParam } from "../../core/query-utils/required-param";
 import { ComponentWithChildren } from "../../core/types/component";
 import {
   ThirdwebAuthConfig,
-  ThirdwebAuthConfigProvider,
+  ThirdwebAuthProvider,
 } from "../contexts/thirdweb-auth";
 import {
   ThirdwebConnectedWalletProvider,
@@ -102,11 +102,11 @@ export const WrappedThirdwebSDKProvider: ComponentWithChildren<
 
   return (
     <QueryClientProviderWithDefault queryClient={queryClient}>
-      <ThirdwebAuthConfigProvider value={authConfig}>
+      <ThirdwebAuthProvider value={authConfig}>
         <ThirdwebSDKContext.Provider value={ctxValue}>
           {children}
         </ThirdwebSDKContext.Provider>
-      </ThirdwebAuthConfigProvider>
+      </ThirdwebAuthProvider>
     </QueryClientProviderWithDefault>
   );
 };

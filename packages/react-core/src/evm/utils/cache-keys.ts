@@ -181,6 +181,14 @@ export const cacheKeys = {
             contractAddress,
             params ? ["getAllUnclaimed", params] : ["getAllUnclaimed"],
           ),
+        getAllClaimed: (
+          contractAddress: RequiredParam<ContractAddress>,
+          params?: QueryAllParams,
+        ) =>
+          createContractCacheKey(
+            contractAddress,
+            params ? ["getAllClaimed", params] : ["getAllClaimed"],
+          ),
         totalUnclaimedSupply: (
           contractAddress: RequiredParam<ContractAddress>,
         ) => createContractCacheKey(contractAddress, ["totalUnclaimedSupply"]),
