@@ -37,7 +37,7 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
 }) => {
   if (onlyFunctions) {
     return (
-      <Card as={Flex} flexDir="column" gap={2}>
+      <Card as={Flex} height="36rem" flexDir="column" gap={2}>
         {functions && functions.length > 0 && (
           <ContractFunctionsPanel fnsOrEvents={functions} contract={contract} />
         )}
@@ -46,7 +46,7 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
   }
 
   return (
-    <Card as={Flex} flexDir="column" gap={2} p={0}>
+    <Card as={Flex} height="36rem" flexDir="column" gap={2} p={0}>
       <Tabs isLazy lazyBehavior="keepMounted">
         <TabList px={0} borderBottomColor="borderColor" borderBottomWidth="1px">
           {functions && functions.length > 0 ? (

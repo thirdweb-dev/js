@@ -3,6 +3,7 @@ import { Flex } from "@chakra-ui/react";
 import { useContract, useContractType } from "@thirdweb-dev/react";
 import { Abi } from "@thirdweb-dev/sdk";
 import { ContractCode } from "components/contract-tabs/code/ContractCode";
+import { useEffect } from "react";
 
 interface ContractCodePageProps {
   contractAddress?: string;
@@ -15,6 +16,10 @@ export const ContractCodePage: React.FC<ContractCodePageProps> = ({
   const { data: contractType, isLoading } = useContractType(contractAddress);
 
   const useCustomCodeTab = contractType === "custom";
+
+  useEffect(() => {
+    window?.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
 
   if (contractQuery.isLoading || isLoading) {
     // TODO build a skeleton for this

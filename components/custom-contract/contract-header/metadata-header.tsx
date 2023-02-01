@@ -1,6 +1,5 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { Flex, Image, Skeleton } from "@chakra-ui/react";
-import { ContractBadge } from "components/badges/contract-badge";
 import { NextSeo } from "next-seo";
 import { StaticImageData } from "next/image";
 import { useRouter } from "next/router";
@@ -123,11 +122,7 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
               {isLoaded ? data?.description : ""}
             </Text>
           </Skeleton>
-
-          <Flex gap={2} direction="row">
-            <AddressCopyButton size="xs" address={address} />
-            {address && <ContractBadge address={address} />}
-          </Flex>
+          <AddressCopyButton size="xs" address={address} />
         </Flex>
       </Flex>
     </>
