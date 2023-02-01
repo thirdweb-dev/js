@@ -37,7 +37,7 @@ export const FormComponent: React.FC<IFormComponentProps> = ({
         label: "attempt",
       });
 
-      const connection = new Connection("https://api.testnet.solana.com");
+      const connection = new Connection("https://api.devnet.solana.com");
       return await connection.requestAirdrop(
         publicKey,
         Number(LAMPORTS_PER_SOL),
