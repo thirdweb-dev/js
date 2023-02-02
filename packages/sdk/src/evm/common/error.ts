@@ -268,10 +268,13 @@ export type FunctionInfo = {
  * @public
  */
 export class TransactionError extends Error {
+  #reason: string;
+
   constructor(
     reason: string,
     from: string,
     to: string,
+    method: string,
     data: string,
     network: providers.Network,
     rpcUrl: string,
@@ -298,7 +301,11 @@ export class TransactionError extends Error {
           }`,
         );
       }
+    } else {
+      errorMessage += withSpaces("function", method);
     }
+
+    errorMessage += withSpaces(`data`, `${data}`);
 
     try {
       const url = new URL(rpcUrl);
@@ -312,6 +319,12 @@ export class TransactionError extends Error {
     errorMessage += `\n\n`;
 
     super(errorMessage);
+
+    this.#reason = reason;
+  }
+
+  get reason(): string {
+    return this.#reason;
   }
 }
 
@@ -371,6 +384,8 @@ export async function convertToTWError(
   contractAddress: string,
   contractInterface: ethers.utils.Interface,
 ): Promise<TransactionError> {
+  console.log(error.message);
+
   let raw: string;
   if (typeof error === "object") {
     // metamask errors comes as objects, apply parsing on data object
@@ -395,6 +410,7 @@ export async function convertToTWError(
     }
   }
 
+  const method = parseMessageParts(/.*?"method[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
   const data = parseMessageParts(/.*?"data[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
   const rpcUrl = parseMessageParts(/.*?"url[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
   let from = parseMessageParts(/.*?"from[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
@@ -417,6 +433,7 @@ export async function convertToTWError(
     reason,
     from,
     to,
+    method,
     data,
     network,
     rpcUrl,
