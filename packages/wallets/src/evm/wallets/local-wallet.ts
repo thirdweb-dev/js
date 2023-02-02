@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 
 interface IWalletStorage {
   getPrivateKey(): Promise<string | null | undefined>;
-  storePrivateKey(pkey: string): Promise<void>;
+  storePrivateKey(address: string, pkey: string): Promise<void>;
 }
 
 interface IStorage {
@@ -29,19 +29,17 @@ class LocalWalletInternal extends AbstractWallet {
     return new ethers.Wallet(await this.getOrCreatePrivateKey(), provider);
   }
 
-  async export() {
+  async export(password: string): Promise<string> {
     const wallet = (await this.getSigner()) as ethers.Wallet;
-    return {
-      memonic: wallet.mnemonic,
-      prvateKey: wallet.privateKey,
-    };
+    return wallet.encrypt(password);
   }
 
   private async getOrCreatePrivateKey(): Promise<string> {
     let pkey = await this.options.storage.getPrivateKey();
     if (!pkey) {
-      pkey = ethers.Wallet.createRandom().privateKey;
-      await this.options.storage.storePrivateKey(pkey);
+      const w = ethers.Wallet.createRandom();
+      pkey = w.privateKey;
+      await this.options.storage.storePrivateKey(w.address, pkey);
     }
     return pkey;
   }
@@ -63,6 +61,43 @@ class BrowserStorage implements IWalletStorage {
   }
 }
 
+class CredentialsStorage implements IWalletStorage {
+  private container: CredentialsContainer;
+  constructor(container: CredentialsContainer) {
+    this.container = container;
+  }
+
+  async getPrivateKey(): Promise<string | null | undefined> {
+    const credential = await this.container.get({
+      password: true,
+      unmediated: true,
+    } as CredentialRequestOptions);
+    console.log(credential);
+    if (credential && "password" in credential) {
+      return credential.password as string;
+    }
+    return null;
+  }
+
+  async storePrivateKey(address: string, pkey: string): Promise<void> {
+    if ("PasswordCredential" in window) {
+      let credentialData = {
+        id: address,
+        password: pkey,
+      };
+      const credential = await this.container.create({
+        password: credentialData,
+      } as CredentialCreationOptions);
+      if (!credential) {
+        throw new Error("Credential not created");
+      }
+      await this.container.store(credential);
+    } else {
+      throw new Error("PasswordCredential not supported");
+    }
+  }
+}
+
 export class LocalWallet {
   static async fromBrowserStorage() {
     return new LocalWalletInternal({
@@ -74,6 +109,12 @@ export class LocalWallet {
     const storage = await import("encrypt-storage");
     return new LocalWalletInternal({
       storage: new BrowserStorage(new storage.EncryptStorage(secretKey)),
+    });
+  }
+
+  static async fromCredentialStore() {
+    return new LocalWalletInternal({
+      storage: new CredentialsStorage(navigator.credentials),
     });
   }
 }

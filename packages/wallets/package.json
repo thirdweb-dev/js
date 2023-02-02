@@ -60,6 +60,10 @@
       "module": "./evm/wallets/private-key/dist/thirdweb-dev-wallets-evm-wallets-private-key.esm.js",
       "default": "./evm/wallets/private-key/dist/thirdweb-dev-wallets-evm-wallets-private-key.cjs.js"
     },
+    "./evm/wallets/local-wallet": {
+      "module": "./evm/wallets/local-wallet/dist/thirdweb-dev-wallets-evm-wallets-local-wallet.esm.js",
+      "default": "./evm/wallets/local-wallet/dist/thirdweb-dev-wallets-evm-wallets-local-wallet.cjs.js"
+    },
     "./evm/connectors/magic": {
       "module": "./evm/connectors/magic/dist/thirdweb-dev-wallets-evm-connectors-magic.esm.js",
       "default": "./evm/connectors/magic/dist/thirdweb-dev-wallets-evm-connectors-magic.cjs.js"
@@ -125,6 +129,7 @@
   },
   "sideEffects": false,
   "dependencies": {
+    "encrypt-storage": "^2.12.14",
     "eventemitter3": "^5.0.0",
     "localforage": "^1.10.0"
   },
@@ -212,6 +217,7 @@
     "lint": "eslint src/",
     "fix": "eslint src/ --fix",
     "clean": "rm -rf dist/",
-    "build": "tsc && preconstruct build"
+    "build": "tsc && preconstruct build",
+    "push": "yalc push"
   }
 }
