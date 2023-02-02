@@ -82,8 +82,12 @@ const main = async () => {
           const versionInfo = await notifier.fetchInfo();
           versionSpinner.stop();
 
-          // Set cache to prevent checking for updates again for 24 hours
-          cache.set("last-version-check", new Date().toISOString());
+          try {
+            // Set cache to prevent checking for updates again for 24 hours
+            cache.set("last-version-check", new Date().toISOString());
+          } catch {
+            // no-op
+          }
 
           if (versionInfo.type !== "latest") {
             const res = await prompts({
