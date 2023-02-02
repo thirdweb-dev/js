@@ -1,5 +1,12 @@
 # @thirdweb-dev/react-core
 
+## 3.7.3
+
+### Patch Changes
+
+- Updated dependencies [[`dee4596`](https://github.com/thirdweb-dev/js/commit/dee45965496d5d0298944031dd13a4345f9e1683)]:
+  - @thirdweb-dev/auth@3.0.3
+
 ## 3.7.2
 
 ### Patch Changes

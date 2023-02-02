@@ -1,5 +1,14 @@
 # thirdweb
 
+## 0.9.14
+
+### Patch Changes
+
+- [#528](https://github.com/thirdweb-dev/js/pull/528) [`ab1f8bb`](https://github.com/thirdweb-dev/js/commit/ab1f8bb6f658dadbca2cb53decbc893050217407) Thanks [@adam-maj](https://github.com/adam-maj)! - Added --skip-update-check flag to CLI to prevent checking for new versions and automatically updating before running commands. Also, only check for check for updates every 24 hours.
+
+- Updated dependencies [[`b45d761`](https://github.com/thirdweb-dev/js/commit/b45d761f8f2695b48312ec6eff15e0549e6a8a41), [`5f8ec45`](https://github.com/thirdweb-dev/js/commit/5f8ec45af7c81d075a84846098f38cad90d03fb9), [`04de5b2`](https://github.com/thirdweb-dev/js/commit/04de5b278362573991140c3a496de7451e5c770d)]:
+  - @thirdweb-dev/sdk@3.7.3
+
 ## 0.9.13
 
 ### Patch Changes
