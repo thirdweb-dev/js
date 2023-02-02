@@ -40,6 +40,11 @@ describe("NFTCollection", async () => {
     expect(all[0].metadata.name).to.eq("Test NFT");
   });
 
+  it("should fetch transactions", async () => {
+    const txns = await collection.getTransactions();
+    expect(txns.length).to.eq(2);
+  });
+
   it("should fetch balance of NFTs", async () => {
     const all = await collection.getAll();
     const balance = await collection.balanceOf(
