@@ -115,6 +115,14 @@ export function useContractRouteConfig(
         ),
     },
     {
+      title: "Explorer",
+      path: "explorer",
+      element: () =>
+        import("../tabs/explorer/page").then(({ ContractExplorerPage }) => (
+          <ContractExplorerPage contractAddress={contractAddress} />
+        )),
+    },
+    {
       title: "Events",
       path: "events",
       element: () =>

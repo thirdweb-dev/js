@@ -201,16 +201,6 @@ export const CustomContractOverviewPage: React.FC<
       <GridItem as={Flex} colSpan={{ xl: 3 }} direction="column" gap={16}>
         <LatestEvents contractAddress={contractAddress} />
         <BuildYourApp />
-        <Flex direction="column" gap={6}>
-          <Heading size="title.sm">Contract Explorer</Heading>
-          <Skeleton height="36rem" isLoaded={!!contract}>
-            <ContractFunctionsOverview
-              onlyFunctions
-              functions={functions}
-              contract={contract}
-            />
-          </Skeleton>
-        </Flex>
         <ShareContract address={contractAddress} />
       </GridItem>
       <GridItem as={Flex} direction="column" gap={6}>

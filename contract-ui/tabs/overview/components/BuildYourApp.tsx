@@ -1,4 +1,3 @@
-import { ChakraNextImage as Image } from "../../../../components/Image";
 import {
   Flex,
   GridItem,
@@ -6,6 +5,7 @@ import {
   LinkOverlay,
   SimpleGrid,
 } from "@chakra-ui/react";
+import { ChakraNextImage as Image } from "components/Image";
 import { PRODUCTS } from "components/product-pages/common/nav/DesktopMenu";
 import { Card, Heading, Link, Text } from "tw-components";
 

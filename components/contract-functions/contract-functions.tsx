@@ -16,7 +16,7 @@ import type {
 import { SourcesPanel } from "components/contract-components/shared/sources-panel";
 import { SourceFile } from "components/contract-components/types";
 import { CodeOverview } from "contract-ui/tabs/code/components/code-overview";
-import { Card, Heading } from "tw-components";
+import { Heading } from "tw-components";
 
 interface ContractFunctionsOverview {
   functions?: AbiFunction[] | null;
@@ -37,50 +37,50 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
 }) => {
   if (onlyFunctions) {
     return (
-      <Card as={Flex} height="36rem" flexDir="column" gap={2}>
+      <Flex height="100%" flexDir="column" gap={2}>
         {functions && functions.length > 0 && (
           <ContractFunctionsPanel fnsOrEvents={functions} contract={contract} />
         )}
-      </Card>
+      </Flex>
     );
   }
 
   return (
-    <Card as={Flex} height="36rem" flexDir="column" gap={2} p={0}>
+    <Flex flexDir="column" gap={2} w="100%">
       <Tabs isLazy lazyBehavior="keepMounted">
         <TabList px={0} borderBottomColor="borderColor" borderBottomWidth="1px">
           {functions && functions.length > 0 ? (
-            <Tab gap={2}>
+            <Tab>
               <Heading color="inherit" my={1} size="label.lg">
                 Functions
               </Heading>
             </Tab>
           ) : null}
           {events?.length ? (
-            <Tab gap={2}>
+            <Tab>
               <Heading color="inherit" my={1} size="label.lg">
                 Events
               </Heading>
             </Tab>
           ) : null}
           {abi && (
-            <Tab gap={2}>
+            <Tab>
               <Heading color="inherit" my={1} size="label.lg">
                 Code
               </Heading>
             </Tab>
           )}
           {sources && sources?.length > 0 && (
-            <Tab gap={2}>
+            <Tab>
               <Heading color="inherit" my={1} size="label.lg">
                 Sources
               </Heading>
             </Tab>
           )}
         </TabList>
-        <TabPanels px={{ base: 2, md: 6 }} py={2}>
+        <TabPanels py={2}>
           {functions && functions.length > 0 ? (
-            <TabPanel px={0}>
+            <TabPanel h="40rem">
               <ContractFunctionsPanel
                 fnsOrEvents={functions}
                 contract={contract}
@@ -88,7 +88,7 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
             </TabPanel>
           ) : null}
           {events && events?.length > 0 ? (
-            <TabPanel px={0}>
+            <TabPanel>
               <ContractFunctionsPanel
                 fnsOrEvents={events}
                 contract={contract}
@@ -96,19 +96,19 @@ export const ContractFunctionsOverview: React.FC<ContractFunctionsOverview> = ({
             </TabPanel>
           ) : null}
           {abi && (
-            <TabPanel px={0}>
+            <TabPanel>
               <Flex direction="column" gap={6}>
                 <CodeOverview abi={abi} />
               </Flex>
             </TabPanel>
           )}
           {(sources || abi) && (
-            <TabPanel px={0}>
+            <TabPanel>
               <SourcesPanel sources={sources} abi={abi} />
             </TabPanel>
           )}
         </TabPanels>
       </Tabs>
-    </Card>
+    </Flex>
   );
 };

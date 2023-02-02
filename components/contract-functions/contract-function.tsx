@@ -1,5 +1,6 @@
 import { InteractiveAbiFunction } from "./interactive-abi-function";
 import {
+  Box,
   Divider,
   Flex,
   GridItem,
@@ -7,7 +8,12 @@ import {
   List,
   ListItem,
   SimpleGrid,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
   Table,
+  Tabs,
   Tbody,
   Td,
   Th,
@@ -165,68 +171,86 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
   >(fnsOrEvents[0]);
 
   return (
-    <SimpleGrid height="100%" columns={12}>
+    <SimpleGrid height="100%" columns={12} gap={3}>
       <GridItem
+        as={Card}
+        px={0}
+        pt={0}
         height="100%"
         overflow="auto"
-        colSpan={{ base: 12, md: 3 }}
-        borderRightWidth={{ base: "0px", md: "1px" }}
-        borderBottomWidth={{ base: "1px", md: "0px" }}
-        borderColor="borderColor"
+        colSpan={{ base: 12, md: 4 }}
+        overflowY="auto"
       >
-        <List
-          pr={{ base: 0, md: 3 }}
-          mb={{ base: 3, md: 0 }}
-          overflowX="hidden"
-        >
-          {writeFunctions.length ? (
-            <Flex mt={3} mb={3} gap={2}>
-              <Icon boxSize={3} as={FiEdit2} />
-              <Text size="label.sm">WRITE</Text>
-            </Flex>
-          ) : null}
-          {writeFunctions.map((fn) => (
-            <FunctionsOrEventsListItem
-              key={fn.signature}
-              fn={fn}
-              isFunction={isFunction}
-              selectedFunction={selectedFunction}
-              setSelectedFunction={setSelectedFunction}
-            />
-          ))}
-          {viewFunctions.length ? (
-            <>
-              <Divider my={3} />
-              <Flex mt={5} mb={3} gap={2}>
-                <Icon boxSize={3} as={FiEye} />
-                <Text size="label.sm">READ</Text>
-              </Flex>
-            </>
-          ) : null}
-          {viewFunctions.map((fn) => (
-            <FunctionsOrEventsListItem
-              key={fn.name}
-              fn={fn}
-              isFunction={isFunction}
-              selectedFunction={selectedFunction}
-              setSelectedFunction={setSelectedFunction}
-            />
-          ))}
-          {events.map((fn) => (
-            <FunctionsOrEventsListItem
-              key={isFunction ? (fn as AbiFunction).signature : fn.name}
-              fn={fn}
-              isFunction={isFunction}
-              selectedFunction={selectedFunction}
-              setSelectedFunction={setSelectedFunction}
-            />
-          ))}
+        <List height="100%" overflowX="hidden">
+          {(writeFunctions.length > 0 || viewFunctions.length > 0) && (
+            <Tabs h="100%" position="relative">
+              <TabList as={Flex}>
+                {writeFunctions.length > 0 && (
+                  <Tab gap={2} flex={"1 1 0"}>
+                    <Icon boxSize={3} as={FiEdit2} />
+                    <Heading color="inherit" my={1} size="label.md">
+                      Write
+                    </Heading>
+                  </Tab>
+                )}
+                {viewFunctions.length > 0 && (
+                  <Tab gap={2} flex={"1 1 0"}>
+                    <Icon boxSize={3} as={FiEye} />
+                    <Heading color="inherit" my={1} size="label.md">
+                      Read
+                    </Heading>
+                  </Tab>
+                )}
+              </TabList>
+              <TabPanels h="auto" overflow="auto">
+                <TabPanel>
+                  {writeFunctions.map((fn) => (
+                    <FunctionsOrEventsListItem
+                      key={fn.signature}
+                      fn={fn}
+                      isFunction={isFunction}
+                      selectedFunction={selectedFunction}
+                      setSelectedFunction={setSelectedFunction}
+                    />
+                  ))}
+                </TabPanel>
+                <TabPanel>
+                  {viewFunctions.map((fn) => (
+                    <FunctionsOrEventsListItem
+                      key={fn.name}
+                      fn={fn}
+                      isFunction={isFunction}
+                      selectedFunction={selectedFunction}
+                      setSelectedFunction={setSelectedFunction}
+                    />
+                  ))}
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          )}
+
+          {events.length > 0 && (
+            <Box px={4} pt={2} overflowX="hidden">
+              {events.map((fn) => (
+                <FunctionsOrEventsListItem
+                  key={isFunction ? (fn as AbiFunction).signature : fn.name}
+                  fn={fn}
+                  isFunction={isFunction}
+                  selectedFunction={selectedFunction}
+                  setSelectedFunction={setSelectedFunction}
+                />
+              ))}
+            </Box>
+          )}
         </List>
       </GridItem>
-      <GridItem height="100%" overflow="auto" colSpan={{ base: 12, md: 9 }}>
-        <Card ml={{ base: 0, md: 3 }} mt={{ base: 3, md: 0 }} flexGrow={1}>
-          <ContractFunction fn={selectedFunction} contract={contract} />
-        </Card>
+      <GridItem
+        as={Card}
+        height="100%"
+        overflow="auto"
+        colSpan={{ base: 12, md: 8 }}
+      >
+        <ContractFunction fn={selectedFunction} contract={contract} />
       </GridItem>
     </SimpleGrid>
   );

@@ -270,12 +270,14 @@ Deploy it in one click`,
             </Card>
           )}
           {contractFunctions && (
-            <ContractFunctionsOverview
-              functions={contractFunctions}
-              events={contractEvents}
-              sources={sources.data}
-              abi={contractReleaseMetadata.data?.abi}
-            />
+            <Card p={0}>
+              <ContractFunctionsOverview
+                functions={contractFunctions}
+                events={contractEvents}
+                sources={sources.data}
+                abi={contractReleaseMetadata.data?.abi}
+              />
+            </Card>
           )}
         </Flex>
       </GridItem>
