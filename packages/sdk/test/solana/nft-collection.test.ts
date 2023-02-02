@@ -40,6 +40,11 @@ describe("NFTCollection", async () => {
     expect(all[0].metadata.name).to.eq("Test NFT");
   });
 
+  it("should fetch transactions", async () => {
+    const txns = await collection.getTransactions();
+    expect(txns.length).to.eq(2);
+  });
+
   it("should fetch balance of NFTs", async () => {
     const all = await collection.getAll();
     const balance = await collection.balanceOf(
@@ -148,14 +153,19 @@ describe("NFTCollection", async () => {
     expect(creators[0].address).to.equal(sdk.wallet.getAddress());
     expect(creators[0].share).to.equal(100);
 
+    const numNfts = (await collection.getAll()).length;
+
     const newCreator = Keypair.generate().publicKey.toBase58();
-    await collection.updateCreators([
-      {
-        address: sdk.wallet.getAddress() as string,
-        share: 75,
-      },
-      { address: newCreator, share: 25 },
-    ]);
+    await collection.updateCreators(
+      [
+        {
+          address: sdk.wallet.getAddress() as string,
+          share: 75,
+        },
+        { address: newCreator, share: 25 },
+      ],
+      true,
+    );
 
     creators = await collection.getCreators();
     expect(creators.length).to.equal(2);
@@ -164,36 +174,36 @@ describe("NFTCollection", async () => {
     expect(creators[1].address).to.equal(newCreator);
     expect(creators[1].share).to.equal(25);
 
-    // TODO (adam): fix this test
-    // const all = await collection.getAll();
-    // for (const nft of all) {
-    //   // @ts-ignore
-    //   const creatorsOfNft = await collection.nft.creatorsOf(nft.metadata.id);
-    //   expect(creatorsOfNft.length).to.equal(2);
-    //   expect(creatorsOfNft[0].address).to.equal(sdk.wallet.getAddress());
-    //   expect(creatorsOfNft[0].share).to.equal(75);
-    //   expect(creatorsOfNft[1].address).to.equal(newCreator);
-    //   expect(creatorsOfNft[1].share).to.equal(25);
-    // }
+    const all = await collection.getAll();
+    expect(all.length).to.equal(numNfts);
+    for (const nft of all) {
+      // @ts-ignore
+      const creatorsOfNft = await collection.nft.creatorsOf(nft.metadata.id);
+      expect(creatorsOfNft.length).to.equal(2);
+      expect(creatorsOfNft[0].address).to.equal(sdk.wallet.getAddress());
+      expect(creatorsOfNft[0].share).to.equal(75);
+      expect(creatorsOfNft[1].address).to.equal(newCreator);
+      expect(creatorsOfNft[1].share).to.equal(25);
+    }
   });
 
   it("Should update royalty", async () => {
     let royalty = await collection.getRoyalty();
     expect(royalty).to.equal(0);
 
-    const mintAddress = (await collection.getAll())[0].metadata.id;
-    // @ts-ignore
-    let nft = await collection.nft.getRaw(mintAddress);
-    expect(nft.isMutable).to.equal(true);
-    expect(nft.sellerFeeBasisPoints).to.equal(0);
+    const numNfts = (await collection.getAll()).length;
 
-    await collection.updateRoyalty(100);
+    await collection.updateRoyalty(100, true);
 
     royalty = await collection.getRoyalty();
     expect(royalty).to.equal(100);
 
-    // TODO (adam): fix this test
-    // nft = await collection.nft.getRaw(mintAddress);
-    // expect(nft.sellerFeeBasisPoints).to.equal(100);
+    const all = await collection.getAll();
+    expect(all.length).to.equal(numNfts);
+    for (const singleNft of all) {
+      // @ts-ignore
+      const royaltyOfNft = await collection.nft.getRaw(singleNft.metadata.id);
+      expect(royaltyOfNft.sellerFeeBasisPoints).to.equal(100);
+    }
   });
 });

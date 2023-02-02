@@ -1,5 +1,19 @@
 # @thirdweb-dev/auth
 
+## 3.0.3
+
+### Patch Changes
+
+- [#533](https://github.com/thirdweb-dev/js/pull/533) [`dee4596`](https://github.com/thirdweb-dev/js/commit/dee45965496d5d0298944031dd13a4345f9e1683) Thanks [@adam-maj](https://github.com/adam-maj)! - Remove next major version pin on auth
+
+## 3.0.2
+
+## 3.0.1
+
+### Patch Changes
+
+- [#520](https://github.com/thirdweb-dev/js/pull/520) [`8c81ca5`](https://github.com/thirdweb-dev/js/commit/8c81ca5c3033b04b1f64e3a1134a72e7e3ec03b1) Thanks [@adam-maj](https://github.com/adam-maj)! - Update auth and react-core dependencies
+
 ## 3.0.0
 
 ### Major Changes

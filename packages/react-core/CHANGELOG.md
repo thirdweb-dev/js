@@ -1,5 +1,28 @@
 # @thirdweb-dev/react-core
 
+## 3.7.3
+
+### Patch Changes
+
+- Updated dependencies [[`dee4596`](https://github.com/thirdweb-dev/js/commit/dee45965496d5d0298944031dd13a4345f9e1683)]:
+  - @thirdweb-dev/auth@3.0.3
+
+## 3.7.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/auth@3.0.2
+
+## 3.7.1
+
+### Patch Changes
+
+- [#520](https://github.com/thirdweb-dev/js/pull/520) [`8c81ca5`](https://github.com/thirdweb-dev/js/commit/8c81ca5c3033b04b1f64e3a1134a72e7e3ec03b1) Thanks [@adam-maj](https://github.com/adam-maj)! - Update auth and react-core dependencies
+
+- Updated dependencies [[`8c81ca5`](https://github.com/thirdweb-dev/js/commit/8c81ca5c3033b04b1f64e3a1134a72e7e3ec03b1)]:
+  - @thirdweb-dev/auth@3.0.1
+
 ## 3.7.0
 
 ### Minor Changes

@@ -33,6 +33,7 @@ import {
   Connection,
   ParsedAccountData,
   PublicKey,
+  TransactionResponse,
 } from "@solana/web3.js";
 
 /**
@@ -174,7 +175,9 @@ export class NFTHelper {
     return nfts;
   }
 
-  private async getAllMetadataAddresses(collectionAddress: string) {
+  async getTransactions(
+    collectionAddress: string,
+  ): Promise<TransactionResponse[]> {
     const collectionKey = new PublicKey(collectionAddress);
 
     // TODO cache signatures <> transactions mapping in memory so pagination doesn't re-request this everytime
@@ -196,8 +199,7 @@ export class NFTHelper {
       allSignatures.push(...signatures);
     } while (signatures.length > 0);
 
-    const metadataAddresses: PublicKey[] = [];
-
+    let txns: TransactionResponse[] = [];
     // TODO RPC's will throttle this, need to do some optimizations here
     const batchSize = 1000; // alchemy RPC batch limit
     for (let i = 0; i < allSignatures.length; i += batchSize) {
@@ -206,13 +208,27 @@ export class NFTHelper {
         Math.min(allSignatures.length, i + batchSize),
       );
 
-      const transactions = (
-        await this.metaplex.connection.getTransactions(
-          batch.map((s) => s.signature),
-        )
-      ).reverse();
+      txns = [
+        ...txns,
+        ...(
+          (
+            await this.metaplex.connection.getTransactions(
+              batch.map((s) => s.signature),
+            )
+          ).filter((tx) => !!tx) as TransactionResponse[]
+        ).reverse(),
+      ];
+    }
+    return txns;
+  }
 
-      for (const tx of transactions) {
+  async getAllMetadataAddresses(
+    collectionAddress: string,
+  ): Promise<PublicKey[]> {
+    const txns = await this.getTransactions(collectionAddress);
+
+    return txns
+      .map((tx) => {
         if (tx) {
           const programIds = tx.transaction.message
             .programIds()
@@ -230,9 +246,8 @@ export class NFTHelper {
                 accountKeys[ix.programIdIndex] === METAPLEX_PROGRAM_ID
               ) {
                 const metadataAddressIndex = ix.accounts[0];
-                const metadata_address =
-                  tx.transaction.message.accountKeys[metadataAddressIndex];
-                metadataAddresses.push(metadata_address);
+
+                return tx.transaction.message.accountKeys[metadataAddressIndex];
               }
             }
           } else if (programIds.includes(CANDYMACHINE_PROGRAM_ID)) {
@@ -243,17 +258,14 @@ export class NFTHelper {
                 ix.data === "JEuNFGs7wrU"
               ) {
                 const metadataAddressIndex = ix.accounts[1];
-                const metadata_address =
-                  tx.transaction.message.accountKeys[metadataAddressIndex];
-                metadataAddresses.push(metadata_address);
+
+                return tx.transaction.message.accountKeys[metadataAddressIndex];
               }
             }
           }
         }
-      }
-    }
-
-    return metadataAddresses;
+      })
+      .filter((a) => !!a) as PublicKey[];
   }
 
   async toNFTMetadata(

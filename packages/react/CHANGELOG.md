@@ -1,5 +1,30 @@
 # @thirdweb-dev/react
 
+## 3.7.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@3.7.3
+
+## 3.7.2
+
+### Patch Changes
+
+- [#527](https://github.com/thirdweb-dev/js/pull/527) [`bdd9ed2`](https://github.com/thirdweb-dev/js/commit/bdd9ed22989f5baa511bec70ef1ae9d88bfb957e) Thanks [@jnsdls](https://github.com/jnsdls)! - fix dependency issues with @zag-js/react
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@3.7.2
+
+## 3.7.1
+
+### Patch Changes
+
+- [#520](https://github.com/thirdweb-dev/js/pull/520) [`8c81ca5`](https://github.com/thirdweb-dev/js/commit/8c81ca5c3033b04b1f64e3a1134a72e7e3ec03b1) Thanks [@adam-maj](https://github.com/adam-maj)! - Update auth and react-core dependencies
+
+- Updated dependencies [[`8c81ca5`](https://github.com/thirdweb-dev/js/commit/8c81ca5c3033b04b1f64e3a1134a72e7e3ec03b1)]:
+  - @thirdweb-dev/react-core@3.7.1
+
 ## 3.7.0
 
 ### Minor Changes

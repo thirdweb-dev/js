@@ -37,13 +37,22 @@ export function useLogin() {
       invariant(authConfig.auth, "You need a connected wallet to login.");
 
       const payload = await authConfig.auth.login(options);
-      await fetch(`${authConfig.authUrl}/login`, {
+      const res = await fetch(`${authConfig.authUrl}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ payload }),
       });
+
+      if (!res.ok) {
+        const data = await res.json();
+        if (data.error) {
+          throw new Error(data.error);
+        }
+
+        throw new Error(`Login request failed with status code ${res.status}`);
+      }
 
       queryClient.invalidateQueries(ensureTWPrefix(["user"]));
     },
