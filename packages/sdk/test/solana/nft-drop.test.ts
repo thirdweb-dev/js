@@ -131,11 +131,20 @@ describe("NFTDrop", async () => {
     expect(creators[0].address).to.equal(sdk.wallet.getAddress());
     expect(creators[0].share).to.equal(100);
 
+    const numNfts = (await drop.getAllClaimed()).length;
     const newCreator = Keypair.generate().publicKey.toBase58();
-    await drop.updateCreators([
-      { address: sdk.wallet.getAddress() as string, share: 75 },
-      { address: newCreator, share: 25 },
-    ]);
+
+    await drop.updateCreators(
+      [
+        {
+          address: sdk.wallet.getAddress() as string,
+          share: 75,
+          verified: true,
+        },
+        { address: newCreator, share: 25, verified: true },
+      ],
+      true,
+    );
 
     creators = await drop.getCreators();
     expect(creators.length).to.equal(2);
@@ -143,14 +152,39 @@ describe("NFTDrop", async () => {
     expect(creators[0].share).to.equal(75);
     expect(creators[1].address).to.equal(newCreator);
     expect(creators[1].share).to.equal(25);
+
+    const all = await drop.getAllClaimed();
+    expect(all.length).to.equal(numNfts);
+    for (const nft of all) {
+      // @ts-ignore
+      const creatorsOfNft = await drop.nft.creatorsOf(nft.metadata.id);
+      expect(creatorsOfNft.length).to.equal(3);
+      // Skip checking the first creator which is the candy machine creator pda
+      expect(creatorsOfNft[1].address).to.equal(sdk.wallet.getAddress());
+      expect(creatorsOfNft[1].share).to.equal(75);
+      expect(creatorsOfNft[2].address).to.equal(newCreator);
+      expect(creatorsOfNft[2].share).to.equal(25);
+    }
   });
 
   it("Should update royalty", async () => {
     let royalty = await drop.getRoyalty();
     expect(royalty).to.equal(0);
-    await drop.updateRoyalty(100);
+
+    const mintAddress = (await drop.getAll())[0].metadata.id;
+    // @ts-ignore
+    let nft = await drop.nft.getRaw(mintAddress);
+    expect(nft.isMutable).to.equal(true);
+    expect(nft.sellerFeeBasisPoints).to.equal(0);
+
+    await drop.updateRoyalty(100, true);
+
     royalty = await drop.getRoyalty();
     expect(royalty).to.equal(100);
+
+    // @ts-ignore
+    nft = await drop.nft.getRaw(mintAddress);
+    expect(nft.sellerFeeBasisPoints).to.equal(100);
   });
 
   it("Should get all correctly", async () => {
