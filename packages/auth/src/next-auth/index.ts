@@ -6,7 +6,7 @@ export function ThirdwebProvider(cfg: ThirdwebProviderConfig) {
   const auth = new ThirdwebAuth(cfg.wallet, cfg.domain);
 
   return CredentialsProvider({
-    name: "ThirdwebAuth",
+    name: "Credentials",
     credentials: {
       payload: {
         label: "Payload",
@@ -32,7 +32,9 @@ export function ThirdwebProvider(cfg: ThirdwebProviderConfig) {
 
         const address = await auth.verify(parsedPayload, verifyOptions);
 
-        return { id: address, address: address };
+        console.log("Succesfully authorized", address);
+
+        return { id: address, address };
       } catch (err) {
         return null;
       }
