@@ -395,20 +395,43 @@ export class ContractWrapper<
     if (!func) {
       throw new Error(`invalid function: "${fn.toString()}"`);
     }
+
+    // First, if no gasLimit is passed, call estimate gas ourselves
+    if (!callOverrides.gasLimit) {
+      try {
+        callOverrides.gasLimit = await this.estimateGas(fn, args);
+      } catch {
+        // If gas estimation fails, we'll call static to get a better error message
+        try {
+          await this.writeContract.callStatic[fn as string](...args);
+        } catch (err: any) {
+          throw await this.formatError(err);
+        }
+
+        // If call static doesn't throw for some reason (it should), continue
+      }
+    }
+
+    // Now there should be no gas estimate errors
     try {
       return await func(...args, callOverrides);
-    } catch (e) {
-      const network = await this.getProvider().getNetwork();
-      const signerAddress = await this.getSignerAddress();
-      const contractAddress = await this.readContract.address;
-      throw await convertToTWError(
-        e,
-        network,
-        signerAddress,
-        contractAddress,
-        this.readContract.interface,
-      );
+    } catch (err) {
+      throw await this.formatError(err);
     }
+  }
+
+  private async formatError(err: any) {
+    const provider = this.getProvider();
+    const network = await provider.getNetwork();
+    const signerAddress = await this.getSignerAddress();
+    const contractAddress = this.readContract.address;
+    return await convertToTWError(
+      err,
+      network,
+      signerAddress,
+      contractAddress,
+      this.readContract.interface,
+    );
   }
 
   /**

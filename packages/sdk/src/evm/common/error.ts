@@ -268,14 +268,6 @@ export type FunctionInfo = {
  * @public
  */
 export class TransactionError extends Error {
-  public reason: string;
-  public from: string;
-  public to: string;
-  public data: string;
-  public chain: providers.Network;
-  public rpcUrl: string;
-  public functionInfo: FunctionInfo | undefined;
-
   constructor(
     reason: string,
     from: string,
@@ -283,28 +275,23 @@ export class TransactionError extends Error {
     data: string,
     network: providers.Network,
     rpcUrl: string,
-    raw: string,
     functionInfo: FunctionInfo | undefined,
   ) {
-    let builtErrorMsg = "\n| Contract transaction failed |\n\n";
-    builtErrorMsg += `Message: ${reason}`;
-    builtErrorMsg += "\n\n| Transaction info |\n";
-    builtErrorMsg += withSpaces("from", from);
-    builtErrorMsg += withSpaces("to", to);
-    builtErrorMsg += withSpaces(
-      `chain`,
-      `${network.name} (${network.chainId})`,
-    );
+    let errorMessage = `\n\n\n╔═══════════════════╗\n║ TRANSACTION ERROR ║\n╚═══════════════════╝\n\n`;
+    errorMessage += `Reason: ${reason}`;
+    errorMessage += `\n\n\n╔═════════════════════════╗\n║ TRANSACTION INFORMATION ║\n╚═════════════════════════╝\n`;
+    errorMessage += withSpaces("from", from);
+    errorMessage += withSpaces("to", to);
+    errorMessage += withSpaces(`chain`, `${network.name} (${network.chainId})`);
 
     if (functionInfo) {
-      builtErrorMsg += "\n\n| Failed contract call info |\n";
-      builtErrorMsg += withSpaces("function", functionInfo.signature);
-      builtErrorMsg += withSpaces(
+      errorMessage += withSpaces("function", functionInfo.signature);
+      errorMessage += withSpaces(
         `arguments`,
         JSON.stringify(functionInfo.inputs, null, 2),
       );
       if (functionInfo.value.gt(0)) {
-        builtErrorMsg += withSpaces(
+        errorMessage += withSpaces(
           "value",
           `${ethers.utils.formatEther(functionInfo.value)} ${
             NATIVE_TOKENS[network.chainId as SUPPORTED_CHAIN_ID]?.symbol
@@ -315,22 +302,16 @@ export class TransactionError extends Error {
 
     try {
       const url = new URL(rpcUrl);
-      builtErrorMsg += withSpaces(`RPC`, url.hostname);
+      errorMessage += withSpaces(`rpc`, url.hostname);
     } catch (e2) {
       // ignore if can't parse URL
     }
-    builtErrorMsg += "\n\n";
-    builtErrorMsg += "| Raw error |";
-    builtErrorMsg += "\n\n";
-    builtErrorMsg += raw;
-    super(builtErrorMsg);
-    this.reason = reason;
-    this.from = from;
-    this.to = to;
-    this.data = data;
-    this.chain = network;
-    this.rpcUrl = rpcUrl;
-    this.functionInfo = functionInfo;
+
+    errorMessage += `\n\n\n╔═════════════════════╗\n║ DEBUGGING RESOURCES ║\n╚═════════════════════╝\n\n`;
+    errorMessage += `Need helping debugging? Come tell us about your error in our Discord channel and we'll help you out:\nhttps://discord.gg/thirdweb`;
+    errorMessage += `\n\n`;
+
+    super(errorMessage);
   }
 }
 
@@ -398,9 +379,11 @@ export async function convertToTWError(
     // not sure what this is, just throw it back
     raw = error.toString();
   }
+
   let reason =
     parseMessageParts(/.*?"message[^a-zA-Z0-9]*([^"\\]*).*?/, raw) ||
     parseMessageParts(/.*?"reason[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
+
   if (reason && reason.toLowerCase().includes("cannot estimate gas")) {
     // the error might be in the next reason block
     const nextReason = parseMessageParts(
@@ -411,20 +394,25 @@ export async function convertToTWError(
       reason = nextReason;
     }
   }
+
   const data = parseMessageParts(/.*?"data[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
   const rpcUrl = parseMessageParts(/.*?"url[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
   let from = parseMessageParts(/.*?"from[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
   let to = parseMessageParts(/.*?"to[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
+
+  // fallback to contractAddress
   if (to === "") {
-    // fallback to contractAddress
     to = contractAddress;
   }
+
+  // fallback to signerAddress
   if (from === "") {
-    // fallback to signerAddress
     from = signerAddress;
   }
+
   const functionInfo =
     data.length > 0 ? parseFunctionInfo(data, contractInterface) : undefined;
+
   return new TransactionError(
     reason,
     from,
@@ -432,7 +420,6 @@ export async function convertToTWError(
     data,
     network,
     rpcUrl,
-    raw,
     functionInfo,
   );
 }
