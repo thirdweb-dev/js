@@ -405,7 +405,9 @@ export const ConnectWallet: React.FC<EcosystemButtonprops> = ({
 
   return (
     <>
-      <MagicModal isOpen={isOpen} onClose={onClose} />
+      {process.env.NEXT_PUBLIC_MAGIC_KEY ? (
+        <MagicModal isOpen={isOpen} onClose={onClose} />
+      ) : null}
       <Menu isLazy>
         <MenuButton
           isLoading={connector.loading}
