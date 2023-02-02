@@ -1,5 +1,12 @@
 # @thirdweb-dev/react
 
+## 3.7.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@3.7.3
+
 ## 3.7.2
 
 ### Patch Changes
