@@ -129,6 +129,7 @@ export const MarkdownRenderer: React.FC<
           return (
             <Text
               as="code"
+              whiteSpace="break-spaces"
               px={1}
               py={0.5}
               bg="blackAlpha.100"
