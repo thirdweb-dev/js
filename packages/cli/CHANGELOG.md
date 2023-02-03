@@ -1,5 +1,18 @@
 # thirdweb
 
+## 0.9.16
+
+### Patch Changes
+
+- Updated dependencies [[`ec1f232`](https://github.com/thirdweb-dev/js/commit/ec1f2324c7a0e58c2d2a209cfe0d194807ba5b70), [`d29f7e7`](https://github.com/thirdweb-dev/js/commit/d29f7e78f09063630e812dd41164d8a41d4f97dd)]:
+  - @thirdweb-dev/sdk@3.7.4
+
+## 0.9.15
+
+### Patch Changes
+
+- [#537](https://github.com/thirdweb-dev/js/pull/537) [`cf96333`](https://github.com/thirdweb-dev/js/commit/cf96333fa2f46a4a73a822a0b1248891cc890267) Thanks [@adam-maj](https://github.com/adam-maj)! - Fix cache error on windows OS
+
 ## 0.9.14
 
 ### Patch Changes
