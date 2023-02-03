@@ -8,7 +8,7 @@ import {
   getAllInBatches,
   handleTokenApproval,
   isTokenApprovedForTransfer,
-} from "../../common/marketplacev3";
+} from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import {
   InterfaceId_IERC1155,

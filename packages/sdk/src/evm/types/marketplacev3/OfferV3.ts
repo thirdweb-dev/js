@@ -25,14 +25,14 @@ export interface OfferV3 {
   /**
    * The ID of the token.
    */
-  tokenId: BigNumberish;
+  tokenId: string;
 
   /**
    * The quantity of tokens to buy.
    *
    * For ERC721s, this value should always be 1 (and will be forced internally regardless of what is passed here).
    */
-  quantity: BigNumberish;
+  quantity: string;
 
   /**
    * The address of the currency offered for the NFTs.
@@ -47,7 +47,7 @@ export interface OfferV3 {
   /**
    * The total offer amount for the NFTs.
    */
-  totalPrice: BigNumberish;
+  totalPrice: string;
 
   /**
    * The asset to buy.
@@ -57,7 +57,7 @@ export interface OfferV3 {
   /**
    * The end time of the offer.
    */
-  endTimeInSeconds: BigNumberish;
+  endTimeInSeconds: string;
 
   /**
    * Whether the listing is CREATED, COMPLETED, or CANCELLED.

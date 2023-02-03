@@ -25,14 +25,14 @@ export interface EnglishAuction {
   /**
    * The ID of the token to auction.
    */
-  tokenId: BigNumberish;
+  tokenId: string;
 
   /**
    * The quantity of tokens to include in the auction.
    *
    * For ERC721s, this value should always be 1 (and will be forced internally regardless of what is passed here).
    */
-  quantity: BigNumberish;
+  quantity: string;
 
   /**
    * The address of the currency to accept for the auction.
@@ -42,7 +42,7 @@ export interface EnglishAuction {
   /**
    * The minimum price that a bid must be in order to be accepted.
    */
-  minimumBidAmount: BigNumber;
+  minimumBidAmount: string;
 
   /**
    * The `CurrencyValue` of the minimum bid amount.
@@ -53,7 +53,7 @@ export interface EnglishAuction {
   /**
    * The buyout price of the auction.
    */
-  buyoutBidAmount: BigNumber;
+  buyoutBidAmount: string;
 
   /**
    * The `CurrencyValue` of the buyout price.
@@ -67,7 +67,7 @@ export interface EnglishAuction {
    * If a new winning bid is made less than x seconds before expirationTimestamp, the
    * expirationTimestamp is increased by x seconds.
    */
-  timeBufferInSeconds: BigNumber;
+  timeBufferInSeconds: number;
 
   /**
    * This is a buffer in basis points e.g. x%.
@@ -75,17 +75,17 @@ export interface EnglishAuction {
    * To be considered as a new winning bid, a bid must be at least x% greater than
    * the current winning bid.
    */
-  bidBufferBps: BigNumber;
+  bidBufferBps: number;
 
   /**
    * The start time of the auction.
    */
-  startTimeInSeconds: BigNumberish;
+  startTimeInSeconds: string;
 
   /**
    * The end time of the auction.
    */
-  endTimeInSeconds: BigNumberish;
+  endTimeInSeconds: string;
 
   /**
    * The asset being auctioned.

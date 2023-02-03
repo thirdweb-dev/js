@@ -4,10 +4,7 @@ import {
   normalizePriceValue,
   setErc20Allowance,
 } from "../../common/currency";
-import {
-  getAllInBatches,
-  handleTokenApproval,
-} from "../../common/marketplacev3";
+import { getAllInBatches, handleTokenApproval } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../../constants";
 import { FEATURE_OFFERS } from "../../constants/thirdweb-features";
@@ -363,9 +360,9 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
       offerorAddress: offer.offeror,
       assetContractAddress: offer.assetContract,
       currencyContractAddress: offer.currency,
-      tokenId: offer.tokenId,
-      quantity: offer.quantity,
-      totalPrice: offer.totalPrice,
+      tokenId: offer.tokenId.toString(),
+      quantity: offer.quantity.toString(),
+      totalPrice: offer.totalPrice.toString(),
       currencyValue: await fetchCurrencyValue(
         this.contractWrapper.getProvider(),
         offer.currency,
@@ -377,7 +374,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
         offer.tokenId,
         this.storage,
       ),
-      endTimeInSeconds: offer.expirationTimestamp,
+      endTimeInSeconds: offer.expirationTimestamp.toString(),
       status: status,
     };
   }

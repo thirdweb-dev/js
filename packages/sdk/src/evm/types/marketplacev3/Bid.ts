@@ -5,7 +5,7 @@ export interface Bid {
   /**
    * The id of the auction.
    */
-  auctionId: BigNumberish;
+  auctionId: string;
 
   /**
    * The address of the buyer who made the offer.
@@ -20,7 +20,7 @@ export interface Bid {
   /**
    * The amount of coins offered per token.
    */
-  bidAmount: BigNumber;
+  bidAmount: string;
 
   /**
    * The `CurrencyValue` of the listing. Useful for displaying the price information.

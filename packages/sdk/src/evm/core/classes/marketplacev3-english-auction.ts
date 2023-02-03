@@ -6,10 +6,7 @@ import {
   normalizePriceValue,
   setErc20Allowance,
 } from "../../common/currency";
-import {
-  getAllInBatches,
-  handleTokenApproval,
-} from "../../common/marketplacev3";
+import { getAllInBatches, handleTokenApproval } from "../../common/marketplace";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { FEATURE_ENGLISH_AUCTIONS } from "../../constants/thirdweb-features";
 import { Status } from "../../enums";
@@ -210,10 +207,10 @@ export class MarketplaceV3EnglishAuctions<
       return undefined;
     }
     return await this.mapBid(
-      BigNumber.from(auctionId),
+      auctionId.toString(),
       bid._bidder,
       bid._currency,
-      BigNumber.from(bid._bidAmount),
+      bid._bidAmount.toString(),
     );
   }
 
@@ -630,7 +627,7 @@ export class MarketplaceV3EnglishAuctions<
    *
    * @param auctionId - id of the auction
    */
-  public async getBidBufferBps(auctionId: BigNumberish): Promise<BigNumber> {
+  public async getBidBufferBps(auctionId: BigNumberish): Promise<number> {
     return (await this.getAuction(auctionId)).bidBufferBps;
   }
 
@@ -650,9 +647,9 @@ export class MarketplaceV3EnglishAuctions<
 
     const currentBidOrReservePrice = winningBid
       ? // if there is a winning bid use the value of it
-        winningBid.bidAmount
+        BigNumber.from(winningBid.bidAmount)
       : // if there is no winning bid use the reserve price
-        auction.minimumBidAmount;
+        BigNumber.from(auction.minimumBidAmount);
 
     const minimumNextBid = currentBidOrReservePrice.add(
       // the addition of the current bid and the buffer
@@ -719,25 +716,27 @@ export class MarketplaceV3EnglishAuctions<
       id: auction.auctionId.toString(),
       creatorAddress: auction.auctionCreator,
       assetContractAddress: auction.assetContract,
-      tokenId: auction.tokenId,
-      quantity: auction.quantity,
+      tokenId: auction.tokenId.toString(),
+      quantity: auction.quantity.toString(),
       currencyContractAddress: auction.currency,
-      minimumBidAmount: BigNumber.from(auction.minimumBidAmount),
+      minimumBidAmount: auction.minimumBidAmount.toString(),
       minimumBidCurrencyValue: await fetchCurrencyValue(
         this.contractWrapper.getProvider(),
         auction.currency,
         auction.minimumBidAmount,
       ),
-      buyoutBidAmount: BigNumber.from(auction.buyoutBidAmount),
+      buyoutBidAmount: auction.buyoutBidAmount.toString(),
       buyoutCurrencyValue: await fetchCurrencyValue(
         this.contractWrapper.getProvider(),
         auction.currency,
         auction.buyoutBidAmount,
       ),
-      timeBufferInSeconds: BigNumber.from(auction.timeBufferInSeconds),
-      bidBufferBps: BigNumber.from(auction.bidBufferBps),
-      startTimeInSeconds: auction.startTimestamp,
-      endTimeInSeconds: auction.endTimestamp,
+      timeBufferInSeconds: BigNumber.from(
+        auction.timeBufferInSeconds,
+      ).toNumber(),
+      bidBufferBps: BigNumber.from(auction.bidBufferBps).toNumber(),
+      startTimeInSeconds: auction.startTimestamp.toString(),
+      endTimeInSeconds: auction.endTimestamp.toString(),
       asset: await fetchTokenMetadataForContract(
         auction.assetContract,
         this.contractWrapper.getProvider(),
@@ -756,10 +755,10 @@ export class MarketplaceV3EnglishAuctions<
    * @returns - A `Bid` object
    */
   private async mapBid(
-    auctionId: BigNumber,
+    auctionId: string,
     bidderAddress: string,
     currencyContractAddress: string,
-    bidAmount: BigNumber,
+    bidAmount: string,
   ): Promise<Bid> {
     return {
       auctionId,

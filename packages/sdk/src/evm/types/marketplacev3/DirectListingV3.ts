@@ -25,14 +25,14 @@ export interface DirectListingV3 {
   /**
    * The ID of the token to list.
    */
-  tokenId: BigNumberish;
+  tokenId: string;
 
   /**
    * The quantity of tokens to include in the listing.
    *
    * For ERC721s, this value should always be 1 (and will be forced internally regardless of what is passed here).
    */
-  quantity: BigNumberish;
+  quantity: string;
 
   /**
    * The address of the currency to accept for the listing.
@@ -47,7 +47,7 @@ export interface DirectListingV3 {
   /**
    * The price to pay per unit of NFTs listed.
    */
-  pricePerToken: BigNumberish;
+  pricePerToken: string;
 
   /**
    * The asset being listed.
@@ -57,12 +57,12 @@ export interface DirectListingV3 {
   /**
    * The start time of the listing.
    */
-  startTimeInSeconds: BigNumberish;
+  startTimeInSeconds: string;
 
   /**
    * The end time of the listing.
    */
-  endTimeInSeconds: BigNumberish;
+  endTimeInSeconds: string;
 
   /**
    * Whether the listing is reserved to be bought from a specific set of buyers.

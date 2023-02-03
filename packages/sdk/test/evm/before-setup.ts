@@ -22,6 +22,7 @@ import {
 } from "../../src/evm";
 import { Plugin } from "../../src/evm/types/plugins";
 import { MockStorage, mockUploadWithCID } from "./mock/MockStorage";
+import weth from "./mock/WETH9.json";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   ContractPublisher,
@@ -82,6 +83,7 @@ let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
 let storage: ThirdwebStorage;
 let implementations: { [key in ContractType]?: string };
+let mock_weth_address: string;
 
 const fastForwardTime = async (timeInSeconds: number): Promise<void> => {
   const now = Math.floor(Date.now() / 1000);
@@ -108,6 +110,15 @@ export const mochaHooks = {
     const trustedForwarderAddress =
       "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
     await jsonProvider.send("hardhat_reset", []);
+
+    const mock_weth_deployer = new ethers.ContractFactory(
+      weth.abi,
+      weth.bytecode,
+    )
+      .connect(signer)
+      .deploy();
+    const mock_weth = await (await mock_weth_deployer).deployed();
+    mock_weth_address = mock_weth.address;
 
     const registry = (await new ethers.ContractFactory(
       TWRegistry__factory.abi,
@@ -379,7 +390,7 @@ async function setupMarketplaceV3(): Promise<string> {
     DirectListingsLogic__factory.bytecode,
   )
     .connect(signer)
-    .deploy(nativeTokenWrapperAddress)) as DirectListingsLogic;
+    .deploy(mock_weth_address)) as DirectListingsLogic;
   const directListingsLogic = await directListingsLogicDeployer.deployed();
   await mockUploadContractMetadata(
     directListingsLogic.address,
@@ -397,7 +408,7 @@ async function setupMarketplaceV3(): Promise<string> {
     EnglishAuctionsLogic__factory.bytecode,
   )
     .connect(signer)
-    .deploy(nativeTokenWrapperAddress)) as EnglishAuctionsLogic;
+    .deploy(mock_weth_address)) as EnglishAuctionsLogic;
   const englishAuctionsLogic = await englishAuctionsLogicDeployer.deployed();
   await mockUploadContractMetadata(
     englishAuctionsLogic.address,
