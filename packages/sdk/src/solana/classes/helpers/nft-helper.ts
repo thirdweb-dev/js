@@ -222,13 +222,11 @@ export class NFTHelper {
 
       txns = [
         ...txns,
-        ...(
-          (
-            await this.metaplex.connection.getTransactions(
-              batch.map((s) => s.signature),
-            )
-          ).filter((tx) => !!tx) as TransactionResponse[]
-        ).reverse(),
+        ...((
+          await this.metaplex.connection.getTransactions(
+            batch.map((s) => s.signature),
+          )
+        ).filter((tx) => !!tx) as TransactionResponse[]),
       ];
     }
     return txns;
@@ -237,7 +235,7 @@ export class NFTHelper {
   async getAllMetadataAddresses(
     collectionAddress: string,
   ): Promise<PublicKey[]> {
-    const txns = await this.getTransactions(collectionAddress);
+    const txns = (await this.getTransactions(collectionAddress)).reverse();
 
     return txns
       .map((tx) => {
