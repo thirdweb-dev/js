@@ -1,5 +1,11 @@
 # thirdweb
 
+## 0.9.15
+
+### Patch Changes
+
+- [#537](https://github.com/thirdweb-dev/js/pull/537) [`cf96333`](https://github.com/thirdweb-dev/js/commit/cf96333fa2f46a4a73a822a0b1248891cc890267) Thanks [@adam-maj](https://github.com/adam-maj)! - Fix cache error on windows OS
+
 ## 0.9.14
 
 ### Patch Changes
