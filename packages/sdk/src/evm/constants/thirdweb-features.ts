@@ -1,6 +1,9 @@
 import IERC2771ContextAbi from "@thirdweb-dev/contracts-js/dist/abis/ERC2771Context.json";
 import IAppURI from "@thirdweb-dev/contracts-js/dist/abis/IAppURI.json";
 import IContractMetadataAbi from "@thirdweb-dev/contracts-js/dist/abis/IContractMetadata.json";
+import IDirectListingsAbi from "@thirdweb-dev/contracts-js/dist/abis/IDirectListings.json";
+import IEnglishAuctionsAbi from "@thirdweb-dev/contracts-js/dist/abis/IEnglishAuctions.json";
+import IOffersAbi from "@thirdweb-dev/contracts-js/dist/abis/IOffers.json";
 import IPackVRFAbi from "@thirdweb-dev/contracts-js/dist/abis/IPackVRFDirect.json";
 import IPermissionsAbi from "@thirdweb-dev/contracts-js/dist/abis/IPermissions.json";
 import IPermissionsEnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IPermissionsEnumerable.json";
@@ -131,5 +134,41 @@ export const FEATURE_PLUGIN_ROUTER = {
     contracts: "IRouter",
   },
   abis: [IRouterAbi],
+  features: {},
+} as const;
+
+export const FEATURE_DIRECT_LISTINGS = {
+  name: "DirectListings",
+  namespace: "direct.listings",
+  docLinks: {
+    // TODO
+    sdk: "",
+    contracts: "",
+  },
+  abis: [IDirectListingsAbi],
+  features: {},
+} as const;
+
+export const FEATURE_ENGLISH_AUCTIONS = {
+  name: "EnglishAuctions",
+  namespace: "english.auctions",
+  docLinks: {
+    // TODO
+    sdk: "",
+    contracts: "",
+  },
+  abis: [IEnglishAuctionsAbi],
+  features: {},
+} as const;
+
+export const FEATURE_OFFERS = {
+  name: "Offers",
+  namespace: "offers",
+  docLinks: {
+    // TODO
+    sdk: "",
+    contracts: "",
+  },
+  abis: [IOffersAbi],
   features: {},
 } as const;

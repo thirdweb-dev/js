@@ -26,7 +26,6 @@ export async function getCompositePluginABI(
       AbiSchema.parse(abi),
       "PluginRouter",
     );
-
     if (isPluginRouter) {
       const contract = new ContractWrapper<IRouter>(
         provider,
@@ -85,5 +84,7 @@ export function joinABIs(abis: Abi[]): Abi {
     );
   });
 
-  return AbiSchema.parse(filteredABIs);
+  const finalABIs = filteredABIs.filter((item) => item.type !== "constructor");
+
+  return AbiSchema.parse(finalABIs);
 }
