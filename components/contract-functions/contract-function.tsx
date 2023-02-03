@@ -183,7 +183,7 @@ export const ContractFunctionsPanel: React.FC<ContractFunctionsPanelProps> = ({
       >
         <List height="100%" overflowX="hidden">
           {(writeFunctions.length > 0 || viewFunctions.length > 0) && (
-            <Tabs h="100%" position="relative">
+            <Tabs h="100%" position="relative" display="flex" flexDir="column">
               <TabList as={Flex}>
                 {writeFunctions.length > 0 && (
                   <Tab gap={2} flex={"1 1 0"}>
