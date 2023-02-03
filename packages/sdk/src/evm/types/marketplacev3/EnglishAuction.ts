@@ -79,12 +79,12 @@ export interface EnglishAuction {
   /**
    * The start time of the auction.
    */
-  startTimeInSeconds: string;
+  startTimeInSeconds: number;
 
   /**
    * The end time of the auction.
    */
-  endTimeInSeconds: string;
+  endTimeInSeconds: number;
 
   /**
    * The asset being auctioned.

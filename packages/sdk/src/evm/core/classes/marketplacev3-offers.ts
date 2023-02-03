@@ -374,7 +374,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
         offer.tokenId,
         this.storage,
       ),
-      endTimeInSeconds: offer.expirationTimestamp.toString(),
+      endTimeInSeconds: BigNumber.from(offer.expirationTimestamp).toNumber(),
       status: status,
     };
   }

@@ -56,7 +56,7 @@ export interface OfferV3 {
   /**
    * The end time of the offer.
    */
-  endTimeInSeconds: string;
+  endTimeInSeconds: number;
 
   /**
    * Whether the listing is CREATED, COMPLETED, or CANCELLED.

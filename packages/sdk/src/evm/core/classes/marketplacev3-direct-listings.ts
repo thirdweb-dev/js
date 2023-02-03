@@ -403,8 +403,6 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
     listingId: BigNumberish,
     listing: DirectListingInputParams,
   ): Promise<TransactionResultWithId> {
-    // validateNewListingParam(listing);
-
     const parsedListing = DirectListingInputParamsSchema.parse(listing);
 
     await handleTokenApproval(
@@ -745,14 +743,14 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
       id: listing.listingId.toString(),
       tokenId: listing.tokenId.toString(),
       quantity: listing.quantity.toString(),
-      startTimeInSeconds: listing.startTimestamp.toString(),
+      startTimeInSeconds: BigNumber.from(listing.startTimestamp).toNumber(),
       asset: await fetchTokenMetadataForContract(
         listing.assetContract,
         this.contractWrapper.getProvider(),
         listing.tokenId,
         this.storage,
       ),
-      endTimeInSeconds: listing.endTimestamp.toString(),
+      endTimeInSeconds: BigNumber.from(listing.endTimestamp).toNumber(),
       creatorAddress: listing.listingCreator,
       isReservedListing: listing.reserved,
       status: status,

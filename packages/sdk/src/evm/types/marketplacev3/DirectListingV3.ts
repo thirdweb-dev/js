@@ -56,12 +56,12 @@ export interface DirectListingV3 {
   /**
    * The start time of the listing.
    */
-  startTimeInSeconds: string;
+  startTimeInSeconds: number;
 
   /**
    * The end time of the listing.
    */
-  endTimeInSeconds: string;
+  endTimeInSeconds: number;
 
   /**
    * Whether the listing is reserved to be bought from a specific set of buyers.

@@ -441,6 +441,12 @@ export class MarketplaceV3EnglishAuctions<
       throw new Error("Cannot make a bid with 0 value");
     }
 
+    if (normalizedBidAmount.gt(auction.buyoutBidAmount)) {
+      throw new Error(
+        "Bid amount must be less than or equal to buyoutBidAmount",
+      );
+    }
+
     const winningBid = await this.getWinningBid(auctionId);
     if (winningBid) {
       const isWinnner = await this.isWinningBid(auctionId, normalizedBidAmount);
@@ -735,8 +741,8 @@ export class MarketplaceV3EnglishAuctions<
         auction.timeBufferInSeconds,
       ).toNumber(),
       bidBufferBps: BigNumber.from(auction.bidBufferBps).toNumber(),
-      startTimeInSeconds: auction.startTimestamp.toString(),
-      endTimeInSeconds: auction.endTimestamp.toString(),
+      startTimeInSeconds: BigNumber.from(auction.startTimestamp).toNumber(),
+      endTimeInSeconds: BigNumber.from(auction.endTimestamp).toNumber(),
       asset: await fetchTokenMetadataForContract(
         auction.assetContract,
         this.contractWrapper.getProvider(),
