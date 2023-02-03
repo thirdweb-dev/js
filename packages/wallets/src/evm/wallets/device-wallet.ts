@@ -1,24 +1,24 @@
 import { AbstractWallet } from "./abstract";
 import { ethers } from "ethers";
 
-interface IWalletStorage {
+interface IWalletStore {
   getPrivateKey(): Promise<string | null | undefined>;
   storePrivateKey(address: string, pkey: string): Promise<void>;
 }
 
-interface IStorage {
+interface IDeviceStorage {
   getItem(key: string): string | null | undefined;
   setItem(key: string, value: string): void;
 }
 
-type LocalWalletOptions = {
-  storage: IWalletStorage;
+type DeviceWalletOptions = {
+  storage: IWalletStore;
 };
 
-class LocalWalletInternal extends AbstractWallet {
-  private options: LocalWalletOptions;
+export class DeviceWalletImpl extends AbstractWallet {
+  private options: DeviceWalletOptions;
 
-  constructor(options: LocalWalletOptions) {
+  constructor(options: DeviceWalletOptions) {
     super();
     this.options = options;
   }
@@ -45,10 +45,10 @@ class LocalWalletInternal extends AbstractWallet {
   }
 }
 
-class BrowserStorage implements IWalletStorage {
-  private storage: IStorage;
+class BrowserStorage implements IWalletStore {
+  private storage: IDeviceStorage;
   private STORAGE_KEY = "tw_wallet_pk";
-  constructor(storage: IStorage) {
+  constructor(storage: IDeviceStorage) {
     this.storage = storage;
   }
 
@@ -61,7 +61,7 @@ class BrowserStorage implements IWalletStorage {
   }
 }
 
-class CredentialsStorage implements IWalletStorage {
+class CredentialsStorage implements IWalletStore {
   private container: CredentialsContainer;
   constructor(container: CredentialsContainer) {
     this.container = container;
@@ -98,22 +98,22 @@ class CredentialsStorage implements IWalletStorage {
   }
 }
 
-export class LocalWallet {
+export class DeviceWallet {
   static async fromBrowserStorage() {
-    return new LocalWalletInternal({
+    return new DeviceWalletImpl({
       storage: new BrowserStorage(window.localStorage),
     });
   }
 
   static async fromEncryptedBrowserStorage(secretKey: string) {
     const storage = await import("encrypt-storage");
-    return new LocalWalletInternal({
+    return new DeviceWalletImpl({
       storage: new BrowserStorage(new storage.EncryptStorage(secretKey)),
     });
   }
 
   static async fromCredentialStore() {
-    return new LocalWalletInternal({
+    return new DeviceWalletImpl({
       storage: new CredentialsStorage(navigator.credentials),
     });
   }
