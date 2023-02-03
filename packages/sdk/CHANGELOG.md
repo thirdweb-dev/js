@@ -1,5 +1,13 @@
 # @thirdweb-dev/sdk
 
+## 3.7.4
+
+### Patch Changes
+
+- [#542](https://github.com/thirdweb-dev/js/pull/542) [`ec1f232`](https://github.com/thirdweb-dev/js/commit/ec1f2324c7a0e58c2d2a209cfe0d194807ba5b70) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Solana - Expose getTransaction pagination options + transactions for given wallet
+
+- [#540](https://github.com/thirdweb-dev/js/pull/540) [`d29f7e7`](https://github.com/thirdweb-dev/js/commit/d29f7e78f09063630e812dd41164d8a41d4f97dd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - expose `getMintTransaction()` for fine grain control on mint calls
+
 ## 3.7.3
 
 ### Patch Changes
