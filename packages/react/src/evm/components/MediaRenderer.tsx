@@ -432,10 +432,10 @@ export const MediaRenderer = React.forwardRef<
   MediaRendererProps
 >(
   (
-    { src, poster, alt, requireInteraction = false, style, ...restProps },
+    { src, poster, alt, requireInteraction = false, width = "300px", height = "300px", style, ...restProps },
     ref,
   ) => {
-    const mergedStyle: React.CSSProperties = { objectFit: "contain", ...style };
+    const mergedStyle: React.CSSProperties = { objectFit: "contain", width, height, ...style };
     const videoOrImageSrc = useResolvedMediaType(src ?? undefined);
     const possiblePosterSrc = useResolvedMediaType(poster ?? undefined);
     if (!videoOrImageSrc.mimeType) {
