@@ -264,54 +264,56 @@ export type FunctionInfo = {
   value: BigNumber;
 };
 
+type TransactionErrorInfo = {
+  reason: string;
+  from: string;
+  to: string;
+  network: providers.Network;
+  method?: string;
+  data?: string;
+  rpcUrl?: string;
+  value?: BigNumber;
+};
+
 /**
  * @public
  */
 export class TransactionError extends Error {
   #reason: string;
 
-  constructor(
-    reason: string,
-    from: string,
-    to: string,
-    method: string,
-    data: string,
-    network: providers.Network,
-    rpcUrl: string,
-    functionInfo: FunctionInfo | undefined,
-  ) {
+  constructor(info: TransactionErrorInfo) {
     let errorMessage = `\n\n\n╔═══════════════════╗\n║ TRANSACTION ERROR ║\n╚═══════════════════╝\n\n`;
-    errorMessage += `Reason: ${reason}`;
+    errorMessage += `Reason: ${info.reason}`;
     errorMessage += `\n\n\n╔═════════════════════════╗\n║ TRANSACTION INFORMATION ║\n╚═════════════════════════╝\n`;
-    errorMessage += withSpaces("from", from);
-    errorMessage += withSpaces("to", to);
-    errorMessage += withSpaces(`chain`, `${network.name} (${network.chainId})`);
+    errorMessage += withSpaces("from", info.from);
+    errorMessage += withSpaces("to", info.to);
+    errorMessage += withSpaces(
+      `chain`,
+      `${info.network.name} (${info.network.chainId})`,
+    );
 
-    if (functionInfo) {
-      errorMessage += withSpaces("function", functionInfo.signature);
-      errorMessage += withSpaces(
-        `arguments`,
-        JSON.stringify(functionInfo.inputs, null, 2),
-      );
-      if (functionInfo.value.gt(0)) {
-        errorMessage += withSpaces(
-          "value",
-          `${ethers.utils.formatEther(functionInfo.value)} ${
-            NATIVE_TOKENS[network.chainId as SUPPORTED_CHAIN_ID]?.symbol
-          }`,
-        );
+    if (info.rpcUrl) {
+      try {
+        const url = new URL(info.rpcUrl);
+        errorMessage += withSpaces(`rpc`, url.hostname);
+      } catch (e2) {
+        // ignore if can't parse URL
       }
-    } else {
-      errorMessage += withSpaces("function", method);
     }
 
-    errorMessage += withSpaces(`data`, `${data}`);
+    if (info.value && info.value.gt(0)) {
+      errorMessage += withSpaces(
+        "value",
+        `${ethers.utils.formatEther(info.value)} ${
+          NATIVE_TOKENS[info.network.chainId as SUPPORTED_CHAIN_ID]?.symbol
+        }`,
+      );
+    }
 
-    try {
-      const url = new URL(rpcUrl);
-      errorMessage += withSpaces(`rpc`, url.hostname);
-    } catch (e2) {
-      // ignore if can't parse URL
+    errorMessage += withSpaces(`data`, `${info.data}`);
+
+    if (info.method) {
+      errorMessage += withSpaces("method", info.method);
     }
 
     errorMessage += `\n\n\n╔═════════════════════╗\n║ DEBUGGING RESOURCES ║\n╚═════════════════════╝\n\n`;
@@ -320,7 +322,7 @@ export class TransactionError extends Error {
 
     super(errorMessage);
 
-    this.#reason = reason;
+    this.#reason = info.reason;
   }
 
   get reason(): string {
@@ -330,112 +332,25 @@ export class TransactionError extends Error {
 
 /**
  * @internal
- * @param data
- * @param contractInterface
  */
-function parseFunctionInfo(
-  data: string,
-  contractInterface: ethers.utils.Interface,
-): FunctionInfo | undefined {
-  try {
-    const fnFragment = contractInterface.parseTransaction({
-      data,
-    });
-    const results: Record<string, any> = {};
-    const args = fnFragment.args;
-    fnFragment.functionFragment.inputs.forEach((param, index) => {
-      if (Array.isArray(args[index])) {
-        const obj: Record<string, unknown> = {};
-        const components = param.components;
-        if (components) {
-          const arr = args[index];
-          for (let i = 0; i < components.length; i++) {
-            const name = components[i].name;
-            obj[name] = arr[i];
-          }
-          results[param.name] = obj;
-        }
-      } else {
-        results[param.name] = args[index];
-      }
-    });
-    return {
-      signature: fnFragment.signature,
-      inputs: results,
-      value: fnFragment.value,
-    };
-  } catch (e) {
-    return undefined;
+export function parseRevertReason(error: any): string {
+  if (error.reason) {
+    return error.reason as string;
   }
-}
 
-/**
- * @internal
- * @param error
- * @param network
- * @param signerAddress
- * @param contractAddress
- * @param contractInterface
- */
-export async function convertToTWError(
-  error: any,
-  network: ethers.providers.Network,
-  signerAddress: string,
-  contractAddress: string,
-  contractInterface: ethers.utils.Interface,
-): Promise<TransactionError> {
-  let raw: string;
+  // I think this code path should never be hit, but just in case
+
+  let errorString: string = error;
   if (typeof error === "object") {
-    // metamask errors comes as objects, apply parsing on data object
-    raw = JSON.stringify(error);
-  } else {
-    // not sure what this is, just throw it back
-    raw = error.toString();
+    // MetaMask errors come as objects so parse them first
+    errorString = JSON.stringify(error);
+  } else if (typeof error !== "string") {
+    errorString = error.toString();
   }
 
-  let reason =
-    parseMessageParts(/.*?"message[^a-zA-Z0-9]*([^"\\]*).*?/, raw) ||
-    parseMessageParts(/.*?"reason[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
-
-  if (reason && reason.toLowerCase().includes("cannot estimate gas")) {
-    // the error might be in the next reason block
-    const nextReason = parseMessageParts(
-      /.*?"reason[^a-zA-Z0-9]*([^"\\]*).*?/,
-      raw.slice(raw.indexOf(reason) + reason.length),
-    );
-    if (nextReason) {
-      reason = nextReason;
-    }
-  }
-
-  const method = parseMessageParts(/.*?"method[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
-  const data = parseMessageParts(/.*?"data[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
-  const rpcUrl = parseMessageParts(/.*?"url[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
-  let from = parseMessageParts(/.*?"from[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
-  let to = parseMessageParts(/.*?"to[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
-
-  // fallback to contractAddress
-  if (to === "") {
-    to = contractAddress;
-  }
-
-  // fallback to signerAddress
-  if (from === "") {
-    from = signerAddress;
-  }
-
-  const functionInfo =
-    data.length > 0 ? parseFunctionInfo(data, contractInterface) : undefined;
-
-  return new TransactionError(
-    reason,
-    from,
-    to,
-    method,
-    data,
-    network,
-    rpcUrl,
-    functionInfo,
+  return (
+    parseMessageParts(/.*?"message":"([^"\\]*).*?/, errorString) ||
+    parseMessageParts(/.*?"reason":"([^"\\]*).*?/, errorString)
   );
 }
 
@@ -443,10 +358,18 @@ function withSpaces(label: string, content: string) {
   if (content === "") {
     return content;
   }
+
   const spaces = Array(10 - label.length)
     .fill(" ")
     .join("");
-  return `\n${label}:${spaces}${content}`;
+
+  if (content.includes("\n")) {
+    content = "\n\n  " + content.split("\n").join(`\n  `);
+  } else {
+    content = `${spaces}${content}`;
+  }
+
+  return `\n${label}:${content}`;
 }
 
 function parseMessageParts(regex: RegExp, raw: string): string {
