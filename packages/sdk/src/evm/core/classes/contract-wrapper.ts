@@ -405,7 +405,10 @@ export class ContractWrapper<
       } catch {
         // If gas estimation fails, we'll call static to get a better error message
         try {
-          await this.writeContract.callStatic[fn as string](...args);
+          await this.writeContract.callStatic[fn as string](
+            ...args,
+            ...(callOverrides.value ? [{ value: callOverrides.value }] : []),
+          );
         } catch (err: any) {
           throw await this.formatError(err);
         }
