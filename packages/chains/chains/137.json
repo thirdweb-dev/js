@@ -2,10 +2,18 @@
   "name": "Polygon Mainnet",
   "chain": "Polygon",
   "icon": {
-    "url": "ipfs://QmRNqgazYuxUa5WdddFPftTWiP3KwzBMgV9Z19QWnLMETc",
-    "width": 2000,
-    "height": 2000,
-    "format": "png"
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/polygon/512.png",
+    "height": 512,
+    "width": 512,
+    "format": "png",
+    "sizes": [
+      512,
+      256,
+      128,
+      64,
+      32,
+      16
+    ]
   },
   "rpc": [
     "https://polygon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",

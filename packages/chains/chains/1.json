@@ -2,10 +2,18 @@
   "name": "Ethereum Mainnet",
   "chain": "ETH",
   "icon": {
-    "url": "ipfs://QmdwQDr6vmBtXmK2TmknkEuZNoaDqTasFdZdu3DRw8b2wt",
-    "width": 1000,
-    "height": 1628,
-    "format": "png"
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
+    "height": 512,
+    "width": 512,
+    "format": "png",
+    "sizes": [
+      512,
+      256,
+      128,
+      64,
+      32,
+      16
+    ]
   },
   "rpc": [
     "https://ethereum.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
@@ -16,10 +24,10 @@
   ],
   "features": [
     {
-      "name": "EIP155"
+      "name": "EIP1559"
     },
     {
-      "name": "EIP1559"
+      "name": "EIP155"
     }
   ],
   "faucets": [],

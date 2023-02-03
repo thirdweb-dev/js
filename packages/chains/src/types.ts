@@ -6,6 +6,7 @@ export type Chain = {
     width: number;
     height: number;
     format: string;
+    sizes?: number[];
   };
   rpc: string[];
   features?: Array<{ name: string }>;

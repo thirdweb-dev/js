@@ -9,9 +9,9 @@
     "https://rpc.goerli.mudit.blog/"
   ],
   "faucets": [
-    "http://fauceth.komputing.org?chain=5&address=${ADDRESS}",
+    "https://faucet.goerli.mudit.blog",
     "https://goerli-faucet.slock.it?address=${ADDRESS}",
-    "https://faucet.goerli.mudit.blog"
+    "http://fauceth.komputing.org?chain=5&address=${ADDRESS}"
   ],
   "nativeCurrency": {
     "name": "Goerli Ether",
@@ -34,10 +34,18 @@
   ],
   "testnet": true,
   "icon": {
-    "url": "ipfs://QmdwQDr6vmBtXmK2TmknkEuZNoaDqTasFdZdu3DRw8b2wt",
-    "width": 1000,
-    "height": 1628,
-    "format": "png"
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
+    "height": 512,
+    "width": 512,
+    "format": "png",
+    "sizes": [
+      512,
+      256,
+      128,
+      64,
+      32,
+      16
+    ]
   },
   "slug": "goerli"
 }

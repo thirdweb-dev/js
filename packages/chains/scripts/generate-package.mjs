@@ -1,5 +1,17 @@
 import axios from "axios";
+import merge from "deepmerge";
 import fs from "fs";
+
+const combineMerge = (target, source, options) => {
+  let destination = target.slice();
+
+  source.forEach((item, index) => {
+    if (target.indexOf(item) === -1) {
+      destination = [item, ...destination];
+    }
+  });
+  return destination;
+};
 
 const chainsDir = "./chains";
 
@@ -9,7 +21,7 @@ const chainsJsonUrl = "https://chainid.network/chains.json";
 const iconRoute =
   "https://raw.githubusercontent.com/ethereum-lists/chains/master/_data/icons";
 
-const thirdwebRpc = JSON.parse(fs.readFileSync("./thirdweb-rpc.json"));
+const overrides = JSON.parse(fs.readFileSync("./overrides.json"));
 
 /** @type {Chain[]} */
 let chains = (await axios.get(chainsJsonUrl)).data;
@@ -17,13 +29,10 @@ let chains = (await axios.get(chainsJsonUrl)).data;
 chains = chains
   .filter((c) => c.status !== "deprecated")
   .map((chain) => {
-    if (thirdwebRpc[chain.chainId]) {
-      chain.rpc = [
-        `https://${
-          thirdwebRpc[chain.chainId]
-        }.rpc.thirdweb.com/${"${THIRDWEB_API_KEY}"}`,
-        ...chain.rpc,
-      ];
+    if (overrides[chain.chainId]) {
+      chain = merge(chain, overrides[chain.chainId], {
+        arrayMerge: combineMerge,
+      });
     }
 
     // apparently this is the best way to do this off of raw data
@@ -92,15 +101,20 @@ for (const chain of chains) {
 
   try {
     if ("icon" in chain) {
-      const response = await axios.get(`${iconRoute}/${chain.icon}.json`);
-      if (response.status == 200) {
-        const iconMeta = response.data[0];
-        chain.icon = iconMeta;
-        if (!chainToIcon[chain.chain]) {
-          chainToIcon[chain.chain] = iconMeta;
+      if (typeof chain.icon === "string") {
+        const response = await axios.get(`${iconRoute}/${chain.icon}.json`);
+        if (response.status == 200) {
+          const iconMeta = response.data[0];
+          chain.icon = iconMeta;
+          if (!chainToIcon[chain.chain]) {
+            chainToIcon[chain.chain] = iconMeta;
+          }
+        } else {
+          console.log(response);
         }
       } else {
-        console.log(response);
+        // just pass it through
+        chainToIcon[chain.chain] = chain.icon;
       }
     } else {
       // if no icon, use the icon of the chain with the same name

@@ -18,13 +18,13 @@
   "faucets": [],
   "explorers": [
     {
-      "name": "Arbiscan",
-      "url": "https://arbiscan.io",
+      "name": "Arbitrum Explorer",
+      "url": "https://explorer.arbitrum.io",
       "standard": "EIP3091"
     },
     {
-      "name": "Arbitrum Explorer",
-      "url": "https://explorer.arbitrum.io",
+      "name": "Arbiscan",
+      "url": "https://arbiscan.io",
       "standard": "EIP3091"
     }
   ],
@@ -38,12 +38,20 @@
       }
     ]
   },
-  "testnet": false,
   "icon": {
-    "url": "ipfs://QmdwQDr6vmBtXmK2TmknkEuZNoaDqTasFdZdu3DRw8b2wt",
-    "width": 1000,
-    "height": 1628,
-    "format": "png"
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/arbitrum/512.png",
+    "height": 512,
+    "width": 512,
+    "format": "png",
+    "sizes": [
+      512,
+      256,
+      128,
+      64,
+      32,
+      16
+    ]
   },
+  "testnet": false,
   "slug": "arbitrum-one"
 }

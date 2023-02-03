@@ -18,10 +18,18 @@
   "chainId": 250,
   "networkId": 250,
   "icon": {
-    "url": "ipfs://QmcM8kHNsNYoitt5S3kLThyrKVFTZo3k2rgnume6tnNroQ",
-    "width": 1212,
-    "height": 1546,
-    "format": "png"
+    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/fantom/512.png",
+    "height": 512,
+    "width": 512,
+    "format": "png",
+    "sizes": [
+      512,
+      256,
+      128,
+      64,
+      32,
+      16
+    ]
   },
   "explorers": [
     {
