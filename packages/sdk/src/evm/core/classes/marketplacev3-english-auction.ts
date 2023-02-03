@@ -693,7 +693,7 @@ export class MarketplaceV3EnglishAuctions<
   private async mapAuction(
     auction: IEnglishAuctions.AuctionStruct,
   ): Promise<EnglishAuction> {
-    let status: Status = Status.DNE;
+    let status: Status = Status.UNSET;
     const block = await this.contractWrapper.getProvider().getBlock("latest");
     const blockTime = block.timestamp;
     switch (auction.status) {

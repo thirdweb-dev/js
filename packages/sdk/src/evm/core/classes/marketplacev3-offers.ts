@@ -338,7 +338,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
    * @returns - The mapped interface.
    */
   private async mapOffer(offer: IOffers.OfferStruct): Promise<OfferV3> {
-    let status: Status = Status.DNE;
+    let status: Status = Status.UNSET;
     const block = await this.contractWrapper.getProvider().getBlock("latest");
     const blockTime = block.timestamp;
     switch (offer.status) {

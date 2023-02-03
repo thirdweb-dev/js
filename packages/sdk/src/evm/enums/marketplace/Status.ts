@@ -1,5 +1,5 @@
 export enum Status {
-  DNE = 0,
+  UNSET = 0,
   Created = 1,
   Completed = 2,
   Cancelled = 3,

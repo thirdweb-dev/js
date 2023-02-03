@@ -714,7 +714,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   private async mapListing(
     listing: IDirectListings.ListingStruct,
   ): Promise<DirectListingV3> {
-    let status: Status = Status.DNE;
+    let status: Status = Status.UNSET;
     const block = await this.contractWrapper.getProvider().getBlock("latest");
     const blockTime = block.timestamp;
     switch (listing.status) {
