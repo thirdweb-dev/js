@@ -66,7 +66,6 @@ export const CHAIN_ID_TO_NAME = Object.fromEntries(
 
 export function buildDefaultMap(sdkOptions: SDKOptions = {}) {
   const options = SDKOptionsSchema.parse(sdkOptions);
-  console.log("options", options.chains);
   return options.chains.reduce((previousValue, currentValue) => {
     previousValue[currentValue.chainId] = currentValue;
     return previousValue;
