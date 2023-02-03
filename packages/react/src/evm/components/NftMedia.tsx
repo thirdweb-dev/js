@@ -10,6 +10,8 @@ export interface ThirdwebNftMediaProps extends SharedMediaProps {
    * The NFT metadata of the NFT returned by the thirdweb sdk.
    */
   metadata: NFTMetadata;
+  width?: string;
+  height?: string;
 }
 
 /**
@@ -38,13 +40,15 @@ export interface ThirdwebNftMediaProps extends SharedMediaProps {
 export const ThirdwebNftMedia = React.forwardRef<
   HTMLMediaElement,
   ThirdwebNftMediaProps
->(({ metadata, style, ...props }, ref) => {
+  >(({ metadata, width = "300px", height = "300px", style, ...props }, ref) => {
   return (
     <MediaRenderer
       src={metadata.animation_url || metadata.image}
       poster={metadata.image}
       alt={metadata.name?.toString() || ""}
       ref={ref}
+      width={width}
+      height={height}
       style={{ ...style }} 
       {...props}
     />

@@ -57,6 +57,8 @@ export interface MediaRendererProps extends SharedMediaProps {
    * The media poster image uri. (if applicable)
    */
   poster?: string | null;
+  width?: string;
+  height?: string;
 }
 
 interface PlayButtonProps {
