@@ -131,6 +131,41 @@ export interface MarketplaceContractDeployMetadata {
 }
 
 /**
+ * Options for deploying a Marketplace-V3 contract
+ * @public
+ */
+export interface MarketplaceV3ContractDeployMetadata {
+  /**
+   * name of the contract
+   */
+  name: string;
+  /**
+   * Optional description of the contract
+   */
+  description?: string;
+  /**
+   * Optional image for the contract
+   */
+  image?: FileOrBufferOrString;
+  /**
+   * Optional url for the contract
+   */
+  external_link?: string;
+  /**
+   * Custom gasless trusted forwarder addresses
+   */
+  trusted_forwarders?: string[];
+  /**
+   * The address that will receive the proceeds from platform fees
+   */
+  platform_fee_recipient?: string;
+  /**
+   * The percentage (in basis points) of platform fees
+   */
+  platform_fee_basis_points?: number;
+}
+
+/**
  * Options for deploying a Vote contract
  * @public
  */

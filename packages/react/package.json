@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react",
-  "version": "3.7.3",
+  "version": "3.7.4",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -102,6 +102,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.0",
     "@emotion/styled": "^11.10.0",
+    "@google/model-viewer": "^2.1.1",
     "@react-icons/all-files": "^4.1.0",
     "@safe-global/safe-core-sdk": "^3.2.0",
     "@safe-global/safe-ethers-adapters": "0.1.0-alpha.13",

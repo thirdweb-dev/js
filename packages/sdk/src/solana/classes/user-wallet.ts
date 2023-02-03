@@ -1,6 +1,7 @@
 import { CurrencyValue } from "../../core/schema/token";
 import { WalletSigner } from "../types/common";
 import { toCurrencyValue } from "../utils/token";
+import { NFTHelper } from "./helpers/nft-helper";
 import {
   amount,
   guestIdentity,
@@ -12,7 +13,12 @@ import {
   SOL,
   walletAdapterIdentity,
 } from "@metaplex-foundation/js";
-import { Keypair, PublicKey } from "@solana/web3.js";
+import {
+  Keypair,
+  PublicKey,
+  SignaturesForAddressOptions,
+  TransactionResponse,
+} from "@solana/web3.js";
 import bs58 from "bs58";
 import EventEmitter from "eventemitter3";
 import invariant from "tiny-invariant";
@@ -170,6 +176,20 @@ export class UserWallet {
       this.metaplex.identity().publicKey,
     );
     return toCurrencyValue(amount(value, SOL));
+  }
+
+  /**
+   * Get the all transactions for this program
+   * @beta
+   */
+  async getTransactions(
+    options?: SignaturesForAddressOptions,
+  ): Promise<TransactionResponse[]> {
+    const helper = new NFTHelper(this.metaplex);
+    return helper.getTransactions(
+      this.metaplex.identity().publicKey.toBase58(),
+      options,
+    );
   }
 
   private connectToMetaplex(signer: WalletSigner) {
