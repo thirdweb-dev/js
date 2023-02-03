@@ -9,8 +9,18 @@ import {
   CarbonPlayFilledAlt,
 } from "./Icons";
 import { useQuery } from "@tanstack/react-query";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  lazy,
+  Suspense,
+} from "react";
 import useDimensions from "react-cool-dimensions";
+
+const ModelViewer = lazy(() => import("./ModelViewer"));
 
 export interface SharedMediaProps {
   className?: string;
@@ -25,6 +35,8 @@ export interface SharedMediaProps {
    * Show the media controls (where applicable) (default false)
    */
   controls?: HTMLVideoElement["controls"];
+
+  children?: ReactNode;
 }
 
 /**
@@ -45,6 +57,8 @@ export interface MediaRendererProps extends SharedMediaProps {
    * The media poster image uri. (if applicable)
    */
   poster?: string | null;
+  width?: string;
+  height?: string;
 }
 
 interface PlayButtonProps {
@@ -399,6 +413,7 @@ LinkPlayer.displayName = "LinkPlayer";
  * This component can be used to render any media type, including image, audio, video, and html files.
  * Its convenient for rendering NFT media files, as these can be a variety of different types.
  * The component falls back to a external link if the media type is not supported.
+ * The default size is 300px by 300px, but this can be changed using the `width` and `height` props.
  *
  * Props: {@link MediaRendererProps}
  *
@@ -420,10 +435,10 @@ export const MediaRenderer = React.forwardRef<
   MediaRendererProps
 >(
   (
-    { src, poster, alt, requireInteraction = false, style, ...restProps },
+    { src, poster, alt, requireInteraction = false, width = "300px", height = "300px", style, ...restProps },
     ref,
   ) => {
-    const mergedStyle: React.CSSProperties = { objectFit: "contain", ...style };
+    const mergedStyle: React.CSSProperties = { objectFit: "contain", width, height, ...style };
     const videoOrImageSrc = useResolvedMediaType(src ?? undefined);
     const possiblePosterSrc = useResolvedMediaType(poster ?? undefined);
     if (!videoOrImageSrc.mimeType) {
@@ -444,6 +459,30 @@ export const MediaRenderer = React.forwardRef<
           requireInteraction={requireInteraction}
           {...restProps}
         />
+      );
+    } else if (videoOrImageSrc.mimeType.startsWith("model")) {
+      return (
+        <Suspense
+          fallback={
+            poster ? (
+              <img
+                style={mergedStyle}
+                src={poster}
+                alt={alt}
+                ref={ref as unknown as React.LegacyRef<HTMLImageElement>}
+                {...restProps}
+              />
+            ) : null
+          }
+        >
+          <ModelViewer
+            style={mergedStyle}
+            src={videoOrImageSrc.url || ""}
+            poster={poster}
+            alt={alt}
+            {...restProps}
+          />
+        </Suspense>
       );
     } else if (shouldRenderVideoTag(videoOrImageSrc.mimeType)) {
       return (
