@@ -3,6 +3,7 @@ import { FEATURE_TOKEN_MINTABLE } from "../../constants/erc20-features";
 import { Amount } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
+import { TransactionTask } from "./TransactionTask";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
 import { Erc20BatchMintable } from "./erc-20-batch-mintable";
@@ -47,12 +48,19 @@ export class Erc20Mintable implements DetectableFeature {
    * ```
    */
   public async to(to: string, amount: Amount): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("mintTo", [
-        to,
-        await this.erc20.normalizeAmount(amount),
-      ]),
-    };
+    const tx = await this.getMintTransaction(to, amount);
+    return tx.execute();
+  }
+
+  public async getMintTransaction(
+    to: string,
+    amount: Amount,
+  ): Promise<TransactionTask> {
+    return TransactionTask.make({
+      contractWrapper: this.contractWrapper,
+      functionName: "mintTo",
+      args: [to, await this.erc20.normalizeAmount(amount)],
+    });
   }
 
   private detectErc20BatchMintable() {
