@@ -1,6 +1,12 @@
 {
   "name": "Shardeum Liberty 1.X",
   "chain": "Shardeum",
+  "icon": {
+    "url": "ipfs://Qma1bfuubpepKn7DLDy4NPSKDeT3S4VPCNhu6UmdGrb6YD",
+    "width": 609,
+    "height": 533,
+    "format": "png"
+  },
   "rpc": [
     "https://liberty10.shardeum.org/"
   ],
@@ -18,9 +24,9 @@
   "networkId": 8080,
   "explorers": [
     {
-      "name": "Sharedum Scan",
+      "name": "Shardeum Scan",
       "url": "https://explorer-liberty10.shardeum.org",
-      "standard": "EIP3091"
+      "standard": "none"
     }
   ],
   "redFlags": [

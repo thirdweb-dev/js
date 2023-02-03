@@ -1,5 +1,8 @@
 import { getDeployArguments } from "../../common/deploy";
-import { getApprovedImplementation } from "../../constants";
+import {
+  getApprovedImplementation,
+  getDefaultTrustedForwarders,
+} from "../../constants";
 import {
   EditionDropInitializer,
   EditionInitializer,
@@ -29,7 +32,13 @@ import type { TWFactory } from "@thirdweb-dev/contracts-js";
 import TWFactoryAbi from "@thirdweb-dev/contracts-js/dist/abis/TWFactory.json";
 import { ProxyDeployedEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/TWFactory";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { constants, Contract, ContractInterface, ethers } from "ethers";
+import {
+  BigNumber,
+  constants,
+  Contract,
+  ContractInterface,
+  ethers,
+} from "ethers";
 import { EventEmitter } from "eventemitter3";
 import invariant from "tiny-invariant";
 import { z } from "zod";

@@ -16,7 +16,7 @@ import { MarketplaceV3DirectListings } from "../../core/classes/marketplacev3-di
 import { MarketplaceV3EnglishAuctions } from "../../core/classes/marketplacev3-english-auction";
 import { MarketplaceV3Offers } from "../../core/classes/marketplacev3-offers";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
-import { NetworkOrSignerOrProvider } from "../../core/types";
+import { NetworkInput } from "../../core/types";
 import { Abi } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -196,7 +196,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
   }
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
@@ -229,7 +229,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
-  onNetworkUpdated(network: NetworkOrSignerOrProvider) {
+  onNetworkUpdated(network: NetworkInput) {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 

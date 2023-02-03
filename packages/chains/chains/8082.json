@@ -1,5 +1,5 @@
 {
-  "name": "Shardeum Liberty 2.X",
+  "name": "Shardeum Sphinx 1.X",
   "chain": "Shardeum",
   "icon": {
     "url": "ipfs://Qma1bfuubpepKn7DLDy4NPSKDeT3S4VPCNhu6UmdGrb6YD",
@@ -8,10 +8,10 @@
     "format": "png"
   },
   "rpc": [
-    "https://liberty20.shardeum.org/"
+    "https://sphinx.shardeum.org/"
   ],
   "faucets": [
-    "https://faucet.liberty20.shardeum.org"
+    "https://faucet-sphinx.shardeum.org/"
   ],
   "nativeCurrency": {
     "name": "Shardeum SHM",
@@ -19,13 +19,13 @@
     "decimals": 18
   },
   "infoURL": "https://docs.shardeum.org/",
-  "shortName": "Liberty20",
-  "chainId": 8081,
-  "networkId": 8081,
+  "shortName": "Sphinx10",
+  "chainId": 8082,
+  "networkId": 8082,
   "explorers": [
     {
       "name": "Shardeum Scan",
-      "url": "https://explorer-liberty20.shardeum.org",
+      "url": "https://explorer-sphinx.shardeum.org",
       "standard": "none"
     }
   ],
@@ -33,5 +33,5 @@
     "reusedChainId"
   ],
   "testnet": false,
-  "slug": "shardeum-liberty-2-x"
+  "slug": "shardeum-sphinx-1-x"
 }
