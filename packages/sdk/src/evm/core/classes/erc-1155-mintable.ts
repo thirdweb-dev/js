@@ -5,6 +5,7 @@ import { FEATURE_EDITION_MINTABLE } from "../../constants/erc1155-features";
 import { EditionMetadataOrUri } from "../../schema";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResultWithId } from "../types";
+import { TransactionTask } from "./TransactionTask";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc1155 } from "./erc-1155";
 import { Erc1155BatchMintable } from "./erc-1155-batch-mintable";
@@ -77,16 +78,8 @@ export class Erc1155Mintable implements DetectableFeature {
     to: string,
     metadataWithSupply: EditionMetadataOrUri,
   ): Promise<TransactionResultWithId<NFT>> {
-    const uri = await uploadOrExtractURI(
-      metadataWithSupply.metadata,
-      this.storage,
-    );
-    const receipt = await this.contractWrapper.sendTransaction("mintTo", [
-      to,
-      ethers.constants.MaxUint256,
-      uri,
-      metadataWithSupply.supply,
-    ]);
+    const tx = await this.getMintTransaction(to, metadataWithSupply);
+    const { receipt } = await tx.execute();
     const event = this.contractWrapper.parseLogs<TransferSingleEvent>(
       "TransferSingle",
       receipt?.logs,
@@ -100,6 +93,21 @@ export class Erc1155Mintable implements DetectableFeature {
       receipt,
       data: () => this.erc1155.get(id.toString()),
     };
+  }
+
+  public async getMintTransaction(
+    to: string,
+    metadataWithSupply: EditionMetadataOrUri,
+  ): Promise<TransactionTask> {
+    const uri = await uploadOrExtractURI(
+      metadataWithSupply.metadata,
+      this.storage,
+    );
+    return TransactionTask.make({
+      contractWrapper: this.contractWrapper,
+      functionName: "mintTo",
+      args: [to, ethers.constants.MaxUint256, uri, metadataWithSupply.supply],
+    });
   }
 
   /**
