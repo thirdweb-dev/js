@@ -15,7 +15,7 @@ import {
   ChainId,
 } from '@thirdweb-dev/sdk';
 import type { ThirdwebStorage } from '@thirdweb-dev/storage';
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 import {
   WagmiConfig,
   Connector,
@@ -49,8 +49,6 @@ export type ChainRpc<TSupportedChain extends SupportedChain> = Record<
 
 interface IContext {
   isInitializing: boolean;
-  displayUri: string | undefined,
-  connectorError: Error | undefined
 }
 
 /**
@@ -196,8 +194,6 @@ export const ThirdwebProvider = <
 }: React.PropsWithChildren<ThirdwebProviderProps<TSupportedChain>>) => {
   const [isInitializing, setIsInitializing] = useState(true);
   const [signer, setSigner] = useState<Signer | undefined>()
-  const [displayUri, setDisplayUri] = useState<string | undefined>();
-  const [connectorError, setConnectorError] = useState<Error | undefined>();
 
   const _supportedChains: Chain[] = useMemo(() => {
     return supportedChains
@@ -223,26 +219,6 @@ export const ThirdwebProvider = <
       return prev;
     }, {} as Record<number, string>);
   }, [chainRpc, _supportedChains]);
-
-  const _reset = () => {
-  };
-
-  const _subscribeConnector = useCallback((walletConnector: WalletConnectConnector) => {
-    walletConnector.addListener('message', ({type, data}) => {
-        switch (type) {
-          case 'display_uri':
-            invariant(typeof data === 'string', 'display_uri message data must be a string')
-            setDisplayUri(data);
-            break;
-        }
-      })
-      walletConnector.addListener('error', (error) => {
-        setConnectorError(error)
-      })
-      walletConnector.addListener('disconnect', () => {
-        _reset()
-      })
-  }, [])
 
   const _client = useMemo(() => {
     const walletConnectClientMeta = {
@@ -285,8 +261,6 @@ export const ThirdwebProvider = <
       }
     });
 
-    _subscribeConnector(walletConnector);
-
     walletConnector.getProvider().then((provider) => {
       const web3Provider = new providers.Web3Provider(provider);
       setSigner(web3Provider.getSigner())
@@ -318,7 +292,7 @@ export const ThirdwebProvider = <
     });
 
     return client;
-  }, [_subscribeConnector, dAppMeta.description, dAppMeta.logoUrl, dAppMeta.name, dAppMeta.url, walletConnectors]);
+  }, [dAppMeta.description, dAppMeta.logoUrl, dAppMeta.name, dAppMeta.url, walletConnectors]);
 
   const readonlySettings: SDKOptionsOutput['readonlySettings'] = useMemo(() => {
     if (
@@ -356,9 +330,7 @@ export const ThirdwebProvider = <
 
   const value = useMemo(() => ({
     isInitializing,
-    displayUri,
-    connectorError
-  }), [isInitializing, displayUri, connectorError])
+  }), [isInitializing])
 
   return (
     <SignerContext.Provider value={{...value}}>

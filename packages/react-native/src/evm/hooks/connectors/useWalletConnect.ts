@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import invariant from "tiny-invariant";
 import { useClient, useConnect } from "wagmi";
 
@@ -41,6 +42,9 @@ export function useWalletConnect() {
   const { connect, connectors, error, isLoading, isSuccess } =
     useConnect();
 
+  const [displayUri, setDisplayUri] = useState<string | undefined>();
+  const [connectorError, setConnectorError] = useState<Error | undefined>();
+
   const connector = connectors.find(
     (c) => c.id === "walletConnect",
   );
@@ -49,5 +53,24 @@ export function useWalletConnect() {
     "WalletConnect connector not found, please make sure it is provided to your <ThirdwebProvider />",
   );
 
-  return { connector: connector, connect: () => { connect({ connector: connector }) }, error: error, isLoading: isLoading, isSuccess: isSuccess }
+  useEffect(() => {
+    connector.addListener('message', ({ type, data }) => {
+      switch (type) {
+        case 'display_uri':
+          invariant(typeof data === 'string', 'display_uri message data must be a string')
+          setDisplayUri(data);
+          break;
+      }
+    })
+    connector.addListener('error', (connectError) => {
+      setConnectorError(connectError)
+    })
+
+    return () => {
+      connector.removeAllListeners();
+    }
+  }, [connector]);
+
+  return { connector: connector, connect: () => { connect({ connector: connector }) }, error: error, isLoading: isLoading, isSuccess: isSuccess, displayUri, connectorError };
 }
+
