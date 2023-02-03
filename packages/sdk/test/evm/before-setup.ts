@@ -13,6 +13,7 @@ import {
   NFTCollectionInitializer,
   NFTDropInitializer,
   PackInitializer,
+  resolveContractUriFromAddress,
   SignatureDropInitializer,
   SplitInitializer,
   ThirdwebSDK,
@@ -21,7 +22,8 @@ import {
   VoteInitializer,
 } from "../../src/evm";
 import { Plugin } from "../../src/evm/types/plugins";
-import { MockStorage } from "./mock/MockStorage";
+import { MockStorage, mockUploadWithCID } from "./mock/MockStorage";
+import weth from "./mock/WETH9.json";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   ContractPublisher,
@@ -54,6 +56,14 @@ import {
   PluginMap,
   PluginMap__factory,
   VoteERC20__factory,
+  MarketplaceRouter__factory,
+  DirectListingsLogic__factory,
+  DirectListingsLogic,
+  MarketplaceRouter,
+  EnglishAuctionsLogic__factory,
+  EnglishAuctionsLogic,
+  OffersLogic__factory,
+  OffersLogic,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -74,6 +84,7 @@ let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
 let storage: ThirdwebStorage;
 let implementations: { [key in ContractType]?: string };
+let mock_weth_address: string;
 
 const fastForwardTime = async (timeInSeconds: number): Promise<void> => {
   const now = Math.floor(Date.now() / 1000);
@@ -100,6 +111,15 @@ export const mochaHooks = {
     const trustedForwarderAddress =
       "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
     await jsonProvider.send("hardhat_reset", []);
+
+    const mock_weth_deployer = new ethers.ContractFactory(
+      weth.abi,
+      weth.bytecode,
+    )
+      .connect(signer)
+      .deploy();
+    const mock_weth = await (await mock_weth_deployer).deployed();
+    mock_weth_address = mock_weth.address;
 
     const registry = (await new ethers.ContractFactory(
       TWRegistry__factory.abi,
@@ -164,7 +184,7 @@ export const mochaHooks = {
     }
 
     for (const contractType in CONTRACTS_MAP) {
-      if (contractType === "custom") {
+      if (contractType === "custom" || contractType === "marketplace-v3") {
         continue;
       }
       let factories: any[] = [];
@@ -230,6 +250,13 @@ export const mochaHooks = {
       }
     }
 
+    // setup marketplace-v3 and add implementation to factory
+    const marketplaceEntrypointAddress = await setupMarketplaceV3();
+    const tx = await thirdwebFactoryDeployer.addImplementation(
+      marketplaceEntrypointAddress,
+    );
+    await tx.wait();
+
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     process.env.registryAddress = thirdwebRegistryAddress;
     // eslint-disable-next-line turbo/no-undeclared-env-vars
@@ -254,6 +281,18 @@ export const mochaHooks = {
   },
 };
 
+const getFunctionSignature = (fnInputs: any): string => {
+  return (
+    "(" +
+    fnInputs
+      .map((i) => {
+        return i.type === "tuple" ? getFunctionSignature(i.components) : i.type;
+      })
+      .join(",") +
+    ")"
+  );
+};
+
 const generatePluginFunctions = (
   pluginAddress: string,
   pluginAbi: Abi,
@@ -263,14 +302,44 @@ const generatePluginFunctions = (
   // TODO - filter out common functions like _msgSender(), contractType(), etc.
   for (const fnFragment of Object.values(pluginInterface.functions)) {
     const fn = pluginInterface.getFunction(fnFragment.name);
+    if (fn.name.includes("_")) {
+      continue;
+    }
     pluginFunctions.push({
       functionSelector: pluginInterface.getSighash(fn),
-      functionSignature:
-        fn.name + "(" + fn.inputs.map((i) => i.type).join(",") + ")",
+      functionSignature: fn.name + getFunctionSignature(fn.inputs),
       pluginAddress,
     });
   }
   return pluginFunctions;
+};
+
+const mockUploadContractMetadata = async (address: string, abi: any) => {
+  const ipfsHash = (await resolveContractUriFromAddress(
+    address,
+    defaultProvider,
+  )) as string;
+
+  const metadata = {
+    compiler: {},
+    output: {
+      abi,
+      devdoc: {},
+      userdoc: {},
+    },
+    settings: {
+      compilationTarget: {},
+      evmVersion: {},
+      metadata: {},
+      optimizer: {},
+      remappings: [],
+    },
+    sources: {},
+    version: 1,
+  };
+  const cid = ipfsHash.replace("ipfs://", "");
+
+  await mockUploadWithCID(cid, JSON.stringify(metadata));
 };
 
 // Setup multichain registry for tests
@@ -310,6 +379,93 @@ async function setupMultichainRegistry(
     await multichainRegistryRouterDeployer.deployed();
 
   return multichainRegistryRouter.address;
+}
+
+// Setup marketplace-v3 for tests
+async function setupMarketplaceV3(): Promise<string> {
+  const nativeTokenWrapperAddress = getNativeTokenByChainId(ChainId.Hardhat)
+    .wrapped.address;
+  // Direct Listings
+  const directListingsLogicDeployer = (await new ethers.ContractFactory(
+    DirectListingsLogic__factory.abi,
+    DirectListingsLogic__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(mock_weth_address)) as DirectListingsLogic;
+  const directListingsLogic = await directListingsLogicDeployer.deployed();
+  await mockUploadContractMetadata(
+    directListingsLogic.address,
+    DirectListingsLogic__factory.abi,
+  );
+
+  const pluginsDirectListings: Plugin[] = generatePluginFunctions(
+    directListingsLogic.address,
+    DirectListingsLogic__factory.abi,
+  );
+
+  // English Auctions
+  const englishAuctionsLogicDeployer = (await new ethers.ContractFactory(
+    EnglishAuctionsLogic__factory.abi,
+    EnglishAuctionsLogic__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(mock_weth_address)) as EnglishAuctionsLogic;
+  const englishAuctionsLogic = await englishAuctionsLogicDeployer.deployed();
+  await mockUploadContractMetadata(
+    englishAuctionsLogic.address,
+    EnglishAuctionsLogic__factory.abi,
+  );
+
+  const pluginsEnglishAuctions: Plugin[] = generatePluginFunctions(
+    englishAuctionsLogic.address,
+    EnglishAuctionsLogic__factory.abi,
+  );
+
+  // Offers
+  const offersLogicDeployer = (await new ethers.ContractFactory(
+    OffersLogic__factory.abi,
+    OffersLogic__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy()) as OffersLogic;
+  const offersLogic = await offersLogicDeployer.deployed();
+  await mockUploadContractMetadata(
+    offersLogic.address,
+    OffersLogic__factory.abi,
+  );
+
+  const pluginsOffers: Plugin[] = generatePluginFunctions(
+    offersLogic.address,
+    OffersLogic__factory.abi,
+  );
+
+  // console.log([
+  //   ...pluginsDirectListings,
+  //   ...pluginsEnglishAuctions,
+  //   ...pluginsOffers,
+  // ]);
+
+  const pluginMapDeployer = (await new ethers.ContractFactory(
+    PluginMap__factory.abi,
+    PluginMap__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy([
+      ...pluginsDirectListings,
+      ...pluginsEnglishAuctions,
+      ...pluginsOffers,
+    ])) as PluginMap;
+  const pluginMap = await pluginMapDeployer.deployed();
+
+  const marketplaceRouterDeployer = (await new ethers.ContractFactory(
+    MarketplaceRouter__factory.abi,
+    MarketplaceRouter__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(pluginMap.address)) as MarketplaceRouter;
+  const marketplaceRouter = await marketplaceRouterDeployer.deployed();
+
+  return marketplaceRouter.address;
 }
 
 export {

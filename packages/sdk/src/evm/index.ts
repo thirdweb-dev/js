@@ -34,6 +34,7 @@ export * from "./integrations/thirdweb-checkout";
 export type { Edition } from "./contracts/prebuilt-implementations/edition";
 export type { EditionDrop } from "./contracts/prebuilt-implementations/edition-drop";
 export type { Marketplace } from "./contracts/prebuilt-implementations/marketplace";
+export type { MarketplaceV3 } from "./contracts/prebuilt-implementations/marketplacev3";
 export type { Multiwrap } from "./contracts/prebuilt-implementations/multiwrap";
 export type { NFTCollection } from "./contracts/prebuilt-implementations/nft-collection";
 export type { NFTDrop } from "./contracts/prebuilt-implementations/nft-drop";

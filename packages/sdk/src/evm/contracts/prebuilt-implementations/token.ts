@@ -187,6 +187,16 @@ export class Token extends StandardErc20<TokenERC20> {
   }
 
   /**
+   * Construct a mint transaction without executing it.
+   * This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
+   * @param receiver - Address you want to send the token to
+   * @param amount - The amount of tokens you want to mint
+   */
+  public async getMintTransaction(to: string, amount: Amount) {
+    return this.erc20.getMintTransaction(to, amount);
+  }
+
+  /**
    * Mint Tokens To Many Wallets
    *
    * @remarks Mint tokens to many wallets in one transaction.

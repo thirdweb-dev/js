@@ -259,6 +259,19 @@ export class Edition extends StandardErc1155<TokenERC1155> {
   }
 
   /**
+   * Construct a mint transaction without executing it.
+   * This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
+   * @param receiver - Address you want to send the token to
+   * @param metadataWithSupply - The metadata of the NFT you want to mint
+   */
+  public async getMintTransaction(
+    receiver: string,
+    metadataWithSupply: EditionMetadataOrUri,
+  ) {
+    return this.erc1155.getMintTransaction(receiver, metadataWithSupply);
+  }
+
+  /**
    * Increase the supply of an existing NFT and mint it to the connected wallet
    *
    * @param tokenId - the token id of the NFT to increase supply of

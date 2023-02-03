@@ -12,6 +12,7 @@ import {
   EditionInitializer,
   getContractName,
   MarketplaceInitializer,
+  MarketplaceV3Initializer,
   MultiwrapInitializer,
   NFTCollectionInitializer,
   NFTDropInitializer,
@@ -27,6 +28,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { DeployEvent, DeployEvents } from "../../types";
 import {
   MarketplaceContractDeployMetadata,
+  MarketplaceV3ContractDeployMetadata,
   MultiwrapContractDeployMetadata,
   NFTContractDeployMetadata,
   SplitContractDeployMetadata,
@@ -313,6 +315,30 @@ export class ContractDeployer extends RPCConnectionHandler {
   ): Promise<string> {
     return await this.deployBuiltInContract(
       MarketplaceInitializer.contractType,
+      metadata,
+    );
+  }
+
+  /**
+   * Deploys a new Marketplace-V3 contract
+   *
+   * @remarks Deploys a Marketplace-V3 contract and returns the address of the deployed contract
+   *
+   * @example
+   * ```javascript
+   * const contractAddress = await sdk.deployer.deployMarketplaceV3({
+   *   name: "My Marketplace",
+   *   primary_sale_recipient: "your-address",
+   * });
+   * ```
+   * @param metadata - the contract metadata
+   * @returns the address of the deployed contract
+   */
+  public async deployMarketplaceV3(
+    metadata: MarketplaceV3ContractDeployMetadata,
+  ): Promise<string> {
+    return await this.deployBuiltInContract(
+      MarketplaceV3Initializer.contractType,
       metadata,
     );
   }

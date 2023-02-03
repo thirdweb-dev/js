@@ -18,7 +18,11 @@ import {
   toOriginalEditionAccount,
   TransactionBuilder,
 } from "@metaplex-foundation/js";
-import { PublicKey, TransactionResponse } from "@solana/web3.js";
+import {
+  PublicKey,
+  SignaturesForAddressOptions,
+  TransactionResponse,
+} from "@solana/web3.js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
 
@@ -144,8 +148,10 @@ export class NFTCollection {
    * Get the all transactions for this program
    * @beta
    */
-  async getTransactions(): Promise<TransactionResponse[]> {
-    return this.nft.getTransactions(this.publicKey.toBase58());
+  async getTransactions(
+    options?: SignaturesForAddressOptions,
+  ): Promise<TransactionResponse[]> {
+    return this.nft.getTransactions(this.publicKey.toBase58(), options);
   }
 
   /**

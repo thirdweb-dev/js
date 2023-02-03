@@ -1,5 +1,14 @@
 # @thirdweb-dev/react
 
+## 3.7.4
+
+### Patch Changes
+
+- [#470](https://github.com/thirdweb-dev/js/pull/470) [`b59a31c`](https://github.com/thirdweb-dev/js/commit/b59a31c365380c4dc9aed8d7678d46b4b21a029d) Thanks [@JustinTime42](https://github.com/JustinTime42)! - Added support for displaying 3d model NFTs
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@3.7.4
+
 ## 3.7.3
 
 ### Patch Changes
