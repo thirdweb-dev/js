@@ -1,5 +1,21 @@
 # @thirdweb-dev/sdk
 
+## 3.7.3
+
+### Patch Changes
+
+- [#410](https://github.com/thirdweb-dev/js/pull/410) [`b45d761`](https://github.com/thirdweb-dev/js/commit/b45d761f8f2695b48312ec6eff15e0549e6a8a41) Thanks [@adam-maj](https://github.com/adam-maj)! - Add creator and royalty settings to drop
+
+- [#535](https://github.com/thirdweb-dev/js/pull/535) [`5f8ec45`](https://github.com/thirdweb-dev/js/commit/5f8ec45af7c81d075a84846098f38cad90d03fb9) Thanks [@jnsdls](https://github.com/jnsdls)! - [Solana] - add `burnBatch()` and `getTransactions()` for NFTCollection and NFTDrop
+
+- [#471](https://github.com/thirdweb-dev/js/pull/471) [`04de5b2`](https://github.com/thirdweb-dev/js/commit/04de5b278362573991140c3a496de7451e5c770d) Thanks [@adam-maj](https://github.com/adam-maj)! - Expose getSnapshotEntryForAddress
+
+## 3.7.2
+
+### Patch Changes
+
+- [#525](https://github.com/thirdweb-dev/js/pull/525) [`19b8e18`](https://github.com/thirdweb-dev/js/commit/19b8e18b6bf68e374c817fefbf2fd29ac5573052) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix `getClaimTransaction().estimateGasCostInEther()` for claims costing native currency
+
 ## 3.7.1
 
 ## 3.7.0

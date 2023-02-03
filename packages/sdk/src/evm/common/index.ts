@@ -10,4 +10,7 @@ export {
   fetchCurrencyMetadata,
   normalizePriceValue,
 } from "./currency";
-export { convertToReadableQuantity } from "./claim-conditions";
+export {
+  convertToReadableQuantity,
+  fetchSnapshotEntryForAddress,
+} from "./claim-conditions";
