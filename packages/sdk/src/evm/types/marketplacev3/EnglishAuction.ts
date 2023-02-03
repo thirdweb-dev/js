@@ -1,7 +1,6 @@
 import { NFTMetadata } from "../../../core/schema/nft";
 import { Status } from "../../enums";
 import { CurrencyValue } from "../currency";
-import { BigNumber, BigNumberish } from "ethers";
 
 /**
  * Represents a new marketplace english-auction.
