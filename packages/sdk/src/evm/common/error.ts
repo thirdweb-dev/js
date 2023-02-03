@@ -384,8 +384,6 @@ export async function convertToTWError(
   contractAddress: string,
   contractInterface: ethers.utils.Interface,
 ): Promise<TransactionError> {
-  console.log(error.message);
-
   let raw: string;
   if (typeof error === "object") {
     // metamask errors comes as objects, apply parsing on data object

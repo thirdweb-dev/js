@@ -399,14 +399,13 @@ export class ContractWrapper<
     // First, if no gasLimit is passed, call estimate gas ourselves
     if (!callOverrides.gasLimit) {
       try {
-        callOverrides.gasLimit = await this.estimateGas(fn, args);
+        callOverrides.gasLimit = await this.writeContract.estimateGas[
+          fn as string
+        ](...args, callOverrides);
       } catch {
         // If gas estimation fails, we'll call static to get a better error message
         try {
-          await this.writeContract.callStatic[fn as string](
-            ...args,
-            callOverrides,
-          );
+          await this.writeContract.callStatic[fn as string](...args);
         } catch (err: any) {
           throw await this.formatError(err);
         }
