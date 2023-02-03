@@ -1,3 +1,4 @@
+import { DEFAULT_QUERY_ALL_COUNT } from "../../core/schema/QueryParams";
 import { MAX_BPS } from "../../core/schema/shared";
 import {
   InterfaceId_IERC1155,
@@ -15,7 +16,13 @@ import type { IERC1155, IERC165, IERC721 } from "@thirdweb-dev/contracts-js";
 import ERC165Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC165.json";
 import ERC721Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC721.json";
 import ERC1155Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC1155.json";
-import { BigNumber, BigNumberish, Contract, providers } from "ethers";
+import {
+  BigNumber,
+  BigNumberish,
+  Contract,
+  ContractFunction,
+  providers,
+} from "ethers";
 import invariant from "tiny-invariant";
 
 /**
@@ -234,4 +241,19 @@ export function isWinningBid(
   }
   const buffer = newBidPrice.sub(winningPrice).mul(MAX_BPS).div(winningPrice);
   return buffer.gte(bidBuffer);
+}
+
+export async function getAllInBatches(
+  start: number,
+  end: number,
+  fn: ContractFunction,
+): Promise<any[]> {
+  let batches: any[] = [];
+  while (end - start > DEFAULT_QUERY_ALL_COUNT) {
+    batches.push(fn(start, start + DEFAULT_QUERY_ALL_COUNT - 1));
+    start += DEFAULT_QUERY_ALL_COUNT;
+  }
+  batches.push(fn(start, end - 1));
+
+  return await Promise.all(batches);
 }

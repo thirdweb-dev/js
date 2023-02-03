@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/contracts-js",
   "dependencies": {
-    "@thirdweb-dev/contracts": "3.3.0"
+    "@thirdweb-dev/contracts": "3.3.3-0"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.18.10",
@@ -34,6 +34,7 @@
     "clean": "rm -rf dist/",
     "typechain": "rm -rf ./src && typechain --target ethers-v5 --out-dir src '../../node_modules/@thirdweb-dev/contracts/abi/*.json'",
     "extract-abi": "node ./scripts/extract-abis.mjs",
-    "build": "yarn typechain && tsc && yarn preconstruct build && yarn extract-abi"
+    "build": "yarn typechain && tsc && yarn preconstruct build && yarn extract-abi",
+    "push": "yalc push"
   }
 }

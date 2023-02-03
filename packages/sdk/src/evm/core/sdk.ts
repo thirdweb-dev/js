@@ -354,6 +354,20 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   }
 
   /**
+   * Get an instance of a Marketplace contract
+   * @param contractAddress - the address of the deployed contract
+   * @deprecated
+   * This method is deprecated and will be removed in a future major version. You should use {@link getContract} instead.
+   * ```diff
+   * - const marketplace = await sdk.getMarketplaceV3("0x1234...");
+   * + const marketplace = await sdk.getContract("0x1234...", "marketplace-v3");
+   * ```
+   */
+  public async getMarketplaceV3(contractAddress: string) {
+    return await this.getContract(contractAddress, "marketplace-v3");
+  }
+
+  /**
    * Get an instance of a Pack contract
    * @param contractAddress - the address of the deployed contract
    * @deprecated
