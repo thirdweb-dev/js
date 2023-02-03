@@ -350,7 +350,9 @@ export function parseRevertReason(error: any): string {
 
   return (
     parseMessageParts(/.*?"message":"([^"\\]*).*?/, errorString) ||
-    parseMessageParts(/.*?"reason":"([^"\\]*).*?/, errorString)
+    parseMessageParts(/.*?"reason":"([^"\\]*).*?/, errorString) ||
+    error.message ||
+    ""
   );
 }
 
