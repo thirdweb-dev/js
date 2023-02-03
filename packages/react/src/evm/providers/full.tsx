@@ -115,7 +115,7 @@ export interface ThirdwebProviderProps {
   /**
    * The network to use for the SDK.
    */
-  network: ChainIdOrName;
+  network?: ChainIdOrName;
 
   /**
    * The {@link SDKOptions | Thirdweb SDK Options} to pass to the thirdweb SDK
@@ -162,10 +162,9 @@ export interface ThirdwebProviderProps {
 
   /**
    * The chainId that your dApp is running on.
-   * While this *can* be `undefined` it is required to be passed. Passing `undefined` will cause no SDK to be instantiated
    * @deprecated - use `network` instead
    */
-  desiredChainId: number | undefined;
+  desiredChainId?: number | undefined;
   /**
    * A partial map of chainIds to rpc urls to use for certain chains
    * If not provided, will default to the rpcUrls of the chain objects for the supported chains
@@ -362,7 +361,8 @@ export const ThirdwebProvider = ({
           desiredChainId={desiredChainId}
           sdkOptions={sdkOptions}
           chains={chains}
-          network={network}
+          // will get caught below
+          network={network || 0}
           storageInterface={storageInterface}
           authConfig={authConfig}
         >
@@ -375,10 +375,16 @@ export const ThirdwebProvider = ({
 
 const ThirdwebSDKProviderWagmiWrapper: React.FC<
   React.PropsWithChildren<Omit<ThirdwebSDKProviderProps, "signer" | "provider">>
-> = ({ children, ...props }) => {
+> = ({ children, network, chains, ...props }) => {
   const [signer] = useSigner();
+
   return (
-    <ThirdwebSDKProvider signer={signer.data} {...props}>
+    <ThirdwebSDKProvider
+      signer={signer.data}
+      network={network || chains?.[0]?.chainId || 1}
+      chains={chains}
+      {...props}
+    >
       {children}
     </ThirdwebSDKProvider>
   );
