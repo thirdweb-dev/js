@@ -264,7 +264,7 @@ export type FunctionInfo = {
   value: BigNumber;
 };
 
-type TransactionErrorInfo = {
+export type TransactionErrorInfo = {
   reason: string;
   from: string;
   to: string;
@@ -280,6 +280,7 @@ type TransactionErrorInfo = {
  */
 export class TransactionError extends Error {
   #reason: string;
+  #info: TransactionErrorInfo;
 
   constructor(info: TransactionErrorInfo) {
     let errorMessage = `\n\n\n╔═══════════════════╗\n║ TRANSACTION ERROR ║\n╚═══════════════════╝\n\n`;
@@ -324,10 +325,16 @@ export class TransactionError extends Error {
     super(errorMessage);
 
     this.#reason = info.reason;
+    this.#info = info;
   }
 
+  // Keep reason here for backwards compatibility
   get reason(): string {
     return this.#reason;
+  }
+
+  get info(): TransactionErrorInfo {
+    return this.#info;
   }
 }
 
