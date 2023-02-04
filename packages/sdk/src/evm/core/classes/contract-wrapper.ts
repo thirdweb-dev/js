@@ -440,8 +440,6 @@ export class ContractWrapper<
     args: any[],
     callOverrides: CallOverrides,
   ) {
-    console.log(">>>>>>>>>>>>>>>>>>>>>>>>> RAW ERROR");
-    console.log(error);
     const provider = this.getProvider() as ethers.providers.Provider & {
       connection?: ConnectionInfo;
     };

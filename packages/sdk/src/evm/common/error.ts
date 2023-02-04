@@ -305,7 +305,8 @@ export class TransactionError extends Error {
       errorMessage += withSpaces(
         "value",
         `${ethers.utils.formatEther(info.value)} ${
-          NATIVE_TOKENS[info.network.chainId as SUPPORTED_CHAIN_ID]?.symbol
+          NATIVE_TOKENS[info.network.chainId as SUPPORTED_CHAIN_ID]?.symbol ||
+          ""
         }`,
       );
     }
@@ -317,7 +318,7 @@ export class TransactionError extends Error {
     }
 
     errorMessage += `\n\n\n╔═════════════════════╗\n║ DEBUGGING RESOURCES ║\n╚═════════════════════╝\n\n`;
-    errorMessage += `Need helping debugging? Come tell us about your error in our Discord channel and we'll help you out:\nhttps://discord.gg/thirdweb`;
+    errorMessage += `Need helping debugging? Join our Discord: https://discord.gg/thirdweb`;
     errorMessage += `\n\n`;
 
     super(errorMessage);
