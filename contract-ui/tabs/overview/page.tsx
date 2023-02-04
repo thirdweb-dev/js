@@ -7,11 +7,13 @@ import { contractType, useContract } from "@thirdweb-dev/react";
 import { Abi, getAllDetectedFeatureNames } from "@thirdweb-dev/sdk";
 import { ImportContract } from "components/contract-components/import-contract";
 import { useMemo } from "react";
-import { Heading, Link } from "tw-components";
+import { Heading, TrackedLink } from "tw-components";
 
 interface CustomContractOverviewPageProps {
   contractAddress?: string;
 }
+
+const TRACKING_CATEGORY = "contract_overview";
 
 export const CustomContractOverviewPage: React.FC<
   CustomContractOverviewPageProps
@@ -42,9 +44,15 @@ export const CustomContractOverviewPage: React.FC<
   return (
     <SimpleGrid columns={{ base: 1, xl: 4 }} gap={8}>
       <GridItem as={Flex} colSpan={{ xl: 3 }} direction="column" gap={16}>
-        <LatestEvents contractAddress={contractAddress} />
-        <BuildYourApp />
-        <ShareContract address={contractAddress} />
+        <LatestEvents
+          address={contractAddress}
+          trackingCategory={TRACKING_CATEGORY}
+        />
+        <BuildYourApp trackingCategory={TRACKING_CATEGORY} />
+        <ShareContract
+          address={contractAddress}
+          trackingCategory={TRACKING_CATEGORY}
+        />
       </GridItem>
       <GridItem as={Flex} direction="column" gap={6}>
         {guides.length > 0 && (
@@ -52,7 +60,9 @@ export const CustomContractOverviewPage: React.FC<
             <Heading size="title.sm">Relevant guides</Heading>
             <Flex gap={4} direction="column">
               {guides.map((guide) => (
-                <Link
+                <TrackedLink
+                  category={TRACKING_CATEGORY}
+                  label={guide.title.toLowerCase().replace(" ", "_")}
                   isExternal
                   fontWeight={500}
                   href={guide.url}
@@ -67,7 +77,7 @@ export const CustomContractOverviewPage: React.FC<
                   }}
                 >
                   {guide.title}
-                </Link>
+                </TrackedLink>
               ))}
             </Flex>
           </Flex>
@@ -77,20 +87,22 @@ export const CustomContractOverviewPage: React.FC<
           <Flex direction="column" gap={4}>
             <Heading size="title.sm">Relevant templates</Heading>
             <Flex gap={4} direction="column">
-              {templates.map((guide) => (
-                <Link
+              {templates.map((template) => (
+                <TrackedLink
                   isExternal
+                  category={TRACKING_CATEGORY}
+                  label={template.title.toLowerCase().replace(" ", "_")}
                   fontWeight={500}
-                  href={guide.url}
-                  key={guide.title}
+                  href={template.url}
+                  key={template.title}
                   fontSize="14px"
                   color="heading"
                   opacity={0.6}
                   display="inline-block"
                   _hover={{ opacity: 1, textDecoration: "none" }}
                 >
-                  {guide.title}
-                </Link>
+                  {template.title}
+                </TrackedLink>
               ))}
             </Flex>
           </Flex>

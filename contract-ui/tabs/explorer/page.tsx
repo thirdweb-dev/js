@@ -2,7 +2,6 @@ import { Flex, Skeleton } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import { Abi } from "@thirdweb-dev/sdk";
 import { useContractFunctions } from "components/contract-components/hooks";
-import { ImportContract } from "components/contract-components/import-contract";
 import { ContractFunctionsOverview } from "components/contract-functions/contract-functions";
 
 interface ContractCodePageProps {

@@ -15,10 +15,16 @@ import {
 } from "@chakra-ui/react";
 import type { ContractEvent } from "@thirdweb-dev/sdk/evm";
 import { AnimatePresence, motion } from "framer-motion";
-import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useEffect, useState } from "react";
 import { FiCopy } from "react-icons/fi";
-import { Button, Card, Heading, Link, Text } from "tw-components";
+import {
+  Button,
+  Card,
+  Heading,
+  Text,
+  TrackedLink,
+  TrackedLinkProps,
+} from "tw-components";
 
 interface ContractTransaction {
   transactionHash: ContractEvent["transaction"]["transactionHash"];
@@ -27,14 +33,16 @@ interface ContractTransaction {
 }
 
 interface LatestEventsProps {
-  contractAddress?: string;
+  trackingCategory: TrackedLinkProps["category"];
+  address?: string;
 }
 
 export const LatestEvents: React.FC<LatestEventsProps> = ({
-  contractAddress,
+  address,
+  trackingCategory,
 }) => {
   const [autoUpdate] = useState(true);
-  const allEvents = useActivity(contractAddress, autoUpdate);
+  const allEvents = useActivity(address, autoUpdate);
 
   return (
     <Flex gap={6} flexDirection="column">
@@ -42,11 +50,17 @@ export const LatestEvents: React.FC<LatestEventsProps> = ({
         <Heading flexShrink={0} size="title.sm">
           Latest Events
         </Heading>
-        <Link color="blue.600" gap={4} href="/events">
+        <TrackedLink
+          category={trackingCategory}
+          label="view_all_events"
+          color="blue.600"
+          gap={4}
+          href="/events"
+        >
           View all events -&gt;
-        </Link>
+        </TrackedLink>
       </Flex>
-      {contractAddress && (
+      {address && (
         <Card p={0} overflow="hidden">
           <SimpleGrid
             gap={2}
@@ -78,11 +92,7 @@ export const LatestEvents: React.FC<LatestEventsProps> = ({
             )}
             <AnimatePresence initial={false}>
               {allEvents?.slice(0, 3).map((e) => (
-                <EventsFeedItem
-                  key={e.transactionHash}
-                  transaction={e}
-                  contractAddress={contractAddress}
-                />
+                <EventsFeedItem key={e.transactionHash} transaction={e} />
               ))}
             </AnimatePresence>
           </List>
@@ -94,7 +104,6 @@ export const LatestEvents: React.FC<LatestEventsProps> = ({
 
 interface EventsFeedItemProps {
   transaction: ContractTransaction;
-  contractAddress: string;
 }
 
 export const EventsFeedItem: React.FC<EventsFeedItemProps> = ({

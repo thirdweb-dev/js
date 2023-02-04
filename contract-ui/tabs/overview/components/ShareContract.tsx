@@ -16,13 +16,17 @@ import {
 import { useTrack } from "hooks/analytics/useTrack";
 import { useMemo, useState } from "react";
 import { FiCheck, FiCopy } from "react-icons/fi";
-import { Button, Card, Heading, Text } from "tw-components";
+import { Button, Card, Heading, Text, TrackedLinkProps } from "tw-components";
 
 interface ShareContractProps {
   address: string;
+  trackingCategory: TrackedLinkProps["category"];
 }
 
-export const ShareContract: React.FC<ShareContractProps> = ({ address }) => {
+export const ShareContract: React.FC<ShareContractProps> = ({
+  address,
+  trackingCategory,
+}) => {
   const trackEvent = useTrack();
   const network = useDashboardNetwork();
   const [theme, setTheme] = useState<"light" | "dark">("dark");
@@ -96,9 +100,9 @@ export const ShareContract: React.FC<ShareContractProps> = ({ address }) => {
                 onClick={() => {
                   onCopyCode();
                   trackEvent({
-                    category: "share_contract",
+                    category: trackingCategory,
                     action: "click",
-                    label: "copy_code",
+                    label: `copy_code_${theme}`,
                   });
                 }}
                 leftIcon={hasCopiedCode ? <FiCheck /> : <FiCopy />}
@@ -148,7 +152,7 @@ export const ShareContract: React.FC<ShareContractProps> = ({ address }) => {
                 onClick={() => {
                   onCopyLink();
                   trackEvent({
-                    category: "share_contract",
+                    category: trackingCategory,
                     action: "click",
                     label: "copy_link",
                   });

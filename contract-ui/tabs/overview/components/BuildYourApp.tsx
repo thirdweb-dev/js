@@ -7,11 +7,23 @@ import {
 } from "@chakra-ui/react";
 import { ChakraNextImage as Image } from "components/Image";
 import { PRODUCTS } from "components/product-pages/common/nav/DesktopMenu";
-import { Card, Heading, Link, Text } from "tw-components";
+import {
+  Card,
+  Heading,
+  Text,
+  TrackedLink,
+  TrackedLinkProps,
+} from "tw-components";
 
 const RENDERED_PRODUCTS = ["sdk", "storage", "ui-components", "auth"];
 
-export const BuildYourApp = () => {
+interface BuildYourAppProps {
+  trackingCategory: TrackedLinkProps["category"];
+}
+
+export const BuildYourApp: React.FC<BuildYourAppProps> = ({
+  trackingCategory,
+}) => {
   return (
     <Card
       px={{ base: 4, md: 8 }}
@@ -24,7 +36,13 @@ export const BuildYourApp = () => {
         <GridItem as={Flex} direction="column" gap={4}>
           <Heading size="label.lg">Build your app</Heading>
           <Text size="body.md">
-            <LinkOverlay as={Link} href="/code" color="blue.500">
+            <LinkOverlay
+              as={TrackedLink}
+              category={trackingCategory}
+              label="build_your_app"
+              href="/code"
+              color="blue.500"
+            >
               Learn more
             </LinkOverlay>{" "}
             about how you can use thirdweb tools to build apps on top of this

@@ -8,7 +8,14 @@ import { ProductSection } from "components/product-pages/common/ProductSection";
 import { YoutubeEmbed } from "components/video-embed/YoutubeEmbed";
 import { PageId } from "page-id";
 import { FiArrowRight } from "react-icons/fi";
-import { Card, Heading, Link, LinkButton, Text } from "tw-components";
+import {
+  Card,
+  Heading,
+  Link,
+  LinkButton,
+  Text,
+  TrackedLink,
+} from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
 interface NFTContractInfo {
@@ -297,7 +304,9 @@ const Minting: ThirdwebNextPage = () => {
           {exploreNFTContracts.map((nftContractInfo) => {
             return (
               <article key={nftContractInfo.name}>
-                <Link
+                <TrackedLink
+                  category={TRACKING_CATEGORY}
+                  label={nftContractInfo.name.toLowerCase().replace(" ", "-")}
                   href={nftContractInfo.link}
                   isExternal
                   textDecoration="none !important"
@@ -323,7 +332,7 @@ const Minting: ThirdwebNextPage = () => {
                     </Heading>
                     <Text size="body.lg">{nftContractInfo.description}</Text>
                   </Card>
-                </Link>
+                </TrackedLink>
               </article>
             );
           })}

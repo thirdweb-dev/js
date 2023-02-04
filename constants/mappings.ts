@@ -414,7 +414,7 @@ export const CHAIN_ID_TO_GNOSIS = Object.entries(GNOSIS_TO_CHAIN_ID).reduce(
     [chainId]: gnosis,
   }),
   {} as Record<
-    typeof GNOSIS_TO_CHAIN_ID[keyof typeof GNOSIS_TO_CHAIN_ID],
+    (typeof GNOSIS_TO_CHAIN_ID)[keyof typeof GNOSIS_TO_CHAIN_ID],
     keyof typeof GNOSIS_TO_CHAIN_ID
   >,
 );
