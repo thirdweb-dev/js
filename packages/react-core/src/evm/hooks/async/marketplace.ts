@@ -28,7 +28,7 @@ import type {
   NewDirectListing,
 } from "@thirdweb-dev/sdk";
 import { ListingType } from "@thirdweb-dev/sdk";
-import { BigNumberish } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import invariant from "tiny-invariant";
 import { DirectListingInputParams } from "@thirdweb-dev/sdk/dist/declarations/src/evm/schema/marketplacev3/direct-listings";
 import { EnglishAuctionInputParams } from "@thirdweb-dev/sdk/dist/declarations/src/evm/schema/marketplacev3/english-auctions";
@@ -448,10 +448,52 @@ export function useWinningBid(
     () => {
       requiredParamInvariant(contract, "No Contract instance provided");
       requiredParamInvariant(listingId, "No listing id provided");
+      invariant(
+        contract.auction.getWinningBid,
+        "contract does not support auction.getWinningBid",
+      );
       return contract.auction.getWinningBid(listingId);
     },
     {
       enabled: !!contract && listingId !== undefined,
+    },
+  );
+}
+
+/**
+ * Use this to get a the winning bid for an auction listing from your marketplace v3 contract.
+ *
+ * @example
+ * ```javascript
+ * const { data: winningBid, isLoading, error } = useWinningBid(<YourMarketplaceV3ContractInstance>, <listingId>);
+ * ```
+ *
+ * @param contract - an instance of a marketplace contract
+ * @param auctionId - the auction id to check
+ * @returns a response object that includes the {@link Bid} that is winning the auction
+ * @beta
+ */
+export function useEnglishAuctionWinningBid(
+  contract: RequiredParam<MarketplaceV3>,
+  auctionId: RequiredParam<BigNumberish>,
+) {
+  const contractAddress = contract?.getAddress();
+  return useQueryWithNetwork(
+    cacheKeys.contract.marketplace.auction.getWinningBid(
+      contractAddress,
+      auctionId,
+    ),
+    () => {
+      requiredParamInvariant(contract, "No Contract instance provided");
+      requiredParamInvariant(auctionId, "No auction id provided");
+      invariant(
+        contract.englishAuctions.getWinningBid,
+        "contract does not support englishAuctions.getWinningBid",
+      );
+      return contract.englishAuctions.getWinningBid(auctionId);
+    },
+    {
+      enabled: !!contract && auctionId !== undefined,
     },
   );
 }
@@ -470,7 +512,7 @@ export function useWinningBid(
  * @beta
  */
 export function useAuctionWinner(
-  contract: RequiredParam<Marketplace>,
+  contract: RequiredParam<Marketplace | MarketplaceV3>,
   listingId: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
@@ -479,18 +521,27 @@ export function useAuctionWinner(
       contractAddress,
       listingId,
     ),
-    async () => {
+    () => {
       requiredParamInvariant(contract, "No Contract instance provided");
       requiredParamInvariant(listingId, "No listing id provided");
-      let winner: string | undefined;
-      try {
-        winner = await contract.auction.getWinner(listingId);
-      } catch (err) {
-        if (!(err as Error)?.message?.includes("Could not find auction")) {
-          throw err;
-        }
+
+      const isV1 = isMarketplaceV1(contract);
+    
+      if (isV1) {
+        invariant(
+          contract.auction.getWinner,
+          "contract does not support auction.getWinner",
+        );
+        return contract.auction.getWinner(listingId);
+      } else if (!isV1) {
+        invariant(
+          contract.englishAuctions.getWinner,
+          "contract does not support englishAuctions.getWinner",
+        );
+        return contract.englishAuctions.getWinner(listingId);
       }
-      return winner;
+      invariant(false, "Contract is not a valid marketplace contract");
+
     },
     {
       enabled: !!contract && listingId !== undefined,
@@ -507,17 +558,35 @@ export function useAuctionWinner(
  * ```
  *
  * @param contract - an instance of a marketplace contract
+ * @param listingId - the listing id to check (only necessary for marketplace v3)
 
  * @returns a response object that includes an array of listings
  * @beta
  */
-export function useBidBuffer(contract: RequiredParam<Marketplace>) {
+export function useBidBuffer(contract: RequiredParam<Marketplace | MarketplaceV3>, listingId?: RequiredParam<BigNumberish>) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.marketplace.getBidBufferBps(contractAddress),
     () => {
       requiredParamInvariant(contract, "No Contract instance provided");
-      return contract.getBidBufferBps();
+
+      const isV1 = isMarketplaceV1(contract);
+    
+      if (isV1) {
+        invariant(
+          contract.getBidBufferBps,
+          "contract does not support getBidBufferBps",
+        );
+        return contract.getBidBufferBps();
+      } else if (!isV1) {
+        invariant(
+          contract.englishAuctions.getBidBufferBps,
+          "contract does not support englishAuctions.getBidBufferBps",
+        );
+        requiredParamInvariant(listingId, "No listing id provided");
+        return BigNumber.from(contract.englishAuctions.getBidBufferBps(listingId));
+      }
+      invariant(false, "Contract is not a valid marketplace contract");
     },
     {
       enabled: !!contract,
@@ -539,7 +608,7 @@ export function useBidBuffer(contract: RequiredParam<Marketplace>) {
  * @beta
  */
 export function useMinimumNextBid(
-  contract: RequiredParam<Marketplace>,
+  contract: RequiredParam<Marketplace | MarketplaceV3>,
   listingId: RequiredParam<BigNumberish>,
 ) {
   const contractAddress = contract?.getAddress();
@@ -551,7 +620,24 @@ export function useMinimumNextBid(
     async () => {
       requiredParamInvariant(contract, "No Contract instance provided");
       requiredParamInvariant(listingId, "No listing id provided");
-      return await contract.auction.getMinimumNextBid(listingId);
+
+      const isV1 = isMarketplaceV1(contract);
+    
+      if (isV1) {
+        invariant(
+          contract.auction.getMinimumNextBid,
+          "contract does not support auction.getMinimumNextBid",
+        );
+        return contract.auction.getMinimumNextBid(listingId);
+      } else if (!isV1) {
+        invariant(
+          contract.englishAuctions.getMinimumNextBid,
+          "contract does not support englishAuctions.getMinimumNextBid",
+        );
+        return contract.englishAuctions.getMinimumNextBid(listingId);
+      }
+      invariant(false, "Contract is not a valid marketplace contract");
+
     },
     {
       enabled: !!contract && listingId !== undefined,
