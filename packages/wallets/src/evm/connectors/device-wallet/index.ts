@@ -1,4 +1,5 @@
-import { DeviceWallet, DeviceWalletImpl } from "../../wallets/device-wallet";
+import { AbstractBrowserWallet, WalletOptions } from "../../wallets/base";
+import { DeviceWallet } from "../../wallets/device-wallet";
 import {
   Chain,
   Connector,
@@ -12,6 +13,32 @@ import {
 import type { Address } from "abitype";
 import { ethers } from "ethers";
 import { getAddress } from "ethers/lib/utils.js";
+
+export class DeviceBrowserWallet extends AbstractBrowserWallet {
+  #connector?: DeviceWalletConnector;
+
+  static id = "deviceWallet" as const;
+  public get walletName() {
+    return "Device Wallet" as const;
+  }
+
+  constructor(options: WalletOptions) {
+    super(DeviceBrowserWallet.id, options);
+  }
+
+  protected async getConnector(): Promise<DeviceWalletConnector> {
+    if (!this.#connector) {
+      // import the connector dynamically
+      this.#connector = new DeviceWalletConnector({
+        chains: this.chains,
+        options: {
+          name: this.options.appName,
+        },
+      });
+    }
+    return this.#connector;
+  }
+}
 
 export type DeviceWalletConnectorOptions = {
   /** Name of connector */
@@ -29,7 +56,8 @@ export class DeviceWalletConnector extends Connector<
   chainId: number;
 
   #provider?: ethers.providers.Provider;
-  #wallet?: DeviceWalletImpl;
+  #signer?: ethers.Signer;
+  #wallet?: DeviceWallet;
 
   protected shimDisconnectKey = "deviceWallet.shimDisconnect";
 
@@ -69,6 +97,8 @@ export class DeviceWalletConnector extends Connector<
 
       this.emit("message", { type: "connecting" });
 
+      this.#wallet = await DeviceWallet.fromCredentialStore();
+
       const signer = await this.getSigner();
       const account = (await signer.getAddress()) as `0x${string}`;
       const id = await this.getChainId();
@@ -98,7 +128,11 @@ export class DeviceWalletConnector extends Connector<
   }
 
   async getAccount() {
-    return (await (await this.getSigner()).getAddress()) as `0x${string}`;
+    const signer = await this.getSigner();
+    if (!signer) {
+      throw new Error("No signer found");
+    }
+    return (await signer.getAddress()) as `0x${string}`;
   }
 
   async getChainId() {
@@ -107,8 +141,9 @@ export class DeviceWalletConnector extends Connector<
 
   async getProvider() {
     if (!this.#provider) {
-      this.#provider = ethers.providers.getDefaultProvider(
-        await this.getChainId(),
+      // TODO pull chains package here + getProviderForChain util + this.getChainId()
+      this.#provider = new ethers.providers.JsonRpcBatchProvider(
+        "https://goerli.rpc.thirdweb.com",
       );
     }
     return this.#provider;
@@ -116,9 +151,14 @@ export class DeviceWalletConnector extends Connector<
 
   async getSigner() {
     if (!this.#wallet) {
-      this.#wallet = await DeviceWallet.fromCredentialStore();
+      throw new Error("No wallet found");
     }
-    return this.#wallet.getSigner();
+    if (!this.#signer) {
+      this.#signer = (await this.#wallet.getSigner()).connect(
+        await this.getProvider(),
+      );
+    }
+    return this.#signer;
   }
 
   async isAuthorized() {
@@ -147,7 +187,7 @@ export class DeviceWalletConnector extends Connector<
     image?: string;
     symbol: string;
   }) {
-    throw new Error("Not supported");
+    return false;
   }
 
   protected onAccountsChanged = (accounts: string[]) => {

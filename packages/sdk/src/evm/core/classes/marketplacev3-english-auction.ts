@@ -27,7 +27,7 @@ import type {
   IEnglishAuctions,
   EnglishAuctionsLogic,
 } from "@thirdweb-dev/contracts-js";
-import { NewAuctionEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/EnglishAuctionsLogic";
+import { NewAuctionEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/IEnglishAuctions";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers, constants } from "ethers";
 import invariant from "tiny-invariant";

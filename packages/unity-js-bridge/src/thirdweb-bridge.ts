@@ -2,6 +2,7 @@
 import { CoinbasePayIntegration, FundWalletOptions } from "@thirdweb-dev/pay";
 import { ChainOrRpc, ThirdwebSDK, getRpcUrl } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
+import { DeviceBrowserWallet } from "@thirdweb-dev/wallets/evm/connectors/device-wallet";
 import type { AbstractBrowserWallet } from "@thirdweb-dev/wallets/evm/wallets/base";
 import { CoinbaseWallet } from "@thirdweb-dev/wallets/evm/wallets/coinbase-wallet";
 import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
@@ -43,6 +44,7 @@ const WALLETS = [
   WalletConnect,
   CoinbaseWallet,
   MagicAuthWallet,
+  DeviceBrowserWallet,
 ] as const;
 
 type PossibleWallet = typeof WALLETS[number]["id"];

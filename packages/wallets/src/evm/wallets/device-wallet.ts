@@ -1,21 +1,28 @@
+import type { DeviceWalletConnector } from "../connectors/device-wallet";
 import { AbstractWallet } from "./abstract";
+import { AbstractBrowserWallet, WalletOptions } from "./base";
 import { ethers } from "ethers";
 
-interface IWalletStore {
-  getPrivateKey(): Promise<string | null | undefined>;
-  storePrivateKey(address: string, pkey: string): Promise<void>;
-}
+export class DeviceWallet extends AbstractWallet {
+  static async fromBrowserStorage() {
+    return new DeviceWallet({
+      storage: new BrowserStorage(window.localStorage),
+    });
+  }
 
-interface IDeviceStorage {
-  getItem(key: string): string | null | undefined;
-  setItem(key: string, value: string): void;
-}
+  static async fromEncryptedBrowserStorage(secretKey: string) {
+    const storage = await import("encrypt-storage");
+    return new DeviceWallet({
+      storage: new BrowserStorage(new storage.EncryptStorage(secretKey)),
+    });
+  }
 
-type DeviceWalletOptions = {
-  storage: IWalletStore;
-};
+  static async fromCredentialStore() {
+    return new DeviceWallet({
+      storage: new CredentialsStorage(navigator.credentials),
+    });
+  }
 
-export class DeviceWalletImpl extends AbstractWallet {
   private options: DeviceWalletOptions;
 
   constructor(options: DeviceWalletOptions) {
@@ -44,6 +51,20 @@ export class DeviceWalletImpl extends AbstractWallet {
     return pkey;
   }
 }
+
+interface IWalletStore {
+  getPrivateKey(): Promise<string | null | undefined>;
+  storePrivateKey(address: string, pkey: string): Promise<void>;
+}
+
+interface IDeviceStorage {
+  getItem(key: string): string | null | undefined;
+  setItem(key: string, value: string): void;
+}
+
+type DeviceWalletOptions = {
+  storage: IWalletStore;
+};
 
 class BrowserStorage implements IWalletStore {
   private storage: IDeviceStorage;
@@ -95,26 +116,5 @@ class CredentialsStorage implements IWalletStore {
     } else {
       throw new Error("PasswordCredential not supported");
     }
-  }
-}
-
-export class DeviceWallet {
-  static async fromBrowserStorage() {
-    return new DeviceWalletImpl({
-      storage: new BrowserStorage(window.localStorage),
-    });
-  }
-
-  static async fromEncryptedBrowserStorage(secretKey: string) {
-    const storage = await import("encrypt-storage");
-    return new DeviceWalletImpl({
-      storage: new BrowserStorage(new storage.EncryptStorage(secretKey)),
-    });
-  }
-
-  static async fromCredentialStore() {
-    return new DeviceWalletImpl({
-      storage: new CredentialsStorage(navigator.credentials),
-    });
   }
 }
