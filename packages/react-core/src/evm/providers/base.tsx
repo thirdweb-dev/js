@@ -7,15 +7,12 @@ import {
   ThirdwebAuthConfig,
   ThirdwebAuthProvider,
 } from "../contexts/thirdweb-auth";
-import {
-  ThirdwebConnectedWalletProvider,
-  useThirdwebConnectedWalletContext,
-} from "../contexts/thirdweb-wallet";
+import { ThirdwebConnectedWalletProvider } from "../contexts/thirdweb-wallet";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import { ChainIdOrName, SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { ethers, Signer } from "ethers";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import type { Signer } from "ethers";
+import { createContext, useContext, useMemo } from "react";
 import invariant from "tiny-invariant";
 
 interface TWSDKContext {
@@ -26,85 +23,84 @@ interface TWSDKContext {
 const ThirdwebSDKContext = createContext<TWSDKContext>({});
 
 export interface ThirdwebSDKProviderProps extends QueryClientProviderProps {
-  signer?: Signer;
-  sdkOptions?: Omit<SDKOptions, "chains">;
-  storageInterface?: ThirdwebStorage;
-  authConfig?: ThirdwebAuthConfig;
+  // the chains that we want to configure - optional, defaults to defaultChains
   chains?: Chain[];
-  network: ChainIdOrName;
+  // a possible signer - optional, defaults to undefined
+  signer?: Signer;
 
-  /**
-   * @deprecated - use network instead
-   */
-  desiredChainId?: number;
-  /**
-   * @deprecated - use network instead
-   */
-  provider?: ChainIdOrName | ethers.providers.Provider;
+  // additional SDK options (forwarded to the SDK initializer)
+  sdkOptions?: Omit<SDKOptions, "chains">;
+  // storage
+  storageInterface?: ThirdwebStorage;
+  // if u want to use auth, pass this
+  authConfig?: ThirdwebAuthConfig;
+
+  // the network to use - optional, defaults to ...
+  network?: ChainIdOrName;
 }
 
 /**
  *
  * @internal
  */
-export const WrappedThirdwebSDKProvider: ComponentWithChildren<
-  Omit<ThirdwebSDKProviderProps, "signer">
+const WrappedThirdwebSDKProvider: ComponentWithChildren<
+  Omit<ThirdwebSDKProviderProps, "queryClient" | "authConfig">
 > = ({
   sdkOptions = {},
-  desiredChainId,
   storageInterface,
-  provider,
-  queryClient,
-  authConfig,
   chains = defaultChains,
   network,
+  signer,
   children,
 }) => {
-  const { signer } = useThirdwebConnectedWalletContext();
-
-  const [sdk, setSDK] = useState<ThirdwebSDK>();
-
-  useEffect(() => {
+  const sdk = useMemo(() => {
+    // on the server we can't do anything (?)
     if (typeof window === "undefined") {
       return undefined;
     }
-    const mergedSDKOptions: SDKOptions = {
+    let chainId: number | undefined = undefined;
+    // try to resolve the chainId
+    if (typeof network === "number") {
+      if (chains.find((c) => c.chainId === network)) {
+        chainId = network;
+      }
+    } else if (typeof network === "string") {
+      const chain = chains.find((c) => c.slug === network);
+      if (chain) {
+        chainId = chain.chainId;
+      }
+    }
+
+    const mergedOptions = {
       ...sdkOptions,
       chains,
     };
-    const _sdk = signer
-      ? ThirdwebSDK.fromSigner(
-          signer,
-          network,
-          mergedSDKOptions,
-          storageInterface,
-        )
-      : new ThirdwebSDK(
-          provider || network,
-          mergedSDKOptions,
-          storageInterface,
-        );
 
-    setSDK(_sdk);
-  }, [
-    provider,
-    sdkOptions,
-    storageInterface,
-    desiredChainId,
-    network,
-    signer,
-    chains,
-  ]);
+    let sdk_: ThirdwebSDK | undefined = undefined;
 
-  useEffect(() => {
-    if (sdk) {
-      if (signer) {
-        sdk.updateSignerOrProvider(signer);
-      } else {
-        sdk.updateSignerOrProvider(provider || network);
-      }
+    if (signer) {
+      // sdk from signer
+      sdk_ = ThirdwebSDK.fromSigner(
+        signer,
+        chainId,
+        mergedOptions,
+        storageInterface,
+      );
+    } else if (chainId) {
+      // sdk from chainId
+      sdk_ = new ThirdwebSDK(chainId, mergedOptions, storageInterface);
     }
-  }, [signer, sdk, desiredChainId, network, provider]);
+
+    if (!sdk_) {
+      console.warn(
+        "No sdk created, please check your network and signer options",
+      );
+    } else {
+      (sdk_ as any)._chainId = chainId;
+    }
+
+    return sdk_;
+  }, [chains, network, sdkOptions, signer, storageInterface]);
 
   const ctxValue = useMemo(
     () => ({
@@ -115,13 +111,9 @@ export const WrappedThirdwebSDKProvider: ComponentWithChildren<
   );
 
   return (
-    <QueryClientProviderWithDefault queryClient={queryClient}>
-      <ThirdwebAuthProvider value={authConfig}>
-        <ThirdwebSDKContext.Provider value={ctxValue}>
-          {children}
-        </ThirdwebSDKContext.Provider>
-      </ThirdwebAuthProvider>
-    </QueryClientProviderWithDefault>
+    <ThirdwebSDKContext.Provider value={ctxValue}>
+      {children}
+    </ThirdwebSDKContext.Provider>
   );
 };
 
@@ -136,12 +128,16 @@ export const WrappedThirdwebSDKProvider: ComponentWithChildren<
  */
 export const ThirdwebSDKProvider: ComponentWithChildren<
   ThirdwebSDKProviderProps
-> = ({ signer, children, ...restProps }) => {
+> = ({ signer, children, queryClient, authConfig, ...restProps }) => {
   return (
     <ThirdwebConnectedWalletProvider signer={signer}>
-      <WrappedThirdwebSDKProvider {...restProps}>
-        {children}
-      </WrappedThirdwebSDKProvider>
+      <QueryClientProviderWithDefault queryClient={queryClient}>
+        <ThirdwebAuthProvider value={authConfig}>
+          <WrappedThirdwebSDKProvider signer={signer} {...restProps}>
+            {children}
+          </WrappedThirdwebSDKProvider>
+        </ThirdwebAuthProvider>
+      </QueryClientProviderWithDefault>
     </ThirdwebConnectedWalletProvider>
   );
 };

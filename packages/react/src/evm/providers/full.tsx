@@ -209,13 +209,10 @@ export const ThirdwebProvider = ({
   sdkOptions,
   chains = defaultChains,
   network,
-  chainRpc = chains.reduce((acc, c) => {
-    acc[c.chainId] = c.rpc[0];
-    return acc;
-  }, {} as Record<number, string>),
+
   walletConnectors = defaultWalletConnectors,
   dAppMeta = defaultdAppMeta,
-  desiredChainId,
+
   authConfig,
   storageInterface,
   queryClient,
@@ -223,22 +220,16 @@ export const ThirdwebProvider = ({
   children,
 }: React.PropsWithChildren<ThirdwebProviderProps>) => {
   // construct the wagmi options
+  const wagmiProps: WagmiproviderProps = useMemo(() => {
+    const wagmiChains = chains.map(transformChainToMinimalWagmiChain);
 
-  const _rpcUrlMap: Record<number, string> = useMemo(() => {
-    return {
+    const _rpcUrlMap = {
       ...chains.reduce((acc, c) => {
         acc[c.chainId] = c.rpc[0];
         return acc;
       }, {} as Record<number, string>),
-      ...chainRpc,
     };
-  }, [chainRpc, chains]);
 
-  const wagmiChains = useMemo(() => {
-    return chains.map(transformChainToMinimalWagmiChain);
-  }, [chains]);
-
-  const wagmiProps: WagmiproviderProps = useMemo(() => {
     const walletConnectClientMeta = {
       name: dAppMeta.name,
       url: dAppMeta.url || "",
@@ -312,7 +303,7 @@ export const ThirdwebProvider = ({
               const jsonRpcUrl =
                 typeof network === "number"
                   ? _rpcUrlMap[network]
-                  : _rpcUrlMap[chainId || desiredChainId || 1];
+                  : _rpcUrlMap[chainId || 1];
               return new CoinbaseWalletConnector({
                 chains: wagmiChains,
                 options:
@@ -335,6 +326,7 @@ export const ThirdwebProvider = ({
       },
     } as WagmiproviderProps;
   }, [
+    chains,
     dAppMeta.name,
     dAppMeta.url,
     dAppMeta.logoUrl,
@@ -342,27 +334,21 @@ export const ThirdwebProvider = ({
     dAppMeta.isDarkMode,
     autoConnect,
     walletConnectors,
-    wagmiChains,
-    _rpcUrlMap,
     network,
-    desiredChainId,
   ]);
 
   return (
     <ThirdwebConfigProvider
       value={{
-        rpcUrlMap: _rpcUrlMap,
         chains,
       }}
     >
       <WagmiProvider {...wagmiProps}>
         <ThirdwebSDKProviderWagmiWrapper
           queryClient={queryClient}
-          desiredChainId={desiredChainId}
           sdkOptions={sdkOptions}
           chains={chains}
-          // will get caught below
-          network={network || 0}
+          network={network}
           storageInterface={storageInterface}
           authConfig={authConfig}
         >
