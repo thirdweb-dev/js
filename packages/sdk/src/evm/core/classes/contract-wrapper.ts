@@ -1,4 +1,8 @@
-import { convertToTWError, extractFunctionsFromAbi } from "../../common";
+import {
+  TransactionError,
+  extractFunctionsFromAbi,
+  parseRevertReason,
+} from "../../common";
 import {
   BiconomyForwarderAbi,
   ChainAwareForwardRequest,
@@ -35,6 +39,7 @@ import {
   ethers,
   providers,
 } from "ethers";
+import { ConnectionInfo } from "ethers/lib/utils.js";
 import invariant from "tiny-invariant";
 
 /**
@@ -395,21 +400,94 @@ export class ContractWrapper<
     if (!func) {
       throw new Error(`invalid function: "${fn.toString()}"`);
     }
+
+    // First, if no gasLimit is passed, call estimate gas ourselves
+    if (!callOverrides.gasLimit) {
+      try {
+        callOverrides.gasLimit = await this.writeContract.estimateGas[
+          fn as string
+        ](...args, callOverrides);
+      } catch (e) {
+        // If gas estimation fails, we'll call static to get a better error message
+        try {
+          await this.writeContract.callStatic[fn as string](
+            ...args,
+            ...(callOverrides.value ? [{ value: callOverrides.value }] : []),
+          );
+        } catch (err: any) {
+          throw await this.formatError(err, fn, args, callOverrides);
+        }
+
+        // If call static doesn't throw an error, estimateGas likely failed because the signer
+        // account has insufficient funds (or other reasons, we can case on later).
+        throw new Error(
+          "Failed to estimate gas for transaction. You may have insufficient funds in your account to execute this transaction.",
+        );
+      }
+    }
+
+    // Now there should be no gas estimate errors
     try {
       return await func(...args, callOverrides);
-    } catch (e) {
-      const network = await this.getProvider().getNetwork();
-      const signerAddress = await this.getSignerAddress();
-      const contractAddress = await this.readContract.address;
-
-      throw await convertToTWError(
-        e,
-        network,
-        signerAddress,
-        contractAddress,
-        this.readContract.interface,
-      );
+    } catch (err) {
+      throw await this.formatError(err, fn, args, callOverrides);
     }
+  }
+
+  private async formatError(
+    error: any,
+    fn: keyof TContract["functions"],
+    args: any[],
+    callOverrides: CallOverrides,
+  ) {
+    const provider = this.getProvider() as ethers.providers.Provider & {
+      connection?: ConnectionInfo;
+    };
+
+    // Get metadata for transaction to populate into error
+    const network = await provider.getNetwork();
+    const from = await (callOverrides.from || this.getSignerAddress());
+    const to = this.readContract.address;
+    const data = this.readContract.interface.encodeFunctionData(
+      fn as string,
+      args,
+    );
+    const value = BigNumber.from(callOverrides.value || 0);
+    const rpcUrl = provider.connection?.url;
+
+    // Render function signature with arguments filled in
+    const functionSignature = this.readContract.interface.getFunction(
+      fn as string,
+    );
+    const methodArgs = args.map((arg) => {
+      if (JSON.stringify(arg).length <= 80) {
+        return JSON.stringify(arg);
+      }
+      return JSON.stringify(arg, undefined, 2);
+    });
+    const joinedArgs =
+      methodArgs.join(", ").length <= 80
+        ? methodArgs.join(", ")
+        : "\n" +
+          methodArgs
+            .map((arg) => "  " + arg.split("\n").join("\n  "))
+            .join(",\n") +
+          "\n";
+    const method = `${functionSignature.name}(${joinedArgs})`;
+
+    // Parse the revert reason from the error
+    const reason = parseRevertReason(error);
+
+    return new TransactionError({
+      reason,
+      from,
+      to,
+      method,
+      data,
+      network,
+      rpcUrl,
+      value,
+    });
   }
 
   /**

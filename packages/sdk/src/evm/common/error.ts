@@ -264,176 +264,96 @@ export type FunctionInfo = {
   value: BigNumber;
 };
 
+type TransactionErrorInfo = {
+  reason: string;
+  from: string;
+  to: string;
+  network: providers.Network;
+  method?: string;
+  data?: string;
+  rpcUrl?: string;
+  value?: BigNumber;
+};
+
 /**
  * @public
  */
 export class TransactionError extends Error {
-  public reason: string;
-  public from: string;
-  public to: string;
-  public data: string;
-  public chain: providers.Network;
-  public rpcUrl: string;
-  public functionInfo: FunctionInfo | undefined;
+  #reason: string;
 
-  constructor(
-    reason: string,
-    from: string,
-    to: string,
-    data: string,
-    network: providers.Network,
-    rpcUrl: string,
-    raw: string,
-    functionInfo: FunctionInfo | undefined,
-  ) {
-    let builtErrorMsg = "\n| Contract transaction failed |\n\n";
-    builtErrorMsg += `Message: ${reason}`;
-    builtErrorMsg += "\n\n| Transaction info |\n";
-    builtErrorMsg += withSpaces("from", from);
-    builtErrorMsg += withSpaces("to", to);
-    builtErrorMsg += withSpaces(
+  constructor(info: TransactionErrorInfo) {
+    let errorMessage = `\n\n\n╔═══════════════════╗\n║ TRANSACTION ERROR ║\n╚═══════════════════╝\n\n`;
+    errorMessage += `Reason: ${info.reason}`;
+    errorMessage += `\n\n\n╔═════════════════════════╗\n║ TRANSACTION INFORMATION ║\n╚═════════════════════════╝\n`;
+    errorMessage += withSpaces("from", info.from);
+    errorMessage += withSpaces("to", info.to);
+    errorMessage += withSpaces(
       `chain`,
-      `${network.name} (${network.chainId})`,
+      `${info.network.name} (${info.network.chainId})`,
     );
 
-    if (functionInfo) {
-      builtErrorMsg += "\n\n| Failed contract call info |\n";
-      builtErrorMsg += withSpaces("function", functionInfo.signature);
-      builtErrorMsg += withSpaces(
-        `arguments`,
-        JSON.stringify(functionInfo.inputs, null, 2),
+    if (info.rpcUrl) {
+      try {
+        const url = new URL(info.rpcUrl);
+        errorMessage += withSpaces(`rpc`, url.hostname);
+      } catch (e2) {
+        // ignore if can't parse URL
+      }
+    }
+
+    if (info.value && info.value.gt(0)) {
+      errorMessage += withSpaces(
+        "value",
+        `${ethers.utils.formatEther(info.value)} ${
+          NATIVE_TOKENS[info.network.chainId as SUPPORTED_CHAIN_ID]?.symbol ||
+          ""
+        }`,
       );
-      if (functionInfo.value.gt(0)) {
-        builtErrorMsg += withSpaces(
-          "value",
-          `${ethers.utils.formatEther(functionInfo.value)} ${
-            NATIVE_TOKENS[network.chainId as SUPPORTED_CHAIN_ID]?.symbol
-          }`,
-        );
-      }
     }
 
-    try {
-      const url = new URL(rpcUrl);
-      builtErrorMsg += withSpaces(`RPC`, url.hostname);
-    } catch (e2) {
-      // ignore if can't parse URL
+    errorMessage += withSpaces(`data`, `${info.data}`);
+
+    if (info.method) {
+      errorMessage += withSpaces("method", info.method);
     }
-    builtErrorMsg += "\n\n";
-    builtErrorMsg += "| Raw error |";
-    builtErrorMsg += "\n\n";
-    builtErrorMsg += raw;
-    super(builtErrorMsg);
-    this.reason = reason;
-    this.from = from;
-    this.to = to;
-    this.data = data;
-    this.chain = network;
-    this.rpcUrl = rpcUrl;
-    this.functionInfo = functionInfo;
+
+    errorMessage += `\n\n\n╔═════════════════════╗\n║ DEBUGGING RESOURCES ║\n╚═════════════════════╝\n\n`;
+    errorMessage += `Need helping debugging? Join our Discord: https://discord.gg/thirdweb`;
+    errorMessage += `\n\n`;
+
+    super(errorMessage);
+
+    this.#reason = info.reason;
+  }
+
+  get reason(): string {
+    return this.#reason;
   }
 }
 
 /**
  * @internal
- * @param data
- * @param contractInterface
  */
-function parseFunctionInfo(
-  data: string,
-  contractInterface: ethers.utils.Interface,
-): FunctionInfo | undefined {
-  try {
-    const fnFragment = contractInterface.parseTransaction({
-      data,
-    });
-    const results: Record<string, any> = {};
-    const args = fnFragment.args;
-    fnFragment.functionFragment.inputs.forEach((param, index) => {
-      if (Array.isArray(args[index])) {
-        const obj: Record<string, unknown> = {};
-        const components = param.components;
-        if (components) {
-          const arr = args[index];
-          for (let i = 0; i < components.length; i++) {
-            const name = components[i].name;
-            obj[name] = arr[i];
-          }
-          results[param.name] = obj;
-        }
-      } else {
-        results[param.name] = args[index];
-      }
-    });
-    return {
-      signature: fnFragment.signature,
-      inputs: results,
-      value: fnFragment.value,
-    };
-  } catch (e) {
-    return undefined;
+export function parseRevertReason(error: any): string {
+  if (error.reason) {
+    return error.reason as string;
   }
-}
 
-/**
- * @internal
- * @param error
- * @param network
- * @param signerAddress
- * @param contractAddress
- * @param contractInterface
- */
-export async function convertToTWError(
-  error: any,
-  network: ethers.providers.Network,
-  signerAddress: string,
-  contractAddress: string,
-  contractInterface: ethers.utils.Interface,
-): Promise<TransactionError> {
-  let raw: string;
+  // I think this code path should never be hit, but just in case
+
+  let errorString: string = error;
   if (typeof error === "object") {
-    // metamask errors comes as objects, apply parsing on data object
-    raw = JSON.stringify(error);
-  } else {
-    // not sure what this is, just throw it back
-    raw = error.toString();
+    // MetaMask errors come as objects so parse them first
+    errorString = JSON.stringify(error);
+  } else if (typeof error !== "string") {
+    errorString = error.toString();
   }
-  let reason =
-    parseMessageParts(/.*?"message[^a-zA-Z0-9]*([^"\\]*).*?/, raw) ||
-    parseMessageParts(/.*?"reason[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
-  if (reason && reason.toLowerCase().includes("cannot estimate gas")) {
-    // the error might be in the next reason block
-    const nextReason = parseMessageParts(
-      /.*?"reason[^a-zA-Z0-9]*([^"\\]*).*?/,
-      raw.slice(raw.indexOf(reason) + reason.length),
-    );
-    if (nextReason) {
-      reason = nextReason;
-    }
-  }
-  const data = parseMessageParts(/.*?"data[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
-  const rpcUrl = parseMessageParts(/.*?"url[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
-  let from = parseMessageParts(/.*?"from[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
-  let to = parseMessageParts(/.*?"to[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
-  if (to === "") {
-    // fallback to contractAddress
-    to = contractAddress;
-  }
-  if (from === "") {
-    // fallback to signerAddress
-    from = signerAddress;
-  }
-  const functionInfo =
-    data.length > 0 ? parseFunctionInfo(data, contractInterface) : undefined;
-  return new TransactionError(
-    reason,
-    from,
-    to,
-    data,
-    network,
-    rpcUrl,
-    raw,
-    functionInfo,
+
+  return (
+    parseMessageParts(/.*?"message":"([^"\\]*).*?/, errorString) ||
+    parseMessageParts(/.*?"reason":"([^"\\]*).*?/, errorString) ||
+    error.message ||
+    ""
   );
 }
 
@@ -441,10 +361,18 @@ function withSpaces(label: string, content: string) {
   if (content === "") {
     return content;
   }
+
   const spaces = Array(10 - label.length)
     .fill(" ")
     .join("");
-  return `\n${label}:${spaces}${content}`;
+
+  if (content.includes("\n")) {
+    content = "\n\n  " + content.split("\n").join(`\n  `);
+  } else {
+    content = `${spaces}${content}`;
+  }
+
+  return `\n${label}:${content}`;
 }
 
 function parseMessageParts(regex: RegExp, raw: string): string {
