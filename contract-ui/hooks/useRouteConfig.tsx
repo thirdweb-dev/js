@@ -276,6 +276,10 @@ export function useContractRouteConfig(
               "ERC20ClaimConditionsV2",
               "ERC20ClaimPhasesV1",
               "ERC20ClaimPhasesV2",
+
+              // marketplace v3
+              "DirectListings",
+              "EnglishAuctions",
             ],
           }),
     },

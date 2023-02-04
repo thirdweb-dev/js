@@ -17,6 +17,8 @@ export const CustomContractEmbedPage: React.FC<
   const ercOrMarketplace =
     contractType === "marketplace"
       ? "marketplace"
+      : contractType === "marketplace-v3"
+      ? "marketplace-v3"
       : erc20
       ? "erc20"
       : erc1155

@@ -32,7 +32,7 @@ interface EmbedSetupProps {
   ercOrMarketplace: string;
 }
 
-const IPFS_URI = "ipfs://QmckhV2bx4VFCy7Aq1oDvyagmkEDbBtuHngm7o4pyaFaYi";
+const IPFS_URI = "ipfs://QmRHAgPic1HeakAw9EU7WRjt4NPE19pWb8hCorRNhw4Zdy";
 
 interface IframeSrcOptions {
   rpcUrl: string;
@@ -40,6 +40,9 @@ interface IframeSrcOptions {
   chainId?: number;
   tokenId?: string;
   listingId?: string;
+  listingType?: string;
+  directListingId?: string;
+  englishAuctionId?: string;
   relayUrl?: string;
   theme?: string;
   primaryColor?: string;
@@ -89,6 +92,9 @@ const buildIframeSrc = (
     chainId,
     tokenId,
     listingId,
+    listingType,
+    directListingId,
+    englishAuctionId,
     relayUrl,
     theme,
     primaryColor,
@@ -107,6 +113,20 @@ const buildIframeSrc = (
   }
   if (listingId !== undefined && ercOrMarketplace === "marketplace") {
     url.searchParams.append("listingId", listingId.toString());
+  }
+  if (
+    directListingId !== undefined &&
+    ercOrMarketplace === "marketplace-v3" &&
+    listingType === "direct-listing"
+  ) {
+    url.searchParams.append("directListingId", directListingId.toString());
+  }
+  if (
+    englishAuctionId !== undefined &&
+    ercOrMarketplace === "marketplace-v3" &&
+    listingType === "english-auction"
+  ) {
+    url.searchParams.append("englishAuctionId", englishAuctionId.toString());
   }
   if (rpcUrl) {
     url.searchParams.append("rpcUrl", rpcUrl);
@@ -143,6 +163,9 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
     relayUrl: string;
     tokenId: string;
     listingId: string;
+    listingType: string;
+    directListingId: string;
+    englishAuctionId: string;
     theme: string;
     primaryColor: string;
     secondaryColor: string;
@@ -154,6 +177,8 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
       ipfsGateway: "https://gateway.ipfscdn.io/ipfs/",
       tokenId: "0",
       listingId: "0",
+      directListingId: "0",
+      englishAuctionId: "0",
       theme: "light",
       primaryColor: "purple",
       secondaryColor: "orange",
@@ -209,6 +234,38 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
               </FormHelperText>
             </FormControl>
           ) : null}
+          {ercOrMarketplace === "marketplace-v3" ? (
+            <FormControl>
+              <FormLabel>Listing type</FormLabel>
+              <Select {...register("listingType")}>
+                <option value="direct-listing">Direct Listing</option>
+                <option value="english-auction">English Auction</option>
+              </Select>
+              <FormHelperText>
+                The type of listing the embed should display
+              </FormHelperText>
+            </FormControl>
+          ) : null}
+          {ercOrMarketplace === "marketplace-v3" &&
+          watch("listingType") === "direct-listing" ? (
+            <FormControl>
+              <FormLabel>Direct Listing ID</FormLabel>
+              <Input type="number" {...register("directListingId")} />
+              <FormHelperText>
+                The direct listing ID the embed should display
+              </FormHelperText>
+            </FormControl>
+          ) : null}
+          {ercOrMarketplace === "marketplace-v3" &&
+          watch("listingType") === "english-auction" ? (
+            <FormControl>
+              <FormLabel>English Auction ID</FormLabel>
+              <Input type="number" {...register("englishAuctionId")} />
+              <FormHelperText>
+                The english auction ID the embed should display
+              </FormHelperText>
+            </FormControl>
+          ) : null}
           {ercOrMarketplace === "erc1155" ? (
             <FormControl>
               <FormLabel>Token ID</FormLabel>
@@ -226,7 +283,8 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
             </FormHelperText>
           </FormControl>
 
-          {ercOrMarketplace === "marketplace" ? null : (
+          {ercOrMarketplace === "marketplace" ||
+          ercOrMarketplace === "marketplace-v3" ? null : (
             <FormControl gap={4}>
               <Heading size="title.sm" my={4}>
                 Gasless
@@ -295,7 +353,8 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
               Used for the main actions button backgrounds.
             </FormHelperText>
           </FormControl>
-          {ercOrMarketplace === "marketplace" ? (
+          {ercOrMarketplace === "marketplace" ||
+          ercOrMarketplace === "marketplace-v3" ? (
             <FormControl>
               <FormLabel>Secondary Color</FormLabel>
               <Select {...register("secondaryColor")}>
