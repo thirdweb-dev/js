@@ -44,6 +44,7 @@ const NFTS = {
     "thirdweb.eth/DropERC721",
     "thirdweb.eth/DropERC1155",
     "thirdweb.eth/SignatureDrop",
+    "nach.eth/DynamicFreeMint",
   ],
 } as const;
 
@@ -129,6 +130,29 @@ const COMMERCE = {
   showInExplore: false,
 } as const;
 
+const STAKING = {
+  id: "staking",
+  name: "Staking",
+  displayName: "Staking",
+  description: "Stake your NFTs or tokens to earn ERC20 tokens in return.",
+  contracts: [
+    "thirdweb.eth/NFTStake",
+    "thirdweb.eth/EditionStake",
+    "thirdweb.eth/TokenStake",
+  ],
+  showInExplore: true,
+} as const;
+
+const BETA = {
+  id: "beta",
+  name: "Beta",
+  displayName: "Beta",
+  description:
+    "Contracts that are not ready yet, but you can already start deploying on selected testnets.",
+  contracts: ["thirdweb.eth/MarketplaceRouter"],
+  showInExplore: true,
+} as const;
+
 const CATEGORIES = {
   [POPULAR.id]: POPULAR,
   [NFTS.id]: NFTS,
@@ -138,6 +162,8 @@ const CATEGORIES = {
   [AIRDROP.id]: AIRDROP,
   [GAMING.id]: GAMING,
   [COMMERCE.id]: COMMERCE,
+  [STAKING.id]: STAKING,
+  [BETA.id]: BETA,
 } as const;
 
 export function getCategory(id: string): ExploreCategory | null {

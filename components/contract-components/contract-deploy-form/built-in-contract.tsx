@@ -528,12 +528,20 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                     <AccordionPanel py={4} px={0}>
                       <Flex pb={4} direction="column" gap={2}>
                         <Heading size="label.lg">Platform fees</Heading>
-                        <Text size="body.md" fontStyle="italic">
-                          Get additional fees for all primary sales that happen
-                          on this contract. (This is useful if you are deploying
-                          this contract for a 3rd party and want to take fees
-                          for your service.)
-                        </Text>
+                        {contract?.contractType === "marketplace" ||
+                        contract?.contractType === "marketplace-v3" ? (
+                          <Text size="body.md" fontStyle="italic">
+                            Get a percentage of all the secondary sales that
+                            happen on your contract.
+                          </Text>
+                        ) : (
+                          <Text size="body.md" fontStyle="italic">
+                            Get additional fees for all primary sales that
+                            happen on this contract. (This is useful if you are
+                            deploying this contract for a 3rd party and want to
+                            take fees for your service.)
+                          </Text>
+                        )}
                         <Flex gap={4} direction={{ base: "column", md: "row" }}>
                           <FormControl
                             isRequired={isRequired("platform_fee_recipient")}
@@ -846,7 +854,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
             <SupportedNetworkSelect
               isDisabled={deploy.isLoading || !publishMetadata.isSuccess}
               value={
-                !DisabledChainsMap[contractType as ContractType].find(
+                !DisabledChainsMap[contractType as ContractType]?.find(
                   (chain) => chain === selectedChain,
                 )
                   ? selectedChain

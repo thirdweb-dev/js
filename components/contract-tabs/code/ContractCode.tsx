@@ -9,7 +9,9 @@ import { usePascalCaseContractName } from "@3rdweb-sdk/react";
 import { Flex, Spinner, Stack } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useQuery } from "@tanstack/react-query";
-import { useAddress } from "@thirdweb-dev/react";
+import { useAddress, useContract } from "@thirdweb-dev/react";
+import { Abi } from "@thirdweb-dev/sdk";
+import { CodeOverview } from "contract-ui/tabs/code/components/code-overview";
 import { constants } from "ethers";
 import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useCallback, useMemo, useState } from "react";
@@ -97,11 +99,22 @@ export const ContractCode: React.FC<ContractCodeProps> = ({
     [address, contractAddress, chainName],
   );
 
+  const { contract } = useContract(contractAddress);
+
   if (isLoading) {
     return (
       <Card>
         <Spinner /> Loading...
       </Card>
+    );
+  }
+
+  if (!scopedData && contract) {
+    return (
+      <CodeOverview
+        abi={contract?.abi as Abi}
+        contractAddress={contractAddress}
+      />
     );
   }
 

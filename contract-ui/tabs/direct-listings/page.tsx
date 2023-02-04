@@ -1,17 +1,18 @@
+/* import { CreateListingButton } from "./components/list-button"; */
 import { CreateListingButton } from "../shared-components/list-button";
-import { ListingsTable } from "./components/table";
+import { DirectListingsTable } from "./components/table";
 import { Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import { Heading } from "tw-components";
 
-interface ListingsPageProps {
+interface ContractDirectListingsPageProps {
   contractAddress?: string;
 }
 
-export const ContractListingsPage: React.FC<ListingsPageProps> = ({
-  contractAddress,
-}) => {
-  const contractQuery = useContract(contractAddress, "marketplace");
+export const ContractDirectListingsPage: React.FC<
+  ContractDirectListingsPageProps
+> = ({ contractAddress }) => {
+  const contractQuery = useContract(contractAddress, "marketplace-v3");
 
   if (contractQuery.isLoading) {
     // TODO build a skeleton for this
@@ -29,12 +30,13 @@ export const ContractListingsPage: React.FC<ListingsPageProps> = ({
         <Flex gap={4}>
           <CreateListingButton
             contractQuery={contractQuery}
-            createText="Create Listing"
+            type="direct-listings"
+            createText="Create Direct Listing"
           />
         </Flex>
       </Flex>
 
-      <ListingsTable contract={contractQuery.contract} />
+      <DirectListingsTable contract={contractQuery.contract} />
     </Flex>
   );
 };

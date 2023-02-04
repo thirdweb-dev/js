@@ -1,23 +1,24 @@
 import { Text } from "./text";
-import { Center, Flex, Icon, PropsOf, chakra } from "@chakra-ui/react";
+import { Box, Center, Flex, Icon, PropsOf, chakra } from "@chakra-ui/react";
 import { ThirdwebNftMedia, ThirdwebNftMediaProps } from "@thirdweb-dev/react";
 import { FiImage } from "react-icons/fi";
 
-export const NFTMedia = chakra(ThirdwebNftMedia);
+export const NFTMedia = chakra(ThirdwebNftMedia, {
+  shouldForwardProp: (prop) => ["width", "height", "metadata"].includes(prop),
+});
 
 export const NFTMediaWithEmptyState: React.FC<
-  PropsOf<typeof NFTMedia> & ThirdwebNftMediaProps & { boxSize: number }
+  PropsOf<typeof NFTMedia> & ThirdwebNftMediaProps
 > = (props) => {
-  if (
-    !props.metadata.uri ||
-    !(props.metadata.image || props.metadata.animation_url)
-  ) {
+  if (!(props.metadata.image || props.metadata.animation_url)) {
     return (
       <Center
         borderRadius="lg"
-        boxSize={props.boxSize}
+        width={props.width}
+        height={props.height}
         borderColor="accent.300"
         borderWidth="1px"
+        boxSize={props.boxSize}
       >
         <Flex direction="column" align="center" gap={1.5}>
           <Icon boxSize={6} as={FiImage} color="accent.300" />
@@ -28,5 +29,14 @@ export const NFTMediaWithEmptyState: React.FC<
       </Center>
     );
   }
-  return <NFTMedia {...props} />;
+  return (
+    <Box
+      boxSize={props.boxSize}
+      width={props.width}
+      height={props.height}
+      borderRadius="lg"
+    >
+      <NFTMedia {...props} width="100%" height="100%" />
+    </Box>
+  );
 };

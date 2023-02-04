@@ -1,4 +1,6 @@
-import { CancelTab } from "./cancel-tab";
+import { CancelDirectListing } from "../direct-listings/components/cancel";
+import { CancelEnglishAuction } from "../english-auctions/components/cancel";
+import { LISTING_STATUS } from "./types";
 import {
   Flex,
   GridItem,
@@ -12,9 +14,9 @@ import {
 } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import type {
-  AuctionListing,
-  DirectListing,
-  Marketplace,
+  DirectListingV3,
+  EnglishAuction,
+  MarketplaceV3,
 } from "@thirdweb-dev/sdk/evm";
 import { BigNumber } from "ethers";
 import { useMemo } from "react";
@@ -23,22 +25,25 @@ import { AddressCopyButton } from "tw-components/AddressCopyButton";
 import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 
 interface NFTDrawerProps {
-  contract: Marketplace;
+  contract: MarketplaceV3;
   isOpen: boolean;
   onClose: () => void;
-  data: AuctionListing | DirectListing | null;
+  data: DirectListingV3 | EnglishAuction | null;
+  type: "direct-listings" | "english-auctions";
 }
+
 export const ListingDrawer: React.FC<NFTDrawerProps> = ({
+  contract,
   isOpen,
   onClose,
   data,
-  contract,
+  type,
 }) => {
   const address = useAddress();
   const prevData = usePrevious(data);
 
   const renderData = data || prevData;
-  const isOwner = address === renderData?.sellerAddress;
+  const isOwner = address === renderData?.creatorAddress;
 
   const tokenId = renderData?.asset.id.toString() || "";
 
@@ -66,11 +71,11 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
                 <GridItem colSpan={9}>
                   <AddressCopyButton
                     size="xs"
-                    address={renderData.sellerAddress}
+                    address={renderData.creatorAddress}
                   />
                 </GridItem>
                 <GridItem colSpan={3}>
-                  <Heading size="label.md">Listing Type</Heading>
+                  <Heading size="label.md">Status</Heading>
                 </GridItem>
                 <GridItem colSpan={9}>
                   <Badge
@@ -78,7 +83,7 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
                     variant="subtle"
                     textTransform="capitalize"
                   >
-                    {renderData?.type === 0 ? "Direct Listing" : "Auction"}
+                    {LISTING_STATUS[renderData.status]}
                   </Badge>
                 </GridItem>
                 <GridItem colSpan={3}>
@@ -115,18 +120,31 @@ export const ListingDrawer: React.FC<NFTDrawerProps> = ({
       {
         title: "Cancel Listing",
         isDisabled: !isOwner,
-        children: () => (
-          <CancelTab
-            contract={contract}
-            listingId={renderData.id}
-            listingType={renderData.type}
-          />
-        ),
+        children: () =>
+          type === "direct-listings" ? (
+            <CancelDirectListing
+              contract={contract}
+              listingId={renderData?.id}
+            />
+          ) : (
+            <CancelEnglishAuction
+              contract={contract}
+              auctionId={renderData?.id}
+            />
+          ),
       },
     ];
 
     return t;
-  }, [contract, isOwner, renderData, tokenId, data?.asset]);
+  }, [
+    renderData,
+    isOwner,
+    tokenId,
+    data?.asset.attributes,
+    data?.asset.properties,
+    type,
+    contract,
+  ]);
 
   if (!renderData) {
     return null;

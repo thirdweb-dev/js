@@ -57,9 +57,10 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
             metadata={renderData.metadata}
             requireInteraction
             flexShrink={0}
-            boxSize={32}
             borderRadius="lg"
             objectFit="contain"
+            width="150px"
+            height="150px"
           />
           <Flex flexDir="column" gap={2} w="70%">
             <Heading size="title.lg">{renderData.metadata.name}</Heading>

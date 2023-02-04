@@ -10,6 +10,7 @@ export class AnalyticsEvents {
     "nft-collection": "App-NftContractDeployed",
     edition: "App-NftCollectionContractDeployed",
     marketplace: "App-MarketContractDeployed",
+    "marketplace-v3": "App-MarketplaceV3ContractDeployed",
     pack: "App-PackContractDeployed",
     "nft-drop": "App-DropContractDeployed",
     "edition-drop": "App-BundleDropContractDeployed",

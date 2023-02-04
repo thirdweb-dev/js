@@ -152,6 +152,34 @@ export function useContractRouteConfig(
         )),
     },
     {
+      title: "Direct Listings",
+      path: "direct-listings",
+      isEnabled: extensionDetectedState({
+        contractQuery,
+        feature: "DirectListings",
+      }),
+      element: () =>
+        import("../tabs/direct-listings/page").then(
+          ({ ContractDirectListingsPage }) => (
+            <ContractDirectListingsPage contractAddress={contractAddress} />
+          ),
+        ),
+    },
+    {
+      title: "English Auctions",
+      path: "english-auctions",
+      isEnabled: extensionDetectedState({
+        contractQuery,
+        feature: "EnglishAuctions",
+      }),
+      element: () =>
+        import("../tabs/english-auctions/page").then(
+          ({ ContractEnglishAuctionsPage }) => (
+            <ContractEnglishAuctionsPage contractAddress={contractAddress} />
+          ),
+        ),
+    },
+    {
       title: "Listings",
       path: "listings",
       isEnabled: contractTypeQuery.isLoading

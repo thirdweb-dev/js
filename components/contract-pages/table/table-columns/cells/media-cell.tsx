@@ -19,6 +19,8 @@ export const MediaCell: React.FC<MediaCellProps> = ({ cell }) => {
       flexShrink={0}
       boxSize={24}
       objectFit="contain"
+      width="100px"
+      height="100px"
     />
   );
 };

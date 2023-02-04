@@ -25,6 +25,8 @@ export function usePascalCaseContractName(contractName: string) {
     return "Pack";
   } else if (contractName === "multiwrap") {
     return "Multiwrap";
+  } else if (contractName === "marketplace-v3") {
+    return "MarketplaceV3";
   } else {
     return contractName;
   }

@@ -1,11 +1,11 @@
 import { useDashboardNetwork } from "@3rdweb-sdk/react";
 import { useWalletNFTs } from "@3rdweb-sdk/react/hooks/useWalletNFTs";
 import {
+  Box,
   Center,
   Flex,
   FormControl,
   Icon,
-  Image,
   Input,
   List,
   ListItem,
@@ -16,22 +16,34 @@ import {
   useModalContext,
 } from "@chakra-ui/react";
 import {
+  UseContractResult,
+  useContractType,
   useCreateAuctionListing,
   useCreateDirectListing,
 } from "@thirdweb-dev/react";
 import {
+  Marketplace,
+  MarketplaceV3,
   NATIVE_TOKEN_ADDRESS,
   NewAuctionListing,
   NewDirectListing,
 } from "@thirdweb-dev/sdk/evm";
 import { CurrencySelector } from "components/shared/CurrencySelector";
+import { formatEther, parseEther } from "ethers/lib/utils";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { WalletNFT } from "lib/wallet/nfts/types";
 import { useForm } from "react-hook-form";
-import { FaImage } from "react-icons/fa";
 import { FiInfo } from "react-icons/fi";
-import { FormHelperText, FormLabel, Heading, Text } from "tw-components";
+import {
+  Card,
+  FormHelperText,
+  FormLabel,
+  Heading,
+  Link,
+  Text,
+} from "tw-components";
+import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 import { shortenIfAddress } from "utils/usedapp-external";
 
 interface ListForm
@@ -44,18 +56,38 @@ interface ListForm
 }
 
 type NFTMintForm = {
+  contractQuery:
+    | UseContractResult<Marketplace>
+    | UseContractResult<MarketplaceV3>;
   directList: ReturnType<typeof useCreateDirectListing>;
   auctionList: ReturnType<typeof useCreateAuctionListing>;
   formId: string;
+  type?: "direct-listings" | "english-auctions";
 };
 
+const auctionTimes = [
+  { label: "1 day", value: 60 * 60 * 24 },
+  { label: "3 days", value: 60 * 60 * 24 * 3 },
+  { label: "7 days", value: 60 * 60 * 24 * 7 },
+  { label: "1 month", value: 60 * 60 * 24 * 30 },
+  { label: "3 months", value: 60 * 60 * 24 * 30 * 3 },
+  { label: "6 months", value: 60 * 60 * 24 * 30 * 6 },
+  { label: "1 year", value: 60 * 60 * 24 * 365 },
+];
+
 export const CreateListingsForm: React.FC<NFTMintForm> = ({
+  contractQuery,
   directList,
   auctionList,
   formId,
+  type,
 }) => {
   const trackEvent = useTrack();
   const network = useDashboardNetwork();
+
+  const { data: contractType } = useContractType(
+    contractQuery?.contract?.getAddress(),
+  );
 
   const { data: nfts, isLoading: nftsLoading } = useWalletNFTs();
 
@@ -65,10 +97,11 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
       currencyContractAddress: NATIVE_TOKEN_ADDRESS,
       quantity: "1",
       buyoutPricePerToken: "0",
-      listingType: "direct",
+      listingType: type === "english-auctions" ? "auction" : "direct",
       reservePricePerToken: "0",
       startTimestamp: new Date(),
-      listingDurationInSeconds: (60 * 60 * 24).toString(),
+      // Default to one month duration
+      listingDurationInSeconds: (60 * 60 * 24 * 30).toString(),
     },
   });
 
@@ -102,11 +135,16 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
               assetContractAddress: formData.selected.contractAddress,
               tokenId: formData.selected.tokenId,
               currencyContractAddress: formData.currencyContractAddress,
+              quantity: formData.quantity,
+              startTimestamp: formData.startTimestamp,
+              // Hard code to year 2100 for now
+              pricePerToken: formData.buyoutPricePerToken,
+              endTimestamp: new Date(4102444800000),
+
+              // Marketplace v1 only params
               buyoutPricePerToken: formData.buyoutPricePerToken,
               // Hard code to 100 years for now
               listingDurationInSeconds: (60 * 60 * 24 * 365 * 100).toString(),
-              quantity: formData.quantity,
-              startTimestamp: formData.startTimestamp,
             },
             {
               onSuccess: () => {
@@ -121,12 +159,27 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
             {
               assetContractAddress: formData.selected.contractAddress,
               tokenId: formData.selected.tokenId,
-              currencyContractAddress: formData.currencyContractAddress,
-              buyoutPricePerToken: formData.buyoutPricePerToken,
-              listingDurationInSeconds: formData.listingDurationInSeconds,
               quantity: formData.quantity,
               startTimestamp: formData.startTimestamp,
+              currencyContractAddress: formData.currencyContractAddress,
+              minimumBidAmount: mulDecimalByQuantity(
+                formData.reservePricePerToken,
+                formData.quantity,
+              ),
+              buyoutBidAmount: mulDecimalByQuantity(
+                formData.buyoutPricePerToken,
+                formData.quantity,
+              ),
+              // Create endTimestamp with the current date + listingDurationInSeconds
+              endTimestamp: new Date(
+                new Date().getTime() +
+                  parseInt(formData.listingDurationInSeconds) * 1000,
+              ),
+
+              // Marketplace v1 only params
               reservePricePerToken: formData.reservePricePerToken,
+              buyoutPricePerToken: formData.buyoutPricePerToken,
+              listingDurationInSeconds: formData.listingDurationInSeconds,
             },
             {
               onSuccess: () => {
@@ -159,7 +212,7 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
           Select NFT
         </Heading>
         <FormHelperText mb="8px">
-          Select the NFTs you want to list for sale
+          Select the NFT you want to list for sale
         </FormHelperText>
         {nftsLoading ? (
           <Center height="60px">
@@ -168,71 +221,34 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
         ) : nfts?.result?.length ? (
           <Flex gap={2} flexWrap="wrap">
             {nfts.result.map((nft, id) => {
-              if (nft.metadata.image) {
-                return (
-                  <Tooltip key={id} label={<ListLabel nft={nft} />}>
-                    <Image
-                      src={nft.metadata.image || undefined}
-                      width="140px"
-                      height="140px"
-                      alt={`${nft.metadata.name || ""}`}
-                      borderRadius="md"
-                      cursor="pointer"
-                      onClick={() =>
-                        isSelected(nft)
-                          ? setValue("selected", undefined)
-                          : setValue("selected", nft)
-                      }
-                      border={isSelected(nft) ? "5px solid" : undefined}
-                      borderColor={isSelected(nft) ? "purple.500" : undefined}
-                    />
-                  </Tooltip>
-                );
-              }
-
-              if (nft.metadata && nft.metadata.name) {
-                return (
-                  <Tooltip key={id} label={<ListLabel nft={nft} />}>
-                    <Center
-                      flexDirection="column"
-                      width="140px"
-                      height="140px"
-                      borderRadius="md"
-                      cursor="pointer"
-                      onClick={() =>
-                        isSelected(nft)
-                          ? setValue("selected", undefined)
-                          : setValue("selected", nft)
-                      }
-                      border={isSelected(nft) ? "5px solid" : undefined}
-                      borderColor={isSelected(nft) ? "purple.500" : undefined}
-                      bg="gray.200"
-                    >
-                      <Text>{nft.metadata?.name}</Text>
-                    </Center>
-                  </Tooltip>
-                );
-              }
-
               return (
-                <Tooltip key={id} label={<ListLabel nft={nft} />}>
-                  <Center
-                    flexDirection="column"
-                    width="140px"
-                    height="140px"
-                    borderRadius="md"
+                <Tooltip
+                  bg="transparent"
+                  boxShadow="none"
+                  shouldWrapChildren
+                  placement="left-end"
+                  key={id}
+                  label={<ListLabel nft={nft} />}
+                >
+                  <Box
+                    borderRadius="lg"
                     cursor="pointer"
                     onClick={() =>
                       isSelected(nft)
                         ? setValue("selected", undefined)
                         : setValue("selected", nft)
                     }
-                    border={isSelected(nft) ? "5px solid" : undefined}
-                    borderColor={isSelected(nft) ? "purple.500" : undefined}
-                    bg="gray.200"
+                    outline={isSelected(nft) ? "3px solid" : undefined}
+                    outlineColor={isSelected(nft) ? "purple.500" : undefined}
+                    overflow="hidden"
                   >
-                    <Icon as={FaImage} boxSize={3} />
-                  </Center>
+                    <NFTMediaWithEmptyState
+                      metadata={nft.metadata}
+                      width="140px"
+                      height="140px"
+                      alt={`${nft.metadata.name || ""}`}
+                    />
+                  </Box>
                 </Tooltip>
               );
             })}
@@ -248,36 +264,46 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
             padding="10px"
             spacing={3}
             _dark={{
-              bg: "orange.800",
-              borderColor: "orange.800",
+              bg: "orange.300",
+              borderColor: "orange.300",
             }}
           >
             <Icon
               as={FiInfo}
               color="orange.400"
-              _dark={{ color: "orange.100" }}
+              _dark={{ color: "orange.900" }}
               boxSize={6}
             />
-            <Text color="orange.800" _dark={{ color: "orange.100" }}>
+            <Text color="orange.800" _dark={{ color: "orange.900" }}>
               There are no NFTs owned by this wallet. You need NFTs to create a
-              listing.
+              listing. You can create NFTs with thirdweb.{" "}
+              <Link
+                href="https://thirdweb.com/explore/nft"
+                color="blue.600"
+                isExternal
+              >
+                Explore NFT contracts
+              </Link>
+              .
             </Text>
           </Stack>
         )}
       </FormControl>
-      <FormControl isDisabled={noNfts}>
-        <Heading as={FormLabel} size="label.lg">
-          Listing Type
-        </Heading>
-        <Select {...register("listingType")}>
-          <option value="direct">Direct</option>
-          <option value="auction">Auction</option>
-        </Select>
-        <FormHelperText>
-          The type of listing you want to create, either an auction or direct
-          listing.
-        </FormHelperText>
-      </FormControl>
+      {contractType === "marketplace" ? (
+        <FormControl isDisabled={noNfts}>
+          <Heading as={FormLabel} size="label.lg">
+            Listing Type
+          </Heading>
+          <Select {...register("listingType")}>
+            <option value="direct">Direct</option>
+            <option value="auction">Auction</option>
+          </Select>
+          <FormHelperText>
+            The type of listing you want to create, either an auction or direct
+            listing.
+          </FormHelperText>
+        </FormControl>
+      ) : null}
       <FormControl isRequired isDisabled={noNfts}>
         <Heading as={FormLabel} size="label.lg">
           Listing Currency
@@ -309,15 +335,6 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
             <Heading as={FormLabel} size="label.lg">
               Quantity
             </Heading>
-            {/* {watch("selected") && (
-                  <Text
-                    color="primary.400"
-                    cursor="pointer"
-                    _hover={{ textDecor: "underline" }}
-                  >
-                    Max
-                  </Text>
-                )} */}
           </Stack>
           <Input {...register("quantity")} />
           <FormHelperText>
@@ -338,12 +355,17 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
           </FormControl>
           <FormControl isRequired>
             <Heading as={FormLabel} size="label.lg">
-              Auction Duration (Seconds)
+              Auction Duration
             </Heading>
-            <Input {...register("listingDurationInSeconds")} />
-            <FormHelperText>
-              The duration of this auction in seconds (86400 is one day)
-            </FormHelperText>
+            <Select {...register("listingDurationInSeconds")}>
+              {auctionTimes.map((time) => (
+                <option key={time.value} value={time.value}>
+                  {time.label}
+                </option>
+              ))}
+            </Select>
+            {/*             <Input {...register("listingDurationInSeconds")} /> */}
+            <FormHelperText>The duration of this auction.</FormHelperText>
           </FormControl>
         </>
       )}
@@ -357,22 +379,35 @@ interface ListLabelProps {
 
 const ListLabel: React.FC<ListLabelProps> = ({ nft }) => {
   return (
-    <List>
-      <ListItem>
-        <strong>Name:</strong> {nft.metadata?.name || "N/A"}
-      </ListItem>
-      <ListItem>
-        <strong>Contract Address:</strong>{" "}
-        {shortenIfAddress(nft.contractAddress)}
-      </ListItem>
-      <ListItem>
-        <strong>Token ID: </strong> {nft.tokenId}
-      </ListItem>
-      <ListItem>
-        <>
-          <strong>Token Standard: </strong> {nft.type}
-        </>
-      </ListItem>
-    </List>
+    <Card color="paragraph" p={4} bg="backgroundCardHighlight">
+      <List>
+        <ListItem>
+          <strong>Name:</strong> {nft.metadata?.name || "N/A"}
+        </ListItem>
+        <ListItem>
+          <strong>Contract Address:</strong>{" "}
+          {shortenIfAddress(nft.contractAddress)}
+        </ListItem>
+        <ListItem>
+          <strong>Token ID: </strong> {nft.tokenId}
+        </ListItem>
+        <ListItem>
+          <>
+            <strong>Token Standard: </strong> {nft.type}
+          </>
+        </ListItem>
+      </List>
+    </Card>
   );
 };
+
+function mulDecimalByQuantity(a: string | number, b: string | number): string {
+  if (!a || a.toString() === "0" || !b || b.toString() === "0") {
+    return "0";
+  }
+
+  const aWei = parseEther(a.toString());
+  const result = aWei.mul(b);
+
+  return formatEther(result).toString();
+}
