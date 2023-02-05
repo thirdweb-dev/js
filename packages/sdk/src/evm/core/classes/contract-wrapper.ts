@@ -380,7 +380,26 @@ export class ContractWrapper<
         callOverrides,
       );
       this.emitTransactionEvent("submitted", tx.hash);
-      const receipt = tx.wait();
+
+      // tx.wait() can fail so we need to wrap it with a catch
+      let receipt;
+      try {
+        receipt = await tx.wait();
+      } catch (err) {
+        try {
+          // If tx.wait() fails, it just gives us a generic "transaction failed"
+          // error. So instead, we need to call static to get an informative error message
+          await this.writeContract.callStatic[fn as string](
+            ...args,
+            ...(callOverrides.value ? [{ value: callOverrides.value }] : []),
+          );
+        } catch (staticErr: any) {
+          throw await this.formatError(staticErr, fn, args, callOverrides);
+        }
+
+        throw await this.formatError(err, fn, args, callOverrides);
+      }
+
       this.emitTransactionEvent("completed", tx.hash);
       return receipt;
     }
@@ -483,6 +502,10 @@ export class ContractWrapper<
             .join(",\n") +
           "\n";
     const method = `${functionSignature.name}(${joinedArgs})`;
+    const hash =
+      error.transactionHash ||
+      error.transaction?.hash ||
+      error.receipt?.transactionHash;
 
     // Parse the revert reason from the error
     const reason = parseRevertReason(error);
@@ -496,6 +519,7 @@ export class ContractWrapper<
       network,
       rpcUrl,
       value,
+      hash,
     });
   }
 
