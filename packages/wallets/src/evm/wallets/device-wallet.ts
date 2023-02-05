@@ -1,6 +1,4 @@
-import type { DeviceWalletConnector } from "../connectors/device-wallet";
 import { AbstractWallet } from "./abstract";
-import { AbstractBrowserWallet, WalletOptions } from "./base";
 import { ethers } from "ethers";
 
 export class DeviceWallet extends AbstractWallet {
