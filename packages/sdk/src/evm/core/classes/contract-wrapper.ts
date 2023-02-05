@@ -401,6 +401,8 @@ export class ContractWrapper<
       throw new Error(`invalid function: "${fn.toString()}"`);
     }
 
+    let insufficientBalance = false;
+
     // First, if no gasLimit is passed, call estimate gas ourselves
     if (!callOverrides.gasLimit) {
       try {
@@ -415,14 +417,23 @@ export class ContractWrapper<
             ...(callOverrides.value ? [{ value: callOverrides.value }] : []),
           );
         } catch (err: any) {
-          throw await this.formatError(err, fn, args, callOverrides);
-        }
+          const from = await (callOverrides.from || this.getSignerAddress());
+          const value = await (callOverrides.value ? callOverrides.value : 0);
+          const balance = await this.getProvider().getBalance(from);
 
-        // If call static doesn't throw an error, estimateGas likely failed because the signer
-        // account has insufficient funds (or other reasons, we can case on later).
-        throw new Error(
-          "Failed to estimate gas for transaction. You may have insufficient funds in your account to execute this transaction.",
-        );
+          // First we check if the error is an insufficient balance error (and save it for later)
+          // We do it like this so if anything goes wrong with the balance check above, the default
+          // code path is for the error to get thrown below
+          if (balance.eq(0) || (value && balance.lt(value))) {
+            insufficientBalance = true;
+          }
+
+          // If it is, then we skip over throwing here, so we can let sendTransaction go through
+          // This is desireable because users will be able to see insufficient funds messages on their wallets
+          if (!insufficientBalance) {
+            throw await this.formatError(err, fn, args, callOverrides);
+          }
+        }
       }
     }
 
@@ -430,6 +441,14 @@ export class ContractWrapper<
     try {
       return await func(...args, callOverrides);
     } catch (err) {
+      // Now we can throw the nice insufficient funds error after it has already been
+      // displayed in user wallets.
+      if (insufficientBalance) {
+        throw new Error(
+          "You have insufficient funds in your account to execute this transaction.",
+        );
+      }
+
       throw await this.formatError(err, fn, args, callOverrides);
     }
   }
