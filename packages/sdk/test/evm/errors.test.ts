@@ -1,4 +1,4 @@
-import { sdk } from "./before-setup";
+import { expectError, sdk } from "./before-setup";
 import { expect } from "chai";
 import { ethers } from "ethers";
 
@@ -15,7 +15,8 @@ describe("Error Handling", async () => {
       });
       expect.fail();
     } catch (err) {
-      expect(err.message).to.contain(
+      expectError(
+        err,
         "You have insufficient funds in your account to execute this transaction.",
       );
     }

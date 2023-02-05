@@ -415,7 +415,6 @@ export class ContractWrapper<
             ...(callOverrides.value ? [{ value: callOverrides.value }] : []),
           );
         } catch (err: any) {
-          console.log("Throwing hre instead!");
           throw await this.formatError(err, fn, args, callOverrides);
         }
       }
@@ -425,7 +424,6 @@ export class ContractWrapper<
     try {
       return await func(...args, callOverrides);
     } catch (err) {
-      console.log("Throwing hre instead!");
       const from = await (callOverrides.from || this.getSignerAddress());
       const value = await (callOverrides.value ? callOverrides.value : 0);
       const balance = await this.getProvider().getBalance(from);
