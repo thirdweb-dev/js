@@ -55,10 +55,10 @@ import {
   PluginMap,
   PluginMap__factory,
   VoteERC20__factory,
-  MarketplaceRouter__factory,
+  MarketplaceV3__factory,
   DirectListingsLogic__factory,
   DirectListingsLogic,
-  MarketplaceRouter,
+  MarketplaceV3,
   EnglishAuctionsLogic__factory,
   EnglishAuctionsLogic,
   OffersLogic__factory,
@@ -456,15 +456,15 @@ async function setupMarketplaceV3(): Promise<string> {
     ])) as PluginMap;
   const pluginMap = await pluginMapDeployer.deployed();
 
-  const marketplaceRouterDeployer = (await new ethers.ContractFactory(
-    MarketplaceRouter__factory.abi,
-    MarketplaceRouter__factory.bytecode,
+  const marketplaceV3Deployer = (await new ethers.ContractFactory(
+    MarketplaceV3__factory.abi,
+    MarketplaceV3__factory.bytecode,
   )
     .connect(signer)
-    .deploy(pluginMap.address)) as MarketplaceRouter;
-  const marketplaceRouter = await marketplaceRouterDeployer.deployed();
+    .deploy(pluginMap.address)) as MarketplaceV3;
+  const marketplaceV3 = await marketplaceV3Deployer.deployed();
 
-  return marketplaceRouter.address;
+  return marketplaceV3.address;
 }
 
 export {
