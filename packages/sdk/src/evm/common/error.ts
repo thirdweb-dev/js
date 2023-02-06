@@ -264,7 +264,7 @@ export type FunctionInfo = {
   value: BigNumber;
 };
 
-type TransactionErrorInfo = {
+export type TransactionErrorInfo = {
   reason: string;
   from: string;
   to: string;
@@ -273,6 +273,7 @@ type TransactionErrorInfo = {
   data?: string;
   rpcUrl?: string;
   value?: BigNumber;
+  hash?: string;
 };
 
 /**
@@ -280,6 +281,7 @@ type TransactionErrorInfo = {
  */
 export class TransactionError extends Error {
   #reason: string;
+  #info: TransactionErrorInfo;
 
   constructor(info: TransactionErrorInfo) {
     let errorMessage = `\n\n\n╔═══════════════════╗\n║ TRANSACTION ERROR ║\n╚═══════════════════╝\n\n`;
@@ -299,6 +301,10 @@ export class TransactionError extends Error {
       } catch (e2) {
         // ignore if can't parse URL
       }
+    }
+
+    if (info.hash) {
+      errorMessage += withSpaces(`tx hash`, info.hash);
     }
 
     if (info.value && info.value.gt(0)) {
@@ -324,10 +330,16 @@ export class TransactionError extends Error {
     super(errorMessage);
 
     this.#reason = info.reason;
+    this.#info = info;
   }
 
+  // Keep reason here for backwards compatibility
   get reason(): string {
     return this.#reason;
+  }
+
+  get info(): TransactionErrorInfo {
+    return this.#info;
   }
 }
 

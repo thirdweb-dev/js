@@ -323,6 +323,14 @@ export const cacheKeys = {
             "getAuction",
             { auctionId },
           ]),
+        getWinningBid: (
+          contractAddress: RequiredParam<ContractAddress>,
+          auctionId: RequiredParam<BigNumberish>,
+        ) =>
+          createContractCacheKey(contractAddress, [
+            "getWinningBid",
+            { auctionId },
+          ]),
         getTotalCount: (contractAddress: RequiredParam<ContractAddress>) =>
           createContractCacheKey(contractAddress, ["getTotalEnglishAuctionsCount"]),
       },
