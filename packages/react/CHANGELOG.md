@@ -1,5 +1,12 @@
 # @thirdweb-dev/react
 
+## 3.8.0
+
+### Patch Changes
+
+- Updated dependencies [[`440a4ad`](https://github.com/thirdweb-dev/js/commit/440a4ade95874e696c589eaa7aae9f0fecc862be)]:
+  - @thirdweb-dev/react-core@3.8.0
+
 ## 3.7.4
 
 ### Patch Changes
