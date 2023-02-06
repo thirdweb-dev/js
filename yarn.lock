@@ -5816,10 +5816,10 @@
     "@tanstack/query-core" "4.19.1"
     use-sync-external-store "^1.2.0"
 
-"@thirdweb-dev/contracts@3.4.0":
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.4.0.tgz#6a1fc4c701cd2b77e9b737e32a301f04bddd9f5e"
-  integrity sha512-pLzeLjgJcmbmTJOuCb+4Y/0R2rZSVWIMrdvTL3SipR1MrcQ631mVsVV2qxboNdoVXx4EYJvk4zssPh/w1eImgQ==
+"@thirdweb-dev/contracts@3.4.1":
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.4.1.tgz#e5a63e705b2f2014fe3fabf3e30209e3c5034348"
+  integrity sha512-BURfuFYZhJOmoycDwo8iaKUi+rdjt9vRGFd0vquqNjL2vQdI7dXqdbuJuOepIwGld5gvRNM+WlnVQ8EZgQIjqg==
 
 "@tootallnate/once@1":
   version "1.1.2"
