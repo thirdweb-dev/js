@@ -333,6 +333,7 @@ export class TransactionError extends Error {
       const revertFile = info.sources.find((file) =>
         file.source.includes(info.reason),
       );
+
       if (revertFile) {
         const lines = revertFile.source
           .split("\n")
