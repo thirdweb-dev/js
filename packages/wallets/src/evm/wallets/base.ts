@@ -54,7 +54,6 @@ export abstract class AbstractBrowserWallet<
       const connector = await this.getConnector();
 
       if (await connector.isAuthorized()) {
-        console.log("auto connecting to", parsedChain);
         return await this.connect(parsedChain);
       }
     }

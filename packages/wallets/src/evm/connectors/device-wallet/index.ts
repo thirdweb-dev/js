@@ -65,9 +65,7 @@ export class DeviceWalletConnector extends Connector<
 
       this.emit("message", { type: "connecting" });
 
-      console.log("Connect Creating wallet");
       this.#wallet = await this.options.createWallet();
-      console.log("Connect get Signer");
       const signer = await this.getSigner();
       const account = (await signer.getAddress()) as `0x${string}`;
       const id = await this.getChainId();
