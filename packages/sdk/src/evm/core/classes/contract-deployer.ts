@@ -489,7 +489,6 @@ export class ContractDeployer extends RPCConnectionHandler {
       parsedMetadata,
       contractURI,
     );
-
     return this.deployReleasedContract(
       // 0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024 === deployer.thirdweb.eth
       "0xdd99b75f095d0c4d5112aCe938e4e6ed962fb024",
