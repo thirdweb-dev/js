@@ -518,7 +518,6 @@ export class ContractWrapper<
     const reason = parseRevertReason(error);
 
     // Get contract sources for stack trace
-
     let sources: ContractSource[] | undefined = undefined;
     let contractName: string | undefined = undefined;
     try {

@@ -342,7 +342,7 @@ export class TransactionError extends Error {
           line.includes(info.reason),
         );
         lines[revertLine] += "   <-- REVERT";
-        const errorLines = lines.slice(revertLine - 5, revertLine + 5);
+        const errorLines = lines.slice(revertLine - 10, revertLine + 2);
 
         errorMessage += `\n\n\n╔══════════════════════╗\n║ SOLIDITY STACK TRACE ║\n╚══════════════════════╝\n\n`;
         errorMessage += `File: ${revertFile.filename.replace(
