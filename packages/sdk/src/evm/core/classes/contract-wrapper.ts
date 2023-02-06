@@ -51,6 +51,9 @@ import invariant from "tiny-invariant";
 export class ContractWrapper<
   TContract extends BaseContract,
 > extends RPCConnectionHandler {
+  // TOOO: In another PR, make this storage private, and have extending classes pass
+  // down storage to be stored in contract wrapper.
+  #storage: ThirdwebStorage;
   private isValidContract = false;
   private customOverrides: () => CallOverrides = () => ({});
   /**
@@ -78,6 +81,7 @@ export class ContractWrapper<
     this.readContract = this.writeContract.connect(
       this.getProvider(),
     ) as TContract;
+    this.#storage = new ThirdwebStorage();
   }
 
   public override updateSignerOrProvider(
@@ -514,17 +518,22 @@ export class ContractWrapper<
     const reason = parseRevertReason(error);
 
     // Get contract sources for stack trace
+
     let sources: ContractSource[] | undefined = undefined;
-    const storage = new ThirdwebStorage(); // Take thirdweb storage in constructor at some point?
+    let contractName: string | undefined = undefined;
     try {
       const metadata = await fetchContractMetadataFromAddress(
         this.readContract.address,
         this.getProvider(),
-        storage,
+        this.#storage,
       );
 
+      if (metadata.name) {
+        contractName = metadata.name;
+      }
+
       if (metadata.metadata.sources) {
-        sources = await fetchSourceFilesFromMetadata(metadata, storage);
+        sources = await fetchSourceFilesFromMetadata(metadata, this.#storage);
       }
     } catch (err) {
       // no-op
@@ -540,6 +549,7 @@ export class ContractWrapper<
       rpcUrl,
       value,
       hash,
+      contractName,
       sources,
     });
   }

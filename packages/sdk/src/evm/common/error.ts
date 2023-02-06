@@ -275,6 +275,7 @@ export type TransactionErrorInfo = {
   rpcUrl?: string;
   value?: BigNumber;
   hash?: string;
+  contractName?: string;
   sources?: ContractSource[];
 };
 
@@ -290,7 +291,10 @@ export class TransactionError extends Error {
     errorMessage += `Reason: ${info.reason}`;
     errorMessage += `\n\n\n╔═════════════════════════╗\n║ TRANSACTION INFORMATION ║\n╚═════════════════════════╝\n`;
     errorMessage += withSpaces("from", info.from);
-    errorMessage += withSpaces("to", info.to);
+    errorMessage += withSpaces(
+      "to",
+      info.contractName ? `${info.to} (${info.contractName})` : info.to,
+    );
     errorMessage += withSpaces(
       `chain`,
       `${info.network.name} (${info.network.chainId})`,
