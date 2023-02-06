@@ -273,6 +273,7 @@ export type TransactionErrorInfo = {
   data?: string;
   rpcUrl?: string;
   value?: BigNumber;
+  hash?: string;
 };
 
 /**
@@ -300,6 +301,10 @@ export class TransactionError extends Error {
       } catch (e2) {
         // ignore if can't parse URL
       }
+    }
+
+    if (info.hash) {
+      errorMessage += withSpaces(`tx hash`, info.hash);
     }
 
     if (info.value && info.value.gt(0)) {
