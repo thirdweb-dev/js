@@ -1,5 +1,6 @@
 import { Feature } from "../constants/contract-features";
 import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../constants/index";
+import { ContractSource } from "../schema";
 import { BigNumber, BigNumberish, ethers, providers } from "ethers";
 
 /**
@@ -274,6 +275,7 @@ export type TransactionErrorInfo = {
   rpcUrl?: string;
   value?: BigNumber;
   hash?: string;
+  sources?: ContractSource[];
 };
 
 /**
@@ -321,6 +323,29 @@ export class TransactionError extends Error {
 
     if (info.method) {
       errorMessage += withSpaces("method", info.method);
+    }
+
+    if (info.sources) {
+      const revertFile = info.sources.find((file) =>
+        file.source.includes(info.reason),
+      );
+      if (revertFile) {
+        const lines = revertFile.source
+          .split("\n")
+          .map((line, index) => `${index + 1}  ${line}`);
+        const revertLine = lines.findIndex((line) =>
+          line.includes(info.reason),
+        );
+        lines[revertLine] += "   <-- REVERT";
+        const errorLines = lines.slice(revertLine - 5, revertLine + 5);
+
+        errorMessage += `\n\n\n╔══════════════════════╗\n║ SOLIDITY STACK TRACE ║\n╚══════════════════════╝\n\n`;
+        errorMessage += `File: ${revertFile.filename.replace(
+          "node_modules/",
+          "",
+        )}\n\n`;
+        errorMessage += errorLines.join("\n");
+      }
     }
 
     errorMessage += `\n\n\n╔═════════════════════╗\n║ DEBUGGING RESOURCES ║\n╚═════════════════════╝\n\n`;

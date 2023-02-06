@@ -1,6 +1,8 @@
 import {
   TransactionError,
   extractFunctionsFromAbi,
+  fetchContractMetadataFromAddress,
+  fetchSourceFilesFromMetadata,
   parseRevertReason,
 } from "../../common";
 import {
@@ -17,7 +19,7 @@ import { CONTRACT_ADDRESSES, ChainId } from "../../constants";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import { EventType } from "../../constants/events";
 import { CallOverrideSchema } from "../../schema";
-import { AbiSchema } from "../../schema/contracts/custom";
+import { AbiSchema, ContractSource } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
   ForwardRequestMessage,
@@ -27,6 +29,7 @@ import {
 } from "../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import fetch from "cross-fetch";
 import {
   BaseContract,
@@ -510,6 +513,23 @@ export class ContractWrapper<
     // Parse the revert reason from the error
     const reason = parseRevertReason(error);
 
+    // Get contract sources for stack trace
+    let sources: ContractSource[] | undefined = undefined;
+    const storage = new ThirdwebStorage(); // Take thirdweb storage in constructor at some point?
+    try {
+      const metadata = await fetchContractMetadataFromAddress(
+        this.readContract.address,
+        this.getProvider(),
+        storage,
+      );
+
+      if (metadata.metadata.sources) {
+        sources = await fetchSourceFilesFromMetadata(metadata, storage);
+      }
+    } catch (err) {
+      // no-op
+    }
+
     return new TransactionError({
       reason,
       from,
@@ -520,6 +540,7 @@ export class ContractWrapper<
       rpcUrl,
       value,
       hash,
+      sources,
     });
   }
 
