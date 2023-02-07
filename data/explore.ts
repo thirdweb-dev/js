@@ -149,7 +149,7 @@ const BETA = {
   displayName: "Beta",
   description:
     "Contracts that are not ready yet, but you can already start deploying on selected testnets.",
-  contracts: ["thirdweb.eth/MarketplaceRouter"],
+  contracts: ["thirdweb.eth/MarketplaceV3"],
   showInExplore: true,
 } as const;
 
