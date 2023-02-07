@@ -1,9 +1,12 @@
-import type { DeviceWalletConnector } from "../connectors/device-wallet";
+import type {
+  DeviceWalletConnector,
+  DeviceWalletConnectorOptions,
+} from "../connectors/device-wallet";
 import { AbstractWallet } from "./abstract";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 import { ethers } from "ethers";
 
-export class DeviceBrowserWallet extends AbstractBrowserWallet {
+export class DeviceBrowserWallet extends AbstractBrowserWallet<DeviceWalletConnectorOptions> {
   #connector?: DeviceWalletConnector;
 
   static id = "deviceWallet" as const;
@@ -12,7 +15,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet {
   }
 
   // TODO wallet type in the Wallet Options
-  constructor(options: WalletOptions) {
+  constructor(options: WalletOptions<DeviceWalletConnectorOptions>) {
     super(DeviceBrowserWallet.id, {
       ...options,
       shouldAutoConnect: false, // TODO figure the autoconnect flow
@@ -27,11 +30,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet {
       );
       this.#connector = new DeviceWalletConnector({
         chains: this.chains,
-        options: {
-          createWallet: async () => {
-            return await DeviceWalletImpl.fromCredentialStore();
-          },
-        },
+        options: this.options,
       });
     }
     return this.#connector;
