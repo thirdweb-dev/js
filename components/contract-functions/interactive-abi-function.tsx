@@ -50,8 +50,8 @@ export function formatResponseData(data: unknown): string {
 }
 
 export function formatError(error: Error): string {
-  if (error.message) {
-    return error.message.split("| Raw error |\n")[0].trim();
+  if ((error as any).reason) {
+    return (error as any).reason;
   }
 
   try {
