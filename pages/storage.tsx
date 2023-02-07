@@ -7,6 +7,7 @@ import { ThirdwebNextPage } from "../utils/types";
 import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { Hero } from "components/product-pages/common/Hero";
 import { ProductCard } from "components/product-pages/common/ProductCard";
+import { getAbsoluteUrl } from "lib/vercel-utils";
 import { Heading } from "tw-components";
 
 const TRACKING_CATEGORY = "storage";
@@ -38,6 +39,16 @@ const Storage: ThirdwebNextPage = () => {
       seo={{
         title: "Storage",
         description: "Secure, fast, decentralized storage",
+        openGraph: {
+          images: [
+            {
+              url: `${getAbsoluteUrl()}/assets/og-image/storage.png`,
+              width: 2334,
+              height: 1260,
+              alt: "thirdweb Storage",
+            },
+          ],
+        },
       }}
     >
       <Hero

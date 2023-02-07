@@ -6,6 +6,7 @@ import { ProductLearnMoreCard } from "components/product-pages/common/ProductLea
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
 import { YoutubeEmbed } from "components/video-embed/YoutubeEmbed";
+import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
 import { Heading } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
@@ -39,6 +40,16 @@ const ContractExtensions: ThirdwebNextPage = () => {
       seo={{
         title: "ContractKit",
         description: "Build your own contract easily",
+        openGraph: {
+          images: [
+            {
+              url: `${getAbsoluteUrl()}/assets/og-image/contractkit.png`,
+              width: 2334,
+              height: 1260,
+              alt: "thirdweb ContractKit",
+            },
+          ],
+        },
       }}
     >
       {/* hero section */}

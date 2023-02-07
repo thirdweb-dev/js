@@ -8,6 +8,7 @@ import { ProductCard } from "components/product-pages/common/ProductCard";
 import { ProductLearnMoreCard } from "components/product-pages/common/ProductLearnMoreCard";
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
+import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
 import { ThirdwebNextPage } from "utils/types";
 
@@ -41,6 +42,16 @@ const Web3SDK: ThirdwebNextPage = () => {
         title: "Powerful SDKs for every stack",
         description:
           "Build web3 applications that can interact with your smart contracts using our powerful SDKs and CLI.",
+        openGraph: {
+          images: [
+            {
+              url: `${getAbsoluteUrl()}/assets/og-image/sdk.png`,
+              width: 2334,
+              height: 1260,
+              alt: "thirdweb SDKs",
+            },
+          ],
+        },
       }}
     >
       <Hero

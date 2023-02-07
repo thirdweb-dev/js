@@ -5,6 +5,7 @@ import { ProductCard } from "components/product-pages/common/ProductCard";
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
 import { YoutubeEmbed } from "components/video-embed/YoutubeEmbed";
+import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
 import { Heading, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
@@ -38,6 +39,16 @@ const Deploy: ThirdwebNextPage = () => {
       seo={{
         title: "Deploy",
         description: "Simple contract deployment workflow for teams",
+        openGraph: {
+          images: [
+            {
+              url: `${getAbsoluteUrl()}/assets/og-image/deploy.png`,
+              width: 2334,
+              height: 1260,
+              alt: "thirdweb Deploy",
+            },
+          ],
+        },
       }}
     >
       {/* hero */}

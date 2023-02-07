@@ -6,6 +6,7 @@ import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { Hero } from "components/product-pages/common/Hero";
 import { ProductCard } from "components/product-pages/common/ProductCard";
 import { ProductPage } from "components/product-pages/common/ProductPage";
+import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
 import { Heading } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
@@ -39,6 +40,16 @@ const UIComponents: ThirdwebNextPage = () => {
       seo={{
         title: "UI Components",
         description: "Plug-and-play frontend components",
+        openGraph: {
+          images: [
+            {
+              url: `${getAbsoluteUrl()}/assets/og-image/ui-components.png`,
+              width: 2334,
+              height: 1260,
+              alt: "thirdweb UI Components",
+            },
+          ],
+        },
       }}
     >
       <Hero

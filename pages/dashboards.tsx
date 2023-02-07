@@ -5,6 +5,7 @@ import { Flex, SimpleGrid } from "@chakra-ui/react";
 import { Hero } from "components/product-pages/common/Hero";
 import { ProductCard } from "components/product-pages/common/ProductCard";
 import { ProductPage } from "components/product-pages/common/ProductPage";
+import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
 import { Heading } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
@@ -38,6 +39,16 @@ const Dashboard: ThirdwebNextPage = () => {
       seo={{
         title: "Dashboards",
         description: "Dashboards to manage your web3 apps.",
+        openGraph: {
+          images: [
+            {
+              url: `${getAbsoluteUrl()}/assets/og-image/dashboards.png`,
+              width: 2334,
+              height: 1260,
+              alt: "thirdweb Dashboards",
+            },
+          ],
+        },
       }}
     >
       <Hero

@@ -36,10 +36,10 @@ const Release: ThirdwebNextPage = () => {
         openGraph: {
           images: [
             {
-              url: `${getAbsoluteUrl()}/product-pages/pre-builts/solution.png`,
-              width: 1200,
-              height: 630,
-              alt: "thirdweb Explore",
+              url: `${getAbsoluteUrl()}/assets/og-image/release.png`,
+              width: 2334,
+              height: 1260,
+              alt: "thirdweb Release",
             },
           ],
         },

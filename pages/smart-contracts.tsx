@@ -44,9 +44,9 @@ const PreBuiltContracts: ThirdwebNextPage = () => {
         openGraph: {
           images: [
             {
-              url: `${getAbsoluteUrl()}/product-pages/pre-builts/solution.png`,
-              width: 1200,
-              height: 630,
+              url: `${getAbsoluteUrl()}/assets/og-image/smart-contracts.png`,
+              width: 2334,
+              height: 1260,
               alt: "thirdweb Explore",
             },
           ],

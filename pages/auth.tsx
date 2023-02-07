@@ -8,6 +8,7 @@ import { Hero } from "components/product-pages/common/Hero";
 import { ProductCard } from "components/product-pages/common/ProductCard";
 import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
+import { getAbsoluteUrl } from "lib/vercel-utils";
 import { PageId } from "page-id";
 import { Heading, TrackedLink } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
@@ -41,6 +42,16 @@ const Authentication: ThirdwebNextPage = () => {
       seo={{
         title: "Auth",
         description: "Authenticate users with their wallets",
+        openGraph: {
+          images: [
+            {
+              url: `${getAbsoluteUrl()}/assets/og-image/auth.png`,
+              width: 2334,
+              height: 1260,
+              alt: "thirdweb Auth",
+            },
+          ],
+        },
       }}
     >
       {/* Hero */}
