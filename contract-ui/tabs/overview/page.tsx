@@ -62,7 +62,10 @@ export const CustomContractOverviewPage: React.FC<
               {guides.map((guide) => (
                 <TrackedLink
                   category={TRACKING_CATEGORY}
-                  label={guide.title.toLowerCase().replace(" ", "_")}
+                  label="guide"
+                  trackingProps={{
+                    guide: guide.title.replace(" ", "_").toLowerCase(),
+                  }}
                   isExternal
                   fontWeight={500}
                   href={guide.url}
@@ -91,7 +94,10 @@ export const CustomContractOverviewPage: React.FC<
                 <TrackedLink
                   isExternal
                   category={TRACKING_CATEGORY}
-                  label={template.title.toLowerCase().replace(" ", "_")}
+                  label="guide"
+                  trackingProps={{
+                    template: template.title.replace(" ", "_").toLowerCase(),
+                  }}
                   fontWeight={500}
                   href={template.url}
                   key={template.title}

@@ -3,13 +3,12 @@ import { motion } from "framer-motion";
 import NextImage from "next/image";
 import { Heading, TrackedLink, TrackedLinkProps } from "tw-components";
 
-interface GuideCardProps {
+interface GuideCardProps
+  extends Pick<TrackedLinkProps, "category" | "label" | "trackingProps"> {
   image: string;
   title: string;
   link: string;
   index: number;
-  category: TrackedLinkProps["category"];
-  label: TrackedLinkProps["label"];
 }
 
 export const GuideCard: React.FC<GuideCardProps> = ({
@@ -19,11 +18,13 @@ export const GuideCard: React.FC<GuideCardProps> = ({
   index,
   category,
   label,
+  trackingProps,
 }) => {
   return (
     <TrackedLink
       category={category}
       label={label}
+      trackingProps={trackingProps}
       href={link}
       isExternal
       textDecor="none !important"

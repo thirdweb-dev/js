@@ -296,8 +296,8 @@ export function useContractRouteConfig(
       path: "settings",
       element: () =>
         import("../tabs/settings/page").then(
-          ({ CustomContractSettingsTab }) => (
-            <CustomContractSettingsTab contractAddress={contractAddress} />
+          ({ CustomContractSettingsPage }) => (
+            <CustomContractSettingsPage contractAddress={contractAddress} />
           ),
         ),
     },

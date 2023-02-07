@@ -81,7 +81,10 @@ export const GuidesShowcase: React.FC<GuidesShowcaseProps> = ({
               {renderData.map(({ title: guideTitle, image, link }, idx) => (
                 <GuideCard
                   category={category}
-                  label={guideTitle.replace(" ", "_").toLowerCase()}
+                  label="guide"
+                  trackingProps={{
+                    guide: guideTitle.replace(" ", "_").toLowerCase(),
+                  }}
                   index={idx}
                   key={guideTitle}
                   image={image}

@@ -301,13 +301,16 @@ const Minting: ThirdwebNextPage = () => {
         </Text>
 
         <SimpleGrid columns={{ base: 1, md: 3 }} gap={6} mb={12}>
-          {exploreNFTContracts.map((nftContractInfo) => {
+          {exploreNFTContracts.map((contractInfo) => {
             return (
-              <article key={nftContractInfo.name}>
+              <article key={contractInfo.name}>
                 <TrackedLink
                   category={TRACKING_CATEGORY}
-                  label={nftContractInfo.name.toLowerCase().replace(" ", "-")}
-                  href={nftContractInfo.link}
+                  label="contract"
+                  trackingProps={{
+                    contract: contractInfo.name.toLowerCase().replace(" ", "-"),
+                  }}
+                  href={contractInfo.link}
                   isExternal
                   textDecoration="none !important"
                 >
@@ -321,16 +324,16 @@ const Minting: ThirdwebNextPage = () => {
                     }}
                   >
                     <Image
-                      src={nftContractInfo.img}
+                      src={contractInfo.img}
                       alt=""
                       width={8}
                       mb={4}
                       borderRadius="full"
                     />
                     <Heading size="title.sm" mb={2}>
-                      {nftContractInfo.name}
+                      {contractInfo.name}
                     </Heading>
-                    <Text size="body.lg">{nftContractInfo.description}</Text>
+                    <Text size="body.lg">{contractInfo.description}</Text>
                   </Card>
                 </TrackedLink>
               </article>
