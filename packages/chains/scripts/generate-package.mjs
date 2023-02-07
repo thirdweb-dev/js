@@ -56,6 +56,7 @@ chains.push({
     symbol: "ETH",
     decimals: 18,
   },
+  icon: "ethereum",
   // has to be unique!
   shortName: "local",
   chainId: 1337,
