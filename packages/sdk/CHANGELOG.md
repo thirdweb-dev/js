@@ -1,5 +1,11 @@
 # @thirdweb-dev/sdk
 
+## 3.8.1
+
+### Patch Changes
+
+- [#550](https://github.com/thirdweb-dev/js/pull/550) [`448b357`](https://github.com/thirdweb-dev/js/commit/448b357ed4b864e05e531837ca3bc97fbcab3291) Thanks [@adam-maj](https://github.com/adam-maj)! - Add solidity stack trace to error messages
+
 ## 3.8.0
 
 ### Minor Changes

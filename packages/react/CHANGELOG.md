@@ -1,5 +1,12 @@
 # @thirdweb-dev/react
 
+## 3.8.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/react-core@3.8.1
+
 ## 3.8.0
 
 ### Patch Changes
