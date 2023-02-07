@@ -1,5 +1,14 @@
 # thirdweb
 
+## 0.9.17
+
+### Patch Changes
+
+- [#549](https://github.com/thirdweb-dev/js/pull/549) [`912738b`](https://github.com/thirdweb-dev/js/commit/912738bd0afdf81e118c720811911ba3d1979ac0) Thanks [@kumaryash90](https://github.com/kumaryash90)! - add staking bases to CLI
+
+- Updated dependencies [[`0b38dac`](https://github.com/thirdweb-dev/js/commit/0b38dac852e54d0bccd263631f4342aee39d7c29), [`29d0c62`](https://github.com/thirdweb-dev/js/commit/29d0c62610cdb88f75d19574bddcb028b5c40393), [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c), [`f295ec6`](https://github.com/thirdweb-dev/js/commit/f295ec67b4cc422c51beda94cbc4d54a31ce9566), [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c), [`f1aecc3`](https://github.com/thirdweb-dev/js/commit/f1aecc30499e39fb23a205bade939bd939f0d0e4)]:
+  - @thirdweb-dev/sdk@3.8.0
+
 ## 0.9.16
 
 ### Patch Changes
