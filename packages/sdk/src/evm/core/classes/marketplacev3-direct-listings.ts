@@ -27,6 +27,7 @@ import { ContractEncoder } from "./contract-encoder";
 import { ContractEvents } from "./contract-events";
 import { ContractInterceptor } from "./contract-interceptor";
 import { ContractWrapper } from "./contract-wrapper";
+import { GasCostEstimator } from "./gas-cost-estimator";
 import type {
   IERC1155,
   IERC165,
@@ -60,6 +61,7 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
   public events: ContractEvents<DirectListingsLogic>;
   public interceptor: ContractInterceptor<DirectListingsLogic>;
   public encoder: ContractEncoder<DirectListingsLogic>;
+  public estimator: GasCostEstimator<DirectListingsLogic>;
 
   constructor(
     contractWrapper: ContractWrapper<TContract>,
@@ -68,13 +70,10 @@ export class MarketplaceV3DirectListings<TContract extends DirectListingsLogic>
     this.contractWrapper = contractWrapper;
     this.storage = storage;
 
-    this.events = new ContractEvents<DirectListingsLogic>(this.contractWrapper);
-    this.encoder = new ContractEncoder<DirectListingsLogic>(
-      this.contractWrapper,
-    );
-    this.interceptor = new ContractInterceptor<DirectListingsLogic>(
-      this.contractWrapper,
-    );
+    this.events = new ContractEvents(this.contractWrapper);
+    this.encoder = new ContractEncoder(this.contractWrapper);
+    this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.estimator = new GasCostEstimator(this.contractWrapper);
   }
 
   getAddress(): string {
