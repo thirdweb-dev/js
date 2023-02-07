@@ -16,7 +16,7 @@ export const SupplyCards: React.FC<SupplyCardsProps> = ({ contract }) => {
   const unclaimedSupplyQuery = useUnclaimedNFTSupply(contract);
 
   return (
-    <Stack direction="row" spacing={6}>
+    <Stack direction={{ base: "column", md: "row" }} spacing={6}>
       <Card as={Stat}>
         <StatLabel>Total Supply</StatLabel>
         <Skeleton

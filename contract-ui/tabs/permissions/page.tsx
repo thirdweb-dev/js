@@ -2,6 +2,7 @@ import { Permissions } from "./components";
 import { ButtonGroup, Code, Divider, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
+import { useEffect } from "react";
 import { Card, Heading, Link, LinkButton, Text } from "tw-components";
 
 interface ContractPermissionsPageProps {
@@ -11,6 +12,10 @@ interface ContractPermissionsPageProps {
 export const ContractPermissionsPage: React.FC<
   ContractPermissionsPageProps
 > = ({ contractAddress }) => {
+  useEffect(() => {
+    window?.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
   const contractQuery = useContract(contractAddress);
 
   const detectedEnumerable = detectFeatures(contractQuery.contract, [
