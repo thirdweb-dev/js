@@ -2,7 +2,7 @@ import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import React, { PropsWithChildren, createContext, useContext } from "react";
 
 interface ThirdwebConfigContext {
-  chains: Chain[];
+  chains: Readonly<Chain[]>;
 }
 
 const ThirdwebConfigContext = createContext<ThirdwebConfigContext>({

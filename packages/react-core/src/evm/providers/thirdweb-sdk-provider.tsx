@@ -22,8 +22,8 @@ interface TWSDKContext {
 const ThirdwebSDKContext = createContext<TWSDKContext>({});
 
 function resolveChainIdFromNetwork(
-  network?: Chain | number | string,
-  chains: Chain[] = defaultChains,
+  network?: number | string,
+  chains: Readonly<Chain[]> = defaultChains,
 ): number | undefined {
   let chainId: number | undefined = undefined;
   // try to resolve the chainId
@@ -44,7 +44,7 @@ export interface ThirdwebSDKProviderProps<
   TChains extends Chain[] = typeof defaultChains,
 > extends QueryClientProviderProps {
   // the chains that we want to configure - optional, defaults to defaultChains
-  supportedChains?: TChains;
+  supportedChains?: Readonly<TChains>;
   // a possible signer - optional, defaults to undefined
   signer?: Signer;
 
