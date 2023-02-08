@@ -8,7 +8,13 @@
     "@thirdweb-dev/chains#build": {
       "outputs": ["dist/**", "chains/**"],
       "dependsOn": ["^build"],
-      "inputs": ["package.json", "scripts/**", "overrides.json"]
+      "inputs": [
+        "package.json",
+        "scripts/**",
+        "overrides.json",
+        "src/types.ts",
+        "src/utils.ts"
+      ]
     },
     "@thirdweb-dev/wallets#build": {
       "outputs": ["dist/**", "evm/**", "solana/**"],

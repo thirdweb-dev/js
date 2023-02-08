@@ -2,14 +2,13 @@ import {
   QueryClientProviderProps,
   QueryClientProviderWithDefault,
 } from "../../core/providers/query-client";
-import { ComponentWithChildren } from "../../core/types/component";
 import {
   ThirdwebAuthConfig,
   ThirdwebAuthProvider,
 } from "../contexts/thirdweb-auth";
 import { ThirdwebConnectedWalletProvider } from "../contexts/thirdweb-wallet";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
-import { ChainIdOrName, SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
+import { SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { Signer } from "ethers";
 import { createContext, useContext, useMemo } from "react";
@@ -23,7 +22,7 @@ interface TWSDKContext {
 const ThirdwebSDKContext = createContext<TWSDKContext>({});
 
 function resolveChainIdFromNetwork(
-  network?: ChainIdOrName,
+  network?: Chain | number | string,
   chains: Chain[] = defaultChains,
 ): number | undefined {
   let chainId: number | undefined = undefined;
@@ -41,9 +40,11 @@ function resolveChainIdFromNetwork(
   return chainId;
 }
 
-export interface ThirdwebSDKProviderProps extends QueryClientProviderProps {
+export interface ThirdwebSDKProviderProps<
+  TChains extends Chain[] = typeof defaultChains,
+> extends QueryClientProviderProps {
   // the chains that we want to configure - optional, defaults to defaultChains
-  chains?: Chain[];
+  supportedChains?: TChains;
   // a possible signer - optional, defaults to undefined
   signer?: Signer;
 
@@ -55,33 +56,34 @@ export interface ThirdwebSDKProviderProps extends QueryClientProviderProps {
   authConfig?: ThirdwebAuthConfig;
 
   // the network to use - optional, defaults to undefined
-  network?: ChainIdOrName;
+  activeChain?: Chain | TChains[number]["chainId"] | TChains[number]["slug"];
 }
 
 /**
  *
  * @internal
  */
-const WrappedThirdwebSDKProvider: ComponentWithChildren<
-  Omit<ThirdwebSDKProviderProps, "queryClient" | "authConfig">
-> = ({
+const WrappedThirdwebSDKProvider = <
+  TChains extends Chain[] = typeof defaultChains,
+>({
   sdkOptions = {},
   storageInterface,
-  chains = defaultChains,
-  network,
+  // @ts-expect-error - different subtype of Chain[] but this works fine
+  supportedChains = defaultChains,
+  activeChain,
   signer,
   children,
-}) => {
+}: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
   const sdk = useMemo(() => {
     // on the server we can't do anything (?)
     if (typeof window === "undefined") {
       return undefined;
     }
-    let chainId = resolveChainIdFromNetwork(network, chains);
+    let chainId = resolveChainIdFromNetwork(activeChain, supportedChains);
 
     const mergedOptions = {
       ...sdkOptions,
-      chains,
+      chains: supportedChains,
     };
 
     let sdk_: ThirdwebSDK | undefined = undefined;
@@ -97,7 +99,7 @@ const WrappedThirdwebSDKProvider: ComponentWithChildren<
       }
       if (chainId) {
         // if we have a chainId, make sure it's in the chains
-        if (!chains.find((c) => c.chainId === chainId)) {
+        if (!supportedChains.find((c) => c.chainId === chainId)) {
           console.warn(
             `The chainId ${chainId} is not in the configured chains, please add it to the ThirdwebProvider`,
           );
@@ -108,17 +110,20 @@ const WrappedThirdwebSDKProvider: ComponentWithChildren<
       sdk_ = ThirdwebSDK.fromSigner(
         signer,
         chainId,
+        // @ts-expect-error - zod doesn't know anything about readonly
         mergedOptions,
         storageInterface,
       );
     } else if (chainId) {
       // sdk from chainId
+      // @ts-expect-error - zod doesn't know anything about readonly
       sdk_ = new ThirdwebSDK(chainId, mergedOptions, storageInterface);
     }
     // if we still have no sdk fall back to the first element in chains
     if (!sdk_) {
-      if (chains.length > 0) {
-        chainId = chains[0].chainId;
+      if (supportedChains.length > 0) {
+        chainId = supportedChains[0].chainId;
+        // @ts-expect-error - zod doesn't know anything about readonly
         sdk_ = new ThirdwebSDK(chainId, mergedOptions, storageInterface);
       } else {
         console.error(
@@ -131,7 +136,7 @@ const WrappedThirdwebSDKProvider: ComponentWithChildren<
     (sdk_ as any)._chainId = chainId;
 
     return sdk_;
-  }, [chains, network, sdkOptions, signer, storageInterface]);
+  }, [activeChain, sdkOptions, signer, storageInterface, supportedChains]);
 
   const ctxValue = useMemo(
     () => ({
@@ -157,9 +162,15 @@ const WrappedThirdwebSDKProvider: ComponentWithChildren<
  *
  * @public
  */
-export const ThirdwebSDKProvider: ComponentWithChildren<
-  ThirdwebSDKProviderProps
-> = ({ signer, children, queryClient, authConfig, ...restProps }) => {
+export const ThirdwebSDKProvider = <
+  TChains extends Chain[] = typeof defaultChains,
+>({
+  signer,
+  children,
+  queryClient,
+  authConfig,
+  ...restProps
+}: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
   return (
     <ThirdwebConnectedWalletProvider signer={signer}>
       <QueryClientProviderWithDefault queryClient={queryClient}>

@@ -9,7 +9,7 @@ import {
   ThirdwebSDKProvider,
   ThirdwebSDKProviderProps,
 } from "@thirdweb-dev/react-core/evm";
-import type { ChainIdOrName, SDKOptions } from "@thirdweb-dev/sdk";
+import type { SDKOptions } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import React, { useMemo } from "react";
 import {
@@ -27,14 +27,18 @@ function transformChainToMinimalWagmiChain(chain: Chain): WagmiChain {
   return {
     id: chain.chainId,
     name: chain.name,
-    rpcUrls: chain.rpc,
+    rpcUrls: chain.rpc as string[],
     nativeCurrency: {
       name: chain.nativeCurrency.name,
       symbol: chain.nativeCurrency.symbol,
       decimals: chain.nativeCurrency.decimals as 18,
     },
     testnet: chain.testnet,
-    blockExplorers: chain.explorers,
+    blockExplorers: chain.explorers as Array<{
+      name: string;
+      url: string;
+      standard: string;
+    }>,
   };
 }
 
@@ -75,13 +79,6 @@ export type WalletConnector =
   | MagicConnector;
 
 /**
- * @internal
- */
-export type ChainRpc<TSupportedChain extends Chain> = Record<
-  TSupportedChain extends Chain ? TSupportedChain["chainId"] : TSupportedChain,
-  string
->;
-/**
  * the metadata to pass to wallet connection dialog (may show up during the wallet-connection process)
  * @remarks this is only used for wallet connect and wallet link, metamask does not support it
  * @public
@@ -112,11 +109,18 @@ export interface DAppMetaData {
 /**
  * The possible props for the ThirdwebProvider.
  */
-export interface ThirdwebProviderProps {
+export interface ThirdwebProviderProps<
+  TChains extends Chain[] = typeof defaultChains,
+> {
   /**
    * The network to use for the SDK.
    */
-  network?: ChainIdOrName;
+  activeChain?: Chain | TChains[number]["chainId"] | TChains[number]["slug"];
+
+  /**
+   * Chains to support. If not provided, will default to the chains supported by the SDK.
+   */
+  supportedChains?: TChains;
 
   /**
    * The {@link SDKOptions | Thirdweb SDK Options} to pass to the thirdweb SDK
@@ -155,11 +159,6 @@ export interface ThirdwebProviderProps {
    * Whether or not to attempt auto-connect to a wallet.
    */
   autoConnect?: boolean;
-
-  /**
-   * Chains to support. If not provided, will default to the chains supported by the SDK.
-   */
-  chains?: Chain[];
 
   /**
    * The chainId that your dApp is running on.
@@ -206,10 +205,14 @@ const defaultWalletConnectors: Required<
  * @public
  *
  */
-export const ThirdwebProvider = ({
+export const ThirdwebProvider = <
+  TChains extends Chain[] = typeof defaultChains,
+>({
   sdkOptions,
-  chains = defaultChains,
-  network,
+
+  // @ts-expect-error - different subtype of Chain[] but this works fine
+  supportedChains = defaultChains,
+  activeChain,
 
   walletConnectors = defaultWalletConnectors,
   dAppMeta = defaultdAppMeta,
@@ -223,7 +226,7 @@ export const ThirdwebProvider = ({
   // deprecated
   desiredChainId,
   chainRpc,
-}: React.PropsWithChildren<ThirdwebProviderProps>) => {
+}: React.PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   // construct the wagmi options
 
   if (chainRpc) {
@@ -234,10 +237,10 @@ export const ThirdwebProvider = ({
   }
 
   const wagmiProps: WagmiproviderProps = useMemo(() => {
-    const wagmiChains = chains.map(transformChainToMinimalWagmiChain);
+    const wagmiChains = supportedChains.map(transformChainToMinimalWagmiChain);
 
     const _rpcUrlMap = {
-      ...chains.reduce((acc, c) => {
+      ...supportedChains.reduce((acc, c) => {
         acc[c.chainId] = c.rpc[0];
         return acc;
       }, {} as Record<number, string>),
@@ -336,7 +339,7 @@ export const ThirdwebProvider = ({
       },
     } as WagmiproviderProps;
   }, [
-    chains,
+    supportedChains,
     dAppMeta.name,
     dAppMeta.url,
     dAppMeta.logoUrl,
@@ -349,16 +352,16 @@ export const ThirdwebProvider = ({
   return (
     <ThirdwebConfigProvider
       value={{
-        chains,
+        chains: supportedChains,
       }}
     >
       <WagmiProvider {...wagmiProps}>
         <ThirdwebSDKProviderWagmiWrapper
           queryClient={queryClient}
           sdkOptions={sdkOptions}
-          chains={chains}
+          supportedChains={supportedChains}
           // desiredChainId is deprecated, we will remove it in the future but still need to pass it here for now
-          network={network || desiredChainId}
+          activeChain={activeChain || desiredChainId}
           storageInterface={storageInterface}
           authConfig={authConfig}
         >
@@ -369,18 +372,16 @@ export const ThirdwebProvider = ({
   );
 };
 
-const ThirdwebSDKProviderWagmiWrapper: React.FC<
-  React.PropsWithChildren<Omit<ThirdwebSDKProviderProps, "signer" | "provider">>
-> = ({ children, network, chains, ...props }) => {
+const ThirdwebSDKProviderWagmiWrapper = <TChains extends Chain[]>({
+  children,
+  ...props
+}: React.PropsWithChildren<
+  Omit<ThirdwebSDKProviderProps<TChains>, "signer" | "provider">
+>) => {
   const [signer] = useSigner();
 
   return (
-    <ThirdwebSDKProvider
-      signer={signer.data}
-      network={network}
-      chains={chains}
-      {...props}
-    >
+    <ThirdwebSDKProvider signer={signer.data} {...props}>
       {children}
     </ThirdwebSDKProvider>
   );

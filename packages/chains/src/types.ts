@@ -6,15 +6,15 @@ export type Chain = {
     width: number;
     height: number;
     format: string;
-    sizes?: number[];
+    sizes?: readonly number[];
   };
-  rpc: string[];
-  features?: Array<{ name: string }>;
-  faucets?: string[];
+  rpc: readonly string[];
+  features?: Readonly<Array<{ name: string }>>;
+  faucets?: readonly string[];
   nativeCurrency: {
     name: string;
     symbol: string;
-    decimals: 18;
+    decimals: number;
   };
   infoURL?: string;
   shortName: string;
@@ -23,11 +23,14 @@ export type Chain = {
   ens?: {
     registry: string;
   };
-  explorers?: Array<{
-    name: string;
-    url: string;
-    standard: string;
-  }>;
+  explorers?: Readonly<
+    Array<{
+      name: string;
+      url: string;
+      standard: string;
+    }>
+  >;
   testnet: boolean;
   slug: string;
+  slip44?: number;
 };

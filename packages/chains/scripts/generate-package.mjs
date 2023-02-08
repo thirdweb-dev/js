@@ -132,8 +132,8 @@ for (const chain of chains) {
   chain.slug = slug;
 
   fs.writeFileSync(
-    `${chainDir}/${chain.chainId}.json`,
-    JSON.stringify(chain, null, 2),
+    `${chainDir}/${chain.chainId}.ts`,
+    `export default ${JSON.stringify(chain, null, 2)} as const;`,
   );
 
   let exportName = slug
@@ -146,11 +146,11 @@ for (const chain of chains) {
     exportName = `_${exportName}`;
   }
 
-  imports.push(
-    `import c${chain.chainId} from "../chains/${chain.chainId}.json";`,
-  );
+  imports.push(`import c${chain.chainId} from "../chains/${chain.chainId}";`);
 
-  exports.push(`export const ${exportName} = c${chain.chainId} as Chain;`);
+  exports.push(
+    `export const ${exportName} = c${chain.chainId} satisfies Chain;`,
+  );
 
   exportNames.push(exportName);
 }
