@@ -115,7 +115,7 @@ export interface ThirdwebProviderProps<
   /**
    * The network to use for the SDK.
    */
-  activeChain?: Chain | TChains[number]["chainId"] | TChains[number]["slug"];
+  activeChain?: TChains[number]["chainId"] | TChains[number]["slug"];
 
   /**
    * Chains to support. If not provided, will default to the chains supported by the SDK.

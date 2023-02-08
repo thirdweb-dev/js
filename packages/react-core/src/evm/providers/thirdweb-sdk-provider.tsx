@@ -56,7 +56,7 @@ export interface ThirdwebSDKProviderProps<
   authConfig?: ThirdwebAuthConfig;
 
   // the network to use - optional, defaults to undefined
-  activeChain?: Chain | TChains[number]["chainId"] | TChains[number]["slug"];
+  activeChain?: TChains[number]["chainId"] | TChains[number]["slug"];
 }
 
 /**
