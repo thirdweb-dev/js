@@ -10,7 +10,14 @@
     }
   },
   "5": {
-    "rpc": ["https://goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}"]
+    "rpc": ["https://goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}"],
+    "icon": {
+      "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
+      "height": 512,
+      "width": 512,
+      "format": "png",
+      "sizes": [16, 32, 64, 128, 256, 512]
+    }
   },
   "137": {
     "rpc": ["https://polygon.rpc.thirdweb.com/${THIRDWEB_API_KEY}"],
@@ -23,7 +30,14 @@
     }
   },
   "80001": {
-    "rpc": ["https://mumbai.rpc.thirdweb.com/${THIRDWEB_API_KEY}"]
+    "rpc": ["https://mumbai.rpc.thirdweb.com/${THIRDWEB_API_KEY}"],
+    "icon": {
+      "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/polygon/512.png",
+      "height": 512,
+      "width": 512,
+      "format": "png",
+      "sizes": [16, 32, 64, 128, 256, 512]
+    }
   },
   "250": {
     "rpc": ["https://fantom.rpc.thirdweb.com/${THIRDWEB_API_KEY}"],
@@ -56,7 +70,14 @@
     }
   },
   "43113": {
-    "rpc": ["https://avalanche-fuji.rpc.thirdweb.com/${THIRDWEB_API_KEY}"]
+    "rpc": ["https://avalanche-fuji.rpc.thirdweb.com/${THIRDWEB_API_KEY}"],
+    "icon": {
+      "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/avalanche/512.png",
+      "height": 512,
+      "width": 512,
+      "format": "png",
+      "sizes": [16, 32, 64, 128, 256, 512]
+    }
   },
   "10": {
     "rpc": ["https://optimism.rpc.thirdweb.com/${THIRDWEB_API_KEY}"],
@@ -69,7 +90,14 @@
     }
   },
   "420": {
-    "rpc": ["https://optimism-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}"]
+    "rpc": ["https://optimism-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}"],
+    "icon": {
+      "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png",
+      "height": 512,
+      "width": 512,
+      "format": "png",
+      "sizes": [16, 32, 64, 128, 256, 512]
+    }
   },
   "42161": {
     "rpc": ["https://arbitrum.rpc.thirdweb.com/${THIRDWEB_API_KEY}"],
@@ -82,7 +110,14 @@
     }
   },
   "421613": {
-    "rpc": ["https://arbitrum-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}"]
+    "rpc": ["https://arbitrum-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}"],
+    "icon": {
+      "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/arbitrum/512.png",
+      "height": 512,
+      "width": 512,
+      "format": "png",
+      "sizes": [16, 32, 64, 128, 256, 512]
+    }
   },
   "56": {
     "rpc": ["https://binance.rpc.thirdweb.com/${THIRDWEB_API_KEY}"],
@@ -95,6 +130,13 @@
     }
   },
   "97": {
-    "rpc": ["https://binance-testnet.rpc.thirdweb.com"]
+    "rpc": ["https://binance-testnet.rpc.thirdweb.com"],
+    "icon": {
+      "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/binance-coin/512.png",
+      "height": 512,
+      "width": 512,
+      "format": "png",
+      "sizes": [16, 32, 64, 128, 256, 512]
+    }
   }
 }

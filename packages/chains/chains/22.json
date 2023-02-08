@@ -13,19 +13,5 @@
   "chainId": 22,
   "networkId": 22,
   "testnet": false,
-  "icon": {
-    "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png",
-    "height": 512,
-    "width": 512,
-    "format": "png",
-    "sizes": [
-      512,
-      256,
-      128,
-      64,
-      32,
-      16
-    ]
-  },
   "slug": "ela-did-sidechain"
 }

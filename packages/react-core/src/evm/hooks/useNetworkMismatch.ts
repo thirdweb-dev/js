@@ -1,4 +1,4 @@
-import { useSDKChainId } from "../providers/base";
+import { useSDKChainId } from "../providers/thirdweb-sdk-provider";
 import { useChainId } from "./wallet";
 
 /**

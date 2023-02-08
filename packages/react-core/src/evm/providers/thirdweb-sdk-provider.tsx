@@ -22,6 +22,25 @@ interface TWSDKContext {
 
 const ThirdwebSDKContext = createContext<TWSDKContext>({});
 
+function resolveChainIdFromNetwork(
+  network?: ChainIdOrName,
+  chains: Chain[] = defaultChains,
+): number | undefined {
+  let chainId: number | undefined = undefined;
+  // try to resolve the chainId
+  if (typeof network === "number") {
+    if (chains.find((c) => c.chainId === network)) {
+      chainId = network;
+    }
+  } else if (typeof network === "string") {
+    const chain = chains.find((c) => c.slug === network);
+    if (chain) {
+      chainId = chain.chainId;
+    }
+  }
+  return chainId;
+}
+
 export interface ThirdwebSDKProviderProps extends QueryClientProviderProps {
   // the chains that we want to configure - optional, defaults to defaultChains
   chains?: Chain[];
@@ -35,7 +54,7 @@ export interface ThirdwebSDKProviderProps extends QueryClientProviderProps {
   // if u want to use auth, pass this
   authConfig?: ThirdwebAuthConfig;
 
-  // the network to use - optional, defaults to ...
+  // the network to use - optional, defaults to undefined
   network?: ChainIdOrName;
 }
 
@@ -58,18 +77,7 @@ const WrappedThirdwebSDKProvider: ComponentWithChildren<
     if (typeof window === "undefined") {
       return undefined;
     }
-    let chainId: number | undefined = undefined;
-    // try to resolve the chainId
-    if (typeof network === "number") {
-      if (chains.find((c) => c.chainId === network)) {
-        chainId = network;
-      }
-    } else if (typeof network === "string") {
-      const chain = chains.find((c) => c.slug === network);
-      if (chain) {
-        chainId = chain.chainId;
-      }
-    }
+    let chainId = resolveChainIdFromNetwork(network, chains);
 
     const mergedOptions = {
       ...sdkOptions,
@@ -80,6 +88,13 @@ const WrappedThirdwebSDKProvider: ComponentWithChildren<
 
     if (signer) {
       // sdk from signer
+
+      if (!chainId) {
+        // try to get the chainId off of the signer sync
+        try {
+          chainId = (signer?.provider as any)?._network?.chainId;
+        } catch (e) {}
+      }
       sdk_ = ThirdwebSDK.fromSigner(
         signer,
         chainId,
@@ -90,14 +105,20 @@ const WrappedThirdwebSDKProvider: ComponentWithChildren<
       // sdk from chainId
       sdk_ = new ThirdwebSDK(chainId, mergedOptions, storageInterface);
     }
-
+    // if we still have no sdk fall back to the first element in chains
     if (!sdk_) {
-      console.warn(
-        "No sdk created, please check your network and signer options",
-      );
-    } else {
-      (sdk_ as any)._chainId = chainId;
+      if (chains.length > 0) {
+        chainId = chains[0].chainId;
+        sdk_ = new ThirdwebSDK(chainId, mergedOptions, storageInterface);
+      } else {
+        console.error(
+          "No chains configured, please pass a chain or chains to the ThirdwebProvider",
+        );
+        return undefined;
+      }
     }
+
+    (sdk_ as any)._chainId = chainId;
 
     return sdk_;
   }, [chains, network, sdkOptions, signer, storageInterface]);

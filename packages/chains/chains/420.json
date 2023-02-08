@@ -15,7 +15,6 @@
   "shortName": "ogor",
   "chainId": 420,
   "networkId": 420,
-  "testnet": true,
   "icon": {
     "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/optimism/512.png",
     "height": 512,
@@ -30,5 +29,6 @@
       16
     ]
   },
+  "testnet": true,
   "slug": "optimism-goerli-testnet"
 }

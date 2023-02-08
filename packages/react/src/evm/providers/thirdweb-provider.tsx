@@ -3,6 +3,7 @@ import type { MagicConnector } from "../connectors/magic";
 import { QueryClient } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import {
+  showDeprecationWarning,
   ThirdwebAuthConfig,
   ThirdwebConfigProvider,
   ThirdwebSDKProvider,
@@ -218,8 +219,20 @@ export const ThirdwebProvider = ({
   queryClient,
   autoConnect = true,
   children,
+
+  // deprecated
+  desiredChainId,
+  chainRpc,
 }: React.PropsWithChildren<ThirdwebProviderProps>) => {
   // construct the wagmi options
+
+  if (chainRpc) {
+    showDeprecationWarning("chainRpc", "chains");
+  }
+  if (desiredChainId) {
+    showDeprecationWarning("desiredChainId", "network");
+  }
+
   const wagmiProps: WagmiproviderProps = useMemo(() => {
     const wagmiChains = chains.map(transformChainToMinimalWagmiChain);
 
@@ -300,10 +313,7 @@ export const ThirdwebProvider = ({
                 (connector.name === "coinbase" ||
                   connector.name === "walletLink"))
             ) {
-              const jsonRpcUrl =
-                typeof network === "number"
-                  ? _rpcUrlMap[network]
-                  : _rpcUrlMap[chainId || 1];
+              const jsonRpcUrl = _rpcUrlMap[chainId || 1];
               return new CoinbaseWalletConnector({
                 chains: wagmiChains,
                 options:
@@ -334,7 +344,6 @@ export const ThirdwebProvider = ({
     dAppMeta.isDarkMode,
     autoConnect,
     walletConnectors,
-    network,
   ]);
 
   return (
@@ -348,7 +357,8 @@ export const ThirdwebProvider = ({
           queryClient={queryClient}
           sdkOptions={sdkOptions}
           chains={chains}
-          network={network}
+          // desiredChainId is deprecated, we will remove it in the future but still need to pass it here for now
+          network={network || desiredChainId}
           storageInterface={storageInterface}
           authConfig={authConfig}
         >
@@ -367,7 +377,7 @@ const ThirdwebSDKProviderWagmiWrapper: React.FC<
   return (
     <ThirdwebSDKProvider
       signer={signer.data}
-      network={network || chains?.[0]?.chainId || 1}
+      network={network}
       chains={chains}
       {...props}
     >

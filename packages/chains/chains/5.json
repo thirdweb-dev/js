@@ -32,7 +32,6 @@
       "standard": "EIP3091"
     }
   ],
-  "testnet": true,
   "icon": {
     "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
     "height": 512,
@@ -47,5 +46,6 @@
       16
     ]
   },
+  "testnet": true,
   "slug": "goerli"
 }

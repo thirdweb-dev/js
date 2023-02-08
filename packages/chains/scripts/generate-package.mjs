@@ -56,8 +56,14 @@ chains.push({
     symbol: "ETH",
     decimals: 18,
   },
-  icon: "ethereum",
-  // has to be unique!
+  // hard code eth icon for now
+  icon: {
+    url: "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
+    height: 512,
+    width: 512,
+    format: "png",
+    sizes: [16, 32, 64, 128, 256, 512],
+  },
   shortName: "local",
   chainId: 1337,
   networkId: 1337,
@@ -110,17 +116,10 @@ for (const chain of chains) {
           if (!chainToIcon[chain.chain]) {
             chainToIcon[chain.chain] = iconMeta;
           }
-        } else {
-          console.log(response);
         }
       } else {
         // just pass it through
         chainToIcon[chain.chain] = chain.icon;
-      }
-    } else {
-      // if no icon, use the icon of the chain with the same name
-      if (chainToIcon[chain.chain]) {
-        chain.icon = chainToIcon[chain.chain];
       }
     }
   } catch (err) {
