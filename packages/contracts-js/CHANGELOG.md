@@ -1,5 +1,17 @@
 # @thirdweb-dev/contracts-js
 
+## 1.3.0
+
+### Minor Changes
+
+- [#474](https://github.com/thirdweb-dev/js/pull/474) [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Update contracts to 3.3.3
+
+### Patch Changes
+
+- [#549](https://github.com/thirdweb-dev/js/pull/549) [`912738b`](https://github.com/thirdweb-dev/js/commit/912738bd0afdf81e118c720811911ba3d1979ac0) Thanks [@kumaryash90](https://github.com/kumaryash90)! - add staking bases to CLI
+
+- [#544](https://github.com/thirdweb-dev/js/pull/544) [`f1aecc3`](https://github.com/thirdweb-dev/js/commit/f1aecc30499e39fb23a205bade939bd939f0d0e4) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Contracts v3.4.0
+
 ## 1.2.3
 
 ### Patch Changes

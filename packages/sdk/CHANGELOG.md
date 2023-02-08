@@ -1,5 +1,33 @@
 # @thirdweb-dev/sdk
 
+## 3.8.1
+
+### Patch Changes
+
+- [#550](https://github.com/thirdweb-dev/js/pull/550) [`448b357`](https://github.com/thirdweb-dev/js/commit/448b357ed4b864e05e531837ca3bc97fbcab3291) Thanks [@adam-maj](https://github.com/adam-maj)! - Add solidity stack trace to error messages
+
+## 3.8.0
+
+### Minor Changes
+
+- [#474](https://github.com/thirdweb-dev/js/pull/474) [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Introducing marketplace-v3 class
+
+### Patch Changes
+
+- [#547](https://github.com/thirdweb-dev/js/pull/547) [`0b38dac`](https://github.com/thirdweb-dev/js/commit/0b38dac852e54d0bccd263631f4342aee39d7c29) Thanks [@adam-maj](https://github.com/adam-maj)! - Add proper error hanling for no funds error
+
+- [#545](https://github.com/thirdweb-dev/js/pull/545) [`29d0c62`](https://github.com/thirdweb-dev/js/commit/29d0c62610cdb88f75d19574bddcb028b5c40393) Thanks [@adam-maj](https://github.com/adam-maj)! - Add error info fields to transaction error
+
+- [#474](https://github.com/thirdweb-dev/js/pull/474) [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Support for Plugin Pattern based contracts
+
+- [#539](https://github.com/thirdweb-dev/js/pull/539) [`f295ec6`](https://github.com/thirdweb-dev/js/commit/f295ec67b4cc422c51beda94cbc4d54a31ce9566) Thanks [@adam-maj](https://github.com/adam-maj)! - Upgrade error messages on failed transactions
+
+- [#544](https://github.com/thirdweb-dev/js/pull/544) [`f1aecc3`](https://github.com/thirdweb-dev/js/commit/f1aecc30499e39fb23a205bade939bd939f0d0e4) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Contracts v3.4.0
+
+- Updated dependencies [[`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c), [`912738b`](https://github.com/thirdweb-dev/js/commit/912738bd0afdf81e118c720811911ba3d1979ac0), [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c), [`f1aecc3`](https://github.com/thirdweb-dev/js/commit/f1aecc30499e39fb23a205bade939bd939f0d0e4)]:
+  - @thirdweb-dev/contracts-js@1.3.0
+  - @thirdweb-dev/storage@1.0.7
+
 ## 3.7.4
 
 ### Patch Changes

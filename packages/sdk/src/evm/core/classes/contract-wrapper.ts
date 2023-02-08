@@ -1,6 +1,8 @@
 import {
   TransactionError,
   extractFunctionsFromAbi,
+  fetchContractMetadataFromAddress,
+  fetchSourceFilesFromMetadata,
   parseRevertReason,
 } from "../../common";
 import {
@@ -17,7 +19,7 @@ import { CONTRACT_ADDRESSES, ChainId } from "../../constants";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import { EventType } from "../../constants/events";
 import { CallOverrideSchema } from "../../schema";
-import { AbiSchema } from "../../schema/contracts/custom";
+import { AbiSchema, ContractSource } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
   ForwardRequestMessage,
@@ -27,6 +29,7 @@ import {
 } from "../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import fetch from "cross-fetch";
 import {
   BaseContract,
@@ -48,6 +51,9 @@ import invariant from "tiny-invariant";
 export class ContractWrapper<
   TContract extends BaseContract,
 > extends RPCConnectionHandler {
+  // TOOO: In another PR, make this storage private, and have extending classes pass
+  // down storage to be stored in contract wrapper.
+  #storage: ThirdwebStorage;
   private isValidContract = false;
   private customOverrides: () => CallOverrides = () => ({});
   /**
@@ -75,6 +81,7 @@ export class ContractWrapper<
     this.readContract = this.writeContract.connect(
       this.getProvider(),
     ) as TContract;
+    this.#storage = new ThirdwebStorage();
   }
 
   public override updateSignerOrProvider(network: NetworkInput): void {
@@ -508,6 +515,27 @@ export class ContractWrapper<
     // Parse the revert reason from the error
     const reason = parseRevertReason(error);
 
+    // Get contract sources for stack trace
+    let sources: ContractSource[] | undefined = undefined;
+    let contractName: string | undefined = undefined;
+    try {
+      const metadata = await fetchContractMetadataFromAddress(
+        this.readContract.address,
+        this.getProvider(),
+        this.#storage,
+      );
+
+      if (metadata.name) {
+        contractName = metadata.name;
+      }
+
+      if (metadata.metadata.sources) {
+        sources = await fetchSourceFilesFromMetadata(metadata, this.#storage);
+      }
+    } catch (err) {
+      // no-op
+    }
+
     return new TransactionError({
       reason,
       from,
@@ -518,6 +546,8 @@ export class ContractWrapper<
       rpcUrl,
       value,
       hash,
+      contractName,
+      sources,
     });
   }
 

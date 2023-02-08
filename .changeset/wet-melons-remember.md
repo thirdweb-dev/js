@@ -1,6 +1,6 @@
 ---
 "@thirdweb-dev/contracts-js": patch
-"@thirdweb-dev/sdk": patch
+"@thirdweb-dev/storage": patch
 ---
 
-Contracts v3.4.0
+force release

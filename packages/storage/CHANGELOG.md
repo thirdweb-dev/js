@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 1.0.7
+
+### Patch Changes
+
+- [#474](https://github.com/thirdweb-dev/js/pull/474) [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Edit mock uploader, downloader
+
 ## 1.0.6
 
 ### Patch Changes
