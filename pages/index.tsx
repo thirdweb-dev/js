@@ -39,10 +39,10 @@ const HomePage: ThirdwebNextPage = () => {
           <KeyFeaturesSection />
           <Suspense>
             <SDKSection />
+            <ValuesSection />
             <NetworksSection />
             <PricingSection />
             <SolutionsSection />
-            <ValuesSection />
             <GetStartedSection />
             <NewsletterSection />
             <HomepageFooter />

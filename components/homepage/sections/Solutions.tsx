@@ -5,11 +5,10 @@ import { Heading, Text, TrackedLink } from "tw-components";
 
 interface SolutionCardProps {
   title: string;
-  description: string;
+  description: React.ReactNode;
   img: string;
   gradient: string;
-  partnerIcon: string;
-  // arrowIcon: string;
+  partnerIcon?: string;
   href: string;
   hoverBorderColor: string;
 }
@@ -22,7 +21,6 @@ const solutions: SolutionCardProps[] = [
       "The all-in-one platform for developers to easily bring their games onto web3. Build a stronger community around your game by giving players ownership of in-game assets.",
     img: "/assets/landingpage/GamingKit.png",
     partnerIcon: "/assets/landingpage/icons/Coinbase.svg",
-    // arrowIcon: "/assets/landingpage/icons/arrow-blue.svg",
     href: "/solutions/gaming",
     hoverBorderColor: "hsl(248deg 89% 79% / 15%)",
   },
@@ -33,8 +31,42 @@ const solutions: SolutionCardProps[] = [
       "Add powerful web3 features to your Shopify storefront enabling tokengated commerce, NFT loyalty programs, digital collectible sales, and more.",
     img: "/assets/landingpage/CommerceKit.png",
     partnerIcon: "/assets/landingpage/icons/Shopify.svg",
-    // arrowIcon: "/assets/landingpage/icons/arrow-pink.svg",
     href: "/solutions/commerce",
+    hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
+  },
+  {
+    title: "Minting",
+    gradient: "linear-gradient(90deg, #8e0eff, #16bdf0)",
+    description: (
+      <>
+        An all-in-one toolkit to build and mint NFTs. Create powerful NFT
+        experiences. Build your own NFT and Marketplace contracts with{" "}
+        <TrackedLink
+          color="white"
+          fontWeight="500"
+          isExternal
+          category="solutions"
+          label="contractkit"
+          href="https://portal.thirdweb.com/contractkit"
+        >
+          ContractKit
+        </TrackedLink>{" "}
+        or discover and deploy in 1-click via{" "}
+        <TrackedLink
+          color="white"
+          fontWeight="500"
+          isExternal
+          href="/explore"
+          category="solutions"
+          label="explore"
+        >
+          Explore
+        </TrackedLink>
+        .
+      </>
+    ),
+    img: "/assets/solutions-pages/minting/hero.png",
+    href: "/solutions/minting",
     hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
   },
 ];
@@ -98,10 +130,12 @@ const SolutionCard: React.FC<SolutionCardProps> = ({
             </Text>
           </Box>
 
-          <Flex alignItems="center" gap={2} mt={10}>
-            <Text lineHeight={1}>In partnership with</Text>
-            <Image src={partnerIcon} alt="" width={100} />
-          </Flex>
+          {partnerIcon && (
+            <Flex alignItems="center" gap={2} mt={10}>
+              <Text lineHeight={1}>In partnership with</Text>
+              <Image src={partnerIcon} alt="" width={100} />
+            </Flex>
+          )}
         </Flex>
       </Flex>
     </TrackedLink>
@@ -110,7 +144,7 @@ const SolutionCard: React.FC<SolutionCardProps> = ({
 
 export const SolutionsSection: React.FC = () => {
   return (
-    <HomepageSection py={24} maxW={950} ml="auto" mr="auto">
+    <HomepageSection py={24} maxW={1050} ml="auto" mr="auto">
       <Aurora
         pos={{ left: "10%", top: "60%" }}
         size={{ width: "2400px", height: "1800px" }}
@@ -137,9 +171,9 @@ export const SolutionsSection: React.FC = () => {
         thirdweb powers the best web3 projects across verticals
       </Text>
       <SimpleGrid
-        columns={{ md: 2, base: 1 }}
+        columns={{ lg: 3, base: 1 }}
         gap={6}
-        maxW={950}
+        maxW={1050}
         margin="0 auto"
       >
         {solutions.map((feature) => (
