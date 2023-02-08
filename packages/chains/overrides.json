@@ -130,7 +130,7 @@
     }
   },
   "97": {
-    "rpc": ["https://binance-testnet.rpc.thirdweb.com"],
+    "rpc": ["https://binance-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}"],
     "icon": {
       "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/binance-coin/512.png",
       "height": 512,
