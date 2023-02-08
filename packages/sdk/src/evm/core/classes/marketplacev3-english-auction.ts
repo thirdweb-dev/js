@@ -440,7 +440,10 @@ export class MarketplaceV3EnglishAuctions<
       throw new Error("Cannot make a bid with 0 value");
     }
 
-    if (normalizedBidAmount.gt(auction.buyoutBidAmount)) {
+    if (
+      BigNumber.from(auction.buyoutBidAmount).gt(0) &&
+      normalizedBidAmount.gt(auction.buyoutBidAmount)
+    ) {
       throw new Error(
         "Bid amount must be less than or equal to buyoutBidAmount",
       );
