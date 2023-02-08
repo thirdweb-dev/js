@@ -56,6 +56,10 @@
       "outputs": ["dist/**"],
       "dependsOn": ["^build"]
     },
+    "@thirdweb-dev/react-native-compat#build": {
+      "outputs": ["src/**"],
+      "dependsOn": ["^build"]
+    },
     "@thirdweb-dev/auth#build": {
       "outputs": [
         "dist/**",
