@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 1.0.8
+
+### Patch Changes
+
+- [#553](https://github.com/thirdweb-dev/js/pull/553) [`76d219e`](https://github.com/thirdweb-dev/js/commit/76d219e6bea1496b45623b3081152854ce1eaa6e) Thanks [@jnsdls](https://github.com/jnsdls)! - force release
+
 ## 1.0.7
 
 ### Patch Changes
