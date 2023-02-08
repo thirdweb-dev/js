@@ -95,6 +95,16 @@ const WrappedThirdwebSDKProvider: ComponentWithChildren<
           chainId = (signer?.provider as any)?._network?.chainId;
         } catch (e) {}
       }
+      if (chainId) {
+        // if we have a chainId, make sure it's in the chains
+        if (!chains.find((c) => c.chainId === chainId)) {
+          console.warn(
+            `The chainId ${chainId} is not in the configured chains, please add it to the ThirdwebProvider`,
+          );
+          // reset the chainId as to not trigger an error in the sdk constructor
+          chainId = undefined;
+        }
+      }
       sdk_ = ThirdwebSDK.fromSigner(
         signer,
         chainId,
