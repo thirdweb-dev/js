@@ -1,5 +1,15 @@
 # @thirdweb-dev/sdk
 
+## 3.8.2
+
+### Patch Changes
+
+- [#555](https://github.com/thirdweb-dev/js/pull/555) [`55b00ef`](https://github.com/thirdweb-dev/js/commit/55b00eff2668eb751b9f907e035b3a0c122d2183) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add gas estimators to each marketplace plugin
+
+- Updated dependencies [[`76d219e`](https://github.com/thirdweb-dev/js/commit/76d219e6bea1496b45623b3081152854ce1eaa6e)]:
+  - @thirdweb-dev/contracts-js@1.3.1
+  - @thirdweb-dev/storage@1.0.8
+
 ## 3.8.1
 
 ### Patch Changes
