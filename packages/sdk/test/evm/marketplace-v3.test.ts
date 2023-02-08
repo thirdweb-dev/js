@@ -5,15 +5,13 @@ import {
   NATIVE_TOKEN_ADDRESS,
   NFTCollection,
   NFTCollectionInitializer,
-  OfferV3,
   Token,
   TokenInitializer,
   MarketplaceV3Initializer,
-  Status,
 } from "../../src/evm";
-import { fastForwardTime, jsonProvider, sdk, signers } from "./before-setup";
+import { jsonProvider, sdk, signers } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert, expect } from "chai";
+import { assert } from "chai";
 import { BigNumber, ethers } from "ethers";
 
 global.fetch = require("cross-fetch");
