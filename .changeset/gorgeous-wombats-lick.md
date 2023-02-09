@@ -8,7 +8,6 @@
 - apps can now define the supported chains by passing `supportedChains` to `ThirdwebProvider`
 - apps can now pass `activeChain` to `ThirdwebProvider` to define the chain out of the supported ones that the SDK should be initialized with
 - if no `activeChain` is passed but a wallet is connected the SDK will be initialized with the chain of the connected wallet
-- if no `activeChain` is passed and no wallet is connected the SDK will be initialized with the first chain of the `supportedChains` array
 
 ### Deprecated options
 
@@ -49,25 +48,7 @@ import { ThirdwebProvider } from "@thirdweb-dev/react";
 const App = () => {
   // since there is only one supported chain defined this will automatically default the SDK to Sepolia
   return (
-    <ThirdwebProvider supportedChains={[Sepolia]}>
-      {/* {...} */}
-    </ThirdwebProvider>
+    <ThirdwebProvider activeChain={Sepolia}>{/* {...} */}</ThirdwebProvider>
   );
-};
-```
-
-### Use multiple chains including custom chains
-
-```js
-import { defaultChains, Sepolia } from "@thirdweb-dev/chains";
-import { ThirdwebProvider } from "@thirdweb-dev/react";
-
-const App = () => {
-  <ThirdwebProvider
-    supportedChains={[...defaultChains, Sepolia]}
-    activeChain="sepolia"
-  >
-    {/* {...} */}
-  </ThirdwebProvider>;
 };
 ```

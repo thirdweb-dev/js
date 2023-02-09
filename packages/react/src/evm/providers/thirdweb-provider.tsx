@@ -115,7 +115,7 @@ export interface ThirdwebProviderProps<
   /**
    * The network to use for the SDK.
    */
-  activeChain?: TChains[number]["chainId"] | TChains[number]["slug"];
+  activeChain?: TChains[number]["chainId"] | TChains[number]["slug"] | Chain;
 
   /**
    * Chains to support. If not provided, will default to the chains supported by the SDK.
@@ -236,11 +236,32 @@ export const ThirdwebProvider = <
     showDeprecationWarning("desiredChainId", "network");
   }
 
+  const mergedChains = useMemo(() => {
+    if (
+      !activeChain ||
+      typeof activeChain === "string" ||
+      typeof activeChain === "number"
+    ) {
+      return supportedChains as Readonly<Chain[]>;
+    }
+    return [...supportedChains, activeChain] as Readonly<Chain[]>;
+  }, [supportedChains, activeChain]);
+
+  const activeChainId = useMemo(() => {
+    if (!activeChain) {
+      return undefined;
+    }
+    if (typeof activeChain === "string" || typeof activeChain === "number") {
+      return activeChain;
+    }
+    return activeChain.chainId;
+  }, [activeChain]);
+
   const wagmiProps: WagmiproviderProps = useMemo(() => {
-    const wagmiChains = supportedChains.map(transformChainToMinimalWagmiChain);
+    const wagmiChains = mergedChains.map(transformChainToMinimalWagmiChain);
 
     const _rpcUrlMap = {
-      ...supportedChains.reduce((acc, c) => {
+      ...mergedChains.reduce((acc, c) => {
         acc[c.chainId] = c.rpc[0];
         return acc;
       }, {} as Record<number, string>),
@@ -339,7 +360,7 @@ export const ThirdwebProvider = <
       },
     } as WagmiproviderProps;
   }, [
-    supportedChains,
+    mergedChains,
     dAppMeta.name,
     dAppMeta.url,
     dAppMeta.logoUrl,
@@ -361,7 +382,7 @@ export const ThirdwebProvider = <
           sdkOptions={sdkOptions}
           supportedChains={supportedChains}
           // desiredChainId is deprecated, we will remove it in the future but still need to pass it here for now
-          activeChain={activeChain || desiredChainId}
+          activeChain={activeChainId || desiredChainId}
           storageInterface={storageInterface}
           authConfig={authConfig}
         >

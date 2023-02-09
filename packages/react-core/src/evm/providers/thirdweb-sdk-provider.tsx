@@ -56,7 +56,7 @@ export interface ThirdwebSDKProviderProps<
   authConfig?: ThirdwebAuthConfig;
 
   // the network to use - optional, defaults to undefined
-  activeChain?: TChains[number]["chainId"] | TChains[number]["slug"];
+  activeChain?: TChains[number]["chainId"] | TChains[number]["slug"] | Chain;
 }
 
 /**
@@ -74,16 +74,37 @@ const WrappedThirdwebSDKProvider = <
   signer,
   children,
 }: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
+  const mergedChains = useMemo(() => {
+    if (
+      !activeChain ||
+      typeof activeChain === "string" ||
+      typeof activeChain === "number"
+    ) {
+      return supportedChains as Readonly<Chain[]>;
+    }
+    return [...supportedChains, activeChain] as Readonly<Chain[]>;
+  }, [supportedChains, activeChain]);
+
+  const activeChainId = useMemo(() => {
+    if (!activeChain) {
+      return undefined;
+    }
+    if (typeof activeChain === "string" || typeof activeChain === "number") {
+      return activeChain;
+    }
+    return activeChain.chainId;
+  }, [activeChain]);
+
   const sdk = useMemo(() => {
     // on the server we can't do anything (?)
     if (typeof window === "undefined") {
       return undefined;
     }
-    let chainId = resolveChainIdFromNetwork(activeChain, supportedChains);
+    let chainId = resolveChainIdFromNetwork(activeChainId, mergedChains);
 
     const mergedOptions = {
       ...sdkOptions,
-      chains: supportedChains,
+      chains: mergedChains,
     };
 
     let sdk_: ThirdwebSDK | undefined = undefined;
@@ -99,7 +120,7 @@ const WrappedThirdwebSDKProvider = <
       }
       if (chainId) {
         // if we have a chainId, make sure it's in the chains
-        if (!supportedChains.find((c) => c.chainId === chainId)) {
+        if (!mergedChains.find((c) => c.chainId === chainId)) {
           console.warn(
             `The chainId ${chainId} is not in the configured chains, please add it to the ThirdwebProvider`,
           );
@@ -121,8 +142,8 @@ const WrappedThirdwebSDKProvider = <
     }
     // if we still have no sdk fall back to the first element in chains
     if (!sdk_) {
-      if (supportedChains.length > 0) {
-        chainId = supportedChains[0].chainId;
+      if (mergedChains.length > 0) {
+        chainId = mergedChains[0].chainId;
         // @ts-expect-error - zod doesn't know anything about readonly
         sdk_ = new ThirdwebSDK(chainId, mergedOptions, storageInterface);
       } else {
@@ -136,7 +157,7 @@ const WrappedThirdwebSDKProvider = <
     (sdk_ as any)._chainId = chainId;
 
     return sdk_;
-  }, [activeChain, sdkOptions, signer, storageInterface, supportedChains]);
+  }, [activeChainId, mergedChains, sdkOptions, signer, storageInterface]);
 
   const ctxValue = useMemo(
     () => ({
