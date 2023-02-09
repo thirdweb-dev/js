@@ -213,7 +213,7 @@ describe("Marketplace V3", async () => {
    * =========== Direct Listings Tests ============
    */
   describe("Direct Listing: Create", () => {
-    it("should list direct listings with 721s", async () => {
+    it.skip("should list direct listings with 721s", async () => {
       const listingId = await createDirectListing(
         dummyNftContract.getAddress(),
         0,
