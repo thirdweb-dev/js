@@ -111,9 +111,16 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     const signer = this.getSigner();
     invariant(signer, "A signer is required to deploy contracts");
 
+    const args = await getDeployArguments(
+      contractType,
+      metadata,
+      contractURI,
+      signer,
+    );
+
     const encodedFunc = Contract.getInterface(ABI).encodeFunctionData(
       "initialize",
-      await getDeployArguments(contractType, metadata, contractURI, signer),
+      args,
     );
 
     const blockNumber = await this.getProvider().getBlockNumber();
