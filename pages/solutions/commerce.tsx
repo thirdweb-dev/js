@@ -9,23 +9,23 @@ import { ProductPage } from "components/product-pages/common/ProductPage";
 import { ProductSection } from "components/product-pages/common/ProductSection";
 import { SolutionsTextImage } from "components/product-pages/common/SolutionsTextImage";
 import { PageId } from "page-id";
-import { Heading, Text } from "tw-components";
+import { Heading, Text, TrackedLink } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
 const TRACKING_CATEGORY = "commerce_kit";
 
 const SHOPIFY_GUIDES = [
   {
+    title: "Create a Shopify theme with thirdweb",
+    image:
+      "https://blog.thirdweb.com/content/images/size/w2000/2023/02/This-is-the-one--1-.png",
+    link: "https://blog.thirdweb.com/guides/create-a-shopify-theme-with-thirdweb/",
+  },
+  {
     title: "How to Create a Token Gated Website on Shopify using thirdweb",
     image:
       "https://blog.thirdweb.com/content/images/size/w2000/2022/11/create-token-gated-website-with-shopify-storefront-and-thirdweb.png",
     link: "https://blog.thirdweb.com/guides/token-nft-gated-shopify-website-thirdweb/",
-  },
-  {
-    title: "Generate Shopify Discount Codes For NFT Holders",
-    image:
-      "https://blog.thirdweb.com/content/images/size/w2000/2022/10/This-is-the-one--10-.png",
-    link: "https://blog.thirdweb.com/guides/generate-shopify-discount-codes-for-nft-holders/",
   },
   {
     title: "Distribute NFTs on a Shopify Store",
@@ -69,11 +69,18 @@ const Commerce: ThirdwebNextPage = () => {
             <Heading size="subtitle.xs" as="span" mt={1}>
               In partnership with
             </Heading>
-            <ChakraNextImage
-              src={require("public/assets/solutions-pages/commerce/shopify.png")}
-              width="80px"
-              alt="Shopify"
-            />
+            <TrackedLink
+              href="https://blockchain.shopify.dev/"
+              isExternal
+              category={TRACKING_CATEGORY}
+              label="shopify"
+            >
+              <ChakraNextImage
+                src={require("public/assets/solutions-pages/commerce/shopify.png")}
+                width="80px"
+                alt="Shopify"
+              />
+            </TrackedLink>
           </Flex>
         }
         secondaryButton={{
