@@ -11,7 +11,10 @@ const defaultOptions = {
   mode: "http",
 } as const;
 
-export function getChainRPC(chain: Chain, options?: ChainRPCOptions): string {
+export function getChainRPC(
+  chain: Pick<Chain, "rpc" | "chainId">,
+  options?: ChainRPCOptions,
+): string {
   const { thirdwebApiKey, alchemyApiKey, infuraApiKey, mode } = {
     ...defaultOptions,
     ...options,
@@ -53,7 +56,7 @@ export function getChainRPC(chain: Chain, options?: ChainRPCOptions): string {
 
   if (orderedRPCs.length === 0) {
     throw new Error(
-      `No RPC available for chain ${chain.name} with mode ${mode}`,
+      `No RPC available for chainId "${chain.chainId}" with mode ${mode}`,
     );
   }
 

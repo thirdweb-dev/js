@@ -2,4 +2,6 @@
 "@thirdweb-dev/chains": minor
 ---
 
-initial release of @thirdweb-dev/chains package
+Initial release for `@thirdweb-dev/chains`.
+
+Use this package to easily configure chains with `@thirdweb-dev/sdk` and `@thirdweb-dev/react`.

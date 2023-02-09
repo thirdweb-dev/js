@@ -3,6 +3,7 @@ import { ChainIdOrName } from "../core";
 import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
 import { ChainInfo, SDKOptions, SDKOptionsSchema } from "../schema";
 import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
+import { getChainRPC } from "@thirdweb-dev/chains";
 import { ethers, providers } from "ethers";
 
 /**
@@ -66,7 +67,7 @@ export const CHAIN_ID_TO_NAME = Object.fromEntries(
 
 export function buildDefaultMap(sdkOptions: SDKOptions = {}) {
   const options = SDKOptionsSchema.parse(sdkOptions);
-  return options.chains.reduce((previousValue, currentValue) => {
+  return options.supportedChains.reduce((previousValue, currentValue) => {
     previousValue[currentValue.chainId] = currentValue;
     return previousValue;
   }, {} as Record<number, ChainInfo>);
@@ -83,20 +84,23 @@ export function getChainProvider(
   const chainId = toChainId(network);
   const options = SDKOptionsSchema.parse(sdkOptions);
   const rpcMap: Record<number, ChainInfo> = buildDefaultMap(options);
-  let rpcUrl = rpcMap[chainId]?.rpc[0];
+  let rpcUrl = "";
+  try {
+    rpcUrl = getChainRPC(rpcMap[chainId], {
+      thirdwebApiKey: options.thirdwebApiKey || DEFAULT_API_KEY,
+      infuraApiKey: options.infuraApiKey,
+      alchemyApiKey: options.alchemyApiKey,
+    });
+  } catch (e) {
+    console.warn("Failed to get chain RPC", e);
+    // no-op
+  }
 
   if (!rpcUrl) {
     throw new Error(
       `No rpc url found for chain ${network}. Please provide a valid rpc url via the 'chains' property of the sdk options.`,
     );
   }
-  // apply API keys
-  rpcUrl = rpcUrl.replace(
-    "${THIRDWEB_API_KEY}",
-    options.thirdwebApiKey || DEFAULT_API_KEY,
-  );
-  rpcUrl = rpcUrl.replace("${INFURA_API_KEY}", options.infuraApiKey || "");
-  rpcUrl = rpcUrl.replace("${ALCHEMY_API_KEY}", options.alchemyApiKey || "");
 
   return getReadOnlyProvider(rpcUrl, chainId);
 }
