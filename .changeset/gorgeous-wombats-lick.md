@@ -5,9 +5,9 @@
 ## Now supports Any EVM - Any Contract!
 
 - no longer requires `desiredChainId` to be passed to `ThirdwebProvider`
-- apps can now define the supported chains by passing `supportedChains` to `ThirdwebProvider`
-- apps can now pass `activeChain` to `ThirdwebProvider` to define the chain out of the supported ones that the SDK should be initialized with
+- apps can now pass `activeChain` to `ThirdwebProvider` to define the chain to connect to (can be a chainId or a fully defined chain object from `@thirdweb-dev/chains`)
 - if no `activeChain` is passed but a wallet is connected the SDK will be initialized with the chain of the connected wallet
+- (advanced) apps can now define the chains they want to support by passing `supportedChains` to `ThirdwebProvider`
 
 ### Deprecated options
 

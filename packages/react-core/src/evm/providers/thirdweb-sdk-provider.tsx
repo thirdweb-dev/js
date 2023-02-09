@@ -8,7 +8,11 @@ import {
 } from "../contexts/thirdweb-auth";
 import { ThirdwebConnectedWalletProvider } from "../contexts/thirdweb-wallet";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
-import { SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
+import {
+  SDKOptions,
+  SDKOptionsOutput,
+  ThirdwebSDK,
+} from "@thirdweb-dev/sdk/evm";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { Signer } from "ethers";
 import { createContext, useContext, useMemo } from "react";
@@ -101,8 +105,32 @@ const WrappedThirdwebSDKProvider = <
       return undefined;
     }
     let chainId = resolveChainIdFromNetwork(activeChainId, mergedChains);
+    if (signer && !chainId) {
+      try {
+        chainId = (signer?.provider as any)?._network?.chainId;
+      } catch (e) {}
+    }
+    const supportedChain = mergedChains.find((c) => c.chainId === chainId);
+
+    if (!supportedChain && chainId !== undefined) {
+      console.warn(
+        `The chainId ${chainId} is not in the configured chains, please add it to the ThirdwebProvider`,
+      );
+      // reset the chainId as to not trigger an error in the sdk constructor
+      chainId = undefined;
+    }
+
+    let readonlySettings: SDKOptionsOutput["readonlySettings"] = undefined;
+
+    if (supportedChain && supportedChain.rpc.length > 0) {
+      readonlySettings = {
+        chainId: supportedChain.chainId,
+        rpcUrl: supportedChain.rpc[0],
+      };
+    }
 
     const mergedOptions = {
+      readonlySettings,
       ...sdkOptions,
       chains: mergedChains,
     };
@@ -112,39 +140,20 @@ const WrappedThirdwebSDKProvider = <
     if (signer) {
       // sdk from signer
 
-      if (!chainId) {
-        // try to get the chainId off of the signer sync
-        try {
-          chainId = (signer?.provider as any)?._network?.chainId;
-        } catch (e) {}
-      }
-      if (chainId) {
-        // if we have a chainId, make sure it's in the chains
-        if (!mergedChains.find((c) => c.chainId === chainId)) {
-          console.warn(
-            `The chainId ${chainId} is not in the configured chains, please add it to the ThirdwebProvider`,
-          );
-          // reset the chainId as to not trigger an error in the sdk constructor
-          chainId = undefined;
-        }
-      }
       sdk_ = ThirdwebSDK.fromSigner(
         signer,
         chainId,
-        // @ts-expect-error - zod doesn't know anything about readonly
         mergedOptions,
         storageInterface,
       );
     } else if (chainId) {
       // sdk from chainId
-      // @ts-expect-error - zod doesn't know anything about readonly
       sdk_ = new ThirdwebSDK(chainId, mergedOptions, storageInterface);
     }
     // if we still have no sdk fall back to the first element in chains
     if (!sdk_) {
       if (mergedChains.length > 0) {
         chainId = mergedChains[0].chainId;
-        // @ts-expect-error - zod doesn't know anything about readonly
         sdk_ = new ThirdwebSDK(chainId, mergedOptions, storageInterface);
       } else {
         console.error(
@@ -153,8 +162,6 @@ const WrappedThirdwebSDKProvider = <
         return undefined;
       }
     }
-
-    (sdk_ as any)._chainId = chainId;
 
     return sdk_;
   }, [activeChainId, mergedChains, sdkOptions, signer, storageInterface]);
@@ -237,5 +244,5 @@ export function useSDK(): ThirdwebSDK | undefined {
  */
 export function useSDKChainId(): number | undefined {
   const sdk = useSDK();
-  return (sdk as any)?._chainId;
+  return (sdk?.getProvider() as any)?._network?.chainId;
 }
