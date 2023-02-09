@@ -14,6 +14,7 @@ import type { ContractInterface, Signer } from "ethers";
 declare global {
   interface Window {
     bridge: TWBridge;
+    unityInstance: any;
   }
 }
 
@@ -56,7 +57,11 @@ interface TWBridge {
   connect: (wallet: PossibleWallet, chainId?: number) => Promise<string>;
   disconnect: () => Promise<void>;
   switchNetwork: (chainId: number) => Promise<void>;
-  invoke: (route: string, payload: string) => Promise<string | undefined>;
+  invoke: (
+    route: string,
+    payload: string,
+    callback: string,
+  ) => Promise<string | undefined>;
   fundWallet: (options: string) => Promise<void>;
 }
 
@@ -146,7 +151,7 @@ class ThirdwebBridge implements TWBridge {
     }
   }
 
-  public async invoke(route: string, payload: string) {
+  public async invoke(route: string, payload: string, callback: string) {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");
     }
@@ -155,7 +160,18 @@ class ThirdwebBridge implements TWBridge {
     const addrOrSDK = firstArg[0];
 
     const fnArgs = JSON.parse(payload).arguments;
+    const cbArgs = JSON.parse(callback).arguments;
     const parsedArgs = fnArgs.map((arg: unknown) => {
+      try {
+        return typeof arg === "string" &&
+          (arg.startsWith("{") || arg.startsWith("["))
+          ? JSON.parse(arg)
+          : arg;
+      } catch (e) {
+        return arg;
+      }
+    });
+    const parsedCbArgs = cbArgs.map((arg: unknown) => {
       try {
         return typeof arg === "string" &&
           (arg.startsWith("{") || arg.startsWith("["))
@@ -199,24 +215,65 @@ class ThirdwebBridge implements TWBridge {
       const contract = typeOrAbi
         ? await this.activeSDK.getContract(addrOrSDK, typeOrAbi)
         : await this.activeSDK.getContract(addrOrSDK);
-      if (routeArgs.length === 2) {
-        // @ts-expect-error need to type-guard this properly
-        const result = await contract[routeArgs[1]](...parsedArgs);
-        return JSON.stringify({ result: result }, bigNumberReplacer);
-      } else if (routeArgs.length === 3) {
-        // @ts-expect-error need to type-guard this properly
-        const result = await contract[routeArgs[1]][routeArgs[2]](
-          ...parsedArgs,
-        );
-        return JSON.stringify({ result: result }, bigNumberReplacer);
-      } else if (routeArgs.length === 4) {
-        // @ts-expect-error need to type-guard this properly
-        const result = await contract[routeArgs[1]][routeArgs[2]][routeArgs[3]](
-          ...parsedArgs,
-        );
-        return JSON.stringify({ result: result }, bigNumberReplacer);
+      if (cbArgs.length == 0) {
+        if (routeArgs.length === 2) {
+          // @ts-expect-error need to type-guard this properly
+          const result = await contract[routeArgs[1]](...parsedArgs);
+          return JSON.stringify({ result: result }, bigNumberReplacer);
+        } else if (routeArgs.length === 3) {
+          // @ts-expect-error need to type-guard this properly
+          const result = await contract[routeArgs[1]][routeArgs[2]](
+            ...parsedArgs,
+          );
+          return JSON.stringify({ result: result }, bigNumberReplacer);
+        } else if (routeArgs.length === 4) {
+          // @ts-expect-error need to type-guard this properly
+          const result = await contract[routeArgs[1]][routeArgs[2]][
+            routeArgs[3]
+          ](...parsedArgs);
+          return JSON.stringify({ result: result }, bigNumberReplacer);
+        } else {
+          throw new Error("Invalid Route");
+        }
       } else {
-        throw new Error("Invalid Route");
+        if (routeArgs.length === 2) {
+          // @ts-expect-error need to type-guard this properly
+          const result = await contract[routeArgs[1]](
+            ...parsedArgs,
+            (anyType: any) => {
+              window.unityInstance.SendMessage(
+                ...parsedCbArgs,
+                JSON.stringify(anyType),
+              );
+            },
+          );
+          return JSON.stringify({ result: result }, bigNumberReplacer);
+        } else if (routeArgs.length === 3) {
+          // @ts-expect-error need to type-guard this properly
+          const result = await contract[routeArgs[1]][routeArgs[2]](
+            ...parsedArgs,
+            (anyType: any) => {
+              window.unityInstance.SendMessage(
+                ...parsedCbArgs,
+                JSON.stringify(anyType),
+              );
+            },
+          );
+          return JSON.stringify({ result: result }, bigNumberReplacer);
+        } else if (routeArgs.length === 4) {
+          // @ts-expect-error need to type-guard this properly
+          const result = await contract[routeArgs[1]][routeArgs[2]][
+            routeArgs[3]
+          ](...parsedArgs, (anyType: any) => {
+            window.unityInstance.SendMessage(
+              ...parsedCbArgs,
+              JSON.stringify(anyType),
+            );
+          });
+          return JSON.stringify({ result: result }, bigNumberReplacer);
+        } else {
+          throw new Error("Invalid Route");
+        }
       }
     }
   }
