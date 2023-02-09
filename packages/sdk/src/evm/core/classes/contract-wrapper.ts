@@ -1,4 +1,10 @@
-import { convertToTWError, extractFunctionsFromAbi } from "../../common";
+import {
+  TransactionError,
+  extractFunctionsFromAbi,
+  fetchContractMetadataFromAddress,
+  fetchSourceFilesFromMetadata,
+  parseRevertReason,
+} from "../../common";
 import {
   BiconomyForwarderAbi,
   ChainAwareForwardRequest,
@@ -13,16 +19,17 @@ import { CONTRACT_ADDRESSES, ChainId } from "../../constants";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import { EventType } from "../../constants/events";
 import { CallOverrideSchema } from "../../schema";
-import { AbiSchema } from "../../schema/contracts/custom";
+import { AbiSchema, ContractSource } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
   ForwardRequestMessage,
   GaslessTransaction,
-  NetworkOrSignerOrProvider,
+  NetworkInput,
   PermitRequestMessage,
 } from "../types";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import ForwarderABI from "@thirdweb-dev/contracts-js/dist/abis/Forwarder.json";
+import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import fetch from "cross-fetch";
 import {
   BaseContract,
@@ -35,6 +42,7 @@ import {
   ethers,
   providers,
 } from "ethers";
+import { ConnectionInfo } from "ethers/lib/utils.js";
 import invariant from "tiny-invariant";
 
 /**
@@ -43,6 +51,9 @@ import invariant from "tiny-invariant";
 export class ContractWrapper<
   TContract extends BaseContract,
 > extends RPCConnectionHandler {
+  // TOOO: In another PR, make this storage private, and have extending classes pass
+  // down storage to be stored in contract wrapper.
+  #storage: ThirdwebStorage;
   private isValidContract = false;
   private customOverrides: () => CallOverrides = () => ({});
   /**
@@ -53,7 +64,7 @@ export class ContractWrapper<
   public abi;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     contractAddress: string,
     contractAbi: ContractInterface,
     options: SDKOptions,
@@ -70,11 +81,10 @@ export class ContractWrapper<
     this.readContract = this.writeContract.connect(
       this.getProvider(),
     ) as TContract;
+    this.#storage = new ThirdwebStorage();
   }
 
-  public override updateSignerOrProvider(
-    network: NetworkOrSignerOrProvider,
-  ): void {
+  public override updateSignerOrProvider(network: NetworkInput): void {
     // update the underlying base class
     super.updateSignerOrProvider(network);
     // re-connect the contract with the new signer / provider
@@ -375,7 +385,26 @@ export class ContractWrapper<
         callOverrides,
       );
       this.emitTransactionEvent("submitted", tx.hash);
-      const receipt = tx.wait();
+
+      // tx.wait() can fail so we need to wrap it with a catch
+      let receipt;
+      try {
+        receipt = await tx.wait();
+      } catch (err) {
+        try {
+          // If tx.wait() fails, it just gives us a generic "transaction failed"
+          // error. So instead, we need to call static to get an informative error message
+          await this.writeContract.callStatic[fn as string](
+            ...args,
+            ...(callOverrides.value ? [{ value: callOverrides.value }] : []),
+          );
+        } catch (staticErr: any) {
+          throw await this.formatError(staticErr, fn, args, callOverrides);
+        }
+
+        throw await this.formatError(err, fn, args, callOverrides);
+      }
+
       this.emitTransactionEvent("completed", tx.hash);
       return receipt;
     }
@@ -395,20 +424,131 @@ export class ContractWrapper<
     if (!func) {
       throw new Error(`invalid function: "${fn.toString()}"`);
     }
+
+    // First, if no gasLimit is passed, call estimate gas ourselves
+    if (!callOverrides.gasLimit) {
+      try {
+        callOverrides.gasLimit = await this.writeContract.estimateGas[
+          fn as string
+        ](...args, callOverrides);
+      } catch (e) {
+        // If gas estimation fails, we'll call static to get a better error message
+        try {
+          await this.writeContract.callStatic[fn as string](
+            ...args,
+            ...(callOverrides.value ? [{ value: callOverrides.value }] : []),
+          );
+        } catch (err: any) {
+          throw await this.formatError(err, fn, args, callOverrides);
+        }
+      }
+    }
+
+    // Now there should be no gas estimate errors
     try {
       return await func(...args, callOverrides);
-    } catch (e) {
-      const network = await this.getProvider().getNetwork();
-      const signerAddress = await this.getSignerAddress();
-      const contractAddress = await this.readContract.address;
-      throw await convertToTWError(
-        e,
-        network,
-        signerAddress,
-        contractAddress,
-        this.readContract.interface,
-      );
+    } catch (err) {
+      const from = await (callOverrides.from || this.getSignerAddress());
+      const value = await (callOverrides.value ? callOverrides.value : 0);
+      const balance = await this.getProvider().getBalance(from);
+
+      if (balance.eq(0) || (value && balance.lt(value))) {
+        throw await this.formatError(
+          new Error(
+            "You have insufficient funds in your account to execute this transaction.",
+          ),
+          fn,
+          args,
+          callOverrides,
+        );
+      }
+
+      throw await this.formatError(err, fn, args, callOverrides);
     }
+  }
+
+  private async formatError(
+    error: any,
+    fn: keyof TContract["functions"],
+    args: any[],
+    callOverrides: CallOverrides,
+  ) {
+    const provider = this.getProvider() as ethers.providers.Provider & {
+      connection?: ConnectionInfo;
+    };
+
+    // Get metadata for transaction to populate into error
+    const network = await provider.getNetwork();
+    const from = await (callOverrides.from || this.getSignerAddress());
+    const to = this.readContract.address;
+    const data = this.readContract.interface.encodeFunctionData(
+      fn as string,
+      args,
+    );
+    const value = BigNumber.from(callOverrides.value || 0);
+    const rpcUrl = provider.connection?.url;
+
+    // Render function signature with arguments filled in
+    const functionSignature = this.readContract.interface.getFunction(
+      fn as string,
+    );
+    const methodArgs = args.map((arg) => {
+      if (JSON.stringify(arg).length <= 80) {
+        return JSON.stringify(arg);
+      }
+      return JSON.stringify(arg, undefined, 2);
+    });
+    const joinedArgs =
+      methodArgs.join(", ").length <= 80
+        ? methodArgs.join(", ")
+        : "\n" +
+          methodArgs
+            .map((arg) => "  " + arg.split("\n").join("\n  "))
+            .join(",\n") +
+          "\n";
+    const method = `${functionSignature.name}(${joinedArgs})`;
+    const hash =
+      error.transactionHash ||
+      error.transaction?.hash ||
+      error.receipt?.transactionHash;
+
+    // Parse the revert reason from the error
+    const reason = parseRevertReason(error);
+
+    // Get contract sources for stack trace
+    let sources: ContractSource[] | undefined = undefined;
+    let contractName: string | undefined = undefined;
+    try {
+      const metadata = await fetchContractMetadataFromAddress(
+        this.readContract.address,
+        this.getProvider(),
+        this.#storage,
+      );
+
+      if (metadata.name) {
+        contractName = metadata.name;
+      }
+
+      if (metadata.metadata.sources) {
+        sources = await fetchSourceFilesFromMetadata(metadata, this.#storage);
+      }
+    } catch (err) {
+      // no-op
+    }
+
+    return new TransactionError({
+      reason,
+      from,
+      to,
+      method,
+      data,
+      network,
+      rpcUrl,
+      value,
+      hash,
+      contractName,
+      sources,
+    });
   }
 
   /**

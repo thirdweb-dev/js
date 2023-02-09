@@ -1,5 +1,10 @@
 // providers
-export * from "./providers/full";
+export { ThirdwebProvider } from "./providers/thirdweb-provider";
+export type {
+  ThirdwebProviderProps,
+  WalletConnector,
+  DAppMetaData,
+} from "./providers/thirdweb-provider";
 
 // require to be inside `<ThirdwebProvider />`
 export * from "./hooks/wagmi-required/useAccount";

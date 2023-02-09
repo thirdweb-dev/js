@@ -268,6 +268,72 @@ export const cacheKeys = {
             { listingId },
           ]),
       },
+
+      directListings: {
+        getAll: (
+          contractAddress: RequiredParam<ContractAddress>,
+          params?: MarketplaceFilter,
+        ) =>
+          createContractCacheKey(
+            contractAddress,
+            params ? ["getAllDirectListings", params] : ["getAllDirectListings"],
+          ),
+        getAllValid: (
+          contractAddress: RequiredParam<ContractAddress>,
+          params?: MarketplaceFilter,
+        ) =>
+          createContractCacheKey(
+            contractAddress,
+            params ? ["getAllValidDirectListings", params] : ["getAllValidDirectListings"],
+          ),
+        getListing: (
+          contractAddress: RequiredParam<ContractAddress>,
+          listingId: RequiredParam<BigNumberish>,
+        ) =>
+          createContractCacheKey(contractAddress, [
+            "getListing",
+            { listingId },
+          ]),
+        getTotalCount: (contractAddress: RequiredParam<ContractAddress>) =>
+          createContractCacheKey(contractAddress, ["getTotalDirectListingsCount"]),
+      },
+
+      englishAuctions: {
+        getAll: (
+          contractAddress: RequiredParam<ContractAddress>,
+          params?: MarketplaceFilter,
+        ) =>
+          createContractCacheKey(
+            contractAddress,
+            params ? ["getAllEnglishAuctions", params] : ["getAllEnglishAuctions"],
+          ),
+        getAllValid: (
+          contractAddress: RequiredParam<ContractAddress>,
+          params?: MarketplaceFilter,
+        ) =>
+          createContractCacheKey(
+            contractAddress,
+            params ? ["getAllEValidEnglishAuctions", params] : ["getAllEValidEnglishAuctions"],
+          ),
+        getAuction: (
+          contractAddress: RequiredParam<ContractAddress>,
+          auctionId: RequiredParam<BigNumberish>,
+        ) =>
+          createContractCacheKey(contractAddress, [
+            "getAuction",
+            { auctionId },
+          ]),
+        getWinningBid: (
+          contractAddress: RequiredParam<ContractAddress>,
+          auctionId: RequiredParam<BigNumberish>,
+        ) =>
+          createContractCacheKey(contractAddress, [
+            "getWinningBid",
+            { auctionId },
+          ]),
+        getTotalCount: (contractAddress: RequiredParam<ContractAddress>) =>
+          createContractCacheKey(contractAddress, ["getTotalEnglishAuctionsCount"]),
+      },
     },
   },
   // extensions

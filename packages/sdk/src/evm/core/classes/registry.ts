@@ -1,6 +1,6 @@
 import { TransactionResult } from "..";
 import { SDKOptions } from "../../schema/sdk-options";
-import { NetworkOrSignerOrProvider } from "../types";
+import { NetworkInput } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import type { TWRegistry } from "@thirdweb-dev/contracts-js";
 import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWRegistry.json";
@@ -12,7 +12,7 @@ import { constants, utils } from "ethers";
 export class ContractRegistry extends ContractWrapper<TWRegistry> {
   constructor(
     registryAddress: string,
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     options?: SDKOptions,
   ) {
     super(network, registryAddress, TWRegistryABI, options);

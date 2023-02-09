@@ -1,4 +1,4 @@
-import { NetworkOrSignerOrProvider, TransactionResult } from "..";
+import { NetworkInput, TransactionResult } from "..";
 import { AmountSchema } from "../../../core/schema/shared";
 import { assertEnabled, detectContractFeature } from "../../common";
 import {
@@ -85,7 +85,7 @@ export class Erc20<
   /**
    * @internal
    */
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+  onNetworkUpdated(network: NetworkInput): void {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
@@ -374,6 +374,19 @@ export class Erc20<
       receiver,
       amount,
     );
+  }
+
+  /**
+   * Construct a mint transaction without executing it.
+   * This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
+   * @param receiver - Address you want to send the token to
+   * @param amount - The amount of tokens you want to mint
+   */
+  public async getMintTransaction(receiver: string, amount: Amount) {
+    return assertEnabled(
+      this.mintable,
+      FEATURE_TOKEN_MINTABLE,
+    ).getMintTransaction(receiver, amount);
   }
 
   ////// ERC20 BatchMintable Extension //////

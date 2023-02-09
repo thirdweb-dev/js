@@ -1,5 +1,61 @@
 # @thirdweb-dev/sdk
 
+## 3.8.2
+
+### Patch Changes
+
+- [#555](https://github.com/thirdweb-dev/js/pull/555) [`55b00ef`](https://github.com/thirdweb-dev/js/commit/55b00eff2668eb751b9f907e035b3a0c122d2183) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Add gas estimators to each marketplace plugin
+
+- Updated dependencies [[`76d219e`](https://github.com/thirdweb-dev/js/commit/76d219e6bea1496b45623b3081152854ce1eaa6e)]:
+  - @thirdweb-dev/contracts-js@1.3.1
+  - @thirdweb-dev/storage@1.0.8
+
+## 3.8.1
+
+### Patch Changes
+
+- [#550](https://github.com/thirdweb-dev/js/pull/550) [`448b357`](https://github.com/thirdweb-dev/js/commit/448b357ed4b864e05e531837ca3bc97fbcab3291) Thanks [@adam-maj](https://github.com/adam-maj)! - Add solidity stack trace to error messages
+
+## 3.8.0
+
+### Minor Changes
+
+- [#474](https://github.com/thirdweb-dev/js/pull/474) [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Introducing marketplace-v3 class
+
+### Patch Changes
+
+- [#547](https://github.com/thirdweb-dev/js/pull/547) [`0b38dac`](https://github.com/thirdweb-dev/js/commit/0b38dac852e54d0bccd263631f4342aee39d7c29) Thanks [@adam-maj](https://github.com/adam-maj)! - Add proper error hanling for no funds error
+
+- [#545](https://github.com/thirdweb-dev/js/pull/545) [`29d0c62`](https://github.com/thirdweb-dev/js/commit/29d0c62610cdb88f75d19574bddcb028b5c40393) Thanks [@adam-maj](https://github.com/adam-maj)! - Add error info fields to transaction error
+
+- [#474](https://github.com/thirdweb-dev/js/pull/474) [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Support for Plugin Pattern based contracts
+
+- [#539](https://github.com/thirdweb-dev/js/pull/539) [`f295ec6`](https://github.com/thirdweb-dev/js/commit/f295ec67b4cc422c51beda94cbc4d54a31ce9566) Thanks [@adam-maj](https://github.com/adam-maj)! - Upgrade error messages on failed transactions
+
+- [#544](https://github.com/thirdweb-dev/js/pull/544) [`f1aecc3`](https://github.com/thirdweb-dev/js/commit/f1aecc30499e39fb23a205bade939bd939f0d0e4) Thanks [@kumaryash90](https://github.com/kumaryash90)! - Contracts v3.4.0
+
+- Updated dependencies [[`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c), [`912738b`](https://github.com/thirdweb-dev/js/commit/912738bd0afdf81e118c720811911ba3d1979ac0), [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c), [`f1aecc3`](https://github.com/thirdweb-dev/js/commit/f1aecc30499e39fb23a205bade939bd939f0d0e4)]:
+  - @thirdweb-dev/contracts-js@1.3.0
+  - @thirdweb-dev/storage@1.0.7
+
+## 3.7.4
+
+### Patch Changes
+
+- [#542](https://github.com/thirdweb-dev/js/pull/542) [`ec1f232`](https://github.com/thirdweb-dev/js/commit/ec1f2324c7a0e58c2d2a209cfe0d194807ba5b70) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Solana - Expose getTransaction pagination options + transactions for given wallet
+
+- [#540](https://github.com/thirdweb-dev/js/pull/540) [`d29f7e7`](https://github.com/thirdweb-dev/js/commit/d29f7e78f09063630e812dd41164d8a41d4f97dd) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - expose `getMintTransaction()` for fine grain control on mint calls
+
+## 3.7.3
+
+### Patch Changes
+
+- [#410](https://github.com/thirdweb-dev/js/pull/410) [`b45d761`](https://github.com/thirdweb-dev/js/commit/b45d761f8f2695b48312ec6eff15e0549e6a8a41) Thanks [@adam-maj](https://github.com/adam-maj)! - Add creator and royalty settings to drop
+
+- [#535](https://github.com/thirdweb-dev/js/pull/535) [`5f8ec45`](https://github.com/thirdweb-dev/js/commit/5f8ec45af7c81d075a84846098f38cad90d03fb9) Thanks [@jnsdls](https://github.com/jnsdls)! - [Solana] - add `burnBatch()` and `getTransactions()` for NFTCollection and NFTDrop
+
+- [#471](https://github.com/thirdweb-dev/js/pull/471) [`04de5b2`](https://github.com/thirdweb-dev/js/commit/04de5b278362573991140c3a496de7451e5c770d) Thanks [@adam-maj](https://github.com/adam-maj)! - Expose getSnapshotEntryForAddress
+
 ## 3.7.2
 
 ### Patch Changes

@@ -1,5 +1,42 @@
 # @thirdweb-dev/unity-js-bridge
 
+## 0.2.7
+
+### Patch Changes
+
+- Updated dependencies [[`55b00ef`](https://github.com/thirdweb-dev/js/commit/55b00eff2668eb751b9f907e035b3a0c122d2183), [`76d219e`](https://github.com/thirdweb-dev/js/commit/76d219e6bea1496b45623b3081152854ce1eaa6e)]:
+  - @thirdweb-dev/sdk@3.8.2
+  - @thirdweb-dev/storage@1.0.8
+
+## 0.2.6
+
+### Patch Changes
+
+- Updated dependencies [[`448b357`](https://github.com/thirdweb-dev/js/commit/448b357ed4b864e05e531837ca3bc97fbcab3291)]:
+  - @thirdweb-dev/sdk@3.8.1
+
+## 0.2.5
+
+### Patch Changes
+
+- Updated dependencies [[`0b38dac`](https://github.com/thirdweb-dev/js/commit/0b38dac852e54d0bccd263631f4342aee39d7c29), [`29d0c62`](https://github.com/thirdweb-dev/js/commit/29d0c62610cdb88f75d19574bddcb028b5c40393), [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c), [`f295ec6`](https://github.com/thirdweb-dev/js/commit/f295ec67b4cc422c51beda94cbc4d54a31ce9566), [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c), [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c), [`f1aecc3`](https://github.com/thirdweb-dev/js/commit/f1aecc30499e39fb23a205bade939bd939f0d0e4)]:
+  - @thirdweb-dev/sdk@3.8.0
+  - @thirdweb-dev/storage@1.0.7
+
+## 0.2.4
+
+### Patch Changes
+
+- Updated dependencies [[`ec1f232`](https://github.com/thirdweb-dev/js/commit/ec1f2324c7a0e58c2d2a209cfe0d194807ba5b70), [`d29f7e7`](https://github.com/thirdweb-dev/js/commit/d29f7e78f09063630e812dd41164d8a41d4f97dd)]:
+  - @thirdweb-dev/sdk@3.7.4
+
+## 0.2.3
+
+### Patch Changes
+
+- Updated dependencies [[`b45d761`](https://github.com/thirdweb-dev/js/commit/b45d761f8f2695b48312ec6eff15e0549e6a8a41), [`5f8ec45`](https://github.com/thirdweb-dev/js/commit/5f8ec45af7c81d075a84846098f38cad90d03fb9), [`04de5b2`](https://github.com/thirdweb-dev/js/commit/04de5b278362573991140c3a496de7451e5c770d)]:
+  - @thirdweb-dev/sdk@3.7.3
+
 ## 0.2.2
 
 ### Patch Changes

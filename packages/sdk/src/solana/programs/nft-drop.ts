@@ -21,10 +21,16 @@ import { sendMultipartTransaction } from "../utils/transactions";
 import { getNework } from "../utils/urls";
 import {
   CandyMachineV2Item,
+  findCandyMachineV2CreatorPda,
   Metaplex,
   toBigNumber,
+  TransactionBuilder,
 } from "@metaplex-foundation/js";
-import { PublicKey } from "@solana/web3.js";
+import {
+  PublicKey,
+  SignaturesForAddressOptions,
+  TransactionResponse,
+} from "@solana/web3.js";
 import { ThirdwebStorage, UploadProgressEvent } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
 
@@ -216,6 +222,16 @@ export class NFTDrop {
 
     // Always return claimed NFTs first, and then fill remaining query count with unclaimed NFTs
     return [...claimedNfts, ...unclaimedNfts];
+  }
+
+  /**
+   * Get the all transactions for this program
+   * @beta
+   */
+  async getTransactions(
+    options?: SignaturesForAddressOptions,
+  ): Promise<TransactionResponse[]> {
+    return this.nft.getTransactions(this.publicKey.toBase58(), options);
   }
 
   /**
@@ -493,47 +509,176 @@ export class NFTDrop {
    * ```
    */
   async burn(nftAddress: string): Promise<TransactionResult> {
+    return this.burnBatch([nftAddress]).then((txs) => txs[0]);
+  }
+
+  /**
+   * Burn multiple NFTs
+   * @param nftAddresses - the mint addresses of the NFT to burn
+   * @returns the transaction signature
+   *
+   * @example
+   * ```jsx
+   * // Specify the address of the NFT to burn
+   * const nftAddress1 = "..."
+   * const nftAddress2 = "..."
+   * // And send the actual burn transaction
+   * const tx = await program.burnBatch([nftAddress1, nftAddress2]);
+   * ```
+   */
+  async burnBatch(nftAddresses: string[]): Promise<TransactionResult[]> {
     const candyMachine = await this.getCandyMachine();
     const collection = candyMachine.collectionMintAddress
       ? candyMachine.collectionMintAddress
       : undefined;
-    const tx = await this.metaplex.nfts().delete({
-      mintAddress: new PublicKey(nftAddress),
-      collection,
-    });
-    return {
-      signature: tx.response.signature,
-    };
+    const txs: TransactionBuilder[] = [];
+
+    for (let nftAddress of nftAddresses) {
+      txs.push(
+        this.metaplex
+          .nfts()
+          .builders()
+          .delete({
+            mintAddress: new PublicKey(nftAddress),
+            collection,
+          }),
+      );
+    }
+
+    return await sendMultipartTransaction(txs, this.metaplex);
   }
 
   /**
    * Update the creators of the collection
    * @param creators - the creators to update
+   * @param updateAll - whether or not to retroactively update the creators of all past NFTs
    */
-  async updateCreators(creators: CreatorInput[]) {
-    const tx = await this.metaplex.candyMachinesV2().update({
-      candyMachine: await this.getCandyMachine(),
-      creators: enforceCreator(creators, this.metaplex.identity().publicKey),
-    });
+  async updateCreators(
+    creators: CreatorInput[],
+    updateAll: boolean = false,
+  ): Promise<TransactionResult[]> {
+    if (updateAll) {
+      const txs: TransactionBuilder[] = [];
 
-    return {
-      signature: tx.response.signature,
-    };
+      const candyMachine = await this.getCandyMachine();
+      const collectionAddress = candyMachine.collectionMintAddress;
+      invariant(collectionAddress, "Collection mint address not found");
+
+      // We need to find the candy machine creator PDA which is auto populated onto NFTs
+      // minted with the candy machine, and add it to the list of creators for each NFT
+      const candyMachineCreatorPda = findCandyMachineV2CreatorPda(
+        candyMachine.address,
+      );
+      const nftCreators = [
+        {
+          address: candyMachineCreatorPda.toBase58(),
+          share: 0,
+        },
+        ...creators,
+      ];
+
+      const allNfts = await this.nft.getAll(collectionAddress.toBase58());
+      await Promise.all(
+        allNfts.map(async (nft) => {
+          const metaplexNft = await this.metaplex
+            .nfts()
+            .findByMint({ mintAddress: new PublicKey(nft.metadata.id) });
+
+          txs.push(
+            this.metaplex
+              .nfts()
+              .builders()
+              .update({
+                nftOrSft: metaplexNft,
+                creators: enforceCreator(
+                  nftCreators,
+                  this.metaplex.identity().publicKey,
+                ),
+              }),
+          );
+        }),
+      );
+
+      const results = await sendMultipartTransaction(txs, this.metaplex);
+      const tx = await this.metaplex.candyMachinesV2().update({
+        candyMachine: await this.getCandyMachine(),
+        creators: enforceCreator(creators, this.metaplex.identity().publicKey),
+      });
+
+      return [
+        {
+          signature: tx.response.signature,
+        },
+        ...results,
+      ];
+    } else {
+      const tx = await this.metaplex.candyMachinesV2().update({
+        candyMachine: await this.getCandyMachine(),
+        creators: enforceCreator(creators, this.metaplex.identity().publicKey),
+      });
+
+      return [
+        {
+          signature: tx.response.signature,
+        },
+      ];
+    }
   }
 
   /**
    * Update the royalty basis points of the collection
    * @param sellerFeeBasisPoints - the royalty basis points of the collection
+   * @param updateAll - whether or not to retroactively update the royalty basis points of all past NFTs
    */
-  async updateRoyalty(sellerFeeBasisPoints: number) {
-    const tx = await this.metaplex.candyMachinesV2().update({
-      candyMachine: await this.getCandyMachine(),
-      sellerFeeBasisPoints,
-    });
+  async updateRoyalty(
+    sellerFeeBasisPoints: number,
+    updateAll: boolean = false,
+  ) {
+    if (updateAll) {
+      const txs: TransactionBuilder[] = [];
 
-    return {
-      signature: tx.response.signature,
-    };
+      const candyMachine = await this.getCandyMachine();
+      const collectionAddress = candyMachine.collectionMintAddress;
+      invariant(collectionAddress, "Collection mint address not found");
+
+      const allNfts = await this.nft.getAll(collectionAddress.toBase58());
+      await Promise.all(
+        allNfts.map(async (nft) => {
+          const metaplexNft = await this.metaplex
+            .nfts()
+            .findByMint({ mintAddress: new PublicKey(nft.metadata.id) });
+
+          txs.push(
+            this.metaplex.nfts().builders().update({
+              nftOrSft: metaplexNft,
+              sellerFeeBasisPoints,
+            }),
+          );
+        }),
+      );
+
+      const results = await sendMultipartTransaction(txs, this.metaplex);
+      const tx = await this.metaplex.candyMachinesV2().update({
+        candyMachine: await this.getCandyMachine(),
+        sellerFeeBasisPoints,
+      });
+
+      return [
+        {
+          signature: tx.response.signature,
+        },
+        ...results,
+      ];
+    } else {
+      const tx = await this.metaplex.candyMachinesV2().update({
+        candyMachine: await this.getCandyMachine(),
+        sellerFeeBasisPoints,
+      });
+
+      return {
+        signature: tx.response.signature,
+      };
+    }
   }
 
   private async getCandyMachine() {

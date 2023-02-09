@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "3.7.2",
+  "version": "3.8.2",
   "description": "The main thirdweb SDK.",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/sdk",
   "license": "Apache-2.0",
@@ -54,7 +54,7 @@
     "generate-docs:solana": "api-extractor run --local --config ./config/api-extractor-solana.json && api-documenter markdown -i ./temp -o ./docs/solana && rm -rf ./temp-solana && mv ./temp ./temp-solana",
     "generate-snippets": "node ./scripts/generate-snippets.mjs && node ./scripts/generate-feature-snippets-evm.mjs",
     "build": "tsc && preconstruct build",
-    "test:evm:all": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --config './test/evm/.mocharc.json' --timeout 30000 --parallel './test/evm/**/*.test.ts'",
+    "test:evm:all": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --config './test/evm/.mocharc.json' --timeout 90000 --parallel './test/evm/**/*.test.ts'",
     "test:evm": "make test-evm",
     "test:evm:single": "SWC_NODE_PROJECT=./tsconfig.test.json mocha --config './test/evm/.mocharc.json' --timeout 90000",
     "node:solana:start": "DEBUG='amman:(info|error|debug)' amman start --forceClone",
@@ -137,6 +137,7 @@
   "dependencies": {
     "@thirdweb-dev/contracts-js": "*",
     "@thirdweb-dev/storage": "*",
+    "@thirdweb-dev/chains": "*",
     "bn.js": "^5.2.1",
     "bs58": "^5.0.0",
     "cross-fetch": "^3.1.5",

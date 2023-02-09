@@ -17,8 +17,11 @@ export class MockDownloader implements IStorageDownloader {
   }
 
   async download(url: string): Promise<Response> {
-    const [cid, name] = url.replace("mock://", "").split("/");
-    const data = this.storage[cid][name];
+    const [cid, name] = url.includes("mock://")
+      ? url.replace("mock://", "").split("/")
+      : url.replace("ipfs://", "").split("/");
+    const data = name ? this.storage[cid][name] : this.storage[cid];
+
     return {
       async json() {
         return Promise.resolve(JSON.parse(data));
