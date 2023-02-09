@@ -3,7 +3,7 @@ import {
   RequiredParam,
   requiredParamInvariant,
 } from "../../../core/query-utils/required-param";
-import { useSDK, useSDKChainId } from "../../providers/base";
+import { useSDK, useSDKChainId } from "../../providers/thirdweb-sdk-provider";
 import { ContractAddress } from "../../types";
 import {
   cacheKeys,

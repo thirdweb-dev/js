@@ -1,14 +1,14 @@
-import { useDesiredChainId } from "../providers/base";
+import { useSDKChainId } from "../providers/thirdweb-sdk-provider";
 import { useChainId } from "./wallet";
 
 /**
- * Hook for checking whether the connected wallet is on the correct network specified by the `desiredChainId` passed to the `<ThirdwebProvider />`.
+ * Hook for checking whether the connected wallet is on the correct network specified by the `network` passed to the `<ThirdwebProvider />`.
  *
  * ```javascript
  * import { useNetworkMistmatch } from "@thirdweb-dev/react"
  * ```
  *
- * @returns `true` if the chainId of the connected wallet is different from the desired chainId passed into <ThirdwebProvider />
+ * @returns `true` if the chainId of the connected wallet is different from the chainId of the network passed into <ThirdwebProvider />
  *
  * @example
  * You can check if a users wallet is connected to the correct chain ID as follows:
@@ -27,11 +27,16 @@ import { useChainId } from "./wallet";
  * @public
  */
 export function useNetworkMismatch() {
-  const desiredChainId = useDesiredChainId();
   const walletChainId = useChainId();
+  const sdkChainId = useSDKChainId();
 
-  if (desiredChainId === -1) {
-    // means no desiredChainId is set in the <ThirdwebProvider />, so we don't care about the network mismatch
+  if (!sdkChainId) {
+    // we don't know yet
+    return false;
+  }
+
+  if (sdkChainId === -1) {
+    // means no network is set in the <ThirdwebProvider />, so we don't care about the network mismatch
     return false;
   }
   if (!walletChainId) {
@@ -39,5 +44,5 @@ export function useNetworkMismatch() {
     return false;
   }
   // check if the chainIds are different
-  return desiredChainId !== walletChainId;
+  return sdkChainId !== walletChainId;
 }

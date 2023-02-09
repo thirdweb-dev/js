@@ -37,7 +37,9 @@ export type SUPPORTED_CHAIN_ID =
   | ChainId.Arbitrum
   | ChainId.ArbitrumGoerli
   | ChainId.BinanceSmartChainMainnet
-  | ChainId.BinanceSmartChainTestnet;
+  | ChainId.BinanceSmartChainTestnet
+  | ChainId.Hardhat
+  | ChainId.Localhost;
 
 /**
  * @public
@@ -57,4 +59,6 @@ export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[] = [
   ChainId.ArbitrumGoerli,
   ChainId.BinanceSmartChainMainnet,
   ChainId.BinanceSmartChainTestnet,
+  ChainId.Hardhat,
+  ChainId.Localhost,
 ];

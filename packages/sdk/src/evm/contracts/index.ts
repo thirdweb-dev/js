@@ -6,7 +6,7 @@ import { ALL_ROLES } from "../common/role";
 import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
 import type {
   ContractType,
-  NetworkOrSignerOrProvider,
+  NetworkInput,
   PrebuiltContractType,
 } from "../core/types";
 import {
@@ -32,7 +32,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 
 type InitalizeParams = [
-  network: NetworkOrSignerOrProvider,
+  network: NetworkInput,
   address: string,
   storage: ThirdwebStorage,
   options?: SDKOptions,

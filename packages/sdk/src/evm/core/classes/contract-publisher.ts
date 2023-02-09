@@ -26,7 +26,7 @@ import {
   PublishedContractSchema,
 } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
+import { NetworkInput, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import type {
@@ -48,7 +48,7 @@ export class ContractPublisher extends RPCConnectionHandler {
   private publisher: ContractWrapper<OnChainContractPublisher>;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     options: SDKOptions,
     storage: ThirdwebStorage,
   ) {
@@ -62,9 +62,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     );
   }
 
-  public override updateSignerOrProvider(
-    network: NetworkOrSignerOrProvider,
-  ): void {
+  public override updateSignerOrProvider(network: NetworkInput): void {
     super.updateSignerOrProvider(network);
     this.publisher.updateSignerOrProvider(network);
   }

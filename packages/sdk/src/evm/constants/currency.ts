@@ -1,5 +1,6 @@
 import { NativeToken } from "../types/currency";
 import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
+import { ethers } from "ethers";
 
 /**
  * @public
@@ -136,16 +137,6 @@ export const NATIVE_TOKENS: Record<
       symbol: "WETH",
     },
   },
-  [ChainId.Hardhat]: {
-    name: "Ether",
-    symbol: "ETH",
-    decimals: 18,
-    wrapped: {
-      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-      name: "Wrapped Ether",
-      symbol: "WETH",
-    },
-  },
   [ChainId.BinanceSmartChainMainnet]: {
     name: "Binance Chain Native Token",
     symbol: "BNB",
@@ -166,6 +157,26 @@ export const NATIVE_TOKENS: Record<
       symbol: "WBNB",
     },
   },
+  [ChainId.Hardhat]: {
+    name: "Ether",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
+  [ChainId.Localhost]: {
+    name: "Ether",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
 };
 
 /**
@@ -174,7 +185,18 @@ export const NATIVE_TOKENS: Record<
  * @public
  */
 export function getNativeTokenByChainId(chainId: ChainId): NativeToken {
-  return NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID];
+  return (
+    NATIVE_TOKENS[chainId as SUPPORTED_CHAIN_ID] || {
+      name: "Ether",
+      symbol: "ETH",
+      decimals: 18,
+      wrapped: {
+        address: ethers.constants.AddressZero,
+        name: "Wrapped Ether",
+        symbol: "WETH",
+      },
+    }
+  );
 }
 
 export const LINK_TOKEN_ADDRESS: Record<number, string> = {
