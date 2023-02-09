@@ -24,10 +24,11 @@
     "android"
   ],
   "dependencies": {
+    "@tanstack/react-query": "^4.0.10",
     "@thirdweb-dev/react-core": "*",
+    "@thirdweb-dev/chains": "*",
     "@thirdweb-dev/sdk": "*",
     "@thirdweb-dev/storage": "*",
-    "@tanstack/react-query": "^4.0.10",
     "tiny-invariant": "^1.2.0",
     "wagmi": "^0.11.0"
   },

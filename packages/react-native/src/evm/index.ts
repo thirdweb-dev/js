@@ -1,5 +1,5 @@
 // providers
-export * from "./providers/full";
+export * from "./providers/thirdweb-provider";
 
 // require to be inside `<ThirdwebProvider />`
 export * from "./hooks/wagmi-required/useAccount";
