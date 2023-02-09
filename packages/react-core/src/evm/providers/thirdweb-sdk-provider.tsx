@@ -128,6 +128,10 @@ const WrappedThirdwebSDKProvider = <
           chainId = undefined;
         }
       }
+      // if the chainId is not in the chains we'll need to null it out here
+      if (!mergedChains.find((c) => c.chainId === chainId)) {
+        chainId = undefined;
+      }
       sdk_ = ThirdwebSDK.fromSigner(
         signer,
         chainId,
