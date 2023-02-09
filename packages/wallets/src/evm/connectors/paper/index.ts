@@ -29,7 +29,6 @@ export class PaperWalletConnector extends Connector<
   ready: boolean = true;
 
   private user: InitializedUser | null = null;
-  // initialize the SDK
   private paper: PaperEmbeddedWalletSdk;
 
   constructor({
@@ -46,12 +45,13 @@ export class PaperWalletConnector extends Connector<
     });
   }
 
+  // TODO define our own connector interface
   async connect({ chainId }: { chainId?: number } = {}) {
     let getUser = await this.paper.getUser();
     switch (getUser.status) {
       case UserStatus.LOGGED_OUT: {
         const authResult = await this.paper.auth.loginWithPaperEmailOtp({
-          email: "joaquim@thirdweb.com",
+          email: "joaquim@thirdweb.com", // TODO as typed param in connect
         });
         this.user = authResult.user;
         break;

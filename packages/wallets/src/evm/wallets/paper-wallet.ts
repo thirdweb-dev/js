@@ -15,7 +15,6 @@ export class PaperWallet extends AbstractBrowserWallet<PaperOptions> {
     return "Paper Wallet" as const;
   }
 
-  // TODO wallet type in the Wallet Options
   constructor(options: WalletOptions<PaperOptions>) {
     super(PaperWallet.id, {
       ...options,
@@ -25,7 +24,6 @@ export class PaperWallet extends AbstractBrowserWallet<PaperOptions> {
 
   protected async getConnector(): Promise<PaperWalletConnector> {
     if (!this.#connector) {
-      // import the connector dynamically
       const chainName = PaperChainMap[this.options.chainId];
       if (!chainName) {
         throw new Error("Unsupported chain id: " + this.options.chainId);
