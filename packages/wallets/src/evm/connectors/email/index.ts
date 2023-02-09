@@ -1,16 +1,15 @@
+import { ConnectParams, TWConnector } from "../../interfaces/tw-connector";
+import {
+  EmailWalletConnectionArgs,
+  EmailWalletConnectorOptions,
+} from "./types";
 import {
   Chains,
   InitializedUser,
   PaperEmbeddedWalletSdk,
   UserStatus,
 } from "@paperxyz/embedded-wallet-service-sdk";
-import { Chain, Connector } from "@wagmi/core";
 import { ethers, Signer } from "ethers";
-
-interface PaperConnectorOptions {
-  clientId: string;
-  chain: Chains;
-}
 
 export const PaperChainMap: Record<number, Chains> = {
   1: "Ethereum",
@@ -19,11 +18,7 @@ export const PaperChainMap: Record<number, Chains> = {
   80001: "Mumbai",
 };
 
-export class PaperWalletConnector extends Connector<
-  ethers.providers.Provider,
-  PaperConnectorOptions,
-  ethers.Signer
-> {
+export class PaperWalletConnector extends TWConnector<EmailWalletConnectionArgs> {
   readonly id: string = "paper-wallet";
   readonly name: string = "Paper Wallet";
   ready: boolean = true;
@@ -31,27 +26,25 @@ export class PaperWalletConnector extends Connector<
   private user: InitializedUser | null = null;
   private paper: PaperEmbeddedWalletSdk;
 
-  constructor({
-    chains,
-    options,
-  }: {
-    chains?: Chain[];
-    options: PaperConnectorOptions;
-  }) {
-    super({ chains, options });
+  constructor(options: EmailWalletConnectorOptions) {
+    super();
     this.paper = new PaperEmbeddedWalletSdk({
       clientId: options.clientId,
-      chain: options.chain, // TODO map chain to paper chain
+      chain: options.chain,
     });
   }
 
   // TODO define our own connector interface
-  async connect({ chainId }: { chainId?: number } = {}) {
+  async connect(args?: ConnectParams<EmailWalletConnectionArgs>) {
+    const email = args?.email;
+    if (!email) {
+      throw new Error("No Email provided");
+    }
     let getUser = await this.paper.getUser();
     switch (getUser.status) {
       case UserStatus.LOGGED_OUT: {
         const authResult = await this.paper.auth.loginWithPaperEmailOtp({
-          email: "joaquim@thirdweb.com", // TODO as typed param in connect
+          email,
         });
         this.user = authResult.user;
         break;
@@ -64,23 +57,22 @@ export class PaperWalletConnector extends Connector<
     if (!this.user) {
       throw new Error("Error connecting User");
     }
-    return {
-      account: await this.getAccount(),
-      chain: { id: await this.getChainId(), unsupported: false },
-      provider: this.getProvider(),
-    };
+    return this.getAddress();
   }
 
   async disconnect(): Promise<void> {
     this.user = null;
   }
-  async getAccount(): Promise<`0x${string}`> {
-    const addr = await this.getUser().wallet.getAddress();
-    return addr as `0x${string}`;
+  async getAddress(): Promise<string> {
+    return await this.getUser().wallet.getAddress();
   }
-
-  async getChainId(): Promise<number> {
-    return Promise.resolve(80001); // TODO map chain to paper chain
+  async isConnected(): Promise<boolean> {
+    try {
+      const addr = await this.getAddress();
+      return !!addr;
+    } catch (e) {
+      return false;
+    }
   }
 
   async getProvider(): Promise<ethers.providers.Provider> {
@@ -104,22 +96,13 @@ export class PaperWalletConnector extends Connector<
     return false;
   }
 
-  async switchChain(chainId: number): Promise<Chain> {
+  async switchChain(chainId: number): Promise<void> {
     const chainName = PaperChainMap[chainId];
     if (!chainName) {
       throw new Error("Chain not supported");
     }
     this.user?.wallet.setChain({ chain: chainName });
-    const chain = this.chains.find((c) => c.id === chainId);
-    if (!chain) {
-      throw new Error("Chain not found");
-    }
-    return chain;
   }
-
-  protected onAccountsChanged(accounts: `0x${string}`[]): void {}
-  protected onChainChanged(chain: string | number): void {}
-  protected onDisconnect(error: Error): void {}
 
   private getUser() {
     if (!this.user) {

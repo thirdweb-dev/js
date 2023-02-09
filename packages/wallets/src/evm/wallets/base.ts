@@ -1,7 +1,8 @@
 import { thirdwebChains } from "../constants/chains";
+import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
 import { getCoordinatorStorage, getWalletStorage } from "../utils/storage";
 import { AbstractWallet } from "./abstract";
-import type { Chain, Connector as WagmiConnector } from "@wagmi/core";
+import type { Chain } from "@wagmi/core";
 
 export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   chains?: Chain[];
@@ -12,6 +13,7 @@ export type WalletOptions<TOpts extends Record<string, any> = {}> = {
 
 export abstract class AbstractBrowserWallet<
   TAdditionalOpts extends Record<string, any> = {},
+  TConnectParams extends Record<string, any> = {},
 > extends AbstractWallet {
   #wallletId;
   protected coordinatorStorage;
@@ -31,39 +33,36 @@ export abstract class AbstractBrowserWallet<
     }
   }
 
+  protected abstract getConnector(): Promise<TWConnector<TConnectParams>>;
+
   async autoConnect() {
     const lastConnectedWallet = await this.coordinatorStorage.getItem(
       "lastConnectedWallet",
     );
 
     if (lastConnectedWallet === this.#wallletId) {
-      const lastConnectedChain = await this.walletStorage.getItem(
-        "lastConnectedChain",
+      const lastConnectionParams = await this.walletStorage.getItem(
+        "lasConnectedParams",
       );
-      let parsedChain: number | undefined;
+      let parsedParams: ConnectParams<TConnectParams> | undefined;
 
       try {
-        parsedChain = parseInt(lastConnectedChain as string);
-        if (isNaN(parsedChain)) {
-          parsedChain = undefined;
-        }
+        parsedParams = JSON.parse(lastConnectionParams as string);
       } catch {
-        parsedChain = undefined;
+        parsedParams = undefined;
       }
 
       const connector = await this.getConnector();
 
-      if (await connector.isAuthorized()) {
-        return await this.connect(parsedChain);
+      if (await connector.isConnected()) {
+        return await this.connect(parsedParams);
       }
     }
   }
 
-  protected abstract getConnector(): Promise<WagmiConnector>;
-
   async connect(
-    chainId?: number,
-  ): Promise<{ address: string; chainId: number }> {
+    connectOptions?: ConnectParams<TConnectParams>,
+  ): Promise<string> {
     const connector = await this.getConnector();
     // setup listeners to re-expose events
     connector.on("connect", (data) => {
@@ -83,7 +82,7 @@ export abstract class AbstractBrowserWallet<
     connector.on("disconnect", () => this.emit("disconnect"));
     connector.on("error", (error) => this.emit("error", error));
     // end event listener setups
-    let connectionRes = await connector.connect({ chainId });
+    let connectedAddress = await connector.connect(connectOptions);
     // do not break on coordinator error
     try {
       await this.coordinatorStorage.setItem(
@@ -92,18 +91,15 @@ export abstract class AbstractBrowserWallet<
       );
     } catch {}
 
-    return {
-      address: connectionRes.account,
-      chainId: connectionRes.chain?.id,
-    };
+    return connectedAddress;
   }
 
-  async getSigner(chainId?: number) {
+  async getSigner() {
     const connector = await this.getConnector();
     if (!connector) {
       throw new Error("Wallet not connected");
     }
-    return await connector.getSigner({ chainId });
+    return await connector.getSigner();
   }
 
   public async disconnect() {
@@ -121,7 +117,7 @@ export abstract class AbstractBrowserWallet<
     }
   }
 
-  async switchChain(chainId: number): Promise<Chain> {
+  async switchChain(chainId: number): Promise<void> {
     const connector = await this.getConnector();
     if (!connector) {
       throw new Error("Wallet not connected");

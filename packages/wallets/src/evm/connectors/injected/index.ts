@@ -1,3 +1,4 @@
+import { WagmiAdapter } from "../../interfaces/tw-connector";
 import { getInjectedName } from "../../utils/getInjectedName";
 import { getConnectorStorage } from "../../utils/storage";
 import {

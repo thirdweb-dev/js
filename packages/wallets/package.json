@@ -60,17 +60,17 @@
       "module": "./evm/wallets/private-key/dist/thirdweb-dev-wallets-evm-wallets-private-key.esm.js",
       "default": "./evm/wallets/private-key/dist/thirdweb-dev-wallets-evm-wallets-private-key.cjs.js"
     },
-    "./evm/wallets/paper-wallet": {
-      "module": "./evm/wallets/paper-wallet/dist/thirdweb-dev-wallets-evm-wallets-paper-wallet.esm.js",
-      "default": "./evm/wallets/paper-wallet/dist/thirdweb-dev-wallets-evm-wallets-paper-wallet.cjs.js"
+    "./evm/wallets/email-wallet": {
+      "module": "./evm/wallets/email-wallet/dist/thirdweb-dev-wallets-evm-wallets-email-wallet.esm.js",
+      "default": "./evm/wallets/email-wallet/dist/thirdweb-dev-wallets-evm-wallets-email-wallet.cjs.js"
+    },
+    "./evm/connectors/email": {
+      "module": "./evm/connectors/email/dist/thirdweb-dev-wallets-evm-connectors-email.esm.js",
+      "default": "./evm/connectors/email/dist/thirdweb-dev-wallets-evm-connectors-email.cjs.js"
     },
     "./evm/connectors/magic": {
       "module": "./evm/connectors/magic/dist/thirdweb-dev-wallets-evm-connectors-magic.esm.js",
       "default": "./evm/connectors/magic/dist/thirdweb-dev-wallets-evm-connectors-magic.cjs.js"
-    },
-    "./evm/connectors/paper": {
-      "module": "./evm/connectors/paper/dist/thirdweb-dev-wallets-evm-connectors-paper.esm.js",
-      "default": "./evm/connectors/paper/dist/thirdweb-dev-wallets-evm-connectors-paper.cjs.js"
     },
     "./evm/wallets/wallet-connect": {
       "module": "./evm/wallets/wallet-connect/dist/thirdweb-dev-wallets-evm-wallets-wallet-connect.esm.js",
