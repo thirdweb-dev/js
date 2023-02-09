@@ -230,10 +230,10 @@ export const ThirdwebProvider = <
   // construct the wagmi options
 
   if (chainRpc) {
-    showDeprecationWarning("chainRpc", "chains");
+    showDeprecationWarning("chainRpc", "supportedChains");
   }
   if (desiredChainId) {
-    showDeprecationWarning("desiredChainId", "network");
+    showDeprecationWarning("desiredChainId", "activeChain");
   }
 
   const mergedChains = useMemo(() => {
