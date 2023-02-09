@@ -9,6 +9,7 @@ import {
   TrackedLink,
   TrackedLinkProps,
 } from "tw-components";
+import { NFTMediaWithEmptyState } from "tw-components/nft-media";
 
 interface NFTDetailsProps {
   contract: SmartContract;
@@ -23,7 +24,18 @@ export const NFTDetails: React.FC<NFTDetailsProps> = ({
 }) => {
   return (
     <Flex direction="column" gap={6}>
-      <Heading size="title.sm">NFT Details</Heading>
+      <Flex align="center" justify="space-between" w="full">
+        <Heading size="title.sm">NFT Details</Heading>
+        <TrackedLink
+          category={trackingCategory}
+          label="view_all_nfts"
+          color="blue.600"
+          gap={4}
+          href="/nfts"
+        >
+          View all -&gt;
+        </TrackedLink>
+      </Flex>
       {[
         "ERC721ClaimPhasesV1",
         "ERC721ClaimPhasesV2",
@@ -42,58 +54,30 @@ interface ContractOverviewNFTGetAllProps {
   contract: NFTContract;
   trackingCategory: TrackedLinkProps["category"];
 }
-export const NFTCards: React.FC<ContractOverviewNFTGetAllProps> = ({
-  contract,
-  trackingCategory,
-}) => {
+const NFTCards: React.FC<ContractOverviewNFTGetAllProps> = ({ contract }) => {
   const getNFTQueryResult = useNFTs(contract, { count: 3 });
 
   return getNFTQueryResult?.data?.length === 0 ? null : (
-    <>
-      <Flex align="center" justify="end" w="full">
-        <TrackedLink
-          category={trackingCategory}
-          label="view_all_nfts"
-          color="blue.600"
-          gap={4}
-          href="/nfts"
-        >
-          View all -&gt;
-        </TrackedLink>
-      </Flex>
-      <SimpleGrid gap={4} columns={{ base: 1, md: 3 }}>
-        {getNFTQueryResult.data?.map((token) => (
-          <GridItem as={Card} key={token.owner} p={0}>
-            {token.metadata.image && (
-              <Box
-                w="100%"
-                pt="100%"
-                position="relative"
-                overflow="hidden"
-                roundedTop="xl"
-              >
-                <Image
-                  w="100%"
-                  src={token.metadata.image}
-                  alt=""
-                  inset={0}
-                  position="absolute"
-                />
-              </Box>
-            )}
-            <Box p={6} pt={4}>
-              <Heading size="label.md">{token.metadata.name}</Heading>
-              <Text mt={1}>
-                {token.metadata.description ? (
-                  token.metadata.description
-                ) : (
-                  <i>No description</i>
-                )}
-              </Text>
+    <SimpleGrid gap={4} columns={{ base: 1, md: 3 }}>
+      {getNFTQueryResult.data?.map((token) => (
+        <GridItem as={Card} key={token.owner} p={0}>
+          {token.metadata.image && (
+            <Box w="100%" overflow="hidden" roundedTop="xl">
+              <NFTMediaWithEmptyState metadata={token.metadata} />
             </Box>
-          </GridItem>
-        ))}
-      </SimpleGrid>
-    </>
+          )}
+          <Box p={6} pt={4}>
+            <Heading size="label.md">{token.metadata.name}</Heading>
+            <Text mt={2} noOfLines={3}>
+              {token.metadata.description ? (
+                token.metadata.description
+              ) : (
+                <i>No description</i>
+              )}
+            </Text>
+          </Box>
+        </GridItem>
+      ))}
+    </SimpleGrid>
   );
 };

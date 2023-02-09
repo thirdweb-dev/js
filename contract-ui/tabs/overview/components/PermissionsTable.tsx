@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useAllRoleMembers } from "@thirdweb-dev/react";
 import { SmartContract } from "@thirdweb-dev/sdk";
+import { constants } from "ethers";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo } from "react";
 import { FiCopy } from "react-icons/fi";
@@ -50,7 +51,7 @@ export const PermissionsTable: React.FC<PermissionsTableProps> = ({
         },
         [] as { member: string; roles: string[] }[],
       ) || []
-    );
+    ).filter((m) => m.member !== constants.AddressZero);
   }, [allRoleMembers.data]);
 
   return (
@@ -93,14 +94,16 @@ export const PermissionsTable: React.FC<PermissionsTableProps> = ({
               <Center py={4}>
                 <Flex align="center" gap={2}>
                   <Text size="body.md" fontStyle="italic">
-                    {"no permissions to show"}
+                    {allRoleMembers.isLoading
+                      ? "loading permissions"
+                      : "no permissions found"}
                   </Text>
                 </Flex>
               </Center>
             )}
             <AnimatePresence initial={false}>
-              {members?.slice(0, 3).map((e) => (
-                <EventsFeedItem key={e.member} data={e} />
+              {members.map((e) => (
+                <PermissionsItem key={e.member} data={e} />
               ))}
             </AnimatePresence>
           </List>
@@ -110,11 +113,11 @@ export const PermissionsTable: React.FC<PermissionsTableProps> = ({
   );
 };
 
-interface EventsFeedItemProps {
+interface PermissionsItemProps {
   data: { member: string; roles: string[] };
 }
 
-export const EventsFeedItem: React.FC<EventsFeedItemProps> = ({ data }) => {
+export const PermissionsItem: React.FC<PermissionsItemProps> = ({ data }) => {
   const toast = useToast();
   const { onCopy, setValue } = useClipboard(data.member);
 
@@ -200,21 +203,21 @@ export const EventsFeedItem: React.FC<EventsFeedItemProps> = ({ data }) => {
         <Box gridColumn="span 1" />
 
         <Flex gridColumn="span 6" flexWrap="wrap" gap={2}>
-          {data.roles.slice(0, 2).map((role, idx) => (
+          {data.roles.slice(0, 3).map((role, idx) => (
             <Tag key={idx}>
               <Text size="body.md" fontWeight="medium">
                 {role}
               </Text>
             </Tag>
           ))}
-          {data.roles.length > 2 && (
+          {data.roles.length > 3 && (
             <Tag
               border="2px solid"
               borderColor="var(--badge-bg)"
               bg="transparent"
             >
               <Text size="body.md" fontWeight="medium">
-                + {data.roles.length - 2}
+                + {data.roles.length - 3}
               </Text>
             </Tag>
           )}
