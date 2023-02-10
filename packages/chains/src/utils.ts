@@ -75,6 +75,9 @@ export function getChainRPCs(
   return orderedRPCs;
 }
 
-export function getChainRPC(chain: Pick<Chain, "rpc" | "chainId">): string {
-  return getChainRPCs(chain)[0];
+export function getChainRPC(
+  chain: Pick<Chain, "rpc" | "chainId">,
+  options?: ChainRPCOptions,
+): string {
+  return getChainRPCs(chain, options)[0];
 }
