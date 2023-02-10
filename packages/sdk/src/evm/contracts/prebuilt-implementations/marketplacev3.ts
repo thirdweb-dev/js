@@ -16,12 +16,12 @@ import { MarketplaceV3DirectListings } from "../../core/classes/marketplacev3-di
 import { MarketplaceV3EnglishAuctions } from "../../core/classes/marketplacev3-english-auction";
 import { MarketplaceV3Offers } from "../../core/classes/marketplacev3-offers";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
-import { NetworkOrSignerOrProvider } from "../../core/types";
+import { NetworkInput } from "../../core/types";
 import { Abi } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
 import { SDKOptions } from "../../schema/sdk-options";
 import type {
-  MarketplaceRouter,
+  MarketplaceV3 as MarketplaceV3Contract,
   DirectListingsLogic,
   EnglishAuctionsLogic,
   OffersLogic,
@@ -47,25 +47,25 @@ export class MarketplaceV3 implements UpdateableNetwork {
   static contractRoles = ["admin", "lister", "asset"] as const;
 
   public abi: Abi;
-  private contractWrapper: ContractWrapper<MarketplaceRouter>;
+  private contractWrapper: ContractWrapper<MarketplaceV3Contract>;
   private storage: ThirdwebStorage;
 
-  public encoder: ContractEncoder<MarketplaceRouter>;
-  public events: ContractEvents<MarketplaceRouter>;
-  public estimator: GasCostEstimator<MarketplaceRouter>;
-  public platformFees: ContractPlatformFee<MarketplaceRouter>;
+  public encoder: ContractEncoder<MarketplaceV3Contract>;
+  public events: ContractEvents<MarketplaceV3Contract>;
+  public estimator: GasCostEstimator<MarketplaceV3Contract>;
+  public platformFees: ContractPlatformFee<MarketplaceV3Contract>;
   public metadata: ContractMetadata<
-    MarketplaceRouter,
+    MarketplaceV3Contract,
     typeof MarketplaceContractSchema
   >;
   public roles: ContractRoles<
-    MarketplaceRouter,
+    MarketplaceV3Contract,
     typeof MarketplaceV3.contractRoles[number]
   >;
   /**
    * @internal
    */
-  public interceptor: ContractInterceptor<MarketplaceRouter>;
+  public interceptor: ContractInterceptor<MarketplaceV3Contract>;
   /**
    * Direct listings
    * @remarks Create and manage direct listings in your marketplace.
@@ -196,13 +196,13 @@ export class MarketplaceV3 implements UpdateableNetwork {
   }
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
     abi: Abi,
     chainId: number,
-    contractWrapper = new ContractWrapper<MarketplaceRouter>(
+    contractWrapper = new ContractWrapper<MarketplaceV3Contract>(
       network,
       address,
       abi,
@@ -229,7 +229,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
-  onNetworkUpdated(network: NetworkOrSignerOrProvider) {
+  onNetworkUpdated(network: NetworkInput) {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 

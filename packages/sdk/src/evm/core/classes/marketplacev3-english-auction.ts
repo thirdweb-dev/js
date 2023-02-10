@@ -23,6 +23,7 @@ import { ContractEncoder } from "./contract-encoder";
 import { ContractEvents } from "./contract-events";
 import { ContractInterceptor } from "./contract-interceptor";
 import { ContractWrapper } from "./contract-wrapper";
+import { GasCostEstimator } from "./gas-cost-estimator";
 import type {
   IEnglishAuctions,
   EnglishAuctionsLogic,
@@ -48,6 +49,7 @@ export class MarketplaceV3EnglishAuctions<
   public events: ContractEvents<EnglishAuctionsLogic>;
   public interceptor: ContractInterceptor<EnglishAuctionsLogic>;
   public encoder: ContractEncoder<EnglishAuctionsLogic>;
+  public estimator: GasCostEstimator<EnglishAuctionsLogic>;
 
   constructor(
     contractWrapper: ContractWrapper<TContract>,
@@ -55,13 +57,10 @@ export class MarketplaceV3EnglishAuctions<
   ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
-    this.events = new ContractEvents<EnglishAuctionsLogic>(
-      this.contractWrapper,
-    );
-    this.encoder = new ContractEncoder<EnglishAuctionsLogic>(contractWrapper);
-    this.interceptor = new ContractInterceptor<EnglishAuctionsLogic>(
-      this.contractWrapper,
-    );
+    this.events = new ContractEvents(this.contractWrapper);
+    this.encoder = new ContractEncoder(this.contractWrapper);
+    this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.estimator = new GasCostEstimator(this.contractWrapper);
   }
 
   getAddress(): string {
@@ -441,7 +440,10 @@ export class MarketplaceV3EnglishAuctions<
       throw new Error("Cannot make a bid with 0 value");
     }
 
-    if (normalizedBidAmount.gt(auction.buyoutBidAmount)) {
+    if (
+      BigNumber.from(auction.buyoutBidAmount).gt(0) &&
+      normalizedBidAmount.gt(auction.buyoutBidAmount)
+    ) {
       throw new Error(
         "Bid amount must be less than or equal to buyoutBidAmount",
       );

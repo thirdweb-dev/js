@@ -21,6 +21,7 @@ import { ContractEncoder } from "./contract-encoder";
 import { ContractEvents } from "./contract-events";
 import { ContractInterceptor } from "./contract-interceptor";
 import { ContractWrapper } from "./contract-wrapper";
+import { GasCostEstimator } from "./gas-cost-estimator";
 import type { IERC20, IOffers, OffersLogic } from "@thirdweb-dev/contracts-js";
 import ERC20Abi from "@thirdweb-dev/contracts-js/dist/abis/IERC20.json";
 import { NewOfferEvent } from "@thirdweb-dev/contracts-js/dist/declarations/src/OffersLogic";
@@ -42,6 +43,7 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
   public events: ContractEvents<OffersLogic>;
   public interceptor: ContractInterceptor<OffersLogic>;
   public encoder: ContractEncoder<OffersLogic>;
+  public estimator: GasCostEstimator<OffersLogic>;
 
   constructor(
     contractWrapper: ContractWrapper<TContract>,
@@ -50,11 +52,10 @@ export class MarketplaceV3Offers<TContract extends OffersLogic>
     this.contractWrapper = contractWrapper;
     this.storage = storage;
 
-    this.events = new ContractEvents<OffersLogic>(this.contractWrapper);
-    this.encoder = new ContractEncoder<OffersLogic>(contractWrapper);
-    this.interceptor = new ContractInterceptor<OffersLogic>(
-      this.contractWrapper,
-    );
+    this.events = new ContractEvents(this.contractWrapper);
+    this.encoder = new ContractEncoder(this.contractWrapper);
+    this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.estimator = new GasCostEstimator(this.contractWrapper);
   }
 
   getAddress(): string {

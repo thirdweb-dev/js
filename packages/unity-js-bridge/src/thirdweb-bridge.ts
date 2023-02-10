@@ -1,11 +1,6 @@
 /// --- Thirdweb Brige ---
 import { CoinbasePayIntegration, FundWalletOptions } from "@thirdweb-dev/pay";
-import {
-  ChainOrRpc,
-  ThirdwebSDK,
-  getRpcUrl,
-  SDKOptionsSchema,
-} from "@thirdweb-dev/sdk";
+import { ThirdwebSDK, ChainIdOrName } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { AbstractBrowserWallet } from "@thirdweb-dev/wallets/evm/wallets/base";
 import { CoinbaseWallet } from "@thirdweb-dev/wallets/evm/wallets/coinbase-wallet";
@@ -59,7 +54,7 @@ type FundWalletInput = FundWalletOptions & {
 };
 
 interface TWBridge {
-  initialize: (chain: ChainOrRpc, options: string) => void;
+  initialize: (chain: ChainIdOrName, options: string) => void;
   connect: (wallet: PossibleWallet, chainId?: number) => Promise<string>;
   disconnect: () => Promise<void>;
   switchNetwork: (chainId: number) => Promise<void>;
@@ -72,7 +67,7 @@ const w = window;
 class ThirdwebBridge implements TWBridge {
   private walletMap: Map<string, AbstractBrowserWallet> = new Map();
   private activeWallet: AbstractBrowserWallet | undefined;
-  private initializedChain: ChainOrRpc | undefined;
+  private initializedChain: ChainIdOrName | undefined;
   private activeSDK: ThirdwebSDK | undefined;
 
   private updateSDKSigner(signer?: Signer) {
@@ -87,7 +82,7 @@ class ThirdwebBridge implements TWBridge {
     }
   }
 
-  public initialize(chain: ChainOrRpc, options: string) {
+  public initialize(chain: ChainIdOrName, options: string) {
     this.initializedChain = chain;
     console.debug("thirdwebSDK initialization:", chain, options);
     const sdkOptions = JSON.parse(options);
@@ -99,8 +94,8 @@ class ThirdwebBridge implements TWBridge {
             },
           })
         : new ThirdwebStorage();
-    const rpcUrl = chain.startsWith("http") ? chain : getRpcUrl(chain, API_KEY);
-    this.activeSDK = new ThirdwebSDK(rpcUrl, sdkOptions, storage);
+    sdkOptions.thirdwebApiKey = sdkOptions.thirdwebApiKey || API_KEY;
+    this.activeSDK = new ThirdwebSDK(chain, sdkOptions, storage);
     for (let wallet of WALLETS) {
       const walletInstance = new wallet({
         appName: sdkOptions.wallet?.appName || "thirdweb powered dApp",
@@ -129,7 +124,7 @@ class ThirdwebBridge implements TWBridge {
     }
     const walletInstance = this.walletMap.get(wallet);
     if (walletInstance) {
-      await walletInstance.connect(chainId);
+      await walletInstance.connect({ chainId });
       this.activeWallet = walletInstance;
       this.updateSDKSigner(await walletInstance.getSigner());
       return await this.activeSDK.wallet.getAddress();

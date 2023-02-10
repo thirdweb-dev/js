@@ -7,12 +7,12 @@ import {
   EditionDropInitializer,
   EditionInitializer,
   getNativeTokenByChainId,
+  LOCAL_NODE_PKEY,
   MarketplaceInitializer,
   MultiwrapInitializer,
   NFTCollectionInitializer,
   NFTDropInitializer,
   PackInitializer,
-  resolveContractUriFromAddress,
   SignatureDropInitializer,
   SplitInitializer,
   ThirdwebSDK,
@@ -21,8 +21,9 @@ import {
   VoteInitializer,
 } from "../../src/evm";
 import { Plugin } from "../../src/evm/types/plugins";
-import { MockStorage, mockUploadWithCID } from "./mock/MockStorage";
+import { MockStorage } from "./mock/MockStorage";
 import weth from "./mock/WETH9.json";
+import { deployContractAndUploadMetadata } from "./utils";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   ContractPublisher,
@@ -55,14 +56,10 @@ import {
   PluginMap,
   PluginMap__factory,
   VoteERC20__factory,
-  MarketplaceRouter__factory,
+  MarketplaceV3__factory,
   DirectListingsLogic__factory,
-  DirectListingsLogic,
-  MarketplaceRouter,
   EnglishAuctionsLogic__factory,
-  EnglishAuctionsLogic,
   OffersLogic__factory,
-  OffersLogic,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -313,34 +310,6 @@ const generatePluginFunctions = (
   return pluginFunctions;
 };
 
-const mockUploadContractMetadata = async (address: string, abi: any) => {
-  const ipfsHash = (await resolveContractUriFromAddress(
-    address,
-    defaultProvider,
-  )) as string;
-
-  const metadata = {
-    compiler: {},
-    output: {
-      abi,
-      devdoc: {},
-      userdoc: {},
-    },
-    settings: {
-      compilationTarget: {},
-      evmVersion: {},
-      metadata: {},
-      optimizer: {},
-      remappings: [],
-    },
-    sources: {},
-    version: 1,
-  };
-  const cid = ipfsHash.replace("ipfs://", "");
-
-  await mockUploadWithCID(cid, JSON.stringify(metadata));
-};
-
 // Setup multichain registry for tests
 async function setupMultichainRegistry(
   trustedForwarderAddress: string,
@@ -382,89 +351,57 @@ async function setupMultichainRegistry(
 
 // Setup marketplace-v3 for tests
 async function setupMarketplaceV3(): Promise<string> {
-  const nativeTokenWrapperAddress = getNativeTokenByChainId(ChainId.Hardhat)
-    .wrapped.address;
   // Direct Listings
-  const directListingsLogicDeployer = (await new ethers.ContractFactory(
+  const directListingsPluginAddress = await deployContractAndUploadMetadata(
     DirectListingsLogic__factory.abi,
     DirectListingsLogic__factory.bytecode,
-  )
-    .connect(signer)
-    .deploy(mock_weth_address)) as DirectListingsLogic;
-  const directListingsLogic = await directListingsLogicDeployer.deployed();
-  await mockUploadContractMetadata(
-    directListingsLogic.address,
-    DirectListingsLogic__factory.abi,
+    signer,
+    [mock_weth_address],
   );
-
   const pluginsDirectListings: Plugin[] = generatePluginFunctions(
-    directListingsLogic.address,
+    directListingsPluginAddress,
     DirectListingsLogic__factory.abi,
   );
 
   // English Auctions
-  const englishAuctionsLogicDeployer = (await new ethers.ContractFactory(
+  const englishAuctionPluginAddress = await deployContractAndUploadMetadata(
     EnglishAuctionsLogic__factory.abi,
     EnglishAuctionsLogic__factory.bytecode,
-  )
-    .connect(signer)
-    .deploy(mock_weth_address)) as EnglishAuctionsLogic;
-  const englishAuctionsLogic = await englishAuctionsLogicDeployer.deployed();
-  await mockUploadContractMetadata(
-    englishAuctionsLogic.address,
-    EnglishAuctionsLogic__factory.abi,
+    signer,
+    [mock_weth_address],
   );
-
   const pluginsEnglishAuctions: Plugin[] = generatePluginFunctions(
-    englishAuctionsLogic.address,
+    englishAuctionPluginAddress,
     EnglishAuctionsLogic__factory.abi,
   );
 
   // Offers
-  const offersLogicDeployer = (await new ethers.ContractFactory(
+  const offersLogicPluginAddress = await deployContractAndUploadMetadata(
     OffersLogic__factory.abi,
     OffersLogic__factory.bytecode,
-  )
-    .connect(signer)
-    .deploy()) as OffersLogic;
-  const offersLogic = await offersLogicDeployer.deployed();
-  await mockUploadContractMetadata(
-    offersLogic.address,
-    OffersLogic__factory.abi,
+    signer,
   );
-
   const pluginsOffers: Plugin[] = generatePluginFunctions(
-    offersLogic.address,
+    offersLogicPluginAddress,
     OffersLogic__factory.abi,
   );
 
-  // console.log([
-  //   ...pluginsDirectListings,
-  //   ...pluginsEnglishAuctions,
-  //   ...pluginsOffers,
-  // ]);
-
-  const pluginMapDeployer = (await new ethers.ContractFactory(
+  // Map
+  const pluginMapAddress = await deployContractAndUploadMetadata(
     PluginMap__factory.abi,
     PluginMap__factory.bytecode,
-  )
-    .connect(signer)
-    .deploy([
-      ...pluginsDirectListings,
-      ...pluginsEnglishAuctions,
-      ...pluginsOffers,
-    ])) as PluginMap;
-  const pluginMap = await pluginMapDeployer.deployed();
+    signer,
+    [[...pluginsDirectListings, ...pluginsEnglishAuctions, ...pluginsOffers]],
+  );
 
-  const marketplaceRouterDeployer = (await new ethers.ContractFactory(
-    MarketplaceRouter__factory.abi,
-    MarketplaceRouter__factory.bytecode,
-  )
-    .connect(signer)
-    .deploy(pluginMap.address)) as MarketplaceRouter;
-  const marketplaceRouter = await marketplaceRouterDeployer.deployed();
-
-  return marketplaceRouter.address;
+  // Router
+  const marketplaceV3Address = await deployContractAndUploadMetadata(
+    MarketplaceV3__factory.abi,
+    MarketplaceV3__factory.bytecode,
+    signer,
+    [pluginMapAddress],
+  );
+  return marketplaceV3Address;
 }
 
 export {

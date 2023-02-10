@@ -1,29 +1,31 @@
-import type { WalletConnectConnector } from "../connectors/wallet-connect";
+import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 
 export class WalletConnect extends AbstractBrowserWallet {
-  #connector?: WalletConnectConnector;
+  #connector?: TWConnector;
 
   static id = "walletConnect" as const;
 
   public get walletName() {
-    return this.#connector?.name || ("WalletConnect" as const);
+    return "WalletConnect" as const;
   }
 
   constructor(options: WalletOptions) {
     super(WalletConnect.id, options);
   }
 
-  protected async getConnector(): Promise<WalletConnectConnector> {
+  protected async getConnector(): Promise<TWConnector> {
     if (!this.#connector) {
       // import the connector dynamically
       const { WalletConnectConnector } = await import(
         "../connectors/wallet-connect"
       );
-      this.#connector = new WalletConnectConnector({
-        chains: this.chains,
-        options: {},
-      });
+      this.#connector = new WagmiAdapter(
+        new WalletConnectConnector({
+          chains: this.chains,
+          options: {},
+        }),
+      );
     }
     return this.#connector;
   }
