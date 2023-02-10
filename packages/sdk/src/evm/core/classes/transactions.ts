@@ -7,36 +7,79 @@ import {
 import { isBrowser } from "../../common/utils";
 import { ChainId } from "../../constants/chains";
 import { ContractSource } from "../../schema/contracts/custom";
+import { TransactionResult } from "../types";
+import { ContractWrapper } from "./contract-wrapper";
 import { ConnectionInfo } from "@ethersproject/web";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BigNumber, CallOverrides, ethers } from "ethers";
+import { BaseContract, BigNumber, CallOverrides, ethers } from "ethers";
 
 type TransactionOptions = {
-  contract: ethers.Contract;
-  contractFunction: string;
+  method: string;
   args: any[];
   overrides?: CallOverrides;
+  storage?: ThirdwebStorage;
+};
+
+type TransactionOptionsWithContractWrapper<
+  TContract extends BaseContract = BaseContract,
+> = TransactionOptions & {
+  contractWrapper: ContractWrapper<TContract>;
+};
+
+type TransactionOptionsWithContract = Omit<TransactionOptions, "contract"> & {
+  contract: ethers.Contract;
   provider: ethers.providers.Provider;
   signer: ethers.Signer;
-  storage: ThirdwebStorage;
 };
 
 type TransactionOptionsWithContractInfo = Omit<
-  TransactionOptions,
+  TransactionOptionsWithContract,
   "contract"
 > & {
+  provider: ethers.providers.Provider;
   contractAddress: string;
   contractAbi?: ethers.ContractInterface;
 };
 
+export function transaction(fn: (...args: any[]) => Promise<Transaction>) {
+  async function executeFn(...args: any[]): Promise<TransactionResult> {
+    const tx = await fn(...args);
+    return { receipt: await tx.execute() };
+  }
+
+  executeFn.transaction = fn;
+  return executeFn;
+}
+
 export class Transaction {
   private contract: ethers.Contract;
-  private contractFunction: string;
+  private method: string;
   private args: any[];
   private overrides: CallOverrides;
   private provider: ethers.providers.Provider;
   private signer: ethers.Signer;
   private storage: ThirdwebStorage;
+
+  static fromContractWrapper(options: TransactionOptionsWithContractWrapper) {
+    const storage = options.storage || new ThirdwebStorage();
+
+    const signer = options.contractWrapper.getSigner();
+    if (!signer) {
+      throw new Error(
+        "Cannot create a transaction without a signer. Please ensure that the contract wrapper has a signer.",
+      );
+    }
+
+    const optionsWithContract = {
+      ...options,
+      storage,
+      contract: options.contractWrapper.writeContract,
+      provider: options.contractWrapper.getProvider(),
+      signer,
+    };
+
+    return new Transaction(optionsWithContract);
+  }
 
   static async fromContractInfo(
     options: TransactionOptionsWithContractInfo,
@@ -74,8 +117,8 @@ export class Transaction {
     return new Transaction(optionsWithContract);
   }
 
-  constructor(options: TransactionOptions) {
-    this.contractFunction = options.contractFunction;
+  constructor(options: TransactionOptionsWithContract) {
+    this.method = options.method;
     this.args = options.args;
     this.overrides = options.overrides || {};
     this.provider = options.provider;
@@ -127,22 +170,19 @@ export class Transaction {
    * Encode the function data for this transaction
    */
   encode() {
-    return this.contract.interface.encodeFunctionData(
-      this.contractFunction,
-      this.args,
-    );
+    return this.contract.interface.encodeFunctionData(this.method, this.args);
   }
 
   /**
    * Simulate the transaction on-chain without executing
    */
   async simulate() {
-    if (!this.contract.callStatic[this.contractFunction]) {
+    if (!this.contract.callStatic[this.method]) {
       throw this.functionError();
     }
 
     try {
-      return await this.contract.callStatic[this.contractFunction](
+      return await this.contract.callStatic[this.method](
         ...this.args,
         ...(this.overrides.value ? [{ value: this.overrides.value }] : []),
       );
@@ -155,12 +195,12 @@ export class Transaction {
    * Estimate the gas limit of this transaction
    */
   async estimateGasLimit() {
-    if (!this.contract.estimateGas[this.contractFunction]) {
+    if (!this.contract.estimateGas[this.method]) {
       throw this.functionError();
     }
 
     try {
-      return await this.contract.estimateGas[this.contractFunction](
+      return await this.contract.estimateGas[this.method](
         ...this.args,
         this.overrides,
       );
@@ -191,7 +231,7 @@ export class Transaction {
    * Send the transaction without waiting for it to be mined.
    */
   async send() {
-    if (!this.contract.functions[this.contractFunction]) {
+    if (!this.contract.functions[this.method]) {
       throw this.functionError();
     }
 
@@ -205,7 +245,7 @@ export class Transaction {
 
     // Now there should be no gas estimate errors
     try {
-      return await this.contract.functions[this.contractFunction](
+      return await this.contract.functions[this.method](
         ...this.args,
         overrides,
       );
@@ -338,7 +378,7 @@ export class Transaction {
 
   private functionError() {
     return new Error(
-      `Contract "${this.contract.address}" does not have function "${this.contractFunction}"`,
+      `Contract "${this.contract.address}" does not have function "${this.method}"`,
     );
   }
 
@@ -359,9 +399,7 @@ export class Transaction {
     const rpcUrl = provider.connection?.url;
 
     // Render function signature with arguments filled in
-    const functionSignature = this.contract.interface.getFunction(
-      this.contractFunction,
-    );
+    const functionSignature = this.contract.interface.getFunction(this.method);
     const methodArgs = this.args.map((arg) => {
       if (JSON.stringify(arg).length <= 80) {
         return JSON.stringify(arg);

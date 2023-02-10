@@ -37,6 +37,7 @@ import { Erc721Mintable } from "./erc-721-mintable";
 import { Erc721Supply } from "./erc-721-supply";
 import { Erc721TieredDrop } from "./erc-721-tiered-drop";
 import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
+import { Transaction, transaction } from "./transactions";
 import type {
   DropERC721,
   IBurnableERC721,
@@ -198,18 +199,14 @@ export class Erc721<
    * ```
    * @twfeature ERC721
    */
-  public async transfer(
-    to: string,
-    tokenId: BigNumberish,
-  ): Promise<TransactionResult> {
+  transfer = transaction(async (to: string, tokenId: BigNumberish) => {
     const from = await this.contractWrapper.getSignerAddress();
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "safeTransferFrom(address,address,uint256)",
-        [from, to, tokenId],
-      ),
-    };
-  }
+    return Transaction.fromContractWrapper({
+      contractWrapper: this.contractWrapper,
+      method: "transferFrom(address,address,uint256)",
+      args: [from, to, tokenId],
+    });
+  });
 
   /**
    * Approve or remove operator as an operator for the caller. Operators can call transferFrom or safeTransferFrom for any token owned by the caller.
