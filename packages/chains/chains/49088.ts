@@ -1,11 +1,10 @@
 export default {
-  "name": "Bifrost Testnet1",
+  "name": "Bifrost Testnet",
   "title": "The Bifrost Testnet network",
   "chain": "BFC",
   "rpc": [
     "https://public-01.testnet.thebifrost.io/rpc",
-    "https://public-02.testnet.thebifrost.io/rpc",
-    "https://private.chain.thebifrost.io/rpc"
+    "https://public-02.testnet.thebifrost.io/rpc"
   ],
   "faucets": [],
   "nativeCurrency": {
@@ -13,10 +12,16 @@ export default {
     "symbol": "BFC",
     "decimals": 18
   },
-  "infoURL": "https://testnet.thebifrost.io",
-  "shortName": "BIT",
+  "infoURL": "https://thebifrost.io",
+  "shortName": "bfc",
   "chainId": 49088,
   "networkId": 49088,
+  "icon": {
+    "url": "ipfs://QmcHvn2Wq91ULyEH5s3uHjosX285hUgyJHwggFJUd3L5uh",
+    "width": 128,
+    "height": 128,
+    "format": "png"
+  },
   "explorers": [
     {
       "name": "explorer-thebifrost",
@@ -25,5 +30,5 @@ export default {
     }
   ],
   "testnet": true,
-  "slug": "bifrost-testnet1"
+  "slug": "bifrost-testnet"
 } as const;

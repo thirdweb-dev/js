@@ -11,7 +11,7 @@ export function useAccount() {
   const wagmiContext = useClient();
   invariant(
     wagmiContext,
-    `useNetwork() can only be used inside <ThirdwebProvider />. If you are using <ThirdwebSDKProvider /> you will have to use your own network logic.`,
+    `useAccount() can only be used inside <ThirdwebProvider />. If you are using <ThirdwebSDKProvider /> you will have to use your own account logic.`,
   );
   return useWagmiAccount();
 }

@@ -24,7 +24,6 @@
     "android"
   ],
   "dependencies": {
-    "@tanstack/query-async-storage-persister": "^4.24.4",
     "@tanstack/react-query": "^4.0.10",
     "@thirdweb-dev/chains": "*",
     "@thirdweb-dev/react-core": "*",
@@ -59,7 +58,7 @@
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": "*",
-    "ethers": ">=5.5.1",
+    "ethers": ">=5.5.1 <6",
     "react": ">=18.0.0",
     "react-native": ">=0.70.0"
   },

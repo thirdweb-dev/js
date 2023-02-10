@@ -1,6 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import {
+  showDeprecationWarning,
   ThirdwebAuthConfig,
   ThirdwebConfigProvider,
   ThirdwebSDKProvider,
@@ -8,16 +9,15 @@ import {
 } from "@thirdweb-dev/react-core/evm";
 import type { SDKOptions } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { getDefaultProvider, Signer } from "ethers";
-import React, { createContext, useContext, useMemo, useState } from "react";
+import { getDefaultProvider } from "ethers";
+import { transformChainToMinimalWagmiChain } from "evm/utils/chains";
+import React, { useMemo } from "react";
+import invariant from "tiny-invariant";
 import {
-  Connector, createClient, createStorage, useSigner, WagmiConfig,
+  Connector, createClient, useSigner, WagmiConfig,
 } from "wagmi";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
-import { noopStorage } from '@wagmi/core';
-import { TW_WC_PROJECT_ID, WC_RELAY_URL } from "evm/constants/walletConnect";
+import { TW_WC_PROJECT_ID, WC_RELAY_URL } from "../constants/walletConnect";
 
 /**
  * @internal
@@ -32,15 +32,6 @@ export type WalletConnectConnectorType =
  */
 export type WalletConnector = WalletConnectConnectorType;
 
-interface IContext {
-  isInitializing: boolean;
-}
-
-/**
- * Context
- */
-export const SignerContext = createContext<IContext>({} as IContext);
-
 /**
  * the metadata to pass to wallet connection dialog (may show up during the wallet-connection process)
  * @remarks this is only used for wallet connect and wallet link, metamask does not support it
@@ -54,11 +45,11 @@ export interface DAppMetaData {
   /**
    * optional - a description of your app
    */
-  description?: string;
+  description: string;
   /**
    * optional - a url that points to a logo (or favicon) of your app
    */
-  logoUrl?: string;
+  logoUrl: string;
   /**
    * optional - the url where your app is hosted
    */
@@ -141,15 +132,13 @@ export interface ThirdwebProviderProps<
 const defaultdAppMeta: DAppMetaData = {
   name: 'thirdweb powered dApp',
   url: 'https://thirdweb.com',
+  logoUrl: 'https://thirdweb.com/favicon.ico',
+  description: 'thirdweb powered dApp',
 };
 
 const defaultWalletConnectors: Required<
   ThirdwebProviderProps['walletConnectors']
 > = ['walletConnect'];
-
-const asyncStoragePersistor = createAsyncStoragePersister({
-  storage: AsyncStorage,
-});
 
 /**
  *
@@ -188,68 +177,41 @@ export const ThirdwebProvider = <
   authConfig,
   storageInterface,
   queryClient,
-  autoConnect = true,
   children,
 
   // deprecated
   desiredChainId,
   chainRpc,
 }: React.PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
-  const [isInitializing, setIsInitializing] = useState(true);
-  const [signer, setSigner] = useState<Signer | undefined>()
+  if (chainRpc) {
+    showDeprecationWarning("chainRpc", "supportedChains");
+  }
+  if (desiredChainId) {
+    showDeprecationWarning("desiredChainId", "activeChain");
+  }
+  
+  const mergedChains = useMemo(() => {
+    if (
+      !activeChain ||
+      typeof activeChain === "string" ||
+      typeof activeChain === "number"
+    ) {
+      return supportedChains as Readonly<Chain[]>;
+    }
+    return [...supportedChains, activeChain] as Readonly<Chain[]>;
+  }, [supportedChains, activeChain]);
 
   const _client = useMemo(() => {
     const walletConnectClientMeta = {
       name: dAppMeta.name,
       url: dAppMeta.url,
-      icons: [dAppMeta.logoUrl || ''],
-      description: dAppMeta.description || '',
+      icons: [dAppMeta.logoUrl],
+      description: dAppMeta.description,
     };
 
-    const wcConnector = walletConnectors[0];
-    const projectId = typeof wcConnector === 'object' && 'projectId' in wcConnector.options ? wcConnector.options.projectId : TW_WC_PROJECT_ID
-    const walletConnector = new WalletConnectConnector({
-      chains: [
-        {
-          id: 1,
-          name: 'Ethereum',
-          network: 'homestead',
-          nativeCurrency: {
-            name: 'Ether',
-            symbol: 'ETH',
-            decimals: 18,
-          },
-          rpcUrls: {
-            default: {
-              http: ['https://ethereum.rpc.thirdweb.com'],
-            },
-            public: {
-              http: ['https://ethereum.rpc.thirdweb.com'],
-            },
-          },
-        },
-      ],
-      options:  {
-        metadata: walletConnectClientMeta,
-        qrcode: false,
-        version: '2',
-        projectId: projectId,
-        relayUrl: WC_RELAY_URL,
-        logger: 'info',
-      }
-    });
-
-    // walletConnector.getProvider().then((provider) => {
-    //   const web3Provider = new providers.Web3Provider(provider);
-    //   setSigner(web3Provider.getSigner())
-    //   setIsInitializing(false);
-    // });
+    const wagmiChains = mergedChains.map(transformChainToMinimalWagmiChain);
 
     const client = createClient({
-      persister: asyncStoragePersistor,
-      storage: createStorage({
-        storage: noopStorage,
-      }),
       connectors: () => {
         return walletConnectors
           .map((connector) => {
@@ -263,7 +225,19 @@ export const ThirdwebProvider = <
               (typeof connector === 'object' &&
                 connector.name === 'walletConnect')
             ) {
-              return walletConnector;
+              const mainnet = wagmiChains.find((chain) => chain.id === 1);
+              invariant(mainnet, 'Mainnet chain not found');
+              return new WalletConnectConnector({
+                chains: [mainnet],
+                options:  {
+                  metadata: walletConnectClientMeta,
+                  qrcode: false,
+                  version: '2',
+                  projectId: TW_WC_PROJECT_ID,
+                  relayUrl: WC_RELAY_URL,
+                  logger: 'info',
+                }
+              });
             }
 
             throw new Error(`Wallet connector not recognised: ${connector}`);
@@ -274,11 +248,7 @@ export const ThirdwebProvider = <
     });
 
     return client;
-  }, [dAppMeta.description, dAppMeta.logoUrl, dAppMeta.name, dAppMeta.url, walletConnectors]);
-
-  const value = useMemo(() => ({
-    isInitializing,
-  }), [isInitializing])
+  }, [dAppMeta.description, dAppMeta.logoUrl, dAppMeta.name, dAppMeta.url, mergedChains, walletConnectors]);
 
   const activeChainId = useMemo(() => {
     if (!activeChain) {
@@ -291,27 +261,25 @@ export const ThirdwebProvider = <
   }, [activeChain]);
 
   return (
-    <SignerContext.Provider value={{...value}}>
-      <ThirdwebConfigProvider
-        value={{
-          chains: supportedChains,
-        }}
-      >
-        <WagmiConfig client={_client}>
-          <ThirdwebSDKProviderWagmiWrapper
-            queryClient={queryClient}
-            sdkOptions={sdkOptions}
-            supportedChains={supportedChains}
-            // desiredChainId is deprecated, we will remove it in the future but still need to pass it here for now
-            activeChain={activeChainId || desiredChainId}
-            storageInterface={storageInterface}
-            authConfig={authConfig}
-          >
-            {children}
-          </ThirdwebSDKProviderWagmiWrapper>
-        </WagmiConfig>
-      </ThirdwebConfigProvider>
-    </SignerContext.Provider>
+    <ThirdwebConfigProvider
+      value={{
+        chains: supportedChains,
+      }}
+    >
+      <WagmiConfig client={_client}>
+        <ThirdwebSDKProviderWagmiWrapper
+          queryClient={queryClient}
+          sdkOptions={sdkOptions}
+          supportedChains={supportedChains}
+          // desiredChainId is deprecated, we will remove it in the future but still need to pass it here for now
+          activeChain={activeChainId || desiredChainId}
+          storageInterface={storageInterface}
+          authConfig={authConfig}
+        >
+          {children}
+        </ThirdwebSDKProviderWagmiWrapper>
+      </WagmiConfig>
+    </ThirdwebConfigProvider>
   );
 };
 
@@ -322,20 +290,10 @@ const ThirdwebSDKProviderWagmiWrapper = <TChains extends Chain[]>({
   Omit<ThirdwebSDKProviderProps<TChains>, "signer" | "provider">
 >) => {
   const {data} = useSigner();
-
+  console.log('data.signer', data);
   return (
     <ThirdwebSDKProvider signer={data || undefined} {...props}>
       {children}
     </ThirdwebSDKProvider>
   );
 };
-
-export function useThirdwebProvider() {
-  const context = useContext(SignerContext);
-  if (context === undefined) {
-    throw new Error(
-      'useThirdwebProvider must be used within a ThirdwebProvider',
-    );
-  }
-  return context;
-}

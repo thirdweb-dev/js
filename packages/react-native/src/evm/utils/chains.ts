@@ -5,32 +5,33 @@ export function transformChainToMinimalWagmiChain(chain: Chain): WagmiChain {
     return {
         id: chain.chainId,
         name: chain.name,
-        rpcUrls: chain.rpc as string[],
+        network: chain.slug,
         nativeCurrency: {
             name: chain.nativeCurrency.name,
             symbol: chain.nativeCurrency.symbol,
             decimals: chain.nativeCurrency.decimals as 18,
         },
         testnet: chain.testnet,
-        blockExplorers: chain.explorers as Array<{
+        rpcUrls: {
+            default: {
+                http: chain.rpc as string[],
+            },
+            public: {
+                http: chain.rpc as string[],
+            },
+        },
+        blockExplorers: chain.explorers?.reduce((prev, explorer: {
             name: string;
             url: string;
             standard: string;
-        }>,
+        }) => {
+            return {
+                ...prev,
+                [explorer.name]: {
+                    name: explorer.name,
+                    url: explorer.url,
+                },
+            };
+        }, { default: { name: chain.explorers[0].name, url: chain.explorers[0].url } })
     };
-}
-
-export function getWagmiChain(chain: Chain): WagmiChain {
-    return {
-        ...chain,
-        network: chain.name,
-        rpcUrls: {
-            default: {
-                http: chain.rpcUrls,
-            },
-            public: {
-                http: chain.rpcUrls,
-            },
-        },
-    } as WagmiChain;
 }

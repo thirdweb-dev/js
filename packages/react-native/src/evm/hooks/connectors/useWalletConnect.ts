@@ -1,6 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import invariant from "tiny-invariant";
 import { useClient, useConnect } from "wagmi";
+import { WalletConnectConnector } from "wagmi/dist/connectors/walletConnect";
+import { Linking } from "react-native";
+import UniversalProvider from "@walletconnect/universal-provider/dist/types/UniversalProvider";
 
 globalThis.Buffer = Buffer;
 
@@ -34,43 +37,71 @@ globalThis.Buffer = Buffer;
  * @public
  */
 export function useWalletConnect() {
-  const wagmiContext = useClient();
+  const client = useClient();
   invariant(
-    wagmiContext,
+    client,
     `useWalletConnect() can only be used inside <ThirdwebProvider />. If you are using <ThirdwebSDKProvider /> you will have to use your own wallet-connection logic.`,
   );
-  const { connect, connectors, error, isLoading, isSuccess } =
+  const { connect, connectors, error: connectError, isLoading, isSuccess } =
     useConnect();
 
-  const [displayUri, setDisplayUri] = useState<string | undefined>();
-  const [connectorError, setConnectorError] = useState<Error | undefined>();
-
-  const connector = connectors.find(
+  const walletConnector = connectors.find(
     (c) => c.id === "walletConnect",
-  );
+  ) as WalletConnectConnector;
   invariant(
-    connector,
-    "WalletConnect connector not found, please make sure it is provided to your <ThirdwebProvider />",
+    walletConnector,
+    "WalletConnectConnector not found, please make sure it is provided to your <ThirdwebProvider />",
   );
 
   useEffect(() => {
-    connector.addListener('message', ({ type, data }) => {
+    // wagmi storage doesn't support async storage so we need to let it know that we are connected
+    const getProvider = async () => {
+      const provider = await walletConnector.getProvider();
+      const univProvider = provider as unknown as UniversalProvider;
+
+      if (univProvider.client.session.length > 0) {
+        setTimeout(() => {
+          connect({ connector: walletConnector });
+        }, 100);
+      }
+    }
+
+    getProvider();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- we only want to run this once
+  }, [])
+
+  // TO DISCUSS: There's no clear event for sending transactions.
+  // const listener = useCallback((errorRP, payload) => {
+  //   if (account && uri) {
+  //     //Linking.openURL(uri)
+  //   }
+  // }, [account, uri])
+
+  // useEffect(() => {
+  //   if (!provider) {
+  //     return;
+  //   }
+  //   provider.client.core.relayer.on("relayer_publish", listener);
+  //   return () => {
+  //     provider.client.core.relayer.removeListener("relayer_publish", listener);
+  //   };
+  // }, [provider, listener]);
+
+  useEffect(() => {
+    walletConnector.addListener('message', async ({ type, data }) => {
       switch (type) {
         case 'display_uri':
           invariant(typeof data === 'string', 'display_uri message data must be a string')
-          setDisplayUri(data);
+          console.log('display_uri', data);
+          Linking.openURL(data);
           break;
       }
     })
-    connector.addListener('error', (connectError) => {
-      setConnectorError(connectError)
-    })
-
     return () => {
-      connector.removeAllListeners();
+      walletConnector.removeAllListeners();
     }
-  }, [connector]);
+  }, [walletConnector]);
 
-  return { connector: connector, connect: () => { connect({ connector: connector }) }, error: error, isLoading: isLoading, isSuccess: isSuccess, displayUri, connectorError };
+  return { connector: walletConnector, connect: () => { connect({ connector: walletConnector }) }, isLoading: isLoading, isSuccess: isSuccess, connectError }
 }
-
