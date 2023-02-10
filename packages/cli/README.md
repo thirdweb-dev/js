@@ -106,11 +106,13 @@ The simplest way to work on the CLI locally is to:
 ```bash
 git clone https://github.com/thirdweb-dev/js.git
 ```
+
 2. From the project root run
 
 ```bash
 yarn && yarn build
 ```
+
 3. From inside `js/packages/cli` Run the `build:watch` command to compile any changes in real time
 
 ```bash

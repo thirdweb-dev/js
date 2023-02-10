@@ -1,6 +1,6 @@
+import { Chain } from "../types";
 import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
 import { ChainId } from "@thirdweb-dev/sdk";
-import { Chain } from "../types";
 
 const chain: Record<string, Chain> = {
   mainnet: {
