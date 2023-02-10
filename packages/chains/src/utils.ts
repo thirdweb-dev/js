@@ -11,37 +11,49 @@ const defaultOptions = {
   mode: "http",
 } as const;
 
-export function getChainRPC(
+export function getChainRPCs(
   chain: Pick<Chain, "rpc" | "chainId">,
   options?: ChainRPCOptions,
-): string {
+): string[] {
   const { thirdwebApiKey, alchemyApiKey, infuraApiKey, mode } = {
     ...defaultOptions,
     ...options,
   };
 
   const modeChains = chain.rpc.filter((rpc) => {
-    if (rpc.startsWith("https://") && mode === "http") {
+    if (rpc.startsWith("http") && mode === "http") {
       return true;
     }
-    if (rpc.startsWith("wss://") && mode === "ws") {
+    if (rpc.startsWith("ws") && mode === "ws") {
       return true;
     }
 
     return false;
   });
 
-  const thirdwebRPC = modeChains.filter((rpc) => {
-    return rpc.includes("${THIRDWEB_API_KEY}") && thirdwebApiKey;
-  });
+  const thirdwebRPC = modeChains
+    .filter((rpc) => {
+      return rpc.includes("${THIRDWEB_API_KEY}") && thirdwebApiKey;
+    })
+    .map((rpc) =>
+      thirdwebApiKey ? rpc.replace("${THIRDWEB_API_KEY}", thirdwebApiKey) : rpc,
+    );
 
-  const alchemyRPC = modeChains.filter((rpc) => {
-    return rpc.includes("${ALCHEMY_API_KEY}") && alchemyApiKey;
-  });
+  const alchemyRPC = modeChains
+    .filter((rpc) => {
+      return rpc.includes("${ALCHEMY_API_KEY}") && alchemyApiKey;
+    })
+    .map((rpc) =>
+      alchemyApiKey ? rpc.replace("${ALCHEMY_API_KEY}", alchemyApiKey) : rpc,
+    );
 
-  const infuraRPC = modeChains.filter((rpc) => {
-    return rpc.includes("${INFURA_API_KEY}") && infuraApiKey;
-  });
+  const infuraRPC = modeChains
+    .filter((rpc) => {
+      return rpc.includes("${INFURA_API_KEY}") && infuraApiKey;
+    })
+    .map((rpc) =>
+      infuraApiKey ? rpc.replace("${INFURA_API_KEY}", infuraApiKey) : rpc,
+    );
 
   const allOtherRpcs = modeChains.filter((rpc) => {
     return !rpc.includes("${");
@@ -60,5 +72,12 @@ export function getChainRPC(
     );
   }
 
-  return orderedRPCs[0];
+  return orderedRPCs;
+}
+
+export function getChainRPC(
+  chain: Pick<Chain, "rpc" | "chainId">,
+  options?: ChainRPCOptions,
+): string {
+  return getChainRPCs(chain, options)[0];
 }
