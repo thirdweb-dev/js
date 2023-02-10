@@ -16,7 +16,7 @@ import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { StandardErc721 } from "../../core/classes/erc-721-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import {
-  NetworkOrSignerOrProvider,
+  NetworkInput,
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
@@ -97,7 +97,7 @@ export class Multiwrap extends StandardErc721<MultiwrapContract> {
   public owner: ContractOwner<MultiwrapContract>;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},

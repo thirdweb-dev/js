@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
-import { getCompositePluginABI } from "../common/plugin";
+import { getCompositePluginABI, joinABIs } from "../common/plugin";
 import { ALL_ROLES } from "../common/role";
 import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
 import type {
   ContractType,
-  NetworkOrSignerOrProvider,
+  NetworkInput,
   PrebuiltContractType,
 } from "../core/types";
 import {
@@ -32,7 +32,7 @@ import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 
 type InitalizeParams = [
-  network: NetworkOrSignerOrProvider,
+  network: NetworkInput,
   address: string,
   storage: ThirdwebStorage,
   options?: SDKOptions,
@@ -180,21 +180,12 @@ export const MarketplaceV3Initializer = {
       provider.getNetwork(),
     ]);
 
-    const parsedABI = typeof abi === "string" ? JSON.parse(abi) : abi;
-    const compositeABI = await getCompositePluginABI(
-      address,
-      AbiSchema.parse(parsedABI),
-      provider,
-      options,
-      storage,
-    );
-
     return new contract.MarketplaceV3(
       network,
       address,
       storage,
       options,
-      compositeABI,
+      abi,
       _network.chainId,
     );
   },
@@ -205,13 +196,20 @@ export const MarketplaceV3Initializer = {
   ) => {
     const abi = await fetchAbiFromAddress(address, provider, storage);
     if (abi) {
-      return abi;
+      return await getCompositePluginABI(address, abi, provider, {}, storage);
     }
 
     // Deprecated - only needed for backwards compatibility with non-released contracts - should remove in v4
-    return (
+    const localAbi = (
       await import("@thirdweb-dev/contracts-js/dist/abis/MarketplaceV3.json")
     ).default;
+    return await getCompositePluginABI(
+      address,
+      localAbi,
+      provider,
+      {},
+      storage,
+    );
   },
 };
 

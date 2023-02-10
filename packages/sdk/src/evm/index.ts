@@ -1,7 +1,7 @@
 // handle browser vs node global
 globalThis.global = globalThis;
 
-export type { ContractType, NetworkOrSignerOrProvider } from "./core/types";
+export type { ContractType, NetworkInput } from "./core/types";
 
 export type { Role } from "./common/role";
 
@@ -12,6 +12,7 @@ export * from "./constants/chains";
 export * from "./schema/tokens/token";
 export * from "./schema/tokens/edition";
 export * from "./schema/contracts/common";
+export * from "./schema/shared";
 export type {
   SDKOptions,
   SDKOptionsSchema,

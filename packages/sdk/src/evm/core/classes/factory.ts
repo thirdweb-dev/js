@@ -1,3 +1,4 @@
+import { getDeployArguments } from "../../common/deploy";
 import {
   getApprovedImplementation,
   getDefaultTrustedForwarders,
@@ -23,7 +24,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { DeployEvents } from "../../types";
 import {
   DeploySchemaForPrebuiltContractType,
-  NetworkOrSignerOrProvider,
+  NetworkInput,
   PrebuiltContractType,
 } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
@@ -39,6 +40,7 @@ import {
   ethers,
 } from "ethers";
 import { EventEmitter } from "eventemitter3";
+import invariant from "tiny-invariant";
 import { z } from "zod";
 
 /**
@@ -66,7 +68,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
 
   constructor(
     factoryAddr: string,
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     storage: ThirdwebStorage,
     options?: SDKOptions,
   ) {
@@ -106,9 +108,19 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       this.storage,
     );
 
+    const signer = this.getSigner();
+    invariant(signer, "A signer is required to deploy contracts");
+
+    const args = await getDeployArguments(
+      contractType,
+      metadata,
+      contractURI,
+      signer,
+    );
+
     const encodedFunc = Contract.getInterface(ABI).encodeFunctionData(
       "initialize",
-      await this.getDeployArguments(contractType, metadata, contractURI),
+      args,
     );
 
     const blockNumber = await this.getProvider().getBlockNumber();

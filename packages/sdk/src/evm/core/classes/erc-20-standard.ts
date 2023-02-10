@@ -2,7 +2,7 @@ import { TokenMintInput } from "../../schema/tokens/token";
 import { Amount, Currency, CurrencyValue } from "../../types/currency";
 import { BaseERC20, BaseSignatureMintERC20 } from "../../types/eips";
 import { UpdateableNetwork } from "../interfaces/contract";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
+import { NetworkInput, TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc20 } from "./erc-20";
 import type { DropERC20, TokenERC20 } from "@thirdweb-dev/contracts-js";
@@ -48,7 +48,7 @@ export class StandardErc20<
   /**
    * @internal
    */
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+  onNetworkUpdated(network: NetworkInput): void {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 

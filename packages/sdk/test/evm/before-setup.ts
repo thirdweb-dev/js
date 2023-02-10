@@ -7,6 +7,7 @@ import {
   EditionDropInitializer,
   EditionInitializer,
   getNativeTokenByChainId,
+  LOCAL_NODE_PKEY,
   MarketplaceInitializer,
   MultiwrapInitializer,
   NFTCollectionInitializer,

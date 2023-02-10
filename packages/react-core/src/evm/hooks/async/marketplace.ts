@@ -2,7 +2,7 @@ import {
   RequiredParam,
   requiredParamInvariant,
 } from "../../../core/query-utils/required-param";
-import { useSDKChainId } from "../../providers/base";
+import { useSDKChainId } from "../../providers/thirdweb-sdk-provider";
 import {
   AcceptDirectOffer,
   BuyNowParams,
@@ -28,10 +28,10 @@ import type {
   NewDirectListing,
 } from "@thirdweb-dev/sdk";
 import { ListingType } from "@thirdweb-dev/sdk";
-import { BigNumber, BigNumberish } from "ethers";
-import invariant from "tiny-invariant";
 import { DirectListingInputParams } from "@thirdweb-dev/sdk/dist/declarations/src/evm/schema/marketplacev3/direct-listings";
 import { EnglishAuctionInputParams } from "@thirdweb-dev/sdk/dist/declarations/src/evm/schema/marketplacev3/english-auctions";
+import { BigNumber, BigNumberish } from "ethers";
+import invariant from "tiny-invariant";
 
 /** **********************/
 /**     READ  HOOKS     **/
@@ -526,7 +526,7 @@ export function useAuctionWinner(
       requiredParamInvariant(listingId, "No listing id provided");
 
       const isV1 = isMarketplaceV1(contract);
-    
+
       if (isV1) {
         invariant(
           contract.auction.getWinner,
@@ -541,7 +541,6 @@ export function useAuctionWinner(
         return contract.englishAuctions.getWinner(listingId);
       }
       invariant(false, "Contract is not a valid marketplace contract");
-
     },
     {
       enabled: !!contract && listingId !== undefined,
@@ -563,7 +562,10 @@ export function useAuctionWinner(
  * @returns a response object that includes an array of listings
  * @beta
  */
-export function useBidBuffer(contract: RequiredParam<Marketplace | MarketplaceV3>, listingId?: RequiredParam<BigNumberish>) {
+export function useBidBuffer(
+  contract: RequiredParam<Marketplace | MarketplaceV3>,
+  listingId?: RequiredParam<BigNumberish>,
+) {
   const contractAddress = contract?.getAddress();
   return useQueryWithNetwork(
     cacheKeys.contract.marketplace.getBidBufferBps(contractAddress),
@@ -571,7 +573,7 @@ export function useBidBuffer(contract: RequiredParam<Marketplace | MarketplaceV3
       requiredParamInvariant(contract, "No Contract instance provided");
 
       const isV1 = isMarketplaceV1(contract);
-    
+
       if (isV1) {
         invariant(
           contract.getBidBufferBps,
@@ -584,7 +586,9 @@ export function useBidBuffer(contract: RequiredParam<Marketplace | MarketplaceV3
           "contract does not support englishAuctions.getBidBufferBps",
         );
         requiredParamInvariant(listingId, "No listing id provided");
-        return BigNumber.from(contract.englishAuctions.getBidBufferBps(listingId));
+        return BigNumber.from(
+          contract.englishAuctions.getBidBufferBps(listingId),
+        );
       }
       invariant(false, "Contract is not a valid marketplace contract");
     },
@@ -622,7 +626,7 @@ export function useMinimumNextBid(
       requiredParamInvariant(listingId, "No listing id provided");
 
       const isV1 = isMarketplaceV1(contract);
-    
+
       if (isV1) {
         invariant(
           contract.auction.getMinimumNextBid,
@@ -637,7 +641,6 @@ export function useMinimumNextBid(
         return contract.englishAuctions.getMinimumNextBid(listingId);
       }
       invariant(false, "Contract is not a valid marketplace contract");
-
     },
     {
       enabled: !!contract && listingId !== undefined,
@@ -680,18 +683,24 @@ export function useMinimumNextBid(
  * @returns a mutation object that can be used to create a new direct listing
  * @beta
  */
-export function useCreateDirectListing<TMarketplace extends Marketplace | MarketplaceV3>(contract: RequiredParam<TMarketplace>) {
+export function useCreateDirectListing<
+  TMarketplace extends Marketplace | MarketplaceV3,
+>(contract: RequiredParam<TMarketplace>) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   const walletAddress = useAddress();
   return useMutation(
-    async (data: TMarketplace extends Marketplace ? NewDirectListing : DirectListingInputParams) => {
+    async (
+      data: TMarketplace extends Marketplace
+        ? NewDirectListing
+        : DirectListingInputParams,
+    ) => {
       invariant(walletAddress, "No wallet connected, cannot create listing");
       requiredParamInvariant(contract, "No Contract instance provided");
 
       const isV1 = isMarketplaceV1(contract);
-    
+
       if (isV1) {
         invariant(
           contract.direct.createListing,
@@ -703,7 +712,9 @@ export function useCreateDirectListing<TMarketplace extends Marketplace | Market
           contract.directListings.createListing,
           "contract does not support directListings.createListing",
         );
-        return await contract.directListings.createListing(data as DirectListingInputParams);
+        return await contract.directListings.createListing(
+          data as DirectListingInputParams,
+        );
       }
       invariant(false, "Contract is not a valid marketplace contract");
     },
@@ -749,18 +760,24 @@ export function useCreateDirectListing<TMarketplace extends Marketplace | Market
  * @returns a mutation object that can be used to create a new auction listing
  * @beta
  */
-export function useCreateAuctionListing<TMarketplace extends Marketplace | MarketplaceV3>(contract: RequiredParam<TMarketplace>) {
+export function useCreateAuctionListing<
+  TMarketplace extends Marketplace | MarketplaceV3,
+>(contract: RequiredParam<TMarketplace>) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
   const walletAddress = useAddress();
   return useMutation(
-    async (data: TMarketplace extends Marketplace ? NewAuctionListing : EnglishAuctionInputParams) => {
+    async (
+      data: TMarketplace extends Marketplace
+        ? NewAuctionListing
+        : EnglishAuctionInputParams,
+    ) => {
       invariant(walletAddress, "no wallet connected, cannot create listing");
       requiredParamInvariant(contract, "No Contract instance provided");
 
       const isV1 = isMarketplaceV1(contract);
-    
+
       if (isV1) {
         invariant(
           contract.auction.createListing,
@@ -772,7 +789,9 @@ export function useCreateAuctionListing<TMarketplace extends Marketplace | Marke
           contract.englishAuctions.createAuction,
           "contract does not support englishAuctions.createAuction",
         );
-        return await contract.englishAuctions.createAuction(data as EnglishAuctionInputParams);
+        return await contract.englishAuctions.createAuction(
+          data as EnglishAuctionInputParams,
+        );
       }
       invariant(false, "Contract is not a valid marketplace contract");
     },
@@ -943,7 +962,9 @@ export function useCancelDirectListing(contract: RequiredParam<MarketplaceV3>) {
  * @returns a mutation object that can be used to cancel an english auction
  * @internal
  */
-export function useCancelEnglishAuction(contract: RequiredParam<MarketplaceV3>) {
+export function useCancelEnglishAuction(
+  contract: RequiredParam<MarketplaceV3>,
+) {
   const activeChainId = useSDKChainId();
   const contractAddress = contract?.getAddress();
   const queryClient = useQueryClient();
@@ -970,7 +991,6 @@ export function useCancelEnglishAuction(contract: RequiredParam<MarketplaceV3>) 
     },
   );
 }
-
 
 /**
  * Use this to place a bid on an auction listing from your marketplace contract.
@@ -1295,6 +1315,8 @@ export function useBuyNow(contract: RequiredParam<Marketplace>) {
   );
 }
 
-function isMarketplaceV1(contract: RequiredParam<Marketplace | MarketplaceV3>): contract is Marketplace {
+function isMarketplaceV1(
+  contract: RequiredParam<Marketplace | MarketplaceV3>,
+): contract is Marketplace {
   return (contract as Marketplace).getAllListings !== undefined;
 }

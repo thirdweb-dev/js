@@ -1,4 +1,4 @@
-import { NetworkOrSignerOrProvider, TransactionResult } from "..";
+import { NetworkInput, TransactionResult } from "..";
 import { getMultichainRegistryAddress } from "../../constants/addresses";
 import { PublishedMetadata } from "../../schema/contracts/custom";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -22,7 +22,7 @@ export class MultichainRegistry {
   private storage: ThirdwebStorage;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
   ) {
@@ -42,7 +42,7 @@ export class MultichainRegistry {
     );
   }
 
-  public async updateSigner(signer: NetworkOrSignerOrProvider) {
+  public async updateSigner(signer: NetworkInput) {
     this.registryLogic.updateSignerOrProvider(signer);
     this.registryRouter.updateSignerOrProvider(signer);
   }
