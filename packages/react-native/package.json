@@ -24,9 +24,10 @@
     "android"
   ],
   "dependencies": {
+    "@tanstack/query-async-storage-persister": "^4.24.4",
     "@tanstack/react-query": "^4.0.10",
-    "@thirdweb-dev/react-core": "*",
     "@thirdweb-dev/chains": "*",
+    "@thirdweb-dev/react-core": "*",
     "@thirdweb-dev/sdk": "*",
     "@thirdweb-dev/storage": "*",
     "tiny-invariant": "^1.2.0",
