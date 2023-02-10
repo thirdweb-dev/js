@@ -4,6 +4,7 @@ import { useClient, useConnect } from "wagmi";
 import { WalletConnectConnector } from "wagmi/dist/connectors/walletConnect";
 import { Linking } from "react-native";
 import UniversalProvider from "@walletconnect/universal-provider/dist/types/UniversalProvider";
+import { useDisconnect } from "../wagmi-required/useDisconnect";
 
 globalThis.Buffer = Buffer;
 
@@ -53,6 +54,8 @@ export function useWalletConnect() {
     "WalletConnectConnector not found, please make sure it is provided to your <ThirdwebProvider />",
   );
 
+  const disconnect = useDisconnect();
+
   useEffect(() => {
     // wagmi storage doesn't support async storage so we need to let it know that we are connected
     const getProvider = async () => {
@@ -71,23 +74,6 @@ export function useWalletConnect() {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- we only want to run this once
   }, [])
 
-  // TO DISCUSS: There's no clear event for sending transactions.
-  // const listener = useCallback((errorRP, payload) => {
-  //   if (account && uri) {
-  //     //Linking.openURL(uri)
-  //   }
-  // }, [account, uri])
-
-  // useEffect(() => {
-  //   if (!provider) {
-  //     return;
-  //   }
-  //   provider.client.core.relayer.on("relayer_publish", listener);
-  //   return () => {
-  //     provider.client.core.relayer.removeListener("relayer_publish", listener);
-  //   };
-  // }, [provider, listener]);
-
   useEffect(() => {
     walletConnector.addListener('message', async ({ type, data }) => {
       switch (type) {
@@ -98,10 +84,15 @@ export function useWalletConnect() {
           break;
       }
     })
+
+    walletConnector.addListener('disconnect', () => {
+      console.log('disconnect');
+      disconnect();
+    })
     return () => {
       walletConnector.removeAllListeners();
     }
-  }, [walletConnector]);
+  }, [disconnect, walletConnector]);
 
   return { connector: walletConnector, connect: () => { connect({ connector: walletConnector }) }, isLoading: isLoading, isSuccess: isSuccess, connectError }
 }
