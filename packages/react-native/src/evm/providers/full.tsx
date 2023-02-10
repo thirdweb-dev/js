@@ -10,7 +10,7 @@ import {
 import type { SDKOptions } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { getDefaultProvider } from "ethers";
-import { transformChainToMinimalWagmiChain } from "evm/utils/chains";
+import { transformChainToMinimalWagmiChain } from "../utils/chains";
 import React, { useMemo } from "react";
 import invariant from "tiny-invariant";
 import {

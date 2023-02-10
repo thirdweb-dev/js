@@ -7,7 +7,7 @@
   "license": "Apache-2.0",
   "main": "dist/index.js",
   "files": [
-    "src"
+    "dist/*"
   ],
   "keywords": [
     "thirdweb",
@@ -24,7 +24,9 @@
     "@ethersproject/shims": "^5.7.0",
     "@walletconnect/react-native-compat": "^2.3.3",
     "events": "3.3.0",
-    "react-native-get-random-values": "^1.8.0"
+    "react-native-get-random-values": "^1.8.0",
+    "base-64": "^1.0.0",
+    "big-integer": "^1.6.51"
   },
   "peerDependencies": {
     "ethers": ">=5.5.1",
