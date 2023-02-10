@@ -18,9 +18,9 @@ export const PaperChainMap: Record<number, Chains> = {
   80001: "Mumbai",
 };
 
-export class PaperWalletConnector extends TWConnector<EmailWalletConnectionArgs> {
-  readonly id: string = "paper-wallet";
-  readonly name: string = "Paper Wallet";
+export class EmailWalletConnector extends TWConnector<EmailWalletConnectionArgs> {
+  readonly id: string = "email-wallet";
+  readonly name: string = "Email Wallet";
   ready: boolean = true;
 
   private user: InitializedUser | null = null;

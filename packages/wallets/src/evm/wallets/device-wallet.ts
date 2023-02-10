@@ -1,13 +1,11 @@
-import type {
-  DeviceWalletConnector,
-  DeviceWalletConnectorOptions,
-} from "../connectors/device-wallet";
+import type { DeviceWalletConnectorOptions } from "../connectors/device-wallet";
+import { TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 import { ethers } from "ethers";
 
 export class DeviceBrowserWallet extends AbstractBrowserWallet<DeviceWalletConnectorOptions> {
-  #connector?: DeviceWalletConnector;
+  #connector?: TWConnector;
 
   static id = "deviceWallet" as const;
   public get walletName() {
@@ -22,16 +20,13 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<DeviceWalletConne
     });
   }
 
-  protected async getConnector(): Promise<DeviceWalletConnector> {
+  protected async getConnector(): Promise<TWConnector> {
     if (!this.#connector) {
       // import the connector dynamically
       const { DeviceWalletConnector } = await import(
         "../connectors/device-wallet"
       );
-      this.#connector = new DeviceWalletConnector({
-        chains: this.chains,
-        options: this.options,
-      });
+      this.#connector = new DeviceWalletConnector(this.options);
     }
     return this.#connector;
   }

@@ -60,13 +60,13 @@
       "module": "./evm/wallets/private-key/dist/thirdweb-dev-wallets-evm-wallets-private-key.esm.js",
       "default": "./evm/wallets/private-key/dist/thirdweb-dev-wallets-evm-wallets-private-key.cjs.js"
     },
-    "./evm/wallets/device-wallet": {
-      "module": "./evm/wallets/device-wallet/dist/thirdweb-dev-wallets-evm-wallets-device-wallet.esm.js",
-      "default": "./evm/wallets/device-wallet/dist/thirdweb-dev-wallets-evm-wallets-device-wallet.cjs.js"
-    },
     "./evm/wallets/email-wallet": {
       "module": "./evm/wallets/email-wallet/dist/thirdweb-dev-wallets-evm-wallets-email-wallet.esm.js",
       "default": "./evm/wallets/email-wallet/dist/thirdweb-dev-wallets-evm-wallets-email-wallet.cjs.js"
+    },
+    "./evm/wallets/device-wallet": {
+      "module": "./evm/wallets/device-wallet/dist/thirdweb-dev-wallets-evm-wallets-device-wallet.esm.js",
+      "default": "./evm/wallets/device-wallet/dist/thirdweb-dev-wallets-evm-wallets-device-wallet.cjs.js"
     },
     "./evm/connectors/email": {
       "module": "./evm/connectors/email/dist/thirdweb-dev-wallets-evm-connectors-email.esm.js",
