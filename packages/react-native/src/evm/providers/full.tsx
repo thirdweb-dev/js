@@ -25,7 +25,7 @@ import { TW_WC_PROJECT_ID, WC_RELAY_URL } from "../constants/walletConnect";
 export type WalletConnectConnectorType =
   | WalletConnectConnector
   | 'walletConnect'
-  | { name: 'walletConnect'; options: WalletConnectConnector['options'] };
+  | { name: 'walletConnect'; options: Omit<WalletConnectConnector['options'], 'version'> & { version: '2' } };
 
 /**
  * @internal
@@ -229,14 +229,24 @@ export const ThirdwebProvider = <
               invariant(mainnet, 'Mainnet chain not found');
               return new WalletConnectConnector({
                 chains: [mainnet],
-                options:  {
-                  metadata: walletConnectClientMeta,
-                  qrcode: false,
-                  version: '2',
-                  projectId: TW_WC_PROJECT_ID,
-                  relayUrl: WC_RELAY_URL,
-                  logger: 'info',
-                }
+                options:  
+                typeof connector === "string"
+                    ? {
+                      metadata: walletConnectClientMeta,
+                      qrcode: false,
+                      version: '2',
+                      projectId: TW_WC_PROJECT_ID,
+                      relayUrl: WC_RELAY_URL,
+                      logger: 'info',
+                      }
+                    : {
+                      metadata: walletConnectClientMeta,
+                      qrcode: false,
+                      projectId: TW_WC_PROJECT_ID,
+                      relayUrl: WC_RELAY_URL,
+                      logger: 'info',
+                      ... connector.options
+                      },
               });
             }
 

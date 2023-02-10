@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import invariant from "tiny-invariant";
 import { useClient, useConnect } from "wagmi";
 import { WalletConnectConnector } from "wagmi/dist/connectors/walletConnect";
@@ -38,6 +38,7 @@ globalThis.Buffer = Buffer;
  * @public
  */
 export function useWalletConnect() {
+  const [displayUri, setDisplayUri] = useState<string | undefined>();
   const client = useClient();
   invariant(
     client,
@@ -63,6 +64,7 @@ export function useWalletConnect() {
       const univProvider = provider as unknown as UniversalProvider;
 
       if (univProvider.client.session.length > 0) {
+        console.log('peer', univProvider.client.session.values[0].peer);
         setTimeout(() => {
           connect({ connector: walletConnector });
         }, 100);
@@ -80,6 +82,8 @@ export function useWalletConnect() {
         case 'display_uri':
           invariant(typeof data === 'string', 'display_uri message data must be a string')
           console.log('display_uri', data);
+          // store first part of the uri to trigger wallet connect
+          setDisplayUri(data.split('?')[0]);
           Linking.openURL(data);
           break;
       }
@@ -94,5 +98,5 @@ export function useWalletConnect() {
     }
   }, [disconnect, walletConnector]);
 
-  return { connector: walletConnector, connect: () => { connect({ connector: walletConnector }) }, isLoading: isLoading, isSuccess: isSuccess, connectError }
+  return { connector: walletConnector, connect: () => { connect({ connector: walletConnector }) }, isLoading: isLoading, isSuccess: isSuccess, connectError, displayUri }
 }
