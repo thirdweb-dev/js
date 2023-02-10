@@ -11,10 +11,10 @@ const defaultOptions = {
   mode: "http",
 } as const;
 
-export function getChainRPC(
+export function getChainRPCs(
   chain: Pick<Chain, "rpc" | "chainId">,
   options?: ChainRPCOptions,
-): string {
+): string[] {
   const { thirdwebApiKey, alchemyApiKey, infuraApiKey, mode } = {
     ...defaultOptions,
     ...options,
@@ -72,5 +72,12 @@ export function getChainRPC(
     );
   }
 
-  return orderedRPCs[0];
+  return orderedRPCs;
+}
+
+export function getChainRPC(
+  chain: Pick<Chain, "rpc" | "chainId">,
+  options?: ChainRPCOptions,
+): string {
+  return getChainRPCs(chain, options)[0];
 }
