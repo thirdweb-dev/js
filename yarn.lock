@@ -6594,6 +6594,13 @@
   dependencies:
     defer-to-connect "^2.0.1"
 
+"@tanstack/query-async-storage-persister@^4.24.4":
+  version "4.24.4"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-async-storage-persister/-/query-async-storage-persister-4.24.4.tgz#905299b46bf6e165530fcb64e4264a0546edac3e"
+  integrity sha512-NftY0lpoKEu8bE65xSgZpNHz2BXQ4278FfwKfJtm1lNseXTlw9TcyeyiLNNBZyaXG1SXo9YFLF2yH9Z+nKR9DQ==
+  dependencies:
+    "@tanstack/query-persist-client-core" "4.24.4"
+
 "@tanstack/query-core@4.19.1":
   version "4.19.1"
   resolved "https://registry.npmjs.org/@tanstack/query-core/-/query-core-4.19.1.tgz"
