@@ -16,9 +16,9 @@ interface CodeOverviewProps {
 
 const COMMANDS = {
   install: {
-    javascript: "npm install @thirdweb-dev/sdk ethers",
-    react: "npm install @thirdweb-dev/react @thirdweb-dev/sdk ethers",
-    web3button: "npm install @thirdweb-dev/react @thirdweb-dev/sdk ethers",
+    javascript: "npm install @thirdweb-dev/sdk ethers@5",
+    react: "npm install @thirdweb-dev/react @thirdweb-dev/sdk ethers@5",
+    web3button: "npm install @thirdweb-dev/react @thirdweb-dev/sdk ethers@5",
     python: "pip install thirdweb-sdk",
     go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
   },

@@ -53,9 +53,9 @@ interface ContractCodeProps {
 
 const INSTALL_COMMANDS = {
   evm: {
-    typescript: "npm install @thirdweb-dev/sdk ethers",
-    javascript: "npm install @thirdweb-dev/sdk ethers",
-    react: "npm install @thirdweb-dev/sdk @thirdweb-dev/react ethers",
+    typescript: "npm install @thirdweb-dev/sdk ethers@5",
+    javascript: "npm install @thirdweb-dev/sdk ethers@5",
+    react: "npm install @thirdweb-dev/sdk @thirdweb-dev/react ethers@5",
     python: "pip install thirdweb-sdk",
     go: "go get github.com/thirdweb-dev/go-sdk/thirdweb",
   },
