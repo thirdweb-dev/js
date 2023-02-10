@@ -291,9 +291,7 @@ const main = async () => {
 
   program
     .command("release")
-    .description(
-      "[Deprecated] use 'publish' instead.",
-    )
+    .description("[Deprecated] use 'publish' instead.")
     .option("-p, --path <project-path>", "path to project", ".")
     .option(
       "-f, --file [name]",
@@ -307,7 +305,9 @@ const main = async () => {
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
     .action(async (options) => {
-      logger.warn("'release' is deprecated and will be removed in a future update. Please use 'publish' instead.");
+      logger.warn(
+        "'release' is deprecated and will be removed in a future update. Please use 'publish' instead.",
+      );
       const url = await processProject(options, "publish");
       info(
         `Open this link to publish your contracts: ${chalk.blueBright(

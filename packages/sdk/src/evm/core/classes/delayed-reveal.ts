@@ -1,3 +1,4 @@
+import { TransactionResult, TransactionResultWithId } from "..";
 import {
   CommonNFTInput,
   NFTMetadata,
@@ -9,12 +10,11 @@ import {
   getBaseUriFromBatch,
 } from "../../common/nft";
 import { FeatureName } from "../../constants/contract-features";
+import { BatchToReveal, UploadProgressEvent } from "../../types";
 import {
   BaseDelayedRevealERC1155,
   BaseDelayedRevealERC721,
 } from "../../types/eips";
-import { BatchToReveal, UploadProgressEvent } from "../../types";
-import { TransactionResult, TransactionResultWithId } from "..";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
   DropERC721_V3,

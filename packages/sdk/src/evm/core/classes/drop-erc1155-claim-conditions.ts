@@ -1,3 +1,9 @@
+import { TransactionResult, TransactionTask } from "..";
+import {
+  detectContractFeature,
+  hasFunction,
+  includesErrorMessage,
+} from "../../common";
 import {
   abstractContractModelToLegacy,
   abstractContractModelToNew,
@@ -10,11 +16,6 @@ import {
   updateExistingClaimConditions,
 } from "../../common/claim-conditions";
 import { isNativeToken } from "../../common/currency";
-import {
-  detectContractFeature,
-  hasFunction,
-  includesErrorMessage,
-} from "../../common";
 import { SnapshotFormatVersion } from "../../common/sharded-merkle-tree";
 import { isNode } from "../../common/utils";
 import { ClaimEligibility } from "../../enums";
@@ -34,7 +35,6 @@ import {
   BaseClaimConditionERC1155,
   PrebuiltEditionDrop,
 } from "../../types/eips";
-import { TransactionResult, TransactionTask } from "..";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
