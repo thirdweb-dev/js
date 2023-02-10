@@ -1,8 +1,8 @@
-import type { CoinbaseWalletConnector } from "../connectors/coinbase-wallet";
+import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 
 export class CoinbaseWallet extends AbstractBrowserWallet {
-  #connector?: CoinbaseWalletConnector;
+  #connector?: TWConnector;
 
   static id = "coinbaseWallet" as const;
   public get walletName() {
@@ -13,19 +13,21 @@ export class CoinbaseWallet extends AbstractBrowserWallet {
     super(CoinbaseWallet.id, options);
   }
 
-  protected async getConnector(): Promise<CoinbaseWalletConnector> {
+  protected async getConnector(): Promise<TWConnector> {
     if (!this.#connector) {
       // import the connector dynamically
       const { CoinbaseWalletConnector } = await import(
         "../connectors/coinbase-wallet"
       );
-      this.#connector = new CoinbaseWalletConnector({
-        chains: this.chains,
-        options: {
-          appName: this.options.appName,
-          reloadOnDisconnect: false,
-        },
-      });
+      this.#connector = new WagmiAdapter(
+        new CoinbaseWalletConnector({
+          chains: this.chains,
+          options: {
+            appName: this.options.appName,
+            reloadOnDisconnect: false,
+          },
+        }),
+      );
     }
     return this.#connector;
   }
