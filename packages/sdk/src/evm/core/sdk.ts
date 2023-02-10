@@ -25,6 +25,7 @@ import type {
   ValidContractInstance,
 } from "./types";
 import { UserWallet } from "./wallet/user-wallet";
+import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import IThirdwebContractABI from "@thirdweb-dev/contracts-js/dist/abis/IThirdwebContract.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { EVMWallet } from "@thirdweb-dev/wallets";
@@ -549,14 +550,29 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
   public async getMultichainContractList(
     walletAddress: string,
+    chains: Chain[] = defaultChains,
   ): Promise<ContractWithMetadata[]> {
     const contracts = await this.multiChainRegistry.getContractAddresses(
       walletAddress,
     );
 
+    const chainMap = chains.reduce((acc, chain) => {
+      acc[chain.chainId] = chain;
+      return acc;
+    }, {} as Record<number, Chain>);
+
     const sdkMap: Record<number, ThirdwebSDK> = {};
 
     return contracts.map(({ address, chainId }) => {
+      if (!chainMap[chainId]) {
+        // if we don't have the chain in our list of supported chains then we can't resolve the contract type regardless, don't even try to set up the SDK
+        return {
+          address,
+          chainId,
+          contractType: async () => "custom" as const,
+          metadata: async () => ({}),
+        };
+      }
       try {
         let chainSDK = sdkMap[chainId];
         if (!chainSDK) {
@@ -564,6 +580,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
             ...this.options,
             // need to disable readonly settings for this to work
             readonlySettings: undefined,
+            // @ts-expect-error - zod doesn't like this
+            supportedChains: chains,
           });
           sdkMap[chainId] = chainSDK;
         }
