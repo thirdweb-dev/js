@@ -4,9 +4,8 @@ import {
   extractFunctionParamsFromAbi,
   fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
-} from "../../common/index";
-import { ChainId, EventType, getNativeTokenByChainId } from "../../constants";
-import { getContractAddressByChainId } from "../../constants/addresses";
+} from "../../common";
+import { ChainId, EventType, getContractAddressByChainId, getNativeTokenByChainId } from "../../constants";
 import {
   EditionDropInitializer,
   EditionInitializer,
@@ -24,9 +23,12 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../contracts";
-import { SDKOptions } from "../../schema/sdk-options";
-import { DeployEvent, DeployEvents } from "../../types";
+import { SDKOptions } from "../../schema";
 import {
+  DeployEvent,
+  DeployEvents,
+  DeployMetadata,
+  DeployOptions,
   MarketplaceContractDeployMetadata,
   MarketplaceV3ContractDeployMetadata,
   MultiwrapContractDeployMetadata,
@@ -34,11 +36,7 @@ import {
   SplitContractDeployMetadata,
   TokenContractDeployMetadata,
   VoteContractDeployMetadata,
-} from "../../types/deploy/deploy-metadata";
-import {
-  DeployMetadata,
-  DeployOptions,
-} from "../../types/deploy/deploy-options";
+} from "../../types";
 import { ThirdwebSDK } from "../sdk";
 import {
   ContractType,
@@ -477,7 +475,7 @@ export class ContractDeployer extends RPCConnectionHandler {
       return deployedAddress;
     }
 
-    // For all other chains, fetch from released contracts
+    // For all other chains, fetch from published contracts
     // resolve contract name from type
     const contractName = getContractName(contractType);
     invariant(contractName, "Contract name not found");
@@ -492,13 +490,13 @@ export class ContractDeployer extends RPCConnectionHandler {
     );
 
     const activeChainId = (await this.getProvider().getNetwork()).chainId;
-    // fetch the release URI from the ContractPublisher contract
+    // fetch the publish URI from the ContractPublisher contract
     const release = await this.fetchReleaseFromPolygon(
       THIRDWEB_DEPLOYER,
       contractName,
       version,
     );
-    // fetch the deploy metadata from the release URI
+    // fetch the deploy metadata from the publish URI
     const deployMeta = await this.fetchAndCacheDeployMetadata(
       release.metadataUri,
     );
@@ -542,8 +540,8 @@ export class ContractDeployer extends RPCConnectionHandler {
   }
 
   /**
-   * Deploy any released contract by its name
-   * @param releaserAddress the address of the releaser
+   * Deploy any published contract by its name
+   * @param publisherAddress the address of the publisher
    * @param contractName the name of the contract to deploy
    * @param constructorParams the constructor params to pass to the contract
    */

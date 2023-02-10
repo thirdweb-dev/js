@@ -1,5 +1,5 @@
 import { EventType } from "../../constants";
-import { ContractEvent, EventQueryOptions } from "../../types/index";
+import { ContractEvent, EventQueryOptions } from "../../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { EventFragment } from "@ethersproject/abi";
 import { BaseContract, Event, providers } from "ethers";

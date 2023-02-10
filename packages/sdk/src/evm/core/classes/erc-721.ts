@@ -22,7 +22,7 @@ import {
   FEATURE_NFT_SIGNATURE_MINTABLE_V2,
 } from "../../constants/erc721-features";
 import { BaseDropERC721, BaseERC721 } from "../../types/eips";
-import { ClaimOptions, UploadProgressEvent } from "../../types/index";
+import { ClaimOptions, UploadProgressEvent } from "../../types";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { UpdateableNetwork } from "../interfaces/contract";
 import {

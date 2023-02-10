@@ -2,7 +2,7 @@ import {
   ShardedMerkleTree,
   SnapshotFormatVersion,
 } from "../../src/evm/common/sharded-merkle-tree";
-import { createSnapshot, SnapshotEntryInput } from "../../src/evm/index";
+import { createSnapshot, SnapshotEntryInput } from "../../src";
 import { sdk, signers, storage } from "./before-setup";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber, ethers } from "ethers";

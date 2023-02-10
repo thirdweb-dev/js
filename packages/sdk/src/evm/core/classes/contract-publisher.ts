@@ -309,7 +309,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       (metadata) => metadata.publishedMetadata.version === version,
     );
     invariant(versionMatch, "Contract version not found");
-    // match the version back to the contract based on the release timestamp
+    // match the version back to the contract based on the published timestamp
     return allVersions.find(
       (contract) => contract.timestamp === versionMatch.publishedTimestamp,
     );

@@ -9,13 +9,12 @@ import {
   getBaseUriFromBatch,
 } from "../../common/nft";
 import { FeatureName } from "../../constants/contract-features";
-import { BatchToReveal } from "../../types/delayed-reveal";
 import {
   BaseDelayedRevealERC1155,
   BaseDelayedRevealERC721,
 } from "../../types/eips";
-import { UploadProgressEvent } from "../../types/events";
-import { TransactionResult, TransactionResultWithId } from "../index";
+import { BatchToReveal, UploadProgressEvent } from "../../types";
+import { TransactionResult, TransactionResultWithId } from "..";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
   DropERC721_V3,

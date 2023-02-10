@@ -41,7 +41,7 @@ Deploying contracts this way gives you access to:
 ## Releasing your contract
 
 ```shell
-npx thirdweb@latest release
+npx thirdweb@latest publish
 ```
 
 Creates an official release of your contract, along with:
@@ -94,7 +94,7 @@ Clone the repo and run this command after installing the CLI tool:
 
 ```bash
 $ cd examples/hardhat
-$ npx thirdweb@latest release
+$ npx thirdweb@latest publish
 ```
 
 ## Local Development

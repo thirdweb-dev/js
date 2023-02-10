@@ -1,5 +1,5 @@
 import { ThirdwebSDK } from "../sdk";
-import { Network } from "../types/index";
+import { Network } from "../types";
 import { getPayer } from "./local-config";
 import { KeypairSigner } from "@metaplex-foundation/js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
