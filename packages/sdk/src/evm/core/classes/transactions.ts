@@ -61,8 +61,6 @@ export class Transaction {
   private storage: ThirdwebStorage;
 
   static fromContractWrapper(options: TransactionOptionsWithContractWrapper) {
-    const storage = options.storage || new ThirdwebStorage();
-
     const signer = options.contractWrapper.getSigner();
     if (!signer) {
       throw new Error(
@@ -72,7 +70,6 @@ export class Transaction {
 
     const optionsWithContract = {
       ...options,
-      storage,
       contract: options.contractWrapper.writeContract,
       provider: options.contractWrapper.getProvider(),
       signer,
