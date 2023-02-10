@@ -335,7 +335,7 @@ export const BatchLazyMint: ComponentWithChildren<BatchLazyMintProps> = (
                   </Box>
                   <Text size="body.sm" mt={2}>
                     <TrackedLink
-                      href="https://thirdweb.notion.site/Batch-Upload-Troubleshooting-dbfc0d3afa6e4d1b98b6199b449c1596"
+                      href="https://support.thirdweb.com/dashboard/n5evQ4EfEjEifczEQaZ1hL/batch-upload-troubleshooting/5WMQFqfaUTU1C8NM8FtJ2X"
                       isExternal
                       category="batch-upload"
                       label="issues"
