@@ -139,13 +139,7 @@ const WrappedThirdwebSDKProvider = <
 
     if (signer) {
       // sdk from signer
-
-      sdk_ = ThirdwebSDK.fromSigner(
-        signer,
-        chainId,
-        mergedOptions,
-        storageInterface,
-      );
+      sdk_ = new ThirdwebSDK(signer, mergedOptions, storageInterface);
     } else if (chainId) {
       // sdk from chainId
       sdk_ = new ThirdwebSDK(chainId, mergedOptions, storageInterface);
