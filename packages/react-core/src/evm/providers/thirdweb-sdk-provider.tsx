@@ -2,12 +2,13 @@ import {
   QueryClientProviderProps,
   QueryClientProviderWithDefault,
 } from "../../core/providers/query-client";
+import { DEFAULT_API_KEY } from "../constants/rpc";
 import {
   ThirdwebAuthConfig,
   ThirdwebAuthProvider,
 } from "../contexts/thirdweb-auth";
 import { ThirdwebConnectedWalletProvider } from "../contexts/thirdweb-wallet";
-import { Chain, defaultChains } from "@thirdweb-dev/chains";
+import { Chain, defaultChains, getChainRPC } from "@thirdweb-dev/chains";
 import {
   SDKOptions,
   SDKOptionsOutput,
@@ -61,6 +62,11 @@ export interface ThirdwebSDKProviderProps<
 
   // the network to use - optional, defaults to undefined
   activeChain?: TChains[number]["chainId"] | TChains[number]["slug"] | Chain;
+
+  // api keys that can be passed
+  thirdwebApiKey?: string;
+  alchemyApiKey?: string;
+  infuraApiKey?: string;
 }
 
 /**
@@ -77,7 +83,12 @@ const WrappedThirdwebSDKProvider = <
   activeChain,
   signer,
   children,
-}: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
+  thirdwebApiKey = DEFAULT_API_KEY,
+  infuraApiKey,
+  alchemyApiKey,
+}: React.PropsWithChildren<
+  Omit<ThirdwebSDKProviderProps<TChains>, "authConfig">
+>) => {
   const mergedChains = useMemo(() => {
     if (
       !activeChain ||
@@ -123,10 +134,20 @@ const WrappedThirdwebSDKProvider = <
     let readonlySettings: SDKOptionsOutput["readonlySettings"] = undefined;
 
     if (supportedChain && supportedChain.rpc.length > 0) {
-      readonlySettings = {
-        chainId: supportedChain.chainId,
-        rpcUrl: supportedChain.rpc[0],
-      };
+      try {
+        const rpcUrl = getChainRPC(supportedChain, {
+          thirdwebApiKey,
+          infuraApiKey,
+          alchemyApiKey,
+        });
+
+        readonlySettings = {
+          chainId: supportedChain.chainId,
+          rpcUrl,
+        };
+      } catch (e) {
+        // no-op
+      }
     }
 
     const mergedOptions = {
@@ -139,10 +160,18 @@ const WrappedThirdwebSDKProvider = <
 
     if (signer) {
       // sdk from signer
-      sdk_ = new ThirdwebSDK(signer, mergedOptions, storageInterface);
+      sdk_ = new ThirdwebSDK(
+        signer,
+        { ...mergedOptions, infuraApiKey, alchemyApiKey, thirdwebApiKey },
+        storageInterface,
+      );
     } else if (chainId) {
       // sdk from chainId
-      sdk_ = new ThirdwebSDK(chainId, mergedOptions, storageInterface);
+      sdk_ = new ThirdwebSDK(
+        chainId,
+        { ...mergedOptions, infuraApiKey, alchemyApiKey, thirdwebApiKey },
+        storageInterface,
+      );
     }
     // if we still have no sdk fall back to the first element in chains
     if (!sdk_) {
@@ -158,7 +187,16 @@ const WrappedThirdwebSDKProvider = <
     }
 
     return sdk_;
-  }, [activeChainId, mergedChains, sdkOptions, signer, storageInterface]);
+  }, [
+    activeChainId,
+    alchemyApiKey,
+    infuraApiKey,
+    mergedChains,
+    sdkOptions,
+    signer,
+    storageInterface,
+    thirdwebApiKey,
+  ]);
 
   const ctxValue = useMemo(
     () => ({

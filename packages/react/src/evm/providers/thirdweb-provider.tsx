@@ -1,8 +1,9 @@
 import { showDeprecationWarning } from "../../core/utils";
 import type { GnosisSafeConnector } from "../connectors/gnosis-safe";
 import type { MagicConnector } from "../connectors/magic";
+import { DEFAULT_API_KEY } from "../constants/rpc";
 import { QueryClient } from "@tanstack/react-query";
-import { Chain, defaultChains } from "@thirdweb-dev/chains";
+import { Chain, defaultChains, getChainRPC } from "@thirdweb-dev/chains";
 import {
   ThirdwebAuthConfig,
   ThirdwebConfigProvider,
@@ -160,6 +161,11 @@ export interface ThirdwebProviderProps<
    */
   autoConnect?: boolean;
 
+  // api keys that can be passed
+  thirdwebApiKey?: string;
+  alchemyApiKey?: string;
+  infuraApiKey?: string;
+
   /**
    * The chainId that your dApp is running on.
    * @deprecated - use `network` instead
@@ -191,11 +197,11 @@ const defaultWalletConnectors: Required<
  * You can wrap your application with the provider as follows:
  *
  * ```jsx title="App.jsx"
- * import { ThirdwebProvider, ChainId } from "@thirdweb-dev/react";
+ * import { ThirdwebProvider } from "@thirdweb-dev/react";
  *
  * const App = () => {
  *   return (
- *     <ThirdwebProvider desiredChainId={ChainId.Mainnet}>
+ *     <ThirdwebProvider>
  *       <YourApp />
  *     </ThirdwebProvider>
  *   );
@@ -222,6 +228,10 @@ export const ThirdwebProvider = <
   queryClient,
   autoConnect = true,
   children,
+
+  thirdwebApiKey = DEFAULT_API_KEY,
+  alchemyApiKey,
+  infuraApiKey,
 
   // deprecated
   desiredChainId,
@@ -262,7 +272,17 @@ export const ThirdwebProvider = <
 
     const _rpcUrlMap = {
       ...mergedChains.reduce((acc, c) => {
-        acc[c.chainId] = c.rpc[0];
+        try {
+          acc[c.chainId] = getChainRPC(c, {
+            thirdwebApiKey,
+            alchemyApiKey,
+            infuraApiKey,
+          });
+        } catch (e) {
+          //  just set it to an emptry string
+          acc[c.chainId] = "";
+        }
+
         return acc;
       }, {} as Record<number, string>),
     };
@@ -367,6 +387,9 @@ export const ThirdwebProvider = <
     dAppMeta.description,
     dAppMeta.isDarkMode,
     autoConnect,
+    thirdwebApiKey,
+    alchemyApiKey,
+    infuraApiKey,
     walletConnectors,
   ]);
 
@@ -385,6 +408,9 @@ export const ThirdwebProvider = <
           activeChain={activeChainId || desiredChainId}
           storageInterface={storageInterface}
           authConfig={authConfig}
+          thirdwebApiKey={thirdwebApiKey}
+          alchemyApiKey={alchemyApiKey}
+          infuraApiKey={infuraApiKey}
         >
           {children}
         </ThirdwebSDKProviderWagmiWrapper>
