@@ -2,6 +2,7 @@ export default {
   "name": "Elastos Smart Chain",
   "chain": "ETH",
   "rpc": [
+    "https://elastos-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.elastos.io/eth"
   ],
   "faucets": [

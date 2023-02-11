@@ -2,6 +2,7 @@ export default {
   "name": "CoinEx Smart Chain Testnet",
   "chain": "CSC",
   "rpc": [
+    "https://coinex-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.coinex.net/"
   ],
   "faucets": [],

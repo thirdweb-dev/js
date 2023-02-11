@@ -2,6 +2,7 @@ export default {
   "name": "Memo Smart Chain Mainnet",
   "chain": "MEMO",
   "rpc": [
+    "https://memo-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://chain.metamemo.one:8501",
     "wss://chain.metamemo.one:16801"
   ],

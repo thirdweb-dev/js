@@ -2,6 +2,7 @@ export default {
   "name": "Lisinski",
   "chain": "CRO",
   "rpc": [
+    "https://lisinski.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-bitfalls1.lisinski.online"
   ],
   "faucets": [

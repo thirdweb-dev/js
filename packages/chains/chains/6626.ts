@@ -2,6 +2,7 @@ export default {
   "name": "Pixie Chain Mainnet",
   "chain": "PixieChain",
   "rpc": [
+    "https://pixie-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-mainnet.chain.pixie.xyz",
     "wss://ws-mainnet.chain.pixie.xyz"
   ],

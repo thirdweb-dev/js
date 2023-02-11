@@ -2,6 +2,7 @@ export default {
   "name": "Credit Smartchain Mainnet",
   "chain": "CREDIT",
   "rpc": [
+    "https://credit-smartchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.cscscan.io"
   ],
   "faucets": [],

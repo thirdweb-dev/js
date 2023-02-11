@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://tmy-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.tmyblockchain.org/rpc"
   ],
   "faucets": [

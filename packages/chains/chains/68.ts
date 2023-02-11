@@ -2,6 +2,7 @@ export default {
   "name": "SoterOne Mainnet",
   "chain": "SOTER",
   "rpc": [
+    "https://soterone.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.soter.one"
   ],
   "faucets": [],

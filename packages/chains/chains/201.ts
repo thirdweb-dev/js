@@ -2,6 +2,7 @@ export default {
   "name": "MOAC testnet",
   "chain": "MOAC",
   "rpc": [
+    "https://moac-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://gateway.moac.io/testnet"
   ],
   "faucets": [],

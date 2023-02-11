@@ -2,6 +2,7 @@ export default {
   "name": "Vision - Mainnet",
   "chain": "Vision",
   "rpc": [
+    "https://vision.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://infragrid.v.network/ethereum/compatible"
   ],
   "faucets": [],

@@ -2,6 +2,7 @@ export default {
   "name": "Beresheet Testnet",
   "chain": "EDG",
   "rpc": [
+    "https://beresheet-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://beresheet1.edgewa.re"
   ],
   "faucets": [],

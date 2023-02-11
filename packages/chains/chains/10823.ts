@@ -2,6 +2,7 @@ export default {
   "name": "CryptoCoinPay",
   "chain": "CCP",
   "rpc": [
+    "https://cryptocoinpay.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://node106.cryptocoinpay.info:8545",
     "ws://node106.cryptocoinpay.info:8546"
   ],

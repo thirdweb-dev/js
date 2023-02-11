@@ -2,6 +2,7 @@ export default {
   "name": "Autonity Bakerloo (Thames) Testnet",
   "chain": "AUT",
   "rpc": [
+    "https://autonity-bakerloo-thames-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.bakerloo.autonity.org/",
     "wss://rpc1.bakerloo.autonity.org/ws/"
   ],

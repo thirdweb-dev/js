@@ -2,6 +2,7 @@ export default {
   "name": "Catecoin Chain Mainnet",
   "chain": "Catechain",
   "rpc": [
+    "https://catecoin-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://send.catechain.com"
   ],
   "faucets": [],

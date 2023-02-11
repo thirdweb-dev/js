@@ -2,6 +2,7 @@ export default {
   "name": "SeedCoin-Network",
   "chain": "SeedCoin-Network",
   "rpc": [
+    "https://seedcoin-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.seedcoin.network"
   ],
   "faucets": [],

@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://sardis.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.sardisnetwork.com"
   ],
   "faucets": [

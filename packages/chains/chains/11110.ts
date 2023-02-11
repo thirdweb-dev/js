@@ -2,6 +2,7 @@ export default {
   "name": "Astra",
   "chain": "Astra",
   "rpc": [
+    "https://astra.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.astranaut.io",
     "https://rpc1.astranaut.io"
   ],

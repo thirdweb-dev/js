@@ -8,6 +8,7 @@ export default {
     "height": 297
   },
   "rpc": [
+    "https://kardiachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.kardiachain.io"
   ],
   "faucets": [],

@@ -3,6 +3,7 @@ export default {
   "title": "Wireshape Testnet Floripa",
   "chain": "Wireshape",
   "rpc": [
+    "https://floripa.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-floripa.wireshape.org"
   ],
   "faucets": [],

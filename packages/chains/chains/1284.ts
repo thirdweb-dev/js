@@ -2,6 +2,7 @@ export default {
   "name": "Moonbeam",
   "chain": "MOON",
   "rpc": [
+    "https://moonbeam.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.api.moonbeam.network",
     "wss://wss.api.moonbeam.network"
   ],

@@ -2,6 +2,7 @@ export default {
   "name": "RSK Testnet",
   "chain": "RSK",
   "rpc": [
+    "https://rsk-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://public-node.testnet.rsk.co",
     "https://mycrypto.testnet.rsk.co"
   ],

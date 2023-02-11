@@ -2,6 +2,7 @@ export default {
   "name": "Expanse Network",
   "chain": "EXP",
   "rpc": [
+    "https://expanse-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.expanse.tech"
   ],
   "faucets": [],

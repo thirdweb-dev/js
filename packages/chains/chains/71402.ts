@@ -2,6 +2,7 @@ export default {
   "name": "Godwoken Mainnet",
   "chain": "GWT",
   "rpc": [
+    "https://godwoken.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://v1.mainnet.godwoken.io/rpc"
   ],
   "faucets": [],

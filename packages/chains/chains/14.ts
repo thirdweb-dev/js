@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://flare.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://flare-api.flare.network/ext/C/rpc"
   ],
   "faucets": [],

@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://excoincial-chain-volta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.exlscan.com"
   ],
   "faucets": [

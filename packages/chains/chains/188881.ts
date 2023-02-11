@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://condor-test-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.condor.systems/rpc"
   ],
   "faucets": [

@@ -3,6 +3,7 @@ export default {
   "chain": "SIN2",
   "faucets": [],
   "rpc": [
+    "https://siriusnet-v2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc2.siriusnet.io"
   ],
   "icon": {

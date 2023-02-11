@@ -2,6 +2,7 @@ export default {
   "name": "Shiden",
   "chain": "SDN",
   "rpc": [
+    "https://shiden.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://shiden.api.onfinality.io/public",
     "https://shiden-rpc.dwellir.com",
     "https://shiden.public.blastapi.io",

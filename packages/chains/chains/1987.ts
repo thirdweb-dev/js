@@ -2,6 +2,7 @@ export default {
   "name": "EtherGem",
   "chain": "EGEM",
   "rpc": [
+    "https://ethergem.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jsonrpc.egem.io/custom"
   ],
   "faucets": [],

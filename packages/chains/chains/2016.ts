@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://z-mainnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.mainnetz.io"
   ],
   "faucets": [

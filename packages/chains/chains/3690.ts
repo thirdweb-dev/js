@@ -2,6 +2,7 @@ export default {
   "name": "Bittex Mainnet",
   "chain": "BTX",
   "rpc": [
+    "https://bittex.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.bittexscan.info",
     "https://rpc2.bittexscan.info"
   ],

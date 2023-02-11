@@ -2,6 +2,7 @@ export default {
   "name": "KCC Testnet",
   "chain": "KCC",
   "rpc": [
+    "https://kcc-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.kcc.network"
   ],
   "faucets": [

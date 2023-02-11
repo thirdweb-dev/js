@@ -2,6 +2,7 @@ export default {
   "name": "TechPay Mainnet",
   "chain": "TPC",
   "rpc": [
+    "https://techpay.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.techpay.io/"
   ],
   "faucets": [],

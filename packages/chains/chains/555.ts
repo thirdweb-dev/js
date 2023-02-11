@@ -2,6 +2,7 @@ export default {
   "name": "Vela1 Chain Mainnet",
   "chain": "VELA1",
   "rpc": [
+    "https://vela1-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.velaverse.io"
   ],
   "faucets": [],

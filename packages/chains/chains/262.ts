@@ -2,6 +2,7 @@ export default {
   "name": "SUR Blockchain Network",
   "chain": "SUR",
   "rpc": [
+    "https://sur-blockchain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sur.nilin.org"
   ],
   "faucets": [],

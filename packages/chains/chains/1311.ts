@@ -2,6 +2,7 @@ export default {
   "name": "Dos Fuji Subnet",
   "chain": "DOS",
   "rpc": [
+    "https://dos-fuji-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test.doschain.com/jsonrpc"
   ],
   "faucets": [],

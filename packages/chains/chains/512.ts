@@ -2,6 +2,7 @@ export default {
   "name": "Double-A Chain Mainnet",
   "chain": "AAC",
   "rpc": [
+    "https://double-a-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.acuteangle.com"
   ],
   "faucets": [],

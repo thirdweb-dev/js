@@ -2,6 +2,7 @@ export default {
   "name": "Joys Digital Mainnet",
   "chain": "JOYS",
   "rpc": [
+    "https://joys-digital.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.joys.digital"
   ],
   "faucets": [],

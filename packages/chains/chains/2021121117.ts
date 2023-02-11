@@ -2,6 +2,7 @@ export default {
   "name": "DataHopper",
   "chain": "HOP",
   "rpc": [
+    "https://datahopper.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://23.92.21.121:8545"
   ],
   "faucets": [],

@@ -3,6 +3,7 @@ export default {
   "title": "Kintsugi merge testnet",
   "chain": "ETH",
   "rpc": [
+    "https://kintsugi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.kintsugi.themerge.dev"
   ],
   "faucets": [

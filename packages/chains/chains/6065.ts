@@ -2,6 +2,7 @@ export default {
   "name": "Tres Testnet",
   "chain": "TresLeches",
   "rpc": [
+    "https://tres-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-test.tresleches.finance/"
   ],
   "faucets": [

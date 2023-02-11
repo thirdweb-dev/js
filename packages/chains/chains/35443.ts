@@ -2,6 +2,7 @@ export default {
   "name": "Q Testnet",
   "chain": "Q",
   "rpc": [
+    "https://q-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.qtestnet.org"
   ],
   "faucets": [],

@@ -2,6 +2,7 @@ export default {
   "name": "CIC Chain Mainnet",
   "chain": "CIC",
   "rpc": [
+    "https://cic-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://xapi.cicscan.com"
   ],
   "faucets": [],

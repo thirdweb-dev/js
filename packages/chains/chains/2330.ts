@@ -2,6 +2,7 @@ export default {
   "name": "Altcoinchain",
   "chain": "mainnet",
   "rpc": [
+    "https://altcoinchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc0.altcoinchain.org/rpc"
   ],
   "faucets": [],

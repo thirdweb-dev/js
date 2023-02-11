@@ -2,6 +2,7 @@ export default {
   "name": "EtherInc",
   "chain": "ETI",
   "rpc": [
+    "https://etherinc.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.einc.io/jsonrpc/mainnet"
   ],
   "faucets": [],

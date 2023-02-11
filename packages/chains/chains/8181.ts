@@ -2,6 +2,7 @@ export default {
   "name": "BeOne Chain Testnet",
   "chain": "BOC",
   "rpc": [
+    "https://beone-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pre-boc1.beonechain.com",
     "https://pre-boc2.beonechain.com",
     "https://pre-boc3.beonechain.com"

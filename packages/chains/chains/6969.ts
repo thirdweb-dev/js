@@ -2,6 +2,7 @@ export default {
   "name": "Tomb Chain Mainnet",
   "chain": "Tomb Chain",
   "rpc": [
+    "https://tomb-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tombchain.com/"
   ],
   "faucets": [],

@@ -3,6 +3,7 @@ export default {
   "title": "The Bifrost Mainnet network",
   "chain": "BFC",
   "rpc": [
+    "https://bifrost.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://public-01.mainnet.thebifrost.io/rpc",
     "https://public-02.mainnet.thebifrost.io/rpc"
   ],

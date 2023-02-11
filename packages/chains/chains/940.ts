@@ -6,6 +6,7 @@ export default {
   "networkId": 940,
   "infoURL": "https://pulsechain.com/",
   "rpc": [
+    "https://pulsechain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.v2.testnet.pulsechain.com/",
     "wss://rpc.v2.testnet.pulsechain.com/"
   ],

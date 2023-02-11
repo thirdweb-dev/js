@@ -2,6 +2,7 @@ export default {
   "name": "4GoodNetwork",
   "chain": "4GN",
   "rpc": [
+    "https://4goodnetwork.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://chain.deptofgood.com"
   ],
   "faucets": [],

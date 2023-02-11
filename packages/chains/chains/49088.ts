@@ -3,6 +3,7 @@ export default {
   "title": "The Bifrost Testnet network",
   "chain": "BFC",
   "rpc": [
+    "https://bifrost-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://public-01.testnet.thebifrost.io/rpc",
     "https://public-02.testnet.thebifrost.io/rpc"
   ],

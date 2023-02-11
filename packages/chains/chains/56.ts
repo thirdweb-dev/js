@@ -3,19 +3,19 @@ export default {
   "chain": "BSC",
   "rpc": [
     "https://binance.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://bsc-dataseed1.binance.org",
-    "https://bsc-dataseed2.binance.org",
-    "https://bsc-dataseed3.binance.org",
-    "https://bsc-dataseed4.binance.org",
-    "https://bsc-dataseed1.defibit.io",
-    "https://bsc-dataseed2.defibit.io",
-    "https://bsc-dataseed3.defibit.io",
-    "https://bsc-dataseed4.defibit.io",
-    "https://bsc-dataseed1.ninicoin.io",
-    "https://bsc-dataseed2.ninicoin.io",
-    "https://bsc-dataseed3.ninicoin.io",
+    "wss://bsc-ws-node.nariox.org",
     "https://bsc-dataseed4.ninicoin.io",
-    "wss://bsc-ws-node.nariox.org"
+    "https://bsc-dataseed3.ninicoin.io",
+    "https://bsc-dataseed2.ninicoin.io",
+    "https://bsc-dataseed1.ninicoin.io",
+    "https://bsc-dataseed4.defibit.io",
+    "https://bsc-dataseed3.defibit.io",
+    "https://bsc-dataseed2.defibit.io",
+    "https://bsc-dataseed1.defibit.io",
+    "https://bsc-dataseed4.binance.org",
+    "https://bsc-dataseed3.binance.org",
+    "https://bsc-dataseed2.binance.org",
+    "https://bsc-dataseed1.binance.org"
   ],
   "faucets": [
     "https://free-online-app.com/faucet-for-eth-evm-chains/"
@@ -52,5 +52,5 @@ export default {
     ]
   },
   "testnet": false,
-  "slug": "binance-smart-chain"
+  "slug": "binance"
 } as const;

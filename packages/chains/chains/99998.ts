@@ -2,6 +2,7 @@ export default {
   "name": "UB Smart Chain(testnet)",
   "chain": "USC",
   "rpc": [
+    "https://ub-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.rpc.uschain.network"
   ],
   "faucets": [],

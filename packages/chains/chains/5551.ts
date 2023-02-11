@@ -2,6 +2,7 @@ export default {
   "name": "Nahmii Mainnet",
   "chain": "Nahmii",
   "rpc": [
+    "https://nahmii.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://l2.nahmii.io"
   ],
   "faucets": [],

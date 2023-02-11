@@ -2,6 +2,7 @@ export default {
   "name": "DAX CHAIN",
   "chain": "DAX",
   "rpc": [
+    "https://dax-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.prodax.io"
   ],
   "faucets": [],

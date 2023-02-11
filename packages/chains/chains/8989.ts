@@ -3,6 +3,7 @@ export default {
   "title": "Giant Mammoth Chain",
   "chain": "GMMT",
   "rpc": [
+    "https://giant-mammoth.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-asia.gmmtchain.io"
   ],
   "faucets": [],

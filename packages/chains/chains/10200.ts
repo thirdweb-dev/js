@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://chiado-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.chiadochain.net",
     "https://rpc.eu-central-2.gateway.fm/v3/gnosis/archival/chiado"
   ],

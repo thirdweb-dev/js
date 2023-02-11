@@ -2,6 +2,7 @@ export default {
   "name": "OctaSpace",
   "chain": "OCTA",
   "rpc": [
+    "https://octaspace.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.octa.space",
     "wss://rpc.octa.space"
   ],
