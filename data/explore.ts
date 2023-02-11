@@ -22,8 +22,8 @@ const POPULAR = {
     "thirdweb.eth/Marketplace",
     "unlock-protocol.eth/PublicLock",
     "thirdweb.eth/DropERC1155",
-    "thirdweb.eth/Split",
     "thirdweb.eth/TokenERC20",
+    "thirdweb.eth/NFTStake",
   ],
 } as const;
 
