@@ -2,6 +2,7 @@ export default {
   "name": "CIC Chain Testnet",
   "chain": "CICT",
   "rpc": [
+    "https://cic-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testapi.cicscan.com"
   ],
   "faucets": [

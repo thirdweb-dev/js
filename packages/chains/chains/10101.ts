@@ -2,6 +2,7 @@ export default {
   "name": "Blockchain Genesis Mainnet",
   "chain": "GEN",
   "rpc": [
+    "https://blockchain-genesis.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eu.mainnet.xixoio.com",
     "https://us.mainnet.xixoio.com",
     "https://asia.mainnet.xixoio.com"

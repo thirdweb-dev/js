@@ -3,6 +3,7 @@ export default {
   "title": "Ethereum multi-client Verkle Testnet Beverly Hills",
   "chain": "ETH",
   "rpc": [
+    "https://beverly-hills.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.beverlyhills.ethdevops.io:8545"
   ],
   "faucets": [

@@ -9,6 +9,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://step-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.step.network"
   ],
   "faucets": [],

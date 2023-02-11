@@ -2,6 +2,7 @@ export default {
   "name": "Haic",
   "chain": "Haic",
   "rpc": [
+    "https://haic.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://orig.haichain.io/"
   ],
   "faucets": [],

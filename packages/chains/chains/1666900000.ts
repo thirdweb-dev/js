@@ -2,6 +2,7 @@ export default {
   "name": "Harmony Devnet Shard 0",
   "chain": "Harmony",
   "rpc": [
+    "https://harmony-devnet-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.s1.ps.hmny.io",
     "https://api.s1.ps.hmny.io"
   ],

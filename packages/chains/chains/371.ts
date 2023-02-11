@@ -2,6 +2,7 @@ export default {
   "name": "Consta Testnet",
   "chain": "tCNT",
   "rpc": [
+    "https://consta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.theconsta.com"
   ],
   "faucets": [],

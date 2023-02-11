@@ -2,6 +2,7 @@ export default {
   "name": "Frenchain",
   "chain": "fren",
   "rpc": [
+    "https://frenchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-02.frenscan.io"
   ],
   "faucets": [],

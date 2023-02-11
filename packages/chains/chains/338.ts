@@ -2,6 +2,7 @@ export default {
   "name": "Cronos Testnet",
   "chain": "CRO",
   "rpc": [
+    "https://cronos-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-t3.cronos.org"
   ],
   "faucets": [

@@ -2,6 +2,7 @@ export default {
   "name": "Aves Mainnet",
   "chain": "AVS",
   "rpc": [
+    "https://aves.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.avescoin.io"
   ],
   "faucets": [],

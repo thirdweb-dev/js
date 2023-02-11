@@ -2,6 +2,7 @@ export default {
   "name": "MDGL Testnet",
   "chain": "MDGL",
   "rpc": [
+    "https://mdgl-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.mdgl.io"
   ],
   "faucets": [],

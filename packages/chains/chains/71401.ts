@@ -2,6 +2,7 @@ export default {
   "name": "Godwoken Testnet v1",
   "chain": "GWT",
   "rpc": [
+    "https://godwoken-testnet-v1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://godwoken-testnet-v1.ckbapp.dev",
     "https://v1.testnet.godwoken.io/rpc"
   ],

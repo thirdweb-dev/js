@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://polyjuice-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://godwoken-testnet-web3-rpc.ckbapp.dev",
     "ws://godwoken-testnet-web3-rpc.ckbapp.dev/ws"
   ],

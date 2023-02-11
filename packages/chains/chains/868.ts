@@ -2,6 +2,7 @@ export default {
   "name": "Fantasia Chain Mainnet",
   "chain": "FSC",
   "rpc": [
+    "https://fantasia-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-data1.fantasiachain.com/",
     "https://mainnet-data2.fantasiachain.com/",
     "https://mainnet-data3.fantasiachain.com/"

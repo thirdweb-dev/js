@@ -8,6 +8,7 @@ export default {
     "format": "svg"
   },
   "rpc": [
+    "https://milkomeda-c1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet-cardano-evm.c1.milkomeda.com",
     "wss://rpc-mainnet-cardano-evm.c1.milkomeda.com"
   ],

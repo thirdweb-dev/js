@@ -2,6 +2,7 @@ export default {
   "name": "JIBCHAIN L1",
   "chain": "JBC",
   "rpc": [
+    "https://jibchain-l1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-l1.jibchain.net"
   ],
   "faucets": [],

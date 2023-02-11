@@ -2,6 +2,7 @@ export default {
   "name": "Haradev Testnet",
   "chain": "Ntity",
   "rpc": [
+    "https://haradev-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://blockchain.haradev.com"
   ],
   "faucets": [],

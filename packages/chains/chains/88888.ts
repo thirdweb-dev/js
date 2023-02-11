@@ -8,6 +8,7 @@ export default {
     "format": "svg"
   },
   "rpc": [
+    "https://ivar-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.ivarex.com"
   ],
   "faucets": [

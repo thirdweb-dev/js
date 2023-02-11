@@ -2,6 +2,7 @@ export default {
   "name": "Boba Network Goerli Testnet",
   "chain": "ETH",
   "rpc": [
+    "https://boba-network-goerli-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.boba.network/"
   ],
   "faucets": [],

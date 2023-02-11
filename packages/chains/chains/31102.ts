@@ -2,6 +2,7 @@ export default {
   "name": "Ethersocial Network",
   "chain": "ESN",
   "rpc": [
+    "https://ethersocial-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.esn.gonspool.com"
   ],
   "faucets": [],

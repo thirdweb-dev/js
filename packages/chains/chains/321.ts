@@ -2,6 +2,7 @@ export default {
   "name": "KCC Mainnet",
   "chain": "KCC",
   "rpc": [
+    "https://kcc.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.kcc.network",
     "https://kcc.mytokenpocket.vip",
     "https://public-rpc.blockpi.io/http/kcc"

@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://garizon-stage1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://s1.garizon.net/rpc"
   ],
   "faucets": [],

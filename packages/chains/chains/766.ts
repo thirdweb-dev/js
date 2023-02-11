@@ -3,6 +3,7 @@ export default {
   "chain": "QOM",
   "status": "incubating",
   "rpc": [
+    "https://ql1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.qom.one"
   ],
   "faucets": [],

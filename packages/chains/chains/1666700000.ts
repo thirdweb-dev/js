@@ -2,6 +2,7 @@ export default {
   "name": "Harmony Testnet Shard 0",
   "chain": "Harmony",
   "rpc": [
+    "https://harmony-testnet-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.s0.b.hmny.io"
   ],
   "faucets": [

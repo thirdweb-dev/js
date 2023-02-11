@@ -2,6 +2,7 @@ export default {
   "name": "BOMB Chain Testnet",
   "chain": "BOMB",
   "rpc": [
+    "https://bomb-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bombchain-testnet.ankr.com/bas_full_rpc_1"
   ],
   "faucets": [

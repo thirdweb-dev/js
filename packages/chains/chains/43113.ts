@@ -39,5 +39,5 @@ export default {
     }
   ],
   "testnet": true,
-  "slug": "avalanche-fuji-testnet"
+  "slug": "avalanche-fuji"
 } as const;

@@ -2,6 +2,7 @@ export default {
   "name": "VChain Mainnet",
   "chain": "VChain",
   "rpc": [
+    "https://vchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bc.vcex.xyz"
   ],
   "faucets": [],

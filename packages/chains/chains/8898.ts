@@ -3,6 +3,7 @@ export default {
   "title": "Mammoth Chain",
   "chain": "MMT",
   "rpc": [
+    "https://mammoth.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dataseed.mmtscan.io",
     "https://dataseed1.mmtscan.io",
     "https://dataseed2.mmtscan.io"

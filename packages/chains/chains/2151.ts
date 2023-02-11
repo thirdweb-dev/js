@@ -2,6 +2,7 @@ export default {
   "name": "BOSagora Mainnet",
   "chain": "ETH",
   "rpc": [
+    "https://bosagora.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.bosagora.org",
     "https://rpc.bosagora.org"
   ],

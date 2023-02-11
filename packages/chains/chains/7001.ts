@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://zetachain-athens-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.athens2.zetachain.com/evm"
   ],
   "faucets": [

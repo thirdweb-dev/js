@@ -2,6 +2,7 @@ export default {
   "name": "Qitmeer",
   "chain": "MEER",
   "rpc": [
+    "https://qitmeer.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-dataseed1.meerscan.io",
     "https://evm-dataseed2.meerscan.io",
     "https://evm-dataseed3.meerscan.io",

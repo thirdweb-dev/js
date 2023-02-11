@@ -2,6 +2,7 @@ export default {
   "name": "EtherLite Chain",
   "chain": "ETL",
   "rpc": [
+    "https://etherlite-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.etherlite.org"
   ],
   "faucets": [

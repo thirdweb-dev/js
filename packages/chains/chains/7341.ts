@@ -8,6 +8,7 @@ export default {
     "format": "svg"
   },
   "rpc": [
+    "https://shyft.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.shyft.network/"
   ],
   "faucets": [],

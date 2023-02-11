@@ -2,6 +2,7 @@ export default {
   "name": "Omax Mainnet",
   "chain": "OMAX Chain",
   "rpc": [
+    "https://omax.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainapi.omaxray.com"
   ],
   "faucets": [

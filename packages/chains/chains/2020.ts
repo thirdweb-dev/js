@@ -3,6 +3,7 @@ export default {
   "title": "Public Mint Mainnet",
   "chain": "PublicMint",
   "rpc": [
+    "https://publicmint.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.publicmint.io:8545"
   ],
   "faucets": [],

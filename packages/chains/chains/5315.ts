@@ -2,6 +2,7 @@ export default {
   "name": "Uzmi Network Mainnet",
   "chain": "UZMI",
   "rpc": [
+    "https://uzmi-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://network.uzmigames.com.br/"
   ],
   "faucets": [],

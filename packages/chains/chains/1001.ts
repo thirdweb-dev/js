@@ -2,6 +2,7 @@ export default {
   "name": "Klaytn Testnet Baobab",
   "chain": "KLAY",
   "rpc": [
+    "https://klaytn-testnet-baobab.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.baobab.klaytn.net:8651"
   ],
   "faucets": [

@@ -30,5 +30,5 @@ export default {
     ]
   },
   "testnet": true,
-  "slug": "optimism-goerli-testnet"
+  "slug": "optimism-goerli"
 } as const;

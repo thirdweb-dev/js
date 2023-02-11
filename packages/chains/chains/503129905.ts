@@ -2,6 +2,7 @@ export default {
   "name": "Nebula Staging",
   "chain": "staging-faint-slimy-achird",
   "rpc": [
+    "https://nebula-staging.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://staging-v3.skalenodes.com/v1/staging-faint-slimy-achird",
     "wss://staging-v3.skalenodes.com/v1/ws/staging-faint-slimy-achird"
   ],

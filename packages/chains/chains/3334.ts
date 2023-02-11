@@ -2,6 +2,7 @@ export default {
   "name": "Web3Q Galileo",
   "chain": "Web3Q",
   "rpc": [
+    "https://web3q-galileo.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://galileo.web3q.io:8545"
   ],
   "faucets": [],

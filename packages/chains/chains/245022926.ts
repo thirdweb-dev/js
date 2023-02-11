@@ -2,6 +2,7 @@ export default {
   "name": "Neon EVM DevNet",
   "chain": "Solana",
   "rpc": [
+    "https://neon-evm-devnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devnet.neonevm.org"
   ],
   "faucets": [

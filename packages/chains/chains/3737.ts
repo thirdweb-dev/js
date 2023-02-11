@@ -2,6 +2,7 @@ export default {
   "name": "Crossbell",
   "chain": "Crossbell",
   "rpc": [
+    "https://crossbell.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.crossbell.io"
   ],
   "faucets": [

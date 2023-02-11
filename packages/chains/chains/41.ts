@@ -2,6 +2,7 @@ export default {
   "name": "Telos EVM Testnet",
   "chain": "TLOS",
   "rpc": [
+    "https://telos-evm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.telos.net/evm"
   ],
   "faucets": [

@@ -2,6 +2,7 @@ export default {
   "name": "Hertz Network Mainnet",
   "chain": "HTZ",
   "rpc": [
+    "https://hertz-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.hertzscan.com"
   ],
   "faucets": [],

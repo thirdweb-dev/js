@@ -2,6 +2,7 @@ export default {
   "name": "Alyx Mainnet",
   "chain": "ALYX",
   "rpc": [
+    "https://alyx.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.alyxchain.com"
   ],
   "faucets": [],

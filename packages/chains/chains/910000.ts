@@ -2,6 +2,7 @@ export default {
   "name": "Posichain Testnet Shard 0",
   "chain": "PSC",
   "rpc": [
+    "https://posichain-testnet-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.s0.t.posichain.org"
   ],
   "faucets": [

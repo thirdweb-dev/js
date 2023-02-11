@@ -2,6 +2,7 @@ export default {
   "name": "Arbitrum on xDai",
   "chain": "AOX",
   "rpc": [
+    "https://arbitrum-on-xdai.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://arbitrum.xdaichain.com/"
   ],
   "faucets": [],

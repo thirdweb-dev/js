@@ -45,5 +45,5 @@ export default {
     }
   ],
   "testnet": false,
-  "slug": "avalanche-c-chain"
+  "slug": "avalanche"
 } as const;

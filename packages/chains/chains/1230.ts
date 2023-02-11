@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://ultron-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://ultron-dev.io"
   ],
   "faucets": [],

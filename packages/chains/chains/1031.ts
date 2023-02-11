@@ -2,6 +2,7 @@ export default {
   "name": "Proxy Network Testnet",
   "chain": "Proxy Network",
   "rpc": [
+    "https://proxy-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://128.199.94.183:8041"
   ],
   "faucets": [],

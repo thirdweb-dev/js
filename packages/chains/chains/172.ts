@@ -2,6 +2,7 @@ export default {
   "name": "Latam-Blockchain Resil Testnet",
   "chain": "Resil",
   "rpc": [
+    "https://latam-blockchain-resil-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.latam-blockchain.com",
     "wss://ws.latam-blockchain.com"
   ],

@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://dogechain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.dogechain.dog"
   ],
   "faucets": [

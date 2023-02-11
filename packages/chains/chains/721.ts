@@ -2,6 +2,7 @@ export default {
   "name": "Lycan Chain",
   "chain": "LYC",
   "rpc": [
+    "https://lycan-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.lycanchain.com/"
   ],
   "faucets": [],
