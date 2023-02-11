@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://bitindi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.bitindi.org"
   ],
   "faucets": [

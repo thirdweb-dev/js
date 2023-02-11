@@ -2,6 +2,7 @@ export default {
   "name": "BitYuan Mainnet",
   "chain": "BTY",
   "rpc": [
+    "https://bityuan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.bityuan.com/eth"
   ],
   "faucets": [],

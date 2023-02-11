@@ -8,6 +8,7 @@ export default {
     "format": "svg"
   },
   "rpc": [
+    "https://milkomeda-a1-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-devnet-algorand-rollup.a1.milkomeda.com"
   ],
   "faucets": [],

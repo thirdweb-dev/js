@@ -2,6 +2,7 @@ export default {
   "name": "Metis Andromeda Mainnet",
   "chain": "ETH",
   "rpc": [
+    "https://metis-andromeda.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://andromeda.metis.io/?owner=1088"
   ],
   "faucets": [],

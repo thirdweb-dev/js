@@ -2,6 +2,7 @@ export default {
   "name": "Zyx Mainnet",
   "chain": "ZYX",
   "rpc": [
+    "https://zyx.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-1.zyx.network/",
     "https://rpc-2.zyx.network/",
     "https://rpc-3.zyx.network/",

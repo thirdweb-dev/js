@@ -2,6 +2,7 @@ export default {
   "name": "Metacodechain",
   "chain": "metacode",
   "rpc": [
+    "https://metacodechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://j.blockcoach.com:8503"
   ],
   "faucets": [],

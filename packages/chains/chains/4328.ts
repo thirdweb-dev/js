@@ -2,6 +2,7 @@ export default {
   "name": "Bobafuji Testnet",
   "chain": "Bobafuji Testnet",
   "rpc": [
+    "https://bobafuji-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.avax.boba.network",
     "wss://wss.testnet.avax.boba.network",
     "https://replica.testnet.avax.boba.network",

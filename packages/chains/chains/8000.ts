@@ -2,6 +2,7 @@ export default {
   "name": "Teleport",
   "chain": "Teleport",
   "rpc": [
+    "https://teleport.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-rpc.teleport.network"
   ],
   "faucets": [],

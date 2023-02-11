@@ -2,6 +2,7 @@ export default {
   "name": "POA Network Core",
   "chain": "POA",
   "rpc": [
+    "https://poa-network-core.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://core.poa.network"
   ],
   "faucets": [],

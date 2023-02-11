@@ -2,6 +2,7 @@ export default {
   "name": "DYNO Mainnet",
   "chain": "DYNO",
   "rpc": [
+    "https://dyno.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.dynoprotocol.com"
   ],
   "faucets": [

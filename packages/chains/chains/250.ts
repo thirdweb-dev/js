@@ -40,5 +40,5 @@ export default {
     }
   ],
   "testnet": false,
-  "slug": "fantom-opera"
+  "slug": "fantom"
 } as const;

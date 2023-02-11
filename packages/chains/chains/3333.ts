@@ -2,6 +2,7 @@ export default {
   "name": "Web3Q Testnet",
   "chain": "Web3Q",
   "rpc": [
+    "https://web3q-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.web3q.io:8545"
   ],
   "faucets": [],

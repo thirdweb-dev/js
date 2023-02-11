@@ -2,6 +2,7 @@ export default {
   "name": "GTON Mainnet",
   "chain": "GTON",
   "rpc": [
+    "https://gton.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.gton.network/"
   ],
   "faucets": [],

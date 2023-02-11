@@ -2,6 +2,7 @@ export default {
   "name": "edeXa Testnet",
   "chain": "edeXa TestNetwork",
   "rpc": [
+    "https://edexa-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.edexa.com/rpc"
   ],
   "faucets": [

@@ -2,6 +2,7 @@ export default {
   "name": "Taycan Testnet",
   "chain": "Taycan",
   "rpc": [
+    "https://taycan-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test-taycan.hupayx.io"
   ],
   "faucets": [

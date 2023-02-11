@@ -2,6 +2,7 @@ export default {
   "name": "FNCY",
   "chain": "FNCY",
   "rpc": [
+    "https://fncy.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://fncy-seed1.fncy.world"
   ],
   "faucets": [

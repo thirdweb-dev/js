@@ -2,6 +2,7 @@ export default {
   "name": "Metal Tahoe C-Chain",
   "chain": "Metal",
   "rpc": [
+    "https://metal-tahoe-c-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://tahoe.metalblockchain.org/ext/bc/C/rpc"
   ],
   "faucets": [],

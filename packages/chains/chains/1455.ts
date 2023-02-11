@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://ctex-scan-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.ctexscan.com/"
   ],
   "faucets": [

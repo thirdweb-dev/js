@@ -2,6 +2,7 @@ export default {
   "name": "Toki Testnet",
   "chain": "TOKI",
   "rpc": [
+    "https://toki-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.buildwithtoki.com/v0/rpc"
   ],
   "faucets": [],

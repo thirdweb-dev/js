@@ -2,6 +2,7 @@ export default {
   "name": "QuarkChain Devnet Root",
   "chain": "QuarkChain",
   "rpc": [
+    "https://quarkchain-devnet-root.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://jrpc.devnet.quarkchain.io:38391"
   ],
   "faucets": [],

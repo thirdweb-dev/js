@@ -2,6 +2,7 @@ export default {
   "name": "Fuse Mainnet",
   "chain": "FUSE",
   "rpc": [
+    "https://fuse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.fuse.io"
   ],
   "faucets": [],

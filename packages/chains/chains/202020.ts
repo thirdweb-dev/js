@@ -2,6 +2,7 @@ export default {
   "name": "Decimal Smart Chain Testnet",
   "chain": "tDSC",
   "rpc": [
+    "https://decimal-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-val.decimalchain.com/web3"
   ],
   "faucets": [],

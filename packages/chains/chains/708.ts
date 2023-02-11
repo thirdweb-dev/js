@@ -2,6 +2,7 @@ export default {
   "name": "BlockChain Station Testnet",
   "chain": "BCS",
   "rpc": [
+    "https://blockchain-station-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.bcsdev.io",
     "wss://rpc-ws-testnet.bcsdev.io"
   ],

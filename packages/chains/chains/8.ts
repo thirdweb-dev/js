@@ -2,6 +2,7 @@ export default {
   "name": "Ubiq",
   "chain": "UBQ",
   "rpc": [
+    "https://ubiq.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.octano.dev",
     "https://pyrus2.ubiqscan.io"
   ],

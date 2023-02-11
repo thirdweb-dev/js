@@ -2,6 +2,7 @@ export default {
   "name": "Beagle Messaging Chain",
   "chain": "BMC",
   "rpc": [
+    "https://beagle-messaging-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://beagle.chat/eth"
   ],
   "faucets": [

@@ -2,6 +2,7 @@ export default {
   "name": "Mix",
   "chain": "MIX",
   "rpc": [
+    "https://mix.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc2.mix-blockchain.org:8647"
   ],
   "faucets": [],

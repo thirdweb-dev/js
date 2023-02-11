@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://filecoin-wallaby-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://wallaby.node.glif.io/rpc/v1"
   ],
   "faucets": [

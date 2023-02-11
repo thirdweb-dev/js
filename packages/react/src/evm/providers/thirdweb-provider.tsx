@@ -1,9 +1,9 @@
+import { showDeprecationWarning } from "../../core/utils";
 import type { GnosisSafeConnector } from "../connectors/gnosis-safe";
 import type { MagicConnector } from "../connectors/magic";
 import { QueryClient } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import {
-  showDeprecationWarning,
   ThirdwebAuthConfig,
   ThirdwebConfigProvider,
   ThirdwebSDKProvider,

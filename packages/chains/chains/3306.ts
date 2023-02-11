@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://debounce-subnet-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dev-rpc.debounce.network"
   ],
   "faucets": [],

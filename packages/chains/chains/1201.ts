@@ -2,6 +2,7 @@ export default {
   "name": "Evanesco Testnet",
   "chain": "Evanesco Testnet",
   "rpc": [
+    "https://evanesco-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seed5.evanesco.org:8547"
   ],
   "faucets": [],

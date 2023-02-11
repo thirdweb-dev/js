@@ -2,6 +2,7 @@ export default {
   "name": "Q Mainnet",
   "chain": "Q",
   "rpc": [
+    "https://q.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.q.org"
   ],
   "faucets": [],

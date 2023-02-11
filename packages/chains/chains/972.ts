@@ -3,6 +3,7 @@ export default {
   "title": "Oort Ascraeus",
   "chain": "Ascraeus",
   "rpc": [
+    "https://oort-ascraeus.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://ascraeus-rpc.oortech.com"
   ],
   "faucets": [],

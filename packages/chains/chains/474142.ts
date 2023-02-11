@@ -2,6 +2,7 @@ export default {
   "name": "OpenChain Mainnet",
   "chain": "OpenChain",
   "rpc": [
+    "https://openchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://baas-rpc.luniverse.io:18545?lChainId=1641349324562974539"
   ],
   "faucets": [],

@@ -2,6 +2,7 @@ export default {
   "name": "Btachain",
   "chain": "btachain",
   "rpc": [
+    "https://btachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dataseed1.btachain.com/"
   ],
   "faucets": [],

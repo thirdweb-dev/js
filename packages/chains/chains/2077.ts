@@ -2,6 +2,7 @@ export default {
   "name": "Quokkacoin Mainnet",
   "chain": "Qkacoin",
   "rpc": [
+    "https://quokkacoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.qkacoin.org"
   ],
   "faucets": [],

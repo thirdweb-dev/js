@@ -2,6 +2,7 @@ export default {
   "name": "Armonia Eva Chain Mainnet",
   "chain": "Eva",
   "rpc": [
+    "https://armonia-eva-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evascan.io/api/eth-rpc/"
   ],
   "faucets": [],

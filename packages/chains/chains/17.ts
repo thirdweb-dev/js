@@ -2,6 +2,7 @@ export default {
   "name": "ThaiChain 2.0 ThaiFi",
   "chain": "TCH",
   "rpc": [
+    "https://thaichain-2-0-thaifi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.thaifi.com"
   ],
   "faucets": [],

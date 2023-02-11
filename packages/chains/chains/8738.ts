@@ -2,6 +2,7 @@ export default {
   "name": "Alph Network",
   "chain": "ALPH",
   "rpc": [
+    "https://alph-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.alph.network",
     "wss://rpc.alph.network"
   ],

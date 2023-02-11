@@ -2,6 +2,7 @@ export default {
   "name": "Edgeware Mainnet",
   "chain": "EDG",
   "rpc": [
+    "https://edgeware.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet1.edgewa.re"
   ],
   "faucets": [],

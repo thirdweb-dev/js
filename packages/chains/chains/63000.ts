@@ -2,6 +2,7 @@ export default {
   "name": "eCredits Mainnet",
   "chain": "ECS",
   "rpc": [
+    "https://ecredits.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ecredits.com"
   ],
   "faucets": [],

@@ -8,6 +8,7 @@ export default {
   },
   "chain": "UNQ",
   "rpc": [
+    "https://unique.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.unique.network",
     "https://eu-rpc.unique.network",
     "https://asia-rpc.unique.network",

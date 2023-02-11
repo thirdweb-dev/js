@@ -2,6 +2,7 @@ export default {
   "name": "Metadium Testnet",
   "chain": "META",
   "rpc": [
+    "https://metadium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.metadium.com/dev"
   ],
   "faucets": [],

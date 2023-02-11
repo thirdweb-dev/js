@@ -3,6 +3,7 @@ export default {
   "title": "Calypso NFT Hub Testnet",
   "chain": "staging-utter-unripe-menkar",
   "rpc": [
+    "https://calypso-nft-hub-skale-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://staging-v3.skalenodes.com/v1/staging-utter-unripe-menkar"
   ],
   "faucets": [

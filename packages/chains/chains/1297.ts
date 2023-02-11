@@ -2,6 +2,7 @@ export default {
   "name": "Bobabase Testnet",
   "chain": "Bobabase Testnet",
   "rpc": [
+    "https://bobabase-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bobabase.boba.network",
     "wss://wss.bobabase.boba.network",
     "https://replica.bobabase.boba.network",

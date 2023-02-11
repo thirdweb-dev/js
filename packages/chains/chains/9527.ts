@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://rangers-protocol-testnet-robin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://robin.rangersprotocol.com/api/jsonrpc"
   ],
   "faucets": [

@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://dexalot-subnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/dexalot/mainnet/rpc"
   ],
   "faucets": [],

@@ -2,6 +2,7 @@ export default {
   "name": "zkSync alpha testnet",
   "chain": "ETH",
   "rpc": [
+    "https://zksync-alpha-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://zksync2-testnet.zksync.dev"
   ],
   "faucets": [

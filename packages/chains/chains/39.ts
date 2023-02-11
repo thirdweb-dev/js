@@ -2,6 +2,7 @@ export default {
   "name": "Unicorn Ultra Testnet",
   "chain": "u2u",
   "rpc": [
+    "https://unicorn-ultra-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.uniultra.xyz"
   ],
   "faucets": [

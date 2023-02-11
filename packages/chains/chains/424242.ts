@@ -3,6 +3,7 @@ export default {
   "chain": "FTN",
   "title": "Fastex Chain testnet",
   "rpc": [
+    "https://fastex-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.fastexchain.com"
   ],
   "features": [

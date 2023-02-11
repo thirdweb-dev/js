@@ -2,6 +2,7 @@ export default {
   "name": "Pirl",
   "chain": "PIRL",
   "rpc": [
+    "https://pirl.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://wallrpc.pirl.io"
   ],
   "faucets": [],

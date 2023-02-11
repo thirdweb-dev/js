@@ -2,6 +2,7 @@ export default {
   "name": "SanR Chain",
   "chain": "SanRChain",
   "rpc": [
+    "https://sanr-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sanrchain-node.santiment.net"
   ],
   "faucets": [],

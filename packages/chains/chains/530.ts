@@ -2,6 +2,7 @@ export default {
   "name": "F(x)Core Mainnet Network",
   "chain": "Fxcore",
   "rpc": [
+    "https://f-x-core-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://fx-json-web3.functionx.io:8545"
   ],
   "faucets": [],

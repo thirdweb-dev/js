@@ -2,6 +2,7 @@ export default {
   "name": "Crypto Emergency",
   "chain": "CEM",
   "rpc": [
+    "https://crypto-emergency.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://cemchain.com"
   ],
   "faucets": [],

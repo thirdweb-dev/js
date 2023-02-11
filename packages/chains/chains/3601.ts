@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://pandoproject.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-rpc-api.pandoproject.org/rpc"
   ],
   "faucets": [],

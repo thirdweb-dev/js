@@ -2,6 +2,7 @@ export default {
   "name": "Lightstreams Mainnet",
   "chain": "PHT",
   "rpc": [
+    "https://lightstreams.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.mainnet.lightstreams.io"
   ],
   "faucets": [],

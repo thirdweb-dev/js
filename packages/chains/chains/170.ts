@@ -2,6 +2,7 @@ export default {
   "name": "HOO Smart Chain Testnet",
   "chain": "ETH",
   "rpc": [
+    "https://hoo-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-testnet.hoosmartchain.com"
   ],
   "faucets": [

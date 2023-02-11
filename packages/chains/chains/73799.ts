@@ -2,6 +2,7 @@ export default {
   "name": "Energy Web Volta Testnet",
   "chain": "Volta",
   "rpc": [
+    "https://energy-web-volta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://volta-rpc.energyweb.org",
     "wss://volta-rpc.energyweb.org/ws"
   ],

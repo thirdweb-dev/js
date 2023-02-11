@@ -2,6 +2,7 @@ export default {
   "name": "Kekchain (kektest)",
   "chain": "kek",
   "rpc": [
+    "https://kekchain-kektest.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.kekchain.com"
   ],
   "faucets": [],

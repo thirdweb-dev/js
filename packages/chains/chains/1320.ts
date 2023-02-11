@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://aitd-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://http-testnet.aitd.io"
   ],
   "faucets": [

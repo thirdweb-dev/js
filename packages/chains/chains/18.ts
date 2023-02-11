@@ -2,6 +2,7 @@ export default {
   "name": "ThunderCore Testnet",
   "chain": "TST",
   "rpc": [
+    "https://thundercore-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.thundercore.com"
   ],
   "faucets": [

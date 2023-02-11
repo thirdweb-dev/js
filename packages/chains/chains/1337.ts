@@ -2,6 +2,7 @@ export default {
   "name": "Localhost",
   "chain": "ETH",
   "rpc": [
+    "https://localhost.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://localhost:8545"
   ],
   "faucets": [],

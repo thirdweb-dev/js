@@ -2,6 +2,7 @@ export default {
   "name": "BitTorrent Chain Mainnet",
   "chain": "BTTC",
   "rpc": [
+    "https://bittorrent-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.bittorrentchain.io/"
   ],
   "faucets": [],

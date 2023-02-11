@@ -2,6 +2,7 @@ export default {
   "name": "GoChain",
   "chain": "GO",
   "rpc": [
+    "https://gochain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.gochain.io"
   ],
   "faucets": [

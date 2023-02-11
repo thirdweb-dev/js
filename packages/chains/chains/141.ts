@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://openpiece-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.openpiece.io"
   ],
   "faucets": [],
