@@ -14,7 +14,6 @@ import type { ContractInterface, Signer } from "ethers";
 declare global {
   interface Window {
     bridge: TWBridge;
-    unityInstance: any;
   }
 }
 
@@ -59,9 +58,11 @@ interface TWBridge {
   switchNetwork: (chainId: number) => Promise<void>;
   invoke: (route: string, payload: string) => Promise<string | undefined>;
   invokeListener: (
+    taskId: string,
     route: string,
     payload: string,
-    callbackArgs: string,
+    action: any,
+    callback: (jsAction: any, jsTaskId: string, jsResult: string) => void,
   ) => void;
   fundWallet: (options: string) => Promise<void>;
 }
@@ -231,9 +232,11 @@ class ThirdwebBridge implements TWBridge {
   }
 
   public async invokeListener(
+    taskId: string,
     route: string,
     payload: string,
-    callbackArgs: string,
+    action: any,
+    callback: (jsAction: any, jsTaskId: string, jsResult: string) => void,
   ) {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");
@@ -255,23 +258,12 @@ class ThirdwebBridge implements TWBridge {
       }
     });
 
-    const cbArgs = JSON.parse(callbackArgs).arguments;
-    const parsedCbArgs = cbArgs.map((arg: unknown) => {
-      try {
-        return typeof arg === "string" &&
-          (arg.startsWith("{") || arg.startsWith("["))
-          ? JSON.parse(arg)
-          : arg;
-      } catch (e) {
-        return arg;
-      }
-    });
-
     console.debug(
       "thirdwebSDK invoke listener:",
+      taskId,
       route,
       parsedFnArgs,
-      parsedCbArgs,
+      action,
     );
 
     // contract call
@@ -290,25 +282,23 @@ class ThirdwebBridge implements TWBridge {
 
       if (routeArgs.length === 2) {
         // @ts-expect-error need to type-guard this properly
-        const result = await contract[routeArgs[1]](
-          ...parsedFnArgs,
-          (result: any) => this.sendMessage(parsedCbArgs, result),
+        await contract[routeArgs[1]](...parsedFnArgs, (result: any) =>
+          callback(action, taskId, JSON.stringify(result, bigNumberReplacer)),
         );
-        return JSON.stringify({ result: result }, bigNumberReplacer);
       } else if (routeArgs.length === 3) {
         // @ts-expect-error need to type-guard this properly
-        const result = await contract[routeArgs[1]][routeArgs[2]](
+        await contract[routeArgs[1]][routeArgs[2]](
           ...parsedFnArgs,
-          (result: any) => this.sendMessage(parsedCbArgs, result),
+          (result: any) =>
+            callback(action, taskId, JSON.stringify(result, bigNumberReplacer)),
         );
-        return JSON.stringify({ result: result }, bigNumberReplacer);
       } else if (routeArgs.length === 4) {
         // @ts-expect-error need to type-guard this properly
-        const result = await contract[routeArgs[1]][routeArgs[2]][routeArgs[3]](
+        await contract[routeArgs[1]][routeArgs[2]][routeArgs[3]](
           ...parsedFnArgs,
-          (result: any) => this.sendMessage(parsedCbArgs, result),
+          (result: any) =>
+            callback(action, taskId, JSON.stringify(result, bigNumberReplacer)),
         );
-        return JSON.stringify({ result: result }, bigNumberReplacer);
       } else {
         throw new Error("Invalid Route");
       }
@@ -324,14 +314,6 @@ class ThirdwebBridge implements TWBridge {
 
     return await cbPay.fundWallet(fundOptions);
   }
-
-  // helper functions
-
-  sendMessage = (args: any, result: any) => {
-    {
-      w.unityInstance.SendMessage(...args, JSON.stringify(result));
-    }
-  };
 }
 
 // add the bridge to the window object type
