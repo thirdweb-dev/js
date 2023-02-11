@@ -5,7 +5,6 @@ export default {
     "https://optimism-bedrock-goerli-alpha-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://alpha-1-replica-0.bedrock-goerli.optimism.io",
     "https://alpha-1-replica-1.bedrock-goerli.optimism.io",
-    "https://alpha-1-replica-2.bedrock-goerli.optimism.io",
     "https://alpha-1-replica-2.bedrock-goerli.optimism.io"
   ],
   "faucets": [],

@@ -162,6 +162,8 @@ for (const chain of chains) {
       ...chain.rpc,
     ];
   }
+  // unique rpcs
+  chain.rpc = [...new Set(chain.rpc)];
 
   fs.writeFileSync(
     `${chainDir}/${chain.chainId}.ts`,
