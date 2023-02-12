@@ -3,6 +3,9 @@ import React, { PropsWithChildren, createContext, useContext } from "react";
 
 interface ThirdwebConfigContext {
   chains: Readonly<Chain[]>;
+  thirdwebApiKey?: string;
+  alchemyApiKey?: string;
+  infuraApiKey?: string;
 }
 
 const ThirdwebConfigContext = createContext<ThirdwebConfigContext>({

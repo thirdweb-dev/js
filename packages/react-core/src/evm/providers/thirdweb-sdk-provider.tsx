@@ -1,3 +1,4 @@
+import { DEFAULT_API_KEY } from "../../core/constants/rpc";
 import {
   QueryClientProviderProps,
   QueryClientProviderWithDefault,
@@ -6,8 +7,9 @@ import {
   ThirdwebAuthConfig,
   ThirdwebAuthProvider,
 } from "../contexts/thirdweb-auth";
+import { ThirdwebConfigProvider } from "../contexts/thirdweb-config";
 import { ThirdwebConnectedWalletProvider } from "../contexts/thirdweb-wallet";
-import { Chain, defaultChains } from "@thirdweb-dev/chains";
+import { Chain, defaultChains, getChainRPC } from "@thirdweb-dev/chains";
 import {
   SDKOptions,
   SDKOptionsOutput,
@@ -61,6 +63,11 @@ export interface ThirdwebSDKProviderProps<
 
   // the network to use - optional, defaults to undefined
   activeChain?: TChains[number]["chainId"] | TChains[number]["slug"] | Chain;
+
+  // api keys that can be passed
+  thirdwebApiKey?: string;
+  alchemyApiKey?: string;
+  infuraApiKey?: string;
 }
 
 /**
@@ -77,18 +84,12 @@ const WrappedThirdwebSDKProvider = <
   activeChain,
   signer,
   children,
-}: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
-  const mergedChains = useMemo(() => {
-    if (
-      !activeChain ||
-      typeof activeChain === "string" ||
-      typeof activeChain === "number"
-    ) {
-      return supportedChains as Readonly<Chain[]>;
-    }
-    return [...supportedChains, activeChain] as Readonly<Chain[]>;
-  }, [supportedChains, activeChain]);
-
+  thirdwebApiKey = DEFAULT_API_KEY,
+  infuraApiKey,
+  alchemyApiKey,
+}: React.PropsWithChildren<
+  Omit<ThirdwebSDKProviderProps<TChains>, "authConfig">
+>) => {
   const activeChainId = useMemo(() => {
     if (!activeChain) {
       return undefined;
@@ -104,13 +105,13 @@ const WrappedThirdwebSDKProvider = <
     if (typeof window === "undefined") {
       return undefined;
     }
-    let chainId = resolveChainIdFromNetwork(activeChainId, mergedChains);
+    let chainId = resolveChainIdFromNetwork(activeChainId, supportedChains);
     if (signer && !chainId) {
       try {
         chainId = (signer?.provider as any)?._network?.chainId;
       } catch (e) {}
     }
-    const supportedChain = mergedChains.find((c) => c.chainId === chainId);
+    const supportedChain = supportedChains.find((c) => c.chainId === chainId);
 
     if (!supportedChain && chainId !== undefined) {
       console.warn(
@@ -123,31 +124,49 @@ const WrappedThirdwebSDKProvider = <
     let readonlySettings: SDKOptionsOutput["readonlySettings"] = undefined;
 
     if (supportedChain && supportedChain.rpc.length > 0) {
-      readonlySettings = {
-        chainId: supportedChain.chainId,
-        rpcUrl: supportedChain.rpc[0],
-      };
+      try {
+        const rpcUrl = getChainRPC(supportedChain, {
+          thirdwebApiKey,
+          infuraApiKey,
+          alchemyApiKey,
+        });
+
+        readonlySettings = {
+          chainId: supportedChain.chainId,
+          rpcUrl,
+        };
+      } catch (e) {
+        // no-op
+      }
     }
 
     const mergedOptions = {
       readonlySettings,
       ...sdkOptions,
-      chains: mergedChains,
+      chains: supportedChains,
     };
 
     let sdk_: ThirdwebSDK | undefined = undefined;
 
     if (signer) {
       // sdk from signer
-      sdk_ = new ThirdwebSDK(signer, mergedOptions, storageInterface);
+      sdk_ = new ThirdwebSDK(
+        signer,
+        { ...mergedOptions, infuraApiKey, alchemyApiKey, thirdwebApiKey },
+        storageInterface,
+      );
     } else if (chainId) {
       // sdk from chainId
-      sdk_ = new ThirdwebSDK(chainId, mergedOptions, storageInterface);
+      sdk_ = new ThirdwebSDK(
+        chainId,
+        { ...mergedOptions, infuraApiKey, alchemyApiKey, thirdwebApiKey },
+        storageInterface,
+      );
     }
     // if we still have no sdk fall back to the first element in chains
     if (!sdk_) {
-      if (mergedChains.length > 0) {
-        chainId = mergedChains[0].chainId;
+      if (supportedChains.length > 0) {
+        chainId = supportedChains[0].chainId;
         sdk_ = new ThirdwebSDK(chainId, mergedOptions, storageInterface);
       } else {
         console.error(
@@ -158,7 +177,16 @@ const WrappedThirdwebSDKProvider = <
     }
 
     return sdk_;
-  }, [activeChainId, mergedChains, sdkOptions, signer, storageInterface]);
+  }, [
+    activeChainId,
+    alchemyApiKey,
+    infuraApiKey,
+    supportedChains,
+    sdkOptions,
+    signer,
+    storageInterface,
+    thirdwebApiKey,
+  ]);
 
   const ctxValue = useMemo(
     () => ({
@@ -191,18 +219,51 @@ export const ThirdwebSDKProvider = <
   children,
   queryClient,
   authConfig,
+  // @ts-expect-error - different subtype of Chain[] but this works fine
+  supportedChains = defaultChains,
+  activeChain,
+  thirdwebApiKey,
+  alchemyApiKey,
+  infuraApiKey,
   ...restProps
 }: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
+  const mergedChains = useMemo(() => {
+    if (
+      !activeChain ||
+      typeof activeChain === "string" ||
+      typeof activeChain === "number"
+    ) {
+      return supportedChains as Readonly<Chain[]>;
+    }
+    return [...supportedChains, activeChain] as Readonly<Chain[]>;
+  }, [supportedChains, activeChain]);
+
   return (
-    <ThirdwebConnectedWalletProvider signer={signer}>
-      <QueryClientProviderWithDefault queryClient={queryClient}>
-        <ThirdwebAuthProvider value={authConfig}>
-          <WrappedThirdwebSDKProvider signer={signer} {...restProps}>
-            {children}
-          </WrappedThirdwebSDKProvider>
-        </ThirdwebAuthProvider>
-      </QueryClientProviderWithDefault>
-    </ThirdwebConnectedWalletProvider>
+    <ThirdwebConfigProvider
+      value={{
+        chains: mergedChains,
+        thirdwebApiKey,
+        alchemyApiKey,
+        infuraApiKey,
+      }}
+    >
+      <ThirdwebConnectedWalletProvider signer={signer}>
+        <QueryClientProviderWithDefault queryClient={queryClient}>
+          <ThirdwebAuthProvider value={authConfig}>
+            <WrappedThirdwebSDKProvider
+              signer={signer}
+              supportedChains={mergedChains}
+              thirdwebApiKey={thirdwebApiKey}
+              alchemyApiKey={alchemyApiKey}
+              infuraApiKey={infuraApiKey}
+              {...restProps}
+            >
+              {children}
+            </WrappedThirdwebSDKProvider>
+          </ThirdwebAuthProvider>
+        </QueryClientProviderWithDefault>
+      </ThirdwebConnectedWalletProvider>
+    </ThirdwebConfigProvider>
   );
 };
 
