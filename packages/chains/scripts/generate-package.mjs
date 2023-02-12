@@ -156,7 +156,9 @@ for (const chain of chains) {
   chain.slug = slug;
   // if the chain has RPCs that we can use then prepend our RPC to the list
   const chainHasHttpRpc = chain.rpc.some((rpc) => rpc.startsWith("http"));
-  if (chainHasHttpRpc) {
+  // if the chain has RPCs that we can use then prepend our RPC to the list
+  // we're exlcuding localhost because we don't want to use our RPC for localhost
+  if (chainHasHttpRpc && chain.chainId !== 1337) {
     chain.rpc = [
       `https://${slug}.rpc.thirdweb.com/${"${THIRDWEB_API_KEY}"}`,
       ...chain.rpc,
