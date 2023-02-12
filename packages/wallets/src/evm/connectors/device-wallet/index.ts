@@ -1,22 +1,25 @@
 import { ConnectParams, TWConnector } from "../../interfaces/tw-connector";
-import type { DeviceWalletImpl } from "../../wallets/device-wallet";
+import type {
+  DeviceWalletConnectionArgs,
+  DeviceWalletImpl,
+} from "../../wallets/device-wallet";
 import { ethers } from "ethers";
 
 export type DeviceWalletConnectorOptions = {
   chainId: number;
   // TODO: Pass device wallet type here instead
-  createWallet: () => Promise<DeviceWalletImpl>;
+  wallet: DeviceWalletImpl;
 };
 
-export class DeviceWalletConnector extends TWConnector {
+export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArgs> {
   readonly id: string = "device_wallet";
   readonly name: string = "Device Wallet";
   options: DeviceWalletConnectorOptions;
   chainId: number;
+  #wallet: DeviceWalletImpl;
 
   #provider?: ethers.providers.Provider;
   #signer?: ethers.Signer;
-  #wallet?: DeviceWalletImpl;
 
   protected shimDisconnectKey = "deviceWallet.shimDisconnect";
 
@@ -24,16 +27,28 @@ export class DeviceWalletConnector extends TWConnector {
     super();
     this.options = options;
     this.chainId = options.chainId;
+    this.#wallet = options.wallet;
   }
 
-  async connect(args: ConnectParams) {
+  async connect(args: ConnectParams<DeviceWalletConnectionArgs>) {
     if (args.chainId) {
       this.chainId = args.chainId;
     }
-    this.#wallet = await this.options.createWallet();
+    await this.initializeDeviceWallet(args.password);
     const signer = await this.getSigner();
-    const account = (await signer.getAddress()) as `0x${string}`;
-    return account;
+    const address = await signer.getAddress();
+    return address;
+  }
+
+  async initializeDeviceWallet(password: string) {
+    // TODO this should be a UI flow prior to calling connect instead
+    const savedAddr = await this.#wallet.getSavedWalletAddress();
+    if (!savedAddr) {
+      await this.#wallet.generateNewWallet();
+      await this.#wallet.save(password);
+    } else {
+      await this.#wallet.loadSavedWallet(password);
+    }
   }
 
   async disconnect() {
@@ -41,7 +56,6 @@ export class DeviceWalletConnector extends TWConnector {
     if (!provider?.removeListener) {
       return;
     }
-    this.#wallet = undefined;
   }
 
   async getAddress(): Promise<string> {
@@ -80,9 +94,8 @@ export class DeviceWalletConnector extends TWConnector {
       throw new Error("No wallet found");
     }
     if (!this.#signer) {
-      this.#signer = (await this.#wallet.getSigner()).connect(
-        await this.getProvider(),
-      );
+      const provider = await this.getProvider();
+      this.#signer = await this.#wallet.getSigner(provider);
     }
     return this.#signer;
   }

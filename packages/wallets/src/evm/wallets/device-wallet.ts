@@ -1,10 +1,21 @@
-import type { DeviceWalletConnectorOptions } from "../connectors/device-wallet";
 import { TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 import { ethers } from "ethers";
 
-export class DeviceBrowserWallet extends AbstractBrowserWallet<DeviceWalletConnectorOptions> {
+export type DeviceWalletOptions = {
+  chainId: number;
+  storage?: "localStore" | "credentialStore";
+};
+
+export type DeviceWalletConnectionArgs = {
+  password: string;
+};
+
+export class DeviceBrowserWallet extends AbstractBrowserWallet<
+  DeviceWalletOptions,
+  DeviceWalletConnectionArgs
+> {
   #connector?: TWConnector;
 
   static id = "deviceWallet" as const;
@@ -13,7 +24,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<DeviceWalletConne
   }
 
   // TODO wallet type in the Wallet Options
-  constructor(options: WalletOptions<DeviceWalletConnectorOptions>) {
+  constructor(options: WalletOptions<DeviceWalletOptions>) {
     super(DeviceBrowserWallet.id, {
       ...options,
       shouldAutoConnect: false, // TODO figure the autoconnect flow
@@ -26,7 +37,22 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<DeviceWalletConne
       const { DeviceWalletConnector } = await import(
         "../connectors/device-wallet"
       );
-      this.#connector = new DeviceWalletConnector(this.options);
+      let wallet: DeviceWalletImpl;
+      switch (this.options.storage) {
+        case "localStore":
+          wallet = await DeviceWalletImpl.fromBrowserStorage();
+          break;
+        case "credentialStore":
+          wallet = await DeviceWalletImpl.fromCredentialStore();
+          break;
+        default:
+          // default to local storage
+          wallet = await DeviceWalletImpl.fromBrowserStorage();
+      }
+      this.#connector = new DeviceWalletConnector({
+        chainId: this.options.chainId,
+        wallet,
+      });
     }
     return this.#connector;
   }
@@ -39,22 +65,16 @@ export class DeviceWalletImpl extends AbstractWallet {
     });
   }
 
-  static async fromEncryptedBrowserStorage(secretKey: string) {
-    const storage = await import("encrypt-storage");
-    return new DeviceWalletImpl({
-      storage: new BrowserStorage(new storage.EncryptStorage(secretKey)),
-    });
-  }
-
   static async fromCredentialStore() {
     return new DeviceWalletImpl({
       storage: new CredentialsStorage(navigator.credentials),
     });
   }
 
-  private options: DeviceWalletOptions;
+  private options: DeviceWalletImplOptions;
+  #wallet?: ethers.Wallet;
 
-  constructor(options: DeviceWalletOptions) {
+  constructor(options: DeviceWalletImplOptions) {
     super();
     this.options = options;
   }
@@ -62,28 +82,72 @@ export class DeviceWalletImpl extends AbstractWallet {
   async getSigner(
     provider?: ethers.providers.Provider,
   ): Promise<ethers.Signer> {
-    return new ethers.Wallet(await this.getOrCreatePrivateKey(), provider);
+    if (!this.#wallet) {
+      throw new Error("Wallet not initialized");
+    }
+    let wallet = this.#wallet;
+    if (provider) {
+      wallet = wallet.connect(provider);
+    }
+    return wallet;
+  }
+
+  async getSavedWalletAddress(): Promise<string | null> {
+    const data = await this.options.storage.getWalletData();
+    if (!data) {
+      return null;
+    }
+    return data.address;
+  }
+
+  async generateNewWallet(): Promise<string> {
+    const wallet = ethers.Wallet.createRandom();
+    this.#wallet = wallet;
+    return wallet.address;
+  }
+
+  async loadSavedWallet(password: string): Promise<string> {
+    const data = await this.options.storage.getWalletData();
+    if (!data) {
+      throw new Error("No saved wallet");
+    }
+    const wallet = await ethers.Wallet.fromEncryptedJson(
+      data.encryptedData,
+      password,
+    );
+    this.#wallet = wallet;
+    return wallet.address;
+  }
+
+  async save(password: string): Promise<void> {
+    const wallet = (await this.getSigner()) as ethers.Wallet;
+    // reduce the scrypt cost to make it faster
+    const options = {
+      scrypt: {
+        N: 1 << 32,
+      },
+    };
+    const encryptedData = await wallet.encrypt(password, options);
+    await this.options.storage.storeWalletData({
+      address: wallet.address,
+      encryptedData,
+    });
   }
 
   async export(password: string): Promise<string> {
     const wallet = (await this.getSigner()) as ethers.Wallet;
     return wallet.encrypt(password);
   }
-
-  private async getOrCreatePrivateKey(): Promise<string> {
-    let pkey = await this.options.storage.getPrivateKey();
-    if (!pkey) {
-      const w = ethers.Wallet.createRandom();
-      pkey = w.privateKey;
-      await this.options.storage.storePrivateKey(w.address, pkey);
-    }
-    return pkey;
-  }
 }
 
+type WalletData = {
+  address: string;
+  encryptedData: string;
+};
+
 interface IWalletStore {
-  getPrivateKey(): Promise<string | null | undefined>;
-  storePrivateKey(address: string, pkey: string): Promise<void>;
+  getWalletData(): Promise<WalletData | null>;
+  storeWalletData(data: WalletData): Promise<void>;
 }
 
 interface IDeviceStorage {
@@ -91,23 +155,32 @@ interface IDeviceStorage {
   setItem(key: string, value: string): void;
 }
 
-type DeviceWalletOptions = {
+type DeviceWalletImplOptions = {
   storage: IWalletStore;
 };
 
 class BrowserStorage implements IWalletStore {
   private storage: IDeviceStorage;
-  private STORAGE_KEY = "tw_wallet_pk";
+  private STORAGE_KEY_DATA = "tw_wallet_data";
+  private STORAGE_KEY_ADDR = "tw_wallet_address";
   constructor(storage: IDeviceStorage) {
     this.storage = storage;
   }
-
-  async getPrivateKey(): Promise<string | null | undefined> {
-    return this.storage.getItem(this.STORAGE_KEY);
+  async getWalletData(): Promise<WalletData | null> {
+    const address = this.storage.getItem(this.STORAGE_KEY_ADDR);
+    const encryptedData = this.storage.getItem(this.STORAGE_KEY_DATA);
+    if (!address || !encryptedData) {
+      return null;
+    }
+    return {
+      address,
+      encryptedData,
+    };
   }
 
-  async storePrivateKey(pkey: string): Promise<void> {
-    this.storage.setItem(this.STORAGE_KEY, pkey);
+  async storeWalletData(data: WalletData): Promise<void> {
+    this.storage.setItem(this.STORAGE_KEY_ADDR, data.address);
+    this.storage.setItem(this.STORAGE_KEY_DATA, data.encryptedData);
   }
 }
 
@@ -116,24 +189,26 @@ class CredentialsStorage implements IWalletStore {
   constructor(container: CredentialsContainer) {
     this.container = container;
   }
-
-  async getPrivateKey(): Promise<string | null | undefined> {
+  async getWalletData(): Promise<WalletData | null> {
     const credential = await this.container.get({
       password: true,
       unmediated: true,
     } as CredentialRequestOptions);
     console.log(credential);
     if (credential && "password" in credential) {
-      return credential.password as string;
+      return {
+        address: credential.id,
+        encryptedData: credential.password as string,
+      };
     }
     return null;
   }
 
-  async storePrivateKey(address: string, pkey: string): Promise<void> {
+  async storeWalletData(data: WalletData): Promise<void> {
     if ("PasswordCredential" in window) {
       let credentialData = {
-        id: address,
-        password: pkey,
+        id: data.address,
+        password: data.encryptedData,
       };
       const credential = await this.container.create({
         password: credentialData,

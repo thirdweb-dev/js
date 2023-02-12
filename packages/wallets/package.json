@@ -141,7 +141,6 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "encrypt-storage": "^2.12.14",
     "eventemitter3": "^5.0.0",
     "localforage": "^1.10.0"
   },
@@ -162,7 +161,7 @@
     "magic-sdk": "^10.1.0",
     "tweetnacl": "^1.0.3"
   },
-  "peerDependenciesMeta": {
+  "peerDependencqiesMeta": {
     "@aws-sdk/client-secrets-manager": {
       "optional": true
     },
