@@ -1,10 +1,16 @@
 import { TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
+import type { Chain } from "@thirdweb-dev/chains";
 import { ethers } from "ethers";
 
 export type DeviceWalletOptions = {
-  chainId: number;
+  chain:
+    | {
+        chainId: number;
+        rpc: string[];
+      }
+    | Chain;
   storage?: "localStore" | "credentialStore";
 };
 
@@ -50,7 +56,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
           wallet = await DeviceWalletImpl.fromBrowserStorage();
       }
       this.#connector = new DeviceWalletConnector({
-        chainId: this.options.chainId,
+        chain: this.options.chain,
         wallet,
       });
     }

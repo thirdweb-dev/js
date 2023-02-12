@@ -10501,14 +10501,6 @@ encodeurl@~1.0.2:
   resolved "https://registry.npmjs.org/encodeurl/-/encodeurl-1.0.2.tgz"
   integrity sha512-TPJXq8JqFaVYm2CWmPvnP2Iyo4ZSM7/QKcSmuMLDObfpH5fi7RUGmd/rTDf+rut/saiDiQEeVTNgAmJEdAOx0w==
 
-encrypt-storage@^2.12.14:
-  version "2.12.14"
-  resolved "https://registry.yarnpkg.com/encrypt-storage/-/encrypt-storage-2.12.14.tgz#29b5ed90277bda37dd26a2309ebe1856a99ecec2"
-  integrity sha512-fjQmqErfrqd5zJVs866S95qgULd/3XYR0X2DTJz80XQ7WoTEa6mVFVKAr8yb60fOyHAy2VRAGPUOx450N6OQ3g==
-  dependencies:
-    crypto-browserify "^3.12.0"
-    crypto-js "^4.1.1"
-
 end-of-stream@^1.1.0, end-of-stream@^1.4.1, end-of-stream@^1.4.4:
   version "1.4.4"
   resolved "https://registry.npmjs.org/end-of-stream/-/end-of-stream-1.4.4.tgz"

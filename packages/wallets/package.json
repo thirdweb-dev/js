@@ -145,6 +145,7 @@
     "localforage": "^1.10.0"
   },
   "peerDependencies": {
+    "@thirdweb-dev/chains": "*",
     "@aws-sdk/client-secrets-manager": "^3.256.0",
     "@coinbase/wallet-sdk": "^3.6.3",
     "@magic-ext/connect": "^3.1.0",
@@ -162,6 +163,9 @@
     "tweetnacl": "^1.0.3"
   },
   "peerDependencqiesMeta": {
+    "@thirdweb-dev/chains": {
+      "optional": true
+    },
     "@aws-sdk/client-secrets-manager": {
       "optional": true
     },
@@ -206,6 +210,7 @@
     }
   },
   "devDependencies": {
+    "@thirdweb-dev/chains": "*",
     "@aws-sdk/client-secrets-manager": "^3.256.0",
     "@coinbase/wallet-sdk": "^3.6.3",
     "@magic-ext/connect": "^3.1.0",

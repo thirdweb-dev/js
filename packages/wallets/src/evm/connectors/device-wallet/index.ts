@@ -3,11 +3,16 @@ import type {
   DeviceWalletConnectionArgs,
   DeviceWalletImpl,
 } from "../../wallets/device-wallet";
+import type { Chain } from "@thirdweb-dev/chains";
 import { ethers } from "ethers";
 
 export type DeviceWalletConnectorOptions = {
-  chainId: number;
-  // TODO: Pass device wallet type here instead
+  chain:
+    | {
+        chainId: number;
+        rpc: string[];
+      }
+    | Chain;
   wallet: DeviceWalletImpl;
 };
 
@@ -26,7 +31,7 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
   constructor(options: DeviceWalletConnectorOptions) {
     super();
     this.options = options;
-    this.chainId = options.chainId;
+    this.chainId = options.chain.chainId;
     this.#wallet = options.wallet;
   }
 
@@ -81,9 +86,8 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
 
   async getProvider() {
     if (!this.#provider) {
-      // TODO pull chains package here + getProviderForChain util + this.getChainId()
       this.#provider = new ethers.providers.JsonRpcBatchProvider(
-        "https://goerli.rpc.thirdweb.com",
+        this.options.chain.rpc[0],
       );
     }
     return this.#provider;
