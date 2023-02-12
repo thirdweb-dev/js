@@ -2,6 +2,7 @@ export default {
   "name": "Seele Mainnet",
   "chain": "Seele",
   "rpc": [
+    "https://seele.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.seelen.pro/"
   ],
   "faucets": [],

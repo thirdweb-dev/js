@@ -2,6 +2,7 @@ export default {
   "name": "Kava EVM Testnet",
   "chain": "KAVA",
   "rpc": [
+    "https://kava-evm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.testnet.kava.io",
     "wss://wevm.testnet.kava.io"
   ],

@@ -2,6 +2,7 @@ export default {
   "name": "Diode Prenet",
   "chain": "DIODE",
   "rpc": [
+    "https://diode-prenet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://prenet.diode.io:8443/",
     "wss://prenet.diode.io:8443/ws"
   ],

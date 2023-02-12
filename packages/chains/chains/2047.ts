@@ -2,6 +2,7 @@ export default {
   "name": "Stratos Testnet",
   "chain": "STOS",
   "rpc": [
+    "https://stratos-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://web3-testnet-rpc.thestratos.org"
   ],
   "faucets": [],

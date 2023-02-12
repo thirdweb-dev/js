@@ -2,6 +2,7 @@ export default {
   "name": "Findora Mainnet",
   "chain": "Findora",
   "rpc": [
+    "https://findora.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-mainnet.findora.org"
   ],
   "faucets": [],

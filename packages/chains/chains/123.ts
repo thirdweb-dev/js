@@ -2,6 +2,7 @@ export default {
   "name": "Fuse Sparknet",
   "chain": "fuse",
   "rpc": [
+    "https://fuse-sparknet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.fusespark.io"
   ],
   "faucets": [

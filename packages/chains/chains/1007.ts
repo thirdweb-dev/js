@@ -2,6 +2,7 @@ export default {
   "name": "Newton Testnet",
   "chain": "NEW",
   "rpc": [
+    "https://newton-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.newchain.newtonproject.org"
   ],
   "faucets": [],

@@ -2,6 +2,7 @@ export default {
   "name": "D-Chain Mainnet",
   "chain": "D-Chain",
   "rpc": [
+    "https://d-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.d-chain.network/ext/bc/2ZiR1Bro5E59siVuwdNuRFzqL95NkvkbzyLBdrsYR9BLSHV7H4/rpc"
   ],
   "nativeCurrency": {

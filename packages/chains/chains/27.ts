@@ -2,6 +2,7 @@ export default {
   "name": "ShibaChain",
   "chain": "SHIB",
   "rpc": [
+    "https://shibachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.shibachain.net"
   ],
   "faucets": [],

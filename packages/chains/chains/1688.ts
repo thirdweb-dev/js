@@ -2,6 +2,7 @@ export default {
   "name": "LUDAN Mainnet",
   "chain": "LUDAN",
   "rpc": [
+    "https://ludan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ludan.org/"
   ],
   "faucets": [],

@@ -2,6 +2,7 @@ export default {
   "name": "Autonity Piccadilly (Thames) Testnet",
   "chain": "AUT",
   "rpc": [
+    "https://autonity-piccadilly-thames-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.piccadilly.autonity.org/",
     "wss://rpc1.piccadilly.autonity.org/ws/"
   ],

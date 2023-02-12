@@ -2,6 +2,7 @@ export default {
   "name": "Crystaleum",
   "chain": "crystal",
   "rpc": [
+    "https://crystaleum.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.cryptocurrencydevs.org",
     "https://rpc.crystaleum.org"
   ],

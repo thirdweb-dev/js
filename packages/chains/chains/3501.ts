@@ -2,6 +2,7 @@ export default {
   "name": "JFIN Chain",
   "chain": "JFIN",
   "rpc": [
+    "https://jfin-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.jfinchain.com"
   ],
   "faucets": [],

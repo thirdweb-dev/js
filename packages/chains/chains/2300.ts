@@ -2,6 +2,7 @@ export default {
   "name": "BOMB Chain",
   "chain": "BOMB",
   "rpc": [
+    "https://bomb-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.bombchain.com"
   ],
   "faucets": [],

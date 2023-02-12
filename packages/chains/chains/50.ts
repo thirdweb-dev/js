@@ -2,6 +2,7 @@ export default {
   "name": "XinFin XDC Network",
   "chain": "XDC",
   "rpc": [
+    "https://xinfin-xdc-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://erpc.xinfin.network",
     "https://rpc.xinfin.network",
     "https://rpc1.xinfin.network"

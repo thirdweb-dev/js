@@ -2,6 +2,7 @@ export default {
   "name": "ThunderCore Mainnet",
   "chain": "TT",
   "rpc": [
+    "https://thundercore.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.thundercore.com",
     "https://mainnet-rpc.thundertoken.net",
     "https://mainnet-rpc.thundercore.io"

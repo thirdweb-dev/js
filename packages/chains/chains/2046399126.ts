@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://europa-skale-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.skalenodes.com/v1/elated-tan-skat",
     "wss://mainnet.skalenodes.com/v1/elated-tan-skat"
   ],

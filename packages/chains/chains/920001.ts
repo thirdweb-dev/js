@@ -2,6 +2,7 @@ export default {
   "name": "Posichain Devnet Shard 1",
   "chain": "PSC",
   "rpc": [
+    "https://posichain-devnet-shard-1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.s1.d.posichain.org"
   ],
   "faucets": [

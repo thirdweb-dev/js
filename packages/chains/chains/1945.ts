@@ -3,6 +3,7 @@ export default {
   "title": "ONUS Chain Testnet",
   "chain": "onus",
   "rpc": [
+    "https://onus-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.onuschain.io"
   ],
   "faucets": [],

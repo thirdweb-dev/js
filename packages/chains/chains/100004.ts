@@ -2,6 +2,7 @@ export default {
   "name": "QuarkChain Mainnet Shard 3",
   "chain": "QuarkChain",
   "rpc": [
+    "https://quarkchain-shard-3.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-s3-ethapi.quarkchain.io",
     "http://eth-jrpc.mainnet.quarkchain.io:39003"
   ],

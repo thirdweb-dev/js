@@ -2,6 +2,7 @@ export default {
   "name": "TOOL Global Mainnet",
   "chain": "OLO",
   "rpc": [
+    "https://tool-global.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-web3.wolot.io"
   ],
   "faucets": [],

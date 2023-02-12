@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://openvessel.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-external.openvessel.io"
   ],
   "faucets": [],

@@ -2,6 +2,7 @@ export default {
   "name": "Telos EVM Mainnet",
   "chain": "TLOS",
   "rpc": [
+    "https://telos-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.telos.net/evm"
   ],
   "faucets": [],

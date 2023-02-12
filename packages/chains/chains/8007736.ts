@@ -2,6 +2,7 @@ export default {
   "name": "Plian Mainnet Subchain 1",
   "chain": "Plian",
   "rpc": [
+    "https://plian-subchain-1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.plian.io/child_0"
   ],
   "faucets": [],

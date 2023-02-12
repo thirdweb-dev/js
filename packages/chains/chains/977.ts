@@ -2,6 +2,7 @@ export default {
   "name": "Nepal Blockchain Network",
   "chain": "YETI",
   "rpc": [
+    "https://nepal-blockchain-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.nepalblockchain.dev",
     "https://api.nepalblockchain.network"
   ],

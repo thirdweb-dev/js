@@ -2,6 +2,7 @@ export default {
   "name": "Plian Testnet Subchain 1",
   "chain": "Plian",
   "rpc": [
+    "https://plian-testnet-subchain-1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.plian.io/child_test"
   ],
   "faucets": [],

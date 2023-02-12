@@ -2,6 +2,7 @@ export default {
   "name": "CENNZnet Azalea",
   "chain": "CENNZnet",
   "rpc": [
+    "https://cennznet-azalea.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://cennznet.unfrastructure.io/public"
   ],
   "faucets": [],

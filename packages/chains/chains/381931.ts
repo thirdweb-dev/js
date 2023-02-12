@@ -2,6 +2,7 @@ export default {
   "name": "Metal C-Chain",
   "chain": "Metal",
   "rpc": [
+    "https://metal-c-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.metalblockchain.org/ext/bc/C/rpc"
   ],
   "faucets": [],

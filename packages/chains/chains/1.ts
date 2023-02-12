@@ -17,6 +17,7 @@ export default {
   },
   "rpc": [
     "https://ethereum.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
     "https://mainnet.infura.io/v3/${INFURA_API_KEY}",
     "wss://mainnet.infura.io/ws/v3/${INFURA_API_KEY}",
     "https://api.mycryptoapi.com/eth",

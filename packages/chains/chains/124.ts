@@ -5,6 +5,7 @@ export default {
   "chainId": 124,
   "networkId": 124,
   "rpc": [
+    "https://decentralized-web.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://decentralized-web.tech/dw_rpc.php"
   ],
   "faucets": [],

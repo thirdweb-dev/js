@@ -2,6 +2,7 @@ export default {
   "name": "Ambros Chain Mainnet",
   "chain": "ambroschain",
   "rpc": [
+    "https://ambros-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.ambros.network"
   ],
   "faucets": [],

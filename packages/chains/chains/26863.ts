@@ -2,6 +2,7 @@ export default {
   "name": "OasisChain Mainnet",
   "chain": "OasisChain",
   "rpc": [
+    "https://oasischain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc1.oasischain.io",
     "https://rpc2.oasischain.io",
     "https://rpc3.oasischain.io"

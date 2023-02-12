@@ -2,6 +2,7 @@ export default {
   "name": "Zeniq",
   "chain": "ZENIQ",
   "rpc": [
+    "https://zeniq.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://smart.zeniq.network:9545"
   ],
   "faucets": [

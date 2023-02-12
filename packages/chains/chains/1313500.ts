@@ -2,6 +2,7 @@ export default {
   "name": "Xerom",
   "chain": "XERO",
   "rpc": [
+    "https://xerom.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.xerom.org"
   ],
   "faucets": [],

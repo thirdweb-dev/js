@@ -2,6 +2,7 @@ export default {
   "name": "Teslafunds",
   "chain": "TSF",
   "rpc": [
+    "https://teslafunds.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://tsfapi.europool.me"
   ],
   "faucets": [],

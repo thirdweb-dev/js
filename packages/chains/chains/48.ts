@@ -2,6 +2,7 @@ export default {
   "name": "Ennothem Mainnet Proterozoic",
   "chain": "ETMP",
   "rpc": [
+    "https://ennothem-proterozoic.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.etm.network"
   ],
   "faucets": [],

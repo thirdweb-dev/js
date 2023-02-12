@@ -2,6 +2,7 @@ export default {
   "name": "BerylBit Mainnet",
   "chain": "BRB",
   "rpc": [
+    "https://berylbit.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.berylbit.io"
   ],
   "faucets": [

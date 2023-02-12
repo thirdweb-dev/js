@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://gnosis.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.gnosischain.com",
     "https://rpc.ankr.com/gnosis",
     "https://gnosischain-rpc.gateway.pokt.network",

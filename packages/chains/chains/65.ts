@@ -2,6 +2,7 @@ export default {
   "name": "OKExChain Testnet",
   "chain": "okexchain",
   "rpc": [
+    "https://okexchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://exchaintestrpc.okex.org"
   ],
   "faucets": [

@@ -2,6 +2,7 @@ export default {
   "name": "0XTade",
   "chain": "0XTade Chain",
   "rpc": [
+    "https://0xtade.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.0xtchain.com"
   ],
   "faucets": [],

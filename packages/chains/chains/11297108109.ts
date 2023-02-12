@@ -2,6 +2,7 @@ export default {
   "name": "Palm",
   "chain": "Palm",
   "rpc": [
+    "https://palm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://palm-mainnet.infura.io/v3/${INFURA_API_KEY}"
   ],
   "faucets": [],

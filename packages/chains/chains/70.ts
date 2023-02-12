@@ -2,6 +2,7 @@ export default {
   "name": "Hoo Smart Chain",
   "chain": "HSC",
   "rpc": [
+    "https://hoo-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-mainnet.hoosmartchain.com",
     "https://http-mainnet2.hoosmartchain.com",
     "wss://ws-mainnet.hoosmartchain.com",

@@ -2,6 +2,7 @@ export default {
   "name": "Evmos",
   "chain": "Evmos",
   "rpc": [
+    "https://evmos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth.bd.evmos.org:8545",
     "https://evmos-evm.publicnode.com"
   ],

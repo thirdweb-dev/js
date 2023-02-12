@@ -2,6 +2,7 @@ export default {
   "name": "OM Platform Mainnet",
   "chain": "omplatform",
   "rpc": [
+    "https://om-platform.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-cnx.omplatform.com/"
   ],
   "faucets": [],

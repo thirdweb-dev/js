@@ -2,6 +2,7 @@ export default {
   "name": "Energi Mainnet",
   "chain": "NRG",
   "rpc": [
+    "https://energi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nodeapi.energi.network"
   ],
   "faucets": [],

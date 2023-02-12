@@ -2,6 +2,7 @@ export default {
   "name": "Wanchain",
   "chain": "WAN",
   "rpc": [
+    "https://wanchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://gwan-ssl.wandevs.org:56891/"
   ],
   "faucets": [],

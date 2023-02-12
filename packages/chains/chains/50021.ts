@@ -2,6 +2,7 @@ export default {
   "name": "GTON Testnet",
   "chain": "GTON Testnet",
   "rpc": [
+    "https://gton-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.gton.network/"
   ],
   "faucets": [],

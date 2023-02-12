@@ -2,6 +2,7 @@ export default {
   "name": "Nebula Mainnet",
   "chain": "green-giddy-denebola",
   "rpc": [
+    "https://nebula.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.skalenodes.com/v1/green-giddy-denebola",
     "wss://mainnet-proxy.skalenodes.com/v1/ws/green-giddy-denebola"
   ],

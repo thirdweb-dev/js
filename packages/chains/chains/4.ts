@@ -3,6 +3,7 @@ export default {
   "title": "Ethereum Testnet Rinkeby",
   "chain": "ETH",
   "rpc": [
+    "https://rinkeby.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rinkeby.infura.io/v3/${INFURA_API_KEY}",
     "wss://rinkeby.infura.io/ws/v3/${INFURA_API_KEY}"
   ],

@@ -2,6 +2,7 @@ export default {
   "name": "High Performance Blockchain",
   "chain": "HPB",
   "rpc": [
+    "https://high-performance-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://hpbnode.com",
     "wss://ws.hpbnode.com"
   ],

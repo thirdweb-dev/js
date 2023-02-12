@@ -2,6 +2,7 @@ export default {
   "name": "MintMe.com Coin",
   "chain": "MINTME",
   "rpc": [
+    "https://mintme-com-coin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.mintme.com"
   ],
   "faucets": [],

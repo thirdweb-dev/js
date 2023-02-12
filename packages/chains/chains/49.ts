@@ -2,6 +2,7 @@ export default {
   "name": "Ennothem Testnet Pioneer",
   "chain": "ETMP",
   "rpc": [
+    "https://ennothem-testnet-pioneer.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.pioneer.etm.network"
   ],
   "faucets": [],

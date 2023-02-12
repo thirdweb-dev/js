@@ -2,6 +2,7 @@ export default {
   "name": "Mantle Testnet",
   "chain": "ETH",
   "rpc": [
+    "https://mantle-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.mantle.xyz"
   ],
   "faucets": [

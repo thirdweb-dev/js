@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://filecoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.node.glif.io/",
     "https://rpc.ankr.com/filecoin"
   ],

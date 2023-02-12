@@ -2,6 +2,7 @@ export default {
   "name": "Star Social Testnet",
   "chain": "SNS",
   "rpc": [
+    "https://star-social-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://avastar.cc/ext/bc/C/rpc"
   ],
   "faucets": [],

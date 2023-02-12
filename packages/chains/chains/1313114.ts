@@ -2,6 +2,7 @@ export default {
   "name": "Etho Protocol",
   "chain": "ETHO",
   "rpc": [
+    "https://etho-protocol.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ethoprotocol.com"
   ],
   "faucets": [],

@@ -4,6 +4,7 @@ export default {
   "chain": "CRC",
   "status": "active",
   "rpc": [
+    "https://kerleano.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://cacib-saturn-test.francecentral.cloudapp.azure.com",
     "wss://cacib-saturn-test.francecentral.cloudapp.azure.com:9443"
   ],

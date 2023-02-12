@@ -3,6 +3,7 @@ export default {
   "title": "Thai Blockchain Service Infrastructure Mainnet",
   "chain": "TBSI",
   "rpc": [
+    "https://tbsi.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.blockchain.or.th"
   ],
   "faucets": [],
