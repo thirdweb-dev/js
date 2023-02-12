@@ -162,7 +162,7 @@
     "magic-sdk": "^10.1.0",
     "tweetnacl": "^1.0.3"
   },
-  "peerDependencqiesMeta": {
+  "peerDependenciesMeta": {
     "@thirdweb-dev/chains": {
       "optional": true
     },
