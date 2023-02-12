@@ -1,3 +1,3 @@
 // TODO update this to a more specific api key
 export const DEFAULT_API_KEY =
-  "c6634ad2d97b74baf15ff556016830c251050e6c36b9da508ce3ec80095d3dc1";
+  "fb52f0ca630bdd02f0d5210d9e8e3568272ac765dd0709272918eefb29d3ac9e";

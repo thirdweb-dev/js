@@ -1,12 +1,11 @@
+import { DEFAULT_API_KEY } from "../../core/constants";
 import { showDeprecationWarning } from "../../core/utils";
 import type { GnosisSafeConnector } from "../connectors/gnosis-safe";
 import type { MagicConnector } from "../connectors/magic";
-import { DEFAULT_API_KEY } from "../constants/rpc";
 import { QueryClient } from "@tanstack/react-query";
 import { Chain, defaultChains, getChainRPC } from "@thirdweb-dev/chains";
 import {
   ThirdwebAuthConfig,
-  ThirdwebConfigProvider,
   ThirdwebSDKProvider,
   ThirdwebSDKProviderProps,
 } from "@thirdweb-dev/react-core/evm";
@@ -280,6 +279,7 @@ export const ThirdwebProvider = <
           });
         } catch (e) {
           //  just set it to an emptry string
+          console.warn("No viable rpc url for chain: ", c.slug);
           acc[c.chainId] = "";
         }
 
@@ -394,28 +394,22 @@ export const ThirdwebProvider = <
   ]);
 
   return (
-    <ThirdwebConfigProvider
-      value={{
-        chains: supportedChains,
-      }}
-    >
-      <WagmiProvider {...wagmiProps}>
-        <ThirdwebSDKProviderWagmiWrapper
-          queryClient={queryClient}
-          sdkOptions={sdkOptions}
-          supportedChains={supportedChains}
-          // desiredChainId is deprecated, we will remove it in the future but still need to pass it here for now
-          activeChain={activeChainId || desiredChainId}
-          storageInterface={storageInterface}
-          authConfig={authConfig}
-          thirdwebApiKey={thirdwebApiKey}
-          alchemyApiKey={alchemyApiKey}
-          infuraApiKey={infuraApiKey}
-        >
-          {children}
-        </ThirdwebSDKProviderWagmiWrapper>
-      </WagmiProvider>
-    </ThirdwebConfigProvider>
+    <WagmiProvider {...wagmiProps}>
+      <ThirdwebSDKProviderWagmiWrapper
+        queryClient={queryClient}
+        sdkOptions={sdkOptions}
+        supportedChains={supportedChains}
+        // desiredChainId is deprecated, we will remove it in the future but still need to pass it here for now
+        activeChain={activeChainId || desiredChainId}
+        storageInterface={storageInterface}
+        authConfig={authConfig}
+        thirdwebApiKey={thirdwebApiKey}
+        alchemyApiKey={alchemyApiKey}
+        infuraApiKey={infuraApiKey}
+      >
+        {children}
+      </ThirdwebSDKProviderWagmiWrapper>
+    </WagmiProvider>
   );
 };
 
