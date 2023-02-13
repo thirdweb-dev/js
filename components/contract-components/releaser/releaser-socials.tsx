@@ -29,7 +29,11 @@ export const ReleaserSocials: React.FC<ReleaserSocialsProps> = ({
         as={LinkButton}
         isExternal
         noIcon
-        href={releaserProfile.twitter}
+        href={
+          releaserProfile.twitter.includes("twitter.com")
+            ? releaserProfile.twitter
+            : `https://twitter.com/${releaserProfile.twitter}`
+        }
         bg="transparent"
         aria-label="twitter"
         icon={<Icon as={SiTwitter} />}
@@ -55,7 +59,11 @@ export const ReleaserSocials: React.FC<ReleaserSocialsProps> = ({
         as={LinkButton}
         isExternal
         noIcon
-        href={releaserProfile.github}
+        href={
+          releaserProfile.github.includes("github.com")
+            ? releaserProfile.github
+            : `https://github.com/${releaserProfile.github}`
+        }
         bg="transparent"
         aria-label="github"
         icon={<Icon as={SiGithub} />}
@@ -82,7 +90,11 @@ export const ReleaserSocials: React.FC<ReleaserSocialsProps> = ({
         as={LinkButton}
         isExternal
         noIcon
-        href={releaserProfile.medium}
+        href={
+          releaserProfile.medium.includes("medium.com")
+            ? releaserProfile.medium
+            : `https://medium.com/@${releaserProfile.medium}`
+        }
         bg="transparent"
         aria-label="medium"
         icon={<Icon as={SiMedium} />}
@@ -95,7 +107,11 @@ export const ReleaserSocials: React.FC<ReleaserSocialsProps> = ({
         as={LinkButton}
         isExternal
         noIcon
-        href={releaserProfile.telegram}
+        href={
+          releaserProfile.telegram.includes("t.me")
+            ? releaserProfile.telegram
+            : `https://t.me/${releaserProfile.telegram}`
+        }
         bg="transparent"
         aria-label="telegram"
         icon={<Icon as={SiTelegram} />}
@@ -121,7 +137,11 @@ export const ReleaserSocials: React.FC<ReleaserSocialsProps> = ({
         as={LinkButton}
         isExternal
         noIcon
-        href={releaserProfile.reddit}
+        href={
+          releaserProfile.reddit.includes("reddit.com")
+            ? releaserProfile.reddit
+            : `https://reddit.com/user/${releaserProfile.reddit}`
+        }
         bg="transparent"
         aria-label="reddit"
         icon={<Icon as={SiReddit} />}
@@ -134,7 +154,11 @@ export const ReleaserSocials: React.FC<ReleaserSocialsProps> = ({
         as={LinkButton}
         isExternal
         noIcon
-        href={releaserProfile.linkedin}
+        href={
+          releaserProfile.linkedin.includes("linkedin.com")
+            ? releaserProfile.linkedin
+            : `https://linkedin.com/in/${releaserProfile.linkedin}`
+        }
         bg="transparent"
         aria-label="linkedin"
         icon={<Icon as={SiLinkedin} />}
