@@ -70,7 +70,8 @@ export function useWalletConnect() {
 
       // waiting on wagmi to update to latest universal provider
       // univProvider.client.on('session_request_sent', ({ topic, request, chainId }) => {
-      //   console.log('session_request', topic, request, chainId);
+      //   // redirect to wallet
+      //   Linking.openURL(displayUri);
       // });
 
       if (univProvider.client.session.length > 0) {
