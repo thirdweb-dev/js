@@ -97,7 +97,7 @@ export interface DAppMetaData {
    */
   logoUrl?: string;
   /**
-   * the url where your app is hosted
+   * optional - the url where your app is hosted
    */
   url?: string;
   /**
