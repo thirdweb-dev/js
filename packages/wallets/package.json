@@ -64,6 +64,10 @@
       "module": "./evm/wallets/email-wallet/dist/thirdweb-dev-wallets-evm-wallets-email-wallet.esm.js",
       "default": "./evm/wallets/email-wallet/dist/thirdweb-dev-wallets-evm-wallets-email-wallet.cjs.js"
     },
+    "./evm/wallets/device-wallet": {
+      "module": "./evm/wallets/device-wallet/dist/thirdweb-dev-wallets-evm-wallets-device-wallet.esm.js",
+      "default": "./evm/wallets/device-wallet/dist/thirdweb-dev-wallets-evm-wallets-device-wallet.cjs.js"
+    },
     "./evm/connectors/email": {
       "module": "./evm/connectors/email/dist/thirdweb-dev-wallets-evm-connectors-email.esm.js",
       "default": "./evm/connectors/email/dist/thirdweb-dev-wallets-evm-connectors-email.cjs.js"
@@ -95,6 +99,10 @@
     "./evm/wallets/aws-secrets-manager": {
       "module": "./evm/wallets/aws-secrets-manager/dist/thirdweb-dev-wallets-evm-wallets-aws-secrets-manager.esm.js",
       "default": "./evm/wallets/aws-secrets-manager/dist/thirdweb-dev-wallets-evm-wallets-aws-secrets-manager.cjs.js"
+    },
+    "./evm/connectors/device-wallet": {
+      "module": "./evm/connectors/device-wallet/dist/thirdweb-dev-wallets-evm-connectors-device-wallet.esm.js",
+      "default": "./evm/connectors/device-wallet/dist/thirdweb-dev-wallets-evm-connectors-device-wallet.cjs.js"
     },
     "./evm/connectors/wallet-connect": {
       "module": "./evm/connectors/wallet-connect/dist/thirdweb-dev-wallets-evm-connectors-wallet-connect.esm.js",
@@ -137,6 +145,7 @@
     "localforage": "^1.10.0"
   },
   "peerDependencies": {
+    "@thirdweb-dev/chains": "*",
     "@aws-sdk/client-secrets-manager": "^3.256.0",
     "@coinbase/wallet-sdk": "^3.6.3",
     "@magic-ext/connect": "^3.1.0",
@@ -154,6 +163,9 @@
     "tweetnacl": "^1.0.3"
   },
   "peerDependenciesMeta": {
+    "@thirdweb-dev/chains": {
+      "optional": true
+    },
     "@aws-sdk/client-secrets-manager": {
       "optional": true
     },
@@ -198,6 +210,7 @@
     }
   },
   "devDependencies": {
+    "@thirdweb-dev/chains": "*",
     "@aws-sdk/client-secrets-manager": "^3.256.0",
     "@coinbase/wallet-sdk": "^3.6.3",
     "@magic-ext/connect": "^3.1.0",
