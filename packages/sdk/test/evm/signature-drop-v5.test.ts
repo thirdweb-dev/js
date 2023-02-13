@@ -548,7 +548,6 @@ describe("Signature drop tests (v5)", async () => {
           maxClaimableSupply: 1,
         },
       ]);
-      // await sdk.updateSignerOrProvider(samWallet);
       let activeCondition = await signatureDropContract.claimConditions.getActive()
       expect(activeCondition).to.not.eq(null);
       await signatureDropContract.claim(1);   
