@@ -89,10 +89,6 @@ export interface DAppMetaData {
    */
   name: string;
   /**
-   * the url where your app is hosted
-   */
-  url: string;
-  /**
    * optional - a description of your app
    */
   description?: string;
@@ -100,6 +96,10 @@ export interface DAppMetaData {
    * optional - a url that points to a logo (or favicon) of your app
    */
   logoUrl?: string;
+  /**
+   * the url where your app is hosted
+   */
+  url?: string;
   /**
    * optional - whether to show the connect dialog in darkmode or not
    */
@@ -182,7 +182,6 @@ export interface ThirdwebProviderProps<
 
 const defaultdAppMeta: DAppMetaData = {
   name: "thirdweb powered dApp",
-  url: 'https://thirdweb.com',
 };
 
 const defaultWalletConnectors: Required<
