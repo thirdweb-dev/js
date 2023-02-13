@@ -4,7 +4,6 @@ import { ThirdwebSDK, ChainIdOrName } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { AbstractBrowserWallet } from "@thirdweb-dev/wallets/evm/wallets/base";
 import { CoinbaseWallet } from "@thirdweb-dev/wallets/evm/wallets/coinbase-wallet";
-import { DeviceBrowserWallet } from "@thirdweb-dev/wallets/evm/wallets/device-wallet";
 import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
 import { MagicAuthWallet } from "@thirdweb-dev/wallets/evm/wallets/magic-auth";
 import { MetaMask } from "@thirdweb-dev/wallets/evm/wallets/metamask";
@@ -44,7 +43,6 @@ const WALLETS = [
   WalletConnect,
   CoinbaseWallet,
   MagicAuthWallet,
-  DeviceBrowserWallet,
 ] as const;
 
 type PossibleWallet = typeof WALLETS[number]["id"];
