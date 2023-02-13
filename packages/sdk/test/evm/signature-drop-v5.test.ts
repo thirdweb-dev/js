@@ -39,7 +39,7 @@ describe("Signature drop tests (v5)", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
-    signatureDropContract = await sdk.getSignatureDrop(
+    signatureDropContract = await sdk.getContract(
       await sdk.deployer.deployBuiltInContract(
         SignatureDropInitializer.contractType,
         {
@@ -48,8 +48,8 @@ describe("Signature drop tests (v5)", async () => {
           primary_sale_recipient: adminWallet.address,
           seller_fee_basis_points: 0,
         },
-        5,
-      ),
+        "5",
+      ), 'signature-drop'
     );
 
     meta = {
@@ -493,8 +493,8 @@ describe("Signature drop tests (v5)", async () => {
       const conditions = await signatureDropContract.claimConditions.getActive({
         withAllowList: true,
       });
-      invariant(conditions.snapshot);
-      expect(conditions.snapshot[0].address).to.eq(samWallet.address);
+      invariant(conditions?.snapshot);
+      expect(conditions?.snapshot[0].address).to.eq(samWallet.address);
     });
 
     it("should remove merkles from the metadata when claim conditions are removed", async () => {
@@ -513,6 +513,47 @@ describe("Signature drop tests (v5)", async () => {
       const newMetadata = await signatureDropContract.metadata.get();
       const newMerkles = newMetadata.merkle;
       expect(JSON.stringify(newMerkles)).to.eq("{}");
+    });
+
+    it("should not return a condition that's not active yet", async () => {
+      const futureDate = new Date();
+      futureDate.setDate(futureDate.getDate() + 1);
+      await signatureDropContract.claimConditions.set([
+        {
+          startTime: futureDate,
+        },
+      ]);
+
+      const activeCondition = await signatureDropContract.claimConditions.getActive()
+      expect(activeCondition).to.eq(null);
+    });
+
+    it("should not return a condition when maxClaimableSupply is zero", async () => {
+      await signatureDropContract.claimConditions.set([
+        {
+          maxClaimableSupply: 0,
+        },
+      ]);    
+      const activeCondition = await signatureDropContract.claimConditions.getActive()
+      expect(activeCondition).to.eq(null);
+    });
+
+    it("should not return a condition when availableSupply is zero", async () => {
+      await signatureDropContract.createBatch([
+        { name: "test1", description: "test" },
+        { name: "test2", description: "test" },
+      ]);
+      await signatureDropContract.claimConditions.set([
+        {
+          maxClaimableSupply: 1,
+        },
+      ]);
+      // await sdk.updateSignerOrProvider(samWallet);
+      let activeCondition = await signatureDropContract.claimConditions.getActive()
+      expect(activeCondition).to.not.eq(null);
+      await signatureDropContract.claim(1);   
+      activeCondition = await signatureDropContract.claimConditions.getActive()
+      expect(activeCondition).to.eq(null);
     });
 
     it("allow all addresses in the merkle tree to claim", async () => {
@@ -544,7 +585,7 @@ describe("Signature drop tests (v5)", async () => {
           snapshot: members,
         },
       ]);
-      const metadata = [] as NFTMetadataInput[];
+      const metadata: NFTMetadataInput[] = [];
       for (let i = 0; i < 10; i++) {
         metadata.push({
           name: `test ${i}`,

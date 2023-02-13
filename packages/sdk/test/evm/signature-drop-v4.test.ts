@@ -39,7 +39,7 @@ describe("Signature drop tests (v4)", async () => {
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
 
-    signatureDropContract = await sdk.getSignatureDrop(
+    signatureDropContract = await sdk.getContract(
       await sdk.deployer.deployBuiltInContract(
         SignatureDropInitializer.contractType,
         {
