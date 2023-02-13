@@ -1,7 +1,9 @@
-import { getRpcUrl } from "../../core/constants/urls";
-import { SignerOrProvider } from "../core/types";
+import { DEFAULT_API_KEY } from "../../core/constants/urls";
+import { ChainIdOrName } from "../core";
 import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
-import { ChainId, SUPPORTED_CHAIN_ID, SUPPORTED_CHAIN_IDS } from "./chains";
+import { ChainInfo, SDKOptions, SDKOptionsSchema } from "../schema";
+import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
+import { getChainRPC } from "@thirdweb-dev/chains";
 import { ethers, providers } from "ethers";
 
 /**
@@ -9,7 +11,7 @@ import { ethers, providers } from "ethers";
  */
 export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
 
-type ChainNames =
+export type ChainNames =
   | "mainnet"
   // common alias for `mainnet`
   | "ethereum"
@@ -29,13 +31,13 @@ type ChainNames =
   | "arbitrum"
   | "arbitrum-goerli"
   | "binance"
-  | "binance-testnet";
+  | "binance-testnet"
+  // local nodes
+  | "hardhat"
+  | "localhost";
 /**
  * @internal
  */
-export type ChainOrRpc =
-  // ideally we could use `https://${string}` notation here, but doing that causes anything that is a generic string to throw a type error => not worth the hassle for now
-  ChainNames | (string & {});
 
 export const CHAIN_NAME_TO_ID: Record<ChainNames, SUPPORTED_CHAIN_ID> = {
   "avalanche-fuji": ChainId.AvalancheFujiTestnet,
@@ -55,72 +57,64 @@ export const CHAIN_NAME_TO_ID: Record<ChainNames, SUPPORTED_CHAIN_ID> = {
   avalanche: ChainId.Avalanche,
   binance: ChainId.BinanceSmartChainMainnet,
   "binance-testnet": ChainId.BinanceSmartChainTestnet,
+  hardhat: ChainId.Hardhat,
+  localhost: ChainId.Localhost,
 };
 
 export const CHAIN_ID_TO_NAME = Object.fromEntries(
   Object.entries(CHAIN_NAME_TO_ID).map(([name, id]) => [id, name]),
 ) as Record<ChainId, ChainNames>;
 
-function buildDefaultMap() {
-  return SUPPORTED_CHAIN_IDS.reduce((previousValue, currentValue) => {
-    previousValue[currentValue] = getProviderForNetwork(
-      CHAIN_ID_TO_NAME[currentValue],
-    ) as string;
+export function buildDefaultMap(sdkOptions: SDKOptions = {}) {
+  const options = SDKOptionsSchema.parse(sdkOptions);
+  return options.supportedChains.reduce((previousValue, currentValue) => {
+    previousValue[currentValue.chainId] = currentValue;
     return previousValue;
-  }, {} as Record<SUPPORTED_CHAIN_ID, string>);
+  }, {} as Record<number, ChainInfo>);
 }
 
-export const DEFAULT_RPC_URLS: Record<SUPPORTED_CHAIN_ID, string> =
-  buildDefaultMap();
+export function getChainProvider(
+  network: ChainIdOrName,
+  sdkOptions: SDKOptions,
+): ethers.providers.Provider {
+  // handle passing a RPC url directly
+  if (typeof network === "string" && network.startsWith("http")) {
+    return getReadOnlyProvider(network);
+  }
+  const chainId = toChainId(network);
+  const options = SDKOptionsSchema.parse(sdkOptions);
+  const rpcMap: Record<number, ChainInfo> = buildDefaultMap(options);
+  let rpcUrl = "";
+  try {
+    rpcUrl = getChainRPC(rpcMap[chainId], {
+      thirdwebApiKey: options.thirdwebApiKey || DEFAULT_API_KEY,
+      infuraApiKey: options.infuraApiKey,
+      alchemyApiKey: options.alchemyApiKey,
+    });
+  } catch (e) {
+    console.warn("Failed to get chain RPC", e);
+    // no-op
+  }
 
-/**
- * @internal
- * @param network - the chain name or rpc url
- * @returns the rpc url for that chain
- */
-export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
-  if (typeof network !== "string") {
+  if (!rpcUrl) {
+    throw new Error(
+      `No rpc url found for chain ${network}. Please provide a valid rpc url via the 'chains' property of the sdk options.`,
+    );
+  }
+
+  return getReadOnlyProvider(rpcUrl, chainId);
+}
+
+export function toChainId(network: ChainIdOrName): number {
+  if (typeof network === "number") {
     return network;
   }
-  switch (network) {
-    case "mainnet":
-    case "ethereum":
-      return getRpcUrl("ethereum");
-    case "goerli":
-      return getRpcUrl("goerli");
-    case "polygon":
-    case "matic":
-      return getRpcUrl("polygon");
-    case "mumbai":
-      return getRpcUrl("mumbai");
-    case "optimism":
-      return getRpcUrl("optimism");
-    case "optimism-goerli":
-      return getRpcUrl("optimism-goerli");
-    case "arbitrum":
-      return getRpcUrl("arbitrum");
-    case "arbitrum-goerli":
-      return getRpcUrl("arbitrum-goerli");
-    case "fantom":
-      return getRpcUrl("fantom");
-    case "fantom-testnet":
-      return getRpcUrl("fantom-testnet");
-    case "avalanche":
-      return getRpcUrl("avalanche");
-    case "avalanche-testnet":
-    case "avalanche-fuji":
-      return getRpcUrl("avalanche-fuji");
-    case "binance":
-      return getRpcUrl("binance");
-    case "binance-testnet":
-      return getRpcUrl("binance-testnet");
-    default:
-      if (network.startsWith("http") || network.startsWith("ws")) {
-        return network;
-      } else {
-        throw new Error(`Unrecognized chain name or RPC url: ${network}`);
-      }
+  if (!(network in CHAIN_NAME_TO_ID)) {
+    throw new Error(
+      `Cannot resolve chainId from: ${network} - please pass the chainId instead and specify it in the 'chains' property of the SDK options.`,
+    );
   }
+  return CHAIN_NAME_TO_ID[network as ChainNames];
 }
 
 const READONLY_PROVIDER_MAP: Map<
@@ -168,21 +162,3 @@ export function getReadOnlyProvider(network: string, chainId?: number) {
     return ethers.getDefaultProvider(network);
   }
 }
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ChainIdToName: Record<number, string> = {
-  [ChainId.Polygon]: "polygon",
-  [ChainId.Mumbai]: "mumbai",
-  [ChainId.Goerli]: "goerli",
-  [ChainId.Mainnet]: "mainnet",
-  [ChainId.Optimism]: "optimism",
-  [ChainId.OptimismGoerli]: "optimism-goerli",
-  [ChainId.Arbitrum]: "arbitrum",
-  [ChainId.ArbitrumGoerli]: "arbitrum-goerli",
-  [ChainId.Fantom]: "fantom",
-  [ChainId.FantomTestnet]: "fantom-testnet",
-  [ChainId.Avalanche]: "avalanche",
-  [ChainId.AvalancheFujiTestnet]: "avalanche-fuji",
-  [ChainId.BinanceSmartChainMainnet]: "binance",
-  [ChainId.BinanceSmartChainTestnet]: "binance-testnet",
-};

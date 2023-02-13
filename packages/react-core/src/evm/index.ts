@@ -1,8 +1,7 @@
 // providers
-export * from "./providers/base";
+export * from "./providers/thirdweb-sdk-provider";
 
 // constants
-export * from "./constants/chain";
 export * from "./constants/runtime";
 
 // contract hooks
