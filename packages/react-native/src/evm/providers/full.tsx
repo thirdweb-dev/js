@@ -300,7 +300,6 @@ const ThirdwebSDKProviderWagmiWrapper = <TChains extends Chain[]>({
   Omit<ThirdwebSDKProviderProps<TChains>, "signer" | "provider">
 >) => {
   const {data} = useSigner();
-  console.log('data.signer', data);
   return (
     <ThirdwebSDKProvider signer={data || undefined} {...props}>
       {children}

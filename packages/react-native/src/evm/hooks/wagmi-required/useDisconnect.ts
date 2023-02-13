@@ -14,15 +14,13 @@ import { useClient, useDisconnect as useWagmiDisconnect } from "wagmi";
  * @example
  * The following will enable users to disconnect their wallet from the page.
  * ```javascript
- * import { useDisconnect } from "@thirdweb-dev/react"
+ * import { useDisconnect } from "@thirdweb-dev/react-native"
  *
  * const App = () => {
  *   const disconnect = useDisconnect()
  *
  *   return (
- *     <button onClick={disconnect}>
- *       Disconnect
- *     </button>
+ *     <Button onClick={disconnect} title={'Disconnect'} />
  *   )
  * }
  * ```

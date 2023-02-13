@@ -1,18 +1,15 @@
 import { useEffect, useState } from "react";
 import invariant from "tiny-invariant";
-import { useClient, useConnect } from "wagmi";
+import { useClient, useConnect, useDisconnect } from "wagmi";
 import { WalletConnectConnector } from "wagmi/dist/connectors/walletConnect";
 import { Linking } from "react-native";
 import UniversalProvider from "@walletconnect/universal-provider/dist/types/UniversalProvider";
-import { useDisconnect } from "../wagmi-required/useDisconnect";
-
-globalThis.Buffer = Buffer;
 
 /**
  * Hook for connecting to a mobile wallet with Wallet Connect
  *
  * ```javascript
- * import { useWalletConnect } from "@thirdweb-dev/react"
+ * import { useWalletConnect } from "@thirdweb-dev/react-native"
  * ```
  *
  *
@@ -22,18 +19,16 @@ globalThis.Buffer = Buffer;
  * import { useWalletConnect } from "@thirdweb-dev/react-native"
  *
  * const App = () => {
- *   const connectWithWalletConnect = useWalletConnect()
+ *   const {connect} = useWalletConnect()
  *
  *   return (
- *     <button onClick={connectWithWalletConnect}>
- *       Connect WalletConnect
- *     </button>
+ *     <Button onClick={connect} title={'Connect Wallet'} />
  *   )
  * }
  * ```
  *
- * When users click this button, a popup will appear on the screen prompting them to scan a QR code from their phone to connect their mobile wallets.
- * Once they scan the QR code from a wallet connect supported mobile wallet, their wallet will then be connected to the page as expected.
+ * Android: `connect` will trigger a modal with a list of available wallets to connect to on their device.
+ * iOS: `connect` will try to open the first app available to handle `wc://` links on the device.
  *
  * @public
  */
@@ -45,6 +40,7 @@ export function useWalletConnect() {
   );
   const [displayUri, setDisplayUri] = useState<string | undefined>();
   const [connectError, setConnectError] = useState<Error | null>();
+
   const { connect, connectors, error: wagmiConnectError, isLoading, isSuccess } =
     useConnect();
 
@@ -56,26 +52,26 @@ export function useWalletConnect() {
     "WalletConnectConnector not found, please make sure it is provided to your <ThirdwebProvider />",
   );
 
-  const disconnect = useDisconnect();
+  const { disconnect } = useDisconnect();
 
   useEffect(() => {
     setConnectError(wagmiConnectError);
   }, [wagmiConnectError]);
 
   useEffect(() => {
-    // wagmi storage doesn't support async storage so we need to let it know that we are connected
+    // wagmi storage doesn't support async storage on mobile so we need to autoconnect
     const getProvider = async () => {
       const provider = await walletConnector.getProvider();
       const univProvider = provider as unknown as UniversalProvider;
 
-      // waiting on wagmi to update to latest universal provider
+      // waiting on wagmi to update to latest universal provider (tag 2.4.2)
       // univProvider.client.on('session_request_sent', ({ topic, request, chainId }) => {
       //   // redirect to wallet
       //   Linking.openURL(displayUri);
       // });
 
       if (univProvider.client.session.length > 0) {
-        console.log('peer', univProvider.client.session.values[0].peer);
+        // avoid race condition with wc init
         setTimeout(() => {
           connect({ connector: walletConnector });
         }, 100);
@@ -91,16 +87,19 @@ export function useWalletConnect() {
       switch (type) {
         case 'display_uri':
           invariant(typeof data === 'string', 'display_uri message data must be a string')
-          console.log('display_uri', data);
           // store first part of the uri to trigger wallet connect
-          setDisplayUri(data.split('?')[0]);
+          setDisplayUri(data);
           Linking.openURL(data);
           break;
       }
     })
 
+    walletConnector.addListener('connect', () => {
+      console.log('walletConnector connect')
+    });
+
     walletConnector.addListener('disconnect', () => {
-      console.log('disconnect');
+      // we need to disconnect wagmi when the connector disconnects
       disconnect();
     })
     return () => {
