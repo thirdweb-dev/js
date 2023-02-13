@@ -97,10 +97,11 @@ export class DropClaimConditions<
    */
   public async getActive(
     options?: ClaimConditionFetchOptions,
-  ): Promise<ClaimCondition> {
+  ): Promise<ClaimCondition | null> {
     const cc = await this.get();
     const metadata = await this.metadata.get();
-    return await transformResultToClaimCondition(
+  
+    const claimCondition = await transformResultToClaimCondition(
       cc,
       await this.getTokenDecimals(),
       this.contractWrapper.getProvider(),
@@ -108,6 +109,16 @@ export class DropClaimConditions<
       this.storage,
       options?.withAllowList || false,
     );
+    // Don't return the condition if it has not started yet
+    if (new Date(claimCondition.startTime).getTime() > Date.now()) {
+      return null;
+    }
+    // Don't return the condition if every NFT has been claimed
+    if (claimCondition.availableSupply === '0') {
+      return null;
+    }
+    
+    return claimCondition;
   }
 
   private async get(
