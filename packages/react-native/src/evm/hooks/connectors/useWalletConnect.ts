@@ -38,13 +38,14 @@ globalThis.Buffer = Buffer;
  * @public
  */
 export function useWalletConnect() {
-  const [displayUri, setDisplayUri] = useState<string | undefined>();
   const client = useClient();
   invariant(
     client,
     `useWalletConnect() can only be used inside <ThirdwebProvider />. If you are using <ThirdwebSDKProvider /> you will have to use your own wallet-connection logic.`,
   );
-  const { connect, connectors, error: connectError, isLoading, isSuccess } =
+  const [displayUri, setDisplayUri] = useState<string | undefined>();
+  const [connectError, setConnectError] = useState<Error | null>();
+  const { connect, connectors, error: wagmiConnectError, isLoading, isSuccess } =
     useConnect();
 
   const walletConnector = connectors.find(
@@ -58,10 +59,19 @@ export function useWalletConnect() {
   const disconnect = useDisconnect();
 
   useEffect(() => {
+    setConnectError(wagmiConnectError);
+  }, [wagmiConnectError]);
+
+  useEffect(() => {
     // wagmi storage doesn't support async storage so we need to let it know that we are connected
     const getProvider = async () => {
       const provider = await walletConnector.getProvider();
       const univProvider = provider as unknown as UniversalProvider;
+
+      // waiting on wagmi to update to latest universal provider
+      // univProvider.client.on('session_request_sent', ({ topic, request, chainId }) => {
+      //   console.log('session_request', topic, request, chainId);
+      // });
 
       if (univProvider.client.session.length > 0) {
         console.log('peer', univProvider.client.session.values[0].peer);
@@ -72,7 +82,6 @@ export function useWalletConnect() {
     }
 
     getProvider();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps -- we only want to run this once
   }, [])
 

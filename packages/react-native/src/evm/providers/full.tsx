@@ -1,7 +1,6 @@
 import { QueryClient } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import {
-  showDeprecationWarning,
   ThirdwebAuthConfig,
   ThirdwebConfigProvider,
   ThirdwebSDKProvider,
@@ -18,6 +17,7 @@ import {
 } from "wagmi";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { TW_WC_PROJECT_ID, WC_RELAY_URL } from "../constants/walletConnect";
+import { showDeprecationWarning } from "../../core/utils";
 
 /**
  * @internal
