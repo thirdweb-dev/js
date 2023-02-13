@@ -2,6 +2,7 @@ export default {
   "name": "Astra Testnet",
   "chain": "Astra",
   "rpc": [
+    "https://astra-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.astranaut.dev"
   ],
   "faucets": [

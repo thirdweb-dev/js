@@ -2,6 +2,7 @@ export default {
   "name": "Kortho Mainnet",
   "chain": "Kortho Chain",
   "rpc": [
+    "https://kortho.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.kortho-chain.com"
   ],
   "faucets": [],

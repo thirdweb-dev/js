@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://p12-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-chain.p12.games"
   ],
   "faucets": [],

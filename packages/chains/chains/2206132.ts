@@ -2,6 +2,7 @@ export default {
   "name": "PlatON Dev Testnet2",
   "chain": "PlatON",
   "rpc": [
+    "https://platon-dev-testnet2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devnet2openapi.platon.network/rpc",
     "wss://devnet2openapi.platon.network/ws"
   ],

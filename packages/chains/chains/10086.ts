@@ -2,6 +2,7 @@ export default {
   "name": "SJATSH",
   "chain": "ETH",
   "rpc": [
+    "https://sjatsh.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://geth.free.idcfengye.com"
   ],
   "faucets": [],

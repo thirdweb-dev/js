@@ -2,6 +2,7 @@ export default {
   "name": "Posichain Mainnet Shard 0",
   "chain": "PSC",
   "rpc": [
+    "https://posichain-shard-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.posichain.org",
     "https://api.s0.posichain.org"
   ],

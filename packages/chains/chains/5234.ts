@@ -2,6 +2,7 @@ export default {
   "name": "Humanode Mainnet",
   "chain": "HMND",
   "rpc": [
+    "https://humanode.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://explorer-rpc-http.mainnet.stages.humanode.io"
   ],
   "faucets": [],

@@ -2,6 +2,7 @@ export default {
   "name": "Canto",
   "chain": "Canto",
   "rpc": [
+    "https://canto.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://canto.slingshot.finance"
   ],
   "faucets": [],

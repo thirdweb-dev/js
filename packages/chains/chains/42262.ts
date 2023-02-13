@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://oasis-emerald.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://emerald.oasis.dev",
     "wss://emerald.oasis.dev/ws"
   ],

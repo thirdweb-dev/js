@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://resincoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.resincoin.dev"
   ],
   "faucets": [],

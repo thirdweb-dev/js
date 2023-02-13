@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://map.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.maplabs.io"
   ],
   "faucets": [],

@@ -8,6 +8,7 @@ export default {
     "format": "svg"
   },
   "rpc": [
+    "https://rei-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rei-testnet-rpc.moonrhythm.io"
   ],
   "faucets": [

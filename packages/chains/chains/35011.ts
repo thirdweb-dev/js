@@ -2,6 +2,7 @@ export default {
   "name": "J2O Taro",
   "chain": "TARO",
   "rpc": [
+    "https://j2o-taro.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.j2o.io"
   ],
   "features": [

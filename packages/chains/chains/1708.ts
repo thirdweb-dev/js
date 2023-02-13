@@ -3,6 +3,7 @@ export default {
   "title": "Thai Blockchain Service Infrastructure Testnet",
   "chain": "TBSI",
   "rpc": [
+    "https://tbsi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.blockchain.or.th"
   ],
   "faucets": [

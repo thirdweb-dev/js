@@ -3,12 +3,12 @@ export default {
   "chain": "BSC",
   "rpc": [
     "https://binance-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://data-seed-prebsc-1-s1.binance.org:8545",
-    "https://data-seed-prebsc-2-s1.binance.org:8545",
-    "https://data-seed-prebsc-1-s2.binance.org:8545",
-    "https://data-seed-prebsc-2-s2.binance.org:8545",
+    "https://data-seed-prebsc-2-s3.binance.org:8545",
     "https://data-seed-prebsc-1-s3.binance.org:8545",
-    "https://data-seed-prebsc-2-s3.binance.org:8545"
+    "https://data-seed-prebsc-2-s2.binance.org:8545",
+    "https://data-seed-prebsc-1-s2.binance.org:8545",
+    "https://data-seed-prebsc-2-s1.binance.org:8545",
+    "https://data-seed-prebsc-1-s1.binance.org:8545"
   ],
   "faucets": [
     "https://testnet.binance.org/faucet-smart"
@@ -44,5 +44,5 @@ export default {
     ]
   },
   "testnet": true,
-  "slug": "binance-smart-chain-testnet"
+  "slug": "binance-testnet"
 } as const;

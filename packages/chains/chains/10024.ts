@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://gon-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.testnet.gaiaopen.network",
     "http://database1.gaiaopen.network"
   ],

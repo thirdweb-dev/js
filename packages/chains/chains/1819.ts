@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://cube-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-testnet.cube.network",
     "wss://ws-testnet.cube.network",
     "https://http-testnet-sg.cube.network",

@@ -2,6 +2,7 @@ export default {
   "name": "Opside Testnet",
   "chain": "Opside",
   "rpc": [
+    "https://opside-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testrpc.opside.network"
   ],
   "faucets": [

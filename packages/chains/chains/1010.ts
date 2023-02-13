@@ -2,6 +2,7 @@ export default {
   "name": "Evrice Network",
   "chain": "EVC",
   "rpc": [
+    "https://evrice-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://meta.evrice.com"
   ],
   "faucets": [],

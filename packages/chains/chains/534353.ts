@@ -3,6 +3,7 @@ export default {
   "chain": "ETH",
   "status": "incubating",
   "rpc": [
+    "https://scroll-alpha-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://alpha-rpc.scroll.io/l2"
   ],
   "faucets": [],

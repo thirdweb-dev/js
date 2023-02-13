@@ -10,6 +10,7 @@ export default {
     "decimals": 18
   },
   "rpc": [
+    "https://celo.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://forno.celo.org",
     "wss://forno.celo.org/ws"
   ],

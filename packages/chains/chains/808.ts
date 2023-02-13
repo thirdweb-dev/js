@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://portal-fantasy-chain-test.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://subnets.avax.network/portal-fantasy/testnet/rpc"
   ],
   "faucets": [],

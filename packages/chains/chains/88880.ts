@@ -2,6 +2,7 @@ export default {
   "name": "Chiliz Scoville Testnet",
   "chain": "CHZ",
   "rpc": [
+    "https://chiliz-scoville-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://scoville-rpc.chiliz.com"
   ],
   "faucets": [

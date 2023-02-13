@@ -2,6 +2,7 @@ export default {
   "name": "Empire Network",
   "chain": "EMPIRE",
   "rpc": [
+    "https://empire-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.empirenetwork.io"
   ],
   "faucets": [],

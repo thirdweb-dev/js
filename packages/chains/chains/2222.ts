@@ -2,6 +2,7 @@ export default {
   "name": "Kava EVM",
   "chain": "KAVA",
   "rpc": [
+    "https://kava-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.kava.io",
     "https://evm2.kava.io",
     "wss://wevm.kava.io",

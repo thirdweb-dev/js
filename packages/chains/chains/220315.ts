@@ -2,6 +2,7 @@ export default {
   "name": "Mas Mainnet",
   "chain": "MAS",
   "rpc": [
+    "https://mas.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://node.masnet.ai:8545"
   ],
   "faucets": [],

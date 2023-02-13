@@ -2,6 +2,7 @@ export default {
   "name": "Elastos Smart Chain Testnet",
   "chain": "ETH",
   "rpc": [
+    "https://elastos-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api-testnet.elastos.io/eth"
   ],
   "faucets": [

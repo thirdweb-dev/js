@@ -2,6 +2,7 @@ export default {
   "name": "XANAChain",
   "chain": "XANAChain",
   "rpc": [
+    "https://xanachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.xana.net/rpc"
   ],
   "faucets": [],

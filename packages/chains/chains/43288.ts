@@ -2,6 +2,7 @@ export default {
   "name": "Boba Avax",
   "chain": "Boba Avax",
   "rpc": [
+    "https://boba-avax.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://avax.boba.network",
     "wss://wss.avax.boba.network",
     "https://replica.avax.boba.network",

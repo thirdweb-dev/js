@@ -2,6 +2,7 @@ export default {
   "name": "Gear Zero Network Testnet",
   "chain": "GearZero",
   "rpc": [
+    "https://gear-zero-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://gzn-test.linksme.info"
   ],
   "faucets": [],

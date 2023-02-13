@@ -2,6 +2,7 @@ export default {
   "name": "Frenchain Testnet",
   "chain": "tfren",
   "rpc": [
+    "https://frenchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-01tn.frenchain.app"
   ],
   "faucets": [],

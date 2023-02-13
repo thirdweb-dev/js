@@ -2,6 +2,7 @@ export default {
   "name": "ENULS Testnet",
   "chain": "ENULS",
   "rpc": [
+    "https://enuls-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://beta.evmapi.nuls.io",
     "https://beta.evmapi2.nuls.io"
   ],

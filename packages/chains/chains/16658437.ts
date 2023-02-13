@@ -2,6 +2,7 @@ export default {
   "name": "Plian Testnet Main",
   "chain": "Plian",
   "rpc": [
+    "https://plian-testnet-main.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.plian.io/testnet"
   ],
   "faucets": [],

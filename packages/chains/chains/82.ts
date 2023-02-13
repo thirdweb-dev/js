@@ -2,6 +2,7 @@ export default {
   "name": "Meter Mainnet",
   "chain": "METER",
   "rpc": [
+    "https://meter.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.meter.io"
   ],
   "faucets": [

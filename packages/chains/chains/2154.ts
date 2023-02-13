@@ -2,6 +2,7 @@ export default {
   "name": "Findora Forge",
   "chain": "Testnet-forge",
   "rpc": [
+    "https://findora-forge.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://prod-forge.prod.findora.org:8545/"
   ],
   "faucets": [],

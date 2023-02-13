@@ -2,6 +2,7 @@ export default {
   "name": "Zenith Testnet (Vilnius)",
   "chain": "Zenith",
   "rpc": [
+    "https://zenith-testnet-vilnius.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://vilnius.zenithchain.co/http"
   ],
   "faucets": [

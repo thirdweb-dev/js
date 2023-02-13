@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://chain-verse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.chainverse.info"
   ],
   "faucets": [],

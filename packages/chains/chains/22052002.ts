@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://excelon.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://edgewallet1.xlon.org/"
   ],
   "faucets": [],

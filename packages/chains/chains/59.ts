@@ -2,6 +2,7 @@ export default {
   "name": "EOS Mainnet",
   "chain": "EOS",
   "rpc": [
+    "https://eos.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.eosargentina.io"
   ],
   "faucets": [],

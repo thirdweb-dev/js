@@ -2,6 +2,7 @@ export default {
   "name": "Haqq Network",
   "chain": "Haqq",
   "rpc": [
+    "https://haqq-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.eth.haqq.network"
   ],
   "faucets": [],

@@ -2,6 +2,7 @@ export default {
   "name": "Evanesco Mainnet",
   "chain": "EVA",
   "rpc": [
+    "https://evanesco.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seed4.evanesco.org:8546"
   ],
   "faucets": [],

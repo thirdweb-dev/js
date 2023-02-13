@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://planq.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-rpc.planq.network"
   ],
   "faucets": [],

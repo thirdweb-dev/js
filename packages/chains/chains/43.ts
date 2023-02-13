@@ -2,6 +2,7 @@ export default {
   "name": "Darwinia Pangolin Testnet",
   "chain": "pangolin",
   "rpc": [
+    "https://darwinia-pangolin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://pangolin-rpc.darwinia.network"
   ],
   "faucets": [

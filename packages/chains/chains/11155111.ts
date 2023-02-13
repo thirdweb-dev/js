@@ -3,6 +3,7 @@ export default {
   "title": "Ethereum Testnet Sepolia",
   "chain": "ETH",
   "rpc": [
+    "https://sepolia.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.sepolia.org",
     "https://rpc-sepolia.rockx.com"
   ],

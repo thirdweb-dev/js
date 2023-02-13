@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://amstar.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet-rpc.amstarscan.com"
   ],
   "faucets": [],

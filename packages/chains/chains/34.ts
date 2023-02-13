@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://dithereum-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node-testnet.dithereum.io"
   ],
   "faucets": [

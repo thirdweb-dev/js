@@ -2,6 +2,7 @@ export default {
   "name": "IoTeX Network Mainnet",
   "chain": "iotex.io",
   "rpc": [
+    "https://iotex-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://babel-api.mainnet.iotex.io"
   ],
   "faucets": [],

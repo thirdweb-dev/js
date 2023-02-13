@@ -2,6 +2,7 @@ export default {
   "name": "Tres Mainnet",
   "chain": "TresLeches",
   "rpc": [
+    "https://tres.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tresleches.finance/",
     "https://rpc.treschain.io/"
   ],

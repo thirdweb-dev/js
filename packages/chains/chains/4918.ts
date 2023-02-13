@@ -2,6 +2,7 @@ export default {
   "name": "Venidium Testnet",
   "chain": "XVM",
   "rpc": [
+    "https://venidium-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-evm-testnet.venidium.io"
   ],
   "faucets": [],

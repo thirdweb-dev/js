@@ -3,6 +3,7 @@ export default {
   "title": "Optimism Testnet Kovan",
   "chain": "ETH",
   "rpc": [
+    "https://optimism-kovan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://kovan.optimism.io/"
   ],
   "faucets": [

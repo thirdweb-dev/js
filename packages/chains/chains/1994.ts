@@ -2,6 +2,7 @@ export default {
   "name": "Ekta",
   "chain": "EKTA",
   "rpc": [
+    "https://ekta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://main.ekta.io"
   ],
   "faucets": [],

@@ -2,6 +2,7 @@ export default {
   "name": "Orlando Chain",
   "chain": "ORL",
   "rpc": [
+    "https://orlando-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-testnet.orlchain.com"
   ],
   "faucets": [],

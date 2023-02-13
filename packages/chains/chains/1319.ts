@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://aitd.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://walletrpc.aitd.io",
     "https://node.aitd.io"
   ],

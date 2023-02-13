@@ -2,6 +2,7 @@ export default {
   "name": "ARTIS sigma1",
   "chain": "ARTIS",
   "rpc": [
+    "https://artis-sigma1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.sigma1.artis.network"
   ],
   "faucets": [],

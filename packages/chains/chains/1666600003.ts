@@ -2,6 +2,7 @@ export default {
   "name": "Harmony Mainnet Shard 3",
   "chain": "Harmony",
   "rpc": [
+    "https://harmony-shard-3.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.s3.t.hmny.io"
   ],
   "faucets": [],

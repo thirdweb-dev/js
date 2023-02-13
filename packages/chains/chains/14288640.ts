@@ -2,6 +2,7 @@ export default {
   "name": "Anduschain Mainnet",
   "chain": "anduschain",
   "rpc": [
+    "https://anduschain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.anduschain.io/rpc",
     "wss://rpc.anduschain.io/ws"
   ],

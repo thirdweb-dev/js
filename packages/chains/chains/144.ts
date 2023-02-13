@@ -2,6 +2,7 @@ export default {
   "name": "PHI Network v2",
   "chain": "PHI",
   "rpc": [
+    "https://phi-network-v2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://connect.phi.network"
   ],
   "faucets": [],

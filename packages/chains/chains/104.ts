@@ -2,6 +2,7 @@ export default {
   "name": "Kaiba Lightning Chain Testnet",
   "chain": "tKLC",
   "rpc": [
+    "https://kaiba-lightning-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://klc.live/"
   ],
   "faucets": [],

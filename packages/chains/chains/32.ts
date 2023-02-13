@@ -2,6 +2,7 @@ export default {
   "name": "GoodData Testnet",
   "chain": "GooD",
   "rpc": [
+    "https://gooddata-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test2.goodata.io"
   ],
   "faucets": [],

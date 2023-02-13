@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://ella-the-heart.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ella.network"
   ],
   "faucets": [],

@@ -2,6 +2,7 @@ export default {
   "name": "Candle",
   "chain": "Candle",
   "rpc": [
+    "https://candle.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://candle-rpc.com/",
     "https://rpc.cndlchain.com"
   ],

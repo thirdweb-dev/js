@@ -10,6 +10,7 @@ export default {
     "decimals": 18
   },
   "rpc": [
+    "https://arbitrum-nova.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nova.arbitrum.io/rpc"
   ],
   "faucets": [],

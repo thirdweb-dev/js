@@ -2,6 +2,7 @@ export default {
   "name": "Conflux eSpace (Testnet)",
   "chain": "Conflux",
   "rpc": [
+    "https://conflux-espace-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evmtestnet.confluxrpc.com"
   ],
   "faucets": [

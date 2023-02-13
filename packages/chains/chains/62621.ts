@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://multivac.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mtv.ac",
     "https://rpc-eu.mtv.ac"
   ],

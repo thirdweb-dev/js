@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://core-blockchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.coredao.org/"
   ],
   "faucets": [],

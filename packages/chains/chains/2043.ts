@@ -2,6 +2,7 @@ export default {
   "name": "OriginTrail Parachain",
   "chain": "OTP",
   "rpc": [
+    "https://origintrail-parachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://astrosat.origintrail.network",
     "wss://parachain-rpc.origin-trail.network"
   ],

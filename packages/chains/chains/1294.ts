@@ -2,6 +2,7 @@ export default {
   "name": "Bobabeam",
   "chain": "Bobabeam",
   "rpc": [
+    "https://bobabeam.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bobabeam.boba.network",
     "wss://wss.bobabeam.boba.network",
     "https://replica.bobabeam.boba.network",

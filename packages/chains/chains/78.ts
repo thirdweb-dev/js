@@ -2,6 +2,7 @@ export default {
   "name": "PrimusChain mainnet",
   "chain": "PC",
   "rpc": [
+    "https://primuschain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://ethnode.primusmoney.com/mainnet"
   ],
   "faucets": [],

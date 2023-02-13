@@ -2,6 +2,7 @@ export default {
   "name": "Liveplex OracleEVM",
   "chain": "Liveplex OracleEVM Network",
   "rpc": [
+    "https://liveplex-oracleevm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.oracle.liveplex.io"
   ],
   "faucets": [],

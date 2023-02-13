@@ -2,6 +2,7 @@ export default {
   "name": "CENNZnet Nikau",
   "chain": "CENNZnet",
   "rpc": [
+    "https://cennznet-nikau.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nikau.centrality.me/public"
   ],
   "faucets": [

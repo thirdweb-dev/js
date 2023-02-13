@@ -2,6 +2,7 @@ export default {
   "name": "GeneChain",
   "chain": "GeneChain",
   "rpc": [
+    "https://genechain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.genechain.io"
   ],
   "faucets": [],

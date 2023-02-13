@@ -2,6 +2,7 @@ export default {
   "name": "Oort Mainnet",
   "chain": "Oort Mainnet",
   "rpc": [
+    "https://oort.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.oortech.com"
   ],
   "faucets": [],

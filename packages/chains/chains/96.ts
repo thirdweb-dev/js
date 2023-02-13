@@ -2,6 +2,7 @@ export default {
   "name": "NEXT Smart Chain",
   "chain": "NSC",
   "rpc": [
+    "https://next-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.nextsmartchain.com"
   ],
   "faucets": [

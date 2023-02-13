@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://omchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seed.omchain.io"
   ],
   "faucets": [],

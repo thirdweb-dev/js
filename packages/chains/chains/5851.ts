@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://ontology-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://polaris1.ont.io:20339",
     "http://polaris2.ont.io:20339",
     "http://polaris3.ont.io:20339",

@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://oasis-sapphire-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.sapphire.oasis.dev",
     "wss://testnet.sapphire.oasis.dev/ws"
   ],

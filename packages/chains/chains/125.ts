@@ -2,6 +2,7 @@ export default {
   "name": "OYchain Testnet",
   "chain": "OYchain",
   "rpc": [
+    "https://oychain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.oychain.io"
   ],
   "faucets": [

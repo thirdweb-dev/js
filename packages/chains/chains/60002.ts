@@ -2,6 +2,7 @@ export default {
   "name": "Thinkium Testnet Chain 2",
   "chain": "Thinkium",
   "rpc": [
+    "https://thinkium-testnet-chain-2.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test2.thinkiumrpc.net/"
   ],
   "faucets": [

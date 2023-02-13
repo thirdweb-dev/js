@@ -2,6 +2,7 @@ export default {
   "name": "Ethereum Classic Mainnet",
   "chain": "ETC",
   "rpc": [
+    "https://ethereum-classic.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.ethercluster.com/etc"
   ],
   "faucets": [
