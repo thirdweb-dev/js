@@ -121,10 +121,12 @@ const Solana: ThirdwebNextPage = () => {
               <LinkButton
                 variant="outline"
                 href="https://portal.thirdweb.com/solana"
-                px={"64px"}
-                py={"28px"}
-                fontSize="20px"
+                w="full"
                 maxW="260px"
+                py={"22px"}
+                borderWidth="2px"
+                fontSize="20px"
+                maxWidth="260px"
                 fontWeight="bold"
                 isExternal
               >

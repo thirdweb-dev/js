@@ -21,8 +21,8 @@ export const ProductButton: React.FC<GeneralCtaProps> = ({
       leftIcon={
         <Icon as={BsFillLightningChargeFill} color="yellow.400" boxSize={4} />
       }
-      px={"64px"}
-      py={"28px"}
+      w="full"
+      py={"24px"}
       onClick={() =>
         trackEvent({
           category: "cta-button",

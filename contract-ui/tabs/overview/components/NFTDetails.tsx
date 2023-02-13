@@ -58,7 +58,7 @@ const NFTCards: React.FC<ContractOverviewNFTGetAllProps> = ({ contract }) => {
   const getNFTQueryResult = useNFTs(contract, { count: 3 });
 
   return getNFTQueryResult?.data?.length === 0 ? null : (
-    <SimpleGrid gap={4} columns={{ base: 1, md: 3 }}>
+    <SimpleGrid gap={6} columns={{ base: 1, md: 3 }}>
       {getNFTQueryResult.data?.map((token) => (
         <GridItem as={Card} key={token.owner} p={0}>
           {token.metadata.image && (
