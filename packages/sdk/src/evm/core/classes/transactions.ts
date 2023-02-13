@@ -7,49 +7,14 @@ import {
 import { isBrowser } from "../../common/utils";
 import { ChainId } from "../../constants/chains";
 import { ContractSource } from "../../schema/contracts/custom";
-import { TransactionResult } from "../types";
-import { ContractWrapper } from "./contract-wrapper";
+import {
+  TransactionOptionsWithContract,
+  TransactionOptionsWithContractInfo,
+  TransactionOptionsWithContractWrapper,
+} from "../../types/transactions";
 import { ConnectionInfo } from "@ethersproject/web";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
-import { BaseContract, BigNumber, CallOverrides, ethers } from "ethers";
-
-type TransactionOptions = {
-  method: string;
-  args: any[];
-  overrides?: CallOverrides;
-  storage?: ThirdwebStorage;
-};
-
-type TransactionOptionsWithContractWrapper<
-  TContract extends BaseContract = BaseContract,
-> = TransactionOptions & {
-  contractWrapper: ContractWrapper<TContract>;
-};
-
-type TransactionOptionsWithContract = Omit<TransactionOptions, "contract"> & {
-  contract: ethers.Contract;
-  provider: ethers.providers.Provider;
-  signer: ethers.Signer;
-};
-
-type TransactionOptionsWithContractInfo = Omit<
-  TransactionOptionsWithContract,
-  "contract"
-> & {
-  provider: ethers.providers.Provider;
-  contractAddress: string;
-  contractAbi?: ethers.ContractInterface;
-};
-
-export function transaction(fn: (...args: any[]) => Promise<Transaction>) {
-  async function executeFn(...args: any[]): Promise<TransactionResult> {
-    const tx = await fn(...args);
-    return { receipt: await tx.execute() };
-  }
-
-  executeFn.transaction = fn;
-  return executeFn;
-}
+import { BigNumber, CallOverrides, ethers } from "ethers";
 
 export class Transaction {
   private contract: ethers.Contract;
@@ -64,7 +29,7 @@ export class Transaction {
     const signer = options.contractWrapper.getSigner();
     if (!signer) {
       throw new Error(
-        "Cannot create a transaction without a signer. Please ensure that the contract wrapper has a signer.",
+        "Cannot create a transaction without a signer. Please ensure that you have a connected signer.",
       );
     }
 
@@ -227,7 +192,7 @@ export class Transaction {
   /**
    * Send the transaction without waiting for it to be mined.
    */
-  async send() {
+  async send(): Promise<ethers.ContractTransaction> {
     if (!this.contract.functions[this.method]) {
       throw this.functionError();
     }
@@ -267,7 +232,7 @@ export class Transaction {
   /**
    * Send the transaction and wait for it to be mined
    */
-  async execute() {
+  async execute(): Promise<ethers.providers.TransactionReceipt> {
     // TODO: Add submitted and completed events
     const tx = await this.send();
 
@@ -454,5 +419,35 @@ export class Transaction {
       contractName,
       sources,
     });
+  }
+}
+
+export class Transactions {
+  private transactions: Transaction[];
+
+  constructor(transactions: Transaction[]) {
+    this.transactions = transactions;
+  }
+
+  add(transaction: Transaction) {
+    this.transactions.push(transaction);
+  }
+
+  get(index: number) {
+    return this.transactions[index];
+  }
+
+  getAll() {
+    return this.transactions;
+  }
+
+  async executeAll(): Promise<ethers.providers.TransactionReceipt[]> {
+    let receipts = [];
+    for (const transaction of this.transactions) {
+      const receipt = await transaction.execute();
+      receipts.push(receipt);
+    }
+
+    return receipts;
   }
 }
