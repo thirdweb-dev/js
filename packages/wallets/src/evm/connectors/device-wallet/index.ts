@@ -57,10 +57,8 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
   }
 
   async disconnect() {
-    const provider = await this.getProvider();
-    if (!provider?.removeListener) {
-      return;
-    }
+    this.#provider = undefined;
+    this.#signer = undefined;
   }
 
   async getAddress(): Promise<string> {

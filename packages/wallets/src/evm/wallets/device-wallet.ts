@@ -29,7 +29,6 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
     return "Device Wallet" as const;
   }
 
-  // TODO wallet type in the Wallet Options
   constructor(options: WalletOptions<DeviceWalletOptions>) {
     super(DeviceBrowserWallet.id, {
       ...options,
