@@ -29,6 +29,10 @@ class SpecialDownloader implements IStorageDownloader {
     if (url.startsWith("ipfs://")) {
       return fetch(replaceIpfsUrl(url));
     }
+    // never proxy things that are not http requests
+    if (!url.startsWith("http")) {
+      return fetch(url);
+    }
 
     const u = new URL(url);
 
