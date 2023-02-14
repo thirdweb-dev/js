@@ -1,5 +1,12 @@
 import { Aurora } from "../Aurora";
-import { Box, Flex, Image, SimpleGrid } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Image,
+  LinkBox,
+  LinkOverlay,
+  SimpleGrid,
+} from "@chakra-ui/react";
 import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { Heading, Text, TrackedLink } from "tw-components";
 
@@ -72,6 +79,7 @@ const solutions: SolutionCardProps[] = [
     hoverBorderColor: "hsl(309deg 54% 81% / 15%)",
   },
 ];
+
 const SolutionCard: React.FC<SolutionCardProps> = ({
   title,
   description,
@@ -83,76 +91,75 @@ const SolutionCard: React.FC<SolutionCardProps> = ({
   hoverBorderColor,
 }) => {
   return (
-    <TrackedLink
-      href={href}
-      isExternal
-      display="flex"
-      textDecor="none !important"
-      category="solutions"
-      label={title.toLowerCase()}
+    <Flex
+      as={LinkBox}
+      overflow="hidden"
+      direction="column"
+      zIndex={10}
+      background="rgba(0,0,0,0.4)"
+      boxShadow={`0 0 0 1px ${hoverBorderColor}`}
+      borderRadius="8px"
+      transition="box-shadow 300ms ease"
+      _hover={{
+        boxShadow: `0 0 80px ${hoverBorderColor}`,
+      }}
     >
+      <Image
+        src={img}
+        alt=""
+        width="100%"
+        height={{ lg: 250, base: 180 }}
+        objectFit="cover"
+      />
       <Flex
-        overflow="hidden"
         direction="column"
-        zIndex={10}
-        as="section"
-        background="rgba(0,0,0,0.4)"
-        boxShadow={`0 0 0 1px ${hoverBorderColor}`}
-        borderRadius="8px"
-        transition="box-shadow 300ms ease"
-        _hover={{
-          boxShadow: `0 0 80px ${hoverBorderColor}`,
-        }}
+        justifyContent="space-between"
+        p={{ base: 6, lg: 8 }}
+        py={{ base: 10 }}
+        flexGrow={1}
       >
-        <Image
-          src={img}
-          alt=""
-          width="100%"
-          height={{ lg: 250, base: 180 }}
-          objectFit="cover"
-        />
-        <Flex
-          direction="column"
-          justifyContent="space-between"
-          p={{ base: 6, lg: 8 }}
-          py={{ base: 10 }}
-          flexGrow={1}
-        >
-          <Box>
-            <Heading
-              as="h3"
-              fontSize="24px"
-              mb={6}
-              bgGradient={gradient}
-              bgClip="text"
+        <Box>
+          <Heading
+            as="h3"
+            fontSize="24px"
+            mb={6}
+            bgGradient={gradient}
+            bgClip="text"
+          >
+            <TrackedLink
+              as={LinkOverlay}
+              href={href}
+              isExternal
+              category="solutions"
+              label={title.toLowerCase()}
             >
               {title}
-            </Heading>
-            <Text size="body.lg" lineHeight={1.7} color="whiteAlpha.700">
-              {description}
-            </Text>
-          </Box>
+            </TrackedLink>
+          </Heading>
+          <Text size="body.lg" lineHeight={1.7} color="whiteAlpha.700">
+            {description}
+          </Text>
+        </Box>
 
-          {partnerIcon && (
-            <Flex alignItems="center" gap={2} mt={10}>
-              <Text lineHeight={1}>In partnership with</Text>
-              {partnerLink ? (
-                <TrackedLink
-                  href={partnerLink}
-                  isExternal
-                  category="solutions"
-                  label="shopify"
-                >
-                  <Image src={partnerIcon} alt="" width={100} />
-                </TrackedLink>
-              ) : (
+        {partnerIcon && (
+          <Flex alignItems="center" gap={2} mt={10}>
+            <Text lineHeight={1}>In partnership with</Text>
+            {partnerLink ? (
+              <TrackedLink
+                href={partnerLink}
+                isExternal
+                category="solutions"
+                label="shopify"
+              >
                 <Image src={partnerIcon} alt="" width={100} />
-              )}
-            </Flex>
-          )}
-        </Flex>
+              </TrackedLink>
+            ) : (
+              <Image src={partnerIcon} alt="" width={100} />
+            )}
+          </Flex>
+        )}
       </Flex>
-    </TrackedLink>
+    </Flex>
   );
 };
 
@@ -185,8 +192,8 @@ export const SolutionsSection: React.FC = () => {
         thirdweb powers the best web3 projects across verticals
       </Text>
       <SimpleGrid columns={{ lg: 3, base: 1 }} gap={6} margin="0 auto">
-        {solutions.map((feature) => (
-          <SolutionCard key={feature.title} {...feature} />
+        {solutions.map((feature, idx) => (
+          <SolutionCard key={feature.title + idx} {...feature} />
         ))}
       </SimpleGrid>
     </HomepageSection>
