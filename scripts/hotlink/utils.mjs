@@ -18,6 +18,11 @@ export function unlink() {
     // sdk
     "cd packages/sdk",
     "sudo yarn unlink",
+    "cd ../../",
+    // clear symlinks on root
+    "sudo yarn unlink @thirdweb-dev/react-core",
+    "sudo yarn unlink @thirdweb-dev/react",
+    "sudo yarn unlink @thirdweb-dev/sdk",
   ].join("\n");
 
   return new Promise((res) => {

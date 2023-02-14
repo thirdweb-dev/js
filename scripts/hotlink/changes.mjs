@@ -22,14 +22,14 @@ export const changes = [
     },
   },
   // sdk
-  {
-    path: "/packages/sdk/package.json",
-    entry: "./src/index.ts",
-    exports: {
-      ".": "./src/index.ts",
-      "./evm": "./src/evm/index.ts",
-      "./solana": "./src/solana/index.ts",
-      "./solana/server": "./src/solana/server/index.ts",
-    },
-  },
+  // {
+  //   path: "/packages/sdk/package.json",
+  //   entry: "./src/index.ts",
+  //   exports: {
+  //     ".": "./src/index.ts",
+  //     "./evm": "./src/evm/index.ts",
+  //     "./solana": "./src/solana/index.ts",
+  //     "./solana/server": "./src/solana/server/index.ts",
+  //   },
+  // },
 ];

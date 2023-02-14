@@ -7,7 +7,7 @@ import fs from "fs";
 import path from "path";
 
 /**
- * update the package.json files
+ * update the package.json files for the pacakges
  * replace references of builds with source files
  */
 function updatepackageJsonFiles() {
@@ -54,14 +54,13 @@ function createLinks() {
     "sudo yarn link",
     "cd ../../",
     // sdk
-    "cd packages/sdk",
-    "sudo yarn link",
+    // "cd packages/sdk",
+    // "sudo yarn link",
   ].join("\n");
 
   return new Promise((res) => {
     exec(createSymLinks, (err, stdout, stderr) => {
       if (err) {
-        // node couldn't execute the command
         return;
       }
 

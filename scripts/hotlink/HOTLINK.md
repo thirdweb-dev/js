@@ -4,6 +4,8 @@
 
 Hotlink mode allows you to use the packages in this repo locally in other repo with hot reload support.
 
+Currently only `@thirdweb-dev/react` and `@thirdweb-dev/react-core` are supported.
+
 This is only intended for testing out the packages locally, you must revert the hotlink before committing any changes.
 
 ### Revert Hotlink
@@ -16,24 +18,22 @@ If you change package json files in this repo, you must also update `scripts/hot
 
 <br/>
 
-## Using the packages in other repository
+## Using the hotlinked packages in other repository
 
 Run following commands to use the packages in this repo to the other repo.
 
 ```bash
 sudo yarn link @thirdweb-dev/react
 sudo yarn link @thirdweb-dev/react-core
-sudo yarn link @thirdweb-dev/sdk
 ```
 
-### Reverting Symlinks
+### Removing links from other repo
 
 once you are done testing, you can revert the symlinks by running the following commands in the other repo.
 
 ```bash
 sudo yarn unlink @thirdweb-dev/react
 sudo yarn unlink @thirdweb-dev/react-core
-sudo yarn unlink @thirdweb-dev/sdk
 
 yarn --force
 ```
@@ -48,12 +48,6 @@ You can use next.js's [transpilePackages](https://nextjs.org/docs/advanced-featu
 // next.config.js
 
 module.exports = {
-  transpilePackages: [
-    "@thirdweb-dev/react",
-    "@thirdweb-dev/react-core",
-    "@thirdweb-dev/sdk",
-  ],
+  transpilePackages: ["@thirdweb-dev/react", "@thirdweb-dev/react-core"],
 };
 ```
-
-<br/>
