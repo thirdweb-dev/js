@@ -111,7 +111,6 @@
     "@safe-global/safe-ethers-adapters": "0.1.0-alpha.13",
     "@safe-global/safe-ethers-lib": "^1.7.0",
     "@tanstack/react-query": "^4.0.10",
-    "@thirdweb-dev/react-core": "*",
     "@zag-js/menu": "0.3.4",
     "@zag-js/react": "0.3.4",
     "buffer": "^6.0.3",
