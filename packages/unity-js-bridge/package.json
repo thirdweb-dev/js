@@ -12,6 +12,7 @@
     "dist/"
   ],
   "dependencies": {
+    "@thirdweb-dev/auth": "*",
     "@thirdweb-dev/pay": "*",
     "@thirdweb-dev/sdk": "*",
     "@thirdweb-dev/storage": "*",
