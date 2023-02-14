@@ -264,9 +264,21 @@ export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
     };
   }
 
-  const { address, ensName } = await queryClient.fetchQuery(
-    ensQuery(profileAddress),
-  );
+  let address: string | null, ensName: string | null;
+  try {
+    const info = await queryClient.fetchQuery(ensQuery(profileAddress));
+    address = info.address;
+    ensName = info.ensName;
+  } catch (e) {
+    // if profileAddress is not a valid address, ensQuery throws
+    // in that case - redirect to 404
+    return {
+      redirect: {
+        destination: "/404",
+        permanent: false,
+      },
+    };
+  }
 
   if (!address) {
     return {
