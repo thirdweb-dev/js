@@ -59,7 +59,8 @@ export function useWalletConnect() {
   }, [wagmiConnectError]);
 
   useEffect(() => {
-    // wagmi storage doesn't support async storage on mobile so we need to autoconnect
+    // wagmi storage doesn't support async storage on mobile so we need to manually connect
+    // https://github.com/wagmi-dev/wagmi/discussions/1630
     const getProvider = async () => {
       const provider = await walletConnector.getProvider();
       const univProvider = provider as unknown as UniversalProvider;
@@ -71,7 +72,8 @@ export function useWalletConnect() {
       // });
 
       if (univProvider.client.session.length > 0) {
-        // avoid race condition with wc init
+        // wc client does not report a successful initialization
+        // so we need to wait for it to initialize before connecting
         setTimeout(() => {
           connect({ connector: walletConnector });
         }, 100);

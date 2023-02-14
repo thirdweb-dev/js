@@ -25,7 +25,7 @@ import { showDeprecationWarning } from "../../core/utils";
 export type WalletConnectConnectorType =
   | WalletConnectConnector
   | 'walletConnect'
-  | { name: 'walletConnect'; options: Omit<WalletConnectConnector['options'], 'version'> & { version: '2' } };
+  | { name: 'walletConnect'; options: Omit<WalletConnectConnector['options'], 'version' | 'qrcode' | 'metadata'> };
 
 /**
  * @internal
@@ -108,11 +108,6 @@ export interface ThirdwebProviderProps<
    * The react-query client to use. (Defaults to a default client.)
    */
   queryClient?: QueryClient;
-
-  /**
-   * Whether or not to attempt auto-connect to a wallet.
-   */
-  autoConnect?: boolean;
 
   /**
    * The chainId that your dApp is running on.
@@ -229,24 +224,24 @@ export const ThirdwebProvider = <
               invariant(mainnet, 'Mainnet chain not found');
               return new WalletConnectConnector({
                 chains: [mainnet],
-                options:  
-                typeof connector === "string"
-                    ? {
-                      metadata: walletConnectClientMeta,
-                      qrcode: false,
-                      version: '2',
-                      projectId: TW_WC_PROJECT_ID,
-                      relayUrl: WC_RELAY_URL,
-                      logger: 'info',
-                      }
-                    : {
-                      metadata: walletConnectClientMeta,
-                      qrcode: false,
-                      projectId: TW_WC_PROJECT_ID,
-                      relayUrl: WC_RELAY_URL,
-                      logger: 'info',
-                      ... connector.options
-                      },
+                options: typeof connector === "string"
+                ? {
+                  metadata: walletConnectClientMeta,
+                  qrcode: false,
+                  version: '2',
+                  projectId: TW_WC_PROJECT_ID,
+                  relayUrl: WC_RELAY_URL,
+                  logger: 'info',
+                  }
+                : {
+                  metadata: walletConnectClientMeta,
+                  qrcode: false,
+                  version: '2',
+                  projectId: TW_WC_PROJECT_ID,
+                  relayUrl: WC_RELAY_URL,
+                  logger: 'info',
+                  ... connector.options
+                  },
               });
             }
 
