@@ -227,13 +227,6 @@ const EVMContractPage: ThirdwebNextPage = () => {
     );
   }
 
-  if (contractQuery.isLoading) {
-    return (
-      <Flex h="100%" justifyContent="center" alignItems="center">
-        <Spinner size="xl" />
-      </Flex>
-    );
-  }
   return (
     <>
       <ContractHeader contractAddress={contractAddress} />

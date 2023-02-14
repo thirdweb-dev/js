@@ -29,32 +29,37 @@ class SpecialDownloader implements IStorageDownloader {
     if (url.startsWith("ipfs://")) {
       return fetch(replaceIpfsUrl(url));
     }
-    // never proxy things that are not http requests
-    if (!url.startsWith("http")) {
+
+    // data urls we always want to just fetch directly
+    if (url.startsWith("data")) {
       return fetch(url);
     }
 
-    const u = new URL(url);
+    if (url.startsWith("http")) {
+      const u = new URL(url);
 
-    // if we already know the hostname is bad, don't even try
-    if (ProxyHostNames.has(u.hostname)) {
-      return fetch(`${getAbsoluteUrl()}/api/proxy?url=${u.toString()}`);
-    }
-
-    try {
-      // try to just fetch it directly
-      const res = await fetch(u);
-      if (await res.clone().json()) {
-        return res;
+      // if we already know the hostname is bad, don't even try
+      if (ProxyHostNames.has(u.hostname)) {
+        return fetch(`${getAbsoluteUrl()}/api/proxy?url=${u.toString()}`);
       }
-      // if we hit this we know something failed and we'll try to proxy it
-      ProxyHostNames.add(u.hostname);
 
-      throw new Error("not ok");
-    } catch (e) {
-      // this is a bit scary but hey, it works
-      return fetch(`${getAbsoluteUrl()}/api/proxy?url=${u.toString()}`);
+      try {
+        // try to just fetch it directly
+        const res = await fetch(u);
+        if (await res.clone().json()) {
+          return res;
+        }
+        // if we hit this we know something failed and we'll try to proxy it
+        ProxyHostNames.add(u.hostname);
+
+        throw new Error("not ok");
+      } catch (e) {
+        // this is a bit scary but hey, it works
+        return fetch(`${getAbsoluteUrl()}/api/proxy?url=${u.toString()}`);
+      }
     }
+
+    throw new Error("not a valid url");
   }
 }
 
