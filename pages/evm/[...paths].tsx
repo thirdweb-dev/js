@@ -166,38 +166,7 @@ const EVMContractPage: ThirdwebNextPage = () => {
     requiresImport,
   ]);
 
-  if (showImportContract) {
-    return (
-      <ImportContract
-        // key is used to force remounting of the component when chain or contract address changes
-        key={`${chainSlug}/${contractAddress}`}
-        contractAddress={contractAddress}
-        chain={chain}
-        autoImport={!!requiresImport}
-        onImport={() => {
-          // stop showing import contract
-          setManuallyImported(true);
-
-          // remove search query param from url without reloading the page or triggering change in router
-          const url = new URL(window.location.href);
-          window.history.replaceState(null, document.title, url.pathname);
-
-          // refetch contract query
-          contractQuery.refetch();
-        }}
-      />
-    );
-  }
-
-  if (contractQuery.isLoading) {
-    return (
-      <Flex h="100%" justifyContent="center" alignItems="center">
-        <Spinner size="xl" />
-      </Flex>
-    );
-  }
-
-  if (chainNotFound || !chain) {
+  if (chainNotFound) {
     return (
       <HomepageSection>
         <Box mb={8} mt={8}>
@@ -235,6 +204,36 @@ const EVMContractPage: ThirdwebNextPage = () => {
     );
   }
 
+  if (showImportContract) {
+    return (
+      <ImportContract
+        // key is used to force remounting of the component when chain or contract address changes
+        key={`${chainSlug}/${contractAddress}`}
+        contractAddress={contractAddress}
+        chain={chain}
+        autoImport={!!requiresImport}
+        onImport={() => {
+          // stop showing import contract
+          setManuallyImported(true);
+
+          // remove search query param from url without reloading the page or triggering change in router
+          const url = new URL(window.location.href);
+          window.history.replaceState(null, document.title, url.pathname);
+
+          // refetch contract query
+          contractQuery.refetch();
+        }}
+      />
+    );
+  }
+
+  if (contractQuery.isLoading) {
+    return (
+      <Flex h="100%" justifyContent="center" alignItems="center">
+        <Spinner size="xl" />
+      </Flex>
+    );
+  }
   return (
     <>
       <ContractHeader contractAddress={contractAddress} />
