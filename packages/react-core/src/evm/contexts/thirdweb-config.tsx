@@ -1,19 +1,15 @@
-import {
-  SupportedChainId,
-  defaultSupportedChains,
-} from "../constants/chain";
-import { DEFAULT_RPC_URLS } from "@thirdweb-dev/sdk";
+import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import React, { PropsWithChildren, createContext, useContext } from "react";
-import { Chain } from "../types";
 
 interface ThirdwebConfigContext {
-  rpcUrlMap: Record<SupportedChainId | number, string>;
-  supportedChains: Chain[];
+  chains: Readonly<Chain[]>;
+  thirdwebApiKey?: string;
+  alchemyApiKey?: string;
+  infuraApiKey?: string;
 }
 
 const ThirdwebConfigContext = createContext<ThirdwebConfigContext>({
-  rpcUrlMap: DEFAULT_RPC_URLS,
-  supportedChains: defaultSupportedChains,
+  chains: defaultChains,
 });
 
 export const ThirdwebConfigProvider: React.FC<

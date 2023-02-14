@@ -10,7 +10,7 @@ import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { DropClaimConditions } from "../../core/classes/drop-claim-conditions";
 import { StandardErc20 } from "../../core/classes/erc-20-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../../core/types";
+import { NetworkInput, TransactionResult } from "../../core/types";
 import { Abi } from "../../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../../schema/contracts/drop-erc20";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -78,7 +78,7 @@ export class TokenDrop extends StandardErc20<PrebuiltTokenDrop> {
   public interceptor: ContractInterceptor<PrebuiltTokenDrop>;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},

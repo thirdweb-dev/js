@@ -7,7 +7,7 @@ import { ContractRoles } from "../../core/classes/contract-roles";
 import { ContractWrapper } from "../../core/classes/contract-wrapper";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../../core/types";
+import { NetworkInput, TransactionResult } from "../../core/types";
 import { Abi } from "../../schema/contracts/custom";
 import { SplitsContractSchema } from "../../schema/contracts/splits";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -61,7 +61,7 @@ export class Split implements UpdateableNetwork {
   }
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
@@ -90,7 +90,7 @@ export class Split implements UpdateableNetwork {
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
-  onNetworkUpdated(network: NetworkOrSignerOrProvider) {
+  onNetworkUpdated(network: NetworkInput) {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 

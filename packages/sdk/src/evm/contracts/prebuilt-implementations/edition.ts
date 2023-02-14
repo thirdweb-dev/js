@@ -16,7 +16,7 @@ import { Erc1155SignatureMintable } from "../../core/classes/erc-1155-signature-
 import { StandardErc1155 } from "../../core/classes/erc-1155-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import {
-  NetworkOrSignerOrProvider,
+  NetworkInput,
   TransactionResult,
   TransactionResultWithId,
 } from "../../core/types";
@@ -100,7 +100,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
   public owner: ContractOwner<TokenERC1155>;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
@@ -140,7 +140,7 @@ export class Edition extends StandardErc1155<TokenERC1155> {
   /**
    * @internal
    */
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+  onNetworkUpdated(network: NetworkInput): void {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 
@@ -256,6 +256,19 @@ export class Edition extends StandardErc1155<TokenERC1155> {
     metadataWithSupply: EditionMetadataOrUri,
   ): Promise<TransactionResultWithId<NFT>> {
     return this.erc1155.mintTo(to, metadataWithSupply);
+  }
+
+  /**
+   * Construct a mint transaction without executing it.
+   * This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
+   * @param receiver - Address you want to send the token to
+   * @param metadataWithSupply - The metadata of the NFT you want to mint
+   */
+  public async getMintTransaction(
+    receiver: string,
+    metadataWithSupply: EditionMetadataOrUri,
+  ) {
+    return this.erc1155.getMintTransaction(receiver, metadataWithSupply);
   }
 
   /**
