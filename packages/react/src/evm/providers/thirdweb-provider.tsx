@@ -106,6 +106,9 @@ export interface DAppMetaData {
   isDarkMode?: boolean;
 }
 
+// this allows autocomplete to work for the chainId prop but still allows `number` and `string` to be passed (for dynamically passed chain data)
+type ChainIdIsh = (string | number) & { __chainIdIsh: never };
+
 /**
  * The possible props for the ThirdwebProvider.
  */
@@ -115,7 +118,11 @@ export interface ThirdwebProviderProps<
   /**
    * The network to use for the SDK.
    */
-  activeChain?: TChains[number]["chainId"] | TChains[number]["slug"] | Chain;
+  activeChain?:
+    | TChains[number]["chainId"]
+    | TChains[number]["slug"]
+    | Chain
+    | ChainIdIsh;
 
   /**
    * Chains to support. If not provided, will default to the chains supported by the SDK.
