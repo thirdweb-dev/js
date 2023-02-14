@@ -105,6 +105,13 @@ const configuredChainsStorage = {
 
   set(networkList: StoredChain[]) {
     const value = JSON.stringify(networkList);
-    localStorage.setItem(configuredChainsStorage.key, value);
+    try {
+      localStorage.setItem(configuredChainsStorage.key, value);
+    } catch (e) {
+      // if storage limit exceed
+      // clear entire local storage and then try again
+      localStorage.clear();
+      localStorage.setItem(configuredChainsStorage.key, value);
+    }
   },
 };
