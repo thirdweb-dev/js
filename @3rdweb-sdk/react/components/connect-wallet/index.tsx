@@ -655,6 +655,7 @@ const GnosisSafeModal: React.FC<ConnectorModalProps> = ({
     reValidateMode: "onChange",
   });
   const formData = watch();
+  const safeChainId = parseInt(formData.safeChainId);
 
   useEffect(() => {
     if (!formData.safeAddress) {
@@ -765,6 +766,7 @@ const GnosisSafeModal: React.FC<ConnectorModalProps> = ({
                   ChainId.AvalancheFujiTestnet,
                 ]}
                 {...register("safeChainId")}
+                value={safeChainId}
               />
 
               <FormHelperText>

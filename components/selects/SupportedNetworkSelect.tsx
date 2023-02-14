@@ -33,9 +33,9 @@ export const SupportedNetworkSelect = forwardRef<
     }, [configuredNetworks]);
 
     const value =
-      selectProps.value === undefined
+      selectProps.value === undefined || selectProps.value === -1
         ? -1
-        : configuredNetworks.some(
+        : configuredNetworks?.some(
             (chain) =>
               !chain.isAutoConfigured && chain.chainId === selectProps.value,
           )
