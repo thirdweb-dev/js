@@ -194,7 +194,10 @@ const EVMContractPage: ThirdwebNextPage = () => {
             prefillSlug={isSlugNumber ? undefined : chainSlug}
             prefillChainId={isSlugNumber ? chainSlug : undefined}
             onNetworkConfigured={(network) => {
-              if (chainSlug === network.slug) {
+              if (
+                chainSlug === network.slug ||
+                chainSlug === `${network.chainId}`
+              ) {
                 setChainNotFound(false);
               }
             }}
