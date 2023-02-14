@@ -44,7 +44,7 @@ Deploying contracts this way gives you access to:
 npx thirdweb@latest publish
 ```
 
-Creates an official release of your contract, along with:
+Creates an official published contract, along with:
 
 - author attribution
 - contract information
@@ -52,9 +52,9 @@ Creates an official release of your contract, along with:
 - versioning
 - release notes
 
-Creating releases this way gives you shareable URL to let others to deploy your contracts in one click. It lets you manage released versions and get attribution for deployed contracts. Contract releases are registered on-chain (Polygon) and IPFS, for free (gasless).
+Publishing contracts this way gives you shareable URL to let others deploy your contracts in one click. It lets you manage published versions and get attribution for deployed contracts. Published contracts are registered on-chain (Polygon) and IPFS, for free (gasless).
 
-Deploying released contracts give deployers access to automatic SDKs to integrate into their app and dashboards to manage and monitor the deployed contracts.
+Deploying published contracts give deployers access to automatic SDKs to integrate into their app and dashboards to manage and monitor the deployed contracts.
 
 ## Detecting contract extensions
 
