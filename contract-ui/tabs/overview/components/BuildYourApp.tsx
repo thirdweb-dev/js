@@ -7,6 +7,7 @@ import {
 } from "@chakra-ui/react";
 import { ChakraNextImage as Image } from "components/Image";
 import { PRODUCTS } from "components/product-pages/common/nav/DesktopMenu";
+import { useTabHref } from "contract-ui/utils";
 import {
   Card,
   Heading,
@@ -24,6 +25,8 @@ interface BuildYourAppProps {
 export const BuildYourApp: React.FC<BuildYourAppProps> = ({
   trackingCategory,
 }) => {
+  const codeHref = useTabHref("code");
+
   return (
     <Card
       px={{ base: 4, md: 8 }}
@@ -40,7 +43,7 @@ export const BuildYourApp: React.FC<BuildYourAppProps> = ({
               as={TrackedLink}
               category={trackingCategory}
               label="build_your_app"
-              href="/code"
+              href={codeHref}
               color="blue.500"
             >
               Learn more

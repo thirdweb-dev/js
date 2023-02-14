@@ -1,10 +1,10 @@
-import type { ContractType, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
+import type { ContractType } from "@thirdweb-dev/sdk/evm";
 import { constants } from "ethers";
 
 export const networkKeys = {
   all: ["network"] as const,
-  chain: (chainId?: SUPPORTED_CHAIN_ID) =>
-    [...networkKeys.all, chainId] as const,
+  chain: (chainId?: number) => [...networkKeys.all, chainId] as const,
+  multiChainRegistry: ["multi-chain-registry"] as const,
 };
 
 export const contractKeys = {

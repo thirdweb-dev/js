@@ -44,7 +44,7 @@ export const TokenSupplyLayout: React.FC<TokenSupplyLayoutProps> = ({
                   {ownedBalance?.displayValue} {ownedBalance?.symbol}
                 </>
               ) : (
-                <StatHelpText>
+                <StatHelpText as="span">
                   Connect your wallet to see your balance
                 </StatHelpText>
               )}

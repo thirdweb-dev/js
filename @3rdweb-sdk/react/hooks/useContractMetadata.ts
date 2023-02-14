@@ -2,7 +2,6 @@ import { contractKeys, networkKeys } from "../cache-keys";
 import { useQuery } from "@tanstack/react-query";
 import {
   PrebuiltContractType,
-  SUPPORTED_CHAIN_ID,
   SchemaForPrebuiltContractType,
 } from "@thirdweb-dev/sdk/evm";
 import { z } from "zod";
@@ -12,7 +11,7 @@ export function useContractMetadataWithAddress(
   queryFn: () => Promise<
     z.infer<SchemaForPrebuiltContractType<PrebuiltContractType>["output"]>
   >,
-  chainId: SUPPORTED_CHAIN_ID,
+  chainId: number,
 ) {
   return useQuery(
     [...networkKeys.chain(chainId), ...contractKeys.detail(address)],

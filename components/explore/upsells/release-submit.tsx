@@ -26,7 +26,7 @@ export const ReleaseUpsellCard: React.FC = () => {
             alt=""
           />
           <Text>
-            <Text fontWeight="bold">
+            <Text as="span" fontWeight="bold">
               Get your protocol in front of our community of builders.
             </Text>
             Over 50,000 web3 devs visit this page every month. Your contract
@@ -41,7 +41,9 @@ export const ReleaseUpsellCard: React.FC = () => {
           />
 
           <Text>
-            <Text fontWeight="bold">Save development time.</Text>
+            <Text as="span" fontWeight="bold">
+              Save development time.
+            </Text>
             Eliminate the need for building tedious middleware and focus on your
             protocol. Our published contracts provide access to thirdweb tools
             that makes it easy for developers to create applications on top of.

@@ -59,7 +59,7 @@ import { ComponentWithChildren } from "types/component-with-children";
 import {
   DashboardSolanaNetwork,
   SupportedSolanaNetworkToUrlMap,
-} from "utils/network";
+} from "utils/solanaUtils";
 
 interface ReleasedContractTableProps {
   contractDetails: ContractDataInput[];
@@ -248,14 +248,12 @@ export const ReleasedContractTable: ComponentWithChildren<
       <Table {...tableInstance.getTableProps()}>
         <Thead>
           {tableInstance.headerGroups.map((headerGroup) => (
-            <Tr
-              {...headerGroup.getHeaderGroupProps()}
-              key={headerGroup.getHeaderGroupProps().key}
-            >
+            // eslint-disable-next-line react/jsx-key
+            <Tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
+                // eslint-disable-next-line react/jsx-key
                 <Th
                   {...column.getHeaderProps()}
-                  key={column.getHeaderProps().key}
                   py={5}
                   borderBottomColor="borderColor"
                 >

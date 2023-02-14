@@ -11,7 +11,6 @@ import {
   forwardRef,
   useButtonGroup,
 } from "@chakra-ui/react";
-import { Link as LocationLink, useMatch } from "@tanstack/react-location";
 import { useTrack } from "hooks/analytics/useTrack";
 import React from "react";
 import { FiExternalLink } from "react-icons/fi";
@@ -76,16 +75,10 @@ export interface LinkButtonProps extends ButtonProps {
   href: string;
   isExternal?: boolean;
   noIcon?: true;
-  noMatch?: true;
 }
 
 export const LinkButton = React.forwardRef<HTMLButtonElement, LinkButtonProps>(
-  (
-    { href, isExternal, noIcon, noMatch, children, ...restButtonProps },
-    ref,
-  ) => {
-    const match = useMatch();
-
+  ({ href, isExternal, noIcon, children, ...restButtonProps }, ref) => {
     if (isExternal) {
       return (
         <Button
@@ -99,21 +92,6 @@ export const LinkButton = React.forwardRef<HTMLButtonElement, LinkButtonProps>(
         >
           {children}
         </Button>
-      );
-    }
-
-    // we're in a react location context, so we can use that
-    if (match && !noMatch) {
-      return (
-        <LocationLink to={href}>
-          <Button
-            {...restButtonProps}
-            ref={ref}
-            textDecoration="none!important"
-          >
-            {children}
-          </Button>
-        </LocationLink>
       );
     }
 

@@ -1,9 +1,9 @@
 import redirects from "../../redirects";
 import { useMainnetsContractList } from "@3rdweb-sdk/react";
-import { Box, Flex } from "@chakra-ui/react";
-import { QueryClient, dehydrate } from "@tanstack/react-query";
+import { Box, Flex, Spinner } from "@chakra-ui/react";
+import { DehydratedState, QueryClient, dehydrate } from "@tanstack/react-query";
+import { Polygon } from "@thirdweb-dev/chains";
 import { useAddress } from "@thirdweb-dev/react/evm";
-import { ChainId } from "@thirdweb-dev/sdk/evm";
 import { AppLayout } from "components/app-layouts/app";
 import {
   ensQuery,
@@ -20,7 +20,7 @@ import { DeployedContracts } from "components/contract-components/tables/deploye
 import { ReleasedContracts } from "components/contract-components/tables/released-contracts";
 import { PublisherSDKContext } from "contexts/custom-sdk-context";
 import { getAllExplorePublishers } from "data/explore";
-import { useSingleQueryParam } from "hooks/useQueryParam";
+import { getDashboardChainRpc } from "lib/rpc";
 import { getEVMThirdwebSDK } from "lib/sdk";
 import { GetStaticPaths, GetStaticProps } from "next";
 import { NextSeo } from "next-seo";
@@ -33,31 +33,32 @@ import { getSingleQueryValue } from "utils/router";
 import { ThirdwebNextPage } from "utils/types";
 import { shortenIfAddress } from "utils/usedapp-external";
 
-const UserPage: ThirdwebNextPage = () => {
-  const wallet = useSingleQueryParam("networkOrAddress");
+type UserPageProps = {
+  profileAddress: string;
+  dehydratedState: DehydratedState;
+};
 
-  const ens = useEns(wallet);
+const UserPage: ThirdwebNextPage = (props: UserPageProps) => {
+  const ens = useEns(props.profileAddress);
 
   const router = useRouter();
-
   // We do this so it doesn't break for users that haven't updated their CLI
   useEffect(() => {
     const previousPath = router.asPath.split("/")[2];
     if (
-      previousPath !== "[networkOrAddress]" &&
-      wallet?.startsWith("Qm") &&
-      !wallet.endsWith(".eth")
+      previousPath !== "[profileAddress]" &&
+      props.profileAddress?.startsWith("Qm") &&
+      !props.profileAddress.endsWith(".eth")
     ) {
       router.replace(`/contracts/deploy/${previousPath}`);
     }
-  }, [wallet, router]);
+  }, [props.profileAddress, router]);
 
   const releaserProfile = useReleaserProfile(ens.data?.address || undefined);
 
-  const displayName = shortenIfAddress(ens?.data?.ensName || wallet).replace(
-    "deployer.thirdweb.eth",
-    "thirdweb.eth",
-  );
+  const displayName = shortenIfAddress(
+    ens?.data?.ensName || props.profileAddress,
+  ).replace("deployer.thirdweb.eth", "thirdweb.eth");
 
   const currentRoute = `https://thirdweb.com${router.asPath}`.replace(
     "deployer.thirdweb.eth",
@@ -110,7 +111,7 @@ const UserPage: ThirdwebNextPage = () => {
       />
 
       <Flex flexDir="column" gap={12}>
-        {wallet && (
+        {props.profileAddress && (
           <Flex
             direction={{ base: "column", md: "row" }}
             justify="space-between"
@@ -120,7 +121,7 @@ const UserPage: ThirdwebNextPage = () => {
           >
             <Flex gap={{ base: 4, md: 8 }} align="center" w="full">
               <ReleaserAvatar
-                address={ens.data?.ensName || wallet}
+                address={ens.data?.ensName || props.profileAddress}
                 boxSize={28}
               />
               <Flex direction="column" gap={0}>
@@ -204,6 +205,15 @@ UserPage.getLayout = function getLayout(page, props) {
   );
 };
 
+// TODO better skeleton needed
+UserPage.fallback = (
+  <AppLayout noSEOOverride>
+    <Flex h="100%" justifyContent="center" alignItems="center">
+      <Spinner size="xl" />
+    </Flex>
+  </AppLayout>
+);
+
 UserPage.pageId = PageId.Profile;
 
 export default UserPage;
@@ -212,17 +222,20 @@ const possibleRedirects = redirects().filter(
   (r) => r.source.split("/").length === 2,
 );
 
-export const getStaticProps: GetStaticProps = async (ctx) => {
+export const getStaticProps: GetStaticProps<UserPageProps> = async (ctx) => {
   const queryClient = new QueryClient();
-  // TODO make this use alchemy / other RPC
-  // currently blocked because our alchemy RPC does not allow us to call this from the server (since we have an allow-list)
-  const polygonSdk = getEVMThirdwebSDK(ChainId.Polygon);
 
-  const networkOrAddress = getSingleQueryValue(ctx.params, "networkOrAddress");
+  const polygonSdk = getEVMThirdwebSDK(
+    Polygon.chainId,
+    getDashboardChainRpc(Polygon),
+  );
+
+  const profileAddress = getSingleQueryValue(ctx.params, "profileAddress");
 
   const foundRedirect = possibleRedirects.find(
-    (r) => r.source.split("/")[1] === networkOrAddress,
+    (r) => r.source.split("/")[1] === profileAddress,
   );
+
   if (foundRedirect) {
     return {
       redirect: {
@@ -232,7 +245,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
     };
   }
 
-  if (!networkOrAddress) {
+  if (!profileAddress) {
     return {
       redirect: {
         destination: "/explore",
@@ -242,7 +255,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   }
 
   // handle deployer.thirdweb.eth urls
-  if (networkOrAddress === "deployer.thirdweb.eth") {
+  if (profileAddress === "deployer.thirdweb.eth") {
     return {
       redirect: {
         destination: "/thirdweb.eth",
@@ -252,7 +265,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   }
 
   const { address, ensName } = await queryClient.fetchQuery(
-    ensQuery(networkOrAddress),
+    ensQuery(profileAddress),
   );
 
   if (!address) {
@@ -281,16 +294,17 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
+      profileAddress: address,
     },
   };
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    fallback: "blocking",
-    paths: getAllExplorePublishers().map((networkOrAddress) => ({
+    fallback: true,
+    paths: getAllExplorePublishers().map((profileAddress) => ({
       params: {
-        networkOrAddress,
+        profileAddress,
       },
     })),
   };

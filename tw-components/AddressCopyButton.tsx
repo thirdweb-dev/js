@@ -104,7 +104,7 @@ export const AddressCopyButton: React.FC<AddressCopyButtonProps> = ({
         leftIcon={noIcon ? undefined : <Icon boxSize={3} as={FiCopy} />}
         fontFamily="mono"
       >
-        <Text size={`label.${buttonSizesMap[size]}`}>
+        <Text color="inherit" size={`label.${buttonSizesMap[size]}`}>
           {address && (shortenAddress ? shorten(address) : address)}
         </Text>
       </Button>

@@ -1,12 +1,13 @@
+import { Chain, Polygon, allChains } from "@thirdweb-dev/chains";
 import {
   Abi,
   ChainId,
-  SUPPORTED_CHAIN_ID,
   extractConstructorParamsFromAbi,
   fetchSourceFilesFromMetadata,
   resolveContractUriFromAddress,
 } from "@thirdweb-dev/sdk/evm";
 import { ethers, utils } from "ethers";
+import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton, getEVMThirdwebSDK } from "lib/sdk";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -105,6 +106,14 @@ export const apiKeyMap: Record<number, string> = {
   [ChainId.BinanceSmartChainTestnet]: process.env.BSCSCAN_KEY as string,
 };
 
+const chhainIdToChain: Record<number, Chain> = allChains.reduce(
+  (acc, chain) => {
+    acc[chain.chainId] = chain;
+    return acc;
+  },
+  {} as Record<number, Chain>,
+);
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== "POST") {
     return res.status(400).json({ error: "invalid method" });
@@ -120,7 +129,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         `ChainId ${chainId} is not supported for etherscan verification`,
       );
     }
-    const sdk = getEVMThirdwebSDK(chainId as SUPPORTED_CHAIN_ID);
+
+    const chain = chhainIdToChain[chainId];
+    if (!chain) {
+      throw new Error(
+        `ChainId ${chainId} is not supported for etherscan verification`,
+      );
+    }
+
+    const sdk = getEVMThirdwebSDK(chain.chainId, getDashboardChainRpc(chain));
     const compilerMetadata = await sdk
       .getPublisher()
       .fetchCompilerMetadataFromAddress(contractAddress);
@@ -336,7 +353,10 @@ async function fetchDeployBytecodeFromReleaseMetadata(
     provider,
   );
   if (compialierMetaUri) {
-    const pubmeta = await getEVMThirdwebSDK(ChainId.Polygon)
+    const pubmeta = await getEVMThirdwebSDK(
+      Polygon.chainId,
+      getDashboardChainRpc(Polygon),
+    )
       .getPublisher()
       .resolvePublishMetadataFromCompilerMetadata(compialierMetaUri);
     return pubmeta.length > 0

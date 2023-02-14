@@ -13,9 +13,11 @@ import {
 } from "@chakra-ui/react";
 import { QueryClient } from "@tanstack/query-core";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Polygon } from "@thirdweb-dev/chains";
 import { ensQuery } from "components/contract-components/hooks";
+import { getDashboardChainRpc } from "lib/rpc";
 import { getEVMThirdwebSDK, replaceIpfsUrl } from "lib/sdk";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { BsShieldCheck } from "react-icons/bs";
 import { FiExternalLink, FiImage } from "react-icons/fi";
 import invariant from "tiny-invariant";
@@ -46,11 +48,6 @@ export const ContractCard: React.FC<ContractCardProps> = ({
   const showSkeleton =
     publishedContractResult.isLoading ||
     publishedContractResult.isPlaceholderData;
-  const [via, setVia] = useState("");
-  useEffect(() => {
-    const pn = window.location.pathname;
-    setVia(pn.endsWith("/") ? pn.slice(0, -1) : pn);
-  }, []);
 
   const href = useMemo(() => {
     let h: string;
@@ -59,14 +56,9 @@ export const ContractCard: React.FC<ContractCardProps> = ({
     } else {
       h = `/${publisher}/${contractId}`;
     }
-    if (via) {
-      h += `?via=${via}`;
-    }
 
     return replaceDeployerAddress(h);
-  }, [contractId, publisher, version, via]);
-
-  console.log(publishedContractResult);
+  }, [contractId, publisher, version]);
 
   return !publishedContractResult.isLoading &&
     !publishedContractResult.data?.id ? null : (
@@ -203,7 +195,6 @@ export const ContractCard: React.FC<ContractCardProps> = ({
                   as={TrackedLink}
                   category="contract_card"
                   label={contractId}
-                  noMatch
                   href={href}
                   trackingProps={{
                     publisher,
@@ -307,8 +298,10 @@ async function queryFn(
   version = "latest",
   queryClient: QueryClient,
 ) {
-  // polygon is chainID 137
-  const polygonSdk = getEVMThirdwebSDK(137);
+  const polygonSdk = getEVMThirdwebSDK(
+    Polygon.chainId,
+    getDashboardChainRpc(Polygon),
+  );
 
   const publisherEns = await queryClient.fetchQuery(ensQuery(publisher));
   // START prefill both publisher ens variations

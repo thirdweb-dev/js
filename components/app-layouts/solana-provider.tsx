@@ -1,10 +1,10 @@
 import { useDashboardSOLNetworkId } from "@3rdweb-sdk/react";
+import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
 import {
   ConnectionProvider,
   WalletProvider,
   useWallet,
 } from "@solana/wallet-adapter-react";
-import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { useQueryClient } from "@tanstack/react-query";
 import { ThirdwebSDKProvider } from "@thirdweb-dev/react/solana";
 import { Network } from "@thirdweb-dev/sdk/solana";

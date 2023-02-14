@@ -400,8 +400,7 @@ const SolanaDevnet: CurrencyMetadata[] = [
     symbol: "USDC",
   },
 ];
-
-export const CURRENCIES: Record<SUPPORTED_CHAIN_ID, CurrencyMetadata[]> = {
+export const CURRENCIES: Record<number, CurrencyMetadata[] | undefined> = {
   [ChainId.Mainnet]: Ethereum,
   [ChainId.Goerli]: Goerli,
   [ChainId.Polygon]: Polygon,

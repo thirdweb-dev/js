@@ -2,6 +2,7 @@ import { Permissions } from "./components";
 import { ButtonGroup, Code, Divider, Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
+import { useTabHref } from "contract-ui/utils";
 import { useEffect } from "react";
 import { Card, Heading, Link, LinkButton, Text } from "tw-components";
 
@@ -17,6 +18,7 @@ export const ContractPermissionsPage: React.FC<
   }, []);
 
   const contractQuery = useContract(contractAddress);
+  const explorerHref = useTabHref("explorer");
 
   const detectedEnumerable = detectFeatures(contractQuery.contract, [
     "PermissionsEnumerable",
@@ -38,7 +40,7 @@ export const ContractPermissionsPage: React.FC<
           extension.
           <br />
           As a result, you can only view and manage basic permissions via the{" "}
-          <Link href="/" color="primary.500">
+          <Link href={explorerHref} color="primary.500">
             Explorer
           </Link>{" "}
           at the moment.

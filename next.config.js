@@ -108,7 +108,7 @@ const sentryWebpackPluginOptions = {
   hideSourceMaps: false,
 };
 
-const enhancedModuleExports = withPlausibleProxy({
+module.exports = withPlausibleProxy({
   customDomain: "https://pl.thirdweb.com",
   scriptName: "pl",
 })(
@@ -116,5 +116,3 @@ const enhancedModuleExports = withPlausibleProxy({
     withSentryConfig(moduleExports, sentryWebpackPluginOptions),
   ),
 );
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-module.exports = require("lodash.merge")(moduleExports, enhancedModuleExports);

@@ -5,7 +5,7 @@ import { ContractOG } from "og-lib/url-utils";
 
 // Make sure the font exists in the specified path:
 export const config = {
-  runtime: "experimental-edge",
+  runtime: "edge",
 };
 const bgImgUrl = new URL(
   `og-lib/assets/contract/background.png`,

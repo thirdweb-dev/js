@@ -1,38 +1,43 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { ThirdwebSDKProvider, useSigner } from "@thirdweb-dev/react";
-import { ChainId, SDKOptions, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
-import { getEVMRPC } from "constants/rpc";
+import type { SDKOptions } from "@thirdweb-dev/sdk/evm";
+import { DASHBOARD_THIRDWEB_API_KEY } from "constants/rpc";
+import {
+  useConfiguredChain,
+  useConfiguredChains,
+} from "hooks/chains/configureChains";
+import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton } from "lib/sdk";
 import { ComponentWithChildren } from "types/component-with-children";
-import { useProvider } from "wagmi";
 
 export const CustomSDKContext: ComponentWithChildren<{
-  desiredChainId?: SUPPORTED_CHAIN_ID | -1;
+  desiredChainId?: number;
   options?: SDKOptions;
 }> = ({ desiredChainId, options, children }) => {
   const signer = useSigner();
-  const provider = useProvider();
   const queryClient = useQueryClient();
+  const networkInfo = useConfiguredChain(desiredChainId || -1);
+  const configuredChains = useConfiguredChains();
 
   return (
     <ThirdwebSDKProvider
-      desiredChainId={desiredChainId}
+      activeChain={desiredChainId}
       signer={signer}
-      provider={provider}
       queryClient={queryClient}
+      supportedChains={configuredChains}
       sdkOptions={{
         gasSettings: {
           maxPriceInGwei: 650,
         },
-        readonlySettings:
-          desiredChainId && desiredChainId !== -1
-            ? {
-                chainId: desiredChainId,
-                rpcUrl: getEVMRPC(desiredChainId),
-              }
-            : undefined,
+        readonlySettings: networkInfo
+          ? {
+              chainId: desiredChainId,
+              rpcUrl: getDashboardChainRpc(networkInfo),
+            }
+          : undefined,
         ...options,
       }}
+      thirdwebApiKey={DASHBOARD_THIRDWEB_API_KEY}
       storageInterface={StorageSingleton}
     >
       {children}
@@ -42,7 +47,8 @@ export const CustomSDKContext: ComponentWithChildren<{
 
 export const PublisherSDKContext: ComponentWithChildren = ({ children }) => (
   <CustomSDKContext
-    desiredChainId={ChainId.Polygon}
+    // polygon = 137
+    desiredChainId={137}
     options={{
       gasless: {
         openzeppelin: {

@@ -15,7 +15,6 @@ import { useAllVersions, useEns } from "components/contract-components/hooks";
 import { ReleasedContract } from "components/contract-components/released-contract";
 import { THIRDWEB_DEPLOYER_ADDRESS } from "constants/addresses";
 import { useTrack } from "hooks/analytics/useTrack";
-import { useSingleQueryParam } from "hooks/useQueryParam";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
@@ -62,24 +61,21 @@ export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
 
   const deployContractId =
     prebuiltContractName || release?.metadataUri.replace("ipfs://", "");
-
-  const viaParam = useSingleQueryParam("via");
-
   return (
     <SimpleGrid columns={12} gap={{ base: 6, md: 10 }} w="full">
       <GridItem colSpan={{ base: 12, md: 8 }}>
         <Flex gap={4} alignItems="center">
-          {viaParam ? (
-            <TrackedIconButton
-              variant="ghost"
-              as={Link}
-              href={viaParam}
-              icon={<Icon boxSize="66%" as={FiChevronLeft} />}
-              category="release"
-              label="back_button"
-              aria-label="Back"
-            />
-          ) : null}
+          <TrackedIconButton
+            variant="ghost"
+            as={Link}
+            // always send back to explore page
+            href="/explore"
+            icon={<Icon boxSize="66%" as={FiChevronLeft} />}
+            category="release"
+            label="back_button"
+            aria-label="Back"
+          />
+
           {release?.logo ? (
             <Image
               flexShrink={0}

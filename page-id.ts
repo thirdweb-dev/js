@@ -1,6 +1,8 @@
 export enum PageId {
   // unknown page id (default)
   Unknown = "unknown",
+  // none case (for previous page id)
+  None = "none",
 
   // ---------------------------------------------------------------------------
   //  marketing / growth pages

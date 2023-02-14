@@ -4,7 +4,7 @@ import {
   FormErrorMessageProps as ChakraFormErrorMessageProps,
   FormHelperText as ChakraFormHelperText,
   FormLabelProps as ChakraFormLabelprops,
-  HelpTextProps as ChakraHelperTextProps,
+  TextProps as ChakraHelperTextProps,
   FormLabel as FormLabelText,
 } from "@chakra-ui/react";
 import {

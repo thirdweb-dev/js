@@ -82,11 +82,11 @@ export const InsufficientFunds: React.FC = () => {
         <Text>
           You don&apos;t have any funds on this network. You&apos;ll need some{" "}
           {symbol} to pay for gas.
-          {isTestnet && " You can get some from the faucet below."}
+          {isTestnet === true && " You can get some from the faucet below."}
         </Text>
 
         <ButtonGroup size="sm">
-          {isTestnet && FAUCETS[chainId as keyof typeof FAUCETS] && (
+          {isTestnet === true && FAUCETS[chainId as keyof typeof FAUCETS] && (
             <LinkButton
               colorScheme="orange"
               href={FAUCETS[chainId as keyof typeof FAUCETS] || ""}

@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { FiPlus } from "react-icons/fi";
 import { Badge, Heading, LinkButton, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
-import { SupportedSolanaNetworkToUrlMap } from "utils/network";
+import { SupportedSolanaNetworkToUrlMap } from "utils/solanaUtils";
 
 interface DeployedProgramsProps {
   noHeader?: true;

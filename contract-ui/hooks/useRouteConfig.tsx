@@ -1,84 +1,93 @@
-import { Flex } from "@chakra-ui/react";
-import { Route } from "@tanstack/react-location";
 import { contractType, useContract } from "@thirdweb-dev/react";
-import { useProgram } from "@thirdweb-dev/react/solana";
 import {
   ExtensionDetectedState,
   extensionDetectedState,
 } from "components/buttons/ExtensionDetectButton";
 import { useEns } from "components/contract-components/hooks";
-import { ProgramClaimConditionsTab } from "program-ui/common/program-claim-conditions";
-import { ProgramCodeTab } from "program-ui/common/program-code";
-import { ProgramSettingsTab } from "program-ui/common/program-settings";
-import { Card, Heading, Text } from "tw-components";
+import { CustomContractOverviewPage } from "contract-ui/tabs/overview/page";
+import dynamic from "next/dynamic";
+import { ComponentType } from "react";
 
-export type EnhancedRoute = Route & {
+// evm
+const LazyContractExplorerPage = dynamic(() =>
+  import("../tabs/explorer/page").then(
+    ({ ContractExplorerPage }) => ContractExplorerPage,
+  ),
+);
+const LazyContractEventsPage = dynamic(() =>
+  import("../tabs/events/page").then(
+    ({ ContractEventsPage }) => ContractEventsPage,
+  ),
+);
+const LazyContractNFTPage = dynamic(() =>
+  import("../tabs/nfts/page").then(({ ContractNFTPage }) => ContractNFTPage),
+);
+const LazyContractTokensPage = dynamic(() =>
+  import("../tabs/tokens/page").then(
+    ({ ContractTokensPage }) => ContractTokensPage,
+  ),
+);
+const LazyContractDirectListingsPage = dynamic(() =>
+  import("../tabs/direct-listings/page").then(
+    ({ ContractDirectListingsPage }) => ContractDirectListingsPage,
+  ),
+);
+const LazyContractEnglishAuctionsPage = dynamic(() =>
+  import("../tabs/english-auctions/page").then(
+    ({ ContractEnglishAuctionsPage }) => ContractEnglishAuctionsPage,
+  ),
+);
+const LazyContractListingsPage = dynamic(() =>
+  import("../tabs/listings/page").then(
+    ({ ContractListingsPage }) => ContractListingsPage,
+  ),
+);
+const LazyContractSplitPage = dynamic(() =>
+  import("../tabs/split/page").then(
+    ({ ContractSplitPage }) => ContractSplitPage,
+  ),
+);
+const LazyContractProposalsPage = dynamic(() =>
+  import("../tabs/proposals/page").then(
+    ({ ContractProposalsPage }) => ContractProposalsPage,
+  ),
+);
+const LazyContractClaimConditionsPage = dynamic(() =>
+  import("../tabs/claim-conditions/page").then(
+    ({ ContractClaimConditionsPage }) => ContractClaimConditionsPage,
+  ),
+);
+const LazyContractPermissionsPage = dynamic(() =>
+  import("../tabs/permissions/page").then(
+    ({ ContractPermissionsPage }) => ContractPermissionsPage,
+  ),
+);
+const LazyCustomContractEmbedPage = dynamic(() =>
+  import("../tabs/embed/page").then(
+    ({ CustomContractEmbedPage }) => CustomContractEmbedPage,
+  ),
+);
+const LazyContractCodePage = dynamic(() =>
+  import("../tabs/code/page").then(({ ContractCodePage }) => ContractCodePage),
+);
+const LazyCustomContractSettingsPage = dynamic(() =>
+  import("../tabs/settings/page").then(
+    ({ CustomContractSettingsPage }) => CustomContractSettingsPage,
+  ),
+);
+const LazyCustomContractSourcesPage = dynamic(() =>
+  import("../tabs/sources/page").then(
+    ({ CustomContractSourcesPage }) => CustomContractSourcesPage,
+  ),
+);
+// end evm
+
+export type EnhancedRoute<T = any> = {
   title: string;
   path: string;
   isEnabled?: ExtensionDetectedState;
+  component: ComponentType<T>;
 };
-
-export function useRouteConfig(ecosystem: "evm" | "solana", address: string) {
-  if (ecosystem === "evm") {
-    // we know what we're doing here, importantly ecosystem is NEVER allowed to change.
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    return useContractRouteConfig(address);
-  }
-
-  // we know what we're doing here, importantly ecosystem is NEVER allowed to change.
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  return useProgramRouteConfig(address);
-}
-
-export function useProgramRouteConfig(programAddress: string): EnhancedRoute[] {
-  const { data: program, isLoading } = useProgram(programAddress);
-
-  return [
-    {
-      title: "Overview",
-      path: "/",
-      element: () =>
-        import("components/pages/program").then(({ ProgramOverviewTab }) => (
-          <ProgramOverviewTab address={programAddress} />
-        )),
-    },
-    {
-      title: "Claim Conditions",
-      path: "/claim-conditions",
-      element: <ProgramClaimConditionsTab address={programAddress} />,
-      isEnabled: isLoading
-        ? "loading"
-        : program?.accountType === "nft-drop"
-        ? "enabled"
-        : "disabled",
-    },
-    {
-      title: "Code",
-      path: "/code",
-      element: <ProgramCodeTab address={programAddress} />,
-    },
-    {
-      title: "Settings",
-      path: "/settings",
-      element:
-        program?.accountType === "nft-collection" ? (
-          <ProgramSettingsTab address={programAddress} />
-        ) : (
-          <>
-            <Card>
-              <Flex direction="column" gap={4}>
-                <Heading size="label.lg">⚠️ Coming soon</Heading>
-                <Text>
-                  Here you will be able to configure Metadata, Creators,
-                  Royalties, etc for your program.
-                </Text>
-              </Flex>
-            </Card>
-          </>
-        ),
-    },
-  ];
-}
 
 export function useContractRouteConfig(
   contractAddress: string,
@@ -106,29 +115,19 @@ export function useContractRouteConfig(
   return [
     {
       title: "Overview",
-      path: "/",
-      element: () =>
-        import("../tabs/overview/page").then(
-          ({ CustomContractOverviewPage }) => (
-            <CustomContractOverviewPage contractAddress={contractAddress} />
-          ),
-        ),
+      path: "overview",
+      // not lazy because this is typically the landing spot so we want it to always be there immediately
+      component: CustomContractOverviewPage,
     },
     {
       title: "Explorer",
       path: "explorer",
-      element: () =>
-        import("../tabs/explorer/page").then(({ ContractExplorerPage }) => (
-          <ContractExplorerPage contractAddress={contractAddress} />
-        )),
+      component: LazyContractExplorerPage,
     },
     {
       title: "Events",
       path: "events",
-      element: () =>
-        import("../tabs/events/page").then(({ ContractEventsPage }) => (
-          <ContractEventsPage contractAddress={contractAddress} />
-        )),
+      component: LazyContractEventsPage,
     },
     {
       title: "NFTs",
@@ -137,19 +136,13 @@ export function useContractRouteConfig(
         contractQuery,
         feature: ["ERC1155", "ERC721"],
       }),
-      element: () =>
-        import("../tabs/nfts/page").then(({ ContractNFTPage }) => (
-          <ContractNFTPage contractAddress={contractAddress} />
-        )),
+      component: LazyContractNFTPage,
     },
     {
       title: "Tokens",
       path: "tokens",
       isEnabled: extensionDetectedState({ contractQuery, feature: "ERC20" }),
-      element: () =>
-        import("../tabs/tokens/page").then(({ ContractTokensPage }) => (
-          <ContractTokensPage contractAddress={contractAddress} />
-        )),
+      component: LazyContractTokensPage,
     },
     {
       title: "Direct Listings",
@@ -158,12 +151,7 @@ export function useContractRouteConfig(
         contractQuery,
         feature: "DirectListings",
       }),
-      element: () =>
-        import("../tabs/direct-listings/page").then(
-          ({ ContractDirectListingsPage }) => (
-            <ContractDirectListingsPage contractAddress={contractAddress} />
-          ),
-        ),
+      component: LazyContractDirectListingsPage,
     },
     {
       title: "English Auctions",
@@ -172,12 +160,7 @@ export function useContractRouteConfig(
         contractQuery,
         feature: "EnglishAuctions",
       }),
-      element: () =>
-        import("../tabs/english-auctions/page").then(
-          ({ ContractEnglishAuctionsPage }) => (
-            <ContractEnglishAuctionsPage contractAddress={contractAddress} />
-          ),
-        ),
+      component: LazyContractEnglishAuctionsPage,
     },
     {
       title: "Listings",
@@ -187,10 +170,7 @@ export function useContractRouteConfig(
         : contractTypeQuery.data === "marketplace"
         ? "enabled"
         : "disabled",
-      element: () =>
-        import("../tabs/listings/page").then(({ ContractListingsPage }) => (
-          <ContractListingsPage contractAddress={contractAddress} />
-        )),
+      component: LazyContractListingsPage,
     },
     {
       title: "Balances",
@@ -200,10 +180,7 @@ export function useContractRouteConfig(
         : contractTypeQuery.data === "split"
         ? "enabled"
         : "disabled",
-      element: () =>
-        import("../tabs/split/page").then(({ ContractSplitPage }) => (
-          <ContractSplitPage contractAddress={contractAddress} />
-        )),
+      component: LazyContractSplitPage,
     },
     {
       title: "Proposals",
@@ -213,21 +190,13 @@ export function useContractRouteConfig(
         : contractTypeQuery.data === "vote"
         ? "enabled"
         : "disabled",
-      element: () =>
-        import("../tabs/proposals/page").then(({ ContractProposalsPage }) => (
-          <ContractProposalsPage contractAddress={contractAddress} />
-        )),
+      component: LazyContractProposalsPage,
     },
     {
       title: "Claim Conditions",
       path: "claim-conditions",
       isEnabled: claimconditionExtensionDetection,
-      element: () =>
-        import("../tabs/claim-conditions/page").then(
-          ({ ContractClaimConditionsPage }) => (
-            <ContractClaimConditionsPage contractAddress={contractAddress} />
-          ),
-        ),
+      component: LazyContractClaimConditionsPage,
     },
     {
       title: "Permissions",
@@ -237,20 +206,12 @@ export function useContractRouteConfig(
         matchStrategy: "any",
         feature: ["Permissions", "PermissionsEnumerable"],
       }),
-      element: () =>
-        import("../tabs/permissions/page").then(
-          ({ ContractPermissionsPage }) => (
-            <ContractPermissionsPage contractAddress={contractAddress} />
-          ),
-        ),
+      component: LazyContractPermissionsPage,
     },
     {
       title: "Embed",
       path: "embed",
-      element: () =>
-        import("../tabs/embed/page").then(({ CustomContractEmbedPage }) => (
-          <CustomContractEmbedPage contractAddress={contractAddress} />
-        )),
+      component: LazyCustomContractEmbedPage,
       isEnabled: contractTypeQuery.isLoading
         ? "loading"
         : contractTypeQuery.data === "marketplace"
@@ -286,28 +247,17 @@ export function useContractRouteConfig(
     {
       title: "Code",
       path: "code",
-      element: () =>
-        import("../tabs/code/page").then(({ ContractCodePage }) => (
-          <ContractCodePage contractAddress={contractAddress} />
-        )),
+      component: LazyContractCodePage,
     },
     {
       title: "Settings",
       path: "settings",
-      element: () =>
-        import("../tabs/settings/page").then(
-          ({ CustomContractSettingsPage }) => (
-            <CustomContractSettingsPage contractAddress={contractAddress} />
-          ),
-        ),
+      component: LazyCustomContractSettingsPage,
     },
     {
       title: "Sources",
       path: "sources",
-      element: () =>
-        import("../tabs/sources/page").then(({ CustomContractSourcesPage }) => (
-          <CustomContractSourcesPage contractAddress={contractAddress} />
-        )),
+      component: LazyCustomContractSourcesPage,
     },
   ];
 }

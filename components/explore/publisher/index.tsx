@@ -22,7 +22,6 @@ export const ContractPublisher: React.FC<ContractPublisherProps> = ({
       gap={1.5}
       align="center"
       flexShrink={0}
-      noMatch
       href={replaceDeployerAddress(
         `/${ensQuery.data?.ensName || ensQuery.data?.address || addressOrEns}`,
       )}

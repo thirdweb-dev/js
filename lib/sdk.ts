@@ -1,46 +1,103 @@
+import { getAbsoluteUrl } from "./vercel-utils";
 import {
   ThirdwebSDK as EVMThirdwebSDK,
-  SUPPORTED_CHAIN_ID,
+  SDKOptions,
 } from "@thirdweb-dev/sdk/evm";
 import { ThirdwebSDK as SOLThirdwebSDK } from "@thirdweb-dev/sdk/solana";
-import { IpfsUploader, ThirdwebStorage } from "@thirdweb-dev/storage";
-import { getEVMRPC, getSOLRPC } from "constants/rpc";
-import { DashboardSolanaNetwork } from "utils/network";
+import {
+  IStorageDownloader,
+  IpfsUploader,
+  ThirdwebStorage,
+} from "@thirdweb-dev/storage";
+import { DASHBOARD_THIRDWEB_API_KEY, getSOLRPC } from "constants/rpc";
+import type { Signer } from "ethers";
+import { DashboardSolanaNetwork } from "utils/solanaUtils";
 
 // use env var to set IPFS gateway or fallback to ipfscdn.io
 const IPFS_GATEWAY_URL =
   (process.env.NEXT_PUBLIC_IPFS_GATEWAY_URL as string) ||
   "https://gateway.ipfscdn.io/ipfs";
 
-export const StorageSingleton = new ThirdwebStorage({
-  gatewayUrls: {
-    "ipfs://": [IPFS_GATEWAY_URL],
-  },
-});
-
 export function replaceIpfsUrl(url: string) {
   return StorageSingleton.resolveScheme(url);
 }
 
-// EVM SDK
-const EVM_SDK_MAP = new Map<SUPPORTED_CHAIN_ID, EVMThirdwebSDK>();
+const ProxyHostNames = new Set<string>();
 
-export function getEVMThirdwebSDK(chainId: SUPPORTED_CHAIN_ID): EVMThirdwebSDK {
-  if (EVM_SDK_MAP.has(chainId)) {
-    return EVM_SDK_MAP.get(chainId) as EVMThirdwebSDK;
+class SpecialDownloader implements IStorageDownloader {
+  async download(url: string): Promise<Response> {
+    if (url.startsWith("ipfs://")) {
+      return fetch(replaceIpfsUrl(url));
+    }
+
+    const u = new URL(url);
+
+    // if we already know the hostname is bad, don't even try
+    if (ProxyHostNames.has(u.hostname)) {
+      return fetch(`${getAbsoluteUrl()}/api/proxy?url=${u.toString()}`);
+    }
+
+    try {
+      // try to just fetch it directly
+      const res = await fetch(u);
+      if (await res.clone().json()) {
+        return res;
+      }
+      // if we hit this we know something failed and we'll try to proxy it
+      ProxyHostNames.add(u.hostname);
+
+      throw new Error("not ok");
+    } catch (e) {
+      // this is a bit scary but hey, it works
+      return fetch(`${getAbsoluteUrl()}/api/proxy?url=${u.toString()}`);
+    }
   }
-  const rpcUrl = getEVMRPC(chainId);
-  const sdk = new EVMThirdwebSDK(
-    rpcUrl,
-    {
-      readonlySettings: {
-        rpcUrl,
-        chainId,
+}
+
+export const StorageSingleton = new ThirdwebStorage({
+  gatewayUrls: {
+    "ipfs://": [IPFS_GATEWAY_URL],
+  },
+  downloader: new SpecialDownloader(),
+});
+
+// EVM SDK
+const EVM_SDK_MAP = new Map<string, EVMThirdwebSDK>();
+
+export function getEVMThirdwebSDK(
+  chainId: number,
+  rpcUrl: string,
+  sdkOptions?: SDKOptions,
+  signer?: Signer,
+): EVMThirdwebSDK {
+  // PERF ISSUE - if the sdkOptions is a huge object, stringify will be slow
+  const sdkKey = chainId + (sdkOptions ? JSON.stringify(sdkOptions) : "");
+
+  let sdk: EVMThirdwebSDK | null = null;
+
+  if (EVM_SDK_MAP.has(sdkKey)) {
+    sdk = EVM_SDK_MAP.get(sdkKey) as EVMThirdwebSDK;
+  } else {
+    sdk = new EVMThirdwebSDK(
+      rpcUrl,
+      {
+        readonlySettings: {
+          rpcUrl,
+          chainId,
+        },
+        thirdwebApiKey: DASHBOARD_THIRDWEB_API_KEY,
+        ...sdkOptions,
       },
-    },
-    StorageSingleton,
-  );
-  EVM_SDK_MAP.set(chainId, sdk);
+      StorageSingleton,
+    );
+
+    EVM_SDK_MAP.set(sdkKey, sdk);
+  }
+
+  if (signer) {
+    sdk.updateSignerOrProvider(signer);
+  }
+
   return sdk;
 }
 

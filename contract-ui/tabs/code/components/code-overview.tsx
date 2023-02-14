@@ -4,10 +4,8 @@ import { useContractFunctions } from "components/contract-components/hooks";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
 import { Environment } from "components/contract-tabs/code/types";
 import { constants } from "ethers";
-import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useMemo, useState } from "react";
 import { Card, Heading, Text } from "tw-components";
-import { SupportedNetwork } from "utils/network";
 
 interface CodeOverviewProps {
   abi: Abi;
@@ -146,7 +144,8 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
   abi,
   contractAddress = constants.AddressZero,
 }) => {
-  const chainName = useSingleQueryParam<SupportedNetwork>("networkOrAddress");
+  // TODO jonas - bring this back once we figure out how we'll instantiate SDK etc
+  const chainName = "";
   const [environment, setEnvironment] = useState<Environment>("react");
 
   const functions = useContractFunctions(abi);

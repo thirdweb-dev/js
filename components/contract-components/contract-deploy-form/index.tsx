@@ -1,8 +1,8 @@
 import { ContractId } from "../types";
 import { isContractIdBuiltInContract } from "../utils";
 import { useChainId } from "@thirdweb-dev/react";
-import { SUPPORTED_CHAIN_ID, SUPPORTED_CHAIN_IDS } from "@thirdweb-dev/sdk/evm";
 import { CustomSDKContext } from "contexts/custom-sdk-context";
+import { useConfiguredChainsRecord } from "hooks/chains/configureChains";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
@@ -11,7 +11,7 @@ const BuiltinContractForm = dynamic(() => import("./built-in-contract"));
 
 interface ContractDeployFormProps {
   contractId: ContractId;
-  chainId?: SUPPORTED_CHAIN_ID;
+  chainId?: number;
   contractVersion?: string;
   onSuccessCallback?: (contractAddress: string) => void;
   isImplementationDeploy?: true;
@@ -24,22 +24,26 @@ export const ContractDeployForm: React.FC<ContractDeployFormProps> = ({
   onSuccessCallback,
   isImplementationDeploy,
 }) => {
-  const chainId = useChainId();
-  const [selectedChain, setSelectedChain] = useState<
-    SUPPORTED_CHAIN_ID | undefined
-  >(
+  const connectedChainId = useChainId();
+  const configuredNetworksRecord = useConfiguredChainsRecord();
+  const [selectedChain, setSelectedChain] = useState<number | undefined>(
     chainIdProp
       ? chainIdProp
-      : chainId && SUPPORTED_CHAIN_IDS.includes(chainId)
-      ? chainId
+      : connectedChainId && connectedChainId in configuredNetworksRecord
+      ? connectedChainId
       : undefined,
   );
 
   useEffect(() => {
-    if (!selectedChain && chainId && SUPPORTED_CHAIN_IDS.includes(chainId)) {
-      setSelectedChain(chainId);
+    // If the user has not selected a chain, and the connected chain is configured, select it
+    if (
+      !selectedChain &&
+      connectedChainId &&
+      connectedChainId in configuredNetworksRecord
+    ) {
+      setSelectedChain(connectedChainId);
     }
-  }, [chainId, selectedChain]);
+  }, [connectedChainId, selectedChain, configuredNetworksRecord]);
 
   if (!contractId) {
     return null;

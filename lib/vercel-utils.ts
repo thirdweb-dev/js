@@ -11,6 +11,10 @@ export function getVercelEnv() {
 }
 
 export function getAbsoluteUrl(): string {
+  // once we're in the browser we can just use the window.location.origin
+  if (isBrowser()) {
+    return window.location.origin;
+  }
   if (process.env.CI) {
     return "https://thirdweb.com";
   }

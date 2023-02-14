@@ -1,5 +1,7 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { Flex, Image, Skeleton } from "@chakra-ui/react";
+import { AddToDashboardToggleButton } from "contract-ui/components/add-to-dashboard";
+import { useConfiguredChain } from "hooks/chains/configureChains";
 import { NextSeo } from "next-seo";
 import { StaticImageData } from "next/image";
 import { useRouter } from "next/router";
@@ -7,7 +9,6 @@ import { ContractOG } from "og-lib/url-utils";
 import { useMemo } from "react";
 import { Heading, Text } from "tw-components";
 import { AddressCopyButton } from "tw-components/AddressCopyButton";
-import { chainIdToHumanReadable } from "utils/network";
 
 interface MetadataHeaderProps {
   isLoaded: boolean;
@@ -19,11 +20,6 @@ interface MetadataHeaderProps {
     image?: string | null;
   };
 }
-function getChainIdToHumanReadable(chainId?: number) {
-  return chainId && chainId in chainIdToHumanReadable
-    ? chainIdToHumanReadable[chainId as keyof typeof chainIdToHumanReadable]
-    : null;
-}
 
 export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
   isLoaded,
@@ -31,17 +27,16 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
   data,
 }) => {
   const chainId = useDashboardEVMChainId();
-
+  const chainInfo = useConfiguredChain(chainId || -1);
   const router = useRouter();
-
+  const chainName = chainInfo?.name;
   const displayName = useMemo(() => {
-    const chainName = getChainIdToHumanReadable(chainId);
     const t = data?.name || "";
     if (t && chainName) {
       return `${t} | ${chainName}`;
     }
     return null;
-  }, [data?.name, chainId]);
+  }, [data?.name, chainName]);
 
   const currentRoute = `https://thirdweb.com${router.asPath}`.replace(
     "deployer.thirdweb.eth",
@@ -122,7 +117,10 @@ export const MetadataHeader: React.FC<MetadataHeaderProps> = ({
               {isLoaded ? data?.description : ""}
             </Text>
           </Skeleton>
-          <AddressCopyButton size="xs" address={address} />
+          <Flex gap={2}>
+            <AddressCopyButton size="xs" address={address} />
+            <AddToDashboardToggleButton contractAddress={address} />
+          </Flex>
         </Flex>
       </Flex>
     </>

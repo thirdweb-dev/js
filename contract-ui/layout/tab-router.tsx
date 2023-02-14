@@ -8,24 +8,16 @@ import {
   usePrevious,
 } from "@chakra-ui/react";
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
-import {
-  Outlet,
-  ReactLocation,
-  Router,
-  useMatchRoute,
-} from "@tanstack/react-location";
-import { ContractHeader } from "components/custom-contract/contract-header";
 import { Logo } from "components/logo";
 import {
   EnhancedRoute,
-  useRouteConfig,
+  useContractRouteConfig,
 } from "contract-ui/hooks/useRouteConfig";
 import { ConditionsNotSet } from "contract-ui/tabs/claim-conditions/components/conditions-not-set";
-import { DropNotReady } from "contract-ui/tabs/claim-conditions/components/drop-not-ready";
 import { useIsomorphicLayoutEffect } from "framer-motion";
 import { useTrack } from "hooks/analytics/useTrack";
-import { ProgramMetadata } from "program-ui/common/program-metadata";
-import { useCallback, useRef, useState } from "react";
+import { useRouter } from "next/router";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { FiXCircle } from "react-icons/fi";
 import { VscExtensions } from "react-icons/vsc";
 import { Button, LinkButton } from "tw-components";
@@ -33,24 +25,25 @@ import { isBrowser } from "utils/isBrowser";
 
 interface ContractTabRouterProps {
   address: string;
-  network: string;
-  ecosystem: "evm" | "solana";
+  path: string;
 }
-
 export const ContractTabRouter: React.FC<ContractTabRouterProps> = ({
   address,
-  network,
-  ecosystem,
+  path,
 }) => {
-  const [location] = useState(() => new ReactLocation({}));
   const isMobile = useBreakpointValue({ base: true, md: false });
   const [isScrolled, setIsScrolled] = useState(false);
   const scrollRef = useRef<any>(null);
   const scrollContainerRef = useRef<HTMLElement>();
-  const routes = useRouteConfig(ecosystem, address);
+  const routes = useContractRouteConfig(address);
+
+  const activeRoute = useMemo(
+    () => routes.find((route) => route.path === path),
+    [path, routes],
+  );
+
   useIsomorphicLayoutEffect(() => {
     const el = document.getElementById("tw-scroll-container");
-
     if (el) {
       scrollContainerRef.current = el;
     }
@@ -70,18 +63,11 @@ export const ContractTabRouter: React.FC<ContractTabRouterProps> = ({
     16,
     scrollContainerRef,
   );
-
   return (
-    <Router
-      basepath={`${network}/${address}`}
-      location={location}
-      routes={routes}
-    >
+    <>
       <Flex direction="column" ref={scrollRef}>
         {/* sub-header */}
 
-        {ecosystem === "evm" && <ContractHeader contractAddress={address} />}
-        {ecosystem === "solana" && <ProgramMetadata address={address} />}
         {/* sub-header-nav */}
         <Box
           position="sticky"
@@ -132,16 +118,15 @@ export const ContractTabRouter: React.FC<ContractTabRouterProps> = ({
         {/* main content */}
         <Container maxW="container.page">
           <Box py={8}>
-            {ecosystem === "solana" ? (
-              <DropNotReady address={address} />
-            ) : (
-              <ConditionsNotSet address={address} />
+            <ConditionsNotSet address={address} />
+
+            {activeRoute?.component && (
+              <activeRoute.component contractAddress={address} />
             )}
-            <Outlet />
           </Box>
         </Container>
       </Flex>
-    </Router>
+    </>
   );
 };
 
@@ -153,6 +138,13 @@ const ContractSubnav: React.FC<ContractSubnavProps> = ({ routes }) => {
   const previousEl = usePrevious(hoveredEl);
   const isMouseOver = useRef(false);
 
+  const { query } = useRouter();
+  const computedBasePath = useMemo(() => {
+    const [network, address] = ((query.paths as string[]) || []).filter(
+      (c) => c !== "evm" && c !== "solana",
+    );
+    return `/${network}/${address}`;
+  }, [query.paths]);
   return (
     <Flex
       direction="row"
@@ -188,28 +180,31 @@ const ContractSubnav: React.FC<ContractSubnavProps> = ({ routes }) => {
           (route) =>
             route.isEnabled === undefined || route.isEnabled !== "disabled",
         )
-        .map((route) => (
-          <ContractSubNavLinkButton
-            icon={
-              route.isEnabled !== undefined ? (
-                route.isEnabled === "enabled" ? (
-                  <Icon as={VscExtensions} color="green.500" />
-                ) : route.isEnabled === "loading" ? (
-                  <Spinner color="purple.500" size="xs" />
-                ) : (
-                  <Icon as={FiXCircle} color="red.500" />
-                )
-              ) : undefined
-            }
-            key={route.path}
-            label={route.title}
-            onHover={setHoveredEl}
-            href={route.path}
-            isDisabled={
-              route.isEnabled === "disabled" || route.isEnabled === "loading"
-            }
-          />
-        ))}
+        .map((route) => {
+          const cleanedPath = route.path.replace("overview", "");
+          return (
+            <ContractSubNavLinkButton
+              icon={
+                route.isEnabled !== undefined ? (
+                  route.isEnabled === "enabled" ? (
+                    <Icon as={VscExtensions} color="green.500" />
+                  ) : route.isEnabled === "loading" ? (
+                    <Spinner color="purple.500" size="xs" />
+                  ) : (
+                    <Icon as={FiXCircle} color="red.500" />
+                  )
+                ) : undefined
+              }
+              key={route.path}
+              label={route.title}
+              onHover={setHoveredEl}
+              href={computedBasePath + (cleanedPath ? `/${cleanedPath}` : "")}
+              isDisabled={
+                route.isEnabled === "disabled" || route.isEnabled === "loading"
+              }
+            />
+          );
+        })}
     </Flex>
   );
 };
@@ -242,10 +237,18 @@ const ContractSubNavLinkButton: React.FC<ContractSubNavLinkButton> = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.label]);
 
-  const matchRoute = useMatchRoute();
+  const { asPath } = useRouter();
+
+  const isActiveRoute = useMemo(() => {
+    return (
+      props.href ===
+      asPath.replace("/evm", "").replace("/solana", "").split("?")[0]
+    );
+  }, [asPath, props.href]);
 
   return (
     <LinkButton
+      flexShrink={0}
       isDisabled={props.isDisabled}
       _focus={{
         boxShadow: "none",
@@ -263,10 +266,7 @@ const ContractSubNavLinkButton: React.FC<ContractSubNavLinkButton> = (
       color="heading"
       borderRadius="none"
       _after={
-        matchRoute({
-          to: props.href,
-          fuzzy: props.href !== "./",
-        })
+        isActiveRoute
           ? {
               content: `""`,
               position: "absolute",

@@ -1,38 +1,13 @@
 import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
-import {
-  Box,
-  ButtonGroup,
-  Container,
-  Divider,
-  Flex,
-  Icon,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverContent,
-  PopoverTrigger,
-  Stack,
-} from "@chakra-ui/react";
-import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
-import { SiGithub } from "@react-icons/all-files/si/SiGithub";
-import { SiTwitter } from "@react-icons/all-files/si/SiTwitter";
-import { SiYoutube } from "@react-icons/all-files/si/SiYoutube";
+import { Box, Container, Divider, Flex, Icon, Stack } from "@chakra-ui/react";
+import { CmdKSearch } from "components/cmd-k-search";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
 import { Logo } from "components/logo";
 import { InsufficientFunds } from "components/notices/InsufficientFunds";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
-import { FiFile, FiGlobe, FiHelpCircle, FiUsers } from "react-icons/fi";
-import {
-  Button,
-  Card,
-  Heading,
-  Link,
-  LinkButton,
-  Text,
-  TrackedIconButton,
-  TrackedLink,
-} from "tw-components";
+import { FiFile, FiGlobe, FiHelpCircle } from "react-icons/fi";
+import { Button, Heading, Link, Text, TrackedLink } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
 export interface AppShellProps {
@@ -92,9 +67,12 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
             as="header"
             alignItems="center"
           >
-            <Link href="/dashboard">
-              <Logo />
-            </Link>
+            <Flex align="center" gap={4}>
+              <Link href="/dashboard">
+                <Logo hideWordmark />
+              </Link>
+              <CmdKSearch />
+            </Flex>
             <Flex align="center" gap={2} marginLeft="auto">
               <Button
                 as={TrackedLink}
@@ -162,97 +140,6 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
                 </Heading>
               </Button>
 
-              <Popover>
-                <PopoverTrigger>
-                  <Button
-                    display={{ base: "none", md: "flex" }}
-                    variant="link"
-                    flexDir="row"
-                    gap={1.5}
-                    mx={1}
-                    alignItems="center"
-                  >
-                    <Icon as={FiUsers} />
-                    <Heading
-                      as="h4"
-                      size="label.md"
-                      display={{ base: "none", md: "inline-flex" }}
-                    >
-                      Community
-                    </Heading>
-                  </Button>
-                </PopoverTrigger>
-                <Card
-                  p={0}
-                  maxW="sm"
-                  w="auto"
-                  as={PopoverContent}
-                  bg="backgroundCardHighlight"
-                  boxShadow="0px 0px 2px 0px var(--popper-arrow-shadow-color)"
-                >
-                  <PopoverArrow bg="backgroundCardHighlight" />
-                  <PopoverBody>
-                    <ButtonGroup variant="ghost">
-                      <TrackedIconButton
-                        as={LinkButton}
-                        isExternal
-                        noIcon
-                        href="https://twitter.com/thirdweb"
-                        // bg="transparent"
-                        aria-label="twitter"
-                        _hover={{
-                          bg: "accent.200",
-                        }}
-                        icon={<Icon as={SiTwitter} />}
-                        category="header"
-                        label="twitter"
-                      />
-                      <TrackedIconButton
-                        as={LinkButton}
-                        isExternal
-                        noIcon
-                        href="https://discord.gg/thirdweb"
-                        // bg="transparent"
-                        _hover={{
-                          bg: "accent.200",
-                        }}
-                        aria-label="discord"
-                        icon={<Icon as={SiDiscord} />}
-                        category="header"
-                        label="discord"
-                      />
-                      <TrackedIconButton
-                        as={LinkButton}
-                        isExternal
-                        noIcon
-                        href="https://www.youtube.com/channel/UCdzMx7Zhy5va5End1-XJFbA"
-                        // bg="transparent"
-                        _hover={{
-                          bg: "accent.200",
-                        }}
-                        aria-label="YouTube"
-                        icon={<Icon as={SiYoutube} />}
-                        category="header"
-                        label="youtube"
-                      />
-                      <TrackedIconButton
-                        as={LinkButton}
-                        isExternal
-                        noIcon
-                        href="https://github.com/thirdweb-dev"
-                        // bg="transparent"
-                        _hover={{
-                          bg: "accent.200",
-                        }}
-                        aria-label="github"
-                        icon={<Icon as={SiGithub} />}
-                        category="header"
-                        label="github"
-                      />
-                    </ButtonGroup>
-                  </PopoverBody>
-                </Card>
-              </Popover>
               <ColorModeToggle />
               <ConnectWallet
                 ml={{ base: 0, md: 2 }}

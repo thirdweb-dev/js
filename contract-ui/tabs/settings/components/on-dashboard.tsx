@@ -1,4 +1,8 @@
-import { useContractList, useDashboardEVMChainId } from "@3rdweb-sdk/react";
+import {
+  useContractList,
+  useEVMContractInfo,
+  useMultiChainRegContractList,
+} from "@3rdweb-sdk/react";
 import {
   useAddContractMutation,
   useRemoveContractMutation,
@@ -8,6 +12,8 @@ import { useAddress } from "@thirdweb-dev/react";
 import { TransactionButton } from "components/buttons/TransactionButton";
 import { useTrack } from "hooks/analytics/useTrack";
 import { useTxNotifications } from "hooks/useTxNotifications";
+import { getDashboardChainRpc } from "lib/rpc";
+import { useState } from "react";
 import { Card, Heading, Text, TrackedLink } from "tw-components";
 
 interface OnDashboardProps {
@@ -18,11 +24,23 @@ export const OnDashboard: React.FC<OnDashboardProps> = ({
   contractAddress,
 }) => {
   const trackEvent = useTrack();
-  const activeChainId = useDashboardEVMChainId();
-  const address = useAddress();
-  const contractList = useContractList(activeChainId || -1, address);
+  const activeChain = useEVMContractInfo()?.chain;
+  const walletAddress = useAddress();
+  const chainId = activeChain?.chainId || -1;
+
+  const [addedState, setAddedState] = useState<"added" | "removed" | "none">(
+    "none",
+  );
+
+  const oldRegistryContractList = useContractList(
+    chainId,
+    activeChain ? getDashboardChainRpc(activeChain) : "",
+    walletAddress,
+  );
+
+  const newRegistryContractList = useMultiChainRegContractList(walletAddress);
+
   const addContract = useAddContractMutation();
-  const removeContract = useRemoveContractMutation();
 
   const { onSuccess: onAddSuccess, onError: onAddError } = useTxNotifications(
     "Successfully added to dashboard",
@@ -34,12 +52,31 @@ export const OnDashboard: React.FC<OnDashboardProps> = ({
       "Failed to remove from dashboard",
     );
 
-  const onDashboard =
-    contractList.isFetched &&
-    contractList.data?.find((c) => c.address === contractAddress) &&
-    contractList.isSuccess;
+  const onOldRegistry =
+    oldRegistryContractList.isFetched &&
+    oldRegistryContractList.data?.find((c) => c.address === contractAddress) &&
+    oldRegistryContractList.isSuccess &&
+    // contract can only be on the old registry if we haven't f'd with it
+    addedState === "none";
 
-  return address && contractAddress ? (
+  const onNewRegistry =
+    (newRegistryContractList.isFetched &&
+      newRegistryContractList.data?.find(
+        (c) => c.address === contractAddress,
+      ) &&
+      newRegistryContractList.isSuccess) ||
+    // if we added it is on the new registry for sure
+    addedState === "added";
+
+  const removeContract = useRemoveContractMutation(
+    chainId,
+    onOldRegistry ? "old" : onNewRegistry ? "new" : "none",
+  );
+
+  const onDashboard =
+    addedState !== "removed" && (onNewRegistry || onOldRegistry);
+
+  return walletAddress && contractAddress ? (
     <Card p={0}>
       <Flex direction="column">
         <Flex p={{ base: 6, md: 10 }} as="section" direction="column" gap={4}>
@@ -94,6 +131,7 @@ export const OnDashboard: React.FC<OnDashboardProps> = ({
                   },
                   {
                     onSuccess: () => {
+                      setAddedState("removed");
                       onRemoveSuccess();
                       trackEvent({
                         category: "settings",
@@ -145,9 +183,11 @@ export const OnDashboard: React.FC<OnDashboardProps> = ({
                 addContract.mutate(
                   {
                     contractAddress,
+                    chainId,
                   },
                   {
                     onSuccess: () => {
+                      setAddedState("added");
                       onAddSuccess();
                       trackEvent({
                         category: "settings",

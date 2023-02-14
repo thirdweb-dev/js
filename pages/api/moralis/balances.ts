@@ -50,7 +50,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     }).then((tRes) => tRes.json()),
   ]);
 
-  const native = CURRENCIES[chainId as SUPPORTED_CHAIN_ID].find(
+  const native = CURRENCIES[chainId]?.find(
     (c) => c.address === constants.AddressZero,
   );
 

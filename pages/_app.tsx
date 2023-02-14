@@ -8,7 +8,7 @@ import PlausibleProvider from "next-plausible";
 import { DefaultSeo } from "next-seo";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
-import NProgress from "nprogress";
+import { PageId } from "page-id";
 import posthog from "posthog-js";
 import { memo, useEffect, useRef } from "react";
 import { generateBreakpointTypographyCssVars } from "tw-components/utils/typography";
@@ -68,35 +68,6 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
   }, []);
 
   useEffect(() => {
-    // setup route cancellation
-    const handleStart = (url: string) => {
-      if (url !== window.location.pathname) {
-        // in production *only* time out the current route transition after 350ms
-        if (process.env.NODE_ENV === "production") {
-          (window as any).routeTransitionTimeout = setTimeout(() => {
-            (window as any).location = url;
-          }, 1000);
-        }
-        NProgress.start();
-      }
-    };
-    const handleStop = () => {
-      clearTimeout((window as any).routeTransitionTimeout);
-      NProgress.done();
-    };
-
-    router.events.on("routeChangeStart", handleStart);
-    router.events.on("routeChangeComplete", handleStop);
-    router.events.on("routeChangeError", handleStop);
-
-    return () => {
-      router.events.off("routeChangeStart", handleStart);
-      router.events.off("routeChangeComplete", handleStop);
-      router.events.off("routeChangeError", handleStop);
-    };
-  }, [router]);
-
-  useEffect(() => {
     // Init PostHog
     posthog.init("phc_hKK4bo8cHZrKuAVXfXGpfNSLSJuucUnguAgt2j6dgSV", {
       api_host: "https://a.thirdweb.com",
@@ -123,13 +94,17 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
       ? Component.pageId(pageProps)
       : Component.pageId;
 
-  const prevPageId = useRef<string>();
+  // starts out with "none" page id
+  const prevPageId = useRef<PageId>(PageId.None);
   useEffect(() => {
     // this catches the case where the the hook is called twice on the same page
     if (pageId === prevPageId.current) {
       return;
     }
-    posthog.register({ page_id: pageId });
+    posthog.register({
+      page_id: pageId,
+      previous_page_id: prevPageId.current,
+    });
     posthog.capture("$pageview");
     return () => {
       prevPageId.current = pageId;
@@ -165,6 +140,7 @@ const ConsoleAppWrapper: React.FC<AppPropsWithLayout> = ({
       seoCanonical={`https://thirdweb.com${router.asPath}`}
       Component={Component}
       pageProps={pageProps}
+      isFallback={router.isFallback}
     />
   );
 };
@@ -173,15 +149,17 @@ interface ConsoleAppProps {
   Component: AppPropsWithLayout["Component"];
   pageProps: AppPropsWithLayout["pageProps"];
   seoCanonical: string;
+  isFallback?: boolean;
 }
 
 const ConsoleApp = memo(function ConsoleApp({
   Component,
   pageProps,
   seoCanonical,
+
+  isFallback,
 }: ConsoleAppProps) {
   const getLayout = Component.getLayout ?? ((page) => page);
-  const children = getLayout(<Component {...pageProps} />, pageProps);
 
   return (
     <PlausibleProvider
@@ -276,7 +254,9 @@ const ConsoleApp = memo(function ConsoleApp({
 
       <ChakraProvider theme={chakraThemeWithFonts}>
         <AnnouncementBanner />
-        {children}
+        {isFallback && Component.fallback
+          ? Component.fallback
+          : getLayout(<Component {...pageProps} />, pageProps)}
       </ChakraProvider>
     </PlausibleProvider>
   );

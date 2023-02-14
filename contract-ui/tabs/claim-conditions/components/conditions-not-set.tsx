@@ -1,8 +1,8 @@
 import { AdminOnly } from "@3rdweb-sdk/react/components/roles/admin-only";
+import { useEVMContractInfo } from "@3rdweb-sdk/react/hooks/useActiveChainId";
 import { Flex, Stack } from "@chakra-ui/react";
 import { useClaimConditions, useContract } from "@thirdweb-dev/react";
 import { detectFeatures } from "components/contract-components/utils";
-import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useState } from "react";
 import { Button, LinkButton, Text } from "tw-components";
 
@@ -29,7 +29,7 @@ export const ConditionsNotSet: React.FC<ConditionsNotSetProps> = ({
       // TODO (cc) check this
       claimConditions.data.every((cc) => cc.maxClaimableSupply === "0"));
 
-  const chainName = useSingleQueryParam("networkOrAddress");
+  const chainSlug = useEVMContractInfo();
 
   if (dismissed || !isClaimable || !noClaimConditions || !contract) {
     return null;
@@ -54,7 +54,7 @@ export const ConditionsNotSet: React.FC<ConditionsNotSetProps> = ({
             size="sm"
             bg="white"
             color="orange.800"
-            href={`/${chainName}/${contract?.getAddress()}/claim-conditions`}
+            href={`/${chainSlug}/${address}/claim-conditions`}
             onClick={() => setDismissed(false)}
           >
             Set Claim Conditions

@@ -1,4 +1,8 @@
-import { DashboardThirdwebProvider } from "./providers";
+import {
+  DashboardThirdwebProvider,
+  DashboardThirdwebProviderProps,
+} from "./providers";
+import { EVMContractInfoProvider } from "@3rdweb-sdk/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { DehydratedState, Hydrate, QueryClient } from "@tanstack/react-query";
@@ -13,8 +17,11 @@ import {
   useChainId,
 } from "@thirdweb-dev/react";
 import { useSDK } from "@thirdweb-dev/react/solana";
+import { DeployModalProvider } from "components/contract-components/contract-deploy-form/deploy-context-modal";
 import { AppShell, AppShellProps } from "components/layout/app-shell";
 import { PrivacyNotice } from "components/notices/PrivacyNotice";
+import { AllChainsProvider } from "contexts/all-chains";
+import { ConfiguredChainsProvider } from "contexts/configured-chains";
 import { ErrorProvider } from "contexts/error-handler";
 import { del, get, set } from "idb-keyval";
 import { useRouter } from "next/router";
@@ -77,7 +84,9 @@ const persister: Persister = createAsyncStoragePersister({
   key: `tw-query-cache`,
 });
 
-export interface AppLayoutProps extends AppShellProps {
+export interface AppLayoutProps
+  extends AppShellProps,
+    DashboardThirdwebProviderProps {
   dehydratedState?: DehydratedState;
 }
 
@@ -111,12 +120,19 @@ export const AppLayout: ComponentWithChildren<AppLayoutProps> = (props) => {
     >
       <Hydrate state={props.dehydratedState}>
         <ErrorProvider>
-          <DashboardThirdwebProvider>
-            <PHIdentifier />
-            {router.pathname !== "/dashboard" && <PrivacyNotice />}
-
-            <AppShell {...props} />
-          </DashboardThirdwebProvider>
+          <DeployModalProvider>
+            <AllChainsProvider>
+              <ConfiguredChainsProvider>
+                <EVMContractInfoProvider value={props.contractInfo}>
+                  <DashboardThirdwebProvider>
+                    <PHIdentifier />
+                    {router.pathname !== "/dashboard" && <PrivacyNotice />}
+                    <AppShell {...props} />
+                  </DashboardThirdwebProvider>
+                </EVMContractInfoProvider>
+              </ConfiguredChainsProvider>
+            </AllChainsProvider>
+          </DeployModalProvider>
         </ErrorProvider>
       </Hydrate>
     </PersistQueryClientProvider>

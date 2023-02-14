@@ -1,6 +1,7 @@
 import { getEVMThirdwebSDK } from "./sdk";
-import { ChainId } from "@thirdweb-dev/sdk/evm";
+import { Ethereum } from "@thirdweb-dev/chains";
 import { utils } from "ethers";
+import { getDashboardChainRpc } from "lib/rpc";
 import invariant from "tiny-invariant";
 
 export interface ENSResolveResult {
@@ -17,7 +18,10 @@ export async function resolveAddressToEnsName(
 ): Promise<ENSResolveResult> {
   invariant(utils.isAddress(address), "address must be a valid address");
 
-  const provider = getEVMThirdwebSDK(ChainId.Mainnet).getProvider();
+  const provider = getEVMThirdwebSDK(
+    Ethereum.chainId,
+    getDashboardChainRpc(Ethereum),
+  ).getProvider();
 
   return {
     ensName: await provider.lookupAddress(address),
@@ -30,7 +34,10 @@ export async function resolveEnsNameToAddress(
 ): Promise<ENSResolveResult> {
   invariant(isEnsName(ensName), "ensName must be a valid ens name");
 
-  const provider = getEVMThirdwebSDK(ChainId.Mainnet).getProvider();
+  const provider = getEVMThirdwebSDK(
+    Ethereum.chainId,
+    getDashboardChainRpc(Ethereum),
+  ).getProvider();
 
   return {
     ensName,

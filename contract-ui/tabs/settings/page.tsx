@@ -1,14 +1,15 @@
 import { SettingsMetadata } from "./components/metadata";
-import { OnDashboard } from "./components/on-dashboard";
-import { PaperCheckoutSetting } from "./components/paper-xyz";
+// import { OnDashboard } from "./components/on-dashboard";
+// import { PaperCheckoutSetting } from "./components/paper-xyz";
 import { SettingsPlatformFees } from "./components/platform-fees";
 import { SettingsPrimarySale } from "./components/primary-sale";
 import { SettingsRoyalties } from "./components/royalties";
 import { Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
-import { useContract, useContractType } from "@thirdweb-dev/react";
+import { useContract } from "@thirdweb-dev/react";
 import { extensionDetectedState } from "components/buttons/ExtensionDetectButton";
-import { isPaperSupportedContract } from "contract-ui/utils";
-import { useSingleQueryParam } from "hooks/useQueryParam";
+
+// import { isPaperSupportedContract } from "contract-ui/utils";
+// import { useSingleQueryParam } from "hooks/useQueryParam";
 
 interface CustomContractSettingsPageProps {
   contractAddress?: string;
@@ -18,10 +19,10 @@ export const CustomContractSettingsPage: React.FC<
   CustomContractSettingsPageProps
 > = ({ contractAddress }) => {
   // TODO remove this
-  const paperEnabled = useSingleQueryParam("paper-enabled");
+  // const paperEnabled = useSingleQueryParam("paper-enabled");
 
   const contractQuery = useContract(contractAddress);
-  const contractType = useContractType(contractAddress);
+  // const contractType = useContractType(contractAddress);
 
   const detectedMetadata = extensionDetectedState({
     contractQuery,
@@ -57,7 +58,7 @@ export const CustomContractSettingsPage: React.FC<
           </GridItem>
 
           {/* paper.xyz settings */}
-          {!!paperEnabled &&
+          {/* {!!paperEnabled &&
             isPaperSupportedContract(
               contractQuery.contract,
               contractType.data,
@@ -65,7 +66,8 @@ export const CustomContractSettingsPage: React.FC<
               <GridItem order={1}>
                 <PaperCheckoutSetting contract={contractQuery.contract} />
               </GridItem>
-            )}
+            )} */}
+          {/* end paper.xyz settings */}
 
           <GridItem order={detectedPrimarySale === "enabled" ? 2 : 101}>
             <SettingsPrimarySale
@@ -86,11 +88,6 @@ export const CustomContractSettingsPage: React.FC<
               contract={contractQuery.contract}
               detectedState={detectedPlatformFees}
             />
-          </GridItem>
-
-          {/* end paper.xyz settings */}
-          <GridItem order={50}>
-            <OnDashboard contractAddress={contractAddress} />
           </GridItem>
         </SimpleGrid>
       </Flex>

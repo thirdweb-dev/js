@@ -1,3 +1,4 @@
+import { useEVMContractInfo } from "@3rdweb-sdk/react";
 import { Box } from "@chakra-ui/react";
 import { useAddress } from "@thirdweb-dev/react";
 import {
@@ -14,9 +15,11 @@ interface ReleasedByProps {
 
 export const ReleasedBy: React.FC<ReleasedByProps> = ({ contractAddress }) => {
   const contractEnsQuery = useEns(contractAddress);
+  const activeNetworkInfo = useEVMContractInfo();
 
   const releasesFromDeploy = useReleasesFromDeploy(
     contractEnsQuery.data?.address || undefined,
+    activeNetworkInfo?.chain?.chainId,
   );
 
   const address = useAddress();

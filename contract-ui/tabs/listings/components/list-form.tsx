@@ -1,4 +1,4 @@
-import { useDashboardNetwork } from "@3rdweb-sdk/react";
+import { useEVMContractInfo } from "@3rdweb-sdk/react";
 import { useWalletNFTs } from "@3rdweb-sdk/react/hooks/useWalletNFTs";
 import {
   Box,
@@ -83,7 +83,7 @@ export const CreateListingsForm: React.FC<NFTMintForm> = ({
   type,
 }) => {
   const trackEvent = useTrack();
-  const network = useDashboardNetwork();
+  const network = useEVMContractInfo()?.chain;
 
   const { data: contractType } = useContractType(
     contractQuery?.contract?.getAddress(),

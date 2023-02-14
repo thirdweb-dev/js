@@ -7,7 +7,6 @@ import { getGuidesAndTemplates } from "./helpers/getGuidesAndTemplates";
 import { Divider, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import { contractType, useContract } from "@thirdweb-dev/react";
 import { Abi, getAllDetectedFeatureNames } from "@thirdweb-dev/sdk";
-import { ImportContract } from "components/contract-components/import-contract";
 import { useMemo } from "react";
 import { Heading, TrackedLink } from "tw-components";
 
@@ -20,7 +19,7 @@ const TRACKING_CATEGORY = "contract_overview";
 export const CustomContractOverviewPage: React.FC<
   CustomContractOverviewPageProps
 > = ({ contractAddress }) => {
-  const { contract, isSuccess, isError } = useContract(contractAddress);
+  const { contract } = useContract(contractAddress);
   const contractTypeQuery = contractType.useQuery(contractAddress);
   const contractTypeData = contractTypeQuery?.data || "custom";
 
@@ -34,15 +33,9 @@ export const CustomContractOverviewPage: React.FC<
     () => getGuidesAndTemplates(detectedFeatureNames, contractTypeData),
     [detectedFeatureNames, contractTypeData],
   );
-
   if (!contractAddress) {
     return <div>No contract address provided</div>;
   }
-
-  if ((!contract?.abi && isSuccess) || isError) {
-    return <ImportContract contractAddress={contractAddress} />;
-  }
-
   return (
     <SimpleGrid columns={{ base: 1, xl: 4 }} gap={8}>
       <GridItem as={Flex} colSpan={{ xl: 3 }} direction="column" gap={16}>

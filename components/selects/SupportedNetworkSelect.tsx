@@ -1,11 +1,9 @@
-import { useWeb3 } from "@3rdweb-sdk/react";
 import { Select, SelectProps, forwardRef } from "@chakra-ui/react";
-import {
-  ChainId,
-  SUPPORTED_CHAIN_ID,
-  SUPPORTED_CHAIN_IDS,
-} from "@thirdweb-dev/sdk/evm";
+import { defaultChains } from "@thirdweb-dev/chains";
+import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
 import { deprecatedChains } from "constants/mappings";
+import { StoredChain } from "contexts/configured-chains";
+import { useConfiguredChains } from "hooks/chains/configureChains";
 import { useMemo } from "react";
 
 export interface SupportedNetworkSelectProps
@@ -22,56 +20,101 @@ export const SupportedNetworkSelect = forwardRef<
     { disabledChainIds, disabledChainIdText = "Unsupported", ...selectProps },
     ref,
   ) => {
-    const { getNetworkMetadata } = useWeb3();
+    const configuredNetworks = useConfiguredChains();
+
     const testnets = useMemo(() => {
-      return SUPPORTED_CHAIN_IDS.map((supportedChain) => {
-        return getNetworkMetadata(supportedChain);
-      }).filter((n) => n.isTestnet);
-    }, [getNetworkMetadata]);
+      return configuredNetworks.filter((n) => !n.isAutoConfigured && n.testnet);
+    }, [configuredNetworks]);
 
     const mainnets = useMemo(() => {
-      return SUPPORTED_CHAIN_IDS.map((supportedChain) => {
-        return getNetworkMetadata(supportedChain);
-      }).filter((n) => !n.isTestnet);
-    }, [getNetworkMetadata]);
+      return configuredNetworks.filter(
+        (n) => !n.isAutoConfigured && !n.testnet,
+      );
+    }, [configuredNetworks]);
+
+    const value =
+      selectProps.value === undefined
+        ? -1
+        : configuredNetworks.some(
+            (chain) =>
+              !chain.isAutoConfigured && chain.chainId === selectProps.value,
+          )
+        ? (selectProps.value as number)
+        : -2;
 
     return (
-      <Select {...selectProps} ref={ref}>
-        <option disabled value={-1}>
-          Select Network
-        </option>
-        <optgroup label="Mainnets">
-          {mainnets.map((mn) => (
-            <option
-              key={mn.chainId}
-              value={mn.chainId}
-              disabled={disabledChainIds?.includes(mn.chainId)}
-            >
-              {mn.chainName} ({mn.symbol})
-              {disabledChainIds?.includes(mn.chainId)
-                ? ` - ${disabledChainIdText}`
-                : ""}
-            </option>
-          ))}
-        </optgroup>
-        <optgroup label="Testnets">
-          {testnets.map((tn) => (
-            <option
-              key={tn.chainId}
-              value={tn.chainId}
-              disabled={disabledChainIds?.includes(tn.chainId)}
-            >
-              {tn.chainName} ({tn.symbol})
-              {deprecatedChains.includes(tn.chainId as SUPPORTED_CHAIN_ID) &&
-                " - Deprecated"}
-              {disabledChainIds?.includes(tn.chainId) &&
-              !deprecatedChains.includes(tn.chainId as SUPPORTED_CHAIN_ID)
-                ? ` - ${disabledChainIdText}`
-                : ""}
-            </option>
-          ))}
-        </optgroup>
+      <Select {...selectProps} value={value} ref={ref}>
+        {value === -1 && (
+          <option disabled value={-1}>
+            Select Network
+          </option>
+        )}
+
+        {value === -2 && (
+          <option disabled value={-2}>
+            Unknown Network - Chain ID #{selectProps.value}
+          </option>
+        )}
+
+        <NetworkOptGroup
+          label="Mainnets"
+          chains={mainnets}
+          disabledChainIdText={disabledChainIdText}
+          disabledChainIds={disabledChainIds}
+        />
+
+        <NetworkOptGroup
+          label="Testnets"
+          chains={testnets}
+          disabledChainIdText={disabledChainIdText}
+          disabledChainIds={disabledChainIds}
+        />
       </Select>
     );
   },
 );
+
+const isDefaultChain = (chainId: number) =>
+  defaultChains.some((c) => c.chainId === chainId);
+
+const NetworkOptGroup: React.FC<{
+  disabledChainIds?: ChainId[];
+  chains: StoredChain[];
+  disabledChainIdText: string;
+  label: string;
+}> = ({ disabledChainIds, chains, disabledChainIdText, label }) => {
+  return (
+    <optgroup label={label}>
+      {chains.map((network) => {
+        const isDisabledChain = disabledChainIds?.includes(network.chainId);
+        const isDeprecaredChain = deprecatedChains.includes(
+          network.chainId as SUPPORTED_CHAIN_ID,
+        );
+
+        // disable the option it if it is either in the list of disabled chains
+        // or if the list of disabled chains is given and chain is not a default chain ( custom chain )
+        const disableOption =
+          isDisabledChain ||
+          (disabledChainIds &&
+            disabledChainIds.length > 0 &&
+            !isDefaultChain(network.chainId));
+
+        const tag = isDeprecaredChain
+          ? " - Deprecated"
+          : disableOption
+          ? ` - ${disabledChainIdText}`
+          : "";
+
+        return (
+          <option
+            key={network.name}
+            value={network.chainId}
+            disabled={disableOption}
+          >
+            {network.name} ({network.nativeCurrency.symbol}) {tag}
+          </option>
+        );
+      })}
+    </optgroup>
+  );
+};

@@ -10,6 +10,7 @@ import {
   Divider,
   Flex,
   FormControl,
+  Icon,
   Input,
   LinkBox,
   LinkOverlay,
@@ -33,6 +34,7 @@ import {
 } from "@thirdweb-dev/sdk/evm";
 import { ChakraNextImage } from "components/Image";
 import { TransactionButton } from "components/buttons/TransactionButton";
+import { ConfigureNetworkModal } from "components/configure-networks/ConfigureNetworkModal";
 import { RecipientForm } from "components/deployment/splits/recipients";
 import { BasisPointsInput } from "components/inputs/BasisPointsInput";
 import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelect";
@@ -41,14 +43,19 @@ import { BuiltinContractMap, DisabledChainsMap } from "constants/mappings";
 import { SolidityInput } from "contract-ui/components/solidity-inputs";
 import { constants, utils } from "ethers";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useConfiguredChain } from "hooks/chains/configureChains";
 import { useImageFileOrUrl } from "hooks/useImageFileOrUrl";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useRouter } from "next/router";
 import twAudited from "public/brand/thirdweb-audited-2.png";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FieldPath, FormProvider, useForm } from "react-hook-form";
+import { IoMdSettings } from "react-icons/io";
+import invariant from "tiny-invariant";
 import {
+  Button,
+  Checkbox,
   FormErrorMessage,
   FormHelperText,
   FormLabel,
@@ -57,10 +64,7 @@ import {
   Text,
   TrackedLink,
 } from "tw-components";
-import {
-  NetworkToBlockTimeMap,
-  SupportedChainIdToNetworkMap,
-} from "utils/network";
+import { NetworkToBlockTimeMap } from "utils/network";
 import { z } from "zod";
 
 function useDeployForm<TContractType extends PrebuiltContractType>(
@@ -86,8 +90,8 @@ function stripNullishKeys<T extends object>(obj: T) {
 interface BuiltinContractFormProps {
   contractType: ContractType;
   contractVersion: string;
-  selectedChain: SUPPORTED_CHAIN_ID | undefined;
-  onChainSelect: (chainId: SUPPORTED_CHAIN_ID) => void;
+  selectedChain: number | undefined;
+  onChainSelect: (chainId: number) => void;
 }
 
 const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
@@ -97,11 +101,14 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
   onChainSelect,
 }) => {
   const publishMetadata = useContractPublishMetadataFromURI(contractType);
-
+  const [showAddNetworkModal, setShowAddNetworkModal] = useState(false);
   const contract =
     PREBUILT_CONTRACTS_MAP[contractType as keyof typeof PREBUILT_CONTRACTS_MAP];
+  const chainInfo = useConfiguredChain(selectedChain || -1);
 
   const form = useDeployForm(contract.schema.deploy);
+
+  const [addToDashboard, setAddToDashboard] = useState(true);
 
   const address = useAddress();
 
@@ -183,10 +190,11 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
       : true;
   }
 
-  const seconds = selectedChain && NetworkToBlockTimeMap[selectedChain];
-
-  const deploy = useDeploy(contract.contractType, contractVersion);
-
+  // for non-default chains - just say "few"
+  const blockTimeInSeconds =
+    selectedChain && selectedChain in NetworkToBlockTimeMap
+      ? NetworkToBlockTimeMap[selectedChain as SUPPORTED_CHAIN_ID]
+      : "few";
   const { onSuccess, onError } = useTxNotifications(
     "Successfully deployed contract",
     "Failed to deploy contract",
@@ -196,6 +204,32 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
   const router = useRouter();
 
   const audit = BuiltinContractMap[contractType]?.audit;
+
+  // TODO better proxy for this needed
+  const isDefaultChain = blockTimeInSeconds !== "few";
+
+  const numberOfTransactions = useMemo(() => {
+    let txnCnt = 1;
+
+    // adding to dashboard requires a transaction
+    if (addToDashboard) {
+      txnCnt += 1;
+    }
+
+    // on non-default chains we need to deploy the implementation first
+    if (!isDefaultChain) {
+      txnCnt += 1;
+    }
+    return txnCnt;
+  }, [addToDashboard, isDefaultChain]);
+
+  const deploy = useDeploy(
+    selectedChain,
+    contract.contractType,
+    contractVersion,
+    addToDashboard,
+    isDefaultChain,
+  );
 
   return (
     <FormProvider {...form}>
@@ -237,9 +271,11 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                 contractAddress,
               });
               onSuccess();
-              router.replace(
-                `/${SupportedChainIdToNetworkMap[selectedChain]}/${contractAddress}`,
+              invariant(
+                chainInfo,
+                `Could not resolve network for ${selectedChain}`,
               );
+              router.push(`/${chainInfo.slug}/${contractAddress}`);
             },
             onError: (err) => {
               trackEvent({
@@ -726,7 +762,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                   <FormHelperText>
                     The number of blocks after a proposal is created that voting
                     on the proposal starts. A block is a series of blockchain
-                    transactions and occurs every ~{seconds} seconds.
+                    transactions and occurs every ~{blockTimeInSeconds} seconds.
                   </FormHelperText>
                   <FormErrorMessage>
                     {
@@ -768,7 +804,7 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                   <FormHelperText>
                     The number of blocks that voters have to vote on any new
                     proposal. A block is a series of blockchain transactions and
-                    occurs every ~{seconds} seconds.
+                    occurs every ~{blockTimeInSeconds} seconds.
                   </FormHelperText>
                   <FormErrorMessage>
                     {
@@ -849,6 +885,28 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
             </TrackedLink>
           </Text>
         </Flex>
+
+        <Flex alignItems="center" gap={3}>
+          <Checkbox
+            isChecked={addToDashboard}
+            onChange={() => setAddToDashboard((prev) => !prev)}
+          />
+
+          <Text mt={1}>
+            Add to dashboard so I can find it in the list of my contracts at{" "}
+            <TrackedLink
+              href="https://thirdweb.com/dashboard"
+              isExternal
+              category="custom-contract"
+              label="visit-dashboard"
+              color="blue.500"
+            >
+              /dashboard
+            </TrackedLink>
+            .
+          </Text>
+        </Flex>
+
         <Flex gap={4} direction={{ base: "column", md: "row" }}>
           <FormControl>
             <SupportedNetworkSelect
@@ -860,27 +918,41 @@ const BuiltinContractForm: React.FC<BuiltinContractFormProps> = ({
                   ? selectedChain
                   : -1
               }
-              onChange={(e) =>
-                onChainSelect(
-                  parseInt(e.currentTarget.value) as SUPPORTED_CHAIN_ID,
-                )
-              }
+              onChange={(e) => onChainSelect(parseInt(e.currentTarget.value))}
               disabledChainIds={DisabledChainsMap[contractType as ContractType]}
               disabledChainIdText="Coming Soon"
             />
           </FormControl>
+
           <TransactionButton
             flexShrink={0}
             type="submit"
             isLoading={deploy.isLoading}
             isDisabled={!publishMetadata.isSuccess || !selectedChain}
             colorScheme="blue"
-            transactionCount={1}
+            transactionCount={numberOfTransactions}
           >
             Deploy Now
           </TransactionButton>
         </Flex>
+
+        <Button
+          variant="filled"
+          background="inputBg"
+          _hover={{
+            background: "inputBgHover",
+          }}
+          leftIcon={<Icon color="inherit" as={IoMdSettings} />}
+          onClick={() => setShowAddNetworkModal(true)}
+          py={3}
+        >
+          Configure Networks
+        </Button>
       </Flex>
+
+      {showAddNetworkModal && (
+        <ConfigureNetworkModal onClose={() => setShowAddNetworkModal(false)} />
+      )}
     </FormProvider>
   );
 };

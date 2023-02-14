@@ -1,5 +1,13 @@
+import {
+  stepAddToRegistry,
+  stepDeploy,
+  useDeployContextModal,
+} from "./contract-deploy-form/deploy-context-modal";
 import { ContractId } from "./types";
-import { isContractIdBuiltInContract } from "./utils";
+import {
+  addContractToMultiChainRegistry,
+  isContractIdBuiltInContract,
+} from "./utils";
 import { contractKeys, networkKeys } from "@3rdweb-sdk/react";
 import { useMutationWithInvalidate } from "@3rdweb-sdk/react/hooks/query/useQueryWithNetwork";
 import {
@@ -8,22 +16,22 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { Polygon } from "@thirdweb-dev/chains";
 import {
   useAddress,
   useChainId,
   useSDK,
   useSDKChainId,
+  useSigner,
 } from "@thirdweb-dev/react";
 import { FeatureWithEnabled } from "@thirdweb-dev/sdk/dist/declarations/src/evm/constants/contract-features";
 import {
   Abi,
-  ChainId,
   ContractInfoSchema,
   ContractType,
   ExtraPublishMetadata,
   ProfileMetadata,
   PublishedContract,
-  SUPPORTED_CHAIN_ID,
   ThirdwebSDK,
   detectFeatures,
   extractConstructorParamsFromAbi,
@@ -34,7 +42,9 @@ import {
 } from "@thirdweb-dev/sdk/evm";
 import { BuiltinContractMap } from "constants/mappings";
 import { utils } from "ethers";
+import { useConfiguredChain } from "hooks/chains/configureChains";
 import { isEnsName } from "lib/ens";
+import { getDashboardChainRpc } from "lib/rpc";
 import { StorageSingleton, getEVMThirdwebSDK } from "lib/sdk";
 import { getAbsoluteUrl } from "lib/vercel-utils";
 import { StaticImageData } from "next/image";
@@ -125,7 +135,7 @@ export function useContractPublishMetadataFromURI(contractId: ContractId) {
 // if passing an address, also fetches the latest version of the matching contract
 export function useContractPrePublishMetadata(uri: string, address?: string) {
   const contractIdIpfsHash = toContractIdIpfsHash(uri);
-  const sdk = getEVMThirdwebSDK(ChainId.Polygon);
+
   return useQuery(
     ["pre-publish-metadata", uri, address],
     async () => {
@@ -136,6 +146,10 @@ export function useContractPrePublishMetadata(uri: string, address?: string) {
       invariant(address, "address is not defined");
       // TODO: Make this nicer.
       invariant(uri !== "ipfs://undefined", "uri can't be undefined");
+      const sdk = getEVMThirdwebSDK(
+        Polygon.chainId,
+        getDashboardChainRpc(Polygon),
+      );
       return await sdk
         ?.getPublisher()
         .fetchPrePublishMetadata(contractIdIpfsHash, address);
@@ -169,7 +183,7 @@ async function fetchFullPublishMetadata(
 // Metadata POST release, contains all the extra information filled in by the user
 export function useContractFullPublishMetadata(uri: string) {
   const contractIdIpfsHash = toContractIdIpfsHash(uri);
-  const sdk = getEVMThirdwebSDK(ChainId.Polygon);
+  const sdk = getEVMThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
   const queryClient = useQueryClient();
 
   return useQuery(
@@ -196,7 +210,7 @@ export function useContractFullPublishMetadata(uri: string) {
 }
 
 async function fetchReleaserProfile(publisherAddress?: string | null) {
-  const sdk = getEVMThirdwebSDK(ChainId.Polygon);
+  const sdk = getEVMThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
   invariant(publisherAddress, "address is not defined");
   return await sdk.getPublisher().getPublisherProfile(publisherAddress);
 }
@@ -222,14 +236,16 @@ export function useLatestRelease(
   publisherAddress?: string,
   contractName?: string,
 ) {
-  const sdk = getEVMThirdwebSDK(ChainId.Polygon);
   return useQuery(
     ["latest-release", publisherAddress, contractName],
     async () => {
       invariant(publisherAddress, "address is not defined");
       invariant(contractName, "contract name is not defined");
-      invariant(sdk, "sdk not provided");
 
+      const sdk = getEVMThirdwebSDK(
+        Polygon.chainId,
+        getDashboardChainRpc(Polygon),
+      );
       const latestRelease = await sdk
         .getPublisher()
         .getLatest(publisherAddress, contractName);
@@ -295,7 +311,7 @@ export function useAllVersions(
   publisherAddress?: string,
   contractName?: string,
 ) {
-  const sdk = getEVMThirdwebSDK(ChainId.Polygon);
+  const sdk = getEVMThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
   return useQuery(
     ["all-releases", publisherAddress, contractName],
     () => fetchAllVersions(sdk, publisherAddress, contractName),
@@ -307,10 +323,12 @@ export function useAllVersions(
 
 export function useReleasesFromDeploy(
   contractAddress?: string,
-  chainId?: SUPPORTED_CHAIN_ID,
+  chainId?: number,
 ) {
   const activeChainId = useSDKChainId();
   const cId = chainId || activeChainId;
+  const chainInfo = useConfiguredChain(cId || -1);
+
   return useQuery(
     (networkKeys.chain(cId) as readonly unknown[]).concat([
       "release-from-deploy",
@@ -319,20 +337,27 @@ export function useReleasesFromDeploy(
     async () => {
       invariant(contractAddress, "contractAddress is not defined");
       invariant(cId, "chain not defined");
-      const sdk = getEVMThirdwebSDK(cId);
+
+      const rpcUrl = chainInfo ? getDashboardChainRpc(chainInfo) : undefined;
+
+      invariant(rpcUrl, "rpcUrl not defined");
+      const sdk = getEVMThirdwebSDK(cId, rpcUrl);
 
       const contractUri = await sdk
         .getPublisher()
         .resolveContractUriFromAddress(contractAddress);
 
-      const polygonSdk = getEVMThirdwebSDK(ChainId.Polygon);
+      const polygonSdk = getEVMThirdwebSDK(
+        Polygon.chainId,
+        getDashboardChainRpc(Polygon),
+      );
 
       return await polygonSdk
         .getPublisher()
         .resolvePublishMetadataFromCompilerMetadata(contractUri);
     },
     {
-      enabled: !!contractAddress && !!cId,
+      enabled: !!contractAddress && !!cId && !!chainInfo,
     },
   );
 }
@@ -347,7 +372,7 @@ export async function fetchReleasedContractInfo(
 }
 
 export function useReleasedContractInfo(contract: PublishedContract) {
-  const sdk = getEVMThirdwebSDK(ChainId.Polygon);
+  const sdk = getEVMThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
   return useQuery(
     ["released-contract", contract],
     () => fetchReleasedContractInfo(sdk, contract),
@@ -472,6 +497,8 @@ export function useCustomContractDeployMutation(
   const queryClient = useQueryClient();
   const walletAddress = useAddress();
   const chainId = useChainId();
+  const signer = useSigner();
+  const deployContext = useDeployContextModal();
 
   return useMutation(
     async (data: ContractDeployMutationParams) => {
@@ -479,17 +506,53 @@ export function useCustomContractDeployMutation(
         sdk && "getPublisher" in sdk,
         "sdk is not ready or does not support publishing",
       );
-      const contractAddress = await sdk.deployer.deployContractFromUri(
-        ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
-        data.constructorParams,
-        {
-          forceDirectDeploy,
-        },
+
+      // open the modal with the appropriate steps
+      deployContext.open(
+        data.addToDashboard ? [stepDeploy, stepAddToRegistry] : [stepDeploy],
       );
-      if (data.addToDashboard) {
-        const registry = await sdk?.deployer.getRegistry();
-        await registry?.addContract(contractAddress);
+
+      let contractAddress: string;
+      try {
+        // deploy contract
+        contractAddress = await sdk.deployer.deployContractFromUri(
+          ipfsHash.startsWith("ipfs://") ? ipfsHash : `ipfs://${ipfsHash}`,
+          data.constructorParams,
+          {
+            forceDirectDeploy,
+          },
+        );
+
+        deployContext.nextStep();
+      } catch (e) {
+        // failed to deploy contract - close modal for now
+        deployContext.close();
+        // re-throw error
+        throw e;
       }
+      try {
+        // let user decide if they want this or not
+        if (data.addToDashboard) {
+          invariant(chainId, "chainId is not provided");
+          await addContractToMultiChainRegistry(
+            {
+              address: contractAddress,
+              chainId,
+            },
+            signer,
+          );
+
+          deployContext.nextStep();
+        }
+      } catch (e) {
+        // failed to add to dashboard - for now just close the modal
+        deployContext.close();
+        // not re-throwing the error, this is not technically a failure to deploy, just to add to dashboard - the contract is deployed already at this stage
+      }
+
+      // always close the modal
+      deployContext.close();
+
       return contractAddress;
     },
     {
@@ -497,6 +560,7 @@ export function useCustomContractDeployMutation(
         return await queryClient.invalidateQueries([
           ...networkKeys.chain(chainId),
           ...contractKeys.list(walletAddress),
+          [networkKeys.multiChainRegistry, walletAddress],
         ]);
       },
     },
@@ -526,7 +590,7 @@ export type ReleasedContractDetails = Awaited<
 >[number];
 
 export function usePublishedContractsQuery(address?: string) {
-  const sdk = getEVMThirdwebSDK(ChainId.Polygon);
+  const sdk = getEVMThirdwebSDK(Polygon.chainId, getDashboardChainRpc(Polygon));
   const queryClient = useQueryClient();
   return useQuery<ReleasedContractDetails[]>(
     ["published-contracts", address],
@@ -616,15 +680,18 @@ export function ensQuery(addressOrEnsName?: string) {
       }
       // if it is neither an address or an ens name then return the placeholder data only
       if (!utils.isAddress(addressOrEnsName) && !isEnsName(addressOrEnsName)) {
-        throw new Error("Invalid address or ens name");
+        throw new Error("Invalid address or ENS name.");
       }
       const res = await fetch(
         `${getAbsoluteUrl()}/api/ens/${addressOrEnsName}`,
       );
-      const { address, ensName } = await res.json();
+      const { address, ensName } = (await res.json()) as {
+        address: string | null;
+        ensName: string | null;
+      };
 
       if (isEnsName(addressOrEnsName) && !address) {
-        throw new Error("ENS name not found");
+        throw new Error("Failed to resolve ENS name.");
       }
 
       return {
@@ -647,6 +714,10 @@ export function ensQuery(addressOrEnsName?: string) {
 
 export function useEns(addressOrEnsName?: string) {
   return useQuery(ensQuery(addressOrEnsName));
+}
+
+export function fetchEns(queryClient: QueryClient, addressOrEnsName: string) {
+  return queryClient.fetchQuery(ensQuery(addressOrEnsName));
 }
 
 export function useContractFunctions(abi: Abi) {

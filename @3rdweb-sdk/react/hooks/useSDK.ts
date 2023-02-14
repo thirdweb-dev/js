@@ -1,22 +1,47 @@
 import { contractKeys, networkKeys } from "../cache-keys";
 import { useQuery } from "@tanstack/react-query";
-import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk/evm";
+import {
+  Arbitrum,
+  ArbitrumGoerli,
+  Avalanche,
+  AvalancheFuji,
+  Binance,
+  BinanceTestnet,
+  Ethereum,
+  Fantom,
+  FantomTestnet,
+  Goerli,
+  Mumbai,
+  Optimism,
+  OptimismGoerli,
+  Polygon,
+} from "@thirdweb-dev/chains";
+import { ChainId, ContractWithMetadata } from "@thirdweb-dev/sdk/evm";
+import { useAutoConfigureChains } from "hooks/chains/allChains";
+import {
+  useConfiguredChains,
+  useConfiguredChainsRecord,
+} from "hooks/chains/configureChains";
+import { getDashboardChainRpc } from "lib/rpc";
 import { getEVMThirdwebSDK, getSOLThirdwebSDK } from "lib/sdk";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import invariant from "tiny-invariant";
-import { DashboardSolanaNetwork } from "utils/network";
+import { DashboardSolanaNetwork } from "utils/solanaUtils";
 
 export function useContractList(
-  chainId: SUPPORTED_CHAIN_ID,
+  chainId: number,
+  rpcUrl: string,
   walletAddress?: string,
 ) {
   return useQuery(
     [...networkKeys.chain(chainId), ...contractKeys.list(walletAddress)],
     async () => {
-      const sdk = getEVMThirdwebSDK(chainId);
-      return [
-        ...((await sdk.getContractList(walletAddress || "")) || []),
-      ].reverse();
+      if (!walletAddress) {
+        return;
+      }
+      const sdk = getEVMThirdwebSDK(chainId, rpcUrl);
+      const contractList = await sdk.getContractList(walletAddress);
+      return [...contractList].reverse();
     },
     {
       enabled: !!walletAddress && !!chainId,
@@ -24,16 +49,73 @@ export function useContractList(
   );
 }
 
-export function useMainnetsContractList(address: string | undefined) {
-  const mainnetQuery = useContractList(ChainId.Mainnet, address);
-  const polygonQuery = useContractList(ChainId.Polygon, address);
-  const fantomQuery = useContractList(ChainId.Fantom, address);
-  const avalancheQuery = useContractList(ChainId.Avalanche, address);
-  const optimismQuery = useContractList(ChainId.Optimism, address);
-  const arbitrumQuery = useContractList(ChainId.Arbitrum, address);
+export function useMultiChainRegContractList(walletAddress?: string) {
+  const configuredChains = useConfiguredChains();
+  return useQuery(
+    [
+      ...networkKeys.multiChainRegistry,
+      walletAddress,
+      { chainIds: configuredChains.map((c) => c.chainId) },
+    ],
+    async () => {
+      if (!walletAddress) {
+        return [];
+      }
+
+      const polygonSDK = getEVMThirdwebSDK(
+        Polygon.chainId,
+        getDashboardChainRpc(Polygon),
+      );
+
+      const contractList = await polygonSDK.getMultichainContractList(
+        walletAddress,
+        configuredChains,
+      );
+
+      return [...contractList].reverse();
+    },
+    {
+      enabled: !!walletAddress,
+    },
+  );
+}
+
+export function useMainnetsContractList(walletAddress: string | undefined) {
+  const mainnetQuery = useContractList(
+    Ethereum.chainId,
+    getDashboardChainRpc(Ethereum),
+    walletAddress,
+  );
+  const polygonQuery = useContractList(
+    Polygon.chainId,
+    getDashboardChainRpc(Polygon),
+    walletAddress,
+  );
+  const fantomQuery = useContractList(
+    Fantom.chainId,
+    getDashboardChainRpc(Fantom),
+    walletAddress,
+  );
+  const avalancheQuery = useContractList(
+    Avalanche.chainId,
+    getDashboardChainRpc(Avalanche),
+    walletAddress,
+  );
+  const optimismQuery = useContractList(
+    Optimism.chainId,
+    getDashboardChainRpc(Optimism),
+    walletAddress,
+  );
+
+  const arbitrumQuery = useContractList(
+    Arbitrum.chainId,
+    getDashboardChainRpc(Arbitrum),
+    walletAddress,
+  );
   const binanceQuery = useContractList(
-    ChainId.BinanceSmartChainMainnet,
-    address,
+    Binance.chainId,
+    getDashboardChainRpc(Binance),
+    walletAddress,
   );
 
   const mainnetList = useMemo(() => {
@@ -100,19 +182,41 @@ export function useMainnetsContractList(address: string | undefined) {
   };
 }
 
-export function useTestnetsContractList(address: string | undefined) {
-  const goerliQuery = useContractList(ChainId.Goerli, address);
-  const mumbaiQuery = useContractList(ChainId.Mumbai, address);
-  const fantomTestnetQuery = useContractList(ChainId.FantomTestnet, address);
-  const avalancheFujiTestnetQuery = useContractList(
-    ChainId.AvalancheFujiTestnet,
-    address,
+export function useTestnetsContractList(walletAddress: string | undefined) {
+  const goerliQuery = useContractList(
+    Goerli.chainId,
+    getDashboardChainRpc(Goerli),
+    walletAddress,
   );
-  const optimismGoerliQuery = useContractList(ChainId.OptimismGoerli, address);
-  const arbitrumGoerliQuery = useContractList(ChainId.ArbitrumGoerli, address);
+  const mumbaiQuery = useContractList(
+    Mumbai.chainId,
+    getDashboardChainRpc(Mumbai),
+    walletAddress,
+  );
+  const fantomTestnetQuery = useContractList(
+    FantomTestnet.chainId,
+    getDashboardChainRpc(FantomTestnet),
+    walletAddress,
+  );
+  const avalancheFujiTestnetQuery = useContractList(
+    AvalancheFuji.chainId,
+    getDashboardChainRpc(AvalancheFuji),
+    walletAddress,
+  );
+  const optimismGoerliQuery = useContractList(
+    OptimismGoerli.chainId,
+    getDashboardChainRpc(OptimismGoerli),
+    walletAddress,
+  );
+  const arbitrumGoerliQuery = useContractList(
+    ArbitrumGoerli.chainId,
+    getDashboardChainRpc(ArbitrumGoerli),
+    walletAddress,
+  );
   const binanceTestnetQuery = useContractList(
-    ChainId.BinanceSmartChainTestnet,
-    address,
+    BinanceTestnet.chainId,
+    getDashboardChainRpc(BinanceTestnet),
+    walletAddress,
   );
 
   const testnetList = useMemo(() => {
@@ -185,13 +289,80 @@ export function useTestnetsContractList(address: string | undefined) {
   };
 }
 
-export function useAllContractList(address: string | undefined) {
-  const mainnetQuery = useMainnetsContractList(address);
-  const testnetQuery = useTestnetsContractList(address);
+export function useAllContractList(walletAddress: string | undefined) {
+  const mainnetQuery = useMainnetsContractList(walletAddress);
+  const testnetQuery = useTestnetsContractList(walletAddress);
+  const multiChainQuery = useMultiChainRegContractList(walletAddress);
+
+  const configuredChainsRecord = useConfiguredChainsRecord();
+  const autoConfigureChains = useAutoConfigureChains();
+
+  useEffect(() => {
+    if (!multiChainQuery.data) {
+      return;
+    }
+
+    // create a set of unconfigured chains
+    const unconfiguredChainsSet: Set<number> = new Set();
+    multiChainQuery.data.forEach((contract) => {
+      if (!configuredChainsRecord[contract.chainId]) {
+        unconfiguredChainsSet.add(contract.chainId);
+      }
+    });
+
+    // auto configure them all if possible
+    autoConfigureChains(unconfiguredChainsSet);
+  }, [autoConfigureChains, multiChainQuery.data, configuredChainsRecord]);
 
   const allList = useMemo(() => {
-    return (mainnetQuery.data || []).concat(testnetQuery.data || []);
-  }, [mainnetQuery.data, testnetQuery.data]);
+    const mainnets: ContractWithMetadata[] = [];
+    const testnets: ContractWithMetadata[] = [];
+    const unknownNets: ContractWithMetadata[] = [];
+
+    if (multiChainQuery.data) {
+      multiChainQuery.data.forEach((net) => {
+        // if network is configured, we can determine if it is a testnet or not
+        if (net.chainId in configuredChainsRecord) {
+          const netInfo = configuredChainsRecord[net.chainId];
+          if (netInfo.testnet) {
+            testnets.push(net);
+          } else {
+            mainnets.push(net);
+          }
+        }
+        // if not configured, we can't determine if it is a testnet or not
+        else {
+          unknownNets.push(net);
+        }
+      });
+    }
+
+    // only for legacy reasons - can be removed once migration to multi-chain registry is complete
+    const mergedMainnets = [...mainnets, ...mainnetQuery.data].sort(
+      (a, b) => a.chainId - b.chainId,
+    );
+    const mergedTestnets = [...testnets, ...testnetQuery.data].sort(
+      (a, b) => a.chainId - b.chainId,
+    );
+
+    let all = [...mergedMainnets, ...mergedTestnets, ...unknownNets];
+
+    // remove duplicates (by address + chain) - can happen if a contract is on both muichain registry and legacy registries
+    const seen: { [key: string]: boolean } = {};
+    all = all.filter((item) => {
+      const key = `${item.chainId}-${item.address}`;
+      const seenBefore = seen[key];
+      seen[key] = true;
+      return !seenBefore;
+    });
+
+    return all;
+  }, [
+    mainnetQuery.data,
+    testnetQuery.data,
+    multiChainQuery.data,
+    configuredChainsRecord,
+  ]);
 
   return {
     data: allList,

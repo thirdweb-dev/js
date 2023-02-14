@@ -1,10 +1,11 @@
 import { QueryClient } from "@tanstack/react-query";
-import { ChainId } from "@thirdweb-dev/sdk/evm";
+import { Polygon } from "@thirdweb-dev/chains";
 import {
   ensQuery,
   fetchPublishedContracts,
 } from "components/contract-components/hooks";
 import { ENSResolveResult } from "lib/ens";
+import { getDashboardChainRpc } from "lib/rpc";
 import { getEVMThirdwebSDK } from "lib/sdk";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSingleQueryValue } from "utils/router";
@@ -42,7 +43,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   // if we don't have a specific contractName we have to actually fetch all the contracts for the address
   if (!contractName) {
-    const polygonSdk = getEVMThirdwebSDK(ChainId.Polygon);
+    const polygonSdk = getEVMThirdwebSDK(
+      Polygon.chainId,
+      getDashboardChainRpc(Polygon),
+    );
     const publishedContracts = await fetchPublishedContracts(
       polygonSdk,
       new QueryClient(),

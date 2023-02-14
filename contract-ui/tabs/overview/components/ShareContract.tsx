@@ -1,4 +1,4 @@
-import { useDashboardEVMChainId, useDashboardNetwork } from "@3rdweb-sdk/react";
+import { useDashboardEVMChainId, useEVMContractInfo } from "@3rdweb-sdk/react";
 import {
   Flex,
   GridItem,
@@ -28,7 +28,7 @@ export const ShareContract: React.FC<ShareContractProps> = ({
   trackingCategory,
 }) => {
   const trackEvent = useTrack();
-  const network = useDashboardNetwork();
+  const chainSlug = useEVMContractInfo()?.chain?.slug || "";
   const [theme, setTheme] = useState<"light" | "dark">("dark");
   const audited = false;
   const activeChainId = useDashboardEVMChainId();
@@ -48,13 +48,13 @@ export const ShareContract: React.FC<ShareContractProps> = ({
   }, [address, theme, activeChainId]);
 
   const badgeCode = `
-    <a href="https://thirdweb.com/${network}/${address}?utm_source=contract_badge" target="_blank">
+    <a href="https://thirdweb.com/${chainSlug}/${address}?utm_source=contract_badge" target="_blank">
       <img width="${BADGE_WIDTH}" height="${
     audited ? AUDITED_BADGE_HEIGHT : BADGE_HEIGHT
   }" src="${badgeUrl}" alt="View contract" />
     </a>`;
 
-  const contractLink = `https://thirdweb.com/${network}/${address}`;
+  const contractLink = `https://thirdweb.com/${chainSlug}/${address}`;
 
   const { hasCopied: hasCopiedCode, onCopy: onCopyCode } = useClipboard(
     badgeCode,
@@ -138,7 +138,7 @@ export const ShareContract: React.FC<ShareContractProps> = ({
             <Flex grow={1} position="relative">
               <Input
                 rounded="lg"
-                value={`https://thirdweb.com/${network}/${address}`}
+                value={`https://thirdweb.com/${chainSlug}/${address}`}
                 pr={10}
                 readOnly
               />

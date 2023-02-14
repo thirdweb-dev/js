@@ -1,84 +1,145 @@
-import { useDashboardNetwork } from "@3rdweb-sdk/react";
 import { useImportContract } from "@3rdweb-sdk/react/hooks/useImportContract";
-import { Flex } from "@chakra-ui/react";
-import { useTrack } from "hooks/analytics/useTrack";
-import { useTxNotifications } from "hooks/useTxNotifications";
-import { Button, Heading, Text } from "tw-components";
+import {
+  Center,
+  Container,
+  Divider,
+  Flex,
+  Icon,
+  Spinner,
+} from "@chakra-ui/react";
+import { Chain } from "@thirdweb-dev/chains";
+import { ChakraNextImage } from "components/Image";
+import { useCallback, useEffect, useRef } from "react";
+import { FiCheck } from "react-icons/fi";
+import { Button, Card, Heading, Text, TrackedLink } from "tw-components";
 
 interface ImportContractProps {
   contractAddress: string;
+  chain: Chain | null;
+  autoImport?: boolean;
+  onImport: () => void;
 }
 
 export const ImportContract: React.FC<ImportContractProps> = ({
   contractAddress,
+  chain,
+  autoImport,
+  onImport,
 }) => {
-  const trackEvent = useTrack();
-  const network = useDashboardNetwork();
   const importContract = useImportContract();
 
-  const { onSuccess, onError } = useTxNotifications(
-    "Contract imported successfully",
-    "Failed to import contract",
-  );
+  const handleImportContract = useCallback(() => {
+    if (!chain) {
+      return;
+    }
+
+    importContract.mutate(
+      { contractAddress, chain },
+      {
+        onSuccess: onImport,
+      },
+    );
+  }, [chain, contractAddress, importContract, onImport]);
+
+  const didAutoImportRef = useRef(false);
+  useEffect(() => {
+    if (autoImport && chain && !didAutoImportRef.current) {
+      didAutoImportRef.current = true;
+      // for some reason this needs to be deferred to the next event loop otherwise we don't get the correct staus reports from the query
+      setTimeout(() => {
+        handleImportContract();
+      }, 0);
+    }
+  }, [autoImport, chain, handleImportContract]);
 
   return (
-    <Flex
-      direction="column"
-      gap={8}
-      w="full"
-      alignItems="center"
-      mt={{ base: 4, md: 12 }}
-    >
-      <Flex direction="column" gap={6} w={96}>
-        <Heading size="title.sm" textAlign="center">
-          This contract can&apos;t be found on thirdweb
-        </Heading>
-        <Text textAlign="center">
-          Import this contract and unlock thirdweb&apos;s toolkit
-        </Text>
-        <Flex justifyContent="center">
-          <Button
-            colorScheme="purple"
-            onClick={() => {
-              trackEvent({
-                category: "import-contract",
-                action: "click",
-                label: "attempt",
-                contractAddress,
-                network,
-              });
-              importContract.mutate(contractAddress, {
-                onSuccess: () => {
-                  trackEvent({
-                    category: "import-contract",
-                    action: "click",
-                    label: "success",
-                    contractAddress,
-                    network,
-                  });
-                  onSuccess();
-                  window.location.reload();
-                },
-                onError: (error) => {
-                  trackEvent({
-                    category: "import-contract",
-                    action: "click",
-                    label: "error",
-                    error,
-                    contractAddress,
-                    network,
-                  });
-                  onError(error);
-                },
-              });
-            }}
-            isLoading={importContract.isLoading}
-            w="auto"
-          >
-            Import Contract
-          </Button>
-        </Flex>
-      </Flex>
-    </Flex>
+    <Container maxW="container.page" h="full">
+      <Center h="full">
+        <Card
+          w="container.sm"
+          as={Flex}
+          flexDirection="column"
+          py={12}
+          px={16}
+          gap={8}
+        >
+          <ChakraNextImage
+            boxSize={16}
+            src={require("./wrench.png")}
+            alt="🔧"
+          />
+          <Flex direction="column" gap={6}>
+            <Flex gap={4} align="center">
+              <Heading as="h2" size="title.lg">
+                {importContract.isLoading
+                  ? "Importing contract"
+                  : importContract.error
+                  ? "Contract could not be imported."
+                  : importContract.isSuccess
+                  ? "Import successful!"
+                  : "Contract requires import."}
+              </Heading>
+              {importContract.isLoading && (
+                <Spinner
+                  boxSize={8}
+                  color="blue.400"
+                  _light={{ color: "blue.600" }}
+                  size="md"
+                />
+              )}
+              {importContract.isSuccess && (
+                <Icon
+                  boxSize={8}
+                  as={FiCheck}
+                  color="green.400"
+                  _light={{ color: "green.600" }}
+                />
+              )}
+            </Flex>
+            <Text>
+              {importContract.isError
+                ? `We could not resolve your contract's ABI or it might be deployed on a network that is not yet supported by import`
+                : `This is a one-time action. Once imported, the contract can be
+              accessed by everyone. This can take up to a few minutes.`}
+            </Text>
+
+            <Flex direction="column" gap={1.5} align="center">
+              {!importContract.isSuccess && !autoImport && (
+                <Button
+                  w="full"
+                  colorScheme="blue"
+                  isLoading={importContract.isLoading}
+                  isDisabled={importContract.isSuccess || !chain}
+                  loadingText="Importing"
+                  onClick={handleImportContract}
+                >
+                  Import Contract
+                </Button>
+              )}
+            </Flex>
+
+            <Divider />
+            <Text>
+              If you require assistance please{" "}
+              <TrackedLink
+                _dark={{
+                  color: "blue.400",
+                }}
+                _light={{
+                  color: "blue.600",
+                }}
+                category="import-contract"
+                label="support"
+                href="https://support.thirdweb.com/how-to-reach-us/gY4SUcfwkzcy5XjnWZvYiE"
+                isExternal
+              >
+                reach out to us
+              </TrackedLink>
+              .
+            </Text>
+          </Flex>
+        </Card>
+      </Center>
+    </Container>
   );
 };

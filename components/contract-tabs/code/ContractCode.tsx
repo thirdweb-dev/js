@@ -13,11 +13,9 @@ import { useAddress, useContract } from "@thirdweb-dev/react";
 import { Abi } from "@thirdweb-dev/sdk";
 import { CodeOverview } from "contract-ui/tabs/code/components/code-overview";
 import { constants } from "ethers";
-import { useSingleQueryParam } from "hooks/useQueryParam";
 import { useCallback, useMemo, useState } from "react";
 import { IoDocumentOutline } from "react-icons/io5";
 import { Card, CodeBlock, Heading, LinkButton, Text } from "tw-components";
-import { SupportedNetwork } from "utils/network";
 
 function replaceVariablesInCodeSnippet(
   snippet: CodeSnippet,
@@ -80,7 +78,9 @@ export const ContractCode: React.FC<ContractCodeProps> = ({
   ecosystem,
 }) => {
   const { data, isLoading } = useContractCodeSnippetQuery(ecosystem);
-  const chainName = useSingleQueryParam<SupportedNetwork>("networkOrAddress");
+
+  // TODO jonas - bring this back when we figure out what the SDK inputs are going to be for this
+  const chainName = "";
 
   const contractName = usePascalCaseContractName(contractType);
 

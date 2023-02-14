@@ -1,4 +1,4 @@
-import { useDashboardNetwork } from "@3rdweb-sdk/react";
+import { useEVMContractInfo } from "@3rdweb-sdk/react";
 import { Stack } from "@chakra-ui/react";
 import { UseMutationResult } from "@tanstack/react-query";
 import { TransactionButton } from "components/buttons/TransactionButton";
@@ -13,7 +13,7 @@ interface CancelTabProps {
 
 export const CancelTab: React.FC<CancelTabProps> = ({ cancelQuery, id }) => {
   const trackEvent = useTrack();
-  const network = useDashboardNetwork();
+  const network = useEVMContractInfo()?.chain;
 
   const { onSuccess, onError } = useTxNotifications(
     "Listing cancelled",

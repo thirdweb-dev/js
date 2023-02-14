@@ -1,4 +1,4 @@
-import { useDashboardNetwork } from "@3rdweb-sdk/react";
+import { useEVMContractInfo } from "@3rdweb-sdk/react";
 import { Stack } from "@chakra-ui/react";
 import { useCancelListing } from "@thirdweb-dev/react";
 import type { ListingType, Marketplace } from "@thirdweb-dev/sdk/evm";
@@ -18,7 +18,7 @@ export const CancelTab: React.FC<CancelTabProps> = ({
   listingType,
 }) => {
   const trackEvent = useTrack();
-  const network = useDashboardNetwork();
+  const network = useEVMContractInfo()?.chain;
 
   const cancelListing = useCancelListing(contract);
 
