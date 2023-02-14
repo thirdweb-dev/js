@@ -15,7 +15,7 @@ import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
 import { MarketplaceAuction } from "../../core/classes/marketplace-auction";
 import { MarketplaceDirect } from "../../core/classes/marketplace-direct";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../../core/types";
+import { NetworkInput, TransactionResult } from "../../core/types";
 import { ListingType } from "../../enums";
 import { Abi } from "../../schema/contracts/custom";
 import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
@@ -144,7 +144,7 @@ export class Marketplace implements UpdateableNetwork {
   }
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
@@ -179,7 +179,7 @@ export class Marketplace implements UpdateableNetwork {
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
-  onNetworkUpdated(network: NetworkOrSignerOrProvider) {
+  onNetworkUpdated(network: NetworkInput) {
     this.contractWrapper.updateSignerOrProvider(network);
   }
 

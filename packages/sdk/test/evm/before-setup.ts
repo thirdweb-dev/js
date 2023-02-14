@@ -7,6 +7,7 @@ import {
   EditionDropInitializer,
   EditionInitializer,
   getNativeTokenByChainId,
+  LOCAL_NODE_PKEY,
   MarketplaceInitializer,
   MultiwrapInitializer,
   NFTCollectionInitializer,
@@ -21,6 +22,8 @@ import {
 } from "../../src/evm";
 import { Plugin } from "../../src/evm/types/plugins";
 import { MockStorage } from "./mock/MockStorage";
+import weth from "./mock/WETH9.json";
+import { deployContractAndUploadMetadata } from "./utils";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   ContractPublisher,
@@ -53,10 +56,13 @@ import {
   PluginMap,
   PluginMap__factory,
   VoteERC20__factory,
+  MarketplaceV3__factory,
+  DirectListingsLogic__factory,
+  EnglishAuctionsLogic__factory,
+  OffersLogic__factory,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
-import { FormatTypes, FunctionFragment, Interface } from "ethers/lib/utils";
 import hardhat from "hardhat";
 
 // it's there, trust me bro
@@ -74,6 +80,7 @@ let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
 let storage: ThirdwebStorage;
 let implementations: { [key in ContractType]?: string };
+let mock_weth_address: string;
 
 const fastForwardTime = async (timeInSeconds: number): Promise<void> => {
   const now = Math.floor(Date.now() / 1000);
@@ -100,6 +107,15 @@ export const mochaHooks = {
     const trustedForwarderAddress =
       "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
     await jsonProvider.send("hardhat_reset", []);
+
+    const mock_weth_deployer = new ethers.ContractFactory(
+      weth.abi,
+      weth.bytecode,
+    )
+      .connect(signer)
+      .deploy();
+    const mock_weth = await (await mock_weth_deployer).deployed();
+    mock_weth_address = mock_weth.address;
 
     const registry = (await new ethers.ContractFactory(
       TWRegistry__factory.abi,
@@ -164,7 +180,7 @@ export const mochaHooks = {
     }
 
     for (const contractType in CONTRACTS_MAP) {
-      if (contractType === "custom") {
+      if (contractType === "custom" || contractType === "marketplace-v3") {
         continue;
       }
       let factories: any[] = [];
@@ -230,6 +246,13 @@ export const mochaHooks = {
       }
     }
 
+    // setup marketplace-v3 and add implementation to factory
+    const marketplaceEntrypointAddress = await setupMarketplaceV3();
+    const tx = await thirdwebFactoryDeployer.addImplementation(
+      marketplaceEntrypointAddress,
+    );
+    await tx.wait();
+
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     process.env.registryAddress = thirdwebRegistryAddress;
     // eslint-disable-next-line turbo/no-undeclared-env-vars
@@ -254,6 +277,18 @@ export const mochaHooks = {
   },
 };
 
+const getFunctionSignature = (fnInputs: any): string => {
+  return (
+    "(" +
+    fnInputs
+      .map((i) => {
+        return i.type === "tuple" ? getFunctionSignature(i.components) : i.type;
+      })
+      .join(",") +
+    ")"
+  );
+};
+
 const generatePluginFunctions = (
   pluginAddress: string,
   pluginAbi: Abi,
@@ -263,10 +298,12 @@ const generatePluginFunctions = (
   // TODO - filter out common functions like _msgSender(), contractType(), etc.
   for (const fnFragment of Object.values(pluginInterface.functions)) {
     const fn = pluginInterface.getFunction(fnFragment.name);
+    if (fn.name.includes("_")) {
+      continue;
+    }
     pluginFunctions.push({
       functionSelector: pluginInterface.getSighash(fn),
-      functionSignature:
-        fn.name + "(" + fn.inputs.map((i) => i.type).join(",") + ")",
+      functionSignature: fn.name + getFunctionSignature(fn.inputs),
       pluginAddress,
     });
   }
@@ -310,6 +347,61 @@ async function setupMultichainRegistry(
     await multichainRegistryRouterDeployer.deployed();
 
   return multichainRegistryRouter.address;
+}
+
+// Setup marketplace-v3 for tests
+async function setupMarketplaceV3(): Promise<string> {
+  // Direct Listings
+  const directListingsPluginAddress = await deployContractAndUploadMetadata(
+    DirectListingsLogic__factory.abi,
+    DirectListingsLogic__factory.bytecode,
+    signer,
+    [mock_weth_address],
+  );
+  const pluginsDirectListings: Plugin[] = generatePluginFunctions(
+    directListingsPluginAddress,
+    DirectListingsLogic__factory.abi,
+  );
+
+  // English Auctions
+  const englishAuctionPluginAddress = await deployContractAndUploadMetadata(
+    EnglishAuctionsLogic__factory.abi,
+    EnglishAuctionsLogic__factory.bytecode,
+    signer,
+    [mock_weth_address],
+  );
+  const pluginsEnglishAuctions: Plugin[] = generatePluginFunctions(
+    englishAuctionPluginAddress,
+    EnglishAuctionsLogic__factory.abi,
+  );
+
+  // Offers
+  const offersLogicPluginAddress = await deployContractAndUploadMetadata(
+    OffersLogic__factory.abi,
+    OffersLogic__factory.bytecode,
+    signer,
+  );
+  const pluginsOffers: Plugin[] = generatePluginFunctions(
+    offersLogicPluginAddress,
+    OffersLogic__factory.abi,
+  );
+
+  // Map
+  const pluginMapAddress = await deployContractAndUploadMetadata(
+    PluginMap__factory.abi,
+    PluginMap__factory.bytecode,
+    signer,
+    [[...pluginsDirectListings, ...pluginsEnglishAuctions, ...pluginsOffers]],
+  );
+
+  // Router
+  const marketplaceV3Address = await deployContractAndUploadMetadata(
+    MarketplaceV3__factory.abi,
+    MarketplaceV3__factory.bytecode,
+    signer,
+    [pluginMapAddress],
+  );
+  return marketplaceV3Address;
 }
 
 export {

@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { getPrebuiltInfo } from "../common/legacy";
 import { fetchAbiFromAddress } from "../common/metadata-resolver";
+import { getCompositePluginABI, joinABIs } from "../common/plugin";
 import { ALL_ROLES } from "../common/role";
 import { getSignerAndProvider } from "../core/classes/rpc-connection-handler";
 import type {
   ContractType,
-  NetworkOrSignerOrProvider,
+  NetworkInput,
   PrebuiltContractType,
 } from "../core/types";
 import {
@@ -20,14 +21,18 @@ import {
   TokenErc721ContractSchema,
   VoteContractSchema,
 } from "../schema";
-import { Abi, CustomContractSchema } from "../schema/contracts/custom";
+import {
+  Abi,
+  AbiSchema,
+  CustomContractSchema,
+} from "../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 
 type InitalizeParams = [
-  network: NetworkOrSignerOrProvider,
+  network: NetworkInput,
   address: string,
   storage: ThirdwebStorage,
   options?: SDKOptions,
@@ -152,10 +157,59 @@ export const MarketplaceInitializer = {
     if (abi) {
       return abi;
     }
+
     // Deprecated - only needed for backwards compatibility with non-released contracts - should remove in v4
     return (
       await import("@thirdweb-dev/contracts-js/dist/abis/Marketplace.json")
     ).default;
+  },
+};
+
+export const MarketplaceV3Initializer = {
+  name: "MarketplaceRouter" as const,
+  contractType: "marketplace-v3" as const,
+  schema: MarketplaceContractSchema,
+  roles: ["admin", "lister", "asset"] as const,
+  initialize: async (
+    ...[network, address, storage, options]: InitalizeParams
+  ) => {
+    const [, provider] = getSignerAndProvider(network, options);
+    const [abi, contract, _network] = await Promise.all([
+      MarketplaceV3Initializer.getAbi(address, provider, storage),
+      import("./prebuilt-implementations/marketplacev3"),
+      provider.getNetwork(),
+    ]);
+
+    return new contract.MarketplaceV3(
+      network,
+      address,
+      storage,
+      options,
+      abi,
+      _network.chainId,
+    );
+  },
+  getAbi: async (
+    address: string,
+    provider: ethers.providers.Provider,
+    storage: ThirdwebStorage,
+  ) => {
+    const abi = await fetchAbiFromAddress(address, provider, storage);
+    if (abi) {
+      return await getCompositePluginABI(address, abi, provider, {}, storage);
+    }
+
+    // Deprecated - only needed for backwards compatibility with non-released contracts - should remove in v4
+    const localAbi = (
+      await import("@thirdweb-dev/contracts-js/dist/abis/MarketplaceV3.json")
+    ).default;
+    return await getCompositePluginABI(
+      address,
+      localAbi,
+      provider,
+      {},
+      storage,
+    );
   },
 };
 
@@ -558,6 +612,7 @@ export const PREBUILT_CONTRACTS_MAP = {
   [EditionDropInitializer.contractType]: EditionDropInitializer,
   [EditionInitializer.contractType]: EditionInitializer,
   [MarketplaceInitializer.contractType]: MarketplaceInitializer,
+  [MarketplaceV3Initializer.contractType]: MarketplaceV3Initializer,
   [MultiwrapInitializer.contractType]: MultiwrapInitializer,
   [NFTCollectionInitializer.contractType]: NFTCollectionInitializer,
   [NFTDropInitializer.contractType]: NFTDropInitializer,

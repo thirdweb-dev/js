@@ -1,10 +1,10 @@
-import { getReadOnlyProvider } from "../../constants/urls";
+import { getChainProvider, getReadOnlyProvider } from "../../constants/urls";
 import {
   SDKOptions,
   SDKOptionsOutput,
   SDKOptionsSchema,
 } from "../../schema/sdk-options";
-import { NetworkOrSignerOrProvider } from "../types";
+import { NetworkInput } from "../types";
 import { ethers, Signer, providers } from "ethers";
 import EventEmitter from "eventemitter3";
 
@@ -16,12 +16,8 @@ export class RPCConnectionHandler extends EventEmitter {
   private signer: Signer | undefined;
   public readonly options: SDKOptionsOutput;
 
-  constructor(network: NetworkOrSignerOrProvider, options: SDKOptions) {
+  constructor(network: NetworkInput, options: SDKOptions) {
     super();
-    const [signer, provider] = getSignerAndProvider(network, options);
-    this.signer = signer;
-    this.provider = provider;
-
     try {
       this.options = SDKOptionsSchema.parse(options);
     } catch (optionParseError) {
@@ -31,13 +27,16 @@ export class RPCConnectionHandler extends EventEmitter {
       );
       this.options = SDKOptionsSchema.parse({});
     }
+    const [signer, provider] = getSignerAndProvider(network, this.options);
+    this.signer = signer;
+    this.provider = provider;
   }
   /**
    * The function to call whenever the network changes, such as when the users connects their wallet, disconnects their wallet, the connected chain changes, etc.
    *
    * @param network - a network, signer or provider that ethers js can interpret
    */
-  public updateSignerOrProvider(network: NetworkOrSignerOrProvider) {
+  public updateSignerOrProvider(network: NetworkInput) {
     const [signer, provider] = getSignerAndProvider(network, this.options);
     this.signer = signer;
     this.provider = provider;
@@ -79,7 +78,7 @@ export class RPCConnectionHandler extends EventEmitter {
  * @internal
  */
 export function getSignerAndProvider(
-  network: NetworkOrSignerOrProvider,
+  network: NetworkInput,
   options: SDKOptions,
 ): [Signer | undefined, providers.Provider] {
   let signer: Signer | undefined;
@@ -103,11 +102,8 @@ export function getSignerAndProvider(
     if (providers.Provider.isProvider(network)) {
       provider = network;
     } else if (!Signer.isSigner(network)) {
-      if (typeof network === "string") {
-        provider = getReadOnlyProvider(
-          network,
-          options?.readonlySettings?.chainId,
-        );
+      if (typeof network === "string" || typeof network === "number") {
+        provider = getChainProvider(network, options);
       } else {
         // no a signer, not a provider, not a string? try with default provider
         provider = ethers.getDefaultProvider(network);

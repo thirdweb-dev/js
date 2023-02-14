@@ -11,7 +11,7 @@ import { TokenERC20History } from "../../core/classes/erc-20-history";
 import { Erc20SignatureMintable } from "../../core/classes/erc-20-signature-mintable";
 import { StandardErc20 } from "../../core/classes/erc-20-standard";
 import { GasCostEstimator } from "../../core/classes/gas-cost-estimator";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../../core/types";
+import { NetworkInput, TransactionResult } from "../../core/types";
 import { Abi } from "../../schema/contracts/custom";
 import { TokenErc20ContractSchema } from "../../schema/contracts/token-erc20";
 import { SDKOptions } from "../../schema/sdk-options";
@@ -70,7 +70,7 @@ export class Token extends StandardErc20<TokenERC20> {
   public interceptor: ContractInterceptor<TokenERC20>;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     address: string,
     storage: ThirdwebStorage,
     options: SDKOptions = {},
@@ -184,6 +184,16 @@ export class Token extends StandardErc20<TokenERC20> {
    */
   public async mintTo(to: string, amount: Amount): Promise<TransactionResult> {
     return this.erc20.mintTo(to, amount);
+  }
+
+  /**
+   * Construct a mint transaction without executing it.
+   * This is useful for estimating the gas cost of a mint transaction, overriding transaction options and having fine grained control over the transaction execution.
+   * @param receiver - Address you want to send the token to
+   * @param amount - The amount of tokens you want to mint
+   */
+  public async getMintTransaction(to: string, amount: Amount) {
+    return this.erc20.getMintTransaction(to, amount);
   }
 
   /**

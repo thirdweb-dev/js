@@ -1,5 +1,41 @@
 # thirdweb
 
+## 0.9.19
+
+### Patch Changes
+
+- Updated dependencies [[`55b00ef`](https://github.com/thirdweb-dev/js/commit/55b00eff2668eb751b9f907e035b3a0c122d2183)]:
+  - @thirdweb-dev/sdk@3.8.2
+
+## 0.9.18
+
+### Patch Changes
+
+- Updated dependencies [[`448b357`](https://github.com/thirdweb-dev/js/commit/448b357ed4b864e05e531837ca3bc97fbcab3291)]:
+  - @thirdweb-dev/sdk@3.8.1
+
+## 0.9.17
+
+### Patch Changes
+
+- [#549](https://github.com/thirdweb-dev/js/pull/549) [`912738b`](https://github.com/thirdweb-dev/js/commit/912738bd0afdf81e118c720811911ba3d1979ac0) Thanks [@kumaryash90](https://github.com/kumaryash90)! - add staking bases to CLI
+
+- Updated dependencies [[`0b38dac`](https://github.com/thirdweb-dev/js/commit/0b38dac852e54d0bccd263631f4342aee39d7c29), [`29d0c62`](https://github.com/thirdweb-dev/js/commit/29d0c62610cdb88f75d19574bddcb028b5c40393), [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c), [`f295ec6`](https://github.com/thirdweb-dev/js/commit/f295ec67b4cc422c51beda94cbc4d54a31ce9566), [`1686fb4`](https://github.com/thirdweb-dev/js/commit/1686fb4b2c0d93004623bc02fcb0e32233fe582c), [`f1aecc3`](https://github.com/thirdweb-dev/js/commit/f1aecc30499e39fb23a205bade939bd939f0d0e4)]:
+  - @thirdweb-dev/sdk@3.8.0
+
+## 0.9.16
+
+### Patch Changes
+
+- Updated dependencies [[`ec1f232`](https://github.com/thirdweb-dev/js/commit/ec1f2324c7a0e58c2d2a209cfe0d194807ba5b70), [`d29f7e7`](https://github.com/thirdweb-dev/js/commit/d29f7e78f09063630e812dd41164d8a41d4f97dd)]:
+  - @thirdweb-dev/sdk@3.7.4
+
+## 0.9.15
+
+### Patch Changes
+
+- [#537](https://github.com/thirdweb-dev/js/pull/537) [`cf96333`](https://github.com/thirdweb-dev/js/commit/cf96333fa2f46a4a73a822a0b1248891cc890267) Thanks [@adam-maj](https://github.com/adam-maj)! - Fix cache error on windows OS
+
 ## 0.9.14
 
 ### Patch Changes

@@ -1,26 +1,25 @@
-import { getChainFromChainId } from "../../constants/chain";
 import { Select, SelectProps } from "../shared/Select";
-import { ChainId, SUPPORTED_CHAIN_IDS } from "@thirdweb-dev/sdk";
+import { useThirdwebConfigContext } from "@thirdweb-dev/react-core/evm";
 import { useMemo } from "react";
 
 export interface SupportedNetworkSelectProps extends SelectProps {
-  disabledChainIds?: ChainId[];
+  disabledChainIds?: number[];
 }
 
 export const SupportedNetworkSelect: React.FC<SupportedNetworkSelectProps> = ({
   disabledChainIds,
   ...selectProps
 }) => {
+  const config = useThirdwebConfigContext();
+
   const { mainnets, testnets } = useMemo(() => {
-    const networks = SUPPORTED_CHAIN_IDS.map((supportedChain) => {
-      return getChainFromChainId(supportedChain);
-    });
+    const networks = config.chains;
 
     return {
       mainnets: networks.filter((n) => !n.testnet),
       testnets: networks.filter((n) => n.testnet),
     };
-  }, []);
+  }, [config.chains]);
 
   return (
     <Select {...selectProps}>
@@ -30,9 +29,9 @@ export const SupportedNetworkSelect: React.FC<SupportedNetworkSelectProps> = ({
       <optgroup label="Mainnets">
         {mainnets.map((mn) => (
           <option
-            key={mn.id}
-            value={mn.id}
-            disabled={disabledChainIds?.includes(mn.id)}
+            key={mn.chainId}
+            value={mn.chainId}
+            disabled={disabledChainIds?.includes(mn.chainId)}
           >
             {mn.name} ({mn.nativeCurrency?.symbol})
           </option>
@@ -41,9 +40,9 @@ export const SupportedNetworkSelect: React.FC<SupportedNetworkSelectProps> = ({
       <optgroup label="Testnets">
         {testnets.map((tn) => (
           <option
-            key={tn.id}
-            value={tn.id}
-            disabled={disabledChainIds?.includes(tn.id)}
+            key={tn.chainId}
+            value={tn.chainId}
+            disabled={disabledChainIds?.includes(tn.chainId)}
           >
             {tn.name} ({tn.nativeCurrency?.symbol})
           </option>

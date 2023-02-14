@@ -33,6 +33,7 @@ import {
   Connection,
   ParsedAccountData,
   PublicKey,
+  SignaturesForAddressOptions,
   TransactionResponse,
 } from "@solana/web3.js";
 
@@ -177,27 +178,38 @@ export class NFTHelper {
 
   async getTransactions(
     collectionAddress: string,
+    options?: SignaturesForAddressOptions,
   ): Promise<TransactionResponse[]> {
     const collectionKey = new PublicKey(collectionAddress);
-
     // TODO cache signatures <> transactions mapping in memory so pagination doesn't re-request this everytime
     const allSignatures: ConfirmedSignatureInfo[] = [];
-    // This returns the first 1000, so we need to loop through until we run out of signatures to get.
-    let signatures = await this.metaplex.connection.getSignaturesForAddress(
-      collectionKey,
-    );
 
-    allSignatures.push(...signatures);
-    do {
-      const options = {
-        before: signatures[signatures.length - 1]?.signature,
-      };
-      signatures = await this.metaplex.connection.getSignaturesForAddress(
-        collectionKey,
-        options,
+    if (options) {
+      // only fetch the specified options
+      allSignatures.push(
+        ...(await this.metaplex.connection.getSignaturesForAddress(
+          collectionKey,
+          options,
+        )),
       );
+    } else {
+      // fetch everything
+      // This returns the first 1000, so we need to loop through until we run out of signatures to get.
+      let signatures = await this.metaplex.connection.getSignaturesForAddress(
+        collectionKey,
+      );
+
       allSignatures.push(...signatures);
-    } while (signatures.length > 0);
+      do {
+        signatures = await this.metaplex.connection.getSignaturesForAddress(
+          collectionKey,
+          {
+            before: signatures[signatures.length - 1]?.signature,
+          },
+        );
+        allSignatures.push(...signatures);
+      } while (signatures.length > 0);
+    }
 
     let txns: TransactionResponse[] = [];
     // TODO RPC's will throttle this, need to do some optimizations here
@@ -210,13 +222,11 @@ export class NFTHelper {
 
       txns = [
         ...txns,
-        ...(
-          (
-            await this.metaplex.connection.getTransactions(
-              batch.map((s) => s.signature),
-            )
-          ).filter((tx) => !!tx) as TransactionResponse[]
-        ).reverse(),
+        ...((
+          await this.metaplex.connection.getTransactions(
+            batch.map((s) => s.signature),
+          )
+        ).filter((tx) => !!tx) as TransactionResponse[]),
       ];
     }
     return txns;
@@ -225,7 +235,7 @@ export class NFTHelper {
   async getAllMetadataAddresses(
     collectionAddress: string,
   ): Promise<PublicKey[]> {
-    const txns = await this.getTransactions(collectionAddress);
+    const txns = (await this.getTransactions(collectionAddress)).reverse();
 
     return txns
       .map((tx) => {

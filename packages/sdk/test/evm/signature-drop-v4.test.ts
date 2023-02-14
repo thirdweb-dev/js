@@ -48,7 +48,7 @@ describe("Signature drop tests (v4)", async () => {
           primary_sale_recipient: adminWallet.address,
           seller_fee_basis_points: 0,
         },
-        4,
+        "4",
       ),
     );
 

@@ -1,3 +1,4 @@
+import { getDeployArguments } from "../../common/deploy";
 import {
   getApprovedImplementation,
   getDefaultTrustedForwarders,
@@ -7,6 +8,7 @@ import {
   EditionInitializer,
   getContractName,
   MarketplaceInitializer,
+  MarketplaceV3Initializer,
   MultiwrapInitializer,
   NFTCollectionInitializer,
   NFTDropInitializer,
@@ -22,7 +24,7 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { DeployEvents } from "../../types";
 import {
   DeploySchemaForPrebuiltContractType,
-  NetworkOrSignerOrProvider,
+  NetworkInput,
   PrebuiltContractType,
 } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
@@ -38,6 +40,7 @@ import {
   ethers,
 } from "ethers";
 import { EventEmitter } from "eventemitter3";
+import invariant from "tiny-invariant";
 import { z } from "zod";
 
 /**
@@ -59,12 +62,13 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     [VoteInitializer.contractType]: 1,
     [SplitInitializer.contractType]: 1,
     [MarketplaceInitializer.contractType]: 2,
+    [MarketplaceV3Initializer.contractType]: 1,
     [PackInitializer.contractType]: 2,
   };
 
   constructor(
     factoryAddr: string,
-    network: NetworkOrSignerOrProvider,
+    network: NetworkInput,
     storage: ThirdwebStorage,
     options?: SDKOptions,
   ) {
@@ -104,9 +108,19 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       this.storage,
     );
 
+    const signer = this.getSigner();
+    invariant(signer, "A signer is required to deploy contracts");
+
+    const args = await getDeployArguments(
+      contractType,
+      metadata,
+      contractURI,
+      signer,
+    );
+
     const encodedFunc = Contract.getInterface(ABI).encodeFunctionData(
       "initialize",
-      await this.getDeployArguments(contractType, metadata, contractURI),
+      args,
     );
 
     const blockNumber = await this.getProvider().getBlockNumber();
@@ -295,6 +309,16 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           trustedForwarders,
           marketplaceMetadata.platform_fee_recipient,
           marketplaceMetadata.platform_fee_basis_points,
+        ];
+      case MarketplaceV3Initializer.contractType:
+        const marketplaceV3Metadata =
+          MarketplaceV3Initializer.schema.deploy.parse(metadata);
+        return [
+          await this.getSignerAddress(),
+          contractURI,
+          trustedForwarders,
+          marketplaceV3Metadata.platform_fee_recipient,
+          marketplaceV3Metadata.platform_fee_basis_points,
         ];
       case PackInitializer.contractType:
         const packsMetadata = PackInitializer.schema.deploy.parse(metadata);
