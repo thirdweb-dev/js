@@ -1,6 +1,6 @@
-import { Box, Flex, GridItem, Image, SimpleGrid } from "@chakra-ui/react";
-import { NFTContract, useNFTs } from "@thirdweb-dev/react";
-import { SmartContract } from "@thirdweb-dev/sdk";
+import { AspectRatio, Box, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
+import { useNFTs } from "@thirdweb-dev/react";
+import { NFT, SmartContract } from "@thirdweb-dev/sdk";
 import { SupplyCards } from "contract-ui/tabs/nfts/components/supply-cards";
 import {
   Card,
@@ -22,7 +22,17 @@ export const NFTDetails: React.FC<NFTDetailsProps> = ({
   trackingCategory,
   features,
 }) => {
-  return (
+  const nfts = useNFTs(contract);
+
+  const showSupplyCards = [
+    "ERC721ClaimPhasesV1",
+    "ERC721ClaimPhasesV2",
+    "ERC721ClaimConditionsV1",
+    "ERC721ClaimConditionsV2",
+    "ERC721ClaimCustom",
+  ].some((type) => features.includes(type));
+
+  return nfts?.data?.length === 0 && !showSupplyCards ? null : (
     <Flex direction="column" gap={6}>
       <Flex align="center" justify="space-between" w="full">
         <Heading size="title.sm">NFT Details</Heading>
@@ -36,36 +46,25 @@ export const NFTDetails: React.FC<NFTDetailsProps> = ({
           View all -&gt;
         </TrackedLink>
       </Flex>
-      {[
-        "ERC721ClaimPhasesV1",
-        "ERC721ClaimPhasesV2",
-        "ERC721ClaimConditionsV1",
-        "ERC721ClaimConditionsV2",
-        "ERC721ClaimCustom",
-      ].some((type) => features.includes(type)) && (
-        <SupplyCards contract={contract} />
-      )}
-      <NFTCards contract={contract} trackingCategory={trackingCategory} />
+      {showSupplyCards && <SupplyCards contract={contract} />}
+      <NFTCards
+        nfts={nfts?.data?.filter((token) => token.metadata).slice(0, 3) || []}
+      />
     </Flex>
   );
 };
 
 interface ContractOverviewNFTGetAllProps {
-  contract: NFTContract;
-  trackingCategory: TrackedLinkProps["category"];
+  nfts: NFT[];
 }
-const NFTCards: React.FC<ContractOverviewNFTGetAllProps> = ({ contract }) => {
-  const getNFTQueryResult = useNFTs(contract, { count: 3 });
-
-  return getNFTQueryResult?.data?.length === 0 ? null : (
+const NFTCards: React.FC<ContractOverviewNFTGetAllProps> = ({ nfts }) => {
+  return nfts?.length === 0 ? null : (
     <SimpleGrid gap={6} columns={{ base: 1, md: 3 }}>
-      {getNFTQueryResult.data?.map((token) => (
+      {nfts?.map((token) => (
         <GridItem as={Card} key={token.owner} p={0}>
-          {token.metadata.image && (
-            <Box w="100%" overflow="hidden" roundedTop="xl">
-              <NFTMediaWithEmptyState metadata={token.metadata} />
-            </Box>
-          )}
+          <AspectRatio w="100%" ratio={1} overflow="hidden" roundedTop="xl">
+            <NFTMediaWithEmptyState metadata={token.metadata} />
+          </AspectRatio>
           <Box p={6} pt={4}>
             <Heading size="label.md">{token.metadata.name}</Heading>
             <Text mt={2} noOfLines={3}>

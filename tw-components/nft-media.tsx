@@ -13,7 +13,7 @@ export const NFTMediaWithEmptyState: React.FC<
   if (!(props.metadata.image || props.metadata.animation_url)) {
     return (
       <Center
-        borderRadius="lg"
+        borderRadius="xl"
         width={props.width}
         height={props.height}
         borderColor="accent.300"
