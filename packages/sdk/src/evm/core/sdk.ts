@@ -114,7 +114,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param storage - optional storage implementation to use
    * @returns an instance of the SDK
    *
-   * @beta
+   * @public
    */
   static fromPrivateKey(
     privateKey: string,
