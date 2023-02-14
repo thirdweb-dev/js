@@ -1,9 +1,11 @@
 /// --- Thirdweb Brige ---
+import { ThirdwebAuth } from "@thirdweb-dev/auth";
 import { CoinbasePayIntegration, FundWalletOptions } from "@thirdweb-dev/pay";
 import { ThirdwebSDK, ChainIdOrName } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { AbstractBrowserWallet } from "@thirdweb-dev/wallets/evm/wallets/base";
 import { CoinbaseWallet } from "@thirdweb-dev/wallets/evm/wallets/coinbase-wallet";
+import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
 import { MagicAuthWallet } from "@thirdweb-dev/wallets/evm/wallets/magic-auth";
 import { MetaMask } from "@thirdweb-dev/wallets/evm/wallets/metamask";
@@ -74,6 +76,7 @@ class ThirdwebBridge implements TWBridge {
   private activeWallet: AbstractBrowserWallet | undefined;
   private initializedChain: ChainIdOrName | undefined;
   private activeSDK: ThirdwebSDK | undefined;
+  private auth: ThirdwebAuth | undefined;
 
   private updateSDKSigner(signer?: Signer) {
     if (this.activeSDK) {
@@ -83,6 +86,15 @@ class ThirdwebBridge implements TWBridge {
       } else if (this.initializedChain) {
         // reset back to provider only in case signer gets reomved (disconnect case)
         this.activeSDK.updateSignerOrProvider(this.initializedChain);
+      }
+    }
+
+    if (signer) {
+      if (this.auth) {
+        this.auth.updateWallet(new EthersWallet(signer));
+      } else {
+        // Domain will always be overwritten in the actual auth call
+        this.auth = new ThirdwebAuth(new EthersWallet(signer), "example.com");
       }
     }
   }
@@ -194,6 +206,15 @@ class ThirdwebBridge implements TWBridge {
       } else {
         throw new Error("Invalid Route");
       }
+    }
+
+    if (addrOrSDK.startsWith("auth")) {
+      if (!this.auth) {
+        throw new Error("You need to connect a wallet to use auth!");
+      }
+
+      const result = await this.auth.login({ domain: parsedArgs[0] });
+      return JSON.stringify({ result: result });
     }
 
     // contract call
