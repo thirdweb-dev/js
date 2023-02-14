@@ -35,6 +35,10 @@ export function useLogin() {
         "Please specify an authConfig in the ThirdwebProvider",
       );
       invariant(authConfig.auth, "You need a connected wallet to login.");
+      invariant(
+        authConfig.authUrl,
+        "Please specify an authUrl in the authConfig.",
+      );
 
       const payload = await authConfig.auth.login(options);
       const res = await fetch(`${authConfig.authUrl}/login`, {

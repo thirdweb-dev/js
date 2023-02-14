@@ -1,8 +1,11 @@
 import { LoginPayload, ThirdwebAuth, VerifyOptions } from "../core";
 import { ThirdwebProviderConfig } from "./types";
+import { ethers } from "ethers";
+import { Awaitable, Session } from "next-auth/core/types";
+import { JWT } from "next-auth/jwt/types";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-export function ThirdwebProvider(cfg: ThirdwebProviderConfig) {
+export function ThirdwebAuthProvider(cfg: ThirdwebProviderConfig) {
   const auth = new ThirdwebAuth(cfg.wallet, cfg.domain);
 
   return CredentialsProvider({
@@ -32,12 +35,24 @@ export function ThirdwebProvider(cfg: ThirdwebProviderConfig) {
 
         const address = await auth.verify(parsedPayload, verifyOptions);
 
-        console.log("Succesfully authorized", address);
-
-        return { id: address, address };
+        return { id: address };
       } catch (err) {
         return null;
       }
     },
   });
+}
+
+export function authSession(params: {
+  session: Session;
+  token: JWT;
+}): Awaitable<Session> {
+  if (params.token.sub && ethers.utils.isAddress(params.token.sub)) {
+    params.session.user = {
+      ...params.session.user,
+      address: params.token.sub,
+    };
+  }
+
+  return params.session;
 }
