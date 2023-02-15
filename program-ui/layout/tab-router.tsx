@@ -1,3 +1,4 @@
+import { useSolanaProgramInfo } from "../../contexts/solana-program";
 import {
   Box,
   Container,
@@ -137,6 +138,8 @@ const ProgramSubnav: React.FC<ProgramSubnavProps> = ({ routes, address }) => {
   const [hoveredEl, setHoveredEl] = useState<EventTarget & HTMLButtonElement>();
   const previousEl = usePrevious(hoveredEl);
   const isMouseOver = useRef(false);
+  const programInfo = useSolanaProgramInfo();
+
   return (
     <Flex
       direction="row"
@@ -190,7 +193,9 @@ const ProgramSubnav: React.FC<ProgramSubnavProps> = ({ routes, address }) => {
               key={route.path}
               label={route.title}
               onHover={setHoveredEl}
-              href={`/solana/${address}${cleanedPath ? `/${cleanedPath}` : ""}`}
+              href={`/${programInfo.slug}/${address}${
+                cleanedPath ? `/${cleanedPath}` : ""
+              }`}
               isDisabled={
                 route.isEnabled === "disabled" || route.isEnabled === "loading"
               }
@@ -230,10 +235,7 @@ const ProgramSubnavLinkButton: React.FC<ProgramSubnavLinkButton> = (props) => {
   const { asPath } = useRouter();
 
   const isActiveRoute = useMemo(() => {
-    return (
-      props.href ===
-      asPath.replace("/evm", "").replace("/solana", "").split("?")[0]
-    );
+    return props.href === asPath.split("?")[0];
   }, [asPath, props.href]);
 
   return (
