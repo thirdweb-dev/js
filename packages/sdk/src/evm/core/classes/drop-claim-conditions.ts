@@ -420,12 +420,31 @@ export class DropClaimConditions<
       this.isNewSinglePhaseDrop(this.contractWrapper) ||
       this.isNewMultiphaseDrop(this.contractWrapper)
     ) {
+      const claimerProofs = await this.getClaimerProofs(addressToCheck);
+
+      let claimedSupply = BigNumber.from(0);
+      let maxClaimable = convertQuantityToBigNumber(claimCondition.maxClaimablePerWallet, decimals)
+
+      if (this.isNewSinglePhaseDrop(this.contractWrapper)) {
+        claimedSupply = await this.contractWrapper.readContract.getSupplyClaimedByWallet(addressToCheck);
+      }
+
+      if (this.isNewMultiphaseDrop(this.contractWrapper)) {
+        const activeClaimConditionId = await this.contractWrapper.readContract.getActiveClaimConditionId();
+        claimedSupply = await this.contractWrapper.readContract.getSupplyClaimedByWallet(activeClaimConditionId, addressToCheck);
+      }
+
+      if (claimerProofs) {
+        maxClaimable = convertQuantityToBigNumber(
+          claimerProofs.maxClaimable,
+          decimals,
+        );
+      }
+
       if (!hasAllowList || (hasAllowList && !allowListEntry)) {
         if (
-          convertQuantityToBigNumber(
-            claimCondition.maxClaimablePerWallet,
-            decimals,
-          ).eq(0)
+          maxClaimable.lte(claimedSupply) || 
+          maxClaimable.eq(0)
         ) {
           reasons.push(ClaimEligibility.AddressNotAllowed);
           return reasons;

@@ -326,17 +326,16 @@ export class Erc721TieredDrop implements DetectableFeature {
     const message = await this.mapPayloadToContractStruct(
       signedPayload.payload,
     );
-    const pricePerToken = await normalizePriceValue(
+    const normalizedTotalPrice = await normalizePriceValue(
       this.contractWrapper.getProvider(),
       signedPayload.payload.price,
       signedPayload.payload.currencyAddress,
     );
-    const price = pricePerToken.mul(signedPayload.payload.quantity);
 
     const overrides = await this.contractWrapper.getCallOverrides();
     await setErc20Allowance(
       this.contractWrapper,
-      price,
+      normalizedTotalPrice,
       signedPayload.payload.currencyAddress,
       overrides,
     );
@@ -367,7 +366,7 @@ export class Erc721TieredDrop implements DetectableFeature {
   private async mapPayloadToContractStruct(
     payload: TieredDropPayloadOutput,
   ): Promise<ISignatureAction.GenericRequestStruct> {
-    const normalizedPricePerToken = await normalizePriceValue(
+    const normalizedTotalPrice = await normalizePriceValue(
       this.contractWrapper.getProvider(),
       payload.price,
       payload.currencyAddress,
@@ -390,7 +389,7 @@ export class Erc721TieredDrop implements DetectableFeature {
         payload.royaltyBps,
         payload.primarySaleRecipient,
         payload.quantity,
-        normalizedPricePerToken,
+        normalizedTotalPrice,
         payload.currencyAddress,
       ],
     );

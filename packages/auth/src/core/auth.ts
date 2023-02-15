@@ -129,7 +129,6 @@ export class ThirdwebAuth {
       try {
         await parsedOptions.validateNonce(payload.payload.nonce);
       } catch (err) {
-        console.log(err);
         throw new Error(`Login request nonce is invalid`);
       }
     }
