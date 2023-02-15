@@ -185,11 +185,22 @@ export const ConnectWallet: React.FC<EcosystemButtonprops> = ({
       if (chainInfo.chainId === ChainId.Localhost) {
         await sdk.wallet.requestFunds(10);
         await balanceQuery.refetch();
+        trackEvent({
+          category: "request-funds",
+          action: "click",
+          label: "from-sdk",
+        });
       } else if (
         chainInfo &&
         chainInfo.faucets &&
         chainInfo.faucets.length > 0
       ) {
+        trackEvent({
+          category: "request-funds",
+          action: "click",
+          label: "from-faucet",
+          faucet: chainInfo.faucets[0],
+        });
         const faucet = chainInfo.faucets[0];
         window.open(faucet, "_blank");
       }
