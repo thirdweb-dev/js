@@ -12,15 +12,11 @@ export const MediaCell: React.FC<MediaCellProps> = ({ cell }) => {
 
   return (
     <NFTMediaWithEmptyState
-      borderRadius="lg"
       pointerEvents="none"
       metadata={nftMetadata}
       requireInteraction
-      flexShrink={0}
-      boxSize={24}
-      objectFit="contain"
-      width="100px"
-      height="100px"
+      width="120px"
+      height="120px"
     />
   );
 };

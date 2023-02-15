@@ -56,9 +56,6 @@ export const NFTDrawer: React.FC<NFTDrawerProps> = ({
           <NFTMediaWithEmptyState
             metadata={renderData.metadata}
             requireInteraction
-            flexShrink={0}
-            borderRadius="lg"
-            objectFit="contain"
             width="150px"
             height="150px"
           />

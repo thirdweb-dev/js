@@ -101,7 +101,12 @@ const NFTCards: React.FC<ContractOverviewNFTGetAllProps> = ({
         <GridItem as={Card} key={token.owner} p={0}>
           <AspectRatio w="100%" ratio={1} overflow="hidden" rounded="xl">
             <Skeleton isLoaded={!isLoading}>
-              <NFTMediaWithEmptyState metadata={token.metadata} requireInteraction />
+              <NFTMediaWithEmptyState
+                metadata={token.metadata}
+                requireInteraction
+                width="100%"
+                height="100%"
+              />
             </Skeleton>
           </AspectRatio>
           <Flex p={4} pb={3} gap={3} direction="column">
