@@ -371,7 +371,14 @@ const CustomContractForm: React.FC<CustomContractFormProps> = ({
             background: "inputBgHover",
           }}
           leftIcon={<Icon color="inherit" as={IoMdSettings} />}
-          onClick={() => setShowAddNetworkModal(true)}
+          onClick={() => {
+            trackEvent({
+              category: "configure-networks",
+              action: "click",
+              label: "deploy-contract",
+            });
+            setShowAddNetworkModal(true);
+          }}
           py={3}
         >
           Configure Networks

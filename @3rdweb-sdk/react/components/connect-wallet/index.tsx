@@ -53,6 +53,7 @@ import { SupportedNetworkSelect } from "components/selects/SupportedNetworkSelec
 import { GNOSIS_TO_CHAIN_ID } from "constants/mappings";
 import { CustomSDKContext } from "contexts/custom-sdk-context";
 import { constants, utils } from "ethers";
+import { useTrack } from "hooks/analytics/useTrack";
 import { useConfiguredChain } from "hooks/chains/configureChains";
 import { useTxNotifications } from "hooks/useTxNotifications";
 import { StaticImageData } from "next/image";
@@ -101,6 +102,7 @@ export const ConnectWallet: React.FC<EcosystemButtonprops> = ({
   ecosystem = "either",
   ...buttonProps
 }) => {
+  const trackEvent = useTrack();
   const solWallet = useWallet();
   const [showConfigureNetworkModal, setShowConfigureNetworkModal] =
     useState(false);
@@ -371,7 +373,14 @@ export const ConnectWallet: React.FC<EcosystemButtonprops> = ({
 
                   <MenuItem
                     icon={<Icon as={IoMdSettings} />}
-                    onClick={() => setShowConfigureNetworkModal(true)}
+                    onClick={() => {
+                      trackEvent({
+                        category: "configure-networks",
+                        action: "click",
+                        label: "dropdown",
+                      });
+                      setShowConfigureNetworkModal(true);
+                    }}
                     py={3}
                   >
                     Configure Networks
