@@ -1,8 +1,5 @@
-import { GenericAuthWallet } from "@thirdweb-dev/wallets";
-
 export type ThirdwebProviderConfig = {
   domain: string;
-  wallet: GenericAuthWallet;
   authOptions?: {
     statement?: string;
     uri?: string;
