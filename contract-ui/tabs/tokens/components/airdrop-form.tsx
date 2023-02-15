@@ -110,7 +110,9 @@ export const TokenAirdropForm: React.FC<TokenAirdropFormProps> = ({
                 <AirdropUpload
                   isOpen={isOpen}
                   onClose={onClose}
-                  setAirdrop={(value) => setValue(`addresses`, value)}
+                  setAirdrop={(value) =>
+                    setValue(`addresses`, value, { shouldDirty: true })
+                  }
                 />
                 <Flex direction={{ base: "column", md: "row" }} gap={4}>
                   <Button
