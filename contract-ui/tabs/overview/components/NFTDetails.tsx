@@ -5,6 +5,7 @@ import {
   SimpleGrid,
   Skeleton,
   SkeletonText,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { useNFTs } from "@thirdweb-dev/react";
 import { NFT, SmartContract } from "@thirdweb-dev/sdk";
@@ -30,14 +31,15 @@ export const NFTDetails: React.FC<NFTDetailsProps> = ({
   trackingCategory,
   features,
 }) => {
+  const isMobile = useBreakpointValue({ base: true, md: false });
   const nftsHref = useTabHref("nfts");
 
   const nftQuery = useNFTs(contract, { count: 5 });
 
-  const displayAbleNfts =
+  const displayableNFTs =
     nftQuery.data
       ?.filter((token) => token.metadata.image || token.metadata.animation_url)
-      .slice(0, 3) || [];
+      .slice(0, isMobile ? 2 : 3) || [];
 
   const showSupplyCards = [
     "ERC721ClaimPhasesV1",
@@ -47,10 +49,10 @@ export const NFTDetails: React.FC<NFTDetailsProps> = ({
     "ERC721ClaimCustom",
   ].some((type) => features.includes(type));
 
-  return displayAbleNfts.length === 0 &&
+  return displayableNFTs.length === 0 &&
     !showSupplyCards &&
     !nftQuery.isInitialLoading ? null : (
-    <Flex direction="column" gap={6}>
+    <Flex direction="column" gap={{ base: 3, md: 6 }}>
       <Flex align="center" justify="space-between" w="full">
         <Heading size="title.sm">NFT Details</Heading>
         <TrackedLink
@@ -67,7 +69,7 @@ export const NFTDetails: React.FC<NFTDetailsProps> = ({
         </TrackedLink>
       </Flex>
       {showSupplyCards && <SupplyCards contract={contract} />}
-      <NFTCards nfts={displayAbleNfts} isLoading={nftQuery.isLoading} />
+      <NFTCards nfts={displayableNFTs} isLoading={nftQuery.isLoading} />
     </Flex>
   );
 };
@@ -92,11 +94,15 @@ const NFTCards: React.FC<ContractOverviewNFTGetAllProps> = ({
   nfts,
   isLoading,
 }) => {
+  const isMobile = useBreakpointValue({ base: true, md: false });
+
   nfts = isLoading
-    ? Array.from({ length: 3 }).map((_, idx) => dummyMetadata(idx))
+    ? Array.from({ length: isMobile ? 2 : 3 }).map((_, idx) =>
+        dummyMetadata(idx),
+      )
     : nfts;
   return (
-    <SimpleGrid gap={6} columns={{ base: 1, md: 3 }}>
+    <SimpleGrid gap={{ base: 3, md: 6 }} columns={{ base: 2, md: 3 }}>
       {nfts.map((token) => (
         <GridItem as={Card} key={token.owner} p={0}>
           <AspectRatio w="100%" ratio={1} overflow="hidden" rounded="xl">

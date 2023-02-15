@@ -16,9 +16,9 @@ export const SupplyCards: React.FC<SupplyCardsProps> = ({ contract }) => {
   const unclaimedSupplyQuery = useUnclaimedNFTSupply(contract);
 
   return (
-    <Stack direction={{ base: "column", md: "row" }} spacing={6}>
+    <Stack spacing={{ base: 3, md: 6 }} direction="row">
       <Card as={Stat}>
-        <StatLabel>Total Supply</StatLabel>
+        <StatLabel mb={{ base: 1, md: 0 }}>Total Supply</StatLabel>
         <Skeleton
           isLoaded={
             claimedSupplyQuery.isSuccess && unclaimedSupplyQuery.isSuccess
@@ -32,7 +32,7 @@ export const SupplyCards: React.FC<SupplyCardsProps> = ({ contract }) => {
         </Skeleton>
       </Card>
       <Card as={Stat}>
-        <StatLabel>Claimed Supply</StatLabel>
+        <StatLabel mb={{ base: 1, md: 0 }}>Claimed Supply</StatLabel>
         <Skeleton isLoaded={claimedSupplyQuery.isSuccess}>
           <StatNumber>
             {BigNumber.from(claimedSupplyQuery?.data || 0).toString()}
@@ -40,7 +40,7 @@ export const SupplyCards: React.FC<SupplyCardsProps> = ({ contract }) => {
         </Skeleton>
       </Card>
       <Card as={Stat}>
-        <StatLabel>Unclaimed Supply</StatLabel>
+        <StatLabel mb={{ base: 1, md: 0 }}>Unclaimed Supply</StatLabel>
         <Skeleton isLoaded={unclaimedSupplyQuery.isSuccess}>
           <StatNumber>
             {BigNumber.from(unclaimedSupplyQuery?.data || 0).toString()}

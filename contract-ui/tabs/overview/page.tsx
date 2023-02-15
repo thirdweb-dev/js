@@ -7,8 +7,8 @@ import { getGuidesAndTemplates } from "./helpers/getGuidesAndTemplates";
 import { Divider, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import { contractType, useContract } from "@thirdweb-dev/react";
 import { Abi, getAllDetectedFeatureNames } from "@thirdweb-dev/sdk";
-import { useMemo } from "react";
-import { Heading, TrackedLink } from "tw-components";
+import { useMemo, useState } from "react";
+import { Heading, Text, TrackedLink } from "tw-components";
 
 interface CustomContractOverviewPageProps {
   contractAddress?: string;
@@ -19,6 +19,8 @@ const TRACKING_CATEGORY = "contract_overview";
 export const CustomContractOverviewPage: React.FC<
   CustomContractOverviewPageProps
 > = ({ contractAddress }) => {
+  const [showAllGuides, setShowAllGuides] = useState(false);
+  const [showAllTemplates, setShowAllTemplates] = useState(false);
   const { contract } = useContract(contractAddress);
   const contractTypeQuery = contractType.useQuery(contractAddress);
   const contractTypeData = contractTypeQuery?.data || "custom";
@@ -73,7 +75,7 @@ export const CustomContractOverviewPage: React.FC<
           <Flex direction="column" gap={6}>
             <Heading size="title.sm">Relevant guides</Heading>
             <Flex gap={4} direction="column">
-              {guides.map((guide) => (
+              {guides.slice(0, showAllGuides ? undefined : 3).map((guide) => (
                 <TrackedLink
                   category={TRACKING_CATEGORY}
                   label="guide"
@@ -96,6 +98,17 @@ export const CustomContractOverviewPage: React.FC<
                   {guide.title}
                 </TrackedLink>
               ))}
+              {guides.length > 3 && !showAllGuides ? (
+                <Text
+                  onClick={() => setShowAllGuides(true)}
+                  cursor="pointer"
+                  opacity={0.6}
+                  color="heading"
+                  _hover={{ opacity: 1, textDecoration: "none" }}
+                >
+                  View more ➝
+                </Text>
+              ) : null}
             </Flex>
           </Flex>
         )}
@@ -104,26 +117,39 @@ export const CustomContractOverviewPage: React.FC<
           <Flex direction="column" gap={4}>
             <Heading size="title.sm">Relevant templates</Heading>
             <Flex gap={4} direction="column">
-              {templates.map((template) => (
-                <TrackedLink
-                  isExternal
-                  category={TRACKING_CATEGORY}
-                  label="guide"
-                  trackingProps={{
-                    template: template.title.replace(" ", "_").toLowerCase(),
-                  }}
-                  fontWeight={500}
-                  href={template.url}
-                  key={template.title}
-                  fontSize="14px"
-                  color="heading"
+              {templates
+                .slice(0, showAllTemplates ? undefined : 3)
+                .map((template) => (
+                  <TrackedLink
+                    isExternal
+                    category={TRACKING_CATEGORY}
+                    label="guide"
+                    trackingProps={{
+                      template: template.title.replace(" ", "_").toLowerCase(),
+                    }}
+                    fontWeight={500}
+                    href={template.url}
+                    key={template.title}
+                    fontSize="14px"
+                    color="heading"
+                    opacity={0.6}
+                    display="inline-block"
+                    _hover={{ opacity: 1, textDecoration: "none" }}
+                  >
+                    {template.title}
+                  </TrackedLink>
+                ))}
+              {templates.length > 3 && !showAllTemplates ? (
+                <Text
+                  onClick={() => setShowAllTemplates(true)}
+                  cursor="pointer"
                   opacity={0.6}
-                  display="inline-block"
+                  color="heading"
                   _hover={{ opacity: 1, textDecoration: "none" }}
                 >
-                  {template.title}
-                </TrackedLink>
-              ))}
+                  View more ➝
+                </Text>
+              ) : null}
             </Flex>
           </Flex>
         )}
