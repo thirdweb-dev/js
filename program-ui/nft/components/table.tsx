@@ -47,9 +47,9 @@ export const NFTGetAllTable: React.FC<{
           }
           return row.metadata.id;
         },
-        Cell: (cell: CellProps<NFT, string>) => (
+        Cell: (cell: CellProps<NFT, string | number>) => (
           <Text size="body.md" fontFamily="mono">
-            {shortenIfAddress(cell.value)}
+            {shortenIfAddress(`${cell.value}`)}
           </Text>
         ),
       },
