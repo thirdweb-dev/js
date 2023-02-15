@@ -201,7 +201,7 @@ function formatInputType(type: string, components?: FunctionComponents): any {
   } else if (type?.includes("string")) {
     return "...";
   } else if (type?.includes("int")) {
-    return 0;
+    return "0";
   } else if (type?.includes("bool")) {
     return true;
   } else if (type?.includes("address")) {

@@ -19,7 +19,7 @@ export const ContractExplorerPage: React.FC<ContractCodePageProps> = ({
   }
 
   return (
-    <Flex direction="column">
+    <Flex direction="column" h="70vh">
       <Skeleton height="100%" isLoaded={!!contract}>
         <ContractFunctionsOverview
           onlyFunctions
