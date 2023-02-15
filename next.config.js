@@ -106,13 +106,14 @@ const sentryWebpackPluginOptions = {
   // https://github.com/getsentry/sentry-webpack-plugin#options.
 
   hideSourceMaps: true,
+  enabled: process.env.NODE_ENV === "production",
 };
+
+// we only want sentry on production enviroments
+const wSentry =
+  process.env.NODE_ENV === "production" ? withSentryConfig : (x) => x;
 
 module.exports = withPlausibleProxy({
   customDomain: "https://pl.thirdweb.com",
   scriptName: "pl",
-})(
-  withBundleAnalyzer(
-    withSentryConfig(moduleExports, sentryWebpackPluginOptions),
-  ),
-);
+})(withBundleAnalyzer(wSentry(moduleExports, sentryWebpackPluginOptions)));
