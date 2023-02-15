@@ -1,4 +1,4 @@
-import { getConnectorStorage } from "../../utils/storage";
+import { AsyncStorage } from "../../../core/AsyncStorage";
 import { InjectedConnector } from "../injected";
 import {
   Chain,
@@ -28,16 +28,17 @@ export type MetaMaskConnectorOptions = Pick<
 
 export class MetaMaskConnector extends InjectedConnector {
   readonly id = "metaMask";
-
   #UNSTABLE_shimOnConnectSelectAccount: MetaMaskConnectorOptions["UNSTABLE_shimOnConnectSelectAccount"];
 
   constructor({
     chains,
+    connectorStorage,
     options: options_,
   }: {
     chains?: Chain[];
+    connectorStorage: AsyncStorage;
     options?: MetaMaskConnectorOptions;
-  } = {}) {
+  }) {
     const options = {
       name: "MetaMask",
       shimDisconnect: true,
@@ -84,7 +85,7 @@ export class MetaMaskConnector extends InjectedConnector {
       },
       ...options_,
     };
-    super({ chains, options });
+    super({ chains, options, connectorStorage });
 
     this.#UNSTABLE_shimOnConnectSelectAccount =
       options.UNSTABLE_shimOnConnectSelectAccount;
@@ -111,7 +112,7 @@ export class MetaMaskConnector extends InjectedConnector {
       if (
         this.#UNSTABLE_shimOnConnectSelectAccount &&
         this.options?.shimDisconnect &&
-        !(await getConnectorStorage().getItem(this.shimDisconnectKey))
+        !Boolean(this.connectorStorage.getItem(this.shimDisconnectKey))
       ) {
         account = await this.getAccount().catch(() => null);
         const isConnected = !!account;
@@ -149,7 +150,7 @@ export class MetaMaskConnector extends InjectedConnector {
       }
 
       if (this.options?.shimDisconnect) {
-        await getConnectorStorage().setItem(this.shimDisconnectKey, true);
+        await this.connectorStorage.setItem(this.shimDisconnectKey, "true");
       }
 
       return { account, chain: { id, unsupported }, provider };

@@ -1,6 +1,6 @@
+import { AsyncStorage } from "../../core/AsyncStorage";
 import { thirdwebChains } from "../constants/chains";
 import { ConnectParams, TWConnector } from "../interfaces/tw-connector";
-import { getCoordinatorStorage, getWalletStorage } from "../utils/storage";
 import { AbstractWallet } from "./abstract";
 import type { Chain } from "@wagmi/core";
 
@@ -8,6 +8,8 @@ export type WalletOptions<TOpts extends Record<string, any> = {}> = {
   chains?: Chain[];
   // default: true
   shouldAutoConnect?: boolean;
+  coordinatorStorage: AsyncStorage;
+  walletStorage: AsyncStorage;
   appName: string;
 } & TOpts;
 
@@ -26,8 +28,9 @@ export abstract class AbstractBrowserWallet<
     this.#wallletId = walletId;
     this.options = options;
     this.chains = options.chains || thirdwebChains;
-    this.coordinatorStorage = getCoordinatorStorage();
-    this.walletStorage = getWalletStorage(walletId);
+    this.coordinatorStorage = options.coordinatorStorage;
+    // make sure walletStorage is having the name walletId
+    this.walletStorage = options.walletStorage;
     if (options.shouldAutoConnect !== false) {
       this.autoConnect();
     }

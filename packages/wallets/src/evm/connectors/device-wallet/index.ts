@@ -9,7 +9,7 @@ import { ethers } from "ethers";
 export type DeviceWalletConnectorOptions = {
   chain:
     | {
-        chainId: number;
+        // chainId: number;
         rpc: string[];
       }
     | Chain;
@@ -20,7 +20,7 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
   readonly id: string = "device_wallet";
   readonly name: string = "Device Wallet";
   options: DeviceWalletConnectorOptions;
-  chainId: number;
+  // chainId: number;
   #wallet: DeviceWalletImpl;
 
   #provider?: ethers.providers.Provider;
@@ -31,14 +31,14 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
   constructor(options: DeviceWalletConnectorOptions) {
     super();
     this.options = options;
-    this.chainId = options.chain.chainId;
+    // this.chainId = options.chain.chainId;
     this.#wallet = options.wallet;
   }
 
   async connect(args: ConnectParams<DeviceWalletConnectionArgs>) {
-    if (args.chainId) {
-      this.chainId = args.chainId;
-    }
+    // if (args.chainId) {
+    //   this.chainId = args.chainId;
+    // }
     await this.initializeDeviceWallet(args.password);
     const signer = await this.getSigner();
     const address = await signer.getAddress();
@@ -78,9 +78,9 @@ export class DeviceWalletConnector extends TWConnector<DeviceWalletConnectionArg
     }
   }
 
-  async getChainId() {
-    return this.chainId;
-  }
+  // async getChainId() {
+  //   return this.chainId;
+  // }
 
   async getProvider() {
     if (!this.#provider) {
