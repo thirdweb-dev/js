@@ -2,6 +2,7 @@ export default {
   "name": "BTCIX Network",
   "chain": "BTCIX",
   "rpc": [
+    "https://btcix-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://seed.btcix.org/rpc"
   ],
   "faucets": [],

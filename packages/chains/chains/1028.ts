@@ -2,6 +2,7 @@ export default {
   "name": "BitTorrent Chain Testnet",
   "chain": "BTTC",
   "rpc": [
+    "https://bittorrent-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testrpc.bittorrentchain.io/"
   ],
   "faucets": [],

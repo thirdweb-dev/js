@@ -2,6 +2,7 @@ export default {
   "name": "IDChain Mainnet",
   "chain": "IDChain",
   "rpc": [
+    "https://idchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://idchain.one/rpc/",
     "wss://idchain.one/ws/"
   ],

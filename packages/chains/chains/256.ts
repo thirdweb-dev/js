@@ -2,6 +2,7 @@ export default {
   "name": "Huobi ECO Chain Testnet",
   "chain": "Heco",
   "rpc": [
+    "https://huobi-eco-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-testnet.hecochain.com",
     "wss://ws-testnet.hecochain.com"
   ],

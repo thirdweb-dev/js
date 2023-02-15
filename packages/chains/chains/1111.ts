@@ -2,6 +2,7 @@ export default {
   "name": "WEMIX3.0 Mainnet",
   "chain": "WEMIX",
   "rpc": [
+    "https://wemix3-0.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.wemix.com",
     "wss://ws.wemix.com"
   ],

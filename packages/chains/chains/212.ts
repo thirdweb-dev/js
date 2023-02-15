@@ -3,6 +3,7 @@ export default {
   "title": "MAP Testnet Makalu",
   "chain": "MAP",
   "rpc": [
+    "https://map-makalu.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.maplabs.io"
   ],
   "faucets": [

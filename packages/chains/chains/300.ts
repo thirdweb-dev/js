@@ -2,6 +2,7 @@ export default {
   "name": "Optimism on Gnosis",
   "chain": "OGC",
   "rpc": [
+    "https://optimism-on-gnosis.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://optimism.gnosischain.com",
     "wss://optimism.gnosischain.com/wss"
   ],

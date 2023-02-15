@@ -2,6 +2,7 @@ export default {
   "name": "SmartMesh Mainnet",
   "chain": "Spectrum",
   "rpc": [
+    "https://smartmesh.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jsonapi1.smartmesh.cn"
   ],
   "faucets": [],

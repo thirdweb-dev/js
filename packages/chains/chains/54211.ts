@@ -2,6 +2,7 @@ export default {
   "name": "Haqq Chain Testnet",
   "chain": "TestEdge2",
   "rpc": [
+    "https://haqq-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.eth.testedge2.haqq.network"
   ],
   "faucets": [

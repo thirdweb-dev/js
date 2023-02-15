@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://shardeum-sphinx-1-x.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sphinx.shardeum.org/"
   ],
   "faucets": [

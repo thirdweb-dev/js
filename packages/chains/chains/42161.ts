@@ -53,5 +53,5 @@ export default {
     ]
   },
   "testnet": false,
-  "slug": "arbitrum-one"
+  "slug": "arbitrum"
 } as const;

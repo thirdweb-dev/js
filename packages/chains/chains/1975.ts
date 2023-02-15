@@ -3,6 +3,7 @@ export default {
   "title": "ONUS Chain Mainnet",
   "chain": "onus",
   "rpc": [
+    "https://onus-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.onuschain.io",
     "wss://ws.onuschain.io"
   ],

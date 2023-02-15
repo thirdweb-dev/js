@@ -2,6 +2,7 @@ export default {
   "name": "Alaya Dev Testnet",
   "chain": "Alaya",
   "rpc": [
+    "https://alaya-dev-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://devnetopenapi.alaya.network/rpc",
     "wss://devnetopenapi.alaya.network/ws"
   ],

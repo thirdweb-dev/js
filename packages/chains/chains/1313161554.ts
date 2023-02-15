@@ -2,6 +2,7 @@ export default {
   "name": "Aurora Mainnet",
   "chain": "NEAR",
   "rpc": [
+    "https://aurora.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.aurora.dev"
   ],
   "faucets": [],

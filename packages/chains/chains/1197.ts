@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://iora-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dataseed.iorachain.com"
   ],
   "faucets": [],

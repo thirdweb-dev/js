@@ -2,6 +2,7 @@ export default {
   "name": "HALO Mainnet",
   "chain": "HALO",
   "rpc": [
+    "https://halo.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://nodes.halo.land"
   ],
   "faucets": [],

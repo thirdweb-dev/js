@@ -2,6 +2,7 @@ export default {
   "name": "Taycan",
   "chain": "Taycan",
   "rpc": [
+    "https://taycan.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://taycan-rpc.hupayx.io:8545"
   ],
   "faucets": [],

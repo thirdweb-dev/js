@@ -2,6 +2,7 @@ export default {
   "name": "Paribu Net Testnet",
   "chain": "PRB",
   "rpc": [
+    "https://paribu-net-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.testnet.paribuscan.com"
   ],
   "faucets": [

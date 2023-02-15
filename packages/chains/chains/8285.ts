@@ -2,6 +2,7 @@ export default {
   "name": "KorthoTest",
   "chain": "Kortho",
   "rpc": [
+    "https://korthotest.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.krotho-test.net"
   ],
   "faucets": [],

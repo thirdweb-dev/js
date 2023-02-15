@@ -12,6 +12,7 @@ import {
   VoteInitializer,
   SplitInitializer,
   MarketplaceInitializer,
+  MarketplaceV3Initializer,
 } from "../contracts";
 import {
   PrebuiltContractType,
@@ -140,6 +141,7 @@ export async function getDeployArguments<
         splitsMetadata.recipients.map((s) => BigNumber.from(s.sharesBps)),
       ];
     case MarketplaceInitializer.contractType:
+    case MarketplaceV3Initializer.contractType:
       const marketplaceMetadata =
         MarketplaceInitializer.schema.deploy.parse(metadata);
       return [

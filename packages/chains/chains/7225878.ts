@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://saakuru.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.saakuru.network"
   ],
   "faucets": [],

@@ -2,6 +2,7 @@ export default {
   "name": "QEasyWeb3 Testnet",
   "chain": "QET",
   "rpc": [
+    "https://qeasyweb3-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://qeasyweb3.com"
   ],
   "faucets": [

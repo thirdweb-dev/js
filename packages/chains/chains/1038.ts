@@ -2,6 +2,7 @@ export default {
   "name": "Bronos Testnet",
   "chain": "Bronos",
   "rpc": [
+    "https://bronos-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm-testnet.bronos.org"
   ],
   "faucets": [

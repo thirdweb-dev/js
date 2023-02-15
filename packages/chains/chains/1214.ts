@@ -2,6 +2,7 @@ export default {
   "name": "EnterChain Mainnet",
   "chain": "ENTER",
   "rpc": [
+    "https://enterchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://tapi.entercoin.net/"
   ],
   "faucets": [],

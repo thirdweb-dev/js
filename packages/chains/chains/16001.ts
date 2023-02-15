@@ -2,6 +2,7 @@ export default {
   "name": "MetaDot Testnet",
   "chain": "MTTTest",
   "rpc": [
+    "https://metadot-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.metadot.network"
   ],
   "faucets": [

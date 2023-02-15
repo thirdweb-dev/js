@@ -2,6 +2,7 @@ export default {
   "name": "OHO Mainnet",
   "chain": "OHO",
   "rpc": [
+    "https://oho.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.oho.ai"
   ],
   "faucets": [],

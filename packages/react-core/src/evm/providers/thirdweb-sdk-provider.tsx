@@ -1,3 +1,4 @@
+import { DEFAULT_API_KEY } from "../../core/constants/rpc";
 import {
   QueryClientProviderProps,
   QueryClientProviderWithDefault,
@@ -6,9 +7,14 @@ import {
   ThirdwebAuthConfig,
   ThirdwebAuthProvider,
 } from "../contexts/thirdweb-auth";
+import { ThirdwebConfigProvider } from "../contexts/thirdweb-config";
 import { ThirdwebConnectedWalletProvider } from "../contexts/thirdweb-wallet";
-import { Chain, defaultChains } from "@thirdweb-dev/chains";
-import { SDKOptions, ThirdwebSDK } from "@thirdweb-dev/sdk/evm";
+import { Chain, defaultChains, getChainRPC } from "@thirdweb-dev/chains";
+import {
+  SDKOptions,
+  SDKOptionsOutput,
+  ThirdwebSDK,
+} from "@thirdweb-dev/sdk/evm";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { Signer } from "ethers";
 import { createContext, useContext, useMemo } from "react";
@@ -40,6 +46,9 @@ function resolveChainIdFromNetwork(
   return chainId;
 }
 
+// this allows autocomplete to work for the chainId prop but still allows `number` and `string` to be passed (for dynamically passed chain data)
+type ChainIdIsh = (string | number) & { __chainIdIsh: never };
+
 export interface ThirdwebSDKProviderProps<
   TChains extends Chain[] = typeof defaultChains,
 > extends QueryClientProviderProps {
@@ -56,7 +65,16 @@ export interface ThirdwebSDKProviderProps<
   authConfig?: ThirdwebAuthConfig;
 
   // the network to use - optional, defaults to undefined
-  activeChain?: TChains[number]["chainId"] | TChains[number]["slug"] | Chain;
+  activeChain?:
+    | TChains[number]["chainId"]
+    | TChains[number]["slug"]
+    | ChainIdIsh
+    | Chain;
+
+  // api keys that can be passed
+  thirdwebApiKey?: string;
+  alchemyApiKey?: string;
+  infuraApiKey?: string;
 }
 
 /**
@@ -73,18 +91,12 @@ const WrappedThirdwebSDKProvider = <
   activeChain,
   signer,
   children,
-}: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
-  const mergedChains = useMemo(() => {
-    if (
-      !activeChain ||
-      typeof activeChain === "string" ||
-      typeof activeChain === "number"
-    ) {
-      return supportedChains as Readonly<Chain[]>;
-    }
-    return [...supportedChains, activeChain] as Readonly<Chain[]>;
-  }, [supportedChains, activeChain]);
-
+  thirdwebApiKey = DEFAULT_API_KEY,
+  infuraApiKey,
+  alchemyApiKey,
+}: React.PropsWithChildren<
+  Omit<ThirdwebSDKProviderProps<TChains>, "authConfig">
+>) => {
   const activeChainId = useMemo(() => {
     if (!activeChain) {
       return undefined;
@@ -100,51 +112,68 @@ const WrappedThirdwebSDKProvider = <
     if (typeof window === "undefined") {
       return undefined;
     }
-    let chainId = resolveChainIdFromNetwork(activeChainId, mergedChains);
+    let chainId = resolveChainIdFromNetwork(activeChainId, supportedChains);
+    if (signer && !chainId) {
+      try {
+        chainId = (signer?.provider as any)?._network?.chainId;
+      } catch (e) {}
+    }
+    const supportedChain = supportedChains.find((c) => c.chainId === chainId);
+
+    if (!supportedChain && chainId !== undefined) {
+      console.warn(
+        `The chainId ${chainId} is not in the configured chains, please add it to the ThirdwebProvider`,
+      );
+      // reset the chainId as to not trigger an error in the sdk constructor
+      chainId = undefined;
+    }
+
+    let readonlySettings: SDKOptionsOutput["readonlySettings"] = undefined;
+
+    if (supportedChain && supportedChain.rpc.length > 0) {
+      try {
+        const rpcUrl = getChainRPC(supportedChain, {
+          thirdwebApiKey,
+          infuraApiKey,
+          alchemyApiKey,
+        });
+
+        readonlySettings = {
+          chainId: supportedChain.chainId,
+          rpcUrl,
+        };
+      } catch (e) {
+        // no-op
+      }
+    }
 
     const mergedOptions = {
+      readonlySettings,
       ...sdkOptions,
-      chains: mergedChains,
+      chains: supportedChains,
     };
 
     let sdk_: ThirdwebSDK | undefined = undefined;
 
     if (signer) {
       // sdk from signer
-
-      if (!chainId) {
-        // try to get the chainId off of the signer sync
-        try {
-          chainId = (signer?.provider as any)?._network?.chainId;
-        } catch (e) {}
-      }
-      if (chainId) {
-        // if we have a chainId, make sure it's in the chains
-        if (!mergedChains.find((c) => c.chainId === chainId)) {
-          console.warn(
-            `The chainId ${chainId} is not in the configured chains, please add it to the ThirdwebProvider`,
-          );
-          // reset the chainId as to not trigger an error in the sdk constructor
-          chainId = undefined;
-        }
-      }
-      sdk_ = ThirdwebSDK.fromSigner(
+      sdk_ = new ThirdwebSDK(
         signer,
-        chainId,
-        // @ts-expect-error - zod doesn't know anything about readonly
-        mergedOptions,
+        { ...mergedOptions, infuraApiKey, alchemyApiKey, thirdwebApiKey },
         storageInterface,
       );
     } else if (chainId) {
       // sdk from chainId
-      // @ts-expect-error - zod doesn't know anything about readonly
-      sdk_ = new ThirdwebSDK(chainId, mergedOptions, storageInterface);
+      sdk_ = new ThirdwebSDK(
+        chainId,
+        { ...mergedOptions, infuraApiKey, alchemyApiKey, thirdwebApiKey },
+        storageInterface,
+      );
     }
     // if we still have no sdk fall back to the first element in chains
     if (!sdk_) {
-      if (mergedChains.length > 0) {
-        chainId = mergedChains[0].chainId;
-        // @ts-expect-error - zod doesn't know anything about readonly
+      if (supportedChains.length > 0) {
+        chainId = supportedChains[0].chainId;
         sdk_ = new ThirdwebSDK(chainId, mergedOptions, storageInterface);
       } else {
         console.error(
@@ -154,10 +183,17 @@ const WrappedThirdwebSDKProvider = <
       }
     }
 
-    (sdk_ as any)._chainId = chainId;
-
     return sdk_;
-  }, [activeChainId, mergedChains, sdkOptions, signer, storageInterface]);
+  }, [
+    activeChainId,
+    alchemyApiKey,
+    infuraApiKey,
+    supportedChains,
+    sdkOptions,
+    signer,
+    storageInterface,
+    thirdwebApiKey,
+  ]);
 
   const ctxValue = useMemo(
     () => ({
@@ -190,18 +226,51 @@ export const ThirdwebSDKProvider = <
   children,
   queryClient,
   authConfig,
+  // @ts-expect-error - different subtype of Chain[] but this works fine
+  supportedChains = defaultChains,
+  activeChain,
+  thirdwebApiKey,
+  alchemyApiKey,
+  infuraApiKey,
   ...restProps
 }: React.PropsWithChildren<ThirdwebSDKProviderProps<TChains>>) => {
+  const mergedChains = useMemo(() => {
+    if (
+      !activeChain ||
+      typeof activeChain === "string" ||
+      typeof activeChain === "number"
+    ) {
+      return supportedChains as Readonly<Chain[]>;
+    }
+    return [...supportedChains, activeChain] as Readonly<Chain[]>;
+  }, [supportedChains, activeChain]);
+
   return (
-    <ThirdwebConnectedWalletProvider signer={signer}>
-      <QueryClientProviderWithDefault queryClient={queryClient}>
-        <ThirdwebAuthProvider value={authConfig}>
-          <WrappedThirdwebSDKProvider signer={signer} {...restProps}>
-            {children}
-          </WrappedThirdwebSDKProvider>
-        </ThirdwebAuthProvider>
-      </QueryClientProviderWithDefault>
-    </ThirdwebConnectedWalletProvider>
+    <ThirdwebConfigProvider
+      value={{
+        chains: mergedChains,
+        thirdwebApiKey,
+        alchemyApiKey,
+        infuraApiKey,
+      }}
+    >
+      <ThirdwebConnectedWalletProvider signer={signer}>
+        <QueryClientProviderWithDefault queryClient={queryClient}>
+          <ThirdwebAuthProvider value={authConfig}>
+            <WrappedThirdwebSDKProvider
+              signer={signer}
+              supportedChains={mergedChains}
+              thirdwebApiKey={thirdwebApiKey}
+              alchemyApiKey={alchemyApiKey}
+              infuraApiKey={infuraApiKey}
+              {...restProps}
+            >
+              {children}
+            </WrappedThirdwebSDKProvider>
+          </ThirdwebAuthProvider>
+        </QueryClientProviderWithDefault>
+      </ThirdwebConnectedWalletProvider>
+    </ThirdwebConfigProvider>
   );
 };
 
@@ -237,5 +306,5 @@ export function useSDK(): ThirdwebSDK | undefined {
  */
 export function useSDKChainId(): number | undefined {
   const sdk = useSDK();
-  return (sdk as any)?._chainId;
+  return (sdk?.getProvider() as any)?._network?.chainId;
 }

@@ -2,6 +2,7 @@ export default {
   "name": "Mythical Chain",
   "chain": "MYTH",
   "rpc": [
+    "https://mythical-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://chain-rpc.mythicalgames.com"
   ],
   "faucets": [],

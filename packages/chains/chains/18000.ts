@@ -2,6 +2,7 @@ export default {
   "name": "Frontier of Dreams Testnet",
   "chain": "Game Network",
   "rpc": [
+    "https://frontier-of-dreams-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.fod.games/"
   ],
   "nativeCurrency": {

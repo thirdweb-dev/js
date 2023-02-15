@@ -2,6 +2,7 @@ export default {
   "name": "Wegochain Rubidium Mainnet",
   "chain": "RBD",
   "rpc": [
+    "https://wegochain-rubidium.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://proxy.wegochain.io",
     "http://wallet.wegochain.io:7764"
   ],

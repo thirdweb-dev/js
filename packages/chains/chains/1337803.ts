@@ -2,6 +2,7 @@ export default {
   "name": "Zhejiang",
   "chain": "ETH",
   "rpc": [
+    "https://zhejiang.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.zhejiang.ethpandaops.io"
   ],
   "faucets": [

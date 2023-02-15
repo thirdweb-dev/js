@@ -2,6 +2,7 @@ export default {
   "name": "Ethereum Classic Testnet Mordor",
   "chain": "ETC",
   "rpc": [
+    "https://ethereum-classic-testnet-mordor.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.ethercluster.com/mordor"
   ],
   "faucets": [],

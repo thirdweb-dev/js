@@ -2,6 +2,7 @@ export default {
   "name": "Darwinia Crab Network",
   "chain": "crab",
   "rpc": [
+    "https://darwinia-crab-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://crab-rpc.darwinia.network"
   ],
   "faucets": [],

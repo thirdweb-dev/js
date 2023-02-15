@@ -2,6 +2,7 @@ export default {
   "name": "Lambda Testnet",
   "chain": "Lambda",
   "rpc": [
+    "https://lambda-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.lambda.top/"
   ],
   "faucets": [

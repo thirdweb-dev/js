@@ -2,6 +2,7 @@ export default {
   "name": "YuanChain Mainnet",
   "chain": "YCC",
   "rpc": [
+    "https://yuanchain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.yuan.org/eth"
   ],
   "faucets": [],

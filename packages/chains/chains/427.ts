@@ -2,6 +2,7 @@ export default {
   "name": "Zeeth Chain",
   "chain": "ZeethChain",
   "rpc": [
+    "https://zeeth-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.zeeth.io"
   ],
   "faucets": [],

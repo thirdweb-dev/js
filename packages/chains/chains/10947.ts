@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://quadrans-blockchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpctest.quadrans.io",
     "https://rpctest2.quadrans.io"
   ],

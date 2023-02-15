@@ -2,6 +2,7 @@ export default {
   "name": "Gather Testnet Network",
   "chain": "GTH",
   "rpc": [
+    "https://gather-testnet-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.gather.network"
   ],
   "faucets": [],

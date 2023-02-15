@@ -26,11 +26,11 @@ npx thirdweb create --app
 Alternatively, you can install the SDK into your existing project using npm or yarn:
 
 ```sh
-npm install @thirdweb-dev/react @thirdweb-dev/sdk ethers
+npm install @thirdweb-dev/react @thirdweb-dev/sdk ethers@5
 ```
 
 ```sh
-yarn add @thirdweb-dev/react @thirdweb-dev/sdk ethers
+yarn add @thirdweb-dev/react @thirdweb-dev/sdk ethers@5
 ```
 
 <br />

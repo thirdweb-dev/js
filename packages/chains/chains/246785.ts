@@ -2,6 +2,7 @@ export default {
   "name": "ARTIS Testnet tau1",
   "chain": "ARTIS",
   "rpc": [
+    "https://artis-testnet-tau1.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tau1.artis.network"
   ],
   "faucets": [],

@@ -2,6 +2,7 @@ export default {
   "name": "Aurora Testnet",
   "chain": "NEAR",
   "rpc": [
+    "https://aurora-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.aurora.dev/"
   ],
   "faucets": [],

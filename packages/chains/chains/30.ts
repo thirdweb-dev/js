@@ -2,6 +2,7 @@ export default {
   "name": "RSK Mainnet",
   "chain": "RSK",
   "rpc": [
+    "https://rsk.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://public-node.rsk.co",
     "https://mycrypto.rsk.co"
   ],

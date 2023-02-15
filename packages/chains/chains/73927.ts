@@ -2,6 +2,7 @@ export default {
   "name": "Mixin Virtual Machine",
   "chain": "MVM",
   "rpc": [
+    "https://mixin-virtual-machine.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://geth.mvm.dev"
   ],
   "faucets": [],

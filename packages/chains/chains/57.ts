@@ -2,6 +2,7 @@ export default {
   "name": "Syscoin Mainnet",
   "chain": "SYS",
   "rpc": [
+    "https://syscoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.syscoin.org",
     "wss://rpc.syscoin.org/wss"
   ],

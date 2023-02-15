@@ -2,6 +2,7 @@ export default {
   "name": "Aquachain",
   "chain": "AQUA",
   "rpc": [
+    "https://aquachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://c.onical.org",
     "https://tx.aquacha.in/api"
   ],

@@ -2,6 +2,7 @@ export default {
   "name": "TomoChain",
   "chain": "TOMO",
   "rpc": [
+    "https://tomochain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tomochain.com"
   ],
   "faucets": [],

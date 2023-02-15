@@ -2,6 +2,7 @@ export default {
   "name": "Boba BNB Testnet",
   "chain": "Boba BNB Testnet",
   "rpc": [
+    "https://boba-bnb-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.bnb.boba.network",
     "wss://wss.testnet.bnb.boba.network",
     "https://replica.testnet.bnb.boba.network",

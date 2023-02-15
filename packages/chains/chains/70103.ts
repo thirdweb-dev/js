@@ -2,6 +2,7 @@ export default {
   "name": "Thinkium Mainnet Chain 103",
   "chain": "Thinkium",
   "rpc": [
+    "https://thinkium-chain-103.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://proxy103.thinkiumrpc.net/"
   ],
   "faucets": [],

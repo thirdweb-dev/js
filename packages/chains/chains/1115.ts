@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://core-blockchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.test.btcs.network/"
   ],
   "faucets": [

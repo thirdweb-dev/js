@@ -2,6 +2,7 @@ export default {
   "name": "Smart Host Teknoloji TESTNET",
   "chain": "SHT",
   "rpc": [
+    "https://smart-host-teknoloji-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://s2.tl.web.tr:4041"
   ],
   "faucets": [],

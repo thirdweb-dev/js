@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://filecoin-hyperspace-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.hyperspace.node.glif.io/rpc/v1",
     "https://filecoin-hyperspace.chainstacklabs.com/rpc/v1"
   ],

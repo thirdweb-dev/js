@@ -2,6 +2,7 @@ export default {
   "name": "Social Smart Chain Mainnet",
   "chain": "SoChain",
   "rpc": [
+    "https://social-smart-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://socialsmartchain.digitalnext.business"
   ],
   "faucets": [],

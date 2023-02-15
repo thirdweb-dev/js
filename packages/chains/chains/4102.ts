@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://aioz-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-ds.testnet.aioz.network"
   ],
   "faucets": [],

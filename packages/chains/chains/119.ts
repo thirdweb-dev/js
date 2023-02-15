@@ -2,6 +2,7 @@ export default {
   "name": "ENULS Mainnet",
   "chain": "ENULS",
   "rpc": [
+    "https://enuls.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evmapi.nuls.io",
     "https://evmapi2.nuls.io"
   ],

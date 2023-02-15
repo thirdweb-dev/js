@@ -2,6 +2,7 @@ export default {
   "name": "Plian Mainnet Main",
   "chain": "Plian",
   "rpc": [
+    "https://plian-main.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.plian.io/pchain"
   ],
   "faucets": [],

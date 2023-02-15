@@ -3,6 +3,7 @@ export default {
   "title": "Calypso NFT Hub Mainnet",
   "chain": "honorable-steel-rasalhague",
   "rpc": [
+    "https://calypso-nft-hub-skale.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.skalenodes.com/v1/honorable-steel-rasalhague"
   ],
   "faucets": [

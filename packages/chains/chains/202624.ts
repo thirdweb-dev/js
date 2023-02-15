@@ -17,6 +17,7 @@ export default {
     "decimals": 18
   },
   "rpc": [
+    "https://jellie.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jellie-rpc.twala.io/",
     "wss://jellie-rpc-wss.twala.io/"
   ],

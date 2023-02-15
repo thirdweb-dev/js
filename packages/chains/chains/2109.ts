@@ -2,6 +2,7 @@ export default {
   "name": "Exosama Network",
   "chain": "EXN",
   "rpc": [
+    "https://exosama-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.exosama.com",
     "wss://rpc.exosama.com"
   ],

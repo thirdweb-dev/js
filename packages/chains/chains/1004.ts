@@ -3,6 +3,7 @@ export default {
   "title": "EKTA Testnet T-EKTA",
   "chain": "T-EKTA",
   "rpc": [
+    "https://t-ekta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://test.ekta.io:8545"
   ],
   "faucets": [],

@@ -2,6 +2,7 @@ export default {
   "name": "Evmos Testnet",
   "chain": "Evmos",
   "rpc": [
+    "https://evmos-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth.bd.evmos.dev:8545"
   ],
   "faucets": [

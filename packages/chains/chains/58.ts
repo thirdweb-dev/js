@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://ontology.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "http://dappnode1.ont.io:20339",
     "http://dappnode2.ont.io:20339",
     "http://dappnode3.ont.io:20339",

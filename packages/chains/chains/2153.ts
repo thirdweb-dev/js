@@ -2,6 +2,7 @@ export default {
   "name": "Findora Testnet",
   "chain": "Testnet-anvil",
   "rpc": [
+    "https://findora-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://prod-testnet.prod.findora.org:8545/"
   ],
   "faucets": [],

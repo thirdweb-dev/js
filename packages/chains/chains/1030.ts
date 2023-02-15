@@ -2,6 +2,7 @@ export default {
   "name": "Conflux eSpace",
   "chain": "Conflux",
   "rpc": [
+    "https://conflux-espace.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.confluxrpc.com"
   ],
   "faucets": [],

@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://metaplayerone.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.metaplayer.one/"
   ],
   "faucets": [],

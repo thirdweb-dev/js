@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://taraxa.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mainnet.taraxa.io/"
   ],
   "faucets": [],

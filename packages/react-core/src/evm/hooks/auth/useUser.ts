@@ -31,6 +31,10 @@ export function useUser<
         authConfig,
         "Please specify an authConfig in the ThirdwebProvider",
       );
+      invariant(
+        authConfig.authUrl,
+        "Please specify an authUrl in the authConfig.",
+      );
 
       // We include credentials so we can getUser even if API is on different URL
       const res = await fetch(`${authConfig.authUrl}/user`, {

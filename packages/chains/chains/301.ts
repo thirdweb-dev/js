@@ -2,6 +2,7 @@ export default {
   "name": "Bobaopera",
   "chain": "Bobaopera",
   "rpc": [
+    "https://bobaopera.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://bobaopera.boba.network",
     "wss://wss.bobaopera.boba.network",
     "https://replica.bobaopera.boba.network",
