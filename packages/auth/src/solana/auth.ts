@@ -4,17 +4,25 @@ import { KeypairWallet } from "./signer";
 import { Keypair } from "@solana/web3.js";
 
 const wallet = new KeypairWallet(Keypair.generate());
-const authMap = new Map();
+const authMap = new Map<string, ThirdwebAuth>();
 
-export function verifyLogin(
+export async function verifyLogin(
   domain: string,
   payload: LoginPayload,
   options?: Omit<VerifyOptions, "domain">,
 ) {
+  let auth: ThirdwebAuth;
   if (!authMap.has(domain)) {
-    authMap.set(domain, new ThirdwebAuth(wallet, domain));
+    auth = new ThirdwebAuth(wallet, domain);
+    authMap.set(domain, auth);
+  } else {
+    auth = authMap.get(domain) as ThirdwebAuth;
   }
 
-  const auth = authMap.get(domain);
-  return auth.verify(payload, options);
+  try {
+    const address = await auth.verify(payload, options);
+    return { address, error: undefined };
+  } catch (err: any) {
+    return { address: undefined, error: err.message };
+  }
 }
