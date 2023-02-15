@@ -109,6 +109,9 @@ export class DropClaimConditions<
       this.storage,
       options?.withAllowList || false,
     );
+    if (options?.returnInactive === true) {
+      return claimCondition;
+    }
     // Don't return the condition if it has not started yet
     if (new Date(claimCondition.startTime).getTime() > Date.now()) {
       return null;
@@ -195,7 +198,8 @@ export class DropClaimConditions<
         ),
       );
     } else {
-      return [await this.getActive(options)];
+      const activeCondition = await this.getActive({ returnInactive: true, ...options} );
+      return activeCondition ? [activeCondition] : [];
     }
   }
 
@@ -237,7 +241,7 @@ export class DropClaimConditions<
   ): Promise<ClaimEligibility[]> {
     const reasons: ClaimEligibility[] = [];
     let activeConditionIndex: BigNumber;
-    let claimCondition: ClaimCondition;
+    let claimCondition: ClaimCondition | null;
 
     const decimals = await this.getTokenDecimals();
     const quantityWithDecimals = ethers.utils.parseUnits(
@@ -260,6 +264,10 @@ export class DropClaimConditions<
 
     try {
       claimCondition = await this.getActive();
+      if (claimCondition === null) {
+        reasons.push(ClaimEligibility.NoActiveClaimPhase);
+        return reasons;
+      }
     } catch (err: any) {
       if (
         includesErrorMessage(err, "!CONDITION") ||
@@ -758,10 +766,11 @@ export class DropClaimConditions<
     const addressToClaim = address
       ? address
       : await this.contractWrapper.getSignerAddress();
+    const activeCondition = (await this.getActive({ returnInactive: true })) as ClaimCondition; 
     return prepareClaim(
       addressToClaim,
       quantity,
-      await this.getActive(),
+      activeCondition,
       async () => (await this.metadata.get()).merkle,
       decimals,
       this.contractWrapper,

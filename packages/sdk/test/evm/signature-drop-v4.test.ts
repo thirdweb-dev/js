@@ -49,7 +49,7 @@ describe("Signature drop tests (v4)", async () => {
           seller_fee_basis_points: 0,
         },
         "4",
-      ),
+      ), 'signature-drop'
     );
 
     meta = {
@@ -181,7 +181,7 @@ describe("Signature drop tests (v4)", async () => {
     });
 
     it("comprehensive test", async () => {
-      const metadata = [];
+      const metadata: NFTMetadataInput[] = [];
       for (let i = 0; i < 10; i++) {
         metadata.push({ name: `test${i}`, description: `desc${i}` });
       }
@@ -221,7 +221,7 @@ describe("Signature drop tests (v4)", async () => {
     });
 
     it("comprehensive test with allowlist", async () => {
-      const metadata = [];
+      const metadata: NFTMetadataInput[] = [];
       for (let i = 0; i < 10; i++) {
         metadata.push({ name: `test${i}`, description: `desc${i}` });
       }
@@ -585,7 +585,7 @@ describe("Signature drop tests (v4)", async () => {
     });
   });
 
-  describe("Claim Conditions", () => {
+  describe("Claim Conditions", () => {  
     it("should allow a snapshot to be set", async () => {
       await signatureDropContract.createBatch([
         { name: "test1", description: "test" },
@@ -600,7 +600,7 @@ describe("Signature drop tests (v4)", async () => {
       const conditions = await signatureDropContract.claimConditions.getActive({
         withAllowList: true,
       });
-      invariant(conditions.snapshot);
+      invariant(conditions?.snapshot);
       expect(conditions.snapshot[0].address).to.eq(samWallet.address);
     });
 
@@ -620,6 +620,7 @@ describe("Signature drop tests (v4)", async () => {
       );
 
       const roots = await signatureDropContract.claimConditions.getActive();
+      invariant(roots);
       expect(roots.merkleRootHash.length > 0);
 
       await signatureDropContract.claimConditions.set([{}]);

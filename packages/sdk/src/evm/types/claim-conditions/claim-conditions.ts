@@ -82,4 +82,9 @@ export type ClaimOptions = {
 
 export type ClaimConditionFetchOptions = {
   withAllowList?: boolean;
+  /**
+   * Whether to return only active claim conditions, defaults to false
+   * @default false
+  */
+  returnInactive?: boolean;
 };

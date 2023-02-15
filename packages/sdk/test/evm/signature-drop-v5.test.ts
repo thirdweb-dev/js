@@ -507,6 +507,7 @@ describe("Signature drop tests (v5)", async () => {
       ]);
 
       const roots = await signatureDropContract.claimConditions.getActive();
+      invariant(roots);
       expect(roots.merkleRootHash.length > 0);
 
       await signatureDropContract.claimConditions.set([{}]);
