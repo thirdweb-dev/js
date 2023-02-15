@@ -109,7 +109,7 @@ export const ProgramTabRouter: React.FC<ProgramTabRouterProps> = ({
                 }
                 w={isScrolled ? "calc(100% - 40px)" : "100%"}
               >
-                <ContractSubnav routes={routes} />
+                <ProgramSubnav routes={routes} address={address} />
               </Box>
             </Flex>
           </Container>
@@ -120,7 +120,7 @@ export const ProgramTabRouter: React.FC<ProgramTabRouterProps> = ({
           <Box py={8}>
             <DropNotReady address={address} />
             {activeRoute?.component && (
-              <activeRoute.component contractAddress={address} />
+              <activeRoute.component address={address} />
             )}
           </Box>
         </Container>
@@ -129,21 +129,14 @@ export const ProgramTabRouter: React.FC<ProgramTabRouterProps> = ({
   );
 };
 
-interface ContractSubnavProps {
+interface ProgramSubnavProps {
   routes: EnhancedRoute[];
+  address: string;
 }
-const ContractSubnav: React.FC<ContractSubnavProps> = ({ routes }) => {
+const ProgramSubnav: React.FC<ProgramSubnavProps> = ({ routes, address }) => {
   const [hoveredEl, setHoveredEl] = useState<EventTarget & HTMLButtonElement>();
   const previousEl = usePrevious(hoveredEl);
   const isMouseOver = useRef(false);
-
-  const { query } = useRouter();
-  const computedBasePath = useMemo(() => {
-    const [network, address] = ((query.paths as string[]) || []).filter(
-      (c) => c !== "evm" && c !== "solana",
-    );
-    return `/${network}/${address}`;
-  }, [query.paths]);
   return (
     <Flex
       direction="row"
@@ -182,7 +175,7 @@ const ContractSubnav: React.FC<ContractSubnavProps> = ({ routes }) => {
         .map((route) => {
           const cleanedPath = route.path.replace("overview", "");
           return (
-            <ContractSubNavLinkButton
+            <ProgramSubnavLinkButton
               icon={
                 route.isEnabled !== undefined ? (
                   route.isEnabled === "enabled" ? (
@@ -197,7 +190,7 @@ const ContractSubnav: React.FC<ContractSubnavProps> = ({ routes }) => {
               key={route.path}
               label={route.title}
               onHover={setHoveredEl}
-              href={computedBasePath + (cleanedPath ? `/${cleanedPath}` : "")}
+              href={`/solana/${address}${cleanedPath ? `/${cleanedPath}` : ""}`}
               isDisabled={
                 route.isEnabled === "disabled" || route.isEnabled === "loading"
               }
@@ -208,7 +201,7 @@ const ContractSubnav: React.FC<ContractSubnavProps> = ({ routes }) => {
   );
 };
 
-interface ContractSubNavLinkButton {
+interface ProgramSubnavLinkButton {
   href: string;
   onHover: (event: EventTarget & HTMLButtonElement) => void;
   label: string;
@@ -216,9 +209,7 @@ interface ContractSubNavLinkButton {
   isDisabled?: boolean;
 }
 
-const ContractSubNavLinkButton: React.FC<ContractSubNavLinkButton> = (
-  props,
-) => {
+const ProgramSubnavLinkButton: React.FC<ProgramSubnavLinkButton> = (props) => {
   const trackEvent = useTrack();
   const onClick = useCallback(() => {
     trackEvent({
