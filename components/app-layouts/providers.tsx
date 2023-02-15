@@ -63,6 +63,20 @@ export const DashboardThirdwebProvider: ComponentWithChildren<
     return wc;
   }, [chain, rpcUrls]);
 
+  const readonlySettings = useMemo(() => {
+    if (!chain) {
+      return undefined;
+    }
+    const rpcUrl = getDashboardChainRpc(chain);
+    if (!rpcUrl) {
+      return undefined;
+    }
+    return {
+      chainId: chain.chainId,
+      rpcUrl,
+    };
+  }, [chain]);
+
   return (
     <ThirdwebProvider
       queryClient={queryClient}
@@ -76,12 +90,7 @@ export const DashboardThirdwebProvider: ComponentWithChildren<
       supportedChains={configuredChains}
       sdkOptions={{
         gasSettings: { maxPriceInGwei: 650 },
-        readonlySettings: chain
-          ? {
-              chainId: chain.chainId,
-              rpcUrl: getDashboardChainRpc(chain),
-            }
-          : undefined,
+        readonlySettings,
       }}
       thirdwebApiKey={DASHBOARD_THIRDWEB_API_KEY}
       storageInterface={StorageSingleton}

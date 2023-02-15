@@ -314,7 +314,6 @@ const ContractTableRow: React.FC<ContractTableRowProps> = ({ row }) => {
               undefined,
               {
                 scroll: true,
-                shallow: true,
               },
             );
             return;
@@ -524,8 +523,6 @@ const WrappedSolanaDeployDrawer: React.FC<
                     network as DashboardSolanaNetwork
                   ]
                 }/${contractAddress}`,
-                undefined,
-                { shallow: true },
               );
             },
             onError: (error, variables) => {

@@ -233,8 +233,7 @@ export const ContractReleaseForm: React.FC<ContractReleaseFormProps> = ({
                       successRedirectUrl,
                       undefined,
                       // reset scroll after redirect
-                      // shallow render (aka do not wait for SSR)
-                      { scroll: true, shallow: true },
+                      { scroll: true },
                     );
                   }
                 },

@@ -1,5 +1,5 @@
 import { useDashboardSOLNetworkId } from "@3rdweb-sdk/react";
-import { PhantomWalletAdapter } from "@solana/wallet-adapter-phantom";
+import { Adapter } from "@solana/wallet-adapter-base";
 import {
   ConnectionProvider,
   WalletProvider,
@@ -12,7 +12,8 @@ import { getSOLRPC } from "constants/rpc";
 import { useMemo } from "react";
 import { ComponentWithChildren } from "types/component-with-children";
 
-const wallets = [new PhantomWalletAdapter()];
+// just solana things - we don't actually need to pass phantom anymore but we *do* need to pass the wallets array still...
+const wallets: Adapter[] = [];
 
 export const SolanaProvider: ComponentWithChildren = ({ children }) => {
   const dashboardNetwork = useDashboardSOLNetworkId();

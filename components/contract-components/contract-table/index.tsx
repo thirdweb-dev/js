@@ -142,7 +142,6 @@ const TableRow: React.FC<TableRowProps> = ({ row, context }) => {
           undefined,
           {
             scroll: true,
-            shallow: true,
           },
         );
       }}

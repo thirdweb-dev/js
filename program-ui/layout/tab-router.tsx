@@ -49,7 +49,6 @@ export const ProgramTabRouter: React.FC<ProgramTabRouterProps> = ({
       scrollContainerRef.current = el;
     }
   }, []);
-
   useScrollPosition(
     ({ currPos }) => {
       if (currPos.y < -5) {

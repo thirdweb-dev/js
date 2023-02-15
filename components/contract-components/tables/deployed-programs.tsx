@@ -122,8 +122,6 @@ export const DeployedPrograms: React.FC<DeployedProgramsProps> = ({
             `/${SupportedSolanaNetworkToUrlMap[row.network]}/${
               row.programAddress
             }`,
-            undefined,
-            { shallow: true },
           );
         }}
       />
