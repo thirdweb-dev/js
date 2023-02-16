@@ -1,4 +1,5 @@
 export type { EVMWallet } from "./interfaces";
+export type { ConnectParams } from "./interfaces/tw-connector";
 export type {
   AbstractWallet,
   WalletData,
@@ -10,6 +11,7 @@ export * from "./wallets/aws-secrets-manager";
 export type { AbstractBrowserWallet, WalletOptions } from "./wallets/base";
 export * from "./wallets/coinbase-wallet";
 export * from "./wallets/device-wallet";
+export type { DeviceWalletConnectionArgs } from "./wallets/device-wallet";
 export * from "./wallets/ethers";
 export * from "./wallets/injected";
 export * from "./wallets/magic-auth";

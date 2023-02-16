@@ -1,8 +1,13 @@
 import { DAppMetaData } from "../types/dAppMeta";
 import { transformChainToMinimalWagmiChain } from "../utils";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
-import type { DeviceWalletOptions } from "@thirdweb-dev/wallets";
-import { AsyncStorage, WalletOptions } from "@thirdweb-dev/wallets";
+import type {
+  AsyncStorage,
+  ConnectParams,
+  DeviceWalletConnectionArgs,
+  DeviceWalletOptions,
+  WalletOptions,
+} from "@thirdweb-dev/wallets";
 import { Signer } from "ethers";
 import {
   createContext,
@@ -59,6 +64,10 @@ export function ThirdwebWalletProvider(
         walletStorageMap.set(walletClass.id, walletStorage);
       }
 
+      let connectArgs: ConnectParams = {
+        chainId: props.value.activeChain.chainId,
+      };
+
       let options: WalletOptions = {
         chains:
           props.value.chains.map(transformChainToMinimalWagmiChain) ||
@@ -72,11 +81,21 @@ export function ThirdwebWalletProvider(
       if (walletClass.id === "deviceWallet") {
         (options as WalletOptions<DeviceWalletOptions>).chain =
           props.value.activeChain;
-        // todo : options.storage
+
+        // JUST FOR TESTING
+        (options as WalletOptions<DeviceWalletOptions>).storage =
+          "credentialStore";
+
+        // JUST FOR TESTING
+        // where to we get password? -> from the user
+        // connectPrecursor
+        (connectArgs as ConnectParams<DeviceWalletConnectionArgs>).password =
+          "TESTING123";
       }
 
       const wallet = new walletClass(options);
-      await wallet.connect();
+
+      await wallet.connect(connectArgs);
       const _signer = await wallet.getSigner();
       setSigner(_signer);
     },
@@ -98,17 +117,17 @@ export function ThirdwebWalletProvider(
   );
 }
 
-export function useThirdwebWalletContext() {
+export function useThirdwebWallet() {
   const context = useContext(ThirdwebWalletContext);
   if (!context) {
     invariant(
       context,
-      "useThirdwebWalletContext must be used within a ThirdwebWalletProvider",
+      "useThirdwebWallet must be used within a ThirdwebProvider",
     );
   }
   return context;
 }
 
 export function useWalletSigner() {
-  return useThirdwebWalletContext().signer;
+  return useThirdwebWallet().signer;
 }

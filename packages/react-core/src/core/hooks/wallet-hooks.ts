@@ -1,13 +1,13 @@
-import { useThirdwebWalletContext } from "../providers/thirdweb-wallet-provider";
+import { useThirdwebWallet } from "../providers/thirdweb-wallet-provider";
 
 export function useActiveWallet() {
-  return useThirdwebWalletContext().activeWallet;
+  return useThirdwebWallet().activeWallet;
 }
 
 export function useWallets() {
-  return useThirdwebWalletContext().wallets;
+  return useThirdwebWallet().wallets;
 }
 
 export function useConnect() {
-  return useThirdwebWalletContext().connect;
+  return useThirdwebWallet().connect;
 }

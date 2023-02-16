@@ -10,8 +10,8 @@
 // export * from "./hooks/wagmi-required/useNetwork";
 // export { ThirdwebProvider } from "./providers/thirdweb-provider";
 // export { ThirdwebProvider } from "@thirdweb-dev/react-core";
-export * from "@thirdweb-dev/react-core/evm";
-export * from "./components/ConnectWallet";
+export { useAddress, useConnect, useWallets } from "@thirdweb-dev/react-core";
+// export * from "./components/ConnectWallet";
 // ui components
 export * from "./components/MediaRenderer";
 export * from "./components/NftMedia";
