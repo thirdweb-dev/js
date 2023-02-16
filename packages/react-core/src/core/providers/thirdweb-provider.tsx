@@ -5,6 +5,7 @@ import {
 } from "../../evm";
 import { DEFAULT_API_KEY } from "../constants/rpc";
 import { DAppMetaData } from "../types/dAppMeta";
+import { SupportedWallet } from "../types/wallet";
 import { showDeprecationWarning } from "../utils";
 import {
   ThirdwebWalletProvider,
@@ -16,7 +17,7 @@ import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import type { SDKOptions } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
-  AsyncStorage,
+  CreateAsyncStorage,
   DeviceBrowserWallet,
   MetaMask,
 } from "@thirdweb-dev/wallets";
@@ -57,7 +58,7 @@ export interface ThirdwebProviderProps<
   // walletConnectors?: WalletConnector[];
 
   // TODO
-  wallets: any[];
+  supportedWallets: SupportedWallet[];
 
   /**
    * Metadata to pass to wallet connect and walletlink wallet connect. (Used to show *which* dApp is being connected to in mobile wallets that support it)
@@ -103,7 +104,7 @@ export interface ThirdwebProviderProps<
    */
   chainRpc?: Record<number, string>;
 
-  storage: AsyncStorage;
+  createWalletStorage: CreateAsyncStorage;
 }
 
 // SDK handles this under the hood for us
@@ -160,12 +161,12 @@ export const ThirdwebProvider = <
   alchemyApiKey,
   infuraApiKey,
 
-  wallets = [MetaMask, DeviceBrowserWallet],
+  supportedWallets = [MetaMask, DeviceBrowserWallet],
 
   // deprecated
   desiredChainId,
   chainRpc,
-  storage,
+  createWalletStorage,
 }: React.PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
   // construct the wagmi options
 
@@ -206,16 +207,16 @@ export const ThirdwebProvider = <
     return activeChain || supportedChains[0] || defaultChains[0];
   }, [activeChain, supportedChains]);
 
+  // handle auto connect
+
   return (
     <ThirdwebWalletProvider
-      value={{
-        chains: supportedChains || defaultChains,
-        wallets,
-        shouldAutoConnect: autoConnect,
-        storage,
-        dAppMeta,
-        activeChain: activeChainObj,
-      }}
+      chains={supportedChains || defaultChains}
+      wallets={supportedWallets}
+      shouldAutoConnect={autoConnect}
+      createWalletStorage={createWalletStorage}
+      dAppMeta={dAppMeta}
+      activeChain={activeChainObj}
     >
       <ThirdwebSDKProviderWrapper
         queryClient={queryClient}

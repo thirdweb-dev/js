@@ -11,3 +11,7 @@ export function useWallets() {
 export function useConnect() {
   return useThirdwebWallet().connect;
 }
+
+export function useDisconnect() {
+  return useThirdwebWallet().disconnect;
+}

@@ -1,5 +1,5 @@
-import { __DEV__ } from "./constants/rpc";
-import { Chain } from "@thirdweb-dev/chains";
+import { DEFAULT_API_KEY, __DEV__ } from "./constants/rpc";
+import { Chain, getChainRPC } from "@thirdweb-dev/chains";
 import { Chain as WagmiChain } from "@wagmi/core";
 
 const warnSet = new Set<`${string}:${string}`>();
@@ -21,6 +21,10 @@ export function showDeprecationWarning(
 }
 
 export function transformChainToMinimalWagmiChain(chain: Chain): WagmiChain {
+  const rpc = getChainRPC(chain, {
+    thirdwebApiKey: DEFAULT_API_KEY,
+  });
+
   return {
     id: chain.chainId,
     name: chain.name,
@@ -33,10 +37,10 @@ export function transformChainToMinimalWagmiChain(chain: Chain): WagmiChain {
     testnet: chain.testnet,
     rpcUrls: {
       default: {
-        http: chain.rpc as string[],
+        http: [rpc],
       },
       public: {
-        http: chain.rpc as string[],
+        http: [rpc],
       },
     },
     blockExplorers: chain.explorers?.reduce(
