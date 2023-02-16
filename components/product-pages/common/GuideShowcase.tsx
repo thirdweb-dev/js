@@ -83,7 +83,7 @@ export const GuidesShowcase: React.FC<GuidesShowcaseProps> = ({
                   category={category}
                   label="guide"
                   trackingProps={{
-                    guide: guideTitle.replace(" ", "_").toLowerCase(),
+                    guide: guideTitle.replaceAll(" ", "_").toLowerCase(),
                   }}
                   index={idx}
                   key={guideTitle}

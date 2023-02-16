@@ -123,9 +123,11 @@ export const CustomContractOverviewPage: React.FC<
                   <TrackedLink
                     isExternal
                     category={TRACKING_CATEGORY}
-                    label="guide"
+                    label="template"
                     trackingProps={{
-                      template: template.title.replace(" ", "_").toLowerCase(),
+                      template: template.title
+                        .replaceAll(" ", "_")
+                        .toLowerCase(),
                     }}
                     fontWeight={500}
                     href={template.url}

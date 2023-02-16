@@ -308,7 +308,9 @@ const Minting: ThirdwebNextPage = () => {
                   category={TRACKING_CATEGORY}
                   label="contract"
                   trackingProps={{
-                    contract: contractInfo.name.toLowerCase().replace(" ", "-"),
+                    contract: contractInfo.name
+                      .toLowerCase()
+                      .replaceAll(" ", "-"),
                   }}
                   href={contractInfo.link}
                   isExternal
