@@ -1,5 +1,5 @@
 import { ThirdwebSDK } from "../../src/evm";
-import { Goerli } from "@thirdweb-dev/chains";
+import { Goerli, Fncy } from "@thirdweb-dev/chains";
 // import { signers, storage } from "./before-setup";
 // import { AddressZero } from "@ethersproject/constants";
 // import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -28,9 +28,15 @@ describe("SDK Initialization", async () => {
     expect(network.chainId).to.equal(5);
   });
 
-  it("should be able to be initialized with a chain", async () => {
+  it("should be able to be initialized with a default chain", async () => {
     const sdk = new ThirdwebSDK(Goerli);
     const network = await sdk.getProvider().getNetwork();
     expect(network.chainId).to.equal(5);
+  });
+
+  it("should be able to be initialized with a custom chain", async () => {
+    const sdk = new ThirdwebSDK(Fncy);
+    const network = await sdk.getProvider().getNetwork();
+    expect(network.chainId).to.equal(Fncy.chainId);
   });
 });
