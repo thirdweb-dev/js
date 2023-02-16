@@ -40,7 +40,7 @@ jobs:
       comment_body: ${{ github.event.comment.body }}
 
   deploy:
-    runs-on: ubuntu-latest-32
+    runs-on: ubuntu-latest-16
     timeout-minutes: 30
     needs: deploy-check
     if: needs.deploy-check.outputs.triggered == 'true'
