@@ -1,5 +1,6 @@
 ---
-"@thirdweb-dev/react-native": patch
+"@thirdweb-dev/react-native": minor
+"@thirdweb-dev/react-native-compat": minor
 "@thirdweb-dev/tsconfig": patch
 ---
 
