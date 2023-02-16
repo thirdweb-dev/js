@@ -16,4 +16,4 @@ export * from "./components/ConnectWallet";
 export * from "./components/MediaRenderer";
 export * from "./components/NftMedia";
 export * from "./components/Web3Button";
-export type {} from "./providers/thirdweb-provider";
+export { ThirdwebProvider } from "./providers/thirdweb-provider";
