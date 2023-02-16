@@ -2,7 +2,10 @@ export default {
   "name": "Polygon zkEVM Testnet",
   "title": "Polygon zkEVM Testnet",
   "chain": "Polygon",
-  "rpc": [],
+  "rpc": [
+    "https://polygon-zkevm-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://rpc.public.zkevm-test.net"
+  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
@@ -10,12 +13,12 @@ export default {
     "decimals": 18
   },
   "infoURL": "https://polygon.technology/solutions/polygon-zkevm/",
-  "shortName": "zkevmtest",
-  "chainId": 1402,
-  "networkId": 1402,
+  "shortName": "testnet-zkEVM-mango",
+  "chainId": 1422,
+  "networkId": 1422,
   "explorers": [
     {
-      "name": "blockscout",
+      "name": "Polygon zkEVM explorer",
       "url": "https://explorer.public.zkevm-test.net",
       "standard": "EIP3091"
     }

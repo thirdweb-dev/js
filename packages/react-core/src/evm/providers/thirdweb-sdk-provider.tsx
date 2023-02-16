@@ -46,6 +46,9 @@ function resolveChainIdFromNetwork(
   return chainId;
 }
 
+// this allows autocomplete to work for the chainId prop but still allows `number` and `string` to be passed (for dynamically passed chain data)
+type ChainIdIsh = (string | number) & { __chainIdIsh: never };
+
 export interface ThirdwebSDKProviderProps<
   TChains extends Chain[] = typeof defaultChains,
 > extends QueryClientProviderProps {
@@ -62,7 +65,11 @@ export interface ThirdwebSDKProviderProps<
   authConfig?: ThirdwebAuthConfig;
 
   // the network to use - optional, defaults to undefined
-  activeChain?: TChains[number]["chainId"] | TChains[number]["slug"] | Chain;
+  activeChain?:
+    | TChains[number]["chainId"]
+    | TChains[number]["slug"]
+    | ChainIdIsh
+    | Chain;
 
   // api keys that can be passed
   thirdwebApiKey?: string;
@@ -252,10 +259,12 @@ export const ThirdwebSDKProvider = <
           <ThirdwebAuthProvider value={authConfig}>
             <WrappedThirdwebSDKProvider
               signer={signer}
+              // @ts-expect-error - different subtype of Chain[] but this works fine
               supportedChains={mergedChains}
               thirdwebApiKey={thirdwebApiKey}
               alchemyApiKey={alchemyApiKey}
               infuraApiKey={infuraApiKey}
+              activeChain={activeChain}
               {...restProps}
             >
               {children}

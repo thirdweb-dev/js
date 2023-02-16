@@ -1,9 +1,11 @@
 /// --- Thirdweb Brige ---
+import { ThirdwebAuth } from "@thirdweb-dev/auth";
 import { CoinbasePayIntegration, FundWalletOptions } from "@thirdweb-dev/pay";
 import { ThirdwebSDK, ChainIdOrName } from "@thirdweb-dev/sdk";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import type { AbstractBrowserWallet } from "@thirdweb-dev/wallets/evm/wallets/base";
 import { CoinbaseWallet } from "@thirdweb-dev/wallets/evm/wallets/coinbase-wallet";
+import { EthersWallet } from "@thirdweb-dev/wallets/evm/wallets/ethers";
 import { InjectedWallet } from "@thirdweb-dev/wallets/evm/wallets/injected";
 import { MagicAuthWallet } from "@thirdweb-dev/wallets/evm/wallets/magic-auth";
 import { MetaMask } from "@thirdweb-dev/wallets/evm/wallets/metamask";
@@ -57,6 +59,13 @@ interface TWBridge {
   disconnect: () => Promise<void>;
   switchNetwork: (chainId: number) => Promise<void>;
   invoke: (route: string, payload: string) => Promise<string | undefined>;
+  invokeListener: (
+    taskId: string,
+    route: string,
+    payload: string,
+    action: any,
+    callback: (jsAction: any, jsTaskId: string, jsResult: string) => void,
+  ) => void;
   fundWallet: (options: string) => Promise<void>;
 }
 
@@ -67,6 +76,7 @@ class ThirdwebBridge implements TWBridge {
   private activeWallet: AbstractBrowserWallet | undefined;
   private initializedChain: ChainIdOrName | undefined;
   private activeSDK: ThirdwebSDK | undefined;
+  private auth: ThirdwebAuth | undefined;
 
   private updateSDKSigner(signer?: Signer) {
     if (this.activeSDK) {
@@ -76,6 +86,15 @@ class ThirdwebBridge implements TWBridge {
       } else if (this.initializedChain) {
         // reset back to provider only in case signer gets reomved (disconnect case)
         this.activeSDK.updateSignerOrProvider(this.initializedChain);
+      }
+    }
+
+    if (signer) {
+      if (this.auth) {
+        this.auth.updateWallet(new EthersWallet(signer));
+      } else {
+        // Domain will always be overwritten in the actual auth call
+        this.auth = new ThirdwebAuth(new EthersWallet(signer), "example.com");
       }
     }
   }
@@ -110,6 +129,7 @@ class ThirdwebBridge implements TWBridge {
       this.walletMap.set(wallet.id, walletInstance);
     }
   }
+
   public async connect(
     wallet: PossibleWallet = "injected",
     chainId?: number | undefined,
@@ -130,6 +150,7 @@ class ThirdwebBridge implements TWBridge {
       throw new Error("Invalid Wallet");
     }
   }
+
   public async disconnect() {
     if (this.activeWallet) {
       await this.activeWallet.disconnect();
@@ -137,6 +158,7 @@ class ThirdwebBridge implements TWBridge {
       this.updateSDKSigner();
     }
   }
+
   public async switchNetwork(chainId: number) {
     if (chainId && this.activeWallet && "switchChain" in this.activeWallet) {
       await this.activeWallet.switchChain(chainId);
@@ -186,6 +208,15 @@ class ThirdwebBridge implements TWBridge {
       }
     }
 
+    if (addrOrSDK.startsWith("auth")) {
+      if (!this.auth) {
+        throw new Error("You need to connect a wallet to use auth!");
+      }
+
+      const result = await this.auth.login({ domain: parsedArgs[0] });
+      return JSON.stringify({ result: result });
+    }
+
     // contract call
     if (addrOrSDK.startsWith("0x")) {
       let typeOrAbi: string | ContractInterface | undefined;
@@ -220,6 +251,81 @@ class ThirdwebBridge implements TWBridge {
       }
     }
   }
+
+  public async invokeListener(
+    taskId: string,
+    route: string,
+    payload: string,
+    action: any,
+    callback: (jsAction: any, jsTaskId: string, jsResult: string) => void,
+  ) {
+    if (!this.activeSDK) {
+      throw new Error("SDK not initialized");
+    }
+
+    const routeArgs = route.split(SEPARATOR);
+    const firstArg = routeArgs[0].split(SUB_SEPARATOR);
+    const addrOrSDK = firstArg[0];
+
+    const fnArgs = JSON.parse(payload).arguments;
+    const parsedFnArgs = fnArgs.map((arg: unknown) => {
+      try {
+        return typeof arg === "string" &&
+          (arg.startsWith("{") || arg.startsWith("["))
+          ? JSON.parse(arg)
+          : arg;
+      } catch (e) {
+        return arg;
+      }
+    });
+
+    console.debug(
+      "thirdwebSDK invoke listener:",
+      taskId,
+      route,
+      parsedFnArgs,
+      action,
+    );
+
+    // contract call
+    if (addrOrSDK.startsWith("0x")) {
+      let typeOrAbi: string | ContractInterface | undefined;
+      if (firstArg.length > 1) {
+        try {
+          typeOrAbi = JSON.parse(firstArg[1]); // try to parse ABI
+        } catch (e) {
+          typeOrAbi = firstArg[1];
+        }
+      }
+      const contract = typeOrAbi
+        ? await this.activeSDK.getContract(addrOrSDK, typeOrAbi)
+        : await this.activeSDK.getContract(addrOrSDK);
+
+      if (routeArgs.length === 2) {
+        // @ts-expect-error need to type-guard this properly
+        await contract[routeArgs[1]](...parsedFnArgs, (result: any) =>
+          callback(action, taskId, JSON.stringify(result, bigNumberReplacer)),
+        );
+      } else if (routeArgs.length === 3) {
+        // @ts-expect-error need to type-guard this properly
+        await contract[routeArgs[1]][routeArgs[2]](
+          ...parsedFnArgs,
+          (result: any) =>
+            callback(action, taskId, JSON.stringify(result, bigNumberReplacer)),
+        );
+      } else if (routeArgs.length === 4) {
+        // @ts-expect-error need to type-guard this properly
+        await contract[routeArgs[1]][routeArgs[2]][routeArgs[3]](
+          ...parsedFnArgs,
+          (result: any) =>
+            callback(action, taskId, JSON.stringify(result, bigNumberReplacer)),
+        );
+      } else {
+        throw new Error("Invalid Route");
+      }
+    }
+  }
+
   public async fundWallet(options: string) {
     if (!this.activeSDK) {
       throw new Error("SDK not initialized");

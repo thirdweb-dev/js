@@ -3,7 +3,9 @@ export default {
   "chain": "Canto",
   "rpc": [
     "https://canto.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://canto.slingshot.finance"
+    "https://canto.slingshot.finance",
+    "https://canto.neobase.one",
+    "https://mainnode.plexnode.org:8545"
   ],
   "faucets": [],
   "nativeCurrency": {
