@@ -7,10 +7,7 @@ export default {
     "height": 460,
     "format": "png"
   },
-  "rpc": [
-    "https://resincoin.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
-    "https://mainnet.resincoin.dev"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",

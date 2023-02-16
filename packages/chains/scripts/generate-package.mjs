@@ -124,12 +124,13 @@ function findSlug(chain) {
   return slug;
 }
 
-for (const chain of chains) {
-  const chainDir = `${chainsDir}`;
-  if (!fs.existsSync(chainDir)) {
-    fs.mkdirSync(chainDir, { recursive: true });
-  }
+const chainDir = `${chainsDir}`;
+// clean out the chains directory
+fs.rmdirSync(chainDir, { recursive: true });
+// make sure the chain directory exists
+fs.mkdirSync(chainDir, { recursive: true });
 
+for (const chain of chains) {
   try {
     if ("icon" in chain) {
       if (typeof chain.icon === "string") {
