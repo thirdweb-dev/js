@@ -1,3 +1,4 @@
+import { AsyncStorage } from "../../core";
 import { TWConnector } from "../interfaces/tw-connector";
 import { AbstractWallet } from "./abstract";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
@@ -11,7 +12,8 @@ export type DeviceWalletOptions = {
         rpc: string[];
       }
     | Chain;
-  storage?: "localStore" | "credentialStore";
+  storageType?: "asyncStore" | "credentialStore";
+  storage: AsyncStorage;
 };
 
 export type DeviceWalletConnectionArgs = {
@@ -43,16 +45,20 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
         "../connectors/device-wallet"
       );
       let wallet: DeviceWalletImpl;
-      switch (this.options.storage) {
-        case "localStore":
-          wallet = await DeviceWalletImpl.fromBrowserStorage();
+      switch (this.options.storageType) {
+        case "asyncStore":
+          wallet = await DeviceWalletImpl.fromAsyncStorage(
+            this.options.storage,
+          );
           break;
         case "credentialStore":
           wallet = await DeviceWalletImpl.fromCredentialStore();
           break;
         default:
           // default to local storage
-          wallet = await DeviceWalletImpl.fromBrowserStorage();
+          wallet = await DeviceWalletImpl.fromAsyncStorage(
+            this.options.storage,
+          );
       }
       this.#connector = new DeviceWalletConnector({
         chain: this.options.chain,
@@ -64,9 +70,9 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
 }
 
 export class DeviceWalletImpl extends AbstractWallet {
-  static async fromBrowserStorage() {
+  static async fromAsyncStorage(storage: AsyncStorage) {
     return new DeviceWalletImpl({
-      storage: new BrowserStorage(window.localStorage),
+      storage: new AsyncWalletStorage(storage),
     });
   }
 
@@ -155,25 +161,24 @@ interface IWalletStore {
   storeWalletData(data: WalletData): Promise<void>;
 }
 
-interface IDeviceStorage {
-  getItem(key: string): string | null | undefined;
-  setItem(key: string, value: string): void;
-}
-
 type DeviceWalletImplOptions = {
   storage: IWalletStore;
 };
 
-class BrowserStorage implements IWalletStore {
-  private storage: IDeviceStorage;
-  private STORAGE_KEY_DATA = "tw_wallet_data";
-  private STORAGE_KEY_ADDR = "tw_wallet_address";
-  constructor(storage: IDeviceStorage) {
+class AsyncWalletStorage implements IWalletStore {
+  private storage: AsyncStorage;
+  // no need for prefixing here - AsyncStorage is already namespaced
+  private STORAGE_KEY_DATA = "data";
+  private STORAGE_KEY_ADDR = "address";
+  constructor(storage: AsyncStorage) {
     this.storage = storage;
   }
   async getWalletData(): Promise<WalletData | null> {
-    const address = this.storage.getItem(this.STORAGE_KEY_ADDR);
-    const encryptedData = this.storage.getItem(this.STORAGE_KEY_DATA);
+    const [address, encryptedData] = await Promise.all([
+      this.storage.getItem(this.STORAGE_KEY_ADDR),
+      this.storage.getItem(this.STORAGE_KEY_DATA),
+    ]);
+
     if (!address || !encryptedData) {
       return null;
     }
@@ -184,8 +189,10 @@ class BrowserStorage implements IWalletStore {
   }
 
   async storeWalletData(data: WalletData): Promise<void> {
-    this.storage.setItem(this.STORAGE_KEY_ADDR, data.address);
-    this.storage.setItem(this.STORAGE_KEY_DATA, data.encryptedData);
+    await Promise.all([
+      this.storage.setItem(this.STORAGE_KEY_ADDR, data.address),
+      this.storage.setItem(this.STORAGE_KEY_DATA, data.encryptedData),
+    ]);
   }
 }
 

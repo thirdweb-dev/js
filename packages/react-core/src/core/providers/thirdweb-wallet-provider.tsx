@@ -23,6 +23,7 @@ import {
 import invariant from "tiny-invariant";
 
 let coordinatorStorage: AsyncStorage;
+let deviceWalletStorage: AsyncStorage;
 let connectorStorage: AsyncStorage;
 const walletStorageMap: Map<string, AsyncStorage> = new Map();
 
@@ -62,11 +63,15 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
   >();
 
   if (!coordinatorStorage) {
-    coordinatorStorage = props.createWalletStorage("");
+    coordinatorStorage = props.createWalletStorage("coordinatorStorage");
   }
 
   if (!connectorStorage) {
     connectorStorage = props.createWalletStorage("connector");
+  }
+
+  if (!deviceWalletStorage) {
+    deviceWalletStorage = props.createWalletStorage("deviceWallet");
   }
 
   const getConstructorArg = useCallback(
@@ -95,8 +100,9 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
         return {
           ...walletOptions,
           chain: props.activeChain,
-          // don't use right now credentialStore
-          storage: "localStore",
+          // can't use credentialStore right now - so use asyncStore
+          storageType: "asyncStore",
+          storage: deviceWalletStorage,
         };
       }
 
