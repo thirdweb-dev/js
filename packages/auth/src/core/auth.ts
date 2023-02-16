@@ -50,7 +50,8 @@ export class ThirdwebAuth {
       statement: parsedOptions?.statement,
       version: parsedOptions?.version,
       uri:
-        parsedOptions?.uri || (isBrowser() ? window.location.href : undefined),
+        parsedOptions?.uri ||
+        (isBrowser() ? window.location.origin : undefined),
       chain_id: chainId,
       nonce: parsedOptions?.nonce,
       expiration_time:
