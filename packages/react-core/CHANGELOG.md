@@ -1,5 +1,27 @@
 # @thirdweb-dev/react-core
 
+## 3.9.0
+
+### Patch Changes
+
+- [#591](https://github.com/thirdweb-dev/js/pull/591) [`61d41db`](https://github.com/thirdweb-dev/js/commit/61d41db7699d999d4f71038b5376dd95e9c0d5a5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix passing activeChainId prop
+
+- [`818048d`](https://github.com/thirdweb-dev/js/commit/818048d52fdef43536929f3b4df5b4c255b97389) Thanks [@jnsdls](https://github.com/jnsdls)! - enable passing of apiKeys to the provider
+
+- [`2b3e94f`](https://github.com/thirdweb-dev/js/commit/2b3e94f90a49bcaccf63ac84fc9fc974506ca70d) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix creating SDK with signer only
+
+- [`500a0e6`](https://github.com/thirdweb-dev/js/commit/500a0e671b3feb01aedd2c34443b682d0934f389) Thanks [@jnsdls](https://github.com/jnsdls)! - fix deprecationWarning bug in react & react-core
+
+- [#578](https://github.com/thirdweb-dev/js/pull/578) [`f3b96e7`](https://github.com/thirdweb-dev/js/commit/f3b96e7120ebb45f837803530962a21f87439661) Thanks [@jnsdls](https://github.com/jnsdls)! - allow `number` and `string` types for `activeChain` prop on `<ThirdwebSDKProvider />` and `<ThirdwebProvider />`
+
+- [`5d25ee1`](https://github.com/thirdweb-dev/js/commit/5d25ee1ab7abb4bfbded283a18f2d7740bb6995d) Thanks [@jnsdls](https://github.com/jnsdls)! - fix initialization of the SDK when a `signer` is provided with a chain that is not passed in `supportedChains`
+
+- [#576](https://github.com/thirdweb-dev/js/pull/576) [`f6ea971`](https://github.com/thirdweb-dev/js/commit/f6ea97185470f91fc73a117827df51cf8e1c99d1) Thanks [@adam-maj](https://github.com/adam-maj)! - Add support for next-auth to auth and react
+
+- Updated dependencies [[`6a50719`](https://github.com/thirdweb-dev/js/commit/6a507194861b0712fd753c49ac63a8af68eb21d5), [`af8cf40`](https://github.com/thirdweb-dev/js/commit/af8cf40e4e1dab6afcc7622f7f9bbcfc6e8534d8), [`5d25ee1`](https://github.com/thirdweb-dev/js/commit/5d25ee1ab7abb4bfbded283a18f2d7740bb6995d), [`d0bcd2c`](https://github.com/thirdweb-dev/js/commit/d0bcd2c5871ca9480efc8d97e27e337eb9bbf830), [`4d9e5c6`](https://github.com/thirdweb-dev/js/commit/4d9e5c6193b839fc7f67e7e73e0589dc8c4db90d), [`017b0d5`](https://github.com/thirdweb-dev/js/commit/017b0d56b64651b290440b60789e058afba9f9a5), [`500a0e6`](https://github.com/thirdweb-dev/js/commit/500a0e671b3feb01aedd2c34443b682d0934f389), [`f6ea971`](https://github.com/thirdweb-dev/js/commit/f6ea97185470f91fc73a117827df51cf8e1c99d1)]:
+  - @thirdweb-dev/chains@0.1.0
+  - @thirdweb-dev/auth@3.0.4
+
 ## 3.8.2
 
 ## 3.8.1
