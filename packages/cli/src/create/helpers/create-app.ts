@@ -161,9 +161,9 @@ export async function createApp({
       );
     }
 
-    const jsonFile = path.join(root, "package.json");
-    const packageString = fs.readFileSync(jsonFile);
     try {
+      const jsonFile = path.join(root, "package.json");
+      const packageString = fs.readFileSync(jsonFile);
       const packageJson = JSON.parse(packageString.toString());
       if (packageJson) {
         packageJson.name = appName;
