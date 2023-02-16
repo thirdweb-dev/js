@@ -62,7 +62,7 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
   >();
 
   if (!coordinatorStorage) {
-    coordinatorStorage = props.createWalletStorage("");
+    coordinatorStorage = props.createWalletStorage("coordinatorStorage");
   }
 
   if (!connectorStorage) {
