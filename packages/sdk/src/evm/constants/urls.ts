@@ -1,5 +1,5 @@
 import { DEFAULT_API_KEY } from "../../core/constants/urls";
-import { ChainIdOrName } from "../core";
+import { ChainIdOrNameOrChain } from "../core";
 import { StaticJsonRpcBatchProvider } from "../lib/static-batch-rpc";
 import { ChainInfo, SDKOptions, SDKOptionsSchema } from "../schema";
 import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
@@ -74,15 +74,21 @@ export function buildDefaultMap(sdkOptions: SDKOptions = {}) {
 }
 
 export function getChainProvider(
-  network: ChainIdOrName,
+  network: ChainIdOrNameOrChain,
   sdkOptions: SDKOptions,
 ): ethers.providers.Provider {
   // handle passing a RPC url directly
   if (typeof network === "string" && network.startsWith("http")) {
     return getReadOnlyProvider(network);
   }
+
   const chainId = toChainId(network);
   const options = SDKOptionsSchema.parse(sdkOptions);
+  // add the chain to the supportedChains
+  if (typeof network !== "number" && typeof network !== "string") {
+    // @ts-expect-error - we know this is a chain and it will work to build the map
+    options.supportedChains = [network, ...options.supportedChains];
+  }
   const rpcMap: Record<number, ChainInfo> = buildDefaultMap(options);
   let rpcUrl = "";
   try {
@@ -105,9 +111,14 @@ export function getChainProvider(
   return getReadOnlyProvider(rpcUrl, chainId);
 }
 
-export function toChainId(network: ChainIdOrName): number {
+export function toChainId(network: ChainIdOrNameOrChain): number {
+  // if it's a number just return it
   if (typeof network === "number") {
     return network;
+  }
+  // if it's a chain just return the chain id
+  if (typeof network !== "string") {
+    return network.chainId;
   }
   if (!(network in CHAIN_NAME_TO_ID)) {
     throw new Error(
