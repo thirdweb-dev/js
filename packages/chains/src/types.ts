@@ -34,3 +34,16 @@ export type Chain = {
   slug: string;
   slip44?: number;
 };
+
+// MinimalChain is a subset of Chain with only the fields that are required / non-optional
+export type MinimalChain = Pick<
+  Chain,
+  | "name"
+  | "chain"
+  | "rpc"
+  | "nativeCurrency"
+  | "shortName"
+  | "chainId"
+  | "testnet"
+  | "slug"
+>;

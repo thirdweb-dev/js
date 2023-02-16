@@ -1,4 +1,4 @@
-import { Chain } from "./types";
+import { Chain, MinimalChain } from "./types";
 
 type ChainRPCOptions = {
   thirdwebApiKey?: string;
@@ -80,4 +80,38 @@ export function getChainRPC(
   options?: ChainRPCOptions,
 ): string {
   return getChainRPCs(chain, options)[0];
+}
+
+export function minimizeChain(chain: Chain): MinimalChain {
+  const [firstRpc] = chain.rpc;
+  return {
+    name: chain.name,
+    chain: chain.chain,
+    rpc: [firstRpc],
+    nativeCurrency: chain.nativeCurrency,
+    shortName: chain.shortName,
+    chainId: chain.chainId,
+    testnet: chain.testnet,
+    slug: chain.slug,
+  };
+}
+
+type ChainConfiguration = {
+  rpc?: string | string[];
+};
+
+export function configureChain(
+  chain: Chain,
+  chainConfig: ChainConfiguration,
+): Chain {
+  let additionalRPCs: string[] = [];
+  if (chainConfig?.rpc) {
+    if (typeof chainConfig.rpc === "string") {
+      additionalRPCs = [chainConfig.rpc];
+    } else {
+      additionalRPCs = chainConfig.rpc;
+    }
+  }
+  // prepend additional RPCs to the chain's RPCs
+  return { ...chain, rpc: [...additionalRPCs, ...chain.rpc] };
 }
