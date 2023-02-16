@@ -259,10 +259,12 @@ export const ThirdwebSDKProvider = <
           <ThirdwebAuthProvider value={authConfig}>
             <WrappedThirdwebSDKProvider
               signer={signer}
+              // @ts-expect-error - different subtype of Chain[] but this works fine
               supportedChains={mergedChains}
               thirdwebApiKey={thirdwebApiKey}
               alchemyApiKey={alchemyApiKey}
               infuraApiKey={infuraApiKey}
+              activeChain={activeChain}
               {...restProps}
             >
               {children}
