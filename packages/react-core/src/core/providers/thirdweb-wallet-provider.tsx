@@ -1,11 +1,14 @@
 import { DAppMetaData } from "../types/dAppMeta";
+import {
+  DeviceWalletType,
+  MetaMaskWalletType,
+  SupportedWallet,
+} from "../types/wallet";
 import { transformChainToMinimalWagmiChain } from "../utils";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import type {
   AsyncStorage,
-  ConnectParams,
-  DeviceWalletConnectionArgs,
-  DeviceWalletOptions,
+  CreateAsyncStorage,
   WalletOptions,
 } from "@thirdweb-dev/wallets";
 import { Signer } from "ethers";
@@ -14,103 +17,194 @@ import {
   PropsWithChildren,
   useCallback,
   useContext,
+  useEffect,
   useState,
 } from "react";
 import invariant from "tiny-invariant";
 
-// TODO: add correct type for wallet class
-type Wallet = any;
-
 let coordinatorStorage: AsyncStorage;
+let connectorStorage: AsyncStorage;
 const walletStorageMap: Map<string, AsyncStorage> = new Map();
 
+type NonNullable<T> = T extends null | undefined ? never : T;
+type WalletConnectParams<W extends SupportedWallet> = NonNullable<
+  Parameters<InstanceType<W>["connect"]>[0]
+>;
+
 type ThirdwebWalletContextData = {
-  wallets: Wallet[];
+  wallets: SupportedWallet[];
   signer?: Signer;
-  activeWallet?: Wallet;
-  connect: (wallet: Wallet) => Promise<void>;
+  activeWallet?: InstanceType<SupportedWallet>;
+  connect: <W extends SupportedWallet>(
+    wallet: W,
+    connectParams: WalletConnectParams<W>,
+  ) => Promise<void>;
+  disconnect: () => void;
 };
 
 const ThirdwebWalletContext = createContext<
   ThirdwebWalletContextData | undefined
 >(undefined);
 
-export function ThirdwebWalletProvider(
-  props: PropsWithChildren<{
-    value: {
-      activeChain: Chain;
-      wallets: Wallet[];
-      shouldAutoConnect?: boolean;
-      storage: AsyncStorage;
-      dAppMeta: DAppMetaData;
-      chains: Chain[];
-    };
-  }>,
-) {
+type ThirdwebWalletProviderProps = PropsWithChildren<{
+  activeChain: Chain;
+  wallets: SupportedWallet[];
+  shouldAutoConnect?: boolean;
+  createWalletStorage: CreateAsyncStorage;
+  dAppMeta: DAppMetaData;
+  chains: Chain[];
+}>;
+
+export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
+  const [activeWallet, setActiveWallet] = useState<
+    InstanceType<SupportedWallet> | undefined
+  >();
 
   if (!coordinatorStorage) {
-    coordinatorStorage = props.value.storage.createInstance("");
+    coordinatorStorage = props.createWalletStorage("");
   }
 
-  const connect = useCallback(
-    async (walletClass: Wallet) => {
-      let walletStorage = walletStorageMap.get(walletClass.id);
+  if (!connectorStorage) {
+    connectorStorage = props.createWalletStorage("connector");
+  }
+
+  const getConstructorArg = useCallback(
+    <W extends SupportedWallet>(Wallet: W): ConstructorParameters<W>[0] => {
+      let walletStorage = walletStorageMap.get(Wallet.id);
 
       if (!walletStorage) {
-        walletStorage = props.value.storage.createInstance(
-          `wallet_${walletClass.id}`,
-        );
-        walletStorageMap.set(walletClass.id, walletStorage);
+        walletStorage = props.createWalletStorage(`wallet_${Wallet.id}`);
+        walletStorageMap.set(Wallet.id, walletStorage);
       }
 
-      let connectArgs: ConnectParams = {
-        chainId: props.value.activeChain.chainId,
-      };
+      const walletChains =
+        props.chains.map(transformChainToMinimalWagmiChain) ||
+        defaultChains.map(transformChainToMinimalWagmiChain);
 
-      let options: WalletOptions = {
-        chains:
-          props.value.chains.map(transformChainToMinimalWagmiChain) ||
-          defaultChains.map(transformChainToMinimalWagmiChain),
-        shouldAutoConnect: props.value.shouldAutoConnect,
+      let walletOptions: WalletOptions = {
+        chains: walletChains,
+        shouldAutoConnect: props.shouldAutoConnect,
         coordinatorStorage,
         walletStorage: walletStorage,
-        appName: props.value.dAppMeta.name,
+        appName: props.dAppMeta.name,
       };
 
-      if (walletClass.id === "deviceWallet") {
-        (options as WalletOptions<DeviceWalletOptions>).chain =
-          props.value.activeChain;
-
-        // JUST FOR TESTING
-        (options as WalletOptions<DeviceWalletOptions>).storage =
-          "credentialStore";
-
-        // JUST FOR TESTING
-        // where to we get password? -> from the user
-        // connectPrecursor
-        (connectArgs as ConnectParams<DeviceWalletConnectionArgs>).password =
-          "TESTING123";
+      // Device wallet
+      if (Wallet.id === "deviceWallet") {
+        return {
+          ...walletOptions,
+          chain: props.activeChain,
+          // don't use right now credentialStore
+          storage: "localStore",
+        };
       }
 
-      const wallet = new walletClass(options);
+      // Metamask
+      if (Wallet.id === "metamask") {
+        return {
+          ...walletOptions,
+          connectorStorage,
+        };
+      }
 
-      await wallet.connect(connectArgs);
+      throw new Error(`Unsupported wallet`);
+    },
+    [props],
+  );
+
+  const handleWalletConnected = useCallback(
+    async (wallet: InstanceType<SupportedWallet>) => {
       const _signer = await wallet.getSigner();
       setSigner(_signer);
+      setActiveWallet(wallet);
     },
-    [
-      props.value.activeChain,
-      props.value.chains,
-      props.value.dAppMeta.name,
-      props.value.shouldAutoConnect,
-      props.value.storage,
-    ],
+    [],
   );
+
+  // Auto Connect
+  // TODO - Can't do auto connect for Device Wallet right now
+  useEffect(() => {
+    // if explicitly set to false, don't auto connect
+    // by default, auto connect
+    if (props.shouldAutoConnect === false) {
+      return;
+    }
+
+    (async () => {
+      const lastConnectedWalletId = await coordinatorStorage.getItem(
+        "lastConnectedWallet",
+      );
+
+      const Wallet = props.wallets.find((W) => W.id === lastConnectedWalletId);
+      if (Wallet) {
+        if (Wallet.id === "metamask") {
+          const wallet = new Wallet(getConstructorArg(Wallet));
+          await wallet.autoConnect();
+          handleWalletConnected(wallet);
+        }
+      }
+    })();
+  }, [
+    getConstructorArg,
+    props.wallets,
+    handleWalletConnected,
+    props.shouldAutoConnect,
+  ]);
+
+  const connectWallet = useCallback(
+    async <W extends SupportedWallet>(
+      Wallet: W,
+      connectParams: Parameters<InstanceType<W>["connect"]>[0],
+    ) => {
+      // Device wallet
+      if (Wallet.id === "deviceWallet") {
+        const _connectedParams =
+          connectParams as WalletConnectParams<DeviceWalletType>;
+
+        const _Wallet = Wallet as DeviceWalletType;
+        const wallet = new _Wallet(getConstructorArg(_Wallet));
+
+        await wallet.connect(_connectedParams);
+        handleWalletConnected(wallet);
+      }
+
+      // Metamask
+      else if (Wallet.id === "metamask") {
+        const _Wallet = Wallet as MetaMaskWalletType;
+        const _connectedParams = connectParams as NonNullable<
+          Parameters<InstanceType<MetaMaskWalletType>["connect"]>[0]
+        >;
+
+        const wallet = new _Wallet(getConstructorArg(_Wallet));
+
+        await wallet.connect(_connectedParams);
+        handleWalletConnected(wallet);
+      }
+    },
+    [getConstructorArg, handleWalletConnected],
+  );
+
+  const disconnectWallet = useCallback(() => {
+    // get the connected wallet
+    if (!activeWallet) {
+      return;
+    }
+    activeWallet.disconnect().then(() => {
+      setSigner(undefined);
+      setActiveWallet(undefined);
+    });
+  }, [activeWallet]);
 
   return (
     <ThirdwebWalletContext.Provider
-      value={{ wallets: props.value.wallets, connect, signer }}
+      value={{
+        disconnect: disconnectWallet,
+        wallets: props.wallets,
+        connect: connectWallet,
+        signer,
+        activeWallet,
+      }}
     >
       {props.children}
     </ThirdwebWalletContext.Provider>

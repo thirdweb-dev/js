@@ -3,6 +3,7 @@ export { ChainId } from "@thirdweb-dev/sdk";
 export {
   useActiveWallet,
   useConnect,
+  useDisconnect,
   useWallets,
 } from "../core/hooks/wallet-hooks";
 export { ThirdwebProvider } from "../core/providers/thirdweb-provider";
@@ -33,6 +34,7 @@ export * from "./hooks/storage";
 export * from "./hooks/useNetworkMismatch";
 export * from "./hooks/useReadonlySDK";
 export * from "./hooks/useSigner";
+export { useSupportedChains } from "./hooks/useSupportedChains";
 export * from "./hooks/wallet";
 // providers
 export * from "./providers/thirdweb-sdk-provider";
