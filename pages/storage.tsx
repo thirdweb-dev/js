@@ -59,6 +59,7 @@ const Storage: ThirdwebNextPage = () => {
         buttonText="Get started"
         buttonLink="https://portal.thirdweb.com/storage"
         gradient="linear-gradient(147.15deg, #410AB6 30.17%, #FFAE63 100.01%)"
+        image={require("public/assets/product-pages/storage/hero.png")}
       >
         <SimpleGrid
           justifyContent="flex-start"
