@@ -26,7 +26,6 @@ const POPULAR = {
     "thirdweb.eth/NFTStake",
   ],
 } as const;
-
 const NFTS = {
   id: "nft",
   name: "NFT",

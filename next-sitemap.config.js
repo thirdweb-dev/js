@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { allChains } = require("@thirdweb-dev/chains");
+
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
   siteUrl: process.env.SITE_URL || "https://thirdweb.com",
@@ -32,5 +35,15 @@ module.exports = {
       lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
       alternateRefs: config.alternateRefs ?? [],
     };
+  },
+  additionalPaths: async (config) => {
+    return allChains.map((chain) => {
+      return {
+        loc: `/${chain.slug}`,
+        changefreq: config.changefreq,
+        priority: config.priority,
+        lastmod: config.autoLastmod ? new Date().toISOString() : undefined,
+      };
+    });
   },
 };
