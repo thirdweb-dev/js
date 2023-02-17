@@ -1,12 +1,11 @@
-// re-exports
-export { ChainId } from "@thirdweb-dev/sdk";
+
 export {
   useActiveWallet,
   useConnect,
   useDisconnect,
   useWallets,
 } from "../core/hooks/wallet-hooks";
-export { ThirdwebProvider } from "../core/providers/thirdweb-provider";
+export * from "../core/providers/thirdweb-provider";
 // Utilities and Others
 export { shouldNeverPersistQuery } from "../core/query-utils/query-key";
 export type { RequiredParam } from "../core/query-utils/required-param";
