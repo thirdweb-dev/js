@@ -6,8 +6,8 @@ export type {
   NFT,
   NFTMetadata,
   NFTMetadataOrUri,
-  CommonNFTInput,
 } from "./core/schema/nft";
+export { CommonNFTInput } from "./core/schema/nft";
 
 export type { CurrencyValue, TokenMetadata } from "./core/schema/token";
 export { getRpcUrl } from "./core/constants/urls";
