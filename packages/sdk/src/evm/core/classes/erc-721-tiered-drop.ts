@@ -1,10 +1,4 @@
-import {
-  CommonNFTInput,
-  NFT,
-  NFTMetadata,
-  NFTMetadataInput,
-  NFTMetadataOrUri,
-} from "../../../core/schema/nft";
+import { NFT, NFTMetadata, NFTMetadataOrUri } from "../../../core/schema/nft";
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { getBaseUriFromBatch, uploadOrExtractURIs } from "../../common/nft";
 import { FEATURE_NFT_TIERED_DROP } from "../../constants/erc721-features";
@@ -155,8 +149,8 @@ export class Erc721TieredDrop implements DetectableFeature {
   }
 
   public async createDelayedRevealBatchWithTier(
-    placeholder: NFTMetadataInput,
-    metadatas: NFTMetadataInput[],
+    placeholder: NFTMetadataOrUri,
+    metadatas: NFTMetadataOrUri[],
     password: string,
     tier: string,
     options?: {
@@ -166,25 +160,17 @@ export class Erc721TieredDrop implements DetectableFeature {
     if (!password) {
       throw new Error("Password is required");
     }
-
-    const placeholderUris = await this.storage.uploadBatch(
-      [CommonNFTInput.parse(placeholder)],
-      {
-        rewriteFileNames: {
-          fileStartNumber: 0,
-        },
-      },
+    const placeholderUris = await uploadOrExtractURIs(
+      [placeholder],
+      this.storage,
     );
     const placeholderUri = getBaseUriFromBatch(placeholderUris);
     const startFileNumber = await this.erc721.nextTokenIdToMint();
-    const uris = await this.storage.uploadBatch(
-      metadatas.map((m) => CommonNFTInput.parse(m)),
-      {
-        onProgress: options?.onProgress,
-        rewriteFileNames: {
-          fileStartNumber: startFileNumber.toNumber(),
-        },
-      },
+    const uris = await uploadOrExtractURIs(
+      metadatas,
+      this.storage,
+      startFileNumber.toNumber(),
+      options,
     );
 
     const baseUri = getBaseUriFromBatch(uris);
