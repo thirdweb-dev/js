@@ -144,4 +144,8 @@ export enum PageId {
   // thirdweb.com/:network/:contractAddress (solana)
   // example: thirdweb.com/solana/5GYspMpsfw3Vrf7FQ37Jbhpg4PeVZHEPrfPcXY9sGQzy
   DeployedProgram = "deployed-program",
+
+  // thirdweb.com/:network
+  // example: thirdweb.com/ethereum
+  ChainLanding = "chain-landing",
 }

@@ -497,7 +497,7 @@ const ChainSectionElement: ComponentWithChildren<ChainSectionElementProps> = ({
 };
 
 export default ChainPage;
-ChainPage.pageId = PageId.DeployedContract;
+ChainPage.pageId = PageId.ChainLanding;
 ChainPage.getLayout = (page, props) => {
   return (
     <AppLayout
