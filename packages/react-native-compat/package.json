@@ -1,0 +1,40 @@
+{
+  "name": "@thirdweb-dev/react-native-compat",
+  "description": "Shims for Thirdweb in React Native Projects",
+  "version": "0.0.0",
+  "author": "thirdweb eng <eng@thirdweb.com>",
+  "repository": "https://github.com/thirdweb-dev/js",
+  "license": "Apache-2.0",
+  "main": "dist/index.js",
+  "files": [
+    "dist/*"
+  ],
+  "keywords": [
+    "thirdweb",
+    "dapp",
+    "react",
+    "react-native"
+  ],
+  "scripts": {
+    "prettier": "prettier --check './**/*.{js,ts,jsx,tsx}'",
+    "build": "tsc",
+    "push": "yalc push"
+  },
+  "dependencies": {
+    "@ethersproject/shims": "^5.7.0",
+    "@walletconnect/react-native-compat": "^2.3.3",
+    "events": "3.3.0",
+    "react-native-get-random-values": "^1.8.0",
+    "base-64": "^1.0.0",
+    "big-integer": "^1.6.51"
+  },
+  "peerDependencies": {
+    "ethers": ">=5.5.1",
+    "react": ">=18.0.0",
+    "react-native": ">=0.70.0",
+    "wagmi": ">=0.7.0"
+  },
+  "devDependencies": {
+    "babel-plugin-module-resolver": "^5.0.0"
+  }
+}
