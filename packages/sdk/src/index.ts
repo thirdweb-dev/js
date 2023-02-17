@@ -6,6 +6,7 @@ export type {
   NFT,
   NFTMetadata,
   NFTMetadataOrUri,
+  CommonNFTInput,
 } from "./core/schema/nft";
 
 export type { CurrencyValue, TokenMetadata } from "./core/schema/token";
