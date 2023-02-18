@@ -1,4 +1,4 @@
-import { getMultichainRegistryAddress, ThirdwebSDK } from "../../src/evm";
+import { getMultichainRegistryAddress } from "../../src/evm";
 import { joinABIs } from "../../src/evm/common/plugin";
 import { MultichainRegistry } from "../../src/evm/core/classes/multichain-registry";
 import { ContractRegistry } from "../../src/evm/core/classes/registry";

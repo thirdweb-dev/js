@@ -80,18 +80,33 @@
       "inputs": ["src/**"],
       "dependsOn": ["build"]
     },
+    "build:e2e-cra-5": {
+      "outputs": ["build/**"],
+      "inputs": ["src/**", "fixtures/**"],
+      "dependsOn": ["build"]
+    },
+    "build:e2e-next-12": {
+      "outputs": [".next/**"],
+      "inputs": ["src/**", "fixtures/**"],
+      "dependsOn": ["build"]
+    },
+    "build:e2e-vite-3": {
+      "outputs": ["dist/**"],
+      "inputs": ["src/**", "fixtures/**"],
+      "dependsOn": ["build"]
+    },
     "e2e:e2e-cra-5": {
-      "outputs": ["build"],
+      "outputs": ["playwright-report/**"],
       "inputs": ["src/**", "fixtures/**"],
       "dependsOn": ["build"]
     },
     "e2e:e2e-next-12": {
-      "outputs": [".next"],
+      "outputs": ["playwright-report/**"],
       "inputs": ["src/**", "fixtures/**"],
       "dependsOn": ["build"]
     },
     "e2e:e2e-vite-3": {
-      "outputs": ["dist"],
+      "outputs": ["playwright-report/**"],
       "inputs": ["src/**", "fixtures/**"],
       "dependsOn": ["build"]
     },
