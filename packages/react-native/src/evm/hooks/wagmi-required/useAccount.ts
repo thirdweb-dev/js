@@ -1,13 +1,10 @@
 import invariant from "tiny-invariant";
-import {
-  useAccount as useWagmiAccount,
-  useClient
-} from "wagmi";
+import { useAccount as useWagmiAccount, useClient } from "wagmi";
 
 /**
  * @internal
  */
-export function useAccount() {
+export function useAccount(): ReturnType<typeof useWagmiAccount> {
   const wagmiContext = useClient();
   invariant(
     wagmiContext,
