@@ -1,0 +1,70 @@
+name: New CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    types: [opened, synchronize]
+  # trigger on merge group as well (merge queue)
+  merge_group:
+    types: [checks_requested]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+
+jobs:
+  setup:
+    name: Setup
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install
+        uses: ./.github/composite-actions/install
+
+  playwright:
+    name: Install Playwright
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Install Playwright
+        run: npx playwright install --with-deps
+
+  build:
+    needs: setup
+    name: Build
+    timeout-minutes: 10
+    runs-on: ubuntu-latest-16
+
+    steps:
+      - name: Build
+        run: yarn build
+
+  test:
+    timeout-minutes: 20
+    needs: build
+    name:  Test Packages
+    runs-on: ubuntu-latest-16
+    steps:
+      - name: Test
+        run: yarn test
+
+  e2e: 
+    timeout-minutes: 20
+    needs: [build, playwright]
+    runs-on: ubuntu-latest-16
+    steps: 
+      - name: e2e
+        run: yarn e2e
+
+    
