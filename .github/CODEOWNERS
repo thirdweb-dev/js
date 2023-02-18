@@ -6,7 +6,7 @@
 
 # Devrel owns all markdown files (README etc.)
 
-\*.md @thirdweb-dev/devrel
+*.md @thirdweb-dev/devrel
 
 # Shared ownership of the react and react-core packages
 
