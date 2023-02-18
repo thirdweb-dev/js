@@ -71,7 +71,8 @@ export const Permissions = <TContract extends ContractWithRoles>({
             action: "set-permissions",
             label: "attempt",
           });
-          setAllRoleMembers.mutateAsync(d as PermissionFormContext<TContract>, {
+          // if we switch back to mutateAsync then *need* to catch errors
+          setAllRoleMembers.mutate(d as PermissionFormContext<TContract>, {
             onSuccess: (_data, variables) => {
               trackEvent({
                 category: "permissions",

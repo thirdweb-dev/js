@@ -718,7 +718,7 @@ const GnosisSafeModal: React.FC<ConnectorModalProps> = ({
                 ...d,
                 safeChainId: parseInt(d.safeChainId),
               });
-              if (response.error) {
+              if (response?.error) {
                 throw response.error;
               }
               onClose();

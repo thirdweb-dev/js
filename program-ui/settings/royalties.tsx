@@ -60,7 +60,8 @@ export const SettingsRoyalties: React.FC<SettingsRoyaltiesProps> = ({
             action: "set-royalty",
             label: "attempt",
           });
-          mutation.mutateAsync(
+          // if we switch back to mutateAsync then *need* to catch errors
+          mutation.mutate(
             {
               sellerFeeBasisPoints: d.sellerFeeBasisPoints,
               updateAll: d.updateAll,

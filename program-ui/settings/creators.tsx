@@ -86,7 +86,8 @@ export const SettingsCreators: React.FC<SettingsCreatorsProps> = ({
             action: "set-creators",
             label: "attempt",
           });
-          mutation.mutateAsync(
+          // if we switch back to mutateAsync then *need* to catch errors
+          mutation.mutate(
             { creators: d.creators, updateAll: d.updateAll },
             {
               onSuccess: () => {

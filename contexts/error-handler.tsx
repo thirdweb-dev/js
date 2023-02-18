@@ -7,7 +7,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { SiDiscord } from "@react-icons/all-files/si/SiDiscord";
-import { TransactionError } from "@thirdweb-dev/sdk/evm";
+import type { TransactionError } from "@thirdweb-dev/sdk/evm";
 import {
   createContext,
   useCallback,
@@ -78,15 +78,15 @@ export const ErrorProvider: ComponentWithChildren = ({ children }) => {
             </Heading>
           </Flex>
           <Flex direction="column" gap={2}>
-            <Heading size="label.md">Sender</Heading>
+            <Heading size="label.md">From</Heading>
             <AddressCopyButton address={currentError?.info?.from} />
           </Flex>
           <Flex direction="column" gap={2}>
-            <Heading size="label.md">Recipient</Heading>
+            <Heading size="label.md">To</Heading>
             <AddressCopyButton address={currentError?.info?.to} />
           </Flex>
           <Flex direction="column" gap={2}>
-            <Heading size="label.md">Network / Chain</Heading>
+            <Heading size="label.md">Chain / Chain ID</Heading>
             <Text>
               {currentError?.info.network.name} (
               {currentError?.info.network.chainId})
@@ -143,5 +143,5 @@ export function isError(value: unknown): value is Error {
 }
 
 export function isTransactionError(error: unknown): error is TransactionError {
-  return error instanceof TransactionError;
+  return error instanceof Object && "reason" in error && "info" in error;
 }

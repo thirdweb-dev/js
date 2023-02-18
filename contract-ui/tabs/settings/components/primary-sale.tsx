@@ -67,7 +67,8 @@ export const SettingsPrimarySale = <
             action: "set-primary-sale",
             label: "attempt",
           });
-          mutation.mutateAsync(d.primary_sale_recipient, {
+          // if we switch back to mutateAsync then *need* to catch errors
+          mutation.mutate(d.primary_sale_recipient, {
             onSuccess: (_data, variables) => {
               trackEvent({
                 category: "settings",

@@ -67,7 +67,8 @@ export const SettingsPlatformFees = <
             action: "set-platform-fees",
             label: "attempt",
           });
-          mutation.mutateAsync(d, {
+          // if we switch back to mutateAsync then *need* to catch errors
+          mutation.mutate(d, {
             onSuccess: (_data, variables) => {
               trackEvent({
                 category: "settings",
