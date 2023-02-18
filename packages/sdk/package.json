@@ -38,9 +38,6 @@
       "solana/index.ts",
       "solana/server/index.ts"
     ],
-    "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
-      "exports": true
-    },
     "exports": true
   },
   "sideEffects": false,
