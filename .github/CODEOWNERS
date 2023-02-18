@@ -2,20 +2,20 @@
 
 # Platform team owns everything by default
 
-- @platform
+- @thirdweb-dev/platform
 
 # Devrel owns all markdown files (README etc.)
 
-\*.md @devrel
+\*.md @thirdweb-dev/devrel
 
 # Shared ownership of the react and react-core packages
 
-packages/react/ @product @platform
-packages/react-core/ @product @platform
+packages/react/ @thirdweb-dev/product @thirdweb-dev/platform
+packages/react-core/ @thirdweb-dev/product @thirdweb-dev/platform
 
 # Shared ownership of the CLI
 
-packages/cli/ @product @platform
+packages/cli/ @thirdweb-dev/product @thirdweb-dev/platform
 
 # Chains is owned specifically by jonas for now
 
