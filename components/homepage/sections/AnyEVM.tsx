@@ -1,7 +1,5 @@
-import { ChakraNextImage } from "../../Image";
-import { HomepageSection } from "../../product-pages/homepage/HomepageSection";
-import { Box, Flex } from "@chakra-ui/react";
-import React from "react";
+import { Box, Flex, Image } from "@chakra-ui/react";
+import { HomepageSection } from "components/product-pages/homepage/HomepageSection";
 import { Heading, Text } from "tw-components";
 
 export const AnyEVMSection = () => {
@@ -44,13 +42,13 @@ export const AnyEVMSection = () => {
         h="0"
         w="full"
       >
-        <ChakraNextImage
+        <Image
           transform="translate(-50%, -60%)"
           ml="50%"
           alt=""
           w="1500px"
           maxW="250vw"
-          src={require("public/assets/landingpage/any-evm.png")}
+          src="/assets/landingpage/any-evm.webp"
           justifySelf="flex-end"
         />
       </Box>
