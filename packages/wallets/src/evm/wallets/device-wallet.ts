@@ -7,11 +7,11 @@ import { ethers } from "ethers";
 
 export type DeviceWalletOptions = {
   chain:
-    | {
-        chainId: number;
-        rpc: string[];
-      }
-    | Chain;
+  | {
+    chainId: number;
+    rpc: string[];
+  }
+  | Chain;
   storageType?: "asyncStore" | "credentialStore";
   storage: AsyncStorage;
 };
@@ -39,6 +39,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
   }
 
   protected async getConnector(): Promise<TWConnector> {
+    console.log("getConnector")
     if (!this.#connector) {
       // import the connector dynamically
       const { DeviceWalletConnector } = await import(
@@ -60,6 +61,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
             this.options.storage,
           );
       }
+      console.log('initConnector', wallet);
       this.#connector = new DeviceWalletConnector({
         chain: this.options.chain,
         wallet,
@@ -88,6 +90,7 @@ export class DeviceWalletImpl extends AbstractWallet {
   constructor(options: DeviceWalletImplOptions) {
     super();
     this.options = options;
+    console.log('DeviceWalletImpl', this.options.storage)
   }
 
   async getSigner(
@@ -104,6 +107,7 @@ export class DeviceWalletImpl extends AbstractWallet {
   }
 
   async getSavedWalletAddress(): Promise<string | null> {
+    console.log("getSavedWalletAddress", this.options.storage)
     const data = await this.options.storage.getWalletData();
     if (!data) {
       return null;
@@ -138,6 +142,7 @@ export class DeviceWalletImpl extends AbstractWallet {
         N: 1 << 32,
       },
     };
+    console.log('save')
     const encryptedData = await wallet.encrypt(password, options);
     await this.options.storage.storeWalletData({
       address: wallet.address,

@@ -8,11 +8,11 @@ import { ethers } from "ethers";
 
 export type DeviceWalletConnectorOptions = {
   chain:
-    | {
-        // chainId: number;
-        rpc: string[];
-      }
-    | Chain;
+  | {
+    // chainId: number;
+    rpc: string[];
+  }
+  | Chain;
   wallet: DeviceWalletImpl;
 };
 
