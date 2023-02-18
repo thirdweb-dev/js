@@ -1,7 +1,10 @@
 export default {
-  "name": "zkSync v2",
+  "name": "zkSync Era Mainnet",
   "chain": "ETH",
-  "rpc": [],
+  "rpc": [
+    "https://zksync-era.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://zksync2-mainnet.zksync.io"
+  ],
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",
@@ -13,24 +16,28 @@ export default {
   "chainId": 324,
   "networkId": 324,
   "icon": {
-    "url": "ipfs://QmdwQDr6vmBtXmK2TmknkEuZNoaDqTasFdZdu3DRw8b2wt",
-    "width": 1000,
-    "height": 1628,
-    "format": "png"
+    "url": "ipfs://Qma6H9xd8Ydah1bAFnmDuau1jeMh5NjGEL8tpdnjLbJ7m2",
+    "width": 512,
+    "height": 512,
+    "format": "svg"
   },
   "explorers": [
     {
-      "name": "zkSync v2 Block Explorer",
+      "name": "zkSync Era Block Explorer",
       "url": "https://explorer.zksync.io",
+      "icon": "zksync-era",
       "standard": "EIP3091"
     }
   ],
   "parent": {
     "type": "L2",
     "chain": "eip155-1",
-    "bridges": []
+    "bridges": [
+      {
+        "url": "https://portal.zksync.io/bridge"
+      }
+    ]
   },
-  "status": "incubating",
   "testnet": false,
-  "slug": "zksync-v2"
+  "slug": "zksync-era"
 } as const;
