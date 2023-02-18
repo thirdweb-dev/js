@@ -1,0 +1,28 @@
+# Order is important; the last matching pattern takes the most precedence.
+
+# Platform team owns everything by default
+
+- @platform
+
+# Devrel owns all markdown files (README etc.)
+
+\*.md @devrel
+
+# Shared ownership of the react and react-core packages
+
+packages/react/ @product @platform
+packages/react-core/ @product @platform
+
+# Shared ownership of the CLI
+
+packages/cli/ @product @platform
+
+# Chains is owned specifically by jonas for now
+
+packages/chains/ @jnsdls
+
+# .github folder + .changeset + turbo config is owned by joaquim and jonas for now
+
+.github/ @joaquim-verges @jnsdls
+.changeset/ @joaquim-verges @jnsdls
+turbo.json @joaquim-verges @jnsdls
