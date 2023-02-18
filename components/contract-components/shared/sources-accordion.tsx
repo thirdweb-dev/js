@@ -29,17 +29,23 @@ export const SourcesAccordion: React.FC<SourcesAccordionProps> = ({
           _first={{ borderTopWidth: 0 }}
           _last={{ borderBottomWidth: 0 }}
         >
-          <AccordionButton justifyContent="space-between" py={2}>
-            <Heading size="label.md">{signature.filename}</Heading>
-            <AccordionIcon />
-          </AccordionButton>
-          <AccordionPanel>
-            <CodeBlock
-              overflow="auto"
-              code={signature.source.trim()}
-              language="solidity"
-            />
-          </AccordionPanel>
+          {({ isExpanded }) => (
+            <>
+              <AccordionButton justifyContent="space-between" py={2}>
+                <Heading size="label.md">{signature.filename}</Heading>
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel>
+                {isExpanded && (
+                  <CodeBlock
+                    overflow="auto"
+                    code={signature.source.trim()}
+                    language="solidity"
+                  />
+                )}
+              </AccordionPanel>
+            </>
+          )}
         </AccordionItem>
       ))}
       {abi && (
@@ -50,17 +56,23 @@ export const SourcesAccordion: React.FC<SourcesAccordionProps> = ({
           _first={{ borderTopWidth: 0 }}
           _last={{ borderBottomWidth: 0 }}
         >
-          <AccordionButton justifyContent="space-between" py={2}>
-            <Heading size="label.md">ABI</Heading>
-            <AccordionIcon />
-          </AccordionButton>
-          <AccordionPanel>
-            <CodeBlock
-              code={JSON.stringify(abi, null, 2)}
-              language="json"
-              overflow="auto"
-            />
-          </AccordionPanel>
+          {({ isExpanded }) => (
+            <>
+              <AccordionButton justifyContent="space-between" py={2}>
+                <Heading size="label.md">ABI</Heading>
+                <AccordionIcon />
+              </AccordionButton>
+              <AccordionPanel>
+                {isExpanded && (
+                  <CodeBlock
+                    code={JSON.stringify(abi, null, 2)}
+                    language="json"
+                    overflow="auto"
+                  />
+                )}
+              </AccordionPanel>
+            </>
+          )}
         </AccordionItem>
       )}
     </Accordion>

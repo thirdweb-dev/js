@@ -31,6 +31,10 @@ export function useTrack() {
       }),
     );
 
-    posthog.capture(catActLab, flat(restDataSafe));
+    try {
+      posthog.capture(catActLab, flat(restDataSafe));
+    } catch (e) {
+      // ignore - we just don't want to trigger an error in the app if posthog fails
+    }
   }, []);
 }
