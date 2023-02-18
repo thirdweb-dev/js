@@ -405,7 +405,8 @@ export const ThirdwebProvider = <
       <ThirdwebSDKProviderWagmiWrapper
         queryClient={queryClient}
         sdkOptions={sdkOptions}
-        supportedChains={supportedChains}
+        // @ts-expect-error - we are passing the wrong type here, but it's ok because we are passing the correct type to the provider
+        supportedChains={mergedChains}
         // desiredChainId is deprecated, we will remove it in the future but still need to pass it here for now
         activeChain={activeChainId || desiredChainId}
         storageInterface={storageInterface}

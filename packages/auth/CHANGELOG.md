@@ -1,5 +1,11 @@
 # @thirdweb-dev/auth
 
+## 3.0.5
+
+### Patch Changes
+
+- [#588](https://github.com/thirdweb-dev/js/pull/588) [`f0de81d`](https://github.com/thirdweb-dev/js/commit/f0de81d4b1ba33b2ac73ed16cfdea8fd4eb5da9e) Thanks [@adam-maj](https://github.com/adam-maj)! - Add verify login to auth
+
 ## 3.0.4
 
 ### Patch Changes
