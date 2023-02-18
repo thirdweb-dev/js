@@ -12,7 +12,7 @@ import type {
   WalletOptions,
 } from "@thirdweb-dev/wallets";
 import { Signer } from "ethers";
-import {
+import React, {
   createContext,
   PropsWithChildren,
   useCallback,
@@ -144,11 +144,9 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
 
       const Wallet = props.wallets.find((W) => W.id === lastConnectedWalletId);
       if (Wallet) {
-        if (Wallet.id === "metamask") {
-          const wallet = new Wallet(getConstructorArg(Wallet));
-          await wallet.autoConnect();
-          handleWalletConnected(wallet);
-        }
+        const wallet = new Wallet(getConstructorArg(Wallet));
+        await wallet.autoConnect();
+        handleWalletConnected(wallet);
       }
     })();
   }, [

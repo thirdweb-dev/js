@@ -9,13 +9,13 @@ export class AsyncLocalStorage implements AsyncStorage {
     this.name = name;
   }
 
-  getItem(this: AsyncStorage, key: string) {
+  getItem(key: string) {
     return new Promise<string | null>((res) => {
       res(localStorage.getItem(`${PREFIX}/${this.name}/${key}`));
     });
   }
 
-  setItem(this: AsyncStorage, key: string, value: string) {
+  setItem(key: string, value: string) {
     return new Promise<void>((res, rej) => {
       try {
         localStorage.setItem(`${PREFIX}/${this.name}/${key}`, value);
@@ -26,7 +26,7 @@ export class AsyncLocalStorage implements AsyncStorage {
     });
   }
 
-  removeItem(this: AsyncStorage, key: string) {
+  removeItem(key: string) {
     return new Promise<void>((res) => {
       localStorage.removeItem(`${PREFIX}/${this.name}/${key}`);
       res();

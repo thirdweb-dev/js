@@ -10,15 +10,15 @@ export class AsyncLocalStorage implements IAsyncStorage {
         this.name = name;
     }
 
-    getItem(this: IAsyncStorage, key: string) {
+    getItem(key: string) {
         return AsyncStorage.getItem(`${PREFIX}/${this.name}/${key}`)
     }
 
-    setItem(this: IAsyncStorage, key: string, value: string) {
+    setItem(key: string, value: string) {
         return AsyncStorage.setItem(`${PREFIX}/${this.name}/${key}`, value);
     }
 
-    removeItem(this: IAsyncStorage, key: string) {
+    removeItem(key: string) {
         return AsyncStorage.removeItem(`${PREFIX}/${this.name}/${key}`);
     }
 }
