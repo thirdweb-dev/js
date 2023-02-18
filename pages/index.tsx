@@ -1,10 +1,10 @@
+import { AnyEVMSection } from "../components/homepage/sections/AnyEVM";
 import { Box, DarkMode, Flex } from "@chakra-ui/react";
 import { HomepageFooter } from "components/footer/Footer";
 import { GetStartedSection } from "components/homepage/sections/GetStartedSection";
 import { HeroSection } from "components/homepage/sections/HeroSection";
 import { KeyFeaturesSection } from "components/homepage/sections/KeyFeaturesSection";
 import { NewsletterSection } from "components/homepage/sections/NewsletterSection";
-import { NetworksSection } from "components/homepage/sections/NextworksSection";
 import { PricingSection } from "components/homepage/sections/PricingSection";
 import { SDKSection } from "components/homepage/sections/SDKSection";
 import { SolutionsSection } from "components/homepage/sections/Solutions";
@@ -37,10 +37,10 @@ const HomePage: ThirdwebNextPage = () => {
           <PartnerCarousel />
           <StatsSection />
           <KeyFeaturesSection />
+          <AnyEVMSection />
           <Suspense>
             <SDKSection />
             <ValuesSection />
-            <NetworksSection />
             <PricingSection />
             <SolutionsSection />
             <GetStartedSection />

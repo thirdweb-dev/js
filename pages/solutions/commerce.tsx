@@ -1,4 +1,3 @@
-import { AuthenticationExamples } from "../../components/product-pages/authentication/AuthenticationExamples";
 import { Box, Flex, SimpleGrid } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { NewsletterSection } from "components/homepage/sections/NewsletterSection";
