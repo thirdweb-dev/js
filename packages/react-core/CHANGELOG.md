@@ -1,5 +1,15 @@
 # @thirdweb-dev/react-core
 
+## 3.9.1
+
+### Patch Changes
+
+- [#588](https://github.com/thirdweb-dev/js/pull/588) [`f0de81d`](https://github.com/thirdweb-dev/js/commit/f0de81d4b1ba33b2ac73ed16cfdea8fd4eb5da9e) Thanks [@adam-maj](https://github.com/adam-maj)! - Update to use new Auth
+
+- Updated dependencies [[`f0de81d`](https://github.com/thirdweb-dev/js/commit/f0de81d4b1ba33b2ac73ed16cfdea8fd4eb5da9e), [`f580b8a`](https://github.com/thirdweb-dev/js/commit/f580b8ac06534df24b0194cbc632b4a8fd447611)]:
+  - @thirdweb-dev/auth@3.0.5
+  - @thirdweb-dev/chains@0.1.1
+
 ## 3.9.0
 
 ### Patch Changes
