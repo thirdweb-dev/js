@@ -1,5 +1,11 @@
 # @thirdweb-dev/chains
 
+## 0.1.1
+
+### Patch Changes
+
+- [#599](https://github.com/thirdweb-dev/js/pull/599) [`f580b8a`](https://github.com/thirdweb-dev/js/commit/f580b8ac06534df24b0194cbc632b4a8fd447611) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New chains added
+
 ## 0.1.0
 
 ### Minor Changes

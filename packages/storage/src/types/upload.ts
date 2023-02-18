@@ -74,4 +74,8 @@ export type IpfsUploadBatchOptions = {
    * If specified, will upload a single file without wrapping it in a directory
    */
   uploadWithoutDirectory?: boolean;
+  /**
+   * Optional metadata to associate with this upload
+   */
+  metadata?: Record<string, string>;
 };
