@@ -5,6 +5,9 @@ on:
     branches: ["main"]
   pull_request:
     types: [opened, synchronize]
+  # trigger on merge group as well (merge queue)
+  merge_group:
+    types: [checks_requested]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
