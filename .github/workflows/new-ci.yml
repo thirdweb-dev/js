@@ -29,18 +29,8 @@ jobs:
         with:
           fetch-depth: 25
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          check-latest: true
-          registry-url: "https://registry.npmjs.org"
-          cache: "yarn"
-
-      - name: Install dependencies
-        run: yarn --prefer-offline
-        env:
-          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+      - name: Install
+        uses: ./.github/composite-actions/install
 
       - run: yarn build
 
