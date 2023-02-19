@@ -24,34 +24,33 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 16
-        check-latest: true
-        registry-url: "https://registry.npmjs.org"
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          check-latest: true
+          registry-url: "https://registry.npmjs.org"
         
-    - name: Get yarn cache directory path
-      shell: bash
-      id: get-store-path
-      run: echo STORE_PATH=$(yarn cache dir) >> $GITHUB_OUTPUT
+      - name: Get yarn cache directory path
+        shell: bash
+        id: get-store-path
+        run: echo STORE_PATH=$(yarn cache dir) >> $GITHUB_OUTPUT
 
-    - uses: actions/cache@v3
-      timeout-minutes: 5
-      id: yarn-cache
-      with:
-        path: ${{ steps.get-store-path.outputs.STORE_PATH }}
-        key: yarn-store-${{ hashFiles('yarn.lock') }}
-        restore-keys: |
-          yarn-store-
-          yarn-store-${{ hashFiles('yarn.lock') }}
+      - uses: actions/cache@v3
+        timeout-minutes: 5
+        id: yarn-cache
+        with:
+          path: ${{ steps.get-store-path.outputs.STORE_PATH }}
+          key: yarn-store-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            yarn-store-
+            yarn-store-${{ hashFiles('yarn.lock') }}
 
-
-    - name: Install dependencies
-      shell: bash
-      run: yarn --prefer-offline
-      env:
-        PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+      - name: Install dependencies
+        shell: bash
+        run: yarn --prefer-offline
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
 
       - run: yarn build
 
