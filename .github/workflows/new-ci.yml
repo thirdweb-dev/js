@@ -33,7 +33,11 @@ jobs:
         with:
           fetch-depth: 25
 
-      - run: yarn --prefer-offline
+      - name: Install dependencies
+        shell: bash
+        run: yarn --prefer-offline
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
 
       - run: yarn build
 
