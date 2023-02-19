@@ -13,21 +13,22 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+ # To use Remote Caching, uncomment the next lines and follow the steps below.
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
+
 jobs:
   CI:
     name: CI
     timeout-minutes: 30
     runs-on: ubuntu-latest-16
-    # To use Remote Caching, uncomment the next lines and follow the steps below.
-    env:
-      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
     steps:
       - name: Check out code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Install
         uses: ./.github/composite-actions/install
@@ -47,4 +48,22 @@ jobs:
         run: yarn e2e
         env:
           NODE_OPTIONS: "--max_old_space_size=4096"
+
+
+  lint:
+    name: Lint
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Install
+        uses: ./.github/composite-actions/install
+
+      - name: Lint
+        run: yarn lint
 

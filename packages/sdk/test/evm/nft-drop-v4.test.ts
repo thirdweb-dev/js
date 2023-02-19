@@ -106,9 +106,6 @@ describe("NFT Drop Contract (v4)", async () => {
         ],
       },
     ]);
-    console.log(
-      await dropContract.claimConditions.getClaimIneligibilityReasons(1),
-    );
     await dropContract.claim(1);
   });
 
