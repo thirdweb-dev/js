@@ -5,11 +5,11 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { AddContractInput, ContractInput, DeployedContract } from "../../types";
 import { ContractWrapper } from "./contract-wrapper";
 import type {
-  TWMultichainRegistryRouter,
-  TWMultichainRegistryLogic,
+  TWMultichainRegistry,
+  MultichainRegistryCore,
 } from "@thirdweb-dev/contracts-js";
-import TWRegistryABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryLogic.json";
-import TWRegistryRouterABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistryRouter.json";
+import RegistryCoreABI from "@thirdweb-dev/contracts-js/dist/abis/MultichainRegistryCore.json";
+import RegistryRouterABI from "@thirdweb-dev/contracts-js/dist/abis/TWMultichainRegistry.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { constants, utils } from "ethers";
 
@@ -17,8 +17,8 @@ import { constants, utils } from "ethers";
  * @internal
  */
 export class MultichainRegistry {
-  private registryLogic: ContractWrapper<TWMultichainRegistryLogic>;
-  private registryRouter: ContractWrapper<TWMultichainRegistryRouter>;
+  private registryCore: ContractWrapper<MultichainRegistryCore>;
+  private registryRouter: ContractWrapper<TWMultichainRegistry>;
   private storage: ThirdwebStorage;
 
   constructor(
@@ -27,23 +27,23 @@ export class MultichainRegistry {
     options: SDKOptions = {},
   ) {
     this.storage = storage;
-    this.registryLogic = new ContractWrapper<TWMultichainRegistryLogic>(
+    this.registryCore = new ContractWrapper<MultichainRegistryCore>(
       network,
       getMultichainRegistryAddress(),
-      TWRegistryABI,
+      RegistryCoreABI,
       options,
     );
 
-    this.registryRouter = new ContractWrapper<TWMultichainRegistryRouter>(
+    this.registryRouter = new ContractWrapper<TWMultichainRegistry>(
       network,
       getMultichainRegistryAddress(),
-      TWRegistryRouterABI,
+      RegistryRouterABI,
       options,
     );
   }
 
   public async updateSigner(signer: NetworkInput) {
-    this.registryLogic.updateSignerOrProvider(signer);
+    this.registryCore.updateSignerOrProvider(signer);
     this.registryRouter.updateSignerOrProvider(signer);
   }
 
@@ -51,7 +51,7 @@ export class MultichainRegistry {
     chainId: number,
     address: string,
   ): Promise<string> {
-    return await this.registryLogic.readContract.getMetadataUri(
+    return await this.registryCore.readContract.getMetadataUri(
       chainId,
       address,
     );
@@ -74,7 +74,7 @@ export class MultichainRegistry {
   public async getContractAddresses(
     walletAddress: string,
   ): Promise<DeployedContract[]> {
-    return (await this.registryLogic.readContract.getAll(walletAddress))
+    return (await this.registryCore.readContract.getAll(walletAddress))
       .filter(
         (result) =>
           utils.isAddress(result.deploymentAddress) &&
@@ -99,7 +99,7 @@ export class MultichainRegistry {
     const encoded: string[] = [];
     contracts.forEach((contact) => {
       encoded.push(
-        this.registryLogic.readContract.interface.encodeFunctionData("add", [
+        this.registryCore.readContract.interface.encodeFunctionData("add", [
           deployerAddress,
           contact.address,
           contact.chainId,
@@ -126,7 +126,7 @@ export class MultichainRegistry {
     const encoded: string[] = [];
     contracts.forEach((contract) => {
       encoded.push(
-        this.registryLogic.readContract.interface.encodeFunctionData("remove", [
+        this.registryCore.readContract.interface.encodeFunctionData("remove", [
           deployerAddress,
           contract.address,
           contract.chainId,

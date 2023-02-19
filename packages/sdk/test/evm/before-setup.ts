@@ -20,7 +20,11 @@ import {
   TokenInitializer,
   VoteInitializer,
 } from "../../src/evm";
-import { Plugin } from "../../src/evm/types/plugins";
+import {
+  Plugin,
+  PluginFunction,
+  PluginMetadata,
+} from "../../src/evm/types/plugins";
 import { MockStorage } from "./mock/MockStorage";
 import weth from "./mock/WETH9.json";
 import { deployContractAndUploadMetadata } from "./utils";
@@ -49,17 +53,17 @@ import {
   TWFactory__factory,
   TWRegistry,
   TWRegistry__factory,
-  TWMultichainRegistryRouter,
-  TWMultichainRegistryRouter__factory,
-  TWMultichainRegistryLogic,
-  TWMultichainRegistryLogic__factory,
-  PluginMap,
-  PluginMap__factory,
+  TWMultichainRegistry,
+  TWMultichainRegistry__factory,
+  MultichainRegistryCore,
+  MultichainRegistryCore__factory,
+  PluginRegistry__factory,
   VoteERC20__factory,
   MarketplaceV3__factory,
   DirectListingsLogic__factory,
   EnglishAuctionsLogic__factory,
   OffersLogic__factory,
+  PluginRegistry,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -81,6 +85,7 @@ let signers: SignerWithAddress[];
 let storage: ThirdwebStorage;
 let implementations: { [key in ContractType]?: string };
 let mock_weth_address: string;
+let pluginRegistry: PluginRegistry;
 
 const fastForwardTime = async (timeInSeconds: number): Promise<void> => {
   const now = Math.floor(Date.now() / 1000);
@@ -116,6 +121,14 @@ export const mochaHooks = {
       .deploy();
     const mock_weth = await (await mock_weth_deployer).deployed();
     mock_weth_address = mock_weth.address;
+
+    const pluginRegistryDeployer = (await new ethers.ContractFactory(
+      PluginRegistry__factory.abi,
+      PluginRegistry__factory.bytecode,
+    )
+      .connect(signer)
+      .deploy(signer.address)) as PluginRegistry;
+    pluginRegistry = await pluginRegistryDeployer.deployed();
 
     const registry = (await new ethers.ContractFactory(
       TWRegistry__factory.abi,
@@ -292,9 +305,9 @@ const getFunctionSignature = (fnInputs: any): string => {
 const generatePluginFunctions = (
   pluginAddress: string,
   pluginAbi: Abi,
-): Plugin[] => {
+): PluginFunction[] => {
   const pluginInterface = new ethers.utils.Interface(pluginAbi);
-  const pluginFunctions: Plugin[] = [];
+  const pluginFunctions: PluginFunction[] = [];
   // TODO - filter out common functions like _msgSender(), contractType(), etc.
   for (const fnFragment of Object.values(pluginInterface.functions)) {
     const fn = pluginInterface.getFunction(fnFragment.name);
@@ -304,7 +317,6 @@ const generatePluginFunctions = (
     pluginFunctions.push({
       functionSelector: pluginInterface.getSighash(fn),
       functionSignature: fn.name + getFunctionSignature(fn.inputs),
-      pluginAddress,
     });
   }
   return pluginFunctions;
@@ -314,35 +326,36 @@ const generatePluginFunctions = (
 async function setupMultichainRegistry(
   trustedForwarderAddress: string,
 ): Promise<string> {
-  const multichainRegistryLogicDeployer = (await new ethers.ContractFactory(
-    TWMultichainRegistryLogic__factory.abi,
-    TWMultichainRegistryLogic__factory.bytecode,
+  const multichainRegistryCoreDeployer = (await new ethers.ContractFactory(
+    MultichainRegistryCore__factory.abi,
+    MultichainRegistryCore__factory.bytecode,
   )
     .connect(signer)
-    .deploy()) as TWMultichainRegistryLogic;
-  const multichainRegistryLogic =
-    await multichainRegistryLogicDeployer.deployed();
+    .deploy()) as MultichainRegistryCore;
+  const multichainRegistryCore =
+    await multichainRegistryCoreDeployer.deployed();
 
-  const plugins: Plugin[] = generatePluginFunctions(
-    multichainRegistryLogic.address,
-    TWMultichainRegistryLogic__factory.abi,
+  const functions: PluginFunction[] = generatePluginFunctions(
+    multichainRegistryCore.address,
+    MultichainRegistryCore__factory.abi,
   );
 
-  const pluginMapDeployer = (await new ethers.ContractFactory(
-    PluginMap__factory.abi,
-    PluginMap__factory.bytecode,
-  )
-    .connect(signer)
-    .deploy(plugins)) as PluginMap;
-  const pluginMap = await pluginMapDeployer.deployed();
+  const metadata: PluginMetadata = {
+    name: "MultichainRegistryCore",
+    metadataURI: "",
+    implementation: multichainRegistryCore.address,
+  };
+
+  await pluginRegistry.addPlugin({ metadata: metadata, functions: functions });
+
   const multichainRegistryRouterDeployer = (await new ethers.ContractFactory(
-    TWMultichainRegistryRouter__factory.abi,
-    TWMultichainRegistryRouter__factory.bytecode,
+    TWMultichainRegistry__factory.abi,
+    TWMultichainRegistry__factory.bytecode,
   )
     .connect(signer)
-    .deploy(pluginMap.address, [
-      trustedForwarderAddress,
-    ])) as TWMultichainRegistryRouter;
+    .deploy(pluginRegistry.address, [
+      "MultichainRegistryCore",
+    ])) as TWMultichainRegistry;
   const multichainRegistryRouter =
     await multichainRegistryRouterDeployer.deployed();
 
@@ -351,6 +364,9 @@ async function setupMultichainRegistry(
 
 // Setup marketplace-v3 for tests
 async function setupMarketplaceV3(): Promise<string> {
+  const plugins: Plugin[] = [];
+  const pluginNames: string[] = [];
+
   // Direct Listings
   const directListingsPluginAddress = await deployContractAndUploadMetadata(
     DirectListingsLogic__factory.abi,
@@ -358,10 +374,20 @@ async function setupMarketplaceV3(): Promise<string> {
     signer,
     [mock_weth_address],
   );
-  const pluginsDirectListings: Plugin[] = generatePluginFunctions(
+  const functionsDirectListings: PluginFunction[] = generatePluginFunctions(
     directListingsPluginAddress,
     DirectListingsLogic__factory.abi,
   );
+  const metadataDirectListings: PluginMetadata = {
+    name: "DirectListingsLogic",
+    metadataURI: "",
+    implementation: directListingsPluginAddress,
+  };
+  plugins.push({
+    metadata: metadataDirectListings,
+    functions: functionsDirectListings,
+  });
+  pluginNames.push("DirectListingsLogic");
 
   // English Auctions
   const englishAuctionPluginAddress = await deployContractAndUploadMetadata(
@@ -370,10 +396,20 @@ async function setupMarketplaceV3(): Promise<string> {
     signer,
     [mock_weth_address],
   );
-  const pluginsEnglishAuctions: Plugin[] = generatePluginFunctions(
+  const functionsEnglishAuctions: PluginFunction[] = generatePluginFunctions(
     englishAuctionPluginAddress,
     EnglishAuctionsLogic__factory.abi,
   );
+  const metadataEnglishAuctions: PluginMetadata = {
+    name: "EnglishAuctionsLogic",
+    metadataURI: "",
+    implementation: englishAuctionPluginAddress,
+  };
+  plugins.push({
+    metadata: metadataEnglishAuctions,
+    functions: functionsEnglishAuctions,
+  });
+  pluginNames.push("EnglishAuctionsLogic");
 
   // Offers
   const offersLogicPluginAddress = await deployContractAndUploadMetadata(
@@ -381,17 +417,26 @@ async function setupMarketplaceV3(): Promise<string> {
     OffersLogic__factory.bytecode,
     signer,
   );
-  const pluginsOffers: Plugin[] = generatePluginFunctions(
+  const functionsOffers: PluginFunction[] = generatePluginFunctions(
     offersLogicPluginAddress,
     OffersLogic__factory.abi,
   );
+  const metadataOffers: PluginMetadata = {
+    name: "OffersLogic",
+    metadataURI: "",
+    implementation: englishAuctionPluginAddress,
+  };
+  plugins.push({
+    metadata: metadataOffers,
+    functions: functionsOffers,
+  });
+  pluginNames.push("OffersLogic");
 
-  // Map
-  const pluginMapAddress = await deployContractAndUploadMetadata(
-    PluginMap__factory.abi,
-    PluginMap__factory.bytecode,
-    signer,
-    [[...pluginsDirectListings, ...pluginsEnglishAuctions, ...pluginsOffers]],
+  // Add plugins to plugin-registry
+  await Promise.all(
+    plugins.map((plugin) => {
+      return pluginRegistry.addPlugin(plugin);
+    }),
   );
 
   // Router
@@ -399,7 +444,7 @@ async function setupMarketplaceV3(): Promise<string> {
     MarketplaceV3__factory.abi,
     MarketplaceV3__factory.bytecode,
     signer,
-    [pluginMapAddress],
+    [pluginRegistry.address, pluginNames],
   );
   return marketplaceV3Address;
 }
