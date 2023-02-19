@@ -1,4 +1,4 @@
-name: new CI
+name: Build, Lint & Test
 
 on:
   push:
