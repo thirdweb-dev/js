@@ -17,12 +17,15 @@ runs:
       run: echo STORE_PATH=$(yarn cache dir) >> $GITHUB_OUTPUT
 
     - uses: actions/cache@v3
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        timeout-minutes: 5
+        id: yarn-cache
         with:
-        path: ${{ steps.yarn-get-store-path.outputs.dir }}
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
+          path: ${{ steps.get-store-path.outputs.STORE_PATH }}
+          key: yarn-store-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            yarn-store-
+            yarn-store-${{ hashFiles('yarn.lock') }}
+
 
     - name: Install dependencies
       shell: bash
