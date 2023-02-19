@@ -46,7 +46,7 @@ jobs:
           key: ${{ github.sha }}-${{ github.run_number }}
 
   lint:
-    name: Lint
+    name: Lint Packages
     runs-on: ubuntu-latest
     needs: build
     steps:
