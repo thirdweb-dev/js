@@ -18,7 +18,6 @@ import React, {
   lazy,
   Suspense,
 } from "react";
-import useDimensions from "react-cool-dimensions";
 
 const ModelViewer = lazy(() => import("./ModelViewer"));
 
@@ -293,22 +292,12 @@ AudioPlayer.displayName = "AudioPlayer";
 
 const IframePlayer = React.forwardRef<HTMLIFrameElement, MediaRendererProps>(
   ({ src, alt, poster, requireInteraction, style, ...restProps }, ref) => {
-    const { observe, width: elWidth } = useDimensions<HTMLDivElement | null>();
     const [playing, setPlaying] = useState(!requireInteraction);
-
-    if (elWidth < 300) {
-      return (
-        <div ref={observe}>
-          <LinkPlayer style={style} src={src} alt={alt} {...restProps} />
-        </div>
-      );
-    }
 
     return (
       <div
         style={{ position: "relative", ...style }}
         {...restProps}
-        ref={observe}
       >
         <iframe
           src={playing ? src ?? undefined : undefined}
@@ -455,6 +444,7 @@ export const MediaRenderer = React.forwardRef<
     };
     const videoOrImageSrc = useResolvedMediaType(src ?? undefined);
     const possiblePosterSrc = useResolvedMediaType(poster ?? undefined);
+
     if (!videoOrImageSrc.mimeType) {
       return (
         <img

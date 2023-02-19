@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/auth",
-  "version": "3.0.3",
+  "version": "3.0.5",
   "main": "dist/thirdweb-dev-auth.cjs.js",
   "module": "dist/thirdweb-dev-auth.esm.js",
   "exports": {
@@ -50,9 +50,6 @@
       "evm/index.ts",
       "solana/index.ts"
     ],
-    "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
-      "exports": true
-    },
     "exports": true
   },
   "devDependencies": {

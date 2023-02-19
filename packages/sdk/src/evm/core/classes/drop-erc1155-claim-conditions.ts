@@ -397,7 +397,6 @@ export class DropErc1155ClaimConditions<
       }
     }
 
-    // TODO (cc) check for max claimable per wallet and how much each wallet has claimed
     if (
       this.isNewSinglePhaseDrop(this.contractWrapper) ||
       this.isNewMultiphaseDrop(this.contractWrapper)

@@ -1,5 +1,11 @@
 # @thirdweb-dev/storage
 
+## 1.0.9
+
+### Patch Changes
+
+- [#597](https://github.com/thirdweb-dev/js/pull/597) [`300fe4a`](https://github.com/thirdweb-dev/js/commit/300fe4a933f83ac59f89ff019f173cdfc6a2cdff) Thanks [@adam-maj](https://github.com/adam-maj)! - Update storage to take metadata
+
 ## 1.0.8
 
 ### Patch Changes

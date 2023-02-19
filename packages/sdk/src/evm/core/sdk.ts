@@ -16,7 +16,7 @@ import {
   RPCConnectionHandler,
 } from "./classes/rpc-connection-handler";
 import type {
-  ChainIdOrName,
+  ChainIdOrNameOrChain,
   ContractForPrebuiltContractType,
   ContractType,
   NetworkInput,
@@ -56,7 +56,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   static async fromWallet(
     wallet: EVMWallet,
-    network: ChainIdOrName,
+    network: ChainIdOrNameOrChain,
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
   ) {
@@ -86,7 +86,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   static fromSigner(
     signer: Signer,
-    network?: ChainIdOrName,
+    network?: ChainIdOrNameOrChain,
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
   ): ThirdwebSDK {
@@ -117,7 +117,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   static fromPrivateKey(
     privateKey: string,
-    network: ChainIdOrName,
+    network: ChainIdOrNameOrChain,
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
   ): ThirdwebSDK {
@@ -158,10 +158,23 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public storage: ThirdwebStorage;
 
   constructor(
-    network: NetworkInput,
+    network: NetworkInput | Chain,
     options: SDKOptions = {},
     storage: ThirdwebStorage = new ThirdwebStorage(),
   ) {
+    if (
+      typeof network !== "string" &&
+      typeof network !== "number" &&
+      !ethers.Signer.isSigner(network) &&
+      !ethers.providers.Provider.isProvider(network)
+    ) {
+      options = {
+        ...options,
+        // @ts-expect-error - we know that the network is assignable desipite the readonly mismatch
+        supportedChains: [network, ...(options.supportedChains || [])],
+      };
+      network = network.chainId;
+    }
     super(network, options);
     this.storageHandler = storage;
     this.storage = storage;

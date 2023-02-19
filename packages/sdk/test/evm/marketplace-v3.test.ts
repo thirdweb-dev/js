@@ -172,7 +172,6 @@ describe("Marketplace V3", async () => {
     endTimestamp: Date = new Date(
       startTimestamp.getTime() + 5 * 24 * 60 * 60 * 1000,
     ),
-    reservePricePerToken = 0.05,
   ): Promise<BigNumber> => {
     return (
       await marketplaceContract.englishAuctions.createAuction({
@@ -789,7 +788,7 @@ describe("Marketplace V3", async () => {
 
     it("should distribute the tokens when an auction closes", async () => {
       await sdk.updateSignerOrProvider(adminWallet);
-      const auctionId = (
+      const auctionId2 = (
         await marketplaceContract.englishAuctions.createAuction({
           assetContractAddress: dummyNftContract.getAddress(),
           tokenId: "2",
@@ -806,7 +805,7 @@ describe("Marketplace V3", async () => {
 
       await sdk.updateSignerOrProvider(bobWallet);
 
-      await marketplaceContract.englishAuctions.makeBid(auctionId, 2);
+      await marketplaceContract.englishAuctions.makeBid(auctionId2, 2);
 
       await fastForwardTime(60 * 60 * 24);
 
@@ -820,7 +819,7 @@ describe("Marketplace V3", async () => {
         "The buyer should have no tokens to start",
       );
       await marketplaceContract.englishAuctions.closeAuctionForBidder(
-        auctionId,
+        auctionId2,
       );
 
       const balance = await dummyNftContract.balanceOf(bobWallet.address);
@@ -844,7 +843,7 @@ describe("Marketplace V3", async () => {
       );
 
       await marketplaceContract.englishAuctions.closeAuctionForSeller(
-        auctionId,
+        auctionId2,
       );
 
       const newTokenBalance = await customTokenContract.balanceOf(
@@ -917,8 +916,6 @@ describe("Marketplace V3", async () => {
         "0",
         "The buyer should start with no tokens",
       );
-      // await marketplaceContract.makeOffer(directListingId, 0.05, 1);
-      const offerId = await makeOffer(dummyNftContract.getAddress(), 0, 1);
 
       await marketplaceContract.directListings.buyFromListing(
         directListingId,
@@ -934,10 +931,10 @@ describe("Marketplace V3", async () => {
 
     it("should allow offers to be made for listed tokens", async () => {
       sdk.updateSignerOrProvider(bobWallet);
-      const bobOfferId = await makeOffer(dummyNftContract.getAddress(), 0, 1);
+      await makeOffer(dummyNftContract.getAddress(), 0, 1);
 
       sdk.updateSignerOrProvider(samWallet);
-      const samOfferId = await makeOffer(dummyNftContract.getAddress(), 0, 1);
+      await makeOffer(dummyNftContract.getAddress(), 0, 1);
 
       let offers = await marketplaceContract.offers.getAll({
         start: 0,
@@ -969,11 +966,11 @@ describe("Marketplace V3", async () => {
     it("should return all offers for a token when queried", async () => {
       // make an offer as bob
       sdk.updateSignerOrProvider(bobWallet);
-      const bobOfferId = await makeOffer(dummyNftContract.getAddress(), 0, 1);
+      await makeOffer(dummyNftContract.getAddress(), 0, 1);
 
       // make an offer as sam
       sdk.updateSignerOrProvider(samWallet);
-      const samOfferId = await makeOffer(dummyNftContract.getAddress(), 0, 1);
+      await makeOffer(dummyNftContract.getAddress(), 0, 1);
 
       // fetch all offers for the token
       sdk.updateSignerOrProvider(adminWallet);
