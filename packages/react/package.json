@@ -42,9 +42,6 @@
       "evm/index.ts",
       "evm/connectors/**.ts"
     ],
-    "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
-      "exports": true
-    },
     "exports": true
   },
   "private": false,

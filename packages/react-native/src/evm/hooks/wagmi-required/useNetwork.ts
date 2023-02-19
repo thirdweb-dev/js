@@ -1,8 +1,5 @@
 import invariant from "tiny-invariant";
-import {
-  useNetwork as useWagmiNetwork,
-  useClient
-} from "wagmi";
+import { useNetwork as useWagmiNetwork, useClient } from "wagmi";
 
 /**
  * Hook for getting metadata about the network the current wallet is connected to and switching networks
@@ -28,7 +25,7 @@ import {
  * @public
  */
 
-export function useNetwork() {
+export function useNetwork(): ReturnType<typeof useWagmiNetwork> {
   const wagmiContext = useClient();
   invariant(
     wagmiContext,

@@ -11,7 +11,9 @@ export default {
     "https://bear-network-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://brnkc-test.bearnetwork.net"
   ],
-  "faucets": [],
+  "faucets": [
+    "https://faucet.bearnetwork.net"
+  ],
   "nativeCurrency": {
     "name": "Bear Network Chain Testnet Token",
     "symbol": "tBRNKC",

@@ -2,11 +2,12 @@
 
 # Platform team owns everything by default
 
-- @thirdweb-dev/platform
+* @thirdweb-dev/platform
 
 # Devrel owns all markdown files (README etc.)
 
 *.md @thirdweb-dev/devrel
+.changeset/
 
 # Shared ownership of the react and react-core packages
 
