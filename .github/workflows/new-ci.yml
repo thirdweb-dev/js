@@ -37,7 +37,6 @@ jobs:
           registry-url: "https://registry.npmjs.org"
         
       - name: Get yarn cache directory path
-        shell: bash
         id: get-store-path
         run: echo STORE_PATH=$(yarn cache dir) >> $GITHUB_OUTPUT
 
@@ -52,7 +51,6 @@ jobs:
             yarn-store-${{ hashFiles('yarn.lock') }}
 
       - name: Install dependencies
-        shell: bash
         run: yarn --prefer-offline
         env:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
