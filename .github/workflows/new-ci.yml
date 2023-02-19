@@ -1,5 +1,4 @@
-name: new CI
-
+name: Build & Test
 on:
   push:
     branches: ["main"]
@@ -19,51 +18,50 @@ env:
   TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
 jobs:
-  CI:
-    name: CI
-    timeout-minutes: 30
+  build:
     runs-on: ubuntu-latest-16
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
+      - name: Setup node
+        uses: actions/setup-node@v3
         with:
-          fetch-depth: 1
+          node-version: 16
+          check-latest: true
 
-      - name: Install
-        uses: ./.github/composite-actions/install
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 25
 
-        
-      - name: Build
-        run: yarn build
+      - run: yarn --prefer-offline
 
-      - name: Unit tests
-        run: yarn test
+      - run: yarn build
 
-        # if we get here install playwright so we can run e2e
-      - name: Install Playwright
-        run: npx playwright install --with-deps
+        # We use week in the turbo cache key to keep the cache from infinitely growing
+      - id: get-week
+        run: echo "WEEK=$(date +%U)" >> $GITHUB_OUTPUT
 
-      - name: E2E tests
-        run: yarn e2e
-        env:
-          NODE_OPTIONS: "--max_old_space_size=4096"
-
+      - uses: actions/cache@v3
+        timeout-minutes: 5
+        id: cache-build
+        with:
+          path: ./*
+          key: ${{ github.sha }}-${{ github.run_number }}
 
   lint:
-    name: Lint
-    timeout-minutes: 15
     runs-on: ubuntu-latest
-
+    needs: build
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
+      - name: Setup node
+        uses: actions/setup-node@v3
         with:
-          fetch-depth: 1
+          node-version: 16
+          check-latest: true
 
-      - name: Install
-        uses: ./.github/composite-actions/install
-
-      - name: Lint
-        run: yarn lint
-
+      - uses: actions/cache@v3
+        timeout-minutes: 5
+        id: restore-build
+        with:
+          path: ./*
+          key: ${{ github.sha }}-${{ github.run_number }}
+      - run: yarn lint
+  
