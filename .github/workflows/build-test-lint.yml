@@ -116,6 +116,8 @@ jobs:
     runs-on: ubuntu-latest-8
     needs: build
     timeout-minutes: 30
+    # only run on pull requests that are targeting main
+    if: github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main'
 
     steps:
       - name: Setup node
