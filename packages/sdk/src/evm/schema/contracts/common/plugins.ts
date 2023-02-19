@@ -5,8 +5,24 @@ import { z } from "zod";
 /**
  * @internal
  */
-export const PluginMapInput = z.object({
+export const PluginMetadataInput = z.object({
+  name: z.string(),
+  metadataURI: z.string(),
+  implementation: AddressSchema,
+});
+
+/**
+ * @internal
+ */
+export const PluginFunctionInput = z.object({
   functionSelector: BytesLikeSchema,
   functionSignature: z.string(),
-  pluginAddress: AddressSchema,
+});
+
+/**
+ * @internal
+ */
+export const PluginInput = z.object({
+  metadata: PluginMetadataInput,
+  functions: z.array(PluginFunctionInput),
 });
