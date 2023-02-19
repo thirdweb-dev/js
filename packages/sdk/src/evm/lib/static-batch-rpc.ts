@@ -69,14 +69,15 @@ export class StaticJsonRpcBatchProvider extends providers.StaticJsonRpcProvider 
           // if there is no payload, reject the request
           if (!payload) {
             inflightRequest_.reject(new Error("No response for request"));
-          }
-          if (payload.error) {
-            const error = new Error(payload.error.message);
-            (error as any).code = payload.error.code;
-            (error as any).data = payload.error.data;
-            inflightRequest_.reject(error);
           } else {
-            inflightRequest_.resolve(payload.result);
+            if (payload.error) {
+              const error = new Error(payload.error.message);
+              (error as any).code = payload.error.code;
+              (error as any).data = payload.error.data;
+              inflightRequest_.reject(error);
+            } else {
+              inflightRequest_.resolve(payload.result);
+            }
           }
         });
       },
