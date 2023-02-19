@@ -22,22 +22,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          check-latest: true
-          cache: "yarn"
-
-      - uses: actions/checkout@v3
+      - name: Check out code
+        uses: actions/checkout@v3
         with:
           fetch-depth: 25
 
       - name: Install dependencies
-        shell: bash
-        run: yarn --prefer-offline
-        env:
-          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"
+        uses: ./.github/composite-actions/install
 
       - run: yarn build
 
