@@ -35,20 +35,7 @@ jobs:
           node-version: 16
           check-latest: true
           registry-url: "https://registry.npmjs.org"
-        
-      - name: Get yarn cache directory path
-        id: get-store-path
-        run: echo STORE_PATH=$(yarn cache dir) >> $GITHUB_OUTPUT
-
-      - uses: actions/cache@v3
-        timeout-minutes: 5
-        id: yarn-cache
-        with:
-          path: ${{ steps.get-store-path.outputs.STORE_PATH }}
-          key: yarn-store-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            yarn-store-
-            yarn-store-${{ hashFiles('yarn.lock') }}
+          cache: "yarn"
 
       - name: Install dependencies
         run: yarn --prefer-offline
