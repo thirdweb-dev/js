@@ -13,6 +13,6 @@ runs:
 
     - name: Install dependencies
       shell: bash
-      run: yarn --prefer-offline
+      run: yarn
       env:
         PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "1"

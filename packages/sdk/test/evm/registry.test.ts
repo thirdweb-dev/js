@@ -1,4 +1,3 @@
-import { getMultichainRegistryAddress, ThirdwebSDK } from "../../src/evm";
 import { joinABIs } from "../../src/evm/common/plugin";
 import { MultichainRegistry } from "../../src/evm/core/classes/multichain-registry";
 import { ContractRegistry } from "../../src/evm/core/classes/registry";
@@ -22,12 +21,7 @@ describe("Contract Registry", () => {
 
   it("multichain registry", async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     multichainRegistry = sdk.multiChainRegistry;
-    console.log(
-      "multichain registry address: ",
-      getMultichainRegistryAddress(),
-    );
 
     address = await sdk.deployer.deployNFTCollection({
       name: "Test1",
