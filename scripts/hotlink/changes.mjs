@@ -10,6 +10,10 @@ export const changes = [
       original: "dist/thirdweb-dev-react.cjs.js",
       hotlink: "./src/index.ts",
     },
+    types: {
+      hotlink: undefined,
+      original: "dist/thirdweb-dev-react.cjs.d.ts",
+    },
     exports: {
       ".": {
         original: "./dist/thirdweb-dev-react.esm.js",
@@ -42,6 +46,10 @@ export const changes = [
       original: "dist/thirdweb-dev-react-core.cjs.js",
       hotlink: "./src/index.ts",
     },
+    types: {
+      original: "dist/thirdweb-dev-react-core.cjs.d.ts",
+      hotlink: undefined,
+    },
     exports: {
       ".": {
         original: "./dist/thirdweb-dev-react-core.esm.js",
@@ -63,6 +71,10 @@ export const changes = [
     entry: {
       original: "dist/thirdweb-dev-wallets.cjs.js",
       hotlink: "./src/index.ts",
+    },
+    types: {
+      original: "dist/thirdweb-dev-wallets.cjs.d.ts",
+      hotlink: undefined,
     },
     exports: {
       ".": {
@@ -222,6 +234,8 @@ export function updatePackages(changeKey) {
     for (const key in change.exports) {
       pkg.exports[key].module = change.exports[key][changeKey];
     }
+
+    pkg.types = change.types[changeKey];
 
     // save file
     fs.writeFileSync(
