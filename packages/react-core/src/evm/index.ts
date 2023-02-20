@@ -1,11 +1,17 @@
-
 export {
   useActiveWallet,
   useConnect,
+  useConnectingToWallet,
+  useCreateWalletInstance,
   useDisconnect,
   useWallets,
 } from "../core/hooks/wallet-hooks";
-export * from "../core/providers/thirdweb-provider";
+export { ThirdwebProvider } from "../core/providers/thirdweb-provider";
+export type { ThirdwebProviderProps } from "../core/providers/thirdweb-provider";
+export {
+  useDeviceWalletStorage,
+  useThirdwebWallet,
+} from "../core/providers/thirdweb-wallet-provider";
 // Utilities and Others
 export { shouldNeverPersistQuery } from "../core/query-utils/query-key";
 export type { RequiredParam } from "../core/query-utils/required-param";

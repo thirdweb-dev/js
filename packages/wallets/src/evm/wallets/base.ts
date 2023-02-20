@@ -17,7 +17,7 @@ export abstract class AbstractBrowserWallet<
   TAdditionalOpts extends Record<string, any> = {},
   TConnectParams extends Record<string, any> = {},
 > extends AbstractWallet {
-  #wallletId;
+  #walletId;
   protected coordinatorStorage;
   protected walletStorage;
   protected chains;
@@ -25,15 +25,12 @@ export abstract class AbstractBrowserWallet<
 
   constructor(walletId: string, options: WalletOptions<TAdditionalOpts>) {
     super();
-    this.#wallletId = walletId;
+    this.#walletId = walletId;
     this.options = options;
     this.chains = options.chains || thirdwebChains;
     this.coordinatorStorage = options.coordinatorStorage;
     // make sure walletStorage is having the name walletId
     this.walletStorage = options.walletStorage;
-    // if (options.shouldAutoConnect !== false) {
-    //   this.autoConnect();
-    // }
   }
 
   protected abstract getConnector(): Promise<TWConnector<TConnectParams>>;
@@ -43,25 +40,21 @@ export abstract class AbstractBrowserWallet<
       "lastConnectedWallet",
     );
 
-    console.log('autoConnect', this.#wallletId)
-    if (lastConnectedWallet === this.#wallletId) {
-      const lastConnectionParamsJson = await this.walletStorage.getItem(
+    if (lastConnectedWallet === this.#walletId) {
+      const lastConnectionParams = await this.walletStorage.getItem(
         "lastConnectedParams",
       );
 
       let parsedParams: ConnectParams<TConnectParams> | undefined;
 
       try {
-        parsedParams = JSON.parse(lastConnectionParamsJson as string);
+        parsedParams = JSON.parse(lastConnectionParams as string);
       } catch {
         parsedParams = undefined;
       }
 
-      console.log('parsedParams', parsedParams)
-
       const connector = await this.getConnector();
 
-      console.log('connector.isConnected')
       if (!await connector.isConnected()) {
         return await this.connect(parsedParams);
       }
@@ -72,19 +65,16 @@ export abstract class AbstractBrowserWallet<
     connectOptions?: ConnectParams<TConnectParams>,
   ): Promise<string> {
     const connector = await this.getConnector();
-    console.log('getConnector')
 
     // setup listeners to re-expose events
     connector.on("connect", (data) => {
-      console.log('on.Connect')
-      this.coordinatorStorage.setItem("lastConnectedWallet", this.#wallletId);
+      this.coordinatorStorage.setItem("lastConnectedWallet", this.#walletId);
       this.emit("connect", { address: data.account, chainId: data.chain?.id });
       if (data.chain?.id) {
         this.walletStorage.setItem("lastConnectedChain", data.chain?.id);
       }
     });
     connector.on("change", (data) => {
-      console.log('on.change')
       this.emit("change", { address: data.account, chainId: data.chain?.id });
       if (data.chain?.id) {
         this.walletStorage.setItem("lastConnectedChain", data.chain?.id);
@@ -94,18 +84,18 @@ export abstract class AbstractBrowserWallet<
     connector.on("disconnect", () => this.emit("disconnect"));
     connector.on("error", (error) => this.emit("error", error));
 
-    console.log('right before connect', connectOptions)
     // end event listener setups
     let connectedAddress = await connector.connect(connectOptions);
     // do not break on coordinator error
     try {
-      await this.walletStorage.setItem(
-        "lastConnectedParams",
-        JSON.stringify(connectOptions),
-      );
+      // Store the last connected params in secure storage
+      // await this.walletStorage.setItem(
+      //   "lastConnectedParams",
+      //   JSON.stringify(connectOptions),
+      // );
       await this.coordinatorStorage.setItem(
         "lastConnectedWallet",
-        this.#wallletId,
+        this.#walletId,
       );
     } catch { }
 
@@ -129,7 +119,7 @@ export abstract class AbstractBrowserWallet<
       const lastConnectedWallet = await this.coordinatorStorage.getItem(
         "lastConnectedWallet",
       );
-      if (lastConnectedWallet === this.#wallletId) {
+      if (lastConnectedWallet === this.#walletId) {
         await this.coordinatorStorage.removeItem("lastConnectedWallet");
       }
     }
