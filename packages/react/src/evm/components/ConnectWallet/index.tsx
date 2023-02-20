@@ -5,7 +5,6 @@ import { useNetwork } from "../../hooks/wagmi-required/useNetwork";
 import { Portal } from "../../lib/portal";
 import { shortenIfAddress } from "../../utils/addresses";
 import { useClipboard } from "../hooks/useCopyClipboard";
-import { Box } from "../shared/Box";
 import { Button } from "../shared/Button";
 import { Icon } from "../shared/Icon";
 import { chainLogos } from "../shared/Icon/icons/chain-logos";
@@ -23,12 +22,12 @@ import { FiWifi } from "@react-icons/all-files/fi/FiWifi";
 import { FiXCircle } from "@react-icons/all-files/fi/FiXCircle";
 import type { LoginOptions } from "@thirdweb-dev/auth";
 import {
-  useThirdwebAuthContext,
   useAddress,
   useBalance,
   useChainId,
   useLogin,
   useLogout,
+  useThirdwebAuthContext,
   useUser,
 } from "@thirdweb-dev/react-core/evm";
 import { ChainId, SUPPORTED_CHAIN_ID } from "@thirdweb-dev/sdk";
@@ -268,7 +267,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
         </Button>
 
         <Portal>
-          <Box
+          <div
             {...api.positionerProps}
             style={{
               zIndex: 9999,
@@ -451,7 +450,7 @@ export const ConnectWallet: React.FC<ConnectWalletProps> = ({
                 </>
               )}
             </Menu>
-          </Box>
+          </div>
         </Portal>
       </div>
     </ThemeProvider>

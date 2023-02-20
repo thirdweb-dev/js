@@ -1,3 +1,8 @@
+import { ThirdwebAuthConfig } from "../../evm/contexts/thirdweb-auth";
+import {
+  ThirdwebSDKProvider,
+  ThirdwebSDKProviderProps,
+} from "../../evm/providers/thirdweb-sdk-provider";
 import { DEFAULT_API_KEY } from "../constants/rpc";
 import { DAppMetaData } from "../types/dAppMeta";
 import { SupportedWallet } from "../types/wallet";
@@ -17,8 +22,6 @@ import {
   MetaMask,
 } from "@thirdweb-dev/wallets";
 import React, { useMemo } from "react";
-import { ThirdwebAuthConfig } from "../../evm/contexts/thirdweb-auth";
-import {ThirdwebSDKProvider, ThirdwebSDKProviderProps} from "../../evm/providers/thirdweb-sdk-provider";
 
 // this allows autocomplete to work for the chainId prop but still allows `number` and `string` to be passed (for dynamically passed chain data)
 type ChainIdIsh = (string | number) & { __chainIdIsh: never };

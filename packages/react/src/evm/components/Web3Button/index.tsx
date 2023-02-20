@@ -5,11 +5,11 @@ import { ThemeProvider, ThemeProviderProps } from "../shared/ThemeProvider";
 import { FiWifi } from "@react-icons/all-files/fi/FiWifi";
 import { useMutation } from "@tanstack/react-query";
 import {
-  useSDKChainId,
-  useContract,
-  useNetworkMismatch,
   useAddress,
   useChainId,
+  useContract,
+  useNetworkMismatch,
+  useSDKChainId,
 } from "@thirdweb-dev/react-core/evm";
 import type { SmartContract } from "@thirdweb-dev/sdk";
 import type { CallOverrides, ContractInterface } from "ethers";

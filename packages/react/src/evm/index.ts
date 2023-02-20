@@ -16,10 +16,14 @@ export {
   useBalance,
   useChainId,
   useConnect,
+  useConnectingToWallet,
+  useCreateWalletInstance,
+  useDeviceWalletStorage,
   useDisconnect,
   useSupportedChains,
   useWallets,
 } from "@thirdweb-dev/react-core";
+export { ConnectWallet } from "../wallet/ConnectWallet/ConnectWallet";
 // export * from "./components/ConnectWallet";
 // ui components
 export * from "./components/MediaRenderer";
