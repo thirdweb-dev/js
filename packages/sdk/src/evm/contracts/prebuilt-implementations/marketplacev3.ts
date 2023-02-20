@@ -18,7 +18,7 @@ import { MarketplaceV3Offers } from "../../core/classes/marketplacev3-offers";
 import { UpdateableNetwork } from "../../core/interfaces/contract";
 import { NetworkInput } from "../../core/types";
 import { Abi } from "../../schema/contracts/custom";
-import { MarketplaceContractSchema } from "../../schema/contracts/marketplace";
+import { MarketplaceV3ContractSchema } from "../../schema/contracts/marketplacev3";
 import { SDKOptions } from "../../schema/sdk-options";
 import type {
   MarketplaceV3 as MarketplaceV3Contract,
@@ -56,11 +56,11 @@ export class MarketplaceV3 implements UpdateableNetwork {
   public platformFees: ContractPlatformFee<MarketplaceV3Contract>;
   public metadata: ContractMetadata<
     MarketplaceV3Contract,
-    typeof MarketplaceContractSchema
+    typeof MarketplaceV3ContractSchema
   >;
   public roles: ContractRoles<
     MarketplaceV3Contract,
-    typeof MarketplaceV3.contractRoles[number]
+    (typeof MarketplaceV3.contractRoles)[number]
   >;
   /**
    * @internal
@@ -215,7 +215,7 @@ export class MarketplaceV3 implements UpdateableNetwork {
     this.storage = storage;
     this.metadata = new ContractMetadata(
       this.contractWrapper,
-      MarketplaceContractSchema,
+      MarketplaceV3ContractSchema,
       this.storage,
     );
     this.roles = new ContractRoles(
