@@ -64,6 +64,10 @@ import {
   EnglishAuctionsLogic__factory,
   OffersLogic__factory,
   PluginRegistry,
+  Permissions__factory,
+  Permissions,
+  MetaTx__factory,
+  MetaTx,
 } from "@thirdweb-dev/contracts-js";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -326,6 +330,56 @@ const generatePluginFunctions = (
 async function setupMultichainRegistry(
   trustedForwarderAddress: string,
 ): Promise<string> {
+  const plugins: Plugin[] = [];
+  const pluginNames: string[] = [];
+
+  // Permissions plugin
+  const permissionsDeployer = (await new ethers.ContractFactory(
+    Permissions__factory.abi,
+    Permissions__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy()) as Permissions;
+  const permissions = await permissionsDeployer.deployed();
+  const functionsPermissions: PluginFunction[] = generatePluginFunctions(
+    permissions.address,
+    Permissions__factory.abi,
+  );
+  const metadataPermissions: PluginMetadata = {
+    name: "Permissions",
+    metadataURI: "",
+    implementation: permissions.address,
+  };
+  plugins.push({
+    metadata: metadataPermissions,
+    functions: functionsPermissions,
+  });
+  pluginNames.push("Permissions");
+
+  // MetaTx plugin
+  const metaTxDeployer = (await new ethers.ContractFactory(
+    MetaTx__factory.abi,
+    MetaTx__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy([trustedForwarderAddress])) as MetaTx;
+  const metaTx = await metaTxDeployer.deployed();
+  const functionsMetaTx: PluginFunction[] = generatePluginFunctions(
+    metaTx.address,
+    MetaTx__factory.abi,
+  );
+  const metadataMetaTx: PluginMetadata = {
+    name: "ERC2771Context",
+    metadataURI: "",
+    implementation: metaTx.address,
+  };
+  plugins.push({
+    metadata: metadataMetaTx,
+    functions: functionsMetaTx,
+  });
+  pluginNames.push("ERC2771Context");
+
+  // multichain registry core plugin
   const multichainRegistryCoreDeployer = (await new ethers.ContractFactory(
     MultichainRegistryCore__factory.abi,
     MultichainRegistryCore__factory.bytecode,
@@ -335,27 +389,34 @@ async function setupMultichainRegistry(
   const multichainRegistryCore =
     await multichainRegistryCoreDeployer.deployed();
 
-  const functions: PluginFunction[] = generatePluginFunctions(
+  const functionsCore: PluginFunction[] = generatePluginFunctions(
     multichainRegistryCore.address,
     MultichainRegistryCore__factory.abi,
   );
-
-  const metadata: PluginMetadata = {
+  const metadataCore: PluginMetadata = {
     name: "MultichainRegistryCore",
     metadataURI: "",
     implementation: multichainRegistryCore.address,
   };
+  plugins.push({
+    metadata: metadataCore,
+    functions: functionsCore,
+  });
+  pluginNames.push("MultichainRegistryCore");
 
-  await pluginRegistry.addPlugin({ metadata: metadata, functions: functions });
+  // Add plugins to plugin-registry
+  await Promise.all(
+    plugins.map((plugin) => {
+      return pluginRegistry.addPlugin(plugin);
+    }),
+  );
 
   const multichainRegistryRouterDeployer = (await new ethers.ContractFactory(
     TWMultichainRegistry__factory.abi,
     TWMultichainRegistry__factory.bytecode,
   )
     .connect(signer)
-    .deploy(pluginRegistry.address, [
-      "MultichainRegistryCore",
-    ])) as TWMultichainRegistry;
+    .deploy(pluginRegistry.address, pluginNames)) as TWMultichainRegistry;
   const multichainRegistryRouter =
     await multichainRegistryRouterDeployer.deployed();
 
@@ -424,7 +485,7 @@ async function setupMarketplaceV3(): Promise<string> {
   const metadataOffers: PluginMetadata = {
     name: "OffersLogic",
     metadataURI: "",
-    implementation: englishAuctionPluginAddress,
+    implementation: offersLogicPluginAddress,
   };
   plugins.push({
     metadata: metadataOffers,

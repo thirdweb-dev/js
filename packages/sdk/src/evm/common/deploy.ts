@@ -141,7 +141,6 @@ export async function getDeployArguments<
         splitsMetadata.recipients.map((s) => BigNumber.from(s.sharesBps)),
       ];
     case MarketplaceInitializer.contractType:
-    case MarketplaceV3Initializer.contractType:
       const marketplaceMetadata =
         MarketplaceInitializer.schema.deploy.parse(metadata);
       return [
@@ -150,6 +149,16 @@ export async function getDeployArguments<
         trustedForwarders,
         marketplaceMetadata.platform_fee_recipient,
         marketplaceMetadata.platform_fee_basis_points,
+      ];
+    case MarketplaceV3Initializer.contractType:
+      const marketplaceV3Metadata =
+        MarketplaceV3Initializer.schema.deploy.parse(metadata);
+      return [
+        signerAddress,
+        contractURI,
+        trustedForwarders,
+        marketplaceV3Metadata.platform_fee_recipient,
+        marketplaceV3Metadata.platform_fee_basis_points,
       ];
     case PackInitializer.contractType:
       const packsMetadata = PackInitializer.schema.deploy.parse(metadata);

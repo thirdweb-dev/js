@@ -27,6 +27,7 @@ import {
   CustomContractSchema,
 } from "../schema/contracts/custom";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
+import { MarketplaceV3ContractSchema } from "../schema/contracts/marketplacev3";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
@@ -168,7 +169,7 @@ export const MarketplaceInitializer = {
 export const MarketplaceV3Initializer = {
   name: "MarketplaceV3" as const,
   contractType: "marketplace-v3" as const,
-  schema: MarketplaceContractSchema,
+  schema: MarketplaceV3ContractSchema,
   roles: ["admin", "lister", "asset"] as const,
   initialize: async (
     ...[network, address, storage, options]: InitalizeParams
