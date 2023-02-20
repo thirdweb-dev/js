@@ -7,6 +7,7 @@ export {
   useWallets,
 } from "../core/hooks/wallet-hooks";
 export { ThirdwebProvider } from "../core/providers/thirdweb-provider";
+export type { ThirdwebProviderProps } from "../core/providers/thirdweb-provider";
 export {
   useDeviceWalletStorage,
   useThirdwebWallet,

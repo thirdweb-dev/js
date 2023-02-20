@@ -1,9 +1,9 @@
 import { ThirdwebProvider as ThirdwebProviderCore, ThirdwebProviderProps } from "@thirdweb-dev/react-core";
 import React from "react";
 import { DeviceBrowserWallet } from "@thirdweb-dev/wallets";
-import { createAsyncLocalStorage } from "core/AsyncStorage";
+import { createAsyncLocalStorage } from "../../core/AsyncStorage";
 
-export function ThirdwebProviderW({children, createWalletStorage: createWalletStorageProp, ...props} : 
+export function ThirdwebProviderRN({children, createWalletStorage: createWalletStorageProp, ...props} : 
   React.PropsWithChildren<{createWalletStorage?: ThirdwebProviderProps['createWalletStorage']} & Omit<
     ThirdwebProviderProps,
     "createWalletStorage"
