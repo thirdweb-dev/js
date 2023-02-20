@@ -15,3 +15,11 @@ export function useConnect() {
 export function useDisconnect() {
   return useThirdwebWallet().disconnect;
 }
+
+export function useConnectingToWallet() {
+  return useThirdwebWallet().connectingToWallet;
+}
+
+export function useCreateWalletInstance() {
+  return useThirdwebWallet().createWalletInstance;
+}

@@ -6,7 +6,7 @@ import {
 } from "../types/wallet";
 import { transformChainToMinimalWagmiChain } from "../utils";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
-import type {
+import {
   AsyncStorage,
   CreateAsyncStorage,
   WalletOptions,
@@ -32,6 +32,8 @@ type WalletConnectParams<W extends SupportedWallet> = NonNullable<
   Parameters<InstanceType<W>["connect"]>[0]
 >;
 
+type ConnectingToWallet = SupportedWallet["id"];
+
 type ThirdwebWalletContextData = {
   wallets: SupportedWallet[];
   signer?: Signer;
@@ -41,6 +43,11 @@ type ThirdwebWalletContextData = {
     connectParams: WalletConnectParams<W>,
   ) => Promise<void>;
   disconnect: () => void;
+  connectingToWallet?: ConnectingToWallet;
+  createWalletInstance: (
+    Wallet: SupportedWallet,
+  ) => InstanceType<SupportedWallet>;
+  createWalletStorage: CreateAsyncStorage;
 };
 
 const ThirdwebWalletContext = createContext<
@@ -61,6 +68,9 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
   const [activeWallet, setActiveWallet] = useState<
     InstanceType<SupportedWallet> | undefined
   >();
+  const [connectingToWallet, setIsConnectingToWallet] = useState<
+    ConnectingToWallet | undefined
+  >();
 
   if (!coordinatorStorage) {
     coordinatorStorage = props.createWalletStorage("coordinatorStorage");
@@ -74,8 +84,8 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
     deviceWalletStorage = props.createWalletStorage("deviceWallet");
   }
 
-  const getConstructorArg = useCallback(
-    <W extends SupportedWallet>(Wallet: W): ConstructorParameters<W>[0] => {
+  const createWalletInstance = useCallback(
+    <W extends SupportedWallet>(Wallet: W) => {
       let walletStorage = walletStorageMap.get(Wallet.id);
 
       if (!walletStorage) {
@@ -97,21 +107,21 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
 
       // Device wallet
       if (Wallet.id === "deviceWallet") {
-        return {
+        return new (Wallet as DeviceWalletType)({
           ...walletOptions,
           chain: props.activeChain,
           // can't use credentialStore right now - so use asyncStore
           storageType: "asyncStore",
           storage: deviceWalletStorage,
-        };
+        });
       }
 
       // Metamask
       if (Wallet.id === "metamask") {
-        return {
+        return new (Wallet as MetaMaskWalletType)({
           ...walletOptions,
           connectorStorage,
-        };
+        });
       }
 
       throw new Error(`Unsupported wallet`);
@@ -124,6 +134,7 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
       const _signer = await wallet.getSigner();
       setSigner(_signer);
       setActiveWallet(wallet);
+      setIsConnectingToWallet(undefined);
     },
     [],
   );
@@ -145,14 +156,16 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
       const Wallet = props.wallets.find((W) => W.id === lastConnectedWalletId);
       if (Wallet) {
         if (Wallet.id === "metamask") {
-          const wallet = new Wallet(getConstructorArg(Wallet));
+          const wallet = createWalletInstance(
+            Wallet,
+          ) as InstanceType<MetaMaskWalletType>;
           await wallet.autoConnect();
           handleWalletConnected(wallet);
         }
       }
     })();
   }, [
-    getConstructorArg,
+    createWalletInstance,
     props.wallets,
     handleWalletConnected,
     props.shouldAutoConnect,
@@ -168,8 +181,11 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
         const _connectedParams =
           connectParams as WalletConnectParams<DeviceWalletType>;
 
-        const _Wallet = Wallet as DeviceWalletType;
-        const wallet = new _Wallet(getConstructorArg(_Wallet));
+        const wallet = createWalletInstance(
+          Wallet as DeviceWalletType,
+        ) as InstanceType<DeviceWalletType>;
+
+        setIsConnectingToWallet(Wallet.id);
 
         await wallet.connect(_connectedParams);
         handleWalletConnected(wallet);
@@ -177,18 +193,36 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
 
       // Metamask
       else if (Wallet.id === "metamask") {
-        const _Wallet = Wallet as MetaMaskWalletType;
         const _connectedParams = connectParams as NonNullable<
           Parameters<InstanceType<MetaMaskWalletType>["connect"]>[0]
         >;
 
-        const wallet = new _Wallet(getConstructorArg(_Wallet));
+        const wallet = createWalletInstance(
+          Wallet as MetaMaskWalletType,
+        ) as InstanceType<MetaMaskWalletType>;
 
-        await wallet.connect(_connectedParams);
-        handleWalletConnected(wallet);
+        // TODO catch error
+        try {
+          setIsConnectingToWallet(Wallet.id);
+          await wallet.connect(_connectedParams);
+          handleWalletConnected(wallet);
+        } catch (e: any) {
+          if (e.message === "Resource unavailable") {
+            // if we have already requested metamask earlier and asking again
+            // in that case metamask is still in connecting status, so don't reset
+            // reset when user rejects the connect request
+            wallet.addListener("error", () => {
+              setIsConnectingToWallet(undefined);
+            });
+          } else {
+            setIsConnectingToWallet(undefined);
+          }
+
+          throw e;
+        }
       }
     },
-    [getConstructorArg, handleWalletConnected],
+    [createWalletInstance, handleWalletConnected],
   );
 
   const disconnectWallet = useCallback(() => {
@@ -210,6 +244,9 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
         connect: connectWallet,
         signer,
         activeWallet,
+        connectingToWallet: connectingToWallet,
+        createWalletInstance: createWalletInstance,
+        createWalletStorage: props.createWalletStorage,
       }}
     >
       {props.children}
@@ -230,4 +267,29 @@ export function useThirdwebWallet() {
 
 export function useWalletSigner() {
   return useThirdwebWallet().signer;
+}
+
+type DeviceWalletStorage = {
+  data: string | null;
+  address: string | null;
+};
+
+export function useDeviceWalletStorage() {
+  const [_deviceWalletStorage, _setDeviceWalletStorage] = useState<
+    DeviceWalletStorage | undefined
+  >(undefined);
+
+  useEffect(() => {
+    Promise.all([
+      deviceWalletStorage.getItem("data"),
+      deviceWalletStorage.getItem("address"),
+    ]).then(([_data, _address]) => {
+      _setDeviceWalletStorage({
+        data: _data,
+        address: _address,
+      });
+    });
+  }, []);
+
+  return _deviceWalletStorage;
 }
