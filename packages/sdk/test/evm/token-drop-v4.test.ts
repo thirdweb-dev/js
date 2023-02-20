@@ -42,7 +42,7 @@ describe("Token Drop Contract (v4)", async () => {
         TokenDropInitializer.contractType,
       ),
     );
-    dropContract = await sdk.getTokenDrop(address);
+    dropContract = await sdk.getContract(address, "token-drop");
   });
 
   it("should allow a snapshot to be set", async () => {

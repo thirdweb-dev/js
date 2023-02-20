@@ -1,4 +1,4 @@
-import { NFTMetadataInput } from "../../src/core/schema/nft";
+import { NFTMetadataInput, NFTMetadataOrUri } from "../../src/core/schema/nft";
 import {
   ClaimEligibility,
   NATIVE_TOKEN_ADDRESS,
@@ -50,7 +50,7 @@ describe("NFT Drop Contract (v4)", async () => {
   });
 
   it("comprehensive test", async () => {
-    const metadata = [];
+    const metadata: NFTMetadataOrUri[] = [];
     for (let i = 0; i < 10; i++) {
       metadata.push({ name: `test${i}`, description: `desc${i}` });
     }
@@ -91,7 +91,7 @@ describe("NFT Drop Contract (v4)", async () => {
   });
 
   it("comprehensive test with allowlist and price override", async () => {
-    const metadata = [];
+    const metadata: NFTMetadataOrUri[] = [];
     for (let i = 0; i < 10; i++) {
       metadata.push({ name: `test${i}`, description: `desc${i}` });
     }
@@ -106,14 +106,11 @@ describe("NFT Drop Contract (v4)", async () => {
         ],
       },
     ]);
-    console.log(
-      await dropContract.claimConditions.getClaimIneligibilityReasons(1),
-    );
     await dropContract.claim(1);
   });
 
   it("comprehensive test with allowlist", async () => {
-    const metadata = [];
+    const metadata: NFTMetadataOrUri[] = [];
     for (let i = 0; i < 10; i++) {
       metadata.push({ name: `test${i}`, description: `desc${i}` });
     }

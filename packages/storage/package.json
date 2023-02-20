@@ -29,9 +29,6 @@
     "dist/"
   ],
   "preconstruct": {
-    "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
-      "exports": true
-    },
     "exports": true
   },
   "devDependencies": {
