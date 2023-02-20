@@ -16,11 +16,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import type { SDKOptions } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
-import {
-  CreateAsyncStorage,
-  DeviceBrowserWallet,
-  MetaMask,
-} from "@thirdweb-dev/wallets";
+import { CreateAsyncStorage } from "@thirdweb-dev/wallets";
 import React, { useMemo } from "react";
 
 // this allows autocomplete to work for the chainId prop but still allows `number` and `string` to be passed (for dynamically passed chain data)
@@ -57,7 +53,6 @@ export interface ThirdwebProviderProps<
    */
   // walletConnectors?: WalletConnector[];
 
-  // TODO
   supportedWallets: SupportedWallet[];
 
   /**
@@ -161,7 +156,7 @@ export const ThirdwebProvider = <
   alchemyApiKey,
   infuraApiKey,
 
-  supportedWallets = [MetaMask, DeviceBrowserWallet],
+  supportedWallets,
 
   // deprecated
   desiredChainId,

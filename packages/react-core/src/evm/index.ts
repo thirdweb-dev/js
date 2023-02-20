@@ -1,9 +1,11 @@
 export {
+  useActiveChainId,
   useActiveWallet,
   useConnect,
   useConnectingToWallet,
   useCreateWalletInstance,
   useDisconnect,
+  useSwitchChain,
   useWallets,
 } from "../core/hooks/wallet-hooks";
 export { ThirdwebProvider } from "../core/providers/thirdweb-provider";
@@ -15,6 +17,7 @@ export {
 // Utilities and Others
 export { shouldNeverPersistQuery } from "../core/query-utils/query-key";
 export type { RequiredParam } from "../core/query-utils/required-param";
+export type { SupportedWallet } from "../core/types/wallet";
 // constants
 export * from "./constants/runtime";
 // contexts

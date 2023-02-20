@@ -11,6 +11,7 @@
 // export { ThirdwebProvider } from "./providers/thirdweb-provider";
 // export { ThirdwebProvider } from "@thirdweb-dev/react-core";
 export {
+  useActiveChainId,
   useActiveWallet,
   useAddress,
   useBalance,

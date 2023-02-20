@@ -23,3 +23,15 @@ export function useConnectingToWallet() {
 export function useCreateWalletInstance() {
   return useThirdwebWallet().createWalletInstance;
 }
+
+export function useSwitchChain() {
+  return useThirdwebWallet().switchChain;
+}
+
+export function useActiveChainId() {
+  return useThirdwebWallet().activeChainId;
+}
+
+export function useAccountAddress() {
+  return useThirdwebWallet().accountAddress;
+}

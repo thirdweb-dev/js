@@ -11,29 +11,53 @@ import {
   Theme,
 } from "../../design-system";
 import { scrollbar } from "../../design-system/styles";
+import { useInstalledWallets } from "../hooks/useInstalledWallets";
+import { CoinbaseWalletSetup } from "./setup-ui/CoinbaseWaletSetup";
 import { ConnectToDeviceWallet } from "./setup-ui/DeviceWalletSetup";
 import { MetamaskWalletSetup } from "./setup-ui/MetamaskWalletSetup";
+import { CoinbaseWalletIcon } from "./setup-ui/shared/icons/CoinbaseWalletIcon";
 import { DeviceWalletIcon } from "./setup-ui/shared/icons/DeviceWalletIcon";
 import { MetamaskIcon } from "./setup-ui/shared/icons/MetamaskIcon";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import * as Dialog from "@radix-ui/react-dialog";
 import { Cross2Icon } from "@radix-ui/react-icons";
-import { useConnect, useConnectingToWallet } from "@thirdweb-dev/react-core";
-import { MetaMask } from "@thirdweb-dev/wallets";
+import {
+  useConnect,
+  useConnectingToWallet,
+  useWallets,
+} from "@thirdweb-dev/react-core";
+import { SupportedWallet } from "@thirdweb-dev/react-core/src/core/types/wallet";
 import { useEffect, useState } from "react";
 
 const metamaskIcon = <MetamaskIcon width={iconSize.lg} height={iconSize.lg} />;
 const deviceWalletIcon = (
   <DeviceWalletIcon width={iconSize.lg} height={iconSize.lg} />
 );
+const coinbaseWalletIcon = (
+  <CoinbaseWalletIcon width={iconSize.lg} height={iconSize.lg} />
+);
+
+const walletIcons: Record<SupportedWallet["id"], JSX.Element> = {
+  metamask: metamaskIcon,
+  deviceWallet: deviceWalletIcon,
+  coinbaseWallet: coinbaseWalletIcon,
+};
+
+const walletNames: Record<SupportedWallet["id"], string> = {
+  metamask: "Metamask",
+  deviceWallet: "Device Wallet",
+  coinbaseWallet: "Coinbase Wallet",
+};
 
 export const ConnectWalletFlow = () => {
   const connectingToWallet = useConnectingToWallet();
   const [showUI, setShowUI] = useState<
-    "deviceWallet" | "metamask" | "networkList"
+    "deviceWallet" | "metamask" | "networkList" | "coinbaseWallet"
   >("networkList");
   const connect = useConnect();
+  const wallets = useWallets();
+  const installedWallets = useInstalledWallets();
 
   const [open, setOpen] = useState(false);
 
@@ -51,22 +75,36 @@ export const ConnectWalletFlow = () => {
     }
   }, [connectingToWallet]);
 
-  const networksMeta = [
-    {
-      id: "metamask",
-      name: "Metamask",
-      icon: metamaskIcon,
-      onClick: () => connect(MetaMask, {}),
-    },
-    {
-      id: "deviceWallet",
-      name: "Device Wallet",
-      icon: deviceWalletIcon,
-      onClick: () => {
+  const walletsMeta = wallets.map((wallet) => ({
+    id: wallet.id,
+    name: walletNames[wallet.id],
+    icon: walletIcons[wallet.id],
+    onClick: () => {
+      if (wallet.id === "deviceWallet") {
         setShowUI("deviceWallet");
-      },
+      } else {
+        if (wallet.id === "metamask" && !installedWallets.metamask) {
+          // open metamask extension page in new tab
+          // TEMPORARY
+          window.open("https://metamask.io/download/", "_blank");
+        } else if (
+          wallet.id === "coinbaseWallet" &&
+          !installedWallets.coinbaseWallet
+        ) {
+          // TEMPORARY
+          // open coinbase wallet extension page in new tab
+          window.open(
+            "https://chrome.google.com/webstore/detail/coinbase-wallet-extension/hnfanknocfeofbddgcijnmhnfnkdnaad",
+            "_blank",
+          );
+        } else {
+          connect(wallet, {});
+          setShowUI(wallet.id);
+        }
+      }
     },
-  ] as const;
+    installed: installedWallets[wallet.id],
+  }));
 
   const handleBack = () => setShowUI("networkList");
 
@@ -97,18 +135,18 @@ export const ConnectWalletFlow = () => {
                 <Spacer y="xl" />
 
                 <NetworkList>
-                  {networksMeta.map((network) => {
+                  {walletsMeta.map((Wallet) => {
                     return (
-                      <li key={network.id}>
+                      <li key={Wallet.id}>
                         <NetworkButton
                           type="button"
                           onClick={() => {
-                            network.onClick();
-                            setShowUI(network.id);
+                            Wallet.onClick();
                           }}
                         >
-                          {network.icon}
-                          {network.name}
+                          {Wallet.icon}
+                          <WalletName>{Wallet.name}</WalletName>
+                          {Wallet.installed && <Badge> Installed </Badge>}
                         </NetworkButton>
                       </li>
                     );
@@ -124,6 +162,10 @@ export const ConnectWalletFlow = () => {
 
             {showUI === "deviceWallet" && (
               <ConnectToDeviceWallet onBack={handleBack} />
+            )}
+
+            {showUI === "coinbaseWallet" && (
+              <CoinbaseWalletSetup onBack={handleBack} />
             )}
 
             {/* Close Icon */}
@@ -150,6 +192,14 @@ export const ConnectWalletFlow = () => {
     </Dialog.Root>
   );
 };
+
+const Badge = styled.span<{ theme?: Theme }>`
+  padding: ${spacing.xxs} ${spacing.xs};
+  font-size: ${fontSize.sm};
+  background-color: ${(p) => p.theme.badge.secondary};
+  border-radius: ${radius.lg};
+  margin-left: auto;
+`;
 
 const CrossContainer = styled.div`
   position: absolute;
@@ -182,7 +232,7 @@ const DialogContent = styled.div<{ theme?: Theme }>`
   left: 50%;
   transform: translate(-50%, -50%);
   width: calc(100vw - 40px);
-  max-width: 450px;
+  max-width: 500px;
   max-height: 85vh;
   overflow-y: auto;
   padding: ${spacing.lg};
@@ -206,6 +256,11 @@ const DialogContent = styled.div<{ theme?: Theme }>`
     })}
 `;
 
+const WalletName = styled.span`
+  font-size: ${fontSize.md};
+  font-weight: 500;
+`;
+
 const DialogTitle = styled.h2<{ theme?: Theme }>`
   margin: 0;
   font-weight: 500;
@@ -218,7 +273,7 @@ const NetworkList = styled.ul`
   list-style-type: none;
   display: flex;
   flex-direction: column;
-  gap: ${spacing.sm};
+  gap: ${spacing.xs};
 `;
 
 const NetworkButton = styled.button<{ theme?: Theme }>`

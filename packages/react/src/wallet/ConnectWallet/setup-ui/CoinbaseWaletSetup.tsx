@@ -1,8 +1,8 @@
 import { iconSize } from "../../../design-system";
 import { NoticeShell } from "./shared/NoticeShell";
-import { MetamaskIcon } from "./shared/icons/MetamaskIcon";
+import { CoinbaseWalletIcon } from "./shared/icons/CoinbaseWalletIcon";
 
-export const MetamaskWalletSetup: React.FC<{ onBack: () => void }> = (
+export const CoinbaseWalletSetup: React.FC<{ onBack: () => void }> = (
   props,
 ) => {
   return (
@@ -11,7 +11,7 @@ export const MetamaskWalletSetup: React.FC<{ onBack: () => void }> = (
       loading
       title="Connecting your wallet"
       description="Login and connect your wallet through the metamask pop-up"
-      icon={<MetamaskIcon width={iconSize.xl} height={iconSize.xl} />}
+      icon={<CoinbaseWalletIcon width={iconSize.xl} height={iconSize.xl} />}
       helper={{
         text: "Having troubles connecting to metamask?",
         link: "/foo/bar",
