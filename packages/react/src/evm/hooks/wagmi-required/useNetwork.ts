@@ -9,13 +9,16 @@ import {
  *
  * @example
  * ```javascript
- * import { useNetwork, ChainId } from "@thirdweb-dev/react";
+ * import { useNetwork } from "@thirdweb-dev/react";
  *
  * const App = () => {
  *   const [, switchNetwork] = useNetwork();
  *
+ * 
  *   return (
- *     <button onClick={() => switchNetwork(ChainId.Polygon)}>
+ *      // switchNetwork is undefined if the wallet does not support programmatic network switching
+ *      // 137 is the chainId for Polygon in this example
+ *     <button onClick={() => switchNetwork(137)}>
  *        Switch Network
  *     </button>
  *   );

@@ -66,13 +66,22 @@ export class StaticJsonRpcBatchProvider extends providers.StaticJsonRpcProvider 
         // on whether it was a success or error
         batch.forEach((inflightRequest_, index) => {
           const payload = result[index];
-          if (payload.error) {
-            const error = new Error(payload.error.message);
-            (error as any).code = payload.error.code;
-            (error as any).data = payload.error.data;
-            inflightRequest_.reject(error);
+
+          // there may *not* be a payload for a given request (typically RPC error level)
+          if (payload) {
+            // if there is a payload, check for an error
+            if (payload.error) {
+              const error = new Error(payload.error.message);
+              (error as any).code = payload.error.code;
+              (error as any).data = payload.error.data;
+              inflightRequest_.reject(error);
+            } else {
+              // if there's no error resolve the request
+              inflightRequest_.resolve(payload.result);
+            }
           } else {
-            inflightRequest_.resolve(payload.result);
+            // if there is no payload, reject the request
+            inflightRequest_.reject(new Error("No response for request"));
           }
         });
       },
