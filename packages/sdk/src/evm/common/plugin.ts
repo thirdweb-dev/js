@@ -3,8 +3,8 @@ import { Abi, AbiSchema, SDKOptions } from "../schema";
 import { isFeatureEnabled } from "./feature-detection";
 import { fetchContractMetadataFromAddress } from "./metadata-resolver";
 import { unique } from "./utils";
-import type { IRouter } from "@thirdweb-dev/contracts-js";
-import RouterABI from "@thirdweb-dev/contracts-js/dist/abis/Router.json";
+import type { ITWRouter } from "@thirdweb-dev/contracts-js";
+import RouterABI from "@thirdweb-dev/contracts-js/dist/abis/ITWRouter.json";
 import { ThirdwebStorage } from "@thirdweb-dev/storage";
 import { ethers } from "ethers";
 
@@ -28,21 +28,22 @@ export async function getCompositePluginABI(
     );
 
     if (isPluginRouter) {
-      const contract = new ContractWrapper<IRouter>(
+      const contract = new ContractWrapper<ITWRouter>(
         provider,
         address,
         RouterABI,
         options,
       );
 
-      const pluginMap = await contract.readContract.getAllPlugins();
+      const plugins = await contract.readContract.getAllPlugins();
 
       // get extension addresses
-      const allPlugins = pluginMap.map((item) => item.pluginAddress);
-      const plugins = Array.from(new Set(allPlugins));
+      const pluginAddresses = plugins.map(
+        (item) => item.metadata.implementation,
+      );
 
       // get ABIs of extension contracts
-      pluginABIs = await getPluginABI(plugins, provider, storage);
+      pluginABIs = await getPluginABI(pluginAddresses, provider, storage);
     }
   } catch (err) {}
 
