@@ -12,7 +12,7 @@
     "infoURL": "https://base.org/",
     "shortName": "base-gor",
     "chainId": 84531,
-    "explorers": [],
+    "explorers": ["https://goerli-explorer.base.org/"],
     "icon": {
       "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
       "height": 512,
