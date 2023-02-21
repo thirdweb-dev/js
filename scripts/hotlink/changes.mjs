@@ -11,7 +11,7 @@ export const changes = [
       hotlink: "./src/index.ts",
     },
     types: {
-      hotlink: undefined,
+      hotlink: "",
       original: "dist/thirdweb-dev-react.cjs.d.ts",
     },
     exports: {
@@ -48,7 +48,7 @@ export const changes = [
     },
     types: {
       original: "dist/thirdweb-dev-react-core.cjs.d.ts",
-      hotlink: undefined,
+      hotlink: "",
     },
     exports: {
       ".": {
@@ -74,7 +74,7 @@ export const changes = [
     },
     types: {
       original: "dist/thirdweb-dev-wallets.cjs.d.ts",
-      hotlink: undefined,
+      hotlink: "",
     },
     exports: {
       ".": {
