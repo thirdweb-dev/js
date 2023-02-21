@@ -84,6 +84,11 @@ export const NETWORKS: FooterLinkInfo[] = [
     label: "network-solana",
     link: "/network/solana",
   },
+  {
+    name: "Chainlist",
+    label: "chains",
+    link: "/chains",
+  },
 ];
 
 export const FAUCETS: FooterLinkInfo[] = [

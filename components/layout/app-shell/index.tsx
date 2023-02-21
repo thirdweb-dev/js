@@ -162,8 +162,9 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
             py={2}
             as="header"
             alignItems="center"
+            overflowX={{ base: "auto", md: "hidden" }}
           >
-            <Flex gap={2}>
+            <Flex gap={{ base: 0, md: 2 }}>
               <LinkButton
                 href="/dashboard"
                 size="sm"
@@ -274,6 +275,15 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
                     label="gas-estimator"
                   >
                     Gas Estimator
+                  </TrackedLink>
+                  <TrackedLink
+                    href="/chains"
+                    bg="transparent"
+                    category="footer"
+                    display={{ base: "none", md: "flex" }}
+                    label="chains"
+                  >
+                    Chainlist
                   </TrackedLink>
                   <Text alignSelf="center" order={{ base: 2, md: 0 }}>
                     thirdweb &copy; {new Date().getFullYear()}

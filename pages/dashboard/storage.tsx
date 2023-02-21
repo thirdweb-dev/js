@@ -49,11 +49,11 @@ const DashboardStorage: ThirdwebNextPage = () => {
   const [codeEnvironment, setCodeEnvironment] =
     useState<CodeEnvironment>("react");
 
+  const isValidIPFSHash = ipfsHash.startsWith("ipfs://");
+
   const title = "IPFS Upload & Pinning Service | Pin Files to IPFS for Free";
   const description =
     "Upload, pin, and host NFT metadata, images, or any type of file on IPFS—using thirdweb's IPFS pinning service. Store files on IPFS for free.";
-
-  const isValidIPFSHash = ipfsHash.startsWith("ipfs://");
 
   return (
     <SimpleGrid columns={{ base: 1, xl: 4 }} gap={8} mt={{ base: 2, md: 6 }}>
@@ -236,8 +236,30 @@ console.info(url);
 
 // You can also download the data from the uri
 const data = await storage.downloadJSON(uri);`,
-  python: ``,
-  go: ``,
+  python: `from thirdweb import ThirdwebSDK
+
+sdk = ThirdwebSDK("goerli")
+metadata = {
+  "name": "NFT",
+  "image": "ipfs://..."
+}
+uri = sdk.storage.upload(metadata)`,
+  go: `package main
+
+import (
+    "context"
+    "github.com/thirdweb-dev/go-sdk/v2/thirdweb"
+)
+
+func main() {
+    sdk, _ := thirdweb.NewThirdwebSDK("goerli", nil)
+
+    metadata := map[string]interface{}{
+      "name": "NFT",
+      "image": "ipfs://..."
+    }
+    uri, _ := sdk.Storage.Upload(context.Background(), metadata, "", "")
+}`,
   unity: ``,
 };
 

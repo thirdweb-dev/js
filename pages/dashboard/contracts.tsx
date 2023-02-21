@@ -83,7 +83,7 @@ const Contracts: ThirdwebNextPage = () => {
             </Tabs>
           ) : (
             <Container maxW="lg">
-              <Card px={8} as={Flex} flexDir="column" gap={1}>
+              <Card p={6} as={Flex} flexDir="column" gap={2}>
                 <Heading as="h2" size="title.sm">
                   Please connect your wallet
                 </Heading>

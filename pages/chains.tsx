@@ -20,6 +20,7 @@ import { ChainIcon } from "components/icons/ChainIcon";
 import Fuse from "fuse.js";
 import { useConfiguredChainsRecord } from "hooks/chains/configureChains";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
+import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { memo, useDeferredValue, useMemo, useState } from "react";
 import { FiArrowUpRight, FiCheckCircle, FiSearch } from "react-icons/fi";
@@ -74,11 +75,23 @@ export const ChainsLanding: ThirdwebNextPage = (
     return fuse.search(deferredSearchTerm).map((e) => e.item);
   }, [chainsWithDashboardStatus, deferredSearchTerm, fuse]);
 
+  const title = "Chainlist | RPCs, Block Explorers, Faucets | thirdweb";
+  const description =
+    "A list of EVM networks with RPCs, smart contracts, block explorers & faucets. Deploy smart contracts to all EVM chains with thirdweb.";
+
   return (
     <Flex flexDir="column" gap={8} mt={{ base: 2, md: 6 }}>
+      <NextSeo
+        title={title}
+        description={description}
+        openGraph={{
+          title,
+          description,
+        }}
+      />
       <Flex direction="row" align="center" justify="space-between" gap={4}>
         <Heading size="title.lg" as="h1" flexShrink={0}>
-          Chain List
+          Chainlist
         </Heading>
 
         <Card
@@ -238,7 +251,7 @@ const SearchResult: React.FC<{
               readOnly
               isDisabled
               pointerEvents="none"
-              value="Coming soon"
+              value="Coming Soon"
             />
           )}
         </Flex>

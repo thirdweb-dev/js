@@ -168,14 +168,14 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
             <GridItem colSpan={1} key={`${file.name}_${index}`}>
               <SimpleGrid
                 as={Card}
-                columns={14}
+                columns={24}
                 position="relative"
                 p={1}
-                columnGap={2}
+                columnGap={{ base: 2, md: 4 }}
                 rowGap={0}
                 alignItems="center"
               >
-                <GridItem colSpan={3} rowSpan={2}>
+                <GridItem colSpan={5} rowSpan={2}>
                   <AspectRatio ratio={1}>
                     <Box
                       rounded="lg"
@@ -195,13 +195,13 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                     </Box>
                   </AspectRatio>
                 </GridItem>
-                <GridItem colSpan={9} rowSpan={1}>
+                <GridItem colSpan={16} rowSpan={1}>
                   <Heading size="label.md" as="label" noOfLines={2}>
                     {file.name}
                   </Heading>
                 </GridItem>
 
-                <GridItem colSpan={1} rowSpan={1} placeItems="center">
+                <GridItem colSpan={2} rowSpan={1} placeItems="center">
                   {ipfsHash ? (
                     <Tooltip
                       p={0}
@@ -258,7 +258,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                     </Tooltip>
                   )}
                 </GridItem>
-                <GridItem colSpan={9} rowSpan={1}>
+                <GridItem colSpan={16} rowSpan={1}>
                   <Input
                     size="sm"
                     opacity={ipfsHash ? 1 : 0}
