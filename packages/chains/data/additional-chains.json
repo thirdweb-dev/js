@@ -1,6 +1,6 @@
 [
   {
-    "name": "Base Testnet Goerli",
+    "name": "Base Goerli",
     "chain": "ETH",
     "rpc": ["https://goerli.base.org/"],
     "faucets": [],
@@ -12,7 +12,13 @@
     "infoURL": "https://base.org/",
     "shortName": "base-gor",
     "chainId": 84531,
-    "explorers": ["https://goerli-explorer.base.org/"],
+    "explorers": [
+      {
+        "name": "baseScan",
+        "url": "https://goerli-explorer.base.org/",
+        "standard": "EIP3091"
+      }
+    ],
     "icon": {
       "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
       "height": 512,
@@ -20,7 +26,6 @@
       "format": "png",
       "sizes": [512, 256, 128, 64, 32, 16]
     },
-    "testnet": true,
-    "slug": "base-goerli"
+    "testnet": true
   }
 ]

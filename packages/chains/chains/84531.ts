@@ -1,8 +1,8 @@
 export default {
-  "name": "Base Testnet Goerli",
+  "name": "Base Goerli",
   "chain": "ETH",
   "rpc": [
-    "https://base-testnet-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
+    "https://base-goerli.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.base.org/"
   ],
   "faucets": [],
@@ -14,7 +14,13 @@ export default {
   "infoURL": "https://base.org/",
   "shortName": "base-gor",
   "chainId": 84531,
-  "explorers": [],
+  "explorers": [
+    {
+      "name": "baseScan",
+      "url": "https://goerli-explorer.base.org/",
+      "standard": "EIP3091"
+    }
+  ],
   "icon": {
     "url": "ipfs://QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png",
     "height": 512,
@@ -30,5 +36,5 @@ export default {
     ]
   },
   "testnet": true,
-  "slug": "base-testnet-goerli"
+  "slug": "base-goerli"
 } as const;
