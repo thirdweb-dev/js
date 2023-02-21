@@ -115,12 +115,6 @@ function handleLegacyRedirects(
   networkOrAddress: string,
   catchAll: string[],
 ) {
-  // handle old dashboard urls
-  if (networkOrAddress === "dashboard") {
-    const destination = catchAll.join("/");
-    return redirect(request, `/${destination}`);
-  }
-
   // handle deployer.thirdweb.eth urls
   if (networkOrAddress === "deployer.thirdweb.eth") {
     return redirect(request, `/thirdweb.eth/${catchAll.join("/")}`, true);

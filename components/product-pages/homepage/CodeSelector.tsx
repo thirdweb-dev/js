@@ -1,11 +1,12 @@
 import { CodeOptionButton, CodeOptions } from "../common/CodeOptionButton";
 import { Flex, Icon } from "@chakra-ui/react";
 import { useTrack } from "hooks/analytics/useTrack";
+import { useRouter } from "next/router";
 import darkTheme from "prism-react-renderer/themes/dracula";
 import { useState } from "react";
 import { AiOutlineCode } from "react-icons/ai";
 import { CgFileDocument } from "react-icons/cg";
-import { Card, CodeBlock, LinkButton } from "tw-components";
+import { Card, CodeBlock, LinkButton, LinkButtonProps } from "tw-components";
 
 const landingSnippets = {
   javascript: `import { ThirdwebSDK } from "@thirdweb-dev/sdk";
@@ -137,6 +138,8 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
   snippets = "landing",
   docs = "https://portal.thirdweb.com/",
 }) => {
+  const { asPath } = useRouter();
+
   const [activeLanguage, setActiveLanguage] =
     useState<CodeOptions>(defaultLanguage);
   const trackEvent = useTrack();
@@ -161,7 +164,7 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
         flexWrap="wrap"
       >
         {Object.keys(actualSnippets).map((key) =>
-          key === "unity" && snippets === "auth" ? null : (
+          actualSnippets[key as keyof typeof actualSnippets] ? (
             <CodeOptionButton
               key={key}
               setActiveLanguage={setActiveLanguage}
@@ -171,12 +174,15 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
             >
               {key === "javascript" ? "JavaScript" : key}
             </CodeOptionButton>
-          ),
+          ) : null,
         )}
       </Flex>
 
       <Card
-        w={{ base: "full", md: "69%" }}
+        w={{
+          base: "full",
+          md: asPath === "/dashboard/storage" ? "inherit" : "69%",
+        }}
         p={0}
         background="rgba(0,0,0,0.4)"
         boxShadow="0 0 1px 1px hsl(0deg 0% 100% / 15%)"
@@ -199,13 +205,16 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
               ? "cpp"
               : activeLanguage
           }
-          backgroundColor={"transparent"}
+          backgroundColor={
+            asPath === "/dashboard/storage" ? undefined : "transparent"
+          }
           mt={4}
         />
 
         {/* Links for Replit and Docs  */}
-        <Flex justify="end" gap={6} position="absolute" bottom={0} right="16px">
+        <Flex justify="end" gap={6} position="absolute" bottom={0} right={2}>
           <CustomLinkButton
+            px={4}
             text="Docs"
             href={docs}
             icon={<Icon color={"white"} as={CgFileDocument} />}
@@ -238,7 +247,7 @@ export const CodeSelector: React.FC<CodeSelectorProps> = ({
   );
 };
 
-interface CustomLinkButtonProps {
+interface CustomLinkButtonProps extends LinkButtonProps {
   onClick: () => void;
   text: string;
   href: string;
@@ -250,6 +259,7 @@ const CustomLinkButton: React.FC<CustomLinkButtonProps> = ({
   href,
   icon,
   text,
+  ...linkButtonProps
 }) => {
   return (
     <LinkButton
@@ -268,6 +278,7 @@ const CustomLinkButton: React.FC<CustomLinkButtonProps> = ({
         bg: "trnasparent",
       }}
       onClick={onClick}
+      {...linkButtonProps}
     >
       {text}
     </LinkButton>

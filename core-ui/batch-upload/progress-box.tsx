@@ -25,16 +25,13 @@ export const ProgressBox: React.FC<ProgressBoxProps> = ({ progress }) => {
 
   return (
     <Flex w="full" direction="column">
-      {progress.progress !== 0 && (
-        <Progress
-          borderRadius="md"
-          mt="12px"
-          hasStripe
-          colorScheme="primary"
-          transition="500ms ease"
-          value={(progress.progress / progress.total) * 100}
-        />
-      )}
+      <Progress
+        borderRadius="md"
+        mt="12px"
+        transition="500ms ease"
+        value={(progress.progress / progress.total) * 100}
+        size="sm"
+      />
       {takingLong && progress.progress !== 0 && (
         <Text size="body.sm" textAlign="center" mt={3}>
           This may take a while.

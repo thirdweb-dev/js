@@ -19,7 +19,7 @@ import { getDashboardChainRpc } from "lib/rpc";
 import { getEVMThirdwebSDK, replaceIpfsUrl } from "lib/sdk";
 import { useMemo } from "react";
 import { BsShieldCheck } from "react-icons/bs";
-import { FiExternalLink, FiImage } from "react-icons/fi";
+import { FiArrowUpRight, FiImage } from "react-icons/fi";
 import invariant from "tiny-invariant";
 import { Button, Card, Heading, Link, Text, TrackedLink } from "tw-components";
 
@@ -87,7 +87,7 @@ export const ContractCard: React.FC<ContractCardProps> = ({
           {slim ? (
             <IconButton
               variant="solid"
-              icon={<Icon as={FiExternalLink} />}
+              icon={<Icon as={FiArrowUpRight} />}
               size="sm"
               p={0}
               borderRadius="full"

@@ -1,4 +1,4 @@
-import { CodeSnippet, Environment, SupportedEnvironment } from "./types";
+import { CodeEnvironment, CodeSnippet, SupportedEnvironment } from "./types";
 import { ButtonGroup, Flex, Icon, Stack } from "@chakra-ui/react";
 import { SiGo } from "@react-icons/all-files/si/SiGo";
 import { SiJavascript } from "@react-icons/all-files/si/SiJavascript";
@@ -11,8 +11,8 @@ import { ComponentWithChildren } from "types/component-with-children";
 
 interface ICodeSegment {
   snippet: CodeSnippet;
-  environment: Environment;
-  setEnvironment: Dispatch<SetStateAction<Environment>>;
+  environment: CodeEnvironment;
+  setEnvironment: Dispatch<SetStateAction<CodeEnvironment>>;
   isInstallCommand?: boolean;
   hideTabs?: boolean;
 }
@@ -63,10 +63,10 @@ export const CodeSegment: React.FC<ICodeSegment> = ({
   isInstallCommand,
   hideTabs,
 }) => {
-  const activeEnvironment: Environment = useMemo(() => {
+  const activeEnvironment: CodeEnvironment = useMemo(() => {
     return (
       snippet[environment] ? environment : Object.keys(snippet)[0]
-    ) as Environment;
+    ) as CodeEnvironment;
   }, [environment, snippet]);
 
   const activeSnippet = useMemo(() => {

@@ -1,12 +1,10 @@
-import { useAllContractList, useAllProgramsList } from "@3rdweb-sdk/react";
 import {
   Flex,
-  Icon,
-  Tab,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
+  GridItem,
+  LinkBox,
+  LinkOverlay,
+  SimpleGrid,
+  useColorMode,
 } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useAddress } from "@thirdweb-dev/react";
@@ -14,143 +12,168 @@ import { ClientOnly } from "components/ClientOnly/ClientOnly";
 import { FTUX } from "components/FTUX/FTUX";
 import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
-import { DeployedContracts } from "components/contract-components/tables/deployed-contracts";
-import { DeployedPrograms } from "components/contract-components/tables/deployed-programs";
-import { ReleasedContracts } from "components/contract-components/tables/released-contracts";
-import { FancyEVMIcon } from "components/icons/Ethereum";
-import { PublisherSDKContext } from "contexts/custom-sdk-context";
-import { utils } from "ethers";
-import { useSingleQueryParam } from "hooks/useQueryParam";
-import { isPossibleSolanaAddress } from "lib/address-utils";
+import { Changelog, ChangelogItem } from "components/dashboard/Changelog";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { PageId } from "page-id";
-import { useEffect, useMemo, useState } from "react";
-import { Heading } from "tw-components";
+import { useEffect, useState } from "react";
+import { Card, Heading, Text, TrackedLink } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
 
-/**
- *
- * @TODO
- * Initially the FTUX is shown, then the dashboard is shown. This creates a flash of wrong content.
- * To fix this, we need to hold off rendering either the FTUX or the dashboard until we know which one to show.
- */
+const TRACKING_CATEGORY = "dashboard";
 
-const Dashboard: ThirdwebNextPage = () => {
-  const queryParam = useSingleQueryParam("address") || "dashboard";
+const GET_STARTED_SECTIONS = [
+  {
+    title: "View contracts",
+    description:
+      "View smart contracts that you deployed or added to your dashboard.",
+    image: require("public/assets/dashboard/home-view.png"),
+    lightImage: require("public/assets/dashboard/home-view-light.png"),
+    href: "/dashboard/contracts",
+  },
+  {
+    title: "Browse contracts",
+    description:
+      "Explore contracts from world-class web3 protocols & engineers- all deployable with 1-click.",
+    image: require("public/assets/dashboard/home-browse.png"),
+    lightImage: require("public/assets/dashboard/home-browse-light.png"),
+    href: "/explore",
+  },
+  {
+    title: "Browse templates",
+    description:
+      "Get inspired and start building your own web3 apps on top of our templates.",
+    image: require("public/assets/dashboard/home-templates.png"),
+    lightImage: require("public/assets/dashboard/home-templates-light.png"),
+    href: "https://portal.thirdweb.com/templates",
+    isExternal: true,
+  },
+  {
+    title: "Visit the docs",
+    description:
+      "Find guides, references and resources that will help you build with thirdweb.",
+    image: require("public/assets/dashboard/home-docs.png"),
+    lightImage: require("public/assets/dashboard/home-docs-light.png"),
+    href: "https://portal.thirdweb.com",
+    isExternal: true,
+  },
+];
+
+const Dashboard: ThirdwebNextPage = (
+  props: InferGetStaticPropsType<typeof getStaticProps>,
+) => {
+  const { colorMode } = useColorMode();
   const address = useAddress();
   const { publicKey } = useWallet();
 
   /** put the component is loading state for sometime to avoid layout shift */
   const [isLoading, setIsLoading] = useState(true);
-
-  const evmAddress = useMemo(() => {
-    return queryParam === "dashboard"
-      ? address
-      : utils.isAddress(queryParam)
-      ? queryParam
-      : address;
-  }, [address, queryParam]);
-
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
     }, 200);
   }, []);
 
-  const solAddress = useMemo(() => {
-    return queryParam === "dashboard"
-      ? publicKey?.toBase58()
-      : isPossibleSolanaAddress(queryParam)
-      ? queryParam
-      : publicKey?.toBase58();
-  }, [publicKey, queryParam]);
-
   return (
-    <ClientOnly fadeInDuration={600} ssr={null}>
-      {!isLoading && (
-        <>
-          {solAddress && <SOLDashboard address={solAddress} />}
-          {evmAddress && (
-            <Tabs isLazy lazyBehavior="keepMounted">
-              <TabList
-                px={0}
-                borderBottomColor="borderColor"
-                borderBottomWidth="1px"
-                overflowX={{ base: "auto", md: "inherit" }}
-              >
-                <Tab gap={2} _selected={{ borderBottomColor: "purple.500" }}>
-                  <Icon opacity={0.85} boxSize={6} as={FancyEVMIcon} />
-                  <Heading size="label.lg">Deployed Contracts</Heading>
-                </Tab>
-                <Tab
-                  gap={2}
-                  _selected={{
-                    borderBottomColor: "#FBFF5C",
-                  }}
-                >
-                  <ChakraNextImage
-                    src={require("public/assets/product-icons/release.png")}
-                    alt=""
-                    boxSize={6}
-                  />
-                  <Heading size="label.lg">Released Contracts</Heading>
-                </Tab>
-              </TabList>
-              <TabPanels px={0} py={2}>
-                <TabPanel px={0}>
-                  <EVMDashboard address={evmAddress} />
-                </TabPanel>
-                <TabPanel px={0}>
-                  <ReleaseDashboard address={evmAddress} />
-                </TabPanel>
-              </TabPanels>
-            </Tabs>
+    <SimpleGrid columns={{ base: 1, xl: 4 }} gap={8} mt={{ base: 2, md: 10 }}>
+      <GridItem colSpan={{ xl: 3 }}>
+        <ClientOnly fadeInDuration={600} ssr={null}>
+          {!isLoading && (
+            <>
+              <Heading mb={8}>Get started quickly</Heading>
+              {(address || publicKey) && (
+                <SimpleGrid columns={{ base: 1, md: 2 }} gap={6}>
+                  {GET_STARTED_SECTIONS.map(
+                    ({
+                      title,
+                      description,
+                      lightImage,
+                      image,
+                      href,
+                      isExternal,
+                    }) => (
+                      <LinkBox
+                        key={title}
+                        role="group"
+                        overflow="hidden"
+                        position="relative"
+                      >
+                        <Card p={0} overflow="hidden">
+                          <Flex direction="column" gap={3} p={6}>
+                            <LinkOverlay
+                              as={TrackedLink}
+                              category={TRACKING_CATEGORY}
+                              label={title}
+                              href={href}
+                              isExternal={isExternal}
+                              _hover={{ textDecor: "none" }}
+                            >
+                              <Heading
+                                size="title.xs"
+                                _groupHover={{ color: "blue.500" }}
+                                transitionDuration="200ms"
+                              >
+                                {title}{" "}
+                                <Text
+                                  fontWeight="inherit"
+                                  fontSize="inherit"
+                                  color="inherit"
+                                  as="span"
+                                >
+                                  {"->"}
+                                </Text>
+                              </Heading>
+                            </LinkOverlay>
+                            <Text>{description}</Text>
+                          </Flex>
+                          <Flex justifyContent="center" px={6}>
+                            <ChakraNextImage
+                              pointerEvents="none"
+                              sizes="(max-width: 768px) 100vw,
+                            (max-width: 1200px) 50vw,
+                            33vw"
+                              src={colorMode === "light" ? lightImage : image}
+                              alt=""
+                            />
+                          </Flex>
+                        </Card>
+                      </LinkBox>
+                    ),
+                  )}
+                </SimpleGrid>
+              )}
+
+              {!address && !publicKey && <FTUX />}
+            </>
           )}
-          {!evmAddress && !solAddress && <FTUX />}
-        </>
-      )}
-    </ClientOnly>
+        </ClientOnly>
+      </GridItem>
+      <GridItem as={Flex} direction="column" gap={6}>
+        <Heading size="title.sm">Latest changes</Heading>
+        <Changelog changelog={props.changelog} />
+      </GridItem>
+    </SimpleGrid>
   );
 };
-
-// const AppLayout = dynamic(
-//   async () => (await import("components/app-layouts/app")).AppLayout,
-// );
 
 Dashboard.getLayout = (page, props) => <AppLayout {...props}>{page}</AppLayout>;
 Dashboard.pageId = PageId.Dashboard;
 
+// server-side
+type DashboardProps = {
+  changelog: ChangelogItem[];
+};
+
+export const getStaticProps: GetStaticProps<DashboardProps> = async () => {
+  const res = await fetch(
+    "https://thirdweb.ghost.io/ghost/api/content/posts/?key=49c62b5137df1c17ab6b9e46e3&fields=title,url,published_at&filter=tag:changelog&visibility:public&limit=5",
+  );
+  const json = await res.json();
+
+  return {
+    props: { changelog: json.posts },
+    // revalidate once an hour
+    revalidate: 3600,
+  };
+};
+
 export default Dashboard;
-
-interface DashboardProps {
-  address: string;
-}
-
-const EVMDashboard: React.FC<DashboardProps> = ({ address }) => {
-  const allContractList = useAllContractList(address);
-  return (
-    <Flex direction="column" gap={8}>
-      <DeployedContracts contractListQuery={allContractList} limit={50} />
-    </Flex>
-  );
-};
-
-const ReleaseDashboard: React.FC<DashboardProps> = ({ address }) => {
-  return (
-    <Flex direction="column" gap={8}>
-      {/* this section needs to be on the publishersdk context (polygon SDK) */}
-      <PublisherSDKContext>
-        <ReleasedContracts address={address} />
-      </PublisherSDKContext>
-    </Flex>
-  );
-};
-
-const SOLDashboard: React.FC<DashboardProps> = ({ address }) => {
-  const allProgramAccounts = useAllProgramsList(address);
-
-  return (
-    <Flex direction="column" gap={8}>
-      <DeployedPrograms programListQuery={allProgramAccounts} />
-    </Flex>
-  );
-};

@@ -2,7 +2,7 @@ import { Box, Flex, Select } from "@chakra-ui/react";
 import { Abi } from "@thirdweb-dev/sdk";
 import { useContractFunctions } from "components/contract-components/hooks";
 import { CodeSegment } from "components/contract-tabs/code/CodeSegment";
-import { Environment } from "components/contract-tabs/code/types";
+import { CodeEnvironment } from "components/contract-tabs/code/types";
 import { constants } from "ethers";
 import { useMemo, useState } from "react";
 import { Card, Heading, Text } from "tw-components";
@@ -111,12 +111,12 @@ interface SnippetOptions {
 }
 
 function formatSnippet(
-  snippet: Record<Environment, any>,
+  snippet: Record<CodeEnvironment, any>,
   { contractAddress, fn, args, chainName }: SnippetOptions,
 ) {
   const code = { ...snippet };
   for (const key of Object.keys(code)) {
-    const env = key as Environment;
+    const env = key as CodeEnvironment;
 
     code[env] = code[env]
       ?.replace(/{{contract_address}}/gm, contractAddress)
@@ -146,7 +146,7 @@ export const CodeOverview: React.FC<CodeOverviewProps> = ({
 }) => {
   // TODO jonas - bring this back once we figure out how we'll instantiate SDK etc
   const chainName = "";
-  const [environment, setEnvironment] = useState<Environment>("react");
+  const [environment, setEnvironment] = useState<CodeEnvironment>("react");
 
   const functions = useContractFunctions(abi);
   const { readFunctions, writeFunctions } = useMemo(() => {

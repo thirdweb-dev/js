@@ -3,7 +3,7 @@ import { GraphicContainer } from "./components/GraphicContainer";
 import { Box, SimpleGrid } from "@chakra-ui/react";
 import { AnimatePresence, MotionConfig } from "framer-motion";
 import React, { useState } from "react";
-import { Card, Heading } from "tw-components";
+import { Card } from "tw-components";
 
 /**
  * FTUX (First Time User Experience)
@@ -15,17 +15,6 @@ export const FTUX: React.FC = () => {
 
   return (
     <section>
-      <Heading
-        size="title.md"
-        mb={6}
-        mt={12}
-        textAlign="center"
-        fontWeight={500}
-        color="heading"
-      >
-        Getting Started
-      </Heading>
-
       <MotionConfig transition={{ duration: 0.3 }}>
         <AnimatePresence initial={slideIndex !== 0}>
           {/* slide */}

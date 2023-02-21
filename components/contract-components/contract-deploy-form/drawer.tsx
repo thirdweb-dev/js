@@ -49,7 +49,7 @@ export const DeployFormDrawer: React.FC<DeployFormDrawerProps> = ({
             p={0}
             ml={3}
             label={<Flex p={2}>Deploy</Flex>}
-            bgColor="black"
+            bgColor="backgroundCardHighlight"
             borderRadius="lg"
             placement="right"
             shouldWrapChildren

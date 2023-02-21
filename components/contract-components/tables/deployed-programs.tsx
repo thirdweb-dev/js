@@ -92,6 +92,7 @@ export const DeployedPrograms: React.FC<DeployedProgramsProps> = ({
           justify="space-between"
           align="top"
           gap={4}
+          mb={4}
           direction={{ base: "column", md: "row" }}
         >
           <Flex gap={2} direction="column">

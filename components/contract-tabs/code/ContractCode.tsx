@@ -1,7 +1,7 @@
 import { CodeSegment } from "./CodeSegment";
 import {
+  CodeEnvironment,
   CodeSnippet,
-  Environment,
   SnippetApiResponse,
   SnippetSchema,
 } from "./types";
@@ -23,7 +23,7 @@ function replaceVariablesInCodeSnippet(
   walletAddress?: string,
   chainName?: string,
 ): CodeSnippet {
-  const envs = Object.keys(snippet) as Environment[];
+  const envs = Object.keys(snippet) as CodeEnvironment[];
   for (const env of envs) {
     if (contractAddress) {
       snippet[env] = snippet[env]
@@ -91,10 +91,10 @@ export const ContractCode: React.FC<ContractCodeProps> = ({
   const evmAddress = useAddress();
   const solanaAddress = useWallet().publicKey?.toBase58();
   const address = evmAddress || solanaAddress;
-  const [environment, setEnvironment] = useState<Environment>("react");
+  const [environment, setEnvironment] = useState<CodeEnvironment>("react");
 
   const replaceSnippetVars = useCallback(
-    (snip: Partial<Record<Environment, string>>) =>
+    (snip: Partial<Record<CodeEnvironment, string>>) =>
       replaceVariablesInCodeSnippet(snip, contractAddress, address, chainName),
     [address, contractAddress, chainName],
   );

@@ -7,9 +7,9 @@ import {
   GridItem,
   GridItemProps,
   Icon,
-  IconButton,
+  LinkBox,
+  LinkOverlay,
   SimpleGrid,
-  useClipboard,
   useToast,
 } from "@chakra-ui/react";
 import { QueryClient, dehydrate, useQuery } from "@tanstack/react-query";
@@ -31,12 +31,10 @@ import { GetStaticPaths, GetStaticProps, InferGetStaticPropsType } from "next";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { useMemo } from "react";
-import { BiRocket } from "react-icons/bi";
 import {
   FiAlertCircle,
-  FiCheck,
   FiCheckCircle,
-  FiCopy,
+  FiExternalLink,
   FiXCircle,
 } from "react-icons/fi";
 import { IoIosAdd } from "react-icons/io";
@@ -44,8 +42,10 @@ import {
   Button,
   Card,
   Heading,
+  Link,
   LinkButton,
   Text,
+  TrackedCopyButton,
   TrackedLink,
 } from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
@@ -116,16 +116,14 @@ const ChainPage: ThirdwebNextPage = ({
   const rpcStats = useChainStats(chain);
   const toast = useToast();
 
-  const { hasCopied, onCopy } = useClipboard(chain.rpc[0]);
-
   const address = useAddress();
 
-  const title = `${chain.name} (${chain.nativeCurrency.symbol}) | Smart Contracts & Blockchain SDKs`;
+  const title = `${chain.name} (${chain.nativeCurrency.symbol}) | RPC, Smart Contracts, Blockchain SDKs`;
   const description = `Deploy smart contracts to ${
     chain.name
-  } and build decentralized apps with thirdweb's SDKs. Discover ${
-    chain.name
-  } explorers${chain.faucets?.length ? ", faucets," : ""} & dApps.`;
+  } and build dApps with thirdweb's SDKs. Discover ${
+    chain.nativeCurrency.symbol
+  } RPCs, ${chain.faucets?.length ? "faucets," : "dApps"} & explorers.`;
 
   return (
     <>
@@ -153,7 +151,7 @@ const ChainPage: ThirdwebNextPage = ({
         _dark={{
           bg: "linear-gradient(180deg, rgba(0,0,0,.0) 0%, rgba(0,0,0,.5) 100%)",
         }}
-        py={{ base: 16, md: 20 }}
+        pb={{ base: 16, md: 20 }}
         mb={6}
         boxShadow="lg"
       >
@@ -161,8 +159,15 @@ const ChainPage: ThirdwebNextPage = ({
           maxW="container.page"
           as={Flex}
           flexDirection="column"
-          gap={10}
+          gap={6}
         >
+          <Flex pt={{ base: 4, md: 12 }}>
+            <Link href="/chains" _hover={{ textDecor: "none" }} role="group">
+              <Text size="label.md" _hover={{ color: "blue.500" }}>
+                {"<-"} All Chains
+              </Text>
+            </Link>
+          </Flex>
           <Flex
             justify="space-between"
             as="header"
@@ -195,7 +200,6 @@ const ChainPage: ThirdwebNextPage = ({
                       }}
                       background="bgBlack"
                       color="bgWhite"
-                      rightIcon={<Icon as={BiRocket} />}
                       _hover={{
                         opacity: 0.8,
                       }}
@@ -252,8 +256,7 @@ const ChainPage: ThirdwebNextPage = ({
               <TrackedLink
                 isExternal
                 category={CHAIN_CATEGORY}
-                label="info_url
-            "
+                label="info_url"
                 href={chain.infoURL}
               >
                 <Heading maxW="full" noOfLines={1} size="label.lg">
@@ -274,63 +277,61 @@ const ChainPage: ThirdwebNextPage = ({
             </Heading>
           </ChainSectionElement>
         </SimpleGrid>
-        <SimpleGrid columns={{ base: 6, md: 12 }} rowGap={12}>
-          <ChainSectionElement
-            colSpan={6}
-            label="RPC"
-            status={
-              rpcStats.isSuccess ? "good" : rpcStats.isError ? "bad" : "neutral"
-            }
-          >
-            <Flex gap={2}>
-              <Heading maxW="full" noOfLines={2} size="label.lg">
-                {chain.rpc[0].split(".com/")[0]}.com
+        {/* only render rpc setction if we have an rpc for this chain */}
+        {chain.rpc?.[0] ? (
+          <SimpleGrid columns={{ base: 6, md: 12 }} rowGap={12}>
+            <ChainSectionElement
+              colSpan={6}
+              label="RPC"
+              status={
+                rpcStats.isSuccess
+                  ? "good"
+                  : rpcStats.isError
+                  ? "bad"
+                  : "neutral"
+              }
+            >
+              <Flex gap={2}>
+                <Heading maxW="full" noOfLines={2} size="label.lg">
+                  {chain.rpc[0].split(".com/")[0]}.com
+                </Heading>
+                <TrackedCopyButton
+                  category={CHAIN_CATEGORY}
+                  label="copy-rpc-url"
+                  mt={-2}
+                  aria-label="Copy RPC url"
+                  variant="ghost"
+                  size="sm"
+                  value={`${chain.rpc[0].split(".com/")[0]}.com`}
+                />
+              </Flex>
+            </ChainSectionElement>
+            <ChainSectionElement colSpan={3} label="Block Height">
+              <Heading
+                fontFamily="mono"
+                maxW="full"
+                noOfLines={1}
+                size="label.lg"
+              >
+                {rpcStats.data?.blockNumber || 0}
               </Heading>
-              <IconButton
-                mt={-2}
-                aria-label="copy rpc url"
-                variant="ghost"
-                size="sm"
-                onClick={onCopy}
-                icon={
-                  hasCopied ? (
-                    <Icon
-                      color="green.400"
-                      _light={{ color: "green.600" }}
-                      as={FiCheck}
-                    />
-                  ) : (
-                    <Icon as={FiCopy} />
-                  )
-                }
-              />
-            </Flex>
-          </ChainSectionElement>
-          <ChainSectionElement colSpan={3} label="Block Height">
-            <Heading
-              fontFamily="mono"
-              maxW="full"
-              noOfLines={1}
-              size="label.lg"
-            >
-              {rpcStats.data?.blockNumber || 0}
-            </Heading>
-          </ChainSectionElement>
-          <ChainSectionElement colSpan={3} label="Latency">
-            <Heading
-              fontFamily="mono"
-              maxW="full"
-              noOfLines={1}
-              size="label.lg"
-            >
-              {(rpcStats.data?.latency || 0).toFixed(0)}
-              <Text as="span" color="accent.700">
-                {" "}
-                ms
-              </Text>
-            </Heading>
-          </ChainSectionElement>
-        </SimpleGrid>
+            </ChainSectionElement>
+            <ChainSectionElement colSpan={3} label="Latency">
+              <Heading
+                fontFamily="mono"
+                maxW="full"
+                noOfLines={1}
+                size="label.lg"
+              >
+                {(rpcStats.data?.latency || 0).toFixed(0)}
+                <Text as="span" color="accent.700">
+                  {" "}
+                  ms
+                </Text>
+              </Heading>
+            </ChainSectionElement>
+          </SimpleGrid>
+        ) : null}
         {chain.faucets?.length ? (
           <ChainSectionElement colSpan={12} label="Faucets">
             <SimpleGrid columns={{ base: 6, md: 12 }} gridGap={6}>
@@ -350,31 +351,35 @@ const ChainPage: ThirdwebNextPage = ({
                   }
                 }
                 return (
-                  <GridItem
-                    as={Card}
-                    colSpan={3}
-                    key={url.toString()}
-                    gap={2}
-                    display="flex"
-                    flexDirection="column"
-                  >
-                    <Heading as="h5" size="label.md">
-                      {displayTitle}
-                    </Heading>
-                    <TrackedLink
-                      category={CHAIN_CATEGORY}
-                      href={url.toString()}
-                      label="faucet"
-                      trackingProps={{
-                        faucet: url.toString(),
-                      }}
-                      noOfLines={1}
-                      isExternal
+                  <GridItem colSpan={{ base: 6, md: 3 }} key={url.toString()}>
+                    <Card
+                      as={LinkBox}
+                      display="flex"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      gap={4}
                     >
-                      <Text size="body.sm">
-                        {url.toString().split("://")[1]}
-                      </Text>
-                    </TrackedLink>
+                      <Flex gap={2} direction="column" maxW="75%">
+                        <Heading as="h5" size="label.md" noOfLines={1}>
+                          {displayTitle}
+                        </Heading>
+                        <LinkOverlay
+                          as={TrackedLink}
+                          category={CHAIN_CATEGORY}
+                          href={url.toString()}
+                          label="faucet"
+                          trackingProps={{
+                            faucet: url.toString(),
+                          }}
+                          isExternal
+                        >
+                          <Text size="body.sm" noOfLines={1}>
+                            {url.toString().split("://")[1]}
+                          </Text>
+                        </LinkOverlay>
+                      </Flex>
+                      <Icon flexShrink={0} as={FiExternalLink} />
+                    </Card>
                   </GridItem>
                 );
               })}
@@ -386,30 +391,36 @@ const ChainPage: ThirdwebNextPage = ({
             <SimpleGrid columns={{ base: 6, md: 12 }} gridGap={6}>
               {chain.explorers.map((explorer) => {
                 return (
-                  <GridItem
-                    as={Card}
-                    colSpan={3}
-                    key={explorer.url}
-                    gap={2}
-                    display="flex"
-                    flexDirection="column"
-                  >
-                    <Heading as="h5" size="label.md">
-                      {explorer.name}
-                    </Heading>
-                    <TrackedLink
-                      category={CHAIN_CATEGORY}
-                      href={explorer.url}
-                      label="explorer"
-                      trackingProps={{
-                        explorerName: explorer.name,
-                        explorerUrl: explorer.url,
-                      }}
-                      noOfLines={1}
-                      isExternal
+                  <GridItem colSpan={{ base: 6, md: 3 }} key={explorer.url}>
+                    <Card
+                      as={LinkBox}
+                      display="flex"
+                      justifyContent="space-between"
+                      alignItems="center"
                     >
-                      <Text size="body.sm">{explorer.url.split("://")[1]}</Text>
-                    </TrackedLink>
+                      <Flex direction="column" gap={2} maxW="75%">
+                        <Heading as="h5" size="label.md">
+                          {explorer.name}
+                        </Heading>
+                        <LinkOverlay
+                          as={TrackedLink}
+                          category={CHAIN_CATEGORY}
+                          href={explorer.url}
+                          label="explorer"
+                          trackingProps={{
+                            explorerName: explorer.name,
+                            explorerUrl: explorer.url,
+                          }}
+                          noOfLines={1}
+                          isExternal
+                        >
+                          <Text size="body.sm">
+                            {explorer.url.split("://")[1]}
+                          </Text>
+                        </LinkOverlay>
+                      </Flex>
+                      <Icon as={FiExternalLink} />
+                    </Card>
                   </GridItem>
                 );
               })}
@@ -420,7 +431,7 @@ const ChainPage: ThirdwebNextPage = ({
           <>
             <Divider />
             <ChainSectionElement colSpan={12} label="Popular Contracts">
-              <SimpleGrid columns={{ base: 6, md: 12 }} gridGap={6}>
+              <SimpleGrid columns={{ base: 6, md: 12 }} gridGap={6} mt={2}>
                 {category.contracts.map((publishedContractId, idx) => {
                   const [publisher, contractId] =
                     publishedContractId.split("/");
@@ -538,6 +549,12 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
     chainSlug = chainSlug[0];
   }
 
+  if (chainSlug === "localhost") {
+    return {
+      notFound: true,
+    };
+  }
+
   // if the chain slug is a chain id, redirect to the chain slug
   if (chainSlug in chainIdToChain) {
     return {
@@ -556,15 +573,12 @@ export const getStaticProps: GetStaticProps<EVMContractProps> = async (ctx) => {
   }
 
   const chainRpc = getDashboardChainRpc(chain);
-
-  if (!chainRpc) {
-    return {
-      notFound: true,
-    };
-  }
-
   // overwrite with the dashboard chain RPC (add the api key)
-  chain.rpc = [chainRpc];
+  if (chainRpc) {
+    chain.rpc = [chainRpc];
+  } else {
+    chain.rpc = [];
+  }
 
   const category = CHAIN_PAGE_CONTRACTS_CATEGORY;
   const queryClient = new QueryClient();

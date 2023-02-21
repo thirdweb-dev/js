@@ -1,5 +1,6 @@
 import { ConnectWallet } from "@3rdweb-sdk/react/components/connect-wallet";
 import { Box, Container, Divider, Flex, Icon, Stack } from "@chakra-ui/react";
+import { Ethereum, Solana } from "@thirdweb-dev/chain-icons";
 import { CmdKSearch } from "components/cmd-k-search";
 import { ColorModeToggle } from "components/color-mode/color-mode-toggle";
 import { Logo } from "components/logo";
@@ -7,7 +8,14 @@ import { InsufficientFunds } from "components/notices/InsufficientFunds";
 import { NextSeo } from "next-seo";
 import { useRouter } from "next/router";
 import { FiFile, FiGlobe, FiHelpCircle } from "react-icons/fi";
-import { Button, Heading, Link, Text, TrackedLink } from "tw-components";
+import {
+  Button,
+  Heading,
+  Link,
+  LinkButton,
+  Text,
+  TrackedLink,
+} from "tw-components";
 import { ComponentWithChildren } from "types/component-with-children";
 
 export interface AppShellProps {
@@ -22,7 +30,7 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
   ecosystem = "either",
   noSEOOverride,
 }) => {
-  const { pathname } = useRouter();
+  const { pathname, route } = useRouter();
 
   const isCustomContractLayout = layout === "custom-contract";
   return (
@@ -148,6 +156,63 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
               />
             </Flex>
           </Container>
+          <Container
+            maxW="container.page"
+            display="flex"
+            py={2}
+            as="header"
+            alignItems="center"
+          >
+            <Flex gap={2}>
+              <LinkButton
+                href="/dashboard"
+                size="sm"
+                variant={pathname === "/dashboard" ? "solid" : "ghost"}
+              >
+                Home
+              </LinkButton>
+              <LinkButton
+                leftIcon={<Icon as={Ethereum} />}
+                href="/dashboard/contracts"
+                size="sm"
+                variant={
+                  pathname === "/dashboard/contracts" ||
+                  route === "/[networkOrAddress]/[...catchAll]"
+                    ? "solid"
+                    : "ghost"
+                }
+              >
+                Contracts
+              </LinkButton>
+              <LinkButton
+                leftIcon={<Icon as={Solana} />}
+                href="/dashboard/programs"
+                size="sm"
+                variant={
+                  pathname === "/dashboard/programs" ||
+                  route === "/[networkOrAddress]/[...catchAll]"
+                    ? "solid"
+                    : "ghost"
+                }
+              >
+                Programs
+              </LinkButton>
+              <LinkButton
+                href="/dashboard/storage"
+                size="sm"
+                variant={pathname === "/dashboard/storage" ? "solid" : "ghost"}
+              >
+                Storage
+              </LinkButton>
+              <LinkButton
+                href="/dashboard/rpc"
+                size="sm"
+                variant={pathname === "/dashboard/rpc" ? "solid" : "ghost"}
+              >
+                RPC
+              </LinkButton>
+            </Flex>
+          </Container>
         </Box>
         {isCustomContractLayout ? (
           <Box as="main" flexGrow={1}>
@@ -175,9 +240,6 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
                 align="center"
                 justify="center"
               >
-                <Text alignSelf="center" order={{ base: 2, md: 0 }}>
-                  thirdweb &copy; {new Date().getFullYear()}
-                </Text>
                 <Flex align="center" justify="center" gap={4}>
                   <TrackedLink
                     isExternal
@@ -213,6 +275,9 @@ export const AppShell: ComponentWithChildren<AppShellProps> = ({
                   >
                     Gas Estimator
                   </TrackedLink>
+                  <Text alignSelf="center" order={{ base: 2, md: 0 }}>
+                    thirdweb &copy; {new Date().getFullYear()}
+                  </Text>
                 </Flex>
               </Flex>
             </Flex>

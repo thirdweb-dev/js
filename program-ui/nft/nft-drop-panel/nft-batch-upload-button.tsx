@@ -80,7 +80,9 @@ export const NFTBatchUploadButton: React.FC<{ program: NFTDrop }> = ({
             }
           }}
         >
-          <ProgressBox progress={progress} />
+          {mintBatchMutation.isLoading ? (
+            <ProgressBox progress={progress} />
+          ) : null}
         </BatchLazyMint>
       </Drawer>
       <Button

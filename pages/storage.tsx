@@ -33,7 +33,7 @@ const GUIDES = [
   },
 ];
 
-const Storage: ThirdwebNextPage = () => {
+const StorageLanding: ThirdwebNextPage = () => {
   return (
     <ProductPage
       seo={{
@@ -126,6 +126,6 @@ const Storage: ThirdwebNextPage = () => {
   );
 };
 
-Storage.pageId = PageId.StorageLanding;
+StorageLanding.pageId = PageId.StorageLanding;
 
-export default Storage;
+export default StorageLanding;

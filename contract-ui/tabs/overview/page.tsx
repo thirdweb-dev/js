@@ -7,8 +7,8 @@ import { getGuidesAndTemplates } from "./helpers/getGuidesAndTemplates";
 import { Divider, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import { contractType, useContract } from "@thirdweb-dev/react";
 import { Abi, getAllDetectedFeatureNames } from "@thirdweb-dev/sdk";
-import { useMemo, useState } from "react";
-import { Heading, Text, TrackedLink } from "tw-components";
+import { RelevantDataSection } from "components/dashboard/RelevantDataSection";
+import { useMemo } from "react";
 
 interface CustomContractOverviewPageProps {
   contractAddress?: string;
@@ -19,8 +19,6 @@ const TRACKING_CATEGORY = "contract_overview";
 export const CustomContractOverviewPage: React.FC<
   CustomContractOverviewPageProps
 > = ({ contractAddress }) => {
-  const [showAllGuides, setShowAllGuides] = useState(false);
-  const [showAllTemplates, setShowAllTemplates] = useState(false);
   const { contract } = useContract(contractAddress);
   const contractTypeQuery = contractType.useQuery(contractAddress);
   const contractTypeData = contractTypeQuery?.data || "custom";
@@ -55,7 +53,6 @@ export const CustomContractOverviewPage: React.FC<
           address={contractAddress}
           trackingCategory={TRACKING_CATEGORY}
         />
-        <BuildYourApp trackingCategory={TRACKING_CATEGORY} />
         {contract &&
           ["PermissionsEnumerable"].some((type) =>
             detectedFeatureNames.includes(type),
@@ -65,96 +62,24 @@ export const CustomContractOverviewPage: React.FC<
               trackingCategory={TRACKING_CATEGORY}
             />
           )}
+        <BuildYourApp trackingCategory={TRACKING_CATEGORY} />
         <ShareContract
           address={contractAddress}
           trackingCategory={TRACKING_CATEGORY}
         />
       </GridItem>
       <GridItem as={Flex} direction="column" gap={6}>
-        {guides.length > 0 && (
-          <Flex direction="column" gap={6}>
-            <Heading size="title.sm">Relevant guides</Heading>
-            <Flex gap={4} direction="column">
-              {guides.slice(0, showAllGuides ? undefined : 3).map((guide) => (
-                <TrackedLink
-                  category={TRACKING_CATEGORY}
-                  label="guide"
-                  trackingProps={{
-                    guide: guide.title.replace(" ", "_").toLowerCase(),
-                  }}
-                  isExternal
-                  fontWeight={500}
-                  href={guide.url}
-                  key={guide.title}
-                  fontSize="14px"
-                  color="heading"
-                  opacity={0.6}
-                  display="inline-block"
-                  _hover={{
-                    opacity: 1,
-                    textDecoration: "none",
-                  }}
-                >
-                  {guide.title}
-                </TrackedLink>
-              ))}
-              {guides.length > 3 && !showAllGuides ? (
-                <Text
-                  onClick={() => setShowAllGuides(true)}
-                  cursor="pointer"
-                  opacity={0.6}
-                  color="heading"
-                  _hover={{ opacity: 1, textDecoration: "none" }}
-                >
-                  View more ➝
-                </Text>
-              ) : null}
-            </Flex>
-          </Flex>
-        )}
+        <RelevantDataSection
+          data={guides}
+          title="guide"
+          TRACKING_CATEGORY={TRACKING_CATEGORY}
+        />
         {guides.length > 0 && templates.length > 0 && <Divider />}
-        {templates.length > 0 && (
-          <Flex direction="column" gap={4}>
-            <Heading size="title.sm">Relevant templates</Heading>
-            <Flex gap={4} direction="column">
-              {templates
-                .slice(0, showAllTemplates ? undefined : 3)
-                .map((template) => (
-                  <TrackedLink
-                    isExternal
-                    category={TRACKING_CATEGORY}
-                    label="template"
-                    trackingProps={{
-                      template: template.title
-                        .replaceAll(" ", "_")
-                        .toLowerCase(),
-                    }}
-                    fontWeight={500}
-                    href={template.url}
-                    key={template.title}
-                    fontSize="14px"
-                    color="heading"
-                    opacity={0.6}
-                    display="inline-block"
-                    _hover={{ opacity: 1, textDecoration: "none" }}
-                  >
-                    {template.title}
-                  </TrackedLink>
-                ))}
-              {templates.length > 3 && !showAllTemplates ? (
-                <Text
-                  onClick={() => setShowAllTemplates(true)}
-                  cursor="pointer"
-                  opacity={0.6}
-                  color="heading"
-                  _hover={{ opacity: 1, textDecoration: "none" }}
-                >
-                  View more ➝
-                </Text>
-              ) : null}
-            </Flex>
-          </Flex>
-        )}
+        <RelevantDataSection
+          data={templates}
+          title="template"
+          TRACKING_CATEGORY={TRACKING_CATEGORY}
+        />
       </GridItem>
     </SimpleGrid>
   );

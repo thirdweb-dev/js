@@ -128,7 +128,9 @@ export const BatchLazyMintButton: React.FC<BatchLazyMintButtonProps> = ({
           ecosystem="evm"
           isRevealable={isRevealable}
         >
-          <ProgressBox progress={progress} />
+          {mintBatchMutation.isLoading ? (
+            <ProgressBox progress={progress} />
+          ) : null}
         </BatchLazyMint>
       </Drawer>
       <Button
