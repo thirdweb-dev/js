@@ -7,6 +7,7 @@ import {
 /**
  * for now just re-exported
  * @internal
+ * @deprecated - TODO: remove this
  */
 export function useConnect() {
   const wagmiContext = useWagmiContext();

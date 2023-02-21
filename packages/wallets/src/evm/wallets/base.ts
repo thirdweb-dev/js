@@ -17,7 +17,7 @@ export abstract class AbstractBrowserWallet<
   TAdditionalOpts extends Record<string, any> = {},
   TConnectParams extends Record<string, any> = {},
 > extends AbstractWallet {
-  #walletId;
+  walletId: string;
   protected coordinatorStorage;
   protected walletStorage;
   protected chains;
@@ -25,7 +25,7 @@ export abstract class AbstractBrowserWallet<
 
   constructor(walletId: string, options: WalletOptions<TAdditionalOpts>) {
     super();
-    this.#walletId = walletId;
+    this.walletId = walletId;
     this.options = options;
     this.chains = options.chains || thirdwebChains;
     this.coordinatorStorage = options.coordinatorStorage;
@@ -40,7 +40,7 @@ export abstract class AbstractBrowserWallet<
       "lastConnectedWallet",
     );
 
-    if (lastConnectedWallet === this.#walletId) {
+    if (lastConnectedWallet === this.walletId) {
       const lastConnectionParams = await this.walletStorage.getItem(
         "lastConnectedParams",
       );
@@ -55,7 +55,7 @@ export abstract class AbstractBrowserWallet<
 
       const connector = await this.getConnector();
 
-      if (!await connector.isConnected()) {
+      if (!(await connector.isConnected())) {
         return await this.connect(parsedParams);
       }
     }
@@ -68,7 +68,7 @@ export abstract class AbstractBrowserWallet<
 
     // setup listeners to re-expose events
     connector.on("connect", (data) => {
-      this.coordinatorStorage.setItem("lastConnectedWallet", this.#walletId);
+      this.coordinatorStorage.setItem("lastConnectedWallet", this.walletId);
       this.emit("connect", { address: data.account, chainId: data.chain?.id });
       if (data.chain?.id) {
         this.walletStorage.setItem("lastConnectedChain", data.chain?.id);
@@ -95,9 +95,9 @@ export abstract class AbstractBrowserWallet<
       // );
       await this.coordinatorStorage.setItem(
         "lastConnectedWallet",
-        this.#walletId,
+        this.walletId,
       );
-    } catch { }
+    } catch {}
 
     return connectedAddress;
   }
@@ -119,7 +119,7 @@ export abstract class AbstractBrowserWallet<
       const lastConnectedWallet = await this.coordinatorStorage.getItem(
         "lastConnectedWallet",
       );
-      if (lastConnectedWallet === this.#walletId) {
+      if (lastConnectedWallet === this.walletId) {
         await this.coordinatorStorage.removeItem("lastConnectedWallet");
       }
     }

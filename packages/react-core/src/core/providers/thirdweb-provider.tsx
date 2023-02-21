@@ -3,25 +3,28 @@ import {
   ThirdwebSDKProvider,
   ThirdwebSDKProviderProps,
 } from "../../evm/providers/thirdweb-sdk-provider";
-import { DEFAULT_API_KEY } from "../constants/rpc";
+import { useWalletSigner } from "../hooks/wallet-hooks";
 import { DAppMetaData } from "../types/dAppMeta";
 import { SupportedWallet } from "../types/wallet";
 import { showDeprecationWarning } from "../utils";
-import {
-  ThirdwebWalletProvider,
-  useWalletSigner,
-} from "./thirdweb-wallet-provider";
-// import { ThirdwebWalletProvider } from "./thirdweb-wallet-provider";
+import { ThirdwebWalletProvider } from "./thirdweb-wallet-provider";
 import { QueryClient } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
 import type { SDKOptions } from "@thirdweb-dev/sdk";
 import type { ThirdwebStorage } from "@thirdweb-dev/storage";
 import {
+  CoinbaseWallet,
   CreateAsyncStorage,
   DeviceBrowserWallet,
   MetaMask,
 } from "@thirdweb-dev/wallets";
 import React, { useMemo } from "react";
+
+const defaultSupportedWallets: SupportedWallet[] = [
+  MetaMask,
+  CoinbaseWallet,
+  DeviceBrowserWallet,
+];
 
 // this allows autocomplete to work for the chainId prop but still allows `number` and `string` to be passed (for dynamically passed chain data)
 type ChainIdIsh = (string | number) & { __chainIdIsh: never };
@@ -51,14 +54,27 @@ export interface ThirdwebProviderProps<
    * comes with sensible defaults
    */
   sdkOptions?: SDKOptions;
-  /**
-   * An array of connector types (strings) or wallet connector objects that the dApp supports
-   * If not provided, will default to metamask (injected), wallet connect and walletlink (coinbase wallet) with sensible defaults
-   */
-  // walletConnectors?: WalletConnector[];
 
-  // TODO
-  supportedWallets: SupportedWallet[];
+  /**
+   * An array of wallets that the dApp supports
+   * If not provided, will default to Metamask (injected), Coinbase wallet and Device wallet
+   *
+   * @example
+   * You can Import the wallets you want to support from `@thirdweb-dev/wallets` and pass them to `supportedWallets`
+   *
+   * ```jsx title="App.jsx"
+   * import { ThirdwebProvider } from "@thirdweb-dev/react";
+   *
+   * const App = () => {
+   *   return (
+   *     <ThirdwebProvider>
+   *       <YourApp />
+   *     </ThirdwebProvider>
+   *   );
+   * };
+   * ```
+   */
+  supportedWallets?: SupportedWallet[];
 
   /**
    * Metadata to pass to wallet connect and walletlink wallet connect. (Used to show *which* dApp is being connected to in mobile wallets that support it)
@@ -113,124 +129,79 @@ const defaultdAppMeta: DAppMetaData = {
   name: "thirdweb powered dApp",
 };
 
-// const defaultWalletConnectors: Required<
-//   ThirdwebProviderProps["walletConnectors"]
-// > = ["metamask", "walletConnect", "walletLink"];
-
-/**
- *
- * The `<ThirdwebProvider />` component lets you control what networks you want users to connect to, what types of wallets can connect to your app, and the settings for the [Typescript SDK](https://docs.thirdweb.com/typescript).
- *
- * @example
- * You can wrap your application with the provider as follows:
- *
- * ```jsx title="App.jsx"
- * import { ThirdwebProvider } from "@thirdweb-dev/react";
- *
- * const App = () => {
- *   return (
- *     <ThirdwebProvider>
- *       <YourApp />
- *     </ThirdwebProvider>
- *   );
- * };
- * ```
- *
- * @public
- *
- */
 export const ThirdwebProvider = <
   TChains extends Chain[] = typeof defaultChains,
->({
-  sdkOptions,
-
-  // @ts-expect-error - different subtype of Chain[] but this works fine
-  supportedChains = defaultChains,
-  activeChain,
-
-  // walletConnectors = defaultWalletConnectors,
-  dAppMeta = defaultdAppMeta,
-
-  authConfig,
-  storageInterface,
-  queryClient,
-  autoConnect = true,
-  children,
-
-  thirdwebApiKey = DEFAULT_API_KEY,
-  alchemyApiKey,
-  infuraApiKey,
-
-  supportedWallets = [MetaMask, DeviceBrowserWallet],
-
-  // deprecated
-  desiredChainId,
-  chainRpc,
-  createWalletStorage,
-}: React.PropsWithChildren<ThirdwebProviderProps<TChains>>) => {
-  // construct the wagmi options
-
-  if (chainRpc) {
+>(
+  props: React.PropsWithChildren<ThirdwebProviderProps<TChains>>,
+) => {
+  // deprecations
+  if (props.chainRpc) {
     showDeprecationWarning("chainRpc", "supportedChains");
   }
-  if (desiredChainId) {
+  if (props.desiredChainId) {
     showDeprecationWarning("desiredChainId", "activeChain");
   }
 
+  const supportedChains =
+    props.supportedChains || (defaultChains as any as TChains);
+
+  const supportedWallets = props.supportedWallets || defaultSupportedWallets;
+  const dAppMeta = props.dAppMeta || defaultdAppMeta;
+
   const activeChainId = useMemo(() => {
-    if (!activeChain) {
+    if (!props.activeChain) {
       return undefined;
     }
-    if (typeof activeChain === "string" || typeof activeChain === "number") {
-      return activeChain;
+    if (
+      typeof props.activeChain === "string" ||
+      typeof props.activeChain === "number"
+    ) {
+      return props.activeChain;
     }
-    return activeChain.chainId;
-  }, [activeChain]);
+    return props.activeChain.chainId;
+  }, [props.activeChain]);
 
   const activeChainObj = useMemo(() => {
-    if (typeof activeChain === "string") {
+    if (typeof props.activeChain === "string") {
       return (
-        supportedChains.find((chain) => chain.slug === activeChain) ||
+        supportedChains.find((chain) => chain.slug === props.activeChain) ||
         supportedChains[0] ||
         defaultChains[0]
       );
     }
 
-    if (typeof activeChain === "number") {
+    if (typeof props.activeChain === "number") {
       return (
-        supportedChains.find((chain) => chain.chainId === activeChain) ||
+        supportedChains.find((chain) => chain.chainId === props.activeChain) ||
         supportedChains[0] ||
         defaultChains[0]
       );
     }
 
-    return activeChain || supportedChains[0] || defaultChains[0];
-  }, [activeChain, supportedChains]);
-
-  // handle auto connect
+    return props.activeChain || supportedChains[0] || defaultChains[0];
+  }, [props.activeChain, supportedChains]);
 
   return (
     <ThirdwebWalletProvider
-      chains={supportedChains || defaultChains}
-      wallets={supportedWallets}
-      shouldAutoConnect={autoConnect}
-      createWalletStorage={createWalletStorage}
+      chains={supportedChains}
+      supportedWallets={supportedWallets}
+      shouldAutoConnect={props.autoConnect}
+      createWalletStorage={props.createWalletStorage}
       dAppMeta={dAppMeta}
       activeChain={activeChainObj}
     >
       <ThirdwebSDKProviderWrapper
-        queryClient={queryClient}
-        sdkOptions={sdkOptions}
+        queryClient={props.queryClient}
+        sdkOptions={props.sdkOptions}
         supportedChains={supportedChains}
-        // desiredChainId is deprecated, we will remove it in the future but still need to pass it here for now
-        activeChain={activeChainId || desiredChainId}
-        storageInterface={storageInterface}
-        authConfig={authConfig}
-        thirdwebApiKey={thirdwebApiKey}
-        alchemyApiKey={alchemyApiKey}
-        infuraApiKey={infuraApiKey}
+        activeChain={activeChainId || props.desiredChainId}
+        storageInterface={props.storageInterface}
+        authConfig={props.authConfig}
+        thirdwebApiKey={props.thirdwebApiKey}
+        alchemyApiKey={props.alchemyApiKey}
+        infuraApiKey={props.infuraApiKey}
       >
-        {children}
+        {props.children}
       </ThirdwebSDKProviderWrapper>
     </ThirdwebWalletProvider>
   );

@@ -1,5 +1,6 @@
 import { DAppMetaData } from "../types/dAppMeta";
 import {
+  CoinbaseWalletType,
   DeviceWalletType,
   MetaMaskWalletType,
   SupportedWallet,
@@ -12,7 +13,7 @@ import {
   WalletOptions,
 } from "@thirdweb-dev/wallets";
 import { Signer } from "ethers";
-import React, {
+import {
   createContext,
   PropsWithChildren,
   useCallback,
@@ -20,7 +21,6 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import invariant from "tiny-invariant";
 
 let coordinatorStorage: AsyncStorage;
 let deviceWalletStorage: AsyncStorage;
@@ -48,23 +48,29 @@ type ThirdwebWalletContextData = {
     Wallet: SupportedWallet,
   ) => InstanceType<SupportedWallet>;
   createWalletStorage: CreateAsyncStorage;
+  switchChain: (chain: number) => Promise<void>;
+  activeChainId?: number;
+  accountAddress?: string;
 };
 
 const ThirdwebWalletContext = createContext<
   ThirdwebWalletContextData | undefined
 >(undefined);
 
-type ThirdwebWalletProviderProps = PropsWithChildren<{
-  activeChain: Chain;
-  wallets: SupportedWallet[];
-  shouldAutoConnect?: boolean;
-  createWalletStorage: CreateAsyncStorage;
-  dAppMeta: DAppMetaData;
-  chains: Chain[];
-}>;
-
-export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
+export function ThirdwebWalletProvider(
+  props: PropsWithChildren<{
+    activeChain: Chain;
+    supportedWallets: SupportedWallet[];
+    shouldAutoConnect?: boolean;
+    createWalletStorage: CreateAsyncStorage;
+    dAppMeta: DAppMetaData;
+    chains: Chain[];
+  }>,
+) {
   const [signer, setSigner] = useState<Signer | undefined>(undefined);
+  const [activeChainId, setActiveChainId] = useState<number | undefined>();
+  const [accountAddress, setAccountAddress] = useState<string | undefined>();
+
   const [activeWallet, setActiveWallet] = useState<
     InstanceType<SupportedWallet> | undefined
   >();
@@ -124,6 +130,13 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
         });
       }
 
+      // Coinbase
+      if (Wallet.id === "coinbaseWallet") {
+        return new (Wallet as CoinbaseWalletType)({
+          ...walletOptions,
+        });
+      }
+
       throw new Error(`Unsupported wallet`);
     },
     [props],
@@ -132,11 +145,29 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
   const handleWalletConnected = useCallback(
     async (wallet: InstanceType<SupportedWallet>) => {
       const _signer = await wallet.getSigner();
+      const _chainId = await _signer.getChainId();
       setSigner(_signer);
+      setActiveChainId(_chainId);
       setActiveWallet(wallet);
       setIsConnectingToWallet(undefined);
     },
     [],
+  );
+
+  const switchChain = useCallback(
+    async (chainId: number) => {
+      if (!activeWallet) {
+        throw new Error("No active wallet");
+      }
+
+      await activeWallet.switchChain(chainId);
+      const _signer = await activeWallet.getSigner();
+      const _chainId = await _signer.getChainId();
+
+      setActiveChainId(_chainId);
+      setSigner(_signer);
+    },
+    [activeWallet],
   );
 
   // Auto Connect
@@ -153,16 +184,19 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
         "lastConnectedWallet",
       );
 
-      const Wallet = props.wallets.find((W) => W.id === lastConnectedWalletId);
+      const Wallet = props.supportedWallets.find(
+        (W) => W.id === lastConnectedWalletId,
+      );
       if (Wallet && Wallet.id !== "deviceWallet") {
-          const wallet = createWalletInstance(Wallet);
-          await wallet.autoConnect();
-          handleWalletConnected(wallet);
+        const wallet = createWalletInstance(Wallet);
+        const _address = await wallet.autoConnect();
+        setAccountAddress(_address);
+        handleWalletConnected(wallet);
       }
     })();
   }, [
     createWalletInstance,
-    props.wallets,
+    props.supportedWallets,
     handleWalletConnected,
     props.shouldAutoConnect,
   ]);
@@ -183,7 +217,8 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
 
         setIsConnectingToWallet(Wallet.id);
 
-        await wallet.connect(_connectedParams);
+        const address = await wallet.connect(_connectedParams);
+        setAccountAddress(address);
         handleWalletConnected(wallet);
       }
 
@@ -197,10 +232,10 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
           Wallet as MetaMaskWalletType,
         ) as InstanceType<MetaMaskWalletType>;
 
-        // TODO catch error
         try {
           setIsConnectingToWallet(Wallet.id);
-          await wallet.connect(_connectedParams);
+          const address = await wallet.connect(_connectedParams);
+          setAccountAddress(address);
           handleWalletConnected(wallet);
         } catch (e: any) {
           if (e.message === "Resource unavailable") {
@@ -217,6 +252,26 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
           throw e;
         }
       }
+
+      // Coinbase
+      else if (Wallet.id === "coinbaseWallet") {
+        const _connectedParams = connectParams as NonNullable<
+          Parameters<InstanceType<CoinbaseWalletType>["connect"]>[0]
+        >;
+
+        const wallet = createWalletInstance(
+          Wallet as CoinbaseWalletType,
+        ) as InstanceType<CoinbaseWalletType>;
+
+        try {
+          setIsConnectingToWallet(Wallet.id);
+          const address = await wallet.connect(_connectedParams);
+          setAccountAddress(address);
+          handleWalletConnected(wallet);
+        } catch (e: any) {
+          setIsConnectingToWallet(undefined);
+        }
+      }
     },
     [createWalletInstance, handleWalletConnected],
   );
@@ -228,6 +283,7 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
     }
     activeWallet.disconnect().then(() => {
       setSigner(undefined);
+      setActiveChainId(undefined);
       setActiveWallet(undefined);
     });
   }, [activeWallet]);
@@ -236,13 +292,16 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
     <ThirdwebWalletContext.Provider
       value={{
         disconnect: disconnectWallet,
-        wallets: props.wallets,
+        wallets: props.supportedWallets,
         connect: connectWallet,
         signer,
         activeWallet,
         connectingToWallet: connectingToWallet,
         createWalletInstance: createWalletInstance,
         createWalletStorage: props.createWalletStorage,
+        switchChain,
+        activeChainId,
+        accountAddress,
       }}
     >
       {props.children}
@@ -251,18 +310,7 @@ export function ThirdwebWalletProvider(props: ThirdwebWalletProviderProps) {
 }
 
 export function useThirdwebWallet() {
-  const context = useContext(ThirdwebWalletContext);
-  if (!context) {
-    invariant(
-      context,
-      "useThirdwebWallet must be used within a ThirdwebProvider",
-    );
-  }
-  return context;
-}
-
-export function useWalletSigner() {
-  return useThirdwebWallet().signer;
+  return useContext(ThirdwebWalletContext);
 }
 
 type DeviceWalletStorage = {

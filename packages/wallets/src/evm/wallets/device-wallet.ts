@@ -7,11 +7,11 @@ import { ethers } from "ethers";
 
 export type DeviceWalletOptions = {
   chain:
-  | {
-    chainId: number;
-    rpc: string[];
-  }
-  | Chain;
+    | {
+        chainId: number;
+        rpc: string[];
+      }
+    | Chain;
   storageType?: "asyncStore" | "credentialStore";
   storage: AsyncStorage;
 };
@@ -27,6 +27,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
   #connector?: TWConnector;
 
   static id = "deviceWallet" as const;
+
   public get walletName() {
     return "Device Wallet" as const;
   }

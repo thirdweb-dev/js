@@ -11,6 +11,9 @@ export const darkTheme = {
     inverted: mauveDark.mauve12,
     invertedFocused: mauveDark.mauve7,
   },
+  badge: {
+    secondary: mauveDark.mauve7,
+  },
   text: {
     neutral: mauveDark.mauve12,
     inverted: mauveDark.mauve1,
@@ -41,6 +44,9 @@ export const lightTheme: typeof darkTheme = {
     highlighted: gray.gray7,
     inverted: gray.gray12,
     invertedFocused: gray.gray7,
+  },
+  badge: {
+    secondary: gray.gray7,
   },
   text: {
     neutral: gray.gray12,
@@ -73,6 +79,7 @@ export const fontSize = {
 };
 
 export const spacing = {
+  xxs: "6px",
   xs: "8px",
   sm: "12px",
   md: "16px",

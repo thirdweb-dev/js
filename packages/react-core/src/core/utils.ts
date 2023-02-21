@@ -1,4 +1,5 @@
-import { DEFAULT_API_KEY, __DEV__ } from "./constants/rpc";
+import { DEFAULT_API_KEY } from "./constants/rpc";
+import { __DEV__ } from "./constants/runtime";
 import { Chain, getChainRPC } from "@thirdweb-dev/chains";
 import { Chain as WagmiChain } from "@wagmi/core";
 

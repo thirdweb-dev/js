@@ -248,7 +248,7 @@ export const ThirdwebSDKProvider = <
   return (
     <ThirdwebConfigProvider
       value={{
-        chains: mergedChains,
+        chains: mergedChains as Chain[],
         thirdwebApiKey,
         alchemyApiKey,
         infuraApiKey,
