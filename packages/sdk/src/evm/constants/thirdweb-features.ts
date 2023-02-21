@@ -10,8 +10,8 @@ import IPermissionsEnumerableAbi from "@thirdweb-dev/contracts-js/dist/abis/IPer
 import IThirdwebPlatformFeeAbi from "@thirdweb-dev/contracts-js/dist/abis/IPlatformFee.json";
 import IThirdwebPrimarySaleAbi from "@thirdweb-dev/contracts-js/dist/abis/IPrimarySale.json";
 import IThirdwebRoyaltyAbi from "@thirdweb-dev/contracts-js/dist/abis/IRoyalty.json";
-import ITWRouterAbi from "@thirdweb-dev/contracts-js/dist/abis/ITWRouter.json";
 import IOwnableAbi from "@thirdweb-dev/contracts-js/dist/abis/Ownable.json";
+import PluginStateAbi from "@thirdweb-dev/contracts-js/dist/abis/PluginState.json";
 
 export const FEATURE_ROYALTY = {
   name: "Royalty",
@@ -133,7 +133,7 @@ export const FEATURE_PLUGIN_ROUTER = {
     sdk: "sdk.pluginrouter",
     contracts: "IRouter",
   },
-  abis: [ITWRouterAbi],
+  abis: [PluginStateAbi],
   features: {},
 } as const;
 
