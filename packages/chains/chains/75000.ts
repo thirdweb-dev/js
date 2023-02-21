@@ -7,9 +7,7 @@ export default {
     "height": 460,
     "format": "png"
   },
-  "rpc": [
-    "https://mainnet.resincoin.dev"
-  ],
+  "rpc": [],
   "faucets": [],
   "nativeCurrency": {
     "name": "Ether",

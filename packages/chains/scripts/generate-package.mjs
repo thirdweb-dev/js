@@ -96,16 +96,41 @@ function findSlug(chain) {
   if (slug.endsWith("-")) {
     slug = slug.slice(0, -1);
   }
+  // special cases for things that we already had in rpc.thirdweb.com
+  if (slug === "fantom-opera") {
+    slug = "fantom";
+  }
+  if (slug === "avalanche-c-chain") {
+    slug = "avalanche";
+  }
+  if (slug === "avalanche-fuji-testnet") {
+    slug = "avalanche-fuji";
+  }
+  if (slug === "optimism-goerli-testnet") {
+    slug = "optimism-goerli";
+  }
+  if (slug === "arbitrum-one") {
+    slug = "arbitrum";
+  }
+  if (slug === "binance-smart-chain") {
+    slug = "binance";
+  }
+  if (slug === "binance-smart-chain-testnet") {
+    slug = "binance-testnet";
+  }
+  // end special cases
+
   takenSlugs[slug] = true;
   return slug;
 }
 
-for (const chain of chains) {
-  const chainDir = `${chainsDir}`;
-  if (!fs.existsSync(chainDir)) {
-    fs.mkdirSync(chainDir, { recursive: true });
-  }
+const chainDir = `${chainsDir}`;
+// clean out the chains directory
+fs.rmdirSync(chainDir, { recursive: true });
+// make sure the chain directory exists
+fs.mkdirSync(chainDir, { recursive: true });
 
+for (const chain of chains) {
   try {
     if ("icon" in chain) {
       if (typeof chain.icon === "string") {
@@ -130,6 +155,18 @@ for (const chain of chains) {
 
   const slug = findSlug(chain);
   chain.slug = slug;
+  // if the chain has RPCs that we can use then prepend our RPC to the list
+  const chainHasHttpRpc = chain.rpc.some((rpc) => rpc.startsWith("http"));
+  // if the chain has RPCs that we can use then prepend our RPC to the list
+  // we're exlcuding localhost because we don't want to use our RPC for localhost
+  if (chainHasHttpRpc && chain.chainId !== 1337) {
+    chain.rpc = [
+      `https://${slug}.rpc.thirdweb.com/${"${THIRDWEB_API_KEY}"}`,
+      ...chain.rpc,
+    ];
+  }
+  // unique rpcs
+  chain.rpc = [...new Set(chain.rpc)];
 
   fs.writeFileSync(
     `${chainDir}/${chain.chainId}.ts`,
@@ -163,7 +200,7 @@ import type { Chain } from "./types";
 ${exports.join("\n")}
 export * from "./types";
 export * from "./utils";
-export const defaultChains = [Ethereum, Goerli, Polygon, Mumbai, ArbitrumOne, ArbitrumGoerli, Optimism, OptimismGoerliTestnet, BinanceSmartChain, BinanceSmartChainTestnet, FantomOpera, FantomTestnet, AvalancheCChain, AvalancheFujiTestnet, Localhost];
+export const defaultChains = [Ethereum, Goerli, Polygon, Mumbai, Arbitrum, ArbitrumGoerli, Optimism, OptimismGoerli, Binance, BinanceTestnet, Fantom, FantomTestnet, Avalanche, AvalancheFuji, Localhost];
 export const allChains = [${exportNames.join(", ")}];
 `,
 );

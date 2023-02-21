@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://eraswap.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.eraswap.network",
     "https://rpc-mumbai.mainnet.eraswap.network"
   ],

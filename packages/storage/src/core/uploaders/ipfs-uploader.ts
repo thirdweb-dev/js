@@ -159,7 +159,10 @@ export class IpfsUploader implements IStorageUploader<IpfsUploadBatchOptions> {
       }
     }
 
-    const metadata = { name: `Storage SDK`, keyvalues: {} };
+    const metadata = {
+      name: `Storage SDK`,
+      keyvalues: { ...options?.metadata },
+    };
     form.append("pinataMetadata", JSON.stringify(metadata));
 
     if (options?.uploadWithoutDirectory) {

@@ -2,6 +2,7 @@ export default {
   "name": "Lightstreams Testnet",
   "chain": "PHT",
   "rpc": [
+    "https://lightstreams-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.sirius.lightstreams.io"
   ],
   "faucets": [

@@ -2,6 +2,7 @@ export default {
   "name": "Alyx Chain Testnet",
   "chain": "Alyx Chain Testnet",
   "rpc": [
+    "https://alyx-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet-rpc.alyxchain.com"
   ],
   "faucets": [

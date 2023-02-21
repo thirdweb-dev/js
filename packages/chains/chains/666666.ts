@@ -2,6 +2,7 @@ export default {
   "name": "Vision - Vpioneer Test Chain",
   "chain": "Vision-Vpioneer",
   "rpc": [
+    "https://vision-vpioneer-test-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://vpioneer.infragrid.v.network/ethereum/compatible"
   ],
   "faucets": [

@@ -2,6 +2,7 @@ export default {
   "name": "Callisto Mainnet",
   "chain": "CLO",
   "rpc": [
+    "https://callisto.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.callisto.network/"
   ],
   "faucets": [],

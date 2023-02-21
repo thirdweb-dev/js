@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://vention-smart-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node-testnet.vention.network"
   ],
   "faucets": [

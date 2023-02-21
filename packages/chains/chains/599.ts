@@ -2,6 +2,7 @@ export default {
   "name": "Metis Goerli Testnet",
   "chain": "ETH",
   "rpc": [
+    "https://metis-goerli-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://goerli.gateway.metisdevops.link"
   ],
   "faucets": [

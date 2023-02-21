@@ -2,6 +2,7 @@ export default {
   "name": "Cronos Mainnet Beta",
   "chain": "CRO",
   "rpc": [
+    "https://cronos-beta.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evm.cronos.org"
   ],
   "features": [

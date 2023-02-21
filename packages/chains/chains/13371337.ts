@@ -2,6 +2,7 @@ export default {
   "name": "PepChain Churchill",
   "chain": "PEP",
   "rpc": [
+    "https://pepchain-churchill.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://churchill-rpc.pepchain.io"
   ],
   "faucets": [],

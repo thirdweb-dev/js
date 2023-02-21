@@ -1,5 +1,105 @@
 # @thirdweb-dev/react
 
+## 3.9.2
+
+### Patch Changes
+
+- [#601](https://github.com/thirdweb-dev/js/pull/601) [`66cf1fb`](https://github.com/thirdweb-dev/js/commit/66cf1fb5c2e8deb486543ee028d786bb8eef6c19) Thanks [@jnsdls](https://github.com/jnsdls)! - upgrade dependencies
+
+- Updated dependencies [[`66cf1fb`](https://github.com/thirdweb-dev/js/commit/66cf1fb5c2e8deb486543ee028d786bb8eef6c19)]:
+  - @thirdweb-dev/react-core@3.9.2
+  - @thirdweb-dev/wallets@0.2.3
+  - @thirdweb-dev/chains@0.1.2
+
+## 3.9.1
+
+### Patch Changes
+
+- [#599](https://github.com/thirdweb-dev/js/pull/599) [`f580b8a`](https://github.com/thirdweb-dev/js/commit/f580b8ac06534df24b0194cbc632b4a8fd447611) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix readonly chain mismatch
+
+- [#588](https://github.com/thirdweb-dev/js/pull/588) [`f0de81d`](https://github.com/thirdweb-dev/js/commit/f0de81d4b1ba33b2ac73ed16cfdea8fd4eb5da9e) Thanks [@adam-maj](https://github.com/adam-maj)! - Update to use new Auth
+
+- Updated dependencies [[`f0de81d`](https://github.com/thirdweb-dev/js/commit/f0de81d4b1ba33b2ac73ed16cfdea8fd4eb5da9e), [`f580b8a`](https://github.com/thirdweb-dev/js/commit/f580b8ac06534df24b0194cbc632b4a8fd447611)]:
+  - @thirdweb-dev/react-core@3.9.1
+  - @thirdweb-dev/chains@0.1.1
+  - @thirdweb-dev/wallets@0.2.2
+
+## 3.9.0
+
+### Minor Changes
+
+- [`af8cf40`](https://github.com/thirdweb-dev/js/commit/af8cf40e4e1dab6afcc7622f7f9bbcfc6e8534d8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - ## Now supports Any EVM - Any Contract!
+
+  - no longer requires `desiredChainId` to be passed to `ThirdwebProvider`
+  - apps can now pass `activeChain` to `ThirdwebProvider` to define the chain to connect to (can be a chainId or a fully defined chain object from `@thirdweb-dev/chains`)
+  - if no `activeChain` is passed but a wallet is connected the SDK will be initialized with the chain of the connected wallet
+  - (advanced) apps can now define the chains they want to support by passing `supportedChains` to `ThirdwebProvider`
+
+  ### Deprecated options
+
+  - `desiredChainId` is now deprecated and will be removed in the next major version. Please use `activeChain` instead.
+  - `chainRPC` is now deprecated and will be removed in the next major version. Please use `supportedChains` instead.
+
+  ### Basic Setup
+
+  ```diff
+  import { ThirdwebProvider } from "@thirdweb-dev/react";
+  - import { ChainId } from "@thirdweb-dev/sdk";
+
+  const App = () => {
+  - return <ThirdwebProvider desiredChainId={ChainId.Ethereum}>{...}</ThirdwebProvider>
+  + return <ThirdwebProvider>{...}</ThirdwebProvider>
+  }
+  ```
+
+  ### Use a specific chain
+
+  ```js
+  import { ThirdwebProvider } from "@thirdweb-dev/react";
+
+  const App = () => {
+    // Polygon is a default chain, so you can pass the chain name without needing to define "supportedChains"
+    return (
+      <ThirdwebProvider activeChain="polygon">{/* {...} */}</ThirdwebProvider>
+    );
+  };
+  ```
+
+  ### Use a non-default chain
+
+  ```js
+  import { Sepolia } from "@thirdweb-dev/chains";
+  import { ThirdwebProvider } from "@thirdweb-dev/react";
+
+  const App = () => {
+    // since there is only one supported chain defined this will automatically default the SDK to Sepolia
+    return (
+      <ThirdwebProvider activeChain={Sepolia}>{/* {...} */}</ThirdwebProvider>
+    );
+  };
+  ```
+
+### Patch Changes
+
+- [`818048d`](https://github.com/thirdweb-dev/js/commit/818048d52fdef43536929f3b4df5b4c255b97389) Thanks [@jnsdls](https://github.com/jnsdls)! - enable passing of apiKeys to the provider
+
+- [#582](https://github.com/thirdweb-dev/js/pull/582) [`8694d5a`](https://github.com/thirdweb-dev/js/commit/8694d5a3a18648828d67e785e6321488f9e19b79) Thanks [@adam-maj](https://github.com/adam-maj)! - Update with new auth changes
+
+- [`500a0e6`](https://github.com/thirdweb-dev/js/commit/500a0e671b3feb01aedd2c34443b682d0934f389) Thanks [@jnsdls](https://github.com/jnsdls)! - fix deprecationWarning bug in react & react-core
+
+- [#578](https://github.com/thirdweb-dev/js/pull/578) [`f3b96e7`](https://github.com/thirdweb-dev/js/commit/f3b96e7120ebb45f837803530962a21f87439661) Thanks [@jnsdls](https://github.com/jnsdls)! - allow `number` and `string` types for `activeChain` prop on `<ThirdwebSDKProvider />` and `<ThirdwebProvider />`
+
+- [#571](https://github.com/thirdweb-dev/js/pull/571) [`cfd2a7c`](https://github.com/thirdweb-dev/js/commit/cfd2a7c9ec8f45fced17e81465adff529444d410) Thanks [@iketw](https://github.com/iketw)! - Remove duplicate dependency
+
+- [#592](https://github.com/thirdweb-dev/js/pull/592) [`37f58b4`](https://github.com/thirdweb-dev/js/commit/37f58b4e68c5f222d58e346fdc50c8472d830410) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix aligment on web3button
+
+- [#583](https://github.com/thirdweb-dev/js/pull/583) [`03e755f`](https://github.com/thirdweb-dev/js/commit/03e755f1df0d8e9750bf67d428f6a857577e5edd) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - No min-width requirement for html types on nft renderer
+
+- Updated dependencies [[`6a50719`](https://github.com/thirdweb-dev/js/commit/6a507194861b0712fd753c49ac63a8af68eb21d5), [`af8cf40`](https://github.com/thirdweb-dev/js/commit/af8cf40e4e1dab6afcc7622f7f9bbcfc6e8534d8), [`61d41db`](https://github.com/thirdweb-dev/js/commit/61d41db7699d999d4f71038b5376dd95e9c0d5a5), [`5d25ee1`](https://github.com/thirdweb-dev/js/commit/5d25ee1ab7abb4bfbded283a18f2d7740bb6995d), [`818048d`](https://github.com/thirdweb-dev/js/commit/818048d52fdef43536929f3b4df5b4c255b97389), [`94b120f`](https://github.com/thirdweb-dev/js/commit/94b120ffd1ae04e6f363c0444480920319491cb8), [`d0bcd2c`](https://github.com/thirdweb-dev/js/commit/d0bcd2c5871ca9480efc8d97e27e337eb9bbf830), [`2b3e94f`](https://github.com/thirdweb-dev/js/commit/2b3e94f90a49bcaccf63ac84fc9fc974506ca70d), [`017b0d5`](https://github.com/thirdweb-dev/js/commit/017b0d56b64651b290440b60789e058afba9f9a5), [`500a0e6`](https://github.com/thirdweb-dev/js/commit/500a0e671b3feb01aedd2c34443b682d0934f389), [`f3b96e7`](https://github.com/thirdweb-dev/js/commit/f3b96e7120ebb45f837803530962a21f87439661), [`5d25ee1`](https://github.com/thirdweb-dev/js/commit/5d25ee1ab7abb4bfbded283a18f2d7740bb6995d), [`500a0e6`](https://github.com/thirdweb-dev/js/commit/500a0e671b3feb01aedd2c34443b682d0934f389), [`f6ea971`](https://github.com/thirdweb-dev/js/commit/f6ea97185470f91fc73a117827df51cf8e1c99d1), [`bddabe0`](https://github.com/thirdweb-dev/js/commit/bddabe0b42e1f61f49aea555e32ba2747fb94351)]:
+  - @thirdweb-dev/chains@0.1.0
+  - @thirdweb-dev/react-core@3.9.0
+  - @thirdweb-dev/wallets@0.2.1
+
 ## 3.8.2
 
 ### Patch Changes

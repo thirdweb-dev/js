@@ -2,6 +2,7 @@ export default {
   "name": "bloxberg",
   "chain": "bloxberg",
   "rpc": [
+    "https://bloxberg.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://core.bloxberg.org"
   ],
   "faucets": [

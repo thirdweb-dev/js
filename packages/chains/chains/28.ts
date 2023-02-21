@@ -2,6 +2,7 @@ export default {
   "name": "Boba Network Rinkeby Testnet",
   "chain": "ETH",
   "rpc": [
+    "https://boba-network-rinkeby-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rinkeby.boba.network/"
   ],
   "faucets": [],

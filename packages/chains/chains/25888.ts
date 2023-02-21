@@ -2,6 +2,7 @@ export default {
   "name": "Hammer Chain Mainnet",
   "chain": "HammerChain",
   "rpc": [
+    "https://hammer-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.hammerchain.io/rpc"
   ],
   "faucets": [],

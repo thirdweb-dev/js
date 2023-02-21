@@ -2,6 +2,7 @@ export default {
   "name": "XODEX",
   "chain": "XODEX",
   "rpc": [
+    "https://xodex.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.xo-dex.com/rpc",
     "https://xo-dex.io"
   ],

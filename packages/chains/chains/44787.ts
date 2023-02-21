@@ -10,6 +10,7 @@ export default {
     "decimals": 18
   },
   "rpc": [
+    "https://celo-alfajores-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://alfajores-forno.celo-testnet.org",
     "wss://alfajores-forno.celo-testnet.org/ws"
   ],

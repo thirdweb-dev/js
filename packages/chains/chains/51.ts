@@ -2,6 +2,7 @@ export default {
   "name": "XDC Apothem Network",
   "chain": "XDC",
   "rpc": [
+    "https://xdc-apothem-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.apothem.network",
     "https://erpc.apothem.network"
   ],

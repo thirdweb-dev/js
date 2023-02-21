@@ -2,6 +2,7 @@ export default {
   "name": "CLV Parachain",
   "chain": "CLV",
   "rpc": [
+    "https://clv-parachain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api-para.clover.finance"
   ],
   "faucets": [],

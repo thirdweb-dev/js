@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://numbers.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnetrpc.num.network"
   ],
   "faucets": [],

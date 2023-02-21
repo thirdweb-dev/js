@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/chains",
-  "version": "0.0.0",
+  "version": "0.1.2",
   "main": "dist/thirdweb-dev-chains.cjs.js",
   "module": "dist/thirdweb-dev-chains.esm.js",
   "exports": {
@@ -24,9 +24,6 @@
     "entrypoints": [
       "index.ts"
     ],
-    "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
-      "exports": true
-    },
     "exports": true
   },
   "sideEffects": false,

@@ -2,6 +2,7 @@ export default {
   "name": "cheapETH",
   "chain": "cheapETH",
   "rpc": [
+    "https://cheapeth.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.cheapeth.org/rpc"
   ],
   "faucets": [],

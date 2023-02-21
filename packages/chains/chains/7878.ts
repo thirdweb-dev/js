@@ -2,6 +2,7 @@ export default {
   "name": "Hazlor Testnet",
   "chain": "SCAS",
   "rpc": [
+    "https://hazlor-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://hatlas.rpc.hazlor.com:8545",
     "wss://hatlas.rpc.hazlor.com:8546"
   ],

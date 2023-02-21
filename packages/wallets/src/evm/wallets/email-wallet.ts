@@ -1,5 +1,4 @@
 import { PaperChainMap } from "../connectors/email";
-import type { PaperWalletConnector } from "../connectors/email";
 import {
   EmailWalletConnectionArgs,
   EmailWalletOptions,
@@ -11,7 +10,7 @@ export class EmailWallet extends AbstractBrowserWallet<
   EmailWalletOptions,
   EmailWalletConnectionArgs
 > {
-  #connector?: PaperWalletConnector;
+  #connector?: TWConnector;
 
   static id = "email-wallet" as const;
   public get walletName() {
@@ -31,8 +30,8 @@ export class EmailWallet extends AbstractBrowserWallet<
       if (!chainName) {
         throw new Error("Unsupported chain id: " + this.options.chainId);
       }
-      const { PaperWalletConnector } = await import("../connectors/email");
-      this.#connector = new PaperWalletConnector({
+      const { EmailWalletConnector } = await import("../connectors/email");
+      this.#connector = new EmailWalletConnector({
         clientId: this.options.clientId,
         chain: chainName,
       });

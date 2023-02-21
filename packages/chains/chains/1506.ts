@@ -2,6 +2,7 @@ export default {
   "name": "Sherpax Mainnet",
   "chain": "Sherpax Mainnet",
   "rpc": [
+    "https://sherpax.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://mainnet.sherpax.io/rpc"
   ],
   "faucets": [],

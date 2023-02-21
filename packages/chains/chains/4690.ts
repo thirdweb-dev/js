@@ -2,6 +2,7 @@ export default {
   "name": "IoTeX Network Testnet",
   "chain": "iotex.io",
   "rpc": [
+    "https://iotex-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://babel-api.testnet.iotex.io"
   ],
   "faucets": [

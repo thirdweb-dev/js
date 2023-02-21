@@ -1,5 +1,21 @@
 # @thirdweb-dev/wallets
 
+## 0.2.3
+
+### Patch Changes
+
+- [#601](https://github.com/thirdweb-dev/js/pull/601) [`66cf1fb`](https://github.com/thirdweb-dev/js/commit/66cf1fb5c2e8deb486543ee028d786bb8eef6c19) Thanks [@jnsdls](https://github.com/jnsdls)! - upgrade dependencies
+
+## 0.2.2
+
+## 0.2.1
+
+### Patch Changes
+
+- [#548](https://github.com/thirdweb-dev/js/pull/548) [`94b120f`](https://github.com/thirdweb-dev/js/commit/94b120ffd1ae04e6f363c0444480920319491cb8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - New DeviceWallet feature
+
+- [`bddabe0`](https://github.com/thirdweb-dev/js/commit/bddabe0b42e1f61f49aea555e32ba2747fb94351) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Introducing email wallet capability
+
 ## 0.2.0
 
 ### Minor Changes

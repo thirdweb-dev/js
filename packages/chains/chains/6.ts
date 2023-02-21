@@ -2,6 +2,7 @@ export default {
   "name": "Ethereum Classic Testnet Kotti",
   "chain": "ETC",
   "rpc": [
+    "https://ethereum-classic-testnet-kotti.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.ethercluster.com/kotti"
   ],
   "faucets": [],

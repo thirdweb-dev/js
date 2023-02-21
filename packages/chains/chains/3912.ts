@@ -2,6 +2,7 @@ export default {
   "name": "DRAC Network",
   "chain": "DRAC",
   "rpc": [
+    "https://drac-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.dracscan.com/rpc"
   ],
   "faucets": [

@@ -2,6 +2,7 @@ export default {
   "name": "SPS",
   "chain": "SPS",
   "rpc": [
+    "https://sps.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ssquad.games"
   ],
   "faucets": [],

@@ -2,6 +2,7 @@ export default {
   "name": "WEMIX3.0 Testnet",
   "chain": "TWEMIX",
   "rpc": [
+    "https://wemix3-0-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://api.test.wemix.com",
     "wss://ws.test.wemix.com"
   ],

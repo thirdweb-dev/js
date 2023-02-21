@@ -2,6 +2,7 @@ export default {
   "name": "REI Network",
   "chain": "REI",
   "rpc": [
+    "https://rei-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.rei.network",
     "wss://rpc.rei.network"
   ],

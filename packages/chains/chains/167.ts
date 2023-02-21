@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://atoshi-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node.atoshi.io/"
   ],
   "faucets": [],

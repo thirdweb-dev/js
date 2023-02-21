@@ -2,6 +2,7 @@ export default {
   "name": "Autobahn Network",
   "chain": "TXL",
   "rpc": [
+    "https://autobahn-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.autobahn.network"
   ],
   "faucets": [],

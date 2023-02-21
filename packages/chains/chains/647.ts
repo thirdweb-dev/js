@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://sx-network-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.toronto.sx.technology"
   ],
   "faucets": [

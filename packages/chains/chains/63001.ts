@@ -2,6 +2,7 @@ export default {
   "name": "eCredits Testnet",
   "chain": "ECS",
   "rpc": [
+    "https://ecredits-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tst.ecredits.com"
   ],
   "faucets": [

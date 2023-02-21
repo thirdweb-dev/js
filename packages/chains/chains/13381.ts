@@ -2,6 +2,7 @@ export default {
   "name": "Phoenix Mainnet",
   "chain": "Phoenix",
   "rpc": [
+    "https://phoenix.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.phoenixplorer.com/"
   ],
   "faucets": [],

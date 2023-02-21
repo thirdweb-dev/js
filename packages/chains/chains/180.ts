@@ -2,6 +2,7 @@ export default {
   "name": "AME Chain Mainnet",
   "chain": "AME",
   "rpc": [
+    "https://ame-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://node1.amechain.io/"
   ],
   "faucets": [],

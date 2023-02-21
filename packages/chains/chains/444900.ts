@@ -2,6 +2,7 @@ export default {
   "name": "Weelink Testnet",
   "chain": "WLK",
   "rpc": [
+    "https://weelink-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://weelinknode1c.gw002.oneitfarm.com"
   ],
   "faucets": [

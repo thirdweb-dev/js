@@ -8,6 +8,7 @@ export default {
   },
   "chain": "UNQ",
   "rpc": [
+    "https://opal-testnet-by-unique.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc-opal.unique.network",
     "https://us-rpc-opal.unique.network",
     "https://eu-rpc-opal.unique.network",

@@ -2,6 +2,7 @@ export default {
   "name": "CryptoKylin Testnet",
   "chain": "EOS",
   "rpc": [
+    "https://cryptokylin-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://kylin.eosargentina.io"
   ],
   "faucets": [],

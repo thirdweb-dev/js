@@ -2,6 +2,7 @@ export default {
   "name": "Alaya Mainnet",
   "chain": "Alaya",
   "rpc": [
+    "https://alaya.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://openapi.alaya.network/rpc",
     "wss://openapi.alaya.network/ws"
   ],

@@ -2,6 +2,7 @@ export default {
   "name": "Eurus Testnet",
   "chain": "EUN",
   "rpc": [
+    "https://eurus-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.eurus.network"
   ],
   "faucets": [],

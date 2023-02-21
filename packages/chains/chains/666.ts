@@ -2,6 +2,7 @@ export default {
   "name": "Pixie Chain Testnet",
   "chain": "PixieChain",
   "rpc": [
+    "https://pixie-chain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://http-testnet.chain.pixie.xyz",
     "wss://ws-testnet.chain.pixie.xyz"
   ],

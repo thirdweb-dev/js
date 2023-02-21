@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react",
-  "version": "3.8.2",
+  "version": "3.9.2",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -42,9 +42,6 @@
       "evm/index.ts",
       "evm/connectors/**.ts"
     ],
-    "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
-      "exports": true
-    },
     "exports": true
   },
   "private": false,
@@ -111,7 +108,6 @@
     "@safe-global/safe-ethers-adapters": "0.1.0-alpha.13",
     "@safe-global/safe-ethers-lib": "^1.7.0",
     "@tanstack/react-query": "^4.0.10",
-    "@thirdweb-dev/react-core": "*",
     "@zag-js/menu": "0.3.4",
     "@zag-js/react": "0.3.4",
     "buffer": "^6.0.3",
@@ -120,7 +116,6 @@
     "detect-browser": "^5.3.0",
     "magic-sdk": "^10.1.0",
     "mime": "^3.0.0",
-    "react-cool-dimensions": "^2.0.7",
     "tiny-invariant": "^1.2.0",
     "wagmi": "^0.2.28"
   },

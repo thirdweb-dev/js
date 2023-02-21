@@ -2,6 +2,7 @@ export default {
   "name": "TBWG Chain",
   "chain": "TBWG",
   "rpc": [
+    "https://tbwg-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tbwg.io"
   ],
   "faucets": [],

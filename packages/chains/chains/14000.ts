@@ -2,6 +2,7 @@ export default {
   "name": "SPS Testnet",
   "chain": "SPS-Testnet",
   "rpc": [
+    "https://sps-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://www.3sps.net"
   ],
   "faucets": [],

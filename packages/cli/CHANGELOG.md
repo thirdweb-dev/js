@@ -1,5 +1,28 @@
 # thirdweb
 
+## 0.9.22
+
+### Patch Changes
+
+- Updated dependencies [[`f3408d0`](https://github.com/thirdweb-dev/js/commit/f3408d05d84ff8418a3f76961367e47565ed32b4), [`66cf1fb`](https://github.com/thirdweb-dev/js/commit/66cf1fb5c2e8deb486543ee028d786bb8eef6c19)]:
+  - @thirdweb-dev/sdk@3.9.2
+
+## 0.9.21
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.9.1
+
+## 0.9.20
+
+### Patch Changes
+
+- [#591](https://github.com/thirdweb-dev/js/pull/591) [`61d41db`](https://github.com/thirdweb-dev/js/commit/61d41db7699d999d4f71038b5376dd95e9c0d5a5) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Fix create with templates with no package.json
+
+- Updated dependencies [[`af8cf40`](https://github.com/thirdweb-dev/js/commit/af8cf40e4e1dab6afcc7622f7f9bbcfc6e8534d8), [`5d25ee1`](https://github.com/thirdweb-dev/js/commit/5d25ee1ab7abb4bfbded283a18f2d7740bb6995d), [`4d77c18`](https://github.com/thirdweb-dev/js/commit/4d77c185d90f134bbbccd04615cd4873bcf0bd83), [`af8cf40`](https://github.com/thirdweb-dev/js/commit/af8cf40e4e1dab6afcc7622f7f9bbcfc6e8534d8), [`44d56e4`](https://github.com/thirdweb-dev/js/commit/44d56e4a91f6937e32969453cdccd488798ac910), [`44cce2f`](https://github.com/thirdweb-dev/js/commit/44cce2f2b18e5f772974c7851797d7d36fea273c), [`af8cf40`](https://github.com/thirdweb-dev/js/commit/af8cf40e4e1dab6afcc7622f7f9bbcfc6e8534d8)]:
+  - @thirdweb-dev/sdk@3.9.0
+
 ## 0.9.19
 
 ### Patch Changes

@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://home-verse.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.mainnet.oasys.homeverse.games/"
   ],
   "faucets": [],

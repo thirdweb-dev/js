@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/react-core",
-  "version": "3.8.2",
+  "version": "3.9.2",
   "repository": "https://github.com/thirdweb-dev/js/tree/main/packages/react-core",
   "author": "thirdweb eng <eng@thirdweb.com>",
   "license": "Apache-2.0",
@@ -33,9 +33,6 @@
       "solana/index.ts",
       "evm/index.ts"
     ],
-    "___experimentalFlags_WILL_CHANGE_IN_PATCH": {
-      "exports": true
-    },
     "exports": true
   },
   "private": false,

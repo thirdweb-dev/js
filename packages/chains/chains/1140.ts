@@ -2,6 +2,7 @@ export default {
   "name": "MathChain Testnet",
   "chain": "MATH",
   "rpc": [
+    "https://mathchain-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://galois-hk.maiziqianbao.net/rpc"
   ],
   "faucets": [

@@ -2,6 +2,7 @@ export default {
   "name": "Popcateum Mainnet",
   "chain": "POPCATEUM",
   "rpc": [
+    "https://popcateum.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dataseed.popcateum.org"
   ],
   "faucets": [],

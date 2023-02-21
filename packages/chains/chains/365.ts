@@ -2,6 +2,7 @@ export default {
   "name": "Theta Testnet",
   "chain": "Theta",
   "rpc": [
+    "https://theta-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://eth-rpc-api-testnet.thetatoken.org/rpc"
   ],
   "faucets": [],

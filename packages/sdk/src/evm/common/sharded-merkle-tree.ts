@@ -258,7 +258,6 @@ export class ShardedMerkleTree {
           sort: true,
         });
       } catch (e) {
-        console.warn("No merkle entry found for address", address);
         return null;
       }
     }

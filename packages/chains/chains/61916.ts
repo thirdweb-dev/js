@@ -2,6 +2,7 @@ export default {
   "name": "DoKEN Super Chain Mainnet",
   "chain": "DoKEN Super Chain",
   "rpc": [
+    "https://doken-super-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://sgrpc.doken.dev",
     "https://nyrpc.doken.dev",
     "https://ukrpc.doken.dev"

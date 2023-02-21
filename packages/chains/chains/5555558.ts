@@ -2,6 +2,7 @@ export default {
   "name": "Imversed Testnet",
   "chain": "Imversed",
   "rpc": [
+    "https://imversed-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://jsonrpc-test.imversed.network",
     "https://ws-jsonrpc-test.imversed.network"
   ],

@@ -2,6 +2,7 @@ export default {
   "name": "Klaytn Mainnet Cypress",
   "chain": "KLAY",
   "rpc": [
+    "https://klaytn-cypress.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://public-node-api.klaytnapi.com/v1/cypress"
   ],
   "faucets": [],

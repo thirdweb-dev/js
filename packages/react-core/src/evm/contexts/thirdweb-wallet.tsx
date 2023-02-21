@@ -1,5 +1,6 @@
 import { __DEV__ } from "../constants/runtime";
 import { useThirdwebConfigContext } from "./thirdweb-config";
+import { getChainRPC } from "@thirdweb-dev/chains";
 import { UserWallet } from "@thirdweb-dev/sdk";
 import { Signer } from "ethers";
 import React, {
@@ -30,7 +31,8 @@ const ThirdwebConnectedWalletContext =
 export const ThirdwebConnectedWalletProvider: React.FC<
   PropsWithChildren<{ signer?: Signer }>
 > = ({ signer, children }) => {
-  const { chains } = useThirdwebConfigContext();
+  const { chains, thirdwebApiKey, alchemyApiKey, infuraApiKey } =
+    useThirdwebConfigContext();
 
   const [contextValue, setContextValue] =
     useState<ThirdwebConnectedWalletContext>({
@@ -51,7 +53,20 @@ export const ThirdwebConnectedWalletProvider: React.FC<
       // just get both of these up front and keep them around with the context
       Promise.all([signer.getAddress(), signer.getChainId()])
         .then(([address, chainId]) => {
-          const rpcUrl = chains.find((c) => c.chainId === chainId)?.rpc?.[0];
+          const chain = chains.find((c) => c.chainId === chainId);
+          let rpcUrl = undefined;
+          if (chain) {
+            try {
+              rpcUrl = getChainRPC(chain, {
+                thirdwebApiKey,
+                alchemyApiKey,
+                infuraApiKey,
+              });
+            } catch (e) {
+              // failed to get a viable rpc url, nothing we can do
+            }
+          }
+
           // only if the signer is still the same!
           if (signer === s) {
             const wallet = new UserWallet(signer, {
@@ -82,7 +97,7 @@ export const ThirdwebConnectedWalletProvider: React.FC<
       s = undefined;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [signer]);
+  }, [signer, thirdwebApiKey, alchemyApiKey, infuraApiKey]);
 
   return (
     <ThirdwebConnectedWalletContext.Provider value={contextValue}>

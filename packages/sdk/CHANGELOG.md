@@ -1,5 +1,54 @@
 # @thirdweb-dev/sdk
 
+## 3.9.2
+
+### Patch Changes
+
+- [#604](https://github.com/thirdweb-dev/js/pull/604) [`f3408d0`](https://github.com/thirdweb-dev/js/commit/f3408d05d84ff8418a3f76961367e47565ed32b4) Thanks [@jnsdls](https://github.com/jnsdls)! - fix possible crash in StaticJsonRpcBatchProvider
+
+- [#601](https://github.com/thirdweb-dev/js/pull/601) [`66cf1fb`](https://github.com/thirdweb-dev/js/commit/66cf1fb5c2e8deb486543ee028d786bb8eef6c19) Thanks [@jnsdls](https://github.com/jnsdls)! - upgrade dependencies
+
+- Updated dependencies [[`66cf1fb`](https://github.com/thirdweb-dev/js/commit/66cf1fb5c2e8deb486543ee028d786bb8eef6c19)]:
+  - @thirdweb-dev/storage@1.0.10
+  - @thirdweb-dev/chains@0.1.2
+
+## 3.9.1
+
+### Patch Changes
+
+- Updated dependencies [[`300fe4a`](https://github.com/thirdweb-dev/js/commit/300fe4a933f83ac59f89ff019f173cdfc6a2cdff), [`f580b8a`](https://github.com/thirdweb-dev/js/commit/f580b8ac06534df24b0194cbc632b4a8fd447611)]:
+  - @thirdweb-dev/storage@1.0.9
+  - @thirdweb-dev/chains@0.1.1
+
+## 3.9.0
+
+### Minor Changes
+
+- [`af8cf40`](https://github.com/thirdweb-dev/js/commit/af8cf40e4e1dab6afcc7622f7f9bbcfc6e8534d8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - ## Now supports Any EVM - Any Contract!
+
+  - Can now create a `ThirdwebSDK` instance passing: chain id (any EVM chain) / chain name (only supported ones) / RPC url / Provider / Signer
+  - Ability to pass and override any chain information in the new `supportedChains` property of the `SDKOptions`
+  - Support for local nodes! Simply create an SDK with `ChainId.Localhost` or your own local URL to interact with contracts and wallets on your local node
+  - While connected to a local node, request funds to the connected wallet using `await sdk.wallet.requestFunds(0.1)`
+  - Any contract can now be used without passing any ABI, simply by importing the contract on thirdweb.com/chain/contract_address
+
+### Patch Changes
+
+- [`af8cf40`](https://github.com/thirdweb-dev/js/commit/af8cf40e4e1dab6afcc7622f7f9bbcfc6e8534d8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - fix getting contract metadata from multichain registry when readonly rpc is defined
+
+- [`5d25ee1`](https://github.com/thirdweb-dev/js/commit/5d25ee1ab7abb4bfbded283a18f2d7740bb6995d) Thanks [@jnsdls](https://github.com/jnsdls)! - fix `getMultiChainContractList` in case of custom chains
+
+- [#585](https://github.com/thirdweb-dev/js/pull/585) [`4d77c18`](https://github.com/thirdweb-dev/js/commit/4d77c185d90f134bbbccd04615cd4873bcf0bd83) Thanks [@adam-maj](https://github.com/adam-maj)! - Update tiered drop value calculation
+
+- [`af8cf40`](https://github.com/thirdweb-dev/js/commit/af8cf40e4e1dab6afcc7622f7f9bbcfc6e8534d8) Thanks [@joaquim-verges](https://github.com/joaquim-verges)! - Support local nodes and expose ThirdwebSDK.fromLocalNode()
+
+- [#577](https://github.com/thirdweb-dev/js/pull/577) [`44d56e4`](https://github.com/thirdweb-dev/js/commit/44d56e4a91f6937e32969453cdccd488798ac910) Thanks [@nachoiacovino](https://github.com/nachoiacovino)! - Check how many NFTs a specific wallet has claimed to return the proper error on getClaimIneligibilityReasons
+
+- [#590](https://github.com/thirdweb-dev/js/pull/590) [`44cce2f`](https://github.com/thirdweb-dev/js/commit/44cce2f2b18e5f772974c7851797d7d36fea273c) Thanks [@jnsdls](https://github.com/jnsdls)! - allow passing a `Chain` to initialize the SDK
+
+- Updated dependencies [[`6a50719`](https://github.com/thirdweb-dev/js/commit/6a507194861b0712fd753c49ac63a8af68eb21d5), [`af8cf40`](https://github.com/thirdweb-dev/js/commit/af8cf40e4e1dab6afcc7622f7f9bbcfc6e8534d8), [`5d25ee1`](https://github.com/thirdweb-dev/js/commit/5d25ee1ab7abb4bfbded283a18f2d7740bb6995d), [`d0bcd2c`](https://github.com/thirdweb-dev/js/commit/d0bcd2c5871ca9480efc8d97e27e337eb9bbf830), [`017b0d5`](https://github.com/thirdweb-dev/js/commit/017b0d56b64651b290440b60789e058afba9f9a5), [`500a0e6`](https://github.com/thirdweb-dev/js/commit/500a0e671b3feb01aedd2c34443b682d0934f389)]:
+  - @thirdweb-dev/chains@0.1.0
+
 ## 3.8.2
 
 ### Patch Changes

@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://anytype-evm-chain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://geth.anytype.io"
   ],
   "faucets": [

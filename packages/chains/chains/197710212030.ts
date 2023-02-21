@@ -2,6 +2,7 @@ export default {
   "name": "Ntity Mainnet",
   "chain": "Ntity",
   "rpc": [
+    "https://ntity.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.ntity.io"
   ],
   "faucets": [],

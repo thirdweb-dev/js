@@ -21,6 +21,10 @@ export function useLogout() {
         authConfig,
         "Please specify an authConfig in the ThirdwebProvider",
       );
+      invariant(
+        authConfig.authUrl,
+        "Please specify an authUrl in the authConfig.",
+      );
 
       await fetch(`${authConfig.authUrl}/logout`, {
         method: "POST",

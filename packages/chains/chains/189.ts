@@ -2,6 +2,7 @@ export default {
   "name": "BMC Testnet",
   "chain": "BMC",
   "rpc": [
+    "https://bmc-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.bmcchain.com"
   ],
   "faucets": [],

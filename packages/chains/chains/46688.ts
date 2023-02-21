@@ -8,6 +8,7 @@ export default {
     "format": "svg"
   },
   "rpc": [
+    "https://fusion-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet.fusionnetwork.io",
     "wss://testnet.fusionnetwork.io"
   ],

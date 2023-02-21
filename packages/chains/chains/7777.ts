@@ -2,6 +2,7 @@ export default {
   "name": "Rise of the Warbots Testnet",
   "chain": "nmactest",
   "rpc": [
+    "https://rise-of-the-warbots-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://testnet1.riseofthewarbots.com",
     "https://testnet2.riseofthewarbots.com",
     "https://testnet3.riseofthewarbots.com",

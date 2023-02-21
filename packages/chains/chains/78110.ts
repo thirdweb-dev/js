@@ -2,6 +2,7 @@ export default {
   "name": "Firenze test network",
   "chain": "ETH",
   "rpc": [
+    "https://firenze-test-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://ethnode.primusmoney.com/firenze"
   ],
   "faucets": [],

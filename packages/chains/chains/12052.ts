@@ -2,6 +2,7 @@ export default {
   "name": "Singularity ZERO Mainnet",
   "chain": "ZERO",
   "rpc": [
+    "https://singularity-zero.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://zerorpc.singularity.gold"
   ],
   "faucets": [

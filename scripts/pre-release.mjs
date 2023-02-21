@@ -38,8 +38,6 @@ packages.forEach((pkg) => {
     }
   });
 
-  console.log(packageJson);
-
   if (!process.env.CI) {
     console.error(
       `Not in CI, skipping writing package.json for: "${pkg.packageJson.name}"`,

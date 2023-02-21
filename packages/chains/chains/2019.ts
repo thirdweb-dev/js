@@ -3,6 +3,7 @@ export default {
   "title": "Public Mint Testnet",
   "chain": "PublicMint",
   "rpc": [
+    "https://publicmint-testnet.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.tst.publicmint.io:8545"
   ],
   "faucets": [],

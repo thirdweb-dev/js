@@ -2,6 +2,7 @@ export default {
   "name": "Dexit Network",
   "chain": "DXT",
   "rpc": [
+    "https://dexit-network.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://dxt.dexit.network"
   ],
   "faucets": [

@@ -2,6 +2,7 @@ export default {
   "name": "ThaiChain",
   "chain": "TCH",
   "rpc": [
+    "https://thaichain.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://rpc.dome.cloud",
     "https://rpc.thaichain.org"
   ],

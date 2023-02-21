@@ -8,6 +8,7 @@ export default {
     "format": "png"
   },
   "rpc": [
+    "https://velas-evm.rpc.thirdweb.com/${THIRDWEB_API_KEY}",
     "https://evmexplorer.velas.com/rpc",
     "https://explorer.velas.com/rpc"
   ],
