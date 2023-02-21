@@ -15,6 +15,7 @@ export interface WalletEvents {
   message({ type, data }: { type: string; data?: unknown }): void;
   disconnect(): void;
   error(error: Error): void;
+  open_wallet(uri?: string): void;
 }
 
 const EIP1271_ABI = [
@@ -47,8 +48,7 @@ export const checkContractWalletSignature = async (
 
 export abstract class AbstractWallet
   extends EventEmitter<WalletEvents>
-  implements GenericAuthWallet, EVMWallet
-{
+  implements GenericAuthWallet, EVMWallet {
   public type: Ecosystem = "evm";
   protected signer: ethers.Signer | undefined;
 

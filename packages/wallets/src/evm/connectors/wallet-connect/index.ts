@@ -4,59 +4,64 @@ import {
   SwitchChainError,
   UserRejectedRequestError,
   getClient,
-  normalizeChainId,
   Connector,
 } from '@wagmi/core'
 import type WalletConnectProvider from '@walletconnect/ethereum-provider'
-import type {
-  UniversalProviderOpts,
-  UniversalProvider as UniversalProvider_,
-} from '@walletconnect/universal-provider'
-import type { Web3Modal } from '@web3modal/standalone'
 import { providers } from 'ethers'
 import { getAddress, hexValue } from 'ethers/lib/utils.js'
 
-// Shared config for WalletConnect v2
-const defaultV2Config = {
-  namespace: 'eip155',
-  methods: [
-    'eth_sendTransaction',
-    'eth_sendRawTransaction',
-    'eth_sign',
-    'eth_signTransaction',
-    'eth_signTypedData',
-    'eth_signTypedData_v3',
-    'eth_signTypedData_v4',
-    'personal_sign',
-    'wallet_switchEthereumChain',
-    'wallet_addEthereumChain',
-  ],
-  events: ['accountsChanged', 'chainChanged'],
-}
-
-type UniversalProvider = InstanceType<typeof UniversalProvider_>
-
 type WalletConnectOptions = {
-  /** When `true`, uses default WalletConnect QR Code modal */
-  qrcode?: boolean
-  wallet: 'metamask' | 'trustwallet'
-} & (
-    | ({
-      version?: '1'
-    } & ConstructorParameters<typeof WalletConnectProvider>[0])
-    | ({
-      /**
-       * Project ID associated with [WalletConnect account](https://cloud.walletconnect.com)
-       */
-      projectId: NonNullable<UniversalProviderOpts['projectId']>
-      version: '2'
-    } & Omit<UniversalProviderOpts, 'projectId'>)
-  )
-
+  projectId: string
+  qrcode?: boolean,
+  /**
+   * If a new chain is added to a previously existing configured connector `chains`, this flag
+   * will determine if that chain should be considered as stale. A stale chain is a chain that
+   * WalletConnect has yet to establish a relationship with (ie. the user has not approved or
+   * rejected the chain).
+   * Defaults to `true`.
+   *
+   * Preface: Whereas WalletConnect v1 supported dynamic chain switching, WalletConnect v2 requires
+   * the user to pre-approve a set of chains up-front. This comes with consequent UX nuances (see below) when
+   * a user tries to switch to a chain that they have not approved.
+   *
+   * This flag mainly affects the behavior when a wallet does not support dynamic chain authorization
+   * with WalletConnect v2.
+   *
+   * If `true` (default), the new chain will be treated as a stale chain. If the user
+   * has yet to establish a relationship (approved/rejected) with this chain in their WalletConnect
+   * session, the connector will disconnect upon the dapp auto-connecting, and the user will have to
+   * reconnect to the dapp (revalidate the chain) in order to approve the newly added chain.
+   * This is the default behavior to avoid an unexpected error upon switching chains which may
+   * be a confusing user experience (ie. the user will not know they have to reconnect
+   * unless the dapp handles these types of errors).
+   *
+   * If `false`, the new chain will be treated as a validated chain. This means that if the user
+   * has yet to establish a relationship with the chain in their WalletConnect session, wagmi will successfully
+   * auto-connect the user. This comes with the trade-off that the connector will throw an error
+   * when attempting to switch to the unapproved chain. This may be useful in cases where a dapp constantly
+   * modifies their configured chains, and they do not want to disconnect the user upon
+   * auto-connecting. If the user decides to switch to the unapproved chain, it is important that the
+   * dapp handles this error and prompts the user to reconnect to the dapp in order to approve
+   * the newly added chain.
+   *
+   */
+  isNewChainsStale?: boolean
+}
 type WalletConnectSigner = providers.JsonRpcSigner
 
+type ConnectConfig = {
+  /** Target chain to connect to. */
+  chainId?: number
+  /** If provided, will attempt to connect to an existing pairing. */
+  pairingTopic?: string
+}
+
+const NAMESPACE = 'eip155'
+const REQUESTED_CHAINS_KEY = 'wagmi.requestedChains'
+const ADD_ETH_CHAIN_METHOD = 'wallet_addEthereumChain'
+
 export class WalletConnectConnector extends Connector<
-  WalletConnectProvider | UniversalProvider,
+  WalletConnectProvider,
   WalletConnectOptions,
   WalletConnectSigner
 > {
@@ -64,168 +69,72 @@ export class WalletConnectConnector extends Connector<
   readonly name = 'WalletConnect'
   readonly ready = true
 
-  #provider?: WalletConnectProvider | UniversalProvider
-  #initUniversalProviderPromise?: Promise<void>
-  #web3Modal?: Web3Modal
+  #provider?: WalletConnectProvider
+  #initProviderPromise?: Promise<void>
 
   constructor(config: { chains?: Chain[]; options: WalletConnectOptions }) {
-    super(config)
-    if (this.version === '2') {
-      this.#createUniversalProvider()
-      if (this.isQrCode) this.#createWeb3Modal()
-    }
+    super({ ...config, options: { isNewChainsStale: true, ...config.options } })
+    this.#createProvider()
   }
 
-  get isQrCode() {
-    return this.options.qrcode !== false
-  }
-
-  get namespacedChains() {
-    return this.chains.map(
-      (chain) => `${defaultV2Config.namespace}:${chain.id}`,
-    )
-  }
-
-  get version() {
-    if ('version' in this.options) return this.options.version
-    return '1'
-  }
-
-  async connect({ chainId }: { chainId?: number } = {}) {
-    const isV1 = this.version === '1'
-    const isV2 = this.version === '2'
-
+  async connect({ chainId, pairingTopic }: ConnectConfig = {}) {
     try {
       let targetChainId = chainId
       if (!targetChainId) {
         const lastUsedChainId = getClient().lastUsedChainId
-        if (lastUsedChainId && !this.isChainUnsupported(lastUsedChainId))
+        if (lastUsedChainId && !this.isChainUnsupported(lastUsedChainId)) {
           targetChainId = lastUsedChainId
-      }
-
-      const provider = await this.getProvider({
-        chainId: targetChainId,
-        create: isV1,
-      })
-      provider.on('accountsChanged', this.onAccountsChanged)
-      provider.on('chainChanged', this.onChainChanged)
-      provider.on('disconnect', this.onDisconnect)
-
-      if (isV2) {
-        provider.on('session_delete', this.onDisconnect)
-        provider.on('session_request_sent', this.onSessionRequestSent)
-        provider.on('display_uri', this.onDisplayUri)
-
-        const isChainsAuthorized = await this.#isChainsAuthorized()
-
-        // If there is an active session, and the chains are not authorized,
-        // disconnect the session.
-        if ((provider as UniversalProvider).session && !isChainsAuthorized)
-          await provider.disconnect()
-
-        // If there is not an active session, or the chains are not authorized,
-        // attempt to connect.
-        if (
-          !(provider as UniversalProvider).session ||
-          ((provider as UniversalProvider).session && !isChainsAuthorized)
-        ) {
-          await Promise.race([
-            provider.connect({
-              namespaces: {
-                [defaultV2Config.namespace]: {
-                  methods: defaultV2Config.methods,
-                  events: defaultV2Config.events,
-                  chains: this.namespacedChains,
-                  rpcMap: this.chains.reduce(
-                    (rpc, chain) => ({
-                      ...rpc,
-                      [chain.id]: chain.rpcUrls.default.http[0],
-                    }),
-                    {},
-                  ),
-                },
-              },
-            }),
-            ...(this.isQrCode
-              ? [
-                new Promise<void>((_resolve, reject) =>
-                  provider.on('display_uri', async (uri: string) => {
-                    await this.#web3Modal?.openModal({ uri })
-                    // Modal is closed, reject promise so `catch` block for `connect` is called.
-                    this.#web3Modal?.subscribeModal(({ open }) => {
-                      if (!open) reject(new Error('user rejected'))
-                    })
-                  }),
-                ),
-              ]
-              : []),
-          ])
-
-          // If execution reaches here, connection was successful and we can close modal.
-          if (this.isQrCode) this.#web3Modal?.closeModal()
+        } else {
+          targetChainId = this.chains[0]?.id
         }
       }
+      if (!targetChainId) {
+        throw new Error('No chains found on connector.')
+      }
 
-      // Defer message to the next tick to ensure wallet connect data (provided by `.enable()`) is available
-      setTimeout(() => this.emit('message', { type: 'connecting' }), 0)
+      const provider = await this.getProvider()
+      this.#setupListeners()
 
-      const accounts = (await Promise.race([
-        provider.enable(),
-        // When using WalletConnect v1 QR Code Modal, handle user rejection request from wallet
-        ...(isV1 && this.isQrCode
-          ? [
-            new Promise((_res, reject) =>
-              (provider as WalletConnectProvider).connector.on(
-                'disconnect',
-                () => reject(new Error('user rejected')),
-              ),
-            ),
-          ]
-          : []),
-      ])) as string[]
-      const account = getAddress(accounts[0] as string)
+      const isChainsStale = this.#isChainsStale()
+
+      // If there is an active session with stale chains, disconnect the current session.
+      if (provider.session && isChainsStale) {
+        await provider.disconnect()
+      }
+
+      // If there no active session, or the chains are stale, connect.
+      if (!provider.session || isChainsStale) {
+        const optionalChains = this.chains
+          .filter((chain) => chain.id !== targetChainId)
+          .map((optionalChain) => optionalChain.id)
+
+        this.emit('message', { type: 'connecting' })
+
+        await provider.connect({
+          pairingTopic,
+          chains: [targetChainId],
+          optionalChains,
+        })
+
+        this.#setRequestedChainsIds(this.chains.map(({ id }) => id))
+      }
+
+      // If session exists and chains are authorized, enable provider for required chain
+      const accounts = await provider.enable()
+      if (accounts.length === 0) {
+        throw new Error('No accounts found on provider.')
+      }
+      const account = getAddress(accounts[0])
       const id = await this.getChainId()
       const unsupported = this.isChainUnsupported(id)
-
-      // Not all WalletConnect v1 options support programmatic chain switching.
-      // Only enable for wallet options that do.
-      if (isV1) {
-        const walletName =
-          (provider as WalletConnectProvider).connector?.peerMeta?.name ?? ''
-
-        /**
-         * Wallets that support chain switching through WalletConnect
-         * - imToken (token.im)
-         * - MetaMask (metamask.io)
-         * - Omni (omni.app)
-         * - Rainbow (rainbow.me)
-         * - Trust Wallet (trustwallet.com)
-         */
-        const switchChainAllowedRegex =
-          /(imtoken|metamask|omni|rainbow|trust wallet)/i
-        if (switchChainAllowedRegex.test(walletName))
-          this.switchChain = this.#switchChain
-      }
-      // In v2, chain switching is allowed programatically
-      // as the user approves the chains when approving the pairing
-      else this.switchChain = this.#switchChain
 
       return {
         account,
         chain: { id, unsupported },
-        provider: new providers.Web3Provider(
-          provider as providers.ExternalProvider,
-        ),
+        provider: new providers.Web3Provider(provider),
       }
     } catch (error) {
-      if (isV2 && this.isQrCode) this.#web3Modal?.closeModal()
-      // WalletConnect v1: "user closed modal"
-      // WalletConnect v2: "user rejected"
-      if (
-        /user closed modal|user rejected/i.test(
-          (error as ProviderRpcError)?.message,
-        )
-      ) {
+      if (/user rejected/i.test((error as ProviderRpcError)?.message)) {
         throw new UserRejectedRequestError(error)
       }
       throw error
@@ -237,89 +146,30 @@ export class WalletConnectConnector extends Connector<
     try {
       await provider.disconnect()
     } catch (error) {
-      // If the session does not exist, we don't want to throw.
-      if (!/No matching key/i.test((error as Error).message)) throw error
-    }
-
-    provider.removeListener('accountsChanged', this.onAccountsChanged)
-    provider.removeListener('chainChanged', this.onChainChanged)
-    provider.removeListener('disconnect', this.onDisconnect)
-
-    if (this.version === '1' && typeof localStorage !== 'undefined')
-      // Remove local storage session so user can connect again
-      localStorage.removeItem('walletconnect')
-    else {
-      provider.removeListener('session_delete', this.onDisconnect)
-      provider.removeListener('display_uri', this.onDisplayUri)
+      if (!/No matching key/i.test((error as Error).message)) { throw error }
+    } finally {
+      this.#removeListeners()
+      this.#setRequestedChainsIds([])
     }
   }
 
   async getAccount() {
-    const provider = await this.getProvider()
-    let accounts
-    if (this.version === '1')
-      accounts = (provider as WalletConnectProvider).accounts
-    else
-      accounts = (await provider.request({
-        method: 'eth_accounts',
-      })) as string[]
-
-    // return checksum address
-    return getAddress(accounts[0] as string)
+    const { accounts } = await this.getProvider()
+    if (accounts.length === 0) {
+      throw new Error('No accounts found on provider.')
+    }
+    return getAddress(accounts[0])
   }
 
   async getChainId() {
-    const provider = await this.getProvider()
-    if (this.version === '1')
-      return normalizeChainId((provider as WalletConnectProvider).chainId)
-
-    // WalletConnect v2 does not internally manage chainIds anymore, so
-    // we need to retrieve it from the client, or request it from the provider
-    // if none exists.
-    return (
-      getClient().data?.chain?.id ??
-      normalizeChainId(await provider.request({ method: 'eth_chainId' }))
-    )
+    const { chainId } = await this.getProvider()
+    return chainId
   }
 
-  async getProvider({
-    chainId,
-    create,
-  }: { chainId?: number; create?: boolean } = {}) {
-    // WalletConnect v2
-    if (this.options.version === '2') {
-      if (!this.#provider) await this.#createUniversalProvider()
-
-      if (chainId)
-        (this.#provider as UniversalProvider).setDefaultChain(
-          `${defaultV2Config.namespace}:${chainId}`,
-        )
-
-      return this.#provider as UniversalProvider
-    }
-
-    // WalletConnect v1 (Force create new provider)
-    else if (!this.#provider || chainId || create) {
-      const rpc = !this.options?.infuraId
-        ? this.chains.reduce(
-          (rpc, chain) => ({
-            ...rpc,
-            [chain.id]: chain.rpcUrls.default.http[0],
-          }),
-          {},
-        )
-        : {}
-      const WalletConnectProvider = (
-        await import('@walletconnect/ethereum-provider')
-      ).default
-      this.#provider = new WalletConnectProvider({
-        ...this.options,
-        chainId,
-        rpc: { ...rpc, ...this.options?.rpc },
-      })
-      return this.#provider
-    }
-
+  async getProvider({ chainId }: { chainId?: number } = {}) {
+    if (!this.#provider) { await this.#createProvider() }
+    if (chainId) { await this.switchChain(chainId) }
+    if (!this.#provider) { throw new Error('No provider found.') }
     return this.#provider
   }
 
@@ -328,149 +178,214 @@ export class WalletConnectConnector extends Connector<
       this.getProvider({ chainId }),
       this.getAccount(),
     ])
-
-    let provider_ = provider as providers.ExternalProvider
-    if (this.version === '2') {
-      const chainId_ = await this.getChainId()
-      provider_ = {
-        ...provider,
-        async request(args) {
-          return await provider.request(
-            args,
-            `${defaultV2Config.namespace}:${chainId ?? chainId_}`,
-          )
-        },
-      } as providers.ExternalProvider
-    }
-
-    return new providers.Web3Provider(provider_, chainId).getSigner(account)
+    return new providers.Web3Provider(provider, chainId).getSigner(account)
   }
 
   async isAuthorized() {
     try {
-      const [account, isChainsAuthorized] = await Promise.all([
+      const [account, provider] = await Promise.all([
         this.getAccount(),
-        this.#isChainsAuthorized(),
+        this.getProvider(),
       ])
-      return !!account && isChainsAuthorized
+      const isChainsStale = this.#isChainsStale()
+
+      // If an account does not exist on the session, then the connector is unauthorized.
+      if (!account) { return false }
+
+      // If the chains are stale on the session, then the connector is unauthorized.
+      if (isChainsStale && provider.session) {
+        try {
+          await provider.disconnect()
+        } catch { } // eslint-disable-line no-empty
+        return false
+      }
+
+      return true
     } catch {
       return false
     }
   }
 
-  async #createWeb3Modal() {
-    const { Web3Modal } = await import('@web3modal/standalone')
-    const { version } = this.options
-    this.#web3Modal = new Web3Modal({
-      walletConnectVersion: version === '2' ? 2 : 1,
-      projectId: version === '2' ? this.options.projectId : '',
-      standaloneChains: this.namespacedChains,
-    })
-  }
-
-  async #initUniversalProvider() {
-    const WalletConnectProvider = (
-      await import('@walletconnect/universal-provider')
-    ).default
-    if (typeof WalletConnectProvider?.init === 'function') {
-      this.#provider = await WalletConnectProvider.init(
-        this.options as UniversalProviderOpts,
-      )
-    }
-  }
-
-  async #createUniversalProvider() {
-    if (!this.#initUniversalProviderPromise) {
-      this.#initUniversalProviderPromise = this.#initUniversalProvider()
-    }
-    return this.#initUniversalProviderPromise
-  }
-
-  /**
-   * @description Checks if the connector is authorized to access the requested chains.
-   *
-   * There could be a case where requested chains are out of sync with
-   * the users' approved chains (e.g. the dapp could have added support
-   * for an additional chain), hence the user will be unauthorized.
-   */
-  async #isChainsAuthorized() {
-    const provider = await this.getProvider()
-
-    if (this.version === '1') return true
-
-    const providerChains =
-      (provider as UniversalProvider).namespaces?.[defaultV2Config.namespace]
-        ?.chains || []
-    const authorizedChainIds = providerChains.map(
-      (chain) => parseInt(chain.split(':')[1] || '') as Chain['id'],
-    )
-    return !this.chains.some(({ id }) => !authorizedChainIds.includes(id))
-  }
-
-  async #switchChain(chainId: number) {
-    const provider = await this.getProvider()
-    const id = hexValue(chainId)
+  async switchChain(chainId: number) {
+    const chain = this.chains.find((chain_) => chain_.id === chainId)
+    if (!chain) { throw new SwitchChainError(new Error('chain not found on connector.')) }
 
     try {
-      // Set up a race between `wallet_switchEthereumChain` & the `chainChanged` event
-      // to ensure the chain has been switched. This is because there could be a case
-      // where a wallet may not resolve the `wallet_switchEthereumChain` method, or
-      // resolves slower than `chainChanged`.
-      await Promise.race([
-        provider.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: id }],
-        }),
-        new Promise((res) =>
-          this.on('change', ({ chain }) => {
-            if (chain?.id === chainId) res(chainId)
-          }),
-        ),
-      ])
-      if (this.version === '2') {
-        ; (provider as UniversalProvider).setDefaultChain(
-          `${defaultV2Config.namespace}:${chainId}`,
-        )
-        this.onChainChanged(chainId)
+      const provider = await this.getProvider()
+      const namespaceChains = this.#getNamespaceChainsIds()
+      const namespaceMethods = this.#getNamespaceMethods()
+      const isChainApproved = namespaceChains.includes(chainId)
+
+      if (!isChainApproved && namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) {
+        await provider.request({
+          method: ADD_ETH_CHAIN_METHOD,
+          params: [
+            {
+              chainId: hexValue(chain.id),
+              blockExplorerUrls: [chain.blockExplorers?.default],
+              chainName: chain.name,
+              nativeCurrency: chain.nativeCurrency,
+              rpcUrls: [...chain.rpcUrls.default.http],
+            },
+          ],
+        })
+        const requestedChains = this.#getRequestedChainsIds()
+        requestedChains.push(chainId)
+        this.#setRequestedChainsIds(requestedChains)
       }
-      return (
-        this.chains.find((x) => x.id === chainId) ?? {
-          id: chainId,
-          name: `Chain ${id}`,
-          network: `${id}`,
-          nativeCurrency: { decimals: 18, name: 'Ether', symbol: 'ETH' },
-          rpcUrls: { default: { http: [''] }, public: { http: [''] } },
-        }
-      )
+      await provider.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: hexValue(chainId) }],
+      })
+
+      return chain
     } catch (error) {
       const message =
         typeof error === 'string' ? error : (error as ProviderRpcError)?.message
-      if (/user rejected request/i.test(message))
+      if (/user rejected request/i.test(message)) {
         throw new UserRejectedRequestError(error)
+      }
       throw new SwitchChainError(error)
     }
   }
 
-  protected onAccountsChanged = (accounts: string[]) => {
-    if (accounts.length === 0) this.emit('disconnect')
-    else this.emit('change', { account: getAddress(accounts[0] as string) })
+  async #createProvider() {
+    if (!this.#initProviderPromise && typeof window !== 'undefined') {
+      this.#initProviderPromise = this.#initProvider()
+    }
+    return this.#initProviderPromise
   }
 
-  protected onSessionRequestSent = (payload) => {
-    this.emit('message', { type: 'session_request_sent', data: payload })
-  };
+  async #initProvider() {
+    const {
+      default: EthereumProvider,
+      OPTIONAL_EVENTS,
+      OPTIONAL_METHODS,
+    } = await import('@walletconnect/ethereum-provider')
+    const [defaultChain, ...optionalChains] = this.chains.map(({ id }) => id)
+    if (defaultChain) {
+      // EthereumProvider populates & deduplicates required methods and events internally
+      this.#provider = await EthereumProvider.init({
+        showQrModal: this.options.qrcode !== false,
+        projectId: this.options.projectId,
+        optionalMethods: OPTIONAL_METHODS,
+        optionalEvents: OPTIONAL_EVENTS,
+        chains: [defaultChain],
+        optionalChains: optionalChains,
+        rpcMap: Object.fromEntries(
+          this.chains.map((chain) => [
+            chain.id,
+            chain.rpcUrls.default.http[0],
+          ]),
+        ),
+      })
+    }
+  }
+
+  /**
+   * Checks if the target chains match the chains that were
+   * initially requested by the connector for the WalletConnect session.
+   * If there is a mismatch, this means that the chains on the connector
+   * are considered stale, and need to be revalidated at a later point (via
+   * connection).
+   *
+   * There may be a scenario where a dapp adds a chain to the
+   * connector later on, however, this chain will not have been approved or rejected
+   * by the wallet. In this case, the chain is considered stale.
+   *
+   * There are exceptions however:
+   * -  If the wallet supports dynamic chain addition via `eth_addEthereumChain`,
+   *    then the chain is not considered stale.
+   * -  If the `isNewChainsStale` flag is falsy on the connector, then the chain is
+   *    not considered stale.
+   *
+   * For the above cases, chain validation occurs dynamically when the user
+   * attempts to switch chain.
+   *
+   * Also check that dapp supports at least 1 chain from previously approved session.
+   */
+  #isChainsStale() {
+    const namespaceMethods = this.#getNamespaceMethods()
+    if (namespaceMethods.includes(ADD_ETH_CHAIN_METHOD)) { return false }
+    if (!this.options.isNewChainsStale) { return false }
+
+    const requestedChains = this.#getRequestedChainsIds()
+    const connectorChains = this.chains.map(({ id }) => id)
+    const namespaceChains = this.#getNamespaceChainsIds()
+
+    if (
+      namespaceChains.length &&
+      !namespaceChains.some((id) => connectorChains.includes(id))
+    ) { return false }
+
+    return !connectorChains.every((id) => requestedChains.includes(id))
+  }
+
+  #setupListeners() {
+    if (!this.#provider) { return }
+    this.#removeListeners()
+    this.#provider.on('accountsChanged', this.onAccountsChanged)
+    this.#provider.on('chainChanged', this.onChainChanged)
+    this.#provider.on('disconnect', this.onDisconnect)
+    this.#provider.on('session_delete', this.onDisconnect)
+    this.#provider.on('display_uri', this.onDisplayUri)
+    this.#provider.on('connect', this.onConnect)
+  }
+
+  #removeListeners() {
+    if (!this.#provider) { return }
+    this.#provider.removeListener('accountsChanged', this.onAccountsChanged)
+    this.#provider.removeListener('chainChanged', this.onChainChanged)
+    this.#provider.removeListener('disconnect', this.onDisconnect)
+    this.#provider.removeListener('session_delete', this.onDisconnect)
+    this.#provider.removeListener('display_uri', this.onDisplayUri)
+    this.#provider.removeListener('connect', this.onConnect)
+  }
+
+  #setRequestedChainsIds(chains: number[]) {
+    localStorage.setItem(REQUESTED_CHAINS_KEY, JSON.stringify(chains))
+  }
+
+  #getRequestedChainsIds(): number[] {
+    const data = localStorage.getItem(REQUESTED_CHAINS_KEY)
+    return data ? JSON.parse(data) : []
+  }
+
+  #getNamespaceChainsIds() {
+    if (!this.#provider) { return [] }
+    const chainIds = this.#provider.session?.namespaces[NAMESPACE]?.chains?.map(
+      (chain) => parseInt(chain.split(':')[1] || ''),
+    )
+    return chainIds ?? []
+  }
+
+  #getNamespaceMethods() {
+    if (!this.#provider) { return [] }
+    const methods = this.#provider.session?.namespaces[NAMESPACE]?.methods
+    return methods ?? []
+  }
+
+  protected onAccountsChanged = (accounts: string[]) => {
+    if (accounts.length === 0) { this.emit('disconnect') }
+    else { this.emit('change', { account: getAddress(accounts[0]) }) }
+  }
 
   protected onChainChanged = (chainId: number | string) => {
-    const id = normalizeChainId(chainId)
+    const id = Number(chainId)
     const unsupported = this.isChainUnsupported(id)
     this.emit('change', { chain: { id, unsupported } })
   }
 
   protected onDisconnect = () => {
+    this.#setRequestedChainsIds([])
     this.emit('disconnect')
   }
 
   protected onDisplayUri = (uri: string) => {
     this.emit('message', { type: 'display_uri', data: uri })
+  }
+
+  protected onConnect = () => {
+    this.emit('connect', { provider: this.#provider })
   }
 }
