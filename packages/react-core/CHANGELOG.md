@@ -1,5 +1,15 @@
 # @thirdweb-dev/react-core
 
+## 3.9.2
+
+### Patch Changes
+
+- [#601](https://github.com/thirdweb-dev/js/pull/601) [`66cf1fb`](https://github.com/thirdweb-dev/js/commit/66cf1fb5c2e8deb486543ee028d786bb8eef6c19) Thanks [@jnsdls](https://github.com/jnsdls)! - upgrade dependencies
+
+- Updated dependencies [[`66cf1fb`](https://github.com/thirdweb-dev/js/commit/66cf1fb5c2e8deb486543ee028d786bb8eef6c19)]:
+  - @thirdweb-dev/chains@0.1.2
+  - @thirdweb-dev/auth@3.0.6
+
 ## 3.9.1
 
 ### Patch Changes

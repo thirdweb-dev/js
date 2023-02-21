@@ -1,5 +1,17 @@
 # @thirdweb-dev/sdk
 
+## 3.9.2
+
+### Patch Changes
+
+- [#604](https://github.com/thirdweb-dev/js/pull/604) [`f3408d0`](https://github.com/thirdweb-dev/js/commit/f3408d05d84ff8418a3f76961367e47565ed32b4) Thanks [@jnsdls](https://github.com/jnsdls)! - fix possible crash in StaticJsonRpcBatchProvider
+
+- [#601](https://github.com/thirdweb-dev/js/pull/601) [`66cf1fb`](https://github.com/thirdweb-dev/js/commit/66cf1fb5c2e8deb486543ee028d786bb8eef6c19) Thanks [@jnsdls](https://github.com/jnsdls)! - upgrade dependencies
+
+- Updated dependencies [[`66cf1fb`](https://github.com/thirdweb-dev/js/commit/66cf1fb5c2e8deb486543ee028d786bb8eef6c19)]:
+  - @thirdweb-dev/storage@1.0.10
+  - @thirdweb-dev/chains@0.1.2
+
 ## 3.9.1
 
 ### Patch Changes
