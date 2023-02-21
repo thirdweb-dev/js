@@ -1,6 +1,6 @@
 import { useSDK } from "../../providers/thirdweb-sdk-provider";
 
-export * from "./useStorageUpload";
+export { useStorageUpload } from "./useStorageUpload";
 
 /**
  * Get the configured `ThirdwebStorage` instance

@@ -21,7 +21,6 @@ import {
   useEffect,
   useState,
 } from "react";
-import invariant from "tiny-invariant";
 
 let coordinatorStorage: AsyncStorage;
 let deviceWalletStorage: AsyncStorage;
@@ -61,7 +60,7 @@ const ThirdwebWalletContext = createContext<
 export function ThirdwebWalletProvider(
   props: PropsWithChildren<{
     activeChain: Chain;
-    wallets: SupportedWallet[];
+    supportedWallets: SupportedWallet[];
     shouldAutoConnect?: boolean;
     createWalletStorage: CreateAsyncStorage;
     dAppMeta: DAppMetaData;
@@ -185,7 +184,9 @@ export function ThirdwebWalletProvider(
         "lastConnectedWallet",
       );
 
-      const Wallet = props.wallets.find((W) => W.id === lastConnectedWalletId);
+      const Wallet = props.supportedWallets.find(
+        (W) => W.id === lastConnectedWalletId,
+      );
       if (Wallet && Wallet.id !== "deviceWallet") {
         const wallet = createWalletInstance(Wallet);
         const _address = await wallet.autoConnect();
@@ -195,7 +196,7 @@ export function ThirdwebWalletProvider(
     })();
   }, [
     createWalletInstance,
-    props.wallets,
+    props.supportedWallets,
     handleWalletConnected,
     props.shouldAutoConnect,
   ]);
@@ -291,7 +292,7 @@ export function ThirdwebWalletProvider(
     <ThirdwebWalletContext.Provider
       value={{
         disconnect: disconnectWallet,
-        wallets: props.wallets,
+        wallets: props.supportedWallets,
         connect: connectWallet,
         signer,
         activeWallet,
@@ -309,18 +310,7 @@ export function ThirdwebWalletProvider(
 }
 
 export function useThirdwebWallet() {
-  const context = useContext(ThirdwebWalletContext);
-  if (!context) {
-    invariant(
-      context,
-      "useThirdwebWallet must be used within a ThirdwebProvider",
-    );
-  }
-  return context;
-}
-
-export function useWalletSigner() {
-  return useThirdwebWallet().signer;
+  return useContext(ThirdwebWalletContext);
 }
 
 type DeviceWalletStorage = {

@@ -5,10 +5,18 @@ import { keyframes, ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
 import { useActiveWallet } from "@thirdweb-dev/react-core";
 
-export const ConnectWallet: React.FC<{ theme: "dark" | "light" }> = (props) => {
+/**
+ * A component that allows the user to connect their wallet.
+ *
+ * The button must be descendant of `ThirdwebProvider` in order to function.
+ */
+export const ConnectWallet: React.FC<{ theme?: "dark" | "light" }> = (
+  props,
+) => {
   const activeWallet = useActiveWallet();
+  const theme = props.theme || "dark";
   return (
-    <ThemeProvider theme={props.theme === "dark" ? darkTheme : lightTheme}>
+    <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
       <FadeIn>
         {!activeWallet ? <ConnectWalletFlow /> : <ConnectedWalletDetails />}
       </FadeIn>

@@ -14,7 +14,7 @@ import {
  * const App = () => {
  *   const [, switchNetwork] = useNetwork();
  *
- * 
+ *
  *   return (
  *      // switchNetwork is undefined if the wallet does not support programmatic network switching
  *      // 137 is the chainId for Polygon in this example
@@ -29,6 +29,7 @@ import {
  * For those situations, you can typically switch networks in the wallet app this hook will still work.
  *
  * @public
+ * @deprecated - TODO remove this
  */
 
 export function useNetwork() {
