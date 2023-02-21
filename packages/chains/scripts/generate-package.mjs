@@ -21,10 +21,15 @@ const chainsJsonUrl = "https://chainid.network/chains.json";
 const iconRoute =
   "https://raw.githubusercontent.com/ethereum-lists/chains/master/_data/icons";
 
-const overrides = JSON.parse(fs.readFileSync("./overrides.json"));
+const additionalChains = JSON.parse(
+  fs.readFileSync("./data/additional-chains.json"),
+);
+const overrides = JSON.parse(fs.readFileSync("./data/overrides.json"));
 
 /** @type {Chain[]} */
 let chains = (await axios.get(chainsJsonUrl)).data;
+
+chains = chains.concat(additionalChains);
 
 chains = chains
   .filter((c) => c.status !== "deprecated")
