@@ -37,9 +37,41 @@ async function script() {
     "Run Below Commands to use Hotlinked pacakges in your project:\n",
   );
   console.log("\x1b[33m%s\x1b[0m", "yarn link @thirdweb-dev/react");
-  console.log("\x1b[33m%s\x1b[0m", "yarn link @thirdweb-dev/react-core");
-  console.log("\x1b[33m%s\x1b[0m", "yarn link @thirdweb-dev/wallets");
+  console.log("\x1b[33m%s\x1b[0m", "yarn --force");
   console.log("\n");
+
+  console.log(
+    "--------------------------------------------------------------------------------\n",
+  );
+
+  console.log(
+    "You will also need to configure your build tool to build the linked packages.\n",
+  );
+  console.log("For Vite: configure `optimizeDeps` in `vite.config.js`\n");
+  // hello in blue
+  console.log(
+    "\x1b[33m%s\x1b[0m",
+    `\
+optimizeDeps: {
+  exclude: ['@thirdweb-dev/react'],
+}\n\n`,
+  );
+
+  console.log(
+    "for Next.js configure `transpilePackages` in `next.config.js`\n",
+  );
+
+  console.log(
+    "\x1b[33m%s\x1b[0m",
+    `\
+const nextConfig = {
+  transpilePackages: ['@thirdweb-dev/react'],
+};\n\n`,
+  );
+
+  console.log(
+    "--------------------------------------------------------------------------------\n",
+  );
 
   // how to revert
   console.log(
