@@ -17,7 +17,7 @@ import { THIRDWEB_DEPLOYER_ADDRESS } from "constants/addresses";
 import { useTrack } from "hooks/analytics/useTrack";
 import { replaceIpfsUrl } from "lib/sdk";
 import { useRouter } from "next/router";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { FiChevronLeft, FiImage } from "react-icons/fi";
 import { Heading, Link, Text, TrackedIconButton } from "tw-components";
 
@@ -30,12 +30,10 @@ export interface ReleaseWithVersionPageProps {
 export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
   author,
   contractName,
-  version: initialVersion,
+  version,
 }) => {
   const trackEvent = useTrack();
   const ensQuery = useEns(author);
-
-  const [version, setVersion] = useState(initialVersion);
 
   const router = useRouter();
 
@@ -115,12 +113,12 @@ export const ReleaseWithVersionPage: React.FC<ReleaseWithVersionPageProps> = ({
                 action: "click",
                 version_selected: e.target.value,
               });
-              const path =
+              const pathName =
                 e.target.value === allVersions.data?.[0].version
                   ? `/${author}/${contractName}`
                   : `/${author}/${contractName}/${e.target.value}`;
-              router.push(path, undefined, { shallow: true });
-              setVersion(e.target.value);
+
+              router.push(pathName);
             }}
             value={version}
           >
