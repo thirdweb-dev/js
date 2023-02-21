@@ -11,7 +11,7 @@
     "react-scripts": "^5"
   },
   "scripts": {
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "react-scripts build",
     "e2e": "npx playwright test"
   },
   "browserslist": {
