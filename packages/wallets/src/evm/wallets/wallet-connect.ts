@@ -2,7 +2,7 @@ import { TWConnector, WagmiAdapter } from "../interfaces/tw-connector";
 import { AbstractBrowserWallet, WalletOptions } from "./base";
 
 export class WalletConnect extends AbstractBrowserWallet {
-  #connector?: TWConnector;
+  connector?: TWConnector;
 
   static id = "walletConnect" as const;
 
@@ -15,18 +15,18 @@ export class WalletConnect extends AbstractBrowserWallet {
   }
 
   protected async getConnector(): Promise<TWConnector> {
-    if (!this.#connector) {
+    if (!this.connector) {
       // import the connector dynamically
       const { WalletConnectConnector } = await import(
         "../connectors/wallet-connect"
       );
-      this.#connector = new WagmiAdapter(
+      this.connector = new WagmiAdapter(
         new WalletConnectConnector({
           chains: this.chains,
           options: {},
         }),
       );
     }
-    return this.#connector;
+    return this.connector;
   }
 }

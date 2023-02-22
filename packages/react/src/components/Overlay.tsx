@@ -13,6 +13,7 @@ const overlayEnter = keyframes`
 
 export const Overlay = styled.div<{ theme?: Theme }>`
   background-color: ${(p) => p.theme.overlay.subdued};
+  z-index: 9999;
   position: fixed;
   inset: 0;
   animation: ${overlayEnter} 200ms cubic-bezier(0.16, 1, 0.3, 1);

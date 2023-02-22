@@ -7,6 +7,7 @@ import { useWalletSigner } from "../hooks/wallet-hooks";
 import { DAppMetaData } from "../types/dAppMeta";
 import { SupportedWallet } from "../types/wallet";
 import { showDeprecationWarning } from "../utils";
+import { ThirdwebThemeContext } from "./theme-context";
 import { ThirdwebWalletProvider } from "./thirdweb-wallet-provider";
 import { QueryClient } from "@tanstack/react-query";
 import { Chain, defaultChains } from "@thirdweb-dev/chains";
@@ -120,6 +121,8 @@ export interface ThirdwebProviderProps<
    */
   chainRpc?: Record<number, string>;
 
+  theme?: "light" | "dark";
+
   createWalletStorage: CreateAsyncStorage;
 }
 
@@ -182,28 +185,30 @@ export const ThirdwebProvider = <
   }, [props.activeChain, supportedChains]);
 
   return (
-    <ThirdwebWalletProvider
-      chains={supportedChains}
-      supportedWallets={supportedWallets}
-      shouldAutoConnect={props.autoConnect}
-      createWalletStorage={props.createWalletStorage}
-      dAppMeta={dAppMeta}
-      activeChain={activeChainObj}
-    >
-      <ThirdwebSDKProviderWrapper
-        queryClient={props.queryClient}
-        sdkOptions={props.sdkOptions}
-        supportedChains={supportedChains}
-        activeChain={activeChainId || props.desiredChainId}
-        storageInterface={props.storageInterface}
-        authConfig={props.authConfig}
-        thirdwebApiKey={props.thirdwebApiKey}
-        alchemyApiKey={props.alchemyApiKey}
-        infuraApiKey={props.infuraApiKey}
+    <ThirdwebThemeContext.Provider value={props.theme || "dark"}>
+      <ThirdwebWalletProvider
+        chains={supportedChains}
+        supportedWallets={supportedWallets}
+        shouldAutoConnect={props.autoConnect}
+        createWalletStorage={props.createWalletStorage}
+        dAppMeta={dAppMeta}
+        activeChain={activeChainObj}
       >
-        {props.children}
-      </ThirdwebSDKProviderWrapper>
-    </ThirdwebWalletProvider>
+        <ThirdwebSDKProviderWrapper
+          queryClient={props.queryClient}
+          sdkOptions={props.sdkOptions}
+          supportedChains={supportedChains}
+          activeChain={activeChainId || props.desiredChainId}
+          storageInterface={props.storageInterface}
+          authConfig={props.authConfig}
+          thirdwebApiKey={props.thirdwebApiKey}
+          alchemyApiKey={props.alchemyApiKey}
+          infuraApiKey={props.infuraApiKey}
+        >
+          {props.children}
+        </ThirdwebSDKProviderWrapper>
+      </ThirdwebWalletProvider>
+    </ThirdwebThemeContext.Provider>
   );
 };
 

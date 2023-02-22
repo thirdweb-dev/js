@@ -3,7 +3,11 @@ import { ConnectWalletFlow } from "./ConnectWalletFlow";
 import { ConnectedWalletDetails } from "./ConnectedWalletDetails";
 import { keyframes, ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
-import { useActiveWallet } from "@thirdweb-dev/react-core";
+import {
+  ThirdwebThemeContext,
+  useActiveWallet,
+} from "@thirdweb-dev/react-core";
+import { useContext } from "react";
 
 /**
  * A component that allows the user to connect their wallet.
@@ -14,7 +18,8 @@ export const ConnectWallet: React.FC<{ theme?: "dark" | "light" }> = (
   props,
 ) => {
   const activeWallet = useActiveWallet();
-  const theme = props.theme || "dark";
+  const themeFromCore = useContext(ThirdwebThemeContext);
+  const theme = props.theme || themeFromCore || "dark";
   return (
     <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
       <FadeIn>

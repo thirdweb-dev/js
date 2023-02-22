@@ -111,19 +111,6 @@ export function useActiveChainId() {
 
 /**
  *
- * @returns the account address of the connected wallet
- */
-export function useAccountAddress() {
-  const context = useThirdwebWallet();
-  invariant(
-    context,
-    "useAccountAddress() must be used within a <ThirdwebProvider/>",
-  );
-  return context.accountAddress;
-}
-
-/**
- *
  * @returns the signer of the connected wallet
  */
 export function useWalletSigner() {

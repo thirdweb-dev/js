@@ -13,7 +13,6 @@ export {
   useDisconnect,
   useSwitchChain,
   useWallets,
-  useAccountAddress,
 } from "./core/hooks/wallet-hooks";
 export {
   useDeviceWalletStorage,
@@ -249,3 +248,7 @@ export type {
   ClaimTokenParams,
 } from "./evm/types";
 export { getErcs, getErc1155, getErc721, getErc20 } from "./evm/types";
+
+// other
+
+export { ThirdwebThemeContext } from "./core/providers/theme-context";

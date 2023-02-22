@@ -6,8 +6,12 @@ import {
   FormFieldWithIconButton,
 } from "../../../components/formFields";
 import { iconSize } from "../../../design-system";
-import { NoticeShell } from "./shared/NoticeShell";
-import { DeviceWalletIcon } from "./shared/icons/DeviceWalletIcon";
+import { DeviceWalletIcon } from "../icons/DeviceWalletIcon";
+import {
+  BackButton,
+  ModalDescription,
+  ModalTitle,
+} from "../shared/modalElements";
 import styled from "@emotion/styled";
 import { blue } from "@radix-ui/colors";
 import { EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
@@ -38,18 +42,28 @@ export const ConnectToDeviceWallet: React.FC<{ onBack: () => void }> = (
   ) : null;
 
   return (
-    <NoticeShell
-      description={description}
-      onBack={props.onBack}
-      icon={<DeviceWalletIcon width={iconSize.xl} height={iconSize.xl} />}
-      title="Device Wallet"
-    >
+    <>
+      <BackButton onClick={props.onBack} />
+      <Spacer y="lg" />
+      <DeviceWalletIcon width={iconSize.xl} height={iconSize.xl} />
+      <Spacer y="md" />
+      <ModalTitle>Device Wallet</ModalTitle>
+
+      {description && (
+        <>
+          <Spacer y="md" />
+          <ModalDescription>{description}</ModalDescription>
+        </>
+      )}
+
+      <Spacer y="xl" />
+
       {!isDeviceWalletSaved ? (
         <CreateDeviceWallet />
       ) : (
         <ReconnectDeviceWallet />
       )}
-    </NoticeShell>
+    </>
   );
 };
 

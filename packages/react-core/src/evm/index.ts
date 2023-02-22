@@ -11,7 +11,6 @@ export {
   useDisconnect,
   useSwitchChain,
   useWallets,
-  useAccountAddress,
 } from "../core/hooks/wallet-hooks";
 export {
   useDeviceWalletStorage,

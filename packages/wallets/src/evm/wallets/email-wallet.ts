@@ -10,7 +10,7 @@ export class EmailWallet extends AbstractBrowserWallet<
   EmailWalletOptions,
   EmailWalletConnectionArgs
 > {
-  #connector?: TWConnector;
+  connector?: TWConnector;
 
   static id = "email-wallet" as const;
   public get walletName() {
@@ -25,17 +25,17 @@ export class EmailWallet extends AbstractBrowserWallet<
   }
 
   protected async getConnector(): Promise<TWConnector> {
-    if (!this.#connector) {
+    if (!this.connector) {
       const chainName = PaperChainMap[this.options.chainId];
       if (!chainName) {
         throw new Error("Unsupported chain id: " + this.options.chainId);
       }
       const { EmailWalletConnector } = await import("../connectors/email");
-      this.#connector = new EmailWalletConnector({
+      this.connector = new EmailWalletConnector({
         clientId: this.options.clientId,
         chain: chainName,
       });
     }
-    return this.#connector;
+    return this.connector;
   }
 }

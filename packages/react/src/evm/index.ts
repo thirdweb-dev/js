@@ -30,7 +30,6 @@ export {
   useDisconnect,
   useSwitchChain,
   useWallets,
-  useAccountAddress,
 } from "@thirdweb-dev/react-core";
 export {
   useDeviceWalletStorage,

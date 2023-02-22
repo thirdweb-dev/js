@@ -24,7 +24,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
   DeviceWalletOptions,
   DeviceWalletConnectionArgs
 > {
-  #connector?: TWConnector;
+  connector?: TWConnector;
 
   static id = "deviceWallet" as const;
 
@@ -40,7 +40,7 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
   }
 
   protected async getConnector(): Promise<TWConnector> {
-    if (!this.#connector) {
+    if (!this.connector) {
       // import the connector dynamically
       const { DeviceWalletConnector } = await import(
         "../connectors/device-wallet"
@@ -61,12 +61,12 @@ export class DeviceBrowserWallet extends AbstractBrowserWallet<
             this.options.storage,
           );
       }
-      this.#connector = new DeviceWalletConnector({
+      this.connector = new DeviceWalletConnector({
         chain: this.options.chain,
         wallet,
       });
     }
-    return this.#connector;
+    return this.connector;
   }
 }
 

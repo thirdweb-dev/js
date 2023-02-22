@@ -140,7 +140,7 @@
   "sideEffects": false,
   "dependencies": {
     "eventemitter3": "^5.0.0",
-    "localforage": "^1.10.0"
+    "buffer": "^6.0.3"
   },
   "peerDependencies": {
     "@thirdweb-dev/chains": "*",

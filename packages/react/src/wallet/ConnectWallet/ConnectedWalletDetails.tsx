@@ -1,4 +1,5 @@
-import { Overlay } from "../../components/Overlay";
+/* eslint-disable @next/next/no-img-element */
+import { ChainIcon } from "../../components/ChainIcon";
 import { Skeleton } from "../../components/Skeleton";
 import { Spacer } from "../../components/Spacer";
 import { IconButton } from "../../components/buttons";
@@ -12,14 +13,13 @@ import {
 } from "../../design-system";
 import { shortenString } from "../../evm/utils/addresses";
 import { NetworkSelector } from "./NetworkSelector";
-import { CoinbaseWalletIcon } from "./setup-ui/shared/icons/CoinbaseWalletIcon";
-import { DeviceWalletIcon } from "./setup-ui/shared/icons/DeviceWalletIcon";
-import { ExitIcon } from "./setup-ui/shared/icons/ExitIcon";
-import { MetamaskIcon } from "./setup-ui/shared/icons/MetamaskIcon";
+import { CoinbaseWalletIcon } from "./icons/CoinbaseWalletIcon";
+import { DeviceWalletIcon } from "./icons/DeviceWalletIcon";
+import { ExitIcon } from "./icons/ExitIcon";
+import { MetamaskIcon } from "./icons/MetamaskIcon";
 // import "./styles.css";
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
-import * as Dialog from "@radix-ui/react-dialog";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { GearIcon } from "@radix-ui/react-icons";
 import {
@@ -30,12 +30,8 @@ import {
   useBalance,
   useDisconnect,
   useSupportedChains,
-  useSwitchChain,
 } from "@thirdweb-dev/react-core";
 import { useMemo, useState } from "react";
-
-const defaultChainIcon =
-  "https://gateway.ipfscdn.io/ipfs/QmcxZHpyJa8T4i63xqjPYrZ6tKrt55tZJpbXcjSDKuKaf9/ethereum/512.png";
 
 const walletIcons: Record<
   SupportedWallet["id"],
@@ -46,40 +42,16 @@ const walletIcons: Record<
   coinbaseWallet: CoinbaseWalletIcon,
 };
 
-const ChainIcon: React.FC<{ src: string }> = (props) => {
-  return (
-    <img
-      src={props.src}
-      onError={(e) => {
-        if (e.currentTarget.src === defaultChainIcon) return;
-        e.currentTarget.src = defaultChainIcon;
-      }}
-      alt={`C`}
-      width={iconSize.lg}
-      height={iconSize.lg}
-    />
-  );
-};
-
 export const ConnectedWalletDetails = () => {
   const disconnect = useDisconnect();
   const chains = useSupportedChains();
-  const switchChain = useSwitchChain();
   const activeChainId = useActiveChainId();
   const address = useAddress();
   const balanceQuery = useBalance();
   const activeWallet = useActiveWallet();
 
-  const { chainIcon, chainName } = useMemo(() => {
-    const chain = chains.find((chain) => chain.chainId === activeChainId);
-    const url = chain?.icon?.url;
-
-    return {
-      chainIcon: url
-        ? `https://gateway.ipfscdn.io/ipfs/${url.replace("ipfs://", "")}`
-        : defaultChainIcon,
-      chainName: chain?.name || "Unknown Chain",
-    };
+  const chain = useMemo(() => {
+    return chains.find((_chain) => _chain.chainId === activeChainId);
   }, [activeChainId, chains]);
 
   const WalletIcon = activeWallet
@@ -87,30 +59,21 @@ export const ConnectedWalletDetails = () => {
     : null;
 
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
-
-  console.log({ showNetworkSelector });
+  const [open, setOpen] = useState(false);
 
   return (
     <>
       {showNetworkSelector && (
-        <Dialog.Root>
-          <Dialog.Trigger asChild></Dialog.Trigger>
-
-          <Dialog.Overlay asChild>
-            <Overlay />
-          </Dialog.Overlay>
-
-          <Dialog.Content>
-            Hello and welcome
-            <NetworkSelector />
-          </Dialog.Content>
-        </Dialog.Root>
+        <NetworkSelector
+          open={showNetworkSelector}
+          setOpen={setShowNetworkSelector}
+        />
       )}
 
-      <DropdownMenu.Root>
+      <DropdownMenu.Root open={open} onOpenChange={setOpen}>
         <DropdownMenu.Trigger asChild>
-          <WalletInfo type="button">
-            <ChainIcon src={chainIcon} />
+          <WalletInfoButton type="button">
+            <ChainIcon chain={chain} size={iconSize.lg} />
 
             <ColFlex>
               {!balanceQuery.isLoading ? (
@@ -127,7 +90,7 @@ export const ConnectedWalletDetails = () => {
             {WalletIcon && (
               <WalletIcon width={iconSize.lg} height={iconSize.lg} />
             )}
-          </WalletInfo>
+          </WalletInfoButton>
         </DropdownMenu.Trigger>
 
         <DropdownMenu.Portal>
@@ -191,13 +154,14 @@ export const ConnectedWalletDetails = () => {
               >
                 <div
                   style={{
+                    display: "flex",
+                    alignItems: "center",
                     position: "relative",
                   }}
                 >
-                  <ActiveDot />
-                  <ChainIcon src={chainIcon} />
+                  <ChainIcon chain={chain} size={iconSize.lg} active />
                 </div>
-                {chainName}
+                {chain?.name || "Unknown Chain"}
                 <StyledGearIcon
                   style={{
                     flexShrink: 0,
@@ -209,21 +173,7 @@ export const ConnectedWalletDetails = () => {
               </MenuButton>
             </DropdownMenuItem>
 
-            <Spacer y="xl" />
-
-            <DropdownMenuItem>
-              {chains.map((chain) => (
-                <button
-                  key={chain.chainId}
-                  onClick={() => {
-                    switchChain(chain.chainId);
-                  }}
-                >
-                  {" "}
-                  {chain.name}
-                </button>
-              ))}
-            </DropdownMenuItem>
+            <Spacer y="md" />
           </DropdownMenuContent>
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
@@ -244,16 +194,16 @@ const slideUpAndFade = keyframes`
 
 const DropdownMenuContent = styled(DropdownMenu.Content)<{ theme?: Theme }>`
   width: 360px;
+  max-width: 100%;
   background-color: ${(props) => props.theme.bg.base};
   border-radius: ${radius.sm};
   padding: ${spacing.lg};
   box-shadow: ${shadow.lg};
   animation: ${slideUpAndFade} 400ms cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
-  border: 1px solid ${(props) => props.theme.bg.highlighted};
 `;
 
-const WalletInfo = styled.button<{ theme?: Theme }>`
+const WalletInfoButton = styled.button<{ theme?: Theme }>`
   all: unset;
   background: ${(props) => props.theme.bg.base};
   border: 1px solid ${(props) => props.theme.bg.highlighted};
@@ -324,14 +274,10 @@ const MenuButton = styled.button<{ theme?: Theme }>`
   font-weight: 500;
   color: ${(props) => props.theme.text.neutral};
   gap: ${spacing.sm};
+
   &:hover {
     transition: background 150ms ease;
     background: ${(props) => props.theme.bg.elevated};
-    border-color: ${(props) => props.theme.text.secondary};
-
-    svg {
-      color: ${(props) => props.theme.text.neutral};
-    }
   }
 `;
 
@@ -341,15 +287,4 @@ export const DropdownMenuItem = styled(DropdownMenu.Item)<{ theme?: Theme }>`
 
 export const StyledGearIcon = styled(GearIcon)<{ theme?: Theme }>`
   color: ${(props) => props.theme.text.secondary};
-`;
-
-const ActiveDot = styled.div<{ theme?: Theme }>`
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  position: absolute;
-  top: 60%;
-  right: 2px;
-  background-color: #00d395;
-  box-shadow: 0 0 0 3px ${(props) => props.theme.bg.base};
 `;
