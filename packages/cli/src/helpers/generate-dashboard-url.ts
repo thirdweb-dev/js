@@ -3,7 +3,7 @@ export default function generateDashboardUrl(
   version: string | undefined,
 ): string | undefined {
   const splitName = name.split("/");
-  // Released contract
+  // Published contract
   if (splitName.length > 1) {
     return `https://thirdweb.com/dashboard/${splitName[0]}/${splitName[1]}${
       version ? `/${version}` : ""

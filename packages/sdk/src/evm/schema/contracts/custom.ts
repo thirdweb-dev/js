@@ -1,5 +1,5 @@
 import { FileOrBufferOrStringSchema } from "../../../core/schema/shared";
-import { toSemver } from "../../common/index";
+import { toSemver } from "../../common";
 import {
   AddressSchema,
   BigNumberishSchema,
