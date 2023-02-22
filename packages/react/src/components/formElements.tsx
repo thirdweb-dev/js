@@ -8,7 +8,7 @@ export const Label = styled.label<{ theme?: Theme }>`
 `;
 
 export const Input = styled.input<{
-  variant: "outline" | "transparent";
+  variant: "outline" | "transparent" | "secondary";
   theme?: Theme;
 }>`
   font-size: ${fontSize.md};
@@ -20,7 +20,19 @@ export const Input = styled.input<{
   border: none;
   border-radius: 6px;
   color: ${(p) => p.theme.text.neutral};
-  background: transparent;
+  background: ${(p) => {
+    switch (p.variant) {
+      case "secondary":
+        return p.theme.bg.elevated;
+      default:
+        return "transparent";
+    }
+  }};
+
+  &::placeholder {
+    color: ${(p) => p.theme.text.secondary};
+  }
+
   box-shadow: 0 0 0 1.5px
     ${(p) => {
       switch (p.variant) {
@@ -28,6 +40,8 @@ export const Input = styled.input<{
           return p.theme.bg.highlighted;
         case "transparent":
           return "transparent";
+        case "secondary":
+          return p.theme.bg.elevated;
       }
     }};
 

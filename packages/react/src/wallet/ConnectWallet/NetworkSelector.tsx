@@ -1,6 +1,7 @@
 import { ChainIcon } from "../../components/ChainIcon";
 import { Modal } from "../../components/Modal";
 import { Spacer } from "../../components/Spacer";
+import { Input } from "../../components/formElements";
 import {
   fontSize,
   iconSize,
@@ -10,6 +11,7 @@ import {
 } from "../../design-system";
 import { scrollbar } from "../../design-system/styles";
 import styled from "@emotion/styled";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import * as Tabs from "@radix-ui/react-tabs";
 import { Chain } from "@thirdweb-dev/chains";
 import {
@@ -24,14 +26,29 @@ export const NetworkSelector: React.FC<{
   setOpen: (show: boolean) => void;
 }> = (props) => {
   const chains = useSupportedChains();
+  const [searchTerm, setSearchTerm] = React.useState("");
 
   const { testnets, mainnets, all } = useMemo(() => {
-    return {
-      testnets: chains.filter((c) => c.testnet),
-      mainnets: chains.filter((c) => !c.testnet),
-      all: chains,
+    const searchTermLower = searchTerm.toLowerCase();
+    const info = {
+      testnets: [] as Chain[],
+      mainnets: [] as Chain[],
+      all: [] as Chain[],
     };
-  }, [chains]);
+
+    for (const chain of chains) {
+      if (chain.name.toLowerCase().includes(searchTermLower)) {
+        if (chain.testnet) {
+          info.testnets.push(chain);
+        } else {
+          info.mainnets.push(chain);
+        }
+        info.all.push(chain);
+      }
+    }
+
+    return info;
+  }, [chains, searchTerm]);
 
   const closeModal = () => {
     props.setOpen(false);
@@ -43,13 +60,13 @@ export const NetworkSelector: React.FC<{
       setOpen={props.setOpen}
       title="Select Network"
       style={{
-        maxWidth: "500px",
+        maxWidth: "480px",
         paddingBottom: "0px",
       }}
     >
       <Spacer y="lg" />
-      <Description>Choose a network to connect to</Description>
-      <Spacer y="lg" />
+      {/* <Description>Choose a network to connect to the application</Description>
+      <Spacer y="lg" /> */}
 
       <Tabs.Root className="TabsRoot" defaultValue="all">
         <Tabs.List
@@ -57,7 +74,7 @@ export const NetworkSelector: React.FC<{
           aria-label="Manage your account"
           style={{
             display: "flex",
-            gap: spacing.xs,
+            gap: spacing.xxs,
           }}
         >
           <TabButton className="TabsTrigger" value="all">
@@ -70,6 +87,26 @@ export const NetworkSelector: React.FC<{
             Testnets
           </TabButton>
         </Tabs.List>
+
+        <Spacer y="lg" />
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            position: "relative",
+          }}
+        >
+          <StyledMagnifyingGlassIcon />
+          <SearchInput
+            variant="secondary"
+            placeholder="Search Networks"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+            }}
+          />
+        </div>
 
         <Spacer y="lg" />
 
@@ -100,23 +137,17 @@ const NetworkList: React.FC<{
       {props.chains.map((chain) => (
         <li key={chain.chainId}>
           <NetworkButton
+            data-active={activeChainId === chain.chainId}
             onClick={() => {
               switchChain(chain.chainId);
               props.onNetworkSelect();
             }}
           >
-            <div
-              style={{
-                position: "relative",
-              }}
-            >
-              <ChainIcon
-                chain={chain}
-                size={iconSize.md}
-                active={activeChainId === chain.chainId}
-              />
-              {/* active dot */}
-            </div>
+            <ChainIcon
+              chain={chain}
+              size={iconSize.lg}
+              active={activeChainId === chain.chainId}
+            />
             <span>
               {chain.name}{" "}
               <NetworkShortName>
@@ -130,18 +161,18 @@ const NetworkList: React.FC<{
   );
 };
 
-const Description = styled.p<{ theme?: Theme }>`
-  margin: 0;
-  font-size: ${fontSize.md};
-  color: ${(p) => p.theme.text.secondary};
-`;
+// const Description = styled.p<{ theme?: Theme }>`
+//   margin: 0;
+//   font-size: ${fontSize.md};
+//   color: ${(p) => p.theme.text.secondary};
+// `;
 
 const TabButton = styled(Tabs.Trigger)<{ theme?: Theme }>`
   all: unset;
   font-size: ${fontSize.md};
   color: ${(p) => p.theme.text.secondary};
   cursor: pointer;
-  padding: ${spacing.xs} ${spacing.sm};
+  padding: ${spacing.sm} ${spacing.md};
   border-radius: ${radius.lg};
   transition: background 0.2s ease, color 0.2s ease;
   &[data-state="active"] {
@@ -156,11 +187,14 @@ const NetworkListUl = styled.ul<{ theme?: Theme }>`
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: ${spacing.sm};
-  max-height: 330px;
+  gap: ${spacing.xs};
+  height: 340px;
   overflow: auto;
-  padding-right: ${spacing.xs};
+  padding-right: 10px;
   padding-bottom: ${spacing.lg};
+  width: calc(100% + 16px);
+  -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
   ${(p) =>
     scrollbar({
       track: "transparent",
@@ -186,11 +220,28 @@ const NetworkButton = styled.button<{ theme?: Theme }>`
   &:hover {
     background: ${(p) => p.theme.bg.highlighted};
   }
+  &[data-active="true"] {
+    background: ${(p) => p.theme.bg.highlighted};
+  }
 `;
 
 const NetworkShortName = styled.span<{ theme?: Theme }>`
   color: ${(p) => p.theme.text.secondary};
   display: inline-block;
-  font-size: ${fontSize.sm};
+  font-size: ${fontSize.md};
   font-weight: 500;
+`;
+
+const StyledMagnifyingGlassIcon = styled(MagnifyingGlassIcon)<{
+  theme?: Theme;
+}>`
+  width: ${iconSize.md};
+  height: ${iconSize.md};
+  color: ${(p) => p.theme.text.secondary};
+  position: absolute;
+  left: 18px;
+`;
+
+const SearchInput = styled(Input)<{ theme?: Theme }>`
+  padding: ${spacing.sm} ${spacing.md} ${spacing.sm} 60px;
 `;
