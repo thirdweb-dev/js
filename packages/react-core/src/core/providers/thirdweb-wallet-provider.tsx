@@ -303,7 +303,6 @@ export function ThirdwebWalletProvider(
         try {
           setIsConnectingToWallet(Wallet.id);
           const address = await wallet.connect(_connectedParams);
-          setAccountAddress(address);
           handleWalletConnect(wallet);
         } catch (e: any) {
           throw e;
