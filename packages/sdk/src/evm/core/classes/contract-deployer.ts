@@ -496,7 +496,7 @@ export class ContractDeployer extends RPCConnectionHandler {
 
     const activeChainId = (await this.getProvider().getNetwork()).chainId;
     // fetch the publish URI from the ContractPublisher contract
-    const publishedContract = await this.fetchReleaseFromPolygon(
+    const publishedContract = await this.fetchPublishedContractFromPolygon(
       THIRDWEB_DEPLOYER,
       contractName,
       version,
@@ -511,10 +511,7 @@ export class ContractDeployer extends RPCConnectionHandler {
 
     if (implementationAddress) {
       // implementation exists on the current chain, continue with normal flow
-      return this.deployContractFromUri(
-        publishedContract.metadataUri,
-        constructorParams,
-      );
+      return this.deployContractFromUri(publishedContract.metadataUri, constructorParams);
     } else {
       // implementation does NOT exist on chain, deploy the implementation first, then deploy a proxy
       implementationAddress = await this.deployContractFromUri(
@@ -560,7 +557,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     version = "latest",
     options?: DeployOptions,
   ): Promise<string> {
-    const publishedContract = await this.fetchReleaseFromPolygon(
+    const publishedContract = await this.fetchPublishedContractFromPolygon(
       publisherAddress,
       contractName,
       version,
@@ -902,7 +899,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     return data;
   }
 
-  private async fetchReleaseFromPolygon(
+  private async fetchPublishedContractFromPolygon(
     publisherAddress: string,
     contractName: string,
     version: string,
