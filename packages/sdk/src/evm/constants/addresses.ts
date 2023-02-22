@@ -171,7 +171,7 @@ type DropContract = Extract<
   "nft-drop" | "token-drop" | "edition-drop" | "signature-drop"
 >;
 
-// @deprecated - should not be needed anymore, rely on the release data instead
+// @deprecated - should not be needed anymore, rely on the publish data instead
 export const APPROVED_IMPLEMENTATIONS: Record<
   SUPPORTED_CHAIN_ID,
   Record<DropContract, string>

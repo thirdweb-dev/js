@@ -266,7 +266,7 @@ const main = async () => {
     )
     .option(
       "-n, --name [name]",
-      "Name of the pre-built or released contract (such as nft-drop)",
+      "Name of the pre-built or published contract (such as nft-drop)",
     )
     .option(
       "-f, --file [name]",
@@ -278,7 +278,7 @@ const main = async () => {
     )
     .option(
       "-cv, --contract-version [version]",
-      "Version of the released contract",
+      "Version of the published contract",
     )
     .option("--app", "Deploy a web app to decentralized storage")
     .option("--contract", "Deploy a smart contract to blockchains")
@@ -291,8 +291,36 @@ const main = async () => {
 
   program
     .command("release")
+    .description("[Deprecated] use 'publish' instead.")
+    .option("-p, --path <project-path>", "path to project", ".")
+    .option(
+      "-f, --file [name]",
+      "Filter for contract files that contain the file name",
+    )
+    .option(
+      "-cn, --contract-name [name]",
+      "Filter for contracts that contain this contract name",
+    )
+    .option("--dry-run", "dry run (skip actually publishing)")
+    .option("-d, --debug", "show debug logs")
+    .option("--ci", "Continuous Integration mode")
+    .action(async (options) => {
+      logger.warn(
+        "'release' is deprecated and will be removed in a future update. Please use 'publish' instead.",
+      );
+      const url = await processProject(options, "publish");
+      info(
+        `Open this link to publish your contracts: ${chalk.blueBright(
+          url.toString(),
+        )}`,
+      );
+      open(url.toString());
+    });
+
+  program
+    .command("publish")
     .description(
-      "Release your protocol so other devs can deploy them and unlock SDKs, Dashboards and Analytics",
+      "Publish your protocol so other devs can deploy them and unlock SDKs, Dashboards and Analytics",
     )
     .option("-p, --path <project-path>", "path to project", ".")
     .option(
@@ -307,9 +335,9 @@ const main = async () => {
     .option("-d, --debug", "show debug logs")
     .option("--ci", "Continuous Integration mode")
     .action(async (options) => {
-      const url = await processProject(options, "release");
+      const url = await processProject(options, "publish");
       info(
-        `Open this link to release your contracts: ${chalk.blueBright(
+        `Open this link to publish your contracts: ${chalk.blueBright(
           url.toString(),
         )}`,
       );

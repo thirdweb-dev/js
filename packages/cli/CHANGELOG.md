@@ -1,5 +1,14 @@
 # thirdweb
 
+## 0.9.23
+
+### Patch Changes
+
+- [#567](https://github.com/thirdweb-dev/js/pull/567) [`8b68f20`](https://github.com/thirdweb-dev/js/commit/8b68f206789f478c9a2198ad8c277329583bdc31) Thanks [@shift4id](https://github.com/shift4id)! - `thirdweb release` is deprecated, use `thirdweb publish` instead
+
+- Updated dependencies []:
+  - @thirdweb-dev/sdk@3.9.3
+
 ## 0.9.22
 
 ### Patch Changes

@@ -41,10 +41,10 @@ Deploying contracts this way gives you access to:
 ## Releasing your contract
 
 ```shell
-npx thirdweb@latest release
+npx thirdweb@latest publish
 ```
 
-Creates an official release of your contract, along with:
+Creates an official published contract, along with:
 
 - author attribution
 - contract information
@@ -52,9 +52,9 @@ Creates an official release of your contract, along with:
 - versioning
 - release notes
 
-Creating releases this way gives you shareable URL to let others to deploy your contracts in one click. It lets you manage released versions and get attribution for deployed contracts. Contract releases are registered on-chain (Polygon) and IPFS, for free (gasless).
+Publishing contracts this way gives you shareable URL to let others deploy your contracts in one click. It lets you manage published versions and get attribution for deployed contracts. Published contracts are registered on-chain (Polygon) and IPFS, for free (gasless).
 
-Deploying released contracts give deployers access to automatic SDKs to integrate into their app and dashboards to manage and monitor the deployed contracts.
+Deploying published contracts give deployers access to automatic SDKs to integrate into their app and dashboards to manage and monitor the deployed contracts.
 
 ## Detecting contract extensions
 
@@ -94,7 +94,7 @@ Clone the repo and run this command after installing the CLI tool:
 
 ```bash
 $ cd examples/hardhat
-$ npx thirdweb@latest release
+$ npx thirdweb@latest publish
 ```
 
 ## Local Development
@@ -106,11 +106,13 @@ The simplest way to work on the CLI locally is to:
 ```bash
 git clone https://github.com/thirdweb-dev/js.git
 ```
+
 2. From the project root run
 
 ```bash
 yarn && yarn build
 ```
+
 3. From inside `js/packages/cli` Run the `build:watch` command to compile any changes in real time
 
 ```bash
