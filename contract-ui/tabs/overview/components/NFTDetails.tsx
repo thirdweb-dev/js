@@ -69,7 +69,11 @@ export const NFTDetails: React.FC<NFTDetailsProps> = ({
         </TrackedLink>
       </Flex>
       {showSupplyCards && <SupplyCards contract={contract} />}
-      <NFTCards nfts={displayableNFTs} isLoading={nftQuery.isLoading} />
+      <NFTCards
+        nfts={displayableNFTs}
+        trackingCategory={trackingCategory}
+        isLoading={nftQuery.isLoading}
+      />
     </Flex>
   );
 };
@@ -88,13 +92,16 @@ const dummyMetadata: (idx: number) => NFT = (idx) => ({
 
 interface ContractOverviewNFTGetAllProps {
   nfts: NFT[];
+  trackingCategory: TrackedLinkProps["category"];
   isLoading: boolean;
 }
 const NFTCards: React.FC<ContractOverviewNFTGetAllProps> = ({
   nfts,
+  trackingCategory,
   isLoading,
 }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
+  const nftsHref = useTabHref("nfts");
 
   nfts = isLoading
     ? Array.from({ length: isMobile ? 2 : 3 }).map((_, idx) =>
@@ -104,31 +111,39 @@ const NFTCards: React.FC<ContractOverviewNFTGetAllProps> = ({
   return (
     <SimpleGrid gap={{ base: 3, md: 6 }} columns={{ base: 2, md: 3 }}>
       {nfts.map((token) => (
-        <GridItem as={Card} key={token.owner} p={0}>
-          <AspectRatio w="100%" ratio={1} overflow="hidden" rounded="xl">
-            <Skeleton isLoaded={!isLoading}>
-              <NFTMediaWithEmptyState
-                metadata={token.metadata}
-                requireInteraction
-                width="100%"
-                height="100%"
-              />
-            </Skeleton>
-          </AspectRatio>
-          <Flex p={4} pb={3} gap={3} direction="column">
-            <Skeleton w={!isLoading ? "100%" : "50%"} isLoaded={!isLoading}>
-              <Heading size="label.md">{token.metadata.name}</Heading>
-            </Skeleton>
-            <SkeletonText isLoaded={!isLoading}>
-              <Text noOfLines={3}>
-                {token.metadata.description ? (
-                  token.metadata.description
-                ) : (
-                  <i>No description</i>
-                )}
-              </Text>
-            </SkeletonText>
-          </Flex>
+        <GridItem
+          key={token.owner}
+          as={TrackedLink}
+          category={trackingCategory}
+          href={nftsHref}
+          _hover={{ opacity: 0.75, textDecoration: "none" }}
+        >
+          <Card p={0}>
+            <AspectRatio w="100%" ratio={1} overflow="hidden" rounded="xl">
+              <Skeleton isLoaded={!isLoading}>
+                <NFTMediaWithEmptyState
+                  metadata={token.metadata}
+                  requireInteraction
+                  width="100%"
+                  height="100%"
+                />
+              </Skeleton>
+            </AspectRatio>
+            <Flex p={4} pb={3} gap={3} direction="column">
+              <Skeleton w={!isLoading ? "100%" : "50%"} isLoaded={!isLoading}>
+                <Heading size="label.md">{token.metadata.name}</Heading>
+              </Skeleton>
+              <SkeletonText isLoaded={!isLoading}>
+                <Text noOfLines={3}>
+                  {token.metadata.description ? (
+                    token.metadata.description
+                  ) : (
+                    <i>No description</i>
+                  )}
+                </Text>
+              </SkeletonText>
+            </Flex>
+          </Card>
         </GridItem>
       ))}
     </SimpleGrid>

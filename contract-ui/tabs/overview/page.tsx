@@ -1,8 +1,10 @@
 import { BuildYourApp } from "./components/BuildYourApp";
 import { LatestEvents } from "./components/LatestEvents";
+import { MarketplaceDetails } from "./components/MarketplaceDetails";
 import { NFTDetails } from "./components/NFTDetails";
 import { PermissionsTable } from "./components/PermissionsTable";
 import { ShareContract } from "./components/ShareContract";
+import { TokenDetails } from "./components/TokenDetails";
 import { getGuidesAndTemplates } from "./helpers/getGuidesAndTemplates";
 import { Divider, Flex, GridItem, SimpleGrid } from "@chakra-ui/react";
 import { contractType, useContract } from "@thirdweb-dev/react";
@@ -33,12 +35,26 @@ export const CustomContractOverviewPage: React.FC<
     () => getGuidesAndTemplates(detectedFeatureNames, contractTypeData),
     [detectedFeatureNames, contractTypeData],
   );
+
   if (!contractAddress) {
     return <div>No contract address provided</div>;
   }
+
   return (
     <SimpleGrid columns={{ base: 1, xl: 4 }} gap={8}>
       <GridItem as={Flex} colSpan={{ xl: 3 }} direction="column" gap={16}>
+        {contract &&
+          (contractTypeData === "marketplace" ||
+            ["DirectListings", "EnglishAuctions"].some((type) =>
+              detectedFeatureNames.includes(type),
+            )) && (
+            <MarketplaceDetails
+              contractAddress={contractAddress}
+              trackingCategory={TRACKING_CATEGORY}
+              contractType={contractTypeData as "marketplace"}
+              features={detectedFeatureNames}
+            />
+          )}
         {contract &&
           ["ERC1155", "ERC721"].some((type) =>
             detectedFeatureNames.includes(type),
@@ -48,6 +64,10 @@ export const CustomContractOverviewPage: React.FC<
               trackingCategory={TRACKING_CATEGORY}
               features={detectedFeatureNames}
             />
+          )}
+        {contract &&
+          ["ERC20"].some((type) => detectedFeatureNames.includes(type)) && (
+            <TokenDetails contractAddress={contractAddress} />
           )}
         <LatestEvents
           address={contractAddress}

@@ -1,4 +1,5 @@
 import { CreateListingButton } from "../shared-components/list-button";
+import { ListingStats } from "./components/listing-stats";
 import { ListingsTable } from "./components/table";
 import { Flex } from "@chakra-ui/react";
 import { useContract } from "@thirdweb-dev/react";
@@ -33,7 +34,7 @@ export const ContractListingsPage: React.FC<ListingsPageProps> = ({
           />
         </Flex>
       </Flex>
-
+      <ListingStats contract={contractQuery.contract} />
       <ListingsTable contract={contractQuery.contract} />
     </Flex>
   );
