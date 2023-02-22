@@ -20,6 +20,7 @@ import {
 } from "@thirdweb-dev/react";
 import { UploadProgressEvent } from "@thirdweb-dev/storage";
 import { useErrorHandler } from "contexts/error-handler";
+import { useTrack } from "hooks/analytics/useTrack";
 import { replaceIpfsUrl } from "lib/sdk";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -131,6 +132,7 @@ interface FileUploadProps {
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
+  const trackEvent = useTrack();
   const address = useAddress();
   const [progress, setProgress] = useState<UploadProgressEvent>({
     progress: 0,
@@ -391,6 +393,13 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                 rightIcon={<Icon as={FiExternalLink} />}
                 colorScheme="green"
                 isExternal
+                onClick={() => {
+                  trackEvent({
+                    category: TRACKING_CATEGORY,
+                    action: "click",
+                    label: ipfsHashes.length > 1 ? "open-folder" : "open-file",
+                  });
+                }}
               >
                 {ipfsHashes.length > 1 ? "Open Folder" : "Open File"}
               </Button>
@@ -402,12 +411,23 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                 leftIcon={<Icon as={FiUploadCloud} />}
                 onClick={() => {
                   setIpfsHashes([]);
+                  trackEvent({
+                    category: TRACKING_CATEGORY,
+                    action: "upload",
+                    label: "start",
+                  });
                   storageUpload.mutate(
                     {
                       data: files,
                     },
                     {
                       onError: (error) => {
+                        trackEvent({
+                          category: TRACKING_CATEGORY,
+                          action: "upload",
+                          label: "error",
+                          error,
+                        });
                         onError(error, "Failed to upload file");
                         setProgress({
                           progress: 0,
@@ -415,6 +435,11 @@ const FileUpload: React.FC<FileUploadProps> = ({ files, updateFiles }) => {
                         });
                       },
                       onSuccess: (uris) => {
+                        trackEvent({
+                          category: TRACKING_CATEGORY,
+                          action: "upload",
+                          label: "success",
+                        });
                         setIpfsHashes(uris);
                       },
                       onSettled: () => {
