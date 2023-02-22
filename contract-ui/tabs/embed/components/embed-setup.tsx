@@ -1,9 +1,6 @@
 import { useDashboardEVMChainId } from "@3rdweb-sdk/react";
 import { useBreakpointValue } from "@chakra-ui/media-query";
 import {
-  Alert,
-  AlertIcon,
-  AlertTitle,
   Flex,
   FormControl,
   Input,
@@ -27,6 +24,7 @@ import {
 import { useTrack } from "hooks/analytics/useTrack";
 import { useAllChainsData } from "hooks/chains/allChains";
 import { useConfiguredChainsRecord } from "hooks/chains/configureChains";
+import { replaceIpfsUrl } from "lib/sdk";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { FiCopy } from "react-icons/fi";
@@ -47,7 +45,6 @@ interface EmbedSetupProps {
 const IPFS_URI = "ipfs://QmbAgC8YwY36n8H2kuvSWsRisxDZ15QZw3xGZyk9aDvcv7";
 
 interface IframeSrcOptions {
-  ipfsGateway: string;
   chain: string;
   tokenId?: string;
   listingId?: string;
@@ -98,7 +95,6 @@ const buildIframeSrc = (
   }
 
   const {
-    ipfsGateway,
     chain,
     tokenId,
     listingId,
@@ -113,7 +109,7 @@ const buildIframeSrc = (
     biconomyApiId,
   } = options;
 
-  const url = new URL(contractEmbedHash.replace("ipfs://", ipfsGateway));
+  const url = new URL(replaceIpfsUrl(contractEmbedHash));
 
   url.searchParams.append("contract", contract.getAddress());
   url.searchParams.append("chain", chain);
@@ -184,11 +180,18 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
         });
       }
 
+      // eslint-disable-next-line no-template-curly-in-string
+      if (rpc.includes("${THIRDWEB_API_KEY}")) {
+        return configureChain(configuredChain, {
+          // eslint-disable-next-line no-template-curly-in-string
+          rpc: rpc.replace("${THIRDWEB_API_KEY}", EMBED_THIRDWEB_API_KEY),
+        });
+      }
+
       return configuredChain;
     }
     if (allChain) {
       const rpc = getChainRPC(allChain, {
-        // embeds API key
         thirdwebApiKey: EMBED_THIRDWEB_API_KEY,
       });
       return configureChain(allChain, { rpc });
@@ -197,7 +200,6 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   }, [configuredChain, allChain]);
 
   const { register, watch } = useForm<{
-    ipfsGateway: string;
     rpcUrl: string;
     relayUrl: string;
     tokenId: string;
@@ -214,7 +216,6 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
   }>({
     defaultValues: {
       rpcUrl: chain?.rpc[0],
-      ipfsGateway: "https://gateway.ipfscdn.io/ipfs/",
       tokenId: "0",
       listingId: "0",
       directListingId: "0",
@@ -265,10 +266,6 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
           <Heading size="title.sm" mb={4}>
             Configuration
           </Heading>
-          <FormControl>
-            <FormLabel>IPFS Gateway</FormLabel>
-            <Input type="url" {...register("ipfsGateway")} />
-          </FormControl>
           {ercOrMarketplace === "marketplace" ? (
             <FormControl>
               <FormLabel>Listing ID</FormLabel>
@@ -323,7 +320,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
             <FormLabel>RPC Url</FormLabel>
             <Input type="url" {...register("rpcUrl")} />
             <FormHelperText>
-              Provide your own RPC url to use for this embed.
+              RPC the embed should use to connect to the blockchain.
             </FormHelperText>
           </FormControl>
 
@@ -381,7 +378,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
             </Select>
             <FormHelperText>
               Selecting system will make it so the embed would change depending
-              on the user system&apos;s preferences
+              on the user system&apos;s preferences.
             </FormHelperText>
           </FormControl>
           <FormControl>
@@ -454,16 +451,7 @@ export const EmbedSetup: React.FC<EmbedSetupProps> = ({
             height="600px"
             frameBorder="0"
           />
-        ) : (
-          <>
-            {!watch("ipfsGateway") && (
-              <Alert status="error">
-                <AlertIcon />
-                <AlertTitle mr={2}>Missing IPFS Gateway</AlertTitle>
-              </Alert>
-            )}
-          </>
-        )}
+        ) : null}
       </Stack>
     </Flex>
   );
