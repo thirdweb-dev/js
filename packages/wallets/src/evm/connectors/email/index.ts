@@ -24,21 +24,35 @@ export class EmailWalletConnector extends TWConnector<EmailWalletConnectionArgs>
   ready: boolean = true;
 
   private user: InitializedUser | null = null;
-  private paper: PaperEmbeddedWalletSdk;
+  private paper?: PaperEmbeddedWalletSdk;
+  private options: EmailWalletConnectorOptions;
 
   constructor(options: EmailWalletConnectorOptions) {
     super();
-    this.paper = new PaperEmbeddedWalletSdk({
-      clientId: options.clientId,
-      chain: options.chain,
-    });
+    this.options = options;
   }
 
-  // TODO define our own connector interface
+  private initPaperSDK() {
+    if (!this.paper) {
+      const chainName = PaperChainMap[this.options.chain.chainId];
+      if (!chainName) {
+        throw new Error("Unsupported chain id: " + this.options.chain.chainId);
+      }
+      this.paper = new PaperEmbeddedWalletSdk({
+        clientId: this.options.clientId,
+        chain: chainName,
+      });
+    }
+  }
+
   async connect(args?: ConnectParams<EmailWalletConnectionArgs>) {
     const email = args?.email;
     if (!email) {
       throw new Error("No Email provided");
+    }
+    this.initPaperSDK();
+    if (!this.paper) {
+      throw new Error("Paper SDK not initialized");
     }
     let user = await this.paper.getUser();
     switch (user.status) {
@@ -48,6 +62,7 @@ export class EmailWalletConnector extends TWConnector<EmailWalletConnectionArgs>
         });
         this.user = authResult.user;
         /**
+          TODO headless support
           await Paper.auth.sendPaperEmailLoginOtp({ email });
           const otp = await args?.handleOTP();
           const user = await Paper.auth.verifyPaperEmailLoginOtp({ email, otp });
@@ -68,9 +83,11 @@ export class EmailWalletConnector extends TWConnector<EmailWalletConnectionArgs>
   async disconnect(): Promise<void> {
     this.user = null;
   }
+
   async getAddress(): Promise<string> {
     return await this.getUser().wallet.getAddress();
   }
+
   async isConnected(): Promise<boolean> {
     try {
       const addr = await this.getAddress();
@@ -87,16 +104,17 @@ export class EmailWalletConnector extends TWConnector<EmailWalletConnectionArgs>
     }
     return signer.provider;
   }
+
   public async getSigner(): Promise<Signer> {
-    // TODO get RPC from chains package
     const signer = this.user?.wallet.getEthersJsSigner({
-      rpcEndpoint: "https://mumbai.rpc.thirdweb.com",
+      rpcEndpoint: this.options.chain.rpc[0],
     });
     if (!signer) {
       throw new Error("Signer not found");
     }
     return signer;
   }
+
   async isAuthorized(): Promise<boolean> {
     return false;
   }
@@ -106,7 +124,10 @@ export class EmailWalletConnector extends TWConnector<EmailWalletConnectionArgs>
     if (!chainName) {
       throw new Error("Chain not supported");
     }
-    this.user?.wallet.setChain({ chain: chainName });
+    // TODO this needs to update the signer, and emit events
+    // this.user?.wallet.setChain({ chain: chainName });
+    // throw for now
+    throw new Error("Chain switch not supported");
   }
 
   private getUser() {
